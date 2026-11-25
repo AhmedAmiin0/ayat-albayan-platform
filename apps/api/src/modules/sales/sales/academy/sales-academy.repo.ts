@@ -12,7 +12,7 @@ type Student = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'pro
 /** Never rates, phone, calendar or load; the fixed meeting link is the exception (docs/16). */
 export type SalesTeacherRow = Pick<Tables<'teachers'>, 'id' | 'display_name_ar' | 'display_name_en' | 'gender' | 'programs' | 'meeting_link' | 'meeting_mode'> & {
   students: Student[];
-  /** The teacher's photo, signed with the rest of the list in one call (owner 2026-10-28); absent in fakes. */
+  /** The teacher's photo, signed with the rest of the list in one call; absent in fakes. */
   avatar_url?: string | null;
 };
 
@@ -32,7 +32,8 @@ export interface SalesLiveRow {
 
 /**
  * The salesperson's assistant side (docs/16), read with the service role: the academy's teachers,
- * every student and the lessons running now. Each select is a whitelist; the mappers whitelist again.
+ * every student and the lessons running now. Each select is a whitelist; the mappers whitelist
+ * again.
  */
 @Injectable()
 export class SalesAcademyRepo {
@@ -52,7 +53,8 @@ export class SalesAcademyRepo {
     return data.map((t) => ({ ...t, avatar_url: photos.get(t.id) ?? null }));
   }
 
-  /** One page by name, with the guardian's name and phone (owner 2026-10-27: the row opens that family's chat); `search` is a name (Arabic-normalised) or a code, like the admin's list. */
+  // One page by name, with the guardian's name and phone (the row opens that family's chat);
+  // `search` is a name (Arabic-normalised) or a code, like the admin's list.
   async students(q: SalesStudentsQuery): Promise<{ rows: SalesStudentRow[]; total: number }> {
     let query = this.db
       .from('students')
@@ -66,7 +68,9 @@ export class SalesAcademyRepo {
     return { rows: data, total: count ?? 0 };
   }
 
-  /** Lessons with starts_at <= now < ends_at that are still open (scheduled / confirmed), by start. */
+  /**
+   * Lessons with starts_at <= now < ends_at that are still open (scheduled / confirmed), by start.
+   */
   async live(now: Date): Promise<SalesLiveRow[]> {
     const at = now.toISOString();
     const { data, error } = await this.db

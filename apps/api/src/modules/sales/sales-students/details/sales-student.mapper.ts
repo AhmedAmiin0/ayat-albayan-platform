@@ -23,9 +23,9 @@ interface DetailsParts {
   /** Empty unless the viewer holds self.sales_money (part_paid). */
   prices?: readonly PriceRow[];
   trial: SalesTrialLesson[];
-  /** Hers (the money actions); every student shows its subscriptions and reports (owner 2026-10-30). */
+  /** Hers (the money actions); every student shows its subscriptions and reports. */
   mine: boolean;
-  /** The current package, hers or not (owner 2026-10-30): already whitelisted (no price). */
+  /** The current package, hers or not: already whitelisted (no price). */
   package?: SalesPackageSummary | null;
 }
 
@@ -70,7 +70,10 @@ function subscriptionsOf(history: HistoryBundle | null, prices: readonly PriceRo
     .reverse();
 }
 
-/** The student's own attendance per lesson, newest first; a moved lesson is left out (its new one counts). */
+/**
+ * The student's own attendance per lesson, newest first; a moved lesson is left out (its new one
+ * counts).
+ */
 function attendanceDays(studentId: string, lessons: readonly AttendanceRow[]): SalesAttendanceDay[] {
   return lessons.flatMap((l) => {
     const own = l.lesson_students.find((s) => s.student_id === studentId);

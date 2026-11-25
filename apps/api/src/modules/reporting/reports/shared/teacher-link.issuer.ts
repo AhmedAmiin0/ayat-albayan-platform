@@ -16,7 +16,7 @@ const portalPage = (origin: string, lessonId: string): string =>
 
 /**
  * The teacher's report link for one lesson (docs/19 «Teacher report link»): the signed-in portal
- * page (owner 2026-11-14: «send the portal url that is authenticated»). No token: the no-login
+ * page, which needs a sign-in. No token: the no-login
  * tokens already sent stay valid until the lesson's end + report_teacher_edit_hours. null when the
  * web origin is not configured.
  */

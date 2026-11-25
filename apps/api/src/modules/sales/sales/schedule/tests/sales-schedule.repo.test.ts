@@ -10,7 +10,7 @@ describe('SalesScheduleQueries (whitelisted selects)', () => {
     const f = fakeDb({ lessons: [{ data: [] }] });
     await new SalesScheduleRepo(f.db).day({ from: FROM, to: TO });
     const select = String(f.argsOf('lessons', 'select')?.[0]);
-    // Owner 2026-10-26: the lesson's meeting_link and the teacher's meeting_mode, nothing else new.
+    // The lesson's meeting_link and the teacher's meeting_mode, nothing else new.
     expect(select).toMatch(/^id, starts_at, ends_at, status, makeup_of_id, meeting_link, /);
     expect(select).toContain('teachers(id, display_name_ar, display_name_en, tz, meeting_mode)');
     expect(select).not.toContain('*');

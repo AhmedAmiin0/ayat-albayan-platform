@@ -9,7 +9,7 @@ import { StudentsService } from '@/modules/people/students';
 import { PeopleEditRepo } from './people-edit.repo';
 import { PeopleEditService } from './people-edit.service';
 
-// Owner 2026-11-17: a student's own WhatsApp number (a sign-in number), set by staff.
+// A student's own WhatsApp number (a sign-in number), set by staff.
 
 const OWN = '+966500000007';
 const STUDENT = { id: 's1', guardian_id: 'g1', name: 'سهيلة', notes: null, profile_id: null };

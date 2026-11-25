@@ -26,7 +26,7 @@ export function attendanceWindow(
   return { from, to: to.getTime() < now.getTime() ? to : now };
 }
 
-/** `reportId`: the student's submitted report of the lesson; it opens for any student (2026-10-30). */
+/** `reportId`: the student's submitted report of the lesson; it opens for any student. */
 interface RowOptions {
   reportId: string | null;
   reader: AttendanceReader;

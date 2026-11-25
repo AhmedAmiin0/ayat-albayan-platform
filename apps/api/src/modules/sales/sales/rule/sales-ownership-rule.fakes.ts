@@ -6,7 +6,7 @@ import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 import { type SalesRepo, SalesSettings } from '@/modules/sales/sales/shared';
 import { SalesOwnershipRule } from './sales-ownership-rule';
 
-/** Both switches ON: the rule enforces her ownership (owner 2026-11-02). */
+/** Both switches ON: the rule enforces her ownership. */
 export const REQUIRE_ON = { sales_require_assignee: true, sales_auto_assign: true } as const;
 
 /** The rule with `own` as her ownership and the given switches (defaults: not enforced). */

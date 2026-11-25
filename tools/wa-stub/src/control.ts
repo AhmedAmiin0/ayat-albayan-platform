@@ -7,7 +7,8 @@ import { metaError } from './providers/meta.ts';
 import { digits, readJson, type Route, type StubState } from './state.ts';
 import { initialTemplates, reviewTemplate } from './templates.ts';
 import { callValue, type CallSpec } from './providers/kapso-calls.ts';
-import { forward, inboundValue, statusValue, type InboundSpec, type StatusSpec, type WebhookTarget } from './webhook.ts';
+import { statusValue, type StatusSpec } from './status.ts';
+import { forward, inboundValue, type InboundSpec, type WebhookTarget } from './webhook.ts';
 
 /**
  * The webhook of the line `phoneNumberId` belongs to (default notifications): its secret, display
@@ -28,16 +29,25 @@ function kapsoTarget(s: StubState, phoneNumberId?: string): WebhookTarget | null
   return line ? { ...line, appSecret: s.opts.kapso?.webhookSecret ?? '', kapso: true } : null;
 }
 
-async function inbound(s: StubState, spec: InboundSpec, viaKapso = false) {
+/** The inbound's webhook: Meta's or Kapso's for its line, signed with `signWith` when given. */
+function inboundTarget(s: StubState, spec: InboundSpec, viaKapso: boolean): WebhookTarget | null {
   const line = viaKapso ? kapsoTarget(s, spec.phoneNumberId) : target(s, spec.phoneNumberId);
-  const t = line && spec.signWith !== undefined ? { ...line, appSecret: spec.signWith } : line;
+  return line && spec.signWith !== undefined ? { ...line, appSecret: spec.signWith } : line;
+}
+
+/** Keeps the inbound's media for GET /{media-id}: its new id, or null without media. */
+function storeMedia(s: StubState, media: InboundSpec['media']): string | null {
+  if (!media) return null;
+  const mediaId = randomUUID().replace(/-/g, '');
+  s.media.set(mediaId, { mime: media.mime, bytes: Buffer.from(media.base64 ?? '', 'base64') });
+  return mediaId;
+}
+
+async function inbound(s: StubState, spec: InboundSpec, viaKapso = false) {
+  const t = inboundTarget(s, spec, viaKapso);
   if (!t) return [400, { error: 'webhookUrl not configured' }] as const;
   if (!digits(spec.from)) return [400, { error: 'from is required' }] as const;
-  let mediaId: string | null = null;
-  if (spec.media) {
-    mediaId = randomUUID().replace(/-/g, '');
-    s.media.set(mediaId, { mime: spec.media.mime, bytes: Buffer.from(spec.media.base64 ?? '', 'base64') });
-  }
+  const mediaId = storeMedia(s, spec.media);
   const id = `wamid.${randomUUID()}`;
   s.lastInbound.set(digits(spec.from), (spec.timestamp ?? Date.now() / 1000) * 1000);
   const status = await forward(t, inboundValue(spec, { message: id, media: mediaId }));

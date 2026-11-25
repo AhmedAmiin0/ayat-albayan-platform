@@ -32,7 +32,7 @@ interface CacheReply {
 }
 
 /**
- * Dynamic translations (owner, 2026-10-05). The overrides map is public UI copy (the login page
+ * Dynamic translations. The overrides map is public UI copy (the login page
  * needs it before sign-in), cached 60 s and revalidated by ETag; the editor routes are admin only.
  * Writes are recorded by the global ActivityInterceptor ('/i18n/:locale/:key').
  */

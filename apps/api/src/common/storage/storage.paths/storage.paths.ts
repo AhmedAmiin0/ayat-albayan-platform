@@ -69,12 +69,12 @@ export function teacherReceiptPath(input: { teacherId: string; mime: string }): 
   return `${input.teacherId}/${randomUUID()}.${extFor(input.mime)}`;
 }
 
-/** avatars/{user_id}/avatar-{ms}.{ext}: a new object per photo, so a cached signed URL never shows a stale one. */
+/** avatars/{user_id}/avatar-{ms}.{ext}: a new object per photo, so no cached URL goes stale. */
 export function avatarPath(input: { userId: string; mime: string; now?: number }): string {
   return `${input.userId}/avatar-${input.now ?? Date.now()}.${extFor(input.mime)}`;
 }
 
-/** avatars/teachers/{teacher_id}/avatar-{ms}.{ext}: an admin's photo of a teacher who may have no login (migration 20261028000944). */
+/** avatars/teachers/{teacher_id}/avatar-{ms}.{ext}: a teacher's photo, login or not (mig. 944). */
 export function teacherAvatarPath(input: { teacherId: string; mime: string; now?: number }): string {
   return `teachers/${input.teacherId}/avatar-${input.now ?? Date.now()}.${extFor(input.mime)}`;
 }
@@ -84,7 +84,7 @@ export function isUserAvatarPathOf(path: string, userId: string): boolean {
   return isPathOf(path, userId) && storageKeyOf(path).startsWith(`${userId}/avatar-`);
 }
 
-/** Was `path` signed for this teacher record's photo? Exactly teachers/{teacher_id}/avatar-{file}. */
+/** Was `path` signed for this teacher record's photo? Exactly teachers/{id}/avatar-{file}. */
 export function isTeacherAvatarPathOf(path: string, teacherId: string): boolean {
   const parts = storageKeyOf(path).split('/');
   return parts.length === 3 && parts[0] === 'teachers' && isUserAvatarPathOf(parts.slice(1).join('/'), teacherId);
@@ -110,17 +110,17 @@ export function waMediaPath(input: { messageId: string; mime: string }): string 
   return `${input.messageId}.${extFor(input.mime)}`;
 }
 
-/** wa-media/pdf/{message_id}/{page}.jpg: one rendered page of a chat PDF (owner 2026-10-29); re-rendering overwrites it. */
+/** wa-media/pdf/{message_id}/{page}.jpg: one rendered page of a chat PDF; a rerender overwrites. */
 export function pdfPagePath(input: { messageId: string; page: number }): string {
   return `pdf/${input.messageId}/${input.page}.jpg`;
 }
 
-/** wa-media/out/{actor}/{client_request_id}/{uuid}.{ext}: a file staff send from the chat (owner 2026-10-19 #2). */
+/** wa-media/out/{actor}/{client_request_id}/{uuid}.{ext}: a file staff send from the chat. */
 export function chatOutPath(input: { actorId: string; requestId: string; mime: string }): string {
   return `out/${input.actorId}/${input.requestId}/${uploadName(input.mime)}`;
 }
 
-/** wa-media/out/{actor}/{client_request_id}/fwd-{message_id}.{ext}: our copy of a forwarded file, one per forward. */
+/** wa-media/out/{actor}/{client_request_id}/fwd-{message_id}.{ext}: our copy, one per forward. */
 export function forwardOutPath(input: { actorId: string; requestId: string; messageId: string; mime: string }): string {
   return `out/${input.actorId}/${input.requestId}/fwd-${input.messageId}.${extFor(input.mime)}`;
 }

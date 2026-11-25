@@ -20,7 +20,7 @@ export interface PageFound {
 const missing = () => notFound('report_not_found');
 
 /**
- * The report's live page (owner 2026-11-06): the SAVED report, its teacher's files and the PDF,
+ * The report's live page: the SAVED report, its teacher's files and the PDF,
  * every file through a 1 h signed URL (StorageService, so the object-storage switch covers it).
  * Signed in: ReportReaders (admin, the teacher, the family, the owning assistant).
  */

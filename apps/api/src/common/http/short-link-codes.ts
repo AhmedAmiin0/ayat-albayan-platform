@@ -1,4 +1,4 @@
-// The managed short links' WhatsApp codes (owner 2026-11-17, docs/19) as a port, like REPORT_CODES:
+// The managed short links' WhatsApp codes (docs/19) as a port, like REPORT_CODES:
 // the sign-in module (codes, limits, pepper, account_code template) provides it globally, and the
 // short-link gate injects the token. No import runs between the two modules.
 

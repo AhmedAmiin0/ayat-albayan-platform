@@ -12,7 +12,7 @@ type DraftInput = { id: string; form: Partial<ReportV2Draft>; user: ReportCaller
 type SubmitInput = { id: string; form: ReportV2Submit; user: ReportCaller };
 
 /**
- * The new lesson report form (owner 2026-10-26, docs/design/report-form): autosave and submit of a
+ * The new lesson report form (docs/design/report-form): autosave and submit of a
  * form_version 2 report. Same guards as v1 (ReportGate: only the lesson's teacher or an admin,
  * the edit window) and the same submit path, so the lesson outcome, the PDF queue and the family's
  * WhatsApp message are exactly as for v1.

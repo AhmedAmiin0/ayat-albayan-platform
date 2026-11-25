@@ -5,7 +5,7 @@ import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from '@/comm
 import type { PushTransport } from '@/common/push/push.service/push.service';
 
 // Every staff kind whose catalogue channels include 'push' reaches a live bound device (app and
-// browser), exactly as new_message does; a ['bell'] kind stays a bell row (owner 2026-11-03).
+// browser), exactly as new_message does; a ['bell'] kind stays a bell row.
 
 const pushes = (kind: PushKind) =>
   (notificationEntry(kind).channels as readonly string[]).includes('push');

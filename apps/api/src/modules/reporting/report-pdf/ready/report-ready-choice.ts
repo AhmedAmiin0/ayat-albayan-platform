@@ -51,7 +51,7 @@ const FAMILY: Record<FamilyWay, (input: ChoiceInput) => ReadyMessage> = {
 };
 
 /**
- * The messages after a rendered PDF (owner 2026-11-06): the family gets report_ready_family
+ * The messages after a rendered PDF: the family gets report_ready_family
  * while it is approved, else report_ready (session_report_pdf, the PDF as a document); the
  * teacher gets report_ready_teacher only while it is approved (and they have a phone), else
  * nothing extra. Each is deduped per report, so an edit's re-render never sends again.

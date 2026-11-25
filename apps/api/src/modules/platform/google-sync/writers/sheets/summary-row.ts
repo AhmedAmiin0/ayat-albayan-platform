@@ -30,8 +30,8 @@ export function findSummaryRow(rows: Rows, s: Pick<SummaryStudent, 'name' | 'fol
 }
 
 /**
- * A new student's whole row, A..H. Name and teacher go in as text: USER_ENTERED would read a name typed
- * as «+966…» (or «=…») as a formula, which is how AB-0033 became «#ERROR!» (owner 2026-10-28).
+ * A new student's whole row, A..H. Name and teacher go in as text: USER_ENTERED would read a name
+ * typed as «+966…» (or «=…») as a formula, which is how AB-0033 became «#ERROR!».
  */
 export function newSummaryRow(s: SummaryStudent, stats: SummaryStats): CellValue[] {
   return [

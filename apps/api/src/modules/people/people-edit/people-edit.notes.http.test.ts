@@ -5,7 +5,7 @@ import { call, mocks, peopleApp } from '@/modules/people/people-edit/testing/peo
 const S = '11111111-1111-4111-8111-111111111111';
 const G = '22222222-2222-4222-8222-222222222222';
 
-// #621 review: notes stay the admin's (owner 2026-10-27, «never notes» for sales), in the edit
+// #621 review: notes stay the admin's («never notes» for sales), in the edit
 // view and in both PATCHes.
 describe('/people/* and notes', () => {
   let app: NestFastifyApplication;

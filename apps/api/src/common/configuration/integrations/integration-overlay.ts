@@ -1,4 +1,4 @@
-// The integration config snapshot (owner, 2026-10-12: config in the database): the DB values of the
+// The integration config snapshot (config in the database): the DB values of the
 // registry keys (@ab/shared integrations), already checked key by key against the env schema.
 // loadEnv() with its default source lays it over process.env, so a non-empty DB value wins and the
 // env stays the fallback. IntegrationConfigService replaces it at boot, every integrationRefreshMs

@@ -1,5 +1,5 @@
-// A schedule change families and teachers hear about (owner 2026-10-30: «if there is a reschedule,
-// cancel or pause, continue event please notify both teacher and student»). The lesson writers
+// A schedule change families and teachers hear about: a reschedule, cancel, pause or resume
+// notifies both the teacher and the student. The lesson writers
 // announce it through LessonEvents after their transaction commits; ScheduleNotices
 // (modules/teaching/schedule-notices) listens, so neither side imports the other.
 

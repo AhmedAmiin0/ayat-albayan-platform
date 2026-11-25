@@ -1,7 +1,7 @@
 import { BUCKETS, type Bucket } from '@/common/storage/storage.paths';
 
-// Every database column that stores a Storage path (docs/45 §6, owner 2026-11-07: «move all the
-// old files in minio to be served»). columns.test.ts reads every migration: a *_path column that
+// Every database column that stores a Storage path (docs/45 §6: every old file in
+// MinIO is moved so it can be served). columns.test.ts reads every migration: a *_path column that
 // is in neither list below fails it, so a new column cannot be missed silently.
 
 export interface PathColumn {

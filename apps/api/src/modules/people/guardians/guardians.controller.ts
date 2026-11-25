@@ -64,7 +64,7 @@ export class GuardiansController {
     return this.guardians.remove(id);
   }
 
-  /** The family's second number (owner 2026-10-29), `phone` URL-encoded (%2B…); 404 phone_not_found. */
+  /** The family's second number, `phone` URL-encoded (%2B…); 404 phone_not_found. */
   @Delete(':id/phones/:phone')
   @HttpCode(204)
   removePhone(

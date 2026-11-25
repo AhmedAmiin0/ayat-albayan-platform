@@ -5,7 +5,7 @@ import type { GuardianRow, ViewRow } from './people-edit.repo';
 
 type Family = NonNullable<ViewRow['guardian']>;
 
-/** A row without its notes, unless they are shown (the admin's only, owner 2026-10-27). */
+/** A row without its notes, unless they are shown (the admin's only). */
 const notesIf = <R extends { notes: string | null }>(row: R, show: boolean) => {
   const { notes, ...rest } = row;
   return show ? { ...rest, notes } : rest;

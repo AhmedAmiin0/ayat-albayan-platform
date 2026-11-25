@@ -24,7 +24,7 @@ function errorStatus(e: unknown): number {
 }
 
 /**
- * Global activity log (owner, 2026-10-05): records every mutating request (POST/PUT/PATCH/DELETE)
+ * Global activity log: records every mutating request (POST/PUT/PATCH/DELETE)
  * once the handler has answered or thrown, with actor, role, route pattern, action key, entity,
  * status and duration. Recording is queued (ActivityWriter) and wrapped so it can never change
  * the response. Requests refused by the AuthGuard (401/403) never reach interceptors.
@@ -69,7 +69,9 @@ export class ActivityInterceptor implements NestInterceptor {
     return joinRoute(base, pathOf(this.reflector.get<unknown>(PATH_METADATA, ctx.getHandler())));
   }
 
-  /** `@HttpCode()` is applied after interceptors, so read it from metadata (Nest's defaults else). */
+  /**
+   * `@HttpCode()` is applied after interceptors, so read it from metadata (Nest's defaults else).
+   */
   private okStatus(ctx: ExecutionContext, method: string): number {
     const code = this.reflector.get<number | undefined>(HTTP_CODE_METADATA, ctx.getHandler());
     return code ?? (method.toUpperCase() === 'POST' ? 201 : 200);

@@ -60,7 +60,10 @@ export class PortalLessonsRepo {
     return this.settings.read();
   }
 
-  /** The student's lessons whose room is not closed yet (ends after `since`) and starting before `until`. */
+  /**
+   * The student's lessons whose room is not closed yet (ends after `since`) and starting before
+   * `until`.
+   */
   async ahead(input: { studentId: string; since: string; until: string }): Promise<PortalLessonRow[]> {
     const { data, error } = await this.db
       .from('lesson_students')
@@ -95,7 +98,7 @@ export class PortalLessonsRepo {
   }
 
   /**
-   * The family requests this login sent on these lessons (owner 2026-11-17), any status; [] without
+   * The family requests this login sent on these lessons, any status; [] without
    * lessons. Another login's request (the other guardian's) is not this one's to see.
    */
   async requests(input: RequestsOf): Promise<PortalRequestRow[]> {

@@ -10,7 +10,7 @@ import {
 } from '@/modules/reporting/reports/tests/reports.fakes';
 import { reportsApp } from '@/modules/reporting/reports/tests/test-app';
 
-// Owner 2026-11-06: a report sent twice (a double tap, Enter, a retry) must never confirm the
+// A report sent twice (a double tap, Enter, a retry) must never confirm the
 // lesson twice, count the attendance twice, queue a second PDF or message the family twice;
 // an edit is the same report (same id, expectedVersion) and only touches its own student.
 const URL = `/reports/${REPORT_ID}/v2/submit`;

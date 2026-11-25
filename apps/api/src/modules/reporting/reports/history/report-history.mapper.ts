@@ -74,7 +74,7 @@ function summary({ row, lesson }: Joined, seq: ReadonlyMap<string, number>): Rep
 // A fake row may leave the column out: read it as never submitted, not an invalid date.
 const instantOf = (at: string | null | undefined): Date | null => (at ? new Date(at) : null);
 const isoOf = (at: Date | null): string | null => (at === null ? null : at.toISOString());
-/** A teacher edits only her own report (owner 2026-11-11); admins keep the link to any. */
+/** A teacher edits only her own report; admins keep the link to any. */
 const ownsOrAdmin = (w: SummaryWindow, row: HistoryRow): boolean =>
   w.role === 'admin' || row.teacher_id === w.teacherId;
 const mayEdit = (w: SummaryWindow, row: HistoryRow): boolean => {

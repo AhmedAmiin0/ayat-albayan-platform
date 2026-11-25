@@ -53,7 +53,7 @@ export class LessonEvents {
   }
 }
 
-/** Global: the lesson events and the package-paid event (PackageEvents, owner 2026-11-06). */
+/** Global: the lesson events and the package-paid event (PackageEvents). */
 @Global()
 @Module({ providers: [LessonEvents, PackageEvents], exports: [LessonEvents, PackageEvents] })
 export class LessonEventsModule {}

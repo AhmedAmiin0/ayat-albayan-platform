@@ -115,7 +115,7 @@ describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37), rule 
     }
     expect(t.lessons.cancels.cancel).not.toHaveBeenCalled();
     expect(t.lessons.one.reschedule).not.toHaveBeenCalled();
-    // salesB holds the keys and owns nothing: still allowed (any lesson, owner 2026-10-28).
+    // salesB holds the keys and owns nothing: still allowed (any lesson).
     expect((await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesB', body: {} })).statusCode).toBe(200);
   });
 });

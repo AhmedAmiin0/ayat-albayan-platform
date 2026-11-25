@@ -41,7 +41,7 @@ const redirectOf = (row: ShortLinkRow): string =>
   REDIRECTS[row.kind === MANAGED_KIND ? 'managed' : 'system'](row);
 
 /**
- * The in-house short links (owner 2026-11-05, docs/19 «Short links»): the platform's own instead of
+ * The in-house short links (docs/19 «Short links»): the platform's own instead of
  * the old Vercel redirector. Idempotent per (kind, subject): the same code, its target refreshed.
  */
 @Injectable()

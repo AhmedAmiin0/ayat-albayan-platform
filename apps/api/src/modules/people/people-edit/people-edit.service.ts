@@ -27,7 +27,7 @@ const movesPhone = (before: GuardianRow, patch: PeopleGuardianPatch): boolean =>
   patch.phone_e164 !== undefined && patch.phone_e164 !== before.phone_e164;
 
 /**
- * A student's own number receives that student's sign-in codes (owner 2026-11-17): with a login
+ * A student's own number receives that student's sign-in codes: with a login
  * linked, only the admin moves it (as LOGINS below for the main number).
  */
 const guardsOwnPhone = (student: StudentRow, admin: boolean): boolean =>

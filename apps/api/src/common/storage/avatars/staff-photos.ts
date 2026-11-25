@@ -3,19 +3,23 @@ import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 import { AVATAR_FILES, type AvatarFiles } from './avatar-files';
 
-/** Roles whose photo is never shown (owner 2026-10-28: students and families are initials only). */
+/** Roles whose photo is never shown (students and families are initials only). */
 export const NOT_STAFF: ReadonlySet<string> = new Set(['student', 'guardian']);
 
-/** A staff member's photo: their login's own when set, else the one an admin put on the teacher record. */
+/**
+ * A staff member's photo: their login's own when set, else the one an admin put on the teacher
+ * record.
+ */
 export function staffPhotoPath(input: { own: string | null | undefined; teacher: string | null | undefined }): string | null {
   return input.own || input.teacher || null;
 }
 
 /**
- * Signed photo URLs of the staff a response shows (owner 2026-10-28: staff photos everywhere; students,
- * families and WhatsApp contacts are initials only). Every list signs its photos in ONE Storage call;
- * the bucket stays private and a URL lives 15 minutes. A person without a photo is absent from the map.
- * A photo is a hint: a failed lookup logs and shows initials, it never takes the page down.
+ * Signed photo URLs of the staff a response shows (staff photos everywhere; students,
+ * families and WhatsApp contacts are initials only). Every list signs its photos in ONE Storage
+ * call; the bucket stays private and a URL lives 15 minutes. A person without a photo is absent
+ * from the map. A photo is a hint: a failed lookup logs and shows initials, it never takes the page
+ * down.
  */
 @Injectable()
 export class StaffPhotos {
@@ -43,7 +47,10 @@ export class StaffPhotos {
     return this.hint(this.teachers(ids));
   }
 
-  /** profile id → url (its own photo, else its linked teacher record's). Two reads, one signing call. */
+  /**
+   * profile id → url (its own photo, else its linked teacher record's). Two reads, one signing
+   * call.
+   */
   ofProfiles(ids: readonly string[]): Promise<Map<string, string>> {
     return this.hint(this.profiles(ids));
   }

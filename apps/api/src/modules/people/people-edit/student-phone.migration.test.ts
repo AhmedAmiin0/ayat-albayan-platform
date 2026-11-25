@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261117090100 read as text (owner 2026-11-17): a student's own WhatsApp number.
+// Migration 20261117090100 read as text: a student's own WhatsApp number.
 const sql = readFileSync(migrationPath('20261117090100_student_own_phone.sql'), 'utf8');
 const flat = sql.replace(/\s+/g, ' ');
 

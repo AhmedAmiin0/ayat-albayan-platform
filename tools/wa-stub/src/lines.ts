@@ -1,7 +1,7 @@
 // The stub's Meta numbers (docs/12 §13.12): the notifications line always, the chat line only
 // when its phone-number id is configured. Single-line options give exactly the old identity.
 import type { IncomingMessage } from 'node:http';
-import type { LineHealth, StubOptions } from './state.ts';
+import type { ChatLineOptions, LineHealth, StubOptions } from './state.ts';
 
 export interface StubLine {
   phoneNumberId: string;
@@ -20,9 +20,8 @@ const NOTIFICATIONS_DISPLAY = '15550001111';
 const NOTIFICATIONS_ENTRY = 'stub-waba';
 const CHAT_DISPLAY = '15550002222';
 
-/** Notifications first, always; the chat line second when configured. */
-export function stubLines(opts: StubOptions): [StubLine, ...StubLine[]] {
-  const notifications: StubLine = {
+function notificationsLine(opts: StubOptions): StubLine {
+  return {
     phoneNumberId: opts.phoneNumberId ?? 'stub-phone',
     wabaId: opts.wabaId ?? NOTIFICATIONS_ENTRY,
     appId: opts.appId ?? 'stub-app',
@@ -30,21 +29,25 @@ export function stubLines(opts: StubOptions): [StubLine, ...StubLine[]] {
     displayPhone: NOTIFICATIONS_DISPLAY,
     entryId: NOTIFICATIONS_ENTRY,
   };
-  const c = opts.chat;
-  if (!c) return [notifications];
+}
+
+function chatLine(c: ChatLineOptions, notifications: StubLine): StubLine {
   const wabaId = c.wabaId ?? 'stub-chat-waba';
-  return [
-    notifications,
-    {
-      phoneNumberId: c.phoneNumberId,
-      wabaId,
-      appId: c.appId ?? 'stub-chat-app',
-      // One shared Meta app is a valid setup: the chat line then signs with the same secret.
-      appSecret: c.appSecret ?? notifications.appSecret,
-      displayPhone: CHAT_DISPLAY,
-      entryId: wabaId,
-    },
-  ];
+  return {
+    phoneNumberId: c.phoneNumberId,
+    wabaId,
+    appId: c.appId ?? 'stub-chat-app',
+    // One shared Meta app is a valid setup: the chat line then signs with the same secret.
+    appSecret: c.appSecret ?? notifications.appSecret,
+    displayPhone: CHAT_DISPLAY,
+    entryId: wabaId,
+  };
+}
+
+/** Notifications first, always; the chat line second when configured. */
+export function stubLines(opts: StubOptions): [StubLine, ...StubLine[]] {
+  const notifications = notificationsLine(opts);
+  return opts.chat ? [notifications, chatLine(opts.chat, notifications)] : [notifications];
 }
 
 /** The line a phone-number id belongs to, or undefined. */

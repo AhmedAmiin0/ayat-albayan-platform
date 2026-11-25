@@ -7,8 +7,8 @@ import { SalesScheduleRepo } from './sales-schedule.repo';
 import { SalesSettings } from '@/modules/sales/sales/shared';
 
 /**
- * The salesperson's view of the teachers and the academy's day (owner report 2026-10-12: «listing all
- * the teachers in a really bad way», «not seeing the schedule»). Read-only, whitelisted.
+ * The salesperson's view of the teachers and the academy's day: a clear teacher list and the
+ * schedule. Read-only, whitelisted.
  */
 @Injectable()
 export class SalesScheduleService {

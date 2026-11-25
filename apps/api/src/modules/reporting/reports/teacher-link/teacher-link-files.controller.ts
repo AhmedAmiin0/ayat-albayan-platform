@@ -19,7 +19,7 @@ const tokenSchema = z.string().min(1).max(100);
 const idSchema = z.uuid();
 
 /**
- * The teacher's attachments on the no-login report page (owner 2026-11-06): ask for an upload
+ * The teacher's attachments on the no-login report page: ask for an upload
  * URL, PUT the file to Storage, register it; remove one; open one. Adding and removing close with
  * the edit window (409 edit_window_closed). Same link errors as the form (404 / 410 / 409 / 429).
  */

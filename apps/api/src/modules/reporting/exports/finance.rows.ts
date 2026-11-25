@@ -4,7 +4,7 @@ import type { ReceivableRow } from '@ab/money';
 import { ar } from '@/common/infra/i18n/server-text';
 import { riyadhStamp, safeText, type Cell } from './csv';
 
-// Finance CSV rows (owner, 2026-10-05): expenses, the teacher ledger, receivables. Money as numbers.
+// Finance CSV rows: expenses, the teacher ledger, receivables. Money as numbers.
 
 const { expenses: E, earnings: L, payments: P, finance: F, students: S } = ar;
 const method = (m: PaymentMethod | null) => (m ? ar.enums.paymentMethod[m] : '');

@@ -28,7 +28,7 @@ export type StudentListItem = Omit<StudentListRow, 'guardian' | 'teacher'> & {
 };
 
 export type StudentProfileRow = Student & {
-  /** phones: every family number, the main one (is_primary) and a second one (guardian_phones, 2026-10-29). */
+  /** phones: every family number, the main one (is_primary) and a second one (guardian_phones). */
   guardian: { id: string; name: string; phone_e164: string; students: Sibling[]; phones: { phone_e164: string; is_primary: boolean }[] };
   teacher: { id: string; display_name_ar: string; meeting_link: string | null } | null;
 };

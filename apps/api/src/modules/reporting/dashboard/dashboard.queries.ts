@@ -22,7 +22,7 @@ async function counted(q: PromiseLike<CountResult>): Promise<number> {
 export class DashboardQueries {
   constructor(
     @Inject(DB) private readonly db: Db,
-    /** The academy's own numbers: their lead is never counted (owner 2026-10-27). */
+    /** The academy's own numbers: their lead is never counted. */
     @Optional() private readonly own?: OwnNumbers,
   ) {}
 
@@ -86,7 +86,7 @@ export class DashboardQueries {
     return data;
   }
 
-  /** Students on a teacher's load: assigned (teacher_id) and current (CURRENT_STUDENT_STATUSES, owner 2026-10-15). */
+  /** Students on a teacher's load: assigned (teacher_id) and current (CURRENT_STUDENT_STATUSES). */
   loadStudents() {
     return readAll((from, to) =>
       this.db

@@ -2,7 +2,7 @@ import { defaultGrantsOf, effectivePermissions } from '@ab/catalog';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { profile, rolesHarness } from './roles.fakes';
 
-// Owner 2026-10-12: the admin switches grants off (or on) for the built-in teacher / sales /
+// The admin switches grants off (or on) for the built-in teacher / sales /
 // assistant roles through PATCH /roles/:id; every grant change is audited.
 
 describe('RolesService — editing a system role’s grants', () => {

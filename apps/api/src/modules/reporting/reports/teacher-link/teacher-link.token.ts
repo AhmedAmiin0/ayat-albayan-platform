@@ -1,6 +1,6 @@
 import { signPair, verifyPair } from '@/common/http/pair-token';
 
-// The teacher's no-login report link for ONE lesson (owner 2026-11-05, docs/19 «Teacher report
+// The teacher's no-login report link for ONE lesson (docs/19 «Teacher report
 // link»):
 // base64url(lessonId | teacherId | exp).signature, 71 characters (common/http/pair-token.ts),
 // signed

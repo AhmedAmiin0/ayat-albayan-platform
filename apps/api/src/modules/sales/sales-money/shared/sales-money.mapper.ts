@@ -8,8 +8,9 @@ import {
   type SubscriptionView,
 } from '@ab/money';
 
-// The whitelists of the salesperson's money responses (docs/16 row 16): explicit keys, never a spread of
-// the admin's view, so a column added there never leaks here (fx rate, price_source, notes, recorder…).
+// The whitelists of the salesperson's money responses (docs/16 row 16): explicit keys, never a
+// spread of the admin's view, so a column added there never leaks here (fx rate, price_source,
+// notes, recorder…).
 
 export function toSalesQuote(q: QuoteResponse): SalesQuoteView {
   return {
@@ -36,8 +37,8 @@ export function toSalesSubscription(s: SubscriptionView): SalesMoneySubscription
     starts_on: s.starts_on,
     status: s.status,
     paid: s.paid,
-    // An unused cancel is never owed (owner 2026-10-28); a stopped package owes its stored
-    // decision (owedFor, owner 2026-11-06), never price − paid.
+    // An unused cancel is never owed; a stopped package owes its stored
+    // decision (owedFor), never price − paid.
     due: countsForMoney(s) ? dueOf(s, s.paid) : 0,
   };
 }

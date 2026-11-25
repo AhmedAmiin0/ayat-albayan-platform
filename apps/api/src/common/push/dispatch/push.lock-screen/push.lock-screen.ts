@@ -2,10 +2,13 @@ import { clipText } from '@ab/shared';
 import type { AnyPushKind } from '@ab/catalog';
 import { pushText, type PushText } from '@/common/push/expo/expo-push';
 
-// What a device shows on its lock screen (owner 2026-10-25): no more personal data than the alert
+// What a device shows on its lock screen: no more personal data than the alert
 // needs. The bell row keeps the full text: it is read only inside the app, after sign-in.
 
-/** A run of 7+ digits (Latin, Arabic-Indic or Persian; spaces, dashes, dots, brackets between): a phone. */
+/**
+ * A run of 7+ digits (Latin, Arabic-Indic or Persian; spaces, dashes, dots, brackets between): a
+ * phone.
+ */
 const PHONE = /\+?[\d٠-٩۰-۹](?:[\d٠-٩۰-۹\s.()-]{5,}[\d٠-٩۰-۹])/g;
 /** A sum with its currency on either side (Latin and Arabic-Indic digits). */
 const AMOUNT =

@@ -11,7 +11,7 @@ import { msUntilUtcWeekly } from './plan/labels';
 import { DriveBackupRunner, type RunOutcome } from './drive-backup.runner';
 
 /**
- * Once a week (owner 2026-11-11): Friday 01:00 UTC = Friday 04:00 Riyadh, the quiet hour of the
+ * Once a week: Friday 01:00 UTC = Friday 04:00 Riyadh, the quiet hour of the
  * weekend, before the Google sync's 02:00 UTC reconcile.
  */
 const RUN_AT = { weekday: 5, hour: 1 };
