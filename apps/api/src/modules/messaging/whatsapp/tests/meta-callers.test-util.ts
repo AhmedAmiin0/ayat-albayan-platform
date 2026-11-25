@@ -72,7 +72,7 @@ const META_CALLS: readonly (readonly [string, RegExp])[] = [
   ['HttpWhatsappClient', /\bHttpWhatsappClient\b/],
 ];
 
-/** What tsconfig.build.json leaves out of the build (tests and test helpers). */
+/** Tests and test helpers: the build never bundles them. */
 const NOT_BUILT = [/\.test\.ts$/, /\.fakes\.ts$/, /(^|\/)test-app\.ts$/, /(^|\/)fake-db\.ts$/, /\.test-util\.ts$/];
 
 /** Comments may mention Meta (doc links); a `//` inside `https://…` is not a comment. */

@@ -1,7 +1,7 @@
 // What the staging API image depends on (deploy-staging «Did the API change?»): apps/api, every
-// workspace package it reaches through its dependencies and devDependencies (they are built into
-// the image), and the files apps/api/Dockerfile and roll.sh read besides them. A deploy whose diff
-// since the image's commit touches none of these needs no build and no roll.
+// workspace package it reaches through its dependencies and devDependencies (the api bundle
+// compiles their source), and the files apps/api/Dockerfile and roll.sh read besides them. A
+// deploy whose diff since the image's commit touches none of these needs no build and no roll.
 import { globSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
@@ -26,8 +26,7 @@ const WORKSPACE = ['apps/*', 'packages/*', 'tools/*', 'e2e', 'docs/design/brand/
  * Read besides the packages: what the Dockerfile installs from (lockfile, workspace and npm
  * config, patches, the root manifest, .dockerignore), the compose files and scripts that build
  * and run it (deploy/staging/), and the report PDF's logo in @ab/catalog (pdf-assets.ts LOGO_PATH,
- * read at runtime, not through a package dependency). Paths
- * ending in `/` are folders.
+ * read from the file at runtime). Paths ending in `/` are folders.
  */
 export const IMAGE_FILES: readonly string[] = [
   '.dockerignore',

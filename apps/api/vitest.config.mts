@@ -8,7 +8,7 @@ export default defineConfig({
   // `@/x` → src/x, as the root tsconfig.base.json `paths` (the build rewrites it with tsc-alias).
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   test: {
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'bundle/**/*.test.mjs'],
     // Transforms persist across runs in <repo>/node_modules/.vitest-cache (ci.yml restores it).
     fsModuleCache: true,
     // Dummy values so AppModule boots in tests; createClient makes no network call on construction.

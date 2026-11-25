@@ -81,8 +81,9 @@ jobs:
           if grep -qvE '^docs/|\.md$' <<< "$files" || grep -qx 'docs/09-deployment.md' <<< "$files" \
             || grep -q '^docs/design/brand/tools/' <<< "$files"; then code=true; fi
           # Job «image»: what apps/api/Dockerfile reads to install (the lockfile, the workspace manifests, .npmrc,
-          # patches/), the Dockerfile and .dockerignore themselves, and deploy/ (the compose files that run it).
-          IMAGE_PATHS='^(apps/api/Dockerfile|\.dockerignore|\.npmrc|package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|(apps|packages|tools)/[^/]+/package\.json|e2e/package\.json|docs/design/brand/tools/package\.json|patches/.+|deploy/.+)$'
+          # patches/), the Dockerfile and .dockerignore themselves, the api's bundle config (what the image runs)
+          # and deploy/ (the compose files that run it).
+          IMAGE_PATHS='^(apps/api/Dockerfile|apps/api/rolldown\.config\.mjs|apps/api/bundle/[^/]+\.mjs|\.dockerignore|\.npmrc|package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|(apps|packages|tools)/[^/]+/package\.json|e2e/package\.json|docs/design/brand/tools/package\.json|patches/.+|deploy/.+)$'
           image=false
           if grep -qE "$IMAGE_PATHS" <<< "$files"; then image=true; fi
           printf 'e2e=%s\ncode=%s\nimage=%s\n' "$e2e" "$code" "$image" | tee -a "$GITHUB_OUTPUT"
