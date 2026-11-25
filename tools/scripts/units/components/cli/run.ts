@@ -9,6 +9,7 @@ import { reportLines } from './report.ts';
 import { formatFiles, writeFiles } from './write.ts';
 import { trackedFiles } from '../../scan/tree.ts';
 import { groupBy } from '../model/group.ts';
+import { subfoldersOf } from './subfolders.ts';
 
 export interface ComponentsIo {
   root: string;
@@ -18,7 +19,7 @@ export interface ComponentsIo {
   format?: (root: string, paths: string[]) => void;
 }
 
-const ORDER: Step[] = ['types', 'helpers', 'hook'];
+const ORDER: Step[] = ['types', 'helpers', 'split', 'hook'];
 
 /** `pnpm components -- --dry-run|--write [--step <s>] --paths <dir...> [--exclude <f>] [--json]` */
 export function runComponents(argv: readonly string[], io: ComponentsIo): void {
@@ -33,6 +34,7 @@ export function runComponents(argv: readonly string[], io: ComponentsIo): void {
   const ctx = {
     ...repoContext(io.root, paths),
     names: (dir: string) => (names.get(dir) ?? []).map((p) => posix.basename(p)),
+    subfolders: (dir: string) => subfoldersOf(paths, dir),
     excludes,
   };
   const steps = args.step === 'all' ? ORDER : [args.step];

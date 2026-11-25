@@ -8,9 +8,12 @@ import type { HookVerdict } from '../steps/hook/hook.types.ts';
 import { hookStep } from '../steps/hook/hook-step.ts';
 import type { TypesVerdict } from '../steps/types/types.types.ts';
 import { typesStep } from '../steps/types/types-step.ts';
+import type { SplitVerdict } from '../steps/split/split.types.ts';
+import { splitStep } from '../steps/split/split-step.ts';
 
 export type PlanContext = RepoContext & {
   names: (dir: string) => string[];
+  subfolders: (dir: string) => string[];
   excludes: ReadonlyMap<string, string>;
 };
 
@@ -36,6 +39,11 @@ function fromTypes(v: TypesVerdict): Outcome {
 
 function fromHelpers(v: HelpersVerdict): Outcome {
   if (v.result === 'helpers') return outcome('helpers', '', v.files);
+  return v.result === 'refused' ? outcome('refused', v.why) : outcome('unchanged');
+}
+
+function fromSplit(v: SplitVerdict): Outcome {
+  if (v.result === 'split') return outcome('split', '', v.files);
   return v.result === 'refused' ? outcome('refused', v.why) : outcome('unchanged');
 }
 
@@ -72,6 +80,15 @@ export const RUNNERS: Record<Step, Runner> = {
     const { files, text } = folderOf(t, overlay, ctx);
     const outside = ctx.importers(t.path);
     return fromHelpers(helpersStep({ path: t.path, text, name: t.name, files, outside }));
+  },
+  split: (t, overlay, ctx) => {
+    const { files, text } = folderOf(t, overlay, ctx);
+    const dir = posix.dirname(t.path);
+    const hook = (path: string, sub: string, name: string) =>
+      hookStep({ path, text: sub, name, folder: [`${name}.tsx`], tested: ctx.tested(name, t.ws) });
+    return fromSplit(
+      splitStep({ path: t.path, text, name: t.name, files, subfolders: ctx.subfolders(dir), hook }),
+    );
   },
   hook: (t, overlay, ctx) => {
     const { names, text } = folderOf(t, overlay, ctx);

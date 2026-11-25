@@ -1,13 +1,9 @@
-import ts from 'typescript';
+import type ts from 'typescript';
 import type { Component } from '../../model/components.ts';
 import { declaredNames, readsAny } from '../../model/names.ts';
 import { partsOf } from '../../model/parts.ts';
-import { HOOK } from '../../model/source.ts';
+import { HOOK, isExported } from '../../model/source.ts';
 import { ownHookCalls } from '../hook/refusals.ts';
-
-const isExported = (s: ts.Statement): boolean =>
-  ts.canHaveModifiers(s) &&
-  (ts.getModifiers(s) ?? []).some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
 
 const viewOfBody = (c: Component): ts.Node[] => {
   if (c.fn.body === undefined) return [];

@@ -11,6 +11,7 @@ const ctx = (text: string, over: Partial<PlanContext> = {}): PlanContext => ({
   tested: () => true,
   importers: () => [],
   names: () => ['Card.tsx', 'index.ts'],
+  subfolders: () => [],
   excludes: new Map(),
   ...over,
 });

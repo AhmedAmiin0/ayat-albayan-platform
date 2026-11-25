@@ -67,7 +67,7 @@ test('--dry-run writes nothing and reports one row per step', () => {
   });
   assert.deepEqual(
     out.filter((l) => l.startsWith(DIR)).map((l) => l.split('\t').slice(1, 3).join(':')),
-    ['types:typed', 'helpers:helpers', 'hook:hooked'],
+    ['types:typed', 'helpers:helpers', 'split:unchanged', 'hook:hooked'],
   );
   assert.equal(snapshot(root)[`${DIR}/Card.tsx`], FILES[`${DIR}/Card.tsx`]);
 });
