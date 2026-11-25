@@ -48,7 +48,7 @@ const kapsoTemplatesRoute: Route = [
 const kapsoMediaRoute: Route = [
   'GET',
   new RegExp(`^${V}/([^/]+)$`),
-  async (req, m, s) => {
+  (req, m, s) => {
     const id = m[1] ?? '';
     const phone = phoneInfo(req, s, id);
     if (phone) return phone;
@@ -85,7 +85,7 @@ export const kapsoRoutes: Route[] = [
 export const kapsoMediaDownload: Route = [
   'GET',
   /^\/__stub\/kapso-media\/([a-f0-9]+)$/,
-  async (req, m, s) => {
+  (req, m, s) => {
     if (authKind(req) !== 'none')
       return [400, { error: 'download_url must be fetched without credentials' }];
     const media = s.media.get(m[1] ?? '');

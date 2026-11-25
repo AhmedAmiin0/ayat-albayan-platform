@@ -122,7 +122,7 @@ export type Reply = [number, unknown] | { status: number; mime: string; bytes: B
 export type Route = [
   string,
   RegExp,
-  (req: IncomingMessage, m: RegExpExecArray, s: StubState) => Promise<Reply>,
+  (req: IncomingMessage, m: RegExpExecArray, s: StubState) => Reply | Promise<Reply>,
 ];
 
 export const digits = (phone: unknown) => String(phone ?? '').replace(/\D/g, '');

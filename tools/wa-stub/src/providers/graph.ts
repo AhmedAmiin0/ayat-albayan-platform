@@ -21,7 +21,7 @@ export const messagesRoute: Route = [
 export const listTemplatesRoute: Route = [
   'GET',
   new RegExp(`^${V}/([^/]+)/message_templates$`),
-  async (req, m, s) => {
+  (req, m, s) => {
     const name = new URL(req.url ?? '/', 'http://stub').searchParams.get('name');
     const data = s.templates
       .filter((t) => onWaba(t, m[1]) && (!name || t.name === name))
@@ -48,7 +48,7 @@ const metaEditRoute: Route = [
 const metaMediaRoute: Route = [
   'GET',
   new RegExp(`^${V}/([^/]+)$`),
-  async (req, m, s) => {
+  (req, m, s) => {
     const id = m[1] ?? '';
     // A configured phone-number id answers its diagnostics; any other id is a media id.
     const phone = phoneInfo(req, s, id);

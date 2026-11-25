@@ -51,6 +51,6 @@ async function upload(req: IncomingMessage, id: string, s: StubState): Promise<R
 const V = String.raw`\/v\d+\.\d+`;
 /** Before the generic POST /{id} (template edit), which would otherwise take /upload:{id}. */
 export const uploadRoutes: Route[] = [
-  ['POST', new RegExp(`^${V}/[^/]+/uploads$`), async (req, _m, s) => startSession(req, s)],
+  ['POST', new RegExp(`^${V}/[^/]+/uploads$`), (req, _m, s) => startSession(req, s)],
   ['POST', new RegExp(`^${V}/upload:([^/]+)$`), (req, m, s) => upload(req, m[1] ?? '', s)],
 ];

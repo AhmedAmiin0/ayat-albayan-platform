@@ -56,23 +56,23 @@ async function deliveryStatus(s: StubState, spec: StatusSpec) {
 }
 
 export const controlRoutes: Route[] = [
-  ['GET', /^\/__stub\/health$/, async () => [200, { ok: true }]],
-  ['GET', /^\/__stub\/messages$/, async (_r, _m, s) => [200, s.sent]],
-  ['DELETE', /^\/__stub\/messages$/, async (_r, _m, s) => {
+  ['GET', /^\/__stub\/health$/, () => [200, { ok: true }]],
+  ['GET', /^\/__stub\/messages$/, (_r, _m, s) => [200, s.sent]],
+  ['DELETE', /^\/__stub\/messages$/, (_r, _m, s) => {
     s.sent.length = 0;
     s.reads.length = 0;
     s.readLog.length = 0;
     s.requests.length = 0;
     return [200, { cleared: true }];
   }],
-  ['GET', /^\/__stub\/reads$/, async (_r, _m, s) => [200, s.reads]],
-  ['GET', /^\/__stub\/reads\/by-line$/, async (_r, _m, s) => [200, s.readLog]],
-  ['GET', /^\/__stub\/templates$/, async (_r, _m, s) => [200, s.templates]],
+  ['GET', /^\/__stub\/reads$/, (_r, _m, s) => [200, s.reads]],
+  ['GET', /^\/__stub\/reads\/by-line$/, (_r, _m, s) => [200, s.readLog]],
+  ['GET', /^\/__stub\/templates$/, (_r, _m, s) => [200, s.templates]],
   /**
    * Whole reset between e2e tests: default templates and starter, empty logs, media, windows,
    * failures.
    */
-  ['POST', /^\/__stub\/reset$/, async (_r, _m, s) => {
+  ['POST', /^\/__stub\/reset$/, (_r, _m, s) => {
     s.templates = initialTemplates(s.opts);
     s.sent.length = 0;
     s.reads.length = 0;
@@ -94,7 +94,7 @@ export const controlRoutes: Route[] = [
    * WhatsApp Calling (docs/28): the logged …/calls actions; a Kapso-signed `calls` change to the
    * API.
    */
-  ['GET', /^\/__stub\/calls$/, async (_r, _m, s) => [200, s.calls]],
+  ['GET', /^\/__stub\/calls$/, (_r, _m, s) => [200, s.calls]],
   ['POST', /^\/__stub\/kapso\/call$/, async (req, _m, s) => {
     const spec = (await readJson(req)) as unknown as CallSpec;
     const t = kapsoTarget(s, spec.phoneNumberId);
@@ -102,7 +102,7 @@ export const controlRoutes: Route[] = [
     return [200, { forwarded: true, status: await forward({ ...t, field: 'calls' }, callValue(spec)) }];
   }],
   /** Every Graph call with its prefix and credential kind (bearer / api-key / …). */
-  ['GET', /^\/__stub\/requests$/, async (_r, _m, s) => [200, s.requests]],
+  ['GET', /^\/__stub\/requests$/, (_r, _m, s) => [200, s.requests]],
   ['POST', /^\/__stub\/status$/, async (req, _m, s) => [...(await deliveryStatus(s, (await readJson(req)) as unknown as StatusSpec))]],
   /**
    * Meta's review result:
@@ -116,7 +116,7 @@ export const controlRoutes: Route[] = [
     s.failNext.set(digits(body.to), metaError(code, String(body.title ?? 'Simulated failure')));
     return [200, { armed: true, code }];
   }],
-  ['GET', /^\/__stub\/media\/([a-f0-9]+)$/, async (_r, m, s) => {
+  ['GET', /^\/__stub\/media\/([a-f0-9]+)$/, (_r, m, s) => {
     const media = s.media.get(m[1] ?? '');
     return media ? { status: 200, mime: media.mime, bytes: media.bytes } : [404, { error: 'no media' }];
   }],

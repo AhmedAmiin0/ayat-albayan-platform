@@ -3,15 +3,7 @@
     "complexity": {
       "count": 1
     },
-    "typescript/require-await": {
-      "count": 10
-    },
     "typescript/no-base-to-string": {
-      "count": 1
-    }
-  },
-  "src/diagnostics.ts": {
-    "typescript/require-await": {
       "count": 1
     }
   },
@@ -25,24 +17,11 @@
       "count": 2
     }
   },
-  "src/providers/graph.ts": {
-    "typescript/require-await": {
-      "count": 2
-    }
-  },
   "src/providers/kapso-calls.ts": {
     "complexity": {
       "count": 2
     },
     "typescript/no-base-to-string": {
-      "count": 2
-    },
-    "typescript/require-await": {
-      "count": 1
-    }
-  },
-  "src/providers/kapso.ts": {
-    "typescript/require-await": {
       "count": 2
     }
   },
@@ -163,9 +142,6 @@
   "src/uploads.ts": {
     "complexity": {
       "count": 2
-    },
-    "typescript/require-await": {
-      "count": 1
     }
   },
   "src/webhook.ts": {
