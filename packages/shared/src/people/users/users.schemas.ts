@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isTimeZone, phoneE164 } from '@ab/core';
+import { isTimeZone, pageQuery, phoneE164 } from '@ab/core';
 import { USER_ROLES } from '@ab/catalog';
 import { needsExistingRecord, PASSWORD_MAX } from './validation';
 import { isFamilyEmail } from './sign-in';
@@ -26,8 +26,7 @@ const zone = z.string().refine(isTimeZone, 'invalid_tz');
 const locale = z.enum(['ar', 'en']);
 
 export const usersListQuery = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(25),
+  ...pageQuery({ size: 25 }),
   q: z.preprocess(blank, z.string().trim().max(100).optional()),
   role: z.preprocess(blank, z.enum(USER_ROLES).optional()),
   status: z.preprocess(blank, z.enum(USER_STATUSES).optional()),

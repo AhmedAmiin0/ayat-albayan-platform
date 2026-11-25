@@ -37,14 +37,6 @@
       "count": 1
     }
   },
-  "src/core/http/api-client/api-client.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/core/http/api-client/tests/api-client.test.ts": {
     "typescript/no-base-to-string": {
       "count": 2

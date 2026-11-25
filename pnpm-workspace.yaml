@@ -58,6 +58,7 @@ minimumReleaseAgeExclude:
 # the kit sources it type-checks (the cause of the old tsconfig `react` paths).
 catalog:
   '@types/react': ~19.2.18
+  oxlint: 1.95.0
 # One React DOM for the workspace, equal to react 19.2.3 (React refuses a mismatched pair): apps/staff-web and the
 # optional react-dom peer of expo-router / @expo/metro-runtime would otherwise take the newest 19.x (docs/32 x1).
 overrides:

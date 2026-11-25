@@ -4,7 +4,7 @@ import {
   type InfiniteData,
   type QueryClient,
 } from '@tanstack/react-query';
-import { flattenPages } from '@/core/lib/query/paging';
+import { flattenPages } from '@ab/client-core';
 import type { LeadView } from '@ab/shared';
 import type { Page } from '@ab/core';
 import { leadKeys } from '@/core/lib/keys';

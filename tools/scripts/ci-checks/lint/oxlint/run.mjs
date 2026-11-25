@@ -8,7 +8,8 @@ import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readJson } from '../json-file.mjs';
-import { oxlintCli, packageDirs } from './gate.mjs';
+import { lintDirs } from '@ab/config/oxlint';
+import { oxlintCli } from './gate.mjs';
 import { rootManifest } from './schemas.mjs';
 
 /**
@@ -25,7 +26,7 @@ export function lintReport(root) {
 function runOxlint(root) {
   const started = performance.now();
   const { bin, args } = lintReport(root);
-  const run = spawnSync(bin, [...args, ...packageDirs(root)], {
+  const run = spawnSync(bin, [...args, ...lintDirs(root)], {
     cwd: root,
     encoding: 'utf8',
     maxBuffer: 1024 ** 3,

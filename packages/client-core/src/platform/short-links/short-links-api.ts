@@ -1,27 +1,23 @@
 import {
   shortCodeSchema,
-  shortLinkDetailSchema,
   shortLinkGateViewSchema,
-  shortLinkPageSchema,
-  shortLinkPersonSchema,
+  shortLinkRoutes as routes,
   type ShortLinkDetail,
   type ShortLinkGateView,
   type ShortLinkListQuery,
   type ShortLinkPage,
   type ShortLinkPerson,
 } from '@ab/shared';
-import { z } from 'zod';
-import { ApiError, toQueryString, type ApiClient } from '../../core/http';
+import { ApiError, call, type ApiClient } from '../../core/http';
 import { listKey, pathKey } from '../../core/keys';
 
-// docs/19: staff routes under /short-links; the web gate /l/<code> reads the public view.
+// docs/19: staff routes are shortLinkRoutes; the web gate /l/<code> reads the public view.
 
-export const SHORT_LINKS_PATH = '/short-links';
 export const SHORT_LINKS_PUBLIC_PATH = '/public/short-links';
 export const enc = encodeURIComponent;
 
 /** Every admin query sits under this key: one invalidation refreshes lists and details. */
-export const SHORT_LINKS_KEY = pathKey(SHORT_LINKS_PATH);
+export const SHORT_LINKS_KEY = pathKey(routes.list.path);
 /** The gate's public view (never mixed with the admin cache). */
 export const SHORT_LINK_GATE_KEY = pathKey(SHORT_LINKS_PUBLIC_PATH);
 
@@ -56,8 +52,6 @@ export interface ShortLinkQueries {
   gateViewQuery: (code: string) => ShortLinkQuery<GateViewResult>;
 }
 
-const people = z.array(shortLinkPersonSchema);
-
 const isNotFound = (e: unknown): boolean => e instanceof ApiError && e.status === 404;
 
 /** A 404 is an answer (the not-found screen); anything else stays an error. */
@@ -77,26 +71,17 @@ async function readGate(client: ApiClient, code: string): Promise<GateViewResult
 export function shortLinkQueries(client: ApiClient): ShortLinkQueries {
   return {
     listQuery: (filter) => ({
-      queryKey: listKey(SHORT_LINKS_PATH, filter),
-      queryFn: async () => {
-        const path = `${SHORT_LINKS_PATH}${toQueryString(filter)}`;
-        return shortLinkPageSchema.parse(await client.apiFetch(path));
-      },
+      queryKey: listKey(routes.list.path, filter),
+      queryFn: () => call(client, routes.list, { query: filter }),
     }),
     detailQuery: (code) => ({
       queryKey: [...SHORT_LINKS_KEY, code],
-      queryFn: async () => {
-        const body = await client.apiFetch(`${SHORT_LINKS_PATH}/${enc(code)}`);
-        return shortLinkDetailSchema.parse(body);
-      },
+      queryFn: () => call(client, routes.detail, { params: { code } }),
     }),
     peopleQuery: (search) => ({
       queryKey: [...SHORT_LINKS_KEY, 'people', searchTerm(search)],
       enabled: searchTerm(search).length >= PEOPLE_SEARCH_MIN,
-      queryFn: async () => {
-        const query = toQueryString({ search: searchTerm(search) });
-        return people.parse(await client.apiFetch(`${SHORT_LINKS_PATH}/people${query}`));
-      },
+      queryFn: () => call(client, routes.people, { query: { search: searchTerm(search) } }),
     }),
     gateViewQuery: (code) => ({
       queryKey: [...SHORT_LINK_GATE_KEY, code],

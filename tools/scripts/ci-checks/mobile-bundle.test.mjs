@@ -31,3 +31,10 @@ test('each app bundles with the shared Babel config, where app.json switches the
   }
   assert.match(read('packages/mobile-kit/babel.cjs'), /babel-plugin-react-compiler/);
 });
+
+test('the bundles row prints both apps\' bundle sizes (docs/62 §1 «Mobile bundle»)', () => {
+  const step = ci.jobs.verify.steps.find((s) => s.name === 'Mobile bundle size');
+  assert.equal(step.if, "matrix.name == 'typecheck + bundles'");
+  assert.match(step.run, /du -sb "\$dir"/);
+  assert.match(step.run, /for app in staff-mobile family-mobile/);
+});

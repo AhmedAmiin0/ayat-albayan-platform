@@ -1,30 +1,14 @@
 // `pnpm guard:lint -- --oxlint <report.json> [--prune]`: Oxlint's report against every package's
 // oxlint-suppressions.json (baseline.mjs). `--prune` lowers the counts the report no longer
 // reaches and deletes a baseline left empty; nothing writes a new one (docs/59: no suppressions).
-import { existsSync, globSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { existsSync, rmSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { lintDirs } from '@ab/config/oxlint';
 import { readJson } from '../json-file.mjs';
 import { compare, countsOf, pruned } from './baseline.mjs';
 import { baselineFile, oxlintReport } from './schemas.mjs';
-import { scoped } from './scope.mjs';
 
 export const BASELINE = 'oxlint-suppressions.json';
-const DIRS = ['apps/*', 'packages/*', 'tools/*', 'e2e', 'docs/design/brand/tools'];
-
-/**
- * The packages Oxlint lints: every folder with a lint.blocks.mjs (oxlint.config.ts), kept
- * by LINT_SCOPE (scope.mjs; unset = all).
- */
-export const packageDirs = (root) =>
-  scoped(
-    globSync(
-      DIRS.map((dir) => `${dir}/lint.blocks.mjs`),
-      { cwd: root },
-    )
-      .map(dirname)
-      .sort(),
-    process.env.LINT_SCOPE,
-  );
 
 const readBaseline = (path) => (existsSync(path) ? readJson(path, baselineFile) : {});
 
@@ -43,7 +27,7 @@ const WRITES = { prune, check: () => undefined };
 export function oxlintGate({ root, report, mode = 'check' }) {
   if (!Object.hasOwn(WRITES, mode)) throw new Error(`unknown mode: ${mode}`);
   const writes = WRITES[mode];
-  const dirs = packageDirs(root);
+  const dirs = lintDirs(root);
   const now = countsOf(readJson(report, oxlintReport).diagnostics, dirs);
   const outside = Object.keys(now[''] ?? {}).map((file) => `outside any package: ${file}`);
   const lines = dirs.flatMap((dir) => {

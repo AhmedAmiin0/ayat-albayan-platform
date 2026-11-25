@@ -4,6 +4,7 @@
   "type": "module",
   "exports": {
     "./vitest": "./src/vitest.ts",
+    "./page-golden": "./src/page-golden/index.ts",
     "./jest": "./jest.cjs"
   },
   "scripts": {

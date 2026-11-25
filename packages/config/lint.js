@@ -16,14 +16,20 @@ export { SYNTAX, syntaxExempt } from './eslint-syntax.js';
 export { a11yRules } from './jsx-a11y.js';
 export { webBlocks } from './lint-web.js';
 
+/** Exported functions in src declare their types. */
+export const exportTypes = {
+  files: ['src/**/*.ts'],
+  ignores: TESTS,
+  rules: { '@typescript-eslint/explicit-module-boundary-types': 'error' },
+};
+
 /**
  * A library package's blocks: `module` folders reach each other only through their index.ts
  * (src/index.ts is the public API), and exported functions declare their types.
  */
 export function libraryBlocks({ root, module }) {
-  const types = { '@typescript-eslint/explicit-module-boundary-types': 'error' };
   return [
     boundaries({ root, files: ['src/**/*.ts'], module, ignores: ['src/index.ts'] }),
-    { files: ['src/**/*.ts'], ignores: TESTS, rules: types },
+    exportTypes,
   ];
 }
