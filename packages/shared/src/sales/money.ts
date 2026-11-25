@@ -1,6 +1,14 @@
 import { z } from 'zod';
 import { localDate, optionalText, phoneE164 } from '@ab/core';
-import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, pastInstant, paymentAttachmentPaths, receiptUploadSchema, subscriptionPricingSchema } from '@ab/money';
+import {
+  currencyIso,
+  LESSONS_USED_BEFORE_MAX,
+  moneyAmount,
+  pastInstant,
+  paymentAttachmentPaths,
+  receiptUploadSchema,
+  subscriptionPricingSchema,
+} from '@ab/money';
 
 // The salesperson's money writes from the chat (R-ASST-01/04, docs/16): she subscribes
 // a student she brought and records the family's bank transfer with its receipt. Same rules as the admin's
@@ -19,7 +27,11 @@ import { currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, pastInstant, payment
 const chatPhone = phoneE164.optional();
 
 /** POST /sales/subscriptions/quote: the price the create would store, for the student she owns. */
-export const salesQuoteSchema = z.strictObject({ studentId: z.uuid(), pricing: subscriptionPricingSchema, phone: chatPhone });
+export const salesQuoteSchema = z.strictObject({
+  studentId: z.uuid(),
+  pricing: subscriptionPricingSchema,
+  phone: chatPhone,
+});
 
 /** POST /sales/subscriptions: priced by the API from the catalog, like POST /subscriptions. */
 export const salesSubscriptionCreateSchema = z.strictObject({
@@ -57,7 +69,11 @@ export const salesPaymentCreateSchema = z.strictObject({
 export const salesReceiptUploadSchema = receiptUploadSchema.extend({ phone: chatPhone });
 
 /** POST /sales/payments/receipt-from-chat: copy one image / PDF of the family's chat into receipts/{subscriptionId}/. */
-export const salesChatReceiptCopySchema = z.strictObject({ subscriptionId: z.uuid(), messageId: z.uuid(), phone: chatPhone });
+export const salesChatReceiptCopySchema = z.strictObject({
+  subscriptionId: z.uuid(),
+  messageId: z.uuid(),
+  phone: chatPhone,
+});
 
 /** GET /sales/money/family?phone: her students in the family of this chat (every one with sales.renew_any). */
 export const salesFamilyQuerySchema = z.object({ phone: phoneE164 });
@@ -75,7 +91,10 @@ export type SalesReceiptUpload = z.output<typeof salesReceiptUploadSchema>;
  * The `phone` a client adds to a sales money write (docs/16 row 38): the chat's phone for a student the family
  * view lists with `mine: false` (sales.renew_any), nothing for hers, so the bodies for her own stay as they were.
  */
-export function chatBinding(students: readonly { id: string; mine?: boolean }[], at: { studentId: string; phone: string }): { phone?: string } {
+export function chatBinding(
+  students: readonly { id: string; mine?: boolean }[],
+  at: { studentId: string; phone: string },
+): { phone?: string } {
   const theirs = students.find((s) => s.id === at.studentId)?.mine === false;
   return theirs && at.phone !== '' ? { phone: at.phone } : {};
 }

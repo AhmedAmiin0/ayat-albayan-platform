@@ -6,7 +6,9 @@ const base = { startsOn: '2026-10-27', today: '2026-10-28', canSet: true, lesson
 
 describe('usedBeforeProblem', () => {
   it('0 is always accepted, whatever the start or permission', () => {
-    expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 0, canSet: false, startsOn: base.today })).toBeNull();
+    expect(
+      usedBeforeProblem({ ...base, lessonsUsedBefore: 0, canSet: false, startsOn: base.today }),
+    ).toBeNull();
   });
 
   it('1..7 of 8 with a past start and the permission', () => {
@@ -18,16 +20,24 @@ describe('usedBeforeProblem', () => {
   it('never the whole package; one lesson left is enough whatever the days a week', () => {
     expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 8 })).toBe('used_before_too_many');
     expect(usedBeforeProblem({ ...base, lessonsTotal: 12, lessonsUsedBefore: 11 })).toBeNull();
-    expect(usedBeforeProblem({ ...base, lessonsTotal: 12, lessonsUsedBefore: 12 })).toBe('used_before_too_many');
+    expect(usedBeforeProblem({ ...base, lessonsTotal: 12, lessonsUsedBefore: 12 })).toBe(
+      'used_before_too_many',
+    );
   });
 
   it('needs a start before today', () => {
-    expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 1, startsOn: base.today })).toBe('used_before_needs_past_start');
-    expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 1, startsOn: '2026-11-01' })).toBe('used_before_needs_past_start');
+    expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 1, startsOn: base.today })).toBe(
+      'used_before_needs_past_start',
+    );
+    expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 1, startsOn: '2026-11-01' })).toBe(
+      'used_before_needs_past_start',
+    );
   });
 
   it('needs subscriptions.set_start_date', () => {
-    expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 1, canSet: false })).toBe('used_before_not_allowed');
+    expect(usedBeforeProblem({ ...base, lessonsUsedBefore: 1, canSet: false })).toBe(
+      'used_before_not_allowed',
+    );
   });
 });
 

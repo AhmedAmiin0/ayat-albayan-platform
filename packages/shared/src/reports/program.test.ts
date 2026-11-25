@@ -4,7 +4,14 @@ import { reportDraftSchema, reportSubmitSchema } from './schema/index.js';
 import type { ReportView } from './views.js';
 
 // The program field on the lesson report (docs/13-forms-spec.md form 2).
-const GRADES = { recitation: 'good', memorization: 'good', revision: 'good', tajweed: 'good', engagement: 'good', commitment: 'good' } as const;
+const GRADES = {
+  recitation: 'good',
+  memorization: 'good',
+  revision: 'good',
+  tajweed: 'good',
+  engagement: 'good',
+  commitment: 'good',
+} as const;
 const FULL: FormValues = {
   attendance: 'on_time',
   program: 'quran',
@@ -26,7 +33,9 @@ describe('report program', () => {
     }
     expect(reportDraftSchema.safeParse({ program: 'maths' }).success).toBe(false);
     expect(reportDraftSchema.safeParse({ program: null }).success).toBe(false);
-    expect(reportSubmitSchema.safeParse({ ...draftBody(FULL), expectedVersion: 0 }).success).toBe(true);
+    expect(reportSubmitSchema.safeParse({ ...draftBody(FULL), expectedVersion: 0 }).success).toBe(
+      true,
+    );
   });
 
   it('leaving it out is fine on the wire (the server keeps the stored one)', () => {

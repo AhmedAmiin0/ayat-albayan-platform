@@ -1,11 +1,26 @@
-import { DURATIONS, type Attendance, type Duration, type Gender, type LessonStatus, type Program, type StudentStatus } from '@ab/catalog';
+import {
+  DURATIONS,
+  type Attendance,
+  type Duration,
+  type Gender,
+  type LessonStatus,
+  type Program,
+  type StudentStatus,
+} from '@ab/catalog';
 import { isCancelledLesson } from '@ab/schedule';
 import { isNotSubscribed } from './status-flow/index.js';
 
 // A new free trial for a student with no running subscription, and the trial history; pure.
 
 /** moved: a newer date replaced it; awaiting: its time passed, nothing recorded yet. */
-export const TRIAL_OUTCOMES = ['upcoming', 'awaiting', 'attended', 'absent', 'cancelled', 'moved'] as const;
+export const TRIAL_OUTCOMES = [
+  'upcoming',
+  'awaiting',
+  'attended',
+  'absent',
+  'cancelled',
+  'moved',
+] as const;
 export type TrialOutcome = (typeof TRIAL_OUTCOMES)[number];
 
 /** From this many dates on (the new one included) the form warns; never a block. */
@@ -54,7 +69,8 @@ export interface TrialDateResult {
 }
 
 /** new / trial / pending_subscription: a subscriber changes their course instead (409 trial_date_subscribed). */
-export const canPickTrialDate = (status: StudentStatus | null | undefined): boolean => isNotSubscribed(status);
+export const canPickTrialDate = (status: StudentStatus | null | undefined): boolean =>
+  isNotSubscribed(status);
 
 /** The form warns from the 3rd date on: `count` dates exist already, the new one is count + 1. */
 export const warnsTrialDate = (count: number): boolean => count + 1 >= TRIAL_DATE_WARN_FROM;
@@ -77,13 +93,19 @@ export function trialOutcome(input: TrialOutcomeInput): TrialOutcome {
   if (status === 'rescheduled') return 'moved';
   if (isCancelledLesson(status)) return 'cancelled';
   if (MISSED_STATUS.includes(status) || MISSED.includes(attendance)) return 'absent';
-  if (OPEN.includes(status)) return Date.parse(input.starts_at) > input.now.getTime() ? 'upcoming' : 'awaiting';
+  if (OPEN.includes(status))
+    return Date.parse(input.starts_at) > input.now.getTime() ? 'upcoming' : 'awaiting';
   return 'attended';
 }
 
 /** The trial a new date moves: open and still ahead, the earliest of them. */
-export function upcomingTrial<T extends { status: LessonStatus; starts_at: string }>(rows: readonly T[], now: Date): T | null {
-  const ahead = rows.filter((r) => OPEN.includes(r.status) && Date.parse(r.starts_at) > now.getTime());
+export function upcomingTrial<T extends { status: LessonStatus; starts_at: string }>(
+  rows: readonly T[],
+  now: Date,
+): T | null {
+  const ahead = rows.filter(
+    (r) => OPEN.includes(r.status) && Date.parse(r.starts_at) > now.getTime(),
+  );
   return [...ahead].sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at))[0] ?? null;
 }
 

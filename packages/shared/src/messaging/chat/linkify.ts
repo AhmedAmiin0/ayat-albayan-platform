@@ -18,7 +18,8 @@ const WWW_HOST_RE = /^www\.[^\s./]+\.[^\s./]/;
 
 /** Where a matched URL opens, or null when it stays text. */
 function hrefOf(url: string, before: string): string | null {
-  if (url.startsWith('www.')) return !GLUED_RE.test(before) && WWW_HOST_RE.test(url) ? `https://${url}` : null;
+  if (url.startsWith('www.'))
+    return !GLUED_RE.test(before) && WWW_HOST_RE.test(url) ? `https://${url}` : null;
   // «http://.» trims to the bare scheme: text, not a link.
   return /:\/\/./.test(url) ? url : null;
 }

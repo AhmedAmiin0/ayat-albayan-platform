@@ -38,10 +38,15 @@ const DAY_MS = 86_400_000;
 /** ISO instants, at most 31 days apart. */
 export const salesMeetingsQuerySchema = z
   .object({ from: z.iso.datetime({ offset: true }), to: z.iso.datetime({ offset: true }) })
-  .refine((q) => Date.parse(q.to) >= Date.parse(q.from) && Date.parse(q.to) - Date.parse(q.from) <= 31 * DAY_MS, {
-    message: 'range_too_long',
-    path: ['to'],
-  });
+  .refine(
+    (q) =>
+      Date.parse(q.to) >= Date.parse(q.from) &&
+      Date.parse(q.to) - Date.parse(q.from) <= 31 * DAY_MS,
+    {
+      message: 'range_too_long',
+      path: ['to'],
+    },
+  );
 
 /** POST /leads/:id/assign: a sales profile id, or null to unassign. */
 export const leadAssignSchema = z.object({ profileId: z.uuid().nullable() });

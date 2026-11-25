@@ -22,9 +22,13 @@ export const SESSION_WINDOW_MS = 24 * 60 * 60 * 1000;
  * Free text (a session message) is allowed only within 24 h of the contact's last inbound
  * message; after that only an approved template goes out (inbox.sessionClosed).
  */
-export function sessionWindowOpen(lastInboundAt: Date | string | null | undefined, now: Date): boolean {
+export function sessionWindowOpen(
+  lastInboundAt: Date | string | null | undefined,
+  now: Date,
+): boolean {
   if (!lastInboundAt) return false;
-  const at = typeof lastInboundAt === 'string' ? Date.parse(lastInboundAt) : lastInboundAt.getTime();
+  const at =
+    typeof lastInboundAt === 'string' ? Date.parse(lastInboundAt) : lastInboundAt.getTime();
   if (Number.isNaN(at)) return false;
   return now.getTime() - at < SESSION_WINDOW_MS;
 }

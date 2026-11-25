@@ -17,7 +17,10 @@ describe('NOTIFICATION_CATALOGUE is complete', () => {
   it('every push_kind has exactly one bell / push row', () => {
     for (const kind of ALL_PUSH_KINDS) {
       const rows = NOTIFICATION_CATALOGUE.filter((e) => 'pushKind' in e && e.pushKind === kind);
-      expect(rows.map((r) => r.key), kind).toEqual([kind]);
+      expect(
+        rows.map((r) => r.key),
+        kind,
+      ).toEqual([kind]);
     }
   });
 
@@ -29,7 +32,8 @@ describe('NOTIFICATION_CATALOGUE is complete', () => {
   it('every row has a name and a trigger in Arabic and English', () => {
     for (const key of NOTIFICATION_KEYS) {
       for (const bundle of [ar, en]) {
-        const words: Record<string, { name: string; trigger: string }> = bundle.notificationCatalogue.entries;
+        const words: Record<string, { name: string; trigger: string }> =
+          bundle.notificationCatalogue.entries;
         expect(words[key]?.name, key).toBeTruthy();
         expect(words[key]?.trigger, key).toBeTruthy();
       }
@@ -40,7 +44,8 @@ describe('NOTIFICATION_CATALOGUE is complete', () => {
 describe('NOTIFICATION_CATALOGUE matches today', () => {
   it('a row with its own switch defaults to what that setting does on a fresh install', () => {
     for (const e of NOTIFICATION_CATALOGUE) {
-      if ('rowSwitch' in e) expect(e.rowSwitch.isOn(SETTING_DEFAULTS), e.key).toBe(e.defaults.enabled);
+      if ('rowSwitch' in e)
+        expect(e.rowSwitch.isOn(SETTING_DEFAULTS), e.key).toBe(e.defaults.enabled);
       else expect(e.defaults.enabled, e.key).toBe(true);
     }
   });
@@ -48,14 +53,24 @@ describe('NOTIFICATION_CATALOGUE matches today', () => {
   it('automatic = the sender’s AUTOMATIC_KEYS rows (reminders, join link, follow-ups, renewal, rating)', () => {
     const auto = NOTIFICATION_CATALOGUE.filter((e) => e.automatic).map((e) => e.key);
     expect(auto).toEqual([
-      'lesson_reminder', 'lesson_reminder_24h', 'teacher_lesson_reminder', 'lesson_join_link',
-      'renewal_due', 'follow_up_slots', 'lesson_rating',
+      'lesson_reminder',
+      'lesson_reminder_24h',
+      'teacher_lesson_reminder',
+      'lesson_join_link',
+      'renewal_due',
+      'follow_up_slots',
+      'lesson_rating',
     ]);
   });
 
   it('essential = booking confirmations and the report PDF; locked = the failed-send alert only', () => {
-    expect(NOTIFICATION_CATALOGUE.filter((e) => e.essential).map((e) => e.key)).toEqual(['booking_confirmation', 'report_ready']);
-    expect(NOTIFICATION_CATALOGUE.filter((e) => e.locked).map((e) => e.key)).toEqual(['reminder_failed']);
+    expect(NOTIFICATION_CATALOGUE.filter((e) => e.essential).map((e) => e.key)).toEqual([
+      'booking_confirmation',
+      'report_ready',
+    ]);
+    expect(NOTIFICATION_CATALOGUE.filter((e) => e.locked).map((e) => e.key)).toEqual([
+      'reminder_failed',
+    ]);
   });
 
   it('a chat message reaches its teacher, the family and the assistant (owner 2026-11-16)', () => {

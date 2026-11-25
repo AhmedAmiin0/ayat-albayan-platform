@@ -7,7 +7,11 @@ import { addCalendarDays, addDaysIn, localDateIn, startOfDayIn, wallInstant } fr
 export const localDate = (at: Date, tz: string): string => localDateIn(at, tz);
 
 /** Sent on the previous local day in the recipient's tz; null keeps the lesson's own time. */
-export function dayBeforeSendAt(startsAt: Date, tz: string, sendAtLocal: string | null = null): Date {
+export function dayBeforeSendAt(
+  startsAt: Date,
+  tz: string,
+  sendAtLocal: string | null = null,
+): Date {
   if (sendAtLocal === null) return addDaysIn(startsAt, -1, tz);
   return wallInstant(addCalendarDays(localDateIn(startsAt, tz), -1), sendAtLocal, tz);
 }

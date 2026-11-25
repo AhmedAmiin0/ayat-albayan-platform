@@ -28,7 +28,11 @@ export type FeedbackSubmit = z.output<typeof feedbackSubmitSchema>;
 
 /** Only when the lesson took place and this student did not miss it; API and clients share it. */
 export function feedbackEligible(status: LessonStatus, attendance: Attendance | null): boolean {
-  return (status === 'completed' || status === 'late') && attendance !== 'absent' && attendance !== 'excused';
+  return (
+    (status === 'completed' || status === 'late') &&
+    attendance !== 'absent' &&
+    attendance !== 'excused'
+  );
 }
 
 /** POST /lessons/:lessonId/feedback-request (admin). `resend` replaces an expired link. */
@@ -39,7 +43,14 @@ export const feedbackRequestSchema = z.object({
 export type FeedbackRequest = z.output<typeof feedbackRequestSchema>;
 
 /** GET /feedback (and /teachers/me/feedback) sort keys (R-NFR-08); none = newest request first. */
-export const FEEDBACK_SORT_KEYS = ['teacher', 'kind', 'quick_rating', 'rating', 'recommend', 'note'] as const;
+export const FEEDBACK_SORT_KEYS = [
+  'teacher',
+  'kind',
+  'quick_rating',
+  'rating',
+  'recommend',
+  'note',
+] as const;
 export type FeedbackSortKey = (typeof FEEDBACK_SORT_KEYS)[number];
 
 /** GET /feedback filters (paged like every list); `student` and `note` are «contains» text. */

@@ -15,11 +15,17 @@ export type NotificationChannel = (typeof NOTIFICATION_CHANNELS)[number];
 /** Settings a catalogue row's own switch may read today (docs/23a §B6). */
 export type RowSwitchKey = Extract<
   SettingKey,
-  'reminder_24h_enabled' | 'teacher_whatsapp_lesson_reminder' | 'teacher_whatsapp_new_student' | 'feedback_mode'
+  | 'reminder_24h_enabled'
+  | 'teacher_whatsapp_lesson_reminder'
+  | 'teacher_whatsapp_new_student'
+  | 'feedback_mode'
 >;
 
 /** Settings that say when a row is sent (shown next to its trigger). */
-export type TimingKey = Extract<SettingKey, 'reminder_minutes_before' | 'renewal_alert_remaining' | 'follow_up_hours'>;
+export type TimingKey = Extract<
+  SettingKey,
+  'reminder_minutes_before' | 'renewal_alert_remaining' | 'follow_up_hours'
+>;
 
 export interface NotificationEntry<K extends string = string> {
   key: K;

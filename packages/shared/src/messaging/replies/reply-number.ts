@@ -21,7 +21,9 @@ const at = (s: string | null): number => {
   return Number.isNaN(t) ? -Infinity : t;
 };
 
-export type ReplyNumber = { numberId: string } | { code: 'session_closed' | 'number_not_configured' };
+export type ReplyNumber =
+  | { numberId: string }
+  | { code: 'session_closed' | 'number_not_configured' };
 
 /**
  * The number a staff session text leaves from: the number the family wrote to most recently whose 24 h
@@ -31,7 +33,9 @@ export type ReplyNumber = { numberId: string } | { code: 'session_closed' | 'num
 export function replyNumber(input: ReplyNumberInput): ReplyNumber {
   const open = input.windows
     .filter((w) => sessionWindowOpen(w.lastInboundAt, input.now))
-    .sort((a, b) => at(b.lastInboundAt) - at(a.lastInboundAt) || a.numberId.localeCompare(b.numberId));
+    .sort(
+      (a, b) => at(b.lastInboundAt) - at(a.lastInboundAt) || a.numberId.localeCompare(b.numberId),
+    );
   const pick = open.find((w) => input.canSend(w.numberId));
   if (pick) return { numberId: pick.numberId };
   return { code: open.length > 0 ? 'number_not_configured' : 'session_closed' };

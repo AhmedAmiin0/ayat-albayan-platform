@@ -34,13 +34,18 @@ export function lessonReminderMessage(input: LessonMessageInput): OutboundTempla
  * lesson_reminder_24h (R-MSG-02, R-SCH-03): {{1}} names, {{2}} «17:00»; the two quick replies
  * carry «confirm:<lesson id>» and «reschedule:<lesson id>».
  */
-export function lessonReminder24hMessage(input: LessonMessageInput & { lessonId: string }): OutboundTemplate {
+export function lessonReminder24hMessage(
+  input: LessonMessageInput & { lessonId: string },
+): OutboundTemplate {
   return {
     key: 'lesson_reminder_24h',
     params: {
       '1': joinNames(input.names),
       '2': clockTime(input.startsAt, input.tz),
-      payloads: [quickReplyPayload('confirm', input.lessonId), quickReplyPayload('reschedule', input.lessonId)],
+      payloads: [
+        quickReplyPayload('confirm', input.lessonId),
+        quickReplyPayload('reschedule', input.lessonId),
+      ],
     },
   };
 }
@@ -52,11 +57,14 @@ const LINK_LABEL = 'رابط الحلقة:';
 const oneLine = (text: string) => text.replace(/\s+/g, ' ').trim();
 
 /** The plain template has no button, so a non-Meet link rides in {{2}}. */
-export function teacherReminderMessage(input: LessonMessageInput & { teacherName: string }): OutboundTemplate {
+export function teacherReminderMessage(
+  input: LessonMessageInput & { teacherName: string },
+): OutboundTemplate {
   const { key, button } = teacherReminderTemplate(input.meetingLink);
   const link = oneLine(input.meetingLink ?? '');
   const slot = `${clockTime(input.startsAt, input.tz)} — ${joinNames(input.names)}`;
-  const withLink = key === 'teacher_lesson_reminder' && link ? `${slot} · ${LINK_LABEL} ${link}` : slot;
+  const withLink =
+    key === 'teacher_lesson_reminder' && link ? `${slot} · ${LINK_LABEL} ${link}` : slot;
   return { key, params: withButton({ '1': input.teacherName, '2': oneLine(withLink) }, button) };
 }
 

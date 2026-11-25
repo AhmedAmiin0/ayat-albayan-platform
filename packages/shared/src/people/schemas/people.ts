@@ -1,11 +1,5 @@
 import { z } from 'zod';
-import {
-  GENDERS,
-  LEAD_SOURCES,
-  PROGRAMS,
-  STUDENT_STATUSES,
-  TEACHER_STATUSES,
-} from '@ab/catalog';
+import { GENDERS, LEAD_SOURCES, PROGRAMS, STUDENT_STATUSES, TEACHER_STATUSES } from '@ab/catalog';
 import { TEACHER_MEETING_MODES } from '@ab/schedule';
 import { optionalText, phoneE164, requiredText, timeZone } from '@ab/core';
 import { username } from '../users/index.js';
@@ -75,7 +69,9 @@ export const teacherCreateSchema = z.object({
   tz: timeZone,
 });
 /** `username`: written to the teacher's login profile (docs/30); null clears it. Needs a linked login. */
-export const teacherUpdateSchema = teacherCreateSchema.partial().extend({ username: username.nullish() });
+export const teacherUpdateSchema = teacherCreateSchema
+  .partial()
+  .extend({ username: username.nullish() });
 
 export type GuardianCreate = z.infer<typeof guardianCreateSchema>;
 export type GuardianUpdate = z.infer<typeof guardianUpdateSchema>;

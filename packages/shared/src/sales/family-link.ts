@@ -6,7 +6,11 @@ import type { FamilyPhone } from '../people/students/index.js';
 
 /** A generated student code (rule 7): AB- and at least four digits; a typed code is trimmed and upper-cased. */
 export const leadFamilyLinkSchema = z.strictObject({
-  code: z.string().trim().toUpperCase().regex(/^AB-\d{4,}$/),
+  code: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .regex(/^AB-\d{4,}$/),
 });
 export type LeadFamilyLink = z.output<typeof leadFamilyLinkSchema>;
 
@@ -29,7 +33,9 @@ export const LEAD_FAMILY_LINK_ERRORS = [
 export type LeadFamilyLinkError = (typeof LEAD_FAMILY_LINK_ERRORS)[number];
 
 /** A lead's chat with no family and no teacher, whatever the lead's status (converted and lost included). */
-export function canLinkFamily(th: Pick<ThreadView, 'lead_id' | 'guardian_id' | 'teacher_id'>): boolean {
+export function canLinkFamily(
+  th: Pick<ThreadView, 'lead_id' | 'guardian_id' | 'teacher_id'>,
+): boolean {
   return Boolean(th.lead_id) && !th.guardian_id && !th.teacher_id;
 }
 

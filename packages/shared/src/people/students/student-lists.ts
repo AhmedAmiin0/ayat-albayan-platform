@@ -1,6 +1,10 @@
 import type { StudentStatus } from '@ab/catalog';
 import { parseStatusList } from '../schemas/student-filters.js';
-import { isNotSubscribed, NOT_SUBSCRIBED_STATUSES, PACKAGE_ENDED_STATUSES } from './status-flow/index.js';
+import {
+  isNotSubscribed,
+  NOT_SUBSCRIBED_STATUSES,
+  PACKAGE_ENDED_STATUSES,
+} from './status-flow/index.js';
 
 // A teacher's students split by status with one rule for web, mobile and the API mappers.
 
@@ -31,7 +35,10 @@ export function countByKind(list: readonly { status: StudentStatus }[]): Student
 }
 
 /** The students of one kind, in the list's order ('all' is the list as it is). */
-export function splitByStatus<T extends { status: StudentStatus }>(list: readonly T[], kind: StudentListKind): T[] {
+export function splitByStatus<T extends { status: StudentStatus }>(
+  list: readonly T[],
+  kind: StudentListKind,
+): T[] {
   if (kind === 'all') return [...list];
   return list.filter((s) => (kind === 'trial' ? isNotSubscribed(s.status) : s.status === kind));
 }

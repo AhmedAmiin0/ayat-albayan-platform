@@ -9,7 +9,19 @@ import type { NotificationChannel } from './catalogue/catalogue.types.js';
 export type RulesMode = 'legacy' | 'module';
 
 /** Whole hours a select offers (never free text); null means at the lesson's own time. */
-export const DAY_BEFORE_HOURS = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '19:00', '20:00', '21:00', '22:00'] as const;
+export const DAY_BEFORE_HOURS = [
+  '06:00',
+  '08:00',
+  '10:00',
+  '12:00',
+  '14:00',
+  '16:00',
+  '18:00',
+  '19:00',
+  '20:00',
+  '21:00',
+  '22:00',
+] as const;
 
 const minutes = z.number().int().min(5).max(720);
 const hoursList = z
@@ -34,10 +46,13 @@ export const RULE_TIMING_SCHEMAS = {
 } as const;
 
 export type TimedNotificationKey = keyof typeof RULE_TIMING_SCHEMAS;
-export type RuleTiming<K extends TimedNotificationKey = TimedNotificationKey> = z.infer<(typeof RULE_TIMING_SCHEMAS)[K]>;
+export type RuleTiming<K extends TimedNotificationKey = TimedNotificationKey> = z.infer<
+  (typeof RULE_TIMING_SCHEMAS)[K]
+>;
 export type AnyRuleTiming = { [K in TimedNotificationKey]: RuleTiming<K> }[TimedNotificationKey];
 
-export const isTimedKey = (key: string): key is TimedNotificationKey => Object.hasOwn(RULE_TIMING_SCHEMAS, key);
+export const isTimedKey = (key: string): key is TimedNotificationKey =>
+  Object.hasOwn(RULE_TIMING_SCHEMAS, key);
 
 /** One stored row (public.notification_rules). channels / timing / number_id null = the entry's default. */
 export interface NotificationRuleRow {
@@ -70,7 +85,11 @@ export const ESSENTIAL_OFF_TEXT = 'إيقاف';
 export const rulePatchSchema = z
   .object({
     enabled: z.boolean().optional(),
-    channels: z.array(z.enum(['whatsapp', 'bell', 'push'])).min(1).max(3).optional(),
+    channels: z
+      .array(z.enum(['whatsapp', 'bell', 'push']))
+      .min(1)
+      .max(3)
+      .optional(),
     timing: z.unknown().optional(),
     number_id: z.string().uuid().nullable().optional(),
     confirmText: z.unknown().optional(),
@@ -94,5 +113,11 @@ export interface NotificationRuleView {
 }
 
 /** PATCH errors: 422 invalid / locked / unknown_number, 428 confirmation_required, 404 unknown key. */
-export const RULE_ERRORS = ['invalid', 'locked', 'not_editable', 'unknown_number', 'confirmation_required'] as const;
+export const RULE_ERRORS = [
+  'invalid',
+  'locked',
+  'not_editable',
+  'unknown_number',
+  'confirmation_required',
+] as const;
 export type RuleError = (typeof RULE_ERRORS)[number];

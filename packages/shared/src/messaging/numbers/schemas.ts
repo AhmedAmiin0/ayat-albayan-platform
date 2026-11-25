@@ -17,7 +17,10 @@ export const callsNeedKapso = (row: { purpose?: string; provider?: string }): bo
   row.purpose === 'calls' && row.provider !== 'kapso';
 
 /** An Evolution number names its engine (baileys | cloud); any other provider carries none. */
-interface ModeRow { provider?: string; evolution_mode?: string | null }
+interface ModeRow {
+  provider?: string;
+  evolution_mode?: string | null;
+}
 export const evolutionModeFits = (v: ModeRow): boolean =>
   (v.provider === 'evolution') === Boolean(v.evolution_mode);
 
@@ -66,6 +69,14 @@ export const numbersImportSchema = z.object({ dryRun: z.boolean() });
 export const commsSourceSchema = z.object({ source: z.enum(COMMS_SOURCES) });
 
 /** The 409 reasons of the numbers endpoints (shown in words by the web). */
-export const NUMBER_ERRORS = ['parity_not_empty', 'phone_taken', 'default_taken', 'number_enabled', 'not_enabled', 'calls_need_kapso'] as const;
+export const NUMBER_ERRORS = [
+  'parity_not_empty',
+  'phone_taken',
+  'default_taken',
+  'number_enabled',
+  'not_enabled',
+  'calls_need_kapso',
+] as const;
 export type NumberError = (typeof NUMBER_ERRORS)[number];
-export const isNumberError = (code: unknown): code is NumberError => NUMBER_ERRORS.some((c) => c === code);
+export const isNumberError = (code: unknown): code is NumberError =>
+  NUMBER_ERRORS.some((c) => c === code);

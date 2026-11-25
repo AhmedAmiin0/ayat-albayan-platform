@@ -28,8 +28,12 @@ describe('seedPayload (config_seed entries, docs/26 §2b)', () => {
 
   it('has no seed without a hint key, and a blank text is null', () => {
     const noHint = SEED_ENTRIES.filter((e) => !e.hintKey).map((e) => e.key);
-    for (const key of noHint) expect(payload.find((r) => r.key === key)?.description_seed).toBeNull();
-    const [first] = seedPayload(() => '  ', SEED_ENTRIES.filter((e) => e.hintKey));
+    for (const key of noHint)
+      expect(payload.find((r) => r.key === key)?.description_seed).toBeNull();
+    const [first] = seedPayload(
+      () => '  ',
+      SEED_ENTRIES.filter((e) => e.hintKey),
+    );
     expect(first?.description_seed).toBeNull();
   });
 });

@@ -13,7 +13,8 @@ export interface SalesCandidate {
  * null: the lead stays unassigned and the admin assigns it.
  */
 export function pickSales(candidates: readonly SalesCandidate[]): string | null {
-  const stamp = (c: SalesCandidate) => (c.lastAssignedAt === null ? Number.NEGATIVE_INFINITY : Date.parse(c.lastAssignedAt));
+  const stamp = (c: SalesCandidate) =>
+    c.lastAssignedAt === null ? Number.NEGATIVE_INFINITY : Date.parse(c.lastAssignedAt);
   const sorted = [...candidates].sort(
     (a, b) => a.openLeads - b.openLeads || stamp(a) - stamp(b) || a.id.localeCompare(b.id),
   );

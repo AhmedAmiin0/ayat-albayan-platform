@@ -10,7 +10,9 @@ const STUDENT = { guardian_id: G, name: 'سهيلة', tz: 'Asia/Riyadh' };
 
 describe('contact_is_self', () => {
   it('studentCreateSchema accepts it and omits it when absent', () => {
-    expect(studentCreateSchema.parse({ ...STUDENT, contact_is_self: true }).contact_is_self).toBe(true);
+    expect(studentCreateSchema.parse({ ...STUDENT, contact_is_self: true }).contact_is_self).toBe(
+      true,
+    );
     expect(studentCreateSchema.parse(STUDENT)).not.toHaveProperty('contact_is_self');
   });
 

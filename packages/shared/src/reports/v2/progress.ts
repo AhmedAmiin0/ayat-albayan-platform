@@ -44,7 +44,10 @@ function pagesHeld(juz: number, held: ReadonlySet<number>): { done: number; tota
  * pages over the student's v2 history (this report included). null when the lesson has no part.
  * Only v2 reports are read, so memorization before the new form is not counted.
  */
-export function juzProgress(today: ReportContent, history: readonly SurahRange[]): JuzProgress | null {
+export function juzProgress(
+  today: ReportContent,
+  history: readonly SurahRange[],
+): JuzProgress | null {
   const anchor = today.segments.find((s) => s.kind === 'new') ?? today.segments[0];
   if (!anchor) return null;
   const held = heldPositions([...history, ...today.segments]);

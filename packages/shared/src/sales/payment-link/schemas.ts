@@ -1,7 +1,14 @@
 import { z } from 'zod';
 import { localDate } from '@ab/core';
 import type { PaymentMethod } from '@ab/catalog';
-import { CURRENCY_ISOS, currencyIso, LESSONS_USED_BEFORE_MAX, moneyAmount, subscriptionPricingSchema, type PaymentCreate } from '@ab/money';
+import {
+  CURRENCY_ISOS,
+  currencyIso,
+  LESSONS_USED_BEFORE_MAX,
+  moneyAmount,
+  subscriptionPricingSchema,
+  type PaymentCreate,
+} from '@ab/money';
 
 // Stripe payment link (docs/30-stripe-test.md, FEATURE_STRIPE); strict, unknown fields are 400.
 
@@ -24,7 +31,10 @@ export const isLinkCurrency = (currency: string): currency is PaymentLinkCurrenc
   linkCurrencySchema.safeParse(currency).success;
 
 /** POST /sales/payment-links/quote: the calculator price shown as the reference (any student). */
-export const paymentLinkQuoteSchema = z.strictObject({ studentId: z.uuid(), pricing: subscriptionPricingSchema });
+export const paymentLinkQuoteSchema = z.strictObject({
+  studentId: z.uuid(),
+  pricing: subscriptionPricingSchema,
+});
 
 /** The agreed amount is free, > 0, at most settings max_discount_pct below the calculator price. */
 export const paymentLinkCreateSchema = z.strictObject({

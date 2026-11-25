@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
 import en from '../../i18n/en.json' with { type: 'json' };
-import { defaultGrantsOf, EDITABLE_SYSTEM_ROLES, isEditableSystemRole, isGrantable, systemPermissionsOf } from '@ab/catalog';
+import {
+  defaultGrantsOf,
+  EDITABLE_SYSTEM_ROLES,
+  isEditableSystemRole,
+  isGrantable,
+  systemPermissionsOf,
+} from '@ab/catalog';
 
 // docs/16 rows 23–24: two sales options the admin can switch off.
 const KEYS = ['students.check_registration', 'subscriptions.set_start_date'] as const;
@@ -12,7 +18,8 @@ describe('sales options «التحقق من التسجيل» and «تحديد ت
       expect(isGrantable(k)).toBe(true);
       expect(systemPermissionsOf('sales')).toContain(k);
       expect(systemPermissionsOf('admin')).toContain(k);
-      for (const role of ['teacher', 'assistant', 'guardian', 'student'] as const) expect(systemPermissionsOf(role)).not.toContain(k);
+      for (const role of ['teacher', 'assistant', 'guardian', 'student'] as const)
+        expect(systemPermissionsOf(role)).not.toContain(k);
     }
   });
 
@@ -29,7 +36,8 @@ describe('pricing.read', () => {
   it('is a default of sales (and the admin), never of a teacher or an assistant', () => {
     expect(defaultGrantsOf('sales')).toContain('pricing.read');
     expect(systemPermissionsOf('admin')).toContain('pricing.read');
-    for (const role of ['teacher', 'assistant', 'guardian', 'student'] as const) expect(systemPermissionsOf(role)).not.toContain('pricing.read');
+    for (const role of ['teacher', 'assistant', 'guardian', 'student'] as const)
+      expect(systemPermissionsOf(role)).not.toContain('pricing.read');
   });
 });
 
@@ -42,7 +50,8 @@ describe('editable system roles', () => {
   });
 
   it('restore to grantable keys only (no self.* scope key)', () => {
-    for (const role of EDITABLE_SYSTEM_ROLES) expect(defaultGrantsOf(role).every(isGrantable)).toBe(true);
+    for (const role of EDITABLE_SYSTEM_ROLES)
+      expect(defaultGrantsOf(role).every(isGrantable)).toBe(true);
   });
 });
 
@@ -52,11 +61,15 @@ describe('lessons.confirm', () => {
     expect(isGrantable('lessons.confirm')).toBe(true);
     expect(defaultGrantsOf('sales')).toContain('lessons.confirm');
     expect(systemPermissionsOf('admin')).toContain('lessons.confirm');
-    for (const role of ['teacher', 'assistant', 'guardian', 'student'] as const) expect(systemPermissionsOf(role)).not.toContain('lessons.confirm');
+    for (const role of ['teacher', 'assistant', 'guardian', 'student'] as const)
+      expect(systemPermissionsOf(role)).not.toContain('lessons.confirm');
   });
 
   it('has a hint in Arabic and English', () => {
-    for (const dict of [ar, en]) expect((dict.permissions.hints as Record<string, string>)['lessons.confirm']?.trim()).toBeTruthy();
+    for (const dict of [ar, en])
+      expect(
+        (dict.permissions.hints as Record<string, string>)['lessons.confirm']?.trim(),
+      ).toBeTruthy();
   });
 });
 
@@ -66,13 +79,18 @@ describe('courses.pause', () => {
     expect(isGrantable('courses.pause')).toBe(true);
     expect(defaultGrantsOf('sales')).toContain('courses.pause');
     expect(systemPermissionsOf('admin')).toContain('courses.pause');
-    for (const role of ['teacher', 'assistant', 'guardian', 'student'] as const) expect(systemPermissionsOf(role)).not.toContain('courses.pause');
+    for (const role of ['teacher', 'assistant', 'guardian', 'student'] as const)
+      expect(systemPermissionsOf(role)).not.toContain('courses.pause');
   });
 
   it('has a label and a hint in Arabic and English', () => {
     for (const dict of [ar, en]) {
-      expect((dict.permissions.items as Record<string, string>)['courses.pause']?.trim()).toBeTruthy();
-      expect((dict.permissions.hints as Record<string, string>)['courses.pause']?.trim()).toBeTruthy();
+      expect(
+        (dict.permissions.items as Record<string, string>)['courses.pause']?.trim(),
+      ).toBeTruthy();
+      expect(
+        (dict.permissions.hints as Record<string, string>)['courses.pause']?.trim(),
+      ).toBeTruthy();
     }
   });
 });
@@ -82,13 +100,19 @@ describe('sales.renew_any', () => {
   it('is grantable, held by the admin only by default (never sales, a teacher, an assistant or the portal)', () => {
     expect(isGrantable('sales.renew_any')).toBe(true);
     expect(systemPermissionsOf('admin')).toContain('sales.renew_any');
-    for (const role of ['sales', 'teacher', 'assistant', 'guardian', 'student'] as const) expect(systemPermissionsOf(role)).not.toContain('sales.renew_any');
+    for (const role of ['sales', 'teacher', 'assistant', 'guardian', 'student'] as const)
+      expect(systemPermissionsOf(role)).not.toContain('sales.renew_any');
   });
 
   it('has a label and a hint in Arabic and English', () => {
     expect(ar.permissions.items['sales.renew_any']).toBe('تجديد اشتراك أي طالب من المحادثة');
-    for (const dict of [ar, en]) expect((dict.permissions.hints as Record<string, string>)['sales.renew_any']?.trim()).toBeTruthy();
-    expect((en.permissions.items as Record<string, string>)['sales.renew_any']?.trim()).toBeTruthy();
+    for (const dict of [ar, en])
+      expect(
+        (dict.permissions.hints as Record<string, string>)['sales.renew_any']?.trim(),
+      ).toBeTruthy();
+    expect(
+      (en.permissions.items as Record<string, string>)['sales.renew_any']?.trim(),
+    ).toBeTruthy();
   });
 });
 
@@ -109,7 +133,9 @@ describe('subscriptions.edit_terms', () => {
     for (const dict of [ar, en]) {
       const hints = dict.permissions.hints as Record<string, string>;
       expect(hints['subscriptions.edit_terms']?.trim()).toBeTruthy();
-      expect((dict.permissions.items as Record<string, string>)['subscriptions.edit_terms']?.trim()).toBeTruthy();
+      expect(
+        (dict.permissions.items as Record<string, string>)['subscriptions.edit_terms']?.trim(),
+      ).toBeTruthy();
     }
   });
 });

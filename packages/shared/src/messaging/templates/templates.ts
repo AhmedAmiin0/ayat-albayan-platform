@@ -132,6 +132,7 @@ export interface ExpiryInput {
 export function messageExpired(input: ExpiryInput): boolean {
   const now = input.now.getTime();
   if (input.expiresAt) return Date.parse(input.expiresAt) <= now;
-  if (!input.lessonStartsAt || !input.templateKey || !LESSON_TIMED.has(input.templateKey)) return false;
+  if (!input.lessonStartsAt || !input.templateKey || !LESSON_TIMED.has(input.templateKey))
+    return false;
   return Date.parse(input.lessonStartsAt) <= now;
 }

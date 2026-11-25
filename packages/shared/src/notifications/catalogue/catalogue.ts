@@ -17,7 +17,9 @@ export const NOTIFICATION_CATALOGUE = [
 
 export type NotificationKey = (typeof NOTIFICATION_CATALOGUE)[number]['key'];
 
-export const NOTIFICATION_KEYS: readonly NotificationKey[] = NOTIFICATION_CATALOGUE.map((e) => e.key);
+export const NOTIFICATION_KEYS: readonly NotificationKey[] = NOTIFICATION_CATALOGUE.map(
+  (e) => e.key,
+);
 
 /** One row by key (typed: the catalogue's own rows only). */
 export function notificationEntry(key: NotificationKey): NotificationEntry<NotificationKey> {

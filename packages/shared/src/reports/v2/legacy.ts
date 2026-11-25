@@ -10,16 +10,25 @@ export interface LegacyTexts {
 }
 
 const rangesOf = (content: ReportContent, kind: SegmentKind): string | null => {
-  const parts = content.segments.filter((s) => s.kind === kind).map((s) => `${surahName(s.surah)} ${s.from}–${s.to}`);
+  const parts = content.segments
+    .filter((s) => s.kind === kind)
+    .map((s) => `${surahName(s.surah)} ${s.from}–${s.to}`);
   return parts.length > 0 ? parts.join('، ') : null;
 };
 
 /** Each track's parts as surah ranges joined; a track with no part is null. */
-export function legacyTexts(content: ReportContent, tajweedLabel: (topic: TajweedTopic) => string): LegacyTexts {
+export function legacyTexts(
+  content: ReportContent,
+  tajweedLabel: (topic: TajweedTopic) => string,
+): LegacyTexts {
   return {
     recited: rangesOf(content, 'recited'),
     newMemorization: rangesOf(content, 'new'),
     revision: rangesOf(content, 'revision'),
-    theory: (content.tajweed ? tajweedLabel(content.tajweed) : null) ?? content.arabic?.topic ?? content.islamic?.topic ?? null,
+    theory:
+      (content.tajweed ? tajweedLabel(content.tajweed) : null) ??
+      content.arabic?.topic ??
+      content.islamic?.topic ??
+      null,
   };
 }

@@ -13,7 +13,11 @@ export const AVATAR_MAX_BYTES = 2 * 1024 * 1024;
 
 const blank = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? null : v);
 const password = z.string().min(1, 'password_required').max(PASSWORD_MAX);
-const fullName = z.string().trim().min(ACCOUNT_NAME_MIN, 'name_too_short').max(ACCOUNT_NAME_MAX, 'name_too_long');
+const fullName = z
+  .string()
+  .trim()
+  .min(ACCOUNT_NAME_MIN, 'name_too_short')
+  .max(ACCOUNT_NAME_MAX, 'name_too_long');
 
 /**
  * PATCH /me/profile (R-ACC-02). Unknown keys (role, role_id, disabled_at…) are stripped, so a body
@@ -27,7 +31,8 @@ export const profileUpdateSchema = z
     current_password: password.optional(),
   })
   .superRefine((v, ctx) => {
-    if (v.full_name === undefined && v.phone_e164 === undefined) ctx.addIssue({ code: 'custom', path: [], message: 'empty_update' });
+    if (v.full_name === undefined && v.phone_e164 === undefined)
+      ctx.addIssue({ code: 'custom', path: [], message: 'empty_update' });
     if (v.phone_e164 !== undefined && !v.current_password)
       ctx.addIssue({ code: 'custom', path: ['current_password'], message: 'password_required' });
   });
