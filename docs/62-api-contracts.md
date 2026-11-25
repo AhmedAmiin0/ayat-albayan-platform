@@ -1342,14 +1342,14 @@ Starting point on develop `6992a7fed`: 587 routes in `apps/api/src/route-map/rou
 
 ### 3. The client side
 
-- `call(api, route, input)` in `packages/client-core/src/core/http/call/` (tests first):
+- `callWith(api)` in `packages/client-core/src/core/http/call/` (tests first) gives one api client's `call`, bound once where the client is in scope (`const call = callWith(client)`). Each call takes one request, `call({ route, params, query, body })`, typed by the route's schemas, and has no branch: a method table sends a read to `apiFetch` and a write to `apiSend`. It:
   - builds the URL with `routePath`;
   - serialises the query from `RouteQuery<R>`;
   - sends the body;
   - asks with the same `apiFetch(path)` / `apiSend(method, path, body)` a hand-written call made, so apps and their test mocks see no change;
   - parses the answer with `parseResponse(route.response, …)` (strict, per «Decisions»);
   - returns `RouteResult<R>`.
-- The per-endpoint files of part 1 §1 (`x.api.ts`, `x.keys.ts`, `x.query-options.ts`) call `call()` with the route. Query keys come from `listKey(route.path, params)`.
+- The per-endpoint files of part 1 §1 (`x.api.ts`, `x.keys.ts`, `x.query-options.ts`) bind `callWith(client)` once and pass each route as `call({ route, ... })`. Query keys come from `listKey(route.path, params)`.
 - Lint `ab/no-api-path-literal` turns on in C2, at zero: no string or template that starts with `/` is passed to `apiFetch`, `apiSend` or `call` in client-core or an app. Blobs and file downloads use `routePath(route, params)` too.
 
 ### 4. Types, interfaces, enums and objects

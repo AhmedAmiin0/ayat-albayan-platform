@@ -1,4 +1,11 @@
-import type { RouteAnswer, RouteBody, RouteParams, RouteQuery, RouteSpec } from '@ab/core';
+import type {
+  RouteAnswer,
+  RouteBody,
+  RouteParams,
+  RouteQuery,
+  RouteResult,
+  RouteSpec,
+} from '@ab/core';
 import type { z } from 'zod';
 
 /** A route a client can call: it answers JSON or nothing (a file or redirect uses routePath). */
@@ -9,7 +16,8 @@ type Part<K extends string, V> = [V] extends [undefined]
   : Record<K, V>;
 
 /** What call() reads at run time, whatever the route. */
-export interface AnyCallInput {
+export interface AnyCallRequest {
+  route: CallableRoute;
   params?: unknown;
   query?: unknown;
   body?: unknown;
@@ -19,3 +27,9 @@ export interface AnyCallInput {
 export type CallInput<R extends RouteSpec> = Part<'params', RouteParams<R>> &
   Part<'query', RouteQuery<R>> &
   Part<'body', RouteBody<R>>;
+
+/** R is read from `route` only (NoInfer), so a wrong input is an error, never a wider R. */
+export type CallRequest<R extends CallableRoute> = { route: R } & NoInfer<CallInput<R>>;
+
+/** Bound once per api client (docs/62 part 3 §3). */
+export type Call = <R extends CallableRoute>(request: CallRequest<R>) => Promise<RouteResult<R>>;
