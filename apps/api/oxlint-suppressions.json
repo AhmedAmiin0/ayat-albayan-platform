@@ -9077,11 +9077,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/recordings/recording-list.service.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/classroom/recordings/recording.lifecycle.ts": {
     "complexity": {
       "count": 1
