@@ -1,0 +1,41 @@
+name: strip-attribution
+# PR and issue bodies name no tool (CLAUDE.md «No AI mentions in git»), but some editors append an
+# attribution footer each time they save a body; this removes it after every open or edit
+# (tools/scripts/ci-checks/strip-attribution). It reads the current body from the API, so two edits close
+# together both end clean, and its own edit uses GITHUB_TOKEN, which starts no new run. No concurrency
+# group: a cancelled run leaves a cancelled check, which lane-automerge reads as not passed.
+on:
+  pull_request:
+    types: [opened, edited, reopened]
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  strip:
+    name: strip attribution
+    if: github.event_name == 'issues' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: tools/scripts/ci-checks/strip-attribution
+      - name: Remove the attribution footer from the body
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
+        run: |
+          body="$RUNNER_TEMP/body.md" clean="$RUNNER_TEMP/clean.md"
+          gh api "repos/$GITHUB_REPOSITORY/issues/$NUMBER" --jq '.body // ""' > "$body"
+          if node tools/scripts/ci-checks/strip-attribution/strip-footer.mjs < "$body" > "$clean"; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/$NUMBER" -F "body=@$clean" > /dev/null
+            echo "Removed the attribution footer from #$NUMBER"
+          fi
