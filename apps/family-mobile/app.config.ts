@@ -20,7 +20,7 @@ const isStoreBuild = (env: z.infer<typeof envShape>): boolean =>
   env.EAS_BUILD === 'true' && env.EAS_BUILD_PROFILE === 'production';
 
 /**
- * Lane L06 (owner 2026-11-22): the store build must have push, so a production build without the
+ * The store build must have push, so a production build without the
  * EAS production environment's GOOGLE_SERVICES_JSON fails here instead of shipping no FCM.
  */
 const buildEnv = envShape.refine((env) => !isStoreBuild(env) || Boolean(env.GOOGLE_SERVICES_JSON), {
@@ -29,7 +29,7 @@ const buildEnv = envShape.refine((env) => !isStoreBuild(env) || Boolean(env.GOOG
 });
 
 /**
- * The owner's EAS project @holdmycup/ayat-albayan-family (owner 2026-11-15; a project id is not a
+ * The owner's EAS project @holdmycup/ayat-albayan-family (a project id is not a
  * secret): every build and OTA has it without the env.
  */
 const FAMILY_PROJECT_ID = 'ccc6c105-1f67-4b5e-ada5-c892bddaa95a';

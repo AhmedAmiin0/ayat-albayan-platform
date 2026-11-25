@@ -56,7 +56,7 @@ export function CodeStep({ sign }: { sign: WhatsAppSignIn }) {
         icon={progressIcon(flow.busy)}
         onPress={() => void verify(code)}
       />
-      {/* One centred column: side by side, an English pair wrapped unevenly (owner 2026-11-15). */}
+      {/* One centred column: side by side, an English pair wrapped unevenly. */}
       <View style={{ alignItems: 'center' }}>
         {CODE_STEP_ACTIONS.map((action) => (
           <Fragment key={action}>{ACTIONS[action](sign)}</Fragment>

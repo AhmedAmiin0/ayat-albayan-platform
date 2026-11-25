@@ -67,7 +67,7 @@ function FamilyRoom({ link }: { link: Required<RoomLink> }) {
 }
 
 /**
- * app/room/[id]?student=…: a lesson's classroom inside the family app (owner 2026-11-16, the staff
+ * app/room/[id]?student=…: a lesson's classroom inside the family app (the staff
  * room moved into the kit), read-only participants (no host powers). A bad link: the notice.
  */
 export function FamilyRoomRoute() {
