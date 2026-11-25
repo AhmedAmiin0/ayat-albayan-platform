@@ -35,24 +35,22 @@ export class SubscriptionsRepo {
   }
 
   async get(id: string): Promise<SubRow | null> {
-    const data = maybe(await this.db
+    return maybe(await this.db
       .from('subscriptions')
       .select(SELECT)
       .eq('id', id)
       .maybeSingle());
-    return data;
   }
 
   /** A student's packages in FIFO order (starts_on, created_at, id), as the balance view. */
   async forStudent(studentId: string): Promise<SubRow[]> {
-    const data = rows(await this.db
+    return rows(await this.db
       .from('subscriptions')
       .select(SELECT)
       .eq('student_id', studentId)
       .order('starts_on')
       .order('created_at')
       .order('id'));
-    return data;
   }
 
   /** Several students' packages (no join), FIFO order within each student. */
@@ -61,6 +59,20 @@ export class SubscriptionsRepo {
       this.db
         .from('subscriptions')
         .select('*')
+        .in('student_id', chunk)
+        .order('starts_on')
+        .order('created_at')
+        .order('id')
+        .range(from, to),
+    );
+  }
+
+  /** forStudent for several students at once, FIFO order within each student. */
+  async withStudentFor(studentIds: readonly string[]): Promise<SubRow[]> {
+    return readChunkedAll(studentIds, (chunk, from, to) =>
+      this.db
+        .from('subscriptions')
+        .select(SELECT)
         .in('student_id', chunk)
         .order('starts_on')
         .order('created_at')
@@ -79,22 +91,20 @@ export class SubscriptionsRepo {
 
   /** The package a subscribe form already created (its client_request_id), or null. */
   async byRequest(clientRequestId: string): Promise<SubRow | null> {
-    const data = maybe(await this.db
+    return maybe(await this.db
       .from('subscriptions')
       .select(SELECT)
       .eq('client_request_id', clientRequestId)
       .maybeSingle());
-    return data;
   }
 
   async update(id: string, patch: TablesUpdate<'subscriptions'>): Promise<SubRow | null> {
-    const data = maybe(await this.db
+    return maybe(await this.db
       .from('subscriptions')
       .update(patch)
       .eq('id', id)
       .select(SELECT)
       .maybeSingle());
-    return data;
   }
 
   async remove(id: string): Promise<void> {

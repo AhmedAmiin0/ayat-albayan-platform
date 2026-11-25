@@ -20,3 +20,13 @@ describe('SubscriptionsRepo error paths: the answer a failed query gives today',
     });
   });
 });
+
+describe('SubscriptionsRepo.withStudentFor', () => {
+  it('reads the students’ packages with their student, oldest first', async () => {
+    const row = { id: 'p1', student_id: 's1', student: { id: 's1', code: 'AB-0001', name: 'x' } };
+    const { db, argsOf } = fakeDb({ subscriptions: [{ data: [row] }] });
+    expect(await new SubscriptionsRepo(db).withStudentFor(['s1', 's2'])).toEqual([row]);
+    expect(argsOf('subscriptions', 'select')).toEqual(['*, student:students(id, code, name)']);
+    expect(argsOf('subscriptions', 'in')).toEqual(['student_id', ['s1', 's2']]);
+  });
+});
