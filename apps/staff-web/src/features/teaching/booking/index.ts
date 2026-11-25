@@ -64,7 +64,7 @@ export {
   threadMediaUrl,
   uploadInvoiceFile,
 } from './invoice/api.invoice';
-export { BookingLeaveGuard, forgetAllKept } from './kept';
+export { forgetAllKept } from './kept';
 export {
   bookingBase,
   BookingModeContext,

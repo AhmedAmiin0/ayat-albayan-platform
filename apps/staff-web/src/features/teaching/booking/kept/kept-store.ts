@@ -10,8 +10,12 @@ const memory = new Map<string, string>();
 const keptText = jsonText(keptDraftSchema);
 
 function parsed(raw: string | null | undefined): KeptDraft | undefined {
-  const read = keptText.safeParse(raw);
-  return read.success ? read.data : undefined;
+  try {
+    const read = keptText.safeParse(raw);
+    return read.success ? read.data : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function stored(key: string): string | null | undefined {

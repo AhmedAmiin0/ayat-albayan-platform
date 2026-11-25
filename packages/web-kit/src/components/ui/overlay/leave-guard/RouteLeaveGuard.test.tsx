@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { BookingLeaveGuard } from '@/features/teaching/booking/kept/BookingLeaveGuard';
+import { RouteLeaveGuard } from '@ab/web-kit/components/ui/overlay/leave-guard';
 
 interface BlockOpts {
   shouldBlockFn: (a: { current: { pathname: string }; next: { pathname: string } }) => boolean;
@@ -20,7 +19,7 @@ vi.mock('@tanstack/react-router', () => ({
   },
 }));
 
-const l = t.booking.leave;
+const l = { title: 'Leave?', body: 'Not finished.', stay: 'Stay', leave: 'Leave' };
 const BOOK = { pathname: '/admin/book' };
 
 afterEach(() => {
@@ -28,17 +27,17 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe('BookingLeaveGuard (R-SCH-06)', () => {
-  it('blocks leaving an unfinished booking for another page, never a move inside /admin/book', () => {
-    render(<BookingLeaveGuard unfinished />);
+describe('RouteLeaveGuard', () => {
+  it('blocks leaving for another page while `when`, never a move on the same page', () => {
+    render(<RouteLeaveGuard when words={l} />);
     const block = router.opts?.shouldBlockFn;
     expect(router.opts?.enableBeforeUnload).toBe(true);
     expect(block?.({ current: BOOK, next: { pathname: '/admin/inbox' } })).toBe(true);
     expect(block?.({ current: BOOK, next: BOOK })).toBe(false);
   });
 
-  it('lets a finished or untouched booking go without asking', () => {
-    render(<BookingLeaveGuard unfinished={false} />);
+  it('lets the page go without asking otherwise', () => {
+    render(<RouteLeaveGuard when={false} words={l} />);
     expect(router.opts?.enableBeforeUnload).toBe(false);
     expect(router.opts?.shouldBlockFn({ current: BOOK, next: { pathname: '/admin/inbox' } })).toBe(
       false,
@@ -47,7 +46,7 @@ describe('BookingLeaveGuard (R-SCH-06)', () => {
 
   it('asks first: staying is the default, leaving proceeds', () => {
     router.status = 'blocked';
-    render(<BookingLeaveGuard unfinished />);
+    render(<RouteLeaveGuard when words={l} />);
     expect(screen.getByRole('dialog', { name: l.title })).toBeTruthy();
     expect(screen.getByText(l.body)).toBeTruthy();
     const stay = screen.getByRole('button', { name: l.stay });
@@ -59,7 +58,7 @@ describe('BookingLeaveGuard (R-SCH-06)', () => {
   });
 
   it('shows nothing until a leave is blocked', () => {
-    render(<BookingLeaveGuard unfinished />);
+    render(<RouteLeaveGuard when words={l} />);
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 });

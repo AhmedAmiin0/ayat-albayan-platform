@@ -1,11 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
-import {
-  BookingLeaveGuard,
-  BookingPage,
-  parseBookSearch,
-  searchForStudent,
-} from '@/features/teaching/booking';
+import { RouteLeaveGuard } from '@ab/web-kit/components/ui/overlay/leave-guard';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { BookingPage, parseBookSearch, searchForStudent } from '@/features/teaching/booking';
 
 /** /admin/book?studentId= (+ ?kind=makeup&missedLessonId=) | ?leadId=&phone=&name= (+ ?teacherId&startsAt from a free gap) — the booking wizard (R-SCH-06, R-LEAD-06, R-SCH-10). */
 export const Route = createFileRoute('/admin/(ops)/book')({
@@ -26,7 +23,7 @@ function BookRoute() {
         }
         onUnfinished={setUnfinished}
       />
-      <BookingLeaveGuard unfinished={unfinished} />
+      <RouteLeaveGuard when={unfinished} words={t.booking.leave} />
     </>
   );
 }
