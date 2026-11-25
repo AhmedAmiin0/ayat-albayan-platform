@@ -51,7 +51,7 @@ const ours = <T extends { phone_e164: string }>(rows: readonly T[]) =>
   rows.filter((r) => r.phone_e164.startsWith('+966500164'));
 const phonesIn = (rows: readonly { phone_e164: string }[]) =>
   [...new Set(ours(rows).map((r) => r.phone_e164))].sort();
-type ReadRow = { teacher_id: string; phone_e164: string };
+interface ReadRow { teacher_id: string; phone_e164: string }
 
 test.describe('teacher mode RLS (migration 164, rule 9)', () => {
   test('a teacher reads her families, the 90-day window and her own chat; an admin reads all', async () => {

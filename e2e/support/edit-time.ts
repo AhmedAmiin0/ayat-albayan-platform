@@ -49,7 +49,7 @@ export async function seed(tx: Tx) {
 }
 type Seeded = Awaited<ReturnType<typeof seed>>;
 
-export type Edit = {
+export interface Edit {
   s: Seeded;
   status: string;
   from: number;
@@ -57,7 +57,7 @@ export type Edit = {
   durationMin?: number;
   flags?: { retime_open?: boolean; refresh_pdf?: boolean };
   messages?: Record<string, string | Record<string, string>>[];
-};
+}
 
 /** edit_lesson_time as the API calls it (`from` is what the admin saw, 45 minutes long). */
 export async function edit(tx: Tx, e: Edit) {

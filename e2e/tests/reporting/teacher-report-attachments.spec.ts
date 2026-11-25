@@ -14,7 +14,7 @@ const PNG = Buffer.from(
   'base64',
 );
 
-type Row = { id: string; mime: string; size: number; storage_path: string };
+interface Row { id: string; mime: string; size: number; storage_path: string }
 const attachmentsOf = (reportId: string) =>
   withSql((sql) => sql<Row[]>`
     select id, mime, size::int as size, storage_path from public.report_attachments

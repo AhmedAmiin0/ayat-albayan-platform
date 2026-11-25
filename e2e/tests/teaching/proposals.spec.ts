@@ -33,7 +33,7 @@ function cairoClock(at: Date): string {
   }).format(at);
 }
 
-type ProposalRow = { status: string; proposed_starts_at: Date; note: string | null };
+interface ProposalRow { status: string; proposed_starts_at: Date; note: string | null }
 
 async function proposalOf(lessonId: string): Promise<ProposalRow | undefined> {
   return withSql(async (sql) => {
