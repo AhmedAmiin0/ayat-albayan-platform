@@ -1,10 +1,10 @@
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { addCalendarMonths, localDateIn } from '@ab/time';
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ExpensesRepo } from './expenses.repo';
 import { ExpensesSettings } from './expenses.settings';
 import { BackgroundJob } from '@/config/role/background-job';
-import { beatTick } from '@/common/jobs/beats';
+import { Ticker, TickerJob } from '@/common/jobs';
 
 const EVERY_MS = 6 * 3_600_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */
@@ -18,23 +18,20 @@ export function nextMonthStart(now: Date, tz: string = SETTING_DEFAULTS.academy_
 /** Copies recurring expenses into next month as drafts; unique (template_id, month) dedups. */
 @BackgroundJob({ name: 'expenses' })
 @Injectable()
-export class ExpensesJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class ExpensesJob extends TickerJob {
   private readonly log = new Logger(ExpensesJob.name);
-  private readonly timers: NodeJS.Timeout[] = [];
+  protected readonly ticker = new Ticker({
+    name: ExpensesJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: EVERY_MS,
+    run: () => this.runOnce(),
+  });
 
   constructor(
     private readonly expenses: ExpensesRepo,
     private readonly settings: ExpensesSettings,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    const plan = { name: ExpensesJob.name, firstMs: FIRST_RUN_MS, everyMs: EVERY_MS };
-    const tick = beatTick(plan, () => this.runOnce());
-    this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, EVERY_MS).unref());
-  }
-
-  onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+  ) {
+    super();
   }
 
   /** Never throws; the number of drafts written. */

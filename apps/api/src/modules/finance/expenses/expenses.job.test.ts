@@ -47,7 +47,7 @@ describe('ExpensesJob timers', () => {
     return { job, drafts, finish: () => finish() };
   }
 
-  it('runs ten minutes after boot, then every six hours, and never after destroy', async () => {
+  it('runs ten minutes after boot, then every six hours, and never after shutdown', async () => {
     vi.useFakeTimers();
     const { job, drafts, finish } = slowJob();
     job.onApplicationBootstrap();
@@ -57,7 +57,7 @@ describe('ExpensesJob timers', () => {
     await vi.advanceTimersByTimeAsync(6 * HOUR);
     expect(drafts).toHaveBeenCalledTimes(2);
     finish();
-    await job.onModuleDestroy();
+    await job.beforeApplicationShutdown();
     await vi.advanceTimersByTimeAsync(12 * HOUR);
     expect(drafts).toHaveBeenCalledTimes(2);
   });
@@ -69,6 +69,6 @@ describe('ExpensesJob timers', () => {
     await vi.advanceTimersByTimeAsync(10 * 60_000 + 6 * HOUR);
     expect(drafts).toHaveBeenCalledTimes(1);
     finish();
-    await job.onModuleDestroy();
+    await job.beforeApplicationShutdown();
   });
 });
