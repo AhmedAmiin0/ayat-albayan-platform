@@ -4427,13 +4427,13 @@
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm-http.ts": {
     "complexity": {
-      "count": 3
+      "count": 2
     },
     "stylistic/max-len": {
-      "count": 12
+      "count": 10
     },
     "ab/no-shape-checks": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm-plan.ts": {
