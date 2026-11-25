@@ -54,9 +54,14 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
+          # The files that differ between two commits' trees; blobs are never fetched.
+          gained() {
+            git fetch -q --depth=1 --filter=blob:none origin "$1" "$2" || return 1
+            git -c core.quotePath=false diff --name-only --no-renames "$1" "$2"
+          }
           # Everything the merge conditions read, for PR $1 into folder $2 (cli.ts parses it with zod).
           gather() {
-            local n=$1 d=$2 sha id
+            local n=$1 d=$2 sha id base tip names
             rm -rf "$d" && mkdir -p "$d"
             gh pr view "$n" --repo "$REPO" > "$d/pr.json" --json \
               number,title,body,isDraft,isCrossRepository,baseRefName,headRefName,headRefOid,mergeable,labels
@@ -80,9 +85,17 @@ jobs:
                 | {event, label: .label.name, created_at}' | jq -s . > "$d/events.json"
             gh api "repos/$REPO/commits/$sha/check-suites?per_page=100" --paginate \
               --jq '.check_suites[] | {created_at}' | jq -s . > "$d/suites.json"
+            # What develop gained since the PR's merge base (lockfile.ts), from the two trees in git:
+            # the compare API lists 300 files at most. Not known on a failure: a lockfile PR then waits.
             gh api "repos/$REPO/compare/develop...$sha?per_page=1" \
-              --jq '{base_commit: {sha: .base_commit.sha}, merge_base_commit: {sha: .merge_base_commit.sha}}' \
-              > "$d/compare.json"
+              --jq '"\(.merge_base_commit.sha) \(.base_commit.sha)"' > "$d/bases.txt"
+            read -r base tip < "$d/bases.txt"
+            if names=$(gained "$base" "$tip"); then
+              printf '%s\n' "$names" | jq -R 'select(length > 0) | {filename: .}' \
+                | jq -s '{known: true, files: .}' > "$d/behind.json"
+            else
+              echo '{"known": false, "files": []}' > "$d/behind.json"
+            fi
             gh api "repos/$REPO/issues/$n/comments?per_page=100" --paginate --jq '.[] | {body}' \
               | jq -s . > "$d/comments.json"
           }

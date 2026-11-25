@@ -25,7 +25,7 @@ const RULES: readonly ((f: Facts) => Decision | null)[] = [
   (f) => (widened(f.annotations) ? skip('layer table widened: the owner merges it') : null),
   (f) => (f.pr.mergeable === 'MERGEABLE' ? null : skip(`mergeable is ${f.pr.mergeable}`)),
   (f) => {
-    if (!staleLockBase(f.files, f.compare)) return null;
+    if (!staleLockBase(f.files, f.behind)) return null;
     return alreadyAsked(f.comments, f.pr.headRefOid)
       ? skip('stale lockfile base, already asked')
       : { action: 'comment', reason: 'needs update from develop' };
