@@ -923,9 +923,6 @@
     }
   },
   "src/common/student-ids.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/forbidden-imports": {
       "count": 1
     }
@@ -3720,9 +3717,6 @@
     },
     "stylistic/max-len": {
       "count": 5
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/modules/messaging/inbox/threads/threads.repo.ts": {
@@ -6405,9 +6399,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/modules/people/students/students.module.ts": {
@@ -6609,9 +6600,6 @@
   },
   "src/modules/people/teachers/teachers.mapper.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
       "count": 1
     }
   },
@@ -9963,7 +9951,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/meetings/invites/meeting-invitee.resolver.ts": {
