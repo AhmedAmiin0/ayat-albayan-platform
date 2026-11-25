@@ -3,13 +3,13 @@ import { STRIPE_FACTORY, StripeClients, stripeFactory } from './stripe-clients';
 import { StripeFeatureController } from './stripe-feature.controller';
 import { StripeEnabledGuard } from './stripe-gate';
 
-/** The Stripe clients and the feature gate that every Stripe route sits behind (docs/30). */
+/** Stripe clients and the STRIPE_ENABLED guard; the webhook stays outside the guard (docs/30). */
 @Module({
   controllers: [StripeFeatureController],
   providers: [
     { provide: STRIPE_FACTORY, useValue: stripeFactory },
     ...[StripeClients, StripeEnabledGuard],
   ],
-  exports: [StripeClients, StripeEnabledGuard],
+  exports: [StripeClients],
 })
 export class StripeGateModule {}

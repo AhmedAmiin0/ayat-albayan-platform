@@ -6,7 +6,7 @@ import { SyncRepo } from './sync.repo';
 import { ThreadSyncController } from './thread-sync.controller';
 import { ThreadSyncService } from './thread-sync.service';
 
-/** The shared module also resolves SyncViews' optional ThreadQuotes, as before the split. */
+/** The shared module provides SyncViews' optional ThreadQuotes. */
 @Module({
   imports: [InboxSharedModule],
   controllers: [ThreadSyncController],
