@@ -1,14 +1,14 @@
 import { pageOf } from '@ab/core';
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { infinitePageOptions, pageOptions, type ApiClient } from '../../..';
+import { infinitePageOptions, pageOptions, parseResponse, type ApiClient } from '../../..';
 
 const leads = { path: '/leads', page: pageOf(z.object({ id: z.string() })) };
 const body = { items: [{ id: 'a', extra: 1 }], total: 3, page: 1, pageSize: 1 };
 
 function fakeApi() {
-  const apiFetch = vi.fn(async (_path: string, init?: { schema?: z.ZodType }) =>
-    init?.schema ? init.schema.parse(body) : body,
+  const apiFetch = vi.fn(async (path: string, init?: RequestInit & { schema?: z.ZodType }) =>
+    init?.schema ? parseResponse(init.schema, body, path) : body,
   );
   const api: ApiClient = { apiFetch, apiSend: vi.fn() };
   return { api, apiFetch };

@@ -11,8 +11,9 @@ export function pathParamNames(path: string): string[] {
 
 const filled = (value: unknown): boolean => value !== undefined && value !== null && value !== '';
 
-function fillPath(path: string, params: Record<string, unknown>): string {
-  const values = new Map(Object.entries(params));
+/** routePath for a caller that holds the params untyped; the same checks run. */
+export function fillRoutePath(path: string, params: unknown): string {
+  const values = new Map(Object.entries(paramsSchema.parse(params)));
   const names = pathParamNames(path);
   const missing = names.filter((name) => !filled(values.get(name)));
   const extra = [...values.keys()].filter((key) => !names.includes(key));
@@ -26,5 +27,5 @@ function fillPath(path: string, params: Record<string, unknown>): string {
 /** The route's path with each `:name` filled and URI-encoded; a missing or extra param throws. */
 export function routePath<R extends RouteSpec>(route: R, ...args: RoutePathArgs<R>): string {
   const given: readonly unknown[] = args;
-  return fillPath(route.path, paramsSchema.parse(given[0]));
+  return fillRoutePath(route.path, given[0]);
 }

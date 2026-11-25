@@ -1,7 +1,7 @@
 import { defineRoute } from '@ab/core';
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { apiErrorCode, call, type ApiClient } from '../../../..';
+import { apiErrorCode, call, parseResponse, type ApiClient } from '../../../..';
 
 const link = z.object({ code: z.string(), title: z.string() });
 const routes = {
@@ -27,11 +27,13 @@ const routes = {
 };
 
 function fakeApi(answer: unknown) {
-  const apiFetch = vi.fn(async (_path: string, init?: { schema?: z.ZodType }) =>
-    init?.schema ? init.schema.parse(answer) : answer,
+  const parsed = (path: string, schema?: z.ZodType) =>
+    schema ? parseResponse(schema, answer, path) : answer;
+  const apiFetch = vi.fn(async (path: string, init?: RequestInit & { schema?: z.ZodType }) =>
+    parsed(path, init?.schema),
   );
-  const apiSend = vi.fn(async (_m: string, _p: string, opts?: { schema?: z.ZodType }) =>
-    opts?.schema ? opts.schema.parse(answer) : answer,
+  const apiSend = vi.fn(async (_m: string, path: string, opts?: { schema?: z.ZodType }) =>
+    parsed(path, opts?.schema),
   );
   const api: ApiClient = { apiFetch, apiSend };
   return { api, apiFetch, apiSend };
