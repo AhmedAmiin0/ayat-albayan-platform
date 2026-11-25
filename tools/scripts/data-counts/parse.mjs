@@ -1,9 +1,14 @@
 // Production counts land in public Actions logs: only `select count(*) from <table> [where …]` is
-// accepted, with no subquery, function call or second statement that could expose a value.
+// accepted, on a table in public, with no subquery, function call or second statement that could
+// expose or change a value.
 const NAME_LINE = /^--\s*count:\s*([a-z][a-z0-9_]*)\s*$/;
-const COUNT = /^select count\(\*\) from [a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)?(?: where (.+))?$/i;
+const COUNT = /^select count\(\*\) from (?:public\.)?[a-z_][a-z0-9_]*(?: where (.+))?$/i;
 const LITERAL = /'(?:[^']|'')*'/g;
-const FORBIDDEN = /;|--|\/\*|\$|\b(?:select|table|values)\b/i;
+// Postgres ends a string where LITERAL does only when it has no backslash and no prefix (E, U&,
+// B, X), and a quoted name can call a function: a count needs none of them. Each string becomes
+// a backtick, which is no SQL, so what is left is the statement's own code.
+const UNREADABLE = /[\\"`]/;
+const FORBIDDEN = /;|--|\/\*|\$|'|[a-z0-9_&]`|[^\x20-\x7e]|\b(?:select|table|values)\b/i;
 const OPERATORS = new Set(['in', 'and', 'or', 'not']);
 const CALL = /\b([a-z_][a-z0-9_]*)\s*\(/gi;
 
@@ -11,8 +16,8 @@ const hasCall = (where) =>
   [...where.matchAll(CALL)].some(([, word]) => !OPERATORS.has(word.toLowerCase()));
 
 const isPlainWhere = (where) => {
-  const bare = where.replace(LITERAL, "''");
-  return !FORBIDDEN.test(bare) && !hasCall(bare);
+  const bare = where.replace(LITERAL, '`');
+  return !UNREADABLE.test(where) && !FORBIDDEN.test(bare) && !hasCall(bare);
 };
 
 const isPlainCount = (sql) => {

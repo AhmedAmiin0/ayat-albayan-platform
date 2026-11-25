@@ -2,10 +2,13 @@ import { readFileSync } from 'node:fs';
 import { countLines, countOf } from './count.mjs';
 import { parseCounts } from './parse.mjs';
 
+// The extended protocol carries one statement, whatever the text holds.
+const ONE_STATEMENT = { simple: false };
+
 // A database error can quote a row value, so every failure becomes a bare null.
 const countIn = (sql, statement) =>
   sql
-    .begin('read only', (tx) => tx.unsafe(statement))
+    .begin('read only', (tx) => tx.unsafe(statement, [], ONE_STATEMENT))
     .then(countOf)
     .catch(() => null);
 
