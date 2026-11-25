@@ -36,7 +36,9 @@ export function stepReady(d: BookingDraft, step: StepKey): boolean {
   switch (step) {
     case 'students':
       if (d.kind === 'makeup') return d.students.length === 1 && !d.leadId;
-      return isNewStudent(d) && d.students.length === 0 ? newStudentReady(d.newStudent) : d.students.length > 0;
+      return isNewStudent(d) && d.students.length === 0
+        ? newStudentReady(d.newStudent)
+        : d.students.length > 0;
     case 'missed':
       return d.missed !== null;
     case 'invoice':

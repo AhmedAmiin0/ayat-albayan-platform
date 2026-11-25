@@ -22,7 +22,14 @@ function renderReview() {
   const onInvoice = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <ReviewStep draft={DRAFT} onMeetingLink={vi.fn()} onChangeSlot={vi.fn()} onInvoice={onInvoice} onBooked={vi.fn()} onPatch={vi.fn()} />
+      <ReviewStep
+        draft={DRAFT}
+        onMeetingLink={vi.fn()}
+        onChangeSlot={vi.fn()}
+        onInvoice={onInvoice}
+        onBooked={vi.fn()}
+        onPatch={vi.fn()}
+      />
     </QueryClientProvider>,
   );
   return onInvoice;
@@ -41,7 +48,14 @@ describe('ReviewStep invoice errors (R-PAY-03, R-MSG-06)', () => {
     const makeup: BookingDraft = { ...DRAFT, kind: 'makeup', missed: { lessonId: 'l-1', startsAt: SLOT, teacherId: ABRAR.id, durationMin: 45 } };
     render(
       <QueryClientProvider client={new QueryClient()}>
-        <ReviewStep draft={makeup} onMeetingLink={vi.fn()} onChangeSlot={vi.fn()} onInvoice={vi.fn()} onBooked={vi.fn()} onPatch={vi.fn()} />
+        <ReviewStep
+          draft={makeup}
+          onMeetingLink={vi.fn()}
+          onChangeSlot={vi.fn()}
+          onInvoice={vi.fn()}
+          onBooked={vi.fn()}
+          onPatch={vi.fn()}
+        />
       </QueryClientProvider>,
     );
     expect(screen.getByText(t.booking.makeup.timeLabel)).toBeTruthy();

@@ -36,7 +36,14 @@ function renderPane(mode: InboxMode, body: ThreadDetail) {
 function renderRow(mode: InboxMode, patch: Parameters<typeof thread>[0]) {
   renderWithClient(
     <InboxModeContext.Provider value={mode}>
-      <ul><ThreadRow thread={thread({ ...FAMILY, ...patch })} search={{ page: 1 }} active={false} now={new Date()} /></ul>
+      <ul>
+        <ThreadRow
+          thread={thread({ ...FAMILY, ...patch })}
+          search={{ page: 1 }}
+          active={false}
+          now={new Date()}
+        />
+      </ul>
     </InboxModeContext.Provider>,
   );
 }

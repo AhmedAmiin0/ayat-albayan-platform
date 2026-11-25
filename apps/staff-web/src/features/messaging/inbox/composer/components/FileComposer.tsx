@@ -16,7 +16,13 @@ import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/li
 import { useReplyTarget } from '@/features/messaging/inbox/composer/lib/use-reply-target';
 import { rereadSentChat, showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
-type FileSend = { phone: string; clientRequestId: string; file: File; caption: string; replyTo?: string | undefined };
+type FileSend = {
+  phone: string;
+  clientRequestId: string;
+  file: File;
+  caption: string;
+  replyTo?: string | undefined;
+};
 
 export interface FileComposerProps {
   phone: string;
@@ -28,7 +34,8 @@ export interface FileComposerProps {
 /** The name the family sees: ≤ 200 characters, keeping the end (the extension). */
 const sentName = (file: File): string => file.name.trim().slice(-200) || file.type;
 
-const fileErrorText = (e: unknown): string => sendErrorCodeText(e instanceof ChatUploadError ? e.code : sendErrorCode(e));
+const fileErrorText = (e: unknown): string =>
+  sendErrorCodeText(e instanceof ChatUploadError ? e.code : sendErrorCode(e));
 
 /** An image's thumbnail (an object URL, revoked on unmount) or the PDF's name and size. */
 function Chip({ file }: { file: File }) {
@@ -61,9 +68,19 @@ export function FileComposer({ phone, file, onDone }: FileComposerProps) {
   const send = useMutation({
     mutationKey,
     mutationFn: async (s: FileSend) => {
-      const path = await uploadChatFile({ phone: s.phone, requestId: s.clientRequestId, file: s.file });
+      const path = await uploadChatFile({
+        phone: s.phone,
+        requestId: s.clientRequestId,
+        file: s.file,
+      });
       const text = s.caption.trim();
-      const body = { phone: s.phone, clientRequestId: s.clientRequestId, path, filename: sentName(s.file), ...(s.replyTo ? { replyToMessageId: s.replyTo } : {}) };
+      const body = {
+        phone: s.phone,
+        clientRequestId: s.clientRequestId,
+        path,
+        filename: sentName(s.file),
+        ...(s.replyTo ? { replyToMessageId: s.replyTo } : {}),
+      };
       return sendFile(text ? { ...body, caption: text } : body);
     },
     onMutate: sendStart,
@@ -87,7 +104,13 @@ export function FileComposer({ phone, file, onDone }: FileComposerProps) {
       onSubmit={(e) => {
         e.preventDefault();
         if (pending) return;
-        send.mutate({ phone, clientRequestId: requestId.current, file, caption, replyTo: reply.replyTo });
+        send.mutate({
+          phone,
+          clientRequestId: requestId.current,
+          file,
+          caption,
+          replyTo: reply.replyTo,
+        });
       }}
     >
       <ReplyStrip returnFocus={captionBox} />

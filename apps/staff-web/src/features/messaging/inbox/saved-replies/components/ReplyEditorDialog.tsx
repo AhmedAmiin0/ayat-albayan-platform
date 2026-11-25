@@ -31,7 +31,10 @@ export function ReplyEditorDialog({ reply, scope, onClose }: ReplyEditorDialogPr
   const [missing, setMissing] = useState(false);
   const [uploading, setUploading] = useState(false);
   const save = useMutation({
-    mutationFn: () => (reply ? updateReply({ id: reply.id, body: updateBody(draft, !!reply.attachment) }) : createReply(createBody(draft, scope))),
+    mutationFn: () =>
+      reply
+        ? updateReply({ id: reply.id, body: updateBody(draft, !!reply.attachment) })
+        : createReply(createBody(draft, scope)),
     onSuccess: async () => {
       await refreshReplies(queryClient);
       onClose();
@@ -57,10 +60,27 @@ export function ReplyEditorDialog({ reply, scope, onClose }: ReplyEditorDialogPr
   return (
     <Dialog title={reply ? S.editTitle : S.addTitle} onClose={onClose} actions={actions}>
       <form id={formId} onSubmit={submit} noValidate className="grid gap-4">
-        <Field label={S.fieldTitle} required error={missing && !draft.title.trim() ? t.common.required : undefined}>
-          {(p) => <Input {...p} value={draft.title} maxLength={SAVED_REPLY_TITLE_MAX} autoComplete="off" dir="auto" onChange={(e) => set({ title: e.target.value })} />}
+        <Field
+          label={S.fieldTitle}
+          required
+          error={missing && !draft.title.trim() ? t.common.required : undefined}
+        >
+          {(p) => (
+            <Input
+              {...p}
+              value={draft.title}
+              maxLength={SAVED_REPLY_TITLE_MAX}
+              autoComplete="off"
+              dir="auto"
+              onChange={(e) => set({ title: e.target.value })}
+            />
+          )}
         </Field>
-        <Field label={S.fieldBody} required error={missing && !draft.body.trim() ? t.common.required : undefined}>
+        <Field
+          label={S.fieldBody}
+          required
+          error={missing && !draft.body.trim() ? t.common.required : undefined}
+        >
           {(p) => (
             <textarea
               {...p}
@@ -75,7 +95,11 @@ export function ReplyEditorDialog({ reply, scope, onClose }: ReplyEditorDialogPr
           )}
         </Field>
         <PlaceholderChips target={box} value={draft.body} onChange={(body) => set({ body })} />
-        <AttachmentField file={draft.file} onChange={(file) => set({ file })} onBusy={setUploading} />
+        <AttachmentField
+          file={draft.file}
+          onChange={(file) => set({ file })}
+          onBusy={setUploading}
+        />
         {save.isError && <FormAlert>{replyErrorText(save.error)}</FormAlert>}
       </form>
     </Dialog>

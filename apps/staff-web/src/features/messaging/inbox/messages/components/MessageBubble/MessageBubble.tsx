@@ -111,7 +111,9 @@ export function MessageBubble(props: MessageBubbleProps) {
               {note}
             </p>
           ))}
-          {admin && (canRetry(m) || canSendByHand(m) || isHandedOff(m)) && <MessageActions message={m} />}
+          {admin && (canRetry(m) || canSendByHand(m) || isHandedOff(m)) && (
+            <MessageActions message={m} />
+          )}
           {admin && hasWhatsAppLine(m) && <WhatsAppSendLine message={m} now={now} />}
           <ReactionPill message={m} outbound={outbound} />
         </div>

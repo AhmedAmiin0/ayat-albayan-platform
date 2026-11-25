@@ -69,9 +69,15 @@ describe('move a template to the other number', () => {
 
   it('no move to a number the server is not set up for: disabled, with the reason beside it', async () => {
     await renderMove([lineView('notifications'), lineView('chat', { configured: false })]);
-    await waitFor(() => expect((moveOf(t.templates.names.booking_confirmation) as HTMLButtonElement).disabled).toBe(true));
+    await waitFor(() =>
+      expect((moveOf(t.templates.names.booking_confirmation) as HTMLButtonElement).disabled).toBe(
+        true,
+      ),
+    );
     const reason = moveOf(t.templates.names.booking_confirmation).getAttribute('aria-describedby');
-    expect(reason && document.getElementById(reason)?.textContent).toBe(t.templates.moveUnavailable);
+    expect(reason && document.getElementById(reason)?.textContent).toBe(
+      t.templates.moveUnavailable,
+    );
     // The chat row moves to notifications, which is configured.
     expect((moveOf('academy_welcome') as HTMLButtonElement).disabled).toBe(false);
     expect(apiSend).not.toHaveBeenCalled();

@@ -15,9 +15,22 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } } }));
 
 const PATH = '/threads/%2B966501234567';
-const OPENER = template({ key: 'follow_up_slots', params: ['student_name'], body_ar: 'السلام عليكم، موعد {{1}}' });
-const ME = ['/auth/me', { id: 'u1', email: null, role: 'sales', permissions: ['messages.read'] }] as const;
-const EMPTY = { thread: null, messages: [], has_more: false, lessons: [], people: { guardian: null, lead: null, students: [] } };
+const OPENER = template({
+  key: 'follow_up_slots',
+  params: ['student_name'],
+  body_ar: 'السلام عليكم، موعد {{1}}',
+});
+const ME = [
+  '/auth/me',
+  { id: 'u1', email: null, role: 'sales', permissions: ['messages.read'] },
+] as const;
+const EMPTY = {
+  thread: null,
+  messages: [],
+  has_more: false,
+  lessons: [],
+  people: { guardian: null, lead: null, students: [] },
+};
 
 function renderNew(mode: InboxMode) {
   routeFetch(apiFetch, [ME, [PATH, EMPTY], ['/messaging/templates', [OPENER]], ['/messages/gate', { open: true, reason: null, queued: 0 }]]);

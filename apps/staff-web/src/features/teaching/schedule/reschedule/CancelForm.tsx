@@ -54,7 +54,12 @@ export function CancelForm({ lesson, onBack, onDone, correction }: CancelFormPro
     >
       <h3 className="font-display text-h4 font-bold">{title}</h3>
       {!correction && (
-        <ScopeRadios value={scope} onChange={setScope} ruleAllowed={lesson.rule_id !== null} label={t.lessons.scopeLabelCancel} />
+        <ScopeRadios
+          value={scope}
+          onChange={setScope}
+          ruleAllowed={lesson.rule_id !== null}
+          label={t.lessons.scopeLabelCancel}
+        />
       )}
       <CancelByRadios options={correction ? CORRECT_BY : CANCEL_BY} value={by} onChange={setBy} />
       <Field label={t.lessons.reason} error={missing ? t.common.required : undefined}>

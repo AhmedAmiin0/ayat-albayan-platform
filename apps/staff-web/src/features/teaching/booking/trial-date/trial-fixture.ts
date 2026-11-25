@@ -59,4 +59,6 @@ export function routeTrialSend(apiSend: Mock, o: { base: string; answers: unknow
 
 /** The bodies sent to POST `path`, in order. */
 export const sentTo = (apiSend: Mock, path: string): Record<string, unknown>[] =>
-  apiSend.mock.calls.filter(([, p]) => p === path).map(([, , body]) => body as Record<string, unknown>);
+  apiSend.mock.calls
+    .filter(([, p]) => p === path)
+    .map(([, , body]) => body as Record<string, unknown>);

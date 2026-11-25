@@ -11,8 +11,12 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 const NEXT: AcademySettings = { ...SETTING_DEFAULTS, crm_cutover_done: true };
 
 function setup(onSaved?: () => void) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
   const { result } = renderHook(() => useGateSwitch({ onSaved }), { wrapper });
   return { client, result };
 }

@@ -10,9 +10,16 @@ export function textAt(path: string): string {
 const opt = (path: string | undefined): string | undefined => (path ? textAt(path) : undefined);
 
 /** A setting's words on /admin/settings: label, hint, and the switch of a nullable number. */
-export function settingText(key: SettingKey): { label: string; hint?: string; toggle?: string; toggleHint?: string } {
+export function settingText(key: SettingKey): {
+  label: string;
+  hint?: string;
+  toggle?: string;
+  toggleHint?: string;
+} {
   const def = settingDef(key);
-  const words: { label: string; hint?: string; toggle?: string; toggleHint?: string } = { label: textAt(def.labelKey) };
+  const words: { label: string; hint?: string; toggle?: string; toggleHint?: string } = {
+    label: textAt(def.labelKey),
+  };
   const hint = opt(def.hintKey);
   if (hint) words.hint = hint;
   if (def.type === 'int') {

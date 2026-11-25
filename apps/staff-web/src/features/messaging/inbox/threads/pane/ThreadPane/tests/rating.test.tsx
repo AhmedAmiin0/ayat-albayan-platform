@@ -21,7 +21,11 @@ const tap = message({
   interactive_payload: { type: 'button', button: { text: 'جيدة', payload: 'rate_good:l-1' } },
 });
 
-function renderThread(input: { lastInboundAgoMs: number; templates?: unknown[]; guardian?: boolean }) {
+function renderThread(input: {
+  lastInboundAgoMs: number;
+  templates?: unknown[];
+  guardian?: boolean;
+}) {
   const last = new Date(Date.now() - input.lastInboundAgoMs).toISOString();
   const open = input.lastInboundAgoMs < 24 * HOUR;
   routeFetch(apiFetch, [

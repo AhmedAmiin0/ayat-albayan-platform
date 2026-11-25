@@ -36,15 +36,29 @@ describe('catalogue words', () => {
   });
 
   it('channels and tags in words', () => {
-    expect(channelsText(entry({ channels: ['bell', 'push'] }))).toBe(`${c.channels.bell}${t.common.listSeparator}${c.channels.push}`);
-    expect(tagsOf(entry({ essential: true, locked: true }))).toEqual([c.tags.automatic, c.tags.essential, c.tags.locked]);
+    expect(channelsText(entry({ channels: ['bell', 'push'] }))).toBe(
+      `${c.channels.bell}${t.common.listSeparator}${c.channels.push}`,
+    );
+    expect(tagsOf(entry({ essential: true, locked: true }))).toEqual([
+      c.tags.automatic,
+      c.tags.essential,
+      c.tags.locked,
+    ]);
     expect(tagsOf(entry({ automatic: false }))).toEqual([]);
   });
 
   it('the number: each line with its kept phone; free text from the chat; none for bell / push', () => {
-    expect(numberParts(entry({}), LINES)).toEqual([{ label: c.lines.notifications, phone: '+966551234567' }]);
-    expect(numberParts(entry({ lines: ['chat'] }), LINES)).toEqual([{ label: c.lines.chat, phone: null }]);
-    expect(numberParts(entry({ lines: [] }), LINES)).toEqual([{ label: c.chatNumber, phone: null }]);
-    expect(numberParts(entry({ channels: ['bell'], lines: [] }), LINES)).toEqual([{ label: c.noNumber, phone: null }]);
+    expect(numberParts(entry({}), LINES)).toEqual([
+      { label: c.lines.notifications, phone: '+966551234567' },
+    ]);
+    expect(numberParts(entry({ lines: ['chat'] }), LINES)).toEqual([
+      { label: c.lines.chat, phone: null },
+    ]);
+    expect(numberParts(entry({ lines: [] }), LINES)).toEqual([
+      { label: c.chatNumber, phone: null },
+    ]);
+    expect(numberParts(entry({ channels: ['bell'], lines: [] }), LINES)).toEqual([
+      { label: c.noNumber, phone: null },
+    ]);
   });
 });

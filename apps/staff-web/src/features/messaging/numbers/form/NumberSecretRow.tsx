@@ -40,7 +40,10 @@ export function NumberSecretRow({ view, name, manage }: NumberSecretRowProps) {
   const [value, setValue] = useState('');
   const [confirming, setConfirming] = useState(false);
   const save = useNumbersMutation(putNumberSecret, { onDone: () => setValue(''), note: s.saved });
-  const clear = useNumbersMutation(clearNumberSecret, { onDone: () => setConfirming(false), note: s.cleared });
+  const clear = useNumbersMutation(clearNumberSecret, {
+    onDone: () => setConfirming(false),
+    note: s.cleared,
+  });
   const label = t.numbers.fields[name];
   const state = view.secrets[name];
   const hint = warningOf(view, name);

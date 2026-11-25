@@ -10,14 +10,20 @@ export type FilterSearch = Record<string, string>;
 export const filterParam = (key: string) => `f_${key}`;
 
 /** `sort`/`dir` from the URL: unknown keys are dropped, `dir` only with a sort and only when desc. */
-export function parseSortSearch(search: Record<string, unknown>, keys: readonly string[]): SortSearch {
+export function parseSortSearch(
+  search: Record<string, unknown>,
+  keys: readonly string[],
+): SortSearch {
   const sort = search['sort'];
   if (typeof sort !== 'string' || !keys.includes(sort)) return {};
   return search['dir'] === 'desc' ? { sort, dir: 'desc' } : { sort };
 }
 
 /** `f_<key>` params for the allowlisted keys; non-empty strings only. */
-export function parseFilterSearch(search: Record<string, unknown>, keys: readonly string[]): FilterSearch {
+export function parseFilterSearch(
+  search: Record<string, unknown>,
+  keys: readonly string[],
+): FilterSearch {
   const out: FilterSearch = {};
   for (const key of keys) {
     const value = search[filterParam(key)];
@@ -27,7 +33,10 @@ export function parseFilterSearch(search: Record<string, unknown>, keys: readonl
 }
 
 /** DataTable's `sort.onChange` → route search (asc and none leave the URL). */
-export function toSortSearch(next: { key?: string; dir?: SortDir }): { sort?: string; dir?: SortDir } {
+export function toSortSearch(next: { key?: string; dir?: SortDir }): {
+  sort?: string;
+  dir?: SortDir;
+} {
   if (!next.key) return { sort: undefined, dir: undefined };
   return { sort: next.key, dir: next.dir === 'desc' ? 'desc' : undefined };
 }

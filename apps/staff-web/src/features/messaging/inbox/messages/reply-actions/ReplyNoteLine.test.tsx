@@ -34,12 +34,28 @@ const LESSON: ThreadLesson = {
 };
 const ASK = message({ id: 'm-r', body: 'تأجيل الحلقة إلى غدا', guardian_id: 'g-1', lead_id: null });
 const YES = message({ id: 'm-y', body: 'ايوة', guardian_id: 'g-1', lead_id: null });
-const ADMIN: Permission[] = ['lessons.reschedule', 'lessons.write', 'lessons.read', 'booking.write', 'lessons.status'];
+const ADMIN: Permission[] = [
+  'lessons.reschedule',
+  'lessons.write',
+  'lessons.read',
+  'booking.write',
+  'lessons.status',
+];
 
-function renderNote(m: typeof ASK, opts: { mode: InboxMode; permissions: Permission[]; lessons?: ThreadLesson[] }) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+function renderNote(
+  m: typeof ASK,
+  opts: { mode: InboxMode; permissions: Permission[]; lessons?: ThreadLesson[] },
+) {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
   setConfirmationRequired(client, true);
-  client.setQueryData(pathKey('/auth/me'), { id: 'u', email: null, role: 'admin', permissions: opts.permissions });
+  client.setQueryData(pathKey('/auth/me'), {
+    id: 'u',
+    email: null,
+    role: 'admin',
+    permissions: opts.permissions,
+  });
   render(
     <QueryClientProvider client={client}>
       <InboxModeContext.Provider value={opts.mode}>

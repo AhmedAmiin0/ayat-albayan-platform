@@ -5,9 +5,18 @@ import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from '@/features/messaging/inbox/messages/components/MessageBubble/MessageBubble';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch: vi.fn(),
+  apiSend: vi.fn(),
+}));
 
-const block = (over: Partial<MessageTemplateBlock> = {}): MessageTemplateBlock => ({ header: null, footer: null, buttons: [], ...over });
+const block = (over: Partial<MessageTemplateBlock> = {}): MessageTemplateBlock => ({
+  header: null,
+  footer: null,
+  buttons: [],
+  ...over,
+});
 
 function bubble(patch: Partial<MessageView>) {
   renderWithClient(

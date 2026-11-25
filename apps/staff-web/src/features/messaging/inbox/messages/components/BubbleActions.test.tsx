@@ -6,7 +6,13 @@ import { message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox
 import { MessageLog } from './MessageLog';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 
-const base = { phone: PHONE, hasMore: false, loadingOlder: false, onOlder: vi.fn(), waitingKeys: new Set<string>() };
+const base = {
+  phone: PHONE,
+  hasMore: false,
+  loadingOlder: false,
+  onOlder: vi.fn(),
+  waitingKeys: new Set<string>(),
+};
 const M = message({ id: 'm1', body: 'السلام عليكم', replyable: true, forwardable: true });
 
 function renderLog(opts: { enabled: boolean; m?: typeof M }) {

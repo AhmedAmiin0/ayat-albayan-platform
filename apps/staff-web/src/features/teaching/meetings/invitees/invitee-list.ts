@@ -29,7 +29,8 @@ export function fromPhone(typed: string): PickedInvitee | null {
   return { key: `phone:${p.e164}`, name: p.e164, input: { kind: 'phone', phone: p.e164 } };
 }
 
-export const isFull = (list: readonly PickedInvitee[]): boolean => list.length >= MAX_MEETING_INVITEES;
+export const isFull = (list: readonly PickedInvitee[]): boolean =>
+  list.length >= MAX_MEETING_INVITEES;
 
 /** Adds once; a full list stays as it is. */
 export function addInvitee(list: readonly PickedInvitee[], item: PickedInvitee): PickedInvitee[] {
@@ -37,6 +38,8 @@ export function addInvitee(list: readonly PickedInvitee[], item: PickedInvitee):
   return [...list, item];
 }
 
-export const removeInvitee = (list: readonly PickedInvitee[], key: string): PickedInvitee[] => list.filter((p) => p.key !== key);
+export const removeInvitee = (list: readonly PickedInvitee[], key: string): PickedInvitee[] =>
+  list.filter((p) => p.key !== key);
 
-export const hasInvitee = (list: readonly PickedInvitee[], key: string): boolean => list.some((p) => p.key === key);
+export const hasInvitee = (list: readonly PickedInvitee[], key: string): boolean =>
+  list.some((p) => p.key === key);

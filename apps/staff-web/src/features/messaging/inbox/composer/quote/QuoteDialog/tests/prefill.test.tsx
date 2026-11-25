@@ -15,9 +15,16 @@ const p = t.pricing;
 
 function show(phone: string) {
   apiFetch.mockImplementation(async (path: string) => fakePricingApi(path));
-  renderWithClient(<QuoteDialog thread={thread({ phone_e164: phone, session_open: true })} onClose={vi.fn()} onFilled={vi.fn()} />);
+  renderWithClient(
+    <QuoteDialog
+      thread={thread({ phone_e164: phone, session_open: true })}
+      onClose={vi.fn()}
+      onFilled={vi.fn()}
+    />,
+  );
 }
-const quotePath = () => String(apiFetch.mock.calls.find(([path]) => String(path).startsWith('/pricing/quote'))?.[0]);
+const quotePath = () =>
+  String(apiFetch.mock.calls.find(([path]) => String(path).startsWith('/pricing/quote'))?.[0]);
 
 afterEach(() => {
   apiFetch.mockReset();

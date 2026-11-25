@@ -28,7 +28,9 @@ function renderWeek(week: LessonView[]) {
     Promise.resolve(path.startsWith('/lessons/overview') ? overview(week) : path.startsWith('/lesson-proposals') ? [PROPOSED] : []),
   );
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <WeekSchedule search={{}} onSearch={vi.fn()} />
     </QueryClientProvider>,
   );

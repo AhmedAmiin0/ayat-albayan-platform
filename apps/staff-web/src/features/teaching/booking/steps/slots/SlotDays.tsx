@@ -19,7 +19,9 @@ export const pickHint = (d: Pick<BookingDraft, 'course'>): string =>
   d.course ? counted(t.booking.pickNDays, d.course.perWeek) : t.booking.pickDayTimes;
 
 export function daysNote(d: Pick<BookingDraft, 'course' | 'pkg'>, picked: number): string | null {
-  return d.course ? pickProgress(t.booking, picked, d.course.perWeek) : packageDaysNote(d.pkg, picked);
+  return d.course
+    ? pickProgress(t.booking, picked, d.course.perWeek)
+    : packageDaysNote(d.pkg, picked);
 }
 
 /** The assistant's course can't go on until the days add up (R-SCH-02). */

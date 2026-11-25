@@ -49,17 +49,38 @@ export function ReplyComposer({ thread, context, leading }: ReplyComposerProps) 
     const before = getDraft(phone).text;
     const failed = keptFailed(getDraft(phone).failed);
     setDraft(phone, { text: fillComposer(before, resolveSavedReply(reply.body, values)), failed });
-    const next = reply.attachment ? { replyId: reply.id, attachment: reply.attachment, requestId: crypto.randomUUID(), failed: null } : null;
+    const next = reply.attachment
+      ? {
+          replyId: reply.id,
+          attachment: reply.attachment,
+          requestId: crypto.randomUUID(),
+          failed: null,
+        }
+      : null;
     // A pick that replaces the box (a «/» token or an empty box) replaces its file too; one added after text keeps it.
     if (next || replacesBox(before)) setStaged(phone, next);
     focusBox(boxId);
   };
   const may = useMaySend(thread);
-  const picker = useRepliesPicker({ text: draft.text, enabled: may, onPick, onClose: () => focusBox(boxId) });
-  const active = picker.bySlash && picker.list.length ? optionId(listId, picker.keys.active) : undefined;
+  const picker = useRepliesPicker({
+    text: draft.text,
+    enabled: may,
+    onPick,
+    onClose: () => focusBox(boxId),
+  });
+  const active =
+    picker.bySlash && picker.list.length ? optionId(listId, picker.keys.active) : undefined;
   const above = (
     <>
-      {picker.open && <RepliesPanel picker={picker} listId={listId} onAdd={dialogs.add} onEdit={dialogs.edit} onDelete={dialogs.remove} />}
+      {picker.open && (
+        <RepliesPanel
+          picker={picker}
+          listId={listId}
+          onAdd={dialogs.add}
+          onEdit={dialogs.edit}
+          onDelete={dialogs.remove}
+        />
+      )}
       {staged && (
         <StagedChip
           staged={staged}
@@ -86,7 +107,16 @@ export function ReplyComposer({ thread, context, leading }: ReplyComposerProps) 
   };
   return (
     <>
-      <TextComposer phone={phone} leading={<>{leading}<SavedRepliesButton pressed={picker.open && !picker.bySlash} onClick={picker.toggle} /></>} extras={extras} />
+      <TextComposer
+        phone={phone}
+        leading={
+          <>
+            {leading}
+            <SavedRepliesButton pressed={picker.open && !picker.bySlash} onClick={picker.toggle} />
+          </>
+        }
+        extras={extras}
+      />
       {dialogs.dialogs}
     </>
   );

@@ -15,5 +15,11 @@ export const Route = createFileRoute('/meeting/$id')({
 function MeetingRoute() {
   const clock = { ...useClock(), tz: useViewerTz() };
   const { id } = Route.useParams();
-  return <StaffClassroomPage lessonId={id} join={joinMeeting} problem={(e) => meetingJoinProblem(e, clock, clock.tz)} />;
+  return (
+    <StaffClassroomPage
+      lessonId={id}
+      join={joinMeeting}
+      problem={(e) => meetingJoinProblem(e, clock, clock.tz)}
+    />
+  );
 }

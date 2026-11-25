@@ -27,7 +27,10 @@ export function FeedbackPage({ search, onSearch }: FeedbackPageProps) {
   const teachers = useQuery(teacherOptionsQuery);
   const summary = useQuery(feedbackSummaryQuery);
   const list = useQuery(feedbackListQuery(state));
-  const teacherOptions = useMemo(() => (teachers.data ?? []).map((tc) => ({ value: tc.id, label: teacherLabel(tc) })), [teachers.data]);
+  const teacherOptions = useMemo(
+    () => (teachers.data ?? []).map((tc) => ({ value: tc.id, label: teacherLabel(tc) })),
+    [teachers.data],
+  );
 
   return (
     <>
@@ -47,8 +50,19 @@ export function FeedbackPage({ search, onSearch }: FeedbackPageProps) {
       {list.isError && <FormAlert>{t.feedback.listError}</FormAlert>}
       {list.data && (
         <>
-          <FeedbackTable rows={list.data.items} showTeacher teachers={teacherOptions} sort={table.sort} filters={table.filters} />
-          <Pager page={state.page} total={list.data.total} pageSize={FEEDBACK_PAGE_SIZE} onPage={table.onPage} />
+          <FeedbackTable
+            rows={list.data.items}
+            showTeacher
+            teachers={teacherOptions}
+            sort={table.sort}
+            filters={table.filters}
+          />
+          <Pager
+            page={state.page}
+            total={list.data.total}
+            pageSize={FEEDBACK_PAGE_SIZE}
+            onPage={table.onPage}
+          />
         </>
       )}
     </>

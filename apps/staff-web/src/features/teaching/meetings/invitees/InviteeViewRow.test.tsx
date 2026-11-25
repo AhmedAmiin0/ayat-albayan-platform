@@ -10,9 +10,16 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 
 const R = t.meetingInvites.results;
 const ROW: MeetingInviteeView = {
-  id: 'i-1', kind: 'student', display_name: 'سهيلة', channel: 'link', status: 'window_closed', error_code: 'chat_not_allowed', sent_at: null,
+  id: 'i-1',
+  kind: 'student',
+  display_name: 'سهيلة',
+  channel: 'link',
+  status: 'window_closed',
+  error_code: 'chat_not_allowed',
+  sent_at: null,
 };
-const idOf = (n: number): unknown => (apiSend.mock.calls[n]?.[2] as { clientRequestId?: string } | undefined)?.clientRequestId;
+const idOf = (n: number): unknown =>
+  (apiSend.mock.calls[n]?.[2] as { clientRequestId?: string } | undefined)?.clientRequestId;
 
 describe('InviteeViewRow «أعد الإرسال»', () => {
   afterEach(() => {

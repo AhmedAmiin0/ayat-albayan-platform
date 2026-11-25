@@ -9,7 +9,8 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await i
 
 const BUSY = '2026-10-05T15:00:00.000Z';
 const CLASH = { kind: 'teacher_busy', startsAt: BUSY, endsAt: BUSY };
-const refuse = (status: number, code: string, extra = {}) => new ApiError(status, { code, message: code, ...extra });
+const refuse = (status: number, code: string, extra = {}) =>
+  new ApiError(status, { code, message: code, ...extra });
 
 function moveToMonday() {
   const view = openEditTime(SCHEDULED);
@@ -69,8 +70,12 @@ describe('«عدّل الوقت» refusals (R-SCH-11)', () => {
   ])('%i %s reads in Arabic, and a new pick clears it', async (status, code) => {
     apiSend.mockRejectedValueOnce(refuse(status, code));
     moveToMonday();
-    expect(await screen.findByText(t.lessons.error[code as keyof typeof t.lessons.error])).toBeTruthy();
-    expect((screen.getByRole<HTMLButtonElement>('button', { name: t.lessons.timeEdit.submit })).disabled).toBe(false);
+    expect(
+      await screen.findByText(t.lessons.error[code as keyof typeof t.lessons.error]),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole<HTMLButtonElement>('button', { name: t.lessons.timeEdit.submit }).disabled,
+    ).toBe(false);
     pick.time('19:00');
     await waitFor(() => expect(screen.queryByRole('alert')).toBeNull());
   });

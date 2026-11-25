@@ -9,7 +9,11 @@ import { inboxLive, useInboxRealtime } from '@/features/messaging/inbox/api/live
 
 type Status = (s: string) => void;
 const rt = vi.hoisted(() => {
-  const state = { joins: [] as { status?: Status }[], removed: [] as unknown[], others: [] as unknown[] };
+  const state = {
+    joins: [] as { status?: Status }[],
+    removed: [] as unknown[],
+    others: [] as unknown[],
+  };
   const supabase = {
     channel: vi.fn(() => {
       const ch: { status?: Status; on: () => typeof ch; subscribe: (cb: Status) => typeof ch } = {
@@ -20,7 +24,10 @@ const rt = vi.hoisted(() => {
       return ch;
     }),
     removeChannel: vi.fn(async (ch: unknown) => void state.removed.push(ch)),
-    getChannels: vi.fn(() => [...state.others, ...state.joins.filter((c) => !state.removed.includes(c))]),
+    getChannels: vi.fn(() => [
+      ...state.others,
+      ...state.joins.filter((c) => !state.removed.includes(c)),
+    ]),
     realtime: { setAuth: vi.fn(async () => undefined), disconnect: vi.fn(async () => 'ok') },
   };
   return { state, supabase };
@@ -41,7 +48,9 @@ function mount() {
   const client = new QueryClient();
   vi.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);
   vi.spyOn(client, 'invalidateQueries').mockResolvedValue(undefined);
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
   return { hook: renderHook(() => useInboxRealtime(true), { wrapper }), client };
 }
 
@@ -71,8 +80,14 @@ it('mount → unmount 20 times: no channel, visibility listener or timer left; n
     hook.unmount();
     await settle();
   }
-  expect([rt.state.joins.length, rt.supabase.removeChannel.mock.calls.length, open()]).toEqual([20, 20, 0]);
-  expect([rt.supabase.realtime.disconnect.mock.calls.length, handlers.size, vi.getTimerCount()]).toEqual([20, 0, 0]);
+  expect([rt.state.joins.length, rt.supabase.removeChannel.mock.calls.length, open()]).toEqual([
+    20, 20, 0,
+  ]);
+  expect([
+    rt.supabase.realtime.disconnect.mock.calls.length,
+    handlers.size,
+    vi.getTimerCount(),
+  ]).toEqual([20, 0, 0]);
   expect(inboxLive.isLive()).toBe(false);
 });
 
@@ -107,7 +122,9 @@ it('hidden briefly keeps the channel; flips never hold two; another feature keep
   expect([rt.state.joins.length, open()]).toEqual([1, 1]);
   hook.unmount();
   await settle();
-  expect([open(), rt.supabase.realtime.disconnect.mock.calls.length, vi.getTimerCount()]).toEqual([0, 0, 0]);
+  expect([open(), rt.supabase.realtime.disconnect.mock.calls.length, vi.getTimerCount()]).toEqual([
+    0, 0, 0,
+  ]);
 });
 
 it('a tab opened hidden does not join until it is shown', async () => {

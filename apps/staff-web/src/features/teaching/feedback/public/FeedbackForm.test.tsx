@@ -15,7 +15,9 @@ const reply = (status: number, body: unknown = null) =>
 
 function renderForm(onDone = vi.fn()) {
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { mutations: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { mutations: { retry: false } } })}
+    >
       <FeedbackForm token="tok.sig" form={FORM} onDone={onDone} />
     </QueryClientProvider>,
   );

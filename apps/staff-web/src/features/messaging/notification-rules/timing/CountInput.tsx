@@ -18,7 +18,16 @@ export interface CountInputProps {
 }
 
 /** A bounded whole number with its visible label and unit (rule 6: a count, never a time of day). */
-export function CountInput({ label, unit, value, onChange, bounds, disabled, describedBy, invalid }: CountInputProps) {
+export function CountInput({
+  label,
+  unit,
+  value,
+  onChange,
+  bounds,
+  disabled,
+  describedBy,
+  invalid,
+}: CountInputProps) {
   const id = useId();
   return (
     <span className="inline-flex flex-wrap items-center gap-1.5">

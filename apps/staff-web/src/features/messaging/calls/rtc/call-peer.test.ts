@@ -12,15 +12,25 @@ class FakePeer extends EventTarget {
   close = vi.fn();
   createOffer = vi.fn(async () => ({ type: 'offer', sdp: 'v=0 offer' }));
   createAnswer = vi.fn(async () => ({ type: 'answer', sdp: 'v=0 answer' }));
-  setLocalDescription = vi.fn(async (d: { type: string; sdp: string }) => void (this.localDescription = d));
-  setRemoteDescription = vi.fn(async (d: { type: string; sdp: string }) => void (this.remoteDescription = d));
+  setLocalDescription = vi.fn(
+    async (d: { type: string; sdp: string }) => void (this.localDescription = d),
+  );
+  setRemoteDescription = vi.fn(
+    async (d: { type: string; sdp: string }) => void (this.remoteDescription = d),
+  );
 }
 
 function fakes() {
   const track = { enabled: true, stop: vi.fn() };
-  const stream = { getAudioTracks: () => [track], getTracks: () => [track] } as unknown as MediaStream;
+  const stream = {
+    getAudioTracks: () => [track],
+    getTracks: () => [track],
+  } as unknown as MediaStream;
   const pc = new FakePeer();
-  const deps: RtcDeps = { createPeer: vi.fn(() => pc as unknown as RTCPeerConnection), getMic: vi.fn(async () => stream) };
+  const deps: RtcDeps = {
+    createPeer: vi.fn(() => pc as unknown as RTCPeerConnection),
+    getMic: vi.fn(async () => stream),
+  };
   return { pc, deps, track };
 }
 

@@ -5,7 +5,11 @@ const PHONE = '+966501234567';
 
 /** A fake server whose answers resolve only when the test says so, in any order. */
 function server() {
-  const calls: { intent: MemberIntent; ok: () => Promise<unknown>; fail: () => Promise<unknown> }[] = [];
+  const calls: {
+    intent: MemberIntent;
+    ok: () => Promise<unknown>;
+    fail: () => Promise<unknown>;
+  }[] = [];
   const flush = () => new Promise((r) => setTimeout(r, 0));
   const send = vi.fn(
     (intent: MemberIntent) =>

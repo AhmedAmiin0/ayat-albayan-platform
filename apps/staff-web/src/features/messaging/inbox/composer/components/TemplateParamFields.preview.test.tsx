@@ -4,7 +4,14 @@ import { template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { TemplateParamFields } from './TemplateParamFields';
 
 function preview(patch: Parameters<typeof template>[0], values = {}) {
-  render(<TemplateParamFields template={template(patch)} values={values} missing={[]} onChange={() => {}} />);
+  render(
+    <TemplateParamFields
+      template={template(patch)}
+      values={values}
+      missing={[]}
+      onChange={() => {}}
+    />,
+  );
   return screen.getByRole('figure');
 }
 

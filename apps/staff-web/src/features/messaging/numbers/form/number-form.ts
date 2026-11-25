@@ -56,7 +56,8 @@ export function draftErrors(draft: NumberDraft): DraftErrors {
   const out: DraftErrors = {};
   const label = draft.label.trim();
   if (label === '' || label.length > LABEL_MAX) out.label = t.common.required;
-  if (!META_ID_RE.test(draft.phone_number_id.trim())) out.phone_number_id = t.numbers.form.invalidId;
+  if (!META_ID_RE.test(draft.phone_number_id.trim()))
+    out.phone_number_id = t.numbers.form.invalidId;
   if (callsNeedKapso(draft)) out.provider = t.numbers.errors.calls_need_kapso;
   const metaIds = isEvolution(draft) ? [] : (['waba_id', 'app_id'] as const);
   for (const f of metaIds) {

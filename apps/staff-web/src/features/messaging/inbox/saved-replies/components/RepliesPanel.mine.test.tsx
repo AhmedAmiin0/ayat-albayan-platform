@@ -24,7 +24,9 @@ async function openMine(replies = REPLIES) {
     ['/saved-replies', replies],
     ['/me/profile', PROFILE],
   ]);
-  renderWithClient(<ReplyComposer thread={thread({ session_open: true })} context={{}} leading={null} />);
+  renderWithClient(
+    <ReplyComposer thread={thread({ session_open: true })} context={{}} leading={null} />,
+  );
   fireEvent.click(screen.getByRole('button', { name: S.open }));
   await screen.findByRole('listbox');
   fireEvent.click(screen.getByRole('button', { name: S.manage }));
@@ -58,8 +60,13 @@ describe('«ردودي» behind «إدارة» in the picker', () => {
   });
 
   it('the pick list is clean: no add / edit / delete until «إدارة»', async () => {
-    routeFetch(apiFetch, [['/saved-replies', REPLIES], ['/me/profile', PROFILE]]);
-    renderWithClient(<ReplyComposer thread={thread({ session_open: true })} context={{}} leading={null} />);
+    routeFetch(apiFetch, [
+      ['/saved-replies', REPLIES],
+      ['/me/profile', PROFILE],
+    ]);
+    renderWithClient(
+      <ReplyComposer thread={thread({ session_open: true })} context={{}} leading={null} />,
+    );
     fireEvent.click(screen.getByRole('button', { name: S.open }));
     fireEvent.click(await screen.findByRole('tab', { name: S.tabMine }));
     await screen.findByRole('option', { name: /متابعة/ });

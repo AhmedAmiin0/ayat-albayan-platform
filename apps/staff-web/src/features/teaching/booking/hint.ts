@@ -13,13 +13,19 @@ export interface BookHint {
 }
 
 export function bookHint(search: BookSearch): BookHint | null {
-  return search.teacherId ? { teacherId: search.teacherId, startsAt: search.startsAt ?? null } : null;
+  return search.teacherId
+    ? { teacherId: search.teacherId, startsAt: search.startsAt ?? null }
+    : null;
 }
 
 type TeacherChange = Partial<Pick<BookingDraft, 'program' | 'genderPref'>> & { teacher?: BookingTeacherOption | null };
 
 /** A start never carries over to another teacher; the hinted teacher brings its start or picks. */
-export function teacherPatch(draft: BookingDraft, change: TeacherChange, hint: BookHint | null): Partial<BookingDraft> {
+export function teacherPatch(
+  draft: BookingDraft,
+  change: TeacherChange,
+  hint: BookHint | null,
+): Partial<BookingDraft> {
   if (change.teacher === undefined || change.teacher?.id === draft.teacher?.id) return change;
   const hinted = hint !== null && change.teacher?.id === hint.teacherId;
   return { ...change, ...(hinted ? hintedPicks(hint) : { startsAt: null, extra: [] }) };
@@ -27,13 +33,19 @@ export function teacherPatch(draft: BookingDraft, change: TeacherChange, hint: B
 
 /** The hinted picks (a renewal), else the hinted start alone. */
 const hintedPicks = (hint: BookHint): Pick<BookingDraft, 'startsAt' | 'extra'> =>
-  hint.picks && hint.picks.length > 0 ? withPicks(hint.picks) : { startsAt: hint.startsAt, extra: [] };
+  hint.picks && hint.picks.length > 0
+    ? withPicks(hint.picks)
+    : { startsAt: hint.startsAt, extra: [] };
 
 /**
  * Picking a student in the wizard reopens /admin/book for them: the free gap's teacher and start
  * ride along (an unrelated lead or package never does), so step 2 still has the gap's teacher.
  */
-export function searchForStudent(prev: BookSearch, studentId: string, kind?: BookingKind): BookSearch {
+export function searchForStudent(
+  prev: BookSearch,
+  studentId: string,
+  kind?: BookingKind,
+): BookSearch {
   return {
     studentId,
     ...(prev.teacherId && { teacherId: prev.teacherId }),

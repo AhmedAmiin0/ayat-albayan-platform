@@ -23,7 +23,8 @@ const LESSON = lesson({ id: 'a' }); // Sunday 17:00–17:45 Riyadh
 
 describe('filterTeachers (program, gender, picked ids)', () => {
   const all = [T_ABRAR, T_FATMA, T_NOUR];
-  const names = (f: Parameters<typeof filterTeachers>[1]) => filterTeachers(all, f).map((x) => x.display_name_ar);
+  const names = (f: Parameters<typeof filterTeachers>[1]) =>
+    filterTeachers(all, f).map((x) => x.display_name_ar);
 
   it('keeps everyone with no filter and an empty pick', () => {
     expect(names({})).toHaveLength(3);

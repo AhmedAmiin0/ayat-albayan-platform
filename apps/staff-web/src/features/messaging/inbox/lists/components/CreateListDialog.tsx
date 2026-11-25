@@ -36,7 +36,11 @@ export function CreateListDialog({ onClose, onCreated }: CreateListDialogProps) 
   );
   return (
     <Dialog layout="center" title={t.inbox.lists.new} onClose={onClose} actions={actions}>
-      <ListNameForm id={formId} error={create.isError ? listErrorText(create.error) : null} onSubmit={(name) => create.mutate(name)} />
+      <ListNameForm
+        id={formId}
+        error={create.isError ? listErrorText(create.error) : null}
+        onSubmit={(name) => create.mutate(name)}
+      />
     </Dialog>
   );
 }

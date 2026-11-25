@@ -26,9 +26,12 @@ export function draftOf(rule: NotificationRuleView): RuleDraft {
   };
 }
 
-const ordered = (xs: readonly NotificationChannel[]): NotificationChannel[] => NOTIFICATION_CHANNELS.filter((ch) => xs.includes(ch));
-const sameChannels = (a: readonly NotificationChannel[], b: readonly NotificationChannel[]): boolean =>
-  ordered(a).join() === ordered(b).join();
+const ordered = (xs: readonly NotificationChannel[]): NotificationChannel[] =>
+  NOTIFICATION_CHANNELS.filter((ch) => xs.includes(ch));
+const sameChannels = (
+  a: readonly NotificationChannel[],
+  b: readonly NotificationChannel[],
+): boolean => ordered(a).join() === ordered(b).join();
 
 export interface DraftInput {
   rule: NotificationRuleView;

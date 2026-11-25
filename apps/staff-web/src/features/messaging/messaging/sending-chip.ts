@@ -3,7 +3,10 @@ import type { Glyph, Tone } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** ON with WhatsApp not set up sends nothing; under the allow-list only allowed numbers. */
-export function sendingChip(enabled: boolean, gate: SendGateView | undefined): { tone: Tone; glyph: Glyph; label: string } {
+export function sendingChip(
+  enabled: boolean,
+  gate: SendGateView | undefined,
+): { tone: Tone; glyph: Glyph; label: string } {
   const s = t.templates.settings;
   if (!enabled) return { tone: 'neutral', glyph: 'struck', label: s.off };
   // With the server state unknown, never show working on the switch alone.

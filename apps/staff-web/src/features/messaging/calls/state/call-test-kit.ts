@@ -20,7 +20,10 @@ export function activeRow(patch: Partial<ActiveCallView> = {}): ActiveCallView {
 }
 
 /** A fake browser: the peer answers with fixed SDPs, the mic always opens. */
-export function fakeRtc(): RtcDeps & { pc: EventTarget & { connectionState: string }; track: { enabled: boolean; stop: ReturnType<typeof vi.fn> } } {
+export function fakeRtc(): RtcDeps & {
+  pc: EventTarget & { connectionState: string };
+  track: { enabled: boolean; stop: ReturnType<typeof vi.fn> };
+} {
   const track = { enabled: true, stop: vi.fn() };
   const stream = { getAudioTracks: () => [track], getTracks: () => [track] };
   const pc = Object.assign(new EventTarget(), {
@@ -35,7 +38,12 @@ export function fakeRtc(): RtcDeps & { pc: EventTarget & { connectionState: stri
     setLocalDescription: async (d: { sdp: string }) => void (pc.localDescription = d),
     setRemoteDescription: async (d: { sdp: string }) => void (pc.remoteDescription = d),
   });
-  return { pc, track, createPeer: () => pc as unknown as RTCPeerConnection, getMic: async () => stream as unknown as MediaStream };
+  return {
+    pc,
+    track,
+    createPeer: () => pc as unknown as RTCPeerConnection,
+    getMic: async () => stream as unknown as MediaStream,
+  };
 }
 
 /** A button that calls one chat, as the thread header does. */

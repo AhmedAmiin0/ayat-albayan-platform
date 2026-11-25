@@ -41,7 +41,9 @@ const show = (onDone = vi.fn(), withText = false) =>
 const sendButton = (area = 'file') => within(screen.getByRole('region', { name: area })).getByRole<HTMLButtonElement>('button', { name: area === 'file' ? t.inbox.composer.sendFile : t.inbox.composer.send });
 
 beforeEach(() => {
-  client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+  client = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
   uploadToSignedUrl.mockResolvedValue({ error: null });
 });
 afterEach(() => {
@@ -74,16 +76,25 @@ describe('FileComposer (D2)', () => {
     route(() => SENT);
     fireEvent.click(sendButton());
     await waitFor(() => expect(fileCalls()).toHaveLength(2));
-    const ids = fileCalls().map(([, , body]) => (body as { clientRequestId: string }).clientRequestId);
+    const ids = fileCalls().map(
+      ([, , body]) => (body as { clientRequestId: string }).clientRequestId,
+    );
     expect(ids[0]).toBe(ids[1]);
   });
 
   it('an image shows its thumbnail from an object URL, revoked on unmount', () => {
     const created = vi.fn(() => 'blob:thumb');
     const revoked = vi.fn();
-    vi.stubGlobal('URL', Object.assign(URL, { createObjectURL: created, revokeObjectURL: revoked }));
+    vi.stubGlobal(
+      'URL',
+      Object.assign(URL, { createObjectURL: created, revokeObjectURL: revoked }),
+    );
     const png = new File([new Uint8Array(4)], 'صورة.png', { type: 'image/png' });
-    const view = render(<QueryClientProvider client={client}><FileComposer phone={PHONE} file={png} onDone={vi.fn()} /></QueryClientProvider>);
+    const view = render(
+      <QueryClientProvider client={client}>
+        <FileComposer phone={PHONE} file={png} onDone={vi.fn()} />
+      </QueryClientProvider>,
+    );
     expect(screen.getByRole('img', { name: 'صورة.png' }).getAttribute('src')).toBe('blob:thumb');
     view.unmount();
     expect(revoked).toHaveBeenCalledWith('blob:thumb');

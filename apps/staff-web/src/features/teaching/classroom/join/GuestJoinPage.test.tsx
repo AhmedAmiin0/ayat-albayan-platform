@@ -8,7 +8,8 @@ import { GuestJoinPage } from './GuestJoinPage';
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
 
-const reply = (status: number, body: unknown) => fetchMock.mockResolvedValue(new Response(JSON.stringify(body), { status }));
+const reply = (status: number, body: unknown) =>
+  fetchMock.mockResolvedValue(new Response(JSON.stringify(body), { status }));
 
 function open() {
   const client = fakeClient();
@@ -20,7 +21,9 @@ function open() {
   return client;
 }
 const submit = (name: string) => {
-  fireEvent.change(screen.getByLabelText(new RegExp(t.classroom.guest.name)), { target: { value: name } });
+  fireEvent.change(screen.getByLabelText(new RegExp(t.classroom.guest.name)), {
+    target: { value: name },
+  });
   fireEvent.click(screen.getByRole('button', { name: t.classroom.guest.join }));
 };
 

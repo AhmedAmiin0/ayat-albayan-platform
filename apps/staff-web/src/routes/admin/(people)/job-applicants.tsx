@@ -14,5 +14,10 @@ export const Route = createFileRoute('/admin/(people)/job-applicants')({
 function JobApplicantsRoute() {
   const search = parseListUrl(Route.useSearch(), KEYS);
   const navigate = Route.useNavigate();
-  return <JobApplicantsList search={search} onSearch={(next) => void navigate({ search: toListUrl(next) })} />;
+  return (
+    <JobApplicantsList
+      search={search}
+      onSearch={(next) => void navigate({ search: toListUrl(next) })}
+    />
+  );
 }

@@ -12,7 +12,10 @@ import {
 // search holds nothing else. `?page=` is left out on page 1, like every other default.
 
 export type ListUrlState = { page: number; sort: SortSearch; filters: FilterSearch };
-export type ListUrlSearch = { page?: number; sort?: string; dir?: SortDir } & Record<string, string | number | undefined>;
+export type ListUrlSearch = { page?: number; sort?: string; dir?: SortDir } & Record<
+  string,
+  string | number | undefined
+>;
 export type ListUrlKeys = { sortKeys: readonly string[]; filterKeys: readonly string[] };
 
 function toPage(value: unknown): number {
@@ -46,17 +49,26 @@ export const listUrlValidator = (keys: ListUrlKeys) => (search: Record<string, u
 
 /** A header click → the state on page 1. */
 export function withSort(state: ListUrlState, next: { key?: string; dir?: SortDir }): ListUrlState {
-  return { ...state, page: 1, sort: next.key ? { sort: next.key, ...(next.dir ? { dir: next.dir } : {}) } : {} };
+  return {
+    ...state,
+    page: 1,
+    sort: next.key ? { sort: next.key, ...(next.dir ? { dir: next.dir } : {}) } : {},
+  };
 }
 
 /** A filter change → the state on page 1 ('' drops the filter). */
-export function withFilter(state: ListUrlState, change: { key: string; value: string }): ListUrlState {
+export function withFilter(
+  state: ListUrlState,
+  change: { key: string; value: string },
+): ListUrlState {
   const rest = Object.fromEntries(Object.entries(state.filters).filter(([k]) => k !== change.key));
   const value = change.value.trim();
   return { ...state, page: 1, filters: value === '' ? rest : { ...rest, [change.key]: value } };
 }
 
 export function withoutFilters(state: ListUrlState, keys: readonly string[]): ListUrlState {
-  const filters = Object.fromEntries(Object.entries(state.filters).filter(([k]) => !keys.includes(k)));
+  const filters = Object.fromEntries(
+    Object.entries(state.filters).filter(([k]) => !keys.includes(k)),
+  );
   return { ...state, page: 1, filters };
 }

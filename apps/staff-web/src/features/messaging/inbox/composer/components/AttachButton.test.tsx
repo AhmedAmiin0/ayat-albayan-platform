@@ -21,7 +21,8 @@ const fileInput = (): HTMLInputElement => {
   return el;
 };
 const pick = (file: File) => fireEvent.change(fileInput(), { target: { files: [file] } });
-const sized = (bytes: number, name: string, type: string) => new File([new Uint8Array(bytes)], name, { type });
+const sized = (bytes: number, name: string, type: string) =>
+  new File([new Uint8Array(bytes)], name, { type });
 
 function show(input: { mode: InboxMode; open: boolean; permissions?: string[] }) {
   routeFetch(apiFetch, [
@@ -30,7 +31,10 @@ function show(input: { mode: InboxMode; open: boolean; permissions?: string[] })
   ]);
   renderWithClient(
     <InboxModeContext.Provider value={input.mode}>
-      <ComposerPhone thread={thread({ session_open: input.open, last_inbound_at: new Date().toISOString() })} {...props} />
+      <ComposerPhone
+        thread={thread({ session_open: input.open, last_inbound_at: new Date().toISOString() })}
+        {...props}
+      />
     </InboxModeContext.Provider>,
   );
 }

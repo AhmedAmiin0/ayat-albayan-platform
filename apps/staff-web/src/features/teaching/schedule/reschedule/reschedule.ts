@@ -39,7 +39,9 @@ export function seriesDays(lesson: Pick<LessonView, 'starts_at' | 'rule_byday' |
   const tz = familyTz(lesson);
   const to = ruleFromSlot(startsAt, tz).weekday;
   const from = ruleFromSlot(lesson.starts_at, tz).weekday;
-  return [...new Set([to, ...shiftByday({ byday: lesson.rule_byday ?? [], from, to })])].sort((a, b) => a - b);
+  return [...new Set([to, ...shiftByday({ byday: lesson.rule_byday ?? [], from, to })])].sort(
+    (a, b) => a - b,
+  );
 }
 
 /**

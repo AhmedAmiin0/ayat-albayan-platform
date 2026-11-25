@@ -37,7 +37,8 @@ interface SendFromSelectProps {
 
 /** The editable select; a saved number missing from the list is its own disabled option, so the select never shows the default. */
 function SendFromSelect({ tpl, numbers, cell }: SendFromSelectProps) {
-  const missing = tpl.number_id && !numbers.some((n) => n.id === tpl.number_id) ? tpl.number_id : null;
+  const missing =
+    tpl.number_id && !numbers.some((n) => n.id === tpl.number_id) ? tpl.number_id : null;
   return (
     <>
       <span className="text-ink-2">

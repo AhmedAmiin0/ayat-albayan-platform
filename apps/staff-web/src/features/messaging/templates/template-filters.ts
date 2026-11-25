@@ -8,9 +8,11 @@ export const categoryOptions = (): FilterOption[] =>
   TEMPLATE_CATEGORIES.map((c) => ({ value: c, label: t.enums.templateCategory[c] }));
 
 /** The WhatsApp line (WABA) each template lives on. */
-export const lineOptions = (): FilterOption[] => WA_LINES.map((l) => ({ value: l, label: t.enums.waLine[l] }));
+export const lineOptions = (): FilterOption[] =>
+  WA_LINES.map((l) => ({ value: l, label: t.enums.waLine[l] }));
 
-export const statusOptions = (): FilterOption[] => TEMPLATE_STATUSES.map((s) => ({ value: s, label: t.enums.templateStatus[s] }));
+export const statusOptions = (): FilterOption[] =>
+  TEMPLATE_STATUSES.map((s) => ({ value: s, label: t.enums.templateStatus[s] }));
 
 /** Meta's quality scores (GREEN / YELLOW / RED / UNKNOWN) in words. */
 export const qualityOptions = (): FilterOption[] =>

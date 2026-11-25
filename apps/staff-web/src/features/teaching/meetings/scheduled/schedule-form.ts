@@ -43,9 +43,14 @@ export function defaultSchedule(now: Date, tz: string): ScheduleValue {
 }
 
 /** A stored meeting's start and planned end, back on the viewer's clock (the reschedule form). */
-export function scheduleOf(m: { starts_at: string; planned_end_at: string | null }, tz: string): ScheduleValue {
+export function scheduleOf(
+  m: { starts_at: string; planned_end_at: string | null },
+  tz: string,
+): ScheduleValue {
   const { date, time } = zonedPartsIn(new Date(m.starts_at), tz);
-  const minutes = m.planned_end_at ? Math.round((Date.parse(m.planned_end_at) - Date.parse(m.starts_at)) / 60_000) : DEFAULT_MEETING_DURATION;
+  const minutes = m.planned_end_at
+    ? Math.round((Date.parse(m.planned_end_at) - Date.parse(m.starts_at)) / 60_000)
+    : DEFAULT_MEETING_DURATION;
   const durationMin = Math.min(MEETING_DURATION_MAX, Math.max(MEETING_DURATION_MIN, minutes));
   return { date, time, durationMin };
 }
@@ -72,7 +77,10 @@ export function createBody(i: CreateBodyInput): CreateMeeting {
   const title = i.title.trim();
   return {
     ...(title && { title }),
-    ...(i.schedule && { startsAt: startsAtOf(i.schedule.value, i.schedule.tz), durationMin: i.schedule.value.durationMin }),
+    ...(i.schedule && {
+      startsAt: startsAtOf(i.schedule.value, i.schedule.tz),
+      durationMin: i.schedule.value.durationMin,
+    }),
     ...(i.invitees.length > 0 && { invitees: i.invitees.map((p) => p.input) }),
     clientRequestId: i.clientRequestId,
   };

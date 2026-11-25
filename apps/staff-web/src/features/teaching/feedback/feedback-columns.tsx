@@ -102,6 +102,14 @@ const note = col.accessor('note', {
 /** The admin's columns (teacher included, its filter over `teachers`), or a teacher's own. */
 export function feedbackColumns(opts: { showTeacher: boolean; teachers: FilterOption[] }) {
   return opts.showTeacher
-    ? col.columns([studentColumn(true), teacherColumn(opts.teachers), kind, quickRating, rating, recommend, note])
+    ? col.columns([
+        studentColumn(true),
+        teacherColumn(opts.teachers),
+        kind,
+        quickRating,
+        rating,
+        recommend,
+        note,
+      ])
     : col.columns([studentColumn(false), kind, quickRating, rating, recommend, note]);
 }

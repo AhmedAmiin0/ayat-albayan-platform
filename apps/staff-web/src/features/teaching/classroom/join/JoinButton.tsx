@@ -31,7 +31,10 @@ export function EnterButton(props: Props) {
   const { lesson, size = 'md', className, now: given, variant = 'primary' } = props;
   const tick = useNow();
   const now = given ?? tick;
-  const { canJoin, hint } = joinHint(lesson, now, { win: useJoinWindow(), cycle: useClock().cycle });
+  const { canJoin, hint } = joinHint(lesson, now, {
+    win: useJoinWindow(),
+    cycle: useClock().cycle,
+  });
   return (
     <div className={cn('grid justify-items-start gap-1', className)}>
       {canJoin ? (
