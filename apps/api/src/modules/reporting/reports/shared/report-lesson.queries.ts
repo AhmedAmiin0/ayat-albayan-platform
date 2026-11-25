@@ -3,6 +3,7 @@ import type { BalanceView } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pgError } from '@/common/db/errors';
+import { readChunkedAll } from '@/common/db/read-all';
 import { storedContent } from '@/modules/reporting/reports/v2/report-v2.mapper';
 
 /** Enough submitted v2 reports per student to find each track's last range. */
@@ -18,22 +19,25 @@ export class ReportLessonQueries {
     lesson: { id: string; starts_at: string },
     studentIds: readonly string[],
   ): Promise<Map<string, number>> {
-    const out = new Map<string, number>();
     const { data, error } = await this.db
       .from('v_lesson_sequence')
       .select('student_id, seq')
       .eq('lesson_id', lesson.id);
     if (error) throw pgError(error);
+    const out = new Map<string, number>();
     for (const r of data) if (r.student_id && r.seq !== null) out.set(r.student_id, r.seq);
-    for (const id of studentIds.filter((s) => !out.has(s))) {
-      const { count, error: e } = await this.db
+    const missing = studentIds.filter((s) => !out.has(s));
+    const before = await readChunkedAll(missing, (chunk, from, to) =>
+      this.db
         .from('v_lesson_sequence')
-        .select('lesson_id', { count: 'exact', head: true })
-        .eq('student_id', id)
-        .lt('starts_at', lesson.starts_at);
-      if (e) throw pgError(e);
-      out.set(id, (count ?? 0) + 1);
-    }
+        .select('student_id')
+        .in('student_id', chunk)
+        .lt('starts_at', lesson.starts_at)
+        .order('student_id')
+        .order('lesson_id')
+        .range(from, to),
+    );
+    for (const id of missing) out.set(id, 1 + before.filter((r) => r.student_id === id).length);
     return out;
   }
 
@@ -63,28 +67,34 @@ export class ReportLessonQueries {
 
   /**
    * The teacher's memorization history (v2 form): per student, the last range of each track in
-   * their submitted v2 reports, newest first. v1 reports are never read; `exclude` leaves out the
+   * their newest submitted v2 reports. v1 reports are never read; `exclude` leaves out the
    * reports on this form (an edit must not suggest after its own range).
    */
   async memory(
     studentIds: readonly string[],
     exclude: readonly string[],
   ): Promise<Map<string, MemoryView>> {
-    // One read per student (a lesson has one or a few), so one student's history never crowds out another's.
-    const views = await Promise.all(
-      studentIds.map(async (id) => {
-        const { data, error } = await this.db
-          .from('lesson_reports')
-          .select('id, student_id, form_version, content')
-          .eq('student_id', id)
-          .eq('form_version', 2)
-          .eq('status', 'submitted')
-          .order('submitted_at', { ascending: false })
-          .limit(MEMORY_DEPTH + exclude.length);
-        if (error) throw pgError(error);
-        const rows = data.filter((r) => !exclude.includes(r.id));
-        return [id, memoryOf(rows.flatMap((r) => storedContent(r) ?? []))] as const;
-      }),
+    const rows = await readChunkedAll(studentIds, (chunk, from, to) =>
+      this.db
+        .from('lesson_reports')
+        .select('id, student_id, form_version, content')
+        .in('student_id', chunk)
+        .eq('form_version', 2)
+        .eq('status', 'submitted')
+        .order('student_id')
+        .order('submitted_at', { ascending: false })
+        .order('id')
+        .range(from, to),
+    );
+    // The depth is counted per student, so one student's history never crowds out another's.
+    const depth = MEMORY_DEPTH + exclude.length;
+    const historyOf = (id: string) =>
+      rows
+        .filter((r) => r.student_id === id)
+        .slice(0, depth)
+        .filter((r) => !exclude.includes(r.id));
+    const views = studentIds.map(
+      (id) => [id, memoryOf(historyOf(id).flatMap((r) => storedContent(r) ?? []))] as const,
     );
     return new Map(views);
   }
