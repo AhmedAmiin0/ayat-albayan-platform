@@ -73,9 +73,10 @@ const confirmed = (text: unknown): boolean => typeof text === 'string' && text.t
 
 /**
  * PATCH /admin/notifications/:key, decided without I/O (docs/23b decision 4): manual rows 422
- * not_editable; a locked row's OFF 422 locked; channels / timing / number checked against the entry;
- * an essential row's OFF needs ESSENTIAL_OFF_TEXT (428). Unspecified fields keep the current effective
- * values. In legacy mode the mirrored legacy keys are written too, so both paths keep agreeing.
+ * not_editable; a locked row's OFF 422 locked; channels / timing / number checked against the
+ * entry; an essential row's OFF needs ESSENTIAL_OFF_TEXT (428). Unspecified fields keep the current
+ * effective values. In legacy mode the mirrored legacy keys are written too, so both paths keep
+ * agreeing.
  */
 export function planPatch(input: PlanInput): PatchPlan {
   const { entry, snapshot, patch } = input;

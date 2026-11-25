@@ -4,8 +4,9 @@ import { ADMIN_ID, rulesApp } from './test-app';
 
 type App = Awaited<ReturnType<typeof rulesApp>>;
 
-// docs/26 §2f + 26b m1/m3 after 23-P4: the 8 keys are owned by the rules; followUpHours writes the rule
-// for a notifications.manage holder; in module mode GET /settings shows the keys as the rules say them.
+// docs/26 §2f + 26b m1/m3 after 23-P4: the 8 keys are owned by the rules; followUpHours writes the
+// rule for a notifications.manage holder; in module mode GET /settings shows the keys as the rules
+// say them.
 describe('/settings and the notification rules', () => {
   let t: App;
   const patch = (body: object, token = 'admin') =>

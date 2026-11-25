@@ -31,7 +31,8 @@ describe('failurePlan on the crm driver', () => {
     expect(plan(crm(502, 'meta_error'))).toEqual({ status: 'failed', next_attempt_at: null, error_code: 'crm_meta_error', error_text: expect.stringContaining('meta_error says no') });
     expect(plan(crm(500, 'template_malformed'))).toMatchObject({ status: 'failed', error_code: 'crm_template_malformed' });
     expect(plan(crm(400, 'bad_request'))).toMatchObject({ status: 'failed', error_code: 'crm_bad_request' });
-    // The CRM's own WhatsApp connection is down: the line, not the message (held like a refused key).
+    // The CRM's own WhatsApp connection is down: the line, not the message (held like a refused
+    // key).
     expect(plan(crm(400, 'whatsapp_not_configured'))).toMatchObject({ status: 'queued', error_code: 'crm_auth' });
   });
 

@@ -17,7 +17,8 @@ interface CrmPlanInput {
 /**
  * The crm driver's own outcomes (docs/19), after the uncertain and auth checks: a 429 waits for its
  * Retry-After with the try not counted (not the message's fault); any other CRM code (meta_error,
- * template_malformed, a 4xx) fails at once: nothing was sent and the same body fails again. null = not a CRM answer.
+ * template_malformed, a 4xx) fails at once: nothing was sent and the same body fails again. null =
+ * not a CRM answer.
  */
 export function crmPlan(c: CrmPlanInput): FailurePlan | null {
   if (!c.info) return null;

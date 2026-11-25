@@ -5,7 +5,8 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { pdfPageCount, renderPdfPages } from '@/modules/messaging/inbox/files/pdf/pdf-client';
 
-// The API's side of the PDF sandbox against a stand-in ayat-pdf on a temp unix socket: no poppler here.
+// The API's side of the PDF sandbox against a stand-in ayat-pdf on a temp unix socket: no poppler
+// here.
 const PDF = new TextEncoder().encode('%PDF-1.4 fake');
 type Reply = (res: ServerResponse) => void;
 let dir = '';

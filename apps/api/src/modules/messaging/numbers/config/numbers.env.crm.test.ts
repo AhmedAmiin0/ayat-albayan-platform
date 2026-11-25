@@ -4,8 +4,8 @@ import { numberEnv } from './numbers.env';
 import { LEGACY_ENV, numberRow } from '@/modules/messaging/numbers/numbers.fakes';
 import { differences, parityRoles } from '@/modules/messaging/numbers/lines/numbers.parity';
 
-// docs/19 «crm driver» in module mode: a crm number sends with WACRM_API_BASE / WACRM_API_KEY, like a kapso
-// number with Kapso's project key; its ids only name it and no Meta token is needed.
+// docs/19 «crm driver» in module mode: a crm number sends with WACRM_API_BASE / WACRM_API_KEY, like
+// a kapso number with Kapso's project key; its ids only name it and no Meta token is needed.
 
 const CRM = { WACRM_API_BASE: 'http://localhost:4010/crm/api/v1/', WACRM_API_KEY: 'crm-key-fake' };
 

@@ -30,8 +30,9 @@ export class MessagesService {
   ) {}
 
   /**
-   * Only a failed row goes back to the queue (attempts 0, error cleared); the sender runs now.
-   * A held row (auto_off) while automatic messages are still OFF: 409 auto_off, it would be held again.
+   * Only a failed row goes back to the queue (attempts 0, error cleared); the sender runs now. A
+   * held row (auto_off) while automatic messages are still OFF: 409 auto_off, it would be held
+   * again.
    */
   async retry(id: string, opts: { automaticOn: boolean }): Promise<MessageChange> {
     const before = await this.row(id);

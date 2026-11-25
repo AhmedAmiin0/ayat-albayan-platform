@@ -4,7 +4,8 @@ import { C1, N1, N2, overlayNum, routePass, THREE } from '@/modules/messaging/wh
 import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// docs/23c decisions 3–5: rule number → template number → role default → role fallbacks; sessions never fall back.
+// docs/23c decisions 3–5: rule number → template number → role default → role fallbacks; sessions
+// never fall back.
 
 const N3 = '00000000-0000-4000-8000-0000000000a3';
 const row = dueMessage();

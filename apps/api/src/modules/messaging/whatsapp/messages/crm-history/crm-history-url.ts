@@ -8,8 +8,9 @@ type CrmHistoryShape = { direction: string | null; media_mime: string | null; bo
 
 /**
  * The body as an old-CRM file link, or null: the whole (trimmed) body is ONE https URL in canonical
- * form (no space, userinfo, port, query or fragment; no «..» or encoded slash) under CRM_MEDIA_PREFIX.
- * Only the shape: the host is checked against the setting by allowedCrmUrl before any fetch.
+ * form (no space, userinfo, port, query or fragment; no «..» or encoded slash) under
+ * CRM_MEDIA_PREFIX. Only the shape: the host is checked against the setting by allowedCrmUrl before
+ * any fetch.
  */
 export function crmMediaUrl(body: string | null): URL | null {
   const text = body?.trim() ?? '';

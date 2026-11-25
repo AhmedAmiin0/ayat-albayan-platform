@@ -10,14 +10,16 @@ export const BATCH = 20;
 /** A row that failed this many times is left without a copy and counted as failed. */
 export const MAX_ATTEMPTS = 3;
 /**
- * Outage rounds (about a minute each) a row may stay unanswered before it counts one attempt anyway: an
- * outage burns no attempt for half an hour, and a last file that never answers still ends the run.
+ * Outage rounds (about a minute each) a row may stay unanswered before it counts one attempt
+ * anyway: an outage burns no attempt for half an hour, and a last file that never answers still
+ * ends the run.
  */
 export const UNREACHABLE_PATIENCE = 30;
 
 /**
  * copied; retry (a failure below the cap); failed (at the cap); skipped (never ours to fetch);
- * unreachable (the CRM's storage answered no row of the round: no attempt counted, the job stops its tick).
+ * unreachable (the CRM's storage answered no row of the round: no attempt counted, the job stops
+ * its tick).
  */
 export type CopyOutcome = 'copied' | 'retry' | 'failed' | 'skipped' | 'unreachable';
 
@@ -39,8 +41,8 @@ function reason(e: unknown): string {
 
 /**
  * One imported CRM file into wa-media through the SAME path as an admin opening it (InboundMedia:
- * CrmHistoryMedia's host check and fetch caps, a deterministic path, setPath only where empty), so a
- * row copied lazily and by the job still has one object. A failure is marked, never thrown.
+ * CrmHistoryMedia's host check and fetch caps, a deterministic path, setPath only where empty), so
+ * a row copied lazily and by the job still has one object. A failure is marked, never thrown.
  */
 @Injectable()
 export class CrmMediaCopier {
@@ -59,9 +61,9 @@ export class CrmMediaCopier {
 
   /**
    * Copies run together. A round the storage answered for none of its rows is an outage (all
-   * 'unreachable', no attempt counted, up to UNREACHABLE_PATIENCE rounds a row); once it answered any
-   * of them it is up, so a row it did not answer (a file that always times out or 5xx) counts an
-   * attempt and cannot block the batch's head.
+   * 'unreachable', no attempt counted, up to UNREACHABLE_PATIENCE rounds a row); once it answered
+   * any of them it is up, so a row it did not answer (a file that always times out or 5xx) counts
+   * an attempt and cannot block the batch's head.
    */
   async round(ids: readonly string[], host: string): Promise<CopyOutcome[]> {
     const done = await Promise.all(ids.map(async (id) => ({ id, outcome: await this.copy(id, host) })));
@@ -87,7 +89,8 @@ export class CrmMediaCopier {
   async copy(id: string, host: string): Promise<CopyOutcome> {
     const failure = await this.attempt(id, host);
     if (!failure) return 'copied';
-    // An outage says nothing about the file: counting it would burn every row's attempts in minutes (round decides).
+    // An outage says nothing about the file: counting it would burn every row's attempts in minutes
+    // (round decides).
     if (failure.error === CRM_UNREACHABLE) return 'unreachable';
     // A row deleted meanwhile has no failure to record (the foreign key) and never comes back.
     if (failure.status === 404) return 'skipped';

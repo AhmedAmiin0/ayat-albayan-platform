@@ -11,7 +11,8 @@ import { REMINDER_KEYS } from '@/modules/messaging/reminders/reminders.repo';
 import { isStaffAlert, staffStale, type StaffAtSend } from '@/modules/messaging/reminders/plan/staff-reachable';
 
 // Send-time check of a queued row (docs/12 §3.3): rows wait in the queue while the send gate is
-// closed (until cut-over, after a kill-switch OFF), so what was right to queue may be wrong to send.
+// closed (until cut-over, after a kill-switch OFF), so what was right to queue may be wrong to
+// send.
 
 /** The lead columns the check reads (sender.queries DUE_COLUMNS). */
 export interface StaleLead {
@@ -112,18 +113,18 @@ interface AutoRow {
 }
 
 /**
- * teacher_lesson_v3 carries the same-day reminder (automatic) and the new-student alert (a booking):
- * the reminder's dedup key names it, so only that one is held while the switch is OFF.
+ * teacher_lesson_v3 carries the same-day reminder (automatic) and the new-student alert (a
+ * booking): the reminder's dedup key names it, so only that one is held while the switch is OFF.
  */
 const isV3Reminder = (row: AutoRow): boolean =>
   row.template_key === 'teacher_lesson_v3' &&
   (row.dedup_key ?? '').startsWith('teacher_lesson_reminder:');
 
 /**
- * A job-made row of an automatic kind, held (failed 'auto_off') while settings.auto_messages_enabled
- * is OFF. created_by tells them apart: the jobs leave it null; an admin's inbox send of the same
- * template carries the admin (ThreadSendService) and goes. Booking confirmations and report_ready
- * are never automatic here.
+ * A job-made row of an automatic kind, held (failed 'auto_off') while
+ * settings.auto_messages_enabled is OFF. created_by tells them apart: the jobs leave it null; an
+ * admin's inbox send of the same template carries the admin (ThreadSendService) and goes. Booking
+ * confirmations and report_ready are never automatic here.
  */
 export function isAutomatic(row: AutoRow): boolean {
   return row.created_by === null && (AUTOMATIC.has(row.template_key ?? '') || isV3Reminder(row));

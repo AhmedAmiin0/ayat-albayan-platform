@@ -38,11 +38,11 @@ const readNow = (views: MessageView[], at: Date): MessageView[] =>
   views.map((m) => (m.direction === 'inbound' && !m.read_at ? { ...m, read_at: at.toISOString() } : m));
 
 /**
- * The open chat's periodic refresh: rows newer than `after` (and up to
- * DELTA_OVERLAP_MS before it: WhatsApp's own second can land there; clients merge by id) plus the
- * outgoing rows still moving — two reads side by side. Writes nothing unless a new inbound row
- * arrived: then the read stamp of opening the chat (admin / sales: only unread rows, Meta's receipt in
- * the background; teacher: their own teacher_thread_reads) and one thread read for the window.
+ * The open chat's periodic refresh: rows newer than `after` (and up to DELTA_OVERLAP_MS before it:
+ * WhatsApp's own second can land there; clients merge by id) plus the outgoing rows still moving —
+ * two reads side by side. Writes nothing unless a new inbound row arrived: then the read stamp of
+ * opening the chat (admin / sales: only unread rows, Meta's receipt in the background; teacher:
+ * their own teacher_thread_reads) and one thread read for the window.
  */
 @Injectable()
 export class ThreadDeltaService {
@@ -71,7 +71,8 @@ export class ThreadDeltaService {
       this.render(moving.filter((r) => !shown.has(r.id)), caller),
       this.arrived(fresh, { q, caller, now }),
     ]);
-    // A gap only when the rows past the limit are newer than `after` (the overlap alone never forces a full read).
+    // A gap only when the rows past the limit are newer than `after` (the overlap alone never
+    // forces a full read).
     const gap = rows.length > q.limit && Date.parse(rows[q.limit]?.created_at ?? '') > Date.parse(q.after);
     const out: ThreadDelta = { messages, has_more: gap, pending };
     if (!arrived) return out;
@@ -105,7 +106,8 @@ export class ThreadDeltaService {
       return false;
     }
     if (!seen.unread) return false;
-    // Only the rows this answer shows: a late row with an older created_at (catch-up) is not among them.
+    // Only the rows this answer shows: a late row with an older created_at (catch-up) is not among
+    // them.
     const upTo = seen.inbound.filter((r) => !r.read_at).map((r) => r.id);
     return (await this.need(this.receipts).open(q.phone, { now, upTo })).stamped;
   }

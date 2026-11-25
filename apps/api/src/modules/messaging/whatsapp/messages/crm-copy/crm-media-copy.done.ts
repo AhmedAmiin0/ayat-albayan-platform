@@ -5,9 +5,9 @@ import { CrmMediaCopyRepo, type CrmCopyCounts } from './crm-media-copy.repo';
 import { CrmMediaCopySettings } from './crm-media-copy.settings';
 
 /**
- * The end of a copy-all run (no row left to copy): ONE audit row with the totals, then the switch back
- * off. Audit first, so a run never ends without its row; if the switch-off then fails, the next tick
- * retries only the switch-off (`audited`), so the row is not written twice (one process).
+ * The end of a copy-all run (no row left to copy): ONE audit row with the totals, then the switch
+ * back off. Audit first, so a run never ends without its row; if the switch-off then fails, the
+ * next tick retries only the switch-off (`audited`), so the row is not written twice (one process).
  */
 @Injectable()
 export class CrmMediaCopyDone {

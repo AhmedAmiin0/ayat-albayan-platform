@@ -3,8 +3,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { services } from '@/modules/messaging/webhook/tests/webhook.fakes';
 import { kapsoText, SENT_AT } from './external.fakes';
 
-// A reply sent from the WhatsApp Business app (echo) or the old CRM (Kapso history) answers the chat:
-// the phone's earlier unread inbound rows are stamped read, as WhatsApp does on the phone.
+// A reply sent from the WhatsApp Business app (echo) or the old CRM (Kapso history) answers the
+// chat: the phone's earlier unread inbound rows are stamped read, as WhatsApp does on the phone.
 
 const PHONE = '+966501234567';
 const OTHER = '+966509999999';

@@ -1,5 +1,6 @@
-// HTTP test harness for the calls routes (test-only, excluded from the build): the real AppModule with
-// its guards and controllers; wa_calls in memory, the Kapso calls API and the setting faked. No hosted call.
+// HTTP test harness for the calls routes (test-only, excluded from the build): the real AppModule
+// with its guards and controllers; wa_calls in memory, the Kapso calls API and the setting faked.
+// No hosted call.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';

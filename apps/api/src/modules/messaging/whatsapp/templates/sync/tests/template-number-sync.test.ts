@@ -6,7 +6,8 @@ import type { ApprovalRow, ApprovalWrite } from '@/modules/messaging/whatsapp/te
 import { REMINDER_24H, REPORT_READY, STUB_ENV, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError, type MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// POST /admin/numbers/:id/templates/sync (docs/23c decision 4): one number's WABA list → every number on that WABA.
+// POST /admin/numbers/:id/templates/sync (docs/23c decision 4): one number's WABA list → every
+// number on that WABA.
 
 const NOW = new Date('2026-10-24T09:00:00Z');
 const env: MetaLineEnv = { ...STUB_ENV, wabaId: 'waba-1' };

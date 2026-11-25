@@ -20,8 +20,8 @@ const CLIENTS: Record<WaProvider, Build> = {
 };
 
 /**
- * THE way to build a line's or a number's client (docs/19): meta and kapso get the Graph client, crm
- * CrmWhatsappClient, evolution EvolutionWhatsappClient. null = not configured: a client that
+ * THE way to build a line's or a number's client (docs/19): meta and kapso get the Graph client,
+ * crm CrmWhatsappClient, evolution EvolutionWhatsappClient. null = not configured: a client that
  * refuses every call before any request.
  */
 export function whatsappClient(env: WhatsappEnv | null, opts: ClientOpts = {}): WhatsappClient {

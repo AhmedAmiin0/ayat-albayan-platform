@@ -1,5 +1,6 @@
 // HTTP test harness for the WhatsApp routes (test-only, excluded from the build). Real controllers,
-// guards, registry and services; the DB-facing queries, the client, storage and the sender are mocks.
+// guards, registry and services; the DB-facing queries, the client, storage and the sender are
+// mocks.
 import type { AuthUser } from '@/common/auth/verify-token';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
@@ -64,7 +65,8 @@ function mocks() {
 
 export async function whatsappApp(resolver: PermissionResolver = systemResolver) {
   const m = mocks();
-  // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between tests.
+  // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between
+  // tests.
   const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)

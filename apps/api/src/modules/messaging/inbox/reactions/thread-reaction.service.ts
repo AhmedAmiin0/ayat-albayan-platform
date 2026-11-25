@@ -18,12 +18,12 @@ export type ReactionRequest = ThreadSend<ThreadReaction> & { messageId: string }
 export const reactionKey = (r: ReactionRequest): string => `reaction:${r.messageId}:${r.input.emoji ?? '-'}:${dedupKey(r)}`;
 
 /**
- * A reaction, guarded exactly like a text in that chat: the caller's role and scope
- * (a teacher: own families only, never their own chat), the 24 h window and the chat's send line
- * (sendLine), the target in THIS chat with a wamid and ≤ 30 days old. Not a template, so the
- * restricted-templates rule does not apply. The CRM line has no reaction call: 409 reaction_unsupported.
- * our_reaction is set at once; ONE idempotent row goes through the outbox (the sender's own pass):
- * a failed send puts ours back (migration 900's trigger) and comes back as `failed` with its code.
+ * A reaction, guarded exactly like a text in that chat: the caller's role and scope (a teacher: own
+ * families only, never their own chat), the 24 h window and the chat's send line (sendLine), the
+ * target in THIS chat with a wamid and ≤ 30 days old. Not a template, so the restricted-templates
+ * rule does not apply. The CRM line has no reaction call: 409 reaction_unsupported. our_reaction is
+ * set at once; ONE idempotent row goes through the outbox (the sender's own pass): a failed send
+ * puts ours back (migration 900's trigger) and comes back as `failed` with its code.
  */
 @Injectable()
 export class ThreadReactionService {
@@ -42,7 +42,8 @@ export class ThreadReactionService {
     const key = reactionKey(r);
     const target = await this.reactions.target(r.phone, r.messageId);
     assertReactable(target, now);
-    // Sales never see a feedback request or a join link (migration 187, as forward): not found, nothing sent.
+    // Sales never see a feedback request or a join link (migration 187, as forward): not found,
+    // nothing sent.
     if (r.sales && !visibleToSales(target)) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     const thread = await this.threads.thread(r.phone);
     const from = await sendLine(thread, { now, windows: () => this.threads.numberWindows(r.phone) });
@@ -57,8 +58,8 @@ export class ThreadReactionService {
     }
     const row = { ...outboundBase(r, thread), dedup_key: key, body: emoji ?? '', interactive_payload: reactionPayload(target, emoji), ...from };
     const sent = await this.outbox.send(row).catch(async (e: unknown) => {
-      // Nothing queued: ours goes back at once. Queued but the read-back failed: the sender (and the
-      // failed-send trigger) decides, so the inbox never disagrees with what WhatsApp got.
+      // Nothing queued: ours goes back at once. Queued but the read-back failed: the sender (and
+      // the failed-send trigger) decides, so the inbox never disagrees with what WhatsApp got.
       if (!(await this.reactions.queued(key))) {
         await this.reactions.setOurs({ ...where, ours: { emoji: target.our_reaction, by: target.our_reaction_by, at: target.our_reaction_at } });
       }

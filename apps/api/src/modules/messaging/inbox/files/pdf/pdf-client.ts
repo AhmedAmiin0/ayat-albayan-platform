@@ -5,9 +5,9 @@ import type { PageRange } from './pdf-pages';
 import { PdfToolError, type PdfPageImage } from './pdf-render';
 import { PDF_SOCKET, readCapped } from './pdf-wire';
 
-// The API's side of the PDF sandbox (docs/09 «PDF sandbox»): the two calls of pdf-render.ts, answered by
-// poppler in ayat-pdf (no secrets, no network). An API copy never runs poppler itself: no socket (local dev,
-// tests, CI) is PdfToolError('unavailable'), a 503 pdf_unavailable.
+// The API's side of the PDF sandbox (docs/09 «PDF sandbox»): the two calls of pdf-render.ts,
+// answered by poppler in ayat-pdf (no secrets, no network). An API copy never runs poppler itself:
+// no socket (local dev, tests, CI) is PdfToolError('unavailable'), a 503 pdf_unavailable.
 
 /** `socket`: tests listen on a temp path; `timeoutMs`: tests wait less. */
 type SandboxOpts = { socket?: string; timeoutMs?: number };

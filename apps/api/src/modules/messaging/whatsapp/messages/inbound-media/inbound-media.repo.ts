@@ -39,9 +39,9 @@ type Filterable<Q> = { eq(column: 'direction', value: string): Q; not(column: st
 /** A cached inbound voice note or video, for the 30-day purge (WaMediaRetentionJob); always a Meta media id. */
 export type CachedMedia = { id: string; media_path: string; media_mime: string | null; media_id: string | null };
 /**
- * PostgREST `or`: exactly a PLAYABLE_MIMES base type, bare or with parameters («; codecs=opus»). Not a
- * bare prefix: `audio/mp4*` also matched audio/mp4a-latm, which the job skips and never clears, so a
- * run of them at the old end would stop every later purge.
+ * PostgREST `or`: exactly a PLAYABLE_MIMES base type, bare or with parameters («; codecs=opus»).
+ * Not a bare prefix: `audio/mp4*` also matched audio/mp4a-latm, which the job skips and never
+ * clears, so a run of them at the old end would stop every later purge.
  */
 export const PLAYABLE_FILTER = PLAYABLE_MIMES.flatMap((m) => [`media_mime.ilike.${m}`, `media_mime.ilike.${m};*`]).join(',');
 

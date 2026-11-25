@@ -1,6 +1,6 @@
 // HTTP test harness for the inbox routes (test-only, excluded from the build). Real controllers,
-// guards, services, registry and MessageViews; the DB-facing queries, the line clients, the gate and
-// the sender are mocks. `client` = notifications, `chatClient` = chat (docs/12 §13.16): both
+// guards, services, registry and MessageViews; the DB-facing queries, the line clients, the gate
+// and the sender are mocks. `client` = notifications, `chatClient` = chat (docs/12 §13.16): both
 // configured by default; files that reset all mocks re-prime `configured` in beforeEach.
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { ThreadWindow } from './send/send-number';
@@ -108,7 +108,8 @@ function mocks() {
 /** `resolve`: the system roles as seeded by default; a test may grant a role more (a DB-edited role). */
 export async function inboxApp(resolve: PermissionResolver = systemResolver) {
   const m = mocks();
-  // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between tests.
+  // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between
+  // tests.
   const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolve).overrideProvider(TOKEN_VERIFIER).useValue(verify)

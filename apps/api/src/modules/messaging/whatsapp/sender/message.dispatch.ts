@@ -35,8 +35,8 @@ export async function documentLink(storage: StorageService, doc: TemplateDocumen
 }
 
 /**
- * A 7-day signed link to a file staff sent from the chat, signed again on
- * every try. Only wa-media paths under out/ are ever signed: never an inbound cache, never a report.
+ * A 7-day signed link to a file staff sent from the chat, signed again on every try. Only wa-media
+ * paths under out/ are ever signed: never an inbound cache, never a report.
  */
 export async function mediaLink(storage: StorageService, path: string): Promise<string> {
   if (!isSentFilePath(path)) throw new WaError(`media path ${path} is not a sent file`, { code: 100, status: 0 });

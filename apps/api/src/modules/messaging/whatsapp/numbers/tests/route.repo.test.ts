@@ -3,7 +3,8 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { RouteRepo } from '@/modules/messaging/whatsapp/numbers/route.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// docs/23c decision 4: approvals per number, and the templates sendable on the role's WABA or on some number.
+// docs/23c decision 4: approvals per number, and the templates sendable on the role's WABA or on
+// some number.
 
 describe('RouteQueries', () => {
   it('approvals: every message_template_numbers row as key → number → status', async () => {

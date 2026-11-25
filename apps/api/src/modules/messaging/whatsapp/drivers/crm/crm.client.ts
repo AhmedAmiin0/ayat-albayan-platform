@@ -13,8 +13,9 @@ import {
 } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The crm driver (docs/19 «crm driver»): a line that sends through the academy CRM's POST
-// /messages. The CRM owns the number and its conversations; its templates are listed and
-// submitted through the CRM's /templates (docs/39). Samples, inbound media and editing a rejected template stay in the CRM.
+// /messages. The CRM owns the number and its conversations; its templates are listed and submitted
+// through the CRM's /templates (docs/39). Samples, inbound media and editing a rejected template
+// stay in the CRM.
 
 interface CrmClientOpts {
   fetch?: FetchLike;
@@ -47,8 +48,9 @@ const sentAs = (e: unknown, body: CrmBody): unknown => {
 };
 
 /**
- * WhatsappClient over the CRM's REST API. Without the env every call throws WaError(code null, status 0)
- * before any request, like HttpWhatsappClient. The allow-list is checked before any request.
+ * WhatsappClient over the CRM's REST API. Without the env every call throws WaError(code null,
+ * status 0) before any request, like HttpWhatsappClient. The allow-list is checked before any
+ * request.
  */
 export class CrmWhatsappClient implements WhatsappClient {
   private readonly conn: CrmConn | null;
@@ -126,7 +128,8 @@ export class CrmWhatsappClient implements WhatsappClient {
       throw sentAs(e, body);
     });
     const sent = sentSchema.safeParse(data);
-    // A 2xx means the CRM sent it: without the wamid it cannot be matched, and a resend would duplicate it.
+    // A 2xx means the CRM sent it: without the wamid it cannot be matched, and a resend would
+    // duplicate it.
     if (!sent.success) throw new WaError('the CRM answered without a whatsapp_message_id', { code: null, status: 201, uncertain: true });
     return { waMessageId: sent.data.whatsapp_message_id };
   }

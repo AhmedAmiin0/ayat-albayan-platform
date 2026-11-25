@@ -58,8 +58,9 @@ export class ThreadsRepo {
   }
 
   /**
-   * Module mode only (docs/23c decision 6): the phone's newest inbound per number (v_thread_numbers);
-   * number_id null = unstamped history of that line, credited to the role's default by pickSend.
+   * Module mode only (docs/23c decision 6): the phone's newest inbound per number
+   * (v_thread_numbers); number_id null = unstamped history of that line, credited to the role's
+   * default by pickSend.
    */
   async numberWindows(phone: string): Promise<ThreadWindow[]> {
     const { data, error } = await this.db.from('v_thread_numbers').select('number_id, line, last_inbound_at').eq('phone_e164', phone);

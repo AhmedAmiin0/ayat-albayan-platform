@@ -1,5 +1,6 @@
-// Test-only fakes for the calls module (excluded from the build): an in-memory wa_calls store with the
-// same compare-and-set semantics as CallsQueries, a recording Kapso calls API and the kit around them.
+// Test-only fakes for the calls module (excluded from the build): an in-memory wa_calls store with
+// the same compare-and-set semantics as CallsQueries, a recording Kapso calls API and the kit
+// around them.
 import { vi } from 'vitest';
 import { forbidden, notFound } from '@/common/http/errors';
 

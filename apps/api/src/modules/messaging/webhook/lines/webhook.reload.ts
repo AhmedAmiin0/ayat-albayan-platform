@@ -8,9 +8,10 @@ export const RELOAD_GAP_MS = 5_000;
 
 /**
  * A webhook for a phone_number_id this copy does not know (docs/09 «Known windows»): a number or an
- * integration save taken by the other API copy reaches this one only on its refresh (60 s), so before
- * ignoring it the integration overlay and the numbers config are reloaded once and the body parsed
- * again. Concurrent callers share the one reload. Never throws (a failed step keeps the current config).
+ * integration save taken by the other API copy reaches this one only on its refresh (60 s), so
+ * before ignoring it the integration overlay and the numbers config are reloaded once and the body
+ * parsed again. Concurrent callers share the one reload. Never throws (a failed step keeps the
+ * current config).
  */
 @Injectable()
 export class WebhookConfigReload {

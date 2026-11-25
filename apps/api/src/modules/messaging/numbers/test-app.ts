@@ -1,5 +1,5 @@
-// HTTP test harness for the numbers routes (test-only, excluded from the build): the real controllers
-// and guards; the services are mocks.
+// HTTP test harness for the numbers routes (test-only, excluded from the build): the real
+// controllers and guards; the services are mocks.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';

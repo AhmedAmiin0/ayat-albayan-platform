@@ -7,8 +7,8 @@ import { inboxApp } from '@/modules/messaging/inbox/test-app';
 import { REQ, TARGET_ID, target } from '@/modules/messaging/inbox/reactions/reaction.fakes';
 import { ReactionRepo } from '@/modules/messaging/inbox/reactions/reaction.repo';
 
-// PUT /threads/:phone/messages/:id/reaction through the real guards (permissions, scopes, audit). The DB
-// reads and the sender are mocks: no line client is ever called.
+// PUT /threads/:phone/messages/:id/reaction through the real guards (permissions, scopes, audit).
+// The DB reads and the sender are mocks: no line client is ever called.
 
 const URL = `/threads/${encodeURIComponent(PHONE)}/messages/${TARGET_ID}/reaction`;
 const FRESH = new Date(Date.now() - 3_600_000).toISOString();

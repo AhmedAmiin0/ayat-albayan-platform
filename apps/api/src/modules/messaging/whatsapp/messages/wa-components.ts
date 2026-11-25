@@ -86,8 +86,8 @@ export function textMessage(input: { to: string; text: string; replyTo?: string 
 
 /**
  * A session file by link (`{type: kind, [kind]: {link, caption?, filename?}}`); a filename is a
- * document's only, Meta takes no caption on an audio, and `voice: true` only on an audio (an ogg/opus
- * voice note). A reply carries the quoted wamid as context.
+ * document's only, Meta takes no caption on an audio, and `voice: true` only on an audio (an
+ * ogg/opus voice note). A reply carries the quoted wamid as context.
  */
 export function mediaMessage(input: MediaSend): GraphBody {
   const kind = input.kind ?? 'document';

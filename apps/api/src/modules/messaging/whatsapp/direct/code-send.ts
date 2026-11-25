@@ -18,9 +18,10 @@ type CodeSendResult = { status: 'sent' } | { status: 'unavailable' } | { status:
 
 /**
  * The sign-in / password code (docs/30 §4): ONE authentication-template send, now, through the same
- * MessageDispatch the outbox uses (driver per line; module mode routes it to a number). Never queued:
- * a `messages` row would keep the code in template_params, readable by staff in the chat. Respects the
- * send gate and WA_ALLOWED_RECIPIENTS (dispatch.ready). Never retried: the user asks again.
+ * MessageDispatch the outbox uses (driver per line; module mode routes it to a number). Never
+ * queued: a `messages` row would keep the code in template_params, readable by staff in the chat.
+ * Respects the send gate and WA_ALLOWED_RECIPIENTS (dispatch.ready). Never retried: the user asks
+ * again.
  */
 /**
  * Drivers a login code never leaves from: the CRM (its inbox shows the code) and Evolution (an
@@ -64,10 +65,10 @@ export class CodeSend {
   }
 
   /**
-   * The CHAT line only (login codes leave from the chat number), never a fallback to
-   * notifications: no chat line (or number) that can send = unavailable. Legacy: the chat line's own
-   * client. Module mode: routing over the enabled chat numbers only. Never a crm line or number
-   * (docs/30 §4): the CRM's inbox would show the code to its users, and its OTP button is untested.
+   * The CHAT line only (login codes leave from the chat number), never a fallback to notifications:
+   * no chat line (or number) that can send = unavailable. Legacy: the chat line's own client.
+   * Module mode: routing over the enabled chat numbers only. Never a crm line or number (docs/30
+   * §4): the CRM's inbox would show the code to its users, and its OTP button is untested.
    */
   private async via(row: DueMessage, template: TemplateRow): Promise<SendVia | null> {
     const numbers = overlayNumbers();

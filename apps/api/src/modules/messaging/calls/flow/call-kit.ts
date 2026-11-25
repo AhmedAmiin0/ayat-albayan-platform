@@ -27,7 +27,8 @@ export class CallsKit {
 
   /**
    * The row after `event`, or null when the machine ignores it (duplicate, late, wrong side). A
-   * concurrent writer that moved the row first means a re-read and the event is judged again (MAX_ATTEMPTS).
+   * concurrent writer that moved the row first means a re-read and the event is judged again
+   * (MAX_ATTEMPTS).
    */
   async apply(row: CallRow, event: CallEvent, extra: MoveExtra = {}): Promise<CallRow | null> {
     let current: CallRow | null = row;

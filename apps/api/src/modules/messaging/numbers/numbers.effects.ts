@@ -8,9 +8,9 @@ import { OwnNumbers } from './own/own-numbers';
 
 /**
  * What follows every numbers write: an audit row (ids, labels, flags and secret NAMES only, never a
- * value), a refresh of the line config, so module mode applies a change without a restart, and a fresh
- * read of the academy's own numbers (OwnNumbers); then the worker's copy (kickConfigReload). A
- * role's default number saved tells the line-saved listeners (provider-saved.ts).
+ * value), a refresh of the line config, so module mode applies a change without a restart, and a
+ * fresh read of the academy's own numbers (OwnNumbers); then the worker's copy (kickConfigReload).
+ * A role's default number saved tells the line-saved listeners (provider-saved.ts).
  */
 @Injectable()
 export class NumbersEffects implements OnModuleInit {

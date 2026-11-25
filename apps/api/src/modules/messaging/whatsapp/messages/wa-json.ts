@@ -36,7 +36,8 @@ const paramsSchema = z.object({
   buttons: z.array(z.string()).optional(),
   payloads: z.array(z.string()).optional(),
   document: z.object({ bucket: z.string(), path: z.string(), filename: z.string() }).optional(),
-  // A malformed crm part is dropped, never the whole row's values (the meta and kapso drivers never read it).
+  // A malformed crm part is dropped, never the whole row's values (the meta and kapso drivers never
+  // read it).
   crm: crmValuesSchema.optional().catch(undefined),
 });
 

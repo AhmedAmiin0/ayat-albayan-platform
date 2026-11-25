@@ -57,8 +57,8 @@ const scopeFacts = (scopes: readonly string[] | null): ScopeFacts =>
   } : UNKNOWN);
 
 /**
- * One configured crm line: ok, the key refused (credential 'crm'), or the key without messages:send;
- * and which template scopes it lacks, from the same GET /me (no other call).
+ * One configured crm line: ok, the key refused (credential 'crm'), or the key without
+ * messages:send; and which template scopes it lacks, from the same GET /me (no other call).
  */
 export async function crmLineCheck(input: CrmCheckInput): Promise<LineCheckView> {
   const { scopes, error } = await scopesOf(input.conn);

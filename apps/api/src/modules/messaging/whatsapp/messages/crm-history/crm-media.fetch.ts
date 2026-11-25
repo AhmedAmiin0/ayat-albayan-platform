@@ -27,9 +27,9 @@ export function sameFamily(got: string | null, want: string): boolean {
 /**
  * GET one old-CRM file (the URL allowedCrmUrl returned, nothing else): no redirect followed (a 3xx
  * is refused), 10 s in all, the body streamed and cut at `maxBytes`. 200 only, with a content type
- * of the row's family. Unreachable (no answer, the timeout, a broken stream), 5xx or 429 → 502 crm_unreachable
- * (CRM_UNREACHABLE: a retry may work); any other status, another type or an empty body → 410 media_expired;
- * larger than the cap → 413 invoice_too_large.
+ * of the row's family. Unreachable (no answer, the timeout, a broken stream), 5xx or 429 → 502
+ * crm_unreachable (CRM_UNREACHABLE: a retry may work); any other status, another type or an empty
+ * body → 410 media_expired; larger than the cap → 413 invoice_too_large.
  */
 export async function fetchCrmMedia(input: CrmFetchInput): Promise<Uint8Array> {
   const signal = AbortSignal.timeout(CRM_FETCH_TIMEOUT_MS);

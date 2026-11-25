@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import type { TablesInsert } from '@ab/db';
 import { NOW, reactionHarness, request, target } from '@/modules/messaging/inbox/reactions/reaction.fakes';
 
-// Review of #332: sales never react to (or read back) a feedback request or a join link (migration 187),
-// and a failure after the row was queued does not put ours back (the sender decides).
+// Review of #332: sales never react to (or read back) a feedback request or a join link (migration
+// 187), and a failure after the row was queued does not put ours back (the sender decides).
 
 const SALES = { salesId: 'a1' } as never;
 const refused = async (p: Promise<unknown>) =>

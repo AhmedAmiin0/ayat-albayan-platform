@@ -21,8 +21,8 @@ import { TemplateAuthorModule } from '@/modules/messaging/whatsapp/templates/aut
  */
 @Global()
 @Module({
-  // Imported (though global) so the database's config is loaded before onModuleInit below; NumbersModule
-  // so the numbers config (comms_source, docs/23 phase 3) is loaded before it too.
+  // Imported (though global) so the database's config is loaded before onModuleInit below;
+  // NumbersModule so the numbers config (comms_source, docs/23 phase 3) is loaded before it too.
   imports: [
     ...[IntegrationConfigModule, NumbersModule, WhatsappSharedModule, WhatsappMessagesModule],
     ...[WhatsappLinesModule, WhatsappGateModule, WhatsappTemplatesModule, TemplateAuthorModule],

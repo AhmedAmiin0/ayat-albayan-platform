@@ -47,7 +47,8 @@ export class WaMediaRetentionJob extends TickerJob {
     const before = new Date(now.getTime() - RETENTION_DAYS * DAY_MS).toISOString();
     const done = { files: 0 };
     try {
-      // Inbound files, then cached echoes (a voice note sent from the WhatsApp Business app, cached as an inbound one).
+      // Inbound files, then cached echoes (a voice note sent from the WhatsApp Business app, cached
+      // as an inbound one).
       for (const echoes of [false, true]) await this.purge({ before, echoes, done });
     } catch (e) {
       this.log.error(`wa-media retention failed after ${done.files} files: ${String(e)}`);
@@ -59,8 +60,8 @@ export class WaMediaRetentionJob extends TickerJob {
   private async purge(input: { before: string; echoes: boolean; done: { files: number } }): Promise<void> {
     for (let i = 0; i < MAX_BATCHES; i++) {
       const rows = await this.queries.cachedBefore({ before: input.before, limit: BATCH, echoes: input.echoes });
-      // The query already filters by mime and media id; this guard keeps a photo, a PDF or an old-CRM
-      // copy (no media id: our only copy) safe whatever it returns.
+      // The query already filters by mime and media id; this guard keeps a photo, a PDF or an
+      // old-CRM copy (no media id: our only copy) safe whatever it returns.
       const playable = rows.filter((r) => isPlayableMime(r.media_mime) && !!r.media_id);
       if (!playable.length) return;
       await this.storage.removeMany({ bucket: BUCKETS.waMedia, paths: playable.map((r) => r.media_path) });

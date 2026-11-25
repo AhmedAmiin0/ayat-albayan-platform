@@ -6,8 +6,8 @@ import { CommunicationsService } from './communications.service';
 import type { NumbersConfig } from '@/modules/messaging/numbers/config/numbers.config';
 import type { NumbersSettings } from '@/modules/messaging/numbers/numbers.settings';
 
-// The read switch (docs/23 §2e step 5, docs/23b decision 5): module refused while the numbers or the
-// rules parity differs; legacy always allowed, after copying the rules into the legacy keys.
+// The read switch (docs/23 §2e step 5, docs/23b decision 5): module refused while the numbers or
+// the rules parity differs; legacy always allowed, after copying the rules into the legacy keys.
 function setup(opts: { source: 'legacy' | 'module'; moduleValues: Record<string, string>; rules?: RuleParityDiff[] }) {
   let source = opts.source;
   const order: string[] = [];

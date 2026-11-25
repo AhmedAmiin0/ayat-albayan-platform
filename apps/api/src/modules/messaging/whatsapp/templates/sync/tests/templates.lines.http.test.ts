@@ -6,8 +6,8 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 
-// Templates per number over HTTP: one line's sync by body or query, the lines view,
-// the move, and every manage route closed to an allow-list-only role even when it holds templates.manage
+// Templates per number over HTTP: one line's sync by body or query, the lines view, the move, and
+// every manage route closed to an allow-list-only role even when it holds templates.manage
 // (staging's sales role held a stray one: POST health answered it every template, unfiltered).
 
 /** Every role is granted templates.manage on top of its system permissions. */

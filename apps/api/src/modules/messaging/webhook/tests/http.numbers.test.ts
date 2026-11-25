@@ -3,7 +3,8 @@ import type { OverlayNumber } from '@/common/configuration/integrations/numbers-
 import { envelope, inboundValue, PHONE_NUMBER_ID, textPart } from './meta.fakes';
 import { sign, webhookApp } from './test-app';
 
-// Module mode over HTTP (docs/23c decision 7): the stored inbound row carries number_id + line = purpose.
+// Module mode over HTTP (docs/23c decision 7): the stored inbound row carries number_id + line =
+// purpose.
 
 let ctx: Awaited<ReturnType<typeof webhookApp>> | undefined;
 afterEach(async () => {

@@ -80,8 +80,8 @@ export class TemplatesRepo {
   }
 
   /**
-   * A template imported from the chat WABA (template-import.ts). Idempotent (rule 8): a row with the same
-   * Meta name + language already there is left as it is, and null comes back.
+   * A template imported from the chat WABA (template-import.ts). Idempotent (rule 8): a row with
+   * the same Meta name + language already there is left as it is, and null comes back.
    */
   async insert(row: ImportRow): Promise<TemplateRow | null> {
     const { data, error } = await this.db

@@ -3,8 +3,8 @@ import { crmTemplateBody } from '@/modules/messaging/whatsapp/drivers/crm/crm-bo
 import { templateMessage } from '@/modules/messaging/whatsapp/drivers/waba/waba-graph';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// docs/19 «crm driver»: the CRM's own name (crm_name, the old script's default) and the producer's CRM values,
-// used only by the crm driver; the meta driver keeps meta_name and its own values.
+// docs/19 «crm driver»: the CRM's own name (crm_name, the old script's default) and the producer's
+// CRM values, used only by the crm driver; the meta driver keeps meta_name and its own values.
 
 const TO = '+966500000002';
 const ALERT = templateRow({

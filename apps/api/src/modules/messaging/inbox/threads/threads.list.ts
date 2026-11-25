@@ -6,7 +6,8 @@ import type { Db } from '@/common/db/db.module';
 import { pageQuerySchema } from '@/common/http/http';
 import { phoneList } from '@/modules/messaging/numbers';
 
-// H1 list order and filters (R-LEAD-02, R-NFR-08). No `sort` = newest message first (the old order).
+// H1 list order and filters (R-LEAD-02, R-NFR-08). No `sort` = newest message first (the old
+// order).
 
 const THREAD_SORT_KEYS = ['unread', 'name'] as const;
 export type ThreadSortKey = (typeof THREAD_SORT_KEYS)[number];

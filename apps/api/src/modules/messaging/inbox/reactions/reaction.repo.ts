@@ -28,8 +28,9 @@ interface OurReaction {
 }
 
 /**
- * 404 message_not_found for another chat's message, an unknown id or a reaction row; 409 not_reactable
- * without a wamid (WhatsApp does not know it); 409 reaction_too_old past WhatsApp's 30 days.
+ * 404 message_not_found for another chat's message, an unknown id or a reaction row; 409
+ * not_reactable without a wamid (WhatsApp does not know it); 409 reaction_too_old past WhatsApp's
+ * 30 days.
  */
 export function assertReactable(target: ReactionTarget | null, now: Date): asserts target is ReactionTarget {
   if (!target || isReactionPayload(target.interactive_payload)) throw notFound('message_not_found');
@@ -67,8 +68,9 @@ export class ReactionRepo {
   }
 
   /**
-   * Older reaction sends to this message still waiting (a retry, a closed gate) never go out after a newer
-   * tap: failed «superseded» (not claimed by the sender; the revert trigger leaves the newer ours alone).
+   * Older reaction sends to this message still waiting (a retry, a closed gate) never go out after
+   * a newer tap: failed «superseded» (not claimed by the sender; the revert trigger leaves the
+   * newer ours alone).
    */
   async supersede(input: { targetId: string; phone: string }): Promise<void> {
     const { error } = await this.db

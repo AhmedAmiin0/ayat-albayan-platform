@@ -6,9 +6,9 @@ import { ChatListsRepo, type ListName } from './chat-lists.repo';
 const named = (name: string): ListName => ({ name, name_key: chatListNameKey(name) });
 
 /**
- * The academy's ONE shared set of chat lists (docs/22): names that only organise
- * chats. Duplicate names (ignoring case and Arabic letter variants) are 409 list_name_taken; the 31st
- * list is 409 list_limit. Nothing here ever sends a message.
+ * The academy's ONE shared set of chat lists (docs/22): names that only organise chats. Duplicate
+ * names (ignoring case and Arabic letter variants) are 409 list_name_taken; the 31st list is 409
+ * list_limit. Nothing here ever sends a message.
  */
 @Injectable()
 export class ChatListsService {

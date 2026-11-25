@@ -1,8 +1,9 @@
 import { createHmac } from 'node:crypto';
 import { safeEqual } from './webhook.signature';
 
-// The academy CRM's webhook authentication (docs/19 «crm driver»). Fails closed: no WACRM_WEBHOOK_SECRET →
-// every request is refused. Only that secret is tried here; the Meta and Kapso routes never try it.
+// The academy CRM's webhook authentication (docs/19 «crm driver»). Fails closed: no
+// WACRM_WEBHOOK_SECRET → every request is refused. Only that secret is tried here; the Meta and
+// Kapso routes never try it.
 
 /** A delivery signed longer ago (or further ahead) than this is a replay: refused. */
 export const WACRM_TOLERANCE_MS = 5 * 60_000;

@@ -30,10 +30,10 @@ export class QuickReplies {
   /**
    * The lesson a guardian's reply is about (docs/12 §3.5): our button payload (only if that lesson
    * is theirs), else the lesson of the outbound message it answers (Meta's context.id, same phone),
-   * else the latest lesson-linked message we sent them within settings.quick_reply_window_hours whose lesson is still open.
-   * Anyone else, or nothing found → null: the message is only stored and the admin reads it.
-   * A rating tap (lesson_rating, migration 195) takes only the first two: its payload, or the
-   * lesson_rating message it answers.
+   * else the latest lesson-linked message we sent them within settings.quick_reply_window_hours
+   * whose lesson is still open. Anyone else, or nothing found → null: the message is only stored
+   * and the admin reads it. A rating tap (lesson_rating, migration 195) takes only the first two:
+   * its payload, or the lesson_rating message it answers.
    */
   async lessonFor(input: { m: InboundEvent; phone: string; who: Contact; rating?: boolean }): Promise<string | null> {
     const { m, phone, who, rating = false } = input;

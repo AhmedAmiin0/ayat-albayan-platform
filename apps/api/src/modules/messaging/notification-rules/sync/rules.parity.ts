@@ -5,9 +5,10 @@ import { moduleLegacyValues, ruleDifferences } from './rules.mirror';
 import { RulesPersist } from '@/modules/messaging/notification-rules/store/rules.persist';
 
 /**
- * The rules' side of parity and the read switch (docs/23b decision 5), used by CommunicationsService:
- * the differences between the rule and the legacy keys, and the copy rules → legacy keys done before
- * flipping back to legacy. Writes only RULE_SETTING_KEYS, never comms_source or a sending switch.
+ * The rules' side of parity and the read switch (docs/23b decision 5), used by
+ * CommunicationsService: the differences between the rule and the legacy keys, and the copy rules →
+ * legacy keys done before flipping back to legacy. Writes only RULE_SETTING_KEYS, never
+ * comms_source or a sending switch.
  */
 @Injectable()
 export class RulesParity {

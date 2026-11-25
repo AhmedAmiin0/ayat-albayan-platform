@@ -4,7 +4,8 @@ import { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clien
 import { N1, N2, overlayNum } from '@/modules/messaging/whatsapp/numbers/number-route.fakes';
 import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// docs/23c: one client per number, from that number's own config only; nothing here reaches a network.
+// docs/23c: one client per number, from that number's own config only; nothing here reaches a
+// network.
 
 const install = (numbers = [overlayNum()]) => setNumbersOverlay({ values: {}, numberIds: {}, numbers });
 

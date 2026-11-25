@@ -12,8 +12,8 @@ export interface ThreadWindow {
   lastInboundAt: string | null;
 }
 
-// Reply per number (docs/23c decision 6). Module mode only: under legacy (overlayNumbers() === null)
-// pickSend is pickSendLine exactly and never reads the per-number windows.
+// Reply per number (docs/23c decision 6). Module mode only: under legacy (overlayNumbers() ===
+// null) pickSend is pickSendLine exactly and never reads the per-number windows.
 
 export type SendPick = { line?: WaLine; number_id?: string } | { code: SendLineCode };
 
@@ -27,9 +27,10 @@ export interface SendPickInput {
 const log = new Logger('SendNumber');
 
 /**
- * Every row as a number's window. Unstamped history (number_id null: inbound before the flip) counts for
- * its line's default number; a stamped row only for its own number, so an inbound on a second number never
- * opens a window on the default (review: a reply must leave from a number the family wrote to).
+ * Every row as a number's window. Unstamped history (number_id null: inbound before the flip)
+ * counts for its line's default number; a stamped row only for its own number, so an inbound on a
+ * second number never opens a window on the default (review: a reply must leave from a number the
+ * family wrote to).
  */
 export function numberWindows(rows: readonly ThreadWindow[], numbers: readonly OverlayNumber[]): NumberWindow[] {
   const defaultOf = (line: WaLine) => numbers.find((n) => n.is_default && n.purpose === line)?.id;
@@ -56,8 +57,9 @@ export function pickNumber(input: { rows: readonly ThreadWindow[]; numbers: read
 }
 
 /**
- * The sender of a session text / file. Legacy: pickSendLine (no new read). Module mode: pickNumber; a
- * failed windows read fails closed as line_not_configured (503): never a send from a guessed number.
+ * The sender of a session text / file. Legacy: pickSendLine (no new read). Module mode: pickNumber;
+ * a failed windows read fails closed as line_not_configured (503): never a send from a guessed
+ * number.
  */
 export async function pickSend(input: SendPickInput): Promise<SendPick> {
   const numbers = overlayNumbers();

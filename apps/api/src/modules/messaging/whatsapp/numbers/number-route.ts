@@ -10,7 +10,8 @@ import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due'
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Module mode's per-row number pick (docs/23 phase 5, contract docs/23c decisions 3–5). Pure: the
-// sender loads a RoutePass once per pass and asks routeOf() for every due row. Legacy never gets here.
+// sender loads a RoutePass once per pass and asks routeOf() for every due row. Legacy never gets
+// here.
 
 /** The number a row leaves from, and its role (stamped as messages.line at claim, decision 8). */
 export interface NumberRoute {
@@ -84,9 +85,10 @@ const crmApproved = (pass: RoutePass, template: Pick<TemplateRow, 'key' | 'statu
   pass.crmApproved?.has(template.key) ?? template.status === 'approved';
 
 /**
- * Decision 4: approved on a number = its message_template_numbers row says approved; with no row yet,
- * the role's default number counts as approved when message_templates.status is approved. A crm number
- * reads message_templates.status only: a row left from its meta days must not override the hand-set status.
+ * Decision 4: approved on a number = its message_template_numbers row says approved; with no row
+ * yet, the role's default number counts as approved when message_templates.status is approved. A
+ * crm number reads message_templates.status only: a row left from its meta days must not override
+ * the hand-set status.
  */
 export function approvedOn(pass: RoutePass, template: Pick<TemplateRow, 'key' | 'line' | 'status'>): (id: string) => boolean {
   const rows = pass.approvals.get(template.key);

@@ -8,7 +8,8 @@ import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// docs/23c: a routed row leaves through its number's own client; the line clients are never used for it.
+// docs/23c: a routed row leaves through its number's own client; the line clients are never used
+// for it.
 
 const client = () => ({ configured: vi.fn(() => true), sendTemplate: vi.fn(async () => ({ waMessageId: 'wamid.x' })), sendText: vi.fn() });
 const storage = { signedDownload: vi.fn() } as unknown as StorageService;

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { setup } from './follow-ups.job.fakes';
 
-// docs/23 §2c: FollowUpsJob reads the follow_up_slots rule (on/off, hours, slot window) from NotificationPolicy.
+// docs/23 §2c: FollowUpsJob reads the follow_up_slots rule (on/off, hours, slot window) from
+// NotificationPolicy.
 
 const d = (iso: string) => new Date(iso);
 const CYCLE = Date.parse('2026-10-01T10:00:00Z');

@@ -51,9 +51,9 @@ export const DUE_COLUMNS =
 interface AnyDueInput { now: Date; allowed: readonly string[] | null; lane?: Lane }
 
 /**
- * The idle tick's one read (messages_queue_idx): is any queued outbound row due now (in the allow-list
- * when one is set)? A superset of SenderQueries.due() (any template, any line), so false never skips
- * a row due() would have read; true runs the pass exactly as before.
+ * The idle tick's one read (messages_queue_idx): is any queued outbound row due now (in the
+ * allow-list when one is set)? A superset of SenderQueries.due() (any template, any line), so false
+ * never skips a row due() would have read; true runs the pass exactly as before.
  */
 export async function anyDue(db: Db, input: AnyDueInput): Promise<boolean> {
   const now = input.now.toISOString();

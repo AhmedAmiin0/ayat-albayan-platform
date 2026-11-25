@@ -11,8 +11,9 @@ export type SecretStatus = ReadonlyMap<string, Partial<Record<NumberSecretName, 
 const isName = (n: string): n is NumberSecretName => NUMBER_SECRET_NAMES.some((k) => k === n);
 
 /**
- * Per-number credentials in Vault (migration 20261023000621): wa_number:<id>:access_token / :app_secret.
- * No method logs a value; only read() returns one, for the in-memory line config (NumbersConfig).
+ * Per-number credentials in Vault (migration 20261023000621): wa_number:<id>:access_token /
+ * :app_secret. No method logs a value; only read() returns one, for the in-memory line config
+ * (NumbersConfig).
  */
 @Injectable()
 export class NumbersSecrets {

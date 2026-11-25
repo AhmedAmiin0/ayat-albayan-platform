@@ -60,13 +60,13 @@ function errorText(error: unknown): string {
  * Meta's throttling and outage codes retry with backoff (1 min, 5 min, …) until MAX_SEND_ATTEMPTS;
  * anything else (131026 not on WhatsApp, 132001 template missing, the window closed: Meta 131047 /
  * Kapso 422 = window_closed, bad parameters) fails at once. A timeout / dropped connection
- * (`uncertain`: Meta may have sent it) fails at once too, for the admin to check instead of a
- * blind resend. The provider down (lineDown: a 5xx with no code, a refused connection) holds the
- * row, uncounted, as its lane's probe (hold/line-down). An auth error (190 / 10 / 200, or Kapso /
- * the CRM refusing its key) holds the row, uncounted: the credential is broken.
- * Meta's 131042 (no payment method on the WABA; meta, kapso) holds it too (hold/payment-hold).
- * The crm driver: a 429 waits for its Retry-After (uncounted); any other CRM error code fails at once.
- * `attempts` counts this try.
+ * (`uncertain`: Meta may have sent it) fails at once too, for the admin to check instead of a blind
+ * resend. The provider down (lineDown: a 5xx with no code, a refused connection) holds the row,
+ * uncounted, as its lane's probe (hold/line-down). An auth error (190 / 10 / 200, or Kapso / the
+ * CRM refusing its key) holds the row, uncounted: the credential is broken. Meta's 131042 (no
+ * payment method on the WABA; meta, kapso) holds it too (hold/payment-hold). The crm driver: a 429
+ * waits for its Retry-After (uncounted); any other CRM error code fails at once. `attempts` counts
+ * this try.
  */
 export function failurePlan(input: PlanInput): FailurePlan {
   const info = input.error instanceof WaError ? input.error.info : null;

@@ -13,9 +13,9 @@ import {
   WaError, type MetaTemplate, type TemplateRow, type WhatsappLines,
 } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// One number's sync with Meta, each number on its own:
-// only that line's rows, against only that line's WABA list, then that WABA's new templates imported.
-// A row is never matched against (nor marked missing from) the other WABA's list.
+// One number's sync with Meta, each number on its own: only that line's rows, against only that
+// line's WABA list, then that WABA's new templates imported. A row is never matched against (nor
+// marked missing from) the other WABA's list.
 
 interface Warn { warn: (message: string) => void }
 

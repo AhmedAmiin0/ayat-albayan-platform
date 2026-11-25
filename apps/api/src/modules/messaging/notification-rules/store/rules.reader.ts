@@ -8,8 +8,9 @@ export interface RulesSnapshot {
 }
 
 /**
- * The port NotificationPolicy reads through (DI token). The DB implementation (rules.store.ts) caches
- * one snapshot for SETTINGS_CACHE_MS (0 in e2e), drops it on its own writes, never caches a failure.
+ * The port NotificationPolicy reads through (DI token). The DB implementation (rules.store.ts)
+ * caches one snapshot for SETTINGS_CACHE_MS (0 in e2e), drops it on its own writes, never caches a
+ * failure.
  */
 export abstract class RulesReader {
   abstract snapshot(): Promise<RulesSnapshot>;

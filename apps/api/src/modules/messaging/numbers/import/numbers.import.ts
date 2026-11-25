@@ -41,7 +41,8 @@ export class NumbersImport {
       try {
         for (const p of plans) await this.apply(p, actorId);
       } finally {
-        // One audit row (roles, ids, secret NAMES) and the refresh, even when a role failed half-way.
+        // One audit row (roles, ids, secret NAMES) and the refresh, even when a role failed
+        // half-way.
         const roles = plans.map((p) => ({ role: p.role, action: p.action, number_id: p.number_id, secrets: p.secrets_to_copy, skipped: p.not_importable?.fields }));
         await this.effects.after({ actorId, entity: 'wa_numbers', entityId: SINGLETON_ENTITY_ID, action: 'import', after: { roles } });
       }

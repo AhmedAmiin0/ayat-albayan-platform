@@ -71,7 +71,8 @@ export class WebhookService {
   async handle(body: unknown): Promise<void> {
     const now = new Date();
     const batch = await this.parse(body, now);
-    // When the controller stops waiting (within), so an item knows whether Meta can still re-send it.
+    // When the controller stops waiting (within), so an item knows whether Meta can still re-send
+    // it.
     const deadline = now.getTime() + RESPONSE_BUDGET_MS;
     let failed = 0;
     for (const m of batch.messages) failed += await this.safely(m.waMessageId, () => this.inbound.handle(m, { deadline }));
@@ -83,8 +84,9 @@ export class WebhookService {
   }
 
   /**
-   * The batch for the numbers this copy knows. An unknown phone_number_id may be one the other API copy
-   * just saved: reload the config once and parse again before its changes are ignored (and warned about).
+   * The batch for the numbers this copy knows. An unknown phone_number_id may be one the other API
+   * copy just saved: reload the config once and parse again before its changes are ignored (and
+   * warned about).
    */
   private async parse(body: unknown, now: Date): Promise<ReturnType<typeof parseWebhook>> {
     const ignored: string[] = [];

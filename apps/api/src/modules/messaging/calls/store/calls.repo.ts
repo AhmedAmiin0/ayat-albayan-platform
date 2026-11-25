@@ -63,8 +63,9 @@ export class CallsRepo {
   }
 
   /**
-   * Compare-and-set on the status: the moved row, or null when someone else moved it first. The answer
-   * SDP is written once (only while none is stored), the rest only while the row still has `from`.
+   * Compare-and-set on the status: the moved row, or null when someone else moved it first. The
+   * answer SDP is written once (only while none is stored), the rest only while the row still has
+   * `from`.
    */
   async move(m: CallMove): Promise<CallRow | null> {
     const { answer_sdp, ...patch } = m.patch;

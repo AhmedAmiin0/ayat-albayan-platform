@@ -8,7 +8,8 @@ import type { ApprovalWrite } from '@/modules/messaging/whatsapp/templates/catal
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// docs/19 «crm driver» in module mode: a crm number's approval is the hand-set message_templates.status.
+// docs/19 «crm driver» in module mode: a crm number's approval is the hand-set
+// message_templates.status.
 
 const CRM_ENV = { provider: 'crm' as const, base: 'http://127.0.0.1:4010/crm/api/v1', apiKey: 'fake-crm-key' };
 const crmNumber = overlayNum({ env: CRM_ENV });

@@ -14,10 +14,11 @@ import { NumbersEvolution } from './evolution/numbers-evolution';
 import { EvolutionNumbersRepo } from './evolution/evolution-numbers.repo';
 
 /**
- * Academy numbers (docs/23 §2c, phase 3): wa_numbers, the per-number Vault secrets, the import, parity
- * and the comms_source switch. Exports NumbersConfig (the line config port) and NumbersHealth (the line
- * check's per-number store) to WhatsappModule, which imports this module so the config loads first.
- * DB, settings and audit come from the global modules; RulesParity from the global NotificationRulesModule.
+ * Academy numbers (docs/23 §2c, phase 3): wa_numbers, the per-number Vault secrets, the import,
+ * parity and the comms_source switch. Exports NumbersConfig (the line config port) and
+ * NumbersHealth (the line check's per-number store) to WhatsappModule, which imports this module so
+ * the config loads first. DB, settings and audit come from the global modules; RulesParity from the
+ * global NotificationRulesModule.
  */
 @Module({
   controllers: [NumbersController, CommunicationsController],

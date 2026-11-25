@@ -56,9 +56,8 @@ export class ThreadFileSender {
   ) {}
 
   /**
-   * A signed upload URL for one file of this actor and request id; type and size checked first, then
-   * the line as send() picks it, so a chat that cannot be sent
-   * to stores nothing.
+   * A signed upload URL for one file of this actor and request id; type and size checked first,
+   * then the line as send() picks it, so a chat that cannot be sent to stores nothing.
    */
   async uploadUrl(s: ThreadSend<ThreadFileUpload>, now = new Date()): Promise<SignedUpload> {
     assertSendable({ mime: s.input.mime, size: s.input.size, maxBytes: await this.maxBytes() });
@@ -72,9 +71,9 @@ export class ThreadFileSender {
 
   /**
    * Queue the uploaded file, strictly in this order: the request id (400), the line as a text's
-   * (chatLine: 409 session_closed / 503, before any Storage call), the path is this actor's and this
-   * request's (400 file_path), Storage's own type and size, then the first bytes must be that type.
-   * A replayed request id returns the first row (the namespace is shared with text sends).
+   * (chatLine: 409 session_closed / 503, before any Storage call), the path is this actor's and
+   * this request's (400 file_path), Storage's own type and size, then the first bytes must be that
+   * type. A replayed request id returns the first row (the namespace is shared with text sends).
    */
   async send(s: ThreadSend<ThreadFileSendInput>, now = new Date()): Promise<Sent> {
     const key = dedupKey(s);

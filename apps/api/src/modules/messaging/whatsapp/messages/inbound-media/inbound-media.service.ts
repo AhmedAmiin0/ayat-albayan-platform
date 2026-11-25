@@ -35,10 +35,10 @@ export function servable(msg: MediaMessage, allow: (mime: string | null) => bool
 }
 
 /**
- * W6's gate (a chat bubble, a forward): a family's file (servable with isChatViewMime), or an ECHO, a
- * file the academy phone sent from the WhatsApp Business app (outbound with Meta's media id, docs/19
- * coexistence). An echo is fetched and cached exactly as an inbound file; an outbound row with neither
- * a stored file nor a media id (imported history) is 410 media_expired.
+ * W6's gate (a chat bubble, a forward): a family's file (servable with isChatViewMime), or an ECHO,
+ * a file the academy phone sent from the WhatsApp Business app (outbound with Meta's media id,
+ * docs/19 coexistence). An echo is fetched and cached exactly as an inbound file; an outbound row
+ * with neither a stored file nor a media id (imported history) is 410 media_expired.
  */
 export function chatServable(msg: MediaMessage): MediaMessage {
   if (msg.direction === 'inbound') return servable(msg, isChatViewMime);
@@ -92,9 +92,9 @@ export class InboundMedia {
   }
 
   /**
-   * The cached object of a loaded message, downloading it first (cap: 16 MB audio/video, else 10 MB):
-   * from WhatsApp, or an old-CRM file from the CRM's storage (CrmHistoryMedia; no 29-day limit).
-   * A final refusal is kept on the row and answered from it later (media-refusal.ts).
+   * The cached object of a loaded message, downloading it first (cap: 16 MB audio/video, else 10
+   * MB): from WhatsApp, or an old-CRM file from the CRM's storage (CrmHistoryMedia; no 29-day
+   * limit). A final refusal is kept on the row and answered from it later (media-refusal.ts).
    */
   async cache(msg: MediaMessage): Promise<InboundFile> {
     const mime = baseMime(msg.media_mime);

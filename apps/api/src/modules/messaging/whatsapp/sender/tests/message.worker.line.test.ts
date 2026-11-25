@@ -9,7 +9,8 @@ import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fake
 import { STUB_ENV, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// Two lines in the worker (docs/12 §13.3): ready before the claim, stamp only when multi, per-line alert.
+// Two lines in the worker (docs/12 §13.3): ready before the claim, stamp only when multi, per-line
+// alert.
 
 const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn(), staffAtSend: vi.fn() };
 const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };

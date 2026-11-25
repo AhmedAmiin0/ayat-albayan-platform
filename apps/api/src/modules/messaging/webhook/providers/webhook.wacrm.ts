@@ -39,9 +39,9 @@ function received(env: { id: string; event: string; data: unknown }, at: Date): 
 const isDelivery = (s: string): s is StatusEvent['status'] => (DELIVERY_STATUSES as readonly string[]).includes(s);
 
 /**
- * One delivery; null = not the CRM's envelope. A status the delivery path does not know (or a malformed
- * one) reads as `other`. The CRM's conversation id is its own, never Meta's: never stored on a row,
- * only kept on the event to confirm a timed-out send (crm-confirm/).
+ * One delivery; null = not the CRM's envelope. A status the delivery path does not know (or a
+ * malformed one) reads as `other`. The CRM's conversation id is its own, never Meta's: never stored
+ * on a row, only kept on the event to confirm a timed-out send (crm-confirm/).
  */
 export function parseWacrm(body: unknown, now: Date): WacrmDelivery | null {
   const env = envelopeSchema.safeParse(body);
@@ -64,8 +64,9 @@ export function parseWacrm(body: unknown, now: Date): WacrmDelivery | null {
 }
 
 /**
- * Delivery ids seen within the signature window (the CRM may re-send; an older one is refused as stale
- * anyway). In memory per instance: a duplicate on another instance is harmless, statuses only move forward.
+ * Delivery ids seen within the signature window (the CRM may re-send; an older one is refused as
+ * stale anyway). In memory per instance: a duplicate on another instance is harmless, statuses only
+ * move forward.
  */
 export class SeenDeliveries {
   private readonly seen = new Map<string, number>();

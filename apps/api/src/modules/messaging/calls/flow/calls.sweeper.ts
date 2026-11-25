@@ -23,8 +23,9 @@ export const IDLE_MS = 60_000;
 type Overdue = CallEndReason | 'hangup';
 
 /**
- * How long a live row may stay as it is, from when it got there, and how it ends after that: rings from
- * started_at, an accept from its claim (updated_at, set by the claim's write), talk from answered_at.
+ * How long a live row may stay as it is, from when it got there, and how it ends after that: rings
+ * from started_at, an accept from its claim (updated_at, set by the claim's write), talk from
+ * answered_at.
  */
 function limitOf(row: CallRow): { ms: number; since: string; why: Overdue } | null {
   if (row.status === 'connecting' || row.status === 'ringing') {
@@ -43,11 +44,12 @@ export function overdue(row: CallRow, now: Date): Overdue | null {
 
 /**
  * The unanswered timeout (docs/28 §3.1) and the safety net for lost webhooks. Sweeps whatever the
- * setting says while a call is (or may be) live, so a call left live when calls were switched off still
- * ends. Idle (the last sweep left none live, no wake since): nothing at all while calls are OFF (as one
- * process did before), one sweep per IDLE_MS while ON (the backstop for a lost wake). Inserts run on the API copies and this runs on the worker (docs/09), so an
- * insert calls wake(), which the API copy forwards to the worker. Idempotent: every end is compare-and-set,
- * so two sweeps together end a row once (a second terminate is a no-op).
+ * setting says while a call is (or may be) live, so a call left live when calls were switched off
+ * still ends. Idle (the last sweep left none live, no wake since): nothing at all while calls are
+ * OFF (as one process did before), one sweep per IDLE_MS while ON (the backstop for a lost wake).
+ * Inserts run on the API copies and this runs on the worker (docs/09), so an insert calls wake(),
+ * which the API copy forwards to the worker. Idempotent: every end is compare-and-set, so two
+ * sweeps together end a row once (a second terminate is a no-op).
  */
 @BackgroundJob({ name: 'calls-sweeper', kick: 'wake' })
 @Injectable()

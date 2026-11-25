@@ -28,8 +28,9 @@ export function sendsOnCrm(from: ReactFrom): boolean {
 }
 
 /**
- * The thread page's `reactable` flag: its 24 h window is open and the line it answers from is not the CRM's.
- * Never throws (a failed windows read reads as not reactable): the apps only hide the row.
+ * The thread page's `reactable` flag: its 24 h window is open and the line it answers from is not
+ * the CRM's. Never throws (a failed windows read reads as not reactable): the apps only hide the
+ * row.
  */
 export async function threadReactable(queries: ThreadsRepo, phone: string, now: Date): Promise<boolean> {
   const thread = await queries.thread(phone).catch(() => null);

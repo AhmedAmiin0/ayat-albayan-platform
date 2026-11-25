@@ -28,7 +28,8 @@ export function intentOf(m: InboundEvent): QuickReplyIntent | null {
 
 /**
  * A lesson_rating tap (migration 195): our «rate_<value>:<lesson>» payload, else — a template
- * button Meta sent with its text only — the exact text of one of the three buttons. Never typed text.
+ * button Meta sent with its text only — the exact text of one of the three buttons. Never typed
+ * text.
  */
 export function ratingOf(m: InboundEvent): LessonRating | null {
   return ratingOfIntent(intentOf(m)) ?? (m.type === 'button' ? ratingOfText(m.body) : null);
@@ -79,7 +80,8 @@ export function inboundRow({ m, phone, who, leadId, lessonId, read }: RowInput):
     ...(read ? { read_at: m.at.toISOString() } : {}),
     // Only when stamped (docs/12 §13.2): a single-line insert carries no `line` key at all.
     ...(m.line ? { line: m.line } : {}),
-    // The receiving number (docs/23c decision 7; legacy: looked up by phone_number_id, InboundStore); none = no key.
+    // The receiving number (docs/23c decision 7; legacy: looked up by phone_number_id,
+    // InboundStore); none = no key.
     ...(m.numberId ? { number_id: m.numberId } : {}),
   };
 }

@@ -7,7 +7,8 @@ import { type InboundFile, waHttpError } from '@/modules/messaging/whatsapp';
 import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media.service';
 import { FailedRecently, InFlight, pageRange, type PageRange } from './pdf-pages';
 import { PdfPreviewRepo, type PdfDoc } from './pdf-preview.repo';
-// poppler runs in ayat-pdf (pdf-client.ts over its socket), never here; pdf-render gives the slot and the error.
+// poppler runs in ayat-pdf (pdf-client.ts over its socket), never here; pdf-render gives the slot
+// and the error.
 import { pdfPageCount, renderPdfPages, sandboxReady } from './pdf-client';
 import { inSlot, PdfToolError, type PdfPageImage } from './pdf-render';
 
@@ -105,8 +106,8 @@ export class PdfPreviewService {
   }
 
   /**
-   * 'busy' → 503 pdf_busy; 'unavailable' → 503 pdf_unavailable (the sandbox, not the PDF: never remembered);
-   * 'failed' → 503 pdf_render_failed, and the key is refused for FAILED_MS.
+   * 'busy' → 503 pdf_busy; 'unavailable' → 503 pdf_unavailable (the sandbox, not the PDF: never
+   * remembered); 'failed' → 503 pdf_render_failed, and the key is refused for FAILED_MS.
    */
   private async guard<T>(key: string, fn: () => Promise<T>): Promise<T> {
     if (this.failed.has(key)) throw waHttpError('pdf_render_failed', HttpStatus.SERVICE_UNAVAILABLE);

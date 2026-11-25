@@ -5,9 +5,10 @@ import type { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.re
 import type { ThreadListFilter } from './threads.list';
 
 /**
- * GET /threads?list=<uuid> (docs/22 §3): only that list's chats, with the other filters (ThreadsQueries
- * reads v_list_threads, filtered in SQL). A caller without inbox.lists has the param ignored; a
- * malformed id is `null` = an empty page (never a 500); an unknown or empty list is an empty page too.
+ * GET /threads?list=<uuid> (docs/22 §3): only that list's chats, with the other filters
+ * (ThreadsQueries reads v_list_threads, filtered in SQL). A caller without inbox.lists has the
+ * param ignored; a malformed id is `null` = an empty page (never a 500); an unknown or empty list
+ * is an empty page too.
  */
 export function listFilter(f: ThreadListFilter, user: AuthUser): ThreadListFilter | null {
   const { list, ...rest } = f;

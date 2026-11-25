@@ -8,8 +8,8 @@ import type { ExternalMessage } from './external-message';
 
 // The outbound row of a message sent outside the app (Kapso's inbox, the WhatsApp Business app).
 // Pure. History, never work: never 'queued' (the sender only picks queued rows), created_by null
-// and attempts 0 (the sender's claim counts every try); a failed one is refused by the admin's retry
-// (MessagesQueries.requeue), so nothing can ever send it again.
+// and attempts 0 (the sender's claim counts every try); a failed one is refused by the admin's
+// retry (MessagesQueries.requeue), so nothing can ever send it again.
 
 /** Registry keys whose Meta name differs (migration 141, as the chat import maps them); else key = Meta name. */
 const SEEDED_KEYS: Readonly<Record<string, string>> = { lesson_reminder_v2: 'lesson_reminder' };
@@ -44,8 +44,8 @@ const origin = ({ line, numberId }: ExternalRowInput['from']) => ({ ...(line ? {
 
 export function externalRow({ msg, phone, who, from, at, event }: ExternalRowInput): TablesInsert<'messages'> {
   const templateKey = msg.templateName ? templateKeyFor(msg.templateName) : null;
-  // A sign-in code (docs/30 §4, on the chat line since 2026-10-29) is kept as a bare marker: its text
-  // and params hold the code, which staff must never read in the chat.
+  // A sign-in code (docs/30 §4, on the chat line since 2026-10-29) is kept as a bare marker: its
+  // text and params hold the code, which staff must never read in the chat.
   const secret = templateKey === ACCOUNT_CODE_TEMPLATE;
   return {
     ...delivery(msg, event),

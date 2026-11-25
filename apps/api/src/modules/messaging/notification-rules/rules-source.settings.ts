@@ -9,8 +9,8 @@ type RulesSourceValues = SettingsSlice<(typeof KEYS)[number]>;
 
 /**
  * The notification rules' academy settings (docs/23b). Also the one writer of the 8 legacy keys
- * since they became owned (PATCH /settings moves them): a rule write in legacy mode and the flip back
- * to legacy mirror the rules into them here. Never writes comms_source or any sending switch.
+ * since they became owned (PATCH /settings moves them): a rule write in legacy mode and the flip
+ * back to legacy mirror the rules into them here. Never writes comms_source or any sending switch.
  */
 @Injectable()
 export class RulesSourceSettings {

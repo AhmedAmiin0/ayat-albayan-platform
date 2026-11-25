@@ -82,8 +82,8 @@ export class InboundStore {
   }
 
   /**
-   * A message from one of the academy's own numbers (OwnNumbers): the row only, already read, with no
-   * lead, guardian or lesson; false = a replay. Never touches a lead (no follow-up reset).
+   * A message from one of the academy's own numbers (OwnNumbers): the row only, already read, with
+   * no lead, guardian or lesson; false = a replay. Never touches a lead (no follow-up reset).
    */
   saveOwn(m: InboundEvent, phone: string): Promise<boolean> {
     return this.save({ m, phone, who: NOBODY, leadId: null, lessonId: null, stage: 0, read: true });

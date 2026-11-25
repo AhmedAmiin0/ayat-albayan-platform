@@ -11,10 +11,10 @@ export type SlotWindow = Pick<RuleTiming<'follow_up_slots'>, 'slots_from_hours' 
 
 /**
  * Real free starts for a follow-up (R-LEAD-05): every active teacher's weekly grid − time-off −
- * booked lessons (AvailabilityQuery.freeSlots), lesson-length (the pricing default) slots, from
- * the rule's slots_from_hours (12) to slots_to_days (7) ahead (docs/12 §7; FollowUpsJob passes them).
- * The lead's qualification has no program or teacher-gender preference (R-LEAD-03), so every
- * active teacher counts. TODO(owner): narrow by program / teacher gender once the lead has them.
+ * booked lessons (AvailabilityQuery.freeSlots), lesson-length (the pricing default) slots, from the
+ * rule's slots_from_hours (12) to slots_to_days (7) ahead (docs/12 §7; FollowUpsJob passes them).
+ * The lead's qualification has no program or teacher-gender preference (R-LEAD-03), so every active
+ * teacher counts. TODO(owner): narrow by program / teacher gender once the lead has them.
  */
 @Injectable()
 export class FollowUpSlots {

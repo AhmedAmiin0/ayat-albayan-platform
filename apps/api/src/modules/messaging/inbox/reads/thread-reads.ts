@@ -65,8 +65,9 @@ export class ThreadReads {
   }
 
   /**
-   * A chat list (`list`) narrows the admin's and sales' lists; teacher mode never has one. The academy's
-   * own numbers are hidden from every list, search and unread count (the nav counts read this total).
+   * A chat list (`list`) narrows the admin's and sales' lists; teacher mode never has one. The
+   * academy's own numbers are hidden from every list, search and unread count (the nav counts read
+   * this total).
    */
   async list(input: ThreadListFilter, user: AuthUser): Promise<Page<ThreadView>> {
     const f = await this.withoutOwn(input);

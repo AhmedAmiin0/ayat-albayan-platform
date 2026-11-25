@@ -4,7 +4,8 @@ import { dirname } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { inSlot, pdfPageCount, renderPdfPages, type PdfExit, type PdfRun } from '@/modules/messaging/inbox/files/pdf/pdf-render';
 
-// A fake poppler: never the real binaries in a unit test (the image build smoke-renders them, apps/api/Dockerfile).
+// A fake poppler: never the real binaries in a unit test (the image build smoke-renders them,
+// apps/api/Dockerfile).
 const PDF = new TextEncoder().encode('%PDF-1.4 fake');
 const exit = (over: Partial<PdfExit> = {}): PdfExit => ({ code: 0, stdout: '', timedOut: false, ...over });
 const last = (args: readonly string[]) => args[args.length - 1] ?? '';

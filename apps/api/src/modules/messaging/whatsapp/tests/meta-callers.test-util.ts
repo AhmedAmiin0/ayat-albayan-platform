@@ -37,20 +37,24 @@ const WHITELIST = new Set([
   // Meta's edit and the PDF's sample, done by the admin or the author.
   'modules/messaging/whatsapp/templates/edit/template-edit.meta.ts',
   'modules/messaging/whatsapp/templates/edit/template-editor.ts',
-  // One number's template sync (docs/23c decision 4): a read-only list from that number's own client.
+  // One number's template sync (docs/23c decision 4): a read-only list from that number's own
+  // client.
   'modules/messaging/whatsapp/templates/sync/template-number-sync.ts',
   'modules/messaging/whatsapp/templates/sync/template-numbers.service.ts',
   'modules/messaging/whatsapp/live-client.ts',
-  // Routing per number (docs/23c): one number's own config and client, used only by MessageDispatch.
+  // Routing per number (docs/23c): one number's own config and client, used only by
+  // MessageDispatch.
   'modules/messaging/numbers/config/numbers.env.ts',
   'modules/messaging/whatsapp/numbers/number-clients.ts',
   'modules/messaging/whatsapp/whatsapp.client.ts',
-  // The crm driver (docs/19): the one client factory and the CRM's REST client, used only through the line clients.
+  // The crm driver (docs/19): the one client factory and the CRM's REST client, used only through
+  // the line clients.
   'modules/messaging/whatsapp/client-factory.ts',
   'modules/messaging/whatsapp/drivers/crm/crm.client.ts',
   'modules/messaging/whatsapp/drivers/crm/crm-http.ts',
   'modules/messaging/whatsapp/shared/whatsapp-shared.module.ts',
-  // WhatsApp voice calls (docs/28): the one Kapso calling client, one request per method, never a retry.
+  // WhatsApp voice calls (docs/28): the one Kapso calling client, one request per method, never a
+  // retry.
   'modules/messaging/calls/kapso/kapso-calls.ts',
   'modules/messaging/whatsapp/whatsapp.types.ts',
   // Kapso's message history: read-only GETs that store messages sent outside the app.

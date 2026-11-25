@@ -5,9 +5,10 @@ import { PDF_RUN, type PageRange } from './pdf-pages';
 import { inSlot, PdfToolError, pdfPageCount, renderPdfPages } from './pdf-render';
 import { PDF_SOCKET, readCapped } from './pdf-wire';
 
-// ayat-pdf's HTTP side (docs/09 «PDF sandbox»): poppler (pdf-render.ts, unchanged: nice, choom, prlimit,
-// SIGKILL timeouts, 64 KB of stdout, the temp folder removed) on the PDF an API copy posts. Only these
-// requests, one PDF at a time (inSlot: 8 waiting, then 503), a body of at most INVOICE_MAX_BYTES.
+// ayat-pdf's HTTP side (docs/09 «PDF sandbox»): poppler (pdf-render.ts, unchanged: nice, choom,
+// prlimit, SIGKILL timeouts, 64 KB of stdout, the temp folder removed) on the PDF an API copy
+// posts. Only these requests, one PDF at a time (inSlot: 8 waiting, then 503), a body of at most
+// INVOICE_MAX_BYTES.
 
 type Op = { op: 'pages' } | { op: 'render'; range: PageRange };
 
@@ -50,8 +51,9 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   if (!(length >= 1 && length <= INVOICE_MAX_BYTES)) return send(res, 413, { error: 'too_large' });
   try {
     const out = await inSlot(async () => {
-      // The body is read only here, so the PDFs waiting stay in their senders, not in this container's memory.
-      // An API copy that gave up while this waited (its timeout) leaves the slot to the next one.
+      // The body is read only here, so the PDFs waiting stay in their senders, not in this
+      // container's memory. An API copy that gave up while this waited (its timeout) leaves the
+      // slot to the next one.
       if (req.socket.destroyed) return null;
       const bytes = await readCapped(req, INVOICE_MAX_BYTES);
       return bytes ? run(op, bytes) : null;
@@ -69,8 +71,8 @@ function sendError(res: ServerResponse, e: unknown): void {
 }
 
 /**
- * Listens on `path` (the last run's socket removed first: the volume outlives the container), owner only:
- * ayat-pdf and the API copies are the same uid (node, apps/api/Dockerfile).
+ * Listens on `path` (the last run's socket removed first: the volume outlives the container), owner
+ * only: ayat-pdf and the API copies are the same uid (node, apps/api/Dockerfile).
  */
 export async function serve(path = PDF_SOCKET): Promise<Server> {
   await rm(path, { force: true });

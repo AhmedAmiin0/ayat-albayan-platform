@@ -5,7 +5,8 @@ import { services } from '@/modules/messaging/webhook/tests/webhook.fakes';
 import { WebhookService } from '@/modules/messaging/webhook/webhook.service';
 import { parseWebhook } from '@/modules/messaging/webhook/parse/webhook.parse';
 
-// Meta's smb_message_echoes (WhatsApp Business app coexistence): the business's own messages, with content.
+// Meta's smb_message_echoes (WhatsApp Business app coexistence): the business's own messages, with
+// content.
 
 const echo = kapsoText({ id: 'wamid.ECHO1', from: '15550001111', kapso: undefined });
 const echoes = (items: unknown[], phoneNumberId = PHONE_NUMBER_ID) => ({

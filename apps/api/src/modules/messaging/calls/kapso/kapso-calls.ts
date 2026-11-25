@@ -12,8 +12,9 @@ import type { CallingLine } from './calling-line';
 import type { CallPermissionFacts, CallsApi, PermissionRequest } from './calls-api';
 import { permissionRequestBody } from './permission-body';
 
-// Kapso's Meta proxy mirrors Meta's Cloud API Calling (docs/28 §2): same paths and snake_case bodies,
-// the project key as X-API-Key (graph.ts authHeaders). One request per method, never a retry.
+// Kapso's Meta proxy mirrors Meta's Cloud API Calling (docs/28 §2): same paths and snake_case
+// bodies, the project key as X-API-Key (graph.ts authHeaders). One request per method, never a
+// retry.
 
 const sentSchema = z.object({ messages: z.array(z.object({ id: z.string().min(1) })).min(1) });
 const connectSchema = z.object({ calls: z.array(z.object({ id: z.string().min(1) })).min(1) });

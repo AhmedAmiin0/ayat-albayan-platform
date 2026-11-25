@@ -29,8 +29,9 @@ const SKIPS: ReadonlySet<string> = new Set<ForwardSkip>([
 ]);
 
 /**
- * A send path refusal → the target's reason. Any other error (a DB or outbox failure) is that target's
- * `send_failed` too: the targets before it are already queued, so the forward still answers and is audited.
+ * A send path refusal → the target's reason. Any other error (a DB or outbox failure) is that
+ * target's `send_failed` too: the targets before it are already queued, so the forward still
+ * answers and is audited.
  */
 export function skipOf(e: unknown): ForwardSkip {
   if (!(e instanceof HttpException)) return 'send_failed';

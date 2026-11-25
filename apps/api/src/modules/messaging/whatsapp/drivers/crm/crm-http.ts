@@ -4,9 +4,10 @@ import { mayHaveReached, type FetchLike } from '@/common/infra/http/failure';
 import { reachInfo, TIMEOUT_INFO } from '@/modules/messaging/whatsapp/drivers/transport-info';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// One call to the academy CRM's public REST API (docs/19 «crm driver»): Bearer key, JSON, timeout, and the
-// CRM's envelope ({data} / {error:{code,message}}) → WaError. The CRM has no idempotency key, so an answer
-// that may have come after the CRM reached Meta is `uncertain` (never resent automatically).
+// One call to the academy CRM's public REST API (docs/19 «crm driver»): Bearer key, JSON, timeout,
+// and the CRM's envelope ({data} / {error:{code,message}}) → WaError. The CRM has no idempotency
+// key, so an answer that may have come after the CRM reached Meta is `uncertain` (never resent
+// automatically).
 
 export interface CrmConn {
   env: CrmLineEnv;
@@ -90,7 +91,8 @@ export async function crmJson(conn: CrmConn, req: CrmRequest): Promise<unknown> 
       headers: { authorization: `Bearer ${conn.env.apiKey}`, accept: 'application/json', ...(hasBody ? { 'content-type': 'application/json' } : {}) },
       body: hasBody ? JSON.stringify(req.body) : undefined,
       signal: AbortSignal.timeout(conn.timeoutMs),
-      // The CRM never redirects: a 3xx (a wrong base) is a plain «not sent» failure, never a POST turned GET.
+      // The CRM never redirects: a 3xx (a wrong base) is a plain «not sent» failure, never a POST
+      // turned GET.
       redirect: 'manual',
     });
   } catch (e) {

@@ -18,9 +18,10 @@ export function pageRange(page: number, pages: number): PageRange {
 }
 
 /**
- * «Pages:          12» of pdfinfo's report, at most PDF_PAGES_MAX; 0 when it has none. The LAST such
- * line: the file's own strings (Title, Author …, a newline inside them printed as is) come before it,
- * only poppler's lines (Encrypted, Page size …) after, so a crafted «\nPages: 1» in a Title never wins.
+ * «Pages: 12» of pdfinfo's report, at most PDF_PAGES_MAX; 0 when it has none. The LAST such line:
+ * the file's own strings (Title, Author …, a newline inside them printed as is) come before it,
+ * only poppler's lines (Encrypted, Page size …) after, so a crafted «\nPages: 1» in a Title never
+ * wins.
  */
 export function pdfinfoPages(stdout: string): number {
   const m = [...stdout.matchAll(/^Pages:\s+(\d+)$/gm)].at(-1);
@@ -29,7 +30,8 @@ export function pdfinfoPages(stdout: string): number {
 
 /**
  * JPEG at quality 70, the long side scaled to 1600 px (an A4 page ≈ 1131×1600, 150–300 KB), pages
- * `range` only. The smoke render in apps/api/Dockerfile runs these same flags: change both together.
+ * `range` only. The smoke render in apps/api/Dockerfile runs these same flags: change both
+ * together.
  */
 export function pdftoppmArgs(input: { pdf: string; outRoot: string; range: PageRange }): string[] {
   const { first, last } = input.range;

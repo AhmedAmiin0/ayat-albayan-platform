@@ -15,8 +15,8 @@ export const isPartyOf = (row: CallRow, userId: string): boolean => row.created_
 
 /**
  * Staff → family (docs/28 §3.1). The row is written BEFORE Kapso hears of the call (its id is the
- * biz_opaque_callback_data), and the connect is sent exactly once: a failed or timed-out connect ends
- * the row as failed and is never retried (it may already ring, and business calls are billed).
+ * biz_opaque_callback_data), and the connect is sent exactly once: a failed or timed-out connect
+ * ends the row as failed and is never retried (it may already ring, and business calls are billed).
  */
 @Injectable()
 export class OutboundCalls {

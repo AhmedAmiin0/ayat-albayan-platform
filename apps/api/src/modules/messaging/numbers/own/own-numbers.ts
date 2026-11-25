@@ -19,13 +19,13 @@ export function phoneList(phones: Iterable<string>): string {
 }
 
 /**
- * The academy's own WhatsApp numbers: every wa_numbers.display_phone_e164. A message
- * from one of them (the old Apps Script's reminders, sent from the notifications number to the chat
- * number) is kept as a row but is never a customer: no lead, push, unread or list entry. Read through
+ * The academy's own WhatsApp numbers: every wa_numbers.display_phone_e164. A message from one of
+ * them (the old Apps Script's reminders, sent from the notifications number to the chat number) is
+ * kept as a row but is never a customer: no lead, push, unread or list entry. Read through
  * NumbersQueries, cached for the integration refresh period and dropped after every numbers write
- * (NumbersEffects), so a new number row is picked up. Never throws: a failed read keeps the last set
- * (none yet = nobody is hidden, so a family's chat is never lost). INTEGRATION_CONFIG_FROM_DB=false
- * (unit tests, env-only runs): never reads, nobody is hidden.
+ * (NumbersEffects), so a new number row is picked up. Never throws: a failed read keeps the last
+ * set (none yet = nobody is hidden, so a family's chat is never lost).
+ * INTEGRATION_CONFIG_FROM_DB=false (unit tests, env-only runs): never reads, nobody is hidden.
  */
 @Injectable()
 export class OwnNumbers {

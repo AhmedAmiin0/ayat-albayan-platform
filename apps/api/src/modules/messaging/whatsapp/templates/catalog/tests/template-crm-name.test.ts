@@ -4,7 +4,8 @@ import { CRM_ENV } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// docs/19 «crm driver»: the CRM name / language of a template, by hand, audited, only on a crm line.
+// docs/19 «crm driver»: the CRM name / language of a template, by hand, audited, only on a crm
+// line.
 
 const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), upsertApprovals: vi.fn() };
 const audit = { record: vi.fn() };

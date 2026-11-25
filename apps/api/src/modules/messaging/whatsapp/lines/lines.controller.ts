@@ -9,9 +9,10 @@ import { TemplateManagerGuard } from '@/modules/messaging/whatsapp/templates/cat
 
 /**
  * Line diagnostics (docs/12 §13.9, R-MSG-05): each WhatsApp line as Meta reports it. Admin only
- * (templates.manage, never an allow-list-only role: TemplateManagerGuard), read-only on Meta, no audit
- * row (the activity log records the POST). The last good number per line is kept (LineHealthStore), and
- * each checked phone id's result on its number rows (NumbersHealth, docs/23 phase 3).
+ * (templates.manage, never an allow-list-only role: TemplateManagerGuard), read-only on Meta, no
+ * audit row (the activity log records the POST). The last good number per line is kept
+ * (LineHealthStore), and each checked phone id's result on its number rows (NumbersHealth, docs/23
+ * phase 3).
  */
 @ApiTags('messaging')
 @ApiBearerAuth()

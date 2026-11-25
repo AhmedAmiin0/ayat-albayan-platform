@@ -15,8 +15,8 @@ const newest = (rows: readonly TemplateRow[], line: WaLine): string | null =>
   rows.reduce<string | null>((max, r) => (r.line === line && r.last_checked_at && (!max || r.last_checked_at > max) ? r.last_checked_at : max), null);
 
 /**
- * The template catalog (R-MSG-01, issue C1, docs/12 §3.4), per number: what the rows
- * say, read only. Meta syncs live in TemplateVerifier (templates/sync), the admin's audited edits in
+ * The template catalog (R-MSG-01, issue C1, docs/12 §3.4), per number: what the rows say, read
+ * only. Meta syncs live in TemplateVerifier (templates/sync), the admin's audited edits in
  * TemplateAdmin; the class keeps its name so the senders that ask approved() stay as they are.
  */
 @Injectable()
@@ -29,8 +29,9 @@ export class TemplateRegistry {
   ) {}
 
   /**
-   * Each row with number_id and its approvals per number (numbers[], docs/23 phase 5): one extra read. An
-   * unreadable approvals table (e.g. the API deployed before migration 633) lists the rows without numbers[].
+   * Each row with number_id and its approvals per number (numbers[], docs/23 phase 5): one extra
+   * read. An unreadable approvals table (e.g. the API deployed before migration 633) lists the rows
+   * without numbers[].
    */
   async list(): Promise<TemplateView[]> {
     const [rows, approvals] = await Promise.all([this.queries.all(), this.queries.approvals().catch((e: unknown) => this.unread(e, null))]);
@@ -55,8 +56,8 @@ export class TemplateRegistry {
   }
 
   /**
-   * GET /messaging/templates/lines: each line's facts (env only), its newest check, its last sync (stored,
-   * so the copy that ran the sync and the one answering may differ; unreadable = none).
+   * GET /messaging/templates/lines: each line's facts (env only), its newest check, its last sync
+   * (stored, so the copy that ran the sync and the one answering may differ; unreadable = none).
    */
   async lineViews(): Promise<TemplateLineView[]> {
     const [rows, last] = await Promise.all([this.queries.all(), this.queries.lineSyncs().catch((e: unknown) => this.unread(e, new Map<WaLine, TemplateLineSync>()))]);
