@@ -9,7 +9,7 @@ import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { makeupCandidatesQuery } from './booking.dto';
 import { BookingInvoices } from './invoice/booking.invoice';
 import { BookingSettings } from './booking.settings';
-import { MakeupCandidates } from './makeup/makeup-candidates.service';
+import { MakeupCandidates } from './core/makeup/makeup-candidates.service';
 
 /** The invoice and the makeup half of the booking wizard API (R-PAY-03, R-SCH-10). Admin only. */
 @ApiTags('booking')

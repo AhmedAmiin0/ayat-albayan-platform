@@ -1,5 +1,5 @@
 import type { FamilySibling, SalesStudentFamily } from '@ab/shared';
-import type { DetailsStudentRow, FamilyStudentRow } from './sales-student.repo';
+import type { DetailsStudentRow, FamilyStudentRow } from '@/modules/sales/sales-students/shared/sales-student.repo';
 
 const NO_GUARDIAN = { name: null, students: [] };
 

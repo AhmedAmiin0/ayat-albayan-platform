@@ -3,8 +3,7 @@ import { joinWindowConfig } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { KIND_STATUSES, toSalesMeeting, toSalesSubscription } from './sales.mapper';
-import { SalesRepo } from './sales.repo';
-import { SalesSettings } from './sales.settings';
+import { SalesRepo, SalesSettings } from '@/modules/sales/sales/shared';
 
 /** The sales portal's two lists, scoped by the signed-in profile (the id comes from the login, never a param). */
 @Injectable()

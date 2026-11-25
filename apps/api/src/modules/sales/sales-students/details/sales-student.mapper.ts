@@ -12,7 +12,7 @@ import {
 } from '@ab/shared';
 import { currentPackage, netPaid, partPaidOf as owedPartPaid } from '@ab/money';
 import { type HistoryBundle, toSalesHistory } from '@/modules/sales/sales';
-import type { AttendanceRow, DetailsStudentRow, PriceRow } from './sales-student.repo';
+import type { AttendanceRow, DetailsStudentRow, PriceRow } from '@/modules/sales/sales-students/shared/sales-student.repo';
 
 interface DetailsParts {
   student: DetailsStudentRow;

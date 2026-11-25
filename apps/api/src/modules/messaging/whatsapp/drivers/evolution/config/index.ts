@@ -1,2 +1,1 @@
-export { EvolutionConfigController } from './evolution-config.controller';
-export { NumbersEvolutionController } from './evolution-admin.controller';
+export { EvolutionConfigModule } from './evolution-config.module';

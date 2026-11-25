@@ -12,7 +12,7 @@ import {
 import { clickToChatLink } from '@ab/core';
 import { isSentFilePath } from '@/common/storage/storage.paths';
 import { isCrmHistoryRow } from './crm-history/crm-history-url';
-import { mediaExpired } from './inbound-media.service';
+import { mediaExpired } from './inbound-media/inbound-media.service';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { templateParams } from './wa-json';
 

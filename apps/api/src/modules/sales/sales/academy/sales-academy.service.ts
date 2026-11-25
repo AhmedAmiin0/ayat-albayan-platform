@@ -12,7 +12,7 @@ import { packageStarts, rosterFrom, toRoster, type RosterFacts } from './sales-r
 import { SalesRosterRepo } from './sales-roster.repo';
 import { toSalesHistory } from '@/modules/sales/sales/history/sales-history.mapper';
 import { SalesHistoryRepo } from '@/modules/sales/sales/history/sales-history.repo';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 
 /** docs/16: read-only; students and running lessons are academy-wide, subscriptions hers only. */
 @Injectable()
