@@ -29,5 +29,5 @@ test('each app bundles with the shared Babel config, where app.json switches the
     assert.equal(app.expo.experiments.reactCompiler, true);
     assert.match(read(`${dir}/babel.config.cjs`), /@ab\/config\/babel/);
   }
-  assert.match(read('packages/config/expo/babel.cjs'), /babel-plugin-react-compiler/);
+  assert.match(read('packages/config/expo/babel.js'), /babel-plugin-react-compiler/);
 });

@@ -223,7 +223,7 @@ jobs:
           CONF: >-
             ${{ matrix.vcache && hashFiles('*/*/vitest.config.mts', '*/*/vite.config.ts', 'packages/config/vite.js', 'tsconfig*.json',
             '*/*/tsconfig*.json') || hashFiles('*/*/babel.config.cjs',
-            '*/*/jest.config.cjs', '*/*/jest.setup.cjs', 'packages/testing/jest.cjs', 'packages/config/expo/babel.cjs',
+            '*/*/jest.config.cjs', '*/*/jest.setup.cjs', 'packages/testing/jest.cjs', 'packages/config/expo/babel.js',
             'packages/mobile-kit/jest.cjs') }}
           KIND: ${{ matrix.vcache && 'vitest' || 'jest' }}
           SHARD: ${{ matrix.vcache || matrix.jcache }}

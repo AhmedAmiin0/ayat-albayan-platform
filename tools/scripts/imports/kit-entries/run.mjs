@@ -17,7 +17,7 @@ function tsFiles(root, rel) {
     });
 }
 
-/** Rewrites (with `write`) or counts every app file; returns what changed and what needs a person. */
+/** Rewrites (with `write`) or counts every app file: what changed and what needs a person. */
 export function run(root, { write, table }) {
   const project = new Project({ useInMemoryFileSystem: true, skipFileDependencyResolution: true });
   const report = { changed: [], rewritten: 0, manual: [] };

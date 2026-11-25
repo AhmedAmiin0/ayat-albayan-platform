@@ -5,7 +5,7 @@ const KIT = __dirname;
 const [[pattern, target]] = Object.entries(moduleNameMapper);
 const mapped = (name: string): string | null => {
   const match = new RegExp(pattern).exec(name);
-  return match ? target.replace('$1', match[1] ?? '') : null;
+  return match ? target.replace('$1', match[1]) : null;
 };
 
 describe('the kit’s jest wiring for the apps', () => {

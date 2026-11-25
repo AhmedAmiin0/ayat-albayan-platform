@@ -38,7 +38,7 @@ test('a push that changes a cache key file runs everything (develop writes the c
     'apps/api/tsconfig.json',
     'apps/staff-mobile/babel.config.cjs',
     'apps/family-mobile/jest.config.cjs',
-    'packages/config/expo/babel.cjs',
+    'packages/config/expo/babel.js',
     'packages/mobile-kit/jest.cjs',
     'packages/testing/jest.cjs',
   ])

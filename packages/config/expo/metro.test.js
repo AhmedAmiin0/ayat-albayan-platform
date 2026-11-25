@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
 import { test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
-const { appAlias } = createRequire(import.meta.url)('./metro.cjs');
+import { appAlias, metroConfig } from './metro.js';
 const APP = '/repo/apps/family-mobile';
 const echo = (_context, name) => name;
 
@@ -23,4 +23,11 @@ test('appAlias passes the context and platform through untouched', () => {
   const context = { origin: 'a.ts' };
   appAlias(APP, (...args) => calls.push(args))(context, '@/x', 'web');
   assert.deepEqual(calls, [[context, `${APP}/src/x`, 'web']]);
+});
+
+test('metroConfig builds on the app’s own expo default and keeps its resolver behind the alias', async () => {
+  const app = fileURLToPath(new URL('../../../apps/family-mobile', import.meta.url));
+  const config = await metroConfig(app);
+  assert.equal(config.projectRoot, app);
+  assert.equal(typeof config.resolver.resolveRequest, 'function');
 });

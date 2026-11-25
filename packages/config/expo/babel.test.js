@@ -1,11 +1,9 @@
 import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-const require = createRequire(import.meta.url);
-const { expoBabel } = require('./babel.cjs');
+import { expoBabel } from './babel.js';
 const APP = fileURLToPath(new URL('../../../apps/staff-mobile', import.meta.url));
 const api = (caller) => ({ caller: (read) => read(caller) });
 const named = (entry) => (typeof entry === 'string' ? entry : entry.name);
