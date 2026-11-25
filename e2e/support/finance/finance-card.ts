@@ -4,7 +4,7 @@ import { pay, subscription } from '../sales/assistant';
 // Helpers of the finance card SQL spec (migration 20261125000100): a student of a guardian with a
 // given source on a lesson, a quoted package payment, an expense month, the function's rows.
 
-export interface CardRow {
+interface CardRow {
   kind: string;
   month: string;
   currency: string;
