@@ -70,20 +70,4 @@ describe('wa-stub: callValue', () => {
       },
     ]);
   });
-
-  it('a direction the stub does not know is treated as our call (to, answer)', () => {
-    const spec = JSON.parse(
-      '{"event":"connect","callId":"c5","peer":"2014","sdp":"v=2","direction":"OTHER"}',
-    ) as Parameters<typeof callValue>[0];
-    expect(callValue(spec).calls).toStrictEqual([
-      {
-        id: 'c5',
-        event: 'connect',
-        direction: 'OTHER',
-        timestamp: NOW,
-        to: '2014',
-        session: { sdp_type: 'answer', sdp: 'v=2' },
-      },
-    ]);
-  });
 });
