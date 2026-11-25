@@ -8,7 +8,9 @@ const channel = (v: number) => {
 };
 function luminance(hex: string): number {
   const n = Number.parseInt(hex.slice(1), 16);
-  return 0.2126 * channel((n >> 16) & 255) + 0.7152 * channel((n >> 8) & 255) + 0.0722 * channel(n & 255);
+  return (
+    0.2126 * channel((n >> 16) & 255) + 0.7152 * channel((n >> 8) & 255) + 0.0722 * channel(n & 255)
+  );
 }
 const contrast = (a: string, b: string) => {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number];
@@ -17,7 +19,8 @@ const contrast = (a: string, b: string) => {
 
 describe.each(['light', 'dark'] as ThemeName[])('%s avatar tones', (theme) => {
   it('every tone carries `ink` initials at AA (4.5:1)', () => {
-    for (const bg of avatarTones[theme]) expect(contrast(palette[theme].ink, bg)).toBeGreaterThanOrEqual(4.5);
+    for (const bg of avatarTones[theme])
+      expect(contrast(palette[theme].ink, bg)).toBeGreaterThanOrEqual(4.5);
   });
   it('has as many tones as the other theme', () => {
     expect(avatarTones[theme]).toHaveLength(avatarTones.light.length);
