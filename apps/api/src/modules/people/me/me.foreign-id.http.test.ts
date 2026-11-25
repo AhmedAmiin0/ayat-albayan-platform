@@ -2,6 +2,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { AppModule } from '@/app.module';
+import type { PermissionResolver } from '@/common/auth/permissions';
 import {
   PERMISSION_RESOLVER,
   systemResolver,
@@ -12,11 +13,17 @@ import { DB } from '@/common/db/db.module';
 import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 
 const ROLES = ['teacher', 'guardian', 'student', 'sales', 'admin'] as const;
+const NO_PUSH = { id: 'nopush-1', email: null, role: 'teacher' as const, sessionId: 'sess-np' };
 const verify: TokenVerifier = async (token) => {
   await Promise.resolve();
+  if (token === 'nopush') return NO_PUSH;
   const role = ROLES.find((r) => r === token);
   if (!role) throw new Error('bad token');
   return { id: `${role}-1`, email: null, role, sessionId: `sess-${role}` };
+};
+const resolve: PermissionResolver = async (user) => {
+  const held = await systemResolver(user);
+  return user.id === NO_PUSH.id ? held.filter((p) => p !== 'notifications.push') : held;
 };
 
 const MINE = 'ExponentPushToken[mmmmmmmmmmmmmmmmmmmmmm]';
@@ -28,7 +35,7 @@ let app: NestFastifyApplication;
 beforeAll(async () => {
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER)
-    .useValue(systemResolver)
+    .useValue(resolve)
     .overrideProvider(TOKEN_VERIFIER)
     .useValue(verify)
     .overrideProvider(DB)
@@ -68,5 +75,13 @@ describe("DELETE /me/push-tokens/:token with another person's device token", () 
       ['eq', 'token', OTHERS],
       ['eq', 'profile_id', `${role}-1`],
     ]);
+  });
+});
+
+describe('DELETE /me/push-tokens/:token without notifications.push', () => {
+  it('answers 403 and reads or deletes nothing', async () => {
+    const res = await remove('nopush');
+    expect(res.statusCode).toBe(403);
+    expect(fake.calls).toEqual([]);
   });
 });
