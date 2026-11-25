@@ -14,7 +14,7 @@ import {
 import { parseAmountFromZero } from '@ab/money';
 import type { RefundChoice } from './course-refund.js';
 
-// The stop sheet's money (owner 2026-11-06) for web and mobile: the mode, the chosen option, the
+// The stop sheet's money for web and mobile: the mode, the chosen option, the
 // custom amount typed; what the POST asks, the summary (refund, still owed) and whether it is
 // valid. The server computes the same amounts from the choice (StopRefunds / StopOwed).
 

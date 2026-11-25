@@ -74,7 +74,7 @@ export function oweOptions(
 const LOWERING: ReadonlySet<StopOweChoice> = new Set<StopOweChoice>(['nothing', 'custom']);
 
 /**
- * The owe options this person is offered (review 2026-11-06): forgiving money below attended ×
+ * The owe options this person is offered: forgiving money below attended ×
  * rate is a refund holder's call on this student (the server answers 403 otherwise).
  */
 export function offeredOwe<O extends Option<StopOweChoice>>(options: O[], mayLower: boolean): O[] {

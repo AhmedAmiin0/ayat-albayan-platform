@@ -2,12 +2,12 @@
 export interface ChatSendState {
   /** WhatsApp's 24 h window since the family's last message is open. */
   open: boolean;
-  /** ThreadView.try_after_window: the chat line runs on Kapso (owner 2026-11-03: held texts). */
+  /** ThreadView.try_after_window: the chat line runs on Kapso (held texts). */
   tryAfterWindow?: boolean | undefined;
 }
 
 /**
- * May a staff send go from this chat now (owner 2026-11-01, «do the same as the messages»)? One
+ * May a staff send go from this chat now? One
  * rule for a text, a reply, a payment link, a file or receipt, a sticker, a GIF and a forward:
  * inside the window always; after it a staff member (never a teacher, docs/19) still sends on a
  * Kapso chat line: the reopen template goes first and the text after the family replies.

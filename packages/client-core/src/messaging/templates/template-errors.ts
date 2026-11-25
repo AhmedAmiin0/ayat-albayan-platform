@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { ApiError } from '../../core/http/index.js';
 
-// The words for a refused template create or edit (owner 2026-11-14). Each app injects its
+// The words for a refused template create or edit. Each app injects its
 // `t.templates.error` (read on every call: the admins' overrides land after import). The app's own
 // words for the code first (its language), then the API's MSA reason, then the generic line.
 

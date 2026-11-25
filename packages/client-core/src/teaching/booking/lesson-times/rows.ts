@@ -1,8 +1,8 @@
 import { wallParts } from '@ab/schedule';
 import { addCalendarDays, wallInstant, weekdayOfDate } from '@ab/time';
 
-// A weekly course picked as one date + one time per lesson day (owner 2026-11-07: «date input
-// and a time input»), shared by web and mobile. A row's date is the first lesson on that
+// A weekly course picked as one date + one time per lesson day (a date input and a time input),
+// shared by web and mobile. A row's date is the first lesson on that
 // weekday, its time the student's wall clock (CLAUDE.md rule 6: picked, never typed); together
 // they are the same UTC instants the slot grid used to give, so the booking body, the series
 // check and togglePick's one-week rule are unchanged. Pure.

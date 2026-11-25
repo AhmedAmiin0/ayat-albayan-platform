@@ -1,6 +1,6 @@
 /**
- * The realtime channel's rejoin after a drop (docs/44 K2, owner 2026-11-07: «like Kapso, a
- * green/red dot and a reconnect with backoff»): 1 s, 2 s, 5 s, 10 s, then every 30 s until it is
+ * The realtime channel's rejoin after a drop (docs/44 K2: a green/red dot and a
+ * reconnect with backoff): 1 s, 2 s, 5 s, 10 s, then every 30 s until it is
  * SUBSCRIBED again. A resume or the network coming back rejoins at once (now()).
  */
 const REJOIN_STEPS_MS: readonly number[] = [1_000, 2_000, 5_000, 10_000];
