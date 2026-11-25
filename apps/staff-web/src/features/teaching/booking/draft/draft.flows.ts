@@ -4,7 +4,7 @@ import type { PackageSize } from '@ab/catalog';
 // The reduced flows of the booking wizard (teacher → slot → review): the assistant's course of a
 // subscription, and a new trial date for an existing student. Types only.
 
-/** The assistant's course of a subscription she sold (owner 2026-10-18, R-ASST-01). */
+/** The assistant's course of a subscription she sold (R-ASST-01). */
 export interface CourseDraft {
   /** Days a week to pick, exactly (courseDaysPerWeek). */
   perWeek: number;

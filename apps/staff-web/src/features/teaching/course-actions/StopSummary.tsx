@@ -56,7 +56,7 @@ interface BodyProps {
   preview: CourseStopPreview;
   /** `missing` shows the required error after confirm. */
   reason: { value: string; onChange: (v: string) => void; missing: boolean };
-  /** The money choice (owner 2026-11-06). */
+  /** The money choice. */
   money: StopMoneyView;
 }
 

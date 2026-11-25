@@ -4,6 +4,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { teacherKeys } from '@/features/people/keys';
 import { StaffPhotoControl, type StaffPhotoControlProps } from './StaffPhotoControl';
 
 const apiSend = vi.hoisted(() => vi.fn());
@@ -63,7 +64,7 @@ describe('StaffPhotoControl (owner 2026-10-28)', () => {
     expect(calls).toEqual(['POST /teachers/t1/avatar/upload-url', 'upload', 'PUT /teachers/t1/avatar']);
     expect(apiSend).toHaveBeenCalledWith('POST', '/teachers/t1/avatar/upload-url', { mime: 'image/png', size: 1024 });
     expect(apiSend).toHaveBeenLastCalledWith('PUT', '/teachers/t1/avatar', { path: SIGNED.path });
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['teachers'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: teacherKeys.all });
   });
 
   it('a file over 2 MB is refused before any request', () => {

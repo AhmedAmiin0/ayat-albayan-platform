@@ -48,7 +48,7 @@ interface PausePreviewLineProps {
   until: string | null;
 }
 
-/** The answer's lines: the dates and the extension (owner 2026-11-17), else its one count line. */
+/** The answer's lines: the dates and the extension, else its one count line. */
 const linesOf = (data: CoursePausePreview, tz: string): string[] =>
   data.starts ? pauseLines(data, tz) : [coursePausePreviewText(t.coursePause.preview, data.lessons)];
 

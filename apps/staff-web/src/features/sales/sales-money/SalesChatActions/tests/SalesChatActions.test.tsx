@@ -32,7 +32,7 @@ function renderActions(compact = false, students = TWO_ENDED) {
 }
 
 const more = () => screen.getByRole('button', { name: t.common.more });
-/** No action names a child (owner 2026-10-29): the child is picked inside. */
+/** No action names a child: the child is picked inside. */
 const NAMED = { name: / — / };
 
 describe('SalesChatActions: one visible action, the rest in «المزيد» (W3)', () => {

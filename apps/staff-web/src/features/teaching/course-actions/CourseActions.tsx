@@ -36,7 +36,7 @@ const chatOf = (phone: string | undefined, mode: BookingMode): StopChat | undefi
 type Open = 'stop' | 'teacher' | 'times' | 'extend' | null;
 type Can = (key: 'students.change_teacher' | 'courses.reschedule') => boolean;
 
-/** The moves offered, in the board's order, each with what it does (owner 2026-11-17). */
+/** The moves offered, in the board's order, each with what it does. */
 function moveItems(can: Can, props: Pick<CourseActionsProps, 'moves' | 'extend' | 'group'>) {
   if (!shows(props.group, 'course')) return [];
   const words = t.courseActions;

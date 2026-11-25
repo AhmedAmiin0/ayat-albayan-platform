@@ -1,8 +1,9 @@
 import type { StudentRecordingFilters, StudentRecordingsPage } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { recordingKeys } from '@/features/people/keys';
 
-export const RECORDINGS_KEY = ['student-recordings'] as const;
+export const RECORDINGS_KEY = recordingKeys.all;
 
 export const RECORDINGS_PAGE_SIZE = 10;
 
@@ -15,7 +16,7 @@ function queryString(filters: StudentRecordingFilters, page: number, pageSize: n
 /** GET /students/:id/recordings (admin, the teacher, an assigned assistant): newest first. */
 export const studentRecordingsQuery = (input: { studentId: string; filters: StudentRecordingFilters; page: number; pageSize?: number }) =>
   queryOptions({
-    queryKey: [...RECORDINGS_KEY, input.studentId, input.filters, input.page, input.pageSize ?? RECORDINGS_PAGE_SIZE],
+    queryKey: recordingKeys.page({ ...input, pageSize: input.pageSize ?? RECORDINGS_PAGE_SIZE }),
     queryFn: () =>
       apiFetch<StudentRecordingsPage>(
         `/students/${input.studentId}/recordings?${queryString(input.filters, input.page, input.pageSize ?? RECORDINGS_PAGE_SIZE)}`,
@@ -28,7 +29,7 @@ export const studentRecordingsQuery = (input: { studentId: string; filters: Stud
 /** GET /students/:id/recorded-lesson-ids: the lessons with a finished recording (no signed links). */
 export const recordedLessonIdsQuery = (studentId: string) =>
   queryOptions({
-    queryKey: [...RECORDINGS_KEY, studentId, 'recorded-lesson-ids'],
+    queryKey: recordingKeys.recordedLessonIds(studentId),
     queryFn: () => apiFetch<string[]>(`/students/${studentId}/recorded-lesson-ids`),
     staleTime: 5 * 60_000,
   });

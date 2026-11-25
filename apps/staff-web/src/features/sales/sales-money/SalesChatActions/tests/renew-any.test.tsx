@@ -7,7 +7,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 import { SalesChatActions } from '@/features/sales/sales-money/SalesChatActions/SalesChatActions';
 import { OPEN_SUB, student } from '@/features/sales/sales-money/sales-money-fixture';
 
-// sales.renew_any (owner 2026-10-29, docs/16 row 38): the family view lists a child not hers (mine: false).
+// sales.renew_any (docs/16 row 38): the family view lists a child not hers (mine: false).
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => false }) }));
@@ -28,7 +28,7 @@ describe('the sales chat actions for a child not hers', () => {
     fireEvent.click(screen.getByRole('button', { name: t.common.more }));
     expect(screen.getByRole('button', { name: t.salesMoney.newSubscription })).toBeTruthy();
     expect(screen.getByRole('button', { name: t.salesMoney.recordTransfer })).toBeTruthy();
-    // owner 2026-11-01: its weekly days too, like her own children's.
+    // Its weekly days too, like her own children's.
     expect(screen.getByRole('button', { name: t.booking.courseDays })).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.trialDate.action })).toBeNull();
   });

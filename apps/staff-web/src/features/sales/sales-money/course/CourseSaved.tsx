@@ -1,7 +1,7 @@
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-/** The picks kept as a draft (owner 2026-11-06): booked once paid, editable till then. */
+/** The picks kept as a draft: booked once paid, editable till then. */
 export function CourseSaved({ onClose }: { onClose: () => void }) {
   return (
     <div className="grid gap-4">

@@ -13,7 +13,7 @@ const shown = (data: readonly LessonView[] | undefined) =>
   (data ?? []).filter((l) => !isClosedLesson(l.status));
 
 /**
- * The month view's state (owner 2026-11-14): the shown month (following the clock until she
+ * The month view's state: the shown month (following the clock until she
  * steps), the picked day (today by default when shown), and ONE lessons query of the whole grid.
  */
 export function useMyMonth() {

@@ -14,7 +14,7 @@ type StartOpts = {
 /**
  * The same rules as the API (salesStartDate, usedBeforeProblem) before posting: without
  * subscriptions.set_start_date nothing is sent; with it the day, plus `alreadyStarted` only when ticked,
- * and `lessonsUsedBefore` only then and when > 0 (owner 2026-10-28).
+ * and `lessonsUsedBefore` only then and when > 0.
  */
 export function startBody(value: StartValue, opts: StartOpts): { ok: true; body: StartBody } | { ok: false; code: SalesStartProblem | UsedBeforeProblem } {
   if (!opts.canSet) return { ok: true, body: {} };

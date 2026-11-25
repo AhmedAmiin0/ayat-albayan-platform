@@ -21,7 +21,7 @@ export interface DashboardPanelProps {
   prefs: Pick<HomePrefs, 'hero' | 'ended' | 'density'>;
 }
 
-/** The teacher home's today list under the hero (owner 2026-11-14: today's lessons only). */
+/** The teacher home's today list under the hero (today's lessons only). */
 export function DashboardPanel({ lessons, ...rest }: DashboardPanelProps) {
   // Data first (docs/48): a failed 30 s poll keeps the cached lessons on screen; the midnight
   // window change dims the old day with aria-busy until the new one lands.

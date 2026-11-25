@@ -12,15 +12,18 @@ const me: Fake = vi.hoisted(() => ({ role: null, fails: false }));
 const signOut = vi.hoisted(() => vi.fn(async () => undefined));
 vi.mock('@ab/web-kit/lib/http/env/env', () => ({ env }));
 vi.mock('@ab/web-kit/auth/sign-in/sign-in', () => ({ signOut }));
-vi.mock('@ab/web-kit/auth/me/me', () => ({
-  meQuery: {
-    queryKey: ['me'],
-    queryFn: async () => {
-      if (me.fails) throw new Error('503');
-      return me.role ? { role: me.role } : null;
+vi.mock('@ab/web-kit/auth/me/me', async () => {
+  const { pathKey } = await import('@ab/client-core');
+  return {
+    meQuery: {
+      queryKey: pathKey('/auth/me'),
+      queryFn: async () => {
+        if (me.fails) throw new Error('503');
+        return me.role ? { role: me.role } : null;
+      },
     },
-  },
-}));
+  };
+});
 
 const FAMILY = 'https://family.example.test';
 const PORTAL = { path: '/portal', signedOutIsFamily: true };

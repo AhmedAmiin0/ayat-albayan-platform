@@ -14,7 +14,7 @@ const FLOWS: Record<BookingKind, readonly StepKey[]> = {
 const COURSE_FLOW: readonly StepKey[] = ['teacher', 'slot', 'review'];
 /**
  * A new trial date for an existing student: the student is fixed, the length is the last trial's
- * and may change (the package step shows only the length for a trial; owner 2026-11-02).
+ * and may change (the package step shows only the length for a trial).
  */
 const TRIAL_DATE_FLOW: readonly StepKey[] = ['teacher', 'package', 'slot', 'review'];
 

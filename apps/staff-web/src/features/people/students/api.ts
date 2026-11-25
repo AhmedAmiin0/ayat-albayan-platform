@@ -4,12 +4,13 @@ import type { DuplicateStudentBody, StudentListItem, StudentProfile, StudentRef,
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
+import { studentKeys } from '@/features/people/keys';
 import { filterParams, type StudentsFilters } from './list/filters';
 
 export const PAGE_SIZE = 20;
 
 /** Invalidate this after any write. */
-export const STUDENTS_KEY = ['students'] as const;
+export const STUDENTS_KEY = studentKeys.all;
 
 /** The list filters (R-STU-01), the column sort and text filters (R-NFR-08) of GET /students. */
 export type StudentListView = { filters?: StudentsFilters; sort?: SortSearch; columns?: FilterSearch };
@@ -17,7 +18,13 @@ export type StudentListView = { filters?: StudentsFilters; sort?: SortSearch; co
 /** GET /students: search + page, and the filters / sort when given. */
 export const studentListQuery = (search: string, page: number, view: StudentListView = {}) =>
   queryOptions({
-    queryKey: [...STUDENTS_KEY, 'list', { search, page, ...view.filters, ...view.sort, columns: view.columns }],
+    queryKey: studentKeys.list({
+      search,
+      page,
+      ...view.filters,
+      ...view.sort,
+      columns: view.columns,
+    }),
     queryFn: () => {
       const qs = new URLSearchParams([
         ['search', search],
@@ -36,18 +43,18 @@ export type StatusCounts = Record<StudentStatus, number>;
 /** Students per status under the other filters (status itself ignored), e.g. one teacher's. */
 export const studentStatusCountsQuery = (filters: StudentsFilters) =>
   queryOptions({
-    queryKey: [...STUDENTS_KEY, 'status-counts', filters],
+    queryKey: studentKeys.statusCounts(filters),
     queryFn: () => apiFetch<StatusCounts>(`/students/status-counts?${new URLSearchParams(filterParams(filters))}`),
   });
 
 export const studentQuery = (id: string) =>
   queryOptions({
-    queryKey: [...STUDENTS_KEY, id],
+    queryKey: studentKeys.detail(id),
     queryFn: () => apiFetch<StudentProfile>(`/students/${id}`),
   });
 
 export const teacherOptionsQuery = queryOptions({
-  queryKey: [...STUDENTS_KEY, 'teacher-options'],
+  queryKey: studentKeys.teacherOptions(),
   queryFn: () => apiFetch<TeacherOption[]>('/students/teacher-options'),
   staleTime: 5 * 60_000,
 });
