@@ -1,3 +1,2 @@
-export { familyReason } from './attendance/lesson-row-notes';
-export { attendanceWindow } from './attendance/student-attendance.mapper';
+export { familyReason, attendanceWindow } from './attendance';
 export { SalesStudentsModule } from './sales-students.module';

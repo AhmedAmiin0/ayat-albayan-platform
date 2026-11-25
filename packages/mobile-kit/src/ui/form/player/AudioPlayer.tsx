@@ -40,7 +40,7 @@ function ResumeLine({ player, from }: { player: AudioPlayerControls; from: numbe
 }
 
 /**
- * The in-app audio player (owner 2026-11-17): play/pause, ±10 s, speed, and the saved stop.
+ * The in-app audio player: play/pause, ±10 s, speed, and the saved stop.
  * The media itself is behind the AudioSource the app passes in.
  */
 export function AudioPlayer({ id, url, createSource }: AudioPlayerProps) {

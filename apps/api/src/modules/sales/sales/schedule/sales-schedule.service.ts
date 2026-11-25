@@ -4,7 +4,7 @@ import { toSalesTeacher } from '@/modules/sales/sales/academy/sales-academy.mapp
 import { SalesAcademyRepo } from '@/modules/sales/sales/academy/sales-academy.repo';
 import { nextLessons, riyadhDayRange, riyadhToday, teacherDayFacts, toScheduleLesson, upcomingRange } from './sales-schedule.mapper';
 import { SalesScheduleRepo } from './sales-schedule.repo';
-import { SalesSettings } from '@/modules/sales/sales/sales.settings';
+import { SalesSettings } from '@/modules/sales/sales/shared';
 
 /**
  * The salesperson's view of the teachers and the academy's day (owner report 2026-10-12: «listing all

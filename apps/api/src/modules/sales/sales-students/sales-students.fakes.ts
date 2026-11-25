@@ -12,7 +12,7 @@ import { A, NONE, OWN_A } from '@/modules/sales/sales/sales.fakes';
 import { bundle, verify } from '@/modules/sales/sales/academy/sales-academy.fakes';
 import type { TrialLessonRead } from '@/modules/teaching/booking';
 import { TeacherMeRepo } from '@/modules/teaching/lessons';
-import { type AttendanceRow, type LessonFacts, SalesStudentRepo } from './details/sales-student.repo';
+import { type AttendanceRow, type LessonFacts, SalesStudentRepo } from './shared/sales-student.repo';
 import { ruleRow, upcomingRow } from './sales-students.schedule.fakes';
 import { resetAttendance } from './attendance/student-attendance.fakes';
 import { StudentAttendanceRepo } from './attendance/student-attendance.repo';

@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 
 /**
- * Pull to refresh that spins only for the viewer's own pull (owner 2026-10-29: the chat list's loader
- * showed on every new message). TanStack's `isRefetching` is true for ANY background refetch (a poll,
+ * Pull to refresh that spins only for the viewer's own pull, so the chat list's loader does not
+ * show on every new message. TanStack's `isRefetching` is true for ANY background refetch (a poll,
  * a new message invalidating the list), so it must never drive a RefreshControl.
  */
 export function usePullRefresh(refetch: () => unknown) {

@@ -1,4 +1,4 @@
-// The in-app audio player's pure rules (owner 2026-11-17: «play/pause, ±10 s, speed, resume»),
+// The in-app audio player's pure rules (play/pause, ±10 s, speed, resume),
 // shared by the web <audio> player and the mobile player behind its AudioSource adapter.
 
 export const SKIP_SECONDS = 10;

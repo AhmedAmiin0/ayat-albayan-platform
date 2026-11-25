@@ -35,7 +35,7 @@ test('the label is ONE line spanning the button (never shrink-wrapped, «…» n
   await render(<Button label="Join the lesson" onPress={jest.fn()} />);
   const text = screen.getByText('Join the lesson');
   expect(text.props.numberOfLines).toBe(1);
-  // Android drops the ellipsis when adjustsFontSizeToFit is set: «Join the» (owner 2026-10-29).
+  // Android drops the ellipsis when adjustsFontSizeToFit is set: «Join the».
   expect(text.props.adjustsFontSizeToFit).toBeUndefined();
   expect(StyleSheet.flatten(text.props.style)).toMatchObject({
     fontFamily: 'NotoSansArabic_600SemiBold',

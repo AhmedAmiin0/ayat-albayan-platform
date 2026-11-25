@@ -4,7 +4,7 @@
 export const WAVE_BARS = 28;
 
 /**
- * ponytail: NOT the real waveform (that needs the audio decoded): bar heights 0.25–1, seeded from
+ * NOT the real waveform (that needs the audio decoded): bar heights 0.25–1, seeded from
  * the message id (FNV-1a, then xorshift32), so a note looks the same on every render and run.
  */
 export function waveBars(seed: string, count: number = WAVE_BARS): number[] {

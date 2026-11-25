@@ -15,7 +15,7 @@ import {
   uploadName,
 } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
-import { baseMime, InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import { baseMime, InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { SNIFF_BYTES, sniffMime } from './invoice-sniff';
 import type { InvoiceRow } from '@/modules/teaching/booking/core/booking.mapper';

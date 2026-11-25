@@ -1,9 +1,9 @@
 import { CHANNEL_SEAT_TAKEN, channelSeatSchema, type ChannelSeat } from '@ab/shared';
 import { apiErrorCode, type ApiClient } from '../../core/http/index.js';
 
-// One assistant seat per student chat (owner 2026-11-16 «any assistant can subscribe to the
-// chating channel but only 1»; «who brought the student have the priority»), the same for web and
-// mobile: plain TanStack Query options (no React here); each app spreads them into its hooks.
+// One assistant seat per student chat (any assistant may take it, one at a time; the one who
+// brought the student has priority), the same for web and mobile: plain TanStack Query options
+// (no React here); each app spreads them into its hooks.
 
 /**
  * What an assistant sees for one student: hers (the chat opens), free to take, another

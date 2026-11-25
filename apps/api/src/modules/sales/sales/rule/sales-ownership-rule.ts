@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
-import { SalesSettings } from '@/modules/sales/sales/sales.settings';
+import { SalesRepo, SalesSettings } from '@/modules/sales/sales/shared';
 
 /** The two academy switches the rule reads. */
 interface OwnershipSwitches {

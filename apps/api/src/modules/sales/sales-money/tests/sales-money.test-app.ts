@@ -16,8 +16,8 @@ import { AvatarsModule } from '@/common/storage/avatars/avatars.module';
 import { StorageOpsModule } from '@/common/storage/probe';
 import { moneyAppOf } from '@/modules/finance/subscriptions/tests/test-app';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
-import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
-import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import { InboundMediaRepo } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
+import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
 import { SalesMoneyModule } from '@/modules/sales/sales-money';
 
 /**

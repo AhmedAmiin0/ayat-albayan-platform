@@ -1,4 +1,4 @@
-// The lesson room's host powers on the phone (owner 2026-11-16): who may be acted on.
+// The lesson room's host powers on the phone: who may be acted on.
 export {
   mayEndForAll,
   mayMuteMic,

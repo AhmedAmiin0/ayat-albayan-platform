@@ -1,0 +1,100 @@
+import { describe, expect, it } from 'vitest';
+import { fakeDb } from '@/common/db/testing/fake-db';
+import { guardianOwnerIds, ownershipOf, studentOwnerIds } from '@/modules/sales/sales/sales-ownership';
+
+describe('guardianOwnerIds (who owns a family, docs/21 §6)', () => {
+  it('the union of brought_by and converted-lead assigned_to, nulls dropped, deduplicated', async () => {
+    const { db, argsOf } = fakeDb({
+      students: [{ data: [{ brought_by: 'A' }, { brought_by: null }, { brought_by: 'B' }] }],
+      leads: [{ data: [{ assigned_to: 'C' }, { assigned_to: 'A' }, { assigned_to: null }] }],
+    });
+    expect(await guardianOwnerIds(db, 'g1')).toEqual(['A', 'B', 'C']);
+    expect(argsOf('students', 'eq')).toEqual(['guardian_id', 'g1']);
+    expect(argsOf('leads', 'eq')).toEqual(['converted_guardian_id', 'g1']);
+  });
+
+  it('nobody gives []; a database error is thrown', async () => {
+    expect(await guardianOwnerIds(fakeDb({ students: [{ data: [] }], leads: [{ data: [] }] }).db, 'g1')).toEqual([]);
+    const { db } = fakeDb({ students: [{ data: [] }], leads: [{ error: { message: 'boom' } }] });
+    await expect(guardianOwnerIds(db, 'g1')).rejects.toBeDefined();
+  });
+});
+
+describe('studentOwnerIds (who owns one student: a chat message, a payment)', () => {
+  it('who brought it and who holds its family’s lead, nulls dropped, each once', async () => {
+    const { db, argsOf } = fakeDb({
+      students: [{ data: { brought_by: 'A', guardian_id: 'g1' } }],
+      leads: [{ data: [{ assigned_to: 'B' }, { assigned_to: 'A' }, { assigned_to: null }] }],
+    });
+    expect(await studentOwnerIds(db, 's1')).toEqual(['A', 'B']);
+    expect(argsOf('students', 'eq')).toEqual(['id', 's1']);
+    expect(argsOf('leads', 'eq')).toEqual(['converted_guardian_id', 'g1']);
+  });
+
+  it('an unknown student or nobody: []; a database error is thrown', async () => {
+    expect(await studentOwnerIds(fakeDb({ students: [{ data: null }] }).db, 's1')).toEqual([]);
+    const none = fakeDb({
+      students: [{ data: { brought_by: null, guardian_id: 'g1' } }],
+      leads: [{ data: [] }],
+    });
+    expect(await studentOwnerIds(none.db, 's1')).toEqual([]);
+    const { db } = fakeDb({ students: [{ error: { message: 'boom' } }] });
+    await expect(studentOwnerIds(db, 's1')).rejects.toBeDefined();
+  });
+});
+
+describe('ownershipOf (leads and brought students)', () => {
+  it('nothing at all: empty, and only the two first reads are made', async () => {
+    const { db, calls } = fakeDb({ leads: [{ data: [] }], students: [{ data: [] }] });
+    expect(await ownershipOf(db, 'a')).toEqual({ leadIds: [], guardianIds: [], studentIds: [], phones: [] });
+    expect(calls.map((c) => c.table).filter((t, i, all) => all.indexOf(t) === i)).toEqual(['leads', 'students']);
+  });
+
+  it('a lead only: as before, lead phones then the converted family and its children', async () => {
+    const { db } = fakeDb({
+      leads: [{ data: [{ id: 'l1', phone_e164: '+966551110000', converted_guardian_id: 'g1' }] }],
+      students: [{ data: [] }, { data: [{ id: 's1' }] }],
+      guardian_phones: [{ data: [{ phone_e164: '+966552220000' }] }],
+    });
+    expect(await ownershipOf(db, 'a')).toEqual({
+      leadIds: ['l1'], guardianIds: ['g1'], studentIds: ['s1'], phones: ['+966551110000', '+966552220000'],
+    });
+  });
+
+  it('a brought student with no lead: its guardian phone and itself, nothing of its siblings', async () => {
+    const { db, calls } = fakeDb({
+      leads: [{ data: [] }],
+      students: [{ data: [{ id: 's9', guardian_id: 'g9' }] }],
+      guardian_phones: [{ data: [{ phone_e164: '+966553330000' }] }],
+    });
+    expect(await ownershipOf(db, 'a')).toEqual({ leadIds: [], guardianIds: ['g9'], studentIds: ['s9'], phones: ['+966553330000'] });
+    expect(calls.find((c) => c.table === 'students' && c.method === 'eq')?.args).toEqual(['brought_by', 'a']);
+    expect(calls.filter((c) => c.table === 'students' && c.method === 'in')).toEqual([]);
+  });
+
+  it('both: ids deduplicated across the two paths', async () => {
+    const { db } = fakeDb({
+      leads: [{ data: [{ id: 'l1', phone_e164: '+966551110000', converted_guardian_id: 'g1' }] }],
+      students: [{ data: [{ id: 's1', guardian_id: 'g1' }] }, { data: [{ id: 's1' }, { id: 's2' }] }],
+      guardian_phones: [{ data: [{ phone_e164: '+966552220000' }] }],
+    });
+    const own = await ownershipOf(db, 'a');
+    expect(own.studentIds.sort()).toEqual(['s1', 's2']);
+    expect(own.guardianIds).toEqual(['g1']);
+  });
+
+  it('every number of her families: the main one and a second one (guardian_phones by guardian_id)', async () => {
+    const { db, argsOf } = fakeDb({
+      leads: [{ data: [] }],
+      students: [{ data: [{ id: 's9', guardian_id: 'g9' }] }],
+      guardian_phones: [{ data: [{ phone_e164: '+966553330000' }, { phone_e164: '+966554440000' }] }],
+    });
+    expect((await ownershipOf(db, 'a')).phones).toEqual(['+966553330000', '+966554440000']);
+    expect(argsOf('guardian_phones', 'in')).toEqual(['guardian_id', ['g9']]);
+  });
+
+  it('a database error is thrown', async () => {
+    const { db } = fakeDb({ leads: [{ error: { message: 'boom' } }], students: [{ data: [] }] });
+    await expect(ownershipOf(db, 'a')).rejects.toBeDefined();
+  });
+});
