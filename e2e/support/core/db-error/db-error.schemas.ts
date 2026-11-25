@@ -6,5 +6,3 @@ export const dbErrorSchema = z.object({
   detail: z.string().optional(),
   constraint_name: z.string().optional(),
 });
-
-export type DbError = z.infer<typeof dbErrorSchema>;
