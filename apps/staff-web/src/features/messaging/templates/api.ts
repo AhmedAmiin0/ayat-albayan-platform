@@ -12,6 +12,7 @@ import type { WaLine } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
 import { errorCode } from '@/features/teaching/schedule';
+import { templateKeys } from '@/features/messaging/keys';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
@@ -19,13 +20,13 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 // admin action (owner's messaging-safety rule), never automatic.
 
 export const templatesQuery = queryOptions({
-  queryKey: ['templates'],
+  queryKey: templateKeys.all,
   queryFn: () => apiFetch<TemplateView[]>('/messaging/templates'),
 });
 
 /** Both numbers as the server's env knows them (ids, driver, last sync): no Meta call, safe on mount. */
 export const templateLinesQuery = queryOptions({
-  queryKey: ['templates', 'lines'],
+  queryKey: templateKeys.lines(),
   queryFn: () => apiFetch<TemplateLineView[]>('/messaging/templates/lines'),
 });
 
@@ -36,7 +37,8 @@ export const checkTemplateHealth = (line?: WaLine) =>
     : apiSend<TemplateHealthView>('POST', '/messaging/templates/health');
 
 /** Creates a new unsubmitted row; 409 template_exists when the key is taken. */
-export const createTemplate = (input: TemplateCreateInput) => apiSend<TemplateView>('POST', '/messaging/templates', input);
+export const createTemplate = (input: TemplateCreateInput) =>
+  apiSend<TemplateView>('POST', '/messaging/templates', input);
 
 /** T3: not_submitted / rejected / missing → pending, on the WABA of the row's own line. */
 export const submitTemplate = (key: string) =>
@@ -44,22 +46,37 @@ export const submitTemplate = (key: string) =>
 
 /** The row now goes out from the other number; the API re-reads its status on that number's WABA. */
 export const moveTemplateLine = ({ key, line }: { key: string; line: WaLine }) =>
-  apiSend<TemplateMoveView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/line`, { line });
+  apiSend<TemplateMoveView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/line`, {
+    line,
+  });
 
 /** docs/23c decision 9: the template's own number; null = its role's default (404 unknown_number). */
 export const setTemplateNumber = ({ key, number_id }: { key: string; number_id: string | null }) =>
-  apiSend<TemplateNumberSetView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/number`, { number_id });
+  apiSend<TemplateNumberSetView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/number`, {
+    number_id,
+  });
 
 /** Toggles the restricted allow-list that teachers, sales and limited roles may send (docs/16). */
 export const setStarter = ({ key, on }: { key: string; on: boolean }) =>
-  apiSend<TemplateView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/starter`, { sales_starter: on });
+  apiSend<TemplateView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/starter`, {
+    sales_starter: on,
+  });
 
 /** Set by hand for a crm line's template and audited (docs/19). */
 export const setCrmStatus = ({ key, status }: { key: string; status: CrmTemplateStatus }) =>
-  apiSend<TemplateView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/crm-status`, { status });
+  apiSend<TemplateView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/crm-status`, {
+    status,
+  });
 
 /** A crm line's template name / language in the CRM (docs/19); null = the default; audited. */
-export const setCrmName = ({ key, ...body }: { key: string; crm_name: string | null; crm_language: string | null }) =>
+export const setCrmName = ({
+  key,
+  ...body
+}: {
+  key: string;
+  crm_name: string | null;
+  crm_language: string | null;
+}) =>
   apiSend<TemplateView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/crm-name`, body);
 
 /** A submittable row: never sent, refused, or gone from Meta (docs/12 §3.4), on either number. */
@@ -84,16 +101,18 @@ interface CodeInput {
 }
 
 /** The detail fields of the API's error body (docs/12 §1); anything else is ignored. */
-const errorBodySchema = z.object({
-  meta_message: z.unknown(),
-  meta_code: z.unknown(),
-  scope: z.unknown(),
-  line: z.unknown(),
-}).partial();
+const errorBodySchema = z
+  .object({
+    meta_message: z.unknown(),
+    meta_code: z.unknown(),
+    scope: z.unknown(),
+    line: z.unknown(),
+  })
+  .partial();
 
 /** The API's detail as shown: Meta's message or code, or the CRM key's missing scope; else «—». */
 const detailText = (detail: unknown): string =>
-  (typeof detail === 'string' || typeof detail === 'number' ? String(detail) : '—');
+  typeof detail === 'string' || typeof detail === 'number' ? String(detail) : '—';
 
 /**
  * templates.error.<code> in words: meta_error carries Meta's detail (or «—»), crm_scope_missing the
@@ -104,8 +123,11 @@ function codeText({ code, detail, line }: CodeInput): string {
   if (!text) return t.common.error;
   const named: WaLine = line === 'chat' ? 'chat' : 'notifications';
   const shown = detailText(detail);
-  return text.replace('{message}', shown).replace('{scope}', shown)
-    .replace('{line}', t.enums.waLine[named]).replace('{key}', APP_ID_KEY[named]);
+  return text
+    .replace('{message}', shown)
+    .replace('{scope}', shown)
+    .replace('{line}', t.enums.waLine[named])
+    .replace('{key}', APP_ID_KEY[named]);
 }
 
 /** templates.error.<code> in words; Meta's own message (502 meta_error) or the CRM's scope. */
@@ -118,7 +140,10 @@ export function templateErrorText(error: unknown): string {
 type FailedSync = Pick<TemplateLineSync, 'line' | 'error' | 'message'>;
 
 /** One number's failed sync in words (its code, Meta's message for meta_error, its line). */
-export const lineSyncErrorText = (sync: FailedSync): string => codeText({ code: sync.error, detail: sync.message, line: sync.line });
+export const lineSyncErrorText = (sync: FailedSync): string =>
+  codeText({ code: sync.error, detail: sync.message, line: sync.line });
 
 export const syncFailedText = (sync: FailedSync): string =>
-  t.templates.perNumber.syncFailed.replace('{line}', t.enums.waLine[sync.line]).replace('{error}', lineSyncErrorText(sync));
+  t.templates.perNumber.syncFailed
+    .replace('{line}', t.enums.waLine[sync.line])
+    .replace('{error}', lineSyncErrorText(sync));

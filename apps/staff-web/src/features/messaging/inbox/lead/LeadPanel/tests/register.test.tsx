@@ -2,6 +2,9 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { studentKeys } from '@/features/people/keys';
+import { leadKeys } from '@/features/sales/keys';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { lead, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { LeadPanel, type LeadNotice } from '@/features/messaging/inbox/lead/LeadPanel/LeadPanel';
@@ -9,10 +12,22 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
-const FILLED = { student_name: 'عمر', age: 9, gender: 'male', guardian_name: 'أم عمر', tz: 'Africa/Cairo' } as const;
+const FILLED = {
+  student_name: 'عمر',
+  age: 9,
+  gender: 'male',
+  guardian_name: 'أم عمر',
+  tz: 'Africa/Cairo',
+} as const;
 
 function renderPanel(row: InboxLead, onNotice?: (n: LeadNotice) => void) {
   routeFetch(apiFetch, [
@@ -74,8 +89,8 @@ describe('the short lead aside: summary, «تسجيل الطالب», «تعدي
       lead_id: 'lead-1',
     });
     expect(screen.queryByRole('dialog')).toBeNull();
-    for (const key of ['leads', 'threads', 'students']) {
-      expect(invalidate).toHaveBeenCalledWith({ queryKey: [key] });
+    for (const queryKey of [leadKeys.all, threadKeys.all, studentKeys.all]) {
+      expect(invalidate).toHaveBeenCalledWith({ queryKey });
     }
   });
 
