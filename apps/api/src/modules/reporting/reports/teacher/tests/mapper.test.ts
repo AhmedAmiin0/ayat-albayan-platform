@@ -20,7 +20,11 @@ describe('toTeacherReportView (R-REP-02 edit window)', () => {
     { name: 'the boundary instant is already closed', at: '2026-10-05T11:30:00.000Z', can: false, until: '2026-10-05T12:00:00.000Z' },
     { name: 'an hour ago: view only', at: '2026-10-05T11:00:00.000Z', can: false, until: '2026-10-05T11:30:00.000Z' },
   ])('$name', ({ at, can, until }) => {
-    expect(toTeacherReportView(row(at), parts)).toMatchObject({ can_edit: can, edit_until: until, submitted_at: at });
+    expect(toTeacherReportView(row(at), parts)).toMatchObject({
+      can_edit: can,
+      edit_until: until,
+      submitted_at: at,
+    });
   });
 
   it('identity from the lesson and the student; a missing embed degrades to empty strings', () => {
@@ -28,7 +32,16 @@ describe('toTeacherReportView (R-REP-02 edit window)', () => {
       starts_at: '2026-10-04T14:00:00.000Z',
       student: { id: 's1', code: 'AB-0183', name: 'سهيلة' },
     });
-    const bare = toTeacherReportView(row(null), { ...parts, lessons: new Map(), students: new Map() });
-    expect(bare).toMatchObject({ starts_at: '', student: { id: 's1', code: '', name: '' }, submitted_at: null, edit_until: null });
+    const bare = toTeacherReportView(row(null), {
+      ...parts,
+      lessons: new Map(),
+      students: new Map(),
+    });
+    expect(bare).toMatchObject({
+      starts_at: '',
+      student: { id: 's1', code: '', name: '' },
+      submitted_at: null,
+      edit_until: null,
+    });
   });
 });

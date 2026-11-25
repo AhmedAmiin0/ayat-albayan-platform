@@ -39,7 +39,8 @@ function idsOf(env: Env, line: KapsoLine) {
 
 /** A chat id equal to the notifications one would make two lines of one number: refused under either driver. */
 export const duplicateChatPhone = (env: Env): boolean =>
-  env.WA_CHAT_PHONE_NUMBER_ID !== undefined && env.WA_CHAT_PHONE_NUMBER_ID === env.WA_PHONE_NUMBER_ID;
+  env.WA_CHAT_PHONE_NUMBER_ID !== undefined &&
+  env.WA_CHAT_PHONE_NUMBER_ID === env.WA_PHONE_NUMBER_ID;
 const sameNumber = (env: Env, line: KapsoLine) => line === 'chat' && duplicateChatPhone(env);
 
 /**

@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack } from '../../support/core/rls';
+import { errorCode } from '../../support/core/db-error';
 
 // Chat files (docs/21 §2): migration 500 lets wa-media take WhatsApp's audio/video up to 16 MiB,
 // 505 adds messages.media_name (a sent file's name, never blank), 510 points messages.created_by
@@ -19,7 +20,7 @@ test.describe('chat files in the database (migrations 500, 505, 510)', () => {
 
   test('a blank media_name violates the check', async () => {
     await rolledBack(async (tx) => {
-      const code = (q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', (e: { code?: string }) => e.code);
+      const code = (q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
       const insert = (name: string) => () => tx`insert into public.messages (direction, phone_e164, body, media_name, status)
         values ('outbound', '+966500000505', 'ملف', ${name}, 'sent')`;
       expect(await code(insert('   '))).toBe('23514');

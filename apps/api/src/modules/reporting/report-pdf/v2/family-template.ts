@@ -38,7 +38,10 @@ function nextHtml(m: FamilyModel): string {
 }
 
 function footerHtml(m: FamilyModel): string {
-  const left = m.slot ? packageProgress(m.slot.position, m.slot.total, { forms: AR.subscriptions.progress }).remainingLabel : null;
+  const left = m.slot
+    ? packageProgress(m.slot.position, m.slot.total, { forms: AR.subscriptions.progress })
+        .remainingLabel
+    : null;
   const ask = `${esc(f.ask)}: ${ltr(m.contact?.whatsapp ?? CONTACT_WHATSAPP)}`;
   return [
     '<footer class="foot">',

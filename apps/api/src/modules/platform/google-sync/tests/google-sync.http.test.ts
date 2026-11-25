@@ -30,7 +30,12 @@ const verify: TokenVerifier = async (token) => {
 const resolver: PermissionResolver = async (u) => (u.role === 'sales' ? ['settings.read', 'settings.write'] : systemResolver(u));
 
 const data = fakeData();
-const map = { teachers: vi.fn().mockResolvedValue([]), mappedCalendarNames: vi.fn().mockResolvedValue([]), students: vi.fn().mockResolvedValue([]), student: vi.fn() };
+const map = {
+  teachers: vi.fn().mockResolvedValue([]),
+  mappedCalendarNames: vi.fn().mockResolvedValue([]),
+  students: vi.fn().mockResolvedValue([]),
+  student: vi.fn(),
+};
 const log = { recent: vi.fn().mockResolvedValue([]), one: vi.fn() };
 
 const ROUTES = [
@@ -47,11 +52,24 @@ describe('/admin/google (docs/24): admins only', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(GoogleSyncModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(GoogleAccountQueries).useValue(data.account).overrideProvider(GoogleItemsQueries).useValue(data.items)
-      .overrideProvider(GoogleSettings).useValue(data.settings).overrideProvider(GoogleMapQueries).useValue(map)
-      .overrideProvider(GoogleLogQueries).useValue(log).overrideProvider(AuditService).useValue({ record: vi.fn() })
-      .overrideProvider(GOOGLE_CLIENT_FACTORY).useValue(fakeFactory())
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(resolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(GoogleAccountQueries)
+      .useValue(data.account)
+      .overrideProvider(GoogleItemsQueries)
+      .useValue(data.items)
+      .overrideProvider(GoogleSettings)
+      .useValue(data.settings)
+      .overrideProvider(GoogleMapQueries)
+      .useValue(map)
+      .overrideProvider(GoogleLogQueries)
+      .useValue(log)
+      .overrideProvider(AuditService)
+      .useValue({ record: vi.fn() })
+      .overrideProvider(GOOGLE_CLIENT_FACTORY)
+      .useValue(fakeFactory())
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -59,8 +77,23 @@ describe('/admin/google (docs/24): admins only', () => {
   });
   afterAll(() => app.close());
   beforeEach(() => {
-    data.items.counts.mockResolvedValue({ counts: { pending: 0, synced: 0, gone: 0, failed: 0, skipped: 0 }, skips: {} });
-    data.account.get.mockResolvedValue({ status: 'disconnected', email: null, scopes: [], connected_at: null, last_error: null, discovery: null, root_folder_id: null, root_folder_name: null, summary_sheet_id: null, drive_confirmed_at: null, last_run_at: null });
+    data.items.counts.mockResolvedValue({
+      counts: { pending: 0, synced: 0, gone: 0, failed: 0, skipped: 0 },
+      skips: {},
+    });
+    data.account.get.mockResolvedValue({
+      status: 'disconnected',
+      email: null,
+      scopes: [],
+      connected_at: null,
+      last_error: null,
+      discovery: null,
+      root_folder_id: null,
+      root_folder_name: null,
+      summary_sheet_id: null,
+      drive_confirmed_at: null,
+      last_run_at: null,
+    });
   });
 
   it('401 without a token, 403 for a teacher and for a custom role holding settings.*', async () => {

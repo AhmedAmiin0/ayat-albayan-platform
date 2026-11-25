@@ -49,7 +49,10 @@ export class StripeWebhookService {
 
   private async verify(post: WebhookPost): Promise<Stripe.Event> {
     if (!post.rawBody || !post.signature) throw badRequest('bad_signature');
-    const [stripe, secret] = await Promise.all([this.clients.client(), this.clients.webhookSecret()]);
+    const [stripe, secret] = await Promise.all([
+      this.clients.client(),
+      this.clients.webhookSecret(),
+    ]);
     try {
       return stripe.webhooks.constructEvent(post.rawBody, post.signature, secret);
     } catch {

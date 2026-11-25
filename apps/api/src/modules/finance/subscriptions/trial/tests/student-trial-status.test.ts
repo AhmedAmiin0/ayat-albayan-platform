@@ -12,7 +12,12 @@ const trialLesson = (student_id: string, status: 'scheduled' | 'completed' | 'no
   lesson: { status, rule_id: 'r1', instant: false, makeup_of_id: null, rule: { package: 'trial' } },
 });
 
-type SetupOpts = { statuses?: Record<string, string>; rows?: TrialLessonRow[]; moved?: boolean; paid?: boolean };
+type SetupOpts = {
+  statuses?: Record<string, string>;
+  rows?: TrialLessonRow[];
+  moved?: boolean;
+  paid?: boolean;
+};
 function setup(o: SetupOpts = {}) {
   const map = o.statuses ?? { s1: 'new' };
   const statuses = {

@@ -11,7 +11,9 @@ const PHONE_LIMITS = { per15Min: 3, perDay: 10, failedPerDay: 10 } as const;
 
 /** May another code go to this phone now? Over a limit the request still answers 202 (no enumeration). */
 export const phoneMaySend = (s: PhoneStats): boolean =>
-  s.sentLast15Min < PHONE_LIMITS.per15Min && s.sentLastDay < PHONE_LIMITS.perDay && s.failedLastDay < PHONE_LIMITS.failedPerDay;
+  s.sentLast15Min < PHONE_LIMITS.per15Min &&
+  s.sentLastDay < PHONE_LIMITS.perDay &&
+  s.failedLastDay < PHONE_LIMITS.failedPerDay;
 
 /**
  * The site-wide breaker (security review): wrong codes over EVERY phone in an hour. Past it no code is
@@ -21,7 +23,8 @@ export const phoneMaySend = (s: PhoneStats): boolean =>
 export const GLOBAL_FAILED_PER_HOUR = 200;
 
 /** May this phone's code still be checked? (10 wrong codes a day, across codes.) */
-export const phoneMayCheck = (s: PhoneStats): boolean => s.failedLastDay < PHONE_LIMITS.failedPerDay;
+export const phoneMayCheck = (s: PhoneStats): boolean =>
+  s.failedLastDay < PHONE_LIMITS.failedPerDay;
 
 type LimitKind = 'request' | 'check' | 'login';
 
@@ -41,7 +44,11 @@ export class SignInLimits {
   constructor(@Inject(LIMIT_STORE) private readonly store: LimitStore) {}
 
   /** 429 too_many_requests when either bucket of this kind is full. */
-  async assert(kind: LimitKind, at: { ip: string; identifier: string }, now = Date.now()): Promise<void> {
+  async assert(
+    kind: LimitKind,
+    at: { ip: string; identifier: string },
+    now = Date.now(),
+  ): Promise<void> {
     const budget = BUDGET[kind];
     const buckets = [
       { key: `${kind}:ip:${at.ip}`, max: budget.ip },

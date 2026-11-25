@@ -29,7 +29,11 @@ describe('submitPayload: versions (R-REP-02 versioned, R-REP-04 resubmit updates
     const first = '2026-10-04T14:50:00.000Z';
     const p = submitPayload(input({ report: submittedRow({ version: 2, submitted_at: first }) }));
     expect(p.expected_version).toBe(2);
-    expect(p.report).toMatchObject({ version: 3, submitted_at: first, edited_at: AFTER.toISOString() });
+    expect(p.report).toMatchObject({
+      version: 3,
+      submitted_at: first,
+      edited_at: AFTER.toISOString(),
+    });
   });
 });
 

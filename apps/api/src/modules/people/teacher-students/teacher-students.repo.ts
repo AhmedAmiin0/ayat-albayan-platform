@@ -27,7 +27,10 @@ export class TeacherStudentsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Students whose teacher_id is mine and whose status is one of `statuses`. */
-  async assigned(input: { teacherId: string; statuses: readonly StudentStatus[] }): Promise<TeacherStudentRow[]> {
+  async assigned(input: {
+    teacherId: string;
+    statuses: readonly StudentStatus[];
+  }): Promise<TeacherStudentRow[]> {
     const { data, error } = await this.db
       .from('students')
       .select(COLUMNS)
@@ -50,7 +53,10 @@ export class TeacherStudentsRepo {
   }
 
   /** Students by id, filtered to `statuses` (so paused / churned never come back). */
-  async byIds(input: { ids: readonly string[]; statuses: readonly StudentStatus[] }): Promise<TeacherStudentRow[]> {
+  async byIds(input: {
+    ids: readonly string[];
+    statuses: readonly StudentStatus[];
+  }): Promise<TeacherStudentRow[]> {
     if (input.ids.length === 0) return [];
     const { data, error } = await this.db
       .from('students')

@@ -19,7 +19,11 @@ const sign = (body: string, key: Buffer): string => b64(createHmac('sha256', key
 export const nonceHash = (nonce: string): string => createHash('sha256').update(nonce).digest('hex');
 
 /** A new state for `userId`, valid until now + 10 minutes. */
-export function newState(input: { userId: string; key: Buffer; now: number }): { state: string; nonce: string; expiresAt: Date } {
+export function newState(input: { userId: string; key: Buffer; now: number }): {
+  state: string;
+  nonce: string;
+  expiresAt: Date;
+} {
   const nonce = randomBytes(24).toString('base64url');
   const payload: StatePayload = { u: input.userId, n: nonce, e: input.now + STATE_TTL_MS };
   const body = b64(JSON.stringify(payload));

@@ -46,7 +46,13 @@ export class ReportV2Service {
     const { columns, content } = v2SubmitColumns(form);
     return this.submits.write(
       { ...editable, user },
-      { expectedVersion: form.expectedVersion, attendance: form.attendance, program: form.program, columns, content: contentJson(content) },
+      {
+        expectedVersion: form.expectedVersion,
+        attendance: form.attendance,
+        program: form.program,
+        columns,
+        content: contentJson(content),
+      },
     );
   }
 }

@@ -87,7 +87,11 @@ export function reportReadyMessage(input: ReportReadyInput, now: Date): ReportRe
       document: {
         bucket: BUCKETS.reports,
         path: input.pdfPath,
-        filename: reportFileName({ code: input.studentCode, startsAt: input.startsAt, tz: guardian.tz }),
+        filename: reportFileName({
+          code: input.studentCode,
+          startsAt: input.startsAt,
+          tz: guardian.tz,
+        }),
       },
       crm: { report: input.trial ? 'trial' : 'regular' },
     },

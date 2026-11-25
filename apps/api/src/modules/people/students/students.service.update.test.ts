@@ -11,7 +11,11 @@ function setup(results: Record<string, FakeResult[]>) {
   const fake = fakeDb(results);
   const record = vi.fn();
   const audit = { record } as unknown as AuditService;
-  return { ...fake, record, svc: new StudentsService(fake.db, new GuardiansService(fake.db), audit) };
+  return {
+    ...fake,
+    record,
+    svc: new StudentsService(fake.db, new GuardiansService(fake.db), audit),
+  };
 }
 
 describe('StudentsService.update (R-STU-05, R-NFR-03)', () => {

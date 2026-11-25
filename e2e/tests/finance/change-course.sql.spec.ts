@@ -2,11 +2,19 @@ import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import { change, changeOf, CHANGE, seedCourse } from '../../support/finance/change-course';
 import { BASE, iso, rolledBack, type Tx } from '../../support/edit-time';
+import { errorCode, errorMessage } from '../../support/core/db-error';
 
 // change_course (migration 480) moves a course's rules and lessons atomically, idempotently.
 
 const DAY = 864e5;
-interface RuleRow { id: string; ends_on: string; status: string; subscription_id: string | null; first_rule_id: string | null; client_request_id: string | null }
+interface RuleRow {
+  id: string;
+  ends_on: string;
+  status: string;
+  subscription_id: string | null;
+  first_rule_id: string | null;
+  client_request_id: string | null;
+}
 const rulesOf = (tx: Tx, sub: string) => tx<RuleRow[]>`select id, ends_on::text, status::text, subscription_id, first_rule_id,
   client_request_id from public.schedule_rules where subscription_id = ${sub} order by created_at, first_rule_id nulls first`;
 const lessonsOf = (tx: Tx, ids: string[]) => tx<{ status: string; chargeable: boolean }[]>`select l.status::text, ls.chargeable
@@ -59,11 +67,12 @@ test.describe('change_course: the remaining lessons of a course on new days (R-A
     await rolledBack(async (tx) => {
       const c = await seedCourse(tx);
       const bad = changeOf(c, { requestId: randomUUID(), sub: randomUUID() });
-      const code = await tx.savepoint((sp) => change(sp, bad)).then(() => 'ok', (e: { message?: string }) => e.message);
+      const code = await tx.savepoint((sp) => change(sp, bad)).then(() => 'ok', errorMessage);
       expect(code).toBe('course_mismatch');
       const rules = await rulesOf(tx, c.sub);
       expect(rules.map((r) => r.id)).toEqual(c.rules);
-      expect(new Set(rules.map((r) => r.ends_on))).toEqual(new Set([iso(CHANGE + 14 * DAY).slice(0, 10)]));
+      expect(new Set(rules.map((r) => r.ends_on)))
+        .toEqual(new Set([iso(CHANGE + 14 * DAY).slice(0, 10)]));
       expect(await lessonsOf(tx, c.lessons.map((l) => l.id))).toEqual(c.lessons.map(() => ({ status: 'scheduled', chargeable: true })));
     });
   });
@@ -72,7 +81,7 @@ test.describe('change_course: the remaining lessons of a course on new days (R-A
     await rolledBack(async (tx) => {
       const c = await seedCourse(tx);
       const empty = { ...changeOf(c, { requestId: randomUUID() }), new_rules: [] };
-      const code = await tx.savepoint((sp) => change(sp, empty)).then(() => 'ok', (e: { code?: string }) => e.code);
+      const code = await tx.savepoint((sp) => change(sp, empty)).then(() => 'ok', errorCode);
       expect(code).toBe('22023');
     });
   });
@@ -101,8 +110,10 @@ test.describe('change_course: the remaining lessons of a course on new days (R-A
       const second = changeOf(c, { requestId: randomUUID(), at: CHANGE + 7 * DAY, rules });
       await change(tx, { ...second, changes });
       const all = await rulesOf(tx, c.sub);
-      expect(all.filter((r) => c.rules.includes(r.id)).map((r) => r.ends_on)).toEqual(c.rules.map(() => iso(CHANGE - DAY).slice(0, 10)));
-      expect(all.filter((r) => first.rule_ids.includes(r.id)).map((r) => r.ends_on)).toEqual(first.rule_ids.map(() => iso(CHANGE + 6 * DAY).slice(0, 10)));
+      expect(all.filter((r) => c.rules.includes(r.id)).map((r) => r.ends_on))
+        .toEqual(c.rules.map(() => iso(CHANGE - DAY).slice(0, 10)));
+      expect(all.filter((r) => first.rule_ids.includes(r.id)).map((r) => r.ends_on))
+        .toEqual(first.rule_ids.map(() => iso(CHANGE + 6 * DAY).slice(0, 10)));
     });
   });
 
@@ -111,7 +122,7 @@ test.describe('change_course: the remaining lessons of a course on new days (R-A
       const c = await seedCourse(tx);
       await change(tx, changeOf(c, { requestId: randomUUID() }));
       const stale = changeOf(c, { requestId: randomUUID() });
-      const code = await tx.savepoint((sp) => change(sp, stale)).then(() => 'ok', (e: { message?: string }) => e.message);
+      const code = await tx.savepoint((sp) => change(sp, stale)).then(() => 'ok', errorMessage);
       expect(code).toBe('course_changed');
       expect(await rulesOf(tx, c.sub)).toHaveLength(4);
     });
@@ -123,7 +134,9 @@ test.describe('change_course: the remaining lessons of a course on new days (R-A
       const [active, paused] = c.rules;
       await tx`update public.schedule_rules set status = 'paused' where id = ${paused ?? ''}`;
       const base = changeOf(c, { requestId: randomUUID(), rules: [active ?? ''] });
-      const ofPaused = c.lessons.filter((l) => l.rule_id === paused && Date.parse(l.starts_at) >= CHANGE).map((l) => l.id);
+      const ofPaused = c.lessons
+        .filter((l) => l.rule_id === paused && Date.parse(l.starts_at) >= CHANGE)
+        .map((l) => l.id);
       const changes = ofPaused.map((id) => ({ id, from_status: 'scheduled', to_status: 'rescheduled', chargeable: false }));
       await change(tx, { ...base, changes });
       expect(await lessonsOf(tx, ofPaused)).toEqual(ofPaused.map(() => ({ status: 'rescheduled', chargeable: false })));

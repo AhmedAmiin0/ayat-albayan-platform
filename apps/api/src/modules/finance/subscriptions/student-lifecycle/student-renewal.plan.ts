@@ -48,7 +48,11 @@ export function renewalTarget(current: StudentStatus, ended: boolean): StudentSt
  * trial facts decide, as for a new student (attended → pending_subscription, an open
  * trial → trial, none → new).
  */
-export function revertTarget(input: { otherPayment: boolean; ended: boolean; facts: TrialFacts }): StudentStatus {
+export function revertTarget(input: {
+  otherPayment: boolean;
+  ended: boolean;
+  facts: TrialFacts;
+}): StudentStatus {
   if (input.otherPayment) return input.ended ? 'pending_renewal' : 'active';
   return trialMove('new', { ...input.facts, paid: false })?.to ?? 'new';
 }
@@ -88,7 +92,10 @@ export function pendingSince(last: StatusChangeRow | null): string | null {
  * event: a money write, a lesson change, or a renewal date passing after that manual change (in the
  * student's tz).
  */
-export function manualWins(last: StatusChangeRow | null, opts: { renewDates: readonly string[]; localDay: string }): boolean {
+export function manualWins(
+  last: StatusChangeRow | null,
+  opts: { renewDates: readonly string[]; localDay: string },
+): boolean {
   if (!last || field(last.after, 'via') !== undefined) return false;
   return !opts.renewDates.some((d) => d >= opts.localDay);
 }

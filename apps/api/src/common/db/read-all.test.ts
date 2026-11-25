@@ -8,7 +8,10 @@ describe('readAll — never truncated at PostgREST max_rows', () => {
     const ranges: [number, number][] = [];
     const rows = await readAll(async (from, to) => {
       ranges.push([from, to]);
-      const data = Array.from({ length: Math.max(0, Math.min(to, total - 1) - from + 1) }, (_, i) => from + i);
+      const data = Array.from(
+        { length: Math.max(0, Math.min(to, total - 1) - from + 1) },
+        (_, i) => from + i,
+      );
       return { data, error: null };
     });
     expect(rows).toHaveLength(total);
@@ -21,7 +24,9 @@ describe('readAll — never truncated at PostgREST max_rows', () => {
 
   it('stops after one call for a short list, and throws on an error', async () => {
     let calls = 0;
-    expect(await readAll(async () => ((calls += 1), { data: [1, 2], error: null }))).toEqual([1, 2]);
+    expect(await readAll(async () => ((calls += 1), { data: [1, 2], error: null }))).toEqual([
+      1, 2,
+    ]);
     expect(calls).toBe(1);
     await expect(
       readAll(async () => ({
@@ -36,7 +41,10 @@ describe('readChunked — long .in() lists never hit HTTP 414', () => {
   it('reads IN_CHUNK ids per request, in order; nothing to read → no request', async () => {
     const ids = Array.from({ length: IN_CHUNK * 2 + 3 }, (_, i) => `id${i}`);
     const sizes: number[] = [];
-    const rows = await readChunked(ids, async (chunk) => (sizes.push(chunk.length), { data: chunk, error: null }));
+    const rows = await readChunked(
+      ids,
+      async (chunk) => (sizes.push(chunk.length), { data: chunk, error: null }),
+    );
     expect(sizes).toEqual([IN_CHUNK, IN_CHUNK, 3]);
     expect(rows).toEqual(ids);
     expect(await readChunked([], async () => ({ data: ['x'], error: null }))).toEqual([]);

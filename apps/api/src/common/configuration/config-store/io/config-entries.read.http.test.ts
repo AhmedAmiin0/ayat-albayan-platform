@@ -5,14 +5,24 @@ import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
 import { configEntriesApp, USERS, type Token } from './config-entries.test-util';
 import { configRow } from '@/common/configuration/config-store/config-store.fakes';
 
-type Entry = { key: string; version: number; stored: boolean; value: unknown; updatedAt: string | null; updatedByName: string | null };
+type Entry = {
+  key: string;
+  version: number;
+  stored: boolean;
+  value: unknown;
+  updatedAt: string | null;
+  updatedByName: string | null;
+};
 
 describe('GET /config/entries, PUT …/description, GET /admin/config/parity', () => {
   let h: Awaited<ReturnType<typeof configEntriesApp>>;
   let app: NestFastifyApplication;
   const list = async (token: Token = 'admin') => {
     const res = await h.call({ method: 'GET', url: '/config/entries', token });
-    return { status: res.statusCode, entries: res.statusCode === 200 ? (res.json().entries as Entry[]) : [] };
+    return {
+      status: res.statusCode,
+      entries: res.statusCode === 200 ? (res.json().entries as Entry[]) : [],
+    };
   };
   const describeKey = (key: string, text: string | null, token: Token = 'admin') =>
     h.call({ method: 'PUT', url: `/config/entries/${key}/description`, body: { text }, token });

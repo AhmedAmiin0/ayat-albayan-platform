@@ -18,7 +18,10 @@ export function boundsOf(def: SettingDef): Record<string, unknown> {
 /** Who last changed the row; nothing for a seeded row nobody wrote (JSON null, no writer). */
 export function changedBy(row: ConfigRow | undefined, names: ReadonlyMap<string, string>) {
   if (!row || neverWritten(row)) return { updatedAt: null, updatedByName: null };
-  return { updatedAt: row.updatedAt, updatedByName: row.updatedBy ? (names.get(row.updatedBy) ?? null) : null };
+  return {
+    updatedAt: row.updatedAt,
+    updatedByName: row.updatedBy ? (names.get(row.updatedBy) ?? null) : null,
+  };
 }
 
 interface EntryParts {
@@ -31,7 +34,15 @@ interface EntryParts {
 
 /** The stored row's part of an entry; a missing row is version 0, nothing stored, no description. */
 function rowFields(row: ConfigRow | undefined) {
-  if (!row) return { stored: false, description: null, descriptionSeed: null, descriptionEdited: false, version: 0, retiredAt: null };
+  if (!row)
+    return {
+      stored: false,
+      description: null,
+      descriptionSeed: null,
+      descriptionEdited: false,
+      version: 0,
+      retiredAt: null,
+    };
   return {
     stored: row.value !== null,
     description: row.description,

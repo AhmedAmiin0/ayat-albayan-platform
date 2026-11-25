@@ -27,15 +27,30 @@ describe('teacher earnings routes (admin)', () => {
     const res = await call({ method: 'GET', url: `/teacher-earnings/${TEACHER}/sessions?status=unpaid` });
     expect(m.earnings.sessions).toHaveBeenCalledWith(TEACHER, { status: 'unpaid', page: 1, pageSize: 25 });
     expect(res.json().items[0]).toMatchObject({ id: eid(1), students: ['سهيلة'], outstanding: 70 });
-    m.earnings.payments.mockResolvedValue({ items: [paymentRow()], total: 1, page: 1, pageSize: 25 });
-    expect((await call({ method: 'GET', url: `/teacher-earnings/${TEACHER}/payments` })).json().items).toHaveLength(1);
-    expect((await call({ method: 'GET', url: `/teacher-earnings/${TEACHER}/sessions?status=bogus` })).statusCode).toBe(400);
+    m.earnings.payments.mockResolvedValue({
+      items: [paymentRow()],
+      total: 1,
+      page: 1,
+      pageSize: 25,
+    });
+    expect(
+      (await call({ method: 'GET', url: `/teacher-earnings/${TEACHER}/payments` })).json().items,
+    ).toHaveLength(1);
+    expect(
+      (await call({ method: 'GET', url: `/teacher-earnings/${TEACHER}/sessions?status=bogus` }))
+        .statusCode,
+    ).toBe(400);
   });
 
   it('POST payments: records the allocation and answers with the payment', async () => {
     const res = await call({ method: 'POST', url: `/teacher-earnings/${TEACHER}/payments`, body: BODY });
     expect(res.statusCode).toBe(200);
-    expect(m.earnings.record).toHaveBeenCalledWith(expect.objectContaining({ items: [{ earning_id: eid(1), amount: 70 }], client_request_id: REQUEST }));
+    expect(m.earnings.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        items: [{ earning_id: eid(1), amount: 70 }],
+        client_request_id: REQUEST,
+      }),
+    );
     expect(res.json()).toMatchObject({ replayed: false, payment: { id: PAYMENT } });
   });
 

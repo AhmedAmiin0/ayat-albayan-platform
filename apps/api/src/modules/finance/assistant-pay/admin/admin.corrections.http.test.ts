@@ -65,12 +65,36 @@ describe('ledger, void, adjustment and attribution (admin)', () => {
     t.rpc.broughtBy.mockResolvedValue(2);
     const res = await t.call({ method: 'POST', url: '/assistant-pay/brought-by', token: 'admin', body: { studentIds: [STUDENT, ID], assistantId: null } });
     expect([res.statusCode, res.json()]).toEqual([200, { changed: 2 }]);
-    expect(t.rpc.broughtBy).toHaveBeenCalledWith({ studentIds: [STUDENT, ID], assistantId: null, actorId: ADMIN });
-    await t.call({ method: 'POST', url: '/assistant-pay/brought-by', token: 'admin', body: { studentIds: [STUDENT], assistantId: A, broughtAt: '2026-10-01T09:00:00Z' } });
-    expect(t.rpc.broughtBy).toHaveBeenLastCalledWith({ studentIds: [STUDENT], assistantId: A, actorId: ADMIN, broughtAt: '2026-10-01T09:00:00Z' });
-    const many = Array.from({ length: 501 }, (_, i) => `d1000000-0000-4000-8000-${String(i).padStart(12, '0')}`);
-    for (const body of [{ studentIds: many, assistantId: A }, { studentIds: [], assistantId: A }, { studentIds: [STUDENT] }]) {
-      expect((await t.call({ method: 'POST', url: '/assistant-pay/brought-by', token: 'admin', body })).statusCode).toBe(400);
+    expect(t.rpc.broughtBy).toHaveBeenCalledWith({
+      studentIds: [STUDENT, ID],
+      assistantId: null,
+      actorId: ADMIN,
+    });
+    await t.call({
+      method: 'POST',
+      url: '/assistant-pay/brought-by',
+      token: 'admin',
+      body: { studentIds: [STUDENT], assistantId: A, broughtAt: '2026-10-01T09:00:00Z' },
+    });
+    expect(t.rpc.broughtBy).toHaveBeenLastCalledWith({
+      studentIds: [STUDENT],
+      assistantId: A,
+      actorId: ADMIN,
+      broughtAt: '2026-10-01T09:00:00Z',
+    });
+    const many = Array.from(
+      { length: 501 },
+      (_, i) => `d1000000-0000-4000-8000-${String(i).padStart(12, '0')}`,
+    );
+    for (const body of [
+      { studentIds: many, assistantId: A },
+      { studentIds: [], assistantId: A },
+      { studentIds: [STUDENT] },
+    ]) {
+      expect(
+        (await t.call({ method: 'POST', url: '/assistant-pay/brought-by', token: 'admin', body }))
+          .statusCode,
+      ).toBe(400);
     }
     t.rpc.broughtBy.mockRejectedValue(conflict('commission_exists'));
     const clash = await t.call({ method: 'POST', url: '/assistant-pay/brought-by', token: 'admin', body: { studentIds: [STUDENT], assistantId: A } });

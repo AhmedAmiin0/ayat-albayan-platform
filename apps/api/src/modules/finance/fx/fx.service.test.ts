@@ -36,7 +36,12 @@ describe('FxService.rateSarTo (docs/08 §4)', () => {
   it('refreshes a stale rate and stores the whole provider update', async () => {
     fx.queries.newest.mockResolvedValue(fxRow({ fetched_at: hoursAgo(25) }));
     const rate = await fx.service.rateSarTo('USD');
-    expect(rate).toMatchObject({ rate: 0.2666, date: hoursAgo(1), fallback: false, ageHours: null });
+    expect(rate).toMatchObject({
+      rate: 0.2666,
+      date: hoursAgo(1),
+      fallback: false,
+      ageHours: null,
+    });
     expect(fx.fetcher.latest).toHaveBeenCalledTimes(1);
     expect(fx.queries.save).toHaveBeenCalledWith(snapshot());
   });
@@ -46,7 +51,9 @@ describe('FxService.rateSarTo (docs/08 §4)', () => {
   });
 
   it('API down: newest stored rate, with how old it is', async () => {
-    fx.queries.newest.mockResolvedValue(fxRow({ fetched_at: hoursAgo(50), provider_updated_at: hoursAgo(60) }));
+    fx.queries.newest.mockResolvedValue(
+      fxRow({ fetched_at: hoursAgo(50), provider_updated_at: hoursAgo(60) }),
+    );
     fx.fetcher.latest.mockRejectedValue(new Error('fx: HTTP 503'));
     const rate = await fx.service.rateSarTo('USD');
     expect(rate).toMatchObject({ rate: 0.266667, fallback: false, ageHours: 60 });

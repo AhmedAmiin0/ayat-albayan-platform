@@ -11,7 +11,11 @@ type Student = { id: string; code: string | null; name: string } | null;
 export interface PendingIn {
   lesson_id: string;
   student: Student;
-  lesson: { starts_at: string; status: LessonStatus; teacher: { id: string; display_name_ar: string } | null } | null;
+  lesson: {
+    starts_at: string;
+    status: LessonStatus;
+    teacher: { id: string; display_name_ar: string } | null;
+  } | null;
 }
 interface UnpaidIn {
   id: string;
@@ -40,7 +44,10 @@ interface SubjectIn {
 }
 
 const student = (s: Student) => (s ? { id: s.id, code: s.code ?? '', name: s.name } : null);
-const list = <T>(items: T[]): WorkList<T> => ({ total: items.length, items: items.slice(0, WORK_ITEMS) });
+const list = <T>(items: T[]): WorkList<T> => ({
+  total: items.length,
+  items: items.slice(0, WORK_ITEMS),
+});
 
 export function pendingList(rows: readonly PendingIn[]): WorkList<PendingReportRow> {
   const out: PendingReportRow[] = [];
@@ -68,18 +75,37 @@ export function unpaidList(rows: readonly UnpaidIn[]): WorkList<UnpaidRow> {
       const paid = netPaidIn(r.payments, currency);
       const owed = round2(Math.max(0, price - paid));
       const reason = owed > 0 ? 'owes' : 'renewal_due';
-      return [{ id, student: s, package: pkg, lessons_total, price, paid, owed, reason, currency, starts_on } as const];
+      return [
+        {
+          id,
+          student: s,
+          package: pkg,
+          lessons_total,
+          price,
+          paid,
+          owed,
+          reason,
+          currency,
+          starts_on,
+        } as const,
+      ];
     }),
   );
 }
 
-export function taskList(tasks: readonly TaskIn[], subjects: readonly SubjectIn[]): WorkList<TaskRow> {
+export function taskList(
+  tasks: readonly TaskIn[],
+  subjects: readonly SubjectIn[],
+): WorkList<TaskRow> {
   const byId = new Map(subjects.map((s) => [s.id, s]));
   return list(
     tasks.map((t) => {
       const subject = t.subject_type === 'subscription' ? byId.get(t.subject_id) : undefined;
       const b = subject?.balance;
-      const balance = b && b.lessons_total !== null ? { used: b.lessons_used ?? 0, total: b.lessons_total } : null;
+      const balance =
+        b && b.lessons_total !== null
+          ? { used: b.lessons_used ?? 0, total: b.lessons_total }
+          : null;
       return { ...t, student: student(subject?.student ?? null), balance };
     }),
   );

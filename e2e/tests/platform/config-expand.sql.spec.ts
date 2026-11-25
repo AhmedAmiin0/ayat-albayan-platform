@@ -1,13 +1,14 @@
 import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { dbError } from '../../support/core/db-error';
 
 // Migration 630 (docs/26 §2a, 26-P1 «Expand») against the real database, every test rolled back. Only
 // throwaway zz_e2e_* keys are written: never a messaging or gate key.
 
 interface Row { key: string; value: unknown; version: string; updated_at: Date }
 interface Err { code?: string; detail?: string }
-const fail = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then((): Err => ({}), (e: Err) => e);
+const fail = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then((): Err => ({}), dbError);
 // ::text::jsonb: a bare ::jsonb makes postgres.js serialise the string again (a JSON string, not an array).
 const json = (v: unknown) => JSON.stringify(v);
 
@@ -103,7 +104,8 @@ test.describe('settings expand (migration 630)', () => {
         version::text as version from public.settings where key in ('zz_e2e_false', 'zz_e2e_new') order by key`;
       expect(after.map((r) => [r.key, r.is_null])).toEqual([['zz_e2e_false', false], ['zz_e2e_new', true]]);
       expect(Number(after[0]?.version)).toBeGreaterThan(v0);
-      expect(out).toEqual({ zz_e2e_false: Number(after[0]?.version), zz_e2e_new: Number(after[1]?.version) });
+      expect(out).toEqual(
+        { zz_e2e_false: Number(after[0]?.version), zz_e2e_new: Number(after[1]?.version) });
       expect(Number(await rev(tx))).toBeGreaterThan(Number(r0));
     });
   });

@@ -17,8 +17,16 @@ function setup(need: object) {
   const drive = { need: vi.fn().mockResolvedValue(need), ensure: vi.fn().mockResolvedValue({ folderId: 'F', sheetId: 'S' }) };
   google.sheets.set('S', []);
   const storage = { download: vi.fn().mockResolvedValue(null) };
-  const pdf = new ReportPdfWriter(source as unknown as GoogleSyncSource, drive as unknown as DriveFiles, storage as unknown as StorageService);
-  const rows = new SheetRowsWriter(source as unknown as GoogleSyncSource, drive as unknown as DriveFiles, data as unknown as GoogleData);
+  const pdf = new ReportPdfWriter(
+    source as unknown as GoogleSyncSource,
+    drive as unknown as DriveFiles,
+    storage as unknown as StorageService,
+  );
+  const rows = new SheetRowsWriter(
+    source as unknown as GoogleSyncSource,
+    drive as unknown as DriveFiles,
+    data as unknown as GoogleData,
+  );
   return { pdf, rows, data, ctx: { live: true as const, google } };
 }
 

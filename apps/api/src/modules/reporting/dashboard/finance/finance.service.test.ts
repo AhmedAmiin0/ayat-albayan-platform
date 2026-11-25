@@ -2,31 +2,32 @@ import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it, vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { DashboardSettings } from '@/modules/reporting/dashboard/dashboard.settings';
-import type { FinanceQueries } from './finance.queries';
+import type { FinanceRepo } from './finance.repo';
 import { FinanceService } from './finance.service';
 import type { FxConverter } from './fx-converter';
 
-const at = '2026-10-01T16:00:00Z';
+const ROWS = [
+  { kind: 'payment', month: '2026-10', currency: 'SAR', key: 'facebook_ad', amount: 145, n: 1 },
+  { kind: 'cost', month: '2026-10', currency: 'EGP', key: 'unknown', amount: 130, n: 1 },
+  { kind: 'expense', month: '2026-10', currency: 'EGP', key: 'ads', amount: 260, n: 1 },
+  { kind: 'unrated', month: '', currency: '', key: '', amount: 0, n: 1 },
+];
 
-function service(over: { countLate?: boolean; currency?: string } = {}) {
-  const money = {
-    payments: vi.fn().mockResolvedValue([
-      { amount: 145, currency: 'SAR', paid_at: '2026-10-01T10:00:00Z', subscription: { fx_rate: null, student: { guardian: { source: 'facebook_ad' } } } },
-    ]),
-    payableLessons: vi.fn().mockResolvedValue([
-      { lesson_id: 'l1', starts_at: at, amount: 130 },
-      { lesson_id: 'l2', starts_at: at, amount: null },
-    ]),
-    lessonSources: vi.fn().mockResolvedValue([]),
-    expenses: vi.fn().mockResolvedValue([{ id: 'e', month: '2026-10-01', category: 'ads', amount: 260, currency: 'EGP' }]),
-  };
+function service(over: { currency?: string } = {}) {
+  const money = { totals: vi.fn().mockResolvedValue(ROWS) };
   const fx = {
-    conversion: vi.fn().mockResolvedValue({ currency: 'SAR', rates: { SAR: 1, EGP: 13 }, missing: [], date: '2026-10-01T00:00:00Z' }),
+    conversion: vi.fn().mockResolvedValue({
+      currency: 'SAR',
+      rates: { SAR: 1, EGP: 13 },
+      missing: [],
+      date: '2026-10-01T00:00:00Z',
+    }),
   };
-  const { countLate = false, currency = SETTING_DEFAULTS.reporting_currency } = over;
-  const settings = readerOf(DashboardSettings, { payout_count_late: countLate, reporting_currency: currency });
+  const settings = readerOf(DashboardSettings, {
+    reporting_currency: over.currency ?? SETTING_DEFAULTS.reporting_currency,
+  });
   const svc = new FinanceService(
-    money as unknown as FinanceQueries,
+    money as unknown as FinanceRepo,
     fx as unknown as FxConverter,
     settings,
   );
@@ -56,7 +57,12 @@ describe('FinanceService.finance (R-RPT-02)', () => {
     });
     expect(f.by_month.map((m) => m.month)).toEqual(['2026-09', '2026-10']);
     expect(f.expenses_by_category.ads).toBe(20);
-    expect(f.by_source[0]).toMatchObject({ source: 'facebook_ad', leads: 2, converted: 1, revenue: 145 });
+    expect(f.by_source[0]).toMatchObject({
+      source: 'facebook_ad',
+      leads: 2,
+      converted: 1,
+      revenue: 145,
+    });
   });
 
   it('converts to the stored settings.reporting_currency', async () => {
@@ -65,11 +71,17 @@ describe('FinanceService.finance (R-RPT-02)', () => {
     expect(fx.conversion).toHaveBeenCalledWith('EGP', new Set(['SAR', 'EGP']));
   });
 
-  it('teacher cost reads the one pay rule (payable lessons); sources only for costed lessons', async () => {
-    const { svc, money } = service({ countLate: true });
+  it('reads the card with one aggregate call over the Riyadh window and its months', async () => {
+    const { svc, money } = service();
     await svc.finance({ range: { from: '2026-09-15', to: '2026-10-02' }, leads: [] });
-    expect(money.payableLessons).toHaveBeenCalledTimes(1);
-    expect(money.lessonSources).toHaveBeenCalledWith(['l1']);
-    expect(money.expenses).toHaveBeenCalledWith('2026-09', '2026-10');
+    expect(money.totals).toHaveBeenCalledTimes(1);
+    expect(money.totals).toHaveBeenCalledWith({
+      window: {
+        from: new Date('2026-09-14T21:00:00.000Z'),
+        to: new Date('2026-10-02T21:00:00.000Z'),
+      },
+      first: '2026-09',
+      last: '2026-10',
+    });
   });
 });

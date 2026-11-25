@@ -25,8 +25,21 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 const ID = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
-const teachers = { list: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn(), idByProfile: vi.fn(), photo: async () => null };
-const row = (meeting_mode: string | null) => ({ id: ID, display_name_ar: 'أ. سارة', meeting_link: null, meeting_mode });
+const teachers = {
+  list: vi.fn(),
+  get: vi.fn(),
+  insert: vi.fn(),
+  update: vi.fn(),
+  remove: vi.fn(),
+  idByProfile: vi.fn(),
+  photo: async () => null,
+};
+const row = (meeting_mode: string | null) => ({
+  id: ID,
+  display_name_ar: 'أ. سارة',
+  meeting_link: null,
+  meeting_mode,
+});
 
 describe('TeachersController — meeting_mode', () => {
   let app: NestFastifyApplication;
@@ -63,7 +76,9 @@ describe('TeachersController — meeting_mode', () => {
   });
 
   it('PATCH sets a mode or clears it back to the academy default, and is recorded in the activity log', async () => {
-    teachers.update.mockImplementation(async (_id: string, patch: { meeting_mode: string | null }) => row(patch.meeting_mode));
+    teachers.update.mockImplementation(
+      async (_id: string, patch: { meeting_mode: string | null }) => row(patch.meeting_mode),
+    );
     const res = await call('PATCH', `/teachers/${ID}`, { body: { meeting_mode: 'static' } });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toMatchObject({ meeting_mode: 'static', platform_classroom: false });

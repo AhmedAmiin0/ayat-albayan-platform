@@ -11,7 +11,11 @@ export function oauthClient(env: GoogleEnv): OAuth2Client {
     clientId: env.clientId,
     clientSecret: env.clientSecret,
     redirectUri: env.redirectUri,
-    endpoints: { oauth2AuthBaseUrl: env.endpoints.auth, oauth2TokenUrl: env.endpoints.token, oauth2RevokeUrl: env.endpoints.revoke },
+    endpoints: {
+      oauth2AuthBaseUrl: env.endpoints.auth,
+      oauth2TokenUrl: env.endpoints.token,
+      oauth2RevokeUrl: env.endpoints.revoke,
+    },
   });
 }
 
@@ -39,7 +43,9 @@ export class GoogleOAuthApi implements GoogleOAuth {
     });
   }
 
-  async exchange(code: string): Promise<{ refreshToken: string | null; scopes: string[]; accessToken: string }> {
+  async exchange(
+    code: string,
+  ): Promise<{ refreshToken: string | null; scopes: string[]; accessToken: string }> {
     try {
       const { tokens } = await oauthClient(this.env).getToken(code);
       return { refreshToken: tokens.refresh_token ?? null, scopes: (tokens.scope ?? '').split(/\s+/).filter(Boolean), accessToken: tokens.access_token ?? '' };

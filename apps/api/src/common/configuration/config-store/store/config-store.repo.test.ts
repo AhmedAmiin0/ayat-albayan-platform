@@ -6,7 +6,9 @@ import { ConfigConflictError } from '@/common/configuration/config-store/config-
 const dbRow = { key: 'upload_max_mb', value: 4, version: 3, description: null, description_seed: 'نص', description_edited: false, updated_at: 't', updated_by: 'u1', retired_at: null };
 
 /** settings_revision answers `revs` one by one; settings answers `rows`; rpc answers `rpc`. */
-function fakeDb(opts: { revs?: (number | null)[]; rows?: unknown[]; rpc?: { error: unknown } } = {}) {
+function fakeDb(
+  opts: { revs?: (number | null)[]; rows?: unknown[]; rpc?: { error: unknown } } = {},
+) {
   const revs = [...(opts.revs ?? [1, 1])];
   const maybeSingle = vi.fn(async () => {
     const rev = revs.length > 1 ? revs.shift() : revs[0];

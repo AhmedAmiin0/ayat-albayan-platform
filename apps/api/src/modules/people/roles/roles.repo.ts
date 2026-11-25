@@ -18,7 +18,10 @@ export class RolesRepo implements RoleStore {
       .order('is_system', { ascending: false })
       .order('created_at');
     if (error) throw dbError(error);
-    return data.map(({ role_permissions, ...r }) => ({ ...r, permissions: role_permissions.map((p) => p.permission) }));
+    return data.map(({ role_permissions, ...r }) => ({
+      ...r,
+      permissions: role_permissions.map((p) => p.permission),
+    }));
   }
 
   async profiles(): Promise<ProfileRecord[]> {

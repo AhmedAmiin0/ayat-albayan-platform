@@ -17,15 +17,28 @@ const real = new Stripe('sk_test_offline', { apiVersion: '2026-09-30.endive' });
 export function stripeMocks() {
   return {
     links: {
-      insert: vi.fn(), byRequest: vi.fn(), get: vi.fn(), byToken: vi.fn(), byPaymentIntent: vi.fn(), list: vi.fn(),
-      forStudent: vi.fn(), cancel: vi.fn(), setSession: vi.fn(), setProcessing: vi.fn(), markPaid: vi.fn(), student: vi.fn(), attribute: vi.fn(),
+      insert: vi.fn(),
+      byRequest: vi.fn(),
+      get: vi.fn(),
+      byToken: vi.fn(),
+      byPaymentIntent: vi.fn(),
+      list: vi.fn(),
+      forStudent: vi.fn(),
+      cancel: vi.fn(),
+      setSession: vi.fn(),
+      setProcessing: vi.fn(),
+      markPaid: vi.fn(),
+      student: vi.fn(),
+      attribute: vi.fn(),
     },
     events: { begin: vi.fn(), done: vi.fn() },
     limit: { check: vi.fn() },
     push: { notifyProfiles: vi.fn(), notifyAdmins: vi.fn(), notifySales: vi.fn() },
     teachers: { ensureActive: vi.fn(), assign: vi.fn(), options: vi.fn() },
     stripe: {
-      checkout: { sessions: { create: vi.fn(), retrieve: vi.fn(), expire: vi.fn(), list: vi.fn() } },
+      checkout: {
+        sessions: { create: vi.fn(), retrieve: vi.fn(), expire: vi.fn(), list: vi.fn() },
+      },
       refunds: { list: vi.fn() },
       webhooks: real.webhooks,
     },
@@ -36,7 +49,10 @@ export type StripeMocks = ReturnType<typeof stripeMocks>;
 /** Signs a payload exactly as Stripe does (offline), for POST /webhooks/stripe. */
 export function signed(payload: object): { body: string; signature: string } {
   const body = JSON.stringify(payload);
-  return { body, signature: real.webhooks.generateTestHeaderString({ payload: body, secret: WHSEC }) };
+  return {
+    body,
+    signature: real.webhooks.generateTestHeaderString({ payload: body, secret: WHSEC }),
+  };
 }
 
 export function linkRow(patch: Partial<LinkRow> = {}): LinkRow {
@@ -52,7 +68,15 @@ export function linkRow(patch: Partial<LinkRow> = {}): LinkRow {
 
 /** Gate on (sandbox keys saved, no cap), link open, no event seen yet. */
 export function stripeDefaults(s: StripeMocks): void {
-  for (const group of [s.links, s.events, s.limit, s.push, s.teachers, s.stripe.checkout.sessions, s.stripe.refunds])
+  for (const group of [
+    s.links,
+    s.events,
+    s.limit,
+    s.push,
+    s.teachers,
+    s.stripe.checkout.sessions,
+    s.stripe.refunds,
+  ])
     for (const fn of Object.values(group)) fn.mockReset();
   s.teachers.ensureActive.mockResolvedValue(undefined);
   s.teachers.assign.mockResolvedValue(true);

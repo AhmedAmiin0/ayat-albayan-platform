@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../../support/core/rls';
+import { errorCode } from '../../support/core/db-error';
 
 // Migration 20261010000290 (two WhatsApp lines, docs/12 §13): messages.line and the columns
 // appended to v_threads; here last_inbound_line = the line of the newest inbound row (null when that
@@ -15,7 +16,7 @@ const OLD_COLUMNS = [
   'teacher_name', 'display_name',
 ];
 
-const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', (e: { code?: string }) => e.code);
+const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
 
 type Line = 'notifications' | 'chat' | null;
 interface Row {

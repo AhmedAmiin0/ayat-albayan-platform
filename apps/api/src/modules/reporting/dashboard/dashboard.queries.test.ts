@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { DashboardQueries } from './dashboard.queries';
-import { FinanceQueries } from './finance/finance.queries';
 import { WorkQueries } from './work/work.queries';
 
 const W = { from: new Date('2026-09-30T21:00:00.000Z'), to: new Date('2026-10-07T21:00:00.000Z') };
@@ -38,18 +37,6 @@ describe('DashboardQueries (counts from statuses)', () => {
     expect(calls).toContainEqual({ table: 'leads', method: 'gte', args: ['created_at', W.from.toISOString()] });
     expect(calls).toContainEqual({ table: 'students', method: 'in', args: ['status', ['new', 'trial', 'pending_subscription', 'active', 'pending_renewal', 'expired']] });
     expect(calls).toContainEqual({ table: 'students', method: 'not', args: ['teacher_id', 'is', null] });
-  });
-});
-
-describe('FinanceQueries', () => {
-  it('payable lessons (the one pay rule) in the window; expenses by month bounds', async () => {
-    const { db, calls } = fakeDb({ v_teacher_payable_lessons: [{ data: [] }], expenses: [{ data: [] }] });
-    const q = new FinanceQueries(db);
-    await q.payableLessons(W);
-    await q.expenses('2026-09', '2026-10');
-    expect(calls).toContainEqual({ table: 'v_teacher_payable_lessons', method: 'gte', args: ['starts_at', W.from.toISOString()] });
-    expect(calls).toContainEqual({ table: 'expenses', method: 'gte', args: ['month', '2026-09-01'] });
-    expect(calls).toContainEqual({ table: 'expenses', method: 'lte', args: ['month', '2026-10-01'] });
   });
 });
 

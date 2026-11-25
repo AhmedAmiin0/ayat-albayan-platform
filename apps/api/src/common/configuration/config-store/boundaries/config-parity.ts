@@ -35,7 +35,9 @@ interface ParitySides {
  */
 export function compareEffective(sides: ParitySides): ConfigParityDiff[] {
   const { legacy, store } = sides;
-  const diffs: ConfigParityDiff[] = SETTING_KEYS.filter((k) => !isDeepStrictEqual(legacy[k], store[k])).map((key) => ({
+  const diffs: ConfigParityDiff[] = SETTING_KEYS.filter(
+    (k) => !isDeepStrictEqual(legacy[k], store[k]),
+  ).map((key) => ({
     key,
     legacy: legacy[key],
     store: store[key],

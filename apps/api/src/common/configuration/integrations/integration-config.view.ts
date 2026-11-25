@@ -19,7 +19,9 @@ const nonBlank = (v: string | undefined): string | null => (v !== undefined && v
 export function integrationItems({ plain, secrets, env }: ViewInput): IntegrationConfigItem[] {
   const keys = INTEGRATION_KEYS.filter((d) => integrationKeyAvailable(d.key, env));
   return keys.map(({ key, group, secret }) => {
-    const plainRow = secret ? undefined : plain.find((p) => p.key === key && nonBlank(p.value) !== null);
+    const plainRow = secret
+      ? undefined
+      : plain.find((p) => p.key === key && nonBlank(p.value) !== null);
     const row = secret ? secrets.find((s) => s.key === key) : plainRow;
     const fromEnv = nonBlank(env[key]);
     const source = row ? 'db' : fromEnv !== null ? 'env' : 'unset';

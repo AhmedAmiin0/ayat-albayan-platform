@@ -57,8 +57,8 @@ export function bookingSlots(bundle: SourceBundle, ix: StudentIndex): Map<string
   const rows = [...(bundle.sheets.hub_bookings ?? []), ...(bundle.sheets.book_bookings ?? [])];
   const all = rows.flatMap((r) => booked(r, { ix, today: bundle.today }) ?? []);
   const put = (b: Booked, dates: readonly string[]) => {
-    for (const s of b.students)
-      for (const d of dates) if (!out.has(`${s}|${d}`)) out.set(`${s}|${d}`, b.slot);
+    const keys = b.students.flatMap((s) => dates.map((d) => `${s}|${d}`));
+    for (const k of keys) if (!out.has(k)) out.set(k, b.slot);
   };
   for (const b of all) put(b, [b.exact]);
   for (const b of all) put(b, b.weekly);

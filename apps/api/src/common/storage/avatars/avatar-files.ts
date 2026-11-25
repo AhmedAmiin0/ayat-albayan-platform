@@ -52,7 +52,11 @@ export class StorageAvatarFiles implements AvatarFiles {
   async urls(paths: readonly string[]): Promise<Map<string, string>> {
     const unique = [...new Set(paths)];
     try {
-      return await this.storage.signedDownloads({ bucket: BUCKETS.avatars, paths: unique, seconds: AVATAR_URL_SECONDS });
+      return await this.storage.signedDownloads({
+        bucket: BUCKETS.avatars,
+        paths: unique,
+        seconds: AVATAR_URL_SECONDS,
+      });
     } catch {
       return new Map();
     }

@@ -44,7 +44,8 @@ export function paidVia(earnedAt: string, payments: readonly PaymentFact[]): Pay
 }
 
 /** Only database-written codes pass; an admin-typed reason never leaves (migration 271). */
-const voidCode = (reason: string | null): WalletVoidReason | null => WALLET_VOID_REASONS.find((c) => c === reason) ?? null;
+const voidCode = (reason: string | null): WalletVoidReason | null =>
+  WALLET_VOID_REASONS.find((c) => c === reason) ?? null;
 
 export function toMyCommission(r: MyCommissionSource): MyCommissionRow {
   const state = walletState(r.status, r.statement?.status ?? null);

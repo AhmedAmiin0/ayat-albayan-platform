@@ -55,8 +55,14 @@ export class ReportPdfPublisher {
     const minutes = settings?.report_teacher_edit_minutes ?? DEFAULT_MINUTES;
     const model = { ...toModel(source, now), contact };
     // A v2 report gets the v2 family page; every v1 report keeps the v1 page forever.
-    const html = source.report.form_version === 2 ? familyHtml({ ...toFamilyModel(source, now), contact }, pdfAssets()) : reportHtml(model, pdfAssets());
-    const body = await this.renderer.render(html, footerLabel({ code: model.student.code, startsAt: model.startsAt, tz: model.tz }));
+    const html =
+      source.report.form_version === 2
+        ? familyHtml({ ...toFamilyModel(source, now), contact }, pdfAssets())
+        : reportHtml(model, pdfAssets());
+    const body = await this.renderer.render(
+      html,
+      footerLabel({ code: model.student.code, startsAt: model.startsAt, tz: model.tz }),
+    );
     const { student_id: studentId, lesson_id: lessonId } = source.report;
     // The stored path («minio:…» once MinIO keeps new files, docs/45) is what the report row keeps.
     const key = reportPdfPath({ studentId, lessonId });

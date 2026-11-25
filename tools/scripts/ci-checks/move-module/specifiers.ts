@@ -50,7 +50,10 @@ export function specifierNodes(sf: SourceFile): SpecNode[] {
 }
 
 /** Applies span replacements (from the end, so earlier spans keep their offsets). */
-export function applyEdits(text: string, edits: { start: number; end: number; value: string }[]): string {
+export function applyEdits(
+  text: string,
+  edits: { start: number; end: number; value: string }[],
+): string {
   return [...edits]
     .sort((a, b) => b.start - a.start)
     .reduce((acc, e) => acc.slice(0, e.start) + e.value + acc.slice(e.end), text);

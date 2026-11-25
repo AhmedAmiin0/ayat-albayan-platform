@@ -38,7 +38,11 @@ export class ReportSubmitService {
   async submit({ id, form, user }: SubmitInput): Promise<ReportView> {
     const editable = await this.gate.editable(id, user);
     assertForm(editable.row, 1);
-    const write = { expectedVersion: form.expectedVersion, attendance: form.attendance, program: form.program };
+    const write = {
+      expectedVersion: form.expectedVersion,
+      attendance: form.attendance,
+      program: form.program,
+    };
     return this.write({ ...editable, user }, { ...write, columns: submitColumns(form) });
   }
 
@@ -50,7 +54,11 @@ export class ReportSubmitService {
     if (form.expectedVersion !== row.version) throw conflict('version_conflict');
     const lesson = await this.queries.lesson(row.lesson_id);
     if (!lesson) throw new NotFoundException();
-    const block = reportBlock({ lessonStatus: lesson.status, lessonStartsAt: new Date(lesson.starts_at), now: ctx.now });
+    const block = reportBlock({
+      lessonStatus: lesson.status,
+      lessonStartsAt: new Date(lesson.starts_at),
+      now: ctx.now,
+    });
     if (block) throw conflict(block);
     if (!form.attendance) throw badRequest('missing_attendance');
     if (!form.program && !row.program) throw badRequest('missing_program');
@@ -64,8 +72,11 @@ export class ReportSubmitService {
       now: ctx.now,
       lateCancelHours: ctx.lateCancelHours,
     });
-    await this.queries.submit(form.content === undefined ? payload : { ...payload, content: form.content });
-    const student = lesson.lesson_students.find((s) => s.student_id === row.student_id)?.student?.name ?? '';
+    await this.queries.submit(
+      form.content === undefined ? payload : { ...payload, content: form.content },
+    );
+    const student =
+      lesson.lesson_students.find((s) => s.student_id === row.student_id)?.student?.name ?? '';
     await this.followUp.submitted(row, { student, teacher: lesson.teacher?.display_name_ar ?? '' });
     return this.view(row.id, user);
   }

@@ -8,7 +8,22 @@ import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscription
 
 const url = `/subscriptions/${SUB_ID}/cancel`;
 const balance = (patch: Partial<BalanceRow>): Map<string, BalanceRow> =>
-  new Map([[SUB_ID, { subscription_id: SUB_ID, student_id: STUDENT_ID, is_last: false, lessons_total: 8, lessons_used: 0, remaining: 8, ended_at: null, projected_end_at: null, ...patch }]]);
+  new Map([
+    [
+      SUB_ID,
+      {
+        subscription_id: SUB_ID,
+        student_id: STUDENT_ID,
+        is_last: false,
+        lessons_total: 8,
+        lessons_used: 0,
+        remaining: 8,
+        ended_at: null,
+        projected_end_at: null,
+        ...patch,
+      },
+    ],
+  ]);
 
 describe('POST /subscriptions/:id/cancel: FIFO lessons and a later commission', () => {
   let app: NestFastifyApplication;
@@ -40,7 +55,11 @@ describe('POST /subscriptions/:id/cancel: FIFO lessons and a later commission', 
     m.cancels.laterCommission.mockResolvedValue(true);
     const res = await call({ method: 'POST', url });
     expect([res.statusCode, res.json().code]).toEqual([409, 'has_commission']);
-    expect(m.cancels.laterCommission).toHaveBeenCalledWith({ id: SUB_ID, studentId: STUDENT_ID, createdAt: expect.any(String) });
+    expect(m.cancels.laterCommission).toHaveBeenCalledWith({
+      id: SUB_ID,
+      studentId: STUDENT_ID,
+      createdAt: expect.any(String),
+    });
     expect(m.cancels.cancel).not.toHaveBeenCalled();
   });
 

@@ -22,7 +22,9 @@ describe('env: web push (R-NOT-02, all three or none)', () => {
       subject: WP.WEB_PUSH_SUBJECT,
     });
     expect(webPushEnv(loadEnv({ ...BASE, ...WP, WEB_PUSH_SUBJECT: '' }))).toBeNull();
-    expect(webPushEnv(loadEnv({ ...BASE, WEB_PUSH_VAPID_PRIVATE_KEY: WP.WEB_PUSH_VAPID_PRIVATE_KEY }))).toBeNull();
+    expect(
+      webPushEnv(loadEnv({ ...BASE, WEB_PUSH_VAPID_PRIVATE_KEY: WP.WEB_PUSH_VAPID_PRIVATE_KEY })),
+    ).toBeNull();
   });
 
   it('a malformed key or subject fails the boot', () => {

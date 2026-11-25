@@ -30,7 +30,11 @@ export class ReportsService {
     if (!lesson) throw notFound('lesson_not_found');
     await this.gate.access.assertTeacherOf(user, lesson);
     const ctx = await this.gate.context(user);
-    const block = reportBlock({ lessonStatus: lesson.status, lessonStartsAt: new Date(lesson.starts_at), now: ctx.now });
+    const block = reportBlock({
+      lessonStatus: lesson.status,
+      lessonStartsAt: new Date(lesson.starts_at),
+      now: ctx.now,
+    });
     if (block === 'lesson_cancelled') throw conflict(block);
     // report_form_v2: new drafts (and drafts nobody has touched) use the current form.
     const formVersion = ctx.formV2 ? 2 : 1;
@@ -43,7 +47,13 @@ export class ReportsService {
       this.lessons.packages(ids),
     ]);
     const v2 = reports.filter((r) => r.form_version === 2);
-    const memory = v2.length === 0 ? new Map() : await this.lessons.memory(v2.map((r) => r.student_id), reports.map((r) => r.id));
+    const memory =
+      v2.length === 0
+        ? new Map()
+        : await this.lessons.memory(
+            v2.map((r) => r.student_id),
+            reports.map((r) => r.id),
+          );
     return formResponse({ lesson, reports, numbers, packages, memory, ctx, block });
   }
 

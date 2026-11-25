@@ -29,7 +29,11 @@ function signingKey(keys: VapidKeys) {
 }
 
 /** The Authorization header for one endpoint: `vapid t=<jwt>, k=<public key>`. */
-export async function vapidAuthorization(endpoint: string, keys: VapidKeys, now = new Date()): Promise<string> {
+export async function vapidAuthorization(
+  endpoint: string,
+  keys: VapidKeys,
+  now = new Date(),
+): Promise<string> {
   const iat = Math.floor(now.getTime() / 1000);
   const jwt = await new SignJWT({ sub: keys.subject })
     .setProtectedHeader({ alg: 'ES256', typ: 'JWT' })

@@ -84,13 +84,11 @@ function localDate(raw: string | null): string | null {
 export function sheetLeads(bundle: Pick<SourceBundle, 'sheets'>): SheetLeads {
   const byPhone = new Map<string, SheetLead>();
   const issues: RowIssue[] = [];
-  for (const spec of CONVERSATION_SPECS) {
-    for (const row of bundle.sheets[spec] ?? []) {
-      const lead = readRow(row, issues);
-      if (!lead) continue;
-      const prev = byPhone.get(lead.phone.e164);
-      byPhone.set(lead.phone.e164, prev ? fold(prev, lead) : lead);
-    }
+  for (const row of CONVERSATION_SPECS.flatMap((spec) => bundle.sheets[spec] ?? [])) {
+    const lead = readRow(row, issues);
+    if (!lead) continue;
+    const prev = byPhone.get(lead.phone.e164);
+    byPhone.set(lead.phone.e164, prev ? fold(prev, lead) : lead);
   }
   return { byPhone, issues };
 }

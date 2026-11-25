@@ -18,7 +18,10 @@ const PACKAGE_COLUMN: Record<StudentPackageFilter, [string, boolean]> = {
 };
 
 /** Applies the list filters (R-STU-01) to a v_student_list query; unset filters are skipped. */
-export function applyStudentFilters<Q extends FilterableQuery<Q>>(query: Q, f: StudentListFilters): Q {
+export function applyStudentFilters<Q extends FilterableQuery<Q>>(
+  query: Q,
+  f: StudentListFilters,
+): Q {
   let q = query;
   if (f.status?.length) q = q.in('status', f.status);
   if (f.teacher === NO_TEACHER) q = q.is('teacher_id', null);

@@ -16,7 +16,14 @@ import { PayoutsSettings } from './payouts.settings';
 @Module({
   imports: [TeachersModule, TeacherEarningsModule],
   controllers: [PayoutsController, PayoutPaymentController, TeacherPayoutsController],
-  providers: [PayoutsSettings, PayoutsGenerator, PayoutsLedger, PayoutsPayment, PayoutsRepo, PayoutsService],
+  providers: [
+    PayoutsSettings,
+    PayoutsGenerator,
+    PayoutsLedger,
+    PayoutsPayment,
+    PayoutsRepo,
+    PayoutsService,
+  ],
   exports: [PayoutsRepo, PayoutsService],
 })
 export class PayoutsModule {}

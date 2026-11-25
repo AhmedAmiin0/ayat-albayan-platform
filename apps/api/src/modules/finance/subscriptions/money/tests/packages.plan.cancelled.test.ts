@@ -5,7 +5,9 @@ import { alertPlan, statusChanges, unpaidFlagged, type PlanBalance, type PlanPac
 
 const pkg = (id: string, patch: Partial<PlanPackage> = {}): PlanPackage => ({ id, status: 'unpaid', price: 145, lessons_total: 4, ...patch });
 const bal = (entries: [string, number, number][]) =>
-  new Map<string, PlanBalance>(entries.map(([id, used, remaining]) => [id, { lessons_used: used, remaining }]));
+  new Map<string, PlanBalance>(
+    entries.map(([id, used, remaining]) => [id, { lessons_used: used, remaining }]),
+  );
 
 describe('packages.plan skips a cancelled package', () => {
   it('the recompute never rewrites it (never resurrected), whatever its numbers', () => {

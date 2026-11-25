@@ -8,8 +8,16 @@ import type { SubscriptionsRepo } from '@/modules/finance/subscriptions/shared/s
 // 2026-10-12 21:30 UTC is already 2026-10-13 in Riyadh (UTC+3), still 2026-10-12 in New York.
 const NOW = new Date('2026-10-12T21:30:00Z');
 
-function state(o: { remaining?: number; renews_on?: string | null; paid?: number } = {}): StudentState {
-  const row = { id: 'sub1', status: 'active', price: 290, lessons_total: 8, renews_on: o.renews_on ?? null };
+function state(
+  o: { remaining?: number; renews_on?: string | null; paid?: number } = {},
+): StudentState {
+  const row = {
+    id: 'sub1',
+    status: 'active',
+    price: 290,
+    lessons_total: 8,
+    renews_on: o.renews_on ?? null,
+  };
   const balance = { remaining: o.remaining ?? 3 };
   return { rows: [row], ctx: { balances: new Map([['sub1', balance]]), paid: new Map([['sub1', o.paid ?? 290]]) } } as unknown as StudentState;
 }
@@ -22,7 +30,11 @@ function setup(o: { status?: string; tz?: string; last?: unknown; moved?: boolea
   };
   const packages = { context: vi.fn(async () => state().ctx) };
   const subs = { forStudent: vi.fn(async () => state().rows) };
-  const r = new StudentRenewal(statuses as unknown as StudentStatusRepo, packages as unknown as PackagesService, subs as unknown as SubscriptionsRepo);
+  const r = new StudentRenewal(
+    statuses as unknown as StudentStatusRepo,
+    packages as unknown as PackagesService,
+    subs as unknown as SubscriptionsRepo,
+  );
   return { statuses, r, student };
 }
 const run = async (t: ReturnType<typeof setup>, s: StudentState, cause: RenewalCause = { via: 'event' }) =>

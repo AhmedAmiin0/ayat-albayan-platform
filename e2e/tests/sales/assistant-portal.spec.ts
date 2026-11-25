@@ -40,14 +40,19 @@ async function seedAssistant(tag: number): Promise<{ email: string; id: string }
 }
 
 /** Two families I brought (one paid in full, one not) and one nobody brought, paid by the admin. */
-async function seedFamilies(by: string, names: { paid: string; unpaid: string; other: string }): Promise<void> {
+async function seedFamilies(
+  by: string,
+  names: { paid: string; unpaid: string; other: string },
+): Promise<void> {
   const admin = one(await withSql((sql) => sql<{ id: string }[]>`select id from auth.users where email = ${USERS.admin.email}`));
   await withSql((sql) =>
     sql.begin(async (tx) => {
       const a = await brought(tx, { by, phone: phone(1, 1), price: 1000 });
       const b = await brought(tx, { by, phone: phone(1, 2), price: 800 });
       const other = await student(tx, { phone: phone(1, 3) });
-      for (const [id, name] of [[a.student, names.paid], [b.student, names.unpaid], [other, names.other]] as const) {
+      for (const [id, name] of [
+        [a.student, names.paid], [b.student, names.unpaid], [other, names.other],
+      ] as const) {
         await tx`update public.students set name = ${name}, name_normalized = ${name} where id = ${id}`;
       }
       await pay(tx, a.sub, { amount: 1000, by });

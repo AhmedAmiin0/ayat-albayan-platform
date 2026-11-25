@@ -6168,6 +6168,17 @@ export type Database = {
         Returns: string;
       };
       evaluate_assistant_commission: { Args: { p_subscription: string }; Returns: string };
+      finance_card_totals: {
+        Args: { p_first: string; p_from: string; p_last: string; p_to: string };
+        Returns: {
+          amount: number;
+          currency: string;
+          key: string;
+          kind: string;
+          month: string;
+          n: number;
+        }[];
+      };
       finish_domain_events: { Args: { p_results: Json; p_token: string }; Returns: number };
       generate_assistant_statement: {
         Args: { p_actor: string; p_assistant: string; p_month: string };

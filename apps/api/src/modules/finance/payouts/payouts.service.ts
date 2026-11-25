@@ -25,10 +25,23 @@ export class PayoutsService {
     const before = await this.row(id);
     if (before.status === 'draft') {
       const window = monthWindow(before.month.slice(0, 7), before.teacher?.tz ?? 'UTC');
-      const pendingReports = await this.payouts.pendingReports({ teacherId: before.teacher_id, ...window });
-      const editedSince = await this.payouts.editedSince({ teacherId: before.teacher_id, ...window, since: before.updated_at });
-      const block = approveBlock({ monthEnd: window.to, now: new Date(), pendingReports, editedSince });
-      if (block) throw conflict(block, block === 'reports_pending' ? { count: pendingReports } : {});
+      const pendingReports = await this.payouts.pendingReports({
+        teacherId: before.teacher_id,
+        ...window,
+      });
+      const editedSince = await this.payouts.editedSince({
+        teacherId: before.teacher_id,
+        ...window,
+        since: before.updated_at,
+      });
+      const block = approveBlock({
+        monthEnd: window.to,
+        now: new Date(),
+        pendingReports,
+        editedSince,
+      });
+      if (block)
+        throw conflict(block, block === 'reports_pending' ? { count: pendingReports } : {});
     }
     const now = new Date().toISOString();
     return this.move({ before, actorId, to: 'approved', write: { approved_at: now, approved_by: actorId } });
@@ -38,7 +51,9 @@ export class PayoutsService {
   async mine(profileId: string, month?: string): Promise<PayoutView[]> {
     const teacherId = await this.teachers.idByProfile(profileId);
     if (!teacherId) throw notFound('teacher_not_linked');
-    return (await this.payouts.forTeacher(teacherId, month ? monthStart(month) : undefined)).map(toPayoutView);
+    return (await this.payouts.forTeacher(teacherId, month ? monthStart(month) : undefined)).map(
+      toPayoutView,
+    );
   }
 
   private async row(id: string): Promise<PayoutRow> {
@@ -54,8 +69,13 @@ export class PayoutsService {
     write: Record<string, string>;
   }): Promise<PayoutView> {
     const { before } = input;
-    if (!canTransitionPayout(before.status, input.to)) throw conflict('invalid_transition', { from: before.status });
-    const after = await this.payouts.update(before.id, { ...input.write, status: input.to, from: before.status });
+    if (!canTransitionPayout(before.status, input.to))
+      throw conflict('invalid_transition', { from: before.status });
+    const after = await this.payouts.update(before.id, {
+      ...input.write,
+      status: input.to,
+      from: before.status,
+    });
     if (!after) throw conflict('invalid_transition');
     await this.audit.record({
       actorId: input.actorId,

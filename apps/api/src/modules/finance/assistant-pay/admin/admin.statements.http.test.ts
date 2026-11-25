@@ -88,10 +88,22 @@ describe('monthly statements (admin): generate, approve, reopen, pay, unpay', ()
   });
 
   it('pay without a body defaults to now and no method; the same call twice is 409 the second time', async () => {
-    t.rpc.pay.mockResolvedValueOnce(undefined).mockRejectedValueOnce(conflict('invalid_transition'));
-    expect((await t.call({ method: 'POST', url: `${S}/${ID}/pay`, token: 'admin', body: {} })).statusCode).toBe(200);
-    expect(t.rpc.pay.mock.calls[0]?.[0].paid).toMatchObject({ method: null, note: null, receiptPath: null });
-    expect((await t.call({ method: 'POST', url: `${S}/${ID}/pay`, token: 'admin', body: {} })).statusCode).toBe(409);
+    t.rpc.pay
+      .mockResolvedValueOnce(undefined)
+      .mockRejectedValueOnce(conflict('invalid_transition'));
+    expect(
+      (await t.call({ method: 'POST', url: `${S}/${ID}/pay`, token: 'admin', body: {} }))
+        .statusCode,
+    ).toBe(200);
+    expect(t.rpc.pay.mock.calls[0]?.[0].paid).toMatchObject({
+      method: null,
+      note: null,
+      receiptPath: null,
+    });
+    expect(
+      (await t.call({ method: 'POST', url: `${S}/${ID}/pay`, token: 'admin', body: {} }))
+        .statusCode,
+    ).toBe(409);
   });
 
   it('receipt: a signed download only when one was stored; an unknown statement is 404', async () => {

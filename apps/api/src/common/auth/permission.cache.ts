@@ -42,11 +42,18 @@ export class PermissionCache {
     if (hit && hit.expires > now) return hit.value;
     const generation = this.generation;
     const shared = this.shared?.readEntry({ key: permissionKey(key), ttlMs: SHARED_TTL_MS, load });
-    const entry: Entry = { value: shared ? shared.then((r) => r.value) : load(), expires: now + PERMISSION_TTL_MS };
+    const entry: Entry = {
+      value: shared ? shared.then((r) => r.value) : load(),
+      expires: now + PERMISSION_TTL_MS,
+    };
     this.entries.set(key, entry);
-    shared?.then(({ age }) => void (entry.expires = now + PERMISSION_TTL_MS - age), () => undefined);
+    shared?.then(
+      ({ age }) => void (entry.expires = now + PERMISSION_TTL_MS - age),
+      () => undefined,
+    );
     entry.value.catch(() => {
-      if (this.generation === generation && this.entries.get(key) === entry) this.entries.delete(key);
+      if (this.generation === generation && this.entries.get(key) === entry)
+        this.entries.delete(key);
     });
     return entry.value;
   }

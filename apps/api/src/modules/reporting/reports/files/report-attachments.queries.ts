@@ -30,7 +30,11 @@ export class ReportAttachmentsQueries {
     if (student.error) throw dbError(student.error);
     if (lesson.error) throw dbError(lesson.error);
     if (!student.data?.code || !student.data.guardian || !lesson.data) return null;
-    return { code: student.data.code, startsAt: new Date(lesson.data.starts_at), tz: student.data.guardian.tz };
+    return {
+      code: student.data.code,
+      startsAt: new Date(lesson.data.starts_at),
+      tz: student.data.guardian.tz,
+    };
   }
 
   async add(row: NewAttachment): Promise<ReportAttachmentRow> {

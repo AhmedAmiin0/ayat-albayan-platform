@@ -23,6 +23,9 @@ export class PublicConfigController {
   @Get()
   @Header('Cache-Control', 'public, max-age=60')
   async get(): Promise<PublicConfig> {
-    return { ...(await this.settings.publicView()), custom: publicCustom(await this.custom.publicRows()) };
+    return {
+      ...(await this.settings.publicView()),
+      custom: publicCustom(await this.custom.publicRows()),
+    };
   }
 }

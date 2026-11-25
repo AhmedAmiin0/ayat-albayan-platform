@@ -16,7 +16,9 @@ const pkg = (id: string, patch: Partial<PlanPackage> = {}): PlanPackage => ({
   ...patch,
 });
 const bal = (entries: [string, number, number][]) =>
-  new Map<string, PlanBalance>(entries.map(([id, used, remaining]) => [id, { lessons_used: used, remaining }]));
+  new Map<string, PlanBalance>(
+    entries.map(([id, used, remaining]) => [id, { lessons_used: used, remaining }]),
+  );
 
 describe('statusChanges (R-SUB-01: statuses always derived)', () => {
   it('journey 3: a full payment turns the unpaid package active', () => {

@@ -29,7 +29,11 @@ export class DriveFiles {
   }
 
   /** Live only: makes what is missing and returns the place. */
-  async ensure(input: { google: GoogleClient; studentId: string; studentName: string }): Promise<StudentDrive | null> {
+  async ensure(input: {
+    google: GoogleClient;
+    studentId: string;
+    studentName: string;
+  }): Promise<StudentDrive | null> {
     const { google, studentId, studentName } = input;
     const need = await this.need(studentId);
     if (need.kind === 'ready') return need.drive;
@@ -37,23 +41,38 @@ export class DriveFiles {
     const files = await this.map.files(studentId);
     let folderId = files?.folder_id ?? null;
     if (!folderId && need.rootId) {
-      folderId = (await google.createFolder({ name: studentFolderName(studentName), parentId: need.rootId })).id;
+      folderId = (
+        await google.createFolder({ name: studentFolderName(studentName), parentId: need.rootId })
+      ).id;
       await this.map.recordCreated({ studentId, patch: { folder_id: folderId } });
     }
     if (!folderId) return null;
     if (!need.folder) {
       // A script folder without a confirmed sheet reuses its attendance sheet, never a twin.
-      const found = await google.findFiles({ name: attendanceSheetName(studentName), parentId: folderId, mimeType: MIME.sheet });
+      const found = await google.findFiles({
+        name: attendanceSheetName(studentName),
+        parentId: folderId,
+        mimeType: MIME.sheet,
+      });
       if (found.length > 1) return null;
       if (found[0]) {
         await this.map.recordSheet({ studentId, sheetId: found[0].id });
         return { folderId, sheetId: found[0].id };
       }
     }
-    const sheetId = (await google.createSpreadsheet({ name: attendanceSheetName(studentName), parentId: folderId })).id;
+    const sheetId = (
+      await google.createSpreadsheet({ name: attendanceSheetName(studentName), parentId: folderId })
+    ).id;
     await this.map.recordCreated({ studentId, patch: { attendance_sheet_id: sheetId } });
-    await google.updateValues({ spreadsheetId: sheetId, range: 'A1:M1', values: [[...ATTENDANCE_HEADER]] });
-    await google.batchUpdate({ spreadsheetId: sheetId, requests: brandStyle(ATTENDANCE_HEADER.length) });
+    await google.updateValues({
+      spreadsheetId: sheetId,
+      range: 'A1:M1',
+      values: [[...ATTENDANCE_HEADER]],
+    });
+    await google.batchUpdate({
+      spreadsheetId: sheetId,
+      requests: brandStyle(ATTENDANCE_HEADER.length),
+    });
     return { folderId, sheetId };
   }
 }

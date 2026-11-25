@@ -68,7 +68,10 @@ function addSeries(slots, { teacher, series }) {
   const student = studentOf(series.summary);
   for (const weekday of days) {
     const key = [teacher, student, weekday, local.time, local.tz].join('|');
-    const slot = slots.get(key) ?? { teacher, student, weekday, at: local.time, tz: local.tz, minutes: minutesOf(series), series: 0 };
+    const slot = slots.get(key) ?? {
+      teacher, student, weekday, at: local.time, tz: local.tz,
+      minutes: minutesOf(series), series: 0,
+    };
     slot.series += 1;
     slots.set(key, slot);
   }

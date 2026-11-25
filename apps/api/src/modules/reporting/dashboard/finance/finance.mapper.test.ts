@@ -1,60 +1,80 @@
 import { describe, expect, it } from 'vitest';
-import { costFacts, currenciesOf, expenseFacts, paymentFacts } from './finance.mapper';
+import { financeTotals } from './finance';
+import { cardFacts, currenciesOf } from './finance.mapper';
+import type { FinanceTotalsRow } from './finance.schemas';
 
-const student = (lesson_id: string, source: 'referral' | null) => ({ lesson_id, student: { guardian: { source } } });
+const row = (kind: FinanceTotalsRow['kind'], cells: [string, string, string, number]) => {
+  const [month, currency, key, amount] = cells;
+  return { kind, month, currency, key, amount, n: 1 };
+};
 
-describe('costFacts (teacher cost = the ledger amount of each payable lesson)', () => {
-  it('costs each rated lesson in EGP in its Riyadh month, and counts the unrated ones', () => {
-    const { facts, unrated } = costFacts(
-      [
-        { lesson_id: 'l1', starts_at: '2026-09-30T21:00:00.000Z', amount: 60 },
-        { lesson_id: 'l2', starts_at: '2026-10-01T16:00:00.000Z', amount: null },
-        { lesson_id: 'l3', starts_at: '2026-10-01T16:00:00.000Z', amount: 77.78 },
-      ],
-      [student('l1', 'referral'), student('l3', 'referral'), student('l3', null), { lesson_id: 'l3', student: null }],
-    );
-    expect(unrated).toBe(1);
-    expect(facts).toEqual([
-      { amount: 60, currency: 'EGP', month: '2026-10', sources: ['referral'] },
-      { amount: 77.78, currency: 'EGP', month: '2026-10', sources: ['referral', 'unknown', 'unknown'] },
+// What finance_card_totals returns for the fixture the row-by-row mapper used to read:
+// payments 145 SAR (10-01 Riyadh), 40 USD at quote 0.25, a 45 SAR refund, 50 USD without a quote;
+// lessons 60 EGP (one referral student), 77.78 EGP (three students), 50 EGP (none), one unrated;
+// expenses 17000 + 1300 EGP ads and 100 SAR rent.
+const ROWS: FinanceTotalsRow[] = [
+  row('payment', ['2026-10', 'SAR', 'facebook_ad', 100]),
+  row('payment', ['2026-10', 'SAR', 'referral', 160]),
+  row('payment', ['2026-09', 'USD', 'unknown', 50]),
+  row('cost', ['2026-10', 'EGP', 'referral', 60 + 77.78 / 3]),
+  row('cost', ['2026-10', 'EGP', 'unknown', (2 * 77.78) / 3]),
+  row('cost', ['2026-09', 'EGP', 'unknown', 50]),
+  row('expense', ['2026-09', 'EGP', 'ads', 17000]),
+  row('expense', ['2026-10', 'EGP', 'ads', 1300]),
+  row('expense', ['2026-10', 'SAR', 'rent', 100]),
+  { kind: 'unrated', month: '', currency: '', key: '', amount: 0, n: 1 },
+];
+
+const conversion = {
+  currency: 'SAR',
+  rates: { SAR: 1, EGP: 13, USD: 0.25 },
+  missing: [],
+  date: null,
+};
+const months = ['2026-09', '2026-10'];
+
+describe('cardFacts (the aggregate rows give the totals of the row-by-row mapper)', () => {
+  it('equals the totals the old per-row mapper computed on the same fixture', () => {
+    const facts = cardFacts(ROWS);
+    const t = financeTotals({ conversion, months, ...facts });
+    expect(facts.unrated).toBe(1);
+    expect(t).toMatchObject({
+      revenue: 460,
+      teacher_cost: 14.44,
+      expenses: 1507.69,
+      gross_margin: -1062.14,
+      expenses_by_category: { ads: 1407.69, rent: 100 },
+    });
+    expect(t.by_month).toEqual([
+      {
+        month: '2026-09',
+        revenue: 200,
+        teacher_cost: 3.85,
+        expenses: 1307.69,
+        gross_margin: -1111.54,
+      },
+      { month: '2026-10', revenue: 260, teacher_cost: 10.6, expenses: 200, gross_margin: 49.4 },
+    ]);
+    expect(t.by_source.get('facebook_ad')).toEqual({ revenue: 100, teacher_cost: 0 });
+    expect(t.by_source.get('referral')?.teacher_cost).toBeCloseTo(6.60974359, 6);
+    expect(t.by_source.get('unknown')?.teacher_cost).toBeCloseTo(7.83487179, 6);
+  });
+
+  it('a source the catalogue does not know is booked as unknown', () => {
+    const facts = cardFacts([row('payment', ['2026-10', 'SAR', 'carrier_pigeon', 5])]);
+    expect(facts.payments).toEqual([
+      { amount: 5, currency: 'SAR', month: '2026-10', source: 'unknown' },
     ]);
   });
 
-  it('a lesson without students has no source (the totals book it as unknown)', () => {
-    expect(costFacts([{ lesson_id: 'l1', starts_at: '2026-10-01T16:00:00.000Z', amount: 50 }]).facts[0]?.sources).toEqual([]);
+  it('no rows: no facts and no unrated lessons', () => {
+    expect(cardFacts([])).toEqual({ payments: [], costs: [], expenses: [], unrated: 0 });
   });
 });
 
-describe('paymentFacts / expenseFacts / currenciesOf', () => {
-  it('a payment takes its Riyadh month and its guardian source (none → unknown)', () => {
-    const facts = paymentFacts([
-      { amount: 145, currency: 'SAR', paid_at: '2026-09-30T22:00:00.000Z', subscription: { fx_rate: null, student: { guardian: { source: 'facebook_ad' } } } },
-      { amount: 50, currency: 'USD', paid_at: '2026-10-02T09:00:00.000Z', subscription: null },
-    ]);
-    expect(facts).toEqual([
-      { amount: 145, currency: 'SAR', month: '2026-10', source: 'facebook_ad' },
-      { amount: 50, currency: 'USD', month: '2026-10', source: 'unknown' },
-    ]);
-    expect([...currenciesOf(facts, [{ currency: 'EGP' }])].sort()).toEqual(['EGP', 'SAR', 'USD']);
-  });
-
-  it('a USD package payment is booked in SAR at its quote rate (stable after the month closes)', () => {
-    const [fact] = paymentFacts([
-      { amount: 40, currency: 'USD', paid_at: '2026-10-02T09:00:00.000Z', subscription: { fx_rate: 0.25, student: null } },
-    ]);
-    expect(fact).toEqual({ amount: 160, currency: 'SAR', month: '2026-10', source: 'unknown' });
-  });
-
-  it('a refund is negative revenue (it counts against what was paid)', () => {
-    const [fact] = paymentFacts([
-      { amount: 45, currency: 'SAR', paid_at: '2026-10-02T09:00:00.000Z', kind: 'refund', subscription: null },
-    ]);
-    expect(fact?.amount).toBe(-45);
-  });
-
-  it('an expense month "2026-09-01" becomes "2026-09"', () => {
-    expect(expenseFacts([{ month: '2026-09-01', category: 'ads', amount: 17000, currency: 'EGP' }])).toEqual([
-      { amount: 17000, currency: 'EGP', month: '2026-09', category: 'ads' },
-    ]);
+describe('currenciesOf', () => {
+  it('collects every currency met once', () => {
+    const { payments, costs, expenses } = cardFacts(ROWS);
+    expect([...currenciesOf(payments, costs, expenses)].sort()).toEqual(['EGP', 'SAR', 'USD']);
   });
 });

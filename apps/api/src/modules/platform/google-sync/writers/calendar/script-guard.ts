@@ -17,7 +17,10 @@ export function isScriptEvent(e: GoogleListedEvent, startsAt: string): boolean {
  * The duplicate guard: before the platform INSERTS an event for an imported lesson, it lists that
  * calendar's events overlapping the lesson start. Read-only: the script's event is never edited or deleted.
  */
-export async function scriptEventAt(google: GoogleClient, input: { calendarId: string; startsAt: string }): Promise<boolean> {
+export async function scriptEventAt(
+  google: GoogleClient,
+  input: { calendarId: string; startsAt: string },
+): Promise<boolean> {
   const start = new Date(input.startsAt);
   const timeMin = start.toISOString();
   const timeMax = new Date(start.getTime() + 60_000).toISOString();

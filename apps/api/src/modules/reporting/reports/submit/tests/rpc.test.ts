@@ -35,7 +35,11 @@ describe('callSubmitReport', () => {
   });
 
   it('throws the mapped error', async () => {
-    const rpc = vi.fn().mockResolvedValue({ data: null, error: pgError('P0001', 'version_conflict') });
-    await expect(callSubmitReport({ rpc } as unknown as Db, payload)).rejects.toBeInstanceOf(ConflictException);
+    const rpc = vi
+      .fn()
+      .mockResolvedValue({ data: null, error: pgError('P0001', 'version_conflict') });
+    await expect(callSubmitReport({ rpc } as unknown as Db, payload)).rejects.toBeInstanceOf(
+      ConflictException,
+    );
   });
 });

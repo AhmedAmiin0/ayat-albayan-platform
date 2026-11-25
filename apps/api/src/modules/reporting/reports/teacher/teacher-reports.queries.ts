@@ -37,7 +37,11 @@ export class TeacherReportsQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** One page of the teacher's submitted reports: filtered, then sorted (default newest submit first). */
-  async page(input: { teacherId: string; filter?: TeacherReportsQuery; page: PageQuery }): Promise<{ rows: TeacherReportRow[]; total: number }> {
+  async page(input: {
+    teacherId: string;
+    filter?: TeacherReportsQuery;
+    page: PageQuery;
+  }): Promise<{ rows: TeacherReportRow[]; total: number }> {
     const filter = input.filter ?? {};
     const students = filter.student ? await studentIdsMatching(this.db, filter.student) : null;
     if (students?.length === 0) return { rows: [], total: 0 };

@@ -1441,10 +1441,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 11
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
+      "count": 8
     }
   },
   "src/core/ui/lists/LazyList/tests/LazyList.test.tsx": {
@@ -4678,16 +4675,7 @@
     }
   },
   "src/notifications/NotificationsScreen.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
     "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-restricted-syntax": {
       "count": 1
     }
   },
@@ -6513,9 +6501,6 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
-    },
-    "ab/no-restricted-syntax": {
       "count": 1
     },
     "ab/module-boundaries": {
@@ -7818,14 +7803,6 @@
     },
     "ab/no-shape-checks": {
       "count": 1
-    }
-  },
-  "src/today/screens/TodayLayout.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 4
     }
   },
   "src/trial-date/components/PickedLines.tsx": {

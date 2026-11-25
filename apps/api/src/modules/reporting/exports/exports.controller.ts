@@ -49,7 +49,10 @@ export class ExportsController {
 
   @Get('payments.csv')
   async payments(@Query() query: unknown, @Res({ passthrough: true }) reply: HeaderReply) {
-    return send(reply, await this.exports.payments(parseRange(query), parseOrThrow(paymentFilter, query)));
+    return send(
+      reply,
+      await this.exports.payments(parseRange(query), parseOrThrow(paymentFilter, query)),
+    );
   }
 
   /** `?month=YYYY-MM` → 400 invalid_month otherwise. */

@@ -17,7 +17,10 @@ export function sessionExpiry(linkExpiresAt: string, now: Date): number {
  * the assistant in metadata (also on the PaymentIntent, so a charge / refund can be traced), the link id as
  * client_reference_id, back to the API's done / cancelled pages (text only: the webhook alone fulfils).
  */
-export function checkoutParams(link: LinkRow, ctx: { payOrigin: string; now: Date }): Stripe.Checkout.SessionCreateParams {
+export function checkoutParams(
+  link: LinkRow,
+  ctx: { payOrigin: string; now: Date },
+): Stripe.Checkout.SessionCreateParams {
   const page = paymentLinkUrl(ctx.payOrigin, link.token);
   const metadata = {
     payment_link_id: link.id,
@@ -28,7 +31,16 @@ export function checkoutParams(link: LinkRow, ctx: { payOrigin: string; now: Dat
   const name = `${ar.paymentLinks.pay.title} — ${ar.paymentLinks.lessons.replace('{count}', String(link.lessons))}`;
   return {
     mode: 'payment',
-    line_items: [{ quantity: 1, price_data: { currency: link.currency.toLowerCase(), unit_amount: toStripeAmount(link.amount, link.currency), product_data: { name } } }],
+    line_items: [
+      {
+        quantity: 1,
+        price_data: {
+          currency: link.currency.toLowerCase(),
+          unit_amount: toStripeAmount(link.amount, link.currency),
+          product_data: { name },
+        },
+      },
+    ],
     client_reference_id: link.id,
     metadata,
     payment_intent_data: { metadata },

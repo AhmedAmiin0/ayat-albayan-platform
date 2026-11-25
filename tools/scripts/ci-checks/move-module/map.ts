@@ -82,7 +82,10 @@ function companions(root: string, pair: [string, string]): [string, string][] {
     const newStem = posix.basename(to).replace(CODE, '');
     for (const n of names) {
       if (isTest(n) && n.replace(TEST, '') === stem) {
-        out.push([posix.join(dir, n), posix.join(posix.dirname(to), newStem + n.slice(stem.length))]);
+        out.push([
+          posix.join(dir, n),
+          posix.join(posix.dirname(to), newStem + n.slice(stem.length)),
+        ]);
       }
     }
   }
@@ -112,5 +115,7 @@ export function expandMap(root: string, map: MoveMap): [string, string][] {
     if (targets.has(t)) throw new Error(`two files move to ${t}`);
     targets.add(t);
   }
-  return [...pairs].filter(([f]) => existsSync(posix.join(root, f))).sort(([a], [b]) => a.localeCompare(b));
+  return [...pairs]
+    .filter(([f]) => existsSync(posix.join(root, f)))
+    .sort(([a], [b]) => a.localeCompare(b));
 }

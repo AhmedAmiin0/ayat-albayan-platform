@@ -14,7 +14,13 @@ const commission = (id: string, amount: number, over: object = {}) => ({ id, amo
 const statement = (over: Partial<AssistantStatementView> = {}): AssistantStatementView => ({
   id: 's1', assistant: { id: 'a1', name: 'الزهراء' }, month: '2026-09-01', status: 'paid',
   totals: { SAR: { salary: 1000, commissions: 0, adjustments: 0, total: 1000 } },
-  lines: [], approved_at: null, paid_at: null, method: null, note: null, has_receipt: false, ...over,
+  lines: [],
+  approved_at: null,
+  paid_at: null,
+  method: null,
+  note: null,
+  has_receipt: false,
+  ...over,
 });
 const base = { now: NOW, tz: 'Asia/Riyadh', terms: TERMS, commissions: [], adjustments: [], frozen: [], statements: [] };
 
@@ -62,12 +68,27 @@ describe('buildEarnings: this month so far', () => {
 });
 
 describe('buildEarnings: «محفظتي» from the frozen statement lines (owner 2026-10-29)', () => {
-  const earned = (amount: number, over: Partial<MyCommission> = {}): MyCommission =>
-    ({ id: 'c1', amount, currency: 'EGP', earned_at: '2026-10-05T10:00:00Z', statement: null, ...over });
-  const reversal = (statement: MyAdjustment['statement']): MyAdjustment =>
-    ({ id: 'r1', kind: 'reversal', amount: -50, currency: 'EGP', effective_month: '2026-11-01', statement });
-  const line = (kind: string, amount: number, adjustment: { kind: string; reason: string } | null = null) =>
-    ({ kind, amount, currency: 'EGP', commission: null, adjustment });
+  const earned = (amount: number, over: Partial<MyCommission> = {}): MyCommission => ({
+    id: 'c1',
+    amount,
+    currency: 'EGP',
+    earned_at: '2026-10-05T10:00:00Z',
+    statement: null,
+    ...over,
+  });
+  const reversal = (statement: MyAdjustment['statement']): MyAdjustment => ({
+    id: 'r1',
+    kind: 'reversal',
+    amount: -50,
+    currency: 'EGP',
+    effective_month: '2026-11-01',
+    statement,
+  });
+  const line = (
+    kind: string,
+    amount: number,
+    adjustment: { kind: string; reason: string } | null = null,
+  ) => ({ kind, amount, currency: 'EGP', commission: null, adjustment });
   const back = line('adjustment', -50, { kind: 'reversal', reason: 'payment_voided' });
   const frozen = (...s: { status: 'draft' | 'approved' | 'paid'; lines: ReturnType<typeof line>[] }[]) => frozenLines(s);
 

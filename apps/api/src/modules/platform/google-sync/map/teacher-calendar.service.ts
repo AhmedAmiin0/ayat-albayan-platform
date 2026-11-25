@@ -36,7 +36,11 @@ export class TeacherCalendarService {
     };
   }
 
-  async setOwner(input: { teacherId: string; owner: TeacherCalendarOwner; actorId: string }): Promise<TeacherCalendarView> {
+  async setOwner(input: {
+    teacherId: string;
+    owner: TeacherCalendarOwner;
+    actorId: string;
+  }): Promise<TeacherCalendarView> {
     const { data, error } = await this.db
       .from('teachers')
       .update({ calendar_owner: input.owner, calendar_owner_changed_by: input.actorId })

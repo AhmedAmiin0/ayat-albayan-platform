@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../../support/edit-time';
 import { bookPayload, movePayload, seedTrial } from '../../support/sales/trial-date';
+import { errorMessage } from '../../support/core/db-error';
 
 // pick_trial_date's guards (migration 20261025000661, PR #164 review): an imported trial stays a
 // trial when moved, a booking never adds a second upcoming trial, and a request id can only
@@ -8,7 +9,7 @@ import { bookPayload, movePayload, seedTrial } from '../../support/sales/trial-d
 
 type Pick = Parameters<Tx['json']>[0];
 const pick = (tx: Tx, p: Pick) => tx<{ r: { lesson_id: string } }[]>`select public.pick_trial_date(${tx.json(p)}) as r`;
-const refused = (tx: Tx, p: Pick) => tx.savepoint(() => pick(tx, p)).then(() => 'ok', (e: { message?: string }) => e.message);
+const refused = (tx: Tx, p: Pick) => tx.savepoint(() => pick(tx, p)).then(() => 'ok', errorMessage);
 
 test.describe('pick_trial_date guards (R-SCH-12)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));

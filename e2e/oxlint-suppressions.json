@@ -77,9 +77,6 @@
   "support/finance/course-pause.ts": {
     "stylistic/max-len": {
       "count": 3
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
     }
   },
   "support/finance/course-renew.ts": {
@@ -125,9 +122,6 @@
   "support/finance/money.ts": {
     "no-restricted-properties": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     },
     "typescript/no-unsafe-argument": {
       "count": 1
@@ -256,10 +250,7 @@
   },
   "support/sales/assistant.ts": {
     "stylistic/max-len": {
-      "count": 13
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
+      "count": 6
     }
   },
   "support/sales/sales-money.ts": {
@@ -323,14 +314,6 @@
       "count": 4
     }
   },
-  "tests/finance/change-course.sql.spec.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 3
-    }
-  },
   "tests/finance/course-pause-resume.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 4
@@ -341,7 +324,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "tests/finance/exports.spec.ts": {
@@ -349,7 +332,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 1
     },
     "typescript/restrict-template-expressions": {
       "count": 2
@@ -364,16 +347,8 @@
     "complexity": {
       "count": 1
     },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    },
     "typescript/no-unnecessary-type-conversion": {
       "count": 1
-    }
-  },
-  "tests/finance/teacher-earnings-rls.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 2
     }
   },
   "tests/finance/teacher-earnings-ui.spec.ts": {
@@ -381,32 +356,14 @@
       "count": 1
     }
   },
-  "tests/finance/teacher-payments.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
-  "tests/messaging/chat-files.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
   "tests/messaging/chat-list-auto-rules.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 2
     }
   },
   "tests/messaging/chat-list-auto-triggers.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "tests/messaging/chat-lists.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 3
     }
   },
   "tests/messaging/inbound-new-lead.spec.ts": {
@@ -430,9 +387,6 @@
   "tests/messaging/inbox-realtime.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 3
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
     }
   },
   "tests/messaging/inbox-send-file.spec.ts": {
@@ -463,16 +417,6 @@
       "count": 1
     }
   },
-  "tests/messaging/push-device-claim.sql.spec.ts": {
-    "stylistic/max-len": {
-      "count": 11
-    }
-  },
-  "tests/messaging/push-notifications-rls.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
   "tests/messaging/send-gate-boot.api.spec.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -498,11 +442,6 @@
       "count": 4
     }
   },
-  "tests/messaging/wa-line-health.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
   "tests/messaging/wa-lines-check.spec.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -510,9 +449,6 @@
   },
   "tests/messaging/whatsapp-lines.sql.spec.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
   },
@@ -537,9 +473,6 @@
   "tests/people/avatars.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 3
     }
   },
   "tests/people/family-sign-in.api.spec.ts": {
@@ -558,27 +491,11 @@
   "tests/people/portal-views.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 3
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
-  "tests/people/profiles-disabled.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
     }
   },
   "tests/people/rate-limit-take.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 4
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
-  "tests/people/roles-permissions.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
     }
   },
   "tests/people/teacher-isolation.spec.ts": {
@@ -586,30 +503,14 @@
       "count": 1
     }
   },
-  "tests/people/teacher-isolation.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
-  "tests/people/teacher-rls.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
   "tests/people/users-control.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 3
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
     }
   },
   "tests/platform/config-expand.sql.spec.ts": {
     "stylistic/max-len": {
-      "count": 5
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
+      "count": 3
     }
   },
   "tests/platform/config-parity.api.spec.ts": {
@@ -639,9 +540,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
     }
   },
   "tests/platform/google-sync.spec.ts": {
@@ -653,16 +551,6 @@
     },
     "typescript/restrict-template-expressions": {
       "count": 3
-    }
-  },
-  "tests/platform/google-sync.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
-  "tests/platform/integration-config.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
     }
   },
   "tests/platform/mobile-form-sheets.spec.ts": {
@@ -743,11 +631,6 @@
       "count": 1
     }
   },
-  "tests/sales/assistant-portal.spec.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "tests/sales/assistant-reopen.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 4
@@ -787,16 +670,10 @@
   "tests/sales/pick-trial-date.guards.sql.spec.ts": {
     "complexity": {
       "count": 1
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
     }
   },
   "tests/sales/pick-trial-date.sql.spec.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
   },
@@ -860,11 +737,6 @@
       "count": 1
     }
   },
-  "tests/teaching/meeting-recordings-rls.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
   "tests/teaching/meetings.spec.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -907,17 +779,6 @@
   "tests/teaching/student-recordings-rls.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
-  "tests/teaching/teacher-meeting-mode.sql.spec.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    },
-    "typescript/restrict-template-expressions": {
-      "count": 2
     }
   }
 }

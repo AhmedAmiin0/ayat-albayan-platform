@@ -27,7 +27,10 @@ describe('CalendarWriter', () => {
     const first = await s.writer.write(item(), s.live);
     if (first.state !== 'synced') throw new Error('not synced');
     s.google.log.length = 0;
-    const again = await s.writer.write(item({ google_id: first.googleId, google_parent_id: CAL, content_hash: first.hash }), s.live);
+    const again = await s.writer.write(
+      item({ google_id: first.googleId, google_parent_id: CAL, content_hash: first.hash }),
+      s.live,
+    );
     expect(again).toMatchObject({ state: 'synced', googleId: first.googleId });
     expect(s.google.log).toEqual([]);
   });
@@ -82,7 +85,10 @@ describe('CalendarWriter', () => {
     const other = 'other@group.calendar.google.com';
     s.google.calendars.set(other, 'آيات البيان — Teacher B');
     s.map.teacherCalendar.mockResolvedValue(other);
-    const r = await s.writer.write(item({ google_id: first.googleId, google_parent_id: CAL, content_hash: first.hash }), s.live);
+    const r = await s.writer.write(
+      item({ google_id: first.googleId, google_parent_id: CAL, content_hash: first.hash }),
+      s.live,
+    );
     expect(r).toMatchObject({ state: 'synced', parentId: other });
     expect(s.google.events.get(CAL)?.size).toBe(0);
     expect(s.google.events.get(other)?.size).toBe(1);
