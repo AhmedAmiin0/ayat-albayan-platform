@@ -40,7 +40,7 @@ test.describe.serial('send-gate routes and the per-key PATCH /settings (API + DB
   test('PUT /messages/gate/sending {on:false} → 200 and messaging_enabled is false', async ({ request }) => {
     const res = await send(request, { token: admin, method: 'PUT', path: '/messages/gate/sending', body: { on: false } });
     expect(res.status, JSON.stringify(res.body)).toBe(200);
-    expect(res.body['messaging_enabled']).toBe(false);
+    expect(res.body.messaging_enabled).toBe(false);
     expect(await settingText('messaging_enabled')).toBe('false');
   });
 
@@ -48,7 +48,7 @@ test.describe.serial('send-gate routes and the per-key PATCH /settings (API + DB
     for (const body of [{ on: true }, { on: true, confirmText: 'نعم' }]) {
       const res = await send(request, { token: admin, method: 'PUT', path: '/messages/gate/sending', body });
       expect(res.status, JSON.stringify(res.body)).toBe(428);
-      expect(res.body['code']).toBe('confirmation_required');
+      expect(res.body.code).toBe('confirmation_required');
     }
     expect(await settingText('messaging_enabled')).toBe('false');
   });
@@ -73,12 +73,12 @@ test.describe.serial('send-gate routes and the per-key PATCH /settings (API + DB
     };
     const res = await send(request, { token: admin, method: 'PATCH', path: '/settings', body });
     expect(res.status, JSON.stringify(res.body)).toBe(200);
-    expect(res.body['saved']).toEqual(['booking_horizon_weeks']);
-    expect(res.body['moved']).toEqual(
+    expect(res.body.saved).toEqual(['booking_horizon_weeks']);
+    expect(res.body.moved).toEqual(
       expect.arrayContaining(['messaging_enabled', 'auto_messages_enabled', 'crm_cutover_done', 'comms_source', 'google_sync_enabled']),
     );
-    expect(res.body['booking_horizon_weeks']).toBe(7);
-    expect(res.body['messaging_enabled']).toBe(false);
+    expect(res.body.booking_horizon_weeks).toBe(7);
+    expect(res.body.messaging_enabled).toBe(false);
     expect(await settingText('messaging_enabled')).toBe('false');
     expect(await settingText('auto_messages_enabled')).toBe('false');
     expect(await settingText('crm_cutover_done')).toBe(cutoverBefore);

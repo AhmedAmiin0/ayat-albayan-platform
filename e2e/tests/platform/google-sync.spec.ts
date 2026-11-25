@@ -65,11 +65,11 @@ test.describe('Google sync alongside the old script (docs/24)', () => {
     await dialog.getByRole('button', { name: g.confirm.ok }).click();
     await expect.poll(async () => {
       const cals = (await stubState()).calendars;
-      return [cals[STUB_TEACHER_CAL]?.length ?? 0, cals['primary']?.length ?? 0];
+      return [cals[STUB_TEACHER_CAL]?.length ?? 0, cals.primary?.length ?? 0];
     }, WAIT).toEqual([1, 1]);
     const state = await stubState();
     const [teacherEv] = state.calendars[STUB_TEACHER_CAL] ?? [];
-    const [mainEv] = state.calendars['primary'] ?? [];
+    const [mainEv] = state.calendars.primary ?? [];
     expect(teacherEv?.summary).toBe('حلقة — طالب Google · المنصة (يحتاج تأكيد)');
     expect(teacherEv?.extendedProperties?.private).toEqual({ ab_source: 'platform', ab_lesson_id: lessonId });
     expect(`${teacherEv?.description}${teacherEv?.location}`).not.toContain('jit.si');

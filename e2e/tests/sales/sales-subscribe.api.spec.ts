@@ -45,7 +45,7 @@ test.describe.serial('sales subscribe from the chat with a bank-transfer receipt
     const token = need(b).token;
     const quote = await call(request, { token, method: 'POST', path: '/sales/subscriptions/quote', body: { studentId: student, pricing: { tier: 'starter' } } });
     const create = await call(request, { token, method: 'POST', path: '/sales/subscriptions', body: { studentId: student, pricing: { tier: 'starter' }, startsOn: today(), clientRequestId: randomUUID() } });
-    expect([quote.status, quote.body['code'], create.status, create.body['code']]).toEqual([403, 'not_your_student', 403, 'not_your_student']);
+    expect([quote.status, quote.body.code, create.status, create.body.code]).toEqual([403, 'not_your_student', 403, 'not_your_student']);
     const fam = await call(request, { token, method: 'GET', path: `/sales/money/family?phone=${encodeURIComponent(phone)}` });
     expect(fam.body).toEqual({ students: [] });
   });

@@ -53,8 +53,8 @@ test.describe.serial('config parity and null semantics (API + DB)', () => {
 
   test('GET /admin/config/parity is empty on the e2e database', async ({ request }) => {
     const res = await get(request, { token: admin, path: '/admin/config/parity' });
-    expect(res['diffs']).toEqual([]);
-    expect(res['checkedKeys']).toBeGreaterThan(30);
+    expect(res.diffs).toEqual([]);
+    expect(res.checkedKeys).toBeGreaterThan(30);
   });
 
   test('a missing row, JSON null and a seeded null read the same; the gate stays closed', async ({ request }) => {
@@ -66,11 +66,11 @@ test.describe.serial('config parity and null semantics (API + DB)', () => {
       const pub = await get(request, { token: admin, path: '/settings/public' });
       const gate = await get(request, { token: admin, path: '/messages/gate' });
       const parity = await get(request, { token: admin, path: '/admin/config/parity' });
-      expect(parity['diffs'], state).toEqual([]);
-      expect(gate['open'], state).toBe(false);
-      expect(settings['messaging_enabled'], state).toBe(false);
-      expect(settings['auto_messages_enabled'], state).toBe(false);
-      expect(settings['late_cancel_hours'], state).toBeNull();
+      expect(parity.diffs, state).toEqual([]);
+      expect(gate.open, state).toBe(false);
+      expect(settings.messaging_enabled, state).toBe(false);
+      expect(settings.auto_messages_enabled, state).toBe(false);
+      expect(settings.late_cancel_hours, state).toBeNull();
       seen.push({ settings, pub });
     }
     expect(seen[1]).toEqual(seen[0]);

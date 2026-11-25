@@ -2,9 +2,6 @@
   "playwright.config.ts": {
     "stylistic/max-len": {
       "count": 5
-    },
-    "typescript/dot-notation": {
-      "count": 9
     }
   },
   "scripts/screens.ts": {
@@ -44,9 +41,6 @@
   "support/core/schedule.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "support/core/wa-stub.ts": {
@@ -66,9 +60,6 @@
     },
     "stylistic/max-len": {
       "count": 3
-    },
-    "typescript/dot-notation": {
-      "count": 2
     }
   },
   "support/edit-time.ts": {
@@ -203,11 +194,6 @@
       "count": 1
     }
   },
-  "support/messaging/wa-lines.ts": {
-    "typescript/dot-notation": {
-      "count": 1
-    }
-  },
   "support/people/admin-extra.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -240,9 +226,6 @@
   "support/platform/google.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 2
     }
   },
   "support/platform/settings.ts": {
@@ -276,9 +259,6 @@
   "support/sales/assistant-api.ts": {
     "stylistic/max-len": {
       "count": 5
-    },
-    "typescript/dot-notation": {
-      "count": 2
     },
     "typescript/no-unnecessary-condition": {
       "count": 1
@@ -324,9 +304,6 @@
     },
     "ab/max-params": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 2
     }
   },
   "support/teaching/day-times.ts": {
@@ -368,9 +345,6 @@
   "tests/finance/assistant-statement.api.spec.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "typescript/dot-notation": {
-      "count": 4
     }
   },
   "tests/finance/assistant-statements.sql.spec.ts": {
@@ -392,9 +366,6 @@
   "tests/finance/course-pause-resume.sql.spec.ts": {
     "stylistic/max-len": {
       "count": 4
-    },
-    "typescript/dot-notation": {
-      "count": 3
     }
   },
   "tests/finance/course-pause.sql.spec.ts": {
@@ -403,9 +374,6 @@
     },
     "stylistic/max-len": {
       "count": 6
-    },
-    "typescript/dot-notation": {
-      "count": 10
     }
   },
   "tests/finance/exports.spec.ts": {
@@ -416,11 +384,6 @@
       "count": 7
     },
     "typescript/restrict-template-expressions": {
-      "count": 2
-    }
-  },
-  "tests/finance/payment-attachments.api.spec.ts": {
-    "typescript/dot-notation": {
       "count": 2
     }
   },
@@ -628,9 +591,6 @@
   "tests/people/family-sign-in.api.spec.ts": {
     "ab/no-unchecked-json": {
       "count": 3
-    },
-    "typescript/dot-notation": {
-      "count": 2
     }
   },
   "tests/people/journey-6-duplicate-student.spec.ts": {
@@ -721,9 +681,6 @@
     },
     "ab/no-unchecked-json": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 7
     }
   },
   "tests/platform/config-seed.sql.spec.ts": {
@@ -732,9 +689,6 @@
     },
     "stylistic/max-len": {
       "count": 4
-    },
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "tests/platform/dashboard.spec.ts": {
@@ -743,9 +697,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 9
     }
   },
   "tests/platform/google-calendar-handover.sql.spec.ts": {
@@ -768,9 +719,6 @@
     },
     "typescript/restrict-template-expressions": {
       "count": 3
-    },
-    "typescript/dot-notation": {
-      "count": 2
     }
   },
   "tests/platform/google-sync.sql.spec.ts": {
@@ -780,9 +728,6 @@
   },
   "tests/platform/integration-config.sql.spec.ts": {
     "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
       "count": 1
     }
   },
@@ -807,9 +752,6 @@
     },
     "ab/no-unchecked-json": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 6
     }
   },
   "tests/platform/settings-switches.spec.ts": {
@@ -849,11 +791,6 @@
   },
   "tests/reporting/teacher-report-attachments.spec.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
-  "tests/reporting/teacher-report-edit-window.spec.ts": {
-    "typescript/dot-notation": {
       "count": 1
     }
   },
@@ -898,9 +835,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "tests/sales/assistant-terms.sql.spec.ts": {
@@ -924,9 +858,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 2
     }
   },
   "tests/sales/pick-trial-date.guards.sql.spec.ts": {
@@ -945,11 +876,6 @@
       "count": 1
     }
   },
-  "tests/sales/sales-check-start.api.spec.ts": {
-    "typescript/dot-notation": {
-      "count": 1
-    }
-  },
   "tests/sales/sales-double-role.spec.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -960,11 +886,6 @@
       "count": 1
     },
     "ab/no-unchecked-json": {
-      "count": 2
-    }
-  },
-  "tests/sales/sales-subscribe.api.spec.ts": {
-    "typescript/dot-notation": {
       "count": 2
     }
   },

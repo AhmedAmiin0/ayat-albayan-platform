@@ -11,7 +11,7 @@ import { stubReset } from '../../support/core/wa-stub';
 // requests answer 202 whatever exists.
 
 /** A fresh client of its own: the session it opens is the family's, nobody else's. */
-const client = () => createClient(process.env['SUPABASE_URL'] ?? '', process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '', { auth: { persistSession: false } });
+const client = () => createClient(process.env.SUPABASE_URL ?? '', process.env.SUPABASE_SERVICE_ROLE_KEY ?? '', { auth: { persistSession: false } });
 
 test.describe('family sign-in by WhatsApp code', () => {
   test.beforeEach(async () => {
