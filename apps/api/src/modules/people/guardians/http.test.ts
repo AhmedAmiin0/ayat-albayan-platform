@@ -1,14 +1,9 @@
 import { guardianCreateSchema } from '@ab/shared';
-import {
-  BadRequestException,
-  ConflictException,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { parseOrThrow } from '@/common/http/http';
-import { blankToNull, blanksToNull, dbError, listQuerySchema, orSafe, pageRange } from './http';
+import { blankToNull, blanksToNull, listQuerySchema, orSafe, pageRange } from './http';
 
 const createBody = blanksToNull(guardianCreateSchema);
 
@@ -84,24 +79,5 @@ describe('orSafe', () => {
 
   it('keeps _: it matches itself, so names like um_ahmad still match', () => {
     expect(orSafe('um_ahmad')).toBe('um_ahmad');
-  });
-});
-
-describe('dbError', () => {
-  it('maps unique / FK violations to 409 with the given message', () => {
-    const e = dbError({ code: '23505', message: 'dup' }, 'phone_taken');
-    expect(e).toBeInstanceOf(ConflictException);
-    expect(e.message).toBe('phone_taken');
-    expect(dbError({ code: '23503', message: 'fk' })).toBeInstanceOf(ConflictException);
-  });
-
-  it('maps not-found and bad-argument codes', () => {
-    expect(dbError({ code: 'P0002', message: '' })).toBeInstanceOf(NotFoundException);
-    expect(dbError({ code: 'PGRST116', message: '' })).toBeInstanceOf(NotFoundException);
-    expect(dbError({ code: '22023', message: 'self' })).toBeInstanceOf(BadRequestException);
-  });
-
-  it('falls back to 500', () => {
-    expect(dbError({ message: 'boom' })).toBeInstanceOf(InternalServerErrorException);
   });
 });

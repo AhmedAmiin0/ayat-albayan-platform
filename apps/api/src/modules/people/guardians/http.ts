@@ -4,7 +4,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import type { HttpException } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { PgErrorMap } from '@/common/db/errors';
 import { z } from 'zod';
@@ -41,24 +40,6 @@ export function orSafe(term: string): string {
   return term.replace(/[,()*%\\:"]/g, ' ').trim();
 }
 
-type PgError = { code?: string; message: string };
-
-/** Maps a Postgres/PostgREST error to an HTTP exception. */
-export function dbError(error: PgError, conflict = 'conflict'): HttpException {
-  switch (error.code) {
-    case '23505': // unique_violation
-    case '23503': // foreign_key_violation
-      return new ConflictException(conflict);
-    case 'P0002':
-    case 'PGRST116':
-      return new NotFoundException();
-    case '22023':
-    case '23514':
-      return new BadRequestException(error.message);
-    default:
-      return new InternalServerErrorException(error.message);
-  }
-}
 
 const internal = (e: PostgrestError) => new InternalServerErrorException(e.message);
 const badRequest = (e: PostgrestError) => new BadRequestException(e.message);

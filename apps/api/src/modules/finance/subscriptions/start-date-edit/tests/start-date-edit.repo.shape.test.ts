@@ -29,7 +29,7 @@ describe('StartDateEditRepo.setStartsOn: a compare-and-set on starts_on', () => 
     expect(await new StartDateEditRepo(db).setStartsOn(write)).toBeNull();
   });
 
-  it('a database error is thrown through dbError (a unique violation is a 409)', async () => {
+  it('a database error is thrown through pgError (a unique violation is a 409)', async () => {
     const plain = fakeDb({ subscriptions: [{ error: { code: 'XX000', message: 'boom' } }] });
     await expect(new StartDateEditRepo(plain.db).setStartsOn(write)).rejects.toThrow(
       'db error XX000: boom',

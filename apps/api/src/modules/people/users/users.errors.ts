@@ -1,8 +1,8 @@
 import { conflict } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import type { PostgrestError } from '@supabase/supabase-js';
 import { pgError } from '@/common/db/errors';
 
-type DbFailure = Parameters<typeof dbError>[0];
+type DbFailure = PostgrestError;
 
 /** A unique violation on a phone is the admin's mistake (409 phone_taken), not a server error. */
 export function phoneAware(error: DbFailure): Error {

@@ -77,7 +77,7 @@ describe('StaffPhotos', () => {
   });
 });
 
-// The dbError of a failed lookup never reaches the client: a photo is a hint, so it shows initials.
+// A failed lookup never reaches the client: a photo is a hint, so it shows initials.
 describe('StaffPhotos error paths: the answer a failed query gives today', () => {
   it('ofTeachers: a failed teachers read answers an empty map', async () => {
     const f = fakeDb({ teachers: [{ error: PG_ERRORS.unique }] });
