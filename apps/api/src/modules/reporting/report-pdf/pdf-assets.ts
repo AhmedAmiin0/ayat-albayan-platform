@@ -1,5 +1,4 @@
 import { readFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
 
 // Fonts and logo embedded in the report HTML as data URIs, so Chromium never fetches anything and
 // the PDF carries its own fonts (docs/07 §13: self-hosted, never Google Fonts at render time).
@@ -16,9 +15,24 @@ const SUBSETS = ['arabic', 'latin'] as const;
 
 const FACES = [
   { pkg: '@fontsource/amiri', slug: 'amiri', family: 'Amiri', weight: 700 },
-  { pkg: '@fontsource/ibm-plex-sans-arabic', slug: 'ibm-plex-sans-arabic', family: 'IBM Plex Sans Arabic', weight: 400 },
-  { pkg: '@fontsource/ibm-plex-sans-arabic', slug: 'ibm-plex-sans-arabic', family: 'IBM Plex Sans Arabic', weight: 600 },
-  { pkg: '@fontsource/ibm-plex-sans-arabic', slug: 'ibm-plex-sans-arabic', family: 'IBM Plex Sans Arabic', weight: 700 },
+  {
+    pkg: '@fontsource/ibm-plex-sans-arabic',
+    slug: 'ibm-plex-sans-arabic',
+    family: 'IBM Plex Sans Arabic',
+    weight: 400,
+  },
+  {
+    pkg: '@fontsource/ibm-plex-sans-arabic',
+    slug: 'ibm-plex-sans-arabic',
+    family: 'IBM Plex Sans Arabic',
+    weight: 600,
+  },
+  {
+    pkg: '@fontsource/ibm-plex-sans-arabic',
+    slug: 'ibm-plex-sans-arabic',
+    family: 'IBM Plex Sans Arabic',
+    weight: 700,
+  },
 ] as const;
 
 type Face = (typeof FACES)[number];
@@ -26,12 +40,16 @@ type Face = (typeof FACES)[number];
 /** The unicode-range fontsource gives a subset, read from its own CSS so the ranges stay exact. */
 function unicodeRange(face: Face, subset: string): string | null {
   const css = readFileSync(require.resolve(`${face.pkg}/${face.weight}.css`), 'utf8');
-  const block = css.split('@font-face').find((b) => b.includes(`-${subset}-${face.weight}-normal.woff2`));
+  const block = css
+    .split('@font-face')
+    .find((b) => b.includes(`-${subset}-${face.weight}-normal.woff2`));
   return /unicode-range:\s*([^;]+);/.exec(block ?? '')?.[1] ?? null;
 }
 
 function fontFace(face: Face, subset: string): string {
-  const file = require.resolve(`${face.pkg}/files/${face.slug}-${subset}-${face.weight}-normal.woff2`);
+  const file = require.resolve(
+    `${face.pkg}/files/${face.slug}-${subset}-${face.weight}-normal.woff2`,
+  );
   const data = readFileSync(file).toString('base64');
   const range = unicodeRange(face, subset);
   return [
@@ -51,9 +69,10 @@ export function fontCss(): string {
 
 /**
  * The emblem on transparency, 192px tall: docs/design/brand/tools/build.mjs derives it from the
- * academy's logo for the web <Mark>. Same depth from src/ and dist/, so one relative path works.
+ * academy's logo for the web <Mark>. Resolved through the package, not a path relative to this
+ * file: the build bundles this module into dist/main.js.
  */
-export const LOGO_PATH = join(resolve(__dirname, '../../../../../..'), 'packages/catalog/brand/mark.png');
+export const LOGO_PATH = require.resolve('@ab/catalog/brand/mark.png');
 
 export function logoDataUri(): string {
   return `data:image/png;base64,${readFileSync(LOGO_PATH).toString('base64')}`;

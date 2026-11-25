@@ -6,10 +6,10 @@
 #                 and the apt package list
 #   manifests     pnpm-lock.yaml, pnpm-workspace.yaml, .npmrc, patches/ and the package.json files
 #   deps          pnpm fetch + an offline install of "api...", keyed only on «manifests»
-#   build         the source; every workspace package the api depends on ("api^...", in dependency
-#                 order, so a package cut out of @ab/shared, docs/32 lane K, needs no change here),
-#                 then the api; then the dev dependencies pruned (pnpm's own --prod install). The repo
-#                 layout stays as it was: pdf-assets.ts reads packages/catalog/brand/mark.png
+#   build         the source; the api bundled into dist/ (apps/api/rolldown.config.mjs: one file per
+#                 entry, the workspace packages compiled from their TypeScript source, so no package
+#                 is built); then the dev dependencies pruned (pnpm's own --prod install). The repo
+#                 layout stays as it was: pdf-assets.ts reads @ab/catalog's brand/mark.png
 # The pnpm store lives in a BuildKit cache mount (never in a layer): a lockfile change downloads only
 # the new packages. Measured in CI (job «image», cold): runtime-base 50 s and deps 45 s, both skipped
 # by a source-only change; the build 30 s, the prod install 10 s and the final COPY 7 s. Any
@@ -82,8 +82,7 @@ FROM deps AS build
 # only) and nothing below may change it, so the check is off here.
 ENV pnpm_config_verify_deps_before_run=false
 COPY . .
-RUN pnpm --filter "api^..." build \
- && pnpm --filter api build
+RUN pnpm --filter api build
 # A fresh production install (a --prod install over the full one would keep every dev package in
 # node_modules/.pnpm): 609 MB of node_modules become 278 MB. --prefer-offline, not --offline: «deps»
 # may come from the layer cache while the store mount is empty (CI's GitHub cache never holds
