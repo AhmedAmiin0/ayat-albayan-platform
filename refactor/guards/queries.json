@@ -5,7 +5,6 @@
   "apps/api/src/modules/platform/google-sync/sync/google-items.queries.ts",
   "apps/api/src/modules/platform/translations/translations.queries.ts",
   "apps/api/src/modules/reporting/dashboard/dashboard.queries.ts",
-  "apps/api/src/modules/reporting/dashboard/finance/finance.queries.ts",
   "apps/api/src/modules/reporting/dashboard/work/work.queries.ts",
   "apps/api/src/modules/reporting/exports/exports.queries.ts",
   "apps/api/src/modules/reporting/exports/finance-exports.queries.ts",
