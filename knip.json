@@ -81,7 +81,7 @@
       "entry": ["lint.blocks.mjs"]
     },
     "packages/testing": {
-      "entry": ["src/vitest.ts", "src/presence-realtime.ts", "jest.cjs", "lint.blocks.mjs"]
+      "entry": ["src/vitest.ts", "src/presence-realtime/index.ts", "jest.cjs", "lint.blocks.mjs"]
     },
     "packages/db": {
       "entry": ["src/index.ts", "lint.blocks.mjs"],
