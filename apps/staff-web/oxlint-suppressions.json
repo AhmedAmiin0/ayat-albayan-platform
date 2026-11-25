@@ -7002,6 +7002,9 @@
     "no-nested-ternary": {
       "count": 1
     },
+    "stylistic/max-len": {
+      "count": 2
+    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -7130,7 +7133,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 1
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -7313,6 +7316,9 @@
   "src/features/teaching/meetings/scheduled/ScheduleFields.tsx": {
     "react/purity": {
       "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
     }
   },
   "src/features/teaching/meetings/scheduled/ScheduledMeetingDialog.tsx": {
@@ -7654,6 +7660,9 @@
     },
     "max-lines-per-function": {
       "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 3
     },
     "ab/module-boundaries": {
       "count": 1

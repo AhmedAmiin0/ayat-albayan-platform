@@ -18,14 +18,8 @@ interface OneProps {
 
 function OneLinkButton({ lessonId, student, named, approved }: OneProps) {
   const send = useMutation({ mutationFn: sendJoinLink });
-  const label = named
-    ? `${t.classroom.sendLink} ${t.classroom.sendLinkTo.replace('{name}', student.name)}`
-    : t.classroom.sendLink;
-  const done = send.data
-    ? send.data.replayed
-      ? t.classroom.linkResent
-      : t.classroom.linkSent
-    : null;
+  const label = named ? `${t.classroom.sendLink} ${t.classroom.sendLinkTo.replace('{name}', student.name)}` : t.classroom.sendLink;
+  const done = send.data ? (send.data.replayed ? t.classroom.linkResent : t.classroom.linkSent) : null;
   return (
     <div className="grid gap-1.5">
       <Button
@@ -51,13 +45,7 @@ export function SendLinkButton({ lesson }: { lesson: LessonView }) {
   return (
     <div className="grid gap-2 border-t border-rule pt-3">
       {lesson.students.map((s) => (
-        <OneLinkButton
-          key={s.id}
-          lessonId={lesson.id}
-          student={s}
-          named={lesson.students.length > 1}
-          approved={approved}
-        />
+        <OneLinkButton key={s.id} lessonId={lesson.id} student={s} named={lesson.students.length > 1} approved={approved} />
       ))}
       {!approved && templates.isSuccess && (
         <p className="text-xs text-ink-3">
