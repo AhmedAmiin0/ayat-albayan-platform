@@ -916,11 +916,6 @@
       "count": 9
     }
   },
-  "tests/platform/forms-parity.spec.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "tests/platform/google-calendar-handover.sql.spec.ts": {
     "complexity": {
       "count": 1
@@ -1056,7 +1051,7 @@
   },
   "tests/sales/assistant-course-renew.api.spec.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "tests/sales/assistant-course-subscription.sql.spec.ts": {
@@ -1066,7 +1061,7 @@
   },
   "tests/sales/assistant-course.api.spec.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "tests/sales/assistant-portal.spec.ts": {
@@ -1102,7 +1097,7 @@
   },
   "tests/sales/channel-after-subscribe.sql.spec.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "tests/sales/journey-7-assistant-cycle.spec.ts": {
@@ -1168,7 +1163,7 @@
   },
   "tests/sales/sales-starter.spec.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "tests/sales/sales-subscribe.api.spec.ts": {
