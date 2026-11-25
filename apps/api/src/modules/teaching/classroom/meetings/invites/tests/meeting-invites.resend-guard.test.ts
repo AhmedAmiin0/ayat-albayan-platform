@@ -7,11 +7,30 @@ import { meetingServices, type MeetingServices } from '@/modules/teaching/classr
 
 // A resend reaches only whom add() would let the caller invite (R-MEET-02).
 let s: MeetingServices;
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 const REQ = '00000000-0000-4000-8000-0000000000dd';
-const phoneRow = stored({ meeting_id: MEETING_ID, kind: 'phone', phone_e164: OPEN_PHONE, display_name: 'أم سهيلة', channel: 'whatsapp', status: 'sent', created_by: ADMIN.id });
-const studentRow = (id: string) => stored({ meeting_id: MEETING_ID, kind: 'student', student_id: id, phone_e164: OPEN_PHONE, display_name: 'سهيلة', channel: 'link', status: 'window_closed' });
-const resend = (user = TEACHER, inviteeId = phoneRow.id) => s.invites.resend({ user, id: MEETING_ID, inviteeId, body: { clientRequestId: REQ } }, NOW);
+const phoneRow = stored({
+  meeting_id: MEETING_ID,
+  kind: 'phone',
+  phone_e164: OPEN_PHONE,
+  display_name: 'أم سهيلة',
+  channel: 'whatsapp',
+  status: 'sent',
+  created_by: ADMIN.id,
+});
+const studentRow = (id: string) =>
+  stored({
+    meeting_id: MEETING_ID,
+    kind: 'student',
+    student_id: id,
+    phone_e164: OPEN_PHONE,
+    display_name: 'سهيلة',
+    channel: 'link',
+    status: 'window_closed',
+  });
+const resend = (user = TEACHER, inviteeId = phoneRow.id) =>
+  s.invites.resend({ user, id: MEETING_ID, inviteeId, body: { clientRequestId: REQ } }, NOW);
 
 beforeEach(() => {
   s = meetingServices();

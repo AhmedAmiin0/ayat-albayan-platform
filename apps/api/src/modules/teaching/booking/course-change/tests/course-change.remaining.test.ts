@@ -6,8 +6,18 @@ import { BODY, RULE_A, RULE_B, SALES, setup, SUB } from '@/modules/teaching/book
 // REMAINING (review fix 2) and the change point's guards (review fix 4, 7) of CourseChange.
 
 const check = (o: object = {}) => courseChangeCheckSchema.parse({ ...BODY, ...o });
-const failed = (p: Promise<unknown>) => p.then(() => undefined, (e: unknown) => errorCode(e));
-const lesson = (id: string, status: string) => ({ id, status, chargeable: true, makeup: false, instant: false });
+const failed = (p: Promise<unknown>) =>
+  p.then(
+    () => undefined,
+    (e: unknown) => errorCode(e),
+  );
+const lesson = (id: string, status: string) => ({
+  id,
+  status,
+  chargeable: true,
+  makeup: false,
+  instant: false,
+});
 
 describe('CourseChange — REMAINING counts every lesson of the course that stays', () => {
   beforeEach(() => vi.useFakeTimers({ now: new Date('2026-10-18T08:00:00Z'), toFake: ['Date'] }));

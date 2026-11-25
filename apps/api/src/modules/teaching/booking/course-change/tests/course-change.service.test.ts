@@ -40,8 +40,13 @@ describe('CourseChange — «تغيير أيام الحلقات» (owner 2026-10
     deps.checker.check.mockResolvedValue([CLASH]);
     expect(await failed(service.change(body(), ADMIN))).toBe('conflict');
     await service.change(body({ override: { reason: 'بطلب ولي الأمر' } }), ADMIN);
-    const payload = writer.apply.mock.calls[0]?.[0].payload as { new_rules: { lessons: { starts_at: string; override_reason: string | null }[] }[]; audit: { after: { by: string; override_reason: string } } };
-    const clashing = payload.new_rules.flatMap((r) => r.lessons).find((l) => l.starts_at === CLASH.startsAt);
+    const payload = writer.apply.mock.calls[0]?.[0].payload as {
+      new_rules: { lessons: { starts_at: string; override_reason: string | null }[] }[];
+      audit: { after: { by: string; override_reason: string } };
+    };
+    const clashing = payload.new_rules
+      .flatMap((r) => r.lessons)
+      .find((l) => l.starts_at === CLASH.startsAt);
     expect(clashing?.override_reason).toBe('بطلب ولي الأمر');
     expect(payload.audit.after).toEqual(expect.objectContaining({ by: 'admin', override_reason: 'بطلب ولي الأمر' }));
   });

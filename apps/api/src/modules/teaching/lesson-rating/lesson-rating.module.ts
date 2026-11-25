@@ -13,7 +13,15 @@ import { RatingStore } from './rating.store';
 @Module({
   imports: [InboxModule],
   controllers: [RatingController],
-  providers: [RatingRepo, LessonRatingSettings, RatingReads, RatingQueue, RatingJob, RatingStore, RatingSendService],
+  providers: [
+    RatingRepo,
+    LessonRatingSettings,
+    RatingReads,
+    RatingQueue,
+    RatingJob,
+    RatingStore,
+    RatingSendService,
+  ],
   exports: [RatingStore],
 })
 export class LessonRatingModule {}

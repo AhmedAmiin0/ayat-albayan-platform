@@ -29,7 +29,10 @@ describe('BookingInvoices.resolve — required unless trial (R-PAY-03)', () => {
 
   it('a makeup stores its kind', async () => {
     const { invoices } = setup();
-    const row = await invoices.resolve(makeupRequest({ clientRequestId: REQ, invoice: upload }), SCOPE);
+    const row = await invoices.resolve(
+      makeupRequest({ clientRequestId: REQ, invoice: upload }),
+      SCOPE,
+    );
     expect(row).toMatchObject({ kind: 'makeup', source: 'upload' });
   });
 });

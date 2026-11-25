@@ -101,7 +101,11 @@ export class LessonStatusService {
       change: { actor: actor.id, changes: [change] },
       audit: audit(lesson, {
         action: 'status_change',
-        after: { status: to, chargeable: change.chargeable, ...(change.students ? { students: change.students } : {}) },
+        after: {
+          status: to,
+          chargeable: change.chargeable,
+          ...(change.students ? { students: change.students } : {}),
+        },
       }),
       transition: { from: lesson.status, event },
     });

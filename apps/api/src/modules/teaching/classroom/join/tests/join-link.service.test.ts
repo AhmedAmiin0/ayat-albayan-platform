@@ -11,11 +11,13 @@ let q: ReturnType<typeof queries>;
 let outbox: { send: ReturnType<typeof vi.fn> };
 let templates: { approved: ReturnType<typeof vi.fn> };
 const send = () =>
-  new JoinLinkService(q as unknown as ClassroomRepo, templates as unknown as TemplateRegistry, outbox as unknown as Outbox).send(
-    { lessonId: LESSON_ID, body: { studentId: STUDENT_ID }, actorId: ADMIN.id },
-    OPEN,
-  );
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+  new JoinLinkService(
+    q as unknown as ClassroomRepo,
+    templates as unknown as TemplateRegistry,
+    outbox as unknown as Outbox,
+  ).send({ lessonId: LESSON_ID, body: { studentId: STUDENT_ID }, actorId: ADMIN.id }, OPEN);
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 
 beforeEach(() => {
   q = queries();

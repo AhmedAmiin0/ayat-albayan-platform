@@ -53,8 +53,20 @@ describe('instantPayload', () => {
 
   it('has no package, lead, invoice, makeup or messages (nothing goes to WhatsApp)', () => {
     const p = instantPayload(base);
-    expect(p).toMatchObject({ lead: null, new_guardian: null, new_student: null, invoice: null, makeup_of: null, messages: [] });
-    expect(p.rule).toMatchObject({ package: null, teacher_id: 'T1', meeting_link: null, ends_on: '2026-10-05' });
+    expect(p).toMatchObject({
+      lead: null,
+      new_guardian: null,
+      new_student: null,
+      invoice: null,
+      makeup_of: null,
+      messages: [],
+    });
+    expect(p.rule).toMatchObject({
+      package: null,
+      teacher_id: 'T1',
+      meeting_link: null,
+      ends_on: '2026-10-05',
+    });
     expect(p.student_ids).toEqual(['S1', 'S2']);
     expect(p.audit.after).toMatchObject({ kind: 'instant' });
   });

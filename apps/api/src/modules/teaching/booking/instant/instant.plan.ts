@@ -21,7 +21,10 @@ export function instantPlan(input: { now: Date; tz: string; durationMin: number 
       starts_on: date,
       ends_on: date,
     },
-    occurrence: { starts_at: new Date(start), ends_at: new Date(start + input.durationMin * MINUTE_MS) },
+    occurrence: {
+      starts_at: new Date(start),
+      ends_at: new Date(start + input.durationMin * MINUTE_MS),
+    },
   };
 }
 
@@ -54,7 +57,12 @@ export function instantPayload(input: InstantPayloadInput): BookingPayload {
     lead: null,
     new_guardian: null,
     new_student: null,
-    lessons: lessonRows({ occurrences: [plan.occurrence], conflicts, reason, meetingLink: input.meetingLink }),
+    lessons: lessonRows({
+      occurrences: [plan.occurrence],
+      conflicts,
+      reason,
+      meetingLink: input.meetingLink,
+    }),
     messages: [],
     makeup_of: null,
     invoice: null,

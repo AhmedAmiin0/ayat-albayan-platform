@@ -4,7 +4,8 @@ import { HttpException } from '@nestjs/common';
 import { forbidden } from '@/common/http/errors';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 
-const all = (ids: readonly string[], allowed: readonly string[]): boolean => ids.every((id) => allowed.includes(id));
+const all = (ids: readonly string[], allowed: readonly string[]): boolean =>
+  ids.every((id) => allowed.includes(id));
 
 /**
  * What /sales/booking checks ownership against (SalesBookingScope): her leads, families and
@@ -32,7 +33,11 @@ export type CourseGrant = boolean | 'any';
  * course), or (ON only) not_your_lead, not_your_student, not_your_family. canCourse 'any'
  * (sales.renew_any, docs/16 row 38): a course of ANY one student.
  */
-export function assertBookingScope(req: BookingRequest, own: BookingOwnership, canCourse: CourseGrant = false): void {
+export function assertBookingScope(
+  req: BookingRequest,
+  own: BookingOwnership,
+  canCourse: CourseGrant = false,
+): void {
   if (req.override) throw forbidden('override_not_allowed');
   const kind = bookingKindOf(req);
   if (kind === 'makeup' || (kind === 'package' && !canCourse)) throw forbidden('kind_not_allowed');
@@ -86,6 +91,11 @@ export function scopeDuplicates(e: Error, own: BookingOwnership): Error {
   if (typeof body !== 'object' || body === null || !('code' in body) || body.code !== 'duplicate_student') return e;
   const raw = 'candidates' in body ? body.candidates : [];
   const mine = (c: Candidate): boolean => !own || own.studentIds.includes(c.id);
-  const candidates = (isCandidates(raw) ? raw : []).filter(mine).map(({ id, name }) => ({ id, name }));
-  return new HttpException({ code: 'duplicate_student', message: 'duplicate_student', candidates }, 409);
+  const candidates = (isCandidates(raw) ? raw : [])
+    .filter(mine)
+    .map(({ id, name }) => ({ id, name }));
+  return new HttpException(
+    { code: 'duplicate_student', message: 'duplicate_student', candidates },
+    409,
+  );
 }

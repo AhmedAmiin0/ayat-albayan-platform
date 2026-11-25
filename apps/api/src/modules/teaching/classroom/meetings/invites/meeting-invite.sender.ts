@@ -71,8 +71,13 @@ export class MeetingInviteSender {
   async chat(s: ChatSend): Promise<DeliveryOutcome> {
     try {
       const thread = await this.threads.thread(s.phone);
-      const picked = await pickSend({ thread, now: s.now, windows: () => this.threads.numberWindows(s.phone) });
-      if ('code' in picked) return { status: 'window_closed', channel: 'link', error_code: picked.code };
+      const picked = await pickSend({
+        thread,
+        now: s.now,
+        windows: () => this.threads.numberWindows(s.phone),
+      });
+      if ('code' in picked)
+        return { status: 'window_closed', channel: 'link', error_code: picked.code };
       await this.messages.enqueue({
         direction: 'outbound',
         status: 'queued',

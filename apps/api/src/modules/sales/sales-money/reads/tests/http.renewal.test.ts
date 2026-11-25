@@ -8,8 +8,20 @@ import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fak
 
 const SIBLING = '5a000000-0000-4000-8000-0000000000aa';
 const URL = '/sales/money/family?phone=%2B966551110000';
-const PREMIUM_AE = { ...quote({ tier: 'premium', duration: 60, country: 'AE', students: 1, discount: 10 }), fx: null };
-const used = (remaining: number) => ({ subscription_id: SUB_ID, student_id: STUDENT_ID, lessons_total: 4, lessons_used: 4 - remaining, remaining, is_last: true, ended_at: null, projected_end_at: null });
+const PREMIUM_AE = {
+  ...quote({ tier: 'premium', duration: 60, country: 'AE', students: 1, discount: 10 }),
+  fx: null,
+};
+const used = (remaining: number) => ({
+  subscription_id: SUB_ID,
+  student_id: STUDENT_ID,
+  lessons_total: 4,
+  lessons_used: 4 - remaining,
+  remaining,
+  is_last: true,
+  ended_at: null,
+  projected_end_at: null,
+});
 
 describe('GET /sales/money/family: renew_due and the renewal seed (owner 2026-10-26)', () => {
   let app: NestFastifyApplication;

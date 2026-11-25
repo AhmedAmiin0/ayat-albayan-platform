@@ -21,7 +21,10 @@ function setup() {
   const deps = fakeContext();
   deps.availability.bookableSlots.mockResolvedValue(allDayRows(RIYADH_TZ));
   const settings = readerOf(BookingSettings, { teachers_always_available: true });
-  return { ...deps, service: new SlotsService(deps.queries as unknown as BookingRepo, deps.context, settings) };
+  return {
+    ...deps,
+    service: new SlotsService(deps.queries as unknown as BookingRepo, deps.context, settings),
+  };
 }
 const byStart = (slots: { starts_at: string; conflicts: { kind: string }[] }[]) =>
   Object.fromEntries(slots.map((s) => [s.starts_at, s.conflicts.map((c) => c.kind)]));

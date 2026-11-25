@@ -12,9 +12,16 @@ let mod: ReturnType<typeof moderation>;
 let h: ReturnType<typeof http>;
 let persons: ReturnType<typeof roomPersons>;
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new KickService(rolesOf({ q: queries() }), mod as unknown as ModerationRepo, new LivekitApi(config, h), persons as unknown as RoomPersonRepo);
-const kick = (user = ADMIN, identity = 'guest-0123456789ab', svc = service()) => svc.remove({ user, lessonId: LESSON_ID, identity });
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+  new KickService(
+    rolesOf({ q: queries() }),
+    mod as unknown as ModerationRepo,
+    new LivekitApi(config, h),
+    persons as unknown as RoomPersonRepo,
+  );
+const kick = (user = ADMIN, identity = 'guest-0123456789ab', svc = service()) =>
+  svc.remove({ user, lessonId: LESSON_ID, identity });
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 
 beforeEach(() => {
   mod = moderation();
@@ -43,7 +50,9 @@ describe('removing someone from the room', () => {
   it('the lesson teacher removes an assistant: their login is blocked', async () => {
     mod.participant.mockResolvedValue(participantRow({ identity: 'assistant-0123456789ab', role: 'assistant', user_id: ASSISTANT.id, join_link_id: null }));
     await kick(TEACHER, 'assistant-0123456789ab');
-    expect(mod.block).toHaveBeenCalledWith(expect.objectContaining({ principal: { userId: ASSISTANT.id }, blockedBy: TEACHER.id }));
+    expect(mod.block).toHaveBeenCalledWith(
+      expect.objectContaining({ principal: { userId: ASSISTANT.id }, blockedBy: TEACHER.id }),
+    );
   });
 
   it('404 participant_not_found for an identity not in this lesson', async () => {

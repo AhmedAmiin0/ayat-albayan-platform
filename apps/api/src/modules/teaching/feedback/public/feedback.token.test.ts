@@ -8,7 +8,10 @@ const flip = (s: string) => (s.endsWith('A') ? `${s.slice(0, -1)}B` : `${s.slice
 describe('feedback link token', () => {
   it('round-trips the lesson, the student and the expiry', () => {
     const r = verifyToken(SECRET, tokenFor(), NOW);
-    expect(r).toEqual({ ok: true, payload: { lessonId: LESSON_ID, studentId: STUDENT_ID, exp: EXP } });
+    expect(r).toEqual({
+      ok: true,
+      payload: { lessonId: LESSON_ID, studentId: STUDENT_ID, exp: EXP },
+    });
   });
 
   it('is deterministic, so a live link can be rebuilt from its expiry', () => {

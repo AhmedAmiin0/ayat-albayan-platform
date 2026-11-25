@@ -27,13 +27,19 @@ describe('«انسخ رابط الطالب»', () => {
   it('stores only the hash of the token it handed out', async () => {
     const r = await url();
     const token = r.url.split('/join/')[1] ?? '';
-    expect(q.insertLink).toHaveBeenCalledWith({ lesson_id: LESSON_ID, token_hash: hashLinkToken(token), expires_at: r.expires_at, created_by: ADMIN.id });
+    expect(q.insertLink).toHaveBeenCalledWith({
+      lesson_id: LESSON_ID,
+      token_hash: hashLinkToken(token),
+      expires_at: r.expires_at,
+      created_by: ADMIN.id,
+    });
     expect(JSON.stringify(q.insertLink.mock.calls)).not.toContain(token);
   });
 
   it("the lesson's own teacher may; another teacher, an assistant and a guardian may not", async () => {
     expect((await url(TEACHER)).url).toContain('/join/');
-    for (const user of [OTHER_TEACHER, ASSISTANT, GUARDIAN]) await expect(url(user)).rejects.toBeInstanceOf(ForbiddenException);
+    for (const user of [OTHER_TEACHER, ASSISTANT, GUARDIAN])
+      await expect(url(user)).rejects.toBeInstanceOf(ForbiddenException);
     expect(q.insertLink).toHaveBeenCalledTimes(1);
   });
 

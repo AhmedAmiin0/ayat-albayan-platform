@@ -28,7 +28,9 @@ describe('mintToken', () => {
   });
 
   it('caps the lifetime at the default and floors it at five minutes', () => {
-    expect(decode(mintToken(CONFIG, { ...input, ttlSeconds: 99 * 3600 }, NOW)).exp).toBe(nowS + TOKEN_TTL_S);
+    expect(decode(mintToken(CONFIG, { ...input, ttlSeconds: 99 * 3600 }, NOW)).exp).toBe(
+      nowS + TOKEN_TTL_S,
+    );
     expect(decode(mintToken(CONFIG, { ...input, ttlSeconds: 3600 }, NOW)).exp).toBe(nowS + 3600);
     expect(decode(mintToken(CONFIG, { ...input, ttlSeconds: 1 }, NOW)).exp).toBe(nowS + 300);
   });

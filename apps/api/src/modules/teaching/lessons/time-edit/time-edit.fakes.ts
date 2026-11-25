@@ -37,12 +37,18 @@ export const correction = (over: Partial<LessonTimeEdit> = {}): LessonTimeEdit =
 export const CLASH = { kind: 'teacher_busy', startsAt: '2026-10-05T14:00:00.000Z', endsAt: '2026-10-05T14:45:00.000Z', lessonId: 'x' };
 
 /** `over`: the academy settings on top of the registry defaults (payout_count_late / _no_show off). */
-export function timeSetup(row: LessonRow | null = lessonRow(), over: Partial<AcademySettings> = {}) {
+export function timeSetup(
+  row: LessonRow | null = lessonRow(),
+  over: Partial<AcademySettings> = {},
+) {
   const deps = fakeStore(row);
   const checker = { check: vi.fn().mockResolvedValue([]) };
   const settings = fakeSettings(over);
   const payouts = { payoutStatus: vi.fn().mockResolvedValue(null) };
-  const payout = new TimeEditPayout(new LessonsSettings(settings), payouts as unknown as TimeEditRepo);
+  const payout = new TimeEditPayout(
+    new LessonsSettings(settings),
+    payouts as unknown as TimeEditRepo,
+  );
   const service = new LessonTimeService(deps.store, checker as unknown as ConflictChecker, payout);
   const run = (b: LessonTimeEdit) => service.edit({ lessonId: LESSON_ID, body: b, actor: ADMIN });
   return { ...deps, checker, settings, payouts, service, run };

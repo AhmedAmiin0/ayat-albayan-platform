@@ -25,8 +25,13 @@ describe('Teacher proposals «اقترح موعدًا آخر» — routes and ro
     h.lessons.get.mockResolvedValueOnce(lessonRow()).mockResolvedValue(pendingRow);
     const res = await h.call({ method: 'POST', url: `/lessons/${LESSON_ID}/propose`, token: 'teacher', body: { startsAt: LATER } });
     expect(res.statusCode).toBe(201);
-    expect(res.json().pending_proposal).toMatchObject({ id: PROPOSAL_ID, proposed_starts_at: LATER });
-    expect(h.proposals.create).toHaveBeenCalledWith(expect.objectContaining({ lesson_id: LESSON_ID, proposed_starts_at: LATER }));
+    expect(res.json().pending_proposal).toMatchObject({
+      id: PROPOSAL_ID,
+      proposed_starts_at: LATER,
+    });
+    expect(h.proposals.create).toHaveBeenCalledWith(
+      expect.objectContaining({ lesson_id: LESSON_ID, proposed_starts_at: LATER }),
+    );
   });
 
   it("another teacher's lesson → 403; an admin moves lessons directly (403 here); bad body → 400", async () => {
@@ -43,8 +48,12 @@ describe('Teacher proposals «اقترح موعدًا آخر» — routes and ro
     h.proposals.pendingLessonIds.mockResolvedValue([LESSON_ID]);
     h.lessons.byIds.mockResolvedValue([pendingRow]);
     const list = await h.call({ method: 'GET', url: '/lesson-proposals' });
-    expect(list.json().map((l: { pending_proposal: { id: string } }) => l.pending_proposal.id)).toEqual([PROPOSAL_ID]);
-    expect((await h.call({ method: 'GET', url: '/lesson-proposals', token: 'teacher' })).statusCode).toBe(403);
+    expect(
+      list.json().map((l: { pending_proposal: { id: string } }) => l.pending_proposal.id),
+    ).toEqual([PROPOSAL_ID]);
+    expect(
+      (await h.call({ method: 'GET', url: '/lesson-proposals', token: 'teacher' })).statusCode,
+    ).toBe(403);
 
     h.proposals.get.mockResolvedValue({ id: PROPOSAL_ID, lesson_id: LESSON_ID, proposed_starts_at: LATER, status: 'pending' });
     const approved = await h.call({ method: 'POST', url: `/lesson-proposals/${PROPOSAL_ID}/approve`, body: {} });

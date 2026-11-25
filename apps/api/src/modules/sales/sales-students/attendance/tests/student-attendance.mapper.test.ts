@@ -36,7 +36,14 @@ describe('toAttendanceTable', () => {
 
   it('the totals of every kind, late on top of held', () => {
     expect(table().totals).toEqual({
-      held: 3, late: 1, absent: 1, excused: 1, cancelled_by_teacher: 1, cancelled_by_admin: 1, rescheduled: 1, unmarked: 0,
+      held: 3,
+      late: 1,
+      absent: 1,
+      excused: 1,
+      cancelled_by_teacher: 1,
+      cancelled_by_admin: 1,
+      rescheduled: 1,
+      unmarked: 0,
     });
   });
 
@@ -54,8 +61,13 @@ describe('toAttendanceTable', () => {
   });
 
   it('the cancel reason only on a cancelled lesson', () => {
-    const reasons = table().items.filter((r) => r.cancel_reason).map((r) => [r.lesson_id, r.cancel_reason]);
-    expect(reasons).toEqual([['byTeacher', 'سفر المعلمة'], ['byAdmin', 'عطلة']]);
+    const reasons = table()
+      .items.filter((r) => r.cancel_reason)
+      .map((r) => [r.lesson_id, r.cancel_reason]);
+    expect(reasons).toEqual([
+      ['byTeacher', 'سفر المعلمة'],
+      ['byAdmin', 'عطلة'],
+    ]);
   });
 
   it('an imported free lesson (no rule, not chargeable) is a trial', () => {

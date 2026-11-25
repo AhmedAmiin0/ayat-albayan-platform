@@ -24,7 +24,12 @@ export class JoinLinkCopyService {
     if (user.role !== 'admin' && !own) throw new ForbiddenException();
     const token = newLinkToken();
     const expires_at = linkExpiry(lesson, await this.queries.joinWindow());
-    await this.queries.insertLink({ lesson_id: lesson.id, token_hash: hashLinkToken(token), expires_at, created_by: user.id });
+    await this.queries.insertLink({
+      lesson_id: lesson.id,
+      token_hash: hashLinkToken(token),
+      expires_at,
+      created_by: user.id,
+    });
     return { url: `${this.origin}/join/${token}`, expires_at };
   }
 }

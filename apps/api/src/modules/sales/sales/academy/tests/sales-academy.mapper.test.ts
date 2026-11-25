@@ -21,7 +21,12 @@ describe('sales academy mappers (whitelists)', () => {
     const row = { ...teacherRow(), meeting_link: '  ' };
     row.students = [...row.students, { id: 't1', code: 'AB-2', name: 'تجربة', status: 'trial', program: 'quran' }, { id: 't2', code: 'AB-3', name: 'ثانية', status: 'trial', program: 'quran' }];
     const out = toSalesTeacher(row);
-    expect([out.active_count, out.trial_count, out.students.length, out.meeting_link]).toEqual([1, 2, 3, null]);
+    expect([out.active_count, out.trial_count, out.students.length, out.meeting_link]).toEqual([
+      1,
+      2,
+      3,
+      null,
+    ]);
     expect(toSalesTeacher({ ...teacherRow(), meeting_link: null }).meeting_link).toBeNull();
   });
 
@@ -41,10 +46,18 @@ describe('sales academy mappers (whitelists)', () => {
 
   it('toSalesTeacher: platform_classroom is the teacher’s mode, else the academy default; the mode itself is not sent', () => {
     const ctx = (academyAuto: boolean) => ({ facts: new Map(), next: new Map(), academyAuto });
-    expect(toSalesTeacher({ ...teacherRow(), meeting_mode: null }, ctx(true)).platform_classroom).toBe(true);
-    expect(toSalesTeacher({ ...teacherRow(), meeting_mode: null }, ctx(false)).platform_classroom).toBe(false);
-    expect(toSalesTeacher({ ...teacherRow(), meeting_mode: 'static' }, ctx(true)).platform_classroom).toBe(false);
-    expect(toSalesTeacher({ ...teacherRow(), meeting_mode: 'platform' }, ctx(false)).platform_classroom).toBe(true);
+    expect(
+      toSalesTeacher({ ...teacherRow(), meeting_mode: null }, ctx(true)).platform_classroom,
+    ).toBe(true);
+    expect(
+      toSalesTeacher({ ...teacherRow(), meeting_mode: null }, ctx(false)).platform_classroom,
+    ).toBe(false);
+    expect(
+      toSalesTeacher({ ...teacherRow(), meeting_mode: 'static' }, ctx(true)).platform_classroom,
+    ).toBe(false);
+    expect(
+      toSalesTeacher({ ...teacherRow(), meeting_mode: 'platform' }, ctx(false)).platform_classroom,
+    ).toBe(true);
     expect(toSalesTeacher(teacherRow())).not.toHaveProperty('meeting_mode');
   });
 

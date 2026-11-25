@@ -21,6 +21,9 @@ export function withLeadFacts(req: NewParts, lead: LeadFacts | null): Pick<NewPa
   const q = parsed.success ? parsed.data : {};
   const newStudent = { ...req.newStudent };
   for (const key of TEXT) if (blank(newStudent[key]) && !blank(q[key])) newStudent[key] = q[key];
-  const guardian = blank(req.guardian.source) && lead?.source ? { ...req.guardian, source: lead.source } : req.guardian;
+  const guardian =
+    blank(req.guardian.source) && lead?.source
+      ? { ...req.guardian, source: lead.source }
+      : req.guardian;
   return { newStudent, guardian };
 }

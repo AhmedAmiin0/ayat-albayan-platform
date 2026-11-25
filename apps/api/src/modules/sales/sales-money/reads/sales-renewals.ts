@@ -18,7 +18,15 @@ export class SalesRenewals {
     const entries = await Promise.all(
       students.map(async (s) => {
         const { remaining, packages } = await this.packages.studentBalance(s.id);
-        return [s.id, salesRenewal({ status: s.status, remaining, threshold, packages: livePackages(packages) })] as const;
+        return [
+          s.id,
+          salesRenewal({
+            status: s.status,
+            remaining,
+            threshold,
+            packages: livePackages(packages),
+          }),
+        ] as const;
       }),
     );
     return new Map(entries);

@@ -11,9 +11,16 @@ let q: ReturnType<typeof queries>;
 let teachers: { idByProfile: ReturnType<typeof vi.fn> };
 let mod: ReturnType<typeof moderation>;
 let rec: ReturnType<typeof recorder>;
-const service = (config: typeof CONFIG | null = CONFIG) => new RoomJoinService(rolesOf({ q, teachers }), admissionOf({ q, mod, rec, config }), readerOf(ClassroomSettings));
-const join = (user = TEACHER, now = OPEN, svc = service()) => svc.join({ user, lessonId: LESSON_ID }, now);
-const code = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+const service = (config: typeof CONFIG | null = CONFIG) =>
+  new RoomJoinService(
+    rolesOf({ q, teachers }),
+    admissionOf({ q, mod, rec, config }),
+    readerOf(ClassroomSettings),
+  );
+const join = (user = TEACHER, now = OPEN, svc = service()) =>
+  svc.join({ user, lessonId: LESSON_ID }, now);
+const code = async (p: Promise<unknown>) =>
+  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = queries();
@@ -91,7 +98,9 @@ describe('the window', () => {
 
 describe('the token', () => {
   it('has a fresh identity on every call, even for the same person', async () => {
-    const subs = await Promise.all(Array.from({ length: 20 }, () => join(TEACHER))).then((rs) => rs.map((r) => decode(r.token).sub));
+    const subs = await Promise.all(Array.from({ length: 20 }, () => join(TEACHER))).then((rs) =>
+      rs.map((r) => decode(r.token).sub),
+    );
     expect(new Set(subs).size).toBe(20);
     expect(subs.every((s) => s.startsWith('teacher-'))).toBe(true);
   });
@@ -102,7 +111,9 @@ describe('the token', () => {
   });
 
   it('503 classroom_not_configured when LIVEKIT_* are not set', async () => {
-    const err = (await join(TEACHER, OPEN, service(null)).catch((e: HttpException) => e)) as HttpException;
+    const err = (await join(TEACHER, OPEN, service(null)).catch(
+      (e: HttpException) => e,
+    )) as HttpException;
     expect(err.getStatus()).toBe(503);
     expect(err.getResponse()).toMatchObject({ code: 'classroom_not_configured' });
   });

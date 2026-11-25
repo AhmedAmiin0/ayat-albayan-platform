@@ -7,9 +7,21 @@ import { GUEST_TOKEN_TTL_S } from '@/modules/teaching/classroom/join/room-admiss
 
 let mod: ReturnType<typeof moderation>;
 let rec: ReturnType<typeof recorder>;
-const admission = (config: typeof CONFIG | null = CONFIG) => admissionOf({ q: queries(), mod, rec, config });
-const staff = { lessonId: LESSON_ID, role: 'teacher' as const, name: 'أبرار', principal: { userId: 'u1' } };
-const guest = { lessonId: LESSON_ID, role: 'guest' as const, name: 'سهيلة', principal: { joinLinkId: 'l1' }, ttlSeconds: 3600 };
+const admission = (config: typeof CONFIG | null = CONFIG) =>
+  admissionOf({ q: queries(), mod, rec, config });
+const staff = {
+  lessonId: LESSON_ID,
+  role: 'teacher' as const,
+  name: 'أبرار',
+  principal: { userId: 'u1' },
+};
+const guest = {
+  lessonId: LESSON_ID,
+  role: 'guest' as const,
+  name: 'سهيلة',
+  principal: { joinLinkId: 'l1' },
+  ttlSeconds: 3600,
+};
 
 beforeEach(() => {
   mod = moderation();
@@ -19,7 +31,9 @@ beforeEach(() => {
 describe('RoomAdmission', () => {
   it('a blocked principal is refused 403 removed_from_room: no token, no participant row', async () => {
     mod.isBlocked.mockResolvedValue(true);
-    const err = (await admission().admit(staff, OPEN).catch((e: HttpException) => e)) as HttpException;
+    const err = (await admission()
+      .admit(staff, OPEN)
+      .catch((e: HttpException) => e)) as HttpException;
     expect(err.getStatus()).toBe(403);
     expect(err.getResponse()).toMatchObject({ code: 'removed_from_room' });
     expect(mod.isBlocked).toHaveBeenCalledWith(LESSON_ID, { userId: 'u1' });
@@ -65,7 +79,9 @@ describe('RoomAdmission', () => {
   });
 
   it('503 classroom_not_configured without LiveKit', async () => {
-    const err = (await admission(null).admit(staff, OPEN).catch((e: HttpException) => e)) as HttpException;
+    const err = (await admission(null)
+      .admit(staff, OPEN)
+      .catch((e: HttpException) => e)) as HttpException;
     expect(err.getStatus()).toBe(503);
   });
 });

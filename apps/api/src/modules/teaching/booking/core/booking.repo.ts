@@ -109,7 +109,9 @@ export class BookingRepo {
   /** Rule + students + lessons + lead + queued messages in one transaction (docs/10 §5 #14). */
   /** create_booking; its booking_confirmation* rows only while that notification rule is on (gateConfirmations). */
   async createBooking(payload: BookingPayload, actorId: string): Promise<BookingResult> {
-    const gated = payload.messages ? { ...payload, messages: await gateConfirmations(this.policy, payload.messages) } : payload;
+    const gated = payload.messages
+      ? { ...payload, messages: await gateConfirmations(this.policy, payload.messages) }
+      : payload;
     const p_booking = gated as unknown as Json; // typed payload; the RPC validates it in SQL
     const call = () => this.db.rpc('create_booking', { p_booking, p_actor: actorId });
     let { data, error } = await call();

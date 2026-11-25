@@ -7,8 +7,12 @@ import { MeetingInvitePolicies, teacherMaySend, visibleCode, visibleView } from 
 import { CLOSED_PHONE, OPEN_PHONE, teacherScopesFake } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
 
 const OTHER = '+201000000109';
-const policies = (scopes = teacherScopesFake()) => new MeetingInvitePolicies(scopes as unknown as TeacherScopes);
-const withPerms = (user: AuthUser, drop: string): AuthUser => ({ ...user, permissions: systemPermissionsOf(user.role ?? 'teacher').filter((p) => p !== drop) });
+const policies = (scopes = teacherScopesFake()) =>
+  new MeetingInvitePolicies(scopes as unknown as TeacherScopes);
+const withPerms = (user: AuthUser, drop: string): AuthUser => ({
+  ...user,
+  permissions: systemPermissionsOf(user.role ?? 'teacher').filter((p) => p !== drop),
+});
 
 describe('InvitePolicy: who may send WhatsApp through invitations (owner 2026-10-13)', () => {
   it('admin and sales: every phone, the exact codes', async () => {
@@ -20,7 +24,12 @@ describe('InvitePolicy: who may send WhatsApp through invitations (owner 2026-10
 
   it("a teacher: only the families the inbox lets them write to (assertCanSend), never their own chat", async () => {
     const p = await policies().of(TEACHER);
-    expect([p.seesAll, p.mayChat(OPEN_PHONE), p.mayChat(CLOSED_PHONE), p.mayChat(OTHER)]).toEqual([false, true, true, false]);
+    expect([p.seesAll, p.mayChat(OPEN_PHONE), p.mayChat(CLOSED_PHONE), p.mayChat(OTHER)]).toEqual([
+      false,
+      true,
+      true,
+      false,
+    ]);
     expect(p.teacherId).toBe('t1');
     expect(teacherMaySend({ teacherId: 't', teacherName: 'x', phones: new Set([OPEN_PHONE]), ownPhone: OPEN_PHONE }, OPEN_PHONE)).toBe(false);
   });

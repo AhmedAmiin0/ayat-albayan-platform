@@ -22,7 +22,10 @@ export class LessonRoleService {
   ) {}
 
   /** 404 lesson_not_found, 403 when the login has no role in this lesson. */
-  async resolve(user: AuthUser, lessonId: string): Promise<{ lesson: JoinLesson; role: StaffRole }> {
+  async resolve(
+    user: AuthUser,
+    lessonId: string,
+  ): Promise<{ lesson: JoinLesson; role: StaffRole }> {
     const lesson = await this.queries.lesson(lessonId);
     if (!lesson) throw notFound('lesson_not_found');
     return { lesson, role: await this.roleOf(user, lesson) };

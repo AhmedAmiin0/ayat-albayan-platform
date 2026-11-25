@@ -19,7 +19,10 @@ const query = (over: Partial<SlotsQuery> = {}): SlotsQuery => ({
 function setup() {
   const deps = fakeContext();
   const settings = readerOf(BookingSettings, { teachers_always_available: false });
-  return { ...deps, service: new SlotsService(deps.queries as unknown as BookingRepo, deps.context, settings) };
+  return {
+    ...deps,
+    service: new SlotsService(deps.queries as unknown as BookingRepo, deps.context, settings),
+  };
 }
 
 describe('SlotsService (R-SCH-06, R-SCH-04, docs/10 §5 #13)', () => {
@@ -44,7 +47,9 @@ describe('SlotsService (R-SCH-06, R-SCH-04, docs/10 §5 #13)', () => {
       { starts_at: '2026-10-04T18:00:00Z', ends_at: '2026-10-04T20:00:00Z' },
     ]);
     const res = await service.slots(query({ studentIds: [IDS.s1] }));
-    const reasons = Object.fromEntries(res.slots.map((s) => [s.starts_at.slice(11, 16), s.conflicts.map((c) => c.kind)]));
+    const reasons = Object.fromEntries(
+      res.slots.map((s) => [s.starts_at.slice(11, 16), s.conflicts.map((c) => c.kind)]),
+    );
     expect(reasons).toEqual({
       '13:00': [],
       '14:00': ['teacher_busy'],
@@ -77,7 +82,9 @@ describe('SlotsService (R-SCH-06, R-SCH-04, docs/10 §5 #13)', () => {
       { id: 'OTHER', student_id: IDS.s1, starts_at: new Date('2026-10-04T16:00:00Z'), ends_at: new Date('2026-10-04T16:45:00Z') },
     ]);
     const kinds = async (over: Partial<SlotsQuery>) =>
-      (await service.slots(query({ studentIds: [IDS.s1], durationMin: 45, stepMin: 60, ...over }))).slots
+      (
+        await service.slots(query({ studentIds: [IDS.s1], durationMin: 45, stepMin: 60, ...over }))
+      ).slots
         .filter((x) => x.conflicts.length > 0)
         .map((x) => x.starts_at.slice(11, 16));
     expect(await kinds({})).toEqual(['14:00', '16:00']);

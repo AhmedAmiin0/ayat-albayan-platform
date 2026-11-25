@@ -57,7 +57,9 @@ describe('feedback mapper', () => {
   });
 
   it('summary names the teacher', () => {
-    expect(toSummary({ teacher_id: TEACHER_ID, avg_rating: 4.5, n: 2, recommend_yes_pct: 50 }, people)).toEqual({
+    expect(
+      toSummary({ teacher_id: TEACHER_ID, avg_rating: 4.5, n: 2, recommend_yes_pct: 50 }, people),
+    ).toEqual({
       teacher: { id: TEACHER_ID, name: 'أبرار' },
       avg_rating: 4.5,
       n: 2,

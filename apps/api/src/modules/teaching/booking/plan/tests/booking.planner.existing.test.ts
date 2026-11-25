@@ -60,7 +60,9 @@ describe('BookingPlanner — existing students (R-SCH-06, docs/10 §5 #14)', () 
     expect(busy.studentLessons).toHaveBeenCalledWith([IDS.s1, IDS.s2], span);
     expect(busy.teacherLessons).toHaveBeenCalledWith(IDS.teacher, span);
     expect(availability.listTimeOff).toHaveBeenCalledWith(IDS.teacher, span);
-    expect(projection.busy).toHaveBeenCalledWith(expect.objectContaining({ span, excludeRuleIds: [] }));
+    expect(projection.busy).toHaveBeenCalledWith(
+      expect.objectContaining({ span, excludeRuleIds: [] }),
+    );
   });
 
   it('keeps the idempotency key on the rule', async () => {
@@ -89,14 +91,21 @@ describe('BookingPlanner — not found (404)', () => {
 
   it('an unknown student id', async () => {
     const { planner } = fakePlanner();
-    const err = await planner.prepare(bookingRequest({ studentIds: [IDS.s1, IDS.missing] })).catch((e: unknown) => e);
-    expect([status(err), body(err)]).toEqual([404, { code: 'student_not_found', message: 'student_not_found' }]);
+    const err = await planner
+      .prepare(bookingRequest({ studentIds: [IDS.s1, IDS.missing] }))
+      .catch((e: unknown) => e);
+    expect([status(err), body(err)]).toEqual([
+      404,
+      { code: 'student_not_found', message: 'student_not_found' },
+    ]);
   });
 
   it('an unknown teacher or lead', async () => {
     const { planner, queries } = fakePlanner();
     queries.lead.mockResolvedValue(null);
-    const lead = await planner.prepare(bookingRequest({ leadId: IDS.lead })).catch((e: unknown) => e);
+    const lead = await planner
+      .prepare(bookingRequest({ leadId: IDS.lead }))
+      .catch((e: unknown) => e);
     expect(body(lead)).toMatchObject({ code: 'lead_not_found' });
     queries.teacher.mockResolvedValue(null);
     const teacher = await planner.prepare(bookingRequest()).catch((e: unknown) => e);

@@ -35,7 +35,13 @@ describe('grants used by the classroom', () => {
 describe('mintServerToken', () => {
   it('signs a short-lived server token carrying only the requested grant', () => {
     const t = mintServerToken(CONFIG, { roomAdmin: true, room: 'lesson-x' }, NOW);
-    const c = decode(t) as unknown as { iss: string; exp: number; nbf: number; video: object; validSignature: boolean };
+    const c = decode(t) as unknown as {
+      iss: string;
+      exp: number;
+      nbf: number;
+      video: object;
+      validSignature: boolean;
+    };
     expect(c.validSignature).toBe(true);
     expect(c.iss).toBe(CONFIG.apiKey);
     expect(c.video).toEqual({ roomAdmin: true, room: 'lesson-x' });

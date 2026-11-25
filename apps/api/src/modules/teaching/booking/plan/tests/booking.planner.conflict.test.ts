@@ -66,9 +66,9 @@ describe('BookingPlanner — conflicts (R-SCH-04, issue B3)', () => {
     const reason = 'ولي الأمر طلب الميعاد ده بالذات';
     const { payload, conflicts } = await planner.prepare(bookingRequest({ override: { reason } }));
     expect(conflicts.map((c) => c.kind)).toEqual(['teacher_busy']);
-    expect(payload.lessons.filter((l) => l.override_reason === reason).map((l) => l.starts_at)).toEqual([
-      '2026-10-11T14:00:00.000Z',
-    ]);
+    expect(
+      payload.lessons.filter((l) => l.override_reason === reason).map((l) => l.starts_at),
+    ).toEqual(['2026-10-11T14:00:00.000Z']);
     expect(payload.lessons.filter((l) => l.override_reason === null)).toHaveLength(4);
   });
 

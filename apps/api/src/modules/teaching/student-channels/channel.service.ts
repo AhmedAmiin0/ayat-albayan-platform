@@ -75,7 +75,11 @@ export class ChannelService {
   async unread(actor: ChannelActor): Promise<ChannelUnread> {
     if (actor.mode !== 'participant' || !actor.open) return { unread: 0 };
     const countRoles = UNREAD_COUNT_ROLES;
-    const [sum] = await this.queries.summaries({ profileId: actor.profileId, studentIds: [actor.studentId], countRoles });
+    const [sum] = await this.queries.summaries({
+      profileId: actor.profileId,
+      studentIds: [actor.studentId],
+      countRoles,
+    });
     return { unread: sum?.unread ?? 0 };
   }
 }

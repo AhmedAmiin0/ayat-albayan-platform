@@ -50,9 +50,15 @@ function subscriptionProblem(req: CourseFacts['req'], sub: CourseSubscription): 
 }
 
 /** Does a weekly course of the student run on any day of [from, to] (to null = open-ended)? */
-export function courseOverlaps(rules: readonly CourseRule[], span: { from: string; to: string | null }): boolean {
+export function courseOverlaps(
+  rules: readonly CourseRule[],
+  span: { from: string; to: string | null },
+): boolean {
   return rules.some(
-    (r) => isCourseRule(r) && (span.to === null || r.starts_on <= span.to) && (r.ends_on === null || r.ends_on >= span.from),
+    (r) =>
+      isCourseRule(r) &&
+      (span.to === null || r.starts_on <= span.to) &&
+      (r.ends_on === null || r.ends_on >= span.from),
   );
 }
 
@@ -64,7 +70,13 @@ export function courseOverlaps(rules: readonly CourseRule[], span: { from: strin
  * subscription already has its course, or a course of the student overlaps it; one starting after
  * the current one's last day is fine), 400 no_occurrences (a picked day has no lesson).
  */
-export function courseProblem({ req, sub, rules, endsOn, booked }: CourseFacts): CourseProblem | null {
+export function courseProblem({
+  req,
+  sub,
+  rules,
+  endsOn,
+  booked,
+}: CourseFacts): CourseProblem | null {
   if (!sub) return problem(HttpStatus.CONFLICT, 'subscription_required');
   const bad = subscriptionProblem(req, sub);
   if (bad) return bad;
@@ -74,7 +86,12 @@ export function courseProblem({ req, sub, rules, endsOn, booked }: CourseFacts):
   return null;
 }
 
-type BlockFacts = { sub: CourseSubscription | null; rules: readonly CourseRule[]; today: string; booked: boolean };
+type BlockFacts = {
+  sub: CourseSubscription | null;
+  rules: readonly CourseRule[];
+  today: string;
+  booked: boolean;
+};
 
 /**
  * The course wizard's gate before anything is picked (GET /sales/booking/course): no subscription,

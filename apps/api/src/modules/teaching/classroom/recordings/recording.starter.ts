@@ -59,7 +59,12 @@ export class RecordingStarter {
     return this.start({ id: claim, room: roomNameOf(target), filePath, s3 });
   }
 
-  private async start(input: { id: string; room: string; filePath: string; s3: RecordingConfig }): Promise<StartOutcome> {
+  private async start(input: {
+    id: string;
+    room: string;
+    filePath: string;
+    s3: RecordingConfig;
+  }): Promise<StartOutcome> {
     const { room, s3 } = input;
     try {
       if (!s3) return 'off';

@@ -33,23 +33,36 @@ interface DetailsParts {
 const iso = (at: string): string => new Date(at).toISOString();
 
 /** Only when 0 < net paid < owed (the price, or a stopped course's stored decision). */
-function partPaidOf(history: HistoryBundle, prices: readonly PriceRow[]): Map<string, SalesPartPaid> {
+function partPaidOf(
+  history: HistoryBundle,
+  prices: readonly PriceRow[],
+): Map<string, SalesPartPaid> {
   return new Map(
     prices.flatMap((p) => {
-      const paid = netPaid(history.payments.filter((x) => x.subscription_id === p.id).map((x) => ({ amount: Number(x.amount), kind: x.kind })));
+      const paid = netPaid(
+        history.payments
+          .filter((x) => x.subscription_id === p.id)
+          .map((x) => ({ amount: Number(x.amount), kind: x.kind })),
+      );
       const part = owedPartPaid({ ...p, price: Number(p.price), paid });
       return part ? [[p.id, { ...part, currency: p.currency }] as const] : [];
     }),
   );
 }
 
-const partOf = (money: ReadonlyMap<string, SalesPartPaid>, id: string): { part_paid?: SalesPartPaid } => {
+const partOf = (
+  money: ReadonlyMap<string, SalesPartPaid>,
+  id: string,
+): { part_paid?: SalesPartPaid } => {
   const part = money.get(id);
   return part ? { part_paid: part } : {};
 };
 
 /** The history's subscriptions without their payments and audit trail, newest first. */
-function subscriptionsOf(history: HistoryBundle | null, prices: readonly PriceRow[]): SalesStudentSubscription[] {
+function subscriptionsOf(
+  history: HistoryBundle | null,
+  prices: readonly PriceRow[],
+): SalesStudentSubscription[] {
   if (!history) return [];
   const money = partPaidOf(history, prices);
   return toSalesHistory('', history)
@@ -74,7 +87,10 @@ function subscriptionsOf(history: HistoryBundle | null, prices: readonly PriceRo
  * The student's own attendance per lesson, newest first; a moved lesson is left out (its new one
  * counts).
  */
-function attendanceDays(studentId: string, lessons: readonly AttendanceRow[]): SalesAttendanceDay[] {
+function attendanceDays(
+  studentId: string,
+  lessons: readonly AttendanceRow[],
+): SalesAttendanceDay[] {
   return lessons.flatMap((l) => {
     const own = l.lesson_students.find((s) => s.student_id === studentId);
     const kind = attendanceKind(l.status, own?.attendance ?? null);

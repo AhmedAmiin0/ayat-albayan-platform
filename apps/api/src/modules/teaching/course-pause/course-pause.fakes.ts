@@ -45,8 +45,17 @@ export const rpcOut = (over: Partial<RpcOut> = {}): RpcOut => ({
 export function pauseMocks() {
   return {
     queries: {
-      call: vi.fn(), studentExists: vi.fn(), pauses: vi.fn(), pause: vi.fn(), openPause: vi.fn(), due: vi.fn(), dueStarts: vi.fn(), previewStarts: vi.fn(),
-      pausedBack: vi.fn(), lessons: vi.fn(), liftLegacyPause: vi.fn(),
+      call: vi.fn(),
+      studentExists: vi.fn(),
+      pauses: vi.fn(),
+      pause: vi.fn(),
+      openPause: vi.fn(),
+      due: vi.fn(),
+      dueStarts: vi.fn(),
+      previewStarts: vi.fn(),
+      pausedBack: vi.fn(),
+      lessons: vi.fn(),
+      liftLegacyPause: vi.fn(),
     },
     follow: { after: vi.fn(), liftedLegacy: vi.fn(), paused: vi.fn(), resumed: vi.fn() },
   };
@@ -71,10 +80,16 @@ type Call = { method: 'GET' | 'POST' | 'PATCH'; url: string; token: keyof typeof
 export async function pauseApp() {
   const m = pauseMocks();
   const mod = await Test.createTestingModule({ imports: [messagingRoot(CoursePauseModule)] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(CoursePauseRepo).useValue(m.queries)
-    .overrideProvider(CoursePauseFollowUps).useValue(m.follow)
-    .overrideProvider(SettingsService).useValue(fakeSettings())
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(systemResolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(CoursePauseRepo)
+    .useValue(m.queries)
+    .overrideProvider(CoursePauseFollowUps)
+    .useValue(m.follow)
+    .overrideProvider(SettingsService)
+    .useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

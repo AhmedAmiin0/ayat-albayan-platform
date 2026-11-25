@@ -18,7 +18,14 @@ const URL = `/threads/${encodeURIComponent(PHONE)}/rating`;
 const REQ = '5f0c2c4e-1b2a-4c3d-9e8f-0a1b2c3d4e5f';
 
 const m = {
-  queries: { guardianByPhone: vi.fn(), latestHeld: vi.fn(), approved: vi.fn(), held: vi.fn(), byIds: vi.fn(), queue: vi.fn() },
+  queries: {
+    guardianByPhone: vi.fn(),
+    latestHeld: vi.fn(),
+    approved: vi.fn(),
+    held: vi.fn(),
+    byIds: vi.fn(),
+    queue: vi.fn(),
+  },
   templates: { approved: vi.fn(), boot: vi.fn() },
   outbox: { send: vi.fn() },
   audit: { record: vi.fn() },
@@ -31,11 +38,18 @@ describe('POST /threads/:phone/rating', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [messagingRoot(LessonRatingModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(RatingRepo).useValue(m.queries)
-      .overrideProvider(TemplateRegistry).useValue(m.templates)
-      .overrideProvider(Outbox).useValue(m.outbox)
-      .overrideProvider(AuditService).useValue(m.audit)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(RatingRepo)
+      .useValue(m.queries)
+      .overrideProvider(TemplateRegistry)
+      .useValue(m.templates)
+      .overrideProvider(Outbox)
+      .useValue(m.outbox)
+      .overrideProvider(AuditService)
+      .useValue(m.audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

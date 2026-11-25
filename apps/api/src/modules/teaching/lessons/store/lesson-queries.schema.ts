@@ -28,7 +28,10 @@ export function parseWindow(query: unknown): LessonWindow {
  * `?date&tz` → that local day, [00:00, next 00:00) in tz (DST days are 23 or 25 h). No `tz` →
  * `defaultTz` (settings.academy_timezone).
  */
-export function parseDay(query: unknown, defaultTz: string = SETTING_DEFAULTS.academy_timezone): LessonWindow {
+export function parseDay(
+  query: unknown,
+  defaultTz: string = SETTING_DEFAULTS.academy_timezone,
+): LessonWindow {
   const { date, tz = defaultTz } = parseOrThrow(daySchema, query);
   return { from: startOfLocalDay(date, tz), to: startOfLocalDay(addDays(date, 1), tz) };
 }

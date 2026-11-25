@@ -26,7 +26,9 @@ export class RatingSendService {
     const guardian = await this.queries.guardianByPhone(input.phone);
     if (!guardian) throw waHttpError('not_a_guardian', 404);
     const lesson = await this.queries.latestHeld({ guardianId: guardian.id, now });
-    const family = lesson ? ratingFamilies(lesson).find((f) => f.guardian.id === guardian.id) : undefined;
+    const family = lesson
+      ? ratingFamilies(lesson).find((f) => f.guardian.id === guardian.id)
+      : undefined;
     if (!lesson || !family) throw waHttpError('no_completed_lesson', 404);
     const { key, params } = lessonRatingMessage({
       lessonId: lesson.id,

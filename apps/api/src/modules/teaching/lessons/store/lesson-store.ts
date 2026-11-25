@@ -47,7 +47,11 @@ export class LessonStore {
   async commit({ change, audit, transition, notice: asked }: Commit): Promise<void> {
     const { entity, entityId, action, before, after } = audit;
     const to = change.lessons?.find((l) => l.id === movedId(asked))?.starts_at;
-    const { notice, messages } = await this.family({ notice: asked, to, messages: change.messages });
+    const { notice, messages } = await this.family({
+      notice: asked,
+      to,
+      messages: change.messages,
+    });
     const applied = messages ? { ...change, messages } : change;
     const row = { entity, entity_id: entityId, action, before, after };
     try {

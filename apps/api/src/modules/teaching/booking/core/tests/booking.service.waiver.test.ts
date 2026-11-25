@@ -18,8 +18,16 @@ function setup() {
   deps.queries.createBooking.mockResolvedValue(RESULT);
   const { invoices } = invoiceSetup();
   const resolve = vi.spyOn(invoices, 'resolve');
-  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, invoices, fakeTeacherAlert().after);
-  return { ...deps, resolve, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo) };
+  const writer = new BookingWriter(
+    deps.queries as unknown as BookingRepo,
+    invoices,
+    fakeTeacherAlert().after,
+  );
+  return {
+    ...deps,
+    resolve,
+    service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo),
+  };
 }
 
 describe('BookingService.book — invoiceWaived (R-PAY-03, R-ASST-04)', () => {
@@ -35,7 +43,10 @@ describe('BookingService.book — invoiceWaived (R-PAY-03, R-ASST-04)', () => {
   it('with invoiceWaived the package is written with no invoice and an audit with no source', async () => {
     const { service, queries, resolve } = setup();
     await service.book(bookingRequest({ invoice: undefined }), ACTOR, { invoiceWaived: true });
-    expect(resolve).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ waived: true }));
+    expect(resolve).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ waived: true }),
+    );
     const [payload, actor] = queries.createBooking.mock.calls[0] ?? [];
     expect(actor).toBe(ACTOR);
     expect(payload?.invoice).toBeNull();

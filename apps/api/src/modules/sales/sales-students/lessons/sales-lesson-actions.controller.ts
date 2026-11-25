@@ -21,16 +21,32 @@ export class SalesLessonActionsController {
   @Post(':id/reschedule')
   @HttpCode(200)
   @Permissions('lessons.reschedule')
-  reschedule(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesLessonMoved> {
-    return this.actions.reschedule({ lessonId: id, body: parseOrThrow(salesRescheduleSchema, body ?? {}), actor: user });
+  reschedule(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SalesLessonMoved> {
+    return this.actions.reschedule({
+      lessonId: id,
+      body: parseOrThrow(salesRescheduleSchema, body ?? {}),
+      actor: user,
+    });
   }
 
   /** Teacher or student cancels may also come after the end; 409 invalid_transition. */
   @Post(':id/cancel')
   @HttpCode(200)
   @Permissions('lessons.cancel')
-  cancel(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<{ id: string; status: LessonStatus }> {
-    return this.actions.cancel({ lessonId: id, body: parseOrThrow(salesCancelSchema, body ?? {}), actor: user });
+  cancel(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<{ id: string; status: LessonStatus }> {
+    return this.actions.cancel({
+      lessonId: id,
+      body: parseOrThrow(salesCancelSchema, body ?? {}),
+      actor: user,
+    });
   }
 
   /** Any lesson; no body, no message; 409 lesson_ended or invalid_transition. */

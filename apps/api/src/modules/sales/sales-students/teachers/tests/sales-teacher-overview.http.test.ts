@@ -21,8 +21,17 @@ describe('GET /sales/teachers/:id/overview (owner 2026-10-28, docs/16 row 36b)',
     const res = await t.call('GET', `/sales/teachers/${TEACHER}/overview`, { token: 'salesB' });
     expect(res.statusCode).toBe(200);
     const body = res.json();
-    expect(body.weekly.map((s: { weekday: number; time: string }) => [s.weekday, s.time])).toEqual([[0, '20:00'], [2, '20:00']]);
-    expect(body.attendance.totals).toEqual({ held: 2, student_absent: 1, cancelled_by_teacher: 1, cancelled_by_admin: 0, other: 0 });
+    expect(body.weekly.map((s: { weekday: number; time: string }) => [s.weekday, s.time])).toEqual([
+      [0, '20:00'],
+      [2, '20:00'],
+    ]);
+    expect(body.attendance.totals).toEqual({
+      held: 2,
+      student_absent: 1,
+      cancelled_by_teacher: 1,
+      cancelled_by_admin: 0,
+      other: 0,
+    });
     expect(body.attendance.latest).toHaveLength(4);
     expect(t.overview.lessons).toHaveBeenCalledWith(TEACHER, { from: new Date('2026-09-28T10:00:00Z'), to: NOW });
     expect(res.body).not.toMatch(SECRET);

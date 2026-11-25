@@ -21,14 +21,28 @@ const RESULT = {
 const student = (id: string, link: string | null = null) => ({ id, name: 'س', meeting_link_override: link });
 const CLASH = { kind: 'teacher_busy' as const, startsAt: '2026-10-05T13:07:00.000Z', endsAt: '2026-10-05T13:37:00.000Z' };
 
-let booking: { teacher: ReturnType<typeof vi.fn>; students: ReturnType<typeof vi.fn>; replay: ReturnType<typeof vi.fn> };
+let booking: {
+  teacher: ReturnType<typeof vi.fn>;
+  students: ReturnType<typeof vi.fn>;
+  replay: ReturnType<typeof vi.fn>;
+};
 let writes: { create: ReturnType<typeof vi.fn> };
 let checker: { check: ReturnType<typeof vi.fn> };
 const service = () =>
-  new InstantLessonService(booking as unknown as BookingRepo, writes as unknown as InstantRepo, checker as unknown as ConflictChecker);
-const req = (over: object = {}) => ({ studentIds: [S1], teacherId: T, durationMin: 30 as const, ...over });
+  new InstantLessonService(
+    booking as unknown as BookingRepo,
+    writes as unknown as InstantRepo,
+    checker as unknown as ConflictChecker,
+  );
+const req = (over: object = {}) => ({
+  studentIds: [S1],
+  teacherId: T,
+  durationMin: 30 as const,
+  ...over,
+});
 const create = (over: object = {}) => service().create({ req: req(over), actorId: 'A1' }, NOW);
-const body = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+const body = async (p: Promise<unknown>) =>
+  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   booking = {
@@ -53,7 +67,9 @@ describe('POST /lessons/instant', () => {
 
   it('checks the slot for the teacher and every student', async () => {
     await create({ studentIds: [S1, S2] });
-    expect(checker.check).toHaveBeenCalledWith(expect.objectContaining({ teacherId: T, studentIds: [S1, S2], excludeIds: [] }));
+    expect(checker.check).toHaveBeenCalledWith(
+      expect.objectContaining({ teacherId: T, studentIds: [S1, S2], excludeIds: [] }),
+    );
   });
 
   it('409 conflict (with the clashes) unless an override reason is given', async () => {

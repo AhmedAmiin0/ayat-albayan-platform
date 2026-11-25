@@ -43,7 +43,13 @@ describe('GET /lessons/overview (R-SCH-09 all-teachers calendar)', () => {
 
   it('six reads for the window, no per-teacher calls; teacherId narrows every read', async () => {
     await h.call({ method: 'GET', url: `/lessons/overview?${DAY}` });
-    for (const read of [h.overview.teachers, h.overview.slots, h.overview.timeOff, h.overview.carryOver, h.lessons.window]) {
+    for (const read of [
+      h.overview.teachers,
+      h.overview.slots,
+      h.overview.timeOff,
+      h.overview.carryOver,
+      h.lessons.window,
+    ]) {
       expect(read).toHaveBeenCalledTimes(1);
       expect(read).toHaveBeenCalledWith({ ...WINDOW, teacherId: undefined });
     }

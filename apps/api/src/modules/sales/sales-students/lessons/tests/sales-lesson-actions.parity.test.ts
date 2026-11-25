@@ -22,13 +22,34 @@ const checker = { check: vi.fn() };
 
 function rig() {
   const deps = fakeStore(lessonRow());
-  const one = new RescheduleOneService(deps.store, { get: vi.fn() } as unknown as TeachersRepo, checker as unknown as ConflictChecker);
+  const one = new RescheduleOneService(
+    deps.store,
+    { get: vi.fn() } as unknown as TeachersRepo,
+    checker as unknown as ConflictChecker,
+  );
   const settings = readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null });
   const { correction } = fakeCorrection(deps.store, settings);
-  const cancels = new LessonCancelService(deps.store, { rule: vi.fn() } as unknown as ScheduleRepo, settings, correction);
+  const cancels = new LessonCancelService(
+    deps.store,
+    { rule: vi.fn() } as unknown as ScheduleRepo,
+    settings,
+    correction,
+  );
   const scope = { assertLesson: vi.fn(async () => undefined) } as unknown as SalesStudentScope;
-  const queries = { lesson: vi.fn(async (id: string) => ({ id, starts_at: NEW_START, ends_at: NEW_START, status: 'scheduled', lesson_students: [] })) };
-  const actions = new SalesLessonActions(scope, queries as unknown as SalesStudentRepo, { one, cancels } as LessonServices);
+  const queries = {
+    lesson: vi.fn(async (id: string) => ({
+      id,
+      starts_at: NEW_START,
+      ends_at: NEW_START,
+      status: 'scheduled',
+      lesson_students: [],
+    })),
+  };
+  const actions = new SalesLessonActions(
+    scope,
+    queries as unknown as SalesStudentRepo,
+    { one, cancels } as LessonServices,
+  );
   return { ...deps, one, cancels, actions };
 }
 
@@ -51,12 +72,22 @@ describe('sales move / cancel = the admin path (docs/16 row 37)', () => {
     const admin = rig();
     await admin.one.reschedule({ lessonId: LESSON_ID, body: { scope: 'one', startsAt: NEW_START }, actor: ADMIN });
     const sales = rig();
-    await sales.actions.reschedule({ lessonId: LESSON_ID, body: { startsAt: NEW_START }, actor: SALES });
+    await sales.actions.reschedule({
+      lessonId: LESSON_ID,
+      body: { startsAt: NEW_START },
+      actor: SALES,
+    });
     expect(normalised(sales.writer)).toEqual(normalised(admin.writer));
     expect(normalised(sales.writer).messages).toHaveLength(1);
     expect(appliedChange(sales.writer)?.actor).toBe(SALES.id);
-    expect(sales.record.mock.calls[0]?.[0]).toMatchObject({ actorId: SALES.id, action: 'reschedule' });
-    expect(sales.record.mock.calls[0]?.[0].after).toEqual({ ...admin.record.mock.calls[0]?.[0].after, lesson_id: expect.any(String) });
+    expect(sales.record.mock.calls[0]?.[0]).toMatchObject({
+      actorId: SALES.id,
+      action: 'reschedule',
+    });
+    expect(sales.record.mock.calls[0]?.[0].after).toEqual({
+      ...admin.record.mock.calls[0]?.[0].after,
+      lesson_id: expect.any(String),
+    });
   });
 
   it('cancel: the admin\'s «ألغتها الإدارة» change minus the reason; no message queued on either path', async () => {
@@ -67,9 +98,19 @@ describe('sales move / cancel = the admin path (docs/16 row 37)', () => {
     const { cancel_reason: reason, ...adminChange } = appliedChange(admin.writer)?.changes[0] ?? {};
     expect(reason).toBe('ظرف');
     expect(appliedChange(sales.writer)?.changes).toEqual([adminChange]);
-    expect(appliedChange(sales.writer)?.changes[0]).toMatchObject({ to_status: 'cancelled_by_admin', chargeable: false });
-    for (const path of [admin, sales]) expect(appliedChange(path.writer)?.messages ?? []).toEqual([]);
-    expect(sales.record).toHaveBeenCalledWith(expect.objectContaining({ actorId: SALES.id, action: 'cancel', after: expect.objectContaining({ reason: null }) }));
+    expect(appliedChange(sales.writer)?.changes[0]).toMatchObject({
+      to_status: 'cancelled_by_admin',
+      chargeable: false,
+    });
+    for (const path of [admin, sales])
+      expect(appliedChange(path.writer)?.messages ?? []).toEqual([]);
+    expect(sales.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        actorId: SALES.id,
+        action: 'cancel',
+        after: expect.objectContaining({ reason: null }),
+      }),
+    );
   });
 
   it('touches only the one lesson: no rule end, no other lesson', async () => {

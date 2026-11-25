@@ -21,7 +21,13 @@ export type LessonChange = {
 export type StudentOutcome = { student_id: string; attendance: Attendance; chargeable: boolean };
 
 /** audit_log row written inside the same transaction (R-NFR-03); actor = ChangeSet.actor. */
-export type AuditRow = { entity: string; entity_id: string; action: string; before?: Json; after?: Json };
+export type AuditRow = {
+  entity: string;
+  entity_id: string;
+  action: string;
+  before?: Json;
+  after?: Json;
+};
 
 export type NewLesson = {
   id: string;

@@ -79,10 +79,27 @@ export const bundle = (): HistoryBundle =>
   }) as unknown as HistoryBundle;
 
 export async function academyApp() {
-  const sales = { ownership: vi.fn(async (id: string) => (id === A ? OWN_A : NONE)), subscriptions: vi.fn(), meetings: vi.fn(), ownsLesson: vi.fn() };
-  const academy = { teachers: vi.fn(async () => [teacherRow()]), students: vi.fn(async () => ({ rows: [studentRow()], total: 41 })), live: vi.fn(async () => [liveRow()]) };
-  const schedule = { day: vi.fn(async () => [scheduleRow()]), upcoming: vi.fn(async () => [{ starts_at: '2026-10-12T15:00:00.000Z', lesson_students: [{ student_id: 's1' }] }]) };
-  const history = { studentOf: vi.fn(async (id: string) => (id === SUB ? 's1' : null)), history: vi.fn(async () => bundle()) };
+  const sales = {
+    ownership: vi.fn(async (id: string) => (id === A ? OWN_A : NONE)),
+    subscriptions: vi.fn(),
+    meetings: vi.fn(),
+    ownsLesson: vi.fn(),
+  };
+  const academy = {
+    teachers: vi.fn(async () => [teacherRow()]),
+    students: vi.fn(async () => ({ rows: [studentRow()], total: 41 })),
+    live: vi.fn(async () => [liveRow()]),
+  };
+  const schedule = {
+    day: vi.fn(async () => [scheduleRow()]),
+    upcoming: vi.fn(async () => [
+      { starts_at: '2026-10-12T15:00:00.000Z', lesson_students: [{ student_id: 's1' }] },
+    ]),
+  };
+  const history = {
+    studentOf: vi.fn(async (id: string) => (id === SUB ? 's1' : null)),
+    history: vi.fn(async () => bundle()),
+  };
   const roster = {
     rules: vi.fn(async (): Promise<RosterRuleRow[]> => []),
     packages: vi.fn(async (): Promise<RosterPackageRow[]> => []),
@@ -90,13 +107,22 @@ export async function academyApp() {
     balances: vi.fn(async (): Promise<RosterBalanceRow[]> => []),
   };
   const mod = await Test.createTestingModule({ imports: [messagingRoot(SalesAcademyModule)] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(SalesRepo).useValue(sales)
-    .overrideProvider(SalesAcademyRepo).useValue(academy)
-    .overrideProvider(SalesRosterRepo).useValue(roster)
-    .overrideProvider(SalesHistoryRepo).useValue(history)
-    .overrideProvider(SalesScheduleRepo).useValue(schedule)
-    .overrideProvider(SettingsService).useValue(fakeSettings())
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(systemResolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(SalesRepo)
+    .useValue(sales)
+    .overrideProvider(SalesAcademyRepo)
+    .useValue(academy)
+    .overrideProvider(SalesRosterRepo)
+    .useValue(roster)
+    .overrideProvider(SalesHistoryRepo)
+    .useValue(history)
+    .overrideProvider(SalesScheduleRepo)
+    .useValue(schedule)
+    .overrideProvider(SettingsService)
+    .useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

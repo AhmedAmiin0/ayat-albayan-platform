@@ -14,7 +14,11 @@ import { JoinLinkResolver, tokenKind } from '@/modules/teaching/classroom/family
 import { RoomAdmission } from './room-admission';
 
 /** The body by token kind: only the family app's signed link may leave the name out. */
-const BODY = { random: guestJoinSchema, family: familyGuestJoinSchema, none: guestJoinSchema } as const;
+const BODY = {
+  random: guestJoinSchema,
+  family: familyGuestJoinSchema,
+  none: guestJoinSchema,
+} as const;
 
 const MS = 1000;
 const ONE_DAY_S = 86_400;
@@ -39,7 +43,10 @@ export class GuestJoinService {
   ) {}
 
   /** 404 link_invalid, 410 link_expired / join_closed / lesson_ended, 403 join_not_open_yet / removed_from_room, 429, 400, 503. */
-  async join(input: { linkToken: string; ip: string; body: unknown }, now = new Date()): Promise<RoomJoinResult> {
+  async join(
+    input: { linkToken: string; ip: string; body: unknown },
+    now = new Date(),
+  ): Promise<RoomJoinResult> {
     this.limit.assert({ ip: input.ip, token: input.linkToken }, now.getTime());
     this.admission.livekit();
     const typed = parseOrThrow(BODY[tokenKind(input.linkToken)], input.body).name;
@@ -51,7 +58,9 @@ export class GuestJoinService {
     assertLessonHeld(lesson);
     const win = await this.queries.joinWindow();
     assertWindowOpen(lesson, now, win);
-    const closesS = Math.floor(Date.parse(joinWindow(lesson, now, win).closes_at) / MS) - Math.floor(now.getTime() / MS);
+    const closesS =
+      Math.floor(Date.parse(joinWindow(lesson, now, win).closes_at) / MS) -
+      Math.floor(now.getTime() / MS);
     const ttlSeconds = Math.min(closesS, ONE_DAY_S);
     const name = typed ?? (await this.studentName(link, input.body));
     return this.admission.admit({ lessonId: lesson.id, role: 'guest', name, principal: { joinLinkId: link.id }, ttlSeconds }, now);

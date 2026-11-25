@@ -17,7 +17,11 @@ export class RecordingVisibilityService {
     private readonly audit: AuditService,
   ) {}
 
-  async setVisibility(input: { user: AuthUser; id: string; visible: boolean }): Promise<{ id: string; visible_to_student: boolean }> {
+  async setVisibility(input: {
+    user: AuthUser;
+    id: string;
+    visible: boolean;
+  }): Promise<{ id: string; visible_to_student: boolean }> {
     const row = await this.queries.byId(input.id);
     if (!row) throw notFound('recording_not_found');
     await this.assertMay(input.user, row);

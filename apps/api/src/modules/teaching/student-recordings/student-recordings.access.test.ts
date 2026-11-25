@@ -7,11 +7,16 @@ import { ADMIN, ASSISTANT, GUARDIAN, OTHER_ASSISTANT, OTHER_TEACHER, SALES, STUD
 
 let q: ReturnType<typeof studentQueries>;
 const scope = (user = ADMIN) =>
-  new StudentRecordingAccess(q as unknown as StudentRecordingRepo, teachersFake() as unknown as TeachersRepo).scopeFor(user, STUDENT);
+  new StudentRecordingAccess(
+    q as unknown as StudentRecordingRepo,
+    teachersFake() as unknown as TeachersRepo,
+  ).scopeFor(user, STUDENT);
 
 beforeEach(() => {
   q = studentQueries();
-  q.assists.mockImplementation(async ({ profileId }: { profileId: string }) => profileId === ASSISTANT.id);
+  q.assists.mockImplementation(
+    async ({ profileId }: { profileId: string }) => profileId === ASSISTANT.id,
+  );
 });
 
 describe('who may open a student’s recordings (access matrix)', () => {

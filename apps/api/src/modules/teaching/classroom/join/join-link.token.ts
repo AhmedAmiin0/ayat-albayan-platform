@@ -15,5 +15,7 @@ export const looksLikeLinkToken = (token: string): boolean => TOKEN_RE.test(toke
 export const hashLinkToken = (token: string): string => createHash('sha256').update(token).digest('hex');
 
 /** A link dies when its classroom closes (settings.join_closes_after_min after the lesson ends, at creation). */
-export const linkExpiry = (lesson: { ends_at: string }, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): string =>
-  roomClosesAt(lesson, win);
+export const linkExpiry = (
+  lesson: { ends_at: string },
+  win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
+): string => roomClosesAt(lesson, win);

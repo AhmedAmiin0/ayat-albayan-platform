@@ -14,27 +14,39 @@ export const whenText = (startsAt: string | null, tz: string): string =>
   startsAt ? lessonWhenText(new Date(startsAt), tz) : ar.meetingInvites.message.now;
 
 /** The time an invitee reads; a number nobody knows also names the tz it is written in (the creator's). */
-export function inviteeWhen(startsAt: string | null, i: { kind: string; tz: string; display_name: string; phone_e164: string | null }): string {
+export function inviteeWhen(
+  startsAt: string | null,
+  i: { kind: string; tz: string; display_name: string; phone_e164: string | null },
+): string {
   const when = whenText(startsAt, i.tz);
   const unknown = i.kind === 'phone' && i.display_name === i.phone_e164;
-  return startsAt && unknown ? fill(ar.meetingInvites.message.inTz, { when, tz: cityOf(i.tz) }) : when;
+  return startsAt && unknown
+    ? fill(ar.meetingInvites.message.inTz, { when, tz: cityOf(i.tz) })
+    : when;
 }
 
 /** The chat message (and the text the creator copies when the window is closed). */
-export const invitationText = (v: { title: string; when: string; link: string }): string => fill(ar.meetingInvites.message.invite, v);
+export const invitationText = (v: { title: string; when: string; link: string }): string =>
+  fill(ar.meetingInvites.message.invite, v);
 
-export const cancellationText = (v: { title: string; when: string }): string => fill(ar.meetingInvites.message.cancelled, v);
+export const cancellationText = (v: { title: string; when: string }): string =>
+  fill(ar.meetingInvites.message.cancelled, v);
 
 /** The bell row's subject: PushService keys it `meeting_invite:{meeting}:{startsAt|instant}:{profile}`. */
 export const inviteSubject = (meetingId: string, startsAt: string | null): string => `${meetingId}:${whenKey(startsAt)}`;
 
 /** A family's WhatsApp invitation: once per meeting, phone and time (a reschedule is a new key). */
-export const inviteDedupKey = (v: { meetingId: string; phone: string; startsAt: string | null }): string =>
-  `${INVITE_DEDUP_PREFIX}${v.meetingId}:${v.phone}:${whenKey(v.startsAt)}`;
+export const inviteDedupKey = (v: {
+  meetingId: string;
+  phone: string;
+  startsAt: string | null;
+}): string => `${INVITE_DEDUP_PREFIX}${v.meetingId}:${v.phone}:${whenKey(v.startsAt)}`;
 
 /** The client's request id makes a double tap one message. */
-export const resendDedupKey = (v: { meetingId: string; phone: string; startsAt: string | null }, requestId: string): string =>
-  `${inviteDedupKey(v)}:resend:${requestId}`;
+export const resendDedupKey = (
+  v: { meetingId: string; phone: string; startsAt: string | null },
+  requestId: string,
+): string => `${inviteDedupKey(v)}:resend:${requestId}`;
 
 /** The cancellation chat message: once per meeting and phone (not counted in the daily limit). */
 export const cancelDedupKey = (meetingId: string, phone: string): string => `meeting_cancel:${meetingId}:${phone}`;

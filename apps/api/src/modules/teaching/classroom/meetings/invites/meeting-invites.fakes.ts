@@ -96,7 +96,10 @@ export function meetingInviteMocks() {
 type MeetingInviteMocks = ReturnType<typeof meetingInviteMocks>;
 
 /** The HTTP harness: every DB-facing piece of the invitations replaced by the mocks. */
-export const overrideMeetingInvites = (b: TestingModuleBuilder, m: MeetingInviteMocks): TestingModuleBuilder =>
+export const overrideMeetingInvites = (
+  b: TestingModuleBuilder,
+  m: MeetingInviteMocks,
+): TestingModuleBuilder =>
   b
     .overrideProvider(MeetingListRepo).useValue(m.lists)
     .overrideProvider(MeetingInviteesRepo).useValue(m.invitees)
@@ -110,5 +113,6 @@ export const overrideMeetingInvites = (b: TestingModuleBuilder, m: MeetingInvite
 /** Back to the happy-path defaults (beforeEach, after vi.resetAllMocks). */
 export const resetMeetingInvites = (m: MeetingInviteMocks): void => {
   const fresh = meetingInviteMocks();
-  for (const key of Object.keys(fresh) as (keyof MeetingInviteMocks)[]) Object.assign(m[key], fresh[key]);
+  for (const key of Object.keys(fresh) as (keyof MeetingInviteMocks)[])
+    Object.assign(m[key], fresh[key]);
 };

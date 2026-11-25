@@ -71,9 +71,14 @@ describe('POST /sales/lessons/:id/reschedule and /cancel (docs/16 row 37), rule 
     expect(t.lessons.cancels.cancel).not.toHaveBeenCalled();
   });
 
-  it('a group lesson with another family\'s child moves / cancels as one lesson, for every student of it', async () => {
-    t.queries.lesson.mockResolvedValue(lessonFacts({ lesson_students: [{ student_id: MINE }, { student_id: OTHER }] }));
-    const move = await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, { token: 'salesA', body: { startsAt: AT } });
+  it("a group lesson with another family's child moves / cancels as one lesson, for every student of it", async () => {
+    t.queries.lesson.mockResolvedValue(
+      lessonFacts({ lesson_students: [{ student_id: MINE }, { student_id: OTHER }] }),
+    );
+    const move = await t.call('POST', `/sales/lessons/${LESSON}/reschedule`, {
+      token: 'salesA',
+      body: { startsAt: AT },
+    });
     expect(move.statusCode).toBe(200);
     expect(t.lessons.one.reschedule).toHaveBeenCalledWith(expect.objectContaining({ lessonId: LESSON, body: { scope: 'one', startsAt: AT } }));
     expect((await t.call('POST', `/sales/lessons/${LESSON}/cancel`, { token: 'salesA', body: {} })).statusCode).toBe(200);

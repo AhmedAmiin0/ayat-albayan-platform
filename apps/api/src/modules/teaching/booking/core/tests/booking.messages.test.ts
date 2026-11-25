@@ -59,6 +59,8 @@ describe('confirmationDrafts — one per guardian', () => {
 
   it('keeps a null guardian id for the guardian the RPC creates (lead path)', () => {
     const students = [{ name: 'سهيلة', guardian: { ...riyadh, id: null } }];
-    expect(confirmationDrafts({ students, firstStart, meetingLink: null })[0]?.guardian_id).toBeNull();
+    expect(
+      confirmationDrafts({ students, firstStart, meetingLink: null })[0]?.guardian_id,
+    ).toBeNull();
   });
 });

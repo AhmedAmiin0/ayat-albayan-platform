@@ -36,11 +36,17 @@ export type FeedbackListRow = Pick<
 export type FeedbackPage = { rows: FeedbackListRow[]; total: number };
 export type AverageRow = FeedbackAverage & { teacher_id: string };
 
-
-const bounds = (p: PageQuery): [number, number] => [(p.page - 1) * p.pageSize, p.page * p.pageSize - 1];
+const bounds = (p: PageQuery): [number, number] => [
+  (p.page - 1) * p.pageSize,
+  p.page * p.pageSize - 1,
+];
 const EMPTY: FeedbackPage = { rows: [], total: 0 };
 
-function rows(res: { data: FeedbackListRow[] | null; count: number | null; error: PostgrestError | null }): FeedbackPage {
+function rows(res: {
+  data: FeedbackListRow[] | null;
+  count: number | null;
+  error: PostgrestError | null;
+}): FeedbackPage {
   if (res.error) throw dbError(res.error);
   return { rows: res.data ?? [], total: res.count ?? 0 };
 }
@@ -74,7 +80,10 @@ export class FeedbackReadRepo {
   }
 
   /** A teacher's own rows: the teacher filter is the login, never a request parameter. */
-  mine(teacherId: string, input: { filter: FeedbackQuery; page: PageQuery }): Promise<FeedbackPage> {
+  mine(
+    teacherId: string,
+    input: { filter: FeedbackQuery; page: PageQuery },
+  ): Promise<FeedbackPage> {
     return this.page({ filter: { ...input.filter, teacher: teacherId }, page: input.page });
   }
 
@@ -86,11 +95,20 @@ export class FeedbackReadRepo {
     return data.flatMap((r) =>
       r.teacher_id === null || r.n === null || r.n === 0
         ? []
-        : [{ teacher_id: r.teacher_id, avg_rating: Number(r.avg_rating), n: r.n, recommend_yes_pct: Number(r.recommend_yes_pct) }],
+        : [
+            {
+              teacher_id: r.teacher_id,
+              avg_rating: Number(r.avg_rating),
+              n: r.n,
+              recommend_yes_pct: Number(r.recommend_yes_pct),
+            },
+          ],
     );
   }
 
-  async students(ids: readonly string[]): Promise<{ id: string; code: string | null; name: string }[]> {
+  async students(
+    ids: readonly string[],
+  ): Promise<{ id: string; code: string | null; name: string }[]> {
     if (ids.length === 0) return [];
     const { data, error } = await this.db.from('students').select('id, code, name').in('id', [...new Set(ids)]);
     if (error) throw dbError(error);

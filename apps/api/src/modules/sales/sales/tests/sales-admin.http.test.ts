@@ -14,7 +14,9 @@ describe('admin lead assignment: POST /leads/:id/assign, POST /leads/assign-unas
   beforeEach(() => {
     vi.resetAllMocks();
     t.assign.isSalesperson.mockImplementation(async (id: string) => id === A);
-    t.assign.setAssignee.mockImplementation(async (i: { profileId: string | null }) => lead({ assigned_to: i.profileId }));
+    t.assign.setAssignee.mockImplementation(async (i: { profileId: string | null }) =>
+      lead({ assigned_to: i.profileId }),
+    );
     t.assign.salespeople.mockResolvedValue([{ id: A, full_name: 'أحمد' }]);
     t.assign.assignedLeads.mockResolvedValue([{ assigned_to: A, status: 'new', updated_at: '2026-10-01T00:00:00Z' }]);
     t.assign.unassignedLeadIds.mockResolvedValue(['l1', 'l2']);

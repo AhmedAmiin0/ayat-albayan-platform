@@ -15,8 +15,13 @@ describe('ClassroomSettings', () => {
   });
 
   it('answers the stored values: the join window and the default meeting title', async () => {
-    const values = await readerOf(ClassroomSettings, { join_opens_before_min: 5, default_meeting_title: 'لقاء' }).read();
-    expect(joinWindowConfig(values)).toEqual(joinWindowConfig({ ...SETTING_DEFAULTS, join_opens_before_min: 5 }));
+    const values = await readerOf(ClassroomSettings, {
+      join_opens_before_min: 5,
+      default_meeting_title: 'لقاء',
+    }).read();
+    expect(joinWindowConfig(values)).toEqual(
+      joinWindowConfig({ ...SETTING_DEFAULTS, join_opens_before_min: 5 }),
+    );
     expect(values.default_meeting_title).toBe('لقاء');
   });
 });

@@ -14,7 +14,11 @@ const BEFORE = new Date('2026-10-04T10:00:00Z');
 
 function setup(row: LessonRow | null = lessonRow(), lateCancelHours: number | null = null) {
   const deps = fakeStore(row);
-  const service = new LessonStatusService(deps.store, access as unknown as LessonAccess, readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: lateCancelHours }));
+  const service = new LessonStatusService(
+    deps.store,
+    access as unknown as LessonAccess,
+    readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: lateCancelHours }),
+  );
   return { ...deps, service };
 }
 
@@ -60,20 +64,28 @@ describe('LessonStatusService.confirm (R-SCH-03, issue B2)', () => {
     writer.apply.mockRejectedValue(conflict('invalid_transition'));
     queries.get.mockResolvedValueOnce(lessonRow()).mockResolvedValueOnce(lessonRow({ status: 'confirmed' }));
     expect(await service.confirm({ lessonId: LESSON_ID, actor: ADMIN })).toBe(LESSON_ID);
-    queries.get.mockResolvedValueOnce(lessonRow()).mockResolvedValueOnce(lessonRow({ status: 'cancelled_by_admin' }));
-    await expect(service.confirm({ lessonId: LESSON_ID, actor: ADMIN })).rejects.toMatchObject({ status: 409 });
+    queries.get
+      .mockResolvedValueOnce(lessonRow())
+      .mockResolvedValueOnce(lessonRow({ status: 'cancelled_by_admin' }));
+    await expect(service.confirm({ lessonId: LESSON_ID, actor: ADMIN })).rejects.toMatchObject({
+      status: 409,
+    });
   });
 
   it("another teacher's lesson → 403 before any write", async () => {
     access.assertCanTouch.mockRejectedValue(new ForbiddenException());
     const { service, writer } = setup();
-    await expect(service.confirm({ lessonId: LESSON_ID, actor: TEACHER })).rejects.toBeInstanceOf(ForbiddenException);
+    await expect(service.confirm({ lessonId: LESSON_ID, actor: TEACHER })).rejects.toBeInstanceOf(
+      ForbiddenException,
+    );
     expect(writer.apply).not.toHaveBeenCalled();
   });
 
   it('404 for an unknown lesson', async () => {
     const { service } = setup(null);
-    await expect(service.confirm({ lessonId: LESSON_ID, actor: ADMIN })).rejects.toMatchObject({ status: 404 });
+    await expect(service.confirm({ lessonId: LESSON_ID, actor: ADMIN })).rejects.toMatchObject({
+      status: 404,
+    });
   });
 
   it('anyLesson (sales\' lessons.confirm route): no teacher-only check, the salesperson is confirmed_by', async () => {

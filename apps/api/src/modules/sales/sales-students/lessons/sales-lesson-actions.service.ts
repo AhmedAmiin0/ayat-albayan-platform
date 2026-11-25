@@ -58,14 +58,21 @@ export class SalesLessonActions {
     const id = await this.lessons.one.reschedule({ lessonId, body: one, actor });
     const moved = await this.queries.lesson(id);
     if (!moved) throw notFound('lesson_not_found');
-    return { id: moved.id, starts_at: new Date(moved.starts_at).toISOString(), status: moved.status };
+    return {
+      id: moved.id,
+      starts_at: new Date(moved.starts_at).toISOString(),
+      status: moved.status,
+    };
   }
 
   /**
    * `by` admin (default): before it ends only. teacher / student: before or after it ends, and on
    * a lesson held automatically the admin service's correction (409 not_auto_held otherwise).
    */
-  async cancel({ lessonId, body, actor }: Cancel, now = new Date()): Promise<{ id: string; status: LessonStatus }> {
+  async cancel(
+    { lessonId, body, actor }: Cancel,
+    now = new Date(),
+  ): Promise<{ id: string; status: LessonStatus }> {
     const by = body.by ?? 'admin';
     await this.scope.assertLesson({ lessonId, now, user: actor, afterEnd: AFTER_END[by] });
     const reason = body.reason ? body.reason : null;

@@ -20,7 +20,9 @@ describe('meetingLinkFor (R-LES-01, docs/10 invariant 3)', () => {
   });
 
   it("falls back to the teacher's link, or none", () => {
-    expect(meetingLinkFor({ requested: null, overrides: [null], teacherLink: TEACHER })).toBe(TEACHER);
+    expect(meetingLinkFor({ requested: null, overrides: [null], teacherLink: TEACHER })).toBe(
+      TEACHER,
+    );
     expect(meetingLinkFor({ overrides: [undefined], teacherLink: null })).toBeNull();
   });
 });
@@ -44,7 +46,10 @@ describe('leadTarget (R-LEAD-06)', () => {
 });
 
 describe('lessonRows (R-SCH-04)', () => {
-  const occ = (start: string, end: string) => ({ starts_at: new Date(start), ends_at: new Date(end) });
+  const occ = (start: string, end: string) => ({
+    starts_at: new Date(start),
+    ends_at: new Date(end),
+  });
   const occurrences = [
     occ('2026-10-04T14:00:00Z', '2026-10-04T14:45:00Z'),
     occ('2026-10-11T14:00:00Z', '2026-10-11T14:45:00Z'),

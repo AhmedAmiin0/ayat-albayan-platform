@@ -18,7 +18,10 @@ interface LeadPatch<T> {
 }
 
 /** L1 merge: sent keys overwrite, null clears, keys not sent stay (R-LEAD-03). */
-export function mergeQualification(current: Json, patch: LeadQualificationPatch): Record<string, Json> {
+export function mergeQualification(
+  current: Json,
+  patch: LeadQualificationPatch,
+): Record<string, Json> {
   const base = current && typeof current === 'object' && !Array.isArray(current) ? current : {};
   const merged: Record<string, Json | undefined> = { ...base, ...patch };
   return Object.fromEntries(
@@ -76,10 +79,26 @@ export class LeadProfileService {
     return lead;
   }
 
-  private record(input: { lead: LeadRow; action: string; before: Json; actorId: string }): Promise<void> {
-    const after = input.action === 'qualification_update'
-      ? { qualification: input.lead.qualification }
-      : { follow_up_paused: input.lead.follow_up_paused, next_follow_up_at: input.lead.next_follow_up_at };
-    return this.audit.record({ actorId: input.actorId, entity: 'leads', entityId: input.lead.id, action: input.action, before: input.before, after });
+  private record(input: {
+    lead: LeadRow;
+    action: string;
+    before: Json;
+    actorId: string;
+  }): Promise<void> {
+    const after =
+      input.action === 'qualification_update'
+        ? { qualification: input.lead.qualification }
+        : {
+            follow_up_paused: input.lead.follow_up_paused,
+            next_follow_up_at: input.lead.next_follow_up_at,
+          };
+    return this.audit.record({
+      actorId: input.actorId,
+      entity: 'leads',
+      entityId: input.lead.id,
+      action: input.action,
+      before: input.before,
+      after,
+    });
   }
 }

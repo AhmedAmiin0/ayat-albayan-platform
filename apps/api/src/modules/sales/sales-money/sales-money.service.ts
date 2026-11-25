@@ -38,14 +38,20 @@ export class SalesMoney {
   async quote(input: SalesQuote, user: AuthUser): Promise<SalesQuoteView> {
     await this.scope.assertRenews(user, input.studentId);
     assertSalesDiscount(input.pricing);
-    return toSalesQuote(await this.services.creator.quote({ studentId: input.studentId, pricing: input.pricing }));
+    return toSalesQuote(
+      await this.services.creator.quote({ studentId: input.studentId, pricing: input.pricing }),
+    );
   }
 
   /**
    * The start day: salesStartsOn (docs/16 row 24). A retry of the same form (clientRequestId)
    * returns the stored package before any re-quote (its custom price is checked once, at creation).
    */
-  async subscribe(input: SalesSubscriptionCreate, user: AuthUser, now = new Date()): Promise<SalesMoneySubscriptionView> {
+  async subscribe(
+    input: SalesSubscriptionCreate,
+    user: AuthUser,
+    now = new Date(),
+  ): Promise<SalesMoneySubscriptionView> {
     await this.scope.assertRenews(user, input.studentId);
     assertSalesDiscount(input.pricing);
     const startsOn = salesStartsOn(input, user, now);
@@ -89,7 +95,10 @@ export class SalesMoney {
     return toSalesPayment(view, await this.reads.studentStatus(sub.student_id));
   }
 
-  async uploadUrl(input: SalesReceiptUpload, ctx: { user: AuthUser; maxBytes: number }): Promise<SignedUpload> {
+  async uploadUrl(
+    input: SalesReceiptUpload,
+    ctx: { user: AuthUser; maxBytes: number },
+  ): Promise<SignedUpload> {
     const { phone, ...upload } = input; // the chat's phone is never an upload field
     const sub = await this.services.receipts.subscription(input.subscriptionId);
     await this.scope.assertRenews(ctx.user, sub.student_id);

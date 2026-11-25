@@ -71,12 +71,27 @@ export function queries() {
 }
 
 type Claims = {
-  iss: string; sub: string; name: string; nbf: number; exp: number; metadata?: string;
-  video: { roomJoin: boolean; room: string; canPublish: boolean; canSubscribe: boolean; canPublishData: boolean; canPublishSources?: string[] };
+  iss: string;
+  sub: string;
+  name: string;
+  nbf: number;
+  exp: number;
+  metadata?: string;
+  video: {
+    roomJoin: boolean;
+    room: string;
+    canPublish: boolean;
+    canSubscribe: boolean;
+    canPublishData: boolean;
+    canPublishSources?: string[];
+  };
 };
 
 /** Decodes a join token and checks its HS256 signature against `secret`. */
-export function decode(token: string, secret = CONFIG.apiSecret): Claims & { validSignature: boolean } {
+export function decode(
+  token: string,
+  secret = CONFIG.apiSecret,
+): Claims & { validSignature: boolean } {
   const [head = '', body = '', sig = ''] = token.split('.');
   const expected = createHmac('sha256', secret).update(`${head}.${body}`).digest('base64url');
   const claims: Claims = JSON.parse(Buffer.from(body, 'base64url').toString('utf8'));

@@ -17,7 +17,12 @@ let starter: { startFor: ReturnType<typeof vi.fn>; configured: boolean };
 const http = vi.fn<FetchLike>(async (url) =>
   twirpAnswer(200, url.endsWith('/ListParticipants') ? { participants: people } : {}),
 );
-const life = () => new RecordingLifecycle(new LivekitApi(CONFIG, http), rq as unknown as RecordingRepo, starter as unknown as RecordingStarter);
+const life = () =>
+  new RecordingLifecycle(
+    new LivekitApi(CONFIG, http),
+    rq as unknown as RecordingRepo,
+    starter as unknown as RecordingStarter,
+  );
 const methods = () => http.mock.calls.map(([url]) => url.split('/twirp/')[1]);
 
 beforeEach(() => {

@@ -22,8 +22,16 @@ export interface RatedLesson {
 }
 
 /** The answer's columns: written over an existing row (form link or an earlier tap) as they are. */
-export function ratingPatch(tap: RatingTap): Required<Pick<TablesUpdate<'lesson_feedback'>, 'quick_rating' | 'quick_rated_at' | 'quick_rating_wa_id'>> {
-  return { quick_rating: tap.rating, quick_rated_at: tap.at.toISOString(), quick_rating_wa_id: tap.waMessageId };
+export function ratingPatch(
+  tap: RatingTap,
+): Required<
+  Pick<TablesUpdate<'lesson_feedback'>, 'quick_rating' | 'quick_rated_at' | 'quick_rating_wa_id'>
+> {
+  return {
+    quick_rating: tap.rating,
+    quick_rated_at: tap.at.toISOString(),
+    quick_rating_wa_id: tap.waMessageId,
+  };
 }
 
 /** Button-made rows have no link (token_hash null); expires_at is the tap. */

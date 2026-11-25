@@ -23,7 +23,9 @@ describe('classroom moderation routes', () => {
   it('POST …/remove: 204 for the admin; the link is blocked and LiveKit asked to disconnect', async () => {
     const res = await h.call({ method: 'POST', url: remove() });
     expect(res.statusCode).toBe(204);
-    expect(h.moderation.block).toHaveBeenCalledWith(expect.objectContaining({ principal: { joinLinkId: participantRow().join_link_id } }));
+    expect(h.moderation.block).toHaveBeenCalledWith(
+      expect.objectContaining({ principal: { joinLinkId: participantRow().join_link_id } }),
+    );
     expect(h.http.mock.calls[0]?.[0]).toMatch(/UpdateParticipant$/);
     expect(h.http.mock.calls[1]?.[0]).toMatch(/RemoveParticipant$/);
   });

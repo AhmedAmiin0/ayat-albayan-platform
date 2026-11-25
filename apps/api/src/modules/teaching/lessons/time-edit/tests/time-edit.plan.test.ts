@@ -33,7 +33,12 @@ describe('planTimeEdit — move (a scheduled / confirmed lesson)', () => {
   it('resizing in place: 45 → 60 with the same start changes no messages and no keys', () => {
     const plan = planTimeEdit(move({ startsAt: current.startsAt, durationMin: 60 }));
     expect(plan.end).toEqual(new Date('2026-10-04T15:00:00Z'));
-    expect(plan).toMatchObject({ startChanged: false, durationChanged: true, retimeOpen: false, notify: false });
+    expect(plan).toMatchObject({
+      startChanged: false,
+      durationChanged: true,
+      retimeOpen: false,
+      notify: false,
+    });
   });
 
   it('a move to the past (or to right now) is 400 date_in_past', () => {
@@ -66,7 +71,10 @@ describe('isSameTime — replay detection', () => {
 
 describe('payoutScope / isPayoutLocked', () => {
   const paid = ['completed'] as const;
-  const plan = (over: Partial<ReturnType<typeof planTimeEdit>> = {}) => ({ ...planTimeEdit(move()), ...over });
+  const plan = (over: Partial<ReturnType<typeof planTimeEdit>> = {}) => ({
+    ...planTimeEdit(move()),
+    ...over,
+  });
 
   it('a move checks the NEW month in the teacher tz (a lesson on 1 Nov 00:30 Cairo is November)', () => {
     const start = new Date('2026-10-31T22:30:00Z'); // Cairo: 2026-11-01 00:30 (UTC+2: Egypt DST ended on the 29th)

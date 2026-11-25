@@ -14,7 +14,9 @@ const correct = (request: Partial<TimeEditInput['request']> = {}): TimeEditInput
   request: { startsAt: current.startsAt, durationMin: 60, reason: 'الحلقة خدت ساعة', ...request },
 });
 const rejected = (input: TimeEditInput, code: string) =>
-  expect(() => planTimeEdit(input)).toThrow(expect.objectContaining({ status: 400, response: { code, message: code } }));
+  expect(() => planTimeEdit(input)).toThrow(
+    expect.objectContaining({ status: 400, response: { code, message: code } }),
+  );
 
 describe('planTimeEdit — correct (a held lesson, R-SCH-11)', () => {
   it('the session ran 60 min not 45: same start, new end, PDF refresh, no notice', () => {
@@ -33,8 +35,16 @@ describe('planTimeEdit — correct (a held lesson, R-SCH-11)', () => {
   });
 
   it('a corrected start on the same day also refreshes the PDF; notify is ignored', () => {
-    const plan = planTimeEdit(correct({ startsAt: new Date('2026-10-01T13:30:00Z'), durationMin: 45, notify: true }));
-    expect(plan).toMatchObject({ startChanged: true, durationChanged: false, refreshPdf: true, notify: false, retimeOpen: false });
+    const plan = planTimeEdit(
+      correct({ startsAt: new Date('2026-10-01T13:30:00Z'), durationMin: 45, notify: true }),
+    );
+    expect(plan).toMatchObject({
+      startChanged: true,
+      durationChanged: false,
+      refreshPdf: true,
+      notify: false,
+      retimeOpen: false,
+    });
   });
 
   it('a reason is required: missing or blank is 400 reason_required', () => {

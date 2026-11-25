@@ -112,10 +112,18 @@ export class StudentLinkService {
     }
   }
 
-  private async admitTo(input: { lesson: StudentLesson; student: LinkStudent; win: JoinWindowConfig; now: Date; name?: string }): Promise<RoomJoinResult> {
+  private async admitTo(input: {
+    lesson: StudentLesson;
+    student: LinkStudent;
+    win: JoinWindowConfig;
+    now: Date;
+    name?: string;
+  }): Promise<RoomJoinResult> {
     const { lesson, student, win, now } = input;
     const joinLinkId = await this.queries.lessonLinkId({ lesson, studentId: student.id });
-    const closesS = Math.floor(Date.parse(joinWindow(lesson, now, win).closes_at) / MS) - Math.floor(now.getTime() / MS);
+    const closesS =
+      Math.floor(Date.parse(joinWindow(lesson, now, win).closes_at) / MS) -
+      Math.floor(now.getTime() / MS);
     const shown = input.name?.slice(0, 30) ?? roomNameOfStudent(student.name);
     return this.admission.admit(
       { lessonId: lesson.id, role: 'guest', name: shown, principal: { joinLinkId }, ttlSeconds: Math.min(closesS, ONE_DAY_S) },

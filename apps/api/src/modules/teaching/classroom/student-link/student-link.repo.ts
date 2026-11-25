@@ -43,8 +43,16 @@ export class StudentLinkRepo {
 
   /** Creates the student's link, or rotates it: the new hash replaces the old one (which then dies). */
   async saveLink(input: { studentId: string; hash: string; actorId: string }): Promise<void> {
-    const row = { student_id: input.studentId, token_hash: input.hash, revoked_at: null, created_by: input.actorId, created_at: new Date().toISOString() };
-    const { error } = await this.db.from('student_join_links').upsert(row, { onConflict: 'student_id' });
+    const row = {
+      student_id: input.studentId,
+      token_hash: input.hash,
+      revoked_at: null,
+      created_by: input.actorId,
+      created_at: new Date().toISOString(),
+    };
+    const { error } = await this.db
+      .from('student_join_links')
+      .upsert(row, { onConflict: 'student_id' });
     if (error) throw dbError(error);
   }
 
@@ -97,7 +105,10 @@ export class StudentLinkRepo {
     const { data, error } = await this.db.from('lesson_join_links').insert(row).select('id').single();
     if (!error) return data.id;
     // Two joins at once: the other one created it.
-    const raced = error.code === UNIQUE_VIOLATION ? await this.findLessonLink(input.lesson.id, input.studentId) : null;
+    const raced =
+      error.code === UNIQUE_VIOLATION
+        ? await this.findLessonLink(input.lesson.id, input.studentId)
+        : null;
     if (!raced) throw dbError(error);
     return raced;
   }

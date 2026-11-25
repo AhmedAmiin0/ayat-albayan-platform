@@ -57,15 +57,25 @@ interface TeacherAlertPlan {
 }
 
 /** Each distinct teacher with their first lesson of the booking. */
-function firstLessons(lessons: readonly AlertLesson[]): { teacher: AlertTeacher; lesson: AlertLesson }[] {
+function firstLessons(
+  lessons: readonly AlertLesson[],
+): { teacher: AlertTeacher; lesson: AlertLesson }[] {
   const byTeacher = new Map<string, { teacher: AlertTeacher; lesson: AlertLesson }>();
-  for (const lesson of [...lessons].sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at))) {
-    if (lesson.teacher && !byTeacher.has(lesson.teacher.id)) byTeacher.set(lesson.teacher.id, { teacher: lesson.teacher, lesson });
+  for (const lesson of [...lessons].sort(
+    (a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at),
+  )) {
+    if (lesson.teacher && !byTeacher.has(lesson.teacher.id))
+      byTeacher.set(lesson.teacher.id, { teacher: lesson.teacher, lesson });
   }
   return [...byTeacher.values()];
 }
 
-function teacherNewStudentMessage(input: { names: readonly string[]; startsAt: Date; tz: string; kind: BookingKind }): OutboundTemplate {
+function teacherNewStudentMessage(input: {
+  names: readonly string[];
+  startsAt: Date;
+  tz: string;
+  kind: BookingKind;
+}): OutboundTemplate {
   const kinds = ar.templates.teacherNewStudentKind;
   return {
     key: 'teacher_new_student',

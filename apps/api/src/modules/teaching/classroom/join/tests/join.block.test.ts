@@ -13,18 +13,20 @@ import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settin
 let q: ReturnType<typeof queries>;
 let mod: ReturnType<typeof moderation>;
 const deps = () => ({ q, mod, rec: recorder() });
-const staffJoin = (user = TEACHER) => new RoomJoinService(rolesOf(deps()), admissionOf(deps()), readerOf(ClassroomSettings)).join({ user, lessonId: LESSON_ID }, OPEN);
+const staffJoin = (user = TEACHER) =>
+  new RoomJoinService(rolesOf(deps()), admissionOf(deps()), readerOf(ClassroomSettings)).join(
+    { user, lessonId: LESSON_ID },
+    OPEN,
+  );
 const guestJoin = () =>
   new GuestJoinService(
     q as unknown as ClassroomRepo,
     new PublicJoinLimit(),
     admissionOf(deps()),
     resolverOf(q),
-  ).join(
-    { linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } },
-    OPEN,
-  );
-const code = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+  ).join({ linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } }, OPEN);
+const code = async (p: Promise<unknown>) =>
+  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = queries();

@@ -12,7 +12,10 @@ import type { TeacherLessonRow, TeacherRuleRow } from './sales-teacher-overview.
 const OVERVIEW_DAYS = 30;
 const LATEST = 20;
 
-export const overviewWindow = (now: Date): { from: Date; to: Date } => ({ from: new Date(now.getTime() - OVERVIEW_DAYS * DAY_MS), to: now });
+export const overviewWindow = (now: Date): { from: Date; to: Date } => ({
+  from: new Date(now.getTime() - OVERVIEW_DAYS * DAY_MS),
+  to: now,
+});
 
 const namesOf = (rows: TeacherLessonRow['lesson_students']): SalesOverviewStudent[] =>
   rows.flatMap((r) => (r.student ? [{ name: r.student.name, code: r.student.code ?? '' }] : []));
@@ -26,12 +29,22 @@ function slotsOf(rule: TeacherRuleRow, now: Date): SalesTeacherSlot[] {
   const students = namesOf(rule.students);
   return nextStarts(rule, now).map((at) => {
     const wall = wallParts(at, RIYADH_TZ);
-    return { rule_id: rule.id, weekday: wall.weekday, time: wall.time, at, duration_min: rule.duration_min, students };
+    return {
+      rule_id: rule.id,
+      weekday: wall.weekday,
+      time: wall.time,
+      at,
+      duration_min: rule.duration_min,
+      students,
+    };
   });
 }
 
 /** Whitelist of GET /sales/teachers/:id/overview: names, codes, times and statuses; never money or a link. */
-export function toTeacherOverview(p: { rules: readonly TeacherRuleRow[]; lessons: readonly TeacherLessonRow[] }, now: Date): SalesTeacherOverview {
+export function toTeacherOverview(
+  p: { rules: readonly TeacherRuleRow[]; lessons: readonly TeacherLessonRow[] },
+  now: Date,
+): SalesTeacherOverview {
   const weekly = p.rules.flatMap((r) => slotsOf(r, now));
   weekly.sort((a, b) => a.weekday - b.weekday || a.time.localeCompare(b.time));
   const past = p.lessons.filter((l) => l.status !== 'rescheduled' && Date.parse(l.starts_at) < now.getTime());

@@ -5,8 +5,13 @@ import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { TeacherOptionsRepo } from '@/modules/teaching/booking/teacher/teacher-options.repo';
 
 const setup = (on: boolean) => {
-  const f = fakeDb({ teacher_availability: [{ data: [{ teacher_id: 'A' }, { teacher_id: 'A' }] }] });
-  return { ...f, q: new TeacherOptionsRepo(f.db, readerOf(BookingSettings, { teachers_always_available: on })) };
+  const f = fakeDb({
+    teacher_availability: [{ data: [{ teacher_id: 'A' }, { teacher_id: 'A' }] }],
+  });
+  return {
+    ...f,
+    q: new TeacherOptionsRepo(f.db, readerOf(BookingSettings, { teachers_always_available: on })),
+  };
 };
 
 describe('TeacherOptionsQueries.withAvailability (R-SCH-06)', () => {

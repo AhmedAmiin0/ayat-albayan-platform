@@ -57,8 +57,15 @@ export class CourseChangePlanner {
     const now = new Date();
     if (wallParts(req.startsAt, tz).date !== req.startsOn) throw domainError(HttpStatus.BAD_REQUEST, 'starts_at_mismatch');
     const durationMin = DURATIONS.find((d) => d === sub.duration);
-    if (durationMin === undefined) throw new Error(`subscription ${sub.id} has duration ${sub.duration}`);
-    const facts = { role, perWeek: courseDaysPerWeek(sub), lessonsTotal: courseLessonCount(sub), durationMin, tz };
+    if (durationMin === undefined)
+      throw new Error(`subscription ${sub.id} has duration ${sub.duration}`);
+    const facts = {
+      role,
+      perWeek: courseDaysPerWeek(sub),
+      lessonsTotal: courseLessonCount(sub),
+      durationMin,
+      tz,
+    };
     assertChange(req, { ...facts, before: [] }, now);
     const teacherChanged = req.teacherId !== undefined && req.teacherId !== active[0]?.teacher_id;
     assertStart(req, { subStartsOn: sub.starts_on, rules: all, teacherChanged });
@@ -79,12 +86,28 @@ export class CourseChangePlanner {
    * time, that is not moved (a counted lesson after the change point stays counted), plus the
    * occurrences the old active rules will still generate before the change point.
    */
-  private async used(input: { loaded: Loaded; moved: readonly MovedLesson[]; req: CourseChangeRequest; now: Date }): Promise<CourseLessonFact[]> {
+  private async used(input: {
+    loaded: Loaded;
+    moved: readonly MovedLesson[];
+    req: CourseChangeRequest;
+    now: Date;
+  }): Promise<CourseLessonFact[]> {
     const { sub, active, all } = input.loaded;
     const movedIds = new Set(input.moved.map((m) => m.id));
-    const lessons = inPeriod(await this.lessons.ofCourse({ ruleIds: all.map((r) => r.id), studentId: sub.student_id }), all);
+    const lessons = inPeriod(
+      await this.lessons.ofCourse({ ruleIds: all.map((r) => r.id), studentId: sub.student_id }),
+      all,
+    );
     const held = await this.lessons.held(active.map((r) => r.id));
-    const projected = unmaterialised({ rules: active, held, now: input.now, startsOn: input.req.startsOn });
-    return [...lessons.filter((l) => !movedIds.has(l.id)), ...Array.from({ length: projected }, () => PROJECTED)];
+    const projected = unmaterialised({
+      rules: active,
+      held,
+      now: input.now,
+      startsOn: input.req.startsOn,
+    });
+    return [
+      ...lessons.filter((l) => !movedIds.has(l.id)),
+      ...Array.from({ length: projected }, () => PROJECTED),
+    ];
   }
 }

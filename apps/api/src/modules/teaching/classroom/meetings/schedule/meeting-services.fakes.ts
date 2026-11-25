@@ -40,7 +40,10 @@ export function meetingServices() {
     m.threads as unknown as ThreadMessagesRepo,
   );
   const flow = new MeetingInviteFlow(invitees, sender, ORIGIN);
-  const resolver = new MeetingInviteeResolver(picks, new MeetingInvitePolicies(m.teacherScopes as unknown as TeacherScopes));
+  const resolver = new MeetingInviteeResolver(
+    picks,
+    new MeetingInvitePolicies(m.teacherScopes as unknown as TeacherScopes),
+  );
   const meetings = new InternalMeetingsService(queries, new LivekitApi(CONFIG, post), ORIGIN);
   return {
     mq,
@@ -49,8 +52,16 @@ export function meetingServices() {
     meetings,
     create: new MeetingCreateService(queries, new MeetingCreateDeps(resolver, flow, invitees)),
     list: new MeetingListService(queries, m.lists as unknown as MeetingListRepo),
-    schedule: new MeetingScheduleService(meetings, queries, new MeetingScheduleDeps(invitees, sender, resolver)),
-    invites: new MeetingInvitesService(meetings, flow, new MeetingInvitesDeps(resolver, picks, invitees)),
+    schedule: new MeetingScheduleService(
+      meetings,
+      queries,
+      new MeetingScheduleDeps(invitees, sender, resolver),
+    ),
+    invites: new MeetingInvitesService(
+      meetings,
+      flow,
+      new MeetingInvitesDeps(resolver, picks, invitees),
+    ),
   };
 }
 export type MeetingServices = ReturnType<typeof meetingServices>;

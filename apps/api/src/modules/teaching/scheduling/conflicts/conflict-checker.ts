@@ -40,7 +40,12 @@ export class ConflictChecker {
       this.busy.studentLessons(studentIds, span),
       this.availability.bookableSlots(teacherId),
       this.availability.listTimeOff(teacherId, span),
-      this.projection.busy({ teacherId, studentIds, span, excludeRuleIds: input.excludeRuleIds ?? [] }),
+      this.projection.busy({
+        teacherId,
+        studentIds,
+        span,
+        excludeRuleIds: input.excludeRuleIds ?? [],
+      }),
     ]);
     const skip = new Set(input.excludeIds);
     return findConflicts({

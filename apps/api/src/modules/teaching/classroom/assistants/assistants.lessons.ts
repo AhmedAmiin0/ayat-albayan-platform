@@ -9,7 +9,10 @@ import type { LessonRef } from './assistants.repo';
 export class AssistantLessonsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async between(refs: LessonRef[], range: { from: string; to: string }): Promise<AssistantLessonView[]> {
+  async between(
+    refs: LessonRef[],
+    range: { from: string; to: string },
+  ): Promise<AssistantLessonView[]> {
     const ids = [...new Set(refs.map((r) => r.lesson_id))];
     if (!ids.length) return [];
     const { data: lessons, error } = await this.db

@@ -12,7 +12,12 @@ let rq: ReturnType<typeof recordingQueries>;
 let life: { afterLeft: ReturnType<typeof vi.fn>; afterEgressEnded: ReturnType<typeof vi.fn> };
 let presence: { record: ReturnType<typeof vi.fn> };
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new LivekitWebhookService(config, rq as unknown as RecordingRepo, life as unknown as RecordingLifecycle, presence as unknown as RoomPresenceService);
+  new LivekitWebhookService(
+    config,
+    rq as unknown as RecordingRepo,
+    life as unknown as RecordingLifecycle,
+    presence as unknown as RoomPresenceService,
+  );
 const post = (event: object) => {
   const rawBody = Buffer.from(JSON.stringify(event));
   return { rawBody, authorization: signedWebhook(rawBody, { now: NOW }) };
@@ -55,7 +60,9 @@ describe('LivekitWebhookService', () => {
 
   it('a signed but non-JSON body is acknowledged and ignored', async () => {
     const rawBody = Buffer.from('not json');
-    await expect(service().handle({ rawBody, authorization: signedWebhook(rawBody, { now: NOW }) }, NOW)).resolves.toBeUndefined();
+    await expect(
+      service().handle({ rawBody, authorization: signedWebhook(rawBody, { now: NOW }) }, NOW),
+    ).resolves.toBeUndefined();
   });
 
   it('401 for a forged post, and whenever LiveKit is not configured', async () => {

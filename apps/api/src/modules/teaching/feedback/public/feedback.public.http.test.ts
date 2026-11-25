@@ -86,7 +86,10 @@ describe('public «رأيك يهمّنا» page (no login)', () => {
 
   it('POST without a phone keeps the one the link went to', async () => {
     await post({ rating: 3, recommend: 'maybe' });
-    expect(h.queries.answer.mock.calls[0]?.[1]).toMatchObject({ contact_phone: GUARDIAN_PHONE, note: null });
+    expect(h.queries.answer.mock.calls[0]?.[1]).toMatchObject({
+      contact_phone: GUARDIAN_PHONE,
+      note: null,
+    });
   });
 
   it('a second answer is 409 already_submitted: before the write, and when it loses the race', async () => {

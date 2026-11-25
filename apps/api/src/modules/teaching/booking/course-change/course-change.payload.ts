@@ -118,7 +118,11 @@ export function changePayload(input: PayloadInput): Record<string, unknown> {
       entity: 'subscriptions',
       entity_id: input.subscriptionId,
       action: 'course_change',
-      before: { rule_ids: input.active.map((r) => r.id), ended_rule_ids: [...ended], ends_on: head.ends_on },
+      before: {
+        rule_ids: input.active.map((r) => r.id),
+        ended_rule_ids: [...ended],
+        ends_on: head.ends_on,
+      },
       after: {
         by: input.actor.role,
         teacher: { from: head.teacher_id, to: input.req.teacherId ?? head.teacher_id },

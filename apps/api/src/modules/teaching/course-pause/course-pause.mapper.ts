@@ -43,4 +43,6 @@ export const rpcOutSchema = z.object({
 export type RpcOut = z.infer<typeof rpcOutSchema>;
 
 /** The lessons whose charge or attendance changed (LessonEvents: the balance alerts re-read them). */
-export const changedLessons = (out: RpcOut): string[] => [...new Set([...out.cancelled, ...out.left, ...out.reopened, ...out.rejoined])];
+export const changedLessons = (out: RpcOut): string[] => [
+  ...new Set([...out.cancelled, ...out.left, ...out.reopened, ...out.rejoined]),
+];

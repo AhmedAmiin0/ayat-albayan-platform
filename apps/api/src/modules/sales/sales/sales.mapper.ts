@@ -23,7 +23,10 @@ export function toSalesSubscription(row: SalesSubscriptionRow): SalesSubscriptio
 }
 
 /** `win`: the classroom window from settings (default: the registry's 15 / 120 minutes). */
-export function toSalesMeeting(row: SalesLessonRow, at: { now: Date; win?: JoinWindowConfig }): SalesMeetingView {
+export function toSalesMeeting(
+  row: SalesLessonRow,
+  at: { now: Date; win?: JoinWindowConfig },
+): SalesMeetingView {
   const { now, win = DEFAULT_JOIN_WINDOW } = at;
   const students = row.lesson_students.flatMap((s) => (s.student ? [s.student.name] : []));
   return {

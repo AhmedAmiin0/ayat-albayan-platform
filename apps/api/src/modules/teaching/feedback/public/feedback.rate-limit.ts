@@ -49,7 +49,9 @@ export class PublicFeedbackLimit {
 
   /** assert() with the window read from the settings (cached). */
   async check(input: { ip: string; token: string }, now = Date.now()): Promise<void> {
-    const minutes = this.settings ? (await this.settings.read()).feedback_rate_window_min : SETTING_DEFAULTS.feedback_rate_window_min;
+    const minutes = this.settings
+      ? (await this.settings.read()).feedback_rate_window_min
+      : SETTING_DEFAULTS.feedback_rate_window_min;
     this.assert({ ...input, windowMs: minutes * MIN_MS }, now);
   }
 

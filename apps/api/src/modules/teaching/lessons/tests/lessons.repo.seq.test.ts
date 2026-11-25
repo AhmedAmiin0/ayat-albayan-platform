@@ -6,7 +6,10 @@ import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 
 /** A v_lesson_sequence read that takes one 60 ms round trip per chunk. */
 function slowDb() {
-  const chain = { select: () => chain, in: () => new Promise((done) => setTimeout(() => done({ data: [], error: null }), 60)) };
+  const chain = {
+    select: () => chain,
+    in: () => new Promise((done) => setTimeout(() => done({ data: [], error: null }), 60)),
+  };
   return { from: vi.fn(() => chain) } as unknown as Db;
 }
 

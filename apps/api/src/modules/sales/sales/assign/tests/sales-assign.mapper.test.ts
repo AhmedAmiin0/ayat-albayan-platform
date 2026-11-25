@@ -2,7 +2,11 @@ import { pickSales } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { toCandidates } from '@/modules/sales/sales/assign/sales-assign.mapper';
 
-const lead = (assigned_to: string | null, status: string, updated_at: string) => ({ assigned_to, status, updated_at });
+const lead = (assigned_to: string | null, status: string, updated_at: string) => ({
+  assigned_to,
+  status,
+  updated_at,
+});
 
 describe('toCandidates', () => {
   it('open = not converted / lost; last assigned = the newest updated_at of anything assigned; never = null', () => {

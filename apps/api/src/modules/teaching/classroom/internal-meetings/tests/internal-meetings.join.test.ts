@@ -11,9 +11,15 @@ import { admissionOf } from '@/modules/teaching/classroom/moderation/moderation.
 let mq: ReturnType<typeof meetingQueries>;
 let cq: ReturnType<typeof queries>;
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new InternalMeetingJoinService(mq as unknown as InternalMeetingsRepo, new PublicJoinLimit(), admissionOf({ q: cq, config }));
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
-const guest = (svc = service(), token = MEETING_TOKEN) => svc.guest({ token, ip: '9.9.9.9', body: { name: 'ضيف' } }, NOW);
+  new InternalMeetingJoinService(
+    mq as unknown as InternalMeetingsRepo,
+    new PublicJoinLimit(),
+    admissionOf({ q: cq, config }),
+  );
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
+const guest = (svc = service(), token = MEETING_TOKEN) =>
+  svc.guest({ token, ip: '9.9.9.9', body: { name: 'ضيف' } }, NOW);
 
 beforeEach(() => {
   mq = meetingQueries();
@@ -39,13 +45,19 @@ describe('internal meeting: staff join', () => {
 
   it('404 unknown, 410 ended or revoked, 403 a guardian, 503 without LiveKit', async () => {
     mq.byId.mockResolvedValueOnce(null);
-    expect((await fail(service().staff({ user: ADMIN, id: MEETING_ID }, NOW))).getStatus()).toBe(404);
+    expect((await fail(service().staff({ user: ADMIN, id: MEETING_ID }, NOW))).getStatus()).toBe(
+      404,
+    );
     mq.byId.mockResolvedValueOnce(meetingRow({ ends_at: '2026-10-05T09:30:00Z' }));
     const ended = await fail(service().staff({ user: ADMIN, id: MEETING_ID }, NOW));
     expect([ended.getStatus(), ended.getResponse()]).toEqual([410, { code: 'meeting_ended', message: 'meeting_ended' }]);
     mq.byId.mockResolvedValueOnce(meetingRow({ revoked: true }));
-    expect((await fail(service().staff({ user: TEACHER, id: MEETING_ID }, NOW))).getStatus()).toBe(410);
-    expect((await fail(service().staff({ user: GUARDIAN, id: MEETING_ID }, NOW))).getStatus()).toBe(403);
+    expect((await fail(service().staff({ user: TEACHER, id: MEETING_ID }, NOW))).getStatus()).toBe(
+      410,
+    );
+    expect((await fail(service().staff({ user: GUARDIAN, id: MEETING_ID }, NOW))).getStatus()).toBe(
+      403,
+    );
     const off = await fail(service(null).staff({ user: ADMIN, id: MEETING_ID }, NOW));
     expect(off.getResponse()).toMatchObject({ code: 'classroom_not_configured' });
   });

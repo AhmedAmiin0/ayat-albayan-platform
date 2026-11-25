@@ -9,8 +9,10 @@ const student = { student_id: 's1', attendance: null, chargeable: true, student:
 interface Embed { id: string; status: 'draft' | 'submitted'; submitted_at?: string | null; sent_at?: string | null }
 
 const report = (r: Embed | null | undefined, over: Partial<typeof ctx> = {}) =>
-  toLessonView(lessonRow({ lesson_students: [{ ...student, ...(r === undefined ? {} : { report: r }) }] }), { ...ctx, ...over })
-    .students[0]?.report;
+  toLessonView(
+    lessonRow({ lesson_students: [{ ...student, ...(r === undefined ? {} : { report: r }) }] }),
+    { ...ctx, ...over },
+  ).students[0]?.report;
 
 describe('toLessonView — each student’s report state (the lesson details sheet, docs/46 B7)', () => {
   it('the select embeds the report id, status, first submit and family send, through lesson_students', () => {

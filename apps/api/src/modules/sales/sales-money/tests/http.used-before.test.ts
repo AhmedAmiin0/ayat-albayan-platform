@@ -50,7 +50,9 @@ describe('POST /sales/subscriptions lessonsUsedBefore with subscriptions.set_sta
   it('omitted or 0: stored as 0, any start', async () => {
     expect((await create({})).statusCode).toBe(201);
     expect((await create({ lessonsUsedBefore: 0 })).statusCode).toBe(201);
-    expect(ctx.m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ lessons_used_before: 0 }));
+    expect(ctx.m.subs.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ lessons_used_before: 0 }),
+    );
   });
 
   it('without a past start → 400 used_before_needs_past_start, nothing inserted', async () => {

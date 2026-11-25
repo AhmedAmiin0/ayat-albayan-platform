@@ -29,7 +29,11 @@ function setup() {
   deps.queries.createBooking.mockResolvedValue(RESULT);
   const { after, sender, trial } = fakeTeacherAlert();
   const invoices = { resolve: vi.fn().mockResolvedValue(INVOICE) };
-  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, invoices as unknown as BookingInvoices, after);
+  const writer = new BookingWriter(
+    deps.queries as unknown as BookingRepo,
+    invoices as unknown as BookingInvoices,
+    after,
+  );
   const service = new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo);
   return { ...deps, service, sender, invoices, trial };
 }

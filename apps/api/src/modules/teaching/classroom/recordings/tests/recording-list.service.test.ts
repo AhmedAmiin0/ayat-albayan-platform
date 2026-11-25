@@ -8,7 +8,8 @@ import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/reco
 
 let rq: ReturnType<typeof recordingQueries>;
 const storage = { signedDownload: vi.fn() };
-const views = () => new RecordingViews(rq as unknown as RecordingRepo, storage as unknown as StorageService);
+const views = () =>
+  new RecordingViews(rq as unknown as RecordingRepo, storage as unknown as StorageService);
 const service = () => new RecordingListService(rolesOf({ q: queries() }), views());
 const list = (user = ADMIN) => service().list({ user, lessonId: LESSON_ID });
 

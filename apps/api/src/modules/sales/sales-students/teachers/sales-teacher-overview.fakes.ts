@@ -6,9 +6,24 @@ export const TEACHER = '7c000000-0000-4000-8000-0000000000e1';
 export const NOW = new Date('2026-10-28T10:00:00Z');
 
 /** Sun, Tue 19:00 Cairo (20:00 Riyadh) with two students, a link and a price that must never leave. */
-export const teacherRule = (over: Partial<TeacherRuleRow> = {}): TeacherRuleRow & { meeting_link: string; price: number } => ({
-  id: 'r1', byday: [2, 0], start_time_local: '19:00:00', tz: 'Africa/Cairo', duration_min: 45, package: '8', starts_on: '2026-01-01', ends_on: null,
-  students: [{ student: { name: 'ياسمين', code: 'AB-0101' } }, { student: { name: 'يوسف', code: null } }], meeting_link: 'https://meet/secret', price: 290, ...over,
+export const teacherRule = (
+  over: Partial<TeacherRuleRow> = {},
+): TeacherRuleRow & { meeting_link: string; price: number } => ({
+  id: 'r1',
+  byday: [2, 0],
+  start_time_local: '19:00:00',
+  tz: 'Africa/Cairo',
+  duration_min: 45,
+  package: '8',
+  starts_on: '2026-01-01',
+  ends_on: null,
+  students: [
+    { student: { name: 'ياسمين', code: 'AB-0101' } },
+    { student: { name: 'يوسف', code: null } },
+  ],
+  meeting_link: 'https://meet/secret',
+  price: 290,
+  ...over,
 });
 
 export const teacherLesson = (id: string, starts_at: string, status: TeacherLessonRow['status']): TeacherLessonRow => ({

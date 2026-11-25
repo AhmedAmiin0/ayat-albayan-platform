@@ -5,8 +5,14 @@ import { signedWebhook } from '@/modules/teaching/classroom/moderation/moderatio
 
 const NOW = new Date('2026-10-05T17:00:00Z');
 const nowS = NOW.getTime() / 1000;
-const body = Buffer.from(JSON.stringify({ event: 'egress_ended', egressInfo: { egressId: 'EG_1', status: 'EGRESS_COMPLETE' } }));
-const signedFor = (b: Buffer, over: object = {}, secret = CONFIG.apiSecret): string => signedWebhook(b, { now: NOW, over, secret });
+const body = Buffer.from(
+  JSON.stringify({
+    event: 'egress_ended',
+    egressInfo: { egressId: 'EG_1', status: 'EGRESS_COMPLETE' },
+  }),
+);
+const signedFor = (b: Buffer, over: object = {}, secret = CONFIG.apiSecret): string =>
+  signedWebhook(b, { now: NOW, over, secret });
 
 const check = (authorization: string | undefined, rawBody: Buffer | undefined = body) =>
   verifyWebhook({ rawBody, authorization, config: CONFIG, now: NOW });
@@ -35,7 +41,14 @@ describe('verifyWebhook', () => {
 
   it('refuses a missing header or body', () => {
     expect(check(undefined)).toBe(false);
-    expect(verifyWebhook({ rawBody: undefined, authorization: signedFor(body), config: CONFIG, now: NOW })).toBe(false);
+    expect(
+      verifyWebhook({
+        rawBody: undefined,
+        authorization: signedFor(body),
+        config: CONFIG,
+        now: NOW,
+      }),
+    ).toBe(false);
   });
 });
 

@@ -75,7 +75,11 @@ export class MeetingInvitesController {
    */
   @Post(':id/invitees/:inviteeId/resend')
   @HttpCode(200)
-  resend(@Param() params: Record<string, string>, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<MeetingInviteResult> {
+  resend(
+    @Param() params: Record<string, string>,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MeetingInviteResult> {
     const { id, inviteeId } = parseOrThrow(RESEND_PARAMS, params);
     return this.invites.resend({ user, id, inviteeId, body });
   }

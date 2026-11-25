@@ -44,7 +44,12 @@ describe('RuleExtendService — POST /schedule-rules/:id/extend (R-SCH-02, R-SCH
       weeks: 6,
       actorId: 'admin-1',
     });
-    expect(res).toEqual({ rule_id: ruleRow().id, until: UNTIL.toISOString(), inserted: 1, conflicts: [] });
+    expect(res).toEqual({
+      rule_id: ruleRow().id,
+      until: UNTIL.toISOString(),
+      inserted: 1,
+      conflicts: [],
+    });
   });
 
   it('weeks default to settings.booking_horizon_weeks; the new rows\' clashes are returned (never blocks)', async () => {

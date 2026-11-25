@@ -26,10 +26,17 @@ function rig(lessonStudents: string[]) {
   const scope = {
     of: vi.fn(async () => OWN),
     ownLesson: vi.fn(async () => false),
-    isLessonOf: vi.fn(async (_id: string, ids: readonly string[]) => ids.length === lessonStudents.length && ids.every((i) => lessonStudents.includes(i))),
+    isLessonOf: vi.fn(
+      async (_id: string, ids: readonly string[]) =>
+        ids.length === lessonStudents.length && ids.every((i) => lessonStudents.includes(i)),
+    ),
   };
   const slots = { slots: vi.fn(async () => ({ slots: [] })) };
-  const options = new SalesBookingOptions(scope as unknown as SalesBookingScope, {} as TeacherOptionsService, slots as unknown as SlotsService);
+  const options = new SalesBookingOptions(
+    scope as unknown as SalesBookingScope,
+    {} as TeacherOptionsService,
+    slots as unknown as SlotsService,
+  );
   return { options, slots, scope };
 }
 const failed = (p: Promise<unknown>) => p.then(() => null, (e: unknown) => errorCode(e));
@@ -66,8 +73,11 @@ describe('GET /sales/booking/slots for «تغيير الموعد» of any lesson
 
 describe('SalesBookingScope.isLessonOf', () => {
   const scopeOver = (students: string[]) =>
-    new SalesBookingScope({} as SalesOwnershipRule, { lessonStudents: vi.fn(async () => students) } as unknown as TrialDateRepo);
-  it('true only for exactly the lesson\'s students (any order); never for a lesson with none', async () => {
+    new SalesBookingScope(
+      {} as SalesOwnershipRule,
+      { lessonStudents: vi.fn(async () => students) } as unknown as TrialDateRepo,
+    );
+  it("true only for exactly the lesson's students (any order); never for a lesson with none", async () => {
     expect(await scopeOver([MINE, OTHER]).isLessonOf(LESSON, [OTHER, MINE])).toBe(true);
     expect(await scopeOver([MINE, OTHER]).isLessonOf(LESSON, [OTHER])).toBe(false);
     expect(await scopeOver([OTHER]).isLessonOf(LESSON, [OTHER, MINE])).toBe(false);

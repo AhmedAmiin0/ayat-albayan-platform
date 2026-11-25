@@ -13,7 +13,11 @@ export const NOW = new Date('2026-10-28T10:00:00Z');
 type Over = Partial<AttendanceLessonRow> & { attendance?: AttendanceLessonRow['own'][number]['attendance'] };
 
 /** A 30-minute package lesson with Abrar; a link, notes and a price ride along and must never leave. */
-export function lessonRow(id: string, starts_at: string, over: Over = {}): AttendanceLessonRow & { meeting_link: string; notes: string; price: number } {
+export function lessonRow(
+  id: string,
+  starts_at: string,
+  over: Over = {},
+): AttendanceLessonRow & { meeting_link: string; notes: string; price: number } {
   const { attendance = null, ...rest } = over;
   const ends = new Date(Date.parse(starts_at) + 30 * 60_000).toISOString();
   return {

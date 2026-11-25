@@ -9,7 +9,8 @@ import { APPLICANT_SORT, applyApplicantFilters, type ApplicantColumnQuery } from
 
 export type JobApplicantRow = Tables<'job_applicants'>;
 
-export type ApplicantListFilter = PageQuery & ApplicantColumnQuery & { status?: ApplicantStatus | undefined };
+export type ApplicantListFilter = PageQuery &
+  ApplicantColumnQuery & { status?: ApplicantStatus | undefined };
 
 export interface ApplicantMove {
   id: string;

@@ -37,8 +37,12 @@ export const row = (name: string, over: object = {}) =>
 export async function registrationApp() {
   const queries = { byPhone: vi.fn(async () => []), byName: vi.fn(async () => []) };
   const mod = await Test.createTestingModule({ imports: [featureRoot(SalesRegistrationModule)] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(SalesRegistrationRepo).useValue(queries)
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(resolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(SalesRegistrationRepo)
+    .useValue(queries)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

@@ -14,7 +14,10 @@ let q: ReturnType<typeof queries>;
 let mod: ReturnType<typeof moderation>;
 const deps = () => ({ q, mod, rec: recorder(), config: CONFIG });
 const staffJoin = () =>
-  new RoomJoinService(rolesOf({ q }), admissionOf(deps()), readerOf(ClassroomSettings)).join({ user: TEACHER, lessonId: LESSON_ID }, OPEN);
+  new RoomJoinService(rolesOf({ q }), admissionOf(deps()), readerOf(ClassroomSettings)).join(
+    { user: TEACHER, lessonId: LESSON_ID },
+    OPEN,
+  );
 const guestJoin = () =>
   new GuestJoinService(
     q as unknown as ClassroomRepo,

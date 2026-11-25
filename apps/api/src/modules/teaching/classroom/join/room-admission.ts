@@ -61,7 +61,11 @@ export class RoomAdmission {
     if (blocked) throw removedFromRoom();
     const room = lessonRoomName(input.lessonId);
     const identity = newIdentity(input.role);
-    const token = mintToken(config, { room, role: input.role, name: input.name, identity, ttlSeconds: ttlOf(input) }, now);
+    const token = mintToken(
+      config,
+      { room, role: input.role, name: input.name, identity, ttlSeconds: ttlOf(input) },
+      now,
+    );
     await this.moderation.addParticipant({
       lesson_id: input.lessonId,
       identity,
@@ -72,7 +76,14 @@ export class RoomAdmission {
     });
     this.record(lessonTarget(input.lessonId), now);
     // chat: false in a trial lesson; the clients hide and drop the text chat (tools/livekit/README.md).
-    return { url: config.url, token, room, role: input.role, recording: this.recordingState, chat: !trial };
+    return {
+      url: config.url,
+      token,
+      room,
+      role: input.role,
+      recording: this.recordingState,
+      chat: !trial,
+    };
   }
 
   /** 'off' when RECORDING_S3_* or LiveKit are missing: the room warns the admin. */

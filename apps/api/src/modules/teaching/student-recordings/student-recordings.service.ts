@@ -16,10 +16,23 @@ export class StudentRecordingsService {
   ) {}
 
   /** 404 student_not_found, 403 outside the login's scope (see StudentRecordingAccess). */
-  async list(input: { user: AuthUser; studentId: string; query: StudentRecordingsQuery }): Promise<StudentRecordingsPage> {
+  async list(input: {
+    user: AuthUser;
+    studentId: string;
+    query: StudentRecordingsQuery;
+  }): Promise<StudentRecordingsPage> {
     const { onlyTeacherId, manage } = await this.access.scopeFor(input.user, input.studentId);
-    const { rows, total } = await this.queries.page({ studentId: input.studentId, onlyTeacherId, query: input.query });
-    return { items: await this.signed(rows, manage), total, page: input.query.page, pageSize: input.query.pageSize };
+    const { rows, total } = await this.queries.page({
+      studentId: input.studentId,
+      onlyTeacherId,
+      query: input.query,
+    });
+    return {
+      items: await this.signed(rows, manage),
+      total,
+      page: input.query.page,
+      pageSize: input.query.pageSize,
+    };
   }
 
   /** GET /students/:id/recorded-lesson-ids: same access as list(), but no link is signed. */

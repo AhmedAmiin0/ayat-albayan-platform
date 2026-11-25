@@ -8,7 +8,10 @@ const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 function setup(row = lead(), rules: FakePolicyInput = {}) {
   const deps = fakeDeps();
   deps.leads.findById.mockResolvedValue(row);
-  deps.leads.update.mockImplementation(async (_id: string, patch: object) => ({ ...row, ...patch }));
+  deps.leads.update.mockImplementation(async (_id: string, patch: object) => ({
+    ...row,
+    ...patch,
+  }));
   const service = new LeadProfileService(deps.asLeads, fakePolicy(rules), deps.asAudit);
   return { ...deps, service };
 }
@@ -58,12 +61,17 @@ describe('LeadProfileService (L1/L2)', () => {
   ])('resume uses the follow-up hours — %s', async (_name, rules, next) => {
     const { service, leads } = setup(lead({ status: 'no_reply', last_inbound_at: '2026-10-01T10:00:00Z', follow_up_paused: true }), rules);
     await service.followUp({ id: LEAD_ID, patch: { paused: false }, actorId: ACTOR });
-    expect(leads.update).toHaveBeenLastCalledWith(LEAD_ID, expect.objectContaining({ next_follow_up_at: next }));
+    expect(leads.update).toHaveBeenLastCalledWith(
+      LEAD_ID,
+      expect.objectContaining({ next_follow_up_at: next }),
+    );
   });
 
   it('404 for an unknown lead', async () => {
     const { service, leads } = setup();
     leads.findById.mockResolvedValue(null);
-    await expect(service.followUp({ id: LEAD_ID, patch: { paused: true }, actorId: ACTOR })).rejects.toMatchObject({ status: 404 });
+    await expect(
+      service.followUp({ id: LEAD_ID, patch: { paused: true }, actorId: ACTOR }),
+    ).rejects.toMatchObject({ status: 404 });
   });
 });

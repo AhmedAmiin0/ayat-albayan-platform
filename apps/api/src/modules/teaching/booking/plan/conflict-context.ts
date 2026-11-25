@@ -33,10 +33,17 @@ export class ConflictContext {
       this.availability.listTimeOff(q.teacherId, range),
       this.availability.listBusyLessons(q.teacherId, range),
       this.busy.studentLessons(q.studentIds, range),
-      q.excludeCourse ? this.busy.courseLessonIds({ subscriptionId: q.excludeCourse, studentIds: q.studentIds, span: range }) : [],
+      q.excludeCourse
+        ? this.busy.courseLessonIds({
+            subscriptionId: q.excludeCourse,
+            studentIds: q.studentIds,
+            span: range,
+          })
+        : [],
     ]);
     const skip = new Set([...course, ...(q.excludeLessonId ? [q.excludeLessonId] : [])]);
-    const others = <T extends { id: string }>(lessons: T[]): T[] => lessons.filter((l) => !skip.has(l.id));
+    const others = <T extends { id: string }>(lessons: T[]): T[] =>
+      lessons.filter((l) => !skip.has(l.id));
     return {
       availability,
       timeOff: timeOff.map((t) => ({ start: new Date(t.starts_at), end: new Date(t.ends_at) })),

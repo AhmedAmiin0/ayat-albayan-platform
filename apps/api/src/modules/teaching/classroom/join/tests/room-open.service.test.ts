@@ -8,8 +8,12 @@ import { RoomOpenService } from '@/modules/teaching/classroom/join/room-open.ser
 
 let q: ReturnType<typeof queries>;
 const open = (user = TEACHER, now = EARLY) =>
-  new RoomOpenService(rolesOf({ q }), q as unknown as ClassroomRepo).open({ user, lessonId: LESSON_ID }, now);
-const body = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+  new RoomOpenService(rolesOf({ q }), q as unknown as ClassroomRepo).open(
+    { user, lessonId: LESSON_ID },
+    now,
+  );
+const body = async (p: Promise<unknown>) =>
+  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = queries();

@@ -19,10 +19,24 @@ describe('GET /sales/students/:id of another salesperson\'s student (docs/16 row
     const body = res.json();
     const hers = (await t.call('GET', `/sales/students/${MINE}`, { token: 'salesA' })).json();
     expect({ ...body, mine: true, schedule: null }).toEqual({ ...hers, schedule: null });
-    expect(body).toMatchObject({ mine: false, current_id: expect.any(String), reports: { total: 1 } });
+    expect(body).toMatchObject({
+      mine: false,
+      current_id: expect.any(String),
+      reports: { total: 1 },
+    });
     expect(body.subscriptions.length).toBeGreaterThan(0);
-    expect(body.student).toMatchObject({ id: MINE, name: 'ياسمين', guardian_phone: '+966551110000' });
-    expect(body.attendance.totals).toEqual({ present: 1, absent: 1, excused: 0, cancelled: 1, unmarked: 1 });
+    expect(body.student).toMatchObject({
+      id: MINE,
+      name: 'ياسمين',
+      guardian_phone: '+966551110000',
+    });
+    expect(body.attendance.totals).toEqual({
+      present: 1,
+      absent: 1,
+      excused: 0,
+      cancelled: 1,
+      unmarked: 1,
+    });
     expect(body.schedule.weekly).toHaveLength(1);
     expect(body.schedule.upcoming[0].students[0].mine).not.toBe(true);
     expect(res.body).not.toMatch(/سر|secret|\+20|bank/);

@@ -8,7 +8,12 @@ const admin = { role: 'admin' as const, seq };
 
 describe('toLessonView — «عدّل الوقت» fields (R-SCH-11)', () => {
   it('time_edit_mode: move for open, correct for held, null for the closed statuses', () => {
-    const modes = Object.fromEntries(LESSON_STATUSES.map((status) => [status, toLessonView(lessonRow({ status }), admin).time_edit_mode]));
+    const modes = Object.fromEntries(
+      LESSON_STATUSES.map((status) => [
+        status,
+        toLessonView(lessonRow({ status }), admin).time_edit_mode,
+      ]),
+    );
     expect(modes).toEqual({
       scheduled: 'move',
       confirmed: 'move',

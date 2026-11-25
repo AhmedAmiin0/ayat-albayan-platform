@@ -26,7 +26,10 @@ export class InternalMeetingKickService {
     if (!target) throw notFound('participant_not_found');
     if (!canRemove(role, target)) throw new HttpException({ code: 'cannot_remove', message: 'cannot_remove' }, HttpStatus.FORBIDDEN);
     try {
-      await this.livekit.removeParticipant({ room: meetingRoomName(meeting.id), identity: input.identity });
+      await this.livekit.removeParticipant({
+        room: meetingRoomName(meeting.id),
+        identity: input.identity,
+      });
     } catch (e) {
       if (e instanceof LivekitError) throw new BadGatewayException({ code: 'livekit_error', message: e.message });
       throw e;

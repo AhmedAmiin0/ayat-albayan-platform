@@ -40,7 +40,9 @@ describe('sales schedule mappers', () => {
     expect(toScheduleLesson(scheduleRow(), false).meeting_link).toBe('https://meet.example.org/les-2');
     expect(toScheduleLesson(scheduleRow({ meeting_link: '   ' }), false).meeting_link).toBeNull();
     expect(toScheduleLesson(scheduleRow({ meeting_link: null }), false).meeting_link).toBeNull();
-    expect(toScheduleLesson(scheduleRow({ meeting_link: undefined }), false).meeting_link).toBeNull();
+    expect(
+      toScheduleLesson(scheduleRow({ meeting_link: undefined }), false).meeting_link,
+    ).toBeNull();
   });
 
   it('toScheduleLesson: platform_classroom from the teacher’s meeting_mode, else the academy default', () => {

@@ -21,9 +21,18 @@ describe('toTeacherOverview', () => {
 
   it('attendance: totals per kind over the past lessons, moved and future ones left out, newest first', () => {
     const future = teacherLesson('f', '2026-10-29T17:00:00+00:00', 'scheduled');
-    const { attendance } = toTeacherOverview({ rules: [], lessons: [future, ...teacherLessons().reverse()] }, NOW);
+    const { attendance } = toTeacherOverview(
+      { rules: [], lessons: [future, ...teacherLessons().reverse()] },
+      NOW,
+    );
     expect(attendance.days).toBe(30);
-    expect(attendance.totals).toEqual({ held: 2, student_absent: 1, cancelled_by_teacher: 1, cancelled_by_admin: 0, other: 0 });
+    expect(attendance.totals).toEqual({
+      held: 2,
+      student_absent: 1,
+      cancelled_by_teacher: 1,
+      cancelled_by_admin: 0,
+      other: 0,
+    });
     expect(attendance.latest.map((l) => l.lesson_id)).toEqual(['a', 'b', 'c', 'd']);
     expect(attendance.latest[0]).toEqual({ lesson_id: 'a', starts_at: '2026-10-27T17:00:00.000Z', status: 'completed', students: [{ name: 'ياسمين', code: 'AB-0101' }] });
   });

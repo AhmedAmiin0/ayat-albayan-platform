@@ -16,7 +16,14 @@ export function scheduleWindow(now: Date): { from: Date; to: Date; limit: number
 /** The sales schedule's lesson (trial / makeup badges, `mine` on her students) without the way in. */
 function toStudentLesson(row: SalesScheduleRow, own: ReadonlySet<string>): SalesStudentLesson {
   const l = toScheduleLesson(row, false);
-  const lesson = { id: l.id, starts_at: l.starts_at, ends_at: l.ends_at, status: l.status, trial: l.trial, makeup: l.makeup };
+  const lesson = {
+    id: l.id,
+    starts_at: l.starts_at,
+    ends_at: l.ends_at,
+    status: l.status,
+    trial: l.trial,
+    makeup: l.makeup,
+  };
   return withMine({ ...lesson, teacher: l.teacher, students: l.students }, own);
 }
 
@@ -34,6 +41,12 @@ export function toStudentSchedule(p: ScheduleParts, now: Date): SalesStudentSche
   const weekly = p.rules.flatMap((r) => toWeeklySlot(r, now) ?? []);
   weekly.sort((a, b) => (a.next[0] ?? '').localeCompare(b.next[0] ?? ''));
   const own = new Set(p.own);
-  const upcoming = [...p.lessons].sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at)).slice(0, SCHEDULE_LIMIT);
-  return { student_tz: p.studentTz, weekly, upcoming: upcoming.map((row) => toStudentLesson(row, own)) };
+  const upcoming = [...p.lessons]
+    .sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at))
+    .slice(0, SCHEDULE_LIMIT);
+  return {
+    student_tz: p.studentTz,
+    weekly,
+    upcoming: upcoming.map((row) => toStudentLesson(row, own)),
+  };
 }

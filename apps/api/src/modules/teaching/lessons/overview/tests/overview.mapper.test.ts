@@ -53,7 +53,12 @@ describe('toOverview (R-SCH-09)', () => {
     const leftover = lesson({ id: 'l2', teacher_id: 'left', teacher: { id: 'left', display_name_ar: 'تقى', display_name_en: null, tz: 'Africa/Cairo' } });
     const out = toOverview(parts({ teachers, lessons: [leftover, lesson()] }));
     expect(out.teachers.map((t) => t.display_name_ar)).toEqual(['أبرار', 'تقى', 'سارة']);
-    expect(out.teachers[2]).toMatchObject({ students_count: 0, windows: [], free: [], time_off: [] });
+    expect(out.teachers[2]).toMatchObject({
+      students_count: 0,
+      windows: [],
+      free: [],
+      time_off: [],
+    });
     expect(out.lessons.map((l) => l.id)).toHaveLength(2);
   });
 

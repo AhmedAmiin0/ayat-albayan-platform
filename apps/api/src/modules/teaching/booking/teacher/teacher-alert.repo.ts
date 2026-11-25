@@ -30,7 +30,9 @@ export class TeacherAlertRepo {
     return data;
   }
 
-  async students(ids: readonly string[]): Promise<{ id: string; name: string; code: string | null }[]> {
+  async students(
+    ids: readonly string[],
+  ): Promise<{ id: string; name: string; code: string | null }[]> {
     if (ids.length === 0) return [];
     const { data, error } = await this.db.from('students').select('id, name, code').in('id', [...ids]);
     if (error) throw dbError(error);

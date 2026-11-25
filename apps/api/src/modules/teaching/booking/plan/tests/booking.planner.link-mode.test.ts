@@ -32,7 +32,9 @@ describe('BookingPlanner — meeting link mode', () => {
 
   it('auto: an explicit Meet link of the booking is kept on the lessons, not sent', async () => {
     const link = 'https://meet.google.com/abc-defg-hij';
-    const { payload } = await fakePlanner({ meeting_link_auto: true }).planner.prepare(leadRequest({ meetingLink: link }));
+    const { payload } = await fakePlanner({ meeting_link_auto: true }).planner.prepare(
+      leadRequest({ meetingLink: link }),
+    );
     expect(payload.messages[0]?.template_key).toBe('booking_confirmation_plain');
     expect(payload.lessons[0]?.meeting_link).toBe(link);
     expect(payload.rule.meeting_link).toBe(link);

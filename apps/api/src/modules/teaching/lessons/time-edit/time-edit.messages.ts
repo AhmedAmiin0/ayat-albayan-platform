@@ -7,7 +7,10 @@ import { confirmationMessages, type ConfirmedLesson, type Contact } from '@/modu
  * key carries that start, so a retry queues nothing new while a later edit to another time does
  * (edit_lesson_time frees the old key). An admin action: queued even with auto_messages_enabled off.
  */
-export function timeEditMessages(lesson: ConfirmedLesson, contacts: readonly Contact[]): QueuedMessage[] {
+export function timeEditMessages(
+  lesson: ConfirmedLesson,
+  contacts: readonly Contact[],
+): QueuedMessage[] {
   const startMs = Date.parse(lesson.starts_at);
   return confirmationMessages(lesson, contacts).map((m) => ({ ...m, dedup_key: `${m.dedup_key}:${startMs}` }));
 }

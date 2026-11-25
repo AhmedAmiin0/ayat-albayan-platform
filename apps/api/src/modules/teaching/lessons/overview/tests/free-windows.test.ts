@@ -4,7 +4,10 @@ import { teacherSpans } from '@/modules/teaching/lessons/overview/free-windows';
 
 const RIYADH = 'Asia/Riyadh';
 const CAIRO = 'Africa/Cairo';
-const span = (start: string, end: string): TimeRange => ({ start: new Date(start), end: new Date(end) });
+const span = (start: string, end: string): TimeRange => ({
+  start: new Date(start),
+  end: new Date(end),
+});
 const iso = (list: { start: number; end: number }[]) =>
   list.map((i) => `${new Date(i.start).toISOString().slice(5, 16)}–${new Date(i.end).toISOString().slice(11, 16)}`);
 

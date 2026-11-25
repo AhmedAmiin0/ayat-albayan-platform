@@ -26,7 +26,13 @@ interface VideoGrant {
  * camera and microphone but not share a screen into the room.
  */
 export function grantsFor(role: JoinRole, room: string): VideoGrant {
-  const base: VideoGrant = { roomJoin: true, room, canPublish: true, canSubscribe: true, canPublishData: true };
+  const base: VideoGrant = {
+    roomJoin: true,
+    room,
+    canPublish: true,
+    canSubscribe: true,
+    canPublishData: true,
+  };
   return role === 'guest' ? { ...base, canPublishSources: ['camera', 'microphone'] } : base;
 }
 

@@ -44,7 +44,13 @@ describe('GET /sales/students/:id «تفاصيل الطالب» (docs/16 row 36)
       { lesson_id: 'l2', starts_at: '2026-10-15T15:00:00.000Z', kind: 'absent' },
       { lesson_id: 'l1', starts_at: '2026-10-11T15:00:00.000Z', kind: 'present' },
     ]);
-    expect(attendance.totals).toEqual({ present: 1, absent: 1, excused: 0, cancelled: 1, unmarked: 1 });
+    expect(attendance.totals).toEqual({
+      present: 1,
+      absent: 1,
+      excused: 0,
+      cancelled: 1,
+      unmarked: 1,
+    });
     expect(t.queries.pastLessons).toHaveBeenCalledWith(MINE, expect.any(Date));
   });
 

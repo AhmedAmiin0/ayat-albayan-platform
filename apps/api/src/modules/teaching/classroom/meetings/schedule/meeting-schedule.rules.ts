@@ -17,12 +17,18 @@ interface ScheduleTimes {
 const MIN_MS = 60_000;
 
 /** 400 starts_in_past | too_far_ahead. A duration without a start is ignored (instant). */
-export function scheduleTimes(v: { startsAt?: string | undefined; durationMin?: number | undefined }, now: Date): ScheduleTimes {
+export function scheduleTimes(
+  v: { startsAt?: string | undefined; durationMin?: number | undefined },
+  now: Date,
+): ScheduleTimes {
   if (!v.startsAt) return { startsAt: null, plannedEndAt: null };
   const problem = scheduleProblem(v.startsAt, now, MEETING_MAX_AHEAD_DAYS);
   if (problem) throw new BadRequestException({ code: problem, message: problem });
   const startsAt = new Date(v.startsAt).toISOString();
-  return { startsAt, plannedEndAt: plannedEnd(startsAt, v.durationMin ?? DEFAULT_MEETING_DURATION) };
+  return {
+    startsAt,
+    plannedEndAt: plannedEnd(startsAt, v.durationMin ?? DEFAULT_MEETING_DURATION),
+  };
 }
 
 /**
@@ -36,7 +42,10 @@ export function rescheduleTimes(
   now: Date,
 ): ScheduleTimes | null {
   if (patch.startsAt === undefined && patch.durationMin === undefined) return null;
-  const length = current.starts_at && current.planned_end_at ? (Date.parse(current.planned_end_at) - Date.parse(current.starts_at)) / MIN_MS : null;
+  const length =
+    current.starts_at && current.planned_end_at
+      ? (Date.parse(current.planned_end_at) - Date.parse(current.starts_at)) / MIN_MS
+      : null;
   const startsAt = patch.startsAt ?? current.starts_at;
   if (!startsAt) throw new BadRequestException({ code: 'not_scheduled', message: 'not_scheduled' });
   return scheduleTimes({ startsAt, durationMin: patch.durationMin ?? length ?? undefined }, now);

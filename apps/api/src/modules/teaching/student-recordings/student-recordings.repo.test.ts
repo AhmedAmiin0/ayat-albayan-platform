@@ -10,7 +10,11 @@ const query = { page: 3, pageSize: 10 };
 describe('StudentRecordingQueries.page', () => {
   it('joins through lesson_students for this student, newest first, one page of the range', async () => {
     const f = fakeDb({ lesson_recordings: [{ data: [joinRow()], count: 31 }] });
-    const out = await new StudentRecordingRepo(f.db).page({ studentId: STUDENT, onlyTeacherId: null, query });
+    const out = await new StudentRecordingRepo(f.db).page({
+      studentId: STUDENT,
+      onlyTeacherId: null,
+      query,
+    });
     expect(out).toEqual({ rows: [joinRow()], total: 31 });
     expect(eqs(f)).toEqual([['lessons.lesson_students.student_id', STUDENT]]);
     expect(f.argsOf('lesson_recordings', 'order')).toEqual(['started_at', { ascending: false }]);

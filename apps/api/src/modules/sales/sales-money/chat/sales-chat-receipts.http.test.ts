@@ -30,7 +30,9 @@ describe('«اختر صورة الإيصال من المحادثة»: only her s
     const res = await call({ method: 'GET', url: `/sales/money/chat-receipts?studentId=${STUDENT_ID}`, token: 'salesA' });
     expect(res.statusCode).toBe(200);
     expect(m.family.familyPhone).toHaveBeenCalledWith(STUDENT_ID);
-    expect(m.mediaQueries.receipts).toHaveBeenCalledWith(expect.objectContaining({ phone: FAMILY_PHONE }));
+    expect(m.mediaQueries.receipts).toHaveBeenCalledWith(
+      expect.objectContaining({ phone: FAMILY_PHONE }),
+    );
     expect(res.json().map((r: { message_id: string }) => r.message_id)).toEqual([MSG, 'p']);
     expect(Object.keys(res.json()[0]).sort()).toEqual(['caption', 'created_at', 'expired', 'message_id', 'mime']);
     expect(m.media.cache).not.toHaveBeenCalled();

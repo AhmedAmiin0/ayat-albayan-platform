@@ -46,7 +46,11 @@ describe('TeacherMeQueries.me (R-TCH-03)', () => {
 
   it('meeting_mode raw and platform_classroom: the teacher\'s own mode, else the academy default', async () => {
     const me = (mode: string | null, auto: boolean) => {
-      const { db } = fakeDb({ teachers: [{ data: { ...ROW, meeting_mode: mode } }], students: [{ data: [] }], schedule_rules: [{ data: [] }] });
+      const { db } = fakeDb({
+        teachers: [{ data: { ...ROW, meeting_mode: mode } }],
+        students: [{ data: [] }],
+        schedule_rules: [{ data: [] }],
+      });
       return new TeacherMeRepo(db, readerOf(LessonsSettings, { meeting_link_auto: auto })).me('p1');
     };
     expect(await me(null, true)).toMatchObject({ meeting_mode: null, platform_classroom: true });

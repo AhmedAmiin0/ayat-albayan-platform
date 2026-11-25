@@ -35,7 +35,10 @@ function checkBody(livekit: LivekitApi, body: unknown): MuteSource {
   return parseOrThrow(muteSchema, body).source;
 }
 
-async function applyMute(livekit: LivekitApi, input: { room: string; identity: string; source: MuteSource }): Promise<void> {
+async function applyMute(
+  livekit: LivekitApi,
+  input: { room: string; identity: string; source: MuteSource },
+): Promise<void> {
   try {
     await muteTrack(livekit, input);
   } catch (e) {
@@ -61,7 +64,11 @@ export class MuteService {
     const target = await this.moderation.participant(lesson.id, input.identity);
     if (!target) throw notFound('participant_not_found');
     if (!canMute(role, asJoinRole(target.role))) throw cannotMute();
-    await applyMute(this.livekit, { room: lessonRoomName(lesson.id), identity: target.identity, source });
+    await applyMute(this.livekit, {
+      room: lessonRoomName(lesson.id),
+      identity: target.identity,
+      source,
+    });
   }
 }
 
@@ -83,6 +90,10 @@ export class MeetingMuteService {
     const target = roleOfIdentity(input.identity);
     if (!target) throw notFound('participant_not_found');
     if (!canMute(role, target)) throw cannotMute();
-    await applyMute(this.livekit, { room: meetingRoomName(meeting.id), identity: input.identity, source });
+    await applyMute(this.livekit, {
+      room: meetingRoomName(meeting.id),
+      identity: input.identity,
+      source,
+    });
   }
 }

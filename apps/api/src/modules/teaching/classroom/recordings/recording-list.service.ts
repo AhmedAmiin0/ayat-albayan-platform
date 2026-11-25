@@ -35,7 +35,11 @@ export class RecordingViews {
 
   /** A 1-hour signed link to the row's file (the caller checked who may see it). */
   async urlOf(row: RecordingRow): Promise<string> {
-    const signed = await this.storage.signedDownload({ bucket: BUCKETS.recordings, path: row.file_path, seconds: SIGNED_URL_SECONDS.ui });
+    const signed = await this.storage.signedDownload({
+      bucket: BUCKETS.recordings,
+      path: row.file_path,
+      seconds: SIGNED_URL_SECONDS.ui,
+    });
     return signed.url;
   }
 }

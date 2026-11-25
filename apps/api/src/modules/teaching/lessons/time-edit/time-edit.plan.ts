@@ -33,7 +33,8 @@ export type TimeEditPlan = {
   ignoredConflicts: readonly ConflictKind[];
 };
 
-const durationOf = (start: Date, end: Date): number => Math.round((end.getTime() - start.getTime()) / MINUTE_MS);
+const durationOf = (start: Date, end: Date): number =>
+  Math.round((end.getTime() - start.getTime()) / MINUTE_MS);
 
 /** The request already holds: a replay (or a no-op) writes nothing. */
 export const isSameTime = (current: TimeEditInput['current'], request: TimeEditInput['request']): boolean =>
@@ -41,7 +42,10 @@ export const isSameTime = (current: TimeEditInput['current'], request: TimeEditI
   request.durationMin === durationOf(current.startsAt, current.endsAt);
 
 /** The 400s of a move (date_in_past) and of a correction (future, cross-day, reason), in that order. */
-function validate({ mode, now, current, request, zones }: TimeEditInput, planned: { end: Date; reason: string | null }): void {
+function validate(
+  { mode, now, current, request, zones }: TimeEditInput,
+  planned: { end: Date; reason: string | null },
+): void {
   const start = request.startsAt;
   if (mode === 'move') {
     if (start.getTime() <= now.getTime()) throw badRequest('date_in_past');
@@ -94,8 +98,14 @@ type PayoutScopeInput = {
  * - correct: only a paid-status lesson whose length changed changes the payout line (the
  *   breakdown stores lesson ids, so a start-only shift on the same day changes nothing).
  */
-export function payoutScope({ plan, status, teacherTz, paidStatuses }: PayoutScopeInput): PayoutScope | null {
-  if (plan.mode === 'correct' && !(plan.durationChanged && paidStatuses.includes(status))) return null;
+export function payoutScope({
+  plan,
+  status,
+  teacherTz,
+  paidStatuses,
+}: PayoutScopeInput): PayoutScope | null {
+  if (plan.mode === 'correct' && !(plan.durationChanged && paidStatuses.includes(status)))
+    return null;
   return { month: localDateOf(plan.start, teacherTz).slice(0, 7) };
 }
 

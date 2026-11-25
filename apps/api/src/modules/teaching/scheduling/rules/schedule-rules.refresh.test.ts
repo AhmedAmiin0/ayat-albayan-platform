@@ -25,7 +25,9 @@ describe('POST /schedule-rules/refresh («مزامنة الجدول», R-SCH-02)
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(SchedulingModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
       .overrideProvider(HorizonJob)
       .useValue(horizon)

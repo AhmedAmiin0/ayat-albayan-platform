@@ -57,7 +57,11 @@ describe('GET /sales/money/family without sales.renew_any: unchanged', () => {
 
   it('only her own child (mine: true); nothing for a salesperson who owns none of them', async () => {
     const mine = (await call({ method: 'GET', url: URL, token: 'salesA' })).json().students;
-    expect(mine.map((s: { id: string; mine: boolean }) => [s.id, s.mine])).toEqual([[STUDENT_ID, true]]);
-    expect((await call({ method: 'GET', url: URL, token: 'salesB' })).json()).toEqual({ students: [] });
+    expect(mine.map((s: { id: string; mine: boolean }) => [s.id, s.mine])).toEqual([
+      [STUDENT_ID, true],
+    ]);
+    expect((await call({ method: 'GET', url: URL, token: 'salesB' })).json()).toEqual({
+      students: [],
+    });
   });
 });

@@ -89,7 +89,10 @@ export class ClassroomRepo {
     const g = await this.db.from('guardians').select('id, phone_e164').eq('id', student.data.guardian_id).maybeSingle();
     if (g.error) throw dbError(g.error);
     if (!g.data?.phone_e164) return null;
-    return { student: { id: student.data.id, name: student.data.name }, guardian: { id: g.data.id, phone: g.data.phone_e164 } };
+    return {
+      student: { id: student.data.id, name: student.data.name },
+      guardian: { id: g.data.id, phone: g.data.phone_e164 },
+    };
   }
 
   async insertLink(row: TablesInsert<'lesson_join_links'>): Promise<JoinLinkRow> {

@@ -5,8 +5,11 @@ import { FeedbackReadRepo } from './feedback.read.repo';
 
 const T = 'lesson_feedback';
 const PAGE = { page: 1, pageSize: 20 };
-const argsOf = (calls: { table: string; method: string; args: unknown[] }[], table: string, method: string) =>
-  calls.filter((c) => c.table === table && c.method === method).map((c) => c.args);
+const argsOf = (
+  calls: { table: string; method: string; args: unknown[] }[],
+  table: string,
+  method: string,
+) => calls.filter((c) => c.table === table && c.method === method).map((c) => c.args);
 
 describe('FeedbackReadQueries.page sort and column filters (R-NFR-08)', () => {
   it('teacher order: by the embedded teacher name, then newest request', async () => {

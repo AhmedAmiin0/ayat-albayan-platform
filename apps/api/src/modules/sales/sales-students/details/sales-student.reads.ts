@@ -22,7 +22,12 @@ export class SalesStudentReads {
       this.reports.lessons(rows.map((r) => r.lesson_id)),
       this.reports.sequence(studentId),
     ]);
-    const page = historyResponse({ rows, lessons, seq, page: { page: 1, pageSize: REPORTS_LIMIT } });
+    const page = historyResponse({
+      rows,
+      lessons,
+      seq,
+      page: { page: 1, pageSize: REPORTS_LIMIT },
+    });
     return { items: page.items, total: page.total };
   }
 }

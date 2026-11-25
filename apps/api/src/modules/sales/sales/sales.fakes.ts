@@ -53,18 +53,30 @@ export const meetingRow = (over: Partial<SalesLessonRow> = {}): SalesLessonRow =
 });
 
 export async function salesApp() {
-  const sales = { ownership: vi.fn(), subscriptions: vi.fn(), meetings: vi.fn(), ownsLesson: vi.fn() };
+  const sales = {
+    ownership: vi.fn(),
+    subscriptions: vi.fn(),
+    meetings: vi.fn(),
+    ownsLesson: vi.fn(),
+  };
   const assign = {
     salespeople: vi.fn(), assignedLeads: vi.fn(), unassignedLeadIds: vi.fn(),
     isSalesperson: vi.fn(), setAssignee: vi.fn(), names: vi.fn(),
   };
   const audit = { record: vi.fn() };
   const mod = await Test.createTestingModule({ imports: [featureRoot(SalesModule)] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(SalesRepo).useValue(sales)
-    .overrideProvider(SalesAssignRepo).useValue(assign)
-    .overrideProvider(AuditService).useValue(audit)
-    .overrideProvider(SettingsService).useValue(fakeSettings())
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(systemResolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(SalesRepo)
+    .useValue(sales)
+    .overrideProvider(SalesAssignRepo)
+    .useValue(assign)
+    .overrideProvider(AuditService)
+    .useValue(audit)
+    .overrideProvider(SettingsService)
+    .useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

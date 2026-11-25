@@ -22,7 +22,10 @@ export class RecordingRetentionRepo {
   }
 
   /** Finished or failed rows that ended before `cutoff` and still have their file, oldest first. */
-  async expired(input: { cutoff: string; limit: number }): Promise<{ id: string; file_path: string }[]> {
+  async expired(input: {
+    cutoff: string;
+    limit: number;
+  }): Promise<{ id: string; file_path: string }[]> {
     const { data, error } = await this.db
       .from('lesson_recordings')
       .select('id, file_path')

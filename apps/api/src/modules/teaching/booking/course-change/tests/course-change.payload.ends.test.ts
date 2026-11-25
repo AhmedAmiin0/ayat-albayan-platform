@@ -23,7 +23,12 @@ const base: PayloadInput = {
   counted: 0,
 };
 type Step = { id: string; from_status: string; to_status: string; chargeable: boolean };
-type Payload = { starts_on: string; end_rules: { id: string; ends_on: string; changes: Step[] }[]; changes: Step[]; audit: { after: { moved: string[] } } };
+type Payload = {
+  starts_on: string;
+  end_rules: { id: string; ends_on: string; changes: Step[] }[];
+  changes: Step[];
+  audit: { after: { moved: string[] } };
+};
 const payloadOf = (o: Partial<PayloadInput>) => changePayload({ ...base, ...o }) as Payload;
 
 describe('changePayload — old rules end at min(their ends_on, startsOn − 1)', () => {
@@ -50,7 +55,9 @@ describe('changePayload — every moved lesson is written', () => {
     const step = (id: string, from: string) => ({ id, from_status: from, to_status: 'rescheduled', chargeable: false });
     expect(p.end_rules.find((r) => r.id === 'ra')?.changes).toEqual([step('l1', 'scheduled')]);
     expect(p.changes).toEqual([step('l2', 'confirmed'), step('l3', 'scheduled')]);
-    const written = [...p.end_rules.flatMap((r) => r.changes), ...p.changes].map((c) => c.id).sort();
+    const written = [...p.end_rules.flatMap((r) => r.changes), ...p.changes]
+      .map((c) => c.id)
+      .sort();
     expect(written).toEqual(p.audit.after.moved.sort());
   });
 });

@@ -69,7 +69,11 @@ describe('MakeupCandidates.list (R-SCH-10)', () => {
 
   it('a changed makeup_window_days moves the oldest start asked for', async () => {
     const { db, calls } = fakeDb({ lessons: [{ data: [] }] });
-    await new MakeupCandidates(db, readerOf(BookingSettings, { makeup_window_days: 10 })).list(IDS.s1);
-    expect(calls.filter((c) => c.method === 'gte').map((c) => c.args)).toEqual([['starts_at', '2026-09-23T10:00:00.000Z']]);
+    await new MakeupCandidates(db, readerOf(BookingSettings, { makeup_window_days: 10 })).list(
+      IDS.s1,
+    );
+    expect(calls.filter((c) => c.method === 'gte').map((c) => c.args)).toEqual([
+      ['starts_at', '2026-09-23T10:00:00.000Z'],
+    ]);
   });
 });

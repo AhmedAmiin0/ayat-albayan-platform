@@ -28,7 +28,11 @@ beforeEach(() => {
 describe('starting a lesson recording', () => {
   it('claims the row, creates the room, then starts an audio-only MP3 egress into the bucket path', async () => {
     expect(await starter().startFor(lessonTarget(LESSON_ID), OPEN)).toBe('started');
-    expect(q.claim).toHaveBeenCalledWith({ target: lessonTarget(LESSON_ID), filePath: path, startedAt: OPEN.toISOString() });
+    expect(q.claim).toHaveBeenCalledWith({
+      target: lessonTarget(LESSON_ID),
+      filePath: path,
+      startedAt: OPEN.toISOString(),
+    });
     const urls = h.mock.calls.map(([url]) => url);
     expect(urls).toEqual([
       'https://livekit.example.test/twirp/livekit.RoomService/CreateRoom',

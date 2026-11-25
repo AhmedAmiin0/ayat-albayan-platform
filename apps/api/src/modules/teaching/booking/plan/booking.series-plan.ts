@@ -30,7 +30,9 @@ function groupsOf(rule: SeriesRule): TimeGroup[] {
 /** The plan cut at endsOn: timing.ends_on = endsOn, later occurrences dropped. */
 function capped(plan: Plan, endsOn: string): Plan {
   const { tz } = plan.timing;
-  const occurrences = plan.occurrences.filter((o) => isoDay(dayInZone(o.starts_at.getTime(), tz)) <= endsOn);
+  const occurrences = plan.occurrences.filter(
+    (o) => isoDay(dayInZone(o.starts_at.getTime(), tz)) <= endsOn,
+  );
   return { timing: { ...plan.timing, ends_on: endsOn }, occurrences };
 }
 
@@ -42,7 +44,8 @@ function courseWeeks(input: SeriesInput, endsOn: string): number {
   return Math.max(input.horizonWeeks, (end - input.now.getTime()) / (7 * DAY_MS));
 }
 
-const overlaps = (a: Occurrence, b: Occurrence) => a.starts_at < b.ends_at && b.starts_at < a.ends_at;
+const overlaps = (a: Occurrence, b: Occurrence) =>
+  a.starts_at < b.ends_at && b.starts_at < a.ends_at;
 
 /**
  * 400 day_times_overlap when a lesson of one time runs into a lesson of another (e.g. across

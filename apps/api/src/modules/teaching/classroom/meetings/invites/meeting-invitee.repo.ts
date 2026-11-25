@@ -55,7 +55,11 @@ export class MeetingInviteeRepo {
   }
 
   /** Students in the scope, by id (resolution, with the guardian) or by name / code (picker). */
-  async students(input: { scope: StudentScope; ids?: readonly string[]; q?: string }): Promise<StudentPick[]> {
+  async students(input: {
+    scope: StudentScope;
+    ids?: readonly string[];
+    q?: string;
+  }): Promise<StudentPick[]> {
     let query = this.db.from('students').select(STUDENT_COLUMNS);
     if (input.scope.kind === 'ids') query = query.in('id', [...input.scope.ids]);
     if (input.ids) query = query.in('id', [...input.ids]);

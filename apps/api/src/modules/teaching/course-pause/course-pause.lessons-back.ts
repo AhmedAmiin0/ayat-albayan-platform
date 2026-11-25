@@ -4,7 +4,10 @@ import { ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleRepo, Sched
 import { changedLessons, type RpcOut } from './course-pause.mapper';
 import { CoursePauseRepo, type ReopenedLesson } from './course-pause.repo';
 
-const occurrence = (l: ReopenedLesson) => ({ starts_at: new Date(l.starts_at), ends_at: new Date(l.ends_at) });
+const occurrence = (l: ReopenedLesson) => ({
+  starts_at: new Date(l.starts_at),
+  ends_at: new Date(l.ends_at),
+});
 
 /** What generating a resumed rule again needs (max-params). */
 @Injectable()
@@ -65,7 +68,12 @@ export class CoursePauseLessonsBack {
     for (const teacherId of new Set(lessons.map((l) => l.teacher_id))) {
       const mine = lessons.filter((l) => l.teacher_id === teacherId);
       const proposed = mine.map(occurrence);
-      const conflicts = await this.clashes.checker.check({ teacherId, studentIds: [out.student_id], proposed, excludeIds: mine.map((l) => l.id) });
+      const conflicts = await this.clashes.checker.check({
+        teacherId,
+        studentIds: [out.student_id],
+        proposed,
+        excludeIds: mine.map((l) => l.id),
+      });
       await this.clashes.writer.flagConflicts(mine, conflicts);
       found += conflicts.length;
     }

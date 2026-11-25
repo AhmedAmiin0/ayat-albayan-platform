@@ -20,8 +20,16 @@ export interface SalesScheduleRow {
   teacher_confirmed_at?: string | null;
   rule: { package: string | null } | null;
   /** tz and meeting_mode optional in test fakes. */
-  teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz?: string; meeting_mode?: string | null } | null;
-  lesson_students: { student: { id: string; code: string | null; name: string; tz?: string } | null }[];
+  teacher: {
+    id: string;
+    display_name_ar: string;
+    display_name_en: string | null;
+    tz?: string;
+    meeting_mode?: string | null;
+  } | null;
+  lesson_students: {
+    student: { id: string; code: string | null; name: string; tz?: string } | null;
+  }[];
 }
 
 export interface UpcomingRow {

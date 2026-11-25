@@ -17,7 +17,11 @@ describe('SalesTeacherAssign.assign (migration 972)', () => {
   it('ensureActive: an active teacher passes; none found is 400 teacher_not_found', async () => {
     const found = (data: unknown) => {
       const q: Record<string, unknown> = {};
-      Object.assign(q, { select: () => q, eq: () => q, maybeSingle: async () => ({ data, error: null }) });
+      Object.assign(q, {
+        select: () => q,
+        eq: () => q,
+        maybeSingle: async () => ({ data, error: null }),
+      });
       return { from: vi.fn(() => q) } as unknown as Db;
     };
     await expect(new SalesTeacherAssign(found({ id: 't' })).ensureActive('t')).resolves.toBeUndefined();

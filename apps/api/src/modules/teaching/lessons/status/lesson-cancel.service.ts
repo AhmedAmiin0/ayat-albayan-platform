@@ -107,7 +107,13 @@ export class LessonCancelService {
         entityId: rule.id,
         action: 'cancel',
         before: { status: rule.status, ends_on: rule.ends_on },
-        after: { ends_on: addDays(from, -1), from, by: body.by, reason: body.reason, cancelled: open.map((l) => l.id) },
+        after: {
+          ends_on: addDays(from, -1),
+          from,
+          by: body.by,
+          reason: body.reason,
+          cancelled: open.map((l) => l.id),
+        },
       },
       transition: { from: open[0]?.status ?? 'scheduled', event: CANCEL_EVENT[body.by] },
     });
@@ -115,6 +121,10 @@ export class LessonCancelService {
   }
 
   private async context(body: Cancel): Promise<CancelContext> {
-    return { ...body, now: new Date(), lateCancelHours: (await this.settings.read()).late_cancel_hours };
+    return {
+      ...body,
+      now: new Date(),
+      lateCancelHours: (await this.settings.read()).late_cancel_hours,
+    };
   }
 }

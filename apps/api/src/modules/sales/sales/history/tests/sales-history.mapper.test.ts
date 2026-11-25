@@ -24,7 +24,11 @@ describe('sales subscription history mapper', () => {
 
   it('a subscription without a balance row: nothing used, all remaining', () => {
     const b = { ...bundle(), balances: [] };
-    expect(toSalesHistory(SUB, b).subscriptions[1]).toMatchObject({ lessons_used: 0, lessons_remaining: 8, ended_at: null });
+    expect(toSalesHistory(SUB, b).subscriptions[1]).toMatchObject({
+      lessons_used: 0,
+      lessons_remaining: 8,
+      ended_at: null,
+    });
   });
 
   it('a cancelled subscription (no balance row) has nothing left', () => {

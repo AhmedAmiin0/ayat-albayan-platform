@@ -30,7 +30,12 @@ export const scheduledRow = (over: Partial<MeetingRow> = {}): MeetingRow =>
 export function meetingQueries() {
   return {
     insert: vi.fn(async (r: NewMeeting) =>
-      meetingRow({ title: r.title, created_by: r.createdBy, starts_at: r.startsAt, planned_end_at: r.plannedEndAt }),
+      meetingRow({
+        title: r.title,
+        created_by: r.createdBy,
+        starts_at: r.startsAt,
+        planned_end_at: r.plannedEndAt,
+      }),
     ),
     byRequest: vi.fn().mockResolvedValue(null),
     byId: vi.fn().mockResolvedValue(meetingRow()),

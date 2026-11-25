@@ -12,8 +12,12 @@ export type Principal = { userId: string } | { joinLinkId: string };
 const UNIQUE_VIOLATION = '23505';
 
 /** classroom_participants / classroom_blocks columns of a principal. */
-export const principalColumns = (p: Principal): { user_id: string | null; join_link_id: string | null } =>
-  'userId' in p ? { user_id: p.userId, join_link_id: null } : { user_id: null, join_link_id: p.joinLinkId };
+export const principalColumns = (
+  p: Principal,
+): { user_id: string | null; join_link_id: string | null } =>
+  'userId' in p
+    ? { user_id: p.userId, join_link_id: null }
+    : { user_id: null, join_link_id: p.joinLinkId };
 
 /** The principal of a participant row; null when its login or link is gone. */
 export function principalOf(row: Pick<ParticipantRow, 'user_id' | 'join_link_id'>): Principal | null {

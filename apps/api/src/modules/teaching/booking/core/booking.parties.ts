@@ -73,7 +73,11 @@ export class BookingParties {
         throw domainError(HttpStatus.CONFLICT, 'duplicate_student', { guardian_id: existing.id, candidates });
       }
     }
-    const target = { id: existing?.id ?? null, phone_e164: guardian.phone_e164, tz: existing?.tz ?? guardian.tz };
+    const target = {
+      id: existing?.id ?? null,
+      phone_e164: guardian.phone_e164,
+      tz: existing?.tz ?? guardian.tz,
+    };
     return {
       student_ids: [],
       new_guardian: guardian,

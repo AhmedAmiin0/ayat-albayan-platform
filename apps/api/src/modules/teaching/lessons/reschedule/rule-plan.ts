@@ -70,7 +70,12 @@ export type LessonsPlanInput = {
 };
 
 /** The new rule's lesson rows (ids generated here so the confirmation can point at the first). */
-export function planLessons({ plan, link, clashes, overrideReason }: LessonsPlanInput): NewLesson[] {
+export function planLessons({
+  plan,
+  link,
+  clashes,
+  overrideReason,
+}: LessonsPlanInput): NewLesson[] {
   const meetingLink = resolveMeetingLink({
     explicit: plan.rule.meeting_link,
     studentOverrides: link.overrides,

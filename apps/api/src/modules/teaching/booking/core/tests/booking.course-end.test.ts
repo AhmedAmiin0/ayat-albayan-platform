@@ -29,7 +29,9 @@ describe('plannedCourseEnd — the local date of the N-th lesson from now (owner
 
   it('null with no days or no lessons to count', () => {
     const now = new Date('2026-10-01T08:00:00Z');
-    expect(plannedCourseEnd({ rule: { ...rule, byday: [], dayTimes: [] }, now, lessonsTotal: 8 })).toBeNull();
+    expect(
+      plannedCourseEnd({ rule: { ...rule, byday: [], dayTimes: [] }, now, lessonsTotal: 8 }),
+    ).toBeNull();
     expect(plannedCourseEnd({ rule, now, lessonsTotal: 0 })).toBeNull();
   });
 });

@@ -60,6 +60,10 @@ export class MeetingInvitePolicies {
     if (seesAll) return { seesAll, mayChat: () => true, teacherId: null };
     if (user.role !== 'teacher') return { seesAll, mayChat: () => false, teacherId: null };
     const scope = await this.teachers.of(user).catch(() => null);
-    return { seesAll, mayChat: (phone) => scope !== null && teacherMaySend(scope, phone), teacherId: scope?.teacherId ?? null };
+    return {
+      seesAll,
+      mayChat: (phone) => scope !== null && teacherMaySend(scope, phone),
+      teacherId: scope?.teacherId ?? null,
+    };
   }
 }

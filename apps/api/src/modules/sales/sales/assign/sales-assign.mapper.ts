@@ -13,7 +13,10 @@ const CLOSED: ReadonlySet<string> = new Set(['converted', 'lost']);
  * Salespeople as pickSales wants them. lastAssignedAt = the newest updated_at over everything
  * assigned to them (nothing is added to the DB for it, so any later touch of a lead also moves it).
  */
-export function toCandidates(ids: readonly string[], leads: readonly AssignedLead[]): SalesCandidate[] {
+export function toCandidates(
+  ids: readonly string[],
+  leads: readonly AssignedLead[],
+): SalesCandidate[] {
   return ids.map((id) => {
     const mine = leads.filter((l) => l.assigned_to === id);
     const stamps = mine.map((l) => Date.parse(l.updated_at));

@@ -57,7 +57,10 @@ export class RecordingRetention {
   }
 
   /** A failed storage call leaves the row alone: the next run tries it again. */
-  private async purgeOne(row: { id: string; file_path: string }, ctx: { days: number; now: Date }): Promise<boolean> {
+  private async purgeOne(
+    row: { id: string; file_path: string },
+    ctx: { days: number; now: Date },
+  ): Promise<boolean> {
     try {
       return await this.eraser.erase({
         id: row.id,

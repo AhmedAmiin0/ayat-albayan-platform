@@ -8,7 +8,10 @@ import type { TrialStudent } from './trial-date.repo';
 // A new trial date is for one existing student with no invoice and no running subscription.
 
 /** The request with its id fixed (a move's new lesson id) and, for a move, every student of that trial. */
-export type TrialTarget = { req: BookingRequest & { studentIds: string[]; clientRequestId: string }; old: MovedTrial | null };
+export type TrialTarget = {
+  req: BookingRequest & { studentIds: string[]; clientRequestId: string };
+  old: MovedTrial | null;
+};
 
 /** 400 trial_date_invalid unless the body is one existing student's trial; returns that student's id. */
 export function trialStudentId(req: BookingRequest): string {
@@ -24,7 +27,12 @@ export function assertCanPick(student: TrialStudent | null): TrialStudent {
   return student;
 }
 
-type TargetInput = { req: BookingRequest; studentId: string; old: MovedTrial | null; requestId: string };
+type TargetInput = {
+  req: BookingRequest;
+  studentId: string;
+  old: MovedTrial | null;
+  requestId: string;
+};
 
 /** A move books the trial's own students (siblings of one trial lesson move together, like a reschedule). */
 export function targetOf({ req, studentId, old, requestId }: TargetInput): TrialTarget {

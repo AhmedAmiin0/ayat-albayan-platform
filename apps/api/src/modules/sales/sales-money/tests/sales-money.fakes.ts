@@ -24,8 +24,14 @@ export function salesDefaults(m: Mocks): void {
   m.pricing.quote.mockResolvedValue(WEEKLY_SA);
   m.subs.insert.mockResolvedValue(subRow());
   m.subs.get.mockResolvedValue(subRow());
-  m.payments.subscription.mockResolvedValue({ id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR' });
-  m.payments.insert.mockResolvedValue(paymentRow({ recorded_by: SALES_A.id, receipt_path: RECEIPT }));
+  m.payments.subscription.mockResolvedValue({
+    id: SUB_ID,
+    student_id: STUDENT_ID,
+    currency: 'SAR',
+  });
+  m.payments.insert.mockResolvedValue(
+    paymentRow({ recorded_by: SALES_A.id, receipt_path: RECEIPT }),
+  );
   m.payments.get.mockResolvedValue(paymentRow({ recorded_by: SALES_A.id, receipt_path: RECEIPT }));
   m.storage.exists.mockResolvedValue(true);
   m.activation.afterPayment.mockResolvedValue(true);

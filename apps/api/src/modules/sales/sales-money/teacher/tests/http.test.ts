@@ -46,7 +46,11 @@ describe('POST /sales/subscriptions with teacherId; GET /sales/subscriptions/tea
   it('the package is made, then her pick is saved as the student’s teacher, she is the actor', async () => {
     const res = await call({ method: 'POST', url: '/sales/subscriptions', token: 'salesA', body: { ...CREATE, teacherId: TEACHER } });
     expect(res.statusCode).toBe(201);
-    expect(assign).toHaveBeenCalledWith({ studentId: STUDENT_ID, teacherId: TEACHER, actorId: SALES_A.id });
+    expect(assign).toHaveBeenCalledWith({
+      studentId: STUDENT_ID,
+      teacherId: TEACHER,
+      actorId: SALES_A.id,
+    });
   });
 
   it('no teacherId (an older app): the package only, the teacher stays', async () => {

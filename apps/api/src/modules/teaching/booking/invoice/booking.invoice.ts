@@ -71,9 +71,15 @@ export class BookingInvoices {
     if (!isPathOf(a.input.path, a.requestId)) throw bad('invoice_path');
     const info = await this.storage.info({ bucket: BUCKETS.invoices, path: a.input.path });
     if (!info) throw bad('invoice_path');
-    const saved = this.checked({ path: a.input.path, mime: baseMime(info.contentType), size_bytes: info.size }, a.maxBytes);
+    const saved = this.checked(
+      { path: a.input.path, mime: baseMime(info.contentType), size_bytes: info.size },
+      a.maxBytes,
+    );
     // Storage trusts the Content-Type the browser PUT with: the bytes must agree with it.
-    const head = await this.storage.head({ bucket: BUCKETS.invoices, path: a.input.path }, SNIFF_BYTES);
+    const head = await this.storage.head(
+      { bucket: BUCKETS.invoices, path: a.input.path },
+      SNIFF_BYTES,
+    );
     if (!head || sniffMime(head) !== saved.mime) throw bad('invoice_type');
     return { ...saved, kind: a.kind, source: 'upload', message_id: null };
   }

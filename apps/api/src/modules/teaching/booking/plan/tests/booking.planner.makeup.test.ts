@@ -89,8 +89,13 @@ describe('BookingPlanner — حجز تعويضي (R-SCH-10)', () => {
   });
 
   it('400 makeup_student when the student was not on the missed lesson', async () => {
-    const { planner } = setup(missedLessonRow({ lesson_students: [{ student_id: IDS.s2, chargeable: true }] }));
-    expect(await failure(planner.prepare(makeupRequest()))).toMatchObject({ status: 400, body: { code: 'makeup_student' } });
+    const { planner } = setup(
+      missedLessonRow({ lesson_students: [{ student_id: IDS.s2, chargeable: true }] }),
+    );
+    expect(await failure(planner.prepare(makeupRequest()))).toMatchObject({
+      status: 400,
+      body: { code: 'makeup_student' },
+    });
   });
 
   it.each([

@@ -24,7 +24,10 @@ const asStatus = (s: string): StudentRecordingStatus => STUDENT_RECORDING_STATUS
  * A row as the clients see it: no storage path, `url` only for a finished file (the caller signs
  * it), `duration_seconds` from the start and end, `size_bytes` when the egress told us.
  */
-export function studentRecordingView(row: RecordingJoinRow, ctx: { url: string | null; canManage: boolean }): StudentRecordingView {
+export function studentRecordingView(
+  row: RecordingJoinRow,
+  ctx: { url: string | null; canManage: boolean },
+): StudentRecordingView {
   const status = asStatus(row.status);
   return {
     id: row.id,
@@ -51,7 +54,10 @@ export function canManage(rule: ManageRule, row: RecordingJoinRow): boolean {
 }
 
 /** The UTC bounds of a `from`/`to` day range: [from 00:00, the day after `to` 00:00). */
-export function dayBounds(range: { from?: string | undefined; to?: string | undefined }): { gte: string | null; lt: string | null } {
+export function dayBounds(range: { from?: string | undefined; to?: string | undefined }): {
+  gte: string | null;
+  lt: string | null;
+} {
   const next = (day: string): string => `${addCalendarDays(day, 1)}T00:00:00.000Z`;
   return {
     gte: range.from ? `${range.from}T00:00:00.000Z` : null,

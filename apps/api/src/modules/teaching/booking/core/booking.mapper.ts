@@ -105,12 +105,22 @@ type LessonRowsInput = {
 };
 
 /** Lessons for the RPC; an override reason lands only on the occurrences that clash (R-SCH-04). */
-export function lessonRows({ occurrences, conflicts, reason, meetingLink }: LessonRowsInput): LessonRow[] {
+export function lessonRows({
+  occurrences,
+  conflicts,
+  reason,
+  meetingLink,
+}: LessonRowsInput): LessonRow[] {
   const clashing = new Set(conflicts.map((c) => c.startsAt));
   return occurrences.map((o) => {
     const starts_at = o.starts_at.toISOString();
     const override_reason = clashing.has(starts_at) ? reason : null;
-    return { starts_at, ends_at: o.ends_at.toISOString(), meeting_link: meetingLink, override_reason };
+    return {
+      starts_at,
+      ends_at: o.ends_at.toISOString(),
+      meeting_link: meetingLink,
+      override_reason,
+    };
   });
 }
 
@@ -127,6 +137,10 @@ const iso = (pgTime: string) => new Date(pgTime).toISOString();
 /** create_booking's jsonb → BookingResult with UTC ISO instants. Throws on an unexpected shape. */
 export function toBookingResult(data: unknown): BookingResult {
   const r = rpcResult.parse(data);
-  const lessons = r.lessons.map((l) => ({ id: l.id, starts_at: iso(l.starts_at), ends_at: iso(l.ends_at) }));
+  const lessons = r.lessons.map((l) => ({
+    id: l.id,
+    starts_at: iso(l.starts_at),
+    ends_at: iso(l.ends_at),
+  }));
   return { ...r, lessons, invoice_id: r.invoice_id ?? null };
 }

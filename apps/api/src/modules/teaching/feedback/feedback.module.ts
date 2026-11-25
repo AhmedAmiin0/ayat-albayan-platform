@@ -21,9 +21,16 @@ import { FeedbackLinksModule } from './links/feedback-links.module';
   imports: [InboxModule, TeachersModule, FeedbackLinksModule],
   controllers: [FeedbackController, FeedbackPublicController],
   providers: [
-    { provide: FEEDBACK_CONFIG, useFactory: (): FeedbackConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_SECRET ?? null }) },
+    {
+      provide: FEEDBACK_CONFIG,
+      useFactory: (): FeedbackConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_SECRET ?? null }),
+    },
     FeedbackSettings,
-    { provide: PublicFeedbackLimit, useFactory: (s: FeedbackSettings) => new PublicFeedbackLimit(s), inject: [FeedbackSettings] },
+    {
+      provide: PublicFeedbackLimit,
+      useFactory: (s: FeedbackSettings) => new PublicFeedbackLimit(s),
+      inject: [FeedbackSettings],
+    },
     FeedbackRepo,
     FeedbackReadRepo,
     FeedbackSender,

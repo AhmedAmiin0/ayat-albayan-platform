@@ -18,9 +18,19 @@ const service = (config: typeof CONFIG | null = CONFIG, limit = new PublicJoinLi
     admissionOf({ q, mod, rec, config }),
     resolverOf(q),
   );
-const join = (over: { linkToken?: string; body?: unknown; now?: Date; svc?: GuestJoinService } = {}) =>
-  (over.svc ?? service()).join({ linkToken: over.linkToken ?? LINK_TOKEN, ip: '9.9.9.9', body: over.body !== undefined ? over.body : { name: 'سهيلة' } }, over.now ?? OPEN);
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+const join = (
+  over: { linkToken?: string; body?: unknown; now?: Date; svc?: GuestJoinService } = {},
+) =>
+  (over.svc ?? service()).join(
+    {
+      linkToken: over.linkToken ?? LINK_TOKEN,
+      ip: '9.9.9.9',
+      body: over.body !== undefined ? over.body : { name: 'سهيلة' },
+    },
+    over.now ?? OPEN,
+  );
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 
 beforeEach(() => {
   q = queries();

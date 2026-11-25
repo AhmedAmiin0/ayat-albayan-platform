@@ -7,10 +7,17 @@ import { invitesOf, MeetingInviteesRepo } from '@/modules/teaching/classroom/mee
 const row = { meeting_id: MEETING_ID, kind: 'staff', profile_id: 'p', display_name: 'مريم', channel: 'in_app' };
 
 describe('MeetingInviteesQueries (R-MEET-02, migration 414)', () => {
-  it("the invitee cap trigger answers 400 too_many_invitees like the fast check", async () => {
-    const f = fakeDb({ meeting_invitees: [{ error: { code: 'P0001', message: 'too_many_invitees' } }] });
-    const e = (await new MeetingInviteesRepo(f.db).insert([row]).catch((x: HttpException) => x)) as HttpException;
-    expect([e.getStatus(), e.getResponse()]).toEqual([400, expect.objectContaining({ code: 'too_many_invitees' })]);
+  it('the invitee cap trigger answers 400 too_many_invitees like the fast check', async () => {
+    const f = fakeDb({
+      meeting_invitees: [{ error: { code: 'P0001', message: 'too_many_invitees' } }],
+    });
+    const e = (await new MeetingInviteesRepo(f.db)
+      .insert([row])
+      .catch((x: HttpException) => x)) as HttpException;
+    expect([e.getStatus(), e.getResponse()]).toEqual([
+      400,
+      expect.objectContaining({ code: 'too_many_invitees' }),
+    ]);
   });
 
   it("dropQueuedInvites: this meeting's queued invitation texts only, never a row being sent", async () => {

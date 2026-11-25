@@ -8,7 +8,10 @@ const MATCH = { name: 'ياسمين', code: 'AB-0101', status: 'churned', teache
 describe('SalesRegistrationQueries', () => {
   it('byPhone: the children of the family of that number (main or second), by name, 11 rows at most', async () => {
     const family = { id: 'g1', name: 'أم ياسمين', tz: 'Asia/Riyadh', phone_e164: '+966551110000' };
-    const t = fakeDb({ guardian_phones: [{ data: { guardian: family } }], students: [{ data: [dbRow] }] });
+    const t = fakeDb({
+      guardian_phones: [{ data: { guardian: family } }],
+      students: [{ data: [dbRow] }],
+    });
     expect(await new SalesRegistrationRepo(t.db).byPhone('+966552220000')).toEqual([MATCH]);
     expect(t.argsOf('guardian_phones', 'eq')).toEqual(['phone_e164', '+966552220000']);
     expect(t.argsOf('students', 'eq')).toEqual(['guardian_id', 'g1']);

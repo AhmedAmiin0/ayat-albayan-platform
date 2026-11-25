@@ -25,10 +25,18 @@ export class RecordingRepo {
    * Claims the room's one running recording before LiveKit is asked. null = one is already running
    * (the unique partial indexes per lesson / per meeting, migrations 189 / 212), so nothing starts.
    */
-  async claim(input: { target: RoomTarget; filePath: string; startedAt: string }): Promise<string | null> {
+  async claim(input: {
+    target: RoomTarget;
+    filePath: string;
+    startedAt: string;
+  }): Promise<string | null> {
     const { data, error } = await this.db
       .from('lesson_recordings')
-      .insert({ ...ownerColumns(input.target), file_path: input.filePath, started_at: input.startedAt })
+      .insert({
+        ...ownerColumns(input.target),
+        file_path: input.filePath,
+        started_at: input.startedAt,
+      })
       .select('id')
       .single();
     if (error?.code === UNIQUE_VIOLATION) return null;

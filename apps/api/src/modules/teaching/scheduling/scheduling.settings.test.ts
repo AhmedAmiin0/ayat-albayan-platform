@@ -15,7 +15,9 @@ describe('SchedulingSettings', () => {
   });
 
   it('an over value comes through, from one store read', async () => {
-    expect(await readerOf(SchedulingSettings, { booking_horizon_weeks: 8 }).read()).toEqual({ booking_horizon_weeks: 8 });
+    expect(await readerOf(SchedulingSettings, { booking_horizon_weeks: 8 }).read()).toEqual({
+      booking_horizon_weeks: 8,
+    });
     const store = fakeSettings();
     await new SchedulingSettings(store).read();
     expect(store.all).toHaveBeenCalledTimes(1);

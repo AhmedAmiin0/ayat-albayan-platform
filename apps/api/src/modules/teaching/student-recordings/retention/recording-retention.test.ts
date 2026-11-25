@@ -22,7 +22,11 @@ const retention = () =>
   new RecordingRetention(
     settings,
     q as unknown as RecordingRetentionRepo,
-    new RecordingEraser(admin as unknown as RecordingAdminRepo, storage as unknown as StorageService, audit as unknown as AuditService),
+    new RecordingEraser(
+      admin as unknown as RecordingAdminRepo,
+      storage as unknown as StorageService,
+      audit as unknown as AuditService,
+    ),
   );
 const OLD = [{ id: 'R1', file_path: 'lessons/L/1.mp4' }, { id: 'R2', file_path: 'lessons/L/2.mp4' }];
 
@@ -92,13 +96,19 @@ describe('RecordingMaintenanceJob.runOnce', () => {
     keepDays(30);
     q.failStuck.mockResolvedValue(1);
     q.expired.mockResolvedValueOnce([OLD[0]]);
-    expect(await new RecordingMaintenanceJob(retention()).runOnce(NOW)).toEqual({ stuck: 1, purged: 1 });
+    expect(await new RecordingMaintenanceJob(retention()).runOnce(NOW)).toEqual({
+      stuck: 1,
+      purged: 1,
+    });
   });
 
   it('never throws: a failing sweep counts 0 and the other still runs', async () => {
     q.failStuck.mockRejectedValue(new Error('db'));
     keepDays(30);
     q.expired.mockResolvedValueOnce([OLD[0]]);
-    expect(await new RecordingMaintenanceJob(retention()).runOnce(NOW)).toEqual({ stuck: 0, purged: 1 });
+    expect(await new RecordingMaintenanceJob(retention()).runOnce(NOW)).toEqual({
+      stuck: 0,
+      purged: 1,
+    });
   });
 });

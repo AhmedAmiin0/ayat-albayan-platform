@@ -32,7 +32,11 @@ export function rpcError(error: PostgrestError): Error {
  * the generated types make every arg non-null and jsonb-typed, but p_actor may be null (the
  * daily job) and the change sets are typed objects, not `Json`.
  */
-export async function callRpc(db: Db, fn: RpcName, args: Record<string, unknown>): Promise<unknown> {
+export async function callRpc(
+  db: Db,
+  fn: RpcName,
+  args: Record<string, unknown>,
+): Promise<unknown> {
   const { data, error } = await (db as unknown as UntypedRpc).rpc(fn, args);
   if (error) throw rpcError(error);
   return data;

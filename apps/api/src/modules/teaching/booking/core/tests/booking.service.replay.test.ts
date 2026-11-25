@@ -12,8 +12,16 @@ const REQUEST = 'c0000000-0000-4000-8000-0000000000c1';
 function setup() {
   const deps = fakePlanner();
   const alert = fakeTeacherAlert();
-  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, { resolve: vi.fn() } as unknown as BookingInvoices, alert.after);
-  return { ...deps, alert, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo) };
+  const writer = new BookingWriter(
+    deps.queries as unknown as BookingRepo,
+    { resolve: vi.fn() } as unknown as BookingInvoices,
+    alert.after,
+  );
+  return {
+    ...deps,
+    alert,
+    service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo),
+  };
 }
 
 describe('BookingService replay (rule 8)', () => {

@@ -49,7 +49,9 @@ describe('PublicFeedbackLimit', () => {
   });
 
   it('check() reads settings.feedback_rate_window_min: a 2-minute window frees the bucket sooner', async () => {
-    const short = new PublicFeedbackLimit(readerOf(FeedbackSettings, { feedback_rate_window_min: 2 }));
+    const short = new PublicFeedbackLimit(
+      readerOf(FeedbackSettings, { feedback_rate_window_min: 2 }),
+    );
     const usual = new PublicFeedbackLimit(readerOf(FeedbackSettings));
     for (const l of [short, usual]) for (let i = 0; i < 10; i++) await l.check({ ip: '4.4.4.4', token: 't' }, 0);
     await expect(short.check({ ip: '4.4.4.4', token: 't' }, 3 * MIN)).resolves.toBeUndefined();

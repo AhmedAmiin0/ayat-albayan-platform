@@ -28,7 +28,9 @@ describe('POST /schedule-rules/:id/extend (docs/10 route 11, R-SCH-02)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(SchedulingModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
       .overrideProvider(RuleExtendService)
       .useValue(extender)

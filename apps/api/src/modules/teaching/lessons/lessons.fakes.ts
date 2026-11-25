@@ -71,17 +71,37 @@ export function fakeStore(row: LessonRow | null = lessonRow()) {
   const writer = {
     apply: vi.fn(async (change: ChangeSet) => {
       const a = change.audit;
-      if (a) record({ actorId: change.actor, entity: a.entity, entityId: a.entity_id, action: a.action, before: a.before, after: a.after });
+      if (a)
+        record({
+          actorId: change.actor,
+          entity: a.entity,
+          entityId: a.entity_id,
+          action: a.action,
+          before: a.before,
+          after: a.after,
+        });
     }),
     retime: vi.fn(async (change: TimeEditChange) => {
       const a = change.audit;
-      record({ actorId: change.actor, entity: a.entity, entityId: a.entity_id, action: a.action, before: a.before, after: a.after });
+      record({
+        actorId: change.actor,
+        entity: a.entity,
+        entityId: a.entity_id,
+        action: a.action,
+        before: a.before,
+        after: a.after,
+      });
     }),
   };
   const events = new LessonEvents();
   // lesson_rescheduled unusable by default: a move's booking confirmation stays (FamilyMoveNotice).
   const family = fakeFamilyMove();
-  const store = new LessonStore(queries as unknown as LessonsRepo, writer as unknown as LessonWriter, events, family.move);
+  const store = new LessonStore(
+    queries as unknown as LessonsRepo,
+    writer as unknown as LessonWriter,
+    events,
+    family.move,
+  );
   return { store, queries, writer, record, events, family: family.gate };
 }
 

@@ -47,7 +47,10 @@ export class LessonWriter {
    * Stores the clashes of freshly generated lessons on them (lessons.conflicts, R-SCH-04) so the
    * schedule shows what the daily job booked over a conflict. Conflicts match lessons by start.
    */
-  async flagConflicts(lessons: readonly GeneratedLesson[], conflicts: readonly Conflict[]): Promise<void> {
+  async flagConflicts(
+    lessons: readonly GeneratedLesson[],
+    conflicts: readonly Conflict[],
+  ): Promise<void> {
     const byStart = new Map<string, Conflict[]>();
     for (const c of conflicts) byStart.set(c.startsAt, [...(byStart.get(c.startsAt) ?? []), c]);
     const flagged = lessons.flatMap((l) => {
@@ -65,7 +68,9 @@ export class LessonWriter {
    * Its booking_confirmation* rows only while that notification rule is on (gateConfirmations).
    */
   async apply(change: ChangeSet): Promise<void> {
-    const p = change.messages ? { ...change, messages: await gateConfirmations(this.policy, change.messages) } : change;
+    const p = change.messages
+      ? { ...change, messages: await gateConfirmations(this.policy, change.messages) }
+      : change;
     await callRpc(this.db, 'apply_lesson_changes', { p });
   }
 

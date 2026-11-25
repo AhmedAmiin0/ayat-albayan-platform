@@ -27,9 +27,24 @@ describe('toStudentDetails', () => {
 
   it('a student with no subscription (a trial): empty list, no current, zero totals, code never null', () => {
     const d = toStudentDetails(parts(null));
-    expect(d).toMatchObject({ subscriptions: [], current_id: null, attendance: { items: [], totals: { present: 0, absent: 0 } } });
-    expect(d.student).toEqual({ id: 's1', code: '', name: 'ياسمين', status: 'trial', program: 'quran', teacher_name: null, guardian_phone: null });
-    const withPhone = toStudentDetails({ ...parts(null), student: { ...student, guardian: { phone_e164: '+201001112223' } } });
+    expect(d).toMatchObject({
+      subscriptions: [],
+      current_id: null,
+      attendance: { items: [], totals: { present: 0, absent: 0 } },
+    });
+    expect(d.student).toEqual({
+      id: 's1',
+      code: '',
+      name: 'ياسمين',
+      status: 'trial',
+      program: 'quran',
+      teacher_name: null,
+      guardian_phone: null,
+    });
+    const withPhone = toStudentDetails({
+      ...parts(null),
+      student: { ...student, guardian: { phone_e164: '+201001112223' } },
+    });
     expect(withPhone.student.guardian_phone).toBe('+201001112223');
   });
 

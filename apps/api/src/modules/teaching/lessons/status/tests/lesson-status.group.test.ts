@@ -16,7 +16,14 @@ const siblings = lessonRow({
 function setup() {
   const deps = fakeStore(siblings);
   const access = { assertCanTouch: vi.fn() } as unknown as LessonAccess;
-  return { ...deps, service: new LessonStatusService(deps.store, access, readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null })) };
+  return {
+    ...deps,
+    service: new LessonStatusService(
+      deps.store,
+      access,
+      readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null }),
+    ),
+  };
 }
 
 describe('LessonStatusService.changeStatus — one outcome per sibling (R-STU-04, R-SCH-03)', () => {

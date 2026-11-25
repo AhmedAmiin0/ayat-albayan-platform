@@ -21,9 +21,26 @@ export type OverviewTeacherRow = {
   /** The teacher's photo, signed with the rest in one call; absent in fakes. */
   avatar_url?: string | null;
 };
-export type OverviewSlotRow = { teacher_id: string; weekday: number; start_time: string; end_time: string; tz: string };
-export type OverviewCarryRow = { teacher_id: string; status: LessonStatus; starts_at: string; ends_at: string };
-export type OverviewTimeOffRow = { id: string; teacher_id: string; starts_at: string; ends_at: string; reason: string | null };
+export type OverviewSlotRow = {
+  teacher_id: string;
+  weekday: number;
+  start_time: string;
+  end_time: string;
+  tz: string;
+};
+export type OverviewCarryRow = {
+  teacher_id: string;
+  status: LessonStatus;
+  starts_at: string;
+  ends_at: string;
+};
+export type OverviewTimeOffRow = {
+  id: string;
+  teacher_id: string;
+  starts_at: string;
+  ends_at: string;
+  reason: string | null;
+};
 
 /**
  * The three small batched reads behind GET /lessons/overview (R-SCH-09, R-NFR-08): every teacher,

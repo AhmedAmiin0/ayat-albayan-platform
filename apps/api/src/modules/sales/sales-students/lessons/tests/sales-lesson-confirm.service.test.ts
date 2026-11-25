@@ -16,10 +16,22 @@ const access = { assertCanTouch: vi.fn(async () => Promise.reject(new Error('tea
 function rig(row: ReturnType<typeof lessonRow>) {
   const deps = fakeStore(row);
   const settings = readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null });
-  const status = new LessonStatusService(deps.store, access as unknown as ConstructorParameters<typeof LessonStatusService>[1], settings);
-  const facts = { id: row.id, starts_at: row.starts_at, ends_at: row.ends_at, status: row.status, lesson_students: [] };
+  const status = new LessonStatusService(
+    deps.store,
+    access as unknown as ConstructorParameters<typeof LessonStatusService>[1],
+    settings,
+  );
+  const facts = {
+    id: row.id,
+    starts_at: row.starts_at,
+    ends_at: row.ends_at,
+    status: row.status,
+    lesson_students: [],
+  };
   const queries = { lesson: vi.fn(async () => facts) } as unknown as SalesStudentRepo;
-  const actions = new SalesLessonActions({} as SalesStudentScope, queries, { status } as unknown as LessonServices);
+  const actions = new SalesLessonActions({} as SalesStudentScope, queries, {
+    status,
+  } as unknown as LessonServices);
   return { ...deps, actions };
 }
 

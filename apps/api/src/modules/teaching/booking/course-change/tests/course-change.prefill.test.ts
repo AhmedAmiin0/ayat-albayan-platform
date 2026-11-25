@@ -26,8 +26,14 @@ const rule = (id: string, o: Pick<CourseRuleRow, 'byday' | 'starts_on' | 'ends_o
 
 /** The body the form sends for `picks` (as web changeBody / mobile changeRequest build it). */
 const bodyOf = (course: BookedCourse, from: string | null, now: Date): CourseChangeRequest => {
-  const prefilled = from ? prefillDays({ days: course.days, from, tz: TZ, now: now.toISOString() }) : changePicks(course, now);
-  const picked = dayTimesKeeping(prefilled.map((p) => p.at), TZ, prefilled);
+  const prefilled = from
+    ? prefillDays({ days: course.days, from, tz: TZ, now: now.toISOString() })
+    : changePicks(course, now);
+  const picked = dayTimesKeeping(
+    prefilled.map((p) => p.at),
+    TZ,
+    prefilled,
+  );
   if (!picked) throw new Error('no picks');
   return { subscriptionId: SUB, ...picked, clientRequestId: '00000000-0000-4000-8000-000000000003' };
 };

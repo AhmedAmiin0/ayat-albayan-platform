@@ -25,7 +25,11 @@ describe('POST /students/:id/join-link', () => {
     const { url } = await issue();
     const token = url.replace('https://app.example.test/s/', '');
     expect(looksLikeLinkToken(token)).toBe(true);
-    expect(q.saveLink).toHaveBeenCalledWith({ studentId: STUDENT_ID, hash: hashLinkToken(token), actorId: ADMIN.id });
+    expect(q.saveLink).toHaveBeenCalledWith({
+      studentId: STUDENT_ID,
+      hash: hashLinkToken(token),
+      actorId: ADMIN.id,
+    });
     expect(JSON.stringify(q.saveLink.mock.calls)).not.toContain(token);
     expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'students', entityId: STUDENT_ID, action: 'join_link_issued' }));
   });

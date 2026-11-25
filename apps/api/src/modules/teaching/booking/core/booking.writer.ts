@@ -27,13 +27,20 @@ export class BookingWriter {
   async write({ req, prepared, actorId }: BookingWrite): Promise<BookingResult> {
     const { phones, invoiceMaxBytes: maxBytes, invoiceWaived: waived } = prepared;
     const invoice = await this.invoices.resolve(req, { phones, maxBytes, waived });
-    const result = await this.queries.createBooking(withInvoice(prepared.payload, invoice), actorId);
+    const result = await this.queries.createBooking(
+      withInvoice(prepared.payload, invoice),
+      actorId,
+    );
     await this.after.afterBooking({ req, result, actorId });
     return result;
   }
 
   /** A replay returns the first booking: only the idempotent trial status follow-up runs again. */
-  async replayed(done: { req: BookingRequest; result: BookingResult; actorId: string }): Promise<BookingResult> {
+  async replayed(done: {
+    req: BookingRequest;
+    result: BookingResult;
+    actorId: string;
+  }): Promise<BookingResult> {
     await this.after.afterReplay(done);
     return done.result;
   }

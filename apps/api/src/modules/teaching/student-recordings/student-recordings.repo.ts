@@ -59,7 +59,10 @@ export class StudentRecordingRepo {
   }
 
   /** The lessons of this student with a finished recording: ids only, nothing is signed (the report history's links). */
-  async doneLessonIds(input: { studentId: string; onlyTeacherId: string | null }): Promise<string[]> {
+  async doneLessonIds(input: {
+    studentId: string;
+    onlyTeacherId: string | null;
+  }): Promise<string[]> {
     let q = this.db
       .from('lesson_recordings')
       .select('lesson_id, lessons!inner(teacher_id, lesson_students!inner(student_id))')

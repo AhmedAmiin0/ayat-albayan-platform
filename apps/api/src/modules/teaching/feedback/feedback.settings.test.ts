@@ -14,6 +14,8 @@ describe('FeedbackSettings', () => {
   });
 
   it('answers the stored window', async () => {
-    expect(await readerOf(FeedbackSettings, { feedback_rate_window_min: 2 }).read()).toEqual({ feedback_rate_window_min: 2 });
+    expect(await readerOf(FeedbackSettings, { feedback_rate_window_min: 2 }).read()).toEqual({
+      feedback_rate_window_min: 2,
+    });
   });
 });

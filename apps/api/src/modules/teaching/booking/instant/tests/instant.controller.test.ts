@@ -29,8 +29,12 @@ describe('POST /lessons/instant', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [bookingRoot()] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(InstantLessonService).useValue(instant)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(InstantLessonService)
+      .useValue(instant)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

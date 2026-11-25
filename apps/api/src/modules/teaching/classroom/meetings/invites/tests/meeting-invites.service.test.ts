@@ -7,17 +7,36 @@ import { CLOSED_PHONE, OPEN_PHONE, openThread, STAFF_ID, STUDENT_A, stored } fro
 import { meetingServices, ORIGIN, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
 let s: MeetingServices;
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 const REQ = '00000000-0000-4000-8000-0000000000bb';
-const family = stored({ meeting_id: MEETING_ID, kind: 'student', student_id: STUDENT_A, phone_e164: OPEN_PHONE, display_name: 'أم سهيلة', channel: 'link', status: 'window_closed' });
-const staff = stored({ meeting_id: MEETING_ID, kind: 'staff', profile_id: STAFF_ID, display_name: 'مريم', channel: 'in_app', status: 'sent' });
-const resend = (inviteeId: string, user = TEACHER) => s.invites.resend({ user, id: MEETING_ID, inviteeId, body: { clientRequestId: REQ } }, NOW);
+const family = stored({
+  meeting_id: MEETING_ID,
+  kind: 'student',
+  student_id: STUDENT_A,
+  phone_e164: OPEN_PHONE,
+  display_name: 'أم سهيلة',
+  channel: 'link',
+  status: 'window_closed',
+});
+const staff = stored({
+  meeting_id: MEETING_ID,
+  kind: 'staff',
+  profile_id: STAFF_ID,
+  display_name: 'مريم',
+  channel: 'in_app',
+  status: 'sent',
+});
+const resend = (inviteeId: string, user = TEACHER) =>
+  s.invites.resend({ user, id: MEETING_ID, inviteeId, body: { clientRequestId: REQ } }, NOW);
 
 beforeEach(() => {
   s = meetingServices();
   s.mq.byId.mockResolvedValue(scheduledRow());
   s.m.picks.teacherStudentIds.mockResolvedValue([STUDENT_A]);
-  s.m.invitees.byId.mockImplementation(async (_m: string, id: string) => [family, staff].find((i) => i.id === id) ?? null);
+  s.m.invitees.byId.mockImplementation(
+    async (_m: string, id: string) => [family, staff].find((i) => i.id === id) ?? null,
+  );
   s.m.threads.thread.mockImplementation(async (phone: string) => openThread(phone, NOW));
 });
 
@@ -25,7 +44,9 @@ describe('MeetingInvitesService.resend (R-MEET-02)', () => {
   it('a new personal link for that invitee only, sent with a resend dedup key', async () => {
     const r = await resend(family.id);
     const token = (r.link ?? '').slice(`${ORIGIN}/m/`.length);
-    expect(s.m.invitees.update).toHaveBeenCalledWith(family.id, { token_hash: hashMeetingToken(token) });
+    expect(s.m.invitees.update).toHaveBeenCalledWith(family.id, {
+      token_hash: hashMeetingToken(token),
+    });
     expect(s.m.invitees.update.mock.calls.every(([id]) => id === family.id)).toBe(true);
     expect(s.m.threads.enqueue.mock.calls[0]?.[0].dedup_key).toBe(`meeting_invite:${MEETING_ID}:${OPEN_PHONE}:2026-10-05T12:00:00.000Z:resend:${REQ}`);
     expect(r).toMatchObject({ status: 'sent', channel: 'whatsapp' });

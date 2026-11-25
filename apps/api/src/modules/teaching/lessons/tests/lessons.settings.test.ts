@@ -26,7 +26,10 @@ describe('LessonsSettings', () => {
   });
 
   it('an over value comes through, from one store read', async () => {
-    const values = await readerOf(LessonsSettings, { late_cancel_hours: 24, booking_horizon_weeks: 2 }).read();
+    const values = await readerOf(LessonsSettings, {
+      late_cancel_hours: 24,
+      booking_horizon_weeks: 2,
+    }).read();
     expect(values).toMatchObject({ late_cancel_hours: 24, booking_horizon_weeks: 2 });
     const store = fakeSettings();
     await new LessonsSettings(store).read();

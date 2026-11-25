@@ -8,7 +8,9 @@ function upcoming(lesson: { status: LessonRow['status']; starts_at: string }, no
 
 /** Students on upcoming lessons: the ones UnpaidFlags needs to look at. */
 export function upcomingStudentIds(rows: readonly LessonRow[], now: number): string[] {
-  return rows.filter((r) => upcoming(r, now)).flatMap((r) => r.lesson_students.map((s) => s.student_id));
+  return rows
+    .filter((r) => upcoming(r, now))
+    .flatMap((r) => r.lesson_students.map((s) => s.student_id));
 }
 
 /**
@@ -16,8 +18,15 @@ export function upcomingStudentIds(rows: readonly LessonRow[], now: number): str
  * makeup (R-SCH-10) is never marked: it consumes no package unit, so an unpaid package is no reason
  * to warn about it.
  */
-export function markUnpaid(view: LessonView, flagged: ReadonlySet<string>, now: number): LessonView {
+export function markUnpaid(
+  view: LessonView,
+  flagged: ReadonlySet<string>,
+  now: number,
+): LessonView {
   if (flagged.size === 0 || view.makeup || !upcoming(view, now)) return view;
   if (!view.students.some((s) => flagged.has(s.id))) return view;
-  return { ...view, students: view.students.map((s) => (flagged.has(s.id) ? { ...s, unpaid: true } : s)) };
+  return {
+    ...view,
+    students: view.students.map((s) => (flagged.has(s.id) ? { ...s, unpaid: true } : s)),
+  };
 }

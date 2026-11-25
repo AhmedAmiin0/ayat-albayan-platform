@@ -34,7 +34,10 @@ function checkBody(livekit: LivekitApi, body: unknown): { allow: boolean } {
   return parseOrThrow(shareGrantSchema, body);
 }
 
-async function applyShare(livekit: LivekitApi, input: { room: string; identity: string; allow: boolean }): Promise<void> {
+async function applyShare(
+  livekit: LivekitApi,
+  input: { room: string; identity: string; allow: boolean },
+): Promise<void> {
   try {
     await livekit.setScreenShare(input);
   } catch (e) {
@@ -60,7 +63,11 @@ export class ShareGrantService {
     const target = await this.moderation.participant(lesson.id, input.identity);
     if (!target) throw notFound('participant_not_found');
     if (!canGrantShare(role, asJoinRole(target.role))) throw cannotGrant();
-    await applyShare(this.livekit, { room: lessonRoomName(lesson.id), identity: target.identity, allow });
+    await applyShare(this.livekit, {
+      room: lessonRoomName(lesson.id),
+      identity: target.identity,
+      allow,
+    });
   }
 }
 
@@ -82,6 +89,10 @@ export class MeetingShareGrantService {
     const target = roleOfIdentity(input.identity);
     if (!target) throw notFound('participant_not_found');
     if (!canGrantShare(role, target)) throw cannotGrant();
-    await applyShare(this.livekit, { room: meetingRoomName(meeting.id), identity: input.identity, allow });
+    await applyShare(this.livekit, {
+      room: meetingRoomName(meeting.id),
+      identity: input.identity,
+      allow,
+    });
   }
 }

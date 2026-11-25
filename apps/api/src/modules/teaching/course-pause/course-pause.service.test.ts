@@ -7,7 +7,10 @@ import { CoursePauseService } from './course-pause.service';
 function service() {
   const m = pauseMocks();
   resetPauseMocks(m);
-  const svc = new CoursePauseService(m.queries as unknown as CoursePauseRepo, m.follow as unknown as CoursePauseFollowUps);
+  const svc = new CoursePauseService(
+    m.queries as unknown as CoursePauseRepo,
+    m.follow as unknown as CoursePauseFollowUps,
+  );
   return { m, svc };
 }
 

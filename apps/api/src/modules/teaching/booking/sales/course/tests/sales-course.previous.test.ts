@@ -32,7 +32,9 @@ function setup(booked = false, drafts: object = noDrafts) {
     subscriptionBooked: vi.fn().mockResolvedValue(booked),
     requested: vi.fn().mockResolvedValue(false),
   };
-  const scope = { of: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }) };
+  const scope = {
+    of: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }),
+  };
   const asScope = scope as unknown as SalesBookingScope;
   return new SalesCourse(queries as unknown as SalesCourseRepo, asScope, drafts as CourseDraftRepo);
 }
@@ -85,8 +87,19 @@ describe('SalesCourse — the renewal of a running course', () => {
   });
 
   it('days that overlap the running course are still refused (course_exists)', async () => {
-    const body = { teacherId: 'a0000000-0000-4000-8000-000000000001', byday: [0, 2], startTimeLocal: '17:00', tz: 'Asia/Riyadh', durationMin: 45, startsOn: '2026-10-25', package: '8', studentIds: [S1] };
-    const e: unknown = await setup().options(bookingRequestSchema.parse(body)).catch((x: unknown) => x);
+    const body = {
+      teacherId: 'a0000000-0000-4000-8000-000000000001',
+      byday: [0, 2],
+      startTimeLocal: '17:00',
+      tz: 'Asia/Riyadh',
+      durationMin: 45,
+      startsOn: '2026-10-25',
+      package: '8',
+      studentIds: [S1],
+    };
+    const e: unknown = await setup()
+      .options(bookingRequestSchema.parse(body))
+      .catch((x: unknown) => x);
     expect(e).toMatchObject({ response: { code: 'course_exists' } });
   });
 });

@@ -19,7 +19,10 @@ describe('ScheduleQueries', () => {
   });
 
   it('ruleStudents lists ids and link overrides', () => {
-    expect(ruleStudents(ruleRow())).toEqual({ ids: [ruleRow().schedule_rule_students[0]?.student_id], overrides: [null] });
+    expect(ruleStudents(ruleRow())).toEqual({
+      ids: [ruleRow().schedule_rule_students[0]?.student_id],
+      overrides: [null],
+    });
   });
 });
 

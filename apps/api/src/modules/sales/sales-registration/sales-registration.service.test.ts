@@ -7,7 +7,10 @@ const A: AuthUser = { id: 'a', email: null, role: 'sales' };
 const B: AuthUser = { id: 'b', email: null, role: 'sales' };
 const make = () => {
   const queries = { byPhone: vi.fn(async () => []), byName: vi.fn(async () => []) };
-  return { queries, svc: new SalesRegistrationService(queries as unknown as SalesRegistrationRepo) };
+  return {
+    queries,
+    svc: new SalesRegistrationService(queries as unknown as SalesRegistrationRepo),
+  };
 };
 
 describe('SalesRegistrationService', () => {

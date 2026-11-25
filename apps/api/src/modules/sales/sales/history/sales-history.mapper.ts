@@ -2,7 +2,8 @@ import type { SalesHistoryEntry, SalesSubscriptionHistory } from '@ab/shared';
 import { SUBSCRIPTION_STATUSES, type SubscriptionStatus } from '@ab/catalog';
 import type { HistoryAuditRow, HistoryBundle, HistorySubscriptionRow } from './sales-history.repo';
 
-const asStatus = (v: string | null): SubscriptionStatus | null => SUBSCRIPTION_STATUSES.find((s) => s === v) ?? null;
+const asStatus = (v: string | null): SubscriptionStatus | null =>
+  SUBSCRIPTION_STATUSES.find((s) => s === v) ?? null;
 
 /**
  * The audit rows that moved the status (a create counts: from null), oldest first; any other edit
@@ -33,7 +34,13 @@ function entry(sub: HistorySubscriptionRow, b: HistoryBundle): SalesHistoryEntry
     status_changes: statusChanges(b.audit.filter((a) => a.entity_id === sub.id)),
     payments: b.payments
       .filter((p) => p.subscription_id === sub.id)
-      .map((p) => ({ id: p.id, paid_at: p.paid_at, kind: p.kind, amount: p.amount, currency: p.currency })),
+      .map((p) => ({
+        id: p.id,
+        paid_at: p.paid_at,
+        kind: p.kind,
+        amount: p.amount,
+        currency: p.currency,
+      })),
   };
 }
 

@@ -5,7 +5,13 @@ import { familyOfPhone } from '@/common/db/family-of-phone';
 import { notFound } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
 
-export type FamilyStudentRow = { id: string; code: string | null; name: string; status: StudentStatus; teacher_id: string | null };
+export type FamilyStudentRow = {
+  id: string;
+  code: string | null;
+  name: string;
+  status: StudentStatus;
+  teacher_id: string | null;
+};
 
 /** The reads of the salesperson's money endpoints that the admin services do not answer (service role). */
 @Injectable()

@@ -11,8 +11,12 @@ import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 let mq: ReturnType<typeof meetingQueries>;
 let post: ReturnType<typeof http>;
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new InternalMeetingKickService(mq as unknown as InternalMeetingsRepo, new LivekitApi(config, post));
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+  new InternalMeetingKickService(
+    mq as unknown as InternalMeetingsRepo,
+    new LivekitApi(config, post),
+  );
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 const GUEST = 'guest-0123456789ab';
 
 beforeEach(() => {
@@ -29,18 +33,44 @@ describe('InternalMeetingKickService', () => {
   });
 
   it('403 cannot_remove: an assistant may not remove, nobody removes an admin', async () => {
-    expect((await fail(service().remove({ user: ASSISTANT, id: MEETING_ID, identity: GUEST }))).getResponse()).toMatchObject({ code: 'cannot_remove' });
-    expect((await fail(service().remove({ user: ADMIN, id: MEETING_ID, identity: 'admin-0123456789ab' }))).getStatus()).toBe(403);
-    expect((await fail(service().remove({ user: GUARDIAN, id: MEETING_ID, identity: GUEST }))).getStatus()).toBe(403);
+    expect(
+      (
+        await fail(service().remove({ user: ASSISTANT, id: MEETING_ID, identity: GUEST }))
+      ).getResponse(),
+    ).toMatchObject({ code: 'cannot_remove' });
+    expect(
+      (
+        await fail(
+          service().remove({ user: ADMIN, id: MEETING_ID, identity: 'admin-0123456789ab' }),
+        )
+      ).getStatus(),
+    ).toBe(403);
+    expect(
+      (
+        await fail(service().remove({ user: GUARDIAN, id: MEETING_ID, identity: GUEST }))
+      ).getStatus(),
+    ).toBe(403);
     expect(post).not.toHaveBeenCalled();
   });
 
   it('404 for an unknown meeting or identity, 503 without LiveKit, 502 when LiveKit refuses', async () => {
     mq.byId.mockResolvedValueOnce(null);
-    expect((await fail(service().remove({ user: ADMIN, id: MEETING_ID, identity: GUEST }))).getStatus()).toBe(404);
-    expect((await fail(service().remove({ user: ADMIN, id: MEETING_ID, identity: 'boss-0123456789ab' }))).getStatus()).toBe(404);
-    expect((await fail(service(null).remove({ user: ADMIN, id: MEETING_ID, identity: GUEST }))).getStatus()).toBe(503);
+    expect(
+      (await fail(service().remove({ user: ADMIN, id: MEETING_ID, identity: GUEST }))).getStatus(),
+    ).toBe(404);
+    expect(
+      (
+        await fail(service().remove({ user: ADMIN, id: MEETING_ID, identity: 'boss-0123456789ab' }))
+      ).getStatus(),
+    ).toBe(404);
+    expect(
+      (
+        await fail(service(null).remove({ user: ADMIN, id: MEETING_ID, identity: GUEST }))
+      ).getStatus(),
+    ).toBe(503);
     post = http({ status: 500, body: { code: 'internal' } });
-    expect((await fail(service().remove({ user: ADMIN, id: MEETING_ID, identity: GUEST }))).getStatus()).toBe(502);
+    expect(
+      (await fail(service().remove({ user: ADMIN, id: MEETING_ID, identity: GUEST }))).getStatus(),
+    ).toBe(502);
   });
 });

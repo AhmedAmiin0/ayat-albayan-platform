@@ -26,7 +26,10 @@ export class FeedbackPublicService {
     return toFormView(await this.resolve(call, now));
   }
 
-  async submit(call: PublicCall & { body: unknown }, now = new Date()): Promise<{ submitted: true }> {
+  async submit(
+    call: PublicCall & { body: unknown },
+    now = new Date(),
+  ): Promise<{ submitted: true }> {
     const ctx = await this.resolve(call, now);
     if (ctx.row.submitted_at) throw conflict('already_submitted');
     const input = parseOrThrow(feedbackSubmitSchema, call.body);

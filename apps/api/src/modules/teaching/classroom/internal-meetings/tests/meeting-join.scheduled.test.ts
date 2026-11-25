@@ -9,8 +9,14 @@ import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
 import { admissionOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 
 let mq: ReturnType<typeof meetingQueries>;
-const service = () => new InternalMeetingJoinService(mq as unknown as InternalMeetingsRepo, new PublicJoinLimit(), admissionOf({ q: queries(), config: CONFIG }));
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+const service = () =>
+  new InternalMeetingJoinService(
+    mq as unknown as InternalMeetingsRepo,
+    new PublicJoinLimit(),
+    admissionOf({ q: queries(), config: CONFIG }),
+  );
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 const at = (iso: string) => new Date(iso);
 let ip = 0;
 const guest = (now: Date) => service().guest({ token: MEETING_TOKEN, ip: `9.9.8.${++ip}`, body: { name: 'ضيف' } }, now);

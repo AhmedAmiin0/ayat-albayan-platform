@@ -27,14 +27,29 @@ const INPUT: PayloadInput = {
   contacts: [{ id: 's1', name: 'سهيلة', guardian: { id: 'g1', phone_e164: '+966500000001', tz: 'Asia/Riyadh' } }],
   counted: 0,
 };
-type Rule = { id: string; subscription_id: string; first_rule_id: string | null; ends_on: string; lessons: { id: string; starts_at: string; meeting_link: string | null }[] };
+type Rule = {
+  id: string;
+  subscription_id: string;
+  first_rule_id: string | null;
+  ends_on: string;
+  lessons: { id: string; starts_at: string; meeting_link: string | null }[];
+};
 type Payload = {
   client_request_id: string;
   subscription_id: string;
-  end_rules: { id: string; ends_on: string; changes: { id: string; to_status: string; chargeable: boolean }[] }[];
+  end_rules: {
+    id: string;
+    ends_on: string;
+    changes: { id: string; to_status: string; chargeable: boolean }[];
+  }[];
   new_rules: Rule[];
   messages: { lesson_id: string; guardian_id: string }[];
-  audit: { entity: string; entity_id: string; action: string; after: { by: string; remaining: number; ends_on: string } };
+  audit: {
+    entity: string;
+    entity_id: string;
+    action: string;
+    after: { by: string; remaining: number; ends_on: string };
+  };
 };
 const payload = changePayload(INPUT) as Payload;
 

@@ -25,7 +25,11 @@ export class SalesScheduleService {
       this.schedule.upcoming(upcomingRange(now)),
       this.settings.read(),
     ]);
-    const ctx = { facts: teacherDayFacts(today, now), next: nextLessons(upcoming), academyAuto: settings.meeting_link_auto };
+    const ctx = {
+      facts: teacherDayFacts(today, now),
+      next: nextLessons(upcoming),
+      academyAuto: settings.meeting_link_auto,
+    };
     return rows.map((row) => toSalesTeacher(row, ctx));
   }
 

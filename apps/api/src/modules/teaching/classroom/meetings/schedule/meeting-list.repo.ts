@@ -48,7 +48,11 @@ export class MeetingListRepo {
       .order('created_at', { ascending: false })
       .limit(LIST_LIMIT);
     if (error) throw dbError(error);
-    return data.map((r) => ({ meeting_id: r.meeting_id, status: r.status as MeetingInviteStatus, channel: r.channel as MeetingInviteChannel }));
+    return data.map((r) => ({
+      meeting_id: r.meeting_id,
+      status: r.status as MeetingInviteStatus,
+      channel: r.channel as MeetingInviteChannel,
+    }));
   }
 
   async byIds(ids: readonly string[]): Promise<MeetingRow[]> {

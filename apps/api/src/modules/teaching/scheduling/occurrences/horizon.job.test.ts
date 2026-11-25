@@ -55,7 +55,12 @@ describe('HorizonJob — daily refresh of active rules (R-SCH-02)', () => {
 
   it('never throws, even when the rule list cannot be read', async () => {
     rules.activeRuleIds.mockRejectedValue(new Error('db down'));
-    await expect(job().runOnce(NOW)).resolves.toEqual({ rules: 0, inserted: 0, failed: 0, ended: 0 });
+    await expect(job().runOnce(NOW)).resolves.toEqual({
+      rules: 0,
+      inserted: 0,
+      failed: 0,
+      ended: 0,
+    });
   });
 
   it('first ends the rules whose end date is before UTC yesterday (R-SCH-07)', async () => {

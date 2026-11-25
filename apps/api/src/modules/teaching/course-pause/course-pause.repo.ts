@@ -5,8 +5,17 @@ import { dbError } from '@/common/http/http';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { rpcOutSchema, type PauseRow, type RpcOut } from './course-pause.mapper';
 
-type RpcName = 'course_pause_start' | 'course_pause_begin' | 'course_pause_set_until' | 'course_pause_resume';
-type UntypedRpc = { rpc(fn: string, args: Record<string, unknown>): PromiseLike<{ data: unknown; error: PostgrestError | null }> };
+type RpcName =
+  | 'course_pause_start'
+  | 'course_pause_begin'
+  | 'course_pause_set_until'
+  | 'course_pause_resume';
+type UntypedRpc = {
+  rpc(
+    fn: string,
+    args: Record<string, unknown>,
+  ): PromiseLike<{ data: unknown; error: PostgrestError | null }>;
+};
 /** The window the sheet previews: [start, end) UTC instants, end null = every future lesson. */
 type PreviewWindow = { studentId: string; start: Date; end: Date | null };
 /** A reopened lesson, for the clash check after a resume. */

@@ -97,7 +97,10 @@ export class InternalMeetingsRepo {
   }
 
   /** PATCH /meetings/:id: a new title and/or a new time. */
-  async update(id: string, patch: { title?: string; starts_at?: string; planned_end_at?: string }): Promise<void> {
+  async update(
+    id: string,
+    patch: { title?: string; starts_at?: string; planned_end_at?: string },
+  ): Promise<void> {
     const { error } = await this.db.from('meetings').update(patch).eq('id', id);
     if (error) throw dbError(error);
   }

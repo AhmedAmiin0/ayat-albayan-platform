@@ -12,7 +12,10 @@ const OLD = missedLessonRow({ starts_at: '2026-07-01T14:00:00Z' });
 function parties(windowDays?: number) {
   const queries = fakeQueries();
   queries.makeupOriginal.mockResolvedValue(OLD);
-  const settings = readerOf(BookingSettings, windowDays === undefined ? {} : { makeup_window_days: windowDays });
+  const settings = readerOf(
+    BookingSettings,
+    windowDays === undefined ? {} : { makeup_window_days: windowDays },
+  );
   return new BookingParties(queries as unknown as BookingRepo, settings);
 }
 

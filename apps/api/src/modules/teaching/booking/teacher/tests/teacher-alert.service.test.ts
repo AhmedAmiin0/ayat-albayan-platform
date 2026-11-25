@@ -21,7 +21,10 @@ describe('TeacherAlert.afterBooking (R-NOT-03)', () => {
   });
 
   it('switch OFF: the bell row only, no WhatsApp', async () => {
-    const { alert, push, queries } = fakeTeacherAlert({ lessons: LESSONS, settings: { teacher_whatsapp_new_student: false } });
+    const { alert, push, queries } = fakeTeacherAlert({
+      lessons: LESSONS,
+      settings: { teacher_whatsapp_new_student: false },
+    });
     await alert.afterBooking({ req: REQ, result: RESULT });
     expect(push.notifyProfiles).toHaveBeenCalledTimes(1);
     expect(queries.queue).not.toHaveBeenCalled();
@@ -38,8 +41,15 @@ describe('TeacherAlert.afterBooking (R-NOT-03)', () => {
   });
 
   it('module mode, the row on: WhatsApp queued even while the legacy key is off', async () => {
-    const rules = { mode: 'module' as const, rows: [{ key: 'teacher_new_student', enabled: true }] };
-    const { alert, queries } = fakeTeacherAlert({ lessons: LESSONS, rules, settings: { teacher_whatsapp_new_student: false } });
+    const rules = {
+      mode: 'module' as const,
+      rows: [{ key: 'teacher_new_student', enabled: true }],
+    };
+    const { alert, queries } = fakeTeacherAlert({
+      lessons: LESSONS,
+      rules,
+      settings: { teacher_whatsapp_new_student: false },
+    });
     await alert.afterBooking({ req: REQ, result: RESULT });
     expect(queries.queue).toHaveBeenCalledTimes(1);
   });

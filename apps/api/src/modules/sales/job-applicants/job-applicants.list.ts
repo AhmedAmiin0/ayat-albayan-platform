@@ -33,14 +33,21 @@ interface ApplicantFilterable<Q> {
   not(column: string, operator: string, value: null): Q;
 }
 
-function presence<Q extends ApplicantFilterable<Q>>(q: Q, column: string, want: PresenceFilter | undefined): Q {
+function presence<Q extends ApplicantFilterable<Q>>(
+  q: Q,
+  column: string,
+  want: PresenceFilter | undefined,
+): Q {
   if (want === 'yes') return q.not(column, 'is', null);
   if (want === 'no') return q.is(column, null);
   return q;
 }
 
 /** Name / notes «contains», phone digits in any format, CV / recitation link present or not. */
-export function applyApplicantFilters<Q extends ApplicantFilterable<Q>>(query: Q, f: ApplicantColumnQuery): Q {
+export function applyApplicantFilters<Q extends ApplicantFilterable<Q>>(
+  query: Q,
+  f: ApplicantColumnQuery,
+): Q {
   let q = query;
   if (f.name) q = q.ilike('name', ilikeContains(f.name));
   if (f.phone) q = q.ilike('phone_e164', ilikeContains(searchDigits(f.phone) || f.phone));

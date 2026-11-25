@@ -34,7 +34,12 @@ const VIA = 'trial_new_date';
 /** No upcoming trial: the booking itself, its audit row marked as a new trial date. */
 export function bookPick({ payload, actorId }: PickInput): TrialPick {
   const audit = { after: { ...payload.audit.after, via: VIA } };
-  return { actor: actorId, student_ids: payload.student_ids, teacher_id: payload.rule.teacher_id, booking: { ...payload, audit } };
+  return {
+    actor: actorId,
+    student_ids: payload.student_ids,
+    teacher_id: payload.rule.teacher_id,
+    booking: { ...payload, audit },
+  };
 }
 
 /** The booking's confirmations for the new lesson (existing guardians only; the lead path never moves). */
@@ -56,14 +61,28 @@ export function movePick({ payload, actorId, old, lessonId }: MoveInput): TrialP
   const change: ChangeSet = {
     actor: actorId,
     changes: [{ id: old.id, from_status: old.status, to_status: 'rescheduled', chargeable: false }],
-    lessons: [{ id: lessonId, rule_id: old.rule_id, teacher_id: teacherId, ...lesson, rescheduled_from_id: old.id, student_ids: old.student_ids }],
+    lessons: [
+      {
+        id: lessonId,
+        rule_id: old.rule_id,
+        teacher_id: teacherId,
+        ...lesson,
+        rescheduled_from_id: old.id,
+        student_ids: old.student_ids,
+      },
+    ],
     messages: queued(payload.messages, lessonId),
     audit: {
       entity: 'lessons',
       entity_id: old.id,
       action: VIA,
       before: { status: old.status, starts_at: old.starts_at, teacher_id: old.teacher_id },
-      after: { lesson_id: lessonId, starts_at: lesson.starts_at, teacher_id: teacherId, override_reason: lesson.override_reason },
+      after: {
+        lesson_id: lessonId,
+        starts_at: lesson.starts_at,
+        teacher_id: teacherId,
+        override_reason: lesson.override_reason,
+      },
     },
   };
   return { actor: actorId, student_ids: old.student_ids, teacher_id: teacherId, change };

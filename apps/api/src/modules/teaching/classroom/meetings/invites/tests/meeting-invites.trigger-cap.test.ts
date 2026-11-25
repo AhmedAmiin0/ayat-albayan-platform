@@ -14,7 +14,10 @@ beforeEach(() => {
   s = meetingServices();
   s.mq.byId.mockResolvedValue(scheduledRow());
   s.m.picks.teacherStudentIds.mockResolvedValue([STUDENT_A, STUDENT_B]);
-  s.m.picks.students.mockResolvedValue([pick(STUDENT_A, OPEN_PHONE), pick(STUDENT_B, CLOSED_PHONE)]);
+  s.m.picks.students.mockResolvedValue([
+    pick(STUDENT_A, OPEN_PHONE),
+    pick(STUDENT_B, CLOSED_PHONE),
+  ]);
   s.m.threads.thread.mockImplementation(async (phone: string) => openThread(phone, NOW));
 });
 
@@ -37,10 +40,16 @@ describe('invite_limit from the trigger (R-MEET-02)', () => {
     const fam = stored({ meeting_id: MEETING_ID, kind: 'phone', phone_e164: OPEN_PHONE, display_name: OPEN_PHONE, channel: 'whatsapp', status: 'sent' });
     s.m.invitees.byId.mockResolvedValue(fam);
     s.m.threads.enqueue.mockRejectedValue(LIMIT);
-    const r = await s.invites.resend({ user: ADMIN, id: MEETING_ID, inviteeId: fam.id, body: { clientRequestId: REQ } }, NOW);
+    const r = await s.invites.resend(
+      { user: ADMIN, id: MEETING_ID, inviteeId: fam.id, body: { clientRequestId: REQ } },
+      NOW,
+    );
     expect(r).toMatchObject({ status: 'failed', error_code: 'invite_limit' });
     expect(r.link).toMatch(/\/m\//);
-    expect(s.m.invitees.update).toHaveBeenCalledWith(fam.id, expect.objectContaining({ token_hash: expect.any(String) }));
+    expect(s.m.invitees.update).toHaveBeenCalledWith(
+      fam.id,
+      expect.objectContaining({ token_hash: expect.any(String) }),
+    );
     expect(s.m.sender.kick).not.toHaveBeenCalled();
   });
 });

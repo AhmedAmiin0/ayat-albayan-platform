@@ -20,7 +20,10 @@ export class SalesController {
   constructor(private readonly sales: SalesService) {}
 
   @Get('subscriptions')
-  subscriptions(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<SalesSubscriptionView[]> {
+  subscriptions(
+    @Query() query: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SalesSubscriptionView[]> {
     return this.sales.subscriptions(user, parseOrThrow(salesSubscriptionsQuerySchema, query).kind);
   }
 

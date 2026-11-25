@@ -18,7 +18,12 @@ export interface SalesOwnership {
   phones: string[];
 }
 
-export const NO_OWNERSHIP: SalesOwnership = { leadIds: [], guardianIds: [], studentIds: [], phones: [] };
+export const NO_OWNERSHIP: SalesOwnership = {
+  leadIds: [],
+  guardianIds: [],
+  studentIds: [],
+  phones: [],
+};
 
 const uniq = (ids: readonly string[]): string[] => [...new Set(ids)];
 
@@ -31,7 +36,9 @@ export async function ownershipOf(db: Db, profileId: string): Promise<SalesOwner
   ]);
   if (leads.error) throw dbError(leads.error);
   if (brought.error) throw dbError(brought.error);
-  const leadGuardians = uniq(leads.data.flatMap((l) => (l.converted_guardian_id ? [l.converted_guardian_id] : [])));
+  const leadGuardians = uniq(
+    leads.data.flatMap((l) => (l.converted_guardian_id ? [l.converted_guardian_id] : [])),
+  );
   const guardianIds = uniq([...leadGuardians, ...brought.data.map((s) => s.guardian_id)]);
   const phones = new Set(leads.data.map((l) => l.phone_e164));
   const leadIds = leads.data.map((l) => l.id);

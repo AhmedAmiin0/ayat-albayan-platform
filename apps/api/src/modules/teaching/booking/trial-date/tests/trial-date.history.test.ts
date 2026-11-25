@@ -39,8 +39,18 @@ describe('«مواعيد الحلقة التجريبية»: every trial time pic
   });
 
   it('header facts: the count, the family’s zone, allowed, and the upcoming trial a new date moves', () => {
-    const h = trialHistory({ student: STUDENT, lessons: trialLessonsOf(ROWS), names: new Map(), now: NOW });
-    expect({ count: h.count, tz: h.family_tz, allowed: h.allowed, upcoming: h.upcoming_id }).toEqual({ count: 4, tz: 'Europe/London', allowed: true, upcoming: NEW });
+    const h = trialHistory({
+      student: STUDENT,
+      lessons: trialLessonsOf(ROWS),
+      names: new Map(),
+      now: NOW,
+    });
+    expect({
+      count: h.count,
+      tz: h.family_tz,
+      allowed: h.allowed,
+      upcoming: h.upcoming_id,
+    }).toEqual({ count: 4, tz: 'Europe/London', allowed: true, upcoming: NEW });
   });
 
   it('a subscriber is not allowed; no guardian falls back to the student’s zone; empty when none', () => {

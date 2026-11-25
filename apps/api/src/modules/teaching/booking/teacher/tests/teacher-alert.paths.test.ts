@@ -38,8 +38,13 @@ describe('teacher alert on both booking paths (R-NOT-03)', () => {
     const { booking, push } = setup();
     const scope = { of: vi.fn(async () => null) } as unknown as SalesBookingScope;
     const user: AuthUser = { id: 'sales-1', email: null, role: 'sales' };
-    await new SalesBookingService(scope, booking, {} as unknown as SalesCourse).book(leadRequest(), user);
-    expect(push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({ kind: 'new_student', profileIds: ['P1'] }));
+    await new SalesBookingService(scope, booking, {} as unknown as SalesCourse).book(
+      leadRequest(),
+      user,
+    );
+    expect(push.notifyProfiles).toHaveBeenCalledWith(
+      expect.objectContaining({ kind: 'new_student', profileIds: ['P1'] }),
+    );
     expect(push.notifyProfiles).toHaveBeenCalledTimes(1);
   });
 

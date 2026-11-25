@@ -57,7 +57,10 @@ export class InternalMeetingsService {
   }
 
   /** managed, and still open: 410 meeting_ended once ended, cancelled or past its window. */
-  async managedOpen(input: { user: AuthUser; id: string }, now: Date): Promise<{ row: MeetingRow; win: JoinWindowConfig }> {
+  async managedOpen(
+    input: { user: AuthUser; id: string },
+    now: Date,
+  ): Promise<{ row: MeetingRow; win: JoinWindowConfig }> {
     const row = await this.managed(input);
     const win = await this.queries.joinWindow();
     if (meetingState(row, now, win) === 'ended') throw meetingEnded();

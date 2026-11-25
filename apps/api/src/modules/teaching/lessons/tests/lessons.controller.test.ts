@@ -44,16 +44,31 @@ describe('GET /lessons, /lessons/day, /students/:id/lessons (docs/10 routes 1, 2
     h.lessons.seq.mockResolvedValue(new Map([[`done:${STUDENT_ID}`, 12]]));
     const res = await h.call({ method: 'GET', url: `/lessons?${WEEK}` });
     expect(h.lessons.seq).toHaveBeenCalledWith(['done']);
-    expect(res.json().map((l: { students: { seq: number | null }[] }) => l.students[0]?.seq)).toEqual([null, 12]);
+    expect(
+      res.json().map((l: { students: { seq: number | null }[] }) => l.students[0]?.seq),
+    ).toEqual([null, 12]);
   });
 
   it("a student's lessons: admin only, 404 unknown student, page envelope newest first", async () => {
     h.lessons.studentExists.mockResolvedValue(true);
-    h.lessons.studentPage.mockResolvedValue({ items: [lessonRow()], total: 30, page: 2, pageSize: 10 });
-    const res = await h.call({ method: 'GET', url: `/students/${STUDENT_ID}/lessons?page=2&pageSize=10` });
+    h.lessons.studentPage.mockResolvedValue({
+      items: [lessonRow()],
+      total: 30,
+      page: 2,
+      pageSize: 10,
+    });
+    const res = await h.call({
+      method: 'GET',
+      url: `/students/${STUDENT_ID}/lessons?page=2&pageSize=10`,
+    });
     expect(res.statusCode).toBe(200);
     expect(h.lessons.studentPage).toHaveBeenCalledWith(STUDENT_ID, { page: 2, pageSize: 10 });
-    expect(res.json()).toMatchObject({ total: 30, page: 2, pageSize: 10, items: [{ id: LESSON_ID }] });
+    expect(res.json()).toMatchObject({
+      total: 30,
+      page: 2,
+      pageSize: 10,
+      items: [{ id: LESSON_ID }],
+    });
     h.lessons.studentExists.mockResolvedValue(false);
     expect((await h.call({ method: 'GET', url: `/students/${STUDENT_ID}/lessons` })).statusCode).toBe(404);
     expect((await h.call({ method: 'GET', url: `/students/${STUDENT_ID}/lessons`, token: 'teacher' })).statusCode).toBe(403);
