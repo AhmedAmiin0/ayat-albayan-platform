@@ -15,7 +15,12 @@ export type CredentialMode = (typeof CREDENTIAL_MODES)[number];
 
 const blank = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
 // The family logins' synthetic domain (docs/30 §2) is the API's alone: never typed for a staff login.
-const email = z.string().trim().toLowerCase().pipe(z.email().max(254)).refine((v) => !isFamilyEmail(v), 'invalid_email');
+const email = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .pipe(z.email().max(254))
+  .refine((v) => !isFamilyEmail(v), 'invalid_email');
 const fullName = z.string().trim().min(2).max(120);
 const zone = z.string().refine(isTimeZone, 'invalid_tz');
 const locale = z.enum(['ar', 'en']);
@@ -59,12 +64,14 @@ export const userCreateSchema = z
     new_teacher: newTeacher.optional(),
   })
   .superRefine((v, ctx) => {
-    const issue = (path: string, message: string) => ctx.addIssue({ code: 'custom', path: [path], message });
+    const issue = (path: string, message: string) =>
+      ctx.addIssue({ code: 'custom', path: [path], message });
     if (v.credential === 'set' && !v.password) issue('password', 'password_required');
     if (needsExistingRecord(v.role) && !v.linked_id) issue('linked_id', 'link_required');
     if (v.role === 'teacher' && !v.linked_id && !v.new_teacher) issue('linked_id', 'link_required');
     if (v.role === 'teacher' && v.linked_id && v.new_teacher) issue('new_teacher', 'link_or_new');
-    if (!['teacher', 'student', 'guardian'].includes(v.role) && (v.linked_id || v.new_teacher)) issue('linked_id', 'link_not_allowed');
+    if (!['teacher', 'student', 'guardian'].includes(v.role) && (v.linked_id || v.new_teacher))
+      issue('linked_id', 'link_not_allowed');
   });
 export type UserCreate = z.output<typeof userCreateSchema>;
 
@@ -82,10 +89,18 @@ export const userUpdateSchema = z
   .refine((v) => Object.values(v).some((x) => x !== undefined), 'empty_update');
 export type UserUpdate = z.output<typeof userUpdateSchema>;
 
-export const userDisableSchema = z.object({ reason: z.preprocess(blank, z.string().trim().max(500).optional()) });
+export const userDisableSchema = z.object({
+  reason: z.preprocess(blank, z.string().trim().max(500).optional()),
+});
 export type UserDisable = z.output<typeof userDisableSchema>;
 
 export const passwordResetSchema = z
-  .object({ credential: z.enum(CREDENTIAL_MODES).default('generate'), password: z.string().max(PASSWORD_MAX).optional() })
-  .refine((v) => v.credential !== 'set' || !!v.password, { path: ['password'], message: 'password_required' });
+  .object({
+    credential: z.enum(CREDENTIAL_MODES).default('generate'),
+    password: z.string().max(PASSWORD_MAX).optional(),
+  })
+  .refine((v) => v.credential !== 'set' || !!v.password, {
+    path: ['password'],
+    message: 'password_required',
+  });
 export type PasswordReset = z.output<typeof passwordResetSchema>;

@@ -85,20 +85,31 @@ export function riyadhMonthBounds(month: string): { from: Date; to: Date } {
 }
 
 const ZERO = (): Record<AttendanceTotalKind, number> => ({
-  held: 0, late: 0, absent: 0, excused: 0,
-  cancelled_by_teacher: 0, cancelled_by_admin: 0, rescheduled: 0, unmarked: 0,
+  held: 0,
+  late: 0,
+  absent: 0,
+  excused: 0,
+  cancelled_by_teacher: 0,
+  cancelled_by_admin: 0,
+  rescheduled: 0,
+  unmarked: 0,
 });
 
 /** The kind of one row as the totals count it; `late` is counted on top of `held`. */
-export function attendanceTotalKind(row: Pick<AttendanceTableRow, 'status' | 'attendance'>): AttendanceTotalKind {
+export function attendanceTotalKind(
+  row: Pick<AttendanceTableRow, 'status' | 'attendance'>,
+): AttendanceTotalKind {
   if (row.status === 'rescheduled') return 'rescheduled';
-  if (row.status === 'cancelled_by_teacher' || row.status === 'cancelled_by_admin') return row.status;
+  if (row.status === 'cancelled_by_teacher' || row.status === 'cancelled_by_admin')
+    return row.status;
   const kind = attendanceKind(row.status, row.attendance);
   return kind === 'present' ? 'held' : kind === 'absent' || kind === 'excused' ? kind : 'unmarked';
 }
 
 /** The month's totals of every kind. */
-export function attendanceTableTotals(rows: readonly Pick<AttendanceTableRow, 'status' | 'attendance'>[]): Record<AttendanceTotalKind, number> {
+export function attendanceTableTotals(
+  rows: readonly Pick<AttendanceTableRow, 'status' | 'attendance'>[],
+): Record<AttendanceTotalKind, number> {
   const totals = ZERO();
   for (const row of rows) {
     const kind = attendanceTotalKind(row);

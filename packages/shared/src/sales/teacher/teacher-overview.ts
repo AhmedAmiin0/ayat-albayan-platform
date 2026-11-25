@@ -25,7 +25,12 @@ export interface SalesTeacherSlot {
 }
 
 /** How the teacher's past lessons ended: held = completed / late, `other` = any other closed status (excused). */
-export type TeacherLessonKind = 'held' | 'student_absent' | 'cancelled_by_teacher' | 'cancelled_by_admin' | 'other';
+export type TeacherLessonKind =
+  | 'held'
+  | 'student_absent'
+  | 'cancelled_by_teacher'
+  | 'cancelled_by_admin'
+  | 'other';
 
 export interface SalesTeacherLesson {
   lesson_id: string;
@@ -56,8 +61,16 @@ export function teacherLessonKind(status: LessonStatus): TeacherLessonKind | nul
 }
 
 /** How many lessons of each kind (open and moved ones not counted). */
-export function teacherLessonTotals(statuses: readonly LessonStatus[]): Record<TeacherLessonKind, number> {
-  const totals: Record<TeacherLessonKind, number> = { held: 0, student_absent: 0, cancelled_by_teacher: 0, cancelled_by_admin: 0, other: 0 };
+export function teacherLessonTotals(
+  statuses: readonly LessonStatus[],
+): Record<TeacherLessonKind, number> {
+  const totals: Record<TeacherLessonKind, number> = {
+    held: 0,
+    student_absent: 0,
+    cancelled_by_teacher: 0,
+    cancelled_by_admin: 0,
+    other: 0,
+  };
   for (const status of statuses) {
     const kind = teacherLessonKind(status);
     if (kind) totals[kind] += 1;

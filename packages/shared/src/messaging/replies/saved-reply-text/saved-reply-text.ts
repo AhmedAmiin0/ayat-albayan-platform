@@ -15,7 +15,8 @@ const GAP = '\u0000';
 const TOKEN = /\{(name|student|assistant)\}/g;
 const PUNCT = '،,.!?؟؛;:';
 
-const isPlaceholder = (key: string): key is SavedReplyPlaceholder => SAVED_REPLY_PLACEHOLDERS.some((p) => p === key);
+const isPlaceholder = (key: string): key is SavedReplyPlaceholder =>
+  SAVED_REPLY_PLACEHOLDERS.some((p) => p === key);
 
 /** Removed placeholders and what they leave behind, in order; text away from a gap is never touched. */
 const TIDY: readonly [RegExp, string][] = [

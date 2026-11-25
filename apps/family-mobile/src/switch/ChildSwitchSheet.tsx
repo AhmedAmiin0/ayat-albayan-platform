@@ -4,7 +4,7 @@ import { closeChildSwitch, useChildSwitch } from '@/nav';
 import { ChildSwitchList } from './ChildSwitchList';
 
 /**
- * The children sheet over every tab (owner 2026-11-16, canvas SwitchSheet), opened from a tab
+ * The children sheet over every tab (canvas SwitchSheet), opened from a tab
  * header's child button: the native bottom sheet (@expo/ui), sized to its rows, closed by a swipe,
  * the scrim, Android's back or a pick.
  */

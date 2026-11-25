@@ -31,12 +31,21 @@ export interface TemplateRouteInput {
 export function roleOrder(numbers: readonly RoutableNumber[], line: WaLine): RoutableNumber[] {
   return numbers
     .filter((n) => n.purpose === line)
-    .sort((a, b) => Number(b.is_default) - Number(a.is_default) || a.fallback_rank - b.fallback_rank || a.created_at.localeCompare(b.created_at));
+    .sort(
+      (a, b) =>
+        Number(b.is_default) - Number(a.is_default) ||
+        a.fallback_rank - b.fallback_rank ||
+        a.created_at.localeCompare(b.created_at),
+    );
 }
 
 /** Every candidate in order, each id once: rule → template → role default → role fallbacks. */
 export function templateCandidates(input: TemplateRouteInput): string[] {
-  const ids = [input.ruleNumberId, input.templateNumberId, ...roleOrder(input.numbers, input.line).map((n) => n.id)];
+  const ids = [
+    input.ruleNumberId,
+    input.templateNumberId,
+    ...roleOrder(input.numbers, input.line).map((n) => n.id),
+  ];
   return [...new Set(ids.filter((id): id is string => id !== null))];
 }
 
@@ -58,8 +67,14 @@ export function routeTemplate(input: TemplateRouteInput): string | null {
  * default of its line. Never another number: Meta allows a session message only inside THAT number's
  * 24 h window. null = it cannot leave now (stays queued).
  */
-export function routeSession(numbers: readonly RoutableNumber[], at: { numberId: string | null; line: WaLine }): string | null {
-  const id = at.numberId ?? numbers.find((n) => n.purpose === at.line && n.is_default && n.enabled)?.id ?? null;
+export function routeSession(
+  numbers: readonly RoutableNumber[],
+  at: { numberId: string | null; line: WaLine },
+): string | null {
+  const id =
+    at.numberId ??
+    numbers.find((n) => n.purpose === at.line && n.is_default && n.enabled)?.id ??
+    null;
   const n = id === null ? undefined : numbers.find((x) => x.id === id);
   return n?.enabled && n.sendable ? n.id : null;
 }

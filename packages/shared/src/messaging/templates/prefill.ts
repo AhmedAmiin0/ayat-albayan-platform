@@ -15,7 +15,10 @@ export interface TemplatePrefill {
 }
 
 /** {{n}} → the known, trimmed value for each of the template's first nine variables; blanks are left out. */
-export function prefillParams(tpl: Pick<TemplateView, 'params'>, ctx: TemplatePrefill): Partial<Record<BodySlot, string>> {
+export function prefillParams(
+  tpl: Pick<TemplateView, 'params'>,
+  ctx: TemplatePrefill,
+): Partial<Record<BodySlot, string>> {
   const known: Record<string, string | null | undefined> = {
     student_names: ctx.studentName,
     student_name: ctx.studentName,

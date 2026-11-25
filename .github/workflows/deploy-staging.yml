@@ -221,9 +221,8 @@ jobs:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.STAGING_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
           # Public by design; accepted as a variable or a secret.
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY || secrets.STAGING_SUPABASE_ANON_KEY }}
-          # Stripe go live (owner 2026-11-01, docs/30): the pay-link buttons are built in. They still show only
-          # when GET /stripe/feature says so («الدفع الإلكتروني» on and both keys saved); without the API's
-          # FEATURE_STRIPE that route is 404 and nothing shows.
+          # Stripe go live (docs/30): the pay-link buttons show only when GET /stripe/feature says so
+          # (online payment on and both keys saved); without the API's FEATURE_STRIPE that route is 404.
           VITE_FEATURE_STRIPE: "1"
           VITE_FAMILY_ORIGIN: ${{ vars.VITE_FAMILY_ORIGIN }}
           # The family app's «wrongApp» link for a staff account.

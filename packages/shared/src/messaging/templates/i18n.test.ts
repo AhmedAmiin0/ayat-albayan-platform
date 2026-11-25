@@ -8,7 +8,9 @@ import { TEMPLATE_KEYS } from './templates.js';
 describe('Phase 4 strings and chips (rule 10, docs/07 §6)', () => {
   // The restricted defaults too: the assistant's picker shows each by name, never its Meta key.
   it('every template key has an Arabic name, and so does each restricted default (migration 460, imports)', () => {
-    expect(Object.keys(ar.templates.names).sort()).toEqual([...TEMPLATE_KEYS, ...RESTRICTED_TEMPLATE_DEFAULTS].sort());
+    expect(Object.keys(ar.templates.names).sort()).toEqual(
+      [...TEMPLATE_KEYS, ...RESTRICTED_TEMPLATE_DEFAULTS].sort(),
+    );
   });
 
   it('the reschedule starter keeps its exact names and its variable label', () => {

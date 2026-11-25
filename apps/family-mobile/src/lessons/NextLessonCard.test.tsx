@@ -12,7 +12,7 @@ jest.mock('@ab/mobile-kit/room', () => ({
   useNativeRoom: () => ({ data: {} }),
 }));
 
-// The lapis card (canvas Child) and its live state (owner 2026-11-16, canvas RoomXLiveHome).
+// The lapis card (canvas Child) and its live state (canvas RoomXLiveHome).
 
 const MIN = 60_000;
 const L = t.portal.app.live;

@@ -21,7 +21,9 @@ export interface SalesPartPaid {
   currency: string;
 }
 
-export type SalesStudentSubscription = Omit<SalesHistoryEntry, 'payments' | 'status_changes'> & { part_paid?: SalesPartPaid };
+export type SalesStudentSubscription = Omit<SalesHistoryEntry, 'payments' | 'status_changes'> & {
+  part_paid?: SalesPartPaid;
+};
 
 /** One past lesson for this student, as the attendance list says it. */
 export type AttendanceKind = 'present' | 'absent' | 'excused' | 'cancelled' | 'unmarked';
@@ -45,7 +47,15 @@ export interface SalesTrialLesson {
 export interface SalesStudentDetails {
   /** Hers, or any while SalesOwnershipRule does not enforce: the money actions. Every student reads the same. Absent: old cache (= hers). */
   mine?: boolean;
-  student: { id: string; code: string; name: string; status: StudentStatus; program: Program; teacher_name: string | null; guardian_phone: string | null };
+  student: {
+    id: string;
+    code: string;
+    name: string;
+    status: StudentStatus;
+    program: Program;
+    teacher_name: string | null;
+    guardian_phone: string | null;
+  };
   /** Newest first; `current_id` is the newest active one, else the newest (null without any). */
   subscriptions: SalesStudentSubscription[];
   current_id: string | null;
@@ -89,7 +99,10 @@ export interface SalesLessonMoved {
 const HELD: readonly LessonStatus[] = ['completed', 'late'];
 
 /** Own attendance wins, else the status; a rescheduled lesson is null, its new one counts. */
-export function attendanceKind(status: LessonStatus, attendance: Attendance | null): AttendanceKind | null {
+export function attendanceKind(
+  status: LessonStatus,
+  attendance: Attendance | null,
+): AttendanceKind | null {
   if (status === 'rescheduled') return null;
   if (isCancelledLesson(status)) return 'cancelled';
   if (attendance === 'on_time' || attendance === 'late') return 'present';
@@ -100,10 +113,18 @@ export function attendanceKind(status: LessonStatus, attendance: Attendance | nu
   return status === 'excused' ? 'excused' : 'unmarked';
 }
 
-const ZERO = (): Record<AttendanceKind, number> => ({ present: 0, absent: 0, excused: 0, cancelled: 0, unmarked: 0 });
+const ZERO = (): Record<AttendanceKind, number> => ({
+  present: 0,
+  absent: 0,
+  excused: 0,
+  cancelled: 0,
+  unmarked: 0,
+});
 
 /** How many days of each kind. */
-export function attendanceTotals(days: readonly Pick<SalesAttendanceDay, 'kind'>[]): Record<AttendanceKind, number> {
+export function attendanceTotals(
+  days: readonly Pick<SalesAttendanceDay, 'kind'>[],
+): Record<AttendanceKind, number> {
   const totals = ZERO();
   for (const d of days) totals[d.kind] += 1;
   return totals;

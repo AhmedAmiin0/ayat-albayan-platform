@@ -21,7 +21,14 @@ export interface FormValues {
   nextPlan: string;
 }
 
-export type TextKey = 'recited' | 'newMemorization' | 'revision' | 'theory' | 'notes' | 'homework' | 'nextPlan';
+export type TextKey =
+  | 'recited'
+  | 'newMemorization'
+  | 'revision'
+  | 'theory'
+  | 'notes'
+  | 'homework'
+  | 'nextPlan';
 
 /** PUT /reports/:id/draft body (only the fields sent are written). */
 export type DraftBody = Partial<ReportDraft>;
@@ -29,7 +36,12 @@ export type DraftBody = Partial<ReportDraft>;
 export type SubmitBody = DraftBody & { expectedVersion: number };
 
 /** The four lesson-work fields, then the three after the grades, in form order. */
-export const DONE_FIELDS = ['recited', 'newMemorization', 'revision', 'theory'] as const satisfies readonly TextKey[];
+export const DONE_FIELDS = [
+  'recited',
+  'newMemorization',
+  'revision',
+  'theory',
+] as const satisfies readonly TextKey[];
 export const AFTER_FIELDS = ['notes', 'homework', 'nextPlan'] as const satisfies readonly TextKey[];
 
 const REQUIRED: readonly TextKey[] = REPORT_REQUIRED_TEXT;
@@ -63,7 +75,10 @@ export function valuesOf(report: ReportView): FormValues {
 
 /** The whole form as a draft (autosave sends everything; the server trims, '' clears). */
 export function draftBody(v: FormValues): DraftBody {
-  const grades = Object.fromEntries(REPORT_RUBRICS.map((r) => [r, v.grades[r]])) as Record<Rubric, Grade | null>;
+  const grades = Object.fromEntries(REPORT_RUBRICS.map((r) => [r, v.grades[r]])) as Record<
+    Rubric,
+    Grade | null
+  >;
   return {
     attendance: v.attendance,
     ...(v.program ? { program: v.program } : {}),
@@ -94,6 +109,12 @@ export function submitProblem(v: FormValues, version = 0): string | null {
  * Autosave: save when the settled form differs from what the server has, nothing is in flight,
  * and this exact body did not just fail (it is retried once the teacher changes something).
  */
-export function shouldSave(s: { enabled: boolean; settled: string; saved: string; failed: string | null; pending: boolean }): boolean {
+export function shouldSave(s: {
+  enabled: boolean;
+  settled: string;
+  saved: string;
+  failed: string | null;
+  pending: boolean;
+}): boolean {
   return s.enabled && !s.pending && s.settled !== s.saved && s.settled !== s.failed;
 }

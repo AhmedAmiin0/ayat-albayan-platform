@@ -56,11 +56,18 @@ export interface TemplateBlockSource {
  * URL suffixes that are a guardian's own signed token (the feedback form, the classroom guest link):
  * a staff tap would act as the family, so the button shows its label only.
  */
-export const TOKEN_URL_KEYS: ReadonlySet<string> = new Set(['lesson_feedback_request', 'lesson_join_link']);
+export const TOKEN_URL_KEYS: ReadonlySet<string> = new Set([
+  'lesson_feedback_request',
+  'lesson_join_link',
+]);
 
 /** Before the first sync with `display`: the registry's own buttons (the sender's view). */
 export function registryButtons(buttons: readonly TemplateButton[]): TemplateDisplayButton[] {
-  return buttons.map((b) => (b.type === 'url' ? { type: 'url', text: b.text ?? '', url: b.url } : { type: 'quick_reply', text: b.text }));
+  return buttons.map((b) =>
+    b.type === 'url'
+      ? { type: 'url', text: b.text ?? '', url: b.url }
+      : { type: 'quick_reply', text: b.text },
+  );
 }
 
 /** A URL button's link with {{1}} filled; none while its value is missing or a token. */
@@ -71,7 +78,11 @@ function filledUrl(url: string, key: string, params: TemplateParams): string | u
   return url.replace('{{1}}', params.button);
 }
 
-function filled(b: TemplateDisplayButton, key: string, params: TemplateParams): TemplateDisplayButton {
+function filled(
+  b: TemplateDisplayButton,
+  key: string,
+  params: TemplateParams,
+): TemplateDisplayButton {
   if (b.type !== 'url' || b.url === undefined) return b;
   const { url, ...rest } = b;
   const link = filledUrl(url, key, params);
@@ -83,8 +94,15 @@ function filled(b: TemplateDisplayButton, key: string, params: TemplateParams): 
  * A registry row Meta's sync has not described yet reads from its own columns: a document header
  * (report_ready), the footer, the URL and quick-reply buttons.
  */
-export function templateBlock(src: TemplateBlockSource, params: TemplateParams): MessageTemplateBlock {
-  const header = src.display ? src.display.header : src.header_format === 'document' ? { type: 'document' as const } : null;
+export function templateBlock(
+  src: TemplateBlockSource,
+  params: TemplateParams,
+): MessageTemplateBlock {
+  const header = src.display
+    ? src.display.header
+    : src.header_format === 'document'
+      ? { type: 'document' as const }
+      : null;
   const buttons = src.display ? src.display.buttons : registryButtons(src.buttons);
   return { header, footer: src.footer_ar, buttons: buttons.map((b) => filled(b, src.key, params)) };
 }

@@ -2,11 +2,27 @@ import { describe, expect, it } from 'vitest';
 import * as runtime from '../index.js';
 import { assistantTermsSchema } from '@ab/money';
 import { reportDraftSchema } from '../reports/schema/index.js';
-import { ASSISTANT, BALANCE, commission, FULL_GRADES, PAYMENT, reportView, statement, termsRowOf } from './index.js';
+import {
+  ASSISTANT,
+  BALANCE,
+  commission,
+  FULL_GRADES,
+  PAYMENT,
+  reportView,
+  statement,
+  termsRowOf,
+} from './index.js';
 
 describe('shared test fixtures', () => {
   it('stay out of the runtime @ab/shared entry', () => {
-    for (const name of ['ASSISTANT', 'BALANCE', 'PAYMENT', 'FULL_GRADES', 'reportView', 'termsRowOf']) {
+    for (const name of [
+      'ASSISTANT',
+      'BALANCE',
+      'PAYMENT',
+      'FULL_GRADES',
+      'reportView',
+      'termsRowOf',
+    ]) {
       expect(name in runtime).toBe(false);
     }
   });
@@ -14,7 +30,12 @@ describe('shared test fixtures', () => {
   it('assistant terms parse with the terms command schema', () => {
     const { commission: c, salary: s } = ASSISTANT.terms;
     const parsed = assistantTermsSchema.safeParse({
-      commission: c && { type: c.type, value: c.value, currency: c.currency, startsOn: c.starts_on },
+      commission: c && {
+        type: c.type,
+        value: c.value,
+        currency: c.currency,
+        startsOn: c.starts_on,
+      },
       salary: s && { amount: s.amount, currency: s.currency, startsOn: s.starts_on },
     });
     expect(parsed.success).toBe(true);
@@ -22,7 +43,11 @@ describe('shared test fixtures', () => {
   });
 
   it('commission and statement builders take overrides and keep currencies apart', () => {
-    expect(commission({ status: 'voided' })).toMatchObject({ id: 'c1', amount: 50, status: 'voided' });
+    expect(commission({ status: 'voided' })).toMatchObject({
+      id: 'c1',
+      amount: 50,
+      status: 'voided',
+    });
     const st = statement();
     for (const [cur, t] of Object.entries(st.totals)) {
       const sum = st.lines.filter((l) => l.currency === cur).reduce((acc, l) => acc + l.amount, 0);
@@ -32,7 +57,11 @@ describe('shared test fixtures', () => {
 
   it('earnings rows agree with each other', () => {
     expect(BALANCE.earned - BALANCE.paid).toBe(BALANCE.outstanding);
-    expect(PAYMENT).toMatchObject({ teacher_id: BALANCE.teacher.id, amount: BALANCE.paid, currency: BALANCE.currency });
+    expect(PAYMENT).toMatchObject({
+      teacher_id: BALANCE.teacher.id,
+      amount: BALANCE.paid,
+      currency: BALANCE.currency,
+    });
   });
 
   it('report grades parse with the draft schema and the view builder takes overrides', () => {
@@ -45,6 +74,10 @@ describe('shared test fixtures', () => {
       engagement: null,
       commitment: null,
     });
-    expect(reportView({ status: 'submitted', version: 1 })).toMatchObject({ id: 'r-1', status: 'submitted', version: 1 });
+    expect(reportView({ status: 'submitted', version: 1 })).toMatchObject({
+      id: 'r-1',
+      status: 'submitted',
+      version: 1,
+    });
   });
 });

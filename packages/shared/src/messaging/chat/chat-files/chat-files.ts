@@ -45,7 +45,8 @@ const SEND_KINDS: Record<string, Exclude<WaSendKind, 'document'>> = {
 export type WaSendKind = 'image' | 'audio' | 'video' | 'sticker' | 'document';
 
 /** The type a stored file travels as (a forwarded voice note or video too); anything else goes as a document. */
-export const waSendKind = (mime: string | null): WaSendKind => SEND_KINDS[baseMime(mime)] ?? 'document';
+export const waSendKind = (mime: string | null): WaSendKind =>
+  SEND_KINDS[baseMime(mime)] ?? 'document';
 
 export type ChatFileProblem = 'file_type' | 'file_too_large';
 
@@ -79,7 +80,12 @@ export type ThreadPdfPage = SignedDownload & { page: number; pages: number; byte
 export type ThreadFile = SignedDownload & { mime: string };
 
 /** The strings of inbox.pdf (ar.json / en.json) the meta line reads. */
-export type PdfMetaStrings = { type: string; pages: Readonly<Record<PluralForm, string>>; kb: string; mb: string };
+export type PdfMetaStrings = {
+  type: string;
+  pages: Readonly<Record<PluralForm, string>>;
+  kb: string;
+  mb: string;
+};
 
 const MB = 1024 * 1024;
 /** First-strong isolate (FSI … PDI): in an Arabic line «1.2» never takes its direction from «PDF» (bidi W7). */

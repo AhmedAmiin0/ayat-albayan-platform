@@ -19,7 +19,15 @@ export type CallStatus = (typeof CALL_STATUSES)[number];
  * inbound call nobody took; declined = staff declined an inbound call; failed = WhatsApp refused or
  * the request's answer was lost (never retried: it may already be billed).
  */
-export const CALL_END_REASONS = ['completed', 'no_answer', 'rejected', 'cancelled', 'missed', 'declined', 'failed'] as const;
+export const CALL_END_REASONS = [
+  'completed',
+  'no_answer',
+  'rejected',
+  'cancelled',
+  'missed',
+  'declined',
+  'failed',
+] as const;
 export type CallEndReason = (typeof CALL_END_REASONS)[number];
 
 /** A call as the clients see it (GET /calls, /calls/active). SDPs only on /calls/active, to the parties. */

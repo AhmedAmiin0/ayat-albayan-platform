@@ -9,7 +9,12 @@ import type { MessageView } from '../chat/views.js';
 // do now. Pure; the web and the app fill inbox.quickReply.<key> with `when` and
 // draw `action` as a secondary button (inbox.replyAction).
 
-export type ReplyNoteKey = 'confirmed' | 'reschedule' | 'rescheduleNoLesson' | 'rescheduled' | 'stop';
+export type ReplyNoteKey =
+  | 'confirmed'
+  | 'reschedule'
+  | 'rescheduleNoLesson'
+  | 'rescheduled'
+  | 'stop';
 
 export interface ReplyNoteAction {
   kind: 'confirm' | 'reschedule';
@@ -46,8 +51,11 @@ function whenOf({ lesson, clock = DEFAULT_CLOCK }: ReplyNoteContext): string | n
 
 function rescheduleNote(ctx: ReplyNoteContext, when: string | null): ReplyNote {
   const { lesson } = ctx;
-  if (ctx.moved || lesson?.status === 'rescheduled') return { key: 'rescheduled', when: null, action: null };
-  const open = lesson && (lesson.status === null || lesson.status === 'scheduled' || lesson.status === 'confirmed');
+  if (ctx.moved || lesson?.status === 'rescheduled')
+    return { key: 'rescheduled', when: null, action: null };
+  const open =
+    lesson &&
+    (lesson.status === null || lesson.status === 'scheduled' || lesson.status === 'confirmed');
   if (open && ctx.rights.reschedule && lessonNotEnded(lesson, ctx.now)) {
     return { key: 'reschedule', when, action: { kind: 'reschedule', lesson } };
   }
@@ -67,7 +75,8 @@ function confirmNote(ctx: ReplyNoteContext, when: string | null): ReplyNote | nu
 export function replyNote(m: NoteInput, ctx: ReplyNoteContext): ReplyNote | null {
   if (m.direction !== 'inbound' || !m.body) return null;
   const intent = quickReplyIntent(m.body);
-  if (intent === 'stop') return m.guardian_id || m.lead_id ? { key: 'stop', when: null, action: null } : null;
+  if (intent === 'stop')
+    return m.guardian_id || m.lead_id ? { key: 'stop', when: null, action: null } : null;
   if (!m.guardian_id) return null;
   const when = whenOf(ctx);
   if (intent === 'reschedule') return rescheduleNote(ctx, when);

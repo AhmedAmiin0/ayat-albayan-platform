@@ -27,10 +27,17 @@ describe('the catalogue settings slice', () => {
   });
 
   it('the slice decides every row exactly as the full settings do', () => {
-    const on: AcademySettings = { ...SETTING_DEFAULTS, messaging_enabled: true, auto_messages_enabled: true, feedback_mode: 'link' };
+    const on: AcademySettings = {
+      ...SETTING_DEFAULTS,
+      messaging_enabled: true,
+      auto_messages_enabled: true,
+      feedback_mode: 'link',
+    };
     for (const s of [SETTING_DEFAULTS, on]) {
       for (const gateReason of [null, 'switch_off'] as const) {
-        expect(catalogueViews({ settings: slice(s), gateReason, templates })).toEqual(catalogueViews({ settings: s, gateReason, templates }));
+        expect(catalogueViews({ settings: slice(s), gateReason, templates })).toEqual(
+          catalogueViews({ settings: s, gateReason, templates }),
+        );
       }
     }
   });

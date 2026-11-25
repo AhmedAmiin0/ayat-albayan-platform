@@ -72,12 +72,15 @@ type Quotable = { replyable?: boolean; template_key: string | null };
 export const canReply = (m: Pick<Quotable, 'replyable'>): boolean => m.replyable === true;
 
 /** A text or a file we hold or can fetch, never a template. */
-export function canForward(m: Quotable & { body: string | null; media_mime: string | null; forwardable?: boolean }): boolean {
+export function canForward(
+  m: Quotable & { body: string | null; media_mime: string | null; forwardable?: boolean },
+): boolean {
   return !m.template_key && m.forwardable === true && (!!m.body?.trim() || !!m.media_mime);
 }
 
 /** The quote's first line, trimmed; '' when it has no text. */
-export const quoteLine = (body: string | null): string => (body ?? '').trim().split('\n')[0]?.trim() ?? '';
+export const quoteLine = (body: string | null): string =>
+  (body ?? '').trim().split('\n')[0]?.trim() ?? '';
 
 /** What kind of file a quote or a forward carries, for its label (inbox.media.*). */
 export function mediaKindOf(mime: string | null): 'image' | 'audio' | 'video' | 'document' | null {

@@ -7,7 +7,7 @@ import { student } from '@/portal/portal.fixtures';
 import { GreetingHeader } from './GreetingHeader';
 import { closeChildSwitch, useChildSwitch } from './switch-store';
 
-// Home's header as the child switch (owner 2026-11-16, canvas SwitchHome).
+// Home's header as the child switch (canvas SwitchHome).
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

@@ -13,7 +13,8 @@ function leaves(node: unknown, path: string): Leaf[] {
   return [[path, node]];
 }
 
-const tokens = (v: unknown): string[] => (typeof v === 'string' ? (v.match(/\{[A-Za-z0-9_]+\}/g) ?? []).sort() : []);
+const tokens = (v: unknown): string[] =>
+  typeof v === 'string' ? (v.match(/\{[A-Za-z0-9_]+\}/g) ?? []).sort() : [];
 
 describe('en.json ↔ ar.json', () => {
   const arLeaves = new Map(leaves(ar, ''));
@@ -25,12 +26,16 @@ describe('en.json ↔ ar.json', () => {
   });
 
   it('every English value is a non-empty string where Arabic has a string', () => {
-    const bad = [...arLeaves].filter(([k, v]) => typeof v === 'string' && !String(enLeaves.get(k) ?? '').trim());
+    const bad = [...arLeaves].filter(
+      ([k, v]) => typeof v === 'string' && !String(enLeaves.get(k) ?? '').trim(),
+    );
     expect(bad.map(([k]) => k)).toEqual([]);
   });
 
   it('keeps the same {placeholders} in every string', () => {
-    const diff = [...arLeaves].filter(([k, v]) => tokens(v).join() !== tokens(enLeaves.get(k)).join());
+    const diff = [...arLeaves].filter(
+      ([k, v]) => tokens(v).join() !== tokens(enLeaves.get(k)).join(),
+    );
     expect(diff.map(([k]) => k)).toEqual([]);
   });
 });

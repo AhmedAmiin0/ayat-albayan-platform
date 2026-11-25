@@ -2,7 +2,13 @@ import type { NotificationEntry } from './catalogue.types.js';
 
 // WhatsApp rows a job or an event sends without a person (docs/23a §B2 W1–W7, W9–W11, W13, W14).
 
-const ROW = { channels: ['whatsapp'], manual: false, essential: false, locked: false, defaults: { enabled: true } } as const;
+const ROW = {
+  channels: ['whatsapp'],
+  manual: false,
+  essential: false,
+  locked: false,
+  defaults: { enabled: true },
+} as const;
 const AUTO = { ...ROW, automatic: true } as const;
 
 export const WHATSAPP_ENTRIES = [
@@ -35,7 +41,10 @@ export const WHATSAPP_ENTRIES = [
     key: 'teacher_lesson_reminder',
     audience: 'teacher',
     templates: ['teacher_lesson_reminder', 'teacher_lesson_reminder_meet'],
-    rowSwitch: { key: 'teacher_whatsapp_lesson_reminder', isOn: (s) => s.teacher_whatsapp_lesson_reminder },
+    rowSwitch: {
+      key: 'teacher_whatsapp_lesson_reminder',
+      isOn: (s) => s.teacher_whatsapp_lesson_reminder,
+    },
     timing: 'reminder_minutes_before',
   },
   {
@@ -64,8 +73,20 @@ export const WHATSAPP_ENTRIES = [
     automatic: false,
     essential: true,
   },
-  { ...AUTO, key: 'renewal_due', audience: 'guardian', templates: ['renewal_due'], timing: 'renewal_alert_remaining' },
-  { ...AUTO, key: 'follow_up_slots', audience: 'lead', templates: ['follow_up_slots'], timing: 'follow_up_hours' },
+  {
+    ...AUTO,
+    key: 'renewal_due',
+    audience: 'guardian',
+    templates: ['renewal_due'],
+    timing: 'renewal_alert_remaining',
+  },
+  {
+    ...AUTO,
+    key: 'follow_up_slots',
+    audience: 'lead',
+    templates: ['follow_up_slots'],
+    timing: 'follow_up_hours',
+  },
   {
     ...AUTO,
     key: 'lesson_rating',

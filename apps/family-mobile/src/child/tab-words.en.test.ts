@@ -1,6 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 
-// The five pills fit one 358pt row in English too (canvas ChatXFamilyEntry; review 2026-11-17).
+// The five pills fit one 358pt row in English too (canvas ChatXFamilyEntry).
 // A rough width at 14pt semibold: ~7.5pt a letter, 8 + 8 padding and 2 border a pill, 4 between,
 // the unread badge 22pt with its gap.
 
