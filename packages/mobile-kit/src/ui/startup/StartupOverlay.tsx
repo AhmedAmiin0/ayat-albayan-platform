@@ -18,7 +18,7 @@ interface StartupOverlayProps {
 /**
  * Lies over the root stack until the app is ready, then fades out over the screen already laid
  * out beneath it (no layout jump: nothing moves, the cover just clears). The staff and family
- * apps show the same cover (owner 2026-11-16). Inside the query provider: it reads whether the
+ * apps show the same cover. Inside the query provider: it reads whether the
  * persisted cache brought anything back.
  */
 export function StartupOverlay({ ready, onRetry, fontsLoaded }: StartupOverlayProps) {

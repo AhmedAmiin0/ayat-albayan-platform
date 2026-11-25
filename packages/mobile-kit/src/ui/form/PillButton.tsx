@@ -62,7 +62,7 @@ function Badge({ count }: { count: number }) {
 
 type Colors = ReturnType<typeof useTheme>['color'];
 
-/** Selected = the action green on its wash (owner 2026-10-29, option A); else ink on raised. */
+/** Selected = the action green on its wash (option A); else ink on raised. */
 function pillLook(color: Colors, selected: boolean) {
   return selected
     ? { fg: color.lapis, border: color.lapisWash, fill: color.lapisWash }

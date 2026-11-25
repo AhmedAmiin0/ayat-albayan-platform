@@ -1,4 +1,4 @@
-/** Back from the background after this long, the lock comes back (owner 2026-11-15). */
+/** Back from the background after this long, the lock comes back. */
 export const LOCK_AFTER_MS = 5 * 60_000;
 
 /**

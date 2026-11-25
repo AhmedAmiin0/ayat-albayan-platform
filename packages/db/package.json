@@ -4,7 +4,7 @@
   "type": "module",
   "exports": { ".": "./src/index.ts" },
   "scripts": {
-    "gen:types": "supabase gen types typescript --local > src/types.ts && prettier --write src/types.ts",
+    "gen:types": "supabase gen types typescript --local > src/types.ts && oxfmt src/types.ts",
     "reset": "supabase db reset",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsgo --noEmit"

@@ -35,7 +35,7 @@ export interface HtmlAudio {
 }
 
 /**
- * The web player over an <audio> or <video> element (owner 2026-11-17): the same reducer as the
+ * The web player over an <audio> or <video> element: the same reducer as the
  * app's, the stop saved on pause, skip, the end and every few seconds of play. One player sounds
  * at a time: starting this one stops the page's other player (use-now-playing).
  */

@@ -2,7 +2,7 @@ import { chatDay, type ChatDay, clockOf, type ClockCycle, dateText, dayParts } f
 import { t } from '../../lib/i18n/i18n';
 import { locale } from '../../lib/i18n/locale';
 
-// The day separators of a chat, as WhatsApp (owner 2026-10-27): the staff inbox and the student
+// The day separators of a chat, as WhatsApp: the staff inbox and the student
 // channel word a day the same way, in the viewer's zone; the day logic is the shared chatDay.
 
 const DAY_MONTH = { day: 'numeric', month: 'long' } as const;

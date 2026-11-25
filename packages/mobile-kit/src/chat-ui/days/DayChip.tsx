@@ -4,7 +4,7 @@ import { AppText } from '../../ui/primitives/AppText';
 import { CHIP_BORDER, CHIP_MARGIN, CHIP_PAD } from './top-band';
 
 /**
- * A day separator (owner 2026-10-27, as WhatsApp): a small centred chip over the day's first row.
+ * A day separator (as WhatsApp): a small centred chip over the day's first row.
  */
 export function DayChip({ label, testID }: { label: string; testID?: string }) {
   const { color } = useTheme();

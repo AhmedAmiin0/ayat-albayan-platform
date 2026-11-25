@@ -8,7 +8,7 @@ import { ClosedStepRow } from './ClosedStepRow';
 import { DiamondOrnament } from './DiamondOrnament';
 
 /**
- * A participant's closed chat (owner 2026-10-29, the ChatXClosed board): a raised card at the top
+ * A participant's closed chat (the ChatXClosed board): a raised card at the top
  * of the thread with the gold diamond, why it is not open yet, who talks here once it is, and the
  * steps left (the subscription, the teacher, then it opens by itself). The chat switched off for
  * the family says only that.

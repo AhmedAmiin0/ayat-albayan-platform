@@ -1,5 +1,5 @@
-// The Babel config of every Expo app here and of this package's jest (owner 2026-10-30,
-// docs/31a §3.2: the React Compiler for EVERY Babel caller). babel-preset-expo compiles only
+// The Babel config of every Expo app here and of this package's jest (docs/31a §3.2: the
+// React Compiler for EVERY Babel caller). babel-preset-expo compiles only
 // when Metro passes supportsReactCompiler, which jest-expo never does, so the unit tests would run
 // code that never ships: the app.json `experiments.reactCompiler` switch adds the plugin here for
 // every caller (plugins run before presets) with its defaults (target 19, node_modules skipped),

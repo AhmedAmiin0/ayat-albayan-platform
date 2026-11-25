@@ -1,4 +1,4 @@
-// Where the floating day chip may show (owner 2026-10-27, as WhatsApp): never over an inline day
+// Where the floating day chip may show (as WhatsApp): never over an inline day
 // separator. Pure geometry over the inverted list: VirtualizedList's own cell frames (onLayout, in
 // content coordinates) and the scroll offset, so it is unit-tested without a device.
 

@@ -23,7 +23,7 @@ function Diamond() {
 }
 
 /**
- * Before the subscription and the teacher's assignment (owner 2026-10-29), the card of what is
+ * Before the subscription and the teacher's assignment, the card of what is
  * left (FamChatWebClosed / FamChatWebClosedTeacher): the title, who talks here, and the three
  * steps with the current one marked; the line of its reason stays as the card's status.
  */

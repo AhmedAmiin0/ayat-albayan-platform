@@ -24,7 +24,7 @@ const PILL = {
 } as const;
 
 /**
- * The WhatsApp-order typing bar (owner 2026-10-27): [pill] then the round button, in reading order,
+ * The WhatsApp-order typing bar: [pill] then the round button, in reading order,
  * so it mirrors with the phone (the round button on the right in English, on the left in Arabic).
  * Presentational only: the caller fills the pill and the action.
  */

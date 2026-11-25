@@ -56,7 +56,7 @@ export const meQuery = queryOptions({
  * Route guard for beforeLoad: signed in and holding `role` (or any of several), else back to
  * /login. The role is the BASE SCOPE (which app, which home); pages inside are gated by permission.
  * `back` (the page asked for, path + search): a signed-out user carries it to /login as
- * `?redirect=` and lands there after sign-in (owner 2026-11-14); a guard without it is unchanged.
+ * `?redirect=` and lands there after sign-in; a guard without it is unchanged.
  */
 export async function requireRole(
   queryClient: QueryClient,

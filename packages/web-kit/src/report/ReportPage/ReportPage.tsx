@@ -9,7 +9,7 @@ import { PublicReport } from '@ab/web-kit/report/PublicReport';
 import { ReportPageBody } from '@ab/web-kit/report/ReportPageBody';
 
 /**
- * /report/:publicId (owner 2026-11-06): the report's live page, without the app shell, rendered
+ * /report/:publicId: the report's live page, without the app shell, rendered
  * from the saved report with the teacher's files and the PDF. Read with the browser's session:
  * the report's readers see it; anyone else verifies by a WhatsApp code (PublicReport).
  */

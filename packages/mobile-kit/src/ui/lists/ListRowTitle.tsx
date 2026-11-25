@@ -19,7 +19,7 @@ interface ListRowTitleProps {
 
 /**
  * ListRow's first line: the name (one line, «…» when long) and the LTR meta beside it. With
- * `link` the name is the row's header (owner 2026-10-30): bigger and bolder than the lines below,
+ * `link` the name is the row's header: bigger and bolder than the lines below,
  * its own tap target even inside a pressable row.
  */
 export function ListRowTitle({ title, meta, metaStrong, link }: ListRowTitleProps) {

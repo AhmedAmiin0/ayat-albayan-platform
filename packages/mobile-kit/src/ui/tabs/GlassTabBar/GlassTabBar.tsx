@@ -17,7 +17,7 @@ interface GlassTabBarProps extends BottomTabBarProps {
 }
 
 /**
- * The bottom tabs as a floating glass capsule «like iOS» (owner 2026-10-26, docs/29 §7): 20pt from
+ * The bottom tabs as a floating glass capsule «like iOS» (docs/29 §7): 20pt from
  * both sides and 24pt above the bottom safe area, a translucent fill with a white sheen and a 0.5pt
  * edge (no backdrop blur: no blur library in this APK), a grey capsule that springs to the active
  * tab, and a fade of the screen colour behind it so rows scrolling under it melt away. Only the

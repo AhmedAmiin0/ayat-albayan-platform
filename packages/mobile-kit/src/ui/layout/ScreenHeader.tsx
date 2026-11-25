@@ -6,8 +6,8 @@ import { Mark } from '../primitives/Mark';
 import { AppText, type AppTextNode } from '../primitives/AppText';
 
 /**
- * The title's size (owner 2026-10-27: «Header is oversized in all sections»; 2026-10-28: «still a big
- * header»): every screen and sheet at h4 (20pt), one header pattern, so the content starts higher.
+ * The title's size: every screen and sheet at h4 (20pt), one header pattern, so the content
+ * starts higher.
  */
 const TITLE = type.size.h4;
 
@@ -54,7 +54,7 @@ export function ScreenHeader({
         <AppText
           ref={titleRef}
           accessibilityRole="header"
-          // One line always (owner 2026-10-27: «Conversations» wrapped in English): it shrinks to fit.
+          // One line always, even where a title wraps in English: it shrinks to fit.
           numberOfLines={1}
           adjustsFontSizeToFit
           minimumFontScale={0.7}
