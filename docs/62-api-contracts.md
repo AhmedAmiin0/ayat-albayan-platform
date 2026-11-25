@@ -1,14 +1,15 @@
 # 62 · Shared API contracts, one pagination path, a DRY data layer
 
-Plan for: «move the request and response zod schemas to packages so they are used in both the frontend and the backend», «a reusable pagination logic», «the back end dry and really reliable», «dont type enum objects», «write a function to reuse the zod schema» (owner, 2026-11-25). Paths and line numbers were read on develop `4eef53603`, before the Nest module split; every PR looks them up again on current develop.
+Plan for: «move the request and response zod schemas to packages so they are used in both the frontend and the backend», «a reusable pagination logic», «the back end dry and really reliable», «dont type enum objects», «write a function to reuse the zod schema», «you can use zod to infer ts» (owner, 2026-11-25). Paths and line numbers were read on develop `4eef53603`, before the Nest module split; every PR looks them up again on current develop.
 
 ## Decisions (owner, 2026-11-25)
 
-- **PRs.** Five PRs to develop, in this order: A, B, E, C1, C2 (§5 of part 1). Part 2's two PRs fold in: the enum tables, `ab/no-typed-value-table` and `guard:mappers` go into **B**; the portal-history pilot (`portal-outcome.ts`, `asResponse`, `toHistoryRow`) goes into **C1**.
-- **E's wire changes:** approved as one set, exactly the rows marked E in part 1 §6 «Intended wire changes». Any other wire change needs a new go.
+- **PRs.** Six PRs to develop, in this order: A, D (below), B, E, C1, C2 (§5 of part 1). Part 2's two PRs fold in: the enum tables, `ab/no-typed-value-table` and `guard:mappers` go into **B**; the portal-history pilot (`portal-outcome.ts`, `asResponse`, `toHistoryRow`) goes into **C1**.
+- **Wire changes:** approved as one set, exactly the rows marked E, C1 or C2 in part 1 §6 «Intended wire changes» (C1/C2: a bad id answers the standard `validation_failed` body, still 400; undeclared columns are dropped after checking the newest release tag). Any other wire change needs a new go.
 - **Class C:** two PRs, C1 and C2.
 - **Response mismatches: strict.** `asResponse` answers 500 `response_invalid` (paths logged, never values) for a row that does not fit its schema. Client-core parses responses with the shared schemas and throws `bad_response` on a mismatch (docs/36 z14). The `@Returns` interceptor still runs only in tests and e2e.
-- **Read-only data counts** (part 2 §6 Q1): yes on a staging database, with a read-only key the owner adds. Any count on the database with real users' data needs the owner's go each time.
+- **Read-only data counts** (part 2 §6 Q1): yes, on production. One extra PR, **D** `ci/data-counts` (`ci(repo): add a read-only data counts job`), comes right after A: a `workflow_dispatch` workflow whose job runs in a GitHub environment `prod-readonly` (deployment branches: develop only) holding the owner's read-only key as an environment secret. It runs only `select count(*)` statements inside a read-only transaction and prints integers only, never row values, because Actions logs are public. The owner merges D himself. C1 and C2 dispatch it per domain before converting that domain's mappers; a non-zero count blocks the conversion until the schema or the data is fixed.
+- **Prerequisites 3 and 4 of part 1 §5 are not gates.** When C1 or C2 makes `guard:units` fail in a folder, that unit is folded in its own moves-only commit inside the same PR.
 - **Reviews.** The hourly conductor reviews each PR once, when every check on its head is green, and adds `reviewed` + `auto-merge`. E is labelled only if its diff changes nothing outside the approved table.
 - **Prerequisites.** `nest/all-modules` and #937 (oxlint only) merged. The api comment sweep and the remaining api unit folds are not prerequisites; they pause while B, E, C1 or C2 is open.
 
@@ -98,7 +99,7 @@ export type ReturnsDecorator<T> = <F extends (...a: never[]) => T | Promise<T>>(
   - It computes `wire = JSON.parse(JSON.stringify(body))` and `parsed = schema.parse(wire)`.
   - It fails with 500 `response_contract` unless `isDeepStrictEqual(parsed, wire)` (`node:util`).
   - Response schemas have no transforms, so the two values differ only when a key was stripped.
-  - That catches missing fields, wrongly typed fields, and undeclared columns that a `select('*')` leaks. Client-side schemas do not need to be strict for this.
+  - That catches missing fields, wrongly typed fields, and undeclared columns from a `select('*')`. Client-side schemas do not need to be strict for this.
   - The check never replaces the body. Production parses nothing.
 - **Handlers without `@Returns` are skipped.** These need none:
   - `@HttpCode(204)` (54 handlers);
@@ -604,89 +605,213 @@ I read everything from origin/develop at 4eef53603 and ran nothing. The type cla
 
 ### 1. Enum value maps
 
+Paths below are from origin/develop `83066331f`. Counts are from `4eef53603`, as in §7, and get rerun on the merge head. The zod claims come from reading zod 4.6.5: `v4/classic/schemas.d.ts`, `v4/core/schemas.d.ts`, `v4/core/util.d.ts`, `src/v4/core/schemas.ts`, `src/v4/core/parse.ts` and `v4/core/schemas.js`, plus its `record.test.ts` and `readonly.test.ts`. I compiled nothing. The first red tests in B prove the claims.
+
 #### Rule
 
-In `apps/api/src` (tests aside), a `const` object literal whose values are all literals (string, number, boolean, null) carries no type. That means no `Record<…>`, `Partial<Record<…>>` or `Readonly<Record<…>>` annotation and no `satisfies Record<…>`. The one exception is a table whose key and value types are both plain `string` or `number`, such as mime types, HTML entities or extensions. Those tables are not enum objects.
+**Enums are schemas.** Each enum gets a named `z.enum` built from its `as const` tuple. Its type comes from `z.infer` and takes the schema's name without `Schema`, so `portalOutcomeSchema` gives `PortalOutcome`. That matches how `laneSchema` and `translationLocaleSchema` are named today.
+- The tuple stays the source. `.options` is a mutable `Array` (classic `schemas.d.ts:605`), and `listSortShape` takes a `readonly [K, ...K[]]`.
+- The schema and its type go in the tuple's current file. Moving tuples into `x.schemas.ts` files (rule 15) is the rule 15 lane's job.
+- The three hand-written unions that become tuples (`AttendanceKind`, `WaSendKind`, `StatementLineKind`) also stay in their current files. All of them can then move together later, and B adds no files for them.
+- In files B already touches, inline `z.enum(TUPLE)` copies switch to the named schema. The other 45 copies, in 27 files, stay as they are. Both forms parse and infer the same.
+- The hand guards keep their names and signatures, and each body becomes the schema's own predicate, `xSchema.validate(v)`. This applies to `isUserRole` (catalog `roles.ts:5`), `isWaLine` (`enums/messaging.ts:85`) and `isPermission` (`catalog.ts:18`).
+  - `validate(data: unknown): data is core.input<this>` (classic `schemas.d.ts:31`) stops at the first issue and builds no `ZodError`.
+  - Callers do not change. `.safeParse(v).data` could not replace the guards everywhere, because `onMessagingLine` and `number-route.ts:43` (`.filter((n): n is … => isWaLine(n.purpose))`) need a predicate.
+  - `isGrantable` stays as it is. Its schema is in `roles.schemas.ts`, which imports `catalog.ts`, so pointing `catalog.ts` at it would create a module cycle.
 
-A table between two package enums moves into a package. It goes to the package that already holds its twin or inverse, otherwise to the owner of the target enum. Tables with an api-local or a provider side stay in the api, untyped.
+**A table keyed by an enum is a frozen zod record, decoded once on import.**
 
-These stay as they are:
-- Handler and strategy maps, whose values are functions, builders or schemas (rule 11). There are 40 today, including `BUILD`, `AUTO`, `ON_DECISION`, `MISS_TEXT`, `SAME` and `REPORT_OF`.
-- Config and rule objects (`BUCKET_RULES`, `BUDGET`, `ROLE_KEYS`, `APPLICANT_TRANSITIONS`, ...).
-- Error-code maps whose values are constants (`CREDENTIAL_CODE`, `UNSUPPORTED_CODE`, `REFUSED`, `NO_LIST`).
-- Labels read from the bundle (`CITIES = ar.tz`, `TEMPLATE_NAMES`, `MEDIA_LABELS`). They are not object literals, and this addendum does not touch them.
+```ts
+const CANCEL_EVENT = z
+  .record(cancelBySchema, lessonEventSchema)
+  .readonly()
+  .decode({ teacher: 'cancel_by_teacher', admin: 'cancel_by_admin', student: 'excuse' });
+// Readonly<Record<CancelBy, LessonEvent>>, inferred
+```
 
-#### Where the maps live, by kind
+- It is `.decode`, not `.parse`.
+  - `decode(data: core.input<this>)` (classic `schemas.d.ts:34`) types its argument as the record's input (core `schemas.d.ts:834-836`), here `Readonly<Record<CancelBy, LessonEvent>>`.
+  - A literal written in the call therefore fails to compile on a missing key (TS2741, or TS2739 for several), a wrong value (TS2322) or an extra key (TS2353).
+  - `.parse` takes `unknown` and leaves all three checks to runtime.
+- `.readonly()` keeps every key required. `MakeReadonly` (`util.d.ts:69`) only wraps the type in `Readonly<…>`. It also freezes the table (`src/v4/core/schemas.ts:4624`). Without it, the output is a mutable `Record`, and tables typed `Readonly<Record<…>>` today (`TICK`, `STAFF_ROLE`, `PER_IP`, `KIND_OF`, …) would lose that.
+- At runtime, `decode` is a normal forward parse (`core/parse.ts:216-224`). The record visits every member of the key enum (`core/schemas.ts:3256-3300`).
+  - A missing member fails at its path.
+  - A value outside the target schema fails.
+  - A key outside the key enum fails as `unrecognized_keys` (`:3302-3323`).
+  - The `ZodError` is thrown on import, so the api would stop at boot. CI catches it before that, because each table's test imports its file.
+- A member with no mapping is `null`, written with `toSchema.nullable()`.
+  - `.nullable()` leaves the input required. Its `optin` is the inner enum's, which includes `undefined` (core `schemas.d.ts:980-983`), so the record does not become `Partial`.
+  - The value schema never takes `.optional()`, `.default()` or `.prefault()`. Those make the record's input `Partial` (zod `record.test.ts:80-90`), and a forgotten member then compiles.
+  - It never takes `.catch()` either. The input stays required, but a bad value would load as the fallback instead of failing.
+  - `z.partialRecord` is not used. Each partial map gets explicit `null` rows, so every new member has to be placed.
+- Two partial tables have readers that need checking:
+  - `nextStatus` tests `from === undefined` on the webhook `RANK` (`webhook/status/webhook.status.ts:16`). That test becomes `=== null`. `RANK[incoming] ?? -1` already handles `null`.
+  - `recordRefusal` only checks whether `RECORD_WRITE[role]` is truthy (`users.rules.ts:51`), so it needs no change.
+- A lookup with an enum member has no `| undefined` under `noUncheckedIndexedAccess` (`tsconfig.base.json:8`), because a record over finite keys has no index signature. A record keyed by `z.string()` keeps its index signature, so its lookups stay `T | undefined`.
+- The cost is one parse per table at load and nothing per lookup. Schemas derived from another one (`.exclude`, `.extract`, `.catch`) are module constants too. They are never built inside a function, because each call would construct a new schema.
+- A table runs when its file is evaluated, so it must not be in an import cycle with the files of its two schemas.
+  - In ESM, the schema would still be in its TDZ. In the CommonJS api (`apps/api/tsconfig.json`), it would be `undefined`. Either way, the file fails at load.
+  - `pnpm guard:cycles` already fails a new folder cycle inside a package, and the Metro bundle job fails on require cycles (ci.yml).
+
+**A table stays beside its readers.** It moves into a package only when a second app or package reads it, which is the rule 23 test for logic. Its schemas come from the packages that own the enums, so no package edge is added.
+- Six tables between two package enums are read only by the api, so they stay there as `z.record`s: `OUTCOME`, `ATTENDANCE`, `CORRECT_EVENT`, `CANCEL_EVENT`, `RECORD_WRITE` and `AS_READY`.
+  - No client decodes a table it never reads. Metro does not tree-shake (part 1 «Mobile bundle»).
+  - B changes no importers and adds no package exports for these tables.
+- `LIST` has a second reader: client-core's `HISTORY_LIST_OF` (`people/portal/history.ts:12`) is the same table, typed by hand.
+  - B converts `LIST` in place.
+  - C1 moves it to `@ab/shared` as `PORTAL_LIST_OF` and deletes the copy, as the owner's PR split already says.
+- A decoded table never goes into an `x.schemas.ts` file. Rule 15 lets a file mix runtime code and types only for a schema and its `z.infer` type, and a table is data. A table lives in a runtime file that exports no types, or stays where it is.
+- The three hand-typed tables already in packages also become records in B: `LESSON_EVENT_TARGET` and `CANCEL_STATUS` (`schedule/…/state-machine.ts`) and `ATTENDANCE_EVENT` (`shared/reports/rules.ts`).
+  - B adds schemas to `state-machine.ts` anyway, and the inverse tests read all three.
+  - These are the only package tables that decode when an app starts. A bad one would break web and mobile on load. Its package test, which imports its file, stops that.
+
+**Strings from outside go through the schema.** This covers a DB or provider value that narrows to an enum, or to part of one.
+- `.safeParse(v).data` narrows the value, with `.extract` or `.exclude` for the part.
+- `.catch(x).parse(v)` does the narrowing when there is a fallback.
+- `.validate(v)` is used where a predicate is needed.
+
+No identity tables remain.
+
+**These stay as they are.** Their values are functions, schemas, objects, constants or labels, not enum members.
+- Handler and strategy maps (rule 11). There are 40 today, including `BUILD`, `AUTO`, `ON_DECISION`, `MISS_TEXT`, `SAME` and `REPORT_OF`.
+- Config and rule objects (`BUCKET_RULES`, `BUDGET`, `ROLE_KEYS`, `APPLICANT_TRANSITIONS`, `LESSON_TRANSITIONS`, `KIND_STATUSES`).
+- Error-code maps whose values are constants (`CREDENTIAL_CODE`, `UNSUPPORTED_CODE`, `REFUSED`, `NO_LIST`, `DRIVER_CODE`).
+- Labels from the bundle (`CITIES = ar.tz`, `TEMPLATE_NAMES`, `MEDIA_LABELS`).
+- Label, style, icon and route tables (`ATTENDANCE_STYLE`, `BUTTON_ICON`, `SHELL_OF`, the push routes, the `HistoryPanel` `EMPTY` tables, catalog `HOME_BY_ROLE`).
+
+**Tables of DB names keep `as const satisfies Record<K, V>`.**
+- These are `LINK_TABLE` (`sign-in/accounts/subjects.repo.ts:22` and `users/store/users.links.repo.ts:14`), `TEXT_COLUMN` (`reporting/reports/report.mapper.ts:79`) and shared `RUBRIC_COLUMN` (`reports/rules.ts:18`).
+- Their values are generated table and column names, and no schema exists for them.
+- `z.record(k, z.string())` would widen those values to `string`, and `db.from()` and `TablesUpdate` reject a plain `string`.
+
+#### The maps, by kind
 
 | Kind (count) | Form | Maps |
 |---|---|---|
-| package enum → package enum (7) | Untyped `as const` table in the package, plus an accessor with declared parameter and return types where the lookup composes another function | `OUTCOME`, `LIST` → `@ab/shared`; `ATTENDANCE` beside `ATTENDANCE_EVENT` in `packages/shared/src/reports/rules.ts`; `CORRECT_EVENT`, `CANCEL_EVENT` → `@ab/schedule`; `RECORD_WRITE` → `packages/catalog/src/permissions/roles/roles.ts`; `AS_READY` → `packages/shared/src/schemas/readiness.ts` |
-| identity or narrowing (6) | No table. `ROW_OF` is deleted and `kind` is passed straight through, because `AnyPushKind` is assignable to `NotificationKey`. Each of the others becomes a tuple of the members it lets through, read with `.find((x) => x === v)`. That is the existing `roleOf` pattern (`teaching/student-channels/views/message-view.ts:12`). | `ROW_OF` (`common/push/dispatch/push.rules.ts`), `KIND_OF` (`student-recordings/lesson-files/lesson-files.mapper.ts`), `CHAT_ROLES`, `SHOWN` (`people/portal/lessons/portal-lesson-family.ts`; the one in `wa-submit.ts` is a handler map), `REQUESTERS`, `LINK_KIND` |
-| api-local enums (4) | Drop the annotation and keep the table beside its enum | `COUNTER`, `OTHER` (`relane.repo.ts`; the rule has no repo exemption), `NAMED`, `NEXT` |
-| provider or DB string → our enum (8) | Drop the annotation and keep the table in its adapter (rule 18). Look values up with `own(table, key)`, moved from `webhook/parse/webhook.evolution.ts:54` to `apps/api/src/common/infra/own-value.ts`. Prototype keys never match, and today's fallbacks stay written out: `?? 'pending'` in `ourStatus`, `?? guestRole(row)` in `room-state.mapper.ts`. | `META_STATUS`, `HEADERS`, `BUTTONS`, `TICK`, `STAFF_ROLE`, `RECORDED`, `PROVIDER_KEYS`, `SEEDED_KEYS` |
-| our enum → provider value (2) | Drop the annotation and keep the table in its adapter | `INTEGRATION`, `MEDIA_TYPE` |
+| package enum → package enum (7) | `z.record` over the package schemas, left in the file that reads it | `OUTCOME` and `LIST` (`portal-history.mapper.ts`). `LIST` moves in C1, as described above.<br>`ATTENDANCE` (`teaching/lessons/status/outcomes.ts`), `CORRECT_EVENT` (`auto-held/correction-change.ts`), `CANCEL_EVENT` (`status/transition.ts`).<br>`RECORD_WRITE` (`users.rules.ts`). It covers every role, with `admin`, `assistant` and `sales` set to `null`.<br>`AS_READY` (`health/readiness.rollup.ts`). |
+| identity or narrowing (6, plus `HEADERS`) | No table. Each derived schema is a module constant. | `ROW_OF` (`common/push/dispatch/push.rules.ts`) is deleted, and `kind` passes through, because `AnyPushKind` is assignable to `NotificationKey`.<br>`KIND_OF` becomes `fileKindSchema.parse(row.kind)`, where `fileKindSchema = lessonFileKindSchema.catch('material')`.<br>`CHAT_ROLES` becomes `chatRoleSchema.safeParse(p.role).data`, where `chatRoleSchema = channelSenderRoleSchema.exclude(['sales'])`.<br>`SHOWN` (`portal-lesson-family.ts:16`) becomes `portalRequestStatusSchema.safeParse(last.status).data`. That schema is a name for the inline `z.enum(['pending', 'rejected'])` in `family/portal-actions.ts:17`.<br>`REQUESTERS` becomes `requesterSchema.parse(value)`, where `requesterSchema = proposalRequesterSchema.catch('teacher')`.<br>`LINK_KIND` becomes `linkKindSchema.safeParse(input.role).data`.<br>`HEADERS` (`template-display.ts:8`) becomes `templateHeaderKindSchema.safeParse((part?.format ?? 'TEXT').toLowerCase()).data`, because its five keys are the tuple in upper case.<br>Each fallback stays the one written today. |
+| api-local enums (4) | `z.record`, left where it is. Its unions become api-local `z.enum`s in the module's `x.schemas.ts`. | `COUNTER`, `OTHER` (`laneSchema` on both sides), `NAMED` (`skipWhySchema.nullable()`), `NEXT` |
+| provider string → our enum (7) | `z.record(z.string(), ourSchema)` in its adapter (rule 18), read with `own(table, key)` | `META_STATUS`, `BUTTONS` (keeps its `OTP` alias), `TICK`, `STAFF_ROLE`, `RECORDED`, `PROVIDER_KEYS`.<br>`SEEDED_KEYS` maps a string to a string and stays as it is.<br>LiveKit's `KIND` (`livekit-webhook.room.ts:14`) is untyped today. It becomes `z.record(liveKitEventSchema, participantKindSchema)`, because its keys are already an inline `z.enum` in `participantEventSchema`. |
+| our enum → provider value (2) | `z.record(ourSchema, z.string())` in its adapter | `INTEGRATION` (`evolutionModeSchema`) and `MEDIA_TYPE` (`waSendKindSchema.exclude(['audio'])`).<br>Both cover every member, so a new mode or send kind without a provider value fails to compile.<br>Their values are already typed `string`, so no type gets wider. |
 
-For the two lesson-event tables, one reverse of `LESSON_EVENT_TARGET` goes beside it in `packages/schedule/src/lessons/state-machine/state-machine.ts`. The table has 8 entries, and `scheduled` has no event.
+Provider tables move to zod as well. Their keys are spellings chosen by the provider and cannot be listed in full, so the key stays `z.string()` and the table does not have to cover every case. What zod adds is on the value side: the type is inferred, and a wrong value fails at compile time and on import. Rule A then needs no exception for provider tables.
+- `own()` stays. Zod builds the record on a plain `{}` (`core/schemas.js:1710`), so `TICK['constructor']` would still reach `Object.prototype`.
+- `own()` moves from `webhook/parse/webhook.evolution.ts:54` to `apps/api/src/common/infra/own-value.ts`.
+- The current fallbacks stay written out: `?? 'pending'` in `ourStatus` (`template-sync.ts`) and `?? guestRole(row)` in `room-state.mapper.ts`.
+- `SEND_KINDS` in shared `chat-files.ts:33`, which B touches for `WA_SEND_KINDS`, has the same hole on a stored mime: `waSendKind('__proto__')` returns `Object.prototype`. It becomes a `z.record(z.string(), …)` read with `Object.hasOwn`.
 
-```ts
-/** The event that leads to each status: LESSON_EVENT_TARGET read backwards. */
-export const STATUS_EVENT = {
-  confirmed: 'confirm', completed: 'complete', late: 'mark_late', excused: 'excuse',
-  no_show: 'mark_no_show', cancelled_by_teacher: 'cancel_by_teacher',
-  cancelled_by_admin: 'cancel_by_admin', rescheduled: 'reschedule',
-} as const;
-// api: STATUS_EVENT[to] replaces CORRECT_EVENT[to];
-//      STATUS_EVENT[CANCEL_STATUS[by]] replaces CANCEL_EVENT[by]
-//      (CANCEL_STATUS drops its Record<CancelBy, LessonStatus> type for this)
-```
+Some values are the key names of an object (`COUNTER` holds keys of `DrainSummary`, `BY_STATUS` holds keys of `CRM_WEBHOOK_ERRORS`). For these, the value schema is a `z.enum` of the keys the table uses. The code that indexes the object with such a value fails to compile if the object lacks that key.
 
-`BUILD` (functions) and `AUTO` (`{ event, reason }`) do not change. One test checks that `Object.fromEntries(LESSON_EVENTS.map((e) => [LESSON_EVENT_TARGET[e], e]))` equals `STATUS_EVENT`. Today nothing proves that `CORRECT_EVENT` agrees with the state machine.
+Not used:
+- `.transform(fn)`. `fn` still needs a table or a switch. Its output is not checked unless `.pipe(to)` follows, and `.pipe(to)` fails to compile for partial maps.
+- `z.codec`. It needs both `decode` and `encode`, and a many-to-one or `null` map has no correct inverse. None of the 27 maps crosses the wire one-to-one (§3).
+- `z.enum({ k: v })`. Its values cannot be `null`, and its keys are not checked against the source enum.
 
-#### How the types are inferred
+#### Enum schemas to add
 
-There is no zod wrapper here. An internal enum value is already typed, so a `.parse` would only recheck what the compiler proved, and it would cost one parse per row. Here is what catches each mistake:
-- **Missing key.** Indexing the untyped table with the full source union fails to compile if a member has no entry (TS7053 under `strict`). A member that maps to nothing gets an explicit `null`. Today's `Partial<Record<AttendanceKind, PortalOutcome>>` accepts a forgotten member silently.
-- **Wrong value.** The table's value type is its literal union, so the accessor's declared return type, or the consumer's own type, rejects a typo.
-- **String keys.** `own()` takes `Readonly<Record<string, T>>`, so an untyped table fits and `T` is inferred from it.
+Each schema goes beside its tuple, in the tuple's file. Zod is already a dependency of catalog, schedule, money, shared, core and client-core, so no package edge is added.
 
-I dropped `.transform().pipe(to)`. Its `pipe<T extends $ZodType<any, output<this>>>` requires the target's input to fit the map's output. Partial maps such as `STAFF_ROLE` (2 of 5 roles) and `META_STATUS` (5 of 7 statuses) would therefore fail to compile, and a stray extra value would still pass.
+**Promote a tuple** (`export const xSchema = z.enum(X)`):
+- `@ab/catalog`: `ATTENDANCES`, `LESSON_STATUSES`, `USER_ROLES`, `PERMISSIONS`, `MESSAGE_STATUSES`, `TEMPLATE_STATUSES`, `WA_LINES` and `EVOLUTION_MODES` (`integrations/keys/keys.ts:98`).
+  - `LESSON_STATUSES` is the value schema of `LESSON_EVENT_TARGET` and `CANCEL_STATUS`.
+  - `PERMISSIONS` is typed `readonly Permission[]` (`catalog.ts:13`). `_enum<const T extends readonly string[]>` (classic `schemas.d.ts:610`) takes it as it is and gives `ZodEnum<ToEnum<Permission>>`, so `z.infer` is `Permission` without a cast. A type test pins it.
+  - `Permission` keeps its type derived from the rows, because `PERMISSIONS` is typed by it.
+- `@ab/schedule`: `LESSON_EVENTS`, `STATUS_ROUTE_EVENTS`, `CANCEL_BY`, `CORRECT_TO`, `PROPOSAL_REQUESTERS`, `ROOM_PRESENCE_ROLES`. `state-machine/index.ts` also exports the new schemas.
+- `@ab/shared`: `PORTAL_OUTCOMES`, `PORTAL_HISTORY_STATUSES`, `CHECK_STATES`, `READY_STATES`, `LESSON_FILE_KINDS`, `CHANNEL_SENDER_ROLES`, `TEMPLATE_HEADER_KINDS`, `TEMPLATE_BUTTON_KINDS`, `SHORT_LINK_OUTCOMES`, and `LINK_KINDS` (the literal copy at `users.schemas.ts:67` switches to `linkKindSchema.validate`).
+
+**New tuple and schema** (each beside the type it replaces):
+- `@ab/shared`:
+  - `ATTENDANCE_KINDS` goes in `sales/student/student-details.ts:27`. Client-core's copy `KINDS` (`teaching/lessons/attendance-table-schema.ts:7`) switches to `attendanceKindSchema`.
+  - `WA_SEND_KINDS` goes in `chat-files.ts:45`.
+  - `portalRequestStatusSchema` goes in `family/portal-actions.ts`.
+- `@ab/money`: `STATEMENT_LINE_KINDS` goes in `assistant/statement.ts:31`. It is the key of the statements `RANK`.
+- apps/api only: `SettleState`, `SkipReason`, `Placed`, `RowOutcome`, `DELIVERY_STATUSES`, LiveKit's event names and `ParticipantEvent['kind']`. Also the api-local keys and values of the number and error tables under rule A (`PopplerTool`, `LinkRoute`, and the `'4xx' | '5xx'` band).
+
+`ALL_PUSH_KINDS` and `NotificationKey` need no schema, because `ROW_OF` is deleted. `@ab/core/schemas` gets nothing, since it holds no enums.
+
+#### Helper
+
+None. A wrapper such as `valueTable(schema, table)` would only pass `table` on to `schema.decode`. `decode`'s `core.input<this>` already gives the checks such a helper was meant to add. The type comes from the schema alone, and the literal in the call gets the excess-property check.
+
+The zod tests go with the first table that has `null` rows, `OUTCOME`. They are written red first in `portal-history.mapper.test.ts`.
+- The file exports only the decoded table, so the test builds the same schema to inspect it: `z.record(attendanceKindSchema, portalOutcomeSchema.nullable()).readonly()`.
+- They use `expectTypeOf`, like `apps/api/src/common/db/catalog-enum-parity.test.ts`, so no `@ts-expect-error` is needed.
+- The api `typecheck` runs `tsgo --noEmit` on `tsconfig.json`, whose `include` is `src`, so it covers test files.
+
+The tests:
+1. `expectTypeOf<z.input<typeof schema>>()` equals `Readonly<Record<AttendanceKind, PortalOutcome | null>>`.
+   - Every key is required, so a literal with a missing key, a wrong value or an extra key fails to compile.
+   - This is the test that catches `.default()` or `.prefault()`, because their output type stays non-`Partial`.
+2. `schema.parse(…)` throws for a missing `unmarked`, for `present: 'here'` and for an extra `late: null`. `.parse` runs the same forward check as `.decode` and takes `unknown`, so the bad tables need no cast.
+3. Every `AttendanceKind` goes through `outcomeOf`, and every `PortalOutcome` through `LIST`.
+   - `excused` lands in the `absent` list.
+   - `cancelled`, `unmarked` and a `rescheduled` lesson give `null`.
+
+That no mapping is `null`, never `undefined`, needs no test of its own. `outcomeOf` declares `PortalOutcome | null` and returns `OUTCOME[kind]`, which compiles only if the lookup has no `undefined`.
+
+The other tables get tests where they live:
+- api, inverse tests that read the package half from its package:
+  - `ATTENDANCE` and `ATTENDANCE_EVENT` are exact inverses of each other, for every member.
+  - `LESSON_EVENT_TARGET[CORRECT_EVENT[to]] === to` for every `CorrectTo`. Today no test checks that `CORRECT_EVENT` agrees with the state machine.
+  - `LESSON_EVENT_TARGET[CANCEL_EVENT[by]] === CANCEL_STATUS[by]` for every `CancelBy`.
+- api, `RECORD_WRITE`: it gives `teachers.write`, `students.write` and `guardians.write` to their roles and `null` to the other three.
+- api, the replaced identity tables and `own()`. Each replaced table keeps its fallback, and `own()` returns `undefined` for `constructor` and `__proto__`.
+  - An unknown file kind gives `material`.
+  - A missing requester gives `teacher`.
+  - `CHAT_ROLES` drops `sales` and `admin`.
+  - `SHOWN` drops `approved`.
+  - `LINK_KIND` drops `admin`.
+  - `HEADERS` drops an unknown format, and a missing format gives `text`.
+- catalog:
+  - `expectTypeOf<z.infer<typeof permissionSchema>>()` equals `Permission`.
+  - `isPermission`, `isUserRole` and `isWaLine` accept every member and reject an unknown string and `null`.
+- schedule: the existing state-machine tests pass unchanged on the decoded `LESSON_EVENT_TARGET` and `CANCEL_STATUS`.
+- shared: `waSendKind('__proto__')` gives `document`.
 
 #### Portal-history sketch
 
 ```ts
-// packages/shared/src/people/students/portal-outcome.ts
-import type { Attendance, LessonStatus } from '@ab/catalog';
-import { attendanceKind } from '../../sales/student/student-details.js';
-import type { PortalHistoryStatus, PortalOutcome } from './portal-family.js';
-
-const OUTCOME_OF_KIND = {
-  present: 'attended', absent: 'absent', excused: 'excused', cancelled: null, unmarked: null,
-} as const;
-const LIST_OF_OUTCOME = { attended: 'attended', absent: 'absent', excused: 'absent' } as const;
-
-/** Staff's attendance kind as the family sees it; cancelled, unmarked and moved lessons are in no list. */
-export function portalOutcome(status: LessonStatus, attendance: Attendance | null): PortalOutcome | null {
-  const kind = attendanceKind(status, attendance);
-  return kind === null ? null : OUTCOME_OF_KIND[kind];
-}
-
-/** The list an outcome shows in: an excused absence is still «غاب عنها». */
-export function portalListOf(outcome: PortalOutcome): PortalHistoryStatus {
-  return LIST_OF_OUTCOME[outcome];
-}
+// packages/shared/src/people/students/portal-family.ts (B): the tuples get named schemas
+export const portalHistoryStatusSchema = z.enum(PORTAL_HISTORY_STATUSES);
+export type PortalHistoryStatus = z.infer<typeof portalHistoryStatusSchema>;
+export const portalOutcomeSchema = z.enum(PORTAL_OUTCOMES);
+export type PortalOutcome = z.infer<typeof portalOutcomeSchema>;
+// portalHistoryQuerySchema.status and portalHistoryRowSchema.outcome use them
 ```
-
-In `portal-history.mapper.ts`, `OUTCOME` and `LIST` go away:
 
 ```ts
+// apps/api/src/modules/people/portal/history/portal-history.mapper.ts (B)
+const OUTCOME = z
+  .record(attendanceKindSchema, portalOutcomeSchema.nullable())
+  .readonly()
+  .decode({
+    present: 'attended',
+    absent: 'absent',
+    excused: 'excused',
+    cancelled: null,
+    unmarked: null,
+  });
+
+/** An excused absence still counts as absent. */
+const LIST = z
+  .record(portalOutcomeSchema, portalHistoryStatusSchema)
+  .readonly()
+  .decode({ attended: 'attended', absent: 'absent', excused: 'absent' });
+
 export function outcomeOf(row: PortalPastRow): PortalOutcome | null {
-  return portalOutcome(row.status, row.own[0]?.attendance ?? null);
+  const kind = attendanceKind(row.status, row.own[0]?.attendance ?? null);
+  return kind === null ? null : OUTCOME[kind];
 }
-// pickFor:     outcome !== null && portalListOf(outcome) === status
-// monthCounts: counts[portalListOf(outcome)] += 1
+// pickFor and monthCounts keep reading LIST[outcome]
 ```
 
-`HISTORY_LIST_OF` in `packages/client-core/src/people/portal/history.ts:12` is the same table as `LIST`. It is deleted, and `historyRows` filters on `portalListOf(row.outcome) === list`.
+The `?? null` that the `Partial` type forced goes away. The inferred types are `Readonly<Record<AttendanceKind, PortalOutcome | null>>` and `Readonly<Record<PortalOutcome, PortalHistoryStatus>>`.
+
+In C1, `LIST` moves to `packages/shared/src/people/students/portal-outcome.ts`. That is a runtime file with no type exports, and it imports only `./portal-family.js`, so it adds no folder edge.
+- The table becomes `export const PORTAL_LIST_OF = …`, written in the same form as `LIST`.
+- The mapper's `LIST` and client-core's `HISTORY_LIST_OF` are deleted, and `historyRows` filters on `PORTAL_LIST_OF[row.outcome] === list`.
+- `history.ts`'s type-only `@ab/shared` import becomes a runtime import. The apps already load the barrel at start («Mobile bundle»).
+- `OUTCOME` stays in the api, because no client computes an outcome. Keeping it there also keeps `people/` from importing `sales/student/` (`attendanceKind`). `sales/` already imports `people/` in 5 files, so that import would be a folder cycle, and `guard:cycles` fails one.
 
 ### 2. Schema-driven mapping
 
@@ -775,8 +900,8 @@ Both mapper tests stay as they are. The exact `toEqual`, the `not.toContain('can
 
 | Use | When |
 |---|---|
-| Untyped `as const` table (plus an accessor when it composes) | Every enum-to-enum map. All 27 in §7 fall here. |
-| `z.codec` | One wire value that a client and the api both decode and encode with the same schema. None of the 27 maps qualifies, so `z.codec` stays unused. `ATTENDANCE` and `ATTENDANCE_EVENT` go both ways, but both directions run in the api. Two untyped tables and one inverse test are shorter than a codec plus two new named schemas. |
+| `z.record(from, to).readonly().decode({…})` beside its readers | 19 of the 27 enum maps plus the 13 other rule A tables; the other 8 maps are read through an enum schema, deleted (`ROW_OF`) or left alone (`SEEDED_KEYS`). |
+| `z.codec` | One wire value that a client and the api both decode and encode with the same schema. None of the 27 maps qualifies, so `z.codec` stays unused. `ATTENDANCE` and `ATTENDANCE_EVENT` go both ways, but both directions run in the api. Two `z.record`s and one inverse test are shorter than a codec plus two new named schemas. |
 | `asResponse` | Response mappers whose importers are all read routes |
 | Plain function ending in `asResponse` | Views that are mostly derived: `toMyCommission`, `toSalesTeacher`, `toMeetingView`, `toPortalLesson`. The derivation stays and the copies go. |
 | Plain function without the helper | The excluded mappers in §2 |
@@ -787,13 +912,27 @@ Both mapper tests stay as they are. The exact `toEqual`, the `not.toContain('can
 #### Rule A: `ab/no-typed-value-table` (main lint, at zero)
 
 The rule is syntactic, so it runs in ESLint and in the Oxlint `ab` plugin through `boundariesPlugin.rules` (`packages/config/oxlint/ab-plugin.js`). Its scope is `apps/api/src`, tests aside. It reports a `const` that meets all three conditions:
-- the initializer, with `as const` or `satisfies`, is an object literal;
+- the initializer is an object literal, bare or with `as const`;
 - every value is a string, number or boolean literal, or `null`;
-- it is typed with `Record<K, V>` (bare or inside `Partial`/`Readonly`, as an annotation or with `satisfies`), where K or V is something other than `string`, `number` or `boolean`.
+- it carries a hand-written `Record<K, V>` (bare or inside `Partial`/`Readonly`), either as an annotation or with `satisfies` on a literal that is not `as const`, and K or V is something other than `string`, `number` or `boolean`.
 
-At 4eef53603 it reports 42 tables in 38 files: 39 annotations and 3 `satisfies` (`TEXT_COLUMN` in `reports/report.mapper.ts:79`, and `LINK_TABLE` in `subjects.repo.ts:22` and `users.links.repo.ts:14`). It does not touch `EXT`, `ENTITIES`, `MIME_BY_EXT`, `MIME_BY_TYPE`, `OPTIONAL`, `SEEDED_KEYS` or the `Record<string, number>` `STATUS`. PR 2 fixes all 42 and turns the rule on at zero. Client apps are out of scope, because their route and icon tables are the lookups rule 11 asks for.
+The message gives the fix: `z.record(fromSchema, toSchema).readonly().decode({…})`, with `null` for no mapping, the type taken from the schemas, and the table left beside its readers. The rule does not report:
+- `as const satisfies`, which the DB-name tables in §1 keep;
+- tables whose K and V are both primitive (`EXT`, `ENTITIES`, `MIME_BY_EXT`, `MIME_BY_TYPE`, `OPTIONAL`, `SEEDED_KEYS`, the `Record<string, number>` `STATUS`);
+- literals whose values are functions, constants or schemas.
 
-The placement half (package-to-package maps live in a package) cannot be checked syntactically. A new line in CLAUDE.md rule 12 carries it, so routines write new code that way.
+It reports 39 tables in 35 files, all of them annotations.
+- That number comes from the earlier count of 42 tables in 38 files at `4eef53603`, minus `TEXT_COLUMN` and the two `LINK_TABLE`s.
+- On `83066331f` I checked that those three files have no other hit.
+
+B converts all 39 in place and turns the rule on at zero:
+- 26 enum value maps, as in §1 (the 27 minus `SEEDED_KEYS`);
+- 7 number or boolean tables keyed by an enum (`RANK` ×3, `TIMEOUT_MS`, `PER_IP`, `AFTER_END`, `NEEDS_IDENTITY`), as `z.record(keySchema, z.number())` or `z.boolean()`;
+- the 5 error-code and HTTP-status tables (`BY_STATUS`, `ERROR_CODE`, `MISSING`, `HTTP`, `BANDS`) and `LANE_ROWS`, with `z.string()`, `z.number()` or an enum schema on each side.
+
+Client apps stay out of scope, because their route and icon tables are the lookup maps rule 11 asks for. A syntactic rule cannot see an untyped table between two enums, such as LiveKit's `KIND`. One line added to CLAUDE.md rule 12 covers that case and where tables live:
+
+> Enums are named `z.enum`s beside their tuple, with types from `z.infer`. A value table keyed by an enum is `z.record(from, to).readonly().decode({…})`, with `null` for no mapping, kept beside its readers and moved into a package only when a second app or package reads it. It is never a hand-typed `Record`. Only tables of DB table or column names keep `as const satisfies Record<K, V>`.
 
 #### Guard B: `ab/response-via-schema` (`pnpm guard:mappers`, diff-scoped, permanent)
 
@@ -825,9 +964,11 @@ Mapper conversions open no PRs of their own. Each one rides in the parallel plan
 - One null-edge test per converted mapper sets every column the generated type allows to be null to `null`. The hand-written `overrideTypes` interfaces are not the source.
 - `apps/api/src/route-map/routes.snap.txt` stays unchanged. That proves routes, guards and status codes, not bodies.
 - The six e2e journeys pass in CI.
-- Map tests send every member through each moved table and check the two inverses (the `ATTENDANCE` pair and `STATUS_EVENT`).
+- Map tests send every member through each moved table and check the two inverses (the `ATTENDANCE` pair, and `CORRECT_EVENT` and `CANCEL_EVENT` against `LESSON_EVENT_TARGET` and `CANCEL_STATUS`).
 
 ### 5. Risks
+
+- **A table that fails to decode stops the api at boot.** A bad package table (`LESSON_EVENT_TARGET`, `CANCEL_STATUS`, `ATTENDANCE_EVENT`, `SEND_KINDS`, `PORTAL_LIST_OF`) also breaks web and mobile on load. CI catches it first, because each table's test imports its file.
 
 - **New 500s from data that never matched.** The read-only scope limits where they can occur. The null-edge fixture comes from the generated types. If question 1 gets a yes, staging counts come before each merge. `.catch` is used only where a business fallback exists.
 - **Nullable drift.** An `overrideTypes` interface can call a column non-null when the database or a left join allows null. The generated-type fixture and the counts catch that. Interfaces built by hand cannot.
@@ -852,11 +993,11 @@ All counts are from 4eef53603, non-test files.
 |---|---|---|
 | Handler and strategy maps | 40 | no |
 | Config and rule objects | 11 | no |
-| Error codes and HTTP status | 11 | 5 lose their type (`BY_STATUS`, `ERROR_CODE`, `MISSING`, `HTTP`, `BANDS`) |
+| Error codes and HTTP status | 11 | 5 become `z.record` (`BY_STATUS`, `ERROR_CODE`, `MISSING`, `HTTP`, `BANDS`) |
 | Labels from `ar.json` | 3 | no |
-| Non-enum string tables | 6 | `LANE_ROWS` loses its type |
-| Number or boolean per enum | 7 | lose their type |
-| Enum value maps | 27 | 7 move to packages, 6 deleted, 4 api-local, 8 provider to ours, 2 ours to provider |
+| Non-enum string tables | 6 | `LANE_ROWS` becomes `z.record(laneSchema, z.string())` |
+| Number or boolean per enum | 7 | become `z.record(keySchema, z.number())` or `z.boolean()` |
+| Enum value maps | 27 | 7 between package enums become `z.record` in place (`LIST` moves to shared in C1); 4 api-local `z.record`; 6 provider-to-ours `z.record(z.string(), ours)` read with `own()`; 2 ours-to-provider `z.record(ours, z.string())`; 6 read through an enum schema; `ROW_OF` deleted; `SEEDED_KEYS` unchanged |
 
 Rule A hits 42 tables in 38 files (39 annotations and 3 `satisfies`). Untyped tables that matter here: livekit `KIND`, `KIND_STATUSES`, client-core `HISTORY_LIST_OF` (deleted) and shared `ATTENDANCE_EVENT` (loses its type).
 

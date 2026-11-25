@@ -199,7 +199,7 @@ apps/staff-web/src/features/people/roles/RoleDialog/
   - In a `STRICT` workspace any offender fails, as with `guard:escapes`. After PR 7, all six workspaces are strict.
   - The native oxlint rules `react/no-multi-comp` and `only-export-components` stay off. The guard is the single check, and it already exempts `*-icons.tsx`.
 
-**Enforcement on hand merges.** `develop` has no branch protection (`gh api …/branches/develop/protection` → 404). The guard blocks lane auto-merge through the `guards` job, and the owner's own merges follow the completed-checks rule. Requiring `check` and `guards` in branch protection would make it binding; that is a one-click owner setting (§6).
+**Enforcement on hand merges.** The guard blocks lane auto-merge through the `guards` job, and hand merges follow the completed-checks rule.
 
 **The guard's own tests** (`node --test`, in the «test others» row), each against a fixture tree:
 - One compliant folder.
@@ -389,7 +389,6 @@ The 8 PRs to develop come to about 1,300–1,500 runner-min. Each domain sub-PR 
 - **Mock strings.** `specifiers.ts` rewrites `vi.mock` and `jest.mock`. The loop fails when a mock specifier no longer resolves, because a stale mock silently stops mocking.
 - **jscpd clones between dialog hooks.** The loop finds and excludes them. A clone pair moves to client-core `queryOptions` or a shared dialog hook, which rule 19 wants anyway.
 - **Folder cap.** Sub-components nest inside their parent. Known overflows are regrouped by hand under `--strict`, with no baseline.
-- **Develop is unprotected.** The guard binds lane auto-merge, and hand merges follow the completed-checks rule. Requiring `check` and `guards` in branch protection would close the gap (an owner setting).
 - **Branch drift.** Regenerate rather than merge, and keep at most 2–3 sub-PRs open at once per bundle (docs/57 §10.1).
 - **Volume of test writing (Q2).** About 910 components that need a hook have no test that renders them. Routines write those tests first, in the domain sub-branches.
 
