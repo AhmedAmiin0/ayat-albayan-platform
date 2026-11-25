@@ -3,8 +3,9 @@ import type { QueryClient } from '@tanstack/react-query';
 import { deltaWasEmpty, forgetDelta } from './delta-news';
 import { threadKey, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 import { threadDeltaKey, threadPollKey } from '@/inbox/thread/hooks/thread-poll';
+import { threadKeys } from '@/core/lib/keys';
 
-const navCountKey = ['threads', 'nav-count'];
+const navCountKey = threadKeys.navCount;
 
 /** The page poll, and the badge: what a delta could not stamp read (an old-dated row) shows. */
 async function rereadPage(client: QueryClient, phone: string): Promise<void> {

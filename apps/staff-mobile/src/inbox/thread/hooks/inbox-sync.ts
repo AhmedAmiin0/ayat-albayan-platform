@@ -8,12 +8,13 @@ import { changeLists } from '@/inbox/thread/live/list-marks';
 import { nudgeInboxStore } from '@/inbox/thread/local/store-session';
 import { type ThreadCache, threadKey } from './thread-cache';
 import { clearUnread, newestInbound, type ThreadListCache, touchList } from './thread-list-cache';
+import { threadKeys } from '@/core/lib/keys';
 
 // One shared key reaches every tree's chats list (useThreadList) after any send or receive.
 
 /** ['threads', 'list']: every cached chats list, whatever its search, unread or list filter. */
-export const threadListKey = ['threads', 'list'];
-const navCountKey = ['threads', 'nav-count'];
+export const threadListKey = threadKeys.lists;
+const navCountKey = threadKeys.navCount;
 
 /** A list under a chat is only marked stale (docs/43 AU2); a list on screen re-reads now. */
 export function refreshLists(client: QueryClient): void {
@@ -46,7 +47,7 @@ export async function refreshChat(client: QueryClient, phone: string): Promise<v
 
 /** Reads started before backgrounding may hang and absorb refreshes, so all are cancelled first. */
 export async function resumeInbox(client: QueryClient): Promise<void> {
-  await client.cancelQueries({ queryKey: ['threads'] });
+  await client.cancelQueries({ queryKey: threadKeys.all });
   nudgeInboxStore();
   await refreshInbox(client);
 }

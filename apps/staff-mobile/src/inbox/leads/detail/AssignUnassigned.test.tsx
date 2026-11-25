@@ -1,7 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { ApiError, t } from '@ab/mobile-kit';
+import { ApiError, pathKey, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { AssignUnassigned } from './AssignUnassigned';
+import { leadKeys } from '@/core/lib/keys';
 
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -31,8 +32,8 @@ test('confirm: POST assign-unassigned, say how many, refetch leads and salespeop
   await fireEvent.press(screen.getByRole('button', { name: t.sales.assign.assignAll }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/leads/assign-unassigned'));
   expect(await screen.findByText(t.sales.assign.assignedN.replace('{n}', '4'))).toBeTruthy();
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['leads'] });
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['sales', 'people'] });
+  expect(invalidate).toHaveBeenCalledWith({ queryKey: leadKeys.all });
+  expect(invalidate).toHaveBeenCalledWith({ queryKey: pathKey('/sales/people') });
 });
 
 test('nothing to assign says so; a failure keeps the question open with the error', async () => {
@@ -68,5 +69,5 @@ test('Cancel does nothing while the request runs; a failed run still refetches t
   await fireEvent.press(screen.getByRole('button', { name: t.common.cancel }));
   expect(screen.getByText(t.mobileLeads.assignAllConfirm)).toBeTruthy();
   fail(new ApiError(504));
-  await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: ['leads'] }));
+  await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: leadKeys.all }));
 });

@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { offPathKeys, pdfPageRetryable } from '@ab/client-core';
 import { ApiError, apiFetch } from '@ab/mobile-kit';
 import { threadPath } from '@/inbox/thread/hooks/thread-cache';
+import { threadKeys } from '@/core/lib/keys';
 
 /** GET /threads/:phone/messages/:id/file (W6, docs/20). */
 export const threadFilePath = (phone: string, messageId: string): string =>
@@ -16,7 +17,10 @@ const MARGIN_MS = 5 * 60_000;
 const SIGNED_MS = 60 * 60_000;
 
 /** How long a signed URL stays fresh: until `expires_at` less the margin. */
-export function signedStaleTime(file: { expires_at: string } | undefined, now: number = Date.now()): number {
+export function signedStaleTime(
+  file: { expires_at: string } | undefined,
+  now: number = Date.now(),
+): number {
   if (!file) return 0;
   const left = Date.parse(file.expires_at) - MARGIN_MS - now;
   return Number.isFinite(left) ? Math.max(0, left) : 0;
@@ -31,7 +35,8 @@ const notFailed = (query: { state: { status: string } }): boolean => query.state
  */
 const SIGNED_QUERY = {
   meta: { noPersist: true },
-  staleTime: (query: { state: { data: { expires_at: string } | undefined } }) => signedStaleTime(query.state.data),
+  staleTime: (query: { state: { data: { expires_at: string } | undefined } }) =>
+    signedStaleTime(query.state.data),
   gcTime: SIGNED_MS,
   refetchOnMount: notFailed,
   refetchOnWindowFocus: notFailed,
@@ -55,7 +60,10 @@ export const threadFileQuery = (phone: string, messageId: string) =>
 /** Fetches a bubble's file only when asked (a tap): rendering the thread never signs a URL. */
 export function useThreadFile(phone: string, messageId: string): () => Promise<ThreadFile> {
   const client = useQueryClient();
-  return useCallback(() => client.fetchQuery(threadFileQuery(phone, messageId)), [client, phone, messageId]);
+  return useCallback(
+    () => client.fetchQuery(threadFileQuery(phone, messageId)),
+    [client, phone, messageId],
+  );
 }
 
 /** Never cached: a fresh signed URL each tap, saved under the file's name. */
@@ -70,7 +78,8 @@ export const pdfPagePath = (phone: string, messageId: string, page: number): str
  * A 4xx: an answer that ends there (the PDF bubble then shows today's opener or a note, never
  * a retry).
  */
-export const finalError = (e: unknown): boolean => e instanceof ApiError && e.status >= 400 && e.status < 500;
+export const finalError = (e: unknown): boolean =>
+  e instanceof ApiError && e.status >= 400 && e.status < 500;
 
 /**
  * One page of a chat PDF with its page count and size; page 1 is the bubble's thumb, so the bubble
@@ -80,7 +89,7 @@ export const finalError = (e: unknown): boolean => e instanceof ApiError && e.st
 export const pdfPageQuery = (phone: string, messageId: string, page: number) =>
   queryOptions({
     ...SIGNED_QUERY,
-    queryKey: ['thread-pdf', phone, messageId, page],
+    queryKey: threadKeys.pdfPage(phone, messageId, page),
     queryFn: () => apiFetch<ThreadPdfPage>(pdfPagePath(phone, messageId, page)),
     // A busy slot or failed render (503) is worth another try; pdf_unavailable (no sandbox) and a
     // 4xx not.

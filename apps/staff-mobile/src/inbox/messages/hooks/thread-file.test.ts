@@ -1,7 +1,14 @@
 import { ApiError } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
-import { pdfPagePath, pdfPageQuery, signedStaleTime, threadFilePath, threadFileQuery } from './thread-file';
+import {
+  pdfPagePath,
+  pdfPageQuery,
+  signedStaleTime,
+  threadFilePath,
+  threadFileQuery,
+} from './thread-file';
 import { PHONE } from '@/inbox/shared/thread-fixtures';
+import { threadKeys } from '@/core/lib/keys';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -27,7 +34,7 @@ test('kept off the disk cache, outside ["threads"], never retried', () => {
 test('a ["threads"] invalidation (a send, an opened chat) leaves the signed file fresh', async () => {
   const client = createTestQueryClient();
   await client.query(threadFileQuery(PHONE, 'm1'));
-  await client.invalidateQueries({ queryKey: ['threads'] });
+  await client.invalidateQueries({ queryKey: threadKeys.all });
   expect(client.getQueryState(threadFileQuery(PHONE, 'm1').queryKey)?.isInvalidated).toBe(false);
 });
 
@@ -58,7 +65,8 @@ test('a thumbnail remount never asks again after a 410: no retry on mount, an ho
 /**
  * A refetch or retry option, as TanStack resolves it (for one query, or a failure count and error).
  */
-const resolve = (option: unknown, ...args: unknown[]): unknown => (typeof option === 'function' ? Reflect.apply(option, undefined, args) : option);
+const resolve = (option: unknown, ...args: unknown[]): unknown =>
+  typeof option === 'function' ? Reflect.apply(option, undefined, args) : option;
 
 test('a failure is not asked again on mount, focus or reconnect; a success follows the defaults', async () => {
   mockApiFetch.mockRejectedValue(new Error('410'));
@@ -88,7 +96,12 @@ test('a PDF page: a 503 is retried 3 times; a 4xx, a 500 or no answer never', ()
   const { retry } = pdfPageQuery(PHONE, 'm1', 1);
   const busy = new ApiError(503, { code: 'pdf_busy' });
   expect([0, 1, 2, 3].map((n) => resolve(retry, n, busy))).toEqual([true, true, true, false]);
-  for (const e of [new ApiError(422, { code: 'pdf_no_preview' }), new ApiError(410), new ApiError(500), new Error('offline')]) {
+  for (const e of [
+    new ApiError(422, { code: 'pdf_no_preview' }),
+    new ApiError(410),
+    new ApiError(500),
+    new Error('offline'),
+  ]) {
     expect(resolve(retry, 0, e)).toBe(false);
   }
 });
