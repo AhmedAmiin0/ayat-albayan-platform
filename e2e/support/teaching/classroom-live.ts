@@ -6,8 +6,8 @@ import { AR_LOCALE } from '../core/locale';
 
 // The live classroom against a real LiveKit (`livekit-server --dev`), see tests/classroom-live.spec.ts.
 
-export const LIVE = Boolean(process.env['LIVEKIT_URL']);
-const SHOTS = process.env['CLASSROOM_SHOTS'] ?? 'test-results/classroom-shots';
+export const LIVE = Boolean(process.env.LIVEKIT_URL);
+const SHOTS = process.env.CLASSROOM_SHOTS ?? 'test-results/classroom-shots';
 export const BOARD = ar.classroom.board;
 const MEDIA: BrowserContextOptions = { locale: AR_LOCALE, permissions: ['camera', 'microphone'] };
 

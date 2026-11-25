@@ -11,8 +11,8 @@ export const TAG = String(Date.now()).slice(-6);
 const PASSWORD = 'Assistant-e2e-123';
 
 export async function tokenOf(email: string, password: string): Promise<string> {
-  const url = process.env['SUPABASE_URL'] ?? '';
-  const client = createClient(url, process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '', { auth: { persistSession: false } });
+  const url = process.env.SUPABASE_URL ?? '';
+  const client = createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY ?? '', { auth: { persistSession: false } });
   const { data, error } = await client.auth.signInWithPassword({ email, password });
   if (error || !data.session) throw error ?? new Error('no session');
   return data.session.access_token;

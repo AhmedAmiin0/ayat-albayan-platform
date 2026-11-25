@@ -95,7 +95,8 @@ describe('subscription in the chat (R-SUB-01)', () => {
     const teacher = thread({ lead_id: null, lead_status: null, teacher_id: 't-1', display_name: 'أبرار' });
     renderThread({ ...detail([]), thread: teacher });
     await screen.findByRole('heading', { name: 'أبرار' });
-    for (const label of Object.values(t.inbox.subscription.badge)) expect(screen.queryByText(label)).toBeNull();
+    for (const label of Object.values(t.inbox.subscription.badge))
+      expect(screen.queryByText(label)).toBeNull();
     expect(screen.queryByRole('button', { name: new RegExp(t.subscriptions.new) })).toBeNull();
     expect(screen.queryByRole('link', { name: t.inbox.subscription.subscribe })).toBeNull();
   });

@@ -16,7 +16,12 @@ import { useRuleRow, type RuleRowState } from '@/features/messaging/notification
 
 const c = t.notificationCatalogue;
 const r = t.notificationRules;
-const DISCARD_WORDS = { title: r.discard.title, body: r.discard.body, discard: r.discard.yes, keep: r.discard.keep };
+const DISCARD_WORDS = {
+  title: r.discard.title,
+  body: r.discard.body,
+  discard: r.discard.yes,
+  keep: r.discard.keep,
+};
 
 export interface RuleSheetProps {
   entry: NotificationEntryView;

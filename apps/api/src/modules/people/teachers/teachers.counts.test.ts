@@ -34,7 +34,9 @@ describe('GET /teachers «مشترك / تجريبي» counts (R-TCH-03, owner 20
 
   it('an empty page reads no students', async () => {
     const f = fakeDb({ teachers: [{ data: [], count: 0 }] });
-    expect((await new TeachersRepo(f.db, fakePhotos().photos).list({ page: 1, pageSize: 25 })).items).toEqual([]);
+    expect(
+      (await new TeachersRepo(f.db, fakePhotos().photos).list({ page: 1, pageSize: 25 })).items,
+    ).toEqual([]);
     expect(f.calls.some((c) => c.table === 'students')).toBe(false);
   });
 });

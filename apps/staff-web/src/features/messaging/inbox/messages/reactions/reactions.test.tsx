@@ -11,9 +11,21 @@ import { emojiLabel } from './ReactionRow';
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
-const base = { phone: PHONE, hasMore: false, loadingOlder: false, onOlder: vi.fn(), waitingKeys: new Set<string>() };
+const base = {
+  phone: PHONE,
+  hasMore: false,
+  loadingOlder: false,
+  onOlder: vi.fn(),
+  waitingKeys: new Set<string>(),
+};
 const now = new Date().toISOString();
-const TEXT = message({ id: 'm1', direction: 'inbound', body: 'السلام عليكم', replyable: true, created_at: now });
+const TEXT = message({
+  id: 'm1',
+  direction: 'inbound',
+  body: 'السلام عليكم',
+  replyable: true,
+  created_at: now,
+});
 const PATH = `/threads/${encodeURIComponent(PHONE)}/messages/m1/reaction`;
 
 function chat(m: typeof TEXT, reactable = true) {
@@ -26,12 +38,14 @@ function chat(m: typeof TEXT, reactable = true) {
 const openMenu = () => fireEvent.click(screen.getByRole('button', { name: t.inbox.reply.menu }));
 
 beforeEach(() => {
-  apiSend.mockReset().mockImplementation(async (_m: string, _p: string, body: { emoji: string | null }) => ({
-    message: { ...TEXT, reactions: { theirs: null, ours: body.emoji, ours_by: 'هبة' } },
-    status: 'sent',
-    error_code: null,
-    error_text: null,
-  }));
+  apiSend
+    .mockReset()
+    .mockImplementation(async (_m: string, _p: string, body: { emoji: string | null }) => ({
+      message: { ...TEXT, reactions: { theirs: null, ours: body.emoji, ours_by: 'هبة' } },
+      status: 'sent',
+      error_code: null,
+      error_text: null,
+    }));
 });
 
 describe('the bubble menu’s emoji row', () => {

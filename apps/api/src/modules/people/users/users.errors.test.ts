@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { guardedError, phoneAware } from './users.errors';
 
-const fail = (code: string, message: string) => ({ code, message }) as unknown as Parameters<typeof phoneAware>[0];
+const fail = (code: string, message: string) =>
+  ({ code, message }) as unknown as Parameters<typeof phoneAware>[0];
 
 describe('users.errors', () => {
   it('turns a unique violation into 409 phone_taken, anything else into a plain error', () => {

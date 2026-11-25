@@ -19,7 +19,13 @@ export interface EssentialOffDialogProps {
 }
 
 /** An essential row turns off only after typing the confirm word (docs/23 owner answer 3). */
-export function EssentialOffDialog({ name, pending, error, onYes, onClose }: EssentialOffDialogProps) {
+export function EssentialOffDialog({
+  name,
+  pending,
+  error,
+  onYes,
+  onClose,
+}: EssentialOffDialogProps) {
   const id = useId();
   const hintId = useId();
   const [typed, setTyped] = useState('');

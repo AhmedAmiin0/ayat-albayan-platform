@@ -31,14 +31,38 @@ export interface SlotPickerProps {
 
 /** Week-by-week picker over GET /booking/slots (R-SCH-06, R-SCH-07): no past weeks, no typing. */
 export function SlotPicker(props: SlotPickerProps) {
-  const { teacherId, durationMin, studentIds, studentTz, value, also, onPick, near, excludeCourse, excludeLessonId, lessonId } = props;
+  const {
+    teacherId,
+    durationMin,
+    studentIds,
+    studentTz,
+    value,
+    also,
+    onPick,
+    near,
+    excludeCourse,
+    excludeLessonId,
+    lessonId,
+  } = props;
   const [now] = useState(() => new Date());
   const tz = useViewerTz();
   const first = currentWeekStart(now, tz);
   const [week, setWeek] = useState(() => openingWeek(value ?? near, { first, tz }));
   const range = bookableWindow(week, now, tz);
   const slots = useQuery({
-    ...slotsQuery({ teacherId, durationMin, studentIds, excludeCourse, excludeLessonId, lessonId, from: range?.from ?? now, to: range?.to ?? now }, useBookingMode()),
+    ...slotsQuery(
+      {
+        teacherId,
+        durationMin,
+        studentIds,
+        excludeCourse,
+        excludeLessonId,
+        lessonId,
+        from: range?.from ?? now,
+        to: range?.to ?? now,
+      },
+      useBookingMode(),
+    ),
     enabled: range !== null,
   });
   return (

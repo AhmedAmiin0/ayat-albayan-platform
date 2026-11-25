@@ -18,7 +18,12 @@ export function useStagedSend(phone: string) {
     mutationKey: ['inbox-send', phone],
     mutationFn: async (s: Staged) => {
       const staged = await stageReply({ id: s.replyId, clientRequestId: s.requestId });
-      return sendFile({ phone, clientRequestId: s.requestId, path: staged.path, filename: staged.filename });
+      return sendFile({
+        phone,
+        clientRequestId: s.requestId,
+        path: staged.path,
+        filename: staged.filename,
+      });
     },
     onMutate: sendStart,
     onSuccess: (view, s, start) => {
@@ -27,7 +32,8 @@ export function useStagedSend(phone: string) {
       showAnswer(queryClient, view);
     },
     onError: async (e, s) => {
-      if (getStaged(phone)?.requestId === s.requestId) setStaged(phone, { ...s, failed: sendErrorCode(e) });
+      if (getStaged(phone)?.requestId === s.requestId)
+        setStaged(phone, { ...s, failed: sendErrorCode(e) });
       if (errorCode(e) === 'session_closed') await rereadSentChat(queryClient, phone);
     },
   });

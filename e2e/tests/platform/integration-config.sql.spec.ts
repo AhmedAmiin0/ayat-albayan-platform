@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Migration 310 (config in the database): integration_config is readable by
 // admins only and written by the service role; the Vault functions run for the service role only.
 // Values here are obviously fake and every test rolls back.
 
-const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', (e: { code?: string }) => e.code);
+const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
 const clearClaims = (tx: Tx) => tx`select set_config('request.jwt.claims', '', true)`;
 
 /** Runs `q` as the service role (JWT role service_role), then back to the owner with no claims. */
@@ -72,7 +73,7 @@ test.describe('integration config (migration 310)', () => {
       const read = await asService(tx, () => tx<{ key: string; value: string }[]>`select * from public.integration_secrets_read()`);
       expect(read.filter((r) => r.key === 'WA_APP_SECRET').map((r) => r.value)).toEqual(['e2e-fake-secret-2']);
       const status = await asService(tx, () => tx<Record<string, unknown>[]>`select * from public.integration_secrets_status()`);
-      const row = status.find((r) => r['key'] === 'WA_APP_SECRET');
+      const row = status.find((r) => r.key === 'WA_APP_SECRET');
       expect(Object.keys(row ?? {}).sort()).toEqual(['key', 'updated_at']);
       const cleared = await asService(tx, () => tx<{ c: boolean }[]>`select public.integration_secret_clear('WA_APP_SECRET') as c`);
       expect(cleared[0]?.c).toBe(true);

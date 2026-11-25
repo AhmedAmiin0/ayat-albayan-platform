@@ -4,7 +4,11 @@ import { BOOT_LOAD_MS, REFRESH_MS, TranslationsService } from './translations.se
 import type { OverrideRow, TranslationsQueries } from './translations.queries';
 
 function fakeQueries(rows: OverrideRow[] = []) {
-  const q = { all: vi.fn(async () => rows), upsert: vi.fn(async () => undefined), remove: vi.fn(async () => undefined) };
+  const q = {
+    all: vi.fn(async () => rows),
+    upsert: vi.fn(async () => undefined),
+    remove: vi.fn(async () => undefined),
+  };
   return { q, service: new TranslationsService(q as unknown as TranslationsQueries) };
 }
 

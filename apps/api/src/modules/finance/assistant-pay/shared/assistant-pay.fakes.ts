@@ -2,7 +2,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { AssistantPayModule } from '@/modules/finance/assistant-pay/assistant-pay.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -33,28 +34,61 @@ const verify: TokenVerifier = async (token) => {
 
 export async function assistantApp() {
   const my = {
-    students: vi.fn(), guardianPhones: vi.fn(), payments: vi.fn(), tz: vi.fn(), commissions: vi.fn(), commissionPage: vi.fn(), adjustments: vi.fn(),
+    students: vi.fn(),
+    guardianPhones: vi.fn(),
+    payments: vi.fn(),
+    tz: vi.fn(),
+    commissions: vi.fn(),
+    commissionPage: vi.fn(),
+    adjustments: vi.fn(),
   };
-  const terms = { assistants: vi.fn(), isAssistant: vi.fn(), all: vi.fn(), get: vi.fn(), uncommissioned: vi.fn(), broughtBy: vi.fn(), renewalShare: vi.fn() };
+  const terms = {
+    assistants: vi.fn(),
+    isAssistant: vi.fn(),
+    all: vi.fn(),
+    get: vi.fn(),
+    uncommissioned: vi.fn(),
+    broughtBy: vi.fn(),
+    renewalShare: vi.fn(),
+  };
   const statements = { list: vi.fn(), get: vi.fn() };
   const ledger = { list: vi.fn() };
   const rpc = {
-    generate: vi.fn(), approve: vi.fn(), reopen: vi.fn(), pay: vi.fn(), unpay: vi.fn(),
-    adjust: vi.fn(), setTerms: vi.fn(), voidCommission: vi.fn(), broughtBy: vi.fn(), evaluate: vi.fn(),
+    generate: vi.fn(),
+    approve: vi.fn(),
+    reopen: vi.fn(),
+    pay: vi.fn(),
+    unpay: vi.fn(),
+    adjust: vi.fn(),
+    setTerms: vi.fn(),
+    voidCommission: vi.fn(),
+    broughtBy: vi.fn(),
+    evaluate: vi.fn(),
   };
   const receipts = { check: vi.fn(), uploadUrl: vi.fn(), download: vi.fn() };
   const audit = { record: vi.fn() };
   const bell = { notify: vi.fn() };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(MyRepo).useValue(my)
-    .overrideProvider(TermsRepo).useValue(terms)
-    .overrideProvider(StatementsRepo).useValue(statements)
-    .overrideProvider(CommissionsRepo).useValue(ledger)
-    .overrideProvider(AssistantRpc).useValue(rpc)
-    .overrideProvider(EarningsReceipts).useValue(receipts)
-    .overrideProvider(AuditService).useValue(audit)
-    .overrideProvider(CommissionBell).useValue(bell)
+  const mod = await Test.createTestingModule({ imports: [featureRoot(AssistantPayModule)] })
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(systemResolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(MyRepo)
+    .useValue(my)
+    .overrideProvider(TermsRepo)
+    .useValue(terms)
+    .overrideProvider(StatementsRepo)
+    .useValue(statements)
+    .overrideProvider(CommissionsRepo)
+    .useValue(ledger)
+    .overrideProvider(AssistantRpc)
+    .useValue(rpc)
+    .overrideProvider(EarningsReceipts)
+    .useValue(receipts)
+    .overrideProvider(AuditService)
+    .useValue(audit)
+    .overrideProvider(CommissionBell)
+    .useValue(bell)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

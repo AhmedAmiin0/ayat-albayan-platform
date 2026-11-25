@@ -65,7 +65,7 @@ test.describe.serial('bank-transfer attachments (API + DB + storage)', () => {
       path: '/payments',
       body: { ...base, method: 'cash', attachments: paths },
     });
-    expect([cash.status, cash.body['code']]).toEqual([400, 'attachments_not_allowed']);
+    expect([cash.status, cash.body.code]).toEqual([400, 'attachments_not_allowed']);
     const bank = await call<{ id: string }>(request, { token: admin, method: 'POST', path: '/payments', body: { ...base, method: 'bank', attachments: paths } });
     expect(bank.status, JSON.stringify(bank.body)).toBe(201);
     const list = await call<PaymentAttachmentView[]>(request, { token: admin, method: 'GET', path: `/payments/${bank.body.id}/attachments` });
@@ -121,6 +121,6 @@ test.describe.serial('bank-transfer attachments (API + DB + storage)', () => {
     const s = need(sub);
     const body = { subscriptionId: s.id, amount: 5, currency: s.currency, paidAt: new Date().toISOString(), attachments: [`${randomUUID()}/x.png`], clientRequestId: randomUUID() };
     const res = await call(request, { token: need(a).token, method: 'POST', path: '/sales/payments', body });
-    expect([res.status, res.body['code']]).toEqual([400, 'attachment_path']);
+    expect([res.status, res.body.code]).toEqual([400, 'attachment_path']);
   });
 });

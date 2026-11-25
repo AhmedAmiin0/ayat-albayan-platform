@@ -26,8 +26,14 @@ export class TermsRepo {
   }
 
   /** null when the student does not exist. */
-  async broughtBy(studentId: string): Promise<{ brought_by: string | null; brought_at: string | null; name: string | null } | null> {
-    const { data, error } = await this.db.from('students').select('brought_by, brought_at').eq('id', studentId).maybeSingle();
+  async broughtBy(
+    studentId: string,
+  ): Promise<{ brought_by: string | null; brought_at: string | null; name: string | null } | null> {
+    const { data, error } = await this.db
+      .from('students')
+      .select('brought_by, brought_at')
+      .eq('id', studentId)
+      .maybeSingle();
     if (error) throw dbError(error);
     if (!data) return null;
     if (!data.brought_by) return { ...data, name: null };

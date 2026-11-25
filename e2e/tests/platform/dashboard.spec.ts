@@ -26,13 +26,15 @@ test.describe('dashboard numbers (R-RPT-01/02)', () => {
 
     // Deltas of what was seeded (API ↔ seed).
     const d = (pick: (s: Summary) => number) => pick(after) - pick(before);
-    expect(d((s) => s.funnel['new'] ?? 0)).toBe(1);
-    expect(d((s) => s.funnel['trial_booked'] ?? 0)).toBe(1);
-    expect(d((s) => s.funnel['converted'] ?? 0)).toBe(1);
+    expect(d((s) => s.funnel.new ?? 0)).toBe(1);
+    expect(d((s) => s.funnel.trial_booked ?? 0)).toBe(1);
+    expect(d((s) => s.funnel.converted ?? 0)).toBe(1);
     expect(d((s) => s.unpaid_subscriptions)).toBe(1);
     expect(d((s) => s.pending_reports)).toBeGreaterThanOrEqual(4); // both packages: a past + a started lesson
-    expect(week.lessons_by_status['confirmed']).toBe((weekBefore.lessons_by_status['confirmed'] ?? 0) + 1);
-    expect(week.lessons_by_status['no_show']).toBe((weekBefore.lessons_by_status['no_show'] ?? 0) + 1);
+    expect(week.lessons_by_status.confirmed).toBe(
+      (weekBefore.lessons_by_status.confirmed ?? 0) + 1,
+    );
+    expect(week.lessons_by_status.no_show).toBe((weekBefore.lessons_by_status.no_show ?? 0) + 1);
     expect(d((s) => s.finance.revenue)).toBeCloseTo(seed.price, 2);
     expect(d((s) => s.finance.expenses)).toBeCloseTo(seed.expense, 2);
     const f = after.finance;
@@ -58,8 +60,12 @@ test.describe('dashboard numbers (R-RPT-01/02)', () => {
     await expect(cell(rowOf(page, ar.enums.leadStatus.trial_booked), 0)).toHaveText(String(reached('trial_booked', 'trial_done', 'converted')));
     await expect(cell(rowOf(page, ar.enums.leadStatus.converted), 0)).toHaveText(String(reached('converted')));
 
-    await expect(cell(rowOf(page, ar.enums.lessonStatus.confirmed), 0)).toHaveText(String(week.lessons_by_status['confirmed']));
-    await expect(cell(rowOf(page, ar.enums.lessonStatus.no_show), 0)).toHaveText(String(week.lessons_by_status['no_show']));
+    await expect(cell(rowOf(page, ar.enums.lessonStatus.confirmed), 0)).toHaveText(
+      String(week.lessons_by_status.confirmed),
+    );
+    await expect(cell(rowOf(page, ar.enums.lessonStatus.no_show), 0)).toHaveText(
+      String(week.lessons_by_status.no_show),
+    );
     const load = week.teacher_load.find((r) => r.display_name_ar === 'أبرار');
     expect(load?.lessons).toBeGreaterThanOrEqual(3);
     await expect(cell(rowOf(page, 'أبرار'), 1)).toHaveText(String(load?.lessons));

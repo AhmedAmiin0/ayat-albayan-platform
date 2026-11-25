@@ -2,7 +2,8 @@ import { SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { SettingsModule } from './settings.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import { SettingsService } from './settings.service';
@@ -41,10 +42,15 @@ describe('PATCH /settings — owned keys are moved', () => {
     app.inject({ method: 'PATCH', url: '/settings', payload: payload as object, headers: { authorization: 'Bearer admin', 'content-type': 'application/json' } });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(SettingsService).useValue(settings)
-      .overrideProvider(AuditService).useValue(audit)
+    const mod = await Test.createTestingModule({ imports: [featureRoot(SettingsModule)] })
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(SettingsService)
+      .useValue(settings)
+      .overrideProvider(AuditService)
+      .useValue(audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -75,10 +81,18 @@ describe('PATCH /settings — owned keys are moved', () => {
   });
 
   it('a mix: the valid keys are saved, the owned ones moved', async () => {
-    const res = await patch({ ...OWNED_BODY, bookingHorizonWeeks: 6, payoutCountLate: true, unknownField: 1 });
+    const res = await patch({
+      ...OWNED_BODY,
+      bookingHorizonWeeks: 6,
+      payoutCountLate: true,
+      unknownField: 1,
+    });
     expect(res.statusCode).toBe(200);
     expect(res.json().saved).toEqual(['booking_horizon_weeks', 'payout_count_late']);
-    expect(settings.write).toHaveBeenCalledExactlyOnceWith({ booking_horizon_weeks: 6, payout_count_late: true }, ADMIN);
+    expect(settings.write).toHaveBeenCalledExactlyOnceWith(
+      { booking_horizon_weeks: 6, payout_count_late: true },
+      ADMIN,
+    );
     expect(audit.record).toHaveBeenCalledOnce();
   });
 

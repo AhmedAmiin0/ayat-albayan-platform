@@ -1,7 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { toSummaryView } from './earnings.summary';
 
-const row = ({ id, earned, paid, oldest = null }: { id: string; earned: number; paid: number; oldest?: string | null }) => ({
+const row = ({
+  id,
+  earned,
+  paid,
+  oldest = null,
+}: {
+  id: string;
+  earned: number;
+  paid: number;
+  oldest?: string | null;
+}) => ({
   teacher_id: id,
   display_name_ar: `معلم ${id}`,
   sessions: 3,

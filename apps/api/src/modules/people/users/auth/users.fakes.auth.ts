@@ -22,7 +22,12 @@ export class FakeAuthAdmin implements AuthAdmin {
 
   async update(id: string, patch: AuthPatch) {
     const u = this.users.get(id) ?? { email: '', banned: false };
-    this.users.set(id, { ...u, ...(patch.email && { email: patch.email }), ...(patch.password && { password: patch.password }), ...(patch.banned !== undefined && { banned: patch.banned }) });
+    this.users.set(id, {
+      ...u,
+      ...(patch.email && { email: patch.email }),
+      ...(patch.password && { password: patch.password }),
+      ...(patch.banned !== undefined && { banned: patch.banned }),
+    });
     this.calls.push(`update:${id}`);
     this.patches.push({ id, patch });
   }

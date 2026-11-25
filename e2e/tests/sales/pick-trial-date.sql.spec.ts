@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../../support/edit-time';
 import { bookPayload, movePayload, seedTrial, type TrialSeed } from '../../support/sales/trial-date';
+import { errorMessage } from '../../support/core/db-error';
 
 // pick_trial_date (migration 660): move or book, status and audit in one transaction.
 
@@ -43,7 +44,7 @@ test.describe('pick_trial_date: a new trial date in one transaction (R-SCH-07, R
     await rolledBack(async (tx) => {
       const s = await seedTrial(tx);
       await tx`update public.students set status = 'active' where id = ${s.student}`;
-      const failed = await tx.savepoint(() => pick(tx, movePayload(s))).then(() => 'ok', (e: { message?: string }) => e.message);
+      const failed = await tx.savepoint(() => pick(tx, movePayload(s))).then(() => 'ok', errorMessage);
       expect(failed).toBe('trial_date_subscribed');
       const [old] = await tx<{ status: string }[]>`select status::text from public.lessons where id = ${s.lesson}`;
       expect(old?.status).toBe('scheduled');

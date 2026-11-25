@@ -77,7 +77,9 @@ describe('ReportPdfSource — one report and everything around it', () => {
   });
 
   it('no package unit for this lesson → packageN null', async () => {
-    const { db } = fakeDb(tables({ v_package_lessons: [{ data: null }], subscriptions: [{ data: [] }] }));
+    const { db } = fakeDb(
+      tables({ v_package_lessons: [{ data: null }], subscriptions: [{ data: [] }] }),
+    );
     const src = await new ReportPdfSource(db).load('r1', EPOCH);
     expect(src?.packageN).toBeNull();
     expect(src?.packages).toEqual([]);

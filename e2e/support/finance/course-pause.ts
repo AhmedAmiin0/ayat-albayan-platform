@@ -1,10 +1,11 @@
 import type { Tx } from '../edit-time';
 import { USERS } from '../core/users';
+import { errorMessage } from '../core/db-error';
 
 // Helpers of e2e/tests/course-pause.sql.spec.ts: the course pause RPCs (migrations 955–957, docs/11 §7b) against
 // the real database inside a transaction that is rolled back. Days are Riyadh days relative to the tx's now().
 
-type PauseSeed = {
+interface PauseSeed {
   today: string;
   actor: string;
   student: string;
@@ -12,7 +13,7 @@ type PauseSeed = {
   sub: string;
   solo: string;
   group: string;
-};
+}
 
 const phone = () => `+9665${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
 
@@ -114,4 +115,4 @@ export const statuses = async (tx: Tx, s: PauseSeed) => {
   return row;
 };
 export const codeOf = (tx: Tx, run: (sp: Tx) => Promise<unknown>) =>
-  tx.savepoint((sp) => run(sp as unknown as Tx)).then(() => 'ok', (e: { message?: string }) => e.message);
+  tx.savepoint((sp) => run(sp as unknown as Tx)).then(() => 'ok', errorMessage);

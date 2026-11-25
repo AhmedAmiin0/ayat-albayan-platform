@@ -37,10 +37,16 @@ export function entriesFixture(over: readonly ConfigEntry[] = []): ConfigEntries
 }
 
 /** An apiSend mock body for PATCH /config/entries/:key: the row back with the next version. */
-export async function answerPatch(_method: string, path: string, body?: unknown): Promise<{ entry: ConfigEntry }> {
+export async function answerPatch(
+  _method: string,
+  path: string,
+  body?: unknown,
+): Promise<{ entry: ConfigEntry }> {
   const key = decodeURIComponent(path.split('/')[3] ?? '');
   const b = (body ?? {}) as { value?: unknown; expectedVersion?: number };
-  return { entry: entryOf(key, { value: b.value, stored: true, version: (b.expectedVersion ?? 0) + 1 }) };
+  return {
+    entry: entryOf(key, { value: b.value, stored: true, version: (b.expectedVersion ?? 0) + 1 }),
+  };
 }
 
 /** Puts the entries in a test's query client (the hooks read the row's version from it). */

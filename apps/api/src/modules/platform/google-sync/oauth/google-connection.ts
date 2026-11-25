@@ -23,7 +23,10 @@ export class GoogleConnection {
   private cached: { token: string; client: GoogleClient } | null = null;
   /** Property-injected (the constructor is at the 3-parameter limit); 0 = no reuse. */
   @Optional() @Inject(SETTINGS_CACHE_MS) private readonly settingsTtlMs?: number;
-  private readonly token = new TtlCache(() => (this.settingsTtlMs === 0 ? 0 : CONNECTION_TTL_MS), () => this.connectedToken());
+  private readonly token = new TtlCache(
+    () => (this.settingsTtlMs === 0 ? 0 : CONNECTION_TTL_MS),
+    () => this.connectedToken(),
+  );
 
   constructor(
     private readonly account: GoogleAccountQueries,

@@ -13,7 +13,11 @@ type Rows = { key: string; value: unknown }[];
 function copy(redis: ReturnType<typeof fakeRedis>, rows: () => Rows) {
   const select = vi.fn(async () => ({ data: rows(), error: null }));
   const db = { from: vi.fn(() => ({ select })) } as unknown as Db;
-  const q = { snapshot: vi.fn(async () => ({ rev: 1, rows: [] })), revision: vi.fn(async () => 1), set: vi.fn(async () => undefined) };
+  const q = {
+    snapshot: vi.fn(async () => ({ rev: 1, rows: [] })),
+    revision: vi.fn(async () => 1),
+    set: vi.fn(async () => undefined),
+  };
   const store = new ConfigStore(q as unknown as ConfigStoreRepo, 30_000);
   const { cache } = redis.copy();
   new ConfigCacheBridge(store, cache);

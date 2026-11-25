@@ -2,7 +2,8 @@ import { INTEGRATION_KEYS } from '@ab/catalog';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { IntegrationConfigModule } from './integration-config.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -30,7 +31,7 @@ describe('/settings/integrations («التكاملات»)', () => {
     app.inject({ method: o.method, url: o.url ?? '/settings/integrations', payload: o.payload, headers: { authorization: `Bearer ${o.token ?? 'admin'}` } });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({ imports: [featureRoot(IntegrationConfigModule)] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(IntegrationConfigRepo).useValue(q)
       .overrideProvider(AuditService).useValue(audit)

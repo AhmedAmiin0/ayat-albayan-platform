@@ -62,7 +62,10 @@ describe('StorageService (R-REP-02/03, R-PAY-01)', () => {
 
   it('copy goes across buckets on the server and is idempotent (an existing target is kept)', async () => {
     const copy = vi.fn().mockResolvedValue({ error: null });
-    const exists = vi.fn().mockResolvedValueOnce({ data: false, error: null }).mockResolvedValueOnce({ data: true, error: null });
+    const exists = vi
+      .fn()
+      .mockResolvedValueOnce({ data: false, error: null })
+      .mockResolvedValueOnce({ data: true, error: null });
     const { svc, from } = fakeStorage({ copy, exists });
     const input = { from: { bucket: 'wa-media' as const, path: 'm.png' }, to: { bucket: 'invoices' as const, path: 'r/wa-m.png' } };
     await svc.copy(input);

@@ -4,8 +4,11 @@ import { invoiceRecentQuery, recentFilter } from './invoices.dto';
 import { InvoicesRepo } from './invoices.repo';
 
 const page = { page: 1, pageSize: 25 };
-const on = (calls: { table: string; method: string; args: unknown[] }[], table: string, method: string) =>
-  calls.filter((c) => c.table === table && c.method === method).map((c) => c.args);
+const on = (
+  calls: { table: string; method: string; args: unknown[] }[],
+  table: string,
+  method: string,
+) => calls.filter((c) => c.table === table && c.method === method).map((c) => c.args);
 
 describe('GET /invoices/recent sort + filters (R-NFR-08)', () => {
   it('no sort: newest first, then id', async () => {

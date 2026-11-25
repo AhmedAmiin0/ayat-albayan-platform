@@ -50,16 +50,44 @@ describe('terms and attribution of one student (admin)', () => {
     expect(t.rpc.evaluate.mock.calls).toEqual([['sub-1'], ['sub-2']]);
     // Commissions earned by those evaluations ring the bell once, after them all.
     expect(t.bell.notify).toHaveBeenCalledTimes(1);
-    expect(t.bell.notify.mock.invocationCallOrder[0]).toBeGreaterThan(t.rpc.evaluate.mock.invocationCallOrder[1] ?? Infinity);
+    expect(t.bell.notify.mock.invocationCallOrder[0]).toBeGreaterThan(
+      t.rpc.evaluate.mock.invocationCallOrder[1] ?? Infinity,
+    );
   });
 
   it('a fixed commission keeps its currency; a null part clears its columns and skips the rule run', async () => {
-    t.terms.get.mockResolvedValue(row({ commission_type: 'fixed', commission_value: 50, commission_currency: 'EGP', salary_amount: null, salary_currency: null, salary_starts_on: null }));
-    await t.call({ method: 'PUT', url: PUT, token: 'admin', body: { commission: { type: 'fixed', value: 50, currency: 'EGP', startsOn: '2026-10-01' }, salary: null } });
-    expect(t.rpc.setTerms).toHaveBeenLastCalledWith(expect.objectContaining({
-      columns: expect.objectContaining({ commission_type: 'fixed', commission_currency: 'EGP', salary_amount: null, salary_currency: null }),
-    }));
-    t.terms.get.mockResolvedValue(row({ commission_type: null, commission_value: null, commission_starts_on: null }));
+    t.terms.get.mockResolvedValue(
+      row({
+        commission_type: 'fixed',
+        commission_value: 50,
+        commission_currency: 'EGP',
+        salary_amount: null,
+        salary_currency: null,
+        salary_starts_on: null,
+      }),
+    );
+    await t.call({
+      method: 'PUT',
+      url: PUT,
+      token: 'admin',
+      body: {
+        commission: { type: 'fixed', value: 50, currency: 'EGP', startsOn: '2026-10-01' },
+        salary: null,
+      },
+    });
+    expect(t.rpc.setTerms).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        columns: expect.objectContaining({
+          commission_type: 'fixed',
+          commission_currency: 'EGP',
+          salary_amount: null,
+          salary_currency: null,
+        }),
+      }),
+    );
+    t.terms.get.mockResolvedValue(
+      row({ commission_type: null, commission_value: null, commission_starts_on: null }),
+    );
     vi.mocked(t.rpc.evaluate).mockClear();
     const res = await t.call({ method: 'PUT', url: PUT, token: 'admin', body: { commission: null, salary: SALARY } });
     expect(res.json().commission).toBeNull();

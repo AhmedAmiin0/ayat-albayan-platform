@@ -72,5 +72,9 @@ export function eventBody(l: EventLesson, copy: EventCopy): GoogleEventBody {
 }
 
 /** Is this event one the platform made for this lesson? Nothing else is ever updated or deleted. */
-export const isOurEvent = (e: { extendedProperties?: { private?: Record<string, string> } }, lessonId: string): boolean =>
-  e.extendedProperties?.private?.['ab_source'] === PLATFORM_SOURCE && e.extendedProperties.private['ab_lesson_id'] === lessonId;
+export const isOurEvent = (
+  e: { extendedProperties?: { private?: Record<string, string> } },
+  lessonId: string,
+): boolean =>
+  e.extendedProperties?.private?.['ab_source'] === PLATFORM_SOURCE &&
+  e.extendedProperties.private['ab_lesson_id'] === lessonId;

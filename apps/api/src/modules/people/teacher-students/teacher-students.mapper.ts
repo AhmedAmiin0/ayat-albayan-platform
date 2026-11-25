@@ -9,7 +9,10 @@ export function studentIdsOf(lessons: readonly TeacherLessonRow[]): Set<string> 
 }
 
 /** Earliest scheduled / confirmed lesson at or after `now`, per student (ISO UTC). */
-export function nextLessonByStudent(lessons: readonly TeacherLessonRow[], now: Date): Map<string, string> {
+export function nextLessonByStudent(
+  lessons: readonly TeacherLessonRow[],
+  now: Date,
+): Map<string, string> {
   const next = new Map<string, number>();
   for (const l of lessons) {
     const at = Date.parse(l.starts_at);
@@ -23,7 +26,10 @@ export function nextLessonByStudent(lessons: readonly TeacherLessonRow[], now: D
 }
 
 /** Union of the two sources by id, as the whitelisted view, sorted by name (Arabic collation). */
-export function toStudentViews(rows: readonly TeacherStudentRow[], next: ReadonlyMap<string, string>): TeacherStudentView[] {
+export function toStudentViews(
+  rows: readonly TeacherStudentRow[],
+  next: ReadonlyMap<string, string>,
+): TeacherStudentView[] {
   const byId = new Map<string, TeacherStudentRow>();
   for (const r of rows) byId.set(r.id, r);
   return [...byId.values()]

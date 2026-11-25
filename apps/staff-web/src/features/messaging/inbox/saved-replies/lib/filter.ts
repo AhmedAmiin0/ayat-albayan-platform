@@ -4,8 +4,13 @@ import { matchesQuery } from '@ab/core';
 // The picker's pure parts: which list, the search, and the «/» trigger of the composer.
 
 /** One tab's replies whose title or text holds `query` (case, tashkeel and letter forms ignored), in served order. */
-export function filterReplies(replies: readonly SavedReply[], input: { scope: SavedReplyScope; query: string }): SavedReply[] {
-  return replies.filter((r) => r.scope === input.scope && matchesQuery(`${r.title} ${r.body}`, input.query));
+export function filterReplies(
+  replies: readonly SavedReply[],
+  input: { scope: SavedReplyScope; query: string },
+): SavedReply[] {
+  return replies.filter(
+    (r) => r.scope === input.scope && matchesQuery(`${r.title} ${r.body}`, input.query),
+  );
 }
 
 /** The «/» list (as WhatsApp): both tabs in one list, the served order kept. */

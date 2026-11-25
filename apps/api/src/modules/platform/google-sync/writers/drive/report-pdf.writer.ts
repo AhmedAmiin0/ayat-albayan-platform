@@ -33,7 +33,11 @@ export class ReportPdfWriter implements ItemWriter {
       return planned({ method: item.google_id ? 'PATCH' : 'POST', target, summary: pdfName({ student: src.studentName, date, alreadyInSheet: false }) });
     }
     const { google } = ctx;
-    const place = await this.drive.ensure({ google, studentId: src.studentId, studentName: src.studentName });
+    const place = await this.drive.ensure({
+      google,
+      studentId: src.studentId,
+      studentName: src.studentName,
+    });
     if (!place) return { state: 'skipped', reason: 'drive_unconfirmed' };
     const rows = await google.readValues({ spreadsheetId: place.sheetId, range: 'A2:M', render: 'UNFORMATTED_VALUE' });
     const name = pdfName({ student: src.studentName, date, alreadyInSheet: matchDate(rows, { date, pdfFileId: item.google_id }).kind === 'script' });
@@ -41,8 +45,10 @@ export class ReportPdfWriter implements ItemWriter {
     if (item.google_id) {
       const f = await google.getFile(item.google_id);
       if (!f || f.trashed) return { state: 'gone', error: 'deleted_in_google' };
-      if (f.appProperties['ab_report_id'] !== src.reportId) return { state: 'failed', error: 'not_platform_file', attempts: item.attempts };
-      if (hash === item.content_hash) return synced({ googleId: f.id, parentId: place.folderId, hash });
+      if (f.appProperties['ab_report_id'] !== src.reportId)
+        return { state: 'failed', error: 'not_platform_file', attempts: item.attempts };
+      if (hash === item.content_hash)
+        return synced({ googleId: f.id, parentId: place.folderId, hash });
     }
     const bytes = await this.storage.download({ bucket: BUCKETS.reports, path: src.pdfPath });
     // Counted (backoff, 5 attempts), not `later`: a PDF lost in storage must not poll Google every 15 s forever.

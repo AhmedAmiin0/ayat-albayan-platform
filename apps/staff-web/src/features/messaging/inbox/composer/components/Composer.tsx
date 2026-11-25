@@ -10,7 +10,13 @@ import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/tem
 import { useTextOnReply } from '@/features/messaging/inbox/composer/lib/use-reply-target';
 
 /** Reply box (R-LEAD-02): plain or template inside the 24 h window, approved templates after it. */
-export function Composer({ thread, context: known }: { thread: ThreadView; context: PrefillContext }) {
+export function Composer({
+  thread,
+  context: known,
+}: {
+  thread: ThreadView;
+  context: PrefillContext;
+}) {
   // contact_name starts as the name the header shows (guardian ?? lead's WhatsApp name ?? teacher).
   const context = { contactName: thread.display_name, ...known };
   const gate = useQuery({ ...sendGateQuery, enabled: useReadsMessaging() });
@@ -27,6 +33,13 @@ export function Composer({ thread, context: known }: { thread: ThreadView; conte
         ? t.inbox.messagingOff
         : t.inbox.messagingOffServer;
   return (
-    <ComposerPhone thread={thread} context={context} gateNote={gateNote} mode={mode} onMode={setMode} teacher={teacher} />
+    <ComposerPhone
+      thread={thread}
+      context={context}
+      gateNote={gateNote}
+      mode={mode}
+      onMode={setMode}
+      teacher={teacher}
+    />
   );
 }

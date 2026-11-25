@@ -18,8 +18,12 @@ export class GoogleCallbackController {
   @Get('callback')
   @Public()
   @Redirect()
-  async callback(@Query() query: Record<string, string | undefined>): Promise<{ url: string; statusCode: number }> {
-    const outcome = await this.oauth.callback({ code: query['code'], state: query['state'], error: query['error'] }).catch(() => 'exchange' as const);
+  async callback(
+    @Query() query: Record<string, string | undefined>,
+  ): Promise<{ url: string; statusCode: number }> {
+    const outcome = await this.oauth
+      .callback({ code: query['code'], state: query['state'], error: query['error'] })
+      .catch(() => 'exchange' as const);
     const q = outcome === 'connected' ? 'google=connected' : `google=error&reason=${outcome}`;
     return { url: `${firstWebOrigin(loadEnv().WEB_ORIGIN)}/admin/settings?${q}#integrations`, statusCode: 302 };
   }

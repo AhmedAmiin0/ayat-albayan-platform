@@ -65,7 +65,10 @@ const byStart = (a: SlotPackage, b: SlotPackage) =>
  * newest, exactly as migration 123 allocates them (932: after its lessons used before the platform).
  * Stable: later lessons never change it.
  */
-export function packageSlot(n: number | null, packages: readonly SlotPackage[]): PackageSlot | null {
+export function packageSlot(
+  n: number | null,
+  packages: readonly SlotPackage[],
+): PackageSlot | null {
   if (n === null || n < 1) return null;
   const sorted = [...packages].sort(byStart);
   let capFrom = 0;

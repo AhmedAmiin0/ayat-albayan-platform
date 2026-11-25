@@ -23,7 +23,8 @@ type RuleDays = Pick<CourseChangeRequest, 'byday' | 'startTimeLocal' | 'dayTimes
 export const requestDays = (req: RuleDays): DayTime[] =>
   req.byday.map((weekday) => ({
     weekday,
-    startTimeLocal: req.dayTimes?.find((d) => d.weekday === weekday)?.startTimeLocal ?? req.startTimeLocal,
+    startTimeLocal:
+      req.dayTimes?.find((d) => d.weekday === weekday)?.startTimeLocal ?? req.startTimeLocal,
   }));
 
 export const newDaysText = (req: RuleDays, tz: string, clock: ZonedClock): string =>

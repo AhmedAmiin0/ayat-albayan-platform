@@ -32,9 +32,16 @@ describe('SendLinkButton «أرسل رابط الحلقة»', () => {
 
   it('is disabled with the reason while WhatsApp has not approved the template', async () => {
     open(lesson({ status: 'confirmed', students: [SUHAILA] }), 'pending');
-    expect(await screen.findByText(new RegExp(t.classroom.error.template_not_approved))).toBeTruthy();
-    expect(screen.getByRole('button', { name: t.classroom.sendLink })).toHaveProperty('disabled', true);
-    expect(screen.getByRole('link', { name: t.feedback.templateSettings }).getAttribute('href')).toBe('/admin/settings/communications?tab=templates');
+    expect(
+      await screen.findByText(new RegExp(t.classroom.error.template_not_approved)),
+    ).toBeTruthy();
+    expect(screen.getByRole('button', { name: t.classroom.sendLink })).toHaveProperty(
+      'disabled',
+      true,
+    );
+    expect(
+      screen.getByRole('link', { name: t.feedback.templateSettings }).getAttribute('href'),
+    ).toBe('/admin/settings/communications?tab=templates');
   });
 
   it('posts the student, then reads «أُرسل الرابط»', async () => {

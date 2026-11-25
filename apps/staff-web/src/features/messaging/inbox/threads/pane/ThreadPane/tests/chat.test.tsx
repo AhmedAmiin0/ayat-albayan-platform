@@ -28,7 +28,11 @@ function renderThread(open: boolean, gate: 'switch_off' | null = null) {
 describe('the open thread on phones (< 640px): a full-screen chat', () => {
   beforeEach(() => {
     // A phone is also below the shell breakpoint (900px), where the chat goes full-screen.
-    const query = (media: string) => ({ matches: PHONE_QUERIES.includes(media), addEventListener: vi.fn(), removeEventListener: vi.fn() });
+    const query = (media: string) => ({
+      matches: PHONE_QUERIES.includes(media),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    });
     vi.stubGlobal('matchMedia', vi.fn(query));
   });
   afterEach(() => {

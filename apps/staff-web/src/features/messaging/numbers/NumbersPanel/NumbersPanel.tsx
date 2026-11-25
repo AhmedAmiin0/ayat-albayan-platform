@@ -16,7 +16,13 @@ import { SourceSwitch } from '@/features/messaging/numbers/import/SourceSwitch';
 const n = t.numbers;
 
 /** docs/23 §3 phase 3: sends stay on integrations until the source switch flips. */
-export function NumbersPanel({ query, onSaved }: { query: string; onSaved: (message: string) => void }) {
+export function NumbersPanel({
+  query,
+  onSaved,
+}: {
+  query: string;
+  onSaved: (message: string) => void;
+}) {
   const { can } = usePermissions();
   const manage = can('numbers.manage');
   const list = useQuery(numbersQuery);

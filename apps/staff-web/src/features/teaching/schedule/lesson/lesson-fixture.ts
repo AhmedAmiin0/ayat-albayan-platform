@@ -42,8 +42,15 @@ export function lesson(o: LessonOverrides = {}): LessonView {
     ...(o.time_edit_mode !== undefined && { time_edit_mode: o.time_edit_mode }),
     ...(o.time_edit !== undefined && { time_edit: o.time_edit }),
   };
-  const room = o.platform_classroom === undefined ? {} : { platform_classroom: o.platform_classroom };
-  return { ...core(o), ...edit, ...room, conflicts: o.conflicts ?? [], pending_proposal: o.pending_proposal ?? null };
+  const room =
+    o.platform_classroom === undefined ? {} : { platform_classroom: o.platform_classroom };
+  return {
+    ...core(o),
+    ...edit,
+    ...room,
+    conflicts: o.conflicts ?? [],
+    pending_proposal: o.pending_proposal ?? null,
+  };
 }
 
 function core(o: LessonOverrides): Omit<LessonView, 'conflicts' | 'pending_proposal'> {

@@ -8,7 +8,7 @@ export function stableJson(value: unknown): string {
   if (value && typeof value === 'object') {
     const entries = Object.entries(value)
       .filter(([, v]) => v !== undefined)
-      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+      .sort(([a], [b]) => Number(a > b) - Number(a < b));
     return `{${entries.map(([k, v]) => `${JSON.stringify(k)}:${stableJson(v)}`).join(',')}}`;
   }
   return JSON.stringify(value ?? null);

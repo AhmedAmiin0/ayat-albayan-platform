@@ -62,9 +62,14 @@ test.describe.serial('assistant statement and own pages (API + DB)', () => {
     expect(res.status, JSON.stringify(res.body)).toBe(200);
     statement = res.body;
     expect(statement.status).toBe('draft');
-    expect(statement.totals['SAR']).toMatchObject({ salary: 1000, commissions: 12, adjustments: 0, total: 1012 });
+    expect(statement.totals.SAR).toMatchObject({
+      salary: 1000,
+      commissions: 12,
+      adjustments: 0,
+      total: 1012,
+    });
     expect(Object.keys(statement.totals).sort()).toEqual(['SAR', 'USD']);
-    expect(statement.totals['USD']).toMatchObject({ salary: 0, adjustments: 0 });
+    expect(statement.totals.USD).toMatchObject({ salary: 0, adjustments: 0 });
     const again = await call<AssistantStatementView>(request, { token: admin, method: 'POST', path: '/assistant-pay/statements', body });
     expect([again.body.id, again.body.totals]).toEqual([statement.id, statement.totals]);
   });
@@ -92,8 +97,10 @@ test.describe.serial('assistant statement and own pages (API + DB)', () => {
     expect(JSON.stringify(students.body)).not.toMatch(/price|notes|fx_|receipt/);
     const earnings = await get<MyEarnings>(me.token, '/sales/me/earnings', request);
     expect(earnings.body.terms).toMatchObject({ commission: { type: 'percent', value: 10 }, salary: { amount: 1000, currency: 'SAR' } });
-    expect(earnings.body.commissions_total['SAR']).toBe(12);
-    expect(earnings.body.statements.map((s) => [s.status, s.totals['SAR']?.total])).toEqual([['paid', 1012]]);
+    expect(earnings.body.commissions_total.SAR).toBe(12);
+    expect(earnings.body.statements.map((s) => [s.status, s.totals.SAR?.total])).toEqual([
+      ['paid', 1012],
+    ]);
     const pays = await get<MyPaymentRow[]>(me.token, '/sales/me/payments', request);
     expect(pays.body.map((r) => [r.amount, r.currency])).toEqual([[10, 'SAR']]);
   });

@@ -30,14 +30,23 @@ export function heldRole(state: RoleState, profile: ProfileRecord): RoleRecord |
 export function permissionsOf(state: RoleState, profile: ProfileRecord): Permission[] {
   const role = heldRole(state, profile);
   if (!role) return [];
-  return effectivePermissions({ baseRole: profile.role, granted: role.permissions, allGrantable: isSystemAdmin(role) });
+  return effectivePermissions({
+    baseRole: profile.role,
+    granted: role.permissions,
+    allGrantable: isSystemAdmin(role),
+  });
 }
 
 /** The catalog keys a profile holds: self.* scope keys (they come with the base role, not a grant) left out. */
-export const grantsOf = (state: RoleState, profile: ProfileRecord): Permission[] => permissionsOf(state, profile).filter(isGrantable);
+export const grantsOf = (state: RoleState, profile: ProfileRecord): Permission[] =>
+  permissionsOf(state, profile).filter(isGrantable);
 
 /** First of `wanted` the actor does not hold (null = all held): nobody grants beyond their own reach. */
-export function missingGrant(state: RoleState, actorId: string, wanted: readonly Permission[]): Permission | null {
+export function missingGrant(
+  state: RoleState,
+  actorId: string,
+  wanted: readonly Permission[],
+): Permission | null {
   const actor = state.profiles.find((p) => p.id === actorId);
   const held = actor ? permissionsOf(state, actor) : [];
   return wanted.find((w) => !held.includes(w)) ?? null;
@@ -57,7 +66,9 @@ export function managerProblem(state: RoleState, actorId: string): ManagerProble
 }
 
 export function roleView(state: RoleState, role: RoleRecord): RoleView {
-  const permissions = isSystemAdmin(role) ? [...GRANTABLE_PERMISSIONS] : GRANTABLE_PERMISSIONS.filter((p) => role.permissions.includes(p));
+  const permissions = isSystemAdmin(role)
+    ? [...GRANTABLE_PERMISSIONS]
+    : GRANTABLE_PERMISSIONS.filter((p) => role.permissions.includes(p));
   return {
     id: role.id,
     key: role.key,

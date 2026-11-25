@@ -27,8 +27,17 @@ const BOOKED = { rule_id: 'r1', student_ids: ['s'], guardian_ids: ['g'], lessons
 async function reachReview() {
   apiFetch.mockImplementation(respond);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-      <BookingPage search={{ leadId: '9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d', phone: '+966501234567', name: 'أم جود' }} onOpenStudent={vi.fn()} />
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      <BookingPage
+        search={{
+          leadId: '9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d',
+          phone: '+966501234567',
+          name: 'أم جود',
+        }}
+        onOpenStudent={vi.fn()}
+      />
     </QueryClientProvider>,
   );
   fireEvent.change(await screen.findByLabelText(t.leads.studentName), { target: { value: 'جود' } });

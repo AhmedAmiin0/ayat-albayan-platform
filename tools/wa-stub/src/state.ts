@@ -1,5 +1,6 @@
 // Stub state and route types shared by the Graph routes (stub.ts) and the control routes.
 import type { IncomingMessage } from 'node:http';
+import { z } from 'zod';
 import type { Json, StubTemplate } from './providers/meta.ts';
 
 /** The optional second Meta number (docs/12 §13.12): its own phone id, WABA, token and secret. */
@@ -125,7 +126,12 @@ export type Route = [
   (req: IncomingMessage, m: RegExpExecArray, s: StubState) => Reply | Promise<Reply>,
 ];
 
-export const digits = (phone: unknown) => String(phone ?? '').replace(/\D/g, '');
+const scalarText = z.union([z.string(), z.number()]).transform(String);
+
+export const textOr = (value: unknown, fallback: string): string =>
+  scalarText.catch(fallback).parse(value);
+
+export const digits = (phone: unknown) => textOr(phone, '').replace(/\D/g, '');
 export const DAY_MS = 24 * 60 * 60 * 1000;
 
 export async function readBytes(req: IncomingMessage): Promise<Buffer> {

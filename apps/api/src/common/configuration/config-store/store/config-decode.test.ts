@@ -57,7 +57,11 @@ describe('decodeAll', () => {
     const all = decodeAll([{ key: 'google_calendar_window_days', value: 3 }, { key: 'upload_max_mb', value: 4 }], onMalformed);
     expect(Object.keys(all).sort()).toEqual([...CONFIG_KEYS].sort());
     expect(Object.keys(CONFIG_DEFS)).toHaveLength(CONFIG_KEYS.length);
-    expect(all).toMatchObject({ google_calendar_window_days: 60, google_sync_enabled: false, upload_max_mb: 4 });
+    expect(all).toMatchObject({
+      google_calendar_window_days: 60,
+      google_sync_enabled: false,
+      upload_max_mb: 4,
+    });
     expect(onMalformed).toHaveBeenCalledExactlyOnceWith('google_calendar_window_days');
   });
 

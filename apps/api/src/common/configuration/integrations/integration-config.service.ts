@@ -47,7 +47,10 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
     if (this.everyMs === null) return;
     this.shared?.on('integrations', () => void this.refresh());
     await this.refresh();
-    this.timer = setInterval(() => void this.refresh(), Math.max(this.everyMs, MIN_REFRESH_MS)).unref();
+    this.timer = setInterval(
+      () => void this.refresh(),
+      Math.max(this.everyMs, MIN_REFRESH_MS),
+    ).unref();
   }
 
   onModuleDestroy(): void {
@@ -74,7 +77,10 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
 
   /** GET /settings/integrations. */
   async items(): Promise<IntegrationConfigItem[]> {
-    const [plain, secrets] = await Promise.all([this.queries.plainRows(), this.queries.secretStatus()]);
+    const [plain, secrets] = await Promise.all([
+      this.queries.plainRows(),
+      this.queries.secretStatus(),
+    ]);
     return integrationItems({ plain, secrets, env: process.env });
   }
 
@@ -93,7 +99,10 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
     if (this.everyMs !== null) await this.shared?.invalidate({ topic: 'integrations' });
   }
 
-  async writeValues(values: Partial<Record<IntegrationPlainKey, string | null>>, actorId: string): Promise<void> {
+  async writeValues(
+    values: Partial<Record<IntegrationPlainKey, string | null>>,
+    actorId: string,
+  ): Promise<void> {
     try {
       await this.queries.writePlain(values, actorId);
     } finally {

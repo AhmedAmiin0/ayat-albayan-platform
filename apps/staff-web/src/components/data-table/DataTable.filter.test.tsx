@@ -72,14 +72,29 @@ describe('DataTable filters', () => {
   });
 
   it('the panel names the rows left: a client table counts its own, a server list brings `toolbar.total`', () => {
-    const { unmount } = render(<DataTable clientFilter columns={columns} data={DATA} getRowId={(r) => r.id} />);
+    const { unmount } = render(
+      <DataTable clientFilter columns={columns} data={DATA} getRowId={(r) => r.id} />,
+    );
     openFilters();
-    fireEvent.change(screen.getByRole('combobox', { name: by('الحالة') }), { target: { value: 'paused' } });
-    expect(screen.getByRole('button', { name: t.table.showResultsCount.replace('{n}', '2') })).toBeTruthy();
+    fireEvent.change(screen.getByRole('combobox', { name: by('الحالة') }), {
+      target: { value: 'paused' },
+    });
+    expect(
+      screen.getByRole('button', { name: t.table.showResultsCount.replace('{n}', '2') }),
+    ).toBeTruthy();
     unmount();
-    render(<DataTable columns={columns} data={DATA} filters={{ values: {}, onChange: vi.fn() }} toolbar={{ total: 41 }} />);
+    render(
+      <DataTable
+        columns={columns}
+        data={DATA}
+        filters={{ values: {}, onChange: vi.fn() }}
+        toolbar={{ total: 41 }}
+      />,
+    );
     openFilters();
-    expect(screen.getByRole('button', { name: t.table.showResultsCount.replace('{n}', '41') })).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: t.table.showResultsCount.replace('{n}', '41') }),
+    ).toBeTruthy();
   });
 
   it('a server list without a total says only «عرض النتائج» (the page is not the result)', () => {

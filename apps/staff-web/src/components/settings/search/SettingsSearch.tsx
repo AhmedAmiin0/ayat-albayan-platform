@@ -3,7 +3,13 @@ import { Input } from '@ab/web-kit/components/ui/form/input';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** A search box over every setting (label, hint or key); an empty box shows everything. */
-export function SettingsSearch({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+export function SettingsSearch({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
   const id = useId();
   return (
     <div className="grid gap-1">

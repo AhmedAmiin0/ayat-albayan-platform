@@ -9,7 +9,9 @@ import type { MemberIntent } from './member-queue';
  * checklist show it before the refetch lands (which then confirms it).
  */
 export function patchThreadLists(queryClient: QueryClient, intent: MemberIntent): void {
-  const list = queryClient.getQueryData<ChatList[]>(CHAT_LISTS_KEY)?.find((l) => l.id === intent.id);
+  const list = queryClient
+    .getQueryData<ChatList[]>(CHAT_LISTS_KEY)
+    ?.find((l) => l.id === intent.id);
   const patch = (lists: ChatListRef[]): ChatListRef[] => {
     const rest = lists.filter((l) => l.id !== intent.id);
     return intent.member && list ? [...rest, { id: list.id, name: list.name }] : rest;

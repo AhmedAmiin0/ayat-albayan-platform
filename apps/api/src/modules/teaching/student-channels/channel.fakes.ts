@@ -1,7 +1,8 @@
 // Test fixtures and HTTP harness for the student channel (test-only, excluded from the build).
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { StudentChannelsModule } from './student-channels.module';
 import { bootWith } from '@/common/auth/auth.fakes';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { PushService, type PushTarget } from '@/common/push/push.service';
@@ -12,8 +13,7 @@ import { ChannelEditsRepo } from './channel-edits.repo';
 import { PresenceRepo, PresenceSettings } from '@/modules/people/presence';
 import { fakePresence } from '@/modules/people/presence/presence.fakes';
 import { ChannelPeopleRepo } from './channel-people.repo';
-import type { ChannelMessageRow, ChannelSummaryRow } from './channel.repo';
-import { ChannelRepo } from './channel.repo';
+import { type ChannelMessageRow, type ChannelSummaryRow, ChannelRepo } from './channel.repo';
 import { FamilyChatSettings, TeacherChatSettings } from './family-chat.settings';
 import { channelExtras } from './testing/channel-extras.fakes';
 import { ChannelBellRepo } from './notify/channel-bell.repo';
@@ -136,7 +136,7 @@ export async function channelApp() {
   ];
   const builder = overrides.reduce(
     (b, [token, value]) => b.overrideProvider(token).useValue(value),
-    Test.createTestingModule({ imports: [AppModule] }),
+    Test.createTestingModule({ imports: [messagingRoot(StudentChannelsModule)] }),
   );
   const app = await bootWith(builder, USERS);
   const call = (method: 'GET' | 'POST' | 'DELETE', url: string, who: Who) =>

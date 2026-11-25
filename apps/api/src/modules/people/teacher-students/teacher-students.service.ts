@@ -18,7 +18,11 @@ export class TeacherStudentsService {
     private readonly queries: TeacherStudentsRepo,
   ) {}
 
-  async mine(user: AuthUser, kind: TeacherStudentKind, now = new Date()): Promise<TeacherStudentView[]> {
+  async mine(
+    user: AuthUser,
+    kind: TeacherStudentKind,
+    now = new Date(),
+  ): Promise<TeacherStudentView[]> {
     const teacherId = await this.teachers.idByProfile(user.id);
     if (!teacherId) throw notFound('teacher_not_linked');
     const statuses = TEACHER_STUDENT_STATUSES[kind];

@@ -16,7 +16,9 @@ const CLASH = { kind: 'teacher_busy', startsAt: '2026-10-05T13:07:00.000Z', ends
 const onStarted = vi.fn();
 const show = () =>
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <InstantLessonDialog onClose={vi.fn()} onStarted={onStarted} />
     </QueryClientProvider>,
   );
@@ -75,6 +77,8 @@ describe('InstantLessonDialog «حلقة فورية»', () => {
     fireEvent.click(screen.getByRole('button', { name: t.meetings.start }));
     await vi.waitFor(() => expect(onStarted).toHaveBeenCalledWith('l-10'));
     expect(apiSend.mock.calls[1]?.[2]).toMatchObject({ override: { reason: 'طارئ' } });
-    expect(apiSend.mock.calls[1]?.[2].clientRequestId).toBe(apiSend.mock.calls[0]?.[2].clientRequestId);
+    expect(apiSend.mock.calls[1]?.[2].clientRequestId).toBe(
+      apiSend.mock.calls[0]?.[2].clientRequestId,
+    );
   });
 });

@@ -4,6 +4,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { huda } from '@/inbox/shared/fixtures';
 import { LeadAssign } from './LeadAssign';
 import { free, leadsBackend, owned } from '@/inbox/leads/list/leads-fixtures';
+import { leadKeys } from '@/core/lib/keys';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -33,9 +34,14 @@ test('picking a person POSTs profileId, patches the detail and refetches the lis
   await renderWithQuery(<LeadAssign lead={free} />, client);
   await fireEvent.press(await screen.findByRole('radio', { name: 'عمر' }));
   expect(mockApiSend).toHaveBeenCalledWith('POST', `/leads/${free.id}/assign`, { profileId: 'p2' });
-  await waitFor(() => expect(client.getQueryData(['leads', free.id])).toMatchObject({ assigned_to: 'p2', assigned_to_name: 'عمر' }));
+  await waitFor(() =>
+    expect(client.getQueryData(['leads', free.id])).toMatchObject({
+      assigned_to: 'p2',
+      assigned_to_name: 'عمر',
+    }),
+  );
   expect(await screen.findByText(t.mobileLeads.assignRowSaved)).toBeTruthy();
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['leads', 'list'] });
+  expect(invalidate).toHaveBeenCalledWith({ queryKey: leadKeys.lists });
 });
 
 test('«بدون مسؤول» takes the lead back with profileId null', async () => {
@@ -43,7 +49,9 @@ test('«بدون مسؤول» takes the lead back with profileId null', async ()
   await renderWithQuery(<LeadAssign lead={owned} />, createTestQueryClient({ meFromApi: true }));
   await screen.findByRole('radio', { name: 'عمر' });
   await fireEvent.press(screen.getByRole('radio', { name: t.sales.assign.none }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', `/leads/${owned.id}/assign`, { profileId: null });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/leads/${owned.id}/assign`, {
+    profileId: null,
+  });
 });
 
 test('a refused assignment shows the error', async () => {
@@ -54,15 +62,23 @@ test('a refused assignment shows the error', async () => {
 });
 
 test('an owner the list no longer has still shows by the name the API sent', async () => {
-  await renderWithQuery(<LeadAssign lead={{ ...huda, assigned_to: 'gone', assigned_to_name: 'منى' }} />, createTestQueryClient({ meFromApi: true }));
+  await renderWithQuery(
+    <LeadAssign lead={{ ...huda, assigned_to: 'gone', assigned_to_name: 'منى' }} />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   expect(await screen.findByRole('radio', { name: 'منى', checked: true })).toBeTruthy();
 });
 
 test('the people list failing offers a retry; no leads.assign renders nothing', async () => {
   mockApiFetch.mockImplementation((path: string) =>
-    path === '/auth/me' ? Promise.resolve({ permissions: ['leads.assign'] }) : Promise.reject(new Error('offline')),
+    path === '/auth/me'
+      ? Promise.resolve({ permissions: ['leads.assign'] })
+      : Promise.reject(new Error('offline')),
   );
-  const first = await renderWithQuery(<LeadAssign lead={free} />, createTestQueryClient({ meFromApi: true }));
+  const first = await renderWithQuery(
+    <LeadAssign lead={free} />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   expect(await screen.findByText(t.mobileLeads.peopleFailed)).toBeTruthy();
   expect(screen.getByRole('button', { name: t.mobile.retry })).toBeTruthy();
   first.unmount();

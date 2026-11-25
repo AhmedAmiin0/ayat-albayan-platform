@@ -6,7 +6,9 @@ function chain(result: unknown) {
   const q: Record<string, ReturnType<typeof vi.fn>> = {};
   for (const k of ['select', 'eq', 'neq', 'not', 'update', 'gt', 'or', 'in']) q[k] = vi.fn(() => q);
   q.maybeSingle = vi.fn(async () => result);
-  return Object.assign(q, { then: (ok: (v: unknown) => unknown) => Promise.resolve(result).then(ok) });
+  return Object.assign(q, {
+    then: (ok: (v: unknown) => unknown) => Promise.resolve(result).then(ok),
+  });
 }
 
 describe('SubscriptionCancelQueries', () => {
@@ -39,7 +41,9 @@ describe('SubscriptionCancelQueries', () => {
     const write = { id: 's1', actorId: 'a1', reason: null, now: new Date('2026-10-28T09:00:00Z') };
     const run = async (result: unknown) => {
       const q = chain(result);
-      const out = await new SubscriptionCancelRepo({ from: vi.fn(() => q) } as unknown as Db).cancel(write);
+      const out = await new SubscriptionCancelRepo({
+        from: vi.fn(() => q),
+      } as unknown as Db).cancel(write);
       return { q, out };
     };
     const ok = await run({ data: { id: 's1' }, error: null });

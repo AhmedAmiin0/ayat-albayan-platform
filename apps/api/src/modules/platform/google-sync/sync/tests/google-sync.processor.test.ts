@@ -13,7 +13,11 @@ function setup(write: ReturnType<typeof vi.fn>) {
   const google = new FakeGoogle();
   const connection = { client: vi.fn().mockResolvedValue(google), authFailed: vi.fn() };
   const writers = { of: () => ({ write }) };
-  const p = new GoogleSyncProcessor(data as unknown as GoogleData, connection as unknown as GoogleConnection, writers as unknown as GoogleWriters);
+  const p = new GoogleSyncProcessor(
+    data as unknown as GoogleData,
+    connection as unknown as GoogleConnection,
+    writers as unknown as GoogleWriters,
+  );
   return { p, data, connection, google };
 }
 
@@ -48,7 +52,10 @@ describe('GoogleSyncProcessor', () => {
     const s = setup(write);
     s.data.items.claim.mockResolvedValue([item({ attempts: 0 }), item({ id: 'b', attempts: 4 })]);
     await s.p.runOnce();
-    const [[, first], [, last]] = s.data.items.finish.mock.calls as [[unknown, { state: string; attempts: number; at?: Date }], [unknown, { state: string }]];
+    const [[, first], [, last]] = s.data.items.finish.mock.calls as [
+      [unknown, { state: string; attempts: number; at?: Date }],
+      [unknown, { state: string }],
+    ];
     expect(first).toMatchObject({ state: 'retry', attempts: 1 });
     expect((first.at?.getTime() ?? 0) - Date.now()).toBeGreaterThan(10_000);
     expect(last).toMatchObject({ state: 'failed', attempts: 5 });

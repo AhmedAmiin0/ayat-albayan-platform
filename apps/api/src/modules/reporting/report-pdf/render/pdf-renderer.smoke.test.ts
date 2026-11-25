@@ -51,16 +51,23 @@ describe.skipIf(!hasChromium)('PdfRenderer — Chromium smoke (R-REP-03)', () =>
     expect(footed).not.toEqual(plain);
   }, 60_000);
 
-  it.skipIf(!out)('writes a PNG of the page for a visual check', async () => {
-    const browser = await chromium.launch();
-    const page = await browser.newPage({ viewport: { width: 718, height: 1047 }, deviceScaleFactor: 2 });
-    await page.emulateMedia({ media: 'print' });
-    await page.setContent(reportHtml(sampleModel(), pdfAssets()), { waitUntil: 'load' });
-    await page.evaluate('document.fonts.ready.then(() => true)');
-    await page.screenshot({ path: join(out ?? '.', 'sample.png'), fullPage: true });
-    await page.setContent(reportHtml(absentModel(), pdfAssets()), { waitUntil: 'load' });
-    await page.evaluate('document.fonts.ready.then(() => true)');
-    await page.screenshot({ path: join(out ?? '.', 'sample-absent.png'), fullPage: true });
-    await browser.close();
-  }, 60_000);
+  it.skipIf(!out)(
+    'writes a PNG of the page for a visual check',
+    async () => {
+      const browser = await chromium.launch();
+      const page = await browser.newPage({
+        viewport: { width: 718, height: 1047 },
+        deviceScaleFactor: 2,
+      });
+      await page.emulateMedia({ media: 'print' });
+      await page.setContent(reportHtml(sampleModel(), pdfAssets()), { waitUntil: 'load' });
+      await page.evaluate('document.fonts.ready.then(() => true)');
+      await page.screenshot({ path: join(out ?? '.', 'sample.png'), fullPage: true });
+      await page.setContent(reportHtml(absentModel(), pdfAssets()), { waitUntil: 'load' });
+      await page.evaluate('document.fonts.ready.then(() => true)');
+      await page.screenshot({ path: join(out ?? '.', 'sample-absent.png'), fullPage: true });
+      await browser.close();
+    },
+    60_000,
+  );
 });

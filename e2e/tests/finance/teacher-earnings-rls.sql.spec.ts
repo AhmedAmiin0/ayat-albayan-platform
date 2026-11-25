@@ -3,6 +3,7 @@ import { earningId, pastLesson, pay, teacherWithRates } from '../../support/fina
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
 import { resetAbrar } from '../../support/core/schedule';
+import { errorCode } from '../../support/core/db-error';
 
 // RLS of migration 176 (rule 9): admins all; a teacher only their own rows; nobody else.
 
@@ -64,7 +65,7 @@ test.describe('teacher earnings RLS (migration 176)', () => {
     await rolledBack(async (tx) => {
       const { mine } = await seed(tx);
       const refused = (query: () => Promise<unknown>) =>
-        tx.savepoint(() => as(tx, mine.userId, query)).then(() => 'allowed', (e: { code?: string }) => e.code);
+        tx.savepoint(() => as(tx, mine.userId, query)).then(() => 'allowed', errorCode);
       expect(await refused(() => tx`update public.teacher_session_earnings set paid_amount = amount where teacher_id = ${mine.id}`)).toBe('42501');
       expect(await refused(() => tx`delete from public.teacher_payments where teacher_id = ${mine.id}`)).toBe('42501');
       expect(await refused(() => tx`insert into public.teacher_payments (teacher_id, amount, paid_at, method)
@@ -78,7 +79,7 @@ test.describe('teacher earnings RLS (migration 176)', () => {
     await rolledBack(async (tx) => {
       await seed(tx);
       await tx`set local role anon`;
-      const rows = await tx`select 1 from public.teacher_session_earnings`.then(() => 'allowed', (e: { code?: string }) => e.code);
+      const rows = await tx`select 1 from public.teacher_session_earnings`.then(() => 'allowed', errorCode);
       expect(rows).toBe('42501');
     });
   });

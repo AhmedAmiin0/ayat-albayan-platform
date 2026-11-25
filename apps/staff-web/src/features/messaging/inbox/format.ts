@@ -61,7 +61,8 @@ export function threadKind(th: ThreadView): keyof typeof t.inbox.kind | null {
   return th.lead_id ? 'lead' : null;
 }
 
-const templateName = (key: string): string => (t.templates.names as Record<string, string>)[key] ?? key;
+const templateName = (key: string): string =>
+  (t.templates.names as Record<string, string>)[key] ?? key;
 
 export function templateLine(key: string): string {
   return t.inbox.templateLine.replace('{name}', templateName(key));

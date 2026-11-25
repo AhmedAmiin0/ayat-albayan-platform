@@ -2,7 +2,10 @@
 import type { PortalGuardian, PortalStudent } from '@ab/shared';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { StudentChannelsModule } from '@/modules/teaching/student-channels';
+import { StudentRecordingsModule } from '@/modules/teaching/student-recordings';
+import { PortalModule } from './portal.module';
 import { bootWith } from '@/common/auth/auth.fakes';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
@@ -69,9 +72,16 @@ const SETTINGS = { meeting_link_auto: false, family_payment_instructions: 'تح�
 export async function portalApp() {
   const scope = { studentsOf: vi.fn(async (id: string) => FAMILIES[id] ?? []) };
   const lessons = {
-    readSettings: vi.fn(async () => ({ meeting_link_auto: false, join_opens_before_min: 10, join_closes_after_min: 120 })),
-    ahead: vi.fn(async () => [lessonRow()]), one: vi.fn(async (): Promise<PortalLessonRow | null> => lessonRow()), override: vi.fn(async (): Promise<string | null> => null),
-    requests: vi.fn(async (): Promise<PortalRequestRow[]> => []) };
+    readSettings: vi.fn(async () => ({
+      meeting_link_auto: false,
+      join_opens_before_min: 10,
+      join_closes_after_min: 120,
+    })),
+    ahead: vi.fn(async () => [lessonRow()]),
+    one: vi.fn(async (): Promise<PortalLessonRow | null> => lessonRow()),
+    override: vi.fn(async (): Promise<string | null> => null),
+    requests: vi.fn(async (): Promise<PortalRequestRow[]> => []),
+  };
   const reports = {
     sent: vi.fn(async () => [{ id: R1, lesson_id: L1, sent_at: '2026-10-20T18:00:00.000Z', pdf_path: `${S1}/${L1}.pdf`, notes: 'سر', lesson: { starts_at: '2026-10-20T16:00:00.000Z', teacher: { display_name_ar: 'أبرار', display_name_en: null } } }]),
     oneSent: vi.fn(async (): Promise<{ id: string; lesson_id: string; sent_at: string; pdf_path: string } | null> => ({ id: R1, lesson_id: L1, sent_at: '2026-10-20T18:00:00.000Z', pdf_path: `${S1}/${L1}.pdf` })),
@@ -94,7 +104,9 @@ export async function portalApp() {
   const storage = { signedDownload: vi.fn(async (ref: { seconds?: number }) => ({ url: 'https://files.example.org/signed', expires_at: `+${ref.seconds}` })) };
   const chat = { e164: vi.fn(async (): Promise<string | null> => '+966500000000') };
   const guardian = { ownOf: vi.fn(async (): Promise<PortalGuardian | null> => GUARDIAN) };
-  const builder = Test.createTestingModule({ imports: [AppModule] })
+  const builder = Test.createTestingModule({
+    imports: [messagingRoot(PortalModule, StudentRecordingsModule, StudentChannelsModule)],
+  })
     .overrideProvider(PortalScopeRepo).useValue(scope)
     .overrideProvider(PortalLessonsRepo).useValue(lessons)
     .overrideProvider(PortalReportsRepo).useValue(reports)

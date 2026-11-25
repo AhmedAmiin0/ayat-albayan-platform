@@ -22,8 +22,13 @@ const BOOKED = { rule_id: 'r1', student_ids: [JOUD.id], guardian_ids: ['g'], les
 async function bookFromLead() {
   apiFetch.mockImplementation(respond);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-      <BookingPage search={{ leadId: LEAD, phone: '+966501234567', name: 'أم جود' }} onOpenStudent={vi.fn()} />
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      <BookingPage
+        search={{ leadId: LEAD, phone: '+966501234567', name: 'أم جود' }}
+        onOpenStudent={vi.fn()}
+      />
     </QueryClientProvider>,
   );
   fireEvent.change(await screen.findByLabelText(t.leads.studentName), { target: { value: 'جوود' } });

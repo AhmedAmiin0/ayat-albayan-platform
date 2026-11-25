@@ -32,10 +32,17 @@ export function PauseFields({ studentId, today, draft, onChange }: PauseFieldsPr
       </Field>
       <Field label={words.reason} hint={words.reasonHint}>
         {(p) => (
-          <Input {...p} value={draft.reason} maxLength={COURSE_PAUSE_REASON_MAX} onChange={(e) => onChange({ reason: e.target.value })} />
+          <Input
+            {...p}
+            value={draft.reason}
+            maxLength={COURSE_PAUSE_REASON_MAX}
+            onChange={(e) => onChange({ reason: e.target.value })}
+          />
         )}
       </Field>
-      {problem === null && <PausePreviewLine studentId={studentId} from={draft.from} until={draft.until || null} />}
+      {problem === null && (
+        <PausePreviewLine studentId={studentId} from={draft.from} until={draft.until || null} />
+      )}
       <p className="text-xs text-ink-3">{words.noMessage}</p>
     </div>
   );
@@ -50,7 +57,9 @@ interface PausePreviewLineProps {
 
 /** The answer's lines: the dates and the extension, else its one count line. */
 const linesOf = (data: CoursePausePreview, tz: string): string[] =>
-  data.starts ? pauseLines(data, tz) : [coursePausePreviewText(t.coursePause.preview, data.lessons)];
+  data.starts
+    ? pauseLines(data, tz)
+    : [coursePausePreviewText(t.coursePause.preview, data.lessons)];
 
 /** Re-read as the dates change, valid dates only. */
 function PausePreviewLine({ studentId, from, until }: PausePreviewLineProps) {

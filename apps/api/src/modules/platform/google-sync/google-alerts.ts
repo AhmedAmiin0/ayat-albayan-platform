@@ -24,7 +24,11 @@ export class GoogleAlerts {
   }
 
   /** Once per handover: `since` is in the subject, so a later handover alerts again. */
-  scriptStillRunning(input: { teacherId: string; name: string; since: string | null }): Promise<void> {
+  scriptStillRunning(input: {
+    teacherId: string;
+    name: string;
+    since: string | null;
+  }): Promise<void> {
     const reason = ar.googleSync.alerts.scriptEventPresent.replace('{name}', input.name);
     const subject = `script_calendar:${input.teacherId}:${input.since ?? 'initial'}`;
     return this.push.notifyAdmins('google_sync_alert', { subject, vars: { reason }, bellOnly: true });

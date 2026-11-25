@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { PresenceModule } from './presence.module';
 import { bootWith } from '@/common/auth/auth.fakes';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { LastSeenService } from './last-seen.service';
@@ -18,7 +19,7 @@ describe('GET /presence over HTTP', () => {
   const f = fakePresence();
   let app: Awaited<ReturnType<typeof bootWith>>;
   beforeAll(async () => {
-    const builder = Test.createTestingModule({ imports: [AppModule] })
+    const builder = Test.createTestingModule({ imports: [featureRoot(PresenceModule)] })
       .overrideProvider(PresenceRepo)
       .useValue(f.repo)
       .overrideProvider(PresenceSettings)

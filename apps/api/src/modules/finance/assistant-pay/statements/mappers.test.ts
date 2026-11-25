@@ -16,9 +16,27 @@ describe('toTermsView / termsColumns', () => {
     expect(toTermsView('a1', terms(), 50)).toEqual({
       assistant_id: 'a1', commission: { type: 'fixed', value: 50, currency: 'EGP', starts_on: '2026-10-01' }, salary: { amount: 1000, currency: 'SAR', starts_on: '2026-10-01' }, renewal_share_percent: 50,
     });
-    expect(toTermsView('a1', null, 50)).toEqual({ assistant_id: 'a1', commission: null, salary: null, renewal_share_percent: 50 });
-    const cleared = terms({ commission_type: null, commission_value: null, commission_currency: null, commission_starts_on: null, salary_amount: null, salary_currency: null, salary_starts_on: null });
-    expect(toTermsView('a1', cleared, 40)).toEqual({ assistant_id: 'a1', commission: null, salary: null, renewal_share_percent: 40 });
+    expect(toTermsView('a1', null, 50)).toEqual({
+      assistant_id: 'a1',
+      commission: null,
+      salary: null,
+      renewal_share_percent: 50,
+    });
+    const cleared = terms({
+      commission_type: null,
+      commission_value: null,
+      commission_currency: null,
+      commission_starts_on: null,
+      salary_amount: null,
+      salary_currency: null,
+      salary_starts_on: null,
+    });
+    expect(toTermsView('a1', cleared, 40)).toEqual({
+      assistant_id: 'a1',
+      commission: null,
+      salary: null,
+      renewal_share_percent: 40,
+    });
   });
 
   it('a percent drops any currency; a null part clears all three of its columns', () => {
@@ -29,8 +47,12 @@ describe('toTermsView / termsColumns', () => {
 
 describe('toStatementView / readTotals', () => {
   it('readTotals keeps per-currency numbers and reads anything else as empty', () => {
-    expect(readTotals({ SAR: { salary: 1, commissions: 2, adjustments: -1, total: 2 } })).toEqual({ SAR: { salary: 1, commissions: 2, adjustments: -1, total: 2 } });
-    expect(readTotals({ SAR: { total: 'x' } })).toEqual({ SAR: { salary: 0, commissions: 0, adjustments: 0, total: 0 } });
+    expect(readTotals({ SAR: { salary: 1, commissions: 2, adjustments: -1, total: 2 } })).toEqual({
+      SAR: { salary: 1, commissions: 2, adjustments: -1, total: 2 },
+    });
+    expect(readTotals({ SAR: { total: 'x' } })).toEqual({
+      SAR: { salary: 0, commissions: 0, adjustments: 0, total: 0 },
+    });
     expect(readTotals([1])).toEqual({});
     expect(readTotals('x')).toEqual({});
     expect(readTotals({ SAR: 5 })).toEqual({});

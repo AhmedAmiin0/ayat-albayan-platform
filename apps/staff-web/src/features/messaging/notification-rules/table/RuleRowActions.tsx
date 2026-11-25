@@ -9,7 +9,9 @@ const r = t.notificationRules;
 /** Not a live region: RulesSection's always-mounted polite region announces failures. */
 export function RuleRowActions({ row, name }: { row: RuleRowState; name: string }) {
   const invalid = !row.result.ok;
-  const summary = row.result.ok ? row.result.changes.join(t.common.listSeparator) : row.result.error;
+  const summary = row.result.ok
+    ? row.result.changes.join(t.common.listSeparator)
+    : row.result.error;
   return (
     <div className="grid gap-1.5">
       {row.dirty && (

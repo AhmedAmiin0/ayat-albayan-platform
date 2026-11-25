@@ -12,7 +12,15 @@ import { showAnswer } from '@/features/messaging/inbox/api/send-cache';
 const RESEND_TEXT = ar.inbox.resend.text;
 
 /** The bubble's clientRequestId is reused for every opening, so it sends once (rule 8). */
-export function ResendDialog({ phone, clientRequestId, onClose }: { phone: string; clientRequestId: string; onClose: () => void }) {
+export function ResendDialog({
+  phone,
+  clientRequestId,
+  onClose,
+}: {
+  phone: string;
+  clientRequestId: string;
+  onClose: () => void;
+}) {
   const queryClient = useQueryClient();
   const send = useMutation({
     mutationFn: () => sendText({ phone, text: RESEND_TEXT, clientRequestId }),

@@ -71,7 +71,10 @@ describe('CalendarWriter: imported lessons of a teacher handed over to the platf
     const foreign = { ...scriptEvent(), id: 'ev-script-later' };
     s.google.events.get(CAL)?.set(foreign.id, foreign);
     s.source.lesson.mockResolvedValue(lessonSource({ origin: false, managed: false }));
-    const r = await s.writer.write(item({ google_id: first.googleId, google_parent_id: CAL, content_hash: first.hash }), s.live);
+    const r = await s.writer.write(
+      item({ google_id: first.googleId, google_parent_id: CAL, content_hash: first.hash }),
+      s.live,
+    );
     expect(r).toMatchObject({ state: 'synced', googleId: null });
     expect([...(s.google.events.get(CAL)?.keys() ?? [])]).toEqual([foreign.id]);
     expect(await s.writer.write(item(), s.live)).toEqual({ state: 'skipped', reason: 'not_platform_origin' });
@@ -86,7 +89,10 @@ describe('CalendarWriter: an imported lesson moved to another teacher follows th
     s.google.calendars.set(OTHER, 'آيات البيان — Teacher B');
     const first = await s.writer.write(item(), s.live);
     if (first.state !== 'synced' || !first.googleId) throw new Error('not synced');
-    return { s, moved: item({ google_id: first.googleId, google_parent_id: CAL, content_hash: first.hash }) };
+    return {
+      s,
+      moved: item({ google_id: first.googleId, google_parent_id: CAL, content_hash: first.hash }),
+    };
   }
 
   it('to a platform-owned teacher: our old event goes, a new one is made on their calendar', async () => {

@@ -35,7 +35,9 @@ describe('system-role parity with the old @Roles table', () => {
   it('still has every endpoint of the frozen table, and only role routes are new', () => {
     const now = new Set(routes.map((r) => r.key));
     expect(Object.keys(before).filter((k) => !now.has(k))).toEqual([]);
-    expect(routes.filter((r) => !(r.key in before) && !ADDED.test(r.key)).map((r) => r.key)).toEqual([]);
+    expect(
+      routes.filter((r) => !(r.key in before) && !ADDED.test(r.key)).map((r) => r.key),
+    ).toEqual([]);
   });
 
   it('admits and refuses each system role exactly as before, on every endpoint', () => {

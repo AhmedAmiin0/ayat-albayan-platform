@@ -25,7 +25,11 @@ describe('MyFeedback (teacher)', () => {
   afterEach(() => apiFetch.mockReset());
 
   it('shows my own average and my students’ answers — no teacher column, no phone', async () => {
-    open({ items: [ROW_DONE], total: 1, average: { avg_rating: 4.5, n: 2, recommend_yes_pct: 50 } });
+    open({
+      items: [ROW_DONE],
+      total: 1,
+      average: { avg_rating: 4.5, n: 2, recommend_yes_pct: 50 },
+    });
     expect(await screen.findByText('سهيلة')).toBeTruthy();
     expect(screen.getByText('4.5')).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/feedback?page=1&pageSize=20');

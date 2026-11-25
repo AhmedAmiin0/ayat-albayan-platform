@@ -26,7 +26,13 @@ export interface ChangeBodyInput {
 }
 
 /** POST …/course/change[/check] body; null with nothing picked. */
-export function changeBody({ course, picks, prefilled = [], requestId, override }: ChangeBodyInput): CourseChangeBody | null {
+export function changeBody({
+  course,
+  picks,
+  prefilled = [],
+  requestId,
+  override,
+}: ChangeBodyInput): CourseChangeBody | null {
   const rule = dayTimesKeeping(picks, course.tz, prefilled);
   if (!rule) return null;
   return {

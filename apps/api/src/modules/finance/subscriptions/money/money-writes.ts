@@ -59,7 +59,10 @@ export class MoneyWrites {
 
   private async followUp(entry: Done, studentId: string): Promise<void> {
     await this.follow.after(entry, { studentId, actorId: entry.actorId });
-    await this.alerts.evaluateStudents([studentId], { actorId: entry.actorId, cause: causeOf(entry) });
+    await this.alerts.evaluateStudents([studentId], {
+      actorId: entry.actorId,
+      cause: causeOf(entry),
+    });
     const paid = paidPackage(entry);
     if (paid) await this.packages.paid(paid);
   }

@@ -36,7 +36,18 @@ export interface WizardBodyProps {
 
 /** The wizard owns the chrome: step list, next and back. */
 export function WizardBody(props: WizardBodyProps) {
-  const { step, draft, patch, primary, siblings, onOpenStudent, hint, missedLessonId, onGoto, onBooked } = props;
+  const {
+    step,
+    draft,
+    patch,
+    primary,
+    siblings,
+    onOpenStudent,
+    hint,
+    missedLessonId,
+    onGoto,
+    onBooked,
+  } = props;
   const mode = useBookingMode();
   switch (step) {
     case 'students': {
@@ -52,7 +63,12 @@ export function WizardBody(props: WizardBodyProps) {
               onChange={({ newStudent, ...rest }) =>
                 patch({
                   ...rest,
-                  ...(newStudent ? { newStudent, country: guardianCountry({ phone_e164: newStudent.guardianPhone }) } : {}),
+                  ...(newStudent
+                    ? {
+                        newStudent,
+                        country: guardianCountry({ phone_e164: newStudent.guardianPhone }),
+                      }
+                    : {}),
                 })
               }
             />

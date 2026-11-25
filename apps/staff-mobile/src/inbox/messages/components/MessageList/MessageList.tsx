@@ -110,6 +110,7 @@ export function MessageList({ phone, query: live }: { phone: string; query: Thre
             ref={list}
             testID="message-list"
             inverted
+            strictMode // a stable cell renderer: a floating-day redraw skips the cells
             style={{ flex: 1 }}
             contentContainerStyle={{ paddingVertical: 4 }}
             data={rows}

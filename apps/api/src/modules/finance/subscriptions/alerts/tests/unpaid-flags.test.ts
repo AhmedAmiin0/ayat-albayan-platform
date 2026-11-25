@@ -12,8 +12,14 @@ import { UnpaidFlags } from '@/modules/finance/subscriptions/alerts/unpaid-flags
 import type { CourseDue } from '@/modules/finance/subscriptions/course-due/course-due';
 
 const bal = (id: string, studentId: string, remaining: number): BalanceRow => ({
-  subscription_id: id, student_id: studentId, lessons_total: 4, lessons_used: 4 - remaining, remaining,
-  is_last: true, ended_at: null, projected_end_at: null,
+  subscription_id: id,
+  student_id: studentId,
+  lessons_total: 4,
+  lessons_used: 4 - remaining,
+  remaining,
+  is_last: true,
+  ended_at: null,
+  projected_end_at: null,
 });
 
 function flags(on: boolean) {
@@ -49,11 +55,19 @@ describe('UnpaidFlags (R-SUB-02 «الباقة غير مدفوعة» on future l
 describe('AlertsJob', () => {
   function job(students: () => Promise<string[]>) {
     const queries = { sweepStudents: vi.fn(students) };
-    const alerts = { evaluateStudents: vi.fn(async () => 1), evaluateLessons: vi.fn(async () => undefined) };
+    const alerts = {
+      evaluateStudents: vi.fn(async () => 1),
+      evaluateLessons: vi.fn(async () => undefined),
+    };
     const events = new LessonEvents();
     const courseDue = { sweep: vi.fn(async () => 0) };
     const asAlerts = alerts as unknown as SubscriptionAlertsService;
-    const j = new AlertsJob(queries as unknown as AlertsRepo, asAlerts, events, courseDue as unknown as CourseDue);
+    const j = new AlertsJob(
+      queries as unknown as AlertsRepo,
+      asAlerts,
+      events,
+      courseDue as unknown as CourseDue,
+    );
     return { j, alerts, events, courseDue, queries };
   }
 

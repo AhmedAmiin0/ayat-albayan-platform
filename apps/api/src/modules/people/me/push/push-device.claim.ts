@@ -18,7 +18,10 @@ export interface DeviceClaim {
  * the caller's hands now); 401 when the caller's session ended meanwhile. The key is kept when the
  * device proved it, else the fresh one minted here replaces the old holder's.
  */
-export async function claimDevice(db: Db, claim: DeviceClaim & { sessionId: string }): Promise<string> {
+export async function claimDevice(
+  db: Db,
+  claim: DeviceClaim & { sessionId: string },
+): Promise<string> {
   const fresh = mintDeviceKey();
   const { data, error } = await db.rpc('claim_push_device', {
     p_token: claim.token,

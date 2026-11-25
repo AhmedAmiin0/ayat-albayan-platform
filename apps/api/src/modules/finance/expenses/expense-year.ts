@@ -9,7 +9,11 @@ type Row = { month: string; category: string; amount: number; currency: string; 
  */
 const noCategories = (): Record<string, number> => ({});
 
-export function expenseYear(input: { year: string; rows: readonly Row[]; conversion: Conversion }): ExpenseYearView {
+export function expenseYear(input: {
+  year: string;
+  rows: readonly Row[];
+  conversion: Conversion;
+}): ExpenseYearView {
   const months = Array.from({ length: 12 }, (_, i) => ({
     month: `${input.year}-${String(i + 1).padStart(2, '0')}`,
     total: 0,

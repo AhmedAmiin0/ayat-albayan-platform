@@ -15,6 +15,15 @@ export {
 /** Only what changed, validated with the API's own schema (leadQualificationPatchSchema). */
 export function qualPatch(form: QualForm, before: QualForm): QualResult {
   const c = t.common;
-  const text = { invalidTimeZone: c.invalidTimeZone, invalidTime: c.invalidTime, endBeforeStart: c.endBeforeStart, error: c.error };
-  return leadQualPatch(form, before, { ...text, ageInvalid: t.students.ageInvalid, phoneErrors: c.phoneErrors });
+  const text = {
+    invalidTimeZone: c.invalidTimeZone,
+    invalidTime: c.invalidTime,
+    endBeforeStart: c.endBeforeStart,
+    error: c.error,
+  };
+  return leadQualPatch(form, before, {
+    ...text,
+    ageInvalid: t.students.ageInvalid,
+    phoneErrors: c.phoneErrors,
+  });
 }

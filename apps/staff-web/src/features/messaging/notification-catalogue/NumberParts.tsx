@@ -5,7 +5,13 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { numberParts } from './catalogue-text';
 
 /** The number is an LTR island so it never renders reversed. */
-export function NumberParts({ entry, lines }: { entry: NotificationEntryView; lines: readonly LineHealthView[] }) {
+export function NumberParts({
+  entry,
+  lines,
+}: {
+  entry: NotificationEntryView;
+  lines: readonly LineHealthView[];
+}) {
   return (
     <>
       {numberParts(entry, lines).map((part, i) => (

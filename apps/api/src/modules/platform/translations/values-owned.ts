@@ -4,7 +4,8 @@ import { ConflictException } from '@nestjs/common';
 /** docs/26 §3: ar hints of settings rows are edited on values only; module-owned keys excluded. */
 export const VALUES_HINT_KEYS: ReadonlyMap<string, string> = (() => {
   const out = new Map<string, string>();
-  for (const e of SEED_ENTRIES) if (e.hintKey && !isOwnedSettingKey(e.key) && !out.has(e.hintKey)) out.set(e.hintKey, e.key);
+  for (const e of SEED_ENTRIES)
+    if (e.hintKey && !isOwnedSettingKey(e.key) && !out.has(e.hintKey)) out.set(e.hintKey, e.key);
   return out;
 })();
 

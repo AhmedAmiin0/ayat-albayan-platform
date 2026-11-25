@@ -53,7 +53,13 @@ export class PortalLessonsService {
       this.queries.override(call.studentId),
       this.extras.of(student, now),
     ]);
-    const ctx = { academyAuto: values.meeting_link_auto, override, classroom: this.rooms.classroomReady(), win, now };
+    const ctx = {
+      academyAuto: values.meeting_link_auto,
+      override,
+      classroom: this.rooms.classroomReady(),
+      win,
+      now,
+    };
     const rooms = await this.extras.rooms(rows, { now, family });
     const lessonIds = rows.map((r) => r.id);
     const requests = await this.queries.requests({ lessonIds, userId: call.user.id });

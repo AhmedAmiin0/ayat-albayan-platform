@@ -14,5 +14,10 @@ export const Route = createFileRoute('/admin/(ops)/schedule')({
 function ScheduleRoute() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
-  return <WeekSchedule search={search} onSearch={(next) => void navigate({ search: parseScheduleSearch(next) })} />;
+  return (
+    <WeekSchedule
+      search={search}
+      onSearch={(next) => void navigate({ search: parseScheduleSearch(next) })}
+    />
+  );
 }

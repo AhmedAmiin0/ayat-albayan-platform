@@ -29,7 +29,10 @@ export function useMembership(phone: string, cached: readonly ChatListRef[]): Me
       await setMember(intent);
       patchThreadLists(queryClient, intent);
     };
-    enqueueMember({ id, phone, member: on }, { send, settle: () => refreshLists(queryClient), onFail: () => setFailed(true) });
+    enqueueMember(
+      { id, phone, member: on },
+      { send, settle: () => refreshLists(queryClient), onFail: () => setFailed(true) },
+    );
   };
   return { member, failed, toggle };
 }

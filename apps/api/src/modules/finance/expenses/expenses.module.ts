@@ -13,7 +13,14 @@ import { ExpensesSettings } from './expenses.settings';
 @Module({
   imports: [DashboardModule],
   controllers: [ExpensesController, ExpenseCategoriesController],
-  providers: [ExpensesRepo, ExpensesService, ExpensesSettings, ExpenseReceipts, ExpenseYearService, ExpensesJob],
+  providers: [
+    ExpensesRepo,
+    ExpensesService,
+    ExpensesSettings,
+    ExpenseReceipts,
+    ExpenseYearService,
+    ExpensesJob,
+  ],
   exports: [ExpensesRepo],
 })
 export class ExpensesModule {}

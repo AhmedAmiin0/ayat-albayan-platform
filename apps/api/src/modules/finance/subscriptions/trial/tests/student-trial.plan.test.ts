@@ -2,7 +2,12 @@ import type { Attendance, LessonStatus, PackageSize } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { trialFactsOf, trialStudentsOf, type TrialLessonRow } from '@/modules/finance/subscriptions/trial/student-trial.plan';
 
-type RowOpts = { student_id?: string; attendance?: Attendance; status?: LessonStatus; pkg?: PackageSize | null };
+type RowOpts = {
+  student_id?: string;
+  attendance?: Attendance;
+  status?: LessonStatus;
+  pkg?: PackageSize | null;
+};
 const row = (o: RowOpts): TrialLessonRow => ({
   student_id: o.student_id ?? 's1',
   attendance: o.attendance ?? null,
@@ -13,7 +18,13 @@ const row = (o: RowOpts): TrialLessonRow => ({
     rule: o.pkg === null ? null : { package: o.pkg ?? 'trial' },
   },
 });
-type Imported = { status?: LessonStatus; chargeable?: boolean; instant?: boolean; makeup?: string; rule?: string };
+type Imported = {
+  status?: LessonStatus;
+  chargeable?: boolean;
+  instant?: boolean;
+  makeup?: string;
+  rule?: string;
+};
 const imported = (o: Imported): TrialLessonRow => ({
   student_id: 's1',
   attendance: 'on_time',

@@ -22,7 +22,12 @@ const resumedText = (result: Pick<CoursePauseResult, 'conflicts'>): string =>
   result.conflicts > 0 ? t.coursePause.resumedConflicts.replace('{n}', String(result.conflicts)) : t.coursePause.resumed;
 
 /** POST /students/:id/course-pause/resume after one confirm. */
-export function ResumeCourseDialog({ studentId, subscriptionId, onClose, onDone }: ResumeCourseDialogProps) {
+export function ResumeCourseDialog({
+  studentId,
+  subscriptionId,
+  onClose,
+  onDone,
+}: ResumeCourseDialogProps) {
   const invalidate = useInvalidatePause(studentId);
   const tz = useViewerTz();
   const preview = useQuery(resumePreviewQuery(studentId));
@@ -50,7 +55,9 @@ export function ResumeCourseDialog({ studentId, subscriptionId, onClose, onDone 
         </>
       }
     >
-      {resume.isError ? <FormAlert>{t.coursePause.errors[coursePauseErrorCode(resume.error)]}</FormAlert> : null}
+      {resume.isError ? (
+        <FormAlert>{t.coursePause.errors[coursePauseErrorCode(resume.error)]}</FormAlert>
+      ) : null}
     </Dialog>
   );
 }

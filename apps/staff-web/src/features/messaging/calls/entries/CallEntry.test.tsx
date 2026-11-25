@@ -13,7 +13,12 @@ const call = (patch: Partial<CallView> = {}): CallView => ({
 });
 
 function ui(patch: Partial<CallsUi> = {}): CallsUi {
-  return { config: { enabled: true, available: true, canCall: true, iceServers: [] }, busy: false, call: vi.fn(), ...patch };
+  return {
+    config: { enabled: true, available: true, canCall: true, iceServers: [] },
+    busy: false,
+    call: vi.fn(),
+    ...patch,
+  };
 }
 
 describe('a call in the chat log (WhatsApp-like)', () => {

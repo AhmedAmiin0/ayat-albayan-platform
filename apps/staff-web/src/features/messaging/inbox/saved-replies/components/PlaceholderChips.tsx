@@ -10,15 +10,25 @@ export interface PlaceholderChipsProps {
 }
 
 /** The text with `token` at the caret (or the end), and where the caret goes next. */
-export function insertAt(input: { value: string; token: string; at: number | null }): { text: string; caret: number } {
+export function insertAt(input: { value: string; token: string; at: number | null }): {
+  text: string;
+  caret: number;
+} {
   const at = input.at ?? input.value.length;
-  return { text: input.value.slice(0, at) + input.token + input.value.slice(at), caret: at + input.token.length };
+  return {
+    text: input.value.slice(0, at) + input.token + input.value.slice(at),
+    caret: at + input.token.length,
+  };
 }
 
 export function PlaceholderChips({ target, value, onChange }: PlaceholderChipsProps) {
   const insert = (key: SavedReplyPlaceholder) => {
     const box = target.current;
-    const { text, caret } = insertAt({ value, token: placeholderToken(key), at: box ? box.selectionStart : null });
+    const { text, caret } = insertAt({
+      value,
+      token: placeholderToken(key),
+      at: box ? box.selectionStart : null,
+    });
     onChange(text);
     requestAnimationFrame(() => {
       box?.focus();

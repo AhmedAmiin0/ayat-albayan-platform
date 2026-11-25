@@ -3,7 +3,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { assistantError } from './assistant-pay.errors';
 
-type PaidArgs = { paidAt: string; method: string | null; note: string | null; receiptPath: string | null };
+type PaidArgs = {
+  paidAt: string;
+  method: string | null;
+  note: string | null;
+  receiptPath: string | null;
+};
 
 const field = (data: Json, key: string): unknown =>
   typeof data === 'object' && data !== null && !Array.isArray(data) ? data[key] : undefined;
@@ -40,8 +45,17 @@ export class AssistantRpc {
 
   async pay(input: { statementId: string; actorId: string; paid: PaidArgs }): Promise<void> {
     const { paid } = input;
-    const p: Json = { paid_at: paid.paidAt, method: paid.method, note: paid.note, receipt_path: paid.receiptPath };
-    const { error } = await this.db.rpc('pay_assistant_statement', { p_statement: input.statementId, p_actor: input.actorId, p });
+    const p: Json = {
+      paid_at: paid.paidAt,
+      method: paid.method,
+      note: paid.note,
+      receipt_path: paid.receiptPath,
+    };
+    const { error } = await this.db.rpc('pay_assistant_statement', {
+      p_statement: input.statementId,
+      p_actor: input.actorId,
+      p,
+    });
     if (error) throw assistantError(error);
   }
 
@@ -55,7 +69,14 @@ export class AssistantRpc {
   }
 
   /** A retry carries the same requestId (unique per assistant) and gets the first adjustment's id back. */
-  async adjust(input: { assistantId: string; amount: number; currency: string; reason: string; actorId: string; requestId?: string | undefined }): Promise<string> {
+  async adjust(input: {
+    assistantId: string;
+    amount: number;
+    currency: string;
+    reason: string;
+    actorId: string;
+    requestId?: string | undefined;
+  }): Promise<string> {
     const { data, error } = await this.db.rpc('add_assistant_adjustment', {
       p_assistant: input.assistantId,
       p_amount: input.amount,
@@ -74,7 +95,11 @@ export class AssistantRpc {
     if (error) throw assistantError(error);
   }
 
-  async voidCommission(input: { commissionId: string; actorId: string; reason: string }): Promise<void> {
+  async voidCommission(input: {
+    commissionId: string;
+    actorId: string;
+    reason: string;
+  }): Promise<void> {
     const { error } = await this.db.rpc('void_assistant_commission', {
       p_commission: input.commissionId,
       p_actor: input.actorId,
@@ -84,7 +109,12 @@ export class AssistantRpc {
   }
 
   /** Attribution of one or many students (null clears it); the commission is evaluated after. Returns how many changed. */
-  async broughtBy(input: { studentIds: string[]; assistantId: string | null; actorId: string; broughtAt?: string }): Promise<number> {
+  async broughtBy(input: {
+    studentIds: string[];
+    assistantId: string | null;
+    actorId: string;
+    broughtAt?: string;
+  }): Promise<number> {
     const { data, error } = await this.db.rpc('set_students_brought_by', {
       p_students: input.studentIds,
       p_assistant: input.assistantId,

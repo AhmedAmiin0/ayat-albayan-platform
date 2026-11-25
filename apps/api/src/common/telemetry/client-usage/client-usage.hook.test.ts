@@ -21,7 +21,9 @@ describe('client usage hook (X-AB-Client × route template)', () => {
   const counter = new ClientUsageCounter();
 
   beforeAll(async () => {
-    app = await NestFactory.create<NestFastifyApplication>(TestModule, new FastifyAdapter(), { logger: false });
+    app = await NestFactory.create<NestFastifyApplication>(TestModule, new FastifyAdapter(), {
+      logger: false,
+    });
     app.enableCors({ origin: ['https://web.example'] });
     registerClientUsage(app, counter);
     await app.init();

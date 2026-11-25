@@ -56,7 +56,9 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
       s.store.notify(callErrorText(e));
     }
   };
-  const ui: CallsUi | null = config ? { config, busy: s.session !== null, call: (target) => void call(target) } : null;
+  const ui: CallsUi | null = config
+    ? { config, busy: s.session !== null, call: (target) => void call(target) }
+    : null;
   const overlay = (
     <>
       <CallOverlay s={s} showsPhone={showsPhone} ask={ask} onAsk={(next) => (setAsk(null), setSent(next === 'sent'))} onSilence={setSilenced} />

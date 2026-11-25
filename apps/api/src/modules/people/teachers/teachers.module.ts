@@ -10,7 +10,13 @@ import { TeachersSettings } from './teachers.settings';
 /** Teachers, weekly availability, time-off, free-slot query. R-TCH-01, R-TCH-02. */
 @Module({
   controllers: [TeachersController, AvailabilityController],
-  providers: [TeachersSettings, TeachersRepo, TeacherUsernames, AvailabilityRepo, AvailabilityQuery],
+  providers: [
+    TeachersSettings,
+    TeachersRepo,
+    TeacherUsernames,
+    AvailabilityRepo,
+    AvailabilityQuery,
+  ],
   exports: [AvailabilityRepo, AvailabilityQuery, TeachersRepo],
 })
 export class TeachersModule {}

@@ -2,7 +2,7 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { bookingRoot } from '@/modules/teaching/booking/booking-root.fakes';
 import {
   PERMISSION_RESOLVER,
   systemResolver,
@@ -70,7 +70,7 @@ export async function outsideApp() {
   const outside = { slots: vi.fn(), outside: vi.fn() };
   const booking = { book: vi.fn(), check: vi.fn() };
   const sales = { ownership: vi.fn() };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [bookingRoot()] })
     .overrideProvider(PERMISSION_RESOLVER)
     .useValue(systemResolver)
     .overrideProvider(TOKEN_VERIFIER)

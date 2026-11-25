@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Migrations 286 + 287 (review of the users-control PR): a client session cannot write
 // profiles.disabled_*, a disabled admin is an admin no more for RLS, the service role (the API) can
 // disable / enable, and the academy always keeps an active system admin.
 
-const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', (e: { code?: string }) => e.code);
+const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
 const clearClaims = (tx: Tx) => tx`select set_config('request.jwt.claims', '', true)`;
 
 /** Runs `q` as the service role (JWT role service_role), then back to the owner with no claims. */

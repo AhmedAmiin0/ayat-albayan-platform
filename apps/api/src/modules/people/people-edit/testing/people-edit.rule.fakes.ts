@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { PeopleEditModule } from '@/modules/people/people-edit/people-edit.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '@/common/auth/auth.guard';
 import { DB } from '@/common/db/db.module';
@@ -48,7 +49,7 @@ export async function ruleApp() {
   const phones = { removeSecond: vi.fn() };
   const audit = { record: vi.fn() };
   const settings = fakeSettings({ sales_require_assignee: true, sales_auto_assign: true });
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [featureRoot(PeopleEditModule)] })
     .overrideProvider(PERMISSION_RESOLVER)
     .useValue(systemResolver)
     .overrideProvider(TOKEN_VERIFIER)

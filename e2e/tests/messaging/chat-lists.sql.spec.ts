@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Chat lists (docs/22 §1, migrations 520-521): API-only writes, max 30 lists, E.164 members.
 
@@ -23,14 +24,14 @@ test.describe('chat lists in the database (migrations 520, 521)', () => {
       expect(seen[0]?.n).toBe(0);
       const code = await tx
         .savepoint((sp) => as(sp, teacher, () => sp`insert into public.chat_lists (name, name_key) values ('س', 'س')`))
-        .then(() => 'ok', (e: { code?: string }) => e.code);
+        .then(() => 'ok', errorCode);
       expect(code).toBe('42501');
     });
   });
 
   test('a list delete cascades to its memberships only; names are unique by key; phones are E.164', async () => {
     await rolledBack(async (tx) => {
-      const code = (q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', (e: { code?: string }) => e.code);
+      const code = (q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
       const [list] = await tx<{ id: string }[]>`insert into public.chat_lists (name, name_key) values ('بانتظار الدفع', 'بانتظار الدفع') returning id`;
       if (!list) throw new Error('list not written');
       await tx`insert into public.messages (direction, phone_e164, body, status) values ('inbound', ${PHONE}, 'السلام عليكم', 'delivered')`;
@@ -54,7 +55,7 @@ test.describe('chat lists in the database (migrations 520, 521)', () => {
       await tx`insert into public.chat_lists (name, name_key) select 'ق' || i, 'ق' || i from generate_series(1, 30) as i`;
       const over = await tx.savepoint((sp) => sp`insert into public.chat_lists (name, name_key) values ('ق31', 'ق31')`).then(
         () => 'ok',
-        (e: { code?: string }) => e.code,
+        errorCode,
       );
       expect(over).toBe('23514');
       const roles = await tx<{ key: string }[]>`select r.key from public.role_permissions p join public.roles r on r.id = p.role_id

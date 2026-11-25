@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { as, family, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Rule 9 behind the API with a teacher JWT: own rows only; writes to others change nothing.
 
@@ -58,7 +59,7 @@ test.describe('teacher isolation by RLS (rule 9)', () => {
         pair((x) => x.report),
       ];
       const read = <T extends object>(query: () => Promise<T[]>) => as(tx, teacher, query);
-      type V = { v: string };
+      interface V { v: string }
       expect(await read(() => tx<V[]>`select id::text as v from public.lessons where id in ${tx(lessons)}`)).toEqual([{ v: s.mine.lesson }]);
       expect(await read(() => tx<V[]>`select id::text as v from public.students where id in ${tx(students)}`)).toEqual([{ v: s.mine.student }]);
       expect(await read(() => tx<V[]>`select lesson_id::text as v from public.lesson_students where lesson_id in ${tx(lessons)}`)).toEqual([{ v: s.mine.lesson }]);
@@ -76,7 +77,7 @@ test.describe('teacher isolation by RLS (rule 9)', () => {
       const s = await seed(tx);
       const teacher = await userId(tx, USERS.teacher.email);
       const attempt = (query: () => Promise<unknown>) =>
-        tx.savepoint(() => as(tx, teacher, query)).catch((e: { code?: string }) => e.code);
+        tx.savepoint(() => as(tx, teacher, query)).catch(errorCode);
       await attempt(() => tx`update public.lessons set status = 'confirmed' where id = ${s.theirs.lesson}`);
       await attempt(() => tx`update public.lesson_reports set notes = 'اختراق' where id = ${s.theirs.report}`);
       await attempt(() => tx`delete from public.report_attachments where report_id = ${s.theirs.report}`);

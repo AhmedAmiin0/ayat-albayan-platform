@@ -15,7 +15,10 @@ import { KindLine } from './KindLine';
 import { FEEDBACK_RECOMMEND, type FeedbackFormView, type FeedbackRecommend } from '@/features/teaching/feedback/types';
 import type { FeedbackRating } from '@ab/catalog';
 
-const RECOMMEND = FEEDBACK_RECOMMEND.map((r) => ({ value: r, label: t.enums.feedbackRecommend[r] }));
+const RECOMMEND = FEEDBACK_RECOMMEND.map((r) => ({
+  value: r,
+  label: t.enums.feedbackRecommend[r],
+}));
 const PROBLEM_TEXT: Record<PublicProblem, string> = {
   expired: t.feedback.expired,
   invalid: t.feedback.invalid,

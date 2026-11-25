@@ -48,7 +48,9 @@ function crossings(from: string, forbidden: readonly string[]): string[] {
 
 describe('settings / custom-config / public-config boundaries', () => {
   it('scans the three folders', () => {
-    const names = [SETTINGS, CUSTOM, PUBLIC].flatMap((f) => sources(f).map((p) => relative(COMMON, p)));
+    const names = [SETTINGS, CUSTOM, PUBLIC].flatMap((f) =>
+      sources(f).map((p) => relative(COMMON, p)),
+    );
     expect(names).toEqual(
       expect.arrayContaining([
         join(SETTINGS, 'settings.module.ts'),

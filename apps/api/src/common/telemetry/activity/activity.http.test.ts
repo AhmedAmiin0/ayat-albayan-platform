@@ -5,7 +5,7 @@ import { ADMIN, moneyApp, resetMocks, type Mocks } from '@/modules/finance/subsc
 import { ActivityRepo } from './activity.repo';
 import { ActivityWriter } from './activity.writer';
 
-describe('activity log over HTTP (real AppModule, interceptor and guards)', () => {
+describe('activity log over HTTP (money routes, real interceptor and guards)', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
   let call: Awaited<ReturnType<typeof moneyApp>>['call'];

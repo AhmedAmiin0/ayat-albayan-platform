@@ -1,7 +1,8 @@
 import { Test } from '@nestjs/testing';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { TestAccountsModule } from './test-accounts.module';
 import { bootWith, ROLE_ADMIN, ROLE_USERS } from '@/common/auth/auth.fakes';
 import { TestAccountsRepo } from './test-accounts.repo';
 
@@ -15,7 +16,7 @@ describe('PATCH /admin/users/:id/test and /students/:id/test (docs/56)', () => {
     app.inject({ method: 'PATCH', url, headers: { authorization: `Bearer ${token}` }, payload });
 
   beforeAll(async () => {
-    const builder = Test.createTestingModule({ imports: [AppModule] })
+    const builder = Test.createTestingModule({ imports: [featureRoot(TestAccountsModule)] })
       .overrideProvider(TestAccountsRepo)
       .useValue(repo);
     app = await bootWith(builder, ROLE_USERS);

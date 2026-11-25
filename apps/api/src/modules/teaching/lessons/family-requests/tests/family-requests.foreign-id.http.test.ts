@@ -1,7 +1,8 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { FamilyRequestsModule } from '@/modules/teaching/lessons/family-requests/family-requests.module';
 import { bootWith, ROLE_SALES, ROLE_USERS } from '@/common/auth/auth.fakes';
 import { LESSON_ID, lessonRow, STUDENT_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import { ProposalDecisionService } from '@/modules/teaching/lessons/proposals/lesson-proposals.service';
@@ -36,7 +37,7 @@ describe('family requests answered by an assistant (lessons.reschedule)', () => 
   const decided = () => [...m.deciding.approve.mock.calls, ...m.deciding.reject.mock.calls];
 
   beforeAll(async () => {
-    const builder = Test.createTestingModule({ imports: [AppModule] })
+    const builder = Test.createTestingModule({ imports: [messagingRoot(FamilyRequestsModule)] })
       .overrideProvider(LessonProposalRepo)
       .useValue(m.proposals)
       .overrideProvider(LessonStore)

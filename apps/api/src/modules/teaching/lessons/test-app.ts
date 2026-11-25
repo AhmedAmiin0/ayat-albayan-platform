@@ -5,7 +5,8 @@ import { SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { LessonsModule } from './lessons.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import { SettingsService } from '@/common/settings/settings.service';
@@ -83,10 +84,10 @@ function mocks() {
   };
 }
 
-/** Boots AppModule with the mocks; `reset()` restores the happy-path defaults (call in beforeEach). */
+/** Boots its root with the mocks; `reset()` restores the happy-path defaults (in beforeEach). */
 export async function lessonsApp() {
   const m = mocks();
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [messagingRoot(LessonsModule)] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(LessonsRepo).useValue(m.lessons)
     .overrideProvider(LessonWriter).useValue(m.writer)

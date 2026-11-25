@@ -4,8 +4,11 @@ import { RouteFade } from './RouteFade';
 
 let path = '/admin/students';
 vi.mock('@tanstack/react-router', () => ({
-  useRouterState: ({ select }: { select: (s: { resolvedLocation: { pathname: string } }) => string }) =>
-    select({ resolvedLocation: { pathname: path } }),
+  useRouterState: ({
+    select,
+  }: {
+    select: (s: { resolvedLocation: { pathname: string } }) => string;
+  }) => select({ resolvedLocation: { pathname: path } }),
 }));
 
 const animate = vi.fn();

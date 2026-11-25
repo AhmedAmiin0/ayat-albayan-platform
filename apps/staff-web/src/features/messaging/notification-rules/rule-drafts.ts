@@ -22,7 +22,11 @@ export function placeRuleDraft(all: Drafts, key: NotificationKey, draft: RuleDra
 
 export function useRuleDrafts(): RuleDrafts {
   const [drafts, setDrafts] = useState<Drafts>({});
-  const put = useCallback((key: NotificationKey, draft: RuleDraft | null) => setDrafts((all) => placeRuleDraft(all, key, draft)), []);
+  const put = useCallback(
+    (key: NotificationKey, draft: RuleDraft | null) =>
+      setDrafts((all) => placeRuleDraft(all, key, draft)),
+    [],
+  );
   const keys = useMemo(() => Object.keys(drafts) as NotificationKey[], [drafts]);
   return useMemo(() => ({ get: (key) => drafts[key], put, keys }), [drafts, put, keys]);
 }

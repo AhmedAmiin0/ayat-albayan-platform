@@ -34,7 +34,10 @@ describe('MyQueries: every read is filtered on the signed-in profile, and only o
   });
 
   it('commissions and adjustments: mine only; commissions only the earned ones', async () => {
-    const { db, calls } = fakeDb({ assistant_commissions: [{ data: [] }], assistant_adjustments: [{ data: [] }] });
+    const { db, calls } = fakeDb({
+      assistant_commissions: [{ data: [] }],
+      assistant_adjustments: [{ data: [] }],
+    });
     const q = new MyRepo(db);
     await q.commissions('a1');
     await q.adjustments('a1');
@@ -80,8 +83,22 @@ describe('StatementsQueries.list: the assistant never sees a draft', () => {
   });
 
   it('the admin list has no such filter, and sorts by newest month then name', async () => {
-    const row = (id: string, month: string, name: string) => ({ id, month, assistant: { id, full_name: name } });
-    const { db, calls } = fakeDb({ assistant_statements: [{ data: [row('1', '2026-09-01', 'ب'), row('2', '2026-10-01', 'ب'), row('3', '2026-10-01', 'أ')] }] });
+    const row = (id: string, month: string, name: string) => ({
+      id,
+      month,
+      assistant: { id, full_name: name },
+    });
+    const { db, calls } = fakeDb({
+      assistant_statements: [
+        {
+          data: [
+            row('1', '2026-09-01', 'ب'),
+            row('2', '2026-10-01', 'ب'),
+            row('3', '2026-10-01', 'أ'),
+          ],
+        },
+      ],
+    });
     const rows = await new StatementsRepo(db).list({});
     expect(calls.some((c) => c.method === 'neq')).toBe(false);
     expect(rows.map((r) => r.id)).toEqual(['3', '2', '1']);

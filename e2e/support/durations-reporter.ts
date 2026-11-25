@@ -15,7 +15,7 @@ export default class DurationsReporter implements Reporter {
   private readonly ms: Record<string, Record<string, number>> = {};
 
   onBegin(_config: unknown, suite: Suite): void {
-    const out = process.env['E2E_GROUPS_FILE'];
+    const out = process.env.E2E_GROUPS_FILE;
     if (out) this.write(out, groupsOf(suite));
   }
 
@@ -27,7 +27,7 @@ export default class DurationsReporter implements Reporter {
   }
 
   onEnd(): void {
-    const out = process.env['E2E_DURATIONS_FILE'];
+    const out = process.env.E2E_DURATIONS_FILE;
     if (out && Object.keys(this.ms).length) this.write(out, this.ms);
   }
 
@@ -44,7 +44,7 @@ export default class DurationsReporter implements Reporter {
   }
 }
 
-type Group = { project: string; file: string; tests: number };
+interface Group { project: string; file: string; tests: number }
 
 /** Mirrors Playwright 1.63 createTestGroups (fullyParallel off): Map by worker hash, then by file. */
 function groupsOf(root: Suite): Group[] | null {

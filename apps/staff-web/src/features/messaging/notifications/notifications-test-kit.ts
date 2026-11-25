@@ -13,9 +13,17 @@ export const ITEM: NotificationItem = {
   created_at: '2026-10-12T09:00:00Z',
   read_at: null,
 };
-export const READ_ITEM: NotificationItem = { ...ITEM, id: 'n2', title: 'Older one', read_at: '2026-10-12T10:00:00Z' };
+export const READ_ITEM: NotificationItem = {
+  ...ITEM,
+  id: 'n2',
+  title: 'Older one',
+  read_at: '2026-10-12T10:00:00Z',
+};
 
-export const page = (items: NotificationItem[], unread = items.filter((i) => !i.read_at).length): NotificationsPage => ({
+export const page = (
+  items: NotificationItem[],
+  unread = items.filter((i) => !i.read_at).length,
+): NotificationsPage => ({
   items,
   total: items.length,
   page: 1,

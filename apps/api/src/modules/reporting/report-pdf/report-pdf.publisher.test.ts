@@ -11,9 +11,15 @@ import type { ReportPdfSource } from './report-pdf.source';
 const NOW = new Date('2026-09-29T15:12:00Z');
 
 function setup(found = true, store = fakeSettings()) {
-  const source = { load: vi.fn<(id: string, now: Date) => Promise<ReturnType<typeof sampleSource> | null>>(async () => (found ? sampleSource() : null)) };
+  const source = {
+    load: vi.fn<(id: string, now: Date) => Promise<ReturnType<typeof sampleSource> | null>>(
+      async () => (found ? sampleSource() : null),
+    ),
+  };
   const renderer = {
-    render: vi.fn<(html: string, footer?: string) => Promise<Uint8Array>>(async () => new Uint8Array([37, 80, 68, 70])),
+    render: vi.fn<(html: string, footer?: string) => Promise<Uint8Array>>(
+      async () => new Uint8Array([37, 80, 68, 70]),
+    ),
     close: vi.fn(async () => undefined),
   };
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };

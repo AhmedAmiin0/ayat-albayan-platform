@@ -23,9 +23,17 @@ function TrialDates({ student }: { student: Profile }) {
   const history = useQuery(trialHistoryQuery(student.id));
   const [open, setOpen] = useState(false);
   const allowed = history.data?.allowed ?? canPickTrialDate(student.status);
-  const facts = { program: student.program, genderPref: student.teacher_gender_pref ?? null, tz: student.tz };
+  const facts = {
+    program: student.program,
+    genderPref: student.teacher_gender_pref ?? null,
+    tz: student.tz,
+  };
   return (
-    <section aria-labelledby={titleId} data-testid="trial-dates-section" className="mb-6 grid gap-3 border-b border-rule pb-5">
+    <section
+      aria-labelledby={titleId}
+      data-testid="trial-dates-section"
+      className="mb-6 grid gap-3 border-b border-rule pb-5"
+    >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <TrialHistoryTitle id={titleId} history={history.data} />
         <TrialDateButton allowed={allowed} onOpen={() => setOpen(true)} />

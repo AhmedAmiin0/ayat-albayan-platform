@@ -67,7 +67,10 @@ describe('formColumns (R-REP-02 autosave writes only what was sent)', () => {
 
   it('an empty autosave writes nothing; null clears', () => {
     expect(formColumns({})).toEqual({});
-    expect(formColumns({ notes: null, grades: { revision: null } })).toEqual({ notes: null, grade_revision: null });
+    expect(formColumns({ notes: null, grades: { revision: null } })).toEqual({
+      notes: null,
+      grade_revision: null,
+    });
   });
 });
 

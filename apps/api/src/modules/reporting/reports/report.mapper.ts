@@ -21,10 +21,9 @@ const instant = (iso: string | null) => (iso === null ? null : new Date(iso));
 export function reportView(row: ReportRow, ctx: ViewContext): ReportView {
   const submittedAt = instant(row.submitted_at);
   const until = editUntil({ submittedAt, minutes: ctx.minutes });
-  const grades = Object.fromEntries(REPORT_RUBRICS.map((r) => [r, row[RUBRIC_COLUMN[r]]])) as Record<
-    Rubric,
-    Grade | null
-  >;
+  const grades = Object.fromEntries(
+    REPORT_RUBRICS.map((r) => [r, row[RUBRIC_COLUMN[r]]]),
+  ) as Record<Rubric, Grade | null>;
   return {
     id: row.id,
     lesson_id: row.lesson_id,
@@ -49,7 +48,15 @@ export function reportView(row: ReportRow, ctx: ViewContext): ReportView {
     pdf_error: row.pdf_error,
     sent_at: row.sent_at,
     attachments: [...row.attachments].sort((a, b) => a.created_at.localeCompare(b.created_at)),
-    can_edit: ctx.role !== null && canEditReport({ role: ctx.role, submittedAt, sentAt: instant(row.sent_at), now: ctx.now, minutes: ctx.minutes }),
+    can_edit:
+      ctx.role !== null &&
+      canEditReport({
+        role: ctx.role,
+        submittedAt,
+        sentAt: instant(row.sent_at),
+        now: ctx.now,
+        minutes: ctx.minutes,
+      }),
     edit_until: until?.toISOString() ?? null,
     ...v2Fields(row),
   };

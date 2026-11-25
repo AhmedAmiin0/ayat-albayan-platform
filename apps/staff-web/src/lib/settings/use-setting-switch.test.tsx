@@ -11,9 +11,13 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 const NEXT: AcademySettings = { ...SETTING_DEFAULTS, sales_auto_assign: true };
 
 function setup(opts?: SettingSwitchOptions) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
   const invalidate = vi.spyOn(client, 'invalidateQueries');
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
   const { result } = renderHook(() => useSettingSwitch(opts), { wrapper });
   return { client, invalidate, result };
 }

@@ -2,7 +2,8 @@ import type { AcademySettings } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { SalesStudentsModule } from './sales-students.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '@/common/auth/auth.guard';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
@@ -83,7 +84,7 @@ export async function studentsApp(settings: Partial<AcademySettings> = {}) {
   const me = { me: vi.fn(), students: vi.fn() };
   const lessons = { one: { reschedule: vi.fn() }, cancels: { cancel: vi.fn() }, status: { confirm: vi.fn() }, corrections: { correct: vi.fn() } };
   const roster = { rules: vi.fn(), packages: vi.fn(), lessons: vi.fn(), balances: vi.fn() };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [messagingRoot(SalesStudentsModule)] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SalesRepo).useValue(sales)
     .overrideProvider(SalesStudentRepo).useValue(queries)

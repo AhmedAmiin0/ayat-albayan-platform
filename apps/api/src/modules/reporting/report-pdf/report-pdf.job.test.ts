@@ -17,7 +17,11 @@ const NOW = new Date('2026-10-02T08:00:00Z');
 const message = { dedup_key: 'report_ready:r1' };
 
 function job(policy = fakePolicy()) {
-  const j = new ReportPdfJob(queries as unknown as ReportPdfQueries, publisher as unknown as ReportPdfPublisher, policy);
+  const j = new ReportPdfJob(
+    queries as unknown as ReportPdfQueries,
+    publisher as unknown as ReportPdfPublisher,
+    policy,
+  );
   j.wait = vi.fn(async () => undefined);
   return j;
 }
@@ -41,8 +45,15 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
     expect(queries.pendingIds).toHaveBeenCalledWith(20, expect.any(Date));
     expect(queries.claim.mock.calls).toEqual([['r1'], ['r2']]);
     expect(queries.queueMessages).toHaveBeenCalledWith([message]);
-    expect(queries.finish).toHaveBeenCalledWith({ id: 'r1', version: 3, status: 'ready', path: 's/r1.pdf' });
-    const order = [publisher.publish, queries.queueMessages, queries.finish].map((f) => f.mock.invocationCallOrder[0]);
+    expect(queries.finish).toHaveBeenCalledWith({
+      id: 'r1',
+      version: 3,
+      status: 'ready',
+      path: 's/r1.pdf',
+    });
+    const order = [publisher.publish, queries.queueMessages, queries.finish].map(
+      (f) => f.mock.invocationCallOrder[0],
+    );
     expect(order).toEqual([...order].sort((a = 0, b = 0) => a - b));
   });
 
@@ -126,6 +137,12 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
 
   it('never throws, even when the queue cannot be read', async () => {
     queries.recoverStale.mockRejectedValue(new Error('db down'));
-    await expect(job().runOnce(NOW)).resolves.toEqual({ recovered: 0, rendered: 0, failed: 0, skipped: 0, held: 0 });
+    await expect(job().runOnce(NOW)).resolves.toEqual({
+      recovered: 0,
+      rendered: 0,
+      failed: 0,
+      skipped: 0,
+      held: 0,
+    });
   });
 });

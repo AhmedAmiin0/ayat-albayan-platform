@@ -8,7 +8,10 @@ import { allDayRows } from '@ab/schedule';
 const ROW = { id: 'a1', weekday: 0, start_time: '16:00:00', end_time: '18:00:00', tz: 'Africa/Cairo' };
 const setup = (on: boolean) => {
   const f = fakeDb({ teacher_availability: [{ data: [ROW] }] });
-  const q = new AvailabilityRepo(f.db, readerOf(TeachersSettings, { teachers_always_available: on }));
+  const q = new AvailabilityRepo(
+    f.db,
+    readerOf(TeachersSettings, { teachers_always_available: on }),
+  );
   const touched = () => f.calls.filter((c) => c.table === 'teacher_availability');
   return { q, touched };
 };

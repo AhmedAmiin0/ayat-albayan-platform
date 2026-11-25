@@ -15,9 +15,14 @@ const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
-const reasonField = () => screen.queryByLabelText(new RegExp(t.booking.courseChange.overrideReason));
+const reasonField = () =>
+  screen.queryByLabelText(new RegExp(t.booking.courseChange.overrideReason));
 
 async function toReview(mode: BookingMode, onDone = vi.fn()) {
   renderWithClient(
@@ -65,7 +70,9 @@ describe('«تغيير أيام الحلقات» over a clash (owner 2026-10-18,
     const off = { ...CLASH, kind: 'outside_availability' as const };
     routeChangeSend(apiSend, { ...CHECK, conflicts: [off] });
     await toReview('sales');
-    expect(await screen.findByText(conflictText(off, C24, CHANGE_VIEW.course.teacherTz))).toBeTruthy();
+    expect(
+      await screen.findByText(conflictText(off, C24, CHANGE_VIEW.course.teacherTz)),
+    ).toBeTruthy();
   });
 
   it('the admin: a reason field, then the change saved with override.reason on /booking/course/change', async () => {

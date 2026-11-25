@@ -13,7 +13,9 @@ const CHAT_KEYS = [
 
 /** The chat token: its own; under legacy only, WA_ACCESS_TOKEN when unset (the PR #142 item 15 rule). */
 const chatToken = (env: Env): string | undefined =>
-  env.linesFromNumbers === true ? env.WA_CHAT_ACCESS_TOKEN : (env.WA_CHAT_ACCESS_TOKEN ?? env.WA_ACCESS_TOKEN);
+  env.linesFromNumbers === true
+    ? env.WA_CHAT_ACCESS_TOKEN
+    : (env.WA_CHAT_ACCESS_TOKEN ?? env.WA_ACCESS_TOKEN);
 
 export function chatEnv(env: Env, base: string | undefined): MetaLineEnv | null {
   const phoneNumberId = env.WA_CHAT_PHONE_NUMBER_ID;
@@ -27,7 +29,11 @@ export function chatEnv(env: Env, base: string | undefined): MetaLineEnv | null 
 }
 
 export function metaNotifications(env: Env, base: string | undefined): MetaLineEnv | null {
-  const { WA_PHONE_NUMBER_ID: phoneNumberId, WA_WABA_ID: wabaId, WA_ACCESS_TOKEN: accessToken } = env;
+  const {
+    WA_PHONE_NUMBER_ID: phoneNumberId,
+    WA_WABA_ID: wabaId,
+    WA_ACCESS_TOKEN: accessToken,
+  } = env;
   if (!base || !phoneNumberId || !wabaId || !accessToken) return null;
   const conn = { base, version: env.WA_API_VERSION, phoneNumberId, wabaId, accessToken };
   return env.WA_APP_ID ? { ...conn, appId: env.WA_APP_ID } : conn;

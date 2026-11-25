@@ -86,14 +86,15 @@ const LINKS = [
  * Only link tables named in --only count (leaving a link table out is the caller's choice).
  */
 export function skipPartialParents(plan: PlanWithChanges, only: ReadonlySet<EntityName>) {
-  const lost = new Set<string>();
-  for (const [table, col] of LINKS) {
-    if (!only.has(table)) continue;
-    for (const l of plan.items) {
-      const parent = l.key.entity === table ? l.record.refs[col] : undefined;
-      if (parent && l.action === 'skip' && l.targetId === null) lost.add(keyId(parent));
-    }
-  }
+  const skipped = plan.items.filter((l) => l.action === 'skip' && l.targetId === null);
+  const lost = new Set(
+    LINKS.filter(([table]) => only.has(table)).flatMap(([table, col]) =>
+      skipped.flatMap((l) => {
+        const parent = l.key.entity === table ? l.record.refs[col] : undefined;
+        return parent ? [keyId(parent)] : [];
+      }),
+    ),
+  );
   const items = plan.items.map((i) =>
     i.action === 'create' && lost.has(keyId(i.key)) ? skip(i) : i,
   );

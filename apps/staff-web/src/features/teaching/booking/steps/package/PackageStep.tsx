@@ -83,7 +83,9 @@ function PackageChoice({ draft, students, onPick }: { draft: BookingDraft; stude
               />
               <span className="font-semibold">{t.enums.packageSize[pkg]}</span>
               <span className="ms-auto text-sm">
-                <PackagePrice input={{ pkg, durationMin: draft.durationMin, country: draft.country, students }} />
+                <PackagePrice
+                  input={{ pkg, durationMin: draft.durationMin, country: draft.country, students }}
+                />
               </span>
             </label>
           </li>
@@ -96,7 +98,10 @@ function PackageChoice({ draft, students, onPick }: { draft: BookingDraft; stude
 /** Nothing for a trial, whose label already says free. */
 export function PackagePrice({ input }: { input: PriceInput }) {
   const selection = quoteSelection(input);
-  const quote = useQuery({ ...quoteQuery(selection ?? { ...emptySelection }), enabled: selection !== null });
+  const quote = useQuery({
+    ...quoteQuery(selection ?? { ...emptySelection }),
+    enabled: selection !== null,
+  });
   if (input.pkg === 'trial') return null;
   if (!selection) return <span className="text-xs text-ink-3">{t.booking.noPrice}</span>;
   if (quote.isError) return <span className="text-xs text-ink-3">{t.common.error}</span>;

@@ -27,11 +27,19 @@ describe('ReportFilesService.studentPdfUrl', () => {
 
   it('another student\'s report, an unknown one or a draft is 404; a PDF still building is 409 pdf_not_ready', async () => {
     h.reports.get.mockResolvedValue(submittedRow({ pdf_status: 'ready', pdf_path: 's/l.pdf' }));
-    await expect(files.studentPdfUrl({ id: REPORT_ID, studentId: SIBLING_ID })).rejects.toMatchObject({ status: 404 });
+    await expect(
+      files.studentPdfUrl({ id: REPORT_ID, studentId: SIBLING_ID }),
+    ).rejects.toMatchObject({ status: 404 });
     h.reports.get.mockResolvedValue(null);
-    await expect(files.studentPdfUrl({ id: REPORT_ID, studentId: STUDENT_ID })).rejects.toMatchObject({ status: 404 });
-    h.reports.get.mockResolvedValue(submittedRow({ status: 'draft', pdf_status: 'ready', pdf_path: 's/l.pdf' }));
-    await expect(files.studentPdfUrl({ id: REPORT_ID, studentId: STUDENT_ID })).rejects.toMatchObject({ status: 404 });
+    await expect(
+      files.studentPdfUrl({ id: REPORT_ID, studentId: STUDENT_ID }),
+    ).rejects.toMatchObject({ status: 404 });
+    h.reports.get.mockResolvedValue(
+      submittedRow({ status: 'draft', pdf_status: 'ready', pdf_path: 's/l.pdf' }),
+    );
+    await expect(
+      files.studentPdfUrl({ id: REPORT_ID, studentId: STUDENT_ID }),
+    ).rejects.toMatchObject({ status: 404 });
     h.reports.get.mockResolvedValue(submittedRow());
     await expect(files.studentPdfUrl({ id: REPORT_ID, studentId: STUDENT_ID })).rejects.toMatchObject({ response: { code: 'pdf_not_ready' } });
     expect(h.storage.signedDownload).not.toHaveBeenCalled();

@@ -84,7 +84,11 @@ export class ConfigStoreRepo {
 
   /** config_set: one transaction for every change; P0409 → ConfigConflictError. */
   async set(changes: readonly ConfigChange[], actorId: string): Promise<void> {
-    const payload = changes.map((c) => ({ key: c.key, value: c.value ?? null, expected_version: c.expectedVersion }));
+    const payload = changes.map((c) => ({
+      key: c.key,
+      value: c.value ?? null,
+      expected_version: c.expectedVersion,
+    }));
     const { error } = await this.db.rpc('config_set', { changes: payload as Json, actor: actorId });
     if (error) throw rpcError('config_set', error);
   }

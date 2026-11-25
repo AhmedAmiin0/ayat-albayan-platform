@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { TransactionSql } from 'postgres';
 import { rolledBack } from '../../support/core/rls';
+import { dbError } from '../../support/core/db-error';
 
 // Migration 490 against the real database, in a transaction that is rolled back:
 // teachers.meeting_mode (null | 'static' | 'platform') and the relink trigger that carries a new
@@ -19,7 +20,7 @@ async function teacher(tx: Tx, link: string | null = OLD): Promise<string> {
   return row.id;
 }
 
-type Lesson = { teacherId: string; inDays: number; status?: string; link: string | null };
+interface Lesson { teacherId: string; inDays: number; status?: string; link: string | null }
 async function lesson(tx: Tx, l: Lesson): Promise<string> {
   const starts = new Date(Date.now() + l.inDays * DAY);
   const ends = new Date(starts.getTime() + 45 * 60_000);
@@ -31,6 +32,11 @@ async function lesson(tx: Tx, l: Lesson): Promise<string> {
 
 const linkOf = async (tx: Tx, id: string) =>
   (await tx<{ meeting_link: string | null }[]>`select meeting_link from public.lessons where id = ${id}`)[0]?.meeting_link;
+
+const constraintOf = (e: unknown) => {
+  const { code, constraint_name } = dbError(e);
+  return [code, constraint_name].join(':');
+};
 
 test.describe('teachers.meeting_mode (migration 490)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
@@ -44,7 +50,7 @@ test.describe('teachers.meeting_mode (migration 490)', () => {
         await tx`update public.teachers set meeting_mode = ${mode} where id = ${id}`;
       }
       const bad = await tx.savepoint((sp) => sp`update public.teachers set meeting_mode = 'zoom' where id = ${id}`)
-        .then(() => 'ok', (e: { code?: string; constraint_name?: string }) => `${e.code}:${e.constraint_name}`);
+        .then(() => 'ok', constraintOf);
       expect(bad).toBe('23514:teachers_meeting_mode_check');
     });
   });

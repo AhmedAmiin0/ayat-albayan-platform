@@ -35,7 +35,13 @@ export class ReportFilesService {
   }
 
   /** docs/16 row 36: the caller checked the student is hers; another student's report is 404. */
-  async studentPdfUrl({ id, studentId }: { id: string; studentId: string }): Promise<SignedDownload> {
+  async studentPdfUrl({
+    id,
+    studentId,
+  }: {
+    id: string;
+    studentId: string;
+  }): Promise<SignedDownload> {
     const row = await this.gate.row(id);
     if (row?.student_id !== studentId || row.status !== 'submitted') throw new NotFoundException();
     return this.signPdf(row);
@@ -45,7 +51,11 @@ export class ReportFilesService {
     if (row.pdf_status !== 'ready' || !row.pdf_path) throw conflict('pdf_not_ready');
     const name = await this.files.pdfName({ studentId: row.student_id, lessonId: row.lesson_id });
     const download = name ? reportFileName(name) : undefined;
-    return this.storage.signedDownload({ bucket: BUCKETS.reports, path: row.pdf_path, ...(download ? { download } : {}) });
+    return this.storage.signedDownload({
+      bucket: BUCKETS.reports,
+      path: row.pdf_path,
+      ...(download ? { download } : {}),
+    });
   }
 
   /**
@@ -53,20 +63,37 @@ export class ReportFilesService {
    */
   async uploadUrl({ id, user, file }: FileRef & { file: AttachmentUpload }): Promise<SignedUpload> {
     await this.gate.editable(id, user);
-    return this.storage.signedUpload({ bucket: BUCKETS.attachments, path: attachmentPath({ reportId: id, mime: file.mime }), file });
+    return this.storage.signedUpload({
+      bucket: BUCKETS.attachments,
+      path: attachmentPath({ reportId: id, mime: file.mime }),
+      file,
+    });
   }
 
   /**
    * R8: registers an uploaded object; the path must be under this report and exist (400
    * attachment_path), and its first bytes must be the mime it was sent as (400 attachment_type).
    */
-  async register({ id, user, file }: FileRef & { file: AttachmentRegister }): Promise<ReportAttachmentView> {
+  async register({
+    id,
+    user,
+    file,
+  }: FileRef & { file: AttachmentRegister }): Promise<ReportAttachmentView> {
     await this.gate.editable(id, user);
     if (!isPathOf(file.path, id)) throw badRequest('attachment_path');
-    const head = await this.storage.head({ bucket: BUCKETS.attachments, path: file.path }, SNIFF_BYTES);
+    const head = await this.storage.head(
+      { bucket: BUCKETS.attachments, path: file.path },
+      SNIFF_BYTES,
+    );
     if (!head) throw badRequest('attachment_path');
     if (sniffMime(head) !== file.mime) throw badRequest('attachment_type');
-    return this.files.add({ report_id: id, storage_path: file.path, mime: file.mime, size: file.size, created_by: callerActor(user) });
+    return this.files.add({
+      report_id: id,
+      storage_path: file.path,
+      mime: file.mime,
+      size: file.size,
+      created_by: callerActor(user),
+    });
   }
 
   /** R9: the row and its object. */

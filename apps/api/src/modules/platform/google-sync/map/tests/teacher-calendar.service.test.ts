@@ -9,14 +9,29 @@ const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 /** teachers read / update and the counts rpc, recorded; `changed` = rows the update touched. */
 function fakeDb(input: { owner: string; changed: number }) {
   const updates: object[] = [];
-  const read = { data: { id: TEACHER_ID, calendar_owner: input.owner, calendar_owner_changed_at: null }, error: null };
+  const read = {
+    data: { id: TEACHER_ID, calendar_owner: input.owner, calendar_owner_changed_at: null },
+    error: null,
+  };
   const update = (patch: object) => {
     updates.push(patch);
-    const chain = { eq: () => chain, neq: () => chain, select: async () => ({ data: Array.from({ length: input.changed }, () => ({ id: TEACHER_ID })), error: null }) };
+    const chain = {
+      eq: () => chain,
+      neq: () => chain,
+      select: async () => ({
+        data: Array.from({ length: input.changed }, () => ({ id: TEACHER_ID })),
+        error: null,
+      }),
+    };
     return chain;
   };
-  const from = () => ({ select: () => ({ eq: () => ({ maybeSingle: async () => read }) }), update });
-  const rpc = vi.fn().mockResolvedValue({ data: [{ managed: 12, script_event_present: 3 }], error: null });
+  const from = () => ({
+    select: () => ({ eq: () => ({ maybeSingle: async () => read }) }),
+    update,
+  });
+  const rpc = vi
+    .fn()
+    .mockResolvedValue({ data: [{ managed: 12, script_event_present: 3 }], error: null });
   return { db: { from, rpc } as unknown as Db, updates, rpc };
 }
 const runtime = () => ({ job: { kick: vi.fn().mockResolvedValue(undefined) } });
@@ -24,9 +39,19 @@ const runtime = () => ({ job: { kick: vi.fn().mockResolvedValue(undefined) } });
 describe('TeacherCalendarService', () => {
   it('the view: owner and this teacher\'s managed / script_event_present counts', async () => {
     const f = fakeDb({ owner: 'platform', changed: 0 });
-    const view = await new TeacherCalendarService(f.db, runtime() as unknown as GoogleRuntime).view(TEACHER_ID);
-    expect(view).toEqual({ teacher_id: TEACHER_ID, owner: 'platform', changed_at: null, managed: 12, script_event_present: 3 });
-    expect(f.rpc).toHaveBeenCalledWith('google_teacher_calendar_counts', { p_teacher_id: TEACHER_ID });
+    const view = await new TeacherCalendarService(f.db, runtime() as unknown as GoogleRuntime).view(
+      TEACHER_ID,
+    );
+    expect(view).toEqual({
+      teacher_id: TEACHER_ID,
+      owner: 'platform',
+      changed_at: null,
+      managed: 12,
+      script_event_present: 3,
+    });
+    expect(f.rpc).toHaveBeenCalledWith('google_teacher_calendar_counts', {
+      p_teacher_id: TEACHER_ID,
+    });
   });
 
   it('a switch writes the owner with the admin as actor (the DB trigger queues the lessons) and kicks the worker', async () => {

@@ -50,7 +50,8 @@ test.describe('leads list and job applicants (R-LEAD-01/04)', () => {
     const { phones, names } = await seedFour(tag);
     const [phone, name] = [phones[0] ?? '', names[0] ?? ''];
     const page = await asRole('admin');
-    const funnelBefore = (await summaryOf(page, { from: riyadhToday(), to: riyadhToday() })).funnel['new'] ?? 0;
+    const funnelBefore =
+      (await summaryOf(page, { from: riyadhToday(), to: riyadhToday() })).funnel.new ?? 0;
 
     // The unfiltered header is the SQL total.
     await page.goto('/admin/leads');
@@ -110,7 +111,8 @@ test.describe('leads list and job applicants (R-LEAD-01/04)', () => {
     const [applicants] = await withSql((sql) => sql<{ n: number }[]>`select count(*)::int as n from public.job_applicants`);
     await expect(page.getByText(ar.jobApplicants.count.replace('{n}', String(applicants?.n ?? -1)), { exact: true })).toBeVisible();
     await expect(page.getByRole('row').filter({ hasText: name })).toBeVisible();
-    const funnelAfter = (await summaryOf(page, { from: riyadhToday(), to: riyadhToday() })).funnel['new'] ?? 0;
+    const funnelAfter =
+      (await summaryOf(page, { from: riyadhToday(), to: riyadhToday() })).funnel.new ?? 0;
     expect(funnelAfter).toBe(funnelBefore - 1);
   });
 });

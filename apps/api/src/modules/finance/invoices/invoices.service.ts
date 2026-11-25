@@ -42,7 +42,12 @@ export class InvoicesService {
   async recent(f: RecentFilter) {
     const { rows, total } = await this.queries.recent(f);
     const paid = await this.queries.paymentsOf(rows.map((r) => r.id));
-    return { items: rows.map((r) => ({ ...view(r), payment_id: paid.get(r.id) ?? null })), total, page: f.page, pageSize: f.pageSize };
+    return {
+      items: rows.map((r) => ({ ...view(r), payment_id: paid.get(r.id) ?? null })),
+      total,
+      page: f.page,
+      pageSize: f.pageSize,
+    };
   }
 
   async one(id: string): Promise<InvoiceView | null> {
@@ -56,6 +61,10 @@ export class InvoicesService {
     if (!row) throw notFound('invoice_not_found');
     const code = row.students[0]?.code;
     const name = `${code ? `${code}_` : ''}${ar.booking.invoice.downloadName}.${extFor(row.mime)}`;
-    return this.storage.signedDownload({ bucket: BUCKETS.invoices, path: row.storage_path, download: name });
+    return this.storage.signedDownload({
+      bucket: BUCKETS.invoices,
+      path: row.storage_path,
+      download: name,
+    });
   }
 }

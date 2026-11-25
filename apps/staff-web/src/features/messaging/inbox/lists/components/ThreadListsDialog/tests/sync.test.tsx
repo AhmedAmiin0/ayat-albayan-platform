@@ -30,7 +30,10 @@ function show(lists: readonly ChatListRef[]) {
 /** apiSend answers only when the test resolves each call, in the order the test picks. */
 function heldSends() {
   const held: { method: string; path: string; done: () => void }[] = [];
-  apiSend.mockImplementation((method: string, path: string) => new Promise<void>((r) => held.push({ method, path, done: r })));
+  apiSend.mockImplementation(
+    (method: string, path: string) =>
+      new Promise<void>((r) => held.push({ method, path, done: r })),
+  );
   return held;
 }
 

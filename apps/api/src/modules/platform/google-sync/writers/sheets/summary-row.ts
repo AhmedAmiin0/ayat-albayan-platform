@@ -50,8 +50,14 @@ export function newSummaryRow(s: SummaryStudent, stats: SummaryStats): CellValue
  * The cells the platform rewrites on an existing row: D..F always (recomputed), G and H only
  * where they are blank. A..C (name, teacher, program) stay as the script wrote them.
  */
-export function summaryUpdates(existing: readonly CellValue[], s: SummaryStudent, stats: SummaryStats): { range: string; values: CellValue[] }[] {
-  const out = [{ range: 'D', values: [stats.first ?? '', stats.last ?? '', stats.count] as CellValue[] }];
+export function summaryUpdates(
+  existing: readonly CellValue[],
+  s: SummaryStudent,
+  stats: SummaryStats,
+): { range: string; values: CellValue[] }[] {
+  const out = [
+    { range: 'D', values: [stats.first ?? '', stats.last ?? '', stats.count] as CellValue[] },
+  ];
   const blank = (c: CellValue | undefined) => c === undefined || c === null || c === '';
   if (blank(existing[6])) out.push({ range: 'G', values: [driveFolderLink(s.folderId)] });
   if (blank(existing[7])) out.push({ range: 'H', values: [sheetLink(s.attendanceSheetId)] });
@@ -59,7 +65,9 @@ export function summaryUpdates(existing: readonly CellValue[], s: SummaryStudent
 }
 
 /** The summary sheet's rows that point at a folder, for discovery's student suggestions. */
-export function summaryLinks(rows: Rows): { name: string; folderId: string; sheetId: string | null }[] {
+export function summaryLinks(
+  rows: Rows,
+): { name: string; folderId: string; sheetId: string | null }[] {
   return rows.flatMap((r) => {
     const folderId = folderIdIn(r[6]);
     const name = typeof r[0] === 'string' ? r[0].trim() : '';

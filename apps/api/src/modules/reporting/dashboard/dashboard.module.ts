@@ -4,7 +4,7 @@ import { DashboardController } from './dashboard.controller';
 import { DashboardQueries } from './dashboard.queries';
 import { DashboardService } from './dashboard.service';
 import { DashboardSettings } from './dashboard.settings';
-import { FinanceQueries } from './finance/finance.queries';
+import { FinanceRepo } from './finance/finance.repo';
 import { FinanceService } from './finance/finance.service';
 import { FxConverter } from './finance/fx-converter';
 import { WorkQueries } from './work/work.queries';
@@ -16,7 +16,15 @@ import { WorkQueries } from './work/work.queries';
 @Module({
   imports: [FxModule],
   controllers: [DashboardController],
-  providers: [DashboardService, DashboardQueries, DashboardSettings, FinanceService, FinanceQueries, WorkQueries, FxConverter],
+  providers: [
+    DashboardService,
+    DashboardQueries,
+    DashboardSettings,
+    FinanceService,
+    FinanceRepo,
+    WorkQueries,
+    FxConverter,
+  ],
   exports: [FxConverter],
 })
 export class DashboardModule {}

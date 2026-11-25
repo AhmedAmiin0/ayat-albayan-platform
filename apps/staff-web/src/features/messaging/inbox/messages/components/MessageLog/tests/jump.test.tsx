@@ -33,8 +33,20 @@ const B = message({ id: 'b', body: 'الثانية', created_at: '2026-10-05T09:
 const C = message({ id: 'c', body: 'الثالثة', created_at: '2026-10-05T09:10:00Z' });
 const D = message({ id: 'd', body: 'الرابعة', created_at: '2026-10-05T09:15:00Z' });
 // The send waits for a sender pass: her row comes back 'sent', not 'queued'.
-const MINE = message({ id: 'mine', direction: 'outbound', status: 'sent', body: 'ردّي', created_at: '2026-10-05T09:20:00Z' });
-const base = { phone: PHONE, hasMore: false, loadingOlder: false, onOlder: vi.fn(), waitingKeys: new Set<string>() };
+const MINE = message({
+  id: 'mine',
+  direction: 'outbound',
+  status: 'sent',
+  body: 'ردّي',
+  created_at: '2026-10-05T09:20:00Z',
+});
+const base = {
+  phone: PHONE,
+  hasMore: false,
+  loadingOlder: false,
+  onOlder: vi.fn(),
+  waitingKeys: new Set<string>(),
+};
 
 const box = () => {
   const el = screen.getByRole('log', { name: t.messages.log }).parentElement;

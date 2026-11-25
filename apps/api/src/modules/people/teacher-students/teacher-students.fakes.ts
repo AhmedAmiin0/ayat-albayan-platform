@@ -14,7 +14,9 @@ export const student = (over: Partial<TeacherStudentRow>): TeacherStudentRow => 
   ...over,
 });
 
-export const lesson = (over: Partial<TeacherLessonRow> & { students?: string[] }): TeacherLessonRow => ({
+export const lesson = (
+  over: Partial<TeacherLessonRow> & { students?: string[] },
+): TeacherLessonRow => ({
   starts_at: '2026-10-05T14:00:00+00:00',
   status: 'scheduled',
   lesson_students: (over.students ?? ['s1']).map((student_id) => ({ student_id })),
