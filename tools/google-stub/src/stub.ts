@@ -7,7 +7,7 @@ import { driveRoutes } from './drive.ts';
 import { oauthRoutes } from './oauth.ts';
 import { sheetRoutes } from './sheets.ts';
 import { initialState, readJson, type Reply, type Route, type StubState } from './state.ts';
-import { revokeBody } from './stub.schemas.ts';
+import { revokeBody } from './bodies.schemas.ts';
 
 function controlRoutes(state: { s: StubState }): Route[] {
   return [

@@ -1,6 +1,6 @@
 // Sheets v4 values (A1 ranges on the first tab) and batchUpdate (accepted, counted).
 import { notFound, readJson, type Route } from './state.ts';
-import { valuesBody } from './stub.schemas.ts';
+import { valuesBody } from './bodies.schemas.ts';
 
 const col = (letters: string) =>
   letters.split('').reduce((n, c) => n * 26 + c.charCodeAt(0) - 64, 0) - 1;

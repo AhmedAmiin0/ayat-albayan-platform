@@ -1,6 +1,6 @@
 // Calendar v3: the calendar list and one calendar's events.
 import { nextId, notFound, readJson, type Route, type StubEvent, type StubState } from './state.ts';
-import { eventBody } from './stub.schemas.ts';
+import { eventBody } from './bodies.schemas.ts';
 
 const cal = (s: StubState, id: string) => {
   const name = decodeURIComponent(id);

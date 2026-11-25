@@ -2,7 +2,7 @@
 // one-tab sheets. Fake ids and names only; reset between specs through /__stub/reset.
 import type { IncomingMessage } from 'node:http';
 import type { z } from 'zod';
-import type { EventBody } from './stub.schemas.ts';
+import type { EventBody } from './bodies.schemas.ts';
 
 export type Cell = string | number | boolean | null;
 export type StubEvent = EventBody & { id: string; status: string };

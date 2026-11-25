@@ -11,7 +11,7 @@ import {
   type StubFile,
   type StubState,
 } from './state.ts';
-import { fileMeta, newFileBody, type FileMeta } from './stub.schemas.ts';
+import { fileMeta, newFileBody, type FileMeta } from './bodies.schemas.ts';
 
 const unquote = (s: string) => s.replace(/\\'/g, "'").replace(/\\\\/g, '\\');
 const clause = (q: string, re: RegExp) => {
