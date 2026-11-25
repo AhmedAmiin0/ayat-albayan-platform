@@ -56,7 +56,9 @@ export interface EffectiveInput {
 /** The permission set the API enforces for one user. */
 export function effectivePermissions(input: EffectiveInput): Permission[] {
   if (!input.baseRole) return [];
-  const grants = input.allGrantable ? GRANTABLE_PERMISSIONS : GRANTABLE_PERMISSIONS.filter((p) => input.granted.includes(p));
+  const grants = input.allGrantable
+    ? GRANTABLE_PERMISSIONS
+    : GRANTABLE_PERMISSIONS.filter((p) => input.granted.includes(p));
   return [...grants, ...fixedGrantsOf(input.baseRole), ...selfPermissionsOf(input.baseRole)];
 }
 
