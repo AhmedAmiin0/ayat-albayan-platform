@@ -2781,7 +2781,7 @@
   },
   "src/modules/messaging/inbox/people/tests/thread-people.test.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/people/thread-people.mapper.ts": {
@@ -2800,7 +2800,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/forbidden-imports": {
       "count": 1
@@ -7165,11 +7165,6 @@
   "src/modules/sales/sales-money/reads/sales-money.reads.ts": {
     "ab/module-boundaries": {
       "count": 2
-    }
-  },
-  "src/modules/sales/sales-money/reads/sales-renewals.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/modules/sales/sales-money/reads/tests/http.renew-any-family.test.ts": {
