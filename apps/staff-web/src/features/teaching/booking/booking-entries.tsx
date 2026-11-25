@@ -6,8 +6,9 @@ import { leadByPhoneQuery, type InboxLead } from '@/features/messaging/inbox/api
 import { studentQuery } from '@/features/people/students/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { guardianQuery, type BookSearch, type GuardianRow } from './api';
-import { BookingWizard, type BookingWizardProps } from './BookingWizard';
+import type { BookingWizardProps } from './BookingWizard';
 import { emptyDraft, type BookingDraft } from './draft/draft';
+import { KeptBookingWizard, keptKey, type KeptBookingWizardProps } from './kept';
 import type { BookHint } from './hint';
 import { newStudentFromLead } from './steps/who/new-student';
 import { guardianCountry } from './steps/package/price';
@@ -17,7 +18,11 @@ import type { StudentProfile } from '@ab/shared';
 type ProfileWithPref = StudentProfile & { teacher_gender_pref?: Gender | null };
 
 /** A student's own wizard: their zone, program, preference, price currency and chat number prefill it. */
-export function draftFromStudent(s: ProfileWithPref, guardian: GuardianRow | undefined, kind: BookingDraft['kind'] = 'package'): BookingDraft {
+export function draftFromStudent(
+  s: ProfileWithPref,
+  guardian: GuardianRow | undefined,
+  kind: BookingDraft['kind'] = 'package',
+): BookingDraft {
   const owner = guardian ?? s.guardian;
   return {
     ...emptyDraft({ kind }),
@@ -33,7 +38,10 @@ export function draftFromStudent(s: ProfileWithPref, guardian: GuardianRow | und
 /** A lead books a trial unless a package was asked (R-SUB-01); lead data prefills step 1. */
 export function draftFromLead(search: BookSearch, lead: InboxLead | null): BookingDraft {
   const pkg = search.pkg ?? 'trial';
-  const base = emptyDraft({ leadId: search.leadId ?? null, kind: pkg === 'trial' ? 'trial' : 'package' });
+  const base = emptyDraft({
+    leadId: search.leadId ?? null,
+    kind: pkg === 'trial' ? 'trial' : 'package',
+  });
   const { student, tz } = newStudentFromLead(lead, search);
   // The chat the lead wrote from: where the invoice usually arrived, even if another guardian number is typed.
   const leadPhone = normalizePhone(search.phone ?? '');
@@ -47,7 +55,10 @@ export function draftFromLead(search: BookSearch, lead: InboxLead | null): Booki
   };
 }
 
-export interface EntryProps extends Pick<BookingWizardProps, 'onOpenStudent' | 'onChoice'> {
+export interface EntryProps
+  extends
+    Pick<BookingWizardProps, 'onOpenStudent' | 'onChoice'>,
+    Pick<KeptBookingWizardProps, 'onUnfinished'> {
   /** A free gap's teacher + start from the calendar (?teacherId&startsAt). */
   hint: BookHint | null;
 }
@@ -58,12 +69,15 @@ export function LeadBooking({
   onOpenStudent,
   hint,
   onChoice,
+  onUnfinished,
 }: EntryProps & { search: BookSearch }) {
   const lead = useQuery({ ...leadByPhoneQuery(search.phone ?? ''), enabled: !!search.phone });
   if (lead.isPending && !!search.phone) return <p className="text-ink-3">{t.common.loading}</p>;
   const found = lead.data && lead.data.id === search.leadId ? lead.data : null;
   return (
-    <BookingWizard
+    <KeptBookingWizard
+      keepKey={keptKey(search)}
+      onUnfinished={onUnfinished}
       initial={draftFromLead(search, found)}
       primary={null}
       siblings={[]}
@@ -81,6 +95,7 @@ export function StudentBooking({
   onOpenStudent,
   hint,
   onChoice,
+  onUnfinished,
 }: EntryProps & { search: BookSearch; studentId: string }) {
   const student = useQuery(studentQuery(studentId));
   const guardianId = student.data?.guardian_id;
@@ -90,8 +105,10 @@ export function StudentBooking({
   if (!student.data || guardian.isPending) return <p className="text-ink-3">{t.common.loading}</p>;
   const s = student.data;
   return (
-    <BookingWizard
+    <KeptBookingWizard
       key={s.id}
+      keepKey={keptKey(search)}
+      onUnfinished={onUnfinished}
       initial={draftFromStudent(s, guardian.data, search.kind)}
       primary={{ id: s.id, name: s.name, code: s.code }}
       siblings={s.siblings.filter((x) => x.id !== s.id)}

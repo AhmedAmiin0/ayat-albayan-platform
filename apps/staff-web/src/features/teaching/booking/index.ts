@@ -52,6 +52,7 @@ export {
   type TrialDateDraft,
   type withPicks,
 } from './draft/draft';
+export { BookingPage, type BookingPageProps } from './BookingPage';
 export { bookHint, type BookHint, searchForStudent, teacherPatch } from './hint';
 export { InvoiceButton, InvoiceDialog } from './invoice/InvoiceDialog';
 export {
@@ -63,6 +64,7 @@ export {
   threadMediaUrl,
   uploadInvoiceFile,
 } from './invoice/api.invoice';
+export { BookingLeaveGuard, forgetAllKept } from './kept';
 export {
   bookingBase,
   BookingModeContext,
