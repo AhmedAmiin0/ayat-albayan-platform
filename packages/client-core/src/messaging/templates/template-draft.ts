@@ -1,6 +1,6 @@
 import { BODY_SLOTS, type TemplateEditButton } from '@ab/shared';
 
-// The form both apps fill (owner 2026-11-14), pure: the body's {{n}} count, each variable's
+// The form both apps fill, pure: the body's {{n}} count, each variable's
 // sample, and the preview's params.
 
 /** Highest {{n}} in the body (0 when none), capped at the nine slots a send fills. */

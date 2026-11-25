@@ -1,4 +1,4 @@
-// The inbox's live nudge (owner 2026-10-27: Supabase Realtime while the app is open, push when it
+// The inbox's live nudge (Supabase Realtime while the app is open, push when it
 // is closed, a slow poll as the fallback). The database broadcasts ONE event per changed phone on a
 // private topic; a client never reads data from it, it only re-reads the same API routes sooner.
 
@@ -13,7 +13,7 @@ export const INBOX_LIVE_EVENT = 'thread_changed';
 /**
  * While the channel is SUBSCRIBED the open chat, the chats list and the badge still re-read this
  * often: a safety net for a socket that died quietly (mobile networks) while it still reads
- * SUBSCRIBED (owner 2026-11-06 «chat is slow»: up to a minute at 60 s). Events re-read sooner.
+ * SUBSCRIBED (60 s left a chat up to a minute late). Events re-read sooner.
  */
 export const INBOX_FALLBACK_MS = 20_000;
 /** A burst of events becomes one fetch now and one at the end: an open chat once a second… */
@@ -67,7 +67,7 @@ export function catchUpPlan(key: LiveKey): LiveKey[] {
  * /threads (v_threads over thread_summaries, migration 20261106001100) filtered to unread, one row.
  */
 export const UNREAD_COUNT_PATH = '/threads?unread=true&page=1&pageSize=1';
-/** Its one cache key, under ['threads', 'nav-count']: a send, an opened chat, an event refresh it. */
+/** Its one cache key, under ['threads', 'nav-count']: a send, an open chat, an event refresh it. */
 export const UNREAD_COUNT_KEY = ['threads', 'nav-count', 'unread'] as const;
 
 const unreadPage = z.object({ total: z.number().int().min(0) });
@@ -75,7 +75,7 @@ const unreadPage = z.object({ total: z.number().int().min(0) });
 /** The badge's number from its GET answer (zod: a malformed answer throws, the query errors). */
 export const unreadTotal = (raw: unknown): number => unreadPage.parse(raw).total;
 
-/** A refresh interval: the slow fallback while realtime is up, the caller's poll while it is not. */
+/** A refresh interval: the slow fallback while realtime is up, else the caller's poll. */
 export function liveInterval(live: boolean, offline: number): number {
   return live ? INBOX_FALLBACK_MS : offline;
 }

@@ -1,8 +1,8 @@
 import type { LiveConnection } from './live-connect/index.js';
 
 /**
- * The channel's lifetime around the app's visibility (owner 2026-10-27: close the connection when
- * it is not needed, no leaks). resume() joins (or keeps the joined channel, rejoins it at once if it
+ * The channel's lifetime around the app's visibility (close the connection when it is
+ * not needed, no leaks). resume() joins (or keeps the joined channel, rejoins it at once if it
  * dropped, and resyncs once); pause(ms) leaves after `ms` unless resumed first (0 leaves at once);
  * end() leaves for good. At most one connection and
  * one timer at any moment, none after a leave or the end.

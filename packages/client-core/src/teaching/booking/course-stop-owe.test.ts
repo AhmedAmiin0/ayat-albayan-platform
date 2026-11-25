@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { offeredOwe, oweOptions } from './course-refund.js';
 import { mayLowerOwe } from './course-stop-money.js';
 
-// Review 2026-11-06: lowering what is owed below attended × rate (nothing, a smaller custom
+// Lowering what is owed below attended × rate (nothing, a smaller custom
 // amount) is a refund holder's call on this student; the sheets hide it from everyone else.
 const words = {
   refundUnattended: '',

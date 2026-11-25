@@ -20,7 +20,7 @@ export type ReportStage = 'write' | 'resume' | 'window' | 'done';
 export type TeacherLessonState = 'awaiting' | 'confirmed' | 'running' | ReportStage | 'status';
 /** live: in the join window before ends_at; after: still open after ends_at; off otherwise. */
 export type JoinPhase = 'live' | 'after' | 'off';
-/** The way in: our classroom, or the teacher's own fixed link (owner Q3). */
+/** The way in: our classroom, or the teacher's own fixed link. */
 export type WayIn = 'room' | 'link';
 export type PlanAction = 'join' | 'confirm' | 'report' | 'cancel';
 

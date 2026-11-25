@@ -1,5 +1,5 @@
-// The composer's send bookkeeping, shared by the web and the mobile kit (review 2026-11-17): what
-// stays in the box after a send, and the client_id that makes a retry idempotent (rule 8).
+// The composer's send bookkeeping, shared by the web and the mobile kit: what stays
+// in the box after a send, and the client_id that makes a retry idempotent (rule 8).
 
 /** The text that went out and its client_id, kept until the API has it. */
 export interface SendAttempt {

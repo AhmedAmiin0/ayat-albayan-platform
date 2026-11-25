@@ -6,21 +6,24 @@ import { clockOf, dateText, localDateIn, type ClockCycle } from '@ab/time';
 
 export type ChannelAudience = 'teacher' | 'portal' | 'admin' | 'sales';
 
-/** Participants write and mark read (the owning assistant too, owner 11-16); the monitor reads. */
+/** Participants write and mark read (the owning assistant too); the monitor reads. */
 export const CHANNEL_WRITES: Readonly<Record<ChannelAudience, boolean>> = { teacher: true, portal: true, admin: false, sales: true };
 
 /** The thread re-reads this often while it is on screen (the inbox polls the same way). */
 export const CHANNEL_REFRESH_MS = 15_000;
 
-/** An open WhatsApp chat asks for a delta this often while on screen (GET /threads/:phone?after=, ~2 reads). */
+/**
+ * An open WhatsApp chat asks for a delta this often while on screen
+ * (GET /threads/:phone?after=, ~2 reads).
+ */
 export const INBOX_REFRESH_MS = 10_000;
 
-/** An open WhatsApp chat re-reads its whole newest page this often (people, lessons, older ticks). */
+/** An open WhatsApp chat re-reads its whole newest page this often (people, lessons, ticks). */
 export const THREAD_FULL_MS = 60_000;
 
 /**
  * The chats list re-reads this often while on screen: 30 s while GET /threads re-aggregated every
- * message (server audit 2026-10-27), 15 s once it reads thread_summaries (migration 20261028000921).
+ * message, 15 s once it reads thread_summaries (migration 20261028000921).
  */
 export const INBOX_LIST_REFRESH_MS = 15_000;
 
@@ -54,7 +57,7 @@ export const channelKey = (audience: ChannelAudience, studentId: string) => ['ch
 export const TEACHER_CHANNELS_PATH = '/teachers/me/channels';
 export const portalUnreadPath = (studentId: string): string => `/portal/students/${studentId}/channel/unread`;
 
-/** The next `before` of an infinite thread: the oldest message of the last page read, while more exist. */
+/** The next `before` of an infinite thread: the last page's oldest message, while more exist. */
 export const olderCursor = (last: ChannelPage): string | undefined => (last.has_more ? last.messages[0]?.created_at : undefined);
 
 /** Every page of an infinite thread (newest page first) as one list, oldest first. */
