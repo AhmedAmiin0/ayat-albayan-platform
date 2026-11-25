@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { template as templateView } from '@/features/messaging/inbox/testing/inbox-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { CrmNameButton } from './CrmNameButton';
 import { CrmNameDialog } from './CrmNameDialog';
 import { templateName } from '@/features/messaging/templates/template-cells';

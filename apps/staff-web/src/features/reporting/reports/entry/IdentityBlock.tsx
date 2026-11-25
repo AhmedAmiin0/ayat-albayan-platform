@@ -1,11 +1,7 @@
 import { lessonWhenAt, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
 import { packageProgress } from '@ab/money';
 import type { ReactNode } from 'react';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { useClock } from '@ab/web-kit/lib/clock';
+import { Ltr, tzCity, t, teacherLabel, useClock } from '@ab/web-kit';
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (

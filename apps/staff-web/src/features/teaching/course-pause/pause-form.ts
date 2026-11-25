@@ -7,7 +7,7 @@ import {
   type CourseResumePreview,
 } from '@ab/shared';
 import { dayIn } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** Dates are YYYY-MM-DD; an empty until means until resumed. */
 export interface PauseDraft {

@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, Input, t } from '@ab/web-kit';
 
 export interface UsersSearchProps {
   initial: string;

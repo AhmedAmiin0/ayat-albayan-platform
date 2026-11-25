@@ -1,8 +1,6 @@
 import { QUICK_NOTES, type QuickNote, type ReportView } from '@ab/shared';
 import { useId } from 'react';
-import { controlClass } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { controlClass, t, cn } from '@ab/web-kit';
 import { AttachmentsField } from '@/features/reporting/reports/entry/AttachmentsField';
 import type { ReportEntryV2State } from '@/features/reporting/reports/entry-v2/use-report-entry-v2';
 import { ToggleChips } from '@/features/reporting/reports/entry-v2/ToggleChips';

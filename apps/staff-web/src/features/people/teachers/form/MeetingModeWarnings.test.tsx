@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { settle, showMeetingMode } from './meeting-mode-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());

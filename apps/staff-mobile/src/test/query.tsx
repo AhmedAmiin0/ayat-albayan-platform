@@ -5,12 +5,12 @@ import {
   freshQueryClient,
   renderWithQuery as render,
   seedPublicConfig,
-} from '@ab/mobile-kit/testing/query';
+} from '@ab/mobile-kit/testing';
 import { seedFullAccess } from './staff-me';
 
 // Test-only helpers: the shared fresh client and settings seed (@ab/mobile-kit), signed in as
 // staff.
-export { queryWrapper, seedPublicConfig } from '@ab/mobile-kit/testing/query';
+export { queryWrapper, seedPublicConfig } from '@ab/mobile-kit/testing';
 
 interface TestClientOptions {
   /** The test answers GET /auth/me through its apiFetch mock: nothing seeded. */

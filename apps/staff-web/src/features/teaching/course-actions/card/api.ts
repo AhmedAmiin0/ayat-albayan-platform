@@ -11,7 +11,7 @@ import {
 import type { CourseCardLesson, CourseExtendResult } from '@ab/shared';
 import type { LessonView } from '@ab/schedule';
 import { queryOptions, useMutation } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 import { useInvalidateCourseActions } from '@/features/teaching/course-actions/api';
 
 // Paths, keys and parsers come from @ab/client-core; the card key sits under the actions' key.

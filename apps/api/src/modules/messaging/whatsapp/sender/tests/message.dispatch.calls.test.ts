@@ -19,8 +19,13 @@ describe('MessageDispatch — «اطلب إذن الاتصال» (docs/28)', () 
   });
 
   it('a driver without it (crm) fails the row permanently instead of sending text', async () => {
-    const lines = { notifications: { sendText: vi.fn() }, chat: { sendText: vi.fn() } } as unknown as WhatsappLines;
-    await expect(new MessageDispatch(lines, {} as StorageService).send(permissionRow(), null, 'chat')).rejects.toMatchObject({ info: { code: 100 } });
+    const lines = {
+      notifications: { sendText: vi.fn() },
+      chat: { sendText: vi.fn() },
+    } as unknown as WhatsappLines;
+    await expect(
+      new MessageDispatch(lines, {} as StorageService).send(permissionRow(), null, 'chat'),
+    ).rejects.toMatchObject({ info: { code: 100 } });
   });
 
   it('the Graph body is Meta\'s interactive call_permission_request', () => {

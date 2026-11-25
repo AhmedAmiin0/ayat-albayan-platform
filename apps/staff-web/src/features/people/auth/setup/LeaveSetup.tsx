@@ -1,8 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { signOut } from '@ab/web-kit/auth/sign-in';
+import { Button, t, signOut } from '@ab/web-kit';
 
 export function LeaveSetup() {
   const queryClient = useQueryClient();

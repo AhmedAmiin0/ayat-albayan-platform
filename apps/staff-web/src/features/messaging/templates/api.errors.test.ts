@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { lineSyncErrorText, templateErrorText } from './api';
 
 // docs/19: a refused Kapso key has its own words; only meta_error names Meta.

@@ -1,6 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon, type IconName } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
+import { Button, Icon, type IconName, IconButton } from '@ab/web-kit';
 
 type Props = { label: string; icon: IconName; compact: boolean; onClick: () => void };
 

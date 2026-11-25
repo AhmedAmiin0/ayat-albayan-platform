@@ -1,13 +1,10 @@
 import { callEntryKind, type CallView } from '@ab/shared';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon, t, cn, useClock } from '@ab/web-kit';
 import { clockText, fullTime } from '@/features/messaging/inbox';
 import { BUBBLE_ROW } from '@/features/messaging/inbox';
 import { useInboxMode } from '@/features/messaging/inbox';
 import { useCalls } from '@/features/messaging/calls/state/call-context';
 import { callEntryText, callerName, callGlyph, callTone } from './call-text';
-import { useClock } from '@ab/web-kit/lib/clock';
 
 export interface CallEntryProps {
   call: CallView;

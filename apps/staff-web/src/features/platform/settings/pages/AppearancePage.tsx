@@ -1,4 +1,4 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { AppearanceSection } from '@/features/platform/settings/sections/AppearanceSection';
 import { ModuleHead } from './ModuleHead';
 

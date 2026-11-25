@@ -1,8 +1,5 @@
 import type { ChatList } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Button, Icon, t, cn } from '@ab/web-kit';
 import { CHIP_CLASS, ListChip } from './ListChip';
 
 const L = t.inbox.lists;

@@ -1,10 +1,7 @@
 import type { GoogleStatusView } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Dialog, FormAlert, t } from '@ab/web-kit';
 import { disconnectGoogle, getConnectUrl, googleStatusQuery } from '@/features/platform/google-sync/google-api';
 
 const s = t.googleSync.connection;

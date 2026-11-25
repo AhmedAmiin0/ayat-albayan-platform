@@ -1,6 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Ltr, t } from '@ab/web-kit';
 import type { StudentRef } from '@ab/shared';
 
 export interface DuplicateNoticeProps {

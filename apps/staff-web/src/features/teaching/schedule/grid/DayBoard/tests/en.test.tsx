@@ -7,7 +7,7 @@ import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { boardRows } from '@/features/teaching/schedule/overview';
 import { T_ABRAR, T_FATMA, T_NOUR } from '@/features/teaching/schedule/overview-fixture';
 import { ScheduleNav } from '@/features/teaching/schedule/ScheduleNav';
-import { configWrapper } from '@ab/web-kit/lib/settings/confirmation-testing';
+import { configWrapper } from '@ab/web-kit/testing';
 
 // The calendar in English (LTR): every word from en.json, Western digits, the same layout.
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));

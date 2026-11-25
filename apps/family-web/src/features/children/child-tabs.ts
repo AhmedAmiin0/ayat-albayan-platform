@@ -3,8 +3,8 @@ import {
 } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { z } from 'zod';
-import type { TabOption } from '@ab/web-kit/components/ui/layout/tabs';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { TabOption } from '@ab/web-kit';
+import { t } from '@ab/web-kit';
 
 /** `?tab=` of a child's page (an alert opens the package or the chat): unknown values drop. */
 const tabSearch = z

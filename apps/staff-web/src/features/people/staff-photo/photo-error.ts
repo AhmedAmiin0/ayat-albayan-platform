@@ -1,6 +1,5 @@
 import { accountMessage } from '@/features/people/account';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 
 const OWN: Record<string, string | undefined> = t.staffPhoto.errors;
 const FILE_CODES = new Set(['avatar_type', 'avatar_too_large', 'avatar_path']);

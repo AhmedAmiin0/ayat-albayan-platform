@@ -9,11 +9,7 @@ import {
 } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Button, Ltr, StatusChip, t, cn } from '@ab/web-kit';
 import { Amount } from './balance/Amount';
 import type { SubscriptionView } from './api';
 import { moneyText, packageName, progressOf } from './format';

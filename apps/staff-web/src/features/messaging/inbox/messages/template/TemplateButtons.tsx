@@ -1,6 +1,5 @@
 import { templateButtonLink, type TemplateDisplayButton } from '@ab/shared';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, t } from '@ab/web-kit';
 import { templateButtonHint, templateButtonLabel } from '@ab/client-core';
 import { BUTTON_ICON } from './template-buttons';
 

@@ -19,11 +19,17 @@ describe('submit of a document-header template on a kapso line', () => {
     vi.stubEnv('WA_APP_ID', 'set-but-useless-on-kapso');
     queries.get.mockResolvedValue(REPORT_READY_SEED);
     const f = kapsoFetch();
-    const lines = { notifications: new HttpWhatsappClient(KAPSO_ENV, { fetch: f.fetch }), chat: new HttpWhatsappClient(null) };
+    const lines = {
+      notifications: new HttpWhatsappClient(KAPSO_ENV, { fetch: f.fetch }),
+      chat: new HttpWhatsappClient(null),
+    };
     const registry = templateServices(queries, lines, audit);
     const error = await registry.admin.submit('report_ready', 'admin-1').then(
       () => null,
-      (e: { getStatus: () => number; getResponse: () => unknown }) => [e.getStatus(), e.getResponse()],
+      (e: { getStatus: () => number; getResponse: () => unknown }) => [
+        e.getStatus(),
+        e.getResponse(),
+      ],
     );
     expect(error).toEqual([409, { code: 'needs_meta_driver', message: 'needs_meta_driver', line: 'notifications' }]);
     expect(f.requests).toHaveLength(0);

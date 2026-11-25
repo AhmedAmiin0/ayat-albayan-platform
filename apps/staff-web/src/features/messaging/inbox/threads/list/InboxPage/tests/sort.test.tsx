@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { clearAllFilters, findFilters } from '@/test/open-filters';
 import { InboxPage } from '@/features/messaging/inbox/threads/list/InboxPage/InboxPage';
 import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';

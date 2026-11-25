@@ -23,7 +23,9 @@ interface CrmRequest {
   body?: unknown;
 }
 
-const errorSchema = z.object({ error: z.object({ code: z.string().optional(), message: z.string().optional() }) });
+const errorSchema = z.object({
+  error: z.object({ code: z.string().optional(), message: z.string().optional() }),
+});
 
 /** The CRM's own refusals that mean nothing reached WhatsApp: fail with its code, never uncertain. */
 const NOT_SENT_5XX = new Set(['meta_error', 'template_malformed']);
@@ -64,7 +66,11 @@ interface CrmAnswer {
 }
 
 /** A CRM error answer as its raw text (tests and the send plan build one this way). */
-export function crmErrorFrom(res: { status: number; text: string; retryAfter: string | null }): WaError {
+export function crmErrorFrom(res: {
+  status: number;
+  text: string;
+  retryAfter: string | null;
+}): WaError {
   return crmErrorOf({ status: res.status, body: json(res.text), retryAfter: res.retryAfter });
 }
 
@@ -74,19 +80,32 @@ function crmErrorOf(res: CrmAnswer): WaError {
   const base = { code: null, status: res.status, crmCode, details: said };
   const message = `CRM HTTP ${res.status} ${crmCode}${said ? `: ${said}` : ''}`;
   const refused = { ...base, credential: 'crm' as const, ...missingScope(res.status, said) };
-  if (res.status === 401 || res.status === 403) return new WaError(`CRM refused the API key: ${message}`, refused);
-  if (crmCode === LINE_DOWN) return new WaError(`CRM has no WhatsApp connection: ${message}`, { ...base, credential: 'crm' });
-  if (res.status === 429) return new WaError(message, { ...base, retryAfterMs: retryAfterMs(res.retryAfter) });
+  if (res.status === 401 || res.status === 403)
+    return new WaError(`CRM refused the API key: ${message}`, refused);
+  if (crmCode === LINE_DOWN)
+    return new WaError(`CRM has no WhatsApp connection: ${message}`, {
+      ...base,
+      credential: 'crm',
+    });
+  if (res.status === 429)
+    return new WaError(message, { ...base, retryAfterMs: retryAfterMs(res.retryAfter) });
   if (crmCode === CRM_DOWN) return new WaError(message, { ...base, lineDown: true });
-  if (res.status >= 500 && !NOT_SENT_5XX.has(crmCode)) return new WaError(message, { ...base, uncertain: true });
+  if (res.status >= 500 && !NOT_SENT_5XX.has(crmCode))
+    return new WaError(message, { ...base, uncertain: true });
   return new WaError(message, base);
 }
 
 /** The CRM's error code and message; a body that is not its envelope (a proxy's page) is http_<status> only, never shown. */
-function envelopeOf(res: Pick<CrmAnswer, 'status' | 'body'>): { crmCode: string; said: string | undefined } {
+function envelopeOf(res: Pick<CrmAnswer, 'status' | 'body'>): {
+  crmCode: string;
+  said: string | undefined;
+} {
   const parsed = errorSchema.safeParse(res.body);
   if (!parsed.success) return { crmCode: `http_${res.status}`, said: undefined };
-  return { crmCode: parsed.data.error.code ?? `http_${res.status}`, said: parsed.data.error.message };
+  return {
+    crmCode: parsed.data.error.code ?? `http_${res.status}`,
+    said: parsed.data.error.message,
+  };
 }
 
 /** Only a status failure reaches the default: every other kind has its own entry. */

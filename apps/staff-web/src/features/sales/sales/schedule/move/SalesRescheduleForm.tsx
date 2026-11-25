@@ -1,9 +1,7 @@
 import type { SalesScheduleLesson } from '@ab/shared';
 import { RIYADH_TZ } from '@ab/time';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
+import { Button, FormAlert, ButtonRow, t } from '@ab/web-kit';
 import { BookingModeContext } from '@/features/teaching/booking';
 import {
   ConflictNotice,
@@ -13,7 +11,6 @@ import {
   MoveReason,
   SlotPicker,
 } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useSalesMove } from './sales-move-api';
 
 interface SalesRescheduleFormProps {

@@ -1,11 +1,6 @@
 import { formatPhone } from '@ab/core';
 import { Link } from '@tanstack/react-router';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { iconButtonClass } from '@ab/web-kit/components/ui/form/icon-button';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon, iconButtonClass, Ltr, StatusChip, t, cn } from '@ab/web-kit';
 import { threadKind, threadTitle, timesInText } from '@/features/messaging/inbox/format';
 import { inboxBase, showsPhone, useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { ThreadListChips } from '@/features/messaging/inbox/lists/components/ThreadListChips';

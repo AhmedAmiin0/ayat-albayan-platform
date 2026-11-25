@@ -14,7 +14,10 @@ export const PDF_BYTES = new TextEncoder().encode('%PDF-1.4 fake');
 export const ask = (page: number, messageId = 'm1') => ({ phone: PHONE, messageId, page });
 /** What a fake pdftoppm returns for a range. */
 export const jpgs = (range: { first: number; last: number }) =>
-  Array.from({ length: range.last - range.first + 1 }, (_, i) => ({ page: range.first + i, jpg: new Uint8Array([0xff, 0xd8, i]) }));
+  Array.from({ length: range.last - range.first + 1 }, (_, i) => ({
+    page: range.first + i,
+    jpg: new Uint8Array([0xff, 0xd8, i]),
+  }));
 
 /** `objects`: wa-media by path (a message's PDF is `{id}.pdf`); `docs`: messages.media_pages / media_bytes by id. */
 export function setup() {
@@ -29,7 +32,12 @@ export function setup() {
   const storage = {
     exists: vi.fn(async (ref: { path: string }) => objects.has(ref.path)),
     download: vi.fn(async (ref: { path: string }) => objects.get(ref.path) ?? null),
-    upload: vi.fn(async (ref: { path: string; body: Uint8Array }) => (objects.set(ref.path, ref.body), ref.path)),
+    upload: vi.fn(
+      async (ref: { path: string; body: Uint8Array }) => (
+        objects.set(ref.path, ref.body),
+        ref.path
+      ),
+    ),
     storedPathFor: (path: string) => path,
     signedDownload: vi.fn(async (ref: { path: string }) => ({ url: `https://signed/${ref.path}`, expires_at: '2026-10-29T13:00:00.000Z' })),
   };

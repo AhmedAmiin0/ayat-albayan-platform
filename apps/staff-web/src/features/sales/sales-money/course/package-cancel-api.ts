@@ -7,7 +7,7 @@ import {
 } from '@ab/client-core';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import type { CancelBody } from '@/features/finance/subscriptions';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 
 // The assistant may cancel any student's package with subscriptions.stop.
 

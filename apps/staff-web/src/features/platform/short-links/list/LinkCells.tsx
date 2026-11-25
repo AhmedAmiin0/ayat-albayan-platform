@@ -1,9 +1,7 @@
 import { fillSlots, targetHost, usageText } from '@ab/client-core';
 import { SHORT_LINK_GATE_PATH, type ShortLinkRow } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, Ltr, t } from '@ab/web-kit';
 import { CopyButton } from '@/features/platform/short-links/shared/CopyButton';
 import { LINK_ROUTES, type LinkSection } from '@/features/platform/short-links/shared/link-routes';
 import { RoleTag } from '@/features/platform/short-links/shared/PersonLine';

@@ -11,7 +11,7 @@ import type {
 } from '@ab/shared';
 import type { CommsSource } from '@ab/settings';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';
 
 /** GET /admin/numbers (settings.read): every number; secrets as «set / not set» only. */

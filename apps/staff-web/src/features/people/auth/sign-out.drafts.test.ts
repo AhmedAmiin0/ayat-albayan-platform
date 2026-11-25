@@ -5,7 +5,7 @@ import { getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draf
 import { lastOwnSend, recordOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { registerDrafts } from '@/features/messaging/inbox/sales/register-drafts';
 import { rememberUntilSessionEnd } from '@/features/messaging/inbox/shared/tab-memory';
-import { signOut } from '@ab/web-kit/auth/sign-in';
+import { signOut } from '@ab/web-kit';
 
 const auth = vi.hoisted(() => ({ signOut: vi.fn(async () => undefined) }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));

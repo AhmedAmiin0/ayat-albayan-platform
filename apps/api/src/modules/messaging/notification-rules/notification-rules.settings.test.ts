@@ -15,7 +15,10 @@ describe('NotificationRulesSettings', () => {
   });
 
   it('answers the stored switches and timings', async () => {
-    const values = await readerOf(NotificationRulesSettings, { reminder_24h_enabled: true, follow_up_hours: [12] }).read();
+    const values = await readerOf(NotificationRulesSettings, {
+      reminder_24h_enabled: true,
+      follow_up_hours: [12],
+    }).read();
     expect(values.reminder_24h_enabled).toBe(true);
     expect(values.follow_up_hours).toEqual([12]);
   });

@@ -24,9 +24,20 @@ describe('knownNumber (a number with no message yet)', () => {
   });
 
   it('a teacher alone; nobody → null', async () => {
-    const teacher = fakeDb({ guardian_phones: [{ data: null }], leads: [{ data: [] }], teachers: [{ data: [{ id: 't1' }] }] });
-    expect(await knownNumber(teacher.db, PHONE)).toMatchObject({ guardian_id: null, teacher_id: 't1' });
-    const nobody = fakeDb({ guardian_phones: [{ data: null }], leads: [{ data: [] }], teachers: [{ data: [] }] });
+    const teacher = fakeDb({
+      guardian_phones: [{ data: null }],
+      leads: [{ data: [] }],
+      teachers: [{ data: [{ id: 't1' }] }],
+    });
+    expect(await knownNumber(teacher.db, PHONE)).toMatchObject({
+      guardian_id: null,
+      teacher_id: 't1',
+    });
+    const nobody = fakeDb({
+      guardian_phones: [{ data: null }],
+      leads: [{ data: [] }],
+      teachers: [{ data: [] }],
+    });
     expect(await knownNumber(nobody.db, PHONE)).toBeNull();
   });
 

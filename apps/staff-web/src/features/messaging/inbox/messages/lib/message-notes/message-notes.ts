@@ -1,7 +1,7 @@
 import { canRetryCode, canSendViaWhatsApp, isAwaitingReply, MAX_SEND_ATTEMPTS, type MessageView } from '@ab/shared';
 import { SEND_UNCONFIRMED } from '@ab/client-core';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { Clock } from '@ab/web-kit';
+import { t } from '@ab/web-kit';
 import { errorText, fullTime } from '@/features/messaging/inbox/format';
 
 export interface NotesInput {

@@ -76,3 +76,12 @@ test('resolveSpec: `@/` is the importing app\'s src (web and api), `../` stays r
   assert.equal(resolveSpec(files, 'apps/api/src/m/z.ts', '@/lib/i18n'), null, 'never the other app');
   assert.equal(resolveSpec(files, 'e2e/tests/a.spec.ts', '@/lib/i18n'), null);
 });
+
+test('resolveSpec: the web kit entries are its source files, a deep kit path stays the kit src', () => {
+  const kit = (p) => `packages/web-kit/src/${p}`;
+  const app = 'apps/family-web/src/a.tsx';
+  assert.equal(resolveSpec(new Set(), app, '@ab/web-kit'), kit('index.ts'));
+  assert.equal(resolveSpec(new Set(), app, '@ab/web-kit/room'), kit('room.ts'));
+  assert.equal(resolveSpec(new Set(), app, '@ab/web-kit/testing'), kit('testing/index.ts'));
+  assert.equal(resolveSpec(new Set([kit('lib/clock.ts')]), app, '@ab/web-kit/lib/clock'), kit('lib/clock.ts'));
+});

@@ -1,11 +1,8 @@
 import { courseStopLessonsText, datesText } from '@ab/client-core';
 import { COURSE_STOP_REASON_MAX, type CourseStopPreview } from '@ab/shared';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Field, Input, t, useViewerTz } from '@ab/web-kit';
 import { Amount } from '@/features/finance/subscriptions';
 import { dateLabel, dayIn } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { StopMoneyChoice } from './refund/StopMoneyChoice';
 import type { StopMoneyView } from './refund/use-stop-money';
 

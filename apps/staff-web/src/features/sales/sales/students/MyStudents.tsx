@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { myStudentsQuery } from '@/features/sales/sales/api';
 import { myStudentColumns } from './my-student-columns';
 import { PortalList } from './PortalList';

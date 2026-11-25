@@ -2,8 +2,7 @@ import type { RegistrationCheckView } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { RegistrationCheckButton } from '@/features/sales/sales/registration/RegistrationCheckButton/RegistrationCheckButton';
 
 const apiFetch = vi.hoisted(() => vi.fn());

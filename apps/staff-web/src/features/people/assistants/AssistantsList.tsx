@@ -2,10 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
 import { TableBox } from '@/components/data-table/TableBox';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { EmptyState, FormAlert, ListSkeleton, t } from '@ab/web-kit';
 import { assistantsQuery } from './api';
 import { assistantColumns } from './assistant-columns';
 

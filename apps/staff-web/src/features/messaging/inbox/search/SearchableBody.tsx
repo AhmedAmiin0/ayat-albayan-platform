@@ -1,4 +1,4 @@
-import { LinkedBody } from '@ab/web-kit/components/ui/display/linked-body';
+import { LinkedBody } from '@ab/web-kit';
 import { useChatSearch } from './search-context';
 import { SearchMarks } from './SearchMarks';
 

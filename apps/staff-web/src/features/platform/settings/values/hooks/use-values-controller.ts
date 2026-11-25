@@ -6,7 +6,7 @@ import {
 } from '@ab/settings';
 import { useCallback, useState } from 'react';
 import { settingText } from '@/components/settings/search/setting-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { rowForm, rowUpdate } from '@/features/platform/settings/registry-form/row-form';
 import type { SettingsForm } from '@/features/platform/settings/registry-form/settings-form';
 import { useRowSaves, type SaveInput } from './use-row-saves';

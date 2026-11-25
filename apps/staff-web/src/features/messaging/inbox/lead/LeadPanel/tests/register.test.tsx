@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { studentKeys } from '@/features/people/keys';
 import { leadKeys } from '@/features/sales/keys';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';

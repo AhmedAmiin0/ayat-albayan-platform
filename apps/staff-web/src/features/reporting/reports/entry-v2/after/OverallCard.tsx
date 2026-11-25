@@ -1,6 +1,6 @@
 import { fillSlots } from '@ab/client-core';
 import type { Grade } from '@ab/catalog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { GradeChips } from '@/features/reporting/reports/entry-v2/GradeChips';
 import { CARD } from '@/features/reporting/reports/entry-v2/v2-classes';
 

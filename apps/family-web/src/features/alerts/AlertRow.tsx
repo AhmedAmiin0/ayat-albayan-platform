@@ -1,12 +1,7 @@
 import { alertTarget } from '@ab/client-core';
 import type { PortalKind } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { dateAndClock } from '@ab/web-kit/lib/clock-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { useFamilyChatOn } from '@ab/web-kit/portal/use-family-chat';
+import { useClock, dateAndClock, t, cn, Card, useFamilyChatOn } from '@ab/web-kit';
 import { alertLink } from './alert-link';
 import type { FamilyAlerts } from './alerts-api';
 

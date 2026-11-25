@@ -1,8 +1,6 @@
 import type { MessageSearchHit } from '@ab/shared';
 import { useId } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { Button, t, useNow } from '@ab/web-kit';
 import { useChatAnchor } from '@/features/messaging/inbox/shared/chat-anchor';
 import { MessageHitRow } from './MessageHitRow';
 import type { HitsPhase, MessageHitsState } from './use-message-hits';

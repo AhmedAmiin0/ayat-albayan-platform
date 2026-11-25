@@ -1,5 +1,5 @@
 import type { CancelBy } from '@ab/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** Teacher cancels are not counted; a student excuse follows the late-cancel rule. */
 export const CORRECT_BY = ['teacher', 'student'] as const satisfies readonly CancelBy[];

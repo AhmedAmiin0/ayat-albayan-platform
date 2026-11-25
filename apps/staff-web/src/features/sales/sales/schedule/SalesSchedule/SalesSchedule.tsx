@@ -1,13 +1,15 @@
 import { ACADEMY_TZ, zonedPartsIn } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import {
+  Button,
+  Cartouche,
+  EmptyState,
+  FormAlert,
+  PageHead,
+  ListSkeleton,
+  useNow,
+  t,
+} from '@ab/web-kit';
 import { salesScheduleQuery, salesTeachersQuery } from '@/features/sales/sales/academy-api';
 import { SalesDayBoard } from '@/features/sales/sales/schedule/SalesDayBoard';
 import { SalesDayNav } from '@/features/sales/sales/schedule/SalesDayNav';

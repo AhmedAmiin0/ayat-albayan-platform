@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { setLocale, t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { FamilySignInScreen } from '@/sign-in/FamilySignInScreen/FamilySignInScreen';
 
 // Signed out, a phone in one language can switch to the other without signing in first.

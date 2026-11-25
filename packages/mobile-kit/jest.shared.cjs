@@ -65,7 +65,7 @@ jest.mock('./src/lib/connectivity/connectivity', () => {
 });
 
 // The translation-overrides refresh would call the real API from every flow test: off here.
-// lib/i18n-overrides.test.ts tests the real module (jest.requireActual).
+// lib/i18n-overrides.test.ts tests the real module (jest.unmock).
 jest.mock('./src/lib/i18n/i18n-overrides', () => ({
   ...jest.requireActual('./src/lib/i18n/i18n-overrides'),
   refreshOverrides: jest.fn(async () => false),

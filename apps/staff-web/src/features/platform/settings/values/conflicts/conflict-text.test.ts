@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { conflictBy, conflictText } from './conflict-text';
 import { valueText } from '@/features/platform/settings/values/lib/value-format';
 

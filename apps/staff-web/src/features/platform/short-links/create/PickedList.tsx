@@ -1,10 +1,7 @@
 import { fillSlots, type LinkPick } from '@ab/client-core';
 import { formatPhone } from '@ab/core';
 import type { ReactNode } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, Ltr, IconButton, t } from '@ab/web-kit';
 import { RoleTag } from '@/features/platform/short-links/shared/PersonLine';
 
 const F = t.shortLinks.form;

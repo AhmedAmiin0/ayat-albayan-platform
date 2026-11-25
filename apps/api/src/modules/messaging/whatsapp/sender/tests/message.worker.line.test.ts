@@ -11,7 +11,13 @@ import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Two lines in the worker (docs/12 §13.3): ready before the claim, stamp only when multi, per-line alert.
 
-const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn(), staffAtSend: vi.fn() };
+const queries = {
+  claim: vi.fn(),
+  sent: vi.fn(),
+  failure: vi.fn(),
+  expire: vi.fn(),
+  staffAtSend: vi.fn(),
+};
 const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };
 const push = { notifyAdmins: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
@@ -20,7 +26,11 @@ const chatText = dueMessage({ template_key: null, template_params: null, body: '
 const authError = new WaError('Error validating access token', { code: 190, status: 401 });
 
 function worker() {
-  const w = new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, push as unknown as PushService);
+  const w = new MessageWorker(
+    queries as unknown as SenderRepo,
+    dispatch as unknown as MessageDispatch,
+    push as unknown as PushService,
+  );
   w.wait = vi.fn(async () => undefined);
   return w;
 }

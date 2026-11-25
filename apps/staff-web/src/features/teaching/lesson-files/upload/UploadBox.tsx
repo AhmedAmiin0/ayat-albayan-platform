@@ -1,8 +1,6 @@
 import { LESSON_FILE_KINDS, type LessonFileKind } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Select, t } from '@ab/web-kit';
 import { UploadQueue } from './UploadQueue';
 import { useUploadQueue } from './use-upload-queue';
 

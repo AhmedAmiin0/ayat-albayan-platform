@@ -1,7 +1,7 @@
 import type { ShortLinkRow } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableColumn, DataTableFeatures } from '@/components/data-table/DataTable';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { StateChip } from '@/features/platform/short-links/shared/LinkChips';
 import type { LinkSection } from '@/features/platform/short-links/shared/link-routes';
 import { ExpiryCell, OwnerCell, ShortUrlCell, TitleCell, UsageCell } from './LinkCells';

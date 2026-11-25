@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { createElement } from 'react';
 import { vi } from 'vitest';
-import { type Me, meQuery } from '@ab/web-kit/auth/me';
+import { type Me, meQuery } from '@ab/web-kit';
 import { GatePage } from './GatePage';
 
 // Tests only: the gate /l/<code> on a fresh query client, the API answered by `fetch` routes

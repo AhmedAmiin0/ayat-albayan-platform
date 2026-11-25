@@ -1,7 +1,6 @@
 import { settingDef, type SettingKey } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { t, locale } from '@ab/web-kit';
 import type { DescribeTarget } from './describe-target';
 import { shownDescription } from './description';
 import type { ValuesApi } from '@/features/platform/settings/values/hooks/use-values-controller.types';

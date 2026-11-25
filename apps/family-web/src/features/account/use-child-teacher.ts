@@ -1,8 +1,6 @@
 import { nextLesson } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { portalLessonsQuery } from '@ab/web-kit/portal/api';
+import { teacherLabel, useNow, portalLessonsQuery } from '@ab/web-kit';
 
 /** In the UI language; null while loading or with no lesson ahead. */
 export function useChildTeacher(studentId: string): string | null {

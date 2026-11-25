@@ -56,14 +56,25 @@ export class WaMediaRetentionJob extends TickerJob {
   }
 
   /** One kind's batches; `done.files` counts as it goes, so a failure still reports what was purged. */
-  private async purge(input: { before: string; echoes: boolean; done: { files: number } }): Promise<void> {
+  private async purge(input: {
+    before: string;
+    echoes: boolean;
+    done: { files: number };
+  }): Promise<void> {
     for (let i = 0; i < MAX_BATCHES; i++) {
-      const rows = await this.queries.cachedBefore({ before: input.before, limit: BATCH, echoes: input.echoes });
+      const rows = await this.queries.cachedBefore({
+        before: input.before,
+        limit: BATCH,
+        echoes: input.echoes,
+      });
       // The query already filters by mime and media id; this guard keeps a photo, a PDF or an old-CRM
       // copy (no media id: our only copy) safe whatever it returns.
       const playable = rows.filter((r) => isPlayableMime(r.media_mime) && !!r.media_id);
       if (!playable.length) return;
-      await this.storage.removeMany({ bucket: BUCKETS.waMedia, paths: playable.map((r) => r.media_path) });
+      await this.storage.removeMany({
+        bucket: BUCKETS.waMedia,
+        paths: playable.map((r) => r.media_path),
+      });
       await this.queries.clearPaths(
         playable.map((r) => r.id),
         input.echoes,

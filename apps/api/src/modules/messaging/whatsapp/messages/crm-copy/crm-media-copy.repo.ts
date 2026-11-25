@@ -43,6 +43,11 @@ export class CrmMediaCopyRepo {
     const { data, error } = await this.db.rpc('crm_media_copy_counts', { p_host: host });
     if (error) throw new Error(`crm media copy counts failed: ${error.message}`);
     const row = data && typeof data === 'object' && !Array.isArray(data) ? data : {};
-    return { copied: count(row.copied), failed: count(row.failed), skipped: count(row.skipped), remaining: count(row.remaining) };
+    return {
+      copied: count(row.copied),
+      failed: count(row.failed),
+      skipped: count(row.skipped),
+      remaining: count(row.remaining),
+    };
   }
 }

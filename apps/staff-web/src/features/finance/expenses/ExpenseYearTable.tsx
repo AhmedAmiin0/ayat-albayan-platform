@@ -3,10 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { DataTable, type DataTableFeatures } from '@/components/data-table/DataTable';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { FormAlert, t } from '@ab/web-kit';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { categoriesQuery, categoryLabel, expenseYearQuery } from './api';
 
 type Month = ExpenseYearView['months'][number];

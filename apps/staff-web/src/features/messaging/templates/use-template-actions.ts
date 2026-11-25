@@ -1,8 +1,8 @@
 import type { TemplateView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import type { ToastProps } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { ToastProps } from '@ab/web-kit';
+import { t } from '@ab/web-kit';
 import { moveTemplateLine, setStarter, submitTemplate, syncFailedText, templateErrorText, templateLinesQuery, templatesQuery } from './api';
 
 /** The one toast of the template section. */

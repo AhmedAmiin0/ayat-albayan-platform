@@ -1,7 +1,7 @@
 import { defaultCountry, nameOf } from '@ab/client-core';
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { renderAt } from '@/test/render-at';
 import { WhatsAppSignIn } from './WhatsAppSignIn';
 

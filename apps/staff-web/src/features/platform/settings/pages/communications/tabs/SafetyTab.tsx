@@ -7,7 +7,7 @@ import {
   WACRM_GROUPS,
 } from '@/features/platform/integrations/integration-places';
 import { IntegrationsPanel } from '@/features/platform/integrations/IntegrationsPanel';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { CrmCutoverCard } from '@/features/platform/settings/pages/communications/CrmCutoverCard';
 
 /** docs/23 §2d tab 5, docs/26b §6a: emptying the allow-list still asks first. */

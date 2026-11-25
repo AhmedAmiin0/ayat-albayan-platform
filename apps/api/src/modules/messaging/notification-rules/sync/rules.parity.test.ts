@@ -21,8 +21,16 @@ function setup(over: Partial<AcademySettings> = {}) {
   const settings = new RulesSourceSettings(store, 30_000);
   const reader = new DbRulesReader(table, settings);
   const audit = { record: vi.fn(async () => undefined) };
-  const journal = new RulesJournal(audit as unknown as AuditService, { push: vi.fn() } as unknown as ActivityWriter);
-  return { parity: new RulesParity(new RulesPersist(table, settings, reader), journal), store, audit, table };
+  const journal = new RulesJournal(
+    audit as unknown as AuditService,
+    { push: vi.fn() } as unknown as ActivityWriter,
+  );
+  return {
+    parity: new RulesParity(new RulesPersist(table, settings, reader), journal),
+    store,
+    audit,
+    table,
+  };
 }
 
 describe('RulesParity (docs/23b decision 5)', () => {
@@ -38,7 +46,10 @@ describe('RulesParity (docs/23b decision 5)', () => {
     const values = await t.parity.copyToLegacy('actor');
     expect(values.reminder_minutes_before).toBe(30);
     expect(t.store.write).toHaveBeenCalledTimes(1);
-    const written = (t.store.write as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as Record<string, unknown>;
+    const written = (t.store.write as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as Record<
+      string,
+      unknown
+    >;
     expect(Object.keys(written).sort()).toEqual([...RULE_SETTING_KEYS].sort());
     expect(written).toMatchObject({ feedback_mode: SETTING_DEFAULTS.feedback_mode });
     expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'settings', action: 'rules_to_legacy' }));

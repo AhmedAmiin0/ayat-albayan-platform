@@ -1,9 +1,8 @@
 import { act, fireEvent, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { useBelowShell } from '@ab/web-kit/components/ui/layout/use-narrow';
+import { useBelowShell, t } from '@ab/web-kit';
 import { ABRAR } from '@/features/teaching/booking/wizard-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';

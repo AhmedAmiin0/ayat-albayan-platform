@@ -103,7 +103,10 @@ export function fakeDeps() {
     queries: fakeQueries(),
     leads: { upsertByPhone: vi.fn().mockResolvedValue(lead({ id: NEW_LEAD_ID })) },
     lessons: { confirm: vi.fn().mockResolvedValue(LESSON_ID) },
-    push: { notifyAdmins: vi.fn().mockResolvedValue(undefined), notifySales: vi.fn().mockResolvedValue(undefined) },
+    push: {
+      notifyAdmins: vi.fn().mockResolvedValue(undefined),
+      notifySales: vi.fn().mockResolvedValue(undefined),
+    },
     audit: { record: vi.fn().mockResolvedValue(undefined) },
     ratings: { record: vi.fn().mockResolvedValue(1) },
   };
@@ -119,7 +122,11 @@ export function services(d: Deps = fakeDeps()) {
     d.lessons as unknown as LessonStatusService,
     d.audit as unknown as AuditService,
   );
-  const store = new InboundStore(queries, d.leads as unknown as LeadsService, d.ratings as unknown as RatingStore);
+  const store = new InboundStore(
+    queries,
+    d.leads as unknown as LeadsService,
+    d.ratings as unknown as RatingStore,
+  );
   const inbound = new InboundService(store, replies, push);
   const external = externalServices(d.queries);
   const crm = { adopt: vi.fn().mockResolvedValue(false) };

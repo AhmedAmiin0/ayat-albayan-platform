@@ -11,8 +11,7 @@ import {
   type WayIn,
 } from '@ab/client-core';
 import { isOpenLesson, type LessonView } from '@ab/schedule';
-import { useJoinWindow, usePlatformClassroom } from '@ab/web-kit/lib/settings/public-config';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { useJoinWindow, usePlatformClassroom, useNow } from '@ab/web-kit';
 
 export interface TeacherPlan extends LessonPlan {
   stage: ReportStage | null;

@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { Ltr, t } from '@ab/web-kit';
 import { studentListQuery } from '@/features/people/students/api';
 import { StudentSearch } from '@/features/people/students/list/StudentSearch';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { PickedStudent } from '@/features/teaching/booking/draft/draft';
 import type { StudentRef } from '@ab/shared';
 

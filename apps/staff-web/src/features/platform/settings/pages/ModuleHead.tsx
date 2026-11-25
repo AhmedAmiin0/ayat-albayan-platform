@@ -1,9 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Cartouche, Icon, PageHead, t } from '@ab/web-kit';
 
 /** docs/26b §3. */
 export function ModuleHead({ title, children }: { title: string; children?: ReactNode }) {

@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { t, locale } from '@ab/web-kit';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { canRetry, outboundNotes } from '@/features/messaging/inbox/messages/lib/message-notes/message-notes';
 

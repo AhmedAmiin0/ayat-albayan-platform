@@ -1,8 +1,8 @@
 import { formatPhone } from '@ab/core';
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { home, kid } from '@ab/web-kit/portal/portal.fixtures';
+import { t } from '@ab/web-kit';
+import { home, kid } from '@ab/web-kit/testing';
 import { renderAt } from '@/test/render-at';
 import { ProfilePage } from './ProfilePage';
 

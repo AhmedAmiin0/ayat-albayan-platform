@@ -1,9 +1,6 @@
 import { fillSlots } from '@ab/client-core';
 import { lessonWhenAt, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { Ltr, useClock, t, teacherLabel } from '@ab/web-kit';
 
 export interface V2HeaderProps {
   lesson: ReportFormLesson;

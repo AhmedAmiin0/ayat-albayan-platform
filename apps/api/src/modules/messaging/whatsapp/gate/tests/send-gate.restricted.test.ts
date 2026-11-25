@@ -25,6 +25,11 @@ describe('SendGate.view restricted flag (WA_ALLOWED_RECIPIENTS, docs/12 §13.5)'
   it('an open gate keeps its state and adds the flag', async () => {
     Object.entries(STUB_WA_ENV).forEach(([k, v]) => vi.stubEnv(k, v));
     vi.stubEnv('WA_ALLOWED_RECIPIENTS', '+201001234567');
-    await expect(gate({ messaging_enabled: true }).view()).resolves.toEqual({ open: true, reason: null, queued: 3, restricted: true });
+    await expect(gate({ messaging_enabled: true }).view()).resolves.toEqual({
+      open: true,
+      reason: null,
+      queued: 3,
+      restricted: true,
+    });
   });
 });

@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
-import { Page } from '@ab/web-kit/components/ui/layout/page';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Page, cn } from '@ab/web-kit';
 import { useRailBox } from './use-rail-box';
 
 // The page's own scroll area: the cartouche row stays pinned and a table keeps its header in view.

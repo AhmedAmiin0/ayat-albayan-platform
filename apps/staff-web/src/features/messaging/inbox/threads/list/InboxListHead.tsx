@@ -1,7 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Cartouche, PageHead, t } from '@ab/web-kit';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { LiveDot } from './LiveDot';
 import { NewChatForm, NewChatToggle } from './NewChatForm';

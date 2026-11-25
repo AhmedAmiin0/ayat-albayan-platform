@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { salesLiveQuery } from '@/features/sales/sales/academy-api';
 
 /** Hidden while loading, on error or without the scope key; compact uses a router Link. */

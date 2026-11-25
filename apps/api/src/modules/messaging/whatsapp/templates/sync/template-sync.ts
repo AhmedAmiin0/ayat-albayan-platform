@@ -32,7 +32,14 @@ const componentSchema = z.object({
   format: z.string().optional(),
   text: z.string().optional(),
   buttons: z
-    .array(z.object({ type: z.string(), text: z.string().optional(), url: z.string().optional(), phone_number: z.string().optional() }))
+    .array(
+      z.object({
+        type: z.string(),
+        text: z.string().optional(),
+        url: z.string().optional(),
+        phone_number: z.string().optional(),
+      }),
+    )
     .optional(),
 });
 export type Component = z.infer<typeof componentSchema>;
@@ -60,7 +67,10 @@ function toButton(b: MetaButton, mine: TemplateButton | undefined): TemplateButt
   return intent ? { type: 'quick_reply', text: b.text, intent } : null;
 }
 
-export function metaButtons(comps: readonly Component[], ours: readonly TemplateButton[]): TemplateButton[] | null {
+export function metaButtons(
+  comps: readonly Component[],
+  ours: readonly TemplateButton[],
+): TemplateButton[] | null {
   const raw = comps.find((c) => c.type === 'BUTTONS')?.buttons ?? [];
   const out = raw.map((b, i) => toButton(b, ours[i]));
   return out.every((b): b is TemplateButton => b !== null) ? out : null;
@@ -73,7 +83,11 @@ export type TemplatePatch = TablesUpdate<'message_templates'>;
  * BODY / FOOTER / BUTTONS over our shapes. Not on Meta: a never-submitted row stays
  * not_submitted, anything else is missing.
  */
-export function syncPatch(row: TemplateRow, meta: MetaTemplate | undefined, now: Date): TemplatePatch {
+export function syncPatch(
+  row: TemplateRow,
+  meta: MetaTemplate | undefined,
+  now: Date,
+): TemplatePatch {
   const checked = { last_checked_at: now.toISOString() };
   if (!meta) return { ...checked, status: row.status === 'not_submitted' ? 'not_submitted' : 'missing' };
   const status = ourStatus(meta.status);
@@ -94,6 +108,9 @@ export function syncPatch(row: TemplateRow, meta: MetaTemplate | undefined, now:
 }
 
 /** The Meta template a registry row stands for: same name and language. */
-export function findMeta(row: TemplateRow, meta: readonly MetaTemplate[]): MetaTemplate | undefined {
+export function findMeta(
+  row: TemplateRow,
+  meta: readonly MetaTemplate[],
+): MetaTemplate | undefined {
   return meta.find((t) => t.name === row.meta_name && t.language === row.language);
 }

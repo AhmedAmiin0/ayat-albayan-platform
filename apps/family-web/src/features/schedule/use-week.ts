@@ -2,9 +2,7 @@ import { scheduleWeek, weekSchedule, weekStrip, weekSummary } from '@ab/client-c
 import type { PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { portalLessonsQuery } from '@ab/web-kit/portal/api';
+import { useNow, useViewerTz, portalLessonsQuery } from '@ab/web-kit';
 
 /** The lessons API covers 14 days: this week, the next and the one after at most. */
 export const MAX_OFFSET = 2;

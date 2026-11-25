@@ -9,7 +9,7 @@ import {
   type SiteCountry,
 } from '@ab/money';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 import { pricingKeys } from '@/features/finance/keys';
 
 // Shapes returned by apps/api/src/modules/pricing (docs/08). The client never prices anything:

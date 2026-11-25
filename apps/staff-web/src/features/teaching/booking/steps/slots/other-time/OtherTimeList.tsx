@@ -1,6 +1,4 @@
-import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { RadioChips, useClock, t } from '@ab/web-kit';
 import type { OtherTimeProps } from './OtherTime';
 import { OtherTimeStatus } from './OtherTimeStatus';
 import { dayOptions, timeOptions } from './other-time-options';

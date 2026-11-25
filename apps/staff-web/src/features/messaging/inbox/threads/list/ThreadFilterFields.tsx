@@ -1,6 +1,6 @@
 import { LEAD_STATUSES } from '@ab/catalog';
 import { SelectFilterField } from '@/components/table-toolbar/fields';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { THREAD_SORTS } from '@/features/messaging/inbox/shared/search';
 import type { ThreadFilterOptions } from './thread-filters';
 

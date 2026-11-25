@@ -19,14 +19,22 @@ export interface NumberSetInput {
 }
 
 /** Decision 4: its own approved row, else (no row yet) the role's default number when the row is approved. */
-export function approvedOn(row: TemplateRow, ref: NumberRef, approvals: readonly ApprovalRow[]): boolean {
+export function approvedOn(
+  row: TemplateRow,
+  ref: NumberRef,
+  approvals: readonly ApprovalRow[],
+): boolean {
   const own = approvals.find((a) => a.number_id === ref.id);
   if (own) return own.status === 'approved';
   return ref.is_default && ref.purpose === row.line && row.status === 'approved';
 }
 
 /** PUT /messaging/templates/:key/number (audited, template_number_set); the same number is a no-op. */
-export async function setTemplateNumber(deps: NumberSetDeps, input: NumberSetInput, actorId: string): Promise<TemplateNumberSetView> {
+export async function setTemplateNumber(
+  deps: NumberSetDeps,
+  input: NumberSetInput,
+  actorId: string,
+): Promise<TemplateNumberSetView> {
   const row = await deps.queries.get(input.key);
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
   const ref = input.number_id === null ? null : await deps.queries.numberRef(input.number_id);
@@ -34,7 +42,10 @@ export async function setTemplateNumber(deps: NumberSetDeps, input: NumberSetInp
   if (input.number_id !== null && (!ref || ref.purpose === 'calls')) throw waHttpError('unknown_number', 404);
   let after = row;
   if (row.number_id !== input.number_id) {
-    after = (await deps.queries.update(input.key, { number_id: input.number_id })) ?? { ...row, number_id: input.number_id };
+    after = (await deps.queries.update(input.key, { number_id: input.number_id })) ?? {
+      ...row,
+      number_id: input.number_id,
+    };
     await deps.audit.record({
       actorId,
       entity: 'message_templates',
@@ -45,5 +56,8 @@ export async function setTemplateNumber(deps: NumberSetDeps, input: NumberSetInp
     });
   }
   const approvals = await deps.queries.approvals(input.key);
-  return { template: toTemplateView(after, approvals), not_approved_on_number: ref ? !approvedOn(after, ref, approvals) : false };
+  return {
+    template: toTemplateView(after, approvals),
+    not_approved_on_number: ref ? !approvedOn(after, ref, approvals) : false,
+  };
 }

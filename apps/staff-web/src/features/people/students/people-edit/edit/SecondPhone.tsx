@@ -1,10 +1,7 @@
 import type { PeopleEditView } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { useState } from 'react';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, Button, FormAlert, t } from '@ab/web-kit';
 import { removeSecondPhone } from '@/features/people/students/people-edit/api';
 import { usePeopleWrite } from '@/features/people/students/people-edit/use-people-write';
 

@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Tabs, tabIds } from '@ab/web-kit/components/ui/layout/tabs';
-import { env } from '@ab/web-kit/lib/http/env';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { LanguageSwitch, Cartouche, Tabs, tabIds, env, t } from '@ab/web-kit';
 import { BindingCover } from '@/features/people/auth/BindingCover';
 import { FamilyPanel } from '@/features/people/auth/family/FamilyPanel';
 import { FamilyHostLink } from '@/features/people/auth/login/FamilyHostLink';

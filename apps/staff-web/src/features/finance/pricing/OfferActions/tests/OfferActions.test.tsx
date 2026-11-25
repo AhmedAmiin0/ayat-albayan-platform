@@ -1,7 +1,7 @@
 import { offerText, quote } from '@ab/money';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { OfferActions } from '@/features/finance/pricing/OfferActions/OfferActions';
 
 // A server-shaped quote (the shared function the API itself calls), not a client-side price.

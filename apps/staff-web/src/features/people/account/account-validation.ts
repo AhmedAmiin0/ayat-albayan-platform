@@ -5,7 +5,7 @@ import {
   passwordProblem,
 } from '@ab/shared';
 import { normalizePhone } from '@ab/core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { AccountErrors } from './errors';
 
 // The API checks the same again.

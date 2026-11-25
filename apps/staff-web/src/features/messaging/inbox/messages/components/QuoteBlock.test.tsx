@@ -1,7 +1,7 @@
 import { UNAVAILABLE_QUOTE, type MessageQuote, type ReplyQuote } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { threadFileQuery } from '@/features/messaging/inbox/api/api';
 import { threadPdfPageQuery } from '@/features/messaging/inbox/api/api.files';
 import { jumpToMessage } from '@/features/messaging/inbox/messages/lib/jump-to-message';

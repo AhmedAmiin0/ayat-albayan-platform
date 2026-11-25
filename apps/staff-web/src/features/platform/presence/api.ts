@@ -6,7 +6,7 @@ import {
 } from '@ab/client-core';
 import type { PresenceSelf, StaffPresence } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 
 // docs/33.
 const MINUTE_MS = 60_000;

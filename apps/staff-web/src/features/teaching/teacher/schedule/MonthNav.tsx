@@ -1,6 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Icon, t } from '@ab/web-kit';
 import { monthTitle } from './month-text';
 
 export interface MonthNavProps {

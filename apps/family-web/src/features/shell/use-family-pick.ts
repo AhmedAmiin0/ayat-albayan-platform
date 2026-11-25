@@ -4,7 +4,7 @@ import {
 import type { PortalStudent } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useSyncExternalStore } from 'react';
-import { meQuery } from '@ab/web-kit/auth/me';
+import { meQuery } from '@ab/web-kit';
 import { usePortalHome } from './use-portal-home';
 
 // docs/50 §6: blocked storage (private mode) keeps the pick for this page view only.

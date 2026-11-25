@@ -11,7 +11,7 @@ import type {
 import { monthRangeIn } from '@ab/time';
 import type { AssistantRow, LedgerFilter, StatementFilter } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import { assistantPayKeys } from '@/features/people/keys';
 

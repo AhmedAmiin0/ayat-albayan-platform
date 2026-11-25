@@ -1,12 +1,9 @@
 import type { PaymentLinkView } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { Button, Dialog, Toast, t } from '@ab/web-kit';
 import { Amount } from '@/features/finance/subscriptions';
 import { formatDate } from '@/features/sales/leads';
 import { fillText, linkMessage } from '@/features/sales/payment-links';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { getDraft, keptFailed, setDraft } from '@/features/messaging/inbox';
 import { fillComposer } from '@/features/messaging/inbox';
 

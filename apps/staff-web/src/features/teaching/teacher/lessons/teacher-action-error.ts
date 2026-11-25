@@ -1,5 +1,5 @@
 import { errorCode } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const ERRORS: Partial<Record<string, string>> = { lesson_started: t.teacherBoard.lessonStarted };
 

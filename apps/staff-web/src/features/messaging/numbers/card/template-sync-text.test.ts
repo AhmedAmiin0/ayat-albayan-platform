@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { syncCodeText, syncErrorText, syncResultText } from './template-sync-text';
 
 const s = t.numbers.templateSync;

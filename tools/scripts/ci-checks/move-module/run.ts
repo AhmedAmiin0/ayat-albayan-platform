@@ -25,7 +25,11 @@ function filesOf(root: string, mapFile: string): { map: MoveMap; pairs: [string,
 }
 
 /** A text file's new text: repo paths, then the root knip.json workspace paths and the knip guard names. */
-function rewriteTextFile(file: string, text: string, ctx: { pairs: [string, string][]; table: Map<string, string> }): string {
+function rewriteTextFile(
+  file: string,
+  text: string,
+  ctx: { pairs: [string, string][]; table: Map<string, string> },
+): string {
   const paths = rewriteText(text, textPairs(file, ctx.pairs));
   if (file === 'knip.json') return rewriteKnipWorkspaces(paths, ctx.pairs);
   if (file === 'refactor/guards/knip.json' && ctx.table.size > 0) return renameGuardNames(ctx.table, paths);
@@ -42,10 +46,14 @@ function rewriteAll(r: Resolver, pairs: [string, string][], table: Map<string, s
     const moved = r.renamed.has(file) || keys.some((k) => text.includes(k));
     if (!moved && !mentions(table, text)) continue;
     const specs = moved ? rewriteFile(project, r, { file, text }) : text;
-    if (writeIfChanged(root, file, renameIdentifiers(project, table, { file, text: specs }))) count += 1;
+    if (
+      writeIfChanged(root, file, renameIdentifiers(project, table, { file, text: specs }))
+    ) count += 1;
   }
   for (const file of textFiles(root)) {
-    if (writeIfChanged(root, file, rewriteTextFile(file, readText(root, file), { pairs, table }))) count += 1;
+    if (
+      writeIfChanged(root, file, rewriteTextFile(file, readText(root, file), { pairs, table }))
+    ) count += 1;
   }
   return count;
 }

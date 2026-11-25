@@ -1,6 +1,6 @@
 import type { ShortLinkDetail } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { RoleTag } from '@/features/platform/short-links/shared/PersonLine';
 import { useLinkDates } from '@/features/platform/short-links/shared/use-link-dates';
 

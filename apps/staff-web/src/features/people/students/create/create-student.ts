@@ -1,6 +1,6 @@
 import type { Gender, LeadSource, Program } from '@ab/catalog';
 import { normalizePhone } from '@ab/core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { CreateStudentBody } from '@/features/people/students/api';
 
 export type CreateStudentValues = {

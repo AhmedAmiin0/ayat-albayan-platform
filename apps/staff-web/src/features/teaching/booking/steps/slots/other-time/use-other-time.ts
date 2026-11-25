@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { useViewerTz } from '@ab/web-kit';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { daysOf, outsideParams, shownDay } from './other-time-options';
 import { useOutsideSlots } from './use-outside-slots';

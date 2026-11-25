@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { moneyText } from '@/features/finance/subscriptions';
 import { WEEKLY } from '@/features/finance/subscriptions/money-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { SubscriptionPicker } from './SubscriptionPicker';
 
 const apiFetch = vi.hoisted(() => vi.fn());

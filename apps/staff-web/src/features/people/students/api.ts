@@ -2,7 +2,7 @@ import type { Gender, LeadSource, StudentStatus } from '@ab/catalog';
 import type { Page } from '@ab/core';
 import type { DuplicateStudentBody, StudentListItem, StudentProfile, StudentRef, TeacherOption } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { ApiError, apiFetch, apiSend } from '@ab/web-kit';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 import { studentKeys } from '@/features/people/keys';
 import { filterParams, type StudentsFilters } from './list/filters';

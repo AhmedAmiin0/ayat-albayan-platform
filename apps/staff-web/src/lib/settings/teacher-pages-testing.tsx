@@ -1,7 +1,7 @@
 import { PUBLIC_SETTING_DEFAULTS, TEACHER_PAGE_SWITCH, type PublicSettings } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
+import { publicConfigQuery } from '@ab/web-kit';
 
 /** Tests only: every teacher page switch set to `on` (they default OFF). */
 export const teacherPagesAll = (on: boolean): Partial<PublicSettings> =>

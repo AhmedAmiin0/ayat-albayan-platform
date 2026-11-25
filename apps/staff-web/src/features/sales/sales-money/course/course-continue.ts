@@ -4,9 +4,9 @@ import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { dayAtText } from '@/features/teaching/booking/steps/slots/DayTimesList';
 import type { BookHint } from '@/features/teaching/booking/hint';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { courseDraft } from './course-draft';
-import type { Clock } from '@ab/web-kit/lib/clock';
+import type { Clock } from '@ab/web-kit';
 
 /** The viewer's cycle, language and zone (useViewerTz()). */
 type ZonedClock = Clock & { tz: string };

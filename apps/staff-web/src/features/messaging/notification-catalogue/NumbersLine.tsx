@@ -1,10 +1,8 @@
 import type { LineHealthView } from '@ab/shared';
 import { WA_LINES } from '@ab/catalog';
 import { formatPhone } from '@ab/core';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, t, useClock } from '@ab/web-kit';
 import { formatDateTime } from '@/features/sales/leads/format';
-import { useClock } from '@ab/web-kit/lib/clock';
 
 const c = t.notificationCatalogue;
 

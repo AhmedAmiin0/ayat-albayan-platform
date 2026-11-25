@@ -1,9 +1,5 @@
 import { replyLesson, replyNote, type MessageView, type ReplyNote } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { Button, useClock, t, useNow, useViewerTz } from '@ab/web-kit';
 import { useReplyActions } from './reply-actions-context';
 import { ReplyConfirmButton } from './ReplyConfirmButton';
 

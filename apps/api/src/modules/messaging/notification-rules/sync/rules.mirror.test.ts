@@ -3,7 +3,9 @@ import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { canonical, moduleLegacyValues, ruleDifferences } from './rules.mirror';
 
-const SETTINGS = Object.fromEntries(RULE_SETTING_KEYS.map((k) => [k, SETTING_DEFAULTS[k]])) as RuleSettings;
+const SETTINGS = Object.fromEntries(
+  RULE_SETTING_KEYS.map((k) => [k, SETTING_DEFAULTS[k]]),
+) as RuleSettings;
 
 const rowsOf = (rows: Partial<NotificationRuleRow>[]) =>
   new Map(rows.map((r) => [r.key ?? '', { key: r.key ?? '', enabled: true, channels: null, timing: null, number_id: null, updated_at: 'x', updated_by: null, ...r }]));

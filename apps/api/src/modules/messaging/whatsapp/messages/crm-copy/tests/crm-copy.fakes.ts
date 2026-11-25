@@ -32,7 +32,10 @@ function fakeCopyQueries(rows: Map<string, MediaMessage>, failures: Map<string, 
       [...rows.values()]
         .filter((m) => m.direction === 'inbound' && !m.media_id && !m.media_path && !!m.media_mime && linkOn(m, q.host))
         .filter((m) => m.number?.provider === 'crm')
-        .filter((m) => !failures.get(m.id)?.skipped && (failures.get(m.id)?.attempts ?? 0) < q.maxAttempts)
+        .filter(
+          (m) =>
+            !failures.get(m.id)?.skipped && (failures.get(m.id)?.attempts ?? 0) < q.maxAttempts,
+        )
         .sort((a, b) => a.created_at.localeCompare(b.created_at) || a.id.localeCompare(b.id))
         .slice(0, q.limit)
         .map((m) => m.id),
@@ -49,10 +52,20 @@ function fakeCopyQueries(rows: Map<string, MediaMessage>, failures: Map<string, 
           const m = rows.get(id);
           return f.skipped === skipped && !!m && !m.media_path && linkOn(m, host);
         }).length;
-      const copied = [...rows.values()].filter((m) => m.direction === 'inbound' && !m.media_id && !!m.media_path && linkOn(m, host)).length;
-      const anyHost = (m: MediaMessage) => /^https:\/\/[^/\s]+\/storage\/v1\/object\/public\/chat-media\/\S+$/.test(m.body ?? '');
-      const waiting = (m: MediaMessage) => m.direction === 'inbound' && !m.media_id && !m.media_path && !!m.media_mime && m.number?.provider === 'crm';
-      const remaining = [...rows.values()].filter((m) => waiting(m) && anyHost(m) && !failures.has(m.id)).length;
+      const copied = [...rows.values()].filter(
+        (m) => m.direction === 'inbound' && !m.media_id && !!m.media_path && linkOn(m, host),
+      ).length;
+      const anyHost = (m: MediaMessage) =>
+        /^https:\/\/[^/\s]+\/storage\/v1\/object\/public\/chat-media\/\S+$/.test(m.body ?? '');
+      const waiting = (m: MediaMessage) =>
+        m.direction === 'inbound' &&
+        !m.media_id &&
+        !m.media_path &&
+        !!m.media_mime &&
+        m.number?.provider === 'crm';
+      const remaining = [...rows.values()].filter(
+        (m) => waiting(m) && anyHost(m) && !failures.has(m.id),
+      ).length;
       return { copied, failed: left(false), skipped: left(true), remaining };
     }),
   };
@@ -61,7 +74,9 @@ function fakeCopyQueries(rows: Map<string, MediaMessage>, failures: Map<string, 
 /** Tests only: a settings store holding `values`; writeSwitch writes into it (the job's turnOff). */
 function liveStore(values: Partial<AcademySettings>) {
   const state: AcademySettings = { ...SETTING_DEFAULTS, ...values };
-  const writeSwitch = vi.fn(async (key: string, value: boolean | string) => void Object.assign(state, { [key]: value }));
+  const writeSwitch = vi.fn(
+    async (key: string, value: boolean | string) => void Object.assign(state, { [key]: value }),
+  );
   const store = { all: vi.fn(async () => ({ ...state })), writeSwitch };
   return { state, writeSwitch, store: store as unknown as SettingsService };
 }
@@ -82,11 +97,22 @@ export function copyWorld(seed: MediaMessage[], values: Partial<AcademySettings>
     }),
   };
   const objects = new Map<string, number>();
-  const storage = { upload: vi.fn(async (o: { path: string; body: Uint8Array }) => (objects.set(o.path, o.body.byteLength), o.path)) };
+  const storage = {
+    upload: vi.fn(
+      async (o: { path: string; body: Uint8Array }) => (
+        objects.set(o.path, o.body.byteLength),
+        o.path
+      ),
+    ),
+  };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const lines = { notifications: client, chat: client } as unknown as WhatsappLines;
   const settings = liveStore({ crm_media_copy_all: true, crm_media_host: CRM_HOST, ...values });
-  const media = new InboundMedia(inbound as unknown as InboundMediaRepo, lines, storage as unknown as StorageService);
+  const media = new InboundMedia(
+    inbound as unknown as InboundMediaRepo,
+    lines,
+    storage as unknown as StorageService,
+  );
   Object.assign(media, { crm: new CrmHistoryMedia(new CrmMediaSettings(settings.store)) });
   const queries = fakeCopyQueries(rows, failures);
   const copyQueries = queries as unknown as CrmMediaCopyRepo;
@@ -95,5 +121,17 @@ export function copyWorld(seed: MediaMessage[], values: Partial<AcademySettings>
   const copier = new CrmMediaCopier(media, copyQueries);
   const done = new CrmMediaCopyDone(copyQueries, copySettings, audit as unknown as AuditService);
   const job = new CrmMediaCopyJob(copySettings, copier, done);
-  return { job, copier, rows, failures, objects, storage, queries, audit, client, settings, inbound };
+  return {
+    job,
+    copier,
+    rows,
+    failures,
+    objects,
+    storage,
+    queries,
+    audit,
+    client,
+    settings,
+    inbound,
+  };
 }

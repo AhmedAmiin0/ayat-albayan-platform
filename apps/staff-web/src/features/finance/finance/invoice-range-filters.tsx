@@ -1,6 +1,6 @@
 import { chipIfSet, DateFilterField } from '@/components/table-toolbar/fields';
 import type { ExtraFilters } from '@/components/table-toolbar/types';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { clearFilterSearch } from '@/lib/list/list-search';
 import type { InvoicesUrlSearch } from './search';
 

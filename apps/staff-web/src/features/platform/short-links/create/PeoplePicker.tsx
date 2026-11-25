@@ -2,11 +2,7 @@ import { PEOPLE_SEARCH_MIN, type LinkPick } from '@ab/client-core';
 import type { ShortLinkPerson } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { useId, useState } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, Ltr, Button, SearchInput, t } from '@ab/web-kit';
 import { usePeopleSearch } from '@/features/platform/short-links/api/use-short-links';
 import { RoleTag } from '@/features/platform/short-links/shared/PersonLine';
 

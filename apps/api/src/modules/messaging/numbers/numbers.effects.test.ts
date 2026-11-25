@@ -11,8 +11,15 @@ function effects(failAudit = false) {
   const audit = { record: vi.fn(async () => (order.push('audit'), failAudit ? Promise.reject(new Error('x')) : undefined)) };
   const config = { reload: vi.fn(async () => (order.push('reload'), true)) };
   const own = { forget: vi.fn(() => order.push('own')) };
-  vi.stubGlobal('fetch', () => (order.push('kick'), Promise.resolve(new Response(null, { status: 204 }))));
-  const fx = new NumbersEffects(audit as unknown as AuditService, config as unknown as NumbersConfig, own as unknown as OwnNumbers);
+  vi.stubGlobal(
+    'fetch',
+    () => (order.push('kick'), Promise.resolve(new Response(null, { status: 204 }))),
+  );
+  const fx = new NumbersEffects(
+    audit as unknown as AuditService,
+    config as unknown as NumbersConfig,
+    own as unknown as OwnNumbers,
+  );
   return { fx, order };
 }
 

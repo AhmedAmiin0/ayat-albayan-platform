@@ -5,7 +5,8 @@ import { CrmHistoryMedia } from '@/modules/messaging/whatsapp/messages/crm-histo
 import { CrmMediaSettings } from '@/modules/messaging/whatsapp/messages/crm-history/crm-media.settings';
 import { CRM_HOST, crmLink, crmResponse, crmRow, stubFetch } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history.fakes';
 
-const service = (host: string) => new CrmHistoryMedia(readerOf(CrmMediaSettings, { crm_media_host: host }));
+const service = (host: string) =>
+  new CrmHistoryMedia(readerOf(CrmMediaSettings, { crm_media_host: host }));
 const status = async (p: Promise<unknown>) => {
   const e: unknown = await p.catch((err: unknown) => err);
   if (!(e instanceof HttpException)) throw new Error('expected an HttpException');

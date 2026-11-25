@@ -4,7 +4,7 @@ import { courseDraftSavedSchema } from '@ab/shared';
 import { PACKAGE_SIZES, type Gender, type PackageSize, type Program } from '@ab/catalog';
 import type { BookingResult, BookingTeacherOption, Conflict } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { BOOKING_KINDS, type BookingKind } from './draft/contract';
 import { bookingBase } from './mode';
 import { guardianKeys } from '@/features/people/keys';

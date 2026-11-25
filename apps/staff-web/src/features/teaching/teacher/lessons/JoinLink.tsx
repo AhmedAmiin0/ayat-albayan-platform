@@ -1,6 +1,4 @@
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { buttonVariants, Ltr, t } from '@ab/web-kit';
 
 /** The teacher's fixed meeting link (R-LES-01/02, issue B8): the same link every lesson. */
 export function JoinLink({ link }: { link: string | null }) {

@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { invoicesQuery } from '@/features/teaching/booking/invoice/api.invoice';
 import { InvoiceButton } from '@/features/teaching/booking/invoice/InvoiceDialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** Admin only (R-PAY-03); a trial has none; the endpoint refuses teachers anyway. */
 export function LessonInvoice({ lesson }: { lesson: LessonView }) {

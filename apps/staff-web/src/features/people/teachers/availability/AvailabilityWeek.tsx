@@ -1,8 +1,6 @@
 import type { Weekday } from '@ab/catalog';
 import { forwardRef } from 'react';
-import { useMinuteClock } from '@ab/web-kit/components/ui/layout/running-head';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { useMinuteClock, t, cn } from '@ab/web-kit';
 import { AvailabilityDay, cellClass, trackCellClass, weekRowClass } from './AvailabilityDay';
 import { hatchStyle } from './DayTrack';
 import { WEEK_ORDER, type Grid, type Range } from './grid';

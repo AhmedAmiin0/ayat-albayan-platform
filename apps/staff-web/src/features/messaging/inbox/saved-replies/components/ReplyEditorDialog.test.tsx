@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { PRICES } from '@/features/messaging/inbox/saved-replies/lib/fixture';
 import { ReplyEditorDialog } from './ReplyEditorDialog';
@@ -50,7 +50,7 @@ describe('ReplyEditorDialog', () => {
   });
 
   it('shows the API\'s refusal inline', async () => {
-    const { ApiError } = await import('@ab/web-kit/lib/http/api/api');
+    const { ApiError } = await import('@ab/web-kit');
     apiSend.mockRejectedValue(new ApiError(403, { code: 'saved_replies_forbidden' }));
     renderWithClient(<ReplyEditorDialog reply={PRICES} scope="shared" onClose={onClose} />);
     save();

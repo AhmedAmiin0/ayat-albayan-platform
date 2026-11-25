@@ -1,10 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { notificationsQuery, useMarkRead } from '@ab/web-kit/push/notifications-api';
+import { Button, t, notificationsQuery, useMarkRead, WebPushToggle } from '@ab/web-kit';
 import { NotificationList } from './NotificationList';
-import { WebPushToggle } from '@ab/web-kit/push/WebPushToggle';
 
 export interface NotificationPanelProps {
   /** Close the panel (a row was opened). */

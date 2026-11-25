@@ -2,7 +2,7 @@ import { courseEndOf, type CourseEnd, type CourseEndKey, type TeacherCourseView 
 import { counted } from '@ab/core';
 import { zonedPartsIn } from '@ab/time';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // Course wording (docs/47): dates only, never money; it says course, never package.
 

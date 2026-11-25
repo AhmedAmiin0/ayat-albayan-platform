@@ -14,7 +14,10 @@ describe('FollowUpsSettings', () => {
   });
 
   it('answers the stored switch and no longer reads the rule-owned keys', async () => {
-    const values = await readerOf(FollowUpsSettings, { auto_messages_enabled: true, follow_up_hours: [6, 48] }).read();
+    const values = await readerOf(FollowUpsSettings, {
+      auto_messages_enabled: true,
+      follow_up_hours: [6, 48],
+    }).read();
     expect(values).toEqual({ auto_messages_enabled: true });
   });
 });

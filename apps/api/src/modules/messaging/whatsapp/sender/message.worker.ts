@@ -60,7 +60,8 @@ export class MessageWorker {
       await this.queries.expire(row.id, drop);
       return drop.code;
     }
-    if (row.error_code === SENDING) return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now, line, route });
+    if (row.error_code === SENDING)
+      return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now, line, route });
     const wait = await this.notNow(job, { line, route, now });
     if (wait) return wait;
     const deps = { dispatch: this.dispatch, queries: this.queries, pace: this.pace };

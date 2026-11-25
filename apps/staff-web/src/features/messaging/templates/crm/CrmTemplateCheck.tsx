@@ -3,7 +3,7 @@ import type { WaLine } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { templateName } from '@/features/messaging/templates/template-cells';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const s = t.templates.crmCheck;
 

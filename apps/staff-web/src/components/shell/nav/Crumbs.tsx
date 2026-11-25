@@ -1,6 +1,5 @@
 import { Link, useRouterState } from '@tanstack/react-router';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, t } from '@ab/web-kit';
 import { crumbsFor } from './crumb-trail';
 
 /** Breadcrumbs for the running head. The current page is the last, unlinked crumb. */

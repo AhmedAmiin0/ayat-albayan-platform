@@ -1,8 +1,6 @@
 import type { StudentRecordingView } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { FormAlert, ApiError, t } from '@ab/web-kit';
 import { RECORDINGS_KEY, setRecordingVisible } from './recordings-api';
 
 const R = t.studentRecordings.visible;

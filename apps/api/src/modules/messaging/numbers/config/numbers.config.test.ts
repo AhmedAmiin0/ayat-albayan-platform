@@ -26,7 +26,10 @@ describe('NumbersConfig', () => {
     const spare = numberRow({ id: '00000000-0000-4000-8000-0000000000a2', phone_number_id: '1000000002', is_default: false, enabled: false });
     await config('module', undefined, vi.fn(async () => [numberRow(), spare])).refresh();
     const numbers = numbersOverlay()?.numbers ?? [];
-    expect(numbers.map((n) => [n.id, n.enabled, n.fallback_rank])).toEqual([[numberRow().id, true, 100], [spare.id, false, 100]]);
+    expect(numbers.map((n) => [n.id, n.enabled, n.fallback_rank])).toEqual([
+      [numberRow().id, true, 100],
+      [spare.id, false, 100],
+    ]);
     expect(numbers[1]?.env).toBeNull();
   });
 

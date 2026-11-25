@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { CODE, GATE, json, OPEN_VIEW, showGate, stubApi, TITLE } from '@/features/platform/short-links-gate/gate.test-kit';
 
 const G = t.shortLinks.gate;

@@ -1,9 +1,7 @@
 import type { StatusStyle } from '@ab/money';
 import { dateText } from '@ab/time';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { clockWithSeconds } from '@ab/web-kit/lib/clock-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import type { Clock } from '@ab/web-kit';
+import { clockWithSeconds, t, locale } from '@ab/web-kit';
 
 // DB times are UTC, shown in the viewer's zone (docs/34) and chosen 12/24 h, Western digits.
 

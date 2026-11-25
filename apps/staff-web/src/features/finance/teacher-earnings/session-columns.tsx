@@ -2,11 +2,9 @@ import { earningStatusStyle, type TeacherEarningView } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import { createContext, useContext } from 'react';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { StatusChip, t, useClock } from '@ab/web-kit';
 import { formatDateTime } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useClock } from '@ab/web-kit/lib/clock';
 
 const col = createColumnHelper<DataTableFeatures, TeacherEarningView>();
 

@@ -1,4 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button } from '@ab/web-kit';
 
 export interface ConvertRowProps {
   hint: string;

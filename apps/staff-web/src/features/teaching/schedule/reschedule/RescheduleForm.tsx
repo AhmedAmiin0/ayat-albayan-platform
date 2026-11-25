@@ -1,23 +1,17 @@
 import type { LessonView } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
+import { Button, FormAlert, ButtonRow, t, MoveReason, useClock, useViewerTz } from '@ab/web-kit';
 import { ByDayPicker } from '@/features/teaching/booking/steps/slots/ByDayPicker';
 import { isMakeup } from '@/features/teaching/booking/draft/contract';
 import { ruleFromSlot } from '@/features/teaching/booking/draft/draft';
 import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { conflictsOf, lessonErrorText, LESSONS_KEY, rescheduleLesson } from '@/features/teaching/schedule/api';
 import { ConflictNotice } from './ConflictNotice';
 import { durationMin } from '@/features/teaching/schedule/lesson/lessons';
-import { MoveReason } from '@ab/web-kit/schedule/MoveReason';
 import { familyTz, rescheduleBody, seriesDays } from './reschedule';
 import { ScopeRadios, type Scope } from './ScopeRadios';
 import { SlotPicker } from './SlotPicker';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface RescheduleFormProps {
   lesson: LessonView;

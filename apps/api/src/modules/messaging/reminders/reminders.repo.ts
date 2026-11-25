@@ -25,8 +25,15 @@ export const REMINDER_KEYS = [
 ] as const satisfies readonly TemplateKey[];
 
 /** Registry keys among `keys` that Meta approved (message_templates.status). */
-export async function approvedTemplates(db: Db, keys: readonly TemplateKey[]): Promise<Set<string>> {
-  const { data, error } = await db.from('message_templates').select('key').in('key', [...keys]).eq('status', 'approved');
+export async function approvedTemplates(
+  db: Db,
+  keys: readonly TemplateKey[],
+): Promise<Set<string>> {
+  const { data, error } = await db
+    .from('message_templates')
+    .select('key')
+    .in('key', [...keys])
+    .eq('status', 'approved');
   if (error) throw pgError(error);
   return new Set(data.map((r) => r.key));
 }
@@ -100,7 +107,12 @@ export class RemindersRepo {
     const open: readonly string[] = REMINDER_LESSON_STATUSES;
     const ids = data.filter((m) => !m.lesson || !open.includes(m.lesson.status)).map((m) => m.id);
     if (ids.length === 0) return 0;
-    const del = await this.db.from('messages').delete().in('id', ids).eq('status', 'queued').select('id');
+    const del = await this.db
+      .from('messages')
+      .delete()
+      .in('id', ids)
+      .eq('status', 'queued')
+      .select('id');
     if (del.error) throw pgError(del.error);
     return del.data.length;
   }

@@ -122,7 +122,9 @@ export const integrationValuesSchema = z.object({
 export type IntegrationValuesInput = z.input<typeof integrationValuesSchema>;
 
 /** PUT /settings/integrations/secrets/:key. */
-export const integrationSecretSchema = z.object({ value: z.string().trim().min(1).max(INTEGRATION_VALUE_MAX) });
+export const integrationSecretSchema = z.object({
+  value: z.string().trim().min(1).max(INTEGRATION_VALUE_MAX),
+});
 export type IntegrationSecretInput = z.infer<typeof integrationSecretSchema>;
 
 /** Secrets with a format of their own; any other secret is free text. */

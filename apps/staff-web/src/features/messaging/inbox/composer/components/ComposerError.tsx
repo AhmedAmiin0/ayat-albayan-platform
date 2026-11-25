@@ -1,4 +1,4 @@
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { NuqtaGlyph } from '@ab/web-kit';
 
 /** A composer's failure line under its box (role=alert), named by its box's aria-describedby. */
 export function ComposerError({ id, text }: { id: string; text: string }) {

@@ -1,7 +1,6 @@
 import type { SettingMeta } from '@ab/settings';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, useClock } from '@ab/web-kit';
 import { formatDateTime } from '@/features/sales/leads';
-import { useClock } from '@ab/web-kit/lib/clock';
 
 /** Shows an unsaved mark while dirty, and who changed it last when the server knows. */
 export function RowNotes({ dirty, meta }: { dirty: boolean; meta?: SettingMeta | undefined }) {

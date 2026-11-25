@@ -1,11 +1,7 @@
 import { coursePauseErrorCode } from '@ab/client-core';
 import type { CoursePauseResult } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { Button, FormAlert, Dialog, t, useViewerTz } from '@ab/web-kit';
 import { resumeCoursePause, resumePreviewQuery, useInvalidatePause } from './api';
 import { resumeLines } from './pause-form';
 

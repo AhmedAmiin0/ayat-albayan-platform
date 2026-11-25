@@ -14,5 +14,7 @@ export function movedOrder(input: { rows: readonly SavedReplyRow[]; id: string; 
   if (at < 0 || !moving || !other) return [];
   order[at] = other;
   order[to] = moving;
-  return order.map((r, position) => ({ id: r.id, position })).filter((r, i) => order[i]?.position !== r.position);
+  return order
+    .map((r, position) => ({ id: r.id, position }))
+    .filter((r, i) => order[i]?.position !== r.position);
 }

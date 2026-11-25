@@ -31,7 +31,12 @@ export interface RolePlan extends ImportRoleView {
   row: RowDraft | null;
 }
 
-type RowDraft = { provider: string; phone_number_id: string; waba_id: string | null; app_id: string | null };
+type RowDraft = {
+  provider: string;
+  phone_number_id: string;
+  waba_id: string | null;
+  app_id: string | null;
+};
 
 /** The ids of a row draft checked like wa_numbers does (label and provider are never legacy values). */
 const ID_FIELDS = ['phone_number_id', 'waba_id', 'app_id'] as const;
@@ -101,4 +106,5 @@ function planRole(input: PlanInput, role: WaLine): RolePlan {
   };
 }
 
-export const planAll = (input: PlanInput): RolePlan[] => WA_LINES.map((role) => planRole(input, role));
+export const planAll = (input: PlanInput): RolePlan[] =>
+  WA_LINES.map((role) => planRole(input, role));

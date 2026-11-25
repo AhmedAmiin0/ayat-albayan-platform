@@ -1,5 +1,5 @@
 import type { PublicPaymentLink } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** Only while the API's Stripe key is a sandbox one (`sandbox`, docs/30 §4). */
 export function PayTestNotice({ link }: { link: PublicPaymentLink | undefined }) {

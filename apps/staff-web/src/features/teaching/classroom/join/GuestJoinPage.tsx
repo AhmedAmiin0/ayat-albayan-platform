@@ -2,21 +2,24 @@ import { guestJoinSchema, type RoomJoinResult } from '@ab/schedule';
 import type { ClockCycle } from '@ab/time';
 import { useMutation } from '@tanstack/react-query';
 import { useState, type SubmitEvent } from 'react';
-import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Logo } from '@ab/web-kit/components/ui/display/mark';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { joinAsGuest } from '@ab/web-kit/classroom/api/api';
-import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
-import { classroomErrorText, opensAtOf } from '@ab/web-kit/classroom/room/livekit/errors';
-import { RecordedNotice } from '@ab/web-kit/classroom/recordings/RecordedNotice';
-import type { RoomClient } from '@ab/web-kit/classroom/room/components/room-types';
-import { opensAtText } from '@ab/web-kit/classroom/room/livekit/window-hint';
+import {
+  LanguageSwitch,
+  Button,
+  Cartouche,
+  Field,
+  FormAlert,
+  Input,
+  Logo,
+  useClock,
+  t,
+  joinAsGuest,
+  classroomErrorText,
+  opensAtOf,
+  RecordedNotice,
+  opensAtText,
+} from '@ab/web-kit';
+import { ClassroomRoom } from '@ab/web-kit/room';
+import type { RoomClient } from '@ab/web-kit';
 
 /** A 403 with opens_at says when it opens; every other code has its own line. */
 function problemText(error: unknown, cycle: ClockCycle): string {

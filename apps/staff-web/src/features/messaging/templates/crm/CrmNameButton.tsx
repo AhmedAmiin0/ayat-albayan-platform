@@ -1,7 +1,5 @@
 import { crmTemplateName, type TemplateView } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Ltr, t } from '@ab/web-kit';
 import { templateName } from '@/features/messaging/templates/template-cells';
 
 /** A crm or meta line's row (docs/19): the WABA name it goes as (crm_name, else the default) and its edit button. */

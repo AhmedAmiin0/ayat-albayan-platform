@@ -1,5 +1,4 @@
-import { Icon, type IconName } from '@ab/web-kit/components/ui/display/icon';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon, type IconName, cn } from '@ab/web-kit';
 
 export interface RoundButtonProps {
   label: string;

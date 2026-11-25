@@ -3,7 +3,7 @@ import type { PaymentKind, PaymentMethod } from '@ab/catalog';
 import type { PaymentAttachmentView, PaymentsPage, PaymentView } from '@ab/money';
 import { RIYADH_TZ, riyadhToday, wallInstant } from '@ab/time';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { sortFilterParams, type SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import { PAGE_SIZE } from '@/features/finance/subscriptions/api';

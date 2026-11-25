@@ -1,6 +1,6 @@
 import type { WalletTotals } from '@ab/money';
 import { Amount } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const W = t.assistantPortal.wallet;
 

@@ -2,11 +2,7 @@ import { packageSummary, reportAt, type ChildSummary } from '@ab/client-core';
 import type { PortalMonth, PortalPackage } from '@ab/shared';
 import { dateText } from '@ab/time';
 import { Link } from '@tanstack/react-router';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Dot, Pill } from '@ab/web-kit/components/ui/surface/pill';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { amountText, usedOfText } from '@ab/web-kit/portal/package/package-text';
+import { Icon, Dot, Pill, t, locale, amountText, usedOfText } from '@ab/web-kit';
 
 const DAY = { day: 'numeric', month: 'long' } as const;
 const LINE = 'flex flex-wrap items-center gap-x-3 gap-y-1';

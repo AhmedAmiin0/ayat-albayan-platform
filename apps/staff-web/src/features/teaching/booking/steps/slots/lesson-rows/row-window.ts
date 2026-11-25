@@ -1,7 +1,7 @@
 import type { LessonRow } from '@ab/client-core';
 import { addCalendarDays, localDateIn, otherZoneClock, wallToUtc } from '@ab/time';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { Clock } from '@ab/web-kit/lib/clock';
+import { t } from '@ab/web-kit';
+import type { Clock } from '@ab/web-kit';
 
 // The package's lesson rows (a date input and a time input per day): their date
 // bounds, the slot window that checks them, and the clocks shown beside a time. Pure.

@@ -1,8 +1,7 @@
 import { SEND_REPLAYED, SEND_UNCONFIRMED } from '@ab/client-core';
 import type { MessageView } from '@ab/shared';
 import { afterEach, describe, expect, it } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { clearAllDrafts, draftGeneration, getDraft, keepsFailed, keptFailed, requestIdFor, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store/draft-store';
 import { ReplayedSend, rereadsAfter, sendErrorCode, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
 import { settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';

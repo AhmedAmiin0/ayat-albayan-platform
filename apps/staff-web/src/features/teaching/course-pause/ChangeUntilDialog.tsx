@@ -3,12 +3,7 @@ import type { CoursePauseView } from '@ab/shared';
 import { riyadhToday } from '@ab/time';
 import { useMutation } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { t, Dialog, Field, Input, Button, FormAlert } from '@ab/web-kit';
 import { changePauseUntil, useInvalidatePause } from './api';
 
 interface ChangeUntilDialogProps {

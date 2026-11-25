@@ -1,12 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { iconButtonClass } from '@ab/web-kit/components/ui/form/icon-button';
-import { useDismiss } from '@ab/web-kit/components/ui/overlay/use-dismiss';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
-import { notificationsQuery } from '@ab/web-kit/push/notifications-api';
+import {
+  Icon,
+  iconButtonClass,
+  useDismiss,
+  usePermissions,
+  t,
+  cn,
+  notificationsQuery,
+} from '@ab/web-kit';
 import { NotificationPanel } from '@/features/messaging/notifications/NotificationPanel';
 
 /** "9+" past nine: the badge stays one small disc; the exact count is in the button's name. */

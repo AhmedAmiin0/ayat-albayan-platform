@@ -12,14 +12,20 @@ import {
 
 describe('integration keys registry', () => {
   it('lists every plain and secret key once, grouped in page order', () => {
-    expect(INTEGRATION_KEYS).toHaveLength(INTEGRATION_PLAIN_KEYS.length + INTEGRATION_SECRET_KEYS.length);
+    expect(INTEGRATION_KEYS).toHaveLength(
+      INTEGRATION_PLAIN_KEYS.length + INTEGRATION_SECRET_KEYS.length,
+    );
     expect(new Set(INTEGRATION_KEYS.map((d) => d.key)).size).toBe(INTEGRATION_KEYS.length);
     const order = INTEGRATION_KEYS.map((d) => INTEGRATION_GROUPS.indexOf(d.group));
     expect(order).toEqual([...order].sort((a, b) => a - b));
   });
 
   it('flags exactly the secret keys as secret', () => {
-    expect(INTEGRATION_KEYS.filter((d) => d.secret).map((d) => d.key).sort()).toEqual([...INTEGRATION_SECRET_KEYS].sort());
+    expect(
+      INTEGRATION_KEYS.filter((d) => d.secret)
+        .map((d) => d.key)
+        .sort(),
+    ).toEqual([...INTEGRATION_SECRET_KEYS].sort());
     expect(integrationDef('WA_ACCESS_TOKEN')).toMatchObject({ group: 'wa_notifications', secret: true, i18n: 'integrations.keys.WA_ACCESS_TOKEN' });
     expect(integrationDef('FX_API_URL')).toMatchObject({ group: 'fx', secret: false });
   });

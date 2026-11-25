@@ -47,7 +47,10 @@ export function reactionHarness(t: ReactionTarget | null = target(), status: 'se
   const reactions = {
     target: vi.fn(async () => t),
     queued: vi.fn(async (key: string) => jobs.has(key)),
-    setOurs: vi.fn(async (input: { ours: { emoji: string | null } }) => void (row.our_reaction = input.ours.emoji)),
+    setOurs: vi.fn(
+      async (input: { ours: { emoji: string | null } }) =>
+        void (row.our_reaction = input.ours.emoji),
+    ),
     supersede: vi.fn(async () => undefined),
   };
   const threads = {

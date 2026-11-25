@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { usePermissions } from '@ab/web-kit';
 
 export type PickColumn = { isPicked: (id: string) => boolean; toggle: (id: string) => void };
 

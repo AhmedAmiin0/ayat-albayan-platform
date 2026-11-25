@@ -4,7 +4,7 @@ import type { Conflict } from '@ab/schedule';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { lessonKeys, LESSONS_KEY } from '@/features/teaching/schedule';
 import { STUDENTS_KEY } from '@/features/people/students/api';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { bookingBase } from '@/features/teaching/booking/mode';
 import { bookingKeys } from '@/features/teaching/booking/booking.keys';
 

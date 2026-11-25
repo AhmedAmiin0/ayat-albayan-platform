@@ -39,7 +39,8 @@ describe('crmReportBodies', () => {
 });
 
 describe('CrmWhatsappClient: the report flow', () => {
-  const client = (f: ReturnType<typeof scriptedFetch>) => new CrmWhatsappClient(CRM_ENV, { fetch: f.fetch, timeoutMs: 1_000 });
+  const client = (f: ReturnType<typeof scriptedFetch>) =>
+    new CrmWhatsappClient(CRM_ENV, { fetch: f.fetch, timeoutMs: 1_000 });
 
   it('two calls, document first; the template\'s wamid is kept', async () => {
     const second = { ...CRM_SENT, body: { data: { ...CRM_SENT.body.data, whatsapp_message_id: 'wamid.crm-2' } } };

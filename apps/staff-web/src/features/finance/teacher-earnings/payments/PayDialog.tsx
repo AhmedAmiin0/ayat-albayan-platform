@@ -6,16 +6,12 @@ import {
   type TeacherEarningView,
 } from '@ab/money';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, Dialog, FormAlert, t, useUploadMaxBytes } from '@ab/web-kit';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { PaymentFields, type PaymentForm } from '@/features/finance/payments/record/PaymentFields';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { usePayTeacher } from './use-pay-teacher';
-import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
 
 type Props = {
   teacher: { id: string; name: string };

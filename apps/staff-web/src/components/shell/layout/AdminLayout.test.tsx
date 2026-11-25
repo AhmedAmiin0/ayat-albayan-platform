@@ -3,7 +3,10 @@ import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AdminLayout } from './AdminLayout';
 
-vi.mock('@tanstack/react-query', () => ({ useQuery: () => ({ data: { email: 'a@b.co' } }) }));
+vi.mock('@tanstack/react-query', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  useQuery: () => ({ data: { email: 'a@b.co' } }),
+}));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children, className }: { to: string; children: ReactNode; className?: string }) => (
     <a href={to} className={className}>

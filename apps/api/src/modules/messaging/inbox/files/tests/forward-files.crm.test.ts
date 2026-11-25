@@ -20,7 +20,11 @@ describe('ForwardFiles.copy — an old-CRM file', () => {
       loadChat: vi.fn().mockResolvedValue(row),
       cache: vi.fn().mockResolvedValue({ bucket: 'wa-media', path: 'm-crm-1.webp', mime: 'image/webp' }),
     };
-    const files = new ForwardFiles({} as ThreadsRepo, {} as Outbox, storage as unknown as StorageService);
+    const files = new ForwardFiles(
+      {} as ThreadsRepo,
+      {} as Outbox,
+      storage as unknown as StorageService,
+    );
     Object.assign(files, { inbound });
     const file = await files.copy(row, { actorId: 'a0000000-0000-4000-8000-000000000001', requestId: 'r1' });
     expect(inbound.loadChat).toHaveBeenCalledWith('m-crm-1');

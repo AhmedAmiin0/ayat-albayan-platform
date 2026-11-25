@@ -1,6 +1,6 @@
 import type { GoogleStatusView } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { discoverGoogle, googleStatusQuery, putGoogleDrive } from '@/features/platform/google-sync/google-api';
 import { googleKeys } from '@/features/platform/keys';
 

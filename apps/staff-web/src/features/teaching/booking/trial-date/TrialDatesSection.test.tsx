@@ -3,7 +3,7 @@ import type { StudentStatus } from '@ab/catalog';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { STUDENT_ID } from '@/features/teaching/booking/wizard-fixture';
 import { TrialDatesSection } from './TrialDatesSection';
 import { history, routeTrialFetch } from './trial-fixture';

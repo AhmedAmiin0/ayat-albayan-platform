@@ -11,7 +11,7 @@ import type {
 } from '@ab/shared';
 import type { UsersView } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { userKeys } from '@/features/people/keys';
 
 // users.read lists and opens, users.write does the rest.

@@ -1,6 +1,6 @@
 import type { SettingKey } from '@ab/settings';
 import { useId } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '@ab/web-kit';
 
 /** The ids that tie a row's label, bounds and error line to its editor. */
 export interface RowIds {

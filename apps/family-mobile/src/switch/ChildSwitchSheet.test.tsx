@@ -1,6 +1,6 @@
 import { act, renderHook, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { closeChildSwitch, openChildSwitch, useChildSwitch } from '@/nav';
 import { ChildSwitchSheet } from './ChildSwitchSheet';
 

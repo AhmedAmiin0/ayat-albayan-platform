@@ -1,4 +1,4 @@
-import { onSessionEnd } from '@ab/web-kit/lib/session/session-end';
+import { onSessionEnd } from '@ab/web-kit';
 import { clearAllDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { clearOwnSends } from '@/features/messaging/inbox/composer/lib/own-send';
 import { quotePins } from '@/features/messaging/inbox/composer/quote/quote-id';

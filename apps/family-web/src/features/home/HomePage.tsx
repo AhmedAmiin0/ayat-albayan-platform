@@ -1,6 +1,6 @@
 import { portalViewer, readsOwn, type ChildTab } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { ChildBody, ChildHead } from '@/features/children';
 import { NextLessonCard } from '@/features/next-lesson';
 

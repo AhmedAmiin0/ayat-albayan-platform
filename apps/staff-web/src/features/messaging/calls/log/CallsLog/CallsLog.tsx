@@ -1,7 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { ListSkeleton, t, useNow } from '@ab/web-kit';
 import { callListQuery } from '@/features/messaging/calls/api/calls-api';
 import { CallsLogRow } from '@/features/messaging/calls/log/CallsLogRow';
 

@@ -11,7 +11,12 @@ import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 // Message reactions: a queued reaction row goes out as Meta's {type:'reaction'} on the
 // meta and kapso drivers (the same body), never as a text; the crm driver has no reaction call. No network.
 
-const client = { sendTemplate: vi.fn(), sendText: vi.fn(), sendDocument: vi.fn(), sendReaction: vi.fn() };
+const client = {
+  sendTemplate: vi.fn(),
+  sendText: vi.fn(),
+  sendDocument: vi.fn(),
+  sendReaction: vi.fn(),
+};
 const lines = { notifications: client, chat: client } as unknown as WhatsappLines;
 const dispatch = (l: WhatsappLines = lines) => new MessageDispatch(l, {} as StorageService);
 const reactionRow = (emoji: string) =>
@@ -58,8 +63,12 @@ describe('the reaction body on meta and kapso', () => {
   it('is Meta’s reaction payload, the same on Kapso’s Meta proxy', async () => {
     const meta = scriptedFetch(RECORDED.sendOk);
     const kapso = scriptedFetch(RECORDED.sendOk);
-    await new HttpWhatsappClient(STUB_ENV, { fetch: meta.fetch, timeoutMs: 1_000 }).sendReaction(input);
-    await new HttpWhatsappClient(KAPSO_ENV, { fetch: kapso.fetch, timeoutMs: 1_000 }).sendReaction(input);
+    await new HttpWhatsappClient(STUB_ENV, { fetch: meta.fetch, timeoutMs: 1_000 }).sendReaction(
+      input,
+    );
+    await new HttpWhatsappClient(KAPSO_ENV, { fetch: kapso.fetch, timeoutMs: 1_000 }).sendReaction(
+      input,
+    );
     const body = {
       messaging_product: 'whatsapp',
       recipient_type: 'individual',
@@ -73,8 +82,13 @@ describe('the reaction body on meta and kapso', () => {
 
   it('a removal sends an empty emoji, and the allow-list is checked first', async () => {
     const meta = scriptedFetch(RECORDED.sendOk);
-    await new HttpWhatsappClient(STUB_ENV, { fetch: meta.fetch, timeoutMs: 1_000 }).sendReaction({ ...input, emoji: null });
-    expect(meta.requests[0]?.body).toMatchObject({ reaction: { message_id: 'wamid.T', emoji: '' } });
+    await new HttpWhatsappClient(STUB_ENV, { fetch: meta.fetch, timeoutMs: 1_000 }).sendReaction({
+      ...input,
+      emoji: null,
+    });
+    expect(meta.requests[0]?.body).toMatchObject({
+      reaction: { message_id: 'wamid.T', emoji: '' },
+    });
     const blocked = scriptedFetch();
     const c = new HttpWhatsappClient(STUB_ENV, { fetch: blocked.fetch, timeoutMs: 1_000, allowed: ['+966500000001'] });
     await expect(c.sendReaction(input)).rejects.toThrow('recipient not allowed');

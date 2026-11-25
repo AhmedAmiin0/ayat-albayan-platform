@@ -1,5 +1,4 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t, cn } from '@ab/web-kit';
 import type { QueueItem, QueueState } from './use-upload-queue';
 
 const F = t.lessonFiles;

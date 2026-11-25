@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { renderWithQuery } from './academy.test-utils';
 import { SalesMoney } from './money/SalesMoney';
 import { SalesStudents } from './students/SalesStudents';

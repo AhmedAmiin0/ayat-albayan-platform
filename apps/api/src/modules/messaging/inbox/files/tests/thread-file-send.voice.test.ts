@@ -20,7 +20,11 @@ const upload = vi.fn(async (r: { path: string }) => r.path);
 const storage = { info: vi.fn(), head: vi.fn(), download: vi.fn(), upload };
 const toOgg = vi.fn();
 const sender = () => {
-  const s = new ThreadFileSender(queries as unknown as ThreadsRepo, outbox as unknown as Outbox, storage as unknown as StorageService);
+  const s = new ThreadFileSender(
+    queries as unknown as ThreadsRepo,
+    outbox as unknown as Outbox,
+    storage as unknown as StorageService,
+  );
   Object.assign(s, { toOgg });
   return s;
 };

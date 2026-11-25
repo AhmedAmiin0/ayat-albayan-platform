@@ -1,7 +1,6 @@
 import type { TemplateNumberSyncView } from '@ab/shared';
 import { z } from 'zod';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 
 // docs/23c decision 9: every endpoint code maps to text through one lookup map.
 

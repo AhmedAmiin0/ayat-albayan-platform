@@ -1,10 +1,6 @@
 import type { ShortLinkDetail } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, ListSkeleton, FormAlert, Toast, t } from '@ab/web-kit';
 import { useLinkDetail } from '@/features/platform/short-links/api/use-short-links';
 import { EditLinkDialog } from '@/features/platform/short-links/edit/EditLinkDialog';
 import { ExtendDialog } from '@/features/platform/short-links/edit/ExtendDialog';

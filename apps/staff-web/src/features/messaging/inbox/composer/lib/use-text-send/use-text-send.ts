@@ -7,8 +7,7 @@ import {
   type TextAnswer,
 } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { BUNDLES, t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { BUNDLES, t, locale } from '@ab/web-kit';
 import { errorCode } from '@/features/teaching/schedule';
 import { sendText } from '@/features/messaging/inbox/api/api';
 import {

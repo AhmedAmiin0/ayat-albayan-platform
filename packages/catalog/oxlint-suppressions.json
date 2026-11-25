@@ -24,16 +24,6 @@
       "count": 1
     }
   },
-  "src/google/schemas.test.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/google/schemas.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/google/views.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -44,7 +34,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/integrations/driver-keys.ts": {
@@ -62,17 +52,12 @@
   },
   "src/integrations/keys/keys.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/integrations/keys/tests/kapso.test.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/integrations/keys/tests/keys.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/permissions/catalog.data.ts": {
@@ -84,9 +69,6 @@
     "typescript/consistent-type-definitions": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 2
     }
@@ -96,11 +78,6 @@
       "count": 1
     }
   },
-  "src/theme/avatar-tones.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/theme/avatar-tones.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -108,12 +85,7 @@
   },
   "src/theme/tests/contrast.test.ts": {
     "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/theme/tests/glass.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
+      "count": 2
     }
   },
   "src/theme/theme.ts": {

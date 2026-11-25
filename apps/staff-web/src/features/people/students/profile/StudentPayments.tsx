@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
+import { QueryState, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
 import { paymentsQuery } from '@/features/finance/payments/api';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const row = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2 text-sm';
 

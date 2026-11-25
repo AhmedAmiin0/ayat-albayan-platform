@@ -1,12 +1,7 @@
 import { CORRECTION_PREFIX_ROOM, stripCorrectionPrefix, WA_TEXT_MAX } from '@ab/shared';
 import { useIsMutating } from '@tanstack/react-query';
 import { useId, useLayoutEffect, useRef, useSyncExternalStore, type ReactNode } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { controlClass } from '@ab/web-kit/components/ui/form/input';
-import { usePhone } from '@ab/web-kit/components/ui/layout/use-narrow';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon, IconButton, controlClass, usePhone, t, cn } from '@ab/web-kit';
 import type { ComposerExtras } from '@/features/messaging/inbox/composer/lib/composer-extras';
 import { sendsOnKey } from '@/features/messaging/inbox/composer/lib/composer-keys';
 import { ComposerError } from './ComposerError';

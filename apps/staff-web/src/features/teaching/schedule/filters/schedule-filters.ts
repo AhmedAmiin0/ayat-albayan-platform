@@ -2,7 +2,7 @@ import type { LessonStatus } from '@ab/catalog';
 import type { OverviewTeacher } from '@ab/schedule';
 import { chipIfSet } from '@/components/table-toolbar/fields';
 import type { FilterChip } from '@/components/table-toolbar/types';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { ScheduleSearch } from './search';
 import { pickedLabel } from './TeacherPicker';
 

@@ -1,6 +1,6 @@
 import { wallParts } from '@ab/schedule';
 import { ACADEMY_TZ, weekdayOf } from '@ab/time';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const weekday: Record<string, string | undefined> = t.enums.weekday;
 

@@ -1,14 +1,10 @@
 import type { SalesMoneySubscriptionView, SalesPaymentView } from '@ab/shared';
 import { cancelOffered, parseAmount } from '@ab/money';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, Dialog, FormAlert, t, useUploadMaxBytes } from '@ab/web-kit';
 import { CancelPackageDialog, todayIn } from '@/features/finance/subscriptions';
 import { currencySymbol, packageName, studentLabel } from '@/features/finance/subscriptions';
 import { ShortfallNote } from '@/features/finance/payments';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
 import { cancelSalesSubscription, SALES_MONEY_KEY, type Bind } from '@/features/sales/sales-money/api';
 import { salesErrorText } from '@/features/sales/sales-money/errors';
 import { PackagePicker } from '@/features/sales/sales-money/transfer/PackagePicker';

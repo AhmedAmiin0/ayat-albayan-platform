@@ -12,7 +12,10 @@ export type SendLineCode = 'session_closed' | 'line_not_configured' | 'no_thread
  * is read per call. ThreadSendService.text turns a code into 409 / 503; the meeting invitations
  * (R-MEET-02) record it on the invitee instead.
  */
-export function pickSendLine(thread: ThreadRow | null, now: Date): { line?: WaLine } | { code: SendLineCode } {
+export function pickSendLine(
+  thread: ThreadRow | null,
+  now: Date,
+): { line?: WaLine } | { code: SendLineCode } {
   if (!thread) return { code: 'no_thread' };
   const chatConfigured = Boolean(lineEnvs(loadEnv()).chat);
   const line = threadReplyLine(thread, { chatConfigured, now });

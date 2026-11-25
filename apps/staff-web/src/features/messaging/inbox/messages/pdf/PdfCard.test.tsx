@@ -1,8 +1,7 @@
 import { pdfMetaLine, type MessageView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { MessageMedia } from '@/features/messaging/inbox/messages/components/MessageMedia';
 import { Content } from '@/features/messaging/inbox/messages/components/MessageContent';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';

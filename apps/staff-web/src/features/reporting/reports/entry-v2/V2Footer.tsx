@@ -1,6 +1,5 @@
 import type { ReportFormResponse } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import { FooterHead } from '@/features/reporting/reports/send/FooterHead';
 import { SendButton } from '@/features/reporting/reports/send/SendButton';
 import { SaveStatus } from '@/features/reporting/reports/history/ReportStatusLine';

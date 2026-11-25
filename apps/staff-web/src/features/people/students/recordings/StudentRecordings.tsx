@@ -2,14 +2,16 @@ import type { UserRole } from '@ab/catalog';
 import type { StudentRecordingFilters, StudentRecordingView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import {
+  Button,
+  EmptyState,
+  FormAlert,
+  Pager,
+  ListSkeleton,
+  ApiError,
+  t,
+  teacherLabel,
+} from '@ab/web-kit';
 import { RecordingFiltersBar, type TeacherChoice } from './RecordingFiltersBar';
 import { studentRecordingsQuery } from './recordings-api';
 import { StudentRecordingRow } from './StudentRecordingRow';

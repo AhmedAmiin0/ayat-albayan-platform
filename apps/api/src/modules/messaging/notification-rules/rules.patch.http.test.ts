@@ -80,8 +80,14 @@ describe('PATCH /admin/notifications/:key (docs/23b decision 4)', () => {
     expect(res.statusCode).toBe(200);
     expect(t.table.rows.get('lesson_reminder_24h')).toMatchObject({ enabled: true, timing: { send_at_local: '20:00' }, channels: ['whatsapp'] });
     expect(t.settings.write).toHaveBeenCalledWith({ reminder_24h_enabled: true }, ADMIN_ID);
-    await t.patch(`${URL}/follow_up_slots`, { timing: { hours: [12, 48], slots_from_hours: 6, slots_to_days: 10 } });
-    expect(t.state).toMatchObject({ follow_up_hours: [12, 48], follow_up_slots_from_hours: 6, follow_up_slots_to_days: 10 });
+    await t.patch(`${URL}/follow_up_slots`, {
+      timing: { hours: [12, 48], slots_from_hours: 6, slots_to_days: 10 },
+    });
+    expect(t.state).toMatchObject({
+      follow_up_hours: [12, 48],
+      follow_up_slots_from_hours: 6,
+      follow_up_slots_to_days: 10,
+    });
     await t.patch(`${URL}/lesson_rating`, { enabled: false });
     expect(t.state.feedback_mode).toBe('link');
   });

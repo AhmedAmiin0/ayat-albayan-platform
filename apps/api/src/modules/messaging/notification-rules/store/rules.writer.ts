@@ -12,7 +12,8 @@ interface RuleWrite {
   actor: AuthUser;
 }
 
-const isKey = (key: string): key is NotificationKey => (NOTIFICATION_KEYS as readonly string[]).includes(key);
+const isKey = (key: string): key is NotificationKey =>
+  (NOTIFICATION_KEYS as readonly string[]).includes(key);
 
 /**
  * PATCH /admin/notifications/:key (docs/23b decision 4): parse, plan on a fresh snapshot, check the
@@ -29,8 +30,13 @@ export class RulesWriter {
   async apply(input: RuleWrite): Promise<NotificationKey> {
     if (!isKey(input.key)) throw unknownRule();
     const parsed = rulePatchSchema.safeParse(input.body ?? {});
-    if (!parsed.success) throw ruleError('invalid', parsed.error.issues[0]?.path.join('.') || 'body');
-    const plan = planPatch({ entry: notificationEntry(input.key), snapshot: await this.persist.snapshot(), patch: parsed.data });
+    if (!parsed.success)
+      throw ruleError('invalid', parsed.error.issues[0]?.path.join('.') || 'body');
+    const plan = planPatch({
+      entry: notificationEntry(input.key),
+      snapshot: await this.persist.snapshot(),
+      patch: parsed.data,
+    });
     await this.checkNumber(plan);
     await this.persist.save({ row: plan.row, legacy: plan.legacy, actorId: input.actor.id });
     await this.journal.record({ key: input.key, actor: input.actor, ...pick(plan) });
@@ -43,4 +49,9 @@ export class RulesWriter {
   }
 }
 
-const pick = (p: PatchPlan) => ({ before: p.before, after: p.after, legacy: p.legacy, essentialOff: p.essentialOff });
+const pick = (p: PatchPlan) => ({
+  before: p.before,
+  after: p.after,
+  legacy: p.legacy,
+  essentialOff: p.essentialOff,
+});

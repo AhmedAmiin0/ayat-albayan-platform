@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
-import { RouteLeaveGuard } from '@ab/web-kit/components/ui/overlay/RouteLeaveGuard';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { RouteLeaveGuard, t } from '@ab/web-kit';
 import { BookingPage, parseBookSearch, searchForStudent } from '@/features/teaching/booking';
 
 /** /admin/book?studentId= (+ ?kind=makeup&missedLessonId=) | ?leadId=&phone=&name= (+ ?teacherId&startsAt from a free gap) — the booking wizard (R-SCH-06, R-LEAD-06, R-SCH-10). */

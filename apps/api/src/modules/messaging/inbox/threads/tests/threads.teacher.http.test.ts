@@ -31,17 +31,31 @@ describe('teacher mode H1/H2: only my families, my unread, no lead, no money (R-
   it('H1 lists only the scope, with my unread, lead fields cleared and no «مشترك» lookup', async () => {
     const res = await t.call({ method: 'GET', url: '/threads', token: 'teacher' });
     expect(res.statusCode).toBe(200);
-    expect(t.queries.list).toHaveBeenCalledWith({ page: 1, pageSize: 25, unread: false, phones: [PHONE, OWN] });
+    expect(t.queries.list).toHaveBeenCalledWith({
+      page: 1,
+      pageSize: 25,
+      unread: false,
+      phones: [PHONE, OWN],
+    });
     expect(t.teacher.unread).toHaveBeenCalledWith('tch-1', [PHONE, OWN]);
     const [item] = res.json().items;
-    expect(item).toMatchObject({ unread_count: 2, lead_id: null, lead_name: null, lead_status: null, lead_source: null, subscribed: false });
+    expect(item).toMatchObject({
+      unread_count: 2,
+      lead_id: null,
+      lead_name: null,
+      lead_status: null,
+      lead_source: null,
+      subscribed: false,
+    });
     expect(item).toMatchObject({ badge: null, unpaid: false });
     expect(t.queries.familyTags).not.toHaveBeenCalled();
   });
 
   it('H1 unread=true pages only the phones with my unread; none → an empty page without a query', async () => {
     await t.call({ method: 'GET', url: '/threads?unread=true', token: 'teacher' });
-    expect(t.queries.list).toHaveBeenCalledWith(expect.objectContaining({ unread: false, phones: [PHONE] }));
+    expect(t.queries.list).toHaveBeenCalledWith(
+      expect.objectContaining({ unread: false, phones: [PHONE] }),
+    );
     t.queries.list.mockClear();
     t.teacher.unread.mockResolvedValue(new Map());
     const res = await t.call({ method: 'GET', url: '/threads?unread=true', token: 'teacher' });

@@ -1,4 +1,4 @@
-import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Input } from '@ab/web-kit';
 import { SettingRow, type RowExtras } from './SettingRow';
 
 export interface NumberFieldProps extends RowExtras {

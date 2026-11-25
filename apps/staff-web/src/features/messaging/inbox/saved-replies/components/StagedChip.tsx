@@ -1,9 +1,5 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { Button, Icon, IconButton, NuqtaGlyph, t } from '@ab/web-kit';
 import { sizeText } from '@/features/people/students/recordings/recording-format';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { sendErrorCodeText } from '@/features/messaging/inbox/composer/lib/send-error';
 import type { Staged } from '@/features/messaging/inbox/saved-replies/lib/staged-store';
 

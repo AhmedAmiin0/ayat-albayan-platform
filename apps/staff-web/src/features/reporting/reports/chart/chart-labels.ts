@@ -1,6 +1,6 @@
 import { zonedPartsIn } from '@ab/time';
 import { dayMonthLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { gradeOfScore, type SeriesKey } from './chart';
 
 export const seriesLabel = (key: SeriesKey): string => (key === 'overall' ? t.reports.overall : t.reports.rubric[key]);

@@ -1,8 +1,6 @@
 import { LESSON_STATUSES, type LessonStatus } from '@ab/catalog';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StatusChip, t, useLessonStatusText } from '@ab/web-kit';
 import { Bar } from '@/features/reporting/dashboard/shared/Bar';
-import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 /**
  * This week's lessons by status (R-RPT-01): one row per status that has lessons, the status chip

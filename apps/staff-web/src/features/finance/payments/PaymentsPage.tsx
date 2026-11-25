@@ -3,17 +3,20 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
 import { TableBox } from '@/components/data-table/TableBox';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import {
+  Button,
+  Cartouche,
+  EmptyState,
+  FormAlert,
+  Icon,
+  PageHead,
+  Pager,
+  Toast,
+  ListSkeleton,
+  t,
+  HeadActions,
+} from '@ab/web-kit';
 import { downloadCsv } from '@/features/reporting/exports/api';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { toSortSearch } from '@/lib/list/list-search';
 import { filterParams, paymentsQuery, type PaymentFilters, type PaymentView } from './api';
 import { paymentColumns, type PaymentAction } from './payment-columns';
@@ -22,7 +25,6 @@ import { PeriodTotals } from './PeriodTotals';
 import { RecordPaymentDialog } from './record/RecordPaymentDialog';
 import { paymentsView, type PaymentsUrlSearch } from './search';
 import { usePaymentFilters } from './use-payment-filters';
-import { HeadActions } from '@ab/web-kit/components/ui/layout/head-actions';
 import { usePermissions } from '@/features/people/auth';
 
 /** A filter or sort change goes back to page 1 (the route drops `page: undefined`). */

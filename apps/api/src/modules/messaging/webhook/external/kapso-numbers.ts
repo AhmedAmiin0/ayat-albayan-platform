@@ -26,7 +26,10 @@ function legacyLines(lines: LineEnvs): KapsoNumber[] {
 }
 
 /** The Kapso number Meta names by this phone_number_id; null = not ours or not on Kapso (ignored). */
-export function kapsoNumberFor(phoneNumberId: string, read: () => LineEnvs = () => lineEnvs(loadEnv())): KapsoNumber | null {
+export function kapsoNumberFor(
+  phoneNumberId: string,
+  read: () => LineEnvs = () => lineEnvs(loadEnv()),
+): KapsoNumber | null {
   if (overlayNumbers()) {
     const n = numberByPhoneId(phoneNumberId);
     return n && isKapso(n.env) && isWaLine(n.purpose)

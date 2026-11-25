@@ -1,7 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { ApiError } from '@ab/web-kit/lib/http/api';
+import { t, ApiError } from '@ab/web-kit';
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { AnchorHarness } from '@/features/messaging/inbox/testing/anchor-harness';

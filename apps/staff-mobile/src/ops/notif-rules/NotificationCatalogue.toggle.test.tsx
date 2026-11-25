@@ -5,7 +5,7 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { NotificationCatalogue } from '@/ops/settings/NotificationCatalogue';
 import { answer, catalogueV2, MANAGER, openAudience } from './testing/rules-fixtures';
-import type * as HttpApi from '@ab/mobile-kit/lib/http/api';
+import type { HttpApi } from '@ab/mobile-kit/testing';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

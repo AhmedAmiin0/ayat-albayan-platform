@@ -1,7 +1,6 @@
 import type { SettingMeta } from '@ab/settings';
 import { formatDateTime } from '@/features/sales/leads';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useClock, type Clock } from '@ab/web-kit/lib/clock';
+import { t, useClock, type Clock } from '@ab/web-kit';
 
 const v = t.settingsValues;
 

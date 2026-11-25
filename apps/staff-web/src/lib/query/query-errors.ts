@@ -1,5 +1,5 @@
 import { ApiError, createAuthExit } from '@ab/client-core';
-import { reportWebError } from '@ab/web-kit/boot/web-errors';
+import { reportWebError } from '@ab/web-kit';
 
 // A 4xx is the API's answer (validation, permission, not found) and each screen shows it; only
 // a 5xx or a read with no answer is a fault worth tracking.

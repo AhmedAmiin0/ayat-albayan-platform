@@ -1,7 +1,6 @@
 import { createFileRoute, Navigate, Outlet } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { usePermissions, ListSkeleton } from '@ab/web-kit';
 import { firstSalesRoute } from '@/features/sales/sales';
 
 /** /sales/short-links/*: short_links.manage, else the first page the held role opens. */

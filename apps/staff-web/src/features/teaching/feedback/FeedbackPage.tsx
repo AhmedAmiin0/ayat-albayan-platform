@@ -1,14 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { Cartouche, FormAlert, PageHead, Pager, ListSkeleton, t, teacherLabel } from '@ab/web-kit';
 import { teacherOptionsQuery } from '@/features/people/students/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { serverListProps, serverListState, type ServerListPatch, type ServerListSearch } from '@/lib/list/server-list-search';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { FEEDBACK_PAGE_SIZE, feedbackListQuery, feedbackSummaryQuery } from './api';
 import { FeedbackTable } from './FeedbackTable';
 import { FEEDBACK_LIST_KEYS } from './search';

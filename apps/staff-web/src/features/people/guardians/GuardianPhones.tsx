@@ -2,12 +2,8 @@ import { secondPhoneOf } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Ltr, Button, FormAlert, ApiError, t } from '@ab/web-kit';
 import { STUDENTS_KEY } from '@/features/people/students';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { GUARDIANS_KEY, removeGuardianPhone, type GuardianDetail } from './api';
 
 const G = t.guardians;

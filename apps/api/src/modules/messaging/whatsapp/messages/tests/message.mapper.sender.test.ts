@@ -5,7 +5,8 @@ import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 // D4 (docs/21 §3): who sent an outbound bubble; D2 (§5.9): a sent file's name and no wa.me link.
 
 const text = { template_key: null, template_params: null, body: 'السلام عليكم' } as const;
-const view = (over: Partial<ThreadMessageRow>) => toMessageView({ row: { ...messageRow(text), ...over }, template: null });
+const view = (over: Partial<ThreadMessageRow>) =>
+  toMessageView({ row: { ...messageRow(text), ...over }, template: null });
 const STAFF = 'a0000000-0000-4000-8000-000000000001';
 
 describe('toMessageView sender_name / automatic (D4)', () => {
@@ -17,7 +18,11 @@ describe('toMessageView sender_name / automatic (D4)', () => {
   it('an admin or salesperson send shows the profile\'s full_name', () => {
     for (const full_name of ['سارة', 'المدير']) {
       const v = view({ created_by: STAFF, dedup_key: `send:${STAFF}:x`, sender: { full_name } });
-      expect(v).toMatchObject({ sender_name: full_name, sent_by_teacher_name: null, automatic: false });
+      expect(v).toMatchObject({
+        sender_name: full_name,
+        sent_by_teacher_name: null,
+        automatic: false,
+      });
     }
   });
 
@@ -27,7 +32,10 @@ describe('toMessageView sender_name / automatic (D4)', () => {
   });
 
   it('imported history (no dedup_key) is neither automatic nor named', () => {
-    expect(view({ created_by: null, dedup_key: null })).toMatchObject({ sender_name: null, automatic: false });
+    expect(view({ created_by: null, dedup_key: null })).toMatchObject({
+      sender_name: null,
+      automatic: false,
+    });
   });
 
   it('an inbound row has no sender and is never automatic, even with embeds', () => {

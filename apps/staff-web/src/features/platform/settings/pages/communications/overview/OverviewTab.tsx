@@ -2,7 +2,7 @@ import type { AcademySettings } from '@ab/settings';
 import { DangerFrame } from '@/components/settings/fields/DangerFrame';
 import { AutoMessagesSwitch } from '@/features/messaging/messaging/AutoMessagesSwitch';
 import { MessagingSwitch } from '@/features/messaging/messaging/MessagingSwitch';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { OverviewNumbers } from './OverviewNumbers';
 import { OwnTraffic } from './OwnTraffic';
 import { OverviewWhat } from './OverviewWhat';

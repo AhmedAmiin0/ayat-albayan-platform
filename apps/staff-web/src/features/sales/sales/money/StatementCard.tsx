@@ -3,11 +3,10 @@ import {
   type AssistantStatementLineView,
   type AssistantStatementView,
 } from '@ab/money';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { StatusChip, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CurrencyTotalsList } from './CurrencyTotalsList';
 
 const p = t.assistantPortal.earnings;

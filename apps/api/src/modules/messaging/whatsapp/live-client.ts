@@ -75,7 +75,8 @@ export class LiveWhatsappClient implements WhatsappClient {
     const allowed = allowedRecipients(env);
     // In memory only, compared and dropped: the token is part of the key so a new token takes effect.
     const fingerprint = JSON.stringify([conn, allowed]);
-    if (this.cached?.fingerprint !== fingerprint) this.cached = { fingerprint, client: whatsappClient(conn, { allowed }) };
+    if (this.cached?.fingerprint !== fingerprint)
+      this.cached = { fingerprint, client: whatsappClient(conn, { allowed }) };
     return this.cached.client;
   }
 }

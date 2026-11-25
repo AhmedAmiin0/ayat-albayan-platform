@@ -1,9 +1,7 @@
 import type { AssistantLessonView } from '@ab/schedule';
 import { clockOf } from '@ab/time';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, useClock, clockDir, viewerZone } from '@ab/web-kit';
 import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { clockDir, viewerZone } from '@ab/web-kit/lib/clock-text';
 
 /** Shared by AssistantHome and sales' running lessons. */
 export function AssistantLessonRow({ lesson }: { lesson: AssistantLessonView }) {

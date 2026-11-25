@@ -12,7 +12,9 @@ describe('verifySignature', () => {
   });
 
   it('accepts an upper-case hex digest', () => {
-    expect(verifySignature({ rawBody: body, header: sig(body).toUpperCase(), secrets: [secret] })).toBe(true);
+    expect(
+      verifySignature({ rawBody: body, header: sig(body).toUpperCase(), secrets: [secret] }),
+    ).toBe(true);
   });
 
   it('rejects a signature made with another secret', () => {
@@ -27,9 +29,13 @@ describe('verifySignature', () => {
   it('rejects a missing header, a malformed header, a missing secret or a missing raw body', () => {
     expect(verifySignature({ rawBody: body, header: undefined, secrets: [secret] })).toBe(false);
     expect(verifySignature({ rawBody: body, header: 'sha256=abc', secrets: [secret] })).toBe(false);
-    expect(verifySignature({ rawBody: body, header: sig(body).slice(7), secrets: [secret] })).toBe(false);
+    expect(verifySignature({ rawBody: body, header: sig(body).slice(7), secrets: [secret] })).toBe(
+      false,
+    );
     expect(verifySignature({ rawBody: body, header: sig(body), secrets: [undefined] })).toBe(false);
-    expect(verifySignature({ rawBody: undefined, header: sig(body), secrets: [secret] })).toBe(false);
+    expect(verifySignature({ rawBody: undefined, header: sig(body), secrets: [secret] })).toBe(
+      false,
+    );
   });
 
   it('accepts a body signed with the second of two secrets, rejects a third', () => {

@@ -1,5 +1,5 @@
 import type { LineCheckView } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 type Ready = NonNullable<LineCheckView['meta_ready']>;
 type Label = keyof typeof t.templates.settings.lines;

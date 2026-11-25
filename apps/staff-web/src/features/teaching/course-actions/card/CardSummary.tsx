@@ -1,8 +1,6 @@
 import type { CourseCardView } from '@ab/shared';
 import { courseDaysText } from '@/features/teaching/booking';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { useClock, t, useViewerTz } from '@ab/web-kit';
 import { cardLines, packageLines } from './card-text';
 
 type Course = NonNullable<CourseCardView['course']>;

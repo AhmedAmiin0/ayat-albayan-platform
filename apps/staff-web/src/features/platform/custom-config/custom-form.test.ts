@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { draftOf, emptyDraft, matchesCustom, parseDraft } from './custom-form';
 
 const c = t.config.custom;

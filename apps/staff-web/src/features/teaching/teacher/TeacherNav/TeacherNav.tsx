@@ -1,7 +1,7 @@
 import type { Permission } from '@ab/catalog';
 import type { TeacherPage } from '@ab/settings';
 import { SectionLinks, type SectionLink } from '@/components/shell/nav/SectionLinks';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { useTeacherPageOn } from '@/lib/settings/teacher-pages';
 
 // The teacher's own pages (R-TCH-03), the same order as the mobile tabs.

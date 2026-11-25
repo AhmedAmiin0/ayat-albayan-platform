@@ -1,13 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Select } from '@ab/web-kit/components/ui/form/select';
+import { Button, Dialog, Field, FormAlert, Input, Select, t } from '@ab/web-kit';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { ASSISTANTS_KEY, assistantsQuery, setBroughtBy } from '@/features/people/assistants/api';
 import { broughtAtOf } from './brought-at';
 import { errorText } from '@/features/people/assistants/status';

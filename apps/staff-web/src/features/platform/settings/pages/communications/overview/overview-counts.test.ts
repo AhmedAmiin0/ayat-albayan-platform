@@ -1,7 +1,7 @@
 import { catalogueViews, NOTIFICATION_AUDIENCES } from '@ab/shared';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { audienceCounts } from './overview-counts';
 
 const views = (gateReason: 'switch_off' | null) => catalogueViews({ settings: SETTING_DEFAULTS, gateReason, templates: new Map() });

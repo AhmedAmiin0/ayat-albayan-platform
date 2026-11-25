@@ -1,7 +1,6 @@
 import type { MeetingCreated, MeetingView, PublicMeetingView, RoomJoinResult } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { env } from '@ab/web-kit/lib/http/env';
+import { ApiError, apiFetch, apiSend, env } from '@ab/web-kit';
 import { meetingKeys } from './meeting.keys';
 
 // A standalone room with no lesson.
@@ -24,7 +23,7 @@ export const newMeetingLink = (id: string) =>
 /** POST /meetings/:id/join: staff, with their own login. A fresh identity per call. */
 export const joinMeeting = (id: string) => apiSend<RoomJoinResult>('POST', `/meetings/${id}/join`);
 
-export { removeMeetingParticipant } from '@ab/web-kit/classroom/api/moderation-api';
+export { removeMeetingParticipant } from '@ab/web-kit';
 
 function parseJson(text: string): unknown {
   try {

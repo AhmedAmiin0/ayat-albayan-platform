@@ -1,7 +1,6 @@
 import { ratingOfInteractive, type LessonRating, type MessageView } from '@ab/shared';
 import type { Tone } from '@ab/money';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StatusChip, t } from '@ab/web-kit';
 
 const TONE: Record<LessonRating, Tone> = { excellent: 'ok', good: 'neutral', needs_work: 'act' };
 

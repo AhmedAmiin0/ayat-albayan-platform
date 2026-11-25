@@ -1,8 +1,7 @@
 import { counted } from '@ab/core';
 import { dateText } from '@ab/time';
 import { dayMonthLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { t, locale } from '@ab/web-kit';
 
 const noon = (date: string) => new Date(`${date}T12:00:00Z`);
 

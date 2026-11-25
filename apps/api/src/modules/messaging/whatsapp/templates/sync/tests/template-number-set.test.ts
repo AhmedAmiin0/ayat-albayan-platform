@@ -33,10 +33,17 @@ describe('setTemplateNumber', () => {
   it('saves the number, audits it and warns when the number has not approved the template', async () => {
     const out = await setTemplateNumber(deps, { key: 'booking_confirmation', number_id: SPARE }, 'actor');
     expect(queries.update).toHaveBeenCalledWith('booking_confirmation', { number_id: SPARE });
-    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({
-      action: 'template_number_set', before: { key: 'booking_confirmation', number_id: null }, after: { key: 'booking_confirmation', number_id: SPARE },
-    }));
-    expect(out).toMatchObject({ template: { number_id: SPARE, numbers: [] }, not_approved_on_number: true });
+    expect(audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: 'template_number_set',
+        before: { key: 'booking_confirmation', number_id: null },
+        after: { key: 'booking_confirmation', number_id: SPARE },
+      }),
+    );
+    expect(out).toMatchObject({
+      template: { number_id: SPARE, numbers: [] },
+      not_approved_on_number: true,
+    });
   });
 
   it('no warning once the number holds an approved row; the view lists it', async () => {

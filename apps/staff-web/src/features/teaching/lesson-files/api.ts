@@ -1,5 +1,5 @@
 import { lessonFilesApi } from '@ab/client-core';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 
 // Routes and schemas live in @ab/client-core, bound here to the web's API client.
 const client = { apiFetch, apiSend };

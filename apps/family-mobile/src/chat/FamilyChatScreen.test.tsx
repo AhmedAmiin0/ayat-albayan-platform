@@ -2,7 +2,7 @@ import type { ChannelPage } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import { t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { FamilyChatScreen } from './FamilyChatScreen';
 
 const mockFetch = jest.fn();

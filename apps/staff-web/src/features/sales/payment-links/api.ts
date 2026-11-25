@@ -7,8 +7,7 @@ import type {
 } from '@ab/shared';
 import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { env } from '@ab/web-kit/lib/http/env';
+import { apiFetch, apiSend, env } from '@ab/web-kit';
 import { paymentLinkKeys, publicLinkKeys, stripeKeys } from '@/features/sales/keys';
 
 // Payment links (docs/30) need FEATURE_STRIPE; reads go behind stripeBuild(); 404 means no Stripe.

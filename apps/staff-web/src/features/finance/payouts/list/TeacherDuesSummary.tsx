@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
+import { QueryState } from '@ab/web-kit';
 import { earningsSummaryQuery } from '@/features/finance/payouts/api';
 import { DuesBody } from './DuesBody';
 

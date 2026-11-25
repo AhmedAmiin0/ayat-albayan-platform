@@ -2,7 +2,7 @@ import { formatPhone } from '@ab/core';
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { StudentProfilePage } from '@/features/people/students/profile/StudentProfilePage/StudentProfilePage';
 
 const apiFetch = vi.hoisted(() => vi.fn());

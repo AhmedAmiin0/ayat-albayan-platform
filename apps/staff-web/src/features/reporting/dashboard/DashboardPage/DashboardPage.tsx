@@ -1,14 +1,17 @@
 import { addCalendarMonths } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { adminDayQuery, dayAround } from '@ab/web-kit/classroom/api/api';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
+import {
+  Cartouche,
+  FormAlert,
+  PageHead,
+  adminDayQuery,
+  dayAround,
+  useNow,
+  t,
+  useJoinWindow,
+} from '@ab/web-kit';
 import { ExportsPanel } from '@/features/reporting/exports/ExportsPanel';
 import { MoneyKpis } from '@/features/finance/finance/MoneyKpis';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useJoinWindow } from '@ab/web-kit/lib/settings/public-config';
 import { summaryQuery, workQuery } from '@/features/reporting/dashboard/api';
 import { KpiStrip } from '@/features/reporting/dashboard/funnel/KpiStrip';
 import { PeriodSection } from '@/features/reporting/dashboard/PeriodSection';

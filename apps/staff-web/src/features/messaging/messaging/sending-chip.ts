@@ -1,6 +1,6 @@
 import type { SendGateView } from '@ab/shared';
 import type { Glyph, Tone } from '@ab/money';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** ON with WhatsApp not set up sends nothing; under the allow-list only allowed numbers. */
 export function sendingChip(

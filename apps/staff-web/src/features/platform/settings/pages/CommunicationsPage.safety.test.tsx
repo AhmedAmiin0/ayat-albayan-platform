@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { integrationItems } from '@/features/platform/integrations/integrations.fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { SETTINGS } from '@/test/settings-fixture';
 import { renderCommunications } from './communications-test-kit';
 

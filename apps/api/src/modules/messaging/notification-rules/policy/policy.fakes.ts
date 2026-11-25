@@ -2,7 +2,8 @@ import { SETTING_DEFAULTS, RULE_SETTING_KEYS, type NotificationRuleRow, type Rul
 import { NotificationPolicy } from './policy';
 import type { RulesReader, RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
 
-const defaults = (): RuleSettings => Object.fromEntries(RULE_SETTING_KEYS.map((k) => [k, SETTING_DEFAULTS[k]])) as RuleSettings;
+const defaults = (): RuleSettings =>
+  Object.fromEntries(RULE_SETTING_KEYS.map((k) => [k, SETTING_DEFAULTS[k]])) as RuleSettings;
 
 export interface FakePolicyInput {
   mode?: RulesMode;
@@ -13,7 +14,9 @@ export interface FakePolicyInput {
 }
 
 /** Tests only: a RulesReader over fixed rows (registry defaults, legacy mode, no rows by default). */
-export function fakeRulesReader(input: FakePolicyInput = {}): RulesReader & { snapshot: () => Promise<RulesSnapshot> } {
+export function fakeRulesReader(
+  input: FakePolicyInput = {},
+): RulesReader & { snapshot: () => Promise<RulesSnapshot> } {
   const rows = new Map<string, NotificationRuleRow>();
   for (const r of input.rows ?? []) {
     const key = r.key ?? '';
@@ -28,4 +31,5 @@ export function fakeRulesReader(input: FakePolicyInput = {}): RulesReader & { sn
 }
 
 /** Tests only: a NotificationPolicy over fakeRulesReader(input). */
-export const fakePolicy = (input: FakePolicyInput = {}): NotificationPolicy => new NotificationPolicy(fakeRulesReader(input));
+export const fakePolicy = (input: FakePolicyInput = {}): NotificationPolicy =>
+  new NotificationPolicy(fakeRulesReader(input));

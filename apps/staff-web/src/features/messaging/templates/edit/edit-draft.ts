@@ -3,7 +3,7 @@ import {
   QUICK_REPLY_INTENTS, type QuickReplyIntent, type TemplateDisplayButton,
 } from '@ab/shared';
 import { varsOf, type DraftVar } from '@/features/messaging/templates/create/template-draft';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // Buttons come from WhatsApp's display, else the registry; quick replies keep action by index.
 

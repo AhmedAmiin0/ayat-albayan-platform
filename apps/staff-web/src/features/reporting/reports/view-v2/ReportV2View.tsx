@@ -1,8 +1,6 @@
 import { reportV2Lines } from '@ab/client-core';
 import type { ReportFormEntry, ReportFormLesson } from '@ab/shared';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { StatusChip, t, locale } from '@ab/web-kit';
 import { AttachmentsField } from '@/features/reporting/reports/entry/AttachmentsField';
 import { V2Header } from '@/features/reporting/reports/entry-v2/V2Header';
 import { PdfAction } from '@/features/reporting/reports/history/PdfAction';

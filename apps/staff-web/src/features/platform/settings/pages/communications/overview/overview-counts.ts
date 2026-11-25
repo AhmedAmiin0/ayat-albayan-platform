@@ -1,6 +1,6 @@
 import { NOTIFICATION_AUDIENCES, type NotificationAudience, type NotificationEntryView } from '@ab/shared';
 import { rowsOf } from '@/features/messaging/notification-catalogue/catalogue-tabs';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 export interface AudienceCount {
   audience: NotificationAudience;

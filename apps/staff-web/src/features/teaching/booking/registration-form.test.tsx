@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { SourceField } from '@/features/people/guardians/SourceField';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { ByDayPicker } from './steps/slots/ByDayPicker';
 import { emptyDraft } from './draft/draft';
 import { LeadStudentStep } from './steps/who/LeadStudentStep';

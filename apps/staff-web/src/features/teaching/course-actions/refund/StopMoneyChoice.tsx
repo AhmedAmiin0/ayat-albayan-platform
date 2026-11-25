@@ -7,11 +7,8 @@ import {
   type StopMoney,
 } from '@ab/client-core';
 import type { CourseStopPreview, StopRefund } from '@ab/shared';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
+import { Field, Input, RadioChips, t } from '@ab/web-kit';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { StopMoneyView } from './use-stop-money';
 
 type Fmt = (n: number) => string;

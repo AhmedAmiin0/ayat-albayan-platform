@@ -26,7 +26,10 @@ export type PermissionRequest =
 export interface CallsApi {
   permission(line: CallingLine, to: string): Promise<CallPermissionFacts>;
   /** action connect with our SDP offer; `ref` = our wa_calls.id (biz_opaque_callback_data). */
-  connect(line: CallingLine, input: { to: string; sdp: string; ref: string }): Promise<{ waCallId: string }>;
+  connect(
+    line: CallingLine,
+    input: { to: string; sdp: string; ref: string },
+  ): Promise<{ waCallId: string }>;
   /** pre_accept then accept, with the answering device's SDP answer. */
   accept(line: CallingLine, input: { waCallId: string; sdp: string; ref: string }): Promise<void>;
   reject(line: CallingLine, waCallId: string): Promise<void>;

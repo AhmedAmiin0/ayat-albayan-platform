@@ -23,11 +23,13 @@ export class TeacherThreadsRepo {
 
   /** The signed-in teacher's row (JWT sub = teachers.profile_id); null when not linked. */
   async teacher(profileId: string): Promise<ScopeTeacher | null> {
-    const data = maybe(await this.db
-      .from('teachers')
-      .select('id, display_name_ar, phone_e164')
-      .eq('profile_id', profileId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('teachers')
+        .select('id, display_name_ar, phone_e164')
+        .eq('profile_id', profileId)
+        .maybeSingle(),
+    );
     return data;
   }
 
@@ -41,15 +43,26 @@ export class TeacherThreadsRepo {
   /** The teacher's own unread per phone (teacher_unread); never the admin's read_at. */
   async unread(teacherId: string, phones: readonly string[]): Promise<Map<string, number>> {
     if (phones.length === 0) return new Map();
-    const { data, error } = await this.db.rpc('teacher_unread', { p_teacher_id: teacherId, p_phones: [...phones] });
+    const { data, error } = await this.db.rpc('teacher_unread', {
+      p_teacher_id: teacherId,
+      p_phones: [...phones],
+    });
     if (error) throw pgError(error);
     return new Map(data.map((r) => [r.phone_e164, r.unread]));
   }
 
   /** Opening a thread marks it read for this teacher only (the admin's unread stays). */
   async stampRead(input: { teacherId: string; phone: string; at: Date }): Promise<void> {
-    const row = { teacher_id: input.teacherId, phone_e164: input.phone, read_at: input.at.toISOString() };
-    done(await this.db.from('teacher_thread_reads').upsert(row, { onConflict: 'teacher_id,phone_e164' }));
+    const row = {
+      teacher_id: input.teacherId,
+      phone_e164: input.phone,
+      read_at: input.at.toISOString(),
+    };
+    done(
+      await this.db
+        .from('teacher_thread_reads')
+        .upsert(row, { onConflict: 'teacher_id,phone_e164' }),
+    );
   }
 
   /** Ids of the teacher's own students (TeacherMeQueries.students: assigned + active rules). */
@@ -59,11 +72,13 @@ export class TeacherThreadsRepo {
 
   /** The guardian's students, oldest first, without packages (no money in teacher mode). */
   async guardianStudents(guardianId: string): Promise<PeopleStudentRow[]> {
-    const data = rows(await this.db
-      .from('students')
-      .select('id, code, name, status, teacher:teachers(display_name_ar)')
-      .eq('guardian_id', guardianId)
-      .order('created_at'));
+    const data = rows(
+      await this.db
+        .from('students')
+        .select('id, code, name, status, teacher:teachers(display_name_ar)')
+        .eq('guardian_id', guardianId)
+        .order('created_at'),
+    );
     return data;
   }
 }

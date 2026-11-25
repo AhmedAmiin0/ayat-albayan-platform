@@ -1,11 +1,8 @@
 import { patchRow, rowsFromPicks, type LessonRow } from '@ab/client-core';
 import type { SlotsResponse } from '@ab/schedule';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
+import { Button, FormAlert, tzCity, t } from '@ab/web-kit';
 import { draftPicks, withPicks, type BookingDraft } from '@/features/teaching/booking/draft/draft';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LessonRow as RowView, type RowsCtx } from './LessonRow';
 import { rowErrors, rowPicks } from './row-state';
 import { rowBounds, rowsOpen, slotsWindow } from './row-window';

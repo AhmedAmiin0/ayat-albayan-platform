@@ -2,7 +2,7 @@ import type { RoleView } from '@ab/catalog';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { RolesPage } from '@/features/people/roles/RolesPage/RolesPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());

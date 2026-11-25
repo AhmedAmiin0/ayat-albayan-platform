@@ -1,14 +1,10 @@
 import type { UserRole } from '@ab/catalog';
 import type { StudentRecordingView } from '@ab/schedule';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { recordingTime, RECORDING_TONE } from '@ab/web-kit/classroom/recordings/recording-format';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { StatusChip, recordingTime, RECORDING_TONE, t, teacherLabel, useClock } from '@ab/web-kit';
 import { durationText, sizeText } from './recording-format';
 import { RecordingDelete } from './RecordingDelete';
 import { RecordingPlayer } from './RecordingPlayer';
 import { RecordingVisibility } from './RecordingVisibility';
-import { useClock } from '@ab/web-kit/lib/clock';
 
 const R = t.studentRecordings;
 const TONE = { ...RECORDING_TONE, deleted: 'neutral' } as const;

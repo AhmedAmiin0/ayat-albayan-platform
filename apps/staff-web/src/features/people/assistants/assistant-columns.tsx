@@ -1,8 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { buttonVariants, t } from '@ab/web-kit';
 import { commissionText, dayText, salaryText } from './terms/terms-summary';
 import type { AssistantRow } from '@ab/client-core';
 

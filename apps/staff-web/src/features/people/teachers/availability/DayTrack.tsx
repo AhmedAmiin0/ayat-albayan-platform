@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '@ab/web-kit';
 import type { Range } from './grid';
 import { barBox, overlaps, trackPct } from './track';
 

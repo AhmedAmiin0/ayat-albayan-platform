@@ -28,7 +28,11 @@ export class RulesPersist {
   }
 
   /** The row first, then its legacy mirror (empty in module mode: legacy rows are frozen there). */
-  async save(input: { row: RuleRowWrite; legacy: Partial<RuleSettings>; actorId: string }): Promise<void> {
+  async save(input: {
+    row: RuleRowWrite;
+    legacy: Partial<RuleSettings>;
+    actorId: string;
+  }): Promise<void> {
     try {
       await this.table.upsert(input.row, input.actorId);
       await this.settings.writeLegacy(input.legacy, input.actorId);

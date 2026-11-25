@@ -1,4 +1,4 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** Choices are `key` (asc) or `key:desc`; empty string is the default order. */
 export const leadSortChoices = (): { value: string; label: string }[] => [

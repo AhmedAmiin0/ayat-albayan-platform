@@ -1,7 +1,5 @@
 import type { RefObject } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, IconButton, t } from '@ab/web-kit';
 import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 import { quoteOf, quoteText } from '@/features/messaging/inbox/messages/lib/quote';
 

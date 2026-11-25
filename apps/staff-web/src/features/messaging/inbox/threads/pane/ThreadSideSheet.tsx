@@ -1,8 +1,5 @@
 import type { ReactNode } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
+import { Button, Dialog, Icon, IconButton } from '@ab/web-kit';
 import { SideSheetCloseContext } from '@/features/messaging/inbox/shared/side-sheet';
 
 export interface ThreadSideSheetProps {

@@ -9,14 +9,23 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 const queries = { get: vi.fn(), update: vi.fn() };
 const audit = { record: vi.fn() };
-const starters = () => new TemplateStarters(queries as unknown as TemplatesRepo, audit as unknown as AuditService);
-const welcome = templateRow({ key: 'academy_welcome', meta_name: 'academy_welcome', line: 'chat', sales_starter: true });
+const starters = () =>
+  new TemplateStarters(queries as unknown as TemplatesRepo, audit as unknown as AuditService);
+const welcome = templateRow({
+  key: 'academy_welcome',
+  meta_name: 'academy_welcome',
+  line: 'chat',
+  sales_starter: true,
+});
 
 describe('TemplateStarters.set', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     queries.get.mockResolvedValue(welcome);
-    queries.update.mockImplementation(async (_key: string, patch: object) => ({ ...welcome, ...patch }));
+    queries.update.mockImplementation(async (_key: string, patch: object) => ({
+      ...welcome,
+      ...patch,
+    }));
   });
 
   it('turns a starter off and on: the flag only, audited with before and after', async () => {

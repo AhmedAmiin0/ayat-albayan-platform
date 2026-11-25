@@ -20,16 +20,24 @@ describe('Google sync request schemas', () => {
   });
 
   it('student map: folder + sheet, folder only, or both null (create new); never a sheet alone', () => {
-    expect(googleStudentMapSchema.safeParse({ folder_id: FILE, attendance_sheet_id: FILE }).success).toBe(true);
-    expect(googleStudentMapSchema.safeParse({ folder_id: FILE, attendance_sheet_id: null }).success).toBe(true);
-    expect(googleStudentMapSchema.safeParse({ folder_id: null, attendance_sheet_id: null }).success).toBe(true);
+    expect(
+      googleStudentMapSchema.safeParse({ folder_id: FILE, attendance_sheet_id: FILE }).success,
+    ).toBe(true);
+    expect(
+      googleStudentMapSchema.safeParse({ folder_id: FILE, attendance_sheet_id: null }).success,
+    ).toBe(true);
+    expect(
+      googleStudentMapSchema.safeParse({ folder_id: null, attendance_sheet_id: null }).success,
+    ).toBe(true);
     const bad = googleStudentMapSchema.safeParse({ folder_id: null, attendance_sheet_id: FILE });
     expect(bad.error?.issues[0]?.message).toBe('folder_required');
     expect(googleStudentMapSchema.safeParse({ folder_id: 'x/../y', attendance_sheet_id: null }).success).toBe(false);
   });
 
   it('drive: a root folder id, the summary sheet optional', () => {
-    expect(googleDriveSchema.safeParse({ root_folder_id: FILE, summary_sheet_id: null }).success).toBe(true);
+    expect(
+      googleDriveSchema.safeParse({ root_folder_id: FILE, summary_sheet_id: null }).success,
+    ).toBe(true);
     expect(googleDriveSchema.safeParse({ root_folder_id: 'short', summary_sheet_id: null }).success).toBe(false);
   });
 });

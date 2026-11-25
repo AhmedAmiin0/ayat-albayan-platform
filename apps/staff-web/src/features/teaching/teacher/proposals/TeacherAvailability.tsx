@@ -1,12 +1,10 @@
 import type { TeacherMe } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { FormAlert, ListSkeleton, t } from '@ab/web-kit';
 import { availabilityQuery } from '@/features/people/teachers/api';
 import { AvailabilityGrid } from '@/features/people/teachers/availability/AvailabilityGrid';
 import { gridTz } from '@/features/people/teachers/availability/grid';
 import { TimeOffList } from '@/features/people/teachers/time-off/TimeOffList';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
  * The teacher's own weekly availability and time-off (R-TCH-02, R-SCH-08): the same editor the

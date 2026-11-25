@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { T_ABRAR, T_FATMA, T_NOUR } from '@/features/teaching/schedule/overview-fixture';
 import { CLEAR_SCHEDULE_FILTERS, scheduleChips } from './schedule-filters';
 import type { ScheduleSearch } from './search';

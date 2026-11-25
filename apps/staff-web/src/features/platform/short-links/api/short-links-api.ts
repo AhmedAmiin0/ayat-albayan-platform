@@ -1,5 +1,5 @@
 import { shortLinkQueries, shortLinkSends } from '@ab/client-core';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 
 // Managed links (docs/19): reads and writes live in @ab/client-core, bound here to the web client.
 

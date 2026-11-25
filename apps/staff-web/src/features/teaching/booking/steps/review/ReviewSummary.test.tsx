@@ -3,7 +3,7 @@ import type { BookingTeacherOption } from '@ab/schedule';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { packageDaysNote } from '@/features/teaching/booking/steps/package/package-days';
 import { ReviewSummary } from './ReviewSummary';

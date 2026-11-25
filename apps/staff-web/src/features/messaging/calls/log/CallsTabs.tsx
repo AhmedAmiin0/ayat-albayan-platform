@@ -1,5 +1,4 @@
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { SegmentedControl, t } from '@ab/web-kit';
 import { useCallsEnabled } from '@/features/messaging/calls/state/call-context';
 
 /** Only while calls are on (docs/28 §5). */

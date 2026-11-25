@@ -1,7 +1,6 @@
 import { accountSetupSchema } from '@ab/shared';
 import { z } from 'zod';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { newPasswordProblem } from '@ab/web-kit/auth/reset/reset-checks';
+import { t, newPasswordProblem } from '@ab/web-kit';
 
 /** An API refusal's `code` (the ApiError body), parsed, never shape-checked by hand. */
 const refusal = z.object({ body: z.object({ code: z.string() }) });
