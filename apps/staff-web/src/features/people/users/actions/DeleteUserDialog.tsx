@@ -4,7 +4,8 @@ import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { deleteUser, disableUser, USERS_KEY } from '@/features/people/users/api';
+import { userKeys } from '@/features/people/keys';
+import { deleteUser, disableUser } from '@/features/people/users/api';
 import { historyReferences, userErrorText } from '@/features/people/users/errors';
 import { HistoryReferences } from '@/features/people/users/edit/HistoryReferences';
 
@@ -22,8 +23,8 @@ export function DeleteUserDialog({ user, onBack, onDone }: DeleteUserDialogProps
   // Close first: refetching the open detail of a deleted user would 404 and retry before the dialog could close.
   const finish = (message: string) => {
     onDone(message);
-    queryClient.removeQueries({ queryKey: [...USERS_KEY, 'detail', user.id] });
-    void queryClient.invalidateQueries({ queryKey: USERS_KEY });
+    queryClient.removeQueries({ queryKey: userKeys.detail(user.id) });
+    void queryClient.invalidateQueries({ queryKey: userKeys.all });
   };
   const remove = useMutation({ mutationFn: deleteUser, onSuccess: () => finish(t.users.toast.deleted) });
   const disable = useMutation({ mutationFn: disableUser, onSuccess: () => finish(t.users.toast.disabled) });

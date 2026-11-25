@@ -8,14 +8,17 @@ import type { StudentProfile } from '@ab/shared';
 
 const TEACHER_ID = vi.hoisted(() => '11111111-1111-4111-8111-111111111111');
 const api = vi.hoisted(() => ({ updateStudent: vi.fn() }));
-vi.mock('@/features/people/students/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  ...api,
-  teacherOptionsQuery: queryOptions({
-    queryKey: ['teacher-options-test'],
-    queryFn: async () => [{ id: TEACHER_ID, display_name_ar: 'أبرار', meeting_link: null }],
-  }),
-}));
+vi.mock('@/features/people/students/api', async (importOriginal) => {
+  const { studentKeys } = await import('@/features/people/keys');
+  return {
+    ...(await importOriginal<object>()),
+    ...api,
+    teacherOptionsQuery: queryOptions({
+      queryKey: studentKeys.teacherOptions(),
+      queryFn: async () => [{ id: TEACHER_ID, display_name_ar: 'أبرار', meeting_link: null }],
+    }),
+  };
+});
 
 const STUDENT = {
   id: 's1',

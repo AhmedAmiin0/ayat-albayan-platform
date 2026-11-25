@@ -7,6 +7,7 @@ import { Field } from '@ab/web-kit/components/ui/form/field';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { PasswordInput } from '@ab/web-kit/auth/PasswordInput';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { recoveryKeys } from '@/features/people/keys';
 import { hasRecoverySession, savePassword, setPasswordError } from './set-password';
 
 const S = t.users.setPassword;
@@ -15,7 +16,7 @@ type Phase = 'checking' | 'ready' | 'invalid';
 /** Checked once per visit: never cached, refetched or retried (an error stays «checking»). */
 function usePhase(): Phase {
   const { data } = useQuery({
-    queryKey: ['set-password', 'recovery-session'],
+    queryKey: recoveryKeys.session(),
     queryFn: hasRecoverySession,
     gcTime: 0,
     staleTime: Infinity,

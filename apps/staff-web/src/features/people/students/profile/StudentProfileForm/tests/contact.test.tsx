@@ -9,11 +9,17 @@ import type { StudentProfile } from '@ab/shared';
 // docs/30 §1, a docs/13 deviation.
 
 const api = vi.hoisted(() => ({ updateStudent: vi.fn() }));
-vi.mock('@/features/people/students/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  ...api,
-  teacherOptionsQuery: queryOptions({ queryKey: ['teacher-options-contact'], queryFn: async () => [] }),
-}));
+vi.mock('@/features/people/students/api', async (importOriginal) => {
+  const { studentKeys } = await import('@/features/people/keys');
+  return {
+    ...(await importOriginal<object>()),
+    ...api,
+    teacherOptionsQuery: queryOptions({
+      queryKey: studentKeys.teacherOptions(),
+      queryFn: async () => [],
+    }),
+  };
+});
 
 const C = t.familyAuth.contactIsSelf;
 const STUDENT = {
