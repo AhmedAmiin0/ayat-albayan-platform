@@ -1,8 +1,7 @@
 import { SUBSCRIPTION_STATUSES } from '@ab/catalog';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, t } from '@ab/web-kit';
 import type { SalesSubscriptionView } from '@ab/shared';
 
 const col = createColumnHelper<DataTableFeatures, SalesSubscriptionView>();

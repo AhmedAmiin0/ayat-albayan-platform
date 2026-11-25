@@ -2,16 +2,14 @@ import { PAYOUT_STATUSES } from '@ab/catalog';
 import { payoutStatusStyle } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures, FilterOption } from '@/components/data-table/DataTable';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { StatusChip, t, teacherLabel } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
 import { LedgerPaid } from '@/features/finance/payouts/shared/LedgerPaid';
 import { PayoutActions } from './PayoutActions';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { durationLabel } from '@/features/finance/pricing/format';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { PayoutView } from '@/features/finance/payouts/api';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 
 const col = createColumnHelper<DataTableFeatures, PayoutView>();
 

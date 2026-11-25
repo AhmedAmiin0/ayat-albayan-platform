@@ -1,12 +1,8 @@
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { HeadActions } from '@ab/web-kit/components/ui/layout/head-actions';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { Button, buttonVariants, HeadActions, Icon, Toast, t } from '@ab/web-kit';
 import { NewMeetingMenu } from '@/features/teaching/meetings/NewMeetingMenu';
 import { CreateStudentDialog } from '@/features/people/students/create/CreateStudentDialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** On phones the two secondary actions sit behind the overflow menu (HeadActions). */
 export function QuickActions() {

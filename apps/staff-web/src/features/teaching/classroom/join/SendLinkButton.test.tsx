@@ -2,8 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { JOUD, lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { SendLinkButton } from './SendLinkButton';
 
 const apiFetch = vi.hoisted(() => vi.fn());

@@ -1,10 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { ApiError } from '@ab/web-kit/lib/http/api';
+import { Button, Icon, ApiError, t } from '@ab/web-kit';
 import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { deleteRecording, RECORDINGS_KEY } from './recordings-api';
 
 const R = t.studentRecordings.delete;

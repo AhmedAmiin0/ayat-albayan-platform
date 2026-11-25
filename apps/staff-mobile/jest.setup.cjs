@@ -1,5 +1,4 @@
-// The shared setup first (@ab/mobile-kit: RTL, language, storage, Supabase, connection, tz).
-require('@ab/mobile-kit/jest-setup');
+// After the kit's shared setup (jest.config.cjs: RTL, language, storage, Supabase, connection, tz).
 
 // WhatsApp calls (docs/28 PR 2): LiveKit's react-native-webrtc fork (docs/35) is a native module; the call tests inject fakes.
 jest.mock('@livekit/react-native-webrtc', () => ({

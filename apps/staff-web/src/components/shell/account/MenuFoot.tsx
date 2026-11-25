@@ -1,7 +1,5 @@
-import { ClockToggle } from '@ab/web-kit/components/ui/layout/clock-toggle';
-import { ThemeToggle } from '@ab/web-kit/components/ui/layout/theme-toggle';
+import { ClockToggle, ThemeToggle, LanguageSwitch } from '@ab/web-kit';
 import { AccountChip } from './AccountChip';
-import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
 import { LogoutButton } from './LogoutButton';
 
 /** Same controls as the sidebar foot, so the top bar keeps one button only. */

@@ -1,12 +1,14 @@
 import type { UserRole } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import {
+  Cartouche,
+  FormAlert,
+  PageHead,
+  ListSkeleton,
+  ApiError,
+  t,
+  useViewerTz,
+} from '@ab/web-kit';
 import { reportErrorText, reportFormQuery } from '@/features/reporting/reports/api';
 import { reportHistoryHref } from '@/features/reporting/reports/paths';
 import { ReportLink } from '@/features/reporting/reports/history/ReportLink';

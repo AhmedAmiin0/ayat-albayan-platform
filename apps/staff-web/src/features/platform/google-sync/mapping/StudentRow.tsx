@@ -1,10 +1,7 @@
 import type { GoogleStudentMapInput, GoogleStudentMapRow } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { FormAlert, Ltr, StatusChip, t } from '@ab/web-kit';
 import { deleteStudentFolder, putStudentFolder } from '@/features/platform/google-sync/google-api';
 import { fill } from '@/features/platform/google-sync/google-format';
 import { StudentActions } from './StudentActions';

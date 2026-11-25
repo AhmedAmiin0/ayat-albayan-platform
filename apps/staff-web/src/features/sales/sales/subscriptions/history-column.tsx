@@ -1,8 +1,7 @@
 import type { DataTableColumn } from '@/components/data-table/DataTable';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import type { SalesSubscriptionView } from '@ab/shared';
 
 const col = createColumnHelper<DataTableFeatures, SalesSubscriptionView>();

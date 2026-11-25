@@ -3,10 +3,7 @@ import { deviceTimeZone, resolveViewerTz } from '@ab/time';
 import { QueryClient } from '@tanstack/react-query';
 import { act, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { meQuery } from '@ab/web-kit/auth/me';
-import { signOut } from '@ab/web-kit/auth/sign-in';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { meQuery, signOut, apiFetch, useViewerTz } from '@ab/web-kit';
 
 interface Session {
   data: { session: { access_token: string } | null };

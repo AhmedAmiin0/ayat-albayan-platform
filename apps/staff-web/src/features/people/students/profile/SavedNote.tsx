@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Icon } from '@ab/web-kit';
 
 /** Inline success line (role=status) next to the control that caused it: ✓ + the same verb. */
 export function SavedNote({ children }: { children: ReactNode }) {

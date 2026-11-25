@@ -1,12 +1,10 @@
 import { counted } from '@ab/core';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, useClock, useViewerTz } from '@ab/web-kit';
 import { courseEnd, dayPicks } from '@/features/teaching/booking/draft/draft.days';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { dayAtText } from '@/features/teaching/booking/steps/slots/DayTimesList';
 import { PACKAGE_NOTE_CLASS, packageDaysNote } from '@/features/teaching/booking/steps/package/package-days';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 /** Null without a course or picks. */
 export function courseEndText(d: BookingDraft): string | null {

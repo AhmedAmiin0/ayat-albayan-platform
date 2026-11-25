@@ -1,11 +1,7 @@
 import type { ShortLinkPage } from '@ab/shared';
 import { DataTable } from '@/components/data-table/DataTable';
 import { TableBox } from '@/components/data-table/TableBox';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { EmptyState, ListSkeleton, Button, FormAlert, t } from '@ab/web-kit';
 import type { LinkSection } from '@/features/platform/short-links/shared/link-routes';
 import { linkColumns } from './link-columns';
 

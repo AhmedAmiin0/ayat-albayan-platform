@@ -1,5 +1,5 @@
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '@ab/web-kit';
 
 type Props = { totals: Readonly<Record<string, number>>; className?: string };
 

@@ -1,5 +1,4 @@
-import { WarnLine } from '@ab/web-kit/components/ui/surface/warn-line';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { WarnLine, t } from '@ab/web-kit';
 import { isOutside } from '@/features/teaching/booking/draft/draft';
 import type { OutsideNoteProps } from './OtherTime';
 

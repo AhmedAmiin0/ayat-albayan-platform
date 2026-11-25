@@ -2,7 +2,7 @@ import { INTEGRATION_KEYS } from '@ab/catalog';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { integrationItems } from './integrations.fixture';
 import { IntegrationsPanel } from './IntegrationsPanel';
 

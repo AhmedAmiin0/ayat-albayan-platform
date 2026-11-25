@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, type ReactNode } from 'react';
-import { meQuery, type Me } from '@ab/web-kit/auth/me';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { meQuery, type Me, t } from '@ab/web-kit';
 import { isStaffRole } from './staff-link';
 import { classroomKeys } from '@/features/teaching/classroom/api/classroom.keys';
 

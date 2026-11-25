@@ -2,7 +2,7 @@ import { teacherLessonPaths, teacherStudentHeadSchema } from '@ab/client-core';
 import type { TeacherStudentHead } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { lessonKeys } from '@/features/teaching/schedule';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 
 const readHead = async (url: string): Promise<TeacherStudentHead> =>
   teacherStudentHeadSchema.parse(await apiFetch(url));

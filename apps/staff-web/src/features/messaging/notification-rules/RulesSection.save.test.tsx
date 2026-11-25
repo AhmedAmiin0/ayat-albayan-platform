@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { findRow, overview, renderRules } from './rules-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -72,7 +72,7 @@ describe('«الإشعارات»: a row saves on its own', () => {
     renderRules({ apiFetch });
     const row = await findRow('lesson_reminder');
     fireEvent.change(within(row).getByLabelText(r.timing.minutesLabel), { target: { value: '90' } });
-    const { ApiError } = await import('@ab/web-kit/lib/http/api/api');
+    const { ApiError } = await import('@ab/web-kit');
     apiSend.mockRejectedValue(new ApiError(422, { message: 'invalid' }));
     fireEvent.click(screen.getByRole('button', { name: saveName }));
     expect(await screen.findByText(r.errors.invalid)).toBeTruthy();

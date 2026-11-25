@@ -1,12 +1,9 @@
 import type { PaymentMethod } from '@ab/catalog';
 import { formatAmount, walletStateStyle, type MyCommissionRow } from '@ab/money';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { Ltr, StatusChip, t, cn } from '@ab/web-kit';
 import { monthLabel } from '@/features/finance/payouts';
 import { currencySymbol } from '@/features/finance/subscriptions';
 import { formatDate } from '@/features/sales/leads';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
 
 const P = t.assistantPortal;
 const W = P.wallet;

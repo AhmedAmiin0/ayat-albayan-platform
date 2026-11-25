@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError, apiFetch } from '@ab/web-kit/lib/http/api';
+import { ApiError, apiFetch } from '@ab/web-kit';
 import { ChatUploadError, chatSendMime, sendFile, threadPdfPageQuery, uploadChatFile } from './api.files';
 
 const apiSend = vi.hoisted(() => vi.fn());

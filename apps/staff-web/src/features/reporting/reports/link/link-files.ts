@@ -1,5 +1,5 @@
 import { reportAttachmentViewSchema, signedDownloadSchema, signedUploadSchema } from '@ab/shared';
-import { ApiError, publicApiFetch, publicApiSend } from '@ab/web-kit/lib/http/api';
+import { ApiError, publicApiFetch, publicApiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import type { AttachmentCalls } from '@/features/reporting/reports/report-api';
 

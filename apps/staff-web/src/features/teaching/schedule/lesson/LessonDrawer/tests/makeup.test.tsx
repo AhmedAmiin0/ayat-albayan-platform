@@ -4,11 +4,11 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/rea
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { InvoiceView } from '@/features/teaching/booking/draft/contract';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { JOUD, lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonChip } from '@/features/teaching/schedule/lesson/LessonChip';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/LessonDrawer';
-import { configWrapper } from '@ab/web-kit/lib/settings/confirmation-testing';
+import { configWrapper } from '@ab/web-kit/testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({

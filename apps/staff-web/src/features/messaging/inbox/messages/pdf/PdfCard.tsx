@@ -1,7 +1,7 @@
 import { pdfBubbleName, pdfMetaLine, type MessageView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { type ReactNode, useRef, useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { threadPdfPageQuery } from '@/features/messaging/inbox/api/api.files';
 import { DownloadButton } from '@/features/messaging/inbox/messages/components/DownloadButton';
 import { useOpenPdf } from './use-open-pdf';

@@ -1,11 +1,7 @@
 import type { AcademySettings } from '@ab/settings';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { ConfirmSwitchDialog, Button, FormAlert, StatusChip, t } from '@ab/web-kit';
 import { useGateSwitch } from '@/features/messaging/messaging/gate-api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const h = t.communicationsHub;
 

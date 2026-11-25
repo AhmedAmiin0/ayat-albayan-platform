@@ -8,8 +8,7 @@ import type {
 } from '@ab/shared';
 import { reportErrorCode } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, publicApiFetch, publicApiSend, type SendMethod } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, publicApiFetch, publicApiSend, type SendMethod, t } from '@ab/web-kit';
 import { reportErrorText } from '@/features/reporting/reports/api';
 import type { ReportApi } from '@/features/reporting/reports/report-api';
 import { linkFileCalls } from './link-files';

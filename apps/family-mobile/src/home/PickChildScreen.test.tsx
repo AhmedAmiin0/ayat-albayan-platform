@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { PICKED_CHILD_KEY } from '@ab/client-core';
 import { router } from 'expo-router';
 import { pathKey, t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { student } from '@/portal/portal.fixtures';
 import { PickChildScreen } from './PickChildScreen';
 

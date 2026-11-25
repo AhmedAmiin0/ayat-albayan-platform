@@ -1,10 +1,9 @@
 import type { Gender } from '@ab/catalog';
 import { normalizePhone } from '@ab/core';
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { FormAlert, t } from '@ab/web-kit';
 import { leadByPhoneQuery, type InboxLead } from '@/features/messaging/inbox/api/api';
 import { studentQuery } from '@/features/people/students/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { guardianQuery, type BookSearch, type GuardianRow } from './api';
 import type { BookingWizardProps } from './BookingWizard';
 import { emptyDraft, type BookingDraft } from './draft/draft';

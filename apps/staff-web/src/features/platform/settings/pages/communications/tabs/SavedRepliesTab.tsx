@@ -1,13 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { Button, FormAlert, Icon, Skeleton, usePermissions, t } from '@ab/web-kit';
 import { savedRepliesQuery } from '@/features/messaging/inbox/saved-replies/lib/api';
 import { useReplyDialogs } from '@/features/messaging/inbox/saved-replies/hooks/use-reply-dialogs';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { SavedRepliesTable } from './SavedRepliesTable';
 
 const S = t.savedReplies;

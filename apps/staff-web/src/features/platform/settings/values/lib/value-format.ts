@@ -1,7 +1,6 @@
 import { shapeParts, valueTextBy, type ValueTextTable } from '@ab/client-core';
 import { SETTING_DEFAULTS, settingDef, type SettingKey } from '@ab/settings';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { tzCity, t } from '@ab/web-kit';
 import { countText, unitWord } from './value-units';
 
 const v = t.settingsValues;

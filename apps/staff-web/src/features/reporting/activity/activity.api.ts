@@ -1,6 +1,6 @@
 import type { ActivityPage } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ListUrlState } from '@/lib/list/list-url';
 import { activityKeys } from '@/features/reporting/keys';

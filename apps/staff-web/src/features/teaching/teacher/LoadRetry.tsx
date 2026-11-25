@@ -1,6 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, t } from '@ab/web-kit';
 
 export interface LoadRetryProps {
   /** Without it there is no retry (teacher_not_linked: only the admin can fix it). */

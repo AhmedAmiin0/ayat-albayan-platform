@@ -1,6 +1,5 @@
 import { isFamilyRequest, type LessonProposalView } from '@ab/schedule';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StatusChip, t } from '@ab/web-kit';
 
 export function RequesterTag({ proposal }: { proposal: LessonProposalView | null }) {
   const family = isFamilyRequest(proposal);

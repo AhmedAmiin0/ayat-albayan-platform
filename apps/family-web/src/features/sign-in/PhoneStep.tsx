@@ -1,7 +1,5 @@
 import type { PhoneState } from '@ab/client-core';
-import { PhoneNumberField } from '@ab/web-kit/auth/phone/PhoneNumberField';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { PhoneNumberField, Button, t } from '@ab/web-kit';
 import type { WhatsAppSignIn } from './use-whatsapp-sign-in';
 
 /** The line under the number while it is typed: the hint, or why it cannot be a number. */

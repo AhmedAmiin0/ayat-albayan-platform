@@ -1,4 +1,16 @@
-export { Drawer, type DrawerProps } from '@ab/web-kit/components/ui/overlay/Drawer';
+export {
+  Drawer,
+  type DrawerProps,
+  MoveReason,
+  bookableWindow,
+  byLocalDay,
+  currentWeekStart,
+  type Window,
+  zoneLabel,
+  dateLabel,
+  dayIn,
+  dayMonthLabel,
+} from '@ab/web-kit';
 export {
   approveProposal,
   cancelLesson,
@@ -44,16 +56,7 @@ export {
   type ConflictNoticeProps,
   conflictText,
 } from './reschedule/ConflictNotice';
-export { MoveReason } from '@ab/web-kit/schedule/MoveReason';
 export { reasonPart } from './reschedule/reschedule';
 export { SlotPicker, type SlotPickerProps } from './reschedule/SlotPicker';
-export {
-  bookableWindow,
-  byLocalDay,
-  currentWeekStart,
-  type Window,
-  zoneLabel,
-} from '@ab/web-kit/schedule/slots';
-export { dateLabel, dayIn, dayMonthLabel } from '@ab/web-kit/schedule/tz';
 export { RescheduleForm, type RescheduleFormProps } from './reschedule/RescheduleForm';
 export { TeacherConfirmedTag } from './lesson/TeacherConfirmedTag';

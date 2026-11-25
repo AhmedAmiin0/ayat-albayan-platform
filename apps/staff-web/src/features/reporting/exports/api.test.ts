@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
+import { ApiError } from '@ab/web-kit';
 import { downloadCsv, exportErrorCode, exportPath, filenameFrom } from './api';
 
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({

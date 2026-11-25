@@ -2,14 +2,11 @@ import type { PendingReportView } from '@ab/shared';
 import { counted } from '@ab/core';
 import { clockOf, zonedPartsIn } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, FormAlert, t, useClock } from '@ab/web-kit';
 import { dayMonthLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { pendingReportsQuery } from '@/features/reporting/reports/api';
 import { reportFormHref } from '@/features/reporting/reports/paths';
 import { ReportLink } from '@/features/reporting/reports/history/ReportLink';
-import { useClock } from '@ab/web-kit/lib/clock';
 
 export interface PendingReportsProps {
   tz: string;

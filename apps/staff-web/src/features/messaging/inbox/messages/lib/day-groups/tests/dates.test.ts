@@ -1,7 +1,6 @@
 import { intlLocale } from '@ab/core';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { t, locale } from '@ab/web-kit';
 import { dayLabel } from '@/features/messaging/inbox/messages/lib/day-groups/day-groups';
 
 // The date-fns facade swap (docs/34 §7) keeps the separators the chat log showed before.

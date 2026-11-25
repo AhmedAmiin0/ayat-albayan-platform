@@ -5,7 +5,7 @@ import { ABRAR } from '@/features/teaching/booking/wizard-fixture';
 import { stepReady, toBookingRequest, withPicks } from '@/features/teaching/booking/draft/draft';
 import { dateLabel } from '@/features/teaching/schedule';
 import { studentLabel } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { COURSE_SUB, COURSE_VIEW } from './course-fixture';
 import { courseDraft, courseFixedText, courseHint, courseTitle, subscriptionStartsText } from './course-draft';
 

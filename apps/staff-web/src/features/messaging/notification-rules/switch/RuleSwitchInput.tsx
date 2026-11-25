@@ -1,5 +1,5 @@
 import { SwitchTrack, switchInputClass } from '@/components/settings/fields/SwitchTrack';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 export const onOffWord = (on: boolean): string => (on ? t.settingsValues.on : t.settingsValues.off);
 

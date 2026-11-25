@@ -1,7 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { FormAlert, t, useViewerTz } from '@ab/web-kit';
 import { meetingsQuery } from './internal-api';
 import { MeetingRow } from '@/features/teaching/meetings/rows/MeetingRow';
 

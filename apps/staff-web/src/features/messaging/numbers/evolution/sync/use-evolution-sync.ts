@@ -1,7 +1,7 @@
 import type { EvolutionSyncView } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mutation';
 import { putEvolutionConfig, pushEvolutionSync, readEvolutionSync } from './evolution-sync-api';
 

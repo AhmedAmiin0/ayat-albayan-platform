@@ -1,14 +1,10 @@
 import type { UsedBeforeState } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { ListSkeleton, Button, FormAlert, Dialog, t } from '@ab/web-kit';
 import { Stepper } from '@/features/finance/pricing';
 import { usedBeforeStateQuery } from '@/features/finance/subscriptions/api';
 import { apiErrorText } from '@/features/finance/subscriptions/format';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useEditUsedBefore } from './use-edit-used-before';
 
 interface Props {

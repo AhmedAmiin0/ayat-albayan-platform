@@ -1,10 +1,8 @@
 import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { StatusChip, Drawer, t } from '@ab/web-kit';
 import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
-import { Drawer } from '@ab/web-kit/components/ui/overlay/Drawer';
 import { studentNames } from '@/features/teaching/schedule/lesson/lessons';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CorrectOutcome } from '@/features/teaching/schedule';
 import { SalesCorrectLesson } from './correct/SalesCorrectLesson';
 import { SalesConfirmLesson } from './SalesConfirmLesson';

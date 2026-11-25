@@ -1,8 +1,6 @@
 import type { LessonView } from '@ab/schedule';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Icon, t } from '@ab/web-kit';
 import { AlertRow } from './AlertRow';
 import { HomeCustomize } from './HomeCustomize';
 import { useHomePrefs } from './home-prefs';

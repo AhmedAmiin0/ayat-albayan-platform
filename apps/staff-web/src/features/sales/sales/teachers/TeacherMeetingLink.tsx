@@ -1,6 +1,5 @@
 import { safeHttpUrl } from '@ab/shared';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, t } from '@ab/web-kit';
 import { LinkActions } from '@/features/sales/sales/schedule/LinkActions';
 
 const L = t.studentLists;

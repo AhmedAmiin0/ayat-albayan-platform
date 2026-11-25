@@ -6,8 +6,7 @@ import {
   type LessonView,
 } from '@ab/schedule';
 import type { SessionGroup } from '@ab/client-core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { lessonStatusText, type LessonStatusChip } from '@ab/web-kit/lib/settings/lesson-status-text';
+import { t, lessonStatusText, type LessonStatusChip } from '@ab/web-kit';
 
 /** Which group a lesson is in at `now`: its room is open, still to open, or closed. */
 export function groupOf(

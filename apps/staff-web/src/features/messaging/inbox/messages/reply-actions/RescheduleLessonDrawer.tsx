@@ -3,8 +3,7 @@ import type { ReplyLesson } from '@ab/shared';
 import type { LessonView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { Drawer, RescheduleForm, studentNames } from '@/features/teaching/schedule';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { apiFetch, t } from '@ab/web-kit';
 
 /**
  * The reply's lesson as the admin's form needs it: GET /lessons?from&to (lessons.read) over the minute

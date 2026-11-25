@@ -1,7 +1,7 @@
 import type { PermissionAsk } from '@ab/client-core';
 import type { ActiveCallView } from '@ab/shared';
 import { formatPhone } from '@ab/core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { PermissionDialog } from '@/features/messaging/calls/header/PermissionDialog';
 import type { CallSessionApi } from '@/features/messaging/calls/state/use-call-session';
 import { CallBar } from './CallBar';

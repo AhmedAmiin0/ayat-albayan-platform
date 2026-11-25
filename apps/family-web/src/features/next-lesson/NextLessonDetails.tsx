@@ -2,16 +2,18 @@ import { cardRoom, type CardRoom } from '@ab/client-core';
 import type { PortalLesson, PortalStudent } from '@ab/shared';
 import type { RoomJoinResult } from '@ab/schedule';
 import { useState } from 'react';
-import { RoomOverlay } from '@ab/web-kit/portal/lessons/RoomOverlay';
-import { Dot } from '@ab/web-kit/components/ui/surface/pill';
-import { StatusMark } from '@ab/web-kit/components/ui/surface/status-mark';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
-import { LessonAction } from '@ab/web-kit/portal/lessons/LessonAction';
-import { LessonCountdown } from '@ab/web-kit/portal/lessons/LessonCountdown';
-import { LessonWhen } from '@ab/web-kit/portal/lessons/LessonWhen';
-import { CardRoomLine } from '@ab/web-kit/portal/lessons/room/CardRoomLine';
+import { RoomOverlay } from '@ab/web-kit/room';
+import {
+  Dot,
+  StatusMark,
+  t,
+  teacherLabel,
+  useLessonStatusText,
+  LessonAction,
+  LessonCountdown,
+  LessonWhen,
+  CardRoomLine,
+} from '@ab/web-kit';
 
 interface Props {
   lesson: PortalLesson;

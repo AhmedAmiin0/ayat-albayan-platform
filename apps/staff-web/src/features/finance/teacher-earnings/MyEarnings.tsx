@@ -1,11 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { Cartouche, FormAlert, PageHead, ListSkeleton, t } from '@ab/web-kit';
 import { apiErrorText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useTeacherPageOn } from '@/lib/settings/teacher-pages';
 import { balanceQuery, type Scope } from './api';
 import { EarningsCards } from './EarningsCards';

@@ -1,7 +1,7 @@
 import type { CourseCardLesson } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Drawer, LessonDrawer } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { cardLessonQuery } from './api';
 
 interface CardLessonDrawerProps {

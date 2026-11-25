@@ -5,7 +5,7 @@ import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { lessonKeys, type Window } from '@/features/teaching/schedule';
 import { moneyKeys } from '@/features/finance/keys';
 import { teacherKeys } from '@/features/people/keys';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 
 // Teacher self-service routes (docs/10 §5 rows 3–4; R-TCH-03, R-SCH-08).
 

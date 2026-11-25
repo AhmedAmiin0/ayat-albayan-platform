@@ -1,5 +1,5 @@
 import type { NumberView } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const a = t.numbers.actions;
 

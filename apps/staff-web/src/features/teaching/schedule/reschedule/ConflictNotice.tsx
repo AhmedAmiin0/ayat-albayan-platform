@@ -2,15 +2,18 @@ import { lessonWhenAt } from '@ab/shared';
 import type { Conflict } from '@ab/schedule';
 import { clockOf, sameClockAt } from '@ab/time';
 import { useId, useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { type Clock, useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import {
+  Button,
+  Field,
+  Input,
+  ButtonRow,
+  NuqtaGlyph,
+  tzCity,
+  t,
+  type Clock,
+  useClock,
+  useViewerTz,
+} from '@ab/web-kit';
 import { revealOnMount } from '@/lib/dom/mount-refs';
 
 const SHOWN = 5;

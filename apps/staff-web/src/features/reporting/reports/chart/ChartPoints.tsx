@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '@ab/web-kit';
 import { tooltipAnchor, type ChartPoint } from './chart';
 import { gradeWord, shortDate } from './chart-labels';
 

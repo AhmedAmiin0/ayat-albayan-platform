@@ -7,9 +7,8 @@ import {
 } from '@ab/shared';
 import { localizedName } from '@ab/core';
 import { localDateIn, RIYADH_TZ } from '@ab/time';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { hhmmText } from '@ab/web-kit/lib/clock-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { Clock } from '@ab/web-kit';
+import { hhmmText, t } from '@ab/web-kit';
 
 // Uses the shared roster text helpers, the same words as the phone.
 

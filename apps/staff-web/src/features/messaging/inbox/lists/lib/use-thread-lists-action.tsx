@@ -1,7 +1,6 @@
 import type { ChatListRef } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import { ThreadListsDialog } from '@/features/messaging/inbox/lists/components/ThreadListsDialog';
 import { useListsAccess } from './use-lists-access';
 

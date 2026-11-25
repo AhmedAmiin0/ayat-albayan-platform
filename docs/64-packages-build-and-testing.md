@@ -86,13 +86,19 @@ Defaults taken:
 
 ## PR 5 · Short kit public api (`lane/kits-solid`)
 
-**Scope.** Audit `packages/mobile-kit` (31 exports) and `packages/web-kit` (23 exports) first, then:
+**Audit.** Most kit entries existed so that a test could mock one kit module by path, not because app code needed them:
 
-- A short deliberate exports list: `.` plus only the entries that keep side-effect or native-heavy modules out of the app's start on Metro.
-- Build config out: the babel preset into `@ab/config`, or a small babel package if a dependency makes `@ab/config` wrong.
-- Test helpers out to `@ab/testing` when they depend only on external libraries; otherwise kept and exported only to tests.
-- Non-UI logic (api client, session, i18n bootstrap, query client) moves to client-core where the layers allow.
-- The apps' imports rewritten by a committed codemod (fixture tests first).
+- `@ab/mobile-kit` had 31 entries. App code (outside tests) used only the root, `room` (LiveKit's native WebRTC), `channel/media` (the image and document pickers), `chat-ui/audio` (expo-audio), and the babel, metro and jest-setup configs. The other 23 were mock targets (`jest.mock('@ab/mobile-kit/lib/http/api')`: 697 calls) or test helpers.
+- `@ab/web-kit` had 22 entries plus a `./*` wildcard and no root. The apps import 151 paths (840 `vi.mock` calls among them), and the kit imports itself through the wildcard in 421 files. Only 2 export names collide across the paths the apps use: `RecordingsPanel` (classroom and portal) and `portalApi` (the portal api and its test fixture).
+- Non-UI logic: the platform-free parts (the api client factory, `createAuthExit`, `shouldRetry`, the i18n bundle) already live in client-core and `@ab/i18n`. What is left in each kit binds a platform: AsyncStorage, `AppState`, `I18nManager`, expo-localization and expo-constants on the phone; `import.meta.env`, `localStorage` and the DOM on the web. Nothing more moves.
+
+**Scope.**
+
+- `@ab/mobile-kit` exports `.`, `./room`, `./channel/media`, `./chat-ui/audio`, `./testing` (the query render helpers, plus the types of the modules tests mock: `HttpApi`, `AccessToken`, `ReadWithin`) and `./jest`. `./jest` gives an app's jest config the kit's shared setup file and a `moduleNameMapper` that resolves `@ab/mobile-kit/<path>` to the kit's source. So a test still mocks one module by path, while app code reaches the kit only through its exports, which Metro and the type check enforce.
+- `@ab/web-kit` exports `.`, `./room` and `./testing`. `./room` holds every module that loads livekit-client (the classroom room and the portal panels that open it), so the root keeps LiveKit out of an app's start. `./testing` holds the fixtures and render helpers, plus the `HttpEnv` type. The one name the root would export twice is exported once more under its own name, `PortalRecordingsPanel`. The kit keeps a `./*` export, because its lint forbids `../` and its modules import each other as `@ab/web-kit/<path>`; the tests' `vi.mock` paths resolve through it too. App code may not use it: `webBlocks` bans every deep kit path in an app's `src`, and keeps the R8 ban on `apiFetch`/`apiSend` in components for imports from the root. The kit declares `"sideEffects": ["**/*.css"]` (its only bare imports are style sheets), so a production build bundles a kit module only where its exports are used, as when apps imported it by path: each app's start chunks stay as on develop. A test whose partial `vi.mock` of a kit module lacks a name that the root now loads spreads the original module (`importOriginal`), as the suite already does elsewhere.
+- Build config out: the Expo Babel preset and the Metro config move to `@ab/config` as `@ab/config/babel` and `@ab/config/metro` (ES modules). They resolve expo from the app's folder, so `@ab/config` gains no expo dependency and no babel package is needed. An app's `metro.config.mjs` exports the promised config, because Expo loads that file synchronously and awaits its default export.
+- Test helpers: the dependency-free presence realtime fake moves to `@ab/testing/presence-realtime`. The query render helpers stay in the kit's `./testing`, because they seed the kit's own public-config query. `jest.shared.cjs` stays, because it mocks the kit's own modules.
+- The apps' imports are rewritten by `pnpm imports:kit-entries` (`tools/scripts/imports/kit-entries`, fixture tests first). It maps each path that is no longer public to its entry and merges the statements that land on one entry. A type namespace of a mocked module becomes its named namespace in `./testing`. Mock paths stay as they are, and a value namespace, a default import or an `import()` of a moved path is listed for a person to fix.
 
 **Proof (CI).** Every app import still resolves (typecheck, the mobile bundles, the web build); the mobile startup imports no module the old root entry kept out; test counts unchanged apart from the PR's own; e2e.
 

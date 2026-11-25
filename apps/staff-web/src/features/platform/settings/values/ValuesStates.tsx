@@ -1,7 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, EmptyState, NuqtaGlyph, t } from '@ab/web-kit';
 
 const v = t.settingsValues;
 

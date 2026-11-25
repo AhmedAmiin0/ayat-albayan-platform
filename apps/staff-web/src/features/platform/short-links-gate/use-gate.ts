@@ -4,7 +4,7 @@ import {
 import type { AccountProfile, ShortLinkGateView, ShortLinkOpenResult } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { signOut } from '@ab/web-kit/auth/sign-in';
+import { signOut } from '@ab/web-kit';
 import { profileQuery } from '@/features/people/account';
 import { type Me, meQuery } from '@/features/people/auth';
 import { gateSends, gateViewQuery } from './gate-api';

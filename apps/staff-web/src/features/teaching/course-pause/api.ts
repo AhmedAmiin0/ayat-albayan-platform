@@ -16,7 +16,7 @@ import type {
   CoursePauseState,
 } from '@ab/shared';
 import { keepPreviousData, queryOptions, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 
 // Paths and the key come from @ab/client-core, the same as mobile.
 

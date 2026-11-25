@@ -1,10 +1,7 @@
 import { callClock, callPhaseText, callStatusText, type CallPhase, type CallSession } from '@ab/client-core';
 import type { ActiveCallView } from '@ab/shared';
 import { useId, useRef, useSyncExternalStore } from 'react';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { useFocusTrap } from '@ab/web-kit/components/ui/overlay/use-focus-trap';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Avatar, Icon, useFocusTrap, t } from '@ab/web-kit';
 import { RoundButton } from './RoundButton';
 
 export interface CallScreenProps {

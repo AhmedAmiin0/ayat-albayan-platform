@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button, t } from '@ab/web-kit';
 import { currentMonth } from '@/features/finance/payouts/api';
 import { MonthSelect } from '@/features/finance/payouts/shared/MonthSelect';
 import { dayMonthLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { downloadCsv, exportErrorCode, type ExportKind, type ExportRequest } from './api';
 
 export interface ExportsPanelProps {

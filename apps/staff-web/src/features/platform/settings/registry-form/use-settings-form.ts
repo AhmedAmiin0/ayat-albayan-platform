@@ -1,7 +1,7 @@
 import { SETTING_FIELD_OF, type AcademySettings, type SettingKey } from '@ab/settings';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 import { updateSettings } from '@/lib/settings/settings-api';
 import { isDefault, isDirty, resetPatch } from './settings-dirty';

@@ -1,9 +1,5 @@
 import { GENDERS, type Gender } from '@ab/catalog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Input, RadioChips, Select, t } from '@ab/web-kit';
 
 // Both optional; the age is a whole number from 3 to 99.
 

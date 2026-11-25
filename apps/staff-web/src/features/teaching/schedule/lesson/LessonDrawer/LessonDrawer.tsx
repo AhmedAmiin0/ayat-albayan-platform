@@ -1,15 +1,13 @@
 import type { LessonView } from '@ab/schedule';
 import { useRef, useState } from 'react';
-import { useFocusOnChange } from '@ab/web-kit/components/ui/overlay/use-focus-on-change';
+import { useFocusOnChange, t, Drawer } from '@ab/web-kit';
 import { AdminCourseChange } from '@/features/teaching/booking/course-change/AdminCourseChange';
 import { ClassroomActions } from '@/features/teaching/classroom/join/ClassroomActions';
 import { FeedbackRequestButton } from '@/features/teaching/feedback/FeedbackRequestButton';
 import { LessonReportLinks } from '@/features/reporting/reports/history/LessonReportLinks';
 import { LessonFilesSection } from '@/features/teaching/lesson-files';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CancelForm } from '@/features/teaching/schedule/reschedule/CancelForm';
 import { CorrectOutcome } from '@/features/teaching/schedule/correct/CorrectOutcome';
-import { Drawer } from '@ab/web-kit/components/ui/overlay/Drawer';
 import { EditTimeForm } from '@/features/teaching/schedule/edit-time/EditTimeForm';
 import { LessonActions } from '@/features/teaching/schedule/lesson/LessonActions';
 import { LessonDetails } from '@/features/teaching/schedule/lesson/LessonDetails';

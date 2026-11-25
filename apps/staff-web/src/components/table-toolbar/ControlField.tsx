@@ -1,6 +1,5 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, Select } from '@ab/web-kit';
 import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
-import { Select } from '@ab/web-kit/components/ui/form/select';
 import type { ColumnFilterControl } from './types';
 
 export const filterByLabel = (label: string) => t.table.filterBy.replace('{col}', label);

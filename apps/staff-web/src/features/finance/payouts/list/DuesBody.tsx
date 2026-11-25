@@ -2,8 +2,7 @@ import type { TeacherEarningsSummaryView } from '@ab/money';
 import { Link } from '@tanstack/react-router';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { t, teacherLabel } from '@ab/web-kit';
 
 const row = 'flex flex-wrap items-center gap-x-5 gap-y-1 border-b border-rule py-2.5 text-sm';
 

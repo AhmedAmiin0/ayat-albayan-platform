@@ -1,7 +1,5 @@
 import { FX_ATTRIBUTION_URL } from '@ab/money';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { NuqtaGlyph, t, cn } from '@ab/web-kit';
 import type { FxRate } from '@/features/finance/pricing/api';
 import { fxLine } from '@/features/finance/pricing/format';
 

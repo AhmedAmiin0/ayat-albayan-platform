@@ -1,6 +1,6 @@
 import type { SalesCancel } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@ab/web-kit/lib/http/api';
+import { apiSend } from '@ab/web-kit';
 import { salesKeys } from '@/features/sales/keys';
 
 /**

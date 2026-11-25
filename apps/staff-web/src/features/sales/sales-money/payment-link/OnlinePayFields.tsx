@@ -1,8 +1,6 @@
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Field, Input, t } from '@ab/web-kit';
 import { currencySymbol } from '@/features/finance/subscriptions';
 import { fillText } from '@/features/sales/payment-links';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LinkQuote } from './LinkQuote';
 import type { LinkPay } from './use-link-pay';
 

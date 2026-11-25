@@ -1,11 +1,8 @@
 import type { AttendanceTableRow } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { Icon, buttonVariants, LessonReportView, t } from '@ab/web-kit';
 import { LessonRecording, recordedLessonIdsQuery } from '@/features/people/students';
-import { LessonReportView } from '@ab/web-kit/report';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { revealOnMount } from '@/lib/dom/mount-refs';
 
 // A secondary button; Safari still draws the disclosure triangle unless it is hidden.

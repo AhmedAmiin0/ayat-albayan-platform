@@ -1,10 +1,8 @@
 import { RATING_TEMPLATE, type TemplateView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { meQuery } from '@ab/web-kit/auth/me';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { meQuery, usePermissions, t } from '@ab/web-kit';
 import { FEEDBACK_TEMPLATE } from '@/features/teaching/feedback/types';
 import { templatesQuery } from '@/features/messaging/templates/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { forAudience } from './template-params';
 

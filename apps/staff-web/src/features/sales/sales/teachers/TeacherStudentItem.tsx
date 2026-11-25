@@ -1,10 +1,6 @@
 import type { SalesTeacherStudent } from '@ab/shared';
 import { studentStatusStyle } from '@ab/money';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { Ltr, StatusChip, useClock, t, useViewerTz } from '@ab/web-kit';
 import { viewerWhen } from './teacher-view';
 
 /** One student of the teacher: name, code (LTR island), program, status (trial included), next lesson. */

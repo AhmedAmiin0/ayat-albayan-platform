@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { TeacherNav } from '@/features/teaching/teacher/TeacherNav';
 import { teacherPagesWrapper } from '@/lib/settings/teacher-pages-testing';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { SalesNav } from '@/features/sales/sales/SalesNav/SalesNav';
 
 vi.mock('@tanstack/react-router', () => ({

@@ -1,6 +1,5 @@
 import { formatAmount } from '@ab/money';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Ltr, cn } from '@ab/web-kit';
 import { currencySymbol } from '@/features/finance/subscriptions/format';
 
 /** The number is an LTR island with the symbol after it (docs/07 §14.4). */

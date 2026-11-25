@@ -1,7 +1,6 @@
 import { EVOLUTION_EVENTS, type EvolutionEvent } from '@ab/shared';
 import { useId } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import { defaultEvents } from './config-draft';
 
 const w = t.numbers.evolution.config.webhook;

@@ -1,5 +1,5 @@
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** On an open monthly payout, the part already paid per lesson (docs/11 §10). */
 export function LedgerPaid({ amount }: { amount: number | undefined }) {

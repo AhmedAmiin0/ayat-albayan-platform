@@ -58,7 +58,7 @@ apps/staff-web/src/features/people/roles/RoleDialog/
 - Any other arrow is one expression with no `?:`, `&&`, `||` or `??` and no nested function. It is a call (object and spread arguments allowed), `void call(…)`, or an accessor such as `(c) => c.id`.
 - JSX contains no `filter`, `sort`, `toSorted`, `reduce`, `find`, `some`, `every` or `flatMap` calls. Those derivations belong in the hook.
 
-**A component with no hook** (no hook besides `useTheme`) gets no `use-name.ts`. The reason is the React Compiler's default `infer` mode, which this repo uses: `packages/config/vite.js` `reactCompilerPreset()` and `packages/mobile-kit/babel.cjs` pass no options. In that mode, a `use*` function that calls no hook and creates no JSX is not compiled. This follows the compiler's `getComponentOrHookLike`; PR0 checks it with a fixture.
+**A component with no hook** (no hook besides `useTheme`) gets no `use-name.ts`. The reason is the React Compiler's default `infer` mode, which this repo uses: `packages/config/vite.js` `reactCompilerPreset()` and `packages/config/expo/babel.js` pass no options. In that mode, a `use*` function that calls no hook and creates no JSX is not compiled. This follows the compiler's `getComponentOrHookLike`; PR0 checks it with a fixture.
 - Value-only `const`s (no function literal) stay in `Name.tsx`, where the compiler memoizes them.
 - Any function literal moves to a pure function in `<kebab>.helpers.ts`, unit-tested without `renderHook`.
 

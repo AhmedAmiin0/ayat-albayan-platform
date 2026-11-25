@@ -1,11 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { paneScroll } from '@ab/web-kit/components/ui/layout/rail';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { EmptyState, Pager, ListSkeleton, paneScroll, t, cn } from '@ab/web-kit';
 import { useThreads } from '@/features/messaging/inbox/api/list-ticks';
 import { useInboxLive } from '@/features/messaging/inbox/api/live';
 import { InboxListHead } from '@/features/messaging/inbox/threads/list/InboxListHead';

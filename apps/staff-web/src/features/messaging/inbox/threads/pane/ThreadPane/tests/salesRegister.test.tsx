@@ -1,8 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ABRAR, next, pickSlot, pickTeacher, SLOT } from '@/features/teaching/booking/wizard-fixture';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { detail, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';

@@ -4,7 +4,7 @@ import { instantDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
 import { chatImage, expiredImage, familyOf, KID, kid, MSG, openSub, salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from '@/sales-subscribe/screens/SalesTransferScreen/SalesTransferScreen';
-import type * as HttpApi from '@ab/mobile-kit/lib/http/api';
+import type { HttpApi } from '@ab/mobile-kit/testing';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

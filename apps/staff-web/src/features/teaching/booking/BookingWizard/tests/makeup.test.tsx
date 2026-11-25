@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, locale } from '@ab/web-kit';
 import { mediaCardLabel } from '@/features/teaching/booking/invoice/ChatMediaPicker';
 import type { BookSearch } from '@/features/teaching/booking/api';
 import { BookingPage } from '@/features/teaching/booking/BookingPage';
@@ -18,7 +18,6 @@ import {
   SLOT,
   STUDENT_ID,
 } from '@/features/teaching/booking/wizard-fixture';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;

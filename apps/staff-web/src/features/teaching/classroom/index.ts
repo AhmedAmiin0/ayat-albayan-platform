@@ -12,23 +12,10 @@ export {
   removeAssistant,
   sendJoinLink,
   studentAssistantsQuery,
-} from '@ab/web-kit/classroom/api/api';
-export {
-  issueStudentLink,
-  joinByStudentLink,
-  openRoom,
-  startInstant,
-  studentLinkView,
-} from './api/meetings-api';
-export { ClassroomActions } from './join/ClassroomActions';
-export { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
-export { CopyLinkButton, copyStudentLink } from './join/CopyLinkButton';
-export { GuestJoinPage } from './join/GuestJoinPage';
-export { EnterButton, type JoinableLesson, JoinButton } from './join/JoinButton';
-export { StaffJoinButton } from './join/StaffJoinButton';
-export { RecordingOffAlert, RecordingsPanel } from '@ab/web-kit/classroom/recordings/RecordingsPanel';
-export { RECORDING_TONE, recordingTime } from '@ab/web-kit/classroom/recordings/recording-format';
-export {
+  RecordingOffAlert,
+  RecordingsPanel,
+  RECORDING_TONE,
+  recordingTime,
   type DataPacketIn,
   type DataSendOptions,
   EMPTY_SNAPSHOT,
@@ -39,14 +26,25 @@ export {
   type RoomSnapshot,
   type RoomStatus,
   type TileView,
-} from '@ab/web-kit/classroom/room/components/room-types';
-export {
   classroomErrorKey,
   classroomErrorText,
   mediaErrorText,
   opensAtOf,
-} from '@ab/web-kit/classroom/room/livekit/errors';
+  joinHint,
+} from '@ab/web-kit';
+export {
+  issueStudentLink,
+  joinByStudentLink,
+  openRoom,
+  startInstant,
+  studentLinkView,
+} from './api/meetings-api';
+export { ClassroomActions } from './join/ClassroomActions';
+export { ClassroomRoom } from '@ab/web-kit/room';
+export { CopyLinkButton, copyStudentLink } from './join/CopyLinkButton';
+export { GuestJoinPage } from './join/GuestJoinPage';
+export { EnterButton, type JoinableLesson, JoinButton } from './join/JoinButton';
+export { StaffJoinButton } from './join/StaffJoinButton';
 export { AssistantLessonRow } from './sessions/AssistantLessonRow';
 export { AssistantsManager } from './sessions/AssistantsManager';
 export { StudentJoinLink } from './student-link/StudentJoinLink';
-export { joinHint } from '@ab/web-kit/classroom/room/livekit/window-hint';

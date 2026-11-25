@@ -1,6 +1,6 @@
 import type { NotificationsOverview } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 import { catalogueKeys } from '@/features/messaging/keys';
 
 /**

@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Cartouche, PageHead, t } from '@ab/web-kit';
 import type { BookSearch } from './api';
 import { LeadBooking, StudentBooking } from './booking-entries';
 import { emptyDraft, type BookingDraft } from './draft/draft';

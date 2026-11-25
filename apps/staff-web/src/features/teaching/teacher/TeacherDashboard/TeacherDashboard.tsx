@@ -2,16 +2,18 @@ import { zonedPartsIn } from '@ab/time';
 import type { TeacherMe } from '@ab/schedule';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import {
+  Cartouche,
+  PageHead,
+  Toast,
+  ListSkeleton,
+  t,
+  useNow,
+  usePlatformClassroom,
+} from '@ab/web-kit';
 import { errorCode } from '@/features/teaching/schedule';
 import { InternalMeetingButton } from '@/features/teaching/meetings/internal/InternalMeetingButton';
 import { InternalMeetingsList } from '@/features/teaching/meetings/internal/InternalMeetingsList';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { usePlatformClassroom } from '@ab/web-kit/lib/settings/public-config';
 import { useTeacherPageOn } from '@/lib/settings/teacher-pages';
 import { myLessonsQuery, teacherMeQuery } from '@/features/teaching/teacher/api';
 import { DashboardPanel } from '@/features/teaching/teacher/DashboardPanel';

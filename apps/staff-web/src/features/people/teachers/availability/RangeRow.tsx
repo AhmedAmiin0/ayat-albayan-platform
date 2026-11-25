@@ -1,12 +1,5 @@
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, IconButton, Select, t, useClock, ClockOptions, clockDir, cn } from '@ab/web-kit';
 import { timeOptions, type Range } from './grid';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { ClockOptions } from '@ab/web-kit/lib/clock-options';
-import { clockDir } from '@ab/web-kit/lib/clock-text';
-import { cn } from '@ab/web-kit/lib/utils';
 
 type Props = {
   dayName: string;

@@ -1,9 +1,5 @@
 import { TEACHER_STATUSES } from '@ab/catalog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { TimeZoneSelect } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Input, Select, TimeZoneSelect, t } from '@ab/web-kit';
 import { RATE_FIELDS, type SetField, type TeacherForm } from './teacher-form';
 
 type Props = { form: TeacherForm; set: SetField };

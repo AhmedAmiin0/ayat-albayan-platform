@@ -1,8 +1,5 @@
 import type { AcademySettings } from '@ab/settings';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, StatusChip, t } from '@ab/web-kit';
 import { useSettingSwitch } from '@/lib/settings/use-setting-switch';
 
 const s = t.sales.assign;

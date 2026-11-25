@@ -1,9 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { railXl } from '@ab/web-kit/components/ui/layout/rail';
-import { cn } from '@ab/web-kit/lib/utils';
-import { Toast, type ToastProps } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { railXl, cn, Toast, type ToastProps, t } from '@ab/web-kit';
 import { leadByPhoneQuery } from '@/features/messaging/inbox/api/api';
 import { FollowUpLine } from '@/features/messaging/inbox/lead/FollowUpLine';
 import { LeadDataActions } from '@/features/messaging/inbox/lead/LeadDataActions';

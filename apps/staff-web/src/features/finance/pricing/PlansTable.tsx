@@ -1,7 +1,7 @@
 import type { Quote } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable, type DataTableFeatures } from '@/components/data-table/DataTable';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { durationLabel, frequencyOf, packageCopy, sessionsOf } from './format';
 import { Money } from './Money';
 

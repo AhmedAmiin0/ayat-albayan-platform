@@ -3,7 +3,7 @@ import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { realtime } from '@ab/mobile-kit/testing/presence-realtime';
+import { realtime } from '@ab/testing/presence-realtime';
 import { usePresenceSelf } from './use-presence-self';
 
 const mockApiFetch = jest.fn();
@@ -12,7 +12,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('@ab/mobile-kit/lib/http/supabase', () =>
-  jest.requireActual('@ab/mobile-kit/testing/presence-realtime').realtime.module(),
+  jest.requireActual('@ab/testing/presence-realtime').realtime.module(),
 );
 
 let appState: ((s: AppStateStatus) => void)[] = [];

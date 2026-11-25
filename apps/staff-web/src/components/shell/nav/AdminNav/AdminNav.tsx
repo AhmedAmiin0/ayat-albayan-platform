@@ -1,8 +1,6 @@
 import type { Permission } from '@ab/catalog';
 import { Link } from '@tanstack/react-router';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon, t, cn } from '@ab/web-kit';
 import { MONEY_GROUP, visibleGroups, type NavKey } from '@/components/shell/nav/admin-nav-items';
 
 export { visibleGroups, type NavKey } from '@/components/shell/nav/admin-nav-items';

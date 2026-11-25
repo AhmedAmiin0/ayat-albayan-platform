@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import type { OtherTimeProps } from './OtherTime.types';
 import { OtherTimeList } from '@/features/teaching/booking/steps/slots/other-time/OtherTimeList';
 

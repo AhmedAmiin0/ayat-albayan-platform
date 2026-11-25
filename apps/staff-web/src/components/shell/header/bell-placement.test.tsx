@@ -6,7 +6,7 @@ import {
   READ_ITEM,
   renderWithClient,
 } from '@/features/messaging/notifications/notifications-test-kit';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { MenuBar } from './MenuBar';
 import { WideHeader } from '@/components/shell/layout/TopBarLayout';
 

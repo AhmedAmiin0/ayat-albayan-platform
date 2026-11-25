@@ -1,12 +1,7 @@
 import { isSelfChild } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { counted } from '@ab/core';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { Pill } from '@ab/web-kit/components/ui/surface/pill';
-import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Avatar, Button, Card, Pill, SectionHeader, t } from '@ab/web-kit';
 import { NextLessonDetails, useNextLesson, type NextLessonRead } from '@/features/next-lesson';
 import { ReadState } from './ReadState';
 import { SummaryFigures } from './SummaryFigures';

@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { LessonReportLinks } from '@/features/reporting/reports/history/LessonReportLinks/LessonReportLinks';
 import { PendingReports } from '@/features/reporting/reports/history/PendingReports';
 

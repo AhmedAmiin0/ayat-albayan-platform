@@ -1,6 +1,5 @@
 import { useId } from 'react';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock, t } from '@ab/web-kit';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { leadSummary } from './lead-summary';
 

@@ -10,7 +10,7 @@ import type {
   TeacherCalendarView,
 } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { googleKeys } from '@/features/platform/keys';
 
 // The Google sync admin API (docs/24 §3): every route needs a signed-in admin.

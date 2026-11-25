@@ -2,8 +2,7 @@ import type { MeetingCreateResult } from '@ab/schedule';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { meQuery, type Me } from '@ab/web-kit/auth/me';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { meQuery, type Me, t } from '@ab/web-kit';
 import { ScheduledMeetingDialog } from './ScheduledMeetingDialog';
 
 const api = vi.hoisted(() => ({ fetch: vi.fn(), send: vi.fn() }));

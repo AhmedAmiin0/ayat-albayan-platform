@@ -1,7 +1,6 @@
 import { CURRENCY_ISOS } from '@ab/money';
 import { SETTING_FIELD_OF, settingDef } from '@ab/settings';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { TimeZoneSelect } from '@ab/web-kit/components/ui/form/time-zone-select';
+import { Select, TimeZoneSelect } from '@ab/web-kit';
 import { str } from '@/features/platform/settings/registry-form/settings-form';
 import { valueText } from '@/features/platform/settings/values/lib/value-format';
 import { useValues } from '@/features/platform/settings/values/values-context';

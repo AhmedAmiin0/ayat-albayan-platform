@@ -1,7 +1,6 @@
 import { countByKind, splitByStatus, type SalesTeacherView, type StudentListKind } from '@ab/shared';
 import { useState } from 'react';
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { SegmentedControl, t } from '@ab/web-kit';
 import { TeacherStudentItem } from './TeacherStudentItem';
 
 const L = t.studentLists;

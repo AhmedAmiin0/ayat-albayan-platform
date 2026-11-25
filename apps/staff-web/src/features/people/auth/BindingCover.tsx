@@ -1,7 +1,5 @@
 import { PROGRAMS } from '@ab/catalog';
-import { Mark } from '@ab/web-kit/components/ui/display/mark';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Mark, t, cn } from '@ab/web-kit';
 
 // The binding (docs/07 §1, §5): Mamluk tooled leather, gold fillets, four corner pieces and a
 // central mandorla holding the mark. Login screen ONLY. Decorative, so aria-hidden. The corner

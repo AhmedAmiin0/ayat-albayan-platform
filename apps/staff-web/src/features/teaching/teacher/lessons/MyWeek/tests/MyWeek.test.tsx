@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { MyWeek } from '@/features/teaching/teacher/lessons/MyWeek/MyWeek';
 
 const apiFetch = vi.hoisted(() => vi.fn());

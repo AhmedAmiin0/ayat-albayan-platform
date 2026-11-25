@@ -1,13 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Dialog, SegmentedControl, t, FormAlert } from '@ab/web-kit';
 import { studentQuery } from '@/features/people/students/api';
 import type { CreateStudentValues } from '@/features/people/students/create/create-student';
 import { DuplicateCompare } from './DuplicateCompare';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { SiblingsStrip } from './SiblingsStrip';
 import type { StudentRef } from '@ab/shared';
 

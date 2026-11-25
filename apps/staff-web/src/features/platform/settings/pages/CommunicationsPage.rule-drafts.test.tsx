@@ -1,7 +1,7 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { findRow, overview } from '@/features/messaging/notification-rules/rules-test-kit';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { renderCommunications } from './communications-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());

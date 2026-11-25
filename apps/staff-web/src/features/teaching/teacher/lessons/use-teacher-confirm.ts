@@ -1,7 +1,7 @@
 import { confirmAnswerSchema, teacherLessonPaths } from '@ab/client-core';
 import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
-import { apiSend } from '@ab/web-kit/lib/http/api';
+import { apiSend } from '@ab/web-kit';
 import {
   holdMyLessons,
   patchMyLesson,

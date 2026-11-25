@@ -1,9 +1,5 @@
 import { useState, type SubmitEvent } from 'react';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, FormAlert, Input, Ltr, t } from '@ab/web-kit';
 import { emailErrors } from '@/features/people/account/account-validation';
 import { AccountSection } from './AccountSection';
 import { changeEmail } from '@/features/people/account/api';

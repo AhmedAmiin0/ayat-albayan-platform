@@ -1,19 +1,22 @@
 import type { LessonView } from '@ab/schedule';
 import { clockOf } from '@ab/time';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import {
+  Avatar,
+  ListSkeleton,
+  StatusChip,
+  useNow,
+  t,
+  useJoinWindow,
+  cn,
+  teacherLabel,
+  useClock,
+  clockDir,
+  viewerZone,
+  useLessonStatusText,
+} from '@ab/web-kit';
 import { StaffJoinButton } from '@/features/teaching/classroom/join/StaffJoinButton';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useJoinWindow } from '@ab/web-kit/lib/settings/public-config';
-import { cn } from '@ab/web-kit/lib/utils';
 import { sectionTitle } from '@/features/reporting/dashboard/shared/Bar';
 import { isLiveNow, todaysLessons } from './today';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { clockDir, viewerZone } from '@ab/web-kit/lib/clock-text';
-import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 /**
  * Folds by the card's own width (container query), not the screen's: the card is a

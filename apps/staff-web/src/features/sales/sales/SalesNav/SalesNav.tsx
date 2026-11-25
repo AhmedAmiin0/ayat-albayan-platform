@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/catalog';
 import { SectionLinks, type SectionLink } from '@/components/shell/nav/SectionLinks';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // Each own-data page has its scope key; the assistant side (docs/16) has self.sales_academy.
 export const SALES_NAV_ITEMS = [

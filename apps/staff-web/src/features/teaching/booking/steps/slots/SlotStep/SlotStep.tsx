@@ -1,16 +1,12 @@
 import { lessonWhenAt } from '@ab/shared';
 import { sameClockAt } from '@ab/time';
-import { RequiredMark } from '@ab/web-kit/components/ui/form/label';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
+import { RequiredMark, tzCity, t, type Clock, useClock, useViewerTz } from '@ab/web-kit';
 import { SlotPicker } from '@/features/teaching/schedule/reschedule/SlotPicker';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { pickPatch, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { SeriesCheck } from '@/features/teaching/booking/steps/review/SeriesCheck';
 import { pickHint, SlotDays } from '@/features/teaching/booking/steps/slots/SlotDays';
 import { LessonRows } from '@/features/teaching/booking/steps/slots/lesson-rows';
 import { OtherTime, OutsideNote } from '@/features/teaching/booking/steps/slots/other-time';
-import { type Clock, useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface SlotStepProps {
   draft: BookingDraft;

@@ -1,5 +1,5 @@
 import type { ForwardResponse, ThreadForward } from '@ab/shared';
-import { apiSend } from '@ab/web-kit/lib/http/api';
+import { apiSend } from '@ab/web-kit';
 
 /**
  * POST /threads/forward: one message copied to 1–5 other chats. The answer is per

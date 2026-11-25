@@ -1,6 +1,5 @@
 import { seatState } from '@ab/client-core';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Dialog, t } from '@ab/web-kit';
 import { ChannelSeatCell } from './ChannelSeatCell';
 import { SeatChatDialog } from './SeatChatDialog';
 import { useChannelSeat } from './use-channel-seat';

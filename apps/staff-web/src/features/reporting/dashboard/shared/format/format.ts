@@ -1,8 +1,7 @@
 import { formatAmount } from '@ab/money';
 import { clockOf, dateText } from '@ab/time';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import type { Clock } from '@ab/web-kit/lib/clock';
+import { t, locale } from '@ab/web-kit';
+import type { Clock } from '@ab/web-kit';
 
 // Display text for the dashboard: Western digits everywhere (docs/07 §2), money rounded to whole
 // units (the table and the CSV keep the exact amounts), times in the viewer's zone (docs/34).

@@ -1,8 +1,6 @@
 import type { SalesChatReceipt } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { FormAlert, t, cn } from '@ab/web-kit';
 import { chatReceiptsQuery, receiptFromChat, type Bind } from '@/features/sales/sales-money/api';
 import { ChatReceiptThumb } from './ChatReceiptThumb';
 import { salesErrorText } from '@/features/sales/sales-money/errors';

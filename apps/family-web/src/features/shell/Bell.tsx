@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { useAlerts } from '@/features/alerts';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, t } from '@ab/web-kit';
 
 /** The badge uses the solid danger fill with its own foreground for AA in both themes. */
 export function Bell() {

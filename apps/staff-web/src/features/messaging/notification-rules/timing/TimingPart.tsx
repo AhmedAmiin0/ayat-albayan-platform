@@ -1,8 +1,7 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { VALUE_GROUP_IDS, VALUE_GROUPS } from '@ab/settings';
 import { Link } from '@tanstack/react-router';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useClock, t } from '@ab/web-kit';
 import { fillText, timingText } from '@/features/messaging/notification-rules/rule-text';
 import type { RuleRowState } from '@/features/messaging/notification-rules/table/use-rule-row';
 import { TimingEditor } from './TimingEditor';

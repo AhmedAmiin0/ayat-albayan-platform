@@ -1,8 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { Button, NuqtaGlyph, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { completeTask, MONEY_KEY, openTasksQuery } from '@/features/finance/subscriptions/api';
 import { taskText } from '@/features/finance/subscriptions/format';
 

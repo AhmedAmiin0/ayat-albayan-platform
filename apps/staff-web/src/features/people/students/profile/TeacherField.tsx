@@ -1,8 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { Field, Select, t, teacherLabel } from '@ab/web-kit';
 import { teacherOptionsQuery } from '@/features/people/students/api';
 
 export function TeacherField({ value, onChange }: { value: string; onChange: (id: string) => void }) {

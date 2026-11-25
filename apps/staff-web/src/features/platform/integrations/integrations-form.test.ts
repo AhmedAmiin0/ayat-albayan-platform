@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { integrationItems } from './integrations.fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { changesOf, draftOf, enumEmptyLabel, integrationsMatch, invalidKeys } from './integrations-form';
 
 describe('integrations form logic', () => {

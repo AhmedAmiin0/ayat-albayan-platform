@@ -1,7 +1,4 @@
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Icon, type IconName } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { buttonVariants, Icon, type IconName, t, cn } from '@ab/web-kit';
 import { HUB_DESTINATIONS, HUB_PATHS, type HubDestination } from './hub-paths';
 import { HubLink } from './HubLink';
 import { HubStatus } from './HubStatus';

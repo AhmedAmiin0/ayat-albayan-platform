@@ -1,6 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { PickColumn } from './use-student-pick';
 import type { StudentListItem } from '@ab/shared';
 

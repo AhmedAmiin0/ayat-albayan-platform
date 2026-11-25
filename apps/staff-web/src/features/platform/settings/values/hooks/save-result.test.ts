@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
+import { ApiError } from '@ab/web-kit';
 import { SETTINGS } from '@/test/settings-fixture';
 import { isSaveOutcome, serverMessage, wasInvalid, wasMoved } from './save-result';
 

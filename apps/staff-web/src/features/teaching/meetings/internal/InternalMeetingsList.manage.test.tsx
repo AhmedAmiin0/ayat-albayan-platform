@@ -1,8 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { meQuery, type Me } from '@ab/web-kit/auth/me';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { meQuery, type Me, t } from '@ab/web-kit';
 import { InternalMeetingsList } from './InternalMeetingsList';
 import { meetingRow } from '@/features/teaching/meetings/meeting-fixture';
 

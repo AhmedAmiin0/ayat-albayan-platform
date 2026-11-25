@@ -1,8 +1,7 @@
 import type { GradePoint } from '@ab/shared';
 import { GRADES } from '@ab/catalog';
 import { useState } from 'react';
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { SegmentedControl, t } from '@ab/web-kit';
 import { chartPoints, segments, SERIES_KEYS, yOf, type SeriesKey } from './chart';
 import { gradeWord, seriesLabel, shortDate } from './chart-labels';
 import { ChartPoints } from './ChartPoints';

@@ -1,6 +1,4 @@
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { NuqtaGlyph, t, cn } from '@ab/web-kit';
 import type { StepKey } from './draft/draft';
 
 /** On a phone only the current step keeps its name on screen; a screen reader hears all. */

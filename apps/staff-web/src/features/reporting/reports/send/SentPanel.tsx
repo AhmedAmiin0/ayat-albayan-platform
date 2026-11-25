@@ -1,8 +1,6 @@
 import { lessonWhenAt, type ReportView } from '@ab/shared';
 import { sentMoment, type ReportFormMode } from '@ab/client-core';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, useClock, t } from '@ab/web-kit';
 
 export interface SentPanelProps {
   report: ReportView;

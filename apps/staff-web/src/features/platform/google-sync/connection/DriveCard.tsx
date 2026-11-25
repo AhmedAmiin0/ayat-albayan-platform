@@ -1,13 +1,8 @@
 import type { GoogleFound, GoogleStatusView } from '@ab/catalog';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, StatusChip, t, useClock, useViewerTz } from '@ab/web-kit';
 import { GoogleBlock } from '@/features/platform/google-sync/GoogleBlock';
 import { fill, formatAt } from '@/features/platform/google-sync/google-format';
 import { useDriveActions } from './use-drive-actions';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 const s = t.googleSync.drive;
 

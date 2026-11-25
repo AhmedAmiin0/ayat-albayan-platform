@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button, t } from '@ab/web-kit';
 import { usePermissions } from '@/features/people/auth';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { coursePauseQuery } from './api';
 import { CoursePauseSheet } from './CoursePauseSheet';
 

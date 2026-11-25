@@ -1,14 +1,9 @@
 import { startDateEditMax, startDateEditMin } from '@ab/shared';
 import { riyadhToday } from '@ab/time';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { Button, Field, FormAlert, Input, Dialog, t } from '@ab/web-kit';
 import { apiErrorText } from '@/features/finance/subscriptions/format';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useEditStartDate } from './use-edit-start-date';
 
 export interface StartDatePackage {

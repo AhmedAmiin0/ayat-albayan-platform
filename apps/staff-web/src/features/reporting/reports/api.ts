@@ -13,8 +13,7 @@ import type {
 } from '@ab/shared';
 import { reportErrorWords, TEACHER_REFRESH_MS } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, apiFetch, apiSend, t } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import { reportKeys } from '@/features/reporting/keys';
 

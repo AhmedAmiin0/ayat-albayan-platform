@@ -2,8 +2,7 @@ import { askOf, ringWhile, type CallTarget, type CallsUi, type PermissionAsk } f
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Toast, t } from '@ab/web-kit';
 import { callErrorText } from '@/features/messaging/calls/api/call-error';
 import { callConfigQuery, callPermissionQuery } from '@/features/messaging/calls/api/calls-api';
 import { useCallsRealtime } from '@/features/messaging/calls/api/use-calls-realtime';

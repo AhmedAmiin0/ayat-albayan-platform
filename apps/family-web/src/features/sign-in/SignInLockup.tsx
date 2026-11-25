@@ -1,5 +1,4 @@
-import { BrandLockup } from '@ab/web-kit/components/shell/BrandLockup';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { BrandLockup, t } from '@ab/web-kit';
 
 /** The top of the family sign-in, as the family app (docs/50 §5): the kit lockup and a welcome. */
 export function SignInLockup() {

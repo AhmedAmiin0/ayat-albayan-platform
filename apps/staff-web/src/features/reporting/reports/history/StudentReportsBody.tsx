@@ -2,15 +2,9 @@ import type { UserRole } from '@ab/catalog';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { TableBox } from '@/components/data-table/TableBox';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
+import { EmptyState, ListSkeleton, FormAlert, Pager, ApiError, t, cn } from '@ab/web-kit';
 import { studentReportsQuery } from '@/features/reporting/reports/api';
 import { GradeChart } from '@/features/reporting/reports/chart/GradeChart';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
 import { ReportHistoryList } from './ReportHistoryList';
 import { useRecordedLessons } from './use-recorded-lessons';
 

@@ -4,19 +4,15 @@ import { weekStart, zonedPartsIn } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
+import { Button, buttonVariants, NuqtaGlyph, t, useClock, useViewerTz } from '@ab/web-kit';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
 import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { invoicesQuery } from '@/features/teaching/booking/invoice/api.invoice';
 import type { BookingKind } from '@/features/teaching/booking/draft/contract';
 import type { PickedStudent } from '@/features/teaching/booking/draft/draft';
 import { InvoiceButton } from '@/features/teaching/booking/invoice/InvoiceDialog';
 import { useBookingMode, useChatReturn } from '@/features/teaching/booking/mode';
 import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface BookedPanelProps {
   result: BookingResult;

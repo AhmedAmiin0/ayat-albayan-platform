@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { SwitchTrack, switchInputClass } from '@/components/settings/fields/SwitchTrack';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, t } from '@ab/web-kit';
 import { testFlagError, type TestFlagTarget } from './test-flag.api';
 import { useSetTestFlag } from './use-test-flag';
 

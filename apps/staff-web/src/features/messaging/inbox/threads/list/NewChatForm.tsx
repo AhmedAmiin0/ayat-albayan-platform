@@ -1,11 +1,6 @@
 import { normalizePhone } from '@ab/core';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Field, Icon, IconButton, Input, t } from '@ab/web-kit';
 
 /** A number without messages opens NewThread to send the first template. */
 export function NewChatForm({ onOpen }: { onOpen: (phone: string) => void }) {

@@ -2,7 +2,7 @@ import { formatPhone } from '@ab/core';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { ltr, t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { childHref } from '@/nav';
 import { student } from '@/portal/portal.fixtures';
 import { ProfileScreen } from './ProfileScreen';

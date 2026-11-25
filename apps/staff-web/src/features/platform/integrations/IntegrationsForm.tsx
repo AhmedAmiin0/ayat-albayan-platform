@@ -1,10 +1,7 @@
 import { INTEGRATION_GROUPS, type IntegrationConfigItem } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ConfirmSwitchDialog, Button, FormAlert, t } from '@ab/web-kit';
 import { stripeFeatureQuery } from '@/features/sales/payment-links';
 import { sendGateQuery } from '@/features/messaging/messaging/api';
 import { integrationsQuery, putIntegrationValues } from './integrations-api';

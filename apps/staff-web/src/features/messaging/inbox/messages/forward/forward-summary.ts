@@ -1,6 +1,6 @@
 import type { ForwardResponse } from '@ab/shared';
 import { formatPhone } from '@ab/core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 export interface ForwardSummary {
   text: string;

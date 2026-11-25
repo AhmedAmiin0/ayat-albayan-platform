@@ -1,5 +1,5 @@
 import { apiErrorText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** A payment-link failure as text: its code through paymentLinks.error, anything unknown `fallback` (the generic line). */
 export function paymentLinkErrorText(e: unknown, fallback: string = t.paymentLinks.error.generic): string {

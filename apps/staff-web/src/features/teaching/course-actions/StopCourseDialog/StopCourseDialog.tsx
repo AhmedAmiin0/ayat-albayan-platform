@@ -1,10 +1,7 @@
 import { courseStopErrorCode, stopFormCheck, type StopDone } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, Dialog, t } from '@ab/web-kit';
 import { courseStopPreviewQuery, useStopCourse } from '@/features/teaching/course-actions/api';
 import { useStopMoney } from '@/features/teaching/course-actions/refund/use-stop-money';
 import { StopBody } from '@/features/teaching/course-actions/StopSummary';

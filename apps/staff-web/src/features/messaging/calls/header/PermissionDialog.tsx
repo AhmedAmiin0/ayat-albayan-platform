@@ -1,9 +1,6 @@
 import { permissionHint, permissionReplyText, type PermissionAsk } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Dialog, useClock, t } from '@ab/web-kit';
 import { fullTime, threadKeys } from '@/features/messaging/inbox';
 import { callErrorText } from '@/features/messaging/calls/api/call-error';
 import { callApi } from '@/features/messaging/calls/api/calls-api';

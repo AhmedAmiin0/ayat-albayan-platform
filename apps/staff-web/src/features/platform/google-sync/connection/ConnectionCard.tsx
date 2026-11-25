@@ -1,13 +1,9 @@
 import type { GoogleStatusView } from '@ab/catalog';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, StatusChip, t, useClock, useViewerTz } from '@ab/web-kit';
 import { ConnectionActions } from './ConnectionActions';
 import { GoogleBlock } from '@/features/platform/google-sync/GoogleBlock';
 import { accountStyle, errorText, fill, formatAt } from '@/features/platform/google-sync/google-format';
 import { RedirectUri } from './RedirectUri';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 const s = t.googleSync.connection;
 

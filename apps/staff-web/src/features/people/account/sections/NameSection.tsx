@@ -1,9 +1,6 @@
 import { ACCOUNT_NAME_MAX, ACCOUNT_NAME_MIN } from '@ab/shared';
 import { useState, type SubmitEvent } from 'react';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, FormAlert, Input, t } from '@ab/web-kit';
 import { nameErrors } from '@/features/people/account/account-validation';
 import { AccountSection } from './AccountSection';
 import { updateProfile } from '@/features/people/account/api';

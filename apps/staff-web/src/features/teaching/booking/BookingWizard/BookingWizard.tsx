@@ -1,9 +1,7 @@
 import type { StudentRef, TrialDateResult } from '@ab/shared';
 import type { BookingResult } from '@ab/schedule';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { useFocusOnChange } from '@ab/web-kit/components/ui/overlay/use-focus-on-change';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, useFocusOnChange, t } from '@ab/web-kit';
 import { chatPhone, subscribeTarget } from '@/features/teaching/booking/steps/review/booked';
 import { BookedPanel } from '@/features/teaching/booking/steps/review/BookedPanel';
 import { GapChip } from '@/features/teaching/booking/steps/slots/GapChip';

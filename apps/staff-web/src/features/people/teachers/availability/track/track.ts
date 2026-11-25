@@ -1,8 +1,7 @@
 import { WEEKDAYS, type Weekday } from '@ab/catalog';
 import { intlLocale } from '@ab/core';
 import { weekdayIn, zonedFieldsIn } from '@ab/time';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { t, locale } from '@ab/web-kit';
 import { toMin, type Grid, type Range } from '@/features/people/teachers/availability/grid';
 
 // The availability track (docs/07 §8): 08:00–24:00, drawn from the inline-start like the text.

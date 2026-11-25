@@ -1,7 +1,7 @@
 import { familyChildren } from '@ab/client-core';
 import type { PortalHome } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { useFamilyPick, usePickChild } from '@/features/shell';
 import { ChildSummaryCard } from './ChildSummaryCard';
 

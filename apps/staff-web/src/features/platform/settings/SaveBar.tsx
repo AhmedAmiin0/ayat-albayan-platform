@@ -1,6 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, t } from '@ab/web-kit';
 import type { SettingsFormState } from './registry-form/use-settings-form';
 
 /** The one save for every registry field; the switches save on their own. */

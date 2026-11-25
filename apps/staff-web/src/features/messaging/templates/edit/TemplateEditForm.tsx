@@ -2,7 +2,7 @@ import type { AuthorTemplate } from '@ab/client-core';
 import { templateEditSchema, type TemplateEditInput } from '@ab/shared';
 import { useState, type SubmitEvent } from 'react';
 import { varsOf } from '@/features/messaging/templates/create/template-draft';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { draftOf, toEditInput, type EditDraft } from './edit-draft';
 import { previewBlock } from '@/features/messaging/templates/preview/edit-preview';
 import { TemplatePreview } from '@/features/messaging/templates/preview/TemplatePreview';

@@ -1,9 +1,6 @@
 import type { ChatFileProblem, ThreadView } from '@ab/shared';
 import { useState } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon, IconButton, t, cn, useClock, type Clock } from '@ab/web-kit';
 import { useNoneAllowed } from '@/features/messaging/inbox/composer/lib/allowed-templates';
 import { ReopenBar } from '@/features/messaging/inbox/composer/reopen';
 import { AttachButton } from './AttachButton';
@@ -20,7 +17,6 @@ import { TextComposer } from './TextComposer';
 import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
 import { useChatAccess } from '@/features/messaging/inbox/shared/use-chat-access';
 import { useTriesAfterWindow } from '@/features/messaging/inbox/shared/may-send';
-import { useClock, type Clock } from '@ab/web-kit/lib/clock';
 
 export type ComposerMode = 'text' | 'template';
 

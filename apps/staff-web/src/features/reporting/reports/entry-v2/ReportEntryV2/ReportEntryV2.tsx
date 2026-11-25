@@ -1,8 +1,7 @@
 import type { ReportFormEntry, ReportFormResponse } from '@ab/shared';
 import { ATTENDANCES, PROGRAMS } from '@ab/catalog';
 import { useRef } from 'react';
-import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { RadioChips, t } from '@ab/web-kit';
 import { useFocusInvalid } from '@/features/reporting/reports/entry/use-focus-invalid';
 import { AbsentCard } from '@/features/reporting/reports/entry-v2/AbsentCard';
 import { AfterLesson } from '@/features/reporting/reports/entry-v2/after/AfterLesson';

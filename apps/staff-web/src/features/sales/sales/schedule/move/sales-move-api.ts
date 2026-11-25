@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { reasonPart } from '@/features/teaching/schedule';
-import { apiSend } from '@ab/web-kit/lib/http/api';
+import { apiSend } from '@ab/web-kit';
 import { salesKeys } from '@/features/sales/keys';
 
 export interface SalesMoveInput {

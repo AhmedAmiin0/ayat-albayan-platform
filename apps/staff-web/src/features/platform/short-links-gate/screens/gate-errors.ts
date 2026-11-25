@@ -1,4 +1,4 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { GateError } from '@/features/platform/short-links-gate/use-gate-phone';
 
 /** The words of a step's error (shortLinks.gate.errors), or none. */

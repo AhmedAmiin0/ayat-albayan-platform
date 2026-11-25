@@ -1,6 +1,6 @@
 import { counted } from '@ab/core';
 import { packageProgress } from '@ab/money';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { TaskRow, UnpaidRow } from '@ab/money';
 
 export function taskText(task: Pick<TaskRow, 'kind' | 'student' | 'balance'>): string {

@@ -1,8 +1,6 @@
 import { formatPhone } from '@ab/core';
 import type { ReactNode } from 'react';
-import { Icon, type IconName } from '@ab/web-kit/components/ui/display/icon';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, type IconName, Ltr, t } from '@ab/web-kit';
 import type { Teacher } from '@ab/shared';
 
 function Item({ icon, children }: { icon: IconName; children: ReactNode }) {

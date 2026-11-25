@@ -2,15 +2,17 @@ import { GENDERS, PROGRAMS, STUDENT_STATUSES } from '@ab/catalog';
 import { useForm } from '@tanstack/react-form';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { TimeZoneSelect } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import {
+  Button,
+  Field,
+  Input,
+  Select,
+  TimeZoneSelect,
+  t,
+  teacherLabel,
+  FormAlert,
+} from '@ab/web-kit';
 import { teacherOptionsQuery } from '@/features/people/students/api';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { PROFILE_LABELS, toProfileValues, type ProfileValues } from '@/features/people/students/profile/profile-form';
 import { saveProfile } from '@/features/people/students/profile/save-profile';
 import { SavedNote } from '@/features/people/students/profile/SavedNote';

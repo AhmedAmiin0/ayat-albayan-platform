@@ -1,13 +1,17 @@
 import { cloneBundle } from '@ab/i18n';
 import ar from '@ab/shared/i18n/ar.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type * as Module from './i18n-overrides';
+import {
+  cacheKey,
+  fetchOverrides,
+  OVERRIDES_TIMEOUT_MS,
+  refreshOverrides,
+  restoreCachedOverrides,
+} from './i18n-overrides';
 
 jest.mock('../http/env', () => ({ env: { apiUrl: 'http://api' } }));
-
 // jest.setup turns refreshOverrides off for the flow tests; this file tests the real module.
-const { cacheKey, fetchOverrides, OVERRIDES_TIMEOUT_MS, refreshOverrides, restoreCachedOverrides } =
-  jest.requireActual<typeof Module>('./i18n-overrides');
+jest.unmock('./i18n-overrides');
 
 const json = (body: unknown, status = 200) => ({ ok: status < 300, status, json: async () => body });
 const fetchMock = jest.fn();

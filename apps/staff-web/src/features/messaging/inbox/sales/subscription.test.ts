@@ -1,6 +1,6 @@
 import { threadBadge } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { pupil } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { badgeStyle, dueText, leadChip, packageChipProps, packageLine, subscribeLabel } from './subscription';
 

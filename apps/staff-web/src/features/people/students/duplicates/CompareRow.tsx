@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
-import { Icon, type IconName } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon, type IconName, t, cn } from '@ab/web-kit';
 import type { Match } from './compare';
 
 const base = 'flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 px-2.5 py-2 sm:px-3.5 sm:py-2.5';

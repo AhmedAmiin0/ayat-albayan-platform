@@ -1,7 +1,6 @@
 import type { MeetingInviteResult } from '@ab/schedule';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import { copyText } from '@/features/teaching/meetings/internal/internal-api';
 import { copyPayload, inviteStatusText, notSentHint } from './invite-status';
 

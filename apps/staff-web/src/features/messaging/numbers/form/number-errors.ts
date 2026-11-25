@@ -1,6 +1,5 @@
 import { isNumberError, type NumberError } from '@ab/shared';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 
 /** The 409 code the numbers API answers (`{ message: 'phone_taken' }`), when it is one of ours. */
 export function numberErrorCode(error: unknown): NumberError | null {

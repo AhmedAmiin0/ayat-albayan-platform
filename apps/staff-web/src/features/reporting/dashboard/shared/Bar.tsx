@@ -1,4 +1,4 @@
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '@ab/web-kit';
 
 /**
  * The one bar mark of every dashboard chart (dataviz rules, docs/07): 10px thick, square at the

@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { configWrapper } from '@ab/web-kit/lib/settings/confirmation-testing';
+import { t } from '@ab/web-kit';
+import { configWrapper } from '@ab/web-kit/testing';
 import { KpiStrip } from '@/features/reporting/dashboard/funnel/KpiStrip';
 import { SUMMARY } from '@/features/reporting/dashboard/dashboard-fixture';
 import { LessonsByStatus } from './LessonsByStatus';

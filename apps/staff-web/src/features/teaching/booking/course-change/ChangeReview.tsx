@@ -1,12 +1,10 @@
 import type { BookedCourse, CourseChangeCheck } from '@ab/shared';
 import { counted } from '@ab/core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, FormAlert, t, useClock, useViewerTz } from '@ab/web-kit';
 import { conflictsOf, lessonErrorText } from '@/features/teaching/schedule';
 import { ConflictNotice } from '@/features/teaching/schedule/reschedule/ConflictNotice';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useBookingMode } from '@/features/teaching/booking/mode';
 import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
 import {
@@ -17,8 +15,6 @@ import {
 } from './api';
 import { currentDaysText, newDaysText } from './change-text';
 import { refreshAfterCourseChange } from './refresh';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface ChangeReviewProps {
   body: CourseChangeBody;

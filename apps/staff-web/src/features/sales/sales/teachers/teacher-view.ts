@@ -1,7 +1,6 @@
 import type { SalesTeacherFilter, SalesTeacherView } from '@ab/shared';
 import { zonedWhenText, type ClockCycle } from '@ab/time';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { t, locale } from '@ab/web-kit';
 
 // Filter rules live in @ab/shared, shared with the mobile screen.
 

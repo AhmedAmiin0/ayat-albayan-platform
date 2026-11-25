@@ -1,14 +1,8 @@
 import { STAFF_ROLES } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Select } from '@ab/web-kit/components/ui/form/select';
+import { Button, Dialog, Field, FormAlert, Input, Select, t } from '@ab/web-kit';
 import { apiErrorText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { baseRoleLabel, deleteRole, ROLES_KEY, saveRole, type RoleView } from './api';
 import { PermissionMatrix } from './PermissionMatrix';
 import { RoleResetButton } from './RoleResetButton';

@@ -1,8 +1,5 @@
 import { formatPhone, normalizePhone } from '@ab/core';
-import { HighlightDiff } from '@ab/web-kit/components/ui/display/highlight-diff';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { HighlightDiff, Ltr, t, teacherLabel } from '@ab/web-kit';
 import { nameMatch, textMatch } from './compare';
 import type { CreateStudentValues } from '@/features/people/students/create/create-student';
 import { CompareRow, cell } from './CompareRow';

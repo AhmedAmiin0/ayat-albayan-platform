@@ -1,9 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { Button, Dialog, t } from '@ab/web-kit';
 import { CreateStudentDialog } from '@/features/people/students/create/CreateStudentDialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { leadKeys } from '@/features/sales/keys';

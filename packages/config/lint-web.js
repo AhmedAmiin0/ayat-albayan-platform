@@ -6,6 +6,16 @@ import { a11yRules } from './jsx-a11y.js';
 
 const SRC = ['src/**/*.{ts,tsx}'];
 const TSX = ['src/**/*.tsx'];
+const TS = ['src/**/*.ts'];
+const HTTP_NAMES = ['apiFetch', 'apiSend'];
+const HTTP_MESSAGE = 'Call the API from a hook, not a component.';
+const HTTP = { regex: '(^|/)http/api(\\.js)?$', names: HTTP_NAMES, message: HTTP_MESSAGE };
+const KIT_HTTP = { regex: '^@ab/web-kit$', names: HTTP_NAMES, message: HTTP_MESSAGE };
+// The kit's `./*` export serves its own absolute imports and the tests' mock paths.
+const KIT_PATHS = {
+  regex: '^@ab/web-kit/(?!(room|testing)$)',
+  message: "Import the kit from '@ab/web-kit', '@ab/web-kit/room' or '@ab/web-kit/testing'.",
+};
 
 /**
  * `module`: the folders that reach each other only through their index.ts (docs/27 §1 rule 6;
@@ -24,15 +34,8 @@ export function webBlocks({ root, module }) {
     ...reactRestrictions({ files: SRC, effects: TSX, compiler: true, react19: false }),
     // docs/32 R8: a component calls the API through a query or mutation hook, not apiFetch /
     // apiSend.
-    forbiddenImports({
-      files: TSX,
-      bans: [
-        {
-          regex: '(^|/)http/api(\\.js)?$',
-          names: ['apiFetch', 'apiSend'],
-          message: 'Call the API from a hook, not a component.',
-        },
-      ],
-    }),
+    forbiddenImports({ files: TSX, bans: module ? [HTTP, KIT_HTTP, KIT_PATHS] : [HTTP] }),
+    // docs/64 PR 5: an app reaches the kit through its entries only.
+    ...(module ? [forbiddenImports({ files: TS, bans: [KIT_PATHS] })] : []),
   ];
 }

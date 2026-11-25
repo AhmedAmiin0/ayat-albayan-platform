@@ -1,8 +1,6 @@
 import { addDays, weekdayOf } from '@ab/time';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Button, Icon, t } from '@ab/web-kit';
 import { dayMonthLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface SalesDayNavProps {
   /** The Riyadh day shown, "YYYY-MM-DD". */

@@ -1,5 +1,4 @@
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
+import { Field, Input } from '@ab/web-kit';
 
 export interface KeyFieldProps {
   label: string;

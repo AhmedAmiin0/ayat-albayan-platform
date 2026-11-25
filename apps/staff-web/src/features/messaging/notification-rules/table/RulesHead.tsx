@@ -1,6 +1,5 @@
 import { counted } from '@ab/core';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { NuqtaGlyph, t } from '@ab/web-kit';
 
 const r = t.notificationRules;
 

@@ -1,7 +1,6 @@
 import { sendCounts } from '@ab/client-core';
 import { SHORT_LINK_SEND_STATUSES, type ShortLinkDetail } from '@ab/shared';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, t } from '@ab/web-kit';
 import { CopyButton } from '@/features/platform/short-links/shared/CopyButton';
 import { SendChip } from '@/features/platform/short-links/shared/LinkChips';
 

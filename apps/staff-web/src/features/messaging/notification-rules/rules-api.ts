@@ -1,5 +1,5 @@
 import { RULE_ERRORS, type NotificationEntryView, type RulePatchInput, type RuleError } from '@ab/shared';
-import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
+import { ApiError, apiSend } from '@ab/web-kit';
 
 /** Why a save failed: the contract's errors, or no permission, or anything else. */
 export type RuleFailure = RuleError | 'forbidden' | 'failed';

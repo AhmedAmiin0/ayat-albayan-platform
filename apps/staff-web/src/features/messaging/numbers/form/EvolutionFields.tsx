@@ -1,8 +1,6 @@
 import { EVOLUTION_MODES, type EvolutionMode } from '@ab/catalog';
 import { CheckField } from '@/components/settings/fields/CheckField';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Select, t } from '@ab/web-kit';
 import type { NumberDraft } from './number-form';
 
 const e = t.numbers.evolution;

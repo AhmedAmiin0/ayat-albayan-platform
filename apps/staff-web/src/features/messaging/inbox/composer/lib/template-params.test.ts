@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { forAudience, lessonValues, missingParams, paramFields, prefillParams, toParamsInput, urlButton } from './template-params';
 

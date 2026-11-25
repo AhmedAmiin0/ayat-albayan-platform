@@ -1,11 +1,9 @@
 import type { TeacherMe } from '@ab/schedule';
 import { zonedPartsIn } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
+import { QueryState, useNow, cn } from '@ab/web-kit';
 import { LoadRetry, myLessonsQuery } from '@/features/teaching/teacher';
 import { boardWindow, TeacherBoard } from '@/features/teaching/teacher-board';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { cn } from '@ab/web-kit/lib/utils';
 
 /** Same query key as the home tab, so both share the 30 s poll. */
 export function StudentsBoard({ me }: { me: TeacherMe }) {

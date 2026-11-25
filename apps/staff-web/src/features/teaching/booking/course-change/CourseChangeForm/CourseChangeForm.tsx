@@ -1,7 +1,6 @@
 import type { CourseChangeView } from '@ab/shared';
 import { useRef, useState } from 'react';
-import { useFocusOnChange } from '@ab/web-kit/components/ui/overlay/use-focus-on-change';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useFocusOnChange, t } from '@ab/web-kit';
 import { changeBody, currentPicks } from '@/features/teaching/booking/course-change/change-body';
 import { ChangePicker } from '@/features/teaching/booking/course-change/ChangePicker';
 import { ChangeReview } from '@/features/teaching/booking/course-change/ChangeReview';

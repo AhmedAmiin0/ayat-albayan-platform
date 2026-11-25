@@ -1,8 +1,8 @@
 import { callEntryText as entryText } from '@ab/client-core';
 import type { CallEntryKind, CallView } from '@ab/shared';
 import { formatPhone } from '@ab/core';
-import type { IconName } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { IconName } from '@ab/web-kit';
+import { t } from '@ab/web-kit';
 import { showsPhone, type InboxMode } from '@/features/messaging/inbox';
 
 export const callEntryText = (call: CallView): string => entryText(call, t.calls);

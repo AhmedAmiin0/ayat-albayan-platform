@@ -1,10 +1,7 @@
 import { studentStatusStyle } from '@ab/money';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Ltr, StatusChip, t } from '@ab/web-kit';
 import { mergeStudents, STUDENTS_KEY } from '@/features/people/students/api';
 import { MergeDialog } from './MergeDialog';
 import { SavedNote } from '@/features/people/students/profile/SavedNote';

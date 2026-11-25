@@ -1,9 +1,6 @@
 import { DAY_BEFORE_HOURS } from '@ab/shared';
 import { useId } from 'react';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { ClockOptions } from '@ab/web-kit/lib/clock-options';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { NuqtaGlyph, Select, ClockOptions, t } from '@ab/web-kit';
 import { RuleCheck } from '@/features/messaging/notification-rules/table/RuleCheck';
 import type { TimingDraft } from '@/features/messaging/notification-rules/rule-timing';
 import { CountInput } from './CountInput';

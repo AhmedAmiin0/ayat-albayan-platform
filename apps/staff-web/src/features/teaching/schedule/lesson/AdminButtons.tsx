@@ -1,7 +1,5 @@
 import type { LessonEvent } from '@ab/schedule';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, ButtonRow, t } from '@ab/web-kit';
 
 export interface AdminButtonsProps {
   events: readonly LessonEvent[];

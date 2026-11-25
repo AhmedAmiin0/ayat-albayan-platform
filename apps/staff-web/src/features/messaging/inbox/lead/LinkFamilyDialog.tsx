@@ -2,16 +2,9 @@ import type { RegistrationCheckView, RegistrationMatch } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent, type ReactNode } from 'react';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { Ltr, Button, Field, FormAlert, Input, Dialog, apiFetch, t } from '@ab/web-kit';
 import { salesKeys } from '@/features/sales/keys';
 import { checkRequest, RegistrationMatches } from '@/features/sales/sales';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import {
   linkedText,
   linkFamily,

@@ -1,4 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button } from '@ab/web-kit';
 
 export type AttachmentItem = { key: string; name: string };
 type Texts = { attachmentN: string; attachmentRemove: string };

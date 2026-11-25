@@ -1,7 +1,6 @@
 import { bubbleWord, messageTicks, TICK_PATHS, tickTone, type TickTone } from '@ab/shared';
 import type { MessageStatus } from '@ab/catalog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t, cn } from '@ab/web-kit';
 
 // Failed uses saffron, the same tone as its row word and the bubble's ring.
 const INK: Record<TickTone, string> = { muted: 'text-tick', read: 'text-read', act: 'text-act' };

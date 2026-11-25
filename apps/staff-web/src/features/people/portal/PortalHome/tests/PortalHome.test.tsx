@@ -1,11 +1,8 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { home, soonLesson } from '@ab/web-kit/portal/portal.fixtures';
-import { portalApi, type Answers } from '@ab/web-kit/portal/portal.api-fixture';
-import { renderPortal } from '@ab/web-kit/portal/portal.render';
+import { t, reloadSeenReports } from '@ab/web-kit';
+import { home, soonLesson, portalApi, type Answers, renderPortal } from '@ab/web-kit/testing';
 import { PortalHome } from '@/features/people/portal/PortalHome/PortalHome';
-import { reloadSeenReports } from '@ab/web-kit/portal/use-seen-reports';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));

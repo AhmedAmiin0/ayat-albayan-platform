@@ -1,8 +1,5 @@
 import { useId, type ReactNode } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Button, Skeleton, t, cn } from '@ab/web-kit';
 
 interface BlockProps {
   title: string;

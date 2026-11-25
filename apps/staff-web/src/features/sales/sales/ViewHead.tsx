@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { SegmentedControl, type SegmentedControlProps } from '@ab/web-kit/components/ui/form/segmented-control';
+import { Cartouche, PageHead, SegmentedControl, type SegmentedControlProps } from '@ab/web-kit';
 
 /** The view filter is a filter, not a page; `children` are actions at the inline-end. */
 export function ViewHead<V extends string>({ title, children, ...views }: { title: string; children?: ReactNode } & SegmentedControlProps<V>) {

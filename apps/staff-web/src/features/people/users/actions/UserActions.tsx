@@ -1,8 +1,6 @@
 import type { UserDetail } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, t } from '@ab/web-kit';
 import { enableUser, signOutUser, USERS_KEY } from '@/features/people/users/api';
 import { userErrorText } from '@/features/people/users/errors';
 

@@ -2,8 +2,7 @@ import { counted } from '@ab/core';
 import { screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fill } from '@/features/platform/google-sync/google-format';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { THEME_KEY } from '@ab/web-kit/lib/theme';
+import { t, THEME_KEY } from '@ab/web-kit';
 import { answerHub, googleStatus, item, renderHub, settingsWith } from './hub-test-utils';
 import { HubStatus } from './HubStatus';
 

@@ -1,7 +1,6 @@
 import { act, fireEvent, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setClockPref } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { setClockPref, t } from '@ab/web-kit';
 import { findRow, renderRules } from './rules-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());

@@ -1,11 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { Toast, type ToastProps } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import {
+  Cartouche,
+  PageHead,
+  Pager,
+  Toast,
+  type ToastProps,
+  t,
+  cn,
+  ListSkeleton,
+} from '@ab/web-kit';
 import { AssignUnassignedButton } from './list/AssignUnassignedButton';
 import { LeadList } from './list/LeadList';
 import { leadsQuery, reclassifyLead } from './leads.api';
@@ -13,7 +17,6 @@ import { LeadStatusTabs } from './list/LeadStatusTabs';
 import { LeadsToolbar } from './list/LeadsToolbar';
 import { parseLeadSearch, type LeadSearch } from './types';
 import { TableBox } from '@/components/data-table/TableBox';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { applicantKeys, leadKeys } from '@/features/sales/keys';
 
 export interface LeadsInboxProps {

@@ -1,6 +1,6 @@
 import { usedBeforeMax } from '@ab/shared';
 import { useState } from 'react';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { usePermissions } from '@ab/web-kit';
 import { todayIn } from '@/features/finance/subscriptions';
 import type { StartValue } from './SalesStartField';
 
