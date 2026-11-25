@@ -3,6 +3,7 @@ import { useEffect, type ReactNode } from 'react';
 import { meQuery, type Me } from '@ab/web-kit/auth/me';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { isStaffRole } from './staff-link';
+import { classroomKeys } from '@/features/teaching/classroom/api/classroom.keys';
 
 interface Props {
   /** The link's token: one lookup per link. */
@@ -22,7 +23,7 @@ export function StaffLinkGate({ linkKey, resolve, children, who, go = replace }:
   const me = useQuery({ ...meQuery, ...(who && { queryFn: who }), retry: false });
   const staff = isStaffRole(me.data?.role);
   const target = useQuery({
-    queryKey: ['staff-link', linkKey, me.data?.id ?? ''],
+    queryKey: classroomKeys.staffLink(linkKey, me.data?.id ?? ''),
     queryFn: resolve,
     enabled: staff,
     retry: false,
@@ -37,7 +38,9 @@ export function StaffLinkGate({ linkKey, resolve, children, who, go = replace }:
   if (!waiting) return <>{children}</>;
   return (
     <main className="grid min-h-dvh place-items-center bg-page">
-      <p role="status" className="text-sm text-ink-2">{t.classroom.joining}</p>
+      <p role="status" className="text-sm text-ink-2">
+        {t.classroom.joining}
+      </p>
     </main>
   );
 }

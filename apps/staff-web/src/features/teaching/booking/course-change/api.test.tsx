@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { courseChangeCheckQuery, type CourseChangeBody } from './api';
 import { CHECK, COURSE, MON } from './change-fixture';
+import { bookingKeys } from '@/features/teaching/booking/booking.keys';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
@@ -22,11 +23,21 @@ describe('courseChangeCheckQuery', () => {
 
   it('drops the check once unmounted, so the same picks after a save ask the server again', async () => {
     apiSend.mockResolvedValue(CHECK);
-    const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: Infinity } } });
-    const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
-    const { result, unmount } = renderHook(() => useQuery(courseChangeCheckQuery(body, 'sales')), { wrapper });
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false, gcTime: Infinity } },
+    });
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    );
+    const { result, unmount } = renderHook(() => useQuery(courseChangeCheckQuery(body, 'sales')), {
+      wrapper,
+    });
     await waitFor(() => expect(result.current.data).toEqual(CHECK));
     unmount();
-    await waitFor(() => expect(client.getQueryCache().findAll({ queryKey: ['booking', 'sales'] })).toHaveLength(0));
+    await waitFor(() =>
+      expect(
+        client.getQueryCache().findAll({ queryKey: [...bookingKeys.all, 'sales'] }),
+      ).toHaveLength(0),
+    );
   });
 });

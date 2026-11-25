@@ -7,11 +7,12 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { CLASSROOM_KEY, joinRoom } from '@ab/web-kit/classroom/api/api';
+import { joinRoom } from '@ab/web-kit/classroom/api/api';
 import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
 import { classroomErrorText, opensAtOf } from '@ab/web-kit/classroom/room/livekit/errors';
 import type { RoomClient } from '@ab/web-kit/classroom/room/components/room-types';
 import { opensAtText } from '@ab/web-kit/classroom/room/livekit/window-hint';
+import { classroomKeys } from '@/features/teaching/classroom/api/classroom.keys';
 
 /** Who mints the token: the lesson's room by default, an internal meeting's (joinMeeting) otherwise. */
 type Joiner = (id: string) => Promise<RoomJoinResult>;
@@ -19,7 +20,7 @@ type Joiner = (id: string) => Promise<RoomJoinResult>;
 /** One token per attempt (never cached, never refetched on focus): a fresh identity each time. */
 function useJoin(lessonId: string, attempt: number, join: Joiner) {
   return useQuery({
-    queryKey: [...CLASSROOM_KEY, 'join', lessonId, attempt],
+    queryKey: classroomKeys.join(lessonId, attempt),
     queryFn: () => join(lessonId),
     retry: false,
     gcTime: 0,
@@ -62,12 +63,18 @@ export function StaffClassroomPage({ lessonId, make, join: joiner = joinRoom, pr
   const queryClient = useQueryClient();
   const join = useJoin(lessonId, attempt, joiner);
   const retry = () => {
-    queryClient.removeQueries({ queryKey: [...CLASSROOM_KEY, 'join', lessonId] });
+    queryClient.removeQueries({ queryKey: classroomKeys.joins(lessonId) });
     setAttempt((n) => n + 1);
   };
 
   if (join.isPending) {
-    return <main className="grid min-h-dvh place-items-center bg-page"><p role="status" className="text-sm text-ink-2">{t.classroom.joining}</p></main>;
+    return (
+      <main className="grid min-h-dvh place-items-center bg-page">
+        <p role="status" className="text-sm text-ink-2">
+          {t.classroom.joining}
+        </p>
+      </main>
+    );
   }
   if (join.error) return <Notice onRetry={retry}>{problemOf(join.error)}</Notice>;
   return <ClassroomRoom join={join.data} {...(make && { make })} onRejoin={retry} />;

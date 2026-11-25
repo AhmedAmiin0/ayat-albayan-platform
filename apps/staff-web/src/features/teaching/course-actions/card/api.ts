@@ -1,5 +1,4 @@
 import {
-  courseCardKey,
   courseCardPath,
   courseExtendPreviewPath,
   parseCourseCard,
@@ -13,18 +12,19 @@ import type { LessonView } from '@ab/schedule';
 import { queryOptions, useMutation } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { useInvalidateCourseActions } from '@/features/teaching/course-actions/api';
+import { courseKeys } from '@/features/teaching/course-actions/course.keys';
 
 // Paths, keys and parsers come from @ab/client-core; the card key sits under the actions' key.
 
 export const courseCardQuery = (input: { studentId: string; tree: CardTree }) =>
   queryOptions({
-    queryKey: [...courseCardKey(input.studentId), input.tree],
+    queryKey: courseKeys.card(input.studentId, input.tree),
     queryFn: async () => parseCourseCard(await apiFetch(courseCardPath(input))),
   });
 
 export const extendPreviewQuery = (input: { studentId: string; subscriptionId: string }) =>
   queryOptions({
-    queryKey: [...courseCardKey(input.studentId), 'extend', input.subscriptionId],
+    queryKey: courseKeys.extend(input),
     queryFn: async () => parseExtendPreview(await apiFetch(courseExtendPreviewPath(input))),
   });
 
@@ -34,7 +34,7 @@ export const extendPreviewQuery = (input: { studentId: string; subscriptionId: s
  */
 export const cardLessonQuery = (lesson: CourseCardLesson) =>
   queryOptions({
-    queryKey: ['course-card-lesson', lesson.id],
+    queryKey: courseKeys.cardLesson(lesson.id),
     queryFn: () => readLessonAt<LessonView>(apiFetch, lesson),
     staleTime: 0,
   });

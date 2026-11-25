@@ -24,6 +24,7 @@ import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { useState } from 'react';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { courseKeys } from './course.keys';
 
 // The student profile's course actions: apps/api course-stop and
 // booking/profile. Paths and the key come from @ab/client-core (the same as mobile).
@@ -35,7 +36,7 @@ interface Course {
 
 export const courseStopPreviewQuery = (input: Course) =>
   queryOptions({
-    queryKey: [...courseActionsKey(input.studentId), 'stop', input.subscriptionId],
+    queryKey: courseKeys.stopPreview(input),
     queryFn: () => apiFetch<CourseStopPreview>(courseStopPreviewPath(input)),
   });
 
@@ -44,13 +45,13 @@ export const stopCourse = (studentId: string, body: CourseStopRequest) =>
 
 export const profileCourseQuery = (input: Course & { kind: CourseMoveKind }) =>
   queryOptions({
-    queryKey: [...courseActionsKey(input.studentId), input.kind, input.subscriptionId],
+    queryKey: courseKeys.move(input, input.kind),
     queryFn: () => apiFetch<ProfileCourseView>(courseMoveViewPath(input)),
   });
 
 export const courseTeachersQuery = (studentId: string) =>
   queryOptions({
-    queryKey: [...courseActionsKey(studentId), 'teachers'],
+    queryKey: courseKeys.teachers(studentId),
     queryFn: () => apiFetch<BookingTeacherOption[]>(courseTeacherOptionsPath(studentId)),
   });
 

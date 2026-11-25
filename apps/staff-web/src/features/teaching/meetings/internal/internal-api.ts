@@ -2,14 +2,15 @@ import type { MeetingCreated, MeetingView, PublicMeetingView, RoomJoinResult } f
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
+import { meetingKeys } from './meeting.keys';
 
 // A standalone room with no lesson.
 
-export const MEETINGS_KEY = ['internal-meetings'] as const;
+export const MEETINGS_KEY = meetingKeys.all;
 
 /** GET /meetings: the newest (all for an admin, else the ones I created or am invited to). POST: meeting-invites-api. */
 export const meetingsQuery = queryOptions({
-  queryKey: [...MEETINGS_KEY, 'list'],
+  queryKey: meetingKeys.list(),
   queryFn: () => apiFetch<MeetingView[]>('/meetings'),
 });
 
@@ -17,7 +18,8 @@ export const meetingsQuery = queryOptions({
 export const endMeeting = (id: string) => apiSend('POST', `/meetings/${id}/end`);
 
 /** POST /meetings/:id/link (creator or admin): a fresh link; the previous one stops working. */
-export const newMeetingLink = (id: string) => apiSend<MeetingCreated>('POST', `/meetings/${id}/link`);
+export const newMeetingLink = (id: string) =>
+  apiSend<MeetingCreated>('POST', `/meetings/${id}/link`);
 
 /** POST /meetings/:id/join: staff, with their own login. A fresh identity per call. */
 export const joinMeeting = (id: string) => apiSend<RoomJoinResult>('POST', `/meetings/${id}/join`);
@@ -43,7 +45,7 @@ async function publicCall<T>(path: string, init?: RequestInit): Promise<T> {
 /** GET /public/meetings/:token, polled so the page notices when the meeting ends. */
 export const publicMeetingQuery = (token: string) =>
   queryOptions({
-    queryKey: [...MEETINGS_KEY, 'public', token],
+    queryKey: meetingKeys.public(token),
     queryFn: () => publicCall<PublicMeetingView>(`/public/meetings/${encodeURIComponent(token)}`),
     retry: false,
     refetchInterval: 30_000,

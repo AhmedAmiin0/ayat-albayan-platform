@@ -1,6 +1,5 @@
 import {
   courseActionsKey,
-  courseCardKey,
   coursePauseKey,
   courseResumePreviewPath,
   parseResumePreview,
@@ -9,9 +8,15 @@ import {
   coursePauseResumePath,
   coursePauseUntilPath,
 } from '@ab/client-core';
-import type { CoursePausePreview, CoursePauseResult, CoursePauseStart, CoursePauseState } from '@ab/shared';
+import type {
+  CoursePausePreview,
+  CoursePauseResult,
+  CoursePauseStart,
+  CoursePauseState,
+} from '@ab/shared';
 import { keepPreviousData, queryOptions, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { pauseKeys } from '@/features/teaching/course-pause/keys';
 
 // Paths and the key come from @ab/client-core, the same as mobile.
 
@@ -22,9 +27,13 @@ export const coursePauseQuery = (studentId: string) =>
   });
 
 /** The lessons the window would take the student out of. */
-export const coursePausePreviewQuery = (input: { studentId: string; from: string; until: string | null }) =>
+export const coursePausePreviewQuery = (input: {
+  studentId: string;
+  from: string;
+  until: string | null;
+}) =>
   queryOptions({
-    queryKey: [...coursePauseKey(input.studentId), 'preview', input.from, input.until],
+    queryKey: pauseKeys.preview(input),
     queryFn: () => apiFetch<CoursePausePreview>(coursePausePreviewPath(input)),
     placeholderData: keepPreviousData,
   });
@@ -32,7 +41,7 @@ export const coursePausePreviewQuery = (input: { studentId: string; from: string
 /** The lessons coming back and the days the package moves. */
 export const resumePreviewQuery = (studentId: string) =>
   queryOptions({
-    queryKey: [...courseCardKey(studentId), 'resume'],
+    queryKey: pauseKeys.resume(studentId),
     queryFn: async () => parseResumePreview(await apiFetch(courseResumePreviewPath(studentId))),
     retry: false,
   });
@@ -58,8 +67,8 @@ export function useInvalidatePause(studentId: string): () => Promise<void> {
   const client = useQueryClient();
   return async () => {
     await Promise.all(
-      [coursePauseKey(studentId), courseActionsKey(studentId), ['students'], ['money']].map((queryKey) =>
-        client.invalidateQueries({ queryKey }),
+      [coursePauseKey(studentId), courseActionsKey(studentId), ['students'], ['money']].map(
+        (queryKey) => client.invalidateQueries({ queryKey }),
       ),
     );
   };

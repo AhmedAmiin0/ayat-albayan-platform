@@ -10,16 +10,23 @@ import { joinByStudentLink, studentLinkView } from '@/features/teaching/classroo
 import type { RoomClient } from '@ab/web-kit/classroom/room/components/room-types';
 import { StudentLessonPanel } from './StudentLessonPanel';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { classroomKeys } from '@/features/teaching/classroom/api/classroom.keys';
 
 const REFRESH_MS = 30_000;
 
 /** No login or shell; join enables only while the room is open, re-read every 30 seconds. */
 export function StudentLinkPage({ token, make }: { token: string; make?: () => RoomClient }) {
   const now = useNow(REFRESH_MS);
-  const view = useQuery({ queryKey: ['studentLink', token], queryFn: () => studentLinkView(token), refetchInterval: REFRESH_MS, retry: false });
+  const view = useQuery({
+    queryKey: classroomKeys.studentLink(token),
+    queryFn: () => studentLinkView(token),
+    refetchInterval: REFRESH_MS,
+    retry: false,
+  });
   const join = useMutation({ mutationFn: joinByStudentLink });
 
-  if (join.data) return <ClassroomRoom join={join.data} {...(make && { make })} onRejoin={() => join.reset()} />;
+  if (join.data)
+    return <ClassroomRoom join={join.data} {...(make && { make })} onRejoin={() => join.reset()} />;
   const data = view.data;
   return (
     <main className="min-h-dvh bg-page px-4 py-6 sm:py-10">
@@ -30,7 +37,9 @@ export function StudentLinkPage({ token, make }: { token: string; make?: () => R
         </div>
         {view.isPending && <p className="text-ink-3">{t.common.loading}</p>}
         {view.isError && <FormAlert>{classroomErrorText(view.error)}</FormAlert>}
-        {data && <Cartouche>{t.studentLink.page.greeting.replace('{name}', data.first_name)}</Cartouche>}
+        {data && (
+          <Cartouche>{t.studentLink.page.greeting.replace('{name}', data.first_name)}</Cartouche>
+        )}
         {data && !data.lesson && <p className="text-body text-ink-2">{t.studentLink.page.none}</p>}
         {data?.lesson && (
           <StudentLessonPanel
