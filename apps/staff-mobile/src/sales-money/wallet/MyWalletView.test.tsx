@@ -1,6 +1,6 @@
 import type { NotificationItem } from '@ab/shared';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
-import { t } from '@ab/mobile-kit';
+import { pathKey, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { commissionDay, commissionLine } from '@/sales-money/lib/money-text';
 import { commissionPage, earnings, myCommission } from '@/sales-money/testing/fixtures';
@@ -97,7 +97,7 @@ test('a new «عمولة جديدة» on the bell refreshes the wallet; the hook
   await waitFor(() => expect(calls('/me/notifications')).toBe(1));
   const before = { list: calls('/sales/me/commissions'), earnings: calls('/sales/me/earnings') };
   bell = [bellRow('n1')];
-  await act(async () => client.refetchQueries({ queryKey: ['notifications', 'list'] }));
+  await act(async () => client.refetchQueries({ queryKey: pathKey('/notifications/list') }));
   await waitFor(() => expect(calls('/sales/me/commissions')).toBe(before.list + 1));
   expect(calls('/sales/me/earnings')).toBe(before.earnings + 1);
   expect(calls('/me/notifications')).toBe(2);

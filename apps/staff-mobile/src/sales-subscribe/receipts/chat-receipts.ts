@@ -1,6 +1,7 @@
 import type { SalesChatReceipt, SalesChatReceiptFile, SalesReceiptCopied } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
+import { salesKeys } from '@/core/lib/keys';
 
 // The receipts the family already sent in its WhatsApp chat (R-ASST-04): their list, a short-lived
 // thumbnail per image (fetched only when its row is on screen) and the copy into receipts/. `bind`: the
@@ -12,8 +13,9 @@ const scopeQuery = (studentId: string, bind: Bind) =>
 
 export function useChatReceipts(studentId: string, enabled: boolean, bind: Bind = {}) {
   return useQuery({
-    queryKey: ['sales', 'money', 'chat-receipts', studentId],
-    queryFn: () => apiFetch<SalesChatReceipt[]>(`/sales/money/chat-receipts?${scopeQuery(studentId, bind)}`),
+    queryKey: salesKeys.chatReceipts(studentId),
+    queryFn: () =>
+      apiFetch<SalesChatReceipt[]>(`/sales/money/chat-receipts?${scopeQuery(studentId, bind)}`),
     enabled: enabled && studentId !== '',
   });
 }
@@ -22,7 +24,7 @@ export function useChatReceipts(studentId: string, enabled: boolean, bind: Bind 
 export function useChatReceiptThumb(studentId: string, item: SalesChatReceipt, bind: Bind = {}) {
   const wanted = !item.expired && item.mime.startsWith('image/');
   return useQuery({
-    queryKey: ['sales', 'money', 'chat-receipts', studentId, item.message_id],
+    queryKey: salesKeys.chatReceipt(studentId, item.message_id),
     queryFn: () =>
       apiFetch<SalesChatReceiptFile>(
         `/sales/money/chat-receipts/${encodeURIComponent(item.message_id)}?${scopeQuery(studentId, bind)}`,

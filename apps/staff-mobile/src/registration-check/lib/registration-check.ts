@@ -3,6 +3,7 @@ import { normalizePhone } from '@ab/core';
 import type { RegistrationCheckBy, RegistrationCheckQuery } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, toQueryString, t } from '@ab/mobile-kit';
+import { salesKeys } from '@/core/lib/keys';
 
 // The registration check (docs/16 row 23): is this family / child already a student?
 // GET /sales/registration-check by the guardian's phone (E.164) or a name / code. The checks the
@@ -16,7 +17,10 @@ type SearchResult = { search: RegistrationCheckQuery } | { error: CheckErrorCode
 export function searchOf(by: RegistrationCheckBy, text: string): SearchResult {
   const value = text.trim();
   if (value === '') return { error: 'one_of' };
-  if (by === 'name') return searchChars(value) < REGISTRATION_NAME_MIN ? { error: 'query_too_short' } : { search: { by, q: value } };
+  if (by === 'name')
+    return searchChars(value) < REGISTRATION_NAME_MIN
+      ? { error: 'query_too_short' }
+      : { search: { by, q: value } };
   const phone = normalizePhone(value);
   return phone.ok ? { search: { by, phone: phone.e164 } } : { error: 'invalid_phone' };
 }
@@ -31,11 +35,18 @@ const known = (code: unknown): code is CheckErrorCode =>
 
 /** The API's `{ code }` or a `validation_failed` issue in her words; anything else is generic. */
 export function checkErrorText(error: unknown): string {
-  const body = error instanceof ApiError && typeof error.body === 'object' && error.body !== null ? error.body : {};
+  const body =
+    error instanceof ApiError && typeof error.body === 'object' && error.body !== null
+      ? error.body
+      : {};
   const code: unknown = Reflect.get(body, 'code');
   const issues: unknown = Reflect.get(body, 'issues');
   const issue = Array.isArray(issues)
-    ? issues.map((i: unknown) => (typeof i === 'object' && i !== null ? Reflect.get(i, 'message') : undefined)).find(known)
+    ? issues
+        .map((i: unknown) =>
+          typeof i === 'object' && i !== null ? Reflect.get(i, 'message') : undefined,
+        )
+        .find(known)
     : undefined;
   const key = known(code) ? code : issue;
   return t.registrationCheck.error[key ?? 'generic'];
@@ -44,7 +55,7 @@ export function checkErrorText(error: unknown): string {
 /** The answer for the submitted search; nothing is fetched until there is one. */
 export function useRegistrationCheck(search: RegistrationCheckQuery | null) {
   return useQuery({
-    queryKey: ['sales', 'registration-check', search],
+    queryKey: salesKeys.registrationCheck(search),
     queryFn: () => apiFetch<RegistrationCheckView>(search ? checkPath(search) : ''),
     enabled: search !== null,
     staleTime: 0,

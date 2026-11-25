@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { familyKey } from '@/sales-subscribe/lib/family';
+import { salesKeys } from '@/core/lib/keys';
 import { linkMessage, referenceLine } from '@/sales-subscribe/payment-link/link-text';
 import { familyOf, KID, kid, PHONE, salesQuote } from '@/sales-subscribe/testing/fixtures';
 import { linkQuote, paymentLink } from '@/sales-subscribe/testing/link-fixtures';
@@ -30,10 +30,17 @@ jest.mock('@/inbox', () => ({
 
 const pl = t.paymentLinks;
 const TEACHER = '7a000000-0000-4000-8000-000000000001';
-const created = () => mockApiSend.mock.calls.find((c: unknown[]) => c[1] === '/sales/payment-links')?.[2] as Record<string, unknown> | undefined;
+const created = () =>
+  mockApiSend.mock.calls.find((c: unknown[]) => c[1] === '/sales/payment-links')?.[2] as
+    | Record<string, unknown>
+    | undefined;
 const serve = (child = kid({ teacher_id: TEACHER })) =>
   mockApiFetch.mockImplementation(async (path: string) =>
-    path === '/stripe/feature' ? { stripe: true } : path === '/sales/subscriptions/teachers' ? [{ id: TEACHER, name: 'أبرار' }] : familyOf(child),
+    path === '/stripe/feature'
+      ? { stripe: true }
+      : path === '/sales/subscriptions/teachers'
+        ? [{ id: TEACHER, name: 'أبرار' }]
+        : familyOf(child),
   );
 
 beforeEach(() => {
@@ -41,7 +48,11 @@ beforeEach(() => {
   mockWindow.open = true;
   serve();
   mockApiSend.mockImplementation(async (_m: string, path: string) =>
-    path === '/sales/payment-links/quote' ? linkQuote() : path === '/sales/subscriptions/quote' ? salesQuote : paymentLink(),
+    path === '/sales/payment-links/quote'
+      ? linkQuote()
+      : path === '/sales/subscriptions/quote'
+        ? salesQuote
+        : paymentLink(),
   );
 });
 
@@ -62,12 +73,20 @@ async function createLink(amount?: string, client = createTestQueryClient()) {
 test('the reference is the calculator price; the link carries the form’s student, package, day and teacher, never the phone', async () => {
   await createLink('170');
   await waitFor(() =>
-    expect(created()).toMatchObject({ studentId: KID, amount: 170, currency: 'SAR', pricing: { tier: 'standard' }, teacherId: TEACHER }),
+    expect(created()).toMatchObject({
+      studentId: KID,
+      amount: 170,
+      currency: 'SAR',
+      pricing: { tier: 'standard' },
+      teacherId: TEACHER,
+    }),
   );
   expect(created()?.['startsOn']).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   expect(created()).toHaveProperty('clientRequestId');
   expect(created()).not.toHaveProperty('phone');
-  expect(mockApiSend.mock.calls.some((c: unknown[]) => c[1] === '/sales/subscriptions')).toBe(false);
+  expect(mockApiSend.mock.calls.some((c: unknown[]) => c[1] === '/sales/subscriptions')).toBe(
+    false,
+  );
   expect(await screen.findByText(new RegExp(ltr('170')))).toBeTruthy();
   expect(screen.getByText(ltr(paymentLink().url))).toBeTruthy();
 });
@@ -90,10 +109,12 @@ test('the link made: the family refetches (its unpaid package); «إرسال ف�
   const refetch = jest.spyOn(client, 'invalidateQueries');
   await createLink(undefined, client);
   await fireEvent.press(await screen.findByRole('button', { name: pl.sendInChat }));
-  expect(refetch).toHaveBeenCalledWith({ queryKey: familyKey(PHONE) });
+  expect(refetch).toHaveBeenCalledWith({ queryKey: salesKeys.family(PHONE) });
   expect(mockSetText).toHaveBeenCalledWith(PHONE, linkMessage(paymentLink()));
   expect(mockBack).toHaveBeenCalled();
-  expect(mockApiSend.mock.calls.some((c: unknown[]) => String(c[1]).startsWith('/threads'))).toBe(false);
+  expect(mockApiSend.mock.calls.some((c: unknown[]) => String(c[1]).startsWith('/threads'))).toBe(
+    false,
+  );
 });
 
 test('no text can go in this chat (chatMaySend no): the box’s closed note, the box untouched', async () => {

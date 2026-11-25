@@ -1,11 +1,10 @@
 import type { SalesFamilyView, SalesMoneySubscriptionView } from '@ab/shared';
 import { useQuery, type QueryClient } from '@tanstack/react-query';
-import { apiFetch } from '@ab/mobile-kit';
+import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { salesKeys } from '@/core/lib/keys';
 
 // GET /sales/money/family?phone (R-ASST-01): HER students in this chat's family, each with the
 // packages still owed. Only hers: an empty list means nothing of the family is hers to sell.
-
-export const familyKey = (phone: string) => ['sales', 'money', 'family', phone] as const;
 
 export function familyPath(phone: string): string {
   return `/sales/money/family?phone=${encodeURIComponent(phone)}`;
@@ -13,7 +12,7 @@ export function familyPath(phone: string): string {
 
 export function useSalesFamily(phone: string, enabled = true) {
   return useQuery({
-    queryKey: familyKey(phone),
+    queryKey: salesKeys.family(phone),
     queryFn: () => apiFetch<SalesFamilyView>(familyPath(phone)),
     enabled: enabled && phone !== '',
   });
@@ -44,12 +43,14 @@ export function withOpenPackage(
 ): SalesFamilyView | undefined {
   if (!family) return family;
   const students = family.students.map((s) =>
-    s.id === sub.student.id && !s.open.some((o) => o.id === sub.id) ? { ...s, open: [...s.open, sub] } : s,
+    s.id === sub.student.id && !s.open.some((o) => o.id === sub.id)
+      ? { ...s, open: [...s.open, sub] }
+      : s,
   );
   return { students };
 }
 
 export function refreshFamily(client: QueryClient, phone: string): void {
-  void client.invalidateQueries({ queryKey: ['threads'] });
-  void client.invalidateQueries({ queryKey: familyKey(phone) });
+  void client.invalidateQueries({ queryKey: pathKey('/threads') });
+  void client.invalidateQueries({ queryKey: salesKeys.family(phone) });
 }

@@ -16,7 +16,8 @@ import {
 } from '@ab/mobile-kit';
 import { CancelPackage } from '@/payments';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { chosenOpen, familyKey, openPackages, useSalesFamily } from '@/sales-subscribe/lib/family';
+import { chosenOpen, openPackages, useSalesFamily } from '@/sales-subscribe/lib/family';
+import { salesKeys } from '@/core/lib/keys';
 import { OpenPackagePicker } from '@/sales-subscribe/components/OpenPackagePicker';
 import { TransferDone } from '@/sales-subscribe/components/TransferDone';
 import { TransferForm } from '@/sales-subscribe/components/TransferForm';
@@ -63,7 +64,7 @@ export function SalesTransferScreen() {
               <CancelPackage
                 key={`cancel-${sub.id}`}
                 cancel={(body) => apiSend('POST', `/sales/subscriptions/${sub.id}/cancel`, body)}
-                stale={[familyKey(phone)]}
+                stale={[salesKeys.family(phone)]}
               />
             ) : null}
             {sub ? <TransferForm key={sub.id} sub={sub} phone={phone} bind={bind} onDone={setDone} /> : null}
