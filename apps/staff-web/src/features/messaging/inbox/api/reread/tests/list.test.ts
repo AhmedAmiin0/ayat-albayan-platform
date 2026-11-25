@@ -4,6 +4,7 @@ import { beforeEach, expect, it, vi } from 'vitest';
 import { threadsQuery } from '@/features/messaging/inbox/api/api';
 import { heldRead, thread } from '@/features/messaging/inbox/api/patch-fixtures';
 import { rereadList } from '@/features/messaging/inbox/api/reread/reread';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
 // docs/44 K1 (#693 review): a list event during the list's FIRST load joins it (nothing to
 // cancel), so one more read follows that load: the event's change never waits for the 20 s poll.
@@ -51,6 +52,6 @@ it('a shown list with data: one read now, cancelling an older one, nothing chain
   shown(client);
   const refetch = vi.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);
   rereadList(client);
-  const filters = { queryKey: ['threads', 'list'], type: 'active' };
+  const filters = { queryKey: threadKeys.lists, type: 'active' };
   expect(refetch.mock.calls).toEqual([[filters, { cancelRefetch: true }]]);
 });

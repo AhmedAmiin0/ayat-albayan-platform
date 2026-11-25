@@ -4,6 +4,7 @@ import { beforeEach, expect, it, vi } from 'vitest';
 import { heldRead, msg, PHONE } from '@/features/messaging/inbox/api/patch-fixtures';
 import { rereadChat } from '@/features/messaging/inbox/api/reread/reread';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
 // docs/44 K1 (#693 review): a page load started while the event's delta is out (its answer is then
 // dropped) is followed by one more delta, and a deferred read never starts while the window has no
@@ -28,7 +29,7 @@ async function opened() {
   await client.infiniteQuery(threadQuery(PHONE));
   const query = client.getQueryCache().find({ queryKey: KEY, exact: true });
   if (query) vi.spyOn(query, 'isActive').mockReturnValue(true);
-  const delta = { queryKey: ['thread-delta', PHONE], queryFn: deltas, initialData: 0 };
+  const delta = { queryKey: threadKeys.delta(PHONE), queryFn: deltas, initialData: 0 };
   client.getQueryCache().build(client, delta);
   return { client, chat: new InfiniteQueryObserver(client, threadQuery(PHONE)) };
 }

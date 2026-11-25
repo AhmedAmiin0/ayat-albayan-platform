@@ -15,10 +15,16 @@ export interface CallSessionApi extends Pick<CallDerived, 'row' | 'phase' | 'inc
 const NO_ICE: CallConfigView['iceServers'] = [];
 
 /** The device's call and the incoming rings (docs/28 §3), polled while calls are on for this user. */
-export function useCallSession(input: { config: CallConfigView | undefined; rtc: RtcDeps | null; play: (s: MediaStream) => void }): CallSessionApi {
+export function useCallSession(input: {
+  config: CallConfigView | undefined;
+  rtc: RtcDeps | null;
+  play: (s: MediaStream) => void;
+}): CallSessionApi {
   const client = useQueryClient();
   const { play, rtc } = input;
-  const [store] = useState(() => new CallStore(webCalls, () => void client.invalidateQueries({ queryKey: [...CALLS_KEY] })));
+  const [store] = useState(
+    () => new CallStore(webCalls, () => void client.invalidateQueries({ queryKey: CALLS_KEY })),
+  );
   const state = useSyncExternalStore(store.subscribe, store.get);
   const enabled = input.config?.enabled === true && input.config.canCall;
   const active = useQuery(activeCallsQuery({ enabled, live: state.session !== null }));
@@ -32,7 +38,17 @@ export function useCallSession(input: { config: CallConfigView | undefined; rtc:
 
   // WhatsApp's answer, the call gone from the server, the 45 s timer, calls switched off (CallStore.follow).
   const { answer, gone, deadline, off } = d;
-  useEffect(() => store.follow({ answer, gone, deadline, off }), [store, answer, gone, deadline, off]);
+  useEffect(
+    () => store.follow({ answer, gone, deadline, off }),
+    [store, answer, gone, deadline, off],
+  );
 
-  return { store, session: state.session, row: d.row, phase: d.phase, incoming: d.incoming, notice: state.notice };
+  return {
+    store,
+    session: state.session,
+    row: d.row,
+    phase: d.phase,
+    incoming: d.incoming,
+    notice: state.notice,
+  };
 }

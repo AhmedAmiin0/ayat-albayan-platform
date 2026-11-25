@@ -5,6 +5,7 @@ import { patchLiveCaches } from '@/features/messaging/inbox/api/live-patch';
 import { heldRead, live, msg, PHONE } from '@/features/messaging/inbox/api/patch-fixtures';
 import { rereadChat } from '@/features/messaging/inbox/api/reread/reread';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
 // docs/44 K1: a live event never drops an older-page load in flight nor joins a first load.
 
@@ -30,7 +31,9 @@ const deltas = vi.fn(async () => 0);
 
 /** The open chat's delta query (thread-delta.ts): what an event reads. */
 function withDelta(client: QueryClient) {
-  return client.getQueryCache().build(client, { queryKey: ['thread-delta', PHONE], queryFn: deltas, initialData: 0 });
+  return client
+    .getQueryCache()
+    .build(client, { queryKey: threadKeys.delta(PHONE), queryFn: deltas, initialData: 0 });
 }
 
 /** A chat open with one page that has older ones, observed (the re-read's type: 'active'). */

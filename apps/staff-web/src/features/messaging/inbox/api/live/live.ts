@@ -10,6 +10,7 @@ import { useEffect, useSyncExternalStore } from 'react';
 import { supabase } from '@ab/web-kit/lib/http/supabase';
 import { patchLiveCaches } from '@/features/messaging/inbox/api/live-patch';
 import { rereadChat, rereadList } from '@/features/messaging/inbox/api/reread';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
 /**
  * The inbox's realtime nudge on the web (docs/12 §15), shared logic in @ab/client-core: the private
@@ -61,7 +62,7 @@ export function useInboxRealtime(enabled: boolean): void {
         },
         badge: () =>
           void client.invalidateQueries(
-            { queryKey: ['threads', 'nav-count'] },
+            { queryKey: threadKeys.navCount },
             { cancelRefetch: false },
           ),
         // docs/44 K1: the event's ticks into the caches at once (a visual patch); the re-reads

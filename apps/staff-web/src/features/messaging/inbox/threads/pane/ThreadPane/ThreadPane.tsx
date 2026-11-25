@@ -1,5 +1,5 @@
 import { threadBadge } from '@ab/shared';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { type QueryKey, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useId, useState, type ReactNode } from 'react';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
@@ -8,6 +8,7 @@ import { teacherMeQuery } from '@/features/teaching/teacher/api';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { leadByPhoneQuery } from '@/features/messaging/inbox/api/api';
+import { isThreadDetail, threadKeys } from '@/features/messaging/inbox/api/keys';
 import { useLiveThread } from '@/features/messaging/inbox/api/thread-delta';
 import { ChatActionsProvider } from '@/features/messaging/inbox/shared/ChatActionsProvider';
 import { Composer } from '@/features/messaging/inbox/composer/components/Composer';
@@ -67,7 +68,8 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   // Opening the thread marks their messages read (H2): refresh the unread counts (list + fihris).
   useEffect(() => {
     if (!loaded) return;
-    void queryClient.invalidateQueries({ queryKey: ['threads'], predicate: (q) => q.queryKey[1] !== 'detail' });
+    const notDetail = ({ queryKey }: { queryKey: QueryKey }) => !isThreadDetail(queryKey);
+    void queryClient.invalidateQueries({ queryKey: threadKeys.all, predicate: notDetail });
   }, [loaded, phone, queryClient]);
 
   if (detail.isPending) return <p className="text-sm text-ink-3">{t.common.loading}</p>;
