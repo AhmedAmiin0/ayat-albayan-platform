@@ -1,4 +1,4 @@
-import { meLoaded, permissionsOf, permissionsView, type Can } from '@ab/client-core';
+import { meLoaded, meQueryOptions, permissionsOf, permissionsView, type Can } from '@ab/client-core';
 import {
   canHideMessages,
   canUnhideMessages,
@@ -9,13 +9,12 @@ import type { Permission } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { apiFetch } from '../lib/http/api';
-import { pathKey } from '../lib/query/query-keys';
 import { useMeZone } from './use-me-zone';
 
 export { permissionsOf, type Can };
 
 /** GET /auth/me: role, permissions, tz and locale; one query for every hook that reads it. */
-export const meQuery = () => ({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
+export const meQuery = () => meQueryOptions({ apiFetch });
 
 /**
  * Dynamic roles: the app stays role-gated (admin, teacher, sales and assistant trees, verify-role.ts), and the

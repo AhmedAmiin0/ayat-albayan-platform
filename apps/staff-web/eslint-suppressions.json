@@ -1535,7 +1535,7 @@
       "count": 1
     },
     "max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/features/messaging/inbox/api/live/tests/lifecycle.test.tsx": {

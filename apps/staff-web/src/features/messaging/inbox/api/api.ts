@@ -11,7 +11,7 @@ import {
   type ThreadView,
 } from '@ab/shared';
 import type { LeadStatus } from '@ab/catalog';
-import { liveInterval, type TextAnswer } from '@ab/client-core';
+import { liveInterval, offPathKeys, type TextAnswer } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
@@ -57,8 +57,7 @@ export const threadPage = (path: string, init?: RequestInit) => apiFetch<ThreadD
  */
 export const threadFileQuery = (phone: string, messageId: string) =>
   queryOptions({
-    // Not under ['threads']: a send or an opened chat invalidates those, and this would sign it again.
-    queryKey: ['thread-file', phone, messageId],
+    queryKey: offPathKeys.threadFile(phone, messageId),
     queryFn: () =>
       apiFetch<ThreadFile>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file`),
     staleTime: 30 * 60_000,
