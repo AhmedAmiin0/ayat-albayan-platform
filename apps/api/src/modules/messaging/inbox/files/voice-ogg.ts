@@ -36,7 +36,10 @@ const spawnFfmpeg: FfmpegRun = (args) =>
  * missing or fails: the caller then sends the m4a as plain audio. Through temp files, never stdin:
  * Android's MP4 has its index (moov) at the end, which a pipe cannot seek to. The files are always removed.
  */
-export function toVoiceOgg(bytes: Uint8Array, run: FfmpegRun = spawnFfmpeg): Promise<Uint8Array | null> {
+export function toVoiceOgg(
+  bytes: Uint8Array,
+  run: FfmpegRun = spawnFfmpeg,
+): Promise<Uint8Array | null> {
   return inTempDir('voice-', async (dir) => {
     const input = join(dir, 'in.m4a');
     const output = join(dir, 'out.ogg');

@@ -14,6 +14,8 @@ describe('WebhookSettings', () => {
   });
 
   it('answers the stored reply window', async () => {
-    expect(await readerOf(WebhookSettings, { quick_reply_window_hours: 6 }).read()).toEqual({ quick_reply_window_hours: 6 });
+    expect(await readerOf(WebhookSettings, { quick_reply_window_hours: 6 }).read()).toEqual({
+      quick_reply_window_hours: 6,
+    });
   });
 });

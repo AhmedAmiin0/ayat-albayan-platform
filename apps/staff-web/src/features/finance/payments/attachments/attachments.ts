@@ -1,6 +1,6 @@
 import { PAYMENT_ATTACHMENTS_MAX, type PaymentAttachmentView } from '@ab/money';
 import { useRef } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { receiptProblem } from './ReceiptField';
 
 // Optional, capped, each checked like a receipt before upload; the API checks them again.

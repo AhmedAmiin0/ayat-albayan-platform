@@ -17,8 +17,13 @@ describe('WhatsappSettings (uncached primary-key read, docs/26 §5 26-P4)', () =
   });
 
   it('answers the stored switches', async () => {
-    const { db } = fakeDb({ settings: [rows({ messaging_enabled: true, auto_messages_enabled: true })] });
-    await expect(new WhatsappSettings(db).read()).resolves.toEqual({ messaging_enabled: true, auto_messages_enabled: true });
+    const { db } = fakeDb({
+      settings: [rows({ messaging_enabled: true, auto_messages_enabled: true })],
+    });
+    await expect(new WhatsappSettings(db).read()).resolves.toEqual({
+      messaging_enabled: true,
+      auto_messages_enabled: true,
+    });
   });
 
   it('a failed read rejects (never a default that could open the gate)', async () => {

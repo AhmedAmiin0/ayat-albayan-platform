@@ -1,5 +1,5 @@
 import { CheckField } from '@/components/settings/fields/CheckField';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { ConfigFieldset } from './ConfigFieldset';
 import { ConfigTextField } from './ConfigTextField';
 import type { SectionProps } from './config-draft';

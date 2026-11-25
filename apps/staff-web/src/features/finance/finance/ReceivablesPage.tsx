@@ -1,11 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { Button, Cartouche, QueryState, FormAlert, PageHead, t } from '@ab/web-kit';
 import { downloadCsv } from '@/features/reporting/exports/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { receivablesQuery } from './api';
 import { ReceivablesBody } from './ReceivablesBody';
 

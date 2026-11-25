@@ -1,5 +1,5 @@
 import type { FamilyTab } from '@ab/client-core';
-import type { IconName } from '@ab/web-kit/components/ui/display/icon';
+import type { IconName } from '@ab/web-kit';
 
 /** Each tab's page and icon in the family app's bar. */
 export const TAB_PATH: Readonly<Record<FamilyTab, string>> = {

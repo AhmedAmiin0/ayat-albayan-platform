@@ -8,7 +8,10 @@ const send = (c: HttpWhatsappClient) => c.sendTemplate({ to: '+966551234567', te
 
 function client(...replies: Parameters<typeof scriptedFetch>) {
   const f = scriptedFetch(...replies);
-  return { c: new HttpWhatsappClient(STUB_ENV, { fetch: f.fetch, timeoutMs: 1_000 }), requests: f.requests };
+  return {
+    c: new HttpWhatsappClient(STUB_ENV, { fetch: f.fetch, timeoutMs: 1_000 }),
+    requests: f.requests,
+  };
 }
 
 describe('HttpWhatsappClient against recorded wa-stub answers (no network)', () => {
@@ -36,8 +39,13 @@ describe('HttpWhatsappClient against recorded wa-stub answers (no network)', () 
 
   it('a 5xx without a Meta body or a refused connection → code null, safe to retry', async () => {
     const html = { status: 502, body: '<html>bad gateway</html>' };
-    expect(await send(client(html).c).catch((e: WaError) => e.info)).toMatchObject({ code: null, status: 502 });
-    const refused = new TypeError('fetch failed', { cause: Object.assign(new Error('connect'), { code: 'ECONNREFUSED' }) });
+    expect(await send(client(html).c).catch((e: WaError) => e.info)).toMatchObject({
+      code: null,
+      status: 502,
+    });
+    const refused = new TypeError('fetch failed', {
+      cause: Object.assign(new Error('connect'), { code: 'ECONNREFUSED' }),
+    });
     const down = send(client(refused).c);
     await expect(down).rejects.toMatchObject({ info: { code: null, status: 0, uncertain: false }, message: 'WhatsApp request failed' });
   });

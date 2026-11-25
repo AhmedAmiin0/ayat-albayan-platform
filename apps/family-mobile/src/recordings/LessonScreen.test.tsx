@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { offPathKeys } from '@ab/client-core';
 import { Linking } from 'react-native';
 import { t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { lessonPage, SARA } from './recordings.fixtures';
 import { LessonScreen } from './LessonScreen';
 

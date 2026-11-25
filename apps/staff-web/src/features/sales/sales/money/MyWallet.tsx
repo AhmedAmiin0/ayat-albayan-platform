@@ -1,12 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
+import { Button, EmptyState, FormAlert, ListSkeleton, Pager, t } from '@ab/web-kit';
 import { useBellSignal } from '@/features/messaging/notifications';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { MY_COMMISSIONS_PAGE_SIZE, MY_MONEY_KEY, myCommissionsQuery, myEarningsQuery } from '@/features/sales/sales/api';
 import { CommissionEntry } from './CommissionEntry';
 import { WalletCard } from './WalletCard';

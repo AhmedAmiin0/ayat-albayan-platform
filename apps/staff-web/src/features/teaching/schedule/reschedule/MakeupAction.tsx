@@ -1,12 +1,7 @@
 import { lessonWhenAt } from '@ab/shared';
 import { type LessonView, makeupOffer } from '@ab/schedule';
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
-import { useClock } from '@ab/web-kit/lib/clock';
+import { buttonVariants, ButtonRow, t, useViewerTz, usePublicConfig, useClock } from '@ab/web-kit';
 
 /** Admin only (R-SCH-10); eligibility via makeupOffer, shared with mobile. */
 export function MakeupAction({ lesson }: { lesson: LessonView }) {

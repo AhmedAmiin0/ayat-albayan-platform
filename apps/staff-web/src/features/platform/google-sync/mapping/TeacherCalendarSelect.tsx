@@ -1,8 +1,6 @@
 import type { GoogleFound, GoogleTeacherMapRow } from '@ab/catalog';
 import { useId } from 'react';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Select, StatusChip, t } from '@ab/web-kit';
 import { fill } from '@/features/platform/google-sync/google-format';
 import { NO_CALENDAR } from '@/features/platform/google-sync/google-input';
 

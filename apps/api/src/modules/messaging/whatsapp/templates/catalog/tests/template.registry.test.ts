@@ -7,14 +7,30 @@ import { RENEWAL_DUE_SEED, REPORT_READY_SEED } from '@/modules/messaging/whatsap
 import { RECORDED, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), saveLineSync: vi.fn(async () => undefined), lineSyncs: vi.fn(async () => new Map()) };
-const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() };
+const queries = {
+  all: vi.fn(),
+  get: vi.fn(),
+  update: vi.fn(),
+  insert: vi.fn(),
+  approvals: vi.fn(async () => []),
+  saveLineSync: vi.fn(async () => undefined),
+  lineSyncs: vi.fn(async () => new Map()),
+};
+const client = {
+  configured: vi.fn(),
+  getTemplates: vi.fn(),
+  submitTemplate: vi.fn(),
+  canUploadSamples: vi.fn(),
+  uploadSample: vi.fn(),
+};
 /** Not configured (reset mocks answer undefined): one line, as before the chat line (template.registry.lines.test). */
 const chatClient = { configured: vi.fn(), getTemplates: vi.fn() };
 const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const RENEWAL = RENEWAL_DUE_SEED;
-const recorded = RECORDED.templates.body.data.map((t) => toMetaTemplate({ ...t, components: [...t.components] }));
+const recorded = RECORDED.templates.body.data.map((t) =>
+  toMetaTemplate({ ...t, components: [...t.components] }),
+);
 
 const registry = () =>
   templateServices(queries, { notifications: client, chat: chatClient }, audit);
@@ -26,7 +42,10 @@ describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {
     client.configured.mockReturnValue(true);
     client.getTemplates.mockResolvedValue(recorded);
     queries.all.mockResolvedValue([templateRow({ body_ar: 'شكل قديم' }), RENEWAL]);
-    queries.update.mockImplementation(async (key: string, patch: object) => ({ ...templateRow({ key }), ...patch }));
+    queries.update.mockImplementation(async (key: string, patch: object) => ({
+      ...templateRow({ key }),
+      ...patch,
+    }));
     queries.get.mockResolvedValue(RENEWAL);
     client.submitTemplate.mockResolvedValue({ metaId: 'meta-9', status: 'PENDING' });
   });
@@ -94,8 +113,13 @@ describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {
   });
 
   it('approved(key): the view only when approved (B2’s template_not_approved)', async () => {
-    queries.get.mockResolvedValueOnce(templateRow()).mockResolvedValueOnce(RENEWAL).mockResolvedValueOnce(null);
-    await expect(registry().catalog.approved('booking_confirmation')).resolves.toMatchObject({ key: 'booking_confirmation' });
+    queries.get
+      .mockResolvedValueOnce(templateRow())
+      .mockResolvedValueOnce(RENEWAL)
+      .mockResolvedValueOnce(null);
+    await expect(registry().catalog.approved('booking_confirmation')).resolves.toMatchObject({
+      key: 'booking_confirmation',
+    });
     await expect(registry().catalog.approved('renewal_due')).resolves.toBeNull();
     await expect(registry().catalog.approved('nope')).resolves.toBeNull();
   });

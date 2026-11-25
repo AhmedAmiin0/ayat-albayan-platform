@@ -40,7 +40,8 @@ export class OwnNumbers {
   async phones(now = Date.now()): Promise<ReadonlySet<string>> {
     const everyMs = integrationRefreshMs(loadEnv());
     if (everyMs === null) return NONE;
-    if (this.cached && now - this.cached.at < Math.max(everyMs, MIN_TTL_MS)) return this.cached.phones;
+    if (this.cached && now - this.cached.at < Math.max(everyMs, MIN_TTL_MS))
+      return this.cached.phones;
     try {
       this.cached = { phones: ownPhonesOf(await this.queries.all()), at: now };
     } catch (e) {

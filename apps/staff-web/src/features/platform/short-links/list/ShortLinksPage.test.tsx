@@ -1,7 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { renderWithClient } from '@ab/web-kit/testing/query-render';
+import { t, renderWithClient } from '@ab/web-kit';
 import { linkRow } from '@/features/platform/short-links/shared/short-links.fixtures';
 import { ShortLinksPage } from './ShortLinksPage';
 

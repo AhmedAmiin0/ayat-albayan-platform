@@ -1,7 +1,6 @@
 import type { SettingKey } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import { defaultForm, isModified, rowForm } from '@/features/platform/settings/registry-form/row-form';
 import { isDirty } from '@/features/platform/settings/registry-form/settings-dirty';
 import { describeItem, settingTarget } from '@/features/platform/settings/values/description/row-description';

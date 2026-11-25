@@ -1,4 +1,4 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 
 /** The empty-list title only applies when the list is truly empty, not filtered (docs/22 §4). */

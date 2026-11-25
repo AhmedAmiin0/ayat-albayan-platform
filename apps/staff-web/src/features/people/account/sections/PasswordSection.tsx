@@ -1,7 +1,6 @@
 import { DEFAULT_PASSWORD_MIN } from '@ab/shared';
 import { useState, type SubmitEvent } from 'react';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { FormAlert, t } from '@ab/web-kit';
 import { passwordErrors, type PasswordForm } from '@/features/people/account/account-validation';
 import { AccountSection } from './AccountSection';
 import { changePassword } from '@/features/people/account/api';

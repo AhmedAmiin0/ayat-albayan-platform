@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYMENT } from '@/features/finance/subscriptions/money-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { closeFilters, openFilters } from '@/test/open-filters';
 import { PaymentsPage } from './PaymentsPage';
 import { parsePaymentsSearch, paymentsView, type PaymentsUrlSearch } from './search';

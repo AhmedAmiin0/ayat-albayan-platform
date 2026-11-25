@@ -1,10 +1,8 @@
 import type { SalesPaymentView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { Button, buttonVariants, Dialog, t } from '@ab/web-kit';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { studentLabel } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /** `onBookCourse` books the course days for the paid package's student. */
 type Props = { payment: SalesPaymentView; onClose: () => void; onBookCourse?: (() => void) | undefined };

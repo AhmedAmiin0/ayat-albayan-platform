@@ -12,8 +12,7 @@ import {
   type PackageId,
 } from '@ab/money';
 import type { ReactNode } from 'react';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Input, t } from '@ab/web-kit';
 import { OTHER, type Selection } from '@/features/finance/pricing/api';
 import { SegmentStep } from './SegmentStep';
 import { Stepper } from './Stepper';

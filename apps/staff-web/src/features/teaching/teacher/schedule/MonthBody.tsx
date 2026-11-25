@@ -1,7 +1,5 @@
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { ListSkeleton, t, cn } from '@ab/web-kit';
 import { LoadRetry } from '@/features/teaching/teacher/LoadRetry';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
 import { MonthDayList } from './MonthDayList';
 import { MonthGrid } from './MonthGrid';
 import type { MyMonthState } from './use-my-month';

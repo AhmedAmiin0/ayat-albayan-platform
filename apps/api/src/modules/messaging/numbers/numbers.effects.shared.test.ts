@@ -10,7 +10,11 @@ function copy(redis: ReturnType<typeof fakeRedis>) {
   const config = { reload: vi.fn(async () => true) };
   const own = { forget: vi.fn() };
   const audit = { record: vi.fn(async () => undefined) };
-  const fx = new NumbersEffects(audit as unknown as AuditService, config as unknown as NumbersConfig, own as unknown as OwnNumbers);
+  const fx = new NumbersEffects(
+    audit as unknown as AuditService,
+    config as unknown as NumbersConfig,
+    own as unknown as OwnNumbers,
+  );
   const { cache } = redis.copy();
   (fx as unknown as { shared: SharedCache }).shared = cache;
   fx.onModuleInit();

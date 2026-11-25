@@ -1,10 +1,6 @@
 import { fillSlots, sendCounts } from '@ab/client-core';
 import type { ShortLinkDetail } from '@ab/shared';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Cartouche, Icon, Button, PageHead, t } from '@ab/web-kit';
 import { StateChip } from '@/features/platform/short-links/shared/LinkChips';
 import type { LinkDialog } from '@/features/platform/short-links/edit/use-link-actions';
 

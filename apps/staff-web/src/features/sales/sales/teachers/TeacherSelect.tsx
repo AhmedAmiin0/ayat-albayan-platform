@@ -1,7 +1,5 @@
 import type { SalesTeacherView } from '@ab/shared';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
+import { Select, t, teacherLabel } from '@ab/web-kit';
 
 export interface TeacherSelectProps {
   teachers: readonly SalesTeacherView[];

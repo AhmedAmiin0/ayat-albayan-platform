@@ -9,12 +9,22 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/23 phase 3: messages.number_id is stamped at claim in module mode only; legacy claims are unchanged.
 
-const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn(), staffAtSend: vi.fn() };
+const queries = {
+  claim: vi.fn(),
+  sent: vi.fn(),
+  failure: vi.fn(),
+  expire: vi.fn(),
+  staffAtSend: vi.fn(),
+};
 const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };
 const NOW = new Date('2026-10-02T08:00:00Z');
 
 function run() {
-  const w = new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, { notifyAdmins: vi.fn() } as unknown as PushService);
+  const w = new MessageWorker(
+    queries as unknown as SenderRepo,
+    dispatch as unknown as MessageDispatch,
+    { notifyAdmins: vi.fn() } as unknown as PushService,
+  );
   w.wait = vi.fn(async () => undefined);
   return w.process({ row: dueMessage(), template: templateRow(), now: NOW, autoOn: true });
 }

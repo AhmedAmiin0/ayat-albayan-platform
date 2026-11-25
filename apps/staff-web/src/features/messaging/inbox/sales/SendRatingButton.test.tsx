@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { detail, message, PHONE, template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { clearOwnSends, lastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';

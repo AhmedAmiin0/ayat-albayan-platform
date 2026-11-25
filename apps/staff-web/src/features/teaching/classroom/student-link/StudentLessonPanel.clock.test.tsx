@@ -1,8 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { setClockPref } from '@ab/web-kit/lib/clock';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { opensAtText } from '@ab/web-kit/classroom/room/livekit/window-hint';
+import { setClockPref, ApiError, opensAtText } from '@ab/web-kit';
 import { StudentLessonPanel } from './StudentLessonPanel';
 
 const OPENS = '2026-10-03T15:45:00.000Z';

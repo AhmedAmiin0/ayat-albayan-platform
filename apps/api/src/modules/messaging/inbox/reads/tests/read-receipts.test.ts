@@ -8,8 +8,14 @@ import type { ThreadReadsRepo } from '@/modules/messaging/inbox/threads/store';
 
 const PHONE = '+966501234567';
 const NOW = new Date('2026-10-10T08:00:00Z');
-const BOTH: ReadMark[] = [{ waMessageId: 'wamid.n', line: 'notifications' }, { waMessageId: 'wamid.c', line: 'chat' }];
-const client = () => ({ configured: vi.fn(() => true), markRead: vi.fn().mockResolvedValue(undefined) });
+const BOTH: ReadMark[] = [
+  { waMessageId: 'wamid.n', line: 'notifications' },
+  { waMessageId: 'wamid.c', line: 'chat' },
+];
+const client = () => ({
+  configured: vi.fn(() => true),
+  markRead: vi.fn().mockResolvedValue(undefined),
+});
 
 function setup(marks: ReadMark[], open = true) {
   const queries = { markInboundRead: vi.fn().mockResolvedValue(marks) };

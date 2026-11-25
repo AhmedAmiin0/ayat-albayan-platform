@@ -1,7 +1,5 @@
 import { PROGRAMS, type Program } from '@ab/catalog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Select, t } from '@ab/web-kit';
 
 export interface ProgramFieldProps {
   value: Program;

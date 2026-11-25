@@ -1,8 +1,7 @@
 import { LESSON_FILES_KEY, uploadLessonFile, type UploadInput } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@ab/web-kit/lib/http/api';
+import { apiSend, openAfter } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import { openAfter } from '@ab/web-kit/portal/open-file';
 import { pdfUrl } from '@/features/reporting/reports';
 import { lessonFiles } from './api';
 

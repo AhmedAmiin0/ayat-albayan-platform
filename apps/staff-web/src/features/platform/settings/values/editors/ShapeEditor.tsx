@@ -1,10 +1,7 @@
 import { settingDef, type SettingKey } from '@ab/settings';
 import { useId, useState } from 'react';
 import { settingText } from '@/components/settings/search/setting-text';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Dialog, NuqtaGlyph, t } from '@ab/web-kit';
 import { rowUpdate, rowValue } from '@/features/platform/settings/registry-form/row-form';
 import type { SettingsForm } from '@/features/platform/settings/registry-form/settings-form';
 import { valueText } from '@/features/platform/settings/values/lib/value-format';

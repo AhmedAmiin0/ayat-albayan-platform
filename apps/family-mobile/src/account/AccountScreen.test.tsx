@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t, PUSH_OPT_OUT_KEY } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { PROFILE_HREF } from '@/nav';
 import { AccountScreen } from './AccountScreen';
 

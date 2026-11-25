@@ -1,6 +1,4 @@
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { EmptyState, t, cn } from '@ab/web-kit';
 import { leadGridClass, LeadListItem } from './LeadListItem';
 import type { LeadView } from '@ab/shared';
 

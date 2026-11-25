@@ -1,5 +1,5 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import type { DayRange } from './search';
 import type { DashboardResponse, DashboardWork } from '@ab/money';
 import { dashboardKeys } from '@/features/reporting/keys';

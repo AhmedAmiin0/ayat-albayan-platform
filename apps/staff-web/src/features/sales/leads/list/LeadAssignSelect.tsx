@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Select } from '@ab/web-kit/components/ui/form/select';
+import { Select, t } from '@ab/web-kit';
 import { assignLead, salesPeopleQuery } from '@/features/sales/sales/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { LeadView } from '@ab/shared';
 import { leadKeys, salesKeys } from '@/features/sales/keys';
 

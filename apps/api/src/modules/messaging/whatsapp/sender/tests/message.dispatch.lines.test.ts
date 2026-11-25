@@ -11,7 +11,8 @@ const client = () => ({ configured: vi.fn(() => true), sendTemplate: vi.fn(), se
 let notifications = client();
 let chat = client();
 const storage = { signedDownload: vi.fn() } as unknown as StorageService;
-const dispatch = () => new MessageDispatch({ notifications, chat } as unknown as WhatsappLines, storage);
+const dispatch = () =>
+  new MessageDispatch({ notifications, chat } as unknown as WhatsappLines, storage);
 const text = (over: Parameters<typeof dueMessage>[0] = {}) =>
   dueMessage({ template_key: null, template_params: null, body: 'وعليكم السلام', ...over });
 

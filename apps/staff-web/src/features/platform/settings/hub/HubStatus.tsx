@@ -1,14 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ReactElement } from 'react';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { StatusChip, t, readThemePref } from '@ab/web-kit';
 import { googleStatusQuery } from '@/features/platform/google-sync/google-api';
 import { fill } from '@/features/platform/google-sync/google-format';
 import { integrationsQuery } from '@/features/platform/integrations/integrations-api';
 import { sendGateQuery } from '@/features/messaging/messaging/api';
 import { sendingChip } from '@/features/messaging/messaging/sending-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { settingsQuery } from '@/lib/settings/settings-api';
-import { readThemePref } from '@ab/web-kit/lib/theme';
 import { googleChips, integrationChips, valuesSummary, type HubChip } from './hub-status';
 import type { HubDestination } from './hub-paths';
 

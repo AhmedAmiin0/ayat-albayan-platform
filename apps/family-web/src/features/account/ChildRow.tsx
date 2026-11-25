@@ -1,10 +1,5 @@
 import type { PortalStudent } from '@ab/shared';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { Dot } from '@ab/web-kit/components/ui/surface/pill';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Avatar, Icon, Ltr, Card, Dot, t } from '@ab/web-kit';
 import { useChildTeacher } from './use-child-teacher';
 
 interface Props {

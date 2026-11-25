@@ -48,14 +48,20 @@ export async function pageRows(repos: PageRepos, q: ThreadPageQuery): Promise<Pa
  * The first page's read stamp, only when the thread has unread rows (a poll of a read chat writes
  * nothing), up to the newest row shown. Meta's receipt goes out in the background (ReadReceipts).
  */
-export async function stampRead(receipts: ReadReceipts, input: { q: ThreadPageQuery; page: PageRows; now: Date }): Promise<boolean> {
+export async function stampRead(
+  receipts: ReadReceipts,
+  input: { q: ThreadPageQuery; page: PageRows; now: Date },
+): Promise<boolean> {
   const { q, page, now } = input;
   if (!isFirstPage(q) || !page.found || page.found.unread_count === 0) return false;
   return (await receipts.open(q.phone, { now, upTo: page.rows[0]?.created_at })).stamped;
 }
 
 /** After a stamp, the answer reads as if stamped first: 0 unread, the page's inbound rows read now. */
-export function asRead<T extends { thread: ThreadView | null; messages: MessageView[] }>(detail: T, at: Date): T {
+export function asRead<T extends { thread: ThreadView | null; messages: MessageView[] }>(
+  detail: T,
+  at: Date,
+): T {
   const readAt = at.toISOString();
   return {
     ...detail,

@@ -15,7 +15,11 @@ const TWO_LINES: [string, string][] = [
 ];
 const status = (e: unknown) => (e as { getStatus(): number }).getStatus();
 const code = (e: unknown) => (e as { getResponse(): { code: string } }).getResponse().code;
-const refused = async (p: Promise<unknown>) => p.then(() => null, (e: unknown) => [status(e), code(e)]);
+const refused = async (p: Promise<unknown>) =>
+  p.then(
+    () => null,
+    (e: unknown) => [status(e), code(e)],
+  );
 
 afterEach(() => {
   setIntegrationOverlay({});
@@ -46,11 +50,18 @@ describe('ThreadReactionService — a reaction', () => {
   it('removing ours sends an empty emoji and keeps what it was in `previous`', async () => {
     const h = reactionHarness(target({ our_reaction: '❤️', our_reaction_by: 'a2', our_reaction_at: '2026-10-27T11:30:00Z' }));
     await h.service.react(request({ input: { emoji: null, clientRequestId: REQ } }), NOW);
-    expect(h.reactions.setOurs).toHaveBeenCalledWith(expect.objectContaining({ ours: expect.objectContaining({ emoji: null }) }));
-    expect(h.outbox.send).toHaveBeenCalledWith(expect.objectContaining({
-      body: '',
-      interactive_payload: expect.objectContaining({ reaction: { message_id: 'wamid.T', emoji: '' }, previous: { emoji: '❤️', by: 'a2', at: '2026-10-27T11:30:00Z' } }),
-    }));
+    expect(h.reactions.setOurs).toHaveBeenCalledWith(
+      expect.objectContaining({ ours: expect.objectContaining({ emoji: null }) }),
+    );
+    expect(h.outbox.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        body: '',
+        interactive_payload: expect.objectContaining({
+          reaction: { message_id: 'wamid.T', emoji: '' },
+          previous: { emoji: '❤️', by: 'a2', at: '2026-10-27T11:30:00Z' },
+        }),
+      }),
+    );
   });
 
   it('the same request twice is ONE job, and the retry writes nothing', async () => {

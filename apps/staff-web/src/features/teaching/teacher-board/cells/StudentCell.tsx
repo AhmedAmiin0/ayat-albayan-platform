@@ -1,8 +1,6 @@
 import { studentStatusStyle } from '@ab/money';
 import { Link } from '@tanstack/react-router';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, StatusChip, t } from '@ab/web-kit';
 import type { BoardStudent } from '@/features/teaching/teacher-board/board-rows';
 
 export interface StudentCellProps {

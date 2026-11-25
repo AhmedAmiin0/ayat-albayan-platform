@@ -1,5 +1,5 @@
 import type { PortalStudent } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** The child's name (the page's heading) and code; `over`: a greeting on a student's home. */
 export function ChildHead({ student, over }: { student: PortalStudent; over?: string }) {

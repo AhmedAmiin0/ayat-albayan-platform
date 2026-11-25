@@ -4,7 +4,8 @@ import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper
 
 const NOW = new Date('2026-10-12T10:00:00Z');
 const hoursAgo = (h: number) => new Date(NOW.getTime() - h * 3_600_000).toISOString();
-const thread = (over: Partial<ThreadRow>) => ({ last_chat_inbound_at: null, last_notifications_inbound_at: null, ...over }) as ThreadRow;
+const thread = (over: Partial<ThreadRow>) =>
+  ({ last_chat_inbound_at: null, last_notifications_inbound_at: null, ...over }) as ThreadRow;
 
 afterEach(() => vi.unstubAllEnvs());
 

@@ -3,7 +3,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FILTER_DEBOUNCE_MS } from '@/components/data-table/ColumnFilterText';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
 import { InvoicesPage } from './InvoicesPage';
 import { ReceivablesPage } from './ReceivablesPage';

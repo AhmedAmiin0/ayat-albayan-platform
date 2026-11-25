@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { StaffPanel } from '@/features/people/auth/login/StaffPanel/StaffPanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -57,7 +57,7 @@ describe('StaffPanel «الدخول برمز واتساب» (docs/46 A6)', () =>
 
 describe('the teacher code tab speaks for teachers (review)', () => {
   it('a 503 at verify says the teacher text, not the family one', async () => {
-    const { signInWithCode } = await import('@ab/web-kit/auth/sign-in/sign-in');
+    const { signInWithCode } = await import('@ab/web-kit');
     vi.mocked(signInWithCode).mockResolvedValue({
       ok: false,
       error: t.familyAuth.errors.codes_unavailable,

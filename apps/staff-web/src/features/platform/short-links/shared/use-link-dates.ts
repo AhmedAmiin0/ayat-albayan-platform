@@ -1,12 +1,7 @@
 import { expiryParts, expiryText, SHORT_LINK_PURGE_DAYS, type ExpiryParts } from '@ab/client-core';
 import type { ShortLinkRow } from '@ab/shared';
 import { clockOf, dateText } from '@ab/time';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { dateAndClock } from '@ab/web-kit/lib/clock-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { useClock, dateAndClock, t, locale, useNow, useViewerTz } from '@ab/web-kit';
 
 // Dates in the viewer's zone and clock, plus the relative expiry line.
 

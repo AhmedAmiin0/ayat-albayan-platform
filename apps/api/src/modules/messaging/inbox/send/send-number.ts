@@ -31,7 +31,10 @@ const log = new Logger('SendNumber');
  * its line's default number; a stamped row only for its own number, so an inbound on a second number never
  * opens a window on the default (review: a reply must leave from a number the family wrote to).
  */
-export function numberWindows(rows: readonly ThreadWindow[], numbers: readonly OverlayNumber[]): NumberWindow[] {
+export function numberWindows(
+  rows: readonly ThreadWindow[],
+  numbers: readonly OverlayNumber[],
+): NumberWindow[] {
   const defaultOf = (line: WaLine) => numbers.find((n) => n.is_default && n.purpose === line)?.id;
   return rows.flatMap((r) => {
     const numberId = r.numberId ?? defaultOf(r.line);
@@ -40,13 +43,18 @@ export function numberWindows(rows: readonly ThreadWindow[], numbers: readonly O
 }
 
 /** The overlay number can send now: enabled and its own credentials make a client. */
-const sendable = (n: OverlayNumber | undefined): n is OverlayNumber => Boolean(n?.enabled && n.env !== null);
+const sendable = (n: OverlayNumber | undefined): n is OverlayNumber =>
+  Boolean(n?.enabled && n.env !== null);
 
 /**
  * replyNumber() over the thread's windows per number: { number_id, line = purpose }, else
  * the inbox's codes (number_not_configured → line_not_configured 503, session_closed → 409).
  */
-export function pickNumber(input: { rows: readonly ThreadWindow[]; numbers: readonly OverlayNumber[]; now: Date }): SendPick {
+export function pickNumber(input: {
+  rows: readonly ThreadWindow[];
+  numbers: readonly OverlayNumber[];
+  now: Date;
+}): SendPick {
   const byId = new Map(input.numbers.map((n) => [n.id, n]));
   const windows = mergeWindows(numberWindows(input.rows, input.numbers));
   const picked = replyNumber({ windows, now: input.now, canSend: (id) => sendable(byId.get(id)) });

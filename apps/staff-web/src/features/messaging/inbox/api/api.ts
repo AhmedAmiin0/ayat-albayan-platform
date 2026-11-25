@@ -13,8 +13,7 @@ import {
 import type { LeadStatus } from '@ab/catalog';
 import { liveInterval, offPathKeys, type TextAnswer } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { env } from '@ab/web-kit/lib/http/env';
+import { apiFetch, apiSend, env } from '@ab/web-kit';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { inboxLive } from './live';
 import type { LeadView } from '@ab/shared';

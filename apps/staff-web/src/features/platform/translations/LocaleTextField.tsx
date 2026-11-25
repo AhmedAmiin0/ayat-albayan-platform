@@ -1,10 +1,6 @@
 import type { Locale } from '@ab/core';
 import { MAX_TRANSLATION_LENGTH } from '@ab/i18n';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { controlClass } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Button, Field, controlClass, t, cn } from '@ab/web-kit';
 import type { RegistryHint } from './registry-hints';
 import { ValuesLink } from './ValuesLink';
 

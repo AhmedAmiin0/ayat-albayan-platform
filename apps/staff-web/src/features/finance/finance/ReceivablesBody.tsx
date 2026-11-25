@@ -1,8 +1,7 @@
 import { AGING_BUCKETS } from '@ab/money';
 import { DataTable } from '@/components/data-table/DataTable';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
+import { EmptyState, t } from '@ab/web-kit';
 import { Amount } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { ReceivablesView } from './api';
 import { receivableColumns } from './receivable-columns';
 

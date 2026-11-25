@@ -31,6 +31,9 @@ describe('orderedAt: two messages in one Meta second keep their arrival order', 
     await s.inbound.handle(event({ waMessageId: 'wamid.A' }));
     const later = new Date(AT.getTime() + 1000);
     await s.inbound.handle(event({ waMessageId: 'wamid.B', at: later }));
-    expect(s.queries.stored.map((r) => r.created_at)).toEqual([AT.toISOString(), later.toISOString()]);
+    expect(s.queries.stored.map((r) => r.created_at)).toEqual([
+      AT.toISOString(),
+      later.toISOString(),
+    ]);
   });
 });

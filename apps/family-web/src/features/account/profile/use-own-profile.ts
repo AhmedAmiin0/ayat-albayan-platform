@@ -1,6 +1,6 @@
 import { ownProfileQuery } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 
 const ownProfile = ownProfileQuery({ apiFetch });
 

@@ -2,7 +2,7 @@ import type { PendingReportView } from '@ab/shared';
 import { act, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { PendingReports } from '@/features/reporting/reports/history/PendingReports/PendingReports';
 
 const apiFetch = vi.hoisted(() => vi.fn());

@@ -2,10 +2,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, teacherLabel } from '@ab/web-kit';
 import { reopenPayout, unpayPayout, type PayoutView } from '@/features/finance/payouts/api';
 import { PayPayoutDialog } from './PayPayoutDialog';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 
 export type PayoutDialog = { payout: PayoutView; kind: 'pay' | 'reopen' | 'unpay' };
 

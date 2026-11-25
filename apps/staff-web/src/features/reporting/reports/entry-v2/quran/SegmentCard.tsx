@@ -1,7 +1,6 @@
 import { fillSlots } from '@ab/client-core';
 import { MAX_SEGMENTS, segmentsOf, withSegment, type ReportContent, type SegmentKind } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import type { ReportEntryV2State } from '@/features/reporting/reports/entry-v2/use-report-entry-v2';
 import { CARD, CARD_TITLE } from '@/features/reporting/reports/entry-v2/v2-classes';
 import { SegmentPart } from './SegmentPart';

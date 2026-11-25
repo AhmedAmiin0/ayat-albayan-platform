@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { evolutionErrorText } from './evolution-sync-api';
 
 // Review fixes 9 and 13: a save that was not pushed says so; a refused value is not «unreachable»

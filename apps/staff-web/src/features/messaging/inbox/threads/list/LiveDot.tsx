@@ -1,6 +1,5 @@
 import { liveDotState, type LiveDotState } from '@ab/client-core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t, cn } from '@ab/web-kit';
 import { useInboxLive } from '@/features/messaging/inbox/api/live';
 
 /** The dot's colour (existing tokens, no palette change) and the words a screen reader hears. */

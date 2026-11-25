@@ -1,4 +1,4 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { MyEarnings } from '@/features/sales/sales/teachers/MyEarnings';
 import { MyPayments } from './MyPayments';
 import { MyWallet } from './MyWallet';

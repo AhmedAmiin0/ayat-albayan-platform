@@ -37,7 +37,8 @@ export interface ExternalMessage {
 }
 
 const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
-const first = (...values: (string | null)[]): string | null => values.find((v) => v !== null) ?? null;
+const first = (...values: (string | null)[]): string | null =>
+  values.find((v) => v !== null) ?? null;
 
 /** Unix seconds (Meta; 13 digits = milliseconds) or an ISO string → Date; null when missing or unreadable. */
 export function messageTime(ts: string | null): Date | null {
@@ -64,7 +65,9 @@ export function templateParams(components: unknown): Record<string, string> | nu
 
 function statusOf(m: unknown): DeliveryStatus | null {
   const s = field(m, 'kapso.status');
-  return (DELIVERY_STATUSES as readonly (string | null)[]).includes(s) ? (s as DeliveryStatus) : null;
+  return (DELIVERY_STATUSES as readonly (string | null)[]).includes(s)
+    ? (s as DeliveryStatus)
+    : null;
 }
 
 /** Meta's mime, else Kapso's media_data, else WhatsApp's default for the type. */

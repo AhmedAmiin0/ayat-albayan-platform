@@ -7,14 +7,23 @@ import type { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 const gate = fakeSwitches();
-const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn(), anyDue: vi.fn() };
+const queries = {
+  approvedTemplates: vi.fn(),
+  due: vi.fn(),
+  holdAutomatic: vi.fn(),
+  anyDue: vi.fn(),
+};
 const worker = { process: vi.fn(), deferRest: vi.fn(), release: vi.fn(async () => 0) };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const booking = templateRow();
 const reminder = templateRow({ key: 'lesson_reminder', meta_name: 'lesson_reminder_v2' });
 
 const sender = () =>
-  new MessageSender(gate as unknown as SendGate, queries as unknown as SenderRepo, worker as unknown as MessageWorker);
+  new MessageSender(
+    gate as unknown as SendGate,
+    queries as unknown as SenderRepo,
+    worker as unknown as MessageWorker,
+  );
 
 describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () => {
   beforeEach(() => {
@@ -30,7 +39,17 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
 
   it('kill switch / env / config closed → reads nothing, sends nothing, rows stay queued', async () => {
     gate.open.mockResolvedValue(false);
-    await expect(sender().runOnce(NOW)).resolves.toEqual({ sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, held: 0, paused: 0, skipped: 0, waiting: 0 });
+    await expect(sender().runOnce(NOW)).resolves.toEqual({
+      sent: 0,
+      retry: 0,
+      failed: 0,
+      expired: 0,
+      stale: 0,
+      held: 0,
+      paused: 0,
+      skipped: 0,
+      waiting: 0,
+    });
     expect(queries.due).not.toHaveBeenCalled();
     expect(worker.process).not.toHaveBeenCalled();
   });
@@ -42,7 +61,17 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
       [{ row: dueMessage(), template: booking, now: NOW, autoOn: true }],
       [{ row: expect.objectContaining({ id: 'm2' }), template: null, now: NOW, autoOn: true }],
     ]);
-    expect(summary).toEqual({ sent: 1, retry: 1, failed: 0, expired: 0, stale: 0, held: 0, paused: 0, skipped: 0, waiting: 0 });
+    expect(summary).toEqual({
+      sent: 1,
+      retry: 1,
+      failed: 0,
+      expired: 0,
+      stale: 0,
+      held: 0,
+      paused: 0,
+      skipped: 0,
+      waiting: 0,
+    });
     expect(queries.holdAutomatic).not.toHaveBeenCalled();
   });
 
@@ -51,13 +80,18 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
     queries.holdAutomatic.mockResolvedValue(2); // e.g. the 2 renewal_due rows under a not-yet-approved template
     worker.process.mockReset().mockResolvedValueOnce('held').mockResolvedValueOnce('sent');
     const summary = await sender().runOnce(NOW);
-    expect(queries.holdAutomatic.mock.invocationCallOrder[0]).toBeLessThan(queries.due.mock.invocationCallOrder[0] ?? 0);
+    expect(queries.holdAutomatic.mock.invocationCallOrder[0]).toBeLessThan(
+      queries.due.mock.invocationCallOrder[0] ?? 0,
+    );
     expect(worker.process.mock.calls.map(([job]) => job.autoOn)).toEqual([false, false]);
     expect(summary).toMatchObject({ held: 3, sent: 1 });
   });
 
   it('automatic messages turned OFF mid-pass: the switch is read before every row', async () => {
-    gate.automaticOn.mockResolvedValueOnce(true).mockResolvedValueOnce(true).mockResolvedValue(false);
+    gate.automaticOn
+      .mockResolvedValueOnce(true)
+      .mockResolvedValueOnce(true)
+      .mockResolvedValue(false);
     await sender().runOnce(NOW);
     expect(worker.process.mock.calls.map(([job]) => job.autoOn)).toEqual([true, false]);
   });
@@ -78,7 +112,17 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
 
   it('never throws, even when the queue cannot be read', async () => {
     queries.due.mockRejectedValue(new Error('db down'));
-    await expect(sender().runOnce(NOW)).resolves.toEqual({ sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, held: 0, paused: 0, skipped: 0, waiting: 0 });
+    await expect(sender().runOnce(NOW)).resolves.toEqual({
+      sent: 0,
+      retry: 0,
+      failed: 0,
+      expired: 0,
+      stale: 0,
+      held: 0,
+      paused: 0,
+      skipped: 0,
+      waiting: 0,
+    });
   });
 
   it('kick is single-flight per lane: a kick during a run queues exactly one more run', async () => {

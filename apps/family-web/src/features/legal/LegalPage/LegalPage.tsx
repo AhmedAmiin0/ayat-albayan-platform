@@ -1,6 +1,5 @@
 import { LEGAL_UPDATED_ON } from '@ab/client-core';
-import { AcademyContactLink, LegalDocument, LegalSection } from '@ab/web-kit/components/legal';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { AcademyContactLink, LegalDocument, LegalSection, t } from '@ab/web-kit';
 import { legalContent } from '@/features/legal/legal-content';
 import { LegalFooter } from '@/features/legal/LegalFooter';
 import type { LegalPageProps } from './LegalPage.types';

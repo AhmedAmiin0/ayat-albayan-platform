@@ -34,8 +34,12 @@ describe('PUT …/reaction', () => {
     vi.spyOn(rq, 'setOurs').mockResolvedValue();
     vi.spyOn(rq, 'supersede').mockResolvedValue();
     t.client.configured.mockReturnValue(true);
-    t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, last_notifications_inbound_at: FRESH }));
-    t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'r1', status: 'queued' }));
+    t.queries.thread.mockResolvedValue(
+      threadRow({ last_inbound_at: FRESH, last_notifications_inbound_at: FRESH }),
+    );
+    t.queries.enqueue.mockImplementation(async (row: object) =>
+      messageRow({ ...row, id: 'r1', status: 'queued' }),
+    );
     t.queries.get.mockImplementation(async (id: string) =>
       id === TARGET_ID ? messageRow({ id, direction: 'inbound', our_reaction: '👍', template_key: null, body: 'x' }) : messageRow({ id, status: 'sent', template_key: null }));
   });

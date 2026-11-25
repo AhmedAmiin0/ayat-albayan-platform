@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { locale, t } from '@ab/web-kit';
 import { dayOptions, daysOf, timeOptions } from './other-time-options';
 import { outsideQuery } from './use-outside-slots';
 

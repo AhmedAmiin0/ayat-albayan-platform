@@ -1,5 +1,4 @@
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, t } from '@ab/web-kit';
 
 export interface JumpToLatestProps {
   /** Messages that arrived after the reader scrolled up; 0 shows the arrow alone. */

@@ -1,5 +1,5 @@
 import type { DashboardSummary, WorkTab } from '@ab/money';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // KPI strip (docs/07 §6): highlighted only above zero; confirmation tile only when it is required.
 

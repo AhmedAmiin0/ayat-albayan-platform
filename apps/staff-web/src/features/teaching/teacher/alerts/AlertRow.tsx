@@ -1,10 +1,8 @@
 import { type AlertAction, fillSlots, type ReportStage } from '@ab/client-core';
 import { type ReactNode, useId } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button, t, cn } from '@ab/web-kit';
 import { useMarkRead } from '@/features/messaging/notifications';
 import { REPORT_STAGE_LABEL, ReportLink, reportFormHref } from '@/features/reporting/reports';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
 import type { AlertRowView } from './use-today-alerts';
 
 export interface AlertRowProps {

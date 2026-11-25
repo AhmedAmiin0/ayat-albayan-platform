@@ -1,10 +1,6 @@
 import { correctionTargets, type CorrectTo } from '@ab/schedule';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { Button, FormAlert, ButtonRow, t, useNow } from '@ab/web-kit';
 import { lessonErrorText } from '@/features/teaching/schedule/api';
 import { useCorrectLesson, type CorrectArea, type CorrectLesson } from './correct-api';
 import { CorrectAsk } from './CorrectAsk';

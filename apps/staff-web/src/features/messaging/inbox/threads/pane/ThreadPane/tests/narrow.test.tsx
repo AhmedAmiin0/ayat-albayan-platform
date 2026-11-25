@@ -1,9 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { meQuery, type Me } from '@ab/web-kit/auth/me';
+import { meQuery, type Me, t } from '@ab/web-kit';
 import { SETTINGS } from '@/test/settings-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { detail, lead, message, PHONE, template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';

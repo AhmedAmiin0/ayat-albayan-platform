@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ExtraFilters, FilterChip } from '@/components/table-toolbar/types';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { teacherOptionsQuery } from '@/features/people/students/api';
 import { selectedStatuses, setFilter, toggleStatus, type StudentsFilters } from './filters';
 import { STUDENT_SELECT_LABELS, StudentFilters, studentFilterOptions } from './StudentFilters';

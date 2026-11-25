@@ -21,7 +21,8 @@ export function parseOp(method: string | undefined, url: string | undefined): Op
   if (u.pathname !== '/render' || [...u.searchParams.keys()].sort().join() !== 'first,last') return null;
   const first = int(u.searchParams.get('first'));
   const last = int(u.searchParams.get('last'));
-  if (first === null || last === null || first < 1 || last < first || last - first >= PDF_RUN) return null;
+  if (first === null || last === null || first < 1 || last < first || last - first >= PDF_RUN)
+    return null;
   return { op: 'render', range: { first, last } };
 }
 

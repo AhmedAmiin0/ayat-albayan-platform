@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { PortalShell, SHELL_OF } from '@/components/shell/nav/SectionShells';
 import { FamilyMoved, leaveForFamilyHost } from '@/features/people/auth';
-import { meQuery, requireRole } from '@ab/web-kit/auth/me';
+import { meQuery, requireRole } from '@ab/web-kit';
 
 /** Every signed-in role in its usual shell (R-ACC-01..05); a family goes to the family host. */
 export const Route = createFileRoute('/account')({

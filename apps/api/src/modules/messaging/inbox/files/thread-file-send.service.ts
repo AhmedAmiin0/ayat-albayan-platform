@@ -65,7 +65,11 @@ export class ThreadFileSender {
     const windows = () => this.queries.numberWindows(s.phone);
     const teacher = !!s.scope;
     await chatLine(await this.queries.thread(s.phone), { now, windows, teacher });
-    const path = chatOutPath({ actorId: s.actorId, requestId: s.input.clientRequestId, mime: s.input.mime });
+    const path = chatOutPath({
+      actorId: s.actorId,
+      requestId: s.input.clientRequestId,
+      mime: s.input.mime,
+    });
     const file = { size: s.input.size, mime: s.input.mime };
     return this.storage.signedUpload({ bucket: BUCKETS.waMedia, path, file });
   }
@@ -83,7 +87,8 @@ export class ThreadFileSender {
     const at = { now, windows, teacher: !!s.scope };
     const line = await chatLine(thread, at);
     const { path, clientRequestId, filename, caption } = s.input;
-    if (!isChatOutPathOf(path, { actorId: s.actorId, requestId: clientRequestId })) throw filePath();
+    if (!isChatOutPathOf(path, { actorId: s.actorId, requestId: clientRequestId }))
+      throw filePath();
     const ref = { bucket: BUCKETS.waMedia, path };
     const info = await this.storage.info(ref);
     if (!info) throw filePath();

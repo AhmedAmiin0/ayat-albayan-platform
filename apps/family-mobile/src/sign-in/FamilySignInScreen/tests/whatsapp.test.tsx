@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { FamilySignInScreen } from '@/sign-in/FamilySignInScreen/FamilySignInScreen';
 
 // docs/50 §4: ONE sign-in; the default is WhatsApp number → code → signed in, with a haptic on

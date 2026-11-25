@@ -1,14 +1,10 @@
 import type { ThreadView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Avatar, NuqtaGlyph, t, cn, useClock } from '@ab/web-kit';
 import { DeliveryTicks } from '@/features/messaging/inbox/messages/components/DeliveryTicks';
 import { fullTime, listTime, previewText, threadTitle, unreadLabel } from '@/features/messaging/inbox/format';
 import { inboxBase, showsPhone, useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { openChat, type InboxSearch } from '@/features/messaging/inbox/shared/search';
-import { useClock } from '@ab/web-kit/lib/clock';
 import { AvatarRing, ringWord } from './AvatarRing';
 
 export interface ThreadRowProps {

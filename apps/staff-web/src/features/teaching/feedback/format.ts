@@ -1,6 +1,5 @@
 import { dateText } from '@ab/time';
-import { viewerZone } from '@ab/web-kit/lib/clock-text';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { viewerZone, locale } from '@ab/web-kit';
 
 // Month as a word and full year, since numeric medium style can read as another date.
 const DAY = { day: 'numeric', month: 'short', year: 'numeric' } as const;

@@ -8,9 +8,18 @@ const SECRET = 'fake-wacrm-secret';
 const NOW = new Date('2026-10-25T08:00:00Z');
 const T = Math.floor(NOW.getTime() / 1000);
 const raw = Buffer.from('{"id":"d-1","event":"message.status_updated","data":{}}');
-const v1 = (t: number, secret = SECRET, body: Buffer = raw) => createHmac('sha256', secret).update(`${t}.${body.toString()}`).digest('hex');
-const check = (header: string | undefined, over: { secret?: string; now?: Date; body?: Buffer } = {}) =>
-  verifyWacrmSignature({ rawBody: over.body ?? raw, header, secret: 'secret' in over ? over.secret : SECRET, now: over.now ?? NOW });
+const v1 = (t: number, secret = SECRET, body: Buffer = raw) =>
+  createHmac('sha256', secret).update(`${t}.${body.toString()}`).digest('hex');
+const check = (
+  header: string | undefined,
+  over: { secret?: string; now?: Date; body?: Buffer } = {},
+) =>
+  verifyWacrmSignature({
+    rawBody: over.body ?? raw,
+    header,
+    secret: 'secret' in over ? over.secret : SECRET,
+    now: over.now ?? NOW,
+  });
 
 describe('verifyWacrmSignature', () => {
   it('good: the HMAC over `${t}.${rawBody}`, either part order, upper-case hex', () => {

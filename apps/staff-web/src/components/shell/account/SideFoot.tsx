@@ -1,8 +1,5 @@
-import { ClockToggle } from '@ab/web-kit/components/ui/layout/clock-toggle';
-import { ThemeToggle } from '@ab/web-kit/components/ui/layout/theme-toggle';
-import { cn } from '@ab/web-kit/lib/utils';
+import { ClockToggle, ThemeToggle, cn, LanguageSwitch } from '@ab/web-kit';
 import { AccountChip } from './AccountChip';
-import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
 import { LogoutButton } from './LogoutButton';
 
 /** Sidebar foot from 900px (docs/07 §7, R-ACC-01); below it MenuFoot holds the same controls. */

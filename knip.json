@@ -81,7 +81,7 @@
       "entry": ["lint.blocks.mjs"]
     },
     "packages/testing": {
-      "entry": ["src/vitest.ts", "jest.cjs", "lint.blocks.mjs"]
+      "entry": ["src/vitest.ts", "src/presence-realtime/index.ts", "jest.cjs", "lint.blocks.mjs"]
     },
     "packages/db": {
       "entry": ["src/index.ts", "lint.blocks.mjs"],
@@ -92,7 +92,7 @@
       "ignoreDependencies": ["zod"]
     },
     "packages/mobile-kit": {
-      "entry": ["src/index.ts", "babel.cjs", "jest.shared.cjs", "lint.blocks.mjs"],
+      "entry": ["src/index.ts", "src/testing/index.ts", "jest.cjs", "jest.shared.cjs", "lint.blocks.mjs"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignoreDependencies": [
         "react-test-renderer",

@@ -14,7 +14,7 @@ import type { Program } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
-import { BUNDLES, t } from '@ab/web-kit/lib/i18n/i18n';
+import { BUNDLES, t } from '@ab/web-kit';
 import { REPORTS_KEY } from '@/features/reporting/reports/api';
 import { useReportApi } from '@/features/reporting/reports/report-api';
 import { useReportMode } from '@/features/reporting/reports/send/use-report-mode';

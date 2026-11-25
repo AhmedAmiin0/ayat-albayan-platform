@@ -1,13 +1,12 @@
 import type { ThreadLesson, ThreadPeople } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, locale } from '@ab/web-kit';
 import { fullTime } from '@/features/messaging/inbox/format';
 import { PHONE, pupil } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { student } from '@/features/sales/sales-money/sales-money-fixture';
 import { SalesFamilyLine } from './SalesFamilyLine';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;

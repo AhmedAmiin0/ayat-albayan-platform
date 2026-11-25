@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { AppText, t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { lesson, student } from '@/portal/portal.fixtures';
 import { OptionsRow } from './OptionsRow';
 

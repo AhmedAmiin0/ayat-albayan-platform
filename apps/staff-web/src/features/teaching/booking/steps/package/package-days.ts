@@ -1,7 +1,7 @@
 import type { PackageSize } from '@ab/catalog';
 import { counted } from '@ab/core';
 import { packagePerWeek } from '@ab/money';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** A note (R-SCH-02, R-SUB-01) when weekdays don't add up to the package; null when they match. */
 export function packageDaysNote(pkg: PackageSize, days: number): string | null {

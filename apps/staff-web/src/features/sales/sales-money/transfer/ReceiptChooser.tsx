@@ -1,10 +1,9 @@
 import { PAYMENT_ATTACHMENTS_MAX } from '@ab/money';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button, t } from '@ab/web-kit';
 import { AttachmentItems } from '@/features/finance/payments/attachments/AttachmentItems';
 import { AttachmentPicker } from '@/features/finance/payments/attachments/AttachmentPicker';
 import { addAttachments, type AttachmentProblem } from '@/features/finance/payments/attachments/attachments';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Bind } from '@/features/sales/sales-money/api';
 import { ChatReceiptGrid } from './ChatReceiptGrid';
 import { addChatChoice, attachmentItem, pickedMessages, type ReceiptChoice } from './receipt';

@@ -1,14 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { apiSend } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Icon, IconButton, apiSend, t, useClock } from '@ab/web-kit';
 import { timeOffQuery } from '@/features/people/teachers/api';
 import { TimeOffDialog } from './TimeOffDialog';
 import { formatTimeOff } from './time-off';
-import { useClock } from '@ab/web-kit/lib/clock';
 
 /** docs/07 §8, R-TCH-02. */
 export function TimeOffList({ teacherId }: { teacherId: string }) {

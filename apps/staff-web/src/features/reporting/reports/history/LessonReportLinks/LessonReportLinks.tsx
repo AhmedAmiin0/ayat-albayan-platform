@@ -1,6 +1,5 @@
 import type { LessonView } from '@ab/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { t, useNow } from '@ab/web-kit';
 import { reportFormHref, reportOpen } from '@/features/reporting/reports/paths';
 import { ReportLink } from '@/features/reporting/reports/history/ReportLink';
 import { TeacherReportLinks } from '@/features/reporting/reports/history/TeacherReportLinks';

@@ -1,5 +1,5 @@
 import { leadQualPatch, type QualForm, type QualResult } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // R-LEAD-03: the lead's qualification form lives in @ab/shared (docs/27 E5), shared with the mobile app;
 // this module keeps the web's names and injects `t`.

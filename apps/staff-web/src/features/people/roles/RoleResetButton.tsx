@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Toast, t } from '@ab/web-kit';
 import { resetRole, ROLES_KEY, type RoleView } from './api';
 
 const P = t.permissions.page;

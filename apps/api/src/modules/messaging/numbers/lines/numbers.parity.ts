@@ -21,7 +21,15 @@ function tokenOf(line: GraphEnv): string {
 type LineFacts = Pick<Facts, 'phone_number_id' | 'waba_id' | 'app_id' | 'api_base' | 'api_version' | 'access_token'>;
 
 function lineFacts(line: WhatsappEnv | null): LineFacts {
-  if (!line) return { phone_number_id: null, waba_id: null, app_id: null, api_base: null, api_version: null, access_token: null };
+  if (!line)
+    return {
+      phone_number_id: null,
+      waba_id: null,
+      app_id: null,
+      api_base: null,
+      api_version: null,
+      access_token: null,
+    };
   // A crm line has no ids or version of ours (docs/19): its base and key only; an evolution line
   // its base, instance name (as the phone id) and instance token.
   if (line.provider === 'crm') return { phone_number_id: null, waba_id: null, app_id: null, api_base: line.base, api_version: null, access_token: line.apiKey };
@@ -71,7 +79,9 @@ export function parityRoles(input: ParityInput): ParityRoleView[] {
   return WA_LINES.map((role) => {
     const a = factsOf(input.legacy, role);
     const b = factsOf(input.module, role);
-    const fields = (Object.keys(a) as ParityField[]).filter((f) => relevant(f, a, b)).map((f) => cell(f, a[f], b[f]));
+    const fields = (Object.keys(a) as ParityField[])
+      .filter((f) => relevant(f, a, b))
+      .map((f) => cell(f, a[f], b[f]));
     const n = input.numbers[role];
     return { role, number_id: n?.id ?? null, number_label: n?.label ?? null, fields };
   });

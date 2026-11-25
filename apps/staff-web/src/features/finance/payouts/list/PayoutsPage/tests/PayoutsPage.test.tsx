@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYOUT } from '@/features/finance/subscriptions/money-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
 import { currentMonth, downloadPayoutsCsv } from '@/features/finance/payouts/api';
 import { monthLabel, monthOptions } from '@/features/finance/payouts/shared/MonthSelect';

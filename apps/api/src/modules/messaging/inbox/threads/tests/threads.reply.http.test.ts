@@ -55,7 +55,9 @@ describe('«رد»: POST /threads/:phone/text with replyToMessageId (owner 2026-
     const target = vi.spyOn(quotes, 'target');
     await t.call(reply({ replyToMessageId: undefined }));
     expect(target).not.toHaveBeenCalled();
-    expect(t.queries.enqueue).toHaveBeenCalledWith(expect.not.objectContaining({ reply_to_message_id: expect.anything() }));
+    expect(t.queries.enqueue).toHaveBeenCalledWith(
+      expect.not.objectContaining({ reply_to_message_id: expect.anything() }),
+    );
     expect((await t.call(reply({ replyToMessageId: 'wamid.x' }))).statusCode).toBe(400);
   });
 });

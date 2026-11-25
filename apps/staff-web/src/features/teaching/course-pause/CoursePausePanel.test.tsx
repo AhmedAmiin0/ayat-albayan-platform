@@ -4,7 +4,7 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { dateLabel } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { CoursePausePanel } from './CoursePausePanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());

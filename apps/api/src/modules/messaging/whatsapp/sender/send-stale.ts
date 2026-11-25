@@ -80,7 +80,14 @@ export type DropInput = StaleInput & {
  */
 export function dropReason(row: DropInput, now: Date): { code: 'expired' | 'stale'; text: string } | null {
   const lessonStartsAt = row.lesson?.starts_at ?? null;
-  if (messageExpired({ templateKey: row.template_key, expiresAt: row.expires_at, lessonStartsAt, now })) {
+  if (
+    messageExpired({
+      templateKey: row.template_key,
+      expiresAt: row.expires_at,
+      lessonStartsAt,
+      now,
+    })
+  ) {
     return { code: 'expired', text: 'expired before it was sent' };
   }
   const staff = row.staff && isStaffAlert(row.template_key) ? staffStale(row.staff, row.phone_e164 ?? '') : null;

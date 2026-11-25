@@ -71,20 +71,34 @@ export class ThreadMediaService {
   }
 
   /** W6 only: ownership checked first (404); rows with no stored file are 410. */
-  async bubbleFile(input: { phone: string; messageId: string; download?: boolean }): Promise<ThreadFile> {
+  async bubbleFile(input: {
+    phone: string;
+    messageId: string;
+    download?: boolean;
+  }): Promise<ThreadFile> {
     const { msg, file } = await this.bubbleObject(input);
     const named = input.download ? { download: downloadName(msg) } : {};
-    const signed = await this.storage.signedDownload({ bucket: file.bucket, path: file.path, ...named });
+    const signed = await this.storage.signedDownload({
+      bucket: file.bucket,
+      path: file.path,
+      ...named,
+    });
     return { ...signed, mime: file.mime };
   }
 
   /** bubbleFile's message and stored object, unsigned: the PDF preview (pdf/) reads the same file under the same rules. */
-  async bubbleObject(input: { phone: string; messageId: string }): Promise<{ msg: MediaMessage; file: InboundFile }> {
+  async bubbleObject(input: {
+    phone: string;
+    messageId: string;
+  }): Promise<{ msg: MediaMessage; file: InboundFile }> {
     const msg = await this.queries.message(input.messageId);
     // A message hidden from the platform keeps its file away from staff too.
     if (msg?.phone_e164 !== input.phone || msg.hidden_at) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     if (msg.direction === 'outbound' && msg.media_path) {
-      return { msg, file: { bucket: BUCKETS.waMedia, path: msg.media_path, mime: baseMime(msg.media_mime) } };
+      return {
+        msg,
+        file: { bucket: BUCKETS.waMedia, path: msg.media_path, mime: baseMime(msg.media_mime) },
+      };
     }
     return { msg, file: await this.media.cache(chatServable(msg)) };
   }

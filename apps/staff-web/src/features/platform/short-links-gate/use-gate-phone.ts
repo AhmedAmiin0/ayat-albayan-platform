@@ -5,9 +5,7 @@ import {
 import type { ShortLinkOpenResult } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { codeOf, emptyCode } from '@ab/web-kit/auth/code/code-boxes';
-import { type PhoneEntry, usePhoneEntry } from '@ab/web-kit/auth/phone/use-phone-entry';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
+import { codeOf, emptyCode, type PhoneEntry, usePhoneEntry, useNow } from '@ab/web-kit';
 import { gateSends } from './gate-api';
 
 /** What the phone or the code step says went wrong (the shortLinks.gate.errors keys). */

@@ -1,9 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Cartouche, PageHead, t } from '@ab/web-kit';
 import { rolesQuery, staffUsersQuery, type RoleView } from '@/features/people/roles/api';
 import { RoleDialog } from '@/features/people/roles/RoleDialog';
 import { RolesList } from '@/features/people/roles/RolesList';

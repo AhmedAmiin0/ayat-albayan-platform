@@ -1,7 +1,5 @@
 import { useRef } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { t, Button, Icon } from '@ab/web-kit';
 import type { FilterChip } from './types';
 
 export interface ActiveFilterChipsProps {

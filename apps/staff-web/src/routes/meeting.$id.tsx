@@ -1,10 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { requireRole } from '@ab/web-kit/auth/me';
+import { requireRole, useClock, useViewerTz } from '@ab/web-kit';
 import { StaffClassroomPage } from '@/features/teaching/classroom/join/StaffClassroomPage';
 import { joinMeeting } from '@/features/teaching/meetings/internal/internal-api';
 import { meetingJoinProblem } from '@/features/teaching/meetings/rows/meeting-join-errors';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 /** Internal meeting room for any staff login; refusals use meeting wording (meetingJoinProblem). */
 export const Route = createFileRoute('/meeting/$id')({

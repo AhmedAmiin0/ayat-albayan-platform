@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CorrectLessonChoice, type CorrectBy } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { useSalesCancelLesson } from './sales-cancel-api';
 import { SalesCorrectConfirm } from './SalesCorrectConfirm';
 

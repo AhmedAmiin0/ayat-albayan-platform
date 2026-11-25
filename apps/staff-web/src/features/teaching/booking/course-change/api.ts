@@ -3,7 +3,7 @@ import type { CourseChangeCheck, CourseChangeResult, CourseChangeView } from '@a
 import type { CourseChangeRequest } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { createContext, useContext } from 'react';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { bookingKeys, COURSE_CHANGE_CHECK } from '@/features/teaching/booking/booking.keys';
 
 // The assistant's mirror routes cover her own students only, never over a clash.

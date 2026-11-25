@@ -1,8 +1,5 @@
 import type { MessageView } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Button, useClock, t, cn } from '@ab/web-kit';
 import { clockText, fullTime } from '@/features/messaging/inbox/format';
 import { BUBBLE_ROW } from '@/features/messaging/inbox/messages/lib/bubble-side';
 import { bubbleId } from '@/features/messaging/inbox/messages/lib/jump-to-message';

@@ -14,7 +14,10 @@ describe('gate routes when a read or the audit fails', () => {
     expect(t.settings.writeSwitch).toHaveBeenCalledExactlyOnceWith('messaging_enabled', false, ADMIN_ID);
     expect(res.json()).toMatchObject({ messaging_enabled: false });
     expect(t.audit.record).toHaveBeenCalledWith(
-      expect.objectContaining({ before: { messaging_enabled: null }, after: { messaging_enabled: false } }),
+      expect.objectContaining({
+        before: { messaging_enabled: null },
+        after: { messaging_enabled: false },
+      }),
     );
   });
 

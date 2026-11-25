@@ -2,13 +2,9 @@ import { lessonWhenAt, type ReportSummaryView } from '@ab/shared';
 import type { UserRole } from '@ab/catalog';
 import { gradeStyle } from '@ab/money';
 import { editableNow } from '@ab/client-core';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StatusChip, t, teacherLabel, useClock, useNow } from '@ab/web-kit';
 import { PdfAction } from './PdfAction';
 import { RecordingLink } from './RecordingLink';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
 import { reportFormHref } from '@/features/reporting/reports/paths';
 import { ReportLink } from './ReportLink';
 

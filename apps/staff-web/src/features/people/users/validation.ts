@@ -1,5 +1,5 @@
 import { userChecks } from '@ab/client-core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // The create / edit checks live in @ab/client-core (docs/27 E3), shared with the mobile app; this module injects `t`.
 export const { emailError, nameError, phoneError, passwordError, createErrors, editErrors } = userChecks(() => ({

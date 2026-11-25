@@ -9,7 +9,7 @@ import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft
 import type { BookHint } from '@/features/teaching/booking/hint';
 import { dateLabel } from '@/features/teaching/schedule';
 import { studentLabel } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // Course booking draft (R-ASST-01): fixed facts come from GET /sales/booking/course; pure.
 

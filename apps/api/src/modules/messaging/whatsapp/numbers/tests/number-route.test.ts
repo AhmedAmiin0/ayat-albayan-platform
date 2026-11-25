@@ -26,16 +26,43 @@ describe('routeOf: template rows', () => {
 
   it('a chosen number that is disabled, has no token or lacks the approval falls back to the default', () => {
     const disabled = [overlayNum(), overlayNum({ id: N2, is_default: false, enabled: false })];
-    expect(routeOf(routePass({ numbers: disabled, rules: { booking_confirmation: N2 }, approvals: approvedEverywhere }), { row, template })?.numberId).toBe(N1);
+    expect(
+      routeOf(
+        routePass({
+          numbers: disabled,
+          rules: { booking_confirmation: N2 },
+          approvals: approvedEverywhere,
+        }),
+        { row, template },
+      )?.numberId,
+    ).toBe(N1);
     const noToken = [overlayNum(), overlayNum({ id: N2, is_default: false, env: null })];
-    expect(routeOf(routePass({ numbers: noToken, rules: { booking_confirmation: N2 }, approvals: approvedEverywhere }), { row, template })?.numberId).toBe(N1);
-    const notThere = routePass({ rules: { booking_confirmation: N2 }, approvals: { booking_confirmation: { [N2]: 'pending' } } });
+    expect(
+      routeOf(
+        routePass({
+          numbers: noToken,
+          rules: { booking_confirmation: N2 },
+          approvals: approvedEverywhere,
+        }),
+        { row, template },
+      )?.numberId,
+    ).toBe(N1);
+    const notThere = routePass({
+      rules: { booking_confirmation: N2 },
+      approvals: { booking_confirmation: { [N2]: 'pending' } },
+    });
     expect(routeOf(notThere, { row, template })?.numberId).toBe(N1);
   });
 
-  it('the default off → the role\'s other numbers by fallback_rank, never the other role', () => {
-    const numbers = [overlayNum({ env: null }), overlayNum({ id: N3, is_default: false, fallback_rank: 1 }), ...THREE.slice(1)];
-    expect(routeOf(routePass({ numbers, approvals: approvedEverywhere }), { row, template })?.numberId).toBe(N3);
+  it("the default off → the role's other numbers by fallback_rank, never the other role", () => {
+    const numbers = [
+      overlayNum({ env: null }),
+      overlayNum({ id: N3, is_default: false, fallback_rank: 1 }),
+      ...THREE.slice(1),
+    ];
+    expect(
+      routeOf(routePass({ numbers, approvals: approvedEverywhere }), { row, template })?.numberId,
+    ).toBe(N3);
     // a spare without its own synced approval never counts as approved
     expect(routeOf(routePass({ numbers }), { row, template })).toBeNull();
   });
@@ -60,8 +87,15 @@ describe('routeOf: session rows (decision 5)', () => {
 
   it('never falls back: its number off or tokenless → null', () => {
     const numbers = [overlayNum(), overlayNum({ id: N2, is_default: false, env: null })];
-    expect(routeOf(routePass({ numbers }), { row: text({ number_id: N2 }), template: null })).toBeNull();
-    expect(routeOf(routePass({ numbers: [overlayNum({ enabled: false })] }), { row: text(), template: null })).toBeNull();
+    expect(
+      routeOf(routePass({ numbers }), { row: text({ number_id: N2 }), template: null }),
+    ).toBeNull();
+    expect(
+      routeOf(routePass({ numbers: [overlayNum({ enabled: false })] }), {
+        row: text(),
+        template: null,
+      }),
+    ).toBeNull();
   });
 });
 

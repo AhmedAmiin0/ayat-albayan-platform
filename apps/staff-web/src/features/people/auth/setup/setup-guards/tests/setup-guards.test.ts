@@ -1,7 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 import { isRedirect } from '@tanstack/react-router';
 import { describe, expect, it, vi } from 'vitest';
-import { meQuery, type Me } from '@ab/web-kit/auth/me';
+import { meQuery, type Me } from '@ab/web-kit';
 import { requireSetupPending, requireTeacherPortal } from '@/features/people/auth/setup/setup-guards/setup-guards';
 
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: { getSession: vi.fn() } } }));

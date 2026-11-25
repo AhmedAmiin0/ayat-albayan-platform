@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { kpisOf } from './kpis';
 
 const COUNTS = { needs_confirmation: 3, pending_reports: 0, unpaid_subscriptions: 2, open_tasks: 0 };

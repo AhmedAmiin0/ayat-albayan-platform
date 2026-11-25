@@ -29,7 +29,10 @@ export interface NumberSyncDeps extends NumberLineDeps {
   log: { warn: (message: string) => void };
 }
 
-async function readList(deps: NumberSyncDeps, n: OverlayNumber & { env: WhatsappEnv }): Promise<MetaTemplate[] | { error: string; message?: string }> {
+async function readList(
+  deps: NumberSyncDeps,
+  n: OverlayNumber & { env: WhatsappEnv },
+): Promise<MetaTemplate[] | { error: string; message?: string }> {
   try {
     return await deps.clientOf(n.env).getTemplates();
   } catch (e) {
@@ -40,7 +43,11 @@ async function readList(deps: NumberSyncDeps, n: OverlayNumber & { env: Whatsapp
 }
 
 type Meta = Pick<ApprovalWrite, 'meta_id' | 'quality' | 'last_error'>;
-const kept = (prev: ApprovalRow | undefined): Meta => ({ meta_id: prev?.meta_id ?? null, quality: prev?.quality ?? null, last_error: prev?.last_error ?? null });
+const kept = (prev: ApprovalRow | undefined): Meta => ({
+  meta_id: prev?.meta_id ?? null,
+  quality: prev?.quality ?? null,
+  last_error: prev?.last_error ?? null,
+});
 
 /** Meta's view when found; a mapped WABA name (template-waba-match.ts) never brings its meta_id. */
 function metaOf(p: TemplatePatch, prev: ApprovalRow | undefined): Meta {
@@ -50,7 +57,11 @@ function metaOf(p: TemplatePatch, prev: ApprovalRow | undefined): Meta {
 }
 
 /** One key on one number: Meta's view, or (absent) not_submitted stays not_submitted and anything else is missing. */
-function approval(input: { row: TemplateRow; prev: ApprovalRow | undefined; meta: readonly MetaTemplate[] }, numberId: string, now: Date): ApprovalWrite {
+function approval(
+  input: { row: TemplateRow; prev: ApprovalRow | undefined; meta: readonly MetaTemplate[] },
+  numberId: string,
+  now: Date,
+): ApprovalWrite {
   const { row, prev } = input;
   const p = wabaSyncPatch({ ...row, status: prev?.status ?? 'not_submitted' }, input.meta, now);
   const meta = metaOf(p, prev);
@@ -76,7 +87,11 @@ const NOT_A_WABA_LIST: Partial<Record<WaProvider, Elsewhere>> = {
  * evolution_no_templates, a crm number its line's CRM sync (syncCrmNumber); a failed read is
  * that number's error (200).
  */
-export async function syncNumber(deps: NumberSyncDeps, numberId: string, now: Date): Promise<TemplateNumberSyncView> {
+export async function syncNumber(
+  deps: NumberSyncDeps,
+  numberId: string,
+  now: Date,
+): Promise<TemplateNumberSyncView> {
   requireSync();
   const all = deps.numbers();
   if (all === null) return syncByLine(deps, numberId, now);
@@ -93,7 +108,17 @@ export async function syncNumber(deps: NumberSyncDeps, numberId: string, now: Da
   const targets = n.waba_id ? all.filter(sameWaba).map((x) => x.id) : [n.id];
   const [rows, prev] = await Promise.all([deps.queries.all(), deps.queries.approvals()]);
   const writes = targets.flatMap((id) =>
-    rows.map((row) => approval({ row, prev: prev.find((a) => a.template_key === row.key && a.number_id === id), meta: list }, id, now)),
+    rows.map((row) =>
+      approval(
+        {
+          row,
+          prev: prev.find((a) => a.template_key === row.key && a.number_id === id),
+          meta: list,
+        },
+        id,
+        now,
+      ),
+    ),
   );
   await deps.queries.upsertApprovals(writes);
   return { ...base, ok: true, meta_count: list.length, synced: rows.length, number_ids: targets };

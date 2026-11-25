@@ -21,7 +21,13 @@ afterEach(() => vi.unstubAllEnvs());
 
 describe('ownPhonesOf / phoneList', () => {
   it('every row with a display phone, enabled or not, exactly as stored', () => {
-    expect([...ownPhonesOf([{ display_phone_e164: CHAT }, { display_phone_e164: null }, { display_phone_e164: NOTIFY }])]).toEqual([CHAT, NOTIFY]);
+    expect([
+      ...ownPhonesOf([
+        { display_phone_e164: CHAT },
+        { display_phone_e164: null },
+        { display_phone_e164: NOTIFY },
+      ]),
+    ]).toEqual([CHAT, NOTIFY]);
   });
 
   it('a quoted PostgREST in-list', () => {
@@ -45,7 +51,11 @@ describe('OwnNumbers', () => {
   });
 
   it('a new number row is picked up after a numbers write (forget) or the period', async () => {
-    const { svc } = own([[{ display_phone_e164: CHAT }], [{ display_phone_e164: CHAT }, { display_phone_e164: NOTIFY }], [{ display_phone_e164: NOTIFY }]]);
+    const { svc } = own([
+      [{ display_phone_e164: CHAT }],
+      [{ display_phone_e164: CHAT }, { display_phone_e164: NOTIFY }],
+      [{ display_phone_e164: NOTIFY }],
+    ]);
     expect(await svc.has(NOTIFY)).toBe(false);
     svc.forget();
     expect(await svc.has(NOTIFY)).toBe(true);

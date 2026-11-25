@@ -6,7 +6,7 @@ import {
 } from '@ab/shared';
 import { correctionTargets } from '@ab/schedule';
 import { usePermissions } from '@/features/people/auth';
-import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
+import { usePublicConfig } from '@ab/web-kit';
 import { canSalesCorrect } from './correct/correctable';
 
 /** Reschedule waits until a running lesson is over; its drawer offers only join. */

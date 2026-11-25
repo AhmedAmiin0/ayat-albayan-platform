@@ -2,7 +2,7 @@ import type { MessageView } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { MessageBubble } from '@/features/messaging/inbox/messages/components/MessageBubble';

@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { expect, it, vi } from 'vitest';
 import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep/SlotStep';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { locale } from '@ab/web-kit';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;

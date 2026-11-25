@@ -1,20 +1,22 @@
 import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
 import { round2 } from '@ab/core';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Select } from '@ab/web-kit/components/ui/form/select';
+import {
+  Button,
+  Dialog,
+  Field,
+  FormAlert,
+  Input,
+  Select,
+  t,
+  teacherLabel,
+  useUploadMaxBytes,
+} from '@ab/web-kit';
 import { paidAtDay } from '@/features/finance/payments/record/pay-day';
 import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { PayoutView } from '@/features/finance/payouts/api';
 import { usePayPayout } from './use-pay-payout';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
 
 type Props = { payout: PayoutView; onClose: () => void; onSaved: () => void };
 

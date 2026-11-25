@@ -6,10 +6,8 @@ import {
 } from '@ab/catalog';
 import { intlLocale } from '@ab/core';
 import type { Glyph, Tone } from '@ab/money';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { dateAndClock } from '@ab/web-kit/lib/clock-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import type { Clock } from '@ab/web-kit';
+import { dateAndClock, t, locale } from '@ab/web-kit';
 
 // Display helpers of the Google section. DB times are UTC; they read in the viewer's zone
 // (docs/34), 12 or 24 h as the viewer chose, Western digits.

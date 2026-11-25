@@ -1,12 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { useViewerTz, Button, Dialog, Field, FormAlert, Input, t } from '@ab/web-kit';
 import { CreatedMeeting } from '@/features/teaching/meetings/internal/CreatedMeeting';
 import { MEETINGS_KEY } from '@/features/teaching/meetings/internal/internal-api';
 import type { PickedInvitee } from '@/features/teaching/meetings/invitees/invitee-list';

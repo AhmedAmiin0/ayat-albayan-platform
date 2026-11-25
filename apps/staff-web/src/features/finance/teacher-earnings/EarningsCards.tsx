@@ -1,8 +1,7 @@
 import type { TeacherEarningsBalanceView } from '@ab/money';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t, cn } from '@ab/web-kit';
 
 type CardProps = { label: string; amount: number; hint?: string; strong?: boolean };
 

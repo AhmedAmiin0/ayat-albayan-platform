@@ -1,5 +1,5 @@
 import type { NumberPurpose } from '@ab/catalog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** A plain label, never a chip (docs/12 §13.10); no hooks so rows render without a QueryClient. */
 export function LineBadge({ line }: { line: NumberPurpose | null | undefined }) {

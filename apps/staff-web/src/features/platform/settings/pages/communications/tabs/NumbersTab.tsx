@@ -2,7 +2,7 @@ import { LEGACY_LINE_GROUPS } from '@/features/platform/integrations/integration
 import { IntegrationsPanel } from '@/features/platform/integrations/IntegrationsPanel';
 import { LinesCard } from '@/features/messaging/messaging/lines/LinesCard';
 import { NumbersPanel } from '@/features/messaging/numbers/NumbersPanel';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const h = t.communicationsHub;
 

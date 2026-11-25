@@ -12,7 +12,13 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 // docs/23c: legacy keeps today's pass (no new read); module mode routes each row to a number and pauses per number.
 
 const gate = fakeSwitches();
-const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn(), anyDue: vi.fn(), chatConfigured: false };
+const queries = {
+  approvedTemplates: vi.fn(),
+  due: vi.fn(),
+  holdAutomatic: vi.fn(),
+  anyDue: vi.fn(),
+  chatConfigured: false,
+};
 const worker = { process: vi.fn(), deferRest: vi.fn(), release: vi.fn(async () => 0) };
 const routes = { pass: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
@@ -26,7 +32,8 @@ function sender(withRoutes = true) {
     withRoutes ? (routes as unknown as NumberRoutes) : undefined,
   );
 }
-const jobs = () => worker.process.mock.calls.map(([j]) => j as { row: { id: string }; route?: unknown });
+const jobs = () =>
+  worker.process.mock.calls.map(([j]) => j as { row: { id: string }; route?: unknown });
 const install = () => setNumbersOverlay({ values: {}, numberIds: {}, numbers: THREE });
 
 describe('MessageSender — routing per number', () => {

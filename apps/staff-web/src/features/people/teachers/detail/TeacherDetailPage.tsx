@@ -2,20 +2,25 @@ import { teacherStatusStyle } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { Tabs } from '@ab/web-kit/components/ui/layout/tabs';
+import {
+  Button,
+  buttonVariants,
+  Avatar,
+  Cartouche,
+  PageHead,
+  StatusChip,
+  Tabs,
+  t,
+  FormAlert,
+  ListSkeleton,
+  HeadActions,
+  teacherLabel,
+} from '@ab/web-kit';
 import { StaffPhotoControl } from '@/features/people/staff-photo';
 import { EntityActivity } from '@/features/reporting/activity/EntityActivity';
 import { TeacherCalendarOwner } from '@/features/platform/google-sync';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { availabilityQuery, teacherQuery } from '@/features/people/teachers/api';
 import { AvailabilityGrid } from '@/features/people/teachers/availability/AvailabilityGrid';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
 import { gridTz } from '@/features/people/teachers/availability/grid';
 import { RatesTable } from './RatesTable';
 import { TeacherDialog } from '@/features/people/teachers/form/TeacherDialog';
@@ -23,8 +28,6 @@ import { TeacherFacts } from './TeacherFacts';
 import { TeacherMeta } from './TeacherMeta';
 import { TeacherStudentsPanel } from './TeacherStudentsPanel';
 import { TimeOffList } from '@/features/people/teachers/time-off/TimeOffList';
-import { HeadActions } from '@ab/web-kit/components/ui/layout/head-actions';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import type { Teacher } from '@ab/shared';
 
 type Tab = 'data' | 'availability' | 'students' | 'activity';

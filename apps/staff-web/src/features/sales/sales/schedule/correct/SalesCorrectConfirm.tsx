@@ -1,11 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { ButtonRow } from '@ab/web-kit/components/ui/layout/button-row';
+import { Button, Field, FormAlert, Input, ButtonRow, t } from '@ab/web-kit';
 import { CORRECT_BY_LABEL, type CorrectBy, lessonErrorText } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface SalesCorrectConfirmProps {
   by: CorrectBy;

@@ -52,17 +52,27 @@ export class ForwardFiles {
   ) {}
 
   /** 400 not_forwardable for a file we never had; 410 media_expired / 409 crm_no_media from the fetch. */
-  async copy(row: ThreadMessageRow, at: { actorId: string; requestId: string }): Promise<ForwardFile> {
+  async copy(
+    row: ThreadMessageRow,
+    at: { actorId: string; requestId: string },
+  ): Promise<ForwardFile> {
     const from = await this.source(row);
     const mime = baseMime(from.mime);
     const key = forwardOutPath({ ...at, messageId: row.id, mime });
     const to = { bucket: BUCKETS.waMedia, path: key };
-    const path = await this.storage.copy({ from: { bucket: BUCKETS.waMedia, path: from.path }, to });
+    const path = await this.storage.copy({
+      from: { bucket: BUCKETS.waMedia, path: from.path },
+      to,
+    });
     return { path, mime, name: fileName(row, path), caption: caption(row), ...stickerOf(row) };
   }
 
   /** One target, on a text's line (chatLine: 409 session_closed / 503 line_not_configured). */
-  async send(s: ThreadSend<{ clientRequestId: string }>, file: ForwardFile, now = new Date()): Promise<Sent> {
+  async send(
+    s: ThreadSend<{ clientRequestId: string }>,
+    file: ForwardFile,
+    now = new Date(),
+  ): Promise<Sent> {
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
     const windows = () => this.queries.numberWindows(s.phone);

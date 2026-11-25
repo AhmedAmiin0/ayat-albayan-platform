@@ -35,7 +35,8 @@ const deps: NumberSyncDeps = {
   queries, numbers: () => numbers, clientOf, log: { warn: vi.fn() }, syncLine,
   activeNumberId: () => undefined,
 };
-const written = (): ApprovalWrite[] => queries.upsertApprovals.mock.calls[0]?.[0] as ApprovalWrite[];
+const written = (): ApprovalWrite[] =>
+  queries.upsertApprovals.mock.calls[0]?.[0] as ApprovalWrite[];
 
 describe('syncNumber', () => {
   beforeEach(() => {

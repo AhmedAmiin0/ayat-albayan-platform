@@ -7,7 +7,11 @@ const M = 'messages';
 describe('PdfPreviewQueries (migration 20261030000982)', () => {
   it('doc: null until probed; 0 pages is a stored «no preview», not «not probed»', async () => {
     const { db, argsOf } = fakeDb({
-      [M]: [{ data: { media_pages: null, media_bytes: null } }, { data: { media_pages: 0, media_bytes: 512 } }, { data: null }],
+      [M]: [
+        { data: { media_pages: null, media_bytes: null } },
+        { data: { media_pages: 0, media_bytes: 512 } },
+        { data: null },
+      ],
     });
     const q = new PdfPreviewRepo(db);
     await expect(q.doc('m1')).resolves.toBeNull();

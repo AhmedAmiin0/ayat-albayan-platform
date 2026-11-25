@@ -1,18 +1,20 @@
 import { subscriptionStatusStyle, type Tone } from '@ab/money';
 import type { LessonView } from '@ab/schedule';
 import { clockOf } from '@ab/time';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { cn } from '@ab/web-kit/lib/utils';
+import {
+  NuqtaGlyph,
+  tzCity,
+  t,
+  teacherLabel,
+  cn,
+  zoneLabel,
+  useClock,
+  useViewerTz,
+  clockDir,
+  useLessonStatusText,
+} from '@ab/web-kit';
 import { studentNames } from './lessons';
 import { LessonTags } from './LessonTags';
-import { zoneLabel } from '@ab/web-kit/schedule/slots';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { clockDir } from '@ab/web-kit/lib/clock-text';
-import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 // Literal class strings so Tailwind's scanner sees them (docs/07 §6 status chip tones).
 const EDGE: Record<Tone, string> = {

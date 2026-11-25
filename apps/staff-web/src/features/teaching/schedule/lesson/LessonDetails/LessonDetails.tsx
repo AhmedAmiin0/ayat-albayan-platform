@@ -2,23 +2,25 @@ import { lessonWhenAt } from '@ab/shared';
 import { subscriptionStatusStyle } from '@ab/money';
 import type { LessonView } from '@ab/schedule';
 import { sameClockAt } from '@ab/time';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import {
+  Avatar,
+  buttonVariants,
+  Ltr,
+  StatusChip,
+  t,
+  usePlatformClassroom,
+  teacherLabel,
+  useClock,
+  useViewerTz,
+  useLessonStatusText,
+} from '@ab/web-kit';
 import { conflictText } from '@/features/teaching/schedule/reschedule/ConflictNotice';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { usePlatformClassroom } from '@ab/web-kit/lib/settings/public-config';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { lengthText } from '@/features/teaching/schedule/edit-time/edit-time-text';
 import { EditTimeLink } from '@/features/teaching/schedule/edit-time/EditTimeLink';
 import { durationMin, studentTimes, timeInCity } from '@/features/teaching/schedule/lesson/lessons';
 import { DetailRow } from '@/features/teaching/schedule/lesson/DetailRow';
 import { LessonTags } from '@/features/teaching/schedule/lesson/LessonTags';
 import { TeacherConfirmedTag } from '@/features/teaching/schedule/lesson/TeacherConfirmedTag';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 /** Times in the viewer's zone plus differing clocks; job-found clashes shown (R-SCH-04). */
 export function LessonDetails({

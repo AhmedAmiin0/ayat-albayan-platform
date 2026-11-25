@@ -1,6 +1,6 @@
 import { isGifMessage, isStickerMessage, STICKER_SIZE, type MessageView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { threadFileQuery } from '@/features/messaging/inbox/api/api';
 
 // Signed as the bubble renders rather than on click, since a sticker or GIF is only itself.

@@ -46,7 +46,12 @@ describe('upcomingLessons (template composer, rule 6; the reply note’s actions
 
   it('a lead or an unknown number has no lessons (nothing is read)', async () => {
     const { db, log } = chainDb();
-    expect(await upcomingLessons(db, { thread: view({ guardian_id: null, teacher_id: null }), now: NOW })).toEqual([]);
+    expect(
+      await upcomingLessons(db, {
+        thread: view({ guardian_id: null, teacher_id: null }),
+        now: NOW,
+      }),
+    ).toEqual([]);
     expect(log).toHaveLength(0);
   });
 });

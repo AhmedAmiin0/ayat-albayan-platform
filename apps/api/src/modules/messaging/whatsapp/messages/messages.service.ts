@@ -37,7 +37,8 @@ export class MessagesService {
     const before = await this.row(id);
     const notRetryable = () => waHttpError('not_retryable', 409, { status: before.status });
     if (closed(before)) throw notRetryable();
-    if (before.error_code === AUTO_OFF.code && !opts.automaticOn) throw waHttpError(AUTO_OFF.code, 409);
+    if (before.error_code === AUTO_OFF.code && !opts.automaticOn)
+      throw waHttpError(AUTO_OFF.code, 409);
     const after = await this.queries.requeue(id, restartOf(before.error_code));
     if (!after) throw notRetryable();
     void this.sender.kick();

@@ -1,13 +1,9 @@
 import { continueFits, type SalesCourseView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, FormAlert, t, useClock, useViewerTz } from '@ab/web-kit';
 import { bookingTeachersQuery } from '@/features/teaching/booking/api';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { adjustText, continueText } from './course-continue';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface ContinueChoiceProps {
   view: SalesCourseView;

@@ -1,7 +1,5 @@
 import { studentStatusStyle } from '@ab/money';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, StatusChip, t } from '@ab/web-kit';
 import type { StudentRef } from '@ab/shared';
 
 export function SiblingsStrip({ siblings }: { siblings: StudentRef[] }) {

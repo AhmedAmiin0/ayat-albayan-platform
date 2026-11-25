@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { type Me, meQuery } from '@/features/people/auth';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { StaffPresencePanel } from './StaffPresencePanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());

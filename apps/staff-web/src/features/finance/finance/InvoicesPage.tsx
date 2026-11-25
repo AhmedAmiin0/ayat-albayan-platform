@@ -1,14 +1,8 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { Cartouche, EmptyState, FormAlert, PageHead, Pager, Toast, t } from '@ab/web-kit';
 import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { clearFilterSearch, toFilterSearch, toSortSearch } from '@/lib/list/list-search';
 import { invoiceDownload, invoicesQuery, type InvoiceView } from './api';
 import { invoiceColumns } from './invoice-columns';

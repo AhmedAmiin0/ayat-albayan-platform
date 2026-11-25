@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { QueryStateQuery } from '@ab/web-kit/components/ui/display/query-state';
+import type { QueryStateQuery } from '@ab/web-kit';
 
 export interface KpiTileProps<T> {
   label: string;

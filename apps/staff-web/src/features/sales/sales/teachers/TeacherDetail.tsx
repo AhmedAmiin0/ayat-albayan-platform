@@ -1,10 +1,6 @@
 import type { SalesTeacherView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { usePlatformClassroom } from '@ab/web-kit/lib/settings/public-config';
+import { buttonVariants, Icon, StatusChip, t, usePlatformClassroom } from '@ab/web-kit';
 import { programList } from './teacher-view';
 import { TeacherMeetingLink } from './TeacherMeetingLink';
 import { TeacherStudentsByKind } from './TeacherStudentsByKind';

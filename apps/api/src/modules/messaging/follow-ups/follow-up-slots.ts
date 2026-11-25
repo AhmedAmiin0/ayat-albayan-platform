@@ -29,7 +29,9 @@ export class FollowUpSlots {
     if (to <= from) return [];
     const ids = await this.queries.activeTeacherIds();
     const slots = await Promise.all(
-      ids.map((teacherId) => this.availability.freeSlots({ teacherId, from, to, durationMin: DEFAULT_DURATION })),
+      ids.map((teacherId) =>
+        this.availability.freeSlots({ teacherId, from, to, durationMin: DEFAULT_DURATION }),
+      ),
     );
     return slots.flat().map((s) => s.start);
   }

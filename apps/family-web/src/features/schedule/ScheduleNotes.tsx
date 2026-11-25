@@ -1,6 +1,4 @@
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { tzCity, t, useViewerTz } from '@ab/web-kit';
 
 /** The quiet notes under the week: whose clock the times are on, and when joining opens. */
 export function ScheduleNotes() {

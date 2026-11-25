@@ -4,7 +4,7 @@ import type { ReactElement } from 'react';
 import { act } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { JoinButton } from './JoinButton';
 
 // GET /settings/public never answers here: the window stays on the registry defaults (15 / 120 min).

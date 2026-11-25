@@ -1,11 +1,7 @@
 import { isOpenLesson, type LessonView } from '@ab/schedule';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, FormAlert, t, sendJoinLink, classroomErrorText } from '@ab/web-kit';
 import { templatesQuery } from '@/features/messaging/templates/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { sendJoinLink } from '@ab/web-kit/classroom/api/api';
-import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';
 
 const TEMPLATE = 'lesson_join_link';
 

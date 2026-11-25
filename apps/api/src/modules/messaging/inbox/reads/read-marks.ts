@@ -19,7 +19,8 @@ export function newestPerLine(rows: readonly InboundRead[]): ReadMark[] {
     if (!row.wa_message_id) continue;
     const line = row.line ?? 'notifications';
     const seen = newest.get(line);
-    if (!seen || row.created_at > seen.at) newest.set(line, { waMessageId: row.wa_message_id, at: row.created_at });
+    if (!seen || row.created_at > seen.at)
+      newest.set(line, { waMessageId: row.wa_message_id, at: row.created_at });
   }
   return [...newest].map(([line, m]) => ({ waMessageId: m.waMessageId, line }));
 }

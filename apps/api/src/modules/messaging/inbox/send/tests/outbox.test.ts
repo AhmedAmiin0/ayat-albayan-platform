@@ -14,8 +14,14 @@ function setup(status: 'queued' | 'sent', replayed = false) {
     byDedupKey: vi.fn(async (key: string) => (key === ROW.dedup_key ? messageRow({ id: 'm1', status }) : null)),
   };
   const sender = { kick: vi.fn(() => new Promise<void>(() => undefined)) }; // a pass that never ends (WhatsApp hangs)
-  const views = { view: vi.fn(async (r: { id: string; status: string }) => ({ id: r.id, status: r.status })) };
-  const outbox = new Outbox(queries as unknown as ThreadMessagesRepo, sender as unknown as MessageSender, views as unknown as MessageViews);
+  const views = {
+    view: vi.fn(async (r: { id: string; status: string }) => ({ id: r.id, status: r.status })),
+  };
+  const outbox = new Outbox(
+    queries as unknown as ThreadMessagesRepo,
+    sender as unknown as MessageSender,
+    views as unknown as MessageViews,
+  );
   return { outbox, queries, sender };
 }
 

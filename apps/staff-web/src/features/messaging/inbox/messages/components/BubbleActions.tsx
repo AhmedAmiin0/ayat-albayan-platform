@@ -1,10 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { useRef, useState } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { useDismiss } from '@ab/web-kit/components/ui/overlay/use-dismiss';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon, IconButton, useDismiss, t, cn } from '@ab/web-kit';
 import { BubbleMenu } from './BubbleMenu';
 import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';

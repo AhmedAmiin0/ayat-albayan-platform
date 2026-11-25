@@ -21,7 +21,11 @@ describe('RemindersSettings', () => {
   });
 
   it('answers the stored values and no longer reads the rule-owned keys', async () => {
-    const over = { reminder_lookahead_hours: 48, meeting_link_auto: true, reminder_minutes_before: 30 };
+    const over = {
+      reminder_lookahead_hours: 48,
+      meeting_link_auto: true,
+      reminder_minutes_before: 30,
+    };
     const values = await readerOf(RemindersSettings, over).read();
     expect(values).toMatchObject({ reminder_lookahead_hours: 48, meeting_link_auto: true });
     expect(values).not.toHaveProperty('reminder_minutes_before');

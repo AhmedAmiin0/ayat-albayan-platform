@@ -67,8 +67,11 @@ describe('POST /webhooks/kapso', () => {
     expect(queries.stored).toEqual([]);
   });
 
-  it('a status for a message staff sent from Kapso\'s inbox → read back and stored; a Kapso error still answers 200', async () => {
-    kapsoOverlay({ phone_number_id: PHONE_NUMBER_ID, env: kapsoEnv({ phoneNumberId: PHONE_NUMBER_ID }) });
+  it("a status for a message staff sent from Kapso's inbox → read back and stored; a Kapso error still answers 200", async () => {
+    kapsoOverlay({
+      phone_number_id: PHONE_NUMBER_ID,
+      env: kapsoEnv({ phoneNumberId: PHONE_NUMBER_ID }),
+    });
     const { postKapso, queries, kapso } = await boot();
     const status = (id: string) => JSON.stringify(envelope(statusValue({ id, status: 'delivered' })));
     expect((await postKapso(status('wamid.EXT1'))).statusCode).toBe(200);

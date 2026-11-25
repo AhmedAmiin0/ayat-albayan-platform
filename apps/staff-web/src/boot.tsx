@@ -1,10 +1,13 @@
 import { createRouter } from '@tanstack/react-router';
-import { returnSearchOf } from '@ab/web-kit/auth/return-to';
-import { signOut } from '@ab/web-kit/auth/sign-in';
-import { renderApp } from '@ab/web-kit/boot/render-app';
-import { notFoundState, routeStates } from '@ab/web-kit/boot/route-states';
-import { onSessionEnd } from '@ab/web-kit/lib/session/session-end';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import {
+  returnSearchOf,
+  signOut,
+  renderApp,
+  notFoundState,
+  routeStates,
+  onSessionEnd,
+  t,
+} from '@ab/web-kit';
 import { rememberUntilSessionEnd } from '@/features/messaging/inbox';
 import { forgetAllKept } from '@/features/teaching/booking';
 import { createQueryClient, queryErrorHandler, ROUTER_DEFAULTS } from '@/lib/query';

@@ -1,7 +1,7 @@
 import { NO_ASSIGNEE } from '@ab/shared';
 import { chipIfSet } from '@/components/table-toolbar/fields';
 import type { FilterChip } from '@/components/table-toolbar/types';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { leadSortValue } from '@ab/client-core';
 import { leadSortChoices } from './lead-sort';
 import type { LeadSearch } from '@/features/sales/leads/types';

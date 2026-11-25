@@ -3,7 +3,7 @@ import type { TeacherMe } from '@ab/schedule';
 import { screen, within } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { detail, message, PHONE, pupil, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';

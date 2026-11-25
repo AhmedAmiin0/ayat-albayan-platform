@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
+import { Avatar, t, cn } from '@ab/web-kit';
 import { avatarSeed } from '@/features/people/account';
 import { profileQuery } from '@/features/people/account/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
 
 export interface AccountChipProps {
   email?: string | null;

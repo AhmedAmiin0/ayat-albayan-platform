@@ -1,11 +1,9 @@
 import type { NotificationAudience } from '@ab/shared';
 import type { AcademySettings } from '@ab/settings';
 import { useState, type ReactNode } from 'react';
-import { tabIds } from '@ab/web-kit/components/ui/layout/tabs';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { tabIds, Toast, t } from '@ab/web-kit';
 import { useRuleDrafts, type RuleDrafts } from '@/features/messaging/notification-rules/rule-drafts';
 import { RulesSection } from '@/features/messaging/notification-rules/RulesSection';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { CommunicationsTab } from '@/features/platform/settings/pages/page-search';
 import { NumbersTab } from './tabs/NumbersTab';
 import { OverviewTab } from './overview/OverviewTab';

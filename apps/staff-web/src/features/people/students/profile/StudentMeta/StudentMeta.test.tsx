@@ -1,7 +1,7 @@
 import { formatPhone } from '@ab/core';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { StudentMeta } from './StudentMeta';
 import type { StudentMetaProps } from './StudentMeta.types';
 

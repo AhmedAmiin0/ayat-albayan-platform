@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Dialog, FormAlert, t } from '@ab/web-kit';
 import { moneyKeys } from '@/features/finance/keys';
 import { apiErrorText, studentLabel } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { receiptUrl, type PaymentView } from '@/features/finance/payments/api';
 
 /** A stored receipt through a 1-hour signed URL (P7): the image inline, a PDF in a frame. */

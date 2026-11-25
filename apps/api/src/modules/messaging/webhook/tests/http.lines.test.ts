@@ -11,7 +11,10 @@ afterEach(async () => {
   await ctx?.app.close();
   ctx = undefined;
 });
-const TWO = { appSecrets: [SECRET, CHAT_SECRET], numbers: { notifications: PHONE_NUMBER_ID, chat: CHAT_PHONE_NUMBER_ID } };
+const TWO = {
+  appSecrets: [SECRET, CHAT_SECRET],
+  numbers: { notifications: PHONE_NUMBER_ID, chat: CHAT_PHONE_NUMBER_ID },
+};
 async function boot(config: Parameters<typeof webhookApp>[0] = TWO) {
   ctx = await webhookApp(config);
   return ctx;

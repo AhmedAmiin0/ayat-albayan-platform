@@ -1,9 +1,6 @@
 import { CHAT_SEND_MIMES, chatFileProblem, type ChatFileProblem } from '@ab/shared';
 import { useRef } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
+import { Icon, IconButton, t, useUploadMaxBytes } from '@ab/web-kit';
 
 export interface AttachButtonProps {
   /** A JPEG, PNG or PDF within the limits: FileComposer takes over the box. */

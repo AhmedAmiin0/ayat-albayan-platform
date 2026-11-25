@@ -16,7 +16,9 @@ export const RULES_CLASSROOM = Symbol('RULES_CLASSROOM');
 export type ClassroomOn = () => boolean;
 
 /** Every template key a catalogue row may send. */
-export const CATALOGUE_TEMPLATE_KEYS: readonly string[] = [...new Set(NOTIFICATION_CATALOGUE.flatMap((e) => [...e.templates]))];
+export const CATALOGUE_TEMPLATE_KEYS: readonly string[] = [
+  ...new Set(NOTIFICATION_CATALOGUE.flatMap((e) => [...e.templates])),
+];
 
 /** What the catalogue reads: message_templates (approval and number per key) and the kept line checks. */
 @Injectable()
@@ -35,7 +37,10 @@ export class RulesRepo {
 
   /** Guardians, active teachers and leads with a phone; a failed count reads 0 (logged). */
   async reach(): Promise<Reach> {
-    const count = async (name: string, run: () => PromiseLike<{ count: number | null; error: { message: string } | null }>) => {
+    const count = async (
+      name: string,
+      run: () => PromiseLike<{ count: number | null; error: { message: string } | null }>,
+    ) => {
       try {
         const { count: n, error } = await run();
         if (error) throw new Error(error.message);

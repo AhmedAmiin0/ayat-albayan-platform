@@ -1,10 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { assignAssistant, assistantsQuery, removeAssistant, studentAssistantsQuery } from '@ab/web-kit/classroom/api/api';
+import {
+  Button,
+  FormAlert,
+  Select,
+  t,
+  assignAssistant,
+  assistantsQuery,
+  removeAssistant,
+  studentAssistantsQuery,
+} from '@ab/web-kit';
 
 /** Admin, student profile: the assistants allowed into this student's lessons. */
 export function AssistantsManager({ studentId }: { studentId: string }) {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
+import { ApiError } from '@ab/web-kit';
 import { reportErrorText } from './api';
 import { fileLabel } from './entry/AttachmentsField';
 import { reportFormHref, reportHistoryHref, reportOpen } from './paths';

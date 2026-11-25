@@ -1,4 +1,4 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 export interface StarterToggleProps {
   /** The template's shown name: each row's switch has its own accessible name. */

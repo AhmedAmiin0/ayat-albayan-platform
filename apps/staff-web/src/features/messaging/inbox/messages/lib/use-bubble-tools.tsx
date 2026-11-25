@@ -1,10 +1,8 @@
 import type { MessageView } from '@ab/shared';
 import { type ReactNode, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { Toast, ApiError, t } from '@ab/web-kit';
 import { errorCode } from '@/features/teaching/schedule';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { threadFileDownload } from '@/features/messaging/inbox/api/api';
 import { copyText, saveUrl } from './save-file';
 

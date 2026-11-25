@@ -2,7 +2,7 @@ import { DESCRIPTION_MAX } from '@ab/settings';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { settingText } from '@/components/settings/search/setting-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { entryOf } from '@/test/entries-fixture';
 import { findRow, renderValues } from './values-test-utils';
 

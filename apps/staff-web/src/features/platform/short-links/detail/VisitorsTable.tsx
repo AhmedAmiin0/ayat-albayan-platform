@@ -1,6 +1,6 @@
 import { fillSlots, usageText, visitorLook } from '@ab/client-core';
 import type { ShortLinkDetail, ShortLinkVisitor } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { LinkTable } from '@/features/platform/short-links/shared/LinkTable';
 import { PersonLine } from '@/features/platform/short-links/shared/PersonLine';
 import { useLinkDates } from '@/features/platform/short-links/shared/use-link-dates';

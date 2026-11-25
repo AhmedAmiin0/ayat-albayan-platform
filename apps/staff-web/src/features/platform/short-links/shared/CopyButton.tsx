@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, Button, IconButton, Toast, t } from '@ab/web-kit';
 
 interface CopyButtonProps {
   text: string;

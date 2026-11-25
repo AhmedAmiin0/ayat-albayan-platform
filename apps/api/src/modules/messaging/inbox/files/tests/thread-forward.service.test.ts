@@ -18,7 +18,9 @@ const sent = (status: Sent['view']['status'], id: string): Sent => ({ view: { id
 
 function service(text: (phone: string) => Promise<Sent>) {
   const queries = { get: vi.fn(async () => src) } as unknown as ThreadMessagesRepo;
-  const sends = { text: vi.fn(async (s: { phone: string }) => text(s.phone)) } as unknown as ThreadSendService;
+  const sends = {
+    text: vi.fn(async (s: { phone: string }) => text(s.phone)),
+  } as unknown as ThreadSendService;
   return new ThreadForwardService(queries, sends, {} as ForwardFiles);
 }
 const input = { messageId: SRC, targets: [A, B, C], clientRequestId: 'c0000000-0000-4000-8000-000000000003' };

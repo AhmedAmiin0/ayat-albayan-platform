@@ -1,4 +1,4 @@
-import { WEB_CLIENT_TAG } from '@ab/web-kit/lib/http/client-tag';
+import { WEB_CLIENT_TAG } from '@ab/web-kit';
 import { describe, expect, it } from 'vitest';
 
 describe('the family build tags its API calls as family-web (docs/26 §2f)', () => {

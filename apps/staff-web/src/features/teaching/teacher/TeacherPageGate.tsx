@@ -1,9 +1,7 @@
 import type { TeacherPage } from '@ab/settings';
 import { Navigate } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ListSkeleton, FormAlert, t } from '@ab/web-kit';
 import { useTeacherPageState, type TeacherPageState } from '@/lib/settings/teacher-pages';
 
 interface Props {

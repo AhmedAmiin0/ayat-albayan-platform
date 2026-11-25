@@ -2,9 +2,7 @@ import type { LineCheckView } from '@ab/shared';
 import { WA_LINES } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Toast, t } from '@ab/web-kit';
 import { checkLines, linesCheckQuery } from '@/features/messaging/messaging/api';
 import { LineRow } from '@/features/messaging/messaging/lines/LineRow';
 

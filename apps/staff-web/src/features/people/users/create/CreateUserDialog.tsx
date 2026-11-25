@@ -1,10 +1,7 @@
 import type { IssuedCredential } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Dialog, FormAlert, t } from '@ab/web-kit';
 import { createUser, roleOptionsQuery, USERS_KEY } from '@/features/people/users/api';
 import { initialCreateForm, type CreateForm, type Prefill } from './create-form';
 import { CreateUserFields } from './CreateUserFields';

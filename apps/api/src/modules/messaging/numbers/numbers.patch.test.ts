@@ -13,7 +13,9 @@ describe('numberPatch: a PATCH never leaves a row saying something false', () =>
   });
 
   it('the same phone id, or none, keeps them', () => {
-    expect(numberPatch(checked, { phone_number_id: checked.phone_number_id })).toEqual({ phone_number_id: checked.phone_number_id });
+    expect(numberPatch(checked, { phone_number_id: checked.phone_number_id })).toEqual({
+      phone_number_id: checked.phone_number_id,
+    });
     expect(numberPatch(checked, { label: 'رقم' })).toEqual({ label: 'رقم' });
   });
 
@@ -28,7 +30,11 @@ describe('numberPatch: a PATCH never leaves a row saying something false', () =>
   });
 
   it('disabling a default unsets is_default; disabling a spare changes nothing else', () => {
-    expect(numberPatch(numberRow({ is_default: true, enabled: true }), { enabled: false })).toEqual({ enabled: false, is_default: false });
-    expect(numberPatch(numberRow({ is_default: false, enabled: true }), { enabled: false })).toEqual({ enabled: false });
+    expect(numberPatch(numberRow({ is_default: true, enabled: true }), { enabled: false })).toEqual(
+      { enabled: false, is_default: false },
+    );
+    expect(
+      numberPatch(numberRow({ is_default: false, enabled: true }), { enabled: false }),
+    ).toEqual({ enabled: false });
   });
 });

@@ -44,7 +44,12 @@ const tail = (id: string): string => `…${id.slice(-4)}`;
 @Injectable()
 export class ExternalCatchUpJob extends TickerJob {
   private readonly log = new Logger(ExternalCatchUpJob.name);
-  protected readonly ticker = new Ticker({ name: ExternalCatchUpJob.name, firstMs: FIRST_RUN_MS, everyMs: EVERY_MS, run: () => this.runOnce() });
+  protected readonly ticker = new Ticker({
+    name: ExternalCatchUpJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: EVERY_MS,
+    run: () => this.runOnce(),
+  });
 
   constructor(
     private readonly queries: ExternalRepo,
@@ -65,7 +70,10 @@ export class ExternalCatchUpJob extends TickerJob {
     const counts: CatchUpCounts = { listed: 0, stored: 0, known: 0, skipped: 0 };
     const label = tail(n.env.phoneNumberId);
     try {
-      const newest = await this.queries.newestExternal({ line: n.line, numberId: n.numberId ?? null });
+      const newest = await this.queries.newestExternal({
+        line: n.line,
+        numberId: n.numberId ?? null,
+      });
       const since = catchUpSince(newest, now).toISOString();
       let after: string | undefined;
       for (let page = 0; page < MAX_PAGES; page++) {

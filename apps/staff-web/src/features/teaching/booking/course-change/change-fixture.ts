@@ -1,7 +1,7 @@
 import type { BookedCourse, CourseChangeView } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react';
 import type { Mock } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { ABRAR } from '@/features/teaching/booking/wizard-fixture';
 
 // Test data only: now is Saturday 3 October 2026, 12:00 Riyadh.

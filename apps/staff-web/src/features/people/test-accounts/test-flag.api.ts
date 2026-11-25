@@ -1,5 +1,4 @@
-import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, apiSend, t } from '@ab/web-kit';
 
 export type TestFlagTarget = 'user' | 'student';
 

@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { ConflictNotice } from './ConflictNotice';
 import { ProposalsPanel } from './proposals/ProposalsPanel';
 

@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Icon, usePermissions, t } from '@ab/web-kit';
 import { RegistrationCheckDialog } from '@/features/sales/sales/registration/RegistrationCheckDialog';
 
 /** The button alone: the sales chat holds its dialog above the width switch (m13). */

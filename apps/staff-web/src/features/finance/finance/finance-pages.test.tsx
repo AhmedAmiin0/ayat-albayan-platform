@@ -3,7 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SUMMARY } from '@/features/reporting/dashboard/dashboard-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { yearRange } from './api';
 import { FinanceSummaryPage } from './FinanceSummaryPage';
 import { InvoicesPage } from './InvoicesPage';

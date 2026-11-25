@@ -9,7 +9,8 @@ export {
   subscribeWebPush,
   SW_URL,
   unsubscribeWebPush,
-} from '@ab/web-kit/push/web-push';
+  notificationsQuery,
+  useMarkRead,
+} from '@ab/web-kit';
 // The wallet refreshes when the bell gets a new commission row.
 export { useBellSignal } from './use-bell-signal';
-export { notificationsQuery, useMarkRead } from '@ab/web-kit/push/notifications-api';

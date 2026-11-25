@@ -36,7 +36,9 @@ describe('CrmMediaCopyJob: the old CRM storage not answering', () => {
     down.now = false;
     expect(await w.job.runOnce()).toMatchObject({ state: 'copied', outcomes: ['copied', 'copied', 'copied'] });
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
-    expect(w.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { copied: 3, failed: 0, skipped: 0, remaining: 0 } }));
+    expect(w.audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ after: { copied: 3, failed: 0, skipped: 0, remaining: 0 } }),
+    );
   });
 
   it('one file that never answers while the others do counts its attempts and cannot block the batch', async () => {
@@ -49,7 +51,9 @@ describe('CrmMediaCopyJob: the old CRM storage not answering', () => {
     for (let i = 0; i < UNREACHABLE_PATIENCE; i++) await w.job.runOnce();
     expect(w.failures.get('c0')).toEqual({ attempts: MAX_ATTEMPTS, skipped: false });
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
-    expect(w.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { copied: 2, failed: 1, skipped: 0, remaining: 0 } }));
+    expect(w.audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ after: { copied: 2, failed: 1, skipped: 0, remaining: 0 } }),
+    );
   });
 
   it('a real storage answer (404) still counts, up to the cap', async () => {
@@ -72,7 +76,9 @@ describe('CrmMediaCopyJob: the «done» audit row sees files the batch never pic
     ]);
     expect(await w.job.runOnce()).toMatchObject({ state: 'copied' });
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
-    expect(w.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: { copied: 2, failed: 0, skipped: 1, remaining: 1 } }));
+    expect(w.audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ after: { copied: 2, failed: 0, skipped: 1, remaining: 1 } }),
+    );
     expect(w.rows.get('elsewhere')?.media_path).toBeNull();
     expect(CRM_HOST).not.toBe('old-files.crm.example');
   });

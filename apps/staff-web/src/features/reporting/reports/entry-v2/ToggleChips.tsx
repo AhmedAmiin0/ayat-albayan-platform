@@ -1,4 +1,4 @@
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '@ab/web-kit';
 
 export interface ToggleChipsProps<V extends string> {
   /** The group's name for assistive tech (its heading is outside). */

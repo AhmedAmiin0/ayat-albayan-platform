@@ -1,11 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { buttonVariants, Cartouche, FormAlert, PageHead, ListSkeleton, t } from '@ab/web-kit';
 import { assistantsQuery } from './api';
 import { CommissionLedger } from './commissions/CommissionLedger';
 import { StatementsPanel } from './statements/StatementsPanel';

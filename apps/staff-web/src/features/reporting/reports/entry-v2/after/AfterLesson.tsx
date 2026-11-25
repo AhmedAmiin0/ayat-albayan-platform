@@ -1,5 +1,5 @@
 import { suggestOverall } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { ReportTextField } from '@/features/reporting/reports/entry/ReportTextField';
 import type { ReportEntryV2State } from '@/features/reporting/reports/entry-v2/use-report-entry-v2';
 import { CARD } from '@/features/reporting/reports/entry-v2/v2-classes';

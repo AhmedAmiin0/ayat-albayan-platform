@@ -31,4 +31,4 @@ export const page = (
   unread,
 });
 
-export { renderWithClient } from '@ab/web-kit/testing/query-render';
+export { renderWithClient } from '@ab/web-kit';

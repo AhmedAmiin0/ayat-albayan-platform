@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { takenDays, takenTexts } from './course-taken';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 

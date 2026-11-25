@@ -2,11 +2,8 @@ import { ACTIVITY_RESULTS, ACTIVITY_ROLES, type ActivityView } from '@ab/shared'
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { ColumnFilterDef, DataTableFeatures } from '@/components/data-table/DataTable';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StatusChip, t, useClock, useViewerTz } from '@ab/web-kit';
 import { actionLabel, entityLabel, entityLink, formatAt, resultLabel, resultStyle, roleLabel } from './activity-format';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 const col = createColumnHelper<DataTableFeatures, ActivityView>();
 

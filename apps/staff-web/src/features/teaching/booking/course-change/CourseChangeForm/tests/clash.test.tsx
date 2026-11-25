@@ -3,12 +3,10 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { conflictText } from '@/features/teaching/schedule/reschedule/ConflictNotice';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t, locale } from '@ab/web-kit';
 import { BookingModeContext } from '@/features/teaching/booking/mode';
 import { CHANGE_VIEW, changeBodies, CHECK, CLASH, NOW, routeChange, routeChangeSend, swapSundayForMonday } from '@/features/teaching/booking/course-change/change-fixture';
 import { CourseChangeForm } from '@/features/teaching/booking/course-change/CourseChangeForm/CourseChangeForm';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;

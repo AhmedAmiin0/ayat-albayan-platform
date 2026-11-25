@@ -3,7 +3,7 @@ import { PUBLIC_CONFIG_QUERY_KEY, PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { lesson, student } from '@/portal/portal.fixtures';
 import { NextLessonCard } from './NextLessonCard';
 

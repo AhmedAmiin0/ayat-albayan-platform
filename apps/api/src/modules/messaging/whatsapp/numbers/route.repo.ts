@@ -20,7 +20,11 @@ export class RouteRepo {
     const { data, error } = await this.db.from('message_template_numbers').select('template_key, number_id, status');
     if (error) throw new Error(`template approvals read failed: ${error.message}`);
     const out = new Map<string, Map<string, string>>();
-    for (const r of data) out.set(r.template_key, (out.get(r.template_key) ?? new Map<string, string>()).set(r.number_id, r.status));
+    for (const r of data)
+      out.set(
+        r.template_key,
+        (out.get(r.template_key) ?? new Map<string, string>()).set(r.number_id, r.status),
+      );
     return out;
   }
 

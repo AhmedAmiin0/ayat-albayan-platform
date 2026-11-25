@@ -45,7 +45,10 @@ export interface ThreadListFilter extends ListSort<ThreadSortKey> {
 }
 
 /** Teachers use their own unread count and see no lead, so those filters do not apply. */
-export function teacherListFilter(f: ThreadListFilter, phones: readonly string[]): ThreadListFilter {
+export function teacherListFilter(
+  f: ThreadListFilter,
+  phones: readonly string[],
+): ThreadListFilter {
   const out: ThreadListFilter = { page: f.page, pageSize: f.pageSize, unread: false, phones };
   if (f.hide) out.hide = f.hide;
   if (f.search) out.search = f.search;

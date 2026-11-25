@@ -1,6 +1,5 @@
 import type { NumberEvolutionView, NumberView } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, t } from '@ab/web-kit';
 import { evolutionErrorText } from './evolution-sync-api';
 import { EvolutionSyncLine } from './EvolutionSyncLine';
 import { useEvolutionSync } from './use-evolution-sync';

@@ -1,8 +1,7 @@
 import { PAYMENT_KINDS, type PaymentKind } from '@ab/catalog';
 import { DateFilterField, SelectFilterField } from '@/components/table-toolbar/fields';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button, t } from '@ab/web-kit';
 import { StudentPicker } from '@/features/finance/subscriptions/create/StudentPicker';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { PaymentFilters } from './api';
 
 export interface PaymentFilterFieldsProps {

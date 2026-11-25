@@ -13,10 +13,13 @@ export const forSales = (view: ThreadView): ThreadView => ({ ...view, unpaid: fa
 
 /** Defence in depth next to visibleToSales: no link of a classroom or feedback template in any payload. */
 export const withoutLinks = (view: MessageView): MessageView =>
-  view.template_key && LINK_TEMPLATES.has(view.template_key) ? { ...view, template_params: null, click_to_chat: null } : view;
+  view.template_key && LINK_TEMPLATES.has(view.template_key)
+    ? { ...view, template_params: null, click_to_chat: null }
+    : view;
 
 /** The next lessons without their meeting link: the room is entered through the API (POST /lessons/:id/room/join). */
-export const salesLessons = (lessons: readonly ThreadLesson[]): ThreadLesson[] => lessons.map((l) => ({ ...l, meeting_link: null }));
+export const salesLessons = (lessons: readonly ThreadLesson[]): ThreadLesson[] =>
+  lessons.map((l) => ({ ...l, meeting_link: null }));
 
 /** The guardian, the lead and every child of the family (she answers every chat), without packages or money. */
 export function salesPeople(people: ThreadPeople): ThreadPeople {

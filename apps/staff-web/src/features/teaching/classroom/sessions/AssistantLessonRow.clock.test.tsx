@@ -2,7 +2,7 @@ import type { AssistantLessonView } from '@ab/schedule';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { setClockPref } from '@ab/web-kit/lib/clock';
+import { setClockPref } from '@ab/web-kit';
 import { AssistantLessonRow } from './AssistantLessonRow';
 
 // jsdom's zone is UTC: 14:30Z reads 14:30 or 2:30 PM.

@@ -1,9 +1,7 @@
 import { studentCodeOnTrack } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { signIn } from '@ab/web-kit/auth/sign-in';
-import { useLandAfterSignIn } from '@ab/web-kit/auth/use-return-to';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { signIn, useLandAfterSignIn, t } from '@ab/web-kit';
 
 /** docs/50 §4: the student code is checked while typed with the server's own rule. */
 export function useStudentSignIn() {

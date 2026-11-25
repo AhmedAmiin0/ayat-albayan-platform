@@ -1,9 +1,6 @@
 import { canStep, searchStatus, type SearchStep } from '@ab/client-core';
 import type { KeyboardEvent } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, IconButton, SearchInput, t } from '@ab/web-kit';
 import { useChatSearch, type ChatSearchValue } from './search-context';
 import { SEARCH_BAR_ID } from './to-newest';
 

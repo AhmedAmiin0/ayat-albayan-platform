@@ -1,5 +1,5 @@
 import { permissionGroups, type Permission } from '@ab/catalog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { groupState, type GroupState } from './role-form';
 
 const BOX = 'size-4 shrink-0 accent-[var(--lapis)]';

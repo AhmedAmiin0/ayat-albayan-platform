@@ -1,5 +1,5 @@
 import type { NotificationEntryView } from '@ab/shared';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { StatusChip } from '@ab/web-kit';
 import { stateChip } from '@/features/messaging/notification-catalogue/catalogue-text';
 import { reasonText } from '@/features/messaging/notification-rules/rule-text';
 

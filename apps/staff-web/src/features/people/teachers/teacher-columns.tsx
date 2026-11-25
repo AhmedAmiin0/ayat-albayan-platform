@@ -5,13 +5,8 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Link } from '@tanstack/react-router';
 import { memo } from 'react';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Avatar, Button, buttonVariants, Ltr, StatusChip, t, teacherLabel } from '@ab/web-kit';
 import { StudentCountLink } from './detail/StudentCountLink';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import type { Teacher, TeacherListRow } from '@ab/shared';
 
 const col = createColumnHelper<DataTableFeatures, TeacherListRow>();

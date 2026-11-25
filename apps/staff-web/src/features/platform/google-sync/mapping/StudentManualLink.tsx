@@ -1,9 +1,6 @@
 import type { GoogleStudentMapInput } from '@ab/catalog';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Field, Input, t } from '@ab/web-kit';
 import { parseManualLink } from '@/features/platform/google-sync/google-input';
 
 const s = t.googleSync.students;

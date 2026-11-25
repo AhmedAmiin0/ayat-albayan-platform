@@ -1,10 +1,9 @@
 import { act, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, locale } from '@ab/web-kit';
 import { fullTime } from '@/features/messaging/inbox/format';
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageLog } from '@/features/messaging/inbox/messages/components/MessageLog/MessageLog';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;

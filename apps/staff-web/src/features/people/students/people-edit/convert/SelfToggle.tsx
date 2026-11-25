@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const E = t.peopleEdit;
 

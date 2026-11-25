@@ -75,7 +75,11 @@ function urlValue(input: TemplateSend, b: UrlAt): ButtonValue[] {
 /** Meta's recipient envelope of every message (template, text, file, reaction). */
 export const envelope = (to: string) => ({ messaging_product: 'whatsapp', recipient_type: 'individual', to: waTo(to) });
 
-export function textMessage(input: { to: string; text: string; replyTo?: string | null }): GraphBody {
+export function textMessage(input: {
+  to: string;
+  text: string;
+  replyTo?: string | null;
+}): GraphBody {
   return {
     ...envelope(input.to),
     type: 'text',
@@ -95,7 +99,12 @@ export function mediaMessage(input: MediaSend): GraphBody {
   const caption = kind !== 'audio' && input.caption ? { caption: input.caption } : {};
   const voice = kind === 'audio' && input.voice ? { voice: true } : {};
   const context = input.replyTo ? { context: { message_id: input.replyTo } } : {};
-  return { ...envelope(input.to), type: kind, [kind]: { link: input.url, ...caption, ...filename, ...voice }, ...context };
+  return {
+    ...envelope(input.to),
+    type: kind,
+    [kind]: { link: input.url, ...caption, ...filename, ...voice },
+    ...context,
+  };
 }
 
 export const readReceipt = (waMessageId: string): GraphBody => ({

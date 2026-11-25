@@ -4,7 +4,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
 import { templateKeys } from '@/features/messaging/keys';
 import { templateErrorText } from '@/features/messaging/templates/api';
-import { ApiError, apiFetch, apiSend, type SendMethod } from '@ab/web-kit/lib/http/api';
+import { ApiError, apiFetch, apiSend, type SendMethod } from '@ab/web-kit';
 
 // The admin edits via templates.manage; authors use /messaging/templates/authored.
 

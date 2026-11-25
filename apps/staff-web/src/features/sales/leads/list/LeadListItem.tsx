@@ -2,17 +2,20 @@ import { formatPhone } from '@ab/core';
 import { leadStatusStyle } from '@ab/money';
 import { Link } from '@tanstack/react-router';
 import { useRef } from 'react';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton, iconButtonClass } from '@ab/web-kit/components/ui/form/icon-button';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import {
+  Avatar,
+  Icon,
+  IconButton,
+  iconButtonClass,
+  Ltr,
+  StatusChip,
+  t,
+  cn,
+  useClock,
+} from '@ab/web-kit';
 import { formatAge, formatDateTime } from '@/features/sales/leads/format';
 import { LeadAssignSelect } from './LeadAssignSelect';
 import { ReclassifyConfirm } from './ReclassifyConfirm';
-import { useClock } from '@ab/web-kit/lib/clock';
 import type { LeadView } from '@ab/shared';
 
 /** Shared with the list head so chips line up across rows (docs/07 §9). */

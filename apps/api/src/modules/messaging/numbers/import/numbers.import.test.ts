@@ -27,7 +27,11 @@ function setup() {
     set: vi.fn(async (t: { id: string; name: string }) => mark(t.id, t.name)),
   };
   const effects = { after: vi.fn(async () => undefined) };
-  const importer = new NumbersImport(queries as unknown as NumbersRepo, secrets as unknown as NumbersSecrets, effects as unknown as NumbersEffects);
+  const importer = new NumbersImport(
+    queries as unknown as NumbersRepo,
+    secrets as unknown as NumbersSecrets,
+    effects as unknown as NumbersEffects,
+  );
   return { importer, queries, secrets, effects };
 }
 

@@ -3,7 +3,7 @@ import type { PaymentMethod } from '@ab/catalog';
 import type { PayoutGenerateResult, PayoutView, TeacherEarningsSummaryView } from '@ab/money';
 import { riyadhToday } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { moneyKeys } from '@/features/finance/keys';
 
 // apps/api/src/modules/payouts (docs/11 §8, R-PAY-02, R-TCH-04). Teacher money is EGP.

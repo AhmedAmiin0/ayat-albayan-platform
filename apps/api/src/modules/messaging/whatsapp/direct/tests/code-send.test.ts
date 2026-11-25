@@ -18,7 +18,12 @@ const ACCOUNT_CODE = templateRow({
 const gate = { open: vi.fn() };
 const queries = { approvedTemplates: vi.fn(), chatConfigured: true };
 const dispatch = { ready: vi.fn(), send: vi.fn() };
-const make = () => new CodeSend(gate as unknown as SendGate, queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch);
+const make = () =>
+  new CodeSend(
+    gate as unknown as SendGate,
+    queries as unknown as SenderRepo,
+    dispatch as unknown as MessageDispatch,
+  );
 
 describe('CodeSend — the account_code template, sent now, never queued (docs/30 §4)', () => {
   beforeEach(() => {

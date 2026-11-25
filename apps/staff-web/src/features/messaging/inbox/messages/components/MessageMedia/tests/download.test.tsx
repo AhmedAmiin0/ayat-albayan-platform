@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageMedia } from '@/features/messaging/inbox/messages/components/MessageMedia/MessageMedia';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';

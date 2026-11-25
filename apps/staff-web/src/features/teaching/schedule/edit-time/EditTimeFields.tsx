@@ -1,19 +1,23 @@
 import type { TimeEditMode } from '@ab/schedule';
 import { DURATIONS } from '@ab/catalog';
 import { clockOf, clockTime, wallInstant, weekdayOf } from '@ab/time';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import {
+  Field,
+  Input,
+  RadioChips,
+  Select,
+  tzCity,
+  t,
+  dateLabel,
+  dayMonthLabel,
+  ClockOptions,
+  clockDir,
+  type Clock,
+  useClock,
+  useViewerTz,
+} from '@ab/web-kit';
 import { validLength } from './edit-time';
 import { lengthText } from './edit-time-text';
-import { dateLabel, dayMonthLabel } from '@ab/web-kit/schedule/tz';
-import { ClockOptions } from '@ab/web-kit/lib/clock-options';
-import { clockDir } from '@ab/web-kit/lib/clock-text';
-import { type Clock, useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface FieldState {
   date: string;

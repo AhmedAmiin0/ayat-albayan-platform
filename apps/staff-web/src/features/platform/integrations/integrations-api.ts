@@ -1,6 +1,6 @@
 import type { IntegrationConfigItem, IntegrationPlainKey, IntegrationSecretKey } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 
 /** GET /settings/integrations (admin): every key, its source; a secret's value is always null. */

@@ -1,8 +1,6 @@
 import type { StaffPresence, StaffPresenceRow } from '@ab/shared';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { WithOnline } from '@ab/web-kit/components/channel/presence/presence-pick';
+import { ListSkeleton, t } from '@ab/web-kit';
+import type { Clock, WithOnline } from '@ab/web-kit';
 import { StaffPresenceRows } from './StaffPresenceRows';
 
 const NOTE = 'text-sm text-ink-3';

@@ -1,7 +1,7 @@
 import type { ThreadDetail } from '@ab/shared';
 import { useInfiniteQuery, type InfiniteData } from '@tanstack/react-query';
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { anchoredThreadQuery, hitGone } from '@/features/messaging/inbox/api/anchored';
 import { useLastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { jumpToMessage } from '@/features/messaging/inbox/messages/lib/jump-to-message';

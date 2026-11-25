@@ -1,5 +1,5 @@
 import type { MeetingInviteChannel, MeetingInviteeKind, MeetingInviteStatus } from '@ab/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const R = t.meetingInvites.results;
 const BY_STATUS: Record<MeetingInviteStatus, string> = {

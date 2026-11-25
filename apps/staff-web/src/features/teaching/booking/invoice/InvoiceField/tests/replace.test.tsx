@@ -2,12 +2,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, locale } from '@ab/web-kit';
 import { mediaCardLabel } from '@/features/teaching/booking/invoice/ChatMediaPicker';
 import type { ThreadMediaItem } from '@/features/teaching/booking/draft/contract';
 import type { InvoiceDraft } from '@/features/teaching/booking/draft/draft';
 import { InvoiceField } from '@/features/teaching/booking/invoice/InvoiceField/InvoiceField';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;

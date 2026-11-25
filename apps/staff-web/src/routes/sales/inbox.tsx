@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { usePermissions } from '@ab/web-kit';
 import { InboxPage } from '@/features/messaging/inbox/threads/list/InboxPage';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { parseInboxSearch } from '@/features/messaging/inbox/shared/search';

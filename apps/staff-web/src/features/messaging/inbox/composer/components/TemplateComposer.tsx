@@ -1,13 +1,8 @@
 import { needsLesson, sendsAllTemplates, type TemplateView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { meQuery } from '@ab/web-kit/auth/me';
+import { Button, Field, FormAlert, Select, meQuery, t } from '@ab/web-kit';
 import { templatesQuery } from '@/features/messaging/templates/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { allowedTemplates, noneAllowedText, useNoneAllowed, useReadsMessaging } from '@/features/messaging/inbox/composer/lib/allowed-templates';
 import { sendTemplate } from '@/features/messaging/inbox/api/api';
 import { LessonPicker } from '@/features/messaging/inbox/lead/LessonPicker';

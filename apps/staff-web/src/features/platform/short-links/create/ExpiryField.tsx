@@ -5,10 +5,7 @@ import {
 import { counted } from '@ab/core';
 import { localDateIn } from '@ab/time';
 import { useId } from 'react';
-import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { RadioChips, Input, NuqtaGlyph, t } from '@ab/web-kit';
 import { useLinkDates } from '@/features/platform/short-links/shared/use-link-dates';
 
 const F = t.shortLinks.form;

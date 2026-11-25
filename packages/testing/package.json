@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./vitest": "./src/vitest.ts",
+    "./jest": "./jest.cjs",
     "./page-golden": "./src/page-golden/index.ts",
-    "./jest": "./jest.cjs"
+    "./presence-realtime": "./src/presence-realtime/index.ts",
+    "./vitest": "./src/vitest.ts"
   },
   "scripts": {
     "build": "tsgo --noEmit",

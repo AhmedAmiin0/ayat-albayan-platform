@@ -1,8 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ABRAR, next, pickSlot, pickWednesday, SLOT } from '@/features/teaching/booking/wizard-fixture';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { COURSE_STUDENT_ID, routeCourse, routeCourseSend } from '@/features/sales/sales-money/course/course-fixture';
 import { SalesCourseDialog } from '@/features/sales/sales-money/course/SalesCourseDialog/SalesCourseDialog';

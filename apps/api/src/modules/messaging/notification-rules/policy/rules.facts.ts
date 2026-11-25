@@ -28,6 +28,15 @@ export class RulesFacts {
       this.queries.lines(),
       opts.reach ? this.queries.reach() : Promise.resolve(null),
     ]);
-    return { inputs: { settings, gateReason: state.reason, templates, classroom: this.queries.classroom() }, lines, reach };
+    return {
+      inputs: {
+        settings,
+        gateReason: state.reason,
+        templates,
+        classroom: this.queries.classroom(),
+      },
+      lines,
+      reach,
+    };
   }
 }

@@ -2,9 +2,7 @@ import type { ReactNode } from 'react';
 import { Section } from '@/components/settings/Section';
 import { matchesText } from '@/components/settings/search/settings-search';
 import { useSettingsView } from '@/components/settings/settings-view';
-import { ClockToggle } from '@ab/web-kit/components/ui/layout/clock-toggle';
-import { ThemeToggle } from '@ab/web-kit/components/ui/layout/theme-toggle';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ClockToggle, ThemeToggle, t } from '@ab/web-kit';
 
 const themeMatch = (query: string): boolean => matchesText(`${t.settings.theme} ${t.settings.themeHint}`, query);
 const clockMatch = (query: string): boolean => matchesText(`${t.clock.label} ${t.clock.hint}`, query);

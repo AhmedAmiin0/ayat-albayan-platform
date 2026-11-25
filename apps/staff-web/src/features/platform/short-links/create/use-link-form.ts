@@ -4,7 +4,7 @@ import {
 } from '@ab/client-core';
 import { useState } from 'react';
 import { flushSync } from 'react-dom';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { useViewerTz } from '@ab/web-kit';
 import { useCreateLink } from '@/features/platform/short-links/api/use-short-links';
 import { focusFirstInvalid } from './focus-invalid';
 

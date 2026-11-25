@@ -75,33 +75,53 @@ export class ThreadDeltaService {
     const gap = rows.length > q.limit && Date.parse(rows[q.limit]?.created_at ?? '') > Date.parse(q.after);
     const out: ThreadDelta = { messages, has_more: gap, pending };
     if (!arrived) return out;
-    return { ...out, thread: arrived.window, messages: arrived.stamped ? readNow(messages, now) : messages };
+    return {
+      ...out,
+      thread: arrived.window,
+      messages: arrived.stamped ? readNow(messages, now) : messages,
+    };
   }
 
   private render(rows: readonly ThreadMessageRow[], caller: DeltaCaller): Promise<MessageView[]> {
     if (caller.kind !== 'sales') return Promise.all(rows.map((r) => this.views.view(r)));
-    return Promise.all(rows.filter(visibleToSales).map(async (r) => withoutLinks(await this.views.view(r))));
+    return Promise.all(
+      rows.filter(visibleToSales).map(async (r) => withoutLinks(await this.views.view(r))),
+    );
   }
 
   /** A new inbound row (created after `after`), or one still unread: the stamp and the window; else nothing. */
-  private async arrived(fresh: readonly ThreadMessageRow[], input: StampInput): Promise<Arrived | undefined> {
+  private async arrived(
+    fresh: readonly ThreadMessageRow[],
+    input: StampInput,
+  ): Promise<Arrived | undefined> {
     const { q, caller, now } = input;
     const inbound = fresh.filter((r) => r.direction === 'inbound');
     const after = Date.parse(q.after);
     const news = inbound.some((r) => Date.parse(r.created_at) > after);
     const unread = caller.kind !== 'teacher' && inbound.some((r) => !r.read_at);
     if (!news && !unread) return undefined;
-    const [row, stamped] = await Promise.all([this.queries.thread(q.phone), this.stamp({ inbound, news, unread }, input)]);
+    const [row, stamped] = await Promise.all([
+      this.queries.thread(q.phone),
+      this.stamp({ inbound, news, unread }, input),
+    ]);
     if (!row) return undefined;
     const view = toThreadView(row, now);
     return { window: windowOf(view, caller.kind === 'teacher' || stamped ? 0 : view.unread_count), stamped };
   }
 
   /** Teacher: their own read mark on a new row. Admin / sales: the unread rows, as opening the chat. */
-  private async stamp(seen: { inbound: readonly ThreadMessageRow[]; news: boolean; unread: boolean }, input: StampInput): Promise<boolean> {
+  private async stamp(
+    seen: { inbound: readonly ThreadMessageRow[]; news: boolean; unread: boolean },
+    input: StampInput,
+  ): Promise<boolean> {
     const { q, caller, now } = input;
     if (caller.kind === 'teacher') {
-      if (seen.news) await this.need(this.teacher).stampRead({ teacherId: caller.scope.teacherId, phone: q.phone, at: now });
+      if (seen.news)
+        await this.need(this.teacher).stampRead({
+          teacherId: caller.scope.teacherId,
+          phone: q.phone,
+          at: now,
+        });
       return false;
     }
     if (!seen.unread) return false;

@@ -1,13 +1,10 @@
 import type { TimeEditMode } from '@ab/schedule';
 import type { LessonView } from '@ab/schedule';
 import { sameClockAt } from '@ab/time';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { NuqtaGlyph, t, useClock, useViewerTz } from '@ab/web-kit';
 import type { Change } from './edit-time';
 import { whenWithLength } from './edit-time-text';
 import { durationMin, studentTimes, timeInCity } from '@/features/teaching/schedule/lesson/lessons';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface EditTimeConfirmProps {
   lesson: LessonView;

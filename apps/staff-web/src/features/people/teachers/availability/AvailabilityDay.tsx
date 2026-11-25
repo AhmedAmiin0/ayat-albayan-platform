@@ -1,13 +1,16 @@
 import type { Weekday } from '@ab/catalog';
 import { useId, useState, type FocusEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { useClock, type Clock } from '@ab/web-kit/lib/clock';
-import { hhmmText } from '@ab/web-kit/lib/clock-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import {
+  Button,
+  Icon,
+  IconButton,
+  NuqtaGlyph,
+  useClock,
+  type Clock,
+  hhmmText,
+  t,
+  cn,
+} from '@ab/web-kit';
 import { DayTrack } from './DayTrack';
 import { addRange, dayProblem, problemIndex, removeRange, updateRange, type Range } from './grid';
 import { RangeRow } from './RangeRow';

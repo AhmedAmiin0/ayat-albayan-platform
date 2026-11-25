@@ -1,7 +1,7 @@
 import { messageHits, messageSearchPages } from '@ab/client-core';
 import { searchesMessages } from '@ab/shared';
 import { infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 
 const messageSearchQuery = (q: string) =>
   infiniteQueryOptions(messageSearchPages(q, (path) => apiFetch(path)));

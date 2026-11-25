@@ -20,7 +20,11 @@ export interface CrmStatusDeps {
 }
 
 /** PUT /messaging/templates/:key/crm-status. 404 template_not_found. */
-export async function setCrmStatus(deps: CrmStatusDeps, input: { key: string; status: CrmTemplateStatus }, actorId: string): Promise<TemplateView> {
+export async function setCrmStatus(
+  deps: CrmStatusDeps,
+  input: { key: string; status: CrmTemplateStatus },
+  actorId: string,
+): Promise<TemplateView> {
   const { key, status } = input;
   const row = await deps.queries.get(key);
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });

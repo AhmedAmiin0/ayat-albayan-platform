@@ -20,7 +20,9 @@ const ANSWER_MAX = 16 * 1024 * 1024;
 const UNREACHABLE = new Set(['ENOENT', 'ECONNREFUSED', 'EACCES', 'ENOTSOCK']);
 
 const pagesAnswer = z.object({ pages: z.number().int().min(0) });
-const renderAnswer = z.object({ images: z.array(z.object({ page: z.number().int(), jpg: z.string() })) });
+const renderAnswer = z.object({
+  images: z.array(z.object({ page: z.number().int(), jpg: z.string() })),
+});
 
 /**
  * ayat-pdf is there to ask: a socket at its path. Only a socket, never a file or a link the sandbox
@@ -37,8 +39,15 @@ export async function pdfPageCount(bytes: Uint8Array, opts: SandboxOpts = {}): P
 }
 
 /** pdf-render's renderPdfPages, in ayat-pdf: the JPEGs of `range` (any page outside it is dropped). */
-export async function renderPdfPages(bytes: Uint8Array, range: PageRange, opts: SandboxOpts = {}): Promise<PdfPageImage[]> {
-  const answer = parse(renderAnswer, await call({ path: `/render?first=${range.first}&last=${range.last}`, bytes, opts }));
+export async function renderPdfPages(
+  bytes: Uint8Array,
+  range: PageRange,
+  opts: SandboxOpts = {},
+): Promise<PdfPageImage[]> {
+  const answer = parse(
+    renderAnswer,
+    await call({ path: `/render?first=${range.first}&last=${range.last}`, bytes, opts }),
+  );
   const images = answer.images.filter((i) => i.page >= range.first && i.page <= range.last);
   if (!images.length) throw new PdfToolError('failed');
   return images.map((i) => ({ page: i.page, jpg: new Uint8Array(Buffer.from(i.jpg, 'base64')) }));
@@ -51,10 +60,19 @@ function parse<T>(schema: z.ZodType<T>, value: unknown): T {
 }
 
 /** 200 → its JSON; 503 → 'busy' (its queue is full); anything else → 'failed'. */
-async function call(input: { path: string; bytes: Uint8Array; opts: SandboxOpts }): Promise<unknown> {
+async function call(input: {
+  path: string;
+  bytes: Uint8Array;
+  opts: SandboxOpts;
+}): Promise<unknown> {
   const socketPath = input.opts.socket ?? PDF_SOCKET;
   if (!(await sandboxReady(socketPath))) throw new PdfToolError('unavailable');
-  const { status, body } = await post({ socketPath, path: input.path, bytes: input.bytes, timeoutMs: input.opts.timeoutMs ?? TIMEOUT_MS });
+  const { status, body } = await post({
+    socketPath,
+    path: input.path,
+    bytes: input.bytes,
+    timeoutMs: input.opts.timeoutMs ?? TIMEOUT_MS,
+  });
   if (status === 503) throw new PdfToolError('busy');
   if (status !== 200 || body === null) throw new PdfToolError('failed');
   try {
@@ -82,7 +100,11 @@ function post(input: Post): Promise<{ status: number; body: Buffer | null }> {
         signal: AbortSignal.timeout(input.timeoutMs),
         headers: { 'content-type': 'application/pdf', 'content-length': input.bytes.byteLength },
       },
-      (res) => readCapped(res, ANSWER_MAX).then((body) => resolve({ status: res.statusCode ?? 0, body }), fail),
+      (res) =>
+        readCapped(res, ANSWER_MAX).then(
+          (body) => resolve({ status: res.statusCode ?? 0, body }),
+          fail,
+        ),
     );
     req.once('error', fail);
     req.end(input.bytes);

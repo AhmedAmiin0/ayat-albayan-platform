@@ -28,7 +28,11 @@ export class CommunicationsService {
   ) {}
 
   async parity(): Promise<ParityView> {
-    const [source, defaults, rules] = await Promise.all([this.config.source(), this.config.defaults(), this.rules.differences()]);
+    const [source, defaults, rules] = await Promise.all([
+      this.config.source(),
+      this.config.defaults(),
+      this.rules.differences(),
+    ]);
     const overlay = this.config.overlayOf(defaults);
     const numbers: Partial<Record<WaLine, { id: string; label: string }>> = {};
     for (const n of defaults) numbers[n.purpose] = { id: n.id, label: n.label };

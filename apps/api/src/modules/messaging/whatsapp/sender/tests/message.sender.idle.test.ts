@@ -16,7 +16,10 @@ const worker = { process: vi.fn(async () => 'sent' as const), deferRest: vi.fn()
 function sender(results: Parameters<typeof fakeDb>[0]) {
   const fake = fakeDb(results);
   const gate = new SendGate(new WhatsappSettings(fake.db), fake.db);
-  return { ...fake, sender: new MessageSender(gate, new SenderRepo(fake.db), worker as unknown as MessageWorker) };
+  return {
+    ...fake,
+    sender: new MessageSender(gate, new SenderRepo(fake.db), worker as unknown as MessageWorker),
+  };
 }
 
 describe('MessageSender — round trips per tick (owner 2026-10-27: the API is slowed)', () => {
@@ -33,7 +36,10 @@ describe('MessageSender — round trips per tick (owner 2026-10-27: the API is s
 
   it('idle tick, automatic messages OFF: the hold still runs first, then the probe (3, was 5)', async () => {
     const off = rows({ messaging_enabled: true, auto_messages_enabled: false });
-    const { sender: s, trips } = sender({ settings: [off], messages: [{ data: [] }, { data: [] }] });
+    const { sender: s, trips } = sender({
+      settings: [off],
+      messages: [{ data: [] }, { data: [] }],
+    });
     await s.runOnce(NOW);
     expect(trips).toEqual(['settings', 'messages', 'messages']);
   });

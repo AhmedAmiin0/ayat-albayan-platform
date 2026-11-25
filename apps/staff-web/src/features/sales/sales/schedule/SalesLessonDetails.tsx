@@ -1,18 +1,21 @@
 import { lessonWhenAt, type SalesScheduleLesson } from '@ab/shared';
 import { sameClockAt } from '@ab/time';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import {
+  Ltr,
+  StatusChip,
+  t,
+  teacherLabel,
+  type Clock,
+  useClock,
+  useViewerTz,
+  useLessonStatusText,
+} from '@ab/web-kit';
 import { DetailRow } from '@/features/teaching/schedule/lesson/DetailRow';
 import { durationMin, timeInCity } from '@/features/teaching/schedule/lesson/lessons';
 import { LessonTags } from '@/features/teaching/schedule/lesson/LessonTags';
 import { TeacherConfirmedTag } from '@/features/teaching/schedule';
 import { lengthText } from '@/features/teaching/schedule/edit-time/edit-time-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 import { LessonMeetingLink } from './LessonMeetingLink';
-import { type Clock, useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 /** Each line only when its clock differs from the viewer's (`clock.tz`) at that instant. */
 export function salesClockLines(

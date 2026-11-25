@@ -20,7 +20,8 @@ function seeded() {
   s.queries.stored.push(inbound('wamid.LATER', at(60_000)), inbound('wamid.OTHER', at(-60_000), OTHER));
   return s;
 }
-const readOf = (s: ReturnType<typeof services>, id: string) => s.queries.stored.find((r) => r.wa_message_id === id)?.read_at;
+const readOf = (s: ReturnType<typeof services>, id: string) =>
+  s.queries.stored.find((r) => r.wa_message_id === id)?.read_at;
 
 afterEach(() => vi.useRealTimers());
 

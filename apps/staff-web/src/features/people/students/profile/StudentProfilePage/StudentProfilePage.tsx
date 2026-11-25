@@ -3,20 +3,24 @@ import { studentStatusStyle } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
-import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import {
+  Button,
+  buttonVariants,
+  Cartouche,
+  PageHead,
+  StatusChip,
+  Toast,
+  ApiError,
+  t,
+  FormAlert,
+  HeadActions,
+} from '@ab/web-kit';
 import { EntityActivity } from '@/features/reporting/activity/EntityActivity';
 import { BroughtByField } from '@/features/people/assistants/students/BroughtByField';
 import { AssistantsManager } from '@/features/teaching/classroom/sessions/AssistantsManager';
 import { StudentJoinLink } from '@/features/teaching/classroom/student-link/StudentJoinLink';
 import { GuardianEditDialog } from '@/features/people/guardians/GuardianEditForm';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { studentQuery } from '@/features/people/students/api';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { BalanceCard } from '@/features/finance/subscriptions/balance/BalanceCard';
 import { RenewSubscriptionButton } from '@/features/finance/subscriptions/create/RenewSubscriptionButton';
 import { SiblingMerge } from '@/features/people/students/duplicates/SiblingMerge';
@@ -25,7 +29,6 @@ import { StudentPayments } from '@/features/people/students/profile/StudentPayme
 import { StudentProfileForm } from '@/features/people/students/profile/StudentProfileForm';
 import { StudentMeta } from '@/features/people/students/profile/StudentMeta';
 import { StudentFamily } from '@/features/people/students/family/StudentFamily';
-import { HeadActions } from '@ab/web-kit/components/ui/layout/head-actions';
 import { PeopleEditActions, RemovedStudent } from '@/features/people/students/people-edit';
 import { StudentRecordings } from '@/features/people/students/recordings/StudentRecordings';
 import { CreateAccountButton } from '@/features/people/users/create/CreateAccountButton';

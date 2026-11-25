@@ -1,9 +1,5 @@
 import type { AccountProfile } from '@ab/shared';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Avatar, Cartouche, Ltr, PageHead, t } from '@ab/web-kit';
 import { avatarSeed } from './avatar-file';
 import { roleLabel } from './role-label';
 

@@ -1,6 +1,6 @@
 import { isEditableValueKey, type SettingKey } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { isModified } from '@/features/platform/settings/registry-form/row-form';
 import { ActionCell } from '@/features/platform/settings/values/cells/ActionCell';
 import { DefaultCell, LastCell } from '@/features/platform/settings/values/cells/InfoCells';

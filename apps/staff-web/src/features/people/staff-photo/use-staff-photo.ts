@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, type ChangeEvent } from 'react';
 import { accountMessage, avatarFileProblem, PROFILE_KEY } from '@/features/people/account';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { removeStaffPhoto, uploadStaffPhoto, type StaffPhotoTarget } from './api';
 import { photoErrorText } from './photo-error';
 

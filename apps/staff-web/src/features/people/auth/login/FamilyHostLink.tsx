@@ -1,4 +1,4 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** Families no longer sign in on the staff app once the family host is live (docs/51 §3). */
 export function FamilyHostLink({ host }: { host: string }) {

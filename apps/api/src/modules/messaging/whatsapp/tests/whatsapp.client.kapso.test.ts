@@ -28,8 +28,12 @@ describe('HttpWhatsappClient on kapso', () => {
     const input = { to: '+966551234567', kind: 'image' as const, url: 'https://s.local/a.jpg', caption: 'الواجب' };
     const kapso = scriptedFetch(RECORDED.sendOk);
     const meta = scriptedFetch(RECORDED.sendOk);
-    await new HttpWhatsappClient(KAPSO_ENV, { fetch: kapso.fetch, timeoutMs: 1_000 }).sendDocument(input);
-    await new HttpWhatsappClient(STUB_ENV, { fetch: meta.fetch, timeoutMs: 1_000 }).sendDocument(input);
+    await new HttpWhatsappClient(KAPSO_ENV, { fetch: kapso.fetch, timeoutMs: 1_000 }).sendDocument(
+      input,
+    );
+    await new HttpWhatsappClient(STUB_ENV, { fetch: meta.fetch, timeoutMs: 1_000 }).sendDocument(
+      input,
+    );
     const [k] = kapso.requests;
     expect(k?.url).toBe(`${BASE}/stub-phone/messages`);
     expect(k?.init.headers).toMatchObject({ 'x-api-key': 'fake-kapso-key' });

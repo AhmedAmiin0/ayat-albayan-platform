@@ -1,7 +1,6 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { useState } from 'react';
-import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ConfirmSwitchDialog, t } from '@ab/web-kit';
 import { failureText, fillText, isFamilyFacing, reachText } from '@/features/messaging/notification-rules/rule-text';
 import { useRules } from '@/features/messaging/notification-rules/rules-context';
 import type { RuleRowState } from '@/features/messaging/notification-rules/table/use-rule-row';

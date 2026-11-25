@@ -1,8 +1,6 @@
 import type { SalesMoneySubscriptionView } from '@ab/shared';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Select } from '@ab/web-kit/components/ui/form/select';
+import { Field, Select, t } from '@ab/web-kit';
 import { packageName, studentLabel } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { dueLine } from './due-line';
 
 type Props = {

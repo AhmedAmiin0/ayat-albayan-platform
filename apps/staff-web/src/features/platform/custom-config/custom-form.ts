@@ -4,7 +4,7 @@ import {
   type CustomConfigUpsert,
   type CustomConfigView,
 } from '@ab/settings';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** The add/edit form's boxes (the value is JSON text). */
 export interface CustomDraft {

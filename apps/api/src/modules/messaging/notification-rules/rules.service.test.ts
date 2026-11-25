@@ -35,8 +35,15 @@ function service(opts: Setup = {}) {
     classroom: vi.fn(() => opts.classroom ?? true),
   };
   const gate = { state: vi.fn(async () => ({ open: reason === null, reason })) };
-  const facts = new RulesFacts(readerOf(NotificationRulesSettings, settings), gate as unknown as SendGate, queries as unknown as RulesRepo);
-  const rules: FakePolicyInput = { ...opts.rules, settings: { ...settings, ...opts.rules?.settings } };
+  const facts = new RulesFacts(
+    readerOf(NotificationRulesSettings, settings),
+    gate as unknown as SendGate,
+    queries as unknown as RulesRepo,
+  );
+  const rules: FakePolicyInput = {
+    ...opts.rules,
+    settings: { ...settings, ...opts.rules?.settings },
+  };
   return { svc: new RulesService(facts, fakePolicy(rules)), queries };
 }
 const V1 = { v2: false };
@@ -61,7 +68,9 @@ describe('RulesService.overview (v1): today’s state', () => {
     ['every switch on', { ...SETTING_DEFAULTS, ...ALL_ON }],
   ])('legacy mode, no rows: exactly the v1 rows of before (%s)', async (_name, full) => {
     const { entries } = await service({ settings: full, reason: null }).svc.overview(V1);
-    expect(entries).toEqual(catalogueViews({ settings: full, gateReason: null, templates: approved }).map(v1Entry));
+    expect(entries).toEqual(
+      catalogueViews({ settings: full, gateReason: null, templates: approved }).map(v1Entry),
+    );
   });
 
   it('v1 rows carry exactly the frozen fields; no mode, no reach; classroom_off reads row_off', async () => {
@@ -82,7 +91,11 @@ describe('RulesService.overview (v1): today’s state', () => {
 
   it('fail closed: rules unread → every row off but the locked one', async () => {
     const settings = { ...SETTING_DEFAULTS, ...ALL_ON };
-    const { entries } = await service({ settings, reason: null, rules: { fail: true } }).svc.overview(V1);
+    const { entries } = await service({
+      settings,
+      reason: null,
+      rules: { fail: true },
+    }).svc.overview(V1);
     const on = entries.filter((e) => e.state === 'on').map((e) => e.key);
     expect(on).toEqual(['reminder_failed']);
   });

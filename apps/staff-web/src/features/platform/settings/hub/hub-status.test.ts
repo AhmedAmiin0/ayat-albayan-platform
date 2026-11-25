@@ -2,7 +2,7 @@ import { counted } from '@ab/core';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { fill } from '@/features/platform/google-sync/google-format';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { googleChips, integrationChips, sameValue, valuesSummary } from './hub-status';
 import { googleStatus, item, settingsWith } from './hub-test-utils';
 

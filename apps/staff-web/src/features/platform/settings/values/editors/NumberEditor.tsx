@@ -1,7 +1,6 @@
 import { SETTING_FIELD_OF, settingDef } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Input, cn } from '@ab/web-kit';
 import { flag, onKey, str } from '@/features/platform/settings/registry-form/settings-form';
 import { boundsText } from '@/features/platform/settings/values/lib/value-format';
 import { unitWord } from '@/features/platform/settings/values/lib/value-units';

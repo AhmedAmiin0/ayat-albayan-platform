@@ -1,6 +1,5 @@
 import { safeHttpUrl, type SalesScheduleLesson } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { usePlatformClassroom } from '@ab/web-kit/lib/settings/public-config';
+import { t, usePlatformClassroom } from '@ab/web-kit';
 import { LinkActions } from './LinkActions';
 
 /** Our classroom, else the full http(s) URL on its own LTR line over LinkActions, else none. */

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { copyPayload, inviteeName, inviteStatusText, mayResend, nameDir, notSentHint } from './invite-status';
 import { addInvitee, fromOption, fromPhone, hasInvitee, isFull, removeInvitee, type PickedInvitee } from './invitee-list';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const R = t.meetingInvites.results;
 const student = fromOption({ kind: 'student', id: 'st-1', name: 'سهيلة', code: 'AB-0101' });

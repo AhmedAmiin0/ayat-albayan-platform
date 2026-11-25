@@ -1,10 +1,7 @@
 import { HOME_BY_ROLE, type UserRole } from '@ab/catalog';
 import type { QueryClient } from '@tanstack/react-query';
-import { meQuery } from '@ab/web-kit/auth/me';
-import { reportSession } from '@ab/web-kit/auth/session-activity';
-import { supabase } from '@ab/web-kit/lib/http/supabase';
+import { meQuery, reportSession, supabase, t } from '@ab/web-kit';
 import { passwordError } from '@/features/people/users/validation';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export type SetPasswordResult = { ok: true; home: string } | { ok: false; error: string };
 

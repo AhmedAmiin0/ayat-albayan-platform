@@ -1,10 +1,7 @@
 import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { Select } from '@ab/web-kit/components/ui/form/select';
+import { Field, Input, Select, t } from '@ab/web-kit';
 import { dateLabel } from '@/features/teaching/schedule';
 import { currencySymbol } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface PaymentForm {
   /** Text while typing (Arabic digits too); parseAmount reads it on submit. */

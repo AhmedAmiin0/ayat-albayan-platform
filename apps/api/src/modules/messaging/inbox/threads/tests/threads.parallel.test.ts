@@ -10,12 +10,15 @@ import { ThreadsService } from '@/modules/messaging/inbox/threads/threads.servic
 
 /** Every read takes one 60 ms round trip (the edge logs: 30–90 ms each); elapsed / 60 = sequential rounds. */
 const RTT = 60;
-const slow = <T>(value: T) => vi.fn(() => new Promise<T>((done) => setTimeout(() => done(value), RTT)));
+const slow = <T>(value: T) =>
+  vi.fn(() => new Promise<T>((done) => setTimeout(() => done(value), RTT)));
 
 function service() {
   const queries = {
     list: slow({ items: [threadRow({ guardian_id: 'g1' })], total: 1 }),
-    unsupported: vi.fn((rows: unknown[]) => new Promise((done) => setTimeout(() => done(rows), RTT))),
+    unsupported: vi.fn(
+      (rows: unknown[]) => new Promise((done) => setTimeout(() => done(rows), RTT)),
+    ),
     familyTags: slow(new Map()),
     thread: slow(threadRow({ guardian_id: 'g1' })),
     messages: slow([messageRow({ template_key: null, body: 'سلام' })]),
@@ -23,7 +26,11 @@ function service() {
     people: slow(NO_PEOPLE),
     lessons: slow([]),
   };
-  const views = { view: vi.fn((m: { id: string }) => new Promise((done) => setTimeout(() => done({ id: m.id }), RTT))) };
+  const views = {
+    view: vi.fn(
+      (m: { id: string }) => new Promise((done) => setTimeout(() => done({ id: m.id }), RTT)),
+    ),
+  };
   const receipts = { open: slow({ stamped: false, receipts: Promise.resolve() }) };
   const svc = new ThreadsService(
     queries as unknown as ThreadsRepo,
@@ -56,8 +63,15 @@ describe('ThreadsService — independent reads in parallel (owner 2026-10-27: en
     const { svc, queries } = service();
     const detail = svc.detail({ phone: '+966551234567', limit: 50 });
     expect(await rounds(() => detail)).toBe(2);
-    await expect(detail).resolves.toMatchObject({ has_more: false, lessons: [], people: NO_PEOPLE });
-    expect(queries.lessons).toHaveBeenCalledWith(expect.objectContaining({ guardian_id: 'g1' }), expect.any(Date));
+    await expect(detail).resolves.toMatchObject({
+      has_more: false,
+      lessons: [],
+      people: NO_PEOPLE,
+    });
+    expect(queries.lessons).toHaveBeenCalledWith(
+      expect.objectContaining({ guardian_id: 'g1' }),
+      expect.any(Date),
+    );
   });
 
   it('an older page: 2 rounds (was 4: thread, messages, tag, views), no stamp, no people or lessons', async () => {

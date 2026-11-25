@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { SideSheetCloseContext } from '@/features/messaging/inbox/shared/side-sheet';
 import { PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';

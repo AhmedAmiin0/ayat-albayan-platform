@@ -8,7 +8,12 @@ async function ringing() {
   const t = fakeKit();
   const row = await t.queries.insert({ direction: 'inbound', status: 'ringing', phone_e164: FAMILY, wa_call_id: 'wacid.IN', offer_sdp: 'v=0 offer' });
   if (!row) throw new Error('no row');
-  return { ...t, id: row.id, calls: new InboundCalls(t.kit, fakeGate()), reads: new CallReads(t.kit, fakeGate()) };
+  return {
+    ...t,
+    id: row.id,
+    calls: new InboundCalls(t.kit, fakeGate()),
+    reads: new CallReads(t.kit, fakeGate()),
+  };
 }
 
 describe('InboundCalls: the first accept wins, the others stop ringing', () => {

@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import type * as Room from '@ab/mobile-kit/room';
 import { useLocalSearchParams } from 'expo-router';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { FamilyRoomRoute } from './FamilyRoomRoute';
 
 // app/room/[id]: never a crash where the room cannot start (jest has no LiveKit module).
