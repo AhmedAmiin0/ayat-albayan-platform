@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { diagnosticControlRoutes, resetHealth } from './diagnostics.ts';
 import { initialTemplates, lineOf, stubLines } from './lines.ts';
 import { metaError } from './providers/meta.ts';
-import { digits, readJson, type Route, type StubState } from './state.ts';
+import { digits, readJson, textOr, type Route, type StubState } from './state.ts';
 import { reviewTemplate } from './templates.ts';
 import { callValue, type CallSpec } from './providers/kapso-calls.ts';
 import { statusValue, type StatusSpec } from './status.ts';
@@ -123,7 +123,7 @@ export const controlRoutes: Route[] = [
   ['POST', /^\/__stub\/fail$/, async (req, _m, s) => {
     const body = await readJson(req);
     const code = Number(body.code ?? 131026);
-    s.failNext.set(digits(body.to), metaError(code, String(body.title ?? 'Simulated failure')));
+    s.failNext.set(digits(body.to), metaError(code, textOr(body.title, 'Simulated failure')));
     return [200, { armed: true, code }];
   }],
   ['GET', /^\/__stub\/media\/([a-f0-9]+)$/, (_r, m, s) => {

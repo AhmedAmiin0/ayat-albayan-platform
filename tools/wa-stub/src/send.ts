@@ -3,7 +3,7 @@
 import { randomUUID } from 'node:crypto';
 import { lineOf } from './lines.ts';
 import { bodyParamCount, ERR, onWaba, type Json, type StubTemplate } from './providers/meta.ts';
-import { DAY_MS, digits, type Reply, type StubState } from './state.ts';
+import { DAY_MS, digits, textOr, type Reply, type StubState } from './state.ts';
 
 interface TemplateSend {
   name?: string;
@@ -43,7 +43,7 @@ export function templateError(s: StubState, body: Json, phoneNumberId: string): 
 }
 
 function markRead(s: StubState, body: Json, phoneNumberId: string): Reply {
-  const messageId = String(body.message_id ?? '');
+  const messageId = textOr(body.message_id, '');
   s.reads.push(messageId);
   s.readLog.push({ phoneNumberId, messageId });
   return [200, { success: true }];
@@ -107,7 +107,7 @@ export function postMessage(
   const refused = refusal(s, { body, to, phoneNumberId });
   if (refused) return refused;
   const id = `wamid.${randomUUID()}`;
-  const type = String(body.type ?? 'text');
+  const type = textOr(body.type, 'text');
   const template = (body.template as { name?: string } | undefined)?.name;
   s.sent.push({
     id,
