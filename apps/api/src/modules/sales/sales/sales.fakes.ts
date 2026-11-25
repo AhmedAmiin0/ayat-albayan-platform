@@ -9,7 +9,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { SalesAssignRepo } from './assign/sales-assign.repo';
 import type { SalesLessonRow } from './schedule/sales-lessons';
 import type { SalesOwnership } from './sales-ownership';
-import { SalesRepo, type SalesSubscriptionRow } from './sales.repo';
+import { SalesRepo, type SalesSubscriptionRow } from '@/modules/sales/sales/shared';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 

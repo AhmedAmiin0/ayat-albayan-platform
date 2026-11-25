@@ -17,7 +17,7 @@ export {
   InboundMediaRepo,
   type MediaMessage,
   PLAYABLE_FILTER,
-} from './messages/inbound-media.repo';
+} from './messages/inbound-media/inbound-media.repo';
 export {
   baseMime,
   CRM_NO_MEDIA,
@@ -26,7 +26,7 @@ export {
   MEDIA_FETCH_DAYS,
   mediaExpired,
   servable,
-} from './messages/inbound-media.service';
+} from './messages/inbound-media/inbound-media.service';
 export {
   MESSAGE_SELECT,
   NOT_A_REACTION,

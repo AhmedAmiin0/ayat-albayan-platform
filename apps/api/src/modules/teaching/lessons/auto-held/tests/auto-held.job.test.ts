@@ -1,0 +1,15 @@
+import { describe, expect, it, vi } from 'vitest';
+import { AutoHeldJob } from '@/modules/teaching/lessons/auto-held/auto-held.job';
+import type { AutoHeldService } from '@/modules/teaching/lessons/auto-held/auto-held.service';
+
+describe('AutoHeldJob', () => {
+  it('one pass returns the summary; a failure is logged, never thrown', async () => {
+    const runOnce = vi
+      .fn()
+      .mockResolvedValueOnce({ mode: 'held_by_default', due: 1, held: 1, absent: 0 })
+      .mockRejectedValueOnce(new Error('x'));
+    const job = new AutoHeldJob({ runOnce } as unknown as AutoHeldService);
+    expect(await job.runOnce()).toEqual({ mode: 'held_by_default', due: 1, held: 1, absent: 0 });
+    expect(await job.runOnce()).toBeNull();
+  });
+});

@@ -5,12 +5,12 @@ import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { packageSummaries, SalesRosterRepo } from '@/modules/sales/sales';
-import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
+import { SalesStudentScope } from '@/modules/sales/sales-students/shared/sales-student-scope';
 import { scheduleWindow, toStudentSchedule } from './sales-student-schedule.mapper';
 import { toTrialLessons } from './sales-student-trial.mapper';
 import { toStudentFamily } from './sales-student-family.mapper';
 import { toStudentDetails } from './sales-student.mapper';
-import { SalesStudentRepo } from './sales-student.repo';
+import { SalesStudentRepo } from '@/modules/sales/sales-students/shared/sales-student.repo';
 import { SalesStudentReads } from './sales-student.reads';
 
 /** docs/16 row 36: any student, read-only; `mine` only marks hers for the money actions. */

@@ -6,7 +6,7 @@ import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { BookingPayload } from './booking.mapper';
 import type { BookedStudent } from './booking.messages';
 import { withLeadFacts, type LeadFacts } from './booking.lead-merge';
-import { missedLesson } from '@/modules/teaching/booking/makeup/booking.makeup';
+import { missedLesson } from '@/modules/teaching/booking/core/makeup/booking.makeup';
 import { BookingRepo } from './booking.repo';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 

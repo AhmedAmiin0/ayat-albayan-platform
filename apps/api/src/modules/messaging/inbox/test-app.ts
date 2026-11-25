@@ -14,7 +14,7 @@ import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { ReopenRequest } from '@/modules/messaging/whatsapp/sender/window/reopen-request';
 import { ReopenPick } from '@/modules/messaging/whatsapp/sender/window/manual-send';

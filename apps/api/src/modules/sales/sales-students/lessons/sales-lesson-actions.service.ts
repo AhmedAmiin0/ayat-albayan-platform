@@ -10,8 +10,8 @@ import {
   OutcomeCorrection,
   RescheduleOneService,
 } from '@/modules/teaching/lessons';
-import { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
-import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
+import { SalesStudentRepo } from '@/modules/sales/sales-students/shared/sales-student.repo';
+import { SalesStudentScope } from '@/modules/sales/sales-students/shared/sales-student-scope';
 
 /** Who may be recorded once the lesson is over: what happened, never the academy's own cancel. */
 const AFTER_END: Record<CancelBy, boolean> = {

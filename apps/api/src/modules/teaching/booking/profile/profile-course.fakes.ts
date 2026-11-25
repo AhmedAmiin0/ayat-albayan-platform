@@ -7,7 +7,7 @@ import { bootWith, ROLE_ADMIN, ROLE_SALES, ROLE_USERS } from '@/common/auth/auth
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { PackagesService } from '@/modules/finance/subscriptions';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 import { ConflictChecker, RuleExtendService } from '@/modules/teaching/scheduling';
 import {
   BODY,

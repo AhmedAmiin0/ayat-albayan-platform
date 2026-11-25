@@ -364,7 +364,7 @@ All in `M/20261012000310_integration_config.sql` unless noted; all `search_path=
 | `integration_secrets_read()` → (key, value) | 310:74-80 | — | DEFINER | read `vault.decrypted_secrets` where name like `integration:%` and key_ok |
 | `integration_secrets_status()` → (key, updated_at) | 310:83-89 | — | DEFINER | read `vault.secrets` (no values) |
 
-Tests pin these: `apps/api/src/common/configuration/integrations/secret-keys.migration.test.ts` (latest `integration_secret_key_ok` must equal `INTEGRATION_SECRET_KEYS`), `kapso-secret-keys.migration.test.ts`, `apps/api/src/common/push/notification-bell.migration.test.ts:32`, `apps/api/src/modules/platform/google-sync/google-sync.migration.test.ts:14`.
+Tests pin these: `apps/api/src/common/configuration/integrations/secret-keys.migration.test.ts` (latest `integration_secret_key_ok` must equal `INTEGRATION_SECRET_KEYS`), `kapso-secret-keys.migration.test.ts`, `apps/api/src/common/push/notification-bell.migration.test.ts:32`, `apps/api/src/modules/platform/google-sync/tests/google-sync.migration.test.ts:14`.
 
 ### 5. API (PostgREST / RPC) readers and writers
 
