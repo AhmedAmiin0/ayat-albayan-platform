@@ -79,11 +79,18 @@ function viewFailures(nodes, sf) {
   ];
 }
 
+/** `useName(props);`: its own hook with nothing the view reads. */
+const isOwnCall = (s, own) =>
+  ts.isExpressionStatement(s) &&
+  ts.isCallExpression(s.expression) &&
+  calleeName(s.expression) === own;
+
 /** Check 5's reasons for one component; `c` comes from componentsOf. */
 export function bodyFailures(c, sf) {
   if (c.wrapped) return ['wrapped in a call (forwardRef or memo): hand work'];
-  const { decls, guards, ret, stray } = partsOf(c.fn);
+  const { decls, guards, ret, stray: all } = partsOf(c.fn);
   const view = [...guards, ...(ret === undefined ? [] : [ret])];
+  const stray = all.filter((s) => !isOwnCall(s, `use${c.name}`));
   return [
     ...(ret === undefined ? ['no final return'] : []),
     ...stray.map((s) => `a statement out of place: ${s.getText(sf).slice(0, 60)}`),

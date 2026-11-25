@@ -1,6 +1,7 @@
 import { posix } from 'node:path';
-import ts from 'typescript';
 import type { FloatingUnit } from './scan.types.ts';
+import { componentsOf } from '../../components/model/components.ts';
+import { parseFile } from '../../components/model/source.ts';
 import { isTest, stemOf } from './files.ts';
 
 // `units:fold -- --components` (docs/63 §4 phase 1): every component file folds into its own
@@ -8,7 +9,6 @@ import { isTest, stemOf } from './files.ts';
 // follow their component.
 const FRONTEND = /^(?:apps\/(?:staff|family)-(?:web|mobile)|packages\/(?:web|mobile)-kit)\/src\//;
 const PLAIN_TSX = /^[^.]+\.tsx$/;
-const PASCAL = /^[A-Z](?=[A-Za-z0-9]*[a-z])[A-Za-z0-9]*$/;
 
 export const pascalOf = (stem: string): string =>
   stem
@@ -16,31 +16,9 @@ export const pascalOf = (stem: string): string =>
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join('');
 
-const hasJsx = (node: ts.Node): boolean =>
-  ts.isJsxElement(node) ||
-  ts.isJsxSelfClosingElement(node) ||
-  ts.isJsxFragment(node) ||
-  ts.forEachChild(node, (child) => hasJsx(child) || undefined) === true;
-
-const isFunctionish = (node: ts.Node | undefined): boolean =>
-  node !== undefined &&
-  (ts.isArrowFunction(node) ||
-    ts.isFunctionExpression(node) ||
-    (ts.isCallExpression(node) && node.arguments.some(isFunctionish)));
-
-const isComponent = (s: ts.Statement): boolean => {
-  if (ts.isFunctionDeclaration(s)) return PASCAL.test(s.name?.text ?? '') && hasJsx(s);
-  if (!ts.isVariableStatement(s)) return false;
-  return s.declarationList.declarations.some(
-    (d) => PASCAL.test(d.name.getText()) && isFunctionish(d.initializer) && hasJsx(d),
-  );
-};
-
 /** A top-level PascalCase function, or const holding one, whose body has JSX. */
-export function holdsComponent(text: string, path: string): boolean {
-  const sf = ts.createSourceFile(path, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-  return sf.statements.some(isComponent);
-}
+export const holdsComponent = (text: string, path: string): boolean =>
+  componentsOf(parseFile(path.replace(/\.ts$/, '.tsx'), text)).length > 0;
 
 const isCandidate = (name: string): boolean =>
   PLAIN_TSX.test(name) && !isTest(name) && !name.endsWith('-icons.tsx');

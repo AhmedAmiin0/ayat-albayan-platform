@@ -83,3 +83,8 @@ test('a component wrapped in forwardRef or memo fails', () => {
   });
   assert.ok(failuresOf(files).length > 0);
 });
+
+test('a bare call to its own hook passes; any other bare call fails', () => {
+  assert.deepEqual(body('  useRoleDialog(props);\n  return <b />;'), []);
+  assert.ok(body('  track(props);\n  return <b />;').length > 0);
+});
