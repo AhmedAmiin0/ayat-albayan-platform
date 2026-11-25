@@ -473,6 +473,7 @@
         "platform/dashboard.spec.ts",
         "finance/expenses.spec.ts",
         "finance/exports.spec.ts",
+        "reporting/finance-card-totals.sql.spec.ts",
         "finance/finance-money.spec.ts",
         "reporting/guardian-deliveries.spec.ts",
         "finance/journey-3-payment-renewal.spec.ts",
