@@ -55,7 +55,7 @@ test('hidden until the last package loads, so it never opens on the defaults', a
   expect(renew()).toBeNull();
 });
 
-// owner 2026-11-17: the admin renews ANY time; the start day is picked on the subscribe screen.
+// The admin renews ANY time; the start day is picked on the subscribe screen.
 test.each(['new', 'trial', 'pending_subscription', 'active', 'paused', 'churned'] as const)('%s with a package: «جدّد الاشتراك»', async (status) => {
   serve(status, balanceOf(subscription()));
   await renderWithQuery(<StudentScreen />);

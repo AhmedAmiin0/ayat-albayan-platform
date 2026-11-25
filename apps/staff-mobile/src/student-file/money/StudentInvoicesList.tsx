@@ -10,7 +10,7 @@ const renderInvoice = ({ item }: ListRenderItemInfo<InvoiceView>) => <StudentInv
 
 /**
  * GET /invoices?studentId=: the student's booking invoices (payment proofs), newest first, in one
- * inset card inside the gutter (owner 2026-10-28: one container rule).
+ * inset card inside the gutter (one container rule).
  */
 export function StudentInvoicesList({ studentId }: { studentId: string }) {
   const { color } = useTheme();

@@ -2,7 +2,7 @@ import { act } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
 import type { FakeBackend } from '@/test/fake-backend';
 
-// Resume flows (owner 2026-11-05, «I don't see the updated chat even after a push»): AppState is
+// Resume flows (a chat must update after a push): AppState is
 // driven by hand, and a backend route can hang (a read stuck on a dead connection) until released.
 
 type Change = (state: AppStateStatus) => void;

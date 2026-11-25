@@ -47,7 +47,7 @@ const changedElsewhere = (error: unknown): boolean =>
   error instanceof ApiError && errorBody.safeParse(error.body).data?.code === 'used_before_changed';
 
 /**
- * PATCH /subscriptions/:id/lessons-used-before { lessonsUsedBefore } (owner 2026-11-02), then the
+ * PATCH /subscriptions/:id/lessons-used-before { lessonsUsedBefore }, then the
  * screens holding the package (`stale`) and the editor's state refetch; a number changed elsewhere
  * (409 used_before_changed) refetches the state too.
  */

@@ -62,7 +62,7 @@ function codeOf(error: unknown): string | undefined {
   return typeof body.code === 'string' ? body.code : undefined;
 }
 
-// The used-lessons codes (owner 2026-10-28) live with the package's payment words.
+// The used-lessons codes live with the package's payment words.
 const messages: Record<string, string | undefined> = { ...t.subscriptions.error, ...t.packagePayment.error };
 
 /**

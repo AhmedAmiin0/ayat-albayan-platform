@@ -53,7 +53,7 @@ test('a new top row is not scrolled away (FlashList v2 keeps position by default
   expect(screen.getByTestId('lazy').props.maintainVisibleContentPosition).toBeUndefined();
 });
 
-// Owner 2026-10-28: one container rule, every list's rows in ONE rounded card inside the gutter.
+// One container rule, every list's rows in ONE rounded card inside the gutter.
 test('inset (default): rows sit in one card, the first rounds the top and the last the bottom', async () => {
   await render(<LazyList testID="lazy" data={rows(3)} keyExtractor={keyOf} renderItem={renderRow} />);
   expect(screen.getByTestId('lazy')).not.toHaveStyle({ marginHorizontal: -16 });

@@ -5,7 +5,7 @@ import { renderWithQuery } from '@/test/query';
 import { chatImage, familyOf, KID, kid, MSG, openSub, salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from '@/sales-subscribe/screens/SalesTransferScreen/SalesTransferScreen';
 
-// sales.renew_any (owner 2026-10-29, docs/16 row 38): a child of the chat's family that is not hers (mine: false).
+// sales.renew_any (docs/16 row 38): a child of the chat's family that is not hers (mine: false).
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

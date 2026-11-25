@@ -52,7 +52,7 @@ const onlyHeroLeft = (s: Split) => s.hero !== null && s.rest.length === 0 && s.e
 const byStart = (lessons: readonly LessonView[] | undefined) =>
   [...(lessons ?? [])].sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 
-/** Hero, rows, fold and the day end (docs/48; today's lessons only, owner 2026-11-14). */
+/** Hero, rows, fold and the day end (docs/48; today's lessons only). */
 export function teacherDay(input: DayInput): TeacherDay {
   const s = split(input);
   const { now } = input;

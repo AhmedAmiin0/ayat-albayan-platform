@@ -87,7 +87,7 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
     else save.mutate(
       { studentId, pricing, ...starts.body, ...teacher.body, ...bind, ...custom.body },
       {
-        // Its weekly days next, then the transfer; a child not hers too (owner 2026-11-01).
+        // Its weekly days next, then the transfer; a child not hers too.
         onSuccess: (sub) =>
           router.replace(inTree(base, { pathname: '/inbox/sales-course', params: { studentId, phone, subscriptionId: sub.id } })),
       },

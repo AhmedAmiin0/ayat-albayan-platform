@@ -40,7 +40,7 @@ test('today in Riyadh: one-line time, students over «kind · أ. teacher · len
   await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   expect(await screen.findByText('سلمى')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/sales/schedule?date=2026-10-12');
-  // The time and the names never wrap («11:00 / AM», owner screenshot 2026-10-29).
+  // The time and the names never wrap (never «11:00 / AM»).
   expect(screen.getByText('18:00').props.numberOfLines).toBe(1);
   expect(screen.getByText('سلمى').props.numberOfLines).toBe(1);
   const teacher = t.today.teacherTitled.replace('{teacher}', 'أبرار محمد');

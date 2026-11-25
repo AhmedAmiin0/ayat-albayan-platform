@@ -4,7 +4,7 @@ import type { PeriodTotal } from '@ab/money';
 
 /**
  * The filter's net per currency (payments minus refunds), and the refunds when there are any: a list's
- * header inside the gutter (owner 2026-10-28: one container rule; the list puts 12pt under it).
+ * header inside the gutter (one container rule; the list puts 12pt under it).
  */
 export function PaymentTotals({ totals }: { totals: readonly PeriodTotal[] }) {
   const { color } = useTheme();

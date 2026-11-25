@@ -8,7 +8,7 @@ import { genderItems, zoneItems } from './zone-items';
 
 const E = t.peopleEdit;
 const TEXTS = ['name', 'level', 'memorized', 'goal', 'riwaya', 'notes'] as const;
-/** The text fields; the student's own WhatsApp (sign-in, owner 2026-11-17) is optional. */
+/** The text fields; the student's own WhatsApp (sign-in) is optional. */
 const SPECS: FieldSpec<(typeof TEXTS)[number] | 'phone_e164' | 'age'>[] = [
   ...TEXTS.map((key) => ({ key, label: E.fields[key] })),
   { key: 'phone_e164', label: E.fields.studentPhone, phone: true, hint: E.studentPhoneHint },
@@ -20,7 +20,7 @@ interface StudentEditFieldsProps {
   onChange: (patch: Partial<StudentForm>) => void;
   /** Keys the last save refused. */
   invalid: readonly string[];
-  /** Notes are the admin's only (owner 2026-10-27). */
+  /** Notes are the admin's only. */
   notes: boolean;
 }
 

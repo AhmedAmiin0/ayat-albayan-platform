@@ -43,7 +43,7 @@ interface AttendanceLogRowProps {
   cycle: ClockCycle;
   /** The zone of the dates and times; the viewer's by default (the teacher log passes hers). */
   tz?: string | undefined;
-  /** Given only when the row has a sent report (any student, owner 2026-10-30). */
+  /** Given only when the row has a sent report (any student). */
   onOpen?: (row: AttendanceTableRow) => void;
   /** The teacher's file (docs/47): her action's word in the report cell; null: «—». */
   reportLabel?: string | null;

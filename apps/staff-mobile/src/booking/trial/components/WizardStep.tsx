@@ -124,7 +124,7 @@ interface PackageTimesProps {
   onNext: () => void;
 }
 
-/** A package: a date and a time per day (owner 2026-11-07), from today in the family's zone. */
+/** A package: a date and a time per day, from today in the family's zone. */
 function PackageTimes({ slot, draft, patch, onNext }: PackageTimesProps) {
   const [now] = useState(() => new Date().toISOString());
   const onChange = (picks: string[]) => patch(fromPicks(picks));

@@ -2,10 +2,10 @@ import { CHANNEL_REFRESH_MS, channelSeatKey, channelSeats } from '@ab/client-cor
 import { apiFetch, apiSend, useScreenFocused } from '@ab/mobile-kit';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-// The assistant seat of a student chat on the phone (owner 2026-11-16 «any assistant can
-// subscribe to the chating channel but only 1»): the read and the writes are @ab/client-core's,
+// The assistant seat of a student chat on the phone (any assistant,
+// one at a time): the read and the writes are @ab/client-core's,
 // the same as the web's. Re-read while the screen is shown, so a takeover by the student's
-// bringer («who brought the student have the priority») turns the chat into the card.
+// bringer (who has priority) turns the chat into the card.
 
 const seats = channelSeats({ apiFetch, apiSend });
 

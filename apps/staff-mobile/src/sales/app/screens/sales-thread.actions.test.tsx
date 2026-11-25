@@ -46,6 +46,6 @@ test('a failed send in the sales tree: its status word, but no retry / click-to-
   expect(ticks.props.accessibilityRole).toBe('image');
   expect(ticks.props.onStartShouldSetResponder).toBeUndefined();
   expect(screen.queryByTestId('failed-sheet')).toBeNull();
-  // Only the closed chat's reopen request (owner 2026-10-26), never a retry or hand-off.
+  // Only the closed chat's reopen request, never a retry or hand-off.
   expect(mockApiSend.mock.calls.filter((c) => !String(c[1]).endsWith('/reopen'))).toEqual([]);
 });

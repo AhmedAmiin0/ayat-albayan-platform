@@ -4,7 +4,7 @@ import { canOpen } from '@/core/auth/route-permissions';
 import type { Can } from '@ab/mobile-kit';
 import { pushField, pushKind, pushPhone, pushStudentId } from './push-data';
 
-// The sales and classroom-assistant trees (owner 2026-10-12: a bell in every staff portal). Each
+// The sales and classroom-assistant trees (a bell in every staff portal). Each
 // map returns only its own tree's routes: never an admin URL, and never a tab the role cannot see.
 
 const SALES_MORE = '/sales/more';
@@ -24,7 +24,7 @@ const toSalesToday = (_data: unknown, can: Can) => (canOpen(can, 'salesSchedule'
 const toSalesMeetings = (_data: unknown, can: Can) => (canOpen(can, 'salesMeetings') ? '/sales/more/meetings' : SALES_MORE);
 
 /**
- * A chat message (owner 2026-11-16) → that student's chat, where the assistant in its seat writes
+ * A chat message → that student's chat, where the assistant in its seat writes
  * too (read-only only while the family chat is off or the chat is closed).
  */
 const toSalesChannel = (data: unknown, can: Can) => {
@@ -48,7 +48,7 @@ const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   meeting_invite: toSalesMeetings,
   // Admins only (settings.read); never sent to a salesperson.
   google_sync_alert: () => SALES_MORE,
-  // docs/31 §2: the owning assistant hears her students' chats (owner 2026-11-16).
+  // docs/31 §2: the owning assistant hears her students' chats.
   channel_message: toSalesChannel,
   commission_earned: toSalesWallet,
   // Sent to teachers and families only for now; a salesperson would open students.

@@ -1,8 +1,7 @@
 import eas from '../eas.json';
 
-// Owner 2026-10-31 («the app size is 170 mb»): the internal APKs carry native code for
-// real phones only, not the x86 emulator ABIs: every ABI carries its own copy of the
-// WebRTC libraries. Owner 2026-11-01 («make the app smaller», option 1): 64-bit arm only.
+// The internal APKs stay small: native code for real 64-bit arm phones only, no x86
+// emulator ABIs, because every ABI carries its own copy of the WebRTC libraries.
 
 // `channel` too: with only env/android the type is «weak», and development has neither.
 interface Profile {
