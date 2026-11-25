@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ASSISTANT_COMMISSION_STATUSES } from '../assistant/commission.js';
-import { commissionStatusStyle, walletStateStyle } from './commission-status-style.js';
+import { ASSISTANT_COMMISSION_STATUSES } from '../assistant/commission';
+import { commissionStatusStyle, walletStateStyle } from './commission-status-style';
 
 describe('commissionStatusStyle', () => {
   it('every commission status is mapped: earned settled, voided struck in the danger tone', () => {

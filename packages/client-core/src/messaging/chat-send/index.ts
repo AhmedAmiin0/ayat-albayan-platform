@@ -1,4 +1,4 @@
-export { type ChatSendState, staffMaySend, triesAfterWindow } from './chat-send.js';
+export { type ChatSendState, staffMaySend, triesAfterWindow } from './chat-send';
 export {
   reopenChoices,
   reopenTick,
@@ -6,9 +6,9 @@ export {
   type ReopenChoices,
   type WindowBar,
   type WindowBarInput,
-} from './window-bar.js';
-export { carriesText, messageTemplate, type CarryTextInput } from './carry-text.js';
-export { createPinStore, type PinStore } from './pin-store.js';
+} from './window-bar';
+export { carriesText, messageTemplate, type CarryTextInput } from './carry-text';
+export { createPinStore, type PinStore } from './pin-store';
 export {
   markUnconfirmed,
   replayedOther,
@@ -16,4 +16,4 @@ export {
   SEND_UNCONFIRMED,
   type SentText,
   type TextAnswer,
-} from './unconfirmed/index.js';
+} from './unconfirmed';

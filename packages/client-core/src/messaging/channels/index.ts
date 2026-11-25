@@ -15,7 +15,7 @@ export {
   portalUnreadPath,
   TEACHER_CHANNELS_PATH,
   threadMessages,
-} from './channels.js';
+} from './channels';
 export {
   CHANNEL_LIVE_FALLBACK_MS,
   type ChannelMode,
@@ -24,15 +24,15 @@ export {
   channelPollMs,
   liveChannelId,
   subscribeChannelMessages,
-} from './channel-live.js';
-export { type TeacherPick, teacherChoice } from './teacher-pick.js';
+} from './channel-live';
+export { type TeacherPick, teacherChoice } from './teacher-pick';
 export {
   channelSeatKey,
   channelSeats,
   seatErrorText,
   type SeatState,
   seatState,
-} from './channel-seat.js';
+} from './channel-seat';
 export {
   CHANNEL_EDIT_ERRORS,
   type ChannelEditError,
@@ -41,7 +41,7 @@ export {
   channelMessagePath,
   channelReadsPath,
   threadHidePath,
-} from './channel-edits/index.js';
+} from './channel-edits';
 export {
   channelPresenceKey,
   PRESENCE_SELF_PATH,
@@ -53,18 +53,18 @@ export {
   STAFF_PRESENCE_PATH,
   staffPresenceKey,
   trackSelf,
-} from './presence-live.js';
-export { presenceWatchKey, watchPresence } from './presence-watch.js';
-export { newClientId, remainingDraft, type SendAttempt, sendIdFor } from './channel-draft.js';
-export { closedReasonKey } from './channel-closed.js';
-export { closedSteps, type ClosedStep, type StepKey, type StepState } from './thread/closed-steps.js';
-export { type MenuOffers, menuOffers, offersAny } from './thread/menu-offers.js';
-export { isPending, pendingMessage, withPending, withoutPending } from './thread/pending.js';
-export { headerPeople } from './thread/people.js';
-export { type ChannelRow, channelRows, unreadBand } from './thread/rows.js';
-export { type ChannelTicks, ticksOf } from './thread/ticks.js';
-export { EMOJI, insertAt } from './thread/emoji.js';
-export { WAVE_BARS, waveBars } from './thread/wave-bars.js';
+} from './presence-live';
+export { presenceWatchKey, watchPresence } from './presence-watch';
+export { newClientId, remainingDraft, type SendAttempt, sendIdFor } from './channel-draft';
+export { closedReasonKey } from './channel-closed';
+export { closedSteps, type ClosedStep, type StepKey, type StepState } from './thread/closed-steps';
+export { type MenuOffers, menuOffers, offersAny } from './thread/menu-offers';
+export { isPending, pendingMessage, withPending, withoutPending } from './thread/pending';
+export { headerPeople } from './thread/people';
+export { type ChannelRow, channelRows, unreadBand } from './thread/rows';
+export { type ChannelTicks, ticksOf } from './thread/ticks';
+export { EMOJI, insertAt } from './thread/emoji';
+export { WAVE_BARS, waveBars } from './thread/wave-bars';
 export {
   ChannelFileError,
   type ChannelFileFields,
@@ -74,4 +74,4 @@ export {
   channelFileCapMb,
   channelFileProblem,
   uploadChannelFile,
-} from './thread/upload.js';
+} from './thread/upload';

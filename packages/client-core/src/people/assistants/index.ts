@@ -7,10 +7,10 @@ export {
   type TermsField,
   type TermsForm,
   type TermsRules,
-} from './terms-form.js';
+} from './terms-form';
 export {
   statementActions,
   type StatementAction,
   type StatementCan,
-} from './statement-actions.js';
-export type * from './assistant-list.js';
+} from './statement-actions';
+export type * from './assistant-list';

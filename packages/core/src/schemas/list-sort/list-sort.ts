@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { ListSortShape } from './list-sort.types.js';
+import type { ListSortShape } from './list-sort.types';
 
 // Server-side sort for paginated lists (R-NFR-08): `?sort=<key>&dir=asc|desc`. Each list endpoint
 // allowlists its own keys; the API maps a key to a column (apps/api common/list-sort.ts).

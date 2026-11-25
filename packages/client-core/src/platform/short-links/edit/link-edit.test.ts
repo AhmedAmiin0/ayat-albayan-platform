@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { detail } from '../short-links.test-util.js';
-import { editOf, toUpdateBody } from './link-edit.js';
+import { detail } from '../short-links.test-util';
+import { editOf, toUpdateBody } from './link-edit';
 
 const clock = { now: new Date('2026-11-17T11:06:00.000Z'), tz: 'Asia/Riyadh' };
 const ID = '11111111-1111-4111-8111-111111111111';

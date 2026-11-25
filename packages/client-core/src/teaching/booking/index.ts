@@ -1,6 +1,6 @@
-export type { BookingMode } from './booking-mode.js';
-export { bookingInvoiceInput } from './invoice.js';
-export { bookingPicks, bookingPicksFrom, type BookingPickFields } from './picks.js';
+export type { BookingMode } from './booking-mode';
+export { bookingInvoiceInput } from './invoice';
+export { bookingPicks, bookingPicksFrom, type BookingPickFields } from './picks';
 export {
   type BannerWords,
   coursePauseBanner,
@@ -13,7 +13,7 @@ export {
   coursePauseResumePath,
   coursePauseUntilPath,
   type PreviewWords,
-} from './course-pause.js';
+} from './course-pause';
 export {
   courseActionsKey,
   courseMoveBase,
@@ -28,7 +28,7 @@ export {
   courseStopPreviewPath,
   courseTeacherOptionsPath,
   type StopWords,
-} from './course-actions.js';
+} from './course-actions';
 export {
   offeredOwe,
   oweOptions,
@@ -38,7 +38,7 @@ export {
   type StopChoiceWords,
   type StopRefundWords,
   stopSummaryText,
-} from './course-refund.js';
+} from './course-refund';
 export {
   courseStopBody,
   mayLowerOwe,
@@ -48,19 +48,19 @@ export {
   type StopMoney,
   type StopMoneyAsk,
   type StopMoneyState,
-} from './course-stop-money.js';
+} from './course-stop-money';
 export {
   packageCancelOffered,
   parsePackageCancelCheck,
   postPackageCancel,
   salesPackageCancelKey,
   salesPackageCancelPath,
-} from './package-cancel.js';
+} from './package-cancel';
 export {
   type StopFormCheck,
   stopFormCheck,
   type StopFormInput,
   type StopMoneyProblem,
-} from './course-stop-form.js';
-export * from './course-card/index.js';
-export * from './lesson-times/index.js';
+} from './course-stop-form';
+export * from './course-card';
+export * from './lesson-times';

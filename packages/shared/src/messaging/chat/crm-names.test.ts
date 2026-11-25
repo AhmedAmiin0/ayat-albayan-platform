@@ -4,7 +4,7 @@ import {
   crmTemplateName,
   isCrmReportName,
   templateCrmNameSchema,
-} from './crm-names.js';
+} from './crm-names';
 
 const row = (
   over: Partial<{ key: string; crm_name: string | null; crm_language: string | null }> = {},

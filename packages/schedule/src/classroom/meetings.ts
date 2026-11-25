@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { lessonDuration, overrideSchema } from '../schemas/scheduling/index.js';
-import type { JoinWindow } from './join-window/index.js';
+import { lessonDuration, overrideSchema } from '../schemas/scheduling';
+import type { JoinWindow } from './join-window';
 
 // A meeting with students is always a lesson, except the standalone internal meeting.
 

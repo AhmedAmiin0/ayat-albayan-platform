@@ -1,2 +1,2 @@
-export * from './phone.js';
-export * from './country.js';
+export * from './phone';
+export * from './country';

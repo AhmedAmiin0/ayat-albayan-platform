@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { connectInboxLive, type LiveChannel, type LiveClient } from '../live-connect.js';
-import { createInboxLive } from '../../live-store/index.js';
+import { connectInboxLive, type LiveChannel, type LiveClient } from '../live-connect';
+import { createInboxLive } from '../../live-store';
 
 function fakeClient(auth: Promise<void> = Promise.resolve(), others: unknown[] = []) {
   const hooks: { status?: (s: string) => void; event?: (m: { payload?: unknown }) => void } = {};

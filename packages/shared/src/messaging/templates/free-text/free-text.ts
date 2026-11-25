@@ -1,6 +1,6 @@
-import { renderTemplateBody } from '../render.js';
-import { TEMPLATE_LIMITS } from '../template-create.js';
-import { BODY_SLOTS, type BodySlot, type TemplateParams } from '../templates.js';
+import { renderTemplateBody } from '../render';
+import { TEMPLATE_LIMITS } from '../template-create';
+import { BODY_SLOTS, type BodySlot, type TemplateParams } from '../templates';
 
 // Meta refuses a body parameter with a newline, tab or 5+ spaces (132018) or too long a body.
 

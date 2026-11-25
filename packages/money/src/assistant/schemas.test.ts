@@ -4,7 +4,7 @@ import {
   assistantStatementGenerateSchema,
   assistantTermsSchema,
   broughtBySchema,
-} from './schemas.js';
+} from './schemas';
 
 const ID = '7b8f5d1e-3c2a-4e5f-9a6b-1c2d3e4f5a6b';
 

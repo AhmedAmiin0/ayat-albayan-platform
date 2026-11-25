@@ -1,8 +1,8 @@
 import type { ActiveCallView, CallIceServer } from '@ab/shared';
-import { MicError, type CallPeer } from './call-peer.js';
-import type { CallSession, CallTarget } from './call-phase.js';
-import type { CallPlatform, NoticeAction, PeerMaker } from './call-platform.js';
-import { callErrorText } from './call-words.js';
+import { MicError, type CallPeer } from './call-peer';
+import type { CallSession, CallTarget } from './call-phase';
+import type { CallPlatform, NoticeAction, PeerMaker } from './call-platform';
+import { callErrorText } from './call-words';
 
 /** What the async call steps read and write (CallStore). */
 export interface CallRuntime {

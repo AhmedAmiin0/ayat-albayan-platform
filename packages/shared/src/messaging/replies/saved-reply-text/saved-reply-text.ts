@@ -1,4 +1,4 @@
-import { searchFold } from '../../message-actions/chat-search.js';
+import { searchFold } from '../../message-actions/chat-search';
 
 // Filled on the client; a placeholder with no value is removed with its spacing.
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { integrationValuesSchema, integrationValueValid } from '../../checks.js';
-import { INTEGRATION_ENUMS, integrationDef, integrationEnum, WA_PROVIDERS } from '../keys.js';
+import { integrationValuesSchema, integrationValueValid } from '../../checks';
+import { INTEGRATION_ENUMS, integrationDef, integrationEnum, WA_PROVIDERS } from '../keys';
 
 // The WhatsApp driver choice (docs/19): one provider key per line, the Kapso group, the enum select.
 

@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { parseAmount, parseAmountFromZero, westernDigits } from './amount.js';
+import { parseAmount, parseAmountFromZero, westernDigits } from './amount';
 
 test.each([
   ['145', 145],

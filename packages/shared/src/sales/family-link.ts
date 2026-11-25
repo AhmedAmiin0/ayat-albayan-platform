@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { ThreadView } from '../messaging/index.js';
-import type { FamilyPhone } from '../people/students/index.js';
+import type { ThreadView } from '../messaging';
+import type { FamilyPhone } from '../people/students';
 
 // A lead's number becomes the second number of an existing family; never makes anyone an owner.
 

@@ -1,4 +1,4 @@
-import type { PresenceChannelLike, PresenceRealtimeLike } from './presence-live.js';
+import type { PresenceChannelLike, PresenceRealtimeLike } from './presence-live';
 
 /** A fake realtime client: records joins, tracks and leaves; tests drive status and state. */
 interface FakeChannel extends PresenceChannelLike {

@@ -7,7 +7,7 @@ import {
   type FeedbackRating,
   type FeedbackRecommend,
 } from '@ab/catalog';
-import { LESSON_RATINGS, type LessonRating } from '../messaging/lesson/rating.js';
+import { LESSON_RATINGS, type LessonRating } from '../messaging/lesson/rating';
 import { listSortShape, phoneE164 } from '@ab/core';
 import type { Attendance, LessonStatus } from '@ab/catalog';
 

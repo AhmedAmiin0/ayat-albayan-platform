@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { matchesQuery } from '../arabic.js';
+import { matchesQuery } from '../arabic';
 
 describe('matchesQuery', () => {
   it('matches everything on a blank search', () => {

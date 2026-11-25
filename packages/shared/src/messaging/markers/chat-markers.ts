@@ -6,7 +6,7 @@
 // Kapso's shapes differ, so several paths are read.
 
 import { z } from 'zod';
-import { lenientText, parseOrNull } from '../payload/index.js';
+import { lenientText, parseOrNull } from '../payload';
 
 export const MARKER_TYPES = ['edit', 'revoke', 'reaction'] as const;
 export type MarkerType = (typeof MARKER_TYPES)[number];

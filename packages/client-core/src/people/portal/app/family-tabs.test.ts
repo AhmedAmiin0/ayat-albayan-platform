@@ -1,6 +1,6 @@
 import type { PortalStudent } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { familyTabs, hasFamilyTab } from './family-tabs.js';
+import { familyTabs, hasFamilyTab } from './family-tabs';
 
 const student: PortalStudent = {
   id: 's1', code: 'AB-0001', name: 's1', tz: 'Asia/Riyadh', contact_is_self: false,

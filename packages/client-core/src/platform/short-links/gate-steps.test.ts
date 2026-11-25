@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { RESEND_SECONDS } from '../../core/auth/index.js';
-import { ApiError } from '../../core/http/index.js';
-import { canResend } from '../../index.js';
-import { codeStepError, phoneStepError, resendSecondsLeft } from './gate-steps.js';
+import { RESEND_SECONDS } from '../../core/auth';
+import { ApiError } from '../../core/http';
+import { canResend } from '../..';
+import { codeStepError, phoneStepError, resendSecondsLeft } from './gate-steps';
 
 describe('phone step errors', () => {
   it('maps the API answers to keys', () => {

@@ -1,6 +1,6 @@
 import { intlLocale, type Locale } from '@ab/core';
 import { clockOf, type ClockOptions, weekdayDayMonth } from '@ab/time';
-import { meetingLinkParts, type MeetingHost } from './meeting-link.js';
+import { meetingLinkParts, type MeetingHost } from './meeting-link';
 
 // Queued booking confirmation (R-SCH-06, R-LES-02). Three Meta-approved templates, all with
 // {{1}} = name and {{2}} = date/time text; the two link templates add a URL button whose

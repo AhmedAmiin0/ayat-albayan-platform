@@ -1,6 +1,6 @@
 import type { AssistantTermsView } from '@ab/money';
 import { describe, expect, it } from 'vitest';
-import { termsFormOf, termStartMins, termsToInput, type TermsForm } from '../../index.js';
+import { termsFormOf, termStartMins, termsToInput, type TermsForm } from '../..';
 
 const TODAY = '2026-10-06';
 const SAVED: AssistantTermsView = {

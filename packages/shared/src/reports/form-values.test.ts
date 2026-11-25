@@ -8,8 +8,8 @@ import {
   submitProblem,
   textRequired,
   valuesOf,
-} from './form-values.js';
-import type { ReportView } from './views.js';
+} from './form-values';
+import type { ReportView } from './views';
 
 const FULL_GRADES = {
   recitation: 'excellent',

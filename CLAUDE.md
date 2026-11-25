@@ -57,7 +57,7 @@ Rules 14–24 (owner 2026-11-21/22, `docs/57-code-quality-rules.md`): a rule's C
 pnpm i                         # CI or a cloud session
 pnpm supabase start            # local stack (packages/db): CI only (ci.yml e2e job)
 pnpm turbo dev                 # api :3000, web :5173, wa-stub :4010: no remote place to run (the e2e job starts its servers through Playwright webServer)
-pnpm lint && pnpm turbo typecheck test # CI or a cloud session (lint builds the packages first; the rest with their ^build)
+pnpm lint && pnpm turbo typecheck test # CI or a cloud session (a package's build is its type check; the rest with their ^build)
 pnpm turbo e2e                 # playwright (apps/staff-web against seeded db): CI only (ci.yml e2e job)
 pnpm --filter staff-mobile start # expo: no remote place to run; mobile is verified by CI «test mobile»/«bundle mobile» and mobile.yml
 pnpm migrate:dry && pnpm migrate:apply   # tools/migrate: follows tools/migrate/RUNBOOK.md until the owner decides

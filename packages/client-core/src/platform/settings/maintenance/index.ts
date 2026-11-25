@@ -4,11 +4,11 @@ export {
   maintenanceFacts,
   maintenancePollMs,
   maintenanceView,
-} from './maintenance.js';
+} from './maintenance';
 export {
   type MaintenanceFacts,
   type MaintenanceProbes,
   type MaintenanceState,
   type MaintenanceView,
   type MaintenanceViewer,
-} from './maintenance.types.js';
+} from './maintenance.types';

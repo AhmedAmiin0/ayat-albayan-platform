@@ -1,8 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
     // CommonJS + Nest DI parameter properties (docs/31a §2): consistent-type-imports covers it instead.
     "verbatimModuleSyntax": false,
     "erasableSyntaxOnly": false,

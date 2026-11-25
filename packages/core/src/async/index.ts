@@ -1,3 +1,3 @@
-export * from './errors.js';
-export * from './result.js';
-export * from './retry/index.js';
+export * from './errors';
+export * from './result';
+export * from './retry';

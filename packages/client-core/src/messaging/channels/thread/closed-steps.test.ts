@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { closedSteps } from './closed-steps.js';
+import { closedSteps } from './closed-steps';
 
 const states = (reason: Parameters<typeof closedSteps>[0]) =>
   closedSteps(reason).map((s) => `${s.key}:${s.state}`);

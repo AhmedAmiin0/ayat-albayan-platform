@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MESSAGE_STATUSES } from '@ab/catalog';
-import { messageStatusStyle } from './status-style.js';
+import { messageStatusStyle } from './status-style';
 import {
   bubbleWord,
   messageTicks,
@@ -8,7 +8,7 @@ import {
   TICK_PATHS,
   tickTone,
   tickWord,
-} from './ticks.js';
+} from './ticks';
 
 describe('messageTicks (WhatsApp-style delivery ticks)', () => {
   it.each([

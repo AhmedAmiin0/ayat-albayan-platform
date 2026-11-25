@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { courseLessonCount } from './course.js';
+import { courseLessonCount } from './course';
 
 // 1 of 8 taken before the platform → the course books 7.
 describe('courseLessonCount', () => {

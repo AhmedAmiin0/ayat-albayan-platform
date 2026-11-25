@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fallbackText, renderTemplateBody, type RenderableTemplate } from './render.js';
-import { lessonReminderTemplate, teacherReminderTemplate } from './templates.js';
+import { fallbackText, renderTemplateBody, type RenderableTemplate } from './render';
+import { lessonReminderTemplate, teacherReminderTemplate } from './templates';
 
 const reminder: RenderableTemplate = {
   body_ar: 'حلقة {{1}} النهاردة — {{2}}',

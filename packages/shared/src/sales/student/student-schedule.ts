@@ -1,4 +1,4 @@
-import type { SalesScheduleLesson } from '../schedule.js';
+import type { SalesScheduleLesson } from '../schedule';
 
 // Weekly slots and next lessons; never a meeting link, price or money.
 

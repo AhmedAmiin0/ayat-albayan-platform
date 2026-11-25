@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { ReplyLesson, ReplyRights } from './reply-lesson.js';
-import { replyNote, type ReplyNoteContext } from './reply-note.js';
+import type { ReplyLesson, ReplyRights } from './reply-lesson';
+import { replyNote, type ReplyNoteContext } from './reply-note';
 
 const base = { direction: 'inbound' as const, body: 'ايوة', guardian_id: 'g1', lead_id: null };
 const ask = { ...base, body: 'تأجيل الحلقة إلى غدا' };

@@ -9,4 +9,4 @@ export {
   reopenDedupKey,
   type ReopenFields,
   WINDOW_CLOSED,
-} from './thread-reopen.js';
+} from './thread-reopen';

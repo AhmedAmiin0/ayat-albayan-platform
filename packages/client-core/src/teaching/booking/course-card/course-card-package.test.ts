@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { packageCardLines, packageWordsOf, type PackageWords } from './course-card-package.js';
+import { packageCardLines, packageWordsOf, type PackageWords } from './course-card-package';
 
 const plural = (one: string, n: string) => ({ one, two: n, few: n, other: n });
 const words: PackageWords = {

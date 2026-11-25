@@ -1,6 +1,6 @@
 import type { PortalActionResult } from '@ab/shared';
-import { apiErrorCode } from '../../../core/http/index.js';
-import type { FamilyLessonInput, PortalLessonSends } from './lesson-sends.js';
+import { apiErrorCode } from '../../../core/http';
+import type { FamilyLessonInput, PortalLessonSends } from './lesson-sends';
 
 // One family lesson action, as the family app and the web portal send it, and
 // the notice each says once it lands (portal.actions.<notice>).

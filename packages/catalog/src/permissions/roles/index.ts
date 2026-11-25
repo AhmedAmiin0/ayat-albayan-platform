@@ -1,1 +1,1 @@
-export { USER_ROLES, type UserRole } from './roles.js';
+export { USER_ROLES, type UserRole } from './roles';

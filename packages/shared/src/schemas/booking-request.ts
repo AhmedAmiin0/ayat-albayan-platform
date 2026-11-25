@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { bookingBaseSchema, refineBookingKind, refineDayTimes } from '@ab/schedule';
-import { guardianCreateSchema, studentCreateSchema } from '../people/schemas/index.js';
+import { guardianCreateSchema, studentCreateSchema } from '../people/schemas';
 
 // POST /booking composes the schedule booking fields (@ab/schedule) with the people row schemas,
 // so it lives in @ab/shared, above both (docs/32 k5a).

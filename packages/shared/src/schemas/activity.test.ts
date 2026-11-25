@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { activityListQuery } from './activity.js';
+import { activityListQuery } from './activity';
 
 describe('activityListQuery («سجل النشاط»)', () => {
   it('defaults to page 1 of 25 with no filters', () => {

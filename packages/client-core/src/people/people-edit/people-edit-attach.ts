@@ -1,6 +1,6 @@
 import type { FamilyOption, PeopleEditView } from '@ab/shared';
-import { newFamilyOf, type NewFamilyForm } from './people-edit-form.js';
-import type { PeopleWrite } from './people-edit-write.js';
+import { newFamilyOf, type NewFamilyForm } from './people-edit-form';
+import type { PeopleWrite } from './people-edit-write';
 
 // The state lives in the app's hook; the logic lives here.
 

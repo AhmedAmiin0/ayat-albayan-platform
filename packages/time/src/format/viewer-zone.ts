@@ -1,5 +1,5 @@
-import { RIYADH_TZ, type ClockOptions } from '../clock/index.js';
-import { clockOf, engineTimeZone } from './format.js';
+import { RIYADH_TZ, type ClockOptions } from '../clock';
+import { clockOf, engineTimeZone } from './format';
 import { isTimeZone } from '@ab/core';
 
 // Whose clock a screen reads in (docs/34): instants are stored in UTC (rule 6) and shown in the

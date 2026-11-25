@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '../../core/http/index.js';
-import { templateErrorWords } from './template-errors.js';
+import { ApiError } from '../../core/http';
+import { templateErrorWords } from './template-errors';
 
 const words = templateErrorWords(
   () => ({ author_daily_limit: 'حتى {max} قوالب في اليوم', code_bound_buttons: 'أبقِ الأزرار' }),

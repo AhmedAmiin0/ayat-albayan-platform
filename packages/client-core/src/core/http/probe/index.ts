@@ -1,2 +1,2 @@
-export { probe, PROBE_TIMEOUT_MS } from './probe.js';
-export type { ProbeAnswer, ProbeOptions } from './probe.types.js';
+export { probe, PROBE_TIMEOUT_MS } from './probe';
+export type { ProbeAnswer, ProbeOptions } from './probe.types';

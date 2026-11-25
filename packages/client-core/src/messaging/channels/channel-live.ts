@@ -1,5 +1,5 @@
-import type { ChannelAudience } from './channels.js';
-import { CHANNEL_REFRESH_MS, CHANNEL_WRITES } from './channels.js';
+import type { ChannelAudience } from './channels';
+import { CHANNEL_REFRESH_MS, CHANNEL_WRITES } from './channels';
 
 // Realtime for the student channel (the teacher-student chat runs on the socket, never WhatsApp):
 // Supabase Realtime postgres_changes on channel_messages, filtered by the channel, told only to

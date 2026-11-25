@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { SETTING_DEFAULTS, SETTING_FIELD_OF, SETTING_KEYS } from '../../../registry.js';
-import { settingsChanges, settingsUpdateSchema, settingZod } from '../schema.js';
+import { SETTING_DEFAULTS, SETTING_FIELD_OF, SETTING_KEYS } from '../../../registry';
+import { settingsChanges, settingsUpdateSchema, settingZod } from '../schema';
 
 const ok = (body: object) => settingsUpdateSchema.safeParse(body).success;
 

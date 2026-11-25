@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import type { ChannelParticipantView } from '@ab/shared';
-import { headerPeople } from './people.js';
+import { headerPeople } from './people';
 
 const m = (sender_name: string, mine = false) => ({ sender_name, mine });
 const p = (name: string, me = false): ChannelParticipantView => ({ name, role: 'teacher', me });

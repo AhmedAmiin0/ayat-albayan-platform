@@ -1,7 +1,7 @@
 import type { ChannelSeat } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../core/http/index.js';
-import { channelSeatKey, channelSeats, seatError, seatErrorText, seatState } from './channel-seat.js';
+import { ApiError, type ApiClient } from '../../core/http';
+import { channelSeatKey, channelSeats, seatError, seatErrorText, seatState } from './channel-seat';
 
 // One assistant seat per chat, the one who brought the student first: the seat both apps read
 // and write.

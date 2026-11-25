@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { settingsPatchBodySchema } from './patch.js';
+import { settingsPatchBodySchema } from './patch';
 
 // docs/36 z3: the raw PATCH /settings body is any JSON object; its fields are split one by one.
 describe('settingsPatchBodySchema', () => {

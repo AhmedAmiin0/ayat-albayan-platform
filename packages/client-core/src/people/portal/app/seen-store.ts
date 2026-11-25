@@ -1,4 +1,4 @@
-import { parseSeen, SEEN_REPORTS_KEY, withSeen } from '../report-seen.js';
+import { parseSeen, SEEN_REPORTS_KEY, withSeen } from '../report-seen';
 
 // A failed read or write keeps this run's marks only.
 

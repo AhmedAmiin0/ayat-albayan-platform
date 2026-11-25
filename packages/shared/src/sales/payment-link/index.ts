@@ -1,3 +1,3 @@
-export * from './rules.js';
-export * from './schemas.js';
-export * from './views.js';
+export * from './rules';
+export * from './schemas';
+export * from './views';

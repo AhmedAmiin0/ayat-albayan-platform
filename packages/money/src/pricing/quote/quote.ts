@@ -7,9 +7,9 @@ import {
   type PackageId,
   type PricingDuration,
   type Tier,
-} from '../catalog.js';
-import { currencyForCountry, siteCountry, type CurrencyIso, type SiteCountry } from '../currency.js';
-import { customBase, priceIn, roundCents, starterRateBase } from '../price/index.js';
+} from '../catalog';
+import { currencyForCountry, siteCountry, type CurrencyIso, type SiteCountry } from '../currency';
+import { customBase, priceIn, roundCents, starterRateBase } from '../price';
 
 /** A package, or a custom lesson count (1–60), never both. */
 export type QuotePackage =

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { counted, pluralForm } from './plural.js';
+import { counted, pluralForm } from './plural';
 
 describe('pluralForm (Arabic)', () => {
   it.each([

@@ -1,6 +1,6 @@
 import type { Duration } from '@ab/catalog';
-import { earningStatus, type EarningStatus } from './earnings.js';
-import { lessonCountsForPay, teacherRateFor } from './pay-rule.js';
+import { earningStatus, type EarningStatus } from './earnings';
+import { lessonCountsForPay, teacherRateFor } from './pay-rule';
 
 // Executable specification of public.sync_teacher_earning (migrations 177, 20261005000200): the database trigger
 // is the only writer, this twin pins its decisions in unit tests (the cloud run has no database).

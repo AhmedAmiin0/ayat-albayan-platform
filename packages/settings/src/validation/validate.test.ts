@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { PUBLIC_SETTING_DEFAULTS, PUBLIC_SETTING_KEYS, publicSettings } from '../public.js';
-import { TEACHER_PAGE_KEYS } from '../domains/teaching/teacher-pages.js';
-import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from '../registry.js';
-import { isValidSetting, readSettings } from './validate.js';
+import { PUBLIC_SETTING_DEFAULTS, PUBLIC_SETTING_KEYS, publicSettings } from '../public';
+import { TEACHER_PAGE_KEYS } from '../domains/teaching/teacher-pages';
+import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from '../registry';
+import { isValidSetting, readSettings } from './validate';
 
 describe('readSettings', () => {
   it('fills defaults for missing rows; valid stored values win', () => {

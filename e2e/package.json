@@ -5,8 +5,8 @@
   "scripts": {
     "e2e": "playwright test",
     "typecheck": "tsgo --noEmit",
-    "screens": "node scripts/screens.ts",
-    "test": "node --test support/screens/tests/*.test.ts"
+    "screens": "node --import tsx scripts/screens.ts",
+    "test": "node --import tsx --test support/screens/tests/*.test.ts"
   },
   "devDependencies": {
     "@ab/catalog": "workspace:*",
@@ -24,6 +24,7 @@
     "api": "workspace:*",
     "postgres": "^3.4.9",
     "staff-web": "workspace:*",
+    "tsx": "4.23.15",
     "typescript": "~6.0.3"
   }
 }

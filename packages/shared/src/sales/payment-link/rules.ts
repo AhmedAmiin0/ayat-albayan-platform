@@ -1,5 +1,5 @@
 import { toCents } from '@ab/core';
-import type { PaymentLinkStatus } from './schemas.js';
+import type { PaymentLinkStatus } from './schemas';
 
 // Pure rules of the payment links (docs/30-stripe-test.md), shared by the API, the web and the mobile app.
 

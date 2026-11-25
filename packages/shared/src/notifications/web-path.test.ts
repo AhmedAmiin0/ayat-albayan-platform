@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ALL_PUSH_KINDS, FAMILY_PUSH_KINDS } from '@ab/catalog';
-import { notificationKind, webNotificationPath } from './web-path.js';
+import { notificationKind, webNotificationPath } from './web-path';
 
 const STUDENT = '3f1c2a5e-8b7d-4c1e-9a2b-1d2e3f4a5b6c';
 const MEETING = '7a8b9c0d-1e2f-4a3b-8c4d-5e6f7a8b9c0d';

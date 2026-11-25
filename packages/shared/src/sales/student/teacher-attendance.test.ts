@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { attendanceRate, countKinds, teacherAttendanceKind, zeroCounts } from './teacher-attendance.js';
+import { attendanceRate, countKinds, teacherAttendanceKind, zeroCounts } from './teacher-attendance';
 
 describe('teacherAttendanceKind', () => {
   it('auto-held (completed, no attendance) is unmarked, not present', () => {

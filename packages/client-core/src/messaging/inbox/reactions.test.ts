@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { patchMessage, reactionName, reactionPath, reactionPill, reactorLines, tappedReaction, withOurs } from './reactions.js';
+import { patchMessage, reactionName, reactionPath, reactionPill, reactorLines, tappedReaction, withOurs } from './reactions';
 
 const R = { theirs: '❤️', ours: '👍', ours_by: 'هبة' };
 const msg = (id: string) => ({ id, body: id }) as unknown as MessageView;

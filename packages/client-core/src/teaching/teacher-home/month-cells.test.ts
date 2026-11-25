@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { monthCells } from './month-cells.js';
+import { monthCells } from './month-cells';
 
 describe('monthCells', () => {
   it('marks today, the picked day and the counts', () => {

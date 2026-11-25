@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { MessageView } from '@ab/shared';
-import { laterRow } from './later-row.js';
-import { msg } from './thread.fakes.test-util.js';
+import { laterRow } from './later-row';
+import { msg } from './thread.fakes.test-util';
 
 const as = (status: MessageView['status']) => msg(1, { status });
 

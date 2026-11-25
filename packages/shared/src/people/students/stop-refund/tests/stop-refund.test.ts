@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fromMinor, minorScale, stopRefund, toMinor } from '../stop-refund.js';
+import { fromMinor, minorScale, stopRefund, toMinor } from '../stop-refund';
 
 // refund = net paid - attended x price / lessons x rate.
 const base = {

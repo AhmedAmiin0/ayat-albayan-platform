@@ -12,7 +12,7 @@ import {
   type StopRefundChoice,
 } from '@ab/shared';
 import { parseAmountFromZero } from '@ab/money';
-import type { RefundChoice } from './course-refund.js';
+import type { RefundChoice } from './course-refund';
 
 // The stop sheet's money for web and mobile: the mode, the chosen option, the
 // custom amount typed; what the POST asks, the summary (refund, still owed) and whether it is

@@ -1,2 +1,2 @@
-export * from './lesson-files.js';
-export * from './lesson-assets.js';
+export * from './lesson-files';
+export * from './lesson-assets';

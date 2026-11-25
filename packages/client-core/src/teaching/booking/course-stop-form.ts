@@ -1,4 +1,4 @@
-import type { StopMoney } from './course-stop-money.js';
+import type { StopMoney } from './course-stop-money';
 
 // The reason error shows only after confirm; a custom amount out of range shows as typed.
 

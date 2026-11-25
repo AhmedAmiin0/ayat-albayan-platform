@@ -1,9 +1,9 @@
-import { adWelcomeOf, chatMarkerOf, markerPayload } from './chat-markers.js';
+import { adWelcomeOf, chatMarkerOf, markerPayload } from './chat-markers';
 import {
   interactivePayloadSchema,
   parseOrNull,
   type InteractivePayload,
-} from '../payload/index.js';
+} from '../payload';
 
 // messages.interactive_payload of a message the business sent outside the app (an echo of the
 // WhatsApp Business app, or an item of Kapso's history), read from Meta's message object. It

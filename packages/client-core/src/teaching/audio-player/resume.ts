@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { clampPosition } from './player-math.js';
+import { clampPosition } from './player-math';
 
 // Positions are kept on the device; one near the end counts as heard in full.
 

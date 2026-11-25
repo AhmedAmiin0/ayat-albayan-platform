@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { newClientId, remainingDraft, sendIdFor } from './channel-draft.js';
+import { newClientId, remainingDraft, sendIdFor } from './channel-draft';
 
 describe('remainingDraft: only what was sent leaves the composer', () => {
   it('the same text: cleared', () => {

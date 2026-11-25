@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isUnavailableMessage, isUnsupportedMessage, reactionText } from './unavailable.js';
+import { isUnavailableMessage, isUnsupportedMessage, reactionText } from './unavailable';
 
 const unsupported = (errors: unknown) => ({ type: 'unsupported', errors, unsupported: { type: 'unknown' } });
 

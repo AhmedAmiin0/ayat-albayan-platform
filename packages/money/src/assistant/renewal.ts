@@ -1,5 +1,5 @@
-import { planOn, type CommissionContext, type PlannedCommission, type SubscriptionFact } from './first-paid/index.js';
-import { commissionKindOf, RENEWAL_CUTOFF } from './kind.js';
+import { planOn, type CommissionContext, type PlannedCommission, type SubscriptionFact } from './first-paid';
+import { commissionKindOf, RENEWAL_CUTOFF } from './kind';
 
 // Renewal commission (migration 20261027000751 assistant_commission_plan): «half of the
 // value» = HALF OF HER NORMAL COMMISSION on each renewal (settings.renewal_commission_percent, default 50),

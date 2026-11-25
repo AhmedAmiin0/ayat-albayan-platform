@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { courseStopSchema } from '../../course-stop.js';
+import { courseStopSchema } from '../../course-stop';
 import {
   owedAfterRefund,
   owedAmountProblem,
   owedByChoice,
   refundByChoice,
   STOP_REFUND_CHOICES,
-} from '../stop-choices.js';
-import { refundAmountProblem, stopRefund } from '../../stop-refund/index.js';
+} from '../stop-choices';
+import { refundAmountProblem, stopRefund } from '../../stop-refund';
 
 // The person stopping chooses the money outcome. 8 lessons for 400, 3 attended
 // at 100 % (charge 150).

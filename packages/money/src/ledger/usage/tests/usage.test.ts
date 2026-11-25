@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LessonStatus } from '@ab/catalog';
-import { consumesPackage, subscriptionBalances, type PackageLesson } from '../usage.js';
+import { consumesPackage, subscriptionBalances, type PackageLesson } from '../usage';
 
 // The same scenario the migration 123 SQL check ran (begin … rollback on the local DB): a free
 // trial, six completed lessons, an excuse and a teacher cancel that don't count, two booked.

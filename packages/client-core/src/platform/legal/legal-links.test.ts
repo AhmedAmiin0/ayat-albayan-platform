@@ -5,7 +5,7 @@ import {
   LEGAL_PATHS,
   LEGAL_UPDATED_ON,
   familyLegalUrl,
-} from './legal-links.js';
+} from './legal-links';
 
 describe('the family legal pages', () => {
   it('live on the family portal, over https', () => {

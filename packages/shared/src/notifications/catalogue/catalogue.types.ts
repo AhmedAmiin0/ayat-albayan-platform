@@ -1,7 +1,7 @@
 import type { AnyPushKind } from '@ab/catalog';
-import type { TemplateKey } from '../../messaging/templates/templates.js';
+import type { TemplateKey } from '../../messaging/templates/templates';
 import type { SettingKey } from '@ab/settings';
-import type { CatalogueSettings } from './catalogue-settings.js';
+import type { CatalogueSettings } from './catalogue-settings';
 
 // The notification catalogue (docs/23 §2b): what the academy sends, to whom, through which channel,
 // and which of today's settings governs it. Code defines what exists; phase 3 adds the admin's overrides.

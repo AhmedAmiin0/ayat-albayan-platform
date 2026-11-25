@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { E164_RE } from '@ab/core';
-import { baseMime } from '../../schemas/chat-media.js';
-import { isPdfMime } from '../chat/chat-files/index.js';
+import { baseMime } from '../../schemas/chat-media';
+import { isPdfMime } from '../chat/chat-files';
 import type { MessageDirection } from '@ab/catalog';
 
 // Reply and forward in the inbox; pure, shared by the API, web and app.

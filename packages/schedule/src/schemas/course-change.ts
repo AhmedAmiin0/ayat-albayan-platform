@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { instant, localDate, timeOfDay } from '@ab/core';
-import { dayTimesSchema, refineDayTimes } from './day-times.js';
-import { bydaySchema, overrideSchema } from './scheduling/index.js';
+import { dayTimesSchema, refineDayTimes } from './day-times';
+import { bydaySchema, overrideSchema } from './scheduling';
 
 // New days and times for a course's future lessons; teacher, length and zone stay the course's.
 

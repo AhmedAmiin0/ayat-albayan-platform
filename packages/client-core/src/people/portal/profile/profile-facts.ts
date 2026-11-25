@@ -1,6 +1,6 @@
 import { isFamilyEmail, type PortalStudent } from '@ab/shared';
 import { formatPhone } from '@ab/core';
-import type { OwnProfile } from './own-profile.js';
+import type { OwnProfile } from './own-profile';
 
 export interface ProfileFact {
   label: string;

@@ -1,1 +1,1 @@
-export { normalizeArabic } from './arabic.js';
+export { normalizeArabic } from './arabic';

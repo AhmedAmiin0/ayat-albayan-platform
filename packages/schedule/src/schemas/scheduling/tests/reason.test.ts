@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { rescheduleRequestSchema } from '../scheduling.js';
+import { rescheduleRequestSchema } from '../scheduling';
 
 const one = { scope: 'one', startsAt: '2026-11-20T10:00:00Z' } as const;
 

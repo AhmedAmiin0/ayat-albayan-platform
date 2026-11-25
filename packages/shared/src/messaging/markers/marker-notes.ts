@@ -1,8 +1,8 @@
 import type { MessageDirection } from '@ab/catalog';
-import { adWelcomeOf } from './chat-markers.js';
-import type { HiddenMark } from '../message-actions/hidden.js';
-import type { CorrectionMark } from '../message-actions/correction/index.js';
-import { payloadTypeOf } from '../payload/index.js';
+import { adWelcomeOf } from './chat-markers';
+import type { HiddenMark } from '../message-actions/hidden';
+import type { CorrectionMark } from '../message-actions/correction';
+import { payloadTypeOf } from '../payload';
 
 // What a bubble (or the chats list's last line) shows instead of its own content: a
 // message deleted for everyone, the click-to-WhatsApp ad's automatic welcome

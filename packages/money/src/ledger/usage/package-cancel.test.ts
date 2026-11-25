@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cancelBlock, cancelOffered, COUNTS_FOR_MONEY, countsForMoney, currentPackage, livePackages, subscriptionCancelSchema } from './package-cancel.js';
+import { cancelBlock, cancelOffered, COUNTS_FOR_MONEY, countsForMoney, currentPackage, livePackages, subscriptionCancelSchema } from './package-cancel';
 
 describe('cancelBlock («إلغاء الباقة», owner 2026-10-28)', () => {
   it('a package with nothing paid and no lesson may be cancelled', () => {

@@ -5,10 +5,10 @@ import {
   refreshPlan,
   throttleMsOf,
   type LiveKey,
-} from '../inbox-live.js';
-import { createLiveRegistry } from '../live-registry.js';
-import { liveEvent, type LiveRow } from '../live-rows.js';
-import { createThrottle, type Throttle } from '../throttle.js';
+} from '../inbox-live';
+import { createLiveRegistry } from '../live-registry';
+import { liveEvent, type LiveRow } from '../live-rows';
+import { createThrottle, type Throttle } from '../throttle';
 
 /** What a refresh does in an app: re-read through the API (the same queries its polls run). */
 export interface LiveTargets {

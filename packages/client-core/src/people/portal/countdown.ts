@@ -1,5 +1,5 @@
 import type { PortalLesson } from '@ab/shared';
-import { isAhead, isLessonNow, windowStateAt } from './lesson-window.js';
+import { isAhead, isLessonNow, windowStateAt } from './lesson-window';
 
 // docs/50 §6: the app re-renders every second and words the parts itself.
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_LOCALE, intlLocale, localeDir, parseLocale } from './locale.js';
+import { DEFAULT_LOCALE, intlLocale, localeDir, parseLocale } from './locale';
 
 describe('locale', () => {
   it('defaults to Arabic for nothing saved or an unknown value', () => {

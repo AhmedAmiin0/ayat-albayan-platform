@@ -8,4 +8,4 @@ export {
   isIntegrationPlainKey,
   WA_LINE_PROVIDERS,
   type WaProvider,
-} from './keys.js';
+} from './keys';

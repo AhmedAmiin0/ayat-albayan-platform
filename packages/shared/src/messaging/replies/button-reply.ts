@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { parseOrNull } from '../payload/index.js';
+import { parseOrNull } from '../payload';
 
 // A family's tap on a template button: WhatsApp shows it as their message with
 // the tapped label, quoting our template. The webhook keeps Meta's part as

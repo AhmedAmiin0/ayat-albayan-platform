@@ -1,2 +1,2 @@
-export * from './portal-actions.js';
-export * from './family-requests.js';
+export * from './portal-actions';
+export * from './family-requests';

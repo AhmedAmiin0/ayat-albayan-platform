@@ -4,4 +4,4 @@ export {
   type ReportDraft,
   reportDraftSchema,
   reportSubmitSchema,
-} from './schema.js';
+} from './schema';

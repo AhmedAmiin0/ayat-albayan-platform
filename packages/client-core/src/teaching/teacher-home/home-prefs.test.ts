@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_HOME_PREFS, parseHomePrefs, withAlert } from './home-prefs.js';
+import { DEFAULT_HOME_PREFS, parseHomePrefs, withAlert } from './home-prefs';
 
 describe('parseHomePrefs', () => {
   it('defaults to everything on and comfortable rows', () => {

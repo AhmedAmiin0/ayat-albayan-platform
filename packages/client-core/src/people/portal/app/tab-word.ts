@@ -1,4 +1,4 @@
-import type { ChildTab } from '../viewer.js';
+import type { ChildTab } from '../viewer';
 
 // A login reading its own page gets the self wording; a guardian gets the child wording.
 

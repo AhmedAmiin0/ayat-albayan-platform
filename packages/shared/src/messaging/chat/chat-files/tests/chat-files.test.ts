@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CHAT_FILE_MIMES, WA_IMAGE_MAX_BYTES, chatFileProblem, waMediaKind } from '../chat-files.js';
+import { CHAT_FILE_MIMES, WA_IMAGE_MAX_BYTES, chatFileProblem, waMediaKind } from '../chat-files';
 
 const TEN_MB = 10 * 1024 * 1024;
 

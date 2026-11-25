@@ -1,4 +1,4 @@
-import type { LinkError, LinkField, LinkFieldErrors } from '../link-form-errors.js';
+import type { LinkError, LinkField, LinkFieldErrors } from '../link-form-errors';
 
 // What a create / edit screen does with a form check (toCreateBody / toUpdateBody): the body to
 // send, or each field's refusal in the app's words (shortLinks.form.errors).

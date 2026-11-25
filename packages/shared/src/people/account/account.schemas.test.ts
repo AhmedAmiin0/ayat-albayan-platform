@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { avatarSetSchema, avatarUploadSchema, emailChangeSchema, passwordChangeSchema, profileUpdateSchema } from './account.schemas.js';
+import { avatarSetSchema, avatarUploadSchema, emailChangeSchema, passwordChangeSchema, profileUpdateSchema } from './account.schemas';
 
 describe('profileUpdateSchema (R-ACC-02)', () => {
   it('trims the name and keeps it within 2-80 characters', () => {

@@ -1,6 +1,6 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
-import { oweOptions, refundOptions, stopRefundLines, stopSummaryText } from './course-refund.js';
+import { oweOptions, refundOptions, stopRefundLines, stopSummaryText } from './course-refund';
 
 const money = (n: number) => `${n} ر.س`;
 const refund = {

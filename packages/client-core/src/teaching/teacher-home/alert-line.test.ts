@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { alertLine, type AlertWords } from './alert-line.js';
-import type { AlertParts } from './alert-parts.js';
+import { alertLine, type AlertWords } from './alert-line';
+import type { AlertParts } from './alert-parts';
 
 const W: AlertWords = {
   soon: '{names} {when}',

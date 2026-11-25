@@ -6,9 +6,9 @@ import {
   convertModel,
   emptyFamily,
   type AttachState,
-} from '../../index.js';
+} from '../..';
 import type { Permission } from '@ab/catalog';
-import { VIEW } from './people-edit.fixtures.js';
+import { VIEW } from './people-edit.fixtures';
 
 const write = () => ({ mutate: vi.fn(), isPending: false, errorText: null as string | null });
 const TEXT = { moveConfirm: 'نقل {student} إلى {family}؟', invalid: 'تحقق' };

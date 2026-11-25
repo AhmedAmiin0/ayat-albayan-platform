@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { localDate } from '@ab/core';
-import { daysBefore, SALES_START_BACK_DAYS } from '../start-date.js';
+import { daysBefore, SALES_START_BACK_DAYS } from '../start-date';
 
 // Only starts_on changes; with lessons used before the platform, the start stays before today.
 

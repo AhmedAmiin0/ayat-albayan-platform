@@ -1,10 +1,10 @@
 import type { StudentStatus } from '@ab/catalog';
-import { parseStatusList } from '../schemas/student-filters.js';
+import { parseStatusList } from '../schemas/student-filters';
 import {
   isNotSubscribed,
   NOT_SUBSCRIBED_STATUSES,
   PACKAGE_ENDED_STATUSES,
-} from './status-flow/index.js';
+} from './status-flow';
 
 // A teacher's students split by status with one rule for web, mobile and the API mappers.
 

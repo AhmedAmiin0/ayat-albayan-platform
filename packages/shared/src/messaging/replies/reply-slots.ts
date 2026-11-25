@@ -3,7 +3,7 @@ import {
   SAVED_REPLY_PLACEHOLDERS,
   type SavedReplyPlaceholder,
   type SavedReplyValues,
-} from './saved-reply-text/index.js';
+} from './saved-reply-text';
 
 // A blank in a saved reply is filled before insertion; auto placeholders are prefilled slots.
 

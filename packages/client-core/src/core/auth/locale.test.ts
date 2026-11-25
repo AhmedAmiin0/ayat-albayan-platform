@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { meLocaleOf, meLocalePath, meLocaleSend } from './locale.js';
+import { meLocaleOf, meLocalePath, meLocaleSend } from './locale';
 
 const client = (answer: unknown) => ({
   apiFetch: vi.fn(),

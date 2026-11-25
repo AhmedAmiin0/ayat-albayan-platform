@@ -1,10 +1,10 @@
-import { FAMILY_ENTRIES } from './catalogue.family.js';
-import { MANUAL_ENTRIES, PUSH_ENTRIES } from './catalogue.other.js';
-import type { NotificationEntry } from './catalogue.types.js';
-import { SCHEDULE_ENTRIES } from './catalogue.schedule.js';
-import { WHATSAPP_ENTRIES } from './catalogue.whatsapp.js';
+import { FAMILY_ENTRIES } from './catalogue.family';
+import { MANUAL_ENTRIES, PUSH_ENTRIES } from './catalogue.other';
+import type { NotificationEntry } from './catalogue.types';
+import { SCHEDULE_ENTRIES } from './catalogue.schedule';
+import { WHATSAPP_ENTRIES } from './catalogue.whatsapp';
 
-export * from './catalogue.types.js';
+export * from './catalogue.types';
 
 /** Every notification sent (docs/23 §2b); a new producer needs a row here. */
 export const NOTIFICATION_CATALOGUE = [

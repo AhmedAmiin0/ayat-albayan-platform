@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { prefillParams } from './prefill.js';
+import { prefillParams } from './prefill';
 
 const tpl = (params: string[]) => ({ params });
 

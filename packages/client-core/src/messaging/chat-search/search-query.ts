@@ -5,7 +5,7 @@ import {
   parseChatSearchPage,
   type ChatSearchState,
   type SearchStep,
-} from './chat-search.js';
+} from './chat-search';
 
 /** The app's GET (its apiFetch, untyped: the answer is parsed here). */
 export type SearchGet = (path: string) => Promise<unknown>;

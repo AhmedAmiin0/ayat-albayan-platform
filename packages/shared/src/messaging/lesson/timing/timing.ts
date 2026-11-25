@@ -1,8 +1,8 @@
 import type { LeadStatus } from '@ab/catalog';
-import { dayBeforeSendAt, localDate } from '../timing.day-before.js';
+import { dayBeforeSendAt, localDate } from '../timing.day-before';
 import { addCalendarDays } from '@ab/time';
 
-export { dayBeforeSendAt, localDayStart } from '../timing.day-before.js';
+export { dayBeforeSendAt, localDayStart } from '../timing.day-before';
 
 // When reminders and follow-ups go out (docs/12 §7). Pure: the jobs call these on every tick and
 // the dedup keys make a repeated tick a no-op (rule 8).

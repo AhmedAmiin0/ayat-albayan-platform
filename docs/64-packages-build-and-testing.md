@@ -8,7 +8,8 @@ Owner directives:
 
 - **Packages are Just-in-Time:** «just export ./src and make dev script and build script for all the packages». Every package's `exports` points at `./src` TypeScript; every package still has a real `dev` and `build` script.
 - **No extension in imports:** «inside the packages why are we using .js», «i dont want to import .js files». No `./x.js`, `./x.ts` or `/index` in any specifier, packages included; no `#` imports; packages never use `@/`.
-- **No per-package tsconfig:** «no need for tsconfig and ts.config.build in all the packages set the common in the base». `packages/*` hold no tsconfig file; shared settings live in the root `tsconfig.base.json` plus one root `tsconfig.json` over `packages/*/src`.
+- **One-line tsconfig per package:** first «no need for tsconfig and ts.config.build in all the packages set the common in the base»; then, after seeing a script that generated each package's config, «i dont like this wierd scripts you added in jit» and the choice «One-line tsconfig per package». The root `tsconfig.base.json` holds every common setting; one root config per package kind (`tsconfig.node.json`, `tsconfig.web.json`, `tsconfig.native.json`) extends it with only that kind's differences and `"include": ["${configDir}/src"]`; each package's `tsconfig.json` is exactly `{ "extends": "../../tsconfig.<kind>.json" }`; no `tsconfig.build.json`, no root `tsconfig.json`, and no script or CLI that writes a tsconfig.
+- **Plain package scripts:** `"build": "tsgo --noEmit"`, `"dev": "tsgo --noEmit --watch"`, plus the package's own typecheck, test and lint scripts.
 - **One testing package:** «also create a seperate package for testing if you need to share something for testing», «make the vitest config in one base package for testing».
 - **One oxc base:** «same for oxc».
 - **Solid kits:** about mobile-kit's 30-line exports map, «then this package is not solid»; «if you need to create a package for babel create it».
@@ -48,12 +49,16 @@ Defaults taken:
 
 - Every package's `exports` points at `./src` TypeScript, listing only the subpaths something imports.
 - A committed codemod (fixture tests first) strips the extension from every relative specifier in `packages/*` (import, export-from, `import()`): 826 files use `./x.js` today.
-- `packages/*/tsconfig.json` and `tsconfig.build.json` are deleted. Their shared settings move to the root `tsconfig.base.json`, plus one root `tsconfig.json` that covers `packages/*/src`.
-- The per-package differences are expressed centrally without loosening anything: DOM lib for client-core and web-kit, jsx and `vite/client` for web-kit, Expo settings for mobile-kit, test types. A Node-only package must still fail on DOM globals; where one config cannot express that, a lint rule or a guard does.
-- Every package gets a real `build` (a cached type check of the package, or the root check scoped to it) and `dev` (its watch).
+- Every `tsconfig.build.json` in `packages/*` is deleted. Each package's `tsconfig.json` is one line naming its kind; the kind configs at the root hold the differences without loosening anything:
+  - `tsconfig.node.json`: core, catalog, db, i18n, money, schedule, settings, shared, time. No DOM lib and `types: []`, so a Node-only package still fails on a DOM global.
+  - `tsconfig.web.json`: client-core and web-kit. DOM lib and jsx; web-kit names `vite/client` in its own `src/vite-env.d.ts`, so client-core gets no Vite types.
+  - `tsconfig.native.json`: mobile-kit. The Expo settings it used before; it names the jest types in `src/jest-env.d.ts`.
+- Every package's `build` is `tsgo --noEmit` (a cached type check of its source) and `dev` is `tsgo --noEmit --watch`; turbo keeps `dependsOn: ["^build"]`, so an app's typecheck, tests and bundle re-run when a package they use changes. The kind configs are turbo global dependencies.
+- `guard:tsconfig` enforces this shape: a package's only tsconfig is the one-line `tsconfig.json`; a kind config extends only the base and includes only `${configDir}/src`; there is no root `tsconfig.json`; an app extends the base or a kind config.
+- Node-run TypeScript (the migration CLI, the seeds, the tool and e2e `node --test` runs) starts with `node --import tsx`, which resolves the packages' extensionless relative imports. Playwright, vitest, jest, Metro, Vite and rolldown resolve the source themselves; the api bundle drops its source resolver, since the exports already name the source. The api and `tools/migrate` drop `NodeNext` for the root base's `Bundler` resolution.
 - turbo.json, vitest, Metro and jest-expo, Playwright and every node-run tool script (e2e, `tools/migrate`, `tools/scripts`) keep resolving the packages.
 
-**Proof (CI).** The codemod's fixture tests; typecheck, lint and every workspace's tests with the same counts; the mobile bundles; the api image; e2e; `guard:tsconfig` with no package tsconfig and the root `paths` as the only `paths`.
+**Proof (CI).** The codemod's fixture tests; typecheck, lint and every workspace's tests with the same counts; the mobile bundles; the api image; e2e; `guard:tsconfig` with the one-line package tsconfigs, the three kind configs and the root `paths` as the only `paths`.
 
 ## PR 3 · One testing package (`build/testing-package`)
 
@@ -91,7 +96,7 @@ One PR at a time; each starts from the develop that holds the one before it.
 | # | Branch | Title | Waits for | CI proves |
 |---|---|---|---|---|
 | 1 | `build/api-bundle` | `build(api): bundle the api into one file for the image` | #937 | the api boots from the bundle: app.module smoke test, job «api image» (`/health`, PDF sandbox, report PDF), e2e |
-| 2 | `build/jit-packages` | `build(repo): ship packages as typescript source` | 1 | typecheck, lint, every workspace's tests, the mobile bundles, the api image and e2e with packages as source and no package tsconfig |
+| 2 | `build/jit-packages` | `build(repo): ship packages as typescript source` | 1 | typecheck, lint, every workspace's tests, the mobile bundles, the api image and e2e with packages as source and one-line package tsconfigs |
 | 3 | `build/testing-package` | `build(repo): add the shared testing package and one vitest base` | 2 | every workspace's test count unchanged through the one base; `guard:packages` shows only the new layer |
 | 4 | `build/oxc-base` | `build(repo): one oxlint and oxfmt base in @ab/config` | 3 | the effective lint and format config is identical; `guard:loosened` silent; lint and format green |
 | 5 | `refactor/kits-solid` | `refactor(kits): give mobile-kit and web-kit a short public api` | 4 | every app import resolves; the mobile bundles and startup imports; e2e |

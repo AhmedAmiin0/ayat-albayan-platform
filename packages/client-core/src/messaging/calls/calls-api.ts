@@ -1,5 +1,5 @@
 import type { ActiveCallView, CallConfigView, CallPermissionView, CallView, MessageView } from '@ab/shared';
-import type { ApiClient } from '../../core/http/index.js';
+import type { ApiClient } from '../../core/http';
 
 // WhatsApp voice calls (docs/28 §4), the routes both apps use. Everything but /calls/config answers 404
 // while the setting is off, so every other query is enabled only once the config says `enabled`. The

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import * as E from '@ab/catalog';
-import * as S from './status-style.js';
+import * as S from './status-style';
 
 // docs/07 §6: every value of the 12 state enums has a tone and a glyph (grade: pips).
 const STATE_ENUMS: [string, readonly string[], Record<string, S.StatusStyle>][] = [

@@ -1,6 +1,6 @@
-import type { ApiClient } from '../../http/index.js';
-import { pathKey } from '../../keys/index.js';
-import type { MeQuery } from './me-query.types.js';
+import type { ApiClient } from '../../http';
+import { pathKey } from '../../keys';
+import type { MeQuery } from './me-query.types';
 
 const ME_PATH = '/auth/me';
 

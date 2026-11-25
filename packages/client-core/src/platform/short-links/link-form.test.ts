@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   emptyLinkForm, expiresAtOf, listedCount, maxUsersOf, SHORT_LINK_DEFAULT_DAYS, toCreateBody,
   withoutPerson, withoutPhone, withPerson, withPhone, type LinkForm,
-} from './link-form.js';
+} from './link-form';
 
 const clock = { now: new Date('2026-11-17T11:06:00.000Z'), tz: 'Asia/Riyadh' };
 const ID = '11111111-1111-4111-8111-111111111111';

@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { PAYMENT_METHODS } from '@ab/catalog';
 import { listSortShape, optionalText } from '@ab/core';
-import { EARNING_STATUSES } from './earnings.js';
-import { EARNING_SORT_KEYS, TEACHER_PAYMENT_SORT_KEYS } from '../list-sorts.js';
-import { moneyAmount, pastInstant, RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '../schemas.js';
+import { EARNING_STATUSES } from './earnings';
+import { EARNING_SORT_KEYS, TEACHER_PAYMENT_SORT_KEYS } from '../list-sorts';
+import { moneyAmount, pastInstant, RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '../schemas';
 
 /**
  * POST /teacher-earnings/:teacherId/payments. `earningIds` = the ticked sessions (omitted → every

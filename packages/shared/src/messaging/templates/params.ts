@@ -1,12 +1,12 @@
 import { clockTime } from '@ab/time';
-import { joinNames, lessonWhenText } from '../lesson/booking-confirmation.js';
-import { quickReplyPayload } from '../replies/quick-reply.js';
+import { joinNames, lessonWhenText } from '../lesson/booking-confirmation';
+import { quickReplyPayload } from '../replies/quick-reply';
 import {
   lessonReminderTemplate,
   teacherReminderTemplate,
   type OutboundTemplate,
   type TemplateParams,
-} from './templates.js';
+} from './templates';
 
 // Typed params for Phase 4 producers (docs/12 §2, R-MSG-01).
 

@@ -1,6 +1,6 @@
 import { counted, type PluralForm } from '@ab/core';
-import { fillSlots } from '../reports/index.js';
-import type { AlertParts, ChangeText } from './alert-parts.js';
+import { fillSlots } from '../reports';
+import type { AlertParts, ChangeText } from './alert-parts';
 
 // The row's first line from the shared ar.json / en.json words (teacherAlerts.*), so web and
 // mobile say exactly the same thing.

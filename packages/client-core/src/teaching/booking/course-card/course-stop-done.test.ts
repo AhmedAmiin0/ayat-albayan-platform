@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { stopDoneLines, type StopDoneWords } from './course-stop-done.js';
+import { stopDoneLines, type StopDoneWords } from './course-stop-done';
 
 const words: StopDoneWords = {
   done: 'done',

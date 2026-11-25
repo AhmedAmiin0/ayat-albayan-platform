@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { callsNeedKapso, commsSourceSchema, isNumberError, numberCreateSchema, numberSecretSchema, numbersImportSchema, numberUpdateSchema } from './schemas.js';
+import { callsNeedKapso, commsSourceSchema, isNumberError, numberCreateSchema, numberSecretSchema, numbersImportSchema, numberUpdateSchema } from './schemas';
 
 const base = { label: 'رقم الإشعارات', purpose: 'notifications', phone_number_id: '1000000001' };
 

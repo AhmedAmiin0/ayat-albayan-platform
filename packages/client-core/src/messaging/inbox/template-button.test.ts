@@ -1,6 +1,6 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
-import { templateButtonHint, templateButtonLabel } from './template-button.js';
+import { templateButtonHint, templateButtonLabel } from './template-button';
 
 const words = ar.inbox.templateBubble;
 

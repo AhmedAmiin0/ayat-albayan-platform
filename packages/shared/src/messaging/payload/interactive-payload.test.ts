@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isPayloadOfType, payloadOfType, payloadTypeOf } from './interactive-payload.js';
+import { isPayloadOfType, payloadOfType, payloadTypeOf } from './interactive-payload';
 
 describe('payloadTypeOf', () => {
   it('the string type of an object payload', () => {

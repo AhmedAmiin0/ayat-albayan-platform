@@ -6,4 +6,4 @@ export {
   mayStopCam,
   muteAllTargets,
   type HostPerson,
-} from './room-host.js';
+} from './room-host';

@@ -1,1 +1,1 @@
-export { leadSortFromValue, leadSortValue, parseLeadSort, type LeadSort } from './lead-sort.js';
+export { leadSortFromValue, leadSortValue, parseLeadSort, type LeadSort } from './lead-sort';

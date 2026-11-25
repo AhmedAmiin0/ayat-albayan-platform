@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseWaMarkup, stripWaMarkup } from './wa-markup.js';
+import { parseWaMarkup, stripWaMarkup } from './wa-markup';
 
 const P = { bold: false, italic: false, strike: false, mono: false };
 

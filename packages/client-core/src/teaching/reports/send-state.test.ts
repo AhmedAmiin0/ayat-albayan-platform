@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { minutesLeft, msUntilClose, reportSendState, SENDING_FOR_MS } from './send-state.js';
+import { minutesLeft, msUntilClose, reportSendState, SENDING_FOR_MS } from './send-state';
 
 const UNTIL = '2026-11-11T10:30:00.000Z';
 const at = (iso: string) => new Date(iso);

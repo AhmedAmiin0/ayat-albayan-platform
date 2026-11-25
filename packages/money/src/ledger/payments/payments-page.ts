@@ -1,5 +1,5 @@
 import type { Page } from '@ab/core';
-import type { PaymentView } from '../views.js';
+import type { PaymentView } from '../views';
 
 /** One currency's net on GET /payments (payments minus refunds). */
 export interface PeriodTotal {

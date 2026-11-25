@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { packageSummaryParts, packageSummaryText, type PackageWords, type SalesPackageSummary } from './student-package.js';
+import { packageSummaryParts, packageSummaryText, type PackageWords, type SalesPackageSummary } from './student-package';
 
 const words: PackageWords = {
   size: (size) => (size ? `باقة ${size}` : '—'),

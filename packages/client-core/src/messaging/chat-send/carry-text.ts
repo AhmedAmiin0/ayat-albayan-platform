@@ -1,5 +1,5 @@
 import { MESSAGE_TEMPLATE, type TemplateView } from '@ab/shared';
-import type { WindowBar } from './window-bar.js';
+import type { WindowBar } from './window-bar';
 
 // After the 24 h window, staff send their draft now inside `academy_message` instead of holding it.
 

@@ -7,7 +7,7 @@ import {
   restrictedMay,
   sendsAllTemplates,
   type RestrictedCheck,
-} from './restricted-templates.js';
+} from './restricted-templates';
 
 const row = (over: Partial<RestrictedCheck> = {}): RestrictedCheck => ({
   key: 'free_trial_invite',

@@ -1,4 +1,4 @@
-import type { TemplateButton, TemplateParams } from '../templates.js';
+import type { TemplateButton, TemplateParams } from '../templates';
 
 // A template as WhatsApp draws it, buttons included: the header over the body, the grey footer,
 // and the buttons under the bubble. Display only: the sender keeps reading

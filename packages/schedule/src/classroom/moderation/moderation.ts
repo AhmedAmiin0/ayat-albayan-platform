@@ -1,4 +1,4 @@
-import type { JoinRole } from '../room.js';
+import type { JoinRole } from '../room';
 
 /**
  * The JSON in every LiveKit token's `metadata` (participant.metadata in the room): the role, so each

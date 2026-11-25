@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { chatLiveKey } from './inbox-live.js';
-import { createLiveRegistry } from './live-registry.js';
+import { chatLiveKey } from './inbox-live';
+import { createLiveRegistry } from './live-registry';
 
 const chat = chatLiveKey('+966500000001');
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { acceptCallSchema, CALL_SDP_MAX, callListQuerySchema, startCallSchema } from './call-schemas.js';
+import { acceptCallSchema, CALL_SDP_MAX, callListQuerySchema, startCallSchema } from './call-schemas';
 
 const id = '2f1c7c2e-5a55-4b7e-9d43-3d1f3a0b9c11';
 

@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { asciiDigits } from '@ab/core';
-import type { SettingConfirm, SettingGroup } from '../groups.js';
-import type { SettingOwner } from '../ownership.js';
-import type { SettingDef } from '../defs.js';
+import type { SettingConfirm, SettingGroup } from '../groups';
+import type { SettingOwner } from '../ownership';
+import type { SettingDef } from '../defs';
 
 /** A stored description is at most this many characters (the settings_description_len check). */
 export const DESCRIPTION_MAX = 500;

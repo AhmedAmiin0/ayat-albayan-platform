@@ -1,5 +1,5 @@
-import { addDays, weekdayOf } from './week.js';
-import { hhmmIn, localDateIn, wallToUtc } from './zoned.js';
+import { addDays, weekdayOf } from './week';
+import { hhmmIn, localDateIn, wallToUtc } from './zoned';
 
 // A person's local day, clock and academy week as UTC instants (R-SCH-01, rule 6; row k3b).
 // Local dates «YYYY-MM-DD», times «HH:MM» (24 h).

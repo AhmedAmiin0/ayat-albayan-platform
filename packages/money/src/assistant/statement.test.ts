@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { lastDayOf, monthOf, nextOpenMonth, planStatement, totalsOf, voidEffect } from './statement.js';
+import { lastDayOf, monthOf, nextOpenMonth, planStatement, totalsOf, voidEffect } from './statement';
 
 const SALARY = { amount: 1000, currency: 'EGP', startsOn: '2026-01-01' };
 const base = { month: '2026-10-01', tz: 'Asia/Riyadh', salary: SALARY, commissions: [], adjustments: [] };

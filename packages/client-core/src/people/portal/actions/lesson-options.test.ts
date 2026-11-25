@@ -2,7 +2,7 @@ import type { PortalLesson } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import {
   confirmedLine, declineLine, excusedLine, lessonOptions, requestChip,
-} from './lesson-options.js';
+} from './lesson-options';
 
 const NOW = new Date('2026-11-16T10:00:00Z');
 const request = (status: 'pending' | 'rejected') => ({

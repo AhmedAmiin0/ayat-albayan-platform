@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import type { SettingGroup } from '../../groups.js';
-import { isOwnedSettingKey } from '../../ownership.js';
-import { settingDef, type SettingKey } from '../../registry.js';
-import { OWNED_VALUE_GROUPS, VALUE_CONFIRM, VALUE_GROUPS, type ValueGroupId } from '../value-groups.js';
+import type { SettingGroup } from '../../groups';
+import { isOwnedSettingKey } from '../../ownership';
+import { settingDef, type SettingKey } from '../../registry';
+import { OWNED_VALUE_GROUPS, VALUE_CONFIRM, VALUE_GROUPS, type ValueGroupId } from '../value-groups';
 
 // Until the screens read the registry directly, VALUE_GROUPS and the registry must agree.
 const REGISTRY_GROUP: Record<ValueGroupId | keyof typeof OWNED_VALUE_GROUPS, SettingGroup> = {

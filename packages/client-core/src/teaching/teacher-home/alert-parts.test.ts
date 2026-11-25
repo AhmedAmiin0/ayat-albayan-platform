@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { bellRow, lesson, TZ } from './alerts-fixture.js';
-import { alertParts, type PartsOptions } from './alert-parts.js';
-import type { TodayAlert } from './today-alerts.js';
+import { bellRow, lesson, TZ } from './alerts-fixture';
+import { alertParts, type PartsOptions } from './alert-parts';
+import type { TodayAlert } from './today-alerts';
 
 const O: PartsOptions = { clock: { tz: TZ, cycle: '24', locale: 'ar' }, names: () => 'سهيلة' };
 const L = lesson({ id: 'a' }); // 16:00 Riyadh

@@ -1,4 +1,4 @@
-import type { ProbeAnswer } from '../../../core/http/index.js';
+import type { ProbeAnswer } from '../../../core/http';
 
 /** What the four apps show: the app, the planned screen or the outage one. */
 export type MaintenanceView = 'open' | 'maintenance' | 'down';

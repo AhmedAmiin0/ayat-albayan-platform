@@ -1,8 +1,8 @@
 import type { ActiveCallView, CallIceServer } from '@ab/shared';
-import { acceptRinging, beginCall, hangUp, teardown, type CallRuntime } from './call-actions.js';
-import type { CallPeer } from './call-peer.js';
-import type { CallDerived, CallSession, CallTarget } from './call-phase.js';
-import type { CallPlatform, NoticeAction, PeerMaker } from './call-platform.js';
+import { acceptRinging, beginCall, hangUp, teardown, type CallRuntime } from './call-actions';
+import type { CallPeer } from './call-peer';
+import type { CallDerived, CallSession, CallTarget } from './call-phase';
+import type { CallPlatform, NoticeAction, PeerMaker } from './call-platform';
 
 export interface CallStoreState {
   session: CallSession | null;

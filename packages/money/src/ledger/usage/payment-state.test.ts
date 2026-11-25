@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { convertPayment, netPaid, netPaidIn, paymentState } from './payment-state.js';
+import { convertPayment, netPaid, netPaidIn, paymentState } from './payment-state';
 
 describe('paymentState («مدفوع جزئيًا» is derived)', () => {
   it('none / partial / full by cents', () => {

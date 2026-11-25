@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { normalizeArabic } from '@ab/core';
 import { weekdayDayMonth } from '@ab/time';
-import { joinNames } from './booking-confirmation.js';
-import { quickReplyPayload, type QuickReplyIntent } from '../replies/quick-reply.js';
-import type { OutboundTemplate } from '../templates/templates.js';
-import { lenientString, parseOrNull } from '../payload/index.js';
+import { joinNames } from './booking-confirmation';
+import { quickReplyPayload, type QuickReplyIntent } from '../replies/quick-reply';
+import type { OutboundTemplate } from '../templates/templates';
+import { lenientString, parseOrNull } from '../payload';
 
 // Rating buttons (migration 195); a tap reopens the 24 h window (docs/12 §3.5).
 

@@ -1,1 +1,1 @@
-export { type LocalizedName } from './localized-name.types.js';
+export { type LocalizedName } from './localized-name.types';

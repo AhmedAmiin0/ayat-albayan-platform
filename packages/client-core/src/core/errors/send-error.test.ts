@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { sendErrorReason } from './send-error.js';
+import { sendErrorReason } from './send-error';
 
 const errors = {
   '131042': 'billing',

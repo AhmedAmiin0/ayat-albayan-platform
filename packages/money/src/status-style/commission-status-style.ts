@@ -1,6 +1,6 @@
-import type { AssistantCommissionStatus } from '../assistant/commission.js';
-import type { WalletState } from '../assistant/index.js';
-import type { StatusStyle } from './status-style.js';
+import type { AssistantCommissionStatus } from '../assistant/commission';
+import type { WalletState } from '../assistant';
+import type { StatusStyle } from './status-style';
 
 /** A sales commission (docs/07 §6): earned is settled money (fill); voided is struck, in the danger tone (shape carries the state). */
 export const commissionStatusStyle: Record<AssistantCommissionStatus, StatusStyle> = {

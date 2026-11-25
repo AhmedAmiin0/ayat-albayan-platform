@@ -1,4 +1,4 @@
-import { SEED_ENTRIES, type SeedEntry } from './seed-entries.js';
+import { SEED_ENTRIES, type SeedEntry } from './seed-entries';
 
 /** One element of config_seed(entries jsonb, …): the table's metadata columns only, never a value. */
 export interface ConfigSeedRow {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { driverKeys, driverMissing } from './driver-keys.js';
+import { driverKeys, driverMissing } from './driver-keys';
 
 describe('driverKeys / driverMissing (docs/19: readiness before a driver switch)', () => {
   it('crm needs only the CRM base and key, on either line', () => {

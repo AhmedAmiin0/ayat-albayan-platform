@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { familyChildren, isSelfChild } from './children-list.js';
+import { familyChildren, isSelfChild } from './children-list';
 
 const kid = (id: string, self = false) => ({
   id,

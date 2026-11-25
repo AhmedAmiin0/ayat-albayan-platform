@@ -1,7 +1,7 @@
-import { JUZ_COUNT, PAGE_COUNT, globalAyah, juzOf, juzPages } from '../quran/quran.js';
-import { PAGE_STARTS } from '../quran/quran-data.js';
-import type { ReportContent } from './content.js';
-import type { SurahRange } from './rules.js';
+import { JUZ_COUNT, PAGE_COUNT, globalAyah, juzOf, juzPages } from '../quran/quran';
+import { PAGE_STARTS } from '../quran/quran-data';
+import type { ReportContent } from './content';
+import type { SurahRange } from './rules';
 
 /** Pages of the current juz held, and the juz completed. */
 export interface JuzProgress {

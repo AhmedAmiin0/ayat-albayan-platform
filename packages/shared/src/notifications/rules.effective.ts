@@ -1,6 +1,6 @@
-import type { NotificationKey } from './catalogue/catalogue.js';
-import type { NotificationChannel, NotificationEntry } from './catalogue/catalogue.types.js';
-import { legacyParts, type RuleSettings } from './rules.legacy.js';
+import type { NotificationKey } from './catalogue/catalogue';
+import type { NotificationChannel, NotificationEntry } from './catalogue/catalogue.types';
+import { legacyParts, type RuleSettings } from './rules.legacy';
 import {
   isTimedKey,
   RULE_TIMING_SCHEMAS,
@@ -8,7 +8,7 @@ import {
   type EffectiveRule,
   type NotificationRuleRow,
   type RulesMode,
-} from './rules.types.js';
+} from './rules.types';
 
 export interface ResolveInput {
   mode: RulesMode;

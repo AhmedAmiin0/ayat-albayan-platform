@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { clockOfHhmm, clockRange, isolateClock } from './clock.js';
+import { clockOfHhmm, clockRange, isolateClock } from './clock';
 
 const rangeHhmm = (from: string, to: string, opts: { cycle: '12' | '24'; locale: 'ar' | 'en' }) =>
   clockRange(

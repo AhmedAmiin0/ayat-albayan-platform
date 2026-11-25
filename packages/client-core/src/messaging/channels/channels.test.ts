@@ -8,7 +8,7 @@ import {
   channelUploadPath,
   olderCursor,
   threadMessages,
-} from './channels.js';
+} from './channels';
 
 const NEW = { kind: 'text', attachment: null, reply_to: null, read_by_all: false, client_id: null } as const;
 const msg = (id: string, at: string) => ({ id, body: id, sender_role: 'guardian' as const, sender_name: '', mine: false, created_at: at, edited: false, deleted: false, ...NEW });

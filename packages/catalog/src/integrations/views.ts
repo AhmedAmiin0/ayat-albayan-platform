@@ -1,4 +1,4 @@
-import type { IntegrationGroup, IntegrationKey } from './keys/index.js';
+import type { IntegrationGroup, IntegrationKey } from './keys';
 
 /** Where the value in use comes from: the database, the server env, or nowhere. */
 export type IntegrationSource = 'db' | 'env' | 'unset';

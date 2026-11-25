@@ -1,6 +1,6 @@
 import type { WaLine } from '@ab/catalog';
 import { z } from 'zod';
-import type { TemplateView } from './template-views.js';
+import type { TemplateView } from './template-views';
 
 // Routing per number (docs/23 phase 5, docs/23c decision 9): a template's own number and the per-number
 // template sync. Ids only, never a token.

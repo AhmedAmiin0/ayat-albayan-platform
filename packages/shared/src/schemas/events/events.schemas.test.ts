@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { EVENT_KINDS, parseDomainEvent } from './events.schemas.js';
+import { EVENT_KINDS, parseDomainEvent } from './events.schemas';
 
 const ID = '7d3f6a52-8f4e-4c55-9f0e-5a2b1c3d4e5f';
 const PROBE = '0b6c1d2e-3f40-4a51-8b62-7c8d9e0f1a2b';

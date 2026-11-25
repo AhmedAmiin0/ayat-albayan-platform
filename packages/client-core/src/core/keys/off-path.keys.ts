@@ -1,4 +1,4 @@
-import type { OffPathKeys } from './off-path.keys.types.js';
+import type { OffPathKeys } from './off-path.keys.types';
 
 // Keys kept outside the API path roots on purpose (docs/57 G3). No write refreshes them:
 // - a signed file link: invalidating ['threads'] or ['portal'] (every send, every opened chat)

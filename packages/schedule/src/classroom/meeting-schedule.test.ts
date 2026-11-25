@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { canJoinMeeting, createMeetingSchema, meetingState, meetingWindow, plannedEnd, scheduleProblem } from './internal-meetings.js';
-import { addMeetingInviteesSchema, meetingInviteeInputSchema, updateMeetingSchema } from './meeting-invites.js';
+import { canJoinMeeting, createMeetingSchema, meetingState, meetingWindow, plannedEnd, scheduleProblem } from './internal-meetings';
+import { addMeetingInviteesSchema, meetingInviteeInputSchema, updateMeetingSchema } from './meeting-invites';
 
 const NOW = new Date('2026-10-12T10:00:00Z');
 const UUID = '00000000-0000-4000-8000-000000000001';

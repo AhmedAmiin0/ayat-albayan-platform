@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { googleDriveSchema, googleSettingsSchema, googleStudentMapSchema, googleTeacherMapSchema } from './schemas.js';
+import { googleDriveSchema, googleSettingsSchema, googleStudentMapSchema, googleTeacherMapSchema } from './schemas';
 
 const FILE = '1AbCdEfGhIjKlMnOpQrStUv';
 

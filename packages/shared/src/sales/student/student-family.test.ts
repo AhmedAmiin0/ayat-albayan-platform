@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseSalesFamily } from './student-family.js';
+import { parseSalesFamily } from './student-family';
 
 const FAMILY = {
   guardian_name: 'ولي الأمر',

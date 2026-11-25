@@ -1,5 +1,5 @@
 import { toCents } from '@ab/core';
-import { partPaid } from './payment-state.js';
+import { partPaid } from './payment-state';
 
 // A stopped course owes subscriptions.stop_owed_amount, not its price (migration 20261106000100).
 

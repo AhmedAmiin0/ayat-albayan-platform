@@ -6,7 +6,7 @@ import {
   appSendRefusal,
   canSendViaWhatsApp,
   stoppedByWindow,
-} from '../whatsapp-send.js';
+} from '../whatsapp-send';
 
 const text = {
   direction: 'outbound' as const,

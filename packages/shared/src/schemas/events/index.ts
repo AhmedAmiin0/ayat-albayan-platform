@@ -1,1 +1,1 @@
-export * from './events.schemas.js';
+export * from './events.schemas';

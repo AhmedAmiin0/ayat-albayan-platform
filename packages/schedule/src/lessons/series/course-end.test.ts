@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { courseEndsOn, daysBetween, timeGroups } from './day-times.js';
+import { courseEndsOn, daysBetween, timeGroups } from './day-times';
 
 const groups = (byday: number[], dayTimes: { weekday: number; startTimeLocal: string }[] = []) =>
   timeGroups({ byday, startTimeLocal: '17:00', dayTimes });

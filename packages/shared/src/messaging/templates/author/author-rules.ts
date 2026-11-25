@@ -1,9 +1,9 @@
 import type { Permission } from '@ab/catalog';
-import { OWN_BUTTON_TEMPLATES, type TemplateSender } from '../restricted-templates.js';
-import type { TemplateView } from '../template-views.js';
-import type { AuthorCategory } from './template-edit.js';
-import { isCodeBound } from './code-bound.js';
-import { editRoute } from './edit-limits.js';
+import { OWN_BUTTON_TEMPLATES, type TemplateSender } from '../restricted-templates';
+import type { TemplateView } from '../template-views';
+import type { AuthorCategory } from './template-edit';
+import { isCodeBound } from './code-bound';
+import { editRoute } from './edit-limits';
 
 // Sales authoring: templates.author lets a role write its own templates for the
 // allow-list. It never lifts the allow-list and never opens the templates.manage routes.

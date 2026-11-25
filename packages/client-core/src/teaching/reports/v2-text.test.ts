@@ -1,7 +1,7 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import en from '@ab/shared/i18n/en.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
-import { fillSlots, rangeLabel, rangeMeta, rangePages, rangeSummary } from '../../index.js';
+import { fillSlots, rangeLabel, rangeMeta, rangePages, rangeSummary } from '../..';
 
 const v2 = ar.reports.v2;
 const mulk = { surah: 67, from: 16, to: 22 };

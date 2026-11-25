@@ -1,4 +1,4 @@
-import type { Dsn, ErrorReport } from './error-report.types.js';
+import type { Dsn, ErrorReport } from './error-report.types';
 
 const MAX_TEXT = 4_000;
 

@@ -1,5 +1,5 @@
-import { weekdayOfDate } from './calendar/index.js';
-import { localDateIn, offsetMinutesIn, wallToUtc } from './zoned.js';
+import { weekdayOfDate } from './calendar';
+import { localDateIn, offsetMinutesIn, wallToUtc } from './zoned';
 
 // Local days as numbers (docs/34 §7, row k3b): a «local day» is the UTC-midnight epoch ms of a
 // calendar date in some zone (y/m/d only). Occurrence generation, booking, payouts and the

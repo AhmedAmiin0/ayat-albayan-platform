@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { offeredOwe, oweOptions } from './course-refund.js';
-import { mayLowerOwe } from './course-stop-money.js';
+import { offeredOwe, oweOptions } from './course-refund';
+import { mayLowerOwe } from './course-stop-money';
 
 // Lowering what is owed below attended × rate (nothing, a smaller custom
 // amount) is a refund holder's call on this student; the sheets hide it from everyone else.

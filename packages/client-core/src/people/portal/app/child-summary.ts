@@ -5,9 +5,9 @@ import type {
   PortalReport,
   PortalReports,
 } from '@ab/shared';
-import { isAhead } from '../lesson-window.js';
-import { monthsOf } from '../history.js';
-import { newReportCount } from '../report-seen.js';
+import { isAhead } from '../lesson-window';
+import { monthsOf } from '../history';
+import { newReportCount } from '../report-seen';
 
 // Each read may still be loading (undefined).
 

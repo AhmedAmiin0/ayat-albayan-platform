@@ -1,1 +1,1 @@
-export { settingsChanges, settingsUpdateSchema, settingZod, storedSettingZod } from './schema.js';
+export { settingsChanges, settingsUpdateSchema, settingZod, storedSettingZod } from './schema';

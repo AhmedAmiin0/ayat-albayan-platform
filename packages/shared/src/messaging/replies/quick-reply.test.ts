@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { payloadRef, quickReplyIntent, quickReplyPayload } from './quick-reply.js';
+import { payloadRef, quickReplyIntent, quickReplyPayload } from './quick-reply';
 
 const LESSON = '7f0c2c4e-1b2a-4c3d-9e8f-0a1b2c3d4e5f';
 

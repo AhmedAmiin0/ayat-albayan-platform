@@ -20,7 +20,7 @@ describe('formatRunningHead without the Umm al-Qura calendar (e.g. Hermes)', () 
     }
     Intl.DateTimeFormat = NoIslamic as typeof Intl.DateTimeFormat;
     vi.resetModules();
-    const { formatRunningHead } = await import('../running-head.js');
+    const { formatRunningHead } = await import('../running-head');
     expect(formatRunningHead(new Date('2026-10-01T12:20:00Z'))).toEqual({
       gregorian: 'الخميس 1 أكتوبر 2026',
       hijri: '',

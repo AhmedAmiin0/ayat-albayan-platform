@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { palette, type ThemeName } from '../theme.js';
+import { palette, type ThemeName } from '../theme';
 
 // «Emerald Mint»: white pages, white text on the emerald primary, a mint sidebar.
 it('light tokens are the emerald mint palette', () => {

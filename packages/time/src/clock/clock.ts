@@ -1,6 +1,6 @@
 // Built on h23 parts plus our own AM/PM suffix so every engine, Hermes included, prints the same.
 import type { Locale } from '@ab/core';
-import type { ClockCycle } from './clock-pref.js';
+import type { ClockCycle } from './clock-pref';
 
 export interface ClockOptions {
   /** IANA zone the instant is read in. */

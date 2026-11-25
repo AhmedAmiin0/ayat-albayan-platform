@@ -1,6 +1,6 @@
 import { STUDENT_RECORDING_STATUSES } from '@ab/schedule';
 import { z } from 'zod';
-import { lessonFileViewSchema } from './lesson-files.js';
+import { lessonFileViewSchema } from './lesson-files';
 
 // A lesson's assets together: the recording(s), the reports' PDFs and the lesson files. Staff read
 // GET /lessons/:id/files; the family reads its whitelisted twin under /portal (no staff names).

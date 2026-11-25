@@ -1,6 +1,6 @@
 import type { ActiveCallView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { callPhase, deriveCall, endedOnServer, ringingFor, talkedSeconds, UNANSWERED_MS, type CallSession } from './call-phase.js';
+import { callPhase, deriveCall, endedOnServer, ringingFor, talkedSeconds, UNANSWERED_MS, type CallSession } from './call-phase';
 
 const session = (patch: Partial<CallSession> = {}): CallSession => ({
   id: 'c1', phone: '+966501234567', name: 'أم سهيلة', direction: 'outbound', startedAt: 1_000, muted: false, speaker: false, minimised: false, ended: false, ...patch,

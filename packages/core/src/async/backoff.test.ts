@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { backoffDelay, withJitter } from './retry/index.js';
+import { backoffDelay, withJitter } from './retry';
 
 const curve = { baseMs: 1_000, factor: 3, capMs: 20_000 };
 

@@ -9,13 +9,13 @@ export {
   type AlertKind,
   type Density,
   type HomePrefs,
-} from './home-prefs.js';
+} from './home-prefs';
 export {
   lessonChange,
   type ChangeContext,
   type ChangeWho,
   type LessonChange,
-} from './lesson-changes.js';
+} from './lesson-changes';
 export {
   addMonths,
   lessonsByDay,
@@ -25,8 +25,8 @@ export {
   monthWindowIn,
   type MonthCell,
   type MonthKey,
-} from './month-grid.js';
-export { todayAlerts, type AlertInput, type TodayAlert } from './today-alerts.js';
+} from './month-grid';
+export { todayAlerts, type AlertInput, type TodayAlert } from './today-alerts';
 export {
   alertParts,
   type AlertAction,
@@ -34,12 +34,12 @@ export {
   type AlertText,
   type ChangeText,
   type PartsOptions,
-} from './alert-parts.js';
-export { alertLine, type AlertWords } from './alert-line.js';
-export { monthCells, type MonthCellsInput, type MonthDayView } from './month-cells.js';
+} from './alert-parts';
+export { alertLine, type AlertWords } from './alert-line';
+export { monthCells, type MonthCellsInput, type MonthDayView } from './month-cells';
 export {
   prefSwitches,
   type PrefSwitch,
   type PrefSwitchGroups,
   type PrefSwitchWords,
-} from './pref-switches.js';
+} from './pref-switches';

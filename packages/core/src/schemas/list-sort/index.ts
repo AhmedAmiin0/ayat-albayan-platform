@@ -1,2 +1,2 @@
-export * from './list-sort.js';
-export type * from './list-sort.types.js';
+export * from './list-sort';
+export type * from './list-sort.types';

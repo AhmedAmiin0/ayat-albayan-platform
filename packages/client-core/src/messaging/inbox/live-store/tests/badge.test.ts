@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { chatLiveKey } from '../../inbox-live.js';
-import { createInboxLive } from '../live-store.js';
+import { chatLiveKey } from '../../inbox-live';
+import { createInboxLive } from '../live-store';
 
 const OPEN = '+966500000001';
 const OTHER = '+966500000002';

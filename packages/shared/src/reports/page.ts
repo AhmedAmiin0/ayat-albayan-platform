@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { ATTENDANCES, GRADES, PROGRAMS } from '@ab/catalog';
-import { REPORT_RUBRICS, type Rubric } from './rules.js';
-import { reportContentSchema } from './v2/content.js';
+import { REPORT_RUBRICS, type Rubric } from './rules';
+import { reportContentSchema } from './v2/content';
 
 // The report's live page: https://app.ayatalbayan.com/report/<public_id>, read
 // from the SAVED report (never the PDF), with the teacher's files and the PDF download.

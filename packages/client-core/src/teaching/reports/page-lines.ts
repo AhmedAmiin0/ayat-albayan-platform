@@ -1,5 +1,5 @@
 import type { ReportPageReport } from '@ab/shared';
-import { reportV2Lines, type ReportLine, type ReportV2Text } from './v2-lines.js';
+import { reportV2Lines, type ReportLine, type ReportV2Text } from './v2-lines';
 
 /** The original form's text answers, in its words. */
 export interface V1Words {

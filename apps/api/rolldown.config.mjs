@@ -6,7 +6,6 @@ import swc from 'unplugin-swc';
 import { ENTRIES } from './bundle/entries.mjs';
 import { isExternal } from './bundle/externals.mjs';
 import { readManifest } from './bundle/manifest.mjs';
-import { workspaceSource } from './bundle/workspace-source.mjs';
 
 const root = import.meta.dirname;
 const { dependencies } = readManifest(root);
@@ -15,15 +14,9 @@ const bundle = ([name, input]) => ({
   input: { [name]: input },
   platform: 'node',
   external: isExternal(dependencies),
-  resolve: {
-    alias: { '@': join(root, 'src') },
-    extensionAlias: { '.js': ['.ts', '.js'] },
-  },
+  resolve: { alias: { '@': join(root, 'src') } },
   // swc keeps Nest's decorator metadata (emitDecoratorMetadata) that oxc would not emit.
-  plugins: [
-    workspaceSource(join(root, '../../packages')),
-    swc.rolldown({ module: { type: 'es6' } }),
-  ],
+  plugins: [swc.rolldown({ module: { type: 'es6' } })],
   output: { dir: 'dist', format: 'cjs', sourcemap: true, codeSplitting: false },
 });
 

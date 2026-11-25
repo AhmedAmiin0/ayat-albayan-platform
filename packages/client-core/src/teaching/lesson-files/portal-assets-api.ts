@@ -6,8 +6,8 @@ import {
   type PortalLessonAssets,
   type PortalRecordings,
 } from '@ab/shared';
-import type { ApiClient } from '../../core/http/index.js';
-import { pathKey } from '../../core/keys/index.js';
+import type { ApiClient } from '../../core/http';
+import { pathKey } from '../../core/keys';
 
 // Under the portal's key so the portal's one invalidation refreshes them too.
 

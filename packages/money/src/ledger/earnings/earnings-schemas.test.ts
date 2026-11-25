@@ -4,7 +4,7 @@ import {
   teacherPaymentCreateSchema,
   teacherPaymentListQuery,
   teacherReceiptUploadSchema,
-} from './earnings-schemas.js';
+} from './earnings-schemas';
 
 const ID = '5a000000-0000-4000-8000-000000000001';
 const base = { amount: 100, method: 'bank', paidAt: '2026-10-01T09:00:00Z', clientRequestId: ID };

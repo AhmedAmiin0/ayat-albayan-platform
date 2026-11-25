@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canSkip, TEST_BYPASS, testCheckSchema, userOnlyFlags, type TestCheck } from './test-bypass.js';
+import { canSkip, TEST_BYPASS, testCheckSchema, userOnlyFlags, type TestCheck } from './test-bypass';
 
 const BOTH = { userIsTest: true, studentIsTest: true };
 const NONE = { userIsTest: false, studentIsTest: false };

@@ -1,7 +1,7 @@
 // Price rules of ayatalbayan.com/calculator (docs/08 §1, §3). Same arithmetic order as the site's
 // bundle (rate = base / lessons; rate × n; ceil(÷ divisor)) so float results match it exactly.
-import { BULK, STARTER, type PricingDuration } from '../catalog.js';
-import { currencyForCountry } from '../currency.js';
+import { BULK, STARTER, type PricingDuration } from '../catalog';
+import { currencyForCountry } from '../currency';
 
 /** Site lE, before the currency step: n lessons at bulk's per-lesson rate from 28 up, else starter's. */
 export function customBase(count: number, duration: PricingDuration): number {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError, userErrors } from '../../index.js';
+import { ApiError, userErrors } from '../..';
 
 const errors = userErrors(() => ({ errors: { generic: 'عام', users_email_taken: 'مأخوذ' }, tables: { lessons: 'الحلقات' } }));
 

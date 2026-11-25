@@ -1,6 +1,6 @@
 import type { MessageView, ThreadDetail, ThreadView } from '@ab/shared';
-import type { ThreadPages } from '../inbox/index.js';
-import { provisionalMessage } from './provisional.js';
+import type { ThreadPages } from '../inbox';
+import { provisionalMessage } from './provisional';
 
 // Chat pages for the thread-pages tests: rows minutes apart, a page, a cache of pages.
 

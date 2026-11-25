@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { arabicLiterals, stripComments } from './arabic-literals.js';
+import { arabicLiterals, stripComments } from './arabic-literals';
 
 describe('arabicLiterals', () => {
   it('flags Arabic in string literals and JSX text', () => {

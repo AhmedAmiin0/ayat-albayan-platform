@@ -36,6 +36,8 @@
     "./metro": "./metro.cjs"
   },
   "scripts": {
+    "build": "tsgo --noEmit",
+    "dev": "tsgo --noEmit --watch",
     "typecheck": "tsgo --noEmit",
     "test": "jest"
   },

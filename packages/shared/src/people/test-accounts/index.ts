@@ -7,10 +7,10 @@ export {
   type TestCheck,
   type TestFlags,
   type TestScope,
-} from './test-bypass.js';
+} from './test-bypass';
 export {
   testFlagBodySchema,
   testFlagResultSchema,
   type TestFlagBody,
   type TestFlagResult,
-} from './test-accounts.schemas.js';
+} from './test-accounts.schemas';

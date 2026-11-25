@@ -1,4 +1,4 @@
-import type { LegalPage } from './legal.types.js';
+import type { LegalPage } from './legal.types';
 
 /** The family portal (apps/family-web): the store listing and the app link its legal pages. */
 export const FAMILY_WEB_ORIGIN = 'https://family.ayatalbayan.com';

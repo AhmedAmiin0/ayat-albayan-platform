@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { searchCursor, splitSearchCursor } from './chat-search.js';
+import { searchCursor, splitSearchCursor } from './chat-search';
 import {
   messageSearchPageSchema,
   messageSearchQuerySchema,
   searchesMessages,
-} from './message-search.js';
+} from './message-search';
 
 const ID = 'b1111111-1111-4111-8111-111111111111';
 const AT = '2026-10-01T09:30:00.123456+00:00';

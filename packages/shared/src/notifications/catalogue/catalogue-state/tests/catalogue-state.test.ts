@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { TemplateStatus, WaLine } from '@ab/catalog';
-import { TEMPLATE_KEYS } from '../../../../messaging/templates/templates.js';
+import { TEMPLATE_KEYS } from '../../../../messaging/templates/templates';
 import { SETTING_DEFAULTS, type AcademySettings } from '@ab/settings';
-import { catalogueViews, entryView, type CatalogueInputs } from '../catalogue-state.js';
-import { notificationEntry, type NotificationKey } from '../../catalogue.js';
+import { catalogueViews, entryView, type CatalogueInputs } from '../catalogue-state';
+import { notificationEntry, type NotificationKey } from '../../catalogue';
 
 const tpl = (status: TemplateStatus, line: WaLine) => ({ status, line });
 const approvedAll = new Map(TEMPLATE_KEYS.map((k) => [k, tpl('approved', 'notifications')]));

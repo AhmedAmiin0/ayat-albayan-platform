@@ -1,6 +1,6 @@
-import { INBOX_LIVE_EVENT, INBOX_LIVE_TOPIC } from '../inbox-live.js';
-import { createRejoin, isDropped } from '../../live-rejoin/index.js';
-import type { InboxLive, LiveTargets } from '../live-store/index.js';
+import { INBOX_LIVE_EVENT, INBOX_LIVE_TOPIC } from '../inbox-live';
+import { createRejoin, isDropped } from '../../live-rejoin';
+import type { InboxLive, LiveTargets } from '../live-store';
 
 /** The slice of a SupabaseClient this uses (no dependency on supabase-js here). */
 export interface LiveChannel {

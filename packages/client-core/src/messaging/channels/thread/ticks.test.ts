@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
-import { channelMessage } from './channel.fakes.test-util.js';
-import { pendingMessage } from './pending.js';
-import { ticksOf } from './ticks.js';
+import { channelMessage } from './channel.fakes.test-util';
+import { pendingMessage } from './pending';
+import { ticksOf } from './ticks';
 
 test('mine: the clock while on its way, ✓ once stored, ✓✓ once everyone read it', () => {
   const at = new Date('2026-10-27T10:00:00Z');

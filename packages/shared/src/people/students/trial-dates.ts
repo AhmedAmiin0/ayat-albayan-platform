@@ -8,7 +8,7 @@ import {
   type StudentStatus,
 } from '@ab/catalog';
 import { isCancelledLesson } from '@ab/schedule';
-import { isNotSubscribed } from './status-flow/index.js';
+import { isNotSubscribed } from './status-flow';
 
 // A new free trial for a student with no running subscription, and the trial history; pure.
 

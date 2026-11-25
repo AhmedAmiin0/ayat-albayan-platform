@@ -4,7 +4,7 @@ import {
   lessonReminder24hMessage,
   lessonReminderMessage,
   teacherReminderMessage,
-} from './params.js';
+} from './params';
 
 const LESSON = 'b1c2d3e4-0000-4000-8000-000000000001';
 // 14:00 UTC = 17:00 Riyadh = 17:00 Cairo (EEST, UTC+3 until 30 Oct 2026) = 10:00 New York.

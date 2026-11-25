@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { PEOPLE_EDIT_ERRORS, peopleStudentPatchSchema } from './people-edit.js';
-import { peopleEditStudentSchema } from './people-edit-view.js';
+import { PEOPLE_EDIT_ERRORS, peopleStudentPatchSchema } from './people-edit';
+import { peopleEditStudentSchema } from './people-edit-view';
 
 // A student's own WhatsApp number (optional, E.164), entered by staff.
 

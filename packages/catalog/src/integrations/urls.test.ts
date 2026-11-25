@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { integrationValueValid } from './checks.js';
-import { httpsUrl, livekitUrl } from './urls.js';
+import { integrationValueValid } from './checks';
+import { httpsUrl, livekitUrl } from './urls';
 
 const ok = (schema: typeof httpsUrl, raw: string) => schema.safeParse(raw).success;
 

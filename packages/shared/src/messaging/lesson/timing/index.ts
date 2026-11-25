@@ -1,1 +1,1 @@
-export { dayBeforeSendAt, reminderDue } from './timing.js';
+export { dayBeforeSendAt, reminderDue } from './timing';

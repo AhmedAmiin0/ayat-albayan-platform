@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { err, isErr, isOk, ok, toResult, unwrapOr, type Result } from './result.js';
+import { err, isErr, isOk, ok, toResult, unwrapOr, type Result } from './result';
 
 describe('Result', () => {
   it('ok / err build the two shapes', () => {

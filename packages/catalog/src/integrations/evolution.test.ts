@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { integrationValueValid } from './checks.js';
-import { driverKeys } from './driver-keys.js';
+import { integrationValueValid } from './checks';
+import { driverKeys } from './driver-keys';
 import {
   evolutionBase, evolutionBaseAllowed, evolutionInternalHosts, evolutionInternalList,
-} from './evolution.js';
-import { integrationDef, integrationEnum, WA_LINE_PROVIDERS } from './keys/index.js';
+} from './evolution';
+import { integrationDef, integrationEnum, WA_LINE_PROVIDERS } from './keys';
 
 // The Evolution driver's config (docs/19 «Evolution driver»): base URL (SSRF), pacing, keys.
 

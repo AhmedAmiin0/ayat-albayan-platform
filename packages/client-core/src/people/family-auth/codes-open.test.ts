@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { codesOpen } from './codes-open.js';
+import { codesOpen } from './codes-open';
 
 describe('codesOpen (docs/50 §6)', () => {
   it('reads the family flag for families and the staff flag for staff', () => {

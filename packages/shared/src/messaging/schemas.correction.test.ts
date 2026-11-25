@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CORRECTION_PREFIX_ROOM, threadTextSchema, WA_TEXT_MAX } from './schemas.js';
+import { CORRECTION_PREFIX_ROOM, threadTextSchema, WA_TEXT_MAX } from './schemas';
 
 // An edit is a correction: the text endpoint takes the corrected message's id.
 const ID = 'a0000000-0000-4000-8000-0000000000c1';

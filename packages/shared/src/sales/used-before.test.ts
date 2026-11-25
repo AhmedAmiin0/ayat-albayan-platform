@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { usedBeforeMax, usedBeforeProblem } from './start-date.js';
+import { usedBeforeMax, usedBeforeProblem } from './start-date';
 
 // Used lessons come with a past start date, up to every lesson but one: no fixed cap.
 const base = { startsOn: '2026-10-27', today: '2026-10-28', canSet: true, lessonsTotal: 8 };

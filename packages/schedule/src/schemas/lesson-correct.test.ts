@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { lessonCorrectSchema } from './lesson-correct.js';
+import { lessonCorrectSchema } from './lesson-correct';
 
 describe('lessonCorrectSchema', () => {
   it.each(['completed', 'no_show', 'excused', 'cancelled_by_teacher'])('accepts %s', (to) => {

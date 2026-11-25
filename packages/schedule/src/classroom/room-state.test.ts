@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { canEndLesson } from './moderation/index.js';
-import { lessonEndResultSchema, lessonRoomStateSchema, roomEnded } from './room-state.js';
+import { canEndLesson } from './moderation';
+import { lessonEndResultSchema, lessonRoomStateSchema, roomEnded } from './room-state';
 
 describe('lessonRoomStateSchema', () => {
   it('reads a live room with who is inside', () => {

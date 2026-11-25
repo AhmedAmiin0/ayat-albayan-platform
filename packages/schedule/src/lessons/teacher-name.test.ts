@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { teacherName } from './teacher-name.js';
+import { teacherName } from './teacher-name';
 
 const abrar = { display_name_ar: 'أبرار', display_name_en: 'Abrar' };
 

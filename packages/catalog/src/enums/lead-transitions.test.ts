@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { LEAD_STATUSES, type LeadStatus } from './index.js';
-import { allowedNextStatuses, canTransitionLead } from './lead-transitions.js';
+import { LEAD_STATUSES, type LeadStatus } from '.';
+import { allowedNextStatuses, canTransitionLead } from './lead-transitions';
 
 // Expected table written out independently of the implementation (R-LEAD-01).
 const ALLOWED: Record<LeadStatus, LeadStatus[]> = {

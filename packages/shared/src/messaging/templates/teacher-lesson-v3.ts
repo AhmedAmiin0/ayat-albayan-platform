@@ -1,4 +1,4 @@
-import type { TemplateCreateInput } from './template-create.js';
+import type { TemplateCreateInput } from './template-create';
 
 // Seeded by migration 20261106001300; the report link is a button only.
 

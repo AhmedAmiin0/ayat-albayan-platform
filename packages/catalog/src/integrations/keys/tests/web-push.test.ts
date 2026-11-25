@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { integrationValueValid } from '../../checks.js';
-import { INTEGRATION_GROUPS, integrationDef } from '../keys.js';
+import { integrationValueValid } from '../../checks';
+import { INTEGRATION_GROUPS, integrationDef } from '../keys';
 
 const PUBLIC_KEY = `B${'A'.repeat(86)}`;
 

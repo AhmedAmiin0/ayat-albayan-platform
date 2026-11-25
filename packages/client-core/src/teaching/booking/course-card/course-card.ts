@@ -9,8 +9,8 @@ import {
   type CourseResumePreview,
 } from '@ab/shared';
 import type { StudentStatus } from '@ab/catalog';
-import { apiErrorCode } from '../../../core/http/index.js';
-import { courseActionsKey } from '../course-actions.js';
+import { apiErrorCode } from '../../../core/http';
+import { courseActionsKey } from '../course-actions';
 
 // Course card paths, query key and parsers (rule 12) for web and mobile.
 

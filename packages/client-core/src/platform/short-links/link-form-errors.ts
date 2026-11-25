@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiError, apiErrorCode } from '../../core/http/index.js';
+import { ApiError, apiErrorCode } from '../../core/http';
 
 // What a create / edit field says when the form check or the API refuses it: the keys of
 // shortLinks.form.errors (ar.json / en.json), per field.

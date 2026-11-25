@@ -1,4 +1,4 @@
-import type { CallDirection, CallEndReason, CallStatus } from '../call-types.js';
+import type { CallDirection, CallEndReason, CallStatus } from '../call-types';
 
 // The call state machine (docs/28 §3), one truth for the API (webhook, routes, sweeper). Statuses only
 // move forward (connecting → ringing → accepting → active → ended); an event that would move one back,

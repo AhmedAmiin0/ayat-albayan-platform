@@ -15,7 +15,7 @@ export {
   parseResumePreview,
   statusRoute,
   type StatusRoute,
-} from './course-card.js';
+} from './course-card';
 export {
   type CardWords,
   courseCardLines,
@@ -29,12 +29,12 @@ export {
   type PreviewWords,
   resumePreviewLines,
   type ResumeWords,
-} from './course-card-text.js';
+} from './course-card-text';
 export {
   type PackageCatalog,
   packageCardLines,
   packageWordsOf,
   type PackageLines,
   type PackageWords,
-} from './course-card-package.js';
-export { type StopDone, stopDoneLines, type StopDoneWords } from './course-stop-done.js';
+} from './course-card-package';
+export { type StopDone, stopDoneLines, type StopDoneWords } from './course-stop-done';

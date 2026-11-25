@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '../http/index.js';
-import { chatListErrorWords, type ChatListErrorText } from './chat-list-errors.js';
+import { ApiError } from '../http';
+import { chatListErrorWords, type ChatListErrorText } from './chat-list-errors';
 
 const words: ChatListErrorText = { limit: 'limit', nameTaken: 'taken', notFound: 'gone', saveError: 'failed' };
 const listErrorText = chatListErrorWords(() => words);

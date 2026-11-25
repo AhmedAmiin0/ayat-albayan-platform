@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { continueFrom, prefillDays, prefillPicks } from './course-follow.js';
+import { continueFrom, prefillDays, prefillPicks } from './course-follow';
 
 const sunday = { weekday: 0, startTimeLocal: '17:00' };
 const days = [sunday, { weekday: 2, startTimeLocal: '19:30' }];

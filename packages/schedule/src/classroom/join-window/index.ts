@@ -4,4 +4,4 @@ export {
   type JoinWindow,
   type JoinWindowConfig,
   type WindowLesson,
-} from './join-window.js';
+} from './join-window';

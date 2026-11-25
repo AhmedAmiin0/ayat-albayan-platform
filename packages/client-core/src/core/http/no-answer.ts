@@ -1,4 +1,4 @@
-import { ApiError } from './api-error.js';
+import { ApiError } from './api-error';
 
 /**
  * A request that ended WITHOUT an answer we can trust (a deadline, a dropped connection, an abort,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, weekdayOf, weekStart } from './week.js';
+import { addDays, weekdayOf, weekStart } from './week';
 
 describe('academy-week math (R-SCH-01)', () => {
   it('adds days across months and years, and back', () => {

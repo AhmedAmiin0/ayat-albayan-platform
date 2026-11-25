@@ -1,4 +1,4 @@
-import type { SettingDef } from '../defs.js';
+import type { SettingDef } from '../defs';
 
 /** Off (docs/33): no last seen written or shown; Realtime refuses a track (migration 985). */
 export const PRESENCE_SETTINGS = {

@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   bareUrl, isFull, linkState, linkStateLook, sendCounts, sendLook, targetHost, usageParts,
   usageText,
-} from './link-format.js';
-import { detail } from './short-links.test-util.js';
+} from './link-format';
+import { detail } from './short-links.test-util';
 
 const words = { usedOf: '{used} من {max}', usedUnlimited: '{used} · بلا حد' };
 

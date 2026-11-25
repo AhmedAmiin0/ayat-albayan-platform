@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildEnvelope, scrub } from './envelope.js';
+import { buildEnvelope, scrub } from './envelope';
 
 const dsn = { endpoint: 'https://e.example.com/api/1/envelope/', key: 'k', dsn: 'https://k@e.example.com/1' };
 

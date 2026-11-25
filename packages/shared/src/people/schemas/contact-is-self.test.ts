@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { bookingRequestSchema } from '../../schemas/index.js';
-import { studentCreateSchema, studentUpdateSchema } from './people.js';
+import { bookingRequestSchema } from '../../schemas';
+import { studentCreateSchema, studentUpdateSchema } from './people';
 
 // docs/30 §1: whose WhatsApp number it is is optional everywhere a student is described.
 

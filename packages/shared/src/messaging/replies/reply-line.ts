@@ -1,5 +1,5 @@
 import type { WaLine } from '@ab/catalog';
-import { sessionWindowOpen } from '../wa.js';
+import { sessionWindowOpen } from '../wa';
 
 export interface ReplyLineInput {
   /** Newest inbound received on the chat line (v_threads.last_chat_inbound_at). */

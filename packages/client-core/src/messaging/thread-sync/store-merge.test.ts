@@ -1,7 +1,7 @@
 import type { MessageView, SyncMessage } from '@ab/shared';
 import type { MessageStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
-import { mergeRead, UNSYNCED_AT } from './store-merge.js';
+import { mergeRead, UNSYNCED_AT } from './store-merge';
 
 const ID = 'c0000000-0000-4000-8000-000000000001';
 const T = '2026-11-06T10:00:01.000001+00:00';

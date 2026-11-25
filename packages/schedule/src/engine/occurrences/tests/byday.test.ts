@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ruleOccurrences, type OccurrenceTiming } from '../occurrences.js';
+import { ruleOccurrences, type OccurrenceTiming } from '../occurrences';
 
 // Asia/Riyadh is UTC+3 all year. 2026-10-04 is a Sunday; 2026-10-07 a Wednesday.
 const RULE: OccurrenceTiming = {

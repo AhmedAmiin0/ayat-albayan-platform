@@ -6,7 +6,7 @@ import {
 } from '@ab/shared';
 import { JOIN_ROLES, type RoomJoinResult } from '@ab/schedule';
 import { z } from 'zod';
-import type { ApiClient } from '../../core/http/index.js';
+import type { ApiClient } from '../../core/http';
 
 // The family portal's writes: the guest admission to our classroom (inside the window only), the
 // signed /join link that opens it in the phone's browser (no second sign-in), and a signed link

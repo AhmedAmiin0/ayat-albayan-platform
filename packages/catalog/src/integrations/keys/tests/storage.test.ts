@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { integrationValueValid } from '../../checks.js';
-import { INTEGRATION_GROUPS, integrationDef, integrationEnum } from '../keys.js';
+import { integrationValueValid } from '../../checks';
+import { INTEGRATION_GROUPS, integrationDef, integrationEnum } from '../keys';
 
 describe('object storage in «التكاملات» (docs/45)', () => {
   it('the driver is a select, supabase first (the default until the cut-over)', () => {

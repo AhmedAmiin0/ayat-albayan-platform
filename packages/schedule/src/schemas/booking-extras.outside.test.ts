@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bookingBaseSchema } from './scheduling/index.js';
+import { bookingBaseSchema } from './scheduling';
 
 const RULE = {
   teacherId: '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11',

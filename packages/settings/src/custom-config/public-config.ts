@@ -1,5 +1,5 @@
 import type { Json } from '@ab/core';
-import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '../public.js';
+import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '../public';
 
 // GET /settings/public (no login): the composite read model the apps load before and after login.
 // It joins two stores one way: the public settings (registry) and the public custom values.

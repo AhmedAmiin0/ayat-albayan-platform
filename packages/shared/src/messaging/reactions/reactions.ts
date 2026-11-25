@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { MessageStatus } from '@ab/catalog';
-import type { MessageView } from '../chat/views.js';
-import { isPayloadOfType, lenientText, parseOrNull, payloadOfType } from '../payload/index.js';
+import type { MessageView } from '../chat/views';
+import { isPayloadOfType, lenientText, parseOrNull, payloadOfType } from '../payload';
 
 // WhatsApp message reactions: hold a message to react. WhatsApp is 1:1: one
 // reaction from the contact (theirs) and one from the academy (ours) per message. Pure: the API,

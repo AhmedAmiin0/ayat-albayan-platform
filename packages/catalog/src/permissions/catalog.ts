@@ -1,8 +1,8 @@
-import type { UserRole } from './roles/index.js';
-import { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data.js';
-import { PORTAL_FIXED_GRANTS } from './catalog.portal.js';
+import type { UserRole } from './roles';
+import { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data';
+import { PORTAL_FIXED_GRANTS } from './catalog.portal';
 
-export { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data.js';
+export { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data';
 
 export type Permission = (typeof PERMISSION_ROWS)[number]['key'];
 

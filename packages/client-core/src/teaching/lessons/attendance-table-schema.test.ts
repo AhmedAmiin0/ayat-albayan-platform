@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { attendanceTableSchema } from './attendance-table-schema.js';
+import { attendanceTableSchema } from './attendance-table-schema';
 
 const totals = {
   held: 1, late: 0, absent: 0, excused: 0,

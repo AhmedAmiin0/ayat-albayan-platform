@@ -11,8 +11,8 @@ import {
   type ShortLinkPerson,
 } from '@ab/shared';
 import { z } from 'zod';
-import { ApiError, toQueryString, type ApiClient } from '../../core/http/index.js';
-import { listKey, pathKey } from '../../core/keys/index.js';
+import { ApiError, toQueryString, type ApiClient } from '../../core/http';
+import { listKey, pathKey } from '../../core/keys';
 
 // docs/19: staff routes under /short-links; the web gate /l/<code> reads the public view.
 

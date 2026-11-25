@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CodedError, errorCode, errorMessage, errorTextOf } from './errors.js';
+import { CodedError, errorCode, errorMessage, errorTextOf } from './errors';
 
 describe('error helpers', () => {
   it('errorMessage reads an Error, else stringifies', () => {

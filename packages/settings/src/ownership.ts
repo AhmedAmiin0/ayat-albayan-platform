@@ -1,4 +1,4 @@
-import { camelKey } from './camel.js';
+import { camelKey } from './camel';
 
 /** The module page / route that writes a key owned outside the generic settings write path (docs/26 §2f, §5). */
 export type SettingOwner = 'messages_gate' | 'communications' | 'google_sync' | 'notifications';

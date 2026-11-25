@@ -6,7 +6,7 @@ import {
   isOpenLesson,
   OCCUPYING_LESSON_STATUSES,
   STATUS_ROUTE_EVENTS,
-} from '../state-machine.js';
+} from '../state-machine';
 
 describe('lesson events (R-SCH-03, R-SCH-07, R-SCH-08)', () => {
   it('a scheduled lesson offers every action', () => {

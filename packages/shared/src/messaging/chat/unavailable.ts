@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { WA_ERROR } from '@ab/catalog';
-import { isPayloadOfType, parseOrNull, payloadOfType } from '../payload/index.js';
+import { isPayloadOfType, parseOrNull, payloadOfType } from '../payload';
 
 /**
  * Meta's error on an inbound `unsupported` whose content it could not deliver: «This message is

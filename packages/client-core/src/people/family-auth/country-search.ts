@@ -1,5 +1,5 @@
 import { asciiDigits, type Locale, matchesQuery } from '@ab/core';
-import { COUNTRIES, type Country, nameOf, USUAL } from './countries.js';
+import { COUNTRIES, type Country, nameOf, USUAL } from './countries';
 
 /** A calling-code query yields its digits (native digits folded); a name yields null. */
 function codeOf(query: string): string | null {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { normalizePhone } from '../phone/index.js';
+import { normalizePhone } from '../phone';
 
 /** Any typed phone → E.164 (R-STU-02). The issue message is the PhoneResult reason. */
 export const phoneE164 = z.string().transform((value, ctx) => {

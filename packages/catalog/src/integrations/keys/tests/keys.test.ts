@@ -8,7 +8,7 @@ import {
   isIntegrationKey,
   isIntegrationPlainKey,
   isIntegrationSecretKey,
-} from '../keys.js';
+} from '../keys';
 
 describe('integration keys registry', () => {
   it('lists every plain and secret key once, grouped in page order', () => {

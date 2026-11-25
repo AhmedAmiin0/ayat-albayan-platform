@@ -1,6 +1,6 @@
 import type { StudentStatus } from '@ab/catalog';
 import { DISCOUNTS, renewalPricing, type LastPackage, type RenewalPricing } from '@ab/money';
-import { isPackageEnded } from '../people/students/index.js';
+import { isPackageEnded } from '../people/students';
 
 // Which of her students is due for renewal and the calculator inputs it opens with; pure.
 

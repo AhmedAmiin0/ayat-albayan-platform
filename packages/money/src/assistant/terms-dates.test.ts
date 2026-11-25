@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { earliestTermStart, termStartError } from './terms-dates.js';
+import { earliestTermStart, termStartError } from './terms-dates';
 
 const TODAY = '2026-10-06';
 

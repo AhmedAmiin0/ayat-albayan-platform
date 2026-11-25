@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { outsideSlotsResponseSchema } from './outside-slots.js';
+import { outsideSlotsResponseSchema } from './outside-slots';
 
 const valid = {
   server_now: '2026-10-01T08:00:00.000Z',

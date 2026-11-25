@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { UserRole } from './roles.js';
-import { GRANTABLE_PERMISSIONS, type Permission } from '../catalog.js';
+import type { UserRole } from './roles';
+import { GRANTABLE_PERMISSIONS, type Permission } from '../catalog';
 
 // A role's base_role (its scope) is fixed at creation; only its names and grants change later.
 

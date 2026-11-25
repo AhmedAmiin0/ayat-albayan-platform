@@ -1,4 +1,4 @@
-import { ApiError } from '../http/index.js';
+import { ApiError } from '../http';
 
 const MAX_TRIES = 3;
 

@@ -1,5 +1,5 @@
 import type { MessageView } from '@ab/shared';
-import type { ThreadPages } from '../../inbox/index.js';
+import type { ThreadPages } from '../../inbox';
 
 // docs/44 BUG7, shared by web and mobile. The server dedups `who:phone:clientRequestId` with no
 // kind and no expiry, and a replay returns the FIRST row (201) whatever the new body. The rule:

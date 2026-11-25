@@ -5,5 +5,5 @@ export {
   lessonRoomSends,
   type LessonRoomSends,
   type RoomTargetInput,
-} from './lesson-room.js';
-export { isRoomLive, roomEndedFor, roomLiveMinutes, studentWaiting } from './room-live.js';
+} from './lesson-room';
+export { isRoomLive, roomEndedFor, roomLiveMinutes, studentWaiting } from './room-live';

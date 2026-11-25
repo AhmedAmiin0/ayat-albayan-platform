@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dayBeforeSendAt, nextFollowUpAt, reminderDue, type FollowUpLead } from '../timing.js';
+import { dayBeforeSendAt, nextFollowUpAt, reminderDue, type FollowUpLead } from '../timing';
 
 const lead = (over: Partial<FollowUpLead> = {}): FollowUpLead => ({
   status: 'no_reply',

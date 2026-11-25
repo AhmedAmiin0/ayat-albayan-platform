@@ -1,6 +1,6 @@
-import { RATING_TEMPLATE } from '../../lesson/rating.js';
-import { ACCOUNT_CODE_TEMPLATE } from '../../../people/users/index.js';
-import { TEMPLATE_KEYS } from '../templates.js';
+import { RATING_TEMPLATE } from '../../lesson/rating';
+import { ACCOUNT_CODE_TEMPLATE } from '../../../people/users';
+import { TEMPLATE_KEYS } from '../templates';
 
 // Code-bound templates: the platform sends them by itself with a fixed number of
 // variables and fixed buttons (the reminders, booking_*, teacher_lesson_*, report_ready* =

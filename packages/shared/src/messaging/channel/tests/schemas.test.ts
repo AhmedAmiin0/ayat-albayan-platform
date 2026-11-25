@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { ChannelPage } from '../channel-views.js';
-import { channelPageSchema, channelReadsSchema, channelSeatSchema } from '../channel.schemas.js';
+import type { ChannelPage } from '../channel-views';
+import { channelPageSchema, channelReadsSchema, channelSeatSchema } from '../channel.schemas';
 
 const message = {
   ...{ id: 'm1', body: 'السلام عليكم', sender_role: 'guardian' as const, sender_name: 'أم سلمى' },

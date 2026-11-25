@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { channelAttachmentInputSchema } from './channel-media.js';
+import { channelAttachmentInputSchema } from './channel-media';
 
 // The student channel (docs/31 §2): an in-platform text chat between a student's family, the
 // student's current teacher(s) and the owning assistant, who may write too,

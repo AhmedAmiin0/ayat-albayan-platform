@@ -1,5 +1,5 @@
 import { counted, type PluralForm } from '@ab/core';
-import { clockParts, type CountdownParts, type LessonClock } from './countdown.js';
+import { clockParts, type CountdownParts, type LessonClock } from './countdown';
 
 // The live countdown in words (moved from the web portal's card, docs/50 §7): each app passes its
 // own `t.portal` (the same keys in ar.json / en.json).

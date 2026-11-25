@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { expiryParts, expiryText, SHORT_LINK_PURGE_DAYS } from './link-expiry.js';
+import { expiryParts, expiryText, SHORT_LINK_PURGE_DAYS } from './link-expiry';
 
 const clock = {
   now: new Date('2026-11-17T11:06:00.000Z'), tz: 'Asia/Riyadh', purgeDays: SHORT_LINK_PURGE_DAYS,

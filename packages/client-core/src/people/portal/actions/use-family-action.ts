@@ -1,9 +1,9 @@
 import type { PortalActionResult } from '@ab/shared';
-import { PORTAL_KEY } from '../portal-api.js';
+import { PORTAL_KEY } from '../portal-api';
 import {
   familyFailureText, runFamilyAction, type FailureWords, type FamilyAction,
-} from './family-action.js';
-import type { PortalLessonSends } from './lesson-sends.js';
+} from './family-action';
+import type { PortalLessonSends } from './lesson-sends';
 
 // client-core stays React-free: each app hands in its own TanStack hooks, sends and words.
 

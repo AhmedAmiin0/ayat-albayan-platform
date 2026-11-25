@@ -1,6 +1,6 @@
 import { counted, type PluralForm } from '@ab/core';
-import type { SignedDownload } from '../../../reports/index.js';
-import { baseMime } from '../../../schemas/chat-media.js';
+import type { SignedDownload } from '../../../reports';
+import { baseMime } from '../../../schemas/chat-media';
 
 // Files staff send from the chat: by link, inside the 24 h window.
 

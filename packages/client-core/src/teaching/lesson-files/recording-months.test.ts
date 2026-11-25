@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { partChoices, recordingMinutes } from './index.js';
+import { partChoices, recordingMinutes } from '.';
 
 describe('recordingMinutes', () => {
   it('rounds to whole minutes; unknown reads 0', () => {

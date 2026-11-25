@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { AcademyContact, ContactLine } from './legal.types.js';
+import type { AcademyContact, ContactLine } from './legal.types';
 
 /** A bare host name («ayatalbayan.com»): no scheme, no path, so it never becomes a script link. */
 const HOST = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/i;

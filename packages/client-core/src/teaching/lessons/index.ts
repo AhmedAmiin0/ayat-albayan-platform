@@ -3,7 +3,7 @@ export {
   lessonStatusLook,
   type LessonStatusWords,
   UPCOMING_LESSON_STYLE,
-} from './lesson-status.js';
+} from './lesson-status';
 export {
   cancelAnswerSchema,
   confirmAnswerSchema,
@@ -13,8 +13,8 @@ export {
   teacherCanConfirm,
   teacherConfirmed,
   teacherLessonPaths,
-} from './teacher-actions.js';
-export { attendanceTableSchema } from './attendance-table-schema.js';
+} from './teacher-actions';
+export { attendanceTableSchema } from './attendance-table-schema';
 export {
   joinPhase,
   lessonPlan,
@@ -30,7 +30,7 @@ export {
   type ReportStage,
   type TeacherLessonState,
   type WayIn,
-} from './teacher-lesson-plan.js';
-export { nextOpenLesson, pickHero, type Hero, type HeroLesson } from './pick-hero.js';
-export { teacherStudentHeadSchema } from './teacher-student-head-schema.js';
-export { SESSION_GROUPS, type SessionGroup } from './session-groups.js';
+} from './teacher-lesson-plan';
+export { nextOpenLesson, pickHero, type Hero, type HeroLesson } from './pick-hero';
+export { teacherStudentHeadSchema } from './teacher-student-head-schema';
+export { SESSION_GROUPS, type SessionGroup } from './session-groups';

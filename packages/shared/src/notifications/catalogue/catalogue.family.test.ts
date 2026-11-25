@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { FAMILY_PUSH_KINDS } from '@ab/catalog';
 import { SETTING_DEFAULTS } from '@ab/settings';
-import { optionalChannels, resolveRule } from '../rules.effective.js';
-import { RULE_SETTING_KEYS, type RuleSettings } from '../rules.legacy.js';
-import { entryView } from './catalogue-state/index.js';
-import { notificationEntry } from './catalogue.js';
-import { FAMILY_ENTRIES } from './catalogue.family.js';
+import { optionalChannels, resolveRule } from '../rules.effective';
+import { RULE_SETTING_KEYS, type RuleSettings } from '../rules.legacy';
+import { entryView } from './catalogue-state';
+import { notificationEntry } from './catalogue';
+import { FAMILY_ENTRIES } from './catalogue.family';
 
 // The family app's pushes (docs/50 §5 item 6): on by default, bell + push, the admin's to turn off.
 

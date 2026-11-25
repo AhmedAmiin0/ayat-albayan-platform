@@ -1,4 +1,4 @@
-import { CALLS_KEY } from './calls-api.js';
+import { CALLS_KEY } from './calls-api';
 
 // A nudge, not a data path (docs/28 §4): a change to a wa_calls row the user may read (RLS) makes the
 // calls queries re-read through the API. The shapes are the part of supabase-js's realtime used here.

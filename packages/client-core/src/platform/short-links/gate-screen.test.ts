@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   gateScreen, goneScreen, isDeadEnd, openTarget, outcomeScreen, type GateState,
-} from './gate-screen.js';
-import { gateView } from './short-links.test-util.js';
+} from './gate-screen';
+import { gateView } from './short-links.test-util';
 
 const view = { kind: 'view', view: gateView } as const;
 const gone = (goneReason: 'expired' | 'revoked' | null) =>

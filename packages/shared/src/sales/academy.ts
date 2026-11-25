@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import type { Gender, PaymentKind, Program, StudentStatus, SubscriptionStatus } from '@ab/catalog';
-import type { TeacherStudentCounts } from '../people/students/student-lists.js';
-import type { SalesPackageSummary } from './student/student-package.js';
-import type { RosterAttendance, RosterSlot } from './student/student-roster.js';
-import type { SalesSubscriptionView } from './views.js';
+import type { TeacherStudentCounts } from '../people/students/student-lists';
+import type { SalesPackageSummary } from './student/student-package';
+import type { RosterAttendance, RosterSlot } from './student/student-roster';
+import type { SalesSubscriptionView } from './views';
 
 // Sales assistant view (docs/16) never carries price, rate, phone or note, except the meet link.
 

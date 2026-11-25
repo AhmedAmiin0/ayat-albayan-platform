@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { TEMPLATE_LIMITS } from '../template-create.js';
+import { TEMPLATE_LIMITS } from '../template-create';
 import {
   capText,
   freeTextRoom,
@@ -10,7 +10,7 @@ import {
   sendableFreeText,
   sendableTemplateParams,
   templateParamProblem,
-} from './free-text.js';
+} from './free-text';
 
 const BODY = 'السلام عليكم\nرسالة من الأكاديمية:\n\n{{1}}\n\nيسعدنا ردّكم.';
 

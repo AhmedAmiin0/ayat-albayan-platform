@@ -1,6 +1,6 @@
 import type { ReopenSent, TemplateView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { reopenChoices, reopenTick, windowBar } from './window-bar.js';
+import { reopenChoices, reopenTick, windowBar } from './window-bar';
 
 describe('windowBar: the composer bar after the 24 h window (owner 2026-11-14)', () => {
   it.each([

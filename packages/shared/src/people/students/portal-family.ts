@@ -1,6 +1,6 @@
 import { PACKAGE_SIZES, PAYMENT_KINDS, SUBSCRIPTION_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
-import { portalTeacherSchema } from './portal.js';
+import { portalTeacherSchema } from './portal';
 
 // docs/50 §5: the family app's past lessons and the package with its money. A child student never
 // reads the package (403 package_guardian_only); the chat answers 403 family_chat_off while

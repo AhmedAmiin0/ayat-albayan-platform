@@ -1,5 +1,5 @@
-export { type ChatPages, laterStatus, laterTick, laterTicks, ranksAbove } from './later-status.js';
-export { liveTick } from './live-tick.js';
+export { type ChatPages, laterStatus, laterTick, laterTicks, ranksAbove } from './later-status';
+export { liveTick } from './live-tick';
 export {
   chatStatus,
   overlayPage,
@@ -7,4 +7,4 @@ export {
   overlayTicks,
   type StatusOf,
   type TickRow,
-} from './list-ticks.js';
+} from './list-ticks';

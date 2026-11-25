@@ -1,6 +1,6 @@
-import { parseDsn } from './dsn.js';
-import { buildEnvelope } from './envelope.js';
-import type { Dsn, ErrorReporter, ReporterOptions, ReportTags } from './error-report.types.js';
+import { parseDsn } from './dsn';
+import { buildEnvelope } from './envelope';
+import type { Dsn, ErrorReporter, ReporterOptions, ReportTags } from './error-report.types';
 
 
 const WINDOW_MS = 60_000;

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { ApiClient } from '../../../core/http/index.js';
+import type { ApiClient } from '../../../core/http';
 
 // GET /me/profile (R-ACC-01) as the family pages read it: who signed in, never a secret.
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { askOf, permissionHint, permissionReplyText, type PermissionWords } from './permission-ask.js';
+import { askOf, permissionHint, permissionReplyText, type PermissionWords } from './permission-ask';
 
 const words: PermissionWords = {
   requestHint: 'request', needsTemplate: 'needs', limited: 'limited', viaTemplate: 'via-template', noTemplate: 'no-template',

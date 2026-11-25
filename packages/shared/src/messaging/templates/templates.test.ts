@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { messageExpired } from './templates.js';
+import { messageExpired } from './templates';
 
 const now = new Date('2026-10-04T14:00:00Z');
 const base = { templateKey: 'lesson_reminder', expiresAt: null, lessonStartsAt: null, now };

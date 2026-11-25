@@ -3,7 +3,7 @@ import en from '@ab/shared/i18n/en.json' with { type: 'json' };
 import { emptyContent, type ReportContent, type ReportView } from '@ab/shared';
 import { reportView } from '@ab/shared/testing';
 import { describe, expect, it } from 'vitest';
-import { reportV2Lines, type ReportV2Text } from '../../index.js';
+import { reportV2Lines, type ReportV2Text } from '../..';
 
 const AR: ReportV2Text = { v2: ar.reports.v2, grade: ar.enums.grade, program: ar.enums.program, lang: 'ar' };
 const content = (over: Partial<ReportContent>): ReportContent => ({ ...emptyContent(), ...over });

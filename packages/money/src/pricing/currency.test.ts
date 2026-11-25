@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { currencyForCountry, siteCountry, SITE_COUNTRIES } from './currency.js';
+import { currencyForCountry, siteCountry, SITE_COUNTRIES } from './currency';
 
 describe('currencyForCountry (docs/08 §1)', () => {
   it.each([

@@ -7,7 +7,7 @@ import {
   studentRemaining,
   subscriptionStatusFor,
   type StatusInput,
-} from './alerts.js';
+} from './alerts';
 
 describe('alertFor (R-SUB-02: 2 left → renewal, 0 → unpaid)', () => {
   const rows: [number, number, SubscriptionStatus | undefined, ReturnType<typeof alertFor>][] = [

@@ -1,11 +1,11 @@
-import type { ProbeAnswer } from '../../../core/http/index.js';
-import { MaintenanceOnSchema } from '../maintenance.schema.js';
+import type { ProbeAnswer } from '../../../core/http';
+import { MaintenanceOnSchema } from '../maintenance.schema';
 import type {
   MaintenanceFacts,
   MaintenanceProbes,
   MaintenanceView,
   MaintenanceViewer,
-} from './maintenance.types.js';
+} from './maintenance.types';
 
 /** The query both platforms share (one request, however many hooks read it). */
 export const MAINTENANCE_QUERY_KEY = ['maintenance'] as const;

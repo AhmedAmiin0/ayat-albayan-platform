@@ -1,7 +1,7 @@
 import type { TemplateAuthorInput, TemplateEditInput } from '@ab/shared';
-import type { ApiClient } from '../../core/http/index.js';
-import { pathKey } from '../../core/keys/index.js';
-import { templateListSchema, templateViewSchema, type AuthorTemplate } from './template-view.js';
+import type { ApiClient } from '../../core/http';
+import { pathKey } from '../../core/keys';
+import { templateListSchema, templateViewSchema, type AuthorTemplate } from './template-view';
 
 // Authors use /authored; the admin (templates.manage) edits any template via /:key/content.
 

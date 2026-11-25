@@ -1,5 +1,5 @@
 import type { MessageView, SyncMessage } from '@ab/shared';
-import { laterTicks, ranksAbove, type StatusOf, type TickRow } from '../ticks/index.js';
+import { laterTicks, ranksAbove, type StatusOf, type TickRow } from '../ticks';
 
 // The chat and the chats list read the phone store (docs/43 43-7): its rows are the one source
 // of a message's tick, and of a row the HTTP pages have not brought yet.

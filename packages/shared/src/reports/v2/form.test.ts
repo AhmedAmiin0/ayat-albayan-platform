@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { reportView } from '../../testing/reports.js';
-import { emptyContent, MAX_SEGMENTS, type ReportSegment } from './content.js';
-import { effective, segmentsOf, v2DraftBody, v2Problem, v2SubmitBody, v2ValuesOf, withSegment } from './form.js';
+import { reportView } from '../../testing/reports';
+import { emptyContent, MAX_SEGMENTS, type ReportSegment } from './content';
+import { effective, segmentsOf, v2DraftBody, v2Problem, v2SubmitBody, v2ValuesOf, withSegment } from './form';
 
 const WORDS = { homeworkQuran: 'راجع {surah} {from}-{to}', nextNew: 'جديد {surah} {from}-{to}', nextRevision: 'مراجعة {surah} {from}-{to}' };
 const seg = (kind: ReportSegment['kind'], grade: ReportSegment['grade'] = 'excellent'): ReportSegment => ({ kind, surah: 67, from: 16, to: 22, grade });

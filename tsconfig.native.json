@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    // Mirrors what expo/tsconfig.base (expo 57) sets apart from the root base; re-check on an Expo upgrade.
+    "target": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "module": "preserve",
+    "moduleDetection": "force",
+    "customConditions": ["react-native"],
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "forceConsistentCasingInFileNames": null,
+    "types": []
+  },
+  "include": ["${configDir}/src"]
+}

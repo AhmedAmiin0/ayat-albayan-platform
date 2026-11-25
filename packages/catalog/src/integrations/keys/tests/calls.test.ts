@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { integrationValueValid } from '../../checks.js';
-import { integrationDef } from '../keys.js';
+import { integrationValueValid } from '../../checks';
+import { integrationDef } from '../keys';
 
 describe('voice-call ICE keys (docs/28)', () => {
   it('STUN / TURN urls are plain; the TURN REST shared secret is a Vault secret', () => {

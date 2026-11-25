@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addLocalDays, weekdayOfDate, zonedInstant } from './wall.js';
+import { addLocalDays, weekdayOfDate, zonedInstant } from './wall';
 
 describe('zonedInstant', () => {
   it('Riyadh is UTC+3 all year', () => {

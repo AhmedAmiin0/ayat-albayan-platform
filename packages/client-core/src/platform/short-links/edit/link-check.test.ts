@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { LINK_ERRORS, type LinkError } from '../link-form-errors.js';
-import { linkErrorText, splitLinkCheck } from './link-check.js';
+import { LINK_ERRORS, type LinkError } from '../link-form-errors';
+import { linkErrorText, splitLinkCheck } from './link-check';
 
 const words = Object.fromEntries(LINK_ERRORS.map((k) => [k, `«${k}»`])) as Record<
   LinkError,

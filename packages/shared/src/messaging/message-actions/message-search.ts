@@ -1,6 +1,6 @@
 import { phoneE164 } from '@ab/core';
 import { z } from 'zod';
-import { chatSearchHitSchema, cursorSchema, searchFold } from './chat-search.js';
+import { chatSearchHitSchema, cursorSchema, searchFold } from './chat-search';
 
 // Search across all readable chats (docs/37), newest first; no total, only a cursor.
 

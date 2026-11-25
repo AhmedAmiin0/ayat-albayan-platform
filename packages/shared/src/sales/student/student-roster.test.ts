@@ -6,7 +6,7 @@ import {
   scheduleGroups,
   scheduleLine,
   type RosterSlot,
-} from './student-roster.js';
+} from './student-roster';
 
 const DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 const asma = { display_name_ar: 'أسماء حسين', display_name_en: 'Asma Hussein' };

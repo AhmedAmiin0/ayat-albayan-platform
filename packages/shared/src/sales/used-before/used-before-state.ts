@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { usedBeforeEditMax, type UsedBeforeEditInput } from './used-before-edit.js';
+import { usedBeforeEditMax, type UsedBeforeEditInput } from './used-before-edit';
 
 // GET /subscriptions/:id/lessons-used-before (review 2026-11-02): what the editor may offer before
 // anything is typed: the stored number, the stepper's last value, and why it is refused outright

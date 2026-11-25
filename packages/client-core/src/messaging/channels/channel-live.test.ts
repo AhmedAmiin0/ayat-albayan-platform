@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { CHANNEL_LIVE_FALLBACK_MS, channelMode, channelPollMs, liveChannelId, subscribeChannelMessages, type ChannelRealtimeLike } from './channel-live.js';
-import { CHANNEL_REFRESH_MS } from './channels.js';
+import { CHANNEL_LIVE_FALLBACK_MS, channelMode, channelPollMs, liveChannelId, subscribeChannelMessages, type ChannelRealtimeLike } from './channel-live';
+import { CHANNEL_REFRESH_MS } from './channels';
 
 /** A fake supabase client: records the filter, lets the test fire the status and an insert. */
 function fakeRealtime() {

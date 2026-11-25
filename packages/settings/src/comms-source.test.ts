@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { settingsUpdateSchema } from './validation/schema/index.js';
-import { readSettings } from './validation/validate.js';
-import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from './registry.js';
+import { settingsUpdateSchema } from './validation/schema';
+import { readSettings } from './validation/validate';
+import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from './registry';
 
 // comms_source (docs/23 §3 phase 3): a registry row only its own guarded endpoint writes.
 describe('comms_source setting', () => {

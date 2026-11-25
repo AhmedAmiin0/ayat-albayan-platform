@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { pickProblem, titleOf, uploadLessonFile, type UploadDeps } from './index.js';
+import { pickProblem, titleOf, uploadLessonFile, type UploadDeps } from '.';
 
 const signed = { bucket: 'report-attachments', path: 'L/x.pdf', token: 't', signed_url: 'u' };
 const file = { name: 'صفحة الحفظ.pdf', mime: 'application/pdf', size: 1000, body: new Uint8Array(1) };

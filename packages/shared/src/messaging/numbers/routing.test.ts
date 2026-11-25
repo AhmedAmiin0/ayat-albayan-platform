@@ -5,7 +5,7 @@ import {
   routeTemplate,
   templateCandidates,
   type RoutableNumber,
-} from './routing.js';
+} from './routing';
 
 // docs/23c decisions 3–5: rule → template → role default → role fallbacks; sessions never fall back.
 const num = (id: string, over: Partial<RoutableNumber> = {}): RoutableNumber => ({

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { forAudience, lessonButtonSlug, lessonParams, lessonParamValue, needsLesson } from './lesson-params.js';
-import type { ThreadLesson } from '../chat/views.js';
+import { forAudience, lessonButtonSlug, lessonParams, lessonParamValue, needsLesson } from './lesson-params';
+import type { ThreadLesson } from '../chat/views';
 
 const lesson: ThreadLesson = {
   id: 'l1',

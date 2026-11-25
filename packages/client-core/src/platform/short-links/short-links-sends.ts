@@ -8,8 +8,8 @@ import {
   type ShortLinkSentDetail,
   type ShortLinkUpdate,
 } from '@ab/shared';
-import type { ApiClient } from '../../core/http/index.js';
-import { enc, SHORT_LINKS_PATH, SHORT_LINKS_PUBLIC_PATH } from './short-links-api.js';
+import type { ApiClient } from '../../core/http';
+import { enc, SHORT_LINKS_PATH, SHORT_LINKS_PUBLIC_PATH } from './short-links-api';
 
 // Each write takes a single input, ready for a TanStack `mutationFn` (docs/19).
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { bellRow, lesson, NOW, TZ } from './alerts-fixture.js';
-import { DEFAULT_HOME_PREFS } from './home-prefs.js';
-import { todayAlerts, type AlertInput } from './today-alerts.js';
+import { bellRow, lesson, NOW, TZ } from './alerts-fixture';
+import { DEFAULT_HOME_PREFS } from './home-prefs';
+import { todayAlerts, type AlertInput } from './today-alerts';
 
 const run = (o: Partial<AlertInput>) =>
   todayAlerts({ lessons: [], bell: [], now: NOW, tz: TZ, shown: DEFAULT_HOME_PREFS.alerts, ...o });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { firstName, instantLessonSchema, studentJoinSchema } from './meetings.js';
-import { pickStudentLesson } from './student-lesson.js';
+import { firstName, instantLessonSchema, studentJoinSchema } from './meetings';
+import { pickStudentLesson } from './student-lesson';
 
 const lesson = (id: string, start: string, end: string) => ({ id, starts_at: start, ends_at: end, room_opened_at: null as string | null });
 const A = lesson('a', '2026-10-05T16:00:00.000Z', '2026-10-05T17:00:00.000Z');

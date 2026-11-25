@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { maintenancePollMs, maintenanceView } from '../maintenance.js';
-import type { MaintenanceFacts } from '../maintenance.types.js';
+import { maintenancePollMs, maintenanceView } from '../maintenance';
+import type { MaintenanceFacts } from '../maintenance.types';
 
 const on: MaintenanceFacts = { flag: true, down: false };
 const off: MaintenanceFacts = { flag: false, down: false };

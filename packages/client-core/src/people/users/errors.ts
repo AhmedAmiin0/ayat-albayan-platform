@@ -1,5 +1,5 @@
 import type { UserReference } from '@ab/shared';
-import { ApiError } from '../../core/http/index.js';
+import { ApiError } from '../../core/http';
 
 /** The app's `t.users.errors` (with `generic`) and `t.users.tables`. */
 export interface UserErrorText {

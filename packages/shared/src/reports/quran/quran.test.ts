@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { JUZ_NAMES, JUZ_STARTS, PAGE_STARTS, SURAHS } from './quran-data.js';
+import { JUZ_NAMES, JUZ_STARTS, PAGE_STARTS, SURAHS } from './quran-data';
 import {
   ayahCount,
   globalAyah,
@@ -11,7 +11,7 @@ import {
   rangeInfo,
   searchSurahs,
   surahName,
-} from './quran.js';
+} from './quran';
 
 describe('quran data (Madani mushaf, Hafs)', () => {
   it('has 114 surahs, 6236 ayahs, 604 ascending page starts and 30 juz starts', () => {

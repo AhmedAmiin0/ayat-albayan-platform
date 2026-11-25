@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { GRADES } from '@ab/catalog';
-import { isAyah, SURAH_COUNT } from '../quran/quran.js';
+import { isAyah, SURAH_COUNT } from '../quran/quran';
 
 // The v2 lesson report's structured content (docs/design/report-form): stored
 // whole in lesson_reports.content (jsonb, form_version 2, migration 20261028000940).

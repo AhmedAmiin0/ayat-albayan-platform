@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isLinkedRole, needsExistingRecord, normalizeStudentCode, passwordProblem, STAFF_BASE_ROLES } from './validation.js';
+import { isLinkedRole, needsExistingRecord, normalizeStudentCode, passwordProblem, STAFF_BASE_ROLES } from './validation';
 
 describe('passwordProblem', () => {
   it('flags blank, short and long passwords against the configured minimum', () => {

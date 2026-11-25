@@ -1,12 +1,12 @@
 import { z } from 'zod';
 import { ATTENDANCES, GRADES, PROGRAMS, type Program } from '@ab/catalog';
-import { attended } from '../rules.js';
+import { attended } from '../rules';
 import {
   ARABIC_SKILLS,
   ISLAMIC_RATES,
   reportContentSchema,
   type ReportContent,
-} from './content.js';
+} from './content';
 
 // v2 report commands (PUT /reports/:id/v2/draft, POST /reports/:id/v2/submit). camelCase like the
 // v1 commands; the identity is never sent (R-REP-01). Notes, homework and the next plan keep the

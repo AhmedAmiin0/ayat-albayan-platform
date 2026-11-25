@@ -1,14 +1,14 @@
 import type { TemplateStatus, WaLine } from '@ab/catalog';
-import { NOTIFICATION_CATALOGUE, type NotificationKey } from '../catalogue.js';
-import type { CatalogueSettings } from '../catalogue-settings.js';
-import type { NotificationEntry } from '../catalogue.types.js';
+import { NOTIFICATION_CATALOGUE, type NotificationKey } from '../catalogue';
+import type { CatalogueSettings } from '../catalogue-settings';
+import type { NotificationEntry } from '../catalogue.types';
 import type {
   NotificationBlocker,
   NotificationEntryView,
   NotificationTemplateView,
-} from '../catalogue-views.js';
-import { approvalOf, timingOf } from '../catalogue-timing.js';
-import type { EffectiveRule } from '../../rules.types.js';
+} from '../catalogue-views';
+import { approvalOf, timingOf } from '../catalogue-timing';
+import type { EffectiveRule } from '../../rules.types';
 
 /** What decides a row's state today: the settings, the send gate and the template registry. */
 export interface CatalogueInputs {

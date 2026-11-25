@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { jobBeatsSchema, jobStatusListSchema, readinessSchema } from './readiness.js';
+import { jobBeatsSchema, jobStatusListSchema, readinessSchema } from './readiness';
 
 const checks = {
   database: { status: 'ok', ms: 4 },

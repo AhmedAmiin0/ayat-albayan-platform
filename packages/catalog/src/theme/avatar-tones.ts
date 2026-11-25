@@ -1,4 +1,4 @@
-import type { ThemeName } from './theme.js';
+import type { ThemeName } from './theme';
 
 // The initials circle's backgrounds (one consistent circle when there is no photo).
 // Six muted tones, the text is always `ink` (AA in both themes: avatar-tones.test.ts). A person keeps

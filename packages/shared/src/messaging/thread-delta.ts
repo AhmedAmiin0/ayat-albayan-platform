@@ -1,4 +1,4 @@
-import type { MessageView, ThreadView } from './chat/views.js';
+import type { MessageView, ThreadView } from './chat/views';
 
 /**
  * GET /threads/:phone?after=<ISO>&pending=<id,…>: what changed in an

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { payoutBreakdownSchema } from './payout-breakdown.schemas.js';
+import { payoutBreakdownSchema } from './payout-breakdown.schemas';
 
 const valid = {
   lines: [{ duration: 45, lessons: 2, rate: 70, amount: 140 }],

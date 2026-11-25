@@ -8,7 +8,7 @@ import {
   startOfDayIn,
   startOfWeekIn,
   weekdayOfDate,
-} from '../calendar.js';
+} from '../calendar';
 
 // The calendar helpers on a phone or browser whose own zone has DST (vi.stubEnv sets
 // process.env.TZ, and Node applies a runtime TZ change). Every value is what TZ=UTC gives: only

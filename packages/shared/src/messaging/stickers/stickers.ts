@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { waSendKind } from '../chat/chat-files/index.js';
+import { waSendKind } from '../chat/chat-files';
 
 // WhatsApp stickers and GIFs in the chat, as in WhatsApp: what a bubble is, the request bodies and
 // the lists the apps read. Pure: API, web and app share it.

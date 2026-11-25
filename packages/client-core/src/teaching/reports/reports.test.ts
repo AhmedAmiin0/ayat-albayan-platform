@@ -1,6 +1,6 @@
 import type { ReportView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { ApiError, reportEntryValues, reportErrorCode, reportErrorWords } from '../../index.js';
+import { ApiError, reportEntryValues, reportErrorCode, reportErrorWords } from '../..';
 
 const TEXT = { errors: { version_conflict: 'conflict', missing_grades: 'grades' }, invalidTransition: 'transition', generic: 'error' };
 const words = reportErrorWords(() => TEXT);

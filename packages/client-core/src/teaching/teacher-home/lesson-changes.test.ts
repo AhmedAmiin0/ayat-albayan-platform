@@ -1,7 +1,7 @@
 import { COURSE_PAUSE_REASON } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { lesson, NOW } from './alerts-fixture.js';
-import { lessonChange } from './lesson-changes.js';
+import { lesson, NOW } from './alerts-fixture';
+import { lessonChange } from './lesson-changes';
 
 describe('lessonChange', () => {
   it('null for an ordinary open lesson', () => {

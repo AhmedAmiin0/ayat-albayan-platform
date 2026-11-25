@@ -1,4 +1,4 @@
-import type { ReportView } from '../reports/views.js';
+import type { ReportView } from '../reports/views';
 
 // Test-only lesson report rows shared by web and mobile tests, never imported by app code.
 

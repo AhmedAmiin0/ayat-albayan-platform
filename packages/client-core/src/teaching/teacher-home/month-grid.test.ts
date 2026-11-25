@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addMonths, lessonsByDay, monthGrid, monthOf, monthSpan, monthWindowIn } from './month-grid.js';
+import { addMonths, lessonsByDay, monthGrid, monthOf, monthSpan, monthWindowIn } from './month-grid';
 
 describe('addMonths / monthOf', () => {
   it('crosses years both ways', () => {

@@ -1,4 +1,4 @@
-import { clampPosition, SKIP_SECONDS } from './player-math.js';
+import { clampPosition, SKIP_SECONDS } from './player-math';
 
 // The seek slider (role slider / adjustable): arrows move ±10 s, Home and End jump to the ends,
 // and a tap or a drag lands on its share of the bar. The bar fills from the reading start, so in

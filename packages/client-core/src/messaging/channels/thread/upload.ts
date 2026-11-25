@@ -7,8 +7,8 @@ import {
   type ChannelAttachmentInput,
   type SignedUpload,
 } from '@ab/shared';
-import type { SlotUploadResult, UploadFile } from '../../../core/http/index.js';
-import { channelUploadPath, type ChannelAudience } from '../channels.js';
+import type { SlotUploadResult, UploadFile } from '../../../core/http';
+import { channelUploadPath, type ChannelAudience } from '../channels';
 
 // A photo, PDF or voice note in the student chat (docs/31 §2), web and phone alike: checked here
 // as the API checks it, a signed slot (POST …/attachments/upload-url), the upload, then the

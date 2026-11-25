@@ -7,7 +7,7 @@ import {
   leadQualificationSchema,
   studentCreateSchema,
   timeOffCreateSchema,
-} from './index.js';
+} from '.';
 
 const GUARDIAN = { name: 'ام ايمان', phone_e164: '0501234567', tz: 'Asia/Riyadh' };
 

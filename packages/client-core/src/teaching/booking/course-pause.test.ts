@@ -1,6 +1,6 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '../../core/http/index.js';
+import { ApiError } from '../../core/http';
 import {
   coursePauseBanner,
   coursePauseErrorCode,
@@ -8,7 +8,7 @@ import {
   coursePausePreviewText,
   coursePauseResumePath,
   coursePauseUntilPath,
-} from './course-pause.js';
+} from './course-pause';
 
 const words = ar.coursePause;
 const fmt = (d: string) => `«${d}»`;

@@ -1,5 +1,5 @@
 import type { MessageView, SyncMessage } from '@ab/shared';
-import { laterTick } from '../ticks/index.js';
+import { laterTick } from '../ticks';
 
 /**
  * The stamp of a row the store holds only from a chat read (never synced yet): before every

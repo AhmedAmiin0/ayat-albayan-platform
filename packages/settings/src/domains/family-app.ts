@@ -1,4 +1,4 @@
-import type { SettingDef } from '../defs.js';
+import type { SettingDef } from '../defs';
 
 /**
  * The family app and pages (docs/50 §2, §5): the teacher ↔ family chat, off by default (the API

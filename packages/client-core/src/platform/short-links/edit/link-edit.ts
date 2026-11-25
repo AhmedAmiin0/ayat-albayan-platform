@@ -5,8 +5,8 @@ import {
   type LinkClock,
   type LinkExpiry,
   type LinkPick,
-} from '../link-form.js';
-import { issueErrors, type LinkFieldErrors } from '../link-form-errors.js';
+} from '../link-form';
+import { issueErrors, type LinkFieldErrors } from '../link-form-errors';
 
 // A field left out stays as is on the server; a given user list replaces the old one.
 

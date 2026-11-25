@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fromCents, hasTwoDecimals, round2, toCents } from './cents.js';
+import { fromCents, hasTwoDecimals, round2, toCents } from './cents';
 
 describe('cents', () => {
   it('converts to and from piasters without float drift', () => {

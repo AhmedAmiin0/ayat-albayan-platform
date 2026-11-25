@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { submitProblem, textRequired, type FormValues } from '../../form-values.js';
-import { reportSubmitSchema } from '../schema.js';
+import { submitProblem, textRequired, type FormValues } from '../../form-values';
+import { reportSubmitSchema } from '../schema';
 
 const grades = { recitation: 'good', memorization: 'good', revision: 'good', tajweed: 'good', engagement: 'good', commitment: 'good' } as const;
 const base = { attendance: 'on_time', grades, overall: 'good', recited: 'الفاتحة', newMemorization: 'x', revision: 'y' };

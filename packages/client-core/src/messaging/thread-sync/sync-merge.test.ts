@@ -1,8 +1,8 @@
 import type { SyncMessage, ThreadSync, ThreadView } from '@ab/shared';
 import { encodeSyncCursor } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { EMPTY_SYNC, type SyncState } from './sync-cursor.js';
-import { planSync, type HeldStamp } from './sync-merge.js';
+import { EMPTY_SYNC, type SyncState } from './sync-cursor';
+import { planSync, type HeldStamp } from './sync-merge';
 
 const id = (n: number) => `c0000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 const T1 = '2026-11-06T10:00:01.000001+00:00';

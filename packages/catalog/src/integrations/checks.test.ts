@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { integrationSecretSchema, integrationValuesSchema, integrationValueValid } from './checks.js';
-import { EMPTY_RECIPIENTS, parseAllowedRecipients } from './recipients.js';
+import { integrationSecretSchema, integrationValuesSchema, integrationValueValid } from './checks';
+import { EMPTY_RECIPIENTS, parseAllowedRecipients } from './recipients';
 
 describe('plain value checks', () => {
   it('accepts what the API env accepts and refuses the rest', () => {

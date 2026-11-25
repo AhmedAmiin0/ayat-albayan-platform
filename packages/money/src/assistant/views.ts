@@ -1,8 +1,8 @@
 import type { PaymentKind, PaymentMethod, PayoutStatus } from '@ab/catalog';
-import type { AssistantCommissionStatus, AssistantCommissionType } from './commission.js';
-import type { AssistantCommissionKind } from './kind.js';
-import type { CurrencyTotals, StatementLineKind } from './statement.js';
-import type { WalletTotals } from './wallet.js';
+import type { AssistantCommissionStatus, AssistantCommissionType } from './commission';
+import type { AssistantCommissionKind } from './kind';
+import type { CurrencyTotals, StatementLineKind } from './statement';
+import type { WalletTotals } from './wallet';
 
 // Assistant (base role sales) responses: snake_case, instants ISO UTC, months and days
 // YYYY-MM-01 / YYYY-MM-DD. Amounts are per currency; nothing here sums across currencies.

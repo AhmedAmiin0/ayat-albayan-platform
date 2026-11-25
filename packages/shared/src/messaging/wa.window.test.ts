@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canRetryCode, isRetryableWaError, isWaWindowClosed } from './wa.js';
+import { canRetryCode, isRetryableWaError, isWaWindowClosed } from './wa';
 
 // The 24 h window refusal is never retried; only a template reopens it.
 

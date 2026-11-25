@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { partPaid, receiptShortfall } from './payment-state.js';
+import { partPaid, receiptShortfall } from './payment-state';
 
 // Owner 2026-10-28 («Why is this unpaid»): 81 SAR (90 − 10%), 80 received → part-paid, 1 left.
 describe('partPaid', () => {

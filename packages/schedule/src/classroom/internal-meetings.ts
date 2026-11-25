@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindow, type JoinWindowConfig } from './join-window/index.js';
+import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindow, type JoinWindowConfig } from './join-window';
 import {
   MAX_MEETING_INVITEES,
   meetingDurationSchema,
   meetingInviteeInputSchema,
   type MeetingInviteResult,
   type MyMeetingInvite,
-} from './meeting-invites.js';
+} from './meeting-invites';
 
 // Internal meeting (migration 193): no lesson or teacher; schedulable since migration 410.
 

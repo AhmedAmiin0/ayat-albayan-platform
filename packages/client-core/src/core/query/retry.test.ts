@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '../http/index.js';
-import { shouldRetry, shouldRetryUnanswered } from './retry.js';
+import { ApiError } from '../http';
+import { shouldRetry, shouldRetryUnanswered } from './retry';
 
 describe('shouldRetry', () => {
   it.each([401, 403, 404, 409, 422])('a %i is final', (status) => {

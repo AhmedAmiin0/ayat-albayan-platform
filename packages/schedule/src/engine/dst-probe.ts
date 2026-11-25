@@ -1,5 +1,5 @@
 import { DAY_MS, offsetMs } from '@ab/time';
-import { ruleOccurrences, type Occurrence, type OccurrenceTiming } from './occurrences/index.js';
+import { ruleOccurrences, type Occurrence, type OccurrenceTiming } from './occurrences';
 
 /** First day-step instants after `from` (within `days`) at which `tz`'s UTC offset differs. */
 export function offsetChanges(tz: string, from: Date, days = 366): Date[] {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_RENEWAL_PRICING, quote, type QuoteOptions, type QuoteResponse } from '@ab/money';
-import { salesRenewal, type RenewalPackage, type SalesRenewalInput } from './renewal-due.js';
+import { salesRenewal, type RenewalPackage, type SalesRenewalInput } from './renewal-due';
 
 const source = (o: QuoteOptions): QuoteResponse => ({ ...quote(o), fx: null });
 const pkg = (o: QuoteOptions, price = 145): RenewalPackage => ({

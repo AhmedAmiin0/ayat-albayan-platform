@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { splitLinks } from './linkify.js';
+import { splitLinks } from './linkify';
 
 describe('splitLinks (W11)', () => {
   it('trims the sentence dot after a link', () => {

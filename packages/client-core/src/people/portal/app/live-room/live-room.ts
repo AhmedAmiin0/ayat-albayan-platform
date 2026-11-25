@@ -1,6 +1,6 @@
 import { counted, type PluralForm } from '@ab/core';
 import type { LessonRoomState, RoomPresence, RoomPresenceRole } from '@ab/schedule';
-import { roomLiveMinutes } from '../../../../teaching/lesson-room/index.js';
+import { roomLiveMinutes } from '../../../../teaching/lesson-room';
 
 // Live state comes from LiveKit participant events; a lesson ended for everyone is never live.
 

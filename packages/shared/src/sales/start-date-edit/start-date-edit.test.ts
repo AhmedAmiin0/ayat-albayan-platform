@@ -4,7 +4,7 @@ import {
   startDateEditMin,
   startDateEditProblem,
   startDateEditSchema,
-} from './start-date-edit.js';
+} from './start-date-edit';
 
 const TODAY = '2026-11-03';
 const base = { next: '2026-10-01', today: TODAY, cancelled: false, lessonsUsedBefore: 0 };

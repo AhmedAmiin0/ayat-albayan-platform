@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { authorMayEdit, authorsTemplates, suggestedCategory, type AuthorEditable } from './author-rules.js';
+import { authorMayEdit, authorsTemplates, suggestedCategory, type AuthorEditable } from './author-rules';
 
 const ME = 'u-sales-1';
 const starter: AuthorEditable = {

@@ -1,8 +1,8 @@
 import { clockTime } from '@ab/time';
-import { joinNames, lessonWhenText } from '../lesson/booking-confirmation.js';
-import { meetingLinkParts } from '../lesson/meeting-link.js';
-import { BODY_SLOTS, type BodySlot, type TemplateButton } from './templates.js';
-import type { ThreadLesson } from '../chat/views.js';
+import { joinNames, lessonWhenText } from '../lesson/booking-confirmation';
+import { meetingLinkParts } from '../lesson/meeting-link';
+import { BODY_SLOTS, type BodySlot, type TemplateButton } from './templates';
+import type { ThreadLesson } from '../chat/views';
 
 // Template variables that come from a lesson (rule 6: never typed by hand). The inbox composer
 // fills them from the lesson the admin picks, in the recipient's tz, with the producers' formats.

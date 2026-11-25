@@ -4,7 +4,7 @@ import {
   notificationsQuerySchema,
   notificationsReadSchema,
   type NotificationItem,
-} from './views.js';
+} from './views';
 
 const ID = '3f1c2a5e-8b7d-4c1e-9a2b-1d2e3f4a5b6c';
 

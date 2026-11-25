@@ -1,3 +1,3 @@
-export * from './chat-search.js';
-export * from './search-status.js';
-export * from './search-query.js';
+export * from './chat-search';
+export * from './search-status';
+export * from './search-query';

@@ -1,7 +1,7 @@
 import { toCents } from '@ab/core';
-import { computeCommission, type AssistantCommissionType, type CommissionAmount } from '../commission.js';
-import { commissionKindOf } from '../kind.js';
-import { subscriptionAlreadyStarted, type StartFact } from '../started.js';
+import { computeCommission, type AssistantCommissionType, type CommissionAmount } from '../commission';
+import { commissionKindOf } from '../kind';
+import { subscriptionAlreadyStarted, type StartFact } from '../started';
 import { localDateIn } from '@ab/time';
 
 // "Fully paid" and "first" (migration 20261006000272: subscription_full_at, evaluate_assistant_commission).

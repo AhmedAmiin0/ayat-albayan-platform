@@ -8,19 +8,19 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
-    "lint": "turbo build --filter='./packages/*' --output-logs=errors-only && node tools/scripts/ci-checks/lint/oxlint/run.mjs",
+    "lint": "node tools/scripts/ci-checks/lint/oxlint/run.mjs",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "lint:prune": "turbo build --filter='./packages/*' --output-logs=errors-only && node tools/scripts/ci-checks/lint/oxlint/run.mjs --prune",
+    "lint:prune": "node tools/scripts/ci-checks/lint/oxlint/run.mjs --prune",
     "lint:report": "oxlint -c oxlint.config.ts --type-aware --deny-warnings --report-unused-disable-directives-severity=error --format json",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
     "e2e": "turbo e2e",
     "supabase": "pnpm --filter @ab/db exec supabase",
     "env:local": "node tools/scripts/env/write-local-env.mjs",
-    "seed:demo": "node --env-file-if-exists=e2e/.env tools/scripts/seed/seed-demo.mjs",
+    "seed:demo": "node --import tsx --env-file-if-exists=e2e/.env tools/scripts/seed/seed-demo.mjs",
     "clear:demo": "node --env-file-if-exists=e2e/.env tools/scripts/seed/clear-demo.mjs",
-    "seed:test-account": "node --env-file-if-exists=e2e/.env tools/scripts/seed/seed-test-account.mjs",
+    "seed:test-account": "node --import tsx --env-file-if-exists=e2e/.env tools/scripts/seed/seed-test-account.mjs",
     "migrate": "pnpm --filter @ab/migrate cli",
     "migrate:dry": "pnpm --filter @ab/migrate cli dry-run",
     "migrate:apply": "pnpm --filter @ab/migrate cli apply",
@@ -40,7 +40,8 @@
     "guard:units": "node tools/scripts/units/guard.ts",
     "guard:move-only": "node tools/scripts/units/move-only/gate.mjs",
     "units:fold": "node tools/scripts/units/fold.ts",
-    "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs"
+    "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs",
+    "imports:extensionless": "node tools/scripts/imports/extensionless.mjs"
   },
   "devDependencies": {
     "@ab/config": "workspace:*",
@@ -50,6 +51,7 @@
     "oxlint": "1.95.0",
     "oxlint-tsgolint": "7.0.2008",
     "postgres": "^3.4.9",
+    "tsx": "4.23.15",
     "turbo": "^2.11.6"
   }
 }

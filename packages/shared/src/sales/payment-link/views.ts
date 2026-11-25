@@ -1,6 +1,6 @@
 import type { Duration, PackageSize } from '@ab/catalog';
-import type { SalesQuoteView, SalesStudentRef } from '../money-views.js';
-import type { PaymentLinkKind, PaymentLinkStatus } from './schemas.js';
+import type { SalesQuoteView, SalesStudentRef } from '../money-views';
+import type { PaymentLinkKind, PaymentLinkStatus } from './schemas';
 
 /** One payment link as its assistant (or an admin) sees it. */
 export interface PaymentLinkView {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { searchDigits } from '../phone.js';
+import { searchDigits } from '../phone';
 
 describe('searchDigits (R-STU-02, R-LEAD-01): what a search box matches in phone_e164', () => {
   it.each([

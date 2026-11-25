@@ -6,7 +6,7 @@ import {
   minLinkAmount,
   paymentLinkUrl,
   toMinorUnits,
-} from './rules.js';
+} from './rules';
 
 describe('payment link rules (docs/30)', () => {
   it('minor units: 2 decimals, no float drift', () => {

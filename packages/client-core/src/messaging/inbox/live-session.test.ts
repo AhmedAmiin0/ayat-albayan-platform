@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createLiveSession } from './live-session.js';
+import { createLiveSession } from './live-session';
 
 function fake() {
   const stops: ReturnType<typeof vi.fn>[] = [];

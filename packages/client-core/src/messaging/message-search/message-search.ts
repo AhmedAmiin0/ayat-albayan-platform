@@ -4,7 +4,7 @@ import {
   type MessageSearchHit,
   type MessageSearchPage,
 } from '@ab/shared';
-import type { SearchGet } from '../chat-search/index.js';
+import type { SearchGet } from '../chat-search';
 
 // Search across all messages (docs/37): newest first, a page per cursor, no total.
 

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { GENDERS, LEAD_SOURCES, PROGRAMS, STUDENT_STATUSES, TEACHER_STATUSES } from '@ab/catalog';
 import { TEACHER_MEETING_MODES } from '@ab/schedule';
 import { optionalText, phoneE164, requiredText, timeZone } from '@ab/core';
-import { username } from '../users/index.js';
+import { username } from '../users';
 
 // DTOs use DB column names (snake_case) so they map 1:1 onto TablesInsert<...>.
 // Server-derived columns (code, name_normalized, created_by, …) are deliberately absent.

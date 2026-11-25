@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { RESEND_SECONDS } from '../../core/auth/index.js';
-import { CODE_STEP_ACTIONS, canResend, countdownTick, resendLabel } from './resend.js';
+import { RESEND_SECONDS } from '../../core/auth';
+import { CODE_STEP_ACTIONS, canResend, countdownTick, resendLabel } from './resend';
 
 const words = { resend: 'أعد إرسال الرمز', resendIn: 'يمكنك إعادة الإرسال بعد {seconds} ث' };
 

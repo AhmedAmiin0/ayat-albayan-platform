@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LessonStatus } from '@ab/catalog';
-import { decideLessonOutcome, type OutcomeClock } from '../lesson-outcome.js';
+import { decideLessonOutcome, type OutcomeClock } from '../lesson-outcome';
 
 const MIN = 60_000;
 const SINCE = new Date('2026-11-03T00:00:00Z');

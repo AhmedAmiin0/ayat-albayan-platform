@@ -1,5 +1,5 @@
 import { asciiDigits } from '@ab/core';
-import { COUNTRIES, type Country } from './countries.js';
+import { COUNTRIES, type Country } from './countries';
 
 /** The main country of a shared calling code (+1 → US, +7 → RU, +44 → GB…). */
 const MAIN = new Set(['US', 'RU', 'GB', 'NO', 'AU', 'RE', 'GP', 'CW', 'MA', 'FI', 'IT', 'NZ', 'FK']);

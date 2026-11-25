@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { GOOGLE_SYNC_MODES, GOOGLE_WINDOW_DAYS, TEACHER_CALENDAR_OWNERS } from './enums.js';
+import { GOOGLE_SYNC_MODES, GOOGLE_WINDOW_DAYS, TEACHER_CALENDAR_OWNERS } from './enums';
 
 /** A Google id as the APIs return them (calendar ids are emails; Drive ids are [A-Za-z0-9_-]). */
 const calendarId = z.string().trim().min(1).max(300).regex(/^[A-Za-z0-9_.@#-]+$/);

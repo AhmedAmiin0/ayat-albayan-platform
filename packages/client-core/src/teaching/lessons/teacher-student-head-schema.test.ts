@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { teacherStudentHeadSchema } from './teacher-student-head-schema.js';
+import { teacherStudentHeadSchema } from './teacher-student-head-schema';
 
 const row = {
   lesson_id: 'l1', starts_at: '2026-11-20T10:00:00.000Z', duration_min: 30, teacher_name: null,

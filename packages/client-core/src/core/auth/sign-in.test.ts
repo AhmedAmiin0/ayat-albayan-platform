@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError } from '../http/index.js';
-import { isEmailIdentifier, signInApi, signInError } from './sign-in.js';
+import { ApiError } from '../http';
+import { isEmailIdentifier, signInApi, signInError } from './sign-in';
 
 describe('signInApi (docs/30 §6)', () => {
   it('calls the public routes with their bodies', async () => {

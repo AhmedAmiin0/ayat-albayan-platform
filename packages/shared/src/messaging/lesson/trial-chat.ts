@@ -1,5 +1,5 @@
 import type { StudentStatus } from '@ab/catalog';
-import { isNotSubscribed } from '../../people/students/status-flow/index.js';
+import { isNotSubscribed } from '../../people/students/status-flow';
 
 // Trial students: a teacher and a trial family do not chat directly; sales
 // or the system manages between them. The API scope (migration 20261007000001) enforces it; the

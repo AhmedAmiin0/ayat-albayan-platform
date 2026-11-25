@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { asciiDigits } from './digits.js';
+import { asciiDigits } from './digits';
 
 describe('asciiDigits', () => {
   it('folds Arabic-Indic digits', () => {

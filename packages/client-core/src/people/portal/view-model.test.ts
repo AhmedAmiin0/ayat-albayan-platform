@@ -1,8 +1,8 @@
 import type { PortalHistory, PortalHistoryRow, PortalPackage } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { historyMonths, historyRows } from './history.js';
-import { packageSummary, paymentInstructions, signedAmount } from './package-view.js';
-import { prepareCard } from './prepare.js';
+import { historyMonths, historyRows } from './history';
+import { packageSummary, paymentInstructions, signedAmount } from './package-view';
+import { prepareCard } from './prepare';
 
 const row = (over: Partial<PortalHistoryRow> = {}): PortalHistoryRow => ({
   lesson_id: 'l1', starts_at: '2026-10-31T22:30:00.000Z', ends_at: '2026-10-31T23:00:00.000Z',

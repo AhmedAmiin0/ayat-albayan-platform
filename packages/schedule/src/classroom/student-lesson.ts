@@ -1,4 +1,4 @@
-import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig, type WindowLesson } from './join-window/index.js';
+import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig, type WindowLesson } from './join-window';
 
 /**
  * Which lesson a student's long-lived link opens at `now`, among their open lessons (scheduled /

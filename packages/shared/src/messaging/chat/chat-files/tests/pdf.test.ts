@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../../../i18n/ar.json' with { type: 'json' };
 import en from '../../../../../i18n/en.json' with { type: 'json' };
-import { cleanFileName, isPdfMime, pdfBubbleName, pdfCaptionIsName, pdfMetaLine } from '../chat-files.js';
+import { cleanFileName, isPdfMime, pdfBubbleName, pdfCaptionIsName, pdfMetaLine } from '../chat-files';
 
 const KB = 1024;
 const MB = 1024 * KB;

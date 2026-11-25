@@ -1,5 +1,5 @@
 import type { CallConfigView } from '@ab/shared';
-import type { CallTarget } from './call-phase.js';
+import type { CallTarget } from './call-phase';
 
 // The calls UI both apps hand down through React context, and the small pure pieces their hooks use.
 

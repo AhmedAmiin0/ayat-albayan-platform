@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { oweLowersDefault, replayRefund } from '../stop-choices.js';
+import { oweLowersDefault, replayRefund } from '../stop-choices';
 
 // Review fixes of PR #644: a replay plans from the stored decision; lowering what is owed below
 // attended × rate is a refund holder's call. 400 SAR, charge 150.

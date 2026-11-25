@@ -4,4 +4,4 @@ export {
   stopRefund,
   type StopRefund,
   toMinor,
-} from './stop-refund.js';
+} from './stop-refund';

@@ -1,10 +1,10 @@
 import type { Attendance, Gender, LessonStatus, Program, ReportStatus, StudentStatus } from '@ab/catalog';
-import type { Conflict } from './conflicts.js';
-import type { LessonEvent } from './state-machine/index.js';
-import type { LessonTimeEditView, TimeEditMode } from './series/time-edit.js';
-import type { TeacherMeetingMode } from '../classroom/meeting-mode.js';
-import type { LessonRoomState } from '../classroom/index.js';
-import type { LessonProposalView } from './proposals/proposals.js';
+import type { Conflict } from './conflicts';
+import type { LessonEvent } from './state-machine';
+import type { LessonTimeEditView, TimeEditMode } from './series/time-edit';
+import type { TeacherMeetingMode } from '../classroom/meeting-mode';
+import type { LessonRoomState } from '../classroom';
+import type { LessonProposalView } from './proposals/proposals';
 
 // API response shapes (docs/10-phase2-contracts.md §3): snake_case rows, ISO UTC, IANA tz.
 

@@ -1,5 +1,5 @@
 import type { MessageStatus } from '@ab/catalog';
-import { type ChatPages, ranksAbove } from './later-status.js';
+import { type ChatPages, ranksAbove } from './later-status';
 
 // docs/43 §2 (the owner's pending tick): the chat merges its statuses (delta, page poll) while a
 // list read that started earlier can still answer `queued`. The list row takes the chat's status

@@ -5,7 +5,7 @@ import {
   channelKindOf,
   channelMessageKindOf,
   channelUploadSchema,
-} from './channel-media.js';
+} from './channel-media';
 
 const MiB = 1024 * 1024;
 const file = (mime: string, size: number) => ({ mime, size, name: 'ملف' });

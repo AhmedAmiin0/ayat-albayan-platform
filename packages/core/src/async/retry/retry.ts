@@ -1,5 +1,5 @@
-import { toResult } from '../result.js';
-import type { RetryOptions } from './retry.types.js';
+import { toResult } from '../result';
+import type { RetryOptions } from './retry.types';
 
 /**
  * Run `fn`; after a failure wait delays[i] and try again, so delays.length + 1 attempts in all.

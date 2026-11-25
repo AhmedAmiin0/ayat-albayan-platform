@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { amountProblem, earningIdsOf, payCeiling } from './earnings-pay.js';
+import { amountProblem, earningIdsOf, payCeiling } from './earnings-pay';
 
 const SESSIONS = [
   { id: 'e3', outstanding: 50 },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isAwaitingReply, reopenDedupKey } from '../thread-reopen.js';
+import { isAwaitingReply, reopenDedupKey } from '../thread-reopen';
 
 describe('reopenDedupKey', () => {
   it('names the phone and the Asia/Riyadh day', () => {

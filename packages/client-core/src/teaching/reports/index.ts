@@ -1,8 +1,8 @@
-export { reportEntryValues } from './entry-values.js';
-export { reportErrorCode, reportErrorWords, type ReportErrorText } from './errors.js';
-export { fillSlots, rangeLabel, rangeMeta, rangePages, rangeSummary, type RangeWords } from './v2-text.js';
-export { reportV2Lines, type ReportLine, type ReportV2Text, type ReportV2Words } from './v2-lines.js';
-export { pageLines, type V1Words } from './page-lines.js';
+export { reportEntryValues } from './entry-values';
+export { reportErrorCode, reportErrorWords, type ReportErrorText } from './errors';
+export { fillSlots, rangeLabel, rangeMeta, rangePages, rangeSummary, type RangeWords } from './v2-text';
+export { reportV2Lines, type ReportLine, type ReportV2Text, type ReportV2Words } from './v2-lines';
+export { pageLines, type V1Words } from './page-lines';
 export {
   isReadOnlyMode,
   reportFormMode,
@@ -13,7 +13,7 @@ export {
   type ReportFormMode,
   type SendGuard,
   type SentMoment,
-} from './form-mode.js';
+} from './form-mode';
 export {
   minutesLeft,
   msUntilClose,
@@ -21,13 +21,13 @@ export {
   SENDING_FOR_MS,
   type SendReport,
   type SendState,
-} from './send-state.js';
-export { editableNow, sendLines, type SendLines, type SendWords } from './send-lines.js';
-export { logReportAction, type LogReportAction } from './log-report-action.js';
+} from './send-state';
+export { editableNow, sendLines, type SendLines, type SendWords } from './send-lines';
+export { logReportAction, type LogReportAction } from './log-report-action';
 export {
   AFTER_CLOSE_MS,
   CLOSE_RETRY_MS,
   closeRefetchIn,
   scheduleCloseRefetch,
   withServerWindow,
-} from './server-window.js';
+} from './server-window';

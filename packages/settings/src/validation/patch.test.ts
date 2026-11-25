@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { OWNED_SETTING_KEYS } from '../ownership.js';
-import { parseSettingField, splitSettingsPatch } from './patch.js';
-import { camelKey } from '../camel.js';
+import { OWNED_SETTING_KEYS } from '../ownership';
+import { parseSettingField, splitSettingsPatch } from './patch';
+import { camelKey } from '../camel';
 
 // PATCH /settings per key (docs/26 §2f, 26-P0): owned keys are moved, never written.
 describe('splitSettingsPatch', () => {

@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings, type SettingKey } from './registry.js';
+import { SETTING_DEFAULTS, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings, type SettingKey } from './registry';
 
 type Registry = typeof SETTINGS_REGISTRY;
 /** The keys marked `public: true`: safe for anyone (public pages, the apps before login). */

@@ -1,4 +1,4 @@
-import type { Teacher, TeacherListRow, TimeOff } from '../people/teachers/index.js';
+import type { Teacher, TeacherListRow, TimeOff } from '../people/teachers';
 
 // Test-only teacher answers shared by the web and mobile tests (never imported by app code): the
 // fields a test does not name get neutral values, so each test spells out only what it checks.

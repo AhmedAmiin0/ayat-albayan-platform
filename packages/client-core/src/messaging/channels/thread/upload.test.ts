@@ -4,7 +4,7 @@ import {
   channelFileCapMb,
   channelFileProblem,
   uploadChannelFile,
-} from './upload.js';
+} from './upload';
 
 const SLOT = { bucket: 'channel-media', path: 'ch/f.jpg', token: 'tk', signed_url: 'https://x/u' };
 const ref = { audience: 'portal', studentId: 's1' } as const;

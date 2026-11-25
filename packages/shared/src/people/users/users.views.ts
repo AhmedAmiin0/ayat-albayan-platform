@@ -1,5 +1,5 @@
 import type { UserRole } from '@ab/catalog';
-import type { LinkKind, UserStatus } from './users.schemas.js';
+import type { LinkKind, UserStatus } from './users.schemas';
 
 /** The teacher / student / guardian row a login belongs to. */
 export interface LinkedRecord {

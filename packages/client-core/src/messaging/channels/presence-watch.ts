@@ -6,7 +6,7 @@ import {
   type PresenceRealtimeLike,
   presenceTopic,
   type PresenceWatch,
-} from './presence-live.js';
+} from './presence-live';
 
 /**
  * The watch's identity: the first PRESENCE_WATCH_MAX distinct people (the caller's priority),

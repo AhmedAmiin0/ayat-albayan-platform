@@ -1,2 +1,2 @@
-export { createErrorReporter } from './reporter.js';
-export type { ErrorReporter, ReportTags, ReportTransport } from './error-report.types.js';
+export { createErrorReporter } from './reporter';
+export type { ErrorReporter, ReportTags, ReportTransport } from './error-report.types';

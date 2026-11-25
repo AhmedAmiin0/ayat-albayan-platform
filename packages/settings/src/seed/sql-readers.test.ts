@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { liveSqlObjects, settingsKeysOf, sqlSettingsReaders } from './sql-readers.js';
+import { liveSqlObjects, settingsKeysOf, sqlSettingsReaders } from './sql-readers';
 
 const m1 = `
 create function public.f() returns int language sql as $$

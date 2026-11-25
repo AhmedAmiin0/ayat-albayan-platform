@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { SETTING_DEFAULTS, type AcademySettings } from '../registry.js';
-import { FEEDBACK_MODES, FEEDBACK_SETTINGS, type FeedbackMode } from './feedback.js';
+import { SETTING_DEFAULTS, type AcademySettings } from '../registry';
+import { FEEDBACK_MODES, FEEDBACK_SETTINGS, type FeedbackMode } from './feedback';
 
 describe('feedback settings (migration 195)', () => {
   it('FEEDBACK_MODES are the feedback_mode options, buttons first', () => {

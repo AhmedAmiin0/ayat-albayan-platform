@@ -5,7 +5,7 @@ import {
   attachmentUploadSchema,
   reportDraftSchema,
   reportSubmitSchema,
-} from '../schema.js';
+} from '../schema';
 
 const allGrades = {
   recitation: 'excellent',

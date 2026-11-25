@@ -4,9 +4,9 @@ import {
   SETTINGS_REGISTRY,
   type AcademySettings,
   type SettingKey,
-} from '../registry.js';
-import { storedSettingZod } from './schema/index.js';
-import type { SettingDef } from '../defs.js';
+} from '../registry';
+import { storedSettingZod } from './schema';
+import type { SettingDef } from '../defs';
 
 /** Is the stored JSON valid for this entry? The PATCH schema minus its trim (docs/36 z3). */
 export function isValidSetting(def: SettingDef, v: unknown): boolean {

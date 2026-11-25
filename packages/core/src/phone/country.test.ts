@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CountryListSchema, flagOf } from './country.js';
+import { CountryListSchema, flagOf } from './country';
 
 describe('country data', () => {
   it('a flag is the two regional-indicator letters of the code', () => {

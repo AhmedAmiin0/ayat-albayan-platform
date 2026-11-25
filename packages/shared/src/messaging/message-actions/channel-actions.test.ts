@@ -3,7 +3,7 @@ import {
   CHANNEL_DELETE_WINDOW_MS,
   CHANNEL_EDIT_WINDOW_MS,
   channelActions,
-} from './channel-actions.js';
+} from './channel-actions';
 
 const at = '2026-10-30T10:00:00.000Z';
 const now = (ms: number) => new Date(Date.parse(at) + ms);

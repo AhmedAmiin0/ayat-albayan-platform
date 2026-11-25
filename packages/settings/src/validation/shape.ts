@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { E164_RE } from '@ab/core';
-import type { ShapeField } from '../defs.js';
+import type { ShapeField } from '../defs';
 
 const FORMATS = {
   e164: E164_RE,

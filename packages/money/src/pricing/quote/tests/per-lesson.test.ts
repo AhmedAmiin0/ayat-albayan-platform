@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { roundCents } from '../../price/index.js';
-import { quote, type QuoteOptions } from '../quote.js';
+import { roundCents } from '../../price';
+import { quote, type QuoteOptions } from '../quote';
 
 // Per-lesson price rounds like the site's Intl formatter; these cases differed by 0.01 otherwise.
 type Case = [country: string, plan: string, duration: 30 | 45 | 60, discount: number, site: number];

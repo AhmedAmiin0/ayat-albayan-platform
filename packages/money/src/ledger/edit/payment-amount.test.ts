@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { amountEditProblem, amountFromStripe, paymentAmountSchema } from './payment-amount.js';
+import { amountEditProblem, amountFromStripe, paymentAmountSchema } from './payment-amount';
 
 const bank = { method: 'bank', kind: 'payment', amount: 300 } as const;
 

@@ -1,7 +1,7 @@
 import { backoffDelay, normalizePhone } from '@ab/core';
 import { WA_ERROR as E } from '@ab/catalog';
-import { APP_SEND_UNCONFIRMED } from './chat/thread-reopen/index.js';
-import { REOPEN_NOT_NEEDED } from './message-actions/whatsapp-send/index.js';
+import { APP_SEND_UNCONFIRMED } from './chat/thread-reopen';
+import { REOPEN_NOT_NEEDED } from './message-actions/whatsapp-send';
 
 // WhatsApp Cloud API rules the sender, the webhook and the inbox share (docs/12 §3).
 

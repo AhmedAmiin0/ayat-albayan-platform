@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
-import { probe, PROBE_TIMEOUT_MS } from './probe.js';
+import { probe, PROBE_TIMEOUT_MS } from './probe';
 
 beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());

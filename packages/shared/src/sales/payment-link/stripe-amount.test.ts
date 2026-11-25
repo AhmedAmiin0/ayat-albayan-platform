@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fromStripeAmount, toStripeAmount } from './rules.js';
+import { fromStripeAmount, toStripeAmount } from './rules';
 
 describe('amounts as Stripe counts them, per currency', () => {
   it('2-decimal currencies: hundredths (SAR, AED, QAR, USD)', () => {

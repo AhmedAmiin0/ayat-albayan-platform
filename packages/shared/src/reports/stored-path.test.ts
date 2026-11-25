@@ -5,7 +5,7 @@ import {
   storageKeyOf,
   storageProviderOf,
   storedPath,
-} from './stored-path.js';
+} from './stored-path';
 
 describe('stored path marker (docs/45)', () => {
   it('a path without a marker is an old Supabase object', () => {

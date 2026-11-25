@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ReportTransport } from './error-report.types.js';
-import { createErrorReporter } from './reporter.js';
+import type { ReportTransport } from './error-report.types';
+import { createErrorReporter } from './reporter';
 
 const DSN = 'https://k@e.example.com/1';
 

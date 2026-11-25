@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { meLoaded, permissionsOf, permissionsView } from '../../index.js';
+import { meLoaded, permissionsOf, permissionsView } from '../..';
 
 describe('permissionsView (E2, D6: deny until /auth/me has loaded)', () => {
   it('grants nothing and is not loaded while /auth/me is loading or signed out', () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CUSTOM_VALUE_MAX_BYTES, customConfigUpsertSchema, customKeySchema } from './schema.js';
+import { CUSTOM_VALUE_MAX_BYTES, customConfigUpsertSchema, customKeySchema } from './schema';
 
 describe('custom entry validation', () => {
   it.each(['promo.banner', 'a1', 'site-name', 'x_y.z-9'])('accepts the key %s', (k) => {

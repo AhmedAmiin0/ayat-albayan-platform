@@ -1,5 +1,5 @@
-import { surahName } from '../quran/quran.js';
-import type { ReportContent, SegmentKind, TajweedTopic } from './content.js';
+import { surahName } from '../quran/quran';
+import type { ReportContent, SegmentKind, TajweedTopic } from './content';
 
 /** The v1 text columns a v2 report still fills so the Google sheet reads it. */
 export interface LegacyTexts {

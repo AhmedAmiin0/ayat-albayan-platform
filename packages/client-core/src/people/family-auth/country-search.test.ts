@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { COUNTRIES, defaultCountry, USUAL } from './countries.js';
-import { orderCountries, searchCountries } from './country-search.js';
+import { COUNTRIES, defaultCountry, USUAL } from './countries';
+import { orderCountries, searchCountries } from './country-search';
 
 const codes = (list: readonly { code: string }[]) => list.map((c) => c.code);
 

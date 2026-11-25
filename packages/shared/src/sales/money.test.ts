@@ -4,7 +4,7 @@ import {
   salesPaymentCreateSchema,
   salesQuoteSchema,
   salesSubscriptionCreateSchema,
-} from './money.js';
+} from './money';
 
 const ID = '11111111-1111-4111-8111-111111111111';
 const PAY = {

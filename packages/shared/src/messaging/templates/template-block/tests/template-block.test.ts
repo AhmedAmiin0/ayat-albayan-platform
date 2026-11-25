@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { templateBlock, templateButtonLink, type TemplateBlockSource } from '../template-block.js';
+import { templateBlock, templateButtonLink, type TemplateBlockSource } from '../template-block';
 
 const src = (over: Partial<TemplateBlockSource> = {}): TemplateBlockSource => ({
   key: 'lesson_reminder_meet',

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { EARNING_STATUSES } from '../ledger/earnings/earnings.js';
-import { earningStatusStyle } from './status-style.js';
+import { EARNING_STATUSES } from '../ledger/earnings/earnings';
+import { earningStatusStyle } from './status-style';
 
 describe('earningStatusStyle', () => {
   it('every earning status is mapped; only paid is ok; never saffron (the teacher is not the one to act)', () => {

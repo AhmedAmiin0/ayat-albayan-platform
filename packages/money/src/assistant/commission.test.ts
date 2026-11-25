@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fromCents, toCents } from '@ab/core';
-import { commissionAction, computeCommission } from './commission.js';
+import { commissionAction, computeCommission } from './commission';
 
 const pct = (value: number, base: number, baseCurrency = 'SAR') =>
   computeCommission({ type: 'percent', value, currency: null, base, baseCurrency });

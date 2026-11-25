@@ -1,4 +1,4 @@
-import type { SettingDef } from '../defs.js';
+import type { SettingDef } from '../defs';
 
 /** SQL reads the renewal settings with own defaults: a default change needs a migration. */
 export const SALES_SETTINGS = {

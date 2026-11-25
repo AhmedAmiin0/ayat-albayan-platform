@@ -1,5 +1,5 @@
 import type { ReportView } from '@ab/shared';
-import { msUntilClose } from './send-state.js';
+import { msUntilClose } from './send-state';
 
 type WindowFields = Pick<ReportView, 'can_edit' | 'edit_until' | 'sent_at' | 'pdf_status'>;
 

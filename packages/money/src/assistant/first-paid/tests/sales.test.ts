@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { planCommission, type PaymentFact, type SubscriptionFact } from '../first-paid.js';
+import { planCommission, type PaymentFact, type SubscriptionFact } from '../first-paid';
 
 // Owner 2026-10-12: the salesperson records the family's bank transfer herself (POST /sales/payments). The
 // commission (migration 272 trigger, twin planCommission) reads only the payments, never who recorded them,

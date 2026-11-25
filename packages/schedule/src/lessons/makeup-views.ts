@@ -1,5 +1,5 @@
 import type { LessonStatus } from '@ab/catalog';
-import type { BookingKind } from '../schemas/booking-extras.js';
+import type { BookingKind } from '../schemas/booking-extras';
 
 // Makeup and invoice API shapes (R-SCH-10, R-PAY-03, R-MSG-06). Snake_case like every row;
 // instants are ISO-8601 UTC strings.

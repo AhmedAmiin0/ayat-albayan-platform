@@ -1,20 +1,20 @@
 import type { Attendance, Grade, Program } from '@ab/catalog';
-import type { ReportView } from '../views.js';
+import type { ReportView } from '../views';
 import {
   emptyContent,
   MAX_SEGMENTS,
   type ReportContent,
   type ReportSegment,
   type SegmentKind,
-} from './content.js';
-import { suggestOverall } from './rules.js';
+} from './content';
+import { suggestOverall } from './rules';
 import {
   reportV2SubmitSchema,
   type ReportV2DraftBody,
   type ReportV2SubmitBody,
   type V2Problem,
-} from './schema.js';
-import { suggestHomework, suggestNextPlan, type SuggestWords } from './suggest.js';
+} from './schema';
+import { suggestHomework, suggestNextPlan, type SuggestWords } from './suggest';
 
 // v2 report form shared by web and mobile; null fields send the suggestion until changed.
 

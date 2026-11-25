@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { computeCommission } from './commission.js';
-import { planCommission, type PaymentFact, type SubscriptionFact } from './first-paid/index.js';
-import { commissionKindOf, DEFAULT_RENEWAL_SHARE, RENEWAL_CUTOFF } from './kind.js';
-import { planRenewalCommission } from './renewal.js';
+import { computeCommission } from './commission';
+import { planCommission, type PaymentFact, type SubscriptionFact } from './first-paid';
+import { commissionKindOf, DEFAULT_RENEWAL_SHARE, RENEWAL_CUTOFF } from './kind';
+import { planRenewalCommission } from './renewal';
 
 const AFTER = '2026-11-02T09:00:00Z';
 const pay = (amount: number, paid_at = AFTER): PaymentFact => ({ amount, kind: 'payment', paid_at });

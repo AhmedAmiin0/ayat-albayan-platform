@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { lessonCountsForPay, teacherRateFor, type PayRuleSettings } from './pay-rule.js';
+import { lessonCountsForPay, teacherRateFor, type PayRuleSettings } from './pay-rule';
 
 const OFF: PayRuleSettings = { countLate: false, countNoShow: false, countTrials: false };
 const RATES = { 30: 50, 45: 70, 60: 90, 90: null };

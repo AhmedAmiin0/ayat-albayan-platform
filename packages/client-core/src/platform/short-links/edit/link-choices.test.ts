@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   dayEndExpiry, expiryChip, expiryDay, expiryDayRange, inPeopleFilter,
-} from './link-choices.js';
+} from './link-choices';
 
 const clock = { now: new Date('2026-11-17T22:30:00.000Z'), tz: 'Asia/Riyadh' };
 

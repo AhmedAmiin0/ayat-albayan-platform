@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { STUDENT_STATUSES } from '@ab/catalog';
-import { familyChatViaSales } from './trial-chat.js';
+import { familyChatViaSales } from './trial-chat';
 
 describe('familyChatViaSales (not subscribed yet: no direct teacher chat)', () => {
   it('only a not-yet-subscribed student’s family goes through sales', () => {

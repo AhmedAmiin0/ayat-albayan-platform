@@ -1,14 +1,14 @@
 import { z } from 'zod';
 import type { Attendance, LessonStatus, Program, StudentStatus } from '@ab/catalog';
-import type { ReportSummaryView } from '../../reports/index.js';
+import type { ReportSummaryView } from '../../reports';
 import { instant } from '@ab/core';
-import { moveReasonSchema } from '../../schemas/index.js';
+import { moveReasonSchema } from '../../schemas';
 import { isCancelledLesson } from '@ab/schedule';
-import type { SalesHistoryEntry } from '../academy.js';
-import type { SalesPackageSummary } from './student-package.js';
-import type { SalesStudentSchedule } from './student-schedule.js';
-import type { SalesStudentFamily } from './student-family.js';
-import type { TrialOutcome } from '../../people/students/index.js';
+import type { SalesHistoryEntry } from '../academy';
+import type { SalesPackageSummary } from './student-package';
+import type { SalesStudentSchedule } from './student-schedule';
+import type { SalesStudentFamily } from './student-family';
+import type { TrialOutcome } from '../../people/students';
 
 // Student details for any student (docs/16 row 36); every assistant sees every student.
 

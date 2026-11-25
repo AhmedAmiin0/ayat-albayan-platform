@@ -1,7 +1,7 @@
 import type { ChannelPage } from '@ab/shared';
 import { expect, test } from 'vitest';
-import { channelMessage } from './channel.fakes.test-util.js';
-import { isPending, pendingMessage, withPending, withoutPending } from './pending.js';
+import { channelMessage } from './channel.fakes.test-util';
+import { isPending, pendingMessage, withPending, withoutPending } from './pending';
 
 const row = pendingMessage({ body: 'شكرًا', clientId: 'c1', at: new Date('2026-10-27T10:00:00Z') });
 const page = (ids: string[]): ChannelPage => ({

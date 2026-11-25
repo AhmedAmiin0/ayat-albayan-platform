@@ -1,6 +1,7 @@
 // A tsconfig names only its own folder (CLAUDE.md rule 13): apps and packages link through
 // package.json dependencies and `exports`/`imports`, never through compiler paths; shared compiler
-// options come only from the root tsconfig.base.json, never from a package. The one alias, `@/` →
+// options come only from the root tsconfig.base.json and its kind configs (packages.mjs), never
+// from a package. The one alias, `@/` →
 // each app's own src, is declared once in that root base. No baseline and no allow-list: every
 // tsconfig.json and tsconfig.*.json outside node_modules passes or CI fails, and so does any `@/`
 // import under packages/ (alias.mjs).
@@ -13,6 +14,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { ts } from 'ts-morph';
 import { z } from 'zod';
 import { aliasImports, isPackageCode } from './alias.mjs';
+import { namesKind, shapeViolations } from './packages.mjs';
 
 const NAME = /(^|\/)tsconfig(\.[^/]+)?\.json$/;
 const VENDORED = /(^|\/)node_modules\//;
@@ -43,7 +45,9 @@ const ownFile = (entry) => entry.startsWith('./') && !leavesFolder(entry);
 const isRelative = (entry) => entry.startsWith('./') || entry.startsWith('../');
 const rootBase = (path, base) =>
   isRelative(base) && posix.join(posix.dirname(path), base) === ROOT_BASE;
-const allowedBase = (path, base) => ownFile(base) || rootBase(path, base);
+const fromRoot = (path, base) => posix.join(posix.dirname(path), base);
+const kindBase = (path, base) => isRelative(base) && namesKind(base, fromRoot(path, base));
+const allowedBase = (path, base) => ownFile(base) || rootBase(path, base) || kindBase(path, base);
 
 const OPTIONS = ['rootDirs', 'typeRoots', 'baseUrl'];
 
@@ -64,7 +68,9 @@ const bases = (path, config) =>
   [config.extends ?? []]
     .flat()
     .filter((base) => !allowedBase(path, base))
-    .map((base) => `extends: "${base}" is not its own folder or the root ${ROOT_BASE}`);
+    .map(
+      (base) => `extends: "${base}" is not its own folder, the root ${ROOT_BASE} or a kind config`,
+    );
 
 const isTheAlias = (paths, path) => path === ROOT_BASE && isDeepStrictEqual(paths, ALIAS);
 const pathsAllowed = (paths, path) => paths === undefined || isTheAlias(paths, path);
@@ -80,6 +86,7 @@ export function violations(path, text) {
     ...aliasOnlyInBase(config, path),
     ...outside(config),
     ...bases(path, config),
+    ...shapeViolations(path, config),
   ];
 }
 

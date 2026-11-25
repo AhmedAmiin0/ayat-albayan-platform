@@ -1,5 +1,5 @@
 import type { MessageView, ReactionResult } from '@ab/shared';
-import { patchMessage, withOurs } from './reactions.js';
+import { patchMessage, withOurs } from './reactions';
 
 // Written without React so client-core stays framework-free.
 

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { CHAT_SEND_MIMES, type ChatSendMime } from '../chat/chat-files/index.js';
-import { WA_TEXT_MAX } from '../schemas.js';
+import { CHAT_SEND_MIMES, type ChatSendMime } from '../chat/chat-files';
+import { WA_TEXT_MAX } from '../schemas';
 
 // Called saved replies since `quickReply` means WhatsApp's buttons; nothing here sends.
 

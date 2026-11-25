@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { placeholdersIn, placeholderToken, resolveSavedReply, SAVED_REPLY_PLACEHOLDERS } from '../saved-reply-text.js';
+import { placeholdersIn, placeholderToken, resolveSavedReply, SAVED_REPLY_PLACEHOLDERS } from '../saved-reply-text';
 
 const ALL = { name: 'أم أحمد', student: 'أحمد', assistant: 'سارة' };
 

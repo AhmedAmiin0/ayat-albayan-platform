@@ -15,9 +15,9 @@ import {
   type PortalReports,
   type ReportPageView,
 } from '@ab/shared';
-import type { ApiClient } from '../../core/http/index.js';
-import { listKey, pathKey } from '../../core/keys/index.js';
-import { portalUnreadPath } from '../../messaging/channels/index.js';
+import type { ApiClient } from '../../core/http';
+import { listKey, pathKey } from '../../core/keys';
+import { portalUnreadPath } from '../../messaging/channels';
 
 // The family portal's reads (docs/31, docs/50 §7), shared by web and the family app: plain TanStack
 // Query options (no React), every answer parsed with the shared schema (rule 12). The API scopes

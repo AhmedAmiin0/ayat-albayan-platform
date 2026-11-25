@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { attachmentUploadSchema } from '../schema/index.js';
+import { attachmentUploadSchema } from '../schema';
 
 // Lesson files (migration 20261117150200) in the report-attachments bucket, 25 MiB cap.
 

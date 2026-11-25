@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { diffRanges, diffSegments } from './highlight-diff.js';
+import { diffRanges, diffSegments } from './highlight-diff';
 
 // R-STU-03 duplicate dialog: underline only the letter that differs (docs/07 §14.2).
 describe('diffRanges', () => {

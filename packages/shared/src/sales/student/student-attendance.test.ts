@@ -6,7 +6,7 @@ import {
   nextMonth,
   riyadhMonthBounds,
   riyadhMonthOf,
-} from './student-attendance.js';
+} from './student-attendance';
 
 describe('Riyadh months', () => {
   it('starts and ends a month at Riyadh midnight (UTC+3)', () => {

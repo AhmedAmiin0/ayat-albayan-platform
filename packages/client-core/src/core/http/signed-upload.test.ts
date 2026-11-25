@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { SignedUploadError, uploadToSlot } from './signed-upload.js';
+import { SignedUploadError, uploadToSlot } from './signed-upload';
 
 const file = { body: new Uint8Array([1, 2, 3]), contentType: 'image/png' };
 const slot = (path: string) => ({ bucket: 'receipts', path, token: 'tok', signed_url: 'https://files.example/put?sig=1' });

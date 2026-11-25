@@ -1,4 +1,4 @@
-import type { LiveKey } from './inbox-live.js';
+import type { LiveKey } from './inbox-live';
 
 /**
  * Which refresh targets are on screen. A watched key (a focused chats tab, an open focused chat)

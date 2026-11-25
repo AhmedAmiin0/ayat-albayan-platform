@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { editLimitReason, editRoute, nextEditAt, recentEdits } from './edit-limits.js';
+import { editLimitReason, editRoute, nextEditAt, recentEdits } from './edit-limits';
 
 const now = new Date('2026-11-14T12:00:00Z');
 const hoursAgo = (h: number) => new Date(now.getTime() - h * 3_600_000).toISOString();

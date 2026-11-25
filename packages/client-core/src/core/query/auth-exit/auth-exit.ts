@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { ApiError } from '../../http/index.js';
-import type { AuthExit, AuthExitDeps } from './auth-exit.types.js';
+import { ApiError } from '../../http';
+import type { AuthExit, AuthExitDeps } from './auth-exit.types';
 
 const disabledBody = z.object({ code: z.literal('account_disabled') });
 

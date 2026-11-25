@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { continueFits, courseBodyPackage, courseDaysPerWeek, courseOpensOn } from './course.js';
+import { continueFits, courseBodyPackage, courseDaysPerWeek, courseOpensOn } from './course';
 
 describe('courseDaysPerWeek', () => {
   it.each([

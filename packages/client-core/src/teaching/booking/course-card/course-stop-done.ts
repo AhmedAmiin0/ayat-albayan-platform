@@ -1,6 +1,6 @@
 import type { CourseStopResult } from '@ab/shared';
 import type { StudentStatus } from '@ab/catalog';
-import { fill } from './course-card-text.js';
+import { fill } from './course-card-text';
 
 // Pure; nobody is messaged, and admins get a bell for a manual refund transfer.
 

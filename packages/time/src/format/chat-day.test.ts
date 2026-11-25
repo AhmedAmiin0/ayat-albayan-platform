@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chatDay, chatDayKey, dayParts } from './chat-day.js';
+import { chatDay, chatDayKey, dayParts } from './chat-day';
 
 const now = new Date('2026-10-27T10:00:00Z'); // a Tuesday
 const cairo = { now, tz: 'Africa/Cairo' };

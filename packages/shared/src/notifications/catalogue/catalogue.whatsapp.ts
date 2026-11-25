@@ -1,4 +1,4 @@
-import type { NotificationEntry } from './catalogue.types.js';
+import type { NotificationEntry } from './catalogue.types';
 
 // WhatsApp rows a job or an event sends without a person (docs/23a §B2 W1–W7, W9–W11, W13, W14).
 

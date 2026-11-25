@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createMeetingSchema, meetingState } from './internal-meetings.js';
-import { meetingRoomName } from './room.js';
+import { createMeetingSchema, meetingState } from './internal-meetings';
+import { meetingRoomName } from './room';
 
 const NOW = new Date('2026-10-05T10:00:00Z');
 

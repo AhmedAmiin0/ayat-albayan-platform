@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { logReportAction } from './log-report-action.js';
+import { logReportAction } from './log-report-action';
 
 const now = new Date('2026-11-13T12:00:00.000Z');
 const past = '2026-11-13T10:00:00.000Z';

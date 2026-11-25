@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
 import en from '../../i18n/en.json' with { type: 'json' };
 import { isGrantable, systemPermissionsOf } from '@ab/catalog';
-import { canLinkFamily, LEAD_FAMILY_LINK_ERRORS, leadFamilyLinkSchema, secondPhoneOf } from './family-link.js';
+import { canLinkFamily, LEAD_FAMILY_LINK_ERRORS, leadFamilyLinkSchema, secondPhoneOf } from './family-link';
 
 describe('leadFamilyLinkSchema', () => {
   it('trims and upper-cases a generated code', () => {

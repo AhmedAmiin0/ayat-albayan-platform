@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { WA_LINES } from '@ab/catalog';
-import { TEMPLATE_KEY_PATTERN } from '../schemas.js';
-import { BODY_SLOTS } from './templates.js';
+import { TEMPLATE_KEY_PATTERN } from '../schemas';
+import { BODY_SLOTS } from './templates';
 
 // The API checks Meta's body rules and a free name; sending to Meta stays a separate explicit step.
 

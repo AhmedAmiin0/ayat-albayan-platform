@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { liveRoom, liveRoomText, type LiveRoomWords } from '../live-room.js';
+import { liveRoom, liveRoomText, type LiveRoomWords } from '../live-room';
 
 const now = new Date('2026-11-16T15:34:00Z');
 const teacher = { name: 'فاطمة', role: 'teacher' as const };

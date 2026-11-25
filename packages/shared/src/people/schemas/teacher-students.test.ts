@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { TEACHER_STUDENT_STATUSES, teacherStudentsQuerySchema } from './teacher-students.js';
+import { TEACHER_STUDENT_STATUSES, teacherStudentsQuerySchema } from './teacher-students';
 
 describe('teacherStudentsQuerySchema', () => {
   it.each(['subscribed', 'trial'])('accepts kind=%s', (kind) => {

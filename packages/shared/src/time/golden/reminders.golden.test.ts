@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { reopenDedupKey } from '../../messaging/chat/thread-reopen/index.js';
-import { dayBeforeSendAt, localDayStart } from '../../messaging/lesson/timing.day-before.js';
-import { reminderDue } from '../../messaging/lesson/timing/index.js';
+import { reopenDedupKey } from '../../messaging/chat/thread-reopen';
+import { dayBeforeSendAt, localDayStart } from '../../messaging/lesson/timing.day-before';
+import { reminderDue } from '../../messaging/lesson/timing';
 import { riyadhToday, zonedInstant } from '@ab/time';
-import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
+import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep';
 
 // A whole year per zone: seconds, not the default 5 s, on a busy CI runner.
 vi.setConfig({ testTimeout: 60_000 });

@@ -1,4 +1,4 @@
-import type { LeadStatus } from './index.js';
+import type { LeadStatus } from '.';
 
 /** Allowed lead status moves (R-LEAD-01 funnel). `converted` is terminal. */
 export const LEAD_TRANSITIONS: Record<LeadStatus, readonly LeadStatus[]> = {

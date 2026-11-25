@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addCalendarMonths, shiftCalendarMonths } from '../calendar.js';
+import { addCalendarMonths, shiftCalendarMonths } from '../calendar';
 
 describe('calendar months', () => {
   it('shiftCalendarMonths keeps the day, clamped to a shorter month', () => {

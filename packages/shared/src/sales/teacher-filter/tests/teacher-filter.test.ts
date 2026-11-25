@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { PROGRAMS } from '@ab/catalog';
-import type { SalesTeacherView } from '../../academy.js';
-import { canSalesConfirm, filterSalesTeachers, isRunningLesson, isTeacherFilterOn, NO_TEACHER_FILTER, teacherPrograms } from '../teacher-filter.js';
+import type { SalesTeacherView } from '../../academy';
+import { canSalesConfirm, filterSalesTeachers, isRunningLesson, isTeacherFilterOn, NO_TEACHER_FILTER, teacherPrograms } from '../teacher-filter';
 
 const tc = (over: Partial<SalesTeacherView>): SalesTeacherView => ({
   id: 'x', name: 'أبرار', name_en: 'Abrar', gender: 'female', programs: ['quran', 'arabic'], lessons_today: 0, live_now: false, active_count: 0, trial_count: 0, meeting_link: null, platform_classroom: false, students: [], ...over,

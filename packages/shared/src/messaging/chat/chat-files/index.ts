@@ -6,4 +6,4 @@ export {
   isPdfMime,
   WA_CAPTION_MAX,
   waSendKind,
-} from './chat-files.js';
+} from './chat-files';

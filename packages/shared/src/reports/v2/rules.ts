@@ -1,6 +1,6 @@
 import { GRADES, type Attendance, type Grade, type Program } from '@ab/catalog';
-import { ayahCount, nextAyah } from '../quran/quran.js';
-import { attended } from '../rules.js';
+import { ayahCount, nextAyah } from '../quran/quran';
+import { attended } from '../rules';
 import {
   ARABIC_SKILLS,
   emptyContent,
@@ -9,7 +9,7 @@ import {
   type ReportContent,
   type ReportSegment,
   type SegmentKind,
-} from './content.js';
+} from './content';
 
 /** A saved surah range. */
 export interface SurahRange {

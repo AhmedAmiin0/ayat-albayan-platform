@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { clampPosition, formatClock, PLAYER_SPEEDS, progressOf, skipBy, speedLabel } from './index.js';
+import { clampPosition, formatClock, PLAYER_SPEEDS, progressOf, skipBy, speedLabel } from '.';
 
 describe('speeds', () => {
   it('offers 1×, 1.5× and 2×', () => {

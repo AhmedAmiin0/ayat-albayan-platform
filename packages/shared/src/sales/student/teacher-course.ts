@@ -1,5 +1,5 @@
 import type { StudentStatus } from '@ab/catalog';
-import type { AttendanceTableRow } from './student-attendance.js';
+import type { AttendanceTableRow } from './student-attendance';
 
 // docs/47 PR 1: the teacher's student file head (GET /teachers/me/students/:id). Whitelist: the
 // course's dates and lesson counts only; never a price, payment, package id, status or renews_on.

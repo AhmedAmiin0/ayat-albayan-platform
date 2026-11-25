@@ -1,4 +1,4 @@
-import type { SettingDef } from '../../defs.js';
+import type { SettingDef } from '../../defs';
 
 // One switch per teacher page or button, off by default and turned on from the admin portal.
 // UI only: the teacher stops seeing and reaching the page on web and mobile; the API, the data

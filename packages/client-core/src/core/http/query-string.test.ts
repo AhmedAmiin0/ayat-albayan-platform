@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CLIENT_HEADER, toQueryString } from '../../index.js';
+import { CLIENT_HEADER, toQueryString } from '../..';
 
 describe('toQueryString', () => {
   it('keeps defined, non-empty values, encoded', () => {

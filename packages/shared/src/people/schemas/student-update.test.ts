@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { studentUpdateSchema } from './people.js';
+import { studentUpdateSchema } from './people';
 
 describe('studentUpdateSchema expected_status (R-STU-05)', () => {
   it('accepts a known expected status next to the new one', () => {

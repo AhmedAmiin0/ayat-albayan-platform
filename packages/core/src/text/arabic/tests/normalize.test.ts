@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeArabic } from '../arabic.js';
+import { normalizeArabic } from '../arabic';
 
 // R-STU-03: normalised Arabic (strip hamza / taa marbuta / ya variants).
 describe('normalizeArabic (R-STU-03)', () => {

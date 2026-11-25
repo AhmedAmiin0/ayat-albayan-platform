@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { installErrorReporting, type UncaughtSource } from './error-report.js';
+import { installErrorReporting, type UncaughtSource } from './error-report';
 
 const DSN = 'https://k@errors.example.com/5';
 
