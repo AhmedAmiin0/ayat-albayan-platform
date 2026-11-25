@@ -13,14 +13,13 @@ export interface StudentIndex {
 export function studentIndex(students: readonly Desired[] | undefined): StudentIndex {
   const byPhone = new Map<string, Desired[]>();
   for (const s of students ?? []) {
-    const phone = s.record.refs['guardian_id']?.key;
+    const phone = s.record.refs.guardian_id?.key;
     if (phone) byPhone.set(phone, [...(byPhone.get(phone) ?? []), s]);
   }
   return { all: students ?? [], byPhone };
 }
 
-type Found =
-  { ok: true; student: Desired } | { ok: false; reason: 'not_found' | 'ambiguous' };
+type Found = { ok: true; student: Desired } | { ok: false; reason: 'not_found' | 'ambiguous' };
 
 interface StudentQuery {
   phone?: string | null;
@@ -29,7 +28,7 @@ interface StudentQuery {
   teacher?: string | null;
 }
 
-const nameOf = (s: Desired): string => personName(String(s.record.columns['name'] ?? ''));
+const nameOf = (s: Desired): string => personName(String(s.record.columns.name ?? ''));
 /** The registry name first, then the spellings of rows merged into it by AB code. */
 const namesOf = (s: Desired): string[] => [nameOf(s), ...(s.record.aliases ?? []).map(personName)];
 const ARABIC = /[؀-ۿ]/;
@@ -68,7 +67,7 @@ export function findStudent(ix: StudentIndex, q: StudentQuery): Found {
   if (!q.name) return { ok: false, reason: 'not_found' };
   const teacher = q.teacher;
   const tiers = teacher
-    ? [ix.all.filter((s) => s.record.refs['teacher_id']?.key === teacher), ix.all]
+    ? [ix.all.filter((s) => s.record.refs.teacher_id?.key === teacher), ix.all]
     : [ix.all];
   for (const cands of tiers) {
     const r = byName(cands, q.name);

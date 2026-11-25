@@ -28,16 +28,16 @@ const EXPENSE_CURRENCY = 'EGP';
 /** «other Expenses» descriptions sit in columns H/I of the same tab («zoom»). */
 function otherNote(rows: readonly SourceRow[]): string {
   const descs = rows
-    .filter((r) => (num(r.fields['other_amount']) ?? 0) > 0)
-    .map((r) => text(r.fields['other_desc']))
+    .filter((r) => (num(r.fields.other_amount) ?? 0) > 0)
+    .map((r) => text(r.fields.other_desc))
     .filter((d): d is string => d !== null);
   return ['other Expenses', ...descs].join(': ');
 }
 
 function sheetExpenses(rows: readonly SourceRow[], month: string): Mapped[] {
   return rows.flatMap((r) => {
-    const label = text(r.fields['summary_label']);
-    const amount = num(r.fields['summary_value']);
+    const label = text(r.fields.summary_label);
+    const amount = num(r.fields.summary_value);
     const category = label ? CATEGORY[label] : undefined;
     if (!label || !category || amount === null || amount <= 0) return [];
     const note = category === 'other' ? otherNote(rows) : label;

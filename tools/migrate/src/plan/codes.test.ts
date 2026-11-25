@@ -19,7 +19,7 @@ const imported = (name: string, targetId: string): [string, Existing] => [
 ];
 
 const desired = [student('ليلى', 185), student('هالة', 12), student('تالا')];
-const noCode = (d: Desired | undefined) => d?.record.columns['code_seq'] === undefined;
+const noCode = (d: Desired | undefined) => d?.record.columns.code_seq === undefined;
 
 describe('legacy codes vs the target', () => {
   it('lists the legacy codes of every planned student', () => {

@@ -19,8 +19,8 @@ export interface CrmReader {
 }
 
 export function crmReaderFromEnv(env: NodeJS.ProcessEnv): CrmReader {
-  const url = env['CRM_SUPABASE_URL'];
-  const key = env['CRM_SUPABASE_SERVICE_KEY'];
+  const url = env.CRM_SUPABASE_URL;
+  const key = env.CRM_SUPABASE_SERVICE_KEY;
   if (!url || !key)
     throw new Error('CRM_SUPABASE_URL / CRM_SUPABASE_SERVICE_KEY missing (tools/migrate/.env)');
   const db = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
@@ -56,10 +56,10 @@ const FILTER_EMBEDS = new Set(['conversations', 'contacts', 'pipelines']);
 
 /** Delta merge by id: newer rows replace cached ones; embeds used only for filtering are dropped. */
 export function mergeById(cached: readonly CrmRow[], fresh: readonly CrmRow[]): CrmRow[] {
-  const byId = new Map(cached.map((r) => [String(r['id']), r]));
+  const byId = new Map(cached.map((r) => [String(r.id), r]));
   for (const r of fresh) {
     const row = Object.fromEntries(Object.entries(r).filter(([k]) => !FILTER_EMBEDS.has(k)));
-    byId.set(String(row['id']), row);
+    byId.set(String(row.id), row);
   }
   return [...byId.values()];
 }

@@ -67,7 +67,7 @@ export function collectPeople(bundle: SourceBundle): People {
     }
   }
   const people = [...new Set(byKey.values())];
-  issues.push(...addHeartPeople(bundle.sheets['heart_subscriptions'] ?? [], people));
+  issues.push(...addHeartPeople(bundle.sheets.heart_subscriptions ?? [], people));
   issues.push(...claimLegacyCodes(people), ...mergeCandidates(people));
   const named = new Set(people.map((p) => p.phone));
   return { people, issues, phoneOnly: phoneOnly.filter((o) => !named.has(o.phone)) };

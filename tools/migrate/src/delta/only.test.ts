@@ -36,7 +36,7 @@ describe('onlyEntities', () => {
     const p = onlyEntities(planOf([lead, lesson], [issue('leads'), issue('lessons')]), FROM);
     expect(p.items.map((i) => i.action)).toEqual(['skip', 'create']);
     expect(p.issues.map((i) => i.entity)).toEqual(['lessons']);
-    expect(p.counts['leads']).toMatchObject({ create: 0, skip: 1 });
+    expect(p.counts.leads).toMatchObject({ create: 0, skip: 1 });
   });
 
   it('a lesson before --from is untouched even when lessons are in --only', () => {

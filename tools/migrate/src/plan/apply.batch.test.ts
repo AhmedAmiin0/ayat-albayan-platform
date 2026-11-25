@@ -28,7 +28,7 @@ const mods = (failOn?: number): EntityModule[] => [
     table: 'leads',
     map: () => [],
     write: async (ctx) => {
-      if (ctx.item.record.columns['n'] === failOn) throw new Error('boom');
+      if (ctx.item.record.columns.n === failOn) throw new Error('boom');
       return { targetId: await ctx.tx.insert({ table: 'leads', columns: ctx.columns }) };
     },
   },

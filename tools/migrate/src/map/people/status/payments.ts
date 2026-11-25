@@ -20,13 +20,13 @@ interface PaymentCtx {
 
 /** A paid HEART row → its student's keyId and period start, else null. */
 function paidRow(r: SourceRow, c: PaymentCtx): { id: string; startsOn: string } | null {
-  const name = text(r.fields['name']);
-  const phone = phoneCell(r.fields['phone']);
-  const startsOn = ymd(r.fields['date']);
+  const name = text(r.fields.name);
+  const phone = phoneCell(r.fields.phone);
+  const startsOn = ymd(r.fields.date);
   if (!name || !phone.ok || !startsOn || testReason({ names: [name], phone: phone.e164 }))
     return null;
   const paid =
-    /^paid$/i.test(text(r.fields['paid_status']) ?? '') ||
+    /^paid$/i.test(text(r.fields.paid_status) ?? '') ||
     finPrice(c.bundle, { name, month: startsOn.slice(0, 7) }) !== null;
   const found = paid ? findStudent(c.ix, { phone: phone.e164, name }) : null;
   return found?.ok ? { id: keyId(found.student.key), startsOn } : null;
@@ -35,7 +35,7 @@ function paidRow(r: SourceRow, c: PaymentCtx): { id: string; startsOn: string } 
 /** student keyId → the best state of their paid periods on the import date. */
 export function paymentFacts(c: PaymentCtx): Map<string, PaymentState> {
   const out = new Map<string, PaymentState>();
-  for (const r of c.bundle.sheets['heart_subscriptions'] ?? []) {
+  for (const r of c.bundle.sheets.heart_subscriptions ?? []) {
     const p = paidRow(r, c);
     if (!p) continue;
     const state = paymentState({ startsOn: p.startsOn, today: c.today, expiryDays: c.expiryDays });

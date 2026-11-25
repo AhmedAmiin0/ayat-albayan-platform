@@ -24,7 +24,7 @@ export function templateChanges(o: {
   const out: FieldChange[] = [];
   for (const d of o.fresh) {
     const c = d.record.columns;
-    const hit = o.rows.find((r) => r.meta_name === c['meta_name'] && r.language === c['language']);
+    const hit = o.rows.find((r) => r.meta_name === c.meta_name && r.language === c.language);
     if (!hit) continue;
     o.existing.set(keyId(d.key), { targetId: null, hash: 'in target, not imported yet' });
     for (const field of SYNCED) {
@@ -49,7 +49,7 @@ export async function matchTemplates(o: {
     .select<TemplateRow>({
       text: `select meta_name, language, to_jsonb(t) as row from public.message_templates t
              where meta_name = any($1)`,
-      params: [fresh.map((d) => String(d.record.columns['meta_name']))],
+      params: [fresh.map((d) => String(d.record.columns.meta_name))],
     })
     .catch((err: unknown) => {
       if ((err as { code?: string }).code === '42P01') return [] as TemplateRow[];

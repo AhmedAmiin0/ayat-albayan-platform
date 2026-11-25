@@ -117,7 +117,7 @@ describe('mapMessages', () => {
   });
 
   it('never imports a queued row (the sender would send it)', () => {
-    for (const m of out) if (m.ok) expect(m.value.columns['status']).not.toBe('queued');
+    for (const m of out) if (m.ok) expect(m.value.columns.status).not.toBe('queued');
   });
 
   it('adopts webhook-stored rows by wamid', () => {

@@ -84,7 +84,7 @@ describe('matchPdfs: weak matches need the owner (wrong PDF = wrong parent)', ()
 
   it('attaches it once the zip path is approved, originals before copies', () => {
     const out = matchPdfs(bundle({ files, reports, approved: files }));
-    expect(out.map((m) => m.ok && m.value.columns['zip_path'])).toEqual([files[1], files[0]]);
+    expect(out.map((m) => m.ok && m.value.columns.zip_path)).toEqual([files[1], files[0]]);
     const kept = resolve(out);
     expect(kept.kept).toHaveLength(1);
     expect(kept.issues.filter((i) => i.code === 'conflict')).toHaveLength(1);

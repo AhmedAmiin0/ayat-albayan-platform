@@ -10,7 +10,7 @@ import type { Existing, RowIssue } from '../types.ts';
 import type { Desired } from './resolve.ts';
 
 const codeOf = (d: Desired): number | null => {
-  const c = d.record.columns['code_seq'];
+  const c = d.record.columns.code_seq;
   return d.key.entity === 'students' && typeof c === 'number' ? c : null;
 };
 
@@ -42,7 +42,7 @@ export function dropTakenCodes(o: DropCodesInput): { desired: Desired[]; issues:
     // Fresh: dropped only when someone holds it. Imported earlier: kept only if it is its own.
     if (self ? holder === self : !holder) return d;
     const columns = { ...d.record.columns };
-    delete columns['code_seq'];
+    delete columns.code_seq;
     const record = { ...d.record, columns };
     issues.push({
       code: 'conflict',

@@ -56,7 +56,7 @@ describe('students', () => {
       MODULES,
     );
     const cols = run.by('students')[0]?.record.columns;
-    expect(cols?.['status']).toBe('active');
+    expect(cols?.status).toBe('active');
     expect(cols).not.toHaveProperty('code_seq');
   });
 
@@ -68,7 +68,7 @@ describe('students', () => {
       }),
       MODULES,
     );
-    expect(run.by('students')[0]?.record.refs['teacher_id']).toEqual(keys.teacher('hend'));
+    expect(run.by('students')[0]?.record.refs.teacher_id).toEqual(keys.teacher('hend'));
   });
 
   it('emits legacy-code students first, so new codes never take an AB code', () => {
@@ -81,7 +81,7 @@ describe('students', () => {
       }),
       MODULES,
     );
-    expect(run.by('students').map((d) => d.record.columns['code_seq'])).toEqual([185, undefined]);
+    expect(run.by('students').map((d) => d.record.columns.code_seq)).toEqual([185, undefined]);
   });
 });
 

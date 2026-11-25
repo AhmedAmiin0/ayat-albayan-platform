@@ -44,7 +44,7 @@ describe('createsOnly', () => {
       ['same', 'skip', 'id-same'],
     ]);
     expect(out.changes).toEqual([]);
-    expect(out.counts['leads']).toMatchObject({ create: 1, update: 0, adopt: 1, skip: 2 });
+    expect(out.counts.leads).toMatchObject({ create: 1, update: 0, adopt: 1, skip: 2 });
   });
 
   it('leaves the input plan unchanged', () => {

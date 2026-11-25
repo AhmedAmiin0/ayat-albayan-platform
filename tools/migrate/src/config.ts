@@ -46,7 +46,7 @@ export function resolveTarget(input: ResolveTargetInput): TargetConfig {
     case 'local': {
       // '' (the .env.example shape) counts as unset; a shell DATABASE_URL wins over .env, so the
       // host is checked: --target local never reaches a remote database.
-      const databaseUrl = env['DATABASE_URL'] || LOCAL_DATABASE_URL;
+      const databaseUrl = env.DATABASE_URL || LOCAL_DATABASE_URL;
       if (!LOCAL_HOSTS.includes(new URL(databaseUrl).hostname)) {
         throw new Error('DATABASE_URL for --target local must point at 127.0.0.1 or localhost');
       }
@@ -54,7 +54,7 @@ export function resolveTarget(input: ResolveTargetInput): TargetConfig {
         name: 'local',
         databaseUrl,
         ssl: false,
-        storage: storageFrom(env['SUPABASE_URL'], env['SUPABASE_SERVICE_ROLE_KEY']),
+        storage: storageFrom(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY),
       };
     }
     case 'staging': {
@@ -70,7 +70,7 @@ export function resolveTarget(input: ResolveTargetInput): TargetConfig {
         name: 'staging',
         databaseUrl,
         ssl: true,
-        storage: storageFrom(env['STAGING_SUPABASE_URL'], env['STAGING_SUPABASE_SERVICE_ROLE_KEY']),
+        storage: storageFrom(env.STAGING_SUPABASE_URL, env.STAGING_SUPABASE_SERVICE_ROLE_KEY),
       };
     }
     case 'production': {
@@ -83,10 +83,7 @@ export function resolveTarget(input: ResolveTargetInput): TargetConfig {
         name: 'production',
         databaseUrl: need(env, 'PRODUCTION_DATABASE_URL'),
         ssl: true,
-        storage: storageFrom(
-          env['PRODUCTION_SUPABASE_URL'],
-          env['PRODUCTION_SUPABASE_SERVICE_ROLE_KEY'],
-        ),
+        storage: storageFrom(env.PRODUCTION_SUPABASE_URL, env.PRODUCTION_SUPABASE_SERVICE_ROLE_KEY),
       };
     }
     default:

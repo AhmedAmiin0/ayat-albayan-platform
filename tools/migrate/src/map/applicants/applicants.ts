@@ -14,11 +14,11 @@ interface Applicant {
 }
 
 function applicantRows(bundle: SourceBundle): SourceRow[] {
-  const isJob = (r: SourceRow) => sheetLeadStatus(text(r.fields['status'])) === 'job_applicant';
+  const isJob = (r: SourceRow) => sheetLeadStatus(text(r.fields.status)) === 'job_applicant';
   return [
-    ...(bundle.sheets['hub_conversations'] ?? []).filter(isJob),
-    ...(bundle.sheets['book_conversations'] ?? []).filter(isJob),
-    ...(bundle.sheets['hub_job_replies'] ?? []),
+    ...(bundle.sheets.hub_conversations ?? []).filter(isJob),
+    ...(bundle.sheets.book_conversations ?? []).filter(isJob),
+    ...(bundle.sheets.hub_job_replies ?? []),
   ];
 }
 
@@ -27,8 +27,8 @@ export function mapJobApplicants(bundle: SourceBundle): Mapped[] {
   const issues: RowIssue[] = [];
   for (const r of applicantRows(bundle)) {
     const issue = issuesFor('job_applicants', r.ref);
-    const name = text(r.fields['name']);
-    const phone = phoneCell(r.fields['phone']);
+    const name = text(r.fields.name);
+    const phone = phoneCell(r.fields.phone);
     if (testReason({ names: [name], phone: phone.ok ? phone.e164 : null })) {
       issues.push(issue({ code: 'test_row', severity: 'reject' }));
       continue;
@@ -40,7 +40,7 @@ export function mapJobApplicants(bundle: SourceBundle): Mapped[] {
       continue;
     }
     const prev = byPhone.get(phone.e164);
-    const notes = text(r.fields['summary']);
+    const notes = text(r.fields.summary);
     byPhone.set(
       phone.e164,
       prev

@@ -33,11 +33,11 @@ function ruleOf(
   const issue = issuesFor('schedule_rules', row.ref);
   const fail = (i: IssueInput) => ({ ref: row.ref, issues: [issue(i)] });
   const slot = bookingSlot(f, o.from);
-  if (slot.kind === 'issue' && text(f['recurrence'])) return fail(slot.issue);
+  if (slot.kind === 'issue' && text(f.recurrence)) return fail(slot.issue);
   if (slot.kind !== 'rule') return null;
   const who = bookingWho(row, o.ix);
   if (!('teacher' in who)) return fail(who);
-  const pkgText = text(f['package_text']);
+  const pkgText = text(f.package_text);
   const pkg = packageSize(pkgText) ?? null;
   const issues =
     pkgText && !pkg
