@@ -122,11 +122,6 @@
       "count": 3
     }
   },
-  "src/common/configuration/config-store/boundaries/config-ownership.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/common/configuration/config-store/boundaries/config-parity.test.ts": {
     "typescript/dot-notation": {
       "count": 1
