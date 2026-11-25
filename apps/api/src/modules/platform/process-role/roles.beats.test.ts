@@ -3,7 +3,7 @@ import { jobBeats } from '@/common/jobs/beats';
 import { bootIn } from './roles.boot.probe';
 
 /** Jobs with their own timers (not a Ticker, whose beats ticker.beats.test.ts covers). */
-const OWN_TIMERS = ['ReportPdfJob', 'GoogleSyncJob', 'ExpensesJob', 'CallsSweeper', 'CrmMediaCopyJob'];
+const OWN_TIMERS = ['ReportPdfJob', 'GoogleSyncJob', 'CrmMediaCopyJob'];
 
 afterEach(() => {
   vi.useRealTimers();
