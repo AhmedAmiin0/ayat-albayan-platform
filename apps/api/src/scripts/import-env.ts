@@ -5,7 +5,7 @@ import {
   type IntegrationKey,
 } from '@ab/catalog';
 
-// The one-off import (owner, 2026-10-12): copies the server env's CURRENT integration values into
+// The one-off import: copies the server env's CURRENT integration values into
 // the database (plain → integration_config, secret → Vault). Pure here, so it is tested without a
 // database; config-import-env.ts wires it to the service-role client.
 

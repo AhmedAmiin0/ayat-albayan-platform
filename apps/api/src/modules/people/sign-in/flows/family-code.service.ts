@@ -15,8 +15,8 @@ const subjectOf = (login: FamilyLogin) => ({ kind: login.kind, id: login.rec.id 
 
 /**
  * The family's sign-in (docs/30 §1): a family number on file + a WhatsApp code. The family's main
- * or second number opens the guardian login, a student's own number the student's login (owner
- * 2026-11-17). The first verified code makes the login (lazy). The session is minted by GoTrue:
+ * or second number opens the guardian login, a student's own number the student's login.
+ * The first verified code makes the login (lazy). The session is minted by GoTrue:
  * only the magic link's token hash leaves, and the client trades it with verifyOtp.
  */
 @Injectable()

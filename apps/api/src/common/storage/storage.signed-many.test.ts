@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
 import { StorageService } from './storage.service';
 
-// signedDownloads: a list's photos in ONE createSignedUrls call (owner 2026-10-28).
+// signedDownloads: a list's photos in ONE createSignedUrls call.
 
 function fakeStorage(createSignedUrls: ReturnType<typeof vi.fn>) {
   const from = vi.fn().mockReturnValue({ createSignedUrls });

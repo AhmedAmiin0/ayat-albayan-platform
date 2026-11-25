@@ -7,7 +7,7 @@ import { SignInLimits } from './code-limits';
 const subjectOf = (reportId: string) => ({ kind: 'report' as const, id: reportId });
 
 /**
- * The report page's codes on the sign-in machinery (owner 2026-11-06): purpose report_view,
+ * The report page's codes on the sign-in machinery: purpose report_view,
  * subject the report; the same HMAC, expiry, attempts, per-phone limits, breaker and template.
  */
 @Injectable()

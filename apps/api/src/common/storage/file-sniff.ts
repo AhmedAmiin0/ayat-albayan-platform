@@ -17,7 +17,7 @@ const FORMATS: readonly (readonly [string, (b: Uint8Array) => boolean])[] = [
   ['application/pdf', (b) => ascii(b, 0, 5) === '%PDF-'],
   ['image/webp', (b) => ascii(b, 0, 4) === 'RIFF' && ascii(b, 8, 12) === 'WEBP'],
   ['image/heic', (b) => ascii(b, 4, 8) === 'ftyp' && HEIC_BRANDS.has(ascii(b, 8, 12))],
-  // A chat voice note (owner 2026-10-27): Android records AAC in MP4; ogg is its WhatsApp form.
+  // A chat voice note: Android records AAC in MP4; ogg is its WhatsApp form.
   ['audio/ogg', (b) => ascii(b, 0, 4) === 'OggS'],
   ['audio/mp4', (b) => ascii(b, 4, 8) === 'ftyp' && !HEIC_BRANDS.has(ascii(b, 8, 12))],
   // A report's voice note or audio file (audit A2): the browser recorder writes webm.

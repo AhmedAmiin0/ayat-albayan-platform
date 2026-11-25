@@ -8,7 +8,7 @@ import { dbError } from '@/common/http/http';
 export type StudentRow = Tables<'students'>;
 export type GuardianRow = Tables<'guardians'>;
 
-// `own`: the student's own WhatsApp (guardian_phones.student_id, owner 2026-11-17); the family's
+// `own`: the student's own WhatsApp (guardian_phones.student_id); the family's
 // `phones` are its main and second numbers only (the .is filter in view()).
 const VIEW = [
   'id, code, name, age, gender, level, memorized, goal, riwaya, tz, notes, teacher_gender_pref',
@@ -62,7 +62,7 @@ interface MoveRow {
   to: string;
 }
 
-/** The single rows the assistant's people edits read and write (owner 2026-11-02). */
+/** The single rows the assistant's people edits read and write. */
 @Injectable()
 export class PeopleEditRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

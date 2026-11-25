@@ -9,7 +9,7 @@ export const purgeCutoff = (now: Date, days: number): Date =>
   new Date(now.getTime() - days * DAY_MS);
 
 /**
- * The managed links' lifecycle (owner 2026-11-17, docs/19): stop at expiry, delete
+ * The managed links' lifecycle (docs/19): stop at expiry, delete
  * short_link_purge_days later with their users and visits. Running a pass twice changes nothing.
  */
 @Injectable()

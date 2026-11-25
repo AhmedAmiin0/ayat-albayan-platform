@@ -66,7 +66,7 @@ async function testStudents(db: Db, ids: readonly string[]): Promise<Set<string>
 async function searchFilter(db: Db, term: string): Promise<string | null> {
   const digits = searchDigits(term);
   if (!digits) return studentNameOrCodeFilter(term);
-  // Every family number, main and second (guardian_phones, owner 2026-10-29).
+  // Every family number, main and second (guardian_phones).
   const { data, error } = await db.from('guardian_phones').select('guardian_id').ilike('phone_e164', `%${digits}%`).limit(100);
   if (error) throw dbError(error);
   return studentPhoneOrCodeFilter([...new Set(data.map((g) => g.guardian_id))], digits);
@@ -94,7 +94,7 @@ export async function getStudentProfile(db: Db, id: string): Promise<StudentProf
     .from('students')
     .select(PROFILE_COLUMNS)
     .eq('id', id)
-    // The family's numbers only: a student's own number (owner 2026-11-17) is not one.
+    // The family's numbers only: a student's own number is not one.
     .is('guardian.phones.student_id', null)
     .maybeSingle();
   if (error) throw dbError(error);

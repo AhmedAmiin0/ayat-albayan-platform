@@ -11,7 +11,7 @@ export interface RosterRuleRow {
   rule: WeeklyRuleRow;
 }
 
-/** A student's package (owner 2026-10-30): size, status and dates only; never a price. */
+/** A student's package: size, status and dates only; never a price. */
 export type RosterPackageRow = Pick<
   Tables<'subscriptions'>,
   'id' | 'student_id' | 'package' | 'status' | 'starts_on' | 'renews_on' | 'lessons_total' | 'created_at'

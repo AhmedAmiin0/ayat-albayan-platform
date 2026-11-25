@@ -20,7 +20,7 @@ import { LinkSend } from './send/link-send';
 import { ShortLinksModule } from '@/modules/platform/short-links';
 
 /**
- * Managed short links for the admin and sales (owner 2026-11-17, docs/19): the admin routes, the
+ * Managed short links for the admin and sales (docs/19): the admin routes, the
  * web gate's public routes, the WhatsApp send and the expiry cron. The system links stay in
  * ShortLinksModule; SHORT_LINK_CODES comes from the global SignInModule.
  */

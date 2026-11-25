@@ -10,11 +10,14 @@ import type { AssignedLead } from './sales-assign.mapper';
 export class SalesAssignRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
-    /** The academy's own numbers: their old lead is never handed to a salesperson (owner 2026-10-27). */
+    /** The academy's own numbers: their old lead is never handed to a salesperson. */
     @Optional() private readonly own?: OwnNumbers,
   ) {}
 
-  /** Every active salesperson (profiles.role = 'sales', not disabled: a disabled login must not receive or keep assignments). */
+  /**
+   * Every active salesperson (profiles.role = 'sales', not disabled: a disabled login must not
+   * receive or keep assignments).
+   */
   async salespeople(): Promise<{ id: string; full_name: string }[]> {
     const { data, error } = await this.db.from('profiles').select('id, full_name').eq('role', 'sales').is('disabled_at', null).order('full_name');
     if (error) throw dbError(error);
@@ -42,7 +45,10 @@ export class SalesAssignRepo {
     return data !== null;
   }
 
-  /** Sets (or clears) the owner; `onlyIfFree` makes it a compare-and-set that never reassigns. Null when nothing matched. */
+  /**
+   * Sets (or clears) the owner; `onlyIfFree` makes it a compare-and-set that never reassigns. Null
+   * when nothing matched.
+   */
   async setAssignee(input: { leadId: string; profileId: string | null; onlyIfFree?: boolean }): Promise<Tables<'leads'> | null> {
     let query = this.db.from('leads').update({ assigned_to: input.profileId }).eq('id', input.leadId);
     if (input.onlyIfFree) query = query.is('assigned_to', null);

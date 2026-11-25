@@ -31,7 +31,7 @@ interface PhoneCall {
 }
 
 /**
- * The web gate of a managed link (owner 2026-11-17, docs/19 «Gate»): a signed-in user opens by
+ * The web gate of a managed link (docs/19 «Gate»): a signed-in user opens by
  * profile; anyone else verifies a phone with a WhatsApp code (the family sign-in's codes and
  * limits, through SHORT_LINK_CODES). Then the decision table, and the visit is recorded atomically.
  * Unknown and system codes answer the same 404; the target leaves only with outcome open.

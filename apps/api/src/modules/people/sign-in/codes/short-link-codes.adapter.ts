@@ -17,7 +17,7 @@ const subjectOf = (v: LinkVisitor) => ({ kind: 'short_link' as const, id: visito
 const PURPOSE = 'short_link' as const;
 
 /**
- * The short-link gate's codes on the sign-in machinery (owner 2026-11-17): purpose short_link,
+ * The short-link gate's codes on the sign-in machinery: purpose short_link,
  * subject = (link, phone); the same HMAC, expiry, attempts, per-phone limits, breaker, template.
  */
 @Injectable()

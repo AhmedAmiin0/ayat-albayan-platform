@@ -49,8 +49,8 @@ function footerHtml(m: FamilyModel): string {
 }
 
 /**
- * The v2 lesson report the family receives (owner 2026-10-26 «a better report for the family»,
- * docs/design/report-form/ParentReport.dc.html). Same PDF path and WhatsApp message as v1; only
+ * The v2 lesson report the family receives, a clearer report for the family
+ * (docs/design/report-form/ParentReport.dc.html). Same PDF path and WhatsApp message as v1; only
  * the page changes. Absent / excused: the attendance line, the note and the next lesson only.
  * Pure: the same model gives the same HTML.
  */

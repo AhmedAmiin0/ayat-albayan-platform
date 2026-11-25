@@ -1,9 +1,10 @@
 import type { PasswordSession, CodeSession } from '@ab/shared';
 import type { UserRole } from '@ab/catalog';
 
-// Family accounts (docs/30): what the sign-in flows read and write, as ports so the flows are tested
-// on in-memory fakes (sign-in.fakes.ts) and run on Supabase (codes.queries, subjects.queries, auth-gate).
-/** report_view: a report page (2026-11-06); short_link: a managed link's gate (2026-11-17). */
+// Family accounts (docs/30): what the sign-in flows read and write, as ports so the flows are
+// tested on in-memory fakes (sign-in.fakes.ts) and run on Supabase (codes.queries,
+// subjects.queries, auth-gate).
+/** report_view: a report page; short_link: a managed link's gate. */
 type AccountPurpose = 'sign_in' | 'reset_password' | 'set_password';
 export type CodePurpose = AccountPurpose | 'report_view' | 'short_link';
 export type SubjectKind = 'guardian' | 'student' | 'profile' | 'report' | 'teacher' | 'short_link';
@@ -29,7 +30,7 @@ export interface LiveCode {
   phone: string;
 }
 
-/** login_codes of one phone in the last 24 hours (the per-phone limits, counted in the database). */
+/** login_codes of one phone in the last 24 hours (the per-phone limits, counted in the DB). */
 export interface PhoneStats {
   sentLast15Min: number;
   sentLastDay: number;
@@ -38,9 +39,9 @@ export interface PhoneStats {
 
 export interface CodeStore {
   insert(row: NewCode): Promise<string>;
-  /** The newest code of the subject for these purposes, whatever its state (older ones never count). */
+  /** The subject's newest code for these purposes, whatever its state (older ones never count). */
   latest(subject: Subject, purposes: readonly CodePurpose[]): Promise<LiveCode | null>;
-  /** Counts one attempt on a live code and returns its hash; null = expired, spent or out of attempts. */
+  /** Counts one attempt on a live code, returns its hash; null = expired, spent or out of tries. */
   take(id: string): Promise<string | null>;
   /** Spends the code: true for the first caller only. */
   spend(id: string): Promise<boolean>;
@@ -109,7 +110,7 @@ export interface SubjectStore {
   studentByCode(code: string): Promise<StudentRec | null>;
   profileById(id: string): Promise<ProfileRec | null>;
   profileByUsername(username: string): Promise<ProfileRec | null>;
-  /** A staff profile whose own phone, or whose teacher row's phone, is this one (a conflict / lookup key only). */
+  /** A staff profile whose own or teacher-row phone is this one (a conflict / lookup key only). */
   staffByPhone(phone: string): Promise<ProfileRec | null>;
   /** An active teacher whose login's phone (role teacher) or record phone is this one. */
   teacherByPhone(phone: string): Promise<TeacherRec | null>;

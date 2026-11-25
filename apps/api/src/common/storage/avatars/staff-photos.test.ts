@@ -3,7 +3,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { FakeAvatarFiles } from './avatars.fakes';
 import { StaffPhotos, staffPhotoPath } from './staff-photos';
 
-// Staff photos everywhere (owner 2026-10-28): one read and ONE signing call per list; null/absent when none.
+// Staff photos everywhere: one read and ONE signing call per list; null/absent when none.
 
 describe('staffPhotoPath', () => {
   it('prefers the login’s own photo, else the teacher record’s', () => {

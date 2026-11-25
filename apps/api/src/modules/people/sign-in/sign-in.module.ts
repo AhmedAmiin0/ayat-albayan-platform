@@ -30,7 +30,7 @@ import {
 import { SignInSettings } from './sign-in.settings';
 
 /**
- * Family accounts (owner 2026-10-27, docs/30): WhatsApp-code sign-in for families, username
+ * Family accounts (docs/30): WhatsApp-code sign-in for families, username
  * sign-in, forgot password for everyone. CodeSend comes from the global WhatsappModule,
  * AuditService and SettingsService from their global modules.
  */

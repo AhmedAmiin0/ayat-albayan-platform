@@ -2,15 +2,19 @@ import type { Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 
 /**
- * What a salesperson owns (migrations 187 and 274, in TypeScript because the API runs as the service role):
- * leads.assigned_to = their profile -> leads.converted_guardian_id -> guardians -> students, plus the
- * students they BROUGHT (students.brought_by = their profile) and those students' guardians.
+ * What a salesperson owns (migrations 187 and 274, in TypeScript because the API runs as the
+ * service role): leads.assigned_to = their profile -> leads.converted_guardian_id -> guardians ->
+ * students, plus the students they BROUGHT (students.brought_by = their profile) and those
+ * students' guardians.
  */
 export interface SalesOwnership {
   leadIds: string[];
   guardianIds: string[];
   studentIds: string[];
-  /** E.164: their leads' phones plus every number (main and second) of their leads' and brought students' families. */
+  /**
+   * E.164: their leads' phones plus every number (main and second) of their leads' and brought
+   * students' families.
+   */
   phones: string[];
 }
 
@@ -18,7 +22,8 @@ export const NO_OWNERSHIP: SalesOwnership = { leadIds: [], guardianIds: [], stud
 
 const uniq = (ids: readonly string[]): string[] => [...new Set(ids)];
 
-// ponytail: the chain goes in the URL (.in); a salesperson has tens to low hundreds of leads and students, fine until thousands.
+// ponytail: the chain goes in the URL (.in); a salesperson has tens to low hundreds of leads and
+// students, fine until thousands.
 export async function ownershipOf(db: Db, profileId: string): Promise<SalesOwnership> {
   const [leads, brought] = await Promise.all([
     db.from('leads').select('id, phone_e164, converted_guardian_id').eq('assigned_to', profileId),
@@ -32,9 +37,10 @@ export async function ownershipOf(db: Db, profileId: string): Promise<SalesOwner
   const leadIds = leads.data.map((l) => l.id);
   if (guardianIds.length === 0) return { ...NO_OWNERSHIP, leadIds, phones: [...phones] };
   const [guardians, families] = await Promise.all([
-    // Every family number, main and second (guardian_phones, owner 2026-10-29), as my_sales_phones (migration 974).
+    // Every family number, main and second (guardian_phones), as my_sales_phones (migration 974).
     db.from('guardian_phones').select('phone_e164').in('guardian_id', guardianIds),
-    // Their lead families' children (as before); a brought student is theirs wherever the family came from.
+    // Their lead families' children (as before); a brought student is theirs wherever the family
+    // came from.
     leadGuardians.length > 0 ? db.from('students').select('id').in('guardian_id', leadGuardians) : { data: [], error: null },
   ]);
   if (guardians.error) throw dbError(guardians.error);
@@ -44,7 +50,10 @@ export async function ownershipOf(db: Db, profileId: string): Promise<SalesOwner
   return { leadIds, guardianIds, studentIds, phones: [...phones] };
 }
 
-/** Who owns a family (docs/21 §6): its children's brought_by plus its converted leads' assigned_to, nulls dropped. */
+/**
+ * Who owns a family (docs/21 §6): its children's brought_by plus its converted leads' assigned_to,
+ * nulls dropped.
+ */
 export async function guardianOwnerIds(db: Db, guardianId: string): Promise<string[]> {
   const [brought, leads] = await Promise.all([
     db.from('students').select('brought_by').eq('guardian_id', guardianId),

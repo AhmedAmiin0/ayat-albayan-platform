@@ -8,7 +8,7 @@ import { FinanceExportsQueries } from './finance-exports.queries';
 
 /**
  * CSV exports: students, lessons, payments, payouts (R-RPT-03, R-TCH-04), and the finance files
- * (expenses, teacher ledger, receivables; owner 2026-10-05).
+ * (expenses, teacher ledger, receivables).
  * Owner: Phase 3 builder B4 (docs/11-phase3-contracts.md §1).
  */
 @Module({

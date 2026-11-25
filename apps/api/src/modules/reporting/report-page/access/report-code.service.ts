@@ -36,7 +36,7 @@ interface Call {
 }
 
 /**
- * The report page for a viewer who is not signed in (owner 2026-11-06): a WhatsApp code to the
+ * The report page for a viewer who is not signed in: a WhatsApp code to the
  * phone ON FILE of the lesson's teacher or the student's family (sign-in/codes through
  * REPORT_CODES: the same per-phone limits, pepper, expiry and account_code template; purpose
  * report_view, subject = the report), then a 30-minute HttpOnly cookie bound to THIS report only.

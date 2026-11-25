@@ -10,7 +10,9 @@ import { integrationItems } from './integration-config.view';
 /** audit_log.entity_id of the integration config (one entity; key names go in action / after). */
 export const INTEGRATIONS_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 
-/** Injection token of the refresh period in ms (integrationRefreshMs; 0 = every second; null = off). */
+/**
+ * Injection token of the refresh period in ms (integrationRefreshMs; 0 = every second; null = off).
+ */
 export const INTEGRATION_REFRESH_MS = Symbol('INTEGRATION_REFRESH_MS');
 const MIN_REFRESH_MS = 1_000;
 /** A slow database never holds the boot longer than this. */
@@ -21,13 +23,13 @@ function timeout(ms: number): Promise<never> {
 }
 
 /**
- * Integration config in the database (owner, 2026-10-12). Loads the DB values into the overlay
+ * Integration config in the database. Loads the DB values into the overlay
  * that loadEnv() lays over process.env: once in onModuleInit (awaited, so it is in place before
  * any onApplicationBootstrap and before the first request), every refresh period and right after
  * an admin write. A failed load never blocks the boot: it logs and keeps the last good snapshot
- * (env only until the first good load). Logs carry key names only, never a value. With Redis an admin
- * write announces `integrations` and the other API copies and the worker reload at once; the values
- * themselves (Vault secrets among them) are never put in the shared cache.
+ * (env only until the first good load). Logs carry key names only, never a value. With Redis an
+ * admin write announces `integrations` and the other API copies and the worker reload at once; the
+ * values themselves (Vault secrets among them) are never put in the shared cache.
  */
 @Injectable()
 export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
@@ -81,7 +83,10 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
     if (this.everyMs !== null) await this.refresh();
   }
 
-  /** After an admin write: here, then the worker's copy (kickConfigReload) and, with Redis, every other process. */
+  /**
+   * After an admin write: here, then the worker's copy (kickConfigReload) and, with Redis, every
+   * other process.
+   */
   private async reload(): Promise<void> {
     await this.reloadHere();
     kickConfigReload();

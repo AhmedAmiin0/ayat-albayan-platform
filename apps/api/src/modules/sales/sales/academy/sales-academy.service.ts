@@ -44,7 +44,9 @@ export class SalesAcademyService {
     return { items, total, page: q.page, pageSize: q.pageSize };
   }
 
-  /** Rules and packages, then the lessons since the earliest start and the balances: 4 reads a page. */
+  /**
+   * Rules and packages, then the lessons since the earliest start and the balances: 4 reads a page.
+   */
   private async rosterOf(ids: readonly string[], now: Date): Promise<Map<string, RosterFacts>> {
     const [rules, packages] = await Promise.all([
       this.roster.rules(ids),
@@ -67,7 +69,7 @@ export class SalesAcademyService {
     return (await this.academy.live(now)).map(toSalesLive);
   }
 
-  /** Any student's subscription (owner 2026-10-30: «Make all assistants see all»); 404 for an unknown id. */
+  /** Any student's subscription (every assistant sees every student); 404 for an unknown id. */
   async history(subscriptionId: string): Promise<SalesSubscriptionHistory> {
     const studentId = await this.histories.studentOf(subscriptionId);
     if (!studentId) throw notFound('subscription_not_found');

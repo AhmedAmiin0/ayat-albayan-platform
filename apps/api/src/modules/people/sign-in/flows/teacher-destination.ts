@@ -16,7 +16,7 @@ const loginState = (l: ProfileRec | null): LoginState => {
 
 /**
  * D2 (docs/46): the code goes to `teachers.phone_e164` while she has no login AND while her login
- * is still setup-pending (owner 2026-11-11: a shared number leaves that login without a phone,
+ * is still setup-pending (a shared number leaves that login without a phone,
  * and she has no password yet); after setup, only to that login's own phone, so editing the
  * teacher record never redirects a set-up login's codes. A login of another role (an admin
  * linked to a teacher row) or a disabled one gets nothing.

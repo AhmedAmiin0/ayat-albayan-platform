@@ -2,7 +2,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { AFTER, LESSON_ID, lessonRow, REPORT_ID, reportRow, submittedRow } from '@/modules/reporting/reports/tests/reports.fakes';
 import { reportsApp } from '@/modules/reporting/reports/tests/test-app';
 
-// Owner 2026-11-06: «after the teacher writes the report the lesson gets marked as confirmed».
+// Once the teacher submits the report, the lesson is marked confirmed.
 // The submit is the lesson's outcome (the shared state machine, submit_report's compare-and-set);
 // an edit never confirms twice; each submitted version queues its PDF once.
 const URL = `/reports/${REPORT_ID}/v2/submit`;

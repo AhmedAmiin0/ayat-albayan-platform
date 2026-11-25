@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { DriveBackupHttp } from './drive-backup.http';
 
-// Owner 2026-11-07: the backup is ADD-ONLY. The real Drive adapter has no way to delete, trash or
+// The backup is ADD-ONLY. The real Drive adapter has no way to delete, trash or
 // change a file: only POST (a folder, an upload session), PUT (upload chunks) and GETs.
 
 const source = readFileSync(join(__dirname, 'drive-backup.http.ts'), 'utf8');

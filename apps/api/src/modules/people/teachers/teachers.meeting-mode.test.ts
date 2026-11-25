@@ -11,7 +11,7 @@ import { AvailabilityRepo } from './availability/availability.repo';
 import { TeachersModule } from './teachers.module';
 import { TeachersRepo } from './teachers.repo';
 
-// teachers.meeting_mode (migration 490, owner 2026-10-19): only the admin sets it (teachers.write);
+// teachers.meeting_mode (migration 490): only the admin sets it (teachers.write);
 // every read returns the raw mode and what it resolves to under the academy default (ON here).
 
 const USERS: Record<string, AuthUser> = {

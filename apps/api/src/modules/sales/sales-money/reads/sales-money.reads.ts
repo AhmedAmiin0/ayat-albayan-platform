@@ -11,7 +11,10 @@ import { SalesRenewals } from './sales-renewals';
 const OPEN_PAGE = { page: 1, pageSize: 20 } as const;
 const NOT_DUE = { renew_due: false, renewal: DEFAULT_RENEWAL_PRICING } as const;
 
-/** What the sales subscribe flow reads besides the admin's writes: her family's students and their packages owed. */
+/**
+ * What the sales subscribe flow reads besides the admin's writes: her family's students and their
+ * packages owed.
+ */
 @Injectable()
 export class SalesMoneyReads {
   constructor(
@@ -25,9 +28,9 @@ export class SalesMoneyReads {
   }
 
   /**
-   * Only the children she owns, or every child with `all` (sales.renew_any, docs/16 row 38; `mine` says which are
-   * hers); each with its unpaid packages that still have money due, and its renewal (SalesRenewals).
-   * `own` null (SalesOwnershipRule not enforcing, owner 2026-11-02): every child, each `mine`
+   * Only the children she owns, or every child with `all` (sales.renew_any, docs/16 row 38; `mine`
+   * says which are hers); each with its unpaid packages that still have money due, and its renewal
+   * (SalesRenewals). `own` null (SalesOwnershipRule not enforcing): every child, each `mine`
    * (she may act on it).
    */
   async familyOf(phone: string, scope: { own: Pick<SalesOwnership, 'studentIds'> | null; all: boolean }): Promise<SalesFamilyView> {
@@ -45,7 +48,10 @@ export class SalesMoneyReads {
     return { students };
   }
 
-  /** A package a payment link is still open for is the link's to pay (docs/30), never offered for a transfer too. */
+  /**
+   * A package a payment link is still open for is the link's to pay (docs/30), never offered for a
+   * transfer too.
+   */
   private async open(studentId: string): Promise<SalesMoneySubscriptionView[]> {
     const page = await this.subs.list({ ...OPEN_PAGE, studentId, status: 'unpaid' });
     const owed = page.items.map(toSalesSubscription).filter((s) => s.due > 0);

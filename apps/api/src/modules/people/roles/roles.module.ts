@@ -4,7 +4,7 @@ import { RolesRepo } from './roles.repo';
 import { RolesService } from './roles.service';
 import { ROLE_STORE } from './roles.store';
 
-/** Dynamic roles and permissions (owner, 2026-10-05). PermissionCache comes from AuthModule. */
+/** Dynamic roles and permissions. PermissionCache comes from AuthModule. */
 @Module({
   controllers: [RolesController, StaffUsersController],
   providers: [RolesService, { provide: ROLE_STORE, useClass: RolesRepo }],

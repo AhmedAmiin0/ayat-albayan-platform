@@ -4,8 +4,9 @@ import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice'
 import { SettingsService } from '@/common/settings/settings.service';
 
 /**
- * SalesPaymentsController: the receipt size limit (upload URL and the copy from the chat); SalesMoneyReads:
- * the admin's renewal-alert threshold (a student she owns is «due for renewal» at it, owner 2026-10-26).
+ * SalesPaymentsController: the receipt size limit (upload URL and the copy from the chat);
+ * SalesMoneyReads: the admin's renewal-alert threshold (a student she owns is «due for renewal» at
+ * it).
  */
 const KEYS = ['upload_max_mb', 'renewal_alert_remaining'] as const satisfies readonly SettingKey[];
 export type SalesMoneySettingsValues = SettingsSlice<(typeof KEYS)[number]>;

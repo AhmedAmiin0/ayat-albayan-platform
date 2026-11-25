@@ -7,7 +7,7 @@ import { ActivityRetentionJob } from './activity.retention.job';
 import { ActivityWriter } from './activity.writer';
 
 /**
- * Activity log (owner, 2026-10-05; docs/04 §10): the global interceptor that records every
+ * Activity log (docs/04 §10): the global interceptor that records every
  * mutating request, the sign-in/out reports of the web, GET /activity, and 180-day retention.
  */
 @Module({
@@ -18,7 +18,8 @@ import { ActivityWriter } from './activity.writer';
     ActivityRetentionJob,
     { provide: APP_INTERCEPTOR, useClass: ActivityInterceptor },
   ],
-  // Modules that log a domain event of their own (notification-rules: an essential row switched off).
+  // Modules that log a domain event of their own (notification-rules: an essential row switched
+  // off).
   exports: [ActivityWriter],
 })
 export class ActivityModule {}

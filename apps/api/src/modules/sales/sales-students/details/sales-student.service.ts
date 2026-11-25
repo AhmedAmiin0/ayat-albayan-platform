@@ -48,7 +48,7 @@ export class SalesStudentService {
     return { ...view, student: { ...view.student, guardian_phone: phone }, family };
   }
 
-  /** The current package of ANY student (owner 2026-10-30): no price, payment or commission. */
+  /** The current package of ANY student: no price, payment or commission. */
   private async currentPackage(studentId: string): Promise<SalesPackageSummary | null> {
     const rows = await this.roster.packages([studentId]);
     return (await packageSummaries(this.roster, rows)).get(studentId) ?? null;

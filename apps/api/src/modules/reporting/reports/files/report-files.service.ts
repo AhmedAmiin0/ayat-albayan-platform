@@ -16,7 +16,7 @@ import type { ReportRow } from '@/modules/reporting/reports/report-row';
 import { ReportGate } from '@/modules/reporting/reports/shared/report-gate';
 import { callerActor, type ReportCaller } from '@/modules/reporting/reports/shared/report-access';
 
-/** A signed-in user, or the lesson's teacher through their report link (owner 2026-11-06). */
+/** A signed-in user, or the lesson's teacher through their report link. */
 type FileRef = { id: string; user: ReportCaller };
 type AttachmentRef = FileRef & { attachmentId: string };
 
@@ -48,7 +48,9 @@ export class ReportFilesService {
     return this.storage.signedDownload({ bucket: BUCKETS.reports, path: row.pdf_path, ...(download ? { download } : {}) });
   }
 
-  /** R7: a signed upload URL for a new object under the report (the bucket enforces type and size). */
+  /**
+   * R7: a signed upload URL for a new object under the report (the bucket enforces type and size).
+   */
   async uploadUrl({ id, user, file }: FileRef & { file: AttachmentUpload }): Promise<SignedUpload> {
     await this.gate.editable(id, user);
     return this.storage.signedUpload({ bucket: BUCKETS.attachments, path: attachmentPath({ reportId: id, mime: file.mime }), file });

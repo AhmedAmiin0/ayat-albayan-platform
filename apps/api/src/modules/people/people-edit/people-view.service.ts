@@ -16,7 +16,7 @@ export class PeopleViewService {
     private readonly records: StudentRecordsRepo,
   ) {}
 
-  /** `notes`: the admin's only (owner 2026-10-27), left out for every other role. */
+  /** `notes`: the admin's only, left out for every other role. */
   async view(id: string, notes: boolean): Promise<PeopleEditView> {
     const row = await this.repo.view(id);
     if (!row?.guardian) throw notFound('student_not_found');

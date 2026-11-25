@@ -23,7 +23,7 @@ import { PeopleOwnership } from './access/people-ownership';
 const studentBody = blanksToNull(peopleStudentPatchSchema);
 const guardianBody = blanksToNull(peopleGuardianPatchSchema);
 const isAdmin = (user: AuthUser): boolean => user.role === 'admin';
-/** Notes stay the admin's (owner 2026-10-27): anyone else's `notes` key answers 400. */
+/** Notes stay the admin's: anyone else's `notes` key answers 400. */
 const notesRule = (user: AuthUser): z.ZodType => (isAdmin(user) ? z.object({}) : notesFreeSchema);
 
 /** people.edit only, never students.write; admin-only fields and notes are refused with 400. */

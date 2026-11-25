@@ -4,7 +4,7 @@ import type { BackupSource } from '@/modules/platform/drive-backup/source/backup
 // The Drive calls of the MinIO backup (docs/45 §5), on the academy's existing Google connection.
 // The real adapter is drive-backup.http.ts; every test uses drive-backup.fakes.ts. Failures throw
 // GoogleApiError (status + Google's reason, never a token or a URL). ADD-ONLY: there is no
-// delete, trash or update of a file here at all (owner 2026-11-07): the backup only adds files.
+// delete, trash or update of a file here at all: the backup only adds files.
 
 export interface DriveQuota {
   /** null: no limit (a Workspace pool). */

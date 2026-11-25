@@ -4,7 +4,7 @@ import { notFound } from '@/common/http/errors';
 import type { ShortLinkRow } from '@/modules/platform/short-links';
 
 /**
- * Who sees which managed links (owner 2026-11-17, docs/19): short_links.all (the admin by default)
+ * Who sees which managed links (docs/19): short_links.all (the admin by default)
  * every link; anyone else with short_links.manage (sales) only the links they made.
  */
 export const ownerScope = (user: AuthUser): string | null =>

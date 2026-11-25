@@ -8,7 +8,7 @@ import { ZodParam } from '@/common/http/zod-inputs';
 import { ReportPageService } from './report-page.service';
 
 /**
- * The report's live page for a signed-in reader (owner 2026-11-06): any role may ask, the service
+ * The report's live page for a signed-in reader: any role may ask, the service
  * answers only the report's readers (ReportReaders: admin, the lesson's teacher, the family, the
  * student's owning assistant, read-only); anyone else gets the same 404 as an unknown report.
  */
