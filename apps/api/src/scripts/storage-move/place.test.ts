@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { moveStores } from './move.fakes';
-import { placeInMinio } from './place';
+import { placedSchema, placeInMinio } from './place';
 
 const o = { bucket: 'receipts' as const, key: 's/a.pdf' };
 
@@ -44,5 +44,11 @@ describe('placeInMinio: copy, then verify (docs/45 §6)', () => {
     const { to, stores } = await moveStores([o.key]);
     expect(await placeInMinio({ ...stores, maxBytes: 8 }, o)).toBe('too_large');
     expect(to.objects.size).toBe(0);
+  });
+});
+
+describe('placedSchema', () => {
+  it('names the five ways an object can end up', () => {
+    expect(placedSchema.options).toEqual(['copied', 'present', 'missing', 'mismatch', 'too_large']);
   });
 });
