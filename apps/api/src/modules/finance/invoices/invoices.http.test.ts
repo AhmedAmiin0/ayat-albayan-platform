@@ -43,9 +43,14 @@ describe('invoice routes (R-PAY-03): admin only', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(InvoicesModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(InvoicesRepo).useValue(queries)
-      .overrideProvider(StorageService).useValue(storage)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(InvoicesRepo)
+      .useValue(queries)
+      .overrideProvider(StorageService)
+      .useValue(storage)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

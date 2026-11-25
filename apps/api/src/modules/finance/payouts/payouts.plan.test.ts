@@ -35,7 +35,13 @@ describe('monthWindow (a lesson month is its local date in the teacher tz)', () 
 
 describe('linesOf (one line per length and frozen ledger amount)', () => {
   it('groups by (minutes, amount) and keeps a pro-rated length apart', () => {
-    const lines = linesOf([lesson(45, 70), lesson(45, 70), lesson(45, 60), lesson(50, 77.78), lesson(30, null)]);
+    const lines = linesOf([
+      lesson(45, 70),
+      lesson(45, 70),
+      lesson(45, 60),
+      lesson(50, 77.78),
+      lesson(30, null),
+    ]);
     expect(lines).toEqual([
       { duration: 45, lessons: 1, rate: 60, amount: 60 },
       { duration: 45, lessons: 2, rate: 70, amount: 140 },
@@ -79,7 +85,9 @@ describe('planPayout (R-PAY-02: payable lessons × their ledger amount, EGP; E3 
   });
 
   it('a lesson the teacher has no rate for skips the teacher (never paid 0)', () => {
-    const plan = planPayout(base({ lessons: [lesson(60, null), lesson(45, 70), lesson(60, null)] }));
+    const plan = planPayout(
+      base({ lessons: [lesson(60, null), lesson(45, 70), lesson(60, null)] }),
+    );
     expect(plan).toEqual({ kind: 'missing', durations: [60], deleteId: null });
   });
 
@@ -92,8 +100,17 @@ describe('planPayout (R-PAY-02: payable lessons × their ledger amount, EGP; E3 
 describe('approveBlock (E3: an approved month is frozen, so it waits for the month and its reports)', () => {
   const monthEnd = '2026-09-30T21:00:00.000Z';
   it('the month is not over until its last local midnight', () => {
-    expect(approveBlock({ monthEnd, now: new Date('2026-09-30T20:59:59Z'), pendingReports: 0, editedSince: 0 })).toBe('month_not_over');
-    expect(approveBlock({ monthEnd, now: new Date(monthEnd), pendingReports: 0, editedSince: 0 })).toBeNull();
+    expect(
+      approveBlock({
+        monthEnd,
+        now: new Date('2026-09-30T20:59:59Z'),
+        pendingReports: 0,
+        editedSince: 0,
+      }),
+    ).toBe('month_not_over');
+    expect(
+      approveBlock({ monthEnd, now: new Date(monthEnd), pendingReports: 0, editedSince: 0 }),
+    ).toBeNull();
   });
   it('a missing report blocks; none → approvable', () => {
     expect(approveBlock({ monthEnd, now: new Date('2026-10-02T09:00:00Z'), pendingReports: 1, editedSince: 0 })).toBe('reports_pending');

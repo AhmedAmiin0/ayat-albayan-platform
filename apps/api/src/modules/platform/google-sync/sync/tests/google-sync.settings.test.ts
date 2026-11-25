@@ -11,7 +11,9 @@ describe('GoogleSyncAcademySettings', () => {
     const values = await readerOf(GoogleSyncAcademySettings).read();
     expect(Object.keys(values)).toEqual(EXPECTED);
     expect(values).toEqual(Object.fromEntries(EXPECTED.map((k) => [k, SETTING_DEFAULTS[k]])));
-    expectTypeOf<keyof GoogleSyncAcademySettingsValues>().toEqualTypeOf<(typeof EXPECTED)[number]>();
+    expectTypeOf<keyof GoogleSyncAcademySettingsValues>().toEqualTypeOf<
+      (typeof EXPECTED)[number]
+    >();
   });
 
   it('an over value comes through, from one store read', async () => {

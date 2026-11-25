@@ -8,7 +8,9 @@ import { SubscriptionsSettings } from '@/modules/finance/subscriptions/shared/su
 const NOW = new Date('2026-10-15T06:00:00Z');
 const PENDING = (at: string) => ({ after: { status: 'pending_renewal', via: 'subscription_ended' }, at });
 
-function setup(o: { ids?: string[]; last?: unknown; paid?: boolean; days?: number; moved?: boolean } = {}) {
+function setup(
+  o: { ids?: string[]; last?: unknown; paid?: boolean; days?: number; moved?: boolean } = {},
+) {
   const queries = {
     pendingRenewal: vi.fn(async () => o.ids ?? ['s1']),
     paidSince: vi.fn(async () => o.paid ?? false),
@@ -18,7 +20,11 @@ function setup(o: { ids?: string[]; last?: unknown; paid?: boolean; days?: numbe
     move: vi.fn(async () => o.moved ?? true),
   };
   const settings = readerOf(SubscriptionsSettings, { subscription_expiry_days: o.days ?? 7 });
-  const job = new StudentExpiryJob(queries as unknown as StudentExpiryRepo, statuses as unknown as StudentStatusRepo, settings);
+  const job = new StudentExpiryJob(
+    queries as unknown as StudentExpiryRepo,
+    statuses as unknown as StudentStatusRepo,
+    settings,
+  );
   return { job, queries, statuses };
 }
 const EXPIRED = [
@@ -62,7 +68,11 @@ describe('StudentExpiryJob.runOnce: pending_renewal → expired after N days (ow
   });
 
   it('idempotent: a CAS miss (already expired, or changed by hand) → not counted', async () => {
-    expect(await setup({ moved: false }).job.runOnce(NOW)).toEqual({ students: 1, expired: 0, failed: 0 });
+    expect(await setup({ moved: false }).job.runOnce(NOW)).toEqual({
+      students: 1,
+      expired: 0,
+      failed: 0,
+    });
   });
 
   it('never throws: one failing student is counted, the others still run; a failed list aborts quietly', async () => {

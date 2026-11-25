@@ -56,7 +56,11 @@ export class AvailabilityRepo {
   async replaceSlots(opts: Owned & { slots: AvailabilitySlot[] }): Promise<AvailabilityRow[]> {
     let keep: string[] = [];
     if (opts.slots.length > 0) {
-      const rows = opts.slots.map((s) => ({ ...s, teacher_id: opts.teacherId, created_by: opts.actorId }));
+      const rows = opts.slots.map((s) => ({
+        ...s,
+        teacher_id: opts.teacherId,
+        created_by: opts.actorId,
+      }));
       const { data, error } = await this.db.from('teacher_availability').insert(rows).select('id');
       if (error) throw pgError(error);
       keep = data.map((r) => r.id);
@@ -89,7 +93,11 @@ export class AvailabilityRepo {
       .lt('starts_at', range.to.toISOString())
       .gt('ends_at', range.from.toISOString());
     if (error) throw pgError(error);
-    return data.map((l) => ({ id: l.id, starts_at: new Date(l.starts_at), ends_at: new Date(l.ends_at) }));
+    return data.map((l) => ({
+      id: l.id,
+      starts_at: new Date(l.starts_at),
+      ends_at: new Date(l.ends_at),
+    }));
   }
 
   async insertTimeOff(opts: Owned & { body: TimeOffCreate }): Promise<TimeOff> {
@@ -98,14 +106,20 @@ export class AvailabilityRepo {
     return data;
   }
 
-  async updateTimeOff(opts: { teacherId: string; id: string; body: TimeOffCreate }): Promise<TimeOff | null> {
-    const data = maybe(await this.db
-      .from('teacher_time_off')
-      .update(opts.body)
-      .eq('id', opts.id)
-      .eq('teacher_id', opts.teacherId)
-      .select('*')
-      .maybeSingle());
+  async updateTimeOff(opts: {
+    teacherId: string;
+    id: string;
+    body: TimeOffCreate;
+  }): Promise<TimeOff | null> {
+    const data = maybe(
+      await this.db
+        .from('teacher_time_off')
+        .update(opts.body)
+        .eq('id', opts.id)
+        .eq('teacher_id', opts.teacherId)
+        .select('*')
+        .maybeSingle(),
+    );
     return data;
   }
 

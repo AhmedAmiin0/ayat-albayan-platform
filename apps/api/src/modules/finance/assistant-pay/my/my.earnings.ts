@@ -29,8 +29,16 @@ export function frozenLines(statements: readonly Pick<StatementRow, 'status' | '
 }
 
 /** Frozen statement lines, then unfrozen commissions and reversals; voided ones never show. */
-function walletLines(i: { frozen: readonly WalletLine[]; commissions: readonly MyCommission[]; adjustments: readonly MyAdjustment[] }): WalletLine[] {
-  const open = (r: StatementState & { amount: number; currency: string }) => ({ amount: r.amount, currency: r.currency, statement: r.statement });
+function walletLines(i: {
+  frozen: readonly WalletLine[];
+  commissions: readonly MyCommission[];
+  adjustments: readonly MyAdjustment[];
+}): WalletLine[] {
+  const open = (r: StatementState & { amount: number; currency: string }) => ({
+    amount: r.amount,
+    currency: r.currency,
+    statement: r.statement,
+  });
   return [
     ...i.frozen,
     ...i.commissions.filter((c) => !frozen(c)).map(open),
@@ -56,9 +64,20 @@ export function buildEarnings(i: {
   const plan = planStatement({
     month,
     tz: i.tz,
-    salary: salary ? { amount: salary.amount, currency: salary.currency, startsOn: salary.starts_on } : null,
-    commissions: i.commissions.filter((c) => !frozen(c)).map((c) => ({ id: c.id, amount: c.amount, currency: c.currency, earnedAt: c.earned_at })),
-    adjustments: i.adjustments.filter((a) => !frozen(a)).map((a) => ({ id: a.id, amount: a.amount, currency: a.currency, effectiveMonth: a.effective_month })),
+    salary: salary
+      ? { amount: salary.amount, currency: salary.currency, startsOn: salary.starts_on }
+      : null,
+    commissions: i.commissions
+      .filter((c) => !frozen(c))
+      .map((c) => ({ id: c.id, amount: c.amount, currency: c.currency, earnedAt: c.earned_at })),
+    adjustments: i.adjustments
+      .filter((a) => !frozen(a))
+      .map((a) => ({
+        id: a.id,
+        amount: a.amount,
+        currency: a.currency,
+        effectiveMonth: a.effective_month,
+      })),
   });
   return {
     terms: i.terms,

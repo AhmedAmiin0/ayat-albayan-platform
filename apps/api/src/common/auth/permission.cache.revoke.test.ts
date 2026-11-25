@@ -10,7 +10,9 @@ const OLD: readonly Permission[] = ['payments.read'];
 function copies() {
   const redis = fakeRedis();
   const clock = () => redis.server.now;
-  const [a, b, c] = [redis.copy(), redis.copy(), redis.copy()].map((x) => new PermissionCache(clock, x.cache));
+  const [a, b, c] = [redis.copy(), redis.copy(), redis.copy()].map(
+    (x) => new PermissionCache(clock, x.cache),
+  );
   if (!a || !b || !c) throw new Error('three copies');
   return { redis, a, b, c };
 }

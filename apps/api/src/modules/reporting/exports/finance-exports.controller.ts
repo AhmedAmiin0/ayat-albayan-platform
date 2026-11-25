@@ -15,7 +15,10 @@ interface HeaderReply {
   header(name: string, value: string): unknown;
 }
 
-function send(reply: HeaderReply, input: { filename: string; rows: Parameters<typeof toCsv>[0] }): string {
+function send(
+  reply: HeaderReply,
+  input: { filename: string; rows: Parameters<typeof toCsv>[0] },
+): string {
   reply.header('Content-Type', 'text/csv; charset=utf-8');
   reply.header('Content-Disposition', attachment(input.filename));
   reply.header('Access-Control-Expose-Headers', 'Content-Disposition');
@@ -55,8 +58,14 @@ export class FinanceExportsController {
   async ledger(@Query() query: unknown, @Res({ passthrough: true }) reply: HeaderReply) {
     const { month, teacherId } = parseOrThrow(ledgerQuery, query);
     const w = monthWindow(month);
-    const [sessions, payments] = await Promise.all([this.queries.sessions(w, teacherId), this.queries.teacherPayments(w, teacherId)]);
-    return send(reply, { filename: `teacher-ledger-${month}.csv`, rows: ledgerCsv({ sessions, payments }) });
+    const [sessions, payments] = await Promise.all([
+      this.queries.sessions(w, teacherId),
+      this.queries.teacherPayments(w, teacherId),
+    ]);
+    return send(reply, {
+      filename: `teacher-ledger-${month}.csv`,
+      rows: ledgerCsv({ sessions, payments }),
+    });
   }
 
   /** Who owes, how much, days since the package started, aging bucket. */

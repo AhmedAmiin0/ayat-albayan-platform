@@ -27,34 +27,46 @@ export class TeacherStudentsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Students whose teacher_id is mine and whose status is one of `statuses`. */
-  async assigned(input: { teacherId: string; statuses: readonly StudentStatus[] }): Promise<TeacherStudentRow[]> {
-    const data = rows(await this.db
-      .from('students')
-      .select(COLUMNS)
-      .eq('teacher_id', input.teacherId)
-      .in('status', [...input.statuses]));
+  async assigned(input: {
+    teacherId: string;
+    statuses: readonly StudentStatus[];
+  }): Promise<TeacherStudentRow[]> {
+    const data = rows(
+      await this.db
+        .from('students')
+        .select(COLUMNS)
+        .eq('teacher_id', input.teacherId)
+        .in('status', [...input.statuses]),
+    );
     return data;
   }
 
   /** My lessons (any status) starting at or after `since`, with their student ids. */
   async lessons(input: { teacherId: string; since: string }): Promise<TeacherLessonRow[]> {
-    const data = rows(await this.db
-      .from('lessons')
-      .select('starts_at, status, lesson_students(student_id)')
-      .eq('teacher_id', input.teacherId)
-      .gte('starts_at', input.since)
-      .order('starts_at'));
+    const data = rows(
+      await this.db
+        .from('lessons')
+        .select('starts_at, status, lesson_students(student_id)')
+        .eq('teacher_id', input.teacherId)
+        .gte('starts_at', input.since)
+        .order('starts_at'),
+    );
     return data;
   }
 
   /** Students by id, filtered to `statuses` (so paused / churned never come back). */
-  async byIds(input: { ids: readonly string[]; statuses: readonly StudentStatus[] }): Promise<TeacherStudentRow[]> {
+  async byIds(input: {
+    ids: readonly string[];
+    statuses: readonly StudentStatus[];
+  }): Promise<TeacherStudentRow[]> {
     if (input.ids.length === 0) return [];
-    const data = rows(await this.db
-      .from('students')
-      .select(COLUMNS)
-      .in('id', [...input.ids])
-      .in('status', [...input.statuses]));
+    const data = rows(
+      await this.db
+        .from('students')
+        .select(COLUMNS)
+        .in('id', [...input.ids])
+        .in('status', [...input.statuses]),
+    );
     return data;
   }
 }

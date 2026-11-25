@@ -7,8 +7,17 @@ import { TZ } from '@/modules/platform/google-sync/google-format';
 
 const planned = z.object({ method: z.string(), target: z.string(), summary: z.string() });
 type Raw = {
-  id: string; kind: GoogleSyncKind; state: GoogleSyncState; skip_reason: string | null; google_id: string | null; attempts: number;
-  last_error: string | null; planned: unknown; updated_at: string; lesson_id: string | null; student_id: string | null;
+  id: string;
+  kind: GoogleSyncKind;
+  state: GoogleSyncState;
+  skip_reason: string | null;
+  google_id: string | null;
+  attempts: number;
+  last_error: string | null;
+  planned: unknown;
+  updated_at: string;
+  lesson_id: string | null;
+  student_id: string | null;
 };
 
 /** The sync log (GET /admin/google/items): the last 100 rows, each named by its student and date. */
@@ -46,14 +55,26 @@ export class GoogleLogQueries {
     const lessonOf = new Map((lessons.data ?? []).map((l) => [l.id, l]));
     return rows.map((r) => {
       const l = r.lesson_id ? lessonOf.get(r.lesson_id) : undefined;
-      const ids = r.student_id ? [r.student_id] : (l?.lesson_students ?? []).map((s) => s.student_id);
-      const who = ids.map((id) => people.get(id)).filter(Boolean).join('، ');
+      const ids = r.student_id
+        ? [r.student_id]
+        : (l?.lesson_students ?? []).map((s) => s.student_id);
+      const who = ids
+        .map((id) => people.get(id))
+        .filter(Boolean)
+        .join('، ');
       const when = l && r.kind !== 'summary_row' ? localDate(l.starts_at, TZ) : '';
       const plan = planned.safeParse(r.planned);
       return {
-        id: r.id, kind: r.kind, state: r.state, skip_reason: (r.skip_reason ?? null) as GoogleSkipReason | null,
-        subject: [who, when].filter(Boolean).join(' · '), google_id: r.google_id, attempts: r.attempts, last_error: r.last_error,
-        planned: plan.success ? plan.data : null, updated_at: new Date(r.updated_at).toISOString(),
+        id: r.id,
+        kind: r.kind,
+        state: r.state,
+        skip_reason: (r.skip_reason ?? null) as GoogleSkipReason | null,
+        subject: [who, when].filter(Boolean).join(' · '),
+        google_id: r.google_id,
+        attempts: r.attempts,
+        last_error: r.last_error,
+        planned: plan.success ? plan.data : null,
+        updated_at: new Date(r.updated_at).toISOString(),
       };
     });
   }

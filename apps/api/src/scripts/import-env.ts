@@ -19,7 +19,11 @@ export interface ImportStore {
 export type ImportOutcome = 'imported' | 'skipped (not set in env)' | 'skipped (already in the database)' | 'skipped (invalid value)';
 
 /** One line per key, KEY NAMES ONLY: nothing returned here ever holds a value. */
-export async function importEnv(input: { env: NodeJS.ProcessEnv; store: ImportStore; overwrite: boolean }): Promise<string[]> {
+export async function importEnv(input: {
+  env: NodeJS.ProcessEnv;
+  store: ImportStore;
+  overwrite: boolean;
+}): Promise<string[]> {
   const { env, store, overwrite } = input;
   const existing = await store.existing();
   const lines: string[] = [];

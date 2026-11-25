@@ -41,7 +41,11 @@ describe('POST /sales/payment-links with the subscribe step’s «المعلم/�
     const res = await create({ teacherId: TEACHER });
     expect(res.statusCode).toBe(201);
     expect(s.teachers.ensureActive).toHaveBeenCalledWith(TEACHER);
-    expect(s.teachers.assign).toHaveBeenCalledWith({ studentId: STUDENT_ID, teacherId: TEACHER, actorId: SALES_A.id });
+    expect(s.teachers.assign).toHaveBeenCalledWith({
+      studentId: STUDENT_ID,
+      teacherId: TEACHER,
+      actorId: SALES_A.id,
+    });
     const [checked] = s.teachers.ensureActive.mock.invocationCallOrder;
     const [inserted] = m.subs.insert.mock.invocationCallOrder;
     expect(checked).toBeLessThan(inserted ?? 0);
@@ -71,7 +75,11 @@ describe('POST /sales/payment-links with the subscribe step’s «المعلم/�
     s.links.byRequest.mockResolvedValueOnce(linkRow());
     expect((await create({ teacherId: TEACHER })).statusCode).toBe(201);
     expect(s.teachers.assign).toHaveBeenCalledTimes(2);
-    expect(s.teachers.assign).toHaveBeenLastCalledWith({ studentId: STUDENT_ID, teacherId: TEACHER, actorId: SALES_A.id });
+    expect(s.teachers.assign).toHaveBeenLastCalledWith({
+      studentId: STUDENT_ID,
+      teacherId: TEACHER,
+      actorId: SALES_A.id,
+    });
     expect(m.subs.insert).toHaveBeenCalledTimes(1);
   });
 

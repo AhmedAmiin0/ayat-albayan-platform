@@ -32,7 +32,8 @@ export class CheckoutService {
     if (effectiveLinkStatus({ status: statusOf(link), expires_at: link.expires_at }, now) !== 'open') return page;
     const stripe = await this.clients.client().catch(() => null);
     if (!stripe) return page; // keys missing or refused: the family sees the platform page, never a JSON error
-    if (await this.packages.blocked(link.subscription_id)) return this.close({ stripe, link, now, page });
+    if (await this.packages.blocked(link.subscription_id))
+      return this.close({ stripe, link, now, page });
     const own = this.ownSession(link.stripe_session_id);
     if (own) {
       const current = await stripe.checkout.sessions.retrieve(own);
@@ -51,15 +52,34 @@ export class CheckoutService {
   }
 
   /** The package needs no payment any more: the link reads as cancelled from now on, its session cannot be paid. */
-  private async close(c: { stripe: StripeApi; link: LinkRow; now: Date; page: string }): Promise<string> {
+  private async close(c: {
+    stripe: StripeApi;
+    link: LinkRow;
+    now: Date;
+    page: string;
+  }): Promise<string> {
     await this.deps.links.cancel(c.link.id);
     if (c.link.stripe_session_id) await this.expire(c.stripe, c.link.stripe_session_id);
     return c.page;
   }
 
-  private async fresh(c: { stripe: StripeApi; link: LinkRow; now: Date; page: string }): Promise<string> {
-    const created = await c.stripe.checkout.sessions.create(checkoutParams(c.link, { payOrigin: this.deps.views.payOrigin(), now: c.now }));
-    if (await this.deps.links.setSession({ id: c.link.id, prev: c.link.stripe_session_id, session: created.id })) return created.url ?? c.page;
+  private async fresh(c: {
+    stripe: StripeApi;
+    link: LinkRow;
+    now: Date;
+    page: string;
+  }): Promise<string> {
+    const created = await c.stripe.checkout.sessions.create(
+      checkoutParams(c.link, { payOrigin: this.deps.views.payOrigin(), now: c.now }),
+    );
+    if (
+      await this.deps.links.setSession({
+        id: c.link.id,
+        prev: c.link.stripe_session_id,
+        session: created.id,
+      })
+    )
+      return created.url ?? c.page;
     await this.expire(c.stripe, created.id); // lost the race: the winner's session is the link's
     const winner = (await this.deps.links.get(c.link.id))?.stripe_session_id;
     if (!winner) return c.page;

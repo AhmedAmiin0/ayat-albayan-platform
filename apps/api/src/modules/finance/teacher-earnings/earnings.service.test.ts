@@ -34,12 +34,17 @@ describe('EarningsService.record: allocation', () => {
         items: [{ earning_id: eid(1), amount: 70 }, { earning_id: eid(2), amount: 30 }],
       }),
     );
-    expect(res).toMatchObject({ replayed: false, payment: { id: PAYMENT, amount: 100, sessions: 2 } });
+    expect(res).toMatchObject({
+      replayed: false,
+      payment: { id: PAYMENT, amount: 100, sessions: 2 },
+    });
   });
 
   it('a partial amount is fine: the newest session is left untouched', async () => {
     await service().record(ctx, { ...base, amount: 20 });
-    expect(queries.record).toHaveBeenCalledWith(expect.objectContaining({ items: [{ earning_id: eid(1), amount: 20 }] }));
+    expect(queries.record).toHaveBeenCalledWith(
+      expect.objectContaining({ items: [{ earning_id: eid(1), amount: 20 }] }),
+    );
   });
 
   it('the exact outstanding total pays every session', async () => {
@@ -102,13 +107,18 @@ describe('EarningsService.record: receipt, teacher, idempotency', () => {
 
   it('the RPC saying replayed (two retries at once) is passed through', async () => {
     queries.record.mockResolvedValue({ payment_id: PAYMENT, replayed: true });
-    expect((await service().record(ctx, { ...base, clientRequestId: REQUEST })).replayed).toBe(true);
+    expect((await service().record(ctx, { ...base, clientRequestId: REQUEST })).replayed).toBe(
+      true,
+    );
   });
 });
 
 describe('EarningsService: reads', () => {
   it('balance: earned, paid, outstanding for the teacher', async () => {
-    queries.money.mockResolvedValue([earning(1, { paid_amount: 70 }), earning(2, { paid_amount: 10 })]);
+    queries.money.mockResolvedValue([
+      earning(1, { paid_amount: 70 }),
+      earning(2, { paid_amount: 10 }),
+    ]);
     expect(await service().balance(TEACHER)).toMatchObject({
       earned: 140, paid: 80, outstanding: 60, overpaid: 0, currency: 'EGP', teacher: { display_name_ar: 'أبرار' },
     });

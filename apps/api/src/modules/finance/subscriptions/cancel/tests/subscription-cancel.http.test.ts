@@ -24,10 +24,23 @@ describe('POST /subscriptions/:id/cancel', () => {
   it('cancels: the row stays with who / when / why, audited, its tasks closed, the student recomputed', async () => {
     const res = await call({ method: 'POST', url, body: { reason: '  خطأ ' } });
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toMatchObject({ id: SUB_ID, status: 'cancelled', balance: { remaining: 0 } });
-    expect(m.cancels.cancel).toHaveBeenCalledWith({ id: SUB_ID, actorId: ADMIN.id, reason: 'خطأ', now: expect.any(Date) });
-    expect(m.audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'subscriptions', entityId: SUB_ID, action: 'cancel' }));
-    expect(m.alerts.closeTasks).toHaveBeenCalledWith(expect.objectContaining({ subjectIds: [SUB_ID], keep: [] }));
+    expect(res.json()).toMatchObject({
+      id: SUB_ID,
+      status: 'cancelled',
+      balance: { remaining: 0 },
+    });
+    expect(m.cancels.cancel).toHaveBeenCalledWith({
+      id: SUB_ID,
+      actorId: ADMIN.id,
+      reason: 'خطأ',
+      now: expect.any(Date),
+    });
+    expect(m.audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ entity: 'subscriptions', entityId: SUB_ID, action: 'cancel' }),
+    );
+    expect(m.alerts.closeTasks).toHaveBeenCalledWith(
+      expect.objectContaining({ subjectIds: [SUB_ID], keep: [] }),
+    );
     expect(m.subs.forStudent).toHaveBeenCalledWith(STUDENT_ID);
     expect(m.subs.remove).not.toHaveBeenCalled(); // never deleted
   });

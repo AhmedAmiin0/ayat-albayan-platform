@@ -9,7 +9,14 @@ const FLIP_P1 = { after: { status: 'active', via: 'payment', payment_id: 'p1' },
 const PAYMENT = { id: 'p1', kind: 'payment', amount: 290 };
 const IDS = { studentId: 's1', actorId: 'admin1' };
 
-type Opts = { last?: unknown; status?: string; other?: boolean; ended?: boolean; moved?: boolean; lessons?: TrialLessonRow[] };
+type Opts = {
+  last?: unknown;
+  status?: string;
+  other?: boolean;
+  ended?: boolean;
+  moved?: boolean;
+  lessons?: TrialLessonRow[];
+};
 const lessonRow = (status: 'scheduled' | 'completed'): TrialLessonRow => ({
   student_id: 's1',
   attendance: null,

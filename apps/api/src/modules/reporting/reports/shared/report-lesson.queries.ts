@@ -14,7 +14,10 @@ export class ReportLessonQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /** Issue A5: v_lesson_sequence.seq once completed, else completed lessons before plus one. */
-  async lessonNumbers(lesson: { id: string; starts_at: string }, studentIds: readonly string[]): Promise<Map<string, number>> {
+  async lessonNumbers(
+    lesson: { id: string; starts_at: string },
+    studentIds: readonly string[],
+  ): Promise<Map<string, number>> {
     const out = new Map<string, number>();
     const { data, error } = await this.db
       .from('v_lesson_sequence')
@@ -63,7 +66,10 @@ export class ReportLessonQueries {
    * their submitted v2 reports, newest first. v1 reports are never read; `exclude` leaves out the
    * reports on this form (an edit must not suggest after its own range).
    */
-  async memory(studentIds: readonly string[], exclude: readonly string[]): Promise<Map<string, MemoryView>> {
+  async memory(
+    studentIds: readonly string[],
+    exclude: readonly string[],
+  ): Promise<Map<string, MemoryView>> {
     // One read per student (a lesson has one or a few), so one student's history never crowds out another's.
     const views = await Promise.all(
       studentIds.map(async (id) => {

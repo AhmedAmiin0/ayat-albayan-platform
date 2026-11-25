@@ -30,7 +30,8 @@ export class LinkCancel {
     if (!row) throw conflict('link_not_open');
     await this.deps.audit.record({ actorId: user.id, entity: 'payment_links', entityId: id, action: 'cancel' });
     const same = row.stripe_session_id === link.stripe_session_id;
-    if (row.subscription_id && same && (await this.closed(found))) await this.packages.release(row.subscription_id, user.id);
+    if (row.subscription_id && same && (await this.closed(found)))
+      await this.packages.release(row.subscription_id, user.id);
     return this.deps.views.one(row);
   }
 

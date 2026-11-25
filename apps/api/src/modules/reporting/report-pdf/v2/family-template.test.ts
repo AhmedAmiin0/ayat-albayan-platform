@@ -4,7 +4,8 @@ import { FAMILY_CSS } from './family-css';
 import { content, familyModel } from './family.fakes';
 import { familyHtml } from './family-template';
 
-const html = (over: Parameters<typeof familyModel>[0] = {}) => familyHtml(familyModel(over), STUB_ASSETS);
+const html = (over: Parameters<typeof familyModel>[0] = {}) =>
+  familyHtml(familyModel(over), STUB_ASSETS);
 
 describe('familyHtml — the v2 report the family receives (ParentReport.dc.html)', () => {
   it('Quran, attended: matches the reviewed HTML', async () => {

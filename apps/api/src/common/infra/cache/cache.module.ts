@@ -10,7 +10,10 @@ import { CACHE_STORE, SharedCache } from './shared-cache';
 const log = new Logger('SharedCache');
 
 /** Redis when REDIS_URL is set and valid, else this process's memory (today's behaviour). */
-export function cacheStoreFromEnv(guard: CacheGuard, source: NodeJS.ProcessEnv = process.env): CacheStore {
+export function cacheStoreFromEnv(
+  guard: CacheGuard,
+  source: NodeJS.ProcessEnv = process.env,
+): CacheStore {
   const url = redisUrl(source, (reason) => log.warn(`${reason}; the cache stays in memory`));
   if (!url) return new MemoryCacheStore();
   log.log('shared cache: redis');
@@ -22,7 +25,11 @@ export function cacheStoreFromEnv(guard: CacheGuard, source: NodeJS.ProcessEnv =
 @Module({
   providers: [
     { provide: CacheGuard, useFactory: () => new CacheGuard() },
-    { provide: CACHE_STORE, inject: [CacheGuard], useFactory: (guard: CacheGuard) => cacheStoreFromEnv(guard) },
+    {
+      provide: CACHE_STORE,
+      inject: [CacheGuard],
+      useFactory: (guard: CacheGuard) => cacheStoreFromEnv(guard),
+    },
     SharedCache,
   ],
   // The store and guard too: the job heartbeats share them (common/jobs/beats).

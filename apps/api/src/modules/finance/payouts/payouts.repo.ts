@@ -12,7 +12,8 @@ export type LessonWindow = { teacherId: string; from: string; to: string };
 
 const SELECT = '*, teacher:teachers(id, display_name_ar, display_name_en, tz)';
 const byTeacherName = (a: PayoutRow, b: PayoutRow) =>
-  (a.teacher?.display_name_ar ?? '').localeCompare(b.teacher?.display_name_ar ?? '', 'ar') || a.id.localeCompare(b.id);
+  (a.teacher?.display_name_ar ?? '').localeCompare(b.teacher?.display_name_ar ?? '', 'ar') ||
+  a.id.localeCompare(b.id);
 
 /** All supabase access for `teacher_payouts` (service role; the controllers guard). R-PAY-02. */
 @Injectable()
@@ -27,15 +28,22 @@ export class PayoutsRepo {
 
   /** The ONE pay rule (v_teacher_payable_lessons, migration 20261005000200), with ledger amounts. */
   async lessons(w: LessonWindow): Promise<PayoutLesson[]> {
-    const data = rows(await this.db
-      .from('v_teacher_payable_lessons')
-      .select('lesson_id, minutes, amount, status')
-      .eq('teacher_id', w.teacherId)
-      .gte('starts_at', w.from)
-      .lt('starts_at', w.to)
-      .order('starts_at')
-      .order('lesson_id'));
-    return data.map((r) => ({ id: r.lesson_id, minutes: r.minutes, amount: r.amount, status: r.status }));
+    const data = rows(
+      await this.db
+        .from('v_teacher_payable_lessons')
+        .select('lesson_id, minutes, amount, status')
+        .eq('teacher_id', w.teacherId)
+        .gte('starts_at', w.from)
+        .lt('starts_at', w.to)
+        .order('starts_at')
+        .order('lesson_id'),
+    );
+    return data.map((r) => ({
+      id: r.lesson_id,
+      minutes: r.minutes,
+      amount: r.amount,
+      status: r.status,
+    }));
   }
 
   /**
@@ -45,10 +53,13 @@ export class PayoutsRepo {
   async pendingReports(w: LessonWindow): Promise<number> {
     const { count, error } = await this.db
       .from('lesson_students')
-      .select('lesson_id, lesson:lessons!inner(teacher_id, starts_at, status), lesson_reports(id)', {
-        count: 'exact',
-        head: true,
-      })
+      .select(
+        'lesson_id, lesson:lessons!inner(teacher_id, starts_at, status), lesson_reports(id)',
+        {
+          count: 'exact',
+          head: true,
+        },
+      )
       .eq('lesson.teacher_id', w.teacherId)
       .gte('lesson.starts_at', w.from)
       .lt('lesson.starts_at', w.to)
@@ -80,7 +91,11 @@ export class PayoutsRepo {
 
   /** A teacher's own rows, newest month first (Y5); a draft is still the admin's to change, so hidden. */
   async forTeacher(teacherId: string, month?: string): Promise<PayoutRow[]> {
-    let q = this.db.from('teacher_payouts').select(SELECT).eq('teacher_id', teacherId).neq('status', 'draft');
+    let q = this.db
+      .from('teacher_payouts')
+      .select(SELECT)
+      .eq('teacher_id', teacherId)
+      .neq('status', 'draft');
     if (month) q = q.eq('month', month);
     const { data, error } = await q.order('month', { ascending: false });
     if (error) throw pgError(error);
@@ -88,7 +103,9 @@ export class PayoutsRepo {
   }
 
   async get(id: string): Promise<PayoutRow | null> {
-    const data = maybe(await this.db.from('teacher_payouts').select(SELECT).eq('id', id).maybeSingle());
+    const data = maybe(
+      await this.db.from('teacher_payouts').select(SELECT).eq('id', id).maybeSingle(),
+    );
     return data;
   }
 
@@ -101,15 +118,20 @@ export class PayoutsRepo {
    * Writes only while the row is still in `from` status (compare-and-set): a concurrent approve
    * never gets overwritten by a regenerate. null when the row moved on.
    */
-  async update(id: string, patch: TablesUpdate<'teacher_payouts'> & { from: Tables<'teacher_payouts'>['status'] }) {
+  async update(
+    id: string,
+    patch: TablesUpdate<'teacher_payouts'> & { from: Tables<'teacher_payouts'>['status'] },
+  ) {
     const { from, ...write } = patch;
-    const data = maybe(await this.db
-      .from('teacher_payouts')
-      .update(write)
-      .eq('id', id)
-      .eq('status', from)
-      .select(SELECT)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('teacher_payouts')
+        .update(write)
+        .eq('id', id)
+        .eq('status', from)
+        .select(SELECT)
+        .maybeSingle(),
+    );
     return data;
   }
 

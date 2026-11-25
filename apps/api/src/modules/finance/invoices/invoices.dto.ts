@@ -29,7 +29,10 @@ export type RecentFilter = PageQuery &
   };
 
 /** `tz`: settings.academy_timezone (the days are the academy's). */
-export function recentFilter(q: z.output<typeof invoiceRecentQuery>, tz: string = SETTING_DEFAULTS.academy_timezone): RecentFilter {
+export function recentFilter(
+  q: z.output<typeof invoiceRecentQuery>,
+  tz: string = SETTING_DEFAULTS.academy_timezone,
+): RecentFilter {
   const { from, to, ...rest } = q;
   return { ...rest, ...utcWindow({ from, to }, tz) };
 }

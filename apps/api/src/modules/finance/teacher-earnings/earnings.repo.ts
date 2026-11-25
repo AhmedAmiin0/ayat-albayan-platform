@@ -89,7 +89,11 @@ export class EarningsRepo {
   }
 
   /** settle_payout_in_ledger: the payment id, or null when nothing was outstanding. */
-  async settlePayout(input: { payoutId: string; actorId: string; paidAt: string }): Promise<string | null> {
+  async settlePayout(input: {
+    payoutId: string;
+    actorId: string;
+    paidAt: string;
+  }): Promise<string | null> {
     const { data, error } = await this.db.rpc('settle_payout_in_ledger', {
       p_payout: input.payoutId,
       p_actor: input.actorId,

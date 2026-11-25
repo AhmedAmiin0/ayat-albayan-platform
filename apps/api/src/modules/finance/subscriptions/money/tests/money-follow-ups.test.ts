@@ -12,8 +12,15 @@ function setup() {
   const students = { afterPayment: step('activate') };
   const revert = { afterDelete: step('revert') };
   const bell = { notify: step('bell') };
-  const env = new FollowUpEnv(revert as unknown as StudentDeactivation, bell as unknown as CommissionBell);
-  const follow = new MoneyFollowUps(leads as unknown as LeadConversion, students as unknown as StudentActivation, env);
+  const env = new FollowUpEnv(
+    revert as unknown as StudentDeactivation,
+    bell as unknown as CommissionBell,
+  );
+  const follow = new MoneyFollowUps(
+    leads as unknown as LeadConversion,
+    students as unknown as StudentActivation,
+    env,
+  );
   return { leads, students, revert, bell, follow, order };
 }
 const IDS = { studentId: 's1', actorId: 'u1' };

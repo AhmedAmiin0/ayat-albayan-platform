@@ -26,7 +26,9 @@ export class PortalReportsService {
   async list(input: { user: AuthUser; studentId: string }): Promise<PortalReports> {
     await this.scopes.student(input.user, input.studentId);
     const rows = await this.queries.sent(input.studentId);
-    const recordings = recordingByLesson(await this.queries.visibleRecordings(rows.map((r) => r.lesson_id)));
+    const recordings = recordingByLesson(
+      await this.queries.visibleRecordings(rows.map((r) => r.lesson_id)),
+    );
     return { reports: rows.map((r) => toPortalReport(r, recordings)) };
   }
 
@@ -42,7 +44,11 @@ export class PortalReportsService {
     await this.scopes.student(call.user, call.studentId);
     const row = await this.queries.oneSent({ studentId: call.studentId, reportId: call.id });
     if (!row?.pdf_path) throw notFound('report_not_found');
-    return this.storage.signedDownload({ bucket: BUCKETS.reports, path: row.pdf_path, seconds: SIGNED_URL_SECONDS.portal });
+    return this.storage.signedDownload({
+      bucket: BUCKETS.reports,
+      path: row.pdf_path,
+      seconds: SIGNED_URL_SECONDS.portal,
+    });
   }
 
   /** 404 recording_not_found unless it belongs to one of this student's sent reports and is visible. */
@@ -54,6 +60,10 @@ export class PortalReportsService {
     const row = visible.find((r) => r.id === call.id);
     if (!row) throw notFound('recording_not_found');
     // A video player keeps range-requesting the same URL while it plays: the UI lifetime (an hour).
-    return this.storage.signedDownload({ bucket: BUCKETS.recordings, path: row.file_path, seconds: SIGNED_URL_SECONDS.ui });
+    return this.storage.signedDownload({
+      bucket: BUCKETS.recordings,
+      path: row.file_path,
+      seconds: SIGNED_URL_SECONDS.ui,
+    });
   }
 }

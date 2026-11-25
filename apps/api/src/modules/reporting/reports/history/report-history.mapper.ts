@@ -53,7 +53,13 @@ export function historyResponse(p: HistoryParts): StudentReportsResponse {
     .reverse()
     .slice(start, start + p.page.pageSize)
     .map((j) => ({ ...summary(j, p.seq), ...editWindow(j.row, p.window) }));
-  return { items, total: joined.length, page: p.page.page, pageSize: p.page.pageSize, series: joined.map(point) };
+  return {
+    items,
+    total: joined.length,
+    page: p.page.page,
+    pageSize: p.page.pageSize,
+    series: joined.map(point),
+  };
 }
 
 function summary({ row, lesson }: Joined, seq: ReadonlyMap<string, number>): ReportSummaryView {
@@ -94,10 +100,9 @@ function editWindow(row: HistoryRow, w: SummaryWindow | undefined): Partial<Repo
 }
 
 function point({ row, lesson }: Joined): GradePoint {
-  const rubrics = Object.fromEntries(REPORT_RUBRICS.map((r) => [r, gradeScore(row[RUBRIC_COLUMN[r]])])) as Record<
-    Rubric,
-    number | null
-  >;
+  const rubrics = Object.fromEntries(
+    REPORT_RUBRICS.map((r) => [r, gradeScore(row[RUBRIC_COLUMN[r]])]),
+  ) as Record<Rubric, number | null>;
   return {
     report_id: row.id,
     lesson_id: row.lesson_id,

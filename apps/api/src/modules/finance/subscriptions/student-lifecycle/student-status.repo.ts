@@ -71,8 +71,17 @@ export class StudentStatusRepo {
       .select('id')
       .maybeSingle());
     if (!data) return false;
-    const entry = { actorId: audit.actorId, entity: 'students', entityId: m.studentId, action: 'status_change' };
-    await this.audit.record({ ...entry, before: { status: m.from }, after: { status: m.to, ...audit.after } });
+    const entry = {
+      actorId: audit.actorId,
+      entity: 'students',
+      entityId: m.studentId,
+      action: 'status_change',
+    };
+    await this.audit.record({
+      ...entry,
+      before: { status: m.from },
+      after: { status: m.to, ...audit.after },
+    });
     return true;
   }
 }

@@ -25,7 +25,8 @@ export class ReportHistoryService {
     if (!student) throw new NotFoundException();
     const teacherId = isAdmin(user) ? null : await this.access.teacherId(user);
     if (teacherId !== null) {
-      const own = student.teacher_id === teacherId || (await this.queries.taught({ teacherId, studentId }));
+      const own =
+        student.teacher_id === teacherId || (await this.queries.taught({ teacherId, studentId }));
       if (!own) throw new ForbiddenException();
     }
     const rows = await this.queries.submitted(studentId);

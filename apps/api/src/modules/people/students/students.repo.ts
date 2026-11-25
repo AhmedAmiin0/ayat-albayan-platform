@@ -38,14 +38,23 @@ type StudentListQuery = ListQuery & StudentListFilters & StudentColumnFilters & 
  */
 export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<StudentListItem>> {
   const base = db.from('v_student_list').select(LIST_COLUMNS, { count: 'exact' });
-  let query = applySort(applyStudentColumnFilters(applyStudentFilters(base, q), q), q, STUDENT_SORT);
+  let query = applySort(
+    applyStudentColumnFilters(applyStudentFilters(base, q), q),
+    q,
+    STUDENT_SORT,
+  );
   const filter = await searchFilter(db, q.search);
   if (filter) query = query.or(filter);
   const [from, to] = pageRange(q);
   // The view's columns read as nullable; the base columns (and has_weekly's exists) never are.
-  const { data, error, count } = await query.range(from, to).overrideTypes<StudentListRow[], { merge: false }>();
+  const { data, error, count } = await query
+    .range(from, to)
+    .overrideTypes<StudentListRow[], { merge: false }>();
   if (error) throw pgError(error, peopleErrors());
-  const tests = await testStudents(db, data.map((r) => r.id));
+  const tests = await testStudents(
+    db,
+    data.map((r) => r.id),
+  );
   const items = data.map((r) => ({ ...toListItem(r), is_test: tests.has(r.id) }));
   return { items, total: count ?? 0, page: q.page, pageSize: q.pageSize };
 }
@@ -53,7 +62,10 @@ export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<St
 /** students.is_test (docs/56). */
 async function testStudents(db: Db, ids: readonly string[]): Promise<Set<string>> {
   if (ids.length === 0) return new Set();
-  const data = rows(await db.from('students').select('id').in('id', ids).eq('is_test', true), peopleErrors());
+  const data = rows(
+    await db.from('students').select('id').in('id', ids).eq('is_test', true),
+    peopleErrors(),
+  );
   return new Set(data.map((s) => s.id));
 }
 
@@ -67,7 +79,14 @@ async function searchFilter(db: Db, term: string): Promise<string | null> {
   const digits = searchDigits(term);
   if (!digits) return studentNameOrCodeFilter(term);
   // Every family number, main and second (guardian_phones).
-  const data = rows(await db.from('guardian_phones').select('guardian_id').ilike('phone_e164', `%${digits}%`).limit(100), peopleErrors());
+  const data = rows(
+    await db
+      .from('guardian_phones')
+      .select('guardian_id')
+      .ilike('phone_e164', `%${digits}%`)
+      .limit(100),
+    peopleErrors(),
+  );
   return studentPhoneOrCodeFilter([...new Set(data.map((g) => g.guardian_id))], digits);
 }
 
@@ -89,24 +108,29 @@ export async function countStudentsByStatus(db: Db, f: StudentListFilters): Prom
 
 /** Profile with guardian (+ siblings) and teacher (R-STU-04, R-STU-05). */
 export async function getStudentProfile(db: Db, id: string): Promise<StudentProfile> {
-  const data = maybe(await db
-    .from('students')
-    .select(PROFILE_COLUMNS)
-    .eq('id', id)
-    // The family's numbers only: a student's own number is not one.
-    .is('guardian.phones.student_id', null)
-    .maybeSingle(), peopleErrors());
+  const data = maybe(
+    await db
+      .from('students')
+      .select(PROFILE_COLUMNS)
+      .eq('id', id)
+      // The family's numbers only: a student's own number is not one.
+      .is('guardian.phones.student_id', null)
+      .maybeSingle(),
+    peopleErrors(),
+  );
   if (!data) throw new NotFoundException();
   return toProfile(data);
 }
 
-
 /** Active teachers for the profile's teacher picker. ponytail: move to teachers module later. */
 export async function listTeacherOptions(db: Db): Promise<TeacherOption[]> {
-  const data = rows(await db
-    .from('teachers')
-    .select('id, display_name_ar, meeting_link')
-    .eq('status', 'active')
-    .order('display_name_ar'), peopleErrors());
+  const data = rows(
+    await db
+      .from('teachers')
+      .select('id, display_name_ar, meeting_link')
+      .eq('status', 'active')
+      .order('display_name_ar'),
+    peopleErrors(),
+  );
   return data;
 }

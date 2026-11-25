@@ -50,9 +50,16 @@ export class TeachersRepo {
       .range(from, from + pageSize - 1);
     if (error) throw pgError(error);
     const ids = data.map((row) => row.id);
-    const [counts, photos] = await Promise.all([this.studentCounts(ids), this.photos.ofTeachers(ids)]);
+    const [counts, photos] = await Promise.all([
+      this.studentCounts(ids),
+      this.photos.ofTeachers(ids),
+    ]);
     const none: TeacherStudentCounts = { active_count: 0, trial_count: 0 };
-    const items = data.map((row) => ({ ...withoutPath(row), ...(counts.get(row.id) ?? none), avatar_url: photos.get(row.id) ?? null }));
+    const items = data.map((row) => ({
+      ...withoutPath(row),
+      ...(counts.get(row.id) ?? none),
+      avatar_url: photos.get(row.id) ?? null,
+    }));
     return { items, total: count ?? 0, page, pageSize };
   }
 

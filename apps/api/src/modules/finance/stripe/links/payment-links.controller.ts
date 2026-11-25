@@ -40,7 +40,9 @@ export class PaymentLinksController {
     const rows = await this.deps.links.list({ createdBy: isAdmin(user) ? null : user.id });
     const now = new Date();
     // By the status it reads as now: an open link past its expiry is listed as expired.
-    return rows.map((r) => this.deps.views.one(r, now)).filter((v) => !status || v.status === status);
+    return rows
+      .map((r) => this.deps.views.one(r, now))
+      .filter((v) => !status || v.status === status);
   }
 
   @Post(':id/cancel')

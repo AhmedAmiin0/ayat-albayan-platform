@@ -12,7 +12,8 @@ import { localDate } from './sheet-dates';
 import { findSummaryRow, newSummaryRow, summaryUpdates } from './summary-row';
 import { later, planned, synced, type ItemWriter, type WriteCtx } from '@/modules/platform/google-sync/sync/write-context';
 
-const isSkipReason = (r: string | null): r is GoogleSkipReason => GOOGLE_SKIP_REASONS.some((x) => x === r);
+const isSkipReason = (r: string | null): r is GoogleSkipReason =>
+  GOOGLE_SKIP_REASONS.some((x) => x === r);
 
 /**
  * attendance_row and summary_row (docs/24 §2.5, §2.6). The attendance row is appended once, after
@@ -47,9 +48,19 @@ export class SheetRowsWriter implements ItemWriter {
     const { google } = ctx;
     const sheetId = need.drive.sheetId;
     const values = attendanceRow({
-      date, seq: src.seq, teacherName: src.teacherName, program: src.report.program ?? src.studentProgram, attendance: src.report.attendance,
-      recited: src.report.recited, newMemorization: src.report.new_memorization, revision: src.report.revision, gradeOverall: src.report.grade_overall,
-      notes: src.report.notes, homework: src.report.homework, meetingLink: src.meetingLink, pdfFileId: pdf.google_id,
+      date,
+      seq: src.seq,
+      teacherName: src.teacherName,
+      program: src.report.program ?? src.studentProgram,
+      attendance: src.report.attendance,
+      recited: src.report.recited,
+      newMemorization: src.report.new_memorization,
+      revision: src.report.revision,
+      gradeOverall: src.report.grade_overall,
+      notes: src.report.notes,
+      homework: src.report.homework,
+      meetingLink: src.meetingLink,
+      pdfFileId: pdf.google_id,
     });
     const hash = contentHash(values);
     const rows = await google.readValues({ spreadsheetId: sheetId, range: 'A2:M', render: 'UNFORMATTED_VALUE' });
@@ -57,7 +68,8 @@ export class SheetRowsWriter implements ItemWriter {
     if (found.kind === 'script') return { state: 'skipped', reason: 'already_in_sheet' };
     if (found.kind === 'ours') {
       const range = `A${found.row}:M${found.row}`;
-      if (hash !== item.content_hash) await google.updateValues({ spreadsheetId: sheetId, range, values: [values] });
+      if (hash !== item.content_hash)
+        await google.updateValues({ spreadsheetId: sheetId, range, values: [values] });
       return synced({ googleId: range, parentId: sheetId, hash });
     }
     if (item.google_id) return { state: 'gone', error: 'row_deleted_in_google' };
@@ -85,8 +97,18 @@ export class SheetRowsWriter implements ItemWriter {
     const summaryId = acct.summary_sheet_id;
     const att = await google.readValues({ spreadsheetId: need.drive.sheetId, range: 'A2:M', render: 'UNFORMATTED_VALUE' });
     const stats = attendanceStats(att);
-    const student = { name: src.studentName, teacherName: src.teacherName, program: src.studentProgram, folderId: need.drive.folderId, attendanceSheetId: need.drive.sheetId };
-    const rows = await google.readValues({ spreadsheetId: summaryId, range: 'A2:H', render: 'FORMULA' });
+    const student = {
+      name: src.studentName,
+      teacherName: src.teacherName,
+      program: src.studentProgram,
+      folderId: need.drive.folderId,
+      attendanceSheetId: need.drive.sheetId,
+    };
+    const rows = await google.readValues({
+      spreadsheetId: summaryId,
+      range: 'A2:H',
+      render: 'FORMULA',
+    });
     const row = findSummaryRow(rows, student);
     const otherFolder = row !== null ? folderIdIn(rows[row - 2]?.[6]) : null;
     // A name match whose row points at ANOTHER folder is the script's student: never overwrite it.

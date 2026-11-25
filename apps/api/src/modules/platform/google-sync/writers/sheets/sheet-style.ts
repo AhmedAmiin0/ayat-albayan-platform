@@ -9,18 +9,33 @@ const rgb = (hex: string) => ({
 });
 
 export function brandStyle(columns: number): object[] {
-  const header = { sheetId: 0, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: columns };
+  const header = {
+    sheetId: 0,
+    startRowIndex: 0,
+    endRowIndex: 1,
+    startColumnIndex: 0,
+    endColumnIndex: columns,
+  };
   return [
     {
       updateSheetProperties: {
-        properties: { sheetId: 0, rightToLeft: true, gridProperties: { frozenRowCount: 1, hideGridlines: true } },
+        properties: {
+          sheetId: 0,
+          rightToLeft: true,
+          gridProperties: { frozenRowCount: 1, hideGridlines: true },
+        },
         fields: 'rightToLeft,gridProperties.frozenRowCount,gridProperties.hideGridlines',
       },
     },
     {
       repeatCell: {
         range: header,
-        cell: { userEnteredFormat: { backgroundColor: rgb(BRAND.green), textFormat: { foregroundColor: rgb(BRAND.white), bold: true } } },
+        cell: {
+          userEnteredFormat: {
+            backgroundColor: rgb(BRAND.green),
+            textFormat: { foregroundColor: rgb(BRAND.white), bold: true },
+          },
+        },
         fields: 'userEnteredFormat(backgroundColor,textFormat)',
       },
     },

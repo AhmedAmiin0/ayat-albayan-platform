@@ -41,7 +41,13 @@ export class NotificationsRepo {
     if (rows.error) throw pgError(rows.error);
     if (unread.error) throw pgError(unread.error);
     const items: NotificationItem[] = rows.data.map(notificationItem);
-    return { items, total: rows.count ?? items.length, page: q.page, pageSize: q.pageSize, unread: unread.count ?? 0 };
+    return {
+      items,
+      total: rows.count ?? items.length,
+      page: q.page,
+      pageSize: q.pageSize,
+      unread: unread.count ?? 0,
+    };
   }
 
   /** Stamps read_at on the caller's unread rows: the given ids, or all of them. */
@@ -60,7 +66,11 @@ export class NotificationsRepo {
    * known endpoint moves to the caller (the browser signed in as someone else) and counts as new again. Then only the caller's newest WEB_PUSH_MAX_PER_PROFILE stay.
    * Never another person's live browser on its endpoint alone: 409 (assertBrowserClaim).
    */
-  async subscribe(profileId: string, sub: WebPushSubscriptionInput, sessionId: string): Promise<void> {
+  async subscribe(
+    profileId: string,
+    sub: WebPushSubscriptionInput,
+    sessionId: string,
+  ): Promise<void> {
     await assertBrowserClaim(this.db, { profileId, sub });
     const row = {
       profile_id: profileId,

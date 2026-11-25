@@ -37,7 +37,11 @@ const SESSION_SORT: SortSpec<(typeof EARNING_SORT_KEYS)[number]> = {
 
 /** Payments: newest first by default. */
 const PAYMENT_SORT: SortSpec<(typeof TEACHER_PAYMENT_SORT_KEYS)[number]> = {
-  columns: { paid_at: { column: 'paid_at' }, amount: { column: 'amount' }, method: { column: 'method' } },
+  columns: {
+    paid_at: { column: 'paid_at' },
+    amount: { column: 'amount' },
+    method: { column: 'method' },
+  },
   fallback: { column: 'paid_at', ascending: false },
 };
 
@@ -55,16 +59,28 @@ export async function sessionsPage(db: Db, q: For<EarningsListQuery>): Promise<P
     .range(from, from + f.pageSize - 1)
     .returns<EarningRow[]>();
   if (error) throw pgError(error);
-  const names = await lessonNames(db, data.map((r) => r.lesson_id));
-  const items = data.map((r) => ({ ...r, lesson: { lesson_students: names.get(r.lesson_id) ?? [] } }));
+  const names = await lessonNames(
+    db,
+    data.map((r) => r.lesson_id),
+  );
+  const items = data.map((r) => ({
+    ...r,
+    lesson: { lesson_students: names.get(r.lesson_id) ?? [] },
+  }));
   return { items, total: count ?? 0, page: f.page, pageSize: f.pageSize };
 }
 
 /** One page of the payments made to the teacher, voided ones included unless filtered. */
-export async function paymentsPage(db: Db, q: For<TeacherPaymentListQuery>): Promise<Page<PaymentRow>> {
+export async function paymentsPage(
+  db: Db,
+  q: For<TeacherPaymentListQuery>,
+): Promise<Page<PaymentRow>> {
   const f = q.filter;
   const from = (f.page - 1) * f.pageSize;
-  let query = db.from('teacher_payments').select(PAYMENT, { count: 'exact' }).eq('teacher_id', q.teacherId);
+  let query = db
+    .from('teacher_payments')
+    .select(PAYMENT, { count: 'exact' })
+    .eq('teacher_id', q.teacherId);
   if (f.method) query = query.eq('method', f.method);
   if (f.voided === 'true') query = query.not('voided_at', 'is', null);
   else if (f.voided === 'false') query = query.is('voided_at', null);

@@ -16,8 +16,13 @@ describe('loadFamilyExtras — the v2 reads of the family report', () => {
     expect(out.history).toEqual([{ kind: 'new', surah: 67, from: 1, to: 15, grade: 'good' }]);
     expect(out.content.segments).toHaveLength(1);
     expect(out.nextLessonAt).toBe('2026-10-29T13:00:00Z');
-    const on = (table: string, method: string) => calls.filter((c) => c.table === table && c.method === method).map((c) => c.args);
-    expect(on('lesson_reports', 'eq')).toEqual([['student_id', 's1'], ['form_version', 2], ['status', 'submitted']]);
+    const on = (table: string, method: string) =>
+      calls.filter((c) => c.table === table && c.method === method).map((c) => c.args);
+    expect(on('lesson_reports', 'eq')).toEqual([
+      ['student_id', 's1'],
+      ['form_version', 2],
+      ['status', 'submitted'],
+    ]);
     expect(on('lesson_reports', 'neq')).toEqual([['id', 'r1']]);
     expect(on('lesson_reports', 'lte')).toEqual([['submitted_at', REPORT.submitted_at]]);
     expect(on('lessons', 'gt')).toEqual([['starts_at', '2026-10-27T14:00:00.000Z']]);

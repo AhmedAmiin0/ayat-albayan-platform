@@ -21,19 +21,32 @@ export class FakeCodes implements CodeStore {
 
   async insert(row: NewCode): Promise<string> {
     const id = `code-${this.rows.length + 1}`;
-    this.rows.push({ ...row, id, attempts: 0, usedAt: null, createdAt: this.now(), sendError: null });
+    this.rows.push({
+      ...row,
+      id,
+      attempts: 0,
+      usedAt: null,
+      createdAt: this.now(),
+      sendError: null,
+    });
     return id;
   }
 
   async latest(subject: Subject, purposes: readonly CodePurpose[]): Promise<LiveCode | null> {
-    const mine = this.rows.filter((r) => r.subject.kind === subject.kind && r.subject.id === subject.id && purposes.includes(r.purpose));
+    const mine = this.rows.filter(
+      (r) =>
+        r.subject.kind === subject.kind &&
+        r.subject.id === subject.id &&
+        purposes.includes(r.purpose),
+    );
     const row = mine.at(-1);
     return row ? { id: row.id, purpose: row.purpose, phone: row.phone } : null;
   }
 
   async take(id: string): Promise<string | null> {
     const row = this.rows.find((r) => r.id === id);
-    if (!row || row.usedAt || row.expiresAt <= this.now() || row.attempts >= row.maxAttempts) return null;
+    if (!row || row.usedAt || row.expiresAt <= this.now() || row.attempts >= row.maxAttempts)
+      return null;
     row.attempts += 1;
     return row.hash;
   }
@@ -56,7 +69,9 @@ export class FakeCodes implements CodeStore {
   }
 
   async phoneStats(phone: string, now: Date): Promise<PhoneStats> {
-    const day = this.rows.filter((r) => r.phone === phone && now.getTime() - r.createdAt.getTime() < 24 * 3600_000);
+    const day = this.rows.filter(
+      (r) => r.phone === phone && now.getTime() - r.createdAt.getTime() < 24 * 3600_000,
+    );
     return {
       sentLast15Min: day.filter((r) => now.getTime() - r.createdAt.getTime() < 15 * 60_000).length,
       sentLastDay: day.length,
@@ -106,7 +121,17 @@ export class FakeAudit {
 export const PEPPER = 'test-pepper-0123456789-0123456789-abcdef';
 
 /** SignInSettings over fixed values (family_login_enabled on unless told otherwise). */
-export function fakeSettings(over: Partial<AcademySettings> = {}, pepper: string | null = PEPPER): SignInSettings {
-  const store = { all: async () => ({ ...SETTING_DEFAULTS, family_login_enabled: true, ...over }) } as unknown as SettingsService;
-  return new SignInSettings(store, { pepper, passwordMinLength: 8, supabaseUrl: 'http://localhost', signInKey: 'k' });
+export function fakeSettings(
+  over: Partial<AcademySettings> = {},
+  pepper: string | null = PEPPER,
+): SignInSettings {
+  const store = {
+    all: async () => ({ ...SETTING_DEFAULTS, family_login_enabled: true, ...over }),
+  } as unknown as SettingsService;
+  return new SignInSettings(store, {
+    pepper,
+    passwordMinLength: 8,
+    supabaseUrl: 'http://localhost',
+    signInKey: 'k',
+  });
 }

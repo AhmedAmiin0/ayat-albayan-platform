@@ -28,7 +28,10 @@ export class PayController {
 
   @Get(':token')
   @Header('Cache-Control', 'no-store')
-  async get(@Req() req: PayRequest, @Res({ passthrough: true }) res: HtmlReply): Promise<PublicPaymentLink | string> {
+  async get(
+    @Req() req: PayRequest,
+    @Res({ passthrough: true }) res: HtmlReply,
+  ): Promise<PublicPaymentLink | string> {
     const token = req.params.token ?? '';
     await this.limit.check(req.ip, token);
     const row = isLinkToken(token) ? await this.links.byToken(token) : null;
@@ -59,14 +62,18 @@ export class PayController {
   }
 
   @Get(':token/cancelled')
-  async cancelled(@Req() req: PayRequest, @Res({ passthrough: true }) res: HtmlReply): Promise<string> {
+  async cancelled(
+    @Req() req: PayRequest,
+    @Res({ passthrough: true }) res: HtmlReply,
+  ): Promise<string> {
     return this.result({ kind: 'cancelled', req, res });
   }
 
   private async result(r: { kind: 'done' | 'cancelled'; req: PayRequest; res: HtmlReply }): Promise<string> {
     const token = r.req.params.token ?? '';
     await this.limit.check(r.req.ip, token);
-    if (!isLinkToken(token) || !(await this.links.byToken(token))) return html(r.res, { status: 404, body: notFoundPageHtml() });
+    if (!isLinkToken(token) || !(await this.links.byToken(token)))
+      return html(r.res, { status: 404, body: notFoundPageHtml() });
     const os = fromApp(r.req.headers.cookie);
     const back = { token, kind: r.kind, payOrigin: apiPublicOrigin(), android: os === 'android', live: stripeLiveAllowed() };
     const app = os ? appReturnUrl(back) : null;

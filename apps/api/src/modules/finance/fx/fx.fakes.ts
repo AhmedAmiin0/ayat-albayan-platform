@@ -43,6 +43,10 @@ export function fakeFx(settings: Partial<AcademySettings> = {}) {
     newest: vi.fn<FxRepo['newest']>().mockResolvedValue(null),
     save: vi.fn<FxRepo['save']>().mockResolvedValue(undefined),
   };
-  const service = new FxService(fetcher, queries as unknown as FxRepo, readerOf(FxSettings, settings));
+  const service = new FxService(
+    fetcher,
+    queries as unknown as FxRepo,
+    readerOf(FxSettings, settings),
+  );
   return { fetcher, queries, service };
 }

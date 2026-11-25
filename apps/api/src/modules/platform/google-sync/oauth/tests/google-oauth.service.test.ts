@@ -13,7 +13,9 @@ import type { GoogleAlerts } from '@/modules/platform/google-sync/google-alerts'
 function setup(exchange = vi.fn().mockResolvedValue({ refreshToken: 'fake-refresh', scopes: [...REQUIRED_SCOPES, 'openid'], accessToken: 'fake-access' })) {
   const data = fakeData();
   let stored = '';
-  data.account.setNonce.mockImplementation(async ({ hash }: { hash: string }) => void (stored = hash));
+  data.account.setNonce.mockImplementation(
+    async ({ hash }: { hash: string }) => void (stored = hash),
+  );
   data.account.consumeNonce.mockImplementation(async (h: string) => {
     const ok = h === stored;
     stored = '';
@@ -21,9 +23,16 @@ function setup(exchange = vi.fn().mockResolvedValue({ refreshToken: 'fake-refres
   });
   const oauth: GoogleOAuth = { authUrl: vi.fn(({ state }) => `https://stub.test/auth?state=${encodeURIComponent(state)}`), exchange, email: vi.fn().mockResolvedValue('academy@example.test'), revoke: vi.fn() };
   const factory: GoogleClientFactory = fakeFactory(undefined, oauth);
-  const connection = new GoogleConnection(data.account as unknown as GoogleAccountQueries, factory, { disconnected: vi.fn() } as unknown as GoogleAlerts);
+  const connection = new GoogleConnection(
+    data.account as unknown as GoogleAccountQueries,
+    factory,
+    { disconnected: vi.fn() } as unknown as GoogleAlerts,
+  );
   const audit = { record: vi.fn() };
-  const svc = new GoogleOAuthService(data as unknown as GoogleData, factory, { connection, audit } as unknown as GoogleRuntime);
+  const svc = new GoogleOAuthService(data as unknown as GoogleData, factory, {
+    connection,
+    audit,
+  } as unknown as GoogleRuntime);
   return { svc, data, oauth, audit };
 }
 const stateOf = (url: string) => decodeURIComponent(url.split('state=')[1] ?? '');
@@ -88,7 +97,11 @@ describe('GoogleOAuthService', () => {
   it('stores only the nonce hash', async () => {
     const s = setup();
     const state = stateOf(await s.svc.connectUrl('admin-1'));
-    const payload = JSON.parse(Buffer.from(state.split('.')[0] ?? '', 'base64url').toString()) as { n: string };
-    expect(s.data.account.setNonce).toHaveBeenCalledWith(expect.objectContaining({ hash: nonceHash(payload.n) }));
+    const payload = JSON.parse(Buffer.from(state.split('.')[0] ?? '', 'base64url').toString()) as {
+      n: string;
+    };
+    expect(s.data.account.setNonce).toHaveBeenCalledWith(
+      expect.objectContaining({ hash: nonceHash(payload.n) }),
+    );
   });
 });

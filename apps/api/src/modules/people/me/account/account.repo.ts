@@ -26,8 +26,20 @@ export class AccountRepo implements AccountStore {
     if (!data) return null;
     const name = await this.roleName(data.role, data.role_id);
     const teacher_id = [data.teacher].flat()[0]?.id ?? null;
-    const role = { base: data.role, key: name?.key ?? null, name_ar: name?.name_ar ?? null, name_en: name?.name_en ?? null };
-    return { id: data.id, full_name: data.full_name, phone_e164: data.phone_e164, avatar_path: data.avatar_path, role, teacher_id };
+    const role = {
+      base: data.role,
+      key: name?.key ?? null,
+      name_ar: name?.name_ar ?? null,
+      name_en: name?.name_en ?? null,
+    };
+    return {
+      id: data.id,
+      full_name: data.full_name,
+      phone_e164: data.phone_e164,
+      avatar_path: data.avatar_path,
+      role,
+      teacher_id,
+    };
   }
 
   async update(id: string, patch: SelfPatch): Promise<void> {

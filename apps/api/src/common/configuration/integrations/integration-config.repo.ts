@@ -50,7 +50,10 @@ export class IntegrationConfigRepo {
   }
 
   /** null deletes the row (the env value applies again). actorId null = the import command. */
-  async writePlain(values: Partial<Record<IntegrationPlainKey, string | null>>, actorId: string | null): Promise<void> {
+  async writePlain(
+    values: Partial<Record<IntegrationPlainKey, string | null>>,
+    actorId: string | null,
+  ): Promise<void> {
     for (const [key, value] of Object.entries(values)) {
       const { error } =
         value === null || value === undefined

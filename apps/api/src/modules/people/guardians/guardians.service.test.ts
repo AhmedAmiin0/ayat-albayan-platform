@@ -34,8 +34,12 @@ describe('GuardiansService (R-STU-02, R-STU-04)', () => {
   });
 
   it('get: 404 when missing; returns guardian with students and every family number', async () => {
-    const phones = [{ phone_e164: G.phone_e164, is_primary: true, created_at: '2026-10-29T10:00:00Z' }];
-    const { db, argsOf } = fakeDb({ guardians: [{ data: null }, { data: { ...G, students: [], phones } }] });
+    const phones = [
+      { phone_e164: G.phone_e164, is_primary: true, created_at: '2026-10-29T10:00:00Z' },
+    ];
+    const { db, argsOf } = fakeDb({
+      guardians: [{ data: null }, { data: { ...G, students: [], phones } }],
+    });
     const svc = new GuardiansService(db);
     await expect(svc.get('nope')).rejects.toBeInstanceOf(NotFoundException);
     await expect(svc.get('g1')).resolves.toEqual({ ...G, students: [], phones });

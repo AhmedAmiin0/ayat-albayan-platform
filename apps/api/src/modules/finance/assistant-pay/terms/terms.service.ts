@@ -32,9 +32,16 @@ export class TermsService {
 
   /** Every assistant, with their terms (both null until set). */
   async list(): Promise<AssistantTermsRow[]> {
-    const [people, rows, share] = await Promise.all([this.queries.assistants(), this.queries.all(), this.queries.renewalShare()]);
+    const [people, rows, share] = await Promise.all([
+      this.queries.assistants(),
+      this.queries.all(),
+      this.queries.renewalShare(),
+    ]);
     const byId = new Map(rows.map((r) => [r.assistant_id, r]));
-    return people.map((p) => ({ ...toTermsView(p.id, byId.get(p.id) ?? null, share), name: p.full_name }));
+    return people.map((p) => ({
+      ...toTermsView(p.id, byId.get(p.id) ?? null, share),
+      name: p.full_name,
+    }));
   }
 
   /** 404 student_not_found. */
@@ -47,7 +54,10 @@ export class TermsService {
 
   async get(assistantId: string): Promise<AssistantTermsView> {
     if (!(await this.queries.isAssistant(assistantId))) throw notFound('assistant_not_found');
-    const [row, share] = await Promise.all([this.queries.get(assistantId), this.queries.renewalShare()]);
+    const [row, share] = await Promise.all([
+      this.queries.get(assistantId),
+      this.queries.renewalShare(),
+    ]);
     return toTermsView(assistantId, row, share);
   }
 
@@ -58,11 +68,18 @@ export class TermsService {
    * commission.startsOn and the day the student was brought, and each commission keeps the rate (and a
    * renewal its share) it was earned at. Students already brought are evaluated now, every package.
    */
-  async set(input: { assistantId: string; terms: AssistantTermsInput; actorId: string }): Promise<AssistantTermsView> {
+  async set(input: {
+    assistantId: string;
+    terms: AssistantTermsInput;
+    actorId: string;
+  }): Promise<AssistantTermsView> {
     const before = await this.get(input.assistantId);
     const columns = termsColumns(input.assistantId, input.terms, input.actorId);
     await this.rpc.setTerms({ assistantId: input.assistantId, columns, actorId: input.actorId });
-    const [row, share] = await Promise.all([this.queries.get(input.assistantId), this.queries.renewalShare()]);
+    const [row, share] = await Promise.all([
+      this.queries.get(input.assistantId),
+      this.queries.renewalShare(),
+    ]);
     const after = toTermsView(input.assistantId, row, share);
     await this.env.audit.record({ actorId: input.actorId, entity: 'assistant_terms', entityId: input.assistantId, action: 'set', before: { ...before }, after: { ...after } });
     if (after.commission) await this.evaluateBrought(input.assistantId);

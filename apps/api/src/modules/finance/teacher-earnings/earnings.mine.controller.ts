@@ -36,13 +36,22 @@ export class TeacherMyEarningsController {
   }
 
   @Get('sessions')
-  async sessions(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<TeacherEarningView>> {
+  async sessions(
+    @Query() query: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<Page<TeacherEarningView>> {
     return this.earnings.sessions(await this.me(user), parseOrThrow(earningsListQuery, query));
   }
 
   @Get('payments')
-  async payments(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<TeacherPaymentView>> {
-    return this.earnings.payments(await this.me(user), parseOrThrow(teacherPaymentListQuery, query));
+  async payments(
+    @Query() query: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<Page<TeacherPaymentView>> {
+    return this.earnings.payments(
+      await this.me(user),
+      parseOrThrow(teacherPaymentListQuery, query),
+    );
   }
 
   @Get('payments/:id/receipt')

@@ -25,7 +25,10 @@ export class ReceivablesService {
     const paid = await this.queries.paid(pkgs.map((s) => s.id));
     const rows = receivablesOf({ subs: pkgs, paid, today: riyadhDate(now.toISOString()) });
     const totals = receivableTotals(rows);
-    const conversion = await this.fx.conversion(settings.reporting_currency, totals.map((t) => t.currency));
+    const conversion = await this.fx.conversion(
+      settings.reporting_currency,
+      totals.map((t) => t.currency),
+    );
     const total = totals.reduce((n, t) => n + (convert(conversion, t.owed, t.currency) ?? 0), 0);
     return {
       rows,

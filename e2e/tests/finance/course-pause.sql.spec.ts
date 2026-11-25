@@ -31,11 +31,15 @@ test.describe('course pause RPCs (docs/11 §7b)', () => {
   test('a pause from a later day waits for its from day: statuses kept, no lesson booked for nobody; begin pauses them', async () => {
     await rolledBack(async (tx) => {
       const s = await seedPause(tx);
-      const { id, started } = (await start(tx, pauseOf(s, 3, 5))) as { id: string; started: boolean };
+      const { id, started } = (await start(tx, pauseOf(s, 3, 5))) as {
+        id: string;
+        started: boolean;
+      };
       expect(started).toBe(false);
       expect(await statuses(tx, s)).toMatchObject({ student: 'active', sub: 'active', rule: 'active' });
       // The solo rule is still active: an occurrence inside the window (the only student paused) makes no row.
-      expect(await generate(tx, { rule: s.solo, today: s.today, days: [4, 12], hourZ: 16 })).toHaveLength(1);
+      expect(await generate(tx, { rule: s.solo, today: s.today, days: [4, 12], hourZ: 16 }))
+        .toHaveLength(1);
       expect((await begin(tx, id)).started).toBe(true);
       expect(await statuses(tx, s)).toMatchObject({ student: 'paused', sub: 'paused', rule: 'paused' });
       expect((await begin(tx, id)).started).toBe(false);
@@ -92,7 +96,9 @@ test.describe('course pause RPCs (docs/11 §7b)', () => {
       expect(rows.filter((r) => r.status === 'cancelled_by_admin').map((r) => r.day)).toEqual([3]);
       expect(rows.find((r) => r.day === 4)).toMatchObject({ status: 'scheduled', cancel_reason: null, chargeable: true });
       const group = await groupOf(tx, s.group);
-      for (const d of [4, 5]) expect(group.find((g) => g.day === d)?.students.sort()).toEqual([s.student, s.other].sort());
+      for (const d of [4, 5])
+        expect(group.find((g) => g.day === d)?.students.sort())
+          .toEqual([s.student, s.other].sort());
       expect(await statuses(tx, s)).toEqual({ student: 'active', sub: 'unpaid', renews: day(s.today, 31), rule: 'active', ends: day(s.today, 31) });
     });
   });

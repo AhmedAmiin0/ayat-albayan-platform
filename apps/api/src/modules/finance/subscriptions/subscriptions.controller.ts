@@ -67,7 +67,11 @@ export class SubscriptionsController {
     @Body() body: unknown,
     @CurrentUser() user: AuthUser,
   ): Promise<SubscriptionView> {
-    return this.subs.update(id, sentOnly(parseOrThrow(subscriptionUpdateSchema, body), body), user.id);
+    return this.subs.update(
+      id,
+      sentOnly(parseOrThrow(subscriptionUpdateSchema, body), body),
+      user.id,
+    );
   }
 
   /** The package stays, marked cancelled; 409 already_cancelled, has_payments or has_lessons. */

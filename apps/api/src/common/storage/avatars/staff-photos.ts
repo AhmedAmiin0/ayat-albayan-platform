@@ -10,7 +10,10 @@ export const NOT_STAFF: ReadonlySet<string> = new Set(['student', 'guardian']);
  * A staff member's photo: their login's own when set, else the one an admin put on the teacher
  * record.
  */
-export function staffPhotoPath(input: { own: string | null | undefined; teacher: string | null | undefined }): string | null {
+export function staffPhotoPath(input: {
+  own: string | null | undefined;
+  teacher: string | null | undefined;
+}): string | null {
   return input.own || input.teacher || null;
 }
 
@@ -72,7 +75,12 @@ export class StaffPhotos {
       .select('id, avatar_path, profile:profiles!teachers_profile_id_fkey(avatar_path)')
       .in('id', unique);
     if (error) throw pgError(error);
-    return this.sign(data.map((t) => ({ id: t.id, path: staffPhotoPath({ own: t.profile?.avatar_path, teacher: t.avatar_path }) })));
+    return this.sign(
+      data.map((t) => ({
+        id: t.id,
+        path: staffPhotoPath({ own: t.profile?.avatar_path, teacher: t.avatar_path }),
+      })),
+    );
   }
 
   private async profiles(ids: readonly string[]): Promise<Map<string, string>> {
@@ -80,13 +88,22 @@ export class StaffPhotos {
     if (!unique.length) return new Map();
     const [profiles, teachers] = await Promise.all([
       this.db.from('profiles').select('id, avatar_path, role').in('id', unique),
-      this.db.from('teachers').select('profile_id, avatar_path').in('profile_id', unique).not('avatar_path', 'is', null),
+      this.db
+        .from('teachers')
+        .select('profile_id, avatar_path')
+        .in('profile_id', unique)
+        .not('avatar_path', 'is', null),
     ]);
     if (profiles.error) throw pgError(profiles.error);
     if (teachers.error) throw pgError(teachers.error);
     const ofTeacher = new Map(teachers.data.map((t) => [t.profile_id, t.avatar_path]));
     // Students and families show initials only, even when they have a photo of their own.
     const staff = profiles.data.filter((p) => !NOT_STAFF.has(p.role));
-    return this.sign(staff.map((p) => ({ id: p.id, path: staffPhotoPath({ own: p.avatar_path, teacher: ofTeacher.get(p.id) }) })));
+    return this.sign(
+      staff.map((p) => ({
+        id: p.id,
+        path: staffPhotoPath({ own: p.avatar_path, teacher: ofTeacher.get(p.id) }),
+      })),
+    );
   }
 }

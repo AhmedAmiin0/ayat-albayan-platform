@@ -60,7 +60,9 @@ describe('SharedCache when Redis is down or slow', () => {
     try {
       const { copy } = fakeRedis();
       const a = copy();
-      const store = (a.cache as unknown as { store: { get: (k: string) => Promise<string | null> } }).store;
+      const store = (
+        a.cache as unknown as { store: { get: (k: string) => Promise<string | null> } }
+      ).store;
       vi.spyOn(store, 'get').mockImplementation(() => new Promise(() => undefined));
       const reading = a.cache.read({ key: 'k', ttlMs: 30_000, load: async () => 'db' });
       await vi.advanceTimersByTimeAsync(600);

@@ -41,7 +41,9 @@ describe('AvailabilityController (R-TCH-02)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(TeachersModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
       .overrideProvider(TeachersRepo)
       .useValue(teachers)

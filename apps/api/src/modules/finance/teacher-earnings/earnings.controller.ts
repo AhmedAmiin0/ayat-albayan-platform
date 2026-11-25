@@ -88,7 +88,10 @@ export class TeacherEarningsController {
     @Body() body: unknown,
     @CurrentUser() user: AuthUser,
   ): Promise<TeacherPaymentResult> {
-    return this.earnings.record({ teacherId, actorId: user.id }, parseOrThrow(teacherPaymentCreateSchema, body));
+    return this.earnings.record(
+      { teacherId, actorId: user.id },
+      parseOrThrow(teacherPaymentCreateSchema, body),
+    );
   }
 
   @Post(':teacherId/receipt-upload-url')

@@ -21,7 +21,9 @@ export class MeService {
    * 401 without a session to bind to (a token with no session_id claim, or a session just ended);
    * 409 when the token is someone else's live device. Returns the key the device keeps for next time.
    */
-  async addPushToken(input: DeviceClaim & { sessionId: string | null }): Promise<{ deviceKey: string }> {
+  async addPushToken(
+    input: DeviceClaim & { sessionId: string | null },
+  ): Promise<{ deviceKey: string }> {
     const { userId, token, sessionId } = input;
     if (!sessionId) throw new UnauthorizedException('no_session');
     const deviceKey = await claimDevice(this.db, { ...input, sessionId });
@@ -36,15 +38,19 @@ export class MeService {
     const tokens = await this.pushTokens(userId);
     const next = withoutPushToken(tokens, token);
     if (next !== tokens) await this.savePushTokens(userId, next);
-    done(await this.db.from('push_device_sessions').delete().eq('token', token).eq('profile_id', userId));
+    done(
+      await this.db
+        .from('push_device_sessions')
+        .delete()
+        .eq('token', token)
+        .eq('profile_id', userId),
+    );
   }
 
   private async pushTokens(userId: string): Promise<string[]> {
-    const data = maybe(await this.db
-      .from('profiles')
-      .select('push_tokens')
-      .eq('id', userId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db.from('profiles').select('push_tokens').eq('id', userId).maybeSingle(),
+    );
     if (!data) throw new NotFoundException();
     return data.push_tokens;
   }
@@ -54,12 +60,15 @@ export class MeService {
    * DELETE never ran (401, offline, timeout), stops receiving the previous admin's pushes.
    */
   private async releaseFromOthers(userId: string, token: string): Promise<void> {
-    const data = rows(await this.db
-      .from('profiles')
-      .select('id, push_tokens')
-      .contains('push_tokens', [token])
-      .neq('id', userId));
-    for (const p of data ?? []) await this.savePushTokens(p.id, withoutPushToken(p.push_tokens, token));
+    const data = rows(
+      await this.db
+        .from('profiles')
+        .select('id, push_tokens')
+        .contains('push_tokens', [token])
+        .neq('id', userId),
+    );
+    for (const p of data ?? [])
+      await this.savePushTokens(p.id, withoutPushToken(p.push_tokens, token));
   }
 
   private async savePushTokens(userId: string, tokens: string[]): Promise<void> {

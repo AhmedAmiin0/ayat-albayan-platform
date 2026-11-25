@@ -22,7 +22,11 @@ const BODY: StudentCreateRequest = {
 function setup(results: Record<string, FakeResult[]>) {
   const fake = fakeDb(results);
   const audit = { record: vi.fn() };
-  const svc = new StudentsService(fake.db, new GuardiansService(fake.db), audit as unknown as AuditService);
+  const svc = new StudentsService(
+    fake.db,
+    new GuardiansService(fake.db),
+    audit as unknown as AuditService,
+  );
   return { ...fake, audit, svc };
 }
 

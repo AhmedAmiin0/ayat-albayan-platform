@@ -45,8 +45,14 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
   it('paid: attribution first (nobody brought the student), then ONE card payment by the link’s assistant; link paid; her bell', async () => {
     const res = await post(sessionEvent('checkout.session.completed'));
     expect(res.statusCode).toBe(200);
-    expect(s.links.attribute).toHaveBeenCalledWith({ studentId: STUDENT_ID, assistantId: SALES_A.id, broughtAt: linkRow().created_at });
-    expect(s.links.attribute.mock.invocationCallOrder[0]).toBeLessThan(m.payments.insert.mock.invocationCallOrder[0] ?? 0);
+    expect(s.links.attribute).toHaveBeenCalledWith({
+      studentId: STUDENT_ID,
+      assistantId: SALES_A.id,
+      broughtAt: linkRow().created_at,
+    });
+    expect(s.links.attribute.mock.invocationCallOrder[0]).toBeLessThan(
+      m.payments.insert.mock.invocationCallOrder[0] ?? 0,
+    );
     expect(m.payments.insert).toHaveBeenCalledTimes(1);
     expect(m.payments.insert).toHaveBeenCalledWith(
       expect.objectContaining({ subscription_id: SUB_ID, amount: 120, currency: 'SAR', kind: 'payment', method: 'card', recorded_by: SALES_A.id, client_request_id: uuidFor(SESSION), paid_at: new Date(CREATED * 1000).toISOString() }),
@@ -121,7 +127,10 @@ describe('POST /webhooks/stripe: verified, idempotent, the payment recorded once
     m.payments.byRequest.mockResolvedValue({ id: PAYMENT_ID }); // this session's payment is the one on the package
     await post(sessionEvent('checkout.session.completed', {}, 'evt_2'));
     expect(m.payments.insert).not.toHaveBeenCalled();
-    expect(s.links.markPaid).toHaveBeenCalledWith(LINK_ID, expect.objectContaining({ paymentId: PAYMENT_ID }));
+    expect(s.links.markPaid).toHaveBeenCalledWith(
+      LINK_ID,
+      expect.objectContaining({ paymentId: PAYMENT_ID }),
+    );
   });
 
   it('never a takeover: a renewal, or a student with an earlier package, keeps brought_by; an orphan session alerts', async () => {

@@ -39,8 +39,17 @@ export class CorrectionsRepo {
 
   /** Ledger settlement + payout → paid in one transaction. */
   async payPayout(input: PayPayoutInput): Promise<void> {
-    const p: Json = { paid_at: input.paidAt, method: input.method, note: input.note, receipt_path: input.receiptPath };
-    const { error } = await this.db.rpc('pay_payout', { p_payout: input.payoutId, p_actor: input.actorId, p });
+    const p: Json = {
+      paid_at: input.paidAt,
+      method: input.method,
+      note: input.note,
+      receipt_path: input.receiptPath,
+    };
+    const { error } = await this.db.rpc('pay_payout', {
+      p_payout: input.payoutId,
+      p_actor: input.actorId,
+      p,
+    });
     if (error) throw ledgerError(error);
   }
 

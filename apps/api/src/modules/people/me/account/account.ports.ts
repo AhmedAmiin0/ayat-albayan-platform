@@ -19,7 +19,11 @@ export interface AccountRow {
  * disabled_* are never in this list, whatever a body or a caller holds.
  */
 export const SELF_WRITABLE = ['full_name', 'phone_e164', 'avatar_path'] as const;
-export type SelfPatch = Partial<{ full_name: string; phone_e164: string | null; avatar_path: string | null }>;
+export type SelfPatch = Partial<{
+  full_name: string;
+  phone_e164: string | null;
+  avatar_path: string | null;
+}>;
 
 /** Copies the whitelisted columns only; anything else in `input` is dropped. */
 export function selfWritable(input: object): SelfPatch {

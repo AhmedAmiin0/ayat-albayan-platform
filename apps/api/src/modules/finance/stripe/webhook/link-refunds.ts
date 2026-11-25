@@ -24,7 +24,11 @@ export class LinkRefunds {
   ) {}
 
   async refunded(charge: Stripe.Charge): Promise<string> {
-    return this.refundsOf({ paymentIntent: idOf(charge.payment_intent), charge: charge.id, created: charge.created });
+    return this.refundsOf({
+      paymentIntent: idOf(charge.payment_intent),
+      charge: charge.id,
+      created: charge.created,
+    });
   }
 
   /** refund.updated: a refund pending at charge.refunded that has now succeeded. */
@@ -32,10 +36,18 @@ export class LinkRefunds {
     if (stopRefundFailed(refund)) return this.failed(refund);
     const charge = idOf(refund.charge);
     if (refund.status !== 'succeeded' || !charge) return 'ignored';
-    return this.refundsOf({ paymentIntent: idOf(refund.payment_intent), charge, created: refund.created });
+    return this.refundsOf({
+      paymentIntent: idOf(refund.payment_intent),
+      charge,
+      created: refund.created,
+    });
   }
 
-  private async refundsOf(c: { paymentIntent: string | null; charge: string; created: number }): Promise<string> {
+  private async refundsOf(c: {
+    paymentIntent: string | null;
+    charge: string;
+    created: number;
+  }): Promise<string> {
     const stripe = await this.clients.client();
     const link = await this.linkOfIntent(stripe, c.paymentIntent);
     if (!link?.subscription_id) return 'unknown_link';
@@ -94,11 +106,17 @@ export class LinkRefunds {
   }
 
   /** The link of a PaymentIntent: saved when it was paid, else found through its Checkout Session. */
-  private async linkOfIntent(stripe: StripeApi, paymentIntent: string | null): Promise<LinkRow | null> {
+  private async linkOfIntent(
+    stripe: StripeApi,
+    paymentIntent: string | null,
+  ): Promise<LinkRow | null> {
     if (!paymentIntent) return null;
     const saved = await this.deps.links.byPaymentIntent(paymentIntent);
     if (saved) return saved;
-    const sessions = await stripe.checkout.sessions.list({ payment_intent: paymentIntent, limit: 1 });
+    const sessions = await stripe.checkout.sessions.list({
+      payment_intent: paymentIntent,
+      limit: 1,
+    });
     const id = sessions.data[0]?.client_reference_id;
     return id && /^[0-9a-f-]{36}$/.test(id) ? this.deps.links.get(id) : null;
   }

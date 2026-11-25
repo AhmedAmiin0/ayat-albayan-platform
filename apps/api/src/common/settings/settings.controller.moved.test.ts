@@ -43,9 +43,14 @@ describe('PATCH /settings — owned keys are moved', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(SettingsModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(SettingsService).useValue(settings)
-      .overrideProvider(AuditService).useValue(audit)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(SettingsService)
+      .useValue(settings)
+      .overrideProvider(AuditService)
+      .useValue(audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -76,10 +81,18 @@ describe('PATCH /settings — owned keys are moved', () => {
   });
 
   it('a mix: the valid keys are saved, the owned ones moved', async () => {
-    const res = await patch({ ...OWNED_BODY, bookingHorizonWeeks: 6, payoutCountLate: true, unknownField: 1 });
+    const res = await patch({
+      ...OWNED_BODY,
+      bookingHorizonWeeks: 6,
+      payoutCountLate: true,
+      unknownField: 1,
+    });
     expect(res.statusCode).toBe(200);
     expect(res.json().saved).toEqual(['booking_horizon_weeks', 'payout_count_late']);
-    expect(settings.write).toHaveBeenCalledExactlyOnceWith({ booking_horizon_weeks: 6, payout_count_late: true }, ADMIN);
+    expect(settings.write).toHaveBeenCalledExactlyOnceWith(
+      { booking_horizon_weeks: 6, payout_count_late: true },
+      ADMIN,
+    );
     expect(audit.record).toHaveBeenCalledOnce();
   });
 

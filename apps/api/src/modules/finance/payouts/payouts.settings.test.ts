@@ -14,7 +14,10 @@ describe('PayoutsSettings', () => {
   });
 
   it('answers the stored counting switches', async () => {
-    const values = await readerOf(PayoutsSettings, { payout_count_late: true, payout_count_no_show: true }).read();
+    const values = await readerOf(PayoutsSettings, {
+      payout_count_late: true,
+      payout_count_no_show: true,
+    }).read();
     expect(values).toEqual({ payout_count_late: true, payout_count_no_show: true });
   });
 });

@@ -3,6 +3,7 @@ import { assistant } from '../../support/sales/assistant';
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { captureSends } from './inbox-live.helpers';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Migration 20261028000860: messages broadcast ONE phone-only 'thread_changed' per phone per statement
 // on the private topic 'inbox:staff'; only admin / sales with inbox.read may join it. The e2e stack runs
@@ -96,10 +97,7 @@ test.describe('inbox realtime broadcast (20261028000860)', () => {
           await sp`set local role anon`;
           await sp`select public.inbox_live_reader()`;
         })
-        .then(
-          () => 'allowed',
-          (e: { code?: string }) => e.code,
-        );
+        .then(() => 'allowed', errorCode);
       expect(anon).toBe('42501');
       const [rt] = await tx<
         { t: string | null }[]

@@ -8,11 +8,14 @@ type NameRow = { lesson_id: string } & Student;
 export async function lessonNames(db: Db, lessonIds: string[]): Promise<Map<string, Student[]>> {
   const byLesson = new Map<string, Student[]>();
   if (lessonIds.length === 0) return byLesson;
-  const data = rows(await db
-    .from('lesson_students')
-    .select('lesson_id, student:students(name)')
-    .in('lesson_id', lessonIds)
-    .returns<NameRow[]>());
-  for (const r of data) byLesson.set(r.lesson_id, [...(byLesson.get(r.lesson_id) ?? []), { student: r.student }]);
+  const data = rows(
+    await db
+      .from('lesson_students')
+      .select('lesson_id, student:students(name)')
+      .in('lesson_id', lessonIds)
+      .returns<NameRow[]>(),
+  );
+  for (const r of data)
+    byLesson.set(r.lesson_id, [...(byLesson.get(r.lesson_id) ?? []), { student: r.student }]);
   return byLesson;
 }

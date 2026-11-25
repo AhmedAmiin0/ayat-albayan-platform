@@ -12,20 +12,27 @@ export class RolesRepo implements RoleStore {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async roles(): Promise<RoleRecord[]> {
-    const data = rows(await this.db
-      .from('roles')
-      .select('id, key, name_ar, name_en, base_role, is_system, role_permissions(permission)')
-      .order('is_system', { ascending: false })
-      .order('created_at'));
-    return data.map(({ role_permissions, ...r }) => ({ ...r, permissions: role_permissions.map((p) => p.permission) }));
+    const data = rows(
+      await this.db
+        .from('roles')
+        .select('id, key, name_ar, name_en, base_role, is_system, role_permissions(permission)')
+        .order('is_system', { ascending: false })
+        .order('created_at'),
+    );
+    return data.map(({ role_permissions, ...r }) => ({
+      ...r,
+      permissions: role_permissions.map((p) => p.permission),
+    }));
   }
 
   async profiles(): Promise<ProfileRecord[]> {
-    const data = rows(await this.db
-      .from('profiles')
-      .select('id, full_name, role, role_id')
-      .not('role', 'in', '(guardian,student)')
-      .order('full_name'));
+    const data = rows(
+      await this.db
+        .from('profiles')
+        .select('id, full_name, role, role_id')
+        .not('role', 'in', '(guardian,student)')
+        .order('full_name'),
+    );
     return data;
   }
 
@@ -48,7 +55,10 @@ export class RolesRepo implements RoleStore {
     done(await this.db.from('roles').delete().eq('id', id));
   }
 
-  async setProfileRole(id: string, change: { role: ProfileRecord['role']; role_id: string | null }): Promise<void> {
+  async setProfileRole(
+    id: string,
+    change: { role: ProfileRecord['role']; role_id: string | null },
+  ): Promise<void> {
     done(await this.db.from('profiles').update(change).eq('id', id));
   }
 }

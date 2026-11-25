@@ -43,9 +43,14 @@ export async function configEntriesApp() {
   const store = fakeConfigStore();
   const audit = { record: vi.fn(async () => undefined) };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(ConfigStore).useValue(store)
-    .overrideProvider(AuditService).useValue(audit)
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(resolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(ConfigStore)
+    .useValue(store)
+    .overrideProvider(AuditService)
+    .useValue(audit)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

@@ -35,12 +35,17 @@ describe('POST /payments: a retry racing the first send', () => {
     ['attachments', { attachments: [file(1)] }],
   ] as const) {
     it(`its ${what} owned by the payment the first send just booked: 201 that payment, no insert`, async () => {
-      m.payments.byRequest.mockResolvedValueOnce(null).mockResolvedValue(paymentRow({ client_request_id: REQ }));
+      m.payments.byRequest
+        .mockResolvedValueOnce(null)
+        .mockResolvedValue(paymentRow({ client_request_id: REQ }));
       m.attachments.owners.mockResolvedValue([{ path: file(1), paymentId: PAYMENT_ID }]);
       const res = await call(post(body));
       expect([res.statusCode, res.json().id]).toEqual([201, PAYMENT_ID]);
       expect(m.payments.insert).not.toHaveBeenCalled();
-      expect(replayed).toHaveBeenCalledWith(expect.objectContaining({ entityId: PAYMENT_ID }), STUDENT_ID);
+      expect(replayed).toHaveBeenCalledWith(
+        expect.objectContaining({ entityId: PAYMENT_ID }),
+        STUDENT_ID,
+      );
     });
   }
 
@@ -53,11 +58,18 @@ describe('POST /payments: a retry racing the first send', () => {
 
   it('the insert lost the race: the winner is replayed (follow-ups) and the form’s files saved on it', async () => {
     m.payments.insert.mockResolvedValue(null);
-    m.payments.byRequest.mockResolvedValueOnce(null).mockResolvedValue(paymentRow({ client_request_id: REQ }));
+    m.payments.byRequest
+      .mockResolvedValueOnce(null)
+      .mockResolvedValue(paymentRow({ client_request_id: REQ }));
     const res = await call(post({ attachments: [file(2)] }));
     expect([res.statusCode, res.json().id]).toEqual([201, PAYMENT_ID]);
-    expect(replayed).toHaveBeenCalledWith(expect.objectContaining({ entityId: PAYMENT_ID, action: 'create' }), STUDENT_ID);
-    expect(m.attachments.save).toHaveBeenCalledWith([expect.objectContaining({ payment_id: PAYMENT_ID, path: file(2) })]);
+    expect(replayed).toHaveBeenCalledWith(
+      expect.objectContaining({ entityId: PAYMENT_ID, action: 'create' }),
+      STUDENT_ID,
+    );
+    expect(m.attachments.save).toHaveBeenCalledWith([
+      expect.objectContaining({ payment_id: PAYMENT_ID, path: file(2) }),
+    ]);
     expect(m.audit.record).not.toHaveBeenCalled();
   });
 
@@ -70,6 +82,8 @@ describe('POST /payments: a retry racing the first send', () => {
   it('a failing follow-up after the insert cannot drop the form’s files: they are saved first', async () => {
     m.audit.record.mockRejectedValue(new Error('audit down'));
     await call(post({ attachments: [file(3)] }));
-    expect(m.attachments.save).toHaveBeenCalledWith([expect.objectContaining({ payment_id: PAYMENT_ID, path: file(3) })]);
+    expect(m.attachments.save).toHaveBeenCalledWith([
+      expect.objectContaining({ payment_id: PAYMENT_ID, path: file(3) }),
+    ]);
   });
 });

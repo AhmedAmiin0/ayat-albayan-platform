@@ -49,7 +49,9 @@ describe('ConfigReloadJob (the worker side of an admin save)', () => {
   it('reload() refreshes the integration overlay, the rules (and settings) snapshot, the numbers overlay and own numbers, both Google caches, the translations', async () => {
     const { fakes, job } = worker();
     await job.reload();
-    const called = [...fakes.values()].map((f) => Object.values(f).every((fn) => fn.mock.calls.length === 1));
+    const called = [...fakes.values()].map((f) =>
+      Object.values(f).every((fn) => fn.mock.calls.length === 1),
+    );
     expect(called).toEqual([true, true, true, true, true, true, true]);
   });
 
@@ -120,7 +122,11 @@ describe('an admin save on an API copy kicks the worker (kickConfigReload)', () 
     vi.stubEnv('APP_ROLE', 'api');
     vi.stubEnv('WORKER_URL', 'http://ayat-worker:3000');
     const urls = stubFetch();
-    const q = { all: vi.fn(async () => []), upsert: vi.fn(async () => undefined), remove: vi.fn(async () => undefined) };
+    const q = {
+      all: vi.fn(async () => []),
+      upsert: vi.fn(async () => undefined),
+      remove: vi.fn(async () => undefined),
+    };
     await new TranslationsService(q as never).restore('en', 'nav.leads');
     expect(q.all).toHaveBeenCalledTimes(1);
     expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick?wait=0']);

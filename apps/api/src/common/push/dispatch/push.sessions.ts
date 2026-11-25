@@ -21,7 +21,10 @@ export async function liveSessions(db: Db, ids: readonly (string | null)[]): Pro
  * or by the previous API) waits until the app registers it again on its next start. A failed lookup
  * means no device push (fail closed), never a lost bell row: the caller still writes those.
  */
-export async function liveTokens<P extends { id: string; push_tokens: string[] }>(db: Db, profiles: readonly P[]): Promise<P[]> {
+export async function liveTokens<P extends { id: string; push_tokens: string[] }>(
+  db: Db,
+  profiles: readonly P[],
+): Promise<P[]> {
   const all = profiles.flatMap((p) => p.push_tokens);
   if (all.length === 0) return [...profiles];
   const { data, error } = await db.from('push_device_sessions').select('token, profile_id, session_id, contested_at').in('token', all);

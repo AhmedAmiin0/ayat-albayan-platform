@@ -27,11 +27,11 @@ export function templateChanges(o: {
     const hit = o.rows.find((r) => r.meta_name === c.meta_name && r.language === c.language);
     if (!hit) continue;
     o.existing.set(keyId(d.key), { targetId: null, hash: 'in target, not imported yet' });
-    for (const field of SYNCED) {
+    const changes = SYNCED.map((field) => {
       const [from, to] = [hit.row[field] ?? null, c[field] ?? null];
-      if (!sameValue(from, to))
-        out.push({ entity: d.key.entity, key: d.key.key, ref: d.ref, field, from, to });
-    }
+      return { entity: d.key.entity, key: d.key.key, ref: d.ref, field, from, to };
+    });
+    out.push(...changes.filter((change) => !sameValue(change.from, change.to)));
   }
   return out;
 }

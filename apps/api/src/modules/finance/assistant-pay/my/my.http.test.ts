@@ -101,8 +101,14 @@ describe('GET /sales/me/* (the assistant portal): who may call, and only ever my
 
   it('earnings: B has no rows of A; this month is built from B terms only', async () => {
     const res = await t.call({ method: 'GET', url: '/sales/me/earnings', token: 'salesB' });
-    expect(res.json()).toMatchObject({ terms: null, statements: [], commissions_total: {}, wallet: {} });
-    for (const fn of [t.my.tz, t.my.commissions, t.my.adjustments, t.terms.get]) expect(fn).toHaveBeenCalledWith(B);
+    expect(res.json()).toMatchObject({
+      terms: null,
+      statements: [],
+      commissions_total: {},
+      wallet: {},
+    });
+    for (const fn of [t.my.tz, t.my.commissions, t.my.adjustments, t.terms.get])
+      expect(fn).toHaveBeenCalledWith(B);
     expect(t.statements.list).toHaveBeenCalledWith({ assistantId: B, hideDrafts: true });
   });
 });

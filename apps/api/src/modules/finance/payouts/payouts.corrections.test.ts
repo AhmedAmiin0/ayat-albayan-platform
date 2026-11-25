@@ -19,7 +19,10 @@ describe('payout corrections', () => {
     const res = await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/reopen` });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toMatchObject({ status: 'draft', ledger_paid: 0 });
-    expect(m.corrections.reopenPayout).toHaveBeenCalledWith({ payoutId: PAYOUT_ID, actorId: ADMIN.id });
+    expect(m.corrections.reopenPayout).toHaveBeenCalledWith({
+      payoutId: PAYOUT_ID,
+      actorId: ADMIN.id,
+    });
     for (const status of ['paid', 'draft'] as const) {
       m.payouts.get.mockReset().mockResolvedValue(payoutRow({ status }));
       expect((await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/reopen` })).json().code).toBe('invalid_transition');

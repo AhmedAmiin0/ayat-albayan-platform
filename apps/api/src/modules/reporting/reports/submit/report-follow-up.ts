@@ -21,7 +21,10 @@ export class ReportFollowUp {
     private readonly push: PushService,
   ) {}
 
-  async submitted(report: SubmittedReport, names: { student: string; teacher: string }): Promise<void> {
+  async submitted(
+    report: SubmittedReport,
+    names: { student: string; teacher: string },
+  ): Promise<void> {
     await this.events.changed([report.lesson_id]);
     await this.renderPdf(report.id);
     await this.push.notifyAdmins('report_submitted', {

@@ -5,7 +5,8 @@ import { TeacherReportsQueries } from '@/modules/reporting/reports/teacher/teach
 const T = 'lesson_reports';
 const PAGE = { page: 2, pageSize: 10 };
 type Call = { table: string; method: string; args: unknown[] };
-const argsOf = (calls: Call[], table: string, method: string) => calls.filter((c) => c.table === table && c.method === method).map((c) => c.args);
+const argsOf = (calls: Call[], table: string, method: string) =>
+  calls.filter((c) => c.table === table && c.method === method).map((c) => c.args);
 
 describe('TeacherReportsQueries.page (R-REP-02, R-NFR-08)', () => {
   it('no sort: my submitted reports, newest submit first, then id; windowed', async () => {

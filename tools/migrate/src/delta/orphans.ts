@@ -45,7 +45,7 @@ async function goneRows(o: {
       params: [[...ids.keys()]],
     });
     const found = new Set(rows.map((r) => r.id));
-    for (const [id, key] of ids) if (!found.has(id)) gone.add(key);
+    for (const [, key] of [...ids].filter(([id]) => !found.has(id))) gone.add(key);
   }
   return gone;
 }

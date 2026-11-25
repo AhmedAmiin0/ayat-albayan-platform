@@ -46,7 +46,12 @@ describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout'
     expect(params).toMatchObject({
       mode: 'payment',
       client_reference_id: LINK_ID,
-      metadata: { payment_link_id: LINK_ID, subscription_id: SUB_ID, student_id: STUDENT_ID, assistant_id: SALES_A.id },
+      metadata: {
+        payment_link_id: LINK_ID,
+        subscription_id: SUB_ID,
+        student_id: STUDENT_ID,
+        assistant_id: SALES_A.id,
+      },
       line_items: [{ quantity: 1, price_data: { currency: 'sar', unit_amount: 12000 } }],
       success_url: `${PAGE}/done`,
       cancel_url: `${PAGE}/cancelled`,

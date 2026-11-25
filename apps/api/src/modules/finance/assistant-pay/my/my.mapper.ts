@@ -23,9 +23,16 @@ export const MY_STUDENT_COLUMNS =
  * A whitelist: no price, no subscription; of the guardian the phone only (from
  * `phones` by student id). Only whether the first subscription is paid, and the commission.
  */
-export function toMyStudent(r: MyStudentSource, phones: ReadonlyMap<string, string> = new Map()): MyStudentRow | null {
+export function toMyStudent(
+  r: MyStudentSource,
+  phones: ReadonlyMap<string, string> = new Map(),
+): MyStudentRow | null {
   if (!r.student_id || !r.brought_at) return null;
-  const { commission_status: status, commission_currency: currency, commission_earned_at: earnedAt } = r;
+  const {
+    commission_status: status,
+    commission_currency: currency,
+    commission_earned_at: earnedAt,
+  } = r;
   return {
     id: r.student_id,
     code: r.code ?? '',

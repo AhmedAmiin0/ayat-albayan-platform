@@ -20,7 +20,10 @@ export const subscriptionListQuery = pageQuerySchema.extend({
 });
 
 /** POST /subscriptions/quote: the price S2 would store, for the create dialog (never typed). */
-export const subscriptionQuoteSchema = z.object({ studentId: z.uuid(), pricing: subscriptionPricingSchema });
+export const subscriptionQuoteSchema = z.object({
+  studentId: z.uuid(),
+  pricing: subscriptionPricingSchema,
+});
 export type SubscriptionQuote = z.output<typeof subscriptionQuoteSchema>;
 
 /** GET /admin-tasks?open=true&page&pageSize (S7). */

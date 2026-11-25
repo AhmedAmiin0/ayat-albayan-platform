@@ -12,7 +12,10 @@ export function newCode(pick: (max: number) => number = randomInt): string {
  * HMAC-SHA256 under the server pepper, bound to the purpose and the subject: a code issued for one
  * account or purpose never matches another's row. 64 hex characters (login_codes.code_hash).
  */
-export function hashCode(pepper: string, input: { purpose: CodePurpose; subject: Subject; code: string }): string {
+export function hashCode(
+  pepper: string,
+  input: { purpose: CodePurpose; subject: Subject; code: string },
+): string {
   const { purpose, subject, code } = input;
   return createHmac('sha256', pepper).update(`${purpose}|${subject.kind}:${subject.id}|${code}`).digest('hex');
 }
@@ -24,4 +27,5 @@ export function sameHash(a: string, b: string): boolean {
 }
 
 /** When a code issued now stops working. */
-export const expiryOf = (now: Date, ttlMinutes: number): Date => new Date(now.getTime() + ttlMinutes * 60_000);
+export const expiryOf = (now: Date, ttlMinutes: number): Date =>
+  new Date(now.getTime() + ttlMinutes * 60_000);

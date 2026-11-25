@@ -21,21 +21,37 @@ export class TermsRepo {
   /** Every assistant (base role sales), by name. */
   async assistants(): Promise<{ id: string; full_name: string }[]> {
     const data = rows(await this.db.from('profiles').select('id, full_name').eq('role', 'sales'));
-    return data.sort((a, b) => a.full_name.localeCompare(b.full_name, 'ar') || a.id.localeCompare(b.id));
+    return data.sort(
+      (a, b) => a.full_name.localeCompare(b.full_name, 'ar') || a.id.localeCompare(b.id),
+    );
   }
 
   /** null when the student does not exist. */
-  async broughtBy(studentId: string): Promise<{ brought_by: string | null; brought_at: string | null; name: string | null } | null> {
-    const data = maybe(await this.db.from('students').select('brought_by, brought_at').eq('id', studentId).maybeSingle());
+  async broughtBy(
+    studentId: string,
+  ): Promise<{ brought_by: string | null; brought_at: string | null; name: string | null } | null> {
+    const data = maybe(
+      await this.db
+        .from('students')
+        .select('brought_by, brought_at')
+        .eq('id', studentId)
+        .maybeSingle(),
+    );
     if (!data) return null;
     if (!data.brought_by) return { ...data, name: null };
-    const person = await this.db.from('profiles').select('full_name').eq('id', data.brought_by).maybeSingle();
+    const person = await this.db
+      .from('profiles')
+      .select('full_name')
+      .eq('id', data.brought_by)
+      .maybeSingle();
     if (person.error) throw pgError(person.error);
     return { ...data, name: person.data?.full_name ?? null };
   }
 
   async isAssistant(id: string): Promise<boolean> {
-    const data = maybe(await this.db.from('profiles').select('id').eq('id', id).eq('role', 'sales').maybeSingle());
+    const data = maybe(
+      await this.db.from('profiles').select('id').eq('id', id).eq('role', 'sales').maybeSingle(),
+    );
     return data !== null;
   }
 
@@ -45,7 +61,13 @@ export class TermsRepo {
   }
 
   async get(assistantId: string): Promise<TermsRow | null> {
-    const data = maybe(await this.db.from('assistant_terms').select('*').eq('assistant_id', assistantId).maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('assistant_terms')
+        .select('*')
+        .eq('assistant_id', assistantId)
+        .maybeSingle(),
+    );
     return data;
   }
 
