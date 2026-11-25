@@ -18,13 +18,20 @@ export interface Person extends PersonRow {
 
 type Field = keyof PersonFields;
 
+const CANONICAL: Partial<Record<Field, (s: string) => string | null | undefined>> = {
+  teacherText: teacherFromText,
+  source: leadSource,
+};
+const noCanonical = (): null => null;
+
 /** Same meaning? Teachers by slug, sources by enum, the rest by normalized text. */
 function same(field: Field, a: unknown, b: unknown): boolean {
-  const s = (v: unknown) => normalizeArabic(String(v)).replace(/[\s,،]+$/, '');
-  if (field === 'teacherText')
-    return (teacherFromText(s(a)) ?? s(a)) === (teacherFromText(s(b)) ?? s(b));
-  if (field === 'source') return (leadSource(s(a)) ?? s(a)) === (leadSource(s(b)) ?? s(b));
-  return s(a) === s(b);
+  const canon = CANONICAL[field] ?? noCanonical;
+  const key = (v: unknown) => {
+    const s = normalizeArabic(String(v)).replace(/[\s,،]+$/, '');
+    return canon(s) ?? s;
+  };
+  return key(a) === key(b);
 }
 
 const ref = (p: { ref: PersonRow['ref'] }) => `${p.ref.source}:${p.ref.tab}:${p.ref.row}`;

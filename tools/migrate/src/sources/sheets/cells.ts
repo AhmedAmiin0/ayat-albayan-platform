@@ -35,6 +35,10 @@ export function phoneCell(v: Cell | undefined): PhoneCell {
   if (!raw) return { ok: false, reason: 'empty' };
   const compact = egyptian(raw.replace(/[\s\-().]/g, ''));
   if (!/^\+?\d+$/.test(compact)) return { ok: false, reason: 'not_a_number' };
+  return withCountryCode(compact);
+}
+
+function withCountryCode(compact: string): PhoneCell {
   const local = /^(?:\+|00|0)/.test(compact);
   if (!local && compact.length < 11) return { ok: false, reason: 'missing_country_code' };
   const r = normalizePhone(local ? compact : `+${compact}`);
