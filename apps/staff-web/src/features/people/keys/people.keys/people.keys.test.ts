@@ -30,6 +30,8 @@ describe('people keys', () => {
     expect(studentKeys.detail('s1')).toEqual(['students', 's1']);
     expect(teacherKeys.list(PAGE)).toEqual(['teachers', 'list', 2, { by: 'name' }, PAGE.filters]);
     expect(teacherKeys.timeOff('t1')).toEqual(['teachers', 't1', 'time-off']);
+    expect(teacherKeys.me()).toEqual(['teachers', 'me']);
+    expect(teacherKeys.myStudents('trial')).toEqual(['teachers', 'me', 'students', 'trial']);
     expect(userKeys.detail('u1')).toEqual(['users', 'detail', 'u1']);
     expect(userKeys.candidates('teacher', 'ab')).toEqual(['users', 'candidates', 'teacher', 'ab']);
     expect(roleKeys.staffUsers()).toEqual(['roles', 'users']);
@@ -61,6 +63,12 @@ describe('people keys', () => {
     const mine = [teacherKeys.detail('t1'), teacherKeys.availability('t1')];
     const other = [teacherKeys.timeOff('t2')];
     expect(await staleAfter([...mine, ...other], teacherKeys.detail('t1'))).toEqual(mine);
+  });
+
+  it('refreshes the signed-in teacher and her student facts from her own root', async () => {
+    const mine = [teacherKeys.me(), teacherKeys.myStudents('trial')];
+    const other = [teacherKeys.detail('t2')];
+    expect(await staleAfter([...mine, ...other], teacherKeys.me())).toEqual(mine);
   });
 
   it('keeps each root apart, so a users write leaves the roles and guardians fresh', async () => {

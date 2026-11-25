@@ -31,6 +31,8 @@ export interface TeacherKeys {
   detail: One<string>;
   availability: One<string>;
   timeOff: One<string>;
+  me: None;
+  myStudents: One<string>;
 }
 
 export interface UserKeys {

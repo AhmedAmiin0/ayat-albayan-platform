@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { teacherKeys } from '@/features/people/keys';
+import { lessonKeys } from '@/features/teaching/schedule';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { useTeacherCancel } from './use-teacher-cancel';
@@ -25,7 +27,7 @@ function setup() {
   client.setQueryData(HOME, [AHEAD]);
   client.setQueryData(WEEK, [AHEAD]);
   client.setQueryData(OTHER, [AHEAD]);
-  client.setQueryData(['teachers', 'me'], { id: 't' });
+  client.setQueryData(teacherKeys.me(), { id: 't' });
   const invalidate = vi.spyOn(client, 'invalidateQueries');
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>{children}</QueryClientProvider>
@@ -50,7 +52,7 @@ describe('useTeacherConfirm (optimistic)', () => {
     expect(rowOf(client, OTHER)?.teacher_confirmed_at ?? null).toBeNull();
     act(() => answer({ ...AHEAD, teacher_confirmed_at: '2099-10-01T00:00:00.000Z' }));
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['lessons'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: lessonKeys.all });
     expect(touchedMe(invalidate)).toBe(false);
   });
 

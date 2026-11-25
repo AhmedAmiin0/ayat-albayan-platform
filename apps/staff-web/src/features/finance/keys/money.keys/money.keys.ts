@@ -16,6 +16,7 @@ export const moneyKeys: MoneyKeys = {
   payments: ({ page, filters, sort }) => [...all, 'payments', page, filters, sort],
   receipt: (paymentId) => [...all, 'receipt', paymentId],
   payouts: (month) => [...all, 'payouts', month],
+  myPayouts: () => [...all, 'payouts', 'mine'],
   earningsSummary: () => [...all, 'teacher-earnings', 'summary'],
   subscriptions: (q) => [...all, 'subscriptions', q],
   studentSubscriptions: (studentId) => [...all, 'subscriptions', 'student', studentId],
