@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { NOW, PHONE, reopenOf, STAFF, staffText, windowFakes } from '@/modules/messaging/whatsapp/sender/window/window.fakes';
 
-// Owner 2026-11-07 (option 1): the starter template goes ONLY when a staff member presses send in
+// The starter template goes ONLY when a staff member presses send in
 // a closed window; the message is held and released on the family's reply. Fakes only.
 
 let f = windowFakes();

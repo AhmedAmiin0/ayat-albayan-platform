@@ -7,8 +7,8 @@ import { fetchCrmMedia } from './crm-media.fetch';
 import { CrmMediaSettings } from './crm-media.settings';
 
 /**
- * A family's file imported from the old CRM (no Meta media id; the body is only its storage link,
- * owner 2026-10-27): fetched from that storage, for InboundMedia.cache to keep in wa-media like any
+ * A family's file imported from the old CRM (no Meta media id; the body is only its storage link):
+ * fetched from that storage, for InboundMedia.cache to keep in wa-media like any
  * inbound file. Only a link on exactly the crm_media_host setting's host is fetched; an empty
  * setting or another host is 410 media_expired, as before. Two opens of the same file at once share
  * one fetch.

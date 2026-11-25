@@ -33,7 +33,7 @@ export interface DueMessage {
   line: WaLine | null;
   /** The number a session text was stamped with at enqueue (module mode, docs/23c decision 5); null = its line's default. */
   number_id: string | null;
-  /** A file staff sent from the chat (wa-media out/…; owner 2026-10-19 #2); optional so older fixtures compile. */
+  /** A file staff sent from the chat (wa-media out/…); optional so older fixtures compile. */
   media_path?: string | null;
   media_mime?: string | null;
   media_name?: string | null;

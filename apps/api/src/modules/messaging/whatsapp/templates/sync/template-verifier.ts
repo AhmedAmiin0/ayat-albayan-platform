@@ -30,7 +30,7 @@ const wantsSync = (saved: LineSaved): boolean => SYNCED_ON_SAVE.has(saved.provid
 const failedLine = (l: TemplateLineSync): boolean => !l.ok && l.error !== CRM_MANAGED;
 
 /**
- * Each number's sync with Meta (R-MSG-01, docs/12 §3.4, owner 2026-10-18): reads only its own
+ * Each number's sync with Meta (R-MSG-01, docs/12 §3.4): reads only its own
  * WABA's list (read-only) for only its own rows and imports that WABA's new templates. Once after
  * boot when a line is configured (best effort: log and continue, never block, never submit), and on
  * the admin's POST /messaging/templates/health.

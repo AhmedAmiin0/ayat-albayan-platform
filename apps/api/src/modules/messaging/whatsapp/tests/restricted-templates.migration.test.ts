@@ -4,7 +4,7 @@ import { RESTRICTED_TEMPLATE_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// The restricted allow-list (owner 2026-10-12). No database runs in unit tests: this pins the shape.
+// The restricted allow-list. No database runs in unit tests: this pins the shape.
 const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261012000360_restricted_templates.sql'), 'utf8');
 

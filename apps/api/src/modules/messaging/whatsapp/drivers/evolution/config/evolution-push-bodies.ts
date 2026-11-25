@@ -2,7 +2,7 @@ import type { EvolutionConfig } from '@ab/shared';
 import type { EvolutionMode } from '@ab/catalog';
 import { z } from 'zod';
 
-// What the API pushes to Evolution API v2 for one number (owner 2026-11-06, docs/19 «Evolution
+// What the API pushes to Evolution API v2 for one number (docs/19 «Evolution
 // driver»), from Evolution's DTOs at commit fa09d37: /settings/set (SettingsDto), /webhook/set
 // ({webhook: {...}}), /proxy/set (ProxyDto: port is a string), /instance/create (InstanceDto).
 // Pure: no value here is ever logged; the token and the proxy password ride only in the bodies.
@@ -10,7 +10,7 @@ import { z } from 'zod';
 export type Body = Record<string, unknown>;
 
 /**
- * POST /settings/set/{instance}. `alwaysOnline` is pinned off (owner 2026-11-06: families never
+ * POST /settings/set/{instance}. `alwaysOnline` is pinned off (families never
  * see us «online»), whatever an old stored config said.
  */
 export function settingsBody(c: EvolutionConfig): Body {

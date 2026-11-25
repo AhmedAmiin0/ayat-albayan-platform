@@ -3,7 +3,7 @@ import { failurePlan } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { isWindowClosedError } from '@/modules/messaging/whatsapp/sender/window/window-rules';
 
-// Rule 5 (owner 2026-11-03): WhatsApp's window refusal is window_closed and never retried.
+// Rule 5: WhatsApp's window refusal is window_closed and never retried.
 // Fakes only: never Kapso, never Meta.
 
 const NOW = new Date('2026-11-03T08:00:00Z');

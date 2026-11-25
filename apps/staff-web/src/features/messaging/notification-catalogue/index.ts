@@ -1,6 +1,6 @@
 export { NumberParts } from './NumberParts';
 export { NumbersLine } from './NumbersLine';
-export { CATALOGUE_QUERY_KEY, catalogueQuery } from './catalogue-api';
+export { catalogueQuery } from './catalogue-api';
 export { catalogueMatch } from './catalogue-match';
 export { audienceTabs, rowsOf } from './catalogue-tabs';
 export {

@@ -4,7 +4,7 @@ import { RESTRICTED_TEMPLATE_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Owner 2026-11-14 («a template that carries your text»). No database runs in unit tests: this
+// A template that carries the staff member's text. No database runs in unit tests: this
 // pins the migration's shape.
 const sql = readFileSync(join(MIGRATIONS_DIR, '20261114000200_academy_message_allowed.sql'), 'utf8');
 const code = sql.replace(/--[^\n]*/g, '');

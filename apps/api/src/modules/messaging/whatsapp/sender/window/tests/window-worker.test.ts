@@ -6,7 +6,7 @@ import type { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { NOW, staffText, windowFakes } from '@/modules/messaging/whatsapp/sender/window/window.fakes';
 
-// The worker and the window together (owner 2026-11-03). Fakes only: never Kapso, never Meta.
+// The worker and the window together. Fakes only: never Kapso, never Meta.
 
 const KAPSO_422 = new WaError('WhatsApp HTTP 422', {
   code: null,

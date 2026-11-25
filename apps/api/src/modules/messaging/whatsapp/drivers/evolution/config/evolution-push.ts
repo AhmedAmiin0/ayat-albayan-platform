@@ -13,8 +13,8 @@ import { stateSchema } from '@/modules/messaging/whatsapp/drivers/evolution/evol
 import * as B from './evolution-push-bodies';
 import { proxyMatch, settingsMatch, webhookMatch } from './evolution-readback';
 
-// Pushes one number's options to its Evolution instance and reads them back (owner 2026-11-06:
-// «make all the evolution api options configurable»). The instance first (created with the
+// Pushes one number's options to its Evolution instance and reads them back (every Evolution
+// API option is configurable). The instance first (created with the
 // global key when Evolution does not know it: no QR, nothing linked until an admin scans one),
 // then settings, webhook and proxy, each set then found. A refused part is `failed`, the others
 // still go; the token refused on the instance itself throws (502 evolution_auth).

@@ -3,7 +3,7 @@ import { newStarters, starterRow } from '@/modules/messaging/whatsapp/templates/
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// The chat line's import (owner 2026-10-12, docs/12 §3.4): invented Meta templates, Meta's shapes.
+// The chat line's import (docs/12 §3.4): invented Meta templates, Meta's shapes.
 
 const NOW = new Date('2026-10-12T08:00:00Z');
 const body = (text: string) => ({ type: 'BODY', text });

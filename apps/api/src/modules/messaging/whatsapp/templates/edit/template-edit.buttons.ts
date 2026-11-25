@@ -4,7 +4,7 @@ import type {
 import { templateButtons, templateDisplay } from '@/modules/messaging/whatsapp/messages/wa-json';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// The buttons of an edit (owner 2026-11-14): what WhatsApp shows before (display, else the
+// The buttons of an edit: what WhatsApp shows before (display, else the
 // registry's), and the registry's after (the sender reads its intents and link suffixes by index).
 
 /** Buttons the platform cannot write back (a call or a copy-code one). */

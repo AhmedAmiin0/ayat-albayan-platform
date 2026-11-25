@@ -5,7 +5,7 @@ import type { InboundMediaRepo, MediaMessage } from '@/modules/messaging/whatsap
 import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
 import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// Owner 2026-10-27: the old CRM number's history (line null) was fetched with the NOTIFICATIONS client.
+// The old CRM number's history (line null) was fetched with the NOTIFICATIONS client.
 const row = (over: Partial<MediaMessage>): MediaMessage => ({
   id: 'm1', phone_e164: '+966500000001', direction: 'inbound', media_id: 'mid-1', media_mime: 'audio/ogg; codecs=opus',
   media_path: null, body: null, created_at: new Date().toISOString(), line: null, ...over,

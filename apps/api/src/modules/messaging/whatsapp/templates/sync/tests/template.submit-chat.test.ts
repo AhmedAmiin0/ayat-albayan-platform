@@ -6,7 +6,7 @@ import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/te
 import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// Owner 2026-10-18: a template is submitted to its OWN line's WABA, chat rows included, under that
+// A template is submitted to its OWN line's WABA, chat rows included, under that
 // line's driver: Meta directly, or Kapso (a rejected one edited through hsm_id; no sample upload).
 
 const queries = { get: vi.fn(), update: vi.fn() };

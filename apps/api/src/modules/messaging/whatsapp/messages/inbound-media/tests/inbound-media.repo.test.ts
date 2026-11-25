@@ -17,7 +17,7 @@ describe('InboundMediaQueries retention reads (owner 2026-10-19 #2)', () => {
     expect(out).toEqual([rows[0]]);
     const of = (method: string) => calls.filter((c) => c.method === method).map((c) => c.args);
     expect(of('eq')).toEqual([['direction', 'inbound']]);
-    // Never an old-CRM copy (no media id): our only copy once the CRM's storage is private (owner 2026-10-27).
+    // Never an old-CRM copy (no media id): our only copy once the CRM's storage is private.
     expect(of('not')).toEqual([['media_id', 'is', null], ['media_path', 'is', null]]);
     expect(of('select')).toEqual([['id, media_path, media_mime, media_id']]);
     expect(of('or')).toEqual([[PLAYABLE_FILTER]]);

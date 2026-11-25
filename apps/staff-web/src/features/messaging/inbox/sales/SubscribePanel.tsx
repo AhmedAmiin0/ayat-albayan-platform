@@ -12,6 +12,8 @@ import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
 import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
+import { leadKeys } from '@/features/sales/keys';
 import { SearchFromProfile } from '@/features/messaging/inbox/search';
 import { dueText, packageChipProps, packageLine, subscribeLabel } from './subscription';
 
@@ -24,8 +26,8 @@ export function SubscribePanel({ people }: { people: ThreadPeople }) {
     setPicked(null);
     setToast(t.subscriptions.saved);
     // The family's lead may have just become subscribed (R-LEAD-01), so threads and leads refresh.
-    for (const key of ['threads', 'leads'])
-      await queryClient.invalidateQueries({ queryKey: [key] });
+    for (const queryKey of [threadKeys.all, leadKeys.all])
+      await queryClient.invalidateQueries({ queryKey });
   };
 
   return (
@@ -57,7 +59,11 @@ export function SubscribePanel({ people }: { people: ThreadPeople }) {
                   {s.name}
                 </Link>
                 <Ltr className="text-xs text-ink-3">{s.code}</Ltr>
-                <StatusChip size="sm" {...studentStatusStyle[s.status]} label={t.enums.studentStatus[s.status]} />
+                <StatusChip
+                  size="sm"
+                  {...studentStatusStyle[s.status]}
+                  label={t.enums.studentStatus[s.status]}
+                />
                 {s.teacher_name && <span className="text-xs text-ink-3">{s.teacher_name}</span>}
               </span>
               {sub ? (

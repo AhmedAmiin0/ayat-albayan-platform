@@ -106,7 +106,7 @@ type DeadlineRow = Pick<DueMessage, 'created_at' | 'scheduled_for' | 'expires_at
 /**
  * A hold's deadline: one it already had (a released text refused again keeps it), else 7 days
  * from the later of when it was written and when it was (re)queued for (scheduled_for: a staff
- * retry clears the deadline and restarts it, owner 2026-11-06).
+ * retry clears the deadline and restarts it).
  */
 export function holdDeadline(row: DeadlineRow, now: Date): Date {
   const written = Date.parse(row.created_at ?? now.toISOString());

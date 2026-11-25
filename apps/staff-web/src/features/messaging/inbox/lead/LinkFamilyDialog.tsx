@@ -8,10 +8,17 @@ import { Field } from '@ab/web-kit/components/ui/form/field';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Input } from '@ab/web-kit/components/ui/form/input';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { salesKeys } from '@/features/sales/keys';
 import { checkRequest, RegistrationMatches } from '@/features/sales/sales';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { linkedText, linkFamily, linkFamilyErrorText, refreshAfterLink, searchErrorText } from './link-family';
+import {
+  linkedText,
+  linkFamily,
+  linkFamilyErrorText,
+  refreshAfterLink,
+  searchErrorText,
+} from './link-family';
 
 const L = t.inbox.linkFamily;
 const R = t.registrationCheck;
@@ -41,7 +48,7 @@ export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyD
   const [path, setPath] = useState<string | null>(null);
   const [picked, setPicked] = useState<RegistrationMatch | null>(null);
   const answer = useQuery({
-    queryKey: ['sales', 'registration-check', path ?? ''],
+    queryKey: salesKeys.registrationCheck(path ?? ''),
     queryFn: () => apiFetch<RegistrationCheckView>(path ?? ''),
     enabled: path !== null,
     retry: false,
@@ -67,7 +74,11 @@ export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyD
     pick(null);
   };
   const action = picked ? (
-    <Button type="button" disabled={link.isPending} onClick={() => link.mutate({ leadId, code: picked.code })}>
+    <Button
+      type="button"
+      disabled={link.isPending}
+      onClick={() => link.mutate({ leadId, code: picked.code })}
+    >
       {link.isPending ? L.linking : L.submit}
     </Button>
   ) : (
@@ -111,10 +122,21 @@ export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyD
       </form>
       {/* The confirm line first: under 640px the dialog is a full-screen sheet and ten cards push the end off-screen. */}
       <div className="mt-4 grid gap-3" aria-live="polite">
-        {picked && <p className="text-sm font-semibold text-ink">{L.confirm.split(/(\{name\}|\{code\})/).map((part, i) => slot(part, picked, i))}</p>}
+        {picked && (
+          <p className="text-sm font-semibold text-ink">
+            {L.confirm.split(/(\{name\}|\{code\})/).map((part, i) => slot(part, picked, i))}
+          </p>
+        )}
         {link.isError && <FormAlert>{linkFamilyErrorText(link.error)}</FormAlert>}
         {path && answer.isError && <FormAlert>{searchErrorText(answer.error)}</FormAlert>}
-        {path && answer.data && <RegistrationMatches view={answer.data} by="name" onPick={pick} picked={picked?.code ?? null} />}
+        {path && answer.data && (
+          <RegistrationMatches
+            view={answer.data}
+            by="name"
+            onPick={pick}
+            picked={picked?.code ?? null}
+          />
+        )}
       </div>
     </Dialog>
   );

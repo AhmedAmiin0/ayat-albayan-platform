@@ -7,7 +7,7 @@ import { REPORT_READY, templateRow } from '@/modules/messaging/whatsapp/whatsapp
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 const keys = (rows: { key: string }[]) => rows.map((r) => r.key);
 
-// Owner 2026-10-12: «all roles except the ones allowed to have all templates» list only the allow-list.
+// Every role but the ones allowed all templates lists only the allow-list.
 const ROWS = [
   templateRow(),
   templateRow({ key: 'lesson_reminder' }),
@@ -17,7 +17,7 @@ const ROWS = [
   templateRow({ key: 'lesson_join_link', sales_starter: true }),
   { ...REPORT_READY, status: 'approved' as const, sales_starter: true },
 ];
-/** The three defaults (owner 2026-10-18: trial_reschedule joined free_trial_invite and welcome_greeting). */
+/** The three defaults: trial_reschedule joined free_trial_invite and welcome_greeting. */
 const THREE = ['free_trial_invite', 'welcome_greeting', 'trial_reschedule'];
 
 /** The classroom assistant granted messages.read; the custom role (base sales) and the teacher get customGrants. */
@@ -46,13 +46,13 @@ describe('GET /messaging/templates per role (restricted allow-list)', () => {
     expect(await list('admin')).toHaveLength(ROWS.length);
   });
 
-  // Owner 2026-10-18: «dont show all these templates to sales/teacher», whatever the teacher holds.
+  // Sales and teachers never see every template, whatever the teacher holds.
   it('a teacher granted both keys still lists only the three', async () => {
     customGrants = ['templates.send_all', 'templates.manage'];
     expect(await list('teacher')).toEqual(THREE);
   });
 
-  // Owner 2026-10-15: «only allowed templates should be listed to the assistants», whatever they hold.
+  // Assistants see only the allowed templates, whatever they hold.
   it('a custom role based on sales granted both keys still lists only the three', async () => {
     customGrants = ['templates.send_all', 'templates.manage'];
     expect(await list('custom')).toEqual(THREE);

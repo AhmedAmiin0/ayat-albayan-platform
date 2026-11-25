@@ -15,7 +15,7 @@ const newest = (rows: readonly TemplateRow[], line: WaLine): string | null =>
   rows.reduce<string | null>((max, r) => (r.line === line && r.last_checked_at && (!max || r.last_checked_at > max) ? r.last_checked_at : max), null);
 
 /**
- * The template catalog (R-MSG-01, issue C1, docs/12 §3.4), per number (owner 2026-10-18): what the rows
+ * The template catalog (R-MSG-01, issue C1, docs/12 §3.4), per number: what the rows
  * say, read only. Meta syncs live in TemplateVerifier (templates/sync), the admin's audited edits in
  * TemplateAdmin; the class keeps its name so the senders that ask approved() stay as they are.
  */

@@ -3,7 +3,7 @@ import { toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/t
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { answered, heldStep, holdable, reopenUsable, type WaitingRow } from '@/modules/messaging/whatsapp/sender/window/window-rules';
 
-// The 24 h window's pure rules (owner 2026-11-03). Fakes only.
+// The 24 h window's pure rules. Fakes only.
 
 const STAFF = 's0000000-0000-4000-8000-000000000001';
 const text = {

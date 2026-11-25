@@ -52,9 +52,9 @@ describe('isAutomatic: job-made reminders, classroom links, follow-ups, renewals
   it('every registry key is classified: a new key fails here until it is automatic or sent on an action', () => {
     // lesson_join_link is automatic from the reminders job but manual when created_by is set.
     const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready', 'lesson_feedback_request', 'teacher_new_student'];
-    // A schedule change a person made (owner 2026-10-30): never held by the automatic switch.
+    // A schedule change a person made: never held by the automatic switch.
     onAction.push('lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed');
-    // The report's link to the family and the teacher, after a teacher submitted it (2026-11-06).
+    // The report's link to the family and the teacher, after a teacher submitted it.
     onAction.push('report_ready_family', 'report_ready_teacher');
     // teacher_lesson_v3 also carries the new-student alert (a booking): never held.
     onAction.push('teacher_lesson_v3');
