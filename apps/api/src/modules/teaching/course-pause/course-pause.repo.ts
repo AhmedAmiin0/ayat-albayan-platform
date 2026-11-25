@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
-import { maybe, pgError, rows } from '@/common/db/errors';
+import { maybe, pgError, raisedAs, rows, type PgErrorMap } from '@/common/db/errors';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { rpcOutSchema, type PauseRow, type RpcOut } from './course-pause.mapper';
 
@@ -14,18 +14,17 @@ type OpenPause = { id: string; subscription_id: string | null };
 export type ReopenedLesson = { id: string; teacher_id: string; starts_at: string; ends_at: string };
 
 const PAUSE_SELECT = 'id, student_id, from_date, until_date, reason, created_at, resumed_at, extended_days, creator:profiles!course_pauses_created_by_fkey(full_name)';
-const BAD_REQUEST = new Set(['date_in_past', 'invalid_range']);
-const CONFLICT = new Set(['already_paused', 'pause_not_open']);
-const NOT_FOUND = new Set(['student_not_found', 'pause_not_found']);
-
 /** The RPCs' raised codes (migration 956) → 400 / 409 / 404; a lost race on the one-open index → already_paused. */
-export function pauseRpcError(error: PostgrestError): Error {
-  if (error.code === 'P0001' && BAD_REQUEST.has(error.message)) return badRequest(error.message);
-  if (error.code === 'P0001' && CONFLICT.has(error.message)) return conflict(error.message);
-  if (error.code === 'P0001' && NOT_FOUND.has(error.message)) return notFound(error.message);
-  if (error.code === '23505' && error.message.includes('course_pauses_one_open')) return conflict('already_paused');
-  return pgError(error);
-}
+const PAUSE_ERRORS: PgErrorMap = {
+  constraints: { course_pauses_one_open: () => conflict('already_paused') },
+  raised: {
+    ...raisedAs(['date_in_past', 'invalid_range'], badRequest),
+    ...raisedAs(['already_paused', 'pause_not_open'], conflict),
+    ...raisedAs(['student_not_found', 'pause_not_found'], notFound),
+  },
+};
+
+export const pauseRpcError = (error: PostgrestError): Error => pgError(error, PAUSE_ERRORS);
 
 /** course_pauses reads and the three RPCs (service role; the routes check courses.pause). docs/11 §7b. */
 @Injectable()

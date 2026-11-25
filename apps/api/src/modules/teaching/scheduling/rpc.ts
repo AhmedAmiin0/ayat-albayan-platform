@@ -1,31 +1,37 @@
 import type { Database } from '@ab/db';
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { Db } from '@/common/db/db.module';
-import { pgError } from '@/common/db/errors';
+import { pgError, raisedAs, type PgErrorMap } from '@/common/db/errors';
 import { conflict } from '@/common/http/errors';
 
 type RpcResult = { data: unknown; error: PostgrestError | null };
 type RpcName = keyof Database['public']['Functions'];
 type UntypedRpc = { rpc(fn: string, args: Record<string, unknown>): PromiseLike<RpcResult> };
 
-/** `raise exception '<code>'` messages of the lesson RPCs that map to a 409 domain error. */
-const RAISED_CODES = new Set([
-  'invalid_transition',
-  'rule_not_active',
-  'stale_time',
-  'course_changed',
-  'course_unattributed',
-  'teacher_clash',
-]);
+const slotTaken = () => conflict('slot_taken');
+
+/**
+ * The lesson RPCs' `raise exception '<code>'` messages are 409s. A generated row's (rule_id,
+ * starts_at | local_date) key (migration 110) means that slot is taken; moved rows never hold a
+ * slot, so other unique keys stay plain DB errors.
+ */
+const LESSON_RPC_ERRORS: PgErrorMap = {
+  raised: raisedAs(
+    [
+      'invalid_transition',
+      'rule_not_active',
+      'stale_time',
+      'course_changed',
+      'course_unattributed',
+      'teacher_clash',
+    ],
+    conflict,
+  ),
+  constraints: { lessons_rule_starts_uidx: slotTaken, lessons_rule_date_uidx: slotTaken },
+};
 
 /** Postgres error from the lesson RPCs → HTTP. */
-export function rpcError(error: PostgrestError): Error {
-  if (error.code === 'P0001' && RAISED_CODES.has(error.message)) return conflict(error.message);
-  // A generated row's (rule_id, starts_at | local_date) key (migration 110): that slot is taken.
-  // Moved rows never hold a slot, so other unique keys stay plain DB errors.
-  if (error.code === '23505' && error.message.includes('lessons_rule_')) return conflict('slot_taken');
-  return pgError(error);
-}
+export const rpcError = (error: PostgrestError): Error => pgError(error, LESSON_RPC_ERRORS);
 
 /**
  * Calls a lesson RPC (migrations 080 / 100) by its generated name. Args stay loose on purpose:
