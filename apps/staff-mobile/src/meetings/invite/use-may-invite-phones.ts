@@ -1,6 +1,7 @@
 import { mayInvitePhones } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { meQueryOptions } from '@ab/client-core';
+import { apiFetch } from '@ab/mobile-kit';
 
 /** The `role` of GET /auth/me, or null (no answer yet, an older API). */
 export function roleOf(me: unknown): string | null {
@@ -11,6 +12,6 @@ export function roleOf(me: unknown): string | null {
 
 /** Admin and sales only; hidden until /auth/me answers. */
 export function useMayInvitePhones(): boolean {
-  const me = useQuery({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
+  const me = useQuery(meQueryOptions({ apiFetch }));
   return mayInvitePhones(roleOf(me.data));
 }
