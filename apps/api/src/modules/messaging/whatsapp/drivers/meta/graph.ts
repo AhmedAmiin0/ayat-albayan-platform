@@ -19,7 +19,8 @@ export const providerOf = (env: GraphEnv): Provider => env.provider ?? 'meta';
 
 export interface GraphConn {
   env: GraphEnv;
-  fetch: FetchLike;
+  /** Absent: the shared http client's runtime fetch. */
+  fetch?: FetchLike;
   timeoutMs: number;
 }
 
