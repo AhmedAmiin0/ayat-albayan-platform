@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { z } from 'zod';
-import { defineRoute } from '../route';
+import { defineRoute } from '../define-route';
 import type { RouteBody, RouteParams, RouteQuery, RouteResult } from '../route.types';
 
 const item = z.object({ code: z.string(), visits: z.number() });

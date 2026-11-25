@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
-import { defineRoute } from '../route';
+import { defineRoute } from '../define-route';
 import { routePath } from '../route-path';
 
 const ok = z.object({ ok: z.boolean() });
