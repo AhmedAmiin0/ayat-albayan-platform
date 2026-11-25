@@ -8,7 +8,9 @@ describe('the fake presence realtime', () => {
 
   it('records each opened topic and answers its join once joinAll runs', () => {
     const statuses: string[] = [];
-    client().channel('presence:a').subscribe((s) => statuses.push(s));
+    client()
+      .channel('presence:a')
+      .subscribe((s) => statuses.push(s));
     expect(realtime.topics()).toEqual(['presence:a']);
     realtime.joinAll();
     expect(statuses).toEqual(['SUBSCRIBED']);
@@ -16,7 +18,9 @@ describe('the fake presence realtime', () => {
 
   it('puts a person online and off, firing the topic sync each time', () => {
     let syncs = 0;
-    const ch = client().channel('presence:b').on('presence', {}, () => (syncs += 1));
+    const ch = client()
+      .channel('presence:b')
+      .on('presence', {}, () => (syncs += 1));
     realtime.present('b');
     expect(ch.presenceState()).toEqual({ key: [{ at: 'x' }] });
     realtime.present('b', false);
@@ -37,7 +41,9 @@ describe('the fake presence realtime', () => {
     realtime.present('nobody');
     expect(realtime.tracked('nobody')).toEqual([]);
     const statuses: string[] = [];
-    const ch = client().channel('presence:d').subscribe((s) => statuses.push(s));
+    const ch = client()
+      .channel('presence:d')
+      .subscribe((s) => statuses.push(s));
     await client().removeChannel(ch);
     realtime.joinAll();
     expect(statuses).toEqual([]);

@@ -39,6 +39,9 @@ const ALIAS = {
   '@ab/shared': 'packages/shared/src/index.ts',
   '@ab/shared/testing': 'packages/shared/src/testing/index.ts',
   '@ab/client-core': 'packages/client-core/src/index.ts',
+  '@ab/web-kit': 'packages/web-kit/src/index.ts',
+  '@ab/web-kit/room': 'packages/web-kit/src/room.ts',
+  '@ab/web-kit/testing': 'packages/web-kit/src/testing/index.ts',
 };
 
 /** Repo-relative code files under the roots, unit tests excluded (e2e never runs them). */

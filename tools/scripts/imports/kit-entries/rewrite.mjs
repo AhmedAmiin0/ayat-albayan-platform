@@ -4,6 +4,17 @@
 import { Node, SyntaxKind } from 'ts-morph';
 import { applyEdits, namesOf, spanOf, statementText, typeNamespaceOf } from './statement.mjs';
 
+const entryOfDeep = (spec, rule) =>
+  Object.entries(rule.entries).find(([, paths]) => paths.includes(spec))?.[0] ?? rule.root;
+
+const isDeep = (spec, rule) => spec.startsWith(rule.prefix) && !Object.hasOwn(rule.entries, spec);
+
+/** The entry a path that is no longer public moves to, or undefined when it stays. */
+export function targetOf(spec, table) {
+  const rule = (table.deep ?? []).find((r) => isDeep(spec, r));
+  return table.moves[spec] ?? (rule && entryOfDeep(spec, rule));
+}
+
 const keyOf = (s) => `${s.keyword}|${String(s.typeOnly)}|${s.spec}`;
 const keywordOf = (decl) => (Node.isImportDeclaration(decl) ? 'import' : 'export');
 
@@ -14,8 +25,17 @@ function namespaceEntry(decl, rule) {
   return { decl, keyword: 'import', typeOnly: true, spec: rule.spec, names: [name], moved: true };
 }
 
-function movedEntry(decl, spec) {
-  const names = namesOf(decl);
+const ELEMENT = /^(type )?(\w+)(?: as (\w+))?$/;
+
+/** `name` or `name as local` under the name the entry exports it as. */
+function renamed(text, renames) {
+  const [, type = '', name, local] = ELEMENT.exec(text) ?? [];
+  const next = name === undefined ? undefined : renames[name];
+  return next === undefined ? text : `${type}${next} as ${local ?? name}`;
+}
+
+function movedEntry(decl, spec, renames = {}) {
+  const names = namesOf(decl).map((text) => renamed(text, renames));
   if (names.length === 0) return undefined;
   return { decl, keyword: keywordOf(decl), typeOnly: decl.isTypeOnly(), spec, names, moved: true };
 }
@@ -24,9 +44,10 @@ function movedEntry(decl, spec) {
 function entryOf(decl, table) {
   const spec = decl.getModuleSpecifierValue();
   const rule = table.namespaces[spec];
-  const target = table.moves[spec];
+  const target = targetOf(spec, table);
   if (rule === undefined && target === undefined) return undefined;
-  const entry = rule ? namespaceEntry(decl, rule) : movedEntry(decl, target);
+  const renames = table.renames?.[spec];
+  const entry = rule ? namespaceEntry(decl, rule) : movedEntry(decl, target, renames);
   return entry ?? { manual: decl.getText() };
 }
 
@@ -44,13 +65,16 @@ function groupEdits(group) {
   return [merged, ...rest.map((s) => ({ ...spanOf(s.decl, true), value: '' }))];
 }
 
-const dynamicImports = (sf, table) =>
+/** `import('x')` of a moved path loads the entry instead: it re-exports the same module. */
+const dynamicEdits = (sf, table) =>
   sf
     .getDescendantsOfKind(SyntaxKind.CallExpression)
     .filter((c) => c.getExpression().getKind() === SyntaxKind.ImportKeyword)
     .map((c) => c.getArguments()[0])
-    .filter((a) => Node.isStringLiteral(a) && Object.hasOwn(table.moves, a.getLiteralValue()))
-    .map((a) => `import(${a.getText()})`);
+    .filter((a) => Node.isStringLiteral(a))
+    .map((a) => ({ a, target: targetOf(a.getLiteralValue(), table) }))
+    .filter(({ target }) => target !== undefined)
+    .map(({ a, target }) => ({ start: a.getStart(), end: a.getEnd(), value: `'${target}'` }));
 
 function statements(sf, table) {
   const decls = [...sf.getImportDeclarations(), ...sf.getExportDeclarations()]
@@ -63,12 +87,16 @@ function statements(sf, table) {
 export function rewriteKitImports(project, { file, text }, table) {
   const sf = project.createSourceFile(`/virtual/${file}`, text, { overwrite: true });
   const all = statements(sf, table);
-  const manual = [...all.filter((s) => s.manual), ...dynamicImports(sf, table)];
-  const groups = Map.groupBy(all.filter((s) => s.decl), keyOf);
+  const groups = Map.groupBy(
+    all.filter((s) => s.decl),
+    keyOf,
+  );
   const touched = [...groups.values()].filter((g) => g.some((s) => s.moved));
-  const edits = touched.flatMap(groupEdits);
+  const dynamic = dynamicEdits(sf, table);
+  const edits = [...touched.flatMap(groupEdits), ...dynamic];
   const out = edits.length === 0 ? text : applyEdits(text, edits);
   project.removeSourceFile(sf);
-  const rewritten = all.filter((s) => s.moved).length;
-  return { text: out, rewritten, manual: manual.map((m) => `${file}: ${m.manual ?? m}`) };
+  const rewritten = all.filter((s) => s.moved).length + dynamic.length;
+  const manual = all.filter((s) => s.manual).map((s) => `${file}: ${s.manual}`);
+  return { text: out, rewritten, manual };
 }

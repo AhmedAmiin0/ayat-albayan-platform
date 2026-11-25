@@ -7,6 +7,10 @@ const project = new Project({ useInMemoryFileSystem: true, skipFileDependencyRes
 const TABLE = {
   moves: { '@k/testing/query': '@k/testing', '@k/a/b': '@k', '@k/a/c': '@k' },
   namespaces: { '@k/lib/api': { spec: '@k/testing', name: 'HttpApi' } },
+  deep: [
+    { prefix: '@w/', root: '@w', entries: { '@w/room': ['@w/x/Room'], '@w/testing': ['@w/f'] } },
+  ],
+  renames: { '@w/p/Panel': { Panel: 'PortalPanel' } },
 };
 const rewrite = (text) => rewriteKitImports(project, { file: 'apps/x/src/a.ts', text }, TABLE);
 const lines = (...l) => `${l.join('\n')}\n`;
@@ -28,7 +32,11 @@ test('imports that land on one entry merge into the first, value and type kept a
   );
   assert.equal(
     out.text,
-    lines("import { a, b, type B } from '@k';", "import type { C } from '@k';", "import { d } from '@k/other';"),
+    lines(
+      "import { a, b, type B } from '@k';",
+      "import type { C } from '@k';",
+      "import { d } from '@k/other';",
+    ),
   );
 });
 
@@ -64,19 +72,41 @@ test('mock paths, other packages and relative paths stay as they are', () => {
   assert.deepEqual(rewrite(text), { text, rewritten: 0, manual: [] });
 });
 
-test('a value namespace, a default import or import() of a moved path is left for a person', () => {
-  const text = lines(
-    "import * as B from '@k/a/b';",
-    "import C from '@k/a/c';",
-    "const d = import('@k/a/b');",
-  );
+test('a value namespace or a default import of a moved path is left for a person', () => {
+  const text = lines("import * as B from '@k/a/b';", "import C from '@k/a/c';");
   const out = rewrite(text);
   assert.equal(out.text, text);
   assert.deepEqual(out.manual, [
     "apps/x/src/a.ts: import * as B from '@k/a/b';",
     "apps/x/src/a.ts: import C from '@k/a/c';",
-    "apps/x/src/a.ts: import('@k/a/b')",
   ]);
+});
+
+test('import() of a moved path loads its entry, which re-exports the same module', () => {
+  const out = rewrite(lines("const { b } = await import('@k/a/b');", "await import('@w/x/y');"));
+  assert.equal(out.text, lines("const { b } = await import('@k');", "await import('@w');"));
+  assert.equal(out.rewritten, 2);
+});
+
+test('a deep path of a prefix kit goes to the entry that lists it, else to the root', () => {
+  const out = rewrite(
+    lines(
+      "import { a } from '@w/lib/a';",
+      "import { R } from '@w/x/Room';",
+      "import { f } from '@w/f';",
+      "import { g } from '@w';",
+      "import { h } from '@w/room';",
+      "import { i } from '@w/testing';",
+    ),
+  );
+  assert.equal(
+    out.text,
+    lines(
+      "import { a, g } from '@w';",
+      "import { R, h } from '@w/room';",
+      "import { f, i } from '@w/testing';",
+    ),
+  );
 });
 
 test('a merged statement past 100 columns wraps one name per line', () => {
@@ -88,4 +118,20 @@ test('a merged statement past 100 columns wraps one name per line', () => {
 test('a second run changes nothing', () => {
   const once = rewrite(lines("import { b } from '@k/a/b';", "import { c } from '@k/a/c';")).text;
   assert.deepEqual(rewrite(once), { text: once, rewritten: 0, manual: [] });
+});
+
+test('a name the entry exports under another name keeps its local name', () => {
+  const out = rewrite(
+    lines(
+      "import { Panel, type PanelProps } from '@w/p/Panel';",
+      "export { Panel } from '@w/p/Panel';",
+    ),
+  );
+  assert.equal(
+    out.text,
+    lines(
+      "import { PortalPanel as Panel, type PanelProps } from '@w';",
+      "export { PortalPanel as Panel } from '@w';",
+    ),
+  );
 });
