@@ -1,7 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { connectRedis } from './redis-connect';
 
-const made = vi.hoisted(() => [] as { url: string; options: Record<string, unknown>; calls: unknown[][] }[]);
+const made = vi.hoisted(
+  () => [] as { url: string; options: Record<string, unknown>; calls: unknown[][] }[],
+);
 
 vi.mock('ioredis', () => ({
   default: class {
@@ -30,8 +32,17 @@ describe('connectRedis', () => {
   it('two connections: commands fail fast (no offline queue, short timeouts), the listener waits and re-subscribes', () => {
     connectRedis('redis://ayat-redis:6379', () => undefined);
     const [cmd, sub] = made;
-    expect(cmd?.options).toMatchObject({ enableOfflineQueue: false, commandTimeout: 250, connectTimeout: 1_000, maxRetriesPerRequest: 1 });
-    expect(sub?.options).toMatchObject({ maxRetriesPerRequest: null, autoResubscribe: true, connectTimeout: 1_000 });
+    expect(cmd?.options).toMatchObject({
+      enableOfflineQueue: false,
+      commandTimeout: 250,
+      connectTimeout: 1_000,
+      maxRetriesPerRequest: 1,
+    });
+    expect(sub?.options).toMatchObject({
+      maxRetriesPerRequest: null,
+      autoResubscribe: true,
+      connectTimeout: 1_000,
+    });
     expect(cmd?.calls).toContainEqual(['on', 'error']);
     expect(sub?.calls).toContainEqual(['on', 'error']);
   });

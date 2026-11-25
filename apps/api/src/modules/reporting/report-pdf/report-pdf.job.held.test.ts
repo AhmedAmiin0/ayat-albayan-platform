@@ -70,7 +70,13 @@ describe('ReportPdfJob — unread rules hold the report (never failed, never sen
     expect(w.rows.get('r1')?.status).toBe('ready');
     expect(w.queries.queueMessages).toHaveBeenCalledTimes(1);
     expect([...w.sent]).toEqual(['report_ready:r1']);
-    await expect(w.job.runOnce(NOW)).resolves.toEqual({ recovered: 0, rendered: 0, failed: 0, skipped: 0, held: 0 });
+    await expect(w.job.runOnce(NOW)).resolves.toEqual({
+      recovered: 0,
+      rendered: 0,
+      failed: 0,
+      skipped: 0,
+      held: 0,
+    });
     expect(w.queries.queueMessages).toHaveBeenCalledTimes(1);
   });
 

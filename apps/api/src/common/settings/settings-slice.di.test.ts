@@ -24,7 +24,10 @@ describe('a settings reader under Nest DI', () => {
       .overrideProvider(SettingsService).useValue(store)
       .compile();
     const reader = mod.get(ProbeSettings);
-    expect(await reader.read()).toEqual({ booking_horizon_weeks: 8, sales_auto_assign: SETTING_DEFAULTS.sales_auto_assign });
+    expect(await reader.read()).toEqual({
+      booking_horizon_weeks: 8,
+      sales_auto_assign: SETTING_DEFAULTS.sales_auto_assign,
+    });
     expect(store.all).toHaveBeenCalledTimes(1);
     await mod.close();
   });

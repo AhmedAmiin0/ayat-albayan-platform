@@ -12,7 +12,14 @@ import { TranslationsService } from './translations.service';
     TranslationsQueries,
     TranslationsService,
     // ConfigStore reloads the overrides after a description edit (it writes the ar override, docs/26 §3).
-    { provide: OVERRIDES_REFRESH, useFactory: (t: TranslationsService): OverridesRefresh => () => t.refresh(), inject: [TranslationsService] },
+    {
+      provide: OVERRIDES_REFRESH,
+      useFactory:
+        (t: TranslationsService): OverridesRefresh =>
+        () =>
+          t.refresh(),
+      inject: [TranslationsService],
+    },
   ],
   exports: [TranslationsService, OVERRIDES_REFRESH],
 })

@@ -52,7 +52,8 @@ export class StudentTrialStatus implements OnModuleInit {
     try {
       const facts = trialFactsOf(await this.queries.lessonsOf(ids));
       let moved = 0;
-      for (const id of ids) if (await this.one(id, { facts: facts.get(id) ?? NO_TRIAL, actorId })) moved += 1;
+      for (const id of ids)
+        if (await this.one(id, { facts: facts.get(id) ?? NO_TRIAL, actorId })) moved += 1;
       return moved;
     } catch (e) {
       this.log.error(`trial status failed: ${message(e)}`);
@@ -60,7 +61,10 @@ export class StudentTrialStatus implements OnModuleInit {
     }
   }
 
-  private async one(studentId: string, o: { facts: TrialFacts; actorId: string | null }): Promise<boolean> {
+  private async one(
+    studentId: string,
+    o: { facts: TrialFacts; actorId: string | null },
+  ): Promise<boolean> {
     try {
       const student = await this.statuses.student(studentId);
       if (!student) return false;
@@ -68,7 +72,10 @@ export class StudentTrialStatus implements OnModuleInit {
       const plan = trialMove(student.status, { ...o.facts, paid });
       if (!plan) return false;
       const after = { via: 'trial', from: plan.from, to: plan.to, reason: plan.reason };
-      return await this.statuses.move({ studentId, from: plan.from, to: plan.to }, { actorId: o.actorId, after });
+      return await this.statuses.move(
+        { studentId, from: plan.from, to: plan.to },
+        { actorId: o.actorId, after },
+      );
     } catch (e) {
       this.log.error(`trial status of student ${studentId} failed: ${message(e)}`);
       return false;

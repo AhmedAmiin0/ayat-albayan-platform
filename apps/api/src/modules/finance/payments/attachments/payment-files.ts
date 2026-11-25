@@ -6,7 +6,11 @@ import { badRequest } from '@/common/http/errors';
 import { PaymentAttachments, type CheckedAttachment } from './payment-attachments.service';
 import { ReceiptsService } from './receipts.service';
 
-type FilesInput = { method: PaymentMethod; receiptPath?: string | null | undefined; attachments?: readonly string[] | undefined };
+type FilesInput = {
+  method: PaymentMethod;
+  receiptPath?: string | null | undefined;
+  attachments?: readonly string[] | undefined;
+};
 /** The booked row a late save lands on: its method and count rule, never the form's. */
 type BookedRow = { id: string; subscription_id: string; method: PaymentMethod };
 interface ReceiptPatch {
@@ -44,14 +48,23 @@ export class PaymentFiles {
   async checkPatch<P extends ReceiptPatch>(row: PatchedRow, sent: P): Promise<P> {
     const own = sameStoredObject(row.receipt_path, sent.receiptPath);
     const patch = own ? { ...sent, receiptPath: row.receipt_path } : sent;
-    if (patch.receiptPath) await this.receipts.check({ subscriptionId: row.subscription_id, path: patch.receiptPath, paymentId: row.id });
+    if (patch.receiptPath)
+      await this.receipts.check({
+        subscriptionId: row.subscription_id,
+        path: patch.receiptPath,
+        paymentId: row.id,
+      });
     if (patch.method === undefined || patch.method === 'bank') return patch;
     if ((await this.attachments.paths(row.id)).length > 0) throw badRequest('attachments_not_allowed');
     return patch;
   }
 
   /** After the payment is booked (rule 8): a booked payment must never come back as an error, so a failure is logged. */
-  async saveBooked(paymentId: string, files: readonly CheckedAttachment[], actorId: string): Promise<void> {
+  async saveBooked(
+    paymentId: string,
+    files: readonly CheckedAttachment[],
+    actorId: string,
+  ): Promise<void> {
     try {
       await this.attachments.save(paymentId, files, actorId);
     } catch (e) {
@@ -86,7 +99,13 @@ export class PaymentFiles {
   /** Each path on its own: a failing one is logged and left out. */
   private async checked(row: BookedRow, paths: readonly string[]): Promise<CheckedAttachment[]> {
     const results = await Promise.allSettled(
-      paths.map((path) => this.attachments.check({ subscriptionId: row.subscription_id, paths: [path], paymentId: row.id })),
+      paths.map((path) =>
+        this.attachments.check({
+          subscriptionId: row.subscription_id,
+          paths: [path],
+          paymentId: row.id,
+        }),
+      ),
     );
     return results.flatMap((r, i) => {
       if (r.status === 'fulfilled') return r.value;

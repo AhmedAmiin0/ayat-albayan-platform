@@ -15,7 +15,13 @@ import { LIMIT_STORE, MemoryLimitStore } from './codes/limit-store';
 import { AUTH_GATE, CODE_STORE, SIGN_IN_CONFIG, SUBJECT_STORE } from './sign-in.ports';
 
 export async function signInApp() {
-  const fakes = { codes: new FakeCodes(), send: new FakeCodeSend(), subjects: new FakeSubjects(), auth: new FakeAuth(), audit: new FakeAudit() };
+  const fakes = {
+    codes: new FakeCodes(),
+    send: new FakeCodeSend(),
+    subjects: new FakeSubjects(),
+    auth: new FakeAuth(),
+    audit: new FakeAudit(),
+  };
   const mod = await Test.createTestingModule({ imports: [messagingRoot(SignInModule)] })
     .overrideProvider(CODE_STORE).useValue(fakes.codes)
     .overrideProvider(LIMIT_STORE).useValue(new MemoryLimitStore())

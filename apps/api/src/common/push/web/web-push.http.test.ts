@@ -32,8 +32,12 @@ describe('/me/web-push (R-NOT-02)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(PushModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(NotificationsRepo).useValue(q)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(resolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(NotificationsRepo)
+      .useValue(q)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

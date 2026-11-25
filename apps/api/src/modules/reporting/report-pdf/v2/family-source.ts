@@ -24,7 +24,11 @@ const nextAfter = (at: { startsAt: string; now: Date }): string =>
   new Date(Math.max(Date.parse(at.startsAt), at.now.getTime())).toISOString();
 
 /** v1 reports are never read; a late report or re-render never names a past lesson. */
-export async function loadFamilyExtras(db: Db, report: V2Report, at: { startsAt: string; now: Date }): Promise<FamilyExtras> {
+export async function loadFamilyExtras(
+  db: Db,
+  report: V2Report,
+  at: { startsAt: string; now: Date },
+): Promise<FamilyExtras> {
   let history = db
     .from('lesson_reports')
     .select('content')

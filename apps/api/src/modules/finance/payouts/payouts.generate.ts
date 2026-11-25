@@ -20,7 +20,10 @@ export class PayoutsGenerator {
 
   async generate(month: string, actorId: string): Promise<PayoutGenerateResult> {
     const s = await this.settings.read();
-    const statuses = payoutStatuses({ countLate: s.payout_count_late, countNoShow: s.payout_count_no_show });
+    const statuses = payoutStatuses({
+      countLate: s.payout_count_late,
+      countNoShow: s.payout_count_no_show,
+    });
     const first = monthStart(month);
     const existing = new Map((await this.payouts.forMonth(first)).map((r) => [r.teacher_id, r]));
     const missing: PayoutGenerateResult['missing_rates'] = [];
@@ -29,7 +32,11 @@ export class PayoutsGenerator {
       const lessons = await this.payouts.lessons({ teacherId: teacher.id, ...window });
       const action = planPayout({ teacher, lessons, existing: existing.get(teacher.id), statuses });
       if (action.kind === 'missing')
-        missing.push({ teacher_id: teacher.id, display_name_ar: teacher.display_name_ar, durations: action.durations });
+        missing.push({
+          teacher_id: teacher.id,
+          display_name_ar: teacher.display_name_ar,
+          durations: action.durations,
+        });
       await this.apply(action, { teacherId: teacher.id, month: first, actorId });
     }
     const payouts = (await this.payouts.forMonth(first)).map(toPayoutView);
@@ -49,7 +56,12 @@ export class PayoutsGenerator {
     };
     const row: PayoutRow | null = action.id
       ? await this.payouts.update(action.id, { ...values, from: 'draft' })
-      : await this.payouts.insert({ ...values, teacher_id: ctx.teacherId, month: ctx.month, created_by: ctx.actorId });
+      : await this.payouts.insert({
+          ...values,
+          teacher_id: ctx.teacherId,
+          month: ctx.month,
+          created_by: ctx.actorId,
+        });
     if (!row) return; // approved meanwhile: frozen
     await this.audit.record({
       actorId: ctx.actorId,

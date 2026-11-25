@@ -60,6 +60,8 @@ export interface ChangedLessonRow extends TrialLesson {
 }
 
 export function trialStudentsOf(rows: readonly ChangedLessonRow[]): string[] {
-  const ids = rows.flatMap((r) => r.lesson_students.filter((s) => isTrialLesson(r, s.chargeable)).map((s) => s.student_id));
+  const ids = rows.flatMap((r) =>
+    r.lesson_students.filter((s) => isTrialLesson(r, s.chargeable)).map((s) => s.student_id),
+  );
   return [...new Set(ids)];
 }

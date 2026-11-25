@@ -59,11 +59,17 @@ export function googleEndpoints(base: string | undefined): GoogleEndpoints {
   };
 }
 
-export const googleRedirectUri = (env: Env): string => env.GOOGLE_REDIRECT_URI ?? GOOGLE_REDIRECT_URI_PRODUCTION;
+export const googleRedirectUri = (env: Env): string =>
+  env.GOOGLE_REDIRECT_URI ?? GOOGLE_REDIRECT_URI_PRODUCTION;
 
 /** null until both the client id and secret are set (the connect button stays disabled). */
 export function googleEnv(env: Env): GoogleEnv | null {
   const { GOOGLE_CLIENT_ID: clientId, GOOGLE_CLIENT_SECRET: clientSecret } = env;
   if (!clientId || !clientSecret) return null;
-  return { clientId, clientSecret, redirectUri: googleRedirectUri(env), endpoints: googleEndpoints(env.GOOGLE_API_BASE) };
+  return {
+    clientId,
+    clientSecret,
+    redirectUri: googleRedirectUri(env),
+    endpoints: googleEndpoints(env.GOOGLE_API_BASE),
+  };
 }

@@ -52,7 +52,13 @@ describe('DashboardService.summary (R-RPT-01)', () => {
     const range = { from: '2026-09-01', to: '2026-10-02' };
     const s = await svc.summary(range, NOW);
     expect(s.funnel).toMatchObject({ new: 1, converted: 1, lost: 0 });
-    expect(s).toMatchObject({ active_students: 9, needs_confirmation: 3, pending_reports: 1, unpaid_subscriptions: 2, open_tasks: 1 });
+    expect(s).toMatchObject({
+      active_students: 9,
+      needs_confirmation: 3,
+      pending_reports: 1,
+      unpaid_subscriptions: 2,
+      open_tasks: 1,
+    });
     expect(s.lessons_by_status).toMatchObject({ completed: 1, scheduled: 0 });
     expect(s.teacher_load).toEqual([{ teacher_id: 't1', display_name_ar: 'أبرار', lessons: 1, students: 1, max_students: 10 }]);
     expect(s.finance).toEqual({ currency: 'SAR', revenue: 145 });

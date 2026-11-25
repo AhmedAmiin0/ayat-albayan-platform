@@ -18,7 +18,9 @@ class KickedJob {
 function route() {
   const job = new KickedJob();
   const reload = { reloadHere: vi.fn(async () => undefined) };
-  const refs = { get: (token: unknown) => (token === ConfigReloadJob ? reload : job) } as unknown as ModuleRef;
+  const refs = {
+    get: (token: unknown) => (token === ConfigReloadJob ? reload : job),
+  } as unknown as ModuleRef;
   return { job, reload, controller: new InternalJobsController(refs) };
 }
 

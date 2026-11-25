@@ -6,8 +6,11 @@ import { paymentsPage, sessionsPage } from './earnings.lists';
 const V = 'v_teacher_countable_earnings';
 const P = 'teacher_payments';
 const page = { page: 1, pageSize: 20 };
-const on = (calls: { table: string; method: string; args: unknown[] }[], table: string, method: string) =>
-  calls.filter((c) => c.table === table && c.method === method).map((c) => c.args);
+const on = (
+  calls: { table: string; method: string; args: unknown[] }[],
+  table: string,
+  method: string,
+) => calls.filter((c) => c.table === table && c.method === method).map((c) => c.args);
 
 describe('teacher earnings lists (R-NFR-08)', () => {
   it('sessions: newest first by default, then id', async () => {

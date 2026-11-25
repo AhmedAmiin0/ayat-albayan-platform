@@ -2,14 +2,25 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { TeacherNames } from './suggest';
 
-export type TeacherRow = TeacherNames & { id: string; calendar: { calendar_id: string; calendar_name: string | null; confirmed_at: string } | null };
+export type TeacherRow = TeacherNames & {
+  id: string;
+  calendar: { calendar_id: string; calendar_name: string | null; confirmed_at: string } | null;
+};
 export type StudentRow = {
   id: string;
   code: string;
   name: string;
-  files: { folder_id: string | null; attendance_sheet_id: string | null; confirmed_at: string } | null;
+  files: {
+    folder_id: string | null;
+    attendance_sheet_id: string | null;
+    confirmed_at: string;
+  } | null;
 };
-export type StudentFiles = { folder_id: string | null; attendance_sheet_id: string | null; summary_row_hint: number | null };
+export type StudentFiles = {
+  folder_id: string | null;
+  attendance_sheet_id: string | null;
+  summary_row_hint: number | null;
+};
 
 const fail = (what: string, error: { message: string }) => new Error(`google ${what} failed: ${error.message}`);
 /** Students the sync may write for: everyone who has (or had) lessons in the platform's sense. */
@@ -43,7 +54,11 @@ export class GoogleMapQueries {
     return data.map((r) => r.calendar_name ?? r.calendar_id);
   }
 
-  async setTeacher(input: { teacherId: string; calendar: { id: string; name: string | null } | null; actorId: string }): Promise<void> {
+  async setTeacher(input: {
+    teacherId: string;
+    calendar: { id: string; name: string | null } | null;
+    actorId: string;
+  }): Promise<void> {
     const { teacherId, calendar, actorId } = input;
     const { error } = calendar
       ? await this.db.from('google_teacher_calendars').upsert({ teacher_id: teacherId, calendar_id: calendar.id, calendar_name: calendar.name, confirmed_by: actorId, confirmed_at: new Date().toISOString() })

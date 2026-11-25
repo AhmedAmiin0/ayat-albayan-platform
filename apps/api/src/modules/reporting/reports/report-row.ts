@@ -80,6 +80,11 @@ export type ReportLessonRow = {
   ends_at: string;
   status: LessonStatus;
   meeting_link: string | null;
-  teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz: string } | null;
+  teacher: {
+    id: string;
+    display_name_ar: string;
+    display_name_en: string | null;
+    tz: string;
+  } | null;
   lesson_students: ReportLessonStudent[];
 };

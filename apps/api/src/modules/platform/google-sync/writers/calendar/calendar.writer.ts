@@ -54,7 +54,8 @@ export class CalendarWriter implements ItemWriter {
     const event = eventBody(src.lesson, copy);
     const hash = contentHash({ calendarId, event });
     const moved = item.google_id !== null && item.google_parent_id !== calendarId;
-    if (item.google_id && !moved && hash === item.content_hash) return synced({ googleId: item.google_id, parentId: calendarId, hash });
+    if (item.google_id && !moved && hash === item.content_hash)
+      return synced({ googleId: item.google_id, parentId: calendarId, hash });
     const method = !item.google_id || moved ? 'POST' : 'PUT';
     if (!ctx.live) return planned({ method, target: `calendar:${calendarId}`, summary: event.summary });
     const { google } = ctx;
@@ -66,7 +67,14 @@ export class CalendarWriter implements ItemWriter {
   }
 
   /** Our own event, after checking our tag; deleted in Google ⇒ gone (§2.4). */
-  private async update(input: EventRef & { google: GoogleClient; item: SyncItem; event: GoogleEventBody; hash: string }): Promise<ItemResult> {
+  private async update(
+    input: EventRef & {
+      google: GoogleClient;
+      item: SyncItem;
+      event: GoogleEventBody;
+      hash: string;
+    },
+  ): Promise<ItemResult> {
     const { google, calendarId, eventId, item, event, hash } = input;
     const ev = await google.getEvent({ calendarId, eventId });
     if (!ev || ev.status === 'cancelled') return { state: 'gone', error: 'deleted_in_google' };
@@ -84,26 +92,52 @@ export class CalendarWriter implements ItemWriter {
    * Before a new event: our old one on the previous calendar goes (a new teacher calendar), then the
    * duplicate guard for an imported lesson — the script's event in that slot ⇒ one alert, write nothing.
    */
-  private async beforeInsert(item: SyncItem, input: { google: GoogleClient; calendarId: string; src: LessonSource }): Promise<ItemResult | null> {
+  private async beforeInsert(
+    item: SyncItem,
+    input: { google: GoogleClient; calendarId: string; src: LessonSource },
+  ): Promise<ItemResult | null> {
     const { google, calendarId, src } = input;
     if (item.google_id && item.google_parent_id) {
-      const old = await deleteOwn(google, { calendarId: item.google_parent_id, eventId: item.google_id, lessonId: item.subject_id });
-      if (old === 'foreign') return { state: 'failed', error: 'not_platform_event', attempts: item.attempts };
+      const old = await deleteOwn(google, {
+        calendarId: item.google_parent_id,
+        eventId: item.google_id,
+        lessonId: item.subject_id,
+      });
+      if (old === 'foreign')
+        return { state: 'failed', error: 'not_platform_event', attempts: item.attempts };
     }
-    if (src.origin || !(await scriptEventAt(google, { calendarId, startsAt: src.lesson.startsAt }))) return null;
-    await this.alerts.scriptStillRunning({ teacherId: src.teacherId, name: src.lesson.teacherName, since: src.ownerChangedAt });
+    if (src.origin || !(await scriptEventAt(google, { calendarId, startsAt: src.lesson.startsAt })))
+      return null;
+    await this.alerts.scriptStillRunning({
+      teacherId: src.teacherId,
+      name: src.lesson.teacherName,
+      since: src.ownerChangedAt,
+    });
     return { state: 'skipped', reason: 'script_event_present', googleId: null, parentId: null };
   }
 
   /** Cancelled / moved / not calendar-managed: remove our own event if we made one, else nothing. */
-  private async remove(item: SyncItem, input: { ctx: WriteCtx; imported: boolean }): Promise<ItemResult> {
+  private async remove(
+    item: SyncItem,
+    input: { ctx: WriteCtx; imported: boolean },
+  ): Promise<ItemResult> {
     const { ctx } = input;
     if (!item.google_id || !item.google_parent_id) {
       return input.imported ? { state: 'skipped', reason: 'not_platform_origin' } : synced({ googleId: null, parentId: null, hash: null });
     }
-    if (!ctx.live) return planned({ method: 'DELETE', target: `calendar:${item.google_parent_id}`, summary: item.google_id });
-    const out = await deleteOwn(ctx.google, { calendarId: item.google_parent_id, eventId: item.google_id, lessonId: item.subject_id });
-    if (out === 'foreign') return { state: 'failed', error: 'not_platform_event', attempts: item.attempts };
+    if (!ctx.live)
+      return planned({
+        method: 'DELETE',
+        target: `calendar:${item.google_parent_id}`,
+        summary: item.google_id,
+      });
+    const out = await deleteOwn(ctx.google, {
+      calendarId: item.google_parent_id,
+      eventId: item.google_id,
+      lessonId: item.subject_id,
+    });
+    if (out === 'foreign')
+      return { state: 'failed', error: 'not_platform_event', attempts: item.attempts };
     return synced({ googleId: null, parentId: null, hash: null });
   }
 }

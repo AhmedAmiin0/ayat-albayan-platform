@@ -51,7 +51,9 @@ describe('payments v2 routes', () => {
   it('a payment from the booking invoice links it once; another student’s invoice is 400', async () => {
     m.invoices.get.mockResolvedValue({ ...inv, id: INVOICE, students: [{ id: STUDENT_ID, name: 'سهيلة', code: 'AB-0183' }] });
     await call({ method: 'POST', url: '/payments', body: { ...body, invoiceId: INVOICE } });
-    expect(m.payments.insert).toHaveBeenCalledWith(expect.objectContaining({ invoice_id: INVOICE, receipt_path: null }));
+    expect(m.payments.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ invoice_id: INVOICE, receipt_path: null }),
+    );
     m.payments.byInvoice.mockResolvedValue({ id: PAYMENT_ID });
     expect((await call({ method: 'POST', url: '/payments', body: { ...body, invoiceId: INVOICE } })).json().code).toBe('invoice_used');
     m.invoices.get.mockResolvedValue({ ...inv, id: INVOICE, students: [] });

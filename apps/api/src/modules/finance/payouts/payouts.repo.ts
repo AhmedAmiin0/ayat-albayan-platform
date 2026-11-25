@@ -37,7 +37,12 @@ export class PayoutsRepo {
       .order('starts_at')
       .order('lesson_id');
     if (error) throw dbError(error);
-    return data.map((r) => ({ id: r.lesson_id, minutes: r.minutes, amount: r.amount, status: r.status }));
+    return data.map((r) => ({
+      id: r.lesson_id,
+      minutes: r.minutes,
+      amount: r.amount,
+      status: r.status,
+    }));
   }
 
   /**

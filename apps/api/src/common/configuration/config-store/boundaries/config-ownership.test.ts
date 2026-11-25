@@ -11,7 +11,8 @@ const user = (role: AuthUser['role'], permissions: Permission[]): AuthUser => ({
 
 describe('config ownership (decided in code)', () => {
   it('every OWNED_SETTING_KEYS key is owned, with its owner', () => {
-    for (const [key, owner] of Object.entries(OWNED_SETTING_KEYS)) expect([key, ownerOf(key)]).toEqual([key, owner]);
+    for (const [key, owner] of Object.entries(OWNED_SETTING_KEYS))
+      expect([key, ownerOf(key)]).toEqual([key, owner]);
   });
 
   it('a seed entry with ownedBy or a `patch: false` entry is not writable on «القيم»', () => {
@@ -42,9 +43,15 @@ describe('config ownership (decided in code)', () => {
 
 describe('config entries mapper', () => {
   it('bounds are the code entry min/max/options/length/items/nullable fields', () => {
-    expect(boundsOf(SETTINGS_REGISTRY.late_cancel_hours)).toEqual({ min: expect.any(Number), max: expect.any(Number), nullable: true });
+    expect(boundsOf(SETTINGS_REGISTRY.late_cancel_hours)).toEqual({
+      min: expect.any(Number),
+      max: expect.any(Number),
+      nullable: true,
+    });
     expect(boundsOf(SETTINGS_REGISTRY.comms_source)).toEqual({ options: ['legacy', 'module'] });
-    expect(boundsOf(SETTINGS_REGISTRY.follow_up_hours)).toMatchObject({ maxItems: expect.any(Number) });
+    expect(boundsOf(SETTINGS_REGISTRY.follow_up_hours)).toMatchObject({
+      maxItems: expect.any(Number),
+    });
   });
 
   it('changedBy: nothing for a missing or never-written row; an admin null save keeps its writer', () => {

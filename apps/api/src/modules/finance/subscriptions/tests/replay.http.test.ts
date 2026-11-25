@@ -23,8 +23,12 @@ describe('POST /subscriptions retries (rule 8) and the lead (R-LEAD-01)', () => 
 
   it('stores the key and converts the family’s lead once the package exists', async () => {
     m.subs.insert.mockResolvedValue(subRow());
-    expect((await call({ method: 'POST', url: '/subscriptions', body: create })).statusCode).toBe(201);
-    expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ client_request_id: REQUEST }));
+    expect((await call({ method: 'POST', url: '/subscriptions', body: create })).statusCode).toBe(
+      201,
+    );
+    expect(m.subs.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ client_request_id: REQUEST }),
+    );
     expect(m.leads.afterPackage).toHaveBeenCalledWith(STUDENT_ID, ADMIN.id);
   });
 

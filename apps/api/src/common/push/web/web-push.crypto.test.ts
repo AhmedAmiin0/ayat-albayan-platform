@@ -17,15 +17,24 @@ const b64 = (s: string) => Buffer.from(s, 'base64url');
 
 describe('web push encryption (RFC 8291, aes128gcm)', () => {
   it('is byte-identical to the RFC 8291 §5 example', () => {
-    const body = encryptPayload(Buffer.from(RFC.plaintext), { p256dh: RFC.uaPublic, auth: RFC.auth }, {
-      serverPrivateKey: b64(RFC.asPrivate),
-      salt: b64(RFC.salt),
-    });
+    const body = encryptPayload(
+      Buffer.from(RFC.plaintext),
+      { p256dh: RFC.uaPublic, auth: RFC.auth },
+      {
+        serverPrivateKey: b64(RFC.asPrivate),
+        salt: b64(RFC.salt),
+      },
+    );
     expect(body.toString('base64url')).toBe(RFC.body);
   });
 
   it('the RFC body decrypts with the user agent key', () => {
-    expect(decryptPayload(b64(RFC.body), { privateKey: b64(RFC.uaPrivate), auth: b64(RFC.auth) }).toString()).toBe(RFC.plaintext);
+    expect(
+      decryptPayload(b64(RFC.body), {
+        privateKey: b64(RFC.uaPrivate),
+        auth: b64(RFC.auth),
+      }).toString(),
+    ).toBe(RFC.plaintext);
   });
 
   it('round trip with a fresh key pair and salt per message', () => {

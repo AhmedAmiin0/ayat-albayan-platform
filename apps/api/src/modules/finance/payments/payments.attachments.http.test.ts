@@ -78,7 +78,9 @@ describe('POST /payments «المرفقات» (bank transfers only, docs/11 §7)
     const res = await call(post({ attachments: [file(1)], clientRequestId: REQ }));
     expect([res.statusCode, res.json().id]).toEqual([201, PAYMENT_ID]);
     expect(m.payments.insert).not.toHaveBeenCalled();
-    expect(m.attachments.save).toHaveBeenCalledWith([expect.objectContaining({ payment_id: PAYMENT_ID, path: file(1) })]);
+    expect(m.attachments.save).toHaveBeenCalledWith([
+      expect.objectContaining({ payment_id: PAYMENT_ID, path: file(1) }),
+    ]);
   });
 
   it('the race loser saves the files on the winner (idempotent)', async () => {
@@ -86,6 +88,8 @@ describe('POST /payments «المرفقات» (bank transfers only, docs/11 §7)
     m.payments.byRequest.mockResolvedValueOnce(null).mockResolvedValueOnce(paymentRow());
     const res = await call(post({ attachments: [file(1)], clientRequestId: '7d1c6a52-3b7e-4f0e-9a51-2f7c3e9b8a11' }));
     expect(res.statusCode).toBe(201);
-    expect(m.attachments.save).toHaveBeenCalledWith([expect.objectContaining({ payment_id: PAYMENT_ID, path: file(1) })]);
+    expect(m.attachments.save).toHaveBeenCalledWith([
+      expect.objectContaining({ payment_id: PAYMENT_ID, path: file(1) }),
+    ]);
   });
 });

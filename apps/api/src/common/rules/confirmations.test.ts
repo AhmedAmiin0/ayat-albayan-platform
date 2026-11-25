@@ -15,7 +15,10 @@ describe('gateConfirmations (W1–W3)', () => {
   });
 
   it('legacy, no rows (default on): the messages unchanged', async () => {
-    expect(await gateConfirmations(fakePolicy(), [confirmation, other])).toEqual([confirmation, other]);
+    expect(await gateConfirmations(fakePolicy(), [confirmation, other])).toEqual([
+      confirmation,
+      other,
+    ]);
   });
 
   it('the rule off: the confirmations dropped, other rows kept', async () => {

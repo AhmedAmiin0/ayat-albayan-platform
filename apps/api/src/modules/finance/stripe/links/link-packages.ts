@@ -37,8 +37,16 @@ export class LinkPackages {
   /** Before a new link: the packages of the student's earlier links that can no longer be paid. */
   async releaseStale(studentId: string, actorId: string, now = new Date()): Promise<void> {
     for (const link of await this.links.forStudent(studentId)) {
-      const status = effectiveLinkStatus({ status: statusOf(link), expires_at: link.expires_at }, now);
-      if ((status === 'expired' || status === 'cancelled') && link.subscription_id && !link.paid_payment_id && !link.processing)
+      const status = effectiveLinkStatus(
+        { status: statusOf(link), expires_at: link.expires_at },
+        now,
+      );
+      if (
+        (status === 'expired' || status === 'cancelled') &&
+        link.subscription_id &&
+        !link.paid_payment_id &&
+        !link.processing
+      )
         await this.release(link.subscription_id, actorId);
     }
   }

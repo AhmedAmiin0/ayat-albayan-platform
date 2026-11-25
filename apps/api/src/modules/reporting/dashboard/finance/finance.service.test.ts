@@ -24,7 +24,10 @@ function service(over: { countLate?: boolean; currency?: string } = {}) {
     conversion: vi.fn().mockResolvedValue({ currency: 'SAR', rates: { SAR: 1, EGP: 13 }, missing: [], date: '2026-10-01T00:00:00Z' }),
   };
   const { countLate = false, currency = SETTING_DEFAULTS.reporting_currency } = over;
-  const settings = readerOf(DashboardSettings, { payout_count_late: countLate, reporting_currency: currency });
+  const settings = readerOf(DashboardSettings, {
+    payout_count_late: countLate,
+    reporting_currency: currency,
+  });
   const svc = new FinanceService(
     money as unknown as FinanceQueries,
     fx as unknown as FxConverter,

@@ -58,7 +58,10 @@ export function toSubscriptionView(sub: SubRow, ctx: SubContext): SubscriptionVi
 }
 
 /** GET /students/:id/balance: packages oldest first (FIFO), the newest non-cancelled one is `current`. */
-export function toStudentBalance(studentId: string, packages: SubscriptionView[]): StudentBalanceView {
+export function toStudentBalance(
+  studentId: string,
+  packages: SubscriptionView[],
+): StudentBalanceView {
   const live = livePackages(packages);
   return {
     student_id: studentId,

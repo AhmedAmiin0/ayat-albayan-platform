@@ -3,11 +3,28 @@ import { lessonRow, S2 } from '@/modules/people/portal/portal.fakes';
 import { externalLink, toPortalLesson, wayIn } from './portal-lessons.mapper';
 
 const win = { opensBeforeMin: 10, closesAfterMin: 15 };
-const ctx = (now: string, over: Partial<{ academyAuto: boolean; override: string | null; classroom: boolean }> = {}) => ({
-  academyAuto: false, override: null, classroom: true, win, now: new Date(now), ...over,
+const ctx = (
+  now: string,
+  over: Partial<{ academyAuto: boolean; override: string | null; classroom: boolean }> = {},
+) => ({
+  academyAuto: false,
+  override: null,
+  classroom: true,
+  win,
+  now: new Date(now),
+  ...over,
 });
-const way = (over: { academyAuto?: boolean; classroom?: boolean } = {}) => ({ academyAuto: false, override: null, classroom: true, ...over });
-const teacher = (meeting_mode: string | null) => ({ display_name_ar: 'أبرار', display_name_en: null, meeting_mode });
+const way = (over: { academyAuto?: boolean; classroom?: boolean } = {}) => ({
+  academyAuto: false,
+  override: null,
+  classroom: true,
+  ...over,
+});
+const teacher = (meeting_mode: string | null) => ({
+  display_name_ar: 'أبرار',
+  display_name_en: null,
+  meeting_mode,
+});
 
 describe('portal lessons mapper', () => {
   it('the way in is the reminders’ rule: the teacher mode, else the academy default; our room for a lesson without a link', () => {

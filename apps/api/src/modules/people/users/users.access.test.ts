@@ -9,8 +9,17 @@ import type { Actor } from './users.rules';
 // teachers, only a system admin touches a system admin, and an admin-base role needs an admin actor.
 
 const codeOf = async (p: Promise<unknown>) => errorCode(await p.catch((e: unknown) => e));
-const without = (...gone: Permission[]): Permission[] => GRANTABLE_PERMISSIONS.filter((p) => !gone.includes(p));
-const manager: RoleRecord = { id: 'c-mgr', key: 'manager', name_ar: 'مدير مساعد', name_en: null, base_role: 'admin', is_system: false, permissions: [...GRANTABLE_PERMISSIONS] };
+const without = (...gone: Permission[]): Permission[] =>
+  GRANTABLE_PERMISSIONS.filter((p) => !gone.includes(p));
+const manager: RoleRecord = {
+  id: 'c-mgr',
+  key: 'manager',
+  name_ar: 'مدير مساعد',
+  name_en: null,
+  base_role: 'admin',
+  is_system: false,
+  permissions: [...GRANTABLE_PERMISSIONS],
+};
 const people = () => [
   row('admin1', 'admin'), row('mgr1', 'admin', { role_id: 'c-mgr' }), row('sales1', 'sales'), row('sales2', 'sales'),
   row('t1', 'teacher'), row('s1', 'student'), row('g1', 'guardian'),

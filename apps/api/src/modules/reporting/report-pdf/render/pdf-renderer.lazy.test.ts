@@ -14,9 +14,18 @@ vi.mock('playwright-core', () => {
 });
 
 function fakeBrowser() {
-  const page = { setContent: vi.fn(), evaluate: vi.fn(), pdf: vi.fn(async () => new Uint8Array([37, 80, 68, 70])) };
+  const page = {
+    setContent: vi.fn(),
+    evaluate: vi.fn(),
+    pdf: vi.fn(async () => new Uint8Array([37, 80, 68, 70])),
+  };
   const context = { newPage: vi.fn(async () => page), close: vi.fn(async () => undefined) };
-  return { newContext: vi.fn(async () => context), on: vi.fn(), close: vi.fn(async () => undefined), context };
+  return {
+    newContext: vi.fn(async () => context),
+    on: vi.fn(),
+    close: vi.fn(async () => undefined),
+    context,
+  };
 }
 
 describe('PdfRenderer loads Chromium on the first report', () => {

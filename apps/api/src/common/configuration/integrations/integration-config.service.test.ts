@@ -5,7 +5,8 @@ import { loadEnv } from '@/config/env/env';
 import { asQueries, fakeQueries, type FakeQueries } from './integration-config.fakes';
 import { IntegrationConfigService } from './integration-config.service';
 
-const service = (q: FakeQueries, everyMs: number | null = 30_000) => new IntegrationConfigService(asQueries(q), everyMs);
+const service = (q: FakeQueries, everyMs: number | null = 30_000) =>
+  new IntegrationConfigService(asQueries(q), everyMs);
 let warn: ReturnType<typeof vi.spyOn>;
 
 beforeEach(() => {

@@ -31,7 +31,15 @@ export class AccountService {
     const email = (await this.auth.emailOf(user.id)) ?? user.email;
     const avatar_url = row.avatar_path ? await this.files.url(row.avatar_path) : null;
     const avatar_seed = row.teacher_id ?? row.id;
-    return { id: row.id, full_name: row.full_name, email, phone_e164: row.phone_e164, avatar_url, avatar_seed, role: row.role };
+    return {
+      id: row.id,
+      full_name: row.full_name,
+      email,
+      phone_e164: row.phone_e164,
+      avatar_url,
+      avatar_seed,
+      role: row.role,
+    };
   }
 
   /** R-ACC-02: name and/or phone; 409 phone_taken. */
@@ -69,7 +77,8 @@ export class AccountService {
   private async checkPassword(user: AuthUser, input: { password: string }): Promise<void> {
     if (input.password === '') throw badRequest('password_required');
     const email = (await this.auth.emailOf(user.id)) ?? user.email;
-    const ok = email !== null && (await this.auth.passwordMatches({ email, password: input.password }));
+    const ok =
+      email !== null && (await this.auth.passwordMatches({ email, password: input.password }));
     if (!ok) throw badRequest('wrong_password');
   }
 

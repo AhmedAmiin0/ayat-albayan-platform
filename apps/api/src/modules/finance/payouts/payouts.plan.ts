@@ -43,13 +43,20 @@ export function linesOf(lessons: readonly PayoutLesson[]): PayoutLine[] {
     line.amount = Math.round(line.amount * 100 + l.amount * 100) / 100;
     lines.set(key, line);
   }
-  return [...lines.values()].sort((a, b) => a.duration - b.duration || (a.rate ?? 0) - (b.rate ?? 0));
+  return [...lines.values()].sort(
+    (a, b) => a.duration - b.duration || (a.rate ?? 0) - (b.rate ?? 0),
+  );
 }
 
 type ApproveBlock = 'month_not_over' | 'reports_pending' | 'payout_stale';
 
 /** Approval freezes the month (E3): wait for month end and all reports; recalc after edits. */
-export function approveBlock(input: { monthEnd: string; now: Date; pendingReports: number; editedSince: number }): ApproveBlock | null {
+export function approveBlock(input: {
+  monthEnd: string;
+  now: Date;
+  pendingReports: number;
+  editedSince: number;
+}): ApproveBlock | null {
   if (input.now.getTime() < Date.parse(input.monthEnd)) return 'month_not_over';
   if (input.pendingReports > 0) return 'reports_pending';
   return input.editedSince > 0 ? 'payout_stale' : null;
@@ -77,11 +84,18 @@ export function planPayout(input: PlanInput): PayoutAction {
   const { existing, lessons } = input;
   if (existing && existing.status !== 'draft') return { kind: 'frozen' };
   const draftId = existing?.id ?? null;
-  const unrated = [...new Set(lessons.filter((l) => l.amount === null).map((l) => l.minutes))].sort((a, b) => a - b);
+  const unrated = [...new Set(lessons.filter((l) => l.amount === null).map((l) => l.minutes))].sort(
+    (a, b) => a - b,
+  );
   if (unrated.length > 0) return { kind: 'missing', durations: unrated, deleteId: draftId };
   if (lessons.length === 0) return { kind: 'clear', deleteId: draftId };
   const lines = linesOf(lessons);
   const amount = Math.round(lines.reduce((n, l) => n + l.amount * 100, 0)) / 100;
-  const breakdown = { lines, lesson_ids: lessons.map((l) => l.id), statuses: input.statuses, skipped_lesson_ids: [] };
+  const breakdown = {
+    lines,
+    lesson_ids: lessons.map((l) => l.id),
+    statuses: input.statuses,
+    skipped_lesson_ids: [],
+  };
   return { kind: 'draft', id: draftId, lessonsCount: lessons.length, amount, breakdown };
 }

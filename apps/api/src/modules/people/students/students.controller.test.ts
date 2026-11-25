@@ -22,10 +22,14 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
   let app: NestFastifyApplication;
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [DbModule, AuditModule, AuthModule, StudentsModule] })
+    const mod = await Test.createTestingModule({
+      imports: [DbModule, AuditModule, AuthModule, StudentsModule],
+    })
       .overrideProvider(DB)
       .useValue(fake.db)
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -59,7 +63,16 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
     results['v_student_list'] = n.map((count) => ({ count }));
     const res = await send({ method: 'GET', url: '/students/status-counts?teacher=none' });
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual({ new: 1, trial: 2, pending_subscription: 4, active: 3, pending_renewal: 5, expired: 6, paused: 0, churned: 0 });
+    expect(res.json()).toEqual({
+      new: 1,
+      trial: 2,
+      pending_subscription: 4,
+      active: 3,
+      pending_renewal: 5,
+      expired: 6,
+      paused: 0,
+      churned: 0,
+    });
   });
 
   it('rejects a handle instead of a phone with 400 (R-STU-02)', async () => {

@@ -12,7 +12,9 @@ export const commissionsQuery = z.object({
 });
 
 /** POST /assistant-pay/receipt-upload-url: the receipt of a statement's payment (the same files as teacher receipts). */
-export const assistantReceiptUploadSchema = teacherReceiptUploadSchema.extend({ assistantId: z.uuid() });
+export const assistantReceiptUploadSchema = teacherReceiptUploadSchema.extend({
+  assistantId: z.uuid(),
+});
 
 export type StatementsQuery = z.output<typeof assistantStatementsQuery>;
 export type StatementPay = z.output<typeof assistantStatementPaySchema>;

@@ -3,7 +3,11 @@ import { normalizeArabic, type ListSort } from '@ab/core';
 import { ilikeContains, type SortSpec } from '@/common/db/list-sort';
 
 /** Column text filters of GET /students (R-NFR-08), beside the select filters of R-STU-01. */
-export type StudentColumnFilters = { code?: string | undefined; name?: string | undefined; guardian?: string | undefined };
+export type StudentColumnFilters = {
+  code?: string | undefined;
+  name?: string | undefined;
+  guardian?: string | undefined;
+};
 export type StudentListSort = ListSort<StudentSortKey>;
 
 /**
@@ -29,7 +33,10 @@ interface IlikeQuery<Q> {
 }
 
 /** The name match is Arabic-normalised; guardians is an !inner embed, so it drops rows. */
-export function applyStudentColumnFilters<Q extends IlikeQuery<Q>>(query: Q, f: StudentColumnFilters): Q {
+export function applyStudentColumnFilters<Q extends IlikeQuery<Q>>(
+  query: Q,
+  f: StudentColumnFilters,
+): Q {
   let q = query;
   if (f.code) q = q.ilike('code', ilikeContains(f.code));
   if (f.name) q = q.ilike('name_normalized', ilikeContains(normalizeArabic(f.name)));

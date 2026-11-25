@@ -24,7 +24,10 @@ describe('POST /portal/students/:id/lessons/:lessonId/join', () => {
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({ url: 'wss://lk.example.org', token: 'room-token', role: 'guest' });
     expect(t.lessons.one).toHaveBeenCalledWith({ studentId: S1, lessonId: L1 });
-    expect(t.classroom.lessonLinkId).toHaveBeenCalledWith({ lesson: expect.objectContaining({ id: L1 }), studentId: S1 });
+    expect(t.classroom.lessonLinkId).toHaveBeenCalledWith({
+      lesson: expect.objectContaining({ id: L1 }),
+      studentId: S1,
+    });
     expect(t.admission.admit).toHaveBeenCalledWith(
       expect.objectContaining({ lessonId: L1, role: 'guest', name: 'سلمى', principal: { joinLinkId: 'jl-1' }, ttlSeconds: 3000 }),
       expect.any(Date),

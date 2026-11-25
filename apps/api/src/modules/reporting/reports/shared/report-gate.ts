@@ -58,7 +58,10 @@ export class ReportGate {
     const row = await this.load(id, user);
     const ctx = await this.context(user);
     const window = { submittedAt: instantOf(row.submitted_at), sentAt: instantOf(row.sent_at) };
-    if (ctx.role === null || !canEditReport({ role: ctx.role, ...window, now: ctx.now, minutes: ctx.minutes })) {
+    if (
+      ctx.role === null ||
+      !canEditReport({ role: ctx.role, ...window, now: ctx.now, minutes: ctx.minutes })
+    ) {
       throw conflict('edit_window_closed');
     }
     return { row, ctx };

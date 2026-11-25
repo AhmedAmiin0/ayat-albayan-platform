@@ -11,14 +11,19 @@ export function recordingByLesson(
 }
 
 /** Whitelist: when, by whom (display names), and whether a recording may be opened. */
-export function toPortalReport(row: PortalReportRow, recordings: ReadonlyMap<string, string>): PortalReport {
+export function toPortalReport(
+  row: PortalReportRow,
+  recordings: ReadonlyMap<string, string>,
+): PortalReport {
   const teacher = row.lesson?.teacher;
   return {
     id: row.id,
     lesson_id: row.lesson_id,
     lesson_starts_at: row.lesson?.starts_at ?? null,
     sent_at: row.sent_at ?? '',
-    teacher: teacher ? { display_name_ar: teacher.display_name_ar, display_name_en: teacher.display_name_en } : null,
+    teacher: teacher
+      ? { display_name_ar: teacher.display_name_ar, display_name_en: teacher.display_name_en }
+      : null,
     recording_id: recordings.get(row.lesson_id) ?? null,
   };
 }

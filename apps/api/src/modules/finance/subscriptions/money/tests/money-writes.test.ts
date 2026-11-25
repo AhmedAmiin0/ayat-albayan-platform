@@ -12,7 +12,12 @@ function setup() {
   const follow = { after: vi.fn(async () => void order.push('follow')) };
   const packages = { paid: vi.fn(async () => void order.push('paid')) };
   const asAlerts = alerts as unknown as SubscriptionAlertsService;
-  const w = new MoneyWrites(audit as unknown as AuditService, asAlerts, follow as unknown as MoneyFollowUps, packages as unknown as PackageEvents);
+  const w = new MoneyWrites(
+    audit as unknown as AuditService,
+    asAlerts,
+    follow as unknown as MoneyFollowUps,
+    packages as unknown as PackageEvents,
+  );
   return { order, audit, alerts, follow, w, packages };
 }
 const CREATE = { actorId: 'a1', entity: 'payments', entityId: 'p1', action: 'create', after: { kind: 'payment', amount: 290 } };

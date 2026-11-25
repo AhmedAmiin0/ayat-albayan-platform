@@ -8,7 +8,10 @@ import type { SourceMoney } from './finance/finance';
 // Pure shaping of the dashboard counts: each number is a count of statuses (R-RPT-01, issue F3).
 
 /** How many of `values` per key, every key present (0 when none). */
-export function countBy<K extends string>(keys: readonly K[], values: Iterable<K>): Record<K, number> {
+export function countBy<K extends string>(
+  keys: readonly K[],
+  values: Iterable<K>,
+): Record<K, number> {
   const out = Object.fromEntries(keys.map((k) => [k, 0])) as Record<K, number>;
   for (const v of values) if (v in out) out[v] += 1;
   return out;
@@ -28,7 +31,9 @@ export function teacherLoad({ teachers, lessons, students }: LoadInput): Dashboa
     for (const id of ids) if (id) m.set(id, (m.get(id) ?? 0) + 1);
     return m;
   };
-  const lessonsBy = tally(lessons.filter((l) => occupying.includes(l.status)).map((l) => l.teacher_id));
+  const lessonsBy = tally(
+    lessons.filter((l) => occupying.includes(l.status)).map((l) => l.teacher_id),
+  );
   const studentsBy = tally(students.map((s) => s.teacher_id));
   return teachers.map((t) => ({
     teacher_id: t.id,

@@ -6,9 +6,20 @@ import { MY_COMMISSION_SELECT, type MyCommissionSource } from './my.commissions.
 import { MY_PAYMENT_SELECT, MY_STUDENT_COLUMNS, type MyPaymentSource, type MyStudentSource } from './my.mapper';
 
 export type StatementState = { statement: { status: 'draft' | 'approved' | 'paid' } | null };
-export type MyCommission = StatementState & { id: string; amount: number; currency: string; earned_at: string };
+export type MyCommission = StatementState & {
+  id: string;
+  amount: number;
+  currency: string;
+  earned_at: string;
+};
 /** kind 'reversal' = a commission voided after its statement was approved or paid (migration 272). */
-export type MyAdjustment = StatementState & { id: string; kind: string; amount: number; currency: string; effective_month: string };
+export type MyAdjustment = StatementState & {
+  id: string;
+  kind: string;
+  amount: number;
+  currency: string;
+  effective_month: string;
+};
 
 /** Cap on the assistant's own payment list (newest first). */
 export const MY_PAYMENTS_LIMIT = 500;
@@ -38,7 +49,9 @@ export class MyRepo {
   async guardianPhones(assistantId: string): Promise<Map<string, string>> {
     const { data, error } = await this.db.from('students').select('id, guardian:guardians(phone_e164)').eq('brought_by', assistantId);
     if (error) throw dbError(error);
-    return new Map(data.flatMap((s) => (s.guardian?.phone_e164 ? [[s.id, s.guardian.phone_e164] as const] : [])));
+    return new Map(
+      data.flatMap((s) => (s.guardian?.phone_e164 ? [[s.id, s.guardian.phone_e164] as const] : [])),
+    );
   }
 
   /** ONLY the payments this assistant recorded (recorded_by = self); the subscription is reached for the student's name only. */
@@ -75,7 +88,10 @@ export class MyRepo {
   }
 
   /** One page of my commissions, newest first; index (assistant_id, earned_at). */
-  async commissionPage(assistantId: string, q: PageQuery): Promise<{ rows: MyCommissionSource[]; total: number }> {
+  async commissionPage(
+    assistantId: string,
+    q: PageQuery,
+  ): Promise<{ rows: MyCommissionSource[]; total: number }> {
     const from = (q.page - 1) * q.pageSize;
     const { data, count, error } = await this.db
       .from('assistant_commissions')

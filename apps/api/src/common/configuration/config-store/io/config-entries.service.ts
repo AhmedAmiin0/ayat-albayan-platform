@@ -63,17 +63,27 @@ export class ConfigEntriesService {
     const snap = await this.store.fresh();
     const row = snap.rows.find((r) => r.key === call.key);
     const prev = decodeValue(call.key, def, row).value;
-    if (needsTypedConfirm(seed.confirm, value, prev) && !typedConfirmMatches(value, call.body.confirmText)) {
+    if (
+      needsTypedConfirm(seed.confirm, value, prev) &&
+      !typedConfirmMatches(value, call.body.confirmText)
+    ) {
       throw confirmationRequired();
     }
-    if ((row?.version ?? 0) !== call.body.expectedVersion) throw await this.conflict(call.key, snap);
+    if ((row?.version ?? 0) !== call.body.expectedVersion)
+      throw await this.conflict(call.key, snap);
     try {
-      await this.store.set([{ key: call.key, value, expectedVersion: call.body.expectedVersion }], call.user.id);
+      await this.store.set(
+        [{ key: call.key, value, expectedVersion: call.body.expectedVersion }],
+        call.user.id,
+      );
     } catch (e) {
-      if (e instanceof ConfigConflictError) throw await this.conflict(call.key, await this.store.fresh());
+      if (e instanceof ConfigConflictError)
+        throw await this.conflict(call.key, await this.store.fresh());
       throw e;
     }
-    await this.audited(() => this.audit.value({ actorId: call.user.id, key: call.key, before: prev, after: value }));
+    await this.audited(() =>
+      this.audit.value({ actorId: call.user.id, key: call.key, before: prev, after: value }),
+    );
     return { entry: await this.entry(call.key) };
   }
 
@@ -81,10 +91,13 @@ export class ConfigEntriesService {
   async describe(call: EntryCall<ConfigDescriptionInput>): Promise<ConfigEntryResult> {
     known(call.key);
     if (!mayDescribe(call.user, call.key)) throw ownerPermission(ownerOf(call.key));
-    const before = (await this.store.fresh()).rows.find((r) => r.key === call.key)?.description ?? null;
+    const before =
+      (await this.store.fresh()).rows.find((r) => r.key === call.key)?.description ?? null;
     await this.store.describe({ key: call.key, text: call.body.text, actorId: call.user.id });
     const after = call.body.text;
-    await this.audited(() => this.audit.description({ actorId: call.user.id, key: call.key, before, after }));
+    await this.audited(() =>
+      this.audit.description({ actorId: call.user.id, key: call.key, before, after }),
+    );
     return { entry: await this.entry(call.key) };
   }
 

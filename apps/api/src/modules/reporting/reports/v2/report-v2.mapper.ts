@@ -44,9 +44,14 @@ export function v2DraftColumns(form: Partial<ReportV2Draft>): FormColumns {
 }
 
 /** Absent or excused stores only the note; attended also fills v1 columns for history. */
-export function v2SubmitColumns(form: ReportV2Submit): { columns: FormColumns; content: ReportContent } {
+export function v2SubmitColumns(form: ReportV2Submit): {
+  columns: FormColumns;
+  content: ReportContent;
+} {
   const present = form.attendance ? attended(form.attendance) : false;
-  const content = form.attendance ? keptContent(form.attendance, form.program, form.content) : form.content;
+  const content = form.attendance
+    ? keptContent(form.attendance, form.program, form.content)
+    : form.content;
   const legacy = legacyGrades(content);
   const quran = form.program === 'quran';
   const texts = legacyTexts(content, (topic) => ar.reports.v2.tajweed[topic]);
@@ -59,9 +64,19 @@ export function v2SubmitColumns(form: ReportV2Submit): { columns: FormColumns; c
           ...texts,
           overall: form.overall,
           // Left untouched on the form: the suggestion it showed, in Arabic (the family's report).
-          homework: form.homework === undefined && quran ? suggestHomework(content, ar.reports.v2.suggest) : form.homework,
-          nextPlan: form.nextPlan === undefined && quran ? suggestNextPlan(content, ar.reports.v2.suggest) : form.nextPlan,
-          grades: { recitation: legacy.grade_recitation, memorization: legacy.grade_memorization, revision: legacy.grade_revision },
+          homework:
+            form.homework === undefined && quran
+              ? suggestHomework(content, ar.reports.v2.suggest)
+              : form.homework,
+          nextPlan:
+            form.nextPlan === undefined && quran
+              ? suggestNextPlan(content, ar.reports.v2.suggest)
+              : form.nextPlan,
+          grades: {
+            recitation: legacy.grade_recitation,
+            memorization: legacy.grade_memorization,
+            revision: legacy.grade_revision,
+          },
         }
       : {}),
   });

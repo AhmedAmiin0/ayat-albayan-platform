@@ -35,7 +35,9 @@ describe('studentRows (C1)', () => {
   });
 
   it('a student without guardian, teacher or code leaves those cells empty', () => {
-    const [, row] = studentRows([{ ...STUDENT, code: null, guardian: null, teacher: null, age: null }]);
+    const [, row] = studentRows([
+      { ...STUDENT, code: null, guardian: null, teacher: null, age: null },
+    ]);
     expect(row?.slice(0, 1)).toEqual(['']);
     expect(row?.slice(4, 10)).toEqual([null, '', '', '', '', '']);
   });

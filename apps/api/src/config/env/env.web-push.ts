@@ -13,6 +13,10 @@ export const WEB_PUSH_SHAPE = {
 };
 
 export function webPushEnv(env: Env): VapidKeys | null {
-  const { WEB_PUSH_VAPID_PUBLIC_KEY: publicKey, WEB_PUSH_VAPID_PRIVATE_KEY: privateKey, WEB_PUSH_SUBJECT: subject } = env;
+  const {
+    WEB_PUSH_VAPID_PUBLIC_KEY: publicKey,
+    WEB_PUSH_VAPID_PRIVATE_KEY: privateKey,
+    WEB_PUSH_SUBJECT: subject,
+  } = env;
   return publicKey && privateKey && subject ? { publicKey, privateKey, subject } : null;
 }

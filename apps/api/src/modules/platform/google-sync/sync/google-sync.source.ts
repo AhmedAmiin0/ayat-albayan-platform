@@ -11,7 +11,13 @@ import { GoogleSyncAcademySettings } from './google-sync.settings';
  * A lesson as the calendar writer needs it. origin: platform-origin (§2.2); managed: its events are
  * the platform's to write — platform-origin, or its teacher's calendar_owner is 'platform'.
  */
-export type LessonSource = { origin: boolean; managed: boolean; teacherId: string; ownerChangedAt: string | null; lesson: EventLesson };
+export type LessonSource = {
+  origin: boolean;
+  managed: boolean;
+  teacherId: string;
+  ownerChangedAt: string | null;
+  lesson: EventLesson;
+};
 
 /** A platform report as the Drive and Sheets writers need it. */
 export interface ReportSource {
@@ -23,7 +29,16 @@ export interface ReportSource {
   startsAt: string;
   meetingLink: string | null;
   seq: number | null;
-  report: { attendance: Attendance | null; program: Program | null; recited: string | null; new_memorization: string | null; revision: string | null; grade_overall: Grade | null; notes: string | null; homework: string | null };
+  report: {
+    attendance: Attendance | null;
+    program: Program | null;
+    recited: string | null;
+    new_memorization: string | null;
+    revision: string | null;
+    grade_overall: Grade | null;
+    notes: string | null;
+    homework: string | null;
+  };
   pdfPath: string | null;
   pdfReady: boolean;
   version: number;
@@ -63,12 +78,23 @@ export class GoogleSyncSource {
       endsAt: row.ends_at,
       status: row.status,
       teacherName: row.teacher?.display_name_ar ?? '',
-      students: row.lesson_students.map((s) => ({ name: s.student?.name ?? '', phone: s.student?.guardians?.phone_e164 ?? null })),
-      link: platform ? classroomUrl(firstWebOrigin(loadEnv().WEB_ORIGIN), row.id) : row.meeting_link,
+      students: row.lesson_students.map((s) => ({
+        name: s.student?.name ?? '',
+        phone: s.student?.guardians?.phone_e164 ?? null,
+      })),
+      link: platform
+        ? classroomUrl(firstWebOrigin(loadEnv().WEB_ORIGIN), row.id)
+        : row.meeting_link,
       kind,
       byday: row.rule?.byday ?? null,
     };
-    return { origin: managed.data?.platform_origin === true, managed: managed.data !== null, teacherId: row.teacher_id, ownerChangedAt: row.teacher?.calendar_owner_changed_at ?? null, lesson };
+    return {
+      origin: managed.data?.platform_origin === true,
+      managed: managed.data !== null,
+      teacherId: row.teacher_id,
+      ownerChangedAt: row.teacher?.calendar_owner_changed_at ?? null,
+      lesson,
+    };
   }
 
   async report(reportId: string): Promise<ReportSource | null> {
@@ -88,9 +114,18 @@ export class GoogleSyncSource {
     }
     if (!lesson.data || !student.data) return null;
     return {
-      reportId: rep.id, studentId: rep.student_id, studentName: student.data.name, studentProgram: student.data.program,
-      teacherName: teacher.data?.display_name_ar ?? '', startsAt: lesson.data.starts_at, meetingLink: lesson.data.meeting_link,
-      seq: seq.data?.seq ?? null, report: rep, pdfPath: rep.pdf_path, pdfReady: rep.pdf_status === 'ready', version: rep.version,
+      reportId: rep.id,
+      studentId: rep.student_id,
+      studentName: student.data.name,
+      studentProgram: student.data.program,
+      teacherName: teacher.data?.display_name_ar ?? '',
+      startsAt: lesson.data.starts_at,
+      meetingLink: lesson.data.meeting_link,
+      seq: seq.data?.seq ?? null,
+      report: rep,
+      pdfPath: rep.pdf_path,
+      pdfReady: rep.pdf_status === 'ready',
+      version: rep.version,
       exportable: rep.status === 'submitted' && (imported.data ?? []).length === 0,
     };
   }

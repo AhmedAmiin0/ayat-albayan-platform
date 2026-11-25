@@ -36,7 +36,9 @@ describe('POST /subscriptions lessonsUsedBefore', () => {
     const res = await create({ startsOn: '2026-10-27', lessonsUsedBefore: 1 });
     expect(res.statusCode).toBe(201);
     expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ lessons_used_before: 1 }));
-    expect(m.audit.record).toHaveBeenCalledWith(expect.objectContaining({ after: expect.objectContaining({ lessons_used_before: 1 }) }));
+    expect(m.audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ after: expect.objectContaining({ lessons_used_before: 1 }) }),
+    );
     expect(res.json().lessons_used_before).toBe(1);
   });
 

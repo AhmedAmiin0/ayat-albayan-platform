@@ -35,14 +35,30 @@ export class PaymentInputs {
 
   async convert(input: PaymentWrite, sub: PaymentSubscription): Promise<Converted> {
     if (input.currency === sub.currency)
-      return { amount: input.amount, currency: sub.currency, original_amount: null, original_currency: null, fx_rate: null };
+      return {
+        amount: input.amount,
+        currency: sub.currency,
+        original_amount: null,
+        original_currency: null,
+        fx_rate: null,
+      };
     try {
       const [sent, pkg] = await Promise.all([
         this.fx.rateSarAt(input.currency, input.paidAt),
         this.fx.rateSarAt(sub.currency, input.paidAt),
       ]);
-      const r = convertPayment({ amount: input.amount, sarToSent: sent.rate, sarToPackage: pkg.rate });
-      return { amount: r.amount, currency: sub.currency, original_amount: input.amount, original_currency: input.currency, fx_rate: r.rate };
+      const r = convertPayment({
+        amount: input.amount,
+        sarToSent: sent.rate,
+        sarToPackage: pkg.rate,
+      });
+      return {
+        amount: r.amount,
+        currency: sub.currency,
+        original_amount: input.amount,
+        original_currency: input.currency,
+        fx_rate: r.rate,
+      };
     } catch (e) {
       if (errorCode(e) === 'fx_unavailable') throw badRequest('fx_unavailable', { currency: input.currency });
       throw e;
@@ -57,7 +73,8 @@ export class PaymentInputs {
 
   /** The payment's receipt; one recorded from an invoice has the invoice as its receipt. */
   receipt(row: PaymentRow): Promise<SignedDownload> {
-    if (row.receipt_path === null && row.invoice_id !== null) return this.invoices.download(row.invoice_id);
+    if (row.receipt_path === null && row.invoice_id !== null)
+      return this.invoices.download(row.invoice_id);
     return this.receipts.download(row.receipt_path);
   }
 }

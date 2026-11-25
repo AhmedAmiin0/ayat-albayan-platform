@@ -23,7 +23,11 @@ const activity = { push: vi.fn(), flush: vi.fn(async () => undefined) };
 describe('/i18n — dynamic translations', () => {
   let app: NestFastifyApplication;
   type Method = 'GET' | 'PUT' | 'DELETE';
-  const call = (method: Method, url: string, opts: { token?: string; payload?: object; etag?: string } = {}) =>
+  const call = (
+    method: Method,
+    url: string,
+    opts: { token?: string; payload?: object; etag?: string } = {},
+  ) =>
     app.inject({
       method,
       url,
@@ -37,9 +41,14 @@ describe('/i18n — dynamic translations', () => {
   beforeAll(async () => {
     queries.all.mockResolvedValue([]);
     const mod = await Test.createTestingModule({ imports: [messagingRoot(TranslationsModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(TranslationsQueries).useValue(queries)
-      .overrideProvider(ActivityWriter).useValue(activity)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(TranslationsQueries)
+      .useValue(queries)
+      .overrideProvider(ActivityWriter)
+      .useValue(activity)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

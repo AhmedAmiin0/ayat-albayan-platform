@@ -2,7 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { loadEnv } from '@/config/env/env';
 import { integrationRefreshMs } from './integration-refresh';
 
-const base = { INTEGRATION_CONFIG_FROM_DB: true, INTEGRATION_REFRESH_MS: undefined, SETTINGS_CACHE_MS: 30_000 };
+const base = {
+  INTEGRATION_CONFIG_FROM_DB: true,
+  INTEGRATION_REFRESH_MS: undefined,
+  SETTINGS_CACHE_MS: 30_000,
+};
 
 describe('integrationRefreshMs: the integration config reload period', () => {
   it('unset INTEGRATION_REFRESH_MS: SETTINGS_CACHE_MS but at least a minute (30 s → 60 s: half the reads); e2e 0 stays 0', () => {
@@ -18,7 +22,13 @@ describe('integrationRefreshMs: the integration config reload period', () => {
 
   it('INTEGRATION_CONFIG_FROM_DB=false: null (env only), whatever the periods', () => {
     expect(integrationRefreshMs({ ...base, INTEGRATION_CONFIG_FROM_DB: false })).toBeNull();
-    expect(integrationRefreshMs({ ...base, INTEGRATION_CONFIG_FROM_DB: false, INTEGRATION_REFRESH_MS: 5_000 })).toBeNull();
+    expect(
+      integrationRefreshMs({
+        ...base,
+        INTEGRATION_CONFIG_FROM_DB: false,
+        INTEGRATION_REFRESH_MS: 5_000,
+      }),
+    ).toBeNull();
   });
 
   it('reads the env schema: a blank INTEGRATION_REFRESH_MS is unset, a number is coerced', () => {

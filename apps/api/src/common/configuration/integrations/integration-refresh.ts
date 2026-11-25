@@ -15,5 +15,7 @@ const DEFAULT_INTEGRATION_REFRESH_MS = 60_000;
 export function integrationRefreshMs(env: IntegrationRefreshEnv): number | null {
   if (!env.INTEGRATION_CONFIG_FROM_DB) return null;
   if (env.INTEGRATION_REFRESH_MS !== undefined) return env.INTEGRATION_REFRESH_MS;
-  return env.SETTINGS_CACHE_MS === 0 ? 0 : Math.max(env.SETTINGS_CACHE_MS, DEFAULT_INTEGRATION_REFRESH_MS);
+  return env.SETTINGS_CACHE_MS === 0
+    ? 0
+    : Math.max(env.SETTINGS_CACHE_MS, DEFAULT_INTEGRATION_REFRESH_MS);
 }

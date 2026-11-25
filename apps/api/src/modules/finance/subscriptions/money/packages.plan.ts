@@ -33,7 +33,9 @@ const balanceOf = (p: StudentPackages, s: PlanPackage): PlanBalance =>
   p.balances.get(s.id) ?? { lessons_used: 0, remaining: s.lessons_total };
 
 /** Every package whose derived status differs from the stored one (subscriptionStatusFor). */
-export function statusChanges(p: StudentPackages & { paid: ReadonlyMap<string, number> }): StatusChange[] {
+export function statusChanges(
+  p: StudentPackages & { paid: ReadonlyMap<string, number> },
+): StatusChange[] {
   const subs = livePackages(p.subs);
   const last = subs.length - 1;
   return subs.flatMap((s, i) => {
@@ -49,7 +51,10 @@ export function statusChanges(p: StudentPackages & { paid: ReadonlyMap<string, n
 }
 
 /** The packages with the changes applied (what the alerts read after a recompute). */
-export function withChanges<T extends PlanPackage>(subs: readonly T[], changes: readonly StatusChange[]): T[] {
+export function withChanges<T extends PlanPackage>(
+  subs: readonly T[],
+  changes: readonly StatusChange[],
+): T[] {
   const to = new Map(changes.map((c) => [c.id, c.to]));
   return subs.map((s) => ({ ...s, status: to.get(s.id) ?? s.status }));
 }

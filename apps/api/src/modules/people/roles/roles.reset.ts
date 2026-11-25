@@ -8,7 +8,9 @@ import type { RoleRecord } from './roles.store';
 type ResetProblem = 'admin_role_fixed' | 'not_system_role';
 
 /** The grants a reset writes, or why the role cannot be reset (both 400). */
-export function resetGrants(role: RoleRecord): { ok: true; permissions: Permission[] } | { ok: false; code: ResetProblem } {
+export function resetGrants(
+  role: RoleRecord,
+): { ok: true; permissions: Permission[] } | { ok: false; code: ResetProblem } {
   if (isSystemAdmin(role)) return { ok: false, code: 'admin_role_fixed' };
   if (!role.is_system || !isEditableSystemRole(role.key)) return { ok: false, code: 'not_system_role' };
   return { ok: true, permissions: defaultGrantsOf(role.key) };

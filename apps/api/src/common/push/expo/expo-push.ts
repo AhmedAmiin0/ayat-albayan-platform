@@ -48,7 +48,11 @@ const wakeFields = (data: Record<string, string>) => (wakesInbox(data.kind) ? WA
  * One message per device on the default channel: the same visible banner for every kind; a
  * message push also wakes the app's background task (data stays the kind and the phone).
  */
-export function expoMessages(tokens: readonly string[], text: PushText, data: Record<string, string>): ExpoMessage[] {
+export function expoMessages(
+  tokens: readonly string[],
+  text: PushText,
+  data: Record<string, string>,
+): ExpoMessage[] {
   const wake = wakeFields(data);
   return tokens.map((to) => ({ to, ...text, data, sound: 'default', channelId: ANDROID_CHANNEL, ...wake }));
 }
@@ -83,7 +87,10 @@ interface TicketOutcome {
 const sentTo = (t: ExpoTicket, token: string | undefined): [string, string][] =>
   t.status === 'ok' && token ? [[t.id, token]] : [];
 
-export function readTickets(tokens: readonly string[], tickets: readonly ExpoTicket[]): TicketOutcome {
+export function readTickets(
+  tokens: readonly string[],
+  tickets: readonly ExpoTicket[],
+): TicketOutcome {
   const ticketIds: string[] = [];
   const deadTokens: string[] = [];
   let firstError: string | null = null;

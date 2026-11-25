@@ -43,7 +43,10 @@ describe('DashboardQueries (counts from statuses)', () => {
 
 describe('FinanceQueries', () => {
   it('payable lessons (the one pay rule) in the window; expenses by month bounds', async () => {
-    const { db, calls } = fakeDb({ v_teacher_payable_lessons: [{ data: [] }], expenses: [{ data: [] }] });
+    const { db, calls } = fakeDb({
+      v_teacher_payable_lessons: [{ data: [] }],
+      expenses: [{ data: [] }],
+    });
     const q = new FinanceQueries(db);
     await q.payableLessons(W);
     await q.expenses('2026-09', '2026-10');
