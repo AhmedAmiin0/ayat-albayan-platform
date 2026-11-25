@@ -57,20 +57,9 @@
       "count": 2
     }
   },
-  "src/delta/only.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    }
-  },
   "src/delta/orphans.ts": {
     "complexity": {
       "count": 2
-    },
-    "max-depth": {
-      "count": 1
     }
   },
   "src/delta/scope.ts": {
@@ -139,9 +128,6 @@
   "src/map/leads/sheet-leads.ts": {
     "complexity": {
       "count": 2
-    },
-    "max-depth": {
-      "count": 1
     }
   },
   "src/map/lessons/lessons.ts": {
@@ -309,9 +295,6 @@
   "src/map/reports/times.ts": {
     "complexity": {
       "count": 1
-    },
-    "max-depth": {
-      "count": 1
     }
   },
   "src/map/schedule/booking-row.ts": {
@@ -388,12 +371,6 @@
     }
   },
   "src/plan/apply.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 3
-    },
     "typescript/unbound-method": {
       "count": 1
     }
@@ -405,9 +382,6 @@
   },
   "src/plan/changes.ts": {
     "complexity": {
-      "count": 2
-    },
-    "max-depth": {
       "count": 1
     }
   },
@@ -430,12 +404,6 @@
     }
   },
   "src/plan/match/templates.target.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    },
     "typescript/no-base-to-string": {
       "count": 1
     }
@@ -453,9 +421,6 @@
   "src/plan/stale-refs.ts": {
     "complexity": {
       "count": 1
-    },
-    "max-depth": {
-      "count": 2
     },
     "stylistic/max-len": {
       "count": 1
