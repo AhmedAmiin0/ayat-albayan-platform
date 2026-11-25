@@ -14,7 +14,9 @@ const DROP_RE = /drop\s+(?:function|view)\s+(?:if\s+exists\s+)?([\w.]+)/gi;
 const stripComments = (sql: string): string => sql.replace(/--[^\n]*/g, '');
 
 /** Live definitions: migrations in filename order; a later `create or replace` wins, a `drop` removes. */
-export function liveSqlObjects(migrations: Readonly<Record<string, string>>): Map<string, SqlObject> {
+export function liveSqlObjects(
+  migrations: Readonly<Record<string, string>>,
+): Map<string, SqlObject> {
   const live = new Map<string, SqlObject>();
   for (const file of Object.keys(migrations).sort()) {
     const sql = stripComments(migrations[file] ?? '');
@@ -44,7 +46,9 @@ export function settingsKeysOf(body: string): string[] {
 }
 
 /** Every live object that reads public.settings → the keys it names. */
-export function sqlSettingsReaders(migrations: Readonly<Record<string, string>>): Map<string, string[]> {
+export function sqlSettingsReaders(
+  migrations: Readonly<Record<string, string>>,
+): Map<string, string[]> {
   const readers = new Map<string, string[]>();
   for (const obj of liveSqlObjects(migrations).values()) {
     const keys = settingsKeysOf(obj.body);

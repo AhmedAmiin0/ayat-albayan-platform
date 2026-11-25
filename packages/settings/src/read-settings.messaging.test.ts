@@ -19,15 +19,21 @@ describe('Phase 4 messaging settings (migration 142, docs/12 §2)', () => {
   it('the CRM cut-over flag is a boolean, false until the owner says the number moved', () => {
     expect(readSettings([{ key: 'crm_cutover_done', value: true }]).crm_cutover_done).toBe(true);
     expect(readSettings([{ key: 'crm_cutover_done', value: 'yes' }]).crm_cutover_done).toBe(false);
-    expect(settingsChanges(settingsUpdateSchema.parse({ crmCutoverDone: true }))).toEqual({ crm_cutover_done: true });
+    expect(settingsChanges(settingsUpdateSchema.parse({ crmCutoverDone: true }))).toEqual({
+      crm_cutover_done: true,
+    });
   });
 
   it('automatic messages (migration 162): OFF by default, a boolean, PATCH autoMessagesEnabled', () => {
     expect(SETTING_DEFAULTS.auto_messages_enabled).toBe(false);
     expect(readSettings([{ key: 'auto_messages_enabled', value: true }]).auto_messages_enabled).toBe(true);
     expect(readSettings([{ key: 'auto_messages_enabled', value: 'true' }]).auto_messages_enabled).toBe(false);
-    expect(settingsChanges(settingsUpdateSchema.parse({ autoMessagesEnabled: true }))).toEqual({ auto_messages_enabled: true });
-    expect(settingsChanges(settingsUpdateSchema.parse({ autoMessagesEnabled: false }))).toEqual({ auto_messages_enabled: false });
+    expect(settingsChanges(settingsUpdateSchema.parse({ autoMessagesEnabled: true }))).toEqual({
+      auto_messages_enabled: true,
+    });
+    expect(settingsChanges(settingsUpdateSchema.parse({ autoMessagesEnabled: false }))).toEqual({
+      auto_messages_enabled: false,
+    });
     expect(settingsUpdateSchema.safeParse({ autoMessagesEnabled: 'on' }).success).toBe(false);
   });
 
