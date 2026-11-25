@@ -11,13 +11,12 @@
 import { existsSync, globSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { LINT_DIRS } from '@ab/config/oxlint';
 import { gitRenames, mover } from './baselines/renames.mjs';
 import { readJson } from './json-file.mjs';
 import { BASELINE, oxlintCli } from './oxlint/gate.mjs';
 import { baselineFile } from './oxlint/schemas.mjs';
 import { aboveFile, emptyFiles, entriesOf, newFiles } from './suppressions/compare.mjs';
-
-const DIRS = ['apps/*', 'packages/*', 'tools/*', 'e2e', 'docs/design/brand/tools'];
 
 /** Per-rule totals (sorted by rule) of suppressions files `{ file: { rule: { count } } }`. */
 export function totals(files) {
@@ -57,7 +56,7 @@ const sum = (byRule) => Object.values(byRule).reduce((a, b) => a + b, 0);
 
 /** The oxlint-suppressions.json files of the tree at `dir`: their paths and contents. */
 function suppressions(dir) {
-  const paths = globSync(DIRS.map((d) => `${d}/${BASELINE}`), { cwd: dir }).sort();
+  const paths = globSync(LINT_DIRS.map((d) => `${d}/${BASELINE}`), { cwd: dir }).sort();
   return { paths, files: paths.map((p) => readJson(join(dir, p), baselineFile)) };
 }
 

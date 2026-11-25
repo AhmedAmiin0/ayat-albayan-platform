@@ -13,8 +13,11 @@ as `turbo lint` ran it) 712 s; Oxlint (every rule of every package, type-aware) 
 
 - Each package states its own rules once, in **`lint.blocks.mjs`** (flat-config shape: `files`,
   `ignores`, `rules`; `react: true` for web and mobile). Helpers come from `@ab/config/lint`.
-- **`oxlint.config.ts`** (repo root; editors find it by name) finds every `lint.blocks.mjs` and calls
-  `compose()` of `@ab/config/oxlint` (`packages/config/oxlint/`): the core rules
+- **`oxlint.config.ts`** (repo root; editors find it by name) is one line: `repoConfig(root)` of
+  `@ab/config/oxlint` (`packages/config/oxlint/config.js`). The file stays at the root because
+  oxlint roots ignore patterns and override globs at the config file's folder. `repoConfig` finds
+  every `lint.blocks.mjs` under `LINT_DIRS` (the workspace globs of `pnpm-workspace.yaml`; the
+  lint gates read the same list) and calls `compose()`: the core rules
   (`packages/config/oxlint/core-rules.json`), then per package, scoped to its folder:
   1. every file: `rules.js` `ALL` (hard, flow, date, fetch and selector rules, the presets' syntax
      rules) + `typed.js` `TYPED` (typescript-eslint's type-aware presets with their resolved options);
@@ -301,6 +304,9 @@ change.
 
 - `pnpm format` writes, `pnpm format:check` checks; both read `.gitignore` and the config's
   `ignorePatterns`.
+- `.oxfmtrc.json` is the one format config: no workspace has its own, and oxfmt finds the root file
+  by walking up from the formatted file. `guard:loosened` watches it and the root
+  `oxlint.config.ts` like the rest of the lint config.
 - **No CI format check yet.** The repo is not formatted today, and a check may only land at zero
   (no suppressions of any kind). The format sweep formats one workspace per PR (a whole-workspace
   reformat, proved code-identical by an AST comparison that ignores punctuation tokens); the PR
