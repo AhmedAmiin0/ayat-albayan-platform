@@ -1171,6 +1171,12 @@
     },
     "subscriptionStarts": "The subscription starts on {date}",
     "courseNeedsCheck": "Check the times first, then go on to the review",
+    "leave": {
+      "title": "Leave the booking?",
+      "body": "The booking is not finished yet. What you entered stays saved for this session, so you find it when you come back to the booking page.",
+      "stay": "Continue the booking",
+      "leave": "Leave now"
+    },
     "courseChange": {
       "continueSameDays": "Continue on the same days",
       "pickOtherDays": "Pick other days",
