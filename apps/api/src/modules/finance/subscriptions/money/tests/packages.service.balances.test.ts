@@ -3,7 +3,10 @@ import type { AuditService } from '@/common/audit/audit.service';
 import { PackageEvents } from '@/common/infra/events/lesson-events';
 import type { BalanceRepo, BalanceRow } from '@/modules/finance/subscriptions/money/balance.repo';
 import { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
-import type { SubRow, SubscriptionsRepo } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
+import type {
+  SubRow,
+  SubscriptionsRepo,
+} from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 import { subRow } from './money.fakes';
 
 const S1 = '5a000000-0000-4000-8000-000000000011';
@@ -42,10 +45,10 @@ function service() {
     paid: vi.fn(async (rows: readonly SubRow[]) => new Map(rows.map((r) => [r.id, 50]))),
   };
   const balances = {
-    forSubscriptions: vi.fn(
-      async (ids: readonly string[]) =>
-        new Map(ALL.map((r, i) => [r.id, balance(r, i + 1)]).filter(([id]) => ids.includes(id))),
-    ),
+    forSubscriptions: vi.fn(async (ids: readonly string[]) => {
+      const all = ALL.map((r, i) => [r.id, balance(r, i + 1)] as const);
+      return new Map(all.filter(([id]) => ids.includes(id)));
+    }),
   };
   const audit = { record: vi.fn() };
   const packages = new PackagesService(
@@ -60,16 +63,17 @@ function service() {
 describe('PackagesService.studentBalances', () => {
   it('gives each student the same view as studentBalance, in one set of reads', async () => {
     const { packages, subs } = service();
-    const many = await packages.studentBalances([S1, S2, S3]);
+    const students = [S1, S2, S3].map((id) => ({ id }));
+    const many = await packages.studentBalances(students);
     const one = await Promise.all([S1, S2, S3].map((id) => packages.studentBalance(id)));
-    expect([...many.values()]).toEqual(one);
-    expect([...many.keys()]).toEqual([S1, S2, S3]);
+    expect(many.map(([, b]) => b)).toEqual(one);
+    expect(many.map(([s]) => s)).toEqual(students);
     expect(subs.withStudentFor).toHaveBeenCalledTimes(1);
   });
 
-  it('answers an empty map without reading for no students', async () => {
+  it('answers nothing without reading for no students', async () => {
     const { packages, subs } = service();
-    expect(await packages.studentBalances([])).toEqual(new Map());
+    expect(await packages.studentBalances([])).toEqual([]);
     expect(subs.withStudentFor).not.toHaveBeenCalled();
   });
 });

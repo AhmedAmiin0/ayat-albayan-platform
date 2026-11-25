@@ -84,11 +84,13 @@ export class PackagesService {
   }
 
   /** studentBalance for each student, with one read of packages, balances and payments. */
-  async studentBalances(ids: readonly string[]): Promise<Map<string, StudentBalanceView>> {
-    if (ids.length === 0) return new Map();
-    const views = await this.views(await this.subs.withStudentFor(ids));
+  async studentBalances<T extends { id: string }>(
+    students: readonly T[],
+  ): Promise<[T, StudentBalanceView][]> {
+    if (students.length === 0) return [];
+    const views = await this.views(await this.subs.withStudentFor(students.map((s) => s.id)));
     const of = (id: string) => views.filter((v) => v.student.id === id);
-    return new Map(ids.map((id) => [id, toStudentBalance(id, of(id))]));
+    return students.map((s) => [s, toStudentBalance(s.id, of(s.id))]);
   }
 }
 
