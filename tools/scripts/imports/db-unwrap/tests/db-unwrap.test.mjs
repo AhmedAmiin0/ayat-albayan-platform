@@ -33,9 +33,15 @@ test('maybeSingle becomes maybe, single becomes one, a renamed data keeps its na
     "  const { data: b, error } = await db.from('t').select('id').single();",
     '  if (error) throw dbError(error);',
   ]);
-  const out = { text: rewrite(a).text + rewrite(b).text };
+  const c = body([
+    "  const { data: c, error } = await db.from('t').select('id').maybeSingle()",
+    '    .overrideTypes<Row | null, { merge: false }>();',
+    '  if (error) throw dbError(error);',
+  ]);
+  const out = { text: rewrite(a).text + rewrite(b).text + rewrite(c).text };
   assert.match(out.text, /const a = maybe\(await .*maybeSingle\(\)\);/);
   assert.match(out.text, /const b = one\(await .*\.single\(\)\);/);
+  assert.match(out.text, /const c = maybe\(await .*maybeSingle\(\)\n.*overrideTypes/);
 });
 
 test('a write whose data is not kept becomes done', () => {
@@ -84,7 +90,7 @@ test('the guardians copy keeps its answers through peopleErrors, with the explic
     '}',
   ].join('\n');
   const out = rewrite(text);
-  assert.match(out.text, /import \{ orSafe, peopleErrors \} from '@\/modules\/people\/guardians';/);
+  assert.match(out.text, /import \{ peopleErrors, orSafe \} from '@\/modules\/people\/guardians';/);
   assert.match(
     out.text,
     /const data = rows\(await db\.from\('t'\)\.select\('id'\), peopleErrors\(\)\);/,
