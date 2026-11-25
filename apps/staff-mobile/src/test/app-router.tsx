@@ -22,7 +22,7 @@ jest.mock('expo-notifications', () => jest.requireActual('./native-mocks').notif
 jest.mock('expo-image-picker', () => jest.requireActual('./native-mocks').imagePickerMock());
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  // The real read deadline and token read around the fake answer (owner 2026-11-05: stuck reads).
+  // The real read deadline and token read around the fake answer (stuck reads).
   apiFetch: (url: string, init?: RequestInit) => {
     const token = jest.requireActual<typeof Token>('@ab/mobile-kit/lib/http/access-token');
     const within = jest.requireActual<typeof Within>('@ab/mobile-kit/lib/http/read-within');

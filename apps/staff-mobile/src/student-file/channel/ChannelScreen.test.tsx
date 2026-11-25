@@ -20,7 +20,7 @@ const page = {
   ...{ student_name: 'سلمى', messages: [], has_more: false, read_only: false, open: true },
   ...{ closed_reason: null, channel_id: '' },
 };
-/** The assistant holds the chat's seat (owner 2026-11-16 «… but only 1»). */
+/** The assistant holds the chat's seat (one assistant at a time). */
 const mine = { holder: { id: 'p-a', name: 'سارة' }, mine: true, bringer: false, canTake: false };
 const ANSWERS: readonly (readonly [string, unknown])[] = [
   ['/presence', { enabled: false, peers: [] }],

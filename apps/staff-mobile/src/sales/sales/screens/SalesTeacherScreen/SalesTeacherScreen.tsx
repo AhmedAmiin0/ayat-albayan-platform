@@ -56,7 +56,7 @@ export function SalesTeacherScreen() {
     ),
     [base, cycle, tz],
   );
-  // The students sit in one inset card inside the gutter (owner 2026-10-28: one container rule).
+  // The students sit in one inset card inside the gutter (one container rule).
   const cells = useInsetRows(row, rows.length);
   if (!teacher) {
     return (

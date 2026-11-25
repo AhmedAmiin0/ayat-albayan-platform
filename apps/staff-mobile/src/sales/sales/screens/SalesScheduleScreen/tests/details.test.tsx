@@ -57,7 +57,7 @@ test('sales: a tap opens the details with every clock, the lesson link, her move
   // Sales see the lesson's full link with a copy button.
   expect(screen.getByText('https://meet.example.org/salma')).toBeTruthy();
   expect(screen.getByRole('button', { name: t.lessons.copyLink })).toBeTruthy();
-  // Any student's name opens their details (owner 2026-10-28).
+  // Any student's name opens their details.
   expect(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'سلمى') })).toBeTruthy();
   // Not running: no join in the sheet, and never on the rows.
   expect(screen.queryByRole('button', { name: t.classroom.enter })).toBeNull();

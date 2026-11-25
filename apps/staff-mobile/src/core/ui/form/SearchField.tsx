@@ -9,7 +9,7 @@ interface SearchFieldProps {
   label?: string;
   delayMs?: number;
   /**
-   * The list screens' pill (the chats list as WhatsApp, every list header since owner 2026-10-28): 44pt,
+   * The list screens' pill (the chats list as WhatsApp, every list header): 44pt,
    * a grey fill and a hairline edge in place of the heavy border. Text stays 16pt (no iOS zoom).
    */
   compact?: boolean;

@@ -19,7 +19,7 @@ export const useSalesStudent = (id: string) =>
     enabled: id !== '',
   });
 
-/** The weekly course on the student file (owner 2026-11-06: a link sale left unbooked). */
+/** The weekly course on the student file (a link sale left unbooked). */
 interface CourseState {
   /** The package may be booked now (GET /sales/booking/course: blocked null). */
   book: boolean;

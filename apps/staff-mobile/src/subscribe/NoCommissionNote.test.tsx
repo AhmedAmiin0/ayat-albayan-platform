@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { NoCommissionNote } from './NoCommissionNote';
 
-// Owner 2026-10-28: «If the course already started so dont give commission».
+// A course that already started earns no commission.
 const NOW = new Date('2026-11-01T09:00:00Z'); // 12:00 in Riyadh
 const note = () => screen.queryByText(t.salesMoney.noCommissionStarted);
 

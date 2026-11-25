@@ -49,12 +49,12 @@ const ROUTES: Record<PushKind, (data: unknown) => string> = {
   channel_message: () => '/',
   // Salespeople only; never sent to an admin.
   commission_earned: () => '/',
-  // A schedule change (owner 2026-10-30): the student.
+  // A schedule change: the student.
   lesson_rescheduled: toStudent,
   lesson_cancelled: toStudent,
   course_paused: toStudent,
   course_resumed: toStudent,
-  // A payment came in (owner 2026-11-05): the student (the balance card is on that screen).
+  // A payment came in: the student (the balance card is on that screen).
   payment_received: toStudent,
 };
 
@@ -107,7 +107,7 @@ const TEACHER_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   google_sync_alert: () => TEACHER_TODAY,
   channel_message: (data) => toTeacherChannel(data),
   commission_earned: () => TEACHER_TODAY,
-  // A schedule change (owner 2026-10-30): her schedule, where the lesson moved or went.
+  // A schedule change: her schedule, where the lesson moved or went.
   lesson_rescheduled: () => '/teacher/schedule',
   lesson_cancelled: () => '/teacher/schedule',
   course_paused: () => '/teacher/schedule',

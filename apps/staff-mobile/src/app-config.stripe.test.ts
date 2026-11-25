@@ -4,7 +4,7 @@ import app from '../app.json';
 import eas from '../eas.json';
 import appConfig from '../app.config';
 
-// Owner 2026-10-28, go live 2026-11-01 (docs/30): EXPO_PUBLIC_FEATURE_STRIPE is inlined at bundle time, so a
+// docs/30: EXPO_PUBLIC_FEATURE_STRIPE is inlined at bundle time, so a
 // profile that sets it ships the Stripe UI (still gated by GET /stripe/feature): the normal APK (`preview`) and
 // `stripe-test`. Only `stripe-test`'s APP_VARIANT makes a separate app (own package, own name) installable beside
 // the normal one, on its own update channel.

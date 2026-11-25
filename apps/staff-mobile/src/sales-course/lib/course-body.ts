@@ -8,7 +8,7 @@ import {
 } from '@ab/shared';
 import { courseEndsOn, timeGroups } from '@ab/schedule';
 
-// The assistant's course for the subscription she sold (R-ASST-01, owner 2026-10-18): the plan's
+// The assistant's course for the subscription she sold (R-ASST-01): the plan's
 // package and length, the student's zone, one pick per weekday. Pure; the wizard only holds picks.
 
 /** Why the wizard cannot go on: the API's own reason, or days a week it could not count. */

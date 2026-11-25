@@ -1,7 +1,7 @@
 import { routeIn, teacherRouteFor } from '@/core/push/notification-route/notification-route';
 import { salesRouteFor } from '@/core/push/notification-route.roles';
 
-// A schedule change (owner 2026-10-30): the teacher opens her schedule, an admin the student.
+// A schedule change: the teacher opens her schedule, an admin the student.
 const KINDS = ['lesson_rescheduled', 'lesson_cancelled', 'course_paused', 'course_resumed'];
 
 test.each(KINDS)('%s: the teacher’s schedule, the admin’s student, the sales students', (kind) => {

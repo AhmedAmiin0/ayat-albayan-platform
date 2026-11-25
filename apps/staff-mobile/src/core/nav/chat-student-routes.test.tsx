@@ -25,7 +25,7 @@ import SalesFile from '../../../app/(sales-chat)/sales/inbox/student/[id]';
 import SalesChannel from '../../../app/(sales-chat)/sales/inbox/student/channel/[id]';
 import { chatStudentHref } from './tree-base';
 
-// Review 2026-10-30: every route the student file opened from a chat links to (useStudentHref) has its copy in
+// Every route the student file opened from a chat links to (useStudentHref) has its copy in
 // the chat group, showing the tab's screen; a missing copy would open «unmatched route» instead.
 test.each([
   ['/students/s1', '/inbox/student/s1', [AdminFile, StudentScreen]],

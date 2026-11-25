@@ -9,7 +9,7 @@ import { CourseScreen } from '@/sales-course/screens/CourseScreen';
 import { courseView, SUB_ID } from '@/sales-course/testing/fixtures';
 import { fakeNow } from '@/test/fake-now';
 
-// Owner 2026-10-28: 1 of the 8 lessons was taken before the platform → the course books 7.
+// 1 of the 8 lessons was taken before the platform → the course books 7.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

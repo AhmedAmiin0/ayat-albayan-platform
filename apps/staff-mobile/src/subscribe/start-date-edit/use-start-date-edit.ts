@@ -22,7 +22,7 @@ export function startDateErrorText(error: unknown): string {
 }
 
 /**
- * PATCH /subscriptions/:id/start-date { startsOn } (owner 2026-11-03), then the screens holding
+ * PATCH /subscriptions/:id/start-date { startsOn }, then the screens holding
  * the package (`stale`) refetch.
  */
 export function useStartDateEdit(id: string, stale: readonly QueryKey[]) {

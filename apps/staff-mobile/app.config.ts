@@ -10,7 +10,7 @@ const noShareTarget = (plugins: Plugins = []): Plugins =>
   plugins.map((p) => (Array.isArray(p) && p[0] === 'expo-sharing' ? ['expo-sharing', { android: { enabled: false } }] : p));
 
 /**
- * The Stripe test variant (owner 2026-10-28, docs/30): its own package / bundle id and name, and NO
+ * The Stripe test variant (docs/30): its own package / bundle id and name, and NO
  * android.googleServicesFile: Firebase knows only the normal package, so the test app has no FCM push
  * (registerPush fails soft: no token, no crash). Everything else is the normal app's config.
  */

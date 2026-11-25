@@ -28,7 +28,7 @@ interface DatePickerFieldProps {
 }
 
 /**
- * A day picked on Expo's native date dialog (rule 6, never typed; owner 2026-11-07): the day in an
+ * A day picked on Expo's native date dialog (rule 6, never typed): the day in an
  * input-like row, a tap mounts the dialog bounded by `range` (the days the API accepts), confirming
  * sends YYYY-MM-DD, either button unmounts it.
  */

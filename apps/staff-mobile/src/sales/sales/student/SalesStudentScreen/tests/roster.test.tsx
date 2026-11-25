@@ -31,7 +31,7 @@ const open = () =>
     </TreeBaseProvider>,
   );
 
-// Owner 2026-10-30: any student's schedule and full attendance log, without any «not yours» note.
+// Any student's schedule and full attendance log, without any «not yours» note.
 test('another assistant\'s student: schedule, attendance and the full log; no note', async () => {
   mockApiFetch.mockResolvedValue(other());
   await open();

@@ -4,7 +4,7 @@ import { isThreadHref } from './chat-groups';
 /**
  * Back inside the current stack when a screen sits beneath (canDismiss), else `fallback`. Never
  * router.canGoBack(): it is also true through the tabs' history, whose back (backBehavior
- * "initialRoute") lands on Today from any lone detail screen (owner 2026-11-06).
+ * "initialRoute") lands on Today from any lone detail screen.
  */
 export function backOr(fallback: () => void): void {
   const go = router.canDismiss() ? () => router.back() : fallback;
