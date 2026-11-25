@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { AppModule } from '@/app.module';
 import { PERMISSION_RESOLVER, systemResolver } from '@/common/auth/auth.guard';
 import { IS_PUBLIC, PERMISSION, SIGNED_IN } from '@/common/auth/decorators';
+import type { ControllerClass, RouteHandler } from './route-map.types';
 
 type Target = object;
 
@@ -56,30 +57,39 @@ function accessOf(targets: Target[]): string {
   return `access=${authOf(targets)} guards=${guardsOf(targets)} code=${code}`;
 }
 
-function linesOf(cls: { name: string; prototype: object }): string[] {
+export function handlersOf(cls: ControllerClass): RouteHandler[] {
   const proto = cls.prototype;
   const bases = pathsOf(cls);
   return new MetadataScanner().getAllMethodNames(proto).flatMap((name) => {
     const handler: unknown = Reflect.get(proto, name);
     if (typeof handler !== 'function' || !Reflect.hasMetadata(METHOD_METADATA, handler)) return [];
     const method = RequestMethod[meta(methodSchema, METHOD_METADATA, handler)];
-    const tail = `${accessOf([handler, cls])} ${cls.name}.${name}`;
-    return bases.flatMap((b) => pathsOf(handler).map((s) => `${method} ${join(b, s)} ${tail}`));
+    const paths = bases.flatMap((b) => pathsOf(handler).map((s) => join(b, s)));
+    return paths.map((path) => ({ method, path, cls, name, handler }));
   });
+}
+
+const lineOf = ({ method, path, cls, name, handler }: RouteHandler): string =>
+  `${method} ${path} ${accessOf([handler, cls])} ${cls.name}.${name}`;
+
+/** Every controller class AppModule registers. Compiles the module graph without starting it. */
+export async function appControllers(): Promise<ControllerClass[]> {
+  const mod = await Test.createTestingModule({ imports: [AppModule, DiscoveryModule] })
+    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
+    .compile();
+  const classes = mod.get(DiscoveryService).getControllers().flatMap((wrapper) => {
+    const cls: unknown = wrapper.metatype;
+    return typeof cls === 'function' ? [cls] : [];
+  });
+  await mod.close();
+  return classes;
 }
 
 /**
  * Every route of AppModule as one line, sorted: METHOD path, the auth metadata, the route's own
- * guards, its @HttpCode and Controller.handler. Compiles the module graph without starting the app.
+ * guards, its @HttpCode and Controller.handler.
  */
 export async function routeMap(): Promise<string[]> {
-  const mod = await Test.createTestingModule({ imports: [AppModule, DiscoveryModule] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
-    .compile();
-  const lines = mod.get(DiscoveryService).getControllers().flatMap((wrapper) => {
-    const cls: unknown = wrapper.metatype;
-    return typeof cls === 'function' ? linesOf(cls) : [];
-  });
-  await mod.close();
-  return lines.sort();
+  const classes = await appControllers();
+  return classes.flatMap(handlersOf).map(lineOf).sort();
 }

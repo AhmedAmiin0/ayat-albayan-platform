@@ -3,6 +3,7 @@
 export * from './core/http';
 export * from './core/keys';
 export * from './core/query';
+export * from './core/paging';
 export * from './core/auth';
 export * from './people/users';
 export * from './people/family-auth';

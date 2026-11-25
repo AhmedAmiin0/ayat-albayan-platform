@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { phoneE164 } from '@ab/core';
+import { pageQuery, phoneE164 } from '@ab/core';
 import { loginCode } from '../people/users';
 
 // Managed short links (docs/19 «Short links»): the admin / sales bodies and the
@@ -67,8 +67,7 @@ export const shortLinkListQuerySchema = z.object({
   status: z.enum(SHORT_LINK_STATUSES).optional(),
   owner: z.uuid().optional(),
   search: z.string().trim().min(1).max(80).optional(),
-  page: z.coerce.number().int().min(1).max(10_000).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(20),
+  ...pageQuery({ size: 20, lastPage: 10_000 }),
 });
 export type ShortLinkListQuery = z.infer<typeof shortLinkListQuerySchema>;
 

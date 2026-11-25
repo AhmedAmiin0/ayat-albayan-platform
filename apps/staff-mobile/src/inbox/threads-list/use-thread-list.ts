@@ -1,11 +1,10 @@
-import { INBOX_LIST_REFRESH_MS, liveInterval } from '@ab/client-core';
+import { INBOX_LIST_REFRESH_MS, liveInterval, nextPageParam } from '@ab/client-core';
 import type { ThreadView } from '@ab/shared';
 import type { LeadStatus } from '@ab/catalog';
 import type { Page } from '@ab/core';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { apiFetch, toQueryString, useScreenFocused } from '@ab/mobile-kit';
-import { nextPageParam } from '@/core/lib/query/paging';
 import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
 import { useInboxLive, useLiveWatch } from '@/inbox/thread/live';
 import { useStoredThreads } from '@/inbox/thread/local';

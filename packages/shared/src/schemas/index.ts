@@ -6,6 +6,7 @@ export * from './chat-media';
 export * from './booking-request';
 export * from './short-links';
 export * from './short-link-views';
+export * from './short-links.routes';
 export * from './outside-slots';
 export * from './readiness';
 export * from './events';

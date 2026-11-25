@@ -215,15 +215,19 @@ apps/staff-web/src/features/finance/payouts/use-payouts.ts  // thin hook: useQue
 ### 2.5 Shared contract + zod module
 
 ```
-packages/core/src/schemas/          // primitives: id(), phoneE164, timeZone, isoUtc, money(), page()
+packages/core/src/schemas/          // primitives: id(), phoneE164, timeZone, instant, pageQuery, pageOf
+packages/core/src/routes/           // defineRoute, routePath: one route object per API route (docs/62 part 3)
 packages/shared/src/<domain>/
   x.schemas.ts     // export const payoutView = z.object({ id: id(), … }); export type PayoutView = z.infer<…>
   x.schemas.test.ts// accepts/rejects (red first: the bad payload)
   index.ts
 ```
 
-Helpers to add in `packages/core/src/schemas`: `id()` (uuid), `isoUtc()`, `dateOnly()`, `money()`,
-`studentCode()` (`AB-nnnn`), `pageOf(schema)`, `listQuery(keys)`, `parseOr(schema, value, fallback)`.
+In `packages/core/src/schemas` (docs/62 PR A): `id()` (the loose uuid `ParseUUIDPipe` accepted),
+`clientRequestId`, `pageQuery({ size, max?, lastPage? })` (spread into a list query next to
+`listSortShape(keys)`, so no `listQuery(keys)`), `pageOf(item)`, and the variant helpers `partialOf`,
+`hasAnyValue` and `resolveObject` (docs/62 «Deriving variants from one schema»). Still to add when a
+first caller needs them: `money()`, `studentCode()` (`AB-nnnn`), `parseOr(schema, value, fallback)`.
 
 ### 2.6 Adapter
 

@@ -1,15 +1,14 @@
 import {
-  shortLinkDetailSchema,
   shortLinkOpenResultSchema,
-  shortLinkSentDetailSchema,
+  shortLinkRoutes as routes,
   type ShortLinkCreate,
   type ShortLinkDetail,
   type ShortLinkOpenResult,
   type ShortLinkSentDetail,
   type ShortLinkUpdate,
 } from '@ab/shared';
-import type { ApiClient } from '../../core/http';
-import { enc, SHORT_LINKS_PATH, SHORT_LINKS_PUBLIC_PATH } from './short-links-api';
+import { call, type ApiClient } from '../../core/http';
+import { enc, SHORT_LINKS_PUBLIC_PATH } from './short-links-api';
 
 // Each write takes a single input, ready for a TanStack `mutationFn` (docs/19).
 
@@ -45,22 +44,18 @@ export interface ShortLinkSends {
   otpVerify: (call: GateVerifyCall) => Promise<ShortLinkOpenResult>;
 }
 
-const admin = (code: string, tail = ''): string => `${SHORT_LINKS_PATH}/${enc(code)}${tail}`;
 const gate = (code: string, tail: string): string =>
   `${SHORT_LINKS_PUBLIC_PATH}/${enc(code)}${tail}`;
 
 export function shortLinkSends(client: ApiClient): ShortLinkSends {
   const post = (path: string, body?: unknown): Promise<unknown> =>
     client.apiSend('POST', path, body);
-  const detail = (r: unknown): ShortLinkDetail => shortLinkDetailSchema.parse(r);
-  const sent = (r: unknown): ShortLinkSentDetail => shortLinkSentDetailSchema.parse(r);
   const outcome = (r: unknown): ShortLinkOpenResult => shortLinkOpenResultSchema.parse(r);
   return {
-    create: (body) => post(SHORT_LINKS_PATH, body).then(sent),
-    update: ({ code, body }) =>
-      client.apiSend('PATCH', admin(code), body).then(detail),
-    revoke: (code) => post(admin(code, '/revoke')).then(detail),
-    resend: (code) => post(admin(code, '/resend')).then(sent),
+    create: (body) => call(client, routes.create, { body }),
+    update: ({ code, body }) => call(client, routes.update, { params: { code }, body }),
+    revoke: (code) => call(client, routes.revoke, { params: { code } }),
+    resend: (code) => call(client, routes.resend, { params: { code } }),
     open: (code) => post(gate(code, '/open')).then(outcome),
     otpStart: ({ code, phone }) => client.apiSend('POST', gate(code, '/otp/start'), { phone }),
     otpVerify: ({ code, phone, otp }) =>
