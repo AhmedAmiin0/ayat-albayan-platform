@@ -43,6 +43,8 @@ export const teacherKeys: TeacherKeys = {
   detail: (id) => [...teachers, id],
   availability: (id) => [...teachers, id, 'availability'],
   timeOff: (id) => [...teachers, id, 'time-off'],
+  me: () => [...teachers, 'me'],
+  myStudents: (kind) => [...teachers, 'me', 'students', kind],
 };
 
 export const userKeys: UserKeys = {

@@ -23,6 +23,7 @@ const everyMoneyRead = [
   moneyKeys.payments({ page: 1, filters: {}, sort: {} }),
   moneyKeys.receipt('p1'),
   moneyKeys.payouts('2026-11'),
+  moneyKeys.myPayouts(),
   moneyKeys.earningsSummary(),
   moneyKeys.subscriptions({ page: 1 }),
   moneyKeys.studentSubscriptions('s1'),
@@ -38,6 +39,7 @@ const everyMoneyRead = [
 describe('moneyKeys', () => {
   it('keeps the key shapes the money screens already cache under', () => {
     expect(moneyKeys.all).toEqual(['money']);
+    expect(moneyKeys.myPayouts()).toEqual(['money', 'payouts', 'mine']);
     expect(moneyKeys.expenseYear('2026')).toEqual(['money', 'expenses', 'year', '2026']);
     expect(moneyKeys.payments({ page: 2, filters: { kind: 'x' }, sort: {} })).toEqual([
       'money',
