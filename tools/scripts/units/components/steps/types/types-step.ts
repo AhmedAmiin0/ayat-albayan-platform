@@ -38,6 +38,16 @@ function typesFileOf(m: Move, typesPath: string): string {
   return typesFileText({ existing, imports, decls });
 }
 
+/** The folder's index.ts, only when its re-exports changed. */
+function indexFile(
+  path: string,
+  text: string | undefined,
+  at: Parameters<typeof reexportTypes>[2],
+) {
+  const next = text === undefined ? text : reexportTypes(path, text, at);
+  return next === undefined || next === text ? {} : { [path]: next };
+}
+
 function filesOf(m: Move): Record<string, string> {
   const { input } = m;
   const dir = posix.dirname(input.path);
@@ -50,7 +60,7 @@ function filesOf(m: Move): Record<string, string> {
   return {
     [input.path]: viewText(text, input.path, at),
     [typesPath]: typesFileOf(m, typesPath),
-    ...(index === undefined ? {} : { [indexPath]: reexportTypes(indexPath, index, at) }),
+    ...indexFile(indexPath, index, at),
   };
 }
 

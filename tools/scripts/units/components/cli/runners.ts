@@ -2,6 +2,8 @@ import { posix } from 'node:path';
 import type { Step } from './args.schemas.ts';
 import type { RepoContext } from './context.ts';
 import type { Target } from './discover.ts';
+import type { HelpersVerdict } from '../steps/helpers/helpers.types.ts';
+import { helpersStep } from '../steps/helpers/helpers-step.ts';
 import type { HookVerdict } from '../steps/hook/hook.types.ts';
 import { hookStep } from '../steps/hook/hook-step.ts';
 import type { TypesVerdict } from '../steps/types/types.types.ts';
@@ -29,6 +31,11 @@ const outcome = (result: string, why = '', files: Record<string, string> = {}): 
 
 function fromTypes(v: TypesVerdict): Outcome {
   if (v.result === 'typed') return outcome('typed', '', v.files);
+  return v.result === 'refused' ? outcome('refused', v.why) : outcome('unchanged');
+}
+
+function fromHelpers(v: HelpersVerdict): Outcome {
+  if (v.result === 'helpers') return outcome('helpers', '', v.files);
   return v.result === 'refused' ? outcome('refused', v.why) : outcome('unchanged');
 }
 
@@ -60,6 +67,11 @@ export const RUNNERS: Record<Step, Runner> = {
     return fromTypes(
       typesStep({ path: t.path, text, name: t.name, files, outside: ctx.importers(t.path) }),
     );
+  },
+  helpers: (t, overlay, ctx) => {
+    const { files, text } = folderOf(t, overlay, ctx);
+    const outside = ctx.importers(t.path);
+    return fromHelpers(helpersStep({ path: t.path, text, name: t.name, files, outside }));
   },
   hook: (t, overlay, ctx) => {
     const { names, text } = folderOf(t, overlay, ctx);

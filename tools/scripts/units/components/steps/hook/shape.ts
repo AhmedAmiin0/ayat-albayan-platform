@@ -4,6 +4,7 @@ import type { Pass } from './passes.ts';
 import { isTheme } from '../../model/calls.ts';
 import { declaredNames, readsAny } from '../../model/names.ts';
 import { no, ok, type Result } from '../../model/result.ts';
+import { has, isJsx } from '../../model/source.ts';
 import { inputsOf } from './inputs.ts';
 
 interface Split {
@@ -43,6 +44,7 @@ export function shapeOf(third: Pass, hoists: Shape['hoists']): Result<Shape> {
   const viewReads = readsAny([...parts.guards, parts.ret, ...(theme === undefined ? [] : [theme])]);
   const others = sf.statements.filter((s) => !ts.isImportDeclaration(s) && s !== c.statement);
   const moved = movedOf({ others, params: c.fn.parameters, viewReads });
+  if (moved.some((s) => has(s, isJsx))) return no('JSX in top-level code the setup reads');
   const setupReads = readsAny([...setup, ...moved, ...hoists.map((h) => h.call)]);
   const shared = others.some(
     (s) => !moved.includes(s) && declaredNames(s).some((n) => setupReads.has(n)),

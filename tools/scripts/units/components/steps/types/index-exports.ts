@@ -42,5 +42,6 @@ export function reexportTypes(path: string, text: string, own: Own): string {
     const found = ownExport(s, `./${own.name}`);
     return found === undefined ? s.getText(sf) : split(found, own, sf);
   });
-  return `${lines.join('\n')}\n`;
+  const same = lines.every((l, i) => l === sf.statements[i]?.getText(sf));
+  return same ? text : `${lines.join('\n')}\n`;
 }

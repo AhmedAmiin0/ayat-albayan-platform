@@ -16,7 +16,7 @@ export interface ComponentsIo {
   log: (line: string) => void;
 }
 
-const ORDER: Step[] = ['types', 'hook'];
+const ORDER: Step[] = ['types', 'helpers', 'hook'];
 
 /** `pnpm components -- --dry-run|--write [--step <s>] --paths <dir...> [--exclude <f>] [--json]` */
 export function runComponents(argv: readonly string[], io: ComponentsIo): void {

@@ -1,3 +1,4 @@
+import ts from 'typescript';
 import type { Step } from './args.schemas.ts';
 import { excludedWhy, type Target } from './discover.ts';
 import { RUNNERS, type Overlay, type PlanContext } from './runners.ts';
@@ -9,6 +10,15 @@ export interface Row {
   result: string;
   reason: string;
 }
+
+const SYNTAX = { jsx: ts.JsxEmit.Preserve, noResolve: true, isolatedModules: true };
+
+/** A safety net: a step whose output has a syntax error refuses the component. */
+const parses = (path: string, text: string): boolean =>
+  (
+    ts.transpileModule(text, { fileName: path, reportDiagnostics: true, compilerOptions: SYNTAX })
+      .diagnostics ?? []
+  ).length === 0;
 
 interface Run {
   t: Target;
@@ -22,7 +32,15 @@ function runSteps({ t, steps, ctx }: Run, overlay: Overlay): { rows: Row[]; refu
   for (const step of steps) {
     const out = RUNNERS[step](t, overlay, ctx);
     rows.push({ path: t.path, step, result: out.result, reason: out.why });
-    if (out.result === 'refused') return { rows, refused: true };
+    const broken = Object.entries(out.files).find(([p, text]) => !parses(p, text))?.[0];
+    if (broken !== undefined)
+      rows.push({
+        path: t.path,
+        step,
+        result: 'refused',
+        reason: `generated ${broken} does not parse`,
+      });
+    if (out.result === 'refused' || broken !== undefined) return { rows, refused: true };
     Object.entries(out.files).forEach(([p, text]) => overlay.set(p, text));
   }
   return { rows, refused: false };
