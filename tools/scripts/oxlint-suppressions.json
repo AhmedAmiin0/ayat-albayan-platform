@@ -14,9 +14,6 @@
     "max-depth": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-if-chains": {
       "count": 6
     }
@@ -29,9 +26,6 @@
       "count": 1
     },
     "max-depth": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     },
     "ab/no-if-chains": {
@@ -185,7 +179,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -232,7 +226,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "ci-checks/move-module/knip.ts": {
@@ -243,7 +237,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-if-chains": {
       "count": 2
@@ -257,7 +251,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -268,7 +262,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -276,9 +270,6 @@
   },
   "ci-checks/move-module/resolve.test.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -303,12 +294,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "ci-checks/move-module/specifiers.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "ci-checks/native-changes.mjs": {
@@ -322,15 +313,10 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 18
+      "count": 15
     },
     "ab/no-shape-checks": {
       "count": 8
-    }
-  },
-  "ci-checks/native-changes.test.mjs": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "ci-checks/owned-keys-check.mjs": {
@@ -368,11 +354,6 @@
       "count": 4
     }
   },
-  "ci-checks/pure-move-paths.test.mjs": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "ci-checks/pure-move-suppressions.test.mjs": {
     "stylistic/max-len": {
       "count": 1
@@ -403,15 +384,10 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 11
+      "count": 9
     },
     "ab/no-shape-checks": {
       "count": 3
-    }
-  },
-  "ci-checks/pure-move/baselines.test.mjs": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "ci-checks/pure-move/configs.mjs": {
@@ -422,7 +398,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     },
     "ab/no-shape-checks": {
       "count": 2

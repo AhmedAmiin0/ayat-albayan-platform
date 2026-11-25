@@ -6,7 +6,8 @@ import { barrelPaths, onlyPathsChanged } from './pure-move-check.mjs';
 const ROUTE = 'apps/staff-mobile/app/(tabs)/inbox/index.tsx';
 const SRC = "export { InboxScreen as default } from '@/inbox/screens/InboxScreen';\n";
 const heads = (files) => reexportsOf((file) => files[file] ?? '', barrelPaths);
-const ctx = (files) => ({ from: ROUTE, to: ROUTE, table: renameTable([]), reexports: heads(files) });
+const ctx = (files) =>
+  ({ from: ROUTE, to: ROUTE, table: renameTable([]), reexports: heads(files) });
 
 test('a path may switch to a feature index whose barrel re-exports the same file', () => {
   const files = { 'apps/staff-mobile/src/inbox/index.ts': "export { InboxScreen } from './screens/InboxScreen';\n" };

@@ -47,7 +47,11 @@ function guard(sf: SourceFile, table: Map<string, string>, ids: Node[]): void {
  * names). Strings and comments stay as they are. A file that already has the new name, or imports an old one
  * from a non-workspace package, stops the run.
  */
-export function renameIdentifiers(project: Project, table: Map<string, string>, input: RewriteInput): string {
+export function renameIdentifiers(
+  project: Project,
+  table: Map<string, string>,
+  input: RewriteInput,
+): string {
   const { file, text } = input;
   if (!mentions(table, text)) return text;
   const sf = project.createSourceFile(`/virtual/${file}`, text, { overwrite: true });
