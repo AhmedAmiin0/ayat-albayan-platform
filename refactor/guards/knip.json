@@ -206,7 +206,6 @@
   "e2e/support/sales/assistant.ts types CommissionRow",
   "e2e/support/sales/sales-options.ts exports salesRole",
   "packages/config/eslint-boundaries.js exports target",
-  "tools/google-stub/src/state.ts exports SUMMARY_HEADER",
   "tools/google-stub/src/state.ts types At",
   "tools/migrate/src/cli.args.ts exports USAGE",
   "tools/migrate/src/config.ts exports STAGING_POOLER",
