@@ -11,6 +11,7 @@ Plan for: «move the request and response zod schemas to packages so they are us
 - **Read-only data counts** (part 2 §6 Q1): yes, on production. One extra PR, **D** `ci/data-counts` (`ci(repo): add a read-only data counts job`), comes right after A: a `workflow_dispatch` workflow whose job runs in a GitHub environment `prod-readonly` (deployment branches: develop only) holding the owner's read-only key as an environment secret. It runs only `select count(*)` statements inside a read-only transaction and prints integers only, never row values, because Actions logs are public. The owner merges D himself. C1 and C2 dispatch it per domain before converting that domain's mappers; a non-zero count blocks the conversion until the schema or the data is fixed.
 - **Prerequisites 3 and 4 of part 1 §5 are not gates.** When C1 or C2 makes `guard:units` fail in a folder, that unit is folded in its own moves-only commit inside the same PR.
 - **Reviews.** The hourly conductor reviews each PR once, when every check on its head is green, and adds `reviewed` + `auto-merge`. E is labelled only if its diff changes nothing outside the approved table.
+- **No `.js` in imports** (owner, 2026-11-25: «i dont want to import .js files»). Relative imports inside packages carry no extension, like the apps. The packages infra PR (docs/64) removes today's `.js` specifiers before this plan's PRs start, and no PR here adds one.
 - **Prerequisites.** `nest/all-modules` and #937 (oxlint only) merged. The api comment sweep and the remaining api unit folds are not prerequisites; they pause while B, E, C1 or C2 is open.
 
 # Part 1 · Contracts, pagination, DRY and reliability
@@ -807,7 +808,7 @@ export function outcomeOf(row: PortalPastRow): PortalOutcome | null {
 
 The `?? null` that the `Partial` type forced goes away. The inferred types are `Readonly<Record<AttendanceKind, PortalOutcome | null>>` and `Readonly<Record<PortalOutcome, PortalHistoryStatus>>`.
 
-In C1, `LIST` moves to `packages/shared/src/people/students/portal-outcome.ts`. That is a runtime file with no type exports, and it imports only `./portal-family.js`, so it adds no folder edge.
+In C1, `LIST` moves to `packages/shared/src/people/students/portal-outcome.ts`. That is a runtime file with no type exports, and it imports only `./portal-family`, so it adds no folder edge.
 - The table becomes `export const PORTAL_LIST_OF = …`, written in the same form as `LIST`.
 - The mapper's `LIST` and client-core's `HISTORY_LIST_OF` are deleted, and `historyRows` filters on `PORTAL_LIST_OF[row.outcome] === list`.
 - `history.ts`'s type-only `@ab/shared` import becomes a runtime import. The apps already load the barrel at start («Mobile bundle»).

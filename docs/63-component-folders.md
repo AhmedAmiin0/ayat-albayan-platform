@@ -7,7 +7,8 @@ Plan for: «for the frontend i want the logic to have each component in its own 
 - **Q1 yes:** `Name.tsx` may call `useTheme()`, and a component that calls no other hook gets no `use-name.ts` (value consts stay; function literals go to `<name>.helpers.ts`).
 - **Q2 yes:** every component the codemod changes is covered by a test before its logic moves (docs/59 §3 class B, rule 14).
 - **Q3 yes:** `*-icons.tsx` files that hold only pure SVG components stay one file.
-- **Order:** the eight PRs in §5, starting after #937 (oxlint only) merges. PRs 6 and 7 (staff-web) start only after docs/62's C2 merges, because both edit staff-web hooks and client-core.
+- **No `.js` in imports** (owner, 2026-11-25: «i dont want to import .js files»): packages and apps alike use extensionless relative imports; the packages infra PR (docs/64) lands first.
+- **Order:** the eight PRs in §5, starting after #937 (oxlint only) and the docs/64 infra PRs merge. PRs 6 and 7 (staff-web) start only after docs/62's C2 merges, because both edit staff-web hooks and client-core.
 - **Reviews.** `move/components-*` PRs auto-merge when green (`guard:move-only` is the proof). Every other PR to develop is reviewed once by the hourly conductor when every check is green, then labelled `reviewed` + `auto-merge`. Domain sub-PRs into a `bundle/components-*` branch are merged by the driver that builds them.
 
 Base: origin/develop `83066331f` (2026-11-24 23:39 UTC). `bundle/refactor-one-pass` is already merged (#960 → `e8d1550b7`), and so are all `chore/comments-arabic-*` branches (#896–#927, #955, #958). The open PRs are #937 `build/oxlint-only` (406 files, about 145 of them frontend), #928 `ci/no-arabic-comments` (15 files) and #829 (api). `nest/all-modules` has no PR yet: it is 8 commits ahead, and 848 of its 856 files are in `apps/api`. Every count below comes from a regex scan of `83066331f` (§8), so they are estimates, not AST counts.
