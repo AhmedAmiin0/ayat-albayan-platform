@@ -15,7 +15,7 @@ const slotTaken = () => conflict('slot_taken');
  * starts_at | local_date) key (migration 110) means that slot is taken; moved rows never hold a
  * slot, so other unique keys stay plain DB errors.
  */
-const LESSON_RPC_ERRORS: PgErrorMap = {
+export const LESSON_RPC_ERRORS: PgErrorMap = {
   raised: raisedAs(
     [
       'invalid_transition',
