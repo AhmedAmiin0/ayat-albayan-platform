@@ -1,8 +1,7 @@
 import type { NotificationItem } from '@ab/shared';
 import { router } from 'expo-router';
 import { openPushed } from '@/core/nav/back-within';
-import { useCallback } from 'react';
-import { FlatList, type ListRenderItemInfo, View } from 'react-native';
+import { View } from 'react-native';
 import {
   usePermissions,
   t,
@@ -18,7 +17,7 @@ import {
 import { Note } from '@/core/ui/feedback/Note';
 import { routeIn, type PushTree } from '@/core/push/notification-route';
 import { PillButton } from '@/core/ui/primitives/PillButton';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
+import { LazyList } from '@/core/ui/lists/LazyList';
 import { NotificationRow } from './NotificationRow';
 
 export interface NotificationsScreenProps {
@@ -41,20 +40,15 @@ export function NotificationsScreen({ tree }: NotificationsScreenProps) {
   const bell = t.bell.mobile;
   const unread = list.data?.unread ?? 0;
   const { mutate } = markRead;
-  const open = useCallback(
-    (item: NotificationItem) => {
-      if (!item.read_at) mutate([item.id]);
-      const href = routeIn(tree, { ...item.data, kind: item.kind }, can);
-      if (href) openPushed(href);
-    },
-    [mutate, tree, can],
-  );
+  const open = (item: NotificationItem) => {
+    if (!item.read_at) mutate([item.id]);
+    const href = routeIn(tree, { ...item.data, kind: item.kind }, can);
+    if (href) openPushed(href);
+  };
   const items = list.data?.items ?? [];
-  const renderRow = useCallback(
-    ({ item }: ListRenderItemInfo<NotificationItem>) => <NotificationRow item={item} onPress={open} />,
-    [open],
+  const renderRow = ({ item }: { item: NotificationItem }) => (
+    <NotificationRow item={item} onPress={open} />
   );
-  const cells = useInsetRows(renderRow, items.length);
   const back = <BackButton onPress={() => router.back()} />;
   return (
     <Screen>
@@ -64,12 +58,13 @@ export function NotificationsScreen({ tree }: NotificationsScreenProps) {
           <PillButton label={bell.markAll} onPress={() => mutate(undefined)} />
         </View>
       ) : null}
-      <FlatList
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 24 }}
+      <LazyList
+        testID="notifications-list"
+        tabBar={false}
+        endSpace={24}
         data={items}
         keyExtractor={(item) => item.id}
-        {...cells}
+        renderItem={renderRow}
         refreshing={pull.refreshing}
         onRefresh={pull.onRefresh}
         ListEmptyComponent={

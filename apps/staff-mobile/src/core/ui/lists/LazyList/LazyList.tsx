@@ -1,5 +1,5 @@
 import { FlashList, type FlashListProps } from '@shopify/flash-list';
-import { type ComponentType, useMemo } from 'react';
+import type { ComponentType } from 'react';
 import { View, type ViewStyle } from 'react-native';
 import { useTabBarInset } from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
@@ -31,7 +31,10 @@ interface Paged<T> {
   pulling: boolean;
 }
 
-interface LazyListProps<T> extends Omit<FlashListProps<T>, 'style' | 'contentContainerStyle' | 'keyExtractor' | 'data'> {
+interface LazyListProps<T> extends Omit<
+  FlashListProps<T>,
+  'style' | 'contentContainerStyle' | 'keyExtractor' | 'data'
+> {
   /** The rows; or `paged` instead. */
   data?: FlashListProps<T>['data'];
   /** A usePagedList result: its items, loadMore at the end, refresh + pulling on a pull. */
@@ -54,12 +57,19 @@ interface LazyListProps<T> extends Omit<FlashListProps<T>, 'style' | 'contentCon
  * Screen inside its gutter with the rows in one inset card, the last row clears the floating tab bar, the next page is asked for
  * two screens before the end (FlatList's default); a new top row is not scrolled away. `paged={usePagedList(…)}` wires its rows, next page and pull to refresh;
  * give it an EmptyState / ErrorState as ListEmptyComponent.
- * Rows should be React.memo with stable props, and renderItem a useCallback, or every row redraws.
  */
-export function LazyList<T>({ endSpace = 0, inset = true, tabBar = true, gap, paged, data, ...props }: LazyListProps<T>) {
+export function LazyList<T>({
+  endSpace = 0,
+  inset = true,
+  tabBar = true,
+  gap,
+  paged,
+  data,
+  ...props
+}: LazyListProps<T>) {
   const bar = useTabBarInset();
   const end = tabBar ? 24 + bar + endSpace : endSpace;
-  const content = useMemo(() => ({ paddingBottom: end }), [end]);
+  const content = { paddingBottom: end };
   const rows = data ?? paged?.items;
   const cells = useInsetRows(props.renderItem, rows?.length ?? 0, rows);
   return (
@@ -81,8 +91,13 @@ export function LazyList<T>({ endSpace = 0, inset = true, tabBar = true, gap, pa
 function spacing(inset: boolean, gap: number | undefined, header: boolean) {
   if (inset) return { ListHeaderComponentStyle: header ? HEADER_GAP : undefined };
   const style = gap ? { marginBottom: gap } : undefined;
-  return { ItemSeparatorComponent: gap ? gapOf(gap) : undefined, ListHeaderComponentStyle: header ? style : undefined };
+  return {
+    ItemSeparatorComponent: gap ? gapOf(gap) : undefined,
+    ListHeaderComponentStyle: header ? style : undefined,
+  };
 }
 
 const pagedProps = <T,>(paged: Paged<T> | undefined) =>
-  paged ? { onEndReached: paged.loadMore, onRefresh: paged.refresh, refreshing: paged.pulling } : null;
+  paged
+    ? { onEndReached: paged.loadMore, onRefresh: paged.refresh, refreshing: paged.pulling }
+    : null;
