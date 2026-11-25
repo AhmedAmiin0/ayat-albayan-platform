@@ -1,10 +1,4 @@
-import {
-  CallStore,
-  deriveCall,
-  type CallDerived,
-  type CallSession,
-  type NoticeAction,
-} from '@ab/client-core';
+import { CallStore, deriveCall, type CallDerived, type CallSession, type NoticeAction } from '@ab/client-core';
 import type { ActiveCallView, CallConfigView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
@@ -33,20 +27,12 @@ function useBackgroundNote(input: { store: CallStore; foreground: boolean; live:
 }
 
 /** The device's call and the incoming rings (docs/28 §3), polled while calls are on and the app is in front. */
-export function useCallSession(input: {
-  config: CallConfigView | undefined;
-  rtc: () => Promise<RtcDeps | null>;
-  foreground: boolean;
-}): CallSessionApi {
+export function useCallSession(input: { config: CallConfigView | undefined; rtc: () => Promise<RtcDeps | null>; foreground: boolean }): CallSessionApi {
   const client = useQueryClient();
-  const [store] = useState(
-    () => new CallStore(mobileCalls, () => void client.invalidateQueries({ queryKey: CALLS_KEY })),
-  );
+  const [store] = useState(() => new CallStore(mobileCalls, () => void client.invalidateQueries({ queryKey: CALLS_KEY })));
   const state = useSyncExternalStore(store.subscribe, store.get);
   const enabled = input.config?.enabled === true && input.config.canCall;
-  const active = useQuery(
-    activeCallsQuery({ enabled, live: state.session !== null, polling: input.foreground }),
-  );
+  const active = useQuery(activeCallsQuery({ enabled, live: state.session !== null, polling: input.foreground }));
   const rows: readonly ActiveCallView[] = useMemo(() => active.data?.rows ?? [], [active.data]);
   const d = deriveCall(state, { rows, startedAt: active.data?.startedAt ?? 0, enabled });
   const live = state.session !== null && !state.session.ended;
@@ -59,10 +45,7 @@ export function useCallSession(input: {
 
   // WhatsApp's answer, the call gone from the server, the 45 s timer, calls switched off (CallStore.follow).
   const { answer, gone, deadline, off } = d;
-  useEffect(
-    () => store.follow({ answer, gone, deadline, off }),
-    [store, answer, gone, deadline, off],
-  );
+  useEffect(() => store.follow({ answer, gone, deadline, off }), [store, answer, gone, deadline, off]);
 
   const { session, notice, noticeAction } = state;
   return { store, session, row: d.row, phase: d.phase, incoming: d.incoming, notice, noticeAction };
