@@ -9230,9 +9230,6 @@
     "typescript/consistent-type-definitions": {
       "count": 4
     },
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 4
     }
