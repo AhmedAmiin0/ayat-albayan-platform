@@ -7006,11 +7006,6 @@
       "count": 8
     }
   },
-  "src/modules/platform/google-sync/sync/google-sync.job.ts": {
-    "max-depth": {
-      "count": 1
-    }
-  },
   "src/modules/platform/google-sync/sync/google-sync.processor.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -7668,9 +7663,6 @@
       "count": 5
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-condition": {
       "count": 1
     }
   },
