@@ -7365,14 +7365,6 @@
       "count": 5
     }
   },
-  "src/teacher/report/hooks/use-autosave.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
   "src/teacher/report/hooks/use-scroll-to-invalid.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -7454,9 +7446,6 @@
   },
   "src/teacher/report/v2/hooks/use-v2-entry.ts": {
     "max-lines-per-function": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
       "count": 1
     }
   },

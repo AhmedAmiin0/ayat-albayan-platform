@@ -1,5 +1,5 @@
 // @ab/client-core (docs/27 §3.4, D3): code shared by web and mobile only. No DOM and no React
-// Native imports; react and @tanstack/react-query join as peers with the first hook (Wave E).
+// Native imports; react and @tanstack/react-query are peers, so a hook shares the app's client.
 export * from './core/http';
 export * from './core/keys';
 export * from './core/query';
@@ -13,6 +13,7 @@ export type * from './finance/list-filters';
 export * from './sales/lead-sort';
 export * from './people/assistants';
 export * from './teaching/reports';
+export * from './teaching/report-draft';
 export * from './teaching/booking';
 export * from './core/errors';
 export * from './messaging/channels';

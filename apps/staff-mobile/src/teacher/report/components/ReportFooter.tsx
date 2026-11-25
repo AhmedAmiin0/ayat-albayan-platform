@@ -7,7 +7,7 @@ import { View } from 'react-native';
 import { t, StatusChip, ErrorLine, useNow } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { reportErrorText } from '@/teacher/report/hooks/api';
-import type { SaveState } from '@/teacher/report/hooks/use-autosave';
+import type { SaveState } from '@ab/client-core';
 import type { ReportEntryState } from '@/teacher/report/hooks/use-report-entry';
 import { useWindowClose } from '@/teacher/report/hooks/use-window-close';
 import { SendButton } from './SendButton';

@@ -1,4 +1,4 @@
-import { sendChecked, withServerWindow } from '@ab/client-core';
+import { sendChecked, useDraftSave, withServerWindow } from '@ab/client-core';
 import {
   effective,
   v2DraftBody,
@@ -7,7 +7,6 @@ import {
   v2ValuesOf,
   type ReportAttachmentView,
   type ReportContent,
-  type ReportV2DraftBody,
   type ReportView,
   type V2Values,
 } from '@ab/shared';
@@ -18,7 +17,6 @@ import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { BUNDLES, t } from '@ab/web-kit/lib/i18n/i18n';
 import { REPORTS_KEY } from '@/features/reporting/reports/api';
 import { useReportApi } from '@/features/reporting/reports/report-api';
-import { useDraftSave } from '@/features/reporting/reports/entry/use-autosave';
 import { useReportMode } from '@/features/reporting/reports/send/use-report-mode';
 
 const words = () => t.reports.v2.suggest;
@@ -35,7 +33,9 @@ export function useReportEntryV2(initial: ReportView, studentProgram: Program, o
   const [own, setReport] = useState(initial);
   // The refetched window (can_edit, sent_at, pdf_status) reaches this open card (review 11-11).
   const report = withServerWindow(own, initial);
-  const [values, setValues] = useState<V2Values>(() => v2ValuesOf(initial, studentProgram, storedWords()));
+  const [values, setValues] = useState<V2Values>(() =>
+    v2ValuesOf(initial, studentProgram, storedWords()),
+  );
   const [problem, setProblem] = useState<string | null>(null);
   const mode = useReportMode(report, opened);
   const submit = useMutation({
@@ -51,9 +51,10 @@ export function useReportEntryV2(initial: ReportView, studentProgram: Program, o
     },
   });
   const draft = useDraftSave({
-    body: JSON.stringify(v2DraftBody(values)),
+    id: report.id,
+    body: v2DraftBody(values),
     enabled: report.status === 'draft' && !submit.isPending,
-    save: (b) => api.saveDraftV2({ id: report.id, body: JSON.parse(b) as ReportV2DraftBody }),
+    save: (body) => api.saveDraftV2({ id: report.id, body }),
   });
 
   const set = <K extends keyof V2Values>(key: K, value: V2Values[K]) => {
