@@ -5,14 +5,14 @@
 import { randomUUID } from 'node:crypto';
 import type { Json } from './meta.ts';
 import { metaError } from './meta.ts';
-import { readJson, type Route } from '../state.ts';
+import { readJson, textOr, type Route } from '../state.ts';
 import { V } from './graph.ts';
 
 const ACTIONS = ['connect', 'pre_accept', 'accept', 'reject', 'terminate'];
 
 /** connect starts a call, so the stub mints its wacid; every other action names its call. */
 const callIdOf = (action: string, body: Json): string =>
-  action === 'connect' ? `wacid.stub-${randomUUID()}` : String(body.call_id ?? '');
+  action === 'connect' ? `wacid.stub-${randomUUID()}` : textOr(body.call_id, '');
 
 const answerOf = (action: string, id: string): Json =>
   action === 'connect'
@@ -32,7 +32,7 @@ const callsRoute: Route = [
   new RegExp(`^${V}/([^/]+)/calls$`),
   async (req, m, s) => {
     const body = await readJson(req);
-    const action = String(body.action ?? '');
+    const action = textOr(body.action, '');
     if (!ACTIONS.includes(action)) return [400, metaError(100, 'Invalid parameter', 'action')];
     const id = callIdOf(action, body);
     if (!id) return [400, metaError(100, 'Invalid parameter', 'call_id is required')];
