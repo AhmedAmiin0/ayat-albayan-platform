@@ -1,7 +1,10 @@
-// The one lint config (oxlint.config.ts at the repo root): the core rules (core-rules.json), then
-// per package the base rules (plain or React) and the package's own lint.blocks.mjs, each scoped to
-// its folder (docs/31b-oxlint-mapping.md).
+// The one lint config, loaded by oxlint.config.ts at the repo root: the core rules
+// (core-rules.json), then per package the base rules (plain or React) and the package's own
+// lint.blocks.mjs, each scoped to its folder (docs/31b-oxlint-mapping.md).
+import { globSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { TESTS } from '../eslint-boundaries.js';
 import { toOverrides } from './convert.js';
 import { REACT_BLOCK } from './react.js';
@@ -61,4 +64,29 @@ export function compose({ oxlintrc, packages }) {
     rules: oxlintrc.rules,
     overrides: [...oxlintrc.overrides, ...parts.flatMap((part) => part.overrides)],
   };
+}
+
+const CORE = require('./core-rules.json');
+
+/** Where workspaces live; mirrors pnpm-workspace.yaml `packages`. */
+export const LINT_DIRS = ['apps/*', 'packages/*', 'tools/*', 'e2e', 'docs/design/brand/tools'];
+
+/** The repo-relative workspace folders under `root` that hold a lint.blocks.mjs, sorted. */
+export const lintDirs = (root) =>
+  globSync(
+    LINT_DIRS.map((dir) => `${dir}/lint.blocks.mjs`),
+    { cwd: root },
+  )
+    .map(dirname)
+    .sort();
+
+const loadPackage = async (root, dir) => {
+  const { default: lint } = await import(pathToFileURL(join(root, dir, 'lint.blocks.mjs')).href);
+  return { dir, ...lint };
+};
+
+/** The whole repo's config: the core rules, then every workspace under `root` with its blocks. */
+export async function repoConfig(root) {
+  const packages = await Promise.all(lintDirs(root).map((dir) => loadPackage(root, dir)));
+  return compose({ oxlintrc: CORE, packages });
 }

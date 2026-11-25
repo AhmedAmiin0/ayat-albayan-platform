@@ -1,12 +1,13 @@
 // The lint config sources of one git revision, as one text: the shared Oxlint config
 // (packages/config, its core-rules.json and rule folders), every package's lint.blocks.mjs, a
-// base's .oxlintrc.json, knip.json, .jscpd.json and the `lint:report` script of package.json.
+// base's .oxlintrc.json, the root oxlint.config.ts and .oxfmtrc.json, knip.json, .jscpd.json and
+// the `lint:report` script of package.json.
 import { execFileSync } from 'node:child_process';
 import { z } from 'zod';
 import { parseJson } from '../json-file.mjs';
 
 const CONFIG = String.raw`packages/config/([\w-]+/)?[^/]+\.[cm]?js|packages/config/oxlint/core-rules\.json`;
-const ROOT = String.raw`\.oxlintrc\.json|knip\.json|\.jscpd\.json`;
+const ROOT = String.raw`\.oxlintrc\.json|oxlint\.config\.ts|\.oxfmtrc\.json|knip\.json|\.jscpd\.json`;
 const SOURCE = new RegExp(String.raw`^(${CONFIG}|${ROOT})$|(^|/)lint\.blocks\.mjs$`);
 const TEST = /\.test\./;
 const rootPackage = z.object({ scripts: z.record(z.string(), z.string()) });

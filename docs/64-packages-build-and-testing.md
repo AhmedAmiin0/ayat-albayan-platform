@@ -74,9 +74,15 @@ Defaults taken:
 
 ## PR 4 · One oxlint and oxfmt base (`build/oxc-base`)
 
-**Scope.** Per the oxc-base notes, on top of #937 (merged as `7316f4cd4`): the root `oxlint.config.ts` becomes `export default await repoConfig(import.meta.dirname)` with the discovery of `lint.blocks.mjs` files and the core rules inside `@ab/config`; the format config stays the root `.oxfmtrc.json`, and every workspace's format and lint scripts use it.
+**Scope.** Per the oxc-base notes, on top of #937 (merged as `7316f4cd4`):
 
-**Proof.** The `repoConfig` unit test; the effective oxlint config (the JSON the binary receives) and the oxfmt config per workspace identical on the base and the head, dumped from one checkout in a cloud session; `guard:loosened` silent; lint and `format:check` green.
+- The root `oxlint.config.ts` becomes `export default await repoConfig(import.meta.dirname)`; the discovery of `lint.blocks.mjs` files (`LINT_DIRS`, `lintDirs`) and the core rules live in `@ab/config/oxlint`.
+- The lint gates (`oxlint/gate.mjs`, `oxlint/run.mjs`, `lint-gate.mjs`) read `LINT_DIRS`/`lintDirs` from there instead of three copies; the unused `LINT_SCOPE` filter goes.
+- The `explicit-module-boundary-types` block is one shared `exportTypes` in `@ab/config/lint` (db, i18n and testing used hand copies); `core-rules.json` drops its unread `plugins` key.
+- `oxlint` is pinned once, in the pnpm `catalog:`; `test:all` runs `pnpm lint` (turbo has no lint task).
+- The format config stays the root `.oxfmtrc.json` (oxfmt walks up to it; no workspace has its own or a format script). `guard:loosened` now watches it and the root `oxlint.config.ts`.
+
+**Proof.** The `repoConfig` and `lintDirs` unit tests; the effective oxlint config (the JSON the binary receives) byte-identical on the base and the head, dumped from one checkout in a cloud session; `.oxfmtrc.json` unchanged; `guard:loosened` silent; lint green. The CI format check stays off until the format sweep reaches zero (docs/31b §9).
 
 ## PR 5 · Short kit public api (`refactor/kits-solid`)
 
@@ -99,7 +105,7 @@ One PR at a time; each starts from the develop that holds the one before it.
 | 1 | `build/api-bundle` | `build(api): bundle the api into one file for the image` | #937 | the api boots from the bundle: app.module smoke test, job «api image» (`/health`, PDF sandbox, report PDF), e2e |
 | 2 | `build/jit-packages` | `build(repo): ship packages as typescript source` | 1 | typecheck, lint, every workspace's tests, the mobile bundles, the api image and e2e with packages as source and one-line package tsconfigs |
 | 3 | `build/testing-package` | `build(repo): add the shared testing package and one vitest base` | 2 | every workspace's test count unchanged through the one base; `guard:packages` shows only the new layer |
-| 4 | `build/oxc-base` | `build(repo): one oxlint and oxfmt base in @ab/config` | 3 | the effective lint and format config is identical; `guard:loosened` silent; lint and format green |
+| 4 | `build/oxc-base` | `build(repo): one oxlint and oxfmt base in @ab/config` | 3 | the effective lint and format config is identical; `guard:loosened` silent; lint green |
 | 5 | `refactor/kits-solid` | `refactor(kits): give mobile-kit and web-kit a short public api` | 4 | every app import resolves; the mobile bundles and startup imports; e2e |
 
 The docs/62 and docs/63 lanes start after PR 5 merges.

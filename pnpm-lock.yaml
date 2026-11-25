@@ -9,6 +9,9 @@ catalogs:
     '@types/react':
       specifier: ~19.2.18
       version: 19.2.18
+    oxlint:
+      specifier: 1.95.0
+      version: 1.95.0
 
 overrides:
   react-dom: 19.2.3
@@ -34,7 +37,7 @@ importers:
         specifier: 0.80.0
         version: 0.80.0
       oxlint:
-        specifier: 1.95.0
+        specifier: 'catalog:'
         version: 1.95.0(oxlint-tsgolint@7.0.2008)
       oxlint-tsgolint:
         specifier: 7.0.2008
@@ -836,7 +839,7 @@ importers:
         version: 7.1.1(eslint@10.11.0(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)
     devDependencies:
       oxlint:
-        specifier: 1.95.0
+        specifier: 'catalog:'
         version: 1.95.0(oxlint-tsgolint@7.0.2008)
       vite:
         specifier: ^8.3.2

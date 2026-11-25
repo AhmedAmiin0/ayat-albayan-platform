@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { annotations } from '../run.mjs';
 import { sourcePaths } from '../sources.mjs';
 
-test('sourcePaths: the shared config, every package config and the root lint files, no tests', () => {
+test('sourcePaths: the shared config, every package config, the root lint and format files', () => {
   const paths = [
     'packages/config/eslint-flow.js',
     'packages/config/eslint-flow.config.test.js',
@@ -18,13 +18,18 @@ test('sourcePaths: the shared config, every package config and the root lint fil
     '.oxlintrc.json',
     'knip.json',
     '.jscpd.json',
+    'oxlint.config.ts',
+    '.oxfmtrc.json',
+    'apps/api/oxlint.config.ts',
     'package.json',
   ];
   assert.deepEqual(sourcePaths(paths), [
     '.jscpd.json',
+    '.oxfmtrc.json',
     '.oxlintrc.json',
     'apps/api/lint.blocks.mjs',
     'knip.json',
+    'oxlint.config.ts',
     'packages/config/eslint-flow.js',
     'packages/config/oxlint/core-rules.json',
     'packages/config/oxlint/rules.js',
