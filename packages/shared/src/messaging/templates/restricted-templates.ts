@@ -19,10 +19,17 @@ export const RESTRICTED_TEMPLATE_DEFAULTS = [
 ] as const;
 
 /** Sent only by their own button (signed link, picked lesson): never from a composer's picker. */
-export const OWN_BUTTON_TEMPLATES: readonly string[] = ['lesson_feedback_request', 'lesson_join_link', 'lesson_rating'];
+export const OWN_BUTTON_TEMPLATES: readonly string[] = [
+  'lesson_feedback_request',
+  'lesson_join_link',
+  'lesson_rating',
+];
 
 /** The permissions that lift the allow-list: every template, as the admin. */
-export const ALL_TEMPLATES_PERMISSIONS = ['templates.manage', 'templates.send_all'] as const satisfies readonly Permission[];
+export const ALL_TEMPLATES_PERMISSIONS = [
+  'templates.manage',
+  'templates.send_all',
+] as const satisfies readonly Permission[];
 
 /**
  * A role based on sales, the classroom assistant or teacher lists
@@ -52,12 +59,20 @@ export function managesTemplates(who: TemplateSender | null | undefined): boolea
   return (who.permissions ?? []).includes('templates.manage');
 }
 
-export type RestrictedCheck = Pick<TemplateView, 'key' | 'status' | 'sales_starter' | 'header_format'>;
+export type RestrictedCheck = Pick<
+  TemplateView,
+  'key' | 'status' | 'sales_starter' | 'header_format'
+>;
 
 /**
  * May a restricted role list or send this template? Approved, flagged by the admin, never a PDF one,
  * never an own-button one. The one rule behind both GET /messaging/templates and the thread send.
  */
 export function restrictedMay(t: RestrictedCheck): boolean {
-  return t.status === 'approved' && t.sales_starter && t.header_format !== 'document' && !OWN_BUTTON_TEMPLATES.includes(t.key);
+  return (
+    t.status === 'approved' &&
+    t.sales_starter &&
+    t.header_format !== 'document' &&
+    !OWN_BUTTON_TEMPLATES.includes(t.key)
+  );
 }

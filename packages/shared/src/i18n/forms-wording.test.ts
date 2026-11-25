@@ -51,25 +51,55 @@ describe('form 2: تقرير الحلقة', () => {
   const r = ar.reports;
 
   it('identity labels, section headings and the program choice', () => {
-    expect([r.studentId, r.teacher, r.student]).toEqual(['معرّف الطالب (لا تعدله)', 'اسم المعلم (لا تعدله)', 'اسم الطالب (لا تعدله)']);
-    expect([r.identity, r.done, r.detailTitle, r.notesTitle]).toEqual(['بيانات الحلقة', 'محتوى الحلقة', 'التقييم التفصيلي', 'الملاحظات والواجب']);
-    expect(PROGRAMS.map((p) => ar.enums.program[p])).toEqual(['القرآن الكريم', 'اللغة العربية', 'الدراسات الإسلامية']);
+    expect([r.studentId, r.teacher, r.student]).toEqual([
+      'معرّف الطالب (لا تعدله)',
+      'اسم المعلم (لا تعدله)',
+      'اسم الطالب (لا تعدله)',
+    ]);
+    expect([r.identity, r.done, r.detailTitle, r.notesTitle]).toEqual([
+      'بيانات الحلقة',
+      'محتوى الحلقة',
+      'التقييم التفصيلي',
+      'الملاحظات والواجب',
+    ]);
+    expect(PROGRAMS.map((p) => ar.enums.program[p])).toEqual([
+      'القرآن الكريم',
+      'اللغة العربية',
+      'الدراسات الإسلامية',
+    ]);
   });
 
   it('the PDF reuses the form headings (one source)', () => {
-    expect(Object.keys(r.pdf)).not.toEqual(expect.arrayContaining(['content', 'grades', 'notesTitle']));
+    expect(Object.keys(r.pdf)).not.toEqual(
+      expect.arrayContaining(['content', 'grades', 'notesTitle']),
+    );
   });
 
   it('attendance options', () => {
     const a = ar.enums.attendance;
-    expect([a.on_time, a.late, a.excused, a.absent]).toEqual(['حضرت في الموعد', 'حضرت متأخرة', 'اعتذرت مسبقًا', 'غياب بدون إشعار']);
+    expect([a.on_time, a.late, a.excused, a.absent]).toEqual([
+      'حضرت في الموعد',
+      'حضرت متأخرة',
+      'اعتذرت مسبقًا',
+      'غياب بدون إشعار',
+    ]);
   });
 });
 
 describe('form 3: رأيك يهمّنا', () => {
   it('titles, scale ends and options', () => {
     const f = ar.feedback;
-    expect([f.title, f.teacher, f.kind, f.rating, f.ratingLow, f.ratingHigh, f.recommend, f.note, f.contact]).toEqual([
+    expect([
+      f.title,
+      f.teacher,
+      f.kind,
+      f.rating,
+      f.ratingLow,
+      f.ratingHigh,
+      f.recommend,
+      f.note,
+      f.contact,
+    ]).toEqual([
       'رأيك يهمّنا',
       'اسم المعلمة',
       'نوع الحلقة',
@@ -89,7 +119,12 @@ describe('lesson_feedback_request template', () => {
     expect(ar.templates.names.lesson_feedback_request).toBeTruthy();
     const lessonStartedAt = '2026-10-01T10:00:00Z';
     const now = new Date('2026-10-03T10:00:00Z');
-    const input = { templateKey: 'lesson_feedback_request', expiresAt: null, lessonStartsAt: lessonStartedAt, now };
+    const input = {
+      templateKey: 'lesson_feedback_request',
+      expiresAt: null,
+      lessonStartsAt: lessonStartedAt,
+      now,
+    };
     expect(messageExpired(input)).toBe(false);
     expect(messageExpired({ ...input, expiresAt: '2026-10-02T00:00:00Z' })).toBe(true);
   });

@@ -11,7 +11,10 @@ const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
 
 /** R-LEAD-05: only these leads get follow-ups. */
-export const FOLLOW_UP_STATUSES = ['interested_no_slot', 'no_reply'] as const satisfies readonly LeadStatus[];
+export const FOLLOW_UP_STATUSES = [
+  'interested_no_slot',
+  'no_reply',
+] as const satisfies readonly LeadStatus[];
 
 /** leads.follow_up_note (migration 144): why a due follow-up has not gone out yet. */
 export const FOLLOW_UP_NOTES = ['queued', 'waiting_template', 'no_slots'] as const;

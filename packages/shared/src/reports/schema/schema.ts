@@ -35,7 +35,13 @@ export const reportDraftSchema = z.object({
 });
 
 /** Required on first send when attended; a sent report may be corrected without them. */
-export const REPORT_REQUIRED_TEXT = ['recited', 'newMemorization', 'revision', 'notes', 'homework'] as const;
+export const REPORT_REQUIRED_TEXT = [
+  'recited',
+  'newMemorization',
+  'revision',
+  'notes',
+  'homework',
+] as const;
 
 /**
  * POST /reports/:id/submit: the whole form. Attendance is required; when the student attended
@@ -58,7 +64,8 @@ export const reportSubmitSchema = reportDraftSchema
     }
     if (r.expectedVersion > 0) return;
     const blank = REPORT_REQUIRED_TEXT.filter((k) => !r[k]);
-    if (blank.length > 0) ctx.addIssue({ code: 'custom', path: [blank[0] ?? 'recited'], message: 'missing_text' });
+    if (blank.length > 0)
+      ctx.addIssue({ code: 'custom', path: [blank[0] ?? 'recited'], message: 'missing_text' });
   });
 
 /** POST /reports/:id/attachments/upload-url: the file the teacher picked (R-REP-02). */

@@ -17,7 +17,8 @@ export interface AyahRef {
 /** Ayahs before each surah: OFFSETS[s - 1] + ayah = the global position. */
 const OFFSETS = SURAHS.reduce<number[]>((acc, s, i) => [...acc, (acc[i] ?? 0) + s[2]], [0]);
 
-export const isSurah = (surah: number): boolean => Number.isInteger(surah) && surah >= 1 && surah <= SURAH_COUNT;
+export const isSurah = (surah: number): boolean =>
+  Number.isInteger(surah) && surah >= 1 && surah <= SURAH_COUNT;
 
 /** Ayah count of a surah; 0 when the number is not a surah. */
 export function ayahCount(surah: number): number {
@@ -53,7 +54,8 @@ function lastStartAtOrBefore(starts: readonly number[], position: number): numbe
 }
 
 /** Mushaf page (1–604) of an ayah. */
-export const pageOf = (ref: AyahRef): number => lastStartAtOrBefore(PAGE_STARTS, globalAyah(ref)) + 1;
+export const pageOf = (ref: AyahRef): number =>
+  lastStartAtOrBefore(PAGE_STARTS, globalAyah(ref)) + 1;
 
 /** Juz (1–30) of an ayah. */
 export const juzOf = (ref: AyahRef): number => lastStartAtOrBefore(JUZ_STARTS, globalAyah(ref)) + 1;
@@ -97,7 +99,12 @@ export function searchSurahs(query: string): number[] {
   const all = Array.from({ length: SURAH_COUNT }, (_, i) => i + 1);
   if (q === '') return all;
   if (/^\d+$/.test(q)) return all.filter((n) => String(n).startsWith(q));
-  const bare = (s: string) => normalizeArabic(s).replace(/^ال/, '').replace(/[^\p{L}\p{N}]/gu, '');
+  const bare = (s: string) =>
+    normalizeArabic(s)
+      .replace(/^ال/, '')
+      .replace(/[^\p{L}\p{N}]/gu, '');
   const needle = bare(q);
-  return all.filter((n) => bare(surahName(n)).includes(needle) || bare(surahName(n, 'en')).includes(needle));
+  return all.filter(
+    (n) => bare(surahName(n)).includes(needle) || bare(surahName(n, 'en')).includes(needle),
+  );
 }

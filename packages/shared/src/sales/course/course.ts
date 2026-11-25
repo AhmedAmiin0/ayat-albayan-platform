@@ -8,7 +8,11 @@ import { continueFrom, type BookedCourse } from './course-follow.js';
 // exactly the plan's lesson count, the plan's days a week, each day with its own time.
 
 /** Why the assistant cannot book the course herself (null = she can). */
-export const COURSE_BLOCKS = ['subscription_required', 'course_exists', 'custom_count_admin'] as const;
+export const COURSE_BLOCKS = [
+  'subscription_required',
+  'course_exists',
+  'custom_count_admin',
+] as const;
 export type CourseBlock = (typeof COURSE_BLOCKS)[number];
 
 /** The subscription facts the course follows. */
@@ -24,14 +28,17 @@ export interface CourseSubscription {
 }
 
 /** How many lessons the course books: lessons_total − lessons_used_before. */
-export const courseLessonCount = (sub: Pick<CourseSubscription, 'lessons_total' | 'lessons_used_before'>): number =>
-  sub.lessons_total - (sub.lessons_used_before ?? 0);
+export const courseLessonCount = (
+  sub: Pick<CourseSubscription, 'lessons_total' | 'lessons_used_before'>,
+): number => sub.lessons_total - (sub.lessons_used_before ?? 0);
 
 /**
  * Days a week the course must have: the package's (8 → 2), or for a custom count lessons_total / 4
  * when it divides evenly (a month = 4 weeks). null = the admin books it (custom_count_admin).
  */
-export function courseDaysPerWeek(sub: Pick<CourseSubscription, 'package' | 'lessons_total'>): number | null {
+export function courseDaysPerWeek(
+  sub: Pick<CourseSubscription, 'package' | 'lessons_total'>,
+): number | null {
   if (sub.package) return packagePerWeek(sub.package);
   const n = sub.lessons_total / 4;
   return Number.isInteger(n) && n >= 1 && n <= 7 ? n : null;
@@ -42,7 +49,9 @@ export function courseDaysPerWeek(sub: Pick<CourseSubscription, 'package' | 'les
  * any paid size the schema accepts ('8'). The API ignores it for a course and labels every rule with
  * the subscription's own package (null for a custom count, PR #113 review M4); never show it as a label.
  */
-export const courseBodyPackage = (sub: Pick<CourseSubscription, 'package'>): Exclude<PackageSize, 'trial'> =>
+export const courseBodyPackage = (
+  sub: Pick<CourseSubscription, 'package'>,
+): Exclude<PackageSize, 'trial'> =>
   sub.package === null || sub.package === 'trial' ? '8' : sub.package;
 
 /** GET /sales/booking/course?studentId=: what the course wizard needs (no guardian, no money). */

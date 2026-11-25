@@ -6,7 +6,12 @@ import { CATALOGUE_SETTING_KEYS, type CatalogueSettings } from './catalogue-sett
 import { catalogueViews } from './catalogue-state/index.js';
 import type { RowSwitchKey, TimingKey } from './catalogue.types.js';
 
-const templates = new Map(TEMPLATE_KEYS.map((k) => [k, { status: 'approved' as TemplateStatus, line: 'notifications' as WaLine }]));
+const templates = new Map(
+  TEMPLATE_KEYS.map((k) => [
+    k,
+    { status: 'approved' as TemplateStatus, line: 'notifications' as WaLine },
+  ]),
+);
 
 /** Only the catalogue's keys of a full settings object. */
 const slice = (s: AcademySettings): CatalogueSettings =>
@@ -26,10 +31,17 @@ describe('the catalogue settings slice', () => {
   });
 
   it('the slice decides every row exactly as the full settings do', () => {
-    const on: AcademySettings = { ...SETTING_DEFAULTS, messaging_enabled: true, auto_messages_enabled: true, feedback_mode: 'link' };
+    const on: AcademySettings = {
+      ...SETTING_DEFAULTS,
+      messaging_enabled: true,
+      auto_messages_enabled: true,
+      feedback_mode: 'link',
+    };
     for (const s of [SETTING_DEFAULTS, on]) {
       for (const gateReason of [null, 'switch_off'] as const) {
-        expect(catalogueViews({ settings: slice(s), gateReason, templates })).toEqual(catalogueViews({ settings: s, gateReason, templates }));
+        expect(catalogueViews({ settings: slice(s), gateReason, templates })).toEqual(
+          catalogueViews({ settings: s, gateReason, templates }),
+        );
       }
     }
   });

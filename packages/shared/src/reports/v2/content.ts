@@ -41,13 +41,25 @@ const ayah = z.int().min(1).max(286);
 
 /** One surah part: the surah, the ayah range (from ≤ to, both in the surah) and its grade. */
 export const segmentSchema = z
-  .object({ kind: z.enum(SEGMENT_KINDS), surah: z.int().min(1).max(SURAH_COUNT), from: ayah, to: ayah, grade })
-  .refine((s) => s.from <= s.to && isAyah({ surah: s.surah, ayah: s.to }), { message: 'invalid_range', path: ['to'] });
+  .object({
+    kind: z.enum(SEGMENT_KINDS),
+    surah: z.int().min(1).max(SURAH_COUNT),
+    from: ayah,
+    to: ayah,
+    grade,
+  })
+  .refine((s) => s.from <= s.to && isAyah({ surah: s.surah, ayah: s.to }), {
+    message: 'invalid_range',
+    path: ['to'],
+  });
 
 const gradesOf = <K extends string>(keys: readonly K[]) =>
   z.object(Object.fromEntries(keys.map((k) => [k, grade])) as Record<K, typeof grade>);
 
-export const arabicContentSchema = z.object({ topic: shortText, skills: gradesOf(ARABIC_SKILLS).prefault({}) });
+export const arabicContentSchema = z.object({
+  topic: shortText,
+  skills: gradesOf(ARABIC_SKILLS).prefault({}),
+});
 
 export const islamicContentSchema = z.object({
   domain: z.enum(ISLAMIC_DOMAINS).nullable().default(null),

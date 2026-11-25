@@ -5,9 +5,12 @@ import type { CallView } from './call-types.js';
 /** live = still ringing or talking; the rest are ended calls. */
 export type CallEntryKind = 'outgoing' | 'incoming' | 'missed' | 'unanswered' | 'live';
 
-export function callEntryKind(call: Pick<CallView, 'direction' | 'status' | 'end_reason'>): CallEntryKind {
+export function callEntryKind(
+  call: Pick<CallView, 'direction' | 'status' | 'end_reason'>,
+): CallEntryKind {
   if (call.status !== 'ended') return 'live';
-  if (call.end_reason === 'completed') return call.direction === 'outbound' ? 'outgoing' : 'incoming';
+  if (call.end_reason === 'completed')
+    return call.direction === 'outbound' ? 'outgoing' : 'incoming';
   return call.direction === 'inbound' ? 'missed' : 'unanswered';
 }
 
@@ -24,7 +27,9 @@ export function formatCallDuration(seconds: number): string {
 }
 
 /** One row of the chat log: a message or a call, at its own time. */
-export type ChatEntry<M, C> = { kind: 'message'; at: string; message: M } | { kind: 'call'; at: string; call: C };
+export type ChatEntry<M, C> =
+  | { kind: 'message'; at: string; message: M }
+  | { kind: 'call'; at: string; call: C };
 
 export interface MergeOptions {
   /** Calls before this time are left out (the log's older pages are not loaded yet). */

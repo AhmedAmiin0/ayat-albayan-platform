@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import type { LeadStatus, SubscriptionStatus } from '@ab/catalog';
-import { familyUnpaid, packageChip, subscribeKind, threadBadge, type BadgeStudent } from '../thread-people.js';
+import {
+  familyUnpaid,
+  packageChip,
+  subscribeKind,
+  threadBadge,
+  type BadgeStudent,
+} from '../thread-people.js';
 
 const kid = (status: SubscriptionStatus, lessons_remaining: number): BadgeStudent => ({
   subscription: { status, lessons_remaining },
@@ -9,7 +15,9 @@ const lead = (status: LeadStatus) => ({ guardian: null, lead: { id: 'l1', status
 
 describe('threadBadge (R-SUB-01): the chat chip', () => {
   it('a guardian → the family badge', () => {
-    expect(threadBadge({ guardian: { id: 'g', name: 'أم يوسف' }, lead: null, students: [] })).toBe('none');
+    expect(threadBadge({ guardian: { id: 'g', name: 'أم يوسف' }, lead: null, students: [] })).toBe(
+      'none',
+    );
   });
   it.each<LeadStatus>(['new', 'trial_booked', 'lost'])('a %s lead → «غير مشترك»', (status) => {
     expect(threadBadge(lead(status))).toBe('none');
@@ -35,7 +43,11 @@ describe('familyUnpaid: the list row «غير مدفوع»', () => {
 });
 
 describe('packageChip: a child’s chip from the numbers', () => {
-  const sub = (status: SubscriptionStatus, lessons_remaining: number, due_amount: number) => ({ status, lessons_remaining, due_amount });
+  const sub = (status: SubscriptionStatus, lessons_remaining: number, due_amount: number) => ({
+    status,
+    lessons_remaining,
+    due_amount,
+  });
   it.each<[string, ReturnType<typeof sub>, SubscriptionStatus]>([
     ['owes money, lessons left', sub('unpaid', 4, 145), 'unpaid'],
     ['paid in full and used up (DB still says unpaid)', sub('unpaid', 0, 0), 'expired'],
@@ -51,6 +63,8 @@ describe('packageChip: a child’s chip from the numbers', () => {
 
 describe('subscribeKind: one rule for web and mobile', () => {
   it('no package → new', () => expect(subscribeKind(null)).toBe('new'));
-  it('running → new (a second package, not a renewal)', () => expect(subscribeKind({ status: 'active', lessons_remaining: 3 })).toBe('new'));
-  it('ended → renew', () => expect(subscribeKind({ status: 'unpaid', lessons_remaining: 0 })).toBe('renew'));
+  it('running → new (a second package, not a renewal)', () =>
+    expect(subscribeKind({ status: 'active', lessons_remaining: 3 })).toBe('new'));
+  it('ended → renew', () =>
+    expect(subscribeKind({ status: 'unpaid', lessons_remaining: 0 })).toBe('renew'));
 });

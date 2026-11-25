@@ -1,7 +1,12 @@
 import { z } from 'zod';
 import { ATTENDANCES, GRADES, PROGRAMS, type Program } from '@ab/catalog';
 import { attended } from '../rules.js';
-import { ARABIC_SKILLS, ISLAMIC_RATES, reportContentSchema, type ReportContent } from './content.js';
+import {
+  ARABIC_SKILLS,
+  ISLAMIC_RATES,
+  reportContentSchema,
+  type ReportContent,
+} from './content.js';
 
 // v2 report commands (PUT /reports/:id/v2/draft, POST /reports/:id/v2/submit). camelCase like the
 // v1 commands; the identity is never sent (R-REP-01). Notes, homework and the next plan keep the
@@ -25,9 +30,15 @@ export const reportV2DraftSchema = z.object({
   nextPlan: longText,
 });
 
-export type V2Problem = 'missing_attendance' | 'missing_segments' | 'missing_topic' | 'missing_domain' | 'missing_grades';
+export type V2Problem =
+  | 'missing_attendance'
+  | 'missing_segments'
+  | 'missing_topic'
+  | 'missing_domain'
+  | 'missing_grades';
 
-const allGraded = (grades: Record<string, unknown>, keys: readonly string[]) => keys.every((k) => grades[k] != null);
+const allGraded = (grades: Record<string, unknown>, keys: readonly string[]) =>
+  keys.every((k) => grades[k] != null);
 
 const quranProblem = (c: ReportContent): V2Problem | null => {
   if (c.segments.length === 0) return 'missing_segments';
@@ -61,7 +72,11 @@ export function contentProblem(program: Program, content: ReportContent): V2Prob
  * program's content (contentProblem) and the overall grade too. Absent / excused: nothing else.
  */
 export const reportV2SubmitSchema = reportV2DraftSchema
-  .extend({ expectedVersion: z.int().min(0), program: z.enum(PROGRAMS), content: reportContentSchema.prefault({}) })
+  .extend({
+    expectedVersion: z.int().min(0),
+    program: z.enum(PROGRAMS),
+    content: reportContentSchema.prefault({}),
+  })
   .superRefine((r, ctx) => {
     if (!r.attendance) {
       ctx.addIssue({ code: 'custom', path: ['attendance'], message: 'missing_attendance' });

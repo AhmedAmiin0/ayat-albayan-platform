@@ -12,18 +12,20 @@ export const WA_TEXT_MAX = 4096;
 export const CORRECTION_PREFIX_ROOM = 40;
 
 /** POST /threads/:phone/text: a session message (24 h window only, else 409 session_closed). */
-export const threadTextSchema = z.object({
-  text: z.string().trim().min(1).max(WA_TEXT_MAX),
-  /** Idempotency (rule 8): a retried send returns the first row. */
-  clientRequestId: z.uuid().optional(),
-  /** The quoted message, from this chat (400 reply_not_in_thread). */
-  replyToMessageId: z.uuid().optional(),
-  /** This text corrects that message, sent as a prefixed reply. */
-  correctsId: z.uuid().optional(),
-}).refine((b) => !b.correctsId || b.text.length <= WA_TEXT_MAX - CORRECTION_PREFIX_ROOM, {
-  path: ['text'],
-  message: 'too_long',
-});
+export const threadTextSchema = z
+  .object({
+    text: z.string().trim().min(1).max(WA_TEXT_MAX),
+    /** Idempotency (rule 8): a retried send returns the first row. */
+    clientRequestId: z.uuid().optional(),
+    /** The quoted message, from this chat (400 reply_not_in_thread). */
+    replyToMessageId: z.uuid().optional(),
+    /** This text corrects that message, sent as a prefixed reply. */
+    correctsId: z.uuid().optional(),
+  })
+  .refine((b) => !b.correctsId || b.text.length <= WA_TEXT_MAX - CORRECTION_PREFIX_ROOM, {
+    path: ['text'],
+    message: 'too_long',
+  });
 
 /** POST /threads/:phone/file-upload-url: a signed upload for one image, PDF or voice note. */
 export const threadFileUploadSchema = z.object({
@@ -37,13 +39,21 @@ export const threadFileSendSchema = z.object({
   clientRequestId: z.uuid(),
   path: z.string().min(1),
   // No path separators and no control characters (a newline would reach the family's WhatsApp).
-  filename: z.string().trim().min(1).max(200).regex(/^[^/\\\p{Cc}]+$/u),
+  filename: z
+    .string()
+    .trim()
+    .min(1)
+    .max(200)
+    .regex(/^[^/\\\p{Cc}]+$/u),
   caption: z.string().trim().max(WA_CAPTION_MAX).optional(),
   replyToMessageId: z.uuid().optional(),
 });
 
 const paramText = z.string().trim().min(1).max(1024).optional();
-const slotsShape = Object.fromEntries(BODY_SLOTS.map((s) => [s, paramText])) as Record<BodySlot, typeof paramText>;
+const slotsShape = Object.fromEntries(BODY_SLOTS.map((s) => [s, paramText])) as Record<
+  BodySlot,
+  typeof paramText
+>;
 
 /** messages.template_params an admin can fill ({{1}}…{{9}}); documents and payloads are set by the API. */
 export const templateParamsInputSchema = z.object({

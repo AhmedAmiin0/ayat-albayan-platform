@@ -22,21 +22,35 @@ describe('bookingRequestSchema dayTimes', () => {
     expect(issues({ ...base, dayTimes: [{ weekday: 2, startTimeLocal: '19:30' }] })).toEqual([]);
   });
   it('a day that is not in byday', () => {
-    expect(issues({ ...base, dayTimes: [{ weekday: 3, startTimeLocal: '19:30' }] })).toContain('day_not_in_byday');
+    expect(issues({ ...base, dayTimes: [{ weekday: 3, startTimeLocal: '19:30' }] })).toContain(
+      'day_not_in_byday',
+    );
   });
   it('the same day twice', () => {
-    const twice = [{ weekday: 2, startTimeLocal: '19:30' }, { weekday: 2, startTimeLocal: '20:00' }];
+    const twice = [
+      { weekday: 2, startTimeLocal: '19:30' },
+      { weekday: 2, startTimeLocal: '20:00' },
+    ];
     expect(issues({ ...base, dayTimes: twice })).toContain('duplicate_day');
   });
   it('a trial is one lesson at one time', () => {
-    const trial = { ...base, package: 'trial', byday: [2], dayTimes: [{ weekday: 2, startTimeLocal: '19:30' }] };
+    const trial = {
+      ...base,
+      package: 'trial',
+      byday: [2],
+      dayTimes: [{ weekday: 2, startTimeLocal: '19:30' }],
+    };
     expect(issues(trial)).toContain('package_only');
   });
   it('a free-text time is refused (rule 6)', () => {
-    expect(issues({ ...base, dayTimes: [{ weekday: 2, startTimeLocal: '7:30pm' }] }).length).toBeGreaterThan(0);
+    expect(
+      issues({ ...base, dayTimes: [{ weekday: 2, startTimeLocal: '7:30pm' }] }).length,
+    ).toBeGreaterThan(0);
   });
   it('more than 7 days', () => {
     const many = Array.from({ length: 8 }, (_, i) => ({ weekday: i % 7, startTimeLocal: '19:30' }));
-    expect(issues({ ...base, byday: [0, 1, 2, 3, 4, 5, 6], dayTimes: many }).length).toBeGreaterThan(0);
+    expect(
+      issues({ ...base, byday: [0, 1, 2, 3, 4, 5, 6], dayTimes: many }).length,
+    ).toBeGreaterThan(0);
   });
 });

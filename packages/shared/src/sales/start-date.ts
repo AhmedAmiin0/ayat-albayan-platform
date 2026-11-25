@@ -17,7 +17,9 @@ export interface SalesStartInput {
   today: string;
 }
 
-export type SalesStartResult = { ok: true; startsOn: string } | { ok: false; code: SalesStartProblem };
+export type SalesStartResult =
+  | { ok: true; startsOn: string }
+  | { ok: false; code: SalesStartProblem };
 
 /** YYYY-MM-DD minus n days (addCalendarDays, negated). */
 export function daysBefore(day: string, n: number): string {
@@ -27,18 +29,23 @@ export function daysBefore(day: string, n: number): string {
 export function salesStartDate(input: SalesStartInput): SalesStartResult {
   const { startsOn, today } = input;
   if (!input.canSet) {
-    if ((startsOn === undefined || startsOn === today) && !input.alreadyStarted) return { ok: true, startsOn: today };
+    if ((startsOn === undefined || startsOn === today) && !input.alreadyStarted)
+      return { ok: true, startsOn: today };
     return { ok: false, code: 'start_date_not_allowed' };
   }
   if (startsOn === undefined || startsOn >= today) return { ok: true, startsOn: startsOn ?? today };
   if (!input.alreadyStarted) return { ok: false, code: 'start_date_past' };
-  if (startsOn < daysBefore(today, SALES_START_BACK_DAYS)) return { ok: false, code: 'start_date_too_old' };
+  if (startsOn < daysBefore(today, SALES_START_BACK_DAYS))
+    return { ok: false, code: 'start_date_too_old' };
   return { ok: true, startsOn };
 }
 
 // Used before the platform (migration 932): only with a past start, never the whole package.
 
-export type UsedBeforeProblem = 'used_before_not_allowed' | 'used_before_needs_past_start' | 'used_before_too_many';
+export type UsedBeforeProblem =
+  | 'used_before_not_allowed'
+  | 'used_before_needs_past_start'
+  | 'used_before_too_many';
 
 export interface UsedBeforeInput {
   lessonsUsedBefore: number;
@@ -55,7 +62,9 @@ export function usedBeforeProblem(input: UsedBeforeInput): UsedBeforeProblem | n
   if (input.lessonsUsedBefore === 0) return null;
   if (!input.canSet) return 'used_before_not_allowed';
   if (input.startsOn >= input.today) return 'used_before_needs_past_start';
-  return input.lessonsUsedBefore <= usedBeforeMax(input.lessonsTotal) ? null : 'used_before_too_many';
+  return input.lessonsUsedBefore <= usedBeforeMax(input.lessonsTotal)
+    ? null
+    : 'used_before_too_many';
 }
 
 /**

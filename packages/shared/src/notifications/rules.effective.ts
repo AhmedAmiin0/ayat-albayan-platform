@@ -1,7 +1,14 @@
 import type { NotificationKey } from './catalogue/catalogue.js';
 import type { NotificationChannel, NotificationEntry } from './catalogue/catalogue.types.js';
 import { legacyParts, type RuleSettings } from './rules.legacy.js';
-import { isTimedKey, RULE_TIMING_SCHEMAS, type AnyRuleTiming, type EffectiveRule, type NotificationRuleRow, type RulesMode } from './rules.types.js';
+import {
+  isTimedKey,
+  RULE_TIMING_SCHEMAS,
+  type AnyRuleTiming,
+  type EffectiveRule,
+  type NotificationRuleRow,
+  type RulesMode,
+} from './rules.types.js';
 
 export interface ResolveInput {
   mode: RulesMode;
@@ -16,16 +23,24 @@ export function defaultTiming(key: string, s: RuleSettings): AnyRuleTiming | nul
   if (key === 'lesson_reminder_24h') return { send_at_local: null };
   if (key === 'teacher_lesson_reminder') return { minutes_before: null };
   if (key === 'follow_up_slots') {
-    return { hours: [...s.follow_up_hours], slots_from_hours: s.follow_up_slots_from_hours, slots_to_days: s.follow_up_slots_to_days };
+    return {
+      hours: [...s.follow_up_hours],
+      slots_from_hours: s.follow_up_slots_from_hours,
+      slots_to_days: s.follow_up_slots_to_days,
+    };
   }
   return null;
 }
 
 /** The channels a row may switch off: every allowed channel but the first (it always stays). */
-export const optionalChannels = (entry: NotificationEntry): NotificationChannel[] => entry.channels.slice(1);
+export const optionalChannels = (entry: NotificationEntry): NotificationChannel[] =>
+  entry.channels.slice(1);
 
 /** A stored channel list, kept only when it is a subset of the entry's that includes its first channel. */
-function validChannels(entry: NotificationEntry, stored: readonly string[] | null): NotificationChannel[] | null {
+function validChannels(
+  entry: NotificationEntry,
+  stored: readonly string[] | null,
+): NotificationChannel[] | null {
   if (!stored) return null;
   const allowed = entry.channels as readonly string[];
   if (!stored.every((c) => allowed.includes(c)) || !stored.includes(allowed[0] ?? '')) return null;
@@ -45,7 +60,10 @@ export function validTiming(key: string, stored: unknown): AnyRuleTiming | null 
  * lead time, rows without a switch today). module mode: the row decides; the legacy settings are the
  * fallback for a missing or malformed part. Manual and locked rows are always on.
  */
-export function resolveRule(entry: NotificationEntry<NotificationKey>, input: ResolveInput): EffectiveRule {
+export function resolveRule(
+  entry: NotificationEntry<NotificationKey>,
+  input: ResolveInput,
+): EffectiveRule {
   const { row, settings } = input;
   const legacy = legacyParts(entry.key, settings);
   const stored = {

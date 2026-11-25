@@ -43,11 +43,18 @@ export interface LineCheckView {
   name_status: string | null;
   code_verification_status: string | null;
   /** null = not asked / the call failed; [] = no app subscribed to the WABA (no webhook arrives). */
-  subscribed_apps: { id: string | null; name: string | null; override_callback_uri: string | null }[] | null;
+  subscribed_apps:
+    | { id: string | null; name: string | null; override_callback_uri: string | null }[]
+    | null;
   /**
    * One entry per failed call (phone first, then subscribed_apps; a crm line's only call is crm_me = GET /me);
    * `credential: 'kapso'` = Kapso refused its key, `'crm'` = the CRM refused its key.
    */
-  errors: { step: 'phone' | 'subscribed_apps' | 'crm_me'; code: number | null; message: string; credential?: 'kapso' | 'crm' | 'evolution' }[];
+  errors: {
+    step: 'phone' | 'subscribed_apps' | 'crm_me';
+    code: number | null;
+    message: string;
+    credential?: 'kapso' | 'crm' | 'evolution';
+  }[];
   checked_at: string;
 }

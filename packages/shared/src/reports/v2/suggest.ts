@@ -12,23 +12,37 @@ export interface SuggestWords {
 }
 
 const fill = (template: string, vars: Record<string, string | number>) =>
-  template.replace(/\{(\w+)\}/g, (slot, name: string) => (name in vars ? String(vars[name]) : slot));
+  template.replace(/\{(\w+)\}/g, (slot, name: string) =>
+    name in vars ? String(vars[name]) : slot,
+  );
 
 const langOf = (words: SuggestWords): 'ar' | 'en' => (words.lang === 'en' ? 'en' : 'ar');
 
-const rangeVars = (r: SurahRange, lang: 'ar' | 'en') => ({ surah: surahName(r.surah, lang), from: r.from, to: r.to });
+const rangeVars = (r: SurahRange, lang: 'ar' | 'en') => ({
+  surah: surahName(r.surah, lang),
+  from: r.from,
+  to: r.to,
+});
 
 const lastOf = (content: ReportContent, kind: SegmentKind): SurahRange | null =>
   content.segments.filter((s) => s.kind === kind).at(-1) ?? null;
 
 /** Homework prefill for Quran: revise today's new memorization daily; otherwise null. */
-export function suggestHomework(content: ReportContent, words: SuggestWords, lang = langOf(words)): string | null {
+export function suggestHomework(
+  content: ReportContent,
+  words: SuggestWords,
+  lang = langOf(words),
+): string | null {
   const range = lastOf(content, 'new') ?? content.segments.at(-1) ?? null;
   return range ? fill(words.homeworkQuran, rangeVars(range, lang)) : null;
 }
 
 /** Next-lesson prefill after today's memorization and revision; null when neither. */
-export function suggestNextPlan(content: ReportContent, words: SuggestWords, lang = langOf(words)): string | null {
+export function suggestNextPlan(
+  content: ReportContent,
+  words: SuggestWords,
+  lang = langOf(words),
+): string | null {
   const parts: string[] = [];
   const next = suggestRange(lastOf(content, 'new'));
   if (next) parts.push(fill(words.nextNew, rangeVars(next, lang)));

@@ -61,6 +61,8 @@ export interface RegistrationCheckView {
 
 /** The answer's shape from the rows read (already whitelisted), capped at REGISTRATION_CHECK_MAX. */
 export function registrationView(rows: readonly RegistrationMatch[]): RegistrationCheckView {
-  const matches = rows.slice(0, REGISTRATION_CHECK_MAX).map((r) => ({ name: r.name, code: r.code, status: r.status, teacher_name: r.teacher_name }));
+  const matches = rows
+    .slice(0, REGISTRATION_CHECK_MAX)
+    .map((r) => ({ name: r.name, code: r.code, status: r.status, teacher_name: r.teacher_name }));
   return { found: matches.length > 0, matches, more: rows.length > REGISTRATION_CHECK_MAX };
 }

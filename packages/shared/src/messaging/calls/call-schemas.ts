@@ -6,7 +6,11 @@ import { phoneE164 } from '@ab/core';
 /** An SDP offer or answer is a few KB; anything bigger is not one (the column's check too). */
 export const CALL_SDP_MAX = 20_000;
 
-const sdp = z.string().min(1).max(CALL_SDP_MAX).refine((v) => v.startsWith('v=0'), 'not_sdp');
+const sdp = z
+  .string()
+  .min(1)
+  .max(CALL_SDP_MAX)
+  .refine((v) => v.startsWith('v=0'), 'not_sdp');
 
 /** POST /calls: the browser's (or phone's) SDP offer to the family's WhatsApp. */
 export const startCallSchema = z.object({

@@ -1,4 +1,11 @@
-import type { Duration, PackageSize, PaymentKind, PaymentMethod, StudentStatus, SubscriptionStatus } from '@ab/catalog';
+import type {
+  Duration,
+  PackageSize,
+  PaymentKind,
+  PaymentMethod,
+  StudentStatus,
+  SubscriptionStatus,
+} from '@ab/catalog';
 import type { Quote } from '@ab/money';
 import type { RenewalPricing } from '@ab/money';
 
@@ -7,7 +14,10 @@ import type { RenewalPricing } from '@ab/money';
 // another family's data.
 
 /** The quote she tells the family: the price to transfer, nothing about how it was converted. */
-export type SalesQuoteView = Pick<Quote, 'package' | 'lessons' | 'duration' | 'currency' | 'discount' | 'afterDiscount' | 'perLesson'>;
+export type SalesQuoteView = Pick<
+  Quote,
+  'package' | 'lessons' | 'duration' | 'currency' | 'discount' | 'afterDiscount' | 'perLesson'
+>;
 
 export interface SalesStudentRef {
   id: string;

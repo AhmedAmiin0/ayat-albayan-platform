@@ -7,8 +7,16 @@ const label = (topic: string) => `label:${topic}`;
 
 describe('legacyTexts: the v1 sheet text columns of a v2 report', () => {
   it('writes one part as «<surah> <from>–<to>»', () => {
-    const texts = legacyTexts(content({ segments: [{ kind: 'new', surah: 67, from: 16, to: 22 }] }), label);
-    expect(texts).toEqual({ recited: null, newMemorization: 'الملك 16–22', revision: null, theory: null });
+    const texts = legacyTexts(
+      content({ segments: [{ kind: 'new', surah: 67, from: 16, to: 22 }] }),
+      label,
+    );
+    expect(texts).toEqual({
+      recited: null,
+      newMemorization: 'الملك 16–22',
+      revision: null,
+      theory: null,
+    });
   });
 
   it('joins several parts of one track with «، », in form order', () => {
@@ -23,7 +31,12 @@ describe('legacyTexts: the v1 sheet text columns of a v2 report', () => {
   });
 
   it('no parts: every track is null', () => {
-    expect(legacyTexts(content({}), label)).toEqual({ recited: null, newMemorization: null, revision: null, theory: null });
+    expect(legacyTexts(content({}), label)).toEqual({
+      recited: null,
+      newMemorization: null,
+      revision: null,
+      theory: null,
+    });
   });
 
   it('theory: the tajweed label, else the Arabic or Islamic topic', () => {
