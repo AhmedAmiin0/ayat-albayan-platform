@@ -9,6 +9,7 @@ const NAMES = {
   'apps/staff-web': 'staff-web',
   'apps/family-web': 'family-web',
   'packages/config': '@ab/config',
+  'packages/testing': '@ab/testing',
   'packages/core': '@ab/core',
   'packages/db': '@ab/db',
   'packages/time': '@ab/time',
@@ -46,7 +47,7 @@ const DOMAIN = ['@ab/core', '@ab/time', '@ab/i18n', '@ab/schedule'];
 /** A small layer table over the workspaces above. */
 export const table = () => ({
   layers: [
-    { name: 'T', packages: ['@ab/config'] },
+    { name: 'T', packages: ['@ab/config', '@ab/testing'] },
     { name: 'L0', packages: ['@ab/core'] },
     { name: 'L0db', packages: ['@ab/db'] },
     { name: 'L1', packages: ['@ab/time', '@ab/i18n'] },

@@ -28,6 +28,17 @@ test('an import outside allowed is an extra; an allowed one and @ab/config are n
   assert.deepEqual(v.extras.get(keys(v)[0]).files, ['packages/time/src/a.ts']);
 });
 
+test('an edge into the tooling layer is exempt; one out of @ab/testing is an extra', () => {
+  const v = judged(
+    {
+      'packages/core/vitest.config.mts': "import { testConfig } from '@ab/testing/vitest';",
+      'packages/testing/src/vitest.ts': "import { x } from '@ab/core';",
+    },
+    { '@ab/core': { devDependencies: { '@ab/testing': 'workspace:*' } } },
+  );
+  assert.deepEqual(keys(v), ['@ab/testing → @ab/core (import)']);
+});
+
 test('a relative import from family-web into staff-web fails', () => {
   const v = judged({ 'apps/family-web/src/a.ts': "import { x } from '../../staff-web/src/x';" });
   assert.match(v.fatal.join('\n'), /family-web → staff-web \(import\)/);

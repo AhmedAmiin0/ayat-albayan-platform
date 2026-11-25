@@ -44,7 +44,7 @@ Names (rename #735): `apps/staff-web` (package `staff-web`), `apps/staff-mobile`
   - `schedule/` (the week slot grid, `WeekSlotsFrame`, `MoveReason`, slots and date labels: staff rescheduling and the family's «اطلب موعدًا آخر») and `lesson-files/` (the audio player and file words: staff «ملفات الحلقة» and the family's «التسجيلات»);
   - `classroom/`: the LiveKit room (room, board, mute, kick, share, recordings, stage and their API) — families join inside the page.
   - `components/channel/`: the student channel thread (`ChannelThread`, bubbles, composer, edits, live socket, its API and the chat header's presence line); staff-only parts (teacher messages, monitor, seats) stay in apps/staff-web `student-channel`.
-- **apps/staff-web imports these from the kit:** a move, no copies. `@ab/config` has the shared configs: `@ab/config/vite` (`webConfig`), `@ab/config/eslint-web` (`webReactConfig`) and `webBlocks` in `@ab/config/lint`, so the three web workspaces' configs are not clones.
+- **apps/staff-web imports these from the kit:** a move, no copies. `@ab/config` has the shared configs: `@ab/config/vite` (`webConfig`, merged with `testConfig` from `@ab/testing/vitest`), `@ab/config/eslint-web` (`webReactConfig`) and `webBlocks` in `@ab/config/lint`, so the three web workspaces' configs are not clones.
 - **jscpd** cross-app clones: zero.
 - **CI coverage.**
   - `knip.json`, `tools/scripts/ci-checks/e2e-areas/{select,graph}.mjs`, `e2e/areas.json` and turbo know `apps/family-web` and `packages/web-kit` (turbo hashes the kit's files into every dependant's tasks).

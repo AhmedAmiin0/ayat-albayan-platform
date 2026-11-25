@@ -66,7 +66,8 @@ Defaults taken:
 
 - `testConfig({ kind, setupFiles })` is the one vitest base; every workspace's `vitest.config.mts` becomes a call to it (merged with its own plugins where it has some: swc in the api, the React, Tailwind and router plugins on the web).
 - No runtime imports in the base (types only), so it loads in every workspace without resolving anything.
-- The jest-expo base and setup move out of mobile-kit into `@ab/testing` when they have no workspace dependency.
+- The jest-expo base (`jest.base.cjs`, no workspace dependency) moves out of mobile-kit as `@ab/testing/jest`; the shared jest setup (`jest.shared.cjs`) stays in mobile-kit, because it mocks the kit's own modules, `@ab/time` and `@ab/shared`, and moving it would make a cycle.
+- `@ab/config/vite` drops its `test` block: the three web `vite.config.ts` files merge `webConfig(...)` with `testConfig({ kind: 'web', ... })`, so a web build no longer loads vitest.
 - `refactor/guards/packages.json` adds `@ab/testing` to the bottom tooling layer with no allowed edges; the packages rule exempts edges into that layer, as it does for `@ab/config`.
 
 **Proof (CI).** The base's unit test; every workspace's test count unchanged apart from the PR's own tests; `guard:packages` shows only the new layer.

@@ -2,7 +2,7 @@
   "layers": [
     {
       "name": "T",
-      "packages": ["@ab/config"]
+      "packages": ["@ab/config", "@ab/testing"]
     },
     {
       "name": "L0",
@@ -50,6 +50,7 @@
     "@ab/core": [],
     "@ab/db": [],
     "@ab/config": [],
+    "@ab/testing": [],
     "@ab/time": ["@ab/core"],
     "@ab/i18n": ["@ab/core"],
     "@ab/catalog": ["@ab/core"],

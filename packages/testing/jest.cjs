@@ -1,4 +1,4 @@
-// The jest config of both Expo apps and of this package (jest-expo); each adds its own setup.
+// The jest-expo config of both Expo apps and of @ab/mobile-kit; each adds its own setup files.
 module.exports = {
   preset: 'jest-expo',
   // The first render in a suite pays the cold RN/svg/font transform; under `turbo --force` with
