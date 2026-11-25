@@ -6431,11 +6431,6 @@
       "count": 1
     }
   },
-  "src/features/sales/sales-money/SalesChatActions/tests/renew-any.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/features/sales/sales-money/SalesChatFrame/tests/SalesChatFrame.test.tsx": {
     "stylistic/max-len": {
       "count": 2
@@ -6588,7 +6583,7 @@
   },
   "src/features/sales/sales-money/course/course-fixture.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/features/sales/sales-money/payment-link/CreatedLink.test.tsx": {
@@ -6655,11 +6650,6 @@
     },
     "typescript/dot-notation": {
       "count": 2
-    }
-  },
-  "src/features/sales/sales-money/subscribe/SalesSubscribeStep.teacher.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/sales/sales-money/subscribe/SalesSubscribeStep.tsx": {
@@ -6753,16 +6743,6 @@
     }
   },
   "src/features/sales/sales-money/transfer/SalesTransferStep/tests/chat.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/sales/sales-money/transfer/SalesTransferStep/tests/renew-any.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/sales/sales-money/transfer/SalesTransferStep/tests/shortfall.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -7000,7 +6980,7 @@
   },
   "src/features/sales/sales/schedule/SalesLessonDrawer.test.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/sales/sales/schedule/SalesLessonDrawer.tsx": {

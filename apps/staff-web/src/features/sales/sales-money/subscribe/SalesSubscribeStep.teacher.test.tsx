@@ -23,7 +23,7 @@ function open(teacherId: string | null) {
   return within(screen.getByRole('dialog', { name: t.salesMoney.newSubscription }));
 }
 
-// Owner 2026-10-29: the assistant assigns the teacher when the student subscribes (the chat opens after).
+// The assistant assigns the teacher when the student subscribes (the chat opens after).
 describe('«المعلم/ة» in the subscribe step', () => {
   afterEach(() => {
     apiFetch.mockReset();

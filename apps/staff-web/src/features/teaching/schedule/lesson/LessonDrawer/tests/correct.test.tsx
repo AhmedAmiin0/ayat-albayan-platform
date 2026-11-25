@@ -55,7 +55,7 @@ describe('LessonDrawer: no confirmation (owner 2026-11-02) and «تصحيح ال
     expect(within(drawer).getByText(c.outcomeHint)).toBeTruthy();
     expect(within(drawer).queryByRole('button', { name: c.to.completed })).toBeNull();
     fireEvent.click(within(drawer).getByRole('button', { name: c.to.no_show }));
-    // owner 2026-11-17: it asks first and says whether the lesson counts from the package.
+    // It asks first and says whether the lesson counts from the package.
     expect(within(drawer).getByText(`${c.ask.replace('{to}', c.to.no_show)} ${c.counts.no_show}`)).toBeTruthy();
     fireEvent.click(within(drawer).getByRole('button', { name: c.confirm }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-7/correct', { to: 'no_show' }));

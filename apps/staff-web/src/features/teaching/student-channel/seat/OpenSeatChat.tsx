@@ -11,7 +11,7 @@ interface OpenSeatChatProps {
 }
 
 /**
- * A chat notification's way in (/sales/students?student=<id>; owner 2026-11-16): that student's
+ * A chat notification's way in (/sales/students?student=<id>): that student's
  * chat opens over the list while the seat is hers; not hers (any more, a takeover included), a
  * short card says who follows it or offers to take it. Closing either clears the link.
  */
