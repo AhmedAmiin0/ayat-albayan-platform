@@ -78,7 +78,7 @@ export function zonedFieldsIn(at: Date | number, zone: string): ZonedFields {
   };
 }
 
-/** 0 = الأحد … 6 = السبت: the weekday `at` falls on in `zone` (the DB `byday` numbering). */
+/** 0 = Sunday … 6 = Saturday: the weekday `at` falls on in `zone` (the DB `byday` numbering). */
 export function weekdayIn(at: Date | number, zone: string): number {
   return getDay(at, { in: inZone(zone) });
 }

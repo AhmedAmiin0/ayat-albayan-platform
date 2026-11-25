@@ -418,6 +418,7 @@ jobs:
       - run: pnpm guard:packages
       - run: pnpm guard:tsconfig
       - run: pnpm guard:comments
+      - run: pnpm guard:comment-language
       - run: pnpm guard:escapes
       - run: pnpm guard:units
       - run: pnpm guard:move-only

@@ -24,14 +24,15 @@ function tokens(name: string): string[] {
     .filter(Boolean);
 }
 
-/** "وسهيله" (joined with و) matches "سهيله". */
+/** A word joined to the conjunction waw ("and" + name) matches the bare name. */
 function sameToken(a: string, b: string): boolean {
   return a === b || a === `و${b}` || b === `و${a}`;
 }
 
 /**
  * True when two names likely denote the same person: every word of the shorter name appears in
- * the longer one after normalisation (سهيلة ~ سهيله ~ جود وسهيله, فاطمة ~ فاطمه محمد).
+ * the longer one after normalisation (a taa marbuta or haa ending, a joined second name, an
+ * added surname).
  * No typo/edit-distance matching (R-STU-03); whether it is needed is open with the owner.
  */
 export function arabicNameSimilar(a: string, b: string): boolean {

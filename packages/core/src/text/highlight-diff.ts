@@ -3,8 +3,9 @@ import { normalizeArabic } from './arabic/index.js';
 // Which letters of `text` differ from `other` (duplicate dialog, R-STU-03, docs/07 §14.2).
 // Both names are aligned on their normalizeArabic() letters (so tashkeel / tatweel never shift the
 // alignment), then every letter of `text` that is unmatched or matched to a different raw letter
-// (ة vs ه, أ vs ا) is reported. Ranges index `[...text]` (code points), so the UI slices the raw
-// name into ONE inline run and wraps only the differing letter (colour + underline, no box).
+// (taa marbuta vs haa, hamza alif vs bare alif) is reported. Ranges index `[...text]` (code
+// points), so the UI slices the raw name into ONE inline run and wraps only the differing letter
+// (colour + underline, no box).
 
 export interface DiffRange {
   start: number;

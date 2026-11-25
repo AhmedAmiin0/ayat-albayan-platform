@@ -38,6 +38,7 @@
     "guard:packages": "node tools/scripts/ci-checks/lint/packages-gate.mjs",
     "guard:tsconfig": "node tools/scripts/ci-checks/lint/tsconfig/gate.mjs",
     "guard:comments": "node tools/scripts/ci-checks/comment-only/gate.mjs",
+    "guard:comment-language": "node tools/scripts/ci-checks/comment-only/language/gate.mjs",
     "guard:units": "node tools/scripts/units/guard.ts",
     "guard:move-only": "node tools/scripts/units/move-only/gate.mjs",
     "units:fold": "node tools/scripts/units/fold.ts",
