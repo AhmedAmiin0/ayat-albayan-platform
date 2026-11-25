@@ -112,3 +112,9 @@ test('files without dbError, or with it from elsewhere, are left alone; a second
   const once = rewrite(body(read("db.from('t').select('id')"))).text;
   assert.equal(rewrite(once).text, once);
 });
+
+test('an import left with type-only names becomes import type', () => {
+  const text =
+    "import { dbError, type PageQuery } from '@/common/http/http';\nexport const f = (e) => dbError(e);\n";
+  assert.match(rewrite(text).text, /^import type \{ PageQuery \} from '@\/common\/http\/http';/);
+});
