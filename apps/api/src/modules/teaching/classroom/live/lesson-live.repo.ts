@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { FAMILY_STUDENT_SELECT, type FamilyStudent } from '@/common/push/family-readers';
-import { dbError } from '@/common/http/http';
+import { maybe } from '@/common/db/errors';
 import type { LiveLesson } from './lesson-live.push';
 
 const STUDENT = FAMILY_STUDENT_SELECT;
@@ -16,12 +16,11 @@ export class LessonLiveRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async lesson(lessonId: string): Promise<LiveLesson | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lessons')
       .select(LESSON)
       .eq('id', lessonId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     if (!data) return null;
     const { lesson_students: links, ...lesson } = data;
     return { ...lesson, students: links.flatMap(present) };

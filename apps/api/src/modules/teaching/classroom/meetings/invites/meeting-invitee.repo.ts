@@ -4,7 +4,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { familyOfPhone } from '@/common/db/family-of-phone';
 import { orSafe } from '@/modules/people/guardians/http';
 import { studentNameOrCodeFilter } from '@/modules/people/students/students.mapper';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError, rows } from '@/common/db/errors';
 
 /** Who may be invited as staff (base roles; never a guardian or a student login). */
 const STAFF_ROLES = ['admin', 'teacher', 'assistant', 'sales'] as const;
@@ -50,7 +50,7 @@ export class MeetingInviteeRepo {
     const name = input.q ? orSafe(input.q) : '';
     if (name) query = query.ilike('full_name', `%${name}%`);
     const { data, error } = await query.order('full_name').limit(input.ids ? input.ids.length : PICK_LIMIT);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -62,7 +62,7 @@ export class MeetingInviteeRepo {
     const filter = input.q ? studentNameOrCodeFilter(input.q) : null;
     if (filter) query = query.or(filter);
     const { data, error } = await query.order('name').limit(input.ids ? input.ids.length : PICK_LIMIT);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -72,17 +72,16 @@ export class MeetingInviteeRepo {
    */
   async teacherStudentIds(profileId: string): Promise<string[]> {
     const { data: teacher, error } = await this.db.from('teachers').select('id').eq('profile_id', profileId).maybeSingle();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     if (!teacher) return [];
     const { data, error: e2 } = await this.db.from('students').select('id').eq('teacher_id', teacher.id).not('status', 'in', NOT_SUBSCRIBED);
-    if (e2) throw dbError(e2);
+    if (e2) throw pgError(e2);
     return data.map((r) => r.id);
   }
 
   /** The students an assistant is assigned to (student_assistants). */
   async assistantStudentIds(profileId: string): Promise<string[]> {
-    const { data, error } = await this.db.from('student_assistants').select('student_id').eq('profile_id', profileId);
-    if (error) throw dbError(error);
+    const data = rows(await this.db.from('student_assistants').select('student_id').eq('profile_id', profileId));
     return data.map((r) => r.student_id);
   }
 
@@ -96,8 +95,7 @@ export class MeetingInviteeRepo {
 
   /** The creator's tz: the time of an invitation to an unknown number reads in it. */
   async profileTz(profileId: string): Promise<string | null> {
-    const { data, error } = await this.db.from('profiles').select('tz').eq('id', profileId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('profiles').select('tz').eq('id', profileId).maybeSingle());
     return data?.tz ?? null;
   }
 }

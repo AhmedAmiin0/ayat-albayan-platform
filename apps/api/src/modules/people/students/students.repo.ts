@@ -4,7 +4,8 @@ import { searchDigits } from '@ab/core';
 import type { TeacherOption } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { Db } from '@/common/db/db.module';
-import { dbError, pageRange, type ListQuery } from '@/modules/people/guardians/http';
+import { peopleErrors, pageRange, type ListQuery } from '@/modules/people/guardians/http';
+import { maybe, pgError, rows } from '@/common/db/errors';
 import { applySort } from '@/common/db/list-sort';
 import { applyStudentFilters } from './students.filters';
 import {
@@ -43,7 +44,7 @@ export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<St
   const [from, to] = pageRange(q);
   // The view's columns read as nullable; the base columns (and has_weekly's exists) never are.
   const { data, error, count } = await query.range(from, to).overrideTypes<StudentListRow[], { merge: false }>();
-  if (error) throw dbError(error);
+  if (error) throw pgError(error, peopleErrors());
   const tests = await testStudents(db, data.map((r) => r.id));
   const items = data.map((r) => ({ ...toListItem(r), is_test: tests.has(r.id) }));
   return { items, total: count ?? 0, page: q.page, pageSize: q.pageSize };
@@ -52,8 +53,7 @@ export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<St
 /** students.is_test (docs/56). */
 async function testStudents(db: Db, ids: readonly string[]): Promise<Set<string>> {
   if (ids.length === 0) return new Set();
-  const { data, error } = await db.from('students').select('id').in('id', ids).eq('is_test', true);
-  if (error) throw dbError(error);
+  const data = rows(await db.from('students').select('id').in('id', ids).eq('is_test', true), peopleErrors());
   return new Set(data.map((s) => s.id));
 }
 
@@ -67,8 +67,7 @@ async function searchFilter(db: Db, term: string): Promise<string | null> {
   const digits = searchDigits(term);
   if (!digits) return studentNameOrCodeFilter(term);
   // Every family number, main and second (guardian_phones).
-  const { data, error } = await db.from('guardian_phones').select('guardian_id').ilike('phone_e164', `%${digits}%`).limit(100);
-  if (error) throw dbError(error);
+  const data = rows(await db.from('guardian_phones').select('guardian_id').ilike('phone_e164', `%${digits}%`).limit(100), peopleErrors());
   return studentPhoneOrCodeFilter([...new Set(data.map((g) => g.guardian_id))], digits);
 }
 
@@ -81,7 +80,7 @@ export async function countStudentsByStatus(db: Db, f: StudentListFilters): Prom
     STUDENT_STATUSES.map(async (status) => {
       const base = db.from('v_student_list').select('id', { count: 'exact', head: true });
       const { error, count } = await applyStudentFilters(base, rest).eq('status', status);
-      if (error) throw dbError(error);
+      if (error) throw pgError(error, peopleErrors());
       return [status, count ?? 0] as const;
     }),
   );
@@ -90,14 +89,13 @@ export async function countStudentsByStatus(db: Db, f: StudentListFilters): Prom
 
 /** Profile with guardian (+ siblings) and teacher (R-STU-04, R-STU-05). */
 export async function getStudentProfile(db: Db, id: string): Promise<StudentProfile> {
-  const { data, error } = await db
+  const data = maybe(await db
     .from('students')
     .select(PROFILE_COLUMNS)
     .eq('id', id)
     // The family's numbers only: a student's own number is not one.
     .is('guardian.phones.student_id', null)
-    .maybeSingle();
-  if (error) throw dbError(error);
+    .maybeSingle(), peopleErrors());
   if (!data) throw new NotFoundException();
   return toProfile(data);
 }
@@ -105,11 +103,10 @@ export async function getStudentProfile(db: Db, id: string): Promise<StudentProf
 
 /** Active teachers for the profile's teacher picker. ponytail: move to teachers module later. */
 export async function listTeacherOptions(db: Db): Promise<TeacherOption[]> {
-  const { data, error } = await db
+  const data = rows(await db
     .from('teachers')
     .select('id, display_name_ar, meeting_link')
     .eq('status', 'active')
-    .order('display_name_ar');
-  if (error) throw dbError(error);
+    .order('display_name_ar'), peopleErrors());
   return data;
 }

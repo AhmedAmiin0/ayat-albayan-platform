@@ -2,7 +2,7 @@ import { memoryOf, type MemoryView } from '@ab/shared';
 import type { BalanceView } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import { storedContent } from '@/modules/reporting/reports/v2/report-v2.mapper';
 
 /** Enough submitted v2 reports per student to find each track's last range. */
@@ -20,7 +20,7 @@ export class ReportLessonQueries {
       .from('v_lesson_sequence')
       .select('student_id, seq')
       .eq('lesson_id', lesson.id);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     for (const r of data) if (r.student_id && r.seq !== null) out.set(r.student_id, r.seq);
     for (const id of studentIds.filter((s) => !out.has(s))) {
       const { count, error: e } = await this.db
@@ -28,7 +28,7 @@ export class ReportLessonQueries {
         .select('lesson_id', { count: 'exact', head: true })
         .eq('student_id', id)
         .lt('starts_at', lesson.starts_at);
-      if (e) throw dbError(e);
+      if (e) throw pgError(e);
       out.set(id, (count ?? 0) + 1);
     }
     return out;
@@ -43,7 +43,7 @@ export class ReportLessonQueries {
       .select('subscription_id, student_id, lessons_total, lessons_used, remaining, ended_at, projected_end_at')
       .in('student_id', [...studentIds])
       .eq('is_last', true);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     for (const r of data) {
       if (!r.student_id || !r.subscription_id) continue;
       out.set(r.student_id, {
@@ -75,7 +75,7 @@ export class ReportLessonQueries {
           .eq('status', 'submitted')
           .order('submitted_at', { ascending: false })
           .limit(MEMORY_DEPTH + exclude.length);
-        if (error) throw dbError(error);
+        if (error) throw pgError(error);
         const rows = data.filter((r) => !exclude.includes(r.id));
         return [id, memoryOf(rows.flatMap((r) => storedContent(r) ?? []))] as const;
       }),

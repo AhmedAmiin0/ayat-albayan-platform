@@ -4,7 +4,7 @@ import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { OwnNumbers } from '@/modules/messaging/numbers';
 import { readAll } from '@/common/db/read-all';
-import { dbError } from '@/common/http/http';
+import { pgError, rows } from '@/common/db/errors';
 import type { Window } from './finance/finance.queries';
 
 const HOURS_48 = 48 * 3_600_000;
@@ -13,7 +13,7 @@ type CountResult = { count: number | null; error: PostgrestError | null };
 
 async function counted(q: PromiseLike<CountResult>): Promise<number> {
   const { count, error } = await q;
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   return count ?? 0;
 }
 
@@ -77,12 +77,11 @@ export class DashboardQueries {
 
   /** Active teachers, by name. */
   async teachers() {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('teachers')
       .select('id, display_name_ar, max_students')
       .eq('status', 'active')
-      .order('display_name_ar');
-    if (error) throw dbError(error);
+      .order('display_name_ar'));
     return data;
   }
 

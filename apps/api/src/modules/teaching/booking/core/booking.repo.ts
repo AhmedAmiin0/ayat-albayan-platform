@@ -6,7 +6,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { gateConfirmations } from '@/common/rules/confirmations';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError, rows } from '@/common/db/errors';
 import type { LeadFacts } from './booking.lead-merge';
 import { toBookingResult, type BookingPayload, type InvoiceRow } from './booking.mapper';
 import type { BookingStudent, BookingTeacher, MakeupOriginalRow } from './types';
@@ -34,63 +34,57 @@ export class BookingRepo {
   ) {}
 
   async teacher(id: string): Promise<BookingTeacher | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('teachers')
       .select('id, tz, meeting_link, meeting_mode')
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   /** The students that exist among `ids`, with their guardian (missing ids are simply absent). */
   async students(ids: readonly string[]): Promise<BookingStudent[]> {
-    const { data, error } = await this.db.from('students').select(STUDENT_COLUMNS).in('id', ids);
-    if (error) throw dbError(error);
+    const data = rows(await this.db.from('students').select(STUDENT_COLUMNS).in('id', ids));
     return data;
   }
 
   async lead(id: string): Promise<(LeadFacts & { status: LeadStatus }) | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('leads')
       .select('id, status, source, qualification, phone_e164')
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   /** Phones are unique per guardian, so the lead path reuses the guardian with this phone. */
   async guardianByPhone(e164: string): Promise<GuardianOnFile | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('guardians')
       .select('id, tz, students(id, code, name, status)')
       .eq('phone_e164', e164)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   async makeupOriginal(lessonId: string): Promise<MakeupOriginalRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lessons')
       .select(
         'id, status, starts_at, makeup_of_id, rule:schedule_rules!lessons_rule_id_fkey(package), lesson_students(student_id, chargeable)',
       )
       .eq('id', lessonId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   /** The booking's stored invoice, if this request already saved one (a replay never copies again). */
   async invoiceByRequest(requestId: string): Promise<InvoiceRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('invoices')
       .select('kind, storage_path, mime, size_bytes, source, message_id')
       .eq('client_request_id', requestId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     if (!data || data.kind === 'trial') return null;
     const { storage_path: path, ...rest } = data;
     return { ...rest, kind: data.kind, path, source: data.source === 'whatsapp' ? 'whatsapp' : 'upload' };
@@ -99,10 +93,10 @@ export class BookingRepo {
   /** The booking this request already made (rule 8), null when it is new. No plan, no conflict check. */
   async replay(requestId: string): Promise<BookingResult | null> {
     const { data: rule, error } = await this.db.from('schedule_rules').select('id').eq('client_request_id', requestId).maybeSingle();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     if (!rule) return null;
     const { data, error: failed } = await this.db.rpc('booking_result', { p_rule: rule.id });
-    if (failed) throw dbError(failed);
+    if (failed) throw pgError(failed);
     return toBookingResult(data);
   }
 
@@ -124,7 +118,7 @@ export class BookingRepo {
     }
     // A new guardian on a family's SECOND number (migration 973): guardianByPhone reads main numbers only.
     if (error?.code === '23505' && error.message.includes('guardian_phones_pkey')) throw domainError(HttpStatus.CONFLICT, 'number_taken');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return toBookingResult(data);
   }
 }

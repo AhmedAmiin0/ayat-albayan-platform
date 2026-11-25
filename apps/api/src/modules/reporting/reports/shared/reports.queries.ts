@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, maybe, pgError } from '@/common/db/errors';
 import type { FormColumns } from '@/modules/reporting/reports/report.mapper';
 import {
   REPORT_LESSON_SELECT,
@@ -24,8 +24,7 @@ export class ReportsQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async get(id: string): Promise<ReportRow | null> {
-    const { data, error } = await this.db.from('lesson_reports').select(REPORT_SELECT).eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('lesson_reports').select(REPORT_SELECT).eq('id', id).maybeSingle());
     return data;
   }
 
@@ -35,14 +34,13 @@ export class ReportsQueries {
       .select(REPORT_SELECT)
       .eq('lesson_id', lessonId)
       .order('student_id');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** The lesson with its teacher and students (identity for the form, outcome for a submit). */
   async lesson(id: string): Promise<ReportLessonRow | null> {
-    const { data, error } = await this.db.from('lessons').select(REPORT_LESSON_SELECT).eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('lessons').select(REPORT_LESSON_SELECT).eq('id', id).maybeSingle());
     return data;
   }
 
@@ -62,10 +60,9 @@ export class ReportsQueries {
       form_version: formVersion,
     }));
     if (rows.length === 0) return;
-    const { error } = await this.db
+    done(await this.db
       .from('lesson_reports')
-      .upsert(rows, { onConflict: 'lesson_id,student_id', ignoreDuplicates: true });
-    if (error) throw dbError(error);
+      .upsert(rows, { onConflict: 'lesson_id,student_id', ignoreDuplicates: true }));
   }
 
   /**
@@ -81,20 +78,18 @@ export class ReportsQueries {
       .eq('version', 0)
       .neq('form_version', formVersion);
     for (const column of UNTOUCHED) q = q.is(column, null);
-    const { error } = await q;
-    if (error) throw dbError(error);
+    done(await q);
   }
 
   /** Autosave: only while still a draft. null = no draft row matched (missing or submitted). */
   async updateDraft(id: string, columns: FormColumns): Promise<ReportRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lesson_reports')
       .update(columns)
       .eq('id', id)
       .eq('status', 'draft')
       .select(REPORT_SELECT)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -113,18 +108,17 @@ export class ReportsQueries {
       .eq('id', id)
       .eq('pdf_status', 'failed')
       .select('id');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.length > 0;
   }
 
   /** A submitted report never asked for a PDF: request it (ReportPdfQueue default). */
   async requestPdf(id: string): Promise<void> {
-    const { error } = await this.db
+    done(await this.db
       .from('lesson_reports')
       .update({ pdf_status: 'pending', pdf_error: null })
       .eq('id', id)
       .eq('status', 'submitted')
-      .is('pdf_status', null);
-    if (error) throw dbError(error);
+      .is('pdf_status', null));
   }
 }

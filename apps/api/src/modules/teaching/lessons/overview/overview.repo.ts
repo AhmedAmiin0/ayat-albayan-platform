@@ -4,7 +4,7 @@ import { RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import type { LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 
@@ -42,7 +42,7 @@ export class OverviewRepo {
     let q = this.db.from('teachers').select('id, display_name_ar, display_name_en, gender, programs, tz, meeting_link, max_students, status');
     if (w.teacherId) q = q.eq('id', w.teacherId);
     const { data, error } = await q.order('display_name_ar').order('id');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const photos = await this.photos.ofTeachers(data.map((t) => t.id));
     return data.map((t) => ({ ...t, avatar_url: photos.get(t.id) ?? null }));
   }
@@ -56,13 +56,13 @@ export class OverviewRepo {
       let ids = this.db.from('teachers').select('id');
       if (w.teacherId) ids = ids.eq('id', w.teacherId);
       const { data, error } = await ids;
-      if (error) throw dbError(error);
+      if (error) throw pgError(error);
       return data.flatMap((t) => allDayRows(RIYADH_TZ).map((r) => ({ ...r, teacher_id: t.id })));
     }
     let q = this.db.from('teacher_availability').select('teacher_id, weekday, start_time, end_time, tz');
     if (w.teacherId) q = q.eq('teacher_id', w.teacherId);
     const { data, error } = await q.order('weekday').order('start_time');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -77,7 +77,7 @@ export class OverviewRepo {
       .gt('ends_at', w.from.toISOString());
     if (w.teacherId) q = q.eq('teacher_id', w.teacherId);
     const { data, error } = await q.order('starts_at');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -94,7 +94,7 @@ export class OverviewRepo {
       .gt('ends_at', w.from.toISOString());
     if (w.teacherId) q = q.eq('teacher_id', w.teacherId);
     const { data, error } = await q.order('starts_at');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 }

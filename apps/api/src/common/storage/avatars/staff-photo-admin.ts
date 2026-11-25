@@ -4,7 +4,7 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
 import { badRequest, notFound } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import { avatarPath, teacherAvatarPath } from '@/common/storage/storage.paths';
 import { AvatarWriter, type AvatarSlot } from './avatar-writer';
 import { profileSlot, teacherSlot } from './photo-slots';
@@ -19,7 +19,7 @@ interface Found<T> {
 
 /** The row of a single read: a database error throws, a missing row is a 404 `code`. */
 function orNotFound<T>({ data, error }: Found<T>, code: string): NonNullable<T> {
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   if (!data) throw notFound(code);
   return data;
 }

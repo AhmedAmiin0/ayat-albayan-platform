@@ -1,5 +1,5 @@
 import type { Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe } from '@/common/db/errors';
 import type { ProfileRec, TeacherRec } from '@/modules/people/sign-in/sign-in.ports';
 
 // The teacher side of SubjectStore (docs/46 A2): active teachers only, by the phone of her login
@@ -45,25 +45,23 @@ async function activeTeacher(
   db: Db,
   match: { column: 'profile_id' | 'phone_e164'; value: string },
 ): Promise<TeacherRec | null> {
-  const { data, error } = await db
+  const data = maybe(await db
     .from('teachers')
     .select(TEACHER)
     .eq(match.column, match.value)
     .eq('status', 'active')
-    .maybeSingle();
-  if (error) throw dbError(error);
+    .maybeSingle());
   return data ? toTeacher(data) : null;
 }
 
 /** The teacher this phone names: her own login's number wins over another record's. */
 export async function teacherByPhone(db: Db, phone: string): Promise<TeacherRec | null> {
-  const { data, error } = await db
+  const data = maybe(await db
     .from('profiles')
     .select('id')
     .eq('phone_e164', phone)
     .eq('role', 'teacher')
-    .maybeSingle();
-  if (error) throw dbError(error);
+    .maybeSingle());
   const byLogin = data ? await activeTeacher(db, { column: 'profile_id', value: data.id }) : null;
   return byLogin ?? activeTeacher(db, { column: 'phone_e164', value: phone });
 }

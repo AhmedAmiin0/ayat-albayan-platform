@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 /** What teacher_confirm_lesson answers (migration 20261111000200). */
 export const confirmOutcome = z.enum(['ok', 'not_found', 'not_owner', 'closed', 'started']);
@@ -24,7 +24,7 @@ export class TeacherConfirmRepo {
       p_teacher: teacherId,
       p_actor: actorId,
     });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return confirmOutcome.parse(data);
   }
 }

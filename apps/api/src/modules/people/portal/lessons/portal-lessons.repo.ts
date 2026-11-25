@@ -1,7 +1,7 @@
 import type { LessonStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, rows } from '@/common/db/errors';
 import { PortalSettings, type PortalSettingsValues } from '@/modules/people/portal/portal.settings';
 
 /** A lesson row as the portal reads it (whitelisted select; mapped again before it leaves). */
@@ -65,7 +65,7 @@ export class PortalLessonsRepo {
    * `until`.
    */
   async ahead(input: { studentId: string; since: string; until: string }): Promise<PortalLessonRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lesson_students')
       .select(`lesson:lessons!inner(${LESSON})`)
       .eq('student_id', input.studentId)
@@ -73,27 +73,24 @@ export class PortalLessonsRepo {
       .lt('lesson.starts_at', input.until)
       .neq('lesson.status', 'rescheduled')
       .limit(100)
-      .overrideTypes<Embed[], { merge: false }>();
-    if (error) throw dbError(error);
+      .overrideTypes<Embed[], { merge: false }>());
     return data.flatMap((r) => (r.lesson ? [r.lesson] : [])).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
   }
 
   /** One lesson of the student, or null when the student is not on it. */
   async one(input: { studentId: string; lessonId: string }): Promise<PortalLessonRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lesson_students')
       .select(`lesson:lessons!inner(${LESSON})`)
       .match({ student_id: input.studentId, lesson_id: input.lessonId })
       .maybeSingle()
-      .overrideTypes<Embed | null, { merge: false }>();
-    if (error) throw dbError(error);
+      .overrideTypes<Embed | null, { merge: false }>());
     return data?.lesson ?? null;
   }
 
   /** students.meeting_link_override: the student's own room for an external one-student lesson. */
   async override(studentId: string): Promise<string | null> {
-    const { data, error } = await this.db.from('students').select('meeting_link_override').eq('id', studentId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('students').select('meeting_link_override').eq('id', studentId).maybeSingle());
     return data?.meeting_link_override ?? null;
   }
 
@@ -103,12 +100,11 @@ export class PortalLessonsRepo {
    */
   async requests(input: RequestsOf): Promise<PortalRequestRow[]> {
     if (input.lessonIds.length === 0) return [];
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lesson_proposals')
       .select(REQUEST)
       .in('lesson_id', [...input.lessonIds])
-      .match({ requested_by: 'family', created_by: input.userId });
-    if (error) throw dbError(error);
+      .match({ requested_by: 'family', created_by: input.userId }));
     return data;
   }
 }

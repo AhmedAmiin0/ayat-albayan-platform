@@ -3,7 +3,7 @@ import { DURATIONS } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { notFound } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { maybe, rows } from '@/common/db/errors';
 import type { CourseRuleRow } from '@/modules/teaching/booking/core/course-read';
 import { isCourseRule, type CourseRule } from './sales-course.rules';
 
@@ -44,12 +44,11 @@ export class SalesCourseRepo {
 
   /** What the wizard shows of the student (no guardian, no notes); 404 student_not_found. */
   async student(studentId: string): Promise<SalesCourseView['student']> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('students')
       .select('id, code, name, tz, program, teacher_gender_pref, teacher_id')
       .eq('id', studentId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     if (!data) throw notFound('student_not_found');
     return { ...data, code: data.code ?? '' };
   }
@@ -71,14 +70,13 @@ export class SalesCourseRepo {
   }
 
   private async openPackages(studentId: string) {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('subscriptions')
       .select('id, package, duration, lessons_total, lessons_used_before, starts_on, rules:schedule_rules(id)')
       .eq('student_id', studentId)
       .in('status', ['unpaid', 'active'])
       .order('created_at', { ascending: false })
-      .limit(SUBSCRIPTIONS_READ);
-    if (error) throw dbError(error);
+      .limit(SUBSCRIPTIONS_READ));
     return data;
   }
 
@@ -87,23 +85,21 @@ export class SalesCourseRepo {
    * Trials, makeups and single lessons (isCourseRule) do not count (PR #642 review).
    */
   private async imported(studentId: string): Promise<boolean> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('schedule_rule_students')
       .select('rule:schedule_rules!inner(starts_on, ends_on, package)')
       .eq('student_id', studentId)
-      .is('rule.subscription_id', null);
-    if (error) throw dbError(error);
+      .is('rule.subscription_id', null));
     return data.some(({ rule }) => isCourseRule(rule));
   }
 
   /** The student's active rules (schedule_rule_students → schedule_rules.status = 'active'). */
   async rules(studentId: string): Promise<CourseRule[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('schedule_rule_students')
       .select('rule:schedule_rules!inner(starts_on, ends_on, package, status)')
       .eq('student_id', studentId)
-      .eq('rule.status', 'active');
-    if (error) throw dbError(error);
+      .eq('rule.status', 'active'));
     return data.map(({ rule }) => ({ starts_on: rule.starts_on, ends_on: rule.ends_on, package: rule.package }));
   }
 
@@ -112,8 +108,7 @@ export class SalesCourseRepo {
    * whatever its status: one paid plan books exactly one course; a renewal is a new subscription.
    */
   async subscriptionBooked(subscriptionId: string): Promise<boolean> {
-    const { data, error } = await this.db.from('schedule_rules').select('id').eq('subscription_id', subscriptionId).limit(1);
-    if (error) throw dbError(error);
+    const data = rows(await this.db.from('schedule_rules').select('id').eq('subscription_id', subscriptionId).limit(1));
     return data.length > 0;
   }
 
@@ -122,12 +117,11 @@ export class SalesCourseRepo {
    * of its subscription: course-read.ts groups them (the previous course, the running one).
    */
   async courseRules(studentId: string): Promise<CourseRuleRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('schedule_rules')
       .select(COURSE_RULE_SELECT)
       .eq('schedule_rule_students.student_id', studentId)
-      .not('subscription_id', 'is', null);
-    if (error) throw dbError(error);
+      .not('subscription_id', 'is', null));
     return data.flatMap((r) =>
       r.subscription_id && r.sub ? [{ ...pickRule(r), subscription_id: r.subscription_id, sub: r.sub }] : [],
     );
@@ -135,8 +129,7 @@ export class SalesCourseRepo {
 
   /** Did this clientRequestId already book (a retry after a success, review m6)? */
   async requested(requestId: string): Promise<boolean> {
-    const { data, error } = await this.db.from('schedule_rules').select('id').eq('client_request_id', requestId).limit(1);
-    if (error) throw dbError(error);
+    const data = rows(await this.db.from('schedule_rules').select('id').eq('client_request_id', requestId).limit(1));
     return data.length > 0;
   }
 }

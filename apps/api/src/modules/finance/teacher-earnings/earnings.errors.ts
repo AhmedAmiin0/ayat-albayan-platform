@@ -1,6 +1,6 @@
 import type { PostgrestError } from '@supabase/supabase-js';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 const BAD = new Set(['allocation_mismatch', 'allocation_invalid']);
 const CONFLICT = new Set(['overpayment', 'already_voided', 'invalid_transition']);
@@ -13,5 +13,5 @@ export function ledgerError(error: PostgrestError): Error {
     if (BAD.has(error.message)) return badRequest(error.message);
     if (MISSING.has(error.message)) return notFound(error.message);
   }
-  return dbError(error);
+  return pgError(error);
 }

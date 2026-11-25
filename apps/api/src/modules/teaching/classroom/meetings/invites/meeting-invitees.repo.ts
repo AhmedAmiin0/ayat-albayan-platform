@@ -2,7 +2,7 @@ import type { TablesInsert, TablesUpdate } from '@ab/db';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
-import { dbError } from '@/common/http/http';
+import { done, maybe, pgError } from '@/common/db/errors';
 import type { InviteeRow } from './meeting-invites.mapper';
 
 /** The server's view of an invitee: the phone and profile too (never sent to a client), never the hash. */
@@ -29,13 +29,12 @@ export class MeetingInviteesRepo {
 
   async forMeeting(meetingId: string): Promise<StoredInvitee[]> {
     const { data, error } = await this.db.from('meeting_invitees').select(COLUMNS).eq('meeting_id', meetingId).order('created_at');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   async byId(meetingId: string, id: string): Promise<StoredInvitee | null> {
-    const { data, error } = await this.db.from('meeting_invitees').select(COLUMNS).eq('meeting_id', meetingId).eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('meeting_invitees').select(COLUMNS).eq('meeting_id', meetingId).eq('id', id).maybeSingle());
     return data;
   }
 
@@ -44,19 +43,17 @@ export class MeetingInviteesRepo {
     if (rows.length === 0) return [];
     const { data, error } = await this.db.from('meeting_invitees').insert(rows).select(COLUMNS);
     if (error && tooMany(error)) throw new BadRequestException({ code: 'too_many_invitees', message: 'too_many_invitees' });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   async update(id: string, patch: TablesUpdate<'meeting_invitees'>): Promise<void> {
-    const { error } = await this.db.from('meeting_invitees').update(patch).eq('id', id);
-    if (error) throw dbError(error);
+    done(await this.db.from('meeting_invitees').update(patch).eq('id', id));
   }
 
   /** Cancelling the meeting: every personal guest link stops working at once. */
   async clearTokens(meetingId: string): Promise<void> {
-    const { error } = await this.db.from('meeting_invitees').update({ token_hash: null }).eq('meeting_id', meetingId);
-    if (error) throw dbError(error);
+    done(await this.db.from('meeting_invitees').update({ token_hash: null }).eq('meeting_id', meetingId));
   }
 
   /** WhatsApp invitation rows the login queued since `since` (resends included): the daily limit. */
@@ -67,14 +64,13 @@ export class MeetingInviteesRepo {
       .eq('created_by', createdBy)
       .like('dedup_key', `${INVITE_DEDUP_PREFIX}%`)
       .gte('created_at', since);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return count ?? 0;
   }
 
   /** True when a WhatsApp row with this dedup key was already queued (a retried resend). */
   async queued(dedupKey: string): Promise<boolean> {
-    const { data, error } = await this.db.from('messages').select('id').eq('dedup_key', dedupKey).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('messages').select('id').eq('dedup_key', dedupKey).maybeSingle());
     return data !== null;
   }
 
@@ -92,7 +88,7 @@ export class MeetingInviteesRepo {
       .like('dedup_key', invitesOf(meetingId))
       .or(`error_code.is.null,error_code.neq.${SENDING}`)
       .select('phone_e164');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return [...new Set(data.map((r) => r.phone_e164))];
   }
 
@@ -104,7 +100,7 @@ export class MeetingInviteesRepo {
       .eq('direction', 'outbound')
       .neq('status', 'failed')
       .like('dedup_key', invitesOf(meetingId));
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return new Set(data.map((r) => r.phone_e164));
   }
 }

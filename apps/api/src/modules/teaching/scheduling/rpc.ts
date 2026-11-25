@@ -1,7 +1,7 @@
 import type { Database } from '@ab/db';
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import { conflict } from '@/common/http/errors';
 
 type RpcResult = { data: unknown; error: PostgrestError | null };
@@ -24,7 +24,7 @@ export function rpcError(error: PostgrestError): Error {
   // A generated row's (rule_id, starts_at | local_date) key (migration 110): that slot is taken.
   // Moved rows never hold a slot, so other unique keys stay plain DB errors.
   if (error.code === '23505' && error.message.includes('lessons_rule_')) return conflict('slot_taken');
-  return dbError(error);
+  return pgError(error);
 }
 
 /**

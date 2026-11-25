@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { Contact } from '@/modules/teaching/lessons/status/confirmation-messages';
 import { notFound } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError, rows } from '@/common/db/errors';
 
 /** The subscription a course belongs to (subscriptions row). */
 export type CourseSub = {
@@ -67,12 +67,11 @@ export class CourseChangeRepo {
 
   /** 404 subscription_not_found. */
   async subscription(id: string): Promise<CourseSub> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('subscriptions')
       .select('id, student_id, package, duration, lessons_total, lessons_used_before, starts_on')
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     if (!data) throw notFound('subscription_not_found');
     return data;
   }
@@ -84,14 +83,13 @@ export class CourseChangeRepo {
   async rules(subscriptionId: string): Promise<ChangeRule[]> {
     const refs = await this.course(subscriptionId);
     if (refs.length === 0) return [];
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('schedule_rules')
       .select(
         'id, status, teacher_id, tz, byday, start_time_local, duration_min, starts_on, ends_on, first_rule_id, package, meeting_link, created_from_lead_id, schedule_rule_students(student_id, student:students(meeting_link_override))',
       )
       .in('id', refs.map((r) => r.rule_id))
-      .order('created_at');
-    if (error) throw dbError(error);
+      .order('created_at'));
     const by = new Map(refs.map((r) => [r.rule_id, r]));
     return data.map((r) => ({ ...r, course: by.get(r.id) }));
   }
@@ -99,7 +97,7 @@ export class CourseChangeRepo {
   /** course_rules_of: how each rule of the course is attributed. */
   async course(subscriptionId: string): Promise<CourseRuleRef[]> {
     const { data, error } = await this.db.rpc('course_rules_of', { p_subscription: subscriptionId });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -111,12 +109,11 @@ export class CourseChangeRepo {
     sub: Pick<CourseSub, 'id' | 'student_id'>,
     own: readonly string[],
   ): Promise<OtherRule[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('schedule_rule_students')
       .select('rule:schedule_rules!inner(id, starts_on, ends_on, package, status, subscription_id)')
       .eq('student_id', sub.student_id)
-      .eq('rule.status', 'active');
-    if (error) throw dbError(error);
+      .eq('rule.status', 'active'));
     const mine = new Set(own);
     return data
       .map(({ rule }) => rule)
@@ -125,25 +122,22 @@ export class CourseChangeRepo {
 
   /** Each student's name + guardian, for the queued confirmation (as LessonsQueries.contacts). */
   async contacts(studentIds: readonly string[]): Promise<Contact[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('students')
       .select('id, name, guardian:guardians(id, phone_e164, tz)')
-      .in('id', [...studentIds]);
-    if (error) throw dbError(error);
+      .in('id', [...studentIds]));
     return data;
   }
 
   /** The course teacher's own link (the lessons' when the rule and students have none). */
   async teacherLink(teacherId: string): Promise<string | null> {
-    const { data, error } = await this.db.from('teachers').select('meeting_link').eq('id', teacherId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('teachers').select('meeting_link').eq('id', teacherId).maybeSingle());
     return data?.meeting_link ?? null;
   }
 
   /** The course teacher's teachers.meeting_mode (migration 490): null = the academy default. */
   async teacherMode(teacherId: string): Promise<TeacherMeetingMode | null> {
-    const { data, error } = await this.db.from('teachers').select('meeting_mode').eq('id', teacherId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('teachers').select('meeting_mode').eq('id', teacherId).maybeSingle());
     return meetingModeOf(data?.meeting_mode);
   }
 }

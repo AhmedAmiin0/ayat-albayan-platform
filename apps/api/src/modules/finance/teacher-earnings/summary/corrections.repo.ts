@@ -1,7 +1,7 @@
 import type { Json } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 import { ledgerError } from '@/modules/finance/teacher-earnings/earnings.errors';
 
 export type PayPayoutInput = {
@@ -60,12 +60,11 @@ export class CorrectionsRepo {
 
   /** One row per teacher with ledger sessions (few rows: one per teacher). */
   async summary(): Promise<SummaryRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('v_teacher_earnings_summary')
       .select('*')
       .order('owed', { ascending: false })
-      .order('display_name_ar');
-    if (error) throw dbError(error);
+      .order('display_name_ar'));
     return data;
   }
 }

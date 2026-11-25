@@ -7,7 +7,7 @@ import type {
 } from '@ab/money';
 import type { Db } from '@/common/db/db.module';
 import { applySort, ilikeContains, type SortSpec } from '@/common/db/list-sort';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import { lessonNames } from './earnings.names';
 import type {
   EarningRow,
@@ -53,7 +53,7 @@ export async function sessionsPage(db: Db, q: For<EarningsListQuery>): Promise<P
     .order('id')
     .range(from, from + f.pageSize - 1)
     .returns<EarningRow[]>();
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   const names = await lessonNames(db, data.map((r) => r.lesson_id));
   const items = data.map((r) => ({ ...r, lesson: { lesson_students: names.get(r.lesson_id) ?? [] } }));
   return { items, total: count ?? 0, page: f.page, pageSize: f.pageSize };
@@ -71,6 +71,6 @@ export async function paymentsPage(db: Db, q: For<TeacherPaymentListQuery>): Pro
   const { data, count, error } = await applySort(query, f, PAYMENT_SORT)
     .order('id')
     .range(from, from + f.pageSize - 1);
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };
 }

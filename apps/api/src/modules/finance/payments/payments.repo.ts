@@ -7,7 +7,7 @@ import { applySort } from '@/common/db/list-sort';
 import type { StudentRef } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 import { readAll } from '@/common/db/read-all';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { done, maybe, pgError } from '@/common/db/errors';
 import { filtered, PAYMENT_SORT, type PaymentFilter } from './payments.list-query';
 import type { Page } from '@ab/core';
 import type { PeriodTotal } from '@ab/money';
@@ -39,7 +39,7 @@ export class PaymentsRepo {
     const { data, count, error } = await applySort(query, f, PAYMENT_SORT)
       .order('id')
       .range(from, from + f.pageSize - 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };
   }
 
@@ -63,13 +63,12 @@ export class PaymentsRepo {
   /** Net paid on one package (payments − refunds): a refund may not take it below zero. */
   async netPaid(subscriptionId: string): Promise<number> {
     const { data, error } = await this.db.from('payments').select('amount, kind').eq('subscription_id', subscriptionId);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return netPaid(data.map((r) => ({ amount: Number(r.amount), kind: r.kind })));
   }
 
   async get(id: string): Promise<PaymentRow | null> {
-    const { data, error } = await this.db.from('payments').select(SELECT).eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('payments').select(SELECT).eq('id', id).maybeSingle());
     return data;
   }
 
@@ -77,25 +76,23 @@ export class PaymentsRepo {
   async insert(row: TablesInsert<'payments'>): Promise<PaymentRow | null> {
     const { data, error } = await this.db.from('payments').insert(row).select(SELECT).single();
     if (error?.code === '23505' && error.message.includes('client_request_id')) return null;
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** The payment a form already recorded (its client_request_id), or null. */
   async byRequest(clientRequestId: string): Promise<PaymentRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('payments')
       .select(SELECT)
       .eq('client_request_id', clientRequestId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   /** The payment already recorded from this invoice (recorded once), or null. */
   async byInvoice(invoiceId: string): Promise<{ id: string } | null> {
-    const { data, error } = await this.db.from('payments').select('id').eq('invoice_id', invoiceId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('payments').select('id').eq('invoice_id', invoiceId).maybeSingle());
     return data;
   }
 
@@ -103,7 +100,7 @@ export class PaymentsRepo {
     const { data, error } = await this.db.from('payments').update(patch).eq('id', id).select(SELECT).single();
     // The backstop of migration 432: a payment with attachments stays a bank transfer.
     if (error?.code === '23514' && error.message.includes('attachments')) throw badRequest('attachments_not_allowed');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -113,24 +110,22 @@ export class PaymentsRepo {
     const { error } = await this.db.rpc('payment_amount_set', args);
     const refusal = Object.entries(AMOUNT_REFUSALS).find(([c]) => error?.message.includes(c));
     if (refusal) throw refusal[1](refusal[0]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const read = await this.db.from('payments').select(SELECT).eq('id', id).single();
-    if (read.error) throw dbError(read.error);
+    if (read.error) throw pgError(read.error);
     return read.data;
   }
 
   async remove(id: string): Promise<void> {
-    const { error } = await this.db.from('payments').delete().eq('id', id);
-    if (error) throw dbError(error);
+    done(await this.db.from('payments').delete().eq('id', id));
   }
 
   async subscription(id: string): Promise<PaymentSubscription | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('subscriptions')
       .select('id, student_id, currency, status, cancel_kind')
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -138,7 +133,7 @@ export class PaymentsRepo {
     const wanted = [...new Set(ids.filter((id) => id !== null))];
     if (wanted.length === 0) return new Map();
     const { data, error } = await this.db.from('profiles').select('id, full_name').in('id', wanted);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return new Map(data.map((p) => [p.id, p.full_name]));
   }
 }

@@ -2,7 +2,7 @@ import type { Attendance, Grade, LessonStatus, PdfStatus, ReportStatus } from '@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 
 const HISTORY_COLUMNS =
   'id, lesson_id, teacher_id, attendance, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, status, version, pdf_status, sent_at, submitted_at' as const;
@@ -65,7 +65,7 @@ export class ReportHistoryQueries {
         .from('lessons')
         .select('id, starts_at, teacher:teachers(id, display_name_ar, display_name_en)')
         .in('id', ids.slice(i, i + CHUNK));
-      if (error) throw dbError(error);
+      if (error) throw pgError(error);
       out.push(...data);
     }
     return out;
@@ -81,8 +81,7 @@ export class ReportHistoryQueries {
 
   /** The student's assigned teacher; null when the student does not exist. */
   async student(id: string): Promise<{ teacher_id: string | null } | null> {
-    const { data, error } = await this.db.from('students').select('teacher_id').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('students').select('teacher_id').eq('id', id).maybeSingle());
     return data;
   }
 
@@ -92,7 +91,7 @@ export class ReportHistoryQueries {
       p_teacher_id: input.teacherId,
       p_student_id: input.studentId,
     });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data === true;
   }
 

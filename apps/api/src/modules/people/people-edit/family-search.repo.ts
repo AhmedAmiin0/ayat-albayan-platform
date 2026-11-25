@@ -2,7 +2,7 @@ import type { FamilyOption } from '@ab/shared';
 import { searchDigits } from '@ab/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError, rows } from '@/common/db/errors';
 
 const OPTION = 'id, name, phone_e164, students(code, name)';
 const LIMIT = 10;
@@ -14,7 +14,7 @@ type Search = (db: Db, term: string) => Promise<string[]>;
 const byCode: Search = async (db, term) => {
   const query = db.from('students').select('guardian_id').eq('code', term.toUpperCase());
   const { data, error } = await query.limit(LIMIT);
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   return data.map((s) => s.guardian_id);
 };
 
@@ -23,7 +23,7 @@ const byNumber: Search = async (db, term) => {
   const digits = searchDigits(term) ?? '';
   const query = db.from('guardian_phones').select('guardian_id').ilike('phone_e164', `%${digits}%`);
   const { data, error } = await query.limit(LIMIT);
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   return data.map((p) => p.guardian_id);
 };
 
@@ -32,7 +32,7 @@ const byName: Search = async (db, term) => {
   const safe = term.replace(/[%_\\]/g, '');
   const query = db.from('guardians').select('id').ilike('name', `%${safe}%`);
   const { data, error } = await query.limit(LIMIT);
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   return data.map((g) => g.id);
 };
 
@@ -51,13 +51,12 @@ export class FamilySearchRepo {
   async search(term: string): Promise<FamilyOption[]> {
     const ids = [...new Set(await searchOf(term)(this.db, term))];
     if (ids.length === 0) return [];
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('guardians')
       .select(OPTION)
       .in('id', ids)
       .order('created_at', { ascending: false })
-      .overrideTypes<FamilyOption[], { merge: false }>();
-    if (error) throw dbError(error);
+      .overrideTypes<FamilyOption[], { merge: false }>());
     return data;
   }
 }

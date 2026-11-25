@@ -1,5 +1,5 @@
 import type { Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe } from '@/common/db/errors';
 import type {
   FamilyLogin,
   GuardianRec,
@@ -56,7 +56,6 @@ const toLogin = ({ phone_e164: phone, guardian, student }: NumberRow): FamilyLog
 /** The account a typed number names, or null (not a family number). */
 export async function familyByPhone(db: Db, phone: string): Promise<FamilyLogin | null> {
   const query = db.from('guardian_phones').select(FAMILY).eq('phone_e164', phone);
-  const { data, error } = await query.maybeSingle<NumberRow>();
-  if (error) throw dbError(error);
+  const data = maybe(await query.maybeSingle<NumberRow>());
   return data ? toLogin(data) : null;
 }

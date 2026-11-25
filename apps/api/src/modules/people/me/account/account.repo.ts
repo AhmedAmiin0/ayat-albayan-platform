@@ -1,7 +1,7 @@
 import type { UserRole } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import { phoneAware } from '@/modules/people/users/users.errors';
 import { phoneTaken } from '@/modules/people/users/store/users.links.repo';
 import { selfWritable, type AccountRow, type AccountStore, type SelfPatch } from './account.ports';
@@ -18,12 +18,11 @@ export class AccountRepo implements AccountStore {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async get(id: string): Promise<AccountRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('profiles')
       .select('id, full_name, phone_e164, avatar_path, role, role_id, teacher:teachers!teachers_profile_id_fkey(id)')
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     if (!data) return null;
     const name = await this.roleName(data.role, data.role_id);
     const teacher_id = [data.teacher].flat()[0]?.id ?? null;
@@ -44,7 +43,7 @@ export class AccountRepo implements AccountStore {
   private async roleName(base: UserRole, roleId: string | null): Promise<RoleName | null> {
     const query = this.db.from('roles').select('key, name_ar, name_en');
     const { data, error } = await (roleId ? query.eq('id', roleId) : query.eq('is_system', true).eq('base_role', base)).limit(1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data[0] ?? null;
   }
 }

@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
 import { wakeOn } from '@/common/jobs';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import type { QueuedMessage } from './queued-row';
 import type { RoomCandidate } from './plan/reminders.links';
 import { REMINDER_LESSON_STATUSES, type ReminderLesson } from './plan/reminders.plan';
@@ -27,7 +27,7 @@ export const REMINDER_KEYS = [
 /** Registry keys among `keys` that Meta approved (message_templates.status). */
 export async function approvedTemplates(db: Db, keys: readonly TemplateKey[]): Promise<Set<string>> {
   const { data, error } = await db.from('message_templates').select('key').in('key', [...keys]).eq('status', 'approved');
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   return new Set(data.map((r) => r.key));
 }
 
@@ -38,7 +38,7 @@ export async function queueMessages(db: Db, rows: readonly QueuedMessage[]): Pro
     .from('messages')
     .upsert([...rows], { onConflict: 'dedup_key', ignoreDuplicates: true })
     .select('id');
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   return data.length;
 }
 
@@ -96,12 +96,12 @@ export class RemindersRepo {
       .in('template_key', [...REMINDER_KEYS])
       .gt('expires_at', now.toISOString())
       .not('lesson_id', 'is', null);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const open: readonly string[] = REMINDER_LESSON_STATUSES;
     const ids = data.filter((m) => !m.lesson || !open.includes(m.lesson.status)).map((m) => m.id);
     if (ids.length === 0) return 0;
     const del = await this.db.from('messages').delete().in('id', ids).eq('status', 'queued').select('id');
-    if (del.error) throw dbError(del.error);
+    if (del.error) throw pgError(del.error);
     return del.data.length;
   }
 

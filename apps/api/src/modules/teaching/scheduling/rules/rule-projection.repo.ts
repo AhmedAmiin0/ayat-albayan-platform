@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import type { UtcWindow } from '@ab/schedule';
 import { readAll } from '@/common/db/read-all';
 import { generatedKey, projectRules, type Projected, type ProjectedRule } from './rule-projection';
@@ -38,7 +38,7 @@ export class RuleProjectionRepo {
       .select(RULE_COLUMNS)
       .eq('status', 'active')
       .or(owner);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.map(({ schedule_rule_students: students, ...rule }) => ({
       ...rule,
       student_ids: students.map((s) => s.student_id),
@@ -51,7 +51,7 @@ export class RuleProjectionRepo {
       .from('schedule_rule_students')
       .select('rule_id')
       .in('student_id', [...studentIds]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return [...new Set(data.map((r) => r.rule_id))];
   }
 

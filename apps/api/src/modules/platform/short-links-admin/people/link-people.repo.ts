@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import {
   familyOfPhoneRow,
   phoneSources,
@@ -37,7 +37,7 @@ export class LinkPeopleRepo {
   async byIds(ids: string[]): Promise<PersonRow[]> {
     if (ids.length === 0) return [];
     const { data, error } = await this.db.from('profiles').select(PERSON).in('id', ids);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -51,7 +51,7 @@ export class LinkPeopleRepo {
       .or(`full_name.ilike.${JSON.stringify(pattern)},phone_e164.ilike.${JSON.stringify(pattern)}`)
       .order('full_name')
       .limit(20);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -78,7 +78,7 @@ export class LinkPeopleRepo {
   async familyNames(ids: string[]): Promise<Map<string, string>> {
     if (ids.length === 0) return new Map();
     const { data, error } = await this.db.from('guardians').select('id, name').in('id', ids);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return new Map(data.map((g) => [g.id, g.name]));
   }
 }

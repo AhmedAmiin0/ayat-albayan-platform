@@ -1,7 +1,7 @@
 import type { PortalStudent } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 /** The portal's one scope read (service role): portal_students_of (migration 790). */
 @Injectable()
@@ -14,7 +14,7 @@ export class PortalScopeRepo {
    */
   async studentsOf(profileId: string): Promise<PortalStudent[]> {
     const { data, error } = await this.db.rpc('portal_students_of', { p_profile: profileId });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.map((s) => ({ id: s.id, code: s.code, name: s.name, tz: s.tz, contact_is_self: s.contact_is_self }));
   }
 }

@@ -4,7 +4,7 @@ import type { EarningsListQuery, TeacherPaymentListQuery } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readChunked } from '@/common/db/read-all';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import { ledgerError } from './earnings.errors';
 import { paymentsPage, sessionsPage } from './summary/earnings.lists';
 import type { Page } from '@ab/core';
@@ -31,8 +31,7 @@ export class EarningsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async teacher(id: string): Promise<{ id: string; display_name_ar: string } | null> {
-    const { data, error } = await this.db.from('teachers').select('id, display_name_ar').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('teachers').select('id, display_name_ar').eq('id', id).maybeSingle());
     return data;
   }
 
@@ -48,7 +47,7 @@ export class EarningsRepo {
         .order('id')
         .range(from, from + CHUNK - 1)
         .returns<MoneyRow[]>();
-      if (error) throw dbError(error);
+      if (error) throw pgError(error);
       rows.push(...data);
       if (data.length < CHUNK) return rows;
     }
@@ -63,7 +62,7 @@ export class EarningsRepo {
     let q = this.db.from(COUNTABLE).select('*').eq('teacher_id', teacherId);
     q = ids ? q.in('id', [...ids]) : q.in('status', [...STATUSES.unpaid]);
     const { data, error } = await q.order('starts_at').order('id').limit(CHUNK).returns<EarningRow[]>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -72,18 +71,16 @@ export class EarningsRepo {
   }
 
   async payment(id: string): Promise<PaymentRow | null> {
-    const { data, error } = await this.db.from('teacher_payments').select(PAYMENT).eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('teacher_payments').select(PAYMENT).eq('id', id).maybeSingle());
     return data;
   }
 
   async byRequest(clientRequestId: string): Promise<PaymentRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('teacher_payments')
       .select(PAYMENT)
       .eq('client_request_id', clientRequestId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 

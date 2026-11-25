@@ -2,7 +2,7 @@ import type { ThreadPeople } from '@ab/shared';
 import type { Db } from '@/common/db/db.module';
 import type { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
 import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 import { familyTags, toThreadStudent, type FamilyTag } from './thread-people.mapper';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
@@ -25,8 +25,7 @@ export async function threadPeople(deps: PeopleDeps, row: PeopleOf | null): Prom
   const guardian = row?.guardian_id ? { id: row.guardian_id, name: row.guardian_name ?? '' } : null;
   const lead = row?.lead_id && row.lead_status ? { id: row.lead_id, status: row.lead_status } : null;
   if (!guardian) return { guardian, lead, students: [] };
-  const { data, error } = await deps.db.from('students').select(STUDENTS).eq('guardian_id', guardian.id).order('created_at');
-  if (error) throw dbError(error);
+  const data = rows(await deps.db.from('students').select(STUDENTS).eq('guardian_id', guardian.id).order('created_at'));
   // one S6 balance read per child (a family has a handful); batch if families grow.
   const students = await Promise.all(data.map(async (s) => toThreadStudent(s, await deps.packages.studentBalance(s.id))));
   return { guardian, lead, students };
@@ -40,8 +39,7 @@ export async function familyTagsOf(
 ): Promise<Map<string, FamilyTag>> {
   const ids = [...new Set(guardianIds)];
   if (ids.length === 0) return new Map(); // .in() with no ids is a PostgREST error
-  const { data, error } = await deps.db.from('students').select('id, guardian_id, subscriptions(id, status)').in('guardian_id', ids);
-  if (error) throw dbError(error);
+  const data = rows(await deps.db.from('students').select('id, guardian_id, subscriptions(id, status)').in('guardian_id', ids));
   const balances = await deps.balances.forStudents(data.map((s) => s.id));
   return familyTags(data, balances, threshold);
 }

@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict, notFound } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError, rows } from '@/common/db/errors';
 import { stopPlan, stopRow, type StopPlan, type StopRow } from './course-stop.mapper';
 
 /** The package a stop reads (subscriptions row). */
@@ -50,7 +50,7 @@ function stopError(error: PostgrestError): Error {
     return error.message === 'subscription_not_found' ? notFound(error.message) : conflict(error.message);
   if (error.code === '23514' && error.message.startsWith('has_future_lessons'))
     return conflict('has_future_lessons');
-  return dbError(error);
+  return pgError(error);
 }
 
 /** The course stop's reads and one-transaction write; the route checks subscriptions.stop. */
@@ -60,21 +60,19 @@ export class CourseStopRepo {
 
   /** 404 subscription_not_found (also for another student's package). */
   async subscription(id: string, studentId: string): Promise<StopSub> {
-    const { data, error } = await this.db.from('subscriptions').select(SUB).eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('subscriptions').select(SUB).eq('id', id).maybeSingle());
     if (data?.student_id !== studentId) throw notFound('subscription_not_found');
     return data;
   }
 
   /** The student's current package (currentPackage: newest active, else newest live); 404 none. */
   async current(studentId: string): Promise<StopSub> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('subscriptions')
       .select(SUB)
       .eq('student_id', studentId)
       .order('starts_on', { ascending: false })
-      .order('created_at', { ascending: false });
-    if (error) throw dbError(error);
+      .order('created_at', { ascending: false }));
     const sub = currentPackage(data);
     if (!sub) throw notFound('subscription_not_found');
     return sub;
@@ -87,25 +85,23 @@ export class CourseStopRepo {
   async plan(subscriptionId: string, now: Date): Promise<StopPlan> {
     const args = { p_subscription: subscriptionId, p_at: now.toISOString() };
     const { data, error } = await this.db.rpc('course_stop_plan', args);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return stopPlan(data);
   }
 
   /** The instants of these lessons, earliest first (the sheet lists what a stop cancels). */
   async starts(ids: readonly string[]): Promise<string[]> {
     if (ids.length === 0) return [];
-    const { data, error } = await this.db.from('lessons').select('starts_at').in('id', [...ids]);
-    if (error) throw dbError(error);
+    const data = rows(await this.db.from('lessons').select('starts_at').in('id', [...ids]));
     return data.map((l) => l.starts_at).sort();
   }
 
   /** Net paid in the package currency: shown, never changed. */
   async paid(sub: Pick<StopSub, 'id' | 'currency'>): Promise<number> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('payments')
       .select('amount, kind, currency')
-      .eq('subscription_id', sub.id);
-    if (error) throw dbError(error);
+      .eq('subscription_id', sub.id));
     return netPaidIn(data, sub.currency);
   }
 

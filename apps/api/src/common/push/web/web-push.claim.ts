@@ -1,5 +1,5 @@
 import { ConflictException } from '@nestjs/common';
-import { dbError } from '@/common/http/http';
+import { maybe } from '@/common/db/errors';
 import type { Db } from '@/common/db/db.module';
 import { DEVICE_IN_USE, mayClaimDevice } from '@/common/push/expo/push-claim';
 import { liveSessions } from '@/common/push/dispatch/push.sessions';
@@ -13,12 +13,11 @@ import type { WebPushSubscriptionInput } from './web-push.endpoint';
  * 700 (no session) is not live: the API never pushes to it anyway.
  */
 export async function assertBrowserClaim(db: Db, input: { profileId: string; sub: WebPushSubscriptionInput }): Promise<void> {
-  const { data, error } = await db
+  const data = maybe(await db
     .from('web_push_subscriptions')
     .select('profile_id, session_id, p256dh, auth')
     .eq('endpoint', input.sub.endpoint)
-    .maybeSingle();
-  if (error) throw dbError(error);
+    .maybeSingle());
   if (!data || data.profile_id === input.profileId) return;
   const proven = data.p256dh === input.sub.keys.p256dh && data.auth === input.sub.keys.auth;
   const live = !proven && data.session_id !== null && (await liveSessions(db, [data.session_id])).has(data.session_id);

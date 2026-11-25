@@ -3,7 +3,8 @@ import { meetingModeOf, OPEN_LESSON_STATUSES, usesPlatform } from '@ab/schedule'
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
-import { dbError, type PageQuery } from '@/common/http/http';
+import { type PageQuery } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import type { Contact } from './status/confirmation-messages';
 import { LESSON_SELECT, type LessonRow } from './store/lesson-row';
 import { LessonsSettings } from './lessons.settings';
@@ -23,8 +24,7 @@ export class LessonsRepo {
   ) {}
 
   async get(id: string): Promise<LessonRow | null> {
-    const { data, error } = await this.db.from('lessons').select(LESSON_SELECT).eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('lessons').select(LESSON_SELECT).eq('id', id).maybeSingle());
     return data;
   }
 
@@ -37,7 +37,7 @@ export class LessonsRepo {
       .in('id', [...ids])
       .order('starts_at')
       .order('id');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -64,7 +64,7 @@ export class LessonsRepo {
       .order('starts_at', { ascending: false })
       .order('id')
       .range(start, start + pageSize - 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const order = new Map(data.map((r, i) => [r.id, i]));
     const rows = await this.byIds(data.map((r) => r.id));
     rows.sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
@@ -80,7 +80,7 @@ export class LessonsRepo {
       this.academyAuto(),
       this.db.from('teachers').select('meeting_mode').eq('id', opts.teacherId).maybeSingle(),
     ]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return usesPlatform(meetingModeOf(data?.meeting_mode), auto);
   }
 
@@ -101,13 +101,12 @@ export class LessonsRepo {
       .from('students')
       .select('id, name, guardian:guardians(id, phone_e164, tz)')
       .in('id', [...studentIds]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   async studentExists(id: string): Promise<boolean> {
-    const { data, error } = await this.db.from('students').select('id').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('students').select('id').eq('id', id).maybeSingle());
     return data !== null;
   }
 
@@ -136,7 +135,7 @@ export class LessonsRepo {
     const chunks = Array.from({ length: Math.ceil(lessonIds.length / SEQ_CHUNK) }, (_, i) => lessonIds.slice(i * SEQ_CHUNK, (i + 1) * SEQ_CHUNK));
     const reads = await Promise.all(chunks.map((ids) => this.db.from('v_lesson_sequence').select('lesson_id, student_id, seq').in('lesson_id', ids)));
     for (const { data, error } of reads) {
-      if (error) throw dbError(error);
+      if (error) throw pgError(error);
       for (const r of data) {
         if (r.lesson_id && r.student_id && r.seq !== null) out.set(`${r.lesson_id}:${r.student_id}`, r.seq);
       }

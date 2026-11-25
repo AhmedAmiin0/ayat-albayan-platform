@@ -1,6 +1,6 @@
 import type { LessonStatus } from '@ab/catalog';
 import type { Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError, rows } from '@/common/db/errors';
 import { ownershipOf, type SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 
 /** Lessons that are still to come or were held; cancelled / rescheduled / no-show ones are not meetings. */
@@ -44,41 +44,38 @@ export async function salesLessonsBetween(db: Db, input: { own: SalesOwnership }
 async function bookedFromLeads(db: Db, input: { own: SalesOwnership } & Range): Promise<SalesLessonRow[]> {
   if (input.own.leadIds.length === 0) return [];
   const rules = await db.from('schedule_rules').select('id').in('created_from_lead_id', input.own.leadIds);
-  if (rules.error) throw dbError(rules.error);
+  if (rules.error) throw pgError(rules.error);
   if (rules.data.length === 0) return [];
-  const { data, error } = await db
+  const data = rows(await db
     .from('lessons')
     .select(select(false))
     .in('rule_id', rules.data.map((r) => r.id))
     .gte('starts_at', input.from)
     .lte('starts_at', input.to)
     .in('status', [...MEETING_STATUSES])
-    .overrideTypes<SalesLessonRow[], { merge: false }>();
-  if (error) throw dbError(error);
+    .overrideTypes<SalesLessonRow[], { merge: false }>());
   return data;
 }
 
 async function trialsOfStudents(db: Db, input: { own: SalesOwnership } & Range): Promise<SalesLessonRow[]> {
   if (input.own.studentIds.length === 0) return [];
-  const { data, error } = await db
+  const data = rows(await db
     .from('lessons')
     .select(select(true))
     .in('lesson_students.student_id', input.own.studentIds)
     .gte('starts_at', input.from)
     .lte('starts_at', input.to)
     .in('status', [...MEETING_STATUSES])
-    .overrideTypes<SalesLessonRow[], { merge: false }>();
-  if (error) throw dbError(error);
+    .overrideTypes<SalesLessonRow[], { merge: false }>());
   return data;
 }
 
 /** Is this lesson one of the salesperson's (room join)? Same rule as the list; any status. */
 export async function isSalesLesson(db: Db, input: { profileId: string; lessonId: string }): Promise<boolean> {
-  const { data, error } = await db
+  const data = maybe(await db
     .from('lessons')
     .select(select(false))
     .eq('id', input.lessonId)
-    .maybeSingle<SalesLessonRow>();
-  if (error) throw dbError(error);
+    .maybeSingle<SalesLessonRow>());
   return data !== null && inSalesScope(data, await ownershipOf(db, input.profileId));
 }

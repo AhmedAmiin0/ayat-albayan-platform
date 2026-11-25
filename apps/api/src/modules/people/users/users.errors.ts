@@ -1,11 +1,12 @@
 import { conflict } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 type DbFailure = Parameters<typeof dbError>[0];
 
 /** A unique violation on a phone is the admin's mistake (409 phone_taken), not a server error. */
 export function phoneAware(error: DbFailure): Error {
-  return error.code === '23505' ? conflict('phone_taken') : dbError(error);
+  return error.code === '23505' ? conflict('phone_taken') : pgError(error);
 }
 
 /**

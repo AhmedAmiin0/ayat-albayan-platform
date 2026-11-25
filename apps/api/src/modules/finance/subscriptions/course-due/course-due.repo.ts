@@ -1,7 +1,7 @@
 import type { CourseSubscription } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import { COURSE_DUE_LOOKBACK_MS, dueActivations, legacyStudents } from './course-due.rules';
 
 /** A paid package with no weekly course, and whom it concerns. */
@@ -63,12 +63,11 @@ export class CourseDueRepo {
    * an imported weekly course still running (the wizard would answer course_exists).
    */
   async unbooked(subscriptionId: string, now = new Date()): Promise<UnbookedPackage | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('subscriptions')
       .select(PACKAGE_SELECT)
       .eq('id', subscriptionId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     const p = unbooked(undrafted(data ? [data] : []))[0];
     if (!p) return null;
     return (await this.legacy([p.studentId], now)).has(p.studentId) ? null : p;
@@ -76,12 +75,11 @@ export class CourseDueRepo {
 
   /** The package and whom it concerns, booked or not (a draft's clash alert); null when unknown. */
   async package(subscriptionId: string): Promise<UnbookedPackage | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('subscriptions')
       .select(PACKAGE_SELECT)
       .eq('id', subscriptionId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data ? toUnbooked(data) : null;
   }
 
@@ -98,7 +96,7 @@ export class CourseDueRepo {
       .select(PACKAGE_SELECT)
       .in('id', ids)
       .eq('status', 'active');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const due = unbooked(data);
     const legacy = await this.legacy(due.map((p) => p.studentId), now);
     return due.filter((p) => !legacy.has(p.studentId));
@@ -112,7 +110,7 @@ export class CourseDueRepo {
       .eq('action', 'status_change')
       .eq('after->>status', 'active')
       .gte('at', new Date(now.getTime() - COURSE_DUE_LOOKBACK_MS).toISOString());
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -125,7 +123,7 @@ export class CourseDueRepo {
       .in('student_id', [...studentIds])
       .in('rule.status', ['active', 'paused'])
       .is('rule.subscription_id', null);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const rules = data.map(({ student_id, rule }) => ({ student_id, ...rule }));
     return legacyStudents(rules, now.toISOString().slice(0, 10));
   }

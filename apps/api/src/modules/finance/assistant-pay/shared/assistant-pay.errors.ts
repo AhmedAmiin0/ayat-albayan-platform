@@ -1,6 +1,6 @@
 import type { PostgrestError } from '@supabase/supabase-js';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 const BAD = new Set([
   'invalid_month',
@@ -28,5 +28,5 @@ export function assistantError(error: PostgrestError): Error {
     if (MISSING.has(error.message)) return notFound(error.message);
     if (CONFLICT.has(error.message)) return conflict(error.message);
   }
-  return dbError(error);
+  return pgError(error);
 }

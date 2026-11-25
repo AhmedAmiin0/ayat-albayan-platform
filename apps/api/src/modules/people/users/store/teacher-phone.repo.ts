@@ -1,5 +1,5 @@
 import type { Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 
 // docs/46 A7: a teacher login without a phone takes the record's number unless someone holds it.
 
@@ -12,8 +12,8 @@ async function holdersOf(db: Db, phone: string): Promise<{ profiles: number; gua
     db.from('profiles').select('id', { count: 'exact', head: true }).eq('phone_e164', phone),
     db.from('guardians').select('id', { count: 'exact', head: true }).eq('phone_e164', phone),
   ]);
-  if (p.error) throw dbError(p.error);
-  if (g.error) throw dbError(g.error);
+  if (p.error) throw pgError(p.error);
+  if (g.error) throw pgError(g.error);
   return { profiles: p.count ?? 0, guardians: g.count ?? 0 };
 }
 
@@ -21,12 +21,11 @@ async function holdersOf(db: Db, phone: string): Promise<{ profiles: number; gua
 const lostRace = (error: { code?: string } | null): boolean => error?.code === '23505';
 
 async function recordPhone(db: Db, teacherId: string): Promise<string | null> {
-  const { data, error } = await db
+  const data = maybe(await db
     .from('teachers')
     .select('phone_e164')
     .eq('id', teacherId)
-    .maybeSingle();
-  if (error) throw dbError(error);
+    .maybeSingle());
   return data?.phone_e164 ?? null;
 }
 
@@ -45,5 +44,5 @@ export async function adoptTeacherPhone(
     .update({ phone_e164: phone })
     .eq('id', ctx.profileId)
     .is('phone_e164', null);
-  if (error && !lostRace(error)) throw dbError(error);
+  if (error && !lostRace(error)) throw pgError(error);
 }

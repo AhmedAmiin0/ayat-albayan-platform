@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import {
   approvedTemplates,
   queueMessages,
@@ -32,22 +32,20 @@ export class ScheduleNoticesRepo {
 
   /** The lesson with its teacher and every student on it (and their guardian). */
   async lesson(id: string): Promise<NoticeLessonRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lessons')
       .select(LESSON_SELECT)
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   async student(id: string): Promise<NoticeStudent | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('students')
       .select(STUDENT_SELECT)
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -55,18 +53,17 @@ export class ScheduleNoticesRepo {
   async lessons(ids: readonly string[]): Promise<TakenLessonRow[]> {
     if (ids.length === 0) return [];
     const { data, error } = await this.db.from('lessons').select(TAKEN_SELECT).in('id', [...ids]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** The rules a pause held: its own (rule_ids) and the group ones it took the student out of. */
   async pauseRules(pauseId: string): Promise<string[]> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('course_pauses')
       .select('rule_ids, shared_rule_ids')
       .eq('id', pauseId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data ? [...data.rule_ids, ...data.shared_rule_ids] : [];
   }
 
@@ -82,7 +79,7 @@ export class ScheduleNoticesRepo {
       .gt('starts_at', q.after.toISOString())
       .order('starts_at')
       .limit(1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const [next] = data;
     return next ? { id: next.id, starts_at: next.starts_at, teacher: next.teacher } : null;
   }

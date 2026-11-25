@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, ilikeContains, type SortSpec } from '@/common/db/list-sort';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import type { InvoiceSortKey, RecentFilter } from './invoices.dto';
 
 export type InvoiceRowOut = {
@@ -37,13 +37,12 @@ export class InvoicesRepo {
       .select(SELECT)
       .in('rule_id', [...ruleIds])
       .order('created_at', { ascending: false });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.flatMap(toRow);
   }
 
   async get(id: string): Promise<InvoiceRowOut | null> {
-    const { data, error } = await this.db.from('invoices').select(SELECT).eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('invoices').select(SELECT).eq('id', id).maybeSingle());
     return data ? (toRow(data)[0] ?? null) : null;
   }
 
@@ -58,7 +57,7 @@ export class InvoicesRepo {
     if (f.kind) q = q.eq('kind', f.kind);
     if (rules) q = q.in('rule_id', rules);
     const { data, count, error } = await applySort(q, f, RECENT_SORT).order('id').range(start, start + f.pageSize - 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return { rows: data.flatMap(toRow), total: count ?? 0 };
   }
 
@@ -68,7 +67,7 @@ export class InvoicesRepo {
       .select('rule_id, student:students!inner(name)')
       .ilike('student.name', ilikeContains(name))
       .limit(500);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return [...new Set(data.map((r) => r.rule_id))];
   }
 
@@ -76,14 +75,14 @@ export class InvoicesRepo {
   async paymentsOf(invoiceIds: readonly string[]): Promise<Map<string, string>> {
     if (invoiceIds.length === 0) return new Map();
     const { data, error } = await this.db.from('payments').select('id, invoice_id').in('invoice_id', [...invoiceIds]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return new Map(data.flatMap((p) => (p.invoice_id ? [[p.invoice_id, p.id] as const] : [])));
   }
 
   /** The rules a student is on (their bookings). */
   async ruleIdsOf(studentId: string): Promise<string[]> {
     const { data, error } = await this.db.from('schedule_rule_students').select('rule_id').eq('student_id', studentId);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.map((r) => r.rule_id);
   }
 }
