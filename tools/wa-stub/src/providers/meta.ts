@@ -13,14 +13,15 @@ export interface StubTemplate {
   /** GREEN | YELLOW | RED | UNKNOWN */
   quality: string;
   components: Json[];
-  /** Only on this WABA (the chat line's starters, a template created on a configured line); absent = on every WABA. */
+  /** Only on this WABA (chat starters, one created on a configured line); absent = every WABA. */
   wabaId?: string;
-  /** Meta's rejected_reason (INVALID_FORMAT, …), set by POST /__stub/templates/{name}; absent = NONE. */
+  /** Meta's rejected_reason (INVALID_FORMAT…) via POST /__stub/templates/{name}; absent = NONE. */
   rejectedReason?: string;
 }
 
 /** The templates one WABA has: its own, plus those on every WABA (single line: all of them). */
-export const onWaba = (t: StubTemplate, wabaId: string | undefined): boolean => t.wabaId === undefined || t.wabaId === wabaId;
+export const onWaba = (t: StubTemplate, wabaId: string | undefined): boolean =>
+  t.wabaId === undefined || t.wabaId === wabaId;
 
 const FOOTER = { type: 'FOOTER', text: 'أكاديمية آيات البيان' };
 const JITSI = 'https://meet.jit.si/{{1}}';
@@ -28,8 +29,17 @@ const MEET = 'https://meet.google.com/{{1}}';
 
 function approved(name: string, body: string, url?: string): StubTemplate {
   const components: Json[] = [{ type: 'BODY', text: body }, FOOTER];
-  if (url) components.push({ type: 'BUTTONS', buttons: [{ type: 'URL', text: 'ادخل الحلقة', url }] });
-  return { id: randomUUID(), name, language: 'ar', category: 'UTILITY', status: 'APPROVED', quality: 'GREEN', components };
+  if (url)
+    components.push({ type: 'BUTTONS', buttons: [{ type: 'URL', text: 'ادخل الحلقة', url }] });
+  return {
+    id: randomUUID(),
+    name,
+    language: 'ar',
+    category: 'UTILITY',
+    status: 'APPROVED',
+    quality: 'GREEN',
+    components,
+  };
 }
 
 const BOOKED = 'تم حجز حلقة {{1}} — {{2}}';
@@ -37,7 +47,7 @@ const TODAY = 'حلقة {{1}} النهاردة — {{2}}';
 const TEACHER = 'أستاذ {{1}}، عندك حلقة {{2}}';
 
 /**
- * The 8 templates approved on the academy's WABA (migration 141). The registry's others start absent
+ * The 8 templates approved on the academy's WABA (migration 141). The registry's others are absent
  * (report_ready, renewal_due, follow_up_slots, lesson_reminder_24h, lesson_feedback_request,
  * lesson_join_link, lesson_rating with its 3 quick replies): the admin submits them (POST
  * /{waba}/message_templates) and POST /__stub/templates/{name} plays Meta's review.
@@ -55,8 +65,10 @@ export function defaultTemplates(): StubTemplate[] {
   ];
 }
 
-const WELCOME = 'أهلًا بك في أكاديمية آيات البيان يا {{1}}، يسعدنا تواصلك معنا. هل تودّ حجز حلقة تجريبية مجانية؟';
-const TRIAL = 'السلام عليكم {{1}}، ندعوكم إلى حلقة تجريبية مجانية مع أكاديمية آيات البيان. هل يناسبكم موعد قريب؟';
+const WELCOME =
+  'أهلًا بك في أكاديمية آيات البيان يا {{1}}، يسعدنا تواصلك معنا. هل تودّ حجز حلقة تجريبية مجانية؟';
+const TRIAL =
+  'السلام عليكم {{1}}، ندعوكم إلى حلقة تجريبية مجانية مع أكاديمية آيات البيان. هل يناسبكم موعد قريب؟';
 
 /**
  * The chat line's approved templates: only on the chat WABA, so only the chat
@@ -87,8 +99,8 @@ export function templateJson(t: StubTemplate): Json {
 
 /** Number of distinct {{n}} in the BODY component. */
 export function bodyParamCount(t: StubTemplate): number {
-  const body = t.components.find((c) => c['type'] === 'BODY');
-  const text = typeof body?.['text'] === 'string' ? body['text'] : '';
+  const body = t.components.find((c) => c.type === 'BODY');
+  const text = typeof body?.text === 'string' ? body.text : '';
   return new Set(text.match(/\{\{\d+\}\}/g) ?? []).size;
 }
 
@@ -107,16 +119,30 @@ export function metaError(code: number, message: string, details?: string): Json
 export const ERR = {
   auth: () => metaError(190, 'Invalid OAuth access token'),
   noTemplate: (name: string, lang: string) =>
-    metaError(132001, 'Template name does not exist in the translation', `template name (${name}) does not exist in ${lang}`),
+    metaError(
+      132001,
+      'Template name does not exist in the translation',
+      `template name (${name}) does not exist in ${lang}`,
+    ),
   paused: (name: string) => metaError(132015, 'Template is paused', `template (${name}) is paused`),
   params: (want: number, got: number) =>
-    metaError(132000, 'Number of parameters does not match the expected number of params', `body: expected ${want}, got ${got}`),
+    metaError(
+      132000,
+      'Number of parameters does not match the expected number of params',
+      `body: expected ${want}, got ${got}`,
+    ),
   window: () =>
-    metaError(131047, 'Re-engagement message', 'More than 24 hours have passed since the recipient last replied'),
-  duplicate: (name: string) => metaError(100, 'Invalid parameter', `template ${name} already exists in this language`),
+    metaError(
+      131047,
+      'Re-engagement message',
+      'More than 24 hours have passed since the recipient last replied',
+    ),
+  duplicate: (name: string) =>
+    metaError(100, 'Invalid parameter', `template ${name} already exists in this language`),
   badName: (name: string) => metaError(100, 'Invalid parameter', `invalid template name ${name}`),
   noMedia: (id: string) => metaError(100, 'Invalid parameter', `media ${id} not found`),
-  noObject: (id: string) => metaError(100, 'Unsupported post request', `Object with ID '${id}' does not exist`),
+  noObject: (id: string) =>
+    metaError(100, 'Unsupported post request', `Object with ID '${id}' does not exist`),
   /** Template components and resumable uploads: Meta's code 100 with what was wrong. */
   invalid: (details: string) => metaError(100, 'Invalid parameter', details),
 };

@@ -1,5 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { bearer, closeAll, post, startHook, startStub, templateBody, TWO_LINES } from './test-server.ts';
+import {
+  bearer,
+  closeAll,
+  post,
+  startHook,
+  startStub,
+  templateBody,
+  TWO_LINES,
+} from './test-server.ts';
 
 afterEach(closeAll);
 
@@ -17,14 +25,20 @@ describe('wa-stub: two lines (docs/12 §13.12, R-MSG-04)', () => {
   it('records the phone-number id of the Graph path on every send', async () => {
     const { url, stub } = await twoLines();
     await post(`${url}${msgPath('PN-N')}`, templateBody('lesson_reminder_v2', 2), NOTIF);
-    await post(`${url}/__stub/inbound`, { from: '966500000002', text: 'سلام', phoneNumberId: 'PN-C' });
+    await post(`${url}/__stub/inbound`, {
+      from: '966500000002',
+      text: 'سلام',
+      phoneNumberId: 'PN-C',
+    });
     const text = { to: '966500000002', type: 'text', text: { body: 'أهلاً' } };
     expect((await post(`${url}${msgPath('PN-C')}`, text, CHAT)).status).toBe(200);
     expect(stub.sent.map((m) => [m.type, m.phoneNumberId])).toEqual([
       ['template', 'PN-N'],
       ['text', 'PN-C'],
     ]);
-    const listed = (await (await fetch(`${url}/__stub/messages`)).json()) as { phoneNumberId: string }[];
+    const listed = (await (await fetch(`${url}/__stub/messages`)).json()) as {
+      phoneNumberId: string;
+    }[];
     expect(listed.map((m) => m.phoneNumberId)).toEqual(['PN-N', 'PN-C']);
   });
 
@@ -66,13 +80,20 @@ describe('wa-stub: two lines (docs/12 §13.12, R-MSG-04)', () => {
     const { url } = await twoLines();
     const text = { to: '966500000003', type: 'text', text: { body: 'أهلاً' } };
     expect((await post(`${url}${msgPath('PN-C')}`, text, CHAT)).status).toBe(400);
-    await post(`${url}/__stub/inbound`, { from: '966500000003', text: 'سلام', phoneNumberId: 'PN-C' });
+    await post(`${url}/__stub/inbound`, {
+      from: '966500000003',
+      text: 'سلام',
+      phoneNumberId: 'PN-C',
+    });
     expect((await post(`${url}${msgPath('PN-C')}`, text, CHAT)).status).toBe(200);
   });
 
   it('single-line stub: no chat identity, lenient bearer, sends still carry their path id', async () => {
     const { url, stub } = await startStub();
-    expect((await post(`${url}${msgPath('ANY')}`, templateBody('lesson_reminder_v2', 2), bearer('x'))).status).toBe(200);
+    expect(
+      (await post(`${url}${msgPath('ANY')}`, templateBody('lesson_reminder_v2', 2), bearer('x')))
+        .status,
+    ).toBe(200);
     expect(stub.sent[0]?.phoneNumberId).toBe('ANY');
     expect([...stub.state.health.keys()]).toEqual(['stub-phone']);
   });

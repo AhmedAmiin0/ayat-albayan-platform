@@ -17,12 +17,14 @@ function target(s: StubState, phoneNumberId?: string): WebhookTarget | null {
   if (!s.opts.webhookUrl) return null;
   const line = lineOf(s.opts, phoneNumberId) ?? stubLines(s.opts)[0];
   const { appSecret, displayPhone, entryId } = line;
-  return { url: s.opts.webhookUrl, appSecret, phoneNumberId: phoneNumberId ?? line.phoneNumberId, displayPhone, entryId };
+  const pn = phoneNumberId ?? line.phoneNumberId;
+  return { url: s.opts.webhookUrl, appSecret, phoneNumberId: pn, displayPhone, entryId };
 }
 
 /** The same line identity, delivered as Kapso forwards it: its webhook URL and secret (docs/19). */
 function kapsoTarget(s: StubState, phoneNumberId?: string): WebhookTarget | null {
-  const line = target({ ...s, opts: { ...s.opts, webhookUrl: s.opts.kapso?.webhookUrl } }, phoneNumberId);
+  const opts = { ...s.opts, webhookUrl: s.opts.kapso?.webhookUrl };
+  const line = target({ ...s, opts }, phoneNumberId);
   return line ? { ...line, appSecret: s.opts.kapso?.webhookSecret ?? '', kapso: true } : null;
 }
 
@@ -66,7 +68,10 @@ export const controlRoutes: Route[] = [
   ['GET', /^\/__stub\/reads$/, async (_r, _m, s) => [200, s.reads]],
   ['GET', /^\/__stub\/reads\/by-line$/, async (_r, _m, s) => [200, s.readLog]],
   ['GET', /^\/__stub\/templates$/, async (_r, _m, s) => [200, s.templates]],
-  /** Whole reset between e2e tests: default templates (and the chat starter), empty logs, media, windows, failures. */
+  /**
+   * Whole reset between e2e tests: default templates and starter, empty logs, media, windows,
+   * failures.
+   */
   ['POST', /^\/__stub\/reset$/, async (_r, _m, s) => {
     s.templates = initialTemplates(s.opts);
     s.sent.length = 0;
@@ -83,9 +88,12 @@ export const controlRoutes: Route[] = [
     return [200, { reset: true }];
   }],
   ['POST', /^\/__stub\/inbound$/, async (req, _m, s) => [...(await inbound(s, (await readJson(req)) as unknown as InboundSpec))]],
-  /** The same inbound, forwarded by «Kapso» to its webhook URL with X-Webhook-Signature (docs/19). */
+  /** The same inbound, forwarded by «Kapso» to its webhook URL, X-Webhook-Signature (docs/19). */
   ['POST', /^\/__stub\/kapso\/inbound$/, async (req, _m, s) => [...(await inbound(s, (await readJson(req)) as unknown as InboundSpec, true))]],
-  /** WhatsApp Calling (docs/28): the logged …/calls actions, and a Kapso-signed `calls` change to the API. */
+  /**
+   * WhatsApp Calling (docs/28): the logged …/calls actions; a Kapso-signed `calls` change to the
+   * API.
+   */
   ['GET', /^\/__stub\/calls$/, async (_r, _m, s) => [200, s.calls]],
   ['POST', /^\/__stub\/kapso\/call$/, async (req, _m, s) => {
     const spec = (await readJson(req)) as unknown as CallSpec;
@@ -96,13 +104,16 @@ export const controlRoutes: Route[] = [
   /** Every Graph call with its prefix and credential kind (bearer / api-key / …). */
   ['GET', /^\/__stub\/requests$/, async (_r, _m, s) => [200, s.requests]],
   ['POST', /^\/__stub\/status$/, async (req, _m, s) => [...(await deliveryStatus(s, (await readJson(req)) as unknown as StatusSpec))]],
-  /** Meta's review result: {status: 'APPROVED' | 'REJECTED' | 'PAUSED' | 'DISABLED', quality?, rejected_reason?, waba?}. */
+  /**
+   * Meta's review result:
+   * {status: 'APPROVED' | 'REJECTED' | 'PAUSED' | 'DISABLED', quality?, rejected_reason?, waba?}.
+   */
   ['POST', /^\/__stub\/templates\/([a-z0-9_]+)$/, async (req, m, s) => reviewTemplate(s, { name: m[1] ?? '', body: await readJson(req) })],
   /** The next send to `to` fails with Meta error `code` (default 131026 undeliverable). */
   ['POST', /^\/__stub\/fail$/, async (req, _m, s) => {
     const body = await readJson(req);
-    const code = Number(body['code'] ?? 131026);
-    s.failNext.set(digits(body['to']), metaError(code, String(body['title'] ?? 'Simulated failure')));
+    const code = Number(body.code ?? 131026);
+    s.failNext.set(digits(body.to), metaError(code, String(body.title ?? 'Simulated failure')));
     return [200, { armed: true, code }];
   }],
   ['GET', /^\/__stub\/media\/([a-f0-9]+)$/, async (_r, m, s) => {

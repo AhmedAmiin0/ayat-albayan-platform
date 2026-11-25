@@ -4,7 +4,8 @@ import { authorized } from './lines.ts';
 
 // Review C, S1: a chat token alone must not make the notifications line strict.
 
-const req = (authorization?: string) => ({ headers: authorization ? { authorization } : {} }) as IncomingMessage;
+const req = (authorization?: string) =>
+  ({ headers: authorization ? { authorization } : {} }) as IncomingMessage;
 const CHAT = { phoneNumberId: 'PN-C', wabaId: 'WABA-C', accessToken: 'chat-token' };
 
 describe('wa-stub: authorized()', () => {

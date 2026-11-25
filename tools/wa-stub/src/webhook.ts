@@ -79,7 +79,10 @@ function messagePart(spec: InboundSpec, mediaId: string | null): Json {
   return { type: 'text', text: { body: spec.text ?? '' } };
 }
 
-export function inboundValue(spec: InboundSpec, ids: { message: string; media: string | null }): Json {
+export function inboundValue(
+  spec: InboundSpec,
+  ids: { message: string; media: string | null },
+): Json {
   const message: Json = {
     from: spec.from,
     id: ids.message,
@@ -107,11 +110,11 @@ export function statusValue(spec: StatusSpec, recipient: string): Json {
     recipient_id: recipient,
   };
   if (spec.status === 'sent' || spec.status === 'delivered') {
-    s['conversation'] = { id: `conv-${recipient}`, origin: { type: 'utility' } };
-    s['pricing'] = { billable: true, pricing_model: 'PMP', category: 'utility' };
+    s.conversation = { id: `conv-${recipient}`, origin: { type: 'utility' } };
+    s.pricing = { billable: true, pricing_model: 'PMP', category: 'utility' };
   }
   if (spec.status === 'failed') {
-    s['errors'] = [{ code: spec.errorCode ?? 131026, title: spec.errorTitle ?? 'Message undeliverable' }];
+    s.errors = [{ code: spec.errorCode ?? 131026, title: spec.errorTitle ?? 'Message undeliverable' }];
   }
   return { statuses: [s] };
 }

@@ -69,7 +69,9 @@ export interface SentMessage {
   body: unknown;
   /** The phone-number id of the Graph path the message was sent through (its line). */
   phoneNumberId?: string;
-  /** Through Meta's paths, the Kapso prefix or the CRM prefix (docs/19), so e2e can scope a send to its driver. */
+  /**
+   * Through Meta's paths, the Kapso or the CRM prefix (docs/19): e2e scopes a send to its driver.
+   */
   via?: 'graph' | 'kapso' | 'crm';
 }
 
@@ -112,12 +114,16 @@ export interface StubState {
   handles: Set<string>;
   /** Every Graph call (not /__stub), Meta's paths and the kapso prefix: GET /__stub/requests. */
   requests: RequestLog[];
-  /** Every POST …/calls action (docs/28: connect, pre_accept, accept, reject, terminate): GET /__stub/calls. */
+  /** Every POST …/calls action (docs/28: connect, pre_accept, accept, reject, terminate). */
   calls: Json[];
 }
 
 export type Reply = [number, unknown] | { status: number; mime: string; bytes: Buffer };
-export type Route = [string, RegExp, (req: IncomingMessage, m: RegExpExecArray, s: StubState) => Promise<Reply>];
+export type Route = [
+  string,
+  RegExp,
+  (req: IncomingMessage, m: RegExpExecArray, s: StubState) => Promise<Reply>,
+];
 
 export const digits = (phone: unknown) => String(phone ?? '').replace(/\D/g, '');
 export const DAY_MS = 24 * 60 * 60 * 1000;
