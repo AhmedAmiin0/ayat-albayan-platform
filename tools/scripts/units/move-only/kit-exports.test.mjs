@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
+import { rmSync } from 'node:fs';
 import { test } from 'node:test';
+import { gitRepo } from './git-repo.testing.mjs';
 import { kitExportsFailure } from './kit-exports.mjs';
+import { gate } from './run.mjs';
 
 const FILE = 'packages/web-kit/package.json';
 const pkg = (exports, extra = {}) => JSON.stringify({ name: '@ab/web-kit', ...extra, exports });
@@ -36,4 +39,41 @@ test('a removed entry fails', () => {
 test('a change outside exports fails', () => {
   const head = pkg({ '.': './src/index.ts', './x': './src/X/X.tsx' }, { version: '2.0.0' });
   assert.match(check(head) ?? '', /outside exports/);
+});
+
+const KIT = 'packages/web-kit';
+const fold = (exports) => `${JSON.stringify({ name: '@ab/web-kit', exports }, null, 2)}\n`;
+const REPO = {
+  [`${KIT}/src/ui/card.tsx`]: 'export const Card = () => null;\n',
+  [`${KIT}/package.json`]: fold({ '.': './src/index.ts' }),
+};
+
+function run(entry) {
+  const branch = 'move/components-family-kits';
+  const cwd = gitRepo({
+    base: REPO,
+    branch,
+    edit: ({ write, move }) => {
+      move(`${KIT}/src/ui/card.tsx`, `${KIT}/src/ui/Card/Card.tsx`);
+      write({
+        [`${KIT}/src/ui/Card/index.ts`]: "export { Card } from './Card';\n",
+        [`${KIT}/package.json`]: fold({ '.': './src/index.ts', ...entry }),
+      });
+    },
+  });
+  const lines = [];
+  const code = gate({ argv: ['--branch', branch], env: {}, cwd, log: (l) => lines.push(l) });
+  rmSync(cwd, { recursive: true, force: true });
+  return { code, out: lines.join('\n') };
+}
+
+test('a kit exports entry for an added export-only index.ts is a move', () => {
+  const { code, out } = run({ './ui/Card': './src/ui/Card/index.ts' });
+  assert.equal(code, 0, out);
+});
+
+test('a kit exports entry for any other file fails', () => {
+  const { code, out } = run({ './ui/Card': './src/ui/Card/Card.tsx' });
+  assert.equal(code, 1);
+  assert.match(out, /package\.json: exports "\.\/ui\/Card"/);
 });

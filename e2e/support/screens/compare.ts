@@ -1,7 +1,7 @@
 // The report-only base/head screenshot compare (docs/63 §5 «Web bundles, visual no-change»): it
 // lists, never fails. Server «now» and demo data move pixels between runs, so it is no proof.
 
-export const MAX_DIFF_RATIO = 0.002;
+const MAX_DIFF_RATIO = 0.002;
 const CHANNEL_TOLERANCE = 16;
 
 const channelMoved = (a: Uint8ClampedArray, b: Uint8ClampedArray, i: number): boolean =>

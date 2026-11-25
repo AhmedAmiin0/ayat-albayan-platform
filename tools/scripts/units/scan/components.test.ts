@@ -30,9 +30,11 @@ test('a component file folds alone (minimum 1 file) with every Name.* file besid
 });
 
 test('a kebab-case component file folds with a case rename', () => {
-  const [unit] = componentUnitsIn(DIR, ['fields.tsx', 'fields.test.tsx'], holds);
-  assert.equal(unit.name, 'fields');
-  assert.equal(unit.rename, 'Fields');
+  const units = componentUnitsIn(DIR, ['fields.tsx', 'fields.test.tsx'], holds);
+  assert.deepEqual(
+    units.map((u) => [u.name, u.rename]),
+    [['fields', 'Fields']],
+  );
   assert.equal(pascalOf('table-toolbar'), 'TableToolbar');
 });
 

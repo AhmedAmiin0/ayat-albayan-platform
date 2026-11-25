@@ -14,7 +14,6 @@
     "ci-checks/lint/commit-header/**/*.ts",
     "imports/**/*.ts",
     "automerge/**/*.ts",
-    "units/**/*.ts",
-    "components/**/*.ts"
+    "units/**/*.ts"
   ]
 }

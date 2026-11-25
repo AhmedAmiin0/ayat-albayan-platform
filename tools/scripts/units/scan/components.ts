@@ -1,7 +1,7 @@
 import { posix } from 'node:path';
 import type { FloatingUnit } from './scan.types.ts';
-import { componentsOf } from '../../components/model/components.ts';
-import { parseFile } from '../../components/model/source.ts';
+import { componentsOf } from '../components/model/components.ts';
+import { parseFile } from '../components/model/source.ts';
 import { isTest, stemOf } from './files.ts';
 
 // `units:fold -- --components` (docs/63 §4 phase 1): every component file folds into its own

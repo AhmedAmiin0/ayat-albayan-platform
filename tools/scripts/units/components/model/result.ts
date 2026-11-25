@@ -1,0 +1,6 @@
+/** A step's value, or why it stopped. */
+export type Result<T> = { ok: true; value: T } | { ok: false; why: string };
+
+export const ok = <T>(value: T): Result<T> => ({ ok: true, value });
+
+export const no = <T>(why: string): Result<T> => ({ ok: false, why });
