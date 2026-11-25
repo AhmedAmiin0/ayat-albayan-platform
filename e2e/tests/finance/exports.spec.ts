@@ -11,17 +11,33 @@ import { addDays, resetAbrar, withSql } from '../../support/core/schedule';
 
 const { students: S, guardians: G, payments: P, payouts: Y, subscriptions: SUB, exports: X } = ar;
 const HEADERS = {
-  students: [S.code, S.name, S.status, S.program, S.age, S.teacher, S.guardian, S.guardianPhone, G.country, G.source, S.tz, S.createdAt],
-  lessons: [X.columns.date, X.columns.time, SUB.duration, S.teacher, S.code, S.name, X.columns.lessonStatus, X.columns.attendance, X.columns.chargeable],
-  payments: [P.paidAt, S.code, S.name, SUB.package, SUB.lessonsTotal, ar.finance.kind, P.amount, P.currency, P.method, ar.finance.originalAmount, P.note],
-  payouts: [Y.teacher, Y.month, S.status, SUB.duration, Y.lessons, Y.rate, Y.amount, P.currency, P.paidAt],
+  students: [
+    S.code, S.name, S.status, S.program, S.age, S.teacher, S.guardian, S.guardianPhone, G.country,
+    G.source, S.tz, S.createdAt,
+  ],
+  lessons: [
+    X.columns.date, X.columns.time, SUB.duration, S.teacher, S.code, S.name, X.columns.lessonStatus,
+    X.columns.attendance, X.columns.chargeable,
+  ],
+  payments: [
+    P.paidAt, S.code, S.name, SUB.package, SUB.lessonsTotal, ar.finance.kind, P.amount, P.currency,
+    P.method, ar.finance.originalAmount, P.note,
+  ],
+  payouts: [
+    Y.teacher, Y.month, S.status, SUB.duration, Y.lessons, Y.rate, Y.amount, P.currency, P.paidAt,
+  ],
 };
 const STAMP = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
 const today = riyadhToday();
 const range = { from: addDays(today, -7), to: today };
-const lastMonth = new Date(Date.UTC(Number(today.slice(0, 4)), Number(today.slice(5, 7)) - 2, 1)).toISOString().slice(0, 7);
+const lastMonth = new Date(Date.UTC(Number(today.slice(0, 4)), Number(today.slice(5, 7)) - 2, 1))
+  .toISOString()
+  .slice(0, 7);
 
-async function download(page: Page, kind: keyof typeof HEADERS): Promise<{ name: string; rows: string[][]; text: string }> {
+async function download(
+  page: Page,
+  kind: keyof typeof HEADERS,
+): Promise<{ name: string; rows: string[][]; text: string }> {
   const label = X[kind];
   const [file] = await Promise.all([
     page.waitForEvent('download'),

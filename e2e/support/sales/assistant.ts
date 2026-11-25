@@ -14,14 +14,21 @@ export const code = (tx: Tx, q: () => Promise<unknown>) =>
   tx.savepoint(q).then(() => 'ok', raisedOrCode);
 
 /** A sales login (auth user + profile, tz Riyadh) with the given terms (null = none). */
-export async function assistant(tx: Tx, tag: string, terms?: Record<string, string | number | null>): Promise<string> {
+export async function assistant(
+  tx: Tx,
+  tag: string,
+  terms?: Record<string, string | number | null>,
+): Promise<string> {
   const [u] = await tx<{ id: string }[]>`insert into auth.users (id, email)
     values (gen_random_uuid(), ${`${tag}@e2e.local`}) returning id`;
   if (!u) throw new Error('auth user not written');
   await tx`insert into public.profiles (id, role, full_name) values (${u.id}, 'sales', ${`مسؤول مبيعات ${tag}`})`;
   if (terms) {
-    const t = { commission_type: null, commission_value: null, commission_currency: null, commission_starts_on: null,
-      salary_amount: null, salary_currency: null, salary_starts_on: null, ...terms };
+    const t = {
+      commission_type: null, commission_value: null, commission_currency: null,
+      commission_starts_on: null, salary_amount: null, salary_currency: null, salary_starts_on: null,
+      ...terms,
+    };
     await tx`insert into public.assistant_terms (assistant_id, commission_type, commission_value, commission_currency,
         commission_starts_on, salary_amount, salary_currency, salary_starts_on)
       values (${u.id}, ${t.commission_type}, ${t.commission_value}, ${t.commission_currency},
@@ -33,7 +40,10 @@ export async function assistant(tx: Tx, tag: string, terms?: Record<string, stri
 interface SubInput { price: number; currency?: string; startsOn?: string; usedBefore?: number }
 
 /** A guardian with one child; broughtBy = the sales profile (null: nobody brought them), broughtAt = when (default now). */
-export async function student(tx: Tx, input: { phone: string; broughtBy?: string | null; broughtAt?: string }): Promise<string> {
+export async function student(
+  tx: Tx,
+  input: { phone: string; broughtBy?: string | null; broughtAt?: string },
+): Promise<string> {
   const [g] = await tx<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
     values ('ولي أمر', ${input.phone}, 'SA', 'Asia/Riyadh') returning id`;
   if (!g) throw new Error('guardian not written');
@@ -74,7 +84,14 @@ export function one<T>(rows: readonly T[]): T {
   return row;
 }
 
-export interface CommissionRow { assistant_id: string; amount: string; currency: string; status: string; subscription_id: string | null; statement_id: string | null }
+export interface CommissionRow {
+  assistant_id: string;
+  amount: string;
+  currency: string;
+  status: string;
+  subscription_id: string | null;
+  statement_id: string | null;
+}
 
 /** The student's 'first' commission (one per student). */
 export const commissionOf = async (tx: Tx, studentId: string): Promise<CommissionRow | undefined> =>
@@ -82,13 +99,23 @@ export const commissionOf = async (tx: Tx, studentId: string): Promise<Commissio
     from public.assistant_commissions where student_id = ${studentId} and kind = 'first'`)[0];
 
 /** The 'renewal' commission of one subscription (one per subscription), with its share. */
-export const renewalOf = async (tx: Tx, subscriptionId: string): Promise<(CommissionRow & { share_percent: number }) | undefined> =>
+export const renewalOf = async (
+  tx: Tx,
+  subscriptionId: string,
+): Promise<(CommissionRow & { share_percent: number }) | undefined> =>
   (await tx<(CommissionRow & { share_percent: number })[]>`select assistant_id, amount::text, currency, status, subscription_id,
     statement_id, share_percent from public.assistant_commissions where subscription_id = ${subscriptionId} and kind = 'renewal'`)[0];
 
 /** A one-student family: brought by `by` (at `broughtAt`, default now), one package of `price`, nothing paid yet. */
-export async function brought(tx: Tx, input: SubInput & { by: string; phone: string; broughtAt?: string }) {
-  const st = await student(tx, { phone: input.phone, broughtBy: input.by, ...(input.broughtAt ? { broughtAt: input.broughtAt } : {}) });
+export async function brought(
+  tx: Tx,
+  input: SubInput & { by: string; phone: string; broughtAt?: string },
+) {
+  const st = await student(tx, {
+    phone: input.phone,
+    broughtBy: input.by,
+    ...(input.broughtAt ? { broughtAt: input.broughtAt } : {}),
+  });
   return { student: st, sub: await subscription(tx, st, input) };
 }
 
@@ -117,5 +144,6 @@ export async function paidStatement(tx: Tx, a: string, month: string): Promise<s
   return id;
 }
 
-export const iso = (daysFromNow: number) => new Date(Date.now() + daysFromNow * 86_400_000).toISOString();
+export const iso = (daysFromNow: number) =>
+  new Date(Date.now() + daysFromNow * 86_400_000).toISOString();
 export const today = () => new Date().toISOString().slice(0, 10);
