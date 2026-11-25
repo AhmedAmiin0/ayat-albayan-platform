@@ -9,16 +9,19 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { invoiceDownload } from './api.invoice';
 import type { InvoiceView } from '@/features/teaching/booking/draft/contract';
 import { canShow } from './invoice-file';
+import { invoiceKeys } from '@/features/teaching/booking/booking.keys';
 
 function title(invoice: InvoiceView, clock: Clock): string {
   const who = invoice.students.map((s) => s.name).join(t.common.listSeparator);
-  return [t.booking.invoice.label, who, fullTime(invoice.created_at, clock)].filter(Boolean).join(' · ');
+  return [t.booking.invoice.label, who, fullTime(invoice.created_at, clock)]
+    .filter(Boolean)
+    .join(' · ');
 }
 
 /** A stored invoice through a 1-hour signed URL: the image inline, a PDF in a frame (admin only). */
 export function InvoiceDialog({ invoice, onClose }: { invoice: InvoiceView; onClose: () => void }) {
   const signed = useQuery({
-    queryKey: ['invoices', 'download', invoice.id],
+    queryKey: invoiceKeys.download(invoice.id),
     queryFn: () => invoiceDownload(invoice.id),
     staleTime: 30 * 60_000,
   });
@@ -29,12 +32,25 @@ export function InvoiceDialog({ invoice, onClose }: { invoice: InvoiceView; onCl
       {signed.isPending && <p className="text-ink-3">{t.common.loading}</p>}
       {signed.data &&
         (canShow(invoice.mime) ? (
-          <img src={signed.data.url} alt={t.booking.invoice.label} className="mx-auto max-h-[70vh] w-auto rounded-sm border border-rule" />
+          <img
+            src={signed.data.url}
+            alt={t.booking.invoice.label}
+            className="mx-auto max-h-[70vh] w-auto rounded-sm border border-rule"
+          />
         ) : (
-          <iframe title={title(invoice, clock)} src={signed.data.url} className="h-[70vh] w-full rounded-sm border border-rule" />
+          <iframe
+            title={title(invoice, clock)}
+            src={signed.data.url}
+            className="h-[70vh] w-full rounded-sm border border-rule"
+          />
         ))}
       {signed.data && (
-        <a href={signed.data.url} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm text-lapis underline underline-offset-4">
+        <a
+          href={signed.data.url}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 inline-block text-sm text-lapis underline underline-offset-4"
+        >
           {t.booking.invoice.openNewTab}
         </a>
       )}

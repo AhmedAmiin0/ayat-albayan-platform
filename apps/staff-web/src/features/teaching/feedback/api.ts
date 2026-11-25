@@ -13,8 +13,9 @@ import {
 } from './types';
 import type { FeedbackRowView, FeedbackSubmit } from '@ab/shared';
 import type { Page } from '@ab/core';
+import { feedbackKeys } from '@/features/teaching/feedback/keys';
 
-export const FEEDBACK_KEY = ['feedback'] as const;
+export const FEEDBACK_KEY = feedbackKeys.all;
 export const FEEDBACK_PAGE_SIZE = 20;
 
 // ---- Public (the guardian's link, no login). Plain fetch: never the admin's session token. ----
@@ -50,8 +51,9 @@ export function toFormView(raw: unknown): FeedbackFormView {
 /** GET /public/feedback/:token. Any 4xx = a link that is wrong (404) or expired (410); retrying cannot help. */
 export const publicFeedbackQuery = (token: string) =>
   queryOptions({
-    queryKey: [...FEEDBACK_KEY, 'public', token],
-    queryFn: async () => toFormView(await publicFetch<unknown>(`/public/feedback/${encodeURIComponent(token)}`)),
+    queryKey: feedbackKeys.public(token),
+    queryFn: async () =>
+      toFormView(await publicFetch<unknown>(`/public/feedback/${encodeURIComponent(token)}`)),
     retry: (count, error) => !(error instanceof ApiError && error.status < 500) && count < 2,
     refetchOnWindowFocus: false,
   });
@@ -79,26 +81,30 @@ export function publicProblem(error: unknown): PublicProblem {
 
 /** `?page&pageSize` plus the URL's sort and column filters (their keys are the API's params). */
 const listParams = (s: ServerListState): URLSearchParams =>
-  new URLSearchParams([['page', String(s.page)], ['pageSize', String(FEEDBACK_PAGE_SIZE)], ...sortFilterParams(s.sort, s.filters)]);
+  new URLSearchParams([
+    ['page', String(s.page)],
+    ['pageSize', String(FEEDBACK_PAGE_SIZE)],
+    ...sortFilterParams(s.sort, s.filters),
+  ]);
 
 /** GET /feedback (admin): newest first unless sorted; filtered and paged on the server (R-NFR-08). */
 export const feedbackListQuery = (s: ServerListState) =>
   queryOptions({
-    queryKey: [...FEEDBACK_KEY, 'list', s],
+    queryKey: feedbackKeys.list(s),
     queryFn: () => apiFetch<Page<FeedbackRowView>>(`/feedback?${listParams(s)}`),
     placeholderData: keepPreviousData,
   });
 
 /** Admin only: average, count and recommend rate per teacher. */
 export const feedbackSummaryQuery = queryOptions({
-  queryKey: [...FEEDBACK_KEY, 'summary'],
+  queryKey: feedbackKeys.summary(),
   queryFn: () => apiFetch<TeacherFeedbackSummary[]>('/feedback/summary'),
 });
 
 /** GET /teachers/me/feedback: only my rows (sorted, filtered, paged like the admin's) and my own average. */
 export const myFeedbackQuery = (s: ServerListState) =>
   queryOptions({
-    queryKey: [...FEEDBACK_KEY, 'mine', s],
+    queryKey: feedbackKeys.mine(s),
     queryFn: () => apiFetch<TeacherFeedbackView>(`/teachers/me/feedback?${listParams(s)}`),
     placeholderData: keepPreviousData,
   });
@@ -108,5 +114,7 @@ export const requestFeedback = ({ lessonId, studentId }: { lessonId: string; stu
   apiSend('POST', `/lessons/${lessonId}/feedback-request`, { studentId });
 
 export function requestErrorText(error: unknown): string {
-  return errorCode(error) === 'template_not_approved' ? t.feedback.templateNotApproved : t.feedback.requestFailed;
+  return errorCode(error) === 'template_not_approved'
+    ? t.feedback.templateNotApproved
+    : t.feedback.requestFailed;
 }

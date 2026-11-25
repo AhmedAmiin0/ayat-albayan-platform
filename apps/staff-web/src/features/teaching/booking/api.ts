@@ -7,25 +7,36 @@ import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { BOOKING_KINDS, type BookingKind } from './draft/contract';
 import { bookingBase } from './mode';
+import { guardianKeys } from '@/features/people/keys';
+import { bookingKeys } from './booking.keys';
 
 // Booking routes (docs/10 §5, rows 12–14) + the guardian row for the quote currency.
 
 /** GET /booking/teachers?program&gender — active teachers by name, with load and availability. */
-export const bookingTeachersQuery = (f: { program: Program; gender: Gender | null }, mode: BookingMode = 'admin') => {
+export const bookingTeachersQuery = (
+  f: { program: Program; gender: Gender | null },
+  mode: BookingMode = 'admin',
+) => {
   const params = new URLSearchParams({ program: f.program });
   if (f.gender) params.set('gender', f.gender);
   return queryOptions({
-    queryKey: ['booking', mode, 'teachers', params.toString()],
+    queryKey: bookingKeys.teachers(mode, params.toString()),
     queryFn: () => apiFetch<BookingTeacherOption[]>(`${bookingBase(mode)}/teachers?${params}`),
   });
 };
 
-export type GuardianRow = { id: string; name: string; phone_e164: string; country: string | null; tz: string };
+export type GuardianRow = {
+  id: string;
+  name: string;
+  phone_e164: string;
+  country: string | null;
+  tz: string;
+};
 
 /** GET /guardians/:id — the stored country picks the price currency (docs/08 §1). */
 export const guardianQuery = (id: string) =>
   queryOptions({
-    queryKey: ['guardians', id],
+    queryKey: guardianKeys.detail(id),
     queryFn: () => apiFetch<GuardianRow>(`/guardians/${id}`),
   });
 
@@ -52,7 +63,7 @@ export const bookingCheckQuery = (body: BookingRequest, mode: BookingMode = 'adm
   delete key.invoice; // the check never needs the proof
   delete key.meetingLink; // nor the link: typing it never re-checks
   return queryOptions({
-    queryKey: ['booking', mode, 'check', JSON.stringify(key)],
+    queryKey: bookingKeys.check(mode, JSON.stringify(key)),
     queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', `${bookingBase(mode)}/check`, body),
     retry: false,
   });
@@ -71,7 +82,8 @@ export type BookSearch = {
   missedLessonId?: string;
 };
 
-const text = (v: unknown): string | undefined => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
+const text = (v: unknown): string | undefined =>
+  typeof v === 'string' && v.trim() ? v.trim() : undefined;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function parseBookSearch(s: Record<string, unknown>): BookSearch {

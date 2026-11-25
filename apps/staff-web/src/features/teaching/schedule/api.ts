@@ -15,11 +15,12 @@ import { errorCode } from '@ab/web-kit/lib/http/error-code';
 import { bookingBase } from '@/features/teaching/booking/mode';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Window } from '@ab/web-kit/schedule/slots';
+import { lessonKeys } from './lesson.keys';
 
 // Phase 2 lesson routes (docs/10 §5). Commands camelCase, responses LessonView rows.
 
 /** Invalidate after any lesson write: the week grid, the teacher dashboard and slot pickers. */
-export const LESSONS_KEY = ['lessons'] as const;
+export const LESSONS_KEY = lessonKeys.all;
 
 /**
  * GET /lessons/overview?from&to (≤ 31 days): every teacher with hours, time off, load and free
@@ -29,7 +30,7 @@ export const LESSONS_KEY = ['lessons'] as const;
 export const overviewQuery = (w: Window) => {
   const params = new URLSearchParams({ from: w.from.toISOString(), to: w.to.toISOString() });
   return queryOptions({
-    queryKey: [...LESSONS_KEY, 'overview', params.toString()],
+    queryKey: lessonKeys.overview(params.toString()),
     queryFn: () => apiFetch<ScheduleOverview>(`/lessons/overview?${params}`),
     placeholderData: keepPreviousData,
   });
@@ -64,7 +65,7 @@ export const slotsQuery = (p: SlotsParams, mode: BookingMode = 'admin') => {
     if (value) params.set(key, value);
   }
   return queryOptions({
-    queryKey: [...LESSONS_KEY, 'slots', mode, params.toString()],
+    queryKey: lessonKeys.slots(mode, params.toString()),
     queryFn: () => apiFetch<SlotsResponse>(`${bookingBase(mode)}/slots?${params}`),
     placeholderData: keepPreviousData,
   });
@@ -72,7 +73,10 @@ export const slotsQuery = (p: SlotsParams, mode: BookingMode = 'admin') => {
 
 /** POST /schedule-rules/refresh (admin): generate every lesson the weekly rules owe, now. */
 export const syncSchedule = () =>
-  apiSend<{ rules: number; inserted: number; failed: number; ended: number }>('POST', '/schedule-rules/refresh');
+  apiSend<{ rules: number; inserted: number; failed: number; ended: number }>(
+    'POST',
+    '/schedule-rules/refresh',
+  );
 
 export const confirmLesson = (id: string) => apiSend<LessonView>('POST', `/lessons/${id}/confirm`);
 
@@ -91,13 +95,17 @@ export const editLessonTime = ({ id, body }: { id: string; body: LessonTimeEdit 
 
 /** Pending alternative-time proposals of a teacher or family (R-SCH-08). */
 export const proposalsQuery = queryOptions({
-  queryKey: [...LESSONS_KEY, 'proposals'],
+  queryKey: lessonKeys.proposals(),
   queryFn: () => apiFetch<LessonView[]>('/lesson-proposals'),
 });
 
 /** Approving moves the lesson (a reschedule): 409 conflict unless `override` is given. */
 export const approveProposal = ({ id, override }: { id: string; override?: string }) =>
-  apiSend<LessonView>('POST', `/lesson-proposals/${id}/approve`, override ? { override: { reason: override } } : {});
+  apiSend<LessonView>(
+    'POST',
+    `/lesson-proposals/${id}/approve`,
+    override ? { override: { reason: override } } : {},
+  );
 
 /** `note` is the answer the family reads with a declined request. */
 export const rejectProposal = ({ id, note }: { id: string; note?: string }) =>

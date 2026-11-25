@@ -4,6 +4,7 @@ import type { CourseChangeRequest } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { createContext, useContext } from 'react';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { bookingKeys, COURSE_CHANGE_CHECK } from '@/features/teaching/booking/booking.keys';
 
 // The assistant's mirror routes cover her own students only, never over a clash.
 
@@ -37,7 +38,7 @@ export type CourseChangeBody = CourseChangeRequest & { clientRequestId: string }
 /** GET /booking/course/change?subscriptionId= (admin): the course to change, from a lesson's drawer. */
 export const courseChangeViewQuery = (subscriptionId: string) =>
   queryOptions({
-    queryKey: ['booking', 'admin', 'course-change', subscriptionId],
+    queryKey: bookingKeys.courseChange(subscriptionId),
     queryFn: () =>
       apiFetch<CourseChangeView>(
         `/booking/course/change?subscriptionId=${encodeURIComponent(subscriptionId)}`,
@@ -45,7 +46,7 @@ export const courseChangeViewQuery = (subscriptionId: string) =>
   });
 
 /** The check's key segment (left out of the refresh after a save). */
-export const CHECK_KEY = 'course-change-check';
+export const CHECK_KEY = COURSE_CHANGE_CHECK;
 
 /** gcTime 0: a kept answer would show the old summary and enable save when the same days repeat. */
 export const courseChangeCheckQuery = (
@@ -58,7 +59,7 @@ export const courseChangeCheckQuery = (
   delete key.override;
   const base = baseOf(mode, target);
   return queryOptions({
-    queryKey: ['booking', mode, CHECK_KEY, base, JSON.stringify(key)],
+    queryKey: bookingKeys.courseChangeCheck(mode, base, JSON.stringify(key)),
     queryFn: () => apiSend<CourseChangeCheck>('POST', `${base}/change/check`, key),
     retry: false,
     gcTime: 0,

@@ -1,7 +1,7 @@
 import { outsideSlotsResponseSchema } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
-import { LESSONS_KEY } from '@/features/teaching/schedule';
+import { lessonKeys } from '@/features/teaching/schedule';
 import { bookingBase, useBookingMode } from '@/features/teaching/booking/mode';
 import type { OutsideParams } from './OtherTime';
 
@@ -21,7 +21,7 @@ export function useOutsideSlots(p: OutsideParams) {
   const mode = useBookingMode();
   const query = outsideQuery(p);
   return useQuery({
-    queryKey: [...LESSONS_KEY, 'outside-slots', mode, query],
+    queryKey: lessonKeys.outsideSlots(mode, query),
     queryFn: async () =>
       outsideSlotsResponseSchema.parse(
         await apiFetch(`${bookingBase(mode)}/outside-slots?${query}`),

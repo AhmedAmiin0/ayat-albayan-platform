@@ -2,21 +2,25 @@ import type { BookingMode } from '@ab/client-core';
 import type { BookingRequest, TrialDateResult, TrialHistory } from '@ab/shared';
 import type { Conflict } from '@ab/schedule';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
-import { LESSONS_KEY } from '@/features/teaching/schedule';
+import { lessonKeys, LESSONS_KEY } from '@/features/teaching/schedule';
 import { STUDENTS_KEY } from '@/features/people/students/api';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { bookingBase } from '@/features/teaching/booking/mode';
+import { bookingKeys } from '@/features/teaching/booking/booking.keys';
 
 // Admin or sales base routes (R-SCH-06, R-ASST-01); sales covers her students only.
 
 /** Under LESSONS_KEY: every lesson write (a booking, a move, a cancel) refreshes the history too. */
-export const TRIAL_DATES_KEY = [...LESSONS_KEY, 'trial-dates'] as const;
+export const TRIAL_DATES_KEY = lessonKeys.trialDates;
 
 /** GET {base}/trial-dates?studentId — every trial time picked for the student, newest pick first. */
 export const trialHistoryQuery = (studentId: string, mode: BookingMode = 'admin') =>
   queryOptions({
-    queryKey: [...TRIAL_DATES_KEY, mode, studentId],
-    queryFn: () => apiFetch<TrialHistory>(`${bookingBase(mode)}/trial-dates?studentId=${encodeURIComponent(studentId)}`),
+    queryKey: lessonKeys.trialHistory(mode, studentId),
+    queryFn: () =>
+      apiFetch<TrialHistory>(
+        `${bookingBase(mode)}/trial-dates?studentId=${encodeURIComponent(studentId)}`,
+      ),
   });
 
 /**
@@ -29,8 +33,9 @@ export const trialDateCheckQuery = (body: BookingRequest, mode: BookingMode = 'a
   const key = { ...probe };
   delete key.clientRequestId;
   return queryOptions({
-    queryKey: ['booking', mode, 'trial-date-check', JSON.stringify(key)],
-    queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', `${bookingBase(mode)}/trial-date/check`, probe),
+    queryKey: bookingKeys.trialDateCheck(mode, JSON.stringify(key)),
+    queryFn: () =>
+      apiSend<{ conflicts: Conflict[] }>('POST', `${bookingBase(mode)}/trial-date/check`, probe),
     retry: false,
   });
 };
@@ -46,6 +51,8 @@ export const createTrialDate = (body: BookingRequest, mode: BookingMode = 'admin
 /** After a new trial date: lessons (the history and calendars are under it), students, chats and sales views. */
 export async function refreshAfterTrialDate(queryClient: QueryClient): Promise<void> {
   await Promise.all(
-    [LESSONS_KEY, STUDENTS_KEY, ['threads'], ['sales']].map((queryKey) => queryClient.invalidateQueries({ queryKey })),
+    [LESSONS_KEY, STUDENTS_KEY, ['threads'], ['sales']].map((queryKey) =>
+      queryClient.invalidateQueries({ queryKey }),
+    ),
   );
 }

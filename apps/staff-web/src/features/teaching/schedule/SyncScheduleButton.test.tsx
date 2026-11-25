@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { SyncScheduleButton } from './SyncScheduleButton';
+import { lessonKeys } from './lesson.keys';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiSend, apiFetch: vi.fn(), ApiError: Error }));
@@ -28,7 +29,7 @@ describe('«مزامنة الجدول» (R-SCH-02)', () => {
     fireEvent.click(screen.getByRole('button', { name: t.schedule.sync }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.schedule.synced.replace('{n}', '5')));
     expect(apiSend).toHaveBeenCalledWith('POST', '/schedule-rules/refresh');
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['lessons'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: lessonKeys.all });
   });
 
   it('nothing missing → says the schedule is already in sync', async () => {
