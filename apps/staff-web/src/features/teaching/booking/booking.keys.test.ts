@@ -23,6 +23,12 @@ describe('booking keys', () => {
     expect(bookingKeys.makeupCandidates('s1')).toEqual(['booking', 'makeup-candidates', 's1']);
   });
 
+  it('drops every read of one booking mode once its dialog closes', async () => {
+    const sales = [bookingKeys.check('sales', '{}'), bookingKeys.teachers('sales', 'q')];
+    const admin = bookingKeys.check('admin', '{}');
+    expect(await staleAfter([...sales, admin], bookingKeys.mode('sales'))).toEqual(sales);
+  });
+
   it('keeps the invoice and chat media shapes', () => {
     expect(invoiceKeys.list('q=1')).toEqual(['invoices', 'q=1']);
     expect(invoiceKeys.download('i1')).toEqual(['invoices', 'download', 'i1']);

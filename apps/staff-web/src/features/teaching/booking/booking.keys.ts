@@ -11,6 +11,7 @@ export const COURSE_CHANGE_CHECK = 'course-change-check';
 // COURSE_CHANGE_CHECK): asked again it would answer no_change.
 export const bookingKeys = {
   all,
+  mode: (mode: BookingMode): QueryKey => [...all, mode],
   teachers: (mode: BookingMode, query: string): QueryKey => [...all, mode, 'teachers', query],
   check: (mode: BookingMode, body: string): QueryKey => [...all, mode, 'check', body],
   trialDateCheck: (mode: BookingMode, body: string): QueryKey => [

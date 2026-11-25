@@ -35,9 +35,9 @@ describe('courseChangeCheckQuery', () => {
     await waitFor(() => expect(result.current.data).toEqual(CHECK));
     unmount();
     await waitFor(() =>
-      expect(
-        client.getQueryCache().findAll({ queryKey: [...bookingKeys.all, 'sales'] }),
-      ).toHaveLength(0),
+      expect(client.getQueryCache().findAll({ queryKey: bookingKeys.mode('sales') })).toHaveLength(
+        0,
+      ),
     );
   });
 });
