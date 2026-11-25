@@ -3,6 +3,9 @@
   "private": true,
   "type": "module",
   "description": "Shared React DOM code of the staff web app (apps/staff-web) and the family web app (apps/family-web), docs/51 \u00a72: SOURCE, built by each app's Vite and resolved through `exports`.",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     ".": "./src/index.ts",
     "./room": "./src/room.ts",
