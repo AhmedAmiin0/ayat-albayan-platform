@@ -1,4 +1,4 @@
-import { readLessonAt } from '@ab/client-core';
+import { offPathKeys, readLessonAt } from '@ab/client-core';
 import type { ReplyLesson } from '@ab/shared';
 import type { LessonView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
@@ -22,7 +22,7 @@ export interface RescheduleLessonDrawerProps {
 
 /** Opens the admin's lesson drawer straight on its reschedule form (R-SCH-07). */
 export function RescheduleLessonDrawer({ lesson, onClose, onMoved }: RescheduleLessonDrawerProps) {
-  const read = useQuery({ queryKey: ['reply-lesson', lesson.id], queryFn: () => readLesson(lesson), staleTime: 0 });
+  const read = useQuery({ queryKey: offPathKeys.replyLesson('admin', lesson.id), queryFn: () => readLesson(lesson), staleTime: 0 });
   const done = () => {
     onMoved();
     onClose();

@@ -24,6 +24,13 @@ test('kept off the disk cache, outside ["threads"], never retried', () => {
   expect(q.retry).toBe(false);
 });
 
+test('a ["threads"] invalidation (a send, an opened chat) leaves the signed file fresh', async () => {
+  const client = createTestQueryClient();
+  await client.query(threadFileQuery(PHONE, 'm1'));
+  await client.invalidateQueries({ queryKey: ['threads'] });
+  expect(client.getQueryState(threadFileQuery(PHONE, 'm1').queryKey)?.isInvalidated).toBe(false);
+});
+
 test('a second tap within the signed hour reuses the signed URL', async () => {
   const fresh = { ...FILE, expires_at: new Date(Date.now() + 60 * 60_000).toISOString() };
   mockApiFetch.mockResolvedValue(fresh);

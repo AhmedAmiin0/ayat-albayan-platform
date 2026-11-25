@@ -17,3 +17,5 @@ export {
   type SignInError,
 } from './sign-in.js';
 export { meLocaleOf, meLocalePath, meLocaleSend } from './locale.js';
+export { meQueryOptions } from './me-query/index.js';
+export type { MeQuery } from './me-query/index.js';
