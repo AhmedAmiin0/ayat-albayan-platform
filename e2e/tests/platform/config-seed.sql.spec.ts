@@ -8,7 +8,7 @@ import { rolledBack, type Tx } from '../../support/core/rls';
 // missing row, a JSON null and a seeded null read the same in the SQL readers. The send-gate rows are
 // only deleted inside the rolled-back transaction: nothing here can turn sending on.
 
-type Row = { key: string; value: unknown; version: string; updated_at: Date };
+interface Row { key: string; value: unknown; version: string; updated_at: Date }
 const all = (tx: Tx) => tx<Row[]>`select key, value, version::text as version, updated_at from public.settings order by key`;
 const rev = async (tx: Tx) => {
   await tx`set constraints public.settings_revision_bump immediate`;

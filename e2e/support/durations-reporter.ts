@@ -44,7 +44,7 @@ export default class DurationsReporter implements Reporter {
   }
 }
 
-type Group = { project: string; file: string; tests: number };
+interface Group { project: string; file: string; tests: number }
 
 /** Mirrors Playwright 1.63 createTestGroups (fullyParallel off): Map by worker hash, then by file. */
 function groupsOf(root: Suite): Group[] | null {

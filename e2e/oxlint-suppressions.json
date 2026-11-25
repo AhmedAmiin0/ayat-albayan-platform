@@ -5,9 +5,6 @@
     }
   },
   "scripts/screens.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 2
-    },
     "typescript/restrict-template-expressions": {
       "count": 2
     }
@@ -49,9 +46,6 @@
     }
   },
   "support/durations-reporter.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -65,9 +59,6 @@
   "support/edit-time.ts": {
     "complexity": {
       "count": 1
-    },
-    "typescript/consistent-type-definitions": {
-      "count": 1
     }
   },
   "support/finance/assistant-money.ts": {
@@ -77,16 +68,13 @@
   },
   "support/finance/change-course.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 4
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 2
     }
   },
   "support/finance/course-pause.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     },
@@ -95,16 +83,8 @@
     }
   },
   "support/finance/course-renew.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "support/finance/earnings.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
     }
   },
   "support/finance/exports-csv.ts": {
@@ -275,9 +255,6 @@
     }
   },
   "support/sales/assistant.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 3
-    },
     "stylistic/max-len": {
       "count": 13
     },
@@ -307,9 +284,6 @@
     }
   },
   "support/teaching/day-times.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 3
-    },
     "stylistic/max-len": {
       "count": 1
     }
@@ -330,9 +304,6 @@
     }
   },
   "tests/finance/assistant-money.api.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     }
@@ -353,9 +324,6 @@
     }
   },
   "tests/finance/change-course.sql.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 5
     },
@@ -388,17 +356,11 @@
     }
   },
   "tests/finance/payouts.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "ab/no-unchecked-json": {
       "count": 1
     }
   },
   "tests/finance/teacher-corrections.sql.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -511,15 +473,7 @@
       "count": 1
     }
   },
-  "tests/messaging/reply-forward.sql.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "tests/messaging/send-gate-boot.api.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     }
@@ -593,11 +547,6 @@
       "count": 3
     }
   },
-  "tests/people/journey-6-duplicate-student.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "tests/people/phone-search.spec.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -633,25 +582,16 @@
     }
   },
   "tests/people/teacher-isolation.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "max-depth": {
       "count": 1
     }
   },
   "tests/people/teacher-isolation.sql.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "typescript/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
   },
   "tests/people/teacher-rls.sql.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "typescript/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
@@ -665,9 +605,6 @@
     }
   },
   "tests/platform/config-expand.sql.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 2
-    },
     "stylistic/max-len": {
       "count": 5
     },
@@ -684,9 +621,6 @@
     }
   },
   "tests/platform/config-seed.sql.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 4
     }
@@ -789,11 +723,6 @@
       "count": 1
     }
   },
-  "tests/reporting/teacher-report-attachments.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "tests/sales/assistant-auto-assign-off.api.spec.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -845,11 +774,6 @@
   "tests/sales/journey-7-assistant-cycle.spec.ts": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "tests/sales/lead-register.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
     }
   },
   "tests/sales/leads-applicants.spec.ts": {
@@ -927,9 +851,6 @@
     "no-restricted-properties": {
       "count": 1
     },
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     }
@@ -946,11 +867,6 @@
   },
   "tests/teaching/meetings.spec.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "tests/teaching/proposals.spec.ts": {
-    "typescript/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -997,9 +913,6 @@
     }
   },
   "tests/teaching/teacher-meeting-mode.sql.spec.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "typescript/use-unknown-in-catch-callback-variable": {
       "count": 1
     },
