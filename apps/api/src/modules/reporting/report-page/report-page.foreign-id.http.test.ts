@@ -1,7 +1,9 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { SignInModule } from '@/modules/people/sign-in';
+import { ReportPageModule } from './report-page.module';
 import {
   PERMISSION_RESOLVER,
   systemResolver,
@@ -33,7 +35,9 @@ describe("GET /report-pages/:publicId: another family's report is 404 for a scop
   const storage = { signedDownloads: vi.fn(), signedDownload: vi.fn() };
   let app: NestFastifyApplication;
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({
+      imports: [messagingRoot(ReportPageModule, SignInModule)],
+    })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(ReportPageRepo).useValue(repo)

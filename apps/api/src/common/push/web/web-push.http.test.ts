@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { PushModule } from '@/common/push/push.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { PermissionResolver } from '@/common/auth/permissions';
@@ -30,7 +31,7 @@ describe('/me/web-push (R-NOT-02)', () => {
     app.inject({ method: o.method, url: o.url, payload: o.payload, headers: { authorization: `Bearer ${o.token ?? 'assistant'}` } });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({ imports: [featureRoot(PushModule)] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(NotificationsRepo).useValue(q)
       .compile();

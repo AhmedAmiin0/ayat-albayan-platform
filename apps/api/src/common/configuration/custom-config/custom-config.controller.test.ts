@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { CustomConfigModule } from './custom-config.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
@@ -27,7 +28,7 @@ describe('/config/custom (admin CRUD)', () => {
     app.inject({ method, url, payload: opts.payload, headers: { authorization: `Bearer ${opts.token ?? 'admin'}` } });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({ imports: [featureRoot(CustomConfigModule)] })
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
       .overrideProvider(CustomConfigService).useValue(custom)

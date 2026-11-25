@@ -7,7 +7,8 @@ import { publicSettings, SETTING_DEFAULTS, type AcademySettings } from '@ab/sett
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { NotificationRulesModule } from './rules.module';
 import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
@@ -83,7 +84,7 @@ export async function rulesApp(initial: Partial<AcademySettings> = {}) {
     audit: { record: vi.fn(async () => undefined) },
     activity: { push: vi.fn(), flush: vi.fn(async () => undefined), onModuleDestroy: vi.fn(async () => undefined) },
   };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [messagingRoot(NotificationRulesModule)] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SettingsService).useValue(m.settings)
     .overrideProvider(SETTINGS_CACHE_MS).useValue(0)

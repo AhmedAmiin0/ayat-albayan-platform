@@ -2,7 +2,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { CoursePauseModule } from './course-pause.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
@@ -69,7 +70,7 @@ type Call = { method: 'GET' | 'POST' | 'PATCH'; url: string; token: keyof typeof
 
 export async function pauseApp() {
   const m = pauseMocks();
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [messagingRoot(CoursePauseModule)] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(CoursePauseRepo).useValue(m.queries)
     .overrideProvider(CoursePauseFollowUps).useValue(m.follow)

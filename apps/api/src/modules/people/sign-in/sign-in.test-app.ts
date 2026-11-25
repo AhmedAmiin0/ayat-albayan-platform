@@ -1,8 +1,10 @@
 // HTTP test harness of the sign-in routes (test-only). Real controller, guards, services, limits and
-// code crypto on AppModule; the stores, GoTrue, the WhatsApp send and the settings are the in-memory fakes.
+// code crypto on the sign-in test root; the stores, GoTrue, the WhatsApp send and the settings are
+// the in-memory fakes.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { SignInModule } from './sign-in.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
@@ -14,7 +16,7 @@ import { AUTH_GATE, CODE_STORE, SIGN_IN_CONFIG, SUBJECT_STORE } from './sign-in.
 
 export async function signInApp() {
   const fakes = { codes: new FakeCodes(), send: new FakeCodeSend(), subjects: new FakeSubjects(), auth: new FakeAuth(), audit: new FakeAudit() };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [messagingRoot(SignInModule)] })
     .overrideProvider(CODE_STORE).useValue(fakes.codes)
     .overrideProvider(LIMIT_STORE).useValue(new MemoryLimitStore())
     .overrideProvider(SUBJECT_STORE).useValue(fakes.subjects)

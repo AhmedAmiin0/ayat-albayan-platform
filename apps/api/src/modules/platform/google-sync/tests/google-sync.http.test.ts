@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { GoogleSyncModule } from '@/modules/platform/google-sync/google-sync.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
@@ -45,7 +46,7 @@ describe('/admin/google (docs/24): admins only', () => {
     app.inject({ method: o.method as 'GET', url: o.url, payload: o.payload, headers: o.token ? { authorization: `Bearer ${o.token}` } : {} });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({ imports: [featureRoot(GoogleSyncModule)] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(GoogleAccountQueries).useValue(data.account).overrideProvider(GoogleItemsQueries).useValue(data.items)
       .overrideProvider(GoogleSettings).useValue(data.settings).overrideProvider(GoogleMapQueries).useValue(map)
