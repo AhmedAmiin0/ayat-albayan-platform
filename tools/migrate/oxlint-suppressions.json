@@ -78,9 +78,6 @@
     }
   },
   "src/hash.ts": {
-    "no-nested-ternary": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -176,7 +173,7 @@
   },
   "src/map/people/collect.merge.ts": {
     "complexity": {
-      "count": 2
+      "count": 1
     }
   },
   "src/map/people/collect.ts": {
@@ -499,20 +496,14 @@
     }
   },
   "src/sources/rows.ts": {
-    "complexity": {
-      "count": 1
-    },
     "typescript/no-base-to-string": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-misused-spread": {
       "count": 1
     }
   },
   "src/sources/sheets/cells.ts": {
-    "complexity": {
-      "count": 1
-    },
     "typescript/restrict-template-expressions": {
       "count": 2
     }
