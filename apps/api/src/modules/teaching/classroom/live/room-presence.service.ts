@@ -1,15 +1,19 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import type { ParticipantEvent } from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
+import { z } from 'zod';
+import {
+  participantKindSchema,
+  type ParticipantEvent,
+} from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
 import { targetOfRoom } from '@/modules/teaching/classroom/recordings/recording-target';
 import { LessonLivePush } from './lesson-live.push';
 import { RoomPresenceRepo, type PresenceEvent } from './room-presence.repo';
 
 /** A participant's event names who; room_finished names the room only. */
-const NEEDS_IDENTITY: Readonly<Record<ParticipantEvent['kind'], boolean>> = {
+const NEEDS_IDENTITY = z.record(participantKindSchema, z.boolean()).readonly().decode({
   joined: true,
   left: true,
   finished: false,
-};
+});
 
 const missingWho = (e: ParticipantEvent): boolean => NEEDS_IDENTITY[e.kind] && e.identity === '';
 
