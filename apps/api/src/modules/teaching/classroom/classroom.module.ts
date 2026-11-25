@@ -1,133 +1,43 @@
 import { Module } from '@nestjs/common';
-import { livekitEnv, loadEnv } from '@/config/env/env';
-import { recordingEnv } from '@/config/env/env.recording';
-import { InboxModule } from '@/modules/messaging/inbox/inbox.module';
-import { TeachersModule } from '@/modules/people/teachers/teachers.module';
-import { AssistantsController } from './assistants/assistants.controller';
-import { AssistantLessonsRepo } from './assistants/assistants.lessons';
-import { AssistantsRepo } from './assistants/assistants.repo';
-import { AssistantsService } from './assistants/assistants.service';
-import {
-  CLASSROOM_CONFIG,
-  CLASSROOM_WEB_ORIGIN,
-  FAMILY_JOIN_SECRET,
-  firstWebOrigin,
-  RECORDING_CONFIG,
-  type ClassroomConfigSource,
-  type RecordingConfig,
-} from './classroom.config';
+import { InboxModule } from '@/modules/messaging/inbox';
+import { TeachersModule } from '@/modules/people/teachers';
+import { AssistantsModule } from '@/modules/teaching/classroom/assistants';
+import { InternalMeetingsModule } from '@/modules/teaching/classroom/internal-meetings';
+import { LiveRoomModule } from '@/modules/teaching/classroom/live';
+import { LivekitWebhookModule } from '@/modules/teaching/classroom/livekit';
+import { MaxDurationModule } from '@/modules/teaching/classroom/max-duration';
+import { MeetingsModule } from '@/modules/teaching/classroom/meetings';
+import { RecordingsModule } from '@/modules/teaching/classroom/recordings';
+import { StudentLinkModule } from '@/modules/teaching/classroom/student-link';
+import { ClassroomSharedModule } from './classroom-shared.module';
 import { ClassroomController, JoinLinkStaffController } from './classroom.controller';
 import { ClassroomPublicController } from './classroom.public.controller';
-import { ClassroomRepo } from './classroom.repo';
-import { ClassroomSettings } from './classroom.settings';
-import { FamilyJoinLinks } from './family-link/family-join.links';
-import { GuestJoinService } from './join/guest-join.service';
 import { JoinLinkResolver } from './family-link/join-link.resolver';
-import { INTERNAL_MEETING_CONTROLLERS, INTERNAL_MEETING_PROVIDERS } from './internal-meetings/internal-meetings.providers';
-import { PublicJoinLimit } from './join/join-limit';
+import { GuestJoinService } from './join/guest-join.service';
 import { JoinLinkCopyService } from './join/join-link.copy.service';
 import { JoinLinkService } from './join/join-link.service';
 import { JoinLinkStaffService } from './join/join-link.staff.service';
-import { KickService } from './moderation/kick.service';
-import { RoomPersonRepo } from './moderation/room-person.repo';
-import { LessonRoleService } from './join/lesson-role.service';
-import { LIVEKIT_HTTP, LivekitApi } from './livekit/livekit-api';
-import { LivekitWebhookController } from './livekit/livekit-webhook.controller';
-import { LivekitWebhookService } from './livekit/livekit-webhook.service';
-import { ModerationController } from './moderation/moderation.controller';
-import { ModerationRepo } from './moderation/moderation.repo';
-import { MuteLimit } from './moderation/mute-limit';
-import { LessonMuteController, MeetingMuteController } from './moderation/mute.controller';
-import { MeetingMuteService, MuteService } from './moderation/mute.service';
-import { MAX_DURATION_PROVIDERS } from './max-duration/max-duration.providers';
-import { LIVE_ROOM_CONTROLLERS, LIVE_ROOM_PROVIDERS } from './live/live.providers';
-import { MeetingRecordingListService, RecordingListService, RecordingViews } from './recordings/recording-list.service';
-import { MeetingRecordingsController, RecordingStatusController } from './recordings/recordings.controller';
-import { RecordingLifecycle } from './recordings/recording.lifecycle';
-import { RecordingRepo } from './recordings/recording.repo';
-import { RecordingStarter } from './recordings/recording.starter';
-import { RoomAdmission } from './join/room-admission';
 import { RoomJoinService } from './join/room-join.service';
-import { RoomOpenController } from './join/room-open.controller';
-import { RoomOpenService } from './join/room-open.service';
-import { LessonShareController, MeetingShareController } from './moderation/share-grant.controller';
-import { MeetingShareGrantService, ShareGrantService } from './moderation/share-grant.service';
-import { StudentLinkAdminService } from './student-link/student-link.admin.service';
-import { StudentLinkAdminController, StudentLinkPublicController } from './student-link/student-link.controller';
-import { StudentLinkRepo } from './student-link/student-link.repo';
-import { StudentLinkService } from './student-link/student-link.service';
+import { ModerationModule } from './moderation.module';
+import { RoomOpenModule } from './room-open.module';
 
-/** Online classrooms on self-hosted LiveKit (docs/09): staff, family links, internal meetings. */
+/**
+ * Online classrooms on self-hosted LiveKit (docs/09): staff, family links, internal meetings. The
+ * student file's recordings (modules/student-recordings) sign links and read rows the same way and
+ * the family portal (modules/people/portal) admits its own student like the student's link does,
+ * so the shared, recordings and student-link modules are re-exported.
+ */
 @Module({
-  imports: [InboxModule, TeachersModule],
-  controllers: [
-    ClassroomController,
-    JoinLinkStaffController,
-    LessonShareController,
-    MeetingShareController,
-    LessonMuteController,
-    MeetingRecordingsController,
-    RecordingStatusController,
-    MeetingMuteController,
-    ClassroomPublicController,
-    AssistantsController,
-    ModerationController,
-    LivekitWebhookController,
-    RoomOpenController,
-    StudentLinkPublicController,
-    StudentLinkAdminController,
-    ...INTERNAL_MEETING_CONTROLLERS,
-    ...LIVE_ROOM_CONTROLLERS,
+  imports: [
+    ...[InboxModule, TeachersModule, ClassroomSharedModule, RoomOpenModule, ModerationModule],
+    ...[RecordingsModule, MeetingsModule, InternalMeetingsModule, StudentLinkModule],
+    ...[AssistantsModule, LivekitWebhookModule, LiveRoomModule, MaxDurationModule],
   ],
+  controllers: [ClassroomController, JoinLinkStaffController, ClassroomPublicController],
   providers: [
-    // Read per use: LIVEKIT_* may come from the database's integration config (no restart).
-    { provide: CLASSROOM_CONFIG, useFactory: (): ClassroomConfigSource => () => livekitEnv(loadEnv()) },
-    { provide: CLASSROOM_WEB_ORIGIN, useFactory: (): string => firstWebOrigin(loadEnv().WEB_ORIGIN) },
-    { provide: RECORDING_CONFIG, useFactory: (): RecordingConfig => recordingEnv(loadEnv()) },
-    { provide: FAMILY_JOIN_SECRET, useFactory: () => loadEnv().FEEDBACK_TOKEN_SECRET ?? null },
-    // null: the http core's global fetch (tests bind a double).
-    { provide: LIVEKIT_HTTP, useValue: null },
-    { provide: PublicJoinLimit, useFactory: () => new PublicJoinLimit() },
-    { provide: MuteLimit, useFactory: () => new MuteLimit() },
-    ClassroomSettings,
-    ClassroomRepo,
-    AssistantsRepo,
-    AssistantLessonsRepo,
-    RoomJoinService,
-    RoomOpenService,
-    StudentLinkRepo,
-    StudentLinkService,
-    StudentLinkAdminService,
-    GuestJoinService,
-    FamilyJoinLinks,
-    JoinLinkResolver,
-    JoinLinkService,
-    JoinLinkStaffService,
-    ShareGrantService,
-    MeetingShareGrantService,
-    MuteService,
-    MeetingMuteService,
-    JoinLinkCopyService,
-    AssistantsService,
-    LessonRoleService,
-    ModerationRepo,
-    RecordingRepo,
-    LivekitApi,
-    RecordingStarter,
-    RecordingLifecycle,
-    RoomAdmission,
-    KickService,
-    RoomPersonRepo,
-    RecordingListService,
-    RecordingViews,
-    MeetingRecordingListService,
-    LivekitWebhookService,
-    ...INTERNAL_MEETING_PROVIDERS,
-    ...MAX_DURATION_PROVIDERS,
-    ...LIVE_ROOM_PROVIDERS,
+    ...[RoomJoinService, JoinLinkService, JoinLinkCopyService, JoinLinkStaffService],
+    ...[GuestJoinService, JoinLinkResolver],
   ],
-  // The student file's recordings (modules/student-recordings) sign links and read rows the same way; the
-  // family portal (modules/people/portal) admits its own student like the student's link does.
-  exports: [RecordingViews, RecordingRepo, StudentLinkService],
+  exports: [ClassroomSharedModule, RecordingsModule, StudentLinkModule],
 })
 export class ClassroomModule {}
