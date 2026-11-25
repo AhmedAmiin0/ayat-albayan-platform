@@ -17,12 +17,12 @@ describe('GET /students/:id/course-stop', () => {
     expect(res.json()).toEqual({
       subscriptionId: SUB,
       futureLessons: 1,
-      // owner 2026-11-17: the sheet lists the lessons it cancels.
+      // The sheet lists the lessons it cancels.
       futureStarts: ['2026-11-18T14:00:00Z'],
       activeRules: 2,
       paid: 290,
       currency: 'SAR',
-      // owner 2026-11-02: sales hold no subscriptions.refund, so no refund lines.
+      // Sales hold no subscriptions.refund, so no refund lines.
       refund: null,
       refundUnavailable: false,
       // Cancel-only numbers for everyone who may stop: 3 x 50 x 100 % and the price.

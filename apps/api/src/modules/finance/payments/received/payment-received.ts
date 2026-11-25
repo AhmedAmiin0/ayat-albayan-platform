@@ -21,7 +21,7 @@ interface ReceivedNotice {
   recorderId: string | null;
   /** Told as well, e.g. the payment link's assistant. */
   also?: readonly string[];
-  /** One recipient told with her own title and tap target (owner 2026-11-06). */
+  /** One recipient told with her own title and tap target. */
   book?: BookNotice | undefined;
 }
 
@@ -57,7 +57,7 @@ const isIncoming = (p: ReceivedPayment): boolean => p.kind === 'payment';
 
 /**
  * ONE var, sum and currency together («1,200 EGP»), as payment_due's {left}: the lock screen masks
- * it (owner 2026-10-25: no money on a lock screen); the bell row keeps it.
+ * it (no money on a lock screen); the bell row keeps it.
  */
 const amountText = (p: ReceivedPayment): string => `${formatAmount(p.amount)} ${p.currency}`;
 

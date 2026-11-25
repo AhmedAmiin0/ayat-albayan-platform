@@ -40,11 +40,11 @@ export class CourseChangeWriter {
   }
 
   /**
-   * One transaction: the old rules end, their open lessons move, the new rules and lessons, the audit
-   * row. Then the balance alerts (R-SUB-02) hear which lessons moved, as LessonStore.commit. Its
-   * booking_confirmation* rows only while that notification rule is on (gateConfirmations) and the
-   * family does not hear the move by lesson_rescheduled instead; then the teacher and the family
-   * hear it (CourseChangeNotices, owner 2026-10-30).
+   * One transaction: the old rules end, their open lessons move, the new rules and lessons, the
+   * audit row. Then the balance alerts (R-SUB-02) hear which lessons moved, as LessonStore.commit.
+   * Its booking_confirmation* rows only while that notification rule is on (gateConfirmations) and
+   * the family does not hear the move by lesson_rescheduled instead; then the teacher and the
+   * family hear it (CourseChangeNotices).
    */
   async apply(change: CourseWrite): Promise<CourseChangeResult> {
     const { payload, told } = change;
@@ -63,7 +63,9 @@ export class CourseChangeWriter {
   }
 }
 
-/** The shared services CourseChange talks to (one injectable, so constructors stay at ≤ 3 params). */
+/**
+ * The shared services CourseChange talks to (one injectable, so constructors stay at ≤ 3 params).
+ */
 @Injectable()
 export class CourseChangeDeps {
   constructor(

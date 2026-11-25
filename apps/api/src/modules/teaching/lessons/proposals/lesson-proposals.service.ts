@@ -17,7 +17,7 @@ import { RequestDeclinePush } from './request-decline.push';
 type ProposeInput = { lessonId: string; body: LessonProposalRequest; actor: AuthUser };
 type DecideInput = { proposalId: string; actor: AuthUser };
 type ApproveInput = DecideInput & { body: ProposalApprove };
-/** `note`: the answer's note, the family reads it with the decline (owner 2026-11-17). */
+/** `note`: the answer's note, the family reads it with the decline. */
 type RejectInput = DecideInput & { note?: string };
 
 /** An assistant (base role sales) never books over a clash. */

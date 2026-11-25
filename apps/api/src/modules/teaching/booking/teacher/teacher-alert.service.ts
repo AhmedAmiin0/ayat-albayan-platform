@@ -34,10 +34,11 @@ interface NewStudents {
 /**
  * R-NOT-03: after a successful booking (the admin's and the assistant's wizard, trial / package /
  * makeup; never an instant lesson, which does not go through here), each distinct teacher gets ONE
- * bell row (kind new_student, its own rule in PushService) and, only while the teacher_new_student rule
- * is ON (legacy: settings.teacher_whatsapp_new_student; unreadable = off, logged by the policy) and
- * teacher_new_student is approved, ONE queued WhatsApp row through the usual sender (its send gate,
- * kill switch and allow-list). Then the sender is kicked. Never throws: the booking is already saved.
+ * bell row (kind new_student, its own rule in PushService) and, only while the teacher_new_student
+ * rule is ON (legacy: settings.teacher_whatsapp_new_student; unreadable = off, logged by the
+ * policy) and teacher_new_student is approved, ONE queued WhatsApp row through the usual sender
+ * (its send gate, kill switch and allow-list). Then the sender is kicked. Never throws: the booking
+ * is already saved.
  */
 @Injectable()
 export class TeacherAlert {
@@ -82,7 +83,7 @@ export class TeacherAlert {
     if (rows.length > 0) await this.queries.queue(rows);
   }
 
-  /** teacher_lesson_v3's room and signed links per first lesson (owner 2026-11-06). */
+  /** teacher_lesson_v3's room and signed links per first lesson. */
   private async v3(lessons: readonly AlertLessonRow[]) {
     const auto = await this.queries.academyAuto();
     const origin = firstOrigin(loadEnv().WEB_ORIGIN);

@@ -1,7 +1,7 @@
 import type { StaffOnRecord } from '@/modules/messaging/reminders';
 
 // What a schedule-change notice knows once read (ScheduleNoticesRepo), before it is planned
-// (notice.plan.ts). Owner 2026-10-30: the lesson's teacher and the student's family both hear it.
+// (notice.plan.ts). The lesson's teacher and the student's family both hear it.
 
 /** The four catalogue rows; each is also its template key and its bell / push kind. */
 export const NOTICE_KEYS = [
@@ -55,7 +55,7 @@ export interface Notice {
    * instead (FamilyMoveNotice): one family message per move. Their bells go either way.
    */
   familyWhatsApp: boolean;
-  /** Who made the change: no push to them about it (they still get the WhatsApp, owner: «both»). */
+  /** Who made the change: no push to them about it (they still get the WhatsApp). */
   actorId: string | null;
   /** Only the teachers or only the family (ScheduleChange.audience); absent: both. */
   audience?: 'teacher' | 'family';

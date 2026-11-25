@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.fakes';
 import type { AlertLesson } from '@/modules/teaching/booking/teacher/teacher-alert.plan';
 
-// owner 2026-11-06: the new-student alert goes as teacher_lesson_v3 once approved.
+// The new-student alert goes as teacher_lesson_v3 once approved.
 
 const T1 = {
   id: 'T1',

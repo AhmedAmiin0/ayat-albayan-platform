@@ -20,7 +20,7 @@ export const MY_STUDENT_COLUMNS =
   'student_id, code, name, brought_at, first_subscription_paid, commission_id, commission_status, commission_amount, commission_currency, commission_earned_at, renewal_commission_count';
 
 /**
- * A whitelist: no price, no subscription; of the guardian the phone only (owner 2026-10-27, from
+ * A whitelist: no price, no subscription; of the guardian the phone only (from
  * `phones` by student id). Only whether the first subscription is paid, and the commission.
  */
 export function toMyStudent(r: MyStudentSource, phones: ReadonlyMap<string, string> = new Map()): MyStudentRow | null {

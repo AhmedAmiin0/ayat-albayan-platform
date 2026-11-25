@@ -5,11 +5,11 @@ import type { BookingOwnership } from './sales-booking.scope';
 import { TrialDateRepo } from '@/modules/teaching/booking/trial-date/trial-date.repo';
 
 /**
- * The ownership /sales/booking checks: THE rule (SalesOwnershipRule, owner 2026-11-02): her leads,
- * families and students (ownershipOf) only while sales_require_assignee AND sales_auto_assign are ON;
- * otherwise null, no ownership check, so any salesperson may book any lead, family or student, trial or
- * course (the trial-only rules still hold, and brought_by still credits her). leads.assigned_to is never
- * changed here. A failed read throws (500).
+ * The ownership /sales/booking checks: THE rule (SalesOwnershipRule): her leads,
+ * families and students (ownershipOf) only while sales_require_assignee AND sales_auto_assign are
+ * ON; otherwise null, no ownership check, so any salesperson may book any lead, family or student,
+ * trial or course (the trial-only rules still hold, and brought_by still credits her).
+ * leads.assigned_to is never changed here. A failed read throws (500).
  */
 @Injectable()
 export class SalesBookingScope {

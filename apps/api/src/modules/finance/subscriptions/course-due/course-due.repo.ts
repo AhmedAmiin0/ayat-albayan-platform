@@ -19,8 +19,8 @@ export interface UnbookedPackage {
 }
 
 /**
- * The package with its course rules (any status), its draft (days picked before the payment, owner
- * 2026-11-06) and the student's name and family number.
+ * The package with its course rules (any status), its draft (days picked before the payment)
+ * and the student's name and family number.
  */
 const PACKAGE_SELECT =
   'id, student_id, created_by, package, lessons_total, rules:schedule_rules(id), draft:subscription_course_drafts(subscription_id), student:students(name, guardian:guardians(phone_e164))' as const;

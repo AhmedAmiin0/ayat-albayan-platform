@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migration 932 (owner 2026-10-28): subscriptions.lessons_used_before, counted in v_subscription_balance.
+// Migration 932: subscriptions.lessons_used_before, counted in v_subscription_balance.
 const dir = MIGRATIONS_DIR;
 const code = (name: string) => readFileSync(join(dir, name), 'utf8').replace(/--.*$/gm, '');
 const sql = code('20261028000932_lessons_used_before.sql');

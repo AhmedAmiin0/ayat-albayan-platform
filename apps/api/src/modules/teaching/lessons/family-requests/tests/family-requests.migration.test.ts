@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261117150100 (owner 2026-11-17). No database runs in unit tests: this pins its shape.
+// Migration 20261117150100. No database runs in unit tests: this pins its shape.
 const sql = readFileSync(join(MIGRATIONS_DIR, '20261117150100_family_lesson_requests.sql'), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trimStart().startsWith('--')).join('\n');
 

@@ -39,8 +39,8 @@ interface EndRule {
 
 /**
  * Cancel one occurrence, or this one and the rest of its rule (R-SCH-07). Returns the ids of
- * every cancelled lesson. One lesson: its teacher and family hear it (lesson_cancelled, owner
- * 2026-10-30). Ending a series is a course end, not a lesson's cancellation: no notice.
+ * every cancelled lesson. One lesson: its teacher and family hear it (lesson_cancelled).
+ * Ending a series is a course end, not a lesson's cancellation: no notice.
  */
 @Injectable()
 export class LessonCancelService {

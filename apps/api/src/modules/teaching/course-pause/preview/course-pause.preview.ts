@@ -24,8 +24,8 @@ const extendDaysOf = (from: string, until: string | null): number | null =>
   until === null ? null : pausedDays({ from, until, today: addDays(until, 1) });
 
 /**
- * What a pause or a resume would do, before the confirm (owner 2026-11-17: «every action previews
- * what will happen»): the lessons, their dates, the days the package moves. Nothing written.
+ * What a pause or a resume would do, before the confirm (every action previews what
+ * will happen): the lessons, their dates, the days the package moves. Nothing written.
  */
 @Injectable()
 export class CoursePausePreviews {

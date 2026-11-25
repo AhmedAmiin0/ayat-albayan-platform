@@ -7,15 +7,15 @@ import {
 import type { PackageSize } from '@ab/catalog';
 import { HttpStatus } from '@nestjs/common';
 
-// The assistant's course of a subscription she sold (owner 2026-10-18, R-ASST-01): pure rules,
+// The assistant's course of a subscription she sold (R-ASST-01): pure rules,
 // read by SalesCourse (sales-course.service.ts). Local dates "YYYY-MM-DD" compare as strings.
 
 /** An active schedule_rules row of the student (schedule_rule_students). */
 export type CourseRule = { starts_on: string; ends_on: string | null; package: PackageSize | null };
 
 /**
- * A weekly course: not a trial and not a one-day rule (a makeup or an instant lesson ends the day it
- * starts). An imported rule may have no package: it still counts.
+ * A weekly course: not a trial and not a one-day rule (a makeup or an instant lesson ends the day
+ * it starts). An imported rule may have no package: it still counts.
  */
 export const isCourseRule = (r: CourseRule): boolean => r.package !== 'trial' && r.starts_on !== r.ends_on;
 
@@ -34,9 +34,13 @@ type CourseProblem = { status: HttpStatus; code: string };
 
 const problem = (status: HttpStatus, code: string): CourseProblem => ({ status, code });
 
-/** The request against the subscription it books: kind of lessons, start and days a week (decision 4). */
+/**
+ * The request against the subscription it books: kind of lessons, start and days a week (decision
+ * 4).
+ */
 function subscriptionProblem(req: CourseFacts['req'], sub: CourseSubscription): CourseProblem | null {
-  // The package is the subscription's whatever the client sent (review M4): only the length must match.
+  // The package is the subscription's whatever the client sent (review M4): only the length must
+  // match.
   if (req.durationMin !== sub.duration) return problem(HttpStatus.BAD_REQUEST, 'course_mismatch');
   if (req.startsOn < sub.starts_on) return problem(HttpStatus.BAD_REQUEST, 'starts_before_subscription');
   const perWeek = courseDaysPerWeek(sub);
@@ -53,12 +57,12 @@ export function courseOverlaps(rules: readonly CourseRule[], span: { from: strin
 }
 
 /**
- * Why the assistant may not book this course (null = she may), in this order: 409 subscription_required
- * (no unpaid / active subscription), 400 course_mismatch (another duration), 400
- * starts_before_subscription, 409 custom_count_admin (a lesson count with no whole days a week), 400
- * days_count_mismatch (the plan's days a week exactly), 409 course_exists (the subscription already has
- * its course, or a course of the student overlaps it; one starting after the current one's last day is
- * fine), 400 no_occurrences (a picked day has no lesson).
+ * Why the assistant may not book this course (null = she may), in this order: 409
+ * subscription_required (no unpaid / active subscription), 400 course_mismatch (another duration),
+ * 400 starts_before_subscription, 409 custom_count_admin (a lesson count with no whole days a
+ * week), 400 days_count_mismatch (the plan's days a week exactly), 409 course_exists (the
+ * subscription already has its course, or a course of the student overlaps it; one starting after
+ * the current one's last day is fine), 400 no_occurrences (a picked day has no lesson).
  */
 export function courseProblem({ req, sub, rules, endsOn, booked }: CourseFacts): CourseProblem | null {
   if (!sub) return problem(HttpStatus.CONFLICT, 'subscription_required');
@@ -74,8 +78,8 @@ type BlockFacts = { sub: CourseSubscription | null; rules: readonly CourseRule[]
 
 /**
  * The course wizard's gate before anything is picked (GET /sales/booking/course): no subscription,
- * a custom count the admin books, the subscription's course already booked, or a weekly course still
- * running today or later.
+ * a custom count the admin books, the subscription's course already booked, or a weekly course
+ * still running today or later.
  */
 export function courseBlock(facts: BlockFacts): CourseBlock | null {
   if (!facts.sub) return 'subscription_required';

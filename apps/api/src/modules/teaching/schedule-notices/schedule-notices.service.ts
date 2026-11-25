@@ -19,15 +19,14 @@ export class NoticeDeps {
 }
 
 /**
- * «if there is a reschedule, cancel or pause, continue event please notify both teacher and
- * student» (owner 2026-10-30). After a lesson writer commits (LessonEvents.scheduleChanged), the
- * lesson's teacher and the student's family hear it: the bell / push of each one with a profile
- * (never the person who made the change; PushService applies the row's rule) and one WhatsApp each
- * on the notifications line, queued only while the row's rule is on and its template approved
- * (NoticeGate; never a free-text fallback). A move's family WhatsApp goes only when
- * FamilyMoveNotice chose it over the booking confirmation (one family message). The sender owns
- * the send gate (messaging_enabled). The row is not automatic: auto_messages_enabled does not
- * hold it. Never throws: the change is already saved.
+ * A reschedule, cancel, pause or resume is told to both the teacher and the student. After a
+ * lesson writer commits (LessonEvents.scheduleChanged), the lesson's teacher and the student's
+ * family hear it: the bell / push of each one with a profile (never the person who made the change;
+ * PushService applies the row's rule) and one WhatsApp each on the notifications line, queued only
+ * while the row's rule is on and its template approved (NoticeGate; never a free-text fallback). A
+ * move's family WhatsApp goes only when FamilyMoveNotice chose it over the booking confirmation
+ * (one family message). The sender owns the send gate (messaging_enabled). The row is not
+ * automatic: auto_messages_enabled does not hold it. Never throws: the change is already saved.
  */
 @Injectable()
 export class ScheduleNotices implements OnModuleInit {

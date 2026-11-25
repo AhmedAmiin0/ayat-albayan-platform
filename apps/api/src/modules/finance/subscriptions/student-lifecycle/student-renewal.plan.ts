@@ -12,15 +12,18 @@ export interface EndPackage {
   remaining: number;
 }
 
-/** Its lessons are used up, or its renewal date (YYYY-MM-DD) is before `today` (the student's tz). */
+/**
+ * Its lessons are used up, or its renewal date (YYYY-MM-DD) is before `today` (the student's tz).
+ */
 export function packageEnded(p: EndPackage, today: string): boolean {
   return p.remaining <= 0 || (p.renews_on !== null && p.renews_on < today);
 }
 
 /**
- * The student's subscription has ENDED: a package (trial packages aside) has ended and no package is
- * still running and paid (or paused by hand). A renewal created but not fully paid yet keeps it ended.
- * Uses the payments, never the stored package statuses, so it reads the same before or after a recompute.
+ * The student's subscription has ENDED: a package (trial packages aside) has ended and no package
+ * is still running and paid (or paused by hand). A renewal created but not fully paid yet keeps it
+ * ended. Uses the payments, never the stored package statuses, so it reads the same before or after
+ * a recompute.
  */
 export function subscriptionEnded(subs: readonly EndPackage[], today: string): boolean {
   const paidSubs = subs.filter((s) => s.status !== 'trial');
@@ -29,8 +32,8 @@ export function subscriptionEnded(subs: readonly EndPackage[], today: string): b
 }
 
 /**
- * active → pending_renewal when ended; pending_renewal / expired → active once it runs again (owner
- * 2026-10-15, docs/11 §7: expired is renewed like pending_renewal; it only becomes expired via
+ * active → pending_renewal when ended; pending_renewal / expired → active once it runs again
+ * (docs/11 §7: expired is renewed like pending_renewal; it only becomes expired via
  * StudentExpiryJob). The not-subscribed statuses, paused and churned are never moved by this rule.
  */
 export function renewalTarget(current: StudentStatus, ended: boolean): StudentStatus | null {
@@ -41,8 +44,8 @@ export function renewalTarget(current: StudentStatus, ended: boolean): StudentSt
 
 /**
  * After the payment that flipped the student is deleted: another positive payment remains → rule 5
- * (active, or pending_renewal when ended). None left (older flips with no recorded `from`, owner
- * 2026-10-15): the trial facts decide, as for a new student (attended → pending_subscription, an open
+ * (active, or pending_renewal when ended). None left (older flips with no recorded `from`): the
+ * trial facts decide, as for a new student (attended → pending_subscription, an open
  * trial → trial, none → new).
  */
 export function revertTarget(input: { otherPayment: boolean; ended: boolean; facts: TrialFacts }): StudentStatus {
@@ -50,7 +53,10 @@ export function revertTarget(input: { otherPayment: boolean; ended: boolean; fac
   return trialMove('new', { ...input.facts, paid: false })?.to ?? 'new';
 }
 
-/** The newest students status_change audit row, as written by StudentsService (manual) or the API flows. */
+/**
+ * The newest students status_change audit row, as written by StudentsService (manual) or the API
+ * flows.
+ */
 export interface StatusChangeRow {
   after: unknown;
   at: string;
@@ -64,20 +70,23 @@ export function isFlipBy(last: StatusChangeRow | null, paymentId: string): boole
   return field(last?.after, 'via') === 'payment' && field(last?.after, 'payment_id') === paymentId;
 }
 
-/** The from-status a payment flip recorded (after.from, owner 2026-10-15), or null on older rows. */
+/** The from-status a payment flip recorded (after.from), or null on older rows. */
 export function recordedFrom(last: StatusChangeRow | null): StudentStatus | null {
   const from = field(last?.after, 'from');
   return STUDENT_STATUSES.find((s) => s === from) ?? null;
 }
 
-/** When the student became pending_renewal: the newest status_change's `at` when it set that status. */
+/**
+ * When the student became pending_renewal: the newest status_change's `at` when it set that status.
+ */
 export function pendingSince(last: StatusChangeRow | null): string | null {
   return last && field(last.after, 'status') === 'pending_renewal' ? last.at : null;
 }
 
 /**
- * The periodic sweep respects a status the admin set by hand (no `via`) until the next automatic event:
- * a money write, a lesson change, or a renewal date passing after that manual change (in the student's tz).
+ * The periodic sweep respects a status the admin set by hand (no `via`) until the next automatic
+ * event: a money write, a lesson change, or a renewal date passing after that manual change (in the
+ * student's tz).
  */
 export function manualWins(last: StatusChangeRow | null, opts: { renewDates: readonly string[]; localDay: string }): boolean {
   if (!last || field(last.after, 'via') !== undefined) return false;

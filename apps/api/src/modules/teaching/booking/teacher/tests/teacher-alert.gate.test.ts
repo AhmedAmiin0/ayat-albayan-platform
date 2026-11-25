@@ -5,7 +5,7 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.fakes';
 import { TeacherAlertRepo } from '@/modules/teaching/booking/teacher/teacher-alert.repo';
 
-// Owner 2026-11-02 «Message not sent to the teacher»: on a crm line teacher_new_student goes as the
+// The teacher must get the message: on a crm line teacher_new_student goes as the
 // CRM's teacher_lesson_v2, so the queue gate reads that template's status (template-gate.repo.ts).
 
 const T1 = { id: 'T1', profile_id: 'P1', phone_e164: '+201001234567', tz: 'Africa/Cairo', display_name_ar: 'أ. خالد' };

@@ -8,7 +8,7 @@ import type { CourseRule } from '@/modules/teaching/booking/sales/course/sales-c
 import type { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-course.service';
 
-/** No payment link held and no draft (owner 2026-11-06). */
+/** No payment link held and no draft. */
 const noDrafts = { held: async () => false, get: async () => null };
 
 const S1 = 'c0000000-0000-4000-8000-000000000001';

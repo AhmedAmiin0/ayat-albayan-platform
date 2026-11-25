@@ -3,8 +3,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { PAYMENT_ID, paymentRow, REQUEST_ID, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 
-// An unused-cancelled package (owner 2026-10-28) takes no money: 409 before anything is written (migration 934
-// too). A stopped one (2026-10-30, migration 991) keeps taking it.
+// An unused-cancelled package takes no money: 409 before anything is written (migration 934
+// too). A stopped one (migration 991) keeps taking it.
 
 const body = {
   subscriptionId: SUB_ID,

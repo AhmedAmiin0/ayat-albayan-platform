@@ -8,7 +8,7 @@ import { MeetingInviteSender } from '@/modules/teaching/classroom/meetings/invit
 import { inviteSubject } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.text';
 import type { StoredInvitee } from '@/modules/teaching/classroom/meetings/invites/meeting-invitees.repo';
 
-// R-MEET-02 (owner 2026-11-03: «internal meetings should have push notifications»): a staff
+// R-MEET-02 (internal meetings send push notifications): a staff
 // invitee with a live bound device gets the app and browser push on invite, reschedule and cancel.
 
 const MEETING_ID = '6f1c2b3a-4d5e-4f60-8a9b-0c1d2e3f4a5b';

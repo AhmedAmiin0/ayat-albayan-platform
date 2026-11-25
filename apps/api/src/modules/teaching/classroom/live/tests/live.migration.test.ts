@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migrations 20261117100100..120 (owner 2026-11-16). No database in unit tests: this pins them.
+// Migrations 20261117100100..120. No database in unit tests: this pins them.
 const code = (file: string) =>
   readFileSync(join(MIGRATIONS_DIR, file), 'utf8')
     .split('\n')

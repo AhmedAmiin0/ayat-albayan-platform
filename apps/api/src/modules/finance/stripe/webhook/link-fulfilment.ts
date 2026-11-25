@@ -14,13 +14,15 @@ export const idOf = (v: string | { id: string } | null): string | null => (typeo
 export const pastIso = (unixSeconds: number, now = new Date()): string => new Date(Math.min(unixSeconds * 1000, now.getTime())).toISOString();
 
 /**
- * A paid Checkout Session → ONE payment on the link's package through the normal PaymentsService (method
- * card, the session's amount_total, client_request_id = a uuid of the session id, recorded_by = the link's
- * assistant), so the recompute makes the package active and the commission triggers credit her. On a NEW
- * subscription of a student nobody brought and without a priced package, the student is first attributed to
- * her (brought_at = the link's creation) so the first-package commission applies; otherwise attribution is
- * never changed (a renewal follows the renewal commission rules of whoever brought the student). A payment the platform refuses (e.g. a
- * cancelled package, or one paid another way while this session stayed open) is not retried: the admins get a bell row to settle it by hand.
+ * A paid Checkout Session → ONE payment on the link's package through the normal PaymentsService
+ * (method card, the session's amount_total, client_request_id = a uuid of the session id,
+ * recorded_by = the link's assistant), so the recompute makes the package active and the commission
+ * triggers credit her. On a NEW subscription of a student nobody brought and without a priced
+ * package, the student is first attributed to her (brought_at = the link's creation) so the
+ * first-package commission applies; otherwise attribution is never changed (a renewal follows the
+ * renewal commission rules of whoever brought the student). A payment the platform refuses (e.g. a
+ * cancelled package, or one paid another way while this session stayed open) is not retried: the
+ * admins get a bell row to settle it by hand.
  */
 @Injectable()
 export class LinkFulfilment {
@@ -57,7 +59,7 @@ export class LinkFulfilment {
       return `refused:${errorCode(e) ?? e.getStatus()}`;
     }
     await this.deps.links.markPaid(link.id, { paymentId: payment.id, paidAt: payment.paid_at, paymentIntent: idOf(session.payment_intent) });
-    // The weekly days picked before the payment (owner 2026-11-06): re-read and booked now, after
+    // The weekly days picked before the payment: re-read and booked now, after
     // markPaid (a draft saved meanwhile books at once). A retry replays the same booking.
     await this.deps.packages.paid(link.subscription_id);
     this.deps.alerts.paid(link, { id: payment.id, amount, currency });
@@ -81,16 +83,19 @@ export class LinkFulfilment {
   }
 
   /**
-   * 409 already_paid / subscription_cancelled: the package was paid another way (a bank transfer) or cancelled
-   * while this session stayed open (up to 23 h). Only this session's own retry (its payment already recorded,
-   * the event not yet done) goes on, to replay it.
+   * 409 already_paid / subscription_cancelled: the package was paid another way (a bank transfer)
+   * or cancelled while this session stayed open (up to 23 h). Only this session's own retry (its
+   * payment already recorded, the event not yet done) goes on, to replay it.
    */
   private async stillPayable(subscriptionId: string, sessionId: string): Promise<void> {
     const blocked = await this.packages.blocked(subscriptionId);
     if (blocked && !(await this.recorded.byRequest(uuidFor(sessionId)))) throw conflict(blocked);
   }
 
-  /** Our session (client_reference_id) but no link or no package any more: Stripe has the money, so the admins are told. */
+  /**
+   * Our session (client_reference_id) but no link or no package any more: Stripe has the money, so
+   * the admins are told.
+   */
   private async orphan(session: Stripe.Checkout.Session, link: LinkRow | null): Promise<string> {
     if (!link && !session.client_reference_id && !session.metadata?.payment_link_id) return 'not_ours';
     const text = `${fromStripeAmount(session.amount_total ?? 0, session.currency ?? '')} ${(session.currency ?? '').toUpperCase()} (${session.id})`;
@@ -98,7 +103,10 @@ export class LinkFulfilment {
     return 'orphan_alerted';
   }
 
-  /** Only a NEW subscription of a student nobody brought and who never had a priced package (never a takeover). */
+  /**
+   * Only a NEW subscription of a student nobody brought and who never had a priced package (never a
+   * takeover).
+   */
   private async attribute(link: LinkRow): Promise<void> {
     if (link.kind !== 'new') return;
     try {

@@ -3,7 +3,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
 import { dbError } from '@/common/http/http';
 
-/** The reads of StudentExpiryJob (owner 2026-10-15, docs/11 §7): pending_renewal students, payments since. */
+/** The reads of StudentExpiryJob (docs/11 §7): pending_renewal students, payments since. */
 @Injectable()
 export class StudentExpiryRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -16,7 +16,10 @@ export class StudentExpiryRepo {
     return rows.map((r) => r.id);
   }
 
-  /** A payment (kind payment, amount > 0) of any of the student's packages recorded at or after `since`. */
+  /**
+   * A payment (kind payment, amount > 0) of any of the student's packages recorded at or after
+   * `since`.
+   */
   async paidSince(studentId: string, since: string): Promise<boolean> {
     const { count, error } = await this.db
       .from('payments')

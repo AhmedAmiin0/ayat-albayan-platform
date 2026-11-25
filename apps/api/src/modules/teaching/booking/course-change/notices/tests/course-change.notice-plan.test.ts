@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { addedLessons, courseChanges, courseMove, type CourseTold } from '@/modules/teaching/booking/course-change/notices/course-change.notice-plan';
 
-// Who hears a course change (owner 2026-10-30: «notify both the teacher and the family»).
+// Who hears a course change (both the teacher and the family are told).
 
 const SUN = { id: 'old-sun', starts_at: '2026-11-01T14:00:00Z' };
 const TUE = { id: 'old-tue', starts_at: '2026-11-03T14:00:00Z' };

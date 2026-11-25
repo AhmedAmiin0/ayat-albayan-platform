@@ -6,8 +6,8 @@ const SEAT = `/sales/students/${ST}/channel/seat`;
 const SARA = { id: 'p-sa', name: 'سارة' };
 const HUDA = { id: 'p-sb', name: 'هدى' };
 
-// Owner 2026-11-16 «any assistant can subscribe to the chating channel but only 1» and «who
-// brought the student have the priority»: one seat per chat. p-sa brought the student.
+// Any assistant may take the chat's one seat; the one who brought the student comes first:
+// one seat per chat. p-sa brought the student.
 describe('the assistant seat of a student chat over HTTP', () => {
   let t: App;
   beforeAll(async () => {

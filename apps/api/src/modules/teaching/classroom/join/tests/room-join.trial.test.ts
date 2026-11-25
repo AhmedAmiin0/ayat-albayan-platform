@@ -9,7 +9,7 @@ import { resolverOf } from '@/modules/teaching/classroom/family-link/family-link
 import { admissionOf, moderation, recorder, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RoomJoinService } from '@/modules/teaching/classroom/join/room-join.service';
 
-// Owner, 2026-10-11: in a trial lesson the family and the teacher do not text each other in the room.
+// In a trial lesson the family and the teacher do not text each other in the room.
 let q: ReturnType<typeof queries>;
 let mod: ReturnType<typeof moderation>;
 const deps = () => ({ q, mod, rec: recorder(), config: CONFIG });

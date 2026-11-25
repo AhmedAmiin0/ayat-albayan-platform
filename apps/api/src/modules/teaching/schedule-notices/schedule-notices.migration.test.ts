@@ -5,7 +5,7 @@ import { PUSH_KINDS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { NOTICE_KEYS } from './notice.types';
 
-// Migration 988 (owner 2026-10-30). No database runs in unit tests: this pins its shape and the
+// Migration 988. No database runs in unit tests: this pins its shape and the
 // owner's exact bodies (the ones he pastes into the CRM).
 const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
 const sql = readFileSync(join(dir, '20261030000988_schedule_change_notices.sql'), 'utf8');

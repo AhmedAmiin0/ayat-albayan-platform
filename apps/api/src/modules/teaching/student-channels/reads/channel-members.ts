@@ -37,7 +37,7 @@ function membersOf(input: {
 /**
  * Who is in a student's chat now, as ChannelNotify pushes them: the current teacher(s), the
  * guardian and student logins (only while family_chat_enabled is on) and the one assistant in the
- * chat's seat (student_channels.assistant_id; owner 2026-11-16 «… but only 1»). Never a monitor.
+ * chat's seat (student_channels.assistant_id). Never a monitor.
  */
 @Injectable()
 export class ChannelMembers {

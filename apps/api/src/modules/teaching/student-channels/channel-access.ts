@@ -10,7 +10,7 @@ import { FamilyChatSettings } from './family-chat.settings';
 
 /**
  * Who is in a channel and how: a participant writes and has read marks; a monitor only reads.
- * `open`: channel_is_open (owner 2026-10-29: subscribed and a teacher assigned); a closed one is
+ * `open`: channel_is_open (subscribed and a teacher assigned); a closed one is
  * the participants' empty closed state (409 channel_not_open on a write) while a monitor still
  * reads.
  */
@@ -31,11 +31,11 @@ export class AccessDeps {
 /**
  * docs/31 §2, rule 9 server-side. Participants: the student's current teacher(s)
  * (channel_teacher_ids), the guardian login of the student, and the student's own login, a
- * child's too (owner 2026-11-16: «the child can chat normally»), and the one assistant in the
- * chat's seat (owner 2026-11-16: «any assistant can subscribe to the chating channel but only
- * 1»). Monitors (read-only): anyone the route's student_channels.monitor key let in. Another
- * teacher, family or assistant is 404 student_not_found (as an unknown id).
- * Every family path is 403 family_chat_off while settings.family_chat_enabled is off (docs/50 §2).
+ * child's too (a child chats like any student), and the one assistant in the chat's seat (any
+ * assistant may take it, one at a time). Monitors (read-only): anyone the route's
+ * student_channels.monitor key let in. Another teacher, family or assistant is 404
+ * student_not_found (as an unknown id). Every family path is 403 family_chat_off while
+ * settings.family_chat_enabled is off (docs/50 §2).
  */
 @Injectable()
 export class ChannelAccess {
@@ -67,7 +67,7 @@ export class ChannelAccess {
   }
 
   /**
-   * The seat holder (ChannelPeopleRepo.assistantId; owner 2026-11-16 «… but only 1») reads the
+   * The seat holder (ChannelPeopleRepo.assistantId; one per chat) reads the
    * chat; she writes as 'sales' only on an open channel while settings.family_chat_enabled is on
    * (she writes to the family), else her page is read-only (no composer). The seat is not sales
    * ownership: it grants no money, lead or commission scope.

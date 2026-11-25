@@ -3,7 +3,7 @@ import { TEACHER_ID } from '@/modules/teaching/scheduling/scheduling.fakes';
 import { LESSON_ID } from '@/modules/teaching/lessons/lessons.fakes';
 import { lessonsApp } from '@/modules/teaching/lessons/test-app';
 
-// The schedule-change notices (owner 2026-10-30) through the real routes: each move or cancel
+// The schedule-change notices through the real routes: each move or cancel
 // queues the teacher's and the guardian's WhatsApp rows once the lesson is written (repo faked).
 
 type Harness = Awaited<ReturnType<typeof lessonsApp>>;

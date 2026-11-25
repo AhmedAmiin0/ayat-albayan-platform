@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 import { DELETED_BODY } from './channel-edits.repo';
 
-// Migration 993 (owner 2026-10-30: edit and delete), read as text: no database in unit tests.
+// Migration 993 (edit and delete), read as text: no database in unit tests.
 const dir = MIGRATIONS_DIR;
 const strip = (sql: string) =>
   sql

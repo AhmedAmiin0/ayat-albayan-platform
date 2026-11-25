@@ -10,7 +10,7 @@ const SALES = `/sales/students/${ST}/channel/messages/${M}`;
 const ago = (ms: number) => new Date(Date.now() - ms).toISOString();
 const HOUR = 3_600_000;
 
-// Owner 2026-10-30: the sender deletes for everyone within 48 hours; the admin deletes any
+// The sender deletes for everyone within 48 hours; the admin deletes any
 // (moderation).
 describe('DELETE …/messages/:id: delete for everyone', () => {
   let t: App;

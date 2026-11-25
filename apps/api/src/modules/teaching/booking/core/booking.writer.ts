@@ -12,9 +12,9 @@ type BookingWrite = { req: BookingRequest; prepared: Prepared; actorId: string }
 /**
  * The write half of POST /booking: the invoice file is resolved only now, after the plan passed
  * (a clash or a bad lesson never copies a WhatsApp file), then everything goes through the one
- * create_booking transaction. Then a trial booking moves its students to trial (owner 2026-10-15) and
- * the teacher hears about it (bell + WhatsApp, R-NOT-03, BookingFollowUps) and the sender is kicked so the confirmations go out now, not at the next tick (it sends only when the
- * gate is open).
+ * create_booking transaction. Then a trial booking moves its students to trial and
+ * the teacher hears about it (bell + WhatsApp, R-NOT-03, BookingFollowUps) and the sender is kicked
+ * so the confirmations go out now, not at the next tick (it sends only when the gate is open).
  */
 @Injectable()
 export class BookingWriter {

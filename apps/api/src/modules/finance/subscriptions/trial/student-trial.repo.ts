@@ -9,12 +9,15 @@ const ROW = `student_id, attendance, chargeable, lesson:lessons!inner(status, ${
 /** The same row, only lessons whose rule is a platform trial (inner joins down to the rule). */
 const PLATFORM_ROW = `student_id, attendance, chargeable, lesson:lessons!inner(status, rule_id, instant, makeup_of_id, rule:schedule_rules!lessons_rule_id_fkey!inner(package))`;
 
-/** The reads of the trial transitions (owner 2026-10-15, docs/11 §7): which students, and their trial lessons. */
+/** The reads of the trial transitions (docs/11 §7): which students, and their trial lessons. */
 @Injectable()
 export class StudentTrialRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** The students of these lessons on a trial lesson (platform or imported, isTrialLesson), each once. */
+  /**
+   * The students of these lessons on a trial lesson (platform or imported, isTrialLesson), each
+   * once.
+   */
   async studentsOfTrialLessons(lessonIds: readonly string[]): Promise<string[]> {
     const rows = await readChunked<ChangedLessonRow>(lessonIds, (chunk) =>
       this.db.from('lessons').select(`id, ${LESSON}, lesson_students(student_id, chargeable)`).in('id', chunk),

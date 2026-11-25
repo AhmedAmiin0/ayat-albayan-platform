@@ -54,7 +54,7 @@ export class TeacherJoinController {
 }
 
 /**
- * GET /report-link/legacy/* (no login, owner 2026-11-06): the old Vercel report redirector forwards
+ * GET /report-link/legacy/* (no login): the old Vercel report redirector forwards
  * every /r/<path> here; one lesson's no-login report page, or the «invalid link» page.
  */
 @ApiTags('lesson-links')

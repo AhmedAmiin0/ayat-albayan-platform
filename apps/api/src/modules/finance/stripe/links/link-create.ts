@@ -39,7 +39,8 @@ export class LinkCreate {
     if (replay) return this.replayed(replay, input, user);
     const startsOn = salesStartsOn(input, user, now);
     await this.extra.packages.releaseStale(input.studentId, user.id, now);
-    // Read after the release: a stale link's package never makes this one a renewal (the attribution's own rule).
+    // Read after the release: a stale link's package never makes this one a renewal (the
+    // attribution's own rule).
     const student = await this.deps.links.student(input.studentId);
     if (!student) throw notFound('student_not_found');
     if (input.kind === 'renewal' && student.priced.length === 0) throw badRequest('not_a_renewal');
@@ -49,14 +50,15 @@ export class LinkCreate {
     if (input.currency !== quote.currency) throw badRequest('currency_mismatch', { currency: quote.currency });
     const reference = quote.afterDiscount;
     const problem = linkAmountProblem({ amount: input.amount, reference, maxDiscountPct });
-    // Any agreed amount > 0 (owner 2026-11-18, no sales floor): only the admin's cap applies.
+    // Any agreed amount > 0 (no sales floor): only the admin's cap applies.
     if (problem) throw badRequest(problem, { min: min_amount, currency: quote.currency });
     const { studentId, pricing, clientRequestId, lessonsUsedBefore, teacherId } = input;
     if (teacherId) await this.extra.sales.teachers.ensureActive(teacherId);
     const create = { studentId, pricing, clientRequestId, startsOn, lessonsUsedBefore };
     const sub = await this.creator.create(create, user.id, { price: input.amount });
     if (sub.student.id !== input.studentId) throw conflict('client_request_reused');
-    // After create: a retry that replays its own orphan package (the link insert failed) must not count it as a renewal.
+    // After create: a retry that replays its own orphan package (the link insert failed) must not
+    // count it as a renewal.
     const kind = student.priced.some((id) => id !== sub.id) ? 'renewal' : 'new';
     const row = await this.deps.links.insert({
       token: newLinkToken(),
@@ -103,7 +105,10 @@ export class LinkCreate {
     if (teacherId) await this.extra.sales.teachers.assign({ studentId, teacherId, actorId: user.id });
   }
 
-  /** Someone else's form id (or another student's) is never replayed to her; a retry after a failed assignment assigns now. */
+  /**
+   * Someone else's form id (or another student's) is never replayed to her; a retry after a failed
+   * assignment assigns now.
+   */
   private async replayed(replay: LinkRow, input: PaymentLinkCreate, user: AuthUser): Promise<PaymentLinkView> {
     if (replay.created_by !== user.id || replay.student_id !== input.studentId) throw conflict('client_request_reused');
     const row = await this.deps.links.get(replay.id);

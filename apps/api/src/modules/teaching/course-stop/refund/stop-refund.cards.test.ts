@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { uuidFor } from '@/modules/finance/stripe';
 import { cardRow, kit, listed, planOf, REQ, row } from './stop-refund.fakes';
 
-// Reviewed money cases (owner 2026-11-02): pending refunds, converted cards, KWD / OMR (1/1000).
+// Reviewed money cases: pending refunds, converted cards, KWD / OMR (1/1000).
 const actor = { id: 'a1', reason: 'سفر' };
 
 describe('StopRefunds: what the cards can still give back', () => {

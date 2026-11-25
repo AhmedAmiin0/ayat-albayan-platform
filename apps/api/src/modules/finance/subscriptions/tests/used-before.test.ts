@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { assertUsedBeforeFits } from '@/modules/finance/subscriptions/used-before';
 
-// Every lesson but one (usedBeforeMax, owner 2026-11-02): the course books whatever is left.
+// Every lesson but one (usedBeforeMax): the course books whatever is left.
 describe('assertUsedBeforeFits', () => {
   const code = (used: number, total: number) => {
     try {

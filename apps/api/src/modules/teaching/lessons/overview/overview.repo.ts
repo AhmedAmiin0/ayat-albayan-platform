@@ -18,7 +18,7 @@ export type OverviewTeacherRow = {
   meeting_link: string | null;
   max_students: number | null;
   status: TeacherStatus;
-  /** The teacher's photo, signed with the rest in one call (owner 2026-10-28); absent in fakes. */
+  /** The teacher's photo, signed with the rest in one call; absent in fakes. */
   avatar_url?: string | null;
 };
 export type OverviewSlotRow = { teacher_id: string; weekday: number; start_time: string; end_time: string; tz: string };
@@ -47,7 +47,10 @@ export class OverviewRepo {
     return data.map((t) => ({ ...t, avatar_url: photos.get(t.id) ?? null }));
   }
 
-  /** Weekly rows; while teachers_always_available is on, every teacher all day (what booking accepts). */
+  /**
+   * Weekly rows; while teachers_always_available is on, every teacher all day (what booking
+   * accepts).
+   */
   async slots(w: LessonWindow): Promise<OverviewSlotRow[]> {
     if ((await this.settings.read()).teachers_always_available) {
       let ids = this.db.from('teachers').select('id');
@@ -63,7 +66,9 @@ export class OverviewRepo {
     return data;
   }
 
-  /** Same overlap as AvailabilityQueries.listTimeOff(range): starts before `to`, ends after `from`. */
+  /**
+   * Same overlap as AvailabilityQueries.listTimeOff(range): starts before `to`, ends after `from`.
+   */
   async timeOff(w: LessonWindow): Promise<OverviewTimeOffRow[]> {
     let q = this.db
       .from('teacher_time_off')

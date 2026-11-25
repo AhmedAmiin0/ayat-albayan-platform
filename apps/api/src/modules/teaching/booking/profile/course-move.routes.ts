@@ -16,7 +16,7 @@ interface MoveSchemas {
 }
 
 /**
- * GET change, POST change/check and POST change of a profile course action (owner 2026-10-30): the
+ * GET change, POST change/check and POST change of a profile course action: the
  * subclass names the route and the key (CourseTeacherController, CourseTimesController).
  */
 export abstract class CourseMoveRoutes {

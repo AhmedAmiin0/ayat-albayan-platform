@@ -3,7 +3,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { REQUEST_ID, STUDENT_ID, subRow, WEEKLY_SA } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from './test-app';
 
-// POST /subscriptions lessonsUsedBefore (owner 2026-10-28, migration 932): only with a start before
+// POST /subscriptions lessonsUsedBefore (migration 932): only with a start before
 // the academy's today; every lesson but one (the weekly package: 4, at most 3).
 const NOW = new Date('2026-10-28T10:00:00Z'); // Riyadh today = 2026-10-28
 

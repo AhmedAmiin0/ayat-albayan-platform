@@ -22,7 +22,7 @@ export const presenceRole = (row: PresenceRow): RoomPresenceRole =>
 export type Named = (row: PresenceRow) => boolean;
 const EVERYONE: Named = () => true;
 
-/** The family's view (owner 2026-11-16, review): the teacher and the family's own students only. */
+/** The family's view (review): the teacher and the family's own students only. */
 export const familyNamed =
   (studentIds: readonly string[]): Named =>
   (row) =>

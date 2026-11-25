@@ -8,13 +8,14 @@ import { StudentStatusRepo } from '@/modules/finance/subscriptions/student-lifec
 const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
 /**
- * Transitions 2–3 (owner 2026-10-15, docs/11 §7, R-STU-05): new → trial when a trial lesson is booked,
- * → pending_subscription once it is attended, trial → new when it is missed / cancelled with nothing
- * else booked (trialMove). Evaluated after a trial booking (BookingFollowUps) and on every lesson change
- * of a trial lesson (LessonEvents: attendance, cancel, move, a submitted report). Compare-and-set on the
- * status read, audited (via trial + from / to / reason): a status set by hand to anything else wins.
- * An attended trial of a student who already paid moves nothing (paid, read only when attended).
- * Sends nothing (no WhatsApp, push or email). Never throws: the booking or lesson change is committed.
+ * Transitions 2–3 (docs/11 §7, R-STU-05): new → trial when a trial lesson is booked,
+ * → pending_subscription once it is attended, trial → new when it is missed / cancelled with
+ * nothing else booked (trialMove). Evaluated after a trial booking (BookingFollowUps) and on every
+ * lesson change of a trial lesson (LessonEvents: attendance, cancel, move, a submitted report).
+ * Compare-and-set on the status read, audited (via trial + from / to / reason): a status set by
+ * hand to anything else wins. An attended trial of a student who already paid moves nothing (paid,
+ * read only when attended). Sends nothing (no WhatsApp, push or email). Never throws: the booking
+ * or lesson change is committed.
  */
 @Injectable()
 export class StudentTrialStatus implements OnModuleInit {
@@ -42,7 +43,9 @@ export class StudentTrialStatus implements OnModuleInit {
     }
   }
 
-  /** How many students moved. Never throws (a failure is logged, the next event or edit catches up). */
+  /**
+   * How many students moved. Never throws (a failure is logged, the next event or edit catches up).
+   */
   async evaluate(studentIds: readonly string[], actorId: string | null): Promise<number> {
     const ids = [...new Set(studentIds)];
     if (ids.length === 0) return 0;

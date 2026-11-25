@@ -4,7 +4,7 @@ import { queuedRow, staffReachable, type QueuedMessage } from '@/modules/messagi
 import { noticeTemplate } from './notice-text';
 import type { Notice, NoticeGuardian, NoticeStudent } from './notice.types';
 
-// Who hears a schedule change, and how (owner 2026-10-30: «notify both teacher and student»).
+// Who hears a schedule change, and how (both the teacher and the student are told).
 // Pure: ScheduleNotices reads, this plans, the dedup keys make a retry or a double tap a no-op.
 
 interface NoticePlan {

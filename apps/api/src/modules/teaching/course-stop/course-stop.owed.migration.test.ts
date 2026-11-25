@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migrations 20261106000100 / 101 (owner 2026-11-06): what the SQL spec
+// Migrations 20261106000100 / 101: what the SQL spec
 // (e2e/tests/teaching/course-stop-owed.sql.spec.ts) proves against the database, pinned here.
 const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
 const read = (name: string) => readFileSync(join(dir, name), 'utf8').replace(/--.*$/gm, '');

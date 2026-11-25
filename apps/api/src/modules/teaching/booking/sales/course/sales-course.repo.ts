@@ -55,14 +55,14 @@ export class SalesCourseRepo {
   }
 
   /**
-   * The subscription the course books: the newest unpaid or active one, or (owner 2026-11-06: a
+   * The subscription the course books: the newest unpaid or active one, or (a
    * family with two packages books the older one too) the newest WITHOUT a course of its own. Not
    * for a student with an imported course (a rule with no subscription_id): its old packages were
    * taught on that course and look unbooked. null without any.
    */
   async subscription(studentId: string, only?: string): Promise<CourseSubscription | null> {
     const [all, imported] = await Promise.all([this.openPackages(studentId), this.imported(studentId)]);
-    // `only`: that package (a draft booked on its payment, owner 2026-11-06).
+    // `only`: that package (a draft booked on its payment).
     const subs = only === undefined ? all : all.filter((r) => r.id === only);
     const row = (imported ? undefined : subs.find((r) => r.rules.length === 0)) ?? subs[0];
     if (!row) return null;
@@ -108,8 +108,8 @@ export class SalesCourseRepo {
   }
 
   /**
-   * Does the subscription already have its course (PR #113 review M3)? Any rule tied to it, whatever
-   * its status: one paid plan books exactly one course; a renewal is a new subscription.
+   * Does the subscription already have its course (PR #113 review M3)? Any rule tied to it,
+   * whatever its status: one paid plan books exactly one course; a renewal is a new subscription.
    */
   async subscriptionBooked(subscriptionId: string): Promise<boolean> {
     const { data, error } = await this.db.from('schedule_rules').select('id').eq('subscription_id', subscriptionId).limit(1);
@@ -118,8 +118,8 @@ export class SalesCourseRepo {
   }
 
   /**
-   * Every rule of the student's assistant courses (subscription_id set, any status) with the plan of
-   * its subscription: course-read.ts groups them (the previous course, the running one).
+   * Every rule of the student's assistant courses (subscription_id set, any status) with the plan
+   * of its subscription: course-read.ts groups them (the previous course, the running one).
    */
   async courseRules(studentId: string): Promise<CourseRuleRow[]> {
     const { data, error } = await this.db

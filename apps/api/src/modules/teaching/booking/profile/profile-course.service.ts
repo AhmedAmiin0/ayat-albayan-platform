@@ -25,7 +25,7 @@ interface Move {
 
 /**
  * An assistant (base role sales) changes her own students' courses while SalesOwnershipRule
- * enforces it (owner 2026-11-02, «update student booking»), ANY with sales.renew_any; every other
+ * enforces it, ANY with sales.renew_any; every other
  * holder of the key, and every assistant while the rule is off, ANY student.
  */
 const ownsOnly = (user: AuthUser): boolean => user.role === 'sales' && !can(user, 'sales.renew_any');

@@ -2,7 +2,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { PAUSE, rpcOut, SALES, STUDENT } from './course-pause.fakes';
 import { pauseNoticesApp, TEACHER } from './course-pause.notices.fakes';
 
-// A pause and a resume through the real routes (owner 2026-10-30): ONE course_paused or
+// A pause and a resume through the real routes: ONE course_paused or
 // course_resumed to the teacher and the guardian, never a lesson_cancelled per lesson it took.
 
 type App = Awaited<ReturnType<typeof pauseNoticesApp>>;

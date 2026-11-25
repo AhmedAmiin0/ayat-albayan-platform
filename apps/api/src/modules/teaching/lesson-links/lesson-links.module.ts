@@ -10,7 +10,7 @@ import { LessonLinksSettings } from './lesson-links.settings';
 import { TeacherLessonLinks } from './teacher-lesson-links';
 
 /**
- * The teacher's links of one lesson (owner 2026-11-06, teacher_lesson_v3): the signed join link
+ * The teacher's links of one lesson (teacher_lesson_v3): the signed join link
  * GET /join/:token, the old report redirector's bridge GET /report-link/legacy/*, and the issuer
  * of both button tokens for the reminders and the new-student alert. No short links.
  */

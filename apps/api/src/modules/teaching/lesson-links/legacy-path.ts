@@ -1,6 +1,6 @@
 import { localDayStart } from '@ab/shared';
 
-// GET /report-link/legacy/<path> (owner 2026-11-06): the old Vercel report redirector forwards
+// GET /report-link/legacy/<path>: the old Vercel report redirector forwards
 // every /r/<path> here. Two shapes are known; anything else is the «invalid link» page. Pure.
 
 /** (a) our own v2 button suffix; (b) the old Apps Script's «AB-0004/<teacher>/<token>». */

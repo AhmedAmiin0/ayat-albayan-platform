@@ -35,12 +35,15 @@ export type Prepared = {
 /**
  * Server-side choices of the caller, never of the request body: the assistant's course of a
  * subscription she sold (SalesBookingService) has no invoice (the transfer is recorded later on the
- * subscription, owner 2026-10-18 decision 2) and ends on its N-th lesson (decision 1). The admin
+ * subscription, decision 2) and ends on its N-th lesson (decision 1). The admin
  * passes none: invoice_required and open-ended rules, as before.
  */
 export type PrepareOptions = {
   invoiceWaived?: boolean;
-  /** Every rule's ends_on (plannedCourseEnd): the whole course is planned and checked, nothing after it. */
+  /**
+   * Every rule's ends_on (plannedCourseEnd): the whole course is planned and checked, nothing after
+   * it.
+   */
   endsOn?: string | null;
   /** The subscription it books: every rule's package and subscription_id (CourseLabel). */
   course?: CourseLabel;
@@ -59,11 +62,11 @@ function assertInvoice(req: BookingRequest, invoiceWaived: boolean): void {
  * R-SCH-10): resolve students / lead, the missed lesson of a makeup, generate the horizon's
  * occurrences (one for a trial or a makeup), check every one for conflicts (409 unless
  * override.reason), pick the meeting link and draft one confirmation per guardian (with no link
- * when the teacher holds lessons in our classroom: usesPlatform(meeting_mode, settings.meeting_link_auto)).
- * `conflicts` runs the same check for the wizard before its last step (nothing written).
- * The invoice is not here: it is a file, resolved by BookingInvoices after this plan holds.
- * ponytail: check-then-write, so two admins booking the same slot at the same second can both
- * pass; add a per-teacher advisory lock + re-check in create_booking if that ever happens.
+ * when the teacher holds lessons in our classroom: usesPlatform(meeting_mode,
+ * settings.meeting_link_auto)). `conflicts` runs the same check for the wizard before its last step
+ * (nothing written). The invoice is not here: it is a file, resolved by BookingInvoices after this
+ * plan holds. ponytail: check-then-write, so two admins booking the same slot at the same second
+ * can both pass; add a per-teacher advisory lock + re-check in create_booking if that ever happens.
  */
 @Injectable()
 export class BookingPlanner {
@@ -97,7 +100,8 @@ export class BookingPlanner {
       overrides: who.overrides,
       teacherLink: teacher.meeting_link,
     });
-    // The lessons keep the link either way; a platform teacher's confirmation names none (no lesson id yet, so no classroom token).
+    // The lessons keep the link either way; a platform teacher's confirmation names none (no lesson
+    // id yet, so no classroom token).
     const platform = usesPlatform(meetingModeOf(teacher.meeting_mode), settings.meeting_link_auto);
     const confirmationLink = platform ? null : meetingLink;
     const payload = bookingPayload({ req, kind, teacher, who, lead, plan, siblings, first, conflicts, meetingLink, confirmationLink, makeupOf, course: opts.course });

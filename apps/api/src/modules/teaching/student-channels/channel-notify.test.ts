@@ -29,7 +29,7 @@ const NAMES: ReadonlyMap<string, string> = new Map([['p-t', 'أ. هدى'], ['p-g
 
 interface Setup {
   members?: Person[];
-  /** The seat holder (owner 2026-11-16 «… but only 1»); null = a free seat. */
+  /** The seat holder (one per chat); null = a free seat. */
   assistant?: string | null;
   familyOn?: boolean;
   /** settings.teacher_student_messages_enabled. */

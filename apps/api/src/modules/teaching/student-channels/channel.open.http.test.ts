@@ -5,7 +5,7 @@ type App = Awaited<ReturnType<typeof channelApp>>;
 const TEACHER = `/teachers/me/channels/${ST}`;
 const PORTAL = `/portal/students/${ST}/channel`;
 
-// Owner 2026-10-29: the channel opens once the student is subscribed AND the assistant assigned the teacher
+// The channel opens once the student is subscribed AND the assistant assigned the teacher
 // (channel_is_open). Before that the participants get an empty closed state and every write is 409.
 describe('student channel: closed before the subscription and the assignment', () => {
   let t: App;

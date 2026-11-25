@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { REQ, STUDENT, stopApp, SUB } from './course-stop.fakes';
 
-// The stop sheet's choices over HTTP (owner 2026-11-06). 400 SAR / 8 lessons, 3 attended at
+// The stop sheet's choices over HTTP. 400 SAR / 8 lessons, 3 attended at
 // 100 % (charge 150), 290 paid by bank. The server computes every amount from the choice.
 type App = Awaited<ReturnType<typeof stopApp>>;
 const URL = `/students/${STUDENT}/course-stop`;

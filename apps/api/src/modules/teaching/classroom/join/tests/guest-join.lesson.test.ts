@@ -18,7 +18,7 @@ import { resolverOf } from '@/modules/teaching/classroom/family-link/family-link
 import { GuestJoinService } from '@/modules/teaching/classroom/join/guest-join.service';
 import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
 
-// Room server bugs (owner 2026-11-16): the /join door reads the lesson as it is NOW.
+// Room server bugs: the /join door reads the lesson as it is NOW.
 
 let q: ReturnType<typeof queries>;
 let rec: ReturnType<typeof recorder>;

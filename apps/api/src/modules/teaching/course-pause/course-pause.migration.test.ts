@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migrations 955–958 (owner 2026-10-28, «Also add option to pause the course»; docs/11 §7b).
+// Migrations 955–958 (a course can be paused; docs/11 §7b).
 const dir = MIGRATIONS_DIR;
 const code = (name: string) => readFileSync(join(dir, name), 'utf8').replace(/--.*$/gm, '');
 const table = code('20261028000955_course_pauses.sql');
@@ -64,7 +64,8 @@ describe('migration 956 course pause RPCs', () => {
     expect(r).toMatch(/if cp\.resumed_at is not null then\s+return jsonb_build_object\('id', cp\.id, 'student_id', cp\.student_id, 'resumed', false/);
     expect(r).toMatch(/v_on := least\(coalesce\(\(p ->> 'on'\)::date, \(now\(\) at time zone 'Asia\/Riyadh'\)::date\), cp\.until_date \+ 1\)/);
     expect(r).toMatch(/v_days := greatest\(0, v_on - cp\.from_date\)/);
-    // Each date moves by its own paused days: a course that began inside the pause is not over-extended.
+    // Each date moves by its own paused days: a course that began inside the pause is not
+    // over-extended.
     expect(r).toMatch(/ends_on = r\.ends_on \+ greatest\(0, v_on - greatest\(cp\.from_date, r\.starts_on\)\)/);
     expect(r).toMatch(/renews_on = s\.renews_on \+ greatest\(0, v_on - greatest\(cp\.from_date, s\.starts_on\)\)/);
     expect(r).not.toMatch(/case when r\.starts_on/);

@@ -12,7 +12,7 @@ const UUID = new ParseUUIDPipe();
 /**
  * The staff pages (docs/31 §2): the monitor's read-only view of any student's channel
  * (student_channels.monitor; no send or read route), and the page of the one assistant in the
- * chat's seat, where she writes too (SalesChannelController, owner 2026-11-16).
+ * chat's seat, where she writes too (SalesChannelController).
  */
 @ApiTags('student-channels')
 @ApiBearerAuth()

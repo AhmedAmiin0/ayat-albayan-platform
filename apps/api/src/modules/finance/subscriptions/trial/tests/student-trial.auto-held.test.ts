@@ -3,7 +3,7 @@ import type { Attendance, LessonStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { trialFactsOf, type TrialLessonRow } from '@/modules/finance/subscriptions/trial/student-trial.plan';
 
-// An auto-held trial (owner 2026-11-02): the job sets completed and leaves attendance null, so the
+// An auto-held trial: the job sets completed and leaves attendance null, so the
 // student moves exactly like an attended trial; a correction afterwards moves nobody back.
 const trial = (status: LessonStatus, attendance: Attendance | null = null): TrialLessonRow => ({
   student_id: 's1',

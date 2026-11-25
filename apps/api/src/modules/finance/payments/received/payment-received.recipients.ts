@@ -1,4 +1,4 @@
-/** Who hears of an incoming payment (owner 2026-11-05). */
+/** Who hears of an incoming payment. */
 interface RecipientsInput {
   /** Every enabled admin. */
   admins: readonly string[];

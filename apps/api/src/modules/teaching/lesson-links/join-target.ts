@@ -3,7 +3,7 @@ import { meetingModeOf, usesPlatform } from '@ab/schedule';
 import { z } from 'zod';
 import { JOIN_GRACE_MS } from './join-token';
 
-// Where GET /join/:token sends the teacher (owner 2026-11-06). Never an open redirect: the only
+// Where GET /join/:token sends the teacher. Never an open redirect: the only
 // targets are the lesson's own stored link (written by staff, http(s) without credentials) or our
 // own classroom page on the web origin. Pure.
 

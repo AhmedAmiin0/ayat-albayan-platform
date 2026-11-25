@@ -27,13 +27,15 @@ type NewProposal = {
 type Decision = {
   status: 'approved' | 'rejected';
   decided_by: string;
-  /** The answer's note, shown to the family (owner 2026-11-17). */
+  /** The answer's note, shown to the family. */
   decision_note?: string | null;
 };
 
 const COLUMNS = 'id, lesson_id, proposed_starts_at, status, note, requested_by, created_by';
 
-/** lesson_proposals (migration 110, R-SCH-08). The table itself is the trail: who, when, outcome. */
+/**
+ * lesson_proposals (migration 110, R-SCH-08). The table itself is the trail: who, when, outcome.
+ */
 @Injectable()
 export class LessonProposalRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
