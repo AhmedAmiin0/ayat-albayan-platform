@@ -27,7 +27,7 @@ export function useCourseCheck(body: BookingRequest | null) {
   });
 }
 
-/** PUT …/course/draft (owner 2026-11-06): null = kept as a draft, booked after the payment. */
+/** PUT …/course/draft: null = kept as a draft, booked after the payment. */
 /** apiSend with its reply left unknown, for the schema to parse. */
 const put: (method: 'PUT', path: string, body: unknown) => Promise<unknown> = apiSend;
 

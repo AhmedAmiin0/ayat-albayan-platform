@@ -5,8 +5,8 @@ import { t } from '@ab/mobile-kit';
 import { usePublicConfig } from '@/core/lib/query/public-config';
 
 /**
- * A row chip's words: «To confirm» for the long «Needs confirmation» (owner 2026-10-28: «Needs
- * confirm…» truncated). A detail head with room keeps t.enums.lessonStatus.
+ * A row chip's words: «To confirm» for the long «Needs confirmation» («Needs
+ * confirm…» gets truncated). A detail head with room keeps t.enums.lessonStatus.
  */
 const shortLabels: Readonly<Record<LessonStatus, string>> = {
   ...t.enums.lessonStatus,
@@ -25,7 +25,7 @@ export interface LessonStatusText {
   look: (status: LessonStatus) => StatusStyle;
 }
 
-/** The words and look for `required` (owner 2026-11-02: OFF, a scheduled lesson is just upcoming). */
+/** The words and look for `required` (OFF, a scheduled lesson is just upcoming). */
 export function lessonStatusText(required: boolean): LessonStatusText {
   const short = { labels: shortLabels, upcoming: t.lessons.noConfirm.scheduledShort };
   const long = { labels: t.enums.lessonStatus, upcoming: t.lessons.noConfirm.scheduled };

@@ -4,7 +4,7 @@ import { otherZoneClock } from '@ab/time';
 import type { ViewerClock } from '@/core/lib/clock';
 import { t, locale } from '@ab/mobile-kit';
 
-// One lesson row's reading (owner 2026-11-07): its instant in the student's zone, what the slot
+// One lesson row's reading: its instant in the student's zone, what the slot
 // data says about it (pickState), the nearest free times when it is busy or outside availability,
 // and the viewer's and the teacher's own clocks beside it. Pure.
 

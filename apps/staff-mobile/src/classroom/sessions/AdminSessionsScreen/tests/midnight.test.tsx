@@ -5,7 +5,7 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { AdminSessionsScreen } from '@/classroom/sessions/AdminSessionsScreen/AdminSessionsScreen';
 
-// The owner (2026-10-27): the screen stays mounted for days, so the day must follow the clock.
+// The screen stays mounted for days, so the day must follow the clock.
 const mockApiFetch = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

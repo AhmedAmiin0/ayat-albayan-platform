@@ -27,7 +27,8 @@ import { clearInboxOnSignOut, StaffCalls } from '@/inbox';
 export default function RootLayout() {
   const gate = useAuthGate();
   const boot = useRootBoot(gate);
-  // Signed out: the chats' unsent drafts (and a pending search ask) go with the session (kept until then, review 2026-10-29 #4).
+  // Signed out: the chats' unsent drafts (and a pending search ask) go with the session
+  // (kept until then).
   useEffect(() => {
     if (gate === 'out') clearInboxOnSignOut(); // and the phone's message store (docs/43 43-7)
   }, [gate]);

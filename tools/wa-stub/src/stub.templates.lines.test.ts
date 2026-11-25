@@ -6,16 +6,29 @@ import { bearer, closeAll, post, startStub, templateBody, TWO_LINES } from './te
 
 afterEach(closeAll);
 
-type TemplateList = { data: { name: string; category: string; status: string }[] };
+interface TemplateList {
+  data: { name: string; category: string; status: string }[];
+}
 const NOTIF = bearer('notif-token');
 const names = async (url: string, waba: string) =>
-  ((await (await fetch(`${url}/v21.0/${waba}/message_templates`, { headers: NOTIF })).json()) as TemplateList).data.map((t) => t.name);
+  (
+    (await (
+      await fetch(`${url}/v21.0/${waba}/message_templates`, { headers: NOTIF })
+    ).json()) as TemplateList
+  ).data.map((t) => t.name);
 
 describe('wa-stub: templates per WABA (two lines)', () => {
   it('the chat WABA lists its 3 approved templates next to the shared 8; the notifications WABA does not', async () => {
     const { url } = await startStub(TWO_LINES);
     const chat = await names(url, 'WABA-C');
-    expect(chat).toEqual(expect.arrayContaining(['academy_welcome', 'free_trial_invite', 'welcome_greeting', 'booking_confirmation']));
+    expect(chat).toEqual(
+      expect.arrayContaining([
+        'academy_welcome',
+        'free_trial_invite',
+        'welcome_greeting',
+        'booking_confirmation',
+      ]),
+    );
     expect(chat).toHaveLength(11);
     const notifications = await names(url, 'WABA-N');
     expect(notifications).not.toContain('academy_welcome');
@@ -27,7 +40,10 @@ describe('wa-stub: templates per WABA (two lines)', () => {
     const { url } = await startStub(TWO_LINES);
     const body = templateBody('academy_welcome', 1);
     const wrong = await post(`${url}/v21.0/PN-N/messages`, body, NOTIF);
-    expect([wrong.status, ((await wrong.json()) as { error: { code: number } }).error.code]).toEqual([404, 132001]);
+    expect([
+      wrong.status,
+      ((await wrong.json()) as { error: { code: number } }).error.code,
+    ]).toEqual([404, 132001]);
     expect((await post(`${url}/v21.0/PN-C/messages`, body, NOTIF)).status).toBe(200);
   });
 
@@ -41,6 +57,8 @@ describe('wa-stub: templates per WABA (two lines)', () => {
   it('single line: no starter, every path lists the 8, as before', async () => {
     const { url } = await startStub();
     expect(await names(url, 'ANY')).toHaveLength(8);
-    expect((await post(`${url}/v21.0/PHONE/messages`, templateBody('academy_welcome', 1), NOTIF)).status).toBe(404);
+    expect(
+      (await post(`${url}/v21.0/PHONE/messages`, templateBody('academy_welcome', 1), NOTIF)).status,
+    ).toBe(404);
   });
 });

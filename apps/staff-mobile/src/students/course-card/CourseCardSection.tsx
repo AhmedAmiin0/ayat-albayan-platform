@@ -16,7 +16,7 @@ interface CourseCardSectionProps {
   subscriptionId?: string | null | undefined;
   /** Sales need her student and a course; absent means once the card has a booked course. */
   moves?: boolean;
-  /** The package whose course the moves change (sales, owner 2026-11-06). */
+  /** The package whose course the moves change (sales). */
   movesOf?: string | null | undefined;
   extra?: ReactNode;
   upcoming?: ReactNode;

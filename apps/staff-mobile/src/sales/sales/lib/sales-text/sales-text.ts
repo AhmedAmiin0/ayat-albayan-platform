@@ -90,7 +90,10 @@ interface HistoryLines {
   payments: string[];
 }
 
-/** The lines of one subscription in the history card: package and status, dates, lessons, events, payments with their amount (owner, 2026-10-11). */
+/**
+ * The lines of one subscription in the history card: package and status, dates, lessons, events,
+ * payments with their amount.
+ */
 export function historyLines(entry: SalesHistoryEntry, tz: string): HistoryLines {
   const h = t.sales.history;
   const dates = [fill(h.starts, { date: ltr(entry.starts_on) })];

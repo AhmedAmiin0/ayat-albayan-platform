@@ -36,7 +36,7 @@ interface Row {
   on: boolean;
 }
 
-/** The rows before the package's ones, in the board's order (owner 2026-11-17). */
+/** The rows before the package's ones, in the board's order. */
 function moveRows(keys: ActionKeys, extend: boolean): Row[] {
   const c = t.courseActions;
   const hints = t.courseCard.hints;

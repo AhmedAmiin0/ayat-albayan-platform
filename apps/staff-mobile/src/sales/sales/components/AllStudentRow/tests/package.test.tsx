@@ -13,7 +13,7 @@ const summary: SalesPackageSummary = {
   projected_end_at: null, created_at: '2026-09-30T10:00:00.000Z', lessons_total: 8, lessons_used: 3, lessons_remaining: 5,
 };
 
-// Owner 2026-10-30: every student's status and current package on the row, hers or not; no price.
+// Every student's status and current package on the row, hers or not; no price.
 test.each([
   ['another assistant\'s student', student({ package: summary })],
   ['one of mine', student({ mine: true, package: summary })],

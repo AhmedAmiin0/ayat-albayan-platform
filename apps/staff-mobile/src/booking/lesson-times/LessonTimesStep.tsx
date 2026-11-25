@@ -29,7 +29,7 @@ interface LessonTimesStepProps extends Pick<SlotStepProps, Inherited> {
 }
 
 /**
- * A weekly course's lesson times (owner 2026-11-07: «a date input and a time input»): per day
+ * A weekly course's lesson times, a date input and a time input: per day
  * of the plan one date (the first lesson on that weekday, in the course's first week) and one
  * time in the student's zone, on Expo's native dialogs (rule 6, never typed). The slot data the
  * grid used (GET /booking/slots, same window and exclusions) tells each row free / busy / outside

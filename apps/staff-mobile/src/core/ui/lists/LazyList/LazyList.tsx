@@ -4,7 +4,7 @@ import { View, type ViewStyle } from 'react-native';
 import { useTabBarInset } from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 
-/** Inside Screen's 16pt gutter, on the screen's own margin colour (owner 2026-10-28: one container rule). */
+/** Inside Screen's 16pt gutter, on the screen's own margin colour (one container rule). */
 const FILL: ViewStyle = { flex: 1 };
 /** Between the list's header (totals, a hint) and the rows' card. */
 const HEADER_GAP = { marginBottom: 12 } as const;
@@ -49,7 +49,7 @@ interface LazyListProps<T> extends Omit<FlashListProps<T>, 'style' | 'contentCon
 }
 
 /**
- * The app's long list (owner 2026-10-27, «for long lazy loaded lists use flash list»): FlashList v2,
+ * The app's long lazy-loaded list: FlashList v2,
  * JS-only on the New Architecture, recycling rows instead of mounting one per item. Defaults: fills the
  * Screen inside its gutter with the rows in one inset card, the last row clears the floating tab bar, the next page is asked for
  * two screens before the end (FlatList's default); a new top row is not scrolled away. `paged={usePagedList(…)}` wires its rows, next page and pull to refresh;

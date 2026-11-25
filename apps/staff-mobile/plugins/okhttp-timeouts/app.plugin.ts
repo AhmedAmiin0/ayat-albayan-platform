@@ -2,7 +2,7 @@ import { type ConfigPlugin, withMainApplication } from 'expo/config-plugins';
 
 // Expo config plugin (native: needs a new APK). Registers an OkHttpClientFactory, React Native's
 // documented way to configure its OkHttp client, so a dead HTTP/2 connection is dropped (within
-// about 30 s) instead of pinning every API read (owner 2026-11-05). Android only.
+// about 30 s) instead of pinning every API read. Android only.
 
 const IMPORTS = [
   'android.content.Context',

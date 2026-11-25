@@ -8,7 +8,7 @@ import type { TodayLesson } from './today-lesson';
 type GreetingPart = 'morning' | 'afternoon' | 'evening' | 'night';
 
 /**
- * The part of the day by the local clock (owner 2026-10-28: «Good morning» at 3:36 read wrong): morning
+ * The part of the day by the local clock (never «Good morning» at 3:36): morning
  * 04:00–11:59 (about dawn), afternoon 12:00–16:59, evening 17:00–21:59, night 22:00–03:59.
  */
 export function greetingPart(now: Date, tz: string): GreetingPart {

@@ -5,7 +5,7 @@ import { createTestQueryClient, queryWrapper } from '@/test/query';
 import type { PushTree } from '@/core/push/notification-route';
 import { useNotificationHandling } from '@/core/push/useNotificationHandling/useNotificationHandling';
 
-// Back in the app (owner 2026-11-05): every tree, the teacher's too (a new_message push opens her
+// Back in the app: every tree, the teacher's too (a new_message push opens her
 // chat, and she has no realtime), cancels the chat reads stuck across the background and re-reads.
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), dismissTo: jest.fn() },

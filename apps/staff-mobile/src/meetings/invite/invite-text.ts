@@ -24,7 +24,7 @@ export const tzNote = (tz: string): string => L.tzNote.replace('{tz}', cityOf(tz
 export const minutesText = (n: number): string => L.minutes.replace('{n}', String(n));
 
 type Outcome = Pick<MeetingInviteResult, 'status' | 'channel'> & { error_code?: string | null };
-/** The creator may not send WhatsApp (owner policy 2026-10-13): the invitation is a link to share. */
+/** The creator may not send WhatsApp: the invitation is a link to share. */
 const linkOnly = (r: Outcome): boolean => r.error_code === 'chat_not_allowed';
 
 /** One recipient's outcome in words: in-app, sent on WhatsApp, window closed, a link to share, failed… */

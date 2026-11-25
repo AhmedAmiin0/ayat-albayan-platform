@@ -37,7 +37,7 @@ test('any scheduled lesson (not hers): «تأكيد الحلقة» beside her mo
   mockApiSend.mockResolvedValue({ id: 'l3', starts_at: OTHERS.starts_at, status: 'confirmed' });
   await open();
   expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
-  // Owner 2026-10-28: move / cancel are any lesson too (docs/16 row 37).
+  // Move / cancel are any lesson too (docs/16 row 37).
   expect(screen.getByRole('button', { name: a.reschedule })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: a.confirm }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l3/confirm'));

@@ -54,7 +54,7 @@ test('expired family: chip «انتهت الباقة» → «جدّد» → quot
   await press('button', t.common.back);
   expect(app.pathname()).toBe('/inbox');
   const row = within(await screen.findByRole('button', { name: /أم يوسف/ }));
-  // The list row carries no tag (owner 2026-11-06): its ring turns green from the gray renewal one.
+  // The list row carries no tag: its ring turns green from the gray renewal one.
   await waitFor(() => expect(row.getByTestId('avatar-ring-subscribed')).toBeTruthy());
   expect(row.queryByText(s.badge.expired)).toBeNull();
 });

@@ -1,7 +1,7 @@
 import { arabicLiterals } from '@ab/i18n';
 import allow from './i18n-literals.allow.json';
 
-// «Nothing untranslated» (owner, 2026-10-05): no Arabic in string literals or JSX text of the
+// Nothing untranslated: no Arabic in string literals or JSX text of the
 // app's screens and components (src/ and the expo-router app/). Copy lives in ar.json / en.json.
 // A justified exception goes in i18n-literals.allow.json with its reason.
 

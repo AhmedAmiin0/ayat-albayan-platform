@@ -34,7 +34,7 @@ export function useSalesReschedule(lessonId: string) {
   });
 }
 
-/** POST /sales/lessons/:id/confirm: scheduled → confirmed, ANY lesson (owner 2026-10-28), no message to anyone. */
+/** POST /sales/lessons/:id/confirm: scheduled → confirmed, ANY lesson, no message to anyone. */
 export function useSalesConfirm(lessonId: string) {
   const refresh = useRefreshSchedule();
   return useMutation({

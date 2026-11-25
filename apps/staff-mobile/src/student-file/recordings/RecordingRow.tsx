@@ -35,7 +35,7 @@ interface RecordingRowProps {
 
 /**
  * One recording: when, who taught, length, size, status, play, the visibility switch and delete. No fill
- * or rule of its own: the list's inset card draws them (owner 2026-10-28: one container rule).
+ * or rule of its own: the list's inset card draws them (one container rule).
  */
 const RecordingRow = memo(function RecordingRow(props: RecordingRowProps) {
   const { rec, studentId, tz, canManage, canDelete, admin, getUrl } = props;

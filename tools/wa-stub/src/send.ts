@@ -5,20 +5,27 @@ import { lineOf } from './lines.ts';
 import { bodyParamCount, ERR, onWaba, type Json } from './providers/meta.ts';
 import { DAY_MS, digits, type Reply, type StubState } from './state.ts';
 
-type TemplateSend = { name?: string; language?: { code?: string }; components?: Json[] };
+interface TemplateSend {
+  name?: string;
+  language?: { code?: string };
+  components?: Json[];
+}
 
 const bodyParams = (t: TemplateSend): number => {
-  const bodyPart = t.components?.find((c) => c['type'] === 'body');
-  return Array.isArray(bodyPart?.['parameters']) ? bodyPart['parameters'].length : 0;
+  const bodyPart = t.components?.find((c) => c.type === 'body');
+  return Array.isArray(bodyPart?.parameters) ? bodyPart.parameters.length : 0;
 };
 
-/** Meta's answer to a template send from `phoneNumberId`: the template must be on that number's WABA. */
+/** Meta's answer to a template send from `phoneNumberId`: the template must be on its WABA. */
 export function templateError(s: StubState, body: Json, phoneNumberId: string): Json | null {
-  const t = (body['template'] ?? {}) as TemplateSend;
+  const t = (body.template ?? {}) as TemplateSend;
   const lang = t.language?.code ?? 'ar';
   const waba = lineOf(s.opts, phoneNumberId)?.wabaId;
-  const found = s.templates.find((x) => x.name === t.name && x.language === lang && onWaba(x, waba));
-  if (!found || ['PENDING', 'REJECTED', 'DISABLED'].includes(found.status)) return ERR.noTemplate(t.name ?? '', lang);
+  const found = s.templates.find(
+    (x) => x.name === t.name && x.language === lang && onWaba(x, waba),
+  );
+  if (!found || ['PENDING', 'REJECTED', 'DISABLED'].includes(found.status))
+    return ERR.noTemplate(t.name ?? '', lang);
   if (found.status === 'PAUSED') return ERR.paused(found.name);
   const got = bodyParams(t);
   const want = bodyParamCount(found);
@@ -26,29 +33,34 @@ export function templateError(s: StubState, body: Json, phoneNumberId: string): 
 }
 
 function markRead(s: StubState, body: Json, phoneNumberId: string): Reply {
-  const messageId = String(body['message_id'] ?? '');
+  const messageId = String(body.message_id ?? '');
   s.reads.push(messageId);
   s.readLog.push({ phoneNumberId, messageId });
   return [200, { success: true }];
 }
 
-/** An image or document must carry a `link` or an uploaded `id` (Meta: 100); catches dispatch bugs. */
+/** An image or document must carry a `link` or uploaded `id` (Meta: 100); catches dispatch bugs. */
 function mediaError(body: Json): Json | null {
-  const type = body['type'];
+  const type = body.type;
   if (type !== 'image' && type !== 'document') return null;
   const media = (body[type] ?? {}) as { link?: unknown; id?: unknown };
   return media.link || media.id ? null : ERR.invalid(`${type} needs a link or an id`);
 }
 
-/** Meta's refusal of a send to `to`: an injected failure, a template or media error, or a closed window. */
-function refusal(s: StubState, send: { body: Json; to: string; phoneNumberId: string }): Reply | null {
+/**
+ * Meta's refusal of a send to `to`: an injected failure, template or media error, or closed window.
+ */
+function refusal(
+  s: StubState,
+  send: { body: Json; to: string; phoneNumberId: string },
+): Reply | null {
   const { body, to } = send;
   const injected = s.failNext.get(to);
   if (injected) {
     s.failNext.delete(to);
     return [400, injected];
   }
-  if (body['type'] === 'template') {
+  if (body.type === 'template') {
     const err = templateError(s, body, send.phoneNumberId);
     return err ? [404, err] : null;
   }
@@ -58,16 +70,33 @@ function refusal(s: StubState, send: { body: Json; to: string; phoneNumberId: st
   return s.opts.enforceWindow === false || windowOpen ? null : [400, ERR.window()];
 }
 
-/** `phoneNumberId` is the id in the Graph path (`/v*\/{phone_number_id}/messages`); `via` its prefix. */
-export function postMessage(s: StubState, body: Json, at: { phoneNumberId: string; via: 'graph' | 'kapso' }): Reply {
+/**
+ * `phoneNumberId`: the id in the Graph path (`/v*\/{phone_number_id}/messages`); `via`: its prefix.
+ */
+export function postMessage(
+  s: StubState,
+  body: Json,
+  at: { phoneNumberId: string; via: 'graph' | 'kapso' },
+): Reply {
   const { phoneNumberId } = at;
-  if (body['status'] === 'read') return markRead(s, body, phoneNumberId);
-  const to = digits(body['to']);
+  if (body.status === 'read') return markRead(s, body, phoneNumberId);
+  const to = digits(body.to);
   const refused = refusal(s, { body, to, phoneNumberId });
   if (refused) return refused;
   const id = `wamid.${randomUUID()}`;
-  const type = String(body['type'] ?? 'text');
-  const template = (body['template'] as { name?: string } | undefined)?.name;
-  s.sent.push({ id, to, type, ...(template ? { template } : {}), body, phoneNumberId, via: at.via });
-  return [200, { messaging_product: 'whatsapp', contacts: [{ input: to, wa_id: to }], messages: [{ id }] }];
+  const type = String(body.type ?? 'text');
+  const template = (body.template as { name?: string } | undefined)?.name;
+  s.sent.push({
+    id,
+    to,
+    type,
+    ...(template ? { template } : {}),
+    body,
+    phoneNumberId,
+    via: at.via,
+  });
+  return [
+    200,
+    { messaging_product: 'whatsapp', contacts: [{ input: to, wa_id: to }], messages: [{ id }] },
+  ];
 }

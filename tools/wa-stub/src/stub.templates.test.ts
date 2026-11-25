@@ -3,10 +3,21 @@ import { AUTH, closeAll, post, startStub, templateBody, uploadPdf } from './test
 
 afterEach(closeAll);
 
-type TemplateList = { data: { name: string; status: string; id: string; quality_score: { score: string } }[] };
+interface Listed {
+  name: string;
+  status: string;
+  id: string;
+  quality_score: { score: string };
+}
+interface TemplateList {
+  data: Listed[];
+}
 const TPL = '/v21.0/WABA/message_templates';
 const BODY = { type: 'BODY', text: 'ده تقرير {{1}} يوم {{2}}، ربنا يبارك فيه', example: { body_text: [['أحمد', 'الأحد']] } };
-const code = async (res: Response) => [res.status, ((await res.json()) as { error: { code: number } }).error.code];
+const code = async (res: Response) => [
+  res.status,
+  ((await res.json()) as { error: { code: number } }).error.code,
+];
 
 describe('wa-stub: templates (R-MSG-01 health + explicit submit)', () => {
   it('lists the 8 approved templates with id, status, category and quality', async () => {
@@ -94,7 +105,7 @@ describe('wa-stub: templates (R-MSG-01 health + explicit submit)', () => {
     expect(await res.json()).toEqual({ success: true });
     expect(stub.state.templates.find((t) => t.id === id)).toMatchObject({ status: 'PENDING', category: 'UTILITY', components });
     const missing = await post(`${url}/v21.0/nope`, { components });
-    expect([missing.status, ((await missing.json()) as { error: { code: number } }).error.code]).toEqual([400, 100]);
+    expect(await code(missing)).toEqual([400, 100]);
   });
 
   it('a paused template answers 132015', async () => {

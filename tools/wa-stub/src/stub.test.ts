@@ -31,9 +31,13 @@ describe('wa-stub: POST /messages (docs/12 §5)', () => {
 
   it('190 without a bearer token; a configured token must match', async () => {
     const { url } = await startStub({ accessToken: 'secret' });
-    expect((await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2), {})).status).toBe(401);
+    expect((await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2), {})).status).toBe(
+      401,
+    );
     expect((await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2))).status).toBe(401);
-    const ok = await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2), { authorization: 'Bearer secret' });
+    const ok = await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2), {
+      authorization: 'Bearer secret',
+    });
     expect(ok.status).toBe(200);
   });
 
@@ -45,12 +49,24 @@ describe('wa-stub: POST /messages (docs/12 §5)', () => {
     expect(((await closed.json()) as { error: { code: number } }).error.code).toBe(131047);
     await post(`${url}/__stub/inbound`, { from: '966500000001', text: 'السلام عليكم' });
     expect((await post(`${url}${MSG}`, text)).status).toBe(200);
-    expect((await post(`${url}${MSG}`, { ...text, type: 'document', document: { link: 'https://x/r.pdf' } })).status).toBe(200);
+    expect(
+      (
+        await post(`${url}${MSG}`, {
+          ...text,
+          type: 'document',
+          document: { link: 'https://x/r.pdf' },
+        })
+      ).status,
+    ).toBe(200);
   });
 
   it('marks an inbound message read without logging a send', async () => {
     const { url, stub } = await startStub();
-    const res = await post(`${url}${MSG}`, { messaging_product: 'whatsapp', status: 'read', message_id: 'wamid.in1' });
+    const res = await post(`${url}${MSG}`, {
+      messaging_product: 'whatsapp',
+      status: 'read',
+      message_id: 'wamid.in1',
+    });
     expect(await res.json()).toEqual({ success: true });
     expect(stub.sent).toHaveLength(0);
     expect(await (await fetch(`${url}/__stub/reads`)).json()).toEqual(['wamid.in1']);

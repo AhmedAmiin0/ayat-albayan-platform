@@ -38,8 +38,8 @@ export function withMethod(draft: PaymentDraft, method: PaymentMethod): PaymentD
   return { ...draft, method, receipt: null, attachments };
 }
 
-// An unused cancel (owner 2026-10-28) is never owed; a stopped package (991) owes its stored
-// decision (owedFor, owner 2026-11-06).
+// An unused cancel is never owed; a stopped package (991) owes its stored
+// decision (owedFor).
 const owed = (p: SubscriptionView) => countsForMoney(p) && owesMore(p);
 
 /** Packages a payment can go to: the current one and any older one still owed money, oldest first. */

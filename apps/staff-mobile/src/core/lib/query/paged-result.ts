@@ -5,7 +5,7 @@ import { usePullRefresh } from '@ab/mobile-kit';
  * Adds fields to a TanStack result WITHOUT reading it. A spread (`{ ...query }`) reads every tracked
  * field, so the screen re-rendered on any change (isFetching on each poll, dataUpdatedAt…). The result
  * stays the prototype: a read still goes through TanStack's tracker, and the screen re-renders only for
- * the fields it reads (owner 2026-10-27, «Avoid rerenders»).
+ * the fields it reads.
  */
 export function withTracked<R extends object, E extends object>(result: R, extra: E): R & E {
   return Object.assign(Object.create(result) as R, extra);

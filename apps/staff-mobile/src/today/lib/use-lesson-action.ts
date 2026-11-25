@@ -11,7 +11,7 @@ import {
 /** A cancel carries its body (docs/10 routes 6 and 9). */
 interface LessonChange extends StatusChange<LessonStatus> {
   cancel?: CancelRequest;
-  /** POST /lessons/:id/correct { to } (owner 2026-11-03). */
+  /** POST /lessons/:id/correct { to }. */
   correct?: CorrectTo;
 }
 

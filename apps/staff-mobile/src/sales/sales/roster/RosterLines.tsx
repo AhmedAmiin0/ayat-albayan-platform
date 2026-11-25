@@ -7,7 +7,7 @@ import { rosterAttendanceLine, rosterPackageLine, rosterScheduleLine } from './r
 type RosterStudent = Pick<SalesStudentView, 'weekly' | 'attendance' | 'package'>;
 
 /**
- * Under a student row's lines (owner 2026-10-30): the current package (no price), the weekly
+ * Under a student row's lines: the current package (no price), the weekly
  * schedule in one short line and the attendance count, each on its own full-width line. Nothing
  * from an old cache without them.
  */

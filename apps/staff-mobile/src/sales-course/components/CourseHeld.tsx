@@ -3,7 +3,7 @@ import { t, Button } from '@ab/mobile-kit';
 import { Note } from '@/more';
 
 /**
- * The picks are kept as a draft (owner 2026-11-06: the package is unpaid with an open payment
+ * The picks are kept as a draft (the package is unpaid with an open payment
  * link): booked automatically once paid, editable until then (the wizard opens on them again).
  */
 export function CourseHeld({ onDone }: { onDone: () => void }) {

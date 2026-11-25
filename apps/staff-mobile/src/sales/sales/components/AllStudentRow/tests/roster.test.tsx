@@ -11,7 +11,7 @@ const S = t.sales.allStudents;
 const asma = { display_name_ar: 'أسماء حسين', display_name_en: null };
 const weekly = [{ next: ['2026-11-01T08:00:00.000Z', '2026-11-03T08:00:00.000Z', '2026-11-05T08:00:00.000Z'], teacher: asma }];
 
-// Owner 2026-10-30: every student's schedule and attendance on the row, hers or another family's.
+// Every student's schedule and attendance on the row, hers or another family's.
 test.each([
   ['another assistant\'s student', student({ weekly, attendance: { attended: 7, held: 9, basis: 'subscription' } })],
   ['one of mine', student({ mine: true, weekly, attendance: { attended: 7, held: 9, basis: 'subscription' } })],

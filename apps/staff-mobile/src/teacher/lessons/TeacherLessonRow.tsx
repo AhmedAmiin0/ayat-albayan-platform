@@ -16,7 +16,7 @@ interface TeacherLessonRowProps {
   onOpen: (lesson: LessonView) => void;
   onReport: (lessonId: string) => void;
   onNotice: (text: string) => void;
-  /** An ended row in the fold: the word and only its report lead (owner 2026-11-14). */
+  /** An ended row in the fold: the word and only its report lead. */
   quiet?: boolean;
   /** Compact rows drop the students' clocks line. */
   compact?: boolean;

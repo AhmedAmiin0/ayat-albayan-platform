@@ -3,7 +3,7 @@ import type { StudentStatus } from '@ab/catalog';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 /**
- * A trial student's family is reached through sales, not the teacher (owner, 2026-10-11): the
+ * A trial student's family is reached through sales, not the teacher: the
  * teacher's student file shows this note where a family contact would be. Nothing otherwise.
  */
 export function TrialChatNote({ status }: { status: StudentStatus | undefined }) {

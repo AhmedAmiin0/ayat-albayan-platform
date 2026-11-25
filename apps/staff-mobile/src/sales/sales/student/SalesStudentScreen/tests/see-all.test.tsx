@@ -24,7 +24,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-// Owner 2026-10-30: «Make all assistants see all».
+// Every assistant sees every student.
 test('another assistant\'s student: status, subscription with what is paid, lessons used / left, reports; no note', async () => {
   mockApiFetch.mockResolvedValue(other());
   await renderWithQuery(<SalesStudentScreen />);

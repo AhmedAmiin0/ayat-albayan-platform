@@ -21,7 +21,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-/** Another salesperson's student as the API answers it (owner 2026-10-30): all of it, nobody `mine`. */
+/** Another salesperson's student as the API answers it: all of it, nobody `mine`. */
 const notMine = () => {
   const lesson = upcoming('u1', '2026-10-27T10:30:00.000Z');
   return details({

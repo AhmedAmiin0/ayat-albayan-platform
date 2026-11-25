@@ -16,7 +16,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({}) }));
 
-// No confirmation required (OFF, owner 2026-11-02). «Now» 1 Oct 16:20 Riyadh.
+// No confirmation required (OFF). «Now» 1 Oct 16:20 Riyadh.
 const NOW = new Date('2026-10-01T13:20:00Z');
 const student = (name: string) => [{ id: `s-${name}`, code: 'AB-0300', name, mine: true }];
 const LATER = scheduleLesson({

@@ -5,7 +5,7 @@ import { useTabListBack } from './use-tab-list-back';
 /**
  * Each tab folder's _layout.tsx re-exports these as `unstable_settings`: the tab's list is its
  * stack's first screen, so a cross-tab push (pushInTab) or a deep link loads it beneath a detail
- * screen, and back shows the list, not Today (owner 2026-11-06).
+ * screen, and back shows the list, not Today.
  */
 export const tabStackSettings = { initialRouteName: 'index' };
 

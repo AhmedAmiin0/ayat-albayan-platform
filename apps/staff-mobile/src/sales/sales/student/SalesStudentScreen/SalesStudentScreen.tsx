@@ -43,12 +43,12 @@ function headLines({ code, guardian_phone: phone, program, teacher_name: teacher
 export function SalesStudentScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const student = useSalesStudent(id);
-  // sales.renew_any (owner 2026-11-01): the money action of ANY student, not only hers.
+  // sales.renew_any: the money action of ANY student, not only hers.
   const renewsAny = useHolds('sales.renew_any');
   const data = student.data;
   if (!data) return <SalesLoadScreen title={t.sales.student.title} query={student} notFound={t.sales.student.notFound} />;
   const mine = data.mine !== false;
-  // Money and the course's teacher / times (owner 2026-11-02): her student (`mine` follows the
+  // Money and the course's teacher / times: her student (`mine` follows the
   // ownership rule), ANY with sales.renew_any, as the API's own check.
   const acts = mine || renewsAny;
   const phone = data.student.guardian_phone;

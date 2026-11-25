@@ -17,8 +17,8 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
 
-// Owner 2026-11-16 «any assistant can subscribe to the chating channel but only 1» and «who
-// brought the student have the priority»: the assistant's chat screen reads the seat first.
+// Any assistant may take a chat's seat, one at a time, and the one who brought the student
+// has priority: the assistant's chat screen reads the seat first.
 const S = t.studentChannel.seat;
 const SEAT = '/sales/students/s1/channel/seat';
 const free: ChannelSeat = { holder: null, mine: false, bringer: false, canTake: true };

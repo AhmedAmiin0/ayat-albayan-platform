@@ -19,7 +19,7 @@ import { SheetLines } from './SheetLines';
 type Set = (patch: Partial<StopMoneyState>) => void;
 type Fmt = (n: number) => string;
 
-/** The sheet's money choice (owner 2026-11-06), the same rules as web (@ab/client-core). */
+/** The sheet's money choice, the same rules as web (@ab/client-core). */
 export function useStopMoney(preview: CourseStopPreview | undefined) {
   const [state, setState] = useState<StopMoneyState>(STOP_MONEY_START);
   const holds = useHolds('subscriptions.refund');
