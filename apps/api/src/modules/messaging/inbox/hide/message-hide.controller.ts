@@ -7,11 +7,7 @@ import { MessageHideService } from './message-hide.service';
 
 const uuid = new ParseUUIDPipe();
 
-/**
- * «حذف من المنصة» / «إظهار» on a WhatsApp chat bubble (owner 2026-10-30). Hides for staff only: the
- * message is still on the customer's phone. 403 for a teacher (hide) and for anyone but the admin
- * (show); 404 message_not_found for another chat's message. 204 also when nothing changed.
- */
+/** Hides for staff only; the message stays on the customer's phone; only admin can show. */
 @ApiTags('inbox')
 @ApiBearerAuth()
 @Permissions('inbox.send')

@@ -1,4 +1,4 @@
-import type { LessonView, ScheduleOverview } from '@ab/shared';
+import type { LessonView, ScheduleOverview } from '@ab/schedule';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '@/common/auth/decorators';
@@ -7,10 +7,7 @@ import { LessonViews } from './store/lesson-views';
 import { LessonsSettings } from './lessons.settings';
 import { OverviewService } from './overview/overview.service';
 
-/**
- * Admin schedule lists across teachers (docs/10 routes 1, 2): every status, by starts_at; the
- * client hides closed rows behind «إظهار الملغية…» and shows Riyadh + student time (R-SCH-01).
- */
+/** Admin lists across teachers (docs/10 routes 1, 2): every status, by starts_at (R-SCH-01). */
 @ApiTags('lessons')
 @ApiBearerAuth()
 @Permissions('lessons.read')

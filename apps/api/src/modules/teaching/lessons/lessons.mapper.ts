@@ -11,7 +11,7 @@ import {
   type LessonStudentView,
   type LessonTimeEditView,
   type LessonView,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { z } from 'zod';
 import type { Role } from '@/common/auth/verify-token';
 import type { LessonRow } from './store/lesson-row';
@@ -100,7 +100,7 @@ function teacherOf(row: LessonRow): LessonView['teacher'] {
   return t ? { id: t.id, display_name_ar: t.display_name_ar, display_name_en: t.display_name_en, tz: t.tz } : { id: row.teacher_id, display_name_ar: '', tz: '' };
 }
 
-/** Migration 190: «افتح الحلقة الآن» and «حلقة فورية». */
+/** Migration 190: room opened early and instant lesson. */
 const roomFields = (row: LessonRow): Pick<LessonView, 'room_opened_at' | 'instant'> => ({
   room_opened_at: row.room_opened_at ? iso(row.room_opened_at) : null,
   instant: row.instant ?? false,

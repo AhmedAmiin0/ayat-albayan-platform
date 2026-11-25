@@ -1,5 +1,5 @@
 import { lessonRemovePath } from '@ab/client-core';
-import type { LessonRecordingView, RecordingStatus } from '@ab/shared';
+import type { LessonRecordingView, RecordingStatus } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { CLASSROOM_KEY } from './api';
@@ -17,10 +17,7 @@ export function meetingIdOfRoom(room: string): string | null {
   return room.startsWith(MEETING_PREFIX) && room.length > MEETING_PREFIX.length ? room.slice(MEETING_PREFIX.length) : null;
 }
 
-/**
- * POST /lessons/:id/room/participants/:identity/remove: «إخراج من الحلقة» (204). 403 cannot_remove,
- * 404 participant_not_found; afterwards the API refuses their joins with removed_from_room.
- */
+/** 403 cannot_remove, 404 participant_not_found; then joins fail with removed_from_room. */
 export const removeParticipant = ({ lessonId, identity }: { lessonId: string; identity: string }) =>
   apiSend('POST', lessonRemovePath(lessonId, identity));
 
@@ -28,10 +25,7 @@ export const removeParticipant = ({ lessonId, identity }: { lessonId: string; id
 export const removeMeetingParticipant = (who: { meetingId: string; identity: string }) =>
   apiSend('POST', `/meetings/${who.meetingId}/participants/${encodeURIComponent(who.identity)}/remove`);
 
-/**
- * Who «إخراج» goes through for this room: the lesson's route, or the internal meeting's (which
- * only disconnects: no lasting block). `lessonId` is null for a room of neither kind (no «إخراج»).
- */
+/** An internal meeting only disconnects, no lasting block; `lessonId` null means no removal. */
 export function kickScope(room: string): { lessonId: string | null; remove?: typeof removeParticipant } {
   const meetingId = meetingIdOfRoom(room);
   // A lesson room keeps useKick's default (removeParticipant).
@@ -39,7 +33,6 @@ export function kickScope(room: string): { lessonId: string | null; remove?: typ
   return { lessonId: meetingId, remove: ({ identity }) => removeMeetingParticipant({ meetingId, identity }) };
 }
 
-/** Whose «التسجيلات»: a lesson's or an internal meeting's. */
 export interface RecordingSource {
   kind: 'lesson' | 'meeting';
   id: string;

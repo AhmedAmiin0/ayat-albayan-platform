@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import type { ConflictInput } from '@ab/shared';
+import type { ConflictInput } from '@ab/schedule';
 import { BusyRepo } from '@/modules/teaching/scheduling/conflicts/busy.repo';
 import { AvailabilityRepo } from '@/modules/people/teachers/availability/availability.repo';
-import type { Range } from '@/modules/teaching/booking/core/booking.repo';
+import type { Range } from '@/modules/teaching/booking/core/types';
 
 type ContextQuery = Range & {
   teacherId: string;
   studentIds: readonly string[];
   /** A lesson being edited in place (R-SCH-11): it must not count as busy against itself. */
   excludeLessonId?: string | undefined;
-  /** «تغيير أيام الحلقات»: the lessons of this course (of these students) move, so they are not busy. */
+  /** This course's lessons move, so they are not busy. */
   excludeCourse?: string | undefined;
 };
 type ConflictContextRows = Omit<ConflictInput, 'proposed'>;

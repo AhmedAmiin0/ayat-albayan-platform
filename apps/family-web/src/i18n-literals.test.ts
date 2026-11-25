@@ -1,7 +1,7 @@
 import { arabicLiterals } from '@ab/i18n';
 import { expect, it } from 'vitest';
 
-// «Nothing untranslated» (owner, 2026-10-05): no Arabic in the family pages' string literals or
+// Nothing untranslated: no Arabic in the family pages' string literals or
 // JSX text; copy lives in ar.json / en.json.
 const sources = import.meta.glob<string>(['./**/*.tsx', '!./**/*.test.tsx', '!./test/**'], {
   query: '?raw',

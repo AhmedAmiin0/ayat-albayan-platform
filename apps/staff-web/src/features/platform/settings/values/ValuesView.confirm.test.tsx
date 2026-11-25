@@ -31,7 +31,7 @@ describe('«القيم» — confirmations and the row menu', () => {
     expect(document.activeElement?.textContent).toBe(t.common.cancel);
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.cancel }));
     expect(apiSend).not.toHaveBeenCalled();
-    expect((within(row).getByRole('switch', { name: ALWAYS }) as HTMLInputElement).checked).toBe(true);
+    expect((within(row).getByRole<HTMLInputElement>('switch', { name: ALWAYS })).checked).toBe(true);
     fireEvent.click(within(row).getByRole('switch', { name: ALWAYS }));
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: v.confirmYes.teachersAlwaysAvailable.off }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/teachers_always_available', { value: false, expectedVersion: 1 }));
@@ -48,7 +48,7 @@ describe('«القيم» — confirmations and the row menu', () => {
     expect(yes.getAttribute('aria-disabled')).toBe('true');
     fireEvent.click(yes);
     expect(apiSend).not.toHaveBeenCalled();
-    // Typed on an Arabic keypad: «٣٠» is 30.
+    // Typed on an Arabic keypad: Arabic-Indic 30 is 30.
     fireEvent.change(within(dialog).getByLabelText(c.typedLabel.replace('{n}', '30')), { target: { value: '٣٠' } });
     fireEvent.click(within(dialog).getByRole('button', { name: c.typedYes }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/activity_retention_days', { value: 30, confirmText: '٣٠', expectedVersion: 1 }));

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { cn } from '@ab/web-kit/lib/utils';
 
 export interface EmptyStateProps {
-  /** Amiri title from i18n, e.g. t.students.empty «لسه مفيش طلاب». */
+  /** Amiri title from i18n. */
   title: string;
   /** One sentence saying how the list fills. */
   children?: ReactNode;

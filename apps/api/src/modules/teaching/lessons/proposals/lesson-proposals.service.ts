@@ -3,7 +3,7 @@ import {
   type LessonProposalRequest,
   type ProposalApprove,
   type ProposalRequester,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, forbidden } from '@/common/http/errors';
@@ -23,7 +23,7 @@ type RejectInput = DecideInput & { note?: string };
 /** An assistant (base role sales) never books over a clash. */
 const overrideRefused = (actor: AuthUser): boolean => actor.role === 'sales';
 
-/** A teacher's «اقترح ميعاد تاني» for their own open lesson (R-SCH-08). Returns the lesson id. */
+/** A teacher's proposed new time for their own open lesson (R-SCH-08); returns the lesson id. */
 @Injectable()
 export class LessonProposeService {
   constructor(
@@ -49,13 +49,7 @@ export class LessonProposeService {
   }
 }
 
-/**
- * Staff's answer to a teacher's proposal or a family's request (R-SCH-08). Approving IS a
- * reschedule of that one lesson — conflict check (409 conflict unless override.reason), the move
- * and the family notice in one transaction — then the proposal is marked; `startsAt` moves it to
- * another free time instead («اختر موعدًا آخر»). Rejecting marks it, with the answer's note; a
- * family's request then hears it (RequestDeclinePush).
- */
+/** Approving is a reschedule in one transaction (409 conflict unless override.reason). */
 @Injectable()
 export class ProposalDecisionService {
   constructor(

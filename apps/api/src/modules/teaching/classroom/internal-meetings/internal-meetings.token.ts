@@ -1,10 +1,9 @@
 import { randomBytes } from 'node:crypto';
-import { JOIN_ROLES, type JoinRole } from '@ab/shared';
+import { JOIN_ROLES, type JoinRole } from '@ab/schedule';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { hashLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 
-// «اجتماع داخلي» link /m/<token>: 32 random bytes (43 base64url chars); only the sha256 is stored
-// (meetings.link_token_hash, the same hash as the lesson links), so the URL is shown once.
+// 32 random bytes (43 base64url chars); only the sha256 is stored, so the URL is shown once.
 
 const TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
 

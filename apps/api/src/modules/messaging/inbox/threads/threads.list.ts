@@ -1,4 +1,5 @@
-import { LEAD_STATUSES, listSortShape, type LeadStatus, type ListSort } from '@ab/shared';
+import { LEAD_STATUSES, type LeadStatus } from '@ab/catalog';
+import { listSortShape, type ListSort } from '@ab/core';
 import { z } from 'zod';
 import type { SortSpec } from '@/common/db/list-sort';
 import type { Db } from '@/common/db/db.module';
@@ -10,7 +11,7 @@ import { phoneList } from '@/modules/messaging/numbers';
 const THREAD_SORT_KEYS = ['unread', 'name'] as const;
 export type ThreadSortKey = (typeof THREAD_SORT_KEYS)[number];
 
-/** «غير مقروءة أولًا» (admin's unread_count) and «الاسم» (unnamed numbers last); ties: newest message. */
+/** Unnamed numbers sort last; ties go to the newest message. */
 export const THREAD_SORT: SortSpec<ThreadSortKey> = {
   columns: {
     unread: { column: 'unread_count' },
@@ -35,7 +36,7 @@ export interface ThreadListFilter extends ListSort<ThreadSortKey> {
   unread?: boolean;
   /** The thread's lead status (admin and sales; a teacher sees no lead). */
   status?: LeadStatus | undefined;
-  /** A chat list's id «القوائم» (admin and sales with inbox.lists; checked by chat-list-filter.ts). */
+  /** Checked by chat-list-filter.ts (admin and sales with inbox.lists). */
   list?: string | undefined;
   /** Teacher mode: only these phones (never empty — the caller answers an empty page itself). */
   phones?: readonly string[];
@@ -43,10 +44,7 @@ export interface ThreadListFilter extends ListSort<ThreadSortKey> {
   hide?: readonly string[];
 }
 
-/**
- * Teacher mode: «غير مقروءة» is the teacher's own count (teacher_unread), not the view's
- * unread_count, and a teacher sees no lead — so neither the unread order nor the status filter apply.
- */
+/** Teachers use their own unread count and see no lead, so those filters do not apply. */
 export function teacherListFilter(f: ThreadListFilter, phones: readonly string[]): ThreadListFilter {
   const out: ThreadListFilter = { page: f.page, pageSize: f.pageSize, unread: false, phones };
   if (f.hide) out.hide = f.hide;
@@ -56,7 +54,7 @@ export function teacherListFilter(f: ThreadListFilter, phones: readonly string[]
   return out;
 }
 
-/** The chats of a list «القوائم» or all of them, never the academy's own numbers (`hide`). */
+/** Never the academy's own numbers. */
 export function threadsSource(db: Db, f: ThreadListFilter) {
   const query = f.list
     ? db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)

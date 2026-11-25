@@ -78,7 +78,7 @@ export class StaffPhotos {
     if (profiles.error) throw dbError(profiles.error);
     if (teachers.error) throw dbError(teachers.error);
     const ofTeacher = new Map(teachers.data.map((t) => [t.profile_id, t.avatar_path]));
-    // Students and families are initials only, even with a photo of their own on «حسابي».
+    // Students and families show initials only, even when they have a photo of their own.
     const staff = profiles.data.filter((p) => !NOT_STAFF.has(p.role));
     return this.sign(staff.map((p) => ({ id: p.id, path: staffPhotoPath({ own: p.avatar_path, teacher: ofTeacher.get(p.id) }) })));
   }

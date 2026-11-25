@@ -1,9 +1,5 @@
-import {
-  isAutoHeldDue,
-  startOfLocalDay,
-  type LessonStatus,
-  type SubscriptionStatus,
-} from '@ab/shared';
+import type { LessonStatus, SubscriptionStatus } from '@ab/catalog';
+import { isAutoHeldDue, startOfLocalDay } from '@ab/schedule';
 
 // Which open lessons the auto-held job closes (owner 2026-11-02): isAutoHeldDue on each, with every
 // student's CURRENT package start (the latest one, not cancelled, that has started by now): a
@@ -14,7 +10,7 @@ export interface OpenEndedLesson {
   id: string;
   status: LessonStatus;
   ends_at: string;
-  /** «عدّل الوقت» (R-SCH-11): a reminder made before it was about the old time. */
+  /** R-SCH-11: a reminder made before this edit was about the old time. */
   time_edited_at?: string | null;
   lesson_students: { student_id: string; student: { tz: string } | null }[];
 }

@@ -12,10 +12,7 @@ interface AdminReportV2Props {
   tz: string;
 }
 
-/**
- * An admin on a new-form report: the read view, and «تعديل التقرير» opens the v2 form (admins
- * correct any report, as with the old form). A draft opens straight in the form.
- */
+/** Admins correct any report; a draft opens straight in the form. */
 export function AdminReportV2({ form, entry, titled, tz }: AdminReportV2Props) {
   const [editing, setEditing] = useState(entry.report.status === 'draft');
   if (editing) return <ReportEntryV2 form={form} entry={entry} titled={titled} tz={tz} opened />;

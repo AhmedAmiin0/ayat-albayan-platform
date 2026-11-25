@@ -1,4 +1,5 @@
-import { clockOf, type SlotView, weekDates, weekdayOf } from '@ab/shared';
+import type { SlotView } from '@ab/schedule';
+import { clockOf, weekDates, weekdayOf } from '@ab/time';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
@@ -16,18 +17,14 @@ export interface SlotGridProps {
   studentTz: string;
   /** starts_at of the picked slot. */
   value: string | null;
-  /** A package's other picked starts (one per weekday, owner 2026-10-18): shown picked too. */
+  /** A package's other picked starts (one per weekday): shown picked too. */
   also?: readonly string[] | undefined;
   onPick: (slot: SlotView) => void;
 }
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-/**
- * The teacher's candidate starts as 7 day columns in the viewer's zone (R-SCH-06). Times are
- * picked, never typed (rule 6). A start with conflicts stays pickable but reads «مش فاضي» (struck
- * nuqta): booking it shows the conflict and the book-anyway path (R-SCH-04).
- */
+/** R-SCH-06, rule 6: a start with conflicts stays pickable but reads busy (R-SCH-04). */
 export function SlotGrid({ week, slots, studentTz, value, also = [], onPick }: SlotGridProps) {
   const days = byLocalDay(slots, useViewerTz());
   // Container query: 7 columns on a wide page, stacked days inside the narrow lesson drawer.

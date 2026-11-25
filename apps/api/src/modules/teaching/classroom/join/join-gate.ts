@@ -1,16 +1,15 @@
+import { canSkip, type TestFlags } from '@ab/shared';
 import {
-  canSkip,
   DEFAULT_JOIN_WINDOW,
   isClosedLesson,
   joinWindow,
   roomEnded,
   type JoinWindowConfig,
-  type TestFlags,
   type WindowLesson,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-/** What the gates read of a lesson: its window, and the «إنهاء الحلقة للجميع» stamp. */
+/** What the gates read of a lesson: its window and the room_ended_at stamp. */
 type GateLesson = WindowLesson & { room_ended_at?: string | null };
 
 const gone = (code: string): HttpException =>

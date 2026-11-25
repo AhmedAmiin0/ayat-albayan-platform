@@ -6,11 +6,7 @@ import { CrossIcon } from '@/inbox/shared/chat-icons';
 /** The remove button is drawn dense (32pt) and stretched to the 44pt touch floor by hitSlop. */
 const SLOP = (shape.control.touch - shape.control.dense) / 2;
 
-/**
- * A picked reply's file, waiting above the reply row: its name, «يُرسل بعد النص» and a remove
- * button. One 32pt line (the button's 44pt hit area overhangs it), so the message list keeps its
- * reading space. Nothing is sent until «أرسل».
- */
+/** Nothing is sent until the send button. */
 export function SavedReplyChip({ file, onRemove }: { file: Pick<SavedReplyAttachment, 'name'>; onRemove: () => void }) {
   const { color } = useTheme();
   return (

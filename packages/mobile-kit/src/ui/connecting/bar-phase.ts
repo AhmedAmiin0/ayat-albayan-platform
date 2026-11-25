@@ -1,13 +1,11 @@
-// The reconnecting bar's timing (WhatsApp's «جارٍ الاتصال…»): never for one slow request, a hint
-// when it lasts, a short «تم الاتصال» on the way out.
+// Never for one slow request, a hint when it lasts, a short connected state on the way out.
 
 export type BarPhase = 'hidden' | 'connecting' | 'check' | 'connected';
 
 /** Connecting for less than this shows nothing (no flicker on a single failed request). */
 export const BAR_DELAY_MS = 800;
-/** Connecting for this long adds «تحقّق من اتصالك بالإنترنت». */
+/** Connecting this long adds the check-your-connection hint. */
 export const HINT_AFTER_MS = 10_000;
-/** How long «تم الاتصال» stays before the bar slides away. */
 export const CONNECTED_MS = 1500;
 
 /** What the bar shows after `elapsed` ms of connecting. */
@@ -16,7 +14,7 @@ export function connectingPhase(elapsed: number): BarPhase {
   return elapsed < HINT_AFTER_MS ? 'connecting' : 'check';
 }
 
-/** Back online: «تم الاتصال» only if the bar was showing, else it never appears. */
+/** Back online shows connected only if the bar was showing. */
 export function onlinePhase(previous: BarPhase): BarPhase {
   return previous === 'hidden' ? 'hidden' : 'connected';
 }

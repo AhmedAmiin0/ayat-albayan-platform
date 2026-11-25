@@ -38,7 +38,7 @@ describe('«التكاملات» speaks Arabic (docs/23a §E H3)', () => {
 
   it('the template sync is a switch with Arabic options, not a word to type', async () => {
     await renderPanel();
-    const select = screen.getByLabelText(s.keys.WA_TEMPLATE_SYNC.label) as HTMLSelectElement;
+    const select = screen.getByLabelText<HTMLSelectElement>(s.keys.WA_TEMPLATE_SYNC.label);
     expect(select.tagName).toBe('SELECT');
     expect([...select.options].map((o) => o.textContent)).toContain(s.options.false);
     expect(s.keys.WA_TEMPLATE_SYNC.hint).not.toMatch(/false/);

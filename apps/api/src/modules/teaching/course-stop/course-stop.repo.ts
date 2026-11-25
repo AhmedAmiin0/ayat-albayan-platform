@@ -1,4 +1,5 @@
-import { currentPackage, netPaidIn, type SubscriptionStatus } from '@ab/shared';
+import type { SubscriptionStatus } from '@ab/catalog';
+import { currentPackage, netPaidIn } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
@@ -52,10 +53,7 @@ function stopError(error: PostgrestError): Error {
   return dbError(error);
 }
 
-/**
- * «إلغاء الاشتراك»'s reads and its one-transaction write (service role; the route checks
- * subscriptions.stop).
- */
+/** The course stop's reads and one-transaction write; the route checks subscriptions.stop. */
 @Injectable()
 export class CourseStopRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

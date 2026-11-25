@@ -1,7 +1,7 @@
-import { asciiDigits, type Locale, matchesQuery } from '@ab/shared';
+import { asciiDigits, type Locale, matchesQuery } from '@ab/core';
 import { COUNTRIES, type Country, nameOf, USUAL } from './countries.js';
 
-/** «+٩٦٦», «966» → «966»: a search by calling code; anything else (a name) → null. */
+/** A calling-code query yields its digits (native digits folded); a name yields null. */
 function codeOf(query: string): string | null {
   const digits = asciiDigits(query).replace(/[\s+]/g, '');
   return /^[0-9]+$/.test(digits) ? digits : null;

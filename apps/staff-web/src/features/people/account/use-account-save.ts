@@ -15,10 +15,7 @@ export interface AccountSaveOptions<B> {
   onSaved?: () => void;
 }
 
-/**
- * One «حسابي» form's request: API errors become field-level messages (errors.ts); a success
- * refreshes ['me','profile'] (the page and the shell's avatar chip) and says so in a toast.
- */
+/** A success refreshes ['me','profile'], which the page and the shell's avatar chip read. */
 export function useAccountSave<B>(o: AccountSaveOptions<B>) {
   const queryClient = useQueryClient();
   const [errors, setErrors] = useState<AccountErrors>({});

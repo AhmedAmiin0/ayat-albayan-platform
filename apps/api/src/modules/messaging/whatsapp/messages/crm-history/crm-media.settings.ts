@@ -1,4 +1,4 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { Injectable } from '@nestjs/common';
 import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
 import { SettingsService } from '@/common/settings/settings.service';
@@ -7,7 +7,6 @@ import { SettingsService } from '@/common/settings/settings.service';
 const KEYS = ['crm_media_host'] as const satisfies readonly SettingKey[];
 type CrmMediaSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
-/** CrmHistoryMedia's academy setting (common/settings/settings-slice.ts), edited in «القيم». */
 @Injectable()
 export class CrmMediaSettings {
   constructor(private readonly store: SettingsService) {}

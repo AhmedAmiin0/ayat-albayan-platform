@@ -1,4 +1,4 @@
-import { canMute, canMuteAll, type JoinRole, type MuteSource } from '@ab/shared';
+import { canMute, canMuteAll, type JoinRole, type MuteSource } from '@ab/schedule';
 import { useCallback, useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';
@@ -11,9 +11,9 @@ export interface MuteToast {
 }
 
 export interface MuteController {
-  /** «كتم الميكروفون» / «إيقاف الكاميرا» is offered: someone else, below me, with that source on. */
+  /** Offered for someone else below me with that source on. */
   canMute: (tile: TileView, source: MuteSource) => boolean;
-  /** «كتم الجميع»: the teacher or an admin, with at least one guest's microphone on. */
+  /** The teacher or an admin, with at least one guest's microphone on. */
   canMuteAll: boolean;
   mute: (tile: TileView, source: MuteSource) => void;
   muteAll: () => void;

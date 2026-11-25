@@ -1,5 +1,5 @@
 import type { Tables, TablesInsert } from '@ab/db';
-import { joinWindowConfig, type JoinWindowConfig } from '@ab/shared';
+import { joinWindowConfig, type JoinWindowConfig } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { ClassroomSettings } from './classroom.settings';
@@ -38,7 +38,7 @@ export class ClassroomRepo {
     return data;
   }
 
-  /** «افتح الحلقة الآن»: stamps room_opened_at once (a second call keeps the first time). */
+  /** Stamps room_opened_at once; a second call keeps the first time. */
   async openRoom(id: string, at: string): Promise<JoinLesson | null> {
     const { error } = await this.db.from('lessons').update({ room_opened_at: at }).eq('id', id).is('room_opened_at', null);
     if (error) throw dbError(error);

@@ -1,4 +1,4 @@
-import { clockTime, dayInZone, weekdayOfDay } from '@ab/shared';
+import { clockTime, dayInZone, weekdayOfDay } from '@ab/time';
 import { ar } from '@/common/infra/i18n/server-text';
 // Text helpers for the report template (R-REP-03). Every Arabic word comes from ar.json; LTR
 // values (codes, dates, times, phones) are isolated islands (docs/07 §14 rule 4).

@@ -1,22 +1,22 @@
-import type { JoinRole } from '@ab/shared';
+import type { JoinRole } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
  * Who the room is for. ONE room (ClassroomRoom / LiveRoom / ControlBar) serves the staff pages and
- * the family portal (owner 2026-11-19): the family's extras are switched on here, never forked.
+ * the family portal: the family's extras are switched on here, never forked.
  */
 export type RoomVariant = 'staff' | 'family';
 
 export interface RoomFeatures {
-  /** «قبل الدخول»: camera and microphone preview before connecting. */
+  /** Camera and microphone preview before connecting. */
   deviceCheck: boolean;
-  /** «تغادر الحلقة؟» before leaving. */
+  /** Confirm before leaving. */
   confirmLeave: boolean;
-  /** Alone in the room: «بانتظار المعلم/ة…» with one's own camera in the corner. */
+  /** Alone in the room: waiting for the teacher, own camera in the corner. */
   waitStage: boolean;
   /** The teacher's camera takes the stage, everyone else the strip. */
   spotlightTeacher: boolean;
-  /** «المحادثة» and «المشاركون» in a side panel (wide) or a bottom sheet (phones). */
+  /** Chat and participants in a side panel (wide) or a bottom sheet (phones). */
   sidePanel: boolean;
   /** Phones: round buttons with their short words under them (the app's look). */
   roundControls: boolean;
@@ -45,7 +45,7 @@ export const ROOM_VARIANTS: Readonly<Record<RoomVariant, RoomFeatures>> = {
   },
 };
 
-/** The role word under a name. The family's token is a guest's, but the family reads «الطالب». */
+/** The family's token is a guest's, but the family reads the student role word. */
 const FAMILY_ROLES: Partial<Record<JoinRole, string>> = { guest: t.studentChannel.roles.student };
 
 export function roleWord(variant: RoomVariant, role: JoinRole | null): string {

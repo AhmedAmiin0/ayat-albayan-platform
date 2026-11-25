@@ -1,7 +1,8 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
-import { ACCOUNT_CODE_TEMPLATE, type NumberPurpose } from '@ab/shared';
+import { ACCOUNT_CODE_TEMPLATE } from '@ab/shared';
+import type { NumberPurpose } from '@ab/catalog';
 import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
-import type { Contact } from '@/modules/messaging/webhook/webhook.types';
+import type { Contact } from '@/modules/messaging/webhook/shared/webhook.types';
 import { statusPatch } from '@/modules/messaging/webhook/status/webhook.status';
 import type { ExternalMessage } from './external-message';
 

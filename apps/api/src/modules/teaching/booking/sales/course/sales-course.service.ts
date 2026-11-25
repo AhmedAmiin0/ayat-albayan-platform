@@ -1,4 +1,13 @@
-import { addLocalDays, courseDaysPerWeek, type BookedCourse, courseLessonCount, wallParts, type BookingRequest, type CourseSubscription, type SalesCourseView } from '@ab/shared';
+import {
+  courseDaysPerWeek,
+  type BookedCourse,
+  courseLessonCount,
+  type BookingRequest,
+  type CourseSubscription,
+  type SalesCourseView,
+} from '@ab/shared';
+import { wallParts } from '@ab/schedule';
+import { addLocalDays } from '@ab/time';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -50,7 +59,7 @@ export class SalesCourse {
     const bad = courseProblem({ req, sub, rules, endsOn, booked });
     if (bad) throw domainError(bad.status, bad.code);
     if (!sub) throw domainError(HttpStatus.CONFLICT, 'subscription_required');
-    // The audit names the course it follows (a renewal, «تابِع بنفس الأيام»), whichever days were picked.
+    // The audit names the course a renewal follows, whichever days were picked.
     const { previous } = courseFacts({ rows, now, subscriptionId: sub.id, booked });
     const course = { package: sub.package, subscriptionId: sub.id, follows: previous?.subscriptionId ?? null };
     return { invoiceWaived: true, endsOn, course };
@@ -96,10 +105,7 @@ export class SalesCourse {
     };
   }
 
-  /**
-   * Hold mode and the draft (owner 2026-11-06): unpaid with an open link → «احجز» saves a draft;
-   * a saved draft comes back as `previous` too, so every wizard prefills its picks.
-   */
+  /** Unpaid with an open link saves a draft, which also returns as `previous` for prefill. */
   private async holdOf(sub: CourseSubscription | null, previous: BookedCourse | null) {
     if (!sub) return { hold: false, draft: null, prefill: null };
     const [hold, draft] = await Promise.all([this.drafts.held(sub.id), this.drafts.get(sub.id)]);

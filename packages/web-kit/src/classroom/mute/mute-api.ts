@@ -1,12 +1,12 @@
 import { lessonMutePath } from '@ab/client-core';
-import type { MuteSource } from '@ab/shared';
+import type { MuteSource } from '@ab/schedule';
 import { apiSend } from '@ab/web-kit/lib/http/api';
 import {
   recordingSourceOf,
   type RecordingSource,
 } from '@ab/web-kit/classroom/api/moderation-api';
 
-/** «كتم الميكروفون» / «إيقاف الكاميرا» for one participant: 204, or an ApiError. */
+/** Mute one participant's mic or camera: 204, or an ApiError. */
 export type MuteCall = (input: { identity: string; source: MuteSource }) => Promise<void>;
 
 /** The mute route by room kind: the lesson's from client-core (as the apps), the meeting's. */

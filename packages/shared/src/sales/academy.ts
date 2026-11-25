@@ -5,11 +5,8 @@ import type { SalesPackageSummary } from './student/student-package.js';
 import type { RosterAttendance, RosterSlot } from './student/student-roster.js';
 import type { SalesSubscriptionView } from './views.js';
 
-// The salesperson's assistant side (docs/16): the academy's teachers, every student and
-// a confirmed subscription's history. Whitelists: never a price, rate, phone or note. The one exception:
-// a teacher's fixed meeting link in «المعلمون», nowhere else (docs/16 rows 3, 10).
+// Sales assistant view (docs/16) never carries price, rate, phone or note, except the meet link.
 
-/** A student of a teacher in «المعلمون»: who, which program and status (trial included), the next lesson. */
 export interface SalesTeacherStudent {
   id: string;
   code: string;
@@ -20,10 +17,7 @@ export interface SalesTeacherStudent {
   next_lesson_at: string | null;
 }
 
-/**
- * GET /sales/teachers rows: an active teacher, today's lessons, the students they teach and their counts
- * (`active_count` / `trial_count`, «مشترك n · تجريبي n»), and their fixed meeting link.
- */
+/** An active teacher with today's lessons, students, counts and fixed meeting link. */
 export interface SalesTeacherView extends TeacherStudentCounts {
   id: string;
   name: string;
@@ -57,7 +51,7 @@ export interface SalesStudentView {
   guardian_name: string;
   /** The guardian's E.164 phone (sales see every chat with its phone): the row opens that chat. */
   guardian_phone: string | null;
-  /** One of hers (the ownership of «الاشتراكات»): the row opens «تفاصيل الطالب». Absent in an old cache. */
+  /** One of hers by subscription ownership; opens student details; absent in an old cache. */
   mine?: boolean;
   /** The active weekly slots, read in the viewer's zone. Absent: old cache. */
   weekly?: RosterSlot[];
@@ -82,7 +76,7 @@ export interface SalesHistoryEntry extends Omit<SalesSubscriptionView, 'student'
   created_at: string;
   lessons_used: number;
   lessons_remaining: number;
-  /** «حلقات مستخدمة من الباقة» (in lessons_used); absent from older APIs. */
+  /** Lessons used before the platform (in lessons_used); absent from older APIs. */
   lessons_used_before?: number;
   /** From the audit trail: when the status changed (`from` null = created). */
   status_changes: { at: string; from: SubscriptionStatus | null; to: SubscriptionStatus | null }[];

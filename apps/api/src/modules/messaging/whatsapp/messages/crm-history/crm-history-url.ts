@@ -1,4 +1,4 @@
-import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media.repo';
+import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
 
 /** Where the old CRM kept a chat's files: its own storage's public chat-media bucket. */
 export const CRM_MEDIA_PREFIX = '/storage/v1/object/public/chat-media/';
@@ -15,7 +15,7 @@ export function crmMediaUrl(body: string | null): URL | null {
   const text = body?.trim() ?? '';
   if (!text.startsWith('https://') || /[\s\\]|%2e|%2f|%5c/i.test(text)) return null;
   const url = parsed(text);
-  return url && url.href === text && bare(url) && underPrefix(url.pathname) ? url : null;
+  return url?.href === text && bare(url) && underPrefix(url.pathname) ? url : null;
 }
 
 const parsed = (text: string): URL | null => {
@@ -56,5 +56,5 @@ const DNS_HOST = /^(?=.{4,100}$)([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,63}$/;
 export function allowedCrmUrl(body: string | null, host: string): URL | null {
   const want = host.trim().toLowerCase();
   const url = crmMediaUrl(body);
-  return DNS_HOST.test(want) && url && url.hostname === want ? url : null;
+  return DNS_HOST.test(want) && url?.hostname === want ? url : null;
 }

@@ -4,7 +4,7 @@ import { isDeepStrictEqual } from 'node:util';
 import { z } from 'zod';
 import { parseJson } from '../../ci-checks/lint/json-file.mjs';
 
-const SUPPRESSIONS = /(?:^|\/)(?:eslint|oxlint)-suppressions\.json$/;
+const SUPPRESSIONS = /(?:^|\/)oxlint-suppressions\.json$/;
 const CAP = /^refactor\/folder-cap\/[^/]+\.json$/;
 export const PATH_JSON = new RegExp(
   `${SUPPRESSIONS.source}|^refactor\\/guards\\/(?!packages\\.json$)[^/]+\\.json$|${CAP.source}`,

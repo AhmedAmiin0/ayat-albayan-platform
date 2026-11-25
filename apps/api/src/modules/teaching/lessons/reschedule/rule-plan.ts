@@ -1,7 +1,7 @@
-import type { WeeklyRule } from '@ab/shared';
+import type { WeeklyRule } from '@ab/schedule';
 import { randomUUID } from 'node:crypto';
 import type { NewLesson, NewRule } from '@/modules/teaching/scheduling/change-set';
-import { horizonWindow, localDateOf, ruleOccurrences, type Occurrence } from '@ab/shared';
+import { horizonWindow, localDateOf, ruleOccurrences, type Occurrence } from '@ab/schedule';
 import { resolveMeetingLink } from '@/modules/teaching/scheduling/meeting-link';
 import { ruleStudents, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';
 

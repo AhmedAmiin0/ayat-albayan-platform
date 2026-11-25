@@ -1,8 +1,8 @@
 import type { MessageView, ThreadView } from './chat/views.js';
 
 /**
- * GET /threads/:phone?after=<ISO>&pending=<id,…> (owner 2026-10-27, «delta refresh»): what changed in
- * an open chat since the newest row the client holds, in ~2 reads instead of a whole page (~10).
+ * GET /threads/:phone?after=<ISO>&pending=<id,…>: what changed in an
+ * open chat since the newest row the client holds, in ~2 reads instead of a whole page (~10).
  */
 export interface ThreadDelta {
   /** Rows created after `after`, oldest → newest; at most `limit`. */
@@ -21,7 +21,13 @@ export interface ThreadDelta {
 /** The thread fields a new inbound row changes (the 24 h window, its reply line, the unread count). */
 export type ThreadDeltaWindow = Pick<
   ThreadView,
-  'last_inbound_at' | 'session_open' | 'unread_count' | 'reply_line' | 'last_inbound_line' | 'last_chat_inbound_at' | 'last_notifications_inbound_at'
+  | 'last_inbound_at'
+  | 'session_open'
+  | 'unread_count'
+  | 'reply_line'
+  | 'last_inbound_line'
+  | 'last_chat_inbound_at'
+  | 'last_notifications_inbound_at'
 >;
 
 /** Outbound rows this young still change status (queued → sent → delivered → read). */
@@ -34,6 +40,13 @@ export const DELTA_OVERLAP_MS = 2 * 60_000;
 const MOVING: ReadonlySet<string> = new Set(['queued', 'sent', 'delivered']);
 
 /** An outbound row a delta should re-read: still moving and young enough (failed / read never move again). */
-export function isPendingMessage(m: Pick<MessageView, 'direction' | 'status' | 'created_at'>, now: number): boolean {
-  return m.direction === 'outbound' && MOVING.has(m.status) && now - Date.parse(m.created_at) < PENDING_WINDOW_MS;
+export function isPendingMessage(
+  m: Pick<MessageView, 'direction' | 'status' | 'created_at'>,
+  now: number,
+): boolean {
+  return (
+    m.direction === 'outbound' &&
+    MOVING.has(m.status) &&
+    now - Date.parse(m.created_at) < PENDING_WINDOW_MS
+  );
 }

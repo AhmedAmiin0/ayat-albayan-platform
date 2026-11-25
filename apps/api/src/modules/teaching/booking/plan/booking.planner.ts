@@ -1,4 +1,13 @@
-import { bookingKindOf, isSingleLesson, meetingModeOf, uploadMaxBytes, usesPlatform, type BookingRequest, type Conflict, probeOccurrences } from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import {
+  bookingKindOf,
+  isSingleLesson,
+  meetingModeOf,
+  usesPlatform,
+  type Conflict,
+  probeOccurrences,
+} from '@ab/schedule';
+import { uploadMaxBytes } from '@ab/settings';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
@@ -6,8 +15,8 @@ import { meetingLinkFor, type BookingPayload } from '@/modules/teaching/booking/
 import { bookingPayload, type CourseLabel } from '@/modules/teaching/booking/core/booking.payload';
 import { BookingParties, type Resolved } from '@/modules/teaching/booking/core/booking.parties';
 import type { Plan } from './booking.plan';
-import type { BookingTeacher } from '@/modules/teaching/booking/core/booking.repo';
-import type { Occurrence } from '@ab/shared';
+import type { BookingTeacher } from '@/modules/teaching/booking/core/types';
+import type { Occurrence } from '@ab/schedule';
 import { planSeries } from './booking.series-plan';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { assertNotPast, bookableConflicts } from './outside-hours';
@@ -35,7 +44,7 @@ export type PrepareOptions = {
   endsOn?: string | null;
   /** The subscription it books: every rule's package and subscription_id (CourseLabel). */
   course?: CourseLabel;
-  /** Lessons the check ignores: the upcoming trial a «موعد تجريبي جديد» moves (TrialDates). */
+  /** The upcoming trial being moved. */
   excludeLessonIds?: readonly string[];
 };
 type Series = { plan: Plan; siblings: Plan[]; first: Occurrence; conflicts: Conflict[] };

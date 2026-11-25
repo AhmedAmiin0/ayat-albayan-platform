@@ -17,7 +17,7 @@ export {
   InboundMediaRepo,
   type MediaMessage,
   PLAYABLE_FILTER,
-} from './messages/inbound-media.repo';
+} from './messages/inbound-media/inbound-media.repo';
 export {
   baseMime,
   CRM_NO_MEDIA,
@@ -26,7 +26,7 @@ export {
   MEDIA_FETCH_DAYS,
   mediaExpired,
   servable,
-} from './messages/inbound-media.service';
+} from './messages/inbound-media/inbound-media.service';
 export {
   MESSAGE_SELECT,
   NOT_A_REACTION,
@@ -92,12 +92,8 @@ export {
 } from './templates/catalog/template.mapper';
 export { TemplateRegistry } from './templates/catalog/template.registry';
 export { sendableTemplates } from './templates/gate/template-gate.repo';
-export {
-  type ApprovalRow,
-  type ApprovalWrite,
-  type NumberRef,
-  TemplatesRepo,
-} from './templates/catalog/templates.repo';
+export { TemplatesRepo } from './templates/catalog/templates.repo';
+export type { ApprovalRow, ApprovalWrite, NumberRef } from './templates/catalog/types';
 export { WhatsappModule } from './whatsapp.module';
 export { ReopenRequest } from './sender/window/reopen-request';
 export { capsOf, windowless } from './drivers/driver-caps';

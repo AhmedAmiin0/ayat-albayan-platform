@@ -14,7 +14,7 @@ export interface RescheduleInput {
   byday: readonly number[];
   /** Reason to move over conflicts (R-SCH-04). */
   override?: string | undefined;
-  /** «سبب تغيير الموعد» for scope `one` (docs/47); the teacher reads it in the student file. */
+  /** Reason for scope `one` (docs/47); the teacher reads it in the student file. */
   reason?: string | undefined;
 }
 

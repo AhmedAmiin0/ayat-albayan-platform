@@ -1,4 +1,4 @@
-import { isEditableValueKey, type OwnedValueGroupId, type SettingKey } from '@ab/settings';
+import { isEditableValueKey, type SettingKey } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { isModified } from '@/features/platform/settings/registry-form/row-form';
@@ -20,7 +20,6 @@ import { cellClass, headClass, rowClass } from './row-classes';
 export interface SettingValueRowProps {
   settingKey: SettingKey;
   group: ValuesGroupId;
-  /** «الكل» results name the group under the label. */
   groupName?: string | undefined;
 }
 
@@ -32,7 +31,7 @@ export function SettingValueRow({ settingKey, group, groupName }: SettingValueRo
   const api = useValues();
   const ids = useRowIds();
   const words = settingText(settingKey);
-  const owned = isOwnedGroup(group) ? (group as OwnedValueGroupId) : null;
+  const owned = isOwnedGroup(group) ? group : null;
   // The API refused the key as owned by a module page: the row is text from then on.
   const moved = api.status(settingKey).state === 'moved';
   const editable = owned === null && !moved && api.canWrite && isEditableValueKey(settingKey);

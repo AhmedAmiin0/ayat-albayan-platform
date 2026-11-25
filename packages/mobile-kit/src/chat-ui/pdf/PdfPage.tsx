@@ -11,7 +11,6 @@ export interface PdfZoom {
 
 export interface PdfPageProps {
   page: number;
-  /** The PDF's page count, for «صفحة 3 من 12». */
   pages: number;
   /** The page image's URL once the caller has it. */
   url?: string;
@@ -37,7 +36,7 @@ const pageLabel = (page: number, pages: number): string =>
   t.inbox.pdf.pageOf.replace('{n}', String(page)).replace('{total}', String(pages));
 
 /**
- * One page in the PDF viewer (owner 2026-10-29), asked only when the list renders it (near the
+ * One page in the PDF viewer, asked only when the list renders it (near the
  * screen). The box keeps the A4 shape until the image loads, then its own; a spinner stays until
  * the image itself has loaded, not just its URL. A page that fails says so; a tap asks again.
  */

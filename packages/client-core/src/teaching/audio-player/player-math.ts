@@ -1,10 +1,8 @@
-// The in-app audio player's pure rules (owner 2026-11-17: «play/pause, ±10 s, speed, resume»),
+// The in-app audio player's pure rules (play/pause, ±10 s, speed, resume),
 // shared by the web <audio> player and the mobile player behind its AudioSource adapter.
 
-/** «تقديم/رجوع 10 ثوانٍ». */
 export const SKIP_SECONDS = 10;
 
-/** «السرعة»: three choices, 1×, 1.5× and 2×. */
 export const PLAYER_SPEEDS = [1, 1.5, 2] as const;
 export type PlayerSpeed = (typeof PLAYER_SPEEDS)[number];
 

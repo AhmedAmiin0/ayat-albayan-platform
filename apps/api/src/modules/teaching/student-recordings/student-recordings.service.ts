@@ -1,4 +1,4 @@
-import { type StudentRecordingsPage, type StudentRecordingsQuery } from '@ab/shared';
+import type { StudentRecordingsPage, StudentRecordingsQuery } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { RecordingViews } from '@/modules/teaching/classroom/recordings/recording-list.service';

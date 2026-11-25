@@ -13,11 +13,6 @@ interface Props {
 
 const peopleIn = (snap: RoomSnapshot): number => snap.tiles.filter((x) => x.kind === 'camera').length;
 
-/**
- * The family room's top line (boards FamRoomWebLive / FamRoomPhoneLive): the lesson, «جارٍ إدخالك
- * الحلقة…» while connecting, «جارٍ التسجيل» only while recording, and the people pill that opens
- * «المشاركون» («3 في الحلقة», or «بانتظار البقية…» while alone).
- */
 export function RoomTopBar({ snap, context, onPeople }: Props) {
   const n = peopleIn(snap);
   const words = n > 1 ? t.classroom.participants.replace('{n}', String(n)) : t.classroom.waiting;

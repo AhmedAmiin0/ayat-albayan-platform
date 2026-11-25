@@ -1,9 +1,6 @@
 import { useId, type ReactNode } from 'react';
 
-/**
- * One part of «حسابي» (docs/07 §6 Card/Page: grouped by space and a hairline, never a box): the
- * Amiri h4 title at the inline-start, the form beside it on a wide page, under it on a narrow one.
- */
+/** Grouped by space and a hairline, never a box (docs/07 §6). */
 export function AccountSection({ title, children }: { title: string; children: ReactNode }) {
   const id = useId();
   return (

@@ -1,5 +1,6 @@
 import { portalViewer, readsOwn, reportMonths } from '@ab/client-core';
-import { dateText, type PortalKind, type PortalStudent } from '@ab/shared';
+import type { PortalKind, PortalStudent } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -41,10 +42,7 @@ interface Props {
   kind: PortalKind;
 }
 
-/**
- * «التقارير» (canvas Reports): the sent reports of the student in view, newest first, by month;
- * «تقاريري» for a student's or an adult's own (owner 2026-11-16).
- */
+/** Sent reports only, newest first, grouped by month. */
 export function StudentReportsPage({ student, kind }: Props) {
   const own = readsOwn(portalViewer(kind, student));
   return (

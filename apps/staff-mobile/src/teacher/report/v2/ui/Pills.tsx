@@ -2,7 +2,6 @@ import { Pressable, View, type DimensionValue } from 'react-native';
 import { shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 interface PillsProps<V extends string> {
-  /** The group's spoken name («تقييم التسميع», «الحضور»). */
   label: string;
   items: readonly { value: V; label: string }[];
   isOn: (value: V) => boolean;
@@ -10,7 +9,6 @@ interface PillsProps<V extends string> {
   disabled?: boolean;
   /** radio: one choice (radiogroup); check: any number (the quick notes). */
   role?: 'radio' | 'checkbox';
-  /** chip: wrapping pills; grid: two boxes a row (الحضور); row: equal boxes on one line (البرنامج). */
   layout?: 'chip' | 'grid' | 'row';
 }
 

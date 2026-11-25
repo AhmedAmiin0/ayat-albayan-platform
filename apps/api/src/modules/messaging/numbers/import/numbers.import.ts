@@ -1,4 +1,5 @@
-import { WA_PROVIDERS, type ImportResult, type ImportRoleView } from '@ab/shared';
+import type { ImportResult, ImportRoleView } from '@ab/shared';
+import { WA_PROVIDERS } from '@ab/catalog';
 import { Injectable, Logger } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { integrationOverlay } from '@/common/configuration/integrations/integration-overlay';
@@ -22,15 +23,7 @@ const toView = (p: RolePlan): ImportRoleView => ({
 /** Something to write: a row to create (none for a role that is not importable) or a secret to copy. */
 const hasWork = (p: RolePlan): boolean => (p.action === 'create' && p.row !== null) || p.copies.length > 0;
 
-/**
- * «استيراد الإعداد الحالي» (docs/23 §2e step 2): copies today's effective line config into number rows.
- * Dry run: the plan only. Apply: inserts the missing rows (enabled, default for their role unless a
- * live default exists) and copies the missing secrets server-side: a DB secret Vault→Vault inside one
- * RPC (wa_number_secret_copy), an env-only one read here and written with wa_number_secret_set. Never
- * deletes an integration_config row or a Vault entry; a second apply finds nothing to do (changed false).
- * A role that is not importable (an id fails the wa_numbers checks) is skipped: no row, no copy, no 500.
- * Only key names are ever logged or audited.
- */
+/** Dry run or apply (docs/23 §2e): never deletes; re-apply is a no-op; only key names logged. */
 @Injectable()
 export class NumbersImport {
   private readonly log = new Logger(NumbersImport.name);

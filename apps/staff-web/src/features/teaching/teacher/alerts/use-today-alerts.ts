@@ -1,5 +1,5 @@
 import { alertLine, alertParts, type AlertParts, type AlertWords, todayAlerts } from '@ab/client-core';
-import type { LessonView } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { usePermissions } from '@/features/people/auth';
 import { notificationsQuery } from '@/features/messaging/notifications';
@@ -20,10 +20,7 @@ export interface AlertRowView {
 
 const WORDS: AlertWords = { ...t.teacherAlerts, inMinutes: t.today.inMinutes };
 
-/**
- * «تنبيهات اليوم» (owner 2026-11-14) from the home's lessons and the bell's own query (the same
- * GET /me/notifications as the header bell, read only when she holds notifications.push).
- */
+/** Today's alerts from the home's lessons and the header bell's notifications query. */
 export function useTodayAlerts(o: { lessons: readonly LessonView[]; now: Date; tz: string }) {
   const prefs = useHomePrefs();
   const clock = useClock();

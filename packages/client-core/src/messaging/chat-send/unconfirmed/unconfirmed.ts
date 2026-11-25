@@ -22,7 +22,7 @@ export type TextAnswer = MessageView & {
   same_request?: boolean | undefined;
 };
 
-/** What a send carried: its text; a correction («تعديل») also the original it corrects. */
+/** A correction also carries the original it corrects. */
 export interface SentText {
   text: string;
   correction?: { id: string } | undefined;
@@ -34,7 +34,7 @@ type Correction = NonNullable<SentText['correction']>;
 const bodyOf = (row: Answer): string => (row.body ?? '').trim();
 
 /**
- * A correction (owner 2026-11-07) is this send only when it corrects the same original. A new row
+ * A correction is this send only when it corrects the same original. A new row
  * was written by this request; a replayed one is this send only when the API says it is the same
  * request (`same_request`: the same original and text, a retry after a lost answer). The prefix is
  * never rebuilt here: admins may reword it, and a stale client would guess wrong (review of #694).

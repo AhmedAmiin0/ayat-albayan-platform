@@ -1,6 +1,6 @@
 import type { ChannelMessageView, ChannelPage } from '@ab/shared';
 
-// The optimistic row of a send (review 2026-11-17), web and phone alike: shown at once, keyed by
+// The optimistic row of a send, web and phone alike: shown at once, keyed by
 // its client_id, until the API's answer re-reads the thread; a failure takes it away again.
 
 const PENDING = 'pending:';
@@ -8,7 +8,7 @@ const PENDING = 'pending:';
 /** The optimistic row's id for a send. */
 const pendingId = (clientId: string): string => `${PENDING}${clientId}`;
 
-/** Still on its way: no menu, no swipe, «جارٍ الإرسال…» and the clock tick. */
+/** Still sending: no menu and no swipe. */
 export const isPending = (m: Pick<ChannelMessageView, 'id'>): boolean => m.id.startsWith(PENDING);
 
 interface PendingInput {

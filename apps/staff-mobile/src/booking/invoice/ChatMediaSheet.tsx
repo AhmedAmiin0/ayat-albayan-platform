@@ -12,11 +12,7 @@ interface ChatMediaSheetProps {
   onClose: () => void;
 }
 
-/**
- * «من الشات»: the guardian's recent images and PDFs, newest first (the API sends at most 12, so a
- * wrapped grid, not a list). Picking one books it as the invoice without downloading anything
- * here: the API copies it from WhatsApp into the invoices bucket.
- */
+/** The API sends at most 12, so a grid; picking copies it server-side from WhatsApp. */
 export function ChatMediaSheet({ phone, onPick, onClose }: ChatMediaSheetProps) {
   const media = useThreadMedia(phone);
   return (
@@ -24,7 +20,7 @@ export function ChatMediaSheet({ phone, onPick, onClose }: ChatMediaSheetProps) 
       <FormLabel>{t.booking.invoice.fromChat}</FormLabel>
       {media.isPending ? <Note>{t.common.loading}</Note> : null}
       {media.isError ? <ErrorState onRetry={() => void media.refetch()} /> : null}
-      {media.data && media.data.length === 0 ? <Note>{t.booking.invoice.chatEmpty}</Note> : null}
+      {media.data?.length === 0 ? <Note>{t.booking.invoice.chatEmpty}</Note> : null}
       {media.data?.some((item) => item.expired) ? <Note>{t.booking.invoice.expired}</Note> : null}
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
         {(media.data ?? []).map((item) => (

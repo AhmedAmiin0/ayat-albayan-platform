@@ -4,11 +4,7 @@ import { apiSend } from '@ab/mobile-kit';
 import { makeupRequest } from './makeup-body';
 import type { MakeupDraft } from './makeup-draft';
 
-/**
- * «احجز» for a makeup: POST /booking with the wizard's one clientRequestId (the one the invoice
- * was uploaded under), re-sent on every retry, so a lost reply replays to the first booking.
- * No lead is involved; the schedule and the chats refetch.
- */
+/** One clientRequestId resent on every retry, so a lost reply replays the first booking. */
 export function useBookMakeup(requestId: string) {
   const client = useQueryClient();
   return useMutation({

@@ -4,7 +4,7 @@ import { renderWithQuery } from '@/test/query';
 import { familyOf, kid, openSub } from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from '@/sales-subscribe/screens/SalesTransferScreen/SalesTransferScreen';
 
-// «إلغاء الباقة» from her transfer screen (owner 2026-10-28): her package made by mistake, nothing paid.
+// Cancelling a package made by mistake is allowed only while nothing is paid.
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

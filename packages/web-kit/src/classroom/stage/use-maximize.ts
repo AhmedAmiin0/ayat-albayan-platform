@@ -23,10 +23,7 @@ const leaveFullscreen = () => {
   if (document.fullscreenElement) document.exitFullscreen().catch(() => undefined);
 };
 
-/**
- * «تكبير الشاشة» / «تصغير» for the shared screen on the stage. Esc leaves either mode (the browser
- * does it for fullscreen, a key listener for the overlay); a refused fullscreen falls back to the overlay.
- */
+/** Esc leaves either mode; a refused fullscreen falls back to the overlay. */
 export function useMaximize(ref: RefObject<HTMLElement | null>): Maximize {
   const [mode, setMode] = useState<MaximizeMode | null>(null);
 

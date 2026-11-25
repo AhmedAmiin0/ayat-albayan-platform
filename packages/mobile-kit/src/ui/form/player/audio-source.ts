@@ -1,4 +1,4 @@
-// The player's one door to the native audio module (owner 2026-11-17): the UI and its rules
+// The player's one door to the native audio module: the UI and its rules
 // (@ab/client-core playerReducer) never import a media library. Each app passes its own
 // CreateAudioSource to <AudioPlayer> (family-mobile: the expo-audio adapter).
 

@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { screen } from '@testing-library/react-native';
 import { renderWithQuery, teacherPagesClient } from '@/test/query';
 import { pathKey, type TabItem } from '@ab/mobile-kit';

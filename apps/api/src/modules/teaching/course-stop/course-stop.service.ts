@@ -21,24 +21,7 @@ interface StopInput {
   actor: AuthUser;
 }
 
-/**
- * «إلغاء الاشتراك» from the student's profile (owner 2026-10-30): STOP THE COURSE, KEEP THE MONEY.
- * stop_course (migration 991) does it in ONE transaction: the course's rules (course_rules_of: also
- * a rule without subscription_id, imported or admin-booked, inside the package's period) end on the
- * stop day, its open lessons from now are cancelled (not chargeable), an open course pause closes,
- * the package becomes cancelled (kind 'stopped', who / when / why, the clientRequestId) and the
- * student «توقف» unless another package still runs. A stopped package stays in every money reader:
- * payments, held lessons, reports, earnings and the assistant's commission never change. A retry
- * with the same clientRequestId answers the first stop; 409 course_unattributed when a running rule
- * cannot be attributed (a group, or one running into the next package). No per-lesson notice.
- * Silent on purpose (owner 2026-10-30, «notify both» covers moves, cancels and pauses): no push or
- * template says «the course stopped» (course_paused says «مؤقتًا», lesson_cancelled names one
- * lesson); a course_stopped template and push kind wait for the owner's approval.
- * «إلغاء مع استرداد» (owner 2026-11-02, body.refund, subscriptions.refund): planned and checked
- * BEFORE the stop (403 refund_not_allowed / not_your_student: StopRefundGate; 409
- * refund_exceeds_allowed, 503 stripe_not_configured leave the package as it was), executed
- * after it (StopRefunds, idempotent on clientRequestId).
- */
+/** Stops the course but keeps the money, in one transaction (migration 991); silent on purpose. */
 @Injectable()
 export class CourseStop {
   constructor(
@@ -107,7 +90,7 @@ export class CourseStop {
     return toResult(body.subscriptionId, row, refund);
   }
 
-  /** «إلغاء مع استرداد»: StopRefundGate's checks; the chosen amount at most the net paid. */
+  /** Refund checks; the chosen amount is at most the net paid. */
   private refundPlan(input: {
     ref: RefundSub;
     body: CourseStopRequest;

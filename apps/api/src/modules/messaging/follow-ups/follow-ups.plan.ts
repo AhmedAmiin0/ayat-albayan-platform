@@ -1,15 +1,14 @@
 import type { Json } from '@ab/db';
 import { ar } from '@/common/infra/i18n/server-text';
 import {
-  dayInZone,
   followUpCycle,
   followUpKey,
   type FollowUpLead,
   followUpSlotsMessage,
   leadQualificationSchema,
-  type MessageStatus,
-  RIYADH_TZ,
 } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
+import { dayInZone, RIYADH_TZ } from '@ab/time';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 // R-LEAD-05 follow-up planning (docs/12 §7). Pure.
 
@@ -26,18 +25,14 @@ export interface FollowUpLeadRow extends FollowUpLead {
 
 interface LeadZone {
   tz: string;
-  /** ar.json tz.<id>: {{3}} in «المواعيد بتوقيت {{3}}». */
+  /** The i18n tz.<id> key used for the {{3}} placeholder of the slot message. */
   city: string;
 }
 
 const CITIES: Readonly<Record<string, string>> = ar.tz;
 const qualificationTz = leadQualificationSchema.pick({ tz: true });
 
-/**
- * The lead's tz: what the admin captured in the thread (qualification.tz), else leads.tz, else
- * Riyadh. A tz with no Arabic city in ar.json falls back to Riyadh too, so the message never
- * shows a raw «Europe/Paris»: Riyadh times with «الرياض» are still exact.
- */
+/** Thread tz, else leads.tz, else Riyadh; a tz with no Arabic city also uses Riyadh. */
 export function leadZone(lead: Pick<FollowUpLeadRow, 'tz' | 'qualification'>): LeadZone {
   const parsed = qualificationTz.safeParse(lead.qualification);
   const tz = (parsed.success ? parsed.data.tz : null) ?? lead.tz ?? RIYADH_TZ;

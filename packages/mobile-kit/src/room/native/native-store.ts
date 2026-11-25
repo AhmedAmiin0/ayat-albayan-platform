@@ -22,11 +22,7 @@ function roomLike(lk: Lk, room: Room): RoomLike<Participant> {
   };
 }
 
-/**
- * Why LiveKit let go of the room: removed and opened elsewhere get their own screens; DeleteRoom
- * («إنهاء الحلقة للجميع», the max-duration job) and a closed room are «انتهت الحلقة», no way back;
- * anything else (the network, the server restarting) dropped us, with «ادخل مرة أخرى».
- */
+/** DeleteRoom and a closed room are final; anything else is a drop with a rejoin offer. */
 function closing(lk: Lk, reason: number | undefined): RoomStatus {
   const R = lk.DisconnectReason;
   const why: Partial<Record<number, RoomStatus>> = {

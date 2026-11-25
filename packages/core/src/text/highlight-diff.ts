@@ -3,8 +3,9 @@ import { normalizeArabic } from './arabic/index.js';
 // Which letters of `text` differ from `other` (duplicate dialog, R-STU-03, docs/07 §14.2).
 // Both names are aligned on their normalizeArabic() letters (so tashkeel / tatweel never shift the
 // alignment), then every letter of `text` that is unmatched or matched to a different raw letter
-// (ة vs ه, أ vs ا) is reported. Ranges index `[...text]` (code points), so the UI slices the raw
-// name into ONE inline run and wraps only the differing letter (colour + underline, no box).
+// (taa marbuta vs haa, hamza alif vs bare alif) is reported. Ranges index `[...text]` (code
+// points), so the UI slices the raw name into ONE inline run and wraps only the differing letter
+// (colour + underline, no box).
 
 export interface DiffRange {
   start: number;
@@ -21,9 +22,15 @@ interface Letter {
   key: string;
 }
 
+/**
+ * The code points of `s`, not its graphemes: a letter and its tashkeel must stay apart, so the
+ * marks can be dropped from the alignment and ride along with a differing letter.
+ */
+const codePoints = (s: string): string[] => Array.from(s);
+
 /** One entry per letter that survives normalisation; tashkeel / tatweel are dropped. */
 function letters(s: string): Letter[] {
-  return [...s].flatMap((raw, index) => {
+  return codePoints(s).flatMap((raw, index) => {
     const key = /\s/.test(raw) ? ' ' : normalizeArabic(raw);
     return key ? [{ index, raw, key }] : [];
   });
@@ -36,7 +43,8 @@ function lcsTable(a: string[], b: string[]): (i: number, j: number) => number {
   const cell = (i: number, j: number) => dp[i * w + j] ?? 0;
   for (let i = a.length - 1; i >= 0; i--) {
     for (let j = b.length - 1; j >= 0; j--) {
-      dp[i * w + j] = a[i] === b[j] ? cell(i + 1, j + 1) + 1 : Math.max(cell(i + 1, j), cell(i, j + 1));
+      dp[i * w + j] =
+        a[i] === b[j] ? cell(i + 1, j + 1) + 1 : Math.max(cell(i + 1, j), cell(i, j + 1));
     }
   }
   return cell;
@@ -49,7 +57,7 @@ function lcsPairs(a: Letter[], b: Letter[]): Map<number, Letter> {
     b.map((l) => l.key),
   );
   const pairs = new Map<number, Letter>();
-  for (let i = 0, j = 0; i < a.length && j < b.length; ) {
+  for (let i = 0, j = 0; i < a.length && j < b.length;) {
     const ai = a[i] as Letter;
     const bj = b[j] as Letter;
     if (ai.key === bj.key) {
@@ -67,26 +75,39 @@ function isMark(c: string | undefined): boolean {
   return c !== undefined && !/\s/.test(c) && normalizeArabic(c) === '';
 }
 
+/** A letter that reads the same in both names (spaces never count as a difference). */
+const isSameLetter = (l: Letter, pairs: Map<number, Letter>): boolean =>
+  l.key === ' ' || pairs.get(l.index)?.raw === l.raw;
+
+/** Where a differing letter's run ends: after the marks that follow it. */
+function runEnd(chars: string[], index: number): number {
+  let end = index + 1;
+  while (isMark(chars[end])) end++;
+  return end;
+}
+
+/** Adds the run [start, end), joined to the last range when they touch. */
+function addRun(ranges: DiffRange[], start: number, end: number): void {
+  const last = ranges.at(-1);
+  if (last?.end === start) last.end = end;
+  else ranges.push({ start, end });
+}
+
 /** Differing letter ranges in `text` (marks after a differing letter ride along with it). */
 export function diffRanges(text: string, other: string): DiffRange[] {
   const mine = letters(text);
   const pairs = lcsPairs(mine, letters(other));
-  const chars = [...text];
+  const chars = codePoints(text);
   const ranges: DiffRange[] = [];
-  for (const l of mine) {
-    if (l.key === ' ' || pairs.get(l.index)?.raw === l.raw) continue;
-    let end = l.index + 1;
-    while (isMark(chars[end])) end++;
-    const last = ranges.at(-1);
-    if (last && last.end === l.index) last.end = end;
-    else ranges.push({ start: l.index, end });
+  for (const l of mine.filter((m) => !isSameLetter(m, pairs))) {
+    addRun(ranges, l.index, runEnd(chars, l.index));
   }
   return ranges;
 }
 
 /** `text` split into plain / differing runs, in order, for rendering. */
 export function diffSegments(text: string, other: string): DiffSegment[] {
-  const chars = [...text];
+  const chars = codePoints(text);
   const segments: DiffSegment[] = [];
   let at = 0;
   for (const r of diffRanges(text, other)) {

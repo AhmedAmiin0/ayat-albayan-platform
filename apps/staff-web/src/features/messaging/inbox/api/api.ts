@@ -11,7 +11,7 @@ import {
   type ThreadView,
 } from '@ab/shared';
 import type { LeadStatus } from '@ab/catalog';
-import { liveInterval, type TextAnswer } from '@ab/client-core';
+import { liveInterval, offPathKeys, type TextAnswer } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
@@ -32,7 +32,6 @@ export const threadsQuery = (s: InboxSearch) => {
   const params = new URLSearchParams({ page: String(s.page), pageSize: String(THREADS_PAGE_SIZE) });
   if (s.q) params.set('search', s.q);
   if (s.unread) params.set('unread', 'true');
-  // «غير المقروءة أولًا» = most unread first; names A→ي.
   if (s.sort) params.set('sort', s.sort);
   if (s.sort === 'unread') params.set('dir', 'desc');
   if (s.f_status) params.set('status', s.f_status);
@@ -58,15 +57,14 @@ export const threadPage = (path: string, init?: RequestInit) => apiFetch<ThreadD
  */
 export const threadFileQuery = (phone: string, messageId: string) =>
   queryOptions({
-    // Not under ['threads']: a send or an opened chat invalidates those, and this would sign it again.
-    queryKey: ['thread-file', phone, messageId],
+    queryKey: offPathKeys.threadFile(phone, messageId),
     queryFn: () =>
       apiFetch<ThreadFile>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file`),
     staleTime: 30 * 60_000,
     retry: false,
   });
 
-/** «تنزيل» (owner 2026-10-26): never cached, a fresh URL each click, signed to save under the file's name. */
+/** Never cached: each click gets a fresh URL signed to save under the file's name. */
 export const threadFileDownload = (phone: string, messageId: string) =>
   apiFetch<ThreadFile>(
     `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file?download=1`,
@@ -84,7 +82,7 @@ export const sendTemplate = ({ phone, params, ...body }: ThreadTemplate & { phon
     params: normaliseTemplateParams(params),
   });
 
-/** «إرسال تقييم الحلقة»: lesson_rating for the guardian's latest lesson that took place (migration 195). */
+/** Rates the guardian's latest lesson that took place (migration 195). */
 export const sendRating = ({ phone, ...body }: ThreadRating & { phone: string }) =>
   apiSend<MessageView>('POST', `${threadPath(phone)}/rating`, body);
 
@@ -108,7 +106,7 @@ export type InboxLead = LeadView & {
   next_follow_up_at: string | null;
   /** Why the due follow-up has not gone out (migration 144). */
   follow_up_note: FollowUpNote | null;
-  /** «lead» = they sent «وقف»: resuming needs the admin's explicit confirm. */
+  /** "lead" means they opted out by message, so resuming needs the admin's explicit confirm. */
   follow_up_paused_by: 'lead' | 'admin' | null;
   updated_at: string;
 };

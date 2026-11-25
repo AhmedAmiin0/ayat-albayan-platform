@@ -81,7 +81,7 @@ describe('ScheduledMeetingDialog «اجتماع مجدول»', () => {
     open();
     fireEvent.click(screen.getByRole('button', { name: L.create }));
     const results = await screen.findByRole('region', { name: L.results.title });
-    expect((screen.getByLabelText(t.meetings.internal.link) as HTMLInputElement).value).toBe(URL);
+    expect((screen.getByLabelText<HTMLInputElement>(t.meetings.internal.link)).value).toBe(URL);
     expect(within(results).getByText(L.results.windowClosed)).toBeTruthy();
     expect(within(results).getByText(L.results.windowClosedHint)).toBeTruthy();
     expect(within(results).getByText(L.results.sent)).toBeTruthy();

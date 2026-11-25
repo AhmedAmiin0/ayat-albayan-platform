@@ -1,6 +1,7 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+import { meQueryOptions } from '@ab/client-core';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 
 /** The catalogue's query key prefix (NotificationCatalogue adds the settings' fetch time). */
 export const CATALOGUE_KEY = ['admin', 'notifications'] as const;
@@ -35,6 +36,6 @@ export function holdsIn(me: unknown, permission: string): boolean {
 
 /** notifications.manage held (strict: false until /auth/me answers, so nothing switches by mistake). */
 export function useCanManageNotifications(): boolean {
-  const me = useQuery({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
+  const me = useQuery(meQueryOptions({ apiFetch }));
   return holdsIn(me.data, 'notifications.manage');
 }

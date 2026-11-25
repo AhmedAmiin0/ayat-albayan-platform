@@ -5,7 +5,7 @@ export const DEMO_NOTE = 'DEMO (pnpm seed:demo)';
 
 const RATES = { rate_30: 60, rate_45: 85, rate_60: 110, rate_90: 160 };
 
-/** availability: [weekday 0=الأحد … 6=السبت, start, end] in the teacher's tz. */
+/** availability: [weekday 0=Sunday ... 6=Saturday, start, end] in the teacher's tz. */
 export const TEACHERS = [
   {
     ar: 'فاطمة الزهراء', en: 'Fatma Elzahraa', gender: 'female', programs: ['quran', 'islamic_studies'],

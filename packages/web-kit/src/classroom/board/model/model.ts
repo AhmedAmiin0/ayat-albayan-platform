@@ -22,11 +22,11 @@ export interface Stroke {
 
 export interface BoardState {
   strokes: Stroke[];
-  /** «السماح للطلاب بالكتابة»: the teacher lets guests draw too. */
+  /** The teacher lets guests draw too. */
   studentsCanDraw: boolean;
   /** The staff opened the board for everyone. */
   open: boolean;
-  /** Guests a staff «سماح» let draw (after «اطلب الكتابة على السبورة»), by identity. */
+  /** Guests staff allowed to draw after they asked, by identity. */
   allowed: string[];
 }
 
@@ -45,10 +45,7 @@ export interface Drawer {
   role: JoinRole | null;
 }
 
-/**
- * Teacher, admin and assistant always; a guest (student / guardian) when every student may
- * («السماح للطلاب بالكتابة») or this one was allowed by name; sales never.
- */
+/** Staff always; a guest when all students may or this one was allowed by name; sales never. */
 export function canDraw(who: Drawer, perms: Pick<BoardState, 'studentsCanDraw' | 'allowed'>): boolean {
   if (who.role === null) return false;
   if (STAFF.has(who.role)) return true;
@@ -58,7 +55,7 @@ export function canDraw(who: Drawer, perms: Pick<BoardState, 'studentsCanDraw' |
 /** Opens / closes the board for everyone and clears it. */
 export const canManageBoard = (role: JoinRole | null): boolean => role !== null && STAFF.has(role);
 
-/** «السماح للطلاب بالكتابة» is the teacher's call (and the admin's). */
+/** Letting students draw is the teacher's or admin's call. */
 export const canAllowStudents = (role: JoinRole | null): boolean => role === 'teacher' || role === 'admin';
 
 const clamp01 = (n: number): number => Math.min(1, Math.max(0, n));
@@ -79,11 +76,11 @@ export function normalize(point: { x: number; y: number }, rect: RectLike): [num
   return [round4((point.x - rect.left) / rect.width), round4((point.y - rect.top) / rect.height)];
 }
 
-/** The newest stroke this person drew (their «تراجع» target). */
+/** The newest stroke this person drew (their undo target). */
 export function lastStrokeOf(strokes: readonly Stroke[], by: string): Stroke | undefined {
   for (let i = strokes.length - 1; i >= 0; i -= 1) {
     const s = strokes[i];
-    if (s && s.by === by) return s;
+    if (s?.by === by) return s;
   }
   return undefined;
 }

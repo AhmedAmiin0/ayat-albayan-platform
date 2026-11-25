@@ -1,3 +1,4 @@
+import { offPathKeys } from '@ab/client-core';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Linking } from 'react-native';
 import { useScreenFocused } from '@ab/mobile-kit';
@@ -20,7 +21,7 @@ export function useLessonAssets(input: { studentId: string; lessonId: string }) 
 /** The recording's signed link for the in-app player (1 hour). */
 export function useRecordingUrl(input: { studentId: string; recordingId: string }) {
   return useQuery({
-    queryKey: ['portal-recording-url', input.studentId, input.recordingId],
+    queryKey: offPathKeys.portalRecordingUrl(input.studentId, input.recordingId),
     queryFn: () => portalSend.fileUrl({ ...input, kind: 'recordings', id: input.recordingId }),
     staleTime: LINK_FRESH_MS,
     meta,
@@ -30,7 +31,7 @@ export function useRecordingUrl(input: { studentId: string; recordingId: string 
 /** A voice note's signed link for the in-app player. */
 export function useLessonFileUrl(input: { studentId: string; fileId: string }) {
   return useQuery({
-    queryKey: ['portal-lesson-file-url', input.studentId, input.fileId],
+    queryKey: offPathKeys.portalLessonFileUrl(input.studentId, input.fileId),
     queryFn: () => assets.lessonFileUrl(input),
     staleTime: LINK_FRESH_MS,
     meta,

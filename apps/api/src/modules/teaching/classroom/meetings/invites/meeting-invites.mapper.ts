@@ -12,7 +12,7 @@ import {
   type MeetingInviteStatus,
   type MeetingView,
   type MyMeetingInvite,
-} from '@ab/shared';
+} from '@ab/schedule';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { canManageMeeting } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';

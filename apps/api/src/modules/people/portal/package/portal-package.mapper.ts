@@ -1,10 +1,5 @@
-import type {
-  PortalPackage,
-  PortalPackageView,
-  PortalPayment,
-  PortalStudent,
-  StudentBalanceView,
-} from '@ab/shared';
+import type { PortalPackage, PortalPackageView, PortalPayment, PortalStudent } from '@ab/shared';
+import type { StudentBalanceView } from '@ab/money';
 import { toFamilyBalance } from '@/modules/finance/subscriptions';
 
 /**

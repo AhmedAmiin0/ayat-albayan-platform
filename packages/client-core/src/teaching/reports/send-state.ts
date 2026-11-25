@@ -1,4 +1,4 @@
-import type { ReportStatus } from '@ab/shared';
+import type { ReportStatus } from '@ab/catalog';
 
 /**
  * Where a report stands on its way to the family, now (docs/46 D5, B5): `window` while the
@@ -17,7 +17,7 @@ export interface SendReport {
 }
 
 const MINUTE = 60_000;
-/** How long after the close «يُرسل الآن» stays believable before the line is dropped. */
+/** How long after the close the sending line stays believable before it is dropped. */
 export const SENDING_FOR_MS = 10 * MINUTE;
 
 const ms = (iso: string | null | undefined): number => (iso ? Date.parse(iso) : Number.NaN);

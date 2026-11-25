@@ -52,7 +52,7 @@ describe('DataTable filters', () => {
     openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: by('الحالة') }), { target: { value: 'paused' } });
     expect(names()).toEqual(['فاطمه علي']);
-    // «مسح الكل» clears the panel's filters; the search box keeps its text.
+    // Clear all empties the panel's filters; the search box keeps its text.
     closeFilters();
     fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
     expect(names()).toEqual(['فاطمة', 'فاطمه علي']);
@@ -62,7 +62,7 @@ describe('DataTable filters', () => {
     const onChange = vi.fn();
     render(<DataTable columns={columns} data={DATA} filters={{ values: { st: 'active' }, onChange }} />);
     openFilters();
-    expect((screen.getByRole('combobox', { name: by('الحالة') }) as HTMLSelectElement).value).toBe('active');
+    expect((screen.getByRole<HTMLSelectElement>('combobox', { name: by('الحالة') })).value).toBe('active');
     expect(names()).toHaveLength(3);
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'أحمد' } });
     act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS));

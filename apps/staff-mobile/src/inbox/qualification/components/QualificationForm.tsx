@@ -15,11 +15,7 @@ export interface QualificationFormProps {
   offline: boolean;
 }
 
-/**
- * «بيانات الطالب» (R-LEAD-03, L1), like the web's QualificationForm: the questions the deleted
- * Google Form asked, structured and optional. Saves only what changed (the API merges; an emptied
- * field is cleared). Offline the form stays readable, with no save button.
- */
+/** R-LEAD-03: saves only changed fields (API merges, emptied fields clear); offline has no save. */
 export function QualificationForm({ lead, offline }: QualificationFormProps) {
   const save = useLeadPatch<LeadQualificationPatch>('qualification');
   const [initial, setInitial] = useState(() => qualForm(lead.qualification));
@@ -27,7 +23,7 @@ export function QualificationForm({ lead, offline }: QualificationFormProps) {
   const [errors, setErrors] = useState<QualErrors>({});
   const change = (patch: Partial<QualForm>) => {
     setForm((f) => ({ ...f, ...patch }));
-    // «اتحفظت» / the last failure belong to the values as they were saved, not to new edits.
+    // The saved or failed note belongs to the saved values, not to new edits.
     if (save.isSuccess || save.isError) save.reset();
   };
   const submit = () => {

@@ -1,6 +1,6 @@
 // Dates go through the date-fns facade, @ab/time (docs/34 §7; cut from @ab/shared in docs/32 k3b):
 // that package (and tests, which may check against Intl) is the only place these may appear. The
-// ones that predate the rule: eslint-suppressions.json.
+// ones that predate the rule: oxlint-suppressions.json.
 const facade = 'use the date-fns facade @ab/time (localDateIn, dateText, clockOf…)';
 export const dateRestrictions = [
   { object: 'Intl', property: 'DateTimeFormat', message: `Intl.DateTimeFormat: ${facade}.` },

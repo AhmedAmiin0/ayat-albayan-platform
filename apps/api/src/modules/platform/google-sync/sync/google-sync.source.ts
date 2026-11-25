@@ -1,4 +1,4 @@
-import { meetingModeOf, usesPlatform, type Attendance, type Grade, type LessonStatus, type Program } from '@ab/shared';
+import { meetingModeOf, usesPlatform, type Attendance, type Grade, type Program } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { loadEnv } from '@/config/env/env';
@@ -61,7 +61,7 @@ export class GoogleSyncSource {
       id: row.id,
       startsAt: row.starts_at,
       endsAt: row.ends_at,
-      status: row.status as LessonStatus,
+      status: row.status,
       teacherName: row.teacher?.display_name_ar ?? '',
       students: row.lesson_students.map((s) => ({ name: s.student?.name ?? '', phone: s.student?.guardians?.phone_e164 ?? null })),
       link: platform ? classroomUrl(firstWebOrigin(loadEnv().WEB_ORIGIN), row.id) : row.meeting_link,

@@ -5,7 +5,7 @@ import { isCurrentStudent, splitByStatus, type StudentListKind } from './student
 // churned). TeacherMeRepo.students holds the ones assigned to her or on her active rules; the inbox
 // reads it unfiltered, so this filter runs on the client, never in that query.
 
-/** Her current students of one kind («مشترك» / «تجريبي» / «الكل»), in the order given. */
+/** Her current students of one kind, in the order given. */
 export function boardStudents<T extends { status: StudentStatus }>(
   students: readonly T[],
   kind: StudentListKind,

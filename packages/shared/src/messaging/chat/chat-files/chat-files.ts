@@ -2,13 +2,13 @@ import { counted, type PluralForm } from '@ab/core';
 import type { SignedDownload } from '../../../reports/index.js';
 import { baseMime } from '../../../schemas/chat-media.js';
 
-// Files staff send from the chat (owner 2026-10-19 #2): by link, inside the 24 h window.
+// Files staff send from the chat: by link, inside the 24 h window.
 
 /** Meta's `image` message takes JPEG/PNG only (no WebP/HEIC); PDFs go as a `document`. */
 export const CHAT_SEND_MIMES = ['image/jpeg', 'image/png', 'application/pdf'] as const;
 export type ChatSendMime = (typeof CHAT_SEND_MIMES)[number];
 /**
- * A voice note recorded in the app (owner 2026-10-27): AAC in MP4, as Android records it; the API
+ * A voice note recorded in the app: AAC in MP4, as Android records it; the API
  * turns it into a WhatsApp voice note (ogg/opus). The chat's own send only: saved replies and the
  * web's attach keep CHAT_SEND_MIMES.
  */
@@ -28,7 +28,7 @@ export const waMediaKind = (mime: string | null): WaMediaKind =>
 
 /**
  * Meta's session media types by mime (images JPEG/PNG only; WhatsApp's own audio and video formats;
- * a WebP is WhatsApp's sticker, owner 2026-11-01).
+ * a WebP is WhatsApp's sticker).
  */
 const SEND_KINDS: Record<string, Exclude<WaSendKind, 'document'>> = {
   'image/jpeg': 'image',
@@ -45,7 +45,8 @@ const SEND_KINDS: Record<string, Exclude<WaSendKind, 'document'>> = {
 export type WaSendKind = 'image' | 'audio' | 'video' | 'sticker' | 'document';
 
 /** The type a stored file travels as (a forwarded voice note or video too); anything else goes as a document. */
-export const waSendKind = (mime: string | null): WaSendKind => SEND_KINDS[baseMime(mime)] ?? 'document';
+export const waSendKind = (mime: string | null): WaSendKind =>
+  SEND_KINDS[baseMime(mime)] ?? 'document';
 
 export type ChatFileProblem = 'file_type' | 'file_too_large';
 
@@ -64,8 +65,6 @@ export function chatFileProblem(
   return f.size < 1 || f.size > cap ? 'file_too_large' : null;
 }
 
-// A PDF bubble like WhatsApp's (owner 2026-10-29): page 1 as a thumb and «12 صفحة · PDF · 1.2 ميغابايت».
-
 const PDF_MIME = 'application/pdf';
 export const isPdfMime = (mime: string | null): boolean => baseMime(mime) === PDF_MIME;
 /** The preview's last page (GET …/pdf/:page refuses more); the file itself keeps them all. */
@@ -81,7 +80,12 @@ export type ThreadPdfPage = SignedDownload & { page: number; pages: number; byte
 export type ThreadFile = SignedDownload & { mime: string };
 
 /** The strings of inbox.pdf (ar.json / en.json) the meta line reads. */
-export type PdfMetaStrings = { type: string; pages: Readonly<Record<PluralForm, string>>; kb: string; mb: string };
+export type PdfMetaStrings = {
+  type: string;
+  pages: Readonly<Record<PluralForm, string>>;
+  kb: string;
+  mb: string;
+};
 
 const MB = 1024 * 1024;
 /** First-strong isolate (FSI … PDI): in an Arabic line «1.2» never takes its direction from «PDF» (bidi W7). */
@@ -94,7 +98,7 @@ export function fileSizeText(bytes: number, s: PdfMetaStrings): string {
   return (small ? s.kb : s.mb).split('{n}').join(n);
 }
 
-/** «12 صفحة · PDF · 1.2 ميغابايت», each part isolated so the line reads right in Arabic and English. */
+/** Each part is isolated so the line reads right in Arabic and English. */
 export function pdfMetaLine(doc: { pages: number; bytes: number }, s: PdfMetaStrings): string {
   return [counted(s.pages, doc.pages), s.type, fileSizeText(doc.bytes, s)].map(isolate).join(' · ');
 }
@@ -112,7 +116,7 @@ export function cleanFileName(raw: string | null | undefined, max = 200): string
   return Array.from(name).slice(0, max).join('').trim();
 }
 
-/** A caption line that reads as a PDF's file name («خطة الحفظ.pdf»): no path, ≤ 200 characters. */
+/** A caption line that reads as a PDF file name: no path, at most 200 characters. */
 const PDF_FILE_NAME = /^[^/\\]{1,196}\.pdf$/i;
 
 interface Named {
@@ -126,10 +130,7 @@ const captionName = (m: Named): string => {
   return PDF_FILE_NAME.test(line) ? line : '';
 };
 
-/**
- * A PDF bubble's name, as WhatsApp's: the file's own name (media_name); else the caption's first
- * line when it reads as a file name (some senders put it there); else `untitled` («ملف PDF»).
- */
+/** PDF name: media_name, else a caption first line that reads as a file name, else `untitled`. */
 export function pdfBubbleName(m: Named, untitled: string): string {
   return [cleanFileName(m.media_name), captionName(m)].find((name) => name.length > 0) ?? untitled;
 }

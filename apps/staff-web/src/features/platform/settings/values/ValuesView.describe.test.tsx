@@ -25,7 +25,7 @@ afterEach(() => {
   granted.perms = new Set(['settings.write']);
 });
 
-// The line's name is its text, then the sr-only «. اقرأ الوصف كاملًا أو عدّله» (the visible text alone says no action).
+// The line's name is its text plus a screen-reader suffix, since the text alone names no action.
 const openLine = async (label: string, text: string) => fireEvent.click(within(await findRow(label)).getByRole('button', { name: `${text}${d.lineSr}` }));
 
 describe('«القيم» — «تعديل الوصف»', () => {
@@ -34,7 +34,7 @@ describe('«القيم» — «تعديل الوصف»', () => {
     renderValues(apiFetch, { entries: [edited] });
     await openLine(HORIZON, MINE);
     const dialog = screen.getByRole('dialog', { name: d.title });
-    const box = within(dialog).getByLabelText(new RegExp(d.label)) as HTMLTextAreaElement;
+    const box = within(dialog).getByLabelText<HTMLTextAreaElement>(new RegExp(d.label));
     expect(box.value).toBe(MINE);
     expect(box.maxLength).toBe(DESCRIPTION_MAX);
     const hint = within(dialog).getByText(counter(MINE.length));
@@ -67,7 +67,7 @@ describe('«القيم» — «تعديل الوصف»', () => {
     fireEvent.click(within(row).getByRole('button', { name: t.settingsValues.menu.replace('{name}', HORIZON) }));
     fireEvent.click(within(row).getByRole('menuitem', { name: d.menu }));
     const dialog = screen.getByRole('dialog', { name: d.title });
-    expect((within(dialog).getByLabelText(new RegExp(d.label)) as HTMLTextAreaElement).value).toBe(settingText('booking_horizon_weeks').hint);
+    expect((within(dialog).getByLabelText<HTMLTextAreaElement>(new RegExp(d.label))).value).toBe(settingText('booking_horizon_weeks').hint);
     expect(within(dialog).queryByRole('button', { name: d.restore })).toBeNull();
   });
 

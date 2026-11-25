@@ -6,7 +6,7 @@ import {
   type StudentBalanceView,
   type TeacherBalanceView,
   type SubscriptionView,
-} from '@ab/shared';
+} from '@ab/money';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -18,10 +18,10 @@ import { toTeacherBalance } from './money/balance.teacher';
 import { PackagesService } from './money/packages.service';
 import { StudentAccess } from './student-lifecycle/student-access';
 import { subscriptionListQuery, subscriptionQuoteSchema } from './subscriptions.dto';
-import { SubscriptionCreator } from './subscription-creator';
-import { SubscriptionsService } from './subscriptions.service';
+import { SubscriptionCreator } from './shared/subscription-creator';
+import { SubscriptionsService } from './shared/subscriptions.service';
 import { assertUsedBefore } from './used-before';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 /** Packages (S1–S5, R-SUB-01). Admin only; the price comes from the catalog, never the body. */
 @ApiTags('subscriptions')
@@ -70,7 +70,7 @@ export class SubscriptionsController {
     return this.subs.update(id, sentOnly(parseOrThrow(subscriptionUpdateSchema, body), body), user.id);
   }
 
-  /** «إلغاء الباقة» (owner 2026-10-28): the package stays, «ملغاة»; 409 already_cancelled / has_payments / has_lessons. */
+  /** The package stays, marked cancelled; 409 already_cancelled, has_payments or has_lessons. */
   @Post(':id/cancel')
   @HttpCode(200)
   @Permissions('subscriptions.write')

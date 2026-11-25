@@ -11,13 +11,12 @@ import type { Clock } from '@ab/web-kit/lib/clock';
 import { hhmmText } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// «كل الطلاب»'s schedule, attendance and package cells (owner 2026-10-30), the phone's words
-// through the shared rosterScheduleText / rosterAttendanceText / packageSummaryText.
+// Uses the shared roster text helpers, the same words as the phone.
 
 const S = t.sales.allStudents;
 const dayNames: Record<string, string | undefined> = t.enums.weekday;
 
-/** «الأحد، الثلاثاء، الخميس · 11:00 ص · أسماء حسين» in the viewer's `tz`; null in an old cache. */
+/** In the viewer's `tz`; null in an old cache. */
 export function rosterScheduleLine(
   student: Pick<SalesStudentView, 'weekly'>,
   clock: Clock,
@@ -35,7 +34,7 @@ export function rosterScheduleLine(
   });
 }
 
-/** «حضر 7 من 9 في الباقة الحالية» (or the last 30 days); null in an old cache. */
+/** Current package or the last 30 days; null in an old cache. */
 export function rosterAttendanceLine(student: Pick<SalesStudentView, 'attendance'>): string | null {
   return rosterAttendanceText(student.attendance, S);
 }
@@ -57,7 +56,7 @@ const words: PackageWords = {
   projectedEnd: H.projectedEnd,
 };
 
-/** «12 حلقة · مشترك · استُخدمت 5 من 12 · …» (no price), «لا توجد باقة حالية»; null: old cache. */
+/** Never a price; null means an old cache. */
 export function rosterPackageLine(student: Pick<SalesStudentView, 'package'>): string | null {
   return packageSummaryText(student.package, { ...words, noPackage: S.noPackage });
 }

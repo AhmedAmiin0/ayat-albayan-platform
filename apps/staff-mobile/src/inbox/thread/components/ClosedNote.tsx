@@ -1,12 +1,7 @@
 import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
-/**
- * In the reply box's place once the 24 h window closed: why only a template can go now
- * (inbox.sessionClosed, verbatim; a number with no message yet: the first message is a template).
- * A gold-washed full-width line over the row with «أرسل قالبًا» (ClosedRow). Never cut (owner
- * 2026-10-27): no line limit, it wraps across the whole width.
- */
+/** A number with no message yet must start with a template; the note is never cut. */
 export function ClosedNote({ known }: { known: boolean }) {
   const { color } = useTheme();
   const text = known ? t.inbox.sessionClosed : t.inbox.newChat.firstTemplate;

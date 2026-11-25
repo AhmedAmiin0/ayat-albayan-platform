@@ -1,5 +1,4 @@
-// Read-only Graph calls of «افحص الخطوط» (docs/12 §13.9, §13.12): GET /{phone_number_id}?fields=
-// and GET /{waba}/subscribed_apps, plus POST /__stub/lines/{pn} to play an unhealthy number.
+// Read-only Graph calls of the line check (docs/12 §13.9, §13.12), plus a stub route.
 import type { IncomingMessage } from 'node:http';
 import { initialHealth, stubLines } from './lines.ts';
 import { ERR, type Json } from './providers/meta.ts';

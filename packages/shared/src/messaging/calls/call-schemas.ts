@@ -6,7 +6,11 @@ import { phoneE164 } from '@ab/core';
 /** An SDP offer or answer is a few KB; anything bigger is not one (the column's check too). */
 export const CALL_SDP_MAX = 20_000;
 
-const sdp = z.string().min(1).max(CALL_SDP_MAX).refine((v) => v.startsWith('v=0'), 'not_sdp');
+const sdp = z
+  .string()
+  .min(1)
+  .max(CALL_SDP_MAX)
+  .refine((v) => v.startsWith('v=0'), 'not_sdp');
 
 /** POST /calls: the browser's (or phone's) SDP offer to the family's WhatsApp. */
 export const startCallSchema = z.object({
@@ -21,7 +25,7 @@ export type StartCallInput = z.input<typeof startCallSchema>;
 export const acceptCallSchema = z.object({ sdp });
 export type AcceptCallInput = z.input<typeof acceptCallSchema>;
 
-/** POST /calls/permission/:phone/request: «اطلب إذن الاتصال», a staff send through the outbox. */
+/** Request call permission, a staff send through the outbox. */
 export const callPermissionRequestSchema = z.object({ clientRequestId: z.uuid() });
 
 /** GET /calls: the calls log (newest first), optionally one chat's. */

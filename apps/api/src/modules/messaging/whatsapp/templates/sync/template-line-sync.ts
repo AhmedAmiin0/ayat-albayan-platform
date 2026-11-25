@@ -1,4 +1,5 @@
-import type { TemplateLineFacts, TemplateLineSync, WaLine, WaProvider } from '@ab/shared';
+import type { TemplateLineFacts, TemplateLineSync } from '@ab/shared';
+import type { WaLine, WaProvider } from '@ab/catalog';
 import { lineFacts, readError } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { newStarters } from './template-import';
 import {

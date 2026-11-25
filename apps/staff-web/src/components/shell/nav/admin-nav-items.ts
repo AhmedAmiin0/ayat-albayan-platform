@@ -2,9 +2,7 @@ import type { Permission } from '@ab/catalog';
 import type { IconName } from '@ab/web-kit/components/ui/display/icon';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
-// The fihris (surah index) nav, docs/07 §7: the ONE list of admin pages, rendered by the sidebar
-// (≥ 900px) and by the «القائمة» sheet below it; `visibleGroups` (dynamic roles) filters it once.
-// Only routes that exist, never dead links. لوحة التحكم is the logo link (/admin).
+// The one list of admin pages (docs/07 §7), shared by sidebar and sheet; only existing routes.
 export const ADMIN_NAV_GROUPS = [
   [
     { key: 'leads', to: '/admin/leads', label: t.nav.leads, icon: 'phone', permission: 'leads.read' },
@@ -22,7 +20,7 @@ export const ADMIN_NAV_GROUPS = [
     { key: 'classrooms', to: '/admin/classrooms', label: t.classroom.admin.nav, icon: 'chat', permission: 'lessons.read' },
     { key: 'feedback', to: '/admin/feedback', label: t.nav.feedback, icon: 'star', permission: 'feedback.read' },
   ],
-  // «المالية» (owner, 2026-10-05): every money page in one section, titled (see MONEY_GROUP).
+  // Every money page in one titled section (see MONEY_GROUP).
   [
     { key: 'payments', to: '/admin/payments', label: t.payments.title, icon: 'card', permission: 'payments.read' },
     { key: 'subscriptions', to: '/admin/subscriptions', label: t.nav.subscriptions, icon: 'box', permission: 'subscriptions.read' },
@@ -43,7 +41,6 @@ export const ADMIN_NAV_GROUPS = [
   ],
 ] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName; permission: Permission }[])[];
 
-/** The group whose first key this is gets the «المالية» title. */
 export const MONEY_GROUP = 'payments';
 
 /** Every admin nav item in one flat list (the top bar's page title). */

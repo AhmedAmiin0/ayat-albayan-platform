@@ -4,9 +4,7 @@ import { freshDigits, seedLead } from '../../support/core/messages';
 import { restoreSettings, settingText, snapshotSettings } from '../../support/platform/settings';
 import { setMessaging, stubInbound, stubReset, stubSent } from '../../support/core/wa-stub';
 
-// «التواصل» › «نظرة عامة» switches (/admin/settings/communications; R-MSG-01, cut-over docs/09, docs/23 phases 2 and 6): the kill switch is the only
-// switch for sending (no env fuse) and asks first both ways (ON names the queue); the automatic-messages
-// switch asks first too and holds job-made rows as auto_off.
+// The kill switch is the only send switch (docs/09, docs/23) and confirms both ways.
 
 const s = ar.templates.settings;
 const tabs = ar.settingsPages.communicationsTabs;
@@ -39,13 +37,12 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     await queueText({ phone: `+${digits}`, leadId, body: 'أهلًا بحضرتك' });
     await queueText({ phone: `+${digits}`, leadId, body: 'تحب نحجز لك حلقة؟' });
     const admin = await asRole('admin');
-    // «الإشعارات» (?tab=catalogue, guardian tab by default) says the report PDF is held because sending is off
-    // (the phone row says it short: «الإرسال متوقف»).
+    // The notifications tab says the report PDF is held because sending is off.
     await admin.goto('/admin/settings/communications?tab=catalogue');
     const report = admin.getByRole('region', { name: ar.notificationRules.title, exact: true }).locator('[data-key="report_ready"]');
     const held = isMobile ? ar.notificationRules.shortBlockers.messaging_off : ar.notificationCatalogue.blockers.messaging_off;
     await expect(report.getByText(held, { exact: false })).toBeVisible();
-    // The page head names the state on every tab («إرسال الرسائل: …», never the switch's own words).
+    // The page head names the sending state on every tab.
     await expect(admin.getByRole('group', { name: ar.settingsPages.sendingNow })).toContainText(s.off);
 
     await admin.getByRole('tab', { name: tabs.overview, exact: true }).click();
@@ -89,7 +86,7 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     test.setTimeout(150_000);
     await restoreSettings({ keys: ['auto_messages_enabled'], rows: [{ key: 'auto_messages_enabled', value: false }] });
     const admin = await asRole('admin');
-    await admin.goto('/admin/communications'); // docs/23 §2d's address: «التواصل», «نظرة عامة» is the default tab
+    await admin.goto('/admin/communications'); // docs/23 §2d: overview is the default tab.
     await expect(admin.getByText(s.autoOff, { exact: true })).toBeVisible();
 
     await admin.getByRole('button', { name: s.autoEnable }).click();

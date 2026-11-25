@@ -4,10 +4,7 @@ import { resetAbrar, withSql } from '../../support/core/schedule';
 import { apiSubmit, backdateSubmit, fillTexts, reportRow, TEXTS } from '../../support/reporting/teacher-extra';
 import { USERS } from '../../support/core/users';
 
-// Admin side of «تقرير الحلقة» (R-REP-02/03, R12, R-NFR-03): the teacher's window is closed (25 h
-// ago) and the admin still corrects the sent report → version 2 and an audit row; a PDF that
-// failed shows its state with «جهّز ملف PDF مرة أخرى» → pending → ready; «تحميل PDF» gives a signed URL
-// that serves the file under the report's name. The job renders in-process (ReportPdfModule).
+// Admin report edits (R-REP-02/03, R12, R-NFR-03) after the teacher window: version 2 and audit.
 
 const PDF_WAIT = { timeout: 150_000, intervals: [1_000, 2_000, 5_000] };
 const EDITED = 'تعديل من الإدارة بعد مدة المعلمة';
@@ -50,7 +47,7 @@ test.describe('admin report edit and PDF (R-REP-02/03, R12)', () => {
     const error = await withSql((sql) => sql<{ pdf_error: string | null }[]>`select pdf_error from public.lesson_reports where id = ${reportId}`);
     expect(error).toEqual([{ pdf_error: null }]);
 
-    // «تحميل PDF»: the API signs a URL; it serves the PDF, saved under the report's file name.
+    // The API signs a URL that serves the PDF under the report's file name.
     await admin.reload();
     const [signed] = await Promise.all([
       admin.waitForResponse((r) => r.url().endsWith(`/reports/${reportId}/pdf`) && r.request().method() === 'GET'),

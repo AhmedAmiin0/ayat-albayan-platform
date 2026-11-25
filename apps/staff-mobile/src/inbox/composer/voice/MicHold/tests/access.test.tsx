@@ -2,6 +2,7 @@ import { act, fireEvent, screen } from '@testing-library/react-native';
 import { AccessibilityInfo, AppState, type AppStateStatus } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { hold, lift, openChat, rec, resetVoice, tick } from '@/inbox/composer/voice/voice-test-kit';
+import type * as mockVoiceTestKit from '@/inbox/composer/voice/voice-test-kit';
 
 // A screen reader's tap, the bin, leaving the app and a call (owner 2026-10-27; RTL).
 const mockApiFetch = jest.fn();
@@ -12,7 +13,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
-jest.mock('expo-audio', () => jest.requireActual<typeof import('@/inbox/composer/voice/voice-test-kit')>('@/inbox/composer/voice/voice-test-kit').audioMock());
+jest.mock('expo-audio', () => jest.requireActual<typeof mockVoiceTestKit>('@/inbox/composer/voice/voice-test-kit').audioMock());
 jest.mock('@/inbox/composer/voice/voice-support', () => ({ voiceSupported: () => true }));
 jest.mock('@/inbox/thread/calls/state/call-context', () => ({
   ...jest.requireActual('@/inbox/thread/calls/state/call-context'),
@@ -39,7 +40,7 @@ test('a screen reader’s «activate» records locked (no hold), announced; the 
     fireEvent(mic(), 'accessibilityAction', { nativeEvent: { actionName: 'activate' } });
   });
   expect(rec.record).toHaveBeenCalled();
-  expect(say).toHaveBeenCalledWith(t.inbox.composer.voice.locked); // «اضغط «أرسل» عند الانتهاء», not the hold hint
+  expect(say).toHaveBeenCalledWith(t.inbox.composer.voice.locked);
   expect(screen.getByRole('button', { name: t.inbox.composer.voice.delete })).toBeTruthy();
   await act(async () => {
     fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.voice.delete }));
@@ -52,8 +53,8 @@ test('a screen reader’s «activate» records locked (no hold), announced; the 
 test('the app leaving the foreground stops and keeps the recording (delete or send), sends nothing', async () => {
   const listeners: ((s: AppStateStatus) => void)[] = [];
   jest.spyOn(AppState, 'addEventListener').mockImplementation((_e, fn) => {
-    listeners.push(fn as (s: AppStateStatus) => void);
-    return { remove: jest.fn() } as unknown as ReturnType<typeof AppState.addEventListener>;
+    listeners.push(fn);
+    return { remove: jest.fn() };
   });
   await openChat(mockApiFetch);
   await hold();
@@ -68,8 +69,8 @@ test('the app leaving the foreground stops and keeps the recording (delete or se
 test('the app leaving while the recorder gets ready: no recording goes live, a later tap sends nothing', async () => {
   const listeners: ((s: AppStateStatus) => void)[] = [];
   jest.spyOn(AppState, 'addEventListener').mockImplementation((_e, fn) => {
-    listeners.push(fn as (s: AppStateStatus) => void);
-    return { remove: jest.fn() } as unknown as ReturnType<typeof AppState.addEventListener>;
+    listeners.push(fn);
+    return { remove: jest.fn() };
   });
   let ready: () => void = () => undefined;
   rec.prepareToRecordAsync.mockImplementationOnce(() => new Promise<undefined>((resolve) => (ready = () => resolve(undefined))));

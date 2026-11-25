@@ -1,4 +1,4 @@
-import type { QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/shared';
+import type { QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/money';
 import type { StudentProfile } from '@ab/shared';
 import { subscription } from '@/payments/fixtures';
 import { profile as student } from '@/students/shared/test-data';

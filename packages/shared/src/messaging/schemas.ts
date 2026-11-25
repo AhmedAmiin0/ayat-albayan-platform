@@ -8,24 +8,26 @@ import { BODY_SLOTS, type BodySlot } from './templates/templates.js';
 
 /** WhatsApp's text-message limit. */
 export const WA_TEXT_MAX = 4096;
-/** A correction's text leaves room for its prefix («تصحيح: », admins may reword it). */
+/** A correction's text leaves room for its prefix, which admins may reword. */
 export const CORRECTION_PREFIX_ROOM = 40;
 
 /** POST /threads/:phone/text: a session message (24 h window only, else 409 session_closed). */
-export const threadTextSchema = z.object({
-  text: z.string().trim().min(1).max(WA_TEXT_MAX),
-  /** Idempotency (rule 8): a retried send returns the first row. */
-  clientRequestId: z.uuid().optional(),
-  /** «رد»: the quoted message, of this same chat (the API resolves its wamid; 400 reply_not_in_thread). */
-  replyToMessageId: z.uuid().optional(),
-  /** «تعديل» (owner 2026-11-07): this text corrects that message (a reply prefixed «تصحيح: »). */
-  correctsId: z.uuid().optional(),
-}).refine((b) => !b.correctsId || b.text.length <= WA_TEXT_MAX - CORRECTION_PREFIX_ROOM, {
-  path: ['text'],
-  message: 'too_long',
-});
+export const threadTextSchema = z
+  .object({
+    text: z.string().trim().min(1).max(WA_TEXT_MAX),
+    /** Idempotency (rule 8): a retried send returns the first row. */
+    clientRequestId: z.uuid().optional(),
+    /** The quoted message, from this chat (400 reply_not_in_thread). */
+    replyToMessageId: z.uuid().optional(),
+    /** This text corrects that message, sent as a prefixed reply. */
+    correctsId: z.uuid().optional(),
+  })
+  .refine((b) => !b.correctsId || b.text.length <= WA_TEXT_MAX - CORRECTION_PREFIX_ROOM, {
+    path: ['text'],
+    message: 'too_long',
+  });
 
-/** POST /threads/:phone/file-upload-url: a signed upload for one image, PDF (owner 2026-10-19 #2) or voice note (2026-10-27). */
+/** POST /threads/:phone/file-upload-url: a signed upload for one image, PDF or voice note. */
 export const threadFileUploadSchema = z.object({
   clientRequestId: z.uuid(),
   mime: z.enum(CHAT_FILE_MIMES, { message: 'file_type' }),
@@ -37,13 +39,21 @@ export const threadFileSendSchema = z.object({
   clientRequestId: z.uuid(),
   path: z.string().min(1),
   // No path separators and no control characters (a newline would reach the family's WhatsApp).
-  filename: z.string().trim().min(1).max(200).regex(/^[^/\\\p{Cc}]+$/u),
+  filename: z
+    .string()
+    .trim()
+    .min(1)
+    .max(200)
+    .regex(/^[^/\\\p{Cc}]+$/u),
   caption: z.string().trim().max(WA_CAPTION_MAX).optional(),
   replyToMessageId: z.uuid().optional(),
 });
 
 const paramText = z.string().trim().min(1).max(1024).optional();
-const slotsShape = Object.fromEntries(BODY_SLOTS.map((s) => [s, paramText])) as Record<BodySlot, typeof paramText>;
+const slotsShape = Object.fromEntries(BODY_SLOTS.map((s) => [s, paramText])) as Record<
+  BodySlot,
+  typeof paramText
+>;
 
 /** messages.template_params an admin can fill ({{1}}…{{9}}); documents and payloads are set by the API. */
 export const templateParamsInputSchema = z.object({
@@ -60,20 +70,20 @@ export const threadTemplateSchema = z.object({
   params: templateParamsInputSchema,
   lessonId: z.uuid().optional(),
   clientRequestId: z.uuid().optional(),
-  /** «إعادة فتح المحادثة»: sent as this phone's reopen template (a closed chat-line window). */
+  /** Sent as this phone's reopen template when the chat-line window is closed. */
   reopen: z.boolean().optional(),
 });
 
-/** POST /threads/:phone/rating «إرسال تقييم الحلقة»: the API picks the lesson; the id makes a retry safe. */
+/** The API picks the lesson; the id makes a retry safe. */
 export const threadRatingSchema = z.object({ clientRequestId: z.uuid() });
 
 /**
  * PATCH /messaging/templates/:key/starter: the admin offers a template to sales to start a chat, or
- * stops. Named like the TemplateView field it sets (decision 2026-10-12), not camelCase.
+ * stops. Named like the TemplateView field it sets, not camelCase.
  */
 export const templateStarterSchema = z.object({ sales_starter: z.boolean() });
 
-/** POST /messaging/templates/health: one line (WABA) only; none = every configured line (owner 2026-10-18). */
+/** POST /messaging/templates/health: one line (WABA) only; none = every configured line. */
 export const templateHealthSchema = z.object({ line: z.enum(WA_LINES).optional() });
 
 /** PATCH /messaging/templates/:key/line: the number this template goes from (audited). */
@@ -81,7 +91,7 @@ export const templateLineSchema = z.object({ line: z.enum(WA_LINES) });
 
 /** The two statuses an admin may set by hand on a template whose line is on the crm driver (docs/19). */
 export const CRM_TEMPLATE_STATUSES = ['approved', 'missing'] as const;
-/** PUT /messaging/templates/:key/crm-status: «معتمد في نظام CRM» / «غير متاح في نظام CRM» (audited). */
+/** Audited CRM approval status of a template. */
 export const templateCrmStatusSchema = z.object({ status: z.enum(CRM_TEMPLATE_STATUSES) });
 
 /** PATCH /leads/:id/qualification: merged into leads.qualification; null clears a field. */

@@ -1,4 +1,5 @@
-import type { InvoiceView, SignedDownload } from '@ab/shared';
+import type { SignedDownload } from '@ab/shared';
+import type { InvoiceView } from '@ab/schedule';
 import { ar } from '@/common/infra/i18n/server-text';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, extFor } from '@/common/storage/storage.paths';
@@ -23,10 +24,7 @@ function view(row: InvoiceRowOut): InvoiceView {
   };
 }
 
-/**
- * The فاتورة of bookings (R-PAY-03): who may see them is decided by the controller (admin only;
- * a teacher never sees a payment proof). Views are not audited (ponytail: add if the owner asks).
- */
+/** Admin only, since a teacher never sees a payment proof (R-PAY-03). */
 @Injectable()
 export class InvoicesService {
   constructor(
@@ -52,7 +50,7 @@ export class InvoicesService {
     return row ? view(row) : null;
   }
 
-  /** A signed URL for 1 hour; the browser saves it as «AB-0183_فاتورة.png». 404 invoice_not_found. */
+  /** A signed URL valid for 1 hour; 404 invoice_not_found. */
   async download(id: string): Promise<SignedDownload> {
     const row = await this.queries.get(id);
     if (!row) throw notFound('invoice_not_found');

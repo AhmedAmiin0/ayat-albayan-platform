@@ -2,10 +2,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RecIndicator } from '@ab/web-kit/classroom/recordings/RecIndicator';
 import type { RoomSnapshot } from './room-types';
 
-/**
- * One line above the call: joining, how many are in, and «جارٍ التسجيل» (reconnecting: the
- * ReconnectStrip under it).
- */
+/** Reconnecting shows in the ReconnectStrip below. */
 export function RoomHeader({ snap }: { snap: RoomSnapshot }) {
   const people = snap.tiles.filter((x) => x.kind === 'camera').length;
   return (

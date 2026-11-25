@@ -1,4 +1,4 @@
-import { riyadhToday } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { Injectable, Logger } from '@nestjs/common';
 import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
@@ -16,13 +16,7 @@ interface ResumeSummary {
   failed: number;
 }
 
-/**
- * The pause calendar (docs/11 §7b), hourly with the job as actor null: a pause from a later day
- * begins on its from day (course_pause_begin: rules, package and student paused), and every open
- * pause whose until day is before Riyadh today is resumed as of the day after it (the automatic
- * «استئناف»). Idempotent: each RPC locks the pause and one already begun / resumed changes nothing
- * (the dates move exactly once), so a re-run is harmless.
- */
+/** Pause calendar (docs/11 §7b), hourly: idempotent, each RPC locks the pause; dates move once. */
 @BackgroundJob({ name: 'course-pause-resume' })
 @Injectable()
 export class CoursePauseJob extends TickerJob {

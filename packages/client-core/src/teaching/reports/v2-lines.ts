@@ -4,18 +4,16 @@ import {
   emptyContent,
   ISLAMIC_RATES,
   type ArabicSkill,
-  type Attendance,
-  type Grade,
   type IslamicDomain,
   type IslamicRate,
-  type Locale,
-  type Program,
   type QuickNote,
   type ReportContent,
   type ReportView,
   type SegmentKind,
   type TajweedTopic,
 } from '@ab/shared';
+import type { Attendance, Grade, Program } from '@ab/catalog';
+import type { Locale } from '@ab/core';
 import { rangeLabel, type RangeWords } from './v2-text.js';
 
 /** What the lines read: a ReportView, or the live page's report (ReportPageReport). */
@@ -106,7 +104,7 @@ const CONTENT_LINES: Record<Program, (c: ReportContent, text: ReportV2Text) => R
   islamic_studies: islamicLines,
 };
 
-/** «ملاحظة للأسرة»: the quick notes then the teacher's words. */
+/** Quick notes come before the teacher's words. */
 function noteLine(r: LinesReport, text: ReportV2Text): ReportLine {
   const quick = (r.content?.quick ?? []).map((q) => text.v2.quick[q]);
   const parts = [...quick, ...(r.notes ? [r.notes] : [])];

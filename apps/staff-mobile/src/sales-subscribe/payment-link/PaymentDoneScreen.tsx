@@ -28,11 +28,7 @@ interface LinkOutcomeProps {
   base: TreeBase;
 }
 
-/**
- * The link as our API has it: «تم الدفع», confirming (the webhook may come after Stripe's redirect; after a
- * minute «لم يصل تأكيد الدفع بعد» and «تحديث»), «لم يتم الدفع» (cancelled), or not hers. Then the student's
- * file, which reaches the family's chat.
- */
+/** The webhook may arrive after Stripe's redirect, so a payment can still be confirming. */
 function LinkOutcome({ token, r, base }: LinkOutcomeProps) {
   const result = useLinkByToken(token, r === 'done');
   const [now] = useState(() => new Date());

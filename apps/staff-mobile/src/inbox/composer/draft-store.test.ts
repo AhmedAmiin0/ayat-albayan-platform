@@ -89,7 +89,7 @@ describe('composer draft store («عرض سعر» fills the box; drafts kept unt
     const bound = await staging(A);
     await bound.rerender({ on: 'reply text' });
     await bound.rerender({ on: 'reply text, changed' });
-    await bound.rerender({ on: 'the original' }); // «تعديل»: the box holds the original
+    await bound.rerender({ on: 'the original' });
     setComposerText(A, 'reply text, changed'); // the edit's restore ran first
     await bound.unmount();
     expect(getComposerText(A)).toBe('');

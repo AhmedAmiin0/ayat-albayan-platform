@@ -1,11 +1,12 @@
-import { currentPackage, OPEN_LESSON_STATUSES, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { currentPackage } from '@ab/money';
+import { OPEN_LESSON_STATUSES } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
 import { notFound } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
 
-/** A teacher picked for «تغيير المعلم». */
 interface PickedTeacher {
   id: string;
   status: 'active' | 'inactive';
@@ -56,7 +57,7 @@ export class ProfileCourseRepo {
     return current.id;
   }
 
-  /** The teacher (with its Arabic name, «الدورة والباقة»), or null when unknown. */
+  /** Null when unknown. */
   async teacher(id: string): Promise<PickedTeacher | null> {
     const { data, error } = await this.db
       .from('teachers')
@@ -67,10 +68,7 @@ export class ProfileCourseRepo {
     return data;
   }
 
-  /**
-   * The next open lesson of the course's rules (course_rules_of, migration 991: also a rule without
-   * subscription_id) from now on: «من تاريخ»'s default; `limit` of them for «الحلقات القادمة».
-   */
+  /** course_rules_of (migration 991) also covers a rule without subscription_id. */
   async upcoming(
     ruleIds: readonly string[],
     limit = 1,

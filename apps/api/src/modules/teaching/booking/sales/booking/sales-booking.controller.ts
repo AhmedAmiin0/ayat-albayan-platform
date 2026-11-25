@@ -1,10 +1,5 @@
-import type {
-  BookingRequest,
-  BookingResult,
-  BookingTeacherOption,
-  Conflict,
-  SlotsResponse,
-} from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import type { BookingResult, BookingTeacherOption, Conflict, SlotsResponse } from '@ab/schedule';
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -76,7 +71,7 @@ export class SalesBookingOptionsController {
   ): Promise<SlotsResponse> {
     return this.options.slots(query, user);
   }
-  /** «وقت آخر»: the same scope as her slots, over the server's next 14 days. */
+  /** Same scope as her slots, over the server's next 14 days. */
   @Get('outside-slots')
   outsideSlots(
     @ZodQuery(outsideSlotsQuerySchema) query: z.output<typeof outsideSlotsQuerySchema>,

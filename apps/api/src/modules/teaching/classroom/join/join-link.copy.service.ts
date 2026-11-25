@@ -1,4 +1,4 @@
-import type { JoinLinkUrl } from '@ab/shared';
+import type { JoinLinkUrl } from '@ab/schedule';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
@@ -7,12 +7,7 @@ import { CLASSROOM_WEB_ORIGIN } from '@/modules/teaching/classroom/classroom.con
 import { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
 import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
 
-/**
- * POST /lessons/:id/join-link/url («انسخ لينك الطالب»): a fresh one-lesson guest link handed back as
- * a URL, for the admin or the lesson's own teacher to paste wherever they talk to the family. It
- * needs no WhatsApp template, so it works before Meta approves lesson_join_link. The guest page
- * itself still lets nobody in before the window opens (settings.join_opens_before_min).
- */
+/** Needs no WhatsApp template; the guest page still admits nobody before the window opens. */
 @Injectable()
 export class JoinLinkCopyService {
   constructor(

@@ -9,13 +9,13 @@ const errors: Record<string, string | undefined> = text.error;
 
 /** "4.3 of 5 · 12 answers", or null with no answers yet. One decimal, Western digits. */
 export function averageLine(a: FeedbackAverage | null): string | null {
-  if (!a || a.avg_rating === null || a.n === 0) return null;
+  if (a?.avg_rating == null || a.n === 0) return null;
   return text.averageLine.replace('{avg}', a.avg_rating.toFixed(1)).replace('{n}', String(a.n));
 }
 
 /** The share that would recommend us, or null when nobody answered the question. */
 export function recommendLine(a: FeedbackAverage | null): string | null {
-  if (!a || a.recommend_yes_pct === null || a.n === 0) return null;
+  if (a?.recommend_yes_pct == null || a.n === 0) return null;
   return text.recommendLine.replace('{pct}', String(Math.round(a.recommend_yes_pct)));
 }
 

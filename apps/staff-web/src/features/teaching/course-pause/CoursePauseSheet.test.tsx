@@ -22,7 +22,7 @@ function open() {
   renderWithClient(<CoursePauseSheet studentId="s1" onClose={vi.fn()} onDone={onDone} />);
   const dialog = within(screen.getByRole('dialog', { name: words.title }));
   const set = (label: string, value: string) => fireEvent.change(dialog.getByLabelText(label), { target: { value } });
-  const confirm = () => dialog.getByRole('button', { name: words.confirm }) as HTMLButtonElement;
+  const confirm = () => dialog.getByRole<HTMLButtonElement>('button', { name: words.confirm });
   return { dialog, set, confirm, onDone };
 }
 
@@ -34,7 +34,7 @@ describe('CoursePauseSheet', () => {
 
   it('starts today, open-ended; the preview line follows the dates; the no-message note', async () => {
     const { dialog, set } = open();
-    expect((dialog.getByLabelText(words.from) as HTMLInputElement).value).toBe(today);
+    expect((dialog.getByLabelText<HTMLInputElement>(words.from)).value).toBe(today);
     expect(dialog.getByLabelText(words.from).getAttribute('min')).toBe(today);
     expect(await dialog.findByText(coursePausePreviewText(words.preview, 5))).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith(`/students/s1/course-pause/preview?from=${today}`);

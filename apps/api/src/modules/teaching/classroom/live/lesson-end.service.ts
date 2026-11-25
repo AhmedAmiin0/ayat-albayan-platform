@@ -1,4 +1,4 @@
-import { canEndLesson, isClosedLesson, joinWindow, type LessonEndResult } from '@ab/shared';
+import { canEndLesson, isClosedLesson, joinWindow, type LessonEndResult } from '@ab/schedule';
 import { ConflictException, ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { JoinLesson } from '@/modules/teaching/classroom/classroom.repo';
@@ -8,15 +8,7 @@ import { lessonTarget } from '@/modules/teaching/classroom/recordings/recording-
 import { LessonEndRepo } from './lesson-end.repo';
 import { RoomPresenceRepo } from './room-presence.repo';
 
-/**
- * «إنهاء الحلقة للجميع» (POST /lessons/:id/end, owner 2026-11-16), as «إنهاء» ends a meeting: the
- * lesson's teacher or an admin stamps lessons.room_ended_at (every join gate then answers 410
- * lesson_ended, so «ادخل مرة أخرى» cannot reopen it), nobody counts as inside any more, and the
- * LiveKit room closes for everyone (a running recording is stopped first, its file kept).
- * Idempotent: a second end answers the first time. Only a held lesson whose window is open or
- * whose room has someone inside (409 lesson_not_live otherwise: never a cancelled one, never one
- * of tomorrow). A LiveKit failure is logged; the stamp holds.
- */
+/** End for everyone: idempotent; only a live lesson (409 otherwise); LiveKit failure is logged. */
 @Injectable()
 export class LessonEndService {
   private readonly log = new Logger(LessonEndService.name);

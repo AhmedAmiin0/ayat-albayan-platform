@@ -1,10 +1,9 @@
-import { SETTING_DEFAULTS, type AcademySettings } from '@ab/shared';
+import { SETTING_DEFAULTS, type AcademySettings } from '@ab/settings';
 import { describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from './settings.fakes';
 import { SettingsController } from './settings.controller';
-import type { SettingsRulesPort } from './settings-rules.port';
 
 // 23-P4: the 0.2.0 phone's followUpHours goes through the follow-up rule, applied BEFORE the other
 // fields, so a refused rule write saves nothing else; whatever was written is audited.
@@ -24,7 +23,7 @@ function setup() {
     }),
   };
   const audit = { record: vi.fn(async () => undefined) };
-  const ctl = new SettingsController(settings, audit as unknown as AuditService, rules as unknown as SettingsRulesPort);
+  const ctl = new SettingsController(settings, audit as unknown as AuditService, rules);
   return { ctl, settings, rules, audit, order };
 }
 

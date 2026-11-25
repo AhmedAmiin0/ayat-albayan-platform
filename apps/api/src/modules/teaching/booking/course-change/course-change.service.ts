@@ -1,10 +1,5 @@
-import {
-  usesPlatform,
-  type Conflict,
-  type CourseChangeCheck,
-  type CourseChangeRequest,
-  type CourseChangeResult,
-} from '@ab/shared';
+import type { CourseChangeCheck, CourseChangeResult } from '@ab/shared';
+import { usesPlatform, type Conflict, type CourseChangeRequest } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
@@ -19,17 +14,10 @@ import { assertOwnStudents } from '@/modules/teaching/booking/sales/booking/sale
 
 /** anyStudent: a key skips «her own students» (the profile's routes; sales.renew_any, docs/16 row 38). */
 export interface ChangeActor { user: AuthUser; role: ChangeRole; anyStudent?: boolean }
-/** teacherId: «تغيير المعلم» (owner 2026-10-30), the new rules' teacher; absent = the course's. */
+/** Absent means the course's teacher. */
 export type CourseMove = CourseChangeRequest & { teacherId?: string };
 
-/**
- * «تغيير أيام الحلقات» (owner 2026-10-18, R-ASST-01/04): the course's lessons that have not happened
- * yet move to new days, the teacher, length and zone staying the course's. The assistant changes her
- * own student's course only and never over a clash; the admin may override with a reason. One
- * transaction (change_course): the old rules still reaching the change point end the day before it,
- * every open lesson of the course from it becomes rescheduled, the new rules carry exactly REMAINING
- * lessons (course-change.planner.ts).
- */
+/** R-ASST-01/04: one transaction; assistants never over a clash; admin overrides with a reason. */
 @Injectable()
 export class CourseChange {
   constructor(

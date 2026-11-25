@@ -1,4 +1,14 @@
-import { ESSENTIAL_OFF_TEXT, notificationEntry, RULE_SETTING_KEYS, SETTING_DEFAULTS, type NotificationKey, type NotificationRuleRow, type RulePatchInput, type RuleSettings, type RulesMode } from '@ab/shared';
+import {
+  ESSENTIAL_OFF_TEXT,
+  notificationEntry,
+  RULE_SETTING_KEYS,
+  type NotificationKey,
+  type NotificationRuleRow,
+  type RulePatchInput,
+  type RuleSettings,
+  type RulesMode,
+} from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { planPatch } from './rules.patch';
 import type { RulesSnapshot } from './store/rules.reader';

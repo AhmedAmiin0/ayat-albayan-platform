@@ -4,8 +4,9 @@ import {
   pickStudentLesson,
   roomNameOfStudent,
   studentJoinSchema,
-} from '@ab/shared';
-import type { JoinWindowConfig, PortalRoomLink, RoomJoinResult, StudentLinkView } from '@ab/shared';
+} from '@ab/schedule';
+import type { PortalRoomLink } from '@ab/shared';
+import type { JoinWindowConfig, RoomJoinResult, StudentLinkView } from '@ab/schedule';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { parseOrThrow } from '@/common/http/http';
@@ -31,13 +32,7 @@ type PublicCall = { token: string; ip: string };
 type PortalLesson = Omit<Resolved, 'lesson'> & { lesson: StudentLesson };
 type Resolved = { student: LinkStudent; lesson: StudentLesson | null; win: JoinWindowConfig };
 
-/**
- * The student's own link (/s/<token>, no login): «حلقتك القادمة …» and «ادخل الحلقة» for whichever
- * lesson is current or next (pickStudentLesson). The token is the whole credential; a rotated link
- * is refused 404 link_invalid like an unknown one. The join is the guest join of that lesson, through
- * the one lesson_join_links row of (lesson, student), so «إخراج من الحلقة» holds (403 removed_from_room).
- * The join counts against the public join limit, page reads (polled every 30 s) against a looser one (429).
- */
+/** The token is the whole credential; a rotated link is 404 like an unknown one; removal holds. */
 @Injectable()
 export class StudentLinkService {
   constructor(
@@ -71,13 +66,7 @@ export class StudentLinkService {
     return this.admitTo({ lesson, student, win, now, ...(name && { name }) });
   }
 
-  /**
-   * The family portal's «ادخل الحلقة» (docs/31): the caller (the portal) has checked the student is the
-   * login's own. The same guest admission as join() for ONE lesson of that student, through the one
-   * (lesson, student) link row, so a room removal holds and no token is handed out (the WhatsApp link on
-   * that row keeps working). 404 no_lesson (not theirs or over), 403 join_not_open_yet, 410, 429, 503.
-   * A test login on a test student skips the window; a test login is not rate limited (docs/56).
-   */
+  /** Family portal join (docs/31): ownership checked by caller; test logins skip window. */
   async portalJoin(input: PortalLessonInput, now = new Date()): Promise<RoomJoinResult> {
     const key = { ip: `portal:${input.profileId}`, token: input.lessonId, userIsTest: input.userIsTest };
     this.limit.assert(key, now.getTime());

@@ -1,4 +1,9 @@
-import { driverMissing, type IntegrationConfigItem, type WaLine, type WaProvider } from '@ab/shared';
+import {
+  driverMissing,
+  type IntegrationConfigItem,
+  type WaLine,
+  type WaProvider,
+} from '@ab/catalog';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, FilterPills, Ltr } from '@ab/mobile-kit';
@@ -16,11 +21,7 @@ interface LineDriverRowProps {
   onSave: (line: WaLine, provider: WaProvider) => void;
 }
 
-/**
- * One line's driver (docs/19, like the web's LineDriver + «التكاملات» select): Meta / Kapso / «نظام CRM».
- * Picking another one never saves by itself: it shows what that driver still lacks (key NAMES, never a
- * value) and asks «سيُرسل هذا الخط عبر …» first. Saved = the API's audited PUT /settings/integrations.
- */
+/** docs/19: picking never saves by itself; it lists missing key names, never values, first. */
 export function LineDriverRow({ line, items, canWrite, busy, onSave }: LineDriverRowProps) {
   const h = t.communicationsHub;
   const current = lineDriver(items, line);

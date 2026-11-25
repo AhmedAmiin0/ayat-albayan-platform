@@ -1,3 +1,4 @@
+import { offPathKeys } from '@ab/client-core';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { portalApi, portalAssets } from '@ab/web-kit/portal/api';
 
@@ -13,7 +14,7 @@ export const usePortalLesson = (input: { studentId: string; lessonId: string }) 
 /** The recording's link for the in-page player. */
 export const useRecordingUrl = (input: { studentId: string; recordingId: string }) =>
   useQuery({
-    queryKey: ['portal-recording-url', input.studentId, input.recordingId],
+    queryKey: offPathKeys.portalRecordingUrl(input.studentId, input.recordingId),
     queryFn: () => portalApi.fileUrl({ studentId: input.studentId, kind: 'recordings', id: input.recordingId }),
     staleTime: LINK_FRESH_MS,
   });
@@ -21,15 +22,12 @@ export const useRecordingUrl = (input: { studentId: string; recordingId: string 
 /** A voice note's link for the in-page player. */
 export const useLessonFileUrl = (input: { studentId: string; fileId: string }) =>
   useQuery({
-    queryKey: ['portal-lesson-file-url', input.studentId, input.fileId],
+    queryKey: offPathKeys.portalLessonFileUrl(input.studentId, input.fileId),
     queryFn: () => portalAssets.lessonFileUrl(input),
     staleTime: LINK_FRESH_MS,
   });
 
-/**
- * «تنزيل»: a link that saves the file under `name` (Content-Disposition: attachment), so the page
- * stays where it is while the browser saves it.
- */
+/** Content-Disposition: attachment, so the page stays while the browser saves. */
 export function useSaveLessonFile(studentId: string) {
   return useMutation({
     mutationFn: async (input: { fileId: string; name: string }) => {

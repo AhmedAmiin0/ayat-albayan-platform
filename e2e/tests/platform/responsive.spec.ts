@@ -24,7 +24,7 @@ const ADMIN_PAGES = [
   // The settings hub's five pages (docs/26b §1).
   '/admin/settings/values',
   '/admin/settings/communications',
-  // «التواصل»'s safety tab (docs/23 phase 6): the guards and Kapso moved here from «التكاملات».
+  // The safety tab (docs/23 phase 6) now holds the guards and Kapso.
   '/admin/settings/communications?tab=safety',
   '/admin/settings/integrations',
   '/admin/settings/google',

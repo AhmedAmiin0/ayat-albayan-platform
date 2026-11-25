@@ -15,7 +15,8 @@ import { MessageSender } from './sender/message.sender';
 import { MessagesRepo } from './messages/messages.repo';
 import { AppSendRepo } from './messages/app-send';
 import { SendGate } from './gate/send-gate';
-import { TemplatesRepo, type ApprovalRow } from './templates/catalog/templates.repo';
+import { TemplatesRepo } from './templates/catalog/templates.repo';
+import type { ApprovalRow } from './templates/catalog/types';
 import { TemplateAuthorRepo } from './templates/author/template-author.repo';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from './whatsapp.types';
 

@@ -11,7 +11,10 @@ const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
 
 /** R-LEAD-05: only these leads get follow-ups. */
-export const FOLLOW_UP_STATUSES = ['interested_no_slot', 'no_reply'] as const satisfies readonly LeadStatus[];
+export const FOLLOW_UP_STATUSES = [
+  'interested_no_slot',
+  'no_reply',
+] as const satisfies readonly LeadStatus[];
 
 /** leads.follow_up_note (migration 144): why a due follow-up has not gone out yet. */
 export const FOLLOW_UP_NOTES = ['queued', 'waiting_template', 'no_slots'] as const;
@@ -79,11 +82,7 @@ export interface ReminderTiming {
   now: Date;
 }
 
-/**
- * Should a tick at `now` queue this reminder? same_day: from minutesBefore before the start until
- * the start. day_before: from dayBeforeSendAt while the lesson is still «بكرة» in the recipient's
- * tz, so a lesson booked for later today never gets a «بكرة» message.
- */
+/** day_before is due only while the lesson is still tomorrow in the recipient's tz. */
 export function reminderDue(t: ReminderTiming): boolean {
   const now = t.now.getTime();
   const start = t.startsAt.getTime();

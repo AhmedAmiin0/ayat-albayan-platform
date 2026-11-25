@@ -1,9 +1,9 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { Injectable } from '@nestjs/common';
 import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
 import { SettingsService } from '@/common/settings/settings.service';
 
-/** The automatic lesson_rating is queued only while «الرسائل التلقائية» is ON (its own switch: the lesson_rating rule). */
+/** The automatic lesson_rating is queued only while automatic messages are on. */
 const KEYS = ['auto_messages_enabled'] as const satisfies readonly SettingKey[];
 export type LessonRatingSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 

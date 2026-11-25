@@ -1,16 +1,8 @@
-import {
-  courseDaysPerWeek,
-  courseLessonCount,
-  DURATIONS,
-  type BookedCourse,
-  type DayTime,
-  type PackageSize,
-  wallParts,
-} from '@ab/shared';
+import { courseDaysPerWeek, courseLessonCount, type BookedCourse } from '@ab/shared';
+import { DURATIONS, type PackageSize } from '@ab/catalog';
+import { type DayTime, wallParts } from '@ab/schedule';
 
-// The assistant's booked courses of a student (owner 2026-10-18): the rules sharing a subscription_id
-// (migration 470), read for «تابِع بنفس الأيام» (the previous course) and «تغيير أيام الحلقات» (the
-// running one). Pure; local dates "YYYY-MM-DD" compare as strings.
+// Rules sharing a subscription_id (migration 470); pure; local dates compare as strings.
 
 /** One schedule_rules row of a course, with its subscription's plan. */
 export type CourseRuleRow = {
@@ -109,10 +101,7 @@ const upcomingFrom = (rows: readonly CourseRuleRow[], c: BookedCourse, now: Date
   return own.map((r) => r.starts_on).filter((d) => d > today).sort()[0] ?? null;
 };
 
-/**
- * The course «تغيير أيام الحلقات» changes: the one running today, else the earliest-starting upcoming
- * one (a renewal booked ahead never hides the course actually running). null without either.
- */
+/** The running course, else the earliest upcoming, so a renewal booked ahead never hides it. */
 export function currentCourse(rows: readonly CourseRuleRow[], courses: readonly BookedCourse[], now: Date): BookedCourse | null {
   const running = courses.find((c) => c.running);
   if (running) return running;

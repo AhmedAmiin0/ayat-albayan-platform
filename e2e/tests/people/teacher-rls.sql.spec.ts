@@ -18,7 +18,6 @@ const PHONE = {
   own: '+966500164005',
 };
 
-/** «أبرار» (abrar@e2e.local) and a second teacher; one family per case; one inbound row per phone. */
 async function seed(tx: Tx) {
   const [abrar] = await tx<{ id: string }[]>`update public.teachers set phone_e164 = ${PHONE.own}
     where profile_id = ${await userId(tx, USERS.teacher.email)} returning id`;

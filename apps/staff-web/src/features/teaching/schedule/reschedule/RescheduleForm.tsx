@@ -27,10 +27,7 @@ export interface RescheduleFormProps {
   near?: string;
 }
 
-/**
- * «تغيير الميعاد» (R-SCH-07, journey 4): pick the new start on the teacher's slot grid; a clash
- * comes back as a 409 and is shown in Arabic with «اختار ميعاد تاني» or book-anyway + reason.
- */
+/** Picks a start on the teacher's slot grid (R-SCH-07, journey 4); a 409 clash allows override. */
 export function RescheduleForm({ lesson, onBack, onDone, near }: RescheduleFormProps) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const queryClient = useQueryClient();

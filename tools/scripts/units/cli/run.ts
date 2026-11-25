@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import type { FoldArgs } from './args/index.ts';
 import type { FolderPlan } from '../plan/plan.types.ts';
-import { openPrDirs, readOpenPrs } from '../plan/open-prs.ts';
+import { ghIn, openPrDirs, readOpenPrs } from '../plan/open-prs.ts';
 import { planFolders } from '../plan/plan.ts';
 import { pathRefs } from '../plan/refs.ts';
 import { folderLines, summaryLines, treeLines } from '../plan/report.ts';
@@ -21,7 +21,9 @@ const readIn =
 function plansOf(args: FoldArgs, io: FoldIo): FolderPlan[] {
   const paths = trackedFiles(io.root);
   const only = args.paths.map((p) => posix.relative(io.root, posix.resolve(io.cwd, p)));
-  const prDirs = args.skipOpenPrs ? openPrDirs(readOpenPrs(io.root)) : new Map<string, number[]>();
+  const prDirs = args.skipOpenPrs
+    ? openPrDirs(readOpenPrs(ghIn(io.root)))
+    : new Map<string, number[]>();
   const refs = pathRefs(paths, readIn(io.root));
   return planFolders({ paths, refs, prDirs, ...(only.length > 0 ? { only } : {}) });
 }

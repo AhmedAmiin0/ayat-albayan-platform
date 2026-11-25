@@ -4,25 +4,24 @@ A suppression says a rule is not being followed. So there are none: no disable o
 `@ts-` escapes, no cast or rename made only to quiet a rule, no rule switched off or loosened, and no new
 baseline entry. Fix the code.
 
-The entries already in `eslint-suppressions.json`, `oxlint-suppressions.json`, `refactor/guards/` and
-`refactor/folder-cap/` are old debt. Lanes remove them; nothing adds to them.
+The entries already in `oxlint-suppressions.json` (the only lint baseline since ESLint went, docs/31b),
+`refactor/guards/` and `refactor/folder-cap/` are old debt. Lanes remove them; nothing adds to them.
 
 ## 1. What CI enforces
 
 | Check | Fails on | Where |
 |---|---|---|
-| `pnpm guard:lint` | any count above the base branch's in an `eslint-suppressions.json` or `oxlint-suppressions.json`, per file and per rule (entries follow renamed files); a file or rule entry the base lacks; a per-rule total above the base's; a suppressions file in a workspace whose base has none; a file left as `{}` (delete it); an entry whose file is gone | guards job |
+| `pnpm guard:lint` | any count above the base branch's in an `oxlint-suppressions.json`, per file and per rule (entries follow renamed files); a file or rule entry the base lacks; a per-rule total above the base's; a suppressions file in a workspace whose base has none; a file left as `{}` (delete it); an entry whose file is gone | guards job |
 | `pnpm guard:baselines` | a new entry, a raised number or a new file under `refactor/guards/` (the layer table `packages.json` aside: rule 23) and `refactor/folder-cap/` | guards job |
-| `pnpm guard:loosened` | never fails: a «lint rules loosened» annotation when the head sets a rule to `off`, `0` or `warn`, adds an ignore glob, a `syntaxExempt` or an `exempt` scope, or raises a numeric limit, in `packages/config`, any `lint.blocks.mjs` or `eslint.config`, `.oxlintrc.json`, `knip.json`, `.jscpd.json` or the `lint:ox` script. Such a PR merges only with the owner's go | guards job |
-| ESLint `--max-warnings 0`, Oxlint | any violation not already in the package's suppressions file | verify job |
+| `pnpm guard:loosened` | never fails: a «lint rules loosened» annotation when the head sets a rule to `off`, `0` or `warn`, adds an ignore glob, a `syntaxExempt` or an `exempt` scope, or raises a numeric limit, in `packages/config` (its `oxlint/core-rules.json` included), any `lint.blocks.mjs`, `knip.json`, `.jscpd.json` or the `lint:report` script. Such a PR merges only with the owner's go | guards job |
+| `pnpm guard:escapes` | any inline escape comment (`eslint-`/`oxlint-disable`, `@ts-` escapes, coverage, Stryker, jscpd, biome), read from the AST; Oxlint has no `noInlineConfig`, so this guard is what keeps disable comments out (docs/31b §4) | guards job |
+| `pnpm lint` (Oxlint, type-aware, `--deny-warnings`) | any violation not already in the package's `oxlint-suppressions.json`, and a fixed one until pruned | verify job (lint row) |
 
 There is no one-time baseline. A PR that turns a rule on or tightens a limit brings that rule's violations
-to zero in the same PR; `eslint --suppress-all`, `--suppress-rule` and the Oxlint gate's `--suppress-all`
-are not used. A rule's CI check turns on only when the code already passes it.
+to zero in the same PR; nothing writes a baseline (the Oxlint gate has no `--suppress-all`). A rule's CI check turns on only when the code already passes it.
 
 Fixing an old entry still needs its prune commit: a red CI lint job prints the pruned
-`eslint-suppressions.json` diff («Suppressions to prune») and the Oxlint row prints the pruned
-`oxlint-suppressions.json` diff; commit them (cloud: `pnpm lint:prune`, `pnpm lint:oxfull -- --prune`).
+`oxlint-suppressions.json` diff («Oxlint baselines to prune»); commit it (cloud: `pnpm lint:prune`).
 A workspace whose suppressions file is gone never gets one back.
 
 ## 2. The debt (develop `be54ea650`)
@@ -67,7 +66,8 @@ Each fix PR states its class and proves it the class's way.
 1. Comment sweep (`chore/comments-*`, rule 24): drops most comment-line `max-len` entries.
 2. Unit move (`pnpm units:fold`): files reach their final paths before anything else touches them.
 3. Format: long code lines (class A).
-4. Autofix: `eslint --fix` for class A rules only, one rule per PR.
+4. Autofix: `oxlint --fix` for class A rules only, one rule per PR (check each fix: typescript-eslint's and
+   tsgolint's assertion fixes can widen a type, docs/31b §3.1).
 5. Class B.
 6. Class C.
 7. Delete the workspace's suppressions files once they are empty.
@@ -81,8 +81,8 @@ Each fix PR states its class and proves it the class's way.
 - renaming a file into an exempt glob (`*.test.ts`, `*.gen.ts`, `testing/`);
 - splitting a string or an identifier to dodge `max-len`.
 
-**Warning, `consistent-type-imports` in `apps/api`.** An autofix may turn a class that a Nest constructor
-injects into `import type`. Nest's dependency injection reads the class at runtime
-(`emitDecoratorMetadata`), so the import must stay a value import. Typecheck stays green while the app
-fails to boot. Fix those 1,407 sites by hand or with a fixer that skips constructor parameter types, and
-let the api e2e boot prove it.
+**`consistent-type-imports` in `apps/api`.** Nest's dependency injection reads a constructor's parameter
+classes at runtime (`emitDecoratorMetadata`), so those imports must stay value imports; typecheck stays green
+while an `import type` there breaks boot. apps/api runs `ab/consistent-type-imports` (docs/31b §3.2), which
+counts a type in a decorated signature as a value use: its fixes are safe, and the 1,407 native findings
+are gone.

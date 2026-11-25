@@ -1,12 +1,12 @@
+import type { SignedDownload } from '@ab/shared';
 import {
   monthParam,
   monthQuery,
   payoutPaySchema,
   voidReasonSchema,
   type PayoutGenerateResult,
-  type SignedDownload,
   type PayoutView,
-} from '@ab/shared';
+} from '@ab/money';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -57,7 +57,7 @@ export class PayoutsController {
     return this.payouts.approve(id, user.id);
   }
 
-  /** approved → draft («إعادة فتح»): only while not paid. */
+  /** Approved back to draft, only while not paid. */
   @Post(':id/reopen')
   @HttpCode(200)
   reopen(
@@ -67,7 +67,7 @@ export class PayoutsController {
     return this.ledger.reopen(id, user.id);
   }
 
-  /** paid → approved («إلغاء الدفع»): voids the settlement payment, with a reason. */
+  /** Paid back to approved: voids the settlement payment, with a reason. */
   @Post(':id/unpay')
   @HttpCode(200)
   unpay(
@@ -82,7 +82,7 @@ export class PayoutsController {
   }
 }
 
-/** Y4 «تم الدفع» and its receipt: settlement + status in one transaction (PayoutsPayment). */
+/** Y4 marks paid with its receipt: settlement and status in one transaction (PayoutsPayment). */
 @ApiTags('payouts')
 @ApiBearerAuth()
 @Permissions('payouts.read')

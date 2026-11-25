@@ -65,7 +65,7 @@ const needsNoValue = (t: TemplateView): boolean =>
  * Anything else (unset, unknown, pending, another line, variables) reopens nothing.
  */
 export function reopenUsable(t: TemplateView | null): boolean {
-  return t !== null && t.line === 'chat' && restrictedMay(t) && needsNoValue(t);
+  return t?.line === 'chat' && restrictedMay(t) && needsNoValue(t);
 }
 
 /** What a due row marked AWAITING_REPLY needs: held now, failed (its 7 days are over), or none. */
@@ -89,7 +89,7 @@ export interface WaitingRow {
   created_at: string;
   /** When it was held (null: queued by the inbox, not held yet: its created_at counts). */
   scheduled_for: string | null;
-  /** NO_TEMPLATE_NOTE: held under «بدون قالب» (never orphaned: no template was asked for). */
+  /** Never orphaned, since no template was asked for. */
   error_text: string | null;
   /** Its deadline, set by the hold: null = not held yet (the inbox's enqueue, a staff retry). */
   expires_at: string | null;

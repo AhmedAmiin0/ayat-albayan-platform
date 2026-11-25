@@ -1,10 +1,9 @@
 // Test-only: a SalesOwnershipRule over a fake SalesRepo and fake settings (not built).
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
-import type { SalesRepo } from '@/modules/sales/sales/sales.repo';
-import { SalesSettings } from '@/modules/sales/sales/sales.settings';
+import { type SalesRepo, SalesSettings } from '@/modules/sales/sales/shared';
 import { SalesOwnershipRule } from './sales-ownership-rule';
 
 /** Both switches ON: the rule enforces her ownership (owner 2026-11-02). */

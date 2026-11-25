@@ -2,9 +2,7 @@ import { z } from 'zod';
 import { normalizeArabic, phoneE164 } from '@ab/core';
 import type { StudentStatus } from '@ab/catalog';
 
-// «التحقق من التسجيل» (docs/16 row 23): is this family / child already a student? By the
-// guardian's phone (E.164) or by an Arabic-normalised name or a code. Whitelisted answer: name, code, status
-// and teacher only: never an id, a phone number, a package, money or a note.
+// Registration check (docs/16 row 23): answer is name, code, status and teacher only.
 
 /** At most this many children are listed (the answer says when there were more). */
 export const REGISTRATION_CHECK_MAX = 10;
@@ -42,7 +40,6 @@ export const registrationCheckQuerySchema = z
     return z.NEVER;
   });
 export type RegistrationCheckQuery = z.output<typeof registrationCheckQuerySchema>;
-/** «بالهاتف» or «بالاسم أو الكود». */
 export type RegistrationCheckBy = RegistrationCheckQuery['by'];
 /** The 400 codes the query schema answers with. */
 export type RegistrationCheckCode = 'query_too_short' | 'invalid_phone' | 'one_of';
@@ -64,6 +61,8 @@ export interface RegistrationCheckView {
 
 /** The answer's shape from the rows read (already whitelisted), capped at REGISTRATION_CHECK_MAX. */
 export function registrationView(rows: readonly RegistrationMatch[]): RegistrationCheckView {
-  const matches = rows.slice(0, REGISTRATION_CHECK_MAX).map((r) => ({ name: r.name, code: r.code, status: r.status, teacher_name: r.teacher_name }));
+  const matches = rows
+    .slice(0, REGISTRATION_CHECK_MAX)
+    .map((r) => ({ name: r.name, code: r.code, status: r.status, teacher_name: r.teacher_name }));
   return { found: matches.length > 0, matches, more: rows.length > REGISTRATION_CHECK_MAX };
 }

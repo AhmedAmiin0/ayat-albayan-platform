@@ -4,7 +4,7 @@ import { InviteResultRow } from './InviteResultRow';
 
 const R = t.meetingInvites.results;
 
-/** «نتيجة الدعوات»: one row per recipient; the personal links are shown this once only. */
+/** The personal links are shown this once only. */
 export function InviteResults({ results }: { results: readonly MeetingInviteResult[] }) {
   if (results.length === 0) return null;
   const links = results.some((r) => r.link !== null);

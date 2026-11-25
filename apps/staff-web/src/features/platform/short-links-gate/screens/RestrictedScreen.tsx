@@ -5,10 +5,7 @@ import { StatusCard } from '@/features/platform/short-links-gate/parts/StatusCar
 import type { Gate } from '@/features/platform/short-links-gate/use-gate';
 import { GATE_ACTION } from './gate-action';
 
-/**
- * Board LinkXGateRestricted: the link is for listed people only. «أكّد رقمًا آخر» goes back to
- * the number; a signed-in visitor may also sign out and come in as someone else.
- */
+/** The link is for listed people only; a signed-in visitor may sign out and retry as another. */
 export function RestrictedScreen({ gate }: { gate: Gate }) {
   return (
     <>

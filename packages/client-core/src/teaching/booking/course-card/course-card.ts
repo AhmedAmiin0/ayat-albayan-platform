@@ -7,13 +7,12 @@ import {
   type CourseExtendPreview,
   type CourseExtendResult,
   type CourseResumePreview,
-  type StudentStatus,
 } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { apiErrorCode } from '../../../core/http/index.js';
 import { courseActionsKey } from '../course-actions.js';
 
-// «الدورة والباقة» (owner 2026-11-17) for web and mobile: the card's and «مدّ الجدول»'s paths,
-// the query key, the parsers (rule 12) and where a status pill leads.
+// Course card paths, query key and parsers (rule 12) for web and mobile.
 
 const student = (studentId: string): string => `/students/${studentId}`;
 
@@ -34,10 +33,8 @@ export const courseCardKey = (studentId: string): readonly ['course-actions', st
   'card',
 ];
 
-/** POST «مدّ الجدول» { subscriptionId }. */
 export const courseExtendPath = (studentId: string): string => `${student(studentId)}/course-extend`;
 
-/** GET «مدّ الجدول»'s preview of one package. */
 export function courseExtendPreviewPath(input: {
   studentId: string;
   subscriptionId: string;
@@ -46,7 +43,6 @@ export function courseExtendPreviewPath(input: {
   return `${courseExtendPath(input.studentId)}?subscriptionId=${q}`;
 }
 
-/** GET what «استئناف الدورة» does now. */
 export const courseResumePreviewPath = (studentId: string): string =>
   `${student(studentId)}/course-pause/resume-preview`;
 
@@ -79,7 +75,6 @@ export const parseExtendPreview = (data: unknown): CourseExtendPreview =>
 /** The app's authenticated fetch (each app's apiFetch). */
 type Fetch = (path: string, init?: RequestInit) => Promise<unknown>;
 
-/** POST «مدّ الجدول» { subscriptionId } and its parsed answer. */
 export async function postCourseExtend(
   fetch: Fetch,
   input: { studentId: string; subscriptionId: string },
@@ -92,14 +87,11 @@ export async function postCourseExtend(
 export const parseResumePreview = (data: unknown): CourseResumePreview =>
   courseResumePreviewSchema.parse(data);
 
-/** «مدّ الجدول» is offered: a course with lessons of the package left without a date. */
+/** Extending is offered only when package lessons are left without a date. */
 export const extendOffered = (card: CourseCardView | undefined): boolean =>
   (card?.course?.unbooked ?? 0) > 0;
 
-/**
- * Where a status pill leads (owner 2026-11-17): «موقوف مؤقتًا» opens «إيقاف مؤقت», «متوقف»
- * opens «إلغاء الاشتراك»; every other status is set at once, as before.
- */
+/** Paused opens the pause sheet, stopped opens cancellation; other statuses are set at once. */
 export type StatusRoute = 'pause' | 'stop' | 'set';
 const STATUS_ROUTES: Partial<Record<StudentStatus, StatusRoute>> = {
   paused: 'pause',
@@ -116,7 +108,6 @@ const EXTEND_CODES = [
 ] as const;
 export type CourseExtendErrorCode = (typeof EXTEND_CODES)[number] | 'generic';
 
-/** The `t.courseActions.errors` key of a failed «مدّ الجدول». */
 export function courseExtendErrorCode(error: unknown): CourseExtendErrorCode {
   const code = apiErrorCode(error);
   return EXTEND_CODES.find((c) => c === code) ?? 'generic';

@@ -5,17 +5,12 @@ import {
   stripeMaxDiscountPct,
   stripeWebhookSecret,
   type IntegrationKey,
-} from '@ab/shared';
+} from '@ab/catalog';
 import { z } from 'zod';
 import type { Env } from './env';
 import { blankIsUnset } from './env.blank';
 
-/**
- * The owner's rule (2026-10-28, go live 2026-11-01): the server env FEATURE_STRIPE, never a DB
- * value. `test`: sandbox keys only. `live`: live keys only (a sandbox key would put test
- * payments on real students). Anything else (unset): no Stripe at all, no route mounted and no
- * Stripe key in «التكاملات».
- */
+/** FEATURE_STRIPE is env only: test takes sandbox keys, live takes live keys, unset means none. */
 const stripeMode = (env: NodeJS.ProcessEnv): 'test' | 'live' | undefined =>
   z.enum(['test', 'live']).safeParse(env.FEATURE_STRIPE).data;
 
@@ -38,13 +33,9 @@ export const stripeServerKey = stripeApiKey.refine(
   'stripe_live_key_refused',
 );
 
-/**
- * Stripe payment links (docs/30, with FEATURE_STRIPE test or live), edited in «التكاملات» ›
- * «الدفع الإلكتروني» like every integration key: the switch and the cap in integration_config,
- * the two secrets in Vault (integration:STRIPE_*), env the fallback.
- */
+/** Stripe payment links (docs/30): switch and cap in integration_config, secrets in Vault. */
 export const STRIPE_SHAPE = {
-  /** «الدفع الإلكتروني», off by default: off = every Stripe route but the signed webhook is 404. */
+  /** Off by default: when off every Stripe route but the signed webhook is 404. */
   STRIPE_ENABLED: z.preprocess(blankIsUnset, z.stringbool().default(false)),
   STRIPE_API_KEY: z.preprocess(blankIsUnset, stripeServerKey.optional()),
   STRIPE_WEBHOOK_SECRET: z.preprocess(blankIsUnset, stripeWebhookSecret.optional()),
@@ -52,11 +43,7 @@ export const STRIPE_SHAPE = {
   STRIPE_MAX_DISCOUNT_PCT: z.preprocess(blankIsUnset, stripeMaxDiscountPct.optional()),
 };
 
-/**
- * A key this server offers in «التكاملات»: the Stripe group only with FEATURE_STRIPE (test or
- * live). The list and every write go through it, so no Stripe key is listed, stored or cleared
- * elsewhere.
- */
+/** Stripe keys are offered only with FEATURE_STRIPE; every list and write goes through this. */
 export const integrationKeyAvailable = (
   key: IntegrationKey,
   env: NodeJS.ProcessEnv = process.env,

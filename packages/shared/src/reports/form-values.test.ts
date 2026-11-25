@@ -19,14 +19,47 @@ const FULL_GRADES = {
   engagement: 'excellent',
   commitment: 'excellent',
 } as const;
-const TEXT = { recited: 'الفاتحة', newMemorization: 'الملك 1-5', revision: 'جزء عم', notes: 'ممتازة', homework: 'الملك 6-10' };
-const NO_GRADES = { recitation: null, memorization: null, revision: null, tajweed: null, engagement: null, commitment: null };
+const TEXT = {
+  recited: 'الفاتحة',
+  newMemorization: 'الملك 1-5',
+  revision: 'جزء عم',
+  notes: 'ممتازة',
+  homework: 'الملك 6-10',
+};
+const NO_GRADES = {
+  recitation: null,
+  memorization: null,
+  revision: null,
+  tajweed: null,
+  engagement: null,
+  commitment: null,
+};
 
 function reportView(over: Partial<ReportView> = {}): ReportView {
   return {
-    ...{ id: 'r-1', lesson_id: 'l-1', student_id: 's-1', teacher_id: 't-1', attendance: null, program: 'quran' },
-    ...{ recited: null, new_memorization: null, revision: null, theory: null, grades: { ...NO_GRADES } },
-    ...{ grade_overall: null, notes: null, homework: null, next_plan: null, status: 'draft', version: 0 },
+    ...{
+      id: 'r-1',
+      lesson_id: 'l-1',
+      student_id: 's-1',
+      teacher_id: 't-1',
+      attendance: null,
+      program: 'quran',
+    },
+    ...{
+      recited: null,
+      new_memorization: null,
+      revision: null,
+      theory: null,
+      grades: { ...NO_GRADES },
+    },
+    ...{
+      grade_overall: null,
+      notes: null,
+      homework: null,
+      next_plan: null,
+      status: 'draft',
+      version: 0,
+    },
     ...{ submitted_at: null, edited_at: null, pdf_status: null, pdf_error: null, sent_at: null },
     ...{ attachments: [], can_edit: true, edit_until: null, form_version: 1, content: null },
     ...over,
@@ -41,10 +74,22 @@ describe('form values (R-REP-02)', () => {
   });
 
   it('round-trips a saved report into the draft body (camelCase, every field)', () => {
-    const saved = { attendance: 'late', new_memorization: 'الملك 1-5', next_plan: 'الملك 6-10', grade_overall: 'good' } as const;
+    const saved = {
+      attendance: 'late',
+      new_memorization: 'الملك 1-5',
+      next_plan: 'الملك 6-10',
+      grade_overall: 'good',
+    } as const;
     const v = valuesOf(reportView({ ...saved, grades: { ...FULL_GRADES } }));
     expect(draftBody(v)).toEqual({
-      ...{ attendance: 'late', program: 'quran', recited: '', newMemorization: 'الملك 1-5', revision: '', theory: '' },
+      ...{
+        attendance: 'late',
+        program: 'quran',
+        recited: '',
+        newMemorization: 'الملك 1-5',
+        revision: '',
+        theory: '',
+      },
       ...{ grades: FULL_GRADES, overall: 'good', notes: '', homework: '', nextPlan: 'الملك 6-10' },
     });
     expect(submitBody(v, 3).expectedVersion).toBe(3);
@@ -54,8 +99,15 @@ describe('form values (R-REP-02)', () => {
     const base = valuesOf(reportView());
     expect(submitProblem(base)).toBe('missing_attendance');
     expect(submitProblem({ ...base, attendance: 'on_time' })).toBe('missing_grades');
-    expect(submitProblem({ ...base, attendance: 'on_time', grades: { ...FULL_GRADES } })).toBe('missing_grades');
-    const graded = { ...base, attendance: 'on_time', grades: { ...FULL_GRADES }, overall: 'excellent' } as const;
+    expect(submitProblem({ ...base, attendance: 'on_time', grades: { ...FULL_GRADES } })).toBe(
+      'missing_grades',
+    );
+    const graded = {
+      ...base,
+      attendance: 'on_time',
+      grades: { ...FULL_GRADES },
+      overall: 'excellent',
+    } as const;
     expect(submitProblem(graded)).toBe('missing_text');
     expect(submitProblem({ ...graded, ...TEXT, notes: '  ' })).toBe('missing_text');
     expect(submitProblem({ ...graded, ...TEXT })).toBeNull();
@@ -63,14 +115,26 @@ describe('form values (R-REP-02)', () => {
   });
 
   it('textRequired: the five fields the form required, unless absent / excused (research-forms 12)', () => {
-    expect(['recited', 'newMemorization', 'revision', 'notes', 'homework'].every((k) => textRequired(k as 'notes', 'late'))).toBe(true);
+    expect(
+      ['recited', 'newMemorization', 'revision', 'notes', 'homework'].every((k) =>
+        textRequired(k as 'notes', 'late'),
+      ),
+    ).toBe(true);
     expect(textRequired('theory', 'on_time')).toBe(false);
     expect(textRequired('nextPlan', null)).toBe(false);
     expect(textRequired('recited', 'excused')).toBe(false);
   });
 
   it('the text fields in form order (web and mobile render the same list)', () => {
-    expect([...DONE_FIELDS, ...AFTER_FIELDS]).toEqual(['recited', 'newMemorization', 'revision', 'theory', 'notes', 'homework', 'nextPlan']);
+    expect([...DONE_FIELDS, ...AFTER_FIELDS]).toEqual([
+      'recited',
+      'newMemorization',
+      'revision',
+      'theory',
+      'notes',
+      'homework',
+      'nextPlan',
+    ]);
   });
 });
 

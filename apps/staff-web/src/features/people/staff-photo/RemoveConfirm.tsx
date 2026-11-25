@@ -12,10 +12,7 @@ export interface RemoveConfirmProps {
   onCancel: () => void;
 }
 
-/**
- * «حذف الصورة؟» in place (the user panel is already a dialog). Opening it moves focus to its
- * danger button, so a keyboard or screen-reader user lands on the question's answer.
- */
+/** Focus moves to the danger button so keyboard and screen-reader users land on the answer. */
 export function RemoveConfirm({ name, pending, onRemove, onCancel }: RemoveConfirmProps) {
   const danger = useRef<HTMLButtonElement>(null);
   useEffect(() => danger.current?.focus(), []);

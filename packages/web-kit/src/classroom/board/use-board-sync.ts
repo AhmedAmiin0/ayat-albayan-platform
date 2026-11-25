@@ -1,4 +1,4 @@
-import type { JoinRole } from '@ab/shared';
+import type { JoinRole } from '@ab/schedule';
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
 import type { DataPacketIn, RoomStatus } from '@ab/web-kit/classroom/room/components/room-types';
 import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';

@@ -1,0 +1,1 @@
+export { TrialHistoryTable } from './TrialHistoryTable';

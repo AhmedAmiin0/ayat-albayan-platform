@@ -1,5 +1,5 @@
-// Test-only fakes for «موعد تجريبي جديد»: a real BookingPlanner and TrialDates over vi.fn reads.
-import type { StudentStatus } from '@ab/shared';
+// Test-only: a real BookingPlanner and TrialDates over mocked reads.
+import type { StudentStatus } from '@ab/catalog';
 import { vi } from 'vitest';
 import type { LessonEvents } from '@/common/infra/events/lesson-events';
 import { ruleSettingsOf } from '@/common/rules/rule-settings.fakes';

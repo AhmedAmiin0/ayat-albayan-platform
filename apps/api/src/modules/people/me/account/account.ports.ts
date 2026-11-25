@@ -28,7 +28,7 @@ export function selfWritable(input: object): SelfPatch {
     const value: unknown = Reflect.get(input, key);
     if (value !== undefined) out[key] = value;
   }
-  return out as SelfPatch;
+  return out;
 }
 
 export interface AccountStore {

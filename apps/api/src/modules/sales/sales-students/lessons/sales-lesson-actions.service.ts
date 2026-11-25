@@ -1,12 +1,6 @@
-import {
-  CANCEL_STATUS,
-  type CancelBy,
-  type LessonCorrect,
-  type LessonStatus,
-  type SalesCancel,
-  type SalesLessonMoved,
-  type SalesReschedule,
-} from '@ab/shared';
+import type { SalesCancel, SalesLessonMoved, SalesReschedule } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { CANCEL_STATUS, type CancelBy, type LessonCorrect } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
@@ -16,8 +10,8 @@ import {
   OutcomeCorrection,
   RescheduleOneService,
 } from '@/modules/teaching/lessons';
-import { SalesStudentRepo } from '@/modules/sales/sales-students/details/sales-student.repo';
-import { SalesStudentScope } from '@/modules/sales/sales-students/sales-student-scope';
+import { SalesStudentRepo } from '@/modules/sales/sales-students/shared/sales-student.repo';
+import { SalesStudentScope } from '@/modules/sales/sales-students/shared/sales-student-scope';
 
 /** Who may be recorded once the lesson is over: what happened, never the academy's own cancel. */
 const AFTER_END: Record<CancelBy, boolean> = {
@@ -46,12 +40,7 @@ export class LessonServices {
   ) {}
 }
 
-/**
- * Sales move or cancel ONE lesson (owner 2026-10-27, docs/16 row 37; ANY student's, not only hers:
- * owner 2026-10-28) through the admin's very services, with her as the actor: the same transaction,
- * confirmation messages, package counts, calendar sync and audit as the admin's «تغيير الموعد» (scope one, no substitute, no clash
- * override) and «إلغاء» (scope one, by the academy, the reason optional: null when absent).
- */
+/** docs/16 row 37: through the admin's services with her as actor; scope one, no clash override. */
 @Injectable()
 export class SalesLessonActions {
   constructor(
@@ -85,12 +74,7 @@ export class SalesLessonActions {
     return { id: lessonId, status: lesson?.status ?? CANCEL_STATUS[by] };
   }
 
-  /**
-   * «تأكيد الحلقة» (owner 2026-10-28): ANY lesson, not only hers (the family's «نعم» arrives in a chat every
-   * assistant sees), before it ends. The teacher's own LessonStatusService.confirm, she is confirmed_by and the
-   * audit's actor; `anyLesson` because lessons.confirm already decided (never LessonAccess's teacher rule).
-   * Already confirmed = unchanged; any other status 409 invalid_transition. No message to anyone.
-   */
+  /** Any lesson, since the family's yes arrives in a chat every assistant sees; no message sent. */
   async confirm({ lessonId, actor }: Confirm, now = new Date()): Promise<SalesLessonMoved> {
     const lesson = await this.queries.lesson(lessonId);
     if (!lesson) throw notFound('lesson_not_found');
@@ -99,10 +83,7 @@ export class SalesLessonActions {
     return { id: lesson.id, starts_at: new Date(lesson.starts_at).toISOString(), status: 'confirmed' };
   }
 
-  /**
-   * «تصحيح الحالة» (owner 2026-11-03): after its end, the admin OutcomeCorrection; ANY lesson while
-   * SalesOwnershipRule is off, only hers while it enforces (as cancel, its after-end case).
-   */
+  /** After the end via OutcomeCorrection; any lesson unless SalesOwnershipRule enforces. */
   async correct(
     { lessonId, body, actor }: Correct,
     now = new Date(),

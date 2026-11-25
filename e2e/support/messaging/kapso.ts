@@ -5,9 +5,7 @@ import { API, bearer } from '../core/messages';
 import { withSql } from '../core/schedule';
 import { stub, STUB_URL } from '../core/wa-stub';
 
-// The kapso driver in e2e (docs/19): the notifications line is switched in the database's
-// integration config (as «التكاملات» would), tools/wa-stub plays Kapso under /kapso, and its
-// fake key and webhook secret come from playwright.config.ts (E2E_KAPSO). No hosted service.
+// Kapso driver (docs/19): switched in DB config, played by tools/wa-stub; no hosted service.
 
 /** = playwright.config.ts E2E_KAPSO; tools/wa-stub's Kapso prefix and its version. */
 export const KAPSO_BASE = `${STUB_URL}/kapso`;

@@ -11,7 +11,7 @@ interface Props {
   recordings: readonly PortalRecording[];
 }
 
-/** «تسجيل الحلقة»; a lesson recorded in parts picks one: «الجزء 1 · 31 دقيقة» · «الجزء 2 …». */
+/** A lesson recorded in parts picks one. */
 export function LessonParts({ student, recordings }: Props) {
   const choices = partChoices(recordings, t.lessonFiles);
   const [picked, setPicked] = useState(choices[0]?.value ?? '');

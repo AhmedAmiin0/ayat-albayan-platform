@@ -1,4 +1,5 @@
-import type { MessageStatus, MessageView } from '@ab/shared';
+import type { MessageView } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 
 // docs/43 43-1: one message id's status only moves forward along queued < sent < delivered < read
 // (the order of the webhook's RANK). `failed` and `sent_manually` have no rank: the server moves

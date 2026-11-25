@@ -1,9 +1,5 @@
-import {
-  bookingKindOf,
-  type BookingKind,
-  type BookingRequest,
-  type BookingResult,
-} from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import { bookingKindOf, type BookingKind, type BookingResult } from '@ab/schedule';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
@@ -57,7 +53,7 @@ export class TeacherAlert {
     await this.toTeachers({ lessonIds, studentIds: result.student_ids, kind: bookingKindOf(req) });
   }
 
-  /** The same alert for any write that hands lessons to a teacher («تغيير المعلم»). */
+  /** Any write that hands lessons to a teacher sends the same alert. */
   async toTeachers(input: NewStudents): Promise<void> {
     try {
       await this.alert(input);

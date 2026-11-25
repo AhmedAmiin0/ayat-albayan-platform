@@ -1,11 +1,11 @@
-import { formatAmount, type PaymentKind } from '@ab/shared';
+import type { PaymentKind } from '@ab/catalog';
+import { formatAmount } from '@ab/money';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import type { PaymentRow } from '@/modules/finance/payments/payments.repo';
 import { PaymentReceivedRepo } from './payment-received.repo';
 import { receivedRecipients } from './payment-received.recipients';
 
-/** A payment as «تم استلام دفعة» reads it. */
 export interface ReceivedPayment {
   id: string;
   kind: PaymentKind;
@@ -45,7 +45,7 @@ function studentOf(sub: PaymentRow['subscription']): Pick<ReceivedPayment, 'stud
   return { studentId: sub?.student_id ?? null, student: sub?.student?.name ?? '' };
 }
 
-/** «تم استلام دفعة»'s push: one subject per payment, the student it is about. */
+/** One push subject per payment, about its student. */
 const eventOf = (p: ReceivedPayment) => ({
   kind: 'payment_received' as const,
   subject: `payment:${p.id}`,
@@ -61,13 +61,7 @@ const isIncoming = (p: ReceivedPayment): boolean => p.kind === 'payment';
  */
 const amountText = (p: ReceivedPayment): string => `${formatAmount(p.amount)} ${p.currency}`;
 
-/**
- * «تم استلام دفعة» (owner 2026-11-05): an incoming payment → every admin and the student's
- * following assistant, minus who recorded it; a bell row and a device push (payment_received, its
- * own rule); `book`'s one profile gets its own title and tap target instead. Once per payment
- * (subject `payment:<id>`, PushService's dedup key); a refund tells nobody. Never throws, and
- * `fire` keeps it off the request path.
- */
+/** Admins and the following assistant minus the recorder, once per payment; refunds: nobody. */
 @Injectable()
 export class PaymentReceived {
   private readonly log = new Logger(PaymentReceived.name);

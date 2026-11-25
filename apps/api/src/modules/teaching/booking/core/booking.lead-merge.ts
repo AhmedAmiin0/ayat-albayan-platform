@@ -1,4 +1,5 @@
-import { leadQualificationSchema, type BookingRequest, type LeadSource } from '@ab/shared';
+import { leadQualificationSchema, type BookingRequest } from '@ab/shared';
+import type { LeadSource } from '@ab/catalog';
 
 /** The lead row the booking started from (BookingQueries.lead). */
 export type LeadFacts = {
@@ -14,12 +15,7 @@ type NewParts = Extract<BookingRequest, { newStudent: unknown }>;
 const TEXT = ['level', 'memorized', 'goal', 'riwaya', 'notes'] as const;
 const blank = (v: unknown) => v === undefined || v === null || (typeof v === 'string' && v.trim() === '');
 
-/**
- * Lead → student (research-forms item 2): what «بيانات الطالب» captured and the lead's source fill
- * whatever the client left empty, so web, mobile and any other client carry it. The request's own
- * values win. The guardian-level answers (city, filled_by, relation, alt_phone, group_kind) stay on
- * leads.qualification: guardians has no column for them.
- */
+/** Lead answers fill what the client left empty; request values win. */
 export function withLeadFacts(req: NewParts, lead: LeadFacts | null): Pick<NewParts, 'newStudent' | 'guardian'> {
   const parsed = leadQualificationSchema.safeParse(lead?.qualification ?? {});
   const q = parsed.success ? parsed.data : {};

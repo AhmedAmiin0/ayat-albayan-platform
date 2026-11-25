@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { channelAttachmentInputSchema } from './channel-media.js';
 
 // The student channel (docs/31 §2): an in-platform text chat between a student's family, the
-// student's current teacher(s) and the owning assistant (owner 2026-11-16 «yes it can write also»),
+// student's current teacher(s) and the owning assistant, who may write too,
 // read-only for monitors (student_channels.monitor). Never on WhatsApp. Views are whitelists: names
 // only, never a phone, email or profile id.
 

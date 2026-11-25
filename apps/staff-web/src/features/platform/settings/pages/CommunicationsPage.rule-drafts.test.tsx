@@ -15,7 +15,7 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ pe
 
 const r = t.notificationRules;
 const name = t.notificationCatalogue.entries.lesson_reminder.name;
-const minutesOf = (row: HTMLElement) => within(row).getByLabelText(r.timing.minutesLabel) as HTMLInputElement;
+const minutesOf = (row: HTMLElement) => within(row).getByLabelText<HTMLInputElement>(r.timing.minutesLabel);
 const commsTab = (label: string) => fireEvent.click(screen.getByRole('tab', { name: label }));
 
 afterEach(() => {
@@ -23,7 +23,6 @@ afterEach(() => {
   apiSend.mockReset();
 });
 
-// Finding 1: the «الإشعارات» row drafts live above «التواصل»'s tabs.
 describe('«التواصل»: the «الإشعارات» row drafts', () => {
   it('survive a switch to another «التواصل» tab and back', async () => {
     renderCommunications({ apiFetch, tab: 'catalogue', catalogue: overview() });

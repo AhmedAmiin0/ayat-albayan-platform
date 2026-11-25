@@ -1,4 +1,4 @@
-import type { LessonView, TeacherMe } from '@ab/shared';
+import type { LessonView, TeacherMe } from '@ab/schedule';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

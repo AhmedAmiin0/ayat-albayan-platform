@@ -8,7 +8,6 @@ import { QuietDay } from './QuietDay';
 const mockNavigate = jest.fn();
 jest.mock('expo-router', () => ({ router: { navigate: (h: unknown) => mockNavigate(h) } }));
 
-// Nothing booked tomorrow: only «جدول الغد» and the day it opens matter here.
 const empty = {
   data: [],
   isError: false,

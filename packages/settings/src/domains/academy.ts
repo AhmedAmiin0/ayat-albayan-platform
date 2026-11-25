@@ -3,11 +3,7 @@ import type { SettingDef } from '../defs.js';
 
 const h = 'settings.hints';
 
-/**
- * «الأكاديمية»: contact number, the academy's time zone and the public contact block. SQL reads
- * academy_timezone with its own coalesce default (assistant statements, migration 20261006000273):
- * a default change needs a migration too.
- */
+/** SQL has its own academy_timezone default (migration 20261006000273): change both. */
 export const ACADEMY_SETTINGS = {
   academy_whatsapp_e164: {
     module: 'academy', group: 'academy', reachesFamilies: true,
@@ -32,7 +28,7 @@ export const ACADEMY_SETTINGS = {
     ],
     labelKey: 'config.academyContact', hintKey: 'config.academyContactHint',
   },
-  /** «تحت الصيانة»: the four apps cover all screens but admins'. */
+  /** Maintenance mode: the four apps cover all screens but admins'. */
   maintenance_mode: {
     module: 'academy', group: 'system', confirm: 'simple', reachesFamilies: true, public: true,
     type: 'bool', default: false, labelKey: 'settings.maintenanceMode', hintKey: `${h}.maintenanceMode`,

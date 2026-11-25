@@ -14,9 +14,7 @@ import { z } from 'zod';
 import { ApiError, toQueryString, type ApiClient } from '../../core/http/index.js';
 import { listKey, pathKey } from '../../core/keys/index.js';
 
-// «الروابط المختصرة» (docs/19 «Managed links»): the reads both apps use. The
-// admin / sales routes sit under /short-links; the web gate /l/<code> reads the public view.
-// Plain TanStack Query options (no React), answers parsed with the shared zod schemas.
+// docs/19: staff routes under /short-links; the web gate /l/<code> reads the public view.
 
 export const SHORT_LINKS_PATH = '/short-links';
 export const SHORT_LINKS_PUBLIC_PATH = '/public/short-links';
@@ -62,7 +60,7 @@ const people = z.array(shortLinkPersonSchema);
 
 const isNotFound = (e: unknown): boolean => e instanceof ApiError && e.status === 404;
 
-/** A 404 is an answer (the «لم نجد هذا الرابط» screen); anything else stays an error. */
+/** A 404 is an answer (the not-found screen); anything else stays an error. */
 function notFoundOr(e: unknown): GateViewResult {
   if (isNotFound(e)) return GATE_NOT_FOUND;
   throw e;

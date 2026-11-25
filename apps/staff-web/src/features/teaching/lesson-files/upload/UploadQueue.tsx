@@ -22,7 +22,6 @@ const TONE: Record<QueueState, string> = {
   failed: 'text-danger',
 };
 
-/** One line per picked file: its name and where it stands («جارٍ الرفع…», «رُفع الملف»…). */
 export function UploadQueue({ items }: { items: readonly QueueItem[] }) {
   if (items.length === 0) return null;
   return (

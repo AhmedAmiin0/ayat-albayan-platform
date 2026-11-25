@@ -28,7 +28,7 @@ export class CheckoutService {
   async target(token: string, now = new Date()): Promise<string> {
     const page = paymentLinkUrl(this.deps.views.payOrigin(), token);
     const link = await this.deps.links.byToken(token);
-    if (!link || !link.subscription_id || link.processing) return page;
+    if (!link?.subscription_id || link.processing) return page;
     if (effectiveLinkStatus({ status: statusOf(link), expires_at: link.expires_at }, now) !== 'open') return page;
     const stripe = await this.clients.client().catch(() => null);
     if (!stripe) return page; // keys missing or refused: the family sees the platform page, never a JSON error

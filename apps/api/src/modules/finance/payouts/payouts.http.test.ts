@@ -1,8 +1,8 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYOUT_ID, payoutRow, TEACHER_ID } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { PAYOUT_ID, payoutRow, TEACHER_ID } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 
 const TEACHER = { id: TEACHER_ID, tz: 'Africa/Cairo', display_name_ar: 'أبرار' };
 /** A v_teacher_payable_lessons row as PayoutsQueries.lessons maps it (amount null = no rate). */
@@ -127,7 +127,7 @@ describe('payouts routes (Y1–Y5, R-PAY-02, R-TCH-04)', () => {
     const none = await call({ method: 'GET', url: '/teachers/me/payouts', token: 'teacher' });
     expect(none.json().code).toBe('teacher_not_linked');
     expect((await call({ method: 'GET', url: '/payouts?month=2026-09', token: 'teacher' })).statusCode).toBe(403);
-    // Teacher mode «مستحقاتي»: no id route reaches another teacher's payout.
+    // In teacher mode no id route reaches another teacher's payout.
     for (const action of ['approve', 'pay']) {
       const id = '00000000-0000-4000-8000-0000000000e9';
       expect((await call({ method: 'POST', url: `/payouts/${id}/${action}`, token: 'teacher' })).statusCode).toBe(403);

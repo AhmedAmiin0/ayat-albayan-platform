@@ -1,4 +1,4 @@
-import { INTEGRATION_KEYS, type IntegrationConfigItem } from '@ab/shared';
+import { INTEGRATION_KEYS, type IntegrationConfigItem } from '@ab/catalog';
 import { integrationKeyAvailable } from '@/config/env/env.stripe';
 import type { PlainRow, SecretStatus } from './integration-config.repo';
 

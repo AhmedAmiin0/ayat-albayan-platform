@@ -8,11 +8,7 @@ import {
 } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { quoteOf } from '@/features/messaging/inbox/messages/lib/quote';
 
-/**
- * The box's own draft from before «تعديل», the edit SESSION (one per tap on «تعديل»: a correction
- * sent from an earlier tap never ends a newer one, #694 follow-up item 4) and the draft store's
- * generation when the edit started (a sign-out since: nothing is written back, round 4).
- */
+/** One session per edit tap, so an earlier tap's correction never ends a newer one. */
 type Saved = { session: string; text: string; gen: number } | null;
 
 /** The message being corrected and the session its sends carry. */
@@ -38,10 +34,7 @@ function useRestoreOnLeave(phone: string, saved: RefObject<Saved>): void {
 const clearIf = (id: string | undefined) => (now: MessageQuote | null) =>
   id === undefined || now?.id === id ? null : now;
 
-/**
- * A sent correction ends its own session only (never a newer «تعديل»): the box's draft from
- * before the edit comes back when the box is still empty (#694 follow-up item 6).
- */
+/** The pre-edit draft returns only when the box is still empty. */
 function sentEdit(phone: string, saved: RefObject<Saved>, session: string): boolean {
   const was = saved.current;
   if (was?.session !== session) return false;
@@ -51,11 +44,7 @@ function sentEdit(phone: string, saved: RefObject<Saved>, session: string): bool
   return true;
 }
 
-/**
- * «رد» and «تعديل»: what the next text answers or corrects; picking one clears the other. An
- * edit keeps the box's draft from before it: ✕, «رد», leaving the chat or its sent correction
- * (into a still empty box) brings it back (review of #694).
- */
+/** Picking reply or edit clears the other; an edit restores the prior draft when it ends. */
 export function usePicks(phone: string) {
   const [target, setTarget] = useState<MessageQuote | null>(null);
   const [editing, setEditing] = useState<Editing>(null);
@@ -75,7 +64,7 @@ export function usePicks(phone: string) {
     saved.current = { session, text: saved.current?.text ?? getDraft(phone).text, gen };
     setTarget(null);
     setEditing({ message: m, session });
-    putBox(phone, m.body ?? ''); // «تعديل» is only ever on an original (isCorrectable)
+    putBox(phone, m.body ?? ''); // Edit only ever targets an original (isCorrectable).
   };
   const editSent = (session: string) => {
     if (sentEdit(phone, saved, session)) setEditing(null);

@@ -6,11 +6,7 @@ import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { closeCodes, openCodes } from '../../support/people/family-sign-in';
 import { guardianSignIn, seedPortalFamily, studentSignIn } from '../../support/people/family-portal';
 
-// The family pages on the family host (docs/51) on the real API and seeded data:
-// a guardian of two picks a child first («اختر الطالب»), then sees its attended
-// and missed lessons and the package with its payments, and switches from the name on top; a
-// child's own login never sees money (not even a /package request); no teacher chat while
-// family_chat_enabled is off. No WhatsApp link anywhere.
+// Family pages (docs/51): a child's login never sees money; no teacher chat while chat is off.
 
 const P = ar.portal;
 const MONEY = new RegExp([P.amountDue, P.payments, P.paymentInstructions, P.usedOfHint].join('|'));
@@ -35,7 +31,7 @@ test.describe('family pages on the family host', () => {
     const page = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await guardianSignIn(page, family.phone);
 
-    // Two children and no pick yet: «اختر الطالب» in place of the home, no «التقارير» yet.
+    // Two children and no pick yet: the child picker replaces the home.
     await expect(page.getByRole('heading', { name: P.app.pick.title })).toBeVisible();
     const first = page.getByRole('article', { name: family.first.name });
     await expect(first).toBeVisible();

@@ -1,0 +1,36 @@
+import { counted } from '@ab/core';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { currencyLabel, rateDate } from '@/features/reporting/dashboard/shared/format';
+import type { DashboardResponse } from '@ab/money';
+
+type Finance = DashboardResponse['finance'];
+
+/** Lists which rate the converted totals used (R-RPT-02). */
+export function rateLines(f: Pick<Finance, 'currency' | 'fx_rates'>): string[] {
+  return Object.entries(f.fx_rates)
+    .filter(([code]) => code !== f.currency)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([code, rate]) => `1 ${currencyLabel(f.currency)} = ${Number(rate.toPrecision(6))} ${currencyLabel(code)}`);
+}
+
+/**
+ * The lines under the money: the conversion (currency + rate date), currencies left out for lack
+ * of a rate, and lessons whose teacher has no rate. Honest about every gap, never a guess.
+ */
+export function financeNotes(f: Finance, tz: string): { text: string; warn: boolean }[] {
+  const cur = currencyLabel(f.currency);
+  const notes = [
+    {
+      text: f.fx_date
+        ? t.dashboard.fxNote.replace('{currency}', cur).replace('{date}', rateDate(f.fx_date, tz))
+        : t.dashboard.allInCurrency.replace('{currency}', cur),
+      warn: false,
+    },
+  ];
+  if (f.fx_missing.length > 0) {
+    const currencies = f.fx_missing.join(t.common.listSeparator);
+    notes.push({ text: t.dashboard.fxMissing.replace('{currencies}', currencies), warn: true });
+  }
+  if (f.unrated_lessons > 0) notes.push({ text: counted(t.dashboard.unrated, f.unrated_lessons), warn: true });
+  return notes;
+}

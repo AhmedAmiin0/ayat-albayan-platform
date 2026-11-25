@@ -2,10 +2,7 @@ import { expect, test } from '@playwright/test';
 import { guardian, listOf, members, rerunMigration, someone, student, teacher } from '../../support/auto-lists';
 import { rolledBack } from '../../support/core/rls';
 
-// Automatic chat lists (migration 20261025000710, docs/22 «القوائم التلقائية»): «مشترك» gains the guardian of
-// every active student (not pending_renewal, R-STU-05), «معلم» every active teacher; backfill + triggers, add only, never
-// remove; automatic rows have no added_by; a list without a rule is untouched. This file: the attach, the
-// backfill, the cap and the grants; the trigger paths: chat-list-auto-triggers.sql.spec.ts. Rolled back.
+// Auto lists (migration 710, docs/22, R-STU-05) only add, never remove; auto rows have no added_by.
 
 test.describe('automatic chat lists (migration 710)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));

@@ -26,9 +26,9 @@ jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => {
     },
   };
 });
-const { mockGate } = jest.requireMock('@ab/mobile-kit/auth/use-auth-gate') as {
+const { mockGate } = jest.requireMock<{
   mockGate: { initial: string; set: (s: string) => void };
-};
+}>('@ab/mobile-kit/auth/use-auth-gate');
 
 const stub = (label: string) => () => <Text>{label}</Text>;
 const app = {
@@ -74,7 +74,7 @@ beforeEach(() => {
   });
   // As verifyRole: /auth/me is in the cache when the gate opens a tree (docs/27 E2).
   queryClient.setQueryData(pathKey('/auth/me'), fullAccessMe('teacher'));
-  // The switches on from the first paint, so «المحادثات» is gated by the permission.
+  // The switches are on from the first paint, so the chats tab is gated by permission.
   queryClient.setQueryData(publicConfigQuery.queryKey, publicConfig);
 });
 

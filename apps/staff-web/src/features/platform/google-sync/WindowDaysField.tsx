@@ -16,7 +16,7 @@ interface Props {
   save: ReturnType<typeof useSaveSettings>;
 }
 
-/** «نطاق التقويم بالأيام» with its own «حفظ»; an out-of-range number is flagged and nothing is sent. */
+/** An out-of-range number is flagged and nothing is sent. */
 export function WindowDaysField({ value, save }: Props) {
   const [text, setText] = useState(String(value));
   const [invalid, setInvalid] = useState(false);

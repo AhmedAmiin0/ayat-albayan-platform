@@ -14,19 +14,14 @@ import { CreateMeeting, type MeetingAllow } from '@/meetings/create/CreateMeetin
 import { MeetingRow } from '@/meetings/manage/MeetingRow';
 import { useViewerTz } from '@/core/lib/clock';
 
-/**
- * «الاجتماعات الداخلية» (admin, teacher, assistant, sales): create now or scheduled with invitees,
- * then the newest (all for an admin, else mine and the ones I am invited to) with enter, share link,
- * reschedule, cancel, end and recordings. Times read in the viewer's zone; the room opens in the browser.
- * `allow` (default both): which start buttons show; only the teacher's route passes its switches.
- */
+/** Admins see all, others own and invited; times in the viewer's zone; `allow` gates starts. */
 export function MeetingsScreen({ allow }: { allow?: MeetingAllow }) {
   const meetings = useMeetings();
   const tz = useViewerTz();
   const back = <BackButton onPress={() => router.back()} />;
   let body = <AppText>{t.common.loading}</AppText>;
   if (meetings.isError && !meetings.data) body = <ErrorState onRetry={() => void meetings.refetch()} />;
-  else if (meetings.data && meetings.data.length === 0) body = <EmptyState title={t.meetings.internal.empty} />;
+  else if (meetings.data?.length === 0) body = <EmptyState title={t.meetings.internal.empty} />;
   else if (meetings.data) body = <>{meetings.data.map((m) => <MeetingRow key={m.id} meeting={m} tz={tz} />)}</>;
   return (
     <Screen>

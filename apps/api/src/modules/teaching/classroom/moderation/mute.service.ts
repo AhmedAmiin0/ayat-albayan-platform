@@ -1,4 +1,12 @@
-import { canMute, JOIN_ROLES, lessonRoomName, meetingRoomName, muteSchema, type JoinRole, type MuteSource } from '@ab/shared';
+import {
+  canMute,
+  JOIN_ROLES,
+  lessonRoomName,
+  meetingRoomName,
+  muteSchema,
+  type JoinRole,
+  type MuteSource,
+} from '@ab/schedule';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
@@ -37,11 +45,7 @@ async function applyMute(livekit: LivekitApi, input: { room: string; identity: s
   }
 }
 
-/**
- * «كتم الميكروفون» / «إيقاف الكاميرا» in a lesson room: the teacher, an admin or an assistant of that
- * lesson mutes someone below them (canMute). LiveKit mutes the published track server-side; the
- * participant may turn it back on. Nothing stored.
- */
+/** Only someone below the muter (canMute); the participant may turn it back on; nothing stored. */
 @Injectable()
 export class MuteService {
   constructor(

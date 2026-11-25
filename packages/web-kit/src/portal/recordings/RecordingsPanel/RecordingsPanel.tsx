@@ -1,5 +1,6 @@
 import { hasVideo, partIdsByLesson, recordingMonths } from '@ab/client-core';
-import { dateText, type PortalRecording, type PortalRecordings, type PortalStudent } from '@ab/shared';
+import type { PortalRecording, PortalRecordings, PortalStudent } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { useRef, useState } from 'react';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
@@ -90,10 +91,7 @@ function List({ data, student, onOpenReport }: Props & { data: PortalRecordings 
   );
 }
 
-/**
- * «التسجيلات» (boards FamRecWebList, FamRecWebEmpty): the hint, the picked lesson's card, then
- * every lesson by month; with none yet only the empty note (no hint above it).
- */
+/** With no lessons yet only the empty note shows, no hint above it. */
 export function RecordingsPanel({ student, onOpenReport }: Props) {
   const query = useChildRecordings(student.id);
   return (

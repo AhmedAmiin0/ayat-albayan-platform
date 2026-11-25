@@ -1,4 +1,4 @@
-import { LOCALE_STORAGE_KEY, parseLocale, type Locale } from '@ab/shared';
+import { LOCALE_STORAGE_KEY, parseLocale, type Locale } from '@ab/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { reloadAppAsync } from 'expo';
 import { getLocales } from 'expo-localization';
@@ -12,7 +12,7 @@ import { locale } from './locale';
 // the two languages on every other cold start. Cleared once a start shows the saved language.
 export const RELOAD_KEY = 'ab.locale.reload';
 
-/** What «اللغة» got: restarting now, saved but needs a manual restart, or nothing changed. */
+/** Restarting now, saved but needing a manual restart, or nothing changed. */
 type SwitchResult = 'reloading' | 'restart' | 'error';
 
 /** Both native direction flags: RN's isRTL is forced || (allowed && the phone language is RTL). */
@@ -43,7 +43,7 @@ async function reloadInto(next: Locale, current: Locale): Promise<boolean> {
 }
 
 /**
- * The phone's language, as WhatsApp reads it (owner 2026-10-27): an RTL phone opens in Arabic,
+ * The phone's language, as WhatsApp reads it: an RTL phone opens in Arabic,
  * an LTR one in English. Never throws: no native module or no answer falls back to Arabic.
  */
 export function phoneLocale(): Locale {
@@ -54,11 +54,7 @@ export function phoneLocale(): Locale {
   }
 }
 
-/**
- * Boot gate: true while reloading into the wanted language (render nothing), false when this run
- * already shows it. A saved «اللغة» choice wins; nothing saved follows the phone, so a run whose
- * native flag disagrees with the phone (a forceRTL persisted by older builds) reloads once.
- */
+/** A saved choice wins; otherwise follow the phone, reloading once if the native flag disagrees. */
 export async function syncLocale(current: Locale = locale): Promise<boolean> {
   let saved: string | null;
   let pending: string | null;
@@ -78,10 +74,7 @@ export async function syncLocale(current: Locale = locale): Promise<boolean> {
   return false;
 }
 
-/**
- * «اللغة»: saves the choice and restarts in it. Not saved → nothing changes (the gate would undo it);
- * saved but the reload failed → the next cold start opens in it.
- */
+/** Not saved changes nothing (the gate would undo it); a failed reload applies on cold start. */
 export async function setLocale(next: Locale): Promise<SwitchResult> {
   try {
     await AsyncStorage.setItem(LOCALE_STORAGE_KEY, next);

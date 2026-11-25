@@ -22,9 +22,13 @@ export const SESSION_WINDOW_MS = 24 * 60 * 60 * 1000;
  * Free text (a session message) is allowed only within 24 h of the contact's last inbound
  * message; after that only an approved template goes out (inbox.sessionClosed).
  */
-export function sessionWindowOpen(lastInboundAt: Date | string | null | undefined, now: Date): boolean {
+export function sessionWindowOpen(
+  lastInboundAt: Date | string | null | undefined,
+  now: Date,
+): boolean {
   if (!lastInboundAt) return false;
-  const at = typeof lastInboundAt === 'string' ? Date.parse(lastInboundAt) : lastInboundAt.getTime();
+  const at =
+    typeof lastInboundAt === 'string' ? Date.parse(lastInboundAt) : lastInboundAt.getTime();
   if (Number.isNaN(at)) return false;
   return now.getTime() - at < SESSION_WINDOW_MS;
 }
@@ -99,15 +103,7 @@ export function isWaAuthFailure(info: WaAuthInfo | null | undefined): boolean {
   return !!info && (isWaAuthError(info.code) || info.credential !== undefined);
 }
 
-/**
- * messages.error_code values where the admin's «حاول مرة أخرى» can't help: not on WhatsApp, the 24 h
- * window closed (a template is needed), too late for the lesson, no longer wanted, already handed
- * to the admin's own WhatsApp (that prompt answers it), the WhatsApp Business account is blocked
- * until an admin fixes it in Meta, or this row can never go out as it is. Throttling (131049,
- * 130429, 131056), maintenance (131057), a paused or missing template (132015, 132001), the test
- * allow-list (131030, Meta's or our own: add the number, then retry), network, http_*, auto_off, uncertain,
- * internal and unknown stay retryable.
- */
+/** Codes where a retry can't help; throttling, maintenance and template errors stay retryable. */
 const RETRY_POINTLESS = new Set<string>([
   String(E.undeliverable),
   String(E.reEngagement),
@@ -120,7 +116,7 @@ const RETRY_POINTLESS = new Set<string>([
   'hold_expired',
   // A reopen template cancelled because staff sent the held text from WhatsApp themselves.
   REOPEN_NOT_NEEDED,
-  // «هل أرسلتها من واتساب؟» answers it (yes / no, docs/19), never a plain retry.
+  // Answered by the sent-from-WhatsApp prompt (docs/19), never a plain retry.
   APP_SEND_UNCONFIRMED,
   // The account, until an admin fixes it in Meta: payment (131042), locked (131031), policy block
   // (368), number not registered (131045, 133010), display name (131037).

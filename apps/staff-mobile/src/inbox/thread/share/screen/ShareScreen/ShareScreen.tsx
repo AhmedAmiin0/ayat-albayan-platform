@@ -25,10 +25,7 @@ function ShareBody({ read }: { read: ShareRead }) {
   return <NotReady failed={read.status === 'error'} />;
 }
 
-/**
- * «مشاركة إلى…» (docs/38 §mobile 7), one per chat group (app/(admin-chat)/inbox/share and the sales
- * and teacher copies): what was shared, then ONE chat of this tree. Nothing is sent without a tap.
- */
+/** docs/38 §mobile 7: nothing is sent without a tap. */
 export function ShareScreen() {
   const read = useSharedItems();
   return (

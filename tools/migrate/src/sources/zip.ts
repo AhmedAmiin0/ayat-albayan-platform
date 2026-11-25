@@ -58,5 +58,5 @@ interface SheetGrid {
 
 export async function readWorkbook(bytes: Uint8Array): Promise<SheetGrid[]> {
   const sheets = await readXlsxFile(Buffer.from(bytes));
-  return sheets.map((s) => ({ sheet: s.sheet, data: s.data as unknown[][] }));
+  return sheets.map((s) => ({ sheet: s.sheet, data: s.data }));
 }

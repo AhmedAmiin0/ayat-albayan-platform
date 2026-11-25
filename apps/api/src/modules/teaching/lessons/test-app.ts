@@ -1,7 +1,7 @@
 // HTTP test harness for the lessons + scheduling controllers (test-only, excluded from the build).
 // Real controllers, guards, services and LessonAccess; every DB-facing class is a mock.
 import type { AuthUser } from '@/common/auth/verify-token';
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
@@ -64,7 +64,7 @@ function mocks() {
     rules: { rule: vi.fn(), activeRuleIds: vi.fn() },
     checker: { check: vi.fn() },
     me: { me: vi.fn() },
-    // docs/46 C3/C4: «سأحضر»'s atomic write and the admins' cancel push.
+    // docs/46 C3/C4: the teacher confirmation write and the admins' cancel push.
     confirms: { confirm: vi.fn() },
     cancelPush: { notify: vi.fn() },
     unpaid: { studentIds: vi.fn() },

@@ -17,14 +17,13 @@ export const PERMISSION_ROWS = [
   { key: 'leads.read', area: 'people', grants: [] },
   { key: 'leads.write', area: 'people', grants: [] },
   { key: 'leads.assign', area: 'people', grants: [] },
-  { key: 'leads.link_family', area: 'people', grants: [] }, // «ربط بطالب موجود»: the admin's only
+  { key: 'leads.link_family', area: 'people', grants: [] }, // Admin only.
   { key: 'applicants.read', area: 'people', grants: [] },
   { key: 'applicants.write', area: 'people', grants: [] },
   { key: 'students.read', area: 'students', grants: [] },
   { key: 'students.write', area: 'students', grants: [] },
   { key: 'students.balance', area: 'students', grants: T },
-  // «التحقق من التسجيل» (docs/16 row 23): is this phone / name already a student? Name,
-  // code, status and teacher only. Sales by default; the admin may switch it off for the sales role.
+  // docs/16 row 23: returns name, code, status and teacher only; sales by default, switchable.
   { key: 'students.check_registration', area: 'students', grants: ['sales'] },
   { key: 'guardians.read', area: 'students', grants: [] },
   { key: 'guardians.write', area: 'students', grants: [] },
@@ -40,19 +39,18 @@ export const PERMISSION_ROWS = [
   { key: 'lessons.status', area: 'schedule', grants: T },
   { key: 'lessons.write', area: 'schedule', grants: [] },
   { key: 'booking.write', area: 'schedule', grants: [] },
-  // Sales' «تغيير الموعد» / «إلغاء الحلقة» / «تأكيد الحلقة» on ONE lesson, ANY lesson (docs/16 rows 37, 37b): POST
-  // /sales/lessons/:id/reschedule, /cancel, /confirm only. Never a series, an outcome or teacher pay.
+  // docs/16 rows 37, 37b: one lesson at a time, never a series, an outcome or teacher pay.
   { key: 'lessons.reschedule', area: 'schedule', grants: ['sales'] },
   { key: 'lessons.cancel', area: 'schedule', grants: ['sales'] },
   { key: 'lessons.confirm', area: 'schedule', grants: ['sales'] },
-  // «إيقاف الدورة مؤقتًا» (docs/16 row 37c): the course pause routes, ANY student.
+  // Course pause routes for any student (docs/16 row 37c).
   { key: 'courses.pause', area: 'schedule', grants: ['sales'] },
   // The profile's course actions (migration 990): ANY student, audited.
   { key: 'subscriptions.stop', area: 'schedule', grants: ['sales'] },
-  { key: 'subscriptions.refund', area: 'finance', grants: [] }, // «إلغاء مع استرداد»: admin only
+  { key: 'subscriptions.refund', area: 'finance', grants: [] }, // Cancel with refund is admin only.
   { key: 'students.change_teacher', area: 'schedule', grants: ['sales'] },
   { key: 'courses.reschedule', area: 'schedule', grants: ['sales'] },
-  // «حاسبة الأسعار» GET /pricing/quote and /pricing/catalog: sales by default (migration 760).
+  // Price calculator routes: sales by default (migration 760).
   { key: 'pricing.read', area: 'schedule', grants: ['sales'] },
   { key: 'tasks.manage', area: 'schedule', grants: [] },
   { key: 'classroom.join', area: 'classroom', grants: TAS },
@@ -72,11 +70,9 @@ export const PERMISSION_ROWS = [
   { key: 'inbox.read', area: 'messaging', grants: TS },
   { key: 'inbox.send', area: 'messaging', grants: TS },
   { key: 'inbox.media', area: 'messaging', grants: [] },
-  // «القوائم» (docs/22): create, rename and delete the academy's chat lists and add
-  // chats to them. Sales by default (the admin may switch it off); teachers never get lists.
+  // Chat lists (docs/22): sales by default, switchable; teachers never get lists.
   { key: 'inbox.lists', area: 'messaging', grants: ['sales'] },
-  // «الردود السريعة»: write the SHARED saved replies everyone with the inbox inserts.
-  // The admin by default (grantable to assistants); personal replies «ردودي» need no permission.
+  // Shared saved replies; admin by default, grantable; personal replies need no permission.
   { key: 'saved_replies.manage', area: 'messaging', grants: [] },
   { key: 'messages.read', area: 'messaging', grants: TS },
   { key: 'messages.manage', area: 'messaging', grants: [] },
@@ -84,7 +80,7 @@ export const PERMISSION_ROWS = [
   // Every template from the inbox; without it (or templates.manage) only the
   // restricted allow-list: free_trial_invite and welcome_greeting by default (restricted-templates.ts).
   { key: 'templates.send_all', area: 'messaging', grants: [] },
-  { key: 'templates.author', area: 'messaging', grants: ['sales'] }, // «القوالب»
+  { key: 'templates.author', area: 'messaging', grants: ['sales'] },
   ...SHORT_LINK_ROWS,
   // docs/31 §2: read every student channel (teacher ↔ family), read-only. The admin by default; the owning
   // assistant reads her own students' channels without it (sales ownership).
@@ -93,13 +89,11 @@ export const PERMISSION_ROWS = [
   { key: 'payments.write', area: 'finance', grants: [] },
   { key: 'subscriptions.read', area: 'finance', grants: [] },
   { key: 'subscriptions.write', area: 'finance', grants: [] },
-  // «تحديد تاريخ بداية الاشتراك» (docs/16 row 24): the start date on the CREATE / renew forms only.
+  // docs/16 row 24: the start date on the create and renew forms only.
   { key: 'subscriptions.set_start_date', area: 'finance', grants: ['sales'] },
-  // «تعديل بيانات الباقة»: every change to an EXISTING package or payment
-  // (start date, «حلقات مستخدمة من الباقة», price, a payment's amount). Admin only; granted by
-  // hand to a trusted assistant's role, never to sales by default (migration 999: admin row).
+  // Any change to an existing package or payment; admin only by default (migration 999).
   { key: 'subscriptions.edit_terms', area: 'finance', grants: [] },
-  // «تجديد اشتراك أي طالب من المحادثة» (docs/16 row 38): inline in SalesMoneyScope; the admin's only.
+  // Renew any student from the chat (docs/16 row 38): admin only by default.
   { key: 'sales.renew_any', area: 'finance', grants: [] },
   { key: 'invoices.read', area: 'finance', grants: [] },
   { key: 'receivables.read', area: 'finance', grants: [] },
@@ -117,11 +111,9 @@ export const PERMISSION_ROWS = [
   { key: 'exports.read', area: 'finance', grants: [] },
   { key: 'settings.read', area: 'system', grants: [] },
   { key: 'settings.write', area: 'system', grants: [] },
-  // «الأرقام» (docs/23 §3 phase 3): add / edit WhatsApp numbers, their credentials, the import and the
-  // comms_source switch. The admin only (migration 20261023000620); reading needs settings.read.
+  // docs/23 §3 phase 3: admin only (migration 20261023000620); reading needs settings.read.
   { key: 'numbers.manage', area: 'system', grants: [] },
-  // «الإشعارات» (docs/23 §3 phase 4): switch, time and route the notification rules. Granted by migration
-  // 20261024000632 to every role holding settings.write; reading needs settings.read.
+  // docs/23 §3 phase 4: granted to settings.write roles (migration 20261024000632).
   { key: 'notifications.manage', area: 'system', grants: [] },
   { key: 'activity.read', area: 'system', grants: [] },
   { key: 'roles.manage', area: 'system', grants: [] },

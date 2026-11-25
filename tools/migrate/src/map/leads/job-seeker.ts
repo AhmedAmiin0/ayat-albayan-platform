@@ -1,8 +1,4 @@
-// Job-seeker hint (R-LEAD-04) from a contact's first inbound texts. Flags the lead for the owner's
-// review; never moves anyone to job_applicants. Patterns run on normalizeArabic text (ة→ه, أ→ا).
-// Bare «معلمة» / «محفظة» are not enough: parents write «عايزة معلمة لبنتي». They count only as a
-// self-description («انا محفظه») or next to work words.
-// Keyword heuristic; precision unknown (no labelled CRM job seekers had matching texts).
+// R-LEAD-04: flags only, never moves; a bare "teacher" word counts only as self-description.
 import { normalizeArabic } from '@ab/core';
 
 const ROLE = '(?:معلم|معلمه|محفظ|محفظه|مدرس|مدرسه|مجاز|مجازه)';

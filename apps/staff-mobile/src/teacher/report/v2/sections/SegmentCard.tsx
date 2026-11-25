@@ -54,7 +54,6 @@ function Part({ s, kind, onOpen, segment, index, later }: PartProps) {
   );
 }
 
-/** One Quran track (التسميع / الحفظ الجديد / المراجعة): its parts, each a range and a grade. */
 export function SegmentCard(p: SegmentCardProps) {
   const v2 = t.reports.v2;
   const { content } = p.s.values;

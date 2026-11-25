@@ -11,11 +11,7 @@ import { LeadProfileSection } from '@/inbox/qualification/components/LeadProfile
 import { threadHref } from '@/inbox/thread/hooks/thread-cache';
 import { useCachedLead } from '@/inbox/leads/detail/use-cached-lead';
 
-/**
- * One lead (R-MOB-02): facts, status changer, the WhatsApp thread (reply and templates in the app),
- * «حجز حلقة تجريبية» (quick book), WhatsApp itself as the fallback, the follow-up and «بيانات الطالب»
- * (R-LEAD-03/05), move to job applicants.
- */
+/** R-MOB-02, R-LEAD-03/05. */
 export function LeadDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const lead = useCachedLead(id);
@@ -54,7 +50,7 @@ export function LeadDetailScreen() {
           {open ? (
             <Button
               variant="secondary"
-              // Named: «… لهدى», apart from the «حجز حلقة تجريبية» status chip above (a move only).
+              // Named, to stand apart from the trial status chip above, which only moves status.
               label={name ? t.booking.trialFor.replace('{name}', name) : t.booking.trialTitle}
               onPress={() => router.push({ pathname: '/inbox/book', params: { leadId: id } })}
             />

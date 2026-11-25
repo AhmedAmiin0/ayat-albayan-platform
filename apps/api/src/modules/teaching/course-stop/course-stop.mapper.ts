@@ -1,9 +1,5 @@
-import {
-  STUDENT_STATUSES,
-  type CourseStopped,
-  type CourseStopRefunded,
-  type CourseStopResult,
-} from '@ab/shared';
+import type { CourseStopped, CourseStopRefunded, CourseStopResult } from '@ab/shared';
+import { STUDENT_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
 import type { StopSub } from './course-stop.repo';
 import type { OwedDecision } from './refund';

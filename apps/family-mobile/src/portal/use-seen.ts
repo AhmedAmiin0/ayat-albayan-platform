@@ -2,8 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSyncExternalStore } from 'react';
 import { seenStore } from '@ab/client-core';
 
-// «جديد» on reports this phone has not opened (docs/50 §6, on the device): @ab/client-core's
-// store over AsyncStorage. Opening a report marks it at once on every screen.
+// docs/50 §6: new marks are per device; opening a report clears it at once on every screen.
 
 const store = seenStore(AsyncStorage);
 

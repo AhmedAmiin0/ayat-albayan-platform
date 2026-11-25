@@ -1,10 +1,10 @@
 import type {
   FeedbackQuery,
   FeedbackRowView,
-  Page,
   TeacherFeedbackSummary,
   TeacherFeedbackView,
 } from '@ab/shared';
+import type { Page } from '@ab/core';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
@@ -19,7 +19,7 @@ import {
 } from '@/modules/teaching/feedback/feedback.mapper';
 import { FeedbackReadRepo, type FeedbackListRow } from './feedback.read.repo';
 
-/** The lists behind «رأيك يهمّنا»: the admin sees everything, a teacher only their own rows (rule 9). */
+/** The admin sees everything, a teacher only their own rows (rule 9). */
 @Injectable()
 export class FeedbackReadService {
   constructor(
@@ -34,7 +34,7 @@ export class FeedbackReadService {
     return { items: rows.map((r) => toRowView(r, people)), total, page: page.page, pageSize: page.pageSize };
   }
 
-  /** GET /feedback/summary (admin): average, count and «يرشّح» share per teacher. */
+  /** Admin: average, count and recommend share per teacher. */
   async summary(): Promise<TeacherFeedbackSummary[]> {
     const averages = await this.queries.averages();
     const people = peopleOf([], await this.queries.teachers(averages.map((a) => a.teacher_id)));

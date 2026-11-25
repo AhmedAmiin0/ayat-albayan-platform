@@ -25,7 +25,7 @@ function fakeAuth() {
 describe('bindWebPushToSession (R-NOT-02 privacy)', () => {
   it('unsubscribes this browser on SIGNED_OUT only', () => {
     const { auth, emit } = fakeAuth();
-    bindWebPushToSession(auth as never);
+    bindWebPushToSession(auth);
     emit('SIGNED_IN');
     emit('TOKEN_REFRESHED');
     expect(dropLocalWebPush).not.toHaveBeenCalled();
@@ -36,7 +36,7 @@ describe('bindWebPushToSession (R-NOT-02 privacy)', () => {
   it('another person signing in on this browser without a sign-out drops the previous user’s subscription', () => {
     dropLocalWebPush.mockClear();
     const { auth, emit } = fakeAuth();
-    bindWebPushToSession(auth as never);
+    bindWebPushToSession(auth);
     emit('INITIAL_SESSION', 'u1');
     emit('SIGNED_IN', 'u1'); // the same person again (a tab refocus): kept
     emit('TOKEN_REFRESHED', 'u1');
@@ -47,13 +47,13 @@ describe('bindWebPushToSession (R-NOT-02 privacy)', () => {
 
   it('returns the listener’s unsubscribe', () => {
     const { auth, unsubscribe } = fakeAuth();
-    bindWebPushToSession(auth as never)();
+    bindWebPushToSession(auth)();
     expect(unsubscribe).toHaveBeenCalled();
   });
 
   it('SIGNED_OUT from anywhere (an account disabled mid-session) forgets the tab memories (round 2 D)', () => {
     const { auth, emit } = fakeAuth();
-    bindWebPushToSession(auth as never);
+    bindWebPushToSession(auth);
     forgetMemories.mockClear();
     emit('TOKEN_REFRESHED');
     expect(forgetMemories).not.toHaveBeenCalled();
@@ -66,7 +66,7 @@ describe('bindWebPushToSession (R-NOT-02 privacy)', () => {
     vi.useFakeTimers();
     rebindWebPush.mockClear();
     const { auth, emit } = fakeAuth();
-    bindWebPushToSession(auth as never);
+    bindWebPushToSession(auth);
     emit('INITIAL_SESSION', null);
     emit('TOKEN_REFRESHED');
     await vi.runAllTimersAsync();

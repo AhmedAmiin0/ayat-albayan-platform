@@ -1,11 +1,10 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { gateKit } from './stop-refund.fakes';
 import type { RefundPlan } from './stop-refund.plan';
 
-// Review 2026-11-06: «إلغاء فقط» below the default (nothing, or custom under attended × rate = 150)
-// forgives money, so it needs subscriptions.refund and the sales ownership rule, as a refund does.
+// Owing less than the default forgives money, so it needs subscriptions.refund and sales ownership.
 const SUB = { id: 'sub1', studentId: 'hers', currency: 'SAR' };
 const OTHER = { ...SUB, studentId: 'not-hers' };
 const STOP: Permission[] = ['subscriptions.stop'];

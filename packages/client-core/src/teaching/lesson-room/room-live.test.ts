@@ -1,4 +1,4 @@
-import type { LessonRoomState } from '@ab/shared';
+import type { LessonRoomState } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { isRoomLive, roomEndedFor, roomLiveMinutes, studentWaiting } from './room-live.js';
 

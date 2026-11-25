@@ -10,7 +10,7 @@ const reduceMotion = jest.mocked(AccessibilityInfo.isReduceMotionEnabled);
 const loop = jest.spyOn(Animated, 'loop');
 const c = t.mobile.connection;
 const onRetry = jest.fn();
-const advance = (ms: number) => act(async () => void jest.advanceTimersByTime(ms));
+const advance = (ms: number) => act(async () => jest.advanceTimersByTime(ms));
 const retryButton = () => screen.queryByRole('button', { name: c.retry });
 
 async function open(mode: 'quiet' | 'loading' = 'loading') {

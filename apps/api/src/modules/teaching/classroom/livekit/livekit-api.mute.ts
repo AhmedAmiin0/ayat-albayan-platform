@@ -1,4 +1,4 @@
-import type { MuteSource } from '@ab/shared';
+import type { MuteSource } from '@ab/schedule';
 import type { LivekitApi } from './livekit-api';
 import { ignoredAnswer, participantAnswer } from './livekit-twirp';
 
@@ -25,11 +25,7 @@ export function trackSidOf(participant: Obj, source: MuteSource): string | null 
   return typeof hit?.sid === 'string' ? hit.sid : null;
 }
 
-/**
- * «كتم الميكروفون» / «إيقاف الكاميرا»: GetParticipant → the track of that source → MutePublishedTrack
- * (muted: true). The participant may unmute themselves afterwards. 'none' when nothing of that
- * source is published (already off): nothing to do. Throws LivekitError (not_found when gone).
- */
+/** 'none' when nothing of that source is published; the participant may unmute themselves. */
 export async function muteTrack(api: LivekitApi, input: MuteTrackInput): Promise<'muted' | 'none'> {
   const grant = { roomAdmin: true, room: input.room };
   const who = { room: input.room, identity: input.identity };

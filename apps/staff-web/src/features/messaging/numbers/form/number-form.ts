@@ -123,5 +123,5 @@ export function updateBody(view: NumberView, draft: NumberDraft): NumberUpdate {
   const next: Partial<Record<Key, unknown>> = { evolution_mode: null, ...createBody(draft) };
   const before = recorded(view);
   const changed = KEYS.filter((k) => next[k] !== undefined && next[k] !== before[k]);
-  return Object.fromEntries(changed.map((k) => [k, next[k]])) as NumberUpdate;
+  return Object.fromEntries(changed.map((k) => [k, next[k]]));
 }

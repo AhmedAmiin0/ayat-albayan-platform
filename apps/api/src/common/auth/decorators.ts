@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { createParamDecorator, SetMetadata, type ExecutionContext } from '@nestjs/common';
 import type { AuthUser } from './verify-token';
 

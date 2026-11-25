@@ -1,11 +1,4 @@
-// A7: several form submissions for one student, teacher and day. Pure.
-// Same «رقم الحلقة»: a resubmission — identical content keeps the first (warn), different content
-// keeps the latest (the teacher's correction) and sends the older to review.
-// Different «رقم الحلقة» sent within 30 minutes: a correction with a retyped number — handled as a
-// resubmission (latest kept, older to review), not as a second chargeable lesson.
-// Different «رقم الحلقة» further apart: another lesson typed with the same date — kept as its own
-// lesson (natural key «date#2») and sent to review so the owner fixes the date; dropping it would
-// lose a real lesson from the package balance and the teacher's payout.
+// A7: same number or within 30 min is a resubmission; further apart is its own lesson, to review.
 import { stableJson } from '../../hash.ts';
 import { keyId, keys } from '../../keys.ts';
 import { issuesFor } from '../../sources/sheets/issues.ts';

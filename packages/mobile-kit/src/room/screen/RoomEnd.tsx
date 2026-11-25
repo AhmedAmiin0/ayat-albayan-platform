@@ -1,4 +1,4 @@
-import type { RoomPresence } from '@ab/shared';
+import type { RoomPresence } from '@ab/schedule';
 import type { ReactNode } from 'react';
 import { AlertIcon, RemoveIcon } from '../live/room-icons';
 import type { ClosedWhy, RoomPhase } from '../model/room-phase';
@@ -10,7 +10,7 @@ import { RoomNotice } from './RoomNotice';
 interface ClosedLook {
   message: (kind: RoomKind) => string;
   detail?: string;
-  /** «ادخل مرة أخرى» is offered: they may come back (a rejoin learns a final end: 410). */
+  /** A rejoin learns a final end via 410. */
   again: boolean;
   icon: (ink: string) => ReactNode;
 }
@@ -53,18 +53,16 @@ export interface RoomEndProps {
   phase: Extract<RoomPhase, { step: 'failed' | 'closed' }>;
   kind: RoomKind;
   presence: readonly RoomPresence[];
-  /** «حاول مرة أخرى» / «ادخل مرة أخرى»: back to the preview, with a fresh token. */
+  /** Back to the preview with a fresh token. */
   onAgain: () => void;
   onBack: () => void;
-  /** «فتح في المتصفح» after a failure; null where the app offers no web room. */
+  /** Null where the app offers no web room. */
   onBrowser: (() => void) | null;
 }
 
-/** «المعلم/ة في الغرفة الآن» on RoomXLeft, when the lesson says so. */
 const teacherIn = (presence: readonly RoomPresence[]): string | null =>
   presence.some((p) => p.role === 'teacher') ? t.portal.app.live.teacherIn : null;
 
-/** A failed join, or the room closed: why, a way back in where there is one, and «رجوع». */
 export function RoomEnd({ phase, kind, presence, onAgain, onBack, onBrowser }: RoomEndProps) {
   if (phase.step === 'failed') {
     return (

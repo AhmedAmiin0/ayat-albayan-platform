@@ -4,23 +4,22 @@ import type { AssistantCommissionKind } from './kind.js';
 import type { CurrencyTotals, StatementLineKind } from './statement.js';
 import type { WalletTotals } from './wallet.js';
 
-// Assistant (base role sales) responses (owner, 2026-10-06). snake_case, instants ISO UTC, months and
-// days YYYY-MM-01 / YYYY-MM-DD. Amounts are per currency; nothing here sums across currencies.
+// Assistant (base role sales) responses: snake_case, instants ISO UTC, months and days
+// YYYY-MM-01 / YYYY-MM-DD. Amounts are per currency; nothing here sums across currencies.
 
 /** GET /assistant-pay/terms (admin) and the `terms` of /sales/me/earnings. */
 export interface AssistantTermsView {
   assistant_id: string;
   commission: { type: AssistantCommissionType; value: number; currency: string | null; starts_on: string } | null;
   salary: { amount: number; currency: string; starts_on: string } | null;
-  /**
-   * The share of the commission earned on each renewal now:
-   * settings.renewal_commission_percent, 0 while «عمولة التجديد» is off (renewalShareNow); the
-   * screens then say it is paused.
-   */
+  /** Renewal commission share now; 0 while renewal commission is off (renewalShareNow). */
   renewal_share_percent: number;
 }
 
-/** GET /assistant-pay/terms rows: every assistant with their terms (both null until an admin sets them). */
+/**
+ * GET /assistant-pay/terms rows: every assistant with their terms (both null until an admin sets
+ * them).
+ */
 export interface AssistantTermsRow extends AssistantTermsView {
   name: string;
 }
@@ -30,7 +29,10 @@ export interface BroughtByResult {
   changed: number;
 }
 
-/** GET /assistant-pay/brought-by/:studentId: who brought a student and when (both null when nobody did). */
+/**
+ * GET /assistant-pay/brought-by/:studentId: who brought a student and when (both null when nobody
+ * did).
+ */
 export interface BroughtByView {
   assistant: { id: string; name: string } | null;
   brought_at: string | null;
@@ -42,9 +44,15 @@ export interface AssistantCommissionView {
   assistant: { id: string; name: string };
   student: { id: string; code: string; name: string };
   subscription_id: string | null;
-  /** 'first' (once per student) or 'renewal' (each later package, at share_percent of the normal commission). */
+  /**
+   * 'first' (once per student) or 'renewal' (each later package, at share_percent of the normal
+   * commission).
+   */
   kind: AssistantCommissionKind;
-  /** The share of the normal commission it was earned at: 100 for a first, the setting at earn time for a renewal. */
+  /**
+   * The share of the normal commission it was earned at: 100 for a first, the setting at earn time
+   * for a renewal.
+   */
   share_percent: number;
   type: AssistantCommissionType;
   /** The term's value when it was earned: percent points, or the fixed amount. */
@@ -66,7 +74,7 @@ export interface AssistantStatementLineView {
   currency: string;
   /** commission lines: the student; adjustment lines: the reason. */
   student: { code: string; name: string } | null;
-  /** commission lines: «عمولة» or «عمولة تجديد»; null on the other lines. */
+  /** Commission lines: commission or renewal commission; null on the other lines. */
   commission_kind: AssistantCommissionKind | null;
   reason: string | null;
 }
@@ -98,7 +106,7 @@ export interface MyStudentRow {
   /** Has any of their subscriptions been paid in full? (No price, no amounts.) */
   first_subscription_paid: boolean;
   commission: { amount: number; currency: string; status: AssistantCommissionStatus; earned_at: string } | null;
-  /** How many renewal commissions this student earned her (no amounts per student beyond the first). */
+  /** Renewal commissions this student earned her (no per-student amounts after the first). */
   renewal_commissions: number;
 }
 
@@ -107,14 +115,17 @@ export interface MyEarnings {
   terms: AssistantTermsView | null;
   /** This month so far, as the next statement would be (planStatement), per currency. */
   this_month: Record<string, CurrencyTotals>;
-  /** All earned commissions, per currency (kept for app builds older than «محفظتي»). */
+  /** All earned commissions per currency, kept for older app builds. */
   commissions_total: Record<string, number>;
-  /** «محفظتي» per currency (walletTotals): owed, paid, earned this month. Commissions only. */
+  /** The wallet per currency (walletTotals): owed, paid, earned this month; commissions only. */
   wallet: Record<string, WalletTotals>;
   statements: AssistantStatementView[];
 }
 
-/** GET /sales/me/payments: only payments this assistant recorded; no price, no other subscription data. */
+/**
+ * GET /sales/me/payments: only payments this assistant recorded; no price, no other subscription
+ * data.
+ */
 export interface MyPaymentRow {
   id: string;
   student: { id: string; code: string; name: string };

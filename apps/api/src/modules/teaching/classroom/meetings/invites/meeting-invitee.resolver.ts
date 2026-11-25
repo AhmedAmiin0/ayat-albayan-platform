@@ -1,4 +1,5 @@
-import { mayInvitePhones, normalizePhone, type MeetingInviteeInput, type MeetingInviteeKind } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
+import { mayInvitePhones, type MeetingInviteeInput, type MeetingInviteeKind } from '@ab/schedule';
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
@@ -58,7 +59,7 @@ export class MeetingInviteeResolver {
     return { kind: 'ids', ids: [] };
   }
 
-  /** «أعد الإرسال» reaches only whom the caller could invite: a typed phone (403), a student in scope (404). */
+  /** Reaches only whom the caller could invite: typed phone (403), student in scope (404). */
   async assertMayReach(user: Pick<AuthUser, 'id' | 'role'>, invitee: { kind: string; student_id: string | null }): Promise<void> {
     if (invitee.kind === 'phone' && !mayInvitePhones(user.role)) throw phoneNotAllowed();
     if (invitee.kind !== 'student') return;

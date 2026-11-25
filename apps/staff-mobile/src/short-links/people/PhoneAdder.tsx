@@ -8,7 +8,7 @@ const COUNTRY = defaultCountry(null);
 const P = () => t.shortLinks.people;
 const F = () => t.shortLinks.form;
 
-/** «رقم واتساب ليس في المنصة»: a free number, checked as E.164 before it joins the list. */
+/** A number not on the platform, checked as E.164 before it joins the list. */
 export function PhoneAdder({ onAdd }: { onAdd: (e164: string) => void }) {
   const [typed, setTyped] = useState('');
   const [bad, setBad] = useState(false);

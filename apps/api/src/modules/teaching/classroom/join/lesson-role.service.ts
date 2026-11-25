@@ -1,4 +1,4 @@
-import type { JoinRole } from '@ab/shared';
+import type { JoinRole } from '@ab/schedule';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';

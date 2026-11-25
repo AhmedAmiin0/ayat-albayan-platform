@@ -5,8 +5,7 @@ import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { ChannelRef } from '@ab/web-kit/components/channel/api';
 
-// «تعديل» / «حذف للجميع» (owner 2026-10-30): PATCH / DELETE …/messages/:id (the API checks every
-// rule).
+// PATCH and DELETE of a channel message; the API checks every rule.
 
 interface MessageRef extends ChannelRef {
   messageId: string;

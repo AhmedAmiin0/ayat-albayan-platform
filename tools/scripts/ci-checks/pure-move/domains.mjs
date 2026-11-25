@@ -1,11 +1,11 @@
 // docs/32 g1 + c-rows: a domain move PR adds its domain to the app's `const DOMAINS = [...]`
-// in its lint.blocks.mjs (eslint.config.js before docs/31b; packages/config/eslint-domains.js).
+// in its lint.blocks.mjs (packages/config/eslint-domains.js).
 // The pure-move gate accepts that one line, written as plain quoted names, when every added domain
 // regroups files into `<app>/src/<domain>/<module>/` from outside that module in the same diff and
 // no domain is dropped.
 import { posix } from 'node:path';
 
-const ESLINT = /(^|\/)(eslint\.config\.[cm]?js|lint\.blocks\.mjs)$/;
+const LINT_BLOCKS = /(^|\/)lint\.blocks\.mjs$/;
 const LINE = /^const DOMAINS = \[([^\]\n]*)\];$/m;
 const namesOf = (text) => [...(LINE.exec(text)?.[1] ?? '').matchAll(/'([\w-]+)'/g)].map((m) => m[1]);
 const canonical = (names) => `const DOMAINS = [${names.map((d) => `'${d}'`).join(', ')}];`;
@@ -22,13 +22,13 @@ const regroups = (root, renames) => (d) => {
 };
 
 /**
- * The head text of an eslint config with its DOMAINS line put back to the base's when the change
+ * The head text of a lint.blocks.mjs with its DOMAINS line put back to the base's when the change
  * only adds domains this diff regroups; otherwise the head text unchanged (the normal check then
  * fails it).
  */
 export function followDomains(base, head, { file, renames }) {
   const [before, after] = [LINE.exec(base), LINE.exec(head)];
-  if (!ESLINT.test(file) || !before || !after || before[0] === after[0]) return head;
+  if (!LINT_BLOCKS.test(file) || !before || !after || before[0] === after[0]) return head;
   const root = posix.dirname(file) === '.' ? '' : `${posix.dirname(file)}/`;
   const [old, now] = [namesOf(base), namesOf(head)];
   const added = now.filter((d) => !old.includes(d));

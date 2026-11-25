@@ -10,7 +10,7 @@ type Props = {
   title: string;
   children?: ReactNode;
   confirmLabel: string;
-  /** Ask «السبب» (required, ≥ 3 letters): voiding money is explained in the audit log. */
+  /** A required reason of at least 3 letters, since voiding money is explained in the audit log. */
   withReason?: boolean;
   pending: boolean;
   error: string | null;

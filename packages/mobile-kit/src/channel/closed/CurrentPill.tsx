@@ -2,7 +2,6 @@ import { t } from '../../lib/i18n/i18n';
 import { shape, type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
 
-/** «الخطوة الحالية» beside the current step's name (ChatXClosed). */
 export function CurrentPill() {
   const { color } = useTheme();
   return (

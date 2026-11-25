@@ -1,13 +1,6 @@
 import { netPaidIn } from '@ab/money';
-import type {
-  AdminTaskKind,
-  LessonStatus,
-  PackageSize,
-  PendingReportRow,
-  TaskRow,
-  UnpaidRow,
-  WorkList,
-} from '@ab/shared';
+import type { AdminTaskKind, LessonStatus, PackageSize } from '@ab/catalog';
+import type { PendingReportRow, TaskRow, UnpaidRow, WorkList } from '@ab/money';
 import { round2 } from './conversion';
 import { WORK_ITEMS } from '@/modules/reporting/dashboard/dashboard.types';
 
@@ -80,7 +73,6 @@ export function unpaidList(rows: readonly UnpaidIn[]): WorkList<UnpaidRow> {
   );
 }
 
-/** Tasks about a package carry its student and use («باقة سهيلة قربت تخلص: فاضل حلقتين»). */
 export function taskList(tasks: readonly TaskIn[], subjects: readonly SubjectIn[]): WorkList<TaskRow> {
   const byId = new Map(subjects.map((s) => [s.id, s]));
   return list(

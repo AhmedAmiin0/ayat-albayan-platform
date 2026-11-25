@@ -1,4 +1,4 @@
-import type { RoomPresence } from '@ab/shared';
+import type { RoomPresence } from '@ab/schedule';
 import type { ReactNode } from 'react';
 import { AppText } from '../../ui';
 import { t } from '../../lib/i18n/i18n';
@@ -20,7 +20,7 @@ interface LiveSheetProps {
   onBrowser: (() => void) | null;
 }
 
-/** A trial lesson's «المحادثة»: it opens after subscribing (canvas RoomXChat, the family). */
+/** In a trial lesson the chat opens only after subscribing. */
 function ChatLocked({ onClose }: Pick<LiveSheetProps, 'onClose'>) {
   const { color } = useTheme();
   return (

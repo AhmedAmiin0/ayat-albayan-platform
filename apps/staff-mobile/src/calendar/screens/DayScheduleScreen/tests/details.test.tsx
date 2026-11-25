@@ -59,7 +59,6 @@ test('«تأكيد» inside the sheet confirms, and the sheet shows the new stat
   if (!inSheet) throw new Error('no sheet confirm');
   await fireEvent.press(inSheet);
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/confirm', undefined);
-  // يوسف (row + sheet) and جنى's 17:00 read «مؤكدة».
   await waitFor(() => expect(screen.getAllByText(t.enums.lessonStatus.confirmed)).toHaveLength(3));
 });
 

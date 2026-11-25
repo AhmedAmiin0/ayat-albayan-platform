@@ -1,4 +1,4 @@
-import { intlLocale } from '@ab/shared';
+import { intlLocale } from '@ab/core';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { moneyText } from '@ab/web-kit/lib/money-text';

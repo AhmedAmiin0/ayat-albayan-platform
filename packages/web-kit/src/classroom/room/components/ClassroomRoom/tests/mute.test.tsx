@@ -4,9 +4,10 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { joinAs } from '@ab/web-kit/classroom/board/board-fixture';
 import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom/ClassroomRoom';
 import { fakeClient, tile } from '@ab/web-kit/classroom/room/livekit/fake-client';
+import type * as ApiModule from '@ab/web-kit/lib/http/api/api';
 
 const apiSend = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<typeof import('@ab/web-kit/lib/http/api/api')>()), apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<typeof ApiModule>()), apiSend }));
 
 const M = t.classroom.mute;
 const TILES = [

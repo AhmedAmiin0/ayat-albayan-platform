@@ -12,7 +12,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
 
-// «يُرسل من» while the save is in flight: the dialog can't be dismissed and the selects wait.
+// While the save is in flight the dialog cannot be dismissed and the selects wait.
 
 const s = t.templates.sendFrom;
 const NAME = t.templates.names.booking_confirmation_plain;
@@ -32,7 +32,7 @@ describe('template health — «يُرسل من» busy', () => {
       ['/messaging/templates', [BOOKING]],
     ]);
     renderWithClient(<TemplateHealth headingId="h" />);
-    const box = () => screen.getByRole('combobox', { name: s.labelFor.replace('{name}', NAME) }) as HTMLSelectElement;
+    const box = () => screen.getByRole<HTMLSelectElement>('combobox', { name: s.labelFor.replace('{name}', NAME) });
     const select = await screen.findByRole('combobox', { name: s.labelFor.replace('{name}', NAME) });
     await within(select).findByRole('option', { name: s.option.replace('{label}', 'Spare line').replace('{role}', t.numbers.purpose.notifications) });
     fireEvent.change(select, { target: { value: 'num-2' } });
@@ -41,7 +41,7 @@ describe('template health — «يُرسل من» busy', () => {
     apiSend.mockReturnValue(new Promise((done) => (settle = done)));
     fireEvent.click(within(dialog).getByRole('button', { name: s.confirmYes }));
     await waitFor(() => expect(box().disabled).toBe(true));
-    const cancel = within(dialog).getByRole('button', { name: t.common.cancel }) as HTMLButtonElement;
+    const cancel = within(dialog).getByRole<HTMLButtonElement>('button', { name: t.common.cancel });
     expect(cancel.disabled).toBe(true);
     fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
     fireEvent.keyDown(dialog, { key: 'Escape' });

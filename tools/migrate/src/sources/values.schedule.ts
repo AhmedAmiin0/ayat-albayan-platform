@@ -1,7 +1,7 @@
-// «تقويم الحجوزات» vocabulary: booking status, weekdays, the «التكرار» recurrence text.
+// Bookings vocabulary: status, weekdays, the recurrence text.
 import { lookup } from './values.ts';
 
-/** «الحالة». docs/06: rules and one-off lessons from confirmed / subscribed / needs confirmation. */
+/** docs/06: rules and one-off lessons from confirmed, subscribed or needs confirmation. */
 export const bookingStatus = lookup<
   'confirmed' | 'subscribed' | 'needs_confirmation' | 'tentative' | 'done' | 'cancelled'
 >({
@@ -13,7 +13,7 @@ export const bookingStatus = lookup<
   ملغي: 'cancelled',
 });
 
-/** Weekday names → byday (0 = الأحد … 6 = السبت), Arabic and HEART's English column names. */
+/** Weekday names to byday (0 = Sunday ... 6 = Saturday), Arabic and HEART's English names. */
 export const weekday = lookup<number>({
   الأحد: 0,
   الاتنين: 1,
@@ -34,17 +34,14 @@ export const weekday = lookup<number>({
 
 export interface Recurrence {
   byday: number[];
-  /** Inclusive last local day («حتى 2026-10-17»), or null = open-ended. */
+  /** Inclusive last local day, or null when open-ended. */
   until: string | null;
 }
 
-/**
- * «أسبوعي: السبت,الثلاثاء حتى 2026-10-17» → { byday: [2, 6], until }. Empty → null (one-off).
- * undefined = text present but not understood (raise unmapped_value).
- */
+/** Empty is null (one-off); undefined means text present but not understood (unmapped_value). */
 export function parseRecurrence(raw: string | null): Recurrence | null | undefined {
   if (!raw) return null;
-  // The Apps Script's parseRepeat: /حتى\s*(\d{4})-(\d{1,2})-(\d{1,2})/ → that day 23:59 Asia/Riyadh.
+  // As the Apps Script's parseRepeat: the until day ends at 23:59 Asia/Riyadh.
   const m = /^أسبوعي\s*:\s*(.+?)(?:\s*حتى\s*(\d{4})-(\d{1,2})-(\d{1,2}))?$/.exec(raw.trim());
   if (!m?.[1]) return undefined;
   const days = m[1].split(/[,،]/).map((d) => weekday(d.trim()));

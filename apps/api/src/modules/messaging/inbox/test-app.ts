@@ -4,7 +4,8 @@
 // configured by default; files that reset all mocks re-prime `configured` in beforeEach.
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { ThreadWindow } from './send/send-number';
-import { SETTING_DEFAULTS, type ChatListRef, type ThreadLesson, type ThreadPeople } from '@ab/shared';
+import type { ChatListRef, ThreadLesson, ThreadPeople } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
@@ -13,12 +14,13 @@ import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { ReopenRequest } from '@/modules/messaging/whatsapp/sender/window/reopen-request';
 import { ReopenPick } from '@/modules/messaging/whatsapp/sender/window/manual-send';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
-import { TemplatesRepo, type ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import type { ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/types';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { KnownNumber } from './threads/known-number';
 import type { FamilyTag } from './people/thread-people.mapper';

@@ -7,7 +7,7 @@ import { closeChildSwitch, openChildSwitch, useChildSwitch } from '@/nav';
 import { lesson, student } from '@/portal/portal.fixtures';
 import { ChildSwitchList } from './ChildSwitchList';
 
-// The children sheet (owner 2026-11-16, canvas SwitchSheet, SwitchDone, Adult).
+// The children sheet (canvas SwitchSheet, SwitchDone, Adult).
 
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
@@ -33,7 +33,6 @@ async function show() {
   await waitFor(() => expect(client.isFetching()).toBe(0));
 }
 
-// g1 works as يوسف on this phone.
 beforeEach(async () => {
   closeChildSwitch();
   await AsyncStorage.setItem(PICKED_CHILD_KEY, JSON.stringify({ profileId: 'g1', studentId: 's2' }));

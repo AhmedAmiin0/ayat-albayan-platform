@@ -12,10 +12,7 @@ import {
 } from '../../support/core/schedule';
 import { openMyLesson } from '../../support/teaching/my-calendar';
 
-// Teacher «اقترح موعدًا آخر» → admin «وافق على الموعد» (R-SCH-08, lesson-proposals.controller.ts):
-// «أبرار» moves her own lesson 90 minutes later on her own clock (Cairo), the admin approves it
-// from «طلبات تغيير الموعد», and the lesson moves like any reschedule (R-SCH-07): the old row is
-// `rescheduled`, a new row starts at the proposed time, the guardian's confirmation is queued.
+// An approved proposal moves the lesson like any reschedule (R-SCH-07, R-SCH-08).
 
 const EVERY_DAY = [0, 1, 2, 3, 4, 5, 6] as const;
 const MINUTE = 60_000;
@@ -48,7 +45,7 @@ async function proposalOf(lessonId: string): Promise<ProposalRow | undefined> {
 
 test.describe('lesson proposal — teacher proposes, admin approves (R-SCH-08)', () => {
   test('«اقترح موعدًا آخر» 90 minutes later → «وافق على الموعد» → the lesson moved', async ({ asRole }) => {
-    // «أبرار» works 10:00–22:00 Riyadh every day (approving runs the usual conflict check).
+    // Approving runs the usual conflict check, so the teacher works 10:00-22:00 Riyadh daily.
     const teacherId = await resetAbrar();
     await setAvailability(teacherId, EVERY_DAY.map((d) => [d, '10:00', '22:00']));
     const family = await seedFamily('أم ريم', ['ريم']);
@@ -57,7 +54,6 @@ test.describe('lesson proposal — teacher proposes, admin approves (R-SCH-08)',
     const lessonId = await seedLesson({ teacherId, studentId, startsAt, minutes: 45 });
     const movedTo = new Date(startsAt.getTime() + 90 * MINUTE);
 
-    // Teacher: «جدولي» → the lesson card → the form, on her own clock (same day, +90 min).
     const teacher = await asRole('teacher');
     const card = (await openMyLesson(teacher, { name: /ريم/, at: startsAt })).getByRole('article');
     await card.getByRole('button', { name: ar.teacherDash.proposeReschedule }).click();
@@ -75,7 +71,6 @@ test.describe('lesson proposal — teacher proposes, admin approves (R-SCH-08)',
     expect(proposed).toMatchObject({ status: 'pending', note: NOTE });
     expect(proposed?.proposed_starts_at.toISOString()).toBe(movedTo.toISOString());
 
-    // Admin: «طلبات تغيير الموعد» above the week → the lesson drawer → «وافق على الموعد».
     const admin = await asRole('admin');
     await admin.goto('/admin/schedule');
     const panel = admin.getByRole('region', { name: new RegExp(ar.lessons.proposal.title) });
@@ -96,7 +91,6 @@ test.describe('lesson proposal — teacher proposes, admin approves (R-SCH-08)',
       .poll(() => queuedFor(family.guardianId))
       .toContainEqual(expect.objectContaining({ template_key: 'booking_confirmation', status: 'queued' }));
 
-    // «جدولي» shows the lesson at the new time, with nothing left waiting.
     const mine = await openMyLesson(teacher, { name: /ريم/, at: movedTo, last: true });
     const moved = mine.getByRole('article', { name: new RegExp(`^${cairoClock(movedTo)} ريم`) });
     await expect(moved).toBeVisible();

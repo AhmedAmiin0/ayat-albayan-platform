@@ -13,11 +13,7 @@ const orNull = (e: unknown): null => {
   throw e;
 };
 
-/**
- * «الدورة والباقة» (owner 2026-11-17): the current package's course on the student's file and the
- * sales screen (CourseCardCourse) and the package's numbers (left, used, paid). Read only; the
- * routes check the key.
- */
+/** Read only; the routes check the key. */
 @Injectable()
 export class CourseCards {
   constructor(

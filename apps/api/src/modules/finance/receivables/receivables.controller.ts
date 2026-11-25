@@ -1,10 +1,10 @@
-import type { ReceivablesView } from '@ab/shared';
+import type { ReceivablesView } from '@ab/money';
 import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '@/common/auth/decorators';
 import { ReceivablesService } from './receivables.service';
 
-/** «مستحق على الطلاب»: who owes, how much, how long (aging). Admin only. CSV: /exports/receivables.csv. */
+/** Who owes, how much and for how long (aging); admin only; CSV at /exports/receivables.csv. */
 @ApiTags('receivables')
 @ApiBearerAuth()
 @Permissions('receivables.read')

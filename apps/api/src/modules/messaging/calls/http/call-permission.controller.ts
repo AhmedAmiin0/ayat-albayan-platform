@@ -1,7 +1,7 @@
 import { callPermissionRequestSchema } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -13,10 +13,7 @@ import { CallPermissions } from '@/modules/messaging/calls/flow/call-permission.
 
 type RequestBody = z.output<typeof callPermissionRequestSchema>;
 
-/**
- * GET /calls/permission/:phone (may the academy call this number now?) and «اطلب إذن الاتصال»
- * (docs/28 §3.1): a staff send through the outbox, audited like every send from the thread.
- */
+/** The request is a staff send through the outbox, audited (docs/28 §3.1). */
 @ApiTags('calls')
 @ApiBearerAuth()
 @Permissions('inbox.send')

@@ -36,7 +36,7 @@ test.describe.serial('sales: the course of her subscription with a time per day 
     const ctx = await playwright.request.newContext();
     teacher = await resetAbrar();
     await setAvailability(teacher, [[0, '08:00', '22:00'], [2, '08:00', '22:00']]);
-    await setSetting('sales_require_assignee', true); // her student only: «اشتراط التعيين» ON (docs/16 row 39)
+    await setSetting('sales_require_assignee', true); // Lead assignment rule on (docs/16 row 39).
     a = await makeAssistant('coursea');
     b = await makeAssistant('courseb');
     student = (await family(need(a).id, 'جنى')).student;

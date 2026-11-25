@@ -2,8 +2,6 @@ import { templateCreateSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { emptyDraft, newButton, toInput, varCount, varsOf } from './template-draft';
 
-// «قالب جديد» (owner 2026-10-31): the form's variables follow the body; what it posts.
-
 describe('template draft', () => {
   it('varCount: the highest {{n}} in the text, never above nine', () => {
     expect(varCount('no variables')).toBe(0);

@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { offPathKeys } from '@ab/client-core';
 import { Linking } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
@@ -45,7 +46,7 @@ test('a signed link never reaches the disk cache (noPersist)', async () => {
   const client = freshQueryClient();
   await renderWithQuery(<LessonScreen />, client);
   expect(await screen.findByRole('button', { name: t.audioPlayer.play })).toBeTruthy();
-  const link = client.getQueryCache().find({ queryKey: ['portal-recording-url', 's1', 'A'] });
+  const link = client.getQueryCache().find({ queryKey: offPathKeys.portalRecordingUrl('s1', 'A') });
   expect(link?.meta).toEqual({ noPersist: true });
 });
 

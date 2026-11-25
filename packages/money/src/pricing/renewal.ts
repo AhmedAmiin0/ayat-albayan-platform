@@ -11,9 +11,7 @@ import {
 } from './catalog.js';
 import { SITE_COUNTRIES, type SiteCountry } from './currency.js';
 
-// «جدّد الاشتراك» (docs/18): the new package starts from the student's last one,
-// read from the quote it was priced from (price_source); a row without a usable quote keeps its
-// lesson count. Shared by the web dialog and the mobile subscribe screen. Pure.
+// Renewal (docs/18) starts from the last package's quote; else it keeps the lesson count.
 
 export type LastPackage = Pick<SubscriptionView, 'price_source' | 'lessons_total' | 'duration'>;
 

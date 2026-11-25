@@ -1,10 +1,7 @@
 import type { StopOwe, StopOweChoice, StopRefund, StopRefundChoice } from '@ab/shared';
 
-// «إلغاء فقط» / «إلغاء مع استرداد» (owner 2026-11-02, choices 2026-11-06) for web and mobile: the
-// sheet's lines and option labels with their computed amounts. Words and the money format are
-// injected (each app's `t.courseActions.stop`, its own money()).
+// Words and the money format are injected by each app.
 
-/** The sheet's mode: «إلغاء فقط» or «إلغاء مع استرداد». */
 export type RefundChoice = 'cancel' | 'refund';
 
 /** `t.courseActions.stop`'s refund lines. */
@@ -31,7 +28,6 @@ interface Option<V extends string> {
   label: string;
 }
 
-/** «المدفوع», «الحلقات المحضورة: n × السعر × النسبة = …». */
 export function stopRefundLines(
   words: StopRefundWords,
   refund: StopRefund,
@@ -74,18 +70,17 @@ export function oweOptions(
   ];
 }
 
-/** «إلغاء فقط» below the default (nothing; custom may go under attended × rate). */
+/** These choices go below the default (custom may go under attended times rate). */
 const LOWERING: ReadonlySet<StopOweChoice> = new Set<StopOweChoice>(['nothing', 'custom']);
 
 /**
- * The owe options this person is offered (review 2026-11-06): forgiving money below attended ×
+ * The owe options this person is offered: forgiving money below attended ×
  * rate is a refund holder's call on this student (the server answers 403 otherwise).
  */
 export function offeredOwe<O extends Option<StopOweChoice>>(options: O[], mayLower: boolean): O[] {
   return options.filter((o) => mayLower || !LOWERING.has(o.value));
 }
 
-/** «الاسترداد: … · المتبقي على الأسرة: …» before the confirm. */
 export function stopSummaryText(
   words: Pick<StopChoiceWords, 'summary'>,
   summary: { refund: number; due: number },

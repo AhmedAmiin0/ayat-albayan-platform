@@ -1,4 +1,4 @@
-import type { TeacherMe } from '@ab/shared';
+import type { TeacherMe } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { TeacherMeRepo } from '@/modules/teaching/lessons';

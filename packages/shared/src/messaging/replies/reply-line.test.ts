@@ -24,26 +24,60 @@ const TABLE: [At, At, boolean, 'chat' | 'notifications' | null][] = [
   [CLOSED, CLOSED, false, null],
   [null, null, false, null],
 ];
-const CASES = TABLE.map(([chat, notifications, chatConfigured, want]) => ({ chat, notifications, chatConfigured, want }));
+const CASES = TABLE.map(([chat, notifications, chatConfigured, want]) => ({
+  chat,
+  notifications,
+  chatConfigured,
+  want,
+}));
 
 describe('replyLine truth table', () => {
-  it.each(CASES)('chat=$chat notifications=$notifications configured=$chatConfigured → $want', (c) => {
-    expect(replyLine({ lastChatInboundAt: c.chat, lastNotificationsInboundAt: c.notifications, chatConfigured: c.chatConfigured, now })).toBe(c.want);
-  });
+  it.each(CASES)(
+    'chat=$chat notifications=$notifications configured=$chatConfigured → $want',
+    (c) => {
+      expect(
+        replyLine({
+          lastChatInboundAt: c.chat,
+          lastNotificationsInboundAt: c.notifications,
+          chatConfigured: c.chatConfigured,
+          now,
+        }),
+      ).toBe(c.want);
+    },
+  );
 
   it('prefers chat even when the newest inbound is on notifications (a reminder tap)', () => {
     const tap = '2026-10-11T11:01:00Z';
-    expect(replyLine({ lastChatInboundAt: OPEN, lastNotificationsInboundAt: tap, chatConfigured: true, now })).toBe('chat');
+    expect(
+      replyLine({
+        lastChatInboundAt: OPEN,
+        lastNotificationsInboundAt: tap,
+        chatConfigured: true,
+        now,
+      }),
+    ).toBe('chat');
   });
 
   it('treats the 24 h edge like sessionWindowOpen and tolerates undefined (an old cache)', () => {
-    const input = { lastChatInboundAt: EDGE, lastNotificationsInboundAt: undefined, chatConfigured: true, now };
+    const input = {
+      lastChatInboundAt: EDGE,
+      lastNotificationsInboundAt: undefined,
+      chatConfigured: true,
+      now,
+    };
     expect(replyLine(input)).toBe('chat');
-    expect(replyLine({ ...input, lastChatInboundAt: undefined, lastNotificationsInboundAt: EDGE })).toBe('notifications');
+    expect(
+      replyLine({ ...input, lastChatInboundAt: undefined, lastNotificationsInboundAt: EDGE }),
+    ).toBe('notifications');
   });
 
   it('single line (no chat stamp, chat unset): the history window is the only one', () => {
-    const input = { lastChatInboundAt: null, lastNotificationsInboundAt: OPEN, chatConfigured: false, now };
+    const input = {
+      lastChatInboundAt: null,
+      lastNotificationsInboundAt: OPEN,
+      chatConfigured: false,
+      now,
+    };
     expect(replyLine(input)).toBe('notifications');
     expect(replyLine({ ...input, lastNotificationsInboundAt: CLOSED })).toBeNull();
   });

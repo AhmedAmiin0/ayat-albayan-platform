@@ -1,4 +1,4 @@
-import { roleOfMeta } from '@ab/shared';
+import { roleOfMeta } from '@ab/schedule';
 import type { RoomSnapshot, RoomStatus, TileView } from '@ab/web-kit/classroom/room/components/room-types';
 
 // Structural slices of livekit-client's Room / Participant, so this file is pure and testable.
@@ -48,11 +48,7 @@ export function pubOf(p: ParticipantLike, source: string): PublicationLike | und
 /** TrackSource.SCREEN_SHARE in LiveKit's protocol. */
 const SCREEN_SHARE_SOURCE = 3;
 
-/**
- * May this participant publish a screen share? Read off LiveKit's live permission (a guest's token
- * allows camera + microphone only, until a staff «سماح» updates it); before the server has sent
- * one, a guest may not and everyone else may.
- */
+/** Read from LiveKit's live permission; before the server sends one, a guest may not. */
 export function mayShareScreen(p: Pick<ParticipantLike, 'permissions' | 'metadata'>): boolean {
   const perm = p.permissions;
   if (!perm) return roleOfMeta(p.metadata) !== 'guest';

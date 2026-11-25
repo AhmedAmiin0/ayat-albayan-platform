@@ -9,11 +9,7 @@ const looks: Record<LiveDotState, { label: string; tone: 'ok' | 'bad' }> = {
   off: { label: t.inbox.liveOff, tone: 'bad' },
 };
 
-/**
- * The live dot in the chats header (docs/44 K2, like Kapso): green while the realtime channel is
- * SUBSCRIBED, red while it is down (it rejoins with backoff meanwhile; the polls keep the chats
- * current). Read aloud as «متصل» / «غير متصل», announced when it changes.
- */
+/** docs/44 K2: red while realtime is down; it rejoins with backoff and the polls continue. */
 export function LiveDot() {
   const { color } = useTheme();
   const state = liveDotState(useInboxLive());

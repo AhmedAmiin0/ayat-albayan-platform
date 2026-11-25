@@ -1,9 +1,8 @@
-import { teacherPageOn, withPublicDefaults, type TeacherPage } from '@ab/shared';
+import { teacherPageOn, withPublicDefaults, type TeacherPage } from '@ab/settings';
 import { useQuery } from '@tanstack/react-query';
 import { publicConfigQuery, usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 
-// The teacher page switches (owner 2026-11-13, settings «صفحات المعلم»): UI only; admin, sales and
-// assistant screens never read them.
+// Teacher page switches affect the UI only; admin, sales and assistant screens never read them.
 
 /** For links and buttons: the registry default (off) until GET /settings/public answers. */
 export function useTeacherPageOn(): (page: TeacherPage) => boolean {

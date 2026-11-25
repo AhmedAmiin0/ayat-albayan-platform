@@ -2,14 +2,9 @@ import type { SalesChatReceipt, SalesChatReceiptCopy, SalesChatReceiptFile, Sale
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SalesChatFiles } from './sales-chat-files';
-import { SalesMoneyScope } from '@/modules/sales/sales-money/sales-money.scope';
-import { SalesMoneyServices } from '@/modules/sales/sales-money/sales-money.services';
+import { SalesMoneyScope, SalesMoneyServices } from '@/modules/sales/sales-money/shared';
 
-/**
- * «اختر صورة الإيصال من المحادثة» (owner 2026-10-12, docs/16 row 18): the receipt the family sent in its
- * chat, for a student she owns only (403 not_your_student; with sales.renew_any ANY student, still only the
- * files of that student's own family chat), never a general inbox.media grant.
- */
+/** Receipt from the family chat of her own student only (403 not_your_student, docs/16 row 18). */
 @Injectable()
 export class SalesChatReceipts {
   constructor(

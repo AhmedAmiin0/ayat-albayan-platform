@@ -3,15 +3,13 @@ import { daysBetween } from '@ab/schedule';
 import { localDate } from '@ab/core';
 import { addDays } from '@ab/time';
 
-// «إيقاف الدورة مؤقتًا» (docs/11 §7b): a pause of a student's course between two Riyadh
-// days. The database (migrations 955–957) does the work; these are the contracts and the day arithmetic it
-// mirrors, so the API's checks and the sheet's preview say what the RPCs will do. Dates are "YYYY-MM-DD".
+// Course pause (docs/11 §7b, migrations 955-957); mirrors the RPCs' day arithmetic.
 
 /** The cancel_reason the pause writes on the lessons it cancels (migration 956); data, not a UI string. */
 export const COURSE_PAUSE_REASON = 'إيقاف مؤقت';
 export const COURSE_PAUSE_REASON_MAX = 300;
 
-/** POST /students/:id/course-pause. fromDate defaults to Riyadh today; untilDate null = until «استئناف». */
+/** fromDate defaults to Riyadh today; untilDate null means until resumed. */
 export const coursePauseStartSchema = z
   .object({
     fromDate: localDate.optional(),
@@ -21,24 +19,26 @@ export const coursePauseStartSchema = z
   .strict();
 export type CoursePauseStart = z.infer<typeof coursePauseStartSchema>;
 
-/** PATCH /students/:id/course-pause/until: extend or shorten the open pause (null = until «استئناف»). */
+/** Extend or shorten the open pause (null means until resumed). */
 export const coursePauseUntilSchema = z.object({ untilDate: localDate.nullable() }).strict();
 export type CoursePauseUntil = z.infer<typeof coursePauseUntilSchema>;
 
-/**
- * POST /students/:id/course-pause/resume. subscriptionId: the package row's «استئناف» (absent from the banner): the
- * open pause when it is that pause's package, otherwise that package row paused by the old package-only button.
- */
-export const coursePauseResumeSchema = z.object({ subscriptionId: z.string().uuid().optional() }).strict();
+/** subscriptionId: a package row's resume; resumes the open pause or a package-only paused row. */
+export const coursePauseResumeSchema = z
+  .object({ subscriptionId: z.string().uuid().optional() })
+  .strict();
 export type CoursePauseResume = z.infer<typeof coursePauseResumeSchema>;
 
 /** GET /students/:id/course-pause/preview?from=&until= (until empty = open-ended). */
-export const coursePausePreviewQuery = z.object({ from: localDate.optional(), until: localDate.optional() });
+export const coursePausePreviewQuery = z.object({
+  from: localDate.optional(),
+  until: localDate.optional(),
+});
 
 export interface CoursePauseView {
   id: string;
   from_date: string;
-  /** null = until «استئناف». */
+  /** null means until resumed. */
   until_date: string | null;
   reason: string | null;
   created_at: string;
@@ -54,14 +54,14 @@ export interface CoursePauseState {
   history: CoursePauseView[];
 }
 
-/** The sheet's line «ستُلغى N حلقات…»: lessons the window takes the student out of (cancelled or left). */
+/** Lessons the pause window takes the student out of (cancelled or left). */
 export interface CoursePausePreview {
   from_date: string;
   until_date: string | null;
   lessons: number;
   /** The instants of those lessons, earliest first (absent in an old answer). */
   starts?: string[];
-  /** The days a resume moves the package forward; null = until «استئناف» (counted then). */
+  /** Days a resume moves the package forward; null when open-ended (counted at resume). */
   extend_days?: number | null;
 }
 
@@ -85,7 +85,12 @@ export function resumeDayOf(p: { until: string | null; today: string }): string 
  * the later of the pause's from and that course's own start (`courseStart`), so a course that began inside the
  * pause moves only by its paused days and one starting after it not at all (migration 956).
  */
-export function pausedDays(p: { from: string; until: string | null; today: string; courseStart?: string | null }): number {
+export function pausedDays(p: {
+  from: string;
+  until: string | null;
+  today: string;
+  courseStart?: string | null;
+}): number {
   const start = p.courseStart != null && p.courseStart > p.from ? p.courseStart : p.from;
   return Math.max(0, daysBetween(start, resumeDayOf(p)));
 }
@@ -97,14 +102,21 @@ export const shiftedOrNull = (date: string | null, days: number): string | null 
 export type CoursePauseProblem = 'date_in_past' | 'invalid_range';
 
 /** The API's 400 before the RPC: from before Riyadh today, or until before from. */
-export function coursePauseProblem(p: { from: string; until: string | null; today: string }): CoursePauseProblem | null {
+export function coursePauseProblem(p: {
+  from: string;
+  until: string | null;
+  today: string;
+}): CoursePauseProblem | null {
   if (p.from < p.today) return 'date_in_past';
   if (p.until !== null && p.until < p.from) return 'invalid_range';
   return null;
 }
 
 /** Whether a pause holds the student's course today (from ≤ today and not past until). */
-export function pauseCovers(pause: Pick<CoursePauseView, 'from_date' | 'until_date' | 'resumed_at'>, today: string): boolean {
+export function pauseCovers(
+  pause: Pick<CoursePauseView, 'from_date' | 'until_date' | 'resumed_at'>,
+  today: string,
+): boolean {
   if (pause.resumed_at !== null) return false;
   return pause.from_date <= today && (pause.until_date === null || pause.until_date >= today);
 }

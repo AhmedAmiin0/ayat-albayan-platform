@@ -2,17 +2,14 @@ import {
   canPickTrialDate,
   trialOutcome,
   upcomingTrial,
-  type Attendance,
-  type LessonStatus,
-  type PackageSize,
   type TrialDateRow,
   type TrialHistory,
 } from '@ab/shared';
+import type { Attendance, LessonStatus, PackageSize } from '@ab/catalog';
 import { isTrialLesson } from '@/modules/finance/subscriptions/trial/student-trial.plan';
 import type { TrialStudent } from './trial-date.repo';
 
-// «مواعيد الحلقة التجريبية» (owner 2026-10-25): every trial time picked for a student, newest pick
-// first, with what became of it. Pure: TrialDateQueries reads, this shapes.
+// Pure: newest pick first, with what became of each.
 
 export interface TrialLessonRead {
   student_id: string;

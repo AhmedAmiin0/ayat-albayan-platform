@@ -1,4 +1,4 @@
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { closingOf } from '@ab/web-kit/classroom/closing/closing-kinds';
 import { RoomClosing, type RejoinState } from '@ab/web-kit/classroom/closing/RoomClosing';
 import { DeviceCheck } from '@ab/web-kit/classroom/entry/DeviceCheck';
@@ -16,17 +16,16 @@ export interface ClassroomRoomProps {
   join: RoomJoinResult;
   /** Test seam: a fake client instead of livekit-client. */
   make?: () => RoomClient;
-  /** «ادخل مرة أخرى» after leaving: the parent asks for a fresh token. */
+  /** After leaving, the parent asks for a fresh token to rejoin. */
   onRejoin?: () => void;
   /** Staff (default) or the family portal: the family's extras (room-variant.ts). */
   variant?: RoomVariant;
   /** The lesson as the page knows it: the top line, the waiting note, who is inside. */
   context?: RoomContext;
-  /** The family's «المحادثة». */
   chat?: RoomChatSlot | null;
-  /** «رجوع» on the device check and the closing screens: back to the page. */
+  /** Back to the page from the device check and closing screens. */
   onBack?: () => void;
-  /** The parent's rejoin: under way or refused, and 410 lesson_ended (final «انتهت الحلقة»). */
+  /** The parent's rejoin state; 410 lesson_ended makes the end final. */
   rejoin?: RejoinState & { endedForAll: boolean };
 }
 
@@ -55,12 +54,7 @@ function Call({ join, make = createLivekitRoom, kit, media, onRejoin, onBack, re
   );
 }
 
-/**
- * The live room: the family's «قبل الدخول» first (once per browser), then the call, then its
- * closing screens: left (rejoin), ended for everyone, opened elsewhere, removed by the teacher or
- * admin (no rejoin: the API refuses it anyway), could not connect; each with «رجوع» when the page
- * has somewhere to go back to.
- */
+/** A removed person gets no rejoin since the API refuses it anyway. */
 export function ClassroomRoom(props: ClassroomRoomProps) {
   const kit = roomKit(props);
   const entry = useRoomEntry(kit.features.deviceCheck);

@@ -2,12 +2,11 @@ import { channelActions, type ChannelActions, type ChannelMessageView } from '@a
 import type { ChannelMode } from '../channel-live.js';
 import { channelMessagesPath, type ChannelAudience } from '../channels.js';
 
-// «تعديل» / «حذف للجميع» in the student channel (owner 2026-10-30) for web and mobile. The API
-// enforces the same rule; the menu only offers what it would accept now.
+// The API enforces the same rule; the menu only offers what it would accept now.
 
 /**
  * PATCH (edit) / DELETE (delete for everyone) …/messages/:id, on every audience's route (the
- * owning assistant's too, owner 2026-11-16).
+ * owning assistant's too).
  */
 export function channelMessagePath(input: {
   audience: ChannelAudience;
@@ -44,14 +43,13 @@ export function channelBubbleActions(input: {
   return mayChange(input.audience, input.mode) ? actions : NONE;
 }
 
-/** GET …/messages/:id/reads: who of the chat read this message («معلومات الرسالة»). */
 export const channelReadsPath = (input: {
   audience: ChannelAudience;
   studentId: string;
   messageId: string;
 }): string => `${channelMessagePath(input)}/reads`;
 
-/** POST hides, DELETE shows again («حذف من المنصة» / «إظهار» on a WhatsApp bubble). */
+/** POST hides a WhatsApp bubble from the platform, DELETE shows it again. */
 export const threadHidePath = (phone: string, messageId: string): string =>
   `/threads/${encodeURIComponent(phone)}/messages/${messageId}/hide`;
 

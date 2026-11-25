@@ -1,4 +1,5 @@
-import { dateText, type PortalStudent } from '@ab/shared';
+import type { PortalStudent } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { Pressable, View } from 'react-native';
 import {
   AppText,
@@ -17,9 +18,7 @@ import { openChildSwitch } from './switch-store';
 import { useFamilyClock, usePickedChild } from '@/portal';
 
 interface GreetingHeaderProps {
-  /** The big line: «أهلًا بك», or the student's name under it. */
   title: string;
-  /** The small line over it: today's date, or «أهلًا بك» for a student. */
   over?: string;
   /** The home of the student in view shows their avatar instead of the academy's mark. */
   student?: PortalStudent;
@@ -63,12 +62,7 @@ function Who({ title, over, student, switches }: WhoProps) {
 
 const ROW = { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12 } as const;
 
-/**
- * Home's top (canvas Home, StudentHome): the mark, today's date over «أهلًا بك», the bell. For a
- * guardian of several children the child's avatar, name and a chevron are one button that opens
- * the children sheet (canvas SwitchHome). «تجريبي» marks a test account (docs/56), so nobody
- * mistakes it for a real family.
- */
+/** A test-account badge (docs/56) so nobody mistakes it for a real family. */
 export function GreetingHeader({ title, over, student }: GreetingHeaderProps) {
   const clock = useFamilyClock();
   const today = dateText(useNow(), clock, { weekday: 'long', day: 'numeric', month: 'long' });

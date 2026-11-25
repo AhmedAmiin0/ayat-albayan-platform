@@ -1,9 +1,9 @@
-import type { TeacherEarningsSummaryView } from '@ab/shared';
+import type { TeacherEarningsSummaryView } from '@ab/money';
 import type { SummaryRow } from './corrections.repo';
 
 const cents = (v: number) => Math.round(Number(v) * 100);
 
-/** v_teacher_earnings_summary rows → the «مستحقات المعلمين» view, totals summed in cents (EGP). */
+/** Totals are summed in cents (EGP). */
 export function toSummaryView(rows: readonly SummaryRow[]): TeacherEarningsSummaryView {
   const sum = (key: 'earned' | 'paid' | 'owed') => rows.reduce((n, r) => n + cents(r[key]), 0) / 100;
   return {

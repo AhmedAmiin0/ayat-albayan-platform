@@ -3,8 +3,8 @@ import { apiFetch, apiSend } from './api';
 import { READ_TIMEOUT_MS, SEND_TIMEOUT_MS } from '@ab/client-core';
 import { supabase } from './supabase';
 
-// The read deadline covers the whole apiFetch, token included (owner 2026-11-05: a chat read stuck
-// across a background pinned the chats list). jest.setup.cjs mocks Supabase and connectivity.
+// The read deadline covers the whole apiFetch, token included: a chat read stuck across
+// a background pinned the chats list. jest.setup.cjs mocks Supabase and connectivity.
 jest.mock('./env', () => ({ env: { apiUrl: 'http://api' } }));
 
 const getSession = jest.mocked(supabase.auth.getSession);

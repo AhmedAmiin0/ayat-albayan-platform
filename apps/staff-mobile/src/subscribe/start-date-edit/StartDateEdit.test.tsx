@@ -1,4 +1,5 @@
-import { addCalendarDays, daysBefore, riyadhToday } from '@ab/shared';
+import { daysBefore } from '@ab/shared';
+import { addCalendarDays, riyadhToday } from '@ab/time';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -6,7 +7,7 @@ import { pickDay } from '@/test/pickers/native-picker';
 import { StartDateEdit } from './StartDateEdit';
 import type { StartDatePackage } from './use-start-date-edit';
 
-// «تعديل تاريخ البدء» (owner 2026-11-03): subscriptions.edit_terms only, StartDayPicker.
+// Only with subscriptions.edit_terms.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

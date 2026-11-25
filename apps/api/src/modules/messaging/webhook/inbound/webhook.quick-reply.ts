@@ -4,7 +4,7 @@ import { AuditService } from '@/common/audit/audit.service';
 import { LessonStatusService } from '@/modules/teaching/lessons/status/lesson-status.service';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { payloadLesson } from './webhook.inbound';
-import { WebhookRepo, type Contact } from '@/modules/messaging/webhook/webhook.repo';
+import { WebhookRepo, type Contact } from '@/modules/messaging/webhook/shared/webhook.repo';
 
 /** Audit trail marker for what the webhook does on a guardian's / lead's behalf. */
 const WHATSAPP_ACTOR = 'system:whatsapp';
@@ -16,10 +16,7 @@ interface ReplyAction {
   leadId: string | null;
 }
 
-/**
- * Quick replies (R-MSG-04, R-SCH-03): «نعم» confirms the lesson, «وقف الرسايل» pauses a lead's
- * follow-ups. A reschedule is the admin's job: the inbound push carries it (docs/12 §3.5).
- */
+/** R-MSG-04, R-SCH-03: a reschedule is the admin's job, carried by the push (docs/12 §3.5). */
 @Injectable()
 export class QuickReplies {
   private readonly log = new Logger(QuickReplies.name);
@@ -47,10 +44,7 @@ export class QuickReplies {
       return theirs ? fromPayload : null;
     }
     const answered = await this.answeredLesson({ m, phone, rating });
-    if (answered || rating) return answered; // a rating only ever answers our lesson_rating message, never a guess
-    // A typed «نعم» counts only for a lesson we messaged them about this recently (docs/12 §3.5).
-    // Never a message sent after the reply (a back-filled one, external/inbound): Meta's time is in
-    // whole seconds, so up to the end of the reply's second.
+    if (answered || rating) return answered; // A typed yes counts only within the reply window.
     const windowMs = await this.queries.replyWindowMs();
     const since = new Date(m.at.getTime() - windowMs);
     const until = new Date(Math.floor(m.at.getTime() / 1000) * 1000 + 999);
@@ -92,10 +86,7 @@ export class QuickReplies {
     });
   }
 
-  /**
-   * «وقف الرسايل»: no more follow-ups to this lead. follow_up_slots is the only marketing template
-   * and goes to leads only, so this flag is the marketing opt-out; utility messages continue.
-   */
+  /** This flag is the marketing opt-out: follow_up_slots is the only marketing template. */
   private async stop(leadId: string, m: InboundEvent): Promise<void> {
     await this.queries.updateLead(leadId, { follow_up_paused: true, follow_up_paused_by: 'lead' });
     await this.audit.record({

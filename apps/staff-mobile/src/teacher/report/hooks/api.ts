@@ -42,7 +42,7 @@ export async function refreshAfterSubmit(client: QueryClient): Promise<void> {
     client.invalidateQueries({ queryKey: pathKey('/lessons') }),
     client.invalidateQueries({ queryKey: pathKey('/reports') }),
     client.invalidateQueries({ queryKey: pathKey('/teachers/me/reports') }),
-    // The student file (docs/47): its log row and head read «تعديل التقرير» on the way back.
+    // The student file's log row and head change on the way back (docs/47).
     client.invalidateQueries({ queryKey: pathKey('/teachers/me/students') }),
   ]);
 }

@@ -14,7 +14,7 @@ export interface ChannelRef {
   studentId: string;
 }
 
-/** The teacher's «رسائل الطلاب» list (the staff app): a change in a thread re-reads it. */
+/** A change in a thread re-reads the teacher's list. */
 export const TEACHER_CHANNELS_KEY = ['channel', 'teacher', 'list'] as const;
 
 /** `live`: the thread's socket is joined, so the poll is only the fallback. */

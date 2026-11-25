@@ -1,4 +1,5 @@
-import { chatSearchQuerySchema, phoneE164, type ChatSearchQuery } from '@ab/shared';
+import { chatSearchQuerySchema, type ChatSearchQuery } from '@ab/shared';
+import { phoneE164 } from '@ab/core';
 import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -7,10 +8,7 @@ import { ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { ChatSearchService } from './chat-search.service';
 
-/**
- * GET /threads/:phone/search?q=&cursor= (owner 2026-11-02): «بحث» inside one chat, newest hit
- * first, CHAT_SEARCH_PAGE a page. Same permission and scope as reading the chat.
- */
+/** Newest hit first, CHAT_SEARCH_PAGE per page; same permission and scope as reading the chat. */
 @ApiTags('inbox')
 @ApiBearerAuth()
 @Permissions('inbox.read')

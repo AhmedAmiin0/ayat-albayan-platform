@@ -1,12 +1,16 @@
-import { canJoinNow, clockOf, DEFAULT_JOIN_WINDOW, joinWindow, type ClockCycle, type JoinWindowConfig, type WindowLesson } from '@ab/shared';
+import {
+  canJoinNow,
+  DEFAULT_JOIN_WINDOW,
+  joinWindow,
+  type JoinWindowConfig,
+  type WindowLesson,
+} from '@ab/schedule';
+import { clockOf, type ClockCycle } from '@ab/time';
 import { viewerZone } from '@ab/web-kit/lib/clock-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
-/**
- * «تفتح الساعة 17:45» / «5:45 م» in the viewer's own zone and cycle (Western digits). Every caller
- * passes the cycle it rendered with (useClock), so a switch of «تنسيق الوقت» re-renders the line.
- */
+/** Callers pass the cycle they rendered with (useClock), so a format switch re-renders it. */
 export function opensAtText(iso: string, cycle: ClockCycle): string {
   return t.classroom.opensAt.replace('{time}', clockOf(new Date(iso), { tz: viewerZone(), cycle, locale }));
 }
@@ -17,7 +21,7 @@ export interface JoinHint {
   hint: string | null;
 }
 
-/** The «ادخل الحلقة» rule shared by every button: the settings' window (15 min before to 2 h after by default). */
+/** The join rule shared by every button: 15 min before to 2 h after by default. */
 export function joinHint(lesson: WindowLesson, now: Date, opts: { win?: JoinWindowConfig; cycle: ClockCycle }): JoinHint {
   const win = opts.win ?? DEFAULT_JOIN_WINDOW;
   if (canJoinNow(lesson, now, win)) return { canJoin: true, hint: null };

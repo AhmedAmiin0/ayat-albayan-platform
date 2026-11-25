@@ -17,10 +17,7 @@ import {
   stallReads,
 } from '@/test/app-resume';
 
-// Owner 2026-11-05 (production APK): back in the app after a push, «المحادثات» still showed the
-// old list. A list read stuck across the background (a dead connection, a token refresh that
-// hangs) was joined by every refresh. Now the return cancels and re-reads it, and no read
-// outlives its deadline.
+// A list read stuck across backgrounding was joined by every refresh; return now cancels it.
 
 const getSession = jest.mocked(supabase.auth.getSession);
 const never = () => new Promise<never>(() => undefined);

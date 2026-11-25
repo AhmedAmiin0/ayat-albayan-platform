@@ -14,7 +14,7 @@ interface BubbleA11y {
 }
 
 export interface BubbleActions {
-  /** «رد», «نسخ النص», «إعادة توجيه» or «تنزيل» applies: the bubble opens the menu on a long press. */
+  /** When true the bubble opens the menu on a long press. */
   has: boolean;
   /** `at` = the bubble's window y (the reaction row floats above it). */
   openMenu: (at?: number) => void;
@@ -40,7 +40,6 @@ export function useBubbleActions(m: MessageView): BubbleActions {
   const actions: AccessibilityActionInfo[] = [
     ...(reply && canSend ? [{ name: 'reply', label: t.inbox.reply.action }] : []),
     ...(forward ? [{ name: 'forward', label: t.inbox.forward.action }] : []),
-    // «تفاعل» without the long press: the menu, with the reaction row on top.
     ...(offers.react ? [{ name: 'react', label: t.inbox.reactions.react }] : []),
     { name: 'longpress', label: t.inbox.reply.menu },
   ];

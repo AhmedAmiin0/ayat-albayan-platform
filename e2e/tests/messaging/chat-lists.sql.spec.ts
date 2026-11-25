@@ -2,10 +2,7 @@ import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
 
-// Chat lists «القوائم» (docs/22 §1, migrations 520–521): RLS on both tables (the admin reads, nobody
-// writes but the API), v_list_threads for the service role only, one name per normalised key, at most 30 lists, members are E.164 numbers, and
-// deleting a list removes its memberships only. inbox.lists is seeded for the system admin and sales.
-// Rolled back; database only.
+// Chat lists (docs/22 §1, migrations 520-521): API-only writes, max 30 lists, E.164 members.
 
 const PHONE = '+966500000520';
 

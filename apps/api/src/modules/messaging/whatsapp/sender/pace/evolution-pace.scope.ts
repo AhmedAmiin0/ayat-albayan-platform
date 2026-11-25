@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 
 // Which queued rows to one recipient leave from ONE Evolution number (docs/19 «Evolution driver»,
 // final review 1): the rows stamped with it, and, only when it is its line's default, the session

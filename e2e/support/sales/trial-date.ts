@@ -2,15 +2,29 @@ import { randomUUID } from 'node:crypto';
 import { seedSiblings, type DaySeed } from '../teaching/day-times';
 import { BASE, iso, MIN, type Tx } from '../edit-time';
 
-// Helpers of e2e/tests/pick-trial-date.sql.spec.ts: pick_trial_date (migration 20261025000660,
-// «موعد تجريبي جديد») with payloads in the shapes the API's trial-date.plan.ts builds, rolled back.
+// Helpers for pick_trial_date (migration 20261025000660), payloads as trial-date.plan.ts builds.
 
 const DAY = 24 * 60 * MIN;
 export type TrialSeed = DaySeed & { student: string; rule: string; lesson: string };
 
+const FREED_DAYS = 4;
+
+/**
+ * Other specs commit lessons for the shared e2e teacher, so a move onto BASE + 2 days could hit
+ * teacher_clash depending on run order; inside this rolled-back transaction the window is freed.
+ * The statuses are every one teacher_clash counts (OCCUPYING_LESSON_STATUSES in @ab/schedule).
+ */
+async function freeTeacherWindow(tx: Tx, teacher: string): Promise<void> {
+  await tx`update public.lessons set status = 'cancelled_by_admin'
+    where teacher_id = ${teacher}
+      and status in ('scheduled', 'confirmed', 'completed', 'late', 'no_show')
+      and starts_at < ${iso(BASE + FREED_DAYS * DAY)} and ends_at > ${iso(BASE)}`;
+}
+
 /** One child (pending_subscription) with an upcoming trial at BASE (a one-day trial rule). */
 export async function seedTrial(tx: Tx): Promise<TrialSeed> {
   const s = await seedSiblings(tx);
+  await freeTeacherWindow(tx, s.teacher);
   const student = s.students[0] ?? '';
   await tx`update public.students set status = 'pending_subscription' where id = ${student}`;
   const day = iso(BASE).slice(0, 10);

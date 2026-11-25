@@ -24,7 +24,7 @@ describe('«الإشعارات»: timing editors (selects and bounded numbers on
   it('day before: a select of whole hours, «في موعد الحلقة نفسه» = null; sends send_at_local only', async () => {
     renderRules({ apiFetch });
     const row = await findRow('lesson_reminder_24h');
-    const select = within(row).getByLabelText(tm.dayBeforeLabel) as HTMLSelectElement;
+    const select = within(row).getByLabelText<HTMLSelectElement>(tm.dayBeforeLabel);
     expect(select.value).toBe('');
     expect(within(select).getByRole('option', { name: tm.dayBeforeSame })).toBeTruthy();
     fireEvent.change(select, { target: { value: '20:00' } });

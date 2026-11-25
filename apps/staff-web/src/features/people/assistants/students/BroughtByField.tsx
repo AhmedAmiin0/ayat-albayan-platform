@@ -15,7 +15,7 @@ import { formatDate } from '@/features/sales/leads';
 
 const B = t.assistants.brought;
 
-/** The student profile's «جُلب بواسطة» (R-ASST-01): who brought the student and when; an admin sets or changes it. */
+/** Only an admin sets or changes it (R-ASST-01). */
 export function BroughtByField({ studentId }: { studentId: string }) {
   const { can } = usePermissions();
   const current = useQuery({ ...broughtByQuery(studentId), enabled: can('assistantpay.read') });

@@ -11,11 +11,7 @@ export interface ReclassifyConfirmProps {
   onMove: () => void;
 }
 
-/**
- * Inline confirm strip under an inbox row (docs/07 §9, R-LEAD-04): «سيبها هنا» (ghost) or
- * «نقل لطلبات التوظيف» (the screen's one primary). Focus moves to the safe choice on open; Esc
- * keeps the lead, like every other transient surface.
- */
+/** Inline confirm (docs/07 §9, R-LEAD-04); focus goes to the safe choice, Esc keeps the lead. */
 export function ReclassifyConfirm({ busy, onKeep, onMove }: ReclassifyConfirmProps) {
   const keep = useRef<HTMLButtonElement>(null);
   useEffect(() => keep.current?.focus(), []);

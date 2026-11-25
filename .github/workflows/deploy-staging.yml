@@ -134,7 +134,7 @@ jobs:
         run: |
           ota=false
           js() { git diff --name-only "$BASE" HEAD -- apps/staff-mobile packages ':(exclude)packages/db/supabase' ':(exclude)packages/config' \
-            ':(glob,exclude)**/eslint-suppressions.json' ':(glob,exclude)**/oxlint-suppressions.json' \
+            ':(glob,exclude)**/oxlint-suppressions.json' \
             ':(glob,exclude)**/lint.blocks.mjs' ':(glob,exclude)**/*.test.ts' ':(glob,exclude)**/*.test.tsx' ':(glob,exclude)**/*.md'; }
           if [ -z "$BASE" ]; then echo "::notice::no earlier OTA or deploy known: no automatic OTA (run mobile by hand)"
           elif ! git merge-base --is-ancestor "$BASE" HEAD; then echo "::notice::${BASE:0:7} is not behind this commit: no automatic OTA"
@@ -153,7 +153,7 @@ jobs:
         run: |
           ota=false
           js() { git diff --name-only "$BASE" HEAD -- apps/family-mobile packages ':(exclude)packages/db/supabase' ':(exclude)packages/config' \
-            ':(glob,exclude)**/eslint-suppressions.json' ':(glob,exclude)**/oxlint-suppressions.json' \
+            ':(glob,exclude)**/oxlint-suppressions.json' \
             ':(glob,exclude)**/lint.blocks.mjs' ':(glob,exclude)**/*.test.ts' ':(glob,exclude)**/*.test.tsx' ':(glob,exclude)**/*.md'; }
           if [ -z "$NATIVE_BASE" ]; then echo "::notice::no green family preview build known: no automatic family OTA (mobile → app family)"
           elif ! git merge-base --is-ancestor "$BASE" HEAD; then echo "::notice::${BASE:0:7} is not behind this commit: no family OTA"
@@ -221,9 +221,8 @@ jobs:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.STAGING_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
           # Public by design; accepted as a variable or a secret.
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY || secrets.STAGING_SUPABASE_ANON_KEY }}
-          # Stripe go live (owner 2026-11-01, docs/30): the pay-link buttons are built in. They still show only
-          # when GET /stripe/feature says so («الدفع الإلكتروني» on and both keys saved); without the API's
-          # FEATURE_STRIPE that route is 404 and nothing shows.
+          # Stripe go live (docs/30): the pay-link buttons show only when GET /stripe/feature says so
+          # (online payment on and both keys saved); without the API's FEATURE_STRIPE that route is 404.
           VITE_FEATURE_STRIPE: "1"
           VITE_FAMILY_ORIGIN: ${{ vars.VITE_FAMILY_ORIGIN }}
           # The family app's «wrongApp» link for a staff account.

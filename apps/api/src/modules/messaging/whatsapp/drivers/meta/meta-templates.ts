@@ -1,7 +1,7 @@
 import type { Http } from '@/common/infra/http/http.types';
 import type { GraphEnv } from '@/config/env/env';
 import { nextTemplateCursor, templateEditPath } from '@/modules/messaging/whatsapp/drivers/kapso/kapso';
-import { submitPayload } from '@/modules/messaging/whatsapp/messages/wa-components';
+import { submitPayload } from '@/modules/messaging/whatsapp/messages/submit';
 import type { MetaTemplate, TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { submitSchema, templatesPageSchema, toMetaTemplate } from './meta-shapes';
 

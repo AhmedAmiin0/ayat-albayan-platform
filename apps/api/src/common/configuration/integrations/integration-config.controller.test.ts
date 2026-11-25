@@ -1,4 +1,4 @@
-import { INTEGRATION_KEYS } from '@ab/shared';
+import { INTEGRATION_KEYS } from '@ab/catalog';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';

@@ -49,13 +49,13 @@ const troubled = (c: DeviceControl): boolean => c.problem !== null;
 export interface DeviceCheckController {
   mic: DeviceControl;
   cam: DeviceControl;
-  /** «حاول مرة أخرى»: ask for both again (after allowing them in the browser). */
+  /** Ask for both again after allowing them in the browser. */
   retry: () => void;
-  /** What «انضم الآن» joins with, remembered only when no device had a problem. */
+  /** Remembered only when no device had a problem. */
   choice: () => JoinPick;
 }
 
-/** «قبل الدخول»: the microphone and the camera, each on or off and on which device. */
+/** Microphone and camera, each on or off and on which device. */
 export function useDeviceCheck(initial: MediaChoice): DeviceCheckController {
   const mic = useDevice('mic', { on: initial.mic, id: initial.micId });
   const cam = useDevice('cam', { on: initial.cam, id: initial.camId });

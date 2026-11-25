@@ -1,4 +1,5 @@
-import type { BookingRequest, BookingResult, Conflict } from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import type { BookingResult, Conflict } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { BookingPlanner, type PrepareOptions } from '@/modules/teaching/booking/plan/booking.planner';
 import { BookingRepo } from './booking.repo';
@@ -20,7 +21,6 @@ export class BookingService {
     private readonly queries: BookingRepo,
   ) {}
 
-  /** POST /booking/check: what «احجز» would clash with, before the review step. */
   check(req: BookingRequest, opts?: PrepareOptions): Promise<Conflict[]> {
     return this.planner.conflicts(req, opts);
   }

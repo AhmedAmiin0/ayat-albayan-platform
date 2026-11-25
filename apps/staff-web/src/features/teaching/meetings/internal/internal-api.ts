@@ -3,7 +3,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
 
-// «اجتماع داخلي»: a standalone room with no lesson (POST /meetings and friends, /public/meetings/:token).
+// A standalone room with no lesson.
 
 export const MEETINGS_KEY = ['internal-meetings'] as const;
 

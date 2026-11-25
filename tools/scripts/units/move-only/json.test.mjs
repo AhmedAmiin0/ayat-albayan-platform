@@ -6,7 +6,7 @@ const RENAMES = [['apps/w/src/A.tsx', 'apps/w/src/A/A.tsx']];
 const sup = (key, count) => JSON.stringify({ [key]: { 'max-len': { count } } });
 
 test('suppression keys may follow their files; counts may stay or shrink', () => {
-  const file = 'apps/w/eslint-suppressions.json';
+  const file = 'apps/w/oxlint-suppressions.json';
   assert.equal(
     jsonFailure({ file, base: sup('src/A.tsx', 2), head: sup('src/A/A.tsx', 2), renames: RENAMES }),
     null,

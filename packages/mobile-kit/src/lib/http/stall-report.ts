@@ -5,14 +5,7 @@ import type { StallStage } from '@ab/client-core';
 
 const logged = new Set<StallStage>();
 
-/**
- * What the connection state hears per stage. A sent request with no answer (fetch) is one failure
- * (the connecting bar, the probe, then the reconnect refetch). A hung token refresh (token) is not
- * the API's own failure: reporting it would start the reconnect refetch, which re-runs every query
- * on the same stuck refresh while the bar flashes for up to a minute. It asks for one /health probe
- * instead: an answer changes nothing, no answer (a dead line, airplane mode) starts «connecting».
- * The read still fails either way, so the screen keeps its saved copy with «آخر تحديث».
- */
+/** A hung token refresh only asks for one /health probe; reporting it would loop refetches. */
 const TELL_CONNECTIVITY: Readonly<Record<StallStage, () => void>> = {
   fetch: () => connectivity.reportFailure(),
   token: () => connectivity.probeNow(),

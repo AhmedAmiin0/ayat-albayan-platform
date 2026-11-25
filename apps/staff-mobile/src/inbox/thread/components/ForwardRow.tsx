@@ -25,7 +25,7 @@ export const ForwardRow = memo(function ForwardRow({ thread: th, checked, disabl
   const { color } = useTheme();
   const name = chatName(th);
   const staff = useThreadMode().kind !== 'teacher';
-  // The device clock, as the composer and «رد» (sendState).
+  // Uses the device clock, like the composer.
   const closed = !staffMaySend(sendState(th, new Date()), staff);
   return (
     <Pressable

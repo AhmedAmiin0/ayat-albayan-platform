@@ -22,7 +22,6 @@ export interface QueryStateProps<T> {
   quiet?: boolean;
   /** Replaces the default error line, e.g. a screen with its own recovery. */
   error?: ReactNode;
-  /** The default error line's words; «تعذّر تحميل البيانات.» when unset. */
   errorText?: string;
   isEmpty?: (data: T) => boolean;
   empty?: ReactNode;

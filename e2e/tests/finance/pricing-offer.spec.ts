@@ -4,9 +4,7 @@ import en from '@ab/shared/i18n/en.json' with { type: 'json' };
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 
-// docs/08 §3: «انسخ العرض للعميل» copies the site's Arabic offer text and «أرسله على واتساب»
-// links to wa.me with the same text, in Arabic even when the staff UI is English. Kuwait, 3 lessons
-// a week, 45 minutes needs no FX rate (catalog price in KWD), so the expected text is computed.
+// docs/08 §3: the offer text is Arabic even in an English UI; KWD needs no FX rate.
 
 const KW = quote({ tier: 'standard', duration: 45, country: 'KW', students: 1, discount: 0 });
 const EXPECTED = offerText(KW, ar.pricing);
@@ -59,7 +57,7 @@ test.describe('price offer actions (docs/08 §3)', () => {
     );
     await page.goto('/admin/pricing');
     await expect(page.getByRole('heading', { level: 1, name: en.pricing.title })).toBeVisible();
-    await chooseKuwait(page, en as unknown as typeof ar);
+    await chooseKuwait(page, en);
 
     const href = await page.getByRole('link', { name: en.pricing.sendWhatsapp }).getAttribute('href');
     expect(href).toMatch(/^https:\/\/wa\.me\/\?text=/);

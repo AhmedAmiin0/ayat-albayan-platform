@@ -68,8 +68,7 @@ export function FilterPills<V extends string>({
       showsHorizontalScrollIndicator={false}
       accessibilityRole={role}
       accessibilityLabel={accessibilityLabel}
-      // RN gives a horizontal ScrollView flexGrow 1: beside a flex: 1 list it took a share of
-      // the screen's height and stretched every pill into a tall capsule (two rows on «المحادثات»).
+      // RN gives a horizontal ScrollView flexGrow 1, which stretched pills beside a flex: 1 list.
       style={{ flexGrow: 0, flexShrink: 0 }}
       contentContainerStyle={{ ...spread, paddingVertical: 4 }}
     >

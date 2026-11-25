@@ -10,15 +10,10 @@ import type { SalesStudentSchedule } from './student-schedule.js';
 import type { SalesStudentFamily } from './student-family.js';
 import type { TrialOutcome } from '../../people/students/index.js';
 
-// «تفاصيل الطالب» of the salesperson (docs/16 row 36): ANY student, its trial,
-// «الجدول», attendance, subscriptions and sent reports; every assistant sees every student.
+// Student details for any student (docs/16 row 36); every assistant sees every student.
 
 /** A subscription without its payments or audit trail: package, status, dates, lessons used / left. */
-/**
- * «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1»: net paid, price and what is left, in the
- * package currency. Sent ONLY to a viewer holding self.sales_money (she sees these in her money views
- * already) and only when 0 < paid < price; otherwise absent (docs/16 row 36 stays: no price for the rest).
- */
+/** Sent only to self.sales_money holders and only when 0 < paid < price (docs/16 row 36). */
 export interface SalesPartPaid {
   paid: number;
   price: number;
@@ -26,7 +21,9 @@ export interface SalesPartPaid {
   currency: string;
 }
 
-export type SalesStudentSubscription = Omit<SalesHistoryEntry, 'payments' | 'status_changes'> & { part_paid?: SalesPartPaid };
+export type SalesStudentSubscription = Omit<SalesHistoryEntry, 'payments' | 'status_changes'> & {
+  part_paid?: SalesPartPaid;
+};
 
 /** One past lesson for this student, as the attendance list says it. */
 export type AttendanceKind = 'present' | 'absent' | 'excused' | 'cancelled' | 'unmarked';
@@ -37,12 +34,11 @@ export interface SalesAttendanceDay {
   kind: AttendanceKind;
 }
 
-/** One trial lesson of «الحلقة التجريبية»: a date «موعد تجريبي جديد» replaced stays, outcome `moved`. */
+/** A trial date a newer one replaced stays, with outcome `moved`. */
 export interface SalesTrialLesson {
   lesson_id: string;
   starts_at: string;
   status: LessonStatus;
-  /** trialOutcome of «مواعيد الحلقة التجريبية»: قادمة / بانتظار التقرير / حضر / غاب / أُلغيت / نُقلت. */
   outcome: TrialOutcome;
   teacher_name: string | null;
 }
@@ -51,7 +47,15 @@ export interface SalesTrialLesson {
 export interface SalesStudentDetails {
   /** Hers, or any while SalesOwnershipRule does not enforce: the money actions. Every student reads the same. Absent: old cache (= hers). */
   mine?: boolean;
-  student: { id: string; code: string; name: string; status: StudentStatus; program: Program; teacher_name: string | null; guardian_phone: string | null };
+  student: {
+    id: string;
+    code: string;
+    name: string;
+    status: StudentStatus;
+    program: Program;
+    teacher_name: string | null;
+    guardian_phone: string | null;
+  };
   /** Newest first; `current_id` is the newest active one, else the newest (null without any). */
   subscriptions: SalesStudentSubscription[];
   current_id: string | null;
@@ -59,16 +63,16 @@ export interface SalesStudentDetails {
   attendance: { items: SalesAttendanceDay[]; totals: Record<AttendanceKind, number> };
   /** The sent reports newest first, the teacher's rows (ReportSummaryView), and how many there are. */
   reports: { items: ReportSummaryView[]; total: number };
-  /** «الجدول»: weekly slots and the next lessons, no link. Absent in an old cache. */
+  /** Weekly slots and next lessons, no link; absent in an old cache. */
   schedule?: SalesStudentSchedule;
-  /** «الحلقة التجريبية»: the trial lessons newest first ([] without one). Absent in an old cache. */
+  /** Trial lessons newest first ([] without one); absent in an old cache. */
   trial?: SalesTrialLesson[];
   /**
    * The current package of ANY student: size, status, dates, lessons used /
    * left; never a price or payment. null: none. Absent in an old cache.
    */
   package?: SalesPackageSummary | null;
-  /** «العائلة»: the guardian's name and the siblings. Absent in an old cache. */
+  /** The guardian's name and siblings; absent in an old cache. */
   family?: SalesStudentFamily;
 }
 
@@ -77,11 +81,7 @@ export const salesRescheduleSchema = z.strictObject({
   startsAt: instant,
   reason: moveReasonSchema,
 });
-/**
- * POST /sales/lessons/:id/cancel: one lesson only; the reason is optional (null when absent).
- * `by` (default admin «ألغتها الإدارة»): teacher «ألغاها المعلم/ة» or
- * student «اعتذر الطالب» may also come after the lesson ended, and correct an auto-held one.
- */
+/** Teacher or student cancels may come after the lesson ended and correct an auto-held one. */
 export const salesCancelSchema = z.strictObject({
   reason: z.string().trim().max(500).optional(),
   by: z.enum(['admin', 'teacher', 'student']).optional(),
@@ -98,12 +98,11 @@ export interface SalesLessonMoved {
 
 const HELD: readonly LessonStatus[] = ['completed', 'late'];
 
-/**
- * The student's own attendance wins (on time / late = حضر, absent = غاب, excused); without it the lesson's
- * status decides (held = حضر, no_show = غاب, excused, cancelled); an open lesson nobody marked is
- * «لم تُسجَّل». A moved lesson (rescheduled) is not a day of its own: null, its new lesson counts.
- */
-export function attendanceKind(status: LessonStatus, attendance: Attendance | null): AttendanceKind | null {
+/** Own attendance wins, else the status; a rescheduled lesson is null, its new one counts. */
+export function attendanceKind(
+  status: LessonStatus,
+  attendance: Attendance | null,
+): AttendanceKind | null {
   if (status === 'rescheduled') return null;
   if (isCancelledLesson(status)) return 'cancelled';
   if (attendance === 'on_time' || attendance === 'late') return 'present';
@@ -114,10 +113,18 @@ export function attendanceKind(status: LessonStatus, attendance: Attendance | nu
   return status === 'excused' ? 'excused' : 'unmarked';
 }
 
-const ZERO = (): Record<AttendanceKind, number> => ({ present: 0, absent: 0, excused: 0, cancelled: 0, unmarked: 0 });
+const ZERO = (): Record<AttendanceKind, number> => ({
+  present: 0,
+  absent: 0,
+  excused: 0,
+  cancelled: 0,
+  unmarked: 0,
+});
 
 /** How many days of each kind. */
-export function attendanceTotals(days: readonly Pick<SalesAttendanceDay, 'kind'>[]): Record<AttendanceKind, number> {
+export function attendanceTotals(
+  days: readonly Pick<SalesAttendanceDay, 'kind'>[],
+): Record<AttendanceKind, number> {
   const totals = ZERO();
   for (const d of days) totals[d.kind] += 1;
   return totals;

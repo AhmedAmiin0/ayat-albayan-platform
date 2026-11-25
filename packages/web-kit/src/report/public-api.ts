@@ -9,7 +9,7 @@ import { reportErrorCode } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { publicApiFetch } from '@ab/web-kit/lib/http/api';
 
-// The report page without a session (owner 2026-11-06): a WhatsApp code, then this report's
+// The report page without a session: a WhatsApp code, then this report's
 // HttpOnly cookie (credentials: 'include'; the API is same-site with the web app).
 
 const base = (publicId: string) => `/public/report-pages/${publicId}`;

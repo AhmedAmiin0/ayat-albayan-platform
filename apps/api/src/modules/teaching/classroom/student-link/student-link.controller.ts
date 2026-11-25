@@ -1,4 +1,4 @@
-import type { RoomJoinResult, StudentJoinLinkUrl, StudentLinkView } from '@ab/shared';
+import type { RoomJoinResult, StudentJoinLinkUrl, StudentLinkView } from '@ab/schedule';
 import { Body, Controller, Get, HttpCode, Ip, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions, Public } from '@/common/auth/decorators';
@@ -13,13 +13,13 @@ import { StudentLinkService } from './student-link.service';
 export class StudentLinkPublicController {
   constructor(private readonly links: StudentLinkService) {}
 
-  /** «حلقتك القادمة …»: the current or next lesson and its window. */
+  /** The current or next lesson and its window. */
   @Get(':token')
   view(@Param('token') token: string, @Ip() ip: string): Promise<StudentLinkView> {
     return this.links.view({ token, ip });
   }
 
-  /** «ادخل الحلقة»: the guest join of the lesson whose room is open now. */
+  /** The guest join of the lesson whose room is open now. */
   @Post(':token/join')
   @HttpCode(200)
   join(@Param('token') token: string, @Body() body: unknown, @Ip() ip: string): Promise<RoomJoinResult> {
@@ -27,7 +27,7 @@ export class StudentLinkPublicController {
   }
 }
 
-/** «رابط دخول الطالب» (admin): create or rotate the student's long-lived link. */
+/** Admin: create or rotate the student's long-lived link. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('classroom.links')

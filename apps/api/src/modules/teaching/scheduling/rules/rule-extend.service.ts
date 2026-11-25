@@ -1,4 +1,4 @@
-import type { Conflict } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { OccurrenceGenerator } from '@/modules/teaching/scheduling/occurrences/occurrence-generator';
@@ -9,10 +9,7 @@ type ExtendInput = { ruleId: string; weeks?: number; actorId: string };
 /** POST /schedule-rules/:id/extend 200 (docs/10 route 11). */
 export type ExtendResult = { rule_id: string; until: string; inserted: number; conflicts: Conflict[] };
 
-/**
- * Admin "مدّ الجدول": tops the rule up (R-SCH-02). Never blocks on a clash: the generator stores
- * each new row's clashes on it (lessons.conflicts) and they are returned here (R-SCH-04).
- */
+/** R-SCH-02: never blocks on a clash; clashes are stored on each row and returned (R-SCH-04). */
 @Injectable()
 export class RuleExtendService {
   constructor(

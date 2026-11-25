@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import {
   MessageDispatch,
@@ -36,17 +36,7 @@ interface WindowAt {
 const last4 = (phone: string): string => `…${phone.slice(-4)}`;
 const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
-/**
- * The 24 h window on the chat line (owner 2026-11-03, «not sent after 24h»). A staff text whose
- * window is closed (the inbox marked it AWAITING_REPLY, or WhatsApp refused it: Kapso 422 / Meta
- * 131047) is never sent as free text: ONE reopen template (`chat_reopen_template`, reopenUsable)
- * is pending or sent for that phone per 24 h (ReopenRequest), and the text is held until the
- * family writes on the chat line (WindowRelease), then sent through the normal sender and its
- * gates. No reopen live and none can be queued: it fails at once. After 7 days it fails.
- * The worker only runs with the send gate open; a phone off the allow-list or an unconfigured
- * line holds nothing and queues nothing (ready). «بدون قالب» (owner 2026-11-06): no template, the
- * text waits all the same. Each hold on a Kapso line reopens Kapso's conversation once (KapsoHold).
- */
+/** A closed-window text is never sent free: one reopen template per 24 h, held until reply. */
 @Injectable()
 export class WindowHold {
   private readonly log = new Logger('WindowHold');

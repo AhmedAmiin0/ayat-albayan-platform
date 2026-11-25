@@ -9,11 +9,7 @@ import { useConvert } from './use-convert';
 const E = t.peopleEdit;
 
 
-/**
- * «تحويل إلى طالب / ولي أمر» (people.switch_role): «الطالب هو ولي الأمر», the guardian who is the
- * learner as a student of their family, and a student row that is really the parent as the family's
- * guardian (only without any history or login). Each conversion behind an inline confirm.
- */
+/** People.switch_role conversions; guardian-to-student row only without history or login. */
 export function ConvertSheet({ view, onDone }: PeopleSheetProps) {
   const can = roleActions(view);
   const c = useConvert(view, onDone);

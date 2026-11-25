@@ -1,4 +1,4 @@
-import { ruleExtendRequestSchema } from '@ab/shared';
+import { ruleExtendRequestSchema } from '@ab/schedule';
 import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -19,10 +19,7 @@ export class ScheduleRulesController {
     private readonly horizon: HorizonJob,
   ) {}
 
-  /**
-   * «مزامنة الجدول»: the daily horizon pass now (R-SCH-02), so the calendar shows every lesson the
-   * weekly rules owe (after an import or a rule change) without waiting a day. Idempotent.
-   */
+  /** The daily horizon pass now (R-SCH-02), so rule changes show without waiting; idempotent. */
   @Post('refresh')
   @HttpCode(200)
   refresh(): Promise<RunSummary> {

@@ -1,13 +1,11 @@
 import {
-  addDays,
   pausedDays,
   resumeDayOf,
-  riyadhToday,
-  RIYADH_TZ,
-  startOfLocalDay,
   type CoursePausePreview,
   type CourseResumePreview,
 } from '@ab/shared';
+import { startOfLocalDay } from '@ab/schedule';
+import { addDays, riyadhToday, RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { assertPauseDates, assertStudent } from './course-pause.guards';
@@ -33,7 +31,7 @@ const extendDaysOf = (from: string, until: string | null): number | null =>
 export class CoursePausePreviews {
   constructor(@Inject(CoursePauseRepo) private readonly queries: CoursePauseRepo) {}
 
-  /** «ستُلغى N حلقات»: open lessons from max(now, from) to the day after until (or all). */
+  /** Open lessons from max(now, from) to the day after until (or all). */
   async preview(studentId: string, q: PreviewQuery): Promise<CoursePausePreview> {
     await assertStudent(this.queries, studentId);
     const from = q.from ?? riyadhToday();
@@ -47,7 +45,7 @@ export class CoursePausePreviews {
     return { ...window, lessons: starts.length, starts, extend_days: extend };
   }
 
-  /** «استئناف الدورة الآن؟»: the lessons booked back from today and the days the package moves. */
+  /** The lessons booked back from today and the days the package moves. */
   async resume(studentId: string): Promise<CourseResumePreview> {
     await assertStudent(this.queries, studentId);
     const open = await this.queries.openPause(studentId);

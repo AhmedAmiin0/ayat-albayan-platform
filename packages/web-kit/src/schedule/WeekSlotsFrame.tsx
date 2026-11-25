@@ -1,5 +1,5 @@
-import type { SlotView } from '@ab/shared';
-import { addDays } from '@ab/shared';
+import type { SlotView } from '@ab/schedule';
+import { addDays } from '@ab/time';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
@@ -30,10 +30,7 @@ export interface WeekSlotsFrameProps {
 
 const cityOf = (tz: string) => tzCity(tz) ?? tz;
 
-/**
- * ‹ week › with the zone legend, then the week's grid (R-SCH-06, R-SCH-07): staff's slot picker
- * and the family's «اطلب موعدًا آخر» (owner 2026-11-17). No past weeks, no typing (rule 6).
- */
+/** R-SCH-06, R-SCH-07: no past weeks, no typing (rule 6). */
 export function WeekSlotsFrame(props: WeekSlotsFrameProps) {
   const { week, first, onWeek, studentTz, read, grid } = props;
   const tz = useViewerTz();

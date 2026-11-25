@@ -2,7 +2,7 @@ import {
   instantLessonSchema,
   type InstantLessonRequest,
   type InstantLessonResult,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Controller, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -10,7 +10,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { InstantLessonService } from './instant.service';
 
-/** «حلقة فورية»: an online lesson that starts now (admin only). */
+/** Admin only. */
 @ApiTags('booking')
 @ApiBearerAuth()
 @Permissions('lessons.write')

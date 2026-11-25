@@ -1,5 +1,6 @@
 import { lessonStatusLabel, lessonStatusLook } from '@ab/client-core';
-import type { LessonStatus, StatusStyle } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import type { StatusStyle } from '@ab/money';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { usePublicConfig } from './public-config';
 
@@ -7,7 +8,7 @@ import { usePublicConfig } from './public-config';
 export type LessonStatusChip = StatusStyle & { label: string };
 
 export interface LessonStatusText {
-  /** settings.lesson_confirmation_required: «يحتاج تأكيد» exists only while it is on. */
+  /** Needs confirmation exists only while it is on. */
   required: boolean;
   label: (status: LessonStatus) => string;
   chip: (status: LessonStatus) => LessonStatusChip;
@@ -24,10 +25,7 @@ export function lessonStatusText(required: boolean): LessonStatusText {
   };
 }
 
-/**
- * A lesson status as the academy shows it (owner 2026-11-02): while no confirmation is required a
- * scheduled lesson is simply upcoming («مجدولة», neutral), never «يحتاج تأكيد».
- */
+/** Without required confirmation a scheduled lesson reads as upcoming, never needs confirmation. */
 export function useLessonStatusText(): LessonStatusText {
   return lessonStatusText(usePublicConfig().lesson_confirmation_required);
 }

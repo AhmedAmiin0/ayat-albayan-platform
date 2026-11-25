@@ -7,7 +7,8 @@ import { NOTIFICATION_CATALOGUE, notificationEntry, type NotificationKey } from 
 import { resolveRule } from '../../../rules.effective.js';
 import type { EffectiveRule } from '../../../rules.types.js';
 
-const approvedAll = new Map(TEMPLATE_KEYS.map((k) => [k, { status: 'approved' as TemplateStatus, line: 'notifications' as WaLine }]));
+const tpl = (status: TemplateStatus, line: WaLine) => ({ status, line });
+const approvedAll = new Map(TEMPLATE_KEYS.map((k) => [k, tpl('approved', 'notifications')]));
 const ALL_ON: AcademySettings = { ...SETTING_DEFAULTS, messaging_enabled: true, auto_messages_enabled: true };
 
 /** Every row's effective rule for these stored rows (module mode). */
@@ -69,7 +70,7 @@ describe('entryView with the effective rules (docs/23b)', () => {
   });
 
   it('approval counts the approved variants (some approved is still on)', () => {
-    const templates = new Map([['lesson_reminder', { status: 'approved' as TemplateStatus, line: 'notifications' as WaLine }]]);
+    const templates = new Map([['lesson_reminder', tpl('approved', 'notifications')]]);
     expect(view('lesson_reminder', { templates })).toMatchObject({ state: 'on', approval: 'some' });
     expect(view('lesson_reminder').approval).toBe('all');
     expect(view('lesson_reminder', { templates: new Map() }).approval).toBe('none');

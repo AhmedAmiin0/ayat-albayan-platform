@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { LessonStatus, WaLine } from '@ab/shared';
+import type { LessonStatus, WaLine } from '@ab/catalog';
 import type { Db } from '@/common/db/db.module';
 import { SENDING } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS, type StaleLead } from './send-stale';
@@ -37,7 +37,7 @@ export interface DueMessage {
   media_path?: string | null;
   media_mime?: string | null;
   media_name?: string | null;
-  /** «اطلب إذن الاتصال» (docs/28): the interactive marker; optional so older fixtures compile. */
+  /** Optional so older fixtures compile (docs/28). */
   interactive_payload?: Json | null;
   lesson: { starts_at: string; status: LessonStatus } | null;
   guardian: { name: string } | null;
@@ -70,13 +70,7 @@ export async function anyDue(db: Db, input: AnyDueInput): Promise<boolean> {
   return data.length > 0;
 }
 
-/**
- * PostgREST filter: the row never had a «أرسل عبر واتساب» left open (docs/19): app_send_until is
- * null. A tap sets it; an attached echo or «نعم» / «أرسلتها» (no longer queued) end it; nothing
- * clears it to send again. With no echo, AppSendExpiry fails the row
- * app_send_unconfirmed once the window and its grace pass: the platform never sends a row staff
- * may have sent from the app. The sender's read and claim and the held-text release carry it.
- */
+/** docs/19: the platform never sends a row staff may have sent from the app; nothing clears it. */
 export const NOT_APP_SENT = 'app_send_until.is.null';
 
 /**

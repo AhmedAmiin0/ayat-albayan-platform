@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { badRequest, conflict, forbidden, notFound } from '@/common/http/errors';
 import {
   isPortalRole,

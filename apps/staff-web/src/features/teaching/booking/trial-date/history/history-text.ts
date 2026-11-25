@@ -4,14 +4,13 @@ import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Clock } from '@ab/web-kit/lib/clock';
 
-// The texts of one «مواعيد الحلقة التجريبية» row. The viewer reads their own clock (docs/34, as
-// pickedText and the calendar do); the family's own clock is added when it differs. Pure.
+// The viewer reads their own clock (docs/34); the family's is added when it differs; pure.
 
 export interface RowTexts {
   when: string;
-  /** «بتوقيت الأسرة: …» when the family's zone is not the viewer's, else null. */
+  /** Null when the family's zone is the viewer's. */
   family: string | null;
-  /** «أم سهيلة، 3 أكتوبر» — who picked it and when; «غير معروف» for an imported row. */
+  /** Who picked it and when; unknown for an imported row. */
   picked: string;
 }
 

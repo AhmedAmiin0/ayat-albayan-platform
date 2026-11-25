@@ -11,7 +11,7 @@ export const DIRECTIVES = [
   { tool: 'coverage', test: /\b(?:istanbul|c8|v8)\s+ignore\b/ },
   { tool: 'vite', test: /@vite-ignore\b/ },
   { tool: 'webpack', test: /\bwebpack[A-Z]\w*\s*:/ },
-  { tool: 'prettier', test: /\bprettier-ignore\b/ },
+  { tool: 'oxfmt', test: /\b(?:oxfmt|prettier)-ignore\b/ },
   { tool: 'jscpd', test: /\bjscpd:ignore/ },
   { tool: 'deprecation', test: /@deprecated\b/ },
   { tool: 'jsx pragma', test: /@jsx(?:Runtime|ImportSource|Frag)?\b/ },
@@ -41,7 +41,7 @@ export const isDirective = (comment, file = '') =>
 export const CODE = /\.(?:[mc]?ts|tsx|[mc]?js|jsx)$/;
 
 /** Lint baselines: dropping a comment can fix a suppressed warning (guard:lint: only shrink). */
-export const SUPPRESSIONS = /(?:^|\/)(?:eslint|oxlint)-suppressions\.json$/;
+export const SUPPRESSIONS = /(?:^|\/)oxlint-suppressions\.json$/;
 
 /** Never touched by a comment sweep, even when only their comments change. */
 export const FORBIDDEN = [

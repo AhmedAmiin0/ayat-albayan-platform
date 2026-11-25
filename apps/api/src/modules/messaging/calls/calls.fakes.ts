@@ -2,7 +2,7 @@
 // same compare-and-set semantics as CallsQueries, a recording Kapso calls API and the kit around them.
 import { vi } from 'vitest';
 import { forbidden, notFound } from '@/common/http/errors';
-import type { KapsoLineEnv } from '@/config/env/env';
+
 import type { CallActor } from './access/call-access';
 import type { CallsGate } from './access/calls-gate';
 import { CallsKit } from './flow/call-kit';
@@ -12,7 +12,7 @@ import type { CallMove, CallRow, NewCall } from './store/call-row';
 import type { CallsRepo } from './store/calls.repo';
 
 export const LINE: CallingLine = {
-  env: { provider: 'kapso', base: 'http://stub.test/kapso', version: 'v24.0', phoneNumberId: 'chat-pn', wabaId: 'w1', apiKey: 'k' } as KapsoLineEnv,
+  env: { provider: 'kapso', base: 'http://stub.test/kapso', version: 'v24.0', phoneNumberId: 'chat-pn', wabaId: 'w1', apiKey: 'k' },
   numberId: null,
 };
 export const FAMILY = '+201001234567';
@@ -45,7 +45,7 @@ export class FakeCallsRepo {
       ...{ created_by: null, accepted_by: null, client_request_id: null, started_at: now, answered_at: null, ended_at: null },
       ...{ duration_seconds: null, error_code: null, updated_at: now },
       ...row,
-    } as CallRow;
+    };
     this.rows.set(full.id, full);
     return { ...full };
   }
@@ -67,7 +67,7 @@ export class FakeCallsRepo {
   }
   async move(m: CallMove) {
     const r = this.rows.get(m.id);
-    if (!r || r.status !== m.from) return null;
+    if (r?.status !== m.from) return null;
     const { answer_sdp, ...patch } = m.patch;
     if (answer_sdp !== undefined && r.answer_sdp !== null) return null;
     Object.assign(r, patch, answer_sdp === undefined ? {} : { answer_sdp }, Object.keys(patch).length ? { updated_at: new Date().toISOString() } : {});

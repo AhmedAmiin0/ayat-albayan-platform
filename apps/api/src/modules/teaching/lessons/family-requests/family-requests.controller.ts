@@ -1,11 +1,11 @@
+import type { FamilyRequestView } from '@ab/shared';
 import {
   proposalApproveSchema,
   proposalRejectSchema,
-  type FamilyRequestView,
   type LessonView,
   type ProposalApprove,
   type ProposalReject,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -17,12 +17,7 @@ import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 import { FamilyRequestAccess } from './family-request.access';
 import { familyRequests } from './family-request.mapper';
 
-/**
- * «طلبات الأسر» (owner 2026-11-17): the families' «اطلب موعدًا آخر» waiting for an answer, for an
- * admin (all) and the owning assistant (hers: FamilyRequestAccess). The answer is the same as a
- * teacher's proposal (ProposalDecisionService): approve = the reschedule (409 conflict unless
- * override.reason; `startsAt` = «اختر موعدًا آخر»), reject with a note the family reads.
- */
+/** Pending family requests: admins see all, the owning assistant hers; approve is a reschedule. */
 @ApiTags('lessons')
 @ApiBearerAuth()
 @Permissions('lessons.reschedule')

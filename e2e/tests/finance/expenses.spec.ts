@@ -3,9 +3,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { riyadhToday, summaryOf, thisMonthStart } from '../../support/finance/money-extra';
 import { withSql } from '../../support/core/schedule';
 
-// Expenses (R-RPT-02, issue E4) on /admin/expenses for this month: add (ads, SAR = the reporting
-// currency, so no fx), edit the amount, delete. The rows, the total, the expenses table and the
-// dashboard's expenses / gross margin all follow. «تعديل» is both the row button and the dialog title.
+// Expenses (R-RPT-02, issue E4) in SAR, the reporting currency, so no FX is needed.
 
 const NOTE = `حملة e2e ${Date.now() % 100_000}`;
 const range = () => ({ from: thisMonthStart(), to: riyadhToday() });

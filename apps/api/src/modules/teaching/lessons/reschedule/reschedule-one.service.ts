@@ -1,4 +1,4 @@
-import { isOpenLesson, type RescheduleRequest } from '@ab/shared';
+import { isOpenLesson, type RescheduleRequest } from '@ab/schedule';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -33,10 +33,7 @@ const auditAfter = (next: MovedTo, reason: string | undefined) => ({
 
 type One = Extract<RescheduleRequest, { scope: 'one' }>;
 
-/**
- * The old row becomes 'rescheduled'; docs/47 «سبب تغيير الموعد» (optional) is kept as its
- * cancel_reason (apply_lesson_changes writes it on any change), absent when none was given.
- */
+/** The optional reason (docs/47) is kept as cancel_reason; absent when none was given. */
 const movedAway = (old: LessonRow, reason: string | undefined) => ({
   id: old.id,
   from_status: old.status,

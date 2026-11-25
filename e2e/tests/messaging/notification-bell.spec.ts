@@ -20,10 +20,7 @@ import { USERS } from '../../support/core/users';
 const unread = (n: number) => ar.bell.openUnread.replace('{n}', String(n));
 const SHELL = 900;
 
-/**
- * Opens the bell's list: the header bell from 900px; below it (one bar button)
- * «القائمة», then the sheet's «الإشعارات» row. `name`: the bell's / the row's accessible name.
- */
+/** Header bell from 900px; below it, the menu sheet's notifications row. */
 async function openBell(page: Page, name: string | RegExp): Promise<void> {
   if ((page.viewportSize()?.width ?? 1280) >= SHELL) {
     await page.getByRole('button', { name }).first().click();
@@ -57,7 +54,7 @@ test.describe('notification bell', () => {
     const page = await asRole('admin');
     await page.goto('/admin');
     const wide = (page.viewportSize()?.width ?? 1280) >= SHELL;
-    // Below 900px the unread count is the description of «القائمة» (its name stays exact).
+    // Below 900px the unread count is the menu's description, so its name stays exact.
     if (wide) await expect(page.getByRole('button', { name: unread(1) })).toBeVisible();
     else
       await expect(

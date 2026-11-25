@@ -25,7 +25,6 @@ async function open() {
   await screen.findByText(t.reports.readOnlyHint);
 }
 
-/** «حضرت في الموعد», ممتاز on all seven grade rows, and the five required texts. */
 async function fillAll() {
   await fireEvent.press(screen.getByRole('radio', { name: t.enums.attendance.on_time }));
   for (const radio of screen.getAllByRole('radio', { name: t.enums.grade.excellent })) await fireEvent.press(radio);
@@ -82,7 +81,7 @@ test('a complete report is sent with its version; the sent state and edit window
     homework: 'الملك 6-10',
   });
   expect(await screen.findByText(t.reports.submitted)).toBeTruthy();
-  // Sent: read-only until «تعديل التقرير», which opens the same report for «حفظ التعديل».
+  // Sent is read-only until edit reopens the same report.
   expect(screen.queryByText(t.reports.resubmit)).toBeNull();
   await fireEvent.press(screen.getByText(t.reports.edit));
   expect(screen.getByText(t.reports.resubmit)).toBeTruthy();

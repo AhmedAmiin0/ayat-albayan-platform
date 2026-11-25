@@ -21,7 +21,7 @@ export type DraftProblem = 'students' | 'teacher' | 'reason';
 
 export const DEFAULT_DURATION: Duration = 30;
 
-/** What stops «ابدأ الحلقة»: no student, no teacher, or a clash without a reason. */
+/** No student, no teacher, or a clash without a reason. */
 export function draftProblem(draft: InstantDraft, clashed: boolean): DraftProblem | null {
   if (draft.students.length === 0) return 'students';
   if (!draft.teacherId) return 'teacher';

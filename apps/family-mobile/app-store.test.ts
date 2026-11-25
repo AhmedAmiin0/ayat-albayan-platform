@@ -4,7 +4,7 @@ import pkg from './package.json';
 import config from './app.config';
 
 /**
- * The Google Play release (owner 2026-11-21): guardians and students of every age, so the
+ * The Google Play release: guardians and students of every age, so the
  * Families policy applies: no advertising ID, no ads or analytics SDK, no broad photo access.
  */
 const blocked = app.expo.android.blockedPermissions;

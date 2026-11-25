@@ -17,7 +17,7 @@ export class PdfPreviewRepo {
   async doc(id: string): Promise<PdfDoc | null> {
     const { data, error } = await this.db.from('messages').select('media_pages, media_bytes').eq('id', id).maybeSingle();
     if (error) throw new Error(`message pdf read failed: ${error.message}`);
-    if (data === null || data.media_pages === null) return null;
+    if (data?.media_pages == null) return null;
     return { pages: data.media_pages, bytes: data.media_bytes ?? 0 };
   }
 

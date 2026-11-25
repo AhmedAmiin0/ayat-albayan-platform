@@ -2,7 +2,6 @@ import {
   fromMinor,
   owedAmountProblem,
   owedByChoice,
-  parseAmountFromZero,
   refundAmountProblem,
   refundByChoice,
   toMinor,
@@ -12,9 +11,10 @@ import {
   type StopRefund,
   type StopRefundChoice,
 } from '@ab/shared';
+import { parseAmountFromZero } from '@ab/money';
 import type { RefundChoice } from './course-refund.js';
 
-// The stop sheet's money (owner 2026-11-06) for web and mobile: the mode, the chosen option, the
+// The stop sheet's money for web and mobile: the mode, the chosen option, the
 // custom amount typed; what the POST asks, the summary (refund, still owed) and whether it is
 // valid. The server computes the same amounts from the choice (StopRefunds / StopOwed).
 
@@ -22,11 +22,11 @@ export interface StopMoneyState {
   mode: RefundChoice;
   refundChoice: StopRefundChoice;
   oweChoice: StopOweChoice;
-  /** The custom amount typed (Arabic-Indic digits and «٫» accepted). */
+  /** Arabic-Indic digits and the Arabic decimal separator are accepted. */
   text: string;
 }
 
-/** «إلغاء فقط», the unattended lessons and attended × rate preselected. */
+/** Starts at cancel only, with unattended lessons and attended times rate preselected. */
 export const STOP_MONEY_START: StopMoneyState = {
   mode: 'cancel',
   refundChoice: 'unattended',
@@ -50,7 +50,7 @@ export interface StopMoney {
 
 type Preview = Pick<CourseStopPreview, 'paid' | 'owe' | 'currency'>;
 
-/** «إلغاء مع استرداد» is offered with subscriptions.refund and something paid to give back. */
+/** A refund is offered only with subscriptions.refund and something paid to give back. */
 export function offeredRefund(
   holds: boolean,
   refund: StopRefund | null | undefined,
@@ -62,10 +62,7 @@ type RefundLines = Pick<CourseStopPreview, 'refund' | 'refundUnavailable'>;
 /** The server shows refund lines (or says they are unreadable) only to whom may refund here. */
 const refundsHere = (p: RefundLines): boolean => p.refund !== null || p.refundUnavailable;
 
-/**
- * May this person lower what is owed below attended × rate (nothing, a smaller custom amount)?
- * subscriptions.refund on this student, as «إلغاء مع استرداد» (StopRefundGate).
- */
+/** Lowering what is owed below attended times rate needs subscriptions.refund on this student. */
 export const mayLowerOwe = (holds: boolean, preview: RefundLines | undefined): boolean =>
   holds && preview !== undefined && refundsHere(preview);
 
@@ -102,7 +99,7 @@ function oweMoney(state: StopMoneyState, preview: Preview): StopMoney {
   return { ask, summary, valid, problem: valid ? null : OWE_PROBLEM };
 }
 
-/** The refund path only when it is offered (`breakdown`) and chosen; else «إلغاء فقط». */
+/** The refund path applies only when it is offered (`breakdown`) and chosen. */
 export function stopMoney(input: {
   state: StopMoneyState;
   preview: Preview;
@@ -120,7 +117,7 @@ interface BodyInput {
   ask: StopMoneyAsk;
 }
 
-/** POST …/course-stop's body: `refund` with «إلغاء مع استرداد», else `owe`. */
+/** The body carries `refund` when refunding, else `owe`. */
 export function courseStopBody(input: BodyInput): CourseStopRequest {
   const body = {
     subscriptionId: input.subscriptionId,

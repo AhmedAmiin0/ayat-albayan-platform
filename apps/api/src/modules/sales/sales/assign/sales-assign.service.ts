@@ -5,7 +5,7 @@ import { AuditService } from '@/common/audit/audit.service';
 import { badRequest, notFound } from '@/common/http/errors';
 import { toCandidates } from './sales-assign.mapper';
 import { SalesAssignRepo } from './sales-assign.repo';
-import { SalesSettings } from '@/modules/sales/sales/sales.settings';
+import { SalesSettings } from '@/modules/sales/sales/shared';
 
 /**
  * Who gets a lead. Assignment is the API's job, never a trigger: seed:demo and migrate:apply must

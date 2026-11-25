@@ -1,4 +1,4 @@
-import type { JoinLinkRequest, JoinLinkResult } from '@ab/shared';
+import type { JoinLinkRequest, JoinLinkResult } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import { notFound } from '@/common/http/errors';
@@ -10,12 +10,7 @@ import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
 export const JOIN_LINK_TEMPLATE = 'lesson_join_link';
 const BUCKET_MS = 5 * 60_000;
 
-/**
- * POST /lessons/:id/join-link («ابعت لينك الحلقة»): an explicit admin send, never a job, so
- * settings.auto_messages_enabled is not read, and the template is never submitted to Meta from
- * here (409 template_not_approved until the admin has submitted it and Meta approved it). The
- * message goes through the same Outbox as every inbox template.
- */
+/** An explicit admin send, never a job, so auto_messages_enabled is not read; 409 unapproved. */
 @Injectable()
 export class JoinLinkService {
   constructor(

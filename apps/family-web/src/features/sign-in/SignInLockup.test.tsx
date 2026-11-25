@@ -5,7 +5,7 @@ import { SignInLockup } from './SignInLockup';
 
 const S = t.familyApp.signIn;
 
-// Owner 2026-11-16 «use the logo from the project»: the academy emblem, not the old family icon.
+// The project's logo: the academy emblem, not the old family icon.
 it('shows the academy emblem, the wordmark and «آيات البيان»', () => {
   const { container } = render(<SignInLockup />);
   expect(container.querySelector('img[data-mark="large"]')?.getAttribute('src')).toMatch(

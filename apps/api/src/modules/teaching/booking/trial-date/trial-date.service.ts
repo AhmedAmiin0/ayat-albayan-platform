@@ -1,4 +1,10 @@
-import { upcomingTrial, type BookingRequest, type BookingResult, type Conflict, type TrialDateResult, type TrialHistory } from '@ab/shared';
+import {
+  upcomingTrial,
+  type BookingRequest,
+  type TrialDateResult,
+  type TrialHistory,
+} from '@ab/shared';
+import type { BookingResult, Conflict } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
@@ -26,16 +32,7 @@ export class TrialDateDeps {
   ) {}
 }
 
-/**
- * «موعد تجريبي جديد» (owner 2026-10-25, R-SCH-06, R-SCH-07, R-STU-05): a new free-trial date for one
- * existing student with no running subscription. The booking planner plans it (same teacher, slot,
- * link, conflict check and confirmation as a trial booking), skipping the upcoming trial it moves;
- * pick_trial_date writes it in one transaction (the move or the booking, status → trial, the audit
- * rows). A replay of the request id returns the first pick. Then the booking's follow-ups: the trial
- * status re-check, the teacher's new-student alert for the new lesson (also for the same teacher:
- * there is no moved-lesson notice to reuse, and the old lesson's alert goes stale) and the sender kick.
- * The old trial's queued confirmation and reminders go stale at send time (send-stale.ts).
- */
+/** R-SCH-06/07, R-STU-05: one transaction; a replay returns the first pick. */
 @Injectable()
 export class TrialDates {
   constructor(

@@ -14,7 +14,6 @@ interface Props {
   group: boolean;
 }
 
-/** «تسجيل الحلقة»: its state, length and size, the player, and «يراه الطالب وولي الأمر». */
 export function RecordingItem({ rec, group }: Props) {
   const toggle = useRecordingVisibility();
   return (

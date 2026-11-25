@@ -1,4 +1,4 @@
-import type { ProposalRequester } from '@ab/shared';
+import type { ProposalRequester } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict } from '@/common/http/errors';
@@ -89,7 +89,7 @@ export class LessonProposalRepo {
     if (error) throw dbError(error);
   }
 
-  /** The family's «سحب الطلب»: the asker's own pending request → withdrawn; false = none. */
+  /** The asker's own pending request becomes withdrawn; false when there is none. */
   async withdraw(input: { lessonId: string; userId: string }): Promise<boolean> {
     const { data, error } = await this.db
       .from('lesson_proposals')

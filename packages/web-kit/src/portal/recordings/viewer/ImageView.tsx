@@ -14,11 +14,7 @@ const sized = (zoom: number) => ({
   maxWidth: zoom > ZOOM.start ? 'none' : '100%',
 });
 
-/**
- * A picture on the dark stage (board FamFilesWebImage), whole at 100 % (fitted to the stage);
- * «تكبير» / «تصغير» step a quarter of that and the stage scrolls to pan. A type the browser
- * cannot draw (HEIC outside Safari) says so: «افتح في نافذة جديدة» still reaches it.
- */
+/** Zoom steps a quarter; a type the browser cannot draw (HEIC outside Safari) says so. */
 export function ImageView({ url, alt }: { url: string; alt: string }) {
   const [zoom, setZoom] = useState<number>(ZOOM.start);
   const [broken, setBroken] = useState(false);

@@ -32,7 +32,7 @@ describe('CopyLinkButton («انسخ رابط الطالب»)', () => {
     expect(await screen.findByText(t.classroom.copied)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/join-link/url');
     expect(writeText).toHaveBeenCalledWith('https://app.example.test/join/abc');
-    expect((screen.getByLabelText(t.classroom.linkShown) as HTMLInputElement).value).toBe('https://app.example.test/join/abc');
+    expect((screen.getByLabelText<HTMLInputElement>(t.classroom.linkShown)).value).toBe('https://app.example.test/join/abc');
   });
 
   it('still shows the URL when the clipboard is blocked', async () => {

@@ -1,13 +1,13 @@
-import { clockOf, type ClockOptions, type LessonView, lessonWhenAt } from '@ab/shared';
+import { lessonWhenAt } from '@ab/shared';
+import type { LessonView } from '@ab/schedule';
+import { clockOf, type ClockOptions } from '@ab/time';
 import type { LessonChange } from './lesson-changes.js';
 import type { TodayAlert } from './today-alerts.js';
 
-// What one «تنبيهات اليوم» row says and does, shared by web and mobile: the app picks its own
-// template for `text` (teacherAlerts.<text>) and fills `vars`; never money, never another teacher.
+// Never shows money or another teacher.
 
 export type ChangeText = 'cancelledTeacher' | 'cancelledAdmin' | 'movedTo' | 'movedFrom' | 'movedAway';
 export type AlertText = 'soon' | 'confirm' | 'report' | 'bell' | ChangeText;
-/** The row's one action: the lesson sheet, the report, or «تحديد كمقروء». */
 export type AlertAction = 'open' | 'report' | 'read';
 
 export interface AlertParts {

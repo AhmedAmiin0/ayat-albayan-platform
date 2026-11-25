@@ -1,11 +1,5 @@
 import { z } from 'zod';
-import {
-  GENDERS,
-  LEAD_SOURCES,
-  PROGRAMS,
-  STUDENT_STATUSES,
-  TEACHER_STATUSES,
-} from '@ab/catalog';
+import { GENDERS, LEAD_SOURCES, PROGRAMS, STUDENT_STATUSES, TEACHER_STATUSES } from '@ab/catalog';
 import { TEACHER_MEETING_MODES } from '@ab/schedule';
 import { optionalText, phoneE164, requiredText, timeZone } from '@ab/core';
 import { username } from '../users/index.js';
@@ -42,7 +36,7 @@ export const studentCreateSchema = z.object({
   teacher_gender_pref: z.enum(GENDERS).nullish(),
   meeting_link_override: z.url().nullish(),
   notes: optionalText,
-  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30, a docs/13 deviation): wording only; the DB default is false. */
+  /** Wording only (docs/30, a docs/13 deviation); the DB default is false. */
   contact_is_self: z.boolean().optional(),
 });
 /**
@@ -75,7 +69,9 @@ export const teacherCreateSchema = z.object({
   tz: timeZone,
 });
 /** `username`: written to the teacher's login profile (docs/30); null clears it. Needs a linked login. */
-export const teacherUpdateSchema = teacherCreateSchema.partial().extend({ username: username.nullish() });
+export const teacherUpdateSchema = teacherCreateSchema
+  .partial()
+  .extend({ username: username.nullish() });
 
 export type GuardianCreate = z.infer<typeof guardianCreateSchema>;
 export type GuardianUpdate = z.infer<typeof guardianUpdateSchema>;

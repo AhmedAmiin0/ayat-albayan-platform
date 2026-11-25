@@ -1,4 +1,10 @@
-import { meetingRoomName, meetingState, meetingWindow, type JoinWindowConfig, type MeetingCreated } from '@ab/shared';
+import {
+  meetingRoomName,
+  meetingState,
+  meetingWindow,
+  type JoinWindowConfig,
+  type MeetingCreated,
+} from '@ab/schedule';
 import { ConflictException, ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
@@ -8,11 +14,7 @@ import { InternalMeetingsRepo, type MeetingRow } from './internal-meetings.repo'
 import { canManageMeeting, hashMeetingToken, newMeetingToken } from './internal-meetings.token';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
 
-/**
- * «اجتماع داخلي» (POST /meetings/:id/end, POST /meetings/:id/link): «إنهاء» and «رابط جديد». Creating
- * (MeetingCreateService), listing (MeetingListService) and scheduling (MeetingScheduleService) live
- * apart. No LiveKit call on creation, so it works even before the classroom server is configured.
- */
+/** No LiveKit call on creation, so it works before the classroom server is configured. */
 @Injectable()
 export class InternalMeetingsService {
   private readonly log = new Logger(InternalMeetingsService.name);
@@ -36,7 +38,7 @@ export class InternalMeetingsService {
     this.closeRoom(input.id, now);
   }
 
-  /** Closes the LiveKit room for everyone inside («إنهاء», a cancellation); never throws, never waits. */
+  /** Closes the LiveKit room for everyone inside; never throws, never waits. */
   closeRoom(id: string, now: Date): void {
     if (!this.livekit.configured) return;
     const room = meetingRoomName(id);
@@ -45,7 +47,7 @@ export class InternalMeetingsService {
       .catch((e: unknown) => this.log.warn(`delete room ${room}: ${String(e)}`));
   }
 
-  /** «رابط جديد»: a fresh link replaces the old one (only the hash is stored, so the URL cannot be shown again). 410 once ended. */
+  /** A fresh link replaces the old one (only the hash is stored); 410 once ended. */
   async newLink(input: { user: AuthUser; id: string }, now = new Date()): Promise<MeetingCreated> {
     const row = await this.managed(input);
     if (meetingState(row, now, await this.queries.joinWindow()) === 'ended') throw meetingEnded();

@@ -13,7 +13,7 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
@@ -23,13 +23,7 @@ import { SavedRepliesService } from './saved-replies.service';
 
 type StageBody = z.output<typeof savedReplyStageSchema>;
 
-/**
- * «الردود السريعة» (owner 2026-10-25): the admin and assistants read the shared list and keep their
- * own (RepliesUserGuard, before any body is parsed); writing the shared list needs
- * saved_replies.manage (checked in the service, like templates.send_all). No route sends a message:
- * /stage only copies the attachment for the chat's own POST /threads/:phone/file, which keeps
- * every send gate.
- */
+/** Shared list writes need saved_replies.manage; /stage only copies, sends keep their gates. */
 @ApiTags('inbox')
 @ApiBearerAuth()
 @Permissions('inbox.read')

@@ -31,14 +31,23 @@ export function minLinkAmount(reference: number, maxDiscountPct: number | null):
 }
 
 /** 'discount_too_large' when the agreed amount is below the cap's minimum. */
-export function linkAmountProblem(input: { amount: number; reference: number; maxDiscountPct: number | null }): 'discount_too_large' | null {
+export function linkAmountProblem(input: {
+  amount: number;
+  reference: number;
+  maxDiscountPct: number | null;
+}): 'discount_too_large' | null {
   const min = minLinkAmount(input.reference, input.maxDiscountPct);
   return min !== null && input.amount + 1e-9 < min ? 'discount_too_large' : null;
 }
 
 /** What a stored status means now: an open link past its expiry is expired. */
-export function effectiveLinkStatus(link: { status: PaymentLinkStatus; expires_at: string }, now: Date): PaymentLinkStatus {
-  return link.status === 'open' && Date.parse(link.expires_at) <= now.getTime() ? 'expired' : link.status;
+export function effectiveLinkStatus(
+  link: { status: PaymentLinkStatus; expires_at: string },
+  now: Date,
+): PaymentLinkStatus {
+  return link.status === 'open' && Date.parse(link.expires_at) <= now.getTime()
+    ? 'expired'
+    : link.status;
 }
 
 /**

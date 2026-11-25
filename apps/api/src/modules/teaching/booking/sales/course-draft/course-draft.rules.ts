@@ -1,17 +1,15 @@
 import {
-  addLocalDays,
   courseDaysPerWeek,
   courseLessonCount,
-  wallParts,
   type BookedCourse,
   type BookingRequest,
   type CourseSubscription,
-  type DayTime,
 } from '@ab/shared';
+import { wallParts, type DayTime } from '@ab/schedule';
+import { addLocalDays } from '@ab/time';
 import { createHash } from 'node:crypto';
 
-// «اختر أيام الحلقات» before the payment (owner 2026-11-06): pure rules of a course draft. Local
-// dates "YYYY-MM-DD" compare as strings.
+// Pure rules of a course draft picked before payment; local dates compare as strings.
 
 /** A package's draft as stored (subscription_course_drafts), its request parsed. */
 export interface CourseDraft {
@@ -55,12 +53,7 @@ function daysOf(req: BookingRequest): DayTime[] {
     .map((weekday) => ({ weekday, startTimeLocal: own.get(weekday) ?? req.startTimeLocal }));
 }
 
-/**
- * The draft as SalesCourseView.previous: the wizard («تابِع بنفس الأيام») prefills its teacher and
- * days, old clients too. It never decides the opening day (PR #648 review: an edit may move the
- * first lesson earlier): it ends where the real previous course ends, else the day before the
- * package starts, so the slot grid opens as without a draft.
- */
+/** Never decides the opening day, so the slot grid opens as without a draft. */
 export function draftCourse(
   req: BookingRequest,
   sub: CourseSubscription,

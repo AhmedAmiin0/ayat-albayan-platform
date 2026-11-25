@@ -8,9 +8,9 @@ import {
   type PendingReportView,
   type ReportSummaryView,
   type Rubric,
-  type UserRole,
   type StudentReportsResponse,
 } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import type { PageQuery } from '@/common/http/http';
 import type { HistoryLesson, HistoryRow, PendingRow } from './report-history.queries';
 import { iso } from '@/modules/reporting/reports/submit/report-form.mapper';

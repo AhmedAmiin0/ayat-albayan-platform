@@ -1,4 +1,4 @@
-import { attendanceStyle } from '@ab/shared';
+import { attendanceStyle } from '@ab/money';
 import type { ReportPdfModel } from '@/modules/reporting/report-pdf/render/pdf-model';
 import { AR, durationText, esc, fill, localDate, ltr, timeWithZone, weekdayName } from '@/modules/reporting/report-pdf/render/pdf-text';
 

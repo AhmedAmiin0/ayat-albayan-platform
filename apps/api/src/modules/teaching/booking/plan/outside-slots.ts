@@ -1,12 +1,7 @@
-import {
-  allDayRows,
-  findConflicts,
-  freeSlots,
-  type ConflictInput,
-  type OutsideSlot,
-} from '@ab/shared';
+import type { OutsideSlot } from '@ab/shared';
+import { allDayRows, findConflicts, freeSlots, type ConflictInput } from '@ab/schedule';
 
-// «وقت آخر» (owner 2026-11-21): the whole day of the teacher, not only her weekly hours. Pure.
+// Pure: the teacher's whole day, not only her weekly hours.
 
 export interface OutsideGridInput {
   /** The server's now: no start before it. */

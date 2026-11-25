@@ -9,7 +9,7 @@ interface Props {
   onClick: () => void;
 }
 
-/** The number field's start (as the family app, #752): flag + calling code; opens «اختر الدولة». */
+/** Flag and calling code at the field's start (#752); opens the country picker. */
 export function CountryButton({ country, onClick }: Props) {
   const label = t.familyApp.signIn.country.replace('{name}', nameOf(country, locale));
   return (
@@ -23,7 +23,7 @@ export function CountryButton({ country, onClick }: Props) {
       <span aria-hidden="true" className="text-lg leading-none">
         {country.flag}
       </span>
-      {/* An LTR island: bare, an Arabic line prints «966+» (owner 2026-11-17). */}
+      {/* An LTR island: bare, an Arabic line prints «966+». */}
       <Ltr className="text-base text-ink">{country.dial}</Ltr>
     </Button>
   );

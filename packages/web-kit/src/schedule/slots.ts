@@ -1,4 +1,4 @@
-import { clockOf, weekStart, weekWindowIn, zonedPartsIn } from '@ab/shared';
+import { clockOf, weekStart, weekWindowIn, zonedPartsIn } from '@ab/time';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Clock } from '@ab/web-kit/lib/clock';
 
@@ -8,8 +8,7 @@ export interface Window {
   to: Date;
 }
 
-// Slot grid helpers (R-SCH-06): weeks run السبت → الجمعة in the viewer's zone (docs/34), the grid's
-// big times are the viewer's and the small ones the student's zone (R-SCH-01). Pure, unit-tested.
+// R-SCH-06: weeks run Saturday to Friday in the viewer's zone (docs/34).
 
 /** Items grouped by their local day in `tz`, each day by start time. */
 export function byLocalDay<T extends { starts_at: string }>(
@@ -47,11 +46,7 @@ export function bookableWindow(start: string, now: Date, tz: string): Window | n
   return { from: week.from > now ? week.from : now, to: week.to };
 }
 
-/**
- * The small label under a slot time (viewer's zone): the wall clock in the student's zone, plus the
- * weekday when that zone is already on another day («18:00 السبت»). Null when the clock reads
- * the same as the base zone (e.g. Riyadh vs Kuwait / Cairo-in-summer at UTC+3): nothing to add.
- */
+/** Adds the weekday when the student's zone is on another day; null when the clocks match. */
 export function zoneLabel(
   instant: string,
   zones: { tz: string; base: string },

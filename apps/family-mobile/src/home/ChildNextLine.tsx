@@ -1,5 +1,6 @@
 import { nextLesson } from '@ab/client-core';
-import type { ClockOptions, PortalLesson, PortalStudent } from '@ab/shared';
+import type { PortalLesson, PortalStudent } from '@ab/shared';
+import type { ClockOptions } from '@ab/time';
 import { View } from 'react-native';
 import { AppText, t, type, useNow, useTheme } from '@ab/mobile-kit';
 import { teacherText, whenText } from '@/lessons';

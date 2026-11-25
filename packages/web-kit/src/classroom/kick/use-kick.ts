@@ -1,4 +1,4 @@
-import { canRemove, type JoinRole } from '@ab/shared';
+import { canRemove, type JoinRole } from '@ab/schedule';
 import { useCallback, useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';
@@ -11,7 +11,7 @@ export interface KickToast {
 }
 
 export interface KickController {
-  /** «إخراج من الحلقة» is offered on this tile (never on yourself, never without the lesson id). */
+  /** Never on yourself, never without the lesson id. */
   canKick: (tile: TileView) => boolean;
   target: TileView | null;
   ask: (tile: TileView) => void;
@@ -23,7 +23,7 @@ export interface KickController {
 }
 
 export interface KickOptions {
-  /** The lesson (or internal meeting, with its own `remove`) whose room this is; null: no «إخراج». */
+  /** The lesson (or internal meeting, with its own `remove`); null means no removal. */
   lessonId: string | null;
   role: JoinRole;
   /** Test seam: the API call. */

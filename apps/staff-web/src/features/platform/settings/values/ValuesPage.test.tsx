@@ -7,7 +7,7 @@ import { ValuesPage } from './ValuesPage';
 type BlockOpts = { shouldBlockFn: (a: { current: { pathname: string }; next: { pathname: string } }) => boolean; enableBeforeUnload: boolean };
 const router = vi.hoisted(() => ({
   opts: null as BlockOpts | null,
-  status: 'idle' as 'idle' | 'blocked',
+  status: 'idle',
   proceed: vi.fn(),
   reset: vi.fn(),
   navigate: vi.fn(),

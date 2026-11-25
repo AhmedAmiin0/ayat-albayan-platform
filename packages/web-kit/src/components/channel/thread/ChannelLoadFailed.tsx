@@ -8,7 +8,7 @@ interface Props {
   inline?: boolean;
 }
 
-/** «تعذر تحميل المحادثة» with «حاول مرة أخرى»: the whole state before any data, else a line. */
+/** The whole state before any data, else a line. */
 export function ChannelLoadFailed({ onRetry, inline = false }: Props) {
   const retry = (
     <Button type="button" variant={inline ? 'ghost' : 'secondary'} size="sm" onClick={onRetry}>

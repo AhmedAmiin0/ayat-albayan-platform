@@ -4,7 +4,7 @@ import { apiSend } from '@ab/web-kit/lib/http/api';
 
 export interface SalesMoveInput {
   startsAt: string;
-  /** «سبب تغيير الموعد» (docs/47): optional, sent only when written. */
+  /** Optional reason (docs/47), sent only when written. */
   reason: string;
 }
 

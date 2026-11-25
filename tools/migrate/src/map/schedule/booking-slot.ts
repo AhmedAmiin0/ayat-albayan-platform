@@ -1,6 +1,4 @@
-// When a «تقويم الحجوزات» row runs, from the import date (`--from`) on. Only the
-// statuses the old Apps Script mirrors to Google are imported: مؤكد, مشترك and يحتاج تأكيد (the
-// last as scheduled lessons nobody confirmed yet); مبدئي, تمت, ملغي have no calendar event. Pure.
+// Only statuses the old Apps Script mirrored to Google are imported, from `--from` on; pure.
 import { hhmm, num, text, ymd } from '../../sources/sheets/cells.ts';
 import type { IssueInput } from '../../sources/sheets/issues.ts';
 import { type Recurrence, bookingStatus, parseRecurrence } from '../../sources/values.schedule.ts';
@@ -44,12 +42,7 @@ function placed(rec: Recurrence | null, when: When, from: string): BookingSlot {
   return { kind: 'rule', rec, ...when };
 }
 
-/**
- * A weekly row → a rule to its «حتى» day (starts_on clamped to `from` on create); a row without «التكرار» → one
- * lesson on its date. Nothing before `from` ('YYYY-MM-DD', Asia/Riyadh): a series that ended
- * before it and a one-off dated before it are skipped. No date or time («ناقص تاريخ أو وقت») →
- * missing_field reject, reported.
- */
+/** Nothing before `from` (Asia/Riyadh); a row missing date or time is a missing_field reject. */
 export function bookingSlot(f: SourceRow['fields'], from: string): BookingSlot {
   const status = bookingStatus(text(f['status']));
   if (!status || !SYNCED.has(status)) return { kind: 'skip', reason: 'status_not_synced' };
@@ -65,7 +58,7 @@ export function bookingSlot(f: SourceRow['fields'], from: string): BookingSlot {
   return { kind: 'issue', issue: { code: 'missing_field', severity: 'reject', field } };
 }
 
-/** «تقويم الحجوزات» rows, HUB first, BOOK after (with prefer 'last' the newer sync wins, B1). */
+/** HUB first, BOOK after; with prefer 'last' the newer sync wins (B1). */
 export function bookingRows(sheets: Readonly<Record<string, readonly SourceRow[]>>): SourceRow[] {
   return [...(sheets['hub_bookings'] ?? []), ...(sheets['book_bookings'] ?? [])];
 }

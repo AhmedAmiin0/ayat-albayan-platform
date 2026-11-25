@@ -1,7 +1,7 @@
 import type { FamilyTab } from '@ab/client-core';
 import type { IconName } from '@ab/web-kit/components/ui/display/icon';
 
-/** Each tab's page and icon (owner 2026-11-15, the family app's bar). */
+/** Each tab's page and icon in the family app's bar. */
 export const TAB_PATH: Readonly<Record<FamilyTab, string>> = {
   home: '/portal',
   schedule: '/schedule',
@@ -26,7 +26,7 @@ const SECTION: readonly (readonly [string, FamilyTab])[] = [
   ['/account', 'account'],
 ];
 
-/** The tab the page at `pathname` belongs to; none for «الإشعارات» (the bell lights then). */
+/** None for the alerts page, where the bell lights instead. */
 export function tabOf(pathname: string): FamilyTab | null {
   return SECTION.find(([prefix]) => pathname.startsWith(prefix))?.[1] ?? null;
 }

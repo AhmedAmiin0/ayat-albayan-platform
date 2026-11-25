@@ -5,9 +5,7 @@ import { resetAbrar, seedFamily, withSql } from '../../support/core/schedule';
 import { CHAT_PN, sentVia, SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
 
-// Teacher mode and the restricted allow-list: «أبرار» lists and sends only
-// the three defaults (free_trial_invite, welcome_greeting, trial_reschedule once approved), to her own families; the lesson reminders are no longer
-// hers to send by hand (403 template_not_allowed; the automatic reminders are unchanged).
+// Teachers send only the flagged defaults to their own families; reminders give 403 by hand.
 
 const KEY = 'free_trial_invite';
 const WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };

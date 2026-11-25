@@ -9,7 +9,7 @@ import type { Clock } from '@ab/web-kit/lib/clock';
 
 // Pure view logic for lesson lists (R-SCH-01, R-SCH-03). No React, unit-tested.
 
-/** Moved / cancelled / excused rows: hidden unless «إظهار الملغية…» is on (docs/10 §5.1). */
+/** Hidden unless showing closed lessons is on (docs/10 §5.1). */
 const CLOSED: readonly LessonStatus[] = ['rescheduled', 'cancelled_by_teacher', 'cancelled_by_admin', 'excused'];
 
 export function isClosedLesson(status: LessonStatus): boolean {
@@ -32,7 +32,7 @@ export function filterLessons(lessons: readonly LessonView[], f: LessonFilter): 
   });
 }
 
-/** «سهيلة وجود» for a group (attached و, as in the WhatsApp text), the name for one student. */
+/** Group names joined with an attached conjunction, as in the WhatsApp text. */
 export function studentNames(lesson: { students: readonly { name: string }[] }): string {
   return joinNames(lesson.students.map((s) => s.name), locale);
 }
@@ -63,15 +63,12 @@ export function lessonsOnDay(lessons: readonly LessonView[], day: { date: string
     .toSorted((a, b) => a.starts_at.localeCompare(b.starts_at));
 }
 
-/** «16:00 بتوقيت القاهرة»; a zone without an ar.json city keeps its IANA id. */
+/** A zone without an ar.json city keeps its IANA id. */
 export function timeInCity(instant: string, tz: string, clock: Clock): string {
   return t.schedule.inCity.replace('{time}', clockOf(new Date(instant), { ...clock, tz })).replace('{city}', tzCity(tz) ?? tz);
 }
 
-/**
- * Other zones a lesson time must also be shown in (R-SCH-01): each student's zone whose clock
- * differs from `base` (the viewer's) at that instant, once. «عند الطالب 16:00 بتوقيت القاهرة».
- */
+/** Each student zone whose clock differs from `base` at that instant, once (R-SCH-01). */
 export function studentTimes(lesson: Pick<LessonView, 'starts_at' | 'students'>, base: string, clock: Clock): string[] {
   const at = new Date(lesson.starts_at);
   const other = (tz: string) => !sameClockAt(at, { a: tz, b: base });
@@ -79,10 +76,7 @@ export function studentTimes(lesson: Pick<LessonView, 'starts_at' | 'students'>,
   return zones.map((tz) => t.schedule.studentTime.replace('{time}', timeInCity(lesson.starts_at, tz, clock)));
 }
 
-/**
- * Count of lessons still waiting for a confirm («{n} يحتاج تأكيد», saffron = دورك); always 0
- * while the academy requires no confirmation (`required`, settings.lesson_confirmation_required).
- */
+/** Always 0 while no confirmation is required (settings.lesson_confirmation_required). */
 export function needsConfirmCount(lessons: readonly LessonView[], required: boolean): number {
   return lessons.filter((l) => needsConfirmation(l.status, required)).length;
 }

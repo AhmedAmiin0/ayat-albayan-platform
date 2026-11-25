@@ -1,4 +1,4 @@
-import type { LessonProposalView, ProposalRequester } from '@ab/shared';
+import type { LessonProposalView, ProposalRequester } from '@ab/schedule';
 import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 
 /** Postgres "2026-10-04 14:00:00+00" → "2026-10-04T14:00:00.000Z". */

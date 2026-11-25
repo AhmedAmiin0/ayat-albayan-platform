@@ -5,7 +5,7 @@ import { OwnNumbers } from '@/modules/messaging/numbers';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { inboundPush, intentOf, ratingOf } from './webhook.inbound';
 import { InboundStore, type Sender } from './webhook.inbound.store';
-import type { Contact } from '@/modules/messaging/webhook/webhook.repo';
+import type { Contact } from '@/modules/messaging/webhook/shared/webhook.repo';
 import { QuickReplies } from './webhook.quick-reply';
 import { InboundReactions } from './webhook.reaction';
 
@@ -103,7 +103,7 @@ export class InboundService {
     try {
       owners = kind === 'new_lead' ? [] : await this.store.owners(from.who, from.lead);
     } catch (e) {
-      return void this.log.warn(`inbound ${event.subject}: owners lookup failed, no sales push: ${e instanceof Error ? e.message : String(e)}`);
+      return this.log.warn(`inbound ${event.subject}: owners lookup failed, no sales push: ${e instanceof Error ? e.message : String(e)}`);
     }
     await this.push.notifySales(kind, event, owners);
   }
@@ -118,7 +118,7 @@ export class InboundService {
   /** Unstores the row so Meta's re-send runs the reply again, only while Meta still waits. */
   private async undo(waMessageId: string, deadline: number | undefined): Promise<void> {
     if (deadline !== undefined && Date.now() > deadline - UNDO_MARGIN_MS) {
-      return void this.log.error(`inbound ${waMessageId}: quick reply failed after the 200; row kept`);
+      return this.log.error(`inbound ${waMessageId}: quick reply failed after the 200; row kept`);
     }
     try {
       await this.store.forget(waMessageId);

@@ -7,7 +7,7 @@ import { callErrorText } from './call-words.js';
 /** What the async call steps read and write (CallStore). */
 export interface CallRuntime {
   platform: CallPlatform;
-  /** The device's WebRTC; null = none here (the call says «لا يدعم المكالمات»). */
+  /** Null means the device has no WebRTC, so calls are unsupported. */
   makePeer: PeerMaker | null;
   iceServers: readonly CallIceServer[];
   peer: { current: CallPeer | null };
@@ -75,6 +75,12 @@ function dropLocal(rt: CallRuntime, peer: CallPeer | null): void {
   if (peer && rt.peer.current !== peer) peer.close();
 }
 
+/** Hung up while a request was in flight: the call exists on the server now, so end it there. */
+async function dropAndEnd(rt: CallRuntime, peer: CallPeer | null, id: string): Promise<void> {
+  dropLocal(rt, peer);
+  await rt.platform.sends.endCall(id).catch(() => undefined);
+}
+
 function failed(rt: CallRuntime, input: { live: () => boolean; error: unknown }): void {
   if (!input.live()) return;
   teardown(rt);
@@ -94,8 +100,10 @@ export async function beginCall(rt: CallRuntime, target: CallTarget): Promise<vo
     const sdp = peer ? await peer.offer() : null;
     if (!sdp || !live()) return dropLocal(rt, peer);
     const view = await sends.startCall({ phone: target.phone, sdp, clientRequestId: rt.platform.requestId() });
-    // Hung up while the request was in flight: the call exists now, so end it.
-    if (!live()) return void (dropLocal(rt, peer), await sends.endCall(view.id).catch(() => undefined));
+    if (!live()) {
+      await dropAndEnd(rt, peer, view.id);
+      return;
+    }
     rt.markId();
     rt.setSession((s) => (s ? { ...s, id: view.id } : s));
     rt.refresh();
@@ -104,7 +112,7 @@ export async function beginCall(rt: CallRuntime, target: CallTarget): Promise<vo
   }
 }
 
-/** Inbound «قبول»: our answer to the family's offer, then POST accept (the first one to accept wins). */
+/** The first one to accept wins. */
 export async function acceptRinging(rt: CallRuntime, input: { row: ActiveCallView; name: string }): Promise<void> {
   const { row } = input;
   const { sends } = rt.platform;
@@ -115,7 +123,10 @@ export async function acceptRinging(rt: CallRuntime, input: { row: ActiveCallVie
     const sdp = peer ? await peer.answer(row.offer_sdp ?? '') : null;
     if (!sdp || !live()) return dropLocal(rt, peer);
     await sends.acceptCall(row.id, sdp);
-    if (!live()) return void (dropLocal(rt, peer), await sends.endCall(row.id).catch(() => undefined));
+    if (!live()) {
+      await dropAndEnd(rt, peer, row.id);
+      return;
+    }
     rt.markId();
     rt.refresh();
   } catch (error) {
@@ -123,7 +134,7 @@ export async function acceptRinging(rt: CallRuntime, input: { row: ActiveCallVie
   }
 }
 
-/** «إنهاء» (any phase): cancels an attempt in flight, closes everything local, then WhatsApp terminate. */
+/** Cancels an attempt in flight, closes local media, then WhatsApp terminate. */
 export async function hangUp(rt: CallRuntime, session: CallSession | null): Promise<void> {
   rt.attempt.current += 1;
   teardown(rt);

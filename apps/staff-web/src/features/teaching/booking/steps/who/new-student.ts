@@ -4,8 +4,7 @@ import { normalizePhone } from '@ab/core';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { parseAge } from '@/features/people/students/create/create-student';
 
-// The lead path's new student + guardian (R-LEAD-06): what step 1 edits, what the lead's
-// «بيانات الطالب» prefills (research-forms item 2) and how it maps onto POST /booking.
+// Lead path (R-LEAD-06): what step 1 edits, the lead's prefill and its POST /booking mapping.
 
 /** What the qualification captured beyond step 1's fields; it lands on the new student row. */
 export type CarriedFacts = Pick<LeadQualification, 'level' | 'memorized' | 'goal' | 'riwaya' | 'notes'>;
@@ -15,12 +14,12 @@ export interface NewStudentDraft {
   name: string;
   guardianName: string;
   guardianPhone: string;
-  /** «سن الطالب» as typed (3–99); '' or absent = not given. */
+  /** As typed (3 to 99); empty or absent means not given. */
   age?: string;
   gender?: Gender | '';
-  /** «عرفت عننا منين؟», prefilled from the lead's source. */
+  /** Prefilled from the lead's source. */
   source?: LeadSource | '';
-  /** «رقم الواتساب لـ: الطالب نفسه» (docs/30 §1); absent / false = «ولي الأمر». */
+  /** The student's own number (docs/30 §1); absent or false means the guardian's. */
   contactIsSelf?: boolean;
   carried?: CarriedFacts;
 }
@@ -49,7 +48,7 @@ export const isNewStudent = (d: { leadId: string | null; newStudent: NewStudentD
 
 /** Name, guardian name, a phone that becomes E.164 and, when typed, an age 3–99. */
 export function newStudentReady(s: NewStudentDraft | null): boolean {
-  if (!s || !s.name.trim() || !s.guardianName.trim() || !normalizePhone(s.guardianPhone).ok) return false;
+  if (!s?.name.trim() || !s.guardianName.trim() || !normalizePhone(s.guardianPhone).ok) return false;
   return parseAge(s.age ?? '') !== undefined;
 }
 
@@ -58,8 +57,7 @@ type Family = { program: Program; tz: string; pkg: PackageSize; genderPref: Gend
 
 const blankToNull = (v: string | null | undefined) => (v?.trim() ? v.trim() : null);
 
-/** POST /booking's newStudent + guardian. A trial lesson books a «trial» student, a regular package
- * («اشترك») a «new» one (registrationStatus, docs/18 row 1): only a positive payment makes it active. */
+/** A trial books a trial student, a package a new one (docs/18 row 1); only payment activates. */
 export function leadParts(s: NewStudentDraft, f: Family): LeadParts {
   const c = s.carried ?? {};
   return {
@@ -76,7 +74,7 @@ export function leadParts(s: NewStudentDraft, f: Family): LeadParts {
       goal: blankToNull(c.goal),
       riwaya: blankToNull(c.riwaya),
       notes: blankToNull(c.notes),
-      // Only «الطالب نفسه» is sent: absent = the column default «ولي الأمر» (false).
+      // Only true is sent; absent means the column default false (guardian).
       ...(s.contactIsSelf ? { contact_is_self: true } : {}),
     },
     guardian: { name: s.guardianName.trim(), phone_e164: s.guardianPhone, tz: f.tz, country: f.country, source: s.source || null },

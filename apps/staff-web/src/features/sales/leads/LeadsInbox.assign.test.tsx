@@ -40,7 +40,7 @@ afterEach(() => {
 describe('leads: «مسؤول المبيعات» (admin)', () => {
   it('each lead has a select: «بدون مسؤول» plus the salespeople; picking one POSTs the assignment', async () => {
     open();
-    const select = (await screen.findByRole('combobox', { name: /مسؤول المبيعات لـ أم سهيلة/ })) as HTMLSelectElement;
+    const select = await screen.findByRole<HTMLSelectElement>('combobox', { name: /مسؤول المبيعات لـ أم سهيلة/ });
     await waitFor(() => expect(select.options).toHaveLength(3));
     expect([...select.options].map((o) => o.textContent)).toEqual([t.sales.assign.none, 'منى', 'خالد']);
     expect(select.value).toBe('');
@@ -51,7 +51,7 @@ describe('leads: «مسؤول المبيعات» (admin)', () => {
 
   it('choosing «بدون مسؤول» sends profileId null', async () => {
     open({ ...ROW, assigned_to: 'p1', assigned_to_name: 'منى' });
-    const select = (await screen.findByRole('combobox', { name: /مسؤول المبيعات لـ/ })) as HTMLSelectElement;
+    const select = await screen.findByRole<HTMLSelectElement>('combobox', { name: /مسؤول المبيعات لـ/ });
     await waitFor(() => expect(select.value).toBe('p1'));
     apiSend.mockResolvedValue({});
     fireEvent.change(select, { target: { value: '' } });

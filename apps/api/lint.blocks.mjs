@@ -1,5 +1,5 @@
-// The api's own lint blocks (flat-config shape), read by eslint.config.mjs and by Oxlint
-// (oxlint.full.config.ts): docs/31b-oxlint-mapping.md.
+// The api's own lint blocks (flat-config shape), read by oxlint.config.ts:
+// docs/31b-oxlint-mapping.md.
 import {
   boundaries,
   forbiddenImports,
@@ -69,6 +69,16 @@ export default {
             ],
           },
         ],
+      },
+    },
+    // emitDecoratorMetadata makes a type in a decorated signature a runtime value (Nest injects
+    // by it), which the native rule cannot see: the ab port reads it per class and reports every
+    // other type-only import (docs/31b §3.2).
+    {
+      files: ['**/*.ts'],
+      rules: {
+        'typescript/consistent-type-imports': 'off',
+        'ab/consistent-type-imports': 'error',
       },
     },
     forbiddenImports({

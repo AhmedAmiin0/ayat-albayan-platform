@@ -1,5 +1,5 @@
 import { meLocaleSend } from '@ab/client-core';
-import { LOCALE_STORAGE_KEY, LOCALES, type Locale } from '@ab/shared';
+import { LOCALE_STORAGE_KEY, LOCALES, type Locale } from '@ab/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
 import { accessToken } from '../http/access-token';
@@ -7,16 +7,14 @@ import { apiFetch, apiSend } from '../http/api';
 import { locale } from './locale';
 import { setLocale } from './locale-switch';
 
-// «اللغة» lives on the login (profiles.locale, owner 2026-11-16): the phone keeps a cached copy
-// (LOCALE_STORAGE_KEY) only for the synchronous boot flag (locale-switch). After sign-in the API's
-// answer wins; «اللغة» writes the profile first, then switches.
+// Language lives on the login; the phone caches it only for the synchronous boot flag.
 
 /** PATCH /me/locale. Built per call: the client's helpers are read when used, never at import. */
 const sendLocale = (next: Locale) => meLocaleSend({ apiFetch, apiSend })(next);
 
 const cachedSchema = z.enum(LOCALES).nullable().catch(null);
 
-/** The phone's saved «اللغة» choice; null when none (the phone's language) or unreadable. */
+/** Null when none (follow the phone) or unreadable. */
 async function cachedLocale(): Promise<Locale | null> {
   return cachedSchema.parse(await AsyncStorage.getItem(LOCALE_STORAGE_KEY).catch(() => null));
 }
@@ -61,11 +59,7 @@ async function writeProfile(next: Locale): Promise<boolean> {
   }
 }
 
-/**
- * «اللغة»: the profile first, then the phone (setLocale). A profile that could not be written
- * changes nothing ('error'): switching anyway would be undone by the next /auth/me
- * (followProfileLocale).
- */
+/** A profile write failure changes nothing, since the next /auth/me would undo the switch. */
 export async function chooseLocale(next: Locale): Promise<Awaited<ReturnType<typeof setLocale>>> {
   return (await writeProfile(next)) ? setLocale(next) : 'error';
 }

@@ -1,7 +1,4 @@
-/**
- * Feature detection for the share buttons: phone browsers (iOS Safari, Android Chrome) have no
- * getDisplayMedia, so «شارك الشاشة» / «اطلب مشاركة الشاشة» are hidden there instead of failing.
- */
+/** Phone browsers lack getDisplayMedia, so share buttons are hidden there instead of failing. */
 export interface MediaDevicesLike {
   mediaDevices?: { getDisplayMedia?: unknown } | undefined;
 }

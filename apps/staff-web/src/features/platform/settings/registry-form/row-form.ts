@@ -13,9 +13,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { isDirty } from './settings-dirty';
 import { flag, onKey, shapeId, str, type SettingsForm } from './settings-form';
 
-// One setting at a time («القيم», docs/26b §2: each row saves on its own). The same field ids as
-// the page form (settings-form.ts), so settings-dirty.ts compares them; any registry key works,
-// including the ones the page form leaves out (feedback_mode, sales_auto_assign).
+// One setting at a time (docs/26b §2: each row saves on its own), same ids as settings-form.ts.
 
 type Value = AcademySettings[SettingKey];
 
@@ -24,7 +22,7 @@ export function rowForm(key: SettingKey, value: Value): SettingsForm {
   const def = settingDef(key);
   const field = SETTING_FIELD_OF[key];
   if (def.type === 'json') {
-    const obj = value !== null && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, string>) : {};
+    const obj = value !== null && typeof value === 'object' && !Array.isArray(value) ? value : {};
     return Object.fromEntries(def.shape.map((f) => [shapeId(field, f.name), obj[f.name] ?? '']));
   }
   if (typeof value === 'boolean') return { [field]: value };
@@ -35,10 +33,8 @@ export function rowForm(key: SettingKey, value: Value): SettingsForm {
   return { [field]: value === null ? '' : String(value) };
 }
 
-/** The fields of a setting's default (what «أعد القيمة الافتراضية» puts back). */
 export const defaultForm = (key: SettingKey): SettingsForm => rowForm(key, SETTING_DEFAULTS[key]);
 
-/** Does the stored value differ from the default («معدَّلة»)? */
 export const isModified = (key: SettingKey, settings: AcademySettings): boolean =>
   isDirty(key, rowForm(key, settings[key]), defaultForm(key));
 

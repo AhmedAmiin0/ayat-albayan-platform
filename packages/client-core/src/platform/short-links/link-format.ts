@@ -1,14 +1,12 @@
-import type { Glyph, ShortLinkRow, ShortLinkSendStatus, ShortLinkUser } from '@ab/shared';
+import type { ShortLinkRow, ShortLinkSendStatus, ShortLinkUser } from '@ab/shared';
+import type { Glyph } from '@ab/money';
 import { fillSlots } from '../../teaching/reports/index.js';
 
-// The words around a link in the list and the detail (boards LinkXWebList, LinkXWebDetail,
-// LinkXStaffList, LinkXStaffDetail): its state chip, the WhatsApp send chips and «7 من 12».
-// Keys index shortLinks.state / shortLinks.send (ar.json / en.json); tones are the apps' chip
-// colours and glyphs their shapes (never colour alone).
+// Tones are chip colours and glyphs their shapes, so state is never shown by colour alone.
 
 export type LinkTone = 'success' | 'warning' | 'neutral' | 'danger';
 
-/** The server's status, plus «اكتمل العدد» for an active link that reached its limit. */
+/** An active link that reached its limit is shown as full. */
 export type LinkState = 'active' | 'full' | 'expired' | 'revoked';
 
 export interface LinkLook<K extends string> {
@@ -50,7 +48,6 @@ const SEND_LOOK: Readonly<Record<ShortLinkSendStatus, Look>> = {
   not_sent: { tone: 'neutral', glyph: 'hollow' },
 };
 
-/** shortLinks.send.<key> («قيد الإرسال», «فشل», «لم يُرسل بعد») and its tone and glyph. */
 export const sendLook = (status: ShortLinkSendStatus): LinkLook<ShortLinkSendStatus> => ({
   key: status,
   ...SEND_LOOK[status],
@@ -58,14 +55,12 @@ export const sendLook = (status: ShortLinkSendStatus): LinkLook<ShortLinkSendSta
 
 export type SendCounts = Readonly<Record<ShortLinkSendStatus, number>>;
 
-/** «قيد الإرسال 9 · فشل 1 · لم يُرسل 2», and the count «أعد الإرسال لمن فشل (1)» shows. */
 export function sendCounts(users: readonly Pick<ShortLinkUser, 'sendStatus'>[]): SendCounts {
   const out: Record<ShortLinkSendStatus, number> = { queued: 0, failed: 0, not_sent: 0 };
   for (const u of users) out[u.sendStatus] += 1;
   return out;
 }
 
-/** shortLinks.list.usedOf «{used} من {max}» and shortLinks.list.usedUnlimited «{used} · بلا حد». */
 export interface UsageWords {
   usedOf: string;
   usedUnlimited: string;
@@ -73,7 +68,7 @@ export interface UsageWords {
 
 export interface UsageParts {
   used: number;
-  /** null = «بلا حد». */
+  /** Null means no limit. */
   max: number | null;
   full: boolean;
 }
@@ -84,7 +79,6 @@ export const usageParts = (row: Pick<ShortLinkRow, 'maxUsers' | 'visitors'>): Us
   full: isFull(row),
 });
 
-/** «7 من 12» or «23 · بلا حد». */
 export function usageText(
   row: Pick<ShortLinkRow, 'maxUsers' | 'visitors'>,
   words: UsageWords,
@@ -98,7 +92,7 @@ export function usageText(
 /** «app.ayatalbayan.com/l/K7q2M9xT»: the short URL without its scheme (the cards' line). */
 export const bareUrl = (url: string): string => url.replace(/^https?:\/\//, '');
 
-/** «meet.google.com»: the host a link opens («يفتح: …»), or the text itself when not a URL. */
+/** Returns the host a link opens, or the text itself when it is not a URL. */
 export function targetHost(url: string): string {
   const match = /^https?:\/\/([^/?#]+)/.exec(url);
   return match?.[1] ?? url;

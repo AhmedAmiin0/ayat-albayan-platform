@@ -1,4 +1,4 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { Injectable } from '@nestjs/common';
 import { SettingsService } from '@/common/settings/settings.service';
 

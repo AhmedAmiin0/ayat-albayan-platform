@@ -1,4 +1,5 @@
-import { courseChangeCheckSchema, courseChangeSchema, type CourseChangeCheck, type CourseChangeResult, type SalesCourseView } from '@ab/shared';
+import type { CourseChangeCheck, CourseChangeResult, SalesCourseView } from '@ab/shared';
+import { courseChangeCheckSchema, courseChangeSchema } from '@ab/schedule';
 import type { BookingRequest, CourseDraftSaved } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Post, Put, Query } from '@nestjs/common';
 import { ZodBody } from '@/common/http/zod-inputs';
@@ -15,13 +16,7 @@ import { courseQuerySchema } from '@/modules/teaching/booking/booking.dto';
 import { CourseChange, type ChangeActor } from '@/modules/teaching/booking/course-change/course-change.service';
 import { SalesCourse } from './sales-course.service';
 
-/**
- * The assistant's course wizard (owner 2026-10-18, R-ASST-01): what to book for the subscription she sold.
- * Needs both self.sales_money (the route's) and self.sales (the booking wizard's; 403 otherwise), and the
- * student must be hers while SalesOwnershipRule enforces it. The booking itself is POST /sales/booking
- * with kind 'package'. «تغيير أيام الحلقات» (POST course/change[/check]) changes her own student's course,
- * never over a clash (CourseChange). ANY student with sales.renew_any (docs/16 row 38).
- */
+/** R-ASST-01: needs self.sales_money and self.sales; renew_any opens any (docs/16 row 38). */
 @ApiTags('booking')
 @ApiBearerAuth()
 @Permissions('self.sales_money')
@@ -48,10 +43,7 @@ export class SalesCourseController {
     return this.changes.check(parseOrThrow(courseChangeCheckSchema, body), salesActor(user));
   }
 
-  /**
-   * 200 CourseDraftSaved (owner 2026-11-06): the picks of a package unpaid with an open payment
-   * link kept until its payment (saved again = edited), else booked at once; codes as «احجز».
-   */
+  /** Unpaid with an open link keeps the picks until payment, else books at once. */
   @Put('course/draft')
   draft(
     @ZodBody(bookingBodySchema) req: BookingRequest,

@@ -8,7 +8,10 @@ export const DEFAULT_PASSWORD_MIN = 8;
 export type PasswordProblem = 'blank' | 'too_short' | 'too_long';
 
 /** What is wrong with a typed password, or null. `min` comes from the API config. */
-export function passwordProblem(password: string, min: number = DEFAULT_PASSWORD_MIN): PasswordProblem | null {
+export function passwordProblem(
+  password: string,
+  min: number = DEFAULT_PASSWORD_MIN,
+): PasswordProblem | null {
   if (password.trim() === '') return 'blank';
   if (password.length < min) return 'too_short';
   if (password.length > PASSWORD_MAX) return 'too_long';
@@ -16,13 +19,19 @@ export function passwordProblem(password: string, min: number = DEFAULT_PASSWORD
 }
 
 /** Base roles whose login must be LINKED to an existing record (registration creates the record). */
-export const LINKED_ROLES = ['teacher', 'student', 'guardian'] as const satisfies readonly UserRole[];
+export const LINKED_ROLES = [
+  'teacher',
+  'student',
+  'guardian',
+] as const satisfies readonly UserRole[];
 export type LinkedRole = (typeof LINKED_ROLES)[number];
 
-export const isLinkedRole = (role: UserRole): role is LinkedRole => LINKED_ROLES.some((r) => r === role);
+export const isLinkedRole = (role: UserRole): role is LinkedRole =>
+  LINKED_ROLES.some((r) => r === role);
 
 /** Students and guardians cannot be created here, only linked. */
-export const needsExistingRecord = (role: UserRole): boolean => role === 'student' || role === 'guardian';
+export const needsExistingRecord = (role: UserRole): boolean =>
+  role === 'student' || role === 'guardian';
 
 /** Staff base roles: logins that can hold permissions today. */
 export const STAFF_BASE_ROLES = USER_ROLES.filter((r) => r !== 'student' && r !== 'guardian');

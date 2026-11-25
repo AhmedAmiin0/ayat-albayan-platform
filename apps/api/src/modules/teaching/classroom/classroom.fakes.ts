@@ -1,5 +1,5 @@
 // Test fixtures for the classroom tests (not shipped; excluded from the build by *.fakes.ts).
-import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
+import { DEFAULT_JOIN_WINDOW } from '@ab/schedule';
 import { createHmac } from 'node:crypto';
 import { vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';

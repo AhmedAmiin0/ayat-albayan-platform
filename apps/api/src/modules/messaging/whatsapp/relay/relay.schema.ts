@@ -1,4 +1,4 @@
-import { phoneE164 } from '@ab/shared';
+import { phoneE164 } from '@ab/core';
 import { z } from 'zod';
 
 // The old Apps Script's POST /api/v1/messages bodies (docs/19 «script relay»), parsed at the

@@ -1,6 +1,6 @@
-// The linter-neutral part of the config: the blocks each package's lint.blocks.js composes (files,
-// ignores and rules, in ESLint flat-config shape). eslint.js and oxlint/config.js both read them,
-// so a package states its own rules once (docs/31b-oxlint-mapping.md).
+// The blocks each package's lint.blocks.mjs composes (files, ignores and rules, in flat-config
+// shape); oxlint/config.js converts them, so a package states its own rules once
+// (docs/31b-oxlint-mapping.md).
 import { boundaries, TESTS } from './eslint-boundaries.js';
 
 export {

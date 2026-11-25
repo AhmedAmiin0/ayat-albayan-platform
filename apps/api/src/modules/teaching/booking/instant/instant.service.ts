@@ -1,4 +1,4 @@
-import type { BookingResult, InstantLessonRequest, InstantLessonResult } from '@ab/shared';
+import type { BookingResult, InstantLessonRequest, InstantLessonResult } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
@@ -15,14 +15,7 @@ const firstLesson = (r: BookingResult): InstantLessonResult => {
   return { lessonId: first.id };
 };
 
-/**
- * POST /lessons/instant («حلقة فورية», admin): ONE lesson starting now for existing students with a
- * teacher, written by the booking transaction (create_booking, through create_instant_lesson) so
- * reports, lesson numbers and teacher earnings treat it like any lesson. It is flagged instant (never
- * consumes a package unit) and its room is open at once (room_opened_at = now). Conflict-checked like
- * POST /booking: 409 conflict unless override.reason. No WhatsApp message is queued. A replay with
- * the same clientRequestId returns the first lesson (rule 8).
- */
+/** Via create_booking so it counts like any lesson; never uses a package unit; rule 8. */
 @Injectable()
 export class InstantLessonService {
   constructor(

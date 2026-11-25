@@ -1,4 +1,4 @@
-import { integrationSecretSchema } from '@ab/shared';
+import { integrationSecretSchema } from '@ab/catalog';
 import { z } from 'zod';
 
 // The academy CRM's webhook management API (wacrm, docs/19 «crm driver»): GET/POST {base}/webhooks,
@@ -28,10 +28,7 @@ export type CrmEndpoint = z.infer<typeof crmEndpointSchema>;
 
 export const crmEndpointListSchema = z.array(crmEndpointSchema);
 
-/**
- * The signing secret wacrm shows once: «whsec_» + base64url. Trimmed and bounded like the
- * «التكاملات» secrets PUT, so what is stored is exactly what the env loader reads back.
- */
+/** Trimmed and bounded like the secrets PUT, so what is stored is what the env loader reads. */
 const crmSecretSchema = integrationSecretSchema.shape.value.pipe(
   z.string().regex(/^whsec_[A-Za-z0-9_-]{16,}$/),
 );

@@ -10,10 +10,7 @@ const idsOf = (view: NumberView): readonly Id[] => (view.evolution ? ['phone_num
 const idLabel = (view: NumberView, id: Id): string =>
   view.evolution ? t.numbers.evolution.instance : t.numbers.fields[id];
 
-/**
- * «تفاصيل تقنية»: the raw Meta ids (or an Evolution instance name), folded so the card itself
- * speaks Arabic (docs/23 §2d).
- */
+/** Raw ids are folded so the card itself stays in Arabic (docs/23 §2d). */
 export function NumberDetails({ view }: { view: NumberView }) {
   return (
     <details className="text-xs text-ink-3">

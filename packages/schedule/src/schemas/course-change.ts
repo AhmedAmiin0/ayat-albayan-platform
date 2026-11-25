@@ -3,8 +3,7 @@ import { instant, localDate, timeOfDay } from '@ab/core';
 import { dayTimesSchema, refineDayTimes } from './day-times.js';
 import { bydaySchema, overrideSchema } from './scheduling/index.js';
 
-// «تغيير أيام الحلقات»: new days and times for the lessons of a booked course
-// that have not happened yet. The teacher, the length and the zone stay the course's.
+// New days and times for a course's future lessons; teacher, length and zone stay the course's.
 
 const changeBase = z.object({
   /** The course (its rules' subscription_id, migration 470). */
@@ -36,8 +35,7 @@ export const courseChangeQuerySchema = z.object({ subscriptionId: z.uuid() });
 
 export type CourseChangeRequest = z.infer<typeof courseChangeCheckSchema>;
 
-// «تغيير المعلم» from the student's profile: the same change with the new
-// teacher. The days and times may stay the course's: the rest then moves to the new teacher only.
+// The same change with a new teacher; unchanged days move the rest to the new teacher only.
 const teacherBase = changeBase.extend({ teacherId: z.uuid() });
 
 /** POST /students/:id/course-teacher/change/check: nothing written. */

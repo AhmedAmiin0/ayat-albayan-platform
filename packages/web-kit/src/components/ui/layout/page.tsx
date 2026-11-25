@@ -2,9 +2,9 @@ import type { HTMLAttributes } from 'react';
 import { cn } from '@ab/web-kit/lib/utils';
 
 // The work page (docs/07 §6 Card/Page): a flat card, 1px rule and an 8px radius with a hairline
-// shadow (owner, 2026-10-05: simplify; no gold outline). Never nested, nothing boxed inside it.
+// shadow, no gold outline. Never nested, nothing boxed inside it.
 // `@container` so tables can fold the hamish column with `@max-[940px]:` variants. On phones
-// (< 640px, owner 2026-10-05: "simpler") the page is the screen itself: no frame, margin or shadow.
+// (< 640px) the page is the screen itself: no frame, margin or shadow.
 export const jadwalClass =
   'rounded-md border border-rule bg-card shadow-page';
 

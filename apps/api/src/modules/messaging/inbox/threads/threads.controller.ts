@@ -1,6 +1,5 @@
 import {
   PENDING_IDS_MAX,
-  phoneE164,
   sendsAllTemplates,
   threadTemplateSchema,
   threadTextSchema,
@@ -8,6 +7,7 @@ import {
   type ThreadTemplate,
   type ThreadText,
 } from '@ab/shared';
+import { phoneE164 } from '@ab/core';
 import { Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -106,9 +106,7 @@ export class ThreadsController {
     });
     const action = input.correctsId ? 'thread_correction' : 'thread_text';
     const view = await this.audited({ sent, action, user, scope, sales });
-    // `replayed`: this request id's FIRST row came back, nothing new was queued (the clients
-    // tell a replayed earlier row from the send they made: docs/44 M1, «تعديل»); `same_request`:
-    // for a correction, the server's word that this first row IS this request (#694 round 4).
+    // `replayed`: the first row came back (docs/44 M1); `same_request`: it is this correction.
     return { ...view, replayed: sent.replayed, same_request: sent.sameRequest === true };
   }
 

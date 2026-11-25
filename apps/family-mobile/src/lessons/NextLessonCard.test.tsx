@@ -1,4 +1,5 @@
-import { PUBLIC_CONFIG_QUERY_KEY, PUBLIC_SETTING_DEFAULTS, type RoomPresence } from '@ab/shared';
+import type { RoomPresence } from '@ab/schedule';
+import { PUBLIC_CONFIG_QUERY_KEY, PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@ab/mobile-kit';
@@ -8,10 +9,10 @@ import { NextLessonCard } from './NextLessonCard';
 
 jest.mock('@ab/mobile-kit/room', () => ({
   ...jest.requireActual('@ab/mobile-kit/room'),
-  liveKitNative: () => ({}),
+  useNativeRoom: () => ({ data: {} }),
 }));
 
-// The lapis card (canvas Child) and its live state (owner 2026-11-16, canvas RoomXLiveHome).
+// The lapis card (canvas Child) and its live state (canvas RoomXLiveHome).
 
 const MIN = 60_000;
 const L = t.portal.app.live;

@@ -1,13 +1,12 @@
 import { z } from 'zod';
 
-// The crm driver's template names (docs/19 «crm driver»). The academy CRM holds the templates of the old
-// Google Apps Script («نظام تسجيل الطلاب»): most share our meta_name, three flows use the CRM's own names.
+// The crm driver's template names (docs/19); three flows use the CRM's own names.
 
 /**
  * The CRM's name for a template when it is not its meta_name: the teacher's new-student alert
  * goes as the old script's teacher_lesson_v2, both same-day teacher reminders as its
  * teacher_lesson_reminder ({{1}} the teacher, {{2}} one line, no buttons; the CRM's account has
- * no teacher_lesson_reminder_meet: Meta #132001 on 2026-10-31).
+ * no teacher_lesson_reminder_meet: Meta #132001).
  */
 export const CRM_DEFAULT_NAMES: Readonly<Record<string, string>> = {
   teacher_new_student: 'teacher_lesson_v2',
@@ -16,7 +15,10 @@ export const CRM_DEFAULT_NAMES: Readonly<Record<string, string>> = {
 };
 
 /** The old script's report templates: the PDF goes as a document, then one of these by the lesson's kind. */
-export const CRM_REPORT_TEMPLATES = { trial: 'report_trial_session', regular: 'report_session' } as const;
+export const CRM_REPORT_TEMPLATES = {
+  trial: 'report_trial_session',
+  regular: 'report_session',
+} as const;
 export type CrmReportKind = keyof typeof CRM_REPORT_TEMPLATES;
 
 /** The registry fields the crm driver reads (message_templates.crm_name / crm_language, migration 680). */
@@ -29,11 +31,12 @@ export interface CrmNamed {
 }
 
 /** The name the CRM resolves: the admin's crm_name, else the old script's name, else meta_name. Only on a crm line. */
-export const crmTemplateName = (t: CrmNamed): string => t.crm_name || CRM_DEFAULT_NAMES[t.key] || t.meta_name;
+export const crmTemplateName = (t: CrmNamed): string =>
+  t.crm_name || CRM_DEFAULT_NAMES[t.key] || t.meta_name;
 
 /**
  * Keys that, on a crm line, are also approved by the CRM template they go as (crmTemplateName),
- * not only by their own row (owner 2026-11-02: the teacher's alert waited on teacher_new_student
+ * not only by their own row (the teacher's alert waited on teacher_new_student
  * while the CRM held teacher_lesson_v2 approved). The same-day reminders keep their own status.
  */
 export const CRM_GATED_KEYS: readonly string[] = ['teacher_new_student'];
@@ -70,7 +73,8 @@ export function gateApprovedKeys<R extends CrmGateRow>(
 export const crmTemplateLanguage = (t: CrmNamed): string => t.crm_language || t.language;
 
 /** A report_ready row whose CRM name is one of the old script's report templates: send PDF + that template. */
-export const isCrmReportName = (name: string): boolean => Object.values<string>(CRM_REPORT_TEMPLATES).includes(name);
+export const isCrmReportName = (name: string): boolean =>
+  Object.values<string>(CRM_REPORT_TEMPLATES).includes(name);
 
 /**
  * messages.template_params.crm: what a producer adds for the CRM's own template (the meta driver never reads
@@ -92,8 +96,22 @@ export const crmValuesSchema = z.object({
 
 const blankNull = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? null : v);
 /** Meta's template name rules (lowercase, digits, underscores). */
-const crmName = z.preprocess(blankNull, z.string().trim().regex(/^[a-z0-9_]{1,512}$/).nullable());
-const crmLanguage = z.preprocess(blankNull, z.string().trim().regex(/^[a-z]{2,3}(_[A-Z]{2})?$/).nullable());
+const crmName = z.preprocess(
+  blankNull,
+  z
+    .string()
+    .trim()
+    .regex(/^[a-z0-9_]{1,512}$/)
+    .nullable(),
+);
+const crmLanguage = z.preprocess(
+  blankNull,
+  z
+    .string()
+    .trim()
+    .regex(/^[a-z]{2,3}(_[A-Z]{2})?$/)
+    .nullable(),
+);
 
 /** PUT /messaging/templates/:key/crm-name: blank = back to the default (audited, crm lines only). */
 export const templateCrmNameSchema = z.object({ crm_name: crmName, crm_language: crmLanguage });

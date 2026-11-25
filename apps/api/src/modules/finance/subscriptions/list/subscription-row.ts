@@ -1,10 +1,7 @@
 import type { Json, TablesInsert } from '@ab/db';
-import { TIER_PACKAGE_SIZE, type QuoteResponse, type SubscriptionCreate } from '@ab/shared';
+import { TIER_PACKAGE_SIZE, type QuoteResponse, type SubscriptionCreate } from '@ab/money';
 
-/**
- * «مبلغ مخصص» (owner 2026-11-02): the quote stays in price_source for reference, marked
- * `source: 'custom'` with the price it replaced (`quoted`); the commission runs on `price`.
- */
+/** A custom price keeps the quote in price_source; commission runs on `price`. */
 function priced(quote: QuoteResponse, customPrice: number | undefined) {
   const quoted = quote.afterDiscount;
   const source = customPrice === undefined ? quote : { ...quote, source: 'custom', quoted };
@@ -12,10 +9,7 @@ function priced(quote: QuoteResponse, customPrice: number | undefined) {
   return { price: customPrice ?? quoted, price_source };
 }
 
-/**
- * S2 step 3: the subscriptions row from the catalog quote (R-SUB-01, docs/08 §4), or the
- * «مبلغ مخصص» typed beside it. A new package starts `unpaid`; the recompute derives its status.
- */
+/** S2 step 3 (R-SUB-01, docs/08 §4): a new package starts unpaid; recompute sets status. */
 export function subscriptionRow(
   input: SubscriptionCreate,
   quote: QuoteResponse,

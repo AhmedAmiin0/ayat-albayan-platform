@@ -1,4 +1,5 @@
-import { CANCEL_STATUS, type CancelRequest, type CorrectTo, type LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { CANCEL_STATUS, type CancelRequest, type CorrectTo } from '@ab/schedule';
 import { useEffect } from 'react';
 import { ApiError, t } from '@ab/mobile-kit';
 import {
@@ -7,7 +8,7 @@ import {
   useOptimisticStatus,
 } from '@/core/lib/query/use-optimistic-status';
 
-/** A confirm, a cancel carrying its body (docs/10 routes 6 and 9), or «تصحيح الحالة». */
+/** A cancel carries its body (docs/10 routes 6 and 9). */
 interface LessonChange extends StatusChange<LessonStatus> {
   cancel?: CancelRequest;
   /** POST /lessons/:id/correct { to } (owner 2026-11-03). */
@@ -27,7 +28,6 @@ const NOTICE_MS = 5000;
 /** A refused change in words (docs/10 §3: clients switch on `code`). */
 const ERROR_TEXT: Record<string, string | undefined> = {
   invalid_transition: t.lessons.invalidTransition,
-  // «لم تنعقد الحلقة؟» on a lesson that was not held automatically (owner 2026-11-02).
   not_auto_held: t.lessons.error.not_auto_held,
   earning_paid: t.lessons.error.earning_paid,
 };
@@ -50,12 +50,7 @@ function errorText(error: unknown): string {
   return (typeof code === 'string' && ERROR_TEXT[code]) || t.common.error;
 }
 
-/**
- * «تأكيد» / «إلغاء» on Today (R-MOB-02, R-MOB-03): the lesson shows its new status at once and
- * rolls back if the API refuses. One mutation for the whole screen, so a cancelled card that left
- * the list can still show its error when it comes back. A scope 'rule' cancel patches only this
- * lesson at once; its later lessons change on the refetch.
- */
+/** Optimistic with rollback (R-MOB-02, R-MOB-03); one mutation keeps a returning card's error. */
 export function useLessonAction() {
   const action = useOptimisticStatus<LessonStatus, LessonChange>({ path: '/lessons', request });
   const { isSuccess, reset } = action;

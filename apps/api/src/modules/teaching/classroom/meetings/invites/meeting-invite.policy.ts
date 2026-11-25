@@ -1,4 +1,5 @@
-import { mayInvitePhones, systemPermissionsOf, type MeetingInviteeView } from '@ab/shared';
+import { systemPermissionsOf } from '@ab/catalog';
+import { mayInvitePhones, type MeetingInviteeView } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { assertCanSend, TeacherScopes, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
@@ -42,11 +43,7 @@ export function visibleCode(code: string | null, seesAll: boolean): string | nul
   return !seesAll && code === 'no_thread' ? 'session_closed' : code;
 }
 
-/**
- * What a non-'all' caller sees of an invitee: the masked error code, and no name on a typed phone (a
- * known guardian's name, or the number itself; the clients show «رقم هاتف»). Masked on read only: the
- * stored name is what inviteeWhen compares with the phone.
- */
+/** Masked on read only: the stored name is what inviteeWhen compares with the phone. */
 export const visibleView = <T extends MeetingInviteeView>(view: T, seesAll: boolean): T => ({
   ...view,
   error_code: visibleCode(view.error_code, seesAll),

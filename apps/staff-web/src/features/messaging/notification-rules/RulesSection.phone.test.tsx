@@ -65,13 +65,13 @@ describe('«الإشعارات» below 640px', () => {
     fireEvent.click(within(sheet).getByRole('button', { name: t.common.cancel }));
     fireEvent.click(screen.getByRole('button', { name: r.discard.keep }));
     expect(screen.queryByRole('dialog', { name: r.discard.title })).toBeNull();
-    expect((within(sheet).getByLabelText(r.timing.minutesLabel) as HTMLInputElement).value).toBe('30');
+    expect((within(sheet).getByLabelText<HTMLInputElement>(r.timing.minutesLabel)).value).toBe('30');
     fireEvent.click(within(sheet).getByRole('button', { name: t.common.cancel }));
     expect(screen.getByRole('dialog', { name: r.discard.title })).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: r.discard.yes }));
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
     const again = await openSheet();
-    expect((within(again).getByLabelText(r.timing.minutesLabel) as HTMLInputElement).value).toBe('60');
+    expect((within(again).getByLabelText<HTMLInputElement>(r.timing.minutesLabel)).value).toBe('60');
     expect(apiSend).not.toHaveBeenCalled();
   });
 

@@ -1,4 +1,5 @@
-import { feedbackEligible, lessonRatingMessage, RATING_TEMPLATE, type Attendance, type LessonStatus } from '@ab/shared';
+import { feedbackEligible, lessonRatingMessage, RATING_TEMPLATE } from '@ab/shared';
+import type { Attendance, LessonStatus } from '@ab/catalog';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 
 // Which lesson_rating rows to queue after lessons took place (pure; migration 195, docs/12 §7).
@@ -31,7 +32,7 @@ export interface RatingLesson {
 export const ratingDedupKey = (lessonId: string, guardianId: string): string =>
   `${RATING_TEMPLATE}:${lessonId}:${guardianId}`;
 
-/** Attendance recorded (a report, staff «تم»), never on a lesson only held automatically. */
+/** Attendance was recorded, never on a lesson only held automatically. */
 const recorded = (ls: RatingLessonStudent): boolean => ls.attendance !== null;
 
 /** The guardians of the students who attended (feedbackEligible), each with their children's names. */

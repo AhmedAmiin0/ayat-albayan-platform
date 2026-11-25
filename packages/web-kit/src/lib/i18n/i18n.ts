@@ -10,5 +10,5 @@ import ar from '@ab/shared/i18n/ar.json';
  */
 export const t: typeof ar = cloneBundle(ar);
 
-/** The bundled texts, never changed: the defaults and offline fallback («الأصل» in the editor). */
+/** The bundled texts, never changed: the defaults and offline fallback. */
 export const BUNDLES = { ar } as const;

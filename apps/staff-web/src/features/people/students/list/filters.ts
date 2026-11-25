@@ -31,7 +31,7 @@ export function parseStudentFilters(s: Record<string, unknown>): StudentsFilters
     const text = Array.isArray(v) ? v.join(',') : v;
     if (typeof text === 'string' && text) out[key] = text;
   }
-  return out as StudentsFilters;
+  return out;
 }
 
 /** Query-string pairs for GET /students: only the filters that are set. */
@@ -44,7 +44,7 @@ export function filterParams(f: StudentsFilters): [string, string][] {
 
 export const activeFilterCount = (f: StudentsFilters): number => filterParams(f).length;
 
-/** Sets one filter; '' (the «الكل» option) removes it. */
+/** '' removes the filter. */
 export function setFilter(f: StudentsFilters, key: FilterKey, value: string): StudentsFilters {
   return parseStudentFilters({ ...f, [key]: value });
 }

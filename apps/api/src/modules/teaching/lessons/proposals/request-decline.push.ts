@@ -1,4 +1,5 @@
-import { joinNames, lessonWhenText, RIYADH_TZ } from '@ab/shared';
+import { joinNames, lessonWhenText } from '@ab/shared';
+import { RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { PushService, type PushTarget } from '@/common/push/push.service';
@@ -11,7 +12,7 @@ type Declined = Pick<ProposalRow, 'id' | 'lesson_id' | 'requested_by' | 'created
   decision_note: string | null;
 };
 
-/** «لم يتغيّر موعد حلقة …»: the lesson keeps its time, on the student's clock, with the note. */
+/** The lesson keeps its time, shown on the student's clock, with the note. */
 export function declineEvent(p: Declined, lesson: LessonRow, profileId: string): PushTarget {
   const first = lesson.lesson_students[0];
   const tz = first?.student?.tz ?? RIYADH_TZ;
@@ -30,11 +31,7 @@ export function declineEvent(p: Declined, lesson: LessonRow, profileId: string):
 const isFamilyAsk = (p: Declined): p is Declined & { created_by: string } =>
   p.requested_by === 'family' && p.created_by !== null;
 
-/**
- * The family hears «ارفض» of their «اطلب موعدًا آخر» (owner 2026-11-17): a bell row and a push to
- * the login that asked (kind lesson_request_declined; its notification rule applies). A teacher's
- * proposal is not the family's: nothing. Never throws: the answer is already saved.
- */
+/** Only family requests notify on decline; never throws, the answer is already saved. */
 @Injectable()
 export class RequestDeclinePush {
   private readonly log = new Logger(RequestDeclinePush.name);

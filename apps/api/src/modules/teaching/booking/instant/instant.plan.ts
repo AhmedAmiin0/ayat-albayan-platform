@@ -1,17 +1,12 @@
-import { dayInZone, MINUTE_MS, offsetMs, weekdayOfDay } from '@ab/shared';
-import type { Conflict, Occurrence, OccurrenceTiming } from '@ab/shared';
+import { dayInZone, MINUTE_MS, offsetMs, weekdayOfDay } from '@ab/time';
+import type { Conflict, Occurrence, OccurrenceTiming } from '@ab/schedule';
 import { lessonRows, type BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
 
 type InstantPlan = { timing: OccurrenceTiming; occurrence: Occurrence };
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-/**
- * «حلقة فورية»: one lesson from now (rounded down to the minute) in a one-day rule, the same shape
- * as a trial or a makeup (docs/10 invariant 4): byday = today, start_time_local = this minute and
- * starts_on = ends_on = today, all in `tz`. The timing round-trips to the same instant, so the daily
- * generator (which only looks ahead of now anyway) finds the row already there (unique(rule_id, starts_at)).
- */
+/** docs/10 invariant 4: round-trips to the same instant so unique(rule_id, starts_at) dedups. */
 export function instantPlan(input: { now: Date; tz: string; durationMin: number }): InstantPlan {
   const start = Math.floor(input.now.getTime() / MINUTE_MS) * MINUTE_MS;
   const day = dayInZone(start, input.tz);

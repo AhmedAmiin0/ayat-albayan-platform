@@ -1,5 +1,5 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import type { Attendance, FeedbackKind, LessonStatus } from '@ab/shared';
+import type { Attendance, FeedbackKind, LessonStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
@@ -9,7 +9,7 @@ export type FeedbackRow = Tables<'lesson_feedback'>;
 export type Answer = Required<Pick<TablesUpdate<'lesson_feedback'>, 'rating' | 'recommend' | 'contact_phone' | 'submitted_at'>> &
   Pick<TablesUpdate<'lesson_feedback'>, 'note'>;
 
-/** What «ابعت طلب الرأي» needs to know about one student on one lesson. */
+/** What the feedback request needs to know about one student on one lesson. */
 export interface RequestContext {
   lessonStatus: LessonStatus;
   /** This student's own attendance on the lesson (null until an outcome is recorded). */
@@ -117,7 +117,7 @@ export class FeedbackRepo {
     return data;
   }
 
-  /** The lesson's rule is the free trial (docs/08 «جلسة تجريبية مجانية»); a lesson without a rule is not. */
+  /** The lesson's rule is the free trial (docs/08); a lesson without a rule is not. */
   private async isTrial(ruleId: string | null): Promise<boolean> {
     if (!ruleId) return false;
     const { data, error } = await this.db.from('schedule_rules').select('package').eq('id', ruleId).maybeSingle();

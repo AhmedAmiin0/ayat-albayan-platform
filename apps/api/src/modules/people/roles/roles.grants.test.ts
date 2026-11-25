@@ -1,4 +1,4 @@
-import { GRANTABLE_PERMISSIONS } from '@ab/shared';
+import { GRANTABLE_PERMISSIONS } from '@ab/catalog';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { errorCode } from '@/common/http/errors';

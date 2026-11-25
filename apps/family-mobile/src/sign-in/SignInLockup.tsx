@@ -5,11 +5,6 @@ const TILE = 76;
 /** The emblem inside the tile (canvas LoginFamily: 59 of 76). */
 const MARK = 59;
 
-/**
- * The top of the family sign-in (docs/50 §5 «Hierarchy»): the staff mushaf mark, unchanged, on the
- * family's deep-green tile (canvas LoginFamily), the wordmark «Ayat Al-Bayan» over «آيات البيان»,
- * and one line of welcome.
- */
 export function SignInLockup() {
   const { color } = useTheme();
   return (

@@ -19,10 +19,7 @@ export function useSalesFamily(phone: string, enabled = true) {
   });
 }
 
-/**
- * Her own students of the family: with sales.renew_any the view also lists the others (`mine: false`, docs/16
- * row 38) for subscribe / renew / transfer / «أيام الحلقات»; the trial date, «دفع إلكتروني» and «إلغاء الباقة» stay hers.
- */
+/** With sales.renew_any others are listed too (docs/16 row 38); some actions stay hers only. */
 export function ownStudents<S extends { mine?: boolean }>(students: readonly S[]): S[] {
   return students.filter((s) => s.mine !== false);
 }
@@ -52,7 +49,6 @@ export function withOpenPackage(
   return { students };
 }
 
-/** After a subscription or a transfer: the chat («مشترك») and the family's packages refetch. */
 export function refreshFamily(client: QueryClient, phone: string): void {
   void client.invalidateQueries({ queryKey: ['threads'] });
   void client.invalidateQueries({ queryKey: familyKey(phone) });

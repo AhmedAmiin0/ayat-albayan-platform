@@ -1,4 +1,5 @@
-import { profileCourseQuerySchema, type ProfileCourseView } from '@ab/shared';
+import type { ProfileCourseView } from '@ab/shared';
+import { profileCourseQuerySchema } from '@ab/schedule';
 import type { CourseChangeCheck, CourseChangeResult } from '@ab/shared';
 import { Body, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import type { z } from 'zod';
@@ -24,7 +25,7 @@ export abstract class CourseMoveRoutes {
     private readonly schemas: MoveSchemas,
   ) {}
 
-  /** `?subscriptionId=` (absent = the current package): the course and «من تاريخ»'s default. */
+  /** Absent means the current package. */
   @Get('change')
   view(
     @Param('id', ParseUUIDPipe) id: string,

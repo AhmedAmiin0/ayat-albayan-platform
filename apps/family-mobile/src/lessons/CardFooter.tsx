@@ -1,4 +1,5 @@
-import type { ClockOptions, PortalLesson, PortalStudent } from '@ab/shared';
+import type { PortalLesson, PortalStudent } from '@ab/shared';
+import type { ClockOptions } from '@ab/time';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { useRoomsInApp } from '@/room';
 import { optionsTitle } from './lesson-text';
@@ -24,7 +25,7 @@ interface CardFooterProps {
   onNotice: (message: string) => void;
 }
 
-/** The full card's end: where our room opens, and «خيارات الحلقة» (owner 2026-11-17). */
+/** The full card's end: where our room opens, and the lesson options. */
 export function CardFooter({ lesson, student, clock, now, live, onNotice }: CardFooterProps) {
   const { color } = useTheme();
   const inApp = useRoomsInApp();

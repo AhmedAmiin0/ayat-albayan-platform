@@ -1,4 +1,6 @@
-import { RIYADH_TZ, type LessonStatus, type ThreadLesson, type ThreadView } from '@ab/shared';
+import type { ThreadLesson, ThreadView } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { RIYADH_TZ } from '@ab/time';
 import type { Db } from '@/common/db/db.module';
 
 /** How many upcoming lessons the template composer offers. */
@@ -47,13 +49,7 @@ const GUARDIAN_SELECT =
   'id, starts_at, ends_at, status, meeting_link, teacher:teachers(tz), lesson_students!inner(student:students!inner(name, guardian_id))';
 const TEACHER_SELECT = 'id, starts_at, ends_at, status, meeting_link, teacher:teachers(tz), lesson_students(student:students(name))';
 
-/**
- * The thread's next open lessons (scheduled | confirmed, not started), for the template composer and
- * the reply note's «تأكيد الحلقة» / «تغيير الموعد» (their status and end):
- * a guardian's (only their children named, their tz) or a teacher's (their tz). In teacher mode
- * only the signed-in teacher's own (`teacherId`). Rule 6: a template's lesson time is picked from
- * these, never typed.
- */
+/** Rule 6: a template's lesson time is picked from these, never typed. */
 export async function upcomingLessons(
   db: Db,
   at: { thread: LessonsOf; now: Date; teacherId?: string | undefined },

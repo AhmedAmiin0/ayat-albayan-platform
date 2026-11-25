@@ -11,7 +11,6 @@ interface SchedulePeriodProps {
   onDate: (date: string) => void;
 }
 
-/** ‹ «الخميس 1 أكتوبر» › a day at a time, or ‹ «26 سبتمبر – 2 أكتوبر» › a week at a time. */
 export function SchedulePeriod({ view, date, today, onDate }: SchedulePeriodProps) {
   const day = view === 'day';
   const step = day ? 1 : 7;

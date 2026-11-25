@@ -6,16 +6,12 @@ import { InternalMeetingDialog } from './InternalMeetingDialog';
 import { ScheduledMeetingDialog } from '@/features/teaching/meetings/scheduled/ScheduledMeetingDialog';
 
 interface Props {
-  /** «اجتماع داخلي» shows (default true; only the teacher's page passes its switch). */
+  /** Defaults true; only the teacher's page passes its switch. */
   instant?: boolean;
-  /** «اجتماع مجدول» shows (default true). */
   scheduled?: boolean;
 }
 
-/**
- * «اجتماع داخلي» (now) and «اجتماع مجدول» (a time and invitees) on their own (teacher, assistant and
- * sales pages, where the admin's «اجتماع جديد» menu with the booking wizard does not belong).
- */
+/** For pages where the admin's new-meeting menu with the booking wizard does not belong. */
 export function InternalMeetingButton({ instant = true, scheduled = true }: Props) {
   const [open, setOpen] = useState<'instant' | 'scheduled' | null>(null);
   return (

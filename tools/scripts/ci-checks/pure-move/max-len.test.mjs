@@ -5,7 +5,7 @@ import { suppressionsMoved } from './baselines.mjs';
 // docs/32 D2 + R12: a rename (`XQueries` → `XRepo`) or an `@/` rewrite shortens lines, so a move
 // may lower or drop max-len entries; it may never raise, add or zero them.
 const RULE = 'max-len';
-const FILE = 'apps/api/eslint-suppressions.json';
+const FILE = 'apps/api/oxlint-suppressions.json';
 const MOVES = [['apps/api/src/t/t.queries.ts', 'apps/api/src/t/t.repo.ts']];
 const base = {
   'src/t/t.queries.ts': { [RULE]: { count: 2 } },

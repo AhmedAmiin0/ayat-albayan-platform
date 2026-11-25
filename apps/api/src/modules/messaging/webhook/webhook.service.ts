@@ -6,9 +6,9 @@ import { WebhookConfigReload } from './lines/webhook.reload';
 import { parseWebhook } from './parse/webhook.parse';
 import { StatusService } from './status/webhook.status.service';
 import { CALL_EVENTS, type CallEventsPort } from '@/modules/messaging/calls/flow/call-events.service';
+import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
 
-/** WhatsApp webhook settings from env (docs/12 §3.1, §13.6); a token so tests can swap them. */
-export const WEBHOOK_CONFIG = Symbol('WEBHOOK_CONFIG');
+/** WhatsApp webhook settings from env (docs/12 §3.1, §13.6), provided as WEBHOOK_CONFIG. */
 export interface WebhookConfig {
   /** [WA_APP_SECRET, WA_CHAT_APP_SECRET]: X-Hub-Signature-256 keys, any may match. None → every POST is 401. */
   appSecrets: readonly string[];

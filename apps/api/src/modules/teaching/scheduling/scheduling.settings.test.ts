@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
 import { SchedulingSettings, type SchedulingSettingsValues } from './scheduling.settings';

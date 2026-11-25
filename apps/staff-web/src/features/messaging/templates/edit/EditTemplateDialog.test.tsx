@@ -9,7 +9,7 @@ import { EditTemplateDialog } from './EditTemplateDialog';
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
-// «تعديل» (owner 2026-11-14): Meta's rules on top; a code-bound template changes its words only.
+// A code-bound template may change its words only.
 
 const S = t.templates.edit;
 const C = t.templates.create;

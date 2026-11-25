@@ -5,7 +5,7 @@ import { useTheme } from '../../../theme';
 import { useTabBarInset } from '../tab-bar-inset';
 
 const BODY = { paddingHorizontal: 16, paddingTop: 8, gap: 16 } as const;
-/** A chat, and a list screen's header blocks (title, search, pills): the tight 8pt rhythm (owner 2026-10-28). */
+/** A chat, and a list screen's header blocks (title, search, pills): the tight 8pt rhythm. */
 const TIGHT_BODY = { paddingHorizontal: 16, paddingTop: 8, gap: 8 } as const;
 
 const FullScreenContext = createContext(false);
@@ -27,15 +27,7 @@ interface ScreenProps {
   sheet?: boolean;
 }
 
-/**
- * Screen frame: margin background, top safe area (in the tabs the tab bar owns the bottom; above them,
- * under FullScreenProvider, the frame takes it too), 8pt under it (owner 2026-10-27: the header sat
- * too low), 16pt gutter (every group of rows sits inside it in an inset card, surface/inset.tsx),
- * 16pt between blocks (8pt on a chat or a list screen). Put a
- * FlatList last and give it `style={{ flex: 1 }}`; it does the scrolling.
- * `scroll` for a screen of plain rows with no FlatList («المزيد»): the frame scrolls, so its last row
- * («تسجيل الخروج») is never cut off below the screen.
- */
+/** Put a FlatList last with flex 1; `scroll` for plain-row screens so the last row shows. */
 export function Screen({ children, scroll = false, chat = false, list = false, sheet = false }: ScreenProps) {
   const bar = useTabBarInset();
   const inset = sheet ? 0 : bar;

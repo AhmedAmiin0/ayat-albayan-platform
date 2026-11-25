@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { pickSales, type SalesCandidate } from './pick-sales.js';
 
-const c = (id: string, openLeads: number, lastAssignedAt: string | null = null): SalesCandidate => ({ id, openLeads, lastAssignedAt });
+const c = (
+  id: string,
+  openLeads: number,
+  lastAssignedAt: string | null = null,
+): SalesCandidate => ({ id, openLeads, lastAssignedAt });
 
 describe('pickSales (auto-assignment of a new lead)', () => {
   it('no salespeople: null, the lead stays unassigned', () => {
@@ -13,7 +17,9 @@ describe('pickSales (auto-assignment of a new lead)', () => {
   });
 
   it('a tie goes to whoever was assigned longest ago; never assigned comes first', () => {
-    expect(pickSales([c('a', 3, '2026-10-03T10:00:00Z'), c('b', 3, '2026-10-01T10:00:00Z')])).toBe('b');
+    expect(pickSales([c('a', 3, '2026-10-03T10:00:00Z'), c('b', 3, '2026-10-01T10:00:00Z')])).toBe(
+      'b',
+    );
     expect(pickSales([c('a', 3, '2026-10-01T10:00:00Z'), c('b', 3, null)])).toBe('b');
   });
 

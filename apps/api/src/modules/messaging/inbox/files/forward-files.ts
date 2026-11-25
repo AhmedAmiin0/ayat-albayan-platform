@@ -4,7 +4,7 @@ import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, forwardOutPath, isSentFilePath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { isCrmHistoryRow } from '@/modules/messaging/whatsapp';
-import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media.service';
+import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
 import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
@@ -39,12 +39,7 @@ const caption = (row: ThreadMessageRow): string | null => {
   return row.direction === 'outbound' && row.media_id && text && /^\[[a-z_]+\]$/.test(text) ? null : text;
 };
 
-/**
- * «إعادة توجيه» of a file (owner 2026-10-25): the staff member never uploads it again. Ours (out/…),
- * theirs or an echo of the WhatsApp Business app (cached from WhatsApp first, as the bubble does) is copied once per forward to
- * out/{actor}/{request}/fwd-{message}.{ext}; each target then queues that path through the same
- * window and line checks as a file sent from the chat (thread-file-send.service.ts).
- */
+/** Copied once per forward; each target sends through the normal window and line checks. */
 @Injectable()
 export class ForwardFiles {
   /** Property-injected (the constructor is at the 3-parameter limit). */

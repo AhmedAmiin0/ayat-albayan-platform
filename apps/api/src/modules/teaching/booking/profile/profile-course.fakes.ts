@@ -1,5 +1,5 @@
 // HTTP harness of the profile course actions (test-only, excluded from the build by *.fakes.ts).
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings } from '@ab/settings';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '@/app.module';
@@ -7,7 +7,7 @@ import { bootWith, ROLE_ADMIN, ROLE_SALES, ROLE_USERS } from '@/common/auth/auth
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { PackagesService } from '@/modules/finance/subscriptions';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 import { ConflictChecker, RuleExtendService } from '@/modules/teaching/scheduling';
 import {
   BODY,

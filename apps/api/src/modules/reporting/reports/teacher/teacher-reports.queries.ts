@@ -1,4 +1,5 @@
-import type { Attendance, Grade, PdfStatus, ReportStatus, TeacherReportSortKey, TeacherReportsQuery } from '@ab/shared';
+import type { TeacherReportSortKey, TeacherReportsQuery } from '@ab/shared';
+import type { Attendance, Grade, PdfStatus, ReportStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, type SortSpec } from '@/common/db/list-sort';

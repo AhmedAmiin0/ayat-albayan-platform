@@ -1,0 +1,83 @@
+import { describe, expect, it } from 'vitest';
+import { scheduleRow } from '@/modules/sales/sales/academy/sales-academy.fakes';
+import { nextLessons, riyadhDayRange, riyadhToday, teacherDayFacts, toScheduleLesson, upcomingRange } from '@/modules/sales/sales/schedule/sales-schedule.mapper';
+
+const NOW = new Date('2026-10-11T16:10:00.000Z');
+
+describe('sales schedule mappers', () => {
+  it('riyadhToday / riyadhDayRange: the Riyadh calendar day (UTC+3, no DST)', () => {
+    expect(riyadhToday(new Date('2026-10-11T20:59:00.000Z'))).toBe('2026-10-11');
+    expect(riyadhToday(new Date('2026-10-11T21:00:00.000Z'))).toBe('2026-10-12');
+    expect(riyadhDayRange('2026-10-12')).toEqual({ from: new Date('2026-10-11T21:00:00.000Z'), to: new Date('2026-10-12T21:00:00.000Z') });
+  });
+
+  it('upcomingRange looks 8 days ahead from now', () => {
+    expect(upcomingRange(NOW)).toEqual({ from: NOW, to: new Date('2026-10-19T16:10:00.000Z') });
+  });
+
+  it('toScheduleLesson whitelists: secret columns of the row never come out', () => {
+    const out = toScheduleLesson(scheduleRow(), false);
+    expect(Object.keys(out).sort()).toEqual(['ends_at', 'id', 'makeup', 'meeting_link', 'platform_classroom', 'starts_at', 'status', 'students', 'teacher', 'teacher_confirmed_at', 'trial']);
+    expect(out.teacher).toEqual({ id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar' });
+    expect(out.students).toEqual([{ id: 's1', code: 'AB-0101', name: 'ياسمين' }]);
+    const bare = toScheduleLesson(scheduleRow({ teacher: null, rule: null, makeup_of_id: 'x', lesson_students: [{ student: { id: 's9', code: null, name: 'ن' } }] }), false);
+    expect([bare.teacher.display_name_ar, bare.trial, bare.makeup, bare.students[0]?.code]).toEqual(['', false, true, '']);
+  });
+
+  it('toScheduleLesson carries the teacher’s and students’ zones (local times in the details sheet), nothing else', () => {
+    const out = toScheduleLesson(
+      scheduleRow({
+        teacher: { id: 'tc1', display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo' },
+        lesson_students: [{ student: { id: 's1', code: 'AB-0101', name: 'ياسمين', tz: 'Asia/Muscat' } }],
+      }),
+      false,
+    );
+    expect(out.teacher).toEqual({ id: 'tc1', display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo' });
+    expect(out.students).toEqual([{ id: 's1', code: 'AB-0101', name: 'ياسمين', tz: 'Asia/Muscat' }]);
+  });
+
+  it('toScheduleLesson: the lesson link trimmed, blank or missing → null (owner 2026-10-26)', () => {
+    expect(toScheduleLesson(scheduleRow(), false).meeting_link).toBe('https://meet.example.org/les-2');
+    expect(toScheduleLesson(scheduleRow({ meeting_link: '   ' }), false).meeting_link).toBeNull();
+    expect(toScheduleLesson(scheduleRow({ meeting_link: null }), false).meeting_link).toBeNull();
+    expect(toScheduleLesson(scheduleRow({ meeting_link: undefined }), false).meeting_link).toBeNull();
+  });
+
+  it('toScheduleLesson: platform_classroom from the teacher’s meeting_mode, else the academy default', () => {
+    const mode = (meeting_mode: string | null) => scheduleRow({ teacher: { id: 'tc1', display_name_ar: 'أبرار', display_name_en: null, meeting_mode } });
+    expect(toScheduleLesson(mode('platform'), false).platform_classroom).toBe(true);
+    expect(toScheduleLesson(mode('static'), true).platform_classroom).toBe(false);
+    expect(toScheduleLesson(mode(null), true).platform_classroom).toBe(true);
+    expect(toScheduleLesson(mode(null), false).platform_classroom).toBe(false);
+    expect(toScheduleLesson(scheduleRow({ teacher: null }), true).platform_classroom).toBe(true);
+  });
+
+  it('teacherDayFacts counts today’s lessons but not cancelled ones, and flags one running now', () => {
+    const facts = teacherDayFacts(
+      [
+        scheduleRow({ starts_at: '2026-10-11T16:00:00.000Z', ends_at: '2026-10-11T16:30:00.000Z' }),
+        scheduleRow({ id: 'x', status: 'cancelled_by_admin', starts_at: '2026-10-11T16:00:00.000Z' }),
+        scheduleRow({ id: 'y', status: 'completed', starts_at: '2026-10-11T09:00:00.000Z', ends_at: '2026-10-11T09:30:00.000Z' }),
+        scheduleRow({ id: 'z', teacher: { id: 'tc2', display_name_ar: 'ب', display_name_en: null }, status: 'completed', starts_at: '2026-10-11T16:00:00.000Z' }),
+        scheduleRow({ id: 'w', teacher: null }),
+      ],
+      NOW,
+    );
+    expect(facts.get('tc1')).toEqual({ lessons_today: 2, live_now: true });
+    expect(facts.get('tc2')).toEqual({ lessons_today: 1, live_now: false });
+    expect(facts.size).toBe(2);
+  });
+
+  it('teacherDayFacts: a lesson started at Riyadh 23:58 is live at 00:03 (day() reads lessons overlapping the day)', () => {
+    const row = scheduleRow({ starts_at: '2026-10-11T20:58:00.000Z', ends_at: '2026-10-11T21:43:00.000Z' });
+    expect(teacherDayFacts([row], new Date('2026-10-11T21:03:00.000Z')).get('tc1')).toEqual({ lessons_today: 1, live_now: true });
+  });
+
+  it('nextLessons keeps each student’s first start (rows come by start)', () => {
+    const next = nextLessons([
+      { starts_at: '2026-10-12T10:00:00.000Z', lesson_students: [{ student_id: 'a' }] },
+      { starts_at: '2026-10-13T10:00:00.000Z', lesson_students: [{ student_id: 'a' }, { student_id: 'b' }] },
+    ]);
+    expect([...next]).toEqual([['a', '2026-10-12T10:00:00.000Z'], ['b', '2026-10-13T10:00:00.000Z']]);
+  });
+});

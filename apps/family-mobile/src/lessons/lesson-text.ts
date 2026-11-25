@@ -1,12 +1,7 @@
 import { dayWord, lessonMinutes, type DayWord } from '@ab/client-core';
-import {
-  clockOf,
-  dateText,
-  teacherName,
-  type ClockOptions,
-  type PortalLesson,
-  type PortalTeacher,
-} from '@ab/shared';
+import type { PortalLesson, PortalTeacher } from '@ab/shared';
+import { teacherName } from '@ab/schedule';
+import { clockOf, dateText, type ClockOptions } from '@ab/time';
 import { locale, t } from '@ab/mobile-kit';
 import type { OptionsTitle } from './options/OptionsMenu';
 
@@ -18,7 +13,6 @@ const DAY_WORD: Record<DayWord, () => string> = {
   tomorrow: () => t.portal.app.lesson.tomorrow,
 };
 
-/** «اليوم» / «غدًا» / «الأحد 16 نوفمبر». */
 function dayText(at: Date, clock: ClockOptions, now: Date): string {
   const word = dayWord(at, now, clock.tz);
   return word
@@ -26,15 +20,12 @@ function dayText(at: Date, clock: ClockOptions, now: Date): string {
     : dateText(at, clock, { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
-/** «اليوم 6:30 م». */
 export const whenText = (at: Date, clock: ClockOptions, now: Date): string =>
   `${dayText(at, clock, now)} ${clockOf(at, clock)}`;
 
-/** «6:30 – 7:15 م». */
 export const rangeText = (l: Pick<PortalLesson, 'starts_at' | 'ends_at'>, clock: ClockOptions) =>
   `${clockOf(new Date(l.starts_at), clock)} – ${clockOf(new Date(l.ends_at), clock)}`;
 
-/** «الخميس 13 نوفمبر». */
 export const dateLine = (at: Date, clock: ClockOptions): string =>
   dateText(at, clock, { weekday: 'long', day: 'numeric', month: 'long' });
 
@@ -46,13 +37,11 @@ const LESSON_DAY: Record<DayWord, () => string> = {
   tomorrow: () => t.portal.actions.lessonTomorrow,
 };
 
-/** «حلقة الغد» / «حلقة اليوم» / «حلقة الإثنين 17 نوفمبر». */
 function lessonName(at: Date, clock: ClockOptions, now: Date): string {
   const word = dayWord(at, now, clock.tz);
   return word ? LESSON_DAY[word]() : t.portal.actions.lessonOn.replace('{date}', dateLine(at, clock));
 }
 
-/** «خيارات الحلقة»'s heading, date line and excuse title (canvas LessonXDecline). */
 export function optionsTitle(lesson: PortalLesson, clock: ClockOptions, now: Date): OptionsTitle {
   const at = new Date(lesson.starts_at);
   const name = lessonName(at, clock, now);

@@ -15,17 +15,13 @@ export const participantMeta = (role: JoinRole): string => JSON.stringify({ role
 export function roleOfMeta(metadata: string | undefined | null): JoinRole | null {
   try {
     const role = (JSON.parse(metadata ?? '') as Partial<ParticipantMeta>).role;
-    return typeof role === 'string' ? (role as JoinRole) : null;
+    return typeof role === 'string' ? role : null;
   } catch {
     return null;
   }
 }
 
-/**
- * «إخراج من الحلقة»: an admin may remove anyone but another admin; the lesson's teacher may remove
- * guests, assistants and salespeople. Nobody removes themselves this way (they leave), nobody else
- * removes anyone. The API checks the same rule (POST /lessons/:id/room/participants/:identity/remove).
- */
+/** Admin removes anyone but an admin; the teacher removes guests, assistants and sales. */
 export function canRemove(actor: JoinRole, target: JoinRole): boolean {
   if (actor === 'admin') return target !== 'admin';
   if (actor === 'teacher') return target === 'guest' || target === 'assistant' || target === 'sales';
@@ -34,10 +30,7 @@ export function canRemove(actor: JoinRole, target: JoinRole): boolean {
 
 const SHARE_GRANTORS: ReadonlySet<JoinRole> = new Set<JoinRole>(['teacher', 'admin', 'assistant']);
 
-/**
- * «اطلب مشاركة الشاشة»: a guest's join token allows camera and microphone only; the teacher, an
- * admin or an assistant may let one guest share their screen for this session (and stop it).
- */
+/** A guest's token allows camera and mic only; staff above may grant screen share. */
 export function canGrantShare(actor: JoinRole | null, target: JoinRole | null): boolean {
   return actor !== null && SHARE_GRANTORS.has(actor) && target === 'guest';
 }
@@ -45,17 +38,13 @@ export function canGrantShare(actor: JoinRole | null, target: JoinRole | null): 
 /** Seniority in the room: a staff member mutes only someone below them. */
 const RANK: Readonly<Record<JoinRole, number>> = { admin: 4, teacher: 3, assistant: 2, sales: 1, guest: 0 };
 
-/**
- * «كتم الميكروفون» / «إيقاف الكاميرا» (LiveKit MutePublishedTrack): the teacher, an admin or an
- * assistant mutes someone of lower rank (admin > teacher > assistant > sales > guest), so the kick
- * hierarchy holds and an assistant may mute guests too. Nobody mutes themselves this way.
- */
+/** Mutes lower ranks only (admin > teacher > assistant > sales > guest). */
 export function canMute(actor: JoinRole | null, target: JoinRole | null): boolean {
   if (actor === null || target === null || !SHARE_GRANTORS.has(actor)) return false;
   return RANK[actor] > RANK[target];
 }
 
-/** «كتم الجميع» (every guest's microphone) is the teacher's or an admin's. */
+/** Muting every guest is the teacher's or an admin's. */
 export const canMuteAll = (actor: JoinRole | null): boolean => actor === 'teacher' || actor === 'admin';
 
 /** GET /recordings/status: false = RECORDING_S3_* or LiveKit missing, rooms are not recorded. */
@@ -73,5 +62,5 @@ export interface LessonRecordingView {
   url: string | null;
 }
 
-/** «إنهاء الحلقة للجميع» (POST /lessons/:id/end) is the lesson's teacher's or an admin's. */
+/** Ending the lesson for everyone is the lesson's teacher's or an admin's. */
 export const canEndLesson = (actor: JoinRole | null): boolean => actor === 'teacher' || actor === 'admin';

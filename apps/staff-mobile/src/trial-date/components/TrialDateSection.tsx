@@ -8,11 +8,7 @@ import { studentFileTrialHref } from '@/trial-date/lib/trial-href';
 import { TrialHistoryList } from './TrialHistoryList';
 import type { StudentProfile } from '@ab/shared';
 
-/**
- * The admin student file's «مواعيد الحلقة التجريبية» (R-STU-05): «موعد تجريبي جديد» while the
- * student has no running subscription (new / trial / pending_subscription), else the reason in
- * its place; then the history. Needs booking.write.
- */
+/** Only while no running subscription (R-STU-05), else the reason; needs booking.write. */
 export function TrialDateSection({ student }: { student: StudentProfile }) {
   const { color } = useTheme();
   const can = usePermissions();

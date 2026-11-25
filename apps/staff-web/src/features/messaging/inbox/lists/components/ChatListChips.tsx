@@ -9,18 +9,14 @@ const L = t.inbox.lists;
 
 export interface ChatListChipsProps {
   lists: readonly ChatList[];
-  /** The shown list; undefined = «الكل». */
+  /** Undefined means all chats. */
   active: string | undefined;
   onPick: (list: string | undefined) => void;
   onNew: () => void;
   onEdit: () => void;
 }
 
-/**
- * «الكل», each list by name (with its count), then «＋ قائمة جديدة» (docs/22 §4). The row scrolls
- * sideways inside itself and never widens the page (#120: min-w-0 + overflow-x-auto; the padding keeps
- * the focus outline inside the scroll box). «تعديل القائمة» sits beside the row while a list is shown.
- */
+/** The row scrolls sideways inside itself and never widens the page (#120). */
 export function ChatListChips({ lists, active, onPick, onNew, onEdit }: ChatListChipsProps) {
   const current = lists.find((l) => l.id === active);
   return (

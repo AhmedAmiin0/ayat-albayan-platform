@@ -1,21 +1,32 @@
-import { DURATIONS, type Attendance, type Duration, type Gender, type LessonStatus, type Program, type StudentStatus } from '@ab/catalog';
+import {
+  DURATIONS,
+  type Attendance,
+  type Duration,
+  type Gender,
+  type LessonStatus,
+  type Program,
+  type StudentStatus,
+} from '@ab/catalog';
 import { isCancelledLesson } from '@ab/schedule';
 import { isNotSubscribed } from './status-flow/index.js';
 
-// «موعد تجريبي جديد»: a new free-trial date for an existing student who has no
-// running subscription, and the history of every trial time picked for them. Pure.
+// A new free trial for a student with no running subscription, and the trial history; pure.
 
-/**
- * What became of one picked trial time: قادمة (still ahead), بانتظار التقرير (its time passed, nothing
- * recorded yet), حضر, غاب, أُلغيت, نُقلت (a newer date replaced it: status rescheduled).
- */
-export const TRIAL_OUTCOMES = ['upcoming', 'awaiting', 'attended', 'absent', 'cancelled', 'moved'] as const;
+/** moved: a newer date replaced it; awaiting: its time passed, nothing recorded yet. */
+export const TRIAL_OUTCOMES = [
+  'upcoming',
+  'awaiting',
+  'attended',
+  'absent',
+  'cancelled',
+  'moved',
+] as const;
 export type TrialOutcome = (typeof TRIAL_OUTCOMES)[number];
 
 /** From this many dates on (the new one included) the form warns; never a block. */
 export const TRIAL_DATE_WARN_FROM = 3;
 
-/** One row of «مواعيد الحلقة التجريبية», newest pick first. Times are UTC instants. */
+/** One trial-history row, newest pick first; times are UTC instants. */
 export interface TrialDateRow {
   lesson_id: string;
   starts_at: string;
@@ -58,7 +69,8 @@ export interface TrialDateResult {
 }
 
 /** new / trial / pending_subscription: a subscriber changes their course instead (409 trial_date_subscribed). */
-export const canPickTrialDate = (status: StudentStatus | null | undefined): boolean => isNotSubscribed(status);
+export const canPickTrialDate = (status: StudentStatus | null | undefined): boolean =>
+  isNotSubscribed(status);
 
 /** The form warns from the 3rd date on: `count` dates exist already, the new one is count + 1. */
 export const warnsTrialDate = (count: number): boolean => count + 1 >= TRIAL_DATE_WARN_FROM;
@@ -81,23 +93,26 @@ export function trialOutcome(input: TrialOutcomeInput): TrialOutcome {
   if (status === 'rescheduled') return 'moved';
   if (isCancelledLesson(status)) return 'cancelled';
   if (MISSED_STATUS.includes(status) || MISSED.includes(attendance)) return 'absent';
-  if (OPEN.includes(status)) return Date.parse(input.starts_at) > input.now.getTime() ? 'upcoming' : 'awaiting';
+  if (OPEN.includes(status))
+    return Date.parse(input.starts_at) > input.now.getTime() ? 'upcoming' : 'awaiting';
   return 'attended';
 }
 
 /** The trial a new date moves: open and still ahead, the earliest of them. */
-export function upcomingTrial<T extends { status: LessonStatus; starts_at: string }>(rows: readonly T[], now: Date): T | null {
-  const ahead = rows.filter((r) => OPEN.includes(r.status) && Date.parse(r.starts_at) > now.getTime());
+export function upcomingTrial<T extends { status: LessonStatus; starts_at: string }>(
+  rows: readonly T[],
+  now: Date,
+): T | null {
+  const ahead = rows.filter(
+    (r) => OPEN.includes(r.status) && Date.parse(r.starts_at) > now.getTime(),
+  );
   return [...ahead].sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at))[0] ?? null;
 }
 
 /** A trial's length when the wizard has none of its own: the booking's 45 minutes. */
 export const TRIAL_DEFAULT_MINUTES: Duration = 45;
 
-/**
- * «موعد تجريبي جديد» keeps the last trial's length (newest pick first) when it is one the slots
- * offer (30/45/60/90), else 45; the wizard may change it.
- */
+/** Keeps the last trial's length when the slots offer it (30/45/60/90), else 45. */
 export function trialLength(history: Pick<TrialHistory, 'items'>): Duration {
   const last = history.items[0];
   const ms = last ? Date.parse(last.ends_at) - Date.parse(last.starts_at) : 0;

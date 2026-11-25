@@ -1,10 +1,6 @@
-import type {
-  AssistantLessonView,
-  Page,
-  SalesStudentsQuery,
-  SalesStudentView,
-  SalesSubscriptionHistory,
-} from '@ab/shared';
+import type { SalesStudentsQuery, SalesStudentView, SalesSubscriptionHistory } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { AssistantLessonView } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { chatPhone } from '@/common/auth/chat-phone';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -16,13 +12,9 @@ import { packageStarts, rosterFrom, toRoster, type RosterFacts } from './sales-r
 import { SalesRosterRepo } from './sales-roster.repo';
 import { toSalesHistory } from '@/modules/sales/sales/history/sales-history.mapper';
 import { SalesHistoryRepo } from '@/modules/sales/sales/history/sales-history.repo';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 
-/**
- * The salesperson's assistant side and a subscription's history (docs/16). Read-only. Students and
- * running lessons are the academy's (teachers and the schedule: SalesScheduleService); so is a subscription's
- * history (owner 2026-10-30); «الاشتراكات» (SalesService.subscriptions) still lists hers only.
- */
+/** docs/16: read-only; students and running lessons are academy-wide, subscriptions hers only. */
 @Injectable()
 export class SalesAcademyService {
   constructor(
@@ -32,11 +24,7 @@ export class SalesAcademyService {
     private readonly roster: SalesRosterRepo,
   ) {}
 
-  /**
-   * Every student; `mine` on hers (the ownership of «الاشتراكات»): those rows open «تفاصيل الطالب»
-   * (docs/16 row 36). Each row also carries its weekly slots, attendance count and current package
-   * (owner 2026-10-30; no price), read for the whole page at once.
-   */
+  /** docs/16 row 36: per-row extras read for the whole page at once, no price. */
   async students(
     q: SalesStudentsQuery,
     user: AuthUser,

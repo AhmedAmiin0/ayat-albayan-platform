@@ -5,14 +5,14 @@ import { usePhone } from './use-narrow';
 export interface HeadActionsProps {
   /** The page's ONE primary action (a filled button), always in view. */
   primary?: ReactNode;
-  /** Secondary actions: inline from 640px, behind «⋯ المزيد» on phones. */
+  /** Inline from 640px, behind the more menu on phones. */
   more?: ReactNode;
   /** Names the group (e.g. the dashboard's quick actions). */
   label?: string;
 }
 
 /**
- * A page head's actions (owner, 2026-10-05: "simpler"): the secondary ones, then the primary at
+ * A page head's actions: the secondary ones, then the primary at
  * the inline-end. On phones (< 640px) only the primary and a «⋯» stay in the head.
  */
 export function HeadActions({ primary, more, label }: HeadActionsProps) {

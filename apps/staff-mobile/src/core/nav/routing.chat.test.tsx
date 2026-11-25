@@ -36,7 +36,6 @@ function ChatStub() {
   return <Text>{`chat base=${useTreeBase()} mode=${useThreadMode().kind}`}</Text>;
 }
 const stub = (label: string) => () => <Text>{label}</Text>;
-/** The student file opened from a chat's name: «عرض سجل الحضور» as the real screens build it (the tab's route). */
 function StudentFileStub() {
   const to = useStudentHref();
   const base = useTreeBase();
@@ -117,7 +116,7 @@ test.each([
   expect(router.pathname()).toMatch(own);
 });
 
-// Review 2026-10-30: a tab route pushed from the chat group stacked a second tab host, so «رجوع» landed on Today.
+// A tab route pushed from the chat group stacked a second tab host, so back landed on Today.
 test.each([
   { tree: 'admin', file: '/inbox/student/s1', group: '(admin-chat)' },
   { tree: 'sales', file: '/sales/inbox/student/s1', group: '(sales-chat)' },
@@ -131,7 +130,7 @@ test.each([
   expect(router.pathname()).toBe(file);
 });
 
-// A student's teacher–family chat sat in the tabs, so the floating tab bar covered «أرسل».
+// The teacher-family chat sat in the tabs, so the floating tab bar covered the send button.
 test.each([
   { tree: 'admin', path: '/students/channel/s1', group: '(admin-chat)' },
   { tree: 'sales', path: '/sales/students/channel/s1', group: '(sales-chat)' },

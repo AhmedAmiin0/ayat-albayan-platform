@@ -13,7 +13,7 @@ import type { BioKind } from '../core/device';
 import { useDissolve } from './use-dissolve';
 
 interface LockScreenProps {
-  /** null: the biometrics are gone; only «الدخول بطريقة أخرى» is left (fails closed). */
+  /** Null means biometrics are gone; only the other sign-in way is left (fails closed). */
   kind: BioKind | null;
   /** The last prompt was cancelled or failed: say so, wait for a tap. */
   failed: boolean;
@@ -22,7 +22,7 @@ interface LockScreenProps {
 const firstName = (full: string | undefined) => full?.trim().split(/\s+/)[0] ?? '';
 
 /**
- * The lock (owner 2026-11-15): the mark, the user's first name and one primary action, the other
+ * The lock: the mark, the user's first name and one primary action, the other
  * way as plain text. It prompts by itself as it first lays out; success dissolves it into the app.
  */
 export function LockScreen({ kind, failed }: LockScreenProps) {

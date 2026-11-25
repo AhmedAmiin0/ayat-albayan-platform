@@ -1,13 +1,9 @@
-import { GOOGLE_REDIRECT_URI_PRODUCTION } from '@ab/shared';
+import { GOOGLE_REDIRECT_URI_PRODUCTION } from '@ab/catalog';
 import { z } from 'zod';
 import type { Env } from './env';
 import { blankIsUnset, optionalSecret, optionalUrl } from './env.blank';
 
-/**
- * Google sync (docs/24). The OAuth client (id plain, secret in Vault) comes from «التكاملات» or env.
- * GOOGLE_API_BASE and GOOGLE_REDIRECT_URI stay env only: local and e2e point the base at
- * tools/google-stub and the callback at their own API, so no test ever reaches Google.
- */
+/** GOOGLE_API_BASE and GOOGLE_REDIRECT_URI stay env only so tests never reach Google (docs/24). */
 export const GOOGLE_SHAPE = {
   GOOGLE_CLIENT_ID: optionalSecret,
   GOOGLE_CLIENT_SECRET: optionalSecret,

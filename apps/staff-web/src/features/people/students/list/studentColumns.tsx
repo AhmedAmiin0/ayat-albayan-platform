@@ -49,7 +49,6 @@ export function studentColumns(onOpen: (studentId: string) => void, pick?: PickC
             {c.getValue()}
           </button>
           <TestChip when={c.row.original.is_test === true} className="mt-1" />
-          {/* TODO(R-STU-05): «9 سنين، الرياض» sub-line once the list returns age (no city column yet). */}
           <StudentNote text={studentNote(c.row.original)} className="mt-[3px] hidden text-2xs @max-[940px]:block" />
         </>
       ),

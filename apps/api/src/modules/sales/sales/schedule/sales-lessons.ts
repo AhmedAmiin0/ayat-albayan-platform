@@ -1,4 +1,4 @@
-import type { LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import type { Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 import { ownershipOf, type SalesOwnership } from '@/modules/sales/sales/sales-ownership';
@@ -10,7 +10,7 @@ export interface SalesLessonRow {
   id: string;
   starts_at: string;
   ends_at: string;
-  /** «افتح الحلقة الآن» (migration 190): widens joinable_window. */
+  /** Migration 190: widens joinable_window. */
   room_opened_at?: string | null;
   status: LessonStatus;
   teacher: { display_name_ar: string } | null;

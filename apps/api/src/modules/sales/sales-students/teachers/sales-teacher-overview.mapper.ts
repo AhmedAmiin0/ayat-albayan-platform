@@ -1,16 +1,14 @@
 import {
-  DAY_MS,
-  RIYADH_TZ,
   type SalesOverviewStudent,
   type SalesTeacherOverview,
   type SalesTeacherSlot,
   teacherLessonTotals,
-  wallParts,
 } from '@ab/shared';
+import { wallParts } from '@ab/schedule';
+import { DAY_MS, RIYADH_TZ } from '@ab/time';
 import { nextStarts } from '@/modules/sales/sales';
 import type { TeacherLessonRow, TeacherRuleRow } from './sales-teacher-overview.repo';
 
-/** «الحضور» covers the last 30 days and lists the latest 20 lessons. */
 const OVERVIEW_DAYS = 30;
 const LATEST = 20;
 

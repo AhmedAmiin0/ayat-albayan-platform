@@ -59,7 +59,7 @@ export const imagePickerMock = () => ({
 
 /** The camera is allowed and takes one photo: 5 bytes of «JPEG», as the picker hands them over. */
 export function armCamera(uri = 'file:///cache/slip.jpg'): void {
-  const picker = jest.requireMock('expo-image-picker') as Record<string, jest.Mock>;
+  const picker = jest.requireMock<Record<string, jest.Mock>>('expo-image-picker');
   picker['getCameraPermissionsAsync']?.mockResolvedValue({ granted: true, canAskAgain: true, status: 'granted', expires: 'never' });
   picker['launchCameraAsync']?.mockResolvedValue({
     canceled: false,

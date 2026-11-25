@@ -1,5 +1,6 @@
 import type { Tables } from '@ab/db';
-import { waIdToE164, type NumberPurpose } from '@ab/shared';
+import { waIdToE164 } from '@ab/shared';
+import type { NumberPurpose } from '@ab/catalog';
 import { crmMediaUrl, type CrmMessage } from '@/modules/messaging/whatsapp';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 

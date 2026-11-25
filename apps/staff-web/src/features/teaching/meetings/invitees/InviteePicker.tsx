@@ -20,11 +20,7 @@ interface Props {
   onPicked: (list: PickedInvitee[]) => void;
 }
 
-/**
- * «المدعوون»: tabs «الفريق» / «الطلاب» / «رقم هاتف» (admin and sales only), the picked ones as removable
- * chips, 30 at most. Staff are notified in the app; a student's family and a typed phone get a WhatsApp
- * chat message when the creator may send one (the API decides; otherwise a link to copy).
- */
+/** 30 at most; the API decides whether WhatsApp can be sent, else a link to copy. */
 export function InviteePicker({ picked, onPicked }: Props) {
   const [tab, setTab] = useState<Tab>('staff');
   const phones = useMayInvitePhones();

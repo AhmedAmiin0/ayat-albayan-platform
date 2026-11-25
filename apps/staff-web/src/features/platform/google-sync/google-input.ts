@@ -26,5 +26,5 @@ export function parseManualLink(input: { folder: string; sheet: string }): Manua
   return { ok: true, body: { folder_id: folderId, attendance_sheet_id: sheetId } };
 }
 
-/** The teacher picker's «بدون تقويم» value (a calendar id never contains a space). */
+/** A calendar id never contains a space. */
 export const NO_CALENDAR = 'none ';

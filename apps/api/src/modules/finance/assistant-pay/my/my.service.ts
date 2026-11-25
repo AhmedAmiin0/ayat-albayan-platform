@@ -1,4 +1,5 @@
-import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow, Page } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -34,7 +35,6 @@ export class MyService {
     return (await this.queries.payments(user.id)).map(toMyPayment);
   }
 
-  /** «عمولاتي» (owner 2026-10-29): one page of my own commissions, newest first, each with its wallet state. */
   async commissions(user: AuthUser, q: PageQuery): Promise<Page<MyCommissionRow>> {
     const { rows, total } = await this.queries.commissionPage(user.id, q);
     return { items: rows.map(toMyCommission), total, page: q.page, pageSize: q.pageSize };

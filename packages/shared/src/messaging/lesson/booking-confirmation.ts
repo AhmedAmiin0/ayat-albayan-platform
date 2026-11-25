@@ -32,27 +32,19 @@ export function bookingConfirmationTemplate(
   return host ? { key: BY_HOST[host], button: slug } : { key: 'booking_confirmation_plain', button: null };
 }
 
-/** «الأحد 4 أكتوبر 5:00 م» on a screen: lessonWhenText in the cycle the viewer chose (12 or 24 h). */
+/** lessonWhenText in the 12 or 24 h cycle the viewer chose. */
 export function lessonWhenAt(startsAt: Date, opts: ClockOptions): string {
   return `${weekdayDayMonth(startsAt, opts)} ${clockOf(startsAt, opts)}`;
 }
 
-/**
- * {{2}}: «الأحد 4 أكتوبر 17:00», wall-clock in `tz` (the guardian's), Western digits, 24h.
- * WhatsApp text is always Arabic (the default) and always 24 h; a screen passes its UI language,
- * so the English UI reads «Sunday 4 October 17:00» (screens with a clock choice use lessonWhenAt).
- */
+/** Wall-clock in the guardian's `tz`, Western digits; WhatsApp text is always Arabic and 24 h. */
 export function lessonWhenText(startsAt: Date, tz: string, locale: Locale = 'ar'): string {
   return lessonWhenAt(startsAt, { tz, locale, cycle: '24' });
 }
 
 const listFormats = new Map<Locale, Intl.ListFormat>();
 
-/**
- * {{1}} for several children of one guardian: «سهيلة ومريم» (Intl.ListFormat, attached و); a
- * screen passes its UI language («Suhaila and Mariam»). Created on first use: Hermes may lack
- * Intl.ListFormat and the mobile app imports this module.
- */
+/** Created on first use: Hermes may lack Intl.ListFormat and the mobile app imports this module. */
 export function joinNames(names: readonly string[], locale: Locale = 'ar'): string {
   let f = listFormats.get(locale);
   if (!f) {
@@ -62,13 +54,10 @@ export function joinNames(names: readonly string[], locale: Locale = 'ar'): stri
   return f.format(names);
 }
 
-/**
- * {{1}} of a makeup's confirmation: «تعويضية لـسهيلة», so the approved body «تم حجز حلقة {{1}} — {{2}}»
- * reads «تم حجز حلقة تعويضية لـسهيلة — الأحد 4 أكتوبر 17:00» (للزهراء for الزهراء). English for a screen in English.
- */
+/** The makeup confirmation's {{1}}, so the approved template body reads naturally. */
 export function makeupNames(names: readonly string[], locale: Locale = 'ar'): string {
   const joined = joinNames(names, locale);
   if (locale !== 'ar') return `makeup for ${joined}`;
-  // «لـ» + «الزهراء» is «للزهراء»: the article's alef drops (and the lam doubles).
+  // Arabic grammar: the prefix before a name starting with the article drops the alef.
   return `تعويضية ${joined.startsWith('ال') ? `لل${joined.slice(2)}` : `لـ${joined}`}`;
 }

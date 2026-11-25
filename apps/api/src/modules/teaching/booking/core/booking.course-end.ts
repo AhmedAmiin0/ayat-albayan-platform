@@ -1,4 +1,5 @@
-import { DAY_MS, timeGroups, localDateOf, startOfLocalDay } from '@ab/shared';
+import { timeGroups, localDateOf, startOfLocalDay } from '@ab/schedule';
+import { DAY_MS } from '@ab/time';
 import { planBooking } from '@/modules/teaching/booking/plan/booking.plan';
 import type { SeriesRule } from '@/modules/teaching/booking/plan/booking.series-plan';
 
@@ -6,12 +7,7 @@ const WEEK = 7 * DAY_MS;
 
 type CourseEndInput = { rule: SeriesRule; now: Date; lessonsTotal: number };
 
-/**
- * The first `lessonsTotal` starts of a course from now over every time group, earliest first:
- * planned far enough to reach the N-th lesson whatever booking_horizon_weeks is. Empty when a
- * picked day has no lesson or nothing is counted. «مدّ الجدول» books exactly these (owner
- * 2026-11-17).
- */
+/** Planned far enough to reach the N-th lesson whatever booking_horizon_weeks is. */
 export function plannedCourseStarts({ rule, now, lessonsTotal }: CourseEndInput): Date[] {
   const groups = timeGroups(rule);
   const days = groups.reduce((n, g) => n + g.byday.length, 0);

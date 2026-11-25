@@ -1,5 +1,5 @@
 import type { Json, Tables } from '@ab/db';
-import type { Attendance, LessonStatus, PackageSize, StudentStatus } from '@ab/shared';
+import type { Attendance, LessonStatus, PackageSize, StudentStatus } from '@ab/catalog';
 
 // The rows StudentAttendanceRepo reads (whitelisted columns; docs/46 C5, docs/47).
 

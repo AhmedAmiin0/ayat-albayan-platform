@@ -24,7 +24,6 @@ describe('«القيم» editors by type', () => {
     const input = within(row).getByLabelText(t.settings.bookingHorizonWeeks);
     const bounds = within(row).getByText(v.bounds.replace('{min}', '1').replace('{max}', '12'));
     expect(input.getAttribute('aria-describedby')).toContain(bounds.id);
-    // 5 → «أسابيع» (the counted form), and no spin arrows over the digits.
     expect(within(row).getByText(v.units.weeks.few.replace('{n}', '').trim())).toBeTruthy();
     expect(input.className).toContain('[&::-webkit-inner-spin-button]:appearance-none');
   });
@@ -32,8 +31,8 @@ describe('«القيم» editors by type', () => {
   it('a number that can be OFF has its switch in the same cell; OFF disables the box', async () => {
     renderValues(apiFetch);
     const row = await findRow(t.settings.lateCancelHours);
-    expect((within(row).getByRole('switch', { name: t.settings.lateCancel }) as HTMLInputElement).checked).toBe(false);
-    expect((within(row).getByLabelText(t.settings.lateCancelHours) as HTMLInputElement).disabled).toBe(true);
+    expect((within(row).getByRole<HTMLInputElement>('switch', { name: t.settings.lateCancel })).checked).toBe(false);
+    expect((within(row).getByLabelText<HTMLInputElement>(t.settings.lateCancelHours)).disabled).toBe(true);
   });
 
   it('a phone is type=tel, LTR, with the form it will be saved in', async () => {

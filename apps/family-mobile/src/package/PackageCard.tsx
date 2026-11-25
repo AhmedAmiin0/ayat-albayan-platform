@@ -1,12 +1,13 @@
 import { packageSummary } from '@ab/client-core';
-import { subscriptionStatusStyle, type PortalPackage } from '@ab/shared';
+import type { PortalPackage } from '@ab/shared';
+import { subscriptionStatusStyle } from '@ab/money';
 import { View } from 'react-native';
 import { AppText, StatusChip, raisedCard, t, type, useTheme } from '@ab/mobile-kit';
 import { DueBox } from './DueBox';
 import { dayDate } from './package-text';
 import { UsedBar } from './UsedBar';
 
-/** «البداية» and «التجديد» (the renewal when known). */
+/** The renewal date is shown only when known. */
 const factsOf = (pkg: PortalPackage) => [
   { label: t.portal.app.package.start, value: dayDate(pkg.starts_on) },
   ...(pkg.renews_on
@@ -14,7 +15,6 @@ const factsOf = (pkg: PortalPackage) => [
     : []),
 ];
 
-/** The package (canvas Package): its name and state, «استُخدمت 8 من 12», the dates, what is due. */
 export function PackageCard({ pkg }: { pkg: PortalPackage }) {
   const { color } = useTheme();
   const s = packageSummary(pkg);

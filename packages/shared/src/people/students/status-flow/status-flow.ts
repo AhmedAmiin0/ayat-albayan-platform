@@ -4,25 +4,36 @@ import type { StudentStatus } from '@ab/catalog';
 // transitions. The API applies them compare-and-set on the expected from-status and audits each move;
 // a status the admin sets by hand is never a from-status these rules expect, so it wins.
 
-/** «لم يشترك بعد»: no payment yet. The «تجريبي» list kind, trial chat rules, not-yet-subscribed checks. */
-export const NOT_SUBSCRIBED_STATUSES = ['new', 'trial', 'pending_subscription'] as const satisfies readonly StudentStatus[];
+/** No payment yet: the trial list kind, trial chat rules and not-yet-subscribed checks. */
+export const NOT_SUBSCRIBED_STATUSES = [
+  'new',
+  'trial',
+  'pending_subscription',
+] as const satisfies readonly StudentStatus[];
 
-/** «انتهت الباقة»: the package ended and must be renewed (pending_renewal, then expired after N days). */
-export const PACKAGE_ENDED_STATUSES = ['pending_renewal', 'expired'] as const satisfies readonly StudentStatus[];
+/** The package ended and must be renewed (pending_renewal, then expired after N days). */
+export const PACKAGE_ENDED_STATUSES = [
+  'pending_renewal',
+  'expired',
+] as const satisfies readonly StudentStatus[];
 
 /** What a positive payment moves to `active` (StudentActivation); paused / churned / active never. */
 export const ACTIVATING_STATUSES = [...NOT_SUBSCRIBED_STATUSES, ...PACKAGE_ENDED_STATUSES] as const;
 
-const among = (list: readonly StudentStatus[], s: StudentStatus | null | undefined): boolean => list.some((x) => x === s);
+const among = (list: readonly StudentStatus[], s: StudentStatus | null | undefined): boolean =>
+  list.some((x) => x === s);
 
 /** true for new / trial / pending_subscription. */
-export const isNotSubscribed = (s: StudentStatus | null | undefined): boolean => among(NOT_SUBSCRIBED_STATUSES, s);
+export const isNotSubscribed = (s: StudentStatus | null | undefined): boolean =>
+  among(NOT_SUBSCRIBED_STATUSES, s);
 
-/** true for pending_renewal / expired: the «جدّد الاشتراك» action shows. */
-export const isPackageEnded = (s: StudentStatus | null | undefined): boolean => among(PACKAGE_ENDED_STATUSES, s);
+/** True for pending_renewal or expired, when renewal is offered. */
+export const isPackageEnded = (s: StudentStatus | null | undefined): boolean =>
+  among(PACKAGE_ENDED_STATUSES, s);
 
 /** true when a positive payment makes this student `active`. */
-export const isActivating = (s: StudentStatus | null | undefined): boolean => among(ACTIVATING_STATUSES, s);
+export const isActivating = (s: StudentStatus | null | undefined): boolean =>
+  among(ACTIVATING_STATUSES, s);
 
 /** Why an automatic move happened (audit_log.after.reason). */
 export type StatusReason =
@@ -41,7 +52,8 @@ export interface StatusMovePlan {
 }
 
 /** A registration (any form): a trial lesson booked → trial, none → new. */
-export const registrationStatus = (trialBooked: boolean): StudentStatus => (trialBooked ? 'trial' : 'new');
+export const registrationStatus = (trialBooked: boolean): StudentStatus =>
+  trialBooked ? 'trial' : 'new';
 
 /** The student's trial lessons, as the API reads them. */
 export interface TrialFacts {
@@ -63,9 +75,11 @@ export interface TrialFacts {
 export function trialMove(current: StudentStatus, facts: TrialFacts): StatusMovePlan | null {
   if (current !== 'new' && current !== 'trial') return null;
   if (facts.attended && facts.paid) return null;
-  // A trial date still ahead wins over an older attended one: «موعد تجريبي جديد».
-  if (facts.open) return current === 'new' ? { from: current, to: 'trial', reason: 'trial_booked' } : null;
-  if (facts.attended) return { from: current, to: 'pending_subscription', reason: 'trial_attended' };
+  // A trial date still ahead wins over an older attended one.
+  if (facts.open)
+    return current === 'new' ? { from: current, to: 'trial', reason: 'trial_booked' } : null;
+  if (facts.attended)
+    return { from: current, to: 'pending_subscription', reason: 'trial_attended' };
   return current === 'trial' ? { from: current, to: 'new', reason: 'trial_missed' } : null;
 }
 
@@ -99,7 +113,10 @@ export function expiryMove(input: StatusExpiryInput): StatusMovePlan | null {
  * Transition 4, undone: the payment that activated the student is deleted. Back to the from-status
  * recorded in that payment's audit row, only while the student is still in the status it set (active).
  */
-export function revertMove(current: StudentStatus, recordedFrom: StudentStatus): StatusMovePlan | null {
+export function revertMove(
+  current: StudentStatus,
+  recordedFrom: StudentStatus,
+): StatusMovePlan | null {
   if (current !== 'active' || !isActivating(recordedFrom)) return null;
   return { from: current, to: recordedFrom, reason: 'payment_deleted' };
 }

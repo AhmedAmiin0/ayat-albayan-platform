@@ -13,11 +13,7 @@ interface AgendaItemRowProps {
   lessonRow: (lesson: LessonView) => ReactNode;
 }
 
-/**
- * A «الجدول» section row: a lesson, a quiet «فاضي 17:00 – 19:00» line (a hollow nuqta, not a box that
- * looks tappable: booking from a gap is a web flow until the app has a lead picker), or (week) a
- * day label.
- */
+/** Gaps are a quiet line: booking from a gap is web-only until there is a lead picker. */
 export function AgendaItemRow({ item, lessonRow }: AgendaItemRowProps) {
   const { color } = useTheme();
   const cycle = useClockCycle();

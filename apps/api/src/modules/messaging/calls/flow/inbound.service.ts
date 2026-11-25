@@ -9,11 +9,7 @@ import { callFailed, logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
 import { isPartyOf } from './outbound.service';
 
-/**
- * Family → academy (docs/28 §3.2). Every staff member who may write in that chat sees it ring; the
- * first «قبول» wins (compare-and-set ringing → accepting with accepted_by), the others stop ringing
- * because the row left `ringing`. Accept = pre_accept then accept with the answering device's SDP.
- */
+/** Every allowed staff member rings; the first accept wins by compare-and-set (docs/28 §3.2). */
 @Injectable()
 export class InboundCalls {
   private readonly log = new Logger(InboundCalls.name);
@@ -45,7 +41,7 @@ export class InboundCalls {
     return toActiveView(active, { names: await this.kit.names([active]), userId });
   }
 
-  /** «رفض»: WhatsApp's reject, then the row ends as declined; every other screen stops ringing. */
+  /** WhatsApp's reject, then the row ends as declined; every other screen stops ringing. */
   async reject(actor: CallActor, id: string): Promise<ActiveCallView> {
     const row = await this.ringing(actor, id);
     await this.kit.api.reject(this.gate.line(), row.wa_call_id).catch((e: unknown) => logCallError(this.log, { what: 'reject', callId: id, error: e }));
@@ -58,7 +54,7 @@ export class InboundCalls {
   private async ringing(actor: CallActor, id: string): Promise<CallRow & { wa_call_id: string }> {
     await this.gate.assertOn();
     const row = await this.kit.queries.get(id);
-    if (!row || row.direction !== 'inbound' || !maySee(actor, row.phone_e164)) throw notFound('call_not_found');
+    if (row?.direction !== 'inbound' || !maySee(actor, row.phone_e164)) throw notFound('call_not_found');
     if (row.status === 'ended') throw conflict('call_ended');
     if (row.status !== 'ringing' || !row.wa_call_id) throw conflict('already_taken');
     return { ...row, wa_call_id: row.wa_call_id };

@@ -50,7 +50,7 @@ describe('TeacherEarningsPage «مستحقات المعلم»', () => {
   it('a fully paid session cannot be ticked; ticking the others names the count in the button', async () => {
     open();
     await screen.findByText(t.earnings.statusName.partially_paid);
-    const boxes = screen.getAllByRole('checkbox') as HTMLInputElement[]; // [all, e3, e2, e1]
+    const boxes = screen.getAllByRole<HTMLInputElement>('checkbox'); // [all, e3, e2, e1]
     expect(boxes[3]?.disabled).toBe(true);
     fireEvent.click(boxes[1] as HTMLElement);
     fireEvent.click(boxes[2] as HTMLElement);

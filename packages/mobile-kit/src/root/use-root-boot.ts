@@ -9,7 +9,7 @@ import { useOverridesReady } from '../lib/i18n/i18n-overrides';
 import { useLocaleReady } from '../lib/i18n/locale-switch';
 import { restoreAppearance } from '../lib/appearance/appearance';
 
-// Bundled files: Noto Sans Arabic for everything, titles at 700 (owner, 2026-10-05); names match
+// Bundled files: Noto Sans Arabic for everything, titles at 700; names match
 // theme.type.
 const fonts = {
   NotoSansArabic_400Regular,
@@ -34,7 +34,7 @@ export function useRootBoot(gate: GateStatus): RootBoot {
   const localeReady = useLocaleReady();
   // The admins' translation overrides saved by the last run, in `t` before the first screen.
   const overridesReady = useOverridesReady();
-  // «المظهر»: the saved light/dark override, re-applied while fonts and the session load.
+  // Re-applies the saved light/dark override while fonts and the session load.
   useEffect(() => {
     void restoreAppearance();
   }, []);

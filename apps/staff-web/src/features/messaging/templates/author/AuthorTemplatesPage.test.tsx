@@ -11,8 +11,6 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// «القوالب» for sales (owner 2026-11-14): status chips, «تعديل» only where allowed, «قالب جديد».
-
 const S = t.templates.author;
 const chat = { line: 'chat' as const, sales_starter: true };
 const ROWS = [

@@ -1,14 +1,8 @@
-import {
-  ATTENDANCES,
-  LESSON_STATUSES,
-  REPORT_STATUSES,
-  type StudentAttendanceTable,
-} from '@ab/shared';
+import type { StudentAttendanceTable } from '@ab/shared';
+import { ATTENDANCES, LESSON_STATUSES, REPORT_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
 
-// GET /teachers/me/students/:id/attendance (docs/46 C5): the sales «سجل الحضور» table, parsed at
-// the boundary (rule 12) on web and mobile before their tables read it. docs/47 adds the move
-// lines and the teacher's report state, nullish so an old API still parses.
+// Parsed at the boundary (rule 12, docs/46 C5); docs/47 fields are nullish for an old API.
 
 const KINDS = ['present', 'absent', 'excused', 'cancelled', 'unmarked'] as const;
 const count = z.number().int().nonnegative();

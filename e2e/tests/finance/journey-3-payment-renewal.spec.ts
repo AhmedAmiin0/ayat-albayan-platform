@@ -3,10 +3,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { balanceOf, seedPackageStudent, subscriptionStatus, tasksFor } from '../../support/finance/money';
 import { queuedFor, resetAbrar } from '../../support/core/schedule';
 
-// Journey 3 (docs/03 §5): the admin records a payment → the package is active → lessons are
-// completed down to 2 left → a renewal reminder is queued for the guardian and an admin task is
-// raised (R-PAY-01, R-SUB-01, R-SUB-02). The lesson outcome goes through the API, like the
-// teacher's «حضر» button, so LessonEvents → the alerts run right away (no 15-minute sweep).
+// Journey 3 (docs/03 §5; R-PAY-01, R-SUB-01, R-SUB-02); outcomes go through the API, no sweep.
 
 /** The e2e API (playwright.config.ts webServer, port 3100). */
 const API = 'http://localhost:3100';

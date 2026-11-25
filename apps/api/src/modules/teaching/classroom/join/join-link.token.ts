@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from 'node:crypto';
-import { DEFAULT_JOIN_WINDOW, roomClosesAt, type JoinWindowConfig } from '@ab/shared';
+import { DEFAULT_JOIN_WINDOW, roomClosesAt, type JoinWindowConfig } from '@ab/schedule';
 
 // The family's one-lesson guest link: a random 192-bit token (32 chars, it rides in the WhatsApp
 // URL button), of which only the sha256 is stored (lesson_join_links.token_hash), so a database

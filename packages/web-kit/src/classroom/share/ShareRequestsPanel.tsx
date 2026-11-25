@@ -5,11 +5,6 @@ import type { ShareRequests } from './use-share-requests';
 
 const S = t.classroom.shareRequest;
 
-/**
- * Above the stage, one list for every request: the staff's «{name} يطلب …» with «سماح» / «رفض»,
- * «إيقاف مشاركة {name}» / «إيقاف كتابة {name}» for a guest who may, and the guest's «سُمح لك…» /
- * «رُفض…» line.
- */
 export function ShareRequestsPanel({ share }: { share: ShareRequests }) {
   const { pending, granted, drawers, notice } = share;
   if (pending.length === 0 && granted.length === 0 && drawers.length === 0 && !notice) return null;

@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { Attendance, LessonStatus, PackageSize } from '@ab/shared';
+import type { Attendance, LessonStatus, PackageSize } from '@ab/catalog';
 
 // Payload of public.apply_lesson_changes (migration 100): the API decides, the RPC applies it in
 // one transaction. snake_case like the columns; instants ISO-8601 UTC; dates local "YYYY-MM-DD".

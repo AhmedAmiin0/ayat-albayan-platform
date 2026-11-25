@@ -1,4 +1,6 @@
-import { DURATIONS, courseDaysPerWeek, courseLessonCount, wallParts, type CourseChangeRequest, type CourseLessonFact, startOfLocalDay } from '@ab/shared';
+import { courseDaysPerWeek, courseLessonCount, type CourseLessonFact } from '@ab/shared';
+import { DURATIONS } from '@ab/catalog';
+import { wallParts, type CourseChangeRequest, startOfLocalDay } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
@@ -31,10 +33,7 @@ function inPeriod<T extends { rule_id: string | null; local_date: string | null 
 /** A lesson an old rule will still generate before the change point: booked, chargeable. */
 const PROJECTED: CourseLessonFact = { status: 'scheduled', chargeable: true, makeup: false, instant: false };
 
-/**
- * The guards, REMAINING and the new plan of «تغيير أيام الحلقات» (course-change.service.ts). The change
- * point is max(start of startsOn in the course zone, now); every open lesson of the course from it moves.
- */
+/** The change point is max(start of startsOn in the course zone, now). */
 @Injectable()
 export class CourseChangePlanner {
   constructor(

@@ -14,11 +14,9 @@ interface Props {
   onSubmit: () => void;
   busy: boolean;
   error?: string;
-  /** Links under «أرسل الرمز» («رجوع»…). */
   children?: ReactNode;
 }
 
-/** The first step of a code: who to send it for, then «أرسل الرمز». */
 export function RequestStep({ label, hint, kind, value, onValue, onSubmit, busy, error, children }: Props) {
   return (
     <form

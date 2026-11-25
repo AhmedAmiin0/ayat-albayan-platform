@@ -1,16 +1,11 @@
-import {
-  addDays,
-  courseRemaining,
-  DURATIONS,
-  localDateOf,
-  wallParts,
-  type CourseLessonFact,
-} from '@ab/shared';
+import { courseRemaining, type CourseLessonFact } from '@ab/shared';
+import { DURATIONS } from '@ab/catalog';
+import { localDateOf, wallParts } from '@ab/schedule';
+import { addDays } from '@ab/time';
 import { plannedCourseStarts } from '@/modules/teaching/booking/core/booking.course-end';
 import type { SeriesRule } from '@/modules/teaching/booking/plan/booking.series-plan';
 
-// «مدّ الجدول» (owner 2026-11-17): the package's lessons with no date yet are booked after the
-// course's planned end, on its own days and times. Pure.
+// Pure: undated lessons go after the planned end on the course's own days and times.
 
 /** A rule of the course (schedule_rules), as CourseChangeRepo.rules reads it. */
 export interface ExtendRuleRow {
@@ -43,7 +38,7 @@ export interface ExtendPlan {
   starts: Date[];
   /** The new last day; null when nothing is booked. */
   endsOn: string | null;
-  /** A rule of the set is paused (an open «إيقاف مؤقت»): nothing may be booked now. */
+  /** An open pause means nothing may be booked now. */
   paused: boolean;
 }
 

@@ -1,4 +1,6 @@
-import type { ListSort, PackageSize, SUBSCRIPTION_SORT_KEYS, SubscriptionStatus } from '@ab/shared';
+import type { PackageSize, SubscriptionStatus } from '@ab/catalog';
+import type { ListSort } from '@ab/core';
+import type { SUBSCRIPTION_SORT_KEYS } from '@ab/money';
 import type { SortSpec } from '@/common/db/list-sort';
 import type { PageQuery } from '@/common/http/http';
 
@@ -27,10 +29,7 @@ export const SUB_SORT: SortSpec<SubSortKey> = {
   fallback: { column: 'created_at', ascending: false },
 };
 
-/**
- * The list's select: an inner embed keeps only the rows whose embedded match — the student for
- * the name filter, a payment for «مدفوع جزئيًا» (that extra field is unused).
- */
+/** The inner embed filters rows: the student by name, or a payment for partly paid. */
 export function listSelect(q: Pick<SubListQuery, 'student' | 'paid'>): typeof SELECT {
   const student = q.student === undefined ? 'student:students' : 'student:students!inner';
   const paid = q.paid === 'partial' ? ', paid_rows:payments!inner(id)' : '';

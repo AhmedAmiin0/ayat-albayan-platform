@@ -7,7 +7,6 @@ import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
 import { Card } from '@/teacher/report/v2/ui/Card';
 import { Pills } from '@/teacher/report/v2/ui/Pills';
 
-/** «ملاحظة للأسرة (اختياري)»: quick-note chips (any number), the note itself, and attachments. */
 export function FamilyNoteCard({ s }: { s: V2EntryState }) {
   const v2 = t.reports.v2;
   const quick = QUICK_NOTES.map((q) => ({ value: q, label: v2.quick[q] }));

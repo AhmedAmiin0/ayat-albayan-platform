@@ -1,4 +1,4 @@
-import type { SourceRow } from '@ab/shared';
+import type { SourceRow } from '@ab/money';
 
 // API-internal names of the dashboard module; its response shapes (DashboardResponse,
 // DashboardWork and the work rows) live in @ab/money (ledger/dashboard-*.ts, docs/52).

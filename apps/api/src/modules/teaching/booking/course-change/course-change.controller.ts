@@ -1,11 +1,5 @@
-import {
-  courseChangeCheckSchema,
-  courseChangeQuerySchema,
-  courseChangeSchema,
-  type CourseChangeCheck,
-  type CourseChangeResult,
-  type CourseChangeView,
-} from '@ab/shared';
+import type { CourseChangeCheck, CourseChangeResult, CourseChangeView } from '@ab/shared';
+import { courseChangeCheckSchema, courseChangeQuerySchema, courseChangeSchema } from '@ab/schedule';
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -15,10 +9,7 @@ import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { CourseChange } from './course-change.service';
 import { CourseChangeViews } from './course-change.view';
 
-/**
- * The admin's «تغيير أيام الحلقات» of an assistant course (owner 2026-10-18): the same CourseChange
- * as the assistant's POST /sales/booking/course/change, any student, override with a reason allowed.
- */
+/** Same CourseChange as the assistant's route; any student; override with a reason allowed. */
 @ApiTags('booking')
 @ApiBearerAuth()
 @Permissions('lessons.write')

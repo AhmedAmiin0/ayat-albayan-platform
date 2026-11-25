@@ -1,7 +1,8 @@
 import { needsSetup } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { meQueryOptions } from '@ab/client-core';
+import { apiFetch } from '@ab/mobile-kit';
 
 /** The /auth/me fields setup reads (the body keeps more; anything odd is «no setup»). */
 const meFields = z.looseObject({
@@ -9,15 +10,9 @@ const meFields = z.looseObject({
   email: z.string().nullable().catch(null),
 });
 
-/**
- * A teacher still on her code-made login (docs/46 A4): her tree shows «أكمل حسابك» until she sets
- * an email and a password. Reads the cached /auth/me (the gate loaded it before the tree mounted).
- */
+/** docs/46 A4: until an email and password are set; reads the cached /auth/me. */
 export function useNeedsSetup(): boolean {
-  const me = useQuery({
-    queryKey: pathKey('/auth/me'),
-    queryFn: () => apiFetch('/auth/me'),
-  });
+  const me = useQuery(meQueryOptions({ apiFetch }));
   const parsed = meFields.safeParse(me.data);
   return parsed.success && needsSetup(parsed.data);
 }

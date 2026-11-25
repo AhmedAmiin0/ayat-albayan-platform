@@ -1,7 +1,6 @@
 import type { Tables } from '@ab/db';
 import {
   replyLine,
-  searchDigits,
   sessionWindowOpen,
   type BodySlot,
   type ReopenChoice,
@@ -9,8 +8,9 @@ import {
   type TemplateView,
   type ThreadNote,
   type ThreadView,
-  type WaLine,
 } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
+import { searchDigits } from '@ab/core';
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { orSafe } from '@/modules/people/guardians/http';
 import { looksCrmHistory, windowless } from '@/modules/messaging/whatsapp';
@@ -24,12 +24,7 @@ interface ThreadViewOpts {
   reopenUsable?: ReopenChoice | null;
 }
 
-/**
- * v_threads row → ThreadView (H1/H2). The view's columns are typed nullable, but a thread only
- * exists for a phone with at least one message, so the last-message fields are always set.
- * The family tags come from the guardian's students (ThreadsQueries.familyTags / people); a
- * guardian without students is «مش مشترك», a row without a guardian has no badge.
- */
+/** A thread exists only with a message, so last-message fields are set despite nullable types. */
 export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: boolean }, now: Date, opts: ThreadViewOpts = {}): ThreadView {
   const chat = lineEnvs(loadEnv()).chat;
   const tag = opts.tag ?? null;
@@ -50,8 +45,7 @@ export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: 
     last_chat_inbound_at: row.last_chat_inbound_at,
     last_notifications_inbound_at: row.last_notifications_inbound_at,
     reply_line: shownReplyLine(row, { chatConfigured: Boolean(chat), now }),
-    // Owner 2026-11-03: a Kapso chat line holds a late text (textLine) while it can reopen: the
-    // template is usable, or the admin chose «بدون قالب» (11-06); reopen_choice picks the note.
+    // A Kapso chat line holds a late text while it can reopen; reopen_choice picks the note.
     ...tryAfterWindow(chat?.provider === 'kapso' ? (opts.reopenUsable ?? null) : null),
     unread_count: row.unread_count ?? 0,
     lead_id: row.lead_id,
@@ -119,7 +113,7 @@ function shownReplyLine(row: ThreadRow, at: { chatConfigured: boolean; now: Date
 
 const NO_TAG: FamilyTag = { badge: 'none', unpaid: false, ring: null };
 
-/** A guardian's tags («مش مشترك» without students); none for a lead, a teacher or a stranger. */
+/** None for a lead, a teacher or a stranger. */
 type FamilyFields = Pick<ThreadView, 'subscribed' | 'badge' | 'unpaid' | 'ring'>;
 const NO_FAMILY: FamilyFields = { subscribed: false, badge: null, unpaid: false, ring: null };
 

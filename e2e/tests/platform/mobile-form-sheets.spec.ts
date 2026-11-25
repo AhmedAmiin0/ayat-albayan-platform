@@ -3,10 +3,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { settled } from '../../support/finance/settle';
 import { stubInbound, stubReset } from '../../support/core/wa-stub';
 
-// Owner, 2026-10-05: "on the mobile view of the dashboard don't make the bars for the forms; keep
-// them all as full-screen modals". On a phone (390×844) a form dialog fills the screen and its
-// primary button is on screen without scrolling; from 640px a form is an aside: a full-height
-// panel at the inline-end (the left edge in RTL), «حفظ» in its bottom bar.
+// On a phone a form dialog fills the screen; from 640px it is a full-height inline-end panel.
 
 const PHONE = { width: 390, height: 844 } as const;
 

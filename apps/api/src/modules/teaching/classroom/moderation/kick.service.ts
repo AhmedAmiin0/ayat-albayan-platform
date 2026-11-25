@@ -1,4 +1,4 @@
-import { canRemove, JOIN_ROLES, lessonRoomName, type JoinRole } from '@ab/shared';
+import { canRemove, JOIN_ROLES, lessonRoomName, type JoinRole } from '@ab/schedule';
 import { BadGatewayException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
@@ -22,13 +22,7 @@ interface KickInput {
   identity: string;
 }
 
-/**
- * «إخراج من الحلقة» (POST /lessons/:id/room/participants/:identity/remove). The remover's role
- * in this lesson is computed like a join's; canRemove (@ab/shared) decides. The removed PERSON is
- * blocked first: every link of theirs in this lesson, or their login (RoomPersonRepo; every later
- * join: 403 removed_from_room), then each identity they hold now loses every permission and is
- * disconnected. Audited (participant_removed), once per blocked link or login.
- */
+/** The removed person is blocked first (every link or their login), then disconnected; audited. */
 @Injectable()
 export class KickService {
   constructor(

@@ -1,14 +1,13 @@
-import { clockOf, type ClockOptions, type PortalLesson } from '@ab/shared';
+import type { PortalLesson } from '@ab/shared';
+import { clockOf, type ClockOptions } from '@ab/time';
 import type { LessonWait } from './lesson-window.js';
 
-// Why a lesson card has no «ادخل الحلقة» (lessonWait), in the family's words (moved from the web
-// portal's LessonAction, docs/50 §7). Each app passes its `t.portal` and its clock.
+// Why a lesson card has no join button, worded for the family (docs/50 §7).
 
 export interface WaitWords {
   cancelled: string;
   closed: string;
   noWayIn: string;
-  /** «يُتاح الدخول من {time}». */
   opensAt: string;
 }
 

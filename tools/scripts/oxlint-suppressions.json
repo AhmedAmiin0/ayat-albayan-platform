@@ -287,12 +287,6 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 3
-    },
-    "typescript/no-unsafe-assignment": {
-      "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
       "count": 1
     }
   },
@@ -381,7 +375,7 @@
   },
   "ci-checks/pure-move-suppressions.test.mjs": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "ci-checks/pure-move-tokens.mjs": {

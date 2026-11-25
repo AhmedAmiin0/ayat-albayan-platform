@@ -12,7 +12,7 @@ import type { HistoryBundle } from '@/modules/sales/sales/history/sales-history.
 import { SalesHistoryRepo } from '@/modules/sales/sales/history/sales-history.repo';
 import type { SalesScheduleRow } from '@/modules/sales/sales/schedule/sales-schedule.repo';
 import { SalesScheduleRepo } from '@/modules/sales/sales/schedule/sales-schedule.repo';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
+import { SalesRepo } from '@/modules/sales/sales/shared';
 import { A, B, NONE, OWN_A } from '@/modules/sales/sales/sales.fakes';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';

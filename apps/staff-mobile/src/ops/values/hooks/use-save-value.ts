@@ -1,4 +1,4 @@
-import { SETTING_FIELD_OF, type AcademySettings, type SettingKey, type SettingsMetaResponse } from '@ab/shared';
+import { SETTING_FIELD_OF, type SettingKey, type SettingsMetaResponse } from '@ab/settings';
 import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
@@ -30,7 +30,6 @@ export function outcomeOf(key: SettingKey, answer: unknown): SaveOutcome {
 
 const SAVE_KEY = ['settings', 'value-save'] as const;
 
-/** The keys being saved now: their rows say «جارٍ الحفظ…» on the second line. */
 export function useSavingKeys(): SettingKey[] {
   return useMutationState({
     filters: { mutationKey: SAVE_KEY, status: 'pending' },
@@ -50,14 +49,14 @@ export function useSaveValue() {
     onSuccess: ({ answer }, { key }) => {
       // The settings object replaces the cached copy; any other answer refetches it.
       if (isObject(answer) && Object.hasOwn(answer, key)) {
-        qc.setQueryData(pathKey(SETTINGS), answer as AcademySettings);
+        qc.setQueryData(pathKey(SETTINGS), answer);
       } else void qc.invalidateQueries({ queryKey: pathKey(SETTINGS) });
       void qc.invalidateQueries({ queryKey: pathKey(META) });
     },
   });
 }
 
-/** GET /config/meta («آخر تعديل»); the sheet leaves the line out when it fails or is missing. */
+/** The sheet omits the line when it fails or is missing. */
 export function useConfigMeta() {
   return useQuery({
     queryKey: pathKey(META),

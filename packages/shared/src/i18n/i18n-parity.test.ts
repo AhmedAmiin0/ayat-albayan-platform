@@ -13,7 +13,8 @@ function leaves(node: unknown, path: string): Leaf[] {
   return [[path, node]];
 }
 
-const tokens = (v: unknown): string[] => (typeof v === 'string' ? (v.match(/\{[A-Za-z0-9_]+\}/g) ?? []).sort() : []);
+const tokens = (v: unknown): string[] =>
+  typeof v === 'string' ? (v.match(/\{[A-Za-z0-9_]+\}/g) ?? []).sort() : [];
 
 describe('en.json ↔ ar.json', () => {
   const arLeaves = new Map(leaves(ar, ''));
@@ -25,18 +26,21 @@ describe('en.json ↔ ar.json', () => {
   });
 
   it('every English value is a non-empty string where Arabic has a string', () => {
-    const bad = [...arLeaves].filter(([k, v]) => typeof v === 'string' && !String(enLeaves.get(k) ?? '').trim());
+    const bad = [...arLeaves].filter(
+      ([k, v]) => typeof v === 'string' && !String(enLeaves.get(k) ?? '').trim(),
+    );
     expect(bad.map(([k]) => k)).toEqual([]);
   });
 
   it('keeps the same {placeholders} in every string', () => {
-    const diff = [...arLeaves].filter(([k, v]) => tokens(v).join() !== tokens(enLeaves.get(k)).join());
+    const diff = [...arLeaves].filter(
+      ([k, v]) => tokens(v).join() !== tokens(enLeaves.get(k)).join(),
+    );
     expect(diff.map(([k]) => k)).toEqual([]);
   });
 });
 
-/** Names that stay Arabic in every language: «العربية» and the academy's own name under the
- *  family app's Latin wordmark (docs/50: «Ayat Al-Bayan» over «آيات البيان»). */
+/** Names that stay Arabic in every language: the language name and the academy name (docs/50). */
 const ENDONYMS = new Set(['language.ar', 'familyApp.signIn.wordmarkArabic']);
 
 describe('en.json is fully English', () => {

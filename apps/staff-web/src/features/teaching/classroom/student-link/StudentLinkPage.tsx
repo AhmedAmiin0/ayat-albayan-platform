@@ -13,11 +13,7 @@ import { useNow } from '@ab/web-kit/lib/time/use-now';
 
 const REFRESH_MS = 30_000;
 
-/**
- * /s/:token — the student's own long-lived link (no login, no app shell): «حلقتك القادمة …» with a
- * big «ادخل الحلقة», enabled only while the room is open (re-read every 30 seconds, so it turns on by
- * itself), then the same guest classroom as a one-lesson link.
- */
+/** No login or shell; join enables only while the room is open, re-read every 30 seconds. */
 export function StudentLinkPage({ token, make }: { token: string; make?: () => RoomClient }) {
   const now = useNow(REFRESH_MS);
   const view = useQuery({ queryKey: ['studentLink', token], queryFn: () => studentLinkView(token), refetchInterval: REFRESH_MS, retry: false });

@@ -4,17 +4,17 @@
 
 | Layer | Choice | Notes |
 |-------|--------|-------|
-| Monorepo | **Turborepo** + pnpm workspaces | `turbo run build test lint typecheck e2e` with remote cache |
+| Monorepo | **Turborepo** + pnpm workspaces | `turbo run build test typecheck e2e` with remote cache; `pnpm lint` (Oxlint) |
 | Database / Auth / Storage | **Supabase** (Postgres 15, Auth, Storage, Realtime, pg_cron, Vault) | Migrations as SQL in `packages/db/supabase/migrations`; types generated to `packages/db/src/types.ts` |
 | API | **NestJS 10** (TypeScript, Fastify adapter) | Owns all business logic & WhatsApp webhooks. Talks to Postgres via `postgres.js`/Kysely + Supabase service client for Storage/Auth admin |
 | Web (admin + teacher + guardian portal) | **React 19 + Vite + TanStack** (Router, Query, Table, Form) + Tailwind + shadcn/ui (RTL) | Single app, role-based routes |
 | Mobile (admin) | **Expo SDK 51+ / React Native**, expo-router, TanStack Query, expo-notifications | EAS Build; same `packages/api-client` |
-| Shared | `packages/shared` (zod schemas, enums, i18n ar), `packages/api-client` (typed fetch from OpenAPI), `packages/ui` (web only), `packages/config` (eslint/tsconfig/prettier) | |
+| Shared | `packages/shared` (zod schemas, enums, i18n ar), `packages/api-client` (typed fetch from OpenAPI), `packages/ui` (web only), `packages/config` (lint; shared TypeScript options sit in the root `tsconfig.base.json`; formatting: root `.oxfmtrc.json`, oxfmt) | |
 | Messaging | Meta WhatsApp Cloud API v20+ | Webhook → Nest; outbound via Nest `MessagingModule` |
 | PDF | `@react-pdf/renderer` or Playwright-Chromium HTML→PDF in Nest worker | Arabic fonts (Amiri / Noto Naskh), RTL |
 | Jobs | BullMQ (Redis on Upstash) **or** pg-boss on Supabase Postgres (preferred: no extra infra) | Reminders, PDF generation, calendar mirror |
 | Testing | Vitest (web, packages), Jest (Nest), Supertest (API e2e), **Playwright** (web e2e), jest-expo + RNTL (mobile) | |
-| CI | GitHub Actions: turbo lint/typecheck/test/e2e; Supabase CLI local stack in CI | |
+| CI | GitHub Actions: oxlint, turbo typecheck/test/e2e; Supabase CLI local stack in CI | |
 | Hosting | API: Fly.io / Railway (Docker); Web: Vercel; Mobile: EAS | |
 
 ## 2. Repository layout
@@ -44,7 +44,7 @@ ayat-albayan/
 │  ├─ db/                        # supabase/ (config, migrations, seed), generated types
 │  ├─ shared/                    # enums, zod schemas, i18n/ar.json + en.json, pure utils (phone, tz, money, …)
 │  ├─ client-core/               # web + mobile: http client, query keys and options, non-UI hooks (usePermissions)
-│  └─ config/                    # eslint config (+ the module-boundaries rule), tsconfig, prettier
+│  └─ config/                    # oxlint config (+ the ab/* rules); formatting: oxfmt, root .oxfmtrc.json
 ├─ tools/
 │  ├─ migrate/                   # Google Sheets → Supabase import (dry-run + apply)
 │  ├─ wa-stub/  google-stub/  livekit/
@@ -166,14 +166,15 @@ OpenAPI generated from Nest decorators → `packages/api-client`.
 
 ## 8. Code constraints (enforced)
 
-`packages/config/eslint` rules (full set and reasons: docs/31a §3), every one an error, `eslint . --max-warnings 0`:
+Oxlint is the only linter (`pnpm lint`: `oxlint.config.ts`, type-aware via tsgolint, `--deny-warnings`; rules in
+`packages/config`, full set and reasons: docs/31a §3, docs/31b), every rule an error:
 ```js
 'max-lines': ['error', { max: 150, skipBlankLines: false, skipComments: false }],
-'@typescript-eslint/max-params': ['error', { max: 3 }],
-'@typescript-eslint/no-explicit-any': 'error',
+'ab/max-params': ['error', { max: 3 }],
+'typescript/no-explicit-any': 'error',
 complexity: ['error', 10], 'max-depth': ['error', 3], 'no-console': 'error', eqeqeq: ['error', 'always', { null: 'ignore' }],
-// + typescript-eslint strictTypeChecked + stylisticTypeChecked (projectService), react-hooks (all errors) on web/mobile,
-//   jsx-a11y on web, and reactRestrictions (eslint-react.js):
+// + typescript-eslint's strictTypeChecked + stylisticTypeChecked rules (tsgolint), react-hooks (all errors) on
+//   web/mobile, jsx-a11y on web, and reactRestrictions (eslint-react.js):
 //   web + mobile: no raw useEffect / useLayoutEffect outside use-*.ts(x) / hooks/
 //   web + mobile (React Compiler): no useMemo / useCallback / memo
 //   mobile (React 19): no forwardRef (ref is a prop), use(Context) not useContext, <Context value> not <Context.Provider>
@@ -182,11 +183,22 @@ React Compiler: web `vite.config.ts` (`@rolldown/plugin-babel` + `reactCompilerP
 except `src/features/messaging/inbox/` for now. Mobile: `babel.config.cjs` runs the
 compiler for every Babel caller while app.json `experiments.reactCompiler` is true, so jest also runs the compiled
 code (docs/31a §3.2). Web (React 19.2, docs/32 x1) gets the React 19 rules once x2–x5 remove the old uses. TypeScript flags: docs/31a §2.
-Oxlint runs first (`pnpm lint:ox`, root `.oxlintrc.json`): the rules above that need no types and have no suppressed
-violation (Oxlint has no bulk suppressions; `pnpm guard:lint` fails on a rule that has). `eslint-plugin-oxlint` turns
-them off in ESLint, which keeps the type-aware, custom and react-hooks rules. There are no inline disables
-(docs/59): no `eslint-disable` or `oxlint-disable` comment, no `@ts-` escape. `typecheck` runs
-`tsgo` (TypeScript 7, `@typescript/native-preview`; typescript-eslint still needs TypeScript 6), builds stay on `tsc`.
+Violations that predate a rule sit in each package's `oxlint-suppressions.json` (exact per-file, per-rule counts;
+the only baseline, old debt that only shrinks: docs/59). There are no inline disables: no `eslint-disable` or
+`oxlint-disable` comment, no `@ts-` escape. The repo's own rules (`ab/*`) are JS-plugin rules in `packages/config`;
+apps/api runs `ab/consistent-type-imports`, which reads decorator metadata (docs/31b §3.2).
+`typecheck` runs `tsgo` (TypeScript 7, `@typescript/native-preview`), builds stay on `tsc`.
+Tsconfigs: the shared compiler options live in the root `tsconfig.base.json`. Every tsconfig extends only that
+file (by relative path) or a file in its own folder, never a package, and keeps only the options that differ
+for it (React, Nest or Expo ones). The mobile tsconfigs copy what `expo/tsconfig.base` sets apart from the root
+base, so an Expo upgrade re-checks them. The `@/` alias is defined once, in the root base:
+`"paths": { "@/*": ["${configDir}/src/*"] }`, which TypeScript expands to each extending workspace's own `src`
+(tsgo, tsc and tsc-alias 1.9.7 do). No other tsconfig has `paths` or `baseUrl`. Runtime resolvers keep their
+own alias: Vite and Vitest (`@ab/config/vite`, api `vitest.config.mts`), jest (`moduleNameMapper`) and Metro
+(`@ab/mobile-kit/metro`; Expo 57's own tsconfig `paths` support expands `${configDir}` against the root, so
+app.json turns it off). Packages never import `@/`: an app compiles their source, where `@/` is the app's src.
+`@ab/web-kit/<path>` deep imports resolve through the kit's package.json `exports`. `pnpm guard:tsconfig` checks
+all of it.
 Patterns to stay under limits: options objects instead of positional params; one component/service per file; split Nest services into `*.service.ts` + `*.repo.ts` (class `XRepo`, the only injector of `DB`; no new `*.queries.ts`, docs/32 D2) + `*.mapper.ts`; colocate tests as `*.test.ts` (tests also ≤150 lines — split by scenario).
 Unit folders: a unit with 3+ files (code, props, types, tests...) lives in its own folder named after it, with an `index.ts` that only re-exports; its tests go in `tests/` when it has 2+ (`ThreadPane.chat.test.tsx` → `ThreadPane/tests/chat.test.tsx`; `<Unit>.test.tsx` keeps its name); a plain code + test pair stays as it is. A file's unit is the longest non-test code stem it extends (`env.blank.test.ts` → `env.blank`); `X.<role>.ts` (props, types, styles, schemas, mapper, fakes, fixtures, constants, hooks, builder, variants) belongs to `X`. In apps/api each feature folder with a controller is its own Nest module. `pnpm units:fold -- --dry-run` plans the moves, `--write --paths <dir...>` makes them on a `move/*` branch.
 
@@ -194,13 +206,13 @@ Structure guards (docs/27 §1, Wave F). No suppressions (docs/59-no-suppressions
 
 | Guard | Rule | Baseline | Run |
 |-------|------|----------|-----|
-| Module boundaries | import another module (api `modules/<domain>/<module>`, web `features/<domain>/<feature>`, mobile `src/<feature>`, a `packages/*/src/<folder>`) only through its `index.ts`; tests, fakes and `test/`/`testing/` folders are exempt | `eslint-suppressions.json` per package (ESLint bulk suppressions) | `pnpm turbo lint`; after removing deep imports `eslint . --prune-suppressions` in that package |
+| Module boundaries | import another module (api `modules/<domain>/<module>`, web `features/<domain>/<feature>`, mobile `src/<feature>`, a `packages/*/src/<folder>`) only through its `index.ts`; tests, fakes and `test/`/`testing/` folders are exempt | `oxlint-suppressions.json` per package | `pnpm lint`; after removing deep imports `pnpm lint:prune` |
 | Folder cap | ≤ 12 code files (tests not counted) and ≤ 12 sub-folders per folder | `refactor/folder-cap/<app>.json` (a new, grown or stale entry fails) | `node tools/scripts/ci-checks/folder-cap.mjs --strict` (`--write <app>` after a split), `pnpm guard:baselines` |
 | Duplicated code | jscpd `--min-lines 8` (`.jscpd.json`, tests ignored): clones, duplicated lines and cross-app clones (fixtures aside), none above the base branch's (jscpd also runs in the base checkout) | none: measured on both sides | `pnpm guard:dup` |
 | Import cycles | top folders of `packages/shared/src` (docs/32 k1a): cycle edges not above the base branch's | none: measured on both sides | `pnpm guard:cycles` |
 | Dead code | knip (`knip.json`): no new unused file, export, type or dependency | `refactor/guards/knip.json` (fixed entries leave it on `develop`) | `pnpm guard:knip` |
 | Id-route ownership | every id route a teacher, guardian, student or sales login can call maps to the test that sends it someone else's id and asserts 403 or 404; an unmapped route fails the api test `ownership.guard.test.ts`, a mapped file that is missing or asserts no denial fails the gate | none: `apps/api/src/common/auth/ownership/owned-routes.json` is a route → test map, never a list of exceptions | `pnpm guard:ownership` |
-| No new suppressions | the lint job fails on any violation not in that package's `eslint-suppressions.json` (Oxlint: `oxlint-suppressions.json`); the gate holds both kinds to the base branch's per file, per rule and per rule total, and fails on a new entry, a new suppressions file, an empty one (delete it) or an entry whose file is gone. A rule a PR turns on or tightens has no baseline: its violations are fixed in that PR | none: derived from both sides' suppressions files | `pnpm guard:lint`; after fixes `eslint . --prune-suppressions` in the package (docs/31a §5.3) |
+| No new suppressions | the lint job fails on any violation not in that package's `oxlint-suppressions.json` (and on a count below it until pruned); the gate holds them to the base branch's per file, per rule and per rule total, and fails on a new entry, a new suppressions file, an empty one (delete it) or an entry whose file is gone. A rule a PR turns on or tightens has no baseline: its violations are fixed in that PR | none: derived from both sides' suppressions files | `pnpm guard:lint`; after fixes `pnpm lint:prune` (docs/31b §4) |
 | Unit folders | no folder gains a floating unit (3+ files outside a folder named after it, or 2+ tests beside it in its own folder); api `modules/`, route trees, packages/db and e2e/ are not counted | `refactor/guards/units.json` (fixed folders leave it on `develop`) | `pnpm guard:units` (`-- --write` on develop) |
 | Move only | on a `move/*` branch: pure renames, changed module-path strings, added export-only `index.ts` files and baseline keys that follow their files (counts equal or lower); anything else fails, naming the file | none: compared with the merge base | `pnpm guard:move-only` |
 

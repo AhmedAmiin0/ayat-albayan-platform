@@ -33,7 +33,7 @@ interface VoiceTime {
   didJustFinish: boolean;
 }
 
-/** At the end: the next «تشغيل» starts over. */
+/** At the end the next play starts over. */
 export const atEnd = (s: VoiceTime): boolean =>
   s.didJustFinish || (s.duration > 0 && s.currentTime >= s.duration);
 

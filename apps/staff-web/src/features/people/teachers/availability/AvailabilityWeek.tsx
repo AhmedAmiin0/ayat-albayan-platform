@@ -54,10 +54,7 @@ function Legend() {
   );
 }
 
-/**
- * The week as a role=table, one row per weekday from السبت to الجمعة (docs/07 §8): 92px day,
- * 452px ranges, then the track; the track drops under the ranges in narrower pages.
- */
+/** One row per weekday from Saturday to Friday (docs/07 §8). */
 export const AvailabilityWeek = forwardRef<HTMLDivElement, Props>(function AvailabilityWeek({ grid, tz, onDay }, ref) {
   const clock = wallClock(useMinuteClock(), tz);
   return (

@@ -1,4 +1,4 @@
-import type { Glyph, Tone } from '@ab/shared';
+import type { Glyph, Tone } from '@ab/money';
 import { View } from 'react-native';
 import { type Palette, shape, type, useTheme } from '../../theme';
 import { NuqtaGlyph } from '../primitives/NuqtaGlyph';
@@ -30,11 +30,7 @@ export interface StatusChipProps {
   size?: 'md' | 'sm';
 }
 
-/**
- * Status = nuqta glyph + word + tone colour (never colour alone). Spread a shared style entry:
- * `<StatusChip {...leadStatusStyle[s]} label={t.enums.leadStatus[s]} />`. Saffron (`act`) only
- * comes from those maps, so it only ever means «دورك».
- */
+/** Status is glyph, word and tone (never colour alone); saffron comes only from the maps. */
 export function StatusChip({ tone, glyph, label, size = 'md' }: StatusChipProps) {
   const { color } = useTheme();
   const { fg, bg } = toneColors(color, tone);

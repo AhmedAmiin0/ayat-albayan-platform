@@ -4,10 +4,9 @@ import type { Clock } from '@ab/web-kit/lib/clock';
 import { byLocalDay, zoneLabel } from '@ab/web-kit/schedule/slots';
 import { dayIn } from '@ab/web-kit/schedule/tz';
 import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
-import type { OutsideParams } from './OtherTime.types';
+import type { OutsideParams } from './OtherTime';
 
-// «وقت آخر» (owner 2026-11-21): the server's instants as chips, by the viewer's day; the viewer's
-// clock first, the family's beside it when it differs. Pure: formatting only, no clock read.
+// Server instants as chips by the viewer's day; pure formatting, no clock read.
 
 interface Option {
   value: string;
@@ -39,7 +38,6 @@ export function shownDay(days: Map<string, unknown>, picked: string | null): str
 export const daysOf = (slots: readonly OutsideSlot[], viewer: string): Map<string, OutsideSlot[]> =>
   byLocalDay(slots, viewer);
 
-/** One chip per day: «الاثنين 5 أكتوبر» in the viewer's zone. */
 export function dayOptions(days: Map<string, OutsideSlot[]>, viewer: string): Option[] {
   return [...days].map(([date, slots]) => ({
     value: date,

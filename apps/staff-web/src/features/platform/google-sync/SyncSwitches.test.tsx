@@ -61,7 +61,7 @@ describe('Google switches', () => {
   it('the window field refuses a number out of range and saves a good one', async () => {
     const onNote = vi.fn();
     renderGoogle({ apiFetch, onNote });
-    const field = (await screen.findByLabelText(s.window)) as HTMLInputElement;
+    const field = await screen.findByLabelText<HTMLInputElement>(s.window);
     expect(field.value).toBe('60');
     fireEvent.change(field, { target: { value: '200' } });
     fireEvent.click(screen.getByRole('button', { name: t.googleSync.web.save }));

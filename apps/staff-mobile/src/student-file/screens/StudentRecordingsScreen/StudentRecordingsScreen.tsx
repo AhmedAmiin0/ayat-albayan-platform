@@ -1,4 +1,4 @@
-import type { StudentRecordingView } from '@ab/shared';
+import type { StudentRecordingView } from '@ab/schedule';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
@@ -26,13 +26,7 @@ import { LazyList } from '@/core/ui/lists/LazyList';
 const R = t.mobileStudentFile.recordings;
 const keyOf = (r: StudentRecordingView) => r.id;
 
-/**
- * «تسجيلات الحلقات» of one student (web: StudentRecordings), newest first, filtered on the server by
- * date and teacher. Admin from the student screen, teacher from their student's file (`admin` false:
- * their own tz and no delete). Controls follow recordings.manage; the API enforces the same. The list
- * screens' compact top (owner 2026-10-28): «تسجيلات الحلقات · 12» on the title's line, the student's name
- * under it, the rows in one inset card.
- */
+/** Teachers see their own tz and no delete; controls follow recordings.manage, as the API. */
 export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const { color } = useTheme();

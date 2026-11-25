@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { bookingBase, useBookingMode } from '@/features/teaching/booking/mode';
-import type { OutsideParams } from './OtherTime.types';
+import type { OutsideParams } from './OtherTime';
 
 /** The query string: the grid's fields only, never a time from this browser. */
 export function outsideQuery(p: OutsideParams): string {
@@ -16,7 +16,7 @@ export function outsideQuery(p: OutsideParams): string {
   return params.toString();
 }
 
-/** GET {base}/outside-slots («وقت آخر»): the server's next 14 days, parsed (shared schema). */
+/** The server's next 14 days, parsed with the shared schema. */
 export function useOutsideSlots(p: OutsideParams) {
   const mode = useBookingMode();
   const query = outsideQuery(p);

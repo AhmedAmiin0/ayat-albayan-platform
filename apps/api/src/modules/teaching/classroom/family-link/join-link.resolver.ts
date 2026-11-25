@@ -1,4 +1,4 @@
-import { looksLikeFamilyToken, roomNameOfStudent } from '@ab/shared';
+import { looksLikeFamilyToken, roomNameOfStudent } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClassroomRepo, type JoinLinkRow } from '@/modules/teaching/classroom/classroom.repo';
 import { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
@@ -17,12 +17,7 @@ const KINDS: readonly (readonly [TokenKind, (token: string) => boolean])[] = [
 export const tokenKind = (token: string): TokenKind =>
   KINDS.find(([, test]) => test(token))?.[0] ?? 'none';
 
-/**
- * The lesson_join_links row behind /join/<token>: a random token by the sha256 stored on its row,
- * a family join token (the family app's browser link) by the (lesson, student) row the portal join
- * uses, created when missing, so «إخراج من الحلقة» holds on it too. null = unknown, garbled or
- * expired (404 link_invalid); the row's own checks (revoked, expired, window, removal) follow.
- */
+/** null means unknown, garbled or expired (404 link_invalid); the row's own checks follow. */
 @Injectable()
 export class JoinLinkResolver {
   private readonly byKind: Record<TokenKind, Resolve> = {

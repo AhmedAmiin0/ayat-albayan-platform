@@ -1,10 +1,15 @@
-import { CLOCK_STORAGE_KEY, parseClockPref, resolveHourCycle, type ClockCycle, type ClockPref } from '@ab/shared';
+import {
+  CLOCK_STORAGE_KEY,
+  parseClockPref,
+  resolveHourCycle,
+  type ClockCycle,
+  type ClockPref,
+} from '@ab/time';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSyncExternalStore } from 'react';
 import { deviceUses24 } from '../device-clock';
 
-// «تنسيق الوقت» (owner 2026-10-27): follow the phone, or 12 h / 24 h saved on this device under the
-// same AsyncStorage as the language. A change re-renders every subscriber at once, no reload.
+// Saved under the same AsyncStorage as the language; a change re-renders subscribers at once.
 
 let pref: ClockPref = 'auto';
 let device: boolean | null | undefined;
@@ -59,7 +64,6 @@ export function useClockCycle(): ClockCycle {
   return useSyncExternalStore(subscribe, clockCycle);
 }
 
-/** «تنسيق الوقت»: [saved choice, choose]. */
 export function useClockPref(): [ClockPref, (next: ClockPref) => void] {
   // The hook on its own line, not inside the array: the React Compiler skipped hooks nested in
   // an array literal (use-voice).

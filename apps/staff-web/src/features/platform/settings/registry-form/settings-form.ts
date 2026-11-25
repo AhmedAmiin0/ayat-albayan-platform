@@ -23,7 +23,7 @@ export type SettingsErrors = Partial<Record<string, string>>;
 export type SettingsResult = { ok: true; value: SettingsUpdate } | { ok: false; errors: SettingsErrors };
 
 /** The keys the generic form edits, in page order (SETTINGS_LAYOUT, section by section). */
-export const FORM_KEYS: SettingKey[] = (Object.values(SETTINGS_LAYOUT).flat() as SettingKey[]).filter((k) => settingDef(k).form !== false);
+export const FORM_KEYS: SettingKey[] = Object.values(SETTINGS_LAYOUT).flat().filter((k) => settingDef(k).form !== false);
 
 export const onKey = (field: string): string => `${field}On`;
 export const str = (form: SettingsForm, key: string): string => {
@@ -36,7 +36,7 @@ export const flag = (form: SettingsForm, key: string): boolean => form[key] === 
 export const shapeId = (field: string, name: string): string => `${field}.${name}`;
 
 function shapeFields(field: string, def: JsonDef, v: AcademySettings[SettingKey]): SettingsForm {
-  const obj: Record<string, string> = v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, string>) : {};
+  const obj: Record<string, string> = v !== null && typeof v === 'object' && !Array.isArray(v) ? v : {};
   return Object.fromEntries(def.shape.map((f) => [shapeId(field, f.name), obj[f.name] ?? '']));
 }
 
@@ -64,7 +64,7 @@ export function settingsForm(s: AcademySettings): SettingsForm {
 
 /** A blank box is not 0: it fails validation like any other bad number. */
 const num = (v: string): number => (v.trim() === '' ? Number.NaN : Number(v.trim()));
-/** «24، 72», «24, 72» or «24 72». */
+/** Accepts comma, Arabic comma or space separated numbers. */
 const list = (v: string): number[] => v.split(/[\s,،]+/).filter(Boolean).map(Number);
 /** Any typed phone → E.164 when it can be read; otherwise sent as typed and refused. */
 const phone = (v: string): string => {

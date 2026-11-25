@@ -18,7 +18,6 @@ const MESSAGE = P.message
   .replace('{currency}', 'ر.س')
   .replace('{url}', 'https://app.example.com/pay/tok_1');
 
-/** The link made (SalesMoneyFlow's last step after «دفع إلكتروني»). */
 async function created({ canSend = true } = {}) {
   const onClose = vi.fn();
   renderWithClient(<CreatedLink link={CREATED} phone={PHONE} canSend={canSend} onClose={onClose} />);
@@ -52,7 +51,7 @@ describe('«رابط دفع»: the link made', () => {
   it('only where no text can go (useMaySend false): the closed note, only «نسخ» works', async () => {
     await created({ canSend: false });
     expect(await screen.findByText(t.inbox.sessionClosed)).toBeTruthy();
-    expect((screen.getByRole('button', { name: P.sendInChat }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole<HTMLButtonElement>('button', { name: P.sendInChat })).disabled).toBe(true);
     expect(getDraft(PHONE).text).toBe('');
   });
 

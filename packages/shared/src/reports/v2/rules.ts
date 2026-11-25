@@ -18,10 +18,7 @@ export interface SurahRange {
   to: number;
 }
 
-/**
- * The teacher's memorization history for one student (GET report-form, v2 entries): per track the
- * last range saved in a submitted v2 report, and the surahs used lately (the picker's «الأخيرة»).
- */
+/** Per track, the last range in a submitted v2 report and the surahs used lately. */
 export interface MemoryView {
   last: Record<SegmentKind, SurahRange | null>;
   recent_surahs: number[];
@@ -39,7 +36,8 @@ export function memoryOf(contents: readonly ReportContent[]): MemoryView {
       const seg = mine[mine.length - 1];
       if (seg && last[kind] === null) last[kind] = { surah: seg.surah, from: seg.from, to: seg.to };
     }
-    for (const s of content.segments) if (!recent.includes(s.surah) && recent.length < RECENT) recent.push(s.surah);
+    for (const s of content.segments)
+      if (!recent.includes(s.surah) && recent.length < RECENT) recent.push(s.surah);
   }
   return { last, recent_surahs: recent };
 }
@@ -53,7 +51,11 @@ export function suggestRange(last: SurahRange | null): SurahRange | null {
   const start = nextAyah({ surah: last.surah, ayah: last.to });
   if (!start) return null;
   const length = last.to - last.from + 1;
-  return { surah: start.surah, from: start.ayah, to: Math.min(ayahCount(start.surah), start.ayah + length - 1) };
+  return {
+    surah: start.surah,
+    from: start.ayah,
+    to: Math.min(ayahCount(start.surah), start.ayah + length - 1),
+  };
 }
 
 /** The grades a program's content carries, in form order. */
@@ -63,7 +65,7 @@ export function contentGrades(program: Program, content: ReportContent): (Grade 
   return ISLAMIC_RATES.map((k) => content.islamic?.rates[k] ?? null);
 }
 
-/** «مقترح من التقييمات»: the rounded mean of the graded rows (ممتاز = 0 … يحتاج إلى مراجعة = 4). */
+/** The rounded mean of the graded rows (excellent = 0 ... needs revision = 4). */
 export function suggestOverall(program: Program, content: ReportContent): Grade | null {
   const idx = contentGrades(program, content)
     .filter((g): g is Grade => g !== null)
@@ -76,10 +78,15 @@ export function suggestOverall(program: Program, content: ReportContent): Grade 
  * What a send stores: attended → only the taught program's part (the others are hidden on the
  * form); absent or excused → no content at all (the form hides every content section).
  */
-export function keptContent(attendance: Attendance, program: Program, content: ReportContent): ReportContent {
+export function keptContent(
+  attendance: Attendance,
+  program: Program,
+  content: ReportContent,
+): ReportContent {
   const empty = emptyContent();
   if (!attended(attendance)) return empty;
-  if (program === 'quran') return { ...empty, segments: content.segments, tajweed: content.tajweed, quick: content.quick };
+  if (program === 'quran')
+    return { ...empty, segments: content.segments, tajweed: content.tajweed, quick: content.quick };
   if (program === 'arabic') return { ...empty, arabic: content.arabic, quick: content.quick };
   return { ...empty, islamic: content.islamic, quick: content.quick };
 }

@@ -1,7 +1,13 @@
 import {
-  EVOLUTION_MODES, evolutionConfigOf, evolutionStateOf, evolutionSyncOf, WA_PROVIDERS,
-  type LineCheckView, type NumberEvolutionView, type NumberHealth, type NumberView, type WaProvider,
+  evolutionConfigOf,
+  evolutionStateOf,
+  evolutionSyncOf,
+  type LineCheckView,
+  type NumberEvolutionView,
+  type NumberHealth,
+  type NumberView,
 } from '@ab/shared';
+import { EVOLUTION_MODES, WA_PROVIDERS, type WaProvider } from '@ab/catalog';
 import type { Json } from '@ab/db';
 import { evolutionHookOf } from '@/config/env/whatsapp/env.evolution';
 import { displayE164 } from '@/modules/messaging/whatsapp/lines/line-health.store';

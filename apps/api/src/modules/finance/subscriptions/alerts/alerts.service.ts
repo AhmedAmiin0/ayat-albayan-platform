@@ -1,12 +1,12 @@
 import { ar } from '@/common/infra/i18n/server-text';
-import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/shared';
+import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/money';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
 import { AlertsRepo } from './alerts.repo';
 import { alertPlan, openTaskKeys, staleTaskKeys, type AlertPlan } from '@/modules/finance/subscriptions/money/packages.plan';
 import { PackagesService, type StudentState } from '@/modules/finance/subscriptions/money/packages.service';
 import { StudentRenewal } from '@/modules/finance/subscriptions/student-lifecycle/student-renewal';
-import { SubscriptionsSettings } from '@/modules/finance/subscriptions/subscriptions.settings';
+import { SubscriptionsSettings } from '@/modules/finance/subscriptions/shared/subscriptions.settings';
 import type { StudentTz } from '@/modules/finance/subscriptions/student-lifecycle/student-status.types';
 import type { EvaluateOptions, Outcome, Run, Subject } from './alerts.types';
 
@@ -43,11 +43,7 @@ export class SubscriptionAlertsService {
     await this.evaluateStudents(await this.queries.studentsOfLessons(lessonIds));
   }
 
-  /**
-   * Recompute statuses, then raise the alert, then the student's «بانتظار التجديد» rule
-   * (StudentRenewal). The reads are batched for every student, so the sweep's round trips do not
-   * grow with the students (BE-07). One student's failure never stops the others; never throws.
-   */
+  /** Batched reads for every student (BE-07); one student's failure never stops the others. */
   async evaluateStudents(studentIds: readonly string[], opts: EvaluateOptions = {}): Promise<number> {
     const ids = [...new Set(studentIds)];
     if (ids.length === 0) return 0;

@@ -18,7 +18,7 @@ interface Props {
   onClose: () => void;
 }
 
-/** «غيّر الموعد» (creator or admin): date, time and duration on the viewer's clock → PATCH /meetings/:id. */
+/** Creator or admin: times on the viewer's clock. */
 export function RescheduleDialog({ meeting, tz, onClose }: Props) {
   const [value, setValue] = useState<ScheduleValue>(() => scheduleOf(meeting, tz));
   const [issue, setIssue] = useState<string | null>(null);

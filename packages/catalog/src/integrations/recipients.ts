@@ -1,7 +1,6 @@
 import { E164_RE } from '@ab/core';
 
-// WA_ALLOWED_RECIPIENTS (docs/12 §13.5): the staging guard, parsed the same way by the API's env
-// schema and the «التكاملات» form. Fail closed: nothing non-blank ever degrades to "unrestricted".
+// WA_ALLOWED_RECIPIENTS (docs/12 §13.5) fails closed: non-blank never degrades to unrestricted.
 
 /** `bad` when the list is non-blank but holds no item at all (`,` or ` , `). */
 export const EMPTY_RECIPIENTS = '(no number in the list)';

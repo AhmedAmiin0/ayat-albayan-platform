@@ -1,4 +1,4 @@
-import type { FxRate } from '@ab/shared';
+import type { FxRate } from '@ab/money';
 import { describe, expect, it } from 'vitest';
 import { conversionFrom, convert, round2 } from './conversion';
 

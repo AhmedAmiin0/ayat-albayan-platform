@@ -1,4 +1,11 @@
-import { googleStudentMapSchema, googleTeacherMapSchema, teacherCalendarOwnerSchema, type GoogleStudentMapRow, type GoogleTeacherMapRow, type TeacherCalendarView } from '@ab/shared';
+import {
+  googleStudentMapSchema,
+  googleTeacherMapSchema,
+  teacherCalendarOwnerSchema,
+  type GoogleStudentMapRow,
+  type GoogleTeacherMapRow,
+  type TeacherCalendarView,
+} from '@ab/catalog';
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

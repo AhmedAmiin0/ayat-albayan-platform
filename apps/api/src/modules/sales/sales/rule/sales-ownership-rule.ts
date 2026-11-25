@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
-import { SalesRepo } from '@/modules/sales/sales/sales.repo';
-import { SalesSettings } from '@/modules/sales/sales/sales.settings';
+import { SalesRepo, SalesSettings } from '@/modules/sales/sales/shared';
 
 /** The two academy switches the rule reads. */
 interface OwnershipSwitches {
@@ -10,13 +9,7 @@ interface OwnershipSwitches {
   sales_auto_assign: boolean;
 }
 
-/**
- * THE assistant ownership rule (owner 2026-11-02): her leads, families and students are
- * checked ONLY while «اشتراط التعيين» (sales_require_assignee) AND the auto-assignment are
- * both ON. Otherwise she acts on ANY lead, family or student (trials, subscriptions, renewals,
- * receipts, a link's teacher, trial dates, course changes). Role permissions, commission and
- * chat visibility never read it.
- */
+/** Enforced only while sales_require_assignee and auto-assignment are both on. */
 export const enforcesOwnership = (s: OwnershipSwitches): boolean =>
   s.sales_require_assignee && s.sales_auto_assign;
 

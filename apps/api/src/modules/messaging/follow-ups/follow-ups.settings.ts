@@ -1,9 +1,9 @@
-import type { SettingKey } from '@ab/shared';
+import type { SettingKey } from '@ab/settings';
 import { Injectable } from '@nestjs/common';
 import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
 import { SettingsService } from '@/common/settings/settings.service';
 
-/** «الرسائل التلقائية» (FollowUpsJob). The stages and the slot window are the follow_up_slots rule (NotificationPolicy). */
+/** The stages and slot window are the follow_up_slots rule (NotificationPolicy). */
 const KEYS = ['auto_messages_enabled'] as const satisfies readonly SettingKey[];
 export type FollowUpsSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 

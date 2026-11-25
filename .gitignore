@@ -10,6 +10,7 @@ coverage/
 playwright-report/
 test-results/
 e2e/store-shots/
+e2e/ui-screens/
 e2e/.auth/
 packages/db/supabase/.temp/
 packages/db/supabase/.branches/
@@ -45,6 +46,3 @@ service-account*.json
 *.ics
 calendar-diff.sql
 oxlint-report.json
-# ESLint findings that ci's lint row saves for lint parity (eslint-findings.mjs)
-.lint/
-lint-parity-report.json

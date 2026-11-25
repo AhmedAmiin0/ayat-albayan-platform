@@ -1,4 +1,4 @@
-import type { MuteSource } from '@ab/shared';
+import type { MuteSource } from '@ab/schedule';
 import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
@@ -12,7 +12,6 @@ const LABEL: Record<MuteSource, { short: string; of: string; icon: 'mic' | 'cam'
 };
 const SOURCES: readonly MuteSource[] = ['microphone', 'camera'];
 
-/** The tile's corner «كتم الميكروفون» / «إيقاف الكاميرا» (named for the person), where allowed. */
 export function MuteButtons({ tile, mute }: { tile: TileView; mute: MuteController }) {
   return (
     <>

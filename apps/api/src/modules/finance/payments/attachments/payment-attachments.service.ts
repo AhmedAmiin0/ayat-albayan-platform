@@ -1,4 +1,4 @@
-import { RECEIPT_MAX_BYTES, RECEIPT_MIMES, type PaymentAttachmentView } from '@ab/shared';
+import { RECEIPT_MAX_BYTES, RECEIPT_MIMES, type PaymentAttachmentView } from '@ab/money';
 import { Injectable, Logger } from '@nestjs/common';
 import { BUCKETS, isPathOf } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
@@ -17,13 +17,7 @@ export type AttachmentCheck = { subscriptionId: string; paths: readonly string[]
 
 const MIMES: ReadonlySet<string> = new Set(RECEIPT_MIMES);
 
-/**
- * «المرفقات» of a bank transfer (owner 2026-10-12, docs/11 §7): 0..5 files in the private `receipts` bucket
- * under the package's folder (the receipt upload URL). Each path must be the package's, uploaded, and its
- * first bytes an image / PDF (400 attachment_path / attachment_type), and held by no other payment (409
- * attachment_in_use: one file, one payment). The older payments' single
- * receipt_path is shown as the first file (legacy). Rows cascade with the payment; objects are discarded.
- */
+/** Bank transfer attachments (docs/11 §7): 0..5 image/PDF files, each held by one payment. */
 /** There, and within the receipts bucket's own cap (MinIO has none, docs/45). */
 const fits = (info: ObjectInfo | null): info is ObjectInfo =>
   info !== null && info.size <= RECEIPT_MAX_BYTES;
@@ -81,7 +75,7 @@ export class PaymentAttachments {
   /** A salesperson's own payment only (recorded_by = her); 404 payment_not_found otherwise (no existence leak). */
   async ownViews(paymentId: string, userId: string): Promise<PaymentAttachmentView[]> {
     const row = await this.payments.get(paymentId);
-    if (!row || row.recorded_by !== userId) throw notFound('payment_not_found');
+    if (row?.recorded_by !== userId) throw notFound('payment_not_found');
     return this.views(row);
   }
 

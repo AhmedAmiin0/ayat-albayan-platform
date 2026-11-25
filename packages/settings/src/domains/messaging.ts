@@ -6,7 +6,7 @@ const tpl = 'templates.settings';
 export const COMMS_SOURCES = ['legacy', 'module'] as const;
 export type CommsSource = (typeof COMMS_SOURCES)[number];
 
-/** «الرسائل والواتساب» (migrations 142, 162; docs/12 §2): the sending switches and the quick-reply window. */
+/** Sending switches and the quick-reply window (migrations 142, 162; docs/12 §2). */
 export const MESSAGING_SETTINGS = {
   messaging_enabled: {
     module: 'messaging', group: 'safety', ownedBy: 'messages_gate', reachesFamilies: true,
@@ -48,7 +48,7 @@ export const MESSAGING_SETTINGS = {
     type: 'string', default: '', minLength: 0, maxLength: 512,
     labelKey: 'calls.settings.permissionTemplate', hintKey: 'calls.settings.permissionTemplateHint',
   },
-  /** A typed «نعم» confirms only a lesson we messaged the guardian about within this many hours. */
+  /** A typed yes confirms only a lesson we messaged the guardian about within this many hours. */
   quick_reply_window_hours: {
     module: 'messaging', group: 'messaging', reachesFamilies: true,
     type: 'int', default: 48, min: 1, max: 168,

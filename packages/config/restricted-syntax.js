@@ -1,6 +1,6 @@
 // ESLint's no-restricted-syntax (MIT), as a plain rule object: every `ab/*` selector group and the
-// React lists run this one implementation under both ESLint and Oxlint (JS plugins match the same
-// esquery selectors), so neither linter needs the other's built-in rule.
+// React lists run this one implementation as an Oxlint JS plugin rule (Oxlint matches the same
+// esquery selectors and has no built-in version of the rule).
 
 const SCHEMA = {
   type: 'array',

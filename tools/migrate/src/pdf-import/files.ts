@@ -1,6 +1,4 @@
-// Report PDFs in the Drive export: «تقارير آيات البيان/<student folder>/<name> — YYYY-MM-DD.pdf»
-// (122), a few loose in the root folder (14), some re-downloads «… (1).pdf». Listed by
-// extract-sheets in cache/sheets/files.json; plan/run.ts exposes them as bundle.sheets[ZIP_FILES].
+// Report PDFs in the Drive export, listed in cache/sheets/files.json as bundle.sheets[ZIP_FILES].
 import type { ZipEntryInfo } from '../sources/zip.ts';
 import type { SourceRow } from '../types.ts';
 

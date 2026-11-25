@@ -14,6 +14,8 @@ export const mobileCalls: CallPlatform = {
   audio: { route: routeCallAudio, restore: restorePlayback },
 };
 
-/** The device's peers (react-native-webrtc); none without it (the call says «لا يدعم المكالمات»). */
-export const peerMaker = (rtc: RtcDeps | null): PeerMaker | null =>
-  rtc ? (iceServers) => createCallPeer({ deps: rtc, iceServers }) : null;
+/** Peers module loaded at the first call; without it the call is reported unsupported. */
+export const peerMaker =
+  (rtc: () => Promise<RtcDeps | null>): PeerMaker =>
+  async (iceServers) =>
+    createCallPeer({ deps: await rtc(), iceServers });

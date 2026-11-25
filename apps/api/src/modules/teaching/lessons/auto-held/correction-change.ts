@@ -1,9 +1,5 @@
-import {
-  OUTCOME_CORRECTION_REASON,
-  type CorrectTo,
-  type LessonEvent,
-  type LessonStatus,
-} from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { OUTCOME_CORRECTION_REASON, type CorrectTo, type LessonEvent } from '@ab/schedule';
 import type { LessonChange } from '@/modules/teaching/scheduling';
 import type { Commit } from '@/modules/teaching/lessons/store/lesson-store';
 import { cancelChange } from '@/modules/teaching/lessons/status/transition';
@@ -55,7 +51,7 @@ interface CorrectionCommit {
   actorId: string;
 }
 
-/** «تصحيح الحالة»: the change, audited status_change with after.reason outcome_correction. */
+/** Status correction: audited status_change with after.reason outcome_correction. */
 export function correctionCommit(input: CorrectionCommit, ctx: ChangeContext): Commit {
   const { lesson, to, actorId } = input;
   const change = BUILD[to](lesson, ctx);

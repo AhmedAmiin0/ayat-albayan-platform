@@ -1,8 +1,8 @@
-import { chatDay, type ChatDay, clockOf, type ClockCycle, dateText, dayParts } from '@ab/shared';
+import { chatDay, type ChatDay, clockOf, type ClockCycle, dateText, dayParts } from '@ab/time';
 import { t } from '../../lib/i18n/i18n';
 import { locale } from '../../lib/i18n/locale';
 
-// The day separators of a chat, as WhatsApp (owner 2026-10-27): the staff inbox and the student
+// The day separators of a chat, as WhatsApp: the staff inbox and the student
 // channel word a day the same way, in the viewer's zone; the day logic is the shared chatDay.
 
 const DAY_MONTH = { day: 'numeric', month: 'long' } as const;
@@ -34,19 +34,13 @@ const WORDS: Readonly<Record<ChatDay['kind'], (day: ChatDay, clock: DayClock) =>
   date: dateWords,
 };
 
-/**
- * A day chip's words (owner 2026-10-27): «اليوم», «أمس», the weekday within the last six days,
- * else «29 سبتمبر» (with the year when it is not this year), in the zone given.
- */
+/** Today, yesterday, a weekday within six days, else the date (year if not this year). */
 export function chatDayLabel(iso: string, clock: DayClock): string {
   const day = chatDay(new Date(iso), clock);
   return WORDS[day.kind](day, clock);
 }
 
-/**
- * A chat row's time, as WhatsApp's chat list (the inbox and «رسائل الطلاب»): the clock today, else
- * the day's words (chatDayLabel); '' without a valid time.
- */
+/** The clock today, else chatDayLabel; empty without a valid time. */
 export function chatRowTime(
   iso: string | null | undefined,
   clock: DayClock & { cycle: ClockCycle },

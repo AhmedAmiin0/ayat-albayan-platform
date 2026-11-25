@@ -1,19 +1,13 @@
-import type { LeadStatus } from '@ab/shared';
+import type { LeadStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
-import { canTransitionLead } from '@ab/shared';
+import { canTransitionLead } from '@ab/catalog';
 
 type LeadRef = { id: string; status: LeadStatus; converted_guardian_id: string | null };
 
-/**
- * A paid package from POST /subscriptions converts the family's lead (R-LEAD-01, R-SUB-01): the
- * lead the booking linked to the guardian (converted_guardian_id), else the lead on the guardian's
- * phone. Booking a paid package already converts through leadTarget; this covers the common funnel
- * of a trial first, then «اشتراك جديد» from the guardian's chat. Compare-and-set on the status, so a
- * concurrent change wins; a terminal or disallowed status is left alone. Audited like a status change.
- */
+/** Converts the booking's lead, else the guardian phone's (R-LEAD-01); compare-and-set. */
 @Injectable()
 export class LeadConversion {
   constructor(

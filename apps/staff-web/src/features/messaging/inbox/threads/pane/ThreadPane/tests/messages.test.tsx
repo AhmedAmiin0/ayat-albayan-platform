@@ -75,7 +75,7 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     const when = lessonWhenAt(new Date('2026-10-04T14:00:00Z'), { tz: viewerTz(), cycle: '24', locale: 'ar' });
     const confirmed = t.inbox.quickReply.confirmed.replace('{when}', when);
     expect(bubble('تمام، هنحضر').getByText(confirmed)).toBeTruthy();
-    // An unlinked «تمام» with no lesson to confirm says nothing (owner 2026-10-28: no «لم تتأكد أي حلقة»).
+    // An unlinked reply with no lesson to confirm shows no note.
     expect(bubble('تمام').queryByText('لم تتأكد أي حلقة بهذا الرد')).toBeNull();
   });
 

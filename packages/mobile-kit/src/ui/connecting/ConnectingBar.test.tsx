@@ -4,8 +4,6 @@ import { createConnectivity } from '../../lib/connectivity/connectivity-store';
 import { t } from '../../lib/i18n/i18n';
 import { ConnectingBar } from './ConnectingBar';
 
-// The bar against a real store (probe never answers): 800 ms delay, the 260 ms reveal to the measured
-// card, the 10 s hint, «تم الاتصال» for 1.5 s then the exit, a bar mounted mid-outage.
 jest.useFakeTimers();
 const reduceMotion = jest.mocked(AccessibilityInfo.isReduceMotionEnabled);
 const timing = jest.spyOn(Animated, 'timing');
@@ -22,7 +20,7 @@ async function mountBar({ connectingFor }: { connectingFor?: number } = {}) {
   await act(async () => undefined); // Reduce Motion is read asynchronously
   return store;
 }
-const advance = (ms: number) => act(async () => void jest.advanceTimersByTime(ms));
+const advance = (ms: number) => act(async () => jest.advanceTimersByTime(ms));
 const measure = () => fireEvent(screen.getByTestId('connecting-bar-measure'), 'layout', { nativeEvent: { layout: { height: CARD } } });
 const height = () => screen.getByTestId('connecting-bar-reveal');
 const heightRuns = () => timing.mock.calls.map(([, config]) => config).filter((config) => config.useNativeDriver === false);

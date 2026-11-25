@@ -1,11 +1,5 @@
-import type {
-  BookingRequest,
-  BookingResult,
-  BookingTeacherOption,
-  Conflict,
-  OutsideSlotsResponse,
-  SlotsResponse,
-} from '@ab/shared';
+import type { BookingRequest, OutsideSlotsResponse } from '@ab/shared';
+import type { BookingResult, BookingTeacherOption, Conflict, SlotsResponse } from '@ab/schedule';
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -45,7 +39,7 @@ export class BookingController {
     return this.slotsService.slots(query);
   }
 
-  /** «وقت آخر»: the next 14 days of the server clock, inside the teacher hours or not. */
+  /** The next 14 days of the server clock, inside the teacher hours or not. */
   @Get('outside-slots')
   outsideSlots(
     @ZodQuery(outsideSlotsQuerySchema) query: z.output<typeof outsideSlotsQuerySchema>,

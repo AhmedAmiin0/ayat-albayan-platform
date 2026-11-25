@@ -3,7 +3,7 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { t, EmptyState, ListRow, InsetGroup } from '@ab/mobile-kit';
 import { slotLine, slotsInWeekOrder, studentsLine } from './overview-text';
 
-/** «الجدول»: one compact row per weekly slot (Riyadh) with its students' names and codes. No link. */
+/** No link. */
 export function TeacherScheduleTab({ weekly }: { weekly: readonly SalesTeacherSlot[] }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

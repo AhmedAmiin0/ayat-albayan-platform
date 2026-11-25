@@ -1,4 +1,6 @@
-import { normalizePhone, type UserDetail, type UserRole, type UserRoleOption, type UserUpdate } from '@ab/shared';
+import type { UserDetail, UserRoleOption, UserUpdate } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
+import { normalizePhone } from '@ab/core';
 
 /** What the edit panel edits. `role_id` '' = the base role's own (system) role. */
 export interface EditForm {

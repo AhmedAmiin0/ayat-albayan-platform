@@ -1,7 +1,7 @@
 import { useClock, type Clock } from '@ab/web-kit/lib/clock';
 import { useNow } from '@ab/web-kit/lib/time/use-now';
 
-/** Relative presence text («منذ 5 دقائق») stays fresh: re-read the time every 30 seconds. */
+/** Re-reads the time every 30 seconds so relative presence text stays fresh. */
 export const PRESENCE_TICK_MS = 30_000;
 
 /** The viewer's clock (12/24 h, language) and the time now, for presenceLine / lastMessageLine. */

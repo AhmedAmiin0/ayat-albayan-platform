@@ -1,7 +1,7 @@
 import type { ThreadFile, ThreadPdfPage } from '@ab/shared';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { pdfPageRetryable } from '@ab/client-core';
+import { offPathKeys, pdfPageRetryable } from '@ab/client-core';
 import { ApiError, apiFetch } from '@ab/mobile-kit';
 import { threadPath } from '@/inbox/thread/hooks/thread-cache';
 
@@ -44,7 +44,7 @@ const SIGNED_QUERY = {
 export const threadFileQuery = (phone: string, messageId: string) =>
   queryOptions({
     ...SIGNED_QUERY,
-    queryKey: ['thread-file', phone, messageId],
+    queryKey: offPathKeys.threadFile(phone, messageId),
     queryFn: () => apiFetch<ThreadFile>(threadFilePath(phone, messageId)),
     retry: false,
     retryOnMount: false,
@@ -56,7 +56,7 @@ export function useThreadFile(phone: string, messageId: string): () => Promise<T
   return useCallback(() => client.fetchQuery(threadFileQuery(phone, messageId)), [client, phone, messageId]);
 }
 
-/** «تنزيل» (owner 2026-10-26): never cached, a fresh URL each tap, signed to save under the file's name. */
+/** Never cached: a fresh signed URL each tap, saved under the file's name. */
 export const fetchDownload = (phone: string, messageId: string): Promise<ThreadFile> =>
   apiFetch<ThreadFile>(`${threadFilePath(phone, messageId)}?download=1`);
 

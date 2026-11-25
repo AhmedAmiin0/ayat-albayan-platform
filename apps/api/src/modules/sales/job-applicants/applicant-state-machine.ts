@@ -1,4 +1,4 @@
-import { JOB_APPLICANT_STATUSES, type JobApplicantStatus } from '@ab/shared';
+import { JOB_APPLICANT_STATUSES, type JobApplicantStatus } from '@ab/catalog';
 
 export const APPLICANT_STATUSES = JOB_APPLICANT_STATUSES;
 export type ApplicantStatus = JobApplicantStatus;

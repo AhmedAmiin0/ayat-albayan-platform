@@ -4,7 +4,7 @@ import { toSalesTeacher } from '@/modules/sales/sales/academy/sales-academy.mapp
 import { SalesAcademyRepo } from '@/modules/sales/sales/academy/sales-academy.repo';
 import { nextLessons, riyadhDayRange, riyadhToday, teacherDayFacts, toScheduleLesson, upcomingRange } from './sales-schedule.mapper';
 import { SalesScheduleRepo } from './sales-schedule.repo';
-import { SalesSettings } from '@/modules/sales/sales/sales.settings';
+import { SalesSettings } from '@/modules/sales/sales/shared';
 
 /**
  * The salesperson's view of the teachers and the academy's day (owner report 2026-10-12: «listing all
@@ -18,7 +18,6 @@ export class SalesScheduleService {
     private readonly settings: SalesSettings,
   ) {}
 
-  /** «المعلمون»: each active teacher with today's lessons, «في حلقة الآن» and their students' next lesson. */
   async teachers(now = new Date()): Promise<SalesTeacherView[]> {
     const [rows, today, upcoming, settings] = await Promise.all([
       this.academy.teachers(),
@@ -30,7 +29,7 @@ export class SalesScheduleService {
     return rows.map((row) => toSalesTeacher(row, ctx));
   }
 
-  /** «الجدول»: one Riyadh day (today by default), optionally one teacher's. */
+  /** One Riyadh day, today by default. */
   async day(q: SalesScheduleQuery, now = new Date()): Promise<SalesScheduleDay> {
     const date = q.date ?? riyadhToday(now);
     const [rows, settings] = await Promise.all([

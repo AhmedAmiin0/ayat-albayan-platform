@@ -6,7 +6,6 @@ import { Note } from '@/core/ui/feedback/Note';
 
 const A = t.classroom.assistants;
 
-/** «أضف مساعدًا/ة»: opens the list of the assistants not yet on the student; a tap assigns one. */
 export function AssistantPicker({ free, onPick }: { free: readonly AssistantView[]; onPick: (profileId: string) => void }) {
   const [open, setOpen] = useState(false);
   if (free.length === 0) return <Note>{A.noneAvailable}</Note>;

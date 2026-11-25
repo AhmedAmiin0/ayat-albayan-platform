@@ -9,7 +9,7 @@ import {
   SHORT_LINK_PURGE_DAYS,
   type LinkExpiry,
 } from '@ab/client-core';
-import { counted } from '@ab/shared';
+import { counted } from '@ab/core';
 import { useState } from 'react';
 import { View } from 'react-native';
 import {
@@ -45,7 +45,6 @@ const items = () => [
   { value: DATE, label: F().otherDate },
 ];
 
-/** «ينتهي الثلاثاء 24 نوفمبر، 9:00 ص» of the chosen lifetime. */
 function EndsAt({ expiry }: { expiry: LinkExpiry }) {
   const clock = { now: useNow(), tz: useViewerTz() };
   const cycle = useClockCycle();
@@ -55,10 +54,7 @@ function EndsAt({ expiry }: { expiry: LinkExpiry }) {
   return <AppText style={style}>{fillSlots(F().endsAt, { date: when })}</AppText>;
 }
 
-/**
- * «مدة الصلاحية» (board LinkXStaffCreate): 1 · 3 · 7 · 30 days or «تاريخ آخر» on the calendar,
- * the end it makes, and when the link is deleted with its visits.
- */
+/** Shows the end and when the link is deleted with its visits. */
 export function ExpiryField({ expiry, onChange, error }: ExpiryFieldProps) {
   const clock = { now: useNow(), tz: useViewerTz() };
   const [custom, setCustom] = useState(false);

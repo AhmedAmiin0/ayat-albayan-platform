@@ -13,14 +13,10 @@ interface NewTemplateProps {
   manage: boolean;
   factsOf: (line: WaLine) => TemplateLineView | undefined;
   onNotice: (notice: Notice) => void;
-  /** Opens the existing «إرسال إلى ميتا» confirm for the saved row. */
   onSubmit: (tpl: TemplateView) => void;
 }
 
-/**
- * «قالب جديد» (owner 2026-10-31) beside the section's title: the form, then the new row's submit
- * confirm. A crm number's template is sent for review through the CRM (docs/39).
- */
+/** A crm number's template is submitted for review through the CRM (docs/39). */
 export function NewTemplate({ manage, factsOf, onNotice, onSubmit }: NewTemplateProps) {
   const [open, setOpen] = useState(false);
   if (!manage) return null;

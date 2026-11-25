@@ -19,10 +19,7 @@ const settledAt = (now: Date): string => new Date(now.getTime() - APP_SEND_GRACE
 export class AppSendExpiryRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /**
-   * Outbound rows whose «أرسل عبر واتساب» window ended over APP_SEND_GRACE_MS ago with no wamid
-   * attached, still queued (held) or failed, not claimed and not yet unconfirmed.
-   */
+  /** Rows past the window plus APP_SEND_GRACE_MS with no wamid, unclaimed, not yet unconfirmed. */
   async settled(now: Date): Promise<HeldRow[]> {
     const { data, error } = await this.db
       .from('messages')

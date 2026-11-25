@@ -1,4 +1,4 @@
-import type { InvoiceView } from '@ab/shared';
+import type { InvoiceView } from '@ab/schedule';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
 import { t, useTheme, EmptyState, ErrorState } from '@ab/mobile-kit';
 import { useInsetRows } from '@/core/ui/surface/use-inset-rows';

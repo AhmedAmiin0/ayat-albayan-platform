@@ -1,4 +1,5 @@
-import { avatarInitials, avatarTone } from '@ab/shared';
+import { avatarInitials } from '@ab/shared';
+import { avatarTone } from '@ab/catalog';
 import { memo, useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
@@ -13,11 +14,11 @@ export interface AvatarProps {
   id?: string | null;
   /** A signed photo URL or a local preview; null/undefined (or a failed load) shows the initials. */
   src?: string | null;
-  /** Overrides the accessible name (e.g. «معاينة الصورة الجديدة»). */
+  /** Overrides the accessible name. */
   alt?: string;
   /** The name is already beside it: hidden from assistive tech. */
   decorative?: boolean;
-  /** 28 / 36 / 64 px; `xl` (96 px) is for the call screens and the «حسابي» photo. */
+  /** `xl` (96 px) is for the call screens and the account photo. */
   size?: AvatarSize;
   className?: string;
 }

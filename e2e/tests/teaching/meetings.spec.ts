@@ -2,9 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 import { AR_LOCALE } from '../../support/core/locale';
 
-// Meetings: «حلقة فورية» from «اجتماع جديد», «افتح الحلقة الآن» before the
-// usual 15 minutes, and the student's own long-lived link /s/<token>. A meeting with students is always
-// a lesson; the standalone «اجتماع داخلي» has its own spec (internal-meeting.spec.ts).
+// A meeting with students is always a lesson; internal meetings have their own spec.
 
 const tag = () => String(Date.now()).slice(-5);
 const inAnHour = () => new Date(Math.ceil((Date.now() + 60 * 60_000) / 60_000) * 60_000);

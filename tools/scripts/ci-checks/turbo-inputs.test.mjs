@@ -53,9 +53,9 @@ test('every package whose code names the migrations hashes them into its test ta
   for (const pkg of readers) assert.ok(testInputs(pkg).includes(MIGRATIONS), pkg);
 });
 
-test('package lint and test inputs extend the root inputs instead of replacing them', () => {
+test('package test inputs extend the root inputs instead of replacing them', () => {
   for (const pkg of packages)
-    for (const task of ['lint', 'test']) {
+    for (const task of ['test']) {
       const inputs = turboOf(pkg).tasks[task]?.inputs ?? [];
       if (inputs.length) assert.equal(inputs[0], '$TURBO_EXTENDS$', `${pkg} ${task}`);
     }

@@ -1,4 +1,4 @@
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import type { RejoinState } from '@ab/web-kit/classroom/closing/RoomClosing';
@@ -14,7 +14,7 @@ export interface RejoinInput {
 
 export interface RoomRejoin {
   join: RoomJoinResult;
-  /** «ادخل مرة أخرى» straight from the closing screen, without the card. */
+  /** Rejoin straight from the closing screen, without the card. */
   rejoin: (() => void) | undefined;
   state: RejoinState & { endedForAll: boolean };
 }
@@ -22,11 +22,7 @@ export interface RoomRejoin {
 /** 410 lesson_ended: the teacher ended it for everyone, no way back in (the app's RoomXEnded). */
 const endedForAll = (error: unknown): boolean => errorCode(error) === 'lesson_ended';
 
-/**
- * The room overlay's own «ادخل مرة أخرى»: a fresh admission from the API (the old token may be
- * spent), the room again on success; a refusal stays on the closing screen in its own words, and
- * 410 lesson_ended turns it into the final «انتهت الحلقة».
- */
+/** A fresh admission since the old token may be spent; 410 lesson_ended makes the end final. */
 export function useRoomRejoin({ first, ids }: RejoinInput): RoomRejoin {
   const [join, setJoin] = useState(first);
   const again = useMutation({

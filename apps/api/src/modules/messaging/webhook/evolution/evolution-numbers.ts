@@ -1,4 +1,4 @@
-import { isWaLine } from '@ab/shared';
+import { isWaLine } from '@ab/catalog';
 import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import type { Receiving } from '@/modules/messaging/webhook/lines/webhook.lines';
 
@@ -18,7 +18,7 @@ const isEvolution = (n: OverlayNumber, instance: string): boolean =>
  */
 export const numbersNotLoaded = (): boolean => overlayNumbers()?.length === 0;
 
-/** Read per call: an admin's change in «الأرقام» applies to the next delivery. */
+/** Read per call, so a change to numbers applies to the next delivery. */
 export function evolutionNumber(instance: string): EvolutionNumber | null {
   const n = overlayNumbers()?.find((x) => isEvolution(x, instance));
   if (!n) return null;

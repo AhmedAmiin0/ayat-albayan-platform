@@ -1,4 +1,5 @@
-import { ARABIC_SKILLS, ISLAMIC_RATES, JUZ_NAMES, surahName, type Grade, type Program } from '@ab/shared';
+import { ARABIC_SKILLS, ISLAMIC_RATES, JUZ_NAMES, surahName } from '@ab/shared';
+import type { Grade, Program } from '@ab/catalog';
 import { AR, EMPTY, esc, fill, para } from '@/modules/reporting/report-pdf/render/pdf-text';
 import type { FamilyModel } from './family-model';
 

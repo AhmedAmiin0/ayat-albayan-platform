@@ -1,5 +1,5 @@
 import { liveRoomText, type CardRoom, type LiveRoom } from '@ab/client-core';
-import { clockOf } from '@ab/shared';
+import { clockOf } from '@ab/time';
 import { StatusMark } from '@ab/web-kit/components/ui/surface/status-mark';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -7,7 +7,7 @@ import { LivePresence } from './LivePresence';
 
 interface Props {
   room: CardRoom;
-  /** The family's clock: «انتهت الحلقة الساعة 7:12 م». */
+  /** The family's clock. */
   tz: string;
 }
 

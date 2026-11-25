@@ -1,11 +1,11 @@
+import type { Page } from '@ab/core';
 import type {
   MyCommissionRow,
   MyEarnings,
   MyPaymentRow,
   MyStudentRow,
-  Page,
   PaymentAttachmentView,
-} from '@ab/shared';
+} from '@ab/money';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -41,7 +41,7 @@ export class MyController {
     return this.my.earnings(user);
   }
 
-  /** «محفظتي»: my commissions, newest first (?page, ?pageSize ≤ 100); the caller's own only, whatever the query says. */
+  /** My commissions, newest first (pageSize <= 100); always the caller's own, whatever the query */
   @Get('commissions')
   @Permissions('self.sales_earnings')
   commissions(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<MyCommissionRow>> {
@@ -54,7 +54,6 @@ export class MyController {
     return this.my.payments(user);
   }
 
-  /** «المرفقات» of a payment she recorded (recorded_by = her), else 404 payment_not_found. */
   @Get('payments/:id/attachments')
   @Permissions('self.sales_payments')
   paymentAttachments(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<PaymentAttachmentView[]> {

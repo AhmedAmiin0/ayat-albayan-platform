@@ -7,10 +7,7 @@ export interface SearchHeadProps {
   chats: boolean;
 }
 
-/**
- * Under the search box (docs/37): at 1–2 characters, the hint that message text needs 3; with
- * both sections shown, «المحادثات» over the chats.
- */
+/** Message text search needs at least 3 characters (docs/37). */
 export function SearchHead({ hits, chats }: SearchHeadProps) {
   return (
     <>

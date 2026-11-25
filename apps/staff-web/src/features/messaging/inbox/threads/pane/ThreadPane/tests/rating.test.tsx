@@ -7,8 +7,6 @@ import { detail, message, PHONE, template } from '@/features/messaging/inbox/tes
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane';
 
-// The 24 h window in the header, «إرسال تقييم الحلقة» in a closed chat, the rating chip (migration 195).
-
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
@@ -80,7 +78,7 @@ describe('«إرسال تقييم الحلقة»', () => {
   it('template not approved yet → disabled with the note; a lead’s chat has no button', async () => {
     renderThread({ lastInboundAgoMs: 30 * HOUR, templates: [template()] });
     expect(await screen.findByText(t.inbox.rating.notApproved)).toBeTruthy();
-    expect((screen.getByRole('button', { name: t.inbox.rating.send }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole<HTMLButtonElement>('button', { name: t.inbox.rating.send })).disabled).toBe(true);
   });
 
   it('a lead (not a guardian) gets no rating button', async () => {

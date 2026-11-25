@@ -11,10 +11,9 @@ import { resumeLines } from './pause-form';
 
 interface ResumeCourseDialogProps {
   studentId: string;
-  /** A package row's «استئناف»: that package (absent from the banner: the open pause). */
+  /** A package row's resume; absent from the banner means the open pause. */
   subscriptionId?: string;
   onClose: () => void;
-  /** «استُؤنفت الدورة» or, when lessons booked back clash, «… حلقات فيها تعارض تحتاج مراجعة في الجدول: N». */
   onDone: (message: string) => void;
 }
 
@@ -22,7 +21,7 @@ interface ResumeCourseDialogProps {
 const resumedText = (result: Pick<CoursePauseResult, 'conflicts'>): string =>
   result.conflicts > 0 ? t.coursePause.resumedConflicts.replace('{n}', String(result.conflicts)) : t.coursePause.resumed;
 
-/** «استئناف الدورة الآن؟»: POST /students/:id/course-pause/resume after one confirm. */
+/** POST /students/:id/course-pause/resume after one confirm. */
 export function ResumeCourseDialog({ studentId, subscriptionId, onClose, onDone }: ResumeCourseDialogProps) {
   const invalidate = useInvalidatePause(studentId);
   const tz = useViewerTz();

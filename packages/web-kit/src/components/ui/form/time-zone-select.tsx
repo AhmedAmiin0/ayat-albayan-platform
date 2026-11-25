@@ -1,11 +1,11 @@
-import { tzChoices, tzOptionLabel } from '@ab/shared';
+import { tzChoices, tzOptionLabel } from '@ab/time';
 import type { ComponentProps } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Select } from './select';
 
 const CITY: Record<string, string | undefined> = t.tz;
 
-/** City for a sentence («المواعيد بتوقيت القاهرة»), or undefined for a zone without a label. */
+/** City for a sentence, or undefined for a zone without a label. */
 export const tzCity = (id: string): string | undefined => CITY[id];
 
 export interface TimeZoneSelectProps extends Omit<ComponentProps<'select'>, 'value' | 'onChange' | 'children'> {
@@ -13,10 +13,7 @@ export interface TimeZoneSelectProps extends Omit<ComponentProps<'select'>, 'val
   onValue: (tz: string) => void;
 }
 
-/**
- * Every person's zone (rule 6): the curated list as «القاهرة (Africa/Cairo)», picked, never typed.
- * A stored zone outside the list stays selectable, so editing never silently changes it.
- */
+/** Rule 6: zones are picked, never typed; a stored zone outside the list stays selectable. */
 export function TimeZoneSelect({ value, onValue, ...props }: TimeZoneSelectProps) {
   return (
     <Select {...props} value={value} onChange={(e) => onValue(e.target.value)}>

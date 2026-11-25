@@ -1,12 +1,6 @@
-import {
-  LEAD_SOURCES,
-  OCCUPYING_LESSON_STATUSES,
-  type DashboardSummary,
-  type LeadSource,
-  type LeadStatus,
-  type LessonStatus,
-  type SourceRow,
-} from '@ab/shared';
+import { LEAD_SOURCES, type LeadSource, type LeadStatus, type LessonStatus } from '@ab/catalog';
+import type { DashboardSummary, SourceRow } from '@ab/money';
+import { OCCUPYING_LESSON_STATUSES } from '@ab/schedule';
 import { round2 } from './work/conversion';
 import type { SourceKey } from './dashboard.types';
 import type { SourceMoney } from './finance/finance';

@@ -1,5 +1,5 @@
 import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '@ab/shared/testing';
-import { wallInstant, weekWindowIn, zonedPartsIn } from '@ab/shared';
+import { wallInstant, weekWindowIn, zonedPartsIn } from '@ab/time';
 import { describe, expect, it } from 'vitest';
 import { dateLabel, dayMonthLabel } from '@ab/web-kit/schedule/tz/tz';
 

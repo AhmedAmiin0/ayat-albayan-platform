@@ -2,10 +2,7 @@ import { z } from 'zod';
 import { CHAT_SEND_MIMES, type ChatSendMime } from '../chat/chat-files/index.js';
 import { WA_TEXT_MAX } from '../schemas.js';
 
-// «الردود السريعة» (owner 2026-10-25): saved replies staff insert into the chat composer. Named
-// «saved replies» in code: `quickReply` is WhatsApp's interactive reply buttons (quick-reply.ts).
-// A shared reply (owner_profile_id null) is seen by everyone with the inbox and written with
-// saved_replies.manage; a personal one («ردودي») is its owner's alone. Nothing here sends anything.
+// Called saved replies since `quickReply` means WhatsApp's buttons; nothing here sends.
 
 export const SAVED_REPLY_TITLE_MAX = 60;
 export const SAVED_REPLY_BODY_MAX = WA_TEXT_MAX;
@@ -41,7 +38,12 @@ const body = z.string().trim().min(1).max(SAVED_REPLY_BODY_MAX);
 /** The uploaded object (POST /saved-replies/attachment-upload-url) and the name the family sees. */
 const attachment = z.object({
   path: z.string().min(1).max(300),
-  name: z.string().trim().min(1).max(200).regex(/^[^/\\\p{Cc}]+$/u),
+  name: z
+    .string()
+    .trim()
+    .min(1)
+    .max(200)
+    .regex(/^[^/\\\p{Cc}]+$/u),
 });
 
 /** POST /saved-replies. */
@@ -76,6 +78,13 @@ export type SavedReplyUpload = z.infer<typeof savedReplyUploadSchema>;
 export const savedReplyStageSchema = z.object({ clientRequestId: z.uuid() });
 
 /** The 4xx codes of the saved-replies endpoints. */
-export const SAVED_REPLY_ERRORS = ['saved_reply_not_found', 'saved_replies_forbidden', 'file_path', 'file_type', 'file_too_large'] as const;
+export const SAVED_REPLY_ERRORS = [
+  'saved_reply_not_found',
+  'saved_replies_forbidden',
+  'file_path',
+  'file_type',
+  'file_too_large',
+] as const;
 export type SavedReplyError = (typeof SAVED_REPLY_ERRORS)[number];
-export const isSavedReplyError = (code: unknown): code is SavedReplyError => SAVED_REPLY_ERRORS.some((c) => c === code);
+export const isSavedReplyError = (code: unknown): code is SavedReplyError =>
+  SAVED_REPLY_ERRORS.some((c) => c === code);

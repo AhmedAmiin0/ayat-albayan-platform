@@ -1,4 +1,5 @@
-import { WA_LINES, type TemplateHealthView, type TemplateLineSync, type WaLine } from '@ab/shared';
+import type { TemplateHealthView, TemplateLineSync } from '@ab/shared';
+import { WA_LINES, type WaLine } from '@ab/catalog';
 import {
   Inject, Injectable, Logger, Optional,
   type OnApplicationBootstrap, type BeforeApplicationShutdown, type OnModuleDestroy,

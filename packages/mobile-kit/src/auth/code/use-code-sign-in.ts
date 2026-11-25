@@ -1,5 +1,6 @@
 import { type CodeRoutes, RESEND_SECONDS } from '@ab/client-core';
-import { loginCode, normalizePhone } from '@ab/shared';
+import { loginCode } from '@ab/shared';
+import { normalizePhone } from '@ab/core';
 import { useState } from 'react';
 import { authApi } from '../forgot/auth-api';
 import { authErrorText } from '../forgot/auth-errors';
@@ -7,11 +8,7 @@ import { useCountdown } from '../forgot/use-countdown';
 import { signInWithCode } from '../sign-in';
 import { t } from '../../lib/i18n/i18n';
 
-/**
- * «الدخول برمز واتساب», the teacher's (docs/46 A8) or the guardian's (`codes`, docs/50 §6): phone →
- * 6-digit code → session. The phone is only a lookup key (the code goes to the number on file);
- * `target` holds the normalised one.
- */
+/** The phone is only a lookup key; the code goes to the number on file (docs/46 A8, docs/50 §6). */
 export function useCodeSignIn(codes: CodeRoutes = authApi.staffCodes) {
   const [phone, setPhone] = useState('');
   const [target, setTarget] = useState<string | null>(null);

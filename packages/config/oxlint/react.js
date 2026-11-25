@@ -1,4 +1,4 @@
-// The React flavour (eslint.js reactConfig): eslint-plugin-react-hooks' recommended-latest preset,
+// The React flavour: eslint-plugin-react-hooks' recommended-latest preset,
 // every rule an error (the React Compiler's included), browser globals and async JSX handlers.
 // Oxlint runs its native port of each rule; `config` and `gating` (no native port) run the
 // plugin itself as the `react-hooks-js` JS plugin (docs/31b-oxlint-mapping.md).

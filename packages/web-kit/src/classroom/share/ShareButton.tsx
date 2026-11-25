@@ -1,4 +1,4 @@
-import type { JoinRole } from '@ab/shared';
+import type { JoinRole } from '@ab/schedule';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RoomButton } from '@ab/web-kit/classroom/room/components/RoomButton';
 import { RequestButton } from './RequestButton';
@@ -12,11 +12,7 @@ interface Props {
   share: ShareRequests;
 }
 
-/**
- * «شارك الشاشة» where it can work: the browser has getDisplayMedia (never on phones) and LiveKit
- * lets this participant publish a screen (staff, or a guest after «سماح»). A guest who may not yet
- * gets «اطلب مشاركة الشاشة» instead; nobody gets a button that can only fail.
- */
+/** Shown only where it can work; a guest who may not yet gets the request button instead. */
 export function ShareButton({ room, role, share }: Props) {
   const { snap } = room;
   if (!canShareScreen()) return null;

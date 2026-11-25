@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { bundleText, REGISTRY_VERSION, seedPayload } from '@ab/shared';
+import { bundleText, REGISTRY_VERSION, seedPayload } from '@ab/settings';
 import arBundle from '@ab/shared/i18n/ar.json';
 import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
@@ -20,7 +20,7 @@ interface SeedOutcome {
 type SeedLog = Pick<Logger, 'log' | 'warn' | 'error'>;
 
 const asOutcome = (data: unknown): SeedOutcome =>
-  data !== null && typeof data === 'object' && !Array.isArray(data) ? (data as SeedOutcome) : {};
+  data !== null && typeof data === 'object' && !Array.isArray(data) ? data : {};
 
 /** One log line per run: skipped (and why), or applied with the failed keys (a warning when any). */
 function report(out: SeedOutcome, log: SeedLog): void {

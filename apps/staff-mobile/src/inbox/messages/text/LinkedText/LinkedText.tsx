@@ -62,14 +62,13 @@ export function LinkedText({ text, touch, a11y }: LinkedTextProps) {
   const [failed, setFailed] = useState(false);
   const onHold = touch.has ? touch.openMenu : undefined;
   const parts = splitLinks(text);
-  // While «بحث» runs, the searched words are lit up (the links keep their own look).
   const q = useChatSearch()?.q ?? '';
   const draw = (s: string) => (q ? <SearchMarks text={s} q={q} /> : s);
   return (
     <>
       <ContentText
         source={text}
-        // Selecting text would swallow the long press that opens «رد» / «إعادة توجيه».
+        // Selecting text would swallow the long press that opens the message menu.
         selectable={!touch.has}
         {...(a11y ? touch.a11y : {})}
         style={{

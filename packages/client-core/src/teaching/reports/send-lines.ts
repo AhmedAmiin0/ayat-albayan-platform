@@ -1,4 +1,4 @@
-import { counted, type PluralForm } from '@ab/shared';
+import { counted, type PluralForm } from '@ab/core';
 import { minutesLeft, reportSendState, type SendReport, type SendState } from './send-state.js';
 
 /** The texts the lines are made of (reports.editUntil, reports.familySend.*, the minute forms). */
@@ -12,9 +12,8 @@ export interface SendWords {
 }
 
 export interface SendLines {
-  /** «يمكنك تعديل التقرير حتى …», «انتهت مدة التعديل…», or nothing (an admin past the window). */
+  /** Null for an admin past the edit window. */
   edit: string | null;
-  /** «سيُرسل إلى الأسرة بعد 12 دقيقة», «… يُرسل الآن», «أُرسل إلى الأسرة», or nothing. */
   family: string | null;
 }
 

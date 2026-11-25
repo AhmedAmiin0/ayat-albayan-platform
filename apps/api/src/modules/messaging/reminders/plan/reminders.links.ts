@@ -1,4 +1,5 @@
-import { meetingModeOf, reminderDue, usesPlatform, type JoinWindowConfig } from '@ab/shared';
+import { reminderDue } from '@ab/shared';
+import { meetingModeOf, usesPlatform, type JoinWindowConfig } from '@ab/schedule';
 import { linkExpiry } from '@/modules/teaching/classroom/join/join-link.token';
 import { isOpen, type ReminderLesson } from './reminders.plan';
 
@@ -81,11 +82,7 @@ function lessonCandidates(lesson: ReminderLesson, at: CandidateTiming): RoomCand
   });
 }
 
-/**
- * lesson_join_link per (lesson, student with a guardian) once the same-day reminder is due, for a
- * lesson that goes out with our room, and only while the template is approved. One per student: the
- * button carries a guest token of that student's own, like «ابعت لينك الحلقة».
- */
+/** One per student once the same-day reminder is due, only while the template is approved. */
 export function joinCandidates(lessons: readonly ReminderLesson[], ctx: RoomContext, at: CandidateTiming): RoomCandidate[] {
   if (!ctx.joinOk) return [];
   return lessons.filter((l) => isOpen(l.status) && roomFor(l, ctx)).flatMap((l) => lessonCandidates(l, at));

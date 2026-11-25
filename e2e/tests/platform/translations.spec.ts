@@ -2,9 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { openNav } from '../../support/core/nav';
 import { withSql } from '../../support/core/schedule';
 
-// «الترجمات» (dynamic translations): an admin overrides a nav label in
-// Arabic; after a reload the sidebar shows it (main.tsx merges GET /i18n/ar/overrides into `t`
-// before the first render). «استعادة الأصل» brings the bundled label back on the next load.
+// Overrides merge into `t` before the first render (main.tsx), so a reload shows them.
 
 const KEY = 'nav.leads';
 const EDITED = `${ar.nav.leads} e2e ${Date.now() % 100_000}`;
@@ -27,7 +25,7 @@ test.describe('translations («الترجمات»)', () => {
     await editor.getByRole('button', { name: ar.translations.save }).click();
     await expect(page.getByRole('status').filter({ hasText: ar.translations.saved })).toBeVisible();
 
-    // The nav: the sidebar, or the «القائمة» sheet below 900px (closed again with Esc).
+    // The sidebar, or the menu sheet below 900px (closed with Esc).
     const nav = async () => (await openNav(page)).getByRole('navigation', { name: ar.nav.label });
     await page.reload();
     await expect((await nav()).getByRole('link', { name: EDITED })).toBeVisible();

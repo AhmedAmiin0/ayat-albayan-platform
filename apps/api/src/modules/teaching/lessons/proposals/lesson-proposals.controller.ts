@@ -3,7 +3,7 @@ import {
   proposalApproveSchema,
   proposalRejectSchema,
   type LessonView,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -13,11 +13,7 @@ import { ZodBody } from '@/common/http/zod-inputs';
 import { LessonProposeService, ProposalDecisionService } from './lesson-proposals.service';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 
-/**
- * Teacher self-service «اقترح ميعاد تاني» and the admin's answer (R-SCH-08), to the
- * families' «اطلب موعدًا آخر» too (requested_by 'family'; a reject's `note` reaches them).
- * Every route returns LessonView(s); a lesson's pending proposal is LessonView.pending_proposal.
- */
+/** Teacher proposals and family requests (R-SCH-08); a reject's note reaches the family. */
 @ApiTags('lessons')
 @ApiBearerAuth()
 @Permissions('lessons.write')

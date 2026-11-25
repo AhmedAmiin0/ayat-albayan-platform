@@ -1,4 +1,4 @@
-import { SEED_ENTRIES, SETTING_KEYS } from '@ab/shared';
+import { SEED_ENTRIES, SETTING_KEYS } from '@ab/settings';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
@@ -74,7 +74,7 @@ describe('GET /config/entries, PUT …/description, GET /admin/config/parity', (
     ['upload_max_mb', { admin: 200, editor: 200, numbers: 200 }],
   ] as const)('description of %s needs the owner module permission', async (key, want) => {
     for (const [token, status] of Object.entries(want)) {
-      expect([token, (await describeKey(key, 'نص', token as Token)).statusCode]).toEqual([token, status]);
+      expect([token, (await describeKey(key, 'نص', token)).statusCode]).toEqual([token, status]);
     }
     expect((await describeKey(key, 'نص', 'teacher')).statusCode).toBe(403);
   });

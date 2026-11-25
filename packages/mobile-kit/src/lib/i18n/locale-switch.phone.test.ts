@@ -1,11 +1,11 @@
-import { LOCALE_STORAGE_KEY } from '@ab/shared';
+import { LOCALE_STORAGE_KEY } from '@ab/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { reloadAppAsync } from 'expo';
 import { getLocales } from 'expo-localization';
 import { I18nManager } from 'react-native';
 import { RELOAD_KEY, phoneLocale, syncLocale } from './locale-switch';
 
-// Language and direction follow the phone like WhatsApp (owner 2026-10-27); «اللغة» overrides it.
+// Language and direction follow the phone like WhatsApp; the language setting overrides it.
 jest.mock('expo', () => ({ reloadAppAsync: jest.fn(async () => undefined) }));
 jest.mock('expo-localization', () => ({ getLocales: jest.fn() }));
 

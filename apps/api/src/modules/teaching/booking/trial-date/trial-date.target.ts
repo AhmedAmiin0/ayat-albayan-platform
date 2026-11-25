@@ -1,11 +1,11 @@
-import { bookingKindOf, canPickTrialDate, type BookingRequest } from '@ab/shared';
+import { canPickTrialDate, type BookingRequest } from '@ab/shared';
+import { bookingKindOf } from '@ab/schedule';
 import { HttpStatus } from '@nestjs/common';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { MovedTrial } from './trial-date.plan';
 import type { TrialStudent } from './trial-date.repo';
 
-// Who «موعد تجريبي جديد» is for (owner 2026-10-25): ONE existing student, a trial, no invoice,
-// and no running subscription (new / trial / pending_subscription). Pure.
+// A new trial date is for one existing student with no invoice and no running subscription.
 
 /** The request with its id fixed (a move's new lesson id) and, for a move, every student of that trial. */
 export type TrialTarget = { req: BookingRequest & { studentIds: string[]; clientRequestId: string }; old: MovedTrial | null };

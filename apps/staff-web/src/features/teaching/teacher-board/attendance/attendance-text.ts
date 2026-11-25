@@ -4,9 +4,9 @@ import type { Clock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
-// What the web «سجل الحضور» says (docs/46 C5): month names, the totals line, a row's tags.
+// Attendance log wording (docs/46 C5).
 
-/** "2026-10" → «أكتوبر 2026» (mid-month UTC: no zone can push it to another month). */
+/** Mid-month UTC so no zone can push it to another month. */
 export const monthLabel = (month: string): string =>
   dateText(new Date(`${month}-15T12:00:00Z`), { tz: 'UTC', locale }, { month: 'long', year: 'numeric' });
 
@@ -20,7 +20,6 @@ const TOTALS: [keyof typeof t.sales.student.log.totals, (x: Totals) => number][]
   ['rescheduled', (x) => x.rescheduled],
 ];
 
-/** «حضر 3 · غاب 1 · بعذر 0 · متأخر 0 · ألغيت 1 · أُجّلت 0». */
 export const totalsLine = (totals: Totals): string =>
   TOTALS.map(([key, n]) => `${t.sales.student.log.totals[key]} ${n(totals)}`).join(' · ');
 
@@ -46,10 +45,7 @@ const LINES: Line[] = [
   (r) => (r.move_reason ? w().moveReason.replace('{reason}', r.move_reason) : null),
 ];
 
-/**
- * «تجريبية · تعويضية · موعد بديل · متأخر», only those that apply, then the cancel reason and the
- * move lines («نُقلت إلى …», «بدلًا من موعد …», «سبب تغيير الموعد: …») in the viewer's clock.
- */
+/** Only the tags that apply, then the cancel reason and move lines in the viewer's clock. */
 export function rowNote(row: AttendanceTableRow, clock: NoteClock): string {
   const tags = TAGS.filter(([applies]) => applies(row)).map(([, word]) => word());
   const lines = LINES.map((line) => line(row, clock)).filter((l) => l !== null);

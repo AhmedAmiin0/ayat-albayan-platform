@@ -13,7 +13,7 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [], can: (p: string) => p !== 'numbers.manage' || can.manage }),
 }));
 
-// «ترتيب البديل» (docs/23c decision 9): 0–999, saved through the number PATCH (numbers.manage).
+// docs/23c decision 9: range 0-999, saved through the number PATCH.
 
 const r = t.numbers.fallbackRank;
 const card = async () => within(await screen.findByRole('article', { name: 'Notifications line' }));
@@ -67,7 +67,7 @@ describe('«ترتيب البديل»', () => {
     const { client } = renderPanel(apiFetch);
     const c = await card();
     act(() => client.setQueryData(numbersQuery.queryKey, [numberView({ fallback_rank: 42 })]));
-    await waitFor(() => expect((c.getByRole('spinbutton', { name: r.label }) as HTMLInputElement).value).toBe('42'));
+    await waitFor(() => expect((c.getByRole<HTMLInputElement>('spinbutton', { name: r.label })).value).toBe('42'));
   });
 
   it('without numbers.manage the rank is text', async () => {

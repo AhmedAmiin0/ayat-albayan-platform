@@ -1,4 +1,4 @@
-import type { JoinRole } from '@ab/shared';
+import type { JoinRole } from '@ab/schedule';
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
 import { canAllowStudents, canDraw, canManageBoard, EMPTY_BOARD, lastStrokeOf, type BoardState, type PenColor } from './model/model';
@@ -22,9 +22,9 @@ export interface BoardController {
   undo: () => void;
   clear: () => void;
   setStudentsCanDraw: (on: boolean) => void;
-  /** «سماح» / «إيقاف كتابة {name}» for one guest (staff). */
+  /** Allow or stop drawing for one guest (staff). */
   allowDrawer: (identity: string, allow: boolean) => void;
-  /** Opens the board for everyone (staff, after «اطلب فتح السبورة»). */
+  /** Opens the board for everyone (staff, on request). */
   openForAll: () => void;
   toggleVisible: () => void;
 }

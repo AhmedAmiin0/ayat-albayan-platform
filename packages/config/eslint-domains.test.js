@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { ESLint } from 'eslint';
 import { moduleOf } from './eslint-boundaries.js';
 import { domainModuleRegex, routeImportGroup } from './eslint-domains.js';
+import { lintCode } from './oxlint/testing/lint-code.js';
 
 const opts = { base: 'src', exempt: ['core', 'test'] };
 
@@ -28,22 +28,19 @@ test('folder names are kebab-case only (they go into a regex)', () => {
 });
 
 /** Lints one route import with the generated group, as apps/staff-mobile does. */
-async function routeErrors(spec, domains) {
+function routeErrors(spec, domains) {
   const group = routeImportGroup({ prefix: '@/', exempt: ['core'], domains });
-  const eslint = new ESLint({
-    overrideConfigFile: true,
-    overrideConfig: { rules: { 'no-restricted-imports': ['error', { patterns: [{ group, message: 'index only' }] }] } },
-  });
-  const [result] = await eslint.lintText(`import x from '${spec}';\nexport default x;\n`, { filePath: 'app/a.js' });
-  return result?.messages.length ?? -1;
+  const rules = { 'no-restricted-imports': ['error', { patterns: [{ group, message: 'index only' }] }] };
+  const code = `import x from '${spec}';\nexport default x;\n`;
+  return lintCode({ blocks: [{ rules }], files: { 'app/a.js': code } }).length;
 }
 
-test('route files: a domain module through its index only; flat features and core as before', async () => {
+test('route files: a domain module through its index only; flat features and core as before', () => {
   const domains = ['sales'];
-  assert.equal(await routeErrors('@/sales/app', domains), 0);
-  assert.equal(await routeErrors('@/sales/app/screens/A', domains), 1);
-  assert.equal(await routeErrors('@/inbox', domains), 0);
-  assert.equal(await routeErrors('@/inbox/thread/T', domains), 1);
-  assert.equal(await routeErrors('@/core/ui/AppText', domains), 0);
-  assert.equal(await routeErrors('@/sales/app', []), 1, 'not converted yet: @/sales/app is internals of @/sales');
+  assert.equal(routeErrors('@/sales/app', domains), 0);
+  assert.equal(routeErrors('@/sales/app/screens/A', domains), 1);
+  assert.equal(routeErrors('@/inbox', domains), 0);
+  assert.equal(routeErrors('@/inbox/thread/T', domains), 1);
+  assert.equal(routeErrors('@/core/ui/AppText', domains), 0);
+  assert.equal(routeErrors('@/sales/app', []), 1, 'not converted yet: @/sales/app is internals of @/sales');
 });

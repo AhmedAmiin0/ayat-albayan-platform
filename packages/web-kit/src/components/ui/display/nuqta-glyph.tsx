@@ -1,4 +1,4 @@
-import type { Glyph } from '@ab/shared';
+import type { Glyph } from '@ab/money';
 import { cn } from '@ab/web-kit/lib/utils';
 
 // The calligrapher's rhombic dot (docs/07 §5–6). Shape carries the state, colour only confirms it:

@@ -1,24 +1,14 @@
-import type {
-  SalesPackageCancelCheck,
-  SalesPackageCancelled,
-  SubscriptionCancel as CancelBody,
-  SubscriptionView,
-} from '@ab/shared';
+import type { SalesPackageCancelCheck, SalesPackageCancelled } from '@ab/shared';
+import type { SubscriptionCancel as CancelBody, SubscriptionView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SubscriptionCancel } from '@/modules/finance/subscriptions';
-import { SalesMoneyScope } from '@/modules/sales/sales-money/sales-money.scope';
+import { SalesMoneyScope } from '@/modules/sales/sales-money/shared';
 
 /** Who the assistant ownership rule binds: the sales base role; the admin never. */
 const isAssistant = (user: AuthUser): boolean => user.role === 'sales';
 
-/**
- * «إلغاء الباقة» by the assistant (owner 2026-11-02): ANY student's package while «اشتراط التعيين»
- * is OFF (the default), only hers while SalesOwnershipRule enforces it (403 not_your_student).
- * The check, the write, the 409s (already_cancelled / has_payments / has_lessons /
- * has_commission), the audit and the recompute are the admin's (SubscriptionCancel); the answer is
- * the id and the status only: maybe not her student, so never a price or payment.
- */
+/** Any student's package unless the assignment rule is enforced; answers id and status only. */
 @Injectable()
 export class AnyPackageCancel {
   constructor(

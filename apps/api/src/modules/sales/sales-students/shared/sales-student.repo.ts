@@ -1,0 +1,135 @@
+import type { Tables } from '@ab/db';
+import type { Attendance, LessonStatus } from '@ab/catalog';
+import { OPEN_LESSON_STATUSES } from '@ab/schedule';
+import { Inject, Injectable } from '@nestjs/common';
+import { DB, type Db } from '@/common/db/db.module';
+import { dbError } from '@/common/http/http';
+import { type SalesScheduleRow, WEEKLY_RULE_COLUMNS, type WeeklyRuleRow } from '@/modules/sales/sales';
+import { TrialDateRepo } from '@/modules/teaching/booking';
+
+/** A student of the same guardian (the student itself included; the mapper drops it). */
+export type FamilyStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status'>;
+
+/** Whitelisted: never notes, a balance or a meeting link; guardian phone, name, siblings. */
+export type DetailsStudentRow = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program' | 'tz'> & {
+  contact_is_self?: boolean;
+  teacher: { display_name_ar: string } | null;
+  guardian: { phone_e164: string; name?: string; students?: FamilyStudentRow[] } | null;
+};
+
+const DETAILS_SELECT =
+  'id, code, name, status, program, tz, contact_is_self, teacher:teachers(display_name_ar), guardian:guardians(phone_e164, name, students(id, code, name, status))' as const;
+
+/** Only for self.sales_money. */
+export type PriceRow = Pick<
+  Tables<'subscriptions'>,
+  'id' | 'price' | 'currency' | 'cancel_kind' | 'stop_owed_amount'
+>;
+
+/** A past lesson of the student with every student's attendance (the mapper keeps the student's own). */
+export interface AttendanceRow {
+  id: string;
+  starts_at: string;
+  status: LessonStatus;
+  lesson_students: { student_id: string; attendance: Attendance | null }[];
+}
+
+/** What a sales move / cancel checks: who is in the lesson and when it ends. */
+export interface LessonFacts {
+  id: string;
+  starts_at: string;
+  ends_at: string;
+  status: LessonStatus;
+  lesson_students: { student_id: string }[];
+}
+
+/**
+ * The sales schedule's whitelist (SalesScheduleRow) without the way in: no meeting_link, no meeting_mode.
+ * `own` keeps only the student's lessons; `lesson_students` still lists every student (for `mine`).
+ */
+const UPCOMING_SELECT =
+  'id, starts_at, ends_at, status, makeup_of_id, rule:schedule_rules!lessons_rule_id_fkey(package), teacher:teachers(id, display_name_ar, display_name_en, tz), own:lesson_students!inner(student_id), lesson_students(student:students(id, code, name, tz))' as const;
+
+const RULE_SELECT = `rule:schedule_rules!inner(${WEEKLY_RULE_COLUMNS})` as const;
+
+interface Window {
+  from: Date;
+  to: Date;
+  limit: number;
+}
+
+const ATTENDANCE_LIMIT = 60;
+
+/** Service role; any student. */
+@Injectable()
+export class SalesStudentRepo {
+  constructor(@Inject(DB) private readonly db: Db, readonly trialDates: TrialDateRepo) {}
+
+  async student(id: string): Promise<DetailsStudentRow | null> {
+    const { data, error } = await this.db
+      .from('students')
+      .select(DETAILS_SELECT)
+      .eq('id', id)
+      .maybeSingle();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** The price and currency of her student's packages: read ONLY for a viewer with self.sales_money (part_paid). */
+  async prices(studentId: string): Promise<PriceRow[]> {
+    const { data, error } = await this.db.from('subscriptions').select('id, price, currency, cancel_kind, stop_owed_amount').eq('student_id', studentId);
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** Lessons of the student that started before `now`, newest first, at most ATTENDANCE_LIMIT. */
+  async pastLessons(studentId: string, now: Date): Promise<AttendanceRow[]> {
+    const { data, error } = await this.db
+      .from('lessons')
+      .select('id, starts_at, status, lesson_students!inner(student_id, attendance)')
+      .eq('lesson_students.student_id', studentId)
+      .lt('starts_at', now.toISOString())
+      .order('starts_at', { ascending: false })
+      .limit(ATTENDANCE_LIMIT)
+      .overrideTypes<AttendanceRow[], { merge: false }>();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  async lesson(id: string): Promise<LessonFacts | null> {
+    const { data, error } = await this.db
+      .from('lessons')
+      .select('id, starts_at, ends_at, status, lesson_students(student_id)')
+      .eq('id', id)
+      .maybeSingle<LessonFacts>();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** The student's active rules (schedule_rule_students → schedule_rules.status = 'active'). */
+  async rules(studentId: string): Promise<WeeklyRuleRow[]> {
+    const { data, error } = await this.db
+      .from('schedule_rule_students')
+      .select(RULE_SELECT)
+      .eq('student_id', studentId)
+      .eq('rule.status', 'active');
+    if (error) throw dbError(error);
+    return data.map((r) => r.rule);
+  }
+
+  /** The student's open lessons (scheduled / confirmed) starting inside [from, to), by start, at most `limit`. */
+  async upcoming(studentId: string, w: Window): Promise<SalesScheduleRow[]> {
+    const { data, error } = await this.db
+      .from('lessons')
+      .select(UPCOMING_SELECT)
+      .eq('own.student_id', studentId)
+      .gte('starts_at', w.from.toISOString())
+      .lt('starts_at', w.to.toISOString())
+      .in('status', [...OPEN_LESSON_STATUSES])
+      .order('starts_at')
+      .limit(w.limit)
+      .overrideTypes<SalesScheduleRow[], { merge: false }>();
+    if (error) throw dbError(error);
+    return data;
+  }
+}

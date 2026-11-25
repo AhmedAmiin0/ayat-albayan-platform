@@ -1,4 +1,4 @@
-import type { StudentJoinLinkUrl } from '@ab/shared';
+import type { StudentJoinLinkUrl } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { notFound } from '@/common/http/errors';
@@ -6,11 +6,7 @@ import { CLASSROOM_WEB_ORIGIN } from '@/modules/teaching/classroom/classroom.con
 import { hashLinkToken, newLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 import { StudentLinkRepo } from './student-link.repo';
 
-/**
- * POST /students/:id/join-link (admin) «رابط دخول الطالب»: the student's long-lived link, created on
- * the first call and rotated on every later one (only the sha256 is stored, so the URL can only be
- * shown once; a new one replaces it and the old one stops working). Audited.
- */
+/** Rotated on every call after the first (only the sha256 is stored); audited. */
 @Injectable()
 export class StudentLinkAdminService {
   constructor(

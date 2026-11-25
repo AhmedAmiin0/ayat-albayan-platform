@@ -26,11 +26,7 @@ const TILE: Record<MaintenanceCover, { tone: string; glyph: ReactNode }> = {
   },
 };
 
-/**
- * «تحت الصيانة» (owner 2026-11-21) over the whole app, above the kit's top layer (calls, z-60):
- * the family sign-in's frame (the brand lockup, one card), the tile, the words (announced) and
- * one way to ask again now, then the other language. The app keeps running underneath, inert.
- */
+/** Above the kit's top layer (calls, z-60); the app keeps running underneath, inert. */
 export function MaintenanceScreen({ kind, checking, onRetry }: MaintenanceScreenProps) {
   const words = WORDS[kind];
   const tile = TILE[kind];

@@ -7,7 +7,7 @@ import { USERS } from '../../support/core/users';
 
 type Row = { key: string; value: unknown; version: string; updated_at: Date };
 type Err = { code?: string; detail?: string };
-const fail = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => ({} as Err), (e: Err) => e);
+const fail = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then((): Err => ({}), (e: Err) => e);
 // ::text::jsonb: a bare ::jsonb makes postgres.js serialise the string again (a JSON string, not an array).
 const json = (v: unknown) => JSON.stringify(v);
 

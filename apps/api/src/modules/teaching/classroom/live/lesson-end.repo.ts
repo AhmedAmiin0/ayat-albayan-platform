@@ -1,10 +1,10 @@
-import { joinWindowConfig, type JoinWindowConfig } from '@ab/shared';
+import { joinWindowConfig, type JoinWindowConfig } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
 
-/** «إنهاء الحلقة للجميع»: lessons.room_ended_at (migration 20261117100100; service role). */
+/** lessons.room_ended_at (migration 20261117100100; service role). */
 @Injectable()
 export class LessonEndRepo {
   constructor(

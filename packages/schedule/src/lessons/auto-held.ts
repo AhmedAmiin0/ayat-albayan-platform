@@ -9,9 +9,7 @@ import { isOpenLesson } from './state-machine/index.js';
 const MINUTE = 60_000;
 export const AUTO_HELD_GRACE_MS = 30 * MINUTE;
 export const AUTO_HELD_MAX_AGE_MS = 14 * 24 * 60 * MINUTE;
-/**
- * The audit row's `after.reason` of an automatic «انعقدت» (also what marks a lesson correctable).
- */
+/** The audit `after.reason` of an automatic held mark, which also makes a lesson correctable. */
 export const AUTO_HELD_REASON = 'auto_held';
 /**
  * A correction's audit `after.reason`: an auto-held lesson marked cancelled by the teacher /
@@ -47,10 +45,7 @@ const afterPackageStart =
   (start: Date | null): boolean =>
     start === null || endsAt >= start.getTime();
 
-/**
- * Due for «انعقدت تلقائيًا»: still open (scheduled | confirmed; any other status is never touched),
- * ended at least 30 min and at most 14 days ago, and after every student's current package start.
- */
+/** Due when still open, ended 30 min to 14 days ago, after every student's package start. */
 export function isAutoHeldDue(
   lesson: AutoHeldCandidate,
   now: Date,
@@ -64,10 +59,7 @@ export function isAutoHeldDue(
   );
 }
 
-/**
- * «يحتاج تأكيد» is shown (web, mobile, counts, push) only while the academy requires a confirmation
- * (settings.lesson_confirmation_required) and the lesson is still `scheduled`.
- */
+/** Shown only while settings.lesson_confirmation_required is on and status is `scheduled`. */
 export function needsConfirmation(status: LessonStatus, required: boolean): boolean {
   return required && status === 'scheduled';
 }

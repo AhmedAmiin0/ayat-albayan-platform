@@ -1,10 +1,5 @@
-import {
-  counted,
-  courseEndOf,
-  type CourseEnd,
-  type CourseEndKey,
-  type TeacherCourseView,
-} from '@ab/shared';
+import { courseEndOf, type CourseEnd, type CourseEndKey, type TeacherCourseView } from '@ab/shared';
+import { counted } from '@ab/core';
 import { t } from '@ab/mobile-kit';
 import { instantDay, localDay } from '@/core/lib/money/format';
 import { fill } from '@/sales/sales';
@@ -25,10 +20,7 @@ const END_TEXT: Record<CourseEndKey, (end: CourseEnd, tz: string) => string> = {
   unknown: () => f().courseEndUnknown,
 };
 
-/**
- * «بداية الدورة: …», the end («تنتهي الدورة بعد 3 حلقات» …, its instant on `tz`'s calendar) and
- * «الحلقات: 5 من 8». The start is a calendar date, shown with no zone shift.
- */
+/** The start is a calendar date, shown with no zone shift; the end instant uses `tz`. */
 export function courseLines(course: TeacherCourseView, tz: string): string[] {
   const end = courseEndOf(course);
   return [

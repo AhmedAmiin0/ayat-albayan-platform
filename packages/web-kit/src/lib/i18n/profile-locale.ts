@@ -1,20 +1,18 @@
 import { meLocaleSend } from '@ab/client-core';
-import { LOCALE_STORAGE_KEY, LOCALES, type Locale } from '@ab/shared';
+import { LOCALE_STORAGE_KEY, LOCALES, type Locale } from '@ab/core';
 import { z } from 'zod';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { supabase } from '@ab/web-kit/lib/http/supabase';
 import { locale, saveLocale, setLocale } from './locale';
 
-// «اللغة» lives on the login (profiles.locale, owner 2026-11-16), on the staff pages and the
-// family portal alike: after sign-in GET /auth/me's `locale` wins over this browser's saved copy,
-// and the switch writes the profile first (PATCH /me/locale).
+// The language lives on the login: GET /auth/me's `locale` wins over the browser copy.
 
 /** PATCH /me/locale. Built per call: the client's helpers are read when used, never at import. */
 const sendLocale = (next: Locale) => meLocaleSend({ apiFetch, apiSend })(next);
 
 const savedSchema = z.enum(LOCALES).nullable().catch(null);
 
-/** This browser's saved «اللغة» choice; null when none (Arabic by default) or blocked. */
+/** This browser's saved language; null when none (Arabic by default) or blocked. */
 function savedChoice(): Locale | null {
   try {
     return savedSchema.parse(localStorage.getItem(LOCALE_STORAGE_KEY));
@@ -47,11 +45,7 @@ export function followProfileLocale(profile: Locale | null | undefined): boolean
   return switching;
 }
 
-/**
- * «اللغة»: signed in, PATCH /me/locale first, then save and reload; signed out (a public page)
- * only the browser's copy. A profile that could not be written changes nothing (false): the next
- * /auth/me would switch straight back.
- */
+/** A failed profile write changes nothing, since the next /auth/me would switch straight back. */
 export async function chooseLocale(next: Locale): Promise<boolean> {
   try {
     const { data } = await supabase.auth.getSession();

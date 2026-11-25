@@ -10,11 +10,10 @@ export interface TeacherPickerProps {
   /** Picked ids; empty = everyone. */
   value: readonly string[];
   onChange: (ids: string[]) => void;
-  /** In the «تصفية» panel: the list opens in the flow, pushing the fields below it, instead of floating over them. */
+  /** In the filter panel the list opens in the flow instead of floating over fields. */
   inline?: boolean;
 }
 
-/** «كل المعلمين», the one name picked, or «3 معلمين» (counted forms). */
 export function pickedLabel(teachers: TeacherPickerProps['teachers'], value: readonly string[]): string {
   if (value.length === 0) return t.schedule.allTeachers;
   const one = value.length === 1 ? teachers.find((x) => x.id === value[0]) : undefined;

@@ -1,6 +1,7 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "stream",
+  "globalDependencies": ["tsconfig.base.json"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -13,16 +14,6 @@
         "!**/*.md"
       ],
       "outputs": ["dist/**"]
-    },
-    "lint": {
-      "dependsOn": ["^build"],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "$TURBO_ROOT$/.oxlintrc.json",
-        "$TURBO_ROOT$/tools/scripts/ci-checks/lint/parity/eslint-findings.mjs"
-      ],
-      "outputs": [".lint/**"]
     },
     "typecheck": { "dependsOn": ["^build"], "inputs": ["$TURBO_DEFAULT$", "!**/*.md"] },
     "test": {

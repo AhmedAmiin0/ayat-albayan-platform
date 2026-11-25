@@ -2,8 +2,7 @@ import type { FamilyOption, PeopleEditView } from '@ab/shared';
 import { newFamilyOf, type NewFamilyForm } from './people-edit-form.js';
 import type { PeopleWrite } from './people-edit-write.js';
 
-// «ربط بولي أمر آخر» on web and mobile: the state lives in the app's hook (useState), the logic
-// here.
+// The state lives in the app's hook; the logic lives here.
 
 export type MoveBody =
   { guardian_id: string } | { guardian: { name: string; phone_e164: string; tz: string } };
@@ -41,7 +40,7 @@ interface AttachInput {
   text: { moveConfirm: string; invalid: string };
 }
 
-/** «ولي أمر جديد» starts empty, in the student's family zone. */
+/** A new guardian starts empty, in the student's family time zone. */
 export const emptyFamily = (tz: string): NewFamilyForm => ({ name: '', phone_e164: '', tz });
 
 export interface AttachModel extends AttachState {
@@ -78,7 +77,7 @@ function freshChoice(fresh: NewFamilyForm): {
 
 /**
  * A «new» family whose main number already exists IS that family (the API finds it by its phone
- * first, #621 review): the choice becomes it, so the confirm names the real family and the move
+ * first): the choice becomes it, so the confirm names the real family and the move
  * goes by its id (and the ownership check).
  */
 function resolved(choice: MoveChoice | null, families: readonly FamilyOption[] | null) {
@@ -96,7 +95,6 @@ function lookup(state: AttachState, families: readonly FamilyOption[] | undefine
   return { shown, choice, looked };
 }
 
-/** «نقل {student} إلى عائلة {family}؟» once a family is chosen. */
 const confirmOf = (view: PeopleEditView, choice: MoveChoice | null, template: string) =>
   choice && template.replace('{student}', view.student.name).replace('{family}', choice.name);
 

@@ -14,10 +14,7 @@ type Step =
   | { kind: 'done'; payment: SalesPaymentView }
   | { kind: 'link'; link: PaymentLinkView };
 
-/**
- * `studentId`: the student picked up front («جدّد الاشتراك» on one of them). `renew`: the step is a renewal,
- * prefilled from the student's `renewal` and picking among her students due for one.
- */
+/** `studentId` is picked up front; `renew` prefills from the student's `renewal`. */
 type Props = {
   start: FlowStart;
   studentId?: string | undefined;
@@ -33,13 +30,7 @@ type Props = {
 /** Her packages still owed, across her students of the family (the transfer step's picker). */
 export const openPackages = (students: SalesFamilyStudent[]): SalesMoneySubscriptionView[] => students.flatMap((s) => s.open);
 
-/**
- * The money flow of a sales chat: step 1 «اشتراك جديد» (calculator → saved at the API's price), step 2
- * «سجّل التحويل البنكي» (attachments optional) for the new package or one still owed, then the result; or,
- * with «دفع إلكتروني» (a Stripe build), the payment link made to send in the chat.
- * Right after «اشتراك جديد» (and after the transfer) «احجز أيام الحلقات الآن» opens the course wizard
- * (owner 2026-10-18: before the transfer is fine) on top of the step; closing it comes back to it as left.
- */
+/** The course wizard may open before the transfer; closing it returns to the step as left. */
 export function SalesMoneyFlow({ start, studentId, renew, students, phone = '', canSend = false, onClose }: Props) {
   const [step, setStep] = useState<Step>(start === 'subscribe' ? { kind: 'subscribe' } : { kind: 'transfer', sub: null });
   const [course, setCourse] = useState<string | null>(null);
@@ -55,8 +46,7 @@ export function SalesMoneyFlow({ start, studentId, renew, students, phone = '', 
 type FlowStepProps = Omit<Props, 'start'> & { step: Step; setStep: (s: Step) => void; onCourse: (studentId: string) => void };
 
 function FlowStep({ step, setStep, onCourse, studentId, renew, students, phone = '', canSend = false, onClose }: FlowStepProps) {
-  // A child not hers (sales.renew_any, docs/16 row 38): its writes carry the chat phone; «أيام الحلقات» too
-  // (owner 2026-11-01).
+  // A child not hers (sales.renew_any, docs/16 row 38): writes and course days carry its phone.
   const bindOf = (id: string) => chatBinding(students, { studentId: id, phone });
   const course = (id: string) => () => onCourse(id);
   if (step.kind === 'subscribe') {

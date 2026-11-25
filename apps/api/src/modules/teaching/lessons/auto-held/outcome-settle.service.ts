@@ -1,4 +1,4 @@
-import { AUTO_HELD_MAX_AGE_MS, decideLessonOutcome, type OutcomeDecision } from '@ab/shared';
+import { AUTO_HELD_MAX_AGE_MS, decideLessonOutcome, type OutcomeDecision } from '@ab/schedule';
 import { Injectable, Logger } from '@nestjs/common';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import type { OpenEndedLesson } from './auto-held.plan';
@@ -9,7 +9,7 @@ import { writeAuto, type AutoTo } from './auto-outcome';
 export interface SettleSummary {
   held: number;
   absent: number;
-  /** Still «يحتاج تأكيد» with no platform reminder: counted, listed for the assistant. */
+  /** Still needs confirmation with no platform reminder: counted, listed for the assistant. */
   unresolved: number;
   waiting: number;
   skipped: number;
@@ -45,13 +45,7 @@ const remindedFor = (l: OpenEndedLesson, sent: ReadonlyMap<string, number>): boo
 
 const latest = (a: Date, b: Date): Date => (a.getTime() >= b.getTime() ? a : b);
 
-/**
- * Confirmation required (owner 2026-11-03, the default): once a lesson ended + the grace, a
- * confirmed one → completed, a scheduled one whose family reminder the platform sent (no «نعم»
- * came, or it would be confirmed) → no_show «غائب», a scheduled one without → left «يحتاج تأكيد»
- * (v_package_lessons already counts it, migration 1000). Only lessons that ended after
- * lesson_outcomes_since() (the deploy), 14 days back at most. Idempotent: compare-and-set.
- */
+/** Confirmed becomes completed, reminded without a yes becomes no_show; compare-and-set. */
 @Injectable()
 export class OutcomeSettleService {
   private readonly log = new Logger(OutcomeSettleService.name);

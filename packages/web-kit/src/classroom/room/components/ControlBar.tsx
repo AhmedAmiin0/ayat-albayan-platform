@@ -1,4 +1,4 @@
-import type { JoinRole } from '@ab/shared';
+import type { JoinRole } from '@ab/schedule';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
@@ -10,7 +10,7 @@ import { ShareButton } from '@ab/web-kit/classroom/share/ShareButton';
 import type { ShareRequests } from '@ab/web-kit/classroom/share/use-share-requests';
 import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
 
-/** The family's «المحادثة»: its unread count, open in the panel now, and how to open it. */
+/** The family's chat: unread count, whether open, and how to open it. */
 export interface ChatControl {
   unread: number;
   on: boolean;
@@ -23,10 +23,10 @@ interface Props {
   role: JoinRole;
   share: ShareRequests;
   onPeople: () => void;
-  /** «التسجيلات», for the admin and the teacher only. */
+  /** Recordings, for the admin and the teacher only. */
   onRecordings?: (() => void) | undefined;
   chat?: ChatControl | undefined;
-  /** «اخرج من الحلقة» when the room asks first (the family); else it leaves at once. */
+  /** Set when the room asks before leaving (the family); else it leaves at once. */
   onLeave?: (() => void) | undefined;
   /** Phones: the app's row of round buttons (the family). */
   round?: boolean;
@@ -34,7 +34,7 @@ interface Props {
 
 const C = t.mobileRoom.controls;
 
-/** «شغّل الصوت» while autoplay is blocked, then the microphone and camera toggles. */
+/** Unmute audio shows while autoplay is blocked. */
 function MediaButtons({ room, round }: { room: RoomController; round: boolean }) {
   const { snap } = room;
   const mic = snap.micOn ? t.classroom.micOff : t.classroom.micOn;
@@ -66,10 +66,7 @@ function MediaButtons({ room, round }: { room: RoomController; round: boolean })
   );
 }
 
-/**
- * The screen share (or its request), «السبورة» and «اطلب فتح السبورة». On the round row's phones
- * only the board, and only while it is open (a phone never shares its screen).
- */
+/** A phone never shares its screen, so the round row shows only an open board. */
 function BoardButtons({ room, board, role, share, round = false }: Props) {
   const wideOnly = cn('contents', round && 'max-sm:hidden');
   const closed = !board.state.open;

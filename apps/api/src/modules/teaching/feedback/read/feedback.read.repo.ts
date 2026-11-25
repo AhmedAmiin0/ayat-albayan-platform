@@ -1,4 +1,4 @@
-import { addCalendarDays } from '@ab/shared';
+import { addCalendarDays } from '@ab/time';
 import type { FeedbackAverage, FeedbackQuery, FeedbackSortKey } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';

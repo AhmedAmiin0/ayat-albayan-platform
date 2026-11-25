@@ -1,4 +1,4 @@
-import { formatAmount } from '@ab/shared';
+import { formatAmount } from '@ab/money';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { ar } from '@/common/infra/i18n/server-text';
@@ -9,21 +9,13 @@ const FRESH_MS = 5 * 60_000;
 
 type Earned = { id: string; assistant_id: string; amount: number; currency: string; student: { code: string | null; name: string } | null };
 
-/** «ج.م» for EGP as the web's currencySymbol; the site currencies' symbols; else the ISO code. Read at send time (overrides). */
+/** EGP uses the web's symbol, site currencies theirs, else the ISO code; read at send. */
 function currencyText(currency: string): string {
   const names: Readonly<Record<string, string | undefined>> = { ...ar.pricing.currencies, EGP: ar.payouts.currency };
   return names[currency] ?? currency;
 }
 
-/**
- * «عمولة جديدة: +50 ج.م — AB-1022» (owner 2026-10-29): the bell of the assistant a commission was just earned
- * for (its assistant_id, students.brought_by; not the payment's recorder). The database earns it — after a
- * payment or a price change, an admin's attribution, an assistant's new terms — in settle_assistant_commission
- * (migration 751), which writes ONE audit row per earning, 'earn' or 'reinstate'. Earning again after a refund
- * is an UPDATE of the same row (old created_at, same id), so the audit row is the event: after each of those
- * writes this rings every earning of the last FRESH_MS whose commission is still earned, one bell per audit row
- * (the subject; PushService dedups, so a retry or a second caller rings nothing twice). Bell only. Never throws.
- */
+/** One bell per commission audit row (migration 751), deduped; bell only, never throws. */
 @Injectable()
 export class CommissionBell {
   private readonly log = new Logger(CommissionBell.name);

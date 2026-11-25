@@ -1,4 +1,4 @@
-import type { LessonRecordingView } from '@ab/shared';
+import type { LessonRecordingView } from '@ab/schedule';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -25,10 +25,7 @@ export class ModerationController {
     private readonly recordings: RecordingListService,
   ) {}
 
-  /**
-   * «إخراج من الحلقة»: disconnects the participant and keeps their login / link out of this
-   * lesson's room. 204; 404 participant_not_found, 403 cannot_remove, 503, 502 LiveKit refused.
-   */
+  /** 204; 404 participant_not_found, 403 cannot_remove, 503, 502 LiveKit refused. */
   @Post('room/participants/:identity/remove')
   @HttpCode(204)
   async remove(

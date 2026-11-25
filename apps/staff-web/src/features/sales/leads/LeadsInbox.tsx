@@ -22,7 +22,7 @@ export interface LeadsInboxProps {
 
 type Notice = Pick<ToastProps, 'message' | 'tone'>;
 
-/** «10 محادثة», or «3 جديد» under a status filter, so the number names what it counts. */
+/** Under a status filter the count names what it counts. */
 function countLabel(total: number, status: LeadSearch['status']): string {
   if (!status) return t.leads.count.replace('{n}', String(total));
   return t.leads.countStatus.replace('{n}', String(total)).replace('{status}', t.enums.leadStatus[status]);
@@ -55,7 +55,6 @@ export function LeadsInbox({ search, onSearch }: LeadsInboxProps) {
       <PageHead>
         <Cartouche>{t.leads.title}</Cartouche>
         <AssignUnassignedButton />
-        {/* TODO(R-LEAD-02): «11 مستنيين رد» once the API returns an unreplied count. */}
         {leads.data && (
           <span className="text-sm text-ink-3 tabular-nums">{countLabel(leads.data.total, search.status)}</span>
         )}

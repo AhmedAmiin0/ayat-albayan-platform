@@ -1,4 +1,4 @@
-import { AUTO_HELD_MAX_AGE_MS, CORRECT_TO, isOpenLesson, type CorrectTo } from '@ab/shared';
+import { AUTO_HELD_MAX_AGE_MS, CORRECT_TO, isOpenLesson, type CorrectTo } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict } from '@/common/http/errors';
@@ -22,15 +22,7 @@ const recentOutcome = (lesson: LessonRow, now: Date): boolean =>
   (CORRECT_TO as readonly string[]).includes(lesson.status) &&
   Date.parse(lesson.ends_at) >= now.getTime() - AUTO_HELD_MAX_AGE_MS;
 
-/**
- * «تصحيح الحالة» (owner 2026-11-03): assistants and admins record what happened to a lesson,
- * held / absent / excused / cancelled by its teacher. Allowed on a lesson still open after its end
- * («يحتاج تأكيد» the job left), or on one the job settled or staff corrected (AutoHeldRepo.
- * correctable: no submitted report since) that ended in the last 14 days. Otherwise 409
- * not_auto_held (its outcome is the report's); the same status: 409 invalid_transition; the
- * teacher's earning already paid per session: 409 earning_paid. Compare-and-set, audited; the
- * balance views recount at once and LessonEvents runs the alerts. Nobody is messaged.
- */
+/** Status correction: ended in the last 14 days with no report since; 409s otherwise; audited. */
 @Injectable()
 export class OutcomeCorrection {
   constructor(

@@ -1,4 +1,4 @@
-import type { MeetingView, MyMeetingInvite } from '@ab/shared';
+import type { MeetingView, MyMeetingInvite } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
@@ -7,11 +7,7 @@ import { orderMeetings, toMeetingView } from '@/modules/teaching/classroom/meeti
 
 const DAY_MS = 86_400_000;
 
-/**
- * GET /meetings (R-MEET-01): the meetings the caller created OR is invited to (an admin: everyone's),
- * the coming scheduled ones first (soonest first), then the rest newest first. Each with its join
- * window, «ادخل» (can_join), its invitees count and the caller's own invitation.
- */
+/** GET /meetings (R-MEET-01): coming scheduled ones soonest first, then the rest newest first. */
 @Injectable()
 export class MeetingListService {
   constructor(

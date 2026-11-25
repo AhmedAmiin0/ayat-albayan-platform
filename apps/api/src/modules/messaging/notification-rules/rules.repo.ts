@@ -1,11 +1,9 @@
 import {
-  isWaLine,
   NOTIFICATION_CATALOGUE,
   type LineHealthView,
   type NotificationsOverview,
-  type TemplateStatus,
-  type WaLine,
 } from '@ab/shared';
+import { isWaLine, type TemplateStatus, type WaLine } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { LineHealthStore } from '@/modules/messaging/whatsapp/lines/line-health.store';
@@ -35,7 +33,7 @@ export class RulesRepo {
     return this.classroomOn();
   }
 
-  /** «سيصل إلى N»: guardians, active teachers and leads with a phone. A failed count reads 0 (logged). */
+  /** Guardians, active teachers and leads with a phone; a failed count reads 0 (logged). */
   async reach(): Promise<Reach> {
     const count = async (name: string, run: () => PromiseLike<{ count: number | null; error: { message: string } | null }>) => {
       try {

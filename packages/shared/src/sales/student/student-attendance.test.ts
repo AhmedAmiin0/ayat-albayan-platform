@@ -63,7 +63,14 @@ describe('attendanceTableTotals', () => {
       { status: 'confirmed', attendance: null },
     ]);
     expect(totals).toEqual({
-      held: 2, late: 1, absent: 1, excused: 1, cancelled_by_teacher: 1, cancelled_by_admin: 1, rescheduled: 1, unmarked: 1,
+      held: 2,
+      late: 1,
+      absent: 1,
+      excused: 1,
+      cancelled_by_teacher: 1,
+      cancelled_by_admin: 1,
+      rescheduled: 1,
+      unmarked: 1,
     });
   });
 });

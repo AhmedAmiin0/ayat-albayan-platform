@@ -48,7 +48,7 @@ function timingOf(key: string, wanted: unknown): AnyRuleTiming | null {
   if (!isTimedKey(key)) throw ruleError('invalid', 'timing');
   const parsed = RULE_TIMING_SCHEMAS[key].safeParse(wanted);
   if (!parsed.success) throw ruleError('invalid', 'timing');
-  return parsed.data as AnyRuleTiming;
+  return parsed.data;
 }
 
 /** A number only routes a WhatsApp row (its existence is checked by the writer). */

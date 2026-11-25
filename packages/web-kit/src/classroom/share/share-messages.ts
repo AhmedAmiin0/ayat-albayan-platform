@@ -1,13 +1,13 @@
-import { canGrantShare, type JoinRole } from '@ab/shared';
+import { canGrantShare, type JoinRole } from '@ab/schedule';
 
-/** «اطلب مشاركة الشاشة» / «اطلب الكتابة على السبورة» / «اطلب فتح السبورة» on the data channel (reliable). */
+/** Share, draw and open-board requests go on the reliable data channel. */
 export const SHARE_TOPIC = 'share-request';
 
 /** What a guest asks the staff for. */
 export const REQUEST_KINDS = ['screen', 'draw', 'open'] as const;
 export type RequestKind = (typeof REQUEST_KINDS)[number];
 
-/** A guest asks; a staff member's «رفض» names the guest (everyone hears it, so other staff clear it too). */
+/** A staff deny names the guest so every staff member clears it. */
 export type ShareMessage = { t: 'request'; what: RequestKind } | { t: 'deny'; who: string; what: RequestKind };
 
 export function encodeShare(msg: ShareMessage): Uint8Array {
@@ -38,7 +38,7 @@ export interface PendingRequest {
 }
 
 export interface ShareState {
-  /** Guests waiting for «سماح» / «رفض», oldest first (staff side). */
+  /** Guests waiting for an answer, oldest first (staff side). */
   pending: PendingRequest[];
   /** My own requests, per kind (guest side). */
   mine: Record<RequestKind, MineState>;
@@ -50,7 +50,6 @@ export type ShareInput =
   | { kind: 'message'; msg: ShareMessage; from: { identity: string; role: JoinRole | null }; me: string }
   | { kind: 'asked'; what: RequestKind }
   | { kind: 'granted'; what: RequestKind }
-  /** The guest closed the «رُفض…» line. */
   | { kind: 'dismissed' }
   | { kind: 'settled'; identity: string; what: RequestKind };
 
@@ -64,10 +63,7 @@ function dismissed(state: ShareState): ShareState {
   return REQUEST_KINDS.some((k) => state.mine[k] === 'denied') ? { ...state, mine } : state;
 }
 
-/**
- * Requests per session, nothing stored. Only a guest's request counts (a duplicate while pending is
- * ignored); only a staff sender's «رفض» counts (the role comes from the signed token metadata).
- */
+/** Per session, nothing stored; only guest requests and staff denies (token metadata) count. */
 export function shareReducer(state: ShareState, input: ShareInput): ShareState {
   if (input.kind === 'asked') return state.mine[input.what] === 'pending' ? state : setMine(state, input.what, 'pending');
   if (input.kind === 'granted') return setMine(state, input.what, 'idle');

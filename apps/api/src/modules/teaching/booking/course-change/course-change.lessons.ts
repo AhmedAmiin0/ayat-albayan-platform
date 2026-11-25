@@ -1,4 +1,5 @@
-import { OPEN_LESSON_STATUSES, type CourseLessonFact } from '@ab/shared';
+import type { CourseLessonFact } from '@ab/shared';
+import { OPEN_LESSON_STATUSES } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
@@ -14,7 +15,7 @@ interface CourseLesson extends CourseLessonFact {
   local_date: string | null;
 }
 
-/** The lessons of a course «تغيير أيام الحلقات» reads (service role; ownership is checked by CourseChange). */
+/** Service role; ownership is checked by CourseChange. */
 @Injectable()
 export class CourseLessonRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

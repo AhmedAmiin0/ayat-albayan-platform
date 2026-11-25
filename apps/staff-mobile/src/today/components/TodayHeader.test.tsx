@@ -1,17 +1,18 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { screen } from '@testing-library/react-native';
 import { PROFILE_KEY, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { TodayHeader } from './TodayHeader';
+import type * as mockReactNative from 'react-native';
 
-// The header's bell: the admin's always; the salesperson's only with notifications.push (as «المحادثات»).
+// The salesperson's bell needs notifications.push.
 let mockHeld: Permission[] = [];
 jest.mock('@ab/mobile-kit/auth/use-permissions', () => ({
   ...jest.requireActual('@ab/mobile-kit/auth/use-permissions'),
   useHolds: (p: Permission) => mockHeld.includes(p),
 }));
 jest.mock('@/notifications/BellButton', () => {
-  const { Text: MockText } = jest.requireActual<typeof import('react-native')>('react-native');
+  const { Text: MockText } = jest.requireActual<typeof mockReactNative>('react-native');
   return { BellButton: ({ tree }: { tree: string }) => <MockText>{`bell:${tree}`}</MockText> };
 });
 
@@ -42,7 +43,7 @@ test('the greeting carries the first name from the profile', async () => {
     .replace('{greeting}', t.today.greeting.evening)
     .replace('{name}', 'أحمد');
   expect(screen.getByRole('header', { name: named })).toBeTruthy();
-  // Owner 2026-10-28: the tab is already «اليوم», so the screen has no «اليوم» title of its own.
+  // The tab already names the screen, so it has no title of its own.
   expect(screen.queryByText(t.today.title)).toBeNull();
   expect(screen.getAllByRole('header')).toHaveLength(1);
 });

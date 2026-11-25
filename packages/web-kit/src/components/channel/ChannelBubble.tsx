@@ -15,7 +15,7 @@ interface Props {
   refs: ChannelRef;
   /** The thread's one ticking clock (ChannelThread): bubbles gain their date at midnight. */
   now: Date;
-  /** This viewer's mode: «تعديل» / «حذف للجميع» only where the API accepts them. */
+  /** Edit and delete only where the API accepts them. */
   mode: 'write' | 'read';
   /** The same sender again, nothing between: no name line (channelRows). */
   followUp?: boolean;
@@ -23,7 +23,7 @@ interface Props {
   arrived?: boolean;
 }
 
-/** Mine at the inline end (owner 2026-10-27, «like whatsapp»), the others' at the start. */
+/** Mine at the inline end (as in WhatsApp), the others' at the start. */
 const rowClass = (mine: boolean, arrived: boolean): string =>
   cn(
     'group flex scroll-my-24 items-start gap-1',
@@ -31,11 +31,6 @@ const rowClass = (mine: boolean, arrived: boolean): string =>
     arrived && 'animate-fade-up',
   );
 
-/**
- * One message (FamChatWebThread): the bubble (BubbleCard) with «خيارات الرسالة» beside it toward
- * the middle where anything is offered now (owner 2026-10-30): «ردّ», «تعديل», «حذف للجميع»,
- * «معلومات الرسالة»; the delete confirm when asked.
- */
 export function ChannelBubble({ message: m, tz, refs, now, mode, followUp, arrived }: Props) {
   const clock = useClock();
   const tools = useBubbleEditing({ refs, message: m, at: { now, mode } });

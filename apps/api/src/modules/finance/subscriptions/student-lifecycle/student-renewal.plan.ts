@@ -1,6 +1,7 @@
-import { STUDENT_STATUSES, trialMove, type StudentStatus, type SubscriptionStatus, type TrialFacts } from '@ab/shared';
+import { trialMove, type TrialFacts } from '@ab/shared';
+import { STUDENT_STATUSES, type StudentStatus, type SubscriptionStatus } from '@ab/catalog';
 
-// Pure rules of the student status «بانتظار التجديد» (owner 2026-10-12, docs/11 §7, R-STU-05).
+// Pure rules of the pending-renewal student status (docs/11 §7, R-STU-05).
 
 export interface EndPackage {
   status: SubscriptionStatus;

@@ -1,10 +1,8 @@
-import type { Tone } from '@ab/shared';
+import type { Tone } from '@ab/money';
 import type { ReactNode } from 'react';
 import { cn } from '@ab/web-kit/lib/utils';
 
-// Status words (owner 2026-11-19): a state that needs the family («يحتاج تأكيد», an amount due,
-// «جديد») is a tinted Pill; a passive one («مؤكدة», «انتهت») is a coloured Dot and plain text.
-// Tone text on its own wash and ink-2 on any surface are AA (theme.contrast.test.ts).
+// A state that needs the family is a tinted Pill, a passive one a Dot; AA-tested.
 
 const PILL: Readonly<Record<Tone, string>> = {
   ok: 'bg-ok-soft text-ok',
@@ -43,7 +41,7 @@ export function Pill({ tone, children, className }: MarkProps) {
 }
 
 export interface DotProps extends MarkProps {
-  /** The state just turned on («الدخول متاح الآن»): the dot pops in once, never loops. */
+  /** The dot pops in once when the state turns on, never loops. */
   live?: boolean;
 }
 

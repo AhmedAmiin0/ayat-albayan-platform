@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import type { Attendance, LessonStatus, PackageSize, ReportStatus } from '@ab/shared';
+import type { Attendance, LessonStatus, PackageSize, ReportStatus } from '@ab/catalog';
 
 const LESSON_COLUMNS =
   'id, rule_id, teacher_id, starts_at, ends_at, status, meeting_link, cancel_reason, override_reason, confirmed_at, teacher_confirmed_at, rescheduled_from_id, makeup_of_id, conflicts, time_edited_at, time_edit_reason, time_edit_was, room_opened_at, room_ended_at, instant' as const;
@@ -21,15 +21,15 @@ export type LessonRow = {
   cancel_reason: string | null;
   override_reason: string | null;
   confirmed_at: string | null;
-  /** docs/46 D1 «سأحضر» (migration 20261111000200); optional in test fakes. */
+  /** docs/46 D1 teacher attendance confirmation (migration 20261111000200); optional in fakes. */
   teacher_confirmed_at?: string | null;
   rescheduled_from_id: string | null;
   /** Migration 190: the room opened early, and an instant lesson; optional in test fakes. */
   room_opened_at?: string | null;
-  /** «إنهاء الحلقة للجميع» (migration 20261117100100); optional in test fakes. */
+  /** End for everyone stamp (migration 20261117100100); optional in test fakes. */
   room_ended_at?: string | null;
   instant?: boolean;
-  /** The missed lesson this حجز تعويضي replaces (R-SCH-10); optional in test fakes. */
+  /** The missed lesson this makeup booking replaces (R-SCH-10); optional in test fakes. */
   makeup_of_id?: string | null;
   /** The missed lesson a makeup replaces, and the makeups booked for this lesson's misses (one per student). */
   original?: { id: string; starts_at: string } | null;
@@ -42,10 +42,7 @@ export type LessonRow = {
   time_edit_was?: Json | null;
   /** meeting_mode: teachers.meeting_mode (migration 490), null = the academy default; optional in test fakes. */
   teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz: string; meeting_mode?: string | null } | null;
-  /**
-   * The weekly rule's days (a series reschedule keeps them, R-SCH-07) and package (R-SCH-09
-   * «تجريبية»); optional in test fakes.
-   */
+  /** Rule days (kept by a series reschedule, R-SCH-07) and package (R-SCH-09). */
   rule?: { byday: number[]; package?: PackageSize | null; subscription_id?: string | null } | null;
   lesson_students: {
     student_id: string;

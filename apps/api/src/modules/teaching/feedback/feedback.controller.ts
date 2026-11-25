@@ -15,7 +15,7 @@ import { pageQuerySchema, parseOrThrow } from '@/common/http/http';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { FeedbackReadService } from './read/feedback.read.service';
 import { FeedbackRequestService } from './request/feedback.request.service';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 type FeedbackQuery = z.output<typeof feedbackQuerySchema>;
 type PageQuery = z.output<typeof pageQuerySchema>;
@@ -29,10 +29,7 @@ const filterThenPage = (query: unknown): [FeedbackQuery, PageQuery] => [
   parseOrThrow(pageQuerySchema, query),
 ];
 
-/**
- * «رأيك يهمّنا», the staff side: the admin asks a family for it and reads every answer; a teacher
- * reads their own (the static `teachers/me/…` wins over `teachers/:id` in Fastify's router).
- */
+/** The static teachers/me route wins over teachers/:id in Fastify's router. */
 @ApiTags('feedback')
 @ApiBearerAuth()
 @Permissions('feedback.read')
@@ -43,7 +40,7 @@ export class FeedbackController {
     private readonly reads: FeedbackReadService,
   ) {}
 
-  /** «ابعت طلب الرأي»: 409 template_not_approved / lesson_not_eligible / already_submitted; 503 not_configured. */
+  /** 409 template_not_approved, lesson_not_eligible or already_submitted; 503 not_configured. */
   @Post('lessons/:id/feedback-request')
   @HttpCode(200)
   @Permissions('feedback.write')

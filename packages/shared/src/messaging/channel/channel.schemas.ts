@@ -84,8 +84,8 @@ export const channelReadsSchema: z.ZodType<ChannelReads> = z.object({
 });
 
 /**
- * GET / PUT /sales/students/:id/channel/seat (owner 2026-11-16 «any assistant can subscribe to
- * the chating channel but only 1»): who holds the one assistant seat (a name only, never a phone
+ * GET / PUT /sales/students/:id/channel/seat: any assistant may take the channel's seat, but only
+ * one holds it at a time. Who holds the one assistant seat (a name only, never a phone
  * or email; null = free, a holder who is no longer an assistant too), whether it is mine, whether
  * I brought the student (priority: she takes it from anyone) and whether I may take it now.
  */

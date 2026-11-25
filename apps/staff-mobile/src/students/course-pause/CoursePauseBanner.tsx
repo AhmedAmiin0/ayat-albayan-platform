@@ -1,4 +1,5 @@
-import { riyadhToday, type CoursePauseView } from '@ab/shared';
+import type { CoursePauseView } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, shape, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
@@ -12,16 +13,12 @@ import { useResumeAsk } from '@/students/course-card/use-resume-ask';
 interface CoursePauseBannerProps {
   studentId: string;
   pause: CoursePauseView;
-  /** Holds courses.pause: «استئناف» and «تغيير نهاية الإيقاف». */
   canChange: boolean;
   /** A write went through: the file says so under the banner's place. */
   onNotice: (text: string) => void;
 }
 
-/**
- * While the course is paused: «الدورة موقوفة مؤقتًا حتى …», «يبدأ الإيقاف في …» before it starts, the reason;
- * then «استئناف» (asks first: the lessons come back from today) and «تغيير نهاية الإيقاف» (a small sheet).
- */
+/** Resume asks first, since the lessons come back from today. */
 export function CoursePauseBanner({ studentId, pause, canChange, onNotice }: CoursePauseBannerProps) {
   const { color } = useTheme();
   const [asking, setAsking] = useState(false);

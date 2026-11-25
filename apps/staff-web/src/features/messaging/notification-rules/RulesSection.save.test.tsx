@@ -76,6 +76,6 @@ describe('«الإشعارات»: a row saves on its own', () => {
     apiSend.mockRejectedValue(new ApiError(422, { message: 'invalid' }));
     fireEvent.click(screen.getByRole('button', { name: saveName }));
     expect(await screen.findByText(r.errors.invalid)).toBeTruthy();
-    expect((within(row).getByLabelText(r.timing.minutesLabel) as HTMLInputElement).value).toBe('90');
+    expect((within(row).getByLabelText<HTMLInputElement>(r.timing.minutesLabel)).value).toBe('90');
   });
 });

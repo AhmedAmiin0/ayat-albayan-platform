@@ -1,4 +1,4 @@
-import { canGrantShare, type JoinRole } from '@ab/shared';
+import { canGrantShare, type JoinRole } from '@ab/schedule';
 import { useCallback, useEffect, useReducer, useState } from 'react';
 import type { BoardController } from '@ab/web-kit/classroom/board/use-board';
 import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';
@@ -31,9 +31,9 @@ export interface ShareRequests {
   canRequest: boolean;
   /** Staff: guests waiting for an answer, with what they ask for. */
   pending: PendingView[];
-  /** Staff: guests allowed to share now («إيقاف مشاركة {name}»). */
+  /** Staff: guests allowed to share now. */
   granted: TileView[];
-  /** Staff: guests allowed by name to write on the board («إيقاف كتابة {name}»). */
+  /** Staff: guests allowed by name to draw on the board. */
   drawers: TileView[];
   mine: ShareState['mine'];
   notice: string | null;
@@ -48,14 +48,14 @@ export interface ShareRequests {
 export interface ShareRequestOptions {
   room: RoomController;
   role: JoinRole;
-  /** The API call behind the screen's «سماح» (null: a room with no such route). */
+  /** The API call behind a grant; null in a room with no such route. */
   grant: GrantShare | null;
   board: BoardController;
 }
 
 const others = (tiles: TileView[]) => tiles.filter((x) => x.kind === 'camera' && !x.isLocal);
 
-/** «اطلب مشاركة الشاشة / الكتابة على السبورة / فتح السبورة» → staff «سماح» / «رفض» (data message). */
+/** Guest requests and staff allow or deny, over data messages. */
 export function useShareRequests({ room, role, grant, board }: ShareRequestOptions): ShareRequests {
   const [state, dispatch] = useReducer(shareReducer, EMPTY_SHARE);
   const [notice, setNotice] = useState<string | null>(null);
@@ -110,7 +110,7 @@ export function useShareRequests({ room, role, grant, board }: ShareRequestOptio
         settle(tile.identity, what);
         return board.allowDrawer(tile.identity, true);
       }
-      // Opening the board answers every «اطلب فتح السبورة» at once.
+      // Opening the board answers every open-board request at once.
       state.pending.filter((p) => p.what === 'open').forEach((p) => settle(p.identity, 'open'));
       board.openForAll();
     },

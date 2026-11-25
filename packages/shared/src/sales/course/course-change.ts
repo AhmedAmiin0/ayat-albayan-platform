@@ -3,14 +3,14 @@ import type { Conflict } from '@ab/schedule';
 import { CONSUMING_LESSON_STATUSES } from '@ab/money';
 import type { BookedCourse } from './course-follow.js';
 
-// «تغيير أيام الحلقات»: how many lessons of the course are left at the change
-// point. The balance views' rule (v_package_lessons + v_subscription_balance's open lessons, migration
-// 190): a lesson counts when its student is chargeable, it is not a makeup nor an instant lesson, and it
-// was held (completed / late / no_show / excused) or is still booked (scheduled / confirmed). A
-// cancelled or rescheduled lesson, or one not chargeable, gives its place back. Pure.
+// Lessons left at a change point use the balance views' rule (migration 190); pure.
 
 /** Statuses that take one of the course's lessons. */
-export const COURSE_COUNTED_STATUSES = [...CONSUMING_LESSON_STATUSES, 'scheduled', 'confirmed'] as const satisfies readonly LessonStatus[];
+export const COURSE_COUNTED_STATUSES = [
+  ...CONSUMING_LESSON_STATUSES,
+  'scheduled',
+  'confirmed',
+] as const satisfies readonly LessonStatus[];
 
 export interface CourseLessonFact {
   status: LessonStatus;
@@ -23,12 +23,19 @@ export interface CourseLessonFact {
 }
 
 export function countsTowardCourse(l: CourseLessonFact): boolean {
-  return l.chargeable && !l.makeup && !l.instant && (COURSE_COUNTED_STATUSES as readonly string[]).includes(l.status);
+  return (
+    l.chargeable &&
+    !l.makeup &&
+    !l.instant &&
+    (COURSE_COUNTED_STATUSES as readonly string[]).includes(l.status)
+  );
 }
 
 /** lessons_total minus the course's lessons before the change point that count (≤ 0 = course_finished). */
-export const courseRemaining = (lessonsTotal: number, before: readonly CourseLessonFact[]): number =>
-  lessonsTotal - before.filter(countsTowardCourse).length;
+export const courseRemaining = (
+  lessonsTotal: number,
+  before: readonly CourseLessonFact[],
+): number => lessonsTotal - before.filter(countsTowardCourse).length;
 
 /** POST …/course/change/check: the clashes over the whole remaining course, and what is left. */
 export interface CourseChangeCheck {

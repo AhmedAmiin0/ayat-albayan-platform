@@ -1,4 +1,4 @@
-import type { Locale } from '@ab/shared';
+import type { Locale } from '@ab/core';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
@@ -21,7 +21,7 @@ const NOTE: Record<Awaited<ReturnType<typeof chooseLocale>>, () => string | null
 };
 
 interface LanguageRowProps {
-  /** Signed out (the family sign-in): one quiet text button, no «اللغة» heading or row. */
+  /** Signed out: one quiet text button, no heading or row. */
   compact?: boolean;
 }
 
@@ -60,13 +60,7 @@ function QuietSwitch({ other, onPress }: { other: Locale; onPress: () => void })
   );
 }
 
-/**
- * «اللغة»: offers the other language by its own name (العربية / English). Every screen reads its
- * strings once, at start, so switching restarts the app: one short confirm first. If the restart
- * itself fails, it says to reopen the app (the choice is saved and applies then). Signed in, the
- * login's profile is written first (chooseLocale: PATCH /me/locale). Signed out the
- * confirm is outlined: the form's own send button stays the one filled green action on screen.
- */
+/** Strings load once at start, so switching restarts the app; signed in, the profile goes first. */
 export function LanguageRow({ compact }: LanguageRowProps) {
   const other = locale === 'ar' ? 'en' : 'ar';
   const [asking, setAsking] = useState(false);

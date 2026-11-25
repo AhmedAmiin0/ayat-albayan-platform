@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { Fragment, type ReactNode, useState } from 'react';
 import { View } from 'react-native';
 import { AppText, AuthAlert, Button, ltr, ResendButton, t, type, useTheme } from '@ab/mobile-kit';
@@ -7,7 +7,7 @@ import { CodeBoxes } from './CodeBoxes';
 import { CODE_STEP_ACTIONS, type CodeStepAction, isWholeCode } from '@ab/client-core';
 import type { WhatsAppSignIn } from './use-whatsapp-sign-in';
 
-/** «أعد إرسال الرمز» then «غيّر الرقم», in the order every code step uses (client-core). */
+/** Resend then change number, in the order every code step uses (client-core). */
 const ACTIONS: Record<CodeStepAction, (sign: WhatsAppSignIn) => ReactNode> = {
   resend: (sign) => (
     <ResendButton
@@ -21,11 +21,7 @@ const ACTIONS: Record<CodeStepAction, (sign: WhatsAppSignIn) => ReactNode> = {
   ),
 };
 
-/**
- * Step 2: «أدخل الرمز» for the number it went to, the six boxes (typed, pasted or autofilled;
- * the sixth digit signs in without a tap), the resend countdown and «غيّر الرقم». A refused code
- * empties the boxes for the next try.
- */
+/** The sixth digit signs in without a tap; a refused code empties the boxes for the next try. */
 export function CodeStep({ sign }: { sign: WhatsAppSignIn }) {
   const { color } = useTheme();
   const { flow } = sign;
@@ -60,7 +56,7 @@ export function CodeStep({ sign }: { sign: WhatsAppSignIn }) {
         icon={progressIcon(flow.busy)}
         onPress={() => void verify(code)}
       />
-      {/* One centred column: side by side, an English pair wrapped unevenly (owner 2026-11-15). */}
+      {/* One centred column: side by side, an English pair wrapped unevenly. */}
       <View style={{ alignItems: 'center' }}>
         {CODE_STEP_ACTIONS.map((action) => (
           <Fragment key={action}>{ACTIONS[action](sign)}</Fragment>

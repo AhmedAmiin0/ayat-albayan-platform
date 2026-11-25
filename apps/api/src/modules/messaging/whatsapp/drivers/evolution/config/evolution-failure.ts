@@ -1,4 +1,4 @@
-import { WA_ERROR } from '@ab/shared';
+import { WA_ERROR } from '@ab/catalog';
 import { HttpException } from '@nestjs/common';
 import { z } from 'zod';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';

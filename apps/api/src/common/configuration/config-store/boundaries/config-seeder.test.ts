@@ -1,4 +1,4 @@
-import { REGISTRY_VERSION, SEED_ENTRIES } from '@ab/shared';
+import { REGISTRY_VERSION, SEED_ENTRIES } from '@ab/settings';
 import arBundle from '@ab/shared/i18n/ar.json';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';

@@ -70,5 +70,5 @@ export function settingsChanges(update: SettingsUpdate): Partial<AcademySettings
     const key = SETTING_KEY_OF[field];
     if (key && value !== undefined) out[key] = value;
   }
-  return out as Partial<AcademySettings>;
+  return out;
 }

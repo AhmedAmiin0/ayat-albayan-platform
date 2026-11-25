@@ -19,7 +19,6 @@ type Props = {
   set: (patch: Partial<PricingForm>) => void;
   /** Only these discounts as pills (sales: the site's 0/5/10/15 %); omitted = a free 0–100 number. */
   discounts?: readonly number[];
-  /** Beside the pills (sales «دفع إلكتروني»: «مبلغ مخصص»). */
   discountExtra?: ReactNode;
 };
 

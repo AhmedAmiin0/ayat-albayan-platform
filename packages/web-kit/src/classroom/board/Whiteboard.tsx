@@ -7,7 +7,7 @@ import type { BoardController } from './use-board';
 
 interface Props {
   board: BoardController;
-  /** Shared with «مشاركة السبورة» (canvas.captureStream). */
+  /** Shared via canvas.captureStream. */
   canvasRef: RefObject<HTMLCanvasElement | null>;
 }
 

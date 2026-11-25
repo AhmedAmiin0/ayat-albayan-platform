@@ -1,8 +1,7 @@
-// A4: one sheet row naming several children («هالة وتالا», «تالا و هاله», «Hala & Tala»).
-// Pure. Splits only shapes that are unambiguous enough; every split is flagged for the owner.
+// A4: one row naming several children; splits only unambiguous shapes, each flagged; pure.
 import { normalizeArabic } from '@ab/core';
 
-// First names that start with «و»: «محمد وليد» is a person (name + father), not two children.
+// First names starting with the "and" letter: name + father is one person, not two children.
 const WAW_NAMES = new Set(
   [
     'وليد',
@@ -37,17 +36,13 @@ export function cleanName(raw: string): string {
 function splitWaw(part: string): string[] {
   const tokens = part.split(' ');
   const [first, second] = tokens;
-  if (tokens.length !== 2 || !first || !second || !second.startsWith('و')) return [part];
+  if (tokens.length !== 2 || !first || !second?.startsWith('و')) return [part];
   const rest = second.slice(1);
   if (rest.length < 2 || WAW_NAMES.has(normalizeArabic(second))) return [part];
   return [first, rest];
 }
 
-/**
- * Names of the children on one row. «أم X وY» is a mother's kunya and stays one name.
- * Shape heuristic (separators, or exactly two words joined by «و»); three-word names
- * with «و» stay whole and reach the owner through merge review instead.
- */
+/** A mother's kunya stays one name; three-word names stay whole for merge review. */
 export function splitSiblings(raw: string): string[] {
   const name = cleanName(raw);
   if (/^(?:ام|أم)\s/.test(name)) return [name];

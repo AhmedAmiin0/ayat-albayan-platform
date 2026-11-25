@@ -1,11 +1,11 @@
-import { LOCALE_STORAGE_KEY } from '@ab/shared';
+import { LOCALE_STORAGE_KEY } from '@ab/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { accessToken } from '../http/access-token';
 import { apiSend } from '../http/api';
 import { setLocale } from './locale-switch';
 import { chooseLocale, followProfileLocale } from './profile-locale';
 
-// The login's language (profiles.locale) wins after sign-in; «اللغة» writes it first.
+// The login's language (profiles.locale) wins after sign-in; the setting writes it first.
 jest.mock('./locale-switch', () => ({ setLocale: jest.fn(async () => 'reloading') }));
 jest.mock('../http/access-token', () => ({ accessToken: jest.fn(async () => null) }));
 jest.mock('../http/api', () => ({ apiFetch: jest.fn(), apiSend: jest.fn() }));

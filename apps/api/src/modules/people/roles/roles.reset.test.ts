@@ -1,4 +1,4 @@
-import { defaultGrantsOf } from '@ab/shared';
+import { defaultGrantsOf } from '@ab/catalog';
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { errorCode } from '@/common/http/errors';

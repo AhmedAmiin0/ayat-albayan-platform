@@ -1,4 +1,4 @@
-import type { TeacherCancelRequest } from '@ab/shared';
+import type { TeacherCancelRequest } from '@ab/schedule';
 import { cancelAnswerSchema, confirmAnswerSchema, teacherLessonPaths } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
@@ -32,7 +32,7 @@ export function teacherActionError(error: unknown): string {
 const post: (method: 'POST', path: string, body?: TeacherCancelRequest) => Promise<unknown> =
   apiSend;
 
-/** «اليوم», «جدولي» and the board read GET /teachers/me/lessons under ['lessons']: refetch them. */
+/** Today, the schedule and the board share the ['lessons'] key, so refetch them. */
 function useRefreshLessons() {
   const client = useQueryClient();
   return () => client.invalidateQueries({ queryKey: pathKey('/lessons') });
@@ -53,10 +53,7 @@ function restoreMine(client: QueryClient, snapshot: Snapshot | undefined) {
   for (const [key, data] of snapshot ?? []) client.setQueryData(key, data);
 }
 
-/**
- * POST /teachers/me/lessons/:id/confirm-attendance: «سأحضر» (D1), the status never changes.
- * Optimistic (docs/48): her rows say «حضورك مؤكَّد» at once; a refusal puts them back.
- */
+/** The status never changes; optimistic (docs/48), a refusal rolls back. */
 export function useTeacherConfirm(lessonId: string) {
   const client = useQueryClient();
   const refresh = useRefreshLessons();

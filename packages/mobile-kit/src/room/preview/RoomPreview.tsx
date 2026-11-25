@@ -19,10 +19,7 @@ interface RoomPreviewProps {
   onJoin: () => void;
 }
 
-/**
- * One's own camera before joining (the first time only: the choice is kept, canvas RoomXPreview),
- * the mic / camera toggles, the permission notice, the recording notice, «انضم الآن».
- */
+/** The first time only: the device choice is kept. */
 export function RoomPreview({ PreviewVideo, preview, notice, onJoin }: RoomPreviewProps) {
   const { color } = useTheme();
   return (

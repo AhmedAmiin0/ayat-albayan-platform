@@ -1,7 +1,7 @@
 import type { Json } from '@ab/db';
-import type { CustomConfigView } from '@ab/shared';
+import type { CustomConfigView } from '@ab/settings';
 
-export interface CustomConfigRow {
+interface CustomConfigRow {
   key: string;
   value: Json;
   description: string | null;

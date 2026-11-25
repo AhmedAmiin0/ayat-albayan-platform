@@ -1,4 +1,11 @@
-import { addCalendarDays, durationSeconds, mediaOfPath, STUDENT_RECORDING_STATUSES, type StudentRecordingStatus, type StudentRecordingView } from '@ab/shared';
+import {
+  durationSeconds,
+  mediaOfPath,
+  STUDENT_RECORDING_STATUSES,
+  type StudentRecordingStatus,
+  type StudentRecordingView,
+} from '@ab/schedule';
+import { addCalendarDays } from '@ab/time';
 import type { RecordingRow } from '@/modules/teaching/classroom/recordings/recording.repo';
 
 /** A recording with the lesson it belongs to, as the student file's query selects it. */

@@ -1,13 +1,11 @@
 import {
   attendanceKind,
   attendanceTableTotals,
-  monthRangeIn,
-  RIYADH_TZ,
   teacherAttendanceKind,
-  zonedPartsIn,
   type AttendanceTableRow,
   type StudentAttendanceTable,
 } from '@ab/shared';
+import { monthRangeIn, RIYADH_TZ, zonedPartsIn } from '@ab/time';
 import { isTrialLesson } from '@/modules/finance/subscriptions';
 import { moveOf, reasonShown, type AttendanceReader } from './lesson-row-notes';
 import type { AttendanceLessonRow, AttendanceReportRow } from './student-attendance.rows';
@@ -97,7 +95,7 @@ interface TableInput {
 const forTotals = (row: AttendanceTableRow): Pick<AttendanceTableRow, 'status' | 'attendance'> =>
   row.kind === 'unmarked' ? { status: 'scheduled', attendance: null } : row;
 
-/** Whitelist of «سجل الحضور»: times, teacher, statuses, the cancel reason; never money or a link. */
+/** Never money or a link. */
 export function toAttendanceTable(input: TableInput, now: Date): StudentAttendanceTable {
   const { tz = RIYADH_TZ, reader = 'staff', minutes = 0 } = input;
   const reportOf = new Map(input.reports.map((r) => [r.lesson_id, r]));

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { bookingRequestSchema } from '../../schemas/index.js';
 import { studentCreateSchema, studentUpdateSchema } from './people.js';
 
-// «رقم الواتساب لـ: ولي الأمر / الطالب نفسه» (docs/30 §1): optional everywhere a student is described.
+// docs/30 §1: whose WhatsApp number it is is optional everywhere a student is described.
 
 const G = '0b7c6a52-6a7e-4b38-9a3f-1c2d3e4f5a61';
 const T = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
@@ -10,7 +10,9 @@ const STUDENT = { guardian_id: G, name: 'سهيلة', tz: 'Asia/Riyadh' };
 
 describe('contact_is_self', () => {
   it('studentCreateSchema accepts it and omits it when absent', () => {
-    expect(studentCreateSchema.parse({ ...STUDENT, contact_is_self: true }).contact_is_self).toBe(true);
+    expect(studentCreateSchema.parse({ ...STUDENT, contact_is_self: true }).contact_is_self).toBe(
+      true,
+    );
     expect(studentCreateSchema.parse(STUDENT)).not.toHaveProperty('contact_is_self');
   });
 

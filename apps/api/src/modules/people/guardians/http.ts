@@ -1,10 +1,5 @@
-import {
-  BadRequestException,
-  ConflictException,
-  HttpException,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { z } from 'zod';
 
 // Request helpers shared by the guardians and students modules.

@@ -1,12 +1,12 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYMENT_ID, paymentRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/test-app';
+import { PAYMENT_ID, paymentRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 import { conflict } from '@/common/http/errors';
 
 const URL = `/payments/${PAYMENT_ID}`;
 
-// «تعديل المبلغ» on the admin's PATCH (owner 2026-11-02): manual payments only, audited.
+// Amount edits on the admin's PATCH: manual payments only, audited.
 describe('PATCH /payments/:id amount', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

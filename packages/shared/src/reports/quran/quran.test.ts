@@ -36,7 +36,11 @@ describe('quran data (Madani mushaf, Hafs)', () => {
     expect(isAyah({ surah: 67, ayah: 31 })).toBe(false);
     expect(isAyah({ surah: 115, ayah: 1 })).toBe(false);
     expect(() => globalAyah({ surah: 1, ayah: 8 })).toThrow(RangeError);
-    expect([globalAyah({ surah: 1, ayah: 1 }), globalAyah({ surah: 2, ayah: 1 }), globalAyah({ surah: 114, ayah: 6 })]).toEqual([1, 8, 6236]);
+    expect([
+      globalAyah({ surah: 1, ayah: 1 }),
+      globalAyah({ surah: 2, ayah: 1 }),
+      globalAyah({ surah: 114, ayah: 6 }),
+    ]).toEqual([1, 8, 6236]);
   });
 });
 
@@ -63,8 +67,18 @@ describe('pages and ajzāʾ', () => {
   });
 
   it('describes a range: ayahs, pages and juz', () => {
-    expect(rangeInfo({ surah: 67, from: 16, to: 22 })).toEqual({ ayahs: 7, firstPage: 563, lastPage: 563, juz: 29 });
-    expect(rangeInfo({ surah: 67, from: 1, to: 15 })).toEqual({ ayahs: 15, firstPage: 562, lastPage: 563, juz: 29 });
+    expect(rangeInfo({ surah: 67, from: 16, to: 22 })).toEqual({
+      ayahs: 7,
+      firstPage: 563,
+      lastPage: 563,
+      juz: 29,
+    });
+    expect(rangeInfo({ surah: 67, from: 1, to: 15 })).toEqual({
+      ayahs: 15,
+      firstPage: 562,
+      lastPage: 563,
+      juz: 29,
+    });
   });
 });
 

@@ -1,4 +1,4 @@
-import type { ExpenseYearView } from '@ab/shared';
+import type { ExpenseYearView } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { currenciesOf } from '@/modules/reporting/dashboard/finance/finance.mapper';
 import { FxConverter } from '@/modules/reporting/dashboard/finance/fx-converter';

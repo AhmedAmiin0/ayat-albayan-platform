@@ -1,4 +1,4 @@
-import { textDir } from '@ab/shared';
+import { textDir } from '@ab/core';
 import type { ComponentProps } from 'react';
 import { I18nManager } from 'react-native';
 import { AppText } from '../AppText';

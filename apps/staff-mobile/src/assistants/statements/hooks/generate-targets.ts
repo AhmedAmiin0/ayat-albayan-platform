@@ -1,7 +1,4 @@
-/**
- * Who «احسب كشوف الشهر» builds (web generate-targets): the chosen salesperson, else all of them,
- * minus anyone whose statement for the month is already approved or paid (the API would refuse it).
- */
+/** Skips anyone whose month is already approved or paid, which the API would refuse. */
 export function generateTargets(
   assistantIds: readonly string[],
   statements: readonly { assistant: { id: string }; status: 'draft' | 'approved' | 'paid' }[],

@@ -7,7 +7,6 @@ import type { CallPlatform, NoticeAction, PeerMaker } from './call-platform.js';
 export interface CallStoreState {
   session: CallSession | null;
   notice: string | null;
-  /** The notice's action button («افتح الإعدادات»), if any. */
   noticeAction: NoticeAction | null;
   /** Inbound calls declined here: they stop ringing at once, before the next poll. */
   dismissed: ReadonlySet<string>;
@@ -81,7 +80,6 @@ export class CallStore implements CallRuntime {
     this.peer.current?.setMuted(!s.muted);
     this.set({ session: { ...s, muted: !s.muted } });
   }
-  /** «مكبر الصوت» (mobile): the loudspeaker or back to the earpiece. */
   toggleSpeaker(): void {
     const s = this.state.session;
     if (!s) return;
@@ -105,7 +103,6 @@ export class CallStore implements CallRuntime {
     this.schedule(d.deadline);
   }
 
-  /** The server stopped listing the call: close the media, end it there too, say «انتهت المكالمة», then close. */
   serverEnded(): void {
     const id = this.state.session?.id;
     this.attempt.current += 1;

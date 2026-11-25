@@ -28,7 +28,7 @@ function setup({ enabled = false, declined = false, enrolled = true, types = [1]
     setDeclined: jest.fn(async () => void (flags.declined = true)),
   };
   const text = () => ({ reason: 'R', enableReason: 'E', cancel: 'C' });
-  const lock = new BioLockStore({ native, flags: bioFlags, text });
+  const lock = new BioLockStore({ native: Promise.resolve(native), flags: bioFlags, text });
   return { lock, auth, haptics, flags, bioFlags, phase: () => lock.getSnapshot().lock.phase };
 }
 

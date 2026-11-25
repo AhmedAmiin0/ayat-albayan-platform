@@ -1,7 +1,7 @@
 import type { AudioSourceEvents, CreateAudioSource } from '@ab/mobile-kit';
 import { createAudioPlayer, type AudioPlayer, type AudioStatus } from 'expo-audio';
 
-// The family player's media (owner 2026-11-17): the kit's <AudioPlayer> drives this AudioSource,
+// The family player's media: the kit's <AudioPlayer> drives this AudioSource,
 // expo-audio plays the signed link (range reads, no download) and reports through its status.
 
 /** What this player has already told the kit; the saved stop is reached before any time is. */

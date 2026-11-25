@@ -56,6 +56,6 @@ describe('PasswordSection (R-ACC-04)', () => {
     type('old-pass', 'new-pass-1');
     expect(await screen.findByText(t.account.toast.password)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledWith('PUT', '/me/password', { current_password: 'old-pass', new_password: 'new-pass-1' });
-    expect((s.getByLabelText(W.new) as HTMLInputElement).value).toBe('');
+    expect((s.getByLabelText<HTMLInputElement>(W.new)).value).toBe('');
   });
 });

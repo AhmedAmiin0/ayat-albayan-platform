@@ -1,6 +1,6 @@
 import { AccountScreen } from '@/account';
 
-/** «حسابي» for the admin and sales shells (R-ACC-01). */
+/** R-ACC-01: the account screen for the admin and sales shells. */
 export default function AccountRoute() {
   return <AccountScreen home="/more" />;
 }

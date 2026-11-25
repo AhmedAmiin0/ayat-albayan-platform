@@ -1,7 +1,7 @@
 import { posix } from 'node:path';
 import type { Move } from '../plan/plan.types.ts';
 
-const SUPPRESSIONS = /(?:^|\/)(?:eslint|oxlint)-suppressions\.json$/;
+const SUPPRESSIONS = /(?:^|\/)oxlint-suppressions\.json$/;
 const GUARDS = /^refactor\/guards\/[^/]+\.json$/;
 
 /** JSON baselines keyed or listed by file path; a move renames their paths, never their counts. */

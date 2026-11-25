@@ -1,4 +1,4 @@
-import { asciiDigits } from '@ab/shared';
+import { asciiDigits } from '@ab/core';
 import { COUNTRIES, type Country } from './countries.js';
 
 /** The main country of a shared calling code (+1 → US, +7 → RU, +44 → GB…). */
@@ -23,11 +23,7 @@ interface DialSplit {
   national: string;
 }
 
-/**
- * A whole number pasted, autofilled or typed with + / 00 («+44 7700…», «0044…», «+٤٤…»): its
- * country by the longest calling code it starts with, and the national digits. The current
- * country stays when it shares the code (Canada keeps +1). null: not international, or no code yet.
- */
+/** Picks the longest matching calling code, keeping a current country that shares it; else null. */
 export function splitInternational(typed: string, current: Country): DialSplit | null {
   const whole = asciiDigits(typed).replace(/\D/g, '').replace(/^00/, '');
   const owner = isInternational(typed) ? ownerOf(whole) : undefined;

@@ -1,6 +1,8 @@
-import { type BookingRequest, DAY_MS, dayInZone, type TimeGroup, timeGroups, addDays, startOfLocalDay } from '@ab/shared';
+import type { BookingRequest } from '@ab/shared';
+import { type TimeGroup, timeGroups, startOfLocalDay } from '@ab/schedule';
+import { DAY_MS, dayInZone, addDays } from '@ab/time';
 import { HttpStatus } from '@nestjs/common';
-import type { Occurrence } from '@ab/shared';
+import type { Occurrence } from '@ab/schedule';
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { planBooking, type Plan, type PlanRule } from './booking.plan';
 
@@ -50,14 +52,7 @@ function assertApart(plans: readonly Plan[]): void {
   });
 }
 
-/**
- * One plan per distinct start time (one schedule_rules row each, owner 2026-10-18: «اختر موعدًا لكل
- * يوم»), R-SCH-02 / R-SCH-06: planBooking per timeGroups(rule), sorted by their first lesson (plans[0]
- * is the booking's first rule: its first lesson is the confirmation's, and the picked slot pins it on a
- * DST fall-back). A course is planned through its last day (courseCut). An open-ended group with
- * nothing inside the horizon stays, last and with no lessons, so the daily top-up generates it. An
- * old body without dayTimes is exactly one plan.
- */
+/** R-SCH-02/06: one plan per start time; plans[0] pins the first lesson on a DST fall-back. */
 export function planSeries(input: SeriesInput): Plan[] {
   const { rule, endsOn } = input;
   const horizonWeeks = endsOn ? courseWeeks(input, endsOn) : input.horizonWeeks;
@@ -73,13 +68,7 @@ export function planSeries(input: SeriesInput): Plan[] {
 
 const isEmpty = (p: Plan): boolean => p.occurrences.length === 0;
 
-/**
- * A course's plans cut at endsOn. A picked day with no lesson over the whole course horizon is 400
- * no_occurrences. Fewer lessons left than days a week (1 of 8 on 2 days, owner 2026-11-02): a day
- * whose first lesson falls after endsOn keeps its rule (last, ends_on = endsOn, no lessons; the
- * course's days stay whole for «تابِع بنفس الأيام» and a change), so exactly the remaining lessons
- * are booked on the next matching days. Nothing left at all is 400 no_occurrences.
- */
+/** Fewer lessons than days keeps empty-day rules so the course's days stay whole; else 400. */
 function courseCut(planned: readonly Plan[], endsOn: string): Plan[] {
   if (planned.some(isEmpty)) throw domainError(HttpStatus.BAD_REQUEST, 'no_occurrences');
   const cut = planned.map((p) => capped(p, endsOn));

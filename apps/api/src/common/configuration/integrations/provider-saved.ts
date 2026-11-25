@@ -1,11 +1,8 @@
-import { WA_LINES, WA_PROVIDERS, type WaLine, type WaProvider } from '@ab/shared';
+import { WA_LINES, WA_PROVIDERS, type WaLine, type WaProvider } from '@ab/catalog';
 import { Logger } from '@nestjs/common';
 import { z } from 'zod';
 
-// «حفظ خط على ميتا» (docs/19 «CRM → Meta»): an admin who saves a line's provider (WA_PROVIDER /
-// WA_CHAT_PROVIDER in «التكاملات», or a role's default number in «الأرقام») tells the listeners,
-// so a line saved as meta syncs its templates once (TemplateVerifier). In-process, like the
-// overlay.
+// Saving a line's provider notifies listeners so a meta line syncs its templates once (docs/19).
 
 export interface LineSaved {
   line: WaLine;

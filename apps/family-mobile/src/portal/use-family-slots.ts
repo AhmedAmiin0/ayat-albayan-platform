@@ -2,7 +2,7 @@ import type { FamilyLessonInput } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { familySlotsQuery } from './api';
 
-/** «اطلب موعدًا آخر»'s free starts for one week (useSlotWeek's window), on the student's clock. */
+/** Free starts for one week, on the student's clock. */
 export function useFamilySlots(input: FamilyLessonInput & { from: string; to: string }) {
   const slots = useQuery(familySlotsQuery(input));
   return { data: slots.data?.slots, isError: slots.isError, refetch: slots.refetch };

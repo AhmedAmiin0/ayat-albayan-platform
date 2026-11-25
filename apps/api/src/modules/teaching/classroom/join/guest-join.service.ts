@@ -1,4 +1,9 @@
-import { familyGuestJoinSchema, guestJoinSchema, joinWindow, type RoomJoinResult } from '@ab/shared';
+import {
+  familyGuestJoinSchema,
+  guestJoinSchema,
+  joinWindow,
+  type RoomJoinResult,
+} from '@ab/schedule';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { parseOrThrow } from '@/common/http/http';

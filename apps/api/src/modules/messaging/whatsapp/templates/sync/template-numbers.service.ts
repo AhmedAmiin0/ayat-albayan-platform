@@ -1,6 +1,5 @@
-import type {
-  TemplateLineSync, TemplateNumberSetView, TemplateNumberSyncView, WaLine,
-} from '@ab/shared';
+import type { TemplateLineSync, TemplateNumberSetView, TemplateNumberSyncView } from '@ab/shared';
+import type { WaLine } from '@ab/catalog';
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { CrmCopiesRepo } from '@/modules/messaging/whatsapp/messages/crm-sent/crm-copies.repo';
 import { AuditService } from '@/common/audit/audit.service';

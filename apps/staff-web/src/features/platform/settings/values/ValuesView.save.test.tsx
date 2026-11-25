@@ -33,7 +33,7 @@ describe('«القيم» — each row saves on its own', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/booking_horizon_weeks', { value: 8, expectedVersion: 1 }));
     expect(row.getAttribute('aria-busy')).toBe('true');
     expect(within(row).getByRole('status').textContent).toBe(v.saving);
-    expect((within(row).getByLabelText(HORIZON) as HTMLInputElement).disabled).toBe(true);
+    expect((within(row).getByLabelText<HTMLInputElement>(HORIZON)).disabled).toBe(true);
     answer({ entry: entryOf('booking_horizon_weeks', { value: 8, version: 2 }) });
     const toast = await screen.findByText(v.saved);
     expect(within(toast.closest('[data-undo-toast]') as HTMLElement).getByRole('button', { name: v.undo })).toBeTruthy();
@@ -48,13 +48,13 @@ describe('«القيم» — each row saves on its own', () => {
     fireEvent.change(within(b).getByLabelText(MAKEUP), { target: { value: '30' } });
     fireEvent.click(saveOf(a));
     await screen.findByText(v.saved);
-    expect((within(b).getByLabelText(MAKEUP) as HTMLInputElement).value).toBe('30');
+    expect((within(b).getByLabelText<HTMLInputElement>(MAKEUP)).value).toBe('30');
     expect(apiSend).toHaveBeenCalledTimes(1);
     const nav = screen.getByRole('navigation', { name: v.groupsNav });
     fireEvent.click(within(nav).getByRole('button', { name: new RegExp(t.settings.sections.reports) }));
     fireEvent.click(within(nav).getByRole('button', { name: new RegExp(t.settings.sections.schedule) }));
     const again = await findRow(MAKEUP);
-    expect((within(again).getByLabelText(MAKEUP) as HTMLInputElement).value).toBe('30');
+    expect((within(again).getByLabelText<HTMLInputElement>(MAKEUP)).value).toBe('30');
     expect(screen.getByRole('button', { name: new RegExp(v.unsaved.one) })).toBeTruthy();
   });
 
@@ -67,8 +67,7 @@ describe('«القيم» — each row saves on its own', () => {
     expect(within(row).getByText(message)).toBeTruthy();
     expect(input.getAttribute('aria-invalid')).toBe('true');
     expect(input.getAttribute('aria-describedby')).toContain(within(row).getByText(message).closest('p')?.id ?? 'x');
-    // Named by aria-label, not by a visually hidden span (a browser reads that span as a block and
-    // spaces it, «حفظ : …», so the e2e's exact «حفظ: …» found nothing).
+    // Named by aria-label, not a hidden span, which browsers space so the exact e2e name fails.
     expect(saveOf(row).getAttribute('aria-label')).toBe(`${t.common.save}: ${HORIZON}`);
     fireEvent.click(saveOf(row));
     expect(saveOf(row).getAttribute('aria-disabled')).toBe('true');
@@ -105,6 +104,6 @@ describe('«القيم» — each row saves on its own', () => {
     const row = await findRow(HORIZON);
     fireEvent.change(within(row).getByLabelText(HORIZON), { target: { value: '8' } });
     await client.refetchQueries({ queryKey: ['settings'] });
-    expect((within(await findRow(HORIZON)).getByLabelText(HORIZON) as HTMLInputElement).value).toBe('8');
+    expect((within(await findRow(HORIZON)).getByLabelText<HTMLInputElement>(HORIZON)).value).toBe('8');
   });
 });

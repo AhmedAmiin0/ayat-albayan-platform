@@ -12,7 +12,7 @@ export function cellOf(v: unknown): Cell {
   return String(v);
 }
 
-/** Header texts with repeats numbered: ['وقت البدء', 'وقت البدء'] → ['وقت البدء', 'وقت البدء 2']. */
+/** Header texts with repeats numbered: a second copy gets " 2". */
 export function headerNames(row: readonly unknown[]): string[] {
   const seen = new Map<string, number>();
   return row.map((h) => {

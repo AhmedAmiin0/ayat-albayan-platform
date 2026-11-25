@@ -26,19 +26,42 @@ const COUNTRIES: readonly (readonly [string, PhoneCountry, RegExp])[] = [
 // Spaces, dashes, brackets, dots and the bidi marks WhatsApp copies along with numbers.
 const NOISE = /[\s\-().‎‏‪-‮]/g;
 
-/** "+<digits>", or null when the number carries no country code. */
+type PhoneFailure = Extract<PhoneResult, { ok: false }>['reason'];
+
+/** How a cleaned number may be written, each to its "+<digits>" form; the first match wins. */
+const WRITTEN_FORMS: readonly (readonly [RegExp, (digits: string) => string])[] = [
+  [/^\+/, (d) => d],
+  [/^00/, (d) => `+${d.slice(2)}`],
+  [/^966/, (d) => `+${d}`],
+  // Bare 20 + Egyptian mobile, the WhatsApp wa_id shape: no local format starts with 2. Same 1x
+  // set as the EG pattern and the 01… form, so a number is accepted however it is written.
+  [/^201[0-9]{9}$/, (d) => `+${d}`],
+  [/^05[0-9]{8}$/, (d) => `+966${d.slice(1)}`],
+  [/^01[0-9]{9}$/, (d) => `+20${d.slice(1)}`],
+];
+
+/**
+ * "+<digits>", or null when the number carries no country code. R-STU-02: other bare
+ * international numbers (971…, 44…) stay rejected, as they read like local numbers; the
+ * WhatsApp webhook knows wa_id is international and adds the +.
+ */
 function withCountryCode(digits: string): string | null {
-  if (digits.startsWith('+')) return digits;
-  if (digits.startsWith('00')) return `+${digits.slice(2)}`;
-  if (digits.startsWith('966')) return `+${digits}`;
-  // Bare 20 + Egyptian mobile: the WhatsApp wa_id shape. Unambiguous: no local format starts with 2.
-  // Same 1x set as the EG pattern and the 01… rule, so a number is accepted however it is written.
-  if (/^201[0-9]{9}$/.test(digits)) return `+${digits}`;
-  // R-STU-02: other bare international numbers (971…, 44…) stay rejected: without a + they are
-  // indistinguishable from local numbers. The Phase 4 webhook knows wa_id is international and adds the +.
-  if (/^05[0-9]{8}$/.test(digits)) return `+966${digits.slice(1)}`;
-  if (/^01[0-9]{9}$/.test(digits)) return `+20${digits.slice(1)}`;
-  return null;
+  const form = WRITTEN_FORMS.find(([re]) => re.test(digits));
+  return form ? form[1](digits) : null;
+}
+
+/** What makes a cleaned input no phone number at all, checked in order. */
+const INPUT_FAILURES: readonly (readonly [(cleaned: string) => boolean, PhoneFailure])[] = [
+  [(c) => c === '', 'empty'],
+  [(c) => !/^\+?[0-9]+$/.test(c), 'not_a_number'],
+];
+
+/** A number with its country code, held to its country's pattern (any other: E.164 alone). */
+function checkedE164(e164: string | null): PhoneResult {
+  if (e164 === null) return bad('missing_country_code');
+  const known = COUNTRIES.find(([code]) => e164.startsWith(code));
+  const pattern = known ? known[2] : E164_RE;
+  return pattern.test(e164) ? ok(e164, known ? known[1] : null) : bad('invalid_length');
 }
 
 /**
@@ -49,23 +72,17 @@ function withCountryCode(digits: string): string | null {
  */
 export function normalizePhone(input: string): PhoneResult {
   const cleaned = asciiDigits(input).replace(NOISE, '');
-  if (!cleaned) return { ok: false, reason: 'empty' };
-  if (!/^\+?[0-9]+$/.test(cleaned)) return { ok: false, reason: 'not_a_number' };
-
-  const e164 = withCountryCode(cleaned);
-  if (!e164) return { ok: false, reason: 'missing_country_code' };
-  for (const [code, country, re] of COUNTRIES) {
-    if (e164.startsWith(code)) return re.test(e164) ? ok(e164, country) : bad();
-  }
-  return E164_RE.test(e164) ? ok(e164, null) : bad();
+  const failure = INPUT_FAILURES.find(([fails]) => fails(cleaned));
+  return failure ? bad(failure[1]) : checkedE164(withCountryCode(cleaned));
 }
 
 /**
  * The phone part of a list search box (R-STU-02, R-LEAD-01): the digits to find inside phone_e164,
- * or null to search by name. Typed on any keyboard (٠-٩, ۰-۹, spaces, dashes, dots, brackets, +),
- * at least 3 digits. A local number (one leading 0, e.g. 05… or 01…) → its national digits, so it
- * is found under any country code (a UAE 05… is not read as Saudi); a whole international number
- * → its E.164 digits; a partial one → its digits without a leading 00.
+ * or null to search by name. Typed on any keyboard (Arabic-Indic and Persian digits, spaces,
+ * dashes, dots, brackets, +), at least 3 digits. A local number (one leading 0, e.g. 05… or 01…)
+ * → its national digits, so it is found under any country code (a UAE 05… is not read as Saudi);
+ * a whole international number → its E.164 digits; a partial one → its digits without a leading
+ * 00.
  */
 export function searchDigits(term: string): string | null {
   const digits = asciiDigits(term).replace(NOISE, '').replace(/\+/g, '');
@@ -79,8 +96,8 @@ function ok(e164: string, country: PhoneCountry | null): PhoneResult {
   return { ok: true, e164, country };
 }
 
-function bad(): PhoneResult {
-  return { ok: false, reason: 'invalid_length' };
+function bad(reason: PhoneFailure): PhoneResult {
+  return { ok: false, reason };
 }
 
 // National-number grouping per country code: SA +966 5x xxx xxxx, EG +20 1x xxxx xxxx, Gulf 4-4.
@@ -100,7 +117,12 @@ const GROUPS: readonly (readonly [string, readonly number[]])[] = [
 export function formatPhone(e164: string): string {
   for (const [cc, sizes] of GROUPS) {
     const rest = e164.slice(cc.length);
-    if (!e164.startsWith(cc) || !/^[0-9]+$/.test(rest) || rest.length !== sizes.reduce((a, b) => a + b, 0)) continue;
+    if (
+      !e164.startsWith(cc) ||
+      !/^[0-9]+$/.test(rest) ||
+      rest.length !== sizes.reduce((a, b) => a + b, 0)
+    )
+      continue;
     const parts = [cc];
     let at = 0;
     for (const n of sizes) {

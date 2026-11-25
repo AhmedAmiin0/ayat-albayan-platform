@@ -1,4 +1,11 @@
-import { canGrantShare, JOIN_ROLES, lessonRoomName, meetingRoomName, shareGrantSchema, type JoinRole } from '@ab/shared';
+import {
+  canGrantShare,
+  JOIN_ROLES,
+  lessonRoomName,
+  meetingRoomName,
+  shareGrantSchema,
+  type JoinRole,
+} from '@ab/schedule';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
@@ -37,11 +44,7 @@ async function applyShare(livekit: LivekitApi, input: { room: string; identity: 
   }
 }
 
-/**
- * «سماح» / «إيقاف مشاركة» after a guest's «اطلب مشاركة الشاشة», in a lesson room: the teacher, an
- * admin or an assistant of that lesson (canGrantShare) lets one guest publish their screen for
- * this session. Nothing is stored: the permission lives on the LiveKit participant and ends with it.
- */
+/** Nothing is stored: the share permission lives on the LiveKit participant and ends with it. */
 @Injectable()
 export class ShareGrantService {
   constructor(

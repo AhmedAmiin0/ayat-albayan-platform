@@ -1,4 +1,5 @@
-import type { MessageView, Page, ThreadDelta, ThreadDetail, ThreadView } from '@ab/shared';
+import type { MessageView, ThreadDelta, ThreadDetail, ThreadView } from '@ab/shared';
+import type { Page } from '@ab/core';
 import { ForbiddenException, Inject, Injectable, Optional } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
@@ -37,15 +38,14 @@ export class ThreadReads {
   /** Sales mode (property-injected: the constructor is at the 3-parameter limit). */
   @Inject(SalesThreadsService) private readonly sales?: SalesThreadsService;
   @Inject(SalesScopes) private readonly salesScopes?: SalesScopes;
-  /** «القوائم» (docs/22): the list filter and the open chat's lists (admin and sales only). */
+  /** Chat lists (docs/22): admin and sales only. */
   @Inject(ChatListsRepo) private readonly chatLists?: ChatListsRepo;
-  /** «رد»: the messages a page's bubbles answer (owner 2026-10-25). */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
   /** The open chat's delta refresh (owner 2026-10-27). */
   @Inject(ThreadDeltaService) private readonly deltas?: ThreadDeltaService;
   /** The academy's own numbers: never listed, for any role (owner 2026-10-27). */
   @Optional() @Inject(OwnNumbers) private readonly own?: OwnNumbers;
-  /** «تفاعل»: the first page's `reactable` (the chat's send line, migration 900). */
+  /** The first page's `reactable` (the chat's send line, migration 900). */
   @Optional() @Inject(ThreadsRepo) private readonly rows?: ThreadsRepo;
 
   constructor(
@@ -91,7 +91,7 @@ export class ThreadReads {
     return this.reactable({ ...listed, messages: quoted.messages }, true);
   }
 
-  /** thread.reactable: may this caller's bubbles offer «تفاعل» (a teacher never on their own chat). */
+  /** A teacher never reacts on their own chat. */
   private async reactable(detail: ThreadDetail, may: boolean): Promise<ThreadDetail> {
     if (!detail.thread || !this.rows) return detail;
     const reactable = may && (await threadReactable(this.rows, detail.thread.phone_e164, new Date()));

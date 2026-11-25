@@ -1,23 +1,21 @@
-import { isOpenLesson, type JoinState, type JoinWindow, type PortalLesson } from '@ab/shared';
+import type { PortalLesson } from '@ab/shared';
+import { isOpenLesson, type JoinState, type JoinWindow } from '@ab/schedule';
 
 // The join window as the screen's own clock reads it (moved from the web's student link and portal
 // card, docs/50 §7): the API sends the window's edges; the page decides between them every tick.
 
-/** The page's own clock against the window the API sent (its edges already count «الآن»). */
+/** The window edges the API sent already count as open. */
 export function windowStateAt(w: Pick<JoinWindow, 'opens_at' | 'closes_at'>, now: Date): JoinState {
   const t = now.getTime();
   if (t < Date.parse(w.opens_at)) return 'early';
   return t > Date.parse(w.closes_at) ? 'closed' : 'open';
 }
 
-/** «حلقتك الآن» once the lesson has started (until it ends), «حلقتك القادمة» before. */
+/** True from the lesson's start until it ends. */
 export const isLessonNow = (l: { starts_at: string; ends_at: string }, now: Date): boolean =>
   Date.parse(l.starts_at) <= now.getTime() && now.getTime() < Date.parse(l.ends_at);
 
-/**
- * Why a lesson card has no «ادخل الحلقة»: cancelled, over (or no longer open), no way in known,
- * not open yet (`opensAt`: the app writes the window's opening time), or null = the button.
- */
+/** Why a lesson card has no join button; null means the button shows. */
 export type LessonWait = 'cancelled' | 'closed' | 'noWayIn' | 'opensAt';
 
 type WaitRule = readonly [(lesson: PortalLesson, state: JoinState) => boolean, LessonWait];

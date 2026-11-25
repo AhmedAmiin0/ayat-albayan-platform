@@ -2,7 +2,7 @@ import type { RenderableTemplate, TemplateNumberApproval, TemplateView } from '@
 import { HttpException } from '@nestjs/common';
 import { paramNames, templateButtons, templateDisplay } from '@/modules/messaging/whatsapp/messages/wa-json';
 import { CRM_AUTH, EVOLUTION_AUTH, KAPSO_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
-import type { ApprovalRow } from './templates.repo';
+import type { ApprovalRow } from './types';
 import type { TemplateRow, WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** audit_log.entity_id is a uuid; the template key goes in before/after (as settings do). */
@@ -74,7 +74,7 @@ const CREDENTIAL_CODE: Record<NonNullable<WaError['info']['credential']>, string
   evolution: EVOLUTION_AUTH,
 };
 
-/** The CRM's 403 naming a scope its key lacks (templates:read on «مزامنة», docs/39). */
+/** docs/39: the CRM's 403 naming a scope its key lacks. */
 const CRM_SCOPE_MISSING = 'crm_scope_missing';
 
 type ToHttp = (e: WaError) => HttpException | undefined;

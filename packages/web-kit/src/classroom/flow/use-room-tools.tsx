@@ -1,4 +1,4 @@
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { kickScope, recordingSourceOf } from '@ab/web-kit/classroom/api/moderation-api';
 import { useBoard } from '@ab/web-kit/classroom/board/use-board';
 import { KickButton } from '@ab/web-kit/classroom/kick/KickButton';
@@ -16,10 +16,7 @@ import { useShareRequests } from '@ab/web-kit/classroom/share/use-share-requests
 const actsOn = (tile: TileView, kick: KickController, mute: MuteController): boolean =>
   kick.canKick(tile) || mute.canMute(tile, 'microphone') || mute.canMute(tile, 'camera');
 
-/**
- * The room's tools by the join's role: the board, «إخراج من الحلقة», the share and board
- * requests, «كتم», and «التسجيلات» (the admin and the teacher). A guest's tools only ask.
- */
+/** The room's tools by the join's role; a guest's tools only ask. */
 export function useRoomTools(room: RoomController, join: RoomJoinResult) {
   const board = useBoard({ room, role: join.role });
   const kick = useKick({ ...kickScope(join.room), role: join.role });

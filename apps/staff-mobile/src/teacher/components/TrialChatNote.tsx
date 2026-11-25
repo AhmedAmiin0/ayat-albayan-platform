@@ -1,4 +1,5 @@
-import { familyChatViaSales, type StudentStatus } from '@ab/shared';
+import { familyChatViaSales } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 /**

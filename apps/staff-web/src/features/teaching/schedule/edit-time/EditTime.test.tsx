@@ -54,7 +54,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     const form = screen.getByRole('region', { name: t.lessons.timeEdit.title });
     expect(within(form).getByText(t.lessons.timeEdit.vsReschedule)).toBeTruthy();
     expect(screen.getByText(t.lessons.timeEdit.unchanged)).toBeTruthy();
-    expect((screen.getByRole('button', { name: t.lessons.timeEdit.submit }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole<HTMLButtonElement>('button', { name: t.lessons.timeEdit.submit })).disabled).toBe(true);
 
     pick.day(MONDAY);
     pick.time('18:00');
@@ -62,7 +62,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     const line = confirmLine(/الأحد 4 أكتوبر 17:00 \(45 دقيقة\).*5 أكتوبر 18:00 \(60 دقيقة\)/);
     expect(line.textContent).toContain(t.schedule.viewerTime);
     expect(screen.getByText(t.lessons.timeEdit.sameLesson)).toBeTruthy();
-    expect((screen.getByLabelText(t.lessons.timeEdit.notify) as HTMLInputElement).checked).toBe(true);
+    expect((screen.getByLabelText<HTMLInputElement>(t.lessons.timeEdit.notify)).checked).toBe(true);
     expect(screen.queryByText(t.lessons.timeEdit.payoutWarn)).toBeNull(); // only a held lesson's payout moves
 
     pick.save();
@@ -100,12 +100,12 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     const times = TIMES(screen.getByLabelText(new RegExp(t.lessons.timeEdit.time.replace('{city}', '.+'))));
     expect(times).toContain('12:15');
     expect(times).not.toContain('11:45');
-    expect((screen.getByLabelText(t.lessons.timeEdit.otherDate) as HTMLInputElement).type).toBe('date');
+    expect((screen.getByLabelText<HTMLInputElement>(t.lessons.timeEdit.otherDate)).type).toBe('date');
   });
 
   it('a migrated lesson with an odd length (40) shows it instead of a wrong preset', () => {
     open(lesson({ minutes: 40, time_edit_mode: 'move' }));
-    const select = screen.getByLabelText(t.lessons.timeEdit.duration) as HTMLSelectElement;
+    const select = screen.getByLabelText<HTMLSelectElement>(t.lessons.timeEdit.duration);
     expect(select.value).toBe('40');
     expect(TIMES(select)).toEqual(['30', '40', '45', '60', '90']);
   });

@@ -17,9 +17,8 @@ export interface SubscriptionFiltersOptions {
   onChange: (patch: Record<string, unknown>) => void;
 }
 
-/** The status filter (stored statuses + «مدفوع جزئيًا») as the table toolbar's extra filter. */
 export function useSubscriptionFilters({ status, onChange }: SubscriptionFiltersOptions): ExtraFilters {
-  const setStatus = (v: string) => onChange({ status: (v || undefined) as SubscriptionFilter | undefined });
+  const setStatus = (v: string) => onChange({ status: (v || undefined) });
   return {
     fields: <SelectFilterField label={t.subscriptions.status} value={status} options={statusOptions} onChange={setStatus} />,
     chips: chipIfSet({

@@ -1,5 +1,4 @@
 import type {
-  AssistantLessonView,
   SalesHistoryEntry,
   SalesScheduleLesson,
   SalesStudentView,
@@ -7,6 +6,7 @@ import type {
   SalesSubscriptionView,
   SalesTeacherView,
 } from '@ab/shared';
+import type { AssistantLessonView } from '@ab/schedule';
 
 // Test data shaped like the sales API (docs/16): no price; the guardian's (fake) phone only on a student row; a teacher's fixed link only where a test sets one.
 

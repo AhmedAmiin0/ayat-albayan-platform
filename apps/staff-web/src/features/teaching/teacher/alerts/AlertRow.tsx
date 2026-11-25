@@ -13,13 +13,12 @@ export interface AlertRowProps {
   onOpen: (lessonId: string) => void;
 }
 
-/** The row's line id: every action is described by its own row («افتح الحلقة» × 3). */
+/** Every action is described by its own row's line id. */
 type Act = (p: AlertRowProps & { lineId: string }) => ReactNode;
 
 const stageOf = (row: AlertRowView): ReportStage =>
   row.parts.vars.stage === 'resume' || row.parts.vars.stage === 'window' ? row.parts.vars.stage : 'write';
 
-/** The row's one action (owner 2026-11-14): the lesson drawer, the report, or «تحديد كمقروء». */
 const ACTIONS: Record<AlertAction, Act> = {
   open: (p) => (
     <Button
@@ -56,7 +55,6 @@ function MarkRead({ id, lineId }: { id: string; lineId: string }) {
   );
 }
 
-/** The second line: the bell row's body as sent, or «السبب: …» for a change. */
 const detailOf = (row: AlertRowView): string | null =>
   row.parts.detail && row.parts.text !== 'bell'
     ? fillSlots(t.teacherAlerts.reason, { reason: row.parts.detail })

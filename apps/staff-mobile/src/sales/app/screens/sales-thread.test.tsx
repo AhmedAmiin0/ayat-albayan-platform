@@ -38,7 +38,7 @@ async function open(th: typeof thread) {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  // Two days after the last inbound: the 24 h window is closed (the admin would see «إرسال تقييم الحلقة»).
+  // Two days after the last inbound the 24 h window is closed.
   fakeNow(new Date(NOW.getTime() + 2 * 86_400_000));
 });
 afterEach(() => jest.useRealTimers());

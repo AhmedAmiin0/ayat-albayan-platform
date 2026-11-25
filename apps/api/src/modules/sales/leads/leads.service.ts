@@ -1,5 +1,8 @@
-import { canTransitionLead, normalizePhone } from '@ab/shared';
-import type { LeadSource, LeadStatus, LeadView, Page } from '@ab/shared';
+import { canTransitionLead } from '@ab/catalog';
+import { normalizePhone } from '@ab/core';
+import type { LeadView } from '@ab/shared';
+import type { LeadStatus } from '@ab/catalog';
+import type { Page } from '@ab/core';
 import {
   BadRequestException,
   ConflictException,
@@ -15,22 +18,7 @@ import {
   type JobApplicantRow,
 } from '@/modules/sales/job-applicants/job-applicants.repo';
 import { LeadsRepo, type LeadListFilter, type LeadRow } from './leads.repo';
-
-export interface InboundContact {
-  /** Raw WhatsApp / typed phone; normalised to E.164 (rule 7). */
-  phone: string;
-  /** WhatsApp profile name; only fills an empty lead name. */
-  name?: string | null;
-  /** Used for a new lead only; an existing lead keeps its source. */
-  source?: LeadSource;
-  /** Message time (UTC); defaults to now. */
-  at?: Date;
-}
-
-export interface LeadAction {
-  id: string;
-  actorId: string | null;
-}
+import type { InboundContact, LeadAction } from './leads.types';
 
 export const invalidTransition = (from: string, to: string) =>
   new ConflictException({ code: 'invalid_transition', from, to });

@@ -23,10 +23,7 @@ const showTrack = (track: MediaStreamTrack) => (el: HTMLVideoElement | null) => 
   el.srcObject = new MediaStream([track]);
 };
 
-/**
- * One's own camera before joining (board FamRoomWebCheck): mirrored like the room's own tile, or
- * a calm dark box with the reason there is no picture. «أنت» in the corner.
- */
+/** Mirrored like the room's own tile, or a dark box with the reason there is no picture. */
 export function CheckPreview({ cam }: { cam: ProbeState }) {
   return (
     <div className="relative grid aspect-video w-full place-items-center overflow-hidden rounded-md bg-inverse text-on-inverse">

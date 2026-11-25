@@ -1,4 +1,5 @@
-import { LEAD_STATUSES, LESSON_STATUSES, type DateRangeQuery } from '@ab/shared';
+import { LEAD_STATUSES, LESSON_STATUSES } from '@ab/catalog';
+import type { DateRangeQuery } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { countBy, teacherLoad } from './dashboard.mapper';
 import { DashboardQueries } from './dashboard.queries';
@@ -7,7 +8,7 @@ import { FinanceService } from './finance/finance.service';
 import { rangeWindow } from './range';
 import { pendingList, taskList, unpaidList } from './work/work.mapper';
 import { WorkQueries } from './work/work.queries';
-import type { DashboardResponse, DashboardWork } from '@ab/shared';
+import type { DashboardResponse, DashboardWork } from '@ab/money';
 
 /** GET /dashboard/summary and /dashboard/work (R-RPT-01, R-RPT-02). */
 @Injectable()

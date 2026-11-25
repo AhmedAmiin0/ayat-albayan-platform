@@ -5,7 +5,7 @@ import { reactionMutation, withReactions } from './reaction-mutation.js';
 const before = { theirs: '❤️', ours: null, ours_by: null };
 const m = { id: 'm1', reactions: before } as unknown as MessageView;
 const result = (status: 'sent' | 'failed', ours: string | null): ReactionResult =>
-  ({ message: { ...m, reactions: { ...before, ours, ours_by: ours ? 'هبة' : null } }, status, error_code: null, error_text: null }) as ReactionResult;
+  ({ message: { ...m, reactions: { ...before, ours, ours_by: ours ? 'هبة' : null } }, status, error_code: null, error_text: null });
 
 function ports() {
   return { send: vi.fn(), cancel: vi.fn(async () => undefined), patch: vi.fn(), fail: vi.fn() };

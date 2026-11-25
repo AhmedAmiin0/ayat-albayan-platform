@@ -28,7 +28,7 @@ export function pipeline(bundle: SourceBundle, modules: readonly EntityModule[])
   return { ...r, by };
 }
 
-/** A «الطلاب» row with sane defaults; override any field. */
+/** A students-tab row with sane defaults; override any field. */
 export function studentRow(fields: Record<string, Cell>, at?: { row?: number }): SourceRow {
   return row(
     {
@@ -45,7 +45,7 @@ export function studentRow(fields: Record<string, Cell>, at?: { row?: number }):
   );
 }
 
-/** A «تقارير الحلقات» row (new linked shape unless overridden). */
+/** A reports-tab row (new linked shape unless overridden). */
 export function reportRow(fields: Record<string, Cell>, at?: { row?: number }): SourceRow {
   return row(
     {

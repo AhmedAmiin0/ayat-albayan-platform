@@ -13,7 +13,7 @@ import type { UsersView } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
-// apps/api/src/modules/users: «المستخدمون». users.read lists and opens, users.write does the rest.
+// users.read lists and opens, users.write does the rest.
 export const USERS_KEY = ['users'] as const;
 export const USERS_PAGE_SIZE = 20;
 

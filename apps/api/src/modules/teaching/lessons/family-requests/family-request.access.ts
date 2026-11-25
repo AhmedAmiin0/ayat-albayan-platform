@@ -1,4 +1,5 @@
-import type { LessonView, UserRole } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
+import type { LessonView } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
@@ -15,12 +16,7 @@ const ownsAll = (owners: ReadonlyMap<string, string[]>, user: AuthUser) =>
   (ids: readonly string[]): boolean =>
     ids.length > 0 && ids.every((id) => owners.get(id)?.includes(user.id) ?? false);
 
-/**
- * Who answers a family's «اطلب موعدًا آخر» (owner 2026-11-17): an admin any; an assistant (base
- * role sales) the lessons whose students she owns, by the ownership rule's two links (who brought
- * the student, who holds the lead its family came from: TeacherCancelRepo.ownersOf, read once for
- * a whole list). Every other role: none.
- */
+/** Family requests: an admin answers any, a sales assistant only her own students' lessons. */
 @Injectable()
 export class FamilyRequestAccess {
   private readonly rules: Partial<Record<UserRole, Answers>> = {

@@ -17,7 +17,6 @@ export interface ComposerInput {
 }
 
 export type Panel = 'none' | 'emoji' | 'attach';
-/** The round button: the microphone while the box is empty, «أرسل» once typed or recording. */
 export type Round = 'mic' | 'send' | 'voice';
 
 const ignore = () => undefined;

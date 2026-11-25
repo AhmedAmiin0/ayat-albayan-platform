@@ -1,3 +1,4 @@
+import type { SignedDownload, SignedUpload } from '@ab/shared';
 import {
   earningsListQuery,
   teacherPaymentListQuery,
@@ -5,14 +6,12 @@ import {
   teacherReceiptUploadSchema,
   teacherResyncSchema,
   voidReasonSchema,
-  type SignedDownload,
-  type SignedUpload,
   type TeacherEarningsBalanceView,
   type TeacherEarningsSummaryView,
   type TeacherEarningView,
   type TeacherPaymentResult,
   type TeacherPaymentView,
-} from '@ab/shared';
+} from '@ab/money';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -22,7 +21,7 @@ import { CorrectionsRepo } from './summary/corrections.repo';
 import { EarningsReceipts } from './earnings.receipts';
 import { EarningsService } from './earnings.service';
 import { toSummaryView } from './summary/earnings.summary';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 /** Admin: a teacher's balance, sessions and payments; record a payment (docs/11 §10). */
 @ApiTags('teacher-earnings')
@@ -36,7 +35,7 @@ export class TeacherEarningsController {
     private readonly corrections: CorrectionsRepo,
   ) {}
 
-  /** «مستحقات المعلمين»: earned / paid / owed per teacher (static segment, before `:teacherId`). */
+  /** Static segment, declared before `:teacherId`. */
   @Get('summary')
   async summary(): Promise<TeacherEarningsSummaryView> {
     return toSummaryView(await this.corrections.summary());

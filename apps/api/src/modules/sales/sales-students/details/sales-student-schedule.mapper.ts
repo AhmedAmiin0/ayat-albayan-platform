@@ -1,15 +1,14 @@
 import {
-  DAY_MS,
   type SalesStudentLesson,
   type SalesStudentSchedule,
   SCHEDULE_DAYS,
   SCHEDULE_LIMIT,
 } from '@ab/shared';
+import { DAY_MS } from '@ab/time';
 import { type SalesScheduleRow, toScheduleLesson, toWeeklySlot, type WeeklyRuleRow, withMine } from '@/modules/sales/sales';
 
 // Whitelists: a rule's link or subscription and a lesson's link never reach sales (migration 187).
 
-/** «الحلقات القادمة»: from now, SCHEDULE_DAYS ahead, at most SCHEDULE_LIMIT lessons. */
 export function scheduleWindow(now: Date): { from: Date; to: Date; limit: number } {
   return { from: now, to: new Date(now.getTime() + SCHEDULE_DAYS * DAY_MS), limit: SCHEDULE_LIMIT };
 }
@@ -30,7 +29,7 @@ interface ScheduleParts {
   studentTz: string;
 }
 
-/** «الجدول»: weekly slots by their next start, then the upcoming lessons by start. */
+/** Weekly slots by next start, then upcoming lessons by start. */
 export function toStudentSchedule(p: ScheduleParts, now: Date): SalesStudentSchedule {
   const weekly = p.rules.flatMap((r) => toWeeklySlot(r, now) ?? []);
   weekly.sort((a, b) => (a.next[0] ?? '').localeCompare(b.next[0] ?? ''));

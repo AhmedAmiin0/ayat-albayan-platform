@@ -79,10 +79,7 @@
   },
   "src/auth/use-permissions.ts": {
     "stylistic/max-len": {
-      "count": 7
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
+      "count": 5
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -91,11 +88,6 @@
   "src/auth/verify-role.ts": {
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/lib/appearance/appearance.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/lib/connectivity/connectivity-machine.test.ts": {
@@ -119,9 +111,6 @@
       "count": 1
     },
     "typescript/no-misused-promises": {
-      "count": 1
-    },
-    "typescript/no-meaningless-void-operator": {
       "count": 1
     },
     "typescript/no-confusing-void-expression": {
@@ -183,9 +172,6 @@
   "src/lib/i18n/i18n-overrides.test.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 1
     }
   },
   "src/lib/i18n/i18n-overrides.ts": {
@@ -208,15 +194,7 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "src/lib/i18n/locale.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -231,9 +209,6 @@
     }
   },
   "src/lib/query/pull-refresh.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
@@ -245,7 +220,7 @@
   },
   "src/lib/query/query-client.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     },
     "typescript/dot-notation": {
       "count": 1
@@ -329,9 +304,6 @@
     },
     "no-nested-ternary": {
       "count": 4
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/ui/call/call-icons.tsx": {
@@ -346,7 +318,7 @@
   },
   "src/ui/connecting/BarCard.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/ui/connecting/CheckBadge.test.tsx": {
@@ -367,13 +339,7 @@
   },
   "src/ui/connecting/ConnectingBar.test.tsx": {
     "stylistic/max-len": {
-      "count": 6
-    },
-    "typescript/no-meaningless-void-operator": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
+      "count": 5
     },
     "typescript/no-unnecessary-boolean-literal-compare": {
       "count": 1
@@ -415,14 +381,6 @@
       "count": 1
     }
   },
-  "src/ui/connecting/use-bar-phase.test.ts": {
-    "typescript/no-meaningless-void-operator": {
-      "count": 5
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 5
-    }
-  },
   "src/ui/connecting/use-bar-phase.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -434,9 +392,6 @@
     },
     "stylistic/max-len": {
       "count": 3
-    },
-    "typescript/no-meaningless-void-operator": {
-      "count": 1
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -502,7 +457,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 5
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -523,7 +478,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     }
   },
   "src/ui/layout/tab-bar-inset.ts": {
@@ -568,7 +523,7 @@
   },
   "src/ui/primitives/Avatar.tsx": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -576,7 +531,7 @@
   },
   "src/ui/primitives/Button.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/ui/primitives/Chevron.test.tsx": {
@@ -611,7 +566,7 @@
   },
   "src/ui/startup/RetryButton.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/ui/startup/StartupEmblem.test.tsx": {
@@ -619,14 +574,6 @@
       "count": 2
     },
     "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 1
-    }
-  },
-  "src/ui/startup/StartupOverlay.test.tsx": {
-    "typescript/no-meaningless-void-operator": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
       "count": 1
     }
   },
@@ -638,12 +585,6 @@
   "src/ui/startup/StartupScreen.test.tsx": {
     "stylistic/max-len": {
       "count": 5
-    },
-    "typescript/no-meaningless-void-operator": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
     }
   },
   "src/ui/startup/StartupScreen.tsx": {
@@ -653,7 +594,7 @@
   },
   "src/ui/startup/StartupStatus.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -661,12 +602,7 @@
   },
   "src/ui/startup/startup-mode.ts": {
     "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/ui/startup/use-startup-stage.ts": {
-    "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/ui/surface/inset.test.tsx": {
@@ -676,15 +612,10 @@
   },
   "src/ui/surface/inset.tsx": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 5
     },
     "ab/no-restricted-syntax": {
       "count": 3
-    }
-  },
-  "src/ui/surface/surface.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   }
 }

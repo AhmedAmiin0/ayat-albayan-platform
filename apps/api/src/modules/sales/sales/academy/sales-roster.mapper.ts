@@ -1,13 +1,12 @@
 import {
   attendanceKind,
-  RIYADH_TZ,
   ROSTER_RECENT_DAYS,
   rosterAttendance,
-  zonedInstant,
   type RosterAttendance,
   type RosterSlot,
   type SalesPackageSummary,
 } from '@ab/shared';
+import { RIYADH_TZ, zonedInstant } from '@ab/time';
 import { toWeeklySlot } from '@/modules/sales/sales/schedule/weekly-slot';
 import type { RosterLessonRow, RosterPackageRow, RosterRuleRow } from './sales-roster.repo';
 

@@ -1,22 +1,16 @@
-import { amountFromStripe, type PaymentAmount, type SalesPaymentView } from '@ab/shared';
+import type { SalesPaymentView } from '@ab/shared';
+import { amountFromStripe, type PaymentAmount } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, forbidden } from '@/common/http/errors';
-import { toSalesPayment } from '@/modules/sales/sales-money/sales-money.mapper';
-import { SalesMoneyReads } from '@/modules/sales/sales-money/reads/sales-money.reads';
-import { SalesMoneyServices } from '@/modules/sales/sales-money/sales-money.services';
-import { SalesMoneyScope } from '@/modules/sales/sales-money/sales-money.scope';
+import { SalesMoneyReads } from '@/modules/sales/sales-money/reads';
+import {
+  SalesMoneyScope,
+  SalesMoneyServices,
+  toSalesPayment,
+} from '@/modules/sales/sales-money/shared';
 
-/**
- * «تعديل المبلغ» by the assistant (owner 2026-11-02), permission subscriptions.edit_terms (never
- * payments.write): the admin's PaymentsService.update with her as the actor, so the audit
- * (before/after), the package's paid state, the balance, both commissions (the payment triggers)
- * and the alerts follow exactly as on the admin's edit. Whose: the transfer's own rule
- * (SalesMoneyScope.assertRenews: ANY student unless sales_require_assignee is enforced, then hers
- * or any with sales.renew_any; 403 not_your_student). A payment only (she records no refund:
- * 403 refund_not_allowed); never a card
- * one, whose amount is Stripe's (409 stripe_amount_locked, before anything is written).
- */
+/** Reuses the admin's payment update with her as actor; card payment amounts are locked (409). */
 @Injectable()
 export class SalesPaymentAmount {
   constructor(

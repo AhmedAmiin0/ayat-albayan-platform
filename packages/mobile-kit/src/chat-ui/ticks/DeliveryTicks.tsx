@@ -1,18 +1,11 @@
-import {
-  bubbleWord,
-  type MessageStatus,
-  messageTicks,
-  type TickKind,
-  tickTone,
-  type TickTone,
-} from '@ab/shared';
+import { bubbleWord, messageTicks, type TickKind, tickTone, type TickTone } from '@ab/shared';
+import type { MessageStatus } from '@ab/catalog';
 import { Pressable, View, type ViewStyle } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
 import { type Palette, useTheme } from '../../theme';
 import { TickGlyph } from './TickGlyph';
 
-// Read is the WhatsApp-like blue (`read`), the rest the tick grey (`tick`); failed is saffron, the
-// «دورك» tone of its chip (status-style.ts).
+// Read is the blue `read`, the rest the grey `tick`; failed uses the saffron your-turn tone.
 const INK: Record<TickTone, keyof Palette> = { muted: 'tick', read: 'read', act: 'act' };
 const ROW: ViewStyle = { flexDirection: 'row', alignItems: 'center', gap: 2 };
 const HIDDEN = {
@@ -23,23 +16,23 @@ const HIDDEN = {
 export interface DeliveryTicksProps {
   /** Any chat's status: the student channel passes 'sent' / 'read' only. */
   status: MessageStatus;
-  /** «أُرسلت … · وصلت … · قُرئت …»: read with the word; a long press toggles them. */
+  /** A long press toggles the sent, delivered and read times. */
   times?: string;
   /** The bubble shows the times on its own line under the meta row. */
   onLongPress?: () => void;
   /** The row that did not go out: a tap opens what can be done, as WhatsApp. */
   onPress?: () => void;
-  /** Said after the status word when it can be tapped: why it failed («السبب: …»). */
+  /** Said after the status word when tappable: why it failed. */
   actionLabel?: string;
   /** In a chat-list row: the row's label already says the word (no separate stop). */
   inList?: boolean;
-  /** A long press of its own (the student channel's «من قرأ الرسالة») instead of the times. */
+  /** A long press of its own instead of the times. */
   onHold?: () => void;
-  /** The row's error_code: a send that may have gone reads «لم يتأكد الإرسال بعد» (bubbleWord). */
+  /** A send that may have gone reads as not yet confirmed (bubbleWord). */
   errorCode?: string | null;
 }
 
-/** The status word: a send that may have gone (docs/19) is not «لم تُرسل». */
+/** A send that may have gone (docs/19) is not called unsent. */
 const statusWord = ({ status, errorCode }: DeliveryTicksProps): string =>
   bubbleWord(status, errorCode) === 'unconfirmed'
     ? t.messages.unconfirmedTick
@@ -57,13 +50,7 @@ const plain = (p: DeliveryTicksProps): boolean => !p.times && !p.onPress && !p.o
 const holdOf = (p: DeliveryTicksProps): (() => void) | undefined =>
   p.onHold ?? (p.times ? p.onLongPress : undefined);
 
-/**
- * WhatsApp-style ticks on OUR message (packages/shared ticks.ts), drawn with react-native-svg: an
- * image named by the status word (+ times). As in WhatsApp, delivered vs read is the same two ticks
- * told apart by colour only (docs/07 principle 3 carve-out): the word goes to assistive tech and
- * the long press. Failed has its own «!» and word; sent by hand «يدويًا». A row with `onPress` is a
- * button instead: a tap opens its sheet (retry, by hand).
- */
+/** Delivered vs read differ by colour only (docs/07 principle 3 carve-out); word goes to a11y. */
 export function DeliveryTicks(p: DeliveryTicksProps) {
   const { color } = useTheme();
   const kind: TickKind = messageTicks(p.status);

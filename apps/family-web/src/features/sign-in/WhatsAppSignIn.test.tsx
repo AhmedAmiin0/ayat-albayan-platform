@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone } from '@ab/core';
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -20,8 +20,7 @@ beforeEach(() => {
   vi.spyOn(navigator, 'language', 'get').mockReturnValue('ar');
 });
 
-// As the family app (#741, #752): «أدخل الرمز» for the number it went to, the sixth digit signs
-// in without a tap, a refused code empties the boxes and the next try starts in the first.
+// Matches the family app (#741, #752): a refused code empties the boxes and refocuses the first.
 it('the code step: the number, the sixth digit signs in, a refused code empties', async () => {
   signInWithCode.mockResolvedValue({ ok: false, error: t.familyAuth.errors.invalid_code });
   renderAt(<WhatsAppSignIn />);
@@ -40,7 +39,6 @@ it('the code step: the number, the sixth digit signs in, a refused code empties'
   expect(document.activeElement).toBe(box(1));
 });
 
-// As the family app: the resend (counting down, disabled) then «غيّر الرقم», back to the number.
 it('the code step: resend waits for its countdown, «غيّر الرقم» goes back', async () => {
   renderAt(<WhatsAppSignIn />);
   const phone = await screen.findByLabelText(t.familyAuth.phone);

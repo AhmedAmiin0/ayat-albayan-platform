@@ -19,10 +19,7 @@ function cancelOnEscape(e: KeyboardEvent, onCancel: () => void): void {
   onCancel();
 }
 
-/**
- * «تعديل» in place of the text: the same limits as the composer; Esc or «إلغاء» leaves it
- * unchanged (Esc closes only this box).
- */
+/** Same limits as the composer; Esc closes only this box. */
 export function ChannelEditForm({ initial, pending, onSave, onCancel }: Props) {
   const [text, setText] = useState(initial);
   const body = text.trim();

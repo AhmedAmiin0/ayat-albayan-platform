@@ -4,7 +4,7 @@ import {
   courseTeacherChangeSchema,
   courseTeacherCheckSchema,
   type BookingTeacherOption,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -13,13 +13,7 @@ import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teache
 import { CourseMoveRoutes } from './course-move.routes';
 import { ProfileCourse } from './profile-course.service';
 
-/**
- * «تغيير المعلم» from the student's profile (owner 2026-10-30): students.change_teacher (system
- * admin and sales, migration 990), ANY student (an assistant: her own while SalesOwnershipRule
- * enforces it, 403 not_your_student; ProfileCourse). Codes: CourseChange.change plus 404
- * teacher_not_found, 409 teacher_inactive, 400 same_teacher; 404 subscription_not_found for another
- * student's package.
- */
+/** students.change_teacher (migration 990); own students while SalesOwnershipRule enforces. */
 @ApiTags('course-actions')
 @ApiBearerAuth()
 @Permissions('students.change_teacher')
@@ -43,12 +37,7 @@ export class CourseTeacherController extends CourseMoveRoutes {
   }
 }
 
-/**
- * «تغيير موعد الحلقات» from the student's profile (owner 2026-10-30): courses.reschedule (system
- * admin and sales, migration 990), ANY student (an assistant: as above); the remaining lessons keep
- * their count and teacher.
- * Codes: CourseChange.
- */
+/** courses.reschedule (migration 990); the remaining lessons keep their count and teacher. */
 @ApiTags('course-actions')
 @ApiBearerAuth()
 @Permissions('courses.reschedule')

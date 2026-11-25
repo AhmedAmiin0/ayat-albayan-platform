@@ -23,7 +23,7 @@ describe('Google connection card', () => {
     expect(await screen.findByText(s.status.connected)).toBeTruthy();
     expect(screen.getByText('academy@example.test')).toBeTruthy();
     expect(screen.getByText('https://www.googleapis.com/auth/drive')).toBeTruthy();
-    const uri = screen.getByLabelText(s.redirect) as HTMLInputElement;
+    const uri = screen.getByLabelText<HTMLInputElement>(s.redirect);
     expect(uri.readOnly).toBe(true);
     expect(uri.value).toBe('http://localhost:3000/integrations/google/callback');
     expect(screen.getByRole('button', { name: s.reconnect })).toBeTruthy();
@@ -32,7 +32,7 @@ describe('Google connection card', () => {
   it('not configured: says where to enter the client and connect is disabled', async () => {
     renderGoogle({ apiFetch, status: googleStatus({ configured: false, connection: { ...disconnected } }) });
     expect(await screen.findByText(s.notConfigured)).toBeTruthy();
-    expect((screen.getByRole('button', { name: s.connect }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole<HTMLButtonElement>('button', { name: s.connect })).disabled).toBe(true);
     expect(screen.queryByRole('button', { name: s.disconnect })).toBeNull();
   });
 

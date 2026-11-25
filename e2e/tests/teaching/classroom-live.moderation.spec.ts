@@ -2,8 +2,7 @@ import type { Browser, Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { BOARD, boardInk, drawStroke, expectConnected, LIVE, MEDIA_FLAGS, newMeeting, roomPage, shot } from '../../support/teaching/classroom-live';
 
-// Mute and «اطلب الكتابة على السبورة» against a real LiveKit, next to
-// classroom-live.spec.ts (split for the 150-line rule). Skipped without LIVEKIT_URL.
+// Split from classroom-live.spec.ts for the line cap; skipped without LIVEKIT_URL.
 
 const C = ar.classroom;
 const M = C.mute;
@@ -12,7 +11,6 @@ const BR = C.boardRequest;
 test.use({ launchOptions: { args: MEDIA_FLAGS } });
 test.skip(!LIVE, 'needs a LiveKit server (LIVEKIT_URL)');
 
-/** The admin's meeting with the teacher (signed in, via the link) and a guest «سهيلة». */
 async function teacherAndGuest(browser: Browser, title: string): Promise<{ teacher: Page; guest: Page }> {
   const admin = await roomPage(browser, 'admin');
   const link = await newMeeting(admin, `${title} ${Date.now() % 1e5}`);

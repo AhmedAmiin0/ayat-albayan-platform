@@ -1,5 +1,5 @@
 import type { Tables } from '@ab/db';
-import type { LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError } from '@/common/http/http';
@@ -30,7 +30,7 @@ const LESSON_SELECT = `id, starts_at, status, lesson_students(${STUDENT})` as co
 /** A month of one teacher's lessons is a few hundred at most. */
 const LESSONS_LIMIT = 1000;
 
-/** «الجدول» and «الحضور» of one teacher for sales (service role; whitelisted columns, never money or a link). */
+/** Service role; whitelisted columns, never money or a link. */
 @Injectable()
 export class SalesTeacherOverviewRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

@@ -1,6 +1,5 @@
 import type { Tables } from '@ab/db';
 import {
-  clickToChatLink,
   fallbackText,
   isChatViewMime,
   renderTemplateBody,
@@ -10,9 +9,10 @@ import {
   type MessageView,
   type RenderableTemplate,
 } from '@ab/shared';
+import { clickToChatLink } from '@ab/core';
 import { isSentFilePath } from '@/common/storage/storage.paths';
 import { isCrmHistoryRow } from './crm-history/crm-history-url';
-import { mediaExpired } from './inbound-media.service';
+import { mediaExpired } from './inbound-media/inbound-media.service';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { templateParams } from './wa-json';
 
@@ -30,7 +30,7 @@ export type ThreadMessageRow = MessageRow & {
   lesson?: MessageLesson | null;
   sent_by_teacher?: { display_name_ar: string } | null;
   sender?: { full_name: string } | null;
-  /** Staff behind our_reaction (migration 900) and hidden_by («حذف من المنصة», 993). */
+  /** Staff behind our_reaction (migration 900) and hidden_by (migration 993). */
   reactor?: { full_name: string } | null;
   hider?: { full_name: string } | null;
 };
@@ -78,7 +78,7 @@ const outboundForwardable = (row: ThreadMessageRow): boolean =>
   isSentFilePath(row.media_path) || (row.media_id ? fetchable(row) : isText(row));
 const isText = (row: ThreadMessageRow): boolean => !row.media_mime && !!row.body?.trim();
 
-/** «إعادة توجيه»: a text, or a file we hold (ours) or can still fetch (theirs or an echo, not expired); never a template. */
+/** Never a template; a file only when we hold it or can still fetch it. */
 const isForwardable = (row: ThreadMessageRow): boolean => {
   if (row.template_key) return false;
   if (row.direction === 'outbound') return outboundForwardable(row);

@@ -3,8 +3,7 @@ import { chatDayKey, RIYADH_TZ } from '@ab/time';
 import { isOpenLesson } from '@ab/schedule';
 import type { MessageView, ThreadLesson } from '../chat/views.js';
 
-// Which lesson a guardian's quick reply is about, and what the viewer may do to it from the chat
-// (owner 2026-10-28: the note under «تأجيل الحلقة» / «ايوه» carries the action). Pure; web and mobile alike.
+// Which lesson a guardian's quick reply refers to and what the viewer may do from the chat; pure.
 
 /** The lesson a reply refers to; `status` null = an old cache's family lesson (open, by the API's filter). */
 export interface ReplyLesson {
@@ -28,14 +27,32 @@ const isOpen = (status: LessonStatus | null) => status === null || isOpenLesson(
  * open lesson (ThreadDetail.lessons: the guardian's students') that starts on or after the message's
  * Riyadh day and has not ended at `now`. Null when there is none.
  */
-export function replyLesson(m: ReplyOf, family: { lessons: readonly ThreadLesson[]; now: Date }): ReplyLesson | null {
+export function replyLesson(
+  m: ReplyOf,
+  family: { lessons: readonly ThreadLesson[]; now: Date },
+): ReplyLesson | null {
   if (m.lesson_id && m.lesson) {
-    return { id: m.lesson_id, starts_at: m.lesson.starts_at, ends_at: m.lesson.ends_at ?? null, status: m.lesson.status };
+    return {
+      id: m.lesson_id,
+      starts_at: m.lesson.starts_at,
+      ends_at: m.lesson.ends_at ?? null,
+      status: m.lesson.status,
+    };
   }
   const day = chatDayKey(new Date(m.created_at), RIYADH_TZ);
   const candidates = family.lessons
-    .map((l): ReplyLesson => ({ id: l.id, starts_at: l.starts_at, ends_at: l.ends_at ?? null, status: l.status ?? null }))
-    .filter((l) => isOpen(l.status) && lessonNotEnded(l, family.now) && chatDayKey(new Date(l.starts_at), RIYADH_TZ) >= day)
+    .map((l): ReplyLesson => ({
+      id: l.id,
+      starts_at: l.starts_at,
+      ends_at: l.ends_at ?? null,
+      status: l.status ?? null,
+    }))
+    .filter(
+      (l) =>
+        isOpen(l.status) &&
+        lessonNotEnded(l, family.now) &&
+        chatDayKey(new Date(l.starts_at), RIYADH_TZ) >= day,
+    )
     .sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at));
   return candidates[0] ?? null;
 }
@@ -56,10 +73,20 @@ export const NO_REPLY_RIGHTS: ReplyRights = { reschedule: false, confirm: null }
  * (GET /lessons, GET /booking/slots, POST /lessons/:id/reschedule); null = none (teacher mode). Confirm: lessons.confirm
  * on sales' route (ANY lesson), else the admin's lessons.status route outside sales.
  */
-export function replyRights(can: (key: Permission) => boolean, flow: 'sales' | 'admin' | null): ReplyRights {
+export function replyRights(
+  can: (key: Permission) => boolean,
+  flow: 'sales' | 'admin' | null,
+): ReplyRights {
   if (!flow) return NO_REPLY_RIGHTS;
-  const sheet = flow === 'sales' ? can('self.sales') && can('self.sales_academy') : can('lessons.write') && can('lessons.read') && can('booking.write');
-  const confirm = can('lessons.confirm') ? 'sales' : flow === 'admin' && can('lessons.status') ? 'admin' : null;
+  const sheet =
+    flow === 'sales'
+      ? can('self.sales') && can('self.sales_academy')
+      : can('lessons.write') && can('lessons.read') && can('booking.write');
+  const confirm = can('lessons.confirm')
+    ? 'sales'
+    : flow === 'admin' && can('lessons.status')
+      ? 'admin'
+      : null;
   return { reschedule: can('lessons.reschedule') && sheet, confirm };
 }
 

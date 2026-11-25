@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { suppressionsMoved } from './baselines.mjs';
 
 const RULE = 'ab/no-parent-imports';
-const FILE = 'apps/staff-web/eslint-suppressions.json';
+const FILE = 'apps/staff-web/oxlint-suppressions.json';
 const MOVES = [['apps/staff-web/src/a/x.ts', 'apps/staff-web/src/b/x.ts']];
 const base = {
   'src/a/x.ts': { [RULE]: { count: 3 }, 'max-lines': { count: 1 } },

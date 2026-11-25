@@ -7,25 +7,16 @@ import {
   PRICING_DURATIONS,
   SITE_COUNTRIES,
   type RenewalPricing,
-} from '@ab/shared';
+} from '@ab/money';
 import type { PlanChoice } from '@/finance/pricing/selection';
 import { INITIAL_FORM, type SubscribeForm } from './subscribe-form';
 
 // The subscribe screen's route params → its first form (R-SUB-01). Route params are untrusted
 // strings: each one is validated and an unusable value keeps the default. Pure.
 
-/**
- * After a booking: `pkg` (its lesson count: 8 → starter…) and `minutes`. From «جدّد الاشتراك»
- * (renewalPricing, docs/18): `plan` (a tier id or custom), `count`, `minutes`, `discount`, `country`.
- */
-export type FormPrefill = {
-  pkg?: string;
-  plan?: string;
-  count?: string;
-  minutes?: string;
-  discount?: string;
-  country?: string;
-};
+export type FormPrefill = Partial<
+  Record<'pkg' | 'plan' | 'count' | 'minutes' | 'discount' | 'country', string>
+>;
 
 const PLANS: readonly PlanChoice[] = [...PACKAGE_IDS, 'custom'];
 

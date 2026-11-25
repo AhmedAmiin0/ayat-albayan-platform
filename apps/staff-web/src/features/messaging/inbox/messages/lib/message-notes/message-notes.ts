@@ -1,0 +1,75 @@
+import { canRetryCode, canSendViaWhatsApp, isAwaitingReply, MAX_SEND_ATTEMPTS, type MessageView } from '@ab/shared';
+import { SEND_UNCONFIRMED } from '@ab/client-core';
+import type { Clock } from '@ab/web-kit/lib/clock';
+import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { errorText, fullTime } from '@/features/messaging/inbox/format';
+
+export interface NotesInput {
+  /** The row's template is not approved yet: the sender leaves it queued (docs/12 §3.3). */
+  waitingTemplate: boolean;
+  now: Date;
+  clock: Clock;
+}
+
+const at = (template: string, iso: string, clock: Clock) => template.replace('{time}', fullTime(iso, clock));
+
+/**
+ * Lines under an outbound bubble that say why it has not arrived (R-MSG-05): the error in words,
+ * tries so far, the next try, a template still waiting on Meta, or when it was sent by hand.
+ */
+export function outboundNotes(m: MessageView, o: NotesInput): string[] {
+  if (m.direction !== 'outbound') return [];
+  if (isHandedOff(m)) return [];
+  if (m.status === 'failed') return [t.messages.errorLine.replace('{reason}', errorText(m))];
+  if (m.status === 'sent_manually') return m.sent_manually_at ? [at(t.messages.sentManuallyAt, m.sent_manually_at, o.clock)] : [];
+  return m.status === 'queued' ? queuedNotes(m, o) : [];
+}
+
+const HELD: readonly [(m: MessageView) => boolean, () => string][] = [
+  [isAwaitingReply, () => t.messages.awaitingReply],
+  [(m) => m.error_code === SEND_UNCONFIRMED, () => t.messages.sendUnconfirmed],
+];
+const heldNote = (m: MessageView): string | undefined => HELD.find(([is]) => is(m))?.[1]();
+
+function queuedNotes(m: MessageView, o: NotesInput): string[] {
+  // Held behind the reopen template or unanswered (docs/44 BUG7): no tries, no next try.
+  const held = heldNote(m);
+  if (held) return [held];
+  const notes: string[] = [];
+  if (o.waitingTemplate) notes.push(t.messages.waitingTemplate);
+  else if (m.scheduled_for && Date.parse(m.scheduled_for) > o.now.getTime()) {
+    notes.push(at(t.messages.queuedFor, m.scheduled_for, o.clock));
+  }
+  // Claimed by the sender right now (its lease, not a retry time).
+  if (m.error_code === 'sending') return [...notes, t.messages.sendingNow];
+  if (m.attempts > 0) {
+    notes.push(t.messages.attempts.replace('{n}', String(m.attempts)).replace('{max}', String(MAX_SEND_ATTEMPTS)));
+  }
+  // A hold (token or payment, wa_payment_hold) has its reason and next try with no try counted.
+  if (m.error_code) notes.push(t.messages.errorLine.replace('{reason}', errorText(m)));
+  const next = m.attempts > 0 || m.error_code ? m.next_attempt_at : null;
+  if (next) notes.push(at(t.messages.nextAttempt, next, o.clock));
+  return notes;
+}
+
+export function deliveryTitle(m: MessageView, clock: Clock): string {
+  const steps: [string, string | null][] = [
+    [t.messages.sentAt, m.sent_at],
+    [t.messages.deliveredAt, m.delivered_at],
+    [t.messages.readAt, m.direction === 'outbound' ? m.read_at : null],
+  ];
+  return steps.flatMap(([text, iso]) => (iso ? [at(text, iso, clock)] : [])).join(' · ');
+}
+
+/** The admin opened wa.me for it (M3); the row waits for their answer. */
+export const isHandedOff = (m: MessageView): boolean => m.status === 'failed' && m.error_code === 'handed_off';
+
+/**
+ * Retry (M1) is for failed rows where trying again can help (not «not on WhatsApp», a closed 24 h
+ * window, too late, or a hand-off); sending by hand (M2) for any outbound row still not out that
+ * the API gave a wa.me link: none while the sender holds the row («sending»), so no double send.
+ */
+export const canRetry = (m: MessageView): boolean =>
+  m.direction === 'outbound' && m.status === 'failed' && canRetryCode(m.error_code);
+export const canSendByHand = (m: MessageView): boolean =>
+  m.direction === 'outbound' && (m.status === 'failed' || m.status === 'queued') && !!m.click_to_chat && !canSendViaWhatsApp(m);

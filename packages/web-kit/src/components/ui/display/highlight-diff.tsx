@@ -1,4 +1,4 @@
-import { diffSegments } from '@ab/shared';
+import { diffSegments } from '@ab/core';
 
 export interface HighlightDiffProps {
   /** The name to show, exactly as typed / stored. */
@@ -7,12 +7,7 @@ export interface HighlightDiffProps {
   against: string;
 }
 
-/**
- * Duplicate dialog «سهيلة» vs «سهيله» (R-STU-03, docs/07 §14.2). ONE inline run: the differing
- * letter is a plain inline <span> with colour + underline only (no padding, margin, border,
- * background or ZWJ), so Arabic joining survives. Never put this inside a flex/grid parent
- * without wrapping it in its own span; this component already returns a single span.
- */
+/** R-STU-03: the diff letter is a plain span so Arabic joining survives; wrap it in flex. */
 export function HighlightDiff({ text, against }: HighlightDiffProps) {
   return (
     <span>

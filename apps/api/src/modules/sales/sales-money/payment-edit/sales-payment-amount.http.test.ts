@@ -1,14 +1,14 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { systemResolver } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
-import { PAYMENT_ID, paymentRow } from '@/modules/finance/subscriptions/money/money.fakes';
-import { moneyApp, resetMocks, SALES_B, type Mocks } from '@/modules/finance/subscriptions/test-app';
-import { salesDefaults } from '@/modules/sales/sales-money/sales-money.fakes';
+import { PAYMENT_ID, paymentRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import { resetMocks, SALES_B, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
+import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
+import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
-// «تعديل المبلغ» by the assistant (owner 2026-11-02): subscriptions.edit_terms (owner
-// 2026-11-03), never payments.write.
+// The assistant's amount edit needs subscriptions.edit_terms, never payments.write.
 const URL = `/sales/payments/${PAYMENT_ID}/amount`;
 const withEdit: PermissionResolver = async (user) => [
   ...(await systemResolver(user)),
@@ -18,9 +18,9 @@ const withEdit: PermissionResolver = async (user) => [
 describe('PATCH /sales/payments/:id/amount', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp(withEdit)));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp(withEdit)));
   afterAll(() => app.close());
   beforeEach(() => {
     resetMocks(m);
@@ -87,9 +87,9 @@ describe('PATCH /sales/payments/:id/amount', () => {
 describe('PATCH /sales/payments/:id/amount without subscriptions.edit_terms', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
-  let call: Awaited<ReturnType<typeof moneyApp>>['call'];
+  let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
 
-  beforeAll(async () => ({ app, m, call } = await moneyApp()));
+  beforeAll(async () => ({ app, m, call } = await salesMoneyApp()));
   afterAll(() => app.close());
 
   it('the system sales role: 403, nothing read or written', async () => {

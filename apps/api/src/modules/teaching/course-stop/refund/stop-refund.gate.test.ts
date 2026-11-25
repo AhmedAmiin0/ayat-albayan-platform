@@ -1,9 +1,9 @@
-import type { Permission } from '@ab/shared';
+import type { Permission } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { gateKit as gate } from './stop-refund.fakes';
 
-// Review 2026-11-05: «إلغاء مع استرداد» follows SalesOwnershipRule like «إلغاء الباقة» (#612).
+// Cancel with refund follows SalesOwnershipRule like package cancel (#612).
 const SUB = { id: 'sub1', studentId: 'hers', currency: 'SAR' };
 const OTHER = { ...SUB, studentId: 'not-hers' };
 const REFUND: Permission[] = ['subscriptions.stop', 'subscriptions.refund'];

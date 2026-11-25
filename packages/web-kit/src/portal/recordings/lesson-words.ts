@@ -1,25 +1,23 @@
 import { recordingMinutes } from '@ab/client-core';
-import {
-  clockOf, counted, dateText, teacherName, type ClockOptions, type PortalLessonAssets,
-  type PortalRecording,
-} from '@ab/shared';
+import type { PortalLessonAssets, PortalRecording } from '@ab/shared';
+import { counted } from '@ab/core';
+import { teacherName } from '@ab/schedule';
+import { clockOf, dateText, type ClockOptions } from '@ab/time';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 const F = t.lessonFiles;
 
-/** «حلقة الأحد 15 نوفمبر». */
 export const lessonTitle = (startsAt: string, clock: ClockOptions): string =>
   F.lessonOf.replace(
     '{when}',
     dateText(new Date(startsAt), clock, { weekday: 'long', day: 'numeric', month: 'long' }),
   );
 
-/** «مع مريم عبد الله»; null without a teacher. */
+/** null without a teacher. */
 const withTeacher = (teacher: PortalRecording['teacher']): string | null =>
   teacher && t.portal.withTeacher.replace('{teacher}', teacherName(teacher, locale));
 
-/** «سلمى أحمد · مع مريم عبد الله · 17:00 – 17:45» under the lesson page's title. */
 export function lessonLine(
   view: Pick<PortalLessonAssets, 'lesson_starts_at' | 'lesson_ends_at' | 'teacher'>,
   input: { name: string; clock: ClockOptions },
@@ -29,7 +27,6 @@ export function lessonLine(
   return [input.name, withTeacher(view.teacher), range].filter(Boolean).join(' · ');
 }
 
-/** «مع مريم عبد الله · 17:00 · 44 دقيقة · جزءان» of one lesson's row. */
 export function rowLine(
   row: PortalRecording,
   input: { parts: number; clock: ClockOptions },

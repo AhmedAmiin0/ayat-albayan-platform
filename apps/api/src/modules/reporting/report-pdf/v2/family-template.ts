@@ -1,4 +1,4 @@
-import { attendanceStyle, packageProgress } from '@ab/shared';
+import { attendanceStyle, packageProgress } from '@ab/money';
 import type { PdfAssets } from '@/modules/reporting/report-pdf/pdf-assets';
 import { AR, esc, fill, localDate, ltr, stamp, timeWithZone, weekdayName } from '@/modules/reporting/report-pdf/render/pdf-text';
 import { FAMILY_CSS } from './family-css';

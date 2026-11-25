@@ -6,10 +6,7 @@ import { meetingJoinProblem } from '@/features/teaching/meetings/rows/meeting-jo
 import { useClock } from '@ab/web-kit/lib/clock';
 import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
-/**
- * /meeting/:id: an internal meeting's room («اجتماع داخلي») for any staff login, the classroom room UI
- * with the meeting's join; a refusal reads in a meeting's words (meetingJoinProblem).
- */
+/** Internal meeting room for any staff login; refusals use meeting wording (meetingJoinProblem). */
 export const Route = createFileRoute('/meeting/$id')({
   beforeLoad: ({ context }) => requireRole(context.queryClient, ['admin', 'teacher', 'assistant', 'sales']),
   component: MeetingRoute,

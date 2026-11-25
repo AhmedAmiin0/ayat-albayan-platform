@@ -25,7 +25,7 @@ export interface ConnectivityStore {
   reportReached: () => void;
   /** AppState: 'active' → true, 'background' → false. Nothing probes in the background. */
   setActive: (active: boolean) => void;
-  /** «إعادة المحاولة»: probe now, skipping the rest of the backoff. */
+  /** Probe now, skipping the rest of the backoff. */
   probeNow: () => void;
 }
 
@@ -60,7 +60,7 @@ export function createConnectivity(deps: ConnectivityDeps): ConnectivityStore {
     probing = false;
     // Overtaken while in flight (a request answered, or a new failure started its own loop): stale.
     if (state.status !== asked.status || state.since !== asked.since) return;
-    if (ok) return void (state.status === 'connecting' ? store.reportReached() : undefined);
+    if (ok) return state.status === 'connecting' ? store.reportReached() : undefined;
     // Online, this was the foreground check: its failure is the one that starts `connecting`.
     if (state.status === 'online') return store.reportFailure();
     dispatch({ type: 'probeFailed' });

@@ -1,4 +1,4 @@
-import type { RoomJoinResult } from '@ab/shared';
+import type { RoomJoinResult } from '@ab/schedule';
 import { createPortal } from 'react-dom';
 import { holdRoomOpen } from '@ab/web-kit/boot/maintenance';
 import { ClassroomRoom } from '@ab/web-kit/classroom/room/components/ClassroomRoom';
@@ -9,21 +9,13 @@ import { useRoomRejoin } from './room/use-room-rejoin';
 
 interface Props {
   join: RoomJoinResult;
-  /**
-   * The room is done with: back to the card («رجوع»). Without `about` it is also the rejoin (the
-   * card's own button joins again).
-   */
+  /** Back to the card; without `about` it is also the rejoin. */
   onRejoin: () => void;
   /** The lesson and student the card joined: the top line, the chat, and the room's own rejoin. */
   about?: RoomLesson;
 }
 
-/**
- * The classroom over the whole page once a lesson card admitted the student (audit 2026-11-19,
- * extraction 4): one modal surface for every card that joins — the portal's lessons, the family
- * home's next lesson, the family week. The family variant of the shared room: «قبل الدخول», the
- * teacher on the stage, «المحادثة», «تغادر الحلقة؟», and never a dead end («رجوع»). It fades in.
- */
+/** One modal surface for every card that joins; never a dead end. */
 export function RoomOverlay({ join, onRejoin, about }: Props) {
   const lesson = about ?? null;
   const ids = lesson && { lessonId: lesson.lesson.id, studentId: lesson.student.id };

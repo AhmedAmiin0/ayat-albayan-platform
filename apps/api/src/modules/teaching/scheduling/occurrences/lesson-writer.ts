@@ -1,4 +1,4 @@
-import type { Conflict } from '@ab/shared';
+import type { Conflict } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
@@ -69,7 +69,7 @@ export class LessonWriter {
     await callRpc(this.db, 'apply_lesson_changes', { p });
   }
 
-  /** «عدّل الوقت» (migration 174): one lesson's time in place; 409 stale_time / slot_taken. Confirmations as apply. */
+  /** Migration 174: one lesson's time in place; 409 stale_time or slot_taken. */
   async retime(change: TimeEditChange): Promise<void> {
     await callRpc(this.db, 'edit_lesson_time', { p: { ...change, messages: await gateConfirmations(this.policy, change.messages) } });
   }

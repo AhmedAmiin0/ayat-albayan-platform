@@ -2,7 +2,7 @@ import {
   recordingVisibilitySchema,
   studentRecordingsQuerySchema,
   type StudentRecordingsPage,
-} from '@ab/shared';
+} from '@ab/schedule';
 import { Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -13,7 +13,7 @@ import { RecordingDeleteService } from './retention/recording-delete.service';
 import { RecordingVisibilityService } from './recording-visibility.service';
 import { StudentRecordingsService } from './student-recordings.service';
 
-/** «تسجيلات الحلقات» on the teacher-student file. The permission is the coarse gate (recordings.read for the reads, recordings.manage for show/hide and delete: admin and teacher by default); the services decide who may see which student, and DELETE stays admin-only there. */
+/** Permissions are the coarse gate; services decide per student, and DELETE stays admin-only. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('recordings.read')

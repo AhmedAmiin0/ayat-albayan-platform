@@ -21,7 +21,7 @@ interface AudioPlayerProps {
   createSource: CreateAudioSource;
 }
 
-/** «من حيث توقفت: 12:40 · ابدأ من البداية», while the saved stop is ahead of the start. */
+/** Shown while the saved stop is ahead of the start. */
 function ResumeLine({ player, from }: { player: AudioPlayerControls; from: number }) {
   const { color } = useTheme();
   if (from <= 0 || player.state.position <= 0) return null;
@@ -40,7 +40,7 @@ function ResumeLine({ player, from }: { player: AudioPlayerControls; from: numbe
 }
 
 /**
- * The in-app audio player (owner 2026-11-17): play/pause, ±10 s, speed, and the saved stop.
+ * The in-app audio player: play/pause, ±10 s, speed, and the saved stop.
  * The media itself is behind the AudioSource the app passes in.
  */
 export function AudioPlayer({ id, url, createSource }: AudioPlayerProps) {

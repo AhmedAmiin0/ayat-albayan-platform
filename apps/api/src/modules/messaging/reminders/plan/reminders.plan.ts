@@ -5,9 +5,9 @@ import {
   lessonWhenText,
   localDayStart,
   reminderDue,
-  RIYADH_TZ,
-  type LessonStatus,
 } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
+import { RIYADH_TZ } from '@ab/time';
 import type { PushEvent } from '@/common/push/push.service';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import type { StaffOnRecord } from './staff-reachable';
@@ -64,7 +64,7 @@ export const REMINDER_LESSON_STATUSES = ['scheduled', 'confirmed'] as const sati
 
 export const isOpen = (status: LessonStatus): boolean => (REMINDER_LESSON_STATUSES as readonly string[]).includes(status);
 
-/** Each guardian of the lesson's students with their own children in it («سهيلة ومريم»). */
+/** Each guardian of the lesson's students with their own children in it. */
 function byGuardian(lesson: ReminderLesson): { guardian: ReminderGuardian; names: string[] }[] {
   const groups = new Map<string, { guardian: ReminderGuardian; names: string[] }>();
   for (const s of lesson.students) {
@@ -90,7 +90,7 @@ function guardianRows(lesson: ReminderLesson, input: ReminderPlanInput): QueuedM
     if (input.dayBefore && reminderDue({ kind: 'day_before', startsAt, tz: guardian.tz, minutesBefore, sendAtLocal: input.dayBeforeAt, now })) {
       const template = lessonReminder24hMessage({ ...message, lessonId: lesson.id });
       const dedupKey = `lesson_reminder_24h:${lesson.id}:${guardian.id}`;
-      // «بكرة» is only true until the lesson's day starts for the guardian: never sent later.
+      // "Tomorrow" is only true until the lesson's day starts for the guardian; never sent later.
       rows.push(queuedRow({ ...to, template, dedupKey, expiresAt: localDayStart(startsAt, guardian.tz) }));
     }
   }

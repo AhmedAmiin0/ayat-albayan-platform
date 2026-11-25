@@ -1,4 +1,5 @@
-import { riyadhToday, startDateEditMax, startDateEditMin } from '@ab/shared';
+import { startDateEditMax, startDateEditMin } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import type { QueryKey } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -17,10 +18,7 @@ interface EditorProps {
 
 const e = t.salesMoney.startDateEdit;
 
-/**
- * The open editor: Expo's date dialog from the stored day, bounded as the server checks
- * (startDateEditMin / startDateEditMax); «حفظ» only for another day.
- */
+/** Bounded as the server checks; save only for another day. */
 export function StartDateEditor({ sub, stale, onDone }: EditorProps) {
   const today = riyadhToday();
   const [day, setDay] = useState(sub.starts_on);

@@ -1,5 +1,5 @@
-// The mobile app's own lint blocks (flat-config shape), read by eslint.config.js and by Oxlint
-// (oxlint.full.config.ts): docs/31b-oxlint-mapping.md.
+// The mobile app's own lint blocks (flat-config shape), read by oxlint.config.ts:
+// docs/31b-oxlint-mapping.md.
 import {
   boundaries,
   domainModuleRegex,

@@ -1,5 +1,5 @@
 import { dayWord, type WeekDay } from '@ab/client-core';
-import { dateText, type ClockOptions } from '@ab/shared';
+import { dateText, type ClockOptions } from '@ab/time';
 import { View } from 'react-native';
 import { AppText, InsetGroup, InsetSeparator, t, type, useTheme } from '@ab/mobile-kit';
 import { ScheduleRow } from './ScheduleRow';
@@ -10,7 +10,6 @@ interface ScheduleDayProps {
   now: Date;
 }
 
-/** One day of the week: «اليوم · الأحد 16» or «الثلاثاء 18», then its lessons in one card. */
 export function ScheduleDay({ day, clock, now }: ScheduleDayProps) {
   const { color } = useTheme();
   const first = day.lessons[0];

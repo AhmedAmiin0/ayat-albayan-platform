@@ -1,5 +1,6 @@
 import { packageSummary, paymentInstructions } from '@ab/client-core';
-import { subscriptionStatusStyle, type PortalPackage, type PortalStudent } from '@ab/shared';
+import type { PortalPackage, PortalStudent } from '@ab/shared';
+import { subscriptionStatusStyle } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
@@ -9,10 +10,7 @@ import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
 import { amountText, dayText, usedOfText } from './package-text';
 import { PaymentsList } from './PaymentsList';
 
-/**
- * «الباقة» (docs/50 §2), a guardian's or an adult student's only: the package, lessons used and
- * left, the dates, the amount due, the payments and the academy's transfer text. No WhatsApp link.
- */
+/** docs/50 §2: a guardian's or adult student's only; no WhatsApp link. */
 export function PackagePanel({ student }: { student: PortalStudent }) {
   const query = useQuery(portalPackageQuery(student.id));
   return (

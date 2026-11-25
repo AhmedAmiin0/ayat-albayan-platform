@@ -1,110 +1,21 @@
 import { Module } from '@nestjs/common';
-import { PricingModule } from '@/modules/finance/pricing/pricing.module';
-import { TeachersModule } from '@/modules/people/teachers/teachers.module';
-import { SubscriptionCancelRepo } from './cancel/subscription-cancel.repo';
-import { SubscriptionCancel } from './cancel/subscription-cancel.service';
-import { AdminTasksController } from './alerts/admin-tasks.controller';
-import { AdminTasksRepo } from './alerts/admin-tasks.repo';
-import { AlertsJob } from './alerts/alerts.job';
-import { AlertsRepo } from './alerts/alerts.repo';
-import { AlertsEnv, SubscriptionAlertsService } from './alerts/alerts.service';
-import { BalanceRepo } from './money/balance.repo';
-import { CommissionBell } from './money/commission-bell';
-import { CourseDue } from './course-due/course-due';
-import { CourseDueRepo } from './course-due/course-due.repo';
-import { FollowUpEnv, MoneyFollowUps } from './money/money-follow-ups';
-import { MoneyWrites } from './money/money-writes';
-import { PackagesService } from './money/packages.service';
+import { TeachersModule } from '@/modules/people/teachers';
+import { SubscriptionAlertsModule } from '@/modules/finance/subscriptions/alerts';
+import { SubscriptionsSharedModule } from '@/modules/finance/subscriptions/shared';
+import { StartDateEditModule } from '@/modules/finance/subscriptions/start-date-edit';
 import { StudentAccess } from './student-lifecycle/student-access';
 import { StudentBalanceController, SubscriptionsController } from './subscriptions.controller';
-import { SubscriptionsRepo } from './subscriptions.repo';
-import { LeadConversion } from './student-lifecycle/lead-conversion';
-import { SubscriptionCreator } from './subscription-creator';
-import { StudentActivation } from './student-lifecycle/student-activation';
-import { StudentDeactivation } from './student-lifecycle/student-deactivation';
-import { StudentRenewal } from './student-lifecycle/student-renewal';
-import { StudentStatusRepo } from './student-lifecycle/student-status.repo';
-import { StudentExpiryJob } from './student-lifecycle/student-expiry.job';
-import { StudentExpiryRepo } from './student-lifecycle/student-expiry.repo';
-import { StudentTrialStatus } from './trial/student-trial-status';
-import { StudentTrialRepo } from './trial/student-trial.repo';
-import { SubscriptionsService } from './subscriptions.service';
-import { SubscriptionsSettings } from './subscriptions.settings';
-import { UnpaidFlags } from './alerts/unpaid-flags.service';
-import { StartDateEditController } from './start-date-edit/start-date-edit.controller';
-import { StartDateEditRepo } from './start-date-edit/start-date-edit.repo';
-import { StartDateEdit } from './start-date-edit/start-date-edit.service';
-import { UsedBeforeEditRepo } from './used-before-edit/used-before-edit.repo';
-import { UsedBeforeEdit } from './used-before-edit/used-before-edit.service';
 
-/**
- * Subscriptions priced from the catalog, balances (v_subscription_balance), the alerts job.
- * R-SUB-01/02/03. Routes S1–S8 (docs/11 §6).
- * Exports: MoneyWrites (payments: audit + recompute after a write), SubscriptionAlertsService
- * (reports/lessons may call evaluateLessons; AlertsJob already listens to LessonEvents),
- * PackagesService, BalanceQueries, UnpaidFlags (the lesson views' «الباقة مش مدفوعة» flag) and
- * SubscriptionCreator + SubscriptionsService + SubscriptionCancel (the salesperson's subscribe / cancel from the chat reuse them, sales-money),
- * StudentTrialStatus (a trial booking moves new → trial, owner 2026-10-15), CommissionBell (assistant-pay rings it after
- * an attribution or new terms earn a commission). StudentExpiryJob: pending_renewal → expired.
- */
+/** R-SUB-01/02/03; routes S1-S8 (docs/11 §6). */
 @Module({
-  imports: [PricingModule, TeachersModule],
-  controllers: [
-    SubscriptionsController,
-    StudentBalanceController,
-    AdminTasksController,
-    StartDateEditController,
+  imports: [
+    SubscriptionsSharedModule,
+    SubscriptionAlertsModule,
+    StartDateEditModule,
+    TeachersModule,
   ],
-  providers: [
-    AdminTasksRepo,
-    AlertsJob,
-    AlertsRepo,
-    BalanceRepo,
-    CommissionBell,
-    CourseDue,
-    CourseDueRepo,
-    FollowUpEnv,
-    LeadConversion,
-    MoneyFollowUps,
-    MoneyWrites,
-    PackagesService,
-    StudentAccess,
-    StudentActivation,
-    StudentDeactivation,
-    StudentRenewal,
-    StudentStatusRepo,
-    StudentExpiryJob,
-    StudentExpiryRepo,
-    StudentTrialRepo,
-    StudentTrialStatus,
-    SubscriptionAlertsService,
-    SubscriptionCancel,
-    SubscriptionCancelRepo,
-    AlertsEnv,
-    SubscriptionsRepo,
-    SubscriptionCreator,
-    SubscriptionsService,
-    SubscriptionsSettings,
-    UnpaidFlags,
-    UsedBeforeEdit,
-    UsedBeforeEditRepo,
-    StartDateEdit,
-    StartDateEditRepo,
-  ],
-  exports: [
-    BalanceRepo,
-    CommissionBell,
-    CourseDue,
-    MoneyWrites,
-    PackagesService,
-    StudentTrialStatus,
-    SubscriptionAlertsService,
-    SubscriptionCancel,
-    SubscriptionCreator,
-    SubscriptionsRepo,
-    SubscriptionsService,
-    UnpaidFlags,
-    UsedBeforeEdit,
-  ],
+  controllers: [SubscriptionsController, StudentBalanceController],
+  providers: [StudentAccess],
+  exports: [SubscriptionsSharedModule],
 })
 export class SubscriptionsModule {}

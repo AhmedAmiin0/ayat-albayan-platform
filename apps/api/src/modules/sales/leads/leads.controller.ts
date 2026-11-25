@@ -1,4 +1,5 @@
-import { LEAD_SOURCES, LEAD_STATUSES, leadColumnQueryShape, leadFollowUpSchema, leadQualificationPatchSchema } from '@ab/shared';
+import { leadColumnQueryShape, leadFollowUpSchema, leadQualificationPatchSchema } from '@ab/shared';
+import { LEAD_SOURCES, LEAD_STATUSES } from '@ab/catalog';
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -13,7 +14,7 @@ const listQuery = z.object({
   status: z.enum(LEAD_STATUSES).optional(),
   source: z.enum(LEAD_SOURCES).optional(),
   ...pageQueryShape,
-  // `sort`/`dir` + the «مسؤول المتابعة» filter (R-NFR-08, R-LEAD-05).
+  // R-NFR-08, R-LEAD-05.
   ...leadColumnQueryShape,
 });
 const statusBody = z.object({ status: z.enum(LEAD_STATUSES) });

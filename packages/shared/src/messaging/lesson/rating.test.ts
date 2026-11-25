@@ -28,7 +28,11 @@ describe('lessonRatingMessage (migration 195)', () => {
   });
 
   it('one payload per button, in button order, each carrying the lesson', () => {
-    expect(msg.params.payloads).toEqual([`rate_excellent:${LESSON}`, `rate_good:${LESSON}`, `rate_needs_work:${LESSON}`]);
+    expect(msg.params.payloads).toEqual([
+      `rate_excellent:${LESSON}`,
+      `rate_good:${LESSON}`,
+      `rate_needs_work:${LESSON}`,
+    ]);
     for (const [i, p] of (msg.params.payloads ?? []).entries()) {
       expect(payloadRef(p)).toBe(LESSON);
       expect(ratingOfIntent(quickReplyIntent(p))).toBe(LESSON_RATINGS[i]);
@@ -54,14 +58,18 @@ describe('ratingOfText / ratingOfIntent', () => {
     expect(ratingOfText(text)).toBe(rating);
   });
 
-  it.each(['جيدة جدا', 'تمام', 'ممتازة لكن المعلمة تأخرت', '', null])('«%s» is not a button text', (text) => {
-    expect(ratingOfText(text)).toBeNull();
-  });
+  it.each(['جيدة جدا', 'تمام', 'ممتازة لكن المعلمة تأخرت', '', null])(
+    '«%s» is not a button text',
+    (text) => {
+      expect(ratingOfText(text)).toBeNull();
+    },
+  );
 
   it('confirm / stop / null are no rating; typed button texts never become a quick-reply intent', () => {
     expect(ratingOfIntent('confirm')).toBeNull();
     expect(ratingOfIntent(null)).toBeNull();
-    for (const text of Object.values(RATING_BUTTON_TEXTS)) expect(quickReplyIntent(text)).toBeNull();
+    for (const text of Object.values(RATING_BUTTON_TEXTS))
+      expect(quickReplyIntent(text)).toBeNull();
   });
 
   it('buttons stay within Meta’s 20 characters and match the Arabic labels', () => {
@@ -74,11 +82,27 @@ describe('ratingOfText / ratingOfIntent', () => {
 
 describe('ratingOfInteractive (the inbox chip)', () => {
   it('reads our payload first, else the button text', () => {
-    expect(ratingOfInteractive({ type: 'button', button: { payload: `rate_good:${LESSON}`, text: 'ممتازة' } })).toBe('good');
-    expect(ratingOfInteractive({ type: 'button', button: { payload: 'whatever', text: 'تحتاج تحسينًا' } })).toBe('needs_work');
+    expect(
+      ratingOfInteractive({
+        type: 'button',
+        button: { payload: `rate_good:${LESSON}`, text: 'ممتازة' },
+      }),
+    ).toBe('good');
+    expect(
+      ratingOfInteractive({
+        type: 'button',
+        button: { payload: 'whatever', text: 'تحتاج تحسينًا' },
+      }),
+    ).toBe('needs_work');
   });
 
-  it.each([null, 'x', {}, { button: null }, { button: { payload: `confirm:${LESSON}`, text: 'تمام' } }])('%j → null', (p) => {
+  it.each([
+    null,
+    'x',
+    {},
+    { button: null },
+    { button: { payload: `confirm:${LESSON}`, text: 'تمام' } },
+  ])('%j → null', (p) => {
     expect(ratingOfInteractive(p)).toBeNull();
   });
 });

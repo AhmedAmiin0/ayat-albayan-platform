@@ -10,7 +10,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
 
 const n = t.numbers;
-const field = (card: HTMLElement, name: 'access_token' | 'app_secret') => within(card).getByLabelText(n.fields[name]) as HTMLInputElement;
+const field = (card: HTMLElement, name: 'access_token' | 'app_secret') => within(card).getByLabelText<HTMLInputElement>(n.fields[name]);
 
 afterEach(() => {
   apiFetch.mockReset();

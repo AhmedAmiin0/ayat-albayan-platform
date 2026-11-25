@@ -9,12 +9,12 @@ import { linkColumns } from './link-columns';
 
 const P = t.paymentLinks;
 
-/** «روابط الدفع» under «مدفوعاتي» (docs/30, FEATURE_STRIPE): nothing unless useStripeFeature. */
+/** Payment links (docs/30, FEATURE_STRIPE): nothing unless useStripeFeature. */
 export function PaymentLinksSection() {
   return useStripeFeature() ? <PaymentLinksList /> : null;
 }
 
-/** Her links, newest first; «إلغاء الرابط» asks once more (409 link_not_open: it was paid or expired meanwhile). */
+/** Cancel asks once more (409 link_not_open: it was paid or expired meanwhile). */
 function PaymentLinksList() {
   const queryClient = useQueryClient();
   const [cancelling, setCancelling] = useState<PaymentLinkView | null>(null);

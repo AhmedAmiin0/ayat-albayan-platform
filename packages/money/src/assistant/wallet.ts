@@ -4,9 +4,7 @@ import type { AssistantCommissionStatus } from './commission.js';
 import type { AssistantCommissionKind } from './kind.js';
 import { monthOf } from './statement.js';
 
-// «محفظتي»: the salesperson's own commissions as a wallet. A commission is owed until a
-// PAID statement holds it; a draft is the admin's work in progress, so it reads as owed. Commissions only:
-// the salary and the admin's own adjustments stay in «الكشوف». Per currency, never summed across them.
+// A commission is owed until a paid statement holds it; per currency, never summed across them.
 
 /** due: no statement or a draft one; in_statement: an approved one; paid: a paid one; voided: taken back. */
 export type WalletState = 'due' | 'in_statement' | 'paid' | 'voided';
@@ -17,9 +15,9 @@ export type WalletVoidReason = (typeof WALLET_VOID_REASONS)[number];
 
 /** One currency of the wallet. */
 export interface WalletTotals {
-  /** «مستحق لك»: not on a paid statement yet, less the reversals not paid back (negative after a paid one is voided). */
+  /** Not on a paid statement yet, less unpaid reversals (negative after a paid one is voided). */
   due: number;
-  /** «دُفع لك»: on paid statements (a reversal paid back lowers it). */
+  /** On paid statements; a reversal paid back lowers it. */
   paid: number;
   /** Earned this month, in the assistant's time zone. */
   this_month: number;
@@ -35,7 +33,7 @@ export interface MyCommissionRow {
   amount: number;
   currency: string;
   earned_at: string;
-  /** How the package was paid (the payment that completed it): «بطاقة (دفع إلكتروني)», «تحويل بنكي», …; null without one. */
+  /** How the package was paid (the payment that completed it); null without one. */
   method: PaymentMethod | null;
   state: WalletState;
   /** YYYY-MM-01 of the approved or paid statement it sits in; null otherwise. */
@@ -63,7 +61,7 @@ export interface WalletLine {
   statement: { status: PayoutStatus } | null;
 }
 
-/** An earned commission, in a statement or not: what «هذا الشهر» counts. */
+/** An earned commission, in a statement or not: what "this month" counts. */
 export interface WalletEarning {
   amount: number;
   currency: string;

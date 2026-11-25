@@ -10,10 +10,7 @@ interface ReportFilesProps {
   recordingId: string | null;
 }
 
-/**
- * «تحميل التقرير PDF» and «شاهد تسجيل الحلقة» (when staff made it visible): each opens outside
- * the app. Without the page's link the PDF comes through the portal's own signed link.
- */
+/** Each opens outside the app; without the page's link the PDF uses the portal's signed link. */
 export function ReportFiles({ studentId, reportId, pdfUrl, recordingId }: ReportFilesProps) {
   const { color } = useTheme();
   const file = useOpenFile();

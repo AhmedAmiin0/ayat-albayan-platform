@@ -13,11 +13,7 @@ type PublicCall = { token: string; ip: string };
 const expired = () => new GoneException({ code: 'feedback_expired', message: 'feedback_expired' });
 const invalid = () => notFound('feedback_not_found');
 
-/**
- * The family's side of «رأيك يهمّنا» (no login): GET prefill and POST once. A wrong, tampered or
- * revoked (replaced by a resend) link is 404 feedback_not_found, an old one 410 feedback_expired,
- * a second answer 409 already_submitted. The client never says who the teacher is or what kind.
- */
+/** 404 wrong or revoked link, 410 expired, 409 already_submitted; never names the teacher. */
 @Injectable()
 export class FeedbackPublicService {
   constructor(
@@ -44,7 +40,7 @@ export class FeedbackPublicService {
     await this.limit.check({ ip: call.ip, token: call.token });
     const { lessonId, studentId } = this.verified(call.token, now);
     const ctx = await this.queries.byTokenHash(hashToken(call.token));
-    if (!ctx || ctx.row.lesson_id !== lessonId || ctx.row.student_id !== studentId) throw invalid();
+    if (ctx?.row.lesson_id !== lessonId || ctx.row.student_id !== studentId) throw invalid();
     if (Date.parse(ctx.row.expires_at) <= now.getTime()) throw expired();
     return ctx;
   }

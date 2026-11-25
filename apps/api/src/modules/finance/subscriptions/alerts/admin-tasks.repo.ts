@@ -1,10 +1,11 @@
 import type { Tables } from '@ab/db';
-import type { AdminTaskView, Page } from '@ab/shared';
+import type { Page } from '@ab/core';
+import type { AdminTaskView } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { dbError, type PageQuery } from '@/common/http/http';
 import { studentRef } from '@/modules/finance/subscriptions/subscriptions.mapper';
-import type { StudentRef } from '@/modules/finance/subscriptions/subscriptions.repo';
+import type { StudentRef } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 
 type TaskRow = Tables<'admin_tasks'>;
 
@@ -60,7 +61,6 @@ export class AdminTasksRepo {
     return toTaskView(done, await this.studentsOf([done]));
   }
 
-  /** subscription id → its student, for the task wording «باقة {student} …». */
   private async studentsOf(rows: readonly TaskRow[]): Promise<Map<string, StudentRef>> {
     const ids = rows.filter((r) => r.subject_type === 'subscription').map((r) => r.subject_id);
     if (ids.length === 0) return new Map();

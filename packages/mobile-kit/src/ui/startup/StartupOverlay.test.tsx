@@ -6,7 +6,7 @@ import { StartupOverlay } from './StartupOverlay';
 // Saved data vs nothing to show, and the hand-off to the real screen.
 jest.useFakeTimers();
 const c = t.mobile.connection;
-const advance = (ms: number) => act(async () => void jest.advanceTimersByTime(ms));
+const advance = (ms: number) => act(async () => jest.advanceTimersByTime(ms));
 
 async function open({ saved, ready = false }: { saved: boolean; ready?: boolean }) {
   const client = new QueryClient();

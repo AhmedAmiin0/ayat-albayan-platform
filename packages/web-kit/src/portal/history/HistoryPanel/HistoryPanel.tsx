@@ -1,5 +1,6 @@
 import { historyMonths, historyRows } from '@ab/client-core';
-import { dateText, type PortalHistoryStatus, type PortalStudent } from '@ab/shared';
+import type { PortalHistoryStatus, PortalStudent } from '@ab/shared';
+import { dateText } from '@ab/time';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { Button } from '@ab/web-kit/components/ui/form/button';
@@ -14,7 +15,7 @@ interface Props {
   student: PortalStudent;
   status: PortalHistoryStatus;
   onOpenReport: (report: OpenReport) => void;
-  /** The family web's lesson page («ملفات الحلقة» on an attended row); staff pages have none. */
+  /** The family web's lesson page; staff pages have none. */
   onOpenLesson?: (lessonId: string) => void;
 }
 
@@ -23,11 +24,11 @@ const EMPTY: Record<PortalHistoryStatus, () => [string, string]> = {
   absent: () => [t.portal.absentEmpty, t.portal.absentEmptyHint],
 };
 
-/** «أكتوبر 2026» of a «YYYY-MM» month (a calendar month, no zone). */
+/** A calendar month, no zone. */
 const monthName = (month: string): string =>
   dateText(new Date(`${month}-01T00:00:00Z`), { tz: 'UTC', locale }, { month: 'long', year: 'numeric' });
 
-/** «حضرها» / «غاب عنها» (docs/50 §6): past lessons, newest first, by month, a page at a time. */
+/** docs/50 §6: past lessons newest first, by month, a page at a time. */
 export function HistoryPanel({ student, status, ...open }: Props) {
   const query = useInfiniteQuery(portalHistoryQuery({ studentId: student.id, status }));
   const [title, hint] = EMPTY[status]();

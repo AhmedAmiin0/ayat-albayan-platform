@@ -84,9 +84,6 @@
     },
     "typescript/no-unnecessary-type-parameters": {
       "count": 1
-    },
-    "typescript/prefer-optional-chain": {
-      "count": 1
     }
   },
   "src/messaging/calls/call-actions.ts": {
@@ -94,7 +91,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 11
+      "count": 7
     },
     "typescript/no-confusing-void-expression": {
       "count": 2
@@ -139,7 +136,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 9
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -150,7 +147,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -195,7 +192,7 @@
   },
   "src/messaging/channels/channels.ts": {
     "stylistic/max-len": {
-      "count": 10
+      "count": 4
     }
   },
   "src/messaging/channels/teacher-pick.ts": {
@@ -203,13 +200,10 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/messaging/inbox/inbox-live.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -232,11 +226,6 @@
       "count": 1
     }
   },
-  "src/messaging/inbox/live-session.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/messaging/inbox/live-store/live-store.ts": {
     "max-lines-per-function": {
       "count": 1
@@ -250,27 +239,17 @@
       "count": 2
     }
   },
-  "src/messaging/inbox/reaction-mutation.test.ts": {
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 1
-    }
-  },
   "src/messaging/inbox/reaction-mutation.ts": {
     "typescript/explicit-module-boundary-types": {
       "count": 4
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/messaging/inbox/reactions.ts": {
     "stylistic/max-len": {
-      "count": 8
-    }
-  },
-  "src/messaging/inbox/template-button.ts": {
-    "stylistic/max-len": {
-      "count": 1
+      "count": 7
     }
   },
   "src/messaging/inbox/thread-delta.test.ts": {
@@ -351,7 +330,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/teaching/booking/course-actions.ts": {
@@ -361,7 +340,7 @@
   },
   "src/teaching/booking/course-pause.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -373,11 +352,6 @@
     }
   },
   "src/teaching/booking/picks.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/teaching/reports/entry-values.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -393,11 +367,6 @@
       "count": 1
     }
   },
-  "src/teaching/reports/reports.test.ts": {
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 1
-    }
-  },
   "src/teaching/reports/v2-lines.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -410,7 +379,7 @@
   },
   "src/teaching/reports/v2-text.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 1

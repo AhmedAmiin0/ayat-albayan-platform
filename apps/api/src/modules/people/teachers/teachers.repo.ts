@@ -13,7 +13,7 @@ import {
   type TeacherListQuery,
 } from './teachers.list';
 import { teacherSearchFilter } from './teachers.mapper';
-import type { Page } from '@ab/shared';
+import type { Page } from '@ab/core';
 
 export type Teacher = Tables<'teachers'>;
 /** R-TCH-03. */

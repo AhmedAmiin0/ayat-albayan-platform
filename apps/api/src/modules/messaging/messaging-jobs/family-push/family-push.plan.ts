@@ -1,4 +1,4 @@
-import { joinWindow, type JoinWindowConfig, type WindowLesson } from '@ab/shared';
+import { joinWindow, type JoinWindowConfig, type WindowLesson } from '@ab/schedule';
 import { familyTargets, type FamilyStudent } from '@/common/push/family-readers';
 import type { PushTarget } from '@/common/push/push.service';
 
@@ -31,14 +31,14 @@ export function windowJustOpened(lesson: WindowLesson, now: Date, win: JoinWindo
   return fresh && joinWindow(lesson, now, win).state === 'open';
 }
 
-/** «الحلقة على وشك البدء»: one push per login, keyed by the lesson. */
+/** One push per login, keyed by the lesson. */
 export function lessonStartingPushes(lesson: FamilyLesson): PushTarget[] {
   const subject = `lesson:${lesson.id}`;
   const event = { kind: 'lesson_starting' as const, subject, data: { lessonId: lesson.id } };
   return familyTargets(event, { at: lesson.starts_at, students: lesson.students });
 }
 
-/** «وصل تقرير الحلقة»: the student's guardian and own login, keyed by the report. */
+/** To the student's guardian and own login, keyed by the report. */
 export function reportSentPushes(report: SentReport): PushTarget[] {
   const data = { reportId: report.id, lessonId: report.lesson_id };
   const event = { kind: 'report_sent' as const, subject: `report:${report.id}`, data };

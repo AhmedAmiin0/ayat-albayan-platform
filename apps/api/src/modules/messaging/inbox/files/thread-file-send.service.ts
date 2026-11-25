@@ -3,12 +3,11 @@ import {
   CHAT_FILE_MIMES,
   CHAT_VOICE_MIME,
   chatFileProblem,
-  SETTING_DEFAULTS,
-  uploadMaxBytes,
   type SignedUpload,
   type ThreadFileSendInput,
   type ThreadFileUpload,
 } from '@ab/shared';
+import { SETTING_DEFAULTS, uploadMaxBytes } from '@ab/settings';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, chatOutPath, isChatOutPathOf } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
@@ -45,7 +44,7 @@ const filePath = () => waHttpError('file_path', HttpStatus.BAD_REQUEST);
 export class ThreadFileSender {
   /** Property-injected (the constructor is at the 3-parameter limit); absent → the registry default. */
   @Inject(InboxSettings) private readonly settings?: InboxSettings;
-  /** «رد» on a file (owner 2026-10-25), property-injected like settings. */
+  /** Property-injected like settings. */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
   /** m4a → ogg/opus for a voice note (owner 2026-10-27); tests swap in a fake, never the real ffmpeg. */
   private readonly toOgg = toVoiceOgg;

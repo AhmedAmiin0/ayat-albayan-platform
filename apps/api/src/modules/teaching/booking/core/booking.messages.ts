@@ -3,9 +3,9 @@ import {
   joinNames,
   lessonWhenText,
   makeupNames,
-  type BookingKind,
   type BookingTemplateKey,
 } from '@ab/shared';
+import type { BookingKind } from '@ab/schedule';
 
 /** A booked student's guardian; id null = the guardian the RPC creates or reuses (lead path). */
 export type BookedGuardian = { id: string | null; phone_e164: string; tz: string };
@@ -23,18 +23,11 @@ type DraftInput = {
   students: readonly BookedStudent[];
   firstStart: Date;
   meetingLink: string | null;
-  /** A makeup reads «تعويضية لـسهيلة» in {{1}}; omitted = a normal booking. */
+  /** Omitted means a normal booking. */
   kind?: BookingKind;
 };
 
-/**
- * One booking_confirmation* per distinct guardian (docs/10 §5.11, R-SCH-06, R-LES-02): the
- * template follows the lesson's link (Jitsi / Meet / none), {{1}} = that guardian's booked
- * children («سهيلة ومريم», the engine's joinNames), {{2}} = the first lesson in the guardian's
- * tz, button = code/slug. A makeup (R-SCH-10) reuses the same approved templates: {{1}} becomes
- * «تعويضية لـسهيلة», so «تم حجز حلقة تعويضية لـسهيلة — الأحد 4 أكتوبر 17:00».
- * TODO(R-MSG-01): owner to confirm {{1}} is the student's name, not the guardian's.
- */
+/** docs/10 §5.11, R-SCH-06, R-LES-02: one per guardian; makeups (R-SCH-10) reuse them. */
 export function confirmationDrafts(input: DraftInput): MessageDraft[] {
   const template = bookingConfirmationTemplate(input.meetingLink);
   const byPhone = new Map<string, { guardian: BookedGuardian; names: string[] }>();

@@ -5,10 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 /** Up to three overlapping faces, as on the app's live card. */
 const FACES = 3;
 
-/**
- * Who is in the room now (boards FamRoomWebJoin / FamRoomWebCheck / FamRoomWebLeft): the faces,
- * «المعلم/ة في الغرفة الآن» (or «في الغرفة الآن») and the names; staff by their role word only.
- */
+/** Staff appear by their role word only. */
 export function LivePresence({ live }: { live: LiveRoom }) {
   const text = liveRoomText(live, t.portal.app.live);
   return (

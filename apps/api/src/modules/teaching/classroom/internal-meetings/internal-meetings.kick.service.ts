@@ -1,4 +1,4 @@
-import { canRemove, meetingRoomName } from '@ab/shared';
+import { canRemove, meetingRoomName } from '@ab/schedule';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
@@ -7,13 +7,7 @@ import { meetingRoleOf, roleOfIdentity } from './internal-meetings.token';
 import { notConfigured } from '@/modules/teaching/classroom/join/join-gate';
 import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/livekit-api';
 
-/**
- * «إخراج» in an internal meeting (POST /meetings/:id/participants/:identity/remove). The remover's
- * role is the join's (meetingRoleOf); the target's comes from the identity itself, which the API
- * minted (`<role>-<12 hex>`) and LiveKit binds to the signed token, so it cannot be forged. canRemove
- * decides, then LiveKit disconnects the identity. No persistent block: the guest link is shared by
- * everyone, so a removed guest could come back with it (end the meeting or issue a new link instead).
- */
+/** Removal has no persistent block: the guest link is shared, so a removed guest may return. */
 @Injectable()
 export class InternalMeetingKickService {
   constructor(

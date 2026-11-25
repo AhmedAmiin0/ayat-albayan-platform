@@ -1,4 +1,4 @@
-import type { RoomPresence } from '@ab/shared';
+import type { RoomPresence } from '@ab/schedule';
 import { BottomSheet } from '@expo/ui';
 import { ScrollView, View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
@@ -15,13 +15,12 @@ interface ParticipantsPanelProps {
   onClose: () => void;
   /** Who the lesson says is inside: a family-link guest's role in words. */
   presence: readonly RoomPresence[];
-  /** «فتح في المتصفح»: here while in the room (the header has no room for it). */
+  /** Here while in the room because the header has no space for it. */
   onBrowser: (() => void) | null;
   /** The sheet is up (kept mounted, so it slides in and out). */
   open: boolean;
 }
 
-/** «إخراج {name} من الحلقة؟»: the web room's question and its consequence. */
 function KickConfirm({ panel }: Pick<ParticipantsPanelProps, 'panel'>) {
   const who = panel.kick;
   if (!who) return null;
@@ -37,7 +36,7 @@ function KickConfirm({ panel }: Pick<ParticipantsPanelProps, 'panel'>) {
   );
 }
 
-/** «إنهاء الحلقة للجميع», asked first with the kit's InlineConfirm (canvas RoomXEndAll). */
+/** Asked first with the kit's InlineConfirm. */
 function EndForAll({ panel }: Pick<ParticipantsPanelProps, 'panel'>) {
   if (!panel.canEnd) return null;
   if (!panel.ending) return <Button variant="danger" label={H.endAll} onPress={panel.askEnd} />;
@@ -54,11 +53,7 @@ function EndForAll({ panel }: Pick<ParticipantsPanelProps, 'panel'>) {
   );
 }
 
-/**
- * «المشاركون · 3» (canvas RoomXTeacher, RoomXParticipants) in the native bottom sheet (@expo/ui):
- * everyone with their role; the host's «كتم الجميع», per person mute / camera off / «إخراج», and
- * «إنهاء الحلقة للجميع». Read-only for everyone else. Closed by a swipe, the scrim or back.
- */
+/** Host controls only; read-only for everyone else. */
 export function ParticipantsPanel(props: ParticipantsPanelProps) {
   const { panel, onClose, presence, onBrowser } = props;
   const { color } = useTheme();

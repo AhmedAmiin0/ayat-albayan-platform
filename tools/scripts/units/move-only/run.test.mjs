@@ -12,7 +12,7 @@ const BASE_FILES = {
   [`${P}/A.x.test.tsx`]: "import { A } from './A';\nvi.mock('./b');\ntest('x', () => A);\n",
   [`${P}/b.ts`]: 'export const b = 1;\n',
   'apps/w/src/use.ts': "import { A } from './p/A';\n",
-  'apps/w/eslint-suppressions.json': '{ "src/p/A.tsx": { "max-len": { "count": 1 } } }\n',
+  'apps/w/oxlint-suppressions.json': '{ "src/p/A.tsx": { "max-len": { "count": 1 } } }\n',
 };
 
 const FOLD = {
@@ -25,7 +25,7 @@ const FOLD = {
     [`${P}/A/tests/x.test.tsx`]:
       "import { A } from '@/p/A/A';\nvi.mock('@/p/b');\ntest('x', () => A);\n",
     [`${P}/A/index.ts`]: "export { A } from './A';\n",
-    'apps/w/eslint-suppressions.json': '{ "src/p/A/A.tsx": { "max-len": { "count": 1 } } }\n',
+    'apps/w/oxlint-suppressions.json': '{ "src/p/A/A.tsx": { "max-len": { "count": 1 } } }\n',
   },
 };
 
@@ -97,7 +97,7 @@ const BAD = [
   ['another added file', `${P}/A/extra.ts`, 'export {};\n', /added/],
   [
     'a new suppression',
-    'apps/w/eslint-suppressions.json',
+    'apps/w/oxlint-suppressions.json',
     '{ "src/p/A/A.tsx": { "max-len": { "count": 2 } } }\n',
     /new or grew/,
   ],

@@ -40,10 +40,7 @@ const studentRow = (id: string) => ({
 type Token = 'salesA' | 'admin';
 type Method = 'GET' | 'PATCH' | 'DELETE';
 
-/**
- * AppModule with «اشتراط التعيين» and the auto-assignment ON (SalesOwnershipRule enforces):
- * salesA owns MY_STUDENT and MY_FAMILY only. Every people read and write is a vi.fn.
- */
+/** Assignment rule and auto-assignment ON: salesA owns MY_STUDENT and MY_FAMILY only. */
 export async function ruleApp() {
   const sales = { ownership: vi.fn(async (id: string) => (id === A ? OWN_A : NONE)) };
   const repo = { view: vi.fn(), student: vi.fn(), children: vi.fn(), setSelf: vi.fn() };

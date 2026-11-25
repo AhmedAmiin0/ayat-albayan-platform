@@ -1,18 +1,18 @@
 import {
-  riyadhToday,
   usedBeforeEditProblem,
   usedBeforeState,
-  type SubscriptionView,
   type UsedBeforeEditInput as Facts,
   type UsedBeforeState,
   type UsedBeforeEditProblem,
   type UsedBeforeEditResult,
 } from '@ab/shared';
+import type { SubscriptionView } from '@ab/money';
+import { riyadhToday } from '@ab/time';
 import { Injectable } from '@nestjs/common';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';
-import { SubscriptionsRepo } from '@/modules/finance/subscriptions/subscriptions.repo';
-import { SubscriptionsService } from '@/modules/finance/subscriptions/subscriptions.service';
+import { SubscriptionsRepo } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
+import { SubscriptionsService } from '@/modules/finance/subscriptions/shared/subscriptions.service';
 import { UsedBeforeEditRepo } from './used-before-edit.repo';
 
 type HttpError = (code: string) => Error;
@@ -39,16 +39,7 @@ const resultOf = (view: SubscriptionView): UsedBeforeEditResult => ({
   remaining: view.balance.remaining,
 });
 
-/**
- * «تعديل عدد الحلقات المستخدمة» (owner 2026-11-02): admins and assistants, ANY student (the sales
- * ownership rule of «sales_require_assignee», off by default: no owner check). Refusals:
- * usedBeforeEditProblem (404 subscription_not_found, 409 already_cancelled /
- * used_before_course_booked / used_before_changed, 400 used_before_needs_past_start /
- * used_before_too_many), checked first: the same number then answers without a write.
- * Audited with the row before / after through MoneyWrites, which recomputes the student's
- * statuses and alerts from the new balance. The course check and the write are two statements
- * (no RPC, no migration): a course booked in between is the accepted, narrow race.
- */
+/** The course check and the write are two statements: an accepted narrow race. */
 @Injectable()
 export class UsedBeforeEdit {
   constructor(

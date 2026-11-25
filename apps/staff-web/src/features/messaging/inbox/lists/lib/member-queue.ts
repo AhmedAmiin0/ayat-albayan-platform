@@ -1,4 +1,4 @@
-// «القوائم» saves, one queue per (list, chat): a box's saves never overlap, and the last intent wins.
+// One save queue per (list, chat): saves never overlap and the last intent wins.
 
 export interface MemberIntent {
   id: string;

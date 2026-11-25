@@ -1,4 +1,4 @@
-// «تقرير الحلقة» form cells → lesson_reports columns (grades, texts) and lesson facts. Pure.
+// Lesson report form cells to lesson_reports columns and lesson facts; pure.
 import { normalizeArabic } from '@ab/core';
 import { text } from '../../sources/sheets/cells.ts';
 import { grade, teacherFromText } from '../../sources/values.ts';
@@ -23,7 +23,7 @@ export const TEXT_FIELDS = [
   'next_plan',
 ] as const;
 
-/** grade() plus the form's «يحتاج إلى مراجعة» spelling of needs_review. */
+/** grade() plus the form's spelling of needs_review. */
 function gradeOf(raw: string | null) {
   return grade(raw) ?? grade(raw ? raw.replace(/\s+إلى\s+/, ' ') : null);
 }
@@ -47,10 +47,7 @@ export function reportBody(f: Record<string, Cell>): Body {
   return { columns, unmapped };
 }
 
-/**
- * Teacher of a report row: the registry slug when the row is linked («المعلم (من السجل)»), else
- * the locked name, else the typed name (A3 aliases). null = a city or junk; undefined = unknown.
- */
+/** Registry slug when linked, else the locked or typed name (A3); null junk, undefined unknown. */
 export function reportTeacher(f: Record<string, Cell>): string | null | undefined {
   for (const k of ['teacher_slug', 'teacher_locked', 'teacher']) {
     const raw = text(f[k]);
@@ -66,23 +63,20 @@ export function reportNames(f: Record<string, Cell>): string[] {
     .filter((s): s is string => s !== null);
 }
 
-/** Free trial lesson: «التجريبيه» as lesson number (A5 text) or a «(تجريبية)» send log. */
+/** Free trial: a trial lesson number (A5 text) or a trial send log. */
 export function isTrial(f: Record<string, Cell>): boolean {
   const n = normalizeArabic(text(f['lesson_number_text']) ?? '');
   return /تجريب/.test(n) || /تجريبية/.test(text(f['send_status']) ?? '');
 }
 
-/**
- * A5 «رقم الحلقة» free text («الحلقه الثالثه» ~ «الثالثة»), normalized for comparing two reports
- * of one day only — never imported (the number is derived from completed lessons).
- */
+/** A5 lesson number, normalized only to compare two reports of one day; never imported. */
 export function lessonNumber(f: Record<string, Cell>): string {
   return normalizeArabic(text(f['lesson_number_text']) ?? '')
     .replace(/^(?:ال)?حلقه\s*/, '')
     .trim();
 }
 
-/** The PDF reached WhatsApp: «اتبعت PDF ✅ …» or the template fallback «… → اتبعت ✅ …». */
+/** The PDF reached WhatsApp, directly or via the template fallback. */
 export function wasSent(f: Record<string, Cell>): boolean {
   return (text(f['send_status']) ?? '').includes('✅');
 }

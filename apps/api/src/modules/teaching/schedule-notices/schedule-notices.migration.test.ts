@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { PUSH_KINDS, TEMPLATE_KEYS } from '@ab/shared';
+import { TEMPLATE_KEYS } from '@ab/shared';
+import { PUSH_KINDS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { NOTICE_KEYS } from './notice.types';
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LessonStatus } from '@ab/shared';
+import type { LessonStatus } from '@ab/catalog';
 import { lessonPlan, teacherCanPropose, wayIn, type PlanInput } from './teacher-lesson-plan.js';
 
 const base: PlanInput = {

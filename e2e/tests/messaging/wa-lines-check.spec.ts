@@ -2,9 +2,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { CHAT_PN, SINGLE_LINE, stubLineHealth } from '../../support/messaging/wa-lines';
 import { stubReset } from '../../support/core/wa-stub';
 
-// «افحص الخطوط» end to end (docs/12 §13.9–13.10, R-MSG-05, review C S2): LinesController →
-// LinesCheck → the stub's Graph diagnostics → the Lines card on «التواصل» › «الأرقام». Both lines run in
-// e2e (playwright.config.ts E2E_WA / E2E_WA_CHAT), each with its own Meta app id.
+// Line check end to end (docs/12 §13.9-13.10, R-MSG-05); each line has its own Meta app id.
 
 const s = ar.templates.settings.lines;
 
@@ -38,7 +36,7 @@ test.describe('settings — WhatsApp lines check', () => {
     }
     await expect(admin.getByText(s.notChecked, { exact: true })).toHaveCount(0);
 
-    // The good number is kept (docs/23 phase 1): after a fresh load «الإشعارات» shows it with no new check.
+    // The good number is kept (docs/23 phase 1): a fresh load shows it with no new check.
     await admin.goto('/admin/settings/communications?tab=catalogue');
     const catalogue = admin.getByRole('region', { name: ar.notificationRules.title, exact: true });
     await expect(catalogue.getByText('+15550001111').filter({ visible: true }).first()).toBeVisible();

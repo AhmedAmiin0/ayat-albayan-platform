@@ -17,10 +17,6 @@ interface StaffRecordingProps {
   group: boolean;
 }
 
-/**
- * «تسجيل الحلقة» (canvas RecXStaffLessonFiles): state, «7:00 م – 7:42 م · المدة · الحجم», the
- * player, «يراه الطالب وولي الأمر».
- */
 export function StaffRecording({ rec, group }: StaffRecordingProps) {
   const { color } = useTheme();
   const toggle = useRecordingVisibility();
