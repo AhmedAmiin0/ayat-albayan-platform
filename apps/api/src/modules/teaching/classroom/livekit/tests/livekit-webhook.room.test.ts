@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { participantEventOf } from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
+import { participantEventOf, participantKindSchema } from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
 
 describe("participantEventOf: presence in LiveKit's order", () => {
   it('reads createdAt (Unix seconds, string or number) as the event time', () => {
@@ -33,5 +33,15 @@ describe("participantEventOf: presence in LiveKit's order", () => {
     expect(
       participantEventOf({ event: 'participant_left', room: { name: 'r' }, createdAt: 'soon' }),
     ).toBeNull();
+  });
+});
+
+describe('participant kinds', () => {
+  it('maps each LiveKit event to its kind', () => {
+    const of = (event: string) =>
+      participantEventOf({ event, room: { name: 'r' }, participant: { identity: 'g' } })?.kind;
+    expect(['participant_joined', 'participant_left', 'room_finished'].map(of)).toEqual(
+      participantKindSchema.options,
+    );
   });
 });
