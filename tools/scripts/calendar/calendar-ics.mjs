@@ -33,7 +33,12 @@ export function parseStamp(value, tz = null) {
 export function parseRrule(value) {
   const kv = Object.fromEntries(value.split(';').map((p) => p.split('=')));
   const byday = (kv.BYDAY ?? '').split(',').map((d) => DAY[d.slice(-2)]).filter((d) => d !== undefined);
-  return { freq: kv.FREQ ?? null, byday, until: kv.UNTIL ? parseStamp(kv.UNTIL) : null, count: kv.COUNT ? Number(kv.COUNT) : null };
+  return {
+    freq: kv.FREQ ?? null,
+    byday,
+    until: kv.UNTIL ? parseStamp(kv.UNTIL) : null,
+    count: kv.COUNT ? Number(kv.COUNT) : null,
+  };
 }
 
 /** One .ics file → { calendar, series: [{ summary, start, end, rrule }] }. */

@@ -55,7 +55,10 @@ export function textPairs(file: string, pairs: [string, string][]): [string, str
   if (dir === undefined || dir === '.') return pairs;
   const pre = `${dir}/`;
   const inside = pairs.filter(([from, to]) => from.startsWith(pre) && to.startsWith(pre));
-  return [...pairs, ...inside.map(([from, to]): [string, string] => [from.slice(pre.length), to.slice(pre.length)])];
+  return [
+    ...pairs,
+    ...inside.map(([from, to]): [string, string] => [from.slice(pre.length), to.slice(pre.length)]),
+  ];
 }
 
 export function readText(root: string, file: string): string {

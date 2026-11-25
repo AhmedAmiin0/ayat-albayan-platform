@@ -41,7 +41,9 @@ export function rewriteKnipWorkspaces(text: string, pairs: [string, string][]): 
   for (const ws of workspaces(text).reverse()) {
     const pre = `${ws.dir}/`;
     const inside = new Map(
-      pairs.filter(([f, t]) => f.startsWith(pre) && t.startsWith(pre)).map(([f, t]) => [f.slice(pre.length), t.slice(pre.length)]),
+      pairs
+        .filter(([f, t]) => f.startsWith(pre) && t.startsWith(pre))
+        .map(([f, t]) => [f.slice(pre.length), t.slice(pre.length)]),
     );
     if (inside.size === 0) continue;
     const end = objectEnd(out, ws.start);

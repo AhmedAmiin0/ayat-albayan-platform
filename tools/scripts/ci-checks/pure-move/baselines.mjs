@@ -100,14 +100,16 @@ export function knipMoved(texts, renames, ids = new Map()) {
 }
 
 const within = (c, was) =>
-  isRecord(c) && isRecord(was) && Number.isInteger(c.files) && Number.isInteger(c.dirs) && c.files <= was.files && c.dirs <= was.dirs;
+  isRecord(c) && isRecord(was) && Number.isInteger(c.files) && Number.isInteger(c.dirs) &&
+  c.files <= was.files && c.dirs <= was.dirs;
 
 /** True when every head folder-cap entry is a base entry (its folder at its new place if moved whole), not grown. */
 export function folderCapMoved(texts, renames, gone) {
   const [base, head] = [parse(texts.base), parse(texts.head)];
   if (!isRecord(base) || !isRecord(head)) return false;
   const moved = rekey(base, new Map(folderRenames(renames, gone)));
-  return moved !== null && Object.entries(head).every(([folder, c]) => moved.has(folder) && within(c, moved.get(folder)));
+  return moved !== null &&
+    Object.entries(head).every(([folder, c]) => moved.has(folder) && within(c, moved.get(folder)));
 }
 
 /** The verdict for a path-keyed baseline file (null: not one, the other rules apply). */

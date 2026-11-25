@@ -35,7 +35,8 @@ const easCore = (text, profile) => {
   try {
     const eas = JSON.parse(text);
     const side = SIDE_PROFILES.includes(profile);
-    for (const p of Object.keys(eas.build ?? {})) if (side ? p !== profile : SIDE_PROFILES.includes(p)) delete eas.build[p];
+    for (const p of Object.keys(eas.build ?? {}))
+      if (side ? p !== profile : SIDE_PROFILES.includes(p)) delete eas.build[p];
     for (const p of Object.values(eas.build ?? {})) p.env = nativeEnv(p.env);
     return JSON.stringify(eas);
   } catch {
@@ -52,7 +53,8 @@ const JS_ONLY_DEPS = [/^@expo-google-fonts\//, /^@tanstack\//, /^@supabase\/supa
 const JS_ONLY_AT = { '@shopify/flash-list': /^\D*2\./ };
 const jsOnly = (name, version) =>
   String(version).startsWith('workspace:') ||
-  (name in JS_ONLY_AT ? JS_ONLY_AT[name].test(String(version)) : JS_ONLY_DEPS.some((r) => r.test(name)));
+  (name in JS_ONLY_AT
+    ? JS_ONLY_AT[name].test(String(version)) : JS_ONLY_DEPS.some((r) => r.test(name)));
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 
 /** changes: the files changed since the build, and the eas.json profile the OTA targets (default preview). */
@@ -63,7 +65,8 @@ export function nativeChanges(before, after, { files: changedFiles = [], profile
   for (const k of NATIVE_KEYS) if (!same(a[k], b[k])) found.push(`app.json: expo.${k}`);
   // configOut: the target app's evaluated config (configOut below); unknown on either side → the text decides.
   const evaluated = typeof before.configOut === 'string' && typeof after.configOut === 'string';
-  const configSame = before.appConfig === after.appConfig || (evaluated && before.configOut === after.configOut);
+  const configSame =
+    before.appConfig === after.appConfig || (evaluated && before.configOut === after.configOut);
   if (!configSame) found.push('app.config.ts changed (dynamic config)');
   const [pa, pb] = [JSON.parse(before.pkg || '{}'), JSON.parse(after.pkg || '{}')];
   const da = pa.dependencies ?? {};
