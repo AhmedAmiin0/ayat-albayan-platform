@@ -26,7 +26,7 @@ const VARIANTS = [
 ] as const;
 type Variant = (typeof VARIANTS)[number];
 type Role = keyof typeof USERS;
-type Run = { browser: Browser; base: string; out: string; role: Role };
+interface Run { browser: Browser; base: string; out: string; role: Role }
 
 function slug(route: string): string {
   return route.replace(/^\//, '').replace(/[/:]/g, '-') || 'home';
@@ -66,7 +66,7 @@ async function resolveRoute(run: Run, opts: { route: string; page: Page }): Prom
   return new URL(opts.page.url()).pathname;
 }
 
-type Shot = { path: string; name: string };
+interface Shot { path: string; name: string }
 
 async function shoot(run: Run, opts: { variant: Variant; shots: Shot[]; state: BrowserContextOptions['storageState'] }) {
   for (const shot of opts.shots) {

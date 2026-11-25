@@ -1,13 +1,11 @@
 import { UTCDate } from '@date-fns/utc';
-import {
-  addDays,
-  addMonths,
-  differenceInCalendarDays,
-  format,
-  getDay,
-  startOfWeek,
-  type Day,
-} from 'date-fns';
+import type { Day } from 'date-fns';
+import { addDays } from 'date-fns/addDays';
+import { addMonths } from 'date-fns/addMonths';
+import { differenceInCalendarDays } from 'date-fns/differenceInCalendarDays';
+import { format } from 'date-fns/format';
+import { getDay } from 'date-fns/getDay';
+import { startOfWeek } from 'date-fns/startOfWeek';
 import { localDateIn, offsetMinutesIn, wallToUtc } from '../zoned';
 
 // The date-fns facade, part 2 (docs/34 §7): calendar arithmetic. Two kinds of value:

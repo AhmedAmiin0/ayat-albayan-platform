@@ -20,9 +20,6 @@
     }
   },
   "src/common/auth/auth.guard.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/dot-notation": {
       "count": 1
     }
@@ -2480,7 +2477,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/finance/subscriptions/trial/student-trial-status.ts": {
@@ -2860,7 +2857,7 @@
   },
   "src/modules/messaging/calls/test-app.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/messaging/chat-lists/chat-lists.guard.ts": {
@@ -3552,7 +3549,7 @@
   },
   "src/modules/messaging/inbox/test-app.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/messaging/inbox/threads/chat-list-filter.ts": {
@@ -5073,7 +5070,7 @@
   },
   "src/modules/messaging/whatsapp/gate/tests/gate.test-app.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/gate/tests/send-gate.fail-closed.test.ts": {
@@ -6357,7 +6354,7 @@
   },
   "src/modules/people/sign-in/sign-in.test-app.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/people/students/lead-link.ts": {
@@ -8253,11 +8250,6 @@
     }
   },
   "src/modules/sales/leads/leads.status.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/leads/test-app.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -10340,7 +10332,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/teaching/classroom/tests/classroom.settings.test.ts": {
@@ -10584,7 +10576,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/modules/teaching/lesson-rating/lesson-rating.module.ts": {
@@ -11038,7 +11030,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     }
   },
   "src/modules/teaching/lessons/tests/lessons.controller.test.ts": {

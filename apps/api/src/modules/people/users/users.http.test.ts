@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { UsersModule } from './users.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { fakePhotos } from '@/common/storage/avatars/avatars.fakes';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
@@ -45,7 +46,7 @@ describe('users routes through the real guards', () => {
   const body = { email: 'new@example.com', full_name: 'علي أحمد', role: 'sales', credential: 'generate' };
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({ imports: [featureRoot(UsersModule)] })
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
       .overrideProvider(USER_STORE).useValue(store)

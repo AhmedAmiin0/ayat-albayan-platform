@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { MeModule } from './me.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { DB } from '@/common/db/db.module';
@@ -24,7 +25,7 @@ const fake = fakeDb(results);
 let app: NestFastifyApplication;
 
 beforeAll(async () => {
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [featureRoot(MeModule)] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
     .useValue(verify)
     .overrideProvider(DB)
