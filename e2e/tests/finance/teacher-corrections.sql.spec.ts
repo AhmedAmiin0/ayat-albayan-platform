@@ -11,12 +11,12 @@ const refused = (p: Promise<unknown>) =>
     () => 'allowed',
     (e: { message?: string }) => e.message,
   );
-type PayoutState = {
+interface PayoutState {
   status: string;
   paid_at: string | null;
   method: string | null;
   receipt_path: string | null;
-};
+}
 const payoutOf = async (tx: Parameters<Parameters<typeof rolledBack>[0]>[0], id: string) =>
   (await tx<PayoutState[]>`select status, paid_at, method, receipt_path from public.teacher_payouts where id = ${id}`)[0];
 

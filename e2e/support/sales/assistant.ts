@@ -24,7 +24,7 @@ export async function assistant(tx: Tx, tag: string, terms?: Record<string, stri
   return u.id;
 }
 
-type SubInput = { price: number; currency?: string; startsOn?: string; usedBefore?: number };
+interface SubInput { price: number; currency?: string; startsOn?: string; usedBefore?: number }
 
 /** A guardian with one child; broughtBy = the sales profile (null: nobody brought them), broughtAt = when (default now). */
 export async function student(tx: Tx, input: { phone: string; broughtBy?: string | null; broughtAt?: string }): Promise<string> {
@@ -49,7 +49,7 @@ export async function subscription(tx: Tx, studentId: string, input: SubInput): 
   return s.id;
 }
 
-type PayOpts = { amount: number; kind?: 'payment' | 'refund'; at?: string; by?: string };
+interface PayOpts { amount: number; kind?: 'payment' | 'refund'; at?: string; by?: string }
 
 /** A payment (or refund) of the package, in the package currency: a bare number is a payment of now. */
 export async function pay(tx: Tx, sub: string, p: number | PayOpts) {
@@ -68,7 +68,7 @@ export function one<T>(rows: readonly T[]): T {
   return row;
 }
 
-export type CommissionRow = { assistant_id: string; amount: string; currency: string; status: string; subscription_id: string | null; statement_id: string | null };
+export interface CommissionRow { assistant_id: string; amount: string; currency: string; status: string; subscription_id: string | null; statement_id: string | null }
 
 /** The student's 'first' commission (one per student). */
 export const commissionOf = async (tx: Tx, studentId: string): Promise<CommissionRow | undefined> =>

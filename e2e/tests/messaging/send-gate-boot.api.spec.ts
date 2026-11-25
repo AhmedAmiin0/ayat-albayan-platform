@@ -10,7 +10,7 @@ import { stubSent } from '../../support/core/wa-stub';
 // false. The switches are only set to false, then put back.
 
 const KEYS = ['messaging_enabled', 'auto_messages_enabled'];
-type Msg = { id: string; status: string };
+interface Msg { id: string; status: string }
 const familyRows = (guardianId: string) => withSql((sql) => sql<Msg[]>`
   select id, status::text as status from public.messages where guardian_id = ${guardianId} order by id`);
 const createdSince = (since: Date) => withSql(async (sql) =>

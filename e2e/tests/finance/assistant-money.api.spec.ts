@@ -13,7 +13,7 @@ import { USERS } from '../../support/core/users';
 // (each later package a renewal at half), never twice, voided when a payment is deleted. Two terms:
 // 10 percent and a fixed 50 SAR.
 
-type Reg = { student: string; phone: string };
+interface Reg { student: string; phone: string }
 const need = <T>(v: T | undefined): T => {
   if (v === undefined) throw new Error('an earlier step did not run');
   return v;

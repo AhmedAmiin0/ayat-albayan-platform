@@ -6,7 +6,7 @@ import { BASE, iso, rolledBack, type Tx } from '../../support/edit-time';
 // change_course (migration 480) moves a course's rules and lessons atomically, idempotently.
 
 const DAY = 864e5;
-type RuleRow = { id: string; ends_on: string; status: string; subscription_id: string | null; first_rule_id: string | null; client_request_id: string | null };
+interface RuleRow { id: string; ends_on: string; status: string; subscription_id: string | null; first_rule_id: string | null; client_request_id: string | null }
 const rulesOf = (tx: Tx, sub: string) => tx<RuleRow[]>`select id, ends_on::text, status::text, subscription_id, first_rule_id,
   client_request_id from public.schedule_rules where subscription_id = ${sub} order by created_at, first_rule_id nulls first`;
 const lessonsOf = (tx: Tx, ids: string[]) => tx<{ status: string; chargeable: boolean }[]>`select l.status::text, ls.chargeable

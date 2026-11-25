@@ -38,7 +38,7 @@ export async function seedCourse(tx: Tx): Promise<Course> {
   return { ...s, sub: sub.id, rules: rules.map((r) => r.id), lessons };
 }
 
-type NewRuleInput = { at: number; time: string; first: string | null; sub: string; from: number };
+interface NewRuleInput { at: number; time: string; first: string | null; sub: string; from: number }
 
 function newRule(c: Course, o: NewRuleInput & { id: string }) {
   const lessons = [o.at, o.at + 7 * DAY].map((at) => ({
@@ -71,7 +71,7 @@ function newRule(c: Course, o: NewRuleInput & { id: string }) {
   };
 }
 
-type ChangeOptions = {
+interface ChangeOptions {
   requestId: string;
   /** Overrides the second new rule's course. */
   sub?: string;
@@ -79,7 +79,7 @@ type ChangeOptions = {
   at?: number;
   /** The rules the payload ends (default the course's first two). */
   rules?: string[];
-};
+}
 
 /**
  * The rules end the day before the change point; their seeded lessons from it move; two new rules (18:00
@@ -108,7 +108,7 @@ export function changeOf(c: Course, o: ChangeOptions) {
 }
 
 type Move = { id: string; from_status: string; to_status: string; chargeable: boolean };
-type ChangeResult = { rule_ids: string[]; ends_on: string | null };
+interface ChangeResult { rule_ids: string[]; ends_on: string | null }
 
 export async function change(
   tx: Tx,

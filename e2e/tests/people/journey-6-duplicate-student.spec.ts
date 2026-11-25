@@ -3,7 +3,7 @@ import { ar, expect, test } from '../../support/core/fixtures';
 
 // Journey 6 (docs/03 §5): duplicate student creation blocked and merged. R-STU-02, R-STU-03.
 
-type NewStudent = { phone: string; guardian: string; name: string };
+interface NewStudent { phone: string; guardian: string; name: string }
 
 async function createStudent(page: Page, s: NewStudent): Promise<void> {
   await page.getByRole('button', { name: ar.students.add }).click();

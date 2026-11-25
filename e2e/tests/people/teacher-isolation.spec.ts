@@ -10,7 +10,7 @@ import { dropHiba, HIBA_AMOUNT, HIBA_MONTH, seedAbrarPayout, seedHiba, type Hiba
 const OWN_AMOUNT = 321;
 /** Yesterday to next week (the API caps a window at 31 days). */
 const WINDOW = `from=${new Date(Date.now() - 86_400_000).toISOString()}&to=${new Date(Date.now() + 7 * 86_400_000).toISOString()}`;
-type Call = { method: 'GET' | 'POST' | 'PUT'; path: string; body?: unknown };
+interface Call { method: 'GET' | 'POST' | 'PUT'; path: string; body?: unknown }
 
 async function call(page: Page, req: Call): Promise<{ status: number; json: unknown }> {
   const res = await page.request.fetch(`${API}${req.path}`, {

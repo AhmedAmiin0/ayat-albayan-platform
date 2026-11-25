@@ -6,7 +6,7 @@ import { rolledBack, type Tx } from '../../support/edit-time';
 
 const A = '+966500000901';
 const B = '+966500000902';
-type Row = { id: string; reply_to_message_id: string | null; forwarded_from_id: string | null };
+interface Row { id: string; reply_to_message_id: string | null; forwarded_from_id: string | null }
 
 const outbound = async (tx: Tx, phone: string) => {
   const wamid = `wamid.test-${randomUUID()}`;

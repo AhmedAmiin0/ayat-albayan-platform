@@ -58,7 +58,7 @@ test.describe('teacher isolation by RLS (rule 9)', () => {
         pair((x) => x.report),
       ];
       const read = <T extends object>(query: () => Promise<T[]>) => as(tx, teacher, query);
-      type V = { v: string };
+      interface V { v: string }
       expect(await read(() => tx<V[]>`select id::text as v from public.lessons where id in ${tx(lessons)}`)).toEqual([{ v: s.mine.lesson }]);
       expect(await read(() => tx<V[]>`select id::text as v from public.students where id in ${tx(students)}`)).toEqual([{ v: s.mine.student }]);
       expect(await read(() => tx<V[]>`select lesson_id::text as v from public.lesson_students where lesson_id in ${tx(lessons)}`)).toEqual([{ v: s.mine.lesson }]);
