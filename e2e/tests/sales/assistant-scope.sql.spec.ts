@@ -41,7 +41,7 @@ test.describe('assistant scope: what a salesperson can read directly (2026100600
       }
       expect(await count(a, 'assistant_statement_lines')).toBe(2);
       expect(await count(a, 'payments')).toBe(1);
-      expect(await count(admin, 'payments')).toBe((before['payments'] ?? 0) + 2);
+      expect(await count(admin, 'payments')).toBe((before.payments ?? 0) + 2);
       expect(await count(a, 'subscriptions')).toBe(0);
       await tx`insert into public.messages (direction, phone_e164, body) values
         ('inbound', '+966500000204', 'مرحبا'), ('inbound', '+966500000205', 'مرحبا')`;

@@ -78,7 +78,7 @@ export async function readyReport(input: {
   teacherId: string;
 }): Promise<string> {
   const path = `${input.studentId}/${input.lessonId}.pdf`;
-  const storage = createClient(process.env['SUPABASE_URL'] ?? '', process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '', { auth: { persistSession: false } });
+  const storage = createClient(process.env.SUPABASE_URL ?? '', process.env.SUPABASE_SERVICE_ROLE_KEY ?? '', { auth: { persistSession: false } });
   const { error } = await storage.storage.from('reports').upload(path, new TextEncoder().encode('%PDF-1.4\n%e2e\n'), { contentType: 'application/pdf', upsert: true });
   if (error) throw new Error(`pdf upload: ${error.message}`);
   return withSql(async (sql) => {

@@ -42,16 +42,16 @@ const E2E_GOOGLE = {
   GOOGLE_SYNC_POLL_MS: '1000',
 };
 /** E2E_LINES=single = the production default (no WA_CHAT_* keys): the CI job «e2e (single line)». */
-const E2E_WA_CHAT = process.env['E2E_LINES'] === 'single' ? {} : E2E_WA_CHAT_KEYS;
+const E2E_WA_CHAT = process.env.E2E_LINES === 'single' ? {} : E2E_WA_CHAT_KEYS;
 
 export default defineConfig({
   testDir: './tests',
   fullyParallel: false,
   workers: 1, // one shared DB; journeys reset/seed it
-  forbidOnly: !!process.env['CI'],
-  retries: process.env['CI'] ? 1 : 0,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 1 : 0,
   // durations-reporter: per-file times for the CI shard plan (tools/scripts/e2e-shards.mjs).
-  reporter: process.env['CI']
+  reporter: process.env.CI
     ? [['github'], ['html', { open: 'never' }], ['./support/durations-reporter.ts']]
     : 'list',
   globalSetup: './support/global-setup.ts',
@@ -92,14 +92,14 @@ export default defineConfig({
         ...E2E_KAPSO,
         WA_KAPSO_WEBHOOK_URL: `http://localhost:${API_PORT}/webhooks/kapso`,
       },
-      reuseExistingServer: !process.env['CI'],
+      reuseExistingServer: !process.env.CI,
     },
     {
       command: 'node src/server.ts',
       cwd: '../tools/google-stub',
       url: `http://localhost:${GOOGLE_STUB_PORT}/__stub/health`,
       env: { GOOGLE_STUB_PORT: String(GOOGLE_STUB_PORT) },
-      reuseExistingServer: !process.env['CI'],
+      reuseExistingServer: !process.env.CI,
     },
     {
       command: 'node --env-file-if-exists=.env dist/main.js',
@@ -130,9 +130,9 @@ export default defineConfig({
         // Blank = unset: the integration config refresh follows SETTINGS_CACHE_MS, whatever the shell says.
         INTEGRATION_REFRESH_MS: '',
       },
-      reuseExistingServer: !process.env['CI'],
+      reuseExistingServer: !process.env.CI,
       // The API's own log (sender passes, job errors) in the CI output, next to the failing spec.
-      stdout: process.env['CI'] ? 'pipe' : 'ignore',
+      stdout: process.env.CI ? 'pipe' : 'ignore',
     },
     {
       command: `pnpm exec vite --port ${WEB_PORT} --strictPort`,
@@ -140,7 +140,7 @@ export default defineConfig({
       url: WEB_URL,
       // The open inbox refreshes every second (10 s in the app): a status chip shows without a 10 s wait.
       env: { VITE_API_URL: `http://localhost:${API_PORT}`, VITE_INBOX_REFRESH_MS: '1000' },
-      reuseExistingServer: !process.env['CI'],
+      reuseExistingServer: !process.env.CI,
     },
     familyWebServer({ apiUrl: `http://localhost:${API_PORT}`, staffUrl: WEB_URL, reuse: !process.env.CI }),
   ],

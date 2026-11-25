@@ -108,7 +108,7 @@ test.describe('teacher report edit window (R-REP-02/03/04)', () => {
     });
     expect(res.status()).toBe(409);
     expect(await res.json()).toMatchObject({ code: 'edit_window_closed' });
-    expect((await reportRow(s.todayLessonId)).texts['homework']).toBe(TEXTS.homework);
+    expect((await reportRow(s.todayLessonId)).texts.homework).toBe(TEXTS.homework);
   });
 
   test('two tabs: the second submit of a stale form gets version_conflict', async ({ asRole }) => {

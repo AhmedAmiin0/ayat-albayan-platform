@@ -71,7 +71,7 @@ test.describe.serial('sales registration check and start date (API + DB)', () =>
     expect(denied.status).toBe(403);
     const base = { studentId: student, pricing: { tier: 'starter' } };
     const explicit = await call(request, { token: need(a).token, method: 'POST', path: '/sales/subscriptions', body: { ...base, startsOn: riyadhDay(5), clientRequestId: randomUUID() } });
-    expect([explicit.status, explicit.body['code']]).toEqual([403, 'start_date_not_allowed']);
+    expect([explicit.status, explicit.body.code]).toEqual([403, 'start_date_not_allowed']);
     const plain = await call<SalesMoneySubscriptionView>(request, { token: need(a).token, method: 'POST', path: '/sales/subscriptions', body: { ...base, clientRequestId: randomUUID() } });
     expect([plain.status, plain.body.starts_on]).toEqual([201, riyadhDay()]);
   });
