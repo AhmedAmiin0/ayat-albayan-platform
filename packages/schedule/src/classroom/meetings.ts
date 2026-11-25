@@ -1,3 +1,4 @@
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 import { lessonDuration, overrideSchema } from '../schemas/scheduling';
 import type { JoinWindow } from './join-window';
@@ -19,7 +20,7 @@ export const instantLessonSchema = z.object({
   durationMin: lessonDuration,
   override: overrideSchema.optional(),
   /** Idempotency key: a double click returns the first lesson (rule 8). */
-  clientRequestId: z.uuid().optional(),
+  clientRequestId: clientRequestId.optional(),
 });
 export type InstantLessonRequest = z.output<typeof instantLessonSchema>;
 

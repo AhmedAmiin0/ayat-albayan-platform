@@ -1,3 +1,4 @@
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 
 // Scheduled meetings and invitations (R-MEET-01..03, migrations 410–419). Staff are
@@ -54,7 +55,7 @@ export const addMeetingInviteesSchema = z.object({
 });
 
 /** POST /meetings/:id/invitees/:inviteeId/resend: rule 8, a double tap sends once. */
-export const resendMeetingInviteSchema = z.object({ clientRequestId: z.uuid() });
+export const resendMeetingInviteSchema = z.object({ clientRequestId });
 
 /** GET /meetings/invitee-options?q= */
 export const meetingInviteeOptionsQuerySchema = z.object({ q: z.string().trim().max(60).optional() });

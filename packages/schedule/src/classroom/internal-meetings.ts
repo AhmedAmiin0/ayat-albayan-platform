@@ -1,3 +1,4 @@
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindow, type JoinWindowConfig } from './join-window';
 import {
@@ -19,7 +20,7 @@ export const createMeetingSchema = z.object({
   startsAt: z.iso.datetime({ offset: true }).optional(),
   durationMin: meetingDurationSchema.optional(),
   invitees: z.array(meetingInviteeInputSchema).max(MAX_MEETING_INVITEES).optional(),
-  clientRequestId: z.uuid().optional(),
+  clientRequestId: clientRequestId.optional(),
 });
 export type CreateMeeting = z.output<typeof createMeetingSchema>;
 

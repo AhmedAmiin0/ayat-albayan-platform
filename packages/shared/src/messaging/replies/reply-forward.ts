@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { E164_RE } from '@ab/core';
+import { clientRequestId, E164_RE } from '@ab/core';
 import { baseMime } from '../../schemas/chat-media';
 import { isPdfMime } from '../chat/chat-files';
 import type { MessageDirection } from '@ab/catalog';
@@ -19,7 +19,7 @@ export const threadForwardSchema = z.object({
     .min(1)
     .max(FORWARD_MAX_TARGETS)
     .refine((t) => new Set(t).size === t.length, { message: 'duplicate_target' }),
-  clientRequestId: z.uuid(),
+  clientRequestId,
 });
 export type ThreadForward = z.infer<typeof threadForwardSchema>;
 
