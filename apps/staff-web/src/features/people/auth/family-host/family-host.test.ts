@@ -1,4 +1,5 @@
 import type { UserRole } from '@ab/catalog';
+import type { HttpEnv } from '@ab/web-kit/testing';
 import { QueryClient } from '@tanstack/react-query';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { familyHostUrl, leaveForFamilyHost } from './family-host';
@@ -10,7 +11,11 @@ interface Fake {
 const env = vi.hoisted(() => ({ familyOrigin: '' }));
 const me: Fake = vi.hoisted(() => ({ role: null, fails: false }));
 const signOut = vi.hoisted(() => vi.fn(async () => undefined));
-vi.mock('@ab/web-kit/lib/http/env/env', () => ({ env }));
+// The kit root also builds the Supabase client from env when it loads.
+vi.mock('@ab/web-kit/lib/http/env/env', async (importOriginal) => {
+  const actual = await importOriginal<typeof HttpEnv>();
+  return { ...actual, env: Object.assign(env, { ...actual.env, ...env }) };
+});
 vi.mock('@ab/web-kit/auth/sign-in/sign-in', () => ({ signOut }));
 vi.mock('@ab/web-kit/auth/me/me', async () => {
   const { pathKey } = await import('@ab/client-core');
