@@ -16,7 +16,7 @@ interface WeekStripProps {
 }
 
 /**
- * The week at a glance (owner 2026-11-19: an agenda, not a grid): its seven days in one row, today
+ * The week at a glance as an agenda, not a grid: its seven days in one row, today
  * marked, a dot under each day with lessons; a tap jumps to that day below. Seven 44 px days with
  * this spacing (326 px) fit a 360 px phone inside its 16 px gutters: any wider and the page
  * overflows, so a phone zooms the whole page out.

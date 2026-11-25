@@ -16,7 +16,7 @@ const SWITCH: Readonly<Record<SignInWay, () => string>> = {
 };
 
 /**
- * One sign-in for guardians and students (owner 2026-11-15, no tabs): WhatsApp first, the student
+ * One sign-in for guardians and students, with no tabs: WhatsApp first, the student
  * code + password one plain tap away. While WhatsApp codes are off: the password form and one
  * quiet line saying why there is no WhatsApp.
  */
