@@ -218,11 +218,6 @@
       "count": 4
     }
   },
-  "src/schemas/course-change.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/schemas/day-times.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
