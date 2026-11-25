@@ -1,3 +1,3 @@
 export { Route, routeOf } from './route';
 export { RouteInput } from './route-input';
-export type { RouteInputOf, RouteInputOptions } from './route.types';
+export type { RouteInputOf } from './route.types';
