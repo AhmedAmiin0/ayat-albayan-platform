@@ -7,7 +7,7 @@ import { SignInLockup } from './SignInLockup';
 import { SignInWays } from './SignInWays';
 
 /**
- * The family sign-in (docs/51 §1, owner 2026-11-15), as the family app: the academy emblem and
+ * The family sign-in (docs/51 §1), as the family app: the academy emblem and
  * name, a line of welcome, then one way in for guardians and students alike, and last the other
  * language by its own name and the legal pages (Google Play). Waits for GET /auth/code/status, so
  * the right way opens at once; a later change of it opens afresh (keyed).

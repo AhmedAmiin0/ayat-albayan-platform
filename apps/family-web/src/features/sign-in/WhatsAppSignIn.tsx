@@ -5,7 +5,7 @@ import { PhoneStep } from './PhoneStep';
 import { useWhatsAppSignIn } from './use-whatsapp-sign-in';
 
 /**
- * The family pages' default way in: number → code → signed in (docs/50 §4, owner 11-15). Each
+ * The family pages' default way in: number → code → signed in (docs/50 §4). Each
  * refused code opens the boxes afresh (keyed), so the next try starts in the first one.
  */
 export function WhatsAppSignIn() {
