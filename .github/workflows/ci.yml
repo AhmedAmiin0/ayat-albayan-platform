@@ -356,6 +356,7 @@ jobs:
       - run: pnpm guard:queries
       - run: pnpm guard:cycles
       - run: pnpm guard:packages
+      - run: pnpm guard:ownership
       - run: pnpm guard:tsconfig
       - run: pnpm guard:escapes
       - run: pnpm guard:comments

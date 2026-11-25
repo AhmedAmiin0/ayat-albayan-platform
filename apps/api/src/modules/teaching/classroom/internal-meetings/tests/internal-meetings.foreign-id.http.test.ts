@@ -38,4 +38,18 @@ describe('internal meeting routes with someone else’s meeting', () => {
     expect([res.statusCode, res.json().code]).toEqual([403, 'cannot_remove']);
     expect(h.http).not.toHaveBeenCalled();
   });
+
+  it('a guardian joining a staff meeting by id is 403; the meeting is not read', async () => {
+    const res = await h.call({ method: 'POST', url: `${base}/join`, token: 'guardian' });
+    expect(res.statusCode).toBe(403);
+    expect(res.body).not.toContain('token');
+    expect(h.meetings.byId).not.toHaveBeenCalled();
+  });
+
+  it.each(SCOPED)('an unknown meeting id is 404 meeting_not_found for %s', async (token) => {
+    h.meetings.byId.mockResolvedValue(null);
+    const res = await h.call({ method: 'POST', url: `${base}/join`, token });
+    expect([res.statusCode, res.json().code]).toEqual([404, 'meeting_not_found']);
+    expect(h.meetings.profileName).not.toHaveBeenCalled();
+  });
 });

@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { METHOD_METADATA } from '@nestjs/common/constants';
+import { METHOD_METADATA, PATH_METADATA } from '@nestjs/common/constants';
+import { RequestMethod } from '@nestjs/common';
 import { DiscoveryModule, DiscoveryService, MetadataScanner, Reflector } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '@/app.module';
@@ -10,6 +11,8 @@ import { IS_PUBLIC, PERMISSION, SIGNED_IN } from '@/common/auth/decorators';
 /** One controller handler as the AuthGuard sees it. key = 'StudentsController.list'. */
 export interface RouteAccess {
   key: string;
+  /** 'GET /students/:id': the controller path joined with the handler path. */
+  route: string;
   isPublic: boolean;
   signedIn: boolean;
   /** Raw metadata: the coverage test checks it is one catalog key. */
@@ -21,6 +24,19 @@ export type BeforeAccess = 'public' | 'signed-in' | string[];
 
 export function accessBefore(): Record<string, BeforeAccess> {
   return JSON.parse(readFileSync(join(__dirname, 'access-before.json'), 'utf8'));
+}
+
+function pathOf(target: object): string {
+  const raw: unknown = Reflect.getMetadata(PATH_METADATA, target);
+  const first: unknown = Array.isArray(raw) ? raw[0] : raw;
+  return typeof first === 'string' ? first : '';
+}
+
+function routeOf(cls: object, handler: object): string {
+  const method: unknown = Reflect.getMetadata(METHOD_METADATA, handler);
+  const verb = typeof method === 'number' ? (RequestMethod[method] ?? 'GET') : 'GET';
+  const parts = [pathOf(cls), pathOf(handler)].flatMap((p) => p.split('/')).filter((p) => p !== '');
+  return `${verb} /${parts.join('/')}`;
 }
 
 function isHandler(value: unknown): value is (...args: unknown[]) => unknown {
@@ -45,6 +61,7 @@ export async function walkRoutes(): Promise<RouteAccess[]> {
       const targets = [handler, cls];
       out.push({
         key: `${cls.name}.${name}`,
+        route: routeOf(cls, handler),
         isPublic: reflector.getAllAndOverride<boolean>(IS_PUBLIC, targets) === true,
         signedIn: reflector.getAllAndOverride<boolean>(SIGNED_IN, targets) === true,
         permission: reflector.getAllAndOverride<unknown>(PERMISSION, targets),

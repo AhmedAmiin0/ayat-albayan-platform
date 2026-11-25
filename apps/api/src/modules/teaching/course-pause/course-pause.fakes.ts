@@ -22,6 +22,8 @@ const USERS: Record<string, AuthUser> = {
   admin: { id: ADMIN, email: null, role: 'admin' },
   sales: { id: SALES, email: null, role: 'sales' },
   teacher: { id: 't1', email: null, role: 'teacher' },
+  guardian: { id: 'g1', email: null, role: 'guardian' },
+  student: { id: 'st1', email: null, role: 'student' },
   assistant: { id: 'as000000-0000-4000-8000-0000000000a5', email: null, role: 'assistant' },
 };
 export const verify: TokenVerifier = async (token) => {

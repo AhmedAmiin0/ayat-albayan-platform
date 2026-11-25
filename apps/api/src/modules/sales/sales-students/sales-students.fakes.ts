@@ -28,7 +28,7 @@ export const LESSON = '1e000000-0000-4000-8000-0000000000c1';
 export const REPORT = 'f0000000-0000-4000-8000-0000000000f1';
 const OWN = { ...OWN_A, studentIds: [MINE] };
 
-type Token = 'salesA' | 'salesB' | 'admin' | 'teacher' | 'assistant';
+type Token = 'salesA' | 'salesB' | 'admin' | 'teacher' | 'assistant' | 'guardian';
 
 /** Rows as the database could return them, with secret columns present, so a test proves they never leave. */
 const studentRow = () => ({
