@@ -48,7 +48,8 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
   it('the 48 CONFIG keys (28 + chat_reopen_template + whatsapp_calls_enabled + calls_permission_template + renewal_commission_percent, docs/28, + renewal_commission_enabled, + the 3 family login keys, docs/30, + crm_media_host, crm_media_copy_all, + report_form_v2, + meetings_in_app, docs/35, + meeting_max_minutes, + presence_enabled, docs/33, + sales_require_assignee, docs/16 row 39, + lesson_confirmation_required, lesson_outcome_grace_minutes, + short_link_base, + refund_attended_rate_percent, + report_teacher_edit_minutes, docs/46, + the 7 teacher page switches, + the 3 family app keys, docs/50, + the 3 managed short link keys, docs/19, + maintenance_mode) sit in their «القيم» group, scope config', () => {
     const config = Object.values(CONFIG_GROUPS).flat();
     expect(config).toHaveLength(62);
-    for (const [group, keys] of Object.entries(CONFIG_GROUPS)) expect([group, keysWhere((e) => e.group === group)]).toEqual([group, [...keys].sort()]);
+    for (const [group, keys] of Object.entries(CONFIG_GROUPS))
+      expect([group, keysWhere((e) => e.group === group)]).toEqual([group, [...keys].sort()]);
     expect(keysWhere((e) => e.scope === 'config')).toEqual([...config].sort());
   });
 
@@ -62,7 +63,8 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
   });
 
   it('ownership agrees with OWNED_SETTING_KEYS both ways', () => {
-    for (const [key, owner] of Object.entries(OWNED_SETTING_KEYS)) expect([key, byKey.get(key)?.ownedBy]).toEqual([key, owner]);
+    for (const [key, owner] of Object.entries(OWNED_SETTING_KEYS))
+      expect([key, byKey.get(key)?.ownedBy]).toEqual([key, owner]);
     expect(keysWhere((e) => e.ownedBy !== null)).toEqual(Object.keys(OWNED_SETTING_KEYS).sort());
     expect(byKey.get('comms_source')?.ownedBy).toBe('communications');
     expect(byKey.get('messaging_enabled')?.ownedBy).toBe('messages_gate');

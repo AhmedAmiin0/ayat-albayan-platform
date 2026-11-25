@@ -12,4 +12,5 @@ export const UPLOAD_SETTINGS = {
 } as const satisfies Record<string, SettingDef>;
 
 /** Upload limit in bytes (upload_max_mb, at most the buckets' 10 MB). */
-export const uploadMaxBytes = (s: { upload_max_mb: number }): number => s.upload_max_mb * 1024 * 1024;
+export const uploadMaxBytes = (s: { upload_max_mb: number }): number =>
+  s.upload_max_mb * 1024 * 1024;

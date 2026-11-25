@@ -6,7 +6,9 @@ const ok = (body: object) => settingsUpdateSchema.safeParse(body).success;
 
 describe('settingsUpdateSchema (generated from the registry)', () => {
   it('accepts every default under its camelCase field', () => {
-    const body = Object.fromEntries(SETTING_KEYS.map((k) => [SETTING_FIELD_OF[k], SETTING_DEFAULTS[k]]));
+    const body = Object.fromEntries(
+      SETTING_KEYS.map((k) => [SETTING_FIELD_OF[k], SETTING_DEFAULTS[k]]),
+    );
     expect(settingsUpdateSchema.safeParse(body).success).toBe(true);
   });
 

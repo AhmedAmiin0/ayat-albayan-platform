@@ -6,14 +6,24 @@ import { camelKey } from '../camel';
 // PATCH /settings per key (docs/26 §2f, 26-P0): owned keys are moved, never written.
 describe('splitSettingsPatch', () => {
   it('writes valid registry fields as snake_case rows', () => {
-    const out = splitSettingsPatch({ lateCancelHours: 24, bookingHorizonWeeks: 6, payoutCountLate: true });
-    expect(out.changes).toEqual({ late_cancel_hours: 24, booking_horizon_weeks: 6, payout_count_late: true });
+    const out = splitSettingsPatch({
+      lateCancelHours: 24,
+      bookingHorizonWeeks: 6,
+      payoutCountLate: true,
+    });
+    expect(out.changes).toEqual({
+      late_cancel_hours: 24,
+      booking_horizon_weeks: 6,
+      payout_count_late: true,
+    });
     expect(out.saved).toEqual(['late_cancel_hours', 'booking_horizon_weeks', 'payout_count_late']);
     expect(out).toMatchObject({ moved: [], invalid: [], issues: [] });
   });
 
   it('keeps null for a nullable key (turns the policy OFF) and stores the parsed (trimmed) value', () => {
-    expect(splitSettingsPatch({ lateCancelHours: null }).changes).toEqual({ late_cancel_hours: null });
+    expect(splitSettingsPatch({ lateCancelHours: null }).changes).toEqual({
+      late_cancel_hours: null,
+    });
     expect(splitSettingsPatch({ defaultMeetingTitle: '  حلقة  ' }).changes).toEqual({ default_meeting_title: 'حلقة' });
   });
 
@@ -86,7 +96,13 @@ describe('splitSettingsPatch', () => {
   });
 
   it('an empty body or prototype-like fields change nothing', () => {
-    expect(splitSettingsPatch({})).toEqual({ changes: {}, saved: [], moved: [], invalid: [], issues: [] });
+    expect(splitSettingsPatch({})).toEqual({
+      changes: {},
+      saved: [],
+      moved: [],
+      invalid: [],
+      issues: [],
+    });
     const out = splitSettingsPatch(JSON.parse('{"__proto__":{"x":1},"constructor":1,"toString":2}') as Record<string, unknown>);
     expect(out).toEqual({ changes: {}, saved: [], moved: [], invalid: [], issues: [] });
   });

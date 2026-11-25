@@ -47,7 +47,9 @@ describe('public settings', () => {
         'family_chat_enabled', 'family_meetings_in_app', 'maintenance_mode',
       ].sort(),
     );
-    expect(publicSettings({ ...SETTING_DEFAULTS, messaging_enabled: true })).toEqual(PUBLIC_SETTING_DEFAULTS);
+    expect(publicSettings({ ...SETTING_DEFAULTS, messaging_enabled: true })).toEqual(
+      PUBLIC_SETTING_DEFAULTS,
+    );
     expect(PUBLIC_SETTING_DEFAULTS).not.toHaveProperty('messaging_enabled');
   });
 });

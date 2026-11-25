@@ -38,7 +38,9 @@ const AFTER_COPY: readonly string[] = [
 describe('migration config_describe', () => {
   it('copies exactly the registry hint keys, never a key owned at copy time (send gate, Google)', () => {
     const pairs = [...sql.matchAll(/\('([a-z0-9_]+)', '([A-Za-z0-9_.]+)'\)/g)].map((m) => [m[1], m[2]]);
-    const want = SEED_ENTRIES.filter((e) => e.hintKey && !ownedAtCopy(e.key) && !AFTER_COPY.includes(e.key)).map((e) => [e.key, e.hintKey]);
+    const want = SEED_ENTRIES.filter(
+      (e) => e.hintKey && !ownedAtCopy(e.key) && !AFTER_COPY.includes(e.key),
+    ).map((e) => [e.key, e.hintKey]);
     expect(pairs).toEqual(want);
   });
 
