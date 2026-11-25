@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { bookingRequest, fakePlanner, NOW } from '@/modules/teaching/booking/booking.fakes';
-import type { BookingInvoices } from '@/modules/teaching/booking/invoice/booking.invoice';
+
 import { code, SCOPE, setup as invoiceSetup } from '@/modules/teaching/booking/invoice/booking.invoice.fakes';
 import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
@@ -18,7 +18,7 @@ function setup() {
   deps.queries.createBooking.mockResolvedValue(RESULT);
   const { invoices } = invoiceSetup();
   const resolve = vi.spyOn(invoices, 'resolve');
-  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, invoices as BookingInvoices, fakeTeacherAlert().after);
+  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, invoices, fakeTeacherAlert().after);
   return { ...deps, resolve, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo) };
 }
 

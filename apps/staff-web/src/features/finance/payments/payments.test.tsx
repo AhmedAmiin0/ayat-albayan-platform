@@ -119,7 +119,7 @@ describe('PaymentsPage', () => {
     await within(dialog).findByRole('option', { name: /\d/ });
     // The amount is prefilled after the package is chosen (an effect): wait for it, never read it once.
     await vi.waitFor(() =>
-      expect((within(dialog).getByRole('textbox', { name: new RegExp(t.payments.amount) }) as HTMLInputElement).value).toBe('145'),
+      expect((within(dialog).getByRole<HTMLInputElement>('textbox', { name: new RegExp(t.payments.amount) })).value).toBe('145'),
     );
     apiSend.mockResolvedValue(PAYMENT);
     fireEvent.click(within(dialog).getByRole('button', { name: t.payments.record }));

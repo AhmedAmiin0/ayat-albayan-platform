@@ -8,9 +8,12 @@ test('sourcePaths: the shared config, every package config and the root lint fil
     'packages/config/eslint-flow.js',
     'packages/config/eslint-flow.config.test.js',
     'packages/config/oxlint/rules.js',
+    'packages/config/oxlint/core-rules.json',
+    'packages/config/oxlint/testing/lint-code.js',
+    'packages/config/type-imports/rule.js',
+    'packages/config/type-imports/rule.test.js',
     'tsconfig.base.json',
     'apps/api/lint.blocks.mjs',
-    'apps/api/eslint.config.js',
     'apps/api/src/a.js',
     '.oxlintrc.json',
     'knip.json',
@@ -20,11 +23,12 @@ test('sourcePaths: the shared config, every package config and the root lint fil
   assert.deepEqual(sourcePaths(paths), [
     '.jscpd.json',
     '.oxlintrc.json',
-    'apps/api/eslint.config.js',
     'apps/api/lint.blocks.mjs',
     'knip.json',
     'packages/config/eslint-flow.js',
+    'packages/config/oxlint/core-rules.json',
     'packages/config/oxlint/rules.js',
+    'packages/config/type-imports/rule.js',
   ]);
 });
 

@@ -43,7 +43,7 @@ describe('InternalMeetingsList «الاجتماعات الداخلية»', () =>
     api.send.mockResolvedValueOnce({ id: 'm-1', url: 'https://app.example.test/m/new' });
     open([row()]);
     fireEvent.click(await screen.findByRole('button', { name: L.newLink }));
-    await waitFor(() => expect((screen.getByLabelText(L.link) as HTMLInputElement).value).toBe('https://app.example.test/m/new'));
+    await waitFor(() => expect((screen.getByLabelText<HTMLInputElement>(L.link)).value).toBe('https://app.example.test/m/new'));
     expect(api.send).toHaveBeenCalledWith('POST', '/meetings/m-1/link');
     api.send.mockResolvedValueOnce(undefined);
     fireEvent.click(screen.getByRole('button', { name: L.end }));

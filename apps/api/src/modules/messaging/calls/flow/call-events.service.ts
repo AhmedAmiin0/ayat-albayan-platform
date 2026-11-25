@@ -96,7 +96,7 @@ export class CallEvents implements CallEventsPort {
   private async find(e: CallWebhookEvent): Promise<CallRow | null> {
     if (isUuid(e.ref)) {
       const own = await this.kit.queries.get(e.ref);
-      if (own && own.direction === 'outbound' && (!own.wa_call_id || own.wa_call_id === e.waCallId)) return own;
+      if (own?.direction === 'outbound' && (!own.wa_call_id || own.wa_call_id === e.waCallId)) return own;
     }
     return this.kit.queries.byWaCallId(e.waCallId);
   }
@@ -105,7 +105,7 @@ export class CallEvents implements CallEventsPort {
     if (!(await this.gate.enabled()) || !e.sdp) return;
     if (await this.kit.queries.byWaCallId(e.waCallId)) return;
     const phone = e.peer ? waIdToE164(e.peer) : null;
-    if (!phone) return void this.log.warn(`call ${e.waCallId}: the caller's wa_id is not a phone`);
+    if (!phone) return this.log.warn(`call ${e.waCallId}: the caller's wa_id is not a phone`);
     const thread = await this.kit.threads.thread(phone);
     await this.kit.queries.insert({
       ...{ direction: 'inbound', status: 'ringing', phone_e164: phone, wa_call_id: e.waCallId, offer_sdp: e.sdp },

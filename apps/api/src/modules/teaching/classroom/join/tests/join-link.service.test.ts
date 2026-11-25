@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import type { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';

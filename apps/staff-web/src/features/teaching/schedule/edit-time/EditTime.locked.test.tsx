@@ -9,7 +9,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));
 
 const LOCKED = new ApiError(409, { code: 'payout_locked', message: 'payout_locked', month: '2026-09', status: 'approved' });
-const SAVE = () => screen.getByRole('button', { name: t.lessons.timeEdit.submit }) as HTMLButtonElement;
+const SAVE = () => screen.getByRole<HTMLButtonElement>('button', { name: t.lessons.timeEdit.submit });
 
 describe('«عدّل الوقت» in a closed payout month (E3, R-SCH-11)', () => {
   fakeNow();
@@ -39,7 +39,7 @@ describe('«عدّل الوقت» in a closed payout month (E3, R-SCH-11)', () =
     pick.reason('الساعة غلط');
     pick.save();
     fireEvent.click(await screen.findByRole('button', { name: t.lessons.timeEdit.restoreLength.replace('{len}', t.enums.duration['45']) }));
-    expect((screen.getByLabelText(t.lessons.timeEdit.duration) as HTMLSelectElement).value).toBe('45');
+    expect((screen.getByLabelText<HTMLSelectElement>(t.lessons.timeEdit.duration)).value).toBe('45');
     await waitFor(() => expect(SAVE().disabled).toBe(false));
     pick.save();
     await waitFor(() => expect(onDone).toHaveBeenCalled());
@@ -49,7 +49,7 @@ describe('«عدّل الوقت» in a closed payout month (E3, R-SCH-11)', () =
   it('a migrated 40-minute lesson shows «40 دقيقة» and asks for a valid length before saving', () => {
     openEditTime(lesson({ id: 'l-40', minutes: 40, time_edit_mode: 'move' }));
     const odd = t.lessons.timeEdit.durationOther.replace('{n}', '40');
-    const select = screen.getByLabelText(t.lessons.timeEdit.duration) as HTMLSelectElement;
+    const select = screen.getByLabelText<HTMLSelectElement>(t.lessons.timeEdit.duration);
     expect(select.selectedOptions[0]?.textContent).toBe(odd);
     expect(select.getAttribute('aria-invalid')).toBe('true');
     expect(screen.getByText(t.lessons.timeEdit.pickLength)).toBeTruthy();

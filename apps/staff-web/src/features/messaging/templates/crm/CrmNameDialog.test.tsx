@@ -9,7 +9,7 @@ import { templateName } from '@/features/messaging/templates/template-cells';
 // docs/19 «crm driver»: the template's name / language in the CRM, by hand (crm lines only).
 
 const s = t.templates.crmName;
-const field = (label: string) => screen.getByLabelText(label) as HTMLInputElement;
+const field = (label: string) => screen.getByLabelText<HTMLInputElement>(label);
 
 describe('CrmNameDialog', () => {
   it('shows the default (the old script\'s name) as the placeholder; blank saves null = back to the default', () => {

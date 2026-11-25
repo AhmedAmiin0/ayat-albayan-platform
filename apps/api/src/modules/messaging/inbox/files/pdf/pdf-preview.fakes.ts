@@ -35,7 +35,10 @@ export function setup() {
   };
   const queries = {
     doc: vi.fn(async (id: string) => docs.get(id) ?? null),
-    setDoc: vi.fn(async (id: string, doc: PdfDoc) => void (docs.has(id) || docs.set(id, doc))),
+    setDoc: vi.fn((id: string, doc: PdfDoc) => {
+      if (!docs.has(id)) docs.set(id, doc);
+      return Promise.resolve();
+    }),
   };
   const service = new PdfPreviewService(
     media as unknown as ThreadMediaService,

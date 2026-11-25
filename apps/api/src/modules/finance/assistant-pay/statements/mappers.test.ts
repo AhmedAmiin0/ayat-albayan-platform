@@ -9,7 +9,7 @@ const terms = (over: Partial<TermsRow> = {}): TermsRow =>
   ({
     assistant_id: 'a1', commission_type: 'fixed', commission_value: 50, commission_currency: 'EGP', commission_starts_on: '2026-10-01',
     salary_amount: 1000, salary_currency: 'SAR', salary_starts_on: '2026-10-01', created_at: '', updated_at: '', updated_by: null, ...over,
-  }) as TermsRow;
+  });
 
 describe('toTermsView / termsColumns', () => {
   it('a row becomes both parts, numbers as numbers; no row or cleared columns are null', () => {

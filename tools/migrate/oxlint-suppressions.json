@@ -93,9 +93,6 @@
     },
     "typescript/dot-notation": {
       "count": 1
-    },
-    "typescript/prefer-optional-chain": {
-      "count": 1
     }
   },
   "src/delta/scope.ts": {

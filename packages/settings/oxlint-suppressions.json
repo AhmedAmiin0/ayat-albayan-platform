@@ -221,19 +221,16 @@
       "count": 4
     }
   },
-  "src/validation/schema/tests/schema.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/validation/schema/schema.ts": {
     "stylistic/max-len": {
       "count": 1
     },
     "typescript/no-unnecessary-condition": {
       "count": 1
-    },
-    "typescript/no-unnecessary-type-assertion": {
+    }
+  },
+  "src/validation/schema/tests/schema.test.ts": {
+    "stylistic/max-len": {
       "count": 1
     }
   },

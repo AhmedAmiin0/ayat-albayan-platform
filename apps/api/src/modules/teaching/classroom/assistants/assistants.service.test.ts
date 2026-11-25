@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AssistantLessonsRepo } from './assistants.lessons';
 import type { AssistantsRepo } from './assistants.repo';

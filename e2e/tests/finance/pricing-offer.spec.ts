@@ -57,7 +57,7 @@ test.describe('price offer actions (docs/08 §3)', () => {
     );
     await page.goto('/admin/pricing');
     await expect(page.getByRole('heading', { level: 1, name: en.pricing.title })).toBeVisible();
-    await chooseKuwait(page, en as unknown as typeof ar);
+    await chooseKuwait(page, en);
 
     const href = await page.getByRole('link', { name: en.pricing.sendWhatsapp }).getAttribute('href');
     expect(href).toMatch(/^https:\/\/wa\.me\/\?text=/);

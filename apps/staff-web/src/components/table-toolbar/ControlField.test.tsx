@@ -12,7 +12,7 @@ describe('ControlField', () => {
     const filter: ColumnFilterDef = { kind: 'select', options: [{ value: 'active', label: 'مشترك' }] };
     render(<ControlField control={{ ...base, filter, onChange }} />);
     expect(screen.getByText('الحالة')).toBeTruthy();
-    const select = screen.getByRole('combobox', { name: filterByLabel('الحالة') }) as HTMLSelectElement;
+    const select = screen.getByRole<HTMLSelectElement>('combobox', { name: filterByLabel('الحالة') });
     expect(select.options[0]?.textContent).toBe(t.table.all);
     fireEvent.change(select, { target: { value: 'active' } });
     expect(onChange).toHaveBeenCalledWith('active');

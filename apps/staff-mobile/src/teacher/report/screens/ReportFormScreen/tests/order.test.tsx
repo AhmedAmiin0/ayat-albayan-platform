@@ -19,7 +19,7 @@ jest.mock('expo-router', () => ({
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
 
 async function open(report: object = {}) {
-  const form = formResponse(report as never);
+  const form = formResponse(report);
   mockApiFetch.mockImplementation(async (p: string) => (p === '/teachers/me' ? me : form));
   await renderWithQuery(<ReportFormScreen />);
   await screen.findByText(t.reports.readOnlyHint);

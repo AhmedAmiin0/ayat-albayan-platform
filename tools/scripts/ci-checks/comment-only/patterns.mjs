@@ -41,7 +41,7 @@ export const isDirective = (comment, file = '') =>
 export const CODE = /\.(?:[mc]?ts|tsx|[mc]?js|jsx)$/;
 
 /** Lint baselines: dropping a comment can fix a suppressed warning (guard:lint: only shrink). */
-export const SUPPRESSIONS = /(?:^|\/)(?:eslint|oxlint)-suppressions\.json$/;
+export const SUPPRESSIONS = /(?:^|\/)oxlint-suppressions\.json$/;
 
 /** Never touched by a comment sweep, even when only their comments change. */
 export const FORBIDDEN = [

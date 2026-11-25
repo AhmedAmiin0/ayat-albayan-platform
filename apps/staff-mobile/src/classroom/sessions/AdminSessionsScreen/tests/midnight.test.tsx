@@ -48,7 +48,7 @@ test('a day the user picked stays after midnight', async () => {
 test('back from the background over midnight, the day is the new today at once', async () => {
   const handlers: ((s: AppStateStatus) => void)[] = [];
   jest.spyOn(AppState, 'addEventListener').mockImplementation((_type, handler) => {
-    handlers.push(handler as (s: AppStateStatus) => void);
+    handlers.push(handler);
     return { remove: jest.fn() };
   });
   await renderWithQuery(<AdminSessionsScreen />);

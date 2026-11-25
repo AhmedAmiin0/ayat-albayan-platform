@@ -7,11 +7,13 @@ type Row = { month: string; category: string; amount: number; currency: string; 
  * The 12-month table (pure): each confirmed expense converted to the reporting currency and added
  * to its month and category. Drafts are left out; a currency without a rate is listed in fx_missing.
  */
+const noCategories = (): Record<string, number> => ({});
+
 export function expenseYear(input: { year: string; rows: readonly Row[]; conversion: Conversion }): ExpenseYearView {
   const months = Array.from({ length: 12 }, (_, i) => ({
     month: `${input.year}-${String(i + 1).padStart(2, '0')}`,
     total: 0,
-    by_category: {} as Record<string, number>,
+    by_category: noCategories(),
   }));
   const categories = new Set<string>();
   for (const r of input.rows) {

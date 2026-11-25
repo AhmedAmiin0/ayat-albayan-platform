@@ -30,7 +30,7 @@ export const registerDrafts = {
  * and `droppedPast` says so (the dialog shows one line about it).
  */
 export function resumable(saved: RegisterDraft | undefined, leadId: string | null, now: Date): Resumed | undefined {
-  if (!saved || saved.draft.leadId !== leadId) return undefined;
+  if (saved?.draft.leadId !== leadId) return undefined;
   const at = saved.draft.startsAt;
   if (!at || Date.parse(at) > now.getTime()) return saved;
   const steps = stepsOf(saved.draft);

@@ -1,6 +1,6 @@
 import { GRANTABLE_PERMISSIONS } from '@ab/shared';
 import { vi } from 'vitest';
-import { AuditService } from '@/common/audit/audit.service';
+import type { AuditService } from '@/common/audit/audit.service';
 import { PermissionCache } from '@/common/auth/permission.cache';
 import { fakePhotos } from '@/common/storage/avatars/avatars.fakes';
 import { FakeRoleStore } from '@/modules/people/roles/roles.fakes';

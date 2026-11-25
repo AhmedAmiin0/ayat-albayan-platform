@@ -283,11 +283,6 @@
       "count": 1
     }
   },
-  "src/notifications/catalogue/catalogue-settings.test.ts": {
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 2
-    }
-  },
   "src/notifications/catalogue/catalogue-state/catalogue-state.ts": {
     "complexity": {
       "count": 2
@@ -305,17 +300,9 @@
       "count": 2
     }
   },
-  "src/notifications/catalogue/catalogue-state/tests/catalogue-state.test.ts": {
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 2
-    }
-  },
   "src/notifications/catalogue/catalogue-state/tests/rules.test.ts": {
     "stylistic/max-len": {
       "count": 6
-    },
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 2
     }
   },
   "src/notifications/catalogue/catalogue-views.ts": {
@@ -342,9 +329,6 @@
     },
     "stylistic/max-len": {
       "count": 4
-    },
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 1
     }
   },
   "src/notifications/rules.legacy.ts": {

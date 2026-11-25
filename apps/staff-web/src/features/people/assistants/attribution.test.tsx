@@ -39,7 +39,7 @@ describe('BroughtByField on the student profile (R-ASST-01)', () => {
   it('an unset student reads «لم يُحدد»; picking an assistant saves one student', async () => {
     mount();
     expect(await screen.findByText(B.none)).toBeTruthy();
-    const save = screen.getByRole('button', { name: B.save }) as HTMLButtonElement;
+    const save = screen.getByRole<HTMLButtonElement>('button', { name: B.save });
     expect(save.disabled).toBe(true);
     fireEvent.change(await screen.findByLabelText(B.select), { target: { value: 'a1' } });
     fireEvent.click(save);

@@ -2,7 +2,6 @@ import { ConflictException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { fakeDeps, lead } from '@/modules/sales/leads/leads.fakes';
 import { LeadsService } from '@/modules/sales/leads/leads.service';
-import type { SalesAssignService } from '@/modules/sales/sales/assign/sales-assign.service';
 import { world } from '@/modules/sales/sales/assign/tests/sales-assign.fakes';
 
 /** The webhook path: LeadsService.upsertByPhone with the real SalesAssignService behind it. */
@@ -10,7 +9,7 @@ function setup(over: Parameters<typeof world>[0] = {}) {
   const w = world(over);
   const deps = fakeDeps();
   const service = new LeadsService(deps.asLeads, deps.asApplicants, deps.asAudit);
-  Object.assign(service, { sales: w.service as SalesAssignService });
+  Object.assign(service, { sales: w.service });
   deps.leads.insert.mockImplementation(async (row: object) => {
     const created = lead({ ...row, id: 'new-1' });
     w.leads.set(created.id, created);

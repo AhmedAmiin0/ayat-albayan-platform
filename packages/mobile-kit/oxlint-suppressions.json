@@ -113,9 +113,6 @@
     "typescript/no-misused-promises": {
       "count": 1
     },
-    "typescript/no-meaningless-void-operator": {
-      "count": 1
-    },
     "typescript/no-confusing-void-expression": {
       "count": 3
     }
@@ -174,9 +171,6 @@
   },
   "src/lib/i18n/i18n-overrides.test.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-type-assertion": {
       "count": 1
     }
   },
@@ -347,12 +341,6 @@
     "stylistic/max-len": {
       "count": 5
     },
-    "typescript/no-meaningless-void-operator": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
-    },
     "typescript/no-unnecessary-boolean-literal-compare": {
       "count": 1
     }
@@ -393,14 +381,6 @@
       "count": 1
     }
   },
-  "src/ui/connecting/use-bar-phase.test.ts": {
-    "typescript/no-meaningless-void-operator": {
-      "count": 5
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 5
-    }
-  },
   "src/ui/connecting/use-bar-phase.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -412,9 +392,6 @@
     },
     "stylistic/max-len": {
       "count": 3
-    },
-    "typescript/no-meaningless-void-operator": {
-      "count": 1
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -600,14 +577,6 @@
       "count": 1
     }
   },
-  "src/ui/startup/StartupOverlay.test.tsx": {
-    "typescript/no-meaningless-void-operator": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
-    }
-  },
   "src/ui/startup/StartupOverlay.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
@@ -616,12 +585,6 @@
   "src/ui/startup/StartupScreen.test.tsx": {
     "stylistic/max-len": {
       "count": 5
-    },
-    "typescript/no-meaningless-void-operator": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
     }
   },
   "src/ui/startup/StartupScreen.tsx": {

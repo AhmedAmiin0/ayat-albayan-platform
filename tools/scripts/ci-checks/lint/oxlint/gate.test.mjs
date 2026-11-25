@@ -38,8 +38,8 @@ test('a lower count fails until pruned; prune never raises a count', () => {
   const { root, report, baseline } = fixture();
   write(baseline, { 'a.ts': { 'max-depth': { count: 3 } }, 'b.ts': { complexity: { count: 1 } } });
   assert.deepEqual(oxlintGate({ root, report }), [
-    'fixed: e2e/a.ts max-depth 3 -> 2 (pnpm lint:oxfull -- --prune, commit oxlint-suppressions.json)',
-    'fixed: e2e/b.ts complexity 1 -> 0 (pnpm lint:oxfull -- --prune, commit oxlint-suppressions.json)',
+    'fixed: e2e/a.ts max-depth 3 -> 2 (pnpm lint:prune, commit oxlint-suppressions.json)',
+    'fixed: e2e/b.ts complexity 1 -> 0 (pnpm lint:prune, commit oxlint-suppressions.json)',
   ]);
   assert.deepEqual(oxlintGate({ root, report, mode: 'prune' }), []);
   write(baseline, { 'a.ts': { 'max-depth': { count: 1 } } });

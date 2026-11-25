@@ -4,7 +4,6 @@
   "type": "module",
   "scripts": {
     "e2e": "playwright test",
-    "lint": "eslint . --max-warnings 0",
     "typecheck": "tsgo --noEmit",
     "screens": "node scripts/screens.ts",
     "test": "node --test support/screens/tests/*.test.ts"
@@ -23,7 +22,6 @@
     "@types/node": "^24.0.0",
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "api": "workspace:*",
-    "eslint": "^10.0.0",
     "postgres": "^3.4.9",
     "staff-web": "workspace:*",
     "typescript": "~6.0.3"

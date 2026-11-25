@@ -4,7 +4,7 @@ import { Inject, Injectable, Optional } from '@nestjs/common';
 import { CACHE_KEYS } from '@/common/infra/cache/cache-keys';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { DB, type Db } from '@/common/db/db.module';
-import { CUSTOM_COLUMNS, toCustomView, type CustomConfigRow } from './custom-config.mapper';
+import { CUSTOM_COLUMNS, toCustomView } from './custom-config.mapper';
 
 /** The public rows' shared copy (Redis only): GET /settings/public is read by every page load. */
 const PUBLIC_ROWS_TTL_MS = 60_000;
@@ -28,7 +28,7 @@ export class CustomConfigService {
   async find(key: string): Promise<CustomConfigView | null> {
     const { data, error } = await this.db.from('custom_config').select(CUSTOM_COLUMNS).eq('key', key).maybeSingle();
     if (error) throw new Error(`custom_config read failed: ${error.message}`);
-    return data ? toCustomView(data as CustomConfigRow) : null;
+    return data ? toCustomView(data) : null;
   }
 
   /** Public rows only, as the GET /settings/public whitelist's input (shared for a minute with Redis). */
@@ -48,7 +48,7 @@ export class CustomConfigService {
     const { data, error } = await this.db.from('custom_config').upsert(row).select(CUSTOM_COLUMNS).single();
     await this.forgetPublic();
     if (error) throw new Error(`custom_config write failed: ${error.message}`);
-    return toCustomView(data as CustomConfigRow);
+    return toCustomView(data);
   }
 
   /** false when there was no such entry. */

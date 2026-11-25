@@ -1,36 +1,28 @@
-// docs/36 F-2/F-3 (D4): the flow limits reach the real package configs, React flavour included.
+// docs/36 F-2/F-3 (D4): the flow limits reach every package's composed Oxlint config.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { ESLint } from 'eslint';
-import { config, reactConfig, reactRestrictions } from './eslint.js';
+import { reactRestrictions } from './eslint-react.js';
+import { packageOverrides } from './oxlint/config.js';
+import { rulesFor } from './oxlint/resolve.js';
 
-const root = import.meta.dirname;
-const rulesFor = async (blocks, file) => {
-  const eslint = new ESLint({ cwd: root, overrideConfigFile: true, overrideConfig: blocks });
-  return (await eslint.calculateConfigForFile(file)).rules;
-};
 const F2 = ['no-nested-ternary', 'no-lonely-if', 'no-else-return'];
+const rulesOf = ({ react = false, blocks = [] }, file) =>
+  rulesFor({ rules: {}, ...packageOverrides({ dir: 'pkg', react, blocks }) }, `pkg/${file}`);
 
-test('config(): complexity 6 on .ts, 8 on .js, classic variant; depth 2; the F-2 rules are errors', async () => {
-  const ts = await rulesFor(config(root), 'src/a.ts');
-  assert.deepEqual(ts.complexity, [2, { max: 6, variant: 'classic' }]);
-  assert.deepEqual(ts['max-depth'], [2, 2]);
-  for (const rule of F2) assert.equal(ts[rule]?.[0], 2, rule);
-  const js = await rulesFor(config(root), 'src/a.js');
-  assert.deepEqual(js.complexity, [2, { max: 8, variant: 'classic' }]);
+test('a package: complexity 6 on .ts, 8 on .js, classic variant; depth 2; the F-2 rules are errors', () => {
+  const ts = rulesOf({}, 'src/a.ts');
+  assert.deepEqual(ts.complexity, ['error', { max: 6, variant: 'classic' }]);
+  assert.deepEqual(ts['max-depth'], ['error', 2]);
+  for (const rule of F2) assert.equal([ts[rule]].flat()[0], 'error', rule);
+  const js = rulesOf({}, 'src/a.js');
+  assert.deepEqual(js.complexity, ['error', { max: 8, variant: 'classic' }]);
 });
 
-test('reactConfig: .tsx keeps complexity 8, .ts gets 6, depth 2 on both', async () => {
-  const react = reactRestrictions({
-    files: ['src/**/*.{ts,tsx}'],
-    effects: ['src/**/*.tsx'],
-    compiler: true,
-    react19: true,
-  });
-  const blocks = reactConfig(root, ...react);
-  const tsx = await rulesFor(blocks, 'src/a.tsx');
-  const ts = await rulesFor(blocks, 'src/a.ts');
+test('a React package: .tsx keeps complexity 8, .ts gets 6, depth 2 on both', () => {
+  const files = ['src/**/*.{ts,tsx}'];
+  const blocks = reactRestrictions({ files, effects: ['src/**/*.tsx'], compiler: true, react19: true });
+  const [tsx, ts] = ['src/a.tsx', 'src/a.ts'].map((file) => rulesOf({ react: true, blocks }, file));
   assert.deepEqual([tsx.complexity[1].max, ts.complexity[1].max], [8, 6]);
-  assert.deepEqual([tsx['max-depth'], ts['max-depth']], [[2, 2], [2, 2]]);
-  for (const rule of F2) assert.equal(tsx[rule]?.[0], 2, rule);
+  assert.deepEqual([tsx['max-depth'], ts['max-depth']], [['error', 2], ['error', 2]]);
+  for (const rule of F2) assert.equal([tsx[rule]].flat()[0], 'error', rule);
 });

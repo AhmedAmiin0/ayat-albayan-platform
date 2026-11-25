@@ -67,9 +67,9 @@ jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => {
     },
   };
 });
-const { mockGate } = jest.requireMock('@ab/mobile-kit/auth/use-auth-gate') as {
+const { mockGate } = jest.requireMock<{
   mockGate: { initial: string; set: (status: string) => void };
-};
+}>('@ab/mobile-kit/auth/use-auth-gate');
 
 interface AppOptions {
   url: string;

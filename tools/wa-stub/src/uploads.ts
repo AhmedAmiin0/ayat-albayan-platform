@@ -28,7 +28,7 @@ function startSession(req: IncomingMessage, s: StubState): Reply {
 
 async function upload(req: IncomingMessage, id: string, s: StubState): Promise<Reply> {
   const session = s.uploads.get(id);
-  if (!session || session.sig !== query(req).get('sig')) return [400, ERR.noObject(`upload:${id}`)];
+  if (session?.sig !== query(req).get('sig')) return [400, ERR.noObject(`upload:${id}`)];
   if (!/^OAuth \S+/.test(req.headers.authorization ?? '')) return [401, ERR.auth()];
   if (req.headers['file_offset'] !== '0') return [400, ERR.invalid('file_offset must be 0 for a new upload')];
   const bytes = await readBytes(req);

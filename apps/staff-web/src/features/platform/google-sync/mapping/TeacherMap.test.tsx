@@ -22,7 +22,7 @@ describe('teacher ↔ calendar mapping', () => {
     renderGoogle({ apiFetch, onNote });
     const row = await rowOf('Teacher A');
     expect(within(row).getByText(s.suggested.replace('{name}', 'Calendar Teacher A'))).toBeTruthy();
-    expect((within(row).getByRole('combobox') as HTMLSelectElement).value).toBe('fake-cal-a@group.calendar.example');
+    expect((within(row).getByRole<HTMLSelectElement>('combobox')).value).toBe('fake-cal-a@group.calendar.example');
     const saved = googleTeachers().map((r, i) => (i === 0 ? { ...r, calendar_id: 'fake-cal-a@group.calendar.example', calendar_name: 'Calendar Teacher A', confirmed_at: '2026-10-22T09:00:00Z' } : r));
     apiSend.mockResolvedValue(saved);
     fireEvent.click(within(row).getByRole('button', { name: t.googleSync.common.confirm }));
@@ -32,16 +32,16 @@ describe('teacher ↔ calendar mapping', () => {
     await waitFor(() => expect(onNote).toHaveBeenCalledWith(t.googleSync.common.saved));
     const after = await rowOf('Teacher A');
     await waitFor(() => expect(within(after).getAllByText('Calendar Teacher A')).toHaveLength(2));
-    expect((within(after).getByRole('button', { name: t.googleSync.common.confirm }) as HTMLButtonElement).disabled).toBe(true);
+    expect((within(after).getByRole<HTMLButtonElement>('button', { name: t.googleSync.common.confirm })).disabled).toBe(true);
   });
 
   it('no suggestion: confirm stays disabled until a pick; «بدون تقويم» sends null', async () => {
     renderGoogle({ apiFetch });
     const row = await rowOf('Teacher B');
-    const confirm = within(row).getByRole('button', { name: t.googleSync.common.confirm }) as HTMLButtonElement;
+    const confirm = within(row).getByRole<HTMLButtonElement>('button', { name: t.googleSync.common.confirm });
     expect(confirm.disabled).toBe(true);
-    const select = within(row).getByRole('combobox') as HTMLSelectElement;
-    const none = within(select).getByRole('option', { name: s.none }) as HTMLOptionElement;
+    const select = within(row).getByRole<HTMLSelectElement>('combobox');
+    const none = within(select).getByRole<HTMLOptionElement>('option', { name: s.none });
     fireEvent.change(select, { target: { value: none.value } });
     apiSend.mockResolvedValue(googleTeachers());
     fireEvent.click(confirm);

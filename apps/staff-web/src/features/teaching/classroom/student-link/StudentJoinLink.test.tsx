@@ -33,7 +33,7 @@ describe('StudentJoinLink «رابط دخول الطالب»', () => {
     expect(await screen.findByText(t.studentLink.copied)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledWith('POST', '/students/s-1/join-link');
     expect(writeText).toHaveBeenCalledWith('https://app.example.test/s/abc');
-    expect((screen.getByLabelText(t.studentLink.shown) as HTMLInputElement).value).toBe('https://app.example.test/s/abc');
+    expect((screen.getByLabelText<HTMLInputElement>(t.studentLink.shown)).value).toBe('https://app.example.test/s/abc');
   });
 
   it('still shows the URL when the clipboard is blocked, and says so on a failure', async () => {

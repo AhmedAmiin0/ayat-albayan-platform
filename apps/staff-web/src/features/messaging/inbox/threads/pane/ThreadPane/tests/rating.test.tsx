@@ -78,7 +78,7 @@ describe('«إرسال تقييم الحلقة»', () => {
   it('template not approved yet → disabled with the note; a lead’s chat has no button', async () => {
     renderThread({ lastInboundAgoMs: 30 * HOUR, templates: [template()] });
     expect(await screen.findByText(t.inbox.rating.notApproved)).toBeTruthy();
-    expect((screen.getByRole('button', { name: t.inbox.rating.send }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole<HTMLButtonElement>('button', { name: t.inbox.rating.send })).disabled).toBe(true);
   });
 
   it('a lead (not a guardian) gets no rating button', async () => {

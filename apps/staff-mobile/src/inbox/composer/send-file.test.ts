@@ -50,7 +50,7 @@ test('a PDF: the document picker, its cached copy read as bytes, a safe name', a
 test('a PDF over the limit is refused from its picked size, before its bytes are read', async () => {
   documents.mockResolvedValue({ canceled: false, assets: [{ ...pdfAsset, size: 80 * MB }] });
   const fetchMock = jest.fn();
-  globalThis.fetch = fetchMock as unknown as typeof fetch;
+  globalThis.fetch = fetchMock;
   await expect(pickChatFile('pdf', 10 * MB)).rejects.toEqual(new ChatFileError('file_too_large'));
   expect(fetchMock).not.toHaveBeenCalled();
 });

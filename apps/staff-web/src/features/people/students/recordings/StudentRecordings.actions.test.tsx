@@ -47,7 +47,7 @@ describe('visible-to-student toggle', () => {
 
   it('someone who may not manage it only reads the state', async () => {
     renderList('teacher', recordingView({ can_manage: false, visible_to_student: true }));
-    const box = (await screen.findByRole('checkbox', { name: R.visible.label })) as HTMLInputElement;
+    const box = await screen.findByRole<HTMLInputElement>('checkbox', { name: R.visible.label });
     expect([box.checked, box.disabled]).toEqual([true, true]);
     expect(screen.getByText(R.visible.on)).toBeTruthy();
   });

@@ -1,4 +1,4 @@
-// Suppressions only shrink (docs/59): every eslint-suppressions.json and oxlint-suppressions.json
+// Suppressions only shrink (docs/59): every oxlint-suppressions.json
 // is held to the base branch's file by file and rule by rule, its entries followed through renames.
 import { dirname } from 'node:path';
 

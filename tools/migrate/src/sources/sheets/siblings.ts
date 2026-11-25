@@ -36,7 +36,7 @@ export function cleanName(raw: string): string {
 function splitWaw(part: string): string[] {
   const tokens = part.split(' ');
   const [first, second] = tokens;
-  if (tokens.length !== 2 || !first || !second || !second.startsWith('و')) return [part];
+  if (tokens.length !== 2 || !first || !second?.startsWith('و')) return [part];
   const rest = second.slice(1);
   if (rest.length < 2 || WAW_NAMES.has(normalizeArabic(second))) return [part];
   return [first, rest];

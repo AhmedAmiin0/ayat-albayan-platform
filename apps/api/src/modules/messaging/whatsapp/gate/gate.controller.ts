@@ -9,7 +9,7 @@ import {
 } from '@ab/shared';
 import { Controller, HttpCode, Logger, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { AuditService } from '@/common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

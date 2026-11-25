@@ -12,7 +12,7 @@ function draw(state: BoardState, stroke: Stroke): BoardState {
   const i = state.strokes.findIndex((s) => s.id === stroke.id);
   if (i < 0) return { ...state, strokes: [...state.strokes, stroke] };
   const old = state.strokes[i];
-  if (!old || old.by !== stroke.by) return state;
+  if (old?.by !== stroke.by) return state;
   const strokes = [...state.strokes];
   strokes[i] = { ...old, pts: [...old.pts, ...stroke.pts] };
   return { ...state, strokes };

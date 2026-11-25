@@ -7,7 +7,7 @@ const same = (path) => path;
 test('entriesOf: every package file keyed by its repo path', () => {
   const api = { 'src/a.ts': { complexity: { count: 2 } } };
   const web = { 'src/a.ts': { 'max-len': { count: 1 } } };
-  const paths = ['apps/api/eslint-suppressions.json', 'apps/staff-web/eslint-suppressions.json'];
+  const paths = ['apps/api/oxlint-suppressions.json', 'apps/staff-web/oxlint-suppressions.json'];
   assert.deepEqual(entriesOf({ paths, files: [api, web] }), {
     'apps/api/src/a.ts': { complexity: 2 },
     'apps/staff-web/src/a.ts': { 'max-len': 1 },
@@ -40,16 +40,16 @@ test('aboveFile: an entry follows its renamed file; two files moved into one add
 });
 
 test('newFiles: a workspace whose suppressions file the base lacks may not add one', () => {
-  const base = ['apps/api/eslint-suppressions.json'];
-  const head = ['apps/api/eslint-suppressions.json', 'apps/family-web/eslint-suppressions.json'];
+  const base = ['apps/api/oxlint-suppressions.json'];
+  const head = ['apps/api/oxlint-suppressions.json', 'apps/family-web/oxlint-suppressions.json'];
   assert.deepEqual(newFiles(head, base), [
-    'new suppressions file: apps/family-web/eslint-suppressions.json (fix the violations instead)',
+    'new suppressions file: apps/family-web/oxlint-suppressions.json (fix the violations instead)',
   ]);
   assert.deepEqual(newFiles(base, head), []);
 });
 
 test('emptyFiles: a suppressions file with no entry left is deleted, never kept as {}', () => {
-  const paths = ['e2e/eslint-suppressions.json', 'packages/db/oxlint-suppressions.json'];
+  const paths = ['e2e/oxlint-suppressions.json', 'packages/db/oxlint-suppressions.json'];
   assert.deepEqual(emptyFiles({ paths, files: [{ 'a.ts': { x: { count: 1 } } }, {}] }), [
     'empty: packages/db/oxlint-suppressions.json (delete it: the workspace is clean)',
   ]);

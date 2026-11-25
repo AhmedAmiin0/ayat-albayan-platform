@@ -1,14 +1,11 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { Linter } from 'eslint';
 import { reactRestrictions } from './eslint-react.js';
+import { lintCode } from './oxlint/testing/lint-code.js';
 
-const linter = new Linter({ cwd: '/pkg' });
-// JSX through espree (no TypeScript syntax needed): the selectors only read the AST.
-const jsx = { languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } } };
 const lint = ({ compiler, react19, file, code }) => {
   const blocks = reactRestrictions({ files: ['src/**/*.tsx'], effects: ['src/**/*.tsx'], compiler, react19 });
-  return linter.verify(code, [jsx, ...blocks], `/pkg/${file}`).map((m) => m.message.split(':')[0]);
+  return lintCode({ blocks, files: { [file]: code } }).map((d) => d.message.split(':')[0]);
 };
 
 const imports = "import React, { forwardRef, memo, useContext, useMemo } from 'react';";

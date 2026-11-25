@@ -34,7 +34,7 @@ describe('«القيم» — «تعديل الوصف»', () => {
     renderValues(apiFetch, { entries: [edited] });
     await openLine(HORIZON, MINE);
     const dialog = screen.getByRole('dialog', { name: d.title });
-    const box = within(dialog).getByLabelText(new RegExp(d.label)) as HTMLTextAreaElement;
+    const box = within(dialog).getByLabelText<HTMLTextAreaElement>(new RegExp(d.label));
     expect(box.value).toBe(MINE);
     expect(box.maxLength).toBe(DESCRIPTION_MAX);
     const hint = within(dialog).getByText(counter(MINE.length));
@@ -67,7 +67,7 @@ describe('«القيم» — «تعديل الوصف»', () => {
     fireEvent.click(within(row).getByRole('button', { name: t.settingsValues.menu.replace('{name}', HORIZON) }));
     fireEvent.click(within(row).getByRole('menuitem', { name: d.menu }));
     const dialog = screen.getByRole('dialog', { name: d.title });
-    expect((within(dialog).getByLabelText(new RegExp(d.label)) as HTMLTextAreaElement).value).toBe(settingText('booking_horizon_weeks').hint);
+    expect((within(dialog).getByLabelText<HTMLTextAreaElement>(new RegExp(d.label))).value).toBe(settingText('booking_horizon_weeks').hint);
     expect(within(dialog).queryByRole('button', { name: d.restore })).toBeNull();
   });
 

@@ -29,8 +29,8 @@ describe('TermsEditor (R-ASST-02, R-ASST-03, R-ASST-05)', () => {
 
   it('loads the saved terms and saves them unchanged to PUT /assistant-pay/terms/:id', async () => {
     renderEditor();
-    expect((screen.getByLabelText(T.salaryAmount) as HTMLInputElement).value).toBe('3000');
-    expect((screen.getByLabelText(T.valuePercent) as HTMLInputElement).value).toBe('10');
+    expect((screen.getByLabelText<HTMLInputElement>(T.salaryAmount)).value).toBe('3000');
+    expect((screen.getByLabelText<HTMLInputElement>(T.valuePercent)).value).toBe('10');
     save();
     await vi.waitFor(() =>
       expect(apiSend).toHaveBeenCalledWith('PUT', '/assistant-pay/terms/a1', {
@@ -78,7 +78,7 @@ describe('TermsEditor (R-ASST-02, R-ASST-03, R-ASST-05)', () => {
     fireEvent.change(screen.getByLabelText(T.salaryStartsOn), { target: { value: '2026-09-01' } });
     save();
     expect(await screen.findByText(t.assistants.error.salary_start_earlier)).toBeTruthy();
-    expect((screen.getByLabelText(T.salaryStartsOn) as HTMLInputElement).min).toBe('2026-10-01'); // the saved day
+    expect((screen.getByLabelText<HTMLInputElement>(T.salaryStartsOn)).min).toBe('2026-10-01'); // the saved day
     fireEvent.change(screen.getByLabelText(T.salaryStartsOn), { target: { value: '2026-10-01' } });
     fireEvent.change(screen.getByLabelText(T.commissionStartsOn), { target: { value: '2026-10-02' } }); // later is fine
     save();

@@ -1,4 +1,4 @@
-// End to end on a git repo: a move of a file with ESLint bulk suppressions (keyed package-relative).
+// End to end on a git repo: a move of a file with lint baseline entries (keyed package-relative).
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, renameSync, writeFileSync } from 'node:fs';
@@ -8,7 +8,7 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const script = fileURLToPath(new URL('./pure-move-check.mjs', import.meta.url));
-const SUPP = 'apps/staff-web/eslint-suppressions.json';
+const SUPP = 'apps/staff-web/oxlint-suppressions.json';
 const suppressions = (moved, count = 2) =>
   `${JSON.stringify({ 'src/a.ts': { 'ab/module-boundaries': { count: 1 } }, [moved]: { 'ab/module-boundaries': { count } } }, null, 2)}\n`;
 
@@ -48,11 +48,11 @@ test('a moved suppressed file whose key follows it with the same counts is pure'
 test('a suppressions count change in a move fails', () => {
   const r = repo(suppressions('src/core/api.ts', 3));
   assert.equal(r.code, 1);
-  assert.match(r.out, /eslint-suppressions\.json: suppressions: changes more than/);
+  assert.match(r.out, /oxlint-suppressions\.json: suppressions: changes more than/);
 });
 
 test('a suppressions key renamed without a matching move fails', () => {
   const r = repo(suppressions('src/core/http.ts'));
   assert.equal(r.code, 1);
-  assert.match(r.out, /eslint-suppressions\.json/);
+  assert.match(r.out, /oxlint-suppressions\.json/);
 });

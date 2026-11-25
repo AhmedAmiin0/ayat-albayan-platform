@@ -1,5 +1,5 @@
 import type { ExecutionContext } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import type { Reflector } from '@nestjs/core';
 import { describe, expect, it } from 'vitest';
 import { AuthGuard } from './auth.guard';
 import { PERMISSION, SIGNED_IN } from './decorators';

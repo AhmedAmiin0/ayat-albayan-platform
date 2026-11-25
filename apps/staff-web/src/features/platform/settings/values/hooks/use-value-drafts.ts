@@ -20,7 +20,7 @@ export interface ValueDrafts {
 type Drafts = Partial<Record<SettingKey, SettingsForm>>;
 
 const without = (all: Drafts, key: SettingKey): Drafts =>
-  Object.fromEntries(Object.entries(all).filter(([k]) => k !== key)) as Drafts;
+  Object.fromEntries(Object.entries(all).filter(([k]) => k !== key));
 
 /** Sets the row's draft, or drops it when it holds the stored value (a draft is only ever an edit). */
 export function placeDraft(all: Drafts, key: SettingKey, input: { next: SettingsForm; settings: AcademySettings }): Drafts {

@@ -62,7 +62,7 @@ describe('«الإشعارات»: the switch', () => {
     const dialog = screen.getByRole('dialog', { name: r.essentialOff.title.replace('{name}', words.report_ready.name) });
     const input = within(dialog).getByLabelText(r.essentialOff.label.replace('{word}', ESSENTIAL_OFF_TEXT));
     expect(input.getAttribute('aria-describedby')).toBeTruthy();
-    const yes = within(dialog).getByRole('button', { name: r.essentialOff.yes }) as HTMLButtonElement;
+    const yes = within(dialog).getByRole<HTMLButtonElement>('button', { name: r.essentialOff.yes });
     expect(yes.disabled).toBe(true);
     fireEvent.change(input, { target: { value: 'ايقاف' } });
     expect(yes.disabled).toBe(true);

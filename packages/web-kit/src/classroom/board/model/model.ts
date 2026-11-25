@@ -80,7 +80,7 @@ export function normalize(point: { x: number; y: number }, rect: RectLike): [num
 export function lastStrokeOf(strokes: readonly Stroke[], by: string): Stroke | undefined {
   for (let i = strokes.length - 1; i >= 0; i -= 1) {
     const s = strokes[i];
-    if (s && s.by === by) return s;
+    if (s?.by === by) return s;
   }
   return undefined;
 }

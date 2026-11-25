@@ -43,7 +43,7 @@ function counts(i: SyncInput): boolean {
 /** The rate the earning carries: frozen while the length and teacher are unchanged, else the teacher's now. */
 function rateFor(i: SyncInput): number | null {
   const { earning, lesson } = i;
-  if (earning && earning.minutes === lesson.minutes && earning.teacherId === lesson.teacherId) return earning.rate;
+  if (earning?.minutes === lesson.minutes && earning.teacherId === lesson.teacherId) return earning.rate;
   return teacherRateFor(lesson.minutes, i.rates);
 }
 

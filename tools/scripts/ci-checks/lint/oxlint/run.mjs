@@ -1,29 +1,31 @@
-// `pnpm lint:oxfull [-- --prune]`: Oxlint with every rule of every package
-// (oxlint.full.config.ts, type-aware: build the workspace packages first, as turbo lint does) over
-// the folders that hold a lint.blocks.mjs. Writes its JSON report to oxlint-report.json, prints
-// the time, then holds the report to the oxlint-suppressions.json baselines (oxlint-gate.mjs).
+// `pnpm lint` (`pnpm lint:prune` adds --prune): Oxlint with every rule of every package
+// (oxlint.config.ts, type-aware, warnings denied) over the folders that hold a lint.blocks.mjs.
+// Writes its JSON report to oxlint-report.json, prints the time, then holds the report to the
+// oxlint-suppressions.json baselines (gate.mjs). Type-aware rules read the workspace packages'
+// built types: `pnpm lint` builds them first.
 import { spawnSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { readJson } from '../json-file.mjs';
 import { oxlintCli, packageDirs } from './gate.mjs';
+import { rootManifest } from './schemas.mjs';
 
-const ARGS = [
-  '-c',
-  'oxlint.full.config.ts',
-  '--type-aware',
-  '--report-unused-disable-directives-severity=error',
-  '--format',
-  'json',
-];
-
-// The root's own binary: `pnpm exec` would print its scope line into the JSON on stdout.
-const oxlintBin = (root) => join(root, 'node_modules/.bin/oxlint');
+/**
+ * The root's `lint:report` script (oxlint.config.ts, type-aware, warnings denied, JSON), run with
+ * the root's own binary: through pnpm, its warnings would land in the JSON on stdout.
+ */
+export function lintReport(root) {
+  const [bin = '', ...args] = readJson(join(root, 'package.json'), rootManifest)
+    .scripts['lint:report'].split(' ');
+  return { bin: join(root, 'node_modules/.bin', bin), args };
+}
 
 /** Oxlint over `root`'s packages: its report (exit 0 or 1: clean or findings; else it failed). */
-export function runOxlint(root) {
+function runOxlint(root) {
   const started = performance.now();
-  const run = spawnSync(oxlintBin(root), [...ARGS, ...packageDirs(root)], {
+  const { bin, args } = lintReport(root);
+  const run = spawnSync(bin, [...args, ...packageDirs(root)], {
     cwd: root,
     encoding: 'utf8',
     maxBuffer: 1024 ** 3,
@@ -32,13 +34,6 @@ export function runOxlint(root) {
   if (run.status !== 0 && run.status !== 1) throw new Error(`oxlint failed:\n${run.stderr}`);
   console.log(`oxlint: ${seconds} s`);
   return run.stdout;
-}
-
-/** The files Oxlint lints with that config (`--debug=files`), repo-relative. */
-export function oxlintFiles(root) {
-  const args = ['-c', 'oxlint.full.config.ts', '--debug=files', ...packageDirs(root)];
-  const run = spawnSync(oxlintBin(root), args, { cwd: root, encoding: 'utf8' });
-  return run.stdout.split('\n').filter(Boolean);
 }
 
 function main(args) {

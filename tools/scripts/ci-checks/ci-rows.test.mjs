@@ -36,16 +36,16 @@ test('the jest cache is wired like vitest: keyed on lockfile + configs, PRs save
   assert.deepEqual(tasks.test.passThroughEnv, ['JEST_CACHE_DIR'], 'not in the hash: same results');
 });
 
-test('ci: a red lint prints the pruned suppressions to commit', () => {
-  const step = ci.jobs.verify.steps.find((x) => x.name?.startsWith('Suppressions to prune'));
-  assert.equal(step?.if, "failure() && steps.turbo.outcome == 'failure' && matrix.task == 'lint'");
-  // Only after ESLint's stale-suppressions message, only for the packages that printed it.
-  assert.match(step.run, /grep -F 'suppressions left that do not occur anymore' \|\| true\)\n.*if \[ -z "\$stale" \]; then .*exit 0; fi/);
-  assert.match(step.run, /--filter=\\1\/p' <<< "\$stale"/);
-  assert.match(step.run, /turbo lint --force --continue --concurrency=3 \$filters -- --prune-suppressions .*\|\| true\n.*git --no-pager diff -- '\*eslint-suppressions\.json'/);
-  const turbo = ci.jobs.verify.steps.find((x) => x.id === 'turbo').run;
-  assert.match(turbo, /set -o pipefail\n.*\| tee "\$RUNNER_TEMP\/turbo\.log" \|\| status=\$\?/s);
-  assert.match(ci.jobs.verify.strategy.matrix.include.find((r) => r.task === 'lint').opts, /--log-prefix=task/);
+test('ci: one lint row runs pnpm lint (oxlint only) and a red lint prints the baselines to prune', () => {
+  assert.deepEqual(rows.filter((r) => r.task === 'lint'), [{ name: 'lint', task: 'lint' }]);
+  assert.equal(ci.jobs.verify.steps.find((x) => x.id === 'turbo').if, "matrix.task != 'lint'");
+  const lint = ci.jobs.verify.steps.find((x) => x.id === 'lint');
+  assert.equal(lint.if, "matrix.task == 'lint'");
+  assert.match(lint.run, /pnpm lint \|\| status=\$\?/);
+  const prune = step('Oxlint baselines to prune (commit this diff)');
+  assert.equal(prune.if, "failure() && steps.lint.outcome == 'failure'");
+  assert.match(prune.run, /oxlint\/run\.mjs --prune .*\|\| true\n.*git --no-pager diff -- '\*oxlint-suppressions\.json'/);
+  assert.doesNotMatch(read('.github/workflows/ci.yml'), /eslint|lint:parity|lint:ox\b/i);
 });
 
 test('pnpm store: every job restores through the local action; only develop baselines saves', () => {

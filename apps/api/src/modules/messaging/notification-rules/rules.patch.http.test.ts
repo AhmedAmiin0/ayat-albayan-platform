@@ -90,7 +90,7 @@ describe('PATCH /admin/notifications/:key (docs/23b decision 4)', () => {
     t.state.comms_source = 'module';
     const res = await t.patch(`${URL}/lesson_reminder`, { timing: { minutes_before: 30 } });
     expect(res.statusCode).toBe(200);
-    expect((res.json() as NotificationEntryView).timing?.value).toBe('30');
+    expect(res.json<NotificationEntryView>().timing?.value).toBe('30');
     expect(t.settings.write).not.toHaveBeenCalled();
     expect(t.state.reminder_minutes_before).toBeUndefined();
   });

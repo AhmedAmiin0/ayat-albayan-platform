@@ -14,7 +14,7 @@ describe('ConflictNotice inside an edit (R-SCH-11)', () => {
       <ConflictNotice conflicts={[clash]} labels={labels} initialReason="طلب ولي الأمر" studentNames={{ 's-1': 'سهيلة' }} onChangeSlot={vi.fn()} onOverride={onOverride} />,
     );
     expect(screen.getByText(/^سهيلة: /)).toBeTruthy();
-    expect((screen.getByLabelText(labels.reason) as HTMLInputElement).value).toBe('طلب ولي الأمر');
+    expect((screen.getByLabelText<HTMLInputElement>(labels.reason)).value).toBe('طلب ولي الأمر');
     expect(screen.queryByText(t.booking.override)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: labels.override }));
     expect(onOverride).toHaveBeenCalledWith('طلب ولي الأمر');

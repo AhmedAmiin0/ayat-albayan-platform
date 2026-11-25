@@ -30,7 +30,7 @@ function Harness({ k, meta = {} }: { k: SettingKey; meta?: Record<string, Settin
 describe('RegistryField extras', () => {
   it('a number marks itself edited and resets to its default', () => {
     render(<Harness k="activity_retention_days" />);
-    const input = screen.getByLabelText(t.config.activityRetentionDays) as HTMLInputElement;
+    const input = screen.getByLabelText<HTMLInputElement>(t.config.activityRetentionDays);
     expect(input.value).toBe('30');
     expect(screen.queryByText(t.config.dirty)).toBeNull();
     fireEvent.change(input, { target: { value: '45' } });
@@ -48,8 +48,8 @@ describe('RegistryField extras', () => {
 
   it('a nullable number keeps its switch: off means keep forever, on shows the starting days', () => {
     render(<Harness k="recording_retention_days" />);
-    const sw = screen.getByRole('checkbox', { name: t.config.recordingRetentionOn }) as HTMLInputElement;
-    const days = screen.getByLabelText(t.config.recordingRetentionDays) as HTMLInputElement;
+    const sw = screen.getByRole<HTMLInputElement>('checkbox', { name: t.config.recordingRetentionOn });
+    const days = screen.getByLabelText<HTMLInputElement>(t.config.recordingRetentionDays);
     expect(sw.checked).toBe(false);
     expect(days.disabled).toBe(true);
     fireEvent.click(sw);
@@ -60,7 +60,7 @@ describe('RegistryField extras', () => {
 
   it('an object setting shows one box per field and edits them', () => {
     render(<Harness k="academy_contact" />);
-    expect((screen.getByLabelText(t.config.fields.site) as HTMLInputElement).value).toBe('ayatalbayan.com');
+    expect((screen.getByLabelText<HTMLInputElement>(t.config.fields.site)).value).toBe('ayatalbayan.com');
     fireEvent.change(screen.getByLabelText(t.config.fields.email), { target: { value: 'a@b.co' } });
     expect(screen.getByText(t.config.dirty)).toBeTruthy();
   });

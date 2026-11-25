@@ -52,7 +52,7 @@ export class PaymentInputs {
   /** 400 invoice_mismatch unless the invoice is a booking of this package's student. */
   async checkInvoice(invoiceId: string, studentId: string): Promise<void> {
     const invoice = await this.invoices.one(invoiceId);
-    if (!invoice || !invoice.students.some((s) => s.id === studentId)) throw badRequest('invoice_mismatch');
+    if (!invoice?.students.some((s) => s.id === studentId)) throw badRequest('invoice_mismatch');
   }
 
   /** The payment's receipt; one recorded from an invoice has the invoice as its receipt. */

@@ -13,7 +13,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 
 const s = t.integrations;
 const ready = () => screen.findByRole('button', { name: s.saveValues });
-const select = (label: string) => screen.getByLabelText(label) as HTMLSelectElement;
+const select = (label: string) => screen.getByLabelText<HTMLSelectElement>(label);
 
 function renderPanel(items = integrationItems()) {
   routeFetch(apiFetch, [['/settings/integrations', items]]);
@@ -41,7 +41,7 @@ describe('«التكاملات»: the WhatsApp provider select', () => {
       ]);
     }
     expect(screen.getByRole('group', { name: s.groups.kapso })).toBeTruthy();
-    expect((screen.getByLabelText(s.keys.KAPSO_API_KEY.label) as HTMLInputElement).type).toBe('password');
+    expect((screen.getByLabelText<HTMLInputElement>(s.keys.KAPSO_API_KEY.label)).type).toBe('password');
   });
 
   it('switching the notifications line to kapso saves only that key', async () => {
@@ -72,9 +72,9 @@ describe('«التكاملات»: the WhatsApp provider select', () => {
     renderPanel();
     await ready();
     expect(screen.getByRole('group', { name: s.groups.wacrm })).toBeTruthy();
-    expect((screen.getByLabelText(s.keys.WACRM_API_BASE.label) as HTMLInputElement).type).not.toBe('password');
+    expect((screen.getByLabelText<HTMLInputElement>(s.keys.WACRM_API_BASE.label)).type).not.toBe('password');
     for (const key of ['WACRM_API_KEY', 'WACRM_WEBHOOK_SECRET'] as const) {
-      expect((screen.getByLabelText(s.keys[key].label) as HTMLInputElement).type).toBe('password');
+      expect((screen.getByLabelText<HTMLInputElement>(s.keys[key].label)).type).toBe('password');
       expect(screen.getByText(s.keys[key].hint)).toBeTruthy();
     }
     expect(s.keys.WACRM_API_KEY.hint).toContain('messages:send');

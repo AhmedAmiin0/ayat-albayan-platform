@@ -2,7 +2,6 @@
   "$schema": "https://turborepo.dev/schema.json",
   "extends": ["//"],
   "tasks": {
-    "lint": { "dependsOn": ["@ab/shared#build"] },
     "typecheck": { "dependsOn": ["@ab/shared#build"] }
   }
 }

@@ -13,7 +13,7 @@ import type { GoogleWriters } from '@/modules/platform/google-sync/sync/google-w
 
 const LIVE = { data: [{ key: 'google_sync_enabled', value: true }, { key: 'google_sync_mode', value: 'live' }] };
 const OFF = { data: [{ key: 'google_sync_enabled', value: false }] };
-const factory: GoogleClientFactory = { client: () => new FakeGoogle() as never, oauth: () => ({}) as never };
+const factory: GoogleClientFactory = { client: () => new FakeGoogle(), oauth: () => ({}) as never };
 
 /** The real settings / account / outbox queries on a counting fake db (one `trips` entry = one round trip). */
 function setup(results: Parameters<typeof fakeDb>[0]) {

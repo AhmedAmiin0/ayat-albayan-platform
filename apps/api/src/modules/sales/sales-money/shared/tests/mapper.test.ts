@@ -15,7 +15,7 @@ const view = (patch: Partial<SubscriptionView> = {}): SubscriptionView => ({
   paid: 45.5,
   balance: { subscription_id: 'x', lessons_total: 4, lessons_used: 0, remaining: 4, ended_at: null, projected_end_at: null },
   ...patch,
-} as SubscriptionView);
+});
 
 describe('sales money whitelists: explicit keys, never the admin view spread', () => {
   it('a subscription keeps price, paid and due, never notes, fx or the quote source', () => {

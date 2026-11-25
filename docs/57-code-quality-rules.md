@@ -734,8 +734,8 @@ their *logic* belongs in cc, their pieces in the kits).
 ## 9. Enforcement
 
 A rule's CI check turns on only when the code already passes it (docs/59-no-suppressions.md). No check
-enters with a baseline: no `eslint --suppress-all` or `--suppress-rule`, no new entry in an
-`eslint-suppressions.json` or `oxlint-suppressions.json`, no new list under `refactor/guards/`. The
+enters with a baseline: no new entry in an
+`oxlint-suppressions.json`, no new list under `refactor/guards/`. The
 column «Existing sites» below is the work the lane does first: it fixes every site, in numbered PRs when
 there are many, and the last PR turns the rule on at zero. A named file in that column is the list the
 lane works through, never a baseline committed to the repo.
@@ -764,11 +764,11 @@ lane works through, never a baseline committed to the repo.
 | R15 | §8.4 lint rules; `tokens.gen.css` freshness test; showcase-sibling guard; design-review output in the PR | lint, test, guards, review | suppressions + `refactor/guards/showcase.json` | `no-restricted-syntax` native for JSX elements; colour/arbitrary regex as plugin | QR colours, third-party widgets (LiveKit, Stripe Elements), the PDF report page |
 | R16 | `ab/no-client-now`: `Date.now()`/`new Date()` with no argument banned in app and kit code except in `*.timer.ts`/animation hooks; endpoints deciding by time return `server_now` (contract test) | lint + api tests | eslint-suppressions | `no-restricted-syntax` | countdown/animation timers, telemetry timestamps |
 
-New ESLint rules live in `packages/config/eslint-*.js` with their rule tests (pattern of
-`eslint-zod-inputs.test.js`) and their oxlint twin. The rule turns on in the PR that fixes its last
-site, so CI stays green with no suppression; the earlier PRs of the lane fix sites only. `guard:lint`
-fails on any new suppression, per file and per rule, and the guards job annotates a PR that loosens a
-lint config («lint rules loosened»); such a PR merges only with the owner's go.
+New lint rules are `ab/*` Oxlint JS-plugin rules in `packages/config` with their Oxlint RuleTester tests
+(pattern of `eslint-zod-inputs.test.js`), registered in `oxlint/ab-plugin.js`. The rule turns on in the PR
+that fixes its last site, so CI stays green with no suppression; the earlier PRs of the lane fix sites only.
+`guard:lint` fails on any new suppression, per file and per rule, and the guards job annotates a PR that
+loosens a lint config («lint rules loosened»); such a PR merges only with the owner's go.
 
 ## 10. Lanes
 

@@ -33,8 +33,10 @@ export interface DataTableColumnMeta {
  * lists). Paginated lists sort/filter server-side (R-NFR-08): DataTable's `sort`/`filters` props
  * only report the header/filter changes, the route search params hold them, `data` is the page.
  */
+const columnMeta: DataTableColumnMeta = {};
+
 export const dataTableFeatures = tableFeatures({
-  columnMeta: {} as DataTableColumnMeta,
+  columnMeta,
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
   columnFilteringFeature,

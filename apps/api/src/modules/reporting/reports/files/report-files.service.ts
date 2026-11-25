@@ -37,7 +37,7 @@ export class ReportFilesService {
   /** docs/16 row 36: the caller checked the student is hers; another student's report is 404. */
   async studentPdfUrl({ id, studentId }: { id: string; studentId: string }): Promise<SignedDownload> {
     const row = await this.gate.row(id);
-    if (!row || row.student_id !== studentId || row.status !== 'submitted') throw new NotFoundException();
+    if (row?.student_id !== studentId || row.status !== 'submitted') throw new NotFoundException();
     return this.signPdf(row);
   }
 

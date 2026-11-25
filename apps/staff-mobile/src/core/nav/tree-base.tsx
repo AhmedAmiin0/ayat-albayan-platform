@@ -23,7 +23,7 @@ export function useTreeBase(): TreeBase {
 export function inTree(base: TreeBase, href: Href): Href {
   if (!base) return href;
   if (typeof href === 'string') return `${base}${href}` as Href;
-  return { ...href, pathname: `${base}${href.pathname}` } as Href;
+  return { ...href, pathname: `${base}${href.pathname}` };
 }
 
 /** The sales tree opens student details, otherwise the admin's student file. */
@@ -40,8 +40,8 @@ export function InChatProvider({ children }: { children: ReactNode }) {
 /** A push from a chat group stacks a second tab host at the root, so the chat's copy keeps back. */
 export function chatStudentHref(href: Href): Href {
   const move = (path: string) => path.replace(/^(\/sales)?\/students\//, '$1/inbox/student/');
-  if (typeof href === 'string') return move(href) as Href;
-  return { ...href, pathname: move(href.pathname) } as Href;
+  if (typeof href === 'string') return move(href);
+  return { ...href, pathname: move(href.pathname) };
 }
 
 const asIs = (href: Href): Href => href;

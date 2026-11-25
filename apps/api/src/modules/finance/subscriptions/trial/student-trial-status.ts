@@ -27,7 +27,9 @@ export class StudentTrialStatus implements OnModuleInit {
   ) {}
 
   onModuleInit(): void {
-    this.events.onChanged(async (lessonIds) => void (await this.afterLessons(lessonIds)));
+    this.events.onChanged(async (lessonIds) => {
+      await this.afterLessons(lessonIds);
+    });
   }
 
   /** The students of the changed lessons whose rule is a trial; nothing for other lessons. */

@@ -36,7 +36,7 @@ export function ChartPoints({ points, tz }: { points: readonly ChartPoint[]; tz:
           </span>
         ),
       )}
-      {shown && shown.y !== null && (
+      {shown?.y != null && (
         <div
           role="tooltip"
           className={cn(

@@ -21,7 +21,7 @@ const CONFIG = [
   /^\.github\/workflows\/[^/]+\.ya?ml$/,
   /(^|\/)(vitest|vite|jest|playwright)\.config\.[cm]?[jt]s$/,
   /(^|\/)tsconfig[^/]*\.json$/,
-  /(^|\/)(eslint\.config\.[cm]?js|lint\.blocks\.mjs)$/,
+  /(^|\/)lint\.blocks\.mjs$/,
   /(^|\/)knip\.json$/,
   /^refactor\//,
   /(^|\/)routeTree\.gen\.ts$/,

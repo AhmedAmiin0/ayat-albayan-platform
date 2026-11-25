@@ -84,9 +84,6 @@
     },
     "typescript/no-unnecessary-type-parameters": {
       "count": 1
-    },
-    "typescript/prefer-optional-chain": {
-      "count": 1
     }
   },
   "src/messaging/calls/call-actions.ts": {
@@ -94,7 +91,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     },
     "typescript/no-confusing-void-expression": {
       "count": 2
@@ -242,11 +239,6 @@
       "count": 2
     }
   },
-  "src/messaging/inbox/reaction-mutation.test.ts": {
-    "typescript/no-unnecessary-type-assertion": {
-      "count": 1
-    }
-  },
   "src/messaging/inbox/reaction-mutation.ts": {
     "typescript/explicit-module-boundary-types": {
       "count": 4
@@ -372,11 +364,6 @@
       "count": 2
     },
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/teaching/reports/reports.test.ts": {
-    "typescript/no-unnecessary-type-assertion": {
       "count": 1
     }
   },

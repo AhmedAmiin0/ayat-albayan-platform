@@ -74,7 +74,7 @@ describe('GET /config/entries, PUT …/description, GET /admin/config/parity', (
     ['upload_max_mb', { admin: 200, editor: 200, numbers: 200 }],
   ] as const)('description of %s needs the owner module permission', async (key, want) => {
     for (const [token, status] of Object.entries(want)) {
-      expect([token, (await describeKey(key, 'نص', token as Token)).statusCode]).toEqual([token, status]);
+      expect([token, (await describeKey(key, 'نص', token)).statusCode]).toEqual([token, status]);
     }
     expect((await describeKey(key, 'نص', 'teacher')).statusCode).toBe(403);
   });

@@ -15,7 +15,7 @@ const fetchMock = jest.fn();
 beforeEach(async () => {
   await AsyncStorage.clear();
   fetchMock.mockReset();
-  globalThis.fetch = fetchMock as unknown as typeof fetch;
+  globalThis.fetch = fetchMock;
 });
 afterEach(() => jest.useRealTimers());
 

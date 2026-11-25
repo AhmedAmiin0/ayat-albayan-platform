@@ -18,7 +18,7 @@ export interface SubscriptionFiltersOptions {
 }
 
 export function useSubscriptionFilters({ status, onChange }: SubscriptionFiltersOptions): ExtraFilters {
-  const setStatus = (v: string) => onChange({ status: (v || undefined) as SubscriptionFilter | undefined });
+  const setStatus = (v: string) => onChange({ status: (v || undefined) });
   return {
     fields: <SelectFilterField label={t.subscriptions.status} value={status} options={statusOptions} onChange={setStatus} />,
     chips: chipIfSet({

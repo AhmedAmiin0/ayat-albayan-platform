@@ -50,7 +50,7 @@ describe('InternalMeetingDialog «اجتماع داخلي»', () => {
     fireEvent.click(screen.getByRole('button', { name: L.create }));
     await waitFor(() => expect(screen.getByLabelText(L.link)).toBeTruthy());
     expect(apiSend).toHaveBeenCalledWith('POST', '/meetings', { title: 'تنسيق الأسبوع', clientRequestId: expect.any(String) });
-    expect((screen.getByLabelText(L.link) as HTMLInputElement).value).toBe(URL);
+    expect((screen.getByLabelText<HTMLInputElement>(L.link)).value).toBe(URL);
     fireEvent.click(screen.getByRole('button', { name: L.copy }));
     await waitFor(() => expect(screen.getByText(L.copied)).toBeTruthy());
     expect(writeText).toHaveBeenCalledWith(URL);

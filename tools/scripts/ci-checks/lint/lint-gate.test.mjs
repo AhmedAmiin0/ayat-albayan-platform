@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { aboveBase, againstBase, gone, oxlintSuppressed, totals } from './lint-gate.mjs';
+import { aboveBase, againstBase, gone, totals } from './lint-gate.mjs';
 
 test('totals sums each rule over every file of every package, rules sorted', () => {
   const api = { 'src/a.ts': { complexity: { count: 2 }, 'ab/module-boundaries': { count: 1 } } };
@@ -24,25 +24,11 @@ test('aboveBase: equal or below the base branch passes with nothing to edit; abo
   ]);
 });
 
-test('gone: an entry whose file was deleted or moved fails (ESLint never lints that file)', () => {
+test('gone: an entry whose file was deleted or moved fails (a removed file stays gone)', () => {
   const byFile = { 'src/a.ts': { complexity: { count: 1 } }, 'src/old.ts': { 'max-depth': { count: 2 } } };
   const exists = (path) => path === 'apps/staff-web/src/a.ts';
-  assert.deepEqual(gone('apps/staff-web', byFile, exists), ['gone: apps/staff-web/src/old.ts (eslint . --prune-suppressions)']);
+  assert.deepEqual(gone('apps/staff-web', byFile, exists), ['gone: apps/staff-web/src/old.ts (pnpm lint:prune)']);
   assert.deepEqual(gone('apps/staff-web', {}, exists), []);
-});
-
-test('oxlintSuppressed: a rule oxlint runs may have no suppressed violation, whatever its prefix', () => {
-  const now = { '@typescript-eslint/max-params': 2, complexity: 240, 'no-regex-spaces': 2 };
-  const rc = {
-    rules: { 'typescript/no-explicit-any': 'error', 'max-params': 'error' },
-    overrides: [{ rules: { 'eslint/no-regex-spaces': 'error' } }],
-  };
-  assert.deepEqual(oxlintSuppressed(rc, now), [
-    'oxlint runs @typescript-eslint/max-params, which has 2 suppressed: keep it in ESLint',
-    'oxlint runs no-regex-spaces, which has 2 suppressed: keep it in ESLint',
-  ]);
-  assert.deepEqual(oxlintSuppressed({ rules: { eqeqeq: 'error' } }, now), []);
-  assert.deepEqual(oxlintSuppressed({}, now), []);
 });
 
 test('aboveBase: a rule the PR turns on or tightens has no baseline: its violations fail', () => {
@@ -56,18 +42,25 @@ test('aboveBase: a rule the PR turns on or tightens has no baseline: its violati
 
 const side = (files) => ({ paths: Object.keys(files), files: Object.values(files) });
 
-test('againstBase: eslint and oxlint files per rule total, per file and per workspace', () => {
+test('againstBase: oxlint files per rule total, per file and per workspace', () => {
   const api = { 'src/a.ts': { complexity: { count: 2 } } };
-  const base = { eslint: side({ 'apps/api/eslint-suppressions.json': api }), oxlint: side({}) };
-  const head = {
-    eslint: side({ 'apps/api/eslint-suppressions.json': { 'src/b.ts': { complexity: { count: 1 } } } }),
-    oxlint: side({ 'apps/api/oxlint-suppressions.json': api }),
-  };
+  const base = side({ 'apps/api/oxlint-suppressions.json': api });
+  const head = side({
+    'apps/api/oxlint-suppressions.json': { ...api, 'src/b.ts': { complexity: { count: 1 } } },
+    'apps/web/oxlint-suppressions.json': { 'src/c.ts': { 'max-len': { count: 1 } } },
+  });
   assert.deepEqual(againstBase({ head, base, move: (path) => path }), [
+    'above the base branch: complexity 2 -> 3 (fix the new violations)',
+    'above the base branch: max-len 0 -> 1 (fix the new violations)',
     'above the base branch: apps/api/src/b.ts complexity 0 -> 1 (fix it, never suppress it)',
-    'oxlint above the base branch: complexity 0 -> 2 (fix the new violations)',
-    'oxlint above the base branch: apps/api/src/a.ts complexity 0 -> 2 (fix it, never suppress it)',
-    'oxlint new suppressions file: apps/api/oxlint-suppressions.json (fix the violations instead)',
+    'above the base branch: apps/web/src/c.ts max-len 0 -> 1 (fix it, never suppress it)',
+    'new suppressions file: apps/web/oxlint-suppressions.json (fix the violations instead)',
   ]);
   assert.deepEqual(againstBase({ head: base, base, move: (path) => path }), []);
+});
+
+test('againstBase: a lower count or a deleted file entry passes', () => {
+  const base = side({ 'apps/api/oxlint-suppressions.json': { 'src/a.ts': { complexity: { count: 2 } } } });
+  const head = side({ 'apps/api/oxlint-suppressions.json': { 'src/a.ts': { complexity: { count: 1 } } } });
+  assert.deepEqual(againstBase({ head, base, move: (path) => path }), []);
 });

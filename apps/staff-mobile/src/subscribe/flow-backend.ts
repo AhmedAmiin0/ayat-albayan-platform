@@ -1,4 +1,4 @@
-import type { ThreadPeople, ThreadStudentView } from '@ab/shared';
+import type { ThreadPeople } from '@ab/shared';
 import { inboxBackend, GUARDIAN_PHONE } from '@/inbox/shared/flow-backend';
 import { child, family, leadOnly, sub, usedUp } from '@/inbox/subscription/people-fixtures';
 import { detail, PHONE } from '@/inbox/shared/thread-fixtures';
@@ -12,7 +12,7 @@ import { profile, quote, saved } from './fixtures';
 export function subscribeBackend({ hold = false } = {}) {
   const { backend, rows, log } = inboxBackend();
   const state = {
-    child: child({ subscription: usedUp }) as ThreadStudentView,
+    child: child({ subscription: usedUp }),
     release: (): void => undefined,
   };
   const at = rows.findIndex((r) => r.phone_e164 === GUARDIAN_PHONE);

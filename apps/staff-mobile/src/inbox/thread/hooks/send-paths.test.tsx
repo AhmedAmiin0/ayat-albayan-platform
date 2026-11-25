@@ -79,7 +79,7 @@ test('a file and a saved reply attachment touch the list with the API row', asyn
 
 test('a forward refreshes every chat; a retry refreshes its own', async () => {
   mockApiSend.mockResolvedValue({ results: [] });
-  await run(() => useForward(), { messageId: 'm1', targets: [PHONE], clientRequestId: 'p1' } as never);
+  await run(() => useForward(), { messageId: 'm1', targets: [PHONE], clientRequestId: 'p1' });
   expect(refreshed).toHaveBeenCalledWith(expect.anything());
   jest.clearAllMocks();
   mockApiSend.mockResolvedValue(row);

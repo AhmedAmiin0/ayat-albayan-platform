@@ -66,7 +66,7 @@ test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries,
   const base = ci.jobs.guards.steps.find((s) => s.if === "github.event_name == 'pull_request'" && s.name?.startsWith('Base branch'));
   assert.match(base.run, /merge-base "origin\/\$BASE_REF" HEAD\)\n.*worktree add --detach "\$RUNNER_TEMP\/base"[\s\S]*\.bin\/jscpd"\)\n.*GUARD_BASE=/);
   // No one-time baseline for a rule a PR turns on: the lint gate takes no config sources.
-  assert.ok(['pnpm guard:lint', 'pnpm guard:baselines'].every((r) => runs.includes(r)));
+  assert.ok(['pnpm guard:lint', 'pnpm guard:baselines', 'pnpm guard:escapes'].every((r) => runs.includes(r)));
   assert.ok(!runs.some((r) => r.includes('--configs')));
   // A loosened lint config is an annotation, never a failure: the owner decides.
   const loosened = ci.jobs.guards.steps.find((s) => s.name === 'Lint config loosened?');

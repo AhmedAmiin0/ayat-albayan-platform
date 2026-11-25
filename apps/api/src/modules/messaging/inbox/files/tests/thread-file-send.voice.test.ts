@@ -25,7 +25,7 @@ const sender = () => {
   return s;
 };
 const send = (phone = PHONE) =>
-  sender().send({ phone, input: { clientRequestId: REQ, path: PATH, filename: 'voice.m4a' }, actorId: ACTOR, sales: { salesId: ACTOR } as never }, NOW);
+  sender().send({ phone, input: { clientRequestId: REQ, path: PATH, filename: 'voice.m4a' }, actorId: ACTOR, sales: { salesId: ACTOR } }, NOW);
 const sent = () => outbox.queue.mock.calls[0]?.[0] as Record<string, unknown>;
 
 describe('ThreadFileSender.send: a voice note', () => {

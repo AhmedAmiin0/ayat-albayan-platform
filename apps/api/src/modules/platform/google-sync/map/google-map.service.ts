@@ -11,7 +11,7 @@ function studentView(r: StudentRow, links: readonly SummaryLink[]): GoogleStuden
   return {
     student_id: r.id, code: r.code, name: r.name,
     folder_id: r.files?.folder_id ?? null, attendance_sheet_id: r.files?.attendance_sheet_id ?? null,
-    create_new: r.files !== null && r.files.folder_id === null, confirmed_at: r.files?.confirmed_at ?? null,
+    create_new: r.files?.folder_id === null, confirmed_at: r.files?.confirmed_at ?? null,
     suggestion: s ? { folder_id: s.folderId, attendance_sheet_id: s.sheetId, name: s.name } : null,
   };
 }

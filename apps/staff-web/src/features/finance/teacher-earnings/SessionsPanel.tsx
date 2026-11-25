@@ -44,7 +44,10 @@ export function SessionsPanel({ scope, selected, onSelected }: Props) {
     return {
       selected,
       rows,
-      onToggle: (r) => change((m) => void (m.delete(r.id) || m.set(r.id, r))),
+      onToggle: (r) =>
+        change((m) => {
+          if (!m.delete(r.id)) m.set(r.id, r);
+        }),
       onToggleAll: (all, on) => change((m) => all.forEach((r) => (on ? m.set(r.id, r) : m.delete(r.id)))),
     };
   }, [selected, onSelected, rows]);

@@ -65,7 +65,7 @@ const needsNoValue = (t: TemplateView): boolean =>
  * Anything else (unset, unknown, pending, another line, variables) reopens nothing.
  */
 export function reopenUsable(t: TemplateView | null): boolean {
-  return t !== null && t.line === 'chat' && restrictedMay(t) && needsNoValue(t);
+  return t?.line === 'chat' && restrictedMay(t) && needsNoValue(t);
 }
 
 /** What a due row marked AWAITING_REPLY needs: held now, failed (its 7 days are over), or none. */

@@ -27,6 +27,6 @@ describe('report entry values', () => {
   it('prefills the program from the student until the report has its own', () => {
     const report = { program: null, grades: {} } as unknown as ReportView;
     expect(reportEntryValues(report, 'quran').program).toBe('quran');
-    expect(reportEntryValues({ ...report, program: 'arabic' } as ReportView, 'quran').program).toBe('arabic');
+    expect(reportEntryValues({ ...report, program: 'arabic' }, 'quran').program).toBe('arabic');
   });
 });

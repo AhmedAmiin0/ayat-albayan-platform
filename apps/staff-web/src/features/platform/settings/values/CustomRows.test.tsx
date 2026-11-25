@@ -40,7 +40,7 @@ describe('«قيم مخصصة» rows in «القيم»', () => {
     renderValues(apiFetch, { search: { group: 'custom' }, custom: [ENTRY] });
     fireEvent.click(within(await menuOf()).getByRole('menuitem', { name: c.edit }));
     const dialog = screen.getByRole('dialog', { name: c.edit });
-    expect((within(dialog).getByLabelText(c.key) as HTMLInputElement).disabled).toBe(true);
+    expect((within(dialog).getByLabelText<HTMLInputElement>(c.key)).disabled).toBe(true);
   });
 
   it('delete asks first («نعم، احذفها»), cancel is the default', async () => {

@@ -29,7 +29,7 @@ test('packageOverrides: the React flavour adds the hooks rules and browser globa
   assert.deepEqual(level(react, 'typescript/no-misused-promises'), misused);
 });
 
-test('compose: .oxlintrc.json first, type-aware, every package scoped, plugins registered', () => {
+test('compose: the core rules first, type-aware, every package scoped, plugins registered', () => {
   const packages = [
     { dir: 'packages/db', react: false, blocks: [{ ignores: ['src/types.ts'] }] },
     { dir: 'apps/staff-web', react: true, blocks: [] },

@@ -8,7 +8,7 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 // One module-mode pass's routing input (docs/23c); a failed rules read fails the pass (nothing sends).
 
 const queries = () => ({ approvals: vi.fn(async () => new Map()), templates: vi.fn(async () => [templateRow()]) });
-const reader = (snapshot: RulesReader['snapshot']) => ({ snapshot }) as unknown as RulesReader;
+const reader = (snapshot: RulesReader['snapshot']) => ({ snapshot });
 const row = (number_id: string | null) => ({ key: 'booking_confirmation', enabled: true, channels: null, timing: null, number_id, updated_at: '', updated_by: null });
 
 describe('NumberRoutes.pass', () => {

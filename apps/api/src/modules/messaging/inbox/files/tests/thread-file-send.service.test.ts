@@ -24,7 +24,7 @@ const sender = (maxMb?: number) => {
 };
 const input = (over: object = {}) => ({ clientRequestId: REQ, path: PATH, filename: 'الواجب.png', ...over });
 const send = (over: object = {}, s = sender()) =>
-  s.send({ phone: PHONE, input: input(over), actorId: ACTOR, sales: { salesId: ACTOR } as never }, NOW);
+  s.send({ phone: PHONE, input: input(over), actorId: ACTOR, sales: { salesId: ACTOR } }, NOW);
 const code = (e: unknown) => (e as { getResponse(): { code: string } }).getResponse().code;
 const status = (e: unknown) => (e as { getStatus(): number }).getStatus();
 

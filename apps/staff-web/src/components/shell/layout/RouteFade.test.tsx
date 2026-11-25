@@ -15,7 +15,7 @@ const media = (reduce: boolean) =>
 beforeEach(() => {
   path = '/admin/students';
   animate.mockReset();
-  Element.prototype.animate = animate as unknown as Element['animate'];
+  Element.prototype.animate = animate;
 });
 afterEach(() => vi.unstubAllGlobals());
 

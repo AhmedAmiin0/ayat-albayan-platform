@@ -103,7 +103,7 @@ export class LinkFulfilment {
     if (link.kind !== 'new') return;
     try {
       const student = await this.deps.links.student(link.student_id);
-      if (student && student.broughtBy === null && student.priced.every((id) => id === link.subscription_id)) {
+      if (student?.broughtBy === null && student.priced.every((id) => id === link.subscription_id)) {
         await this.deps.links.attribute({ studentId: link.student_id, assistantId: link.created_by, broughtAt: link.created_at });
       }
     } catch (e) {

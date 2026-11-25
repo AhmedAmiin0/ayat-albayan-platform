@@ -39,5 +39,5 @@ export function expensePatch(patch: Partial<ExpenseUpdate>): TablesUpdate<'expen
   if (patch.vendor !== undefined) write['vendor'] = patch.vendor?.trim() || null;
   if (patch.month !== undefined) write['month'] = monthStart(patch.month);
   else if (patch.paidOn) write['month'] = monthStart(patch.paidOn.slice(0, 7));
-  return write as TablesUpdate<'expenses'>;
+  return write;
 }

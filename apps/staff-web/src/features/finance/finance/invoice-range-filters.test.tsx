@@ -16,7 +16,7 @@ describe('invoiceRangeFilters', () => {
 
   it('the panel fields: from and to days', () => {
     render(<>{invoiceRangeFilters({ search: { to: '2026-10-01' }, onChange: vi.fn() }).fields}</>);
-    expect((screen.getByLabelText(t.finance.to) as HTMLInputElement).value).toBe('2026-10-01');
+    expect((screen.getByLabelText<HTMLInputElement>(t.finance.to)).value).toBe('2026-10-01');
     expect(screen.getByLabelText(t.finance.from)).toBeTruthy();
   });
 });

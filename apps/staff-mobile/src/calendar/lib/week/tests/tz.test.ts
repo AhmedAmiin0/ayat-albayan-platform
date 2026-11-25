@@ -1,7 +1,8 @@
 import { t } from '@ab/mobile-kit';
+import type * as WeekModule from '@/calendar/lib/week/week';
 
 // The device zone never moves the Riyadh calendar; jest emulates the zone since it can't switch it.
-type Week = typeof import('@/calendar/lib/week/week');
+type Week = typeof WeekModule;
 const GETTERS = ['FullYear', 'Month', 'Date', 'Day', 'Hours', 'Minutes'] as const;
 
 function onDevice(zone: string, offsetMin: number): Week {

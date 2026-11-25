@@ -1,4 +1,4 @@
-import type { GooglePlannedRequest, GoogleSkipReason, GoogleSyncItemView, GoogleSyncKind, GoogleSyncState } from '@ab/shared';
+import type { GoogleSkipReason, GoogleSyncItemView, GoogleSyncKind, GoogleSyncState } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
@@ -23,7 +23,7 @@ export class GoogleLogQueries {
       .order('updated_at', { ascending: false })
       .limit(limit);
     if (error) throw new Error(`google log read failed: ${error.message}`);
-    return this.view(data as Raw[]);
+    return this.view(data);
   }
 
   async one(id: string): Promise<GoogleSyncItemView | null> {
@@ -33,7 +33,7 @@ export class GoogleLogQueries {
       .eq('id', id)
       .maybeSingle();
     if (error) throw new Error(`google log read failed: ${error.message}`);
-    return data ? ((await this.view([data as Raw]))[0] ?? null) : null;
+    return data ? ((await this.view([data]))[0] ?? null) : null;
   }
 
   private async view(rows: Raw[]): Promise<GoogleSyncItemView[]> {
@@ -53,7 +53,7 @@ export class GoogleLogQueries {
       return {
         id: r.id, kind: r.kind, state: r.state, skip_reason: (r.skip_reason ?? null) as GoogleSkipReason | null,
         subject: [who, when].filter(Boolean).join(' · '), google_id: r.google_id, attempts: r.attempts, last_error: r.last_error,
-        planned: plan.success ? (plan.data as GooglePlannedRequest) : null, updated_at: new Date(r.updated_at).toISOString(),
+        planned: plan.success ? plan.data : null, updated_at: new Date(r.updated_at).toISOString(),
       };
     });
   }

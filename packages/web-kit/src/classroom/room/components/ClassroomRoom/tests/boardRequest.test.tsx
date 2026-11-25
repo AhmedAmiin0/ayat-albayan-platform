@@ -21,7 +21,7 @@ describe('«اطلب الكتابة على السبورة» / «اطلب فتح 
     const c = openRoom('guest', guestRoom());
     fireEvent.click(screen.getByRole('button', { name: B.open.request }));
     expect(sent(c)).toEqual([{ t: 'request', what: 'open' }]);
-    expect((screen.getByRole('button', { name: B.open.pending }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole<HTMLButtonElement>('button', { name: B.open.pending })).disabled).toBe(true);
     act(() => from(c, TEACHER)({ t: 'open', open: true }));
     expect(screen.queryByRole('button', { name: B.open.pending })).toBeNull();
     expect(screen.getByText(t.classroom.board.readOnly)).toBeTruthy();

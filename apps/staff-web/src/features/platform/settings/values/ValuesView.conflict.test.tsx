@@ -42,7 +42,7 @@ describe('«القيم» — 409 conflict row', () => {
     expect(alert.textContent).toContain('سارة');
     expect(alert.textContent).toContain(v.units.weeks.few.replace('{n}', '6'));
     expect(alert.textContent).toContain(v.units.weeks.few.replace('{n}', '8'));
-    expect((within(row).getByLabelText(HORIZON) as HTMLInputElement).value).toBe('8');
+    expect((within(row).getByLabelText<HTMLInputElement>(HORIZON)).value).toBe('8');
   });
 
   it('«احفظ قيمتي» sends the edit again with the newer version; the row and toast follow', async () => {

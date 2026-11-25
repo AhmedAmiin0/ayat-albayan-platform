@@ -75,7 +75,7 @@ export class PaymentAttachments {
   /** A salesperson's own payment only (recorded_by = her); 404 payment_not_found otherwise (no existence leak). */
   async ownViews(paymentId: string, userId: string): Promise<PaymentAttachmentView[]> {
     const row = await this.payments.get(paymentId);
-    if (!row || row.recorded_by !== userId) throw notFound('payment_not_found');
+    if (row?.recorded_by !== userId) throw notFound('payment_not_found');
     return this.views(row);
   }
 

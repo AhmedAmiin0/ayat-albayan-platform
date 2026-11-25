@@ -6,12 +6,8 @@ import { CATALOGUE_SETTING_KEYS, type CatalogueSettings } from './catalogue-sett
 import { catalogueViews } from './catalogue-state/index.js';
 import type { RowSwitchKey, TimingKey } from './catalogue.types.js';
 
-const templates = new Map(
-  TEMPLATE_KEYS.map((k) => [
-    k,
-    { status: 'approved' as TemplateStatus, line: 'notifications' as WaLine },
-  ]),
-);
+const tpl = (status: TemplateStatus, line: WaLine) => ({ status, line });
+const templates = new Map(TEMPLATE_KEYS.map((k) => [k, tpl('approved', 'notifications')]));
 
 /** Only the catalogue's keys of a full settings object. */
 const slice = (s: AcademySettings): CatalogueSettings =>
