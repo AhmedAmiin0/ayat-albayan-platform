@@ -59,7 +59,7 @@ function Notices({ notes }: { notes: string[] }) {
 /**
  * The notices: the gate, the reply line, then the open window's note (collapsed, only the first
  * shows); a template leaves from its own registry line (docs/12 §13.18), not reply_line: no reply
- * line in template mode. The closed window says its part in ReopenBar (owner 2026-11-14).
+ * line in template mode. The closed window says its part in ReopenBar.
  */
 function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { clock: Clock }): string[] {
   const { thread, gateNote, mode, clock } = input;
@@ -73,7 +73,7 @@ function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mo
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
   const inbox = useInboxMode();
-  // Owner 2026-10-31 / 2026-11-01: on a Kapso chat line staff try every send after the window.
+  // On a Kapso chat line staff try every send after the window.
   const trying = useTriesAfterWindow(thread);
   const typing = open || trying;
   const noneAllowed = useNoneAllowed(teacher);

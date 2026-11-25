@@ -24,7 +24,7 @@ function useSaveSetup() {
       // The new email at once: /teacher's guard must not wait for the refreshed JWT on /auth/me.
       queryClient.setQueryData(meQuery.queryKey, (me) => (me ? { ...me, email: body.email } : me));
     },
-    // Her home, or the page she opened (a report link) before signing in (owner 2026-11-14).
+    // Her home, or the page she opened (a report link) before signing in.
     onSuccess: () => land('/teacher'),
   });
 }

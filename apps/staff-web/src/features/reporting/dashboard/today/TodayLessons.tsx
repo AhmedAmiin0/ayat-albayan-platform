@@ -16,7 +16,7 @@ import { clockDir, viewerZone } from '@ab/web-kit/lib/clock-text';
 import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 /**
- * Folds by the card's own width (container query), not the screen's (owner 2026-10-18): the card is a
+ * Folds by the card's own width (container query), not the screen's: the card is a
  * third of the dashboard on a wide screen, so the join buttons go under the details until it is 36rem.
  */
 function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {

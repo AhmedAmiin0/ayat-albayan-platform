@@ -7,7 +7,7 @@ import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from '@/features/messaging/inbox/messages/components/MessageBubble';
 import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
 
-// Stickers and GIFs in the chat (owner 2026-11-01): shown at once, a sticker with no bubble.
+// Stickers and GIFs in the chat: shown at once, a sticker with no bubble.
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 

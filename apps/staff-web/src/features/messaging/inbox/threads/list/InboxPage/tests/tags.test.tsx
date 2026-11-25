@@ -11,7 +11,7 @@ vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
 }));
 
-// Invented families (owner 2026-11-06: no tags; a green ring subscribed, a gray one renewal due).
+// Invented families (no tags; a green ring subscribed, a gray one renewal due).
 const family = (name: string, phone: string, tags: object) =>
   thread({ display_name: name, phone_e164: phone, lead_id: null, lead_status: null, guardian_id: `g-${name}`, ...tags });
 

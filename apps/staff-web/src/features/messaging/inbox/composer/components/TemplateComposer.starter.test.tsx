@@ -9,7 +9,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// A chat starter imported from Meta (owner 2026-10-12): its key is its Meta name, not a TEMPLATE_KEYS one.
+// A chat starter imported from Meta: its key is its Meta name, not a TEMPLATE_KEYS one.
 const IMPORTED = template({
   key: 'academy_welcome',
   meta_name: 'academy_welcome',

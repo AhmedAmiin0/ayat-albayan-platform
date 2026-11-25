@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { SUMMARY, WORK } from '@/features/reporting/dashboard/dashboard-fixture';
 import { DashboardPage } from '@/features/reporting/dashboard/DashboardPage/DashboardPage';
 
-// Overflow guard (owner, 2026-10-05: "fix the overflow in the dashboard"). jsdom has no layout, so this
+// Overflow guard for the dashboard. jsdom has no layout, so this
 // pins the class contract that fixes it: a single-column grid is `grid-cols-1` (minmax(0, 1fr)), never
 // the implicit `auto` track that grows to a wide table's min-content; wide tables scroll in their own
 // box; row headers wrap instead of forcing the table wider. Measured for real by the responsive e2e.

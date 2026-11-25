@@ -34,7 +34,7 @@ describe('«جدّد الاشتراك» on the student profile (owner 2026-10-15
     expect(await screen.findByRole('button', { name: t.students.renew })).toBeTruthy();
   });
 
-  // owner 2026-11-17: the admin renews ANY time once the student has a package.
+  // The admin renews ANY time once the student has a package.
   const others = STUDENT_STATUSES.filter((s) => s !== 'pending_renewal' && s !== 'expired');
   it.each(others)('%s with a package: shown once the balance answers', async (status) => {
     renderButton(status);

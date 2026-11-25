@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { publicConfigQuery } from '@ab/web-kit/lib/settings/public-config';
 
-/** Tests only: every teacher page switch set to `on` (they default OFF since owner 2026-11-13). */
+/** Tests only: every teacher page switch set to `on` (they default OFF). */
 export const teacherPagesAll = (on: boolean): Partial<PublicSettings> =>
   Object.fromEntries(Object.values(TEACHER_PAGE_SWITCH).map((key) => [key, on]));
 

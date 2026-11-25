@@ -32,7 +32,7 @@ type Props = {
 };
 
 const defaultAmount = (s: SubscriptionView, kind: PaymentKind) => String(kind === 'refund' ? s.paid : dueOf(s, s.paid) || owedFor(s));
-/** What a payment in `currency` still owes (owner 2026-10-28: less stays unpaid); null for a refund or another currency. */
+/** What a `currency` payment still owes (less stays unpaid); null for a refund or another one. */
 const dueIn = (s: SubscriptionView | null, opts: { kind: PaymentKind; currency: string }): number | null =>
   s && opts.kind === 'payment' && opts.currency === s.currency ? dueOf(s, s.paid) : null;
 

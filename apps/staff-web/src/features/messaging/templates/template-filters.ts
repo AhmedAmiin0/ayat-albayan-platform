@@ -7,7 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 export const categoryOptions = (): FilterOption[] =>
   TEMPLATE_CATEGORIES.map((c) => ({ value: c, label: t.enums.templateCategory[c] }));
 
-/** The WhatsApp line (WABA) each template lives on (owner 2026-10-12). */
+/** The WhatsApp line (WABA) each template lives on. */
 export const lineOptions = (): FilterOption[] => WA_LINES.map((l) => ({ value: l, label: t.enums.waLine[l] }));
 
 export const statusOptions = (): FilterOption[] => TEMPLATE_STATUSES.map((s) => ({ value: s, label: t.enums.templateStatus[s] }));

@@ -10,7 +10,7 @@ const onScreen = (entries: IntersectionObserverEntry[]): boolean =>
   entries.some((e) => e.isIntersecting);
 
 /**
- * Whether the element under `ref` has been on screen once (owner 2026-11-01: a chat PDF asks its
+ * Whether the element under `ref` has been on screen once (a chat PDF asks its
  * page 1 only then, never a burst for a long log). It stays true when the card scrolls away; with
  * no IntersectionObserver (an old browser, jsdom) it is true at once.
  */

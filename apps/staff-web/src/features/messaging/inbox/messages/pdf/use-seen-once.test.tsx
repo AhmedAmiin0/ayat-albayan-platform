@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useSeenOnce } from './use-seen-once';
 
-// Owner 2026-11-01: a chat PDF asks page 1 only once its card has been on screen (never a burst).
+// A chat PDF asks page 1 only once its card has been on screen (never a burst).
 type Fire = (entries: Pick<IntersectionObserverEntry, 'isIntersecting'>[]) => void;
 let fire: Fire = () => undefined;
 const disconnect = vi.fn();

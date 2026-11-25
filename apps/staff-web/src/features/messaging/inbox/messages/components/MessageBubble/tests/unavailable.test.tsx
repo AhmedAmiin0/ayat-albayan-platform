@@ -9,7 +9,7 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
-// A lead's first message arrived as Meta's `unsupported` (owner 2026-10-25): no body, no file.
+// A lead's first message arrived as Meta's `unsupported`: no body, no file.
 const NOW = new Date('2026-10-01T12:00:00Z');
 const unsupported = (code: number) => ({ type: 'unsupported', errors: [{ code }], unsupported: { type: 'unknown' } });
 

@@ -15,7 +15,7 @@ export type GuardianDetail = {
   tz: string;
   source: LeadSource | null;
   notes: string | null;
-  /** Every family number: the main one (is_primary) and at most one second (owner 2026-10-29); absent from an older API. */
+  /** Every family number: the main one (is_primary) and at most one second; older APIs omit it. */
   phones?: (FamilyPhone & { created_at: string })[];
 };
 

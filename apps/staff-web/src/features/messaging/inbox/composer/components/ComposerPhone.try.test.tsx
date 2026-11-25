@@ -12,8 +12,8 @@ vi.mock('@ab/web-kit/lib/http/supabase', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } },
 }));
 
-// Owner 2026-10-31: after the 24 h window, a Kapso chat line (try_after_window) still lets staff
-// type (no highlighted toggle). Owner 2026-11-14: the long note gave way to the reopen bar.
+// After the 24 h window, a Kapso chat line (try_after_window) still lets staff type (no
+// highlighted toggle); the reopen bar replaces the long note.
 
 const props = { context: {}, gateNote: null, mode: 'text' as const, onMode: vi.fn(), teacher: false };
 const box = () => screen.queryByRole('textbox', { name: t.inbox.composer.messageLabel });

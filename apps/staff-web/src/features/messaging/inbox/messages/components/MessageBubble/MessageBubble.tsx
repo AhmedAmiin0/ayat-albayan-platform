@@ -41,7 +41,7 @@ export function MessageBubble(props: MessageBubbleProps) {
   const notes = outboundNotes(m, { waitingTemplate, now, clock });
   const mode = useInboxMode();
   const admin = mode === 'admin';
-  // A sticker has no bubble around it, as WhatsApp (owner 2026-11-01); its time and ticks stay.
+  // A sticker has no bubble around it, as WhatsApp; its time and ticks stay.
   const bare = stickerOrGif(m, mode === 'teacher') === 'sticker';
   const [menu, setMenu] = useState(false);
   const acts = useHasBubbleActions(m);

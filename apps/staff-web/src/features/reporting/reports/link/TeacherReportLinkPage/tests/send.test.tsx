@@ -7,7 +7,7 @@ import { gradeEverything } from '@/features/reporting/reports/report-form-kit';
 import { TeacherReportLinkPage } from '@/features/reporting/reports/link/TeacherReportLinkPage/TeacherReportLinkPage';
 
 // The no-login page sends through the link's token, with the same one-send / read-only / edit
-// rules as the signed-in form (owner 2026-11-06).
+// rules as the signed-in form.
 const fetchMock = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>();
 const json = (body: unknown) =>
   Promise.resolve(new Response(JSON.stringify(body), { status: 200 }));

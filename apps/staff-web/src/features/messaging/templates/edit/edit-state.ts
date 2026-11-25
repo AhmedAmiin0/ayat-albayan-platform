@@ -3,7 +3,7 @@ import {
   editRoute, isCodeBound, nextEditAt,
 } from '@ab/shared';
 
-// What the edit form tells and allows (owner 2026-11-14), from Meta's rules: a template under
+// What the edit form tells and allows, from Meta's rules: a template under
 // review (or disabled) waits; an approved one waits for its next edit; a never-sent one is ours.
 
 export type EditStage = 'blocked' | 'limited' | 'local' | 'meta';

@@ -4,7 +4,7 @@ import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { canRetry, outboundNotes } from '@/features/messaging/inbox/messages/lib/message-notes/message-notes';
 
-// Owner 2026-11-01: a payment link leaves as a text; WhatsApp's 131047 shows on its own bubble.
+// A payment link leaves as a text; WhatsApp's 131047 shows on its own bubble.
 
 const NOW = new Date('2026-11-01T12:00:00Z');
 const C24 = { cycle: '24', locale } as const;

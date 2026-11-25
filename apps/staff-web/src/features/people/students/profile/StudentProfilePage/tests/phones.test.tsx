@@ -13,7 +13,7 @@ vi.mock('@/features/finance/subscriptions/balance/BalanceCard/BalanceCard', () =
 vi.mock('@/features/people/students/profile/StudentProfileForm/StudentProfileForm', () => ({ StudentProfileForm: () => null }));
 vi.mock('@/features/people/students/duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
 
-// The family's second number (owner 2026-10-29) in the file's meta line, beside the main one.
+// The family's second number in the file's meta line, beside the main one.
 const MAIN = '+966500000001';
 const SECOND = '+966552220000';
 const guardian = (phones?: { phone_e164: string; is_primary: boolean }[]) => ({ id: 'g1', name: 'أم سهيلة', phone_e164: MAIN, ...(phones ? { phones } : {}) });

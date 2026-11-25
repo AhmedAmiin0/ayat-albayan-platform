@@ -20,7 +20,7 @@ export interface SettingRowProps extends RowExtras {
 }
 
 /**
- * One setting as a row (owner, 2026-10-05): the label and a one-line hint at the inline-start, the
+ * One setting as a row: the label and a one-line hint at the inline-start, the
  * control at the inline-end; on phones the control drops under the words.
  */
 export function SettingRow({ label, hint, error, extra, actions, danger, children }: SettingRowProps) {

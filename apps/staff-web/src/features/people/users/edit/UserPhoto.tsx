@@ -2,7 +2,7 @@ import type { UserDetail } from '@ab/shared';
 import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
 import { StaffPhotoControl } from '@/features/people/staff-photo';
 
-/** Students and guardians never get a photo (owner 2026-10-28: initials only; the API says avatar_not_staff). */
+/** Students and guardians never get a photo (initials only; the API says avatar_not_staff). */
 const NO_PHOTO = new Set<UserDetail['role']>(['student', 'guardian']);
 
 /** The panel's head: the user's photo or initials and, for a staff login with users.write, change / remove. */

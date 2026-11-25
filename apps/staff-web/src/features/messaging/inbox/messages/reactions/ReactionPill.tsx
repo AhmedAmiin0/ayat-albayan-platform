@@ -5,8 +5,9 @@ import { cn } from '@ab/web-kit/lib/utils';
 import { useChatActions } from '@/features/messaging/inbox/shared/chat-actions';
 
 /**
- * The reactions at the foot of a bubble, on its outer side (physical, as BUBBLE_ROW: ours right, theirs left; owner 2026-10-27): theirs and ours, «👍 2» when both chose it; the
- * tooltip and the screen reader name who reacted (the chat's name, our staff member). Nothing without one.
+ * The reactions at the foot of a bubble, on its outer side (physical, as BUBBLE_ROW: ours right,
+ * theirs left): theirs and ours, «👍 2» when both chose it; the tooltip and the screen reader name
+ * who reacted (the chat's name, our staff member). Nothing without one.
  */
 export function ReactionPill({ message: m, outbound }: { message: MessageView; outbound: boolean }) {
   const { chat } = useChatActions();

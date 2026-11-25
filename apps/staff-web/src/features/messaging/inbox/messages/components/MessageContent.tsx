@@ -22,7 +22,7 @@ import { TemplateFrame } from '@/features/messaging/inbox/messages/template/Temp
 
 // The inside of a MessageBubble: what was said, and who sent ours.
 
-/** Staff forwarded it here (owner 2026-10-25): a small label with the forward arrow, as WhatsApp does. */
+/** Staff forwarded it here: a small label with the forward arrow, as WhatsApp does. */
 function ForwardedLabel() {
   return (
     <p className="mb-1 flex items-center gap-1 text-2xs font-semibold text-ink-3">

@@ -17,7 +17,7 @@ type Props = {
   currencyLabel: string;
 };
 
-/** Before saving a receipt (owner 2026-10-28): says the package stays unpaid when the amount is short; saving stays allowed. */
+/** Before saving: says the package stays unpaid when the amount is short; saving is allowed. */
 export function ShortfallNote({ amount, due, currencyLabel }: Props) {
   const typed = parseAmount(amount);
   const text = typed === null || due === null ? null : shortfallText({ amount: typed, due, currencyLabel });

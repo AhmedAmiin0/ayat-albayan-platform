@@ -13,7 +13,7 @@ vi.mock('@tanstack/react-router', async (orig) => ({
 const h = t.communicationsHub;
 afterEach(() => apiFetch.mockReset());
 
-// Owner 2026-10-27: messages between the academy's own numbers are hidden everywhere; the count shows here.
+// Messages between the academy's own numbers are hidden everywhere; the count shows here.
 describe('«التواصل» › «نظرة عامة» › «رسائل بين أرقام الأكاديمية»', () => {
   it('the last 7 days’ count from GET /admin/numbers/own-traffic, with what it means', async () => {
     renderCommunications({ apiFetch });
