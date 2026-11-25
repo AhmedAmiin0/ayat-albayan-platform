@@ -6,7 +6,7 @@ import { channelMessagesPath, type ChannelAudience } from '../channels.js';
 
 /**
  * PATCH (edit) / DELETE (delete for everyone) …/messages/:id, on every audience's route (the
- * owning assistant's too, owner 2026-11-16).
+ * owning assistant's too).
  */
 export function channelMessagePath(input: {
   audience: ChannelAudience;

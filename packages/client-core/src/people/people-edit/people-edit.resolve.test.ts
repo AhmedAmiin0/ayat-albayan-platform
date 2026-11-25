@@ -9,7 +9,7 @@ import {
 import type { FamilyOption } from '@ab/shared';
 import { VIEW } from './people-edit.fixtures.js';
 
-// #621 review: a «new» family whose number exists is that family (confirm names it, the move
+// A «new» family whose number exists is that family (confirm names it, the move
 // goes by its id); notes are the admin's only.
 
 const TEXT = { moveConfirm: 'نقل {student} إلى {family}؟', invalid: 'تحقق' };

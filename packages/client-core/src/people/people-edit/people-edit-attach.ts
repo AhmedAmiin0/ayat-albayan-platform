@@ -77,7 +77,7 @@ function freshChoice(fresh: NewFamilyForm): {
 
 /**
  * A «new» family whose main number already exists IS that family (the API finds it by its phone
- * first, #621 review): the choice becomes it, so the confirm names the real family and the move
+ * first): the choice becomes it, so the confirm names the real family and the move
  * goes by its id (and the ownership check).
  */
 function resolved(choice: MoveChoice | null, families: readonly FamilyOption[] | null) {

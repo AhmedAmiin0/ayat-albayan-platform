@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { ApiError, type ApiClient } from '../../core/http/index.js';
 import { channelSeatKey, channelSeats, seatError, seatErrorText, seatState } from './channel-seat.js';
 
-// Owner 2026-11-16 «any assistant can subscribe to the chating channel but only 1» and «who
-// brought the student have the priority»: the seat both apps read and write.
+// One assistant seat per chat, the one who brought the student first: the seat both apps read
+// and write.
 
 const HELD: ChannelSeat = {
   holder: { id: 'p-b', name: 'هدى' },

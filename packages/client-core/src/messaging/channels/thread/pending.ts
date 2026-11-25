@@ -1,6 +1,6 @@
 import type { ChannelMessageView, ChannelPage } from '@ab/shared';
 
-// The optimistic row of a send (review 2026-11-17), web and phone alike: shown at once, keyed by
+// The optimistic row of a send, web and phone alike: shown at once, keyed by
 // its client_id, until the API's answer re-reads the thread; a failure takes it away again.
 
 const PENDING = 'pending:';

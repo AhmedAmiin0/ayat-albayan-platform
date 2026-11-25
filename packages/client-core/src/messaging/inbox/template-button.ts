@@ -1,7 +1,8 @@
 import { templateButtonLink, type TemplateButtonKind, type TemplateDisplayButton } from '@ab/shared';
 
-// A template button's words for web and mobile (owner 2026-10-28): Meta's label, else its kind's,
-// and what a hover or a screen reader says. The words are `inbox.templateBubble` of ar.json / en.json.
+// A template button's words for web and mobile: Meta's label, else its kind's,
+// and what a hover or a screen reader says. The words are `inbox.templateBubble` of ar.json /
+// en.json.
 
 export interface TemplateButtonWords {
   button: Record<TemplateButtonKind, string>;

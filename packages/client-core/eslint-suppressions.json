@@ -198,7 +198,7 @@
   },
   "src/messaging/channels/channels.ts": {
     "max-len": {
-      "count": 8
+      "count": 4
     }
   },
   "src/messaging/channels/teacher-pick.ts": {
@@ -212,9 +212,6 @@
   "src/messaging/inbox/inbox-live.ts": {
     "ab/no-shape-checks": {
       "count": 1
-    },
-    "max-len": {
-      "count": 2
     }
   },
   "src/messaging/inbox/live-connect/live-connect.ts": {
@@ -231,11 +228,6 @@
     "@typescript-eslint/explicit-module-boundary-types": {
       "count": 1
     },
-    "max-len": {
-      "count": 1
-    }
-  },
-  "src/messaging/inbox/live-session.ts": {
     "max-len": {
       "count": 1
     }
@@ -269,11 +261,6 @@
   "src/messaging/inbox/reactions.ts": {
     "max-len": {
       "count": 7
-    }
-  },
-  "src/messaging/inbox/template-button.ts": {
-    "max-len": {
-      "count": 1
     }
   },
   "src/messaging/inbox/thread-delta.test.ts": {
