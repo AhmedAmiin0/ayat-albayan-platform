@@ -2,8 +2,8 @@ import type { SalesScheduleLesson } from '@ab/shared';
 import { localizedName } from '@ab/core';
 import { useViewerTz, zoneNote } from '@/core/lib/clock';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useCallback, useState } from 'react';
-import { ActivityIndicator, FlatList, type ListRenderItemInfo, View } from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import { useLessonDetails, riyadhToday } from '@/calendar';
 import { SchedulePeriod } from '@/calendar/overview/SchedulePeriod';
 import {
@@ -16,12 +16,11 @@ import {
   FilterPills,
   Screen,
   ScreenHeader,
-  useTabBarInset,
   usePullRefresh,
   useNow,
 } from '@ab/mobile-kit';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
+import { LazyList } from '@/core/ui/lists/LazyList';
 import { useSalesSchedule, useSalesTeachers } from '@/sales/sales/lib/sales-api';
 import { SalesLessonRow } from '@/sales/sales/components/SalesLessonRow';
 import { SalesLessonSheet } from '@/sales/sales/components/SalesLessonSheet';
@@ -51,27 +50,33 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   // academy day (docs/34 b): GET /sales/schedule `?date` is a Riyadh day.
   const today = riyadhToday(now);
   const tz = useViewerTz();
-  const [date, setDate] = useFollowingDay(today, params.date && DATE.test(params.date) ? params.date : undefined);
+  const [date, setDate] = useFollowingDay(
+    today,
+    params.date && DATE.test(params.date) ? params.date : undefined,
+  );
   const [teacherId, setTeacherId] = useState(params.teacherId ?? '');
   const [status, setStatus] = useState<ScheduleStatus>('all');
   const day = useSalesSchedule(date, teacherId);
   const pull = usePullRefresh(day.refetch);
   const teachers = useSalesTeachers();
   const details = useLessonDetails(day.data?.lessons);
-  const inset = useTabBarInset();
   // The teacher she came for leads (from the params, so the pills never reorder on a tap).
   const list = teachers.data ?? [];
-  const ordered = [...list.filter((tc) => tc.id === params.teacherId), ...list.filter((tc) => tc.id !== params.teacherId)];
+  const ordered = [
+    ...list.filter((tc) => tc.id === params.teacherId),
+    ...list.filter((tc) => tc.id !== params.teacherId),
+  ];
   const pills = [
     { value: '', label: t.schedule.allTeachers },
-    ...ordered.map((tc) => ({ value: tc.id, label: localizedName({ ar: tc.name, en: tc.name_en }, locale) })),
+    ...ordered.map((tc) => ({
+      value: tc.id,
+      label: localizedName({ ar: tc.name, en: tc.name_en }, locale),
+    })),
   ];
   const open = details.open;
-  const row = useCallback(
-    ({ item }: ListRenderItemInfo<SalesScheduleLesson>) => (
-      <SalesLessonRow lesson={item} onOpen={open} hideStatus={status === 'scheduled' || status === 'confirmed'} />
-    ),
-    [open, status],
+  const hideStatus = status === 'scheduled' || status === 'confirmed';
+  const row = ({ item }: { item: SalesScheduleLesson }) => (
+    <SalesLessonRow lesson={item} onOpen={open} hideStatus={hideStatus} />
   );
   const all = day.data?.lessons ?? [];
   const counts = scheduleStatusCounts(all);
@@ -82,7 +87,6 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
     ...statusPill(value, statusText),
   }));
   const lessons = byScheduleStatus(all, status);
-  const cells = useInsetRows(row, lessons.length);
   return (
     <Screen list>
       <ScreenHeader
@@ -94,16 +98,25 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
       />
       <View style={{ gap: 8 }}>
         <SchedulePeriod view="day" date={date} today={today} onDate={setDate} />
-        <FilterPills accessibilityLabel={t.schedule.teacherFilter} items={pills} value={teacherId} onChange={setTeacherId} />
-        <FilterPills accessibilityLabel={t.sales.academySchedule.status.label} items={statuses} value={status} onChange={setStatus} />
+        <FilterPills
+          accessibilityLabel={t.schedule.teacherFilter}
+          items={pills}
+          value={teacherId}
+          onChange={setTeacherId}
+        />
+        <FilterPills
+          accessibilityLabel={t.sales.academySchedule.status.label}
+          items={statuses}
+          value={status}
+          onChange={setStatus}
+        />
       </View>
-      <FlatList
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 24 + inset }}
+      <LazyList
+        testID="day-board"
         accessibilityLabel={t.schedule.dayBoard}
         data={lessons}
         keyExtractor={(l) => l.id}
-        {...cells}
+        renderItem={row}
         refreshing={pull.refreshing}
         onRefresh={pull.onRefresh}
         ListEmptyComponent={
@@ -112,7 +125,11 @@ export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
           ) : day.isError ? (
             <ErrorState message={t.sales.loadFailed} onRetry={() => void day.refetch()} />
           ) : (
-            <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+            <ActivityIndicator
+              accessibilityLabel={t.common.loading}
+              color={color.lapis}
+              style={{ paddingVertical: 32 }}
+            />
           )
         }
       />
