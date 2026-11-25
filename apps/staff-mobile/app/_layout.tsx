@@ -4,6 +4,7 @@ import {
   BiometricGate,
   type GateStatus,
   useAuthGate,
+  useBootMark,
   useMeId,
   useMeReady,
   RootFrame,
@@ -52,6 +53,7 @@ function GatedRoot({ gate, settled, fontsLoaded }: GatedRootProps) {
   const signedIn = gate !== 'booting' && gate !== 'out';
   const meReady = useMeReady(signedIn);
   const ready = settled && meReady;
+  useBootMark(ready);
   // Online now for the others (docs/33 §1.1), in every tree, while the app is open.
   usePresenceSelf(useMeId(ready && signedIn));
   // The login's language (/auth/me `locale`) wins over this phone's copy: a switch reloads.

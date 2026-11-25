@@ -19,6 +19,7 @@ export { setLocale } from './i18n/locale-switch';
 export { useProfileLocaleSync } from './i18n/use-profile-locale-sync';
 export { locale } from './i18n/locale';
 export { currencyName, money } from './money/money';
+export { useBootMark } from './log/boot';
 export { logWarning } from './log/log';
 export { byLastSeen, peerOnline } from './presence/presence-peers';
 export { useAppActive } from './presence/use-app-active';
