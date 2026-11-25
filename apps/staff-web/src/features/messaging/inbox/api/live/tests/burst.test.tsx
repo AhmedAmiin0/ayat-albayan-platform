@@ -6,6 +6,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { useInboxRealtime } from '@/features/messaging/inbox/api/live/live';
 import { live, msg, PHONE, thread } from '@/features/messaging/inbox/api/patch-fixtures';
 import { useLiveThread } from '@/features/messaging/inbox/api/thread-delta';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
 // docs/44 K1 (rounds 4-5): a reminder batch (insert + claim + sent + delivered + read per message)
 // must not starve GET /threads nor the open chat's delta read: a rows event never cancels
@@ -57,7 +58,7 @@ it('a burst of 20 rows events over 6 s with a slow list read: list reads still l
   const view = renderHook(
     () => {
       useInboxRealtime(true);
-      return useQuery({ queryKey: ['threads', 'list', ''], queryFn: slowList });
+      return useQuery({ queryKey: threadKeys.list(''), queryFn: slowList });
     },
     { wrapper },
   );

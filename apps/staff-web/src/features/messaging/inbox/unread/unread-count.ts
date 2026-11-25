@@ -16,7 +16,7 @@ export const unreadPollMs = (): number => liveInterval(inboxLive.isLive(), env.i
 /** One query under ['threads'] so every re-read refreshes it; a hidden tab does not poll. */
 export const unreadCountQuery = (enabled: boolean) => ({
   enabled,
-  queryKey: [...UNREAD_COUNT_KEY],
+  queryKey: UNREAD_COUNT_KEY,
   queryFn: async ({ signal }: { signal: AbortSignal }) =>
     unreadTotal(await apiFetch(UNREAD_COUNT_PATH, { signal })),
   refetchInterval: unreadPollMs,

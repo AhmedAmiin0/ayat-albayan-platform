@@ -1440,7 +1440,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 2
     }
   },
   "src/features/messaging/inbox/api/api.files.test.ts": {
@@ -1449,9 +1449,6 @@
     }
   },
   "src/features/messaging/inbox/api/api.files.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-untyped-api-calls": {
       "count": 3
     }
@@ -1490,7 +1487,7 @@
   },
   "src/features/messaging/inbox/api/live/tests/live.test.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/messaging/inbox/api/thread-delta.test.tsx": {

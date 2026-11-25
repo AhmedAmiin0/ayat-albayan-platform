@@ -4,6 +4,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { detail, message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { refreshSentLists, rereadSentChat, showAnswer } from './send-cache';
 import { threadQuery } from './thread-query';
+import { threadKeys } from './keys';
 
 // A send writes the API's row into the open chat; a row new to the chat also reads its newest page,
 // because the delta anchors on the newest row held and would skip a row that landed before it.
@@ -14,15 +15,16 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 const held = message({ id: 'm1', created_at: '2026-11-07T10:00:00Z' });
 const listFn = vi.fn(async () => ({ items: [thread()], total: 1 }));
 const badgeFn = vi.fn(async () => 3);
-const chatReads = () => apiFetch.mock.calls.filter(([p]) => String(p).startsWith('/threads/')).length;
+const chatReads = () =>
+  apiFetch.mock.calls.filter(([p]) => String(p).startsWith('/threads/')).length;
 
 /** An open chat, a shown list and the badge, each observed (so an invalidation re-reads it). */
 async function shown() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   apiFetch.mockResolvedValue(detail([held]));
   const chat = new InfiniteQueryObserver(client, threadQuery(PHONE));
-  const list = new QueryObserver(client, { queryKey: ['threads', 'list', ''], queryFn: listFn });
-  const badge = new QueryObserver(client, { queryKey: [...UNREAD_COUNT_KEY], queryFn: badgeFn });
+  const list = new QueryObserver(client, { queryKey: threadKeys.list(''), queryFn: listFn });
+  const badge = new QueryObserver(client, { queryKey: UNREAD_COUNT_KEY, queryFn: badgeFn });
   const offs = [chat, list, badge].map((o) => o.subscribe(() => undefined));
   await vi.waitFor(() => expect(client.isFetching()).toBe(0));
   apiFetch.mockClear();
@@ -37,7 +39,12 @@ afterEach(() => vi.restoreAllMocks());
 it('a send: 1 newest-page read brings a row that landed before it', async () => {
   const { client, off } = await shown();
   const inbound = message({ id: 'm2', created_at: '2026-11-07T10:01:00Z' });
-  const row = message({ id: 'm3', direction: 'outbound', status: 'queued', created_at: '2026-11-07T10:02:00Z' });
+  const row = message({
+    id: 'm3',
+    direction: 'outbound',
+    status: 'queued',
+    created_at: '2026-11-07T10:02:00Z',
+  });
   apiFetch.mockResolvedValue(detail([held, inbound, row]));
   showAnswer(client, row);
   await vi.waitFor(() => expect(client.isFetching()).toBe(0));

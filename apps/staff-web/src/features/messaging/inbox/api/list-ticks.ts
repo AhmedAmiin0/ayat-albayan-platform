@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { threadsQuery } from './api';
 import { threadQuery } from './thread-query';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
 // The owner's pending tick (docs/43 §2, 43-1), web: the open chat merges ✓ / ✓✓ (delta, full read)
 // while the list beside it may still hold an older answer. A list row takes the tick its chat
@@ -56,7 +57,7 @@ export function useTicksInLists(phone: string, chat: ChatPages | undefined): voi
   useEffect(() => {
     const chatAt = updatedAt(client, threadQuery(phone).queryKey);
     const statusOf: StatusOf = (row) => chatStatus(chat, row.last_message_id);
-    const lists = client.getQueriesData<ListPage>({ queryKey: ['threads', 'list'] });
+    const lists = client.getQueriesData<ListPage>({ queryKey: threadKeys.lists });
     for (const [queryKey, page] of lists) {
       const older = updatedAt(client, queryKey) < chatAt;
       const next = page && older ? overlayPage(page, statusOf) : page;

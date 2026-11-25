@@ -12,6 +12,7 @@ import { pdfPageRetryable } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
 // D2: staff send an image or PDF inside the 24 h window. The file goes to
 // wa-media through a one-off signed URL, then POST /file sends that path (the API re-checks it).
@@ -31,11 +32,20 @@ export const fileUploadUrl = ({ phone, ...body }: ThreadFileUpload & { phone: st
   apiSend<SignedUpload>('POST', `${threadPath(phone)}/file-upload-url`, body);
 
 /** Uploads the picked file under this request's id; resolves to its storage path. */
-export async function uploadChatFile(input: { phone: string; requestId: string; file: File }): Promise<string> {
+export async function uploadChatFile(input: {
+  phone: string;
+  requestId: string;
+  file: File;
+}): Promise<string> {
   const { file } = input;
   const mime = chatSendMime(file);
   if (!mime) throw new ChatUploadError('file_type');
-  const signed = await fileUploadUrl({ phone: input.phone, clientRequestId: input.requestId, mime, size: file.size });
+  const signed = await fileUploadUrl({
+    phone: input.phone,
+    clientRequestId: input.requestId,
+    mime,
+    size: file.size,
+  });
   const { error } = await uploadSigned(signed, { body: file, contentType: mime });
   if (error) throw new ChatUploadError(error.message);
   return signed.path;
@@ -50,8 +60,11 @@ const notFailed = (query: { state: { status: string } }): boolean => query.state
 
 export const threadPdfPageQuery = (phone: string, messageId: string, page: number) =>
   queryOptions({
-    queryKey: ['thread-pdf', phone, messageId, page],
-    queryFn: () => apiFetch<ThreadPdfPage>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/pdf/${page}`),
+    queryKey: threadKeys.pdfPage({ phone, messageId, page }),
+    queryFn: () =>
+      apiFetch<ThreadPdfPage>(
+        `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/pdf/${page}`,
+      ),
     staleTime: 30 * 60_000,
     // A busy slot or failed render (503) is asked again; pdf_unavailable (no sandbox) and a 4xx
     // not.

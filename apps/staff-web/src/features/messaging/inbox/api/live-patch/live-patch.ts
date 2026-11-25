@@ -4,6 +4,7 @@ import type { MessageStatus } from '@ab/catalog';
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
 import { writeTicks } from '@/features/messaging/inbox/api/list-ticks';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
 // docs/44 K1 on the web: a realtime event's rows move the ticks of the chat and of every cached
 // chats list at once, with no request: an instant visual patch only, never folded into a read.
@@ -37,7 +38,7 @@ function chatWrites(client: QueryClient, phone: string, incoming: Incoming) {
 export function patchLiveCaches(client: QueryClient, phone: string, rows: readonly LiveRow[]) {
   const incoming: Incoming = applyLiveRows(rows);
   const chat = chatWrites(client, phone, incoming);
-  const lists = client.getQueriesData<ListPage>({ queryKey: ['threads', 'list'] });
+  const lists = client.getQueriesData<ListPage>({ queryKey: threadKeys.lists });
   [
     ...chat,
     ...lists.flatMap(([key, page]) => movedWrite(key, page, page && patchList(page, incoming))),
