@@ -16,7 +16,9 @@ import { kickConfigReload } from '@/config/role/worker-kick';
 export const GOOGLE_DEFAULTS: GoogleSyncSettings = { enabled: false, mode: 'dry_run', window_days: GOOGLE_WINDOW_DAYS.default };
 
 /** Missing or malformed rows read as the safe defaults: OFF and dry_run (docs/24 §4). */
-export function readGoogleSettings(rows: readonly { key: string; value: unknown }[]): GoogleSyncSettings {
+export function readGoogleSettings(
+  rows: readonly { key: string; value: unknown }[],
+): GoogleSyncSettings {
   const v = new Map(rows.map((r) => [r.key, r.value]));
   const mode = v.get(GOOGLE_SETTING_KEYS.mode);
   const days = v.get(GOOGLE_SETTING_KEYS.window_days);
@@ -52,7 +54,10 @@ export class GoogleSettings {
 
   async write(input: { values: GoogleSettingsInput; actorId: string }): Promise<void> {
     try {
-      for (const [field, key] of Object.entries(GOOGLE_SETTING_KEYS) as [keyof GoogleSettingsInput, string][]) {
+      for (const [field, key] of Object.entries(GOOGLE_SETTING_KEYS) as [
+        keyof GoogleSettingsInput,
+        string,
+      ][]) {
         const value = input.values[field];
         if (value === undefined) continue;
         const { error } = await this.db.from('settings').upsert({ key, value, updated_by: input.actorId });

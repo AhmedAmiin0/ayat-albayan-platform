@@ -43,7 +43,9 @@ function setup(rows: SubRow[], paid: Map<string, number>) {
     paid: vi.fn(async () => paid),
     update: vi.fn(async () => null),
   };
-  const balances = { forSubscriptions: vi.fn(async () => new Map(rows.map((r) => [r.id, balance(r.id, 1)]))) };
+  const balances = {
+    forSubscriptions: vi.fn(async () => new Map(rows.map((r) => [r.id, balance(r.id, 1)]))),
+  };
   const audit = { record: vi.fn(async () => undefined) };
   const events = new PackageEvents();
   const paidIds: string[] = [];
@@ -103,7 +105,11 @@ describe('PackagesService.studentBalance (S6)', () => {
     expect(view.packages.map((p) => p.id)).toEqual(['a', 'b']);
     expect(view.current?.id).toBe('b');
     expect(view.remaining).toBe(6);
-    expect(view.packages[0]).toMatchObject({ paid: 145, price: 145, balance: { lessons_used: 1, remaining: 3 } });
+    expect(view.packages[0]).toMatchObject({
+      paid: 145,
+      price: 145,
+      balance: { lessons_used: 1, remaining: 3 },
+    });
   });
 
   it('no packages → current null, nothing left', async () => {

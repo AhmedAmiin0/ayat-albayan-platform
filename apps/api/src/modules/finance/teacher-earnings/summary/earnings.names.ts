@@ -14,6 +14,7 @@ export async function lessonNames(db: Db, lessonIds: string[]): Promise<Map<stri
     .in('lesson_id', lessonIds)
     .returns<NameRow[]>();
   if (error) throw dbError(error);
-  for (const r of data) byLesson.set(r.lesson_id, [...(byLesson.get(r.lesson_id) ?? []), { student: r.student }]);
+  for (const r of data)
+    byLesson.set(r.lesson_id, [...(byLesson.get(r.lesson_id) ?? []), { student: r.student }]);
   return byLesson;
 }

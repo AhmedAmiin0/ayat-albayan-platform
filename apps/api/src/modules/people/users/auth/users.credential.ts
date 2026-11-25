@@ -28,7 +28,10 @@ export function prepareCredential(req: CredentialRequest): PreparedCredential {
 }
 
 /** link mode: the recovery action link (no SMTP: the admin sends it by WhatsApp). */
-export async function withLink(auth: AuthAdmin, ctx: { email: string; prepared: PreparedCredential; mode: CredentialMode }): Promise<IssuedCredential | null> {
+export async function withLink(
+  auth: AuthAdmin,
+  ctx: { email: string; prepared: PreparedCredential; mode: CredentialMode },
+): Promise<IssuedCredential | null> {
   if (ctx.mode !== 'link') return ctx.prepared.issued;
   return { kind: 'link', value: await auth.recoveryLink(ctx.email) };
 }

@@ -18,7 +18,10 @@ export function isConfirmation(m: unknown): boolean {
  * The messages to write: unchanged (and no rule read) when none is a confirmation or the rule is on;
  * without the confirmations when it is off. Other rows are never touched.
  */
-export async function gateConfirmations<T>(policy: NotificationPolicy, messages: readonly T[]): Promise<T[]> {
+export async function gateConfirmations<T>(
+  policy: NotificationPolicy,
+  messages: readonly T[],
+): Promise<T[]> {
   if (!messages.some(isConfirmation)) return [...messages];
   if (await policy.isOn('booking_confirmation')) return [...messages];
   const kept = messages.filter((m) => !isConfirmation(m));

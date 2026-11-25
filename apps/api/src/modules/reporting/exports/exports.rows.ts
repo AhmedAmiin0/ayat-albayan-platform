@@ -24,12 +24,28 @@ export interface StudentIn {
   age: number | null;
   tz: string;
   created_at: string;
-  guardian: { name: string; phone_e164: string; country: string | null; source: LeadSource | null } | null;
+  guardian: {
+    name: string;
+    phone_e164: string;
+    country: string | null;
+    source: LeadSource | null;
+  } | null;
   teacher: { display_name_ar: string } | null;
 }
 
 const studentHeader = (): Cell[] => [
-  S.code, S.name, S.status, S.program, S.age, S.teacher, S.guardian, S.guardianPhone, G.country, G.source, S.tz, S.createdAt,
+  S.code,
+  S.name,
+  S.status,
+  S.program,
+  S.age,
+  S.teacher,
+  S.guardian,
+  S.guardianPhone,
+  G.country,
+  G.source,
+  S.tz,
+  S.createdAt,
 ];
 
 export function studentRows(rows: readonly StudentIn[]): Cell[][] {
@@ -57,11 +73,23 @@ export interface LessonIn {
   ends_at: string;
   status: LessonStatus;
   teacher: { display_name_ar: string } | null;
-  lesson_students: { attendance: Attendance | null; chargeable: boolean; student: { code: string | null; name: string } | null }[];
+  lesson_students: {
+    attendance: Attendance | null;
+    chargeable: boolean;
+    student: { code: string | null; name: string } | null;
+  }[];
 }
 
 const lessonHeader = (): Cell[] => [
-  X.columns.date, X.columns.time, SUB.duration, S.teacher, S.code, S.name, X.columns.lessonStatus, X.columns.attendance, X.columns.chargeable,
+  X.columns.date,
+  X.columns.time,
+  SUB.duration,
+  S.teacher,
+  S.code,
+  S.name,
+  X.columns.lessonStatus,
+  X.columns.attendance,
+  X.columns.chargeable,
 ];
 
 function durationLabel(l: Pick<LessonIn, 'starts_at' | 'ends_at'>): Cell {
@@ -76,7 +104,12 @@ export function lessonRows(rows: readonly LessonIn[]): Cell[][] {
     lessonHeader(),
     ...rows.flatMap((l) => {
       const at = new Date(l.starts_at);
-      const head: Cell[] = [riyadhDate(l.starts_at), clockTime(at, RIYADH_TZ), durationLabel(l), safeText(l.teacher?.display_name_ar)];
+      const head: Cell[] = [
+        riyadhDate(l.starts_at),
+        clockTime(at, RIYADH_TZ),
+        durationLabel(l),
+        safeText(l.teacher?.display_name_ar),
+      ];
       const status = ar.enums.lessonStatus[l.status];
       if (l.lesson_students.length === 0) return [[...head, '', '', status, '', '']];
       return l.lesson_students.map((ls) => [

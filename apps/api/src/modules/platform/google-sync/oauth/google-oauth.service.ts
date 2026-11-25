@@ -46,9 +46,15 @@ export class GoogleOAuthService {
     return oauth.authUrl({ state: s.state, scopes: GOOGLE_SCOPES });
   }
 
-  async callback(input: { code?: string; state?: string; error?: string }): Promise<CallbackOutcome> {
+  async callback(input: {
+    code?: string;
+    state?: string;
+    error?: string;
+  }): Promise<CallbackOutcome> {
     if (input.error || !input.code) return 'denied';
-    const payload = input.state ? readState({ state: input.state, key: this.key(), now: Date.now() }) : null;
+    const payload = input.state
+      ? readState({ state: input.state, key: this.key(), now: Date.now() })
+      : null;
     if (!payload || !(await this.account.consumeNonce(nonceHash(payload.n)))) return 'state';
     const oauth = this.factory.oauth();
     if (!oauth) return 'not_configured';

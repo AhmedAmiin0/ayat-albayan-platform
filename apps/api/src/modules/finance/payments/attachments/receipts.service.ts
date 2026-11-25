@@ -40,9 +40,15 @@ export class ReceiptsService {
    * A client-sent path must be this package's and already uploaded (docs/11 §3), else 400; 409
    * attachment_in_use when another payment already holds it (paymentId: the one being edited may).
    */
-  async check(input: { subscriptionId: string; path: string; paymentId?: string | undefined }): Promise<void> {
+  async check(input: {
+    subscriptionId: string;
+    path: string;
+    paymentId?: string | undefined;
+  }): Promise<void> {
     const { path } = input;
-    const ok = isPathOf(path, input.subscriptionId) && (await this.storage.exists({ bucket: BUCKETS.receipts, path }));
+    const ok =
+      isPathOf(path, input.subscriptionId) &&
+      (await this.storage.exists({ bucket: BUCKETS.receipts, path }));
     if (!ok) throw badRequest('receipt_path');
     const owners = await this.files.owners([path]);
     if (owners.some((o) => o.paymentId !== input.paymentId)) throw conflict('attachment_in_use', { path });

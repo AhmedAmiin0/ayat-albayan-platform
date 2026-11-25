@@ -37,7 +37,9 @@ describe('StudentsService: contact_is_self', () => {
   it('PATCH accepts it and update writes it alone', async () => {
     const dto = studentPatchSchema.parse({ contact_is_self: false });
     expect(dto).toEqual({ contact_is_self: false });
-    const { svc, argsOf } = setup({ students: [{ data: S }, { data: { ...S, contact_is_self: false } }] });
+    const { svc, argsOf } = setup({
+      students: [{ data: S }, { data: { ...S, contact_is_self: false } }],
+    });
     await svc.update('s1', dto, 'u1');
     expect(argsOf('students', 'update')).toEqual([{ contact_is_self: false }]);
   });

@@ -10,7 +10,9 @@ import { AssistantStatementsController } from './assistant-statements.controller
 const reflector = new Reflector();
 const proto = AssistantStatementsController.prototype;
 const needs = (handlers: (keyof typeof proto)[]) =>
-  handlers.map((h) => reflector.getAllAndOverride<string>(PERMISSION, [proto[h], AssistantStatementsController]));
+  handlers.map((h) =>
+    reflector.getAllAndOverride<string>(PERMISSION, [proto[h], AssistantStatementsController]),
+  );
 
 describe('AssistantStatementsController permissions', () => {
   it('approve, reopen and unpay need assistantpay.approve', () => {

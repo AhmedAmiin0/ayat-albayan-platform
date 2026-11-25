@@ -3,7 +3,11 @@ import { BUNDLES } from '@/common/infra/i18n/server-text';
 import { DEFAULTS, listKeys, overrideProblem } from './translations.catalog';
 
 const none = { ar: {}, en: {} };
-const q = (over: Partial<Parameters<typeof listKeys>[0]> = {}) => ({ page: 1, pageSize: 50, ...over });
+const q = (over: Partial<Parameters<typeof listKeys>[0]> = {}) => ({
+  page: 1,
+  pageSize: 50,
+  ...over,
+});
 
 describe('listKeys (GET /i18n/keys)', () => {
   it('lists every bundled key with both defaults, sorted, one page at a time', () => {

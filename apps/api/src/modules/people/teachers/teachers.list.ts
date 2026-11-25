@@ -35,7 +35,10 @@ interface TeacherFilterable<Q> {
 }
 
 /** Name «contains», phone digits in any format «contains», one program among hers, status. */
-export function applyTeacherFilters<Q extends TeacherFilterable<Q>>(query: Q, f: TeacherListQuery): Q {
+export function applyTeacherFilters<Q extends TeacherFilterable<Q>>(
+  query: Q,
+  f: TeacherListQuery,
+): Q {
   let q = query;
   if (f.name) q = q.ilike('display_name_ar', ilikeContains(f.name));
   if (f.phone) q = q.ilike('phone_e164', ilikeContains(searchDigits(f.phone) || f.phone));
@@ -45,7 +48,9 @@ export function applyTeacherFilters<Q extends TeacherFilterable<Q>>(query: Q, f:
 }
 
 /** Active, and not yet subscribed (new, trial, pending_subscription); others ignored. */
-export function tallyKinds(rows: readonly { teacher_id: string | null; status: StudentStatus }[]): Map<string, TeacherStudentCounts> {
+export function tallyKinds(
+  rows: readonly { teacher_id: string | null; status: StudentStatus }[],
+): Map<string, TeacherStudentCounts> {
   const out = new Map<string, TeacherStudentCounts>();
   for (const { teacher_id: id, status } of rows) {
     if (!id || (status !== 'active' && !isNotSubscribed(status))) continue;

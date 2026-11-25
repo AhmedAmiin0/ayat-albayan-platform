@@ -21,7 +21,9 @@ export class MeService {
    * 401 without a session to bind to (a token with no session_id claim, or a session just ended);
    * 409 when the token is someone else's live device. Returns the key the device keeps for next time.
    */
-  async addPushToken(input: DeviceClaim & { sessionId: string | null }): Promise<{ deviceKey: string }> {
+  async addPushToken(
+    input: DeviceClaim & { sessionId: string | null },
+  ): Promise<{ deviceKey: string }> {
     const { userId, token, sessionId } = input;
     if (!sessionId) throw new UnauthorizedException('no_session');
     const deviceKey = await claimDevice(this.db, { ...input, sessionId });
@@ -62,7 +64,8 @@ export class MeService {
       .contains('push_tokens', [token])
       .neq('id', userId);
     if (error) throw dbError(error);
-    for (const p of data ?? []) await this.savePushTokens(p.id, withoutPushToken(p.push_tokens, token));
+    for (const p of data ?? [])
+      await this.savePushTokens(p.id, withoutPushToken(p.push_tokens, token));
   }
 
   private async savePushTokens(userId: string, tokens: string[]): Promise<void> {

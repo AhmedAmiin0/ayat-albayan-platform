@@ -12,7 +12,11 @@ function setup() {
   const payments = { subscription: vi.fn().mockResolvedValue({ id: SUB }) };
   const storage = { signedUpload: vi.fn().mockResolvedValue({ bucket: 'receipts', path: 'p', token: 't', signed_url: 'u' }) };
   const files = {} as unknown as PaymentAttachmentsRepo;
-  const svc = new ReceiptsService(payments as unknown as PaymentsRepo, storage as unknown as StorageService, files);
+  const svc = new ReceiptsService(
+    payments as unknown as PaymentsRepo,
+    storage as unknown as StorageService,
+    files,
+  );
   return { svc, storage };
 }
 const input = (size: number) => ({ subscriptionId: SUB, mime: 'image/png' as const, size });
@@ -26,7 +30,9 @@ describe('ReceiptsService.uploadUrl follows settings.upload_max_mb', () => {
 
   it('a 2 MB setting refuses the same file 400 receipt_too_large before signing', async () => {
     const { svc, storage } = setup();
-    const err = await svc.uploadUrl(input(5 * 1024 * 1024), uploadMaxBytes({ upload_max_mb: 2 })).catch((e: unknown) => e);
+    const err = await svc
+      .uploadUrl(input(5 * 1024 * 1024), uploadMaxBytes({ upload_max_mb: 2 }))
+      .catch((e: unknown) => e);
     expect(err).toBeInstanceOf(HttpException);
     expect((err as HttpException).getResponse()).toMatchObject({ code: 'receipt_too_large' });
     expect(storage.signedUpload).not.toHaveBeenCalled();

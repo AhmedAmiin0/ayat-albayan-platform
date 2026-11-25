@@ -34,7 +34,10 @@ export function crmLine(env: Env, line: WaLine): CrmLineEnv | null {
 
 /** NAMES (never values) of what a crm line still lacks (both lines on crm is a duplicate flag, not a gap). */
 export function crmGaps(env: Env): string[] {
-  const present: Record<string, string | undefined> = { WACRM_API_BASE: env.WACRM_API_BASE, WACRM_API_KEY: env.WACRM_API_KEY };
+  const present: Record<string, string | undefined> = {
+    WACRM_API_BASE: env.WACRM_API_BASE,
+    WACRM_API_KEY: env.WACRM_API_KEY,
+  };
   return Object.keys(present).filter((k) => present[k] === undefined);
 }
 

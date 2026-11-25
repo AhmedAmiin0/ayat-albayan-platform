@@ -48,7 +48,10 @@ export class AssistantStatementsController {
   @Post('statements')
   @HttpCode(200)
   generate(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AssistantStatementView> {
-    return this.statements.generate({ ...parseOrThrow(assistantStatementGenerateSchema, body), actorId: user.id });
+    return this.statements.generate({
+      ...parseOrThrow(assistantStatementGenerateSchema, body),
+      actorId: user.id,
+    });
   }
 
   /** 409 empty_statement when it has no lines. */

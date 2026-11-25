@@ -4,7 +4,13 @@ import { LeadConversion } from '@/modules/finance/subscriptions/student-lifecycl
 import { activatesStudent, StudentActivation } from '@/modules/finance/subscriptions/student-lifecycle/student-activation';
 import { StudentDeactivation, type DeletedPayment } from '@/modules/finance/subscriptions/student-lifecycle/student-deactivation';
 
-type Write = { entity: string; entityId?: string; action: string; before?: unknown; after?: unknown };
+type Write = {
+  entity: string;
+  entityId?: string;
+  action: string;
+  before?: unknown;
+  after?: unknown;
+};
 
 const isDeletedPayment = (row: unknown): row is DeletedPayment =>
   typeof row === 'object' && row !== null && 'id' in row && typeof row.id === 'string' && activatesStudent(row);

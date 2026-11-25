@@ -40,20 +40,40 @@ describe('/assistant-pay: the admin only (assistantpay.read | write | approve)',
     for (const route of ROUTES) {
       for (const token of ['salesA', 'salesB', 'teacher', 'ta', 'guardian'] as const) {
         const res = await t.call({ ...route, token });
-        expect([route.method, route.url, token, res.statusCode]).toEqual([route.method, route.url, token, 403]);
+        expect([route.method, route.url, token, res.statusCode]).toEqual([
+          route.method,
+          route.url,
+          token,
+          403,
+        ]);
       }
     }
-    for (const fn of [...Object.values(t.rpc), ...Object.values(t.terms), ...Object.values(t.statements), ...Object.values(t.ledger), t.receipts.check, t.audit.record]) {
+    for (const fn of [
+      ...Object.values(t.rpc),
+      ...Object.values(t.terms),
+      ...Object.values(t.statements),
+      ...Object.values(t.ledger),
+      t.receipts.check,
+      t.audit.record,
+    ]) {
       expect(fn).not.toHaveBeenCalled();
     }
   });
 
   it('every route: 401 without a token, and the admin passes the guard (anything but 401 / 403)', async () => {
     for (const route of ROUTES) {
-      const anon = await t.app.inject({ method: route.method, url: route.url, payload: route.body });
+      const anon = await t.app.inject({
+        method: route.method,
+        url: route.url,
+        payload: route.body,
+      });
       expect([route.url, anon.statusCode]).toEqual([route.url, 401]);
       const admin = await t.call({ ...route, token: 'admin' });
-      expect([route.method, route.url, [401, 403].includes(admin.statusCode)]).toEqual([route.method, route.url, false]);
+      expect([route.method, route.url, [401, 403].includes(admin.statusCode)]).toEqual([
+        route.method,
+        route.url,
+        false,
+      ]);
     }
   });
 

@@ -48,10 +48,15 @@ export class PackagesService {
    * never the newest. Each package moved to 'active' tells PackageEvents, so its course draft is
    * booked (idempotent).
    */
-  async recomputeMany(studentIds: readonly string[], actorId: string | null): Promise<Map<string, StudentState>> {
+  async recomputeMany(
+    studentIds: readonly string[],
+    actorId: string | null,
+  ): Promise<Map<string, StudentState>> {
     const rows = livePackages(await this.subs.forStudents(studentIds));
     const ctx = await this.context(rows);
-    const states = new Map(studentIds.map((id) => [id, { rows: rows.filter((r) => r.student_id === id), ctx }]));
+    const states = new Map(
+      studentIds.map((id) => [id, { rows: rows.filter((r) => r.student_id === id), ctx }]),
+    );
     const changes = [...states.values()].flatMap((s) => statusChanges({ subs: s.rows, ...ctx }));
     await this.write(changes, actorId);
     for (const c of changes.filter(isActivation)) await this.events.paid(c.id);

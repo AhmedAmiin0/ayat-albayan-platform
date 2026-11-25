@@ -25,8 +25,10 @@ export class GoogleAdminService {
     await this.data.settings.write(input);
     const after = await this.data.settings.read();
     await this.record({ actorId: input.actorId, action: 'settings', after: { ...after } });
-    if (after.enabled && after.mode === 'live' && (before.mode !== 'live' || !before.enabled)) await this.data.items.requeue('dry_run');
-    if (after.enabled && (!before.enabled || after.window_days !== before.window_days)) await this.run.job.reconcile();
+    if (after.enabled && after.mode === 'live' && (before.mode !== 'live' || !before.enabled))
+      await this.data.items.requeue('dry_run');
+    if (after.enabled && (!before.enabled || after.window_days !== before.window_days))
+      await this.run.job.reconcile();
     void this.run.job.kick();
   }
 
@@ -56,11 +58,16 @@ export class GoogleAdminService {
   async confirmDrive(input: { values: GoogleDriveInput; actorId: string }): Promise<void> {
     const d = readDiscovery((await this.data.account.get()).discovery);
     const root = d?.root_folder?.id === input.values.root_folder_id ? d.root_folder : null;
-    const sheetOk = input.values.summary_sheet_id === null || d?.summary_sheet?.id === input.values.summary_sheet_id;
+    const sheetOk =
+      input.values.summary_sheet_id === null ||
+      d?.summary_sheet?.id === input.values.summary_sheet_id;
     if (!root || !sheetOk) throw new ConflictException({ message: 'not_discovered' });
     await this.data.account.update({
-      root_folder_id: root.id, root_folder_name: root.name, summary_sheet_id: input.values.summary_sheet_id,
-      drive_confirmed_at: new Date().toISOString(), drive_confirmed_by: input.actorId,
+      root_folder_id: root.id,
+      root_folder_name: root.name,
+      summary_sheet_id: input.values.summary_sheet_id,
+      drive_confirmed_at: new Date().toISOString(),
+      drive_confirmed_by: input.actorId,
     });
     await this.record({ actorId: input.actorId, action: 'drive_confirm', after: { root_folder_id: root.id } });
     await this.data.items.requeue('drive_unconfirmed');

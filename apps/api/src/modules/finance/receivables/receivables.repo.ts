@@ -55,7 +55,11 @@ export class ReceivablesRepo {
       this.db.from('payments').select('subscription_id, amount, kind').in('subscription_id', chunk),
     );
     const by = new Map<string, { amount: number; kind: 'payment' | 'refund' }[]>();
-    for (const r of rows) by.set(r.subscription_id, [...(by.get(r.subscription_id) ?? []), { amount: Number(r.amount), kind: r.kind }]);
+    for (const r of rows)
+      by.set(r.subscription_id, [
+        ...(by.get(r.subscription_id) ?? []),
+        { amount: Number(r.amount), kind: r.kind },
+      ]);
     return new Map([...by.entries()].map(([id, list]) => [id, netPaid(list)]));
   }
 }

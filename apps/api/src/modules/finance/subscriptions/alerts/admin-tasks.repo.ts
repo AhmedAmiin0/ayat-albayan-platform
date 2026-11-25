@@ -39,7 +39,12 @@ export class AdminTasksRepo {
       .range(from, from + q.pageSize - 1);
     if (error) throw dbError(error);
     const students = await this.studentsOf(data);
-    return { items: data.map((r) => toTaskView(r, students)), total: count ?? 0, page: q.page, pageSize: q.pageSize };
+    return {
+      items: data.map((r) => toTaskView(r, students)),
+      total: count ?? 0,
+      page: q.page,
+      pageSize: q.pageSize,
+    };
   }
 
   /** null when no task has this id. Marking a done task again keeps the first done_at. */

@@ -31,8 +31,20 @@ export class GoogleAccountQueries {
   async get(): Promise<AccountRow> {
     const { data, error } = await this.db.from('google_account').select(COLUMNS).eq('id', true).maybeSingle();
     if (error) throw fail('account read', error);
-    return (data ?? { status: 'disconnected', email: null, scopes: [], connected_at: null, connected_by: null, last_error: null, discovery: null,
-      root_folder_id: null, root_folder_name: null, summary_sheet_id: null, drive_confirmed_at: null, last_run_at: null }) as AccountRow;
+    return (data ?? {
+      status: 'disconnected',
+      email: null,
+      scopes: [],
+      connected_at: null,
+      connected_by: null,
+      last_error: null,
+      discovery: null,
+      root_folder_id: null,
+      root_folder_name: null,
+      summary_sheet_id: null,
+      drive_confirmed_at: null,
+      last_run_at: null,
+    }) as AccountRow;
   }
 
   async update(patch: AccountPatch): Promise<void> {
@@ -45,7 +57,10 @@ export class GoogleAccountQueries {
     await this.update({});
     const { error } = await this.db
       .from('google_account')
-      .update({ oauth_nonce_hash: input.hash, oauth_nonce_expires_at: input.expiresAt.toISOString() })
+      .update({
+        oauth_nonce_hash: input.hash,
+        oauth_nonce_expires_at: input.expiresAt.toISOString(),
+      })
       .eq('id', true);
     if (error) throw fail('nonce write', error);
   }

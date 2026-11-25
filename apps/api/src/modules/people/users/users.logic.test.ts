@@ -8,7 +8,10 @@ import type { StaffProfile } from './store/users.store';
 const prof = (id: string, role: StaffProfile['role'], extra: Partial<StaffProfile> = {}): StaffProfile => ({ id, full_name: id, role, role_id: null, disabled_at: null, ...extra });
 const custom: RoleRecord = { id: 'c1', key: 'custom-1', name_ar: 'محاسب', name_en: null, base_role: 'admin', is_system: false, permissions: ['payments.read'] };
 const readOnly: RoleRecord = { ...custom, id: 'c2', permissions: ['users.read'] };
-const state = (profiles: StaffProfile[]): UserState => ({ roles: [...systemRoles(), custom, readOnly], profiles });
+const state = (profiles: StaffProfile[]): UserState => ({
+  roles: [...systemRoles(), custom, readOnly],
+  profiles,
+});
 const HOLDS_PAYMENTS = ['payments.read'] as const;
 
 describe('escalation (reuses the roles rules)', () => {
@@ -20,7 +23,9 @@ describe('escalation (reuses the roles rules)', () => {
   });
   it('names the missing permission and refuses roles beyond the actor', () => {
     const s = state([]);
-    expect(() => assertRoleAssignable(HOLDS_PAYMENTS, s, systemRoles()[1] as RoleRecord)).toThrow(expect.objectContaining({ status: 403 }));
+    expect(() => assertRoleAssignable(HOLDS_PAYMENTS, s, systemRoles()[1] as RoleRecord)).toThrow(
+      expect.objectContaining({ status: 403 }),
+    );
     expect(isAssignable(HOLDS_PAYMENTS, s, custom)).toBe(true);
     expect(isAssignable(HOLDS_PAYMENTS, s, readOnly)).toBe(false);
   });

@@ -120,7 +120,9 @@ export class ReportPdfSource {
         startsOn: p.starts_on,
         createdAt: p.created_at,
       })),
-      ...(report.form_version === 2 ? { family: await loadFamilyExtras(this.db, report, { startsAt: l.starts_at, now }) } : {}),
+      ...(report.form_version === 2
+        ? { family: await loadFamilyExtras(this.db, report, { startsAt: l.starts_at, now }) }
+        : {}),
     };
   }
 

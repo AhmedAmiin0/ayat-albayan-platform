@@ -6,7 +6,11 @@ import { ActivityRepo, likePrefix, nextDayStart } from './activity.repo';
 type Call = [string, ...unknown[]];
 
 /** A chainable PostgREST stand-in: records every call, resolves to `result`. */
-function fakeDb(result: { data: unknown[]; count: number; error: null | { code: string; message: string } }) {
+function fakeDb(result: {
+  data: unknown[];
+  count: number;
+  error: null | { code: string; message: string };
+}) {
   const calls: Call[] = [];
   const builder: Record<string, unknown> = {};
   for (const name of ['select', 'eq', 'like', 'lt', 'gte', 'order', 'range', 'returns']) {

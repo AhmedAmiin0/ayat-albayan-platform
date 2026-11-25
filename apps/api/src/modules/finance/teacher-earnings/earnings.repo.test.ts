@@ -27,7 +27,11 @@ describe('EarningsQueries', () => {
   });
 
   it('money reads every page of 1000', async () => {
-    const page = Array.from({ length: 1000 }, (_, i) => ({ id: String(i), amount: 1, paid_amount: 0 }));
+    const page = Array.from({ length: 1000 }, (_, i) => ({
+      id: String(i),
+      amount: 1,
+      paid_amount: 0,
+    }));
     const { db } = fakeDb({ [V]: [{ data: page }, { data: [earning(1)] }] });
     expect(await new EarningsRepo(db).money(TEACHER)).toHaveLength(1001);
   });

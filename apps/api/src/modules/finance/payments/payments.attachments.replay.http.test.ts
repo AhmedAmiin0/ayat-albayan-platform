@@ -7,7 +7,9 @@ const REQ = '7d1c6a52-3b7e-4f0e-9a51-2f7c3e9b8a20';
 const post = (body: object) => ({ method: 'POST' as const, url: '/payments', body: { ...ADMIN_PAY, clientRequestId: REQ, ...body } });
 const stored = (...ns: number[]) => ns.map((n) => ({ id: `att-${n}`, path: file(n), mime: 'image/jpeg', size: 2048, created_at: '2026-10-12T09:00:00Z' }));
 const savedPaths = (m: Mocks): string[] =>
-  m.attachments.save.mock.calls.flatMap((args: unknown[]) => (args[0] as { path: string }[]).map((r) => r.path));
+  m.attachments.save.mock.calls.flatMap((args: unknown[]) =>
+    (args[0] as { path: string }[]).map((r) => r.path),
+  );
 
 describe('POST /payments: a booked payment never comes back as an error (rule 8)', () => {
   let app: NestFastifyApplication;
@@ -38,7 +40,8 @@ describe('POST /payments: a booked payment never comes back as an error (rule 8)
     m.storage.info.mockResolvedValue(null); // would be a 400 if the replay re-checked it
     const res = await call(post({ attachments: [file(1), file(2)], receiptPath: file(9) }));
     expect([res.statusCode, res.json().id]).toEqual([201, PAYMENT_ID]);
-    for (const fn of [m.storage.info, m.storage.head, m.storage.exists, m.attachments.save]) expect(fn).not.toHaveBeenCalled();
+    for (const fn of [m.storage.info, m.storage.head, m.storage.exists, m.attachments.save])
+      expect(fn).not.toHaveBeenCalled();
   });
 
   it('a replay that switches to bank on a cash row saves nothing', async () => {

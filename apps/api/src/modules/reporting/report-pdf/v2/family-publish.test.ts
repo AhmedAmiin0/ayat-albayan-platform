@@ -15,9 +15,16 @@ const EPOCH = new Date(0);
 const NOW = new Date('2026-10-27T14:10:00Z');
 
 function publisher(source: ReportSource) {
-  const renderer = { render: vi.fn<(html: string) => Promise<Uint8Array>>(async () => new Uint8Array([37])), close: vi.fn() };
+  const renderer = {
+    render: vi.fn<(html: string) => Promise<Uint8Array>>(async () => new Uint8Array([37])),
+    close: vi.fn(),
+  };
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
-  const p = new ReportPdfPublisher({ load: async () => source } as unknown as ReportPdfSource, renderer as unknown as PdfRenderer, storage as unknown as StorageService);
+  const p = new ReportPdfPublisher(
+    { load: async () => source } as unknown as ReportPdfSource,
+    renderer as unknown as PdfRenderer,
+    storage as unknown as StorageService,
+  );
   const feedback = { url: vi.fn(async () => 'https://api.example/r/Ab12Cd34Ef') };
   const templates = { approved: vi.fn(async () => new Set<string>()) };
   Object.assign(p, { settings: new ReportPdfSettings(fakeSettings()), feedback, templates });
@@ -52,7 +59,13 @@ describe('the family report keeps the same sending path; only the page changes f
     const v1 = fakeDb(tables({ ...report, form_version: 1 }));
     expect((await new ReportPdfSource(v1.db).load('r1', EPOCH))?.family).toBeUndefined();
     expect(v1.trips.filter((t) => t === 'lesson_reports')).toHaveLength(1);
-    const v2 = fakeDb(tables({ ...report, form_version: 2, content: { segments: [] }, submitted_at: null }));
-    expect((await new ReportPdfSource(v2.db).load('r1', EPOCH))?.family).toEqual({ content: expect.objectContaining({ segments: [] }), history: [], nextLessonAt: null });
+    const v2 = fakeDb(
+      tables({ ...report, form_version: 2, content: { segments: [] }, submitted_at: null }),
+    );
+    expect((await new ReportPdfSource(v2.db).load('r1', EPOCH))?.family).toEqual({
+      content: expect.objectContaining({ segments: [] }),
+      history: [],
+      nextLessonAt: null,
+    });
   });
 });

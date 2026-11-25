@@ -10,7 +10,10 @@ describe('GoogleAdminService.discover', () => {
       forget: vi.fn(() => order.push('forget')),
       client: vi.fn(async () => (order.push('client'), null)),
     };
-    const admin = new GoogleAdminService({} as GoogleData, { connection } as unknown as GoogleRuntime);
+    const admin = new GoogleAdminService(
+      {} as GoogleData,
+      { connection } as unknown as GoogleRuntime,
+    );
     await expect(admin.discover()).rejects.toThrow('not_connected');
     expect(order).toEqual(['forget', 'client']);
   });

@@ -6,8 +6,14 @@ const content = { segments, tajweed: null, arabic: null, islamic: null, quick: [
 
 describe('report-v2.mapper', () => {
   it('reads content only on a v2 row; unreadable content reads as null', () => {
-    expect(v2Fields({ form_version: 1, content: null })).toEqual({ form_version: 1, content: null });
-    expect(v2Fields({ form_version: 2, content: { segments } })).toEqual({ form_version: 2, content });
+    expect(v2Fields({ form_version: 1, content: null })).toEqual({
+      form_version: 1,
+      content: null,
+    });
+    expect(v2Fields({ form_version: 2, content: { segments } })).toEqual({
+      form_version: 2,
+      content,
+    });
     expect(storedContent({ form_version: 2, content: { segments: [{ kind: 'x' }] } })).toBeNull();
     expect(storedContent({ form_version: 1, content: { segments } })).toBeNull();
   });

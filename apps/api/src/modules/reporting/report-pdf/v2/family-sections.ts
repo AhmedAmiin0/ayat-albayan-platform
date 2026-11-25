@@ -17,28 +17,44 @@ const line = (text: string) => `<p class="muted">${text}</p>`;
 
 function quranParts({ content }: FamilyModel): string[] {
   const rows = content.segments.map((s) =>
-    row(v.segment[s.kind], { value: esc(fill(v.rangeShort, { surah: surahName(s.surah), from: s.from, to: s.to })), grade: s.grade }),
+    row(v.segment[s.kind], {
+      value: esc(fill(v.rangeShort, { surah: surahName(s.surah), from: s.from, to: s.to })),
+      grade: s.grade,
+    }),
   );
-  const theory = content.tajweed ? [line(esc(fill(f.theoryLine, { topic: v.tajweed[content.tajweed] })))] : [];
+  const theory = content.tajweed
+    ? [line(esc(fill(f.theoryLine, { topic: v.tajweed[content.tajweed] })))]
+    : [];
   return [...rows, ...theory];
 }
 
 function arabicParts({ content }: FamilyModel): string[] {
   const a = content.arabic;
-  const topic = a?.topic ? [line(esc(fill(f.domainLine, { domain: v.topic, topic: a.topic })))] : [];
+  const topic = a?.topic
+    ? [line(esc(fill(f.domainLine, { domain: v.topic, topic: a.topic })))]
+    : [];
   return [...topic, ...ARABIC_SKILLS.map((k) => row(v.skills[k], { grade: a?.skills[k] ?? null }))];
 }
 
 function islamicParts({ content }: FamilyModel): string[] {
   const i = content.islamic;
   const lines = [
-    ...(i?.domain && i.topic ? [line(esc(fill(f.domainLine, { domain: v.domains[i.domain], topic: i.topic })))] : []),
+    ...(i?.domain && i.topic
+      ? [line(esc(fill(f.domainLine, { domain: v.domains[i.domain], topic: i.topic })))]
+      : []),
     ...(i?.memorized ? [line(esc(fill(f.memorizedLine, { text: i.memorized })))] : []),
   ];
-  return [...lines, ...ISLAMIC_RATES.map((k) => row(v.islamicRates[k], { grade: i?.rates[k] ?? null }))];
+  return [
+    ...lines,
+    ...ISLAMIC_RATES.map((k) => row(v.islamicRates[k], { grade: i?.rates[k] ?? null })),
+  ];
 }
 
-const PARTS: Record<Program, (m: FamilyModel) => string[]> = { quran: quranParts, arabic: arabicParts, islamic_studies: islamicParts };
+const PARTS: Record<Program, (m: FamilyModel) => string[]> = {
+  quran: quranParts,
+  arabic: arabicParts,
+  islamic_studies: islamicParts,
+};
 
 export function doneHtml(m: FamilyModel): string {
   const parts = PARTS[m.program](m);
@@ -54,7 +70,9 @@ export function progressHtml(m: FamilyModel): string {
   const juzName = JUZ_NAMES[p.juz - 1] ?? '';
   const pct = Math.round((p.done / p.total) * 100);
   const vars = { juz: p.juz, done: p.done, total: p.total };
-  const completed = p.completed.map((j) => fill(f.juzName, { name: JUZ_NAMES[j - 1] ?? String(j) }));
+  const completed = p.completed.map((j) =>
+    fill(f.juzName, { name: JUZ_NAMES[j - 1] ?? String(j) }),
+  );
   return [
     `<section><h2>${esc(f.progress)}</h2>`,
     `<div class="bar-head"><span>${esc(fill(f.juzLabel, { juz: p.juz, name: juzName }))}</span><span>${esc(fill(f.pagesOf, vars))}</span></div>`,

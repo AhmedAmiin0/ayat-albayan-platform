@@ -29,7 +29,10 @@ describe('GET /lessons/:id/report-form (R1; R-REP-01, R-REP-04, issues A7, D1)',
     h.lessons.packages.mockResolvedValue(new Map([[STUDENT_ID, BALANCE]]));
     const res = await h.call({ method: 'GET', url: URL });
     expect(res.statusCode).toBe(200);
-    expect(h.reports.ensureDrafts).toHaveBeenCalledWith(lessonRow(), { actorId: TEACHER.id, formVersion: 1 });
+    expect(h.reports.ensureDrafts).toHaveBeenCalledWith(lessonRow(), {
+      actorId: TEACHER.id,
+      formVersion: 1,
+    });
     const body = res.json();
     expect(body.lesson).toEqual({
       id: LESSON_ID,
@@ -58,9 +61,25 @@ describe('GET /lessons/:id/report-form (R1; R-REP-01, R-REP-04, issues A7, D1)',
   });
 
   it('a group lesson: one entry per student with a report, by name', async () => {
-    const sibling = { student_id: SIBLING_ID, attendance: null, chargeable: true, student: { id: SIBLING_ID, code: 'AB-0184', name: 'آية', tz: 'Asia/Riyadh', program: 'quran' as const } };
-    h.reports.lesson.mockResolvedValue(lessonRow({ lesson_students: [...lessonRow().lesson_students, sibling] }));
-    h.reports.byLesson.mockResolvedValue([reportRow(), reportRow({ id: 'r2', student_id: SIBLING_ID })]);
+    const sibling = {
+      student_id: SIBLING_ID,
+      attendance: null,
+      chargeable: true,
+      student: {
+        id: SIBLING_ID,
+        code: 'AB-0184',
+        name: 'آية',
+        tz: 'Asia/Riyadh',
+        program: 'quran' as const,
+      },
+    };
+    h.reports.lesson.mockResolvedValue(
+      lessonRow({ lesson_students: [...lessonRow().lesson_students, sibling] }),
+    );
+    h.reports.byLesson.mockResolvedValue([
+      reportRow(),
+      reportRow({ id: 'r2', student_id: SIBLING_ID }),
+    ]);
     const res = await h.call({ method: 'GET', url: URL });
     expect(res.json().entries.map((e: { student: { name: string } }) => e.student.name)).toEqual(['آية', 'سهيلة']);
   });

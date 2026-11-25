@@ -12,7 +12,11 @@ type Fail = (error: AuthFailure) => Error;
  * A login through the Auth Admin API with its email already confirmed (no SMTP is configured); the
  * password only when one is given. Each caller maps GoTrue's failures to its own codes.
  */
-export async function createAuthUser(db: Db, input: { email: string; password?: string | undefined; fullName: string }, fail: Fail): Promise<string> {
+export async function createAuthUser(
+  db: Db,
+  input: { email: string; password?: string | undefined; fullName: string },
+  fail: Fail,
+): Promise<string> {
   const { data, error } = await db.auth.admin.createUser({
     email: input.email,
     ...(input.password && { password: input.password }),

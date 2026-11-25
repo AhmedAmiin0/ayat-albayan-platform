@@ -47,7 +47,14 @@ export class ActivityInterceptor implements NestInterceptor {
     const action = actionKey(ctx.getClass().name, ctx.getHandler().name);
     const record = (status: number, response?: unknown) => {
       try {
-        const row = toEntry({ req, route, action, status, durationMs: Date.now() - started, response });
+        const row = toEntry({
+          req,
+          route,
+          action,
+          status,
+          durationMs: Date.now() - started,
+          response,
+        });
         if (row) this.writer.push(row);
       } catch (e) {
         this.log.warn(`activity entry skipped: ${String(e)}`);

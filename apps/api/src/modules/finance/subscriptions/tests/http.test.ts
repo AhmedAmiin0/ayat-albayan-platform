@@ -27,7 +27,12 @@ describe('subscriptions routes (S1–S6, R-SUB-01)', () => {
     );
     expect(m.audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'subscriptions', action: 'create' }));
     expect(m.subs.forStudent).toHaveBeenCalledWith(STUDENT_ID); // status recompute + alerts
-    expect(res.json()).toMatchObject({ id: SUB_ID, price: 145, paid: 0, balance: { remaining: 4 } });
+    expect(res.json()).toMatchObject({
+      id: SUB_ID,
+      price: 145,
+      paid: 0,
+      balance: { remaining: 4 },
+    });
   });
 
   it('S2: a custom count has no package size; an explicit country wins', async () => {
@@ -37,8 +42,12 @@ describe('subscriptions routes (S1–S6, R-SUB-01)', () => {
     m.subs.get.mockResolvedValue(subRow());
     const body = { ...create, pricing: { count: 10, country: 'eg', duration: 30 } };
     expect((await call({ method: 'POST', url: '/subscriptions', body })).statusCode).toBe(201);
-    expect(m.pricing.quote).toHaveBeenCalledWith(expect.objectContaining({ count: 10, country: 'EG', duration: 30 }));
-    expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ package: null, lessons_total: 10 }));
+    expect(m.pricing.quote).toHaveBeenCalledWith(
+      expect.objectContaining({ count: 10, country: 'EG', duration: 30 }),
+    );
+    expect(m.subs.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ package: null, lessons_total: 10 }),
+    );
   });
 
   it('S2: 404 student_not_found; 400 without pricing', async () => {

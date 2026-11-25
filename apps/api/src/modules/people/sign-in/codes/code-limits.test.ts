@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { phoneMayCheck, phoneMaySend, SignInLimits } from './code-limits';
 import { MemoryLimitStore, type LimitTake } from './limit-store';
 
-const stats = (over: Partial<{ sentLast15Min: number; sentLastDay: number; failedLastDay: number }> = {}) => ({
+const stats = (
+  over: Partial<{ sentLast15Min: number; sentLastDay: number; failedLastDay: number }> = {},
+) => ({
   sentLast15Min: 0,
   sentLastDay: 0,
   failedLastDay: 0,
@@ -52,8 +54,12 @@ describe('SignInLimits (per IP and per identifier, 15 minutes)', () => {
 
   it('asks the store for the IP bucket first, then the folded identifier, over 15 minutes', async () => {
     const seen: LimitTake[] = [];
-    const limits = new SignInLimits({ take: (input) => (seen.push(input), Promise.resolve(false)) });
-    await expect(limits.assert('login', { ip: '203.0.113.7', identifier: 'Ab-1234' }, 5)).rejects.toThrow('too_many_requests');
+    const limits = new SignInLimits({
+      take: (input) => (seen.push(input), Promise.resolve(false)),
+    });
+    await expect(
+      limits.assert('login', { ip: '203.0.113.7', identifier: 'Ab-1234' }, 5),
+    ).rejects.toThrow('too_many_requests');
     expect(seen).toEqual([
       { buckets: [{ key: 'login:ip:203.0.113.7', max: 30 }, { key: 'login:id:student:AB-1234', max: 10 }], windowMs: 15 * 60_000, now: 5 },
     ]);
@@ -72,14 +78,17 @@ describe('SignInLimits.maySend (send:phone buckets shared by every API copy)', (
     };
     expect(await sends(4, 0)).toEqual([true, true, true, false]);
     expect(await limits.maySend('+966500000002', 0)).toBe(true);
-    for (const quarter of [1, 2]) expect(await sends(3, quarter * 15 * 60_000 + 1)).toEqual([true, true, true]);
+    for (const quarter of [1, 2])
+      expect(await sends(3, quarter * 15 * 60_000 + 1)).toEqual([true, true, true]);
     expect(await sends(2, 3 * 15 * 60_000 + 2)).toEqual([true, false]);
     expect(await limits.maySend(PHONE, 24 * 3_600_000 + 1)).toBe(true);
   });
 
   it('takes the 15-minute bucket, then the day bucket (never the day one when the first is full)', async () => {
     const seen: LimitTake[] = [];
-    const limits = new SignInLimits({ take: (input) => (seen.push(input), Promise.resolve(seen.length > 1)) });
+    const limits = new SignInLimits({
+      take: (input) => (seen.push(input), Promise.resolve(seen.length > 1)),
+    });
     expect(await limits.maySend(PHONE, 7)).toBe(false);
     expect(await limits.maySend(PHONE, 8)).toBe(true);
     expect(seen.map((t) => [t.buckets, t.windowMs])).toEqual([

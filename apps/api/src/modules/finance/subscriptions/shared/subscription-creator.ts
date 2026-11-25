@@ -23,13 +23,20 @@ export class SubscriptionCreator {
     private readonly service: SubscriptionsService,
   ) {}
 
-  async create(input: SubscriptionCreate, actorId: string, opts: { price?: number } = {}): Promise<SubscriptionView> {
+  async create(
+    input: SubscriptionCreate,
+    actorId: string,
+    opts: { price?: number } = {},
+  ): Promise<SubscriptionView> {
     const replay = await this.replay(input.clientRequestId);
     if (replay) return replay;
     const quote = await this.quote(input);
     assertUsedBeforeFits(input.lessonsUsedBefore, quote.lessons);
     const row = subscriptionRow(input, quote, actorId);
-    const created = await this.service.add(opts.price === undefined ? row : { ...row, price: opts.price }, actorId);
+    const created = await this.service.add(
+      opts.price === undefined ? row : { ...row, price: opts.price },
+      actorId,
+    );
     // Lost the race to a retry of the same form: that one created it.
     const view = created ?? (await this.replay(input.clientRequestId));
     if (!view) throw notFound('subscription_not_found');

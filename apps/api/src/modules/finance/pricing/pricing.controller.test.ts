@@ -61,7 +61,9 @@ describe('GET /pricing/catalog', () => {
     const body = res.json();
     expect(body).toMatchObject({ country: 'SA', currency: 'SAR', duration: 45, fx: null });
     expect(body.packages.map((p: { package: string }) => p.package)).toEqual([...PACKAGE_IDS]);
-    expect(body.packages.map((p: { price: number }) => p.price)).toEqual([120, 180, 240, 385, 145, 285]);
+    expect(body.packages.map((p: { price: number }) => p.price)).toEqual([
+      120, 180, 240, 385, 145, 285,
+    ]);
     expect(h.queries.newest).not.toHaveBeenCalledWith('USD');
   });
 
@@ -103,8 +105,15 @@ describe('GET /pricing/quote', () => {
   });
 
   it('a free-field discount (12.5 %), as the site allows', async () => {
-    const body = (await h.get('/pricing/quote?tier=starter&country=SA&students=6&discount=12.5')).json();
-    expect(body).toMatchObject({ total: 720, discount: 12.5, afterDiscount: 630, perLesson: 13.13 });
+    const body = (
+      await h.get('/pricing/quote?tier=starter&country=SA&students=6&discount=12.5')
+    ).json();
+    expect(body).toMatchObject({
+      total: 720,
+      discount: 12.5,
+      afterDiscount: 630,
+      perLesson: 13.13,
+    });
   });
 
   it('custom count in QA', async () => {

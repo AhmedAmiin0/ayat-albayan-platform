@@ -16,7 +16,15 @@ import { WorkQueries } from './work/work.queries';
 @Module({
   imports: [FxModule],
   controllers: [DashboardController],
-  providers: [DashboardService, DashboardQueries, DashboardSettings, FinanceService, FinanceQueries, WorkQueries, FxConverter],
+  providers: [
+    DashboardService,
+    DashboardQueries,
+    DashboardSettings,
+    FinanceService,
+    FinanceQueries,
+    WorkQueries,
+    FxConverter,
+  ],
   exports: [FxConverter],
 })
 export class DashboardModule {}

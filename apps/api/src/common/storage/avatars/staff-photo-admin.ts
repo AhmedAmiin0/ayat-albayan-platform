@@ -88,7 +88,15 @@ export class StaffPhotoAdmin {
     return OWNER[who.kind](this.db, who.id);
   }
 
-  private record(who: Who, entry: { actorId: string; action: string; before: Record<string, string | null>; after: string | null }) {
+  private record(
+    who: Who,
+    entry: {
+      actorId: string;
+      action: string;
+      before: Record<string, string | null>;
+      after: string | null;
+    },
+  ) {
     return this.audit.record({
       actorId: entry.actorId,
       entity: who.kind === 'teacher' ? 'teachers' : 'profiles',

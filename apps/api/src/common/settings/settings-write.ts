@@ -11,7 +11,10 @@ interface LatestWrite {
   actorId: string;
 }
 
-async function changesAt(store: WriteStore, values: Readonly<Record<string, unknown>>): Promise<ConfigChange[]> {
+async function changesAt(
+  store: WriteStore,
+  values: Readonly<Record<string, unknown>>,
+): Promise<ConfigChange[]> {
   const versions = new Map((await store.fresh()).rows.map((r) => [r.key, r.version]));
   return Object.entries(values)
     .filter(([, v]) => v !== undefined)

@@ -45,7 +45,10 @@ export class GoogleAdminController {
   @Put('settings')
   async settings(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<GoogleStatusView> {
     requireAdmin(user);
-    await this.admin.saveSettings({ values: parseOrThrow(googleSettingsSchema, body), actorId: user.id });
+    await this.admin.saveSettings({
+      values: parseOrThrow(googleSettingsSchema, body),
+      actorId: user.id,
+    });
     return this.status.view();
   }
 
@@ -59,7 +62,10 @@ export class GoogleAdminController {
   @Put('drive')
   async drive(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<GoogleStatusView> {
     requireAdmin(user);
-    await this.admin.confirmDrive({ values: parseOrThrow(googleDriveSchema, body), actorId: user.id });
+    await this.admin.confirmDrive({
+      values: parseOrThrow(googleDriveSchema, body),
+      actorId: user.id,
+    });
     return this.status.view();
   }
 }

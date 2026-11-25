@@ -118,7 +118,10 @@ describe('POST /reports/:id/submit (R3; R-REP-02/03/04)', () => {
     const edit = { ...FORM, expectedVersion: 1 };
     vi.setSystemTime(new Date(AFTER.getTime() + WINDOW - 1000));
     expect((await h.call({ method: 'POST', url: URL, body: edit })).statusCode).toBe(200);
-    expect(h.reports.submit.mock.calls[0]?.[0].report).toMatchObject({ version: 2, submitted_at: AFTER.toISOString() });
+    expect(h.reports.submit.mock.calls[0]?.[0].report).toMatchObject({
+      version: 2,
+      submitted_at: AFTER.toISOString(),
+    });
     vi.setSystemTime(new Date(AFTER.getTime() + WINDOW));
     expect((await h.call({ method: 'POST', url: URL, body: edit })).json().code).toBe('edit_window_closed');
     expect((await h.call({ method: 'POST', url: URL, body: edit, token: 'admin' })).statusCode).toBe(200);

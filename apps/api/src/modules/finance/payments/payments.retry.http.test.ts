@@ -35,7 +35,9 @@ describe('POST /payments retried with the same clientRequestId', () => {
   it('first call records it with the id; the retry returns the same payment and writes nothing', async () => {
     const first = await call({ method: 'POST', url: '/payments', body });
     expect(first.statusCode).toBe(201);
-    expect(m.payments.insert).toHaveBeenCalledWith(expect.objectContaining({ client_request_id: REQUEST }));
+    expect(m.payments.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ client_request_id: REQUEST }),
+    );
 
     m.payments.insert.mockClear();
     m.audit.record.mockClear();
@@ -50,7 +52,9 @@ describe('POST /payments retried with the same clientRequestId', () => {
 
   it('two sends at once: the loser hits the unique key and returns the winner, unaudited', async () => {
     m.payments.insert.mockResolvedValue(null);
-    m.payments.byRequest.mockResolvedValueOnce(null).mockResolvedValueOnce(paymentRow({ client_request_id: REQUEST }));
+    m.payments.byRequest
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(paymentRow({ client_request_id: REQUEST }));
     const res = await call({ method: 'POST', url: '/payments', body });
     expect(res.statusCode).toBe(201);
     expect(res.json()).toMatchObject({ id: PAYMENT_ID });
@@ -61,8 +65,14 @@ describe('POST /payments retried with the same clientRequestId', () => {
     const students = [{ id: STUDENT_ID, name: 'سهيلة', code: 'AB-0183' }];
     m.invoices.get.mockResolvedValue({ ...INVOICE_ROW, id: INVOICE, students });
     m.payments.byInvoice.mockResolvedValue({ id: PAYMENT_ID });
-    m.payments.byRequest.mockResolvedValueOnce(null).mockResolvedValueOnce(paymentRow({ client_request_id: REQUEST }));
-    const replay = await call({ method: 'POST', url: '/payments', body: { ...body, invoiceId: INVOICE } });
+    m.payments.byRequest
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(paymentRow({ client_request_id: REQUEST }));
+    const replay = await call({
+      method: 'POST',
+      url: '/payments',
+      body: { ...body, invoiceId: INVOICE },
+    });
     expect([replay.statusCode, replay.json().id]).toEqual([201, PAYMENT_ID]);
     expect(m.payments.insert).not.toHaveBeenCalled();
     m.payments.byRequest.mockResolvedValue(null);

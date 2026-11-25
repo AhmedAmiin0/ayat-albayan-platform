@@ -9,7 +9,11 @@ import { pushEndpointAllowed } from './web-push.endpoint';
 import { vapidAuthorization, type VapidKeys } from './web-push.vapid';
 
 /** One POST to a push service; the status is all we read. Injectable: tests never reach the network. */
-export type WebPushTransport = (req: { url: string; headers: Record<string, string>; body: Buffer }) => Promise<{ status: number }>;
+export type WebPushTransport = (req: {
+  url: string;
+  headers: Record<string, string>;
+  body: Buffer;
+}) => Promise<{ status: number }>;
 export const WEB_PUSH_TRANSPORT = Symbol('WEB_PUSH_TRANSPORT');
 /** Read per send since integrations may change the keys; null means web push is off. */
 export const WEB_PUSH_KEYS = Symbol('WEB_PUSH_KEYS');
@@ -90,7 +94,11 @@ export class WebPushSender {
     }
   }
 
-  private async one(input: { sub: { id: string; endpoint: string; p256dh: string; auth: string }; keys: VapidKeys; body: Buffer }): Promise<boolean> {
+  private async one(input: {
+    sub: { id: string; endpoint: string; p256dh: string; auth: string };
+    keys: VapidKeys;
+    body: Buffer;
+  }): Promise<boolean> {
     const { sub } = input;
     if (!pushEndpointAllowed(sub.endpoint)) return this.drop(sub.id, false);
     try {

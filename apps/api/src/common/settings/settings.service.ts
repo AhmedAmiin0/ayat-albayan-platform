@@ -106,7 +106,9 @@ export class SettingsService {
     };
     // Shared for half the TTL, like the permission sets (an entry's age is taken off the local TTL).
     const ttlMs = Math.floor(this.ttlMs / 2);
-    const rows = this.shared ? await this.shared.readEntry({ key: CACHE_KEYS.settingsRows, ttlMs, load, fresh }) : { value: await load(), age: 0 };
+    const rows = this.shared
+      ? await this.shared.readEntry({ key: CACHE_KEYS.settingsRows, ttlMs, load, fresh })
+      : { value: await load(), age: 0 };
     return { value: readSettings(rows.value), age: rows.age };
   }
 }

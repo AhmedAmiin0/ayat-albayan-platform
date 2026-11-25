@@ -54,7 +54,11 @@ export function costFacts(
   students: readonly LessonSourceIn[] = [],
 ): { facts: CostFact[]; unrated: number } {
   const sources = new Map<string, SourceKey[]>();
-  for (const s of students) sources.set(s.lesson_id, [...(sources.get(s.lesson_id) ?? []), sourceOf(s.student?.guardian ?? null)]);
+  for (const s of students)
+    sources.set(s.lesson_id, [
+      ...(sources.get(s.lesson_id) ?? []),
+      sourceOf(s.student?.guardian ?? null),
+    ]);
   const facts: CostFact[] = [];
   let unrated = 0;
   for (const l of rows) {
@@ -65,7 +69,12 @@ export function costFacts(
 }
 
 export function expenseFacts(rows: readonly ExpenseIn[]): ExpenseFact[] {
-  return rows.map((e) => ({ amount: Number(e.amount), currency: e.currency, month: e.month.slice(0, 7), category: e.category }));
+  return rows.map((e) => ({
+    amount: Number(e.amount),
+    currency: e.currency,
+    month: e.month.slice(0, 7),
+    category: e.category,
+  }));
 }
 
 /** Every currency the facts are in (to read only the rates needed). */

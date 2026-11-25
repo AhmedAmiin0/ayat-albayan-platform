@@ -7,7 +7,11 @@ const fail = (e: { code?: string | undefined }) => new Error(`mapped ${e.code ??
 function db(result: { data: unknown; error: unknown }) {
   const createUser = vi.fn().mockResolvedValue(result);
   const getUserById = vi.fn().mockResolvedValue(result);
-  return { db: { auth: { admin: { createUser, getUserById } } } as unknown as Db, createUser, getUserById };
+  return {
+    db: { auth: { admin: { createUser, getUserById } } } as unknown as Db,
+    createUser,
+    getUserById,
+  };
 }
 
 describe('Auth Admin helpers', () => {

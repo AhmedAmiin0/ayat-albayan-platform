@@ -13,7 +13,11 @@ import { PaymentsRepo } from '@/modules/finance/payments/payments.repo';
 export type CheckedAttachment = { path: string; mime: string; size: number | null };
 type WithReceipt = { id: string; receipt_path: string | null };
 /** paymentId: a path this payment already holds is fine (its own replay / edit); any other owner is 409. */
-export type AttachmentCheck = { subscriptionId: string; paths: readonly string[]; paymentId?: string | undefined };
+export type AttachmentCheck = {
+  subscriptionId: string;
+  paths: readonly string[];
+  paymentId?: string | undefined;
+};
 
 const MIMES: ReadonlySet<string> = new Set(RECEIPT_MIMES);
 
@@ -49,9 +53,21 @@ export class PaymentAttachments {
   }
 
   /** Idempotent (unique path): safe on a replayed form. */
-  async save(paymentId: string, files: readonly CheckedAttachment[], actorId: string): Promise<void> {
+  async save(
+    paymentId: string,
+    files: readonly CheckedAttachment[],
+    actorId: string,
+  ): Promise<void> {
     if (files.length === 0) return;
-    await this.rows.save(files.map((f) => ({ payment_id: paymentId, path: f.path, mime: f.mime, size: f.size, created_by: actorId })));
+    await this.rows.save(
+      files.map((f) => ({
+        payment_id: paymentId,
+        path: f.path,
+        mime: f.mime,
+        size: f.size,
+        created_by: actorId,
+      })),
+    );
   }
 
   /** The legacy receipt first (id 'receipt'), then the rows oldest first; each signed for 1 h (a lost object is skipped). */
@@ -60,15 +76,24 @@ export class PaymentAttachments {
     const legacy = payment.receipt_path
       ? [{ id: 'receipt', path: payment.receipt_path, mime: null, size: null, legacy: true }]
       : [];
-    const all = [...legacy, ...rows.map((r) => ({ id: r.id, path: r.path, mime: r.mime, size: r.size, legacy: false }))];
-    const signed = await Promise.all(all.map(async ({ path, ...rest }) => {
-      try {
-        return [{ ...rest, ...(await this.storage.signedDownload({ bucket: BUCKETS.receipts, path })) }];
-      } catch (e) {
-        this.log.warn(`payment ${payment.id}: attachment ${path} not signed (${e instanceof Error ? e.message : String(e)})`);
-        return [];
-      }
-    }));
+    const all = [
+      ...legacy,
+      ...rows.map((r) => ({ id: r.id, path: r.path, mime: r.mime, size: r.size, legacy: false })),
+    ];
+    const signed = await Promise.all(
+      all.map(async ({ path, ...rest }) => {
+        try {
+          return [
+            { ...rest, ...(await this.storage.signedDownload({ bucket: BUCKETS.receipts, path })) },
+          ];
+        } catch (e) {
+          this.log.warn(
+            `payment ${payment.id}: attachment ${path} not signed (${e instanceof Error ? e.message : String(e)})`,
+          );
+          return [];
+        }
+      }),
+    );
     return signed.flat();
   }
 

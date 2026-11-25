@@ -7,11 +7,20 @@ import { PushService } from '@/common/push/push.service';
 /** An earning this recent is news; an older one was told already, or before this bell existed. */
 const FRESH_MS = 5 * 60_000;
 
-type Earned = { id: string; assistant_id: string; amount: number; currency: string; student: { code: string | null; name: string } | null };
+type Earned = {
+  id: string;
+  assistant_id: string;
+  amount: number;
+  currency: string;
+  student: { code: string | null; name: string } | null;
+};
 
 /** EGP uses the web's symbol, site currencies theirs, else the ISO code; read at send. */
 function currencyText(currency: string): string {
-  const names: Readonly<Record<string, string | undefined>> = { ...ar.pricing.currencies, EGP: ar.payouts.currency };
+  const names: Readonly<Record<string, string | undefined>> = {
+    ...ar.pricing.currencies,
+    EGP: ar.payouts.currency,
+  };
   return names[currency] ?? currency;
 }
 

@@ -33,7 +33,12 @@ function contentKeys(ikm: Buffer, salt: Buffer): { cek: Buffer; nonce: Buffer } 
 }
 
 /** RFC 8291 §3.4: IKM from the ECDH secret, keyed by the auth secret and both public keys. */
-function inputKey(input: { secret: Buffer; auth: Buffer; uaPublic: Buffer; asPublic: Buffer }): Buffer {
+function inputKey(input: {
+  secret: Buffer;
+  auth: Buffer;
+  uaPublic: Buffer;
+  asPublic: Buffer;
+}): Buffer {
   const info = Buffer.concat([Buffer.from('WebPush: info\0'), input.uaPublic, input.asPublic]);
   return hkdf({ salt: input.auth, ikm: input.secret, info, length: 32 });
 }
@@ -42,7 +47,11 @@ function inputKey(input: { secret: Buffer; auth: Buffer; uaPublic: Buffer; asPub
  * The request body for one push: header (salt ‖ rs ‖ idlen ‖ the server's public key) followed by
  * the AES-128-GCM record (plaintext ‖ 0x02, then the tag). Fresh key pair and salt per message.
  */
-export function encryptPayload(plaintext: Buffer, keys: WebPushKeys, secrets?: EncryptionSecrets): Buffer {
+export function encryptPayload(
+  plaintext: Buffer,
+  keys: WebPushKeys,
+  secrets?: EncryptionSecrets,
+): Buffer {
   if (plaintext.length > MAX_PLAINTEXT) throw new Error('web push payload too large');
   const uaPublic = b64(keys.p256dh);
   const ecdh = createECDH('prime256v1');
@@ -50,10 +59,19 @@ export function encryptPayload(plaintext: Buffer, keys: WebPushKeys, secrets?: E
   else ecdh.generateKeys();
   const asPublic = ecdh.getPublicKey();
   const salt = secrets?.salt ?? randomBytes(16);
-  const ikm = inputKey({ secret: ecdh.computeSecret(uaPublic), auth: b64(keys.auth), uaPublic, asPublic });
+  const ikm = inputKey({
+    secret: ecdh.computeSecret(uaPublic),
+    auth: b64(keys.auth),
+    uaPublic,
+    asPublic,
+  });
   const { cek, nonce } = contentKeys(ikm, salt);
   const cipher = createCipheriv('aes-128-gcm', cek, nonce);
-  const body = Buffer.concat([cipher.update(Buffer.concat([plaintext, Buffer.from([2])])), cipher.final(), cipher.getAuthTag()]);
+  const body = Buffer.concat([
+    cipher.update(Buffer.concat([plaintext, Buffer.from([2])])),
+    cipher.final(),
+    cipher.getAuthTag(),
+  ]);
   const header = Buffer.alloc(21);
   salt.copy(header, 0);
   header.writeUInt32BE(RECORD_SIZE, 16);
@@ -69,10 +87,18 @@ export function decryptPayload(body: Buffer, ua: { privateKey: Buffer; auth: Buf
   const record = body.subarray(21 + idlen);
   const ecdh = createECDH('prime256v1');
   ecdh.setPrivateKey(ua.privateKey);
-  const ikm = inputKey({ secret: ecdh.computeSecret(asPublic), auth: ua.auth, uaPublic: ecdh.getPublicKey(), asPublic });
+  const ikm = inputKey({
+    secret: ecdh.computeSecret(asPublic),
+    auth: ua.auth,
+    uaPublic: ecdh.getPublicKey(),
+    asPublic,
+  });
   const { cek, nonce } = contentKeys(ikm, salt);
   const decipher = createDecipheriv('aes-128-gcm', cek, nonce);
   decipher.setAuthTag(record.subarray(record.length - 16));
-  const padded = Buffer.concat([decipher.update(record.subarray(0, record.length - 16)), decipher.final()]);
+  const padded = Buffer.concat([
+    decipher.update(record.subarray(0, record.length - 16)),
+    decipher.final(),
+  ]);
   return padded.subarray(0, padded.lastIndexOf(2));
 }

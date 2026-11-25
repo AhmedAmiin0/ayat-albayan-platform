@@ -27,9 +27,20 @@ describe('teachers/me/earnings (a teacher reads only their own)', () => {
     expect((await mine('')).json()).toMatchObject({ earned: 140, paid: 70, outstanding: 70 });
     m.earnings.sessions.mockResolvedValue({ items: [session(2)], total: 1, page: 1, pageSize: 25 });
     expect((await mine('/sessions?status=earned')).statusCode).toBe(200);
-    expect(m.earnings.sessions).toHaveBeenCalledWith(TEACHER, expect.objectContaining({ status: 'earned' }));
-    m.earnings.payments.mockResolvedValue({ items: [paymentRow()], total: 1, page: 1, pageSize: 25 });
-    expect((await mine('/payments')).json().items[0]).toMatchObject({ amount: 100, has_receipt: false });
+    expect(m.earnings.sessions).toHaveBeenCalledWith(
+      TEACHER,
+      expect.objectContaining({ status: 'earned' }),
+    );
+    m.earnings.payments.mockResolvedValue({
+      items: [paymentRow()],
+      total: 1,
+      page: 1,
+      pageSize: 25,
+    });
+    expect((await mine('/payments')).json().items[0]).toMatchObject({
+      amount: 100,
+      has_receipt: false,
+    });
     expect(m.earnings.money).toHaveBeenCalledWith(TEACHER);
   });
 

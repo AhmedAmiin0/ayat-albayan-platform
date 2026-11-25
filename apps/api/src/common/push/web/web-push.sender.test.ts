@@ -5,7 +5,13 @@ import { decryptPayload } from './web-push.crypto';
 import { WebPushSender, type WebPushTransport } from './web-push.sender';
 import type { VapidKeys } from './web-push.vapid';
 
-type Sub = { id: string; endpoint: string; p256dh: string; auth: string; session_id?: string | null };
+type Sub = {
+  id: string;
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  session_id?: string | null;
+};
 
 function browser() {
   const ua = createECDH('prime256v1');
@@ -22,7 +28,10 @@ function fakeDb(subs: Sub[], live = ['live']) {
     select: () => ({ eq: async () => ({ data: rows, error: null }) }),
     delete: () => ({ eq: async (_c: string, id: string) => (deleted.push(id), { error: null }) }),
   }));
-  const rpc = vi.fn(async (_fn: string, a: { p_ids: string[] }) => ({ data: a.p_ids.filter((id) => live.includes(id)), error: null }));
+  const rpc = vi.fn(async (_fn: string, a: { p_ids: string[] }) => ({
+    data: a.p_ids.filter((id) => live.includes(id)),
+    error: null,
+  }));
   return { db: { from, rpc } as unknown as Db, deleted };
 }
 
@@ -52,8 +61,17 @@ describe('WebPushSender (R-NOT-02)', () => {
     expect(req?.url).toBe(FCM);
     expect(req?.headers).toMatchObject({ 'content-encoding': 'aes128gcm', ttl: '86400' });
     expect(req?.headers['authorization']).toMatch(/^vapid t=.+, k=.+$/);
-    const shown = JSON.parse(decryptPayload(req?.body ?? Buffer.alloc(0), { privateKey: b.ua.getPrivateKey(), auth: b.auth }).toString()) as typeof PAYLOAD;
-    expect(shown).toMatchObject({ title: PAYLOAD.title, url: '/teacher/calendar', tag: 'new_student:l1' });
+    const shown = JSON.parse(
+      decryptPayload(req?.body ?? Buffer.alloc(0), {
+        privateKey: b.ua.getPrivateKey(),
+        auth: b.auth,
+      }).toString(),
+    ) as typeof PAYLOAD;
+    expect(shown).toMatchObject({
+      title: PAYLOAD.title,
+      url: '/teacher/calendar',
+      tag: 'new_student:l1',
+    });
     expect(shown.body).toHaveLength(240);
   });
 

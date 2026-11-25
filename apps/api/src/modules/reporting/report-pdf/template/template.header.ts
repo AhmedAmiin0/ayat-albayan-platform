@@ -30,7 +30,10 @@ function cell(label: string, value: string, sub?: string): string {
 /** "n of total" inside a package, else the plain lesson number (R-LES-03). */
 function lessonNoText(m: Pick<ReportPdfModel, 'lessonNo' | 'slot'>): string {
   return m.slot
-    ? fill(esc(r.lessonNoValue), { n: ltr(String(m.slot.position)), total: ltr(String(m.slot.total)) })
+    ? fill(esc(r.lessonNoValue), {
+        n: ltr(String(m.slot.position)),
+        total: ltr(String(m.slot.total)),
+      })
     : ltr(String(m.lessonNo));
 }
 

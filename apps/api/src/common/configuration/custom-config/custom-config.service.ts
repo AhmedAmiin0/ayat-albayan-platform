@@ -34,7 +34,9 @@ export class CustomConfigService {
   /** Public rows only, as the GET /settings/public whitelist's input (shared for a minute with Redis). */
   publicRows(): Promise<PublicRow[]> {
     const load = (): Promise<PublicRow[]> => this.readPublic();
-    return this.shared ? this.shared.read({ key: CACHE_KEYS.customPublic, ttlMs: PUBLIC_ROWS_TTL_MS, load }) : load();
+    return this.shared
+      ? this.shared.read({ key: CACHE_KEYS.customPublic, ttlMs: PUBLIC_ROWS_TTL_MS, load })
+      : load();
   }
 
   private async readPublic(): Promise<PublicRow[]> {
@@ -44,8 +46,18 @@ export class CustomConfigService {
   }
 
   async upsert(key: string, input: CustomConfigUpsert, actorId: string): Promise<CustomConfigView> {
-    const row = { key, value: input.value as NonNullable<Json>, description: input.description ?? null, is_public: input.isPublic, updated_by: actorId };
-    const { data, error } = await this.db.from('custom_config').upsert(row).select(CUSTOM_COLUMNS).single();
+    const row = {
+      key,
+      value: input.value as NonNullable<Json>,
+      description: input.description ?? null,
+      is_public: input.isPublic,
+      updated_by: actorId,
+    };
+    const { data, error } = await this.db
+      .from('custom_config')
+      .upsert(row)
+      .select(CUSTOM_COLUMNS)
+      .single();
     await this.forgetPublic();
     if (error) throw new Error(`custom_config write failed: ${error.message}`);
     return toCustomView(data);
