@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { closeAll, hmacHex, post, receivedAt, startHook, startStub } from './test-server.ts';
+import { z } from 'zod';
+import { closeAll, hmacHex, post, read, receivedAt, startHook, startStub } from './test-server.ts';
 
 // docs/28: WhatsApp Calling under the kapso prefix (signaling, no audio) and fake calling webhooks.
 
@@ -20,6 +21,11 @@ async function setup(callPermission?: boolean) {
   return { hook, url, stub };
 }
 
+const CALLS_ANSWER = z.object({ calls: z.array(z.object({ id: z.string() })) });
+const PERMISSIONS = z.object({
+  actions: z.array(z.object({ action_name: z.string(), can_perform_action: z.boolean() })),
+});
+
 describe('wa-stub: calls', () => {
   it('connect answers a wacid; every action is logged; an unknown action is 400', async () => {
     const { url, stub } = await setup();
@@ -34,7 +40,7 @@ describe('wa-stub: calls', () => {
       },
       KEY,
     );
-    const id = ((await res.json()) as { calls: { id: string }[] }).calls[0]?.id ?? '';
+    const id = (await read(res, CALLS_ANSWER)).calls[0]?.id ?? '';
     expect(id).toMatch(/^wacid\.stub-/);
     expect((await post(`${url}${CALLS}`, { call_id: id, action: 'terminate' }, KEY)).status).toBe(
       200,
@@ -49,16 +55,16 @@ describe('wa-stub: calls', () => {
 
   it('call_permissions: granted by default, or none yet with a request allowed', async () => {
     const granted = await setup();
-    const a = (await (
-      await fetch(`${granted.url}/kapso/v24.0/PN-CHAT/call_permissions?user_wa_id=1`, {
-        headers: KEY,
-      })
-    ).json()) as { actions: { action_name: string; can_perform_action: boolean }[] };
+    const a = await read(
+      fetch(`${granted.url}/kapso/v24.0/PN-CHAT/call_permissions?user_wa_id=1`, { headers: KEY }),
+      PERMISSIONS,
+    );
     expect(a.actions.find((x) => x.action_name === 'start_call')?.can_perform_action).toBe(true);
     const none = await setup(false);
-    const b = (await (
-      await fetch(`${none.url}/kapso/v24.0/PN-CHAT/call_permissions?user_wa_id=1`, { headers: KEY })
-    ).json()) as typeof a;
+    const b = await read(
+      fetch(`${none.url}/kapso/v24.0/PN-CHAT/call_permissions?user_wa_id=1`, { headers: KEY }),
+      PERMISSIONS,
+    );
     expect(b.actions.map((x) => x.can_perform_action)).toEqual([false, true]);
   });
 

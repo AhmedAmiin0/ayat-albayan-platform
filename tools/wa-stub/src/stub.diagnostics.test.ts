@@ -1,13 +1,20 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { bearer, closeAll, post, startHook, startStub, TWO_LINES } from './test-server.ts';
+import { z } from 'zod';
+import { bearer, closeAll, post, read, startHook, startStub, TWO_LINES } from './test-server.ts';
 
 afterEach(closeAll);
 
 const AUTH = { headers: bearer(TWO_LINES.accessToken) };
-const json = async <T>(res: Response) => (await res.json()) as T;
-interface Apps {
-  data: { whatsapp_business_api_data: Record<string, string>; override_callback_uri?: string }[];
-}
+const INFO = z.record(z.string(), z.string());
+const APPS = z.object({
+  data: z.array(
+    z.object({
+      whatsapp_business_api_data: z.record(z.string(), z.string()),
+      override_callback_uri: z.string().optional(),
+    }),
+  ),
+});
+const parse = async <S extends z.ZodType>(schema: S, res: Response) => read(res, schema);
 
 describe('wa-stub: line diagnostics (docs/12 §13.9, §13.12)', () => {
   it('GET /{phone_number_id}?fields= answers only the requested fields, with the id', async () => {
@@ -19,7 +26,7 @@ describe('wa-stub: line diagnostics (docs/12 §13.9, §13.12)', () => {
 
   it('without fields= it answers the six diagnostics fields', async () => {
     const { url } = await startStub(TWO_LINES);
-    const info = await json<Record<string, string>>(await fetch(`${url}/v21.0/PN-N`, AUTH));
+    const info = await parse(INFO, await fetch(`${url}/v21.0/PN-N`, AUTH));
     expect(Object.keys(info).sort()).toEqual(
       [
         'id',
@@ -36,7 +43,7 @@ describe('wa-stub: line diagnostics (docs/12 §13.9, §13.12)', () => {
 
   it('GET /{waba}/subscribed_apps lists the line app; an unknown WABA is 400', async () => {
     const { url } = await startStub(TWO_LINES);
-    const apps = await json<Apps>(await fetch(`${url}/v21.0/WABA-C/subscribed_apps`, AUTH));
+    const apps = await parse(APPS, await fetch(`${url}/v21.0/WABA-C/subscribed_apps`, AUTH));
     expect(apps.data).toHaveLength(1);
     expect(apps.data[0]?.whatsapp_business_api_data).toMatchObject({
       id: 'APP-C',
@@ -57,22 +64,24 @@ describe('wa-stub: line diagnostics (docs/12 §13.9, §13.12)', () => {
       override_callback_uri: 'https://crm.example/hook',
     };
     expect((await post(`${url}/__stub/lines/PN-N`, patch, {})).status).toBe(200);
-    expect(await json<Apps>(await fetch(`${url}/v21.0/WABA-N/subscribed_apps`, AUTH))).toEqual({
+    expect(await parse(APPS, await fetch(`${url}/v21.0/WABA-N/subscribed_apps`, AUTH))).toEqual({
       data: [],
     });
-    const info = await json<Record<string, string>>(
+    const info = await parse(
+      INFO,
       await fetch(`${url}/v21.0/PN-N?fields=status,quality_rating`, AUTH),
     );
     expect(info).toEqual({ id: 'PN-N', status: 'FLAGGED', quality_rating: 'RED' });
     await post(`${url}/__stub/lines/PN-N`, { subscribed: true }, {});
-    const back = await json<Apps>(await fetch(`${url}/v21.0/WABA-N/subscribed_apps`, AUTH));
+    const back = await parse(APPS, await fetch(`${url}/v21.0/WABA-N/subscribed_apps`, AUTH));
     expect(back.data[0]?.override_callback_uri).toBe('https://crm.example/hook');
     expect(back.data[0]?.whatsapp_business_api_data).not.toHaveProperty('override_callback_uri');
     await post(`${url}/__stub/reset`, {});
-    expect(
-      await json<Record<string, string>>(await fetch(`${url}/v21.0/PN-N?fields=status`, AUTH)),
-    ).toEqual({ id: 'PN-N', status: 'CONNECTED' });
-    const reset = await json<Apps>(await fetch(`${url}/v21.0/WABA-N/subscribed_apps`, AUTH));
+    expect(await parse(INFO, await fetch(`${url}/v21.0/PN-N?fields=status`, AUTH))).toEqual({
+      id: 'PN-N',
+      status: 'CONNECTED',
+    });
+    const reset = await parse(APPS, await fetch(`${url}/v21.0/WABA-N/subscribed_apps`, AUTH));
     expect(reset.data[0]).not.toHaveProperty('override_callback_uri');
     expect((await post(`${url}/__stub/lines/PN-X`, { subscribed: false }, {})).status).toBe(404);
   });
@@ -85,10 +94,12 @@ describe('wa-stub: line diagnostics (docs/12 §13.9, §13.12)', () => {
       mime: 'image/png',
       base64: Buffer.from('PNG').toString('base64'),
     };
-    const { mediaId } = await json<{ mediaId: string }>(
+    const { mediaId } = await parse(
+      z.object({ mediaId: z.string() }),
       await post(`${url}/__stub/inbound`, { from: '966500000004', media }),
     );
-    const meta = await json<{ id: string; mime_type: string }>(
+    const meta = await parse(
+      z.object({ id: z.string(), mime_type: z.string() }),
       await fetch(`${url}/v21.0/${mediaId}`, AUTH),
     );
     expect(meta).toMatchObject({ id: mediaId, mime_type: 'image/png' });

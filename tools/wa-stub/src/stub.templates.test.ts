@@ -1,28 +1,39 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { AUTH, closeAll, post, startStub, templateBody, uploadPdf } from './test-server.ts';
+import { z } from 'zod';
+import {
+  AUTH,
+  closeAll,
+  errorCode,
+  post,
+  read,
+  startStub,
+  templateBody,
+  uploadPdf,
+} from './test-server.ts';
 
 afterEach(closeAll);
 
-interface Listed {
-  name: string;
-  status: string;
-  id: string;
-  quality_score: { score: string };
-}
-interface TemplateList {
-  data: Listed[];
-}
+const TEMPLATE_LIST = z.object({
+  data: z.array(
+    z.object({
+      name: z.string(),
+      status: z.string(),
+      id: z.string(),
+      quality_score: z.object({ score: z.string() }),
+    }),
+  ),
+});
 const TPL = '/v21.0/WABA/message_templates';
 const BODY = { type: 'BODY', text: 'ده تقرير {{1}} يوم {{2}}، ربنا يبارك فيه', example: { body_text: [['أحمد', 'الأحد']] } };
 const code = async (res: Response) => [
   res.status,
-  ((await res.json()) as { error: { code: number } }).error.code,
+  await errorCode(res),
 ];
 
 describe('wa-stub: templates (R-MSG-01 health + explicit submit)', () => {
   it('lists the 8 approved templates with id, status, category and quality', async () => {
     const { url } = await startStub();
-    const list = (await (await fetch(`${url}${TPL}`, { headers: AUTH })).json()) as TemplateList;
+    const list = await read(fetch(`${url}${TPL}`, { headers: AUTH }), TEMPLATE_LIST);
     expect(list.data.map((t) => t.name).sort()).toEqual([
       'booking_confirmation',
       'booking_confirmation_meet',
@@ -38,7 +49,10 @@ describe('wa-stub: templates (R-MSG-01 health + explicit submit)', () => {
 
   it('filters by name, as Graph does', async () => {
     const { url } = await startStub();
-    const list = (await (await fetch(`${url}${TPL}?name=lesson_reminder_v2`, { headers: AUTH })).json()) as TemplateList;
+    const list = await read(
+      fetch(`${url}${TPL}?name=lesson_reminder_v2`, { headers: AUTH }),
+      TEMPLATE_LIST,
+    );
     expect(list.data.map((t) => t.name)).toEqual(['lesson_reminder_v2']);
   });
 
@@ -112,6 +126,6 @@ describe('wa-stub: templates (R-MSG-01 health + explicit submit)', () => {
     const { url } = await startStub();
     await post(`${url}/__stub/templates/lesson_reminder_v2`, { status: 'PAUSED' });
     const res = await post(`${url}/v21.0/PHONE/messages`, templateBody('lesson_reminder_v2', 2));
-    expect(((await res.json()) as { error: { code: number } }).error.code).toBe(132015);
+    expect(await errorCode(res)).toBe(132015);
   });
 });

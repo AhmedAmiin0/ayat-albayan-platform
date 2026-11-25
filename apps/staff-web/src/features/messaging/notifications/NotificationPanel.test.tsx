@@ -6,9 +6,16 @@ import { NotificationPanel } from './NotificationPanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
-vi.mock('@ab/web-kit/auth/me/me', () => ({ meQuery: { queryKey: ['auth', 'me'], queryFn: () => ({ role: 'admin' }) } }));
+vi.mock('@ab/web-kit/auth/me/me', async () => {
+  const { pathKey } = await import('@ab/client-core');
+  return { meQuery: { queryKey: pathKey('/auth/me'), queryFn: () => ({ role: 'admin' }) } };
+});
 
 beforeEach(() => {
   apiFetch.mockReset();
@@ -44,7 +51,9 @@ describe('NotificationPanel', () => {
   });
 
   it('«mark all» posts no ids, then reloads the list and the badge', async () => {
-    apiFetch.mockResolvedValueOnce(page([ITEM])).mockResolvedValue(page([{ ...ITEM, read_at: ITEM.created_at }]));
+    apiFetch
+      .mockResolvedValueOnce(page([ITEM]))
+      .mockResolvedValue(page([{ ...ITEM, read_at: ITEM.created_at }]));
     renderWithClient(<NotificationPanel onPick={vi.fn()} />);
     fireEvent.click(await screen.findByRole('button', { name: t.bell.markAll }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/me/notifications/read', {}));

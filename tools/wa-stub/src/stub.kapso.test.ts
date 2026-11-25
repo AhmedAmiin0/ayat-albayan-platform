@@ -1,9 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { z } from 'zod';
 import {
   bearer,
   closeAll,
   hmacHex,
   post,
+  read,
   receivedAt,
   startHook,
   startStub,
@@ -49,7 +51,7 @@ describe('wa-stub: the kapso prefix', () => {
       ['kapso', 'api-key'],
       ['graph', 'bearer'],
     ]);
-    const log = (await (await fetch(`${url}/__stub/requests`)).json()) as unknown[];
+    const log = await read(fetch(`${url}/__stub/requests`), z.array(z.unknown()));
     expect(log).toHaveLength(2);
   });
 
@@ -68,7 +70,10 @@ describe('wa-stub: the kapso prefix', () => {
     stub.state.media.set('ab12', { mime: 'image/jpeg', bytes: Buffer.from([1, 2, 3]) });
     expect((await fetch(`${url}/kapso/v24.0/ab12`, { headers: KEY })).status).toBe(400);
     const res = await fetch(`${url}/kapso/v24.0/ab12?phone_number_id=PN1`, { headers: KEY });
-    const meta = (await res.json()) as { url: string; download_url: string; mime_type: string };
+    const meta = await read(
+      res,
+      z.object({ url: z.string(), download_url: z.string(), mime_type: z.string() }),
+    );
     expect(meta.mime_type).toBe('image/jpeg');
     expect(meta.url).toContain('lookaside');
     expect((await fetch(meta.download_url, { headers: KEY })).status).toBe(400);
@@ -79,12 +84,13 @@ describe('wa-stub: the kapso prefix', () => {
 
   it('templates: listed with cursors and no paging.next; edited only via ?hsm_id=, no /{template id}', async () => {
     const { url, stub } = await setup();
-    const list = (await (
-      await fetch(`${url}/kapso/v24.0/stub-waba/message_templates?limit=100`, { headers: KEY })
-    ).json()) as {
-      data: { id: string; name: string }[];
-      paging: Record<string, unknown>;
-    };
+    const list = await read(
+      fetch(`${url}/kapso/v24.0/stub-waba/message_templates?limit=100`, { headers: KEY }),
+      z.object({
+        data: z.array(z.object({ id: z.string(), name: z.string() })),
+        paging: z.record(z.string(), z.unknown()),
+      }),
+    );
     expect(list.data.length).toBeGreaterThan(0);
     expect(list.paging).not.toHaveProperty('next');
     const id = list.data[0]?.id ?? '';

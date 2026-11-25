@@ -1,20 +1,28 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { bearer, closeAll, post, startStub, templateBody, TWO_LINES } from './test-server.ts';
+import { z } from 'zod';
+import {
+  bearer,
+  closeAll,
+  errorCode,
+  post,
+  read,
+  startStub,
+  templateBody,
+  TWO_LINES,
+} from './test-server.ts';
 
 // Templates per WABA (docs/12 §13.12): the chat WABA has its own starter, which
 // the notifications number cannot send; the academy's 8 are on both, as on the real main number.
 
 afterEach(closeAll);
 
-interface TemplateList {
-  data: { name: string; category: string; status: string }[];
-}
+const TEMPLATE_LIST = z.object({
+  data: z.array(z.object({ name: z.string(), category: z.string(), status: z.string() })),
+});
 const NOTIF = bearer('notif-token');
 const names = async (url: string, waba: string) =>
   (
-    (await (
-      await fetch(`${url}/v21.0/${waba}/message_templates`, { headers: NOTIF })
-    ).json()) as TemplateList
+    await read(fetch(`${url}/v21.0/${waba}/message_templates`, { headers: NOTIF }), TEMPLATE_LIST)
   ).data.map((t) => t.name);
 
 describe('wa-stub: templates per WABA (two lines)', () => {
@@ -40,10 +48,7 @@ describe('wa-stub: templates per WABA (two lines)', () => {
     const { url } = await startStub(TWO_LINES);
     const body = templateBody('academy_welcome', 1);
     const wrong = await post(`${url}/v21.0/PN-N/messages`, body, NOTIF);
-    expect([
-      wrong.status,
-      ((await wrong.json()) as { error: { code: number } }).error.code,
-    ]).toEqual([404, 132001]);
+    expect([wrong.status, await errorCode(wrong)]).toEqual([404, 132001]);
     expect((await post(`${url}/v21.0/PN-C/messages`, body, NOTIF)).status).toBe(200);
   });
 

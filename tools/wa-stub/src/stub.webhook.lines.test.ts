@@ -4,7 +4,9 @@ import {
   closeAll,
   hmacHex,
   post,
+  read,
   receivedAt,
+  sentIds,
   startHook,
   startStub,
   templateBody,
@@ -100,7 +102,7 @@ describe('wa-stub: signed webhooks per line (docs/12 §13.12)', () => {
     await post(`${url}/__stub/inbound`, { from: '966500000015', text: 'x', phoneNumberId: 'PN-C' });
     const text = { to: '966500000015', type: 'text', text: { body: 'أهلاً' } };
     const sent = await post(`${url}/v21.0/PN-C/messages`, text, bearer('chat-token'));
-    const id = ((await sent.json()) as { messages: { id: string }[] }).messages[0]?.id;
+    const id = (await read(sent, sentIds)).messages[0]?.id;
     await post(`${url}/__stub/status`, { id, status: 'delivered' });
     const got = receivedAt(hook, 1);
     expect(got.sig).toBe(hmac(got.body, 'chat-secret'));
@@ -114,7 +116,7 @@ describe('wa-stub: signed webhooks per line (docs/12 §13.12)', () => {
       templateBody('lesson_reminder_v2', 2),
       bearer('notif-token'),
     );
-    const tid = ((await tpl.json()) as { messages: { id: string }[] }).messages[0]?.id;
+    const tid = (await read(tpl, sentIds)).messages[0]?.id;
     await post(`${url}/__stub/status`, { id: tid, status: 'sent' });
     const got = receivedAt(hook, 0);
     expect(got.sig).toBe(hmac(got.body, 'notif-secret'));

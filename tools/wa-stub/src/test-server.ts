@@ -2,6 +2,7 @@
 import { createHmac } from 'node:crypto';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
+import { z } from 'zod';
 import { createStub, type StubOptions } from './stub.ts';
 
 const servers: Server[] = [];
@@ -61,6 +62,21 @@ export const receivedAt = (hook: { received: Received[] }, i: number): Received 
 export const hmacHex = (secret: string, body: string): string =>
   createHmac('sha256', secret).update(body).digest('hex');
 
+/** A stub answer parsed with its schema: a wrong shape fails the test here. */
+export const read = async <S extends z.ZodType>(
+  res: Response | Promise<Response>,
+  schema: S,
+): Promise<z.infer<S>> => schema.parse(await (await res).json());
+
+const graphError = z.object({ error: z.object({ code: z.number() }) });
+
+/** Meta's error code in a refused answer. */
+export const errorCode = async (res: Response): Promise<number> =>
+  (await read(res, graphError)).error.code;
+
+/** A send's answer: the ids Meta gives the sent messages. */
+export const sentIds = z.object({ messages: z.array(z.object({ id: z.string() })) });
+
 export const AUTH = { authorization: 'Bearer test-token' };
 
 /** Two lines with DISTINCT ids, tokens and secrets (docs/12 §13.12). */
@@ -95,7 +111,7 @@ export function startUpload(
   query: Record<string, string>,
   headers: Record<string, string> = AUTH,
 ) {
-  return fetch(`${url}/v21.0/APP/uploads?${new URLSearchParams(query)}`, {
+  return fetch(`${url}/v21.0/APP/uploads?${new URLSearchParams(query).toString()}`, {
     method: 'POST',
     headers,
   });
@@ -108,10 +124,10 @@ export async function uploadPdf(url: string, bytes: Uint8Array<ArrayBuffer>): Pr
     file_length: String(bytes.length),
     file_type: 'application/pdf',
   };
-  const { id } = (await (await startUpload(url, query)).json()) as { id: string };
+  const { id } = await read(startUpload(url, query), z.object({ id: z.string() }));
   const headers = { authorization: 'OAuth test-token', file_offset: '0' };
   const res = await fetch(`${url}/v21.0/${id}`, { method: 'POST', headers, body: bytes });
-  return ((await res.json()) as { h: string }).h;
+  return (await read(res, z.object({ h: z.string() }))).h;
 }
 
 /** A template send with `n` body parameters. */

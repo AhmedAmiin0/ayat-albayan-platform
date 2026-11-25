@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { closeAll, startStub, startUpload, uploadPdf } from './test-server.ts';
+import { z } from 'zod';
+import { closeAll, errorCode, read, startStub, startUpload, uploadPdf } from './test-server.ts';
 
 afterEach(closeAll);
 
@@ -10,13 +11,10 @@ const PDF_QUERY = {
   file_type: 'application/pdf',
 };
 const OAUTH = { authorization: 'OAuth test-token', file_offset: '0' };
-const code = async (res: Response) => [
-  res.status,
-  ((await res.json()) as { error: { code: number } }).error.code,
-];
+const code = async (res: Response) => [res.status, await errorCode(res)];
 
 async function session(url: string): Promise<string> {
-  return ((await (await startUpload(url, PDF_QUERY)).json()) as { id: string }).id;
+  return (await read(startUpload(url, PDF_QUERY), z.object({ id: z.string() }))).id;
 }
 
 describe('wa-stub: resumable upload (template header samples)', () => {
@@ -25,7 +23,7 @@ describe('wa-stub: resumable upload (template header samples)', () => {
     const id = await session(url);
     expect(id).toMatch(/^upload:[a-f0-9]+\?sig=stub[a-f0-9-]+$/);
     const res = await fetch(`${url}/v21.0/${id}`, { method: 'POST', headers: OAUTH, body: PDF });
-    const { h } = (await res.json()) as { h: string };
+    const { h } = await read(res, z.object({ h: z.string() }));
     expect([res.status, h]).toEqual([200, expect.stringMatching(/^4::/)]);
     expect(stub.state.handles.has(h)).toBe(true);
     expect(stub.state.uploads.size).toBe(0);
