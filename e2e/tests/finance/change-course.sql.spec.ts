@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import { change, changeOf, CHANGE, seedCourse } from '../../support/finance/change-course';
 import { BASE, iso, rolledBack, type Tx } from '../../support/edit-time';
+import { errorCode, errorMessage } from '../../support/core/db-error';
 
 // change_course (migration 480) moves a course's rules and lessons atomically, idempotently.
 
@@ -59,7 +60,7 @@ test.describe('change_course: the remaining lessons of a course on new days (R-A
     await rolledBack(async (tx) => {
       const c = await seedCourse(tx);
       const bad = changeOf(c, { requestId: randomUUID(), sub: randomUUID() });
-      const code = await tx.savepoint((sp) => change(sp, bad)).then(() => 'ok', (e: { message?: string }) => e.message);
+      const code = await tx.savepoint((sp) => change(sp, bad)).then(() => 'ok', errorMessage);
       expect(code).toBe('course_mismatch');
       const rules = await rulesOf(tx, c.sub);
       expect(rules.map((r) => r.id)).toEqual(c.rules);
@@ -72,7 +73,7 @@ test.describe('change_course: the remaining lessons of a course on new days (R-A
     await rolledBack(async (tx) => {
       const c = await seedCourse(tx);
       const empty = { ...changeOf(c, { requestId: randomUUID() }), new_rules: [] };
-      const code = await tx.savepoint((sp) => change(sp, empty)).then(() => 'ok', (e: { code?: string }) => e.code);
+      const code = await tx.savepoint((sp) => change(sp, empty)).then(() => 'ok', errorCode);
       expect(code).toBe('22023');
     });
   });
@@ -111,7 +112,7 @@ test.describe('change_course: the remaining lessons of a course on new days (R-A
       const c = await seedCourse(tx);
       await change(tx, changeOf(c, { requestId: randomUUID() }));
       const stale = changeOf(c, { requestId: randomUUID() });
-      const code = await tx.savepoint((sp) => change(sp, stale)).then(() => 'ok', (e: { message?: string }) => e.message);
+      const code = await tx.savepoint((sp) => change(sp, stale)).then(() => 'ok', errorMessage);
       expect(code).toBe('course_changed');
       expect(await rulesOf(tx, c.sub)).toHaveLength(4);
     });

@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Migration 20261028000943 (docs/24 §7) against the real database, rolled back: teachers.calendar_owner,
 // the calendar-managed predicate, the switch's producer, the admin-only guard and the audit row.
@@ -65,7 +66,7 @@ test.describe('Google calendar handover (migration 20261028000943)', () => {
       expect(await owner(tx, s.teacherId)).toBe('platform');
       const [by] = await tx<{ by: string }[]>`select calendar_owner_changed_by as by from public.teachers where id = ${s.teacherId}`;
       expect(by?.by).toBe(admin);
-      const bad = await tx.savepoint(() => tx`update public.teachers set calendar_owner = 'both' where id = ${s.teacherId}`).then(() => 'ok', (e: { code?: string }) => e.code);
+      const bad = await tx.savepoint(() => tx`update public.teachers set calendar_owner = 'both' where id = ${s.teacherId}`).then(() => 'ok', errorCode);
       expect(bad).toBe('23514');
     });
   });

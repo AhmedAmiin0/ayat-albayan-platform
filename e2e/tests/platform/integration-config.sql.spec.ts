@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Migration 310 (config in the database): integration_config is readable by
 // admins only and written by the service role; the Vault functions run for the service role only.
 // Values here are obviously fake and every test rolls back.
 
-const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', (e: { code?: string }) => e.code);
+const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
 const clearClaims = (tx: Tx) => tx`select set_config('request.jwt.claims', '', true)`;
 
 /** Runs `q` as the service role (JWT role service_role), then back to the owner with no claims. */

@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Migrations 280-285 + 288 (users control): the student base role, one login per student, the disabled
 // columns, the service-role-only admin_list_users / user_references / revoke_user_sessions, and the
 // whitelisted student_self view. (Disabled logins and the last-admin guard: profiles-disabled.sql.spec.ts.)
 
-const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', (e: { code?: string }) => e.code);
+const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
 
 async function asService<T>(tx: Tx, q: () => Promise<T>): Promise<T> {
   await tx`select set_config('request.jwt.claims', ${JSON.stringify({ role: 'service_role' })}, true)`;

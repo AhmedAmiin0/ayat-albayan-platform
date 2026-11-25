@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Migration 20261022000600 (docs/23 phase 1): the last good line check per line. Admins read it,
 // only the service role writes, anon sees nothing; numbers must be E.164. Every test rolls back.
 
-const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', (e: { code?: string }) => e.code);
+const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
 const clearClaims = (tx: Tx) => tx`select set_config('request.jwt.claims', '', true)`;
 async function seed(tx: Tx): Promise<void> {
   await tx`delete from public.wa_line_health`;

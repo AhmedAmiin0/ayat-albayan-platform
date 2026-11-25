@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // The family views are read-only (migration 981, review authz-db-1): portal_* and student_self are owner-rights
 // views (they bypass the RLS of the tables under them), so `authenticated` keeps SELECT only. Read from the
@@ -26,7 +27,7 @@ test.describe('family views in the database (migration 981)', () => {
       const teacher = await userId(tx, USERS.teacher.email);
       const code = await tx
         .savepoint((sp) => as(sp, teacher, () => sp`update public.portal_packages set lessons_total = lessons_total + 1`))
-        .then(() => 'ok', (e: { code?: string }) => e.code);
+        .then(() => 'ok', errorCode);
       expect(code).toBe('42501');
     });
   });

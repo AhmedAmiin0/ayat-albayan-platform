@@ -3,13 +3,14 @@ import { earningId, earningOf, pastLesson, pay, teacherWithRates } from '../../s
 import { approvedPayout } from '../../support/finance/pay-rule';
 import { rolledBack } from '../../support/core/rls';
 import { resetAbrar } from '../../support/core/schedule';
+import { errorMessage } from '../../support/core/db-error';
 
 // Correcting money out to a teacher (migration 20261005000201), each case rolled back.
 
 const refused = (p: Promise<unknown>) =>
   p.then(
     () => 'allowed',
-    (e: { message?: string }) => e.message,
+    errorMessage,
   );
 interface PayoutState {
   status: string;

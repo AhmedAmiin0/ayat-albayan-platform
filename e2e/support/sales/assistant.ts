@@ -1,11 +1,17 @@
 import type { Tx } from '../core/rls';
+import { dbError } from '../core/db-error';
 
 // Helpers of the assistant (base role sales) SQL specs, migrations 270-274. Everything is written
 // inside the spec's rolled-back transaction, as the owner role (the triggers run as in production).
 
+const raisedOrCode = (e: unknown) => {
+  const { code, message } = dbError(e);
+  return code === 'P0001' ? message : code;
+};
+
 /** 'ok', the raise exception text of a P0001 (the API's error code), else the SQLSTATE. */
 export const code = (tx: Tx, q: () => Promise<unknown>) =>
-  tx.savepoint(q).then(() => 'ok', (e: { code?: string; message?: string }) => (e.code === 'P0001' ? e.message : e.code));
+  tx.savepoint(q).then(() => 'ok', raisedOrCode);
 
 /** A sales login (auth user + profile, tz Riyadh) with the given terms (null = none). */
 export async function assistant(tx: Tx, tag: string, terms?: Record<string, string | number | null>): Promise<string> {
