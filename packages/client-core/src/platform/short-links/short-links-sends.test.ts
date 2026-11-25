@@ -1,13 +1,28 @@
-import type { ShortLinkCreate } from '@ab/shared';
+import {
+  shortLinkDetailSchema,
+  shortLinkSentDetailSchema,
+  type ShortLinkCreate,
+} from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiClient } from '../../core/http';
+import { z } from 'zod';
+import { parseResponse, type ApiClient } from '../../core/http';
 import { shortLinkSends } from './short-links-sends';
 import { detail } from './short-links.test-util';
 
 const sentDetail = { ...detail, send: { queued: 1, failed: 1 } };
 
-const clientAnswering = (answer: unknown) =>
-  ({ apiFetch: vi.fn(), apiSend: vi.fn(async () => answer) }) as unknown as ApiClient;
+const options = z.object({ schema: z.custom<z.ZodType>((s) => s instanceof z.ZodType) });
+
+/** apiSend as the real client runs it: the options' schema parses the answer. */
+const clientAnswering = (answer: unknown) => {
+  const send = async (_method: string, path: string, arg?: unknown) => {
+    const withSchema = options.safeParse(arg);
+    return withSchema.success ? parseResponse(withSchema.data.schema, answer, path) : answer;
+  };
+  return { apiFetch: vi.fn(), apiSend: vi.fn(send) } as unknown as ApiClient;
+};
+const sent = { schema: shortLinkSentDetailSchema };
+const answered = { schema: shortLinkDetailSchema };
 
 describe('short link writes', () => {
   it('creates and resends with the send counts', async () => {
@@ -18,18 +33,27 @@ describe('short link writes', () => {
       profileIds: [], phones: [], sendWhatsapp: false,
     };
     await expect(sends.create(body)).resolves.toEqual(sentDetail);
-    expect(client.apiSend).toHaveBeenCalledWith('POST', '/short-links', body);
+    expect(client.apiSend).toHaveBeenCalledWith('POST', '/short-links', { body, ...sent });
     await expect(sends.resend('K7q2M9xT')).resolves.toEqual(sentDetail);
-    expect(client.apiSend).toHaveBeenCalledWith('POST', '/short-links/K7q2M9xT/resend', undefined);
+    expect(client.apiSend).toHaveBeenCalledWith('POST', '/short-links/K7q2M9xT/resend', {
+      body: undefined,
+      ...sent,
+    });
   });
 
   it('updates and revokes, answering the detail', async () => {
     const client = clientAnswering(detail);
     const sends = shortLinkSends(client);
     await expect(sends.update({ code: 'K7q2M9xT', body: { title: 'x' } })).resolves.toEqual(detail);
-    expect(client.apiSend).toHaveBeenCalledWith('PATCH', '/short-links/K7q2M9xT', { title: 'x' });
+    expect(client.apiSend).toHaveBeenCalledWith('PATCH', '/short-links/K7q2M9xT', {
+      body: { title: 'x' },
+      ...answered,
+    });
     await sends.revoke('K7q2M9xT');
-    expect(client.apiSend).toHaveBeenCalledWith('POST', '/short-links/K7q2M9xT/revoke', undefined);
+    expect(client.apiSend).toHaveBeenCalledWith('POST', '/short-links/K7q2M9xT/revoke', {
+      body: undefined,
+      ...answered,
+    });
   });
 
   it('opens signed in and through a WhatsApp code', async () => {

@@ -1,10 +1,15 @@
+import { shortLinkDetailSchema, shortLinkPageSchema } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../core/http';
+import type { z } from 'zod';
+import { ApiError, parseResponse, type ApiClient } from '../../core/http';
 import { SHORT_LINK_GATE_KEY, SHORT_LINKS_KEY, shortLinkQueries } from './short-links-api';
 import { detail, gateView, person } from './short-links.test-util';
 
-const clientAnswering = (answer: () => Promise<unknown>) =>
-  ({ apiFetch: vi.fn(answer), apiSend: vi.fn() }) as unknown as ApiClient;
+const clientAnswering = (answer: () => Promise<unknown>) => {
+  const read = async (path: string, init?: { schema?: z.ZodType }) =>
+    init?.schema ? parseResponse(init.schema, await answer(), path) : answer();
+  return { apiFetch: vi.fn(read), apiSend: vi.fn() } as unknown as ApiClient;
+};
 
 describe('short link reads', () => {
   it('lists with the filters in the key and the query string', async () => {
@@ -16,6 +21,7 @@ describe('short link reads', () => {
     await expect(q.queryFn()).resolves.toMatchObject({ total: 1 });
     expect(client.apiFetch).toHaveBeenCalledWith(
       '/short-links?status=active&search=%D9%84%D9%82%D8%A7%D8%A1&page=2',
+      { schema: shortLinkPageSchema },
     );
   });
 
@@ -24,12 +30,14 @@ describe('short link reads', () => {
     const q = shortLinkQueries(client).detailQuery('K7q2M9xT');
     expect(q.queryKey).toEqual(['short-links', 'K7q2M9xT']);
     await expect(q.queryFn()).resolves.toEqual(detail);
-    expect(client.apiFetch).toHaveBeenCalledWith('/short-links/K7q2M9xT');
+    expect(client.apiFetch).toHaveBeenCalledWith('/short-links/K7q2M9xT', {
+      schema: shortLinkDetailSchema,
+    });
   });
 
   it('rejects an answer that does not match the schema', async () => {
     const client = clientAnswering(async () => ({ rows: 'x' }));
-    await expect(shortLinkQueries(client).listQuery({}).queryFn()).rejects.toThrow();
+    await expect(shortLinkQueries(client).listQuery({}).queryFn()).rejects.toThrow(ApiError);
   });
 
   it('searches people from two characters, trimmed', async () => {
@@ -40,7 +48,7 @@ describe('short link reads', () => {
     expect(q.enabled).toBe(true);
     expect(q.queryKey).toEqual(['short-links', 'people', 'أحمد']);
     await expect(q.queryFn()).resolves.toEqual([person]);
-    expect(client.apiFetch).toHaveBeenCalledWith(
+    expect(vi.mocked(client.apiFetch).mock.calls[0]?.[0]).toBe(
       `/short-links/people?search=${encodeURIComponent('أحمد')}`,
     );
   });
