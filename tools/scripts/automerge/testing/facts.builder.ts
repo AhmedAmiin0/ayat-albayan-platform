@@ -1,7 +1,6 @@
 import type { Facts } from '../facts.schemas.ts';
 
 export const HEAD = 'a'.repeat(40);
-export const DEVELOP = 'd'.repeat(40);
 export const HEAD_AT = '2026-11-23T00:00:00Z';
 export const REVIEWED_AT = '2026-11-23T00:45:00Z';
 
@@ -29,7 +28,7 @@ const aPr = (): Pr => ({
   labels: [{ name: 'auto-merge' }],
 });
 
-/** A PR that merges: lane branch, label, green check and guards, fresh base. */
+/** A PR that merges: lane branch, label, green check and guards, nothing new on develop. */
 export function aFacts(): Facts {
   return {
     pr: aPr(),
@@ -37,7 +36,7 @@ export function aFacts(): Facts {
     statuses: [],
     annotations: [],
     files: [{ filename: 'packages/shared/src/a.ts' }],
-    compare: { base_commit: { sha: DEVELOP }, merge_base_commit: { sha: DEVELOP } },
+    behind: { known: true, files: [] },
     comments: [],
     events: [],
     suites: [{ created_at: HEAD_AT }],

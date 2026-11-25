@@ -52,6 +52,16 @@ test('lane-automerge: gathers the reviewed path facts from GitHub, not from git 
   for (const f of ['events', 'suites']) assert.match(script, new RegExp(`> "\\$d/${f}\\.json"`));
 });
 
+test('lane-automerge: what develop gained since the merge base comes from git', () => {
+  assert.match(script, /compare\/develop\.\.\.\$sha\?per_page=1/);
+  assert.match(script, /git fetch -q --depth=1 --filter=blob:none origin "\$1" "\$2" \|\| return 1/);
+  assert.match(script, /git -c core\.quotePath=false diff --name-only --no-renames "\$1" "\$2"/);
+  assert.match(script, /if names=\$\(gained "\$base" "\$tip"\); then/);
+  assert.match(script, /jq -s '\{known: true, files: \.\}' > "\$d\/behind\.json"/);
+  assert.match(script, /echo '\{"known": false, "files": \[\]\}' > "\$d\/behind\.json"/);
+  assert.ok(!script.includes('compare.json'), 'cli.ts reads behind.json, not the compare answer');
+});
+
 /** deploy-staging's preflight `if`, evaluated for one ci run (GitHub `==` on these strings). */
 function preflight(run, eventName = 'workflow_run') {
   const github = { event_name: eventName, repository: 'o/r', event: { workflow_run: run } };
