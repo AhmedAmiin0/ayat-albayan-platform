@@ -4,7 +4,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { CourseActionsSection } from './CourseActionsSection';
 import { BASE, serve, stopPreview, SUB } from './fixtures';
 
-// The stop sheet's money on mobile (owner 2026-11-06), as on web: the person chooses what is still
+// The stop sheet's money on mobile, as on web: the person chooses what is still
 // owed or the refund amount; one summary line. 300 SAR paid, 3 of 8 attended (charge 112.5).
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

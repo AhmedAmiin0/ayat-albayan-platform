@@ -35,7 +35,7 @@ export function confirmingQueryClient(options: TestClientOptions = {}): QueryCli
   return client;
 }
 
-/** A test client for an academy that requires no lesson confirmation (OFF, owner 2026-11-02). */
+/** A test client for an academy that requires no lesson confirmation (OFF). */
 export function noConfirmQueryClient(options: TestClientOptions = {}): QueryClient {
   const client = createTestQueryClient(options);
   seedPublicConfig(client, { lesson_confirmation_required: false });

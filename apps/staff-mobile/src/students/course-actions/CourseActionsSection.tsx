@@ -16,7 +16,7 @@ interface CourseActionsSectionProps {
   subscriptionId?: string | null | undefined;
   /** False hides teacher and time changes (the API would refuse not_your_student). */
   moves?: boolean;
-  /** The package whose course the moves change (owner 2026-11-06); absent = the package. */
+  /** The package whose course the moves change; absent = the package. */
   movesOf?: string | null | undefined;
   /** Offered when the card counts lessons without a date. */
   extend?: boolean;

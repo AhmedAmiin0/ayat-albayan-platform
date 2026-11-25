@@ -6,7 +6,7 @@ import { USERS_KEY } from '@/users/shared/api';
 /** The users list and page, and a teacher's own pages (a teacher login's photo is the teacher's). */
 const PHOTO_KEYS = [USERS_KEY, pathKey('/teachers'), pathKey('/sales/teachers')];
 
-/** Students and guardians never carry a photo (owner 2026-10-28: initials only). */
+/** Students and guardians never carry a photo (initials only). */
 const isStaffRole = (role: UserDetail['role']): boolean => role !== 'student' && role !== 'guardian';
 
 /** Change or remove needs users.write and a staff login. */

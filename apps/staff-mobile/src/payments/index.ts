@@ -3,7 +3,7 @@ export { PaymentScreen } from './screens/PaymentScreen';
 export { pickReceipt } from '@/core/lib/receipts/receipt';
 export { ensureCameraPermission } from '@/core/lib/receipts/camera-permission';
 export { CancelPackage } from './components/CancelPackage';
-// A package's part-paid line and the receipt's shortfall note (owner 2026-10-28), for the money and sales screens.
+// A package's part-paid line and the receipt's shortfall note, for the money and sales screens.
 export { partPaidLine } from '@/core/lib/money/format';
 export { ShortfallNote } from './components/ShortfallNote';
 // Payment link requires FEATURE_STRIPE (test or live).

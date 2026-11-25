@@ -4,7 +4,7 @@ import type { AssistantRow, LedgerFilter, StatementFilter } from '@ab/client-cor
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@ab/mobile-kit';
 
-// apps/api assistant-pay (owner, 2026-10-06; web apps/staff-web/src/features/assistants/api.ts). Reads need
+// apps/api assistant-pay (web apps/staff-web/src/features/assistants/api.ts). Reads need
 // assistantpay.read, writes assistantpay.write, approve/reopen/unpay assistantpay.approve. Per currency.
 
 /** Every query and write of this module lives under it: one invalidation re-reads all (as the web). */

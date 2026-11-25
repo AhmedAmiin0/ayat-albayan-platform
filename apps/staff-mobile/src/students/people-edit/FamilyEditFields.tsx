@@ -18,7 +18,7 @@ interface FamilyEditFieldsProps {
   value: FamilyForm;
   onChange: (patch: Partial<FamilyForm>) => void;
   invalid: readonly string[];
-  /** Notes are the admin's only (owner 2026-10-27). */
+  /** Notes are the admin's only. */
   notes: boolean;
 }
 

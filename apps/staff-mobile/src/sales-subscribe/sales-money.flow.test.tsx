@@ -46,7 +46,7 @@ test('from a family chat: «اشتراك جديد» → saved → the days (late
   await press('button', m.newSubscription);
   expect(app.pathname()).toBe('/inbox/sales-subscribe');
   await fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
-  // On to the package's weekly days (owner 2026-10-18); the transfer may come first.
+  // On to the package's weekly days; the transfer may come first.
   await waitFor(() => expect(app.pathname()).toBe('/inbox/sales-course'));
   await press('button', m.stepTransfer);
   await waitFor(() => expect(app.pathname()).toBe('/inbox/sales-transfer'));

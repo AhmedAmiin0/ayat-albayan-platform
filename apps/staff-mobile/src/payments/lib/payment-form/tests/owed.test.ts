@@ -2,7 +2,7 @@ import { balanceOf, OLD_SUB_ID, SUB_ID, subscription } from '@/payments/fixtures
 import { partPaidLine } from '@/core/lib/money/format';
 import { payablePackages } from '@/payments/lib/payment-form/payment-form';
 
-// Owner 2026-11-06: a stopped course owes its stored decision (owedFor), never price − paid.
+// A stopped course owes its stored decision (owedFor), never price − paid.
 const stopped = (owed: number, paid: number) =>
   subscription({
     id: OLD_SUB_ID,

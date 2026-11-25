@@ -30,16 +30,24 @@ function subscribedApps(s: StubState, wabaId: string): Reply {
   if (!line) return [400, ERR.noObject(wabaId)];
   const health = s.health.get(line.phoneNumberId);
   if (!health?.subscribed) return [200, { data: [] }];
-  const app: Json = { id: line.appId, name: `Stub app ${line.appId}`, link: `https://stub.local/apps/${line.appId}` };
+  const app: Json = {
+    id: line.appId,
+    name: `Stub app ${line.appId}`,
+    link: `https://stub.local/apps/${line.appId}`,
+  };
   // Meta's shape: the override sits NEXT TO whatsapp_business_api_data (review B, F1).
   const item: Json = { whatsapp_business_api_data: app };
-  if (health.override_callback_uri) item['override_callback_uri'] = health.override_callback_uri;
+  if (health.override_callback_uri) item.override_callback_uri = health.override_callback_uri;
   return [200, { data: [item] }];
 }
 
 const V = String.raw`\/v\d+\.\d+`;
 export const diagnosticRoutes: Route[] = [
-  ['GET', new RegExp(`^${V}/([^/]+)/subscribed_apps$`), async (_r, m, s) => subscribedApps(s, m[1] ?? '')],
+  [
+    'GET',
+    new RegExp(`^${V}/([^/]+)/subscribed_apps$`),
+    async (_r, m, s) => subscribedApps(s, m[1] ?? ''),
+  ],
 ];
 
 const TEXT_FIELDS = [...PHONE_FIELDS, 'override_callback_uri'] as const;
@@ -47,7 +55,7 @@ const TEXT_FIELDS = [...PHONE_FIELDS, 'override_callback_uri'] as const;
 /** Applies a POST /__stub/lines/{pn} body: `subscribed` and any of the text fields. */
 function patchHealth(health: LineHealth, body: Json): LineHealth {
   const next: LineHealth = { ...health };
-  if (typeof body['subscribed'] === 'boolean') next.subscribed = body['subscribed'];
+  if (typeof body.subscribed === 'boolean') next.subscribed = body.subscribed;
   for (const field of TEXT_FIELDS) if (typeof body[field] === 'string') next[field] = body[field];
   return next;
 }
@@ -58,12 +66,16 @@ export function resetHealth(s: StubState): void {
 }
 
 export const diagnosticControlRoutes: Route[] = [
-  ['POST', /^\/__stub\/lines\/([^/]+)$/, async (req, m, s) => {
-    const pn = m[1] ?? '';
-    const health = s.health.get(pn);
-    if (!health) return [404, { error: `no line ${pn}` }];
-    const next = patchHealth(health, await readJson(req));
-    s.health.set(pn, next);
-    return [200, next];
-  }],
+  [
+    'POST',
+    /^\/__stub\/lines\/([^/]+)$/,
+    async (req, m, s) => {
+      const pn = m[1] ?? '';
+      const health = s.health.get(pn);
+      if (!health) return [404, { error: `no line ${pn}` }];
+      const next = patchHealth(health, await readJson(req));
+      s.health.set(pn, next);
+      return [200, next];
+    },
+  ],
 ];

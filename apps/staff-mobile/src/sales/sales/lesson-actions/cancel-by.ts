@@ -14,7 +14,7 @@ export const CANCEL_BY_LABEL: Record<SalesCancelBy, string> = {
 type When = 'before' | 'after';
 
 /**
- * The `by` choices on an open lesson (owner 2026-11-02). Confirmation required, as before:
+ * The `by` choices on an open lesson. Confirmation required, as before:
  * the academy only, until it ends. Without one: the academy, the teacher or the student
  * until it ends, then the teacher or the student only (the API refuses the academy then).
  */

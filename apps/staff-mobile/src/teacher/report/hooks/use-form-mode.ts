@@ -19,7 +19,7 @@ interface FormMode {
   sent: () => void;
 }
 
-/** The phone's report form mode (owner 2026-11-06; the rules are client-core's reportFormMode). */
+/** The phone's report form mode (the rules are client-core's reportFormMode). */
 export function useFormMode(report: ReportView): FormMode {
   const [guard] = useState<SendGuard>(singleFlight);
   const [editing, setEditing] = useState(false);

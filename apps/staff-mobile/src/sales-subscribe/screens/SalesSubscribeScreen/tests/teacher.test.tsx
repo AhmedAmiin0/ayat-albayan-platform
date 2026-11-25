@@ -31,7 +31,7 @@ beforeEach(() => {
   mockApiSend.mockImplementation(async (_m: string, path: string) => (path === '/sales/subscriptions/quote' ? salesQuote : openSub()));
 });
 
-// Owner 2026-10-29: the assistant assigns the teacher when the student subscribes (the chat opens after).
+// The assistant assigns the teacher when the student subscribes (the chat opens after).
 test('«المعلم/ة» starts on the trial’s teacher and is sent with the package', async () => {
   answer(TRIAL);
   await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));

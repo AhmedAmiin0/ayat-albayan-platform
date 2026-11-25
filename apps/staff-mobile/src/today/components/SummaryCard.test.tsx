@@ -5,7 +5,7 @@ import { SummaryCard } from './SummaryCard';
 
 const counts = { all: 12, scheduled: 5, completed: 3 };
 
-// Owner 2026-10-28: «need confirmation is broken into two words»: every label holds one line.
+// Every label holds one line, never broken into two.
 test('every column label renders on one line, shrinking to fit rather than wrapping', async () => {
   await renderWithQuery(<SummaryCard counts={counts} filter="all" onFilter={jest.fn()} />, confirmingQueryClient());
   for (const key of ['all', 'scheduled', 'completed'] as const) {

@@ -1,7 +1,7 @@
 import { t, ltr } from '@ab/mobile-kit';
 import { paidLine, paidOf, partPaidLine, shortfallLine } from '@/core/lib/money/format/format';
 
-// Owner 2026-10-28 («Why is this unpaid»): 81 SAR with 80 received stays unpaid; the line says why.
+// 81 SAR with 80 received stays unpaid; the line says why.
 const SAR = t.pricing.currencies.SAR;
 
 test('80 of 81: «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1», Western digits isolated', () => {

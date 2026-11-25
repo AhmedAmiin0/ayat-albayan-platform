@@ -36,7 +36,11 @@ export async function startHook() {
     req.on('data', (c: Buffer) => (body += c.toString()));
     req.on('end', () => {
       const kapsoSig = req.headers['x-webhook-signature'] as string | undefined;
-      received.push({ sig: req.headers['x-hub-signature-256'] as string | undefined, ...(kapsoSig ? { kapsoSig } : {}), body });
+      received.push({
+        sig: req.headers['x-hub-signature-256'] as string | undefined,
+        ...(kapsoSig ? { kapsoSig } : {}),
+        body,
+      });
       res.writeHead(200).end();
     });
   });
@@ -53,7 +57,13 @@ export const TWO_LINES = {
   appId: 'APP-N',
   accessToken: 'notif-token',
   appSecret: 'notif-secret',
-  chat: { phoneNumberId: 'PN-C', wabaId: 'WABA-C', appId: 'APP-C', accessToken: 'chat-token', appSecret: 'chat-secret' },
+  chat: {
+    phoneNumberId: 'PN-C',
+    wabaId: 'WABA-C',
+    appId: 'APP-C',
+    accessToken: 'chat-token',
+    appSecret: 'chat-secret',
+  },
 } satisfies StubOptions;
 
 export const bearer = (token: string) => ({ authorization: `Bearer ${token}` });
@@ -67,13 +77,24 @@ export function post(url: string, body: unknown, headers: Record<string, string>
 }
 
 /** Step 1 of a resumable upload: the session id (`upload:…?sig=…`) or the raw response. */
-export function startUpload(url: string, query: Record<string, string>, headers: Record<string, string> = AUTH) {
-  return fetch(`${url}/v21.0/APP/uploads?${new URLSearchParams(query)}`, { method: 'POST', headers });
+export function startUpload(
+  url: string,
+  query: Record<string, string>,
+  headers: Record<string, string> = AUTH,
+) {
+  return fetch(`${url}/v21.0/APP/uploads?${new URLSearchParams(query)}`, {
+    method: 'POST',
+    headers,
+  });
 }
 
 /** Both steps for `bytes` as a PDF: Meta's handle for example.header_handle. */
 export async function uploadPdf(url: string, bytes: Uint8Array<ArrayBuffer>): Promise<string> {
-  const query = { file_name: 'sample.pdf', file_length: String(bytes.length), file_type: 'application/pdf' };
+  const query = {
+    file_name: 'sample.pdf',
+    file_length: String(bytes.length),
+    file_type: 'application/pdf',
+  };
   const { id } = (await (await startUpload(url, query)).json()) as { id: string };
   const headers = { authorization: 'OAuth test-token', file_offset: '0' };
   const res = await fetch(`${url}/v21.0/${id}`, { method: 'POST', headers, body: bytes });

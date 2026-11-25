@@ -66,7 +66,7 @@ test('without self.sales_money the family is never read and nothing shows', asyn
   expect(screen.queryByText(m.renew)).toBeNull();
 });
 
-// sales.renew_any (owner 2026-11-01): ANY student, whoever brought it (or nobody); else hers.
+// sales.renew_any: ANY student, whoever brought it (or nobody); else hers.
 function serveOther(permissions: string[]) {
   const other = kid({ renew_due: true, mine: false });
   mockApiFetch.mockImplementation(async (path: string) =>

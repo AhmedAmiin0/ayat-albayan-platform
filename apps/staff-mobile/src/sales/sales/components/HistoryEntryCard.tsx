@@ -16,7 +16,7 @@ interface HistoryEntryCardProps {
 
 /**
  * One subscription in the history: package and status, dates, lessons used / left, the status changes
- * and the linked payments with date, kind and amount (owner, 2026-10-11). The opened subscription is outlined in lapis.
+ * and the linked payments with date, kind and amount. The opened subscription is outlined in lapis.
  */
 export function HistoryEntryCard({ entry, current, brief = false }: HistoryEntryCardProps) {
   const { color } = useTheme();
@@ -24,7 +24,7 @@ export function HistoryEntryCard({ entry, current, brief = false }: HistoryEntry
   const tz = useViewerTz();
   const lines = historyLines({ status_changes: [], payments: [], ...entry }, tz);
   const body = { fontFamily: type.ui[400], fontSize: type.size.body, color: color.ink } as const;
-  // Only a self.sales_money viewer gets part_paid, and only while 0 < paid < price (owner 2026-10-28).
+  // Only a self.sales_money viewer gets part_paid, and only while 0 < paid < price.
   const part = 'part_paid' in entry && entry.part_paid ? partPaidLine(entry.part_paid) : null;
   return (
     <View

@@ -18,7 +18,7 @@ interface CourseChangeFlowProps {
   onLeave: () => void;
   /** After the change: out of the screen. */
   onDone: () => void;
-  /** The student profile's routes (owner 2026-10-30); absent = the assistant's own. */
+  /** The student profile's routes; absent = the assistant's own. */
   target?: ChangeTarget | undefined;
 }
 
