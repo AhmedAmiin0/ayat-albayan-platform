@@ -14,7 +14,7 @@ import { familyEmail, refused, usableAs } from './provision';
 type StudentNumber = Extract<FamilyLogin, { kind: 'student' }>;
 
 /**
- * A student's WhatsApp-code sign-in (owner 2026-11-17): the student's own login, the same one a
+ * A student's WhatsApp-code sign-in: the student's own login, the same one a
  * first password makes (s-<id>@family.invalid, Provisioner.student), so a child who signs in both
  * ways has one login. Made at the first verified code, without a password and without a phone on
  * the profile (the number stays in guardian_phones). An existing login must be an enabled

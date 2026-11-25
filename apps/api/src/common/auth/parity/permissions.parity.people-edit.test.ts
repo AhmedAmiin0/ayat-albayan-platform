@@ -2,7 +2,7 @@ import { systemPermissionsOf, USER_ROLES } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { walkRoutes, type RouteAccess } from './route-walk.test-util';
 
-// Owner 2026-11-02 «assistant can update user data»: three narrow keys under /people/*, held by the
+// The assistant can update people's data: three narrow keys under /people/*, held by the
 // system admin and the system sales role, never students.write / guardians.write for sales.
 const KEYS = {
   'people.edit': [

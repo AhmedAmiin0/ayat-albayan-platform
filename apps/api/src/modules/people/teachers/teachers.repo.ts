@@ -35,8 +35,9 @@ export class TeachersRepo {
   ) {}
 
   /**
-   * Search, column filters, allowlisted sort (default: Arabic name), `id` as the last tiebreaker; each
-   * row with its active / trial student counts and its photo (signed in one call for the page).
+   * Search, column filters, allowlisted sort (default: Arabic name), `id` as the last tiebreaker;
+   * each row with its active / trial student counts and its photo (signed in one call for the
+   * page).
    */
   async list(q: TeacherListQuery): Promise<Page<TeacherListRow>> {
     const { page, pageSize, search } = q;
@@ -106,9 +107,9 @@ export class TeachersRepo {
   }
 
   /**
-   * Current load: students with the teacher whose status is current (CURRENT_STUDENT_STATUSES: new |
-   * trial | pending_subscription | active | pending_renewal | expired, owner 2026-10-15) for booking options and the
-   * all-teachers calendar. No ids = every teacher.
+   * Current load: students with the teacher whose status is current (CURRENT_STUDENT_STATUSES: new
+   * | trial | pending_subscription | active | pending_renewal | expired) for booking options and
+   * the all-teachers calendar. No ids = every teacher.
    * ponytail: counts rows in JS — fine for one academy; a grouped view if teachers get thousands.
    */
   async loads(teacherIds?: readonly string[]): Promise<Map<string, number>> {

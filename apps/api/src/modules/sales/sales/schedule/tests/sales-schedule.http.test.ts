@@ -2,14 +2,14 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { academyApp, scheduleRow } from '@/modules/sales/sales/academy/sales-academy.fakes';
 
 type App = Awaited<ReturnType<typeof academyApp>>;
-// The lesson's meeting_link and platform_classroom are in since owner 2026-10-26; nothing else secret.
+// The lesson's meeting_link and platform_classroom are in; nothing else secret.
 const ALLOWED = new Set(['meeting_link', 'platform_classroom']);
 const SECRET = /price|amount|note|reason|rate|phone|meeting|link|attendance|secret|سر/i;
 const keys = (v: unknown): string[] =>
   v && typeof v === 'object' ? Object.entries(v).flatMap(([k, x]) => [k, ...keys(x)]) : [];
 const TC = 'c2000000-0000-4000-8000-0000000000c2';
 
-// Owner report 2026-10-12 («it is not seeing the schedule»): GET /sales/schedule, read-only, whitelisted.
+// Sales see the schedule: GET /sales/schedule, read-only, whitelisted.
 describe('GET /sales/schedule over HTTP', () => {
   let t: App;
   beforeAll(async () => {

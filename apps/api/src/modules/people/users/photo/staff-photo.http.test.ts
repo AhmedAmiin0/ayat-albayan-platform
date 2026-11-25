@@ -10,7 +10,7 @@ import { ROLE_STORE } from '@/modules/people/roles/roles.store';
 import { FakeAuthAdmin, FakeUserStore, row } from '@/modules/people/users/users.fakes';
 import { AUTH_ADMIN, USER_STORE } from '@/modules/people/users/store/users.store';
 
-// The admin's staff-photo routes through the real guards (owner 2026-10-28).
+// The admin's staff-photo routes through the real guards.
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'admin1', email: null, role: 'admin' },

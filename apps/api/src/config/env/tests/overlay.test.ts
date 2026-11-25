@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { setIntegrationOverlay } from '@/common/configuration/integrations/integration-overlay';
 import { lineEnvs, loadEnv, validOverlay } from '@/config/env/env';
 
-// Integration config in the database (owner, 2026-10-12): loadEnv() = env + the DB overlay.
+// Integration config in the database: loadEnv() = env + the DB overlay.
 
 const BASE = { SUPABASE_URL: 'http://127.0.0.1:54321', SUPABASE_SERVICE_ROLE_KEY: 'k' };
 

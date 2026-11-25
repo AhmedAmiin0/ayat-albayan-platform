@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { GoogleApiError } from '@/modules/platform/google-sync';
 import { B, roomOf, setup } from './backup-run.fakes';
 
-// Owner 2026-11-07: the backup is ADD-ONLY. Whatever happens (failed parts, lost answers, crashes,
+// The backup is ADD-ONLY. Whatever happens (failed parts, lost answers, crashes,
 // Drive almost full), it never deletes, trashes or changes a file on Drive: files only grow.
 
 /** Every Drive call the backup may make: reads, the folder, and uploads. */

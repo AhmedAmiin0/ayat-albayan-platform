@@ -6,7 +6,7 @@ export interface Caps {
   part: number;
 }
 
-/** 1 GiB per part (owner 2026-11-07). */
+/** 1 GiB per part. */
 export const DEFAULT_CAPS: Caps = { part: 1024 ** 3 };
 
 interface PartsPlan {

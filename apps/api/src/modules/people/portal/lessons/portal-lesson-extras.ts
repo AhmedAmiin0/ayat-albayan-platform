@@ -23,7 +23,7 @@ export class PortalLessonExtras {
 
   /**
    * The `room` of each lesson (LessonRoomStates: only those near now are looked up), naming only
-   * the teacher and this family's students (owner 2026-11-16, review): others by role.
+   * the teacher and this family's students: others by role.
    */
   rooms(lessons: readonly RoomLesson[], at: FamilyNow): Promise<RoomStates> {
     return this.live.of(lessons, at.now, familyNamed(at.family));

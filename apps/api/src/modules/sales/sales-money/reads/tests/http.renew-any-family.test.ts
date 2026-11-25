@@ -7,7 +7,7 @@ import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/te
 import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
-// GET /sales/money/family with sales.renew_any (owner 2026-10-29, docs/16 row 38): every child, `mine` says whose.
+// GET /sales/money/family with sales.renew_any (docs/16 row 38): every child, `mine` says whose.
 const SIBLING = '5a000000-0000-4000-8000-0000000000aa';
 const URL = '/sales/money/family?phone=%2B966551110000';
 const withRenewAny: PermissionResolver = async (user) => [...(await systemResolver(user)), ...(user.role === 'sales' ? ['sales.renew_any' as const] : [])];

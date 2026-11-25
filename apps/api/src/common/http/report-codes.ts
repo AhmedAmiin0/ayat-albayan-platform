@@ -1,4 +1,4 @@
-// The report page's WhatsApp codes (owner 2026-11-06) as a port: the sign-in module (codes, limits,
+// The report page's WhatsApp codes as a port: the sign-in module (codes, limits,
 // pepper) provides it globally under REPORT_CODES, and the report page injects the token. No import
 // runs between the two modules, so neither joins the other's module-load cycle.
 

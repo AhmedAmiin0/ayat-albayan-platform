@@ -4,7 +4,10 @@ import type { HistoryAuditRow, HistoryBundle, HistorySubscriptionRow } from './s
 
 const asStatus = (v: string | null): SubscriptionStatus | null => SUBSCRIPTION_STATUSES.find((s) => s === v) ?? null;
 
-/** The audit rows that moved the status (a create counts: from null), oldest first; any other edit is dropped. */
+/**
+ * The audit rows that moved the status (a create counts: from null), oldest first; any other edit
+ * is dropped.
+ */
 export function statusChanges(rows: readonly HistoryAuditRow[]): SalesHistoryEntry['status_changes'] {
   return rows
     .map((r) => ({ at: r.at, from: asStatus(r.before_status), to: asStatus(r.after_status) }))
@@ -25,7 +28,7 @@ function entry(sub: HistorySubscriptionRow, b: HistoryBundle): SalesHistoryEntry
     lessons_total: sub.lessons_total,
     lessons_used_before: sub.lessons_used_before,
     lessons_used: used,
-    // A cancelled package has no balance row and nothing left (owner 2026-10-28).
+    // A cancelled package has no balance row and nothing left.
     lessons_remaining: sub.status === 'cancelled' ? 0 : (balance?.remaining ?? Math.max(sub.lessons_total - used, 0)),
     status_changes: statusChanges(b.audit.filter((a) => a.entity_id === sub.id)),
     payments: b.payments
@@ -34,7 +37,10 @@ function entry(sub: HistorySubscriptionRow, b: HistoryBundle): SalesHistoryEntry
   };
 }
 
-/** Whitelist of the history: payments carry amount + currency (owner 2026-10-11); no price, fx, note, method or receipt. */
+/**
+ * Whitelist of the history: payments carry amount + currency; no price, fx, note, method or
+ * receipt.
+ */
 export function toSalesHistory(subscriptionId: string, b: HistoryBundle): SalesSubscriptionHistory {
   return {
     subscription_id: subscriptionId,

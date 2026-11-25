@@ -31,7 +31,7 @@ const listOf = (body: ShortLinkUpdate): { profileIds: string[]; phones: string[]
     : { profileIds: body.profileIds ?? [], phones: body.phones ?? [] };
 
 /**
- * Create, edit and revoke a managed link (owner 2026-11-17, docs/19). The target is checked
+ * Create, edit and revoke a managed link (docs/19). The target is checked
  * against the allow-list (+ the extra hosts) at write time; only the server ever writes it. Every
  * create and revoke leaves an audit row (entity short_links).
  */

@@ -3,7 +3,7 @@ import { errorCode } from '@/common/http/errors';
 import { PHONES } from '@/modules/people/sign-in/sign-in.fakes.accounts';
 import { signInWorld } from '@/modules/people/sign-in/sign-in.world';
 
-// Owner 2026-11-17: a family's second number and a student's own number sign in too (phone first).
+// A family's second number and a student's own number sign in too (phone first).
 
 const IP = '203.0.113.7';
 type World = ReturnType<typeof signInWorld>;

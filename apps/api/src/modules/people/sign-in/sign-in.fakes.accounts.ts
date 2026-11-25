@@ -3,14 +3,15 @@ import { ConflictException } from '@nestjs/common';
 import type { AuthGate, GuardianRec, LinkKind, NewProfile, ProfileRec } from './sign-in.ports';
 import type { FamilyLogin, StudentRec, SubjectStore, TeacherRec } from './sign-in.ports';
 
-// Example people only (no real data): one family with an adult contact and a child, staff with phones.
+// Example people only (no real data): one family with an adult contact and a child, staff with
+// phones.
 
 export const PHONES = {
   guardian: '+966500000001',
   teacher: '+966500000002',
   admin: '+966500000003',
   newTeacher: '+966500000005',
-  /** g1's second number and s1's own number (guardian_phones, owner 2026-11-17). */
+  /** g1's second number and s1's own number (guardian_phones). */
   second: '+966500000006',
   student: '+966500000007',
   other: '+966500000009',

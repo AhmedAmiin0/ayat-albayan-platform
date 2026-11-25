@@ -59,7 +59,7 @@ export class CodeIssuer {
     return this.send.available();
   }
 
-  /** The report page's codes (owner 2026-11-06): the pepper and the send, not the family flag. */
+  /** The report page's codes: the pepper and the send, not the family flag. */
   async sendable(): Promise<boolean> {
     return Boolean(this.settings.config.pepper) && this.send.available();
   }

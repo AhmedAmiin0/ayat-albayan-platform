@@ -5,8 +5,8 @@ import { call, mocks, peopleApp } from '@/modules/people/people-edit/testing/peo
 const S = '11111111-1111-4111-8111-111111111111';
 const G = '22222222-2222-4222-8222-222222222222';
 
-// Owner 2026-11-02: the assistant edits the admin PATCH's fields minus the admin-only ones
-// (notes among them, owner 2026-10-27: people-edit.notes.http.test.ts).
+// The assistant edits the admin PATCH's fields minus the admin-only ones
+// (notes among them: people-edit.notes.http.test.ts).
 const STUDENT_OK = {
   name: 'سهيلة',
   age: 12,

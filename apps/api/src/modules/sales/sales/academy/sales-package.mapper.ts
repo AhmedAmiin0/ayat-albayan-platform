@@ -19,7 +19,7 @@ export function currentPackages(
 }
 
 /**
- * Whitelist of the summary (owner 2026-10-30): size, status, dates, lessons used / left. Every
+ * Whitelist of the summary: size, status, dates, lessons used / left. Every
  * field named: nothing else of a row leaves (no price, currency, payment or commission).
  */
 export function toPackageSummary(

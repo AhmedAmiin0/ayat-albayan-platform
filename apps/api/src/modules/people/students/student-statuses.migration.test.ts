@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migrations 20261015000440..442 (owner 2026-10-15, R-STU-05, docs/18): the new student statuses.
+// Migrations 20261015000440..442 (R-STU-05, docs/18): the new student statuses.
 
 const read = (name: string) =>
   readFileSync(migrationPath(`${name}.sql`), 'utf8').replace(/--.*$/gm, '');

@@ -3,7 +3,7 @@ import { subRow } from '@/modules/finance/subscriptions/money/tests/money.fakes'
 import { toSubscriptionView } from '@/modules/finance/subscriptions/subscriptions.mapper';
 import { toSalesSubscription } from '@/modules/sales/sales-money/shared/sales-money.mapper';
 
-// Owner 2026-11-06: every API money reader uses owedFor: a stopped course owes its stored decision.
+// Every API money reader uses owedFor: a stopped course owes its stored decision.
 const view = (patch: Parameters<typeof subRow>[0], paid: number) =>
   toSubscriptionView(subRow(patch), { balances: new Map(), paid: new Map([['5b000000-0000-4000-8000-000000000001', paid]]) });
 const stopped = { status: 'cancelled' as const, cancel_kind: 'stopped', price: 400 };

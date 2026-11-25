@@ -34,7 +34,7 @@ export const sendDedupKey = (code: string, user: LinkUserRow): string =>
   `${SHORT_LINK_TEMPLATE}:${code}:${user.id}:${user.send_attempts + 1}`;
 
 /**
- * The WhatsApp send of a managed link (owner 2026-11-17, docs/19): ALWAYS the template short_link,
+ * The WhatsApp send of a managed link (docs/19): ALWAYS the template short_link,
  * whose registry row sits on the NOTIFICATIONS line, through the usual Outbox and sender gates.
  * Until the template is approved every row is recorded failed (template_not_approved): never free
  * text, never another line. {{1}} the title, {{2}} the short URL, the button the code.

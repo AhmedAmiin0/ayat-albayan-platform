@@ -13,26 +13,27 @@ export function assertOwnStudent(own: Pick<SalesOwnership, 'studentIds'>, studen
 }
 
 /**
- * 403 discount_not_allowed unless the discount is one of the website's pills (0/5/10/15 %, DISCOUNTS; owner
- * 2026-10-12): the admin's free 0–100 field is not hers, or a 1 SAR package plus her own recorded transfer
- * would earn the full fixed commission. A service rule (403), not a schema one: the body is the admin's.
+ * 403 discount_not_allowed unless the discount is one of the website's pills (0/5/10/15 %,
+ * DISCOUNTS): the admin's free 0–100 field is not hers, or a 1 SAR package plus her own recorded
+ * transfer would earn the full fixed commission. A service rule (403), not a schema one: the body
+ * is the admin's.
  */
 export function assertSalesDiscount(pricing: { discount?: number }): void {
   const discount = pricing.discount ?? 0;
   if (!DISCOUNTS.some((d) => d === discount)) throw forbidden('discount_not_allowed');
 }
 
-/** sales.renew_any (owner 2026-10-29/11-01, docs/16 row 38): the renew flow for ANY student, not only hers. */
+/** sales.renew_any (docs/16 row 38): the renew flow for ANY student, not only hers. */
 export function renewsAny(user: AuthUser): boolean {
   return can(user, 'sales.renew_any');
 }
 
 /**
  * Whose money a salesperson may write (docs/16 row 17): while SalesOwnershipRule enforces ownership
- * (sales_require_assignee AND sales_auto_assign ON) ownershipOf(...).studentIds, i.e. the students of
- * her leads' families and the students she brought (students.brought_by); otherwise ANY student
- * (owner 2026-11-02). With sales.renew_any (row 38; owner 2026-11-01: «renew any one without checking if it was the
- * creator») the renew flow takes ANY student: no owner, brought_by, lead or family-chat check.
+ * (sales_require_assignee AND sales_auto_assign ON) ownershipOf(...).studentIds, i.e. the students
+ * of her leads' families and the students she brought (students.brought_by); otherwise ANY student.
+ * With sales.renew_any (row 38) the renew flow takes ANY student, whoever created it: no owner,
+ * brought_by, lead or family-chat check.
  */
 @Injectable()
 export class SalesMoneyScope {
@@ -58,8 +59,8 @@ export class SalesMoneyScope {
   }
 
   /**
-   * The chat whose files she may use as a receipt: the `phone` she is in when it is one of the student's family
-   * numbers (main or second, owner 2026-10-29), else the family's main chat.
+   * The chat whose files she may use as a receipt: the `phone` she is in when it is one of the
+   * student's family numbers (main or second), else the family's main chat.
    */
   async familyChat(user: AuthUser, studentId: string, phone?: string): Promise<string> {
     await this.assertRenews(user, studentId);

@@ -31,7 +31,7 @@ function monthWindow(month: string) {
   return rangeWindow({ from: `${month}-01`, to: last });
 }
 
-/** Finance CSVs (owner, 2026-10-05): expenses, the teacher ledger, receivables. Admin only. */
+/** Finance CSVs: expenses, the teacher ledger, receivables. Admin only. */
 @ApiTags('exports')
 @ApiBearerAuth()
 @Permissions('exports.read')

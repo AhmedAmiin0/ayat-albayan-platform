@@ -19,7 +19,7 @@ const isGuardianOf: Check = ({ user, facts, sent }) =>
 const isStudent: Check = ({ user, facts, sent }) => sent && facts.student.profile_id === user.id;
 
 /**
- * Who reads a submitted report while signed in (owner 2026-11-06): an admin; the lesson's teacher;
+ * Who reads a submitted report while signed in: an admin; the lesson's teacher;
  * the student's guardian (or the student's own account) once the report was sent to them; and
  * the student's OWNING assistant (sales or classroom assistant: her leads' families and the
  * students she brought), read-only.

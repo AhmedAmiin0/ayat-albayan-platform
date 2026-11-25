@@ -16,7 +16,7 @@ const balance = {
   projected_end_at: '2026-11-20T08:00:00+00:00', lessons_used_before: 2, commission: 40,
 };
 
-// Owner 2026-10-30: «Why i cant see the subscription lessoons and ststus of this user».
+// Sales see any student's subscription, its lessons and its status.
 describe('GET /sales/students/:id: the current package of ANY student', () => {
   let t: App;
   beforeAll(async () => {

@@ -25,7 +25,7 @@ import { PortalScopeRepo } from './scope/portal-scope.repo';
 
 /**
  * The family portal's API (docs/31): /portal/*, guardian and student logins only; the family's
- * lesson actions reuse the lessons module's services and the booking slot grid (owner 2026-11-17).
+ * lesson actions reuse the lessons module's services and the booking slot grid.
  */
 @Module({
   imports: [ClassroomModule, LessonsModule, SubscriptionsModule, BookingModule],

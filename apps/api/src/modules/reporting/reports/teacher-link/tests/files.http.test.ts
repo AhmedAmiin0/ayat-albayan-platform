@@ -9,7 +9,7 @@ import {
 import { reportsApp } from '@/modules/reporting/reports/tests/test-app';
 import { linkBase as base, OTHER_LESSON } from './teacher-link.fakes';
 
-// Owner 2026-11-06: the no-login report page gets the teacher's attachments, within the window.
+// The no-login report page gets the teacher's attachments, within the window.
 const files = () => `${base()}/reports/${REPORT_ID}/attachments`;
 const PNG = { mime: 'image/png', size: 2048 };
 const PATH = `${REPORT_ID}/a.png`;

@@ -3,7 +3,7 @@ import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from '@/comm
 import { lockScreenText } from '@/common/push/dispatch/push.lock-screen/push.lock-screen';
 import type { PushTransport } from '@/common/push/push.service';
 
-// No money on a lock screen (owner 2026-10-25); the bell row, read after sign-in, keeps it.
+// No money on a lock screen; the bell row, read after sign-in, keeps it.
 describe('payment_received: the sum is masked on the lock screen', () => {
   it.each(['1,200 EGP', '145 SAR', '75 GBP', '٥٠٠ ج.م'])('%s leaves no digit', (amount) => {
     const shown = lockScreenText({ kind: 'payment_received', vars: { student: 'سهيلة أحمد', amount } });

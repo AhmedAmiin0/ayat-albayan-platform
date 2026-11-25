@@ -40,8 +40,9 @@ export class SalesAcademyController {
   }
 
   /**
-   * `?date=YYYY-MM-DD&teacherId=`: the day's lessons with their meeting link (owner 2026-10-26), no note or money (400 on a
-   * bad date/id); `mine` on her own students (docs/16 row 37: she may move or cancel those lessons).
+   * `?date=YYYY-MM-DD&teacherId=`: the day's lessons with their meeting link, no note or money (400
+   * on a bad date/id); `mine` on her own students (docs/16 row 37: she may move or cancel those
+   * lessons).
    */
   @Get('schedule')
   @Permissions('self.sales_academy')

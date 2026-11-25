@@ -23,7 +23,7 @@ const tokenSchema = z.string().min(1).max(100);
 const idSchema = z.uuid();
 
 /**
- * The teacher's report for ONE lesson without signing in (owner 2026-11-05, docs/19 «Teacher
+ * The teacher's report for ONE lesson without signing in (docs/19 «Teacher
  * report link»): the signed token in the path grants only that lesson's report form, its drafts
  * and its submit, for that lesson's teacher, from the lesson's start until its end + the edit
  * hours. Same bodies, validation and answers as /lessons/:id/report-form and /reports/:id/…;

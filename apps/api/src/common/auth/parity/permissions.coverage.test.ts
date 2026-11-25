@@ -2,7 +2,7 @@ import { isPermission } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { walkRoutes, type RouteAccess } from './route-walk.test-util';
 
-// Every non-public endpoint maps to exactly one catalog permission (dynamic roles, 2026-10-05).
+// Every non-public endpoint maps to exactly one catalog permission (dynamic roles).
 // A new controller handler without @Permissions (or a typo'd key) fails here, before review.
 
 /** Signed-in only, on purpose: the client reads its permissions from /auth/me. */

@@ -5,7 +5,7 @@ import { resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions
 import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
 
-// POST /sales/subscriptions/:id/cancel (owner 2026-10-28): her own student's package only, the admin's rules.
+// POST /sales/subscriptions/:id/cancel: her own student's package only, the admin's rules.
 
 const url = `/sales/subscriptions/${SUB_ID}/cancel`;
 const cancelled = subRow({ status: 'cancelled', cancelled_by: SALES_A.id });

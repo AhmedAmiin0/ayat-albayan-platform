@@ -24,7 +24,7 @@ import { ShortLinksAdmin } from './short-links-admin';
 const code = () => ZodParam('code', shortCodeSchema, () => notFound('short_link_not_found'));
 
 /**
- * The managed short links for the admin and sales (owner 2026-11-17, docs/19): short_links.manage
+ * The managed short links for the admin and sales (docs/19): short_links.manage
  * on every route; without short_links.all a user sees and changes only the links they made (the
  * same 404 as an unknown code). The people picker answers names and phones of enabled profiles.
  */

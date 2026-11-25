@@ -6,7 +6,7 @@ import type {
   StudentRec,
 } from '@/modules/people/sign-in/sign-in.ports';
 
-// The family side of SubjectStore (owner 2026-11-17): every family number is a guardian_phones row
+// The family side of SubjectStore: every family number is a guardian_phones row
 // (its key is the phone, so one number names one account): the main one, a second one, or a
 // student's own (student_id). A student's own number opens the student's login, any other the
 // guardian's. The code goes to the matched number; GuardianRec.phone stays the MAIN number.

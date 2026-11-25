@@ -3,7 +3,8 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { fakePhotos } from '@/common/storage/avatars/avatars.fakes';
 import { TeachersRepo } from './teachers.repo';
 
-// GET /teachers (owner 2026-10-28): each row's photo from ONE StaffPhotos call for the page; the stored path never leaves.
+// GET /teachers: each row's photo from ONE StaffPhotos call for the page; the stored path never
+// leaves.
 
 describe('teacher list photos', () => {
   it('asks once for the page’s teachers and sets avatar_url, null when none', async () => {

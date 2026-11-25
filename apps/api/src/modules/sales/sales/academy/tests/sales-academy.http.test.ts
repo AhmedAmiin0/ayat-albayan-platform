@@ -39,7 +39,7 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
         students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', program: 'quran', status: 'active', next_lesson_at: '2026-10-12T15:00:00.000Z' }],
       },
     ]);
-    // The one exception to «never a link» (owner 2026-10-12, docs/16 rows 3 and 10): the teacher's fixed link.
+    // The one exception to «never a link» (docs/16 rows 3 and 10): the teacher's fixed link.
     expect(keys(res.json()).filter((k) => SECRET.test(k))).toEqual(['meeting_link']);
     expect(res.body).not.toMatch(/rate_|phone|notes|max_students|calendar/);
   });
@@ -52,7 +52,7 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
         weekly: [], attendance: { attended: 0, held: 0, basis: 'recent' }, package: null }],
       total: 41, page: 2, pageSize: 20,
     });
-    // Owner 2026-10-27: sales already see every chat with its phone, so the row opens that family's chat.
+    // Sales already see every chat with its phone, so the row opens that family's chat.
     expect(keys(res.json()).filter((k) => SECRET.test(k))).toEqual(['guardian_phone']);
     expect(res.body.replace('guardian_phone', '')).not.toMatch(/price|note|meeting|link|balance|package_remaining|secret|سر/i);
     expect((await t.get('/sales/students/all?pageSize=500', 'salesA')).statusCode).toBe(400);

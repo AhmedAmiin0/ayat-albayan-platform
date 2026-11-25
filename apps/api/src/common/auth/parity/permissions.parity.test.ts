@@ -4,7 +4,7 @@ import { accessBefore, walkRoutes, type BeforeAccess, type RouteAccess } from '.
 
 // THE safety net of dynamic roles: for every endpoint, each of the five system roles (and a user
 // with no role) is admitted or refused exactly as under the old @Roles metadata, frozen in
-// access-before.json (generated from the app before the conversion, 2026-10-05).
+// access-before.json (generated from the app before the conversion).
 // A new / renamed / removed handler: record it in access-before.json with its intended role set.
 
 type Who = UserRole | null;
@@ -65,7 +65,7 @@ describe('system-role parity with the old @Roles table', () => {
     }
   });
 
-  // Owner 2026-10-12: an inline check (TemplatesController.list, ThreadSendService), never a route
+  // An inline check (TemplatesController.list, ThreadSendService), never a route
   // gate, so the frozen table is unchanged; by default only the system admin sends every template.
   it('templates.send_all gates no route and is held by the system admin only', () => {
     expect(routes.filter((r) => r.permission === 'templates.send_all').map((r) => r.key)).toEqual([]);
@@ -127,12 +127,13 @@ describe('system-role parity with the old @Roles table', () => {
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('notifications.manage'))).toEqual(['admin']);
   });
 
-  // docs/23 phase 3: numbers.manage gates the numbers writes and the comms_source switch; reads are settings.read.
+  // docs/23 phase 3: numbers.manage gates the numbers writes and the comms_source switch; reads are
+  // settings.read.
   it('numbers.manage gates the numbers writes and the source switch only, for the system admin only', () => {
     const gated = routes.filter((r) => r.permission === 'numbers.manage').map((r) => r.key).sort();
     expect(gated).toEqual([
       'CommunicationsController.setSource',
-      // owner 2026-11-06: every Evolution option, saved and pushed to the instance.
+      // Every Evolution option, saved and pushed to the instance.
       'EvolutionConfigController.config', 'EvolutionConfigController.push', 'EvolutionConfigController.verify',
       'NumbersController.clearSecret', 'NumbersController.create', 'NumbersController.import',
       'NumbersController.remove', 'NumbersController.setSecret', 'NumbersController.update',
