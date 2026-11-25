@@ -1116,6 +1116,118 @@
      "maximum": 100
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "rows": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "code": {
+        "type": "string"
+       },
+       "title": {
+        "type": "string"
+       },
+       "shortUrl": {
+        "type": "string"
+       },
+       "targetUrl": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "active",
+         "expired",
+         "revoked"
+        ]
+       },
+       "audience": {
+        "type": "string",
+        "enum": [
+         "anyone",
+         "listed"
+        ]
+       },
+       "maxUsers": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "sendWhatsapp": {
+        "type": "boolean"
+       },
+       "expiresAt": {
+        "type": "string"
+       },
+       "createdAt": {
+        "type": "string"
+       },
+       "createdBy": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "role"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "users": {
+        "type": "number"
+       },
+       "visitors": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "code",
+       "title",
+       "shortUrl",
+       "targetUrl",
+       "status",
+       "audience",
+       "maxUsers",
+       "sendWhatsapp",
+       "expiresAt",
+       "createdAt",
+       "createdBy",
+       "users",
+       "visitors"
+      ]
+     }
+    },
+    "total": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "rows",
+    "total"
+   ]
   }
  },
  "GET /short-links/:code": {
@@ -1130,6 +1242,271 @@
    },
    "required": [
     "code"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "code": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "shortUrl": {
+     "type": "string"
+    },
+    "targetUrl": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "expired",
+      "revoked"
+     ]
+    },
+    "audience": {
+     "type": "string",
+     "enum": [
+      "anyone",
+      "listed"
+     ]
+    },
+    "maxUsers": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "sendWhatsapp": {
+     "type": "boolean"
+    },
+    "expiresAt": {
+     "type": "string"
+    },
+    "createdAt": {
+     "type": "string"
+    },
+    "createdBy": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "name": {
+         "type": "string"
+        },
+        "role": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "id",
+        "name",
+        "role"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "users": {
+     "type": "number"
+    },
+    "visitors": {
+     "type": "number"
+    },
+    "userList": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+       },
+       "person": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "role"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "phone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sendStatus": {
+        "type": "string",
+        "enum": [
+         "not_sent",
+         "queued",
+         "failed"
+        ]
+       },
+       "sendError": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sentAt": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "person",
+       "phone",
+       "sendStatus",
+       "sendError",
+       "sentAt"
+      ]
+     }
+    },
+    "visitorList": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "kind": {
+        "type": "string",
+        "enum": [
+         "user",
+         "phone"
+        ]
+       },
+       "person": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "role"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "phone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "family": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "firstAt": {
+        "type": "string"
+       },
+       "lastAt": {
+        "type": "string"
+       },
+       "opens": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "kind",
+       "person",
+       "phone",
+       "family",
+       "firstAt",
+       "lastAt",
+       "opens"
+      ]
+     }
+    }
+   },
+   "required": [
+    "code",
+    "title",
+    "shortUrl",
+    "targetUrl",
+    "status",
+    "audience",
+    "maxUsers",
+    "sendWhatsapp",
+    "expiresAt",
+    "createdAt",
+    "createdBy",
+    "users",
+    "visitors",
+    "userList",
+    "visitorList"
    ]
   }
  },
@@ -1147,6 +1524,38 @@
    "required": [
     "search"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     },
+     "name": {
+      "type": "string"
+     },
+     "role": {
+      "type": "string"
+     },
+     "phone": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "role",
+     "phone"
+    ]
+   }
   }
  },
  "GET /students": {
@@ -2985,6 +3394,271 @@
      }
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "code": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "shortUrl": {
+     "type": "string"
+    },
+    "targetUrl": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "expired",
+      "revoked"
+     ]
+    },
+    "audience": {
+     "type": "string",
+     "enum": [
+      "anyone",
+      "listed"
+     ]
+    },
+    "maxUsers": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "sendWhatsapp": {
+     "type": "boolean"
+    },
+    "expiresAt": {
+     "type": "string"
+    },
+    "createdAt": {
+     "type": "string"
+    },
+    "createdBy": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "name": {
+         "type": "string"
+        },
+        "role": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "id",
+        "name",
+        "role"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "users": {
+     "type": "number"
+    },
+    "visitors": {
+     "type": "number"
+    },
+    "userList": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+       },
+       "person": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "role"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "phone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sendStatus": {
+        "type": "string",
+        "enum": [
+         "not_sent",
+         "queued",
+         "failed"
+        ]
+       },
+       "sendError": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sentAt": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "person",
+       "phone",
+       "sendStatus",
+       "sendError",
+       "sentAt"
+      ]
+     }
+    },
+    "visitorList": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "kind": {
+        "type": "string",
+        "enum": [
+         "user",
+         "phone"
+        ]
+       },
+       "person": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "role"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "phone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "family": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "firstAt": {
+        "type": "string"
+       },
+       "lastAt": {
+        "type": "string"
+       },
+       "opens": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "kind",
+       "person",
+       "phone",
+       "family",
+       "firstAt",
+       "lastAt",
+       "opens"
+      ]
+     }
+    }
+   },
+   "required": [
+    "code",
+    "title",
+    "shortUrl",
+    "targetUrl",
+    "status",
+    "audience",
+    "maxUsers",
+    "sendWhatsapp",
+    "expiresAt",
+    "createdAt",
+    "createdBy",
+    "users",
+    "visitors",
+    "userList",
+    "visitorList"
+   ]
   }
  },
  "PATCH /students/:id": {
@@ -11606,6 +12280,294 @@
     "title",
     "targetUrl"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "code": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "shortUrl": {
+     "type": "string"
+    },
+    "targetUrl": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "expired",
+      "revoked"
+     ]
+    },
+    "audience": {
+     "type": "string",
+     "enum": [
+      "anyone",
+      "listed"
+     ]
+    },
+    "maxUsers": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "sendWhatsapp": {
+     "type": "boolean"
+    },
+    "expiresAt": {
+     "type": "string"
+    },
+    "createdAt": {
+     "type": "string"
+    },
+    "createdBy": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "name": {
+         "type": "string"
+        },
+        "role": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "id",
+        "name",
+        "role"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "users": {
+     "type": "number"
+    },
+    "visitors": {
+     "type": "number"
+    },
+    "userList": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+       },
+       "person": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "role"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "phone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sendStatus": {
+        "type": "string",
+        "enum": [
+         "not_sent",
+         "queued",
+         "failed"
+        ]
+       },
+       "sendError": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sentAt": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "person",
+       "phone",
+       "sendStatus",
+       "sendError",
+       "sentAt"
+      ]
+     }
+    },
+    "visitorList": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "kind": {
+        "type": "string",
+        "enum": [
+         "user",
+         "phone"
+        ]
+       },
+       "person": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "role"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "phone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "family": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "firstAt": {
+        "type": "string"
+       },
+       "lastAt": {
+        "type": "string"
+       },
+       "opens": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "kind",
+       "person",
+       "phone",
+       "family",
+       "firstAt",
+       "lastAt",
+       "opens"
+      ]
+     }
+    },
+    "send": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "queued": {
+         "type": "number"
+        },
+        "failed": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "queued",
+        "failed"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "code",
+    "title",
+    "shortUrl",
+    "targetUrl",
+    "status",
+    "audience",
+    "maxUsers",
+    "sendWhatsapp",
+    "expiresAt",
+    "createdAt",
+    "createdBy",
+    "users",
+    "visitors",
+    "userList",
+    "visitorList",
+    "send"
+   ]
   }
  },
  "POST /short-links/:code/resend": {
@@ -11621,6 +12583,294 @@
    "required": [
     "code"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "code": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "shortUrl": {
+     "type": "string"
+    },
+    "targetUrl": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "expired",
+      "revoked"
+     ]
+    },
+    "audience": {
+     "type": "string",
+     "enum": [
+      "anyone",
+      "listed"
+     ]
+    },
+    "maxUsers": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "sendWhatsapp": {
+     "type": "boolean"
+    },
+    "expiresAt": {
+     "type": "string"
+    },
+    "createdAt": {
+     "type": "string"
+    },
+    "createdBy": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "name": {
+         "type": "string"
+        },
+        "role": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "id",
+        "name",
+        "role"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "users": {
+     "type": "number"
+    },
+    "visitors": {
+     "type": "number"
+    },
+    "userList": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+       },
+       "person": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "role"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "phone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sendStatus": {
+        "type": "string",
+        "enum": [
+         "not_sent",
+         "queued",
+         "failed"
+        ]
+       },
+       "sendError": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sentAt": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "person",
+       "phone",
+       "sendStatus",
+       "sendError",
+       "sentAt"
+      ]
+     }
+    },
+    "visitorList": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "kind": {
+        "type": "string",
+        "enum": [
+         "user",
+         "phone"
+        ]
+       },
+       "person": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "role"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "phone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "family": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "firstAt": {
+        "type": "string"
+       },
+       "lastAt": {
+        "type": "string"
+       },
+       "opens": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "kind",
+       "person",
+       "phone",
+       "family",
+       "firstAt",
+       "lastAt",
+       "opens"
+      ]
+     }
+    },
+    "send": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "queued": {
+         "type": "number"
+        },
+        "failed": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "queued",
+        "failed"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "code",
+    "title",
+    "shortUrl",
+    "targetUrl",
+    "status",
+    "audience",
+    "maxUsers",
+    "sendWhatsapp",
+    "expiresAt",
+    "createdAt",
+    "createdBy",
+    "users",
+    "visitors",
+    "userList",
+    "visitorList",
+    "send"
+   ]
   }
  },
  "POST /short-links/:code/revoke": {
@@ -11635,6 +12885,271 @@
    },
    "required": [
     "code"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "code": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "shortUrl": {
+     "type": "string"
+    },
+    "targetUrl": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "expired",
+      "revoked"
+     ]
+    },
+    "audience": {
+     "type": "string",
+     "enum": [
+      "anyone",
+      "listed"
+     ]
+    },
+    "maxUsers": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "sendWhatsapp": {
+     "type": "boolean"
+    },
+    "expiresAt": {
+     "type": "string"
+    },
+    "createdAt": {
+     "type": "string"
+    },
+    "createdBy": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "name": {
+         "type": "string"
+        },
+        "role": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "id",
+        "name",
+        "role"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "users": {
+     "type": "number"
+    },
+    "visitors": {
+     "type": "number"
+    },
+    "userList": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+       },
+       "person": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "role"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "phone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sendStatus": {
+        "type": "string",
+        "enum": [
+         "not_sent",
+         "queued",
+         "failed"
+        ]
+       },
+       "sendError": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sentAt": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "person",
+       "phone",
+       "sendStatus",
+       "sendError",
+       "sentAt"
+      ]
+     }
+    },
+    "visitorList": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "kind": {
+        "type": "string",
+        "enum": [
+         "user",
+         "phone"
+        ]
+       },
+       "person": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "role": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "role"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "phone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "family": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "firstAt": {
+        "type": "string"
+       },
+       "lastAt": {
+        "type": "string"
+       },
+       "opens": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "kind",
+       "person",
+       "phone",
+       "family",
+       "firstAt",
+       "lastAt",
+       "opens"
+      ]
+     }
+    }
+   },
+   "required": [
+    "code",
+    "title",
+    "shortUrl",
+    "targetUrl",
+    "status",
+    "audience",
+    "maxUsers",
+    "sendWhatsapp",
+    "expiresAt",
+    "createdAt",
+    "createdBy",
+    "users",
+    "visitors",
+    "userList",
+    "visitorList"
    ]
   }
  },
