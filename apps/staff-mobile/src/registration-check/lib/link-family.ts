@@ -1,6 +1,7 @@
 import type { LeadFamilyLinked } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiError, apiSend, t, pathKey } from '@ab/mobile-kit';
+import { salesKeys } from '@/core/lib/keys';
 
 // Linking to an existing student: the lead chat's number becomes the second number of an existing
 // student's family. POST /leads/:id/link-family { code } → 200 { linked }; never an id or a phone.
@@ -13,7 +14,8 @@ const isLinkError = (code: unknown): code is LinkErrorCode =>
 /** A 404 / 409 `{ code }` in her words; a 400, a 403 or anything else is the generic line. */
 export function linkFamilyErrorText(error: unknown): string {
   const body: unknown = error instanceof ApiError ? error.body : null;
-  const code: unknown = typeof body === 'object' && body !== null ? Reflect.get(body, 'code') : undefined;
+  const code: unknown =
+    typeof body === 'object' && body !== null ? Reflect.get(body, 'code') : undefined;
   return isLinkError(code) ? t.inbox.linkFamily.errors[code] : t.common.error;
 }
 
@@ -26,9 +28,11 @@ export function useLinkFamily(leadId: string) {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (code: string) =>
-      apiSend<LeadFamilyLinked>('POST', `/leads/${encodeURIComponent(leadId)}/link-family`, { code }),
+      apiSend<LeadFamilyLinked>('POST', `/leads/${encodeURIComponent(leadId)}/link-family`, {
+        code,
+      }),
     onSuccess: () => {
-      for (const key of [pathKey('/threads'), pathKey('/leads'), ['sales', 'money', 'family']]) {
+      for (const key of [pathKey('/threads'), pathKey('/leads'), salesKeys.families]) {
         void client.invalidateQueries({ queryKey: key });
       }
     },
