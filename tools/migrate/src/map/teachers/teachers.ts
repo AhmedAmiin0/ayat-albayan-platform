@@ -21,9 +21,9 @@ export function meetingLink(raw: string | null): string | null {
 
 function calendars(bundle: SourceBundle): Map<string, string> {
   const out = new Map<string, string>();
-  for (const r of bundle.sheets['book_teachers'] ?? []) {
-    const name = text(r.fields['name_en']);
-    const cal = text(r.fields['google_calendar_id']);
+  for (const r of bundle.sheets.book_teachers ?? []) {
+    const name = text(r.fields.name_en);
+    const cal = text(r.fields.google_calendar_id);
     if (name && cal) out.set(teacherSlug(name), cal);
   }
   return out;
@@ -31,15 +31,15 @@ function calendars(bundle: SourceBundle): Map<string, string> {
 
 function mapTeacher(row: SourceRow, cals: ReadonlyMap<string, string>): Mapped {
   const issue = issuesFor('teachers', row.ref);
-  const nameEn = text(row.fields['name_en']);
+  const nameEn = text(row.fields.name_en);
   const slug = nameEn ? teacherSlug(nameEn) : '';
   const nameAr = arabicName(slug);
   if (!nameEn || !nameAr)
     return rejected(row.ref, [
       issue({ code: 'unknown_teacher', severity: 'reject', field: 'name_en' }),
     ]);
-  const phone = phoneCell(row.fields['phone']);
-  const g = gender(text(row.fields['gender']));
+  const phone = phoneCell(row.fields.phone);
+  const g = gender(text(row.fields.gender));
   if (!g)
     return rejected(row.ref, [
       issue({ code: 'unmapped_value', severity: 'reject', field: 'gender' }),
@@ -57,8 +57,8 @@ function mapTeacher(row: SourceRow, cals: ReadonlyMap<string, string>): Mapped {
       gender: g,
       programs: ['quran'], // memorization and tajweed for all 11
       phone_e164: phone.ok ? phone.e164 : null,
-      meeting_link: meetingLink(text(row.fields['meeting_link'])),
-      status: /نشط/.test(text(row.fields['status']) ?? '') ? 'active' : 'inactive',
+      meeting_link: meetingLink(text(row.fields.meeting_link)),
+      status: /نشط/.test(text(row.fields.status) ?? '') ? 'active' : 'inactive',
       tz: phone.ok ? tzForPhone(phone.e164) : 'Africa/Cairo',
       google_calendar_id: cals.get(slug) ?? null,
     },
@@ -67,7 +67,7 @@ function mapTeacher(row: SourceRow, cals: ReadonlyMap<string, string>): Mapped {
 
 export function mapTeachers(bundle: SourceBundle): Mapped[] {
   const cals = calendars(bundle);
-  return (bundle.sheets['hub_teachers'] ?? []).map((r) => mapTeacher(r, cals));
+  return (bundle.sheets.hub_teachers ?? []).map((r) => mapTeacher(r, cals));
 }
 
 export const teachersModule: EntityModule = {

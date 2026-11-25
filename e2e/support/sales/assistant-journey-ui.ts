@@ -7,7 +7,10 @@ import { fillStable } from '../core/fill';
 
 const SM = ar.salesMoney;
 
-export async function registerWithTrial(page: Page, family: { name: string; guardian: string }): Promise<void> {
+export async function registerWithTrial(
+  page: Page,
+  family: { name: string; guardian: string },
+): Promise<void> {
   await page.getByRole('button', { name: ar.inbox.registerNew }).click();
   const dialog = page.getByRole('dialog', { name: ar.inbox.registerNew });
   await fillStable(dialog.getByLabel(ar.leads.studentName), family.name);
@@ -30,7 +33,11 @@ export async function registerWithTrial(page: Page, family: { name: string; guar
 }
 
 /** The discount is the site's pills only (0/5/10/15 %, no free number). */
-export async function saveSubscription(page: Page, pkg: string, title = SM.newSubscription): Promise<Locator> {
+export async function saveSubscription(
+  page: Page,
+  pkg: string,
+  title = SM.newSubscription,
+): Promise<Locator> {
   const dialog = page.getByRole('dialog', { name: title });
   const pills = dialog.getByRole('group', { name: ar.subscriptions.discount }).getByRole('button');
   await expect(pills).toHaveText(DISCOUNTS.map((d) => ar.pricing.discounts[`${d}`]));

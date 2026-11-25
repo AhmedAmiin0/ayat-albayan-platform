@@ -54,9 +54,17 @@ test.describe('teacher mode: the restricted templates (owner 2026-10-12)', () =>
     await teacher.getByRole('button', { name: composer.sendTemplate, exact: true }).click();
 
     const digits = phone.slice(1);
-    await expect.poll(async () => (await sentVia(CHAT_PN)).filter((m) => m.to === digits && m.template === KEY).length, WAIT).toBe(1);
-    const rows = await withSql((sql) => sql<{ sent_by_teacher_id: string | null }[]>`
-      select sent_by_teacher_id from public.messages where phone_e164 = ${phone} and template_key = ${KEY}`);
+    await expect
+      .poll(
+        async () =>
+          (await sentVia(CHAT_PN)).filter((m) => m.to === digits && m.template === KEY).length,
+        WAIT,
+      )
+      .toBe(1);
+    const rows = await withSql(
+      (sql) => sql<{ sent_by_teacher_id: string | null }[]>`
+      select sent_by_teacher_id from public.messages where phone_e164 = ${phone} and template_key = ${KEY}`,
+    );
     expect(rows).toEqual([{ sent_by_teacher_id: abrar }]);
   });
 });

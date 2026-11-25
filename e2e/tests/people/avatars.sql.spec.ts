@@ -79,9 +79,21 @@ test.describe('avatars storage + profiles self-write (migration 370)', () => {
       const before = await tx<{ role: string; avatar_path: string | null }[]>`
         select role::text as role, avatar_path from public.profiles where id = ${teacher}`;
       const own = (q: () => Promise<{ count: number }>) =>
-        tx.savepoint(() => as(tx, teacher, q)).then((r) => r.count, (e: { code?: string }) => e.code);
-      expect([0, '42501']).toContain(await own(() => tx`update public.profiles set role = 'admin' where id = ${teacher}`));
-      expect([0, '42501']).toContain(await own(() => tx`update public.profiles set avatar_path = ${`${teacher}/x.png`} where id = ${teacher}`));
+        tx
+          .savepoint(() => as(tx, teacher, q))
+          .then(
+            (r) => r.count,
+            (e: { code?: string }) => e.code,
+          );
+      expect([0, '42501']).toContain(
+        await own(() => tx`update public.profiles set role = 'admin' where id = ${teacher}`),
+      );
+      expect([0, '42501']).toContain(
+        await own(
+          () =>
+            tx`update public.profiles set avatar_path = ${`${teacher}/x.png`} where id = ${teacher}`,
+        ),
+      );
       const after = await tx<{ role: string; avatar_path: string | null }[]>`
         select role::text as role, avatar_path from public.profiles where id = ${teacher}`;
       expect(after).toEqual(before);

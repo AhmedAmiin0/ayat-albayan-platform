@@ -3,11 +3,12 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import { useRef } from 'react';
 import { apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
+import { subscriptionKeys } from '@/core/lib/keys';
 
 /** A POST keyed by its body; save stays off until the shown price is the current one. */
 export function useSubscriptionQuote(studentId: string, pricing: SubscriptionPricing) {
   return useQuery({
-    queryKey: ['subscriptions', 'quote', studentId, pricing],
+    queryKey: subscriptionKeys.quote(studentId, pricing),
     queryFn: () => apiSend<QuoteResponse>('POST', '/subscriptions/quote', { studentId, pricing }),
     placeholderData: keepPreviousData,
     enabled: studentId !== '',
@@ -34,7 +35,11 @@ export function useCreateSubscription() {
   function save(input: SubscribeInput): Promise<SubscriptionView> {
     const body = JSON.stringify(input);
     if (request.current?.body !== body) request.current = { body, id: requestId() };
-    return apiSend<SubscriptionView>('POST', '/subscriptions', { ...input, notes: null, clientRequestId: request.current.id });
+    return apiSend<SubscriptionView>('POST', '/subscriptions', {
+      ...input,
+      notes: null,
+      clientRequestId: request.current.id,
+    });
   }
 
   return useMutation({
@@ -44,7 +49,8 @@ export function useCreateSubscription() {
         inflight.current = null;
       })),
     onSettled: (_data, _error, input) => {
-      for (const key of [['threads'], ['leads'], ['students', input.studentId]]) void client.invalidateQueries({ queryKey: key });
+      for (const key of [['threads'], ['leads'], ['students', input.studentId]])
+        void client.invalidateQueries({ queryKey: key });
     },
   });
 }

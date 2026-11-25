@@ -28,7 +28,11 @@ export function people(stamp: string): Person[] {
 
 /** Inserts all four plus one inbound message for the lead (so it has an inbox thread). */
 export async function seedPeople(list: Person[]): Promise<string> {
-  const at = (kind: Kind): Person => list.find((p) => p.kind === kind) ?? (() => { throw new Error(kind); })();
+  const at = (kind: Kind): Person =>
+    list.find((p) => p.kind === kind) ??
+    (() => {
+      throw new Error(kind);
+    })();
   const e164 = (p: Person) => `+966${p.national}`;
   const g = at('guardian');
   await withSql(async (sql) => {

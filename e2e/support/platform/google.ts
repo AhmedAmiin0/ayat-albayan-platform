@@ -18,7 +18,13 @@ export interface StubEvent {
 }
 export interface StubState {
   calendars: Record<string, StubEvent[]>;
-  files: { id: string; name: string; mimeType: string; parents: string[]; appProperties: Record<string, string> }[];
+  files: {
+    id: string;
+    name: string;
+    mimeType: string;
+    parents: string[];
+    appProperties: Record<string, string>;
+  }[];
   sheets: Record<string, unknown[][]>;
 }
 
@@ -39,7 +45,10 @@ export async function resetGoogle(): Promise<void> {
   });
 }
 
-export async function googleApi<T>(page: Page, input: { method: string; path: string; body?: unknown }): Promise<T> {
+export async function googleApi<T>(
+  page: Page,
+  input: { method: string; path: string; body?: unknown },
+): Promise<T> {
   const res = await fetch(`${API}/admin/google${input.path}`, {
     method: input.method,
     headers: { ...(await bearer(page)), ...(input.body !== undefined ? { 'content-type': 'application/json' } : {}) },
@@ -63,7 +72,11 @@ export async function itemsOf(subjectId: string): Promise<ItemRow[]> {
 }
 
 /** A tiny PDF in the reports bucket, and the report row pointing at it, made `ready` (the trigger queues it). */
-export async function readyReport(input: { lessonId: string; studentId: string; teacherId: string }): Promise<string> {
+export async function readyReport(input: {
+  lessonId: string;
+  studentId: string;
+  teacherId: string;
+}): Promise<string> {
   const path = `${input.studentId}/${input.lessonId}.pdf`;
   const storage = createClient(process.env['SUPABASE_URL'] ?? '', process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '', { auth: { persistSession: false } });
   const { error } = await storage.storage.from('reports').upload(path, new TextEncoder().encode('%PDF-1.4\n%e2e\n'), { contentType: 'application/pdf', upsert: true });

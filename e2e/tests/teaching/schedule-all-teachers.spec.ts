@@ -57,7 +57,8 @@ test.describe('all-teachers week schedule (R-SCH-01/03)', () => {
     const page = await asRole('admin');
     await open(page);
     await expectOnly(page, [STUDENTS.abrar, STUDENTS.quran, STUDENTS.arabic]);
-    for (const name of Object.values(NAMES)) await expect(grid(page).getByText(name, { exact: true })).toBeVisible();
+    for (const name of Object.values(NAMES))
+      await expect(grid(page).getByText(name, { exact: true })).toBeVisible();
     const panel = await openFilters(page);
     await panel.getByLabel(ar.schedule.showClosed).check();
     await expect(page).toHaveURL(/closed=true/);

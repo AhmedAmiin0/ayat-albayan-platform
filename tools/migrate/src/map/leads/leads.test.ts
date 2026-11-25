@@ -77,7 +77,7 @@ describe('mapLeads', () => {
     expect(k2?.issues).toMatchObject([
       { code: 'unmapped_value', severity: 'review', field: 'job_seeker' },
     ]);
-    expect(k2?.ok && k2.value.columns['qualification']).toMatchObject({
+    expect(k2?.ok && k2.value.columns.qualification).toMatchObject({
       job_seeker_hints: ['self'],
     });
   });

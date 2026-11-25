@@ -32,7 +32,9 @@ test.describe('viewport-high admin frame', () => {
       await admin.waitForTimeout(300);
       expect(await pageOverflow(admin), `inbox @${width}`).toBeLessThanOrEqual(0);
       // The reply box never sits on top of the log (no collapsed log under a tall composer).
-      const logBox = await log.evaluate((el) => el.parentElement?.getBoundingClientRect().bottom ?? 0);
+      const logBox = await log.evaluate(
+        (el) => el.parentElement?.getBoundingClientRect().bottom ?? 0,
+      );
       const reply = await admin.getByRole('textbox').last().boundingBox();
       expect(reply?.y ?? 0, `reply under the log @${width}`).toBeGreaterThanOrEqual(logBox - 1);
       expect(await log.evaluate((el) => el.parentElement?.clientHeight ?? 0), `log height @${width}`).toBeGreaterThanOrEqual(150);

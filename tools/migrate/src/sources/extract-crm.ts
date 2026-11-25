@@ -17,7 +17,7 @@ interface ExtractCrmOptions {
 
 export async function extractCrm(opts: ExtractCrmOptions): Promise<Record<string, number>> {
   // The academy's account (the only one with data). Its id is the owner's: env only, never committed.
-  const accountId = opts.accountId ?? process.env['CRM_ACCOUNT_ID'];
+  const accountId = opts.accountId ?? process.env.CRM_ACCOUNT_ID;
   if (!accountId) {
     throw new Error(
       'CRM_ACCOUNT_ID missing (tools/migrate/.env; value in .claude/artifacts/crm/crm.env)',

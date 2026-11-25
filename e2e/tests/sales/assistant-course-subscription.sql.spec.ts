@@ -27,7 +27,10 @@ test.describe('create_booking ties an assistant course to its subscription (R-AS
       const s = await seedSiblings(tx);
       const sub = await subscriptionOf(tx, s);
       const base = dayTimesPayload(s, { requestId: randomUUID(), siblings: true, invoice: false });
-      const siblings = (base.siblings ?? []).map((x) => ({ ...x, rule: { ...x.rule, subscription_id: sub } }));
+      const siblings = (base.siblings ?? []).map((x) => ({
+        ...x,
+        rule: { ...x.rule, subscription_id: sub },
+      }));
       const payload = { ...base, rule: { ...base.rule, subscription_id: sub }, siblings };
       await book(tx, payload, s.actor);
       expect(await tiesOf(tx, s)).toEqual([{ subscription_id: sub }, { subscription_id: sub }]);
@@ -37,7 +40,11 @@ test.describe('create_booking ties an assistant course to its subscription (R-AS
   test('a payload without it (the admin, a trial, an import) leaves subscription_id null', async () => {
     await rolledBack(async (tx) => {
       const s = await seedSiblings(tx);
-      await book(tx, dayTimesPayload(s, { requestId: randomUUID(), siblings: true, invoice: false }), s.actor);
+      await book(
+        tx,
+        dayTimesPayload(s, { requestId: randomUUID(), siblings: true, invoice: false }),
+        s.actor,
+      );
       expect(await tiesOf(tx, s)).toEqual([{ subscription_id: null }, { subscription_id: null }]);
     });
   });

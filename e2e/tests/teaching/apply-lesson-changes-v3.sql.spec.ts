@@ -16,10 +16,20 @@ async function subscriptionOf(tx: Tx, s: DaySeed): Promise<string> {
 }
 
 const newRule = (s: DaySeed, subscriptionId: string | null) => ({
-  id: randomUUID(), teacher_id: s.teacher, duration_min: 45, start_time_local: '18:00', tz: 'Asia/Riyadh',
-  byday: [new Date(BASE).getUTCDay()], starts_on: iso(BASE).slice(0, 10), ends_on: iso(BASE + 7 * 864e5).slice(0, 10),
-  meeting_link: null, package: '8', created_from_lead_id: null, subscription_id: subscriptionId,
-  first_rule_id: null, student_ids: s.students.slice(0, 1),
+  id: randomUUID(),
+  teacher_id: s.teacher,
+  duration_min: 45,
+  start_time_local: '18:00',
+  tz: 'Asia/Riyadh',
+  byday: [new Date(BASE).getUTCDay()],
+  starts_on: iso(BASE).slice(0, 10),
+  ends_on: iso(BASE + 7 * 864e5).slice(0, 10),
+  meeting_link: null,
+  package: '8',
+  created_from_lead_id: null,
+  subscription_id: subscriptionId,
+  first_rule_id: null,
+  student_ids: s.students.slice(0, 1),
 });
 
 async function applyAndRead(tx: Tx, s: DaySeed, subscriptionId: string | null) {

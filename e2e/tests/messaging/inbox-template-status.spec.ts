@@ -50,13 +50,21 @@ test.describe('inbox — closed session template and delivery chips (R-MSG-01, R
     // The template is picked with the lesson it is about (rule 6): its names and time come from it.
     await admin.getByLabel(field.chooseTemplate).selectOption({ label: ar.templates.names[KEY] });
     await admin.getByLabel(field.pickLesson).selectOption({ index: 1 });
-    await expect(admin.getByLabel(field.paramNames.student_names, { exact: true })).toHaveValue(student);
-    await expect(admin.getByLabel(field.paramNames.lesson_when, { exact: true })).not.toHaveValue('');
+    await expect(admin.getByLabel(field.paramNames.student_names, { exact: true })).toHaveValue(
+      student,
+    );
+    await expect(admin.getByLabel(field.paramNames.lesson_when, { exact: true })).not.toHaveValue(
+      '',
+    );
     await admin.getByRole('button', { name: field.sendTemplate, exact: true }).click();
     await expect(log).toContainText(ar.inbox.templateLine.replace('{name}', ar.templates.names[KEY]));
 
     // «Meta» got the template with both variables; the row is the admin's, keyed per request.
-    await expect.poll(async () => (await stubSent()).filter((m) => m.to === digits && m.template === KEY).length).toBe(1);
+    await expect
+      .poll(
+        async () => (await stubSent()).filter((m) => m.to === digits && m.template === KEY).length,
+      )
+      .toBe(1);
     const sent = (await stubSent()).find((m) => m.to === digits);
     expect(JSON.stringify(sent?.body)).toContain(student);
     const out = await lastOutbound(phone);

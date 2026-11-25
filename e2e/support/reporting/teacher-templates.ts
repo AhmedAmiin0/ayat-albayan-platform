@@ -53,7 +53,16 @@ export async function sentToDigits(digits: string): Promise<StubSent[]> {
 }
 
 /** The document header of a template message: its signed link and the file name. */
-export function documentOf(message: StubSent | undefined): { link: string; filename: string } | undefined {
-  const body = (message?.body ?? {}) as { template?: { components?: { type: string; parameters?: { document?: { link: string; filename: string } }[] }[] } };
+export function documentOf(
+  message: StubSent | undefined,
+): { link: string; filename: string } | undefined {
+  const body = (message?.body ?? {}) as {
+    template?: {
+      components?: {
+        type: string;
+        parameters?: { document?: { link: string; filename: string } }[];
+      }[];
+    };
+  };
   return body.template?.components?.find((c) => c.type === 'header')?.parameters?.[0]?.document;
 }

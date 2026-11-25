@@ -25,12 +25,22 @@ export async function seedSiblings(tx: Tx): Promise<DaySeed> {
   const students = await tx<{ id: string }[]>`insert into public.students (guardian_id, name, name_normalized, tz)
     values (${g.id}, 'سهيلة أيام', 'سهيلة أيام', 'Asia/Riyadh'), (${g.id}, 'مريم أيام', 'مريم أيام', 'Asia/Riyadh')
     returning id`;
-  return { teacher: t.id, actor: t.profile_id, guardian: g.id, students: students.map((s) => s.id) };
+  return {
+    teacher: t.id,
+    actor: t.profile_id,
+    guardian: g.id,
+    students: students.map((s) => s.id),
+  };
 }
 
 const weekday = (ms: number) => new Date(ms).getUTCDay();
 const lessons = (first: number) =>
-  [first, first + 7 * DAY].map((at) => ({ starts_at: iso(at), ends_at: iso(at + 45 * MIN), meeting_link: null, override_reason: null }));
+  [first, first + 7 * DAY].map((at) => ({
+    starts_at: iso(at),
+    ends_at: iso(at + 45 * MIN),
+    meeting_link: null,
+    override_reason: null,
+  }));
 /** BASE is 14:00Z = 17:00 Riyadh; the sibling is two days later at 19:30 Riyadh (16:30Z). */
 const SIBLING_FIRST = BASE + 2 * DAY + 150 * MIN;
 const timing = (at: number, time: string) => ({
@@ -59,10 +69,21 @@ export function dayTimesPayload(s: DaySeed, o: PayloadOptions) {
   };
 }
 
-type BookingRow = { rule_id: string; lessons: { id: string }[]; message_ids: string[]; invoice_id: string | null };
+type BookingRow = {
+  rule_id: string;
+  lessons: { id: string }[];
+  message_ids: string[];
+  invoice_id: string | null;
+};
 
-export async function book(tx: Tx, payload: ReturnType<typeof dayTimesPayload>, actor: string): Promise<BookingRow> {
-  const [row] = await tx<{ r: BookingRow }[]>`select public.create_booking(${tx.json(payload)}, ${actor}) as r`;
+export async function book(
+  tx: Tx,
+  payload: ReturnType<typeof dayTimesPayload>,
+  actor: string,
+): Promise<BookingRow> {
+  const [row] = await tx<
+    { r: BookingRow }[]
+  >`select public.create_booking(${tx.json(payload)}, ${actor}) as r`;
   if (!row) throw new Error('create_booking returned nothing');
   return row.r;
 }
@@ -70,13 +91,25 @@ export async function book(tx: Tx, payload: ReturnType<typeof dayTimesPayload>, 
 /** The instant-lesson RPC with an old payload (no siblings): one rule, one lesson. */
 export async function bookInstant(tx: Tx, s: DaySeed): Promise<BookingRow> {
   const base = dayTimesPayload(s, { requestId: null, siblings: false, invoice: false });
-  const payload = { ...base, rule: { ...base.rule, package: null }, lessons: base.lessons.slice(0, 1), messages: [] };
-  const [row] = await tx<{ r: BookingRow }[]>`select public.create_instant_lesson(${tx.json(payload)}, ${s.actor}) as r`;
+  const payload = {
+    ...base,
+    rule: { ...base.rule, package: null },
+    lessons: base.lessons.slice(0, 1),
+    messages: [],
+  };
+  const [row] = await tx<
+    { r: BookingRow }[]
+  >`select public.create_instant_lesson(${tx.json(payload)}, ${s.actor}) as r`;
   if (!row) throw new Error('create_instant_lesson returned nothing');
   return row.r;
 }
 
-type RuleFacts = { id: string; first_rule_id: string | null; client_request_id: string | null; start_time_local: string };
+type RuleFacts = {
+  id: string;
+  first_rule_id: string | null;
+  client_request_id: string | null;
+  start_time_local: string;
+};
 
 /** The rules of the seeded teacher written in this transaction, first rule first. */
 export async function rulesOf(tx: Tx, s: DaySeed): Promise<RuleFacts[]> {

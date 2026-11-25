@@ -115,7 +115,9 @@ async function chatFirstThenTemplate(admin: Page, at: Contact): Promise<void> {
   await openThread(admin, at.name);
   await admin.getByRole('textbox', { name: ar.inbox.composer.messageLabel }).fill('وعليكم السلام');
   await admin.getByRole('button', { name: ar.inbox.composer.send, exact: true }).click();
-  await expect(admin.getByText(ar.inbox.error.session_closed).first()).toBeVisible({ timeout: 20_000 });
+  await expect(admin.getByText(ar.inbox.error.session_closed).first()).toBeVisible({
+    timeout: 20_000,
+  });
   await queueTemplate({ phone: `+${at.digits}`, createdBy: await profileIdOf('admin') });
   const mine = async () => (await sentVia(NOTIF_PN)).filter((m) => m.to === at.digits);
   await expect.poll(async () => (await mine()).map((m) => [m.type, m.via]), WAIT).toEqual([

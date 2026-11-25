@@ -29,7 +29,10 @@ async function student(tx: Tx, name: string): Promise<string> {
   return s.id;
 }
 
-async function rule(tx: Tx, o: { teacher: string; today: string; students: string[]; sub: string | null }): Promise<string> {
+async function rule(
+  tx: Tx,
+  o: { teacher: string; today: string; students: string[]; sub: string | null },
+): Promise<string> {
   const [r] = await tx<{ id: string }[]>`insert into public.schedule_rules
     (teacher_id, duration_min, start_time_local, tz, byday, starts_on, ends_on, subscription_id)
     values (${o.teacher}, 45, '17:00', 'Asia/Riyadh', '{0,1,2,3,4,5,6}', ${o.today}, (${o.today}::date + 30), ${o.sub}) returning id`;
@@ -39,9 +42,18 @@ async function rule(tx: Tx, o: { teacher: string; today: string; students: strin
 }
 
 /** generate_rule_lessons for `days` (Riyadh today + n) at `hourZ`; returns the new lesson ids. */
-export async function generate(tx: Tx, o: { rule: string; today: string; days: number[]; hourZ?: number }): Promise<string[]> {
-  const rows = o.days.map((n) => ({ starts_at: at(o.today, n, o.hourZ), ends_at: new Date(Date.parse(at(o.today, n, o.hourZ)) + 45 * 60_000).toISOString(), meeting_link: null }));
-  const out = await tx<{ id: string }[]>`select id from public.generate_rule_lessons(${o.rule}, ${tx.json(rows)}, null)`;
+export async function generate(
+  tx: Tx,
+  o: { rule: string; today: string; days: number[]; hourZ?: number },
+): Promise<string[]> {
+  const rows = o.days.map((n) => ({
+    starts_at: at(o.today, n, o.hourZ),
+    ends_at: new Date(Date.parse(at(o.today, n, o.hourZ)) + 45 * 60_000).toISOString(),
+    meeting_link: null,
+  }));
+  const out = await tx<
+    { id: string }[]
+  >`select id from public.generate_rule_lessons(${o.rule}, ${tx.json(rows)}, null)`;
   return out.map((r) => r.id);
 }
 

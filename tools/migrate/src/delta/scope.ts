@@ -42,7 +42,7 @@ export function runScope(
  */
 export function clampRuleStarts<P extends Pick<Plan, 'items'>>(plan: P, from: string): P {
   const items = plan.items.map((i) => {
-    const on = i.record.columns['starts_on'];
+    const on = i.record.columns.starts_on;
     if (
       i.key.entity !== 'schedule_rules' ||
       i.action !== 'create' ||

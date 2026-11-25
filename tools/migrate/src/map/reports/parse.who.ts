@@ -18,7 +18,7 @@ export interface Who {
 
 function studentOf(f: SourceRow['fields'], o: { ix: StudentIndex; teacher: string | null }) {
   const name = reportNames(f)[0] ?? null;
-  const phone = phoneCell(f['phone']);
+  const phone = phoneCell(f.phone);
   const byPhone = phone.ok ? findStudent(o.ix, { phone: phone.e164, name }) : null;
   // A2: the student id is empty on old rows, which have only a typed name and teacher.
   return byPhone?.ok ? byPhone : findStudent(o.ix, { name, teacher: o.teacher });
@@ -27,7 +27,7 @@ function studentOf(f: SourceRow['fields'], o: { ix: StudentIndex; teacher: strin
 export function reportWho(f: SourceRow['fields'], ix: StudentIndex): Who | IssueInput {
   const named = reportTeacher(f);
   const found = studentOf(f, { ix, teacher: named ?? null });
-  const own = found.ok ? found.student.record.refs['teacher_id']?.key : undefined;
+  const own = found.ok ? found.student.record.refs.teacher_id?.key : undefined;
   const teacher = named ?? own;
   if (!teacher) {
     const detail = named === null ? 'not_a_teacher' : 'unknown_text';

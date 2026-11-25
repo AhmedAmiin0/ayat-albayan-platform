@@ -23,9 +23,9 @@ type BookingSlot =
   | { kind: 'issue'; issue: IssueInput };
 
 function whenOf(f: SourceRow['fields']): When | null {
-  const date = ymd(f['date']);
-  const time = hhmm(f['start_time']);
-  const duration = num(f['duration_min']);
+  const date = ymd(f.date);
+  const time = hhmm(f.start_time);
+  const duration = num(f.duration_min);
   if (!date || !time || duration === null || !DURATIONS.has(duration)) return null;
   return { date, time, duration };
 }
@@ -44,9 +44,9 @@ function placed(rec: Recurrence | null, when: When, from: string): BookingSlot {
 
 /** Nothing before `from` (Asia/Riyadh); a row missing date or time is a missing_field reject. */
 export function bookingSlot(f: SourceRow['fields'], from: string): BookingSlot {
-  const status = bookingStatus(text(f['status']));
+  const status = bookingStatus(text(f.status));
   if (!status || !SYNCED.has(status)) return { kind: 'skip', reason: 'status_not_synced' };
-  const rec = parseRecurrence(text(f['recurrence']));
+  const rec = parseRecurrence(text(f.recurrence));
   if (rec === undefined)
     return {
       kind: 'issue',
@@ -60,7 +60,7 @@ export function bookingSlot(f: SourceRow['fields'], from: string): BookingSlot {
 
 /** HUB first, BOOK after; with prefer 'last' the newer sync wins (B1). */
 export function bookingRows(sheets: Readonly<Record<string, readonly SourceRow[]>>): SourceRow[] {
-  return [...(sheets['hub_bookings'] ?? []), ...(sheets['book_bookings'] ?? [])];
+  return [...(sheets.hub_bookings ?? []), ...(sheets.book_bookings ?? [])];
 }
 
 /** How many rows each skip reason left out (printed by dry-run / apply). */

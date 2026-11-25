@@ -45,7 +45,9 @@ test.describe('assistant statements: reopen (20261006000273)', () => {
       await tx`select public.reopen_assistant_statement(${s1}, null)`; // takes its own line and the waiting reversal away
       expect((await tx`select 1 from public.assistant_adjustments where assistant_id = ${a}`).length).toBe(0);
       expect((await generate(tx, a, last)).totals).toEqual({}); // last month holds nothing now: it was earned this month
-      expect((await generate(tx, a, await openMonth(tx, a))).totals).toEqual({ SAR: { salary: 0, commissions: 15, adjustments: 0, total: 15 } });
+      expect((await generate(tx, a, await openMonth(tx, a))).totals).toEqual({
+        SAR: { salary: 0, commissions: 15, adjustments: 0, total: 15 },
+      });
     });
   });
 });

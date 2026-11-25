@@ -42,7 +42,8 @@ export const region = (page: Page, part: Part): Locator => page.getByRole('regio
 export const save = (section: Locator): Promise<void> =>
   section.getByRole('button', { name: A.save, exact: true }).click();
 
-export const currentPassword = (section: Locator): Locator => section.getByLabel(A.currentPassword, { exact: true });
+export const currentPassword = (section: Locator): Locator =>
+  section.getByLabel(A.currentPassword, { exact: true });
 
 export const avatarAlt = (name: string): string => A.avatar.alt.replace('{name}', name);
 

@@ -6,8 +6,17 @@ import { resetAbrar } from '../../support/core/schedule';
 
 // Correcting money out to a teacher (migration 20261005000201), each case rolled back.
 
-const refused = (p: Promise<unknown>) => p.then(() => 'allowed', (e: { message?: string }) => e.message);
-type PayoutState = { status: string; paid_at: string | null; method: string | null; receipt_path: string | null };
+const refused = (p: Promise<unknown>) =>
+  p.then(
+    () => 'allowed',
+    (e: { message?: string }) => e.message,
+  );
+type PayoutState = {
+  status: string;
+  paid_at: string | null;
+  method: string | null;
+  receipt_path: string | null;
+};
 const payoutOf = async (tx: Parameters<Parameters<typeof rolledBack>[0]>[0], id: string) =>
   (await tx<PayoutState[]>`select status, paid_at, method, receipt_path from public.teacher_payouts where id = ${id}`)[0];
 
@@ -21,9 +30,22 @@ test.describe('teacher payment corrections (20261005000201)', () => {
   test('voiding a payment reverses its allocations, keeps it in the history and is audited once', async () => {
     await rolledBack(async (tx) => {
       const t = await teacherWithRates(tx);
-      const a = await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 4 });
-      const b = await pastLesson(tx, { teacher: t.id, minutes: 60, status: 'completed', daysAgo: 3 });
-      const items = [{ earning_id: await earningId(tx, a), amount: 70 }, { earning_id: await earningId(tx, b), amount: 30 }];
+      const a = await pastLesson(tx, {
+        teacher: t.id,
+        minutes: 45,
+        status: 'completed',
+        daysAgo: 4,
+      });
+      const b = await pastLesson(tx, {
+        teacher: t.id,
+        minutes: 60,
+        status: 'completed',
+        daysAgo: 3,
+      });
+      const items = [
+        { earning_id: await earningId(tx, a), amount: 70 },
+        { earning_id: await earningId(tx, b), amount: 30 },
+      ];
       const r = await pay(tx, { teacher: t.id, amount: 100, items });
       const id = r?.payment_id ?? '';
       await tx`select public.void_teacher_payment(${id}, null, 'مبلغ خطأ')`;
@@ -41,8 +63,17 @@ test.describe('teacher payment corrections (20261005000201)', () => {
   test('a capped session (lesson no longer counts) disappears when its only payment is voided', async () => {
     await rolledBack(async (tx) => {
       const t = await teacherWithRates(tx);
-      const l = await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 3 });
-      const r = await pay(tx, { teacher: t.id, amount: 30, items: [{ earning_id: await earningId(tx, l), amount: 30 }] });
+      const l = await pastLesson(tx, {
+        teacher: t.id,
+        minutes: 45,
+        status: 'completed',
+        daysAgo: 3,
+      });
+      const r = await pay(tx, {
+        teacher: t.id,
+        amount: 30,
+        items: [{ earning_id: await earningId(tx, l), amount: 30 }],
+      });
       await tx`update public.lessons set status = 'excused' where id = ${l}`;
       expect(await earningOf(tx, l)).toMatchObject({ amount: '30.00', status: 'paid' });
       await tx`select public.void_teacher_payment(${r?.payment_id ?? ''}, null, 'الحلقة لم تُحتسب')`;
@@ -92,12 +123,21 @@ test.describe('teacher payment corrections (20261005000201)', () => {
       const summary = async () => {
         const [s] = await tx<{ earned: string; paid: string; owed: string; unpaid_sessions: number }[]>`
           select earned, paid, owed, unpaid_sessions from public.v_teacher_earnings_summary where teacher_id = ${t.id}`;
-        return { earned: Number(s?.earned ?? 0), paid: Number(s?.paid ?? 0), owed: Number(s?.owed ?? 0), unpaid: Number(s?.unpaid_sessions ?? 0) };
+        return {
+          earned: Number(s?.earned ?? 0),
+          paid: Number(s?.paid ?? 0),
+          owed: Number(s?.owed ?? 0),
+          unpaid: Number(s?.unpaid_sessions ?? 0),
+        };
       };
       const before = await summary();
       const a = await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 4 });
       await pastLesson(tx, { teacher: t.id, minutes: 60, status: 'completed', daysAgo: 3 });
-      await pay(tx, { teacher: t.id, amount: 70, items: [{ earning_id: await earningId(tx, a), amount: 70 }] });
+      await pay(tx, {
+        teacher: t.id,
+        amount: 70,
+        items: [{ earning_id: await earningId(tx, a), amount: 70 }],
+      });
       const after = await summary();
       expect(after.unpaid - before.unpaid).toBe(1);
       expect(after.owed).toBeCloseTo(after.earned - after.paid, 2);

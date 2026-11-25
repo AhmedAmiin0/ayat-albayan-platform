@@ -8,7 +8,7 @@ import { mapTemplates, messageTemplatesModule, templateKeyFor } from './template
 import { upsertTemplateSql } from './write.ts';
 
 const tpl = (o: Partial<Record<string, unknown>>): CrmRow => ({
-  id: `t-${String(o['name'])}`,
+  id: `t-${String(o.name)}`,
   category: 'Utility',
   language: 'ar',
   header_type: null,

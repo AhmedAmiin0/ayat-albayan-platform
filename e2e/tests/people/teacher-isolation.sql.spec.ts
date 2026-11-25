@@ -36,7 +36,12 @@ async function seed(tx: Tx) {
     values ('معلمة العزل', 'female', '{quran}', 'Asia/Riyadh') returning id`;
   if (!abrar || !other) throw new Error('teachers missing');
   await tx`delete from public.teacher_payouts where teacher_id = ${abrar.id} and month = ${MONTH}`;
-  return { abrar: abrar.id, other: other.id, mine: await side(tx, { teacherId: abrar.id, phone: PHONE.mine }), theirs: await side(tx, { teacherId: other.id, phone: PHONE.theirs }) };
+  return {
+    abrar: abrar.id,
+    other: other.id,
+    mine: await side(tx, { teacherId: abrar.id, phone: PHONE.mine }),
+    theirs: await side(tx, { teacherId: other.id, phone: PHONE.theirs }),
+  };
 }
 
 test.describe('teacher isolation by RLS (rule 9)', () => {
@@ -47,7 +52,11 @@ test.describe('teacher isolation by RLS (rule 9)', () => {
       const s = await seed(tx);
       const teacher = await userId(tx, USERS.teacher.email);
       const pair = (pick: (x: Side) => string) => [pick(s.mine), pick(s.theirs)];
-      const [lessons, students, reports] = [pair((x) => x.lesson), pair((x) => x.student), pair((x) => x.report)];
+      const [lessons, students, reports] = [
+        pair((x) => x.lesson),
+        pair((x) => x.student),
+        pair((x) => x.report),
+      ];
       const read = <T extends object>(query: () => Promise<T[]>) => as(tx, teacher, query);
       type V = { v: string };
       expect(await read(() => tx<V[]>`select id::text as v from public.lessons where id in ${tx(lessons)}`)).toEqual([{ v: s.mine.lesson }]);

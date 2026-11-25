@@ -57,7 +57,12 @@ test.describe.serial('sales: the course of her subscription with a time per day 
   test('GET /sales/booking/course: her student, the unpaid 8-lesson subscription, 2 days a week, not blocked', async ({ request }) => {
     const res = await call<SalesCourseView>(request, { token: need(a).token, method: 'GET', path: `/sales/booking/course?studentId=${student}` });
     expect(res.status, JSON.stringify(res.body)).toBe(200);
-    expect(res.body).toMatchObject({ student: { id: student }, subscription: { lessons_total: 8, duration: 45 }, perWeek: 2, blocked: null });
+    expect(res.body).toMatchObject({
+      student: { id: student },
+      subscription: { lessons_total: 8, duration: 45 },
+      perWeek: 2,
+      blocked: null,
+    });
   });
 
   test('one day for an 8-lesson plan is 400 days_count_mismatch; an invoice or a meeting link is 403', async ({ request }) => {

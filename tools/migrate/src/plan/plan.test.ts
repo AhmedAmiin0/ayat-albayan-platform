@@ -30,9 +30,9 @@ describe('resolve', () => {
 
   it('flags conflicts for review; prefer last keeps the latest (B1)', () => {
     const rows = [ok(G, rec({ name: 'a' }), 2), ok(G, rec({ name: 'b' }), 3)];
-    expect(resolve(rows).kept[0]?.record.columns['name']).toBe('a');
+    expect(resolve(rows).kept[0]?.record.columns.name).toBe('a');
     const last = resolve(rows, { prefer: 'last' });
-    expect(last.kept[0]?.record.columns['name']).toBe('b');
+    expect(last.kept[0]?.record.columns.name).toBe('b');
     expect(last.issues).toMatchObject([{ code: 'conflict', severity: 'review', ref: { row: 2 } }]);
   });
 

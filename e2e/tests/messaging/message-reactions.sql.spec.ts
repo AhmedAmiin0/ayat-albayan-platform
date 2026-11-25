@@ -10,8 +10,10 @@ import { captureEvents } from './inbox-live.helpers';
 const A = '+966500000901';
 const B = '+966500000902';
 
-
-async function message(tx: Tx, input: { phone: string; wamid: string; at: string; direction?: string }) {
+async function message(
+  tx: Tx,
+  input: { phone: string; wamid: string; at: string; direction?: string },
+) {
   const [row] = await tx<{ id: string }[]>`
     insert into public.messages (direction, status, phone_e164, body, wa_message_id, created_at, read_at)
     values (${input.direction ?? 'outbound'}::public.message_direction, 'delivered', ${input.phone}, 'موعد الحلقة غدًا',
@@ -20,7 +22,10 @@ async function message(tx: Tx, input: { phone: string; wamid: string; at: string
 }
 
 /** An inbound reaction row as the old webhook stored it (unread, its own wamid). */
-async function oldReaction(tx: Tx, input: { phone: string; target: string; emoji: string; at: string }) {
+async function oldReaction(
+  tx: Tx,
+  input: { phone: string; target: string; emoji: string; at: string },
+) {
   await tx`insert into public.messages (direction, status, phone_e164, wa_message_id, interactive_payload, created_at)
     values ('inbound', 'delivered', ${input.phone}, ${`wamid.r-${input.target}-${input.at}`},
       ${tx.json({ type: 'reaction', reaction: { message_id: input.target, emoji: input.emoji } })}, ${input.at})`;

@@ -32,7 +32,11 @@ const textsTo = async (pn: string, digits: string) =>
  * A fresh contact writes on `line` (two minutes ago when `thenTap`, which then taps a reminder
  * button on the notifications line one minute later); the admin answers from the thread.
  */
-async function replyAfter(input: { page: Parameters<typeof openThread>[0]; line: WaLine; thenTap?: boolean }) {
+async function replyAfter(input: {
+  page: Parameters<typeof openThread>[0];
+  line: WaLine;
+  thenTap?: boolean;
+}) {
   const digits = freshDigits();
   const name = `رد ${input.line} ${digits.slice(-4)}`;
   const now = Math.floor(Date.now() / 1000);
@@ -99,11 +103,17 @@ test.describe('two WhatsApp lines — replies and reads (R-MSG-01, R-MSG-02)', (
     expect((await stubInboundOn('chat', { from: digits, text: 'أريد الحجز' })).status).toBe(200);
     await expect.poll(async () => (await messagesWithLine(phone)).length, WAIT).toBe(1);
     await queueTemplate({ phone, key: KEY, createdBy: await profileIdOf('admin') });
-    await expect.poll(async () => (await sentVia(NOTIF_PN)).filter((m) => m.to === digits && m.template === KEY).length, WAIT).toBe(1);
+    await expect
+      .poll(
+        async () =>
+          (await sentVia(NOTIF_PN)).filter((m) => m.to === digits && m.template === KEY).length,
+        WAIT,
+      )
+      .toBe(1);
     expect((await sentVia(CHAT_PN)).filter((m) => m.to === digits)).toHaveLength(0);
-    await expect.poll(async () => (await messagesWithLine(phone)).find((m) => m.template_key === KEY), WAIT).toEqual(
-      expect.objectContaining({ line: 'notifications', status: 'sent' }),
-    );
+    await expect
+      .poll(async () => (await messagesWithLine(phone)).find((m) => m.template_key === KEY), WAIT)
+      .toEqual(expect.objectContaining({ line: 'notifications', status: 'sent' }));
   });
 
   test('opening a chat thread marks the message read on the chat number', async ({ asRole }) => {
@@ -113,7 +123,13 @@ test.describe('two WhatsApp lines — replies and reads (R-MSG-01, R-MSG-02)', (
     const inbound = await stubInboundOn('chat', { from: digits, name, text: 'هل وصلت رسالتي؟' });
     expect(inbound.status).toBe(200);
     await openThread(await asRole('admin'), name);
-    await expect.poll(() => stubReadsByLine(), WAIT).toContainEqual({ phoneNumberId: CHAT_PN, messageId: inbound.id });
-    expect((await stubReadsByLine()).filter((r) => r.messageId === inbound.id && r.phoneNumberId === NOTIF_PN)).toHaveLength(0);
+    await expect
+      .poll(() => stubReadsByLine(), WAIT)
+      .toContainEqual({ phoneNumberId: CHAT_PN, messageId: inbound.id });
+    expect(
+      (await stubReadsByLine()).filter(
+        (r) => r.messageId === inbound.id && r.phoneNumberId === NOTIF_PN,
+      ),
+    ).toHaveLength(0);
   });
 });

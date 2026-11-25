@@ -32,20 +32,20 @@ interface Booked {
 }
 
 function booked(r: SourceRow, o: { ix: StudentIndex; today: string }): Booked | null {
-  const phone = phoneCell(r.fields['phone']);
-  const date = ymd(r.fields['date']);
-  const time = hhmm(r.fields['start_time']);
+  const phone = phoneCell(r.fields.phone);
+  const date = ymd(r.fields.date);
+  const time = hhmm(r.fields.start_time);
   if (!phone.ok || !date || !time) return null;
-  const students = splitSiblings(text(r.fields['name']) ?? '').flatMap((name) => {
+  const students = splitSiblings(text(r.fields.name) ?? '').flatMap((name) => {
     const s = findStudent(o.ix, { phone: phone.e164, name });
     return s.ok ? [s.student.key.key] : [];
   });
-  const rec = parseRecurrence(text(r.fields['recurrence']));
+  const rec = parseRecurrence(text(r.fields.recurrence));
   const to = rec?.until && rec.until < o.today ? rec.until : o.today;
   const weekly = rec ? weeklyDates({ from: date, to, byday: rec.byday }) : [];
   return {
     students,
-    slot: { time, duration: num(r.fields['duration_min']) ?? 45 },
+    slot: { time, duration: num(r.fields.duration_min) ?? 45 },
     exact: date,
     weekly,
   };
@@ -54,10 +54,7 @@ function booked(r: SourceRow, o: { ix: StudentIndex; today: string }): Booked | 
 /** studentKey|YYYY-MM-DD → booked slot (exact-date rows first, then weekly; first row wins). */
 export function bookingSlots(bundle: SourceBundle, ix: StudentIndex): Map<string, Slot> {
   const out = new Map<string, Slot>();
-  const rows = [
-    ...(bundle.sheets['hub_bookings'] ?? []),
-    ...(bundle.sheets['book_bookings'] ?? []),
-  ];
+  const rows = [...(bundle.sheets.hub_bookings ?? []), ...(bundle.sheets.book_bookings ?? [])];
   const all = rows.flatMap((r) => booked(r, { ix, today: bundle.today }) ?? []);
   const put = (b: Booked, dates: readonly string[]) => {
     for (const s of b.students)

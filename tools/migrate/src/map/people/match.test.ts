@@ -26,7 +26,7 @@ const ix = studentIndex([
   s('+966551110003', 'هالة', 'abrar'),
 ]);
 const name = (r: ReturnType<typeof findStudent>) =>
-  r.ok ? r.student.record.columns['name'] : r.reason;
+  r.ok ? r.student.record.columns.name : r.reason;
 
 describe('findStudent', () => {
   it('by phone: exact, then similar, else one child decides only for Latin or no name', () => {

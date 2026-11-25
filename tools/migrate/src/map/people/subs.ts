@@ -30,7 +30,7 @@ function attFolders(rows: readonly SourceRow[]): Map<string, Folder> {
     const f = out.get(personName(name));
     if (f) f.rows++;
     else {
-      const teacher = teacherFromText(text(r.fields['teacher'])) ?? null;
+      const teacher = teacherFromText(text(r.fields.teacher)) ?? null;
       out.set(personName(name), { ref: r.ref, name, teacher, rows: 1 });
     }
   }
@@ -48,11 +48,11 @@ interface Ctx {
 
 /** One SUBS row: active when known with more than one lesson, review when unknown. */
 function subsRow(r: SourceRow, c: Ctx): string | null {
-  const name = text(r.fields['student_name']);
+  const name = text(r.fields.student_name);
   if (!name || testReason({ names: [name] })) return null;
-  const teacher = teacherFromText(text(r.fields['teacher'])) ?? null;
+  const teacher = teacherFromText(text(r.fields.teacher)) ?? null;
   const found = findStudent(c.ix, { name, teacher });
-  const lessons = num(r.fields['lessons_count']) ?? 0;
+  const lessons = num(r.fields.lessons_count) ?? 0;
   if (found.ok && lessons > 1) c.out.active.add(keyId(found.student.key));
   if (!found.ok) {
     const rows = c.att.get(personName(name))?.rows ?? 0;
@@ -65,10 +65,10 @@ function subsRow(r: SourceRow, c: Ctx): string | null {
 export function subsFacts(bundle: SourceBundle, students: readonly Desired[]): SubsFacts {
   const c: Ctx = {
     ix: studentIndex(students),
-    att: attFolders(bundle.sheets['att_attendance'] ?? []),
+    att: attFolders(bundle.sheets.att_attendance ?? []),
     out: { active: new Set(), issues: [] },
   };
-  const inSubs = new Set((bundle.sheets['subs_students'] ?? []).map((r) => subsRow(r, c)));
+  const inSubs = new Set((bundle.sheets.subs_students ?? []).map((r) => subsRow(r, c)));
   for (const [key, f] of c.att) {
     const found = inSubs.has(key) ? null : findStudent(c.ix, { name: f.name, teacher: f.teacher });
     if (!found || found.ok) continue;

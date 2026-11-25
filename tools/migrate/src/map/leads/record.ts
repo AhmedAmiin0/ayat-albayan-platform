@@ -40,10 +40,10 @@ function qualification(o: {
 }): Record<string, ColumnValue> {
   const q: Record<string, ColumnValue> = {};
   const crmTags = o.tags.filter((t) => !STATUS_TAGS.has(t));
-  if (crmTags.length) q['crm_tags'] = crmTags;
-  if (o.sheet?.summary) q['legacy_summary'] = o.sheet.summary;
-  if (o.sheet?.agreedSlot) q['agreed_slot'] = o.sheet.agreedSlot;
-  if (o.hints.length) q['job_seeker_hints'] = [...o.hints];
+  if (crmTags.length) q.crm_tags = crmTags;
+  if (o.sheet?.summary) q.legacy_summary = o.sheet.summary;
+  if (o.sheet?.agreedSlot) q.agreed_slot = o.sheet.agreedSlot;
+  if (o.hints.length) q.job_seeker_hints = [...o.hints];
   return q;
 }
 

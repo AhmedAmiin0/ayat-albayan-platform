@@ -4,7 +4,12 @@ import { BOARD, boardInk, expectConnected, LIVE, MEDIA_FLAGS, newMeeting, pageSc
 // The live classroom on a phone (390×844, touch), against a real LiveKit: see classroom-live.spec.ts.
 
 const C = ar.classroom;
-const PHONE = { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 };
+const PHONE = {
+  viewport: { width: 390, height: 844 },
+  isMobile: true,
+  hasTouch: true,
+  deviceScaleFactor: 3,
+};
 
 test.use({ launchOptions: { args: MEDIA_FLAGS } });
 test.skip(!LIVE, 'needs a LiveKit server (LIVEKIT_URL)');

@@ -63,7 +63,7 @@ function mapTemplate(row: CrmRow): Mapped {
   }
   const category = CATEGORY[upper(row, 'category')];
   const header = HEADER[upper(row, 'header_type', 'NONE')];
-  const buttons = templateButtons(row['buttons']);
+  const buttons = templateButtons(row.buttons);
   if (!status || !category || header === undefined || !buttons) {
     const found = { status, category, header_type: header, buttons };
     const fields = Object.entries(found).filter(([, v]) => v === undefined);
@@ -92,7 +92,7 @@ function mapTemplate(row: CrmRow): Mapped {
 }
 
 export function mapTemplates(bundle: Pick<SourceBundle, 'crm'>): Mapped[] {
-  return (bundle.crm['message_templates'] ?? []).map(mapTemplate);
+  return (bundle.crm.message_templates ?? []).map(mapTemplate);
 }
 
 export const messageTemplatesModule: EntityModule = {

@@ -5,7 +5,8 @@ import { API, call } from './assistant-api';
 // Sales options specs (docs/16 rows 23-26) via the roles API; real API and database.
 
 /** Today in Riyadh (UTC+3, no DST), YYYY-MM-DD, shifted by `days`. */
-export const riyadhDay = (days = 0): string => new Date(Date.now() + 3 * 3_600_000 + days * 86_400_000).toISOString().slice(0, 10);
+export const riyadhDay = (days = 0): string =>
+  new Date(Date.now() + 3 * 3_600_000 + days * 86_400_000).toISOString().slice(0, 10);
 
 /** The built-in sales role as the admin sees it. */
 export async function salesRole(request: APIRequestContext, admin: string): Promise<RoleView> {
@@ -16,7 +17,10 @@ export async function salesRole(request: APIRequestContext, admin: string): Prom
 }
 
 /** PATCH the sales role without `permission` (the admin switching the option off). */
-export async function revokeFromSales(request: APIRequestContext, input: { admin: string; permission: string }): Promise<void> {
+export async function revokeFromSales(
+  request: APIRequestContext,
+  input: { admin: string; permission: string },
+): Promise<void> {
   const role = await salesRole(request, input.admin);
   const res = await request.fetch(`${API}/roles/${role.id}`, {
     method: 'PATCH',

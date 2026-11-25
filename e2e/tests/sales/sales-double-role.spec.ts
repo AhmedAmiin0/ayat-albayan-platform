@@ -94,9 +94,13 @@ async function startsWithTemplate(browser: Browser): Promise<void> {
   await page.getByLabel(ar.inbox.newChat.phone).fill(booked.phone);
   await page.getByRole('button', { name: ar.inbox.newChat.open }).click();
   await expect(page.getByText(ar.inbox.newChat.firstTemplate)).toBeVisible();
-  await page.getByLabel(composer.chooseTemplate).selectOption({ label: ar.templates.names.booking_confirmation_plain });
+  await page
+    .getByLabel(composer.chooseTemplate)
+    .selectOption({ label: ar.templates.names.booking_confirmation_plain });
   await page.getByLabel(composer.pickLesson).selectOption({ index: 1 });
-  await expect(page.getByLabel(composer.paramNames.student_names, { exact: true })).toHaveValue(names.student);
+  await expect(page.getByLabel(composer.paramNames.student_names, { exact: true })).toHaveValue(
+    names.student,
+  );
   await page.getByRole('button', { name: composer.sendTemplate, exact: true }).click();
 
   // Queued as hers (sales dedup space); the thread exists, its window closed: the reopen bar.

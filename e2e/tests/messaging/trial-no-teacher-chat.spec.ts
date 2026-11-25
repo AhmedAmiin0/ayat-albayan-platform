@@ -40,7 +40,9 @@ test.describe('trial students: no direct chat between the teacher and the family
 
     // By URL: the API answers 403 not_your_thread (react-query retries before it shows the error).
     await teacher.goto(`/teacher/inbox?phone=${encodeURIComponent(trialPhone)}`);
-    await expect(teacher.getByText(ar.inbox.error.not_your_thread)).toBeVisible({ timeout: 20_000 });
+    await expect(teacher.getByText(ar.inbox.error.not_your_thread)).toBeVisible({
+      timeout: 20_000,
+    });
 
     // Her trial student's file: still hers, with the «through sales» note; the active one has none.
     // (the file's month log has its own role=note, the totals line: scope to the trial note)

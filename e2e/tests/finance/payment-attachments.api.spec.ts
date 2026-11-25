@@ -15,7 +15,10 @@ const need = <T>(v: T | undefined): T => {
 };
 
 /** POST /payments/receipt-upload-url as the admin, then PUT the PNG: the path. */
-async function adminUpload(request: Parameters<typeof call>[0], input: { admin: string; subscriptionId: string }): Promise<string> {
+async function adminUpload(
+  request: Parameters<typeof call>[0],
+  input: { admin: string; subscriptionId: string },
+): Promise<string> {
   const body = { subscriptionId: input.subscriptionId, mime: 'image/png', size: PNG.byteLength };
   const signed = await call<{ path: string; signed_url: string }>(request, { token: input.admin, method: 'POST', path: '/payments/receipt-upload-url', body });
   const put = await request.fetch(signed.body.signed_url, { method: 'PUT', data: PNG, headers: { 'content-type': 'image/png' } });
@@ -44,10 +47,24 @@ test.describe.serial('bank-transfer attachments (API + DB + storage)', () => {
 
   test('admin: a bank transfer with two attachments; listed with signed links; refused on cash', async ({ request }) => {
     const s = need(sub);
-    const paths = [await adminUpload(request, { admin, subscriptionId: s.id }), await adminUpload(request, { admin, subscriptionId: s.id })];
+    const paths = [
+      await adminUpload(request, { admin, subscriptionId: s.id }),
+      await adminUpload(request, { admin, subscriptionId: s.id }),
+    ];
     const paidAt = new Date().toISOString();
-    const base = { subscriptionId: s.id, amount: 10, currency: s.currency, paidAt, clientRequestId: randomUUID() };
-    const cash = await call(request, { token: admin, method: 'POST', path: '/payments', body: { ...base, method: 'cash', attachments: paths } });
+    const base = {
+      subscriptionId: s.id,
+      amount: 10,
+      currency: s.currency,
+      paidAt,
+      clientRequestId: randomUUID(),
+    };
+    const cash = await call(request, {
+      token: admin,
+      method: 'POST',
+      path: '/payments',
+      body: { ...base, method: 'cash', attachments: paths },
+    });
     expect([cash.status, cash.body['code']]).toEqual([400, 'attachments_not_allowed']);
     const bank = await call<{ id: string }>(request, { token: admin, method: 'POST', path: '/payments', body: { ...base, method: 'bank', attachments: paths } });
     expect(bank.status, JSON.stringify(bank.body)).toBe(201);
@@ -59,16 +76,39 @@ test.describe.serial('bank-transfer attachments (API + DB + storage)', () => {
 
   test('sales: a transfer with no receipt at all is recorded (optional since 2026-10-12)', async ({ request }) => {
     const s = need(sub);
-    const body = { subscriptionId: s.id, amount: 5, currency: s.currency, paidAt: new Date().toISOString(), clientRequestId: randomUUID() };
-    const res = await call<{ id: string }>(request, { token: need(a).token, method: 'POST', path: '/sales/payments', body });
+    const body = {
+      subscriptionId: s.id,
+      amount: 5,
+      currency: s.currency,
+      paidAt: new Date().toISOString(),
+      clientRequestId: randomUUID(),
+    };
+    const res = await call<{ id: string }>(request, {
+      token: need(a).token,
+      method: 'POST',
+      path: '/sales/payments',
+      body,
+    });
     expect(res.status, JSON.stringify(res.body)).toBe(201);
   });
 
   test('sales: one attachment; she reads it, another salesperson gets 404', async ({ request }) => {
     const s = need(sub);
     const path = await uploadReceipt(request, { token: need(a).token, subscriptionId: s.id });
-    const body = { subscriptionId: s.id, amount: 5, currency: s.currency, paidAt: new Date().toISOString(), attachments: [path], clientRequestId: randomUUID() };
-    const res = await call<{ id: string }>(request, { token: need(a).token, method: 'POST', path: '/sales/payments', body });
+    const body = {
+      subscriptionId: s.id,
+      amount: 5,
+      currency: s.currency,
+      paidAt: new Date().toISOString(),
+      attachments: [path],
+      clientRequestId: randomUUID(),
+    };
+    const res = await call<{ id: string }>(request, {
+      token: need(a).token,
+      method: 'POST',
+      path: '/sales/payments',
+      body,
+    });
     expect(res.status, JSON.stringify(res.body)).toBe(201);
     salesPayment = res.body.id;
     const mine = await call<PaymentAttachmentView[]>(request, { token: need(a).token, method: 'GET', path: `/sales/me/payments/${salesPayment}/attachments` });

@@ -35,9 +35,13 @@ const search = async (page: Page, term: string) => {
   await box.press('Enter');
 };
 
-async function jobApplicantsWith(phone: string): Promise<{ from_lead_id: string | null; name: string | null }[]> {
-  return withSql((sql) => sql<{ from_lead_id: string | null; name: string | null }[]>`
-    select from_lead_id, name from public.job_applicants where phone_e164 = ${phone}`);
+async function jobApplicantsWith(
+  phone: string,
+): Promise<{ from_lead_id: string | null; name: string | null }[]> {
+  return withSql(
+    (sql) => sql<{ from_lead_id: string | null; name: string | null }[]>`
+    select from_lead_id, name from public.job_applicants where phone_e164 = ${phone}`,
+  );
 }
 
 test.describe('leads list and job applicants (R-LEAD-01/04)', () => {

@@ -18,9 +18,15 @@ test.describe('create_booking with per-day times (R-SCH-02, R-SCH-06, R-PAY-03)'
     await rolledBack(async (tx) => {
       const s = await seedSiblings(tx);
       const requestId = randomUUID();
-      const res = await book(tx, dayTimesPayload(s, { requestId, siblings: true, invoice: true }), s.actor);
+      const res = await book(
+        tx,
+        dayTimesPayload(s, { requestId, siblings: true, invoice: true }),
+        s.actor,
+      );
       const rules = await rulesOf(tx, s);
-      expect(rules.map((r) => [r.start_time_local.slice(0, 5), r.client_request_id, r.first_rule_id])).toEqual([
+      expect(
+        rules.map((r) => [r.start_time_local.slice(0, 5), r.client_request_id, r.first_rule_id]),
+      ).toEqual([
         ['17:00', requestId, null],
         ['19:30', null, res.rule_id],
       ]);
@@ -45,7 +51,11 @@ test.describe('create_booking with per-day times (R-SCH-02, R-SCH-06, R-PAY-03)'
   test('a replay with the same client_request_id returns the same booking, still two rules', async () => {
     await rolledBack(async (tx) => {
       const s = await seedSiblings(tx);
-      const payload = dayTimesPayload(s, { requestId: randomUUID(), siblings: true, invoice: false });
+      const payload = dayTimesPayload(s, {
+        requestId: randomUUID(),
+        siblings: true,
+        invoice: false,
+      });
       const first = await book(tx, payload, s.actor);
       const again = await book(tx, payload, s.actor);
       expect(again).toEqual(first);
@@ -56,7 +66,11 @@ test.describe('create_booking with per-day times (R-SCH-02, R-SCH-06, R-PAY-03)'
   test('an old payload (no siblings) is one rule, as before', async () => {
     await rolledBack(async (tx) => {
       const s = await seedSiblings(tx);
-      const res = await book(tx, dayTimesPayload(s, { requestId: randomUUID(), siblings: false, invoice: false }), s.actor);
+      const res = await book(
+        tx,
+        dayTimesPayload(s, { requestId: randomUUID(), siblings: false, invoice: false }),
+        s.actor,
+      );
       const rules = await rulesOf(tx, s);
       expect(rules.map((r) => [r.id, r.first_rule_id])).toEqual([[res.rule_id, null]]);
       expect(res.lessons).toHaveLength(2);

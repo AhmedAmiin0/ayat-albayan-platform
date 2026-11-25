@@ -25,9 +25,9 @@ test.describe('«عدّل الوقت» — scheduled lessons (R-SCH-11)', () => 
       await expect(page.getByRole('status')).toHaveText(L.savedNotified);
 
       // The same row moved and grew: no «rescheduled» twin.
-      expect((await lessonRows(teacherId)).map((r) => [r.id, r.status, r.starts_at, r.ends_at])).toEqual([
-        [lessonId, 'scheduled', target, new Date(target.getTime() + 60 * 60_000)],
-      ]);
+      expect(
+        (await lessonRows(teacherId)).map((r) => [r.id, r.status, r.starts_at, r.ends_at]),
+      ).toEqual([[lessonId, 'scheduled', target, new Date(target.getTime() + 60 * 60_000)]]);
       const [audit] = await auditOf(lessonId);
       expect(new Date(audit?.before.starts_at ?? '')).toEqual(from);
       expect(audit?.after).toMatchObject({ mode: 'move', notified: 1 });

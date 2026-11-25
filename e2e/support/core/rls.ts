@@ -48,7 +48,10 @@ export async function family(tx: Tx, input: { phone: string; teacherId: string; 
   return s.id;
 }
 
-export async function lesson(tx: Tx, input: { teacherId: string; studentId: string; daysAgo: number }): Promise<void> {
+export async function lesson(
+  tx: Tx,
+  input: { teacherId: string; studentId: string; daysAgo: number },
+): Promise<void> {
   const [l] = await tx<{ id: string }[]>`insert into public.lessons (teacher_id, starts_at, ends_at)
     values (${input.teacherId}, now() - make_interval(days => ${input.daysAgo}),
       now() - make_interval(days => ${input.daysAgo}) + interval '30 minutes') returning id`;

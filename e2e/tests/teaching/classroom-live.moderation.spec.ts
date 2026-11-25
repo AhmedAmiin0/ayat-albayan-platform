@@ -11,7 +11,10 @@ const BR = C.boardRequest;
 test.use({ launchOptions: { args: MEDIA_FLAGS } });
 test.skip(!LIVE, 'needs a LiveKit server (LIVEKIT_URL)');
 
-async function teacherAndGuest(browser: Browser, title: string): Promise<{ teacher: Page; guest: Page }> {
+async function teacherAndGuest(
+  browser: Browser,
+  title: string,
+): Promise<{ teacher: Page; guest: Page }> {
   const admin = await roomPage(browser, 'admin');
   const link = await newMeeting(admin, `${title} ${Date.now() % 1e5}`);
   await admin.context().close();
