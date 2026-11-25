@@ -24,6 +24,13 @@ export class SubscriptionsService {
     return { ...page, items: await this.packages.views(page.items) };
   }
 
+  /** The unpaid packages of these students in one read, newest first as list() sorts them. */
+  async unpaidOf(studentIds: readonly string[]): Promise<SubscriptionView[]> {
+    if (studentIds.length === 0) return [];
+    const rows = await this.subs.withStudentFor(studentIds);
+    return this.packages.views(rows.filter(isUnpaid).toSorted(newestFirst));
+  }
+
   async get(id: string): Promise<SubscriptionView> {
     const [view] = await this.packages.views([await this.row(id)]);
     if (!view) throw notFound('subscription_not_found');
@@ -72,3 +79,9 @@ export class SubscriptionsService {
     return row;
   }
 }
+
+const isUnpaid = (r: SubRow): boolean => r.status === 'unpaid';
+
+const newestFirst = (a: SubRow, b: SubRow): number =>
+  Number(b.created_at > a.created_at) - Number(b.created_at < a.created_at) ||
+  Number(a.id > b.id) - Number(a.id < b.id);
