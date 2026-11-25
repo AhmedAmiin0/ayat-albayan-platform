@@ -1,6 +1,7 @@
 import { fromCents, toCents } from '@ab/core';
 import { localDay } from './first-paid';
 import { addCalendarDays, addCalendarMonths } from '@ab/time';
+import { z } from 'zod';
 
 // An assistant's monthly statement (migration 20261006000273: build_assistant_statement) in pure code:
 // salary + the commissions earned up to that month +/- adjustments, per currency, never summed across
@@ -28,7 +29,9 @@ export interface StatementAdjustmentInput {
   effectiveMonth: string;
 }
 
-export type StatementLineKind = 'salary' | 'commission' | 'adjustment';
+export const STATEMENT_LINE_KINDS = ['salary', 'commission', 'adjustment'] as const;
+export const statementLineKindSchema = z.enum(STATEMENT_LINE_KINDS);
+export type StatementLineKind = z.infer<typeof statementLineKindSchema>;
 export interface StatementLine {
   kind: StatementLineKind;
   /** The commission or adjustment id; null for the salary. */
