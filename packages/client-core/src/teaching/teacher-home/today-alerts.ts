@@ -2,9 +2,9 @@ import type { NotificationItem } from '@ab/shared';
 import type { AnyPushKind } from '@ab/catalog';
 import { isOpenLesson, type LessonView } from '@ab/schedule';
 import { localDateIn } from '@ab/time';
-import { reportStage, teacherCanConfirm, type ReportStage } from '../lessons/index.js';
-import type { AlertKind } from './home-prefs.js';
-import { lessonChange, type LessonChange } from './lesson-changes.js';
+import { reportStage, teacherCanConfirm, type ReportStage } from '../lessons';
+import type { AlertKind } from './home-prefs';
+import { lessonChange, type LessonChange } from './lesson-changes';
 
 // Pure, so web and mobile list the same alerts from one clock.
 

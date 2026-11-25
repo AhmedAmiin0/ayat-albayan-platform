@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { SAR_PER_USD_PEG } from '../../currency.js';
-import { quote, type QuoteOptions } from '../quote.js';
+import { SAR_PER_USD_PEG } from '../../currency';
+import { quote, type QuoteOptions } from '../quote';
 
 // docs/08 §1: any non-site country → USD = ceil(SAR base × rate(SAR→USD)).
 const base = { duration: 45, students: 1, discount: 0 } satisfies Partial<QuoteOptions>;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseDiscount } from './catalog.js';
+import { parseDiscount } from './catalog';
 
 describe('parseDiscount (the site\'s free discount field)', () => {
   it.each([

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LESSON_STATUSES } from '@ab/catalog';
-import { autoHeldWindow, isAutoHeldDue, needsConfirmation } from './auto-held.js';
+import { autoHeldWindow, isAutoHeldDue, needsConfirmation } from './auto-held';
 
 const NOW = new Date('2026-11-02T12:00:00Z');
 const minutesAgo = (m: number) => new Date(NOW.getTime() - m * 60_000).toISOString();

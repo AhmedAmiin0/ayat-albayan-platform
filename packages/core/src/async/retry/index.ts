@@ -1,2 +1,2 @@
-export * from './retry.js';
-export type * from './retry.types.js';
+export * from './retry';
+export type * from './retry.types';

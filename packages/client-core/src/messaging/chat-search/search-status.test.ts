@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { searchStatus } from '../../index.js';
+import { searchStatus } from '../..';
 
 const W = { searching: 'S', empty: 'E', counter: '{n} من {m}', error: 'X' };
 const at = (over: object) => ({ q: 'درس', searching: false, failed: false, total: 3, index: 1, ...over });

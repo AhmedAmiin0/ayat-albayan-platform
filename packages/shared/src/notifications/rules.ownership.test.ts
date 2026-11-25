@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { OWNED_SETTING_KEYS, SETTINGS_REGISTRY } from '@ab/settings';
-import { RULE_SETTING_KEYS } from './rules.legacy.js';
+import { RULE_SETTING_KEYS } from './rules.legacy';
 
 // docs/23b decision 1: the 8 keys move to notifications in the registry and OWNED_SETTING_KEYS.
 describe('the notification rules own exactly RULE_SETTING_KEYS', () => {

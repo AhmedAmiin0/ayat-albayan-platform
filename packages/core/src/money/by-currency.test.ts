@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { sumByCurrency } from './by-currency.js';
+import { sumByCurrency } from './by-currency';
 
 describe('sumByCurrency (never one number across currencies)', () => {
   it('sums each currency on its own, in exact cents', () => {

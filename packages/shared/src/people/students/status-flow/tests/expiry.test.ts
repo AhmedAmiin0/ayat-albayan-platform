@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { expiryMove, type StatusExpiryInput } from '../status-flow.js';
+import { expiryMove, type StatusExpiryInput } from '../status-flow';
 
 const NOW = new Date('2026-10-15T09:00:00Z');
 const base: StatusExpiryInput = { current: 'pending_renewal', since: '2026-10-08T09:00:00Z', now: NOW, days: 7, paidSince: false };

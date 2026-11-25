@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
-import { listSortShape, SORT_DIRS } from './list-sort.js';
+import { listSortShape, SORT_DIRS } from './list-sort';
 
 const schema = z.object({ page: z.coerce.number().default(1), ...listSortShape(['name', 'code'] as const) });
 

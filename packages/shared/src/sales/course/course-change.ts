@@ -1,7 +1,7 @@
 import type { LessonStatus } from '@ab/catalog';
 import type { Conflict } from '@ab/schedule';
 import { CONSUMING_LESSON_STATUSES } from '@ab/money';
-import type { BookedCourse } from './course-follow.js';
+import type { BookedCourse } from './course-follow';
 
 // Lessons left at a change point use the balance views' rule (migration 190); pure.
 

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { lessonFilesApi, portalAssetsApi, partsByLesson, recordingMonths } from './index.js';
+import { lessonFilesApi, portalAssetsApi, partsByLesson, recordingMonths } from '.';
 
 const view = {
   id: 'F', lesson_id: 'L', kind: 'homework', title: null, mime: 'image/png', size: 1,

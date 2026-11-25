@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { leadQualForm, leadQualPatch, type QualText } from './qualification-form.js';
+import { leadQualForm, leadQualPatch, type QualText } from './qualification-form';
 
 const TEXT: QualText = {
   ageInvalid: 'age',

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bodyVarCount, draftParams, previewParams, retexted } from './template-draft.js';
+import { bodyVarCount, draftParams, previewParams, retexted } from './template-draft';
 
 describe('the template form', () => {
   it('counts the body\'s variables', () => {

@@ -1,4 +1,4 @@
-import type { SettingDef } from '../../defs.js';
+import type { SettingDef } from '../../defs';
 
 /** Schedule and lessons (R-SCH-02, R-SCH-07, R-SCH-10). */
 export const SCHEDULING_SETTINGS = {

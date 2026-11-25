@@ -5,7 +5,7 @@ import {
   shortLinkListQuerySchema,
   shortLinkOtpVerifySchema,
   shortLinkUpdateSchema,
-} from './short-links.js';
+} from './short-links';
 
 const base = { title: ' رابط التسجيل ', targetUrl: 'https://app.example.com/register' };
 

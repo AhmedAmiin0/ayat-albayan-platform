@@ -1,6 +1,6 @@
 import type { PortalLesson, PortalStudent } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { weekSchedule, weekStrip, weekSummary } from './week-schedule.js';
+import { weekSchedule, weekStrip, weekSummary } from './week-schedule';
 
 const student: PortalStudent = {
   id: 'a', code: 'AB-0001', name: 'a', tz: 'Asia/Riyadh', contact_is_self: false,

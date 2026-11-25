@@ -1,6 +1,6 @@
 import type { CourseStopPreview } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
-import { ApiError } from '../../core/http/index.js';
+import { ApiError } from '../../core/http';
 
 // Course actions for web and mobile: API paths, query key and error codes; words are injected.
 

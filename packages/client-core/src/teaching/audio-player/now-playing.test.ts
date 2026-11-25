@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { nowPlayingStore } from './index.js';
+import { nowPlayingStore } from '.';
 
 describe('nowPlayingStore', () => {
   it('one at a time: a new player stops the one before it', () => {

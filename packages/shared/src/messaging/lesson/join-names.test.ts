@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { joinNames } from './booking-confirmation.js';
+import { joinNames } from './booking-confirmation';
 
 describe('joinNames ({{1}}, R-MSG-01)', () => {
   it('one name stays as is', () => {

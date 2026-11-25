@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import * as root from '../index.js';
+import * as root from '..';
 import type {
   AcademySettings,
   CamelKey,
@@ -23,7 +23,7 @@ import type {
   SettingsUpdate,
   SettingValue,
   ShapeField,
-} from '../index.js';
+} from '..';
 
 // Export-surface lock (settings segregation): every name the apps import from
 // @ab/shared today must survive the move of the settings files (additions only).

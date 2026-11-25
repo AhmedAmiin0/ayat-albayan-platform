@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError } from '../../../core/http/index.js';
+import { ApiError } from '../../../core/http';
 import {
   courseCardPath,
   courseExtendErrorCode,
@@ -9,7 +9,7 @@ import {
   parseCourseCard,
   readLessonAt,
   statusRoute,
-} from './course-card.js';
+} from './course-card';
 
 const CARD = {
   subscriptionId: 'sub1',

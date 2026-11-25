@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import type { LessonStatus, StudentStatus, SubscriptionStatus } from '@ab/catalog';
 import { OPEN_LESSON_STATUSES, wallParts } from '@ab/schedule';
-import type { StopRefund } from './stop-refund/index.js';
-import { stopOweAskSchema, stopRefundAskSchema, type StopOwe } from './stop-choices/index.js';
+import type { StopRefund } from './stop-refund';
+import { stopOweAskSchema, stopRefundAskSchema, type StopOwe } from './stop-choices';
 
 // Stopping a course keeps the money: payments, earnings and commission stay (migrations 990, 991).
 

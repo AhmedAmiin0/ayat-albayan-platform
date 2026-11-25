@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { SeenStorage } from './seen-store.js';
+import type { SeenStorage } from './seen-store';
 
 // Keyed by the picking profile so another account on the same phone never inherits it.
 

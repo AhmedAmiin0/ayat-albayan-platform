@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Dsn } from './error-report.types.js';
+import type { Dsn } from './error-report.types';
 
 /** https://<public key>@<host>[:port]/[prefix/]<numeric project id> */
 const DSN =

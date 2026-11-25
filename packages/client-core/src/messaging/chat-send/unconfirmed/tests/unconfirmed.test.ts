@@ -1,7 +1,7 @@
 import type { MessageView, ThreadDetail } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { createPinStore } from '../../pin-store.js';
-import { markUnconfirmed, replayedOther, SEND_UNCONFIRMED } from '../unconfirmed.js';
+import { createPinStore } from '../../pin-store';
+import { markUnconfirmed, replayedOther, SEND_UNCONFIRMED } from '../unconfirmed';
 
 const A = '+966501234567';
 

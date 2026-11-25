@@ -1,6 +1,6 @@
 import { deviceTimeZone, resolveViewerTz } from '@ab/time';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setViewerPersonTz, subscribeViewerTz, viewerTz, viewerTzFor } from './viewer-tz.js';
+import { setViewerPersonTz, subscribeViewerTz, viewerTz, viewerTzFor } from './viewer-tz';
 
 const device = resolveViewerTz({ device: deviceTimeZone() });
 

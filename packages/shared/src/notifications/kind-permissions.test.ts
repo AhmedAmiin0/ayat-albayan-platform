@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ALL_PUSH_KINDS, FAMILY_PUSH_KINDS } from '@ab/catalog';
-import { mayReceivePush, PUSH_KIND_PERMISSIONS } from './kind-permissions.js';
+import { mayReceivePush, PUSH_KIND_PERMISSIONS } from './kind-permissions';
 
 describe('PUSH_KIND_PERMISSIONS (R-NOT-01)', () => {
   it('every kind needs notifications.push', () => {

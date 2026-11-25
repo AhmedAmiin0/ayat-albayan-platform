@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
-import { ApiError, createApiClient, isNoAnswer, SEND_TIMEOUT_MS } from '../../../../index.js';
+import { ApiError, createApiClient, isNoAnswer, SEND_TIMEOUT_MS } from '../../../..';
 
 const fetchMock = vi.fn<typeof fetch>();
 beforeEach(() => {

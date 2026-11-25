@@ -1,4 +1,4 @@
-import { type MonthCell, monthGrid } from './month-grid.js';
+import { type MonthCell, monthGrid } from './month-grid';
 
 // The month grid's cells as both apps draw them: the day, whether it is today or picked, and how
 // many of her lessons it holds.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { listenText } from './index.js';
+import { listenText } from '.';
 
 const words = { isNew: 'جديد', stoppedAt: 'توقفت عند {at}', heard: 'استمعت' };
 

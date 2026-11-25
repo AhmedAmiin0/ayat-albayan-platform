@@ -1,1 +1,1 @@
-export { bookingBaseSchema, bydaySchema, lessonDuration, overrideSchema } from './scheduling.js';
+export { bookingBaseSchema, bydaySchema, lessonDuration, overrideSchema } from './scheduling';

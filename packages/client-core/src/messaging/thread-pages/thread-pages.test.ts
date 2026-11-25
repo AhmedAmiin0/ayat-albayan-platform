@@ -8,7 +8,7 @@ import {
   threadNextParam,
   threadPageQuery,
   windowEnd,
-} from './thread-pages.js';
+} from './thread-pages';
 
 const ID = 'b1111111-1111-4111-8111-111111111111';
 const AT = '2026-10-01T09:30:00.123456+00:00';

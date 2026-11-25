@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { quote, type QuoteOptions, type QuoteResponse } from './quote/index.js';
-import { DEFAULT_RENEWAL_PRICING, renewalPricing, type LastPackage } from './renewal.js';
+import { quote, type QuoteOptions, type QuoteResponse } from './quote';
+import { DEFAULT_RENEWAL_PRICING, renewalPricing, type LastPackage } from './renewal';
 
 const source = (o: QuoteOptions): QuoteResponse => ({ ...quote(o), fx: null });
 

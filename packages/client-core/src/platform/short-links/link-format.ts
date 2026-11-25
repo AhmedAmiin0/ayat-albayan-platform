@@ -1,6 +1,6 @@
 import type { ShortLinkRow, ShortLinkSendStatus, ShortLinkUser } from '@ab/shared';
 import type { Glyph } from '@ab/money';
-import { fillSlots } from '../../teaching/reports/index.js';
+import { fillSlots } from '../../teaching/reports';
 
 // Tones are chip colours and glyphs their shapes, so state is never shown by colour alone.
 

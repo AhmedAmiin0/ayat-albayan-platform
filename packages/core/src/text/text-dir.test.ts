@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { textDir } from './text-dir.js';
+import { textDir } from './text-dir';
 
 describe('textDir', () => {
   it('Arabic, Hebrew, Syriac and Thaana first letters are rtl', () => {

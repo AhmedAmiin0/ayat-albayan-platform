@@ -5,8 +5,8 @@ import {
   integrationValuesSchema,
   integrationValueValid,
   stripeKeyLive,
-} from '../../checks.js';
-import { INTEGRATION_GROUPS, integrationDef, integrationEnum } from '../keys.js';
+} from '../../checks';
+import { INTEGRATION_GROUPS, integrationDef, integrationEnum } from '../keys';
 
 // Stripe (docs/30): one switch, two Vault secrets, the cap.
 const issue = (key: 'STRIPE_API_KEY' | 'STRIPE_WEBHOOK_SECRET', value: string) =>

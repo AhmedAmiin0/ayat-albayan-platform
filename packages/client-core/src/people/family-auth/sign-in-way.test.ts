@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { firstWay, OTHER_WAY, WAY_DIRECTION } from './sign-in-way.js';
+import { firstWay, OTHER_WAY, WAY_DIRECTION } from './sign-in-way';
 
 test('codes on: WhatsApp first; codes off: the password form', () => {
   expect(firstWay(true)).toBe('whatsapp');

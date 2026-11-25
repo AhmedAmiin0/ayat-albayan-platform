@@ -4,7 +4,7 @@ import {
   APP_SEND_ANSWER_KEYS,
   APP_SEND_ANSWERS,
   appSendLineOf,
-} from './app-send-answers.js';
+} from './app-send-answers';
 
 const NOW = new Date('2026-11-06T12:00:00Z');
 const held = { status: 'queued' as const, error_code: 'awaiting_reply', app_send_until: null };

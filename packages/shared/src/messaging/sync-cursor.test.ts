@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { encodeSyncCursor, NIL_UUID, rewindSyncCursor, syncCursorSchema } from './sync-cursor.js';
-import { SYNC_LIMIT_DEFAULT, SYNC_LIMIT_MAX, threadSyncQuerySchema } from './thread-sync.js';
+import { encodeSyncCursor, NIL_UUID, rewindSyncCursor, syncCursorSchema } from './sync-cursor';
+import { SYNC_LIMIT_DEFAULT, SYNC_LIMIT_MAX, threadSyncQuerySchema } from './thread-sync';
 
 const ID = 'c0000000-0000-4000-8000-0000000000a1';
 const AT = '2026-11-06T10:00:00.123456+00:00';

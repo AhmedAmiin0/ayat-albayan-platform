@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { commissionKindOf, type OrderFact } from './kind.js';
+import { commissionKindOf, type OrderFact } from './kind';
 
 // Twin of subscription_commission_kind after migration 934.
 describe('commissionKindOf: a cancelled package', () => {

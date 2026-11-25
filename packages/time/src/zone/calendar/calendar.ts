@@ -8,7 +8,7 @@ import {
   startOfWeek,
   type Day,
 } from 'date-fns';
-import { localDateIn, offsetMinutesIn, wallToUtc } from '../zoned.js';
+import { localDateIn, offsetMinutesIn, wallToUtc } from '../zoned';
 
 // The date-fns facade, part 2 (docs/34 §7): calendar arithmetic. Two kinds of value:
 // - a calendar date «YYYY-MM-DD» (a lesson's local day, a `?from&to` day): no zone at all;

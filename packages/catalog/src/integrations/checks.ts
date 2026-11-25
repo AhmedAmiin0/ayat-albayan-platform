@@ -4,11 +4,11 @@ import {
   WA_LINE_PROVIDERS,
   type IntegrationPlainKey,
   type IntegrationSecretKey,
-} from './keys/index.js';
-import { evolutionBase, evolutionInternalHosts } from './evolution.js';
-import { parseAllowedRecipients } from './recipients.js';
-import { STORAGE_VALUE_CHECKS } from './storage.js';
-import { httpsUrl, livekitUrl } from './urls.js';
+} from './keys';
+import { evolutionBase, evolutionInternalHosts } from './evolution';
+import { parseAllowedRecipients } from './recipients';
+import { STORAGE_VALUE_CHECKS } from './storage';
+import { httpsUrl, livekitUrl } from './urls';
 
 // The value checks of the plain keys, consistent with apps/api/src/config/env/env.ts (the API also re-checks
 // every DB value with its own env schema before using it).

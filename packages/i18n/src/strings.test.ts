@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { applyStrings, cloneBundle, flattenStrings, sectionOf } from './strings.js';
-import type { FlatStrings } from './strings.js';
+import { applyStrings, cloneBundle, flattenStrings, sectionOf } from './strings';
+import type { FlatStrings } from './strings';
 
 const bundle = { nav: { leads: 'Leads', inbox: 'Inbox' }, common: { save: 'Save', pages: { n: '{n}' } } };
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { replayedOther } from '../unconfirmed.js';
+import { replayedOther } from '../unconfirmed';
 
 // A correction links by corrects_id; the server decides `replayed` and `same_request`.
 const O1 = 'o1';

@@ -1,6 +1,6 @@
 import type { PortalLesson } from '@ab/shared';
 import { clockOf, type ClockOptions } from '@ab/time';
-import type { LessonWait } from './lesson-window.js';
+import type { LessonWait } from './lesson-window';
 
 // Why a lesson card has no join button, worded for the family (docs/50 §7).
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { PortalLesson } from '@ab/shared';
-import { isLessonNow, lessonWait, nextLesson, windowStateAt } from './lesson-window.js';
+import { isLessonNow, lessonWait, nextLesson, windowStateAt } from './lesson-window';
 
 const w = { opens_at: '2026-10-05T15:45:00.000Z', closes_at: '2026-10-05T19:00:00.000Z' };
 const at = (iso: string) => new Date(iso);

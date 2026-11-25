@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { arabicNameSimilar } from '../arabic.js';
+import { arabicNameSimilar } from '../arabic';
 
 // R-STU-03: duplicate-detection pairs taken from docs/02 issue A1 / A3.
 describe('arabicNameSimilar — same person (R-STU-03)', () => {

@@ -9,7 +9,7 @@ import {
   SESSION_WINDOW_MS,
   sessionWindowOpen,
   waIdToE164,
-} from './wa.js';
+} from './wa';
 
 describe('waIdToE164 (R-LEAD-01, rule 7)', () => {
   it.each([

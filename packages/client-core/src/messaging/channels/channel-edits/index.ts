@@ -6,4 +6,4 @@ export {
   channelMessagePath,
   channelReadsPath,
   threadHidePath,
-} from './channel-edits.js';
+} from './channel-edits';

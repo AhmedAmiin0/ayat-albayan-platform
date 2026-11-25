@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { SETTING_DEFAULTS } from '@ab/settings';
-import { notificationEntry } from './catalogue/catalogue.js';
-import { resolveRule, validTiming } from './rules.effective.js';
-import { RULE_SETTING_KEYS, type RuleSettings } from './rules.legacy.js';
+import { notificationEntry } from './catalogue/catalogue';
+import { resolveRule, validTiming } from './rules.effective';
+import { RULE_SETTING_KEYS, type RuleSettings } from './rules.legacy';
 
 const settings = (over: Partial<RuleSettings> = {}): RuleSettings =>
   ({

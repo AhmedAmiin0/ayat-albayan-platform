@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiClient } from '../../core/http/index.js';
-import { lessonEndPath, lessonMutePath, lessonRemovePath, lessonRoomSends } from './lesson-room.js';
+import type { ApiClient } from '../../core/http';
+import { lessonEndPath, lessonMutePath, lessonRemovePath, lessonRoomSends } from './lesson-room';
 
 const make = (answer: (path: string) => Promise<unknown>) => {
   const apiSend = vi.fn((_m: string, path: string) => answer(path));

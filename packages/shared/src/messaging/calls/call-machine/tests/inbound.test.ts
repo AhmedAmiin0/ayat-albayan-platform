@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isLiveCall, nextCall, talkSeconds, type CallState } from '../call-machine.js';
+import { isLiveCall, nextCall, talkSeconds, type CallState } from '../call-machine';
 
 const inb = (over: Partial<CallState> = {}): CallState => ({
   status: 'ringing', direction: 'inbound', answered_at: null, answer_sdp: null, end_reason: null, duration_seconds: null, ...over,

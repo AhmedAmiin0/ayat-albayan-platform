@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { atOrAfter, micros } from './channel-instant.js';
+import { atOrAfter, micros } from './channel-instant';
 
 describe('instants to the microsecond (Postgres timestamptz)', () => {
   it('keeps the digits a Date drops, whatever the offset', () => {

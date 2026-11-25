@@ -1,6 +1,6 @@
 import { USER_ROLES } from '@ab/catalog';
 import { z } from 'zod';
-import type { ChannelPresence, PresencePeer } from './presence.views.js';
+import type { ChannelPresence, PresencePeer } from './presence.views';
 
 // The apps' parse of a chat's presence (docs/36 Z-5), typed by presence.views.ts.
 

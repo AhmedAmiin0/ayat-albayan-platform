@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LessonStatus } from '@ab/catalog';
-import { CORRECT_TO, correctionTargets } from '../lesson-outcome.js';
+import { CORRECT_TO, correctionTargets } from '../lesson-outcome';
 
 const ENDS = '2026-11-03T16:00:00Z';
 const AFTER = new Date('2026-11-03T16:01:00Z');

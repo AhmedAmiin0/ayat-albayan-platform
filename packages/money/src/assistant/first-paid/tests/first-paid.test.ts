@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { firstFullyPaid, localDay, planCommission, subscriptionFullAt, type PaymentFact, type SubscriptionFact } from '../first-paid.js';
+import { firstFullyPaid, localDay, planCommission, subscriptionFullAt, type PaymentFact, type SubscriptionFact } from '../first-paid';
 
 const pay = (amount: number, paid_at: string, kind: PaymentFact['kind'] = 'payment'): PaymentFact => ({ amount, kind, paid_at });
 const sub = (id: string, price: number, payments: PaymentFact[]): SubscriptionFact =>

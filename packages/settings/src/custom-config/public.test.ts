@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { publicCustom } from './public.js';
+import { publicCustom } from './public';
 
 describe('public custom entries (GET /settings/public)', () => {
   const rows = [

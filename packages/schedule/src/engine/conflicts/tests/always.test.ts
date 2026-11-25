@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { allDayRows } from '../../free-slots/index.js';
-import { findConflicts, type ConflictInput } from '../conflicts.js';
+import { allDayRows } from '../../free-slots';
+import { findConflicts, type ConflictInput } from '../conflicts';
 
 // settings.teachers_always_available: the grid is every day 00:00–24:00 Riyadh (UTC+3).
 const occ = (start: string, end: string) => ({ starts_at: new Date(start), ends_at: new Date(end) });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { offPathKeys, pathKey } from '../../../index.js';
+import { offPathKeys, pathKey } from '../../..';
 
 const startsWith = (key: readonly unknown[], prefix: readonly unknown[]): boolean =>
   prefix.every((part, i) => key[i] === part);

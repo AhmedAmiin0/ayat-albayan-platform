@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { codeBoundProblem, isCodeBound } from './code-bound.js';
+import { codeBoundProblem, isCodeBound } from './code-bound';
 
 const link = { type: 'url', url: 'https://meet.google.com/{{1}}' };
 const reply = { type: 'quick_reply' };

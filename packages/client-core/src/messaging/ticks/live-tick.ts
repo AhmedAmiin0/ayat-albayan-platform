@@ -1,5 +1,5 @@
 import type { MessageStatus } from '@ab/catalog';
-import { ranksAbove } from './later-status.js';
+import { ranksAbove } from './later-status';
 
 // docs/44 K1 on a store that a sync also writes (mobile SQLite): a realtime event is a visual patch
 // over a row the server may have moved since. A late event must never undo a synced failure, and

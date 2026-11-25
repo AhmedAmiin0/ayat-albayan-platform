@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { localeUpdateSchema } from './locale.js';
+import { localeUpdateSchema } from './locale';
 
 describe('localeUpdateSchema (PATCH /me/locale)', () => {
   it('takes ar and en', () => {

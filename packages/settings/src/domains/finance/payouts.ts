@@ -1,4 +1,4 @@
-import type { SettingDef } from '../../defs.js';
+import type { SettingDef } from '../../defs';
 
 const h = 'settings.hints';
 

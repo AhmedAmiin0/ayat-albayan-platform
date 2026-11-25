@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LessonStatus } from '@ab/catalog';
-import { consumesPackage, subscriptionBalances, type PackageLesson } from '../usage.js';
+import { consumesPackage, subscriptionBalances, type PackageLesson } from '../usage';
 
 // Migration 190: an instant lesson never consumes a package unit, even when marked chargeable.
 let seq = 0;

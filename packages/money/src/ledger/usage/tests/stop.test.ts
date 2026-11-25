@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { subscriptionBalances, type PackageLesson } from '../usage.js';
+import { subscriptionBalances, type PackageLesson } from '../usage';
 
 // Migration 991 (PR #464 review): a stopped package keeps the lessons it used at the stop. The next
 // package's lessons never land on it; its unused lessons are forfeited (remaining = total − used).

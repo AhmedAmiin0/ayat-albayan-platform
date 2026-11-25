@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { PaymentKind, PaymentMethod } from '@ab/catalog';
 import { round2 } from '@ab/core';
-import { moneyAmount } from '../schemas.js';
+import { moneyAmount } from '../schemas';
 
 /** The sales amount edit takes only the new amount, in the package's currency. */
 export const paymentAmountSchema = z.strictObject({ amount: moneyAmount });

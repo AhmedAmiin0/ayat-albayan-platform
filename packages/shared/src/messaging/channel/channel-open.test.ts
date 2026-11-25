@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { STUDENT_STATUSES } from '@ab/catalog';
-import { channelOpen } from './channel.js';
+import { channelOpen } from './channel';
 
 // The chat opens once the student subscribed AND the assistant assigned the teacher.
 describe('channelOpen (migration 971 channel_is_open)', () => {

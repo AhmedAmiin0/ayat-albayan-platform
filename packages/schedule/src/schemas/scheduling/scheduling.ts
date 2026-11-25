@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { DURATIONS, PACKAGE_SIZES } from '@ab/catalog';
-import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../../lessons/state-machine/index.js';
-import { bookingExtras } from '../booking-extras.js';
+import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../../lessons/state-machine';
+import { bookingExtras } from '../booking-extras';
 import { instant, localDate, requiredText, timeOfDay, timeZone } from '@ab/core';
-import { dayTimesSchema } from '../day-times.js';
+import { dayTimesSchema } from '../day-times';
 
 // Scheduling commands (docs/10-phase2-contracts.md). Command DTOs are camelCase; POST /booking's
 // schema joins the people row schemas in @ab/shared. Times are never free text (rule 6):

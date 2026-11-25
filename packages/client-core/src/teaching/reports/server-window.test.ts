@@ -1,6 +1,6 @@
 import { reportView } from '@ab/shared/testing';
 import { describe, expect, it } from 'vitest';
-import { AFTER_CLOSE_MS, CLOSE_RETRY_MS, closeRefetchIn, withServerWindow } from './server-window.js';
+import { AFTER_CLOSE_MS, CLOSE_RETRY_MS, closeRefetchIn, withServerWindow } from './server-window';
 
 const NOW = new Date('2026-11-11T10:20:00Z');
 const UNTIL = '2026-11-11T10:30:00.000Z';

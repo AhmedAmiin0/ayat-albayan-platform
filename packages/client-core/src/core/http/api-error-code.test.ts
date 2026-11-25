@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from './api-error.js';
-import { apiErrorCode, pdfPageRetryable } from './api-error-code.js';
+import { ApiError } from './api-error';
+import { apiErrorCode, pdfPageRetryable } from './api-error-code';
 
 describe('apiErrorCode', () => {
   it('the body’s code, else null', () => {

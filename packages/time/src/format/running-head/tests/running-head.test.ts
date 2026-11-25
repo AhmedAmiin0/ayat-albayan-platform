@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { clockTime, formatRunningHead } from '../running-head.js';
+import { clockTime, formatRunningHead } from '../running-head';
 
 describe('formatRunningHead (docs/07 §7)', () => {
   it('formats the reference date: Gregorian, Hijri (Umm al-Qura), both clocks', () => {

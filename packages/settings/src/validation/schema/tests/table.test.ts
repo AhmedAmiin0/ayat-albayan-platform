@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { byType, type SettingDef, type SettingTypeTable } from '../../../defs.js';
-import { SETTING_KEYS, settingDef } from '../../../registry.js';
-import { settingZod } from '../schema.js';
+import { byType, type SettingDef, type SettingTypeTable } from '../../../defs';
+import { SETTING_KEYS, settingDef } from '../../../registry';
+import { settingZod } from '../schema';
 
 const base = { labelKey: 'x' };
 

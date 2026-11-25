@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { CODE_LENGTH, codeDigits, isWholeCode } from './code-digits.js';
+import { CODE_LENGTH, codeDigits, isWholeCode } from './code-digits';
 
 test('typed, pasted with spaces or words, or in Arabic digits → six ASCII digits', () => {
   expect(codeDigits('12')).toBe('12');

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { templateCreateSchema } from './template-create.js';
-import { TEACHER_LESSON_V3 } from './teacher-lesson-v3.js';
-import { TEMPLATE_KEYS } from './templates.js';
+import { templateCreateSchema } from './template-create';
+import { TEACHER_LESSON_V3 } from './teacher-lesson-v3';
+import { TEMPLATE_KEYS } from './templates';
 
 describe('teacher_lesson_v3 (owner 2026-11-06)', () => {
   it('is a valid new registry row: two link buttons with a {{1}} suffix and a sample each', () => {

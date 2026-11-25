@@ -3,4 +3,4 @@ export {
   type ApiClientOptions,
   createApiClient,
   type SendMethod,
-} from './api-client.js';
+} from './api-client';

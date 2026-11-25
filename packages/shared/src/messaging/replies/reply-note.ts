@@ -1,9 +1,9 @@
 import type { Locale } from '@ab/core';
 import { type ClockCycle, RIYADH_TZ } from '@ab/time';
-import { lessonWhenAt } from '../lesson/booking-confirmation.js';
-import { quickReplyIntent } from './quick-reply.js';
-import { lessonNotEnded, type ReplyLesson, type ReplyRights } from './reply-lesson.js';
-import type { MessageView } from '../chat/views.js';
+import { lessonWhenAt } from '../lesson/booking-confirmation';
+import { quickReplyIntent } from './quick-reply';
+import { lessonNotEnded, type ReplyLesson, type ReplyRights } from './reply-lesson';
+import type { MessageView } from '../chat/views';
 
 // The line under an inbound quick reply (R-MSG-05, R-SCH-03): what the system did, and what staff can
 // do now. Pure; the web and the app fill inbox.quickReply.<key> with `when` and

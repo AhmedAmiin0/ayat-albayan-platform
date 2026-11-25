@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { moneyAmount } from '@ab/money';
-import { fromMinor, toMinor, type StopRefund } from '../stop-refund/index.js';
+import { fromMinor, toMinor, type StopRefund } from '../stop-refund';
 
 // The stop sheet's money choices.
 // No fixed policy: the person stopping the course picks the outcome, the server computes the

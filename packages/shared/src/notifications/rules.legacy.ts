@@ -1,6 +1,6 @@
 import type { AcademySettings, SettingKey } from '@ab/settings';
-import type { NotificationKey } from './catalogue/catalogue.js';
-import type { AnyRuleTiming, EffectiveRule } from './rules.types.js';
+import type { NotificationKey } from './catalogue/catalogue';
+import type { AnyRuleTiming, EffectiveRule } from './rules.types';
 
 /** The 8 keys owned by notification rules (docs/26 §1); renewal_alert_remaining stays CONFIG. */
 export const RULE_SETTING_KEYS = [

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
-import { markSending, withDeadline } from './deadline.js';
-import { READ_TIMEOUT_MS } from './timeouts.js';
+import { markSending, withDeadline } from './deadline';
+import { READ_TIMEOUT_MS } from './timeouts';
 
 beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());

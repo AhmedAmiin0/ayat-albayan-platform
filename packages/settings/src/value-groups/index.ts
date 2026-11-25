@@ -1,1 +1,1 @@
-export { VALUE_GROUPS } from './value-groups.js';
+export { VALUE_GROUPS } from './value-groups';

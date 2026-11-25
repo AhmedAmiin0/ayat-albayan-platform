@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import type { Json } from './index.js';
+import type { Json } from '.';
 
 describe('Json', () => {
   it('accepts primitives and null', () => {

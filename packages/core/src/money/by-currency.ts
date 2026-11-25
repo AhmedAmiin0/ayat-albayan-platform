@@ -1,4 +1,4 @@
-import { fromCents, toCents } from './cents.js';
+import { fromCents, toCents } from './cents';
 
 /**
  * Sums per currency, in whole cents (no float drift); never one number across currencies (owner

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
-import { lenientLabel, lenientString, lenientText, parseOrNull } from './lenient.js';
+import { lenientLabel, lenientString, lenientText, parseOrNull } from './lenient';
 
 describe('lenient fields', () => {
   it('lenientText: a non-empty string, else undefined', () => {

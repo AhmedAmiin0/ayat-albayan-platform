@@ -1,5 +1,5 @@
 import { compareCursors, type SyncMessage, type ThreadSync, type ThreadView } from '@ab/shared';
-import { laterCursor, type SyncState } from './sync-cursor.js';
+import { laterCursor, type SyncState } from './sync-cursor';
 
 /** What one sync answer asks the store to do (the SQLite engine runs it in one transaction). */
 export interface SyncPlan {

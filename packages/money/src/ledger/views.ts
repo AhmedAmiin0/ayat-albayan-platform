@@ -7,8 +7,8 @@ import type {
   PayoutStatus,
   SubscriptionStatus,
 } from '@ab/catalog';
-import type { QuoteResponse } from '../pricing/quote/index.js';
-import type { PayoutBreakdownView } from './earnings/payout-breakdown.schemas.js';
+import type { QuoteResponse } from '../pricing/quote';
+import type { PayoutBreakdownView } from './earnings/payout-breakdown.schemas';
 
 // Money responses (docs/11 §5–9). snake_case rows; instants ISO UTC; money as numbers
 // with at most 2 decimals; local dates YYYY-MM-DD; months YYYY-MM.

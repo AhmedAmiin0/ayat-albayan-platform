@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { qrMatrix, qrPath, qrSide, QR_QUIET_ZONE } from './qr.js';
+import { qrMatrix, qrPath, qrSide, QR_QUIET_ZONE } from './qr';
 
 const url = 'https://app.ayatalbayan.com/l/K7q2M9xT';
 

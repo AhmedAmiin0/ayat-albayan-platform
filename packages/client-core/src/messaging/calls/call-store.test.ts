@@ -1,9 +1,9 @@
 import type { ActiveCallView } from '@ab/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { MicError, type CallPeer } from './call-peer.js';
-import type { CallPlatform } from './call-platform.js';
-import { CallStore } from './call-store.js';
-import type { CallsText } from './call-words.js';
+import { MicError, type CallPeer } from './call-peer';
+import type { CallPlatform } from './call-platform';
+import { CallStore } from './call-store';
+import type { CallsText } from './call-words';
 
 const text = {
   mic: { denied: 'denied', unsupported: 'unsupported' },

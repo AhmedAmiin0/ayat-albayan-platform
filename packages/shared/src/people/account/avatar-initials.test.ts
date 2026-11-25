@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { avatarInitials } from './avatar-initials.js';
+import { avatarInitials } from './avatar-initials';
 
 describe('avatarInitials (owner 2026-10-28)', () => {
   it('an Arabic name gives its first letter, without a leading «ال»', () => {

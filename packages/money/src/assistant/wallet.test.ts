@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { walletState, walletTotals, type WalletEarning, type WalletLine } from './wallet.js';
+import { walletState, walletTotals, type WalletEarning, type WalletLine } from './wallet';
 
 const AT = { month: '2026-10-01', tz: 'Asia/Riyadh' };
 const line = (amount: number, over: Partial<WalletLine> = {}): WalletLine => ({ amount, currency: 'EGP', statement: null, ...over });

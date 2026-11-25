@@ -1,6 +1,6 @@
 import type { PortalHome, PortalStudent } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { familyPick, picksChild } from './family-pick.js';
+import { familyPick, picksChild } from './family-pick';
 
 const kid = (id: string): PortalStudent => ({
   id, code: `AB-${id}`, name: id, tz: 'Asia/Riyadh', contact_is_self: false,

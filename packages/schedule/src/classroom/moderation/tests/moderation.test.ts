@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { shareGrantSchema } from '../../schemas.js';
-import { canGrantShare, canRemove, participantMeta, roleOfMeta } from '../moderation.js';
+import { shareGrantSchema } from '../../schemas';
+import { canGrantShare, canRemove, participantMeta, roleOfMeta } from '../moderation';
 
 describe('classroom moderation', () => {
   it('admin removes anyone but an admin; the teacher removes guests, assistants and sales', () => {

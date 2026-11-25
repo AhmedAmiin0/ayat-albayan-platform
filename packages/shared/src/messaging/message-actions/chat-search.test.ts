@@ -5,7 +5,7 @@ import {
   parseSearchCursor,
   searchCursor,
   searchFold,
-} from './chat-search.js';
+} from './chat-search';
 
 const ID = 'b1111111-1111-4111-8111-111111111111';
 

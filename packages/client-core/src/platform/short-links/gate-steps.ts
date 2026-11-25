@@ -1,5 +1,5 @@
-import { RESEND_SECONDS } from '../../core/auth/index.js';
-import { ApiError, apiErrorCode } from '../../core/http/index.js';
+import { RESEND_SECONDS } from '../../core/auth';
+import { ApiError, apiErrorCode } from '../../core/http';
 
 // Resend timing reuses the family sign-in's RESEND_SECONDS.
 

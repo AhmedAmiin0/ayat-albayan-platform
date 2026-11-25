@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isFamilyEmail, PASSWORD_MAX } from '../users/index.js';
+import { isFamilyEmail, PASSWORD_MAX } from '../users';
 
 // A teacher's first-time setup (docs/46 A4): a teacher who signed in with a WhatsApp code holds a
 // synthetic `t-<id>@family.invalid` login; before the portal opens she sets a real email and a

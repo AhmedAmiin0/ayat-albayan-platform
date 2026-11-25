@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { followUpCycle, followUpKey, followUpKeyCycle, localDayStart } from '../timing.js';
+import { followUpCycle, followUpKey, followUpKeyCycle, localDayStart } from '../timing';
 
 describe('follow-up keys (R-LEAD-05, rule 8)', () => {
   const lead = { last_inbound_at: '2026-10-01T10:00:00Z', created_at: '2026-09-30T08:00:00Z' };

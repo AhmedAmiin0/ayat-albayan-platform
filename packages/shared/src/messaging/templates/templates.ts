@@ -1,6 +1,6 @@
-import type { CrmValues } from '../chat/crm-names.js';
-import { meetingLinkParts } from '../lesson/meeting-link.js';
-import type { QuickReplyIntent } from '../replies/quick-reply.js';
+import type { CrmValues } from '../chat/crm-names';
+import { meetingLinkParts } from '../lesson/meeting-link';
+import type { QuickReplyIntent } from '../replies/quick-reply';
 
 // The template registry's keys and the messages.template_params shape (docs/12 §2, migration 141).
 

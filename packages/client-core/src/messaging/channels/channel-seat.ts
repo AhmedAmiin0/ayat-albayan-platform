@@ -1,5 +1,5 @@
 import { CHANNEL_SEAT_TAKEN, channelSeatSchema, type ChannelSeat } from '@ab/shared';
-import { apiErrorCode, type ApiClient } from '../../core/http/index.js';
+import { apiErrorCode, type ApiClient } from '../../core/http';
 
 // One assistant seat per student chat (any assistant may take it, one at a time; the one who
 // brought the student has priority), the same for web and mobile: plain TanStack Query options

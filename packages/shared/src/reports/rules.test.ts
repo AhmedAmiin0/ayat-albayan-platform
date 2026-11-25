@@ -12,7 +12,7 @@ import {
   REPORT_RUBRICS,
   RUBRIC_COLUMN,
   reportBlock,
-} from './rules.js';
+} from './rules';
 
 const at = (iso: string) => new Date(iso);
 const SUBMITTED = at('2026-10-01T10:00:00Z');

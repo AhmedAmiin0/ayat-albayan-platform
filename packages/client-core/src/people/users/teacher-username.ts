@@ -1,5 +1,5 @@
 import { username as usernameSchema } from '@ab/shared';
-import { ApiError } from '../../core/http/index.js';
+import { ApiError } from '../../core/http';
 
 // A teacher's username in the admin teacher form (docs/30 §1, §7).
 

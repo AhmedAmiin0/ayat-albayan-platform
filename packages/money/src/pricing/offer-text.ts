@@ -1,8 +1,8 @@
 // The calculator's WhatsApp offer text (docs/08 §3); labels come from ar.json `ar.pricing`.
 import { counted, type PluralForm } from '@ab/core';
-import type { PackageId } from './catalog.js';
-import type { CurrencyIso } from './currency.js';
-import type { Quote } from './quote/index.js';
+import type { PackageId } from './catalog';
+import type { CurrencyIso } from './currency';
+import type { Quote } from './quote';
 
 export interface OfferLabels {
   waIntro: string;

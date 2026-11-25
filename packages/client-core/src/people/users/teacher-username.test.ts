@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError, tidyUsername, usernameApiError, usernameChange } from '../../index.js';
+import { ApiError, tidyUsername, usernameApiError, usernameChange } from '../..';
 
 const text = { invalid: 'غير صالح', taken: 'مستخدم', needsLogin: 'أنشئ الحساب' };
 

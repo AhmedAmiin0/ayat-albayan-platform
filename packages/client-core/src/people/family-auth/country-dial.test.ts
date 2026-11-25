@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { defaultCountry } from './countries.js';
-import { splitInternational } from './country-dial.js';
+import { defaultCountry } from './countries';
+import { splitInternational } from './country-dial';
 
 const saudi = defaultCountry('SA');
 const split = (typed: string, current = saudi) => {

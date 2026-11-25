@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { SETTING_DEFAULTS } from './registry.js';
-import { settingsChanges, settingsUpdateSchema } from './validation/schema/index.js';
-import { readSettings } from './validation/validate.js';
+import { SETTING_DEFAULTS } from './registry';
+import { settingsChanges, settingsUpdateSchema } from './validation/schema';
+import { readSettings } from './validation/validate';
 
 // The messaging keys: read side (readSettings) and write side (settingsChanges, settingsUpdateSchema).
 

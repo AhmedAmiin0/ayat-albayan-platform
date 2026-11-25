@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bookingConfirmationTemplate, joinNames, lessonWhenText } from './booking-confirmation.js';
+import { bookingConfirmationTemplate, joinNames, lessonWhenText } from './booking-confirmation';
 
 describe('bookingConfirmationTemplate (R-SCH-06, R-LES-02)', () => {
   it('a Jitsi room → booking_confirmation with the slug as button param', () => {

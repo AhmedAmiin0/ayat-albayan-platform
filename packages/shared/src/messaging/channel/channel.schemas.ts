@@ -1,16 +1,16 @@
 import { z } from 'zod';
-import { CHANNEL_MESSAGE_KINDS, type ChannelMessageKind } from './channel-media.js';
+import { CHANNEL_MESSAGE_KINDS, type ChannelMessageKind } from './channel-media';
 import type {
   ChannelMessageView,
   ChannelPage,
   ChannelReads,
   ChannelSenderLabel,
-} from './channel-views.js';
+} from './channel-views';
 import {
   CHANNEL_CLOSED_REASONS,
   CHANNEL_SENDER_ROLES,
   type ChannelClosedReason,
-} from './channel.js';
+} from './channel';
 
 // The apps' parse of the channel's answers (docs/36 Z-5). Typed by the views, so a field added
 // there fails to compile here until the schema reads it too. Lenient on purpose (an app and the

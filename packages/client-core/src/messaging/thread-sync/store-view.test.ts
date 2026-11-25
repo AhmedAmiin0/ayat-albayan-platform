@@ -1,7 +1,7 @@
 import type { MessageView, SyncMessage, ThreadDetail } from '@ab/shared';
 import type { MessageStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
-import { furtherOf, storedStatus, withStoredRows, withStoredTicks } from './store-view.js';
+import { furtherOf, storedStatus, withStoredRows, withStoredTicks } from './store-view';
 
 const at = (s: number) => `2026-11-06T10:00:${String(s).padStart(2, '0')}.000000+00:00`;
 const msg = (n: number, status: MessageStatus = 'sent'): MessageView =>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { courseDraftSavedSchema } from './course-draft.js';
+import { courseDraftSavedSchema } from './course-draft';
 
 const BOOKING = { rule_id: 'r1', student_ids: ['s1'], guardian_ids: ['g1'], lessons: [], message_ids: [], invoice_id: null };
 

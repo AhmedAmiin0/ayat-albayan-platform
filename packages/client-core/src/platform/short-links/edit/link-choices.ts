@@ -1,9 +1,9 @@
 import { SHORT_LINK_MAX_DAYS } from '@ab/shared';
 import { addDaysIn, localDateIn, zonedInstant } from '@ab/time';
-import { roleKey, type RoleKey } from '../link-people.js';
+import { roleKey, type RoleKey } from '../link-people';
 import {
   EXPIRY_DAY_CHOICES, expiresAtOf, type LinkClock, type LinkExpiry,
-} from '../link-form.js';
+} from '../link-form';
 
 /** shortLinks.people.filters.<key>. */
 export const PEOPLE_FILTERS = ['all', 'guardians', 'students', 'teachers', 'staff'] as const;

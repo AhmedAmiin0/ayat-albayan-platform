@@ -1,6 +1,6 @@
 import type { ChannelClosedReason } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { closedReasonKey } from './channel-closed.js';
+import { closedReasonKey } from './channel-closed';
 
 describe('closedReasonKey', () => {
   it('each known reason is its own key', () => {

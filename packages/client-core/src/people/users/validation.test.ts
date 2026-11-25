@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { initialCreateForm, userChecks } from '../../index.js';
-import { TEXT } from './fixtures.test-util.js';
+import { initialCreateForm, userChecks } from '../..';
+import { TEXT } from './fixtures.test-util';
 
 const checks = userChecks(() => TEXT);
 const valid = { ...initialCreateForm(), email: 'a@b.co', full_name: 'هدى' };

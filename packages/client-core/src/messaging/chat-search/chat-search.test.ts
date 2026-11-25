@@ -8,7 +8,7 @@ import {
   parseChatSearchPage,
   searchCounter,
   searchHits,
-} from '../../index.js';
+} from '../..';
 
 const hit = (n: number) => ({
   id: `b0000000-0000-4000-8000-00000000000${n}`,

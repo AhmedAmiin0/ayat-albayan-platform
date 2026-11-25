@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { glass, palette, type ThemeName } from '../theme.js';
+import { glass, palette, type ThemeName } from '../theme';
 
 // The glass tab bar keeps the brand colours: its fill is `raised` made
 // translucent, the sheen is white, and the tab labels on it stay readable (docs/29 §7).

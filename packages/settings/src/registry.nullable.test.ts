@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SETTING_DEFAULTS, SETTING_KEYS, SETTINGS_REGISTRY } from './registry.js';
+import { SETTING_DEFAULTS, SETTING_KEYS, SETTINGS_REGISTRY } from './registry';
 
 // SettingsService.write deletes the row when a PATCH sends null, so the value read back is the
 // default: a nullable entry must therefore default to null (OFF / unset), or null would not stick.

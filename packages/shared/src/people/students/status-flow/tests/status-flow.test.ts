@@ -9,7 +9,7 @@ import {
   registrationStatus,
   revertMove,
   trialMove,
-} from '../status-flow.js';
+} from '../status-flow';
 
 // New → trial → pending_subscription → active → pending_renewal → expired.
 

@@ -1,6 +1,6 @@
 import type { MessageView, ThreadDetail } from '@ab/shared';
-import type { ThreadPages } from '../inbox/index.js';
-import { laterRow } from './later-row.js';
+import type { ThreadPages } from '../inbox';
+import { laterRow } from './later-row';
 
 // The cache edits an open chat makes (web and mobile): an optimistic send's row, the API's row in
 // its place, a rollback, and a fresh newest page folded in. pages[0] is the newest page.

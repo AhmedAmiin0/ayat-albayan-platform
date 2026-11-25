@@ -1,6 +1,6 @@
 import { channelActions, type ChannelActions, type ChannelMessageView } from '@ab/shared';
-import type { ChannelMode } from '../channel-live.js';
-import { channelMessagesPath, type ChannelAudience } from '../channels.js';
+import type { ChannelMode } from '../channel-live';
+import { channelMessagesPath, type ChannelAudience } from '../channels';
 
 // The API enforces the same rule; the menu only offers what it would accept now.
 

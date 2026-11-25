@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { avatarTone, avatarTones } from './avatar-tones.js';
-import { palette, type ThemeName } from './theme.js';
+import { avatarTone, avatarTones } from './avatar-tones';
+import { palette, type ThemeName } from './theme';
 
 const channel = (v: number) => {
   const c = v / 255;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { passwordResetSchema, userCreateSchema, userUpdateSchema, usersListQuery } from './users.schemas.js';
+import { passwordResetSchema, userCreateSchema, userUpdateSchema, usersListQuery } from './users.schemas';
 
 const base = { email: ' Ali@Example.com ', full_name: 'علي أحمد', role: 'admin' as const };
 const ID = '0b6a0f9e-4a3a-4c1c-8c2e-5d7a3b1f9e11';

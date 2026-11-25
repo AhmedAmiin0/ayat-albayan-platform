@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { messageNote, noteText, previewNote } from './marker-notes.js';
+import { messageNote, noteText, previewNote } from './marker-notes';
 
 const WORDS = {
   deleted: 'تم حذف هذه الرسالة',

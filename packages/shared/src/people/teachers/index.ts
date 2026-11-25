@@ -1,1 +1,1 @@
-export type * from './teacher-views.js';
+export type * from './teacher-views';

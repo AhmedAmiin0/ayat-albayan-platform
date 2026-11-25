@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CLOCK_PREFS, parseClockPref, resolveHourCycle, uses24FromHourCycle } from './clock-pref.js';
+import { CLOCK_PREFS, parseClockPref, resolveHourCycle, uses24FromHourCycle } from './clock-pref';
 
 describe('resolveHourCycle', () => {
   it.each([

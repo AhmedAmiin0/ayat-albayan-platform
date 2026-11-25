@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { SubscriptionStatus } from '@ab/catalog';
-import { subscriptionBadge, type BadgeStudent, type SubscriptionBadge } from '../thread-people.js';
+import { subscriptionBadge, type BadgeStudent, type SubscriptionBadge } from '../thread-people';
 
 const kid = (status: SubscriptionStatus, lessons_remaining: number): BadgeStudent => ({
   subscription: { status, lessons_remaining },

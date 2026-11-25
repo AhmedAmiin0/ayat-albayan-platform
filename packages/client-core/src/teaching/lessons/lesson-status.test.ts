@@ -4,7 +4,7 @@ import {
   lessonStatusLabel,
   lessonStatusLook,
   UPCOMING_LESSON_STYLE,
-} from './lesson-status.js';
+} from './lesson-status';
 
 const words = {
   labels: {

@@ -1,8 +1,8 @@
 import type { ShortLinkCreate } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiClient } from '../../core/http/index.js';
-import { shortLinkSends } from './short-links-sends.js';
-import { detail } from './short-links.test-util.js';
+import type { ApiClient } from '../../core/http';
+import { shortLinkSends } from './short-links-sends';
+import { detail } from './short-links.test-util';
 
 const sentDetail = { ...detail, send: { queued: 1, failed: 1 } };
 

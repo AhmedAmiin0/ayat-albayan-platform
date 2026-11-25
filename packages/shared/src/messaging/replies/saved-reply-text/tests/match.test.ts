@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { highlightParts } from '../saved-reply-text.js';
+import { highlightParts } from '../saved-reply-text';
 
 const bold = (text: string, query: string) =>
   highlightParts(text, query)

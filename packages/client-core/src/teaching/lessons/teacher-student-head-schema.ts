@@ -1,7 +1,7 @@
 import type { TeacherStudentHead } from '@ab/shared';
 import { STUDENT_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
-import { attendanceRowSchema } from './attendance-table-schema.js';
+import { attendanceRowSchema } from './attendance-table-schema';
 
 // GET /teachers/me/students/:id (docs/47 PR 1): the student file's head, parsed at the boundary
 // (rule 12) on web and mobile. The course carries dates and counts only, never money.

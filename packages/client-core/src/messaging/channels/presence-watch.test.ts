@@ -1,8 +1,8 @@
 import { PRESENCE_WATCH_MAX } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { PresenceWatch } from './presence-live.js';
-import { presenceWatchKey, watchPresence } from './presence-watch.js';
-import { fakeRealtime } from './presence.fakes.test-util.js';
+import type { PresenceWatch } from './presence-live';
+import { presenceWatchKey, watchPresence } from './presence-watch';
+import { fakeRealtime } from './presence.fakes.test-util';
 
 const A = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
 const B = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';

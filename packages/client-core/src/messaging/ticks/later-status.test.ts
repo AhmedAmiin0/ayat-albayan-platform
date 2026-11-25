@@ -1,7 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import { MESSAGE_STATUSES, type MessageStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
-import { laterStatus, laterTick, laterTicks, ranksAbove } from './later-status.js';
+import { laterStatus, laterTick, laterTicks, ranksAbove } from './later-status';
 
 const msg = (id: string, status: MessageStatus, over: Partial<MessageView> = {}) =>
   ({ id, status, body: id, sent_at: null, delivered_at: null, read_at: null, ...over }) as

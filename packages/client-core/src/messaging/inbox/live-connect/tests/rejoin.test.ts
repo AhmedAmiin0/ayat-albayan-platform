@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { connectInboxLive, type LiveChannel, type LiveClient } from '../live-connect.js';
-import { createInboxLive } from '../../live-store/index.js';
+import { connectInboxLive, type LiveChannel, type LiveClient } from '../live-connect';
+import { createInboxLive } from '../../live-store';
 
 // docs/44 K2: a dropped channel rejoins with backoff, at once on resume / online, then resyncs.
 

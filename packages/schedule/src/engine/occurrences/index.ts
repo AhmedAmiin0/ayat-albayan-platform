@@ -3,4 +3,4 @@ export {
   type OccurrenceTiming,
   ruleOccurrences,
   type UtcWindow,
-} from './occurrences.js';
+} from './occurrences';

@@ -1,6 +1,6 @@
 import type { SlotView } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
-import { nearestFree, pickState } from './pick-check.js';
+import { nearestFree, pickState } from './pick-check';
 
 const slot = (starts_at: string, busy = false): SlotView => ({
   starts_at,

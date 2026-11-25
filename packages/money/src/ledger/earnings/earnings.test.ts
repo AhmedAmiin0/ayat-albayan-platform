@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { allocatePayment, balanceOf, earningStatus, outstanding } from './earnings.js';
+import { allocatePayment, balanceOf, earningStatus, outstanding } from './earnings';
 
 /** `[amount, paid?]` of one session on 2026-09-`day`. */
 const e = (id: string, day: number, [amount = 0, paid = 0]: number[]) => ({

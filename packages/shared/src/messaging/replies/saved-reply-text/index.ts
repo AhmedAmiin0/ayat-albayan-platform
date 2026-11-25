@@ -4,4 +4,4 @@ export {
   SAVED_REPLY_PLACEHOLDERS,
   type SavedReplyPlaceholder,
   type SavedReplyValues,
-} from './saved-reply-text.js';
+} from './saved-reply-text';

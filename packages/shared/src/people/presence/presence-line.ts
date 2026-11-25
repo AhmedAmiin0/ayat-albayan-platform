@@ -1,4 +1,4 @@
-import { presenceWhen, type PresenceWhenInput, type PresenceWords } from './presence-when.js';
+import { presenceWhen, type PresenceWhenInput, type PresenceWords } from './presence-when';
 
 /** ar.json / en.json `presence`: the header words around presenceWhen. */
 export interface PresenceText extends PresenceWords {

@@ -1,4 +1,4 @@
-import type { ChannelMessageView } from '../channel/channel-views.js';
+import type { ChannelMessageView } from '../channel/channel-views';
 
 // Edit and delete in the in-app channel.
 // The sender edits their own text within 15 minutes and deletes their own message for everyone

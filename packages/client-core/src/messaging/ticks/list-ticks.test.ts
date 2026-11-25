@@ -1,7 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import type { MessageStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
-import { chatStatus, overlayPage, overlayPages, overlayTicks, type TickRow } from './list-ticks.js';
+import { chatStatus, overlayPage, overlayPages, overlayTicks, type TickRow } from './list-ticks';
 
 const row = (phone: string, id: string, last_status: MessageStatus): TickRow => ({
   phone_e164: phone,

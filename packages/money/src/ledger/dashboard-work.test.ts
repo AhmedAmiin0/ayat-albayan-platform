@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { WORK_TABS, type DashboardWork, type WorkTab } from './dashboard-work.js';
+import { WORK_TABS, type DashboardWork, type WorkTab } from './dashboard-work';
 
 describe('dashboard work contract', () => {
   it('lists the work tabs in screen order', () => {

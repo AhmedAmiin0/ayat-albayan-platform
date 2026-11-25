@@ -1,9 +1,9 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { formatPhone } from '@ab/core';
 import { describe, expect, it, vi } from 'vitest';
-import { ownProfileQuery } from './own-profile.js';
-import { profileFacts } from './profile-facts.js';
-import { ownStudent, whoLine } from './who-line.js';
+import { ownProfileQuery } from './own-profile';
+import { profileFacts } from './profile-facts';
+import { ownStudent, whoLine } from './who-line';
 
 const P = ar.portal.app.profile;
 const A = ar.portal.app.account;

@@ -1,24 +1,24 @@
-import { camelKey, type CamelKey } from './camel.js';
-import type { SettingDef, SettingsOf } from './defs.js';
-import { ACADEMY_SETTINGS } from './domains/academy.js';
-import { ACTIVITY_SETTINGS } from './domains/activity.js';
-import { CLASSROOM_SETTINGS } from './domains/teaching/classroom.js';
-import { FAMILY_APP_SETTINGS } from './domains/family-app.js';
-import { FAMILY_LOGIN_SETTINGS } from './domains/family-login.js';
-import { FEEDBACK_SETTINGS } from './domains/feedback.js';
-import { FINANCE_SETTINGS } from './domains/finance/finance.js';
-import { FOLLOW_UP_SETTINGS } from './domains/follow-ups.js';
-import { MESSAGING_SETTINGS } from './domains/messaging.js';
-import { NOTIFICATION_SETTINGS } from './domains/notifications.js';
-import { PAYOUT_SETTINGS } from './domains/finance/payouts.js';
-import { PRESENCE_SETTINGS } from './domains/presence.js';
-import { RECORDING_SETTINGS } from './domains/teaching/recordings.js';
-import { REPORT_SETTINGS } from './domains/teaching/reports.js';
-import { SALES_SETTINGS } from './domains/sales.js';
-import { SCHEDULING_SETTINGS } from './domains/teaching/scheduling.js';
-import { SUBSCRIPTION_SETTINGS } from './domains/finance/subscriptions.js';
-import { TEACHER_PAGE_SETTINGS } from './domains/teaching/teacher-pages.js';
-import { UPLOAD_SETTINGS } from './domains/uploads.js';
+import { camelKey, type CamelKey } from './camel';
+import type { SettingDef, SettingsOf } from './defs';
+import { ACADEMY_SETTINGS } from './domains/academy';
+import { ACTIVITY_SETTINGS } from './domains/activity';
+import { CLASSROOM_SETTINGS } from './domains/teaching/classroom';
+import { FAMILY_APP_SETTINGS } from './domains/family-app';
+import { FAMILY_LOGIN_SETTINGS } from './domains/family-login';
+import { FEEDBACK_SETTINGS } from './domains/feedback';
+import { FINANCE_SETTINGS } from './domains/finance/finance';
+import { FOLLOW_UP_SETTINGS } from './domains/follow-ups';
+import { MESSAGING_SETTINGS } from './domains/messaging';
+import { NOTIFICATION_SETTINGS } from './domains/notifications';
+import { PAYOUT_SETTINGS } from './domains/finance/payouts';
+import { PRESENCE_SETTINGS } from './domains/presence';
+import { RECORDING_SETTINGS } from './domains/teaching/recordings';
+import { REPORT_SETTINGS } from './domains/teaching/reports';
+import { SALES_SETTINGS } from './domains/sales';
+import { SCHEDULING_SETTINGS } from './domains/teaching/scheduling';
+import { SUBSCRIPTION_SETTINGS } from './domains/finance/subscriptions';
+import { TEACHER_PAGE_SETTINGS } from './domains/teaching/teacher-pages';
+import { UPLOAD_SETTINGS } from './domains/uploads';
 
 /**
  * Every academy setting (public.settings rows), one domain file per owner (the order here is not

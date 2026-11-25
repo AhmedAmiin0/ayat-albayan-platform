@@ -4,7 +4,7 @@ import {
   usedBeforeEditOffered,
   usedBeforeEditProblem,
   usedBeforeEditSchema,
-} from './used-before-edit.js';
+} from './used-before-edit';
 
 const base = {
   next: 3, lessonsTotal: 8, platformUsed: 0, cancelled: false, courseBooked: false, pastStart: true,

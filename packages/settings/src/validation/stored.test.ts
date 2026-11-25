@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from '../registry.js';
-import { settingZod, storedSettingZod } from './schema/index.js';
-import { isValidSetting, readSettings } from './validate.js';
+import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from '../registry';
+import { settingZod, storedSettingZod } from './schema';
+import { isValidSetting, readSettings } from './validate';
 
 // docs/36 z3: the read side is the PATCH schema (settingZod) minus its trim. A stored string that
 // is not already trimmed reads as the default, exactly like the old hand-written CHECKS table.

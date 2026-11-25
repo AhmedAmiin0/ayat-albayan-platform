@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dayInZone, dayWallToUtc, minutesOfHhmm, offsetMs, weekdayOfDay } from './index.js';
+import { dayInZone, dayWallToUtc, minutesOfHhmm, offsetMs, weekdayOfDay } from '.';
 
 const H = 3_600_000;
 const at = (iso: string) => Date.parse(iso);

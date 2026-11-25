@@ -8,9 +8,9 @@ import {
   type AcademySettings,
   type SettingField,
   type SettingsUpdate,
-} from '../../registry.js';
-import { shapeZod } from '../shape.js';
-import { byType, type SettingDef, type SettingTypeTable } from '../../defs.js';
+} from '../../registry';
+import { shapeZod } from '../shape';
+import { byType, type SettingDef, type SettingTypeTable } from '../../defs';
 
 const orNull = (nullable: boolean | undefined, schema: z.ZodType): z.ZodType =>
   nullable ? schema.nullable() : schema;

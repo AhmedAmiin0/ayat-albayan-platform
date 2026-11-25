@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { managesTemplates } from './restricted-templates.js';
+import { managesTemplates } from './restricted-templates';
 
 // The registry's admin routes are refused to an allow-list-only role, whatever it holds.
 

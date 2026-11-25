@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { studentCodeOnTrack } from './student-code.js';
+import { studentCodeOnTrack } from './student-code';
 
 test('a whole code, or one on its way, is on track', () => {
   for (const typed of ['AB-1234', 'ab-0183', 'AB1234', 'AB-١٢٣٤', 'ab 1234', 'A', 'AB', 'AB-12']) {

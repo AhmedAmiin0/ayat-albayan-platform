@@ -6,7 +6,7 @@ import {
   mayStopCam,
   muteAllTargets,
   type HostPerson,
-} from './room-host.js';
+} from './room-host';
 
 const person = (over: Partial<HostPerson> = {}): HostPerson => ({
   identity: 'guest-0123456789ab',

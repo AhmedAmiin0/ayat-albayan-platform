@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { replyLine } from './reply-line.js';
+import { replyLine } from './reply-line';
 
 // docs/12 §13.3 rule 2: a session text prefers the chat line whenever Meta allows it.
 const now = new Date('2026-10-11T12:00:00Z');

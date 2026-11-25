@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { clipText, sliceCodePoints } from './text-clip.js';
+import { clipText, sliceCodePoints } from './text-clip';
 
 // A push or bell row quotes the start of a message: cut by code points, never inside an emoji's
 // surrogate pair (a lone surrogate shows as «�» and breaks some push providers' JSON).

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { shiftByday, type SeriesShift } from './series-days.js';
+import { shiftByday, type SeriesShift } from './series-days';
 
 describe('shiftByday (R-SCH-07): a moved series keeps its weekly count', () => {
   it.each<[string, SeriesShift, number[]]>([

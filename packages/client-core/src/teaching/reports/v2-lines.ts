@@ -14,7 +14,7 @@ import {
 } from '@ab/shared';
 import type { Attendance, Grade, Program } from '@ab/catalog';
 import type { Locale } from '@ab/core';
-import { rangeLabel, type RangeWords } from './v2-text.js';
+import { rangeLabel, type RangeWords } from './v2-text';
 
 /** What the lines read: a ReportView, or the live page's report (ReportPageReport). */
 type LinesReport = Pick<

@@ -1,5 +1,5 @@
 import type { MessageStatus } from '@ab/catalog';
-import { localDate } from '../../lesson/timing.day-before.js';
+import { localDate } from '../../lesson/timing.day-before';
 
 // The reopen template goes only when staff send in a closed chat, never on open; the text is held.
 

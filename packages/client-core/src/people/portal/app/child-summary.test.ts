@@ -1,6 +1,6 @@
 import type { PortalLessons, PortalReport } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { childSummary, reportAt, reportMonths } from './child-summary.js';
+import { childSummary, reportAt, reportMonths } from './child-summary';
 
 const report = (id: string, startsAt: string | null): PortalReport => ({
   id, lesson_id: `l-${id}`, lesson_starts_at: startsAt, sent_at: '2026-11-02T10:00:00.000Z',

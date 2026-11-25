@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { phoneE164 } from '@ab/core';
-import { isFamilyEmail, PASSWORD_MAX } from '../users/index.js';
+import { isFamilyEmail, PASSWORD_MAX } from '../users';
 
 // R-ACC-01..05: own-login fields only; role, role_id and disabled_* are never in a body (rule 9).
 

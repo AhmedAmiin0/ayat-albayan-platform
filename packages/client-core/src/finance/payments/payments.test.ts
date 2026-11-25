@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { pendingRequestId, uploadOnce } from '../../index.js';
+import { pendingRequestId, uploadOnce } from '../..';
 
 describe('uploadOnce', () => {
   it('uploads a file once: the retry re-sends its path', async () => {

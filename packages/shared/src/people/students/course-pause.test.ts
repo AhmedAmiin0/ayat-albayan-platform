@@ -7,7 +7,7 @@ import {
   pausedDays,
   resumeDayOf,
   shiftedOrNull,
-} from './course-pause.js';
+} from './course-pause';
 
 describe('course pause day arithmetic (mirrors migration 956)', () => {
   it('moves a date across months, years and a leap day; null stays null (no renewal date, an open-ended rule)', () => {

@@ -1,7 +1,7 @@
 import type { CourseCardPackage } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
 import { formatAmount } from '@ab/money';
-import { count, fill, type CountWords } from './course-card-text.js';
+import { count, fill, type CountWords } from './course-card-text';
 
 // Pure; words and formats are injected by each app.
 

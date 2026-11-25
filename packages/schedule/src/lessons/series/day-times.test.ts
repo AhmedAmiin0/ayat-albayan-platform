@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dayTimesFromPicks, timeGroups, togglePick, wallParts } from './day-times.js';
+import { dayTimesFromPicks, timeGroups, togglePick, wallParts } from './day-times';
 
 const RIYADH = 'Asia/Riyadh';
 // Riyadh is UTC+3 all year: 2026-10-18 is a Sunday.

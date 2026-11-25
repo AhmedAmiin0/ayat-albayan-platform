@@ -3,8 +3,8 @@
 // AcademySettings and the admin page's fields are all generated from these entries. Where a row
 // shows on /admin/settings is not part of its entry: layout.ts holds the page order.
 
-import type { SettingConfirm, SettingGroup } from './groups.js';
-import type { SettingOwner } from './ownership.js';
+import type { SettingConfirm, SettingGroup } from './groups';
+import type { SettingOwner } from './ownership';
 
 interface Base {
   /** Dotted path into ar.json / en.json (e.g. 'settings.bookingHorizonWeeks'). */

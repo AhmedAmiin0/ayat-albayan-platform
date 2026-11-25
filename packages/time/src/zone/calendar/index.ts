@@ -1,1 +1,1 @@
-export { addCalendarDays, weekdayOfDate, weekStartOfDate } from './calendar.js';
+export { addCalendarDays, weekdayOfDate, weekStartOfDate } from './calendar';

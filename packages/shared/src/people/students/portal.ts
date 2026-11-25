@@ -2,7 +2,7 @@ import { LESSON_STATUSES } from '@ab/catalog';
 import { LOCALES } from '@ab/core';
 import { lessonRoomStateSchema } from '@ab/schedule';
 import { z } from 'zod';
-import { portalLessonFamilySchema } from './family/portal-actions.js';
+import { portalLessonFamilySchema } from './family/portal-actions';
 
 // The family portal (/portal, docs/31, docs/50): what a guardian or student login reads. Whitelists
 // only: no teacher phone or email, no note or internal reason, no other family. Money only on the

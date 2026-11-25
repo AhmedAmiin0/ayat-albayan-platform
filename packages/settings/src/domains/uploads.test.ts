@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { PUBLIC_SETTING_DEFAULTS } from '../public.js';
-import { SETTING_DEFAULTS } from '../registry.js';
-import { uploadMaxBytes, UPLOAD_SETTINGS } from './uploads.js';
+import { PUBLIC_SETTING_DEFAULTS } from '../public';
+import { SETTING_DEFAULTS } from '../registry';
+import { uploadMaxBytes, UPLOAD_SETTINGS } from './uploads';
 
 describe('upload limit', () => {
   it('converts megabytes to bytes', () => {

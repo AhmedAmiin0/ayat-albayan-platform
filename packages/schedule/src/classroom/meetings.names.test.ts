@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { firstName, roomNameOfStudent } from './meetings.js';
+import { firstName, roomNameOfStudent } from './meetings';
 
 describe('roomNameOfStudent', () => {
   it('the first name of the student', () => {

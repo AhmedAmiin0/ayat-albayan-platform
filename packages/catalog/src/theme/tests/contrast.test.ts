@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { palette, type Palette, type ThemeName } from '../theme.js';
+import { palette, type Palette, type ThemeName } from '../theme';
 
 // Every text/background pair the apps use, on the brand palette, in both themes (WCAG 2.x, sRGB).
 // docs/07 §3 prints these numbers; regenerate that table from here, never by hand.

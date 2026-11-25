@@ -1,5 +1,5 @@
 import type { PortalRecording } from '@ab/shared';
-import { monthsOf } from '../../people/portal/index.js';
+import { monthsOf } from '../../people/portal';
 
 /** Grouped by month on the family's clock, newest first as received. */
 export const recordingMonths = (

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiError } from '../../core/http/index.js';
+import { ApiError } from '../../core/http';
 
 // The words for a refused template create or edit. Each app injects its
 // `t.templates.error` (read on every call: the admins' overrides land after import). The app's own

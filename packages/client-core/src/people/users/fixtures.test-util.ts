@@ -1,5 +1,5 @@
 import type { UserDetail } from '@ab/shared';
-import type { UserCheckText } from './validation.js';
+import type { UserCheckText } from './validation';
 
 /** Plain-word messages: the tests read which check fired, not the app's language. */
 export const TEXT: UserCheckText = {

@@ -2,11 +2,11 @@ import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import en from '@ab/shared/i18n/en.json' with { type: 'json' };
 import { ACTIVITY_ROLES, SHORT_LINK_AUDIENCES, SHORT_LINK_SEND_STATUSES } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { GATE_SCREENS } from './gate-screen.js';
-import { GATE_CODE_ERRORS, GATE_PHONE_ERRORS } from './gate-steps.js';
-import { expiryParts, expiryText, type ExpiryWords } from './link-expiry.js';
-import { LINK_ERRORS } from './link-form-errors.js';
-import { usageText, type UsageWords } from './link-format.js';
+import { GATE_SCREENS } from './gate-screen';
+import { GATE_CODE_ERRORS, GATE_PHONE_ERRORS } from './gate-steps';
+import { expiryParts, expiryText, type ExpiryWords } from './link-expiry';
+import { LINK_ERRORS } from './link-form-errors';
+import { usageText, type UsageWords } from './link-format';
 
 // Every key the short-link logic hands the apps has words in ar.json and en.json.
 

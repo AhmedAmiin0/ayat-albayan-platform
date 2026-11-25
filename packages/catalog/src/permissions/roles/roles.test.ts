@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { HOME_BY_ROLE, isUserRole, USER_ROLES } from './roles.js';
+import { HOME_BY_ROLE, isUserRole, USER_ROLES } from './roles';
 
 describe('roles', () => {
   it('accepts every known role', () => {

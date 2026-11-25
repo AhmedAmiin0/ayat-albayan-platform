@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { RESUME_KEY, resumeStore } from './index.js';
+import { RESUME_KEY, resumeStore } from '.';
 
 const memory = (saved: string | null) => ({
   getItem: vi.fn(() => Promise.resolve(saved)),

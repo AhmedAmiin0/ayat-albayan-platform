@@ -1,5 +1,5 @@
 import { reportBlock, type AttendanceTableRow } from '@ab/shared';
-import { editableNow } from './send-lines.js';
+import { editableNow } from './send-lines';
 
 /** What a log row offers the teacher (docs/47): edit, view, write, or nothing. */
 export type LogReportAction = 'edit' | 'view' | 'write';

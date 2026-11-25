@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { callPeer, gathered, type PeerLike, type StreamLike } from './call-peer.js';
+import { callPeer, gathered, type PeerLike, type StreamLike } from './call-peer';
 
 function fakeMic() {
   const track = { enabled: true, stop: vi.fn() };

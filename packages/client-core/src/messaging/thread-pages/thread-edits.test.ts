@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { provisionalMessage, touchedThread } from './provisional.js';
+import { provisionalMessage, touchedThread } from './provisional';
 import {
   appendMessage,
   freshRow,
@@ -7,8 +7,8 @@ import {
   mergeNewest,
   removeMessage,
   replaceMessage,
-} from './thread-edits.js';
-import { cache, ids, msg, page, PHONE } from './thread.fakes.test-util.js';
+} from './thread-edits';
+import { cache, ids, msg, page, PHONE } from './thread.fakes.test-util';
 
 const temp = msg(9, { id: 'tmp', status: 'queued' });
 const server = msg(9, { id: 's9', status: 'queued' });

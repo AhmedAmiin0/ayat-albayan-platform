@@ -1,6 +1,6 @@
 import type { ThreadDetail } from '@ab/shared';
-import type { ThreadPages } from '../inbox/index.js';
-import { leavesGap, mergeNewest } from './thread-edits.js';
+import type { ThreadPages } from '../inbox';
+import { leavesGap, mergeNewest } from './thread-edits';
 
 /** An open chat's cache as the app's query client reaches it. */
 export interface NewestCache<T extends ThreadPages> {

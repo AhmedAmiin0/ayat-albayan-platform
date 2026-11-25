@@ -1,1 +1,1 @@
-export { type CorrectionMark } from './correction.js';
+export { type CorrectionMark } from './correction';

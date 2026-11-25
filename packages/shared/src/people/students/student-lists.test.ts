@@ -10,7 +10,7 @@ import {
   statusesOfKind,
   statusParamOfKind,
   STUDENT_LIST_KINDS,
-} from './student-lists.js';
+} from './student-lists';
 
 const list = [
   { id: 'a', status: 'active' as const },

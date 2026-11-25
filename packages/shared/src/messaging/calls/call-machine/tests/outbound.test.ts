@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { nextCall, type CallState } from '../call-machine.js';
+import { nextCall, type CallState } from '../call-machine';
 
 const out = (over: Partial<CallState> = {}): CallState => ({
   status: 'connecting', direction: 'outbound', answered_at: null, answer_sdp: null, end_reason: null, duration_seconds: null, ...over,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { canMute, canMuteAll } from '../moderation.js';
-import { muteSchema } from '../../schemas.js';
+import { canMute, canMuteAll } from '../moderation';
+import { muteSchema } from '../../schemas';
 
 describe('canMute / canMuteAll', () => {
   it('staff mute anyone of lower rank: admin > teacher > assistant > sales > guest', () => {

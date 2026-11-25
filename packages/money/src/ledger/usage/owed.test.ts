@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dueOf, owedFor, owesMore, partPaidOf } from './owed.js';
+import { dueOf, owedFor, owesMore, partPaidOf } from './owed';
 
 // Owner 2026-11-06: a stopped course owes what the stop stored, every other package its price.
 const live = { price: 400, cancel_kind: null };

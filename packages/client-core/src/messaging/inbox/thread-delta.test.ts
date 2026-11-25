@@ -1,6 +1,6 @@
 import type { MessageView, ThreadDelta, ThreadDetail, ThreadView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { deltaSearch, mergeDelta, needsFullRead, type ThreadPages } from './thread-delta.js';
+import { deltaSearch, mergeDelta, needsFullRead, type ThreadPages } from './thread-delta';
 
 const NOW = Date.parse('2026-10-27T10:00:00Z');
 const id = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;

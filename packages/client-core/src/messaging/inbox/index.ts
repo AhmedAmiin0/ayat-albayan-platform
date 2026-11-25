@@ -1,4 +1,4 @@
-export { deltaSearch, mergeDelta, needsFullRead, type ThreadPages } from './thread-delta.js';
+export { deltaSearch, mergeDelta, needsFullRead, type ThreadPages } from './thread-delta';
 export {
   catchUpPlan,
   changedPhone,
@@ -18,8 +18,8 @@ export {
   UNREAD_COUNT_KEY,
   UNREAD_COUNT_PATH,
   unreadTotal,
-} from './inbox-live.js';
-export { connectInboxLive, type LiveChannel, type LiveClient, type LiveConnection } from './live-connect/index.js';
+} from './inbox-live';
+export { connectInboxLive, type LiveChannel, type LiveClient, type LiveConnection } from './live-connect';
 export {
   applyLiveRows,
   LIVE_ROWS_MAX,
@@ -28,15 +28,15 @@ export {
   type LiveRow,
   patchChat,
   patchList,
-} from './live-rows.js';
-export { createLiveSession, type LiveSession } from './live-session.js';
+} from './live-rows';
+export { createLiveSession, type LiveSession } from './live-session';
 export {
   createInboxLive,
   type InboxLive,
   type InboxLiveOptions,
   type LiveTargets,
-} from './live-store/index.js';
-export { createThrottle, type Throttle } from './throttle.js';
+} from './live-store';
+export { createThrottle, type Throttle } from './throttle';
 export {
   patchMessage,
   type PillItem,
@@ -48,15 +48,15 @@ export {
   reactorLines,
   tappedReaction,
   withOurs,
-} from './reactions.js';
+} from './reactions';
 export {
   type ReactInput,
   reactionMutation,
   type ReactionPorts,
   withReactions,
-} from './reaction-mutation.js';
+} from './reaction-mutation';
 export {
   templateButtonHint,
   templateButtonLabel,
   type TemplateButtonWords,
-} from './template-button.js';
+} from './template-button';

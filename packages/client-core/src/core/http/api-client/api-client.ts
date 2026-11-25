@@ -1,8 +1,8 @@
 import { UPLOAD_CAPABILITY_HEADER, UPLOAD_SLOT_V2 } from '@ab/shared';
-import { ApiError, readJson } from '../api-error.js';
-import { CLIENT_HEADER } from '../client-header.js';
-import { type StallStage, withDeadline } from '../deadline.js';
-import { sendTimeoutFor } from '../timeouts.js';
+import { ApiError, readJson } from '../api-error';
+import { CLIENT_HEADER } from '../client-header';
+import { type StallStage, withDeadline } from '../deadline';
+import { sendTimeoutFor } from '../timeouts';
 
 export type SendMethod = 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 

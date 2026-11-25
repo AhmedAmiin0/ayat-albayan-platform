@@ -1,4 +1,4 @@
-import { sessionWindowOpen } from '../wa.js';
+import { sessionWindowOpen } from '../wa';
 
 // replyNumber() (docs/23 §3 phase 5): replyLine() per number. Module mode only; legacy keeps replyLine().
 

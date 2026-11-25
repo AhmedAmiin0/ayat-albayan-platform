@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { customBase, priceIn, starterRateBase } from '../price.js';
+import { customBase, priceIn, starterRateBase } from '../price';
 
 // docs/08 §3: n lessons at starter's rate (base/8) below 28, bulk's (base/28) from 28 up.
 // [n, SA price 30/45/60, KW price 30/45/60] — the site's lE output.

@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { hasTwoDecimals, instant, localDate } from '@ab/core';
-import { currencyIso, moneyAmount, monthParam, payoutPaySchema } from '../ledger/index.js';
-import { voidReasonSchema } from '../ledger/corrections-schemas.js';
-import { ASSISTANT_COMMISSION_TYPES } from './commission.js';
+import { currencyIso, moneyAmount, monthParam, payoutPaySchema } from '../ledger';
+import { voidReasonSchema } from '../ledger/corrections-schemas';
+import { ASSISTANT_COMMISSION_TYPES } from './commission';
 import { PAYOUT_STATUSES } from '@ab/catalog';
 
 // Assistant (base role sales) pay commands, camelCase like every command. The admin sets the terms;

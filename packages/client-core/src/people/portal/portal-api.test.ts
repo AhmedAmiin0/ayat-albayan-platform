@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiClient } from '../../core/http/index.js';
-import { PORTAL_KEY, PORTAL_REFRESH_MS, portalQueries } from './portal-api.js';
-import { portalSends } from './portal-sends.js';
+import type { ApiClient } from '../../core/http';
+import { PORTAL_KEY, PORTAL_REFRESH_MS, portalQueries } from './portal-api';
+import { portalSends } from './portal-sends';
 
 const answers: Record<string, unknown> = {
   '/portal/me': { kind: 'guardian', students: [], renew_url: null },

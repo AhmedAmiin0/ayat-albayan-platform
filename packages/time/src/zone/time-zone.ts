@@ -1,5 +1,5 @@
 import { addHours } from 'date-fns';
-import { offsetMinutesIn } from './zoned.js';
+import { offsetMinutesIn } from './zoned';
 
 // Time-zone choices and DST look-ahead (rule 6: every person has a tz, picked, never typed).
 // City labels live in ar.json `tz.<id>`; this module holds no Arabic.

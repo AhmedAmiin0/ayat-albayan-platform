@@ -1,8 +1,8 @@
-import type { SettingDef } from '../defs.js';
-import { GOOGLE_SEED_DEFS } from '../google-defs.js';
-import { MODULE_GROUPS, type SettingConfirm, type SettingGroup } from '../groups.js';
-import type { SettingOwner } from '../ownership.js';
-import { SETTINGS_REGISTRY } from '../registry.js';
+import type { SettingDef } from '../defs';
+import { GOOGLE_SEED_DEFS } from '../google-defs';
+import { MODULE_GROUPS, type SettingConfirm, type SettingGroup } from '../groups';
+import type { SettingOwner } from '../ownership';
+import { SETTINGS_REGISTRY } from '../registry';
 
 /**
  * Bump when any SEED_ENTRIES metadata changes (module, group, scope, type, default, public, hint,

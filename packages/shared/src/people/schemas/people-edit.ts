@@ -1,6 +1,6 @@
 import { phoneE164 } from '@ab/core';
 import { z } from 'zod';
-import { guardianCreateSchema, studentCreateSchema } from './people.js';
+import { guardianCreateSchema, studentCreateSchema } from './people';
 
 // The assistant's edit: admin PATCH minus admin-only fields; strict, so those answer 400.
 

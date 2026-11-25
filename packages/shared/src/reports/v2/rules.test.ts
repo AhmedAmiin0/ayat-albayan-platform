@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { reportContentSchema, type ReportContentInput } from './content.js';
-import { juzProgress } from './progress.js';
-import { keptContent, legacyGrades, memoryOf, suggestOverall, suggestRange } from './rules.js';
-import { suggestHomework, suggestNextPlan } from './suggest.js';
+import { reportContentSchema, type ReportContentInput } from './content';
+import { juzProgress } from './progress';
+import { keptContent, legacyGrades, memoryOf, suggestOverall, suggestRange } from './rules';
+import { suggestHomework, suggestNextPlan } from './suggest';
 
 const content = (c: ReportContentInput) => reportContentSchema.parse(c);
 type Kind = 'recited' | 'new' | 'revision';

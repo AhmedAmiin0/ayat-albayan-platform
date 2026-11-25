@@ -1,5 +1,5 @@
 import type { WaLine, WaProvider } from '@ab/catalog';
-import type { TemplateView } from './template-views.js';
+import type { TemplateView } from './template-views';
 
 // The template registry per number: which number each template goes from and its Meta sync per
 // number. Ids only, never a token.

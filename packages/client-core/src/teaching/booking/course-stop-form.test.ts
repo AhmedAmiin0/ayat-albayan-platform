@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { stopFormCheck } from './course-stop-form.js';
-import type { StopMoney } from './course-stop-money.js';
+import { stopFormCheck } from './course-stop-form';
+import type { StopMoney } from './course-stop-money';
 
 const money = (over: Partial<StopMoney> = {}): StopMoney => ({
   ask: { owe: { choice: 'custom' } },

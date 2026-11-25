@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseDsn } from './dsn.js';
+import { parseDsn } from './dsn';
 
 describe('parseDsn (Sentry or GlitchTip DSN → envelope endpoint)', () => {
   it('https://key@host/42 → the envelope URL and the public key', () => {

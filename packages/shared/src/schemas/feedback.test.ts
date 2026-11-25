@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { feedbackEligible, feedbackQuerySchema, feedbackRequestSchema, feedbackSubmitSchema } from './feedback.js';
+import { feedbackEligible, feedbackQuerySchema, feedbackRequestSchema, feedbackSubmitSchema } from './feedback';
 
 const ok = { rating: 5, recommend: 'yes' };
 

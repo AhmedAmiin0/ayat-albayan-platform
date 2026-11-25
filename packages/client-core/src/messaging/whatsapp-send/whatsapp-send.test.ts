@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { sendViaWhatsApp, whatsappDigits, whatsappSendUrl } from './whatsapp-send.js';
+import { sendViaWhatsApp, whatsappDigits, whatsappSendUrl } from './whatsapp-send';
 
 const PHONE = '+966500000001';
 

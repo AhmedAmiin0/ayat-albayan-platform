@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canHideMessages, canUnhideMessages } from './hidden.js';
+import { canHideMessages, canUnhideMessages } from './hidden';
 
 describe('«حذف من المنصة» roles', () => {
   it('admin and sales with inbox.send hide; a teacher or a role without inbox.send never', () => {

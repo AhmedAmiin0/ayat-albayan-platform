@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LessonStatus } from '@ab/catalog';
-import { lessonPlan, teacherCanPropose, wayIn, type PlanInput } from './teacher-lesson-plan.js';
+import { lessonPlan, teacherCanPropose, wayIn, type PlanInput } from './teacher-lesson-plan';
 
 const base: PlanInput = {
   join: 'off',

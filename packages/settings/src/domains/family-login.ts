@@ -1,4 +1,4 @@
-import type { SettingDef } from '../defs.js';
+import type { SettingDef } from '../defs';
 
 /** Family accounts (docs/30) stay dark while family_login_enabled is off. */
 export const FAMILY_LOGIN_SETTINGS = {

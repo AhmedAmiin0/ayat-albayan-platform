@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LessonStatus } from '@ab/catalog';
-import { nextOpenLesson, pickHero } from './pick-hero.js';
+import { nextOpenLesson, pickHero } from './pick-hero';
 
 const l = (id: string, [from, to]: [string, string], status: LessonStatus = 'scheduled') => ({
   id,

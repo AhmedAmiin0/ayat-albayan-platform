@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LESSON_STATUSES } from '@ab/catalog';
-import { isChargeable } from './chargeable.js';
+import { isChargeable } from './chargeable';
 
 const START = new Date('2026-10-04T14:00:00Z');
 const hoursBefore = (h: number) => new Date(START.getTime() - h * 3_600_000);

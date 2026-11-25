@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { PICKED_CHILD_KEY, pickStore, savedFor } from './pick-store.js';
+import { PICKED_CHILD_KEY, pickStore, savedFor } from './pick-store';
 
 const phone = (saved: string | null) => {
   const box = { value: saved };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { tappedButton } from './button-reply.js';
+import { tappedButton } from './button-reply';
 
 describe('tappedButton', () => {
   it('a template quick reply: its text', () => {

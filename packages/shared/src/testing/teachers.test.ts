@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { teacherFixture, teacherRowFixture, timeOffFixture } from './teachers.js';
+import { teacherFixture, teacherRowFixture, timeOffFixture } from './teachers';
 
 describe('teacher fixtures', () => {
   it('keep the fields a test names and fill the rest', () => {

@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { PUBLIC_SETTING_DEFAULTS, PUBLIC_SETTING_KEYS } from '../public.js';
-import { SETTINGS_REGISTRY } from '../registry.js';
-import { storedSettingZod } from '../validation/schema/index.js';
-import type { PublicConfig } from './public-config.js';
+import { PUBLIC_SETTING_DEFAULTS, PUBLIC_SETTING_KEYS } from '../public';
+import { SETTINGS_REGISTRY } from '../registry';
+import { storedSettingZod } from '../validation/schema';
+import type { PublicConfig } from './public-config';
 
 // The apps' parse of GET /settings/public (docs/36 Z-5): each public key by its registry schema,
 // a missing or bad value read as its default (as withPublicDefaults fills them), the public

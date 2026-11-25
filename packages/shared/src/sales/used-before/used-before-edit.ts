@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { LESSONS_USED_BEFORE_MAX } from '@ab/money';
-import { usedBeforeMax } from '../start-date.js';
+import { usedBeforeMax } from '../start-date';
 
 // Bound as on create, never above lessons left free, and only while no course is booked; pure.
 

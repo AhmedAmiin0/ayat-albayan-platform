@@ -6,4 +6,4 @@ export {
   type PlannedCommission,
   planOn,
   type SubscriptionFact,
-} from './first-paid.js';
+} from './first-paid';

@@ -1,1 +1,1 @@
-export { allDayRows, expandRow, type TimeRange, type WeeklyRow } from './free-slots.js';
+export { allDayRows, expandRow, type TimeRange, type WeeklyRow } from './free-slots';

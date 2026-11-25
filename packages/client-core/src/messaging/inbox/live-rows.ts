@@ -1,8 +1,8 @@
 import type { MessageView } from '@ab/shared';
 import { MESSAGE_DIRECTIONS, MESSAGE_STATUSES, type MessageStatus } from '@ab/catalog';
 import { z } from 'zod';
-import { laterStatus, type TickRow } from '../ticks/index.js';
-import { changedPhone } from './inbox-live.js';
+import { laterStatus, type TickRow } from '../ticks';
+import { changedPhone } from './inbox-live';
 
 // docs/44 P1-2 / K1 (migration 20261107000500): a 'thread_changed' event carries the rows its
 // statement touched when every staff reader may see them — {phone, rows:[{id, s, d, at}]}, at most

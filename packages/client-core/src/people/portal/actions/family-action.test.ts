@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError } from '../../../core/http/index.js';
-import { FAMILY_NOTICE, familyErrorOf, familyFailureText, runFamilyAction } from './family-action.js';
-import type { PortalLessonSends } from './lesson-sends.js';
+import { ApiError } from '../../../core/http';
+import { FAMILY_NOTICE, familyErrorOf, familyFailureText, runFamilyAction } from './family-action';
+import type { PortalLessonSends } from './lesson-sends';
 
 const ids = { studentId: 's1', lessonId: 'l1' };
 const sends = (): PortalLessonSends => ({

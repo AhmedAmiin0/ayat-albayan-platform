@@ -3,7 +3,7 @@ import {
   SHORT_LINK_AUDIENCES,
   SHORT_LINK_SEND_STATUSES,
   SHORT_LINK_STATUSES,
-} from './short-links.js';
+} from './short-links';
 
 // What the short-link routes answer (docs/19 «Short links»), as zod schemas the clients parse.
 

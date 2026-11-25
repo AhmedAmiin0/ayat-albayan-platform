@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   EVOLUTION_DEFAULT_EVENTS, EVOLUTION_HOOK_INTERNAL, evolutionConfigOf, evolutionConfigSchema,
   evolutionHookUrl,
-} from './evolution-config.js';
-import { evolutionSynced, evolutionSyncFailed, evolutionSyncOf } from './evolution-sync.js';
+} from './evolution-config';
+import { evolutionSynced, evolutionSyncFailed, evolutionSyncOf } from './evolution-sync';
 
 // Every Evolution option of a number, validated with zod, safe by default.
 

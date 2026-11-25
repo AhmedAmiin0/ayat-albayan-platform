@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { settingSection } from '../layout.js';
-import { SETTING_DEFAULTS, SETTING_FIELD_OF, SETTINGS_REGISTRY } from '../registry.js';
-import { NOTIFICATION_SETTINGS } from './notifications.js';
+import { settingSection } from '../layout';
+import { SETTING_DEFAULTS, SETTING_FIELD_OF, SETTINGS_REGISTRY } from '../registry';
+import { NOTIFICATION_SETTINGS } from './notifications';
 
 // R-NOT-03: the teacher's WhatsApp messages can be switched off in /admin/settings.
 describe('teacher WhatsApp switches', () => {

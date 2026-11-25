@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { makeupOffer } from './makeup-offer.js';
-import type { LessonStudentView, LessonView } from './views.js';
+import { makeupOffer } from './makeup-offer';
+import type { LessonStudentView, LessonView } from './views';
 
 const NOW = new Date('2026-10-03T10:00:00Z');
 const student = (id: string, over: Partial<LessonStudentView> = {}): LessonStudentView => ({

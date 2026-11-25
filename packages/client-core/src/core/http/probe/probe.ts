@@ -1,5 +1,5 @@
-import { readJson } from '../api-error.js';
-import type { ProbeAnswer, ProbeOptions } from './probe.types.js';
+import { readJson } from '../api-error';
+import type { ProbeAnswer, ProbeOptions } from './probe.types';
 
 /** A probe that has not settled in 8 s counts as no answer. */
 export const PROBE_TIMEOUT_MS = 8_000;

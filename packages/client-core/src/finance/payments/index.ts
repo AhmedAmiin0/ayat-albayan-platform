@@ -1,2 +1,2 @@
-export { pendingRequestId, type PendingRequestId } from './request-id.js';
-export { uploadOnce } from './upload-once.js';
+export { pendingRequestId, type PendingRequestId } from './request-id';
+export { uploadOnce } from './upload-once';

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { APP_SEND_UNCONFIRMED, isHoldFailure } from '../../../chat/thread-reopen/index.js';
-import { canRetryCode } from '../../../wa.js';
-import { appSendUnconfirmed, canSendViaWhatsApp } from '../whatsapp-send.js';
+import { APP_SEND_UNCONFIRMED, isHoldFailure } from '../../../chat/thread-reopen';
+import { canRetryCode } from '../../../wa';
+import { appSendUnconfirmed, canSendViaWhatsApp } from '../whatsapp-send';
 
 const text = {
   direction: 'outbound' as const,

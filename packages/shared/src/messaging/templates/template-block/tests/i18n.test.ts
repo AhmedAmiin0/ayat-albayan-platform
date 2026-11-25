@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../../../i18n/ar.json' with { type: 'json' };
 import en from '../../../../../i18n/en.json' with { type: 'json' };
-import { TEMPLATE_BUTTON_KINDS, TEMPLATE_HEADER_KINDS } from '../template-block.js';
+import { TEMPLATE_BUTTON_KINDS, TEMPLATE_HEADER_KINDS } from '../template-block';
 
 describe('template bubble strings (rule 10)', () => {
   it.each([

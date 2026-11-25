@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiClient } from '../../core/http/index.js';
-import { TEMPLATES_KEY, templateQueries, templateSends } from './templates-api.js';
+import type { ApiClient } from '../../core/http';
+import { TEMPLATES_KEY, templateQueries, templateSends } from './templates-api';
 
 const view = {
   key: 'k', meta_name: 'k', language: 'ar', category: 'utility', header_format: null,

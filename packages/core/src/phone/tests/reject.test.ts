@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizePhone } from '../phone.js';
+import { normalizePhone } from '../phone';
 
 // R-STU-02: validation rejects handles / short numbers.
 describe('normalizePhone — rejected (R-STU-02)', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiClient } from '../../../core/http/index.js';
-import { portalLessonSends, portalSlotsQuery } from './lesson-sends.js';
+import type { ApiClient } from '../../../core/http';
+import { portalLessonSends, portalSlotsQuery } from './lesson-sends';
 
 const RESULT = { lesson_id: 'l1', status: 'confirmed', counts: false };
 const ids = { studentId: 's 1', lessonId: 'l1' };

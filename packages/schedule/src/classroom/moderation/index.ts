@@ -1,1 +1,1 @@
-export { canEndLesson } from './moderation.js';
+export { canEndLesson } from './moderation';

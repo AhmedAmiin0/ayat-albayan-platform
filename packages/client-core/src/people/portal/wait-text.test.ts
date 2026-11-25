@@ -1,7 +1,7 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import type { PortalLesson } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { lessonWaitText } from './wait-text.js';
+import { lessonWaitText } from './wait-text';
 
 const l: PortalLesson = {
   id: 'l1', starts_at: '2026-11-15T15:30:00.000Z', ends_at: '2026-11-15T16:15:00.000Z',

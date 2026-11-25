@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chatBinding, salesChatReceiptsQuerySchema, salesPaymentCreateSchema, salesQuoteSchema } from './money.js';
+import { chatBinding, salesChatReceiptsQuerySchema, salesPaymentCreateSchema, salesQuoteSchema } from './money';
 
 // sales.renew_any (docs/16 row 38): the chat's phone rides only on a write about a child not hers.
 const ID = '11111111-1111-4111-8111-111111111111';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { waSendKind } from '../chat/chat-files/index.js';
+import { waSendKind } from '../chat/chat-files';
 import {
   canForward,
   canReply,
@@ -12,8 +12,8 @@ import {
   quoteSnippet,
   threadForwardSchema,
   UNAVAILABLE_QUOTE,
-} from './reply-forward.js';
-import { threadFileSendSchema, threadTextSchema } from '../schemas.js';
+} from './reply-forward';
+import { threadFileSendSchema, threadTextSchema } from '../schemas';
 
 const ID = '00000000-0000-4000-8000-000000000001';
 const REQ = '00000000-0000-4000-8000-000000000002';

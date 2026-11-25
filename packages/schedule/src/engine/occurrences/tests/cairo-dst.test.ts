@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ruleOccurrences, type OccurrenceTiming } from '../occurrences.js';
+import { ruleOccurrences, type OccurrenceTiming } from '../occurrences';
 
 // Same Cairo DST dates as free-slots.cairo-dst.test.ts: summer UTC+3, winter UTC+2.
 const CAIRO_SUN_16: OccurrenceTiming = {

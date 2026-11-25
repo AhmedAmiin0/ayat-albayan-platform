@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { dayTimesFromPicks } from '@ab/schedule';
-import { prefillDays } from './course-follow.js';
-import { changeOpensOn, changePicks, changePrefillFrom, dayTimesKeeping, inWeekOrder, sameDays, WEEK_ORDER } from './course-picks.js';
+import { prefillDays } from './course-follow';
+import { changeOpensOn, changePicks, changePrefillFrom, dayTimesKeeping, inWeekOrder, sameDays, WEEK_ORDER } from './course-picks';
 
 const now = '2026-10-18T06:00:00.000Z';
 const days = [

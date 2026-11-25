@@ -1,4 +1,4 @@
-import { searchCounter } from './chat-search.js';
+import { searchCounter } from './chat-search';
 
 /** What the bar knows of its search. */
 export interface SearchStatusInput {

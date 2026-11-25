@@ -1,5 +1,5 @@
 import { asciiDigits } from '@ab/core';
-import { moneyAmount } from './schemas.js';
+import { moneyAmount } from './schemas';
 
 /** Arabic-Indic and Persian digits to Western for every money input (R-PAY-01). */
 export function westernDigits(text: string): string {

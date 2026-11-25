@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizePhone } from '../phone.js';
+import { normalizePhone } from '../phone';
 
 // R-STU-02 + docs/08 §1: the Gulf pricing countries are inferred from the calling code.
 describe('normalizePhone — Gulf country inference', () => {

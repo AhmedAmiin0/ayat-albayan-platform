@@ -1,6 +1,6 @@
 import { callEntryKind, formatCallDuration, type ActiveCallView, type CallEntryKind, type CallView } from '@ab/shared';
-import { ApiError } from '../../core/http/index.js';
-import { talkedSeconds, type CallPhase } from './call-phase.js';
+import { ApiError } from '../../core/http';
+import { talkedSeconds, type CallPhase } from './call-phase';
 
 // The calls' sentences, shared by web and mobile. Each app injects its `t.calls`, read on every call
 // (the admins' translation overrides land after import).

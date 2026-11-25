@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { STUDENT_STATUSES } from '@ab/catalog';
-import { canPickTrialDate, trialLength, trialOutcome, upcomingTrial, warnsTrialDate } from './trial-dates.js';
+import { canPickTrialDate, trialLength, trialOutcome, upcomingTrial, warnsTrialDate } from './trial-dates';
 
 const NOW = new Date('2026-10-25T12:00:00Z');
 const AHEAD = '2026-10-26T15:00:00Z';

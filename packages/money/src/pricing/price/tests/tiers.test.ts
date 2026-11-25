@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { basePrice, PACKAGE_IDS, PRICING_DURATIONS, type PackageId } from '../../catalog.js';
-import { priceIn } from '../price.js';
+import { basePrice, PACKAGE_IDS, PRICING_DURATIONS, type PackageId } from '../../catalog';
+import { priceIn } from '../price';
 
 // docs/08 §1–2: every price ayatalbayan.com/calculator shows, per package × duration × country.
 // [package, SA/AE/QA price for 30/45/60, KW/OM price for 30/45/60 = ceil(base / 10)]

@@ -1,4 +1,4 @@
-import type { FamilyPick } from './family-pick.js';
+import type { FamilyPick } from './family-pick';
 
 // docs/50 §6: one student at a time; the reports tab hides until a student is picked.
 

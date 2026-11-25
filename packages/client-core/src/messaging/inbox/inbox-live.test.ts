@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { THREAD_FULL_MS } from '../channels/channels.js';
+import { THREAD_FULL_MS } from '../channels/channels';
 import {
   catchUpPlan,
   changedPhone,
@@ -11,7 +11,7 @@ import {
   refreshPlan,
   THREAD_FULL_LIVE_MS,
   throttleMsOf,
-} from './inbox-live.js';
+} from './inbox-live';
 
 describe('the thread_changed event → what refreshes', () => {
   it('reads only an E.164 phone from the payload', () => {

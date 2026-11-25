@@ -1,4 +1,4 @@
-import type { GoogleAccountStatus, GoogleSkipReason, GoogleSyncKind, GoogleSyncMode, GoogleSyncState, TeacherCalendarOwner } from './enums.js';
+import type { GoogleAccountStatus, GoogleSkipReason, GoogleSyncKind, GoogleSyncMode, GoogleSyncState, TeacherCalendarOwner } from './enums';
 
 /** The connected academy account (google_account): never a token. */
 export interface GoogleConnectionView {

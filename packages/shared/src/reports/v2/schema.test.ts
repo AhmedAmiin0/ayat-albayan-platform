@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { emptyContent, reportContentSchema } from './content.js';
-import { reportV2DraftSchema, reportV2SubmitSchema } from './schema.js';
+import { emptyContent, reportContentSchema } from './content';
+import { reportV2DraftSchema, reportV2SubmitSchema } from './schema';
 
 const seg = (
   kind: string,

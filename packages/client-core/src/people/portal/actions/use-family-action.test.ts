@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError } from '../../../core/http/index.js';
-import { PORTAL_KEY } from '../portal-api.js';
-import type { PortalLessonSends } from './lesson-sends.js';
-import { createUseFamilyAction, type FamilyActionPorts } from './use-family-action.js';
+import { ApiError } from '../../../core/http';
+import { PORTAL_KEY } from '../portal-api';
+import type { PortalLessonSends } from './lesson-sends';
+import { createUseFamilyAction, type FamilyActionPorts } from './use-family-action';
 
 const words = { errors: { group_lesson: 'جماعية' } as never, failed: 'تعذّر' };
 const mutation = (over: object = {}) => ({

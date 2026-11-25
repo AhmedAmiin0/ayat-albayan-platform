@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { channelMessage } from './channel.fakes.test-util.js';
-import { channelRows, unreadBand } from './rows.js';
+import { channelMessage } from './channel.fakes.test-util';
+import { channelRows, unreadBand } from './rows';
 
 const at = (id: string, created_at: string, mine = false) =>
   channelMessage({ id, created_at, mine });

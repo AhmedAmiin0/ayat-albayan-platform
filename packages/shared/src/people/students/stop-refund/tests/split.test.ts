@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { refundAmountProblem, splitRefund } from '../stop-refund.js';
+import { refundAmountProblem, splitRefund } from '../stop-refund';
 
 describe('splitRefund: card first, the rest manual', () => {
   const cards = [

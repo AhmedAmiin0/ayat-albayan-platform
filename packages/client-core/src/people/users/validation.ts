@@ -1,7 +1,7 @@
 import { DEFAULT_PASSWORD_MIN, needsExistingRecord, passwordProblem } from '@ab/shared';
 import { normalizePhone } from '@ab/core';
-import type { CreateForm } from './create-form.js';
-import type { EditForm } from './edit-form.js';
+import type { CreateForm } from './create-form';
+import type { EditForm } from './edit-form';
 
 /** The app's `t.users.validation` and `t.common.phoneErrors` (each app injects its own `t`). */
 export interface UserCheckText {

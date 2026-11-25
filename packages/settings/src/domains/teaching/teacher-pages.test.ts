@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { PUBLIC_SETTING_DEFAULTS } from '../../public.js';
-import { SETTINGS_REGISTRY } from '../../registry.js';
-import { VALUE_GROUPS } from '../../value-groups/index.js';
-import { TEACHER_PAGE_KEYS, TEACHER_PAGE_SWITCH, teacherGateOpen, teacherPageOn } from './teacher-pages.js';
+import { PUBLIC_SETTING_DEFAULTS } from '../../public';
+import { SETTINGS_REGISTRY } from '../../registry';
+import { VALUE_GROUPS } from '../../value-groups';
+import { TEACHER_PAGE_KEYS, TEACHER_PAGE_SWITCH, teacherGateOpen, teacherPageOn } from './teacher-pages';
 
 const off = { ...PUBLIC_SETTING_DEFAULTS };
 

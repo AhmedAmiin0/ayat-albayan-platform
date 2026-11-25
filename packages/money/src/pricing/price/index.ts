@@ -1,1 +1,1 @@
-export { customBase, priceIn, roundCents, starterRateBase } from './price.js';
+export { customBase, priceIn, roundCents, starterRateBase } from './price';

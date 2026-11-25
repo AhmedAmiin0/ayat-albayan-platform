@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { isReadOnlyMode, reportFormMode, sendChecked, sentMoment, singleFlight } from './form-mode.js';
+import { isReadOnlyMode, reportFormMode, sendChecked, sentMoment, singleFlight } from './form-mode';
 
 const draft = { status: 'draft' as const, can_edit: true };
 const sent = { status: 'submitted' as const, can_edit: true };

@@ -1,6 +1,6 @@
-export { maySeePresence, type PresencePair } from './presence-rules.js';
-export { channelPresenceSchema } from './presence.schemas.js';
-export { presenceWhen, type PresenceWhenInput, type PresenceWords } from './presence-when.js';
+export { maySeePresence, type PresencePair } from './presence-rules';
+export { channelPresenceSchema } from './presence.schemas';
+export { presenceWhen, type PresenceWhenInput, type PresenceWords } from './presence-when';
 export {
   isOnline,
   lastMessageLine,
@@ -9,11 +9,11 @@ export {
   presenceLine,
   type OnlineInput,
   type PresenceText,
-} from './presence-line.js';
+} from './presence-line';
 export type {
   ChannelPresence,
   PresencePeer,
   PresenceSelf,
   StaffPresence,
   StaffPresenceRow,
-} from './presence.views.js';
+} from './presence.views';

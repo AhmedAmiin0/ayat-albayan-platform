@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
-import { highlightParts } from '../replies/saved-reply-text/index.js';
-import { searchSnippet } from './search-snippet.js';
+import { highlightParts } from '../replies/saved-reply-text';
+import { searchSnippet } from './search-snippet';
 
 it('a short text is its own snippet, its lines joined', () => {
   expect(searchSnippet('موعد\nالحلقة غدًا', 'الحلقه')).toBe('موعد الحلقة غدًا');

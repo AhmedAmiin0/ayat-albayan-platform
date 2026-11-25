@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { attendanceKind, attendanceTotals, salesCancelSchema, salesRescheduleSchema } from './student-details.js';
+import { attendanceKind, attendanceTotals, salesCancelSchema, salesRescheduleSchema } from './student-details';
 
 describe('attendanceKind', () => {
   it.each([

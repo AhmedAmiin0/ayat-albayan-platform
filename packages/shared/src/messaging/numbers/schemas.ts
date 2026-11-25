@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { NUMBER_PURPOSES, WA_PROVIDERS } from '@ab/catalog';
 import { COMMS_SOURCES } from '@ab/settings';
-import { evolutionFieldsSchema } from './evolution.js';
-import { NUMBER_SECRET_NAMES } from './views.js';
+import { evolutionFieldsSchema } from './evolution';
+import { NUMBER_SECRET_NAMES } from './views';
 
 /** A Meta id (phone number, WABA, app): letters, digits, _ and -, at most 64 (wa_numbers checks). */
 export const META_ID_RE = /^[A-Za-z0-9_-]{1,64}$/;

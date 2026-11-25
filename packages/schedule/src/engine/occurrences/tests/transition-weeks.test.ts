@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ruleOccurrences, type OccurrenceTiming } from '../occurrences.js';
+import { ruleOccurrences, type OccurrenceTiming } from '../occurrences';
 
 // Africa/Cairo 2026 (checked with Intl): spring-forward Fri 24 Apr 00:00 EET → 01:00 EEST;
 // fall-back Thu 29 Oct 24:00 EEST → 23:00 EET (23:00–24:00 happens twice).

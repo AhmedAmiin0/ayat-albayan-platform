@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { templateCreateSchema } from './template-create.js';
+import { templateCreateSchema } from './template-create';
 
 // What the API accepts for a brand-new template.
 

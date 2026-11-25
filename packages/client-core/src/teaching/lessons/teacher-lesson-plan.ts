@@ -6,8 +6,8 @@ import {
   type JoinWindowConfig,
   type LessonView,
 } from '@ab/schedule';
-import { reportSendState } from '../reports/index.js';
-import { teacherCanAct, teacherCanConfirm, teacherConfirmed } from './teacher-actions.js';
+import { reportSendState } from '../reports';
+import { teacherCanAct, teacherCanConfirm, teacherConfirmed } from './teacher-actions';
 
 // One pure lesson model (docs/48): every answer derives from the lesson and the clock.
 

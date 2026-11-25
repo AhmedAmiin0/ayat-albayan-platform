@@ -1,4 +1,4 @@
-import { clampPosition, skipBy, SKIP_SECONDS, type PlayerSpeed } from './player-math.js';
+import { clampPosition, skipBy, SKIP_SECONDS, type PlayerSpeed } from './player-math';
 
 // The player's state as one reducer: the web <audio> and the mobile AudioSource both report what
 // the media did (loaded, time, ended) and the buttons ask for what the listener wants.

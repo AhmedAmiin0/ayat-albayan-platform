@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bookingInvoiceInput, bookingPicks, bookingPicksFrom } from '../../index.js';
+import { bookingInvoiceInput, bookingPicks, bookingPicksFrom } from '../..';
 
 const A = '2026-10-04T14:00:00Z';
 const B = '2026-10-06T16:00:00Z';

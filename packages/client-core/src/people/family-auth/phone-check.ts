@@ -1,7 +1,7 @@
 import { asciiDigits, normalizePhone } from '@ab/core';
-import type { Country } from './countries.js';
+import type { Country } from './countries';
 // Typed with + / 00: the picked country is ignored (the paste split's own rule).
-import { isInternational } from './country-dial.js';
+import { isInternational } from './country-dial';
 
 /** empty: nothing typed; typing: too short to judge; ok: a WhatsApp number; bad: cannot be. */
 export type PhoneState = 'empty' | 'typing' | 'ok' | 'bad';

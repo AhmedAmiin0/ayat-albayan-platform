@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import * as runtime from '../index.js';
+import * as runtime from '..';
 import { assistantTermsSchema } from '@ab/money';
-import { reportDraftSchema } from '../reports/schema/index.js';
+import { reportDraftSchema } from '../reports/schema';
 import {
   ASSISTANT,
   BALANCE,
@@ -11,7 +11,7 @@ import {
   reportView,
   statement,
   termsRowOf,
-} from './index.js';
+} from '.';
 
 describe('shared test fixtures', () => {
   it('stay out of the runtime @ab/shared entry', () => {

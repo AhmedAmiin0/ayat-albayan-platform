@@ -1,4 +1,4 @@
-import type { SettingDef } from '../../defs.js';
+import type { SettingDef } from '../../defs';
 
 /** Online lessons: the join window, internal meetings and the per-lesson link. */
 export const CLASSROOM_SETTINGS = {

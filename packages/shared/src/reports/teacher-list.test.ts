@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { teacherReportsQuerySchema } from './teacher-list.js';
+import { teacherReportsQuerySchema } from './teacher-list';
 
 describe('teacherReportsQuerySchema (R-NFR-08)', () => {
   it('allowlisted sort, attendance and grade enums, a trimmed student search', () => {

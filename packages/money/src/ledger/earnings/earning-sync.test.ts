@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { planEarningSync, type SyncEarning, type SyncInput } from './earning-sync.js';
+import { planEarningSync, type SyncEarning, type SyncInput } from './earning-sync';
 
 const RATES = { 30: 50, 45: 70, 60: 90, 90: null };
 const earning = (patch: Partial<SyncEarning> = {}): SyncEarning => ({

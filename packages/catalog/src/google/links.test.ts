@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { driveFileLink, driveFolderLink, fileIdIn, folderIdIn, sheetLink } from './links.js';
+import { driveFileLink, driveFolderLink, fileIdIn, folderIdIn, sheetLink } from './links';
 
 const ID = 'Abc_DEF-1234567890';
 

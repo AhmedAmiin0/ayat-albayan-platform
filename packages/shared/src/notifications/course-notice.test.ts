@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { courseNoticeData } from './course-notice.js';
-import { webNotificationPath } from './web-path.js';
+import { courseNoticeData } from './course-notice';
+import { webNotificationPath } from './web-path';
 
 const ID = '11111111-1111-4111-8111-111111111111';
 const PHONE = '+966500000000';

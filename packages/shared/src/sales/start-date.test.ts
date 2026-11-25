@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { daysBefore, SALES_START_BACK_DAYS, salesStartDate } from './start-date.js';
+import { daysBefore, SALES_START_BACK_DAYS, salesStartDate } from './start-date';
 
 const today = '2026-10-12';
 

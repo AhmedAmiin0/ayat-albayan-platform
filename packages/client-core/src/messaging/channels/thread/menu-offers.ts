@@ -1,7 +1,7 @@
-import { channelBubbleActions } from '../channel-edits/index.js';
-import type { ChannelAudience } from '../channels.js';
+import { channelBubbleActions } from '../channel-edits';
+import type { ChannelAudience } from '../channels';
 import type { ChannelMessageView } from '@ab/shared';
-import { isPending } from './pending.js';
+import { isPending } from './pending';
 
 export interface MenuOffers {
   reply: boolean;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { contactLine } from './academy-contact.js';
+import { contactLine } from './academy-contact';
 
 describe('contactLine: how the legal pages reach the academy (settings.academy_contact)', () => {
   it('the email first, as a mailto link', () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { quoteCustom } from '../../index.js';
+import { quoteCustom } from '../..';
 
 const run = (on: boolean, text: string) => quoteCustom({ on, text }, 'invalid');
 

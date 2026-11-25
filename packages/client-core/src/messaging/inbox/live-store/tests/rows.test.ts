@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { chatLiveKey } from '../../inbox-live.js';
-import type { LiveRow } from '../../live-rows.js';
-import { createInboxLive, type LiveTargets } from '../live-store.js';
+import { chatLiveKey } from '../../inbox-live';
+import type { LiveRow } from '../../live-rows';
+import { createInboxLive, type LiveTargets } from '../live-store';
 
 const OPEN = '+966500000001';
 const ROWS: LiveRow[] = [{ id: 'a', s: 'delivered', d: 'outbound', at: '2026-11-07T10:00:00Z' }];

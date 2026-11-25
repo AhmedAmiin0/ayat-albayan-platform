@@ -1,8 +1,8 @@
 import type { Attendance, Grade, LessonStatus, PdfStatus, Program, ReportStatus } from '@ab/catalog';
 import type { BalanceView } from '@ab/money';
-import type { Rubric } from './rules.js';
-import type { ReportContent } from './v2/content.js';
-import type { MemoryView } from './v2/rules.js';
+import type { Rubric } from './rules';
+import type { ReportContent } from './v2/content';
+import type { MemoryView } from './v2/rules';
 
 // Phase 3 report responses (docs/11 §4). snake_case rows like every API response; instants are
 // ISO-8601 UTC strings.

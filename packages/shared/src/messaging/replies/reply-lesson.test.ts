@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Permission } from '@ab/catalog';
-import type { ThreadLesson } from '../chat/views.js';
-import { replyConfirmPath, replyLesson, replyRights } from './reply-lesson.js';
+import type { ThreadLesson } from '../chat/views';
+import { replyConfirmPath, replyLesson, replyRights } from './reply-lesson';
 
 const NOW = new Date('2026-10-28T12:00:00Z');
 const fam = (id: string, starts_at: string, over: Partial<ThreadLesson> = {}): ThreadLesson => ({

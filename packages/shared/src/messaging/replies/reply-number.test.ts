@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mergeWindows, replyNumber } from './reply-number.js';
+import { mergeWindows, replyNumber } from './reply-number';
 
 // docs/23c decision 6: the newest open window on a number that can send.
 const now = new Date('2026-10-24T12:00:00Z');

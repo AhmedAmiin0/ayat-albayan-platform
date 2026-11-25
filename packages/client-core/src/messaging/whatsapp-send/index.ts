@@ -5,11 +5,11 @@ export {
   type AppSendAnswer,
   type AppSendLine,
   appSendLineOf,
-} from './app-send-answers.js';
+} from './app-send-answers';
 export {
   sendViaWhatsApp,
   type WhatsAppSendResult,
   type WhatsAppTarget,
   whatsappDigits,
   whatsappSendUrl,
-} from './whatsapp-send.js';
+} from './whatsapp-send';

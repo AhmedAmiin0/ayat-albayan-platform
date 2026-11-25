@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
 import { MESSAGE_STATUSES, PUSH_KINDS, TEMPLATE_STATUSES } from '@ab/catalog';
-import { RESTRICTED_TEMPLATE_DEFAULTS } from './restricted-templates.js';
-import { messageStatusStyle, templateStatusStyle } from '../chat/status-style.js';
-import { TEMPLATE_KEYS } from './templates.js';
+import { RESTRICTED_TEMPLATE_DEFAULTS } from './restricted-templates';
+import { messageStatusStyle, templateStatusStyle } from '../chat/status-style';
+import { TEMPLATE_KEYS } from './templates';
 
 describe('Phase 4 strings and chips (rule 10, docs/07 §6)', () => {
   // The restricted defaults too: the assistant's picker shows each by name, never its Meta key.

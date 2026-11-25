@@ -5,8 +5,8 @@ import { expect, it, vi } from 'vitest';
 // TZ=UTC must not move (addDaysIn once stepped with a host-local setDate: 23 / 25 h here). Node
 // applies a runtime TZ change; the first test proves it did, so a no-op host cannot pass silently.
 vi.stubEnv('TZ', 'America/New_York');
-await import('./zoned.golden.test.js');
-await import('./reminders.golden.test.js');
+await import('./zoned.golden.test');
+await import('./reminders.golden.test');
 
 it('runs on a DST host: EST (UTC-5) in January, EDT (UTC-4) in July', () => {
   expect(new Date('2026-01-15T12:00:00Z').getTimezoneOffset()).toBe(300);

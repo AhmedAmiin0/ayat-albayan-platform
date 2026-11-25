@@ -2,7 +2,7 @@ import type { ShortLinkRow } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { addDaysIn, calendarDaysBetween, localDateIn } from '@ab/time';
-import { fillSlots } from '../../teaching/reports/index.js';
+import { fillSlots } from '../../teaching/reports';
 
 // An ended link is deleted with its visits short_link_purge_days after expiry (docs/19 Cron).
 

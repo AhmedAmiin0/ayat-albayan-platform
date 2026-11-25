@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PUSH_WAKE_KINDS, wakesInbox } from './push-wake.js';
+import { PUSH_WAKE_KINDS, wakesInbox } from './push-wake';
 
 describe('wakesInbox (docs/43 §5)', () => {
   it('only the inbox kinds wake the app', () => {

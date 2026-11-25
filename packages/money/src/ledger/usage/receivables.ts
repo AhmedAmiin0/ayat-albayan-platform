@@ -2,7 +2,7 @@ import { calendarDaysBetween } from '@ab/time';
 // Receivables: who still owes on a package, how much and for how long; pure.
 
 import { toCents } from '@ab/core';
-import { dueOf } from './owed.js';
+import { dueOf } from './owed';
 
 export const AGING_BUCKETS = ['0_30', '31_60', '61_90', '90_plus'] as const;
 export type AgingBucket = (typeof AGING_BUCKETS)[number];

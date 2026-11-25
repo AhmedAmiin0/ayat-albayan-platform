@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fileLineOf, fileTitleOf, megabytes } from './index.js';
+import { fileLineOf, fileTitleOf, megabytes } from '.';
 
 describe('megabytes', () => {
   it('one decimal under 10 MB, whole above, never 0', () => {

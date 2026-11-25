@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { waSendKind } from '../chat/chat-files/index.js';
+import { waSendKind } from '../chat/chat-files';
 import {
   gifListSchema,
   isGifMessage,
@@ -7,7 +7,7 @@ import {
   stickerKey,
   stickerPayloadOf,
   threadGifSendSchema,
-} from './stickers.js';
+} from './stickers';
 
 const SHA = 'Zm9vYmFy';
 const inbound = { type: 'sticker', sticker: { id: 'm1', mime_type: 'image/webp', sha256: SHA, animated: false } };

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LESSON_STATUSES } from '@ab/catalog';
-import { isCancelledLesson, isClosedLesson } from '../state-machine.js';
+import { isCancelledLesson, isClosedLesson } from '../state-machine';
 
 // Written out by hand: the sets the api mappers, the calendar writer and mobile used to copy.
 const CANCELLED = new Set(['cancelled_by_teacher', 'cancelled_by_admin']);

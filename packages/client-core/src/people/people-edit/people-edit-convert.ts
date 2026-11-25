@@ -1,5 +1,5 @@
 import type { ConvertedStudent, PeopleEditView } from '@ab/shared';
-import { firstError, type PeopleDone, type PeopleWrite } from './people-edit-write.js';
+import { firstError, type PeopleDone, type PeopleWrite } from './people-edit-write';
 
 // The state lives in the app's hook; the logic lives here.
 

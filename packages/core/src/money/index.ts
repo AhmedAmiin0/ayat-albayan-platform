@@ -1,2 +1,2 @@
-export * from './by-currency.js';
-export * from './cents.js';
+export * from './by-currency';
+export * from './cents';

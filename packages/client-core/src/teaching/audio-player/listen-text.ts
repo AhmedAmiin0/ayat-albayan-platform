@@ -1,5 +1,5 @@
-import { formatClock } from './player-math.js';
-import type { ListenState } from './resume.js';
+import { formatClock } from './player-math';
+import type { ListenState } from './resume';
 
 export interface ListenWords {
   isNew: string;

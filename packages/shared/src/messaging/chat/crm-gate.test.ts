@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CRM_DEFAULT_NAMES, CRM_GATED_KEYS, gateApprovedKeys } from './crm-names.js';
+import { CRM_DEFAULT_NAMES, CRM_GATED_KEYS, gateApprovedKeys } from './crm-names';
 
 // docs/19 «crm driver»: on a crm line teacher_new_student is approved by its own row OR the CRM
 // template it goes as (teacher_lesson_v2); any other key, and a meta / kapso line, by its own.

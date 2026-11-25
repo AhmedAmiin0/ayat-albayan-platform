@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { renderTemplateBody } from './templates/render.js';
-import { templateStarterSchema, threadTemplateSchema } from './schemas.js';
-import { BODY_SLOTS } from './templates/templates.js';
+import { renderTemplateBody } from './templates/render';
+import { templateStarterSchema, threadTemplateSchema } from './schemas';
+import { BODY_SLOTS } from './templates/templates';
 
 // Starter templates (docs/12 §13.18): any registry key, up to nine variables.
 

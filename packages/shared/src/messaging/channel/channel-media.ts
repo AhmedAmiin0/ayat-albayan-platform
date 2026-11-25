@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { cleanFileName } from '../chat/chat-files/index.js';
+import { cleanFileName } from '../chat/chat-files';
 
 // Photos, PDFs and voice notes in the student channel (docs/31 §2). The API signs an upload into
 // the private channel-media bucket ({channel_id}/{uuid}.{ext}), the app PUTs the file, then posts

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { asciiDigits, normalizePhone } from '@ab/core';
-import { PASSWORD_MAX, normalizeStudentCode } from './validation.js';
+import { PASSWORD_MAX, normalizeStudentCode } from './validation';
 
 // Family accounts (docs/30): the public sign-in / forgot-password bodies and the identifier rules
 // shared by the API (authoritative), the web and the mobile app.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { integrationValueValid } from '../../checks.js';
-import { integrationDef, isIntegrationKey } from '../keys.js';
+import { integrationValueValid } from '../../checks';
+import { integrationDef, isIntegrationKey } from '../keys';
 
 // Google sync (docs/24 §3): the client id is a plain value, the client secret goes to Vault; the
 // refresh token is NOT a registry key (its own Vault entry, never in the form or the env overlay).

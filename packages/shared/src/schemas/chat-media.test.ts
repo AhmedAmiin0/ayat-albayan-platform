@@ -7,7 +7,7 @@ import {
   chatFileMaxBytes,
   isChatViewMime,
   isPlayableMime,
-} from './chat-media.js';
+} from './chat-media';
 
 describe('chat media types (owner 2026-10-19 #1)', () => {
   it('strips parameters and case', () => {

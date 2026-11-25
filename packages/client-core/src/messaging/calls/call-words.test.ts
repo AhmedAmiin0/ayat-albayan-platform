@@ -1,7 +1,7 @@
 import type { ActiveCallView, CallView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '../../core/http/index.js';
-import { callEntryText, callErrorText, callPhaseText, callStatusText, type CallsText } from './call-words.js';
+import { ApiError } from '../../core/http';
+import { callEntryText, callErrorText, callPhaseText, callStatusText, type CallsText } from './call-words';
 
 const text: CallsText = {
   status: { connecting: 'connecting', ringing: 'ringing', accepting: 'accepting', ended: 'ended' },

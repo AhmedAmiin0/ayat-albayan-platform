@@ -1,6 +1,6 @@
 import type { NotificationItem } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { alertSections, alertTarget, pushTarget } from './alerts.js';
+import { alertSections, alertTarget, pushTarget } from './alerts';
 
 const S = '11111111-1111-4111-8111-111111111111';
 const R = '22222222-2222-4222-8222-222222222222';

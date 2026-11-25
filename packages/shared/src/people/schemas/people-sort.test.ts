@@ -5,7 +5,7 @@ import {
   leadColumnQueryShape,
   studentColumnQueryShape,
   teacherColumnQueryShape,
-} from './people-sort.js';
+} from './people-sort';
 
 const students = z.object(studentColumnQueryShape);
 const teachers = z.object(teacherColumnQueryShape);

@@ -1,4 +1,4 @@
-import type { SettingDef } from './defs.js';
+import type { SettingDef } from './defs';
 
 const sw = 'googleSync.switches';
 const meta = { module: 'google_sync', group: 'google', ownedBy: 'google_sync' } as const;

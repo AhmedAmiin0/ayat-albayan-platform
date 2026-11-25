@@ -1,6 +1,6 @@
 import type { MessageStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
-import { liveTick } from './live-tick.js';
+import { liveTick } from './live-tick';
 
 // docs/44 K1 (round 4): a live patch over a synced store moves a tick forward only; it never
 // takes a row onto or off failed / sent_manually unless the event is newer than the row's stamp.

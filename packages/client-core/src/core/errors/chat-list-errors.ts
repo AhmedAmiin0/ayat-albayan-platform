@@ -1,5 +1,5 @@
 import { isChatListError } from '@ab/shared';
-import { ApiError } from '../http/index.js';
+import { ApiError } from '../http';
 
 // The words for a failed chat-list call (docs/22 §3), shared by both apps (docs/27 E6). Each app
 // injects its `t.inbox.lists`, read on every call (the admins' translation overrides land after import).

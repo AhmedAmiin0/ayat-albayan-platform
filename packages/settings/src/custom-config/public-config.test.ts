@@ -5,8 +5,8 @@ import {
   PUBLIC_CONFIG_STALE_MS,
   withPublicDefaults,
   type PublicConfig,
-} from './public-config.js';
-import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '../public.js';
+} from './public-config';
+import { PUBLIC_SETTING_DEFAULTS, type PublicSettings } from '../public';
 
 describe('public config (GET /settings/public)', () => {
   it('the clients share one path, query key and stale time', () => {

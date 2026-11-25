@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { parseOrNull } from './lenient.js';
+import { parseOrNull } from './lenient';
 
 // messages.interactive_payload as the webhook keeps it, and Meta's message objects: an object
 // with its `type` ({ type, [type]: …, errors? }). Each reader parses the part it needs.

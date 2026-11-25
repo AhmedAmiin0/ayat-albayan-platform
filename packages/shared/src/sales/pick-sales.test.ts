@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { pickSales, type SalesCandidate } from './pick-sales.js';
+import { pickSales, type SalesCandidate } from './pick-sales';
 
 const c = (
   id: string,

@@ -1,5 +1,5 @@
 import { lessonEndResultSchema, type LessonEndResult, type MuteSource } from '@ab/schedule';
-import type { ApiClient } from '../../core/http/index.js';
+import type { ApiClient } from '../../core/http';
 
 // Room host controls for web and both apps; the API decides who may act.
 

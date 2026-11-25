@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { listenState, parseResume, resumeAt, withPosition } from './index.js';
+import { listenState, parseResume, resumeAt, withPosition } from '.';
 
 describe('withPosition', () => {
   it('keeps a stop in the middle', () => {

@@ -4,8 +4,8 @@ import {
   type LessonFileView,
   type SignedUpload,
 } from '@ab/shared';
-import type { SlotUploadResult, UploadFile } from '../../core/http/index.js';
-import type { LessonFilesApi } from './lesson-files-api.js';
+import type { SlotUploadResult, UploadFile } from '../../core/http';
+import type { LessonFilesApi } from './lesson-files-api';
 
 // Checks type and 25 MiB, then slot, upload, register; the picker and upload are the app's.
 

@@ -1,6 +1,6 @@
 import type { MessageView, ReactionResult } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { reactionMutation, withReactions } from './reaction-mutation.js';
+import { reactionMutation, withReactions } from './reaction-mutation';
 
 const before = { theirs: '❤️', ours: null, ours_by: null };
 const m = { id: 'm1', reactions: before } as unknown as MessageView;

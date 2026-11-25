@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { localizedName } from './localized-name.js';
+import { localizedName } from './localized-name';
 
 const fuel = { ar: 'وقود', en: 'Fuel' };
 

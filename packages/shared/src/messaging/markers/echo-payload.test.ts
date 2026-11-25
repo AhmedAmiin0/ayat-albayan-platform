@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { defaultMediaMime, echoPayload } from './echo-payload.js';
+import { defaultMediaMime, echoPayload } from './echo-payload';
 
 const W = 'wamid.ORIGINAL';
 

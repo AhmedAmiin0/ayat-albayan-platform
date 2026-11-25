@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { SETTING_DEFAULTS } from '@ab/settings';
-import { NOTIFICATION_KEYS } from './catalogue/catalogue.js';
-import { defaultTiming } from './rules.effective.js';
+import { NOTIFICATION_KEYS } from './catalogue/catalogue';
+import { defaultTiming } from './rules.effective';
 import {
   legacyParts,
   legacyValues,
   RULE_LEGACY_MAP,
   RULE_SETTING_KEYS,
   type RuleSettings,
-} from './rules.legacy.js';
+} from './rules.legacy';
 
 const defaults = Object.fromEntries(
   RULE_SETTING_KEYS.map((k) => [k, SETTING_DEFAULTS[k]]),

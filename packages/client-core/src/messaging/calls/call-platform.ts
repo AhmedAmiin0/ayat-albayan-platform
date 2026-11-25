@@ -1,7 +1,7 @@
 import type { CallIceServer } from '@ab/shared';
-import type { CallPeer } from './call-peer.js';
-import type { CallSends } from './calls-api.js';
-import type { CallsText } from './call-words.js';
+import type { CallPeer } from './call-peer';
+import type { CallSends } from './calls-api';
+import type { CallsText } from './call-words';
 
 /** What each app injects into the call steps: its API, its ids, its words and (mobile) its audio route. */
 export interface CallPlatform {

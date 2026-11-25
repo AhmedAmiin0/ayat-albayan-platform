@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fillReply, replyNeedsInput, replySlots } from './reply-slots.js';
+import { fillReply, replyNeedsInput, replySlots } from './reply-slots';
 
 const keys = (body: string) => replySlots(body).map((s) => s.key);
 

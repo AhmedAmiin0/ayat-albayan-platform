@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { reportContentSchema, type ReportContentInput } from './content.js';
-import { legacyTexts } from './legacy.js';
+import { reportContentSchema, type ReportContentInput } from './content';
+import { legacyTexts } from './legacy';
 
 const content = (c: ReportContentInput) => reportContentSchema.parse(c);
 const label = (topic: string) => `label:${topic}`;

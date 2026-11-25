@@ -1,4 +1,4 @@
-import type { NotificationEntry } from './catalogue.types.js';
+import type { NotificationEntry } from './catalogue.types';
 
 // A lesson moved or cancelled, a course paused or resumed: the family (guardian) and the lesson's
 // teacher, by WhatsApp on the notifications line and in the bell / app. Sent because a person

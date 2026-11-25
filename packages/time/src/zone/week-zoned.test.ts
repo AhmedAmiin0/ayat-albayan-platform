@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, weekdayOf, weekStart } from './week.js';
-import { weekDates, weekWindowIn, zonedPartsIn } from './week-zoned.js';
-import { wallInstant } from './zoned.js';
+import { addDays, weekdayOf, weekStart } from './week';
+import { weekDates, weekWindowIn, zonedPartsIn } from './week-zoned';
+import { wallInstant } from './zoned';
 
 const RIYADH_TZ = 'Asia/Riyadh';
 const CAIRO = 'Africa/Cairo';

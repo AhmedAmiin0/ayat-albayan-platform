@@ -1,4 +1,4 @@
-import type { NotificationEntry } from './catalogue.types.js';
+import type { NotificationEntry } from './catalogue.types';
 
 // Sends a person starts (docs/23a §B2 W8, W15–W19: listed, never switched) and the staff's bell /
 // push kinds (§B3 P1–P9: always on today).

@@ -6,7 +6,7 @@ import {
   subscribeKind,
   threadBadge,
   type BadgeStudent,
-} from '../thread-people.js';
+} from '../thread-people';
 
 const kid = (status: SubscriptionStatus, lessons_remaining: number): BadgeStudent => ({
   subscription: { status, lessons_remaining },

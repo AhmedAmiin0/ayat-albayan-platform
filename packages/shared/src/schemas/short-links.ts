@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { phoneE164 } from '@ab/core';
-import { loginCode } from '../people/users/index.js';
+import { loginCode } from '../people/users';
 
 // Managed short links (docs/19 «Short links»): the admin / sales bodies and the
 // public gate's bodies, shared by the API (authoritative), the web and the mobile app.

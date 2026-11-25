@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isRetryableWaError, isWaAuthError, isWaPaymentHold } from './wa.js';
+import { isRetryableWaError, isWaAuthError, isWaPaymentHold } from './wa';
 
 // 131042 «Business eligibility payment issue» is account-level: held by the sender, never failed.
 describe('isWaPaymentHold', () => {

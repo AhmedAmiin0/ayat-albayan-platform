@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { agingBucket, daysSince, receivablesOf, receivableTotals, type ReceivableIn } from './receivables.js';
+import { agingBucket, daysSince, receivablesOf, receivableTotals, type ReceivableIn } from './receivables';
 
 const sub = (id: string, extra: Partial<ReceivableIn> = {}): ReceivableIn => ({
   id,

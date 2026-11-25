@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiClient } from '../../core/http/index.js';
-import { ACTIVE_POLL_MS, callQueries, callSends, LIVE_POLL_MS } from './calls-api.js';
+import type { ApiClient } from '../../core/http';
+import { ACTIVE_POLL_MS, callQueries, callSends, LIVE_POLL_MS } from './calls-api';
 
 const client = { apiFetch: vi.fn(async () => []), apiSend: vi.fn(async () => undefined) } as unknown as ApiClient;
 

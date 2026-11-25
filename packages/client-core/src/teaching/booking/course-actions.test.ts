@@ -1,6 +1,6 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '../../core/http/index.js';
+import { ApiError } from '../../core/http';
 import {
   courseMoveErrorCode,
   courseMoveViewPath,
@@ -9,7 +9,7 @@ import {
   courseStopPath,
   courseStopPreviewPath,
   courseTeacherOptionsPath,
-} from './course-actions.js';
+} from './course-actions';
 
 const fail = (code: unknown) => new ApiError(409, { code });
 

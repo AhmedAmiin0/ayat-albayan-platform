@@ -9,5 +9,5 @@ export {
   repeatedDays,
   rowsFromPicks,
   weekBounds,
-} from './rows.js';
-export { nearestFree, type NearestInput, type PickCheckInput, type PickState, pickState } from './pick-check.js';
+} from './rows';
+export { nearestFree, type NearestInput, type PickCheckInput, type PickState, pickState } from './pick-check';

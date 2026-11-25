@@ -4,7 +4,7 @@ import {
   courseChangeSchema,
   courseTeacherChangeSchema,
   courseTeacherCheckSchema,
-} from './course-change.js';
+} from './course-change';
 
 const body = {
   subscriptionId: '00000000-0000-4000-8000-000000000001',

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { subscriptionBalances, type PackageLesson } from '../usage.js';
+import { subscriptionBalances, type PackageLesson } from '../usage';
 
 // Migration 932: lessons taken before the platform count as used; the package fills
 // with platform lessons only up to lessonsTotal − lessonsUsedBefore, then the next package takes over.

@@ -5,7 +5,7 @@ import {
   otherZoneClock,
   resolveViewerTz,
   sameClockAt,
-} from './viewer-zone.js';
+} from './viewer-zone';
 
 const CAIRO = 'Africa/Cairo';
 const RIYADH = 'Asia/Riyadh';

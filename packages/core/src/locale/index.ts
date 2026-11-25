@@ -1,3 +1,3 @@
-export * from './locale.js';
-export * from './localized-name/localized-name.js';
-export type { LocalizedName } from './localized-name/index.js';
+export * from './locale';
+export * from './localized-name/localized-name';
+export type { LocalizedName } from './localized-name';

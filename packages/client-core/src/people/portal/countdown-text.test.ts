@@ -1,6 +1,6 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
-import { lessonClockText } from './countdown-text.js';
+import { lessonClockText } from './countdown-text';
 
 const parts = { days: 0, hours: 0, minutes: 8, seconds: 12 };
 

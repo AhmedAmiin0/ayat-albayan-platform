@@ -1,6 +1,6 @@
 import type { LessonRoomState } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
-import { isRoomLive, roomEndedFor, roomLiveMinutes, studentWaiting } from './room-live.js';
+import { isRoomLive, roomEndedFor, roomLiveMinutes, studentWaiting } from './room-live';
 
 const NOW = new Date('2026-11-16T10:12:30.000Z');
 const room = (over: Partial<LessonRoomState> = {}): LessonRoomState => ({

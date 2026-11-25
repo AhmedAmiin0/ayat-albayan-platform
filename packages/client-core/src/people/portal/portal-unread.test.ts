@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiClient } from '../../core/http/index.js';
-import { PORTAL_REFRESH_MS, portalQueries } from './portal-api.js';
+import type { ApiClient } from '../../core/http';
+import { PORTAL_REFRESH_MS, portalQueries } from './portal-api';
 
 const apiFetch = vi.fn(async (): Promise<unknown> => ({ unread: 3 }));
 const client = { apiFetch, apiSend: vi.fn() } as unknown as ApiClient;

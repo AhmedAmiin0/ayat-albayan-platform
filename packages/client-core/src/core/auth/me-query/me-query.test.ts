@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { meQueryOptions, pathKey } from '../../../index.js';
+import { meQueryOptions, pathKey } from '../../..';
 
 describe('meQueryOptions', () => {
   it('keys GET /auth/me by its path, so an ["auth"] invalidation reaches it', () => {

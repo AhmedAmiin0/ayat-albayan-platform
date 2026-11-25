@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { planCommission, type PaymentFact, type SubscriptionFact } from './first-paid/index.js';
-import { commissionKindOf, DEFAULT_RENEWAL_SHARE } from './kind.js';
-import { planRenewalCommission } from './renewal.js';
-import { subscriptionAlreadyStarted } from './started.js';
+import { planCommission, type PaymentFact, type SubscriptionFact } from './first-paid';
+import { commissionKindOf, DEFAULT_RENEWAL_SHARE } from './kind';
+import { planRenewalCommission } from './renewal';
+import { subscriptionAlreadyStarted } from './started';
 
 // Owner 2026-10-28: «If the course already started so dont give commission» (migration 20261028000942).
 const CREATED = '2026-11-01T09:00:00Z'; // 12:00 in Riyadh, 2026-11-01

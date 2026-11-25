@@ -1,5 +1,5 @@
-import { BODY_SLOTS, type BodySlot } from './templates.js';
-import type { TemplateView } from './template-views.js';
+import { BODY_SLOTS, type BodySlot } from './templates';
+import type { TemplateView } from './template-views';
 
 // A template's starting values in the composer (R-LEAD-02, docs/12 H4): what the thread already
 // knows, by the variable's name; still editable. Lesson times are never prefilled (rule 6: they come

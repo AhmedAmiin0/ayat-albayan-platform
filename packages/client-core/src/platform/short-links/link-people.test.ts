@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { notOpenedCount, roleKey, userLook, visitOf, visitorLook } from './link-people.js';
+import { notOpenedCount, roleKey, userLook, visitOf, visitorLook } from './link-people';
 import {
   accountVisit as visit, detail, listedUser as listed, typedUser as typed,
-} from './short-links.test-util.js';
+} from './short-links.test-util';
 
 describe('roleKey', () => {
   it('keeps a known role and calls anything else unknown', () => {

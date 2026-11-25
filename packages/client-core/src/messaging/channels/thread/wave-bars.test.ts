@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { WAVE_BARS, waveBars } from './wave-bars.js';
+import { WAVE_BARS, waveBars } from './wave-bars';
 
 test('the waveform: 28 bars, 0.25–1, the same for the same message id on every call', () => {
   const bars = waveBars('b1111111-1111-4111-8111-111111111111');

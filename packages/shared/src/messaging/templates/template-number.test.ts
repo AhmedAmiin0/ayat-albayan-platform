@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { templateNumberSchema } from './template-number.js';
+import { templateNumberSchema } from './template-number';
 
 describe('templateNumberSchema', () => {
   it('takes a uuid or null', () => {

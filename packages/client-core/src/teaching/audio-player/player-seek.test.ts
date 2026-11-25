@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { seekAtPoint, seekByKey } from './index.js';
+import { seekAtPoint, seekByKey } from '.';
 
 const at = { position: 30, duration: 100 };
 

@@ -1,6 +1,6 @@
 import { dayInZone, dayWallToUtc, minutesOfHhmm, offsetMs, weekdayOfDay } from '@ab/time';
 import { describe, expect, it, vi } from 'vitest';
-import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep.js';
+import { GOLDEN_TIMES, GOLDEN_ZONES, digest, goldenDates, goldenInstants } from '../../testing/golden-sweep';
 
 // A whole year per zone: seconds, not the default 5 s, on a busy CI runner.
 vi.setConfig({ testTimeout: 60_000 });

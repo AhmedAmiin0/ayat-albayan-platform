@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { codeVerifySchema, identifierKey, isFamilyEmail, parseIdentifier, resetSchema, username } from './sign-in.js';
+import { codeVerifySchema, identifierKey, isFamilyEmail, parseIdentifier, resetSchema, username } from './sign-in';
 
 describe('parseIdentifier (docs/30 §6)', () => {
   it('reads an email, lower-cased', () => {

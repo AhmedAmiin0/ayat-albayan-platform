@@ -1,4 +1,4 @@
-import { parseResume, RESUME_KEY, withPosition, type ResumeMap } from './resume.js';
+import { parseResume, RESUME_KEY, withPosition, type ResumeMap } from './resume';
 
 // The saved stops as an external store (useSyncExternalStore) over the device's async storage:
 // read once on first use, a save shows at once and is then written. A failed read or write keeps

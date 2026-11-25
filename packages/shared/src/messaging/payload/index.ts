@@ -1,2 +1,2 @@
-export * from './lenient.js';
-export * from './interactive-payload.js';
+export * from './lenient';
+export * from './interactive-payload';

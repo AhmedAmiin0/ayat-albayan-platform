@@ -1,7 +1,7 @@
 import { wallParts } from '@ab/schedule';
-import { inWeekOrder } from '../course/course-picks.js';
-import type { AttendanceKind } from './student-details.js';
-import type { SalesWeeklySlot } from './student-schedule.js';
+import { inWeekOrder } from '../course/course-picks';
+import type { AttendanceKind } from './student-details';
+import type { SalesWeeklySlot } from './student-schedule';
 
 // Each roster row's weekly slots in one short line and an attendance count; pure.
 

@@ -3,9 +3,9 @@ export {
   PEOPLE_EDIT_KEY,
   peopleEditKey,
   peopleEditPaths,
-} from './people-edit-paths.js';
-export { peopleEditErrorText, type PeopleEditErrorText } from './people-edit-errors.js';
-export { roleActions, toGuardianHint, type RoleActions } from './people-edit-actions.js';
+} from './people-edit-paths';
+export { peopleEditErrorText, type PeopleEditErrorText } from './people-edit-errors';
+export { roleActions, toGuardianHint, type RoleActions } from './people-edit-actions';
 export {
   familyFormOf,
   familyPatchOf,
@@ -18,14 +18,14 @@ export {
   type NewFamilyForm,
   type PatchResult,
   type StudentForm,
-} from './people-edit-form.js';
+} from './people-edit-form';
 export {
   allowedPeopleActions,
   firstError,
   type PeopleActionKind,
   type PeopleDone,
   type PeopleWrite,
-} from './people-edit-write.js';
+} from './people-edit-write';
 export {
   attachModel,
   emptyFamily,
@@ -33,11 +33,11 @@ export {
   type AttachState,
   type MoveBody,
   type MoveChoice,
-} from './people-edit-attach.js';
+} from './people-edit-attach';
 export {
   convertDone,
   convertModel,
   type Conversion,
   type ConvertModel,
   type ConvertText,
-} from './people-edit-convert.js';
+} from './people-edit-convert';

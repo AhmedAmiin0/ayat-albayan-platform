@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { statementActions } from './statement-actions.js';
+import { statementActions } from './statement-actions';
 
 const ALL = { write: true, approve: true };
 const WRITER = { write: true, approve: false };

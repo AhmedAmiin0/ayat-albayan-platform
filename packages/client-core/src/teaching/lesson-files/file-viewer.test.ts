@@ -2,7 +2,7 @@ import type { PortalRecording } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import {
   downloadName, hasVideo, partIdsByLesson, viewableFiles, viewerPage, ZOOM, zoomBy,
-} from './index.js';
+} from '.';
 
 describe('zoomBy', () => {
   it('steps a quarter and stays between half size and three times', () => {

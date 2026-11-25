@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ALL_PUSH_KINDS, FAMILY_PUSH_KINDS } from '@ab/catalog';
-import { pushReaderOf, readerMayGet } from './push-readers.js';
+import { pushReaderOf, readerMayGet } from './push-readers';
 
 // docs/50 §4: a child student never sees a price, an amount or a payment, not even in a push.
 

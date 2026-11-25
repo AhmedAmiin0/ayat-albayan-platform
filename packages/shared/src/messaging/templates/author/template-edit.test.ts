@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { templateAuthorSchema, templateEditSchema } from './template-edit.js';
+import { templateAuthorSchema, templateEditSchema } from './template-edit';
 
 describe('templateEditSchema', () => {
   it('takes new words, samples and buttons; never a name or a category', () => {

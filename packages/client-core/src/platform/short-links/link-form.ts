@@ -2,7 +2,7 @@ import { shortLinkCreateSchema, type ShortLinkAudience, type ShortLinkCreate } f
 import { asciiDigits } from '@ab/core';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { addDaysIn } from '@ab/time';
-import { issueErrors, type LinkFieldErrors } from './link-form-errors.js';
+import { issueErrors, type LinkFieldErrors } from './link-form-errors';
 
 // The form is checked by the API's own schema so the form and the server never disagree.
 

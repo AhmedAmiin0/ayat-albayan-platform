@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ProbeAnswer } from '../../../../core/http/index.js';
-import { maintenanceFacts } from '../maintenance.js';
+import type { ProbeAnswer } from '../../../../core/http';
+import { maintenanceFacts } from '../maintenance';
 
 const ok = (body: unknown): ProbeAnswer => ({ status: 200, body });
 const status = (code: number): ProbeAnswer => ({ status: code, body: null });

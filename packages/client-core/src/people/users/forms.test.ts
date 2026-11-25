@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createBody, editBody, initialCreateForm, initialEditForm } from '../../index.js';
-import { detail } from './fixtures.test-util.js';
+import { createBody, editBody, initialCreateForm, initialEditForm } from '../..';
+import { detail } from './fixtures.test-util';
 
 describe('createBody', () => {
   it('trims, lowercases the email and sends only what applies', () => {

@@ -1,6 +1,6 @@
 import type { CoursePauseView } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
-import { ApiError } from '../../core/http/index.js';
+import { ApiError } from '../../core/http';
 
 // Course pause (docs/11 §7b) for web and mobile; words are injected and dates arrive formatted.
 

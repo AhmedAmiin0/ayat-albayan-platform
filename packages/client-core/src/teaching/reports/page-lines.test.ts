@@ -1,7 +1,7 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { emptyContent, type ReportPageReport } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { pageLines } from './page-lines.js';
+import { pageLines } from './page-lines';
 
 const words = {
   text: { v2: ar.reports.v2, grade: ar.enums.grade, program: ar.enums.program, lang: 'ar' as const },

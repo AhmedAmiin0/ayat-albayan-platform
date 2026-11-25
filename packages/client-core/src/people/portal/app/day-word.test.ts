@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dayTile, dayWord, lessonMinutes } from './day-word.js';
+import { dayTile, dayWord, lessonMinutes } from './day-word';
 
 describe('dayWord', () => {
   const now = new Date('2026-11-15T20:30:00.000Z');

@@ -4,19 +4,19 @@ export {
   valueTextBy,
   type ValueKind,
   type ValueTextTable,
-} from './value-text.js';
+} from './value-text';
 export {
   MAINTENANCE_CONFIRM_MS,
   MAINTENANCE_QUERY_KEY,
   maintenanceFacts,
   maintenancePollMs,
   maintenanceView,
-} from './maintenance/index.js';
-export { MaintenanceOnSchema } from './maintenance.schema.js';
+} from './maintenance';
+export { MaintenanceOnSchema } from './maintenance.schema';
 export type {
   MaintenanceFacts,
   MaintenanceProbes,
   MaintenanceState,
   MaintenanceView,
   MaintenanceViewer,
-} from './maintenance/index.js';
+} from './maintenance';

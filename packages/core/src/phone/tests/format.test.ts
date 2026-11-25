@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatPhone } from '../phone.js';
+import { formatPhone } from '../phone';
 
 // docs/07 §6: phones are read back to guardians, so they are shown grouped; stored as E.164.
 describe('formatPhone (display only, rule 7)', () => {

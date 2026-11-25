@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { senderLine } from './sender.js';
+import { senderLine } from './sender';
 
 const out = { direction: 'outbound' as const };
 

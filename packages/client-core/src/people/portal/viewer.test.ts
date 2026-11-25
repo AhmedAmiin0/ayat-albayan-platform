@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isNewReport, newReportCount, parseSeen, withSeen } from './report-seen.js';
+import { isNewReport, newReportCount, parseSeen, withSeen } from './report-seen';
 import {
   childTabs,
   familyChatOn,
@@ -7,7 +7,7 @@ import {
   portalViewer,
   readsOwn,
   seesMoney,
-} from './viewer.js';
+} from './viewer';
 
 const self = { contact_is_self: true };
 const child = { contact_is_self: false };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { usedBeforeState, usedBeforeStateSchema } from './used-before-state.js';
+import { usedBeforeState, usedBeforeStateSchema } from './used-before-state';
 
 const base = {
   id: 'sub-1', current: 2, lessonsTotal: 8, platformUsed: 1,

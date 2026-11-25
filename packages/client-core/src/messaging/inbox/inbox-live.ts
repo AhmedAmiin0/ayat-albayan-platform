@@ -3,7 +3,7 @@
 // private topic; a client never reads data from it, it only re-reads the same API routes sooner.
 
 import { z } from 'zod';
-import { THREAD_FULL_MS } from '../channels/index.js';
+import { THREAD_FULL_MS } from '../channels';
 
 /** The private Broadcast topic (realtime.messages policy: admin and sales with inbox.read). */
 export const INBOX_LIVE_TOPIC = 'inbox:staff';

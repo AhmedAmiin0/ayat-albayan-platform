@@ -1,11 +1,11 @@
 import type { IntegrationSource, NumberPurpose, WaLine, WaProvider } from '@ab/catalog';
 import type { CommsSource } from '@ab/settings';
-import type { NumberEvolutionView } from './evolution.js';
+import type { NumberEvolutionView } from './evolution';
 
 // Numbers (docs/23 §3): no view ever carries a token or secret value, only set or not with a date.
 
-export { NUMBER_SECRET_NAMES, type NumberSecretName } from './secret-names.js';
-import type { NumberSecretName } from './secret-names.js';
+export { NUMBER_SECRET_NAMES, type NumberSecretName } from './secret-names';
+import type { NumberSecretName } from './secret-names';
 
 /** The last line check of the number's phone_number_id (never a token). */
 export interface NumberHealth {

@@ -5,7 +5,7 @@ import {
   rescheduleRequestSchema,
   ruleCancelRequestSchema,
   ruleExtendRequestSchema,
-} from '../scheduling.js';
+} from '../scheduling';
 
 const T = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
 const NEW_RULE = {

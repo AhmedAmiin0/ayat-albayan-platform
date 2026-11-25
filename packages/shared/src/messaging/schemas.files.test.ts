@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { threadFileSendSchema, threadFileUploadSchema } from './schemas.js';
+import { threadFileSendSchema, threadFileUploadSchema } from './schemas';
 
 const id = '7b0f5b8e-3c1a-4a52-9d0e-2b7c1f0a9e11';
 

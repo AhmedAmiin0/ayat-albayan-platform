@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { PUBLIC_SETTING_DEFAULTS } from '../public.js';
-import { publicConfigSchema } from './public-config-schema.js';
+import { PUBLIC_SETTING_DEFAULTS } from '../public';
+import { publicConfigSchema } from './public-config-schema';
 
 const defaults = { ...PUBLIC_SETTING_DEFAULTS, custom: {} };
 

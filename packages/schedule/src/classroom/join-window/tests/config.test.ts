@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { makeupOffer } from '../../../lessons/makeup-offer.js';
-import type { LessonView } from '../../../lessons/views.js';
-import { makeupEligible } from '../../../schemas/booking-extras.js';
-import { canJoinNow, DEFAULT_JOIN_WINDOW, joinWindow, joinWindowConfig, roomClosesAt } from '../join-window.js';
-import { pickStudentLesson } from '../../student-lesson.js';
+import { makeupOffer } from '../../../lessons/makeup-offer';
+import type { LessonView } from '../../../lessons/views';
+import { makeupEligible } from '../../../schemas/booking-extras';
+import { canJoinNow, DEFAULT_JOIN_WINDOW, joinWindow, joinWindowConfig, roomClosesAt } from '../join-window';
+import { pickStudentLesson } from '../../student-lesson';
 
 const lesson = { starts_at: '2026-10-05T16:00:00Z', ends_at: '2026-10-05T16:30:00Z' };
 const at = (iso: string) => new Date(iso);

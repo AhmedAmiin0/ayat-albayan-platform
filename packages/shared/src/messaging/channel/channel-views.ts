@@ -1,5 +1,5 @@
-import type { ChannelMessageKind } from './channel-media.js';
-import type { ChannelClosedReason, ChannelSenderRole } from './channel.js';
+import type { ChannelMessageKind } from './channel-media';
+import type { ChannelClosedReason, ChannelSenderRole } from './channel';
 
 // What the student channel's API answers (docs/31 §2). Views are whitelists: names only, never a
 // phone, email or profile id. The apps parse them with channel.schemas.ts.

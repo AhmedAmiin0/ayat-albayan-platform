@@ -6,9 +6,9 @@ import {
   type PortalRequest,
   type PortalSlots,
 } from '@ab/shared';
-import type { ApiClient } from '../../../core/http/index.js';
-import { pathKey } from '../../../core/keys/index.js';
-import type { PortalRead } from '../portal-api.js';
+import type { ApiClient } from '../../../core/http';
+import { pathKey } from '../../../core/keys';
+import type { PortalRead } from '../portal-api';
 
 // Shared by family app and web portal; answers are parsed (rule 12), then PORTAL_KEY refreshes.
 

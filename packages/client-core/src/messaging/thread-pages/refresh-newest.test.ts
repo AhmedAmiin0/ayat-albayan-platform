@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ThreadDetail } from '@ab/shared';
-import type { ThreadPages } from '../inbox/index.js';
-import { type NewestCache, refreshNewest } from './refresh-newest.js';
-import { cache, ids, msg, page } from './thread.fakes.test-util.js';
+import type { ThreadPages } from '../inbox';
+import { type NewestCache, refreshNewest } from './refresh-newest';
+import { cache, ids, msg, page } from './thread.fakes.test-util';
 
 interface Store {
   newest: () => Promise<ThreadDetail>;

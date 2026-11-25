@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import type { TemplateStatus, WaLine } from '@ab/catalog';
 import { SETTING_DEFAULTS, type AcademySettings } from '@ab/settings';
-import { resolveRule } from '../rules.effective.js';
-import { RULE_SETTING_KEYS, type RuleSettings } from '../rules.legacy.js';
-import { entryView, type CatalogueInputs } from './catalogue-state/index.js';
-import { notificationEntry } from './catalogue.js';
-import { SCHEDULE_ENTRIES } from './catalogue.schedule.js';
+import { resolveRule } from '../rules.effective';
+import { RULE_SETTING_KEYS, type RuleSettings } from '../rules.legacy';
+import { entryView, type CatalogueInputs } from './catalogue-state';
+import { notificationEntry } from './catalogue';
+import { SCHEDULE_ENTRIES } from './catalogue.schedule';
 
 // The schedule-change rows: the guardian AND the teacher, WhatsApp + bells.
 

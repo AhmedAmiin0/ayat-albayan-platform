@@ -1,4 +1,4 @@
-import type { NotificationEntry } from './catalogue.types.js';
+import type { NotificationEntry } from './catalogue.types';
 
 // The family app's own pushes (docs/50 §5 item 6): to the guardian and the student logins only,
 // in their bell and on their devices. No WhatsApp (that stays the report PDF and the reminders).

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_HOME_PREFS } from './home-prefs.js';
-import { prefSwitches, type PrefSwitchWords } from './pref-switches.js';
+import { DEFAULT_HOME_PREFS } from './home-prefs';
+import { prefSwitches, type PrefSwitchWords } from './pref-switches';
 
 const W: PrefSwitchWords = {
   kind: { soon: 's', confirm: 'c', changed: 'x', report: 'r', bell: 'b' },

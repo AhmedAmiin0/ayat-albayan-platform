@@ -1,7 +1,7 @@
 import type { PortalLesson, PortalStudent, PortalTeacher } from '@ab/shared';
 import { addDaysIn, localDateIn, startOfWeekIn } from '@ab/time';
-import { lessonOptions } from '../actions/lesson-options.js';
-import { isAhead } from '../lesson-window.js';
+import { lessonOptions } from '../actions/lesson-options';
+import { isAhead } from '../lesson-window';
 
 // One academy week, Saturday to Friday (docs/50 §6), of lessons still ahead, on the viewer's clock.
 

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { presenceTopic, trackSelf } from './presence-live.js';
-import { fakeRealtime } from './presence.fakes.test-util.js';
+import { presenceTopic, trackSelf } from './presence-live';
+import { fakeRealtime } from './presence.fakes.test-util';
 
 const ME = '11111111-1111-1111-1111-111111111111';
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { portalHomeSchema } from './portal.js';
+import { portalHomeSchema } from './portal';
 
 const base = { kind: 'guardian', students: [], renew_url: null };
 

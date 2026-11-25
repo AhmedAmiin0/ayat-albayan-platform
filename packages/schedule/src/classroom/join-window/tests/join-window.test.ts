@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canJoinNow, joinWindow } from '../join-window.js';
+import { canJoinNow, joinWindow } from '../join-window';
 
 const lesson = { starts_at: '2026-10-05T16:00:00.000Z', ends_at: '2026-10-05T17:00:00.000Z' };
 const at = (iso: string) => new Date(iso);

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
-import { isCurrentStudent } from './student-lists.js';
-import { boardStudents } from './board-students.js';
+import { isCurrentStudent } from './student-lists';
+import { boardStudents } from './board-students';
 
 const all = STUDENT_STATUSES.map((status: StudentStatus) => ({ id: status, status }));
 const ids = (list: { id: string }[]) => list.map((x) => x.id);

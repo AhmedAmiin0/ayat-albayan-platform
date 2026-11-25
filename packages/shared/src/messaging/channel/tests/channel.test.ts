@@ -5,7 +5,7 @@ import {
   channelEditSchema,
   channelPageQuerySchema,
   channelPostSchema,
-} from '../channel.js';
+} from '../channel';
 
 const ID = 'a1000000-0000-4000-8000-000000000001';
 const photo = { path: 'c1/x.jpg', mime: 'image/jpeg', size: 1000, name: 'صورة.jpg' };

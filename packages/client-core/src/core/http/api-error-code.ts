@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ApiError } from './api-error.js';
+import { ApiError } from './api-error';
 
 const coded = z.object({ code: z.string() });
 

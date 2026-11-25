@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isHoldFailure, REOPEN_NO_TEMPLATE, reopenChoiceOf } from '../thread-reopen.js';
+import { isHoldFailure, REOPEN_NO_TEMPLATE, reopenChoiceOf } from '../thread-reopen';
 
 describe('reopenChoiceOf: the chat_reopen_template choice (owner 2026-11-06)', () => {
   it('«بدون قالب» (none, any case, trimmed) waits for the family', () => {

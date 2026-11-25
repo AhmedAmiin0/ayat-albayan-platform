@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { reactionRef } from '../reactions/reactions.js';
-import { adWelcomeOf, chatMarkerOf, isHiddenPayload, markerPayload } from './chat-markers.js';
+import { reactionRef } from '../reactions/reactions';
+import { adWelcomeOf, chatMarkerOf, isHiddenPayload, markerPayload } from './chat-markers';
 
 const ORIGINAL = 'wamid.HBgMOTY2NTAwMDAwMDAxFQIAERgSQUJDREVGMDEyMzQ1Njc4OQA=';
 

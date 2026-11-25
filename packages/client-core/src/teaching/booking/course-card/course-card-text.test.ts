@@ -5,7 +5,7 @@ import {
   extendPreviewLines,
   pausePreviewLines,
   resumePreviewLines,
-} from './course-card-text.js';
+} from './course-card-text';
 
 const forms = (stem: string) => ({
   zero: `لا ${stem}`,

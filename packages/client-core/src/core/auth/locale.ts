@@ -1,7 +1,7 @@
 import { localeUpdateSchema } from '@ab/shared';
 import { LOCALES, type Locale } from '@ab/core';
 import { z } from 'zod';
-import type { ApiClient } from '../http/index.js';
+import type { ApiClient } from '../http';
 
 // Locale comes from GET /auth/me or GET /portal/me and is written back with PATCH /me/locale.
 

@@ -9,7 +9,7 @@ import {
   type PasswordSession,
   type ResetBody,
 } from '@ab/shared';
-import { ApiError, type ApiClient } from '../http/index.js';
+import { ApiError, type ApiClient } from '../http';
 
 // Family accounts (docs/30 §6): the public sign-in routes as web and mobile call them. Sessions are
 // finished by the app's own supabase client (verifyOtp / setSession).

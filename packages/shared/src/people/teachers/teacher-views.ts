@@ -1,6 +1,6 @@
 import type { Gender, Program, TeacherStatus } from '@ab/catalog';
 import type { AvailabilitySlot, TeacherMeetingMode } from '@ab/schedule';
-import type { TeacherStudentCounts } from '../students/index.js';
+import type { TeacherStudentCounts } from '../students';
 
 // Response shapes of apps/api people/teachers (R-TCH-01, R-TCH-02), as the clients read them.
 

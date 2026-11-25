@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { initialPlayer, playerReducer, type PlayerEvent, type PlayerState } from './index.js';
+import { initialPlayer, playerReducer, type PlayerEvent, type PlayerState } from '.';
 
 const run = (events: PlayerEvent[], start = initialPlayer()): PlayerState =>
   events.reduce(playerReducer, start);

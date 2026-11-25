@@ -8,7 +8,7 @@ import {
   DISCOUNT_MAX,
   PACKAGE_IDS,
   PRICING_DURATIONS,
-} from '../pricing/catalog.js';
+} from '../pricing/catalog';
 import { calendarDaysBetween } from '@ab/time';
 
 // Money commands (docs/11 §5-8): only customPrice replaces the catalog-quoted price, never `price`.

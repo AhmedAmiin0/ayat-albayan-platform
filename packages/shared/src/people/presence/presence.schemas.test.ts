@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { channelPresenceSchema } from './presence.schemas.js';
+import { channelPresenceSchema } from './presence.schemas';
 
 describe("a chat's presence as the apps read it (docs/33)", () => {
   it('reads the people, a never-seen one included', () => {

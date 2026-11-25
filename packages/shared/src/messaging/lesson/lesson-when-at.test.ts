@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { lessonWhenAt, lessonWhenText } from './booking-confirmation.js';
+import { lessonWhenAt, lessonWhenText } from './booking-confirmation';
 
 const at = new Date('2026-10-04T14:00:00Z'); // 17:00 in Riyadh
 

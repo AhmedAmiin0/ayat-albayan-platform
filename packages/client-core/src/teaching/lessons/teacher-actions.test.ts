@@ -8,7 +8,7 @@ import {
   teacherCanConfirm,
   teacherConfirmed,
   teacherLessonPaths,
-} from './teacher-actions.js';
+} from './teacher-actions';
 
 const now = new Date('2026-11-11T12:00:00Z');
 const lesson = (status: LessonStatus, at: string, confirmed: string | null = null) => ({

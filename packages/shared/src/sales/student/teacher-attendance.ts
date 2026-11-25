@@ -1,5 +1,5 @@
 import type { Attendance, LessonStatus } from '@ab/catalog';
-import { attendanceKind, type AttendanceKind } from './student-details.js';
+import { attendanceKind, type AttendanceKind } from './student-details';
 
 /** docs/46 C5: a completed lesson with no attendance was auto-held, so it reads unrecorded. */
 export function teacherAttendanceKind(

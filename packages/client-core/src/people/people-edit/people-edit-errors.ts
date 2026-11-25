@@ -1,4 +1,4 @@
-import { apiErrorCode } from '../../core/http/index.js';
+import { apiErrorCode } from '../../core/http';
 
 /** The app's `t.peopleEdit.errors`: one sentence per API code, and `generic` for anything else. */
 export type PeopleEditErrorText = Record<string, string | undefined> & { generic: string };

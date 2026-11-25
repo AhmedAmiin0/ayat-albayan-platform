@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { QUICK_REPLY_INTENTS } from '../../replies/quick-reply.js';
-import { TEMPLATE_KEY_PATTERN } from '../../schemas.js';
-import { BODY_SLOTS } from '../templates.js';
+import { QUICK_REPLY_INTENTS } from '../../replies/quick-reply';
+import { TEMPLATE_KEY_PATTERN } from '../../schemas';
+import { BODY_SLOTS } from '../templates';
 import {
   fewUrls, TEMPLATE_LIMITS, templateBody, templateButtonText, templateFooter, templateParam,
   templateUrlButton,
-} from '../template-create.js';
+} from '../template-create';
 
 // Meta keeps the name and category of an edited template, and the header is never edited here.
 

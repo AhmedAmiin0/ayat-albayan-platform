@@ -1,5 +1,5 @@
 import type { Permission } from '@ab/catalog';
-import type { TemplateView } from './template-views.js';
+import type { TemplateView } from './template-views';
 
 // Every role without
 // templates.manage or templates.send_all (teachers in teacher mode, sales, the classroom assistant, a

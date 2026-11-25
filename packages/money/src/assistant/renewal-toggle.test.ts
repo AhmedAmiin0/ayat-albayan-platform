@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { SubscriptionFact } from './first-paid/index.js';
-import { planRenewalCommission, renewalShareNow } from './renewal.js';
+import type { SubscriptionFact } from './first-paid';
+import { planRenewalCommission, renewalShareNow } from './renewal';
 
 // Renewal commission off (migration 20261101000996): a new renewal earns nothing; percent kept.
 interface At {

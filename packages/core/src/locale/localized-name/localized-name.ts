@@ -1,5 +1,5 @@
-import type { Locale } from '../locale.js';
-import type { LocalizedName } from './localized-name.types.js';
+import type { Locale } from '../locale';
+import type { LocalizedName } from './localized-name.types';
 
 /** A blank English name counts as missing, so the English UI falls back to Arabic. */
 export function localizedName(name: LocalizedName, locale: Locale): string {

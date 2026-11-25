@@ -9,8 +9,8 @@ import {
   roleActions,
   studentFormOf,
   studentPatchOf,
-} from '../../index.js';
-import { VIEW } from './people-edit.fixtures.js';
+} from '../..';
+import { VIEW } from './people-edit.fixtures';
 
 describe('people-edit forms', () => {
   it('sends only the changed student fields: blank → null, the age a number', () => {

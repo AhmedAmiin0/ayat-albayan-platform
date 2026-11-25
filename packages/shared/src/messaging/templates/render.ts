@@ -1,4 +1,4 @@
-import { BODY_SLOTS, type BodySlot, type TemplateButton, type TemplateParams } from './templates.js';
+import { BODY_SLOTS, type BodySlot, type TemplateButton, type TemplateParams } from './templates';
 
 // Template text as the guardian reads it: the inbox shows outbound template rows with it, and the
 // R-MSG-03 wa.me fallback pre-fills it.

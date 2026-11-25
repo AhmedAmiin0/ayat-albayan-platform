@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isLinkCurrency, PAYMENT_LINK_CURRENCIES, paymentLinkCreateSchema } from './schemas.js';
+import { isLinkCurrency, PAYMENT_LINK_CURRENCIES, paymentLinkCreateSchema } from './schemas';
 
 const ID = '11111111-1111-4111-8111-111111111111';
 const BODY = {

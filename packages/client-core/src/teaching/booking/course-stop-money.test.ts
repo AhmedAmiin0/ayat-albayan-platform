@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { courseStopBody, offeredRefund, STOP_MONEY_START, stopMoney } from './course-stop-money.js';
+import { courseStopBody, offeredRefund, STOP_MONEY_START, stopMoney } from './course-stop-money';
 
 // 8 lessons for 400 SAR, 3 attended at 100 %: charge 150.
 const calc = (paid: number) => ({

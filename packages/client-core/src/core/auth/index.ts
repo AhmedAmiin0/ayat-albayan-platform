@@ -1,11 +1,11 @@
-export { setViewerPersonTz, subscribeViewerTz, viewerTz, viewerTzFor } from './viewer-tz.js';
+export { setViewerPersonTz, subscribeViewerTz, viewerTz, viewerTzFor } from './viewer-tz';
 export {
   meLoaded,
   permissionsOf,
   permissionsView,
   type Can,
   type PermissionsView,
-} from './permissions.js';
+} from './permissions';
 export {
   type CodeRoutes,
   isEmailIdentifier,
@@ -15,7 +15,7 @@ export {
   signInError,
   type SignInApi,
   type SignInError,
-} from './sign-in.js';
-export { meLocaleOf, meLocalePath, meLocaleSend } from './locale.js';
-export { meQueryOptions } from './me-query/index.js';
-export type { MeQuery } from './me-query/index.js';
+} from './sign-in';
+export { meLocaleOf, meLocalePath, meLocaleSend } from './locale';
+export { meQueryOptions } from './me-query';
+export type { MeQuery } from './me-query';

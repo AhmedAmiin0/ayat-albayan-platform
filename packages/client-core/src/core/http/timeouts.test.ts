@@ -7,7 +7,7 @@ import {
   SLOW_READ_TIMEOUT_MS,
   SLOW_SEND_TIMEOUT_MS,
   sendTimeoutFor,
-} from './timeouts.js';
+} from './timeouts';
 
 test('only GET and HEAD are reads', () => {
   const reads = [undefined, 'get', 'HEAD'].map((method) => isRead(method ? { method } : {}));

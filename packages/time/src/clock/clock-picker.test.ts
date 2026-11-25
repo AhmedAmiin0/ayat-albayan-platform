@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { meridiemLabel } from './clock.js';
-import { hourLabel } from './clock-picker.js';
+import { meridiemLabel } from './clock';
+import { hourLabel } from './clock-picker';
 
 describe('hourLabel', () => {
   it('hour chips in each cycle and language', () => {

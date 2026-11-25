@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { teacherLessonKind, teacherLessonTotals } from './teacher-overview.js';
+import { teacherLessonKind, teacherLessonTotals } from './teacher-overview';
 
 describe('teacherLessonKind', () => {
   it.each([

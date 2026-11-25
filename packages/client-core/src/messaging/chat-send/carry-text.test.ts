@@ -1,6 +1,6 @@
 import type { TemplateView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { carriesText, messageTemplate } from './carry-text.js';
+import { carriesText, messageTemplate } from './carry-text';
 
 const tpl = (over: Partial<TemplateView>): TemplateView =>
   ({ key: 'academy_message', line: 'chat', status: 'approved', ...over }) as TemplateView;

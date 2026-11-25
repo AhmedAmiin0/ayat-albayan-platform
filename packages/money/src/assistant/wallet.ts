@@ -1,8 +1,8 @@
 import type { PaymentMethod, PayoutStatus } from '@ab/catalog';
 import { fromCents, toCents } from '@ab/core';
-import type { AssistantCommissionStatus } from './commission.js';
-import type { AssistantCommissionKind } from './kind.js';
-import { monthOf } from './statement.js';
+import type { AssistantCommissionStatus } from './commission';
+import type { AssistantCommissionKind } from './kind';
+import { monthOf } from './statement';
 
 // A commission is owed until a paid statement holds it; per currency, never summed across them.
 

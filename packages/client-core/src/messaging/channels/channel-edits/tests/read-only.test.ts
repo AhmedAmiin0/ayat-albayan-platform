@@ -1,7 +1,7 @@
 import type { ChannelMessageView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { channelBubbleActions, channelEditError } from '../channel-edits.js';
-import { channelMode } from '../../channel-live.js';
+import { channelBubbleActions, channelEditError } from '../channel-edits';
+import { channelMode } from '../../channel-live';
 
 // Review finding 5: the assistant's page says read_only (a closed chat, or the family chat off),
 // so her own bubble offers no edit and no delete-for-all; the API's 403 channel_read_only reads as

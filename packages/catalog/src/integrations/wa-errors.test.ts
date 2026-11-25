@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { WA_ERROR } from './wa-errors.js';
+import { WA_ERROR } from './wa-errors';
 
 describe('WA_ERROR', () => {
   it('names each Meta code once', () => {

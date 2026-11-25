@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { correctionBody, correctionsOf, stripCorrectionPrefix } from '../correction.js';
+import { correctionBody, correctionsOf, stripCorrectionPrefix } from '../correction';
 
 // Review of PR #694: one prefix only (the admins' wording or the bundled one), and only a
 // correction that reached the family marks its original.

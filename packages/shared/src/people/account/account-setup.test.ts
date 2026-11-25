@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { accountSetupSchema, needsSetup } from './account-setup.js';
+import { accountSetupSchema, needsSetup } from './account-setup';
 
 describe('teacher first-time setup (docs/46 A4)', () => {
   it('needs setup only for a teacher on a synthetic login', () => {

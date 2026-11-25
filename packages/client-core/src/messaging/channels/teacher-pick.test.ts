@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { teacherChoice } from './teacher-pick.js';
+import { teacherChoice } from './teacher-pick';
 
 const students = [{ id: 's1', teacher_id: 't1' }, { id: 's2', teacher_id: null }];
 

@@ -1,8 +1,8 @@
-export * from './leads.js';
-export * from './people-sort.js';
-export * from './people.js';
-export * from './student-filters.js';
-export * from './teacher-students.js';
-export * from './people-edit.js';
-export * from './people-edit-view.js';
-export type * from './lead-views.js';
+export * from './leads';
+export * from './people-sort';
+export * from './people';
+export * from './student-filters';
+export * from './teacher-students';
+export * from './people-edit';
+export * from './people-edit-view';
+export type * from './lead-views';

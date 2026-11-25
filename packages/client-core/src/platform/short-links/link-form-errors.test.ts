@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ApiError } from '../../core/http/index.js';
-import { issueErrors, linkServerErrors } from './link-form-errors.js';
+import { ApiError } from '../../core/http';
+import { issueErrors, linkServerErrors } from './link-form-errors';
 
 describe('issueErrors', () => {
   it('keeps the first problem per field, by zod path or dotted path', () => {

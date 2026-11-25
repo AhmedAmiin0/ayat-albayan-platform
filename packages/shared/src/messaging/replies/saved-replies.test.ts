@@ -7,7 +7,7 @@ import {
   savedReplyStageSchema,
   savedReplyUpdateSchema,
   savedReplyUploadSchema,
-} from './saved-replies.js';
+} from './saved-replies';
 
 describe('savedReplyCreateSchema', () => {
   it('trims title and body and takes an optional attachment', () => {

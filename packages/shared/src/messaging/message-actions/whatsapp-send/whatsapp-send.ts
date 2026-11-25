@@ -1,6 +1,6 @@
 import { WA_ERROR as E } from '@ab/catalog';
 import { z } from 'zod';
-import type { MessageView } from '../../chat/views.js';
+import type { MessageView } from '../../chat/views';
 import {
   APP_SEND_UNCONFIRMED,
   AWAITING_REPLY,
@@ -9,7 +9,7 @@ import {
   REOPEN_TRIES_USED,
   REOPEN_UNAVAILABLE,
   WINDOW_CLOSED,
-} from '../../chat/thread-reopen/index.js';
+} from '../../chat/thread-reopen';
 
 // A text the 24 h window stopped is sent from the Business app; the echo confirms (docs/19).
 

@@ -1,7 +1,7 @@
 // Admin-edited keys: plain in integration_config, secrets in Vault; a non-empty DB value beats env.
 
-import { GROUP_OF } from '../keys.groups.js';
-import { STORAGE_DRIVERS, STORAGE_PLAIN_KEYS } from '../storage.js';
+import { GROUP_OF } from '../keys.groups';
+import { STORAGE_DRIVERS, STORAGE_PLAIN_KEYS } from '../storage';
 
 /** The form's groups, in page order. */
 export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'evolution', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google', 'giphy', 'storage', 'stripe'] as const;

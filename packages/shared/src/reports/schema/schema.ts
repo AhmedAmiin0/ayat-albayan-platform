@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ATTENDANCES, GRADES, PROGRAMS } from '@ab/catalog';
-import { attended, REPORT_RUBRICS, type Rubric } from '../rules.js';
+import { attended, REPORT_RUBRICS, type Rubric } from '../rules';
 
 // Identity is never sent; the API takes it from the lesson (R-REP-01, D1); program is editable.
 

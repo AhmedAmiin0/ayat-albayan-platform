@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createRejoin, isDropped, liveDotState, rejoinDelayMs } from './live-rejoin.js';
+import { createRejoin, isDropped, liveDotState, rejoinDelayMs } from './live-rejoin';
 
 beforeEach(() => void vi.useFakeTimers());
 afterEach(() => void vi.useRealTimers());

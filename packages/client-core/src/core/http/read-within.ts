@@ -1,5 +1,5 @@
-import { type StallStage, withDeadline } from './deadline.js';
-import { isRead, READ_TIMEOUT_MS } from './timeouts.js';
+import { type StallStage, withDeadline } from './deadline';
+import { isRead, READ_TIMEOUT_MS } from './timeouts';
 
 export interface ReadDeadline {
   /** Default READ_TIMEOUT_MS; readTimeoutFor(path) gives a slow read more. */

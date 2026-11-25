@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { callEntryKind, formatCallDuration, isMissedCall, mergeChat } from './call-entry.js';
-import type { CallView } from './call-types.js';
+import { callEntryKind, formatCallDuration, isMissedCall, mergeChat } from './call-entry';
+import type { CallView } from './call-types';
 
 const call = (over: Partial<CallView>): Pick<CallView, 'direction' | 'status' | 'end_reason'> => ({
   direction: 'outbound', status: 'ended', end_reason: 'completed', ...over,

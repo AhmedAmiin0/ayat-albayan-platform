@@ -1,6 +1,6 @@
 import type { LessonStatus } from '@ab/catalog';
-import { AUTO_HELD_REASON } from '../auto-held.js';
-import { OPEN_LESSON_STATUSES } from '../state-machine/index.js';
+import { AUTO_HELD_REASON } from '../auto-held';
+import { OPEN_LESSON_STATUSES } from '../state-machine';
 
 // A lesson the family did not confirm after the reminder is absent and counts as used: while
 // settings.lesson_confirmation_required is ON, the job settles a lesson only once it ended plus

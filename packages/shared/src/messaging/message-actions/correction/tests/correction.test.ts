@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canCorrect, correctionBody, correctionsOf, isCorrectable, mayCorrect } from '../correction.js';
+import { canCorrect, correctionBody, correctionsOf, isCorrectable, mayCorrect } from '../correction';
 
 const sent = {
   direction: 'outbound',

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { evolutionBaseAllowed } from './evolution.js';
+import { evolutionBaseAllowed } from './evolution';
 
 // docs/45: Supabase keeps existing files; MinIO keeps new ones once STORAGE_DRIVER switches.
 

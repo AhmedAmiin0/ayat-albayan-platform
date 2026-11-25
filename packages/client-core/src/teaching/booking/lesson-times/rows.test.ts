@@ -8,7 +8,7 @@ import {
   repeatedDays,
   rowsFromPicks,
   weekBounds,
-} from './rows.js';
+} from './rows';
 
 const CAIRO = 'Africa/Cairo';
 

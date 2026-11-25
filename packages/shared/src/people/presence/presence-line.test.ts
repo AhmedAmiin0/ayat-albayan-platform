@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
 import en from '../../../i18n/en.json' with { type: 'json' };
-import { isOnline, lastMessageLine, PRESENCE_RECENT_MS, presenceLine } from './presence-line.js';
+import { isOnline, lastMessageLine, PRESENCE_RECENT_MS, presenceLine } from './presence-line';
 
 const NOW = new Date('2026-10-30T12:00:00Z');
 const base = {

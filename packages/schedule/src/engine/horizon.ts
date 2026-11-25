@@ -1,5 +1,5 @@
 import { DAY_MS, dayInZone, dayWallToUtc } from '@ab/time';
-import type { UtcWindow } from './occurrences/index.js';
+import type { UtcWindow } from './occurrences';
 
 const WEEK = 7 * DAY_MS;
 

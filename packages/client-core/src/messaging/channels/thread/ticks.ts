@@ -1,5 +1,5 @@
 import type { ChannelMessageView } from '@ab/shared';
-import { isPending } from './pending.js';
+import { isPending } from './pending';
 
 /** My message's state: on its way, stored, read by every other participant. */
 export type ChannelTicks = 'queued' | 'sent' | 'read';

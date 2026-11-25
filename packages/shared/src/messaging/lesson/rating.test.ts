@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../../i18n/ar.json' with { type: 'json' };
-import { payloadRef, quickReplyIntent } from '../replies/quick-reply.js';
+import { payloadRef, quickReplyIntent } from '../replies/quick-reply';
 import {
   LESSON_RATINGS,
   lessonDateText,
@@ -9,7 +9,7 @@ import {
   ratingOfInteractive,
   ratingOfIntent,
   ratingOfText,
-} from './rating.js';
+} from './rating';
 
 const LESSON = '7f0c2c4e-1b2a-4c3d-9e8f-0a1b2c3d4e5f';
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { clickToChatLink } from '../phone.js';
+import { clickToChatLink } from '../phone';
 
 describe('clickToChatLink (R-MSG-03)', () => {
   it('drops the + and encodes Arabic, new lines and &', () => {

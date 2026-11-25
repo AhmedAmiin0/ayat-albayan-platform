@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { evolutionStateOf, QR_DATA_URL_RE } from './evolution.js';
-import { numberCreateSchema, numberUpdateSchema } from './schemas.js';
+import { evolutionStateOf, QR_DATA_URL_RE } from './evolution';
+import { numberCreateSchema, numberUpdateSchema } from './schemas';
 
 // docs/19 «Evolution driver»: an Evolution number names its engine; nothing else carries one.
 

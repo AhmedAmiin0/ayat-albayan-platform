@@ -8,8 +8,8 @@ import {
   receiptUploadSchema,
   subscriptionCreateSchema,
   subscriptionUpdateSchema,
-} from './schemas.js';
-import { expenseCreateSchema } from './expense-schemas.js';
+} from './schemas';
+import { expenseCreateSchema } from './expense-schemas';
 
 const SUB = '00000000-0000-4000-8000-000000000001';
 const payment = {

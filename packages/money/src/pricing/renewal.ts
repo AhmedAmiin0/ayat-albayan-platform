@@ -1,4 +1,4 @@
-import type { SubscriptionView } from '../ledger/views.js';
+import type { SubscriptionView } from '../ledger/views';
 import {
   CUSTOM_COUNT_DEFAULT,
   CUSTOM_COUNT_MAX,
@@ -8,8 +8,8 @@ import {
   PRICING_DURATIONS,
   type PackageId,
   type PricingDuration,
-} from './catalog.js';
-import { SITE_COUNTRIES, type SiteCountry } from './currency.js';
+} from './catalog';
+import { SITE_COUNTRIES, type SiteCountry } from './currency';
 
 // Renewal (docs/18) starts from the last package's quote; else it keeps the lesson count.
 

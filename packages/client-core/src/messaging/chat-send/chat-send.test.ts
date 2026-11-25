@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { staffMaySend, triesAfterWindow } from './chat-send.js';
+import { staffMaySend, triesAfterWindow } from './chat-send';
 
 describe('staffMaySend: every staff send follows the text rule (owner 2026-11-01)', () => {
   it.each([

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { instant, localDate } from './common.js';
+import { instant, localDate } from './common';
 
 describe('localDate', () => {
   it('accepts a calendar day', () => {

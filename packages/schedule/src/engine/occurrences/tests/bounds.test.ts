@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ruleOccurrences, type OccurrenceTiming } from '../occurrences.js';
+import { ruleOccurrences, type OccurrenceTiming } from '../occurrences';
 
 const RULE: OccurrenceTiming = {
   byday: [0, 2],

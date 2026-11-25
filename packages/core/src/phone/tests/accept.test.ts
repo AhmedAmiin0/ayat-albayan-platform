@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { E164_RE, normalizePhone } from '../phone.js';
+import { E164_RE, normalizePhone } from '../phone';
 
 // R-STU-02: Saudi and Egyptian formats people actually type / WhatsApp sends.
 describe('normalizePhone — accepted (R-STU-02)', () => {

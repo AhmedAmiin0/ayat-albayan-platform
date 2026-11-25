@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { Attendance, LessonStatus, ReportStatus } from '@ab/catalog';
 import { addCalendarMonths, monthRangeIn, RIYADH_TZ, riyadhToday } from '@ab/time';
 import { monthParam } from '@ab/money';
-import { attendanceKind, type AttendanceKind } from './student-details.js';
+import { attendanceKind, type AttendanceKind } from './student-details';
 
 // One student's past lessons in a Riyadh month; never a price, payment, meeting link or note.
 

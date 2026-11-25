@@ -4,7 +4,7 @@ import {
   courseStopBlock,
   courseStopSchema,
   stoppedLessons,
-} from './course-stop.js';
+} from './course-stop';
 
 const SUB = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
 const REQ = '7a1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e12';

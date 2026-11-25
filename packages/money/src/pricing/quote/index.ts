@@ -1,1 +1,1 @@
-export { quote, type Quote, type QuoteOptions, type QuoteResponse } from './quote.js';
+export { quote, type Quote, type QuoteOptions, type QuoteResponse } from './quote';

@@ -6,7 +6,7 @@ import {
   valueTextBy,
   type ValueKind,
   type ValueTextTable,
-} from '../../index.js';
+} from '../..';
 
 const kindOf = (key: SettingKey, value: unknown): ValueKind => valueKind(settingDef(key), value);
 

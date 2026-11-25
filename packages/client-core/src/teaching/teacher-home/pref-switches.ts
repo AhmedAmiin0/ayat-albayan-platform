@@ -1,4 +1,4 @@
-import { ALERT_KINDS, type AlertKind, type HomePrefs, withAlert } from './home-prefs.js';
+import { ALERT_KINDS, type AlertKind, type HomePrefs, withAlert } from './home-prefs';
 
 // Shared switch order for web and mobile; the apps only draw them.
 

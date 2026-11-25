@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { editableNow, sendLines, type SendWords } from './send-lines.js';
+import { editableNow, sendLines, type SendWords } from './send-lines';
 
 const words: SendWords = {
   editUntil: 'edit until {when}',

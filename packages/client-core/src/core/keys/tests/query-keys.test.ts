@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { listKey, pathKey } from '../../../index.js';
+import { listKey, pathKey } from '../../..';
 
 describe('query keys (one convention, E1)', () => {
   it('pathKey is the path segments', () => {

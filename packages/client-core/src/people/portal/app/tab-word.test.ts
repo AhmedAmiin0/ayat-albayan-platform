@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { childTabPill, childTabWord, type ChildTabWords } from './tab-word.js';
+import { childTabPill, childTabWord, type ChildTabWords } from './tab-word';
 
 const WORDS: ChildTabWords = {
   portal: {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { quote, type QuoteOptions } from '../quote.js';
+import { quote, type QuoteOptions } from '../quote';
 
 const base = {
   duration: 45,

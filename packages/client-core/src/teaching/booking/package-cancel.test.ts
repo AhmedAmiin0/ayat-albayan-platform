@@ -5,7 +5,7 @@ import {
   postPackageCancel,
   salesPackageCancelKey,
   salesPackageCancelPath,
-} from './package-cancel.js';
+} from './package-cancel';
 
 describe('«إلغاء الباقة» of the assistant', () => {
   it('one route for the check and the cancel, and its key', () => {

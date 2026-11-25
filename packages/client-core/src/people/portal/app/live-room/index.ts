@@ -6,4 +6,4 @@ export {
   liveRoomText,
   type LiveRoomText,
   type LiveRoomWords,
-} from './live-room.js';
+} from './live-room';

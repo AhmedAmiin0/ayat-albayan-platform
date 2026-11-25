@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LessonStatus } from '@ab/catalog';
-import { joinPhase, reportStage, teacherLessonState } from './teacher-lesson-plan.js';
+import { joinPhase, reportStage, teacherLessonState } from './teacher-lesson-plan';
 
 // A lesson 13:00–14:00 UTC; the window opens 12:45 and closes 16:00 (15 / 120 min defaults).
 interface Report {

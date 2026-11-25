@@ -1,6 +1,6 @@
-import type { SettingKey } from '../registry.js';
-import { SCHEDULE_KEYS } from '../domains/teaching/schedule-keys.js';
-import { TEACHER_PAGE_KEYS } from '../domains/teaching/teacher-pages.js';
+import type { SettingKey } from '../registry';
+import { SCHEDULE_KEYS } from '../domains/teaching/schedule-keys';
+import { TEACHER_PAGE_KEYS } from '../domains/teaching/teacher-pages';
 
 // Values page (docs/26b §2): small groups, one per view; kept apart from layout.ts.
 

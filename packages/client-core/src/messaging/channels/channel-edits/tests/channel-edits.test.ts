@@ -6,7 +6,7 @@ import {
   channelMessagePath,
   channelReadsPath,
   threadHidePath,
-} from '../channel-edits.js';
+} from '../channel-edits';
 
 const at = '2026-10-30T10:00:00.000Z';
 const msg = (over: Partial<ChannelMessageView> = {}): ChannelMessageView => ({

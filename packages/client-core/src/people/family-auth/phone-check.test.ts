@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { defaultCountry } from './countries.js';
-import { checkPhone } from './phone-check.js';
+import { defaultCountry } from './countries';
+import { checkPhone } from './phone-check';
 
 // Made-up numbers only. The rule is the API's (@ab/core normalizePhone): any country, E.164.
 const in_ = (code: string) => defaultCountry(code);

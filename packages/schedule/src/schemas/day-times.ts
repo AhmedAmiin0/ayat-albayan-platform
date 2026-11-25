@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { bookingKindOf, type BookingKind } from './booking-extras.js';
+import { bookingKindOf, type BookingKind } from './booking-extras';
 import { timeOfDay } from '@ab/core';
 
 // Per-weekday times of a package booking. Kept apart from scheduling.ts (file

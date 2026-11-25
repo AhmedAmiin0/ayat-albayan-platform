@@ -1,5 +1,5 @@
-import { highlightParts } from '../replies/saved-reply-text/index.js';
-import { SNIPPET_SIDE } from './chat-search.js';
+import { highlightParts } from '../replies/saved-reply-text';
+import { SNIPPET_SIDE } from './chat-search';
 
 const ELLIPSIS = '…';
 

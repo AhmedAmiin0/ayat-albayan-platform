@@ -1,6 +1,6 @@
 import type { PortalLesson } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { clockParts, countdownParts, lessonClock } from './countdown.js';
+import { clockParts, countdownParts, lessonClock } from './countdown';
 
 const lesson = (over: Partial<PortalLesson> = {}): PortalLesson => ({
   id: 'l1', starts_at: '2026-10-27T16:00:00.000Z', ends_at: '2026-10-27T16:30:00.000Z',

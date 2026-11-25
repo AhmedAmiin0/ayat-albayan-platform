@@ -1,1 +1,1 @@
-export type * from './list-filters.js';
+export type * from './list-filters';

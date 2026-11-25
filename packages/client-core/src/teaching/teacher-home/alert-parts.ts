@@ -1,8 +1,8 @@
 import { lessonWhenAt } from '@ab/shared';
 import type { LessonView } from '@ab/schedule';
 import { clockOf, type ClockOptions } from '@ab/time';
-import type { LessonChange } from './lesson-changes.js';
-import type { TodayAlert } from './today-alerts.js';
+import type { LessonChange } from './lesson-changes';
+import type { TodayAlert } from './today-alerts';
 
 // Never shows money or another teacher.
 

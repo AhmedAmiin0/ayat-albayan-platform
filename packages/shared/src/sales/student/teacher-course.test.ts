@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { courseEndOf, type TeacherCourseView } from './teacher-course.js';
+import { courseEndOf, type TeacherCourseView } from './teacher-course';
 
 const base: TeacherCourseView = {
   starts_on: '2026-10-01',
