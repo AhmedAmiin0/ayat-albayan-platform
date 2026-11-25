@@ -3,7 +3,7 @@ import { toCents } from '@ab/core';
 import type { EarningsListQuery, TeacherPaymentListQuery } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { readChunked } from '@/common/db/read-all';
+import { readAll, readChunked } from '@/common/db/read-all';
 import { maybe, pgError } from '@/common/db/errors';
 import { ledgerError } from './earnings.errors';
 import { paymentsPage, sessionsPage } from './summary/earnings.lists';
@@ -37,20 +37,16 @@ export class EarningsRepo {
 
   /** Every earning's money (the balance cards), read in pages of 1000. */
   async money(teacherId: string): Promise<MoneyRow[]> {
-    const rows: MoneyRow[] = [];
-    for (let from = 0; ; from += CHUNK) {
-      const { data, error } = await this.db
+    return readAll((from, to) =>
+      this.db
         .from(COUNTABLE)
         .select('id, amount, paid_amount')
         .eq('teacher_id', teacherId)
         .order('starts_at')
         .order('id')
-        .range(from, from + CHUNK - 1)
-        .returns<MoneyRow[]>();
-      if (error) throw pgError(error);
-      rows.push(...data);
-      if (data.length < CHUNK) return rows;
-    }
+        .range(from, to)
+        .returns<MoneyRow[]>(),
+    );
   }
 
   async sessions(teacherId: string, f: SessionFilter): Promise<Page<SessionRow>> {

@@ -1,7 +1,7 @@
 import type { Attendance, Grade, LessonStatus, PdfStatus, ReportStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { readAll } from '@/common/db/read-all';
+import { readAll, readChunked } from '@/common/db/read-all';
 import { maybe, pgError } from '@/common/db/errors';
 
 const HISTORY_COLUMNS =
@@ -38,8 +38,6 @@ export type PendingRow = {
   lesson_reports: { id: string; status: ReportStatus } | null;
 };
 
-const CHUNK = 100;
-
 /** Report history (R5, R-REP-05) and pending reports (R11, R-TCH-03). Service role; callers guard. */
 @Injectable()
 export class ReportHistoryQueries {
@@ -59,16 +57,12 @@ export class ReportHistoryQueries {
   }
 
   async lessons(ids: readonly string[]): Promise<HistoryLesson[]> {
-    const out: HistoryLesson[] = [];
-    for (let i = 0; i < ids.length; i += CHUNK) {
-      const { data, error } = await this.db
+    return readChunked(ids, (chunk) =>
+      this.db
         .from('lessons')
         .select('id, starts_at, teacher:teachers(id, display_name_ar, display_name_en)')
-        .in('id', ids.slice(i, i + CHUNK));
-      if (error) throw pgError(error);
-      out.push(...data);
-    }
-    return out;
+        .in('id', chunk),
+    );
   }
 
   /** Completed lessons only (v_lesson_sequence). */
