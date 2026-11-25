@@ -2,10 +2,11 @@ import { expect, test } from '@playwright/test';
 import { earningId, earningOf, pastLesson, pay, teacherWithRates } from '../../support/finance/earnings';
 import { rolledBack } from '../../support/core/rls';
 import { resetAbrar } from '../../support/core/schedule';
+import { errorMessage } from '../../support/core/db-error';
 
 // record_teacher_payment and settle_payout_in_ledger (migration 178) against the real database.
 
-const refused = (p: Promise<unknown>) => p.then(() => 'allowed', (e: { message?: string }) => e.message);
+const refused = (p: Promise<unknown>) => p.then(() => 'allowed', errorMessage);
 
 test.describe('record_teacher_payment / settle_payout_in_ledger (migration 178)', () => {
   test.beforeEach(async () => {

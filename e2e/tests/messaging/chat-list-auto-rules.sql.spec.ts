@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { guardian, listOf, members, rerunMigration, someone, student, teacher } from '../../support/auto-lists';
 import { rolledBack } from '../../support/core/rls';
+import { errorCode } from '../../support/core/db-error';
 
 // Auto lists (migration 710, docs/22, R-STU-05) only add, never remove; auto rows have no added_by.
 
@@ -15,7 +16,7 @@ test.describe('automatic chat lists (migration 710)', () => {
       expect(rules).toEqual([{ name_key: 'مشترك', auto_rule: 'subscribed' }, { name_key: 'معلم', auto_rule: 'teachers' }]);
       const code = await tx
         .savepoint((sp) => sp`insert into public.chat_lists (name, name_key, auto_rule) values ('أخرى', 'اخري', 'teachers')`)
-        .then(() => 'ok', (e: { code?: string }) => e.code);
+        .then(() => 'ok', errorCode);
       expect(code).toBe('23505');
       // Rows that exist before the backfill (the triggers off, as on staging before 710).
       await tx`alter table public.students disable trigger students_chat_list_auto_ins`;
@@ -71,7 +72,7 @@ test.describe('automatic chat lists (migration 710)', () => {
     await rolledBack(async (tx) => {
       await tx`delete from public.chat_lists`;
       await tx`insert into public.chat_lists (name, name_key) select 'ق' || i, 'ق' || i from generate_series(1, 30) as i`;
-      const code = await tx.savepoint((sp) => rerunMigration(sp)).then(() => 'ok', (e: { code?: string }) => e.code);
+      const code = await tx.savepoint((sp) => rerunMigration(sp)).then(() => 'ok', errorCode);
       expect(code).toBe('23514');
     });
   });

@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import type { TransactionSql } from 'postgres';
 import { as, family, lesson, rolledBack, userId } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Migration 164 against the real database (rule 9: RLS on every table, defence in depth behind the
 // API), in a transaction that is rolled back. With a teacher's JWT, messages shows only the
@@ -109,7 +110,7 @@ test.describe('teacher mode RLS (migration 164, rule 9)', () => {
         tx
           .savepoint(() => as(tx, teacher, query))
           .then(() => 'allowed')
-          .catch((e: { code?: string }) => e.code);
+          .catch(errorCode);
       expect(await refused(() => tx`select * from public.teacher_thread_phones(${t.other})`)).toBe('42501');
       expect(await refused(() => tx`select * from public.teacher_unread(${t.abrar}, ${[PHONE.assigned]})`)).toBe('42501');
       expect(

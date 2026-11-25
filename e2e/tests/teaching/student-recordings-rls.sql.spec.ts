@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { as, family, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Migration 240: no guardian policy on lesson_recordings (a group lesson's file would expose every
 // student's session, its path and egress id). A guardian reads nothing, visible or not; the admin
@@ -57,7 +58,7 @@ test.describe('lesson_recordings for guardians (migration 240)', () => {
       await tx`insert into public.lesson_recordings (lesson_id, file_path, status, ended_at) values (${lessonId}, 'x.mp4', 'done', now())`;
       const [row] = await tx<{ visible_to_student: boolean }[]>`select visible_to_student from public.lesson_recordings where lesson_id = ${lessonId}`;
       expect(row?.visible_to_student).toBe(false);
-      const code = (q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', (e: { code?: string }) => e.code);
+      const code = (q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
       expect(await code(() => tx`insert into public.lesson_recordings (lesson_id, file_path, status, ended_at) values (${lessonId}, 'y.mp4', 'deleted', now())`)).toBe('23514');
     });
   });

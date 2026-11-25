@@ -6,7 +6,7 @@
     "e2e": "playwright test",
     "typecheck": "tsgo --noEmit",
     "screens": "node --import tsx scripts/screens.ts",
-    "test": "node --import tsx --test support/screens/tests/*.test.ts"
+    "test": "node --import tsx --test support/screens/tests/*.test.ts support/core/db-error/*.test.ts"
   },
   "devDependencies": {
     "@ab/catalog": "workspace:*",
@@ -25,6 +25,7 @@
     "postgres": "^3.4.9",
     "staff-web": "workspace:*",
     "tsx": "4.23.15",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "zod": "^4.6.5"
   }
 }
