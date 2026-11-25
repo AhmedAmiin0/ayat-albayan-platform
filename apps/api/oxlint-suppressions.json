@@ -4518,9 +4518,6 @@
     "ab/module-boundaries": {
       "count": 1
     },
-    "ab/no-global-fetch": {
-      "count": 1
-    },
     "typescript/restrict-template-expressions": {
       "count": 2
     }
