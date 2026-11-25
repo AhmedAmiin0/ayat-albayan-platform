@@ -3,7 +3,7 @@ import { OwnNumbers } from '@/modules/messaging/numbers';
 import { envelope, inboundValue, textPart } from './meta.fakes';
 import { kapsoSign, sign, webhookApp } from './test-app';
 
-// The academy's own numbers over HTTP (owner 2026-10-27), both drivers: Meta's route and Kapso's.
+// The academy's own numbers over HTTP, both drivers: Meta's route and Kapso's.
 // Example numbers only. OwnNumbers is the real global provider; only its read is stubbed.
 
 const OWN = '966500000009';

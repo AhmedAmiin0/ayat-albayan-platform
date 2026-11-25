@@ -21,7 +21,7 @@ import {
 const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
 
 /**
- * H1/H2 in sales mode: every chat (owner 2026-10-11, docs/16). Same payload as the admin's so the web
+ * H1/H2 in sales mode: every chat (docs/16). Same payload as the admin's so the web
  * inbox reuses its components, without money flags, packages, meeting links or the two link
  * templates. Opening a thread marks it read, as for the admin.
  */
@@ -29,7 +29,7 @@ const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
 export class SalesThreadsService {
   /** Property-injected (the constructor is at its limit); absent (unit tests): no reopen note. */
   @Optional() @Inject(ReopenRequest) private readonly reopen?: ReopenRequest;
-  /** The bar's live reopen and preselected template (closed window, owner 2026-11-14). */
+  /** The bar's live reopen and preselected template (closed window). */
   @Optional() @Inject(ReopenPick) private readonly pick?: ReopenPick;
 
   constructor(

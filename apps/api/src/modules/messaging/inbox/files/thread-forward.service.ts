@@ -64,7 +64,7 @@ export class ThreadForwardService {
   async forward(f: ForwardInput): Promise<{ source: ThreadMessageRow; results: ForwardOutcome[] }> {
     const source = assertForwardable(await this.queries.get(f.input.messageId), f);
     const media = source.media_mime;
-    // A teacher never sends files (owner 2026-10-19 #5): every target is skipped, nothing is copied.
+    // A teacher never sends files: every target is skipped, nothing is copied.
     const file = media && !f.scope ? await this.files.copy(source, { actorId: f.actorId, requestId: f.input.clientRequestId }) : null;
     const results: ForwardOutcome[] = [];
     for (const phone of f.input.targets) results.push(await this.one({ f, source, phone, file }));

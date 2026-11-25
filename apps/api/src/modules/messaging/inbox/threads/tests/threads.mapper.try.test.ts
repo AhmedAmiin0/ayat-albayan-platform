@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { toThreadView } from '@/modules/messaging/inbox/threads/threads.mapper';
 
-// try_after_window (owner 2026-10-31): the composers let staff type after the window on Kapso only.
+// try_after_window: the composers let staff type after the window on Kapso only.
 
 const NOW = new Date('2026-10-31T10:00:00Z');
 const LINES = {

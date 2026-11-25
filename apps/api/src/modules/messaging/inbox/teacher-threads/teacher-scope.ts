@@ -5,10 +5,10 @@ import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/temp
 import { TeacherThreadsRepo } from './teacher-threads.repo';
 
 /**
- * What a signed-in teacher may see in the inbox (owner decision 2026-10-02, R-TCH-03, R-MSG-05):
+ * What a signed-in teacher may see in the inbox (R-TCH-03, R-MSG-05):
  * the chats of guardians whose children they teach, plus their own chat with the academy. The family
- * of a student not subscribed yet (new, trial, pending_subscription) is not in it (owner 2026-10-11,
- * 2026-10-15: sales or the system manages between them).
+ * of a student not subscribed yet (new, trial, pending_subscription) is not in it
+ * (sales or the system manages between them).
  */
 export interface TeacherScope {
   teacherId: string;

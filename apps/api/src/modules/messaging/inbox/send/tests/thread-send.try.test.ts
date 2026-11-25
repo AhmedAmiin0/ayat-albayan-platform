@@ -10,7 +10,7 @@ import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import { ThreadSendService } from '@/modules/messaging/inbox/send/thread-send.service';
 
-// ThreadSendService.text after the 24 h window (owner 2026-11-03: held). Fakes only: no WhatsApp.
+// ThreadSendService.text after the 24 h window (held). Fakes only: no WhatsApp.
 
 const NOW = new Date('2026-10-31T10:00:00Z');
 const ACTOR = 's0000000-0000-4000-8000-000000000001';

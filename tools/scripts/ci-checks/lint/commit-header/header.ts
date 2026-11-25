@@ -7,7 +7,7 @@ export const TYPES: readonly string[] = [
 export const SCOPES: readonly string[] = [
   'api', 'staff-web', 'family-web', 'staff-mobile', 'family-mobile',
   'db', 'shared', 'client-core', 'web-kit', 'mobile-kit', 'core', 'time', 'money', 'schedule',
-  'settings', 'catalog', 'i18n', 'config', 'e2e', 'tools', 'repo', 'deps',
+  'settings', 'catalog', 'i18n', 'config', 'testing', 'e2e', 'tools', 'repo', 'deps',
 ];
 
 const MAX_HEADER = 100;

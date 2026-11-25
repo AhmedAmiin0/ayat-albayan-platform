@@ -16,6 +16,7 @@ export {
   threadsQuery,
 } from './api/api';
 export { threadQuery } from './api/thread-query';
+export { inboxLeadKeys, isThreadDetail, threadKeys } from './api/keys';
 export {
   clockText,
   errorText,

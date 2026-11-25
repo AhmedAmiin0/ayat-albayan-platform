@@ -31,7 +31,6 @@
     "./ui/connecting/use-screen-focus": "./src/ui/connecting/use-screen-focus.ts",
     "./ui/tabs/AppNativeTabs": "./src/ui/tabs/AppNativeTabs.tsx",
     "./babel": "./babel.cjs",
-    "./jest-config": "./jest.base.cjs",
     "./jest-setup": "./jest.shared.cjs",
     "./metro": "./metro.cjs"
   },
@@ -115,6 +114,7 @@
     "react-native-safe-area-context": "~5.7.0",
     "react-native-svg": "15.15.4",
     "@ab/config": "workspace:*",
+    "@ab/testing": "workspace:*",
     "@testing-library/react-native": "^14.0.1",
     "@types/jest": "^30.0.0",
     "@types/react": "catalog:",

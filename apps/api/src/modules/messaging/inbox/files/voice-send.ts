@@ -24,7 +24,7 @@ async function transcoded(m4a: Uint8Array | null, transcode: typeof toVoiceOgg) 
 }
 
 /**
- * A voice note recorded in the app (audio/mp4, owner 2026-10-27) as WhatsApp's own voice note: the
+ * A voice note recorded in the app (audio/mp4) as WhatsApp's own voice note: the
  * ogg/opus copy, stored beside the m4a in the same out/{actor}/{request}/ folder and sent instead.
  * The m4a stays: a replayed request checks it before the outbox returns the first row. ffmpeg
  * missing or failing → the m4a itself, sent as plain audio (the family still hears it). A copy of

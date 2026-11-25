@@ -27,7 +27,7 @@ export async function threadPeople(deps: PeopleDeps, row: PeopleOf | null): Prom
   if (!guardian) return { guardian, lead, students: [] };
   const { data, error } = await deps.db.from('students').select(STUDENTS).eq('guardian_id', guardian.id).order('created_at');
   if (error) throw dbError(error);
-  // ponytail: one S6 balance read per child (a family has a handful); batch if families grow.
+  // one S6 balance read per child (a family has a handful); batch if families grow.
   const students = await Promise.all(data.map(async (s) => toThreadStudent(s, await deps.packages.studentBalance(s.id))));
   return { guardian, lead, students };
 }

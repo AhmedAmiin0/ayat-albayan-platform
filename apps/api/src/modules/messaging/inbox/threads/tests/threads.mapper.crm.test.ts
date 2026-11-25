@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { toThreadView } from '@/modules/messaging/inbox/threads/threads.mapper';
 
-// Owner 2026-10-27: the chats list shows the media label (the clients' preview of a file with no
+// The chats list shows the media label (the clients' preview of a file with no
 // caption), never the old CRM's storage link, for a last message imported from it.
 const NOW = new Date('2026-10-27T09:00:00Z');
 const LINK = 'https://files.crm.example/storage/v1/object/public/chat-media/account-test/inbound/1-image-1.webp';

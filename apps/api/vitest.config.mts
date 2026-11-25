@@ -1,16 +1,15 @@
+import { testConfig } from '@ab/testing/vitest';
 import { fileURLToPath } from 'node:url';
 import swc from 'unplugin-swc';
-import { defineConfig } from 'vitest/config';
+import { mergeConfig } from 'vitest/config';
 
 // swc keeps Nest decorator metadata that esbuild/oxc would drop.
-export default defineConfig({
+export default mergeConfig(testConfig(), {
   plugins: [swc.vite({ module: { type: 'es6' } })],
-  // `@/x` → src/x, as the root tsconfig.base.json `paths` (the build rewrites it with tsc-alias).
+  // `@/x` → src/x, as the root tsconfig.base.json `paths`.
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   test: {
-    include: ['src/**/*.test.ts', 'bundle/**/*.test.mjs'],
-    // Transforms persist across runs in <repo>/node_modules/.vitest-cache (ci.yml restores it).
-    fsModuleCache: true,
+    include: ['bundle/**/*.test.mjs'],
     // Dummy values so AppModule boots in tests; createClient makes no network call on construction.
     env: {
       SUPABASE_URL: 'http://127.0.0.1:54321',

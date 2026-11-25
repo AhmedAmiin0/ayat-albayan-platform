@@ -4,13 +4,19 @@ import { act, renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { inboxLive, useInboxRealtime } from '@/features/messaging/inbox/api/live/live';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
 // The web inbox over realtime (docs/12 §15): the admin / sales shells' nudge, throttled, polls kept.
 
 const rt = vi.hoisted(() => {
   const hooks: { status?: (s: string) => void; event?: (m: { payload: unknown }) => void } = {};
   const channel: { on: ReturnType<typeof vi.fn>; subscribe: ReturnType<typeof vi.fn> } = {
-    on: vi.fn((_t: string, _f: unknown, cb: (m: { payload: unknown }) => void) => ((hooks.event = cb), channel)),
+    on: vi.fn(
+      (_t: string, _f: unknown, cb: (m: { payload: unknown }) => void) => (
+        (hooks.event = cb),
+        channel
+      ),
+    ),
     subscribe: vi.fn((cb: (s: string) => void) => ((hooks.status = cb), channel)),
   };
   const supabase = {
@@ -30,10 +36,14 @@ async function mount(enabled = true) {
   const client = new QueryClient();
   const refetch = vi.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);
   const invalidate = vi.spyOn(client, 'invalidateQueries').mockResolvedValue(undefined);
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
   // The open chat's delta query (thread-delta.ts): what a chat event runs.
   const deltas = vi.fn(async () => 0);
-  client.getQueryCache().build(client, { queryKey: ['thread-delta', OPEN], queryFn: deltas, initialData: 0 });
+  client
+    .getQueryCache()
+    .build(client, { queryKey: threadKeys.delta(OPEN), queryFn: deltas, initialData: 0 });
   const hook = renderHook(() => useInboxRealtime(enabled), { wrapper });
   await act(async () => undefined);
   const keys = () => refetch.mock.calls.map(([f]) => f?.queryKey?.slice(1).join(' '));
@@ -80,7 +90,7 @@ describe('useInboxRealtime (web)', () => {
   it('an event re-reads the list cancelling an older read in flight, never joining it (AU1)', async () => {
     const m = await mount();
     await send(OTHER);
-    const list = { queryKey: ['threads', 'list'], type: 'active' };
+    const list = { queryKey: threadKeys.lists, type: 'active' };
     expect(m.calls()).toEqual([[list, { cancelRefetch: true }]]);
     m.hook.unmount();
   });

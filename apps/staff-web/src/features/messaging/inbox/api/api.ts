@@ -19,6 +19,7 @@ import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { inboxLive } from './live';
 import type { LeadView } from '@ab/shared';
 import type { Page } from '@ab/core';
+import { inboxLeadKeys, threadKeys } from '@/features/messaging/inbox/api/keys';
 
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 
@@ -37,7 +38,7 @@ export const threadsQuery = (s: InboxSearch) => {
   if (s.f_status) params.set('status', s.f_status);
   if (s.list) params.set('list', s.list);
   return queryOptions({
-    queryKey: ['threads', 'list', params.toString()],
+    queryKey: threadKeys.list(params.toString()),
     queryFn: ({ signal }) => apiFetch<Page<ThreadView>>(`/threads?${params}`, { signal }),
     placeholderData: keepPreviousData,
     refetchInterval: () => liveInterval(inboxLive.isLive(), env.inboxListRefreshMs),
@@ -117,7 +118,7 @@ export type InboxLead = LeadView & {
  */
 export const leadByPhoneQuery = (phone: string) =>
   queryOptions({
-    queryKey: ['leads', 'by-phone', phone],
+    queryKey: inboxLeadKeys.byPhone(phone),
     queryFn: async () => {
       const params = new URLSearchParams({ q: phone, page: '1', pageSize: '5' });
       const page = await apiFetch<Page<InboxLead>>(`/leads?${params}`);

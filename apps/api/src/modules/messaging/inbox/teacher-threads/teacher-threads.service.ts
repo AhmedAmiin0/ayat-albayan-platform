@@ -23,7 +23,7 @@ const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
  */
 @Injectable()
 export class TeacherThreadsService {
-  /** The closed window's reopen bar fields (owner 2026-11-14); absent (unit tests): none. */
+  /** The closed window's reopen bar fields; absent (unit tests): none. */
   @Optional() @Inject(ReopenPick) private readonly pick?: ReopenPick;
 
   constructor(
@@ -40,7 +40,7 @@ export class TeacherThreadsService {
     const unread = await this.teacher.unread(scope.teacherId, all);
     const phones = f.unread ? all.filter((p) => (unread.get(p) ?? 0) > 0) : all;
     if (phones.length === 0) return empty;
-    // ponytail: the scope goes in the URL (.in); a teacher has tens of families, fine until hundreds.
+    // the scope goes in the URL (.in); a teacher has tens of families, fine until hundreds.
     const { items: rows, total } = await this.queries.list(teacherListFilter(f, phones));
     const items = await this.queries.unsupported(rows);
     return { items: items.map((r) => forTeacher(toThreadView(r, now), unread)), total, page: f.page, pageSize: f.pageSize };

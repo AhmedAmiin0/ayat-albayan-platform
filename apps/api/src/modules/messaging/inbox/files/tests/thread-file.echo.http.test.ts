@@ -9,7 +9,7 @@ import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/wh
 import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.repo';
 import { ADMIN, SALES, TEACHER } from '@/modules/messaging/inbox/test-app';
 
-// Owner 2026-10-27: a voice note or video sent from the WhatsApp Business app on the academy phone
+// A voice note or video sent from the WhatsApp Business app on the academy phone
 // (an echo: outbound with Meta's media id, no stored file) is fetched and cached as an inbound one.
 
 const PHONE = '+966552147730';

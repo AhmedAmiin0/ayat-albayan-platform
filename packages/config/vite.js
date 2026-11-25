@@ -1,28 +1,12 @@
-// The Vite + Vitest config of every web workspace (apps/staff-web, apps/family-web and
+// The Vite config of every web workspace (apps/staff-web, apps/family-web and
 // packages/web-kit, docs/51 §2): one factory, so the configs are not clones. The kit ships SOURCE
 // (the React Compiler and import.meta.env need Vite), resolved through its package.json `exports`.
 import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vite';
 import { kitPublic } from './vite-public.js';
-
-const STYLESHEET = /\.css($|\?)/;
-// fsModuleCache keys a module by its own content; Tailwind builds a stylesheet from every source
-// file, so stylesheets are always transformed afresh, never read from the cache.
-const noStylesheetCache = {
-  name: 'ab:no-stylesheet-fs-cache',
-  configureVitest: ({ defineCacheKeyGenerator }) => {
-    defineCacheKeyGenerator(({ id }) => (STYLESHEET.test(id) ? false : undefined));
-  },
-};
-
-const TEST_ENV = {
-  VITE_SUPABASE_URL: 'http://sb.test',
-  VITE_SUPABASE_ANON_KEY: 'anon',
-  VITE_API_URL: 'http://api.test',
-};
 
 /**
  * `dir`: the workspace folder (import.meta.dirname). `port`: the dev server's. `routes`: the app
@@ -33,7 +17,6 @@ const TEST_ENV = {
  */
 export function webConfig(options) {
   const { dir, port, routes = true, cacheDir, kitDir, brandDir, icons, client = 'web' } = options;
-  const kitSrc = `${kitDir}/src`;
   return defineConfig({
     define: { 'import.meta.env.VITE_CLIENT_APP': JSON.stringify(client) },
     plugins: [
@@ -43,7 +26,6 @@ export function webConfig(options) {
       // memo by hand. Default target 19: React 19 ships the compiler runtime.
       babel({ presets: [reactCompilerPreset()] }),
       tailwindcss(),
-      noStylesheetCache,
       kitPublic({ kitDir, brandDir, icons }),
     ],
     ...(cacheDir ? { cacheDir } : {}),
@@ -53,18 +35,5 @@ export function webConfig(options) {
       dedupe: ['react', 'react-dom', '@tanstack/react-query', '@tanstack/react-router'],
     },
     server: { port },
-    test: {
-      environment: 'jsdom',
-      include: ['src/**/*.test.{ts,tsx}'],
-      // Transforms persist across runs in <repo>/node_modules/.vitest-cache (ci.yml restores it).
-      fsModuleCache: true,
-      setupFiles: [`${kitSrc}/testing/test-setup.ts`],
-      // Multi-step wizard/drawer flows take ~1.5s alone and >5s under parallel `turbo test` load.
-      testTimeout: 20_000,
-      // tokens / motion / avatar-tones tests read their raw sheets; every other stylesheet stays
-      // stubbed.
-      css: { include: [/styles\/(tokens|motion|avatar-tones)\.css/, /src\/index\.css/] },
-      env: TEST_ENV,
-    },
   });
 }

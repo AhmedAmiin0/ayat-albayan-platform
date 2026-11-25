@@ -2,7 +2,7 @@ import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { Giphy, mp4Of } from '@/modules/messaging/inbox/stickers/giphy';
 
-// GIPHY for the chat's GIF tab (owner 2026-11-01): never called for real in tests.
+// GIPHY for the chat's GIF tab: never called for real in tests.
 const MP4 = 'https://media2.giphy.com/media/abc/giphy.mp4';
 const gif = (id: string, over: object = {}) => ({
   id,

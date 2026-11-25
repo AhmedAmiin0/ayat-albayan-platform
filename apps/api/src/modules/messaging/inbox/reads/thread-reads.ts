@@ -41,9 +41,9 @@ export class ThreadReads {
   /** Chat lists (docs/22): admin and sales only. */
   @Inject(ChatListsRepo) private readonly chatLists?: ChatListsRepo;
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
-  /** The open chat's delta refresh (owner 2026-10-27). */
+  /** The open chat's delta refresh. */
   @Inject(ThreadDeltaService) private readonly deltas?: ThreadDeltaService;
-  /** The academy's own numbers: never listed, for any role (owner 2026-10-27). */
+  /** The academy's own numbers: never listed, for any role. */
   @Optional() @Inject(OwnNumbers) private readonly own?: OwnNumbers;
   /** The first page's `reactable` (the chat's send line, migration 900). */
   @Optional() @Inject(ThreadsRepo) private readonly rows?: ThreadsRepo;

@@ -4,7 +4,7 @@ import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice'
 import { SettingsService } from '@/common/settings/settings.service';
 
 /**
- * ThreadFileSender: the size limit of a file sent from the chat (owner 2026-10-19 #2); the chat
+ * ThreadFileSender: the size limit of a file sent from the chat; the chat
  * list: the renewal-alert threshold its gray «needs renewal» avatar ring uses (familyRing).
  */
 const KEYS = ['upload_max_mb', 'renewal_alert_remaining'] as const satisfies readonly SettingKey[];

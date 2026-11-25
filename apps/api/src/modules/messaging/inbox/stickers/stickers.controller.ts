@@ -48,7 +48,7 @@ interface PanelSend {
 }
 
 /**
- * The emoji panel's stickers and GIFs (owner 2026-11-01), the admin and sales only: GET
+ * The emoji panel's stickers and GIFs, the admin and sales only: GET
  * /threads/stickers (favourites, then the newest of any chat), PUT / DELETE …/favourites, GET
  * /threads/gifs?q= (GIPHY; `configured: false` until an admin adds the key), and POST
  * /threads/:phone/sticker | gif, audited as `thread_sticker` / `thread_gif`.

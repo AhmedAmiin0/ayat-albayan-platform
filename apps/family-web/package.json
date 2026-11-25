@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@ab/config": "workspace:*",
+    "@ab/testing": "workspace:*",
     "@tanstack/router-cli": "^1.167.40",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.3",

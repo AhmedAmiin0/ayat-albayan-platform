@@ -1,1 +1,1 @@
-module.exports = { ...require('./jest.base.cjs'), setupFiles: ['<rootDir>/jest.shared.cjs'] };
+module.exports = { ...require('@ab/testing/jest'), setupFiles: ['<rootDir>/jest.shared.cjs'] };

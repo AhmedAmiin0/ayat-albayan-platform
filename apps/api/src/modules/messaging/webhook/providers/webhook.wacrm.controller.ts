@@ -22,8 +22,8 @@ interface RawRequest {
  * The academy CRM's outbound webhook (docs/19 «crm driver»). Public: authenticated by WACRM_WEBHOOK_SECRET's
  * HMAC over `${t}.${rawBody}` only, within 5 minutes (a replay is refused). message.status_updated moves our
  * outbound row by its wamid (the existing delivery-status path); message.received (a family writing to
- * the notifications number) is queued by its wamid and the mirror job kicked: it lands in the inbox
- * (owner 2026-11-21). Deduped on the delivery id. Never sends anything.
+ * the notifications number) is queued by its wamid and the mirror job kicked: it lands in the
+ * inbox. Deduped on the delivery id. Never sends anything.
  */
 @ApiTags('webhooks')
 @Public()

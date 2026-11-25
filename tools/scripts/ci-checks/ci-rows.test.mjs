@@ -31,7 +31,8 @@ test('the jest cache is wired like vitest: keyed on lockfile + configs, PRs save
   const turbo = ci.jobs.verify.steps.find((s) => s.id === 'turbo');
   assert.match(turbo.env.JEST_CACHE_DIR, /matrix\.jcache && format\('\{0\}\/node_modules\/\.jest-cache'/);
   assert.match(step('Save the transform cache').if, /cache-matched-key == ''/);
-  assert.match(read('packages/mobile-kit/jest.base.cjs'), /cacheDirectory: process\.env\.JEST_CACHE_DIR/);
+  assert.match(key.env.CONF, /packages\/testing\/jest\.cjs/);
+  assert.match(read('packages/testing/jest.cjs'), /cacheDirectory: process\.env\.JEST_CACHE_DIR/);
   const tasks = JSON.parse(read('turbo.json')).tasks;
   assert.deepEqual(tasks.test.passThroughEnv, ['JEST_CACHE_DIR'], 'not in the hash: same results');
 });

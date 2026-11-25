@@ -24,7 +24,7 @@ export interface ThreadSend<T> {
   scope?: TeacherScope | null;
   /** Sales mode: the sending salesperson (any chat, her own dedup space and audit). */
   sales?: SalesScope | null;
-  /** No templates.send_all (owner 2026-10-12): the allow-list only (restrictedMay); absent: all. */
+  /** No templates.send_all: the allow-list only (restrictedMay); absent: all. */
   restricted?: boolean;
   /** The message this copy was forwarded from (messages.forwarded_from_id). */
   forwardedFrom?: string;
@@ -68,7 +68,7 @@ export async function replyOf(
 
 /**
  * H3/H4 (docs/12 §4, R-LEAD-02): the admin, a salesperson (any chat, docs/16) — or, in teacher mode,
- * a teacher for their own families (owner decision 2026-10-02) — writes from the inbox.
+ * a teacher for their own families — writes from the inbox.
  */
 @Injectable()
 export class ThreadSendService {
@@ -104,8 +104,8 @@ export class ThreadSendService {
 
   /**
    * H4: an approved template with every variable filled; a PDF template comes only from the PDF job.
-   * A restricted role (teacher, sales, any role without templates.send_all) sends only the allow-list
-   * (owner 2026-10-12): 403 template_not_allowed for any other. The sender picks the template's own
+   * A restricted role (teacher, sales, any role without templates.send_all) sends only the
+   * allow-list: 403 template_not_allowed for any other. The sender picks the template's own
    * line at claim (docs/12 §13.3); a chat-line starter is stamped chat now (templateStamp), so the
    * chat lane sends it before the chat's next text (docs/42 42-7). `reopen` in a closed window: the
    * staff-picked reopen template (ReopenPick: the window hold's `reopen:` key, so no second one).

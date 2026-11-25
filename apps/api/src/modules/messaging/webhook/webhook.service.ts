@@ -27,7 +27,7 @@ export interface WebhookConfig {
 }
 
 /**
- * ponytail: the work runs inline; after this budget Meta gets its 200 and the rest finishes in
+ * the work runs inline; after this budget Meta gets its 200 and the rest finishes in
  * the background, so a failure past the budget is only logged (no 500, no re-send). Meta re-sends
  * after ~20 s without an answer. Move to a pg-boss queue if a batch ever needs longer.
  */

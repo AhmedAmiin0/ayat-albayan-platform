@@ -6,7 +6,7 @@ import type { TeacherLinks } from './plan/teacher-lesson.crm';
 import type { RemindersRepo } from './reminders.repo';
 
 /**
- * The teacher reminder's signed links (owner 2026-11-06: no short links any more), made only for
+ * The teacher reminder's signed links (no short links any more), made only for
  * the lessons whose teacher reminder is due this tick: the /join token and the no-login report
  * token and page. Stateless (nothing is written). A failure leaves that lesson without them
  * (logged): the reminder then goes as the older template with the signed-in report page.

@@ -2,7 +2,7 @@ import { teacherReminderMessage, type OutboundTemplate } from '@ab/shared';
 import { ownJoin, teacherReminderCrm, type TeacherLinks } from './teacher-lesson.crm';
 import { teacherLessonV3 } from './teacher-lesson.v3';
 
-// Which template the teacher's same-day reminder goes as (owner 2026-11-06): teacher_lesson_v3 once
+// Which template the teacher's same-day reminder goes as: teacher_lesson_v3 once
 // its row is approved and the lesson's signed links were made; else teacher_lesson_reminder(_meet)
 // with the CRM's one-line {{2}} carrying the direct links (no short links).
 

@@ -17,11 +17,11 @@ export interface ForwardFile {
   mime: string;
   name: string;
   caption: string | null;
-  /** The copy's interactive_payload: a sticker keeps its sha256 (owner 2026-11-01). */
+  /** The copy's interactive_payload: a sticker keeps its sha256. */
   payload?: Json;
 }
 
-/** A sticker's copy keeps its sha256, so the panel lists it once (owner 2026-11-01). */
+/** A sticker's copy keeps its sha256, so the panel lists it once. */
 const stickerOf = (row: ThreadMessageRow): { payload?: Json } =>
   isStickerMessage(row) ? { payload: stickerPayloadOf(row.interactive_payload) } : {};
 
@@ -32,7 +32,7 @@ const fileName = (row: ThreadMessageRow, path: string): string => row.media_name
 
 /**
  * The caption it goes with; an echo's type marker («[video]», webhook external-row) is no caption, nor
- * an old-CRM file's body (only its storage link, owner 2026-10-27).
+ * an old-CRM file's body (only its storage link).
  */
 const caption = (row: ThreadMessageRow): string | null => {
   const text = isCrmHistoryRow(row) ? null : row.body?.trim() || null;

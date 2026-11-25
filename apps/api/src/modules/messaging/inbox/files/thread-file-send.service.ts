@@ -35,8 +35,8 @@ export const sentFileName = (name: string, mime: string): string =>
 const filePath = () => waHttpError('file_path', HttpStatus.BAD_REQUEST);
 
 /**
- * Owner 2026-10-19 #2: staff send a JPEG/PNG image or a PDF from the chat, inside the 24 h window
- * (2026-10-27: also a voice note recorded in the app, sent as WhatsApp's ogg/opus voice note),
+ * Staff send a JPEG/PNG image or a PDF from the chat, inside the 24 h window
+ * (also a voice note recorded in the app, sent as WhatsApp's ogg/opus voice note),
  * stored in wa-media at out/{actor}/{client_request_id}/{uuid}.{ext} and logged under their name
  * (created_by). The browser uploads to a signed URL; the send trusts only what Storage holds.
  */
@@ -46,7 +46,7 @@ export class ThreadFileSender {
   @Inject(InboxSettings) private readonly settings?: InboxSettings;
   /** Property-injected like settings. */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
-  /** m4a → ogg/opus for a voice note (owner 2026-10-27); tests swap in a fake, never the real ffmpeg. */
+  /** m4a → ogg/opus for a voice note; tests swap in a fake, never the real ffmpeg. */
   private readonly toOgg = toVoiceOgg;
 
   constructor(

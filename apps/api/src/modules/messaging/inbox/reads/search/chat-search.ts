@@ -44,7 +44,7 @@ function pastCursor(hits: readonly SearchRow[], cursor: string | undefined): Sea
 }
 
 /**
- * One page of a chat's hits (owner 2026-11-02), newest first: every row's body / caption and
+ * One page of a chat's hits, newest first: every row's body / caption and
  * document name matched folded (searchFold: tashkeel, letter forms, case, digits), the total over
  * the whole chat, and the cursor after the page's last hit while older ones remain.
  */

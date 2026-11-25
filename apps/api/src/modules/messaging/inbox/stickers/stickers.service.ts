@@ -17,7 +17,7 @@ interface FavouriteInput {
 const notFound = () => waHttpError('message_not_found', HttpStatus.NOT_FOUND);
 
 /**
- * The sticker panel (owner 2026-11-01): this staff member's favourites, then the newest stickers
+ * The sticker panel: this staff member's favourites, then the newest stickers
  * received or sent in any chat (any chat's WebP: stickers are no family secret, and no template,
  * sales' only wall, is ever one). A sticker sent from it is one the chats already hold, copied as
  * stored (WhatsApp's 512×512 WebP) to out/… and queued as this staff member's message; the sender

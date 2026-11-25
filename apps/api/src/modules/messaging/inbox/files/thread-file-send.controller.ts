@@ -20,9 +20,9 @@ import { ThreadFileSender } from './thread-file-send.service';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
 
 /**
- * Owner 2026-10-19 #2: the admin and a salesperson send a JPEG/PNG image or a PDF from the chat
+ * The admin and a salesperson send a JPEG/PNG image or a PDF from the chat
  * (R-MSG-05). First a signed upload URL (the browser PUTs the file), then the send, audited as
- * `thread_file` under the sender. A teacher (TeacherScope) gets 403 files_forbidden (owner #5).
+ * `thread_file` under the sender. A teacher (TeacherScope) gets 403 files_forbidden.
  */
 @ApiTags('inbox')
 @ApiBearerAuth()

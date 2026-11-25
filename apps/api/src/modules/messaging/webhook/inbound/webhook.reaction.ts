@@ -7,7 +7,7 @@ import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 export type ReactionOutcome = 'applied' | 'unknown' | 'ignored';
 
 /**
- * An inbound WhatsApp reaction (owner 2026-10-27, migration 900): {reaction: {message_id, emoji}} sets
+ * An inbound WhatsApp reaction (migration 900): {reaction: {message_id, emoji}} sets
  * their_reaction on the message it names, of the SAME phone (a wamid of another chat is never touched);
  * an empty emoji clears it. No row, no push, no unread. Never fails the webhook: an unknown target is
  * reported (the caller keeps a marker row, migration 992), a failed write only logged (Meta would

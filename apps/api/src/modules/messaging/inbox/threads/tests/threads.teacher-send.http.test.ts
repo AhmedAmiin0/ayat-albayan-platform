@@ -75,7 +75,7 @@ describe('teacher mode H3/H4: reply from the academy number, attributed (R-MSG-0
     expect(t.queries.enqueue).not.toHaveBeenCalled();
   });
 
-  // Owner 2026-10-12: the restricted allow-list replaced the reminder templates (no manual reminders).
+  // The restricted allow-list replaced the reminder templates (no manual reminders).
   it('H4 403 template_not_allowed for a lesson reminder or any template outside the allow-list', async () => {
     for (const key of ['lesson_reminder', 'booking_confirmation']) {
       t.templates.get.mockResolvedValue(templateRow({ key }));

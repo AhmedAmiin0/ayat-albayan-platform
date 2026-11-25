@@ -3008,7 +3008,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 9
+      "count": 8
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-preview.fakes.ts": {
@@ -3026,7 +3026,7 @@
   },
   "src/modules/messaging/inbox/files/pdf/pdf-preview.service.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-render.ts": {
@@ -3081,7 +3081,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/messaging/inbox/files/pdf/tests/pdf-render.test.ts": {
@@ -3200,7 +3200,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     },
     "ab/module-boundaries": {
       "count": 2
@@ -3236,7 +3236,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 10
+      "count": 9
     },
     "ab/module-boundaries": {
       "count": 3
@@ -3378,7 +3378,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 11
+      "count": 10
     }
   },
   "src/modules/messaging/inbox/reads/read-marks.ts": {
@@ -3426,7 +3426,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -3502,7 +3502,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "ab/module-boundaries": {
       "count": 3
@@ -3515,7 +3515,7 @@
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
@@ -3534,7 +3534,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/module-boundaries": {
       "count": 1
@@ -3568,7 +3568,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/forbidden-imports": {
       "count": 1
@@ -3610,11 +3610,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/threads/tests/threads.assistant-templates.http.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/inbox/threads/tests/threads.known.http.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -3637,11 +3632,6 @@
   },
   "src/modules/messaging/inbox/threads/tests/threads.own.http.test.ts": {
     "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/messaging/inbox/threads/tests/threads.own.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -3662,12 +3652,12 @@
   },
   "src/modules/messaging/inbox/threads/tests/threads.sales.http.test.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/inbox/threads/tests/threads.teacher-send.http.test.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/threads/tests/threads.teacher.http.test.ts": {
@@ -4204,11 +4194,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/numbers/own/own-numbers.module.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/numbers/own/own-numbers.test.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -4219,7 +4204,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     },
     "ab/forbidden-imports": {
       "count": 2
@@ -4276,7 +4261,7 @@
   },
   "src/modules/messaging/reminders/plan/reminders.links.mode.test.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/reminders/plan/reminders.links.test.ts": {
@@ -4286,7 +4271,7 @@
   },
   "src/modules/messaging/reminders/plan/reminders.links.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 6
     },
     "ab/module-boundaries": {
       "count": 1
@@ -4386,12 +4371,12 @@
   },
   "src/modules/messaging/reminders/reminders.settings.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/reminders/reminders.teacher-switch.test.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/saved-replies/saved-replies.access.http.test.ts": {
@@ -4632,7 +4617,7 @@
   },
   "src/modules/messaging/webhook/inbound/tests/refill.test.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/webhook/inbound/webhook.inbound.service.ts": {
@@ -4640,7 +4625,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     },
     "typescript/no-confusing-void-expression": {
       "count": 2
@@ -4687,7 +4672,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/forbidden-imports": {
       "count": 2

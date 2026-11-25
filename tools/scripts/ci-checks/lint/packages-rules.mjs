@@ -2,7 +2,7 @@
 // `allowed`), and, on a PR, what the head added against its base branch.
 import { appsOf, validateTable, widened } from './packages-table.mjs';
 
-const CONFIG = '@ab/config';
+const TOOLING = 'T';
 const SHOWN = 3;
 const COUNTS = { reexports: 're-exports', dbScope: 'db scope', facade: 'facade imports' };
 const WIDENED =
@@ -10,9 +10,11 @@ const WIDENED =
 
 const reaches = (reach, to) => reach === '*' || (reach ?? []).includes(to);
 
-/** Edges that are never extras: to itself, to @ab/config, e2e's build-only and path reach. */
+const tooling = (t) => t.layers.find((l) => l.name === TOOLING)?.packages ?? [];
+
+/** Never extras: to itself, into the tooling layer, e2e's build-only and path reach. */
 const EXEMPT = [
-  (_t, e) => e.to === e.from || e.to === CONFIG,
+  (t, e) => e.to === e.from || tooling(t).includes(e.to),
   (t, e) => e.kind === 'dev' && (t.appsBuildOnly[e.from] ?? []).includes(e.to),
   (t, e) => e.kind === 'path' && reaches(t.pathReach[e.from], e.to),
 ];

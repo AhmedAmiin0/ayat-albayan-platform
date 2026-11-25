@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { at, sampleLesson } from '@/modules/messaging/reminders/reminders.fakes';
 import { joinCandidates, platformLesson, roomFor, sentLinks, type RoomContext } from './reminders.links';
 
-// teachers.meeting_mode (migration 490, owner 2026-10-19): the lesson's teacher decides, the academy
+// teachers.meeting_mode (migration 490): the lesson's teacher decides, the academy
 // switch (ctx.auto) only for a teacher who follows it. Invented data (reminders.fakes).
 
 const ORIGIN = 'https://app.example';

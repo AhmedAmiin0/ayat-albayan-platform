@@ -54,7 +54,7 @@ export class CrmInboundRepo {
     check(error, 'done');
   }
 
-  /** Owner 2026-11-22 «teachers can only use platform chat»: this E.164 is an active teacher's. */
+  /** Teachers use the platform chat only: this E.164 is an active teacher's. */
   async isActiveTeacher(phone: string): Promise<boolean> {
     const { data, error } = await this.db
       .from('teachers')

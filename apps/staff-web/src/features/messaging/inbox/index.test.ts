@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import * as inbox from './index';
+import { threadKeys } from './api/keys';
 import { getDraft, setDraft } from './composer/lib/draft-store';
 import { LinkFamilyDialog } from './lead/LinkFamilyDialog';
 import { useThreadListsAction } from './lists/lib/use-thread-lists-action';
@@ -21,6 +22,7 @@ describe('inbox barrel', () => {
     expect(inbox.SalesRegisterButton).toBe(SalesRegisterButton);
     expect(inbox.SalesRegisterDialog).toBe(SalesRegisterDialog);
     expect(inbox.canRegisterFrom).toBe(canRegisterFrom);
+    expect(inbox.threadKeys).toBe(threadKeys);
   });
 
   it('re-exports the inbox mode helpers', () => {

@@ -3,7 +3,7 @@ import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
-// GET /threads/:phone?after= (owner 2026-10-27, «delta refresh»): only newer rows plus the pending
+// GET /threads/:phone?after= («delta refresh»): only newer rows plus the pending
 // statuses, two reads, nothing written unless a new inbound arrived; every caller's scope kept.
 
 type App = Awaited<ReturnType<typeof inboxApp>>;

@@ -1,5 +1,5 @@
 module.exports = {
-  ...require('@ab/mobile-kit/jest-config'),
+  ...require('@ab/testing/jest'),
   setupFiles: ['<rootDir>/jest.setup.cjs'],
   moduleNameMapper: { '^@/(.*)$': '<rootDir>/src/$1' },
 };

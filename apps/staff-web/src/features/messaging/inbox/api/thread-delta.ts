@@ -1,10 +1,16 @@
 import { deltaSearch, mergeDelta, needsFullRead } from '@ab/client-core';
 import type { ThreadDelta } from '@ab/shared';
-import { type QueryClient, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  type QueryClient,
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { inboxPollMs, threadPath } from './api';
 import { useTicksInLists } from './list-ticks';
-import { threadDeltaKey, threadQuery } from './thread-query';
+import { threadQuery } from './thread-query';
+import { threadKeys } from './keys';
 import { useLiveChat } from './live';
 
 type Fold = (client: QueryClient, phone: string, delta: ThreadDelta) => void;
@@ -24,8 +30,7 @@ const busy = (client: QueryClient, phone: string): boolean =>
 
 /** The chat changed since the delta was asked (a full read landed, or a read or send runs). */
 const overtaken = (client: QueryClient, phone: string, asked: number | undefined): boolean =>
-  busy(client, phone) ||
-  client.getQueryState(threadQuery(phone).queryKey)?.dataUpdatedAt !== asked;
+  busy(client, phone) || client.getQueryState(threadQuery(phone).queryKey)?.dataUpdatedAt !== asked;
 
 const searchFor = (client: QueryClient, phone: string): string | null =>
   document.hasFocus()
@@ -66,7 +71,7 @@ export function useLiveThread(phone: string) {
   useLiveChat(phone);
   useTicksInLists(phone, detail.data); // the list beside it shows the same tick (docs/43 43-1)
   useQuery({
-    queryKey: threadDeltaKey(phone),
+    queryKey: threadKeys.delta(phone),
     queryFn: ({ signal }) => readThreadDelta(client, phone, signal),
     enabled: detail.isSuccess,
     // No fetch on open: the thread query just read the whole page.

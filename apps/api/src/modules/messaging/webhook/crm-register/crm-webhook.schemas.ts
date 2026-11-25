@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 /**
  * The events the platform reads from the CRM (POST /webhooks/wacrm): delivery ticks, and a family's
- * message to the notifications number, mirrored into the inbox (owner 2026-11-21).
+ * message to the notifications number, mirrored into the inbox.
  */
 export const CRM_WEBHOOK_EVENTS = ['message.status_updated', 'message.received'] as const;
 

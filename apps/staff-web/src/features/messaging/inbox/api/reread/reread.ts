@@ -1,6 +1,7 @@
 import type { ThreadPages } from '@ab/client-core';
 import type { Query, QueryClient } from '@tanstack/react-query';
-import { threadDeltaKey, threadQuery } from '@/features/messaging/inbox/api/thread-query';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
+import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 
 // docs/44 K1: re-reads cancel older reads but wait for chat loads in flight (thread-delta.ts).
 
@@ -42,7 +43,7 @@ const READS: Record<'delta' | 'whole', Read> = {
   delta: (client, phone) =>
     client
       .getQueryCache()
-      .find({ queryKey: threadDeltaKey(phone), exact: true })
+      .find({ queryKey: threadKeys.delta(phone), exact: true })
       ?.fetch(undefined, { cancelRefetch: true })
       .catch(() => undefined) ?? Promise.resolve(),
   whole: (client, phone) =>
@@ -73,7 +74,7 @@ export function rereadChat(client: QueryClient, phone: string): void {
 }
 
 /** The mounted chats lists (a web page shows only mounted queries). */
-const LISTS = { queryKey: ['threads', 'list'], type: 'active' } as const;
+const LISTS = { queryKey: threadKeys.lists, type: 'active' } as const;
 
 /**
  * Re-reads the shown chats lists now (cancelRefetch: true). A list still on its first load is

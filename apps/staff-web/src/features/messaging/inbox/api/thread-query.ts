@@ -2,6 +2,7 @@ import { threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/clie
 import { infiniteQueryOptions } from '@tanstack/react-query';
 import { env } from '@ab/web-kit/lib/http/env';
 import { threadPage, threadPath } from './api';
+import { threadKeys } from './keys';
 
 /**
  * One page per `before` + `before_id` (the oldest loaded message), newest page first. Opening
@@ -15,7 +16,7 @@ import { threadPage, threadPath } from './api';
  */
 export const threadQuery = (phone: string) =>
   infiniteQueryOptions({
-    queryKey: ['threads', 'detail', phone],
+    queryKey: threadKeys.detail(phone),
     queryFn: ({ pageParam, signal }) =>
       threadPage(`${threadPath(phone)}${threadPageQuery(pageParam)}`, { signal }),
     initialPageParam: null as ThreadPageParam,
@@ -23,6 +24,3 @@ export const threadQuery = (phone: string) =>
     getNextPageParam: threadNextParam,
     refetchInterval: () => (document.hasFocus() ? env.threadFullRefreshMs : false),
   });
-
-/** The open chat's delta (thread-delta.ts). Outside ['threads']: a send never runs it. */
-export const threadDeltaKey = (phone: string) => ['thread-delta', phone] as const;

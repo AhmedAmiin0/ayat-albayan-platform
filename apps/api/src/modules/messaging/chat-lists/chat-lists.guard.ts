@@ -13,7 +13,7 @@ import { badRequest, forbidden, notFound } from '@/common/http/errors';
 /**
  * Every lists route needs inbox.lists (the route's @Permissions) AND inbox.read, and the inbox of the
  * admin or an assistant (base role sales): a teacher never gets lists, whatever a custom role grants
- * (owner 2026-10-20, docs/22 §2). 403 lists_forbidden otherwise.
+ * (docs/22 §2). 403 lists_forbidden otherwise.
  */
 export function assertListsUser(user: AuthUser): void {
   const staff = user.role === 'admin' || user.role === 'sales';

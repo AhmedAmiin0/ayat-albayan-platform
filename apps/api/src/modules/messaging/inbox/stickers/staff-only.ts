@@ -7,8 +7,7 @@ type SalesScopeOf = Awaited<ReturnType<ThreadReads['salesScope']>>;
 
 /**
  * Stickers and GIFs are files: the admin and sales only. A salesperson's scope (her dedup space
- * and audit), null for the admin; a teacher is 403 files_forbidden, as for a photo (owner
- * 2026-10-19 #5).
+ * and audit), null for the admin; a teacher is 403 files_forbidden, as for a photo.
  */
 export async function staffOnly(reads: ThreadReads, user: AuthUser): Promise<SalesScopeOf> {
   const sales = await reads.salesScope(user);

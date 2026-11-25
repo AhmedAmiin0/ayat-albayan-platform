@@ -24,7 +24,7 @@ export type { ThreadPageQuery } from '@/modules/messaging/inbox/reads/thread-pag
 export class ThreadsService {
   /** Property-injected (the constructor is at its limit); absent (unit tests): no reopen note. */
   @Optional() @Inject(ReopenRequest) private readonly reopen?: ReopenRequest;
-  /** The bar's live reopen and preselected template (closed window, owner 2026-11-14). */
+  /** The bar's live reopen and preselected template (closed window). */
   @Optional() @Inject(ReopenPick) private readonly pick?: ReopenPick;
   /** The ring's renewal threshold (inbox.settings.ts); absent (unit tests): the default. */
   @Optional() @Inject(InboxSettings) private readonly settings?: InboxSettings;

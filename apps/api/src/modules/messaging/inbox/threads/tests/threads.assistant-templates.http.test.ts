@@ -5,8 +5,8 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { PHONE } from '@/modules/messaging/inbox/inbox.fakes';
 import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
-// Owner 2026-10-15: «only allowed templates should be listed to the assistants». A sales role edited in
-// the database to hold templates.manage / templates.send_all still lists and sends only the allow-list.
+// Only allowed templates are listed to the assistants. A sales role edited in the database to
+// hold templates.manage / templates.send_all still lists and sends only the allow-list.
 const GRANTED: Permission[] = ['templates.manage', 'templates.send_all'];
 const resolve: PermissionResolver = async (user) => {
   const base = user.role ? systemPermissionsOf(user.role) : [];

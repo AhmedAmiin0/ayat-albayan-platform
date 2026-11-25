@@ -1,4 +1,4 @@
-import type { UserConfig } from 'vitest/config';
+import type { UserConfig } from 'vite';
 
 export interface WebConfigOptions {
   /** The workspace folder (import.meta.dirname). */
@@ -9,7 +9,7 @@ export interface WebConfigOptions {
   routes?: boolean;
   /** A second dev server's own Vite cache. */
   cacheDir?: string;
-  /** Absolute folder of @ab/web-kit: its src/ is aliased, its public/ and icons/ are served. */
+  /** Absolute folder of @ab/web-kit: its public/ and icons/ are served. */
   kitDir: string;
   /** Absolute folder of @ab/catalog's brand marks, served at /brand/. */
   brandDir: string;
@@ -19,5 +19,5 @@ export interface WebConfigOptions {
   client?: 'web' | 'family-web';
 }
 
-/** The Vite + Vitest config of a web workspace (docs/51 §2). */
+/** The Vite config of a web workspace (docs/51 §2). */
 export declare function webConfig(options: WebConfigOptions): UserConfig;
