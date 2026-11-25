@@ -2,6 +2,7 @@ import type { StudentRecordingView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { apiFetch } from '@ab/mobile-kit';
+import { studentKeys } from '@/core/lib/keys';
 import { teacherLabel } from './recording-format';
 import type { TeacherChoice } from './RecordingFiltersBar';
 
@@ -22,7 +23,7 @@ function unionChoices(a: TeacherChoice[], b: TeacherChoice[]): TeacherChoice[] {
 
 export function useTeacherChoices(rows: StudentRecordingView[], admin: boolean): TeacherChoice[] {
   const options = useQuery({
-    queryKey: ['students', 'teacher-options'],
+    queryKey: studentKeys.teacherOptions(),
     queryFn: () => apiFetch<Option[]>('/students/teacher-options'),
     enabled: admin,
     staleTime: 10 * 60_000,

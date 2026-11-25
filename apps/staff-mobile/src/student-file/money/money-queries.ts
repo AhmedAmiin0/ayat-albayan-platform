@@ -2,11 +2,12 @@ import type { SignedDownload } from '@ab/shared';
 import type { InvoiceView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@ab/mobile-kit';
+import { invoiceKeys } from '@/core/lib/keys';
 
 /** GET /invoices?studentId=: every booking invoice of the student, newest first (a plain list, no paging). */
 export const useStudentInvoices = (studentId: string, enabled: boolean) =>
   useQuery({
-    queryKey: ['invoices', 'student', studentId],
+    queryKey: invoiceKeys.ofStudent(studentId),
     queryFn: () => apiFetch<InvoiceView[]>(`/invoices?studentId=${studentId}`),
     enabled,
   });

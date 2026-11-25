@@ -5,8 +5,14 @@ import {
   coursePausePreviewPath,
   coursePauseResumePath,
   coursePauseUntilPath,
+  pauseKeys,
 } from '@ab/client-core';
-import type { CoursePausePreview, CoursePauseResult, CoursePauseStart, CoursePauseState } from '@ab/shared';
+import type {
+  CoursePausePreview,
+  CoursePauseResult,
+  CoursePauseStart,
+  CoursePauseState,
+} from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
@@ -23,7 +29,7 @@ export const useCoursePause = (studentId: string) =>
 /** GET …/preview?from=&until=: how many lessons the window takes the student out of. */
 export const usePausePreview = (input: { studentId: string; from: string; until: string | null }) =>
   useQuery({
-    queryKey: [...coursePauseKey(input.studentId), 'preview', input.from, input.until],
+    queryKey: pauseKeys.preview(input),
     queryFn: () => apiFetch<CoursePausePreview>(coursePausePreviewPath(input)),
   });
 
@@ -44,7 +50,8 @@ function useRefresh(studentId: string) {
 export function useStartPause(studentId: string) {
   const refresh = useRefresh(studentId);
   return useMutation({
-    mutationFn: (body: CoursePauseStart) => apiSend<CoursePauseResult>('POST', coursePausePath(studentId), body),
+    mutationFn: (body: CoursePauseStart) =>
+      apiSend<CoursePauseResult>('POST', coursePausePath(studentId), body),
     onSuccess: refresh,
   });
 }
@@ -53,7 +60,8 @@ export function useStartPause(studentId: string) {
 export function useChangeUntil(studentId: string) {
   const refresh = useRefresh(studentId);
   return useMutation({
-    mutationFn: (untilDate: string | null) => apiSend<CoursePauseResult>('PATCH', coursePauseUntilPath(studentId), { untilDate }),
+    mutationFn: (untilDate: string | null) =>
+      apiSend<CoursePauseResult>('PATCH', coursePauseUntilPath(studentId), { untilDate }),
     onSuccess: refresh,
   });
 }

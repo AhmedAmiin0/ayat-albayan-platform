@@ -2,6 +2,7 @@ import type { CourseChangeCheck, CourseChangeResult } from '@ab/shared';
 import type { CourseChangeRequest } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiSend, pathKey } from '@ab/mobile-kit';
+import { salesCourseKeys } from '@/core/lib/keys';
 
 const CHANGE = '/sales/booking/course/change';
 
@@ -15,7 +16,7 @@ export function useCourseChangeCheck(body: CourseChangeRequest | null, path = CH
   const key: Partial<CourseChangeRequest> = { ...body };
   delete key.clientRequestId;
   return useQuery({
-    queryKey: ['sales', 'booking', 'course-change', 'check', path, JSON.stringify(key)],
+    queryKey: salesCourseKeys.changeCheck(path, JSON.stringify(key)),
     queryFn: () => apiSend<CourseChangeCheck>('POST', `${path}/check`, body),
     enabled: body !== null,
     retry: false,
@@ -30,7 +31,7 @@ export function useChangeCourse(path = CHANGE) {
     mutationKey: ['sales', 'booking', 'course-change'],
     mutationFn: (body: CourseChangeRequest) => apiSend<CourseChangeResult>('POST', path, body),
     onSuccess: () => {
-      void client.invalidateQueries({ queryKey: ['lessons'] });
+      void client.invalidateQueries({ queryKey: pathKey('/lessons') });
       void client.invalidateQueries({ queryKey: pathKey('/students') });
       void client.invalidateQueries({ queryKey: pathKey('/sales/booking/course') });
     },
