@@ -2,7 +2,8 @@ import type { SubscriptionPricing } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useDebounced } from '@/features/finance/pricing';
-import { MONEY_KEY, quoteSubscription } from '@/features/finance/subscriptions/api';
+import { moneyKeys } from '@/features/finance/keys';
+import { quoteSubscription } from '@/features/finance/subscriptions/api';
 import { pricingBody, type PricingForm } from './pricing-form';
 
 /**
@@ -19,7 +20,7 @@ export function usePricingBody(form: PricingForm): SubscriptionPricing {
 export function useSubscriptionQuote(studentId: string, pricing: SubscriptionPricing) {
   const settled = useDebounced(pricing, 300);
   return useQuery({
-    queryKey: [...MONEY_KEY, 'quote', studentId, settled],
+    queryKey: moneyKeys.quote(studentId, settled),
     queryFn: () => quoteSubscription({ studentId, pricing: settled }),
     enabled: studentId !== '',
   });

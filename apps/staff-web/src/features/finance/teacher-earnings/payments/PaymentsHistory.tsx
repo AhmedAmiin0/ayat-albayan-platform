@@ -5,6 +5,7 @@ import { DataTable } from '@/components/data-table/DataTable';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Pager } from '@ab/web-kit/components/ui/layout/pager';
+import { financeFileKeys } from '@/features/finance/keys';
 import { apiErrorText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { FilterSearch, SortSearch } from '@/lib/list/list-search';
@@ -13,7 +14,11 @@ import { teacherPaymentColumns } from './teacher-payment-columns';
 import { VoidPaymentDialog } from './VoidPaymentDialog';
 
 function Receipt({ scope, payment, onClose }: { scope: Scope; payment: TeacherPaymentView; onClose: () => void }) {
-  const signed = useQuery({ queryKey: ['teacher-receipt', payment.id], queryFn: () => receiptUrl(scope, payment.id), staleTime: 30 * 60_000 });
+  const signed = useQuery({
+    queryKey: financeFileKeys.teacherReceipt(payment.id),
+    queryFn: () => receiptUrl(scope, payment.id),
+    staleTime: 30 * 60_000,
+  });
   return (
     <Dialog title={t.payments.receipt} onClose={onClose} layout="center">
       {signed.isError && <FormAlert>{apiErrorText(signed.error, t.earnings.error)}</FormAlert>}

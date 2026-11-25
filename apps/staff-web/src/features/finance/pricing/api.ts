@@ -10,6 +10,7 @@ import {
 } from '@ab/money';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { pricingKeys } from '@/features/finance/keys';
 
 // Shapes returned by apps/api/src/modules/pricing (docs/08). The client never prices anything:
 // every number on the calculator comes from these responses.
@@ -67,7 +68,7 @@ export function quoteSearch(sel: Selection): string {
 export const quoteQuery = (sel: Selection) => {
   const search = quoteSearch(sel);
   return queryOptions({
-    queryKey: ['pricing', 'quote', search],
+    queryKey: pricingKeys.quote(search),
     queryFn: () => apiFetch<QuoteResponse>(`/pricing/quote?${search}`),
     placeholderData: keepPreviousData,
   });
@@ -76,7 +77,7 @@ export const quoteQuery = (sel: Selection) => {
 export const catalogQuery = (sel: CatalogSelection) => {
   const search = catalogSearch(sel);
   return queryOptions({
-    queryKey: ['pricing', 'catalog', search],
+    queryKey: pricingKeys.catalog(search),
     queryFn: () => apiFetch<CatalogResponse>(`/pricing/catalog?${search}`),
     placeholderData: keepPreviousData,
   });

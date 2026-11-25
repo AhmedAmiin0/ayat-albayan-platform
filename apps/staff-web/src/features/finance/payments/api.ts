@@ -6,7 +6,8 @@ import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams, type SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import { MONEY_KEY, PAGE_SIZE } from '@/features/finance/subscriptions/api';
+import { PAGE_SIZE } from '@/features/finance/subscriptions/api';
+import { financeFileKeys, moneyKeys } from '@/features/finance/keys';
 
 // apps/api/src/modules/payments (docs/11 §7, R-PAY-01).
 export type { PaymentView } from '@ab/money';
@@ -22,7 +23,7 @@ export function filterParams(f: PaymentFilters): Record<string, string> {
 /** GET /payments: one page, filtered and (R-NFR-08) sorted server-side; default newest paid first. */
 export const paymentsQuery = (page: number, filters: PaymentFilters = {}, sort: SortSearch = {}) =>
   queryOptions({
-    queryKey: [...MONEY_KEY, 'payments', page, filters, sort],
+    queryKey: moneyKeys.payments({ page, filters, sort }),
     queryFn: () => {
       const qs = new URLSearchParams([...Object.entries(filterParams(filters)), ...sortFilterParams(sort)]);
       qs.set('page', String(page));
@@ -63,7 +64,7 @@ export const receiptUrl = (paymentId: string) => apiFetch<SignedDownload>(`/paym
 /** Signed for 1 h. */
 export const attachmentsQuery = (path: string) =>
   queryOptions({
-    queryKey: ['payment-attachments', path],
+    queryKey: financeFileKeys.attachments(path),
     queryFn: () => apiFetch<PaymentAttachmentView[]>(path),
     staleTime: 30 * 60_000,
   });

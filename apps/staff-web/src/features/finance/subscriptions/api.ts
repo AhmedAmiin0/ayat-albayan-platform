@@ -14,6 +14,7 @@ import {
 } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { moneyKeys } from '@/features/finance/keys';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 
 // apps/api/src/modules/subscriptions (docs/11 §6). The client never prices: the price shown and
@@ -21,7 +22,7 @@ import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list
 export type { AdminTaskView, QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/money';
 
 /** Every money write invalidates this (subscriptions, balances, payments, tasks). */
-export const MONEY_KEY = ['money'] as const;
+export const MONEY_KEY = moneyKeys.all;
 export const PAGE_SIZE = 20;
 
 type SubscriptionsListQuery = { status?: SubscriptionStatus | 'partial' | undefined; page: number; sort?: SortSearch; filters?: FilterSearch };
@@ -29,7 +30,7 @@ type SubscriptionsListQuery = { status?: SubscriptionStatus | 'partial' | undefi
 /** GET /subscriptions: one page, filtered and (R-NFR-08) sorted server-side; default newest first. */
 export const subscriptionsQuery = (q: SubscriptionsListQuery) =>
   queryOptions({
-    queryKey: [...MONEY_KEY, 'subscriptions', q],
+    queryKey: moneyKeys.subscriptions(q),
     queryFn: () => {
       const qs = new URLSearchParams(sortFilterParams(q.sort ?? {}, q.filters));
       qs.set('page', String(q.page));
@@ -44,18 +45,18 @@ export const subscriptionsQuery = (q: SubscriptionsListQuery) =>
 /** One student's packages (every status; the picker hides the ended ones). */
 export const studentSubscriptionsQuery = (studentId: string) =>
   queryOptions({
-    queryKey: [...MONEY_KEY, 'subscriptions', 'student', studentId],
+    queryKey: moneyKeys.studentSubscriptions(studentId),
     queryFn: () => apiFetch<Page<SubscriptionView>>(`/subscriptions?studentId=${studentId}&pageSize=100`),
   });
 
 export const studentBalanceQuery = (studentId: string) =>
   queryOptions({
-    queryKey: [...MONEY_KEY, 'balance', studentId],
+    queryKey: moneyKeys.balance(studentId),
     queryFn: () => apiFetch<StudentBalanceView>(`/students/${studentId}/balance`),
   });
 
 export const openTasksQuery = queryOptions({
-  queryKey: [...MONEY_KEY, 'tasks'],
+  queryKey: moneyKeys.tasks(),
   queryFn: () => apiFetch<Page<AdminTaskView>>('/admin-tasks?open=true&pageSize=50'),
 });
 
@@ -97,7 +98,7 @@ export const editStartDate = (id: string, startsOn: string) =>
 /** GET /subscriptions/:id/lessons-used-before: the stored number, the max, a refusal. */
 export const usedBeforeStateQuery = (id: string) =>
   queryOptions({
-    queryKey: [...MONEY_KEY, 'used-before', id],
+    queryKey: moneyKeys.usedBefore(id),
     queryFn: () =>
       apiFetch(`/subscriptions/${id}/lessons-used-before`).then((raw: unknown) =>
         usedBeforeStateSchema.parse(raw),

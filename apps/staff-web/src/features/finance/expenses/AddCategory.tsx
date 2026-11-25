@@ -4,7 +4,7 @@ import { Button } from '@ab/web-kit/components/ui/form/button';
 import { Field } from '@ab/web-kit/components/ui/form/field';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { Input } from '@ab/web-kit/components/ui/form/input';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
+import { moneyKeys } from '@/features/finance/keys';
 import { apiErrorText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { addCategory } from './api';
@@ -17,7 +17,7 @@ export function AddCategory({ onAdded }: { onAdded: (key: string) => void }) {
   const add = useMutation({
     mutationFn: addCategory,
     onSuccess: async (c) => {
-      await queryClient.invalidateQueries({ queryKey: [...MONEY_KEY, 'expense-categories'] });
+      await queryClient.invalidateQueries({ queryKey: moneyKeys.expenseCategories() });
       onAdded(c.key);
       setOpen(false);
     },

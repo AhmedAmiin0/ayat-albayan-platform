@@ -9,7 +9,7 @@ import type {
 } from '@ab/money';
 import type { SessionFilter } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
+import { moneyKeys } from '@/features/finance/keys';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
@@ -21,16 +21,21 @@ export const EARNINGS_PAGE_SIZE = 20;
 /** Admin reads one teacher by id; a teacher always reads their own (the id comes from the token). */
 export type Scope = { kind: 'admin'; teacherId: string } | { kind: 'mine' };
 
-const base = (s: Scope) => (s.kind === 'admin' ? `/teacher-earnings/${s.teacherId}` : '/teachers/me/earnings');
-export const earningsKey = (s: Scope) => [...MONEY_KEY, 'teacher-earnings', s.kind === 'admin' ? s.teacherId : 'me'] as const;
+const base = (s: Scope) =>
+  s.kind === 'admin' ? `/teacher-earnings/${s.teacherId}` : '/teachers/me/earnings';
+const owner = (s: Scope) => (s.kind === 'admin' ? s.teacherId : 'me');
+export const earningsKey = (s: Scope) => moneyKeys.earnings(owner(s));
 
 export const balanceQuery = (s: Scope) =>
-  queryOptions({ queryKey: [...earningsKey(s), 'balance'], queryFn: () => apiFetch<TeacherEarningsBalanceView>(base(s)) });
+  queryOptions({
+    queryKey: moneyKeys.earningsBalance(owner(s)),
+    queryFn: () => apiFetch<TeacherEarningsBalanceView>(base(s)),
+  });
 
 /** One page of sessions, sorted server-side (R-NFR-08); no sort = newest first. */
 export const sessionsQuery = (s: Scope, q: { status: SessionFilter; page: number; sort?: SortSearch }) =>
   queryOptions({
-    queryKey: [...earningsKey(s), 'sessions', q],
+    queryKey: moneyKeys.earningsSessions(owner(s), q),
     queryFn: () => {
       const qs = new URLSearchParams(sortFilterParams(q.sort ?? {}));
       qs.set('page', String(q.page));
@@ -46,7 +51,7 @@ export type PaymentsList = { page: number; sort?: SortSearch; filters?: FilterSe
 /** One page of payments, sorted and filtered (method, voided, note) server-side; no sort = newest first. */
 export const paymentsQuery = (s: Scope, q: PaymentsList) =>
   queryOptions({
-    queryKey: [...earningsKey(s), 'payments', q],
+    queryKey: moneyKeys.earningsPayments(owner(s), q),
     queryFn: () => {
       const qs = new URLSearchParams(sortFilterParams(q.sort ?? {}, q.filters));
       qs.set('page', String(q.page));
