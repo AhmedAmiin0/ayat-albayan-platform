@@ -2,7 +2,8 @@ import type { SubscriptionPricing } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useDebounced } from '@/features/finance/pricing';
 import { useCustomPrice } from '@/features/finance/subscriptions';
-import { quoteSalesSubscription, SALES_MONEY_KEY, type Bind } from '@/features/sales/sales-money/api';
+import { quoteSalesSubscription, type Bind } from '@/features/sales/sales-money/api';
+import { salesMoneyKeys } from '@/features/sales/keys';
 
 interface Opts {
   /** Empty means no quote asked (no student yet, or online payment, which has its own). */
@@ -16,7 +17,7 @@ interface Opts {
 export function useSalesQuote({ studentId, pricing, bind }: Opts) {
   const settled = useDebounced(pricing, 300);
   return useQuery({
-    queryKey: [...SALES_MONEY_KEY, 'quote', studentId, settled],
+    queryKey: salesMoneyKeys.quote(studentId, settled),
     queryFn: () => quoteSalesSubscription({ studentId, pricing: settled, ...bind }),
     enabled: studentId !== '',
   });
