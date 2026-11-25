@@ -22,82 +22,9 @@
       "count": 1
     }
   },
-  "src/stub.calls.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 3
-    }
-  },
-  "src/stub.crm.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 1
-    }
-  },
-  "src/stub.diagnostics.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 1
-    }
-  },
-  "src/stub.kapso.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 3
-    }
-  },
-  "src/stub.lines.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 2
-    }
-  },
-  "src/stub.media.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 1
-    }
-  },
-  "src/stub.templates.lines.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 2
-    }
-  },
-  "src/stub.templates.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 4
-    }
-  },
-  "src/stub.templates.waba.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 1
-    }
-  },
-  "src/stub.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 7
-    }
-  },
-  "src/stub.uploads.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 3
-    }
-  },
-  "src/stub.webhook.lines.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 2
-    }
-  },
-  "src/stub.webhook.test.ts": {
-    "ab/no-unchecked-json": {
-      "count": 3
-    }
-  },
   "src/templates.ts": {
     "typescript/no-base-to-string": {
       "count": 9
-    }
-  },
-  "src/test-server.ts": {
-    "ab/no-unchecked-json": {
-      "count": 2
-    },
-    "typescript/restrict-template-expressions": {
-      "count": 1
     }
   }
 }

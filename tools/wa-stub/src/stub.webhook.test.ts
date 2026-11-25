@@ -1,10 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { z } from 'zod';
 import {
   AUTH,
   closeAll,
   hmacHex,
   post,
+  read,
   receivedAt,
+  sentIds,
   startHook,
   startStub,
   templateBody,
@@ -83,16 +86,16 @@ describe('wa-stub: signed inbound simulation (R-MSG-04)', () => {
         base64: Buffer.from('JPEG').toString('base64'),
       },
     });
-    const { mediaId } = (await media.json()) as { mediaId: string };
+    const { mediaId } = await read(media, z.object({ mediaId: z.string() }));
     expect(messageOf(receivedAt(hook, 0).body)).toMatchObject({ type: 'interactive' });
     expect(messageOf(receivedAt(hook, 1).body)).toMatchObject({
       type: 'image',
       image: { id: mediaId, mime_type: 'image/jpeg', caption: 'الواجب' },
     });
-    const meta = (await (await fetch(`${url}/v21.0/${mediaId}`, { headers: AUTH })).json()) as {
-      url: string;
-      mime_type: string;
-    };
+    const meta = await read(
+      fetch(`${url}/v21.0/${mediaId}`, { headers: AUTH }),
+      z.object({ url: z.string(), mime_type: z.string() }),
+    );
     expect(meta.mime_type).toBe('image/jpeg');
     expect((await fetch(meta.url)).status).toBe(401);
     expect(await (await fetch(meta.url, { headers: AUTH })).text()).toBe('JPEG');
@@ -103,7 +106,7 @@ describe('wa-stub: delivery statuses (R-MSG-05)', () => {
   it('sent carries conversation + pricing; failed carries the error code', async () => {
     const { hook, url } = await setup();
     const sent = await post(`${url}/v21.0/PN1/messages`, templateBody('lesson_reminder_v2', 2));
-    const id = ((await sent.json()) as { messages: { id: string }[] }).messages[0]?.id;
+    const id = (await read(sent, sentIds)).messages[0]?.id;
     await post(`${url}/__stub/status`, { id, status: 'sent' });
     await post(`${url}/__stub/status`, { id, status: 'failed', errorCode: 131026 });
     expect(statusOf(receivedAt(hook, 0).body)).toMatchObject({
