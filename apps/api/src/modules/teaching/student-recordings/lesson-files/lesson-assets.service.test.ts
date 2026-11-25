@@ -22,7 +22,7 @@ describe('LessonAssetsService', () => {
       ]),
       recordings: vi.fn().mockResolvedValue([rec('done'), rec('recording')]),
     };
-    const storage = { signedDownload: vi.fn().mockResolvedValue({ url: 'u', expires_at: 'x' }) };
+    const storage = { signedDownloads: vi.fn().mockResolvedValue(new Map([['p.mp3', 'u']])) };
     const service = new LessonAssetsService(
       { lesson: vi.fn().mockResolvedValue(lessonRef()) } as unknown as LessonFilesAccess,
       { ofLesson: vi.fn().mockResolvedValue([fileRow()]) } as unknown as LessonFilesRepo,
@@ -31,7 +31,9 @@ describe('LessonAssetsService', () => {
     );
     const out = await service.of({ user: ADMIN, lessonId: LESSON });
     expect(out.recordings.map((r) => r.url)).toEqual(['u', null]);
-    expect(storage.signedDownload).toHaveBeenCalledTimes(1);
+    expect(storage.signedDownloads).toHaveBeenCalledTimes(1);
+    const one = { bucket: 'recordings', paths: ['p.mp3'], seconds: 3600 };
+    expect(storage.signedDownloads).toHaveBeenCalledWith(one);
     expect(out.reports.map((r) => r.id)).toEqual(['A']);
     expect(out.files).toHaveLength(1);
   });
