@@ -3,9 +3,9 @@ import { ar, expect, test } from '../../support/core/fixtures';
 import { resetAbrar, seedFamily } from '../../support/core/schedule';
 import { stubInbound, stubReset } from '../../support/core/wa-stub';
 
-// Owner, 2026-10-05: "give the layout of the conversations a max height and make the tables inside
-// scrollable, don't make the page scroll" + "make tables have a static height". The admin frame is
-// viewport-high: the browser page never scrolls; the inbox columns and the table boxes do.
+// The conversations layout has a max height and tables have a static height and scroll inside
+// their own box. The admin frame is viewport-high: the browser page never scrolls; the inbox
+// columns and the table boxes do.
 
 /** The browser page's own vertical overflow (0 = it cannot scroll). */
 const pageOverflow = (page: Page) =>

@@ -8,11 +8,11 @@ import { signInSales } from '../../support/sales/sales-portal';
 import { CHAT_PN, messagesWithLine, NOTIF_PN, sentVia, SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { setMessaging, stubReset } from '../../support/core/wa-stub';
 
-// The restricted allow-list (owner 2026-10-12: «all roles except the ones allowed to have all
-// templates»): the chat number's sync imports its approved templates and flags only free_trial_invite and
-// welcome_greeting; trial_reschedule (seeded flagged, owner 2026-10-18) joins once approved on the chat
-// WABA. Sales are offered only those three, they leave from the chat number, and the admin's switch
-// changes the list (the sync never re-flags).
+// The restricted allow-list applies to every role not allowed all templates: the chat number's
+// sync imports its approved templates and flags only free_trial_invite and welcome_greeting;
+// trial_reschedule (seeded flagged) joins once approved on the chat WABA. Sales are offered only
+// those three, they leave from the chat number, and the admin's switch changes the list (the
+// sync never re-flags).
 
 const KEY = 'free_trial_invite';
 const WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };
@@ -69,7 +69,7 @@ test.describe('restricted templates for sales (owner 2026-10-12)', () => {
       expect.objectContaining({ line: 'chat', status: 'sent' }),
     );
 
-    // The admin unticks welcome_greeting and ticks academy_welcome: the list follows; a new sync keeps it.
+    // The admin unticks welcome_greeting, ticks academy_welcome: the list follows; a sync keeps it.
     await toggleOf('welcome_greeting').click();
     await expect(admin.getByText(t.starterOff)).toBeVisible();
     await toggleOf(UNFLAGGED).click();

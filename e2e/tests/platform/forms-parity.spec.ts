@@ -4,10 +4,10 @@ import { seedPackageStudent } from '../../support/finance/money';
 import { resetAbrar, seedFamily, setAvailability } from '../../support/core/schedule';
 import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
-// Forms parity (owner 2026-10-03, "THESE ARE ALL OUR FORMS"): each form in the app shows the Google
-// Form's titles, options, order and stars. The expected text is typed here from the owner's paste on
-// purpose (never read from ar.json: that would only compare the file with itself). Deliberate
-// differences are marked «DEVIATION».
+// Forms parity: each form in the app shows the Google Form's titles, options, order and stars.
+// The expected text is typed here from the owner's paste on purpose (never read
+// from ar.json: that would only compare the file with itself). Deliberate differences are marked
+// «DEVIATION».
 
 const GRADES = ['ممتاز', 'جيد جدًا', 'جيد', 'مقبول', 'يحتاج إلى مراجعة'];
 
@@ -110,7 +110,7 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
       'رابط الاجتماع',
     ]);
     await expect(identity).toContainText('AB-');
-    // DEVIATION: the id, teacher, student, date, number and link are read-only (filled from the lesson).
+    // DEVIATION: id, teacher, student, date, number and link are read-only (from the lesson).
     await expect(identity.getByRole('textbox')).toHaveCount(0);
     expect(await radioNames(identity.getByRole('group', { name: 'البرنامج' }))).toEqual([
       'القرآن الكريم',

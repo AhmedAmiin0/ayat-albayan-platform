@@ -6,7 +6,7 @@ import { gotoLoaded } from '../../support/core/page-loaded';
 import { seedResponsiveScene } from '../../support/platform/responsive-scene';
 import type { ResponsiveScene } from '../../support/platform/responsive-scene.types';
 
-// Responsive guard (owner, 2026-10-05: "fix the responsive issues"): the main screens never scroll
+// Responsive guard: the main screens never scroll
 // sideways on a phone (390px) or a tablet (768px), in RTL. Tables and tab strips scroll inside
 // their own boxes; the page itself must not. Runs once (desktop project), sizing its own viewport.
 // One test per page: a full load of the dev build is ~2,000 module requests (3-5 s, 2-3x that on

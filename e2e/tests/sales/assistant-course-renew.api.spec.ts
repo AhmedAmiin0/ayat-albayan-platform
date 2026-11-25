@@ -11,9 +11,10 @@ import { call, family, makeAssistant, type Assistant } from '../../support/sales
 import { countedLessons, courseAudit, courseRules, renewal } from '../../support/finance/course-renew';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 
-// Owner 2026-10-18, through the REAL API and database: the assistant books an 8-lesson course (Sun 17:00 +
-// Tue 19:30), changes its days from the second week (Mon 18:00 + Wed 20:00: the course still has exactly 8
-// lessons), then a renewal continues on the same days and times after its last day, tied to the NEW plan.
+// Through the REAL API and database: the assistant books an 8-lesson course (Sun 17:00 +
+// Tue 19:30), changes its days from the second week (Mon 18:00 + Wed 20:00: the course still has
+// exactly 8 lessons), then a renewal continues on the same days and times after its last day, tied
+// to the NEW plan.
 
 const need = <T>(v: T | undefined): T => {
   if (v === undefined) throw new Error('an earlier step did not run');
