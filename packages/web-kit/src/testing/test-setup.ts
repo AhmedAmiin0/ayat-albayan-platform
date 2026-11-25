@@ -9,6 +9,9 @@ configure({ asyncUtilTimeout: 4000 });
 
 afterEach(cleanup);
 
+// Tab memory (kept drafts) never carries from one test to the next.
+afterEach(() => sessionStorage.clear());
+
 // jsdom's en-US locale would otherwise mean 12 h, so tests default to 24 h.
 localStorage.setItem(CLOCK_STORAGE_KEY, '24');
 
@@ -18,5 +21,8 @@ beforeEach(() => setViewerPersonTz('Asia/Riyadh'));
 
 // jsdom has no screen capture; a desktop browser does. Specs about phones delete it to hide the buttons.
 if (typeof navigator !== 'undefined' && !navigator.mediaDevices) {
-  Object.defineProperty(navigator, 'mediaDevices', { configurable: true, value: { getDisplayMedia: () => Promise.reject(new Error('jsdom')) } });
+  Object.defineProperty(navigator, 'mediaDevices', {
+    configurable: true,
+    value: { getDisplayMedia: () => Promise.reject(new Error('jsdom')) },
+  });
 }

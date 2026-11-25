@@ -7831,9 +7831,6 @@
   "src/routes/admin/(ops)/book.tsx": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 3
     }
   },
   "src/routes/admin/(ops)/classrooms.tsx": {
