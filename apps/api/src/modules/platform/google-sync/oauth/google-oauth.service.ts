@@ -8,7 +8,9 @@ import { GoogleData } from '@/modules/platform/google-sync/google-data';
 import { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
 import { newState, nonceHash, readState, stateKey } from './oauth-state';
 
-/** The callback's outcome, shown by the web as a toast (?google=connected | ?google=error&reason=…). */
+/**
+ * The callback's outcome, shown by the web as a toast (?google=connected | ?google=error&reason=…).
+ */
 type CallbackOutcome = 'connected' | 'denied' | 'state' | 'exchange' | 'scopes' | 'not_configured' | 'account';
 export const GOOGLE_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 
@@ -16,9 +18,9 @@ export const GOOGLE_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 export const REQUIRED_SCOPES = GOOGLE_SCOPES.filter((s) => s.startsWith('https://'));
 
 /**
- * The owner connects the academy's Google account once (docs/24 «Owner answers» 4): consent URL with
- * a signed, single-use state; the callback exchanges the code and keeps the refresh token in Vault
- * only. Tokens are never returned, logged or audited.
+ * The owner connects the academy's Google account once (docs/24 «Owner answers» 4): consent URL
+ * with a signed, single-use state; the callback exchanges the code and keeps the refresh token in
+ * Vault only. Tokens are never returned, logged or audited.
  */
 @Injectable()
 export class GoogleOAuthService {
@@ -62,8 +64,9 @@ export class GoogleOAuthService {
     if (!tokens.refreshToken) return 'exchange';
     if (!REQUIRED_SCOPES.every((s) => tokens.scopes.includes(s))) return 'scopes';
     const email = await oauth.email(tokens.accessToken).catch(() => null);
-    // Another Google account would turn every recorded id into «gone»: only the academy's account (once
-    // connected). No email = no proof of the account: refused too. A refused grant is revoked at once.
+    // Another Google account would turn every recorded id into «gone»: only the academy's account
+    // (once connected). No email = no proof of the account: refused too. A refused grant is revoked
+    // at once.
     const before = (await this.account.get()).email;
     if (!email || (before && email !== before)) {
       await oauth.revoke(tokens.refreshToken);

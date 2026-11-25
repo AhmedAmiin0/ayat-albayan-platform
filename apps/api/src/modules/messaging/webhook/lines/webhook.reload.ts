@@ -3,7 +3,10 @@ import { ModuleRef } from '@nestjs/core';
 import { IntegrationConfigService } from '@/common/configuration/integrations/integration-config.service';
 import { NumbersConfig } from '@/modules/messaging/numbers';
 
-/** At most one reload per this gap: a stream of webhooks for a foreign number never hammers the database. */
+/**
+ * At most one reload per this gap: a stream of webhooks for a foreign number never hammers the
+ * database.
+ */
 export const RELOAD_GAP_MS = 5_000;
 
 /**
@@ -21,7 +24,9 @@ export class WebhookConfigReload {
 
   constructor(private readonly refs: ModuleRef) {}
 
-  /** true = the config was just reloaded for this caller (parse again); false = it is fresh already. */
+  /**
+   * true = the config was just reloaded for this caller (parse again); false = it is fresh already.
+   */
   async once(now: number = Date.now()): Promise<boolean> {
     if (this.running) {
       await this.running;

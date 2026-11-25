@@ -21,14 +21,20 @@ import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { toVoiceOgg } from './voice-ogg';
 import { voiceMedia } from './voice-send';
 
-/** 400 file_type / 413 file_too_large, or nothing. The chat's own list: an image, a PDF or a recorded voice note. */
+/**
+ * 400 file_type / 413 file_too_large, or nothing. The chat's own list: an image, a PDF or a
+ * recorded voice note.
+ */
 function assertSendable(f: { mime: string; size: number; maxBytes: number }): void {
   const problem = chatFileProblem(f, CHAT_FILE_MIMES);
   if (problem === 'file_type') throw waHttpError('file_type', HttpStatus.BAD_REQUEST);
   if (problem) throw waHttpError(problem, HttpStatus.PAYLOAD_TOO_LARGE);
 }
 
-/** A PDF reaches the family named .pdf whatever the client called it (the bytes were sniffed as PDF). */
+/**
+ * A PDF reaches the family named .pdf whatever the client called it (the bytes were sniffed as
+ * PDF).
+ */
 export const sentFileName = (name: string, mime: string): string =>
   mime !== 'application/pdf' || /\.pdf$/i.test(name) ? name : `${name.slice(0, 196)}.pdf`;
 
@@ -42,7 +48,9 @@ const filePath = () => waHttpError('file_path', HttpStatus.BAD_REQUEST);
  */
 @Injectable()
 export class ThreadFileSender {
-  /** Property-injected (the constructor is at the 3-parameter limit); absent → the registry default. */
+  /**
+   * Property-injected (the constructor is at the 3-parameter limit); absent → the registry default.
+   */
   @Inject(InboxSettings) private readonly settings?: InboxSettings;
   /** Property-injected like settings. */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;

@@ -112,7 +112,10 @@ export function fakeThreads(thread: { guardian_id: string | null; lead_id: strin
   return { thread: vi.fn(async () => thread), numberWindows: vi.fn(async () => []), enqueue };
 }
 
-/** A gate with the setting `on`, the Kapso line and the allow-list check (pass `refuse` to block a phone). */
+/**
+ * A gate with the setting `on`, the Kapso line and the allow-list check (pass `refuse` to block a
+ * phone).
+ */
 export function fakeGate(input: { on?: boolean; refuse?: string } = {}): CallsGate {
   return {
     enabled: async () => input.on !== false,

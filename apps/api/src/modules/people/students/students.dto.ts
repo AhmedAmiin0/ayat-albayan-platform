@@ -31,7 +31,9 @@ export const studentPatchSchema = studentCreateSchema
   .omit({ guardian_id: true })
   .extend({ program: z.enum(PROGRAMS), status: z.enum(STUDENT_STATUSES) })
   .partial()
-  /** Compare-and-set: written only while the row still has this status, else 409 `status_changed`. */
+  /**
+   * Compare-and-set: written only while the row still has this status, else 409 `status_changed`.
+   */
   .extend({ expected_status: z.enum(STUDENT_STATUSES).optional() });
 
 /** POST /students/:id/merge — `merged_id` is folded into `:id` (kept). */

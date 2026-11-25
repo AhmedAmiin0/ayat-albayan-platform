@@ -7,7 +7,10 @@ import { GoogleData } from '@/modules/platform/google-sync/google-data';
 import { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
 import { GOOGLE_ENTITY_ID } from '@/modules/platform/google-sync/oauth/google-oauth.service';
 
-/** The admin's actions on the sync: settings, discovery, the Drive root. Each one re-queues what it unblocks. */
+/**
+ * The admin's actions on the sync: settings, discovery, the Drive root. Each one re-queues what it
+ * unblocks.
+ */
 @Injectable()
 export class GoogleAdminService {
   constructor(
@@ -19,7 +22,10 @@ export class GoogleAdminService {
     return this.run.audit.record({ actorId: input.actorId, entity: 'google_account', entityId: GOOGLE_ENTITY_ID, action: input.action, before: null, after: input.after });
   }
 
-  /** Going live re-queues the dry-run items; turning on queues the window. Nothing in a routine calls this. */
+  /**
+   * Going live re-queues the dry-run items; turning on queues the window. Nothing in a routine
+   * calls this.
+   */
   async saveSettings(input: { values: GoogleSettingsInput; actorId: string }): Promise<void> {
     const before = await this.data.settings.read();
     await this.data.settings.write(input);
@@ -31,7 +37,8 @@ export class GoogleAdminService {
   }
 
   async discover(): Promise<void> {
-    // Uncached: a connect or disconnect taken by the other API copy must count here (docs/09 «Known windows»).
+    // Uncached: a connect or disconnect taken by the other API copy must count here (docs/09 «Known
+    // windows»).
     this.run.connection.forget();
     const google = await this.run.connection.client();
     if (!google) throw new ConflictException({ message: 'not_connected' });

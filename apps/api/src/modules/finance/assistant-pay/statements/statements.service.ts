@@ -30,7 +30,10 @@ export class StatementsService {
     return this.view(id);
   }
 
-  /** Builds or rebuilds the draft of the month; approved and paid ones answer 409 invalid_transition. */
+  /**
+   * Builds or rebuilds the draft of the month; approved and paid ones answer 409
+   * invalid_transition.
+   */
   async generate(input: { assistantId: string; month: string; actorId: string }): Promise<AssistantStatementView> {
     const id = await this.rpc.generate({ ...input, month: monthStart(input.month) });
     return this.view(id);
@@ -41,7 +44,10 @@ export class StatementsService {
     return this.view(id);
   }
 
-  /** approved -> draft. 409 reversal_in_later_statement while a correction of it sits in a later statement. */
+  /**
+   * approved -> draft. 409 reversal_in_later_statement while a correction of it sits in a later
+   * statement.
+   */
   async reopen(id: string, actorId: string): Promise<AssistantStatementView> {
     await this.rpc.reopen(id, actorId);
     return this.view(id);

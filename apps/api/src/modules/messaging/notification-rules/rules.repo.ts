@@ -11,14 +11,20 @@ import { LineHealthStore } from '@/modules/messaging/whatsapp/lines/line-health.
 type TemplateFacts = ReadonlyMap<string, { status: TemplateStatus; line: WaLine }>;
 export type Reach = NonNullable<NotificationsOverview['reach']>;
 
-/** Is the academy classroom in use (LiveKit configured)? Read per call: LIVEKIT_* may come from the DB. */
+/**
+ * Is the academy classroom in use (LiveKit configured)? Read per call: LIVEKIT_* may come from the
+ * DB.
+ */
 export const RULES_CLASSROOM = Symbol('RULES_CLASSROOM');
 export type ClassroomOn = () => boolean;
 
 /** Every template key a catalogue row may send. */
 export const CATALOGUE_TEMPLATE_KEYS: readonly string[] = [...new Set(NOTIFICATION_CATALOGUE.flatMap((e) => [...e.templates]))];
 
-/** What the catalogue reads: message_templates (approval and number per key) and the kept line checks. */
+/**
+ * What the catalogue reads: message_templates (approval and number per key) and the kept line
+ * checks.
+ */
 @Injectable()
 export class RulesRepo {
   private readonly log = new Logger(RulesRepo.name);

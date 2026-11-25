@@ -8,7 +8,9 @@ import { liveSessions } from '@/common/push/dispatch/push.sessions';
 import { pushEndpointAllowed } from './web-push.endpoint';
 import { vapidAuthorization, type VapidKeys } from './web-push.vapid';
 
-/** One POST to a push service; the status is all we read. Injectable: tests never reach the network. */
+/**
+ * One POST to a push service; the status is all we read. Injectable: tests never reach the network.
+ */
 export type WebPushTransport = (req: { url: string; headers: Record<string, string>; body: Buffer }) => Promise<{ status: number }>;
 export const WEB_PUSH_TRANSPORT = Symbol('WEB_PUSH_TRANSPORT');
 /** Read per send since integrations may change the keys; null means web push is off. */
@@ -57,9 +59,9 @@ const GONE: ReadonlySet<number> = new Set([400, 403, 404, 410, 413]);
 const clip = (text: string) => clipText(text, WEB_PUSH_BODY_MAX);
 
 /**
- * Browser push (R-NOT-02): one encrypted POST per subscription of the profile bound to a live session. Off (no call at all)
- * until the three WEB_PUSH_* values are set. A GONE status: the row is deleted;
- * an endpoint off the allow-list is deleted unsent. Never throws.
+ * Browser push (R-NOT-02): one encrypted POST per subscription of the profile bound to a live
+ * session. Off (no call at all) until the three WEB_PUSH_* values are set. A GONE status: the row
+ * is deleted; an endpoint off the allow-list is deleted unsent. Never throws.
  */
 @Injectable()
 export class WebPushSender {
@@ -78,7 +80,8 @@ export class WebPushSender {
       if (!keys) return 0;
       const { data, error } = await this.db.from('web_push_subscriptions').select('id, endpoint, p256dh, auth, session_id').eq('profile_id', profileId);
       if (error) throw new Error(error.message);
-      // Only browsers bound to a live session of this profile (migration 700; null = not yet re-bound).
+      // Only browsers bound to a live session of this profile (migration 700; null = not yet
+      // re-bound).
       const live = await liveSessions(this.db, data.map((s) => s.session_id));
       const subs = data.filter((s) => s.session_id !== null && live.has(s.session_id));
       const body = Buffer.from(JSON.stringify({ ...payload, body: clip(payload.body) }));

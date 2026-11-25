@@ -13,7 +13,10 @@ export interface ReactionTarget {
   line: string | null;
   number_id: string | null;
   interactive_payload: Json | null;
-  /** A link template (lesson_feedback_request, lesson_join_link) stays hidden from sales (visibleToSales). */
+  /**
+   * A link template (lesson_feedback_request, lesson_join_link) stays hidden from sales
+   * (visibleToSales).
+   */
   template_key: string | null;
   our_reaction: string | null;
   our_reaction_by: string | null;
@@ -38,7 +41,10 @@ export function assertReactable(target: ReactionTarget | null, now: Date): asser
   if (reactionTooOld(target.created_at, now)) throw waHttpError('reaction_too_old', HttpStatus.CONFLICT);
 }
 
-/** The reaction send's marker (dispatch reads `reaction`; the revert trigger `target_id` and `previous`). */
+/**
+ * The reaction send's marker (dispatch reads `reaction`; the revert trigger `target_id` and
+ * `previous`).
+ */
 export const reactionPayload = (target: ReactionTarget, emoji: string | null): Json => ({
   type: 'reaction',
   reaction: { message_id: target.wa_message_id, emoji: emoji ?? '' },
@@ -48,7 +54,9 @@ export const reactionPayload = (target: ReactionTarget, emoji: string | null): J
 
 const TARGET_SELECT = 'id, wa_message_id, created_at, line, number_id, interactive_payload, template_key, our_reaction, our_reaction_by, our_reaction_at' as const;
 
-/** The reaction endpoint's reads and its one optimistic write (service role; the guards run first). */
+/**
+ * The reaction endpoint's reads and its one optimistic write (service role; the guards run first).
+ */
 @Injectable()
 export class ReactionRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -85,7 +93,10 @@ export class ReactionRepo {
     if (error) throw new Error(`reaction supersede failed: ${error.message}`);
   }
 
-  /** Ours at once (optimistic); a failed send puts back `previous` (trigger messages_reaction_failed). */
+  /**
+   * Ours at once (optimistic); a failed send puts back `previous` (trigger
+   * messages_reaction_failed).
+   */
   async setOurs(input: { targetId: string; phone: string; ours: OurReaction }): Promise<void> {
     const { emoji, by, at } = input.ours;
     const patch = { our_reaction: emoji, our_reaction_by: emoji ? by : null, our_reaction_at: emoji ? at : null };

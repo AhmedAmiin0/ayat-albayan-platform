@@ -39,7 +39,10 @@ export class WacrmWebhookController {
     @Inject(CrmInboundJob) private readonly crmInboundJob: CrmInboundJob,
   ) {}
 
-  /** 401 (nothing read) unless the signature is good and fresh; 500 when a write failed (it may come again). */
+  /**
+   * 401 (nothing read) unless the signature is good and fresh; 500 when a write failed (it may come
+   * again).
+   */
   @Post()
   @HttpCode(200)
   async receive(@Req() req: RawRequest, @Headers('x-wacrm-signature') signature?: string): Promise<void> {

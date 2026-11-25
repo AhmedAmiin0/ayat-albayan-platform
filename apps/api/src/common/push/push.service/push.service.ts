@@ -39,10 +39,10 @@ type Delivery = {
 };
 
 /**
- * The bell and its pushes (R-MOB-01, R-NOT-01, R-NOT-02; docs/12 §6). One push_notifications row per
- * event per profile, keyed `{kind}:{subject}:{profile_id}` (written even with no device: the bell
- * shows it), so a retried event never pushes twice (rule 8). Only enabled profiles permitted for the
- * kind (PushAudience). The row is awaited; the browser and app pushes of a NEW row are not
+ * The bell and its pushes (R-MOB-01, R-NOT-01, R-NOT-02; docs/12 §6). One push_notifications row
+ * per event per profile, keyed `{kind}:{subject}:{profile_id}` (written even with no device: the
+ * bell shows it), so a retried event never pushes twice (rule 8). Only enabled profiles permitted
+ * for the kind (PushAudience). The row is awaited; the browser and app pushes of a NEW row are not
  * (PushChannels, off the request path). Never throws: a push failure must not fail the webhook, a
  * booking, the sender or a job.
  */
@@ -66,9 +66,10 @@ export class PushService {
   }
 
   /**
-   * An assistant's alert (docs/21 §6): the family's owners permitted for the kind; none (a new lead,
-   * an unowned family, or no owner eligible) → every enabled salesperson. An admin owner's row
-   * deduplicates against notifyAdmins (same dedup key), so it does not spread to the assistants.
+   * An assistant's alert (docs/21 §6): the family's owners permitted for the kind; none (a new
+   * lead, an unowned family, or no owner eligible) → every enabled salesperson. An admin owner's
+   * row deduplicates against notifyAdmins (same dedup key), so it does not spread to the
+   * assistants.
    */
   async notifySales(kind: AnyPushKind, event: PushEvent, owners: readonly string[]): Promise<void> {
     try {

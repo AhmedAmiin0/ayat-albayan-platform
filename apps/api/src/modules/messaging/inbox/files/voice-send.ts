@@ -14,7 +14,10 @@ type ObjectRef = { bucket: Bucket; path: string };
 
 const log = new Logger('VoiceSend');
 
-/** The ogg's fixed name beside the m4a: a replay overwrites the same object (upsert), never a second one. */
+/**
+ * The ogg's fixed name beside the m4a: a replay overwrites the same object (upsert), never a second
+ * one.
+ */
 export const voiceOggPath = (m4aPath: string): string => `${m4aPath.slice(0, m4aPath.lastIndexOf('/'))}/voice.ogg`;
 
 /** The recording and its ogg/opus copy, or null when either is missing. */

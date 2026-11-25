@@ -53,7 +53,9 @@ export class ConfigEntriesService {
     return this.entries(snap, CONFIG_KEYS.filter((k) => mayView(user, k)));
   }
 
-  /** 404 unknown_key · 409 owned_by_module · 422 invalid · 428 confirmation_required · 409 conflict. */
+  /**
+   * 404 unknown_key · 409 owned_by_module · 422 invalid · 428 confirmation_required · 409 conflict.
+   */
   async patch(call: EntryCall<ConfigEntryPatchInput>): Promise<ConfigEntryResult> {
     const { seed, def } = known(call.key);
     if (isModuleOwned(call.key)) throw ownedByModule(ownerOf(call.key));
@@ -116,7 +118,9 @@ export class ConfigEntriesService {
     });
   }
 
-  /** The write already happened: a failed audit row is logged, never turned into an error answer. */
+  /**
+   * The write already happened: a failed audit row is logged, never turned into an error answer.
+   */
   private async audited(write: () => Promise<void>): Promise<void> {
     try {
       await write();

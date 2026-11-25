@@ -10,7 +10,10 @@ const PDF = new TextEncoder().encode('%PDF-1.4 fake');
 const exit = (over: Partial<PdfExit> = {}): PdfExit => ({ code: 0, stdout: '', timedOut: false, ...over });
 const last = (args: readonly string[]) => args[args.length - 1] ?? '';
 
-/** A run that checks the PDF was written, records the temp folder, writes `files` there and answers `out`. */
+/**
+ * A run that checks the PDF was written, records the temp folder, writes `files` there and answers
+ * `out`.
+ */
 function fakeRun(out: PdfExit, files: string[] = []) {
   const seen = { dir: '', tool: '' };
   const run: PdfRun = async (tool, args) => {

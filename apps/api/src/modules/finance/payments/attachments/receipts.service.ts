@@ -19,7 +19,9 @@ export class ReceiptsService {
     private readonly files: PaymentAttachmentsRepo,
   ) {}
 
-  /** P6 (404 subscription_not_found; 400 receipt_too_large over maxBytes = settings.upload_max_mb). */
+  /**
+   * P6 (404 subscription_not_found; 400 receipt_too_large over maxBytes = settings.upload_max_mb).
+   */
   async uploadUrl(input: ReceiptUpload, maxBytes = RECEIPT_MAX_BYTES): Promise<SignedUpload> {
     if (input.size > maxBytes) throw badRequest('receipt_too_large');
     const sub = await this.subscription(input.subscriptionId);

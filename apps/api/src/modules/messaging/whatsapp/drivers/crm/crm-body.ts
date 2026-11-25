@@ -11,7 +11,9 @@ export interface CrmTemplateParams {
   body?: string[];
   /** A document / image header's link: the 7-day signed Storage URL. */
   headerMediaUrl?: string;
-  /** A URL button's {{1}} suffix or a quick-reply payload, by the button's index in the template. */
+  /**
+   * A URL button's {{1}} suffix or a quick-reply payload, by the button's index in the template.
+   */
   buttonParams?: Record<string, string>;
 }
 

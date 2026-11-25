@@ -6,7 +6,10 @@ import type { WebhookConfigReload } from '@/modules/messaging/webhook/lines/webh
 import type { StatusService } from '@/modules/messaging/webhook/status/webhook.status.service';
 import { WebhookService } from '@/modules/messaging/webhook/webhook.service';
 
-/** A copy that knows only `known`; its reload (when given) learns `learns`, as a save on the other copy would. */
+/**
+ * A copy that knows only `known`; its reload (when given) learns `learns`, as a save on the other
+ * copy would.
+ */
 function copy(opts: { learns?: string; reloads?: boolean } = {}) {
   const inbound = { handle: vi.fn().mockResolvedValue(undefined) };
   const config = { appSecrets: ['s'], verifyToken: 't', numbers: { notifications: 'known' } as Record<string, string> };

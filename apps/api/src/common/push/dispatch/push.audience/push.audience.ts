@@ -12,7 +12,10 @@ import { pushRoute, type PushRoute } from '@/common/push/dispatch/push.rules';
 import { readersOf, studentLogins } from '@/common/push/dispatch/push.readers';
 import { liveTokens } from '@/common/push/dispatch/push.sessions';
 
-/** A profile a notification may go to (enabled, permitted for its kind); push_tokens: live ones only. */
+/**
+ * A profile a notification may go to (enabled, permitted for its kind); push_tokens: live ones
+ * only.
+ */
 export interface Recipient {
   id: string;
   role: UserRole | null;
@@ -23,8 +26,8 @@ export interface Recipient {
  * Who gets a notification, decided at send time (R-NOT-01): never a disabled profile (disabled_at
  * set), and only a profile whose effective permissions (the AuthGuard's resolver) hold what
  * PUSH_KIND_PERMISSIONS asks of the kind — a custom role without notifications.push (or, for an
- * inbox event, inbox.read) gets no bell row, no browser push, no app push. And whether the kind goes
- * out at all, and through which channels: its notification rule (route, NotificationPolicy).
+ * inbox event, inbox.read) gets no bell row, no browser push, no app push. And whether the kind
+ * goes out at all, and through which channels: its notification rule (route, NotificationPolicy).
  */
 @Injectable()
 export class PushAudience {
@@ -48,7 +51,9 @@ export class PushAudience {
     return this.roleIds('admin');
   }
 
-  /** Every enabled base-role salesperson (an assistant): unowned and new-lead chats (docs/21 §6). */
+  /**
+   * Every enabled base-role salesperson (an assistant): unowned and new-lead chats (docs/21 §6).
+   */
   salesIds(): Promise<string[]> {
     return this.roleIds('sales');
   }

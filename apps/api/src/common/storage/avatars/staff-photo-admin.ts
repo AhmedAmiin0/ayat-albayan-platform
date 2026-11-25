@@ -65,7 +65,9 @@ export class StaffPhotoAdmin {
     return { avatar_url: await this.writer.files.url(after) };
   }
 
-  /** A linked teacher loses both: its login's photo and the record's (no photo shows afterwards). */
+  /**
+   * A linked teacher loses both: its login's photo and the record's (no photo shows afterwards).
+   */
   async remove(who: Who, actorId: string): Promise<StaffPhotoView> {
     const owner = await this.owner(who);
     const before = await this.writer.clear(this.slot(owner));
@@ -83,7 +85,10 @@ export class StaffPhotoAdmin {
     return owner.kind === 'teacher' ? teacherSlot(this.db, owner.id) : profileSlot(this.db, owner.id);
   }
 
-  /** Where the photo lives: a teacher's login when it has one, else the record; a user must be staff. */
+  /**
+   * Where the photo lives: a teacher's login when it has one, else the record; a user must be
+   * staff.
+   */
   private owner(who: Who): Promise<Who> {
     return OWNER[who.kind](this.db, who.id);
   }

@@ -6,15 +6,18 @@ import {
 } from '@ab/settings';
 import { BadRequestException } from '@nestjs/common';
 
-/** The alias split plus the followUpHours the caller may write through the follow-up rule (23-P4). */
+/**
+ * The alias split plus the followUpHours the caller may write through the follow-up rule (23-P4).
+ */
 type AliasPatchSplit = SettingsPatchSplit & { followUpHours: number[] | null };
 
 const FOLLOW_UP_FIELDS = ['followUpHours', 'follow_up_hours'] as const;
 
 /**
  * followUpHours / follow_up_hours is owned by the notification rules (moved), but a caller holding
- * notifications.manage still writes it from the 0.2.0 phone (docs/26 §2f): validated by its registry
- * def, it becomes `saved` (or `invalid`) and is applied through the rules by the controller.
+ * notifications.manage still writes it from the 0.2.0 phone (docs/26 §2f): validated by its
+ * registry def, it becomes `saved` (or `invalid`) and is applied through the rules by the
+ * controller.
  */
 function takeFollowUp(body: Readonly<Record<string, unknown>>, out: AliasPatchSplit): void {
   const field = FOLLOW_UP_FIELDS.find((f) => Object.hasOwn(body, f) && body[f] !== undefined);

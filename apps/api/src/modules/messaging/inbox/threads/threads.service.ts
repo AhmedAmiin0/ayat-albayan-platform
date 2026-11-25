@@ -36,7 +36,10 @@ export class ThreadsService {
     private readonly messages: ThreadMessagesRepo,
   ) {}
 
-  /** Each row's family tags come from its guardian's students (one read for the whole page, beside the unsupported marks). */
+  /**
+   * Each row's family tags come from its guardian's students (one read for the whole page, beside
+   * the unsupported marks).
+   */
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
     const [{ items: rows, total }, threshold] = await Promise.all([
       this.queries.list(f), renewalThreshold(this.settings),

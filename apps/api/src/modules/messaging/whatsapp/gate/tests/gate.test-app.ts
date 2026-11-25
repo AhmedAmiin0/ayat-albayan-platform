@@ -19,7 +19,9 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 
-/** Tests only: AppModule over fake auth, a mocked SettingsService and AuditService (gate routes). */
+/**
+ * Tests only: AppModule over fake auth, a mocked SettingsService and AuditService (gate routes).
+ */
 export function gateApp() {
   const settings = { all: vi.fn(), write: vi.fn(), writeSwitch: vi.fn() };
   const audit = { record: vi.fn() };

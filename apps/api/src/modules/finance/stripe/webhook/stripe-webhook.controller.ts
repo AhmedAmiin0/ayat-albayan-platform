@@ -3,7 +3,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
 import { StripeWebhookService } from './stripe-webhook.service';
 
-/** main.ts boots with rawBody: true, so the exact bytes Stripe signed are on req.rawBody (JSON parsed too). */
+/**
+ * main.ts boots with rawBody: true, so the exact bytes Stripe signed are on req.rawBody (JSON
+ * parsed too).
+ */
 interface RawRequest {
   rawBody?: Buffer;
 }

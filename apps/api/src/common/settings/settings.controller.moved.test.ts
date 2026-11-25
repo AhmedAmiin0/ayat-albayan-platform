@@ -34,7 +34,8 @@ const OWNED_KEYS = [
   'google_calendar_window_days',
 ];
 
-// PATCH /settings per key (docs/26 §2f, 26-P0): owned keys come back in `moved` and are never written.
+// PATCH /settings per key (docs/26 §2f, 26-P0): owned keys come back in `moved` and are never
+// written.
 describe('PATCH /settings — owned keys are moved', () => {
   let app: NestFastifyApplication;
   const patch = (payload: unknown) =>

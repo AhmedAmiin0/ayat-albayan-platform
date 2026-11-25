@@ -25,7 +25,9 @@ export const PAYMENT_SORT: SortSpec<PaymentSortKey> = {
 
 type Filterable<Q> = { eq: (c: string, v: string) => Q; gte: (c: string, v: string) => Q; lt: (c: string, v: string) => Q };
 
-/** The list filters, shared by the page and its totals (embedded package for the student filter). */
+/**
+ * The list filters, shared by the page and its totals (embedded package for the student filter).
+ */
 export function filtered<Q extends Filterable<Q>>(q: Q, f: PaymentFilter): Q {
   let out = q;
   if (f.subscriptionId) out = out.eq('subscription_id', f.subscriptionId);

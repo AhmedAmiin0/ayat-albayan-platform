@@ -51,7 +51,10 @@ export class CheckoutService {
     return id?.startsWith(this.clients.liveMode() ? 'cs_live_' : 'cs_test_') ? id : null;
   }
 
-  /** The package needs no payment any more: the link reads as cancelled from now on, its session cannot be paid. */
+  /**
+   * The package needs no payment any more: the link reads as cancelled from now on, its session
+   * cannot be paid.
+   */
   private async close(c: { stripe: StripeApi; link: LinkRow; now: Date; page: string }): Promise<string> {
     await this.deps.links.cancel(c.link.id);
     if (c.link.stripe_session_id) await this.expire(c.stripe, c.link.stripe_session_id);

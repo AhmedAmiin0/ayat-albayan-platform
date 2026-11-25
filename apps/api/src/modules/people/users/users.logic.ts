@@ -16,7 +16,10 @@ export interface UserState extends RoleState {
 export const missingFor = (actor: readonly Permission[], wanted: readonly Permission[]): Permission | null =>
   wanted.find((w) => !actor.includes(w)) ?? null;
 
-/** 403 permission_not_held: the actor must hold every grant of the target's current role (no editing "up"). */
+/**
+ * 403 permission_not_held: the actor must hold every grant of the target's current role (no editing
+ * "up").
+ */
 export function assertOutranks(actor: readonly Permission[], state: UserState, target: StaffProfile): void {
   const missing = missingFor(actor, grantsOf(state, target));
   if (missing) throw forbidden('permission_not_held', { permission: missing });
@@ -125,6 +128,9 @@ export function sentOnly<T extends object, K extends keyof T>(
 export const profilePatch = (input: { [K in ProfileKey]?: ProfilePatch[K] | undefined }): ProfilePatch =>
   sentOnly(input, PROFILE_KEYS);
 
-/** A base role change is refused when a teacher / student / guardian record is (or would be) involved. */
+/**
+ * A base role change is refused when a teacher / student / guardian record is (or would be)
+ * involved.
+ */
 export const roleChangeBlocked = (ctx: { from: UserRole; to: UserRole; linked: boolean }): boolean =>
   ctx.from !== ctx.to && (ctx.linked || isLinkedRole(ctx.from) || isLinkedRole(ctx.to));

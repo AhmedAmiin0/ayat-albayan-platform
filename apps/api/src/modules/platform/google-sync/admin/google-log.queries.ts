@@ -11,7 +11,9 @@ type Raw = {
   last_error: string | null; planned: unknown; updated_at: string; lesson_id: string | null; student_id: string | null;
 };
 
-/** The sync log (GET /admin/google/items): the last 100 rows, each named by its student and date. */
+/**
+ * The sync log (GET /admin/google/items): the last 100 rows, each named by its student and date.
+ */
 @Injectable()
 export class GoogleLogQueries {
   constructor(@Inject(DB) private readonly db: Db) {}

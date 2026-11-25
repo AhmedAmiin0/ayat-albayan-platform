@@ -11,7 +11,10 @@ import { PushService } from '@/common/push/push.service';
 export class GoogleAlerts {
   constructor(private readonly push: PushService) {}
 
-  /** invalid_grant: the refresh token is dead; the subject carries the day so a later expiry is told again. */
+  /**
+   * invalid_grant: the refresh token is dead; the subject carries the day so a later expiry is told
+   * again.
+   */
   disconnected(now = new Date()): Promise<void> {
     const reason = ar.googleSync.alerts.disconnected;
     return this.push.notifyAdmins('google_sync_alert', { subject: `disconnected:${now.toISOString().slice(0, 10)}`, vars: { reason }, bellOnly: true });

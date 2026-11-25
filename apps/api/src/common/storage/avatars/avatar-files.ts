@@ -13,7 +13,9 @@ export interface PhotoSlot {
 /** Photo URLs live for 15 minutes: the page asks again on its next load. */
 const AVATAR_URL_SECONDS = 15 * 60;
 
-/** What a photo needs from Storage (the account page, an admin's teacher / user photo, every list). */
+/**
+ * What a photo needs from Storage (the account page, an admin's teacher / user photo, every list).
+ */
 export interface AvatarFiles {
   uploadUrl(slot: PhotoSlot): Promise<SignedUpload>;
   info(path: string): Promise<{ size: number; contentType: string } | null>;

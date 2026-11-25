@@ -21,7 +21,10 @@ const CONFLICT = new Set([
   'commission_exists',
 ]);
 
-/** `raise exception '<code>'` of migrations 20261006000272 / 273 → HTTP; anything else is a plain DB error. */
+/**
+ * `raise exception '<code>'` of migrations 20261006000272 / 273 → HTTP; anything else is a plain DB
+ * error.
+ */
 export function assistantError(error: PostgrestError): Error {
   if (error.code === 'P0001') {
     if (BAD.has(error.message)) return badRequest(error.message);

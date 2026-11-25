@@ -25,7 +25,9 @@ export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', ema
 const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
 const SALES: AuthUser = { id: 's0000000-0000-4000-8000-000000000003', email: null, role: 'sales' };
 const ASSISTANT: AuthUser = { id: 's0000000-0000-4000-8000-000000000004', email: null, role: 'assistant' };
-/** A custom role (base sales) for the dynamic-roles cases; its grants come from the test's resolver. */
+/**
+ * A custom role (base sales) for the dynamic-roles cases; its grants come from the test's resolver.
+ */
 const CUSTOM: AuthUser = { id: 's0000000-0000-4000-8000-000000000005', email: null, role: 'sales' };
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, sales: SALES, assistant: ASSISTANT, custom: CUSTOM };
 const verify: TokenVerifier = async (token) => {

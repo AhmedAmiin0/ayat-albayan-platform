@@ -5,7 +5,9 @@ import { AppModule } from '@/app.module';
 import { backgroundJobs } from '@/config/role/background-job';
 import { Ticker } from '@/common/jobs';
 
-/** What one boot started: timers per @BackgroundJob (by name), other timers by source file, Tickers. */
+/**
+ * What one boot started: timers per @BackgroundJob (by name), other timers by source file, Tickers.
+ */
 interface BootProbe {
   jobTimers: Map<string, number>;
   otherTimers: Set<string>;
@@ -18,8 +20,9 @@ type TimerFn = (...args: unknown[]) => unknown;
 const APP = /apps[/\\]api[/\\]src[/\\]([^:)]+)/;
 
 /**
- * Who asked for the timer: the frame right below this probe, if it is app code (a library's own timer,
- * like a fetch timeout, is not a job). The shared Ticker is skipped so its owner is named instead.
+ * Who asked for the timer: the frame right below this probe, if it is app code (a library's own
+ * timer, like a fetch timeout, is not a job). The shared Ticker is skipped so its owner is named
+ * instead.
  */
 function caller(stack: string | undefined): string | null {
   const frames = (stack ?? '')
@@ -32,7 +35,10 @@ function caller(stack: string | undefined): string | null {
   return file && !file.endsWith('.test.ts') ? file : null;
 }
 
-/** Wraps a global timer: a call during a job's boot hook counts for that job, any other by its caller. */
+/**
+ * Wraps a global timer: a call during a job's boot hook counts for that job, any other by its
+ * caller.
+ */
 function watchTimer(
   key: 'setTimeout' | 'setInterval',
   probe: BootProbe,
@@ -74,9 +80,10 @@ function watchJobs(probe: BootProbe): () => string | null {
 }
 
 /**
- * Boots the real AppModule in `role` with fake timers and records every timer it starts, however it is
- * written (setTimeout, setInterval, a Ticker, in onModuleInit or onApplicationBootstrap). `hours` of fake
- * time then pass, so a timer a per-copy refresh starts later is seen too (0 = boot only).
+ * Boots the real AppModule in `role` with fake timers and records every timer it starts, however it
+ * is written (setTimeout, setInterval, a Ticker, in onModuleInit or onApplicationBootstrap).
+ * `hours` of fake time then pass, so a timer a per-copy refresh starts later is seen too (0 = boot
+ * only).
  */
 export async function bootIn(role: string, hours = 0): Promise<BootProbe> {
   vi.stubEnv('APP_ROLE', role);

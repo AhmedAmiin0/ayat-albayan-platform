@@ -24,7 +24,9 @@ export class LinkSalesDeps {
   ) {}
 }
 
-/** LinkCreate's own: the release of earlier unused link packages and the sales scope of the teacher. */
+/**
+ * LinkCreate's own: the release of earlier unused link packages and the sales scope of the teacher.
+ */
 @Injectable()
 export class LinkCreateDeps {
   constructor(

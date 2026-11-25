@@ -8,12 +8,13 @@ import { GoogleConnection, GoogleSettings } from '@/modules/platform/google-sync
 import { TranslationsService } from '@/modules/platform/translations';
 
 /**
- * The worker's and the other API copies' copy of the config an admin saves on one API copy (docs/09 «Known
- * windows»): that copy reloads its own at once, then kicks this on the worker (`reload`, gated) and on each
- * peer (`reloadHere`, PEER_URLS), so the sender, the reminders, the Google sync and the other copy never
- * keep a stale numbers overlay, own numbers, allow-list, rules snapshot, translations or Google connection
- * until their next refresh. Each step is looked up when it runs (strict: false, a test app may lack a module)
- * and a failed step never stops the next. Timers: none (wrap() needs the hook).
+ * The worker's and the other API copies' copy of the config an admin saves on one API copy (docs/09
+ * «Known windows»): that copy reloads its own at once, then kicks this on the worker (`reload`,
+ * gated) and on each peer (`reloadHere`, PEER_URLS), so the sender, the reminders, the Google sync
+ * and the other copy never keep a stale numbers overlay, own numbers, allow-list, rules snapshot,
+ * translations or Google connection until their next refresh. Each step is looked up when it runs
+ * (strict: false, a test app may lack a module) and a failed step never stops the next. Timers:
+ * none (wrap() needs the hook).
  */
 @BackgroundJob({ name: 'config-reload', kick: 'reload' })
 @Injectable()
@@ -29,7 +30,10 @@ export class ConfigReloadJob implements OnApplicationBootstrap {
     return this.reloadHere();
   }
 
-  /** This process's reload, whatever its role: the peer route (jobs.controller) calls it on an API copy. */
+  /**
+   * This process's reload, whatever its role: the peer route (jobs.controller) calls it on an API
+   * copy.
+   */
   async reloadHere(): Promise<void> {
     await this.step(IntegrationConfigService, (s) => s.reloadHere());
     // fresh() drops the shared settings cache too, so the numbers below read the new comms_source.

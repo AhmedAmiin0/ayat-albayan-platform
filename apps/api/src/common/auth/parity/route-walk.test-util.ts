@@ -19,7 +19,9 @@ export interface RouteAccess {
   permission: unknown;
 }
 
-/** 'public' | 'signed-in' | the roles @Roles admitted, sorted — the table frozen before the change. */
+/**
+ * 'public' | 'signed-in' | the roles @Roles admitted, sorted — the table frozen before the change.
+ */
 export type BeforeAccess = 'public' | 'signed-in' | string[];
 
 export function accessBefore(): Record<string, BeforeAccess> {

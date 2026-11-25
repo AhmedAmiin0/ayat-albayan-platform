@@ -7,7 +7,10 @@ const SELECT = '*, student:students(id, code, name)';
 
 const fail = (what: string, message: string): Error => new Error(`payment_links ${what} failed: ${message}`);
 
-/** payment_links with the service role (the API is its only writer; RLS keeps clients to their own rows). */
+/**
+ * payment_links with the service role (the API is its only writer; RLS keeps clients to their own
+ * rows).
+ */
 @Injectable()
 export class PaymentLinksRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -55,7 +58,10 @@ export class PaymentLinksRepo {
     return this.change(id, { status: 'cancelled' }, (q) => q.eq('status', 'open'));
   }
 
-  /** Compare-and-set of the Checkout Session (null clears it): false when another request changed it first. */
+  /**
+   * Compare-and-set of the Checkout Session (null clears it): false when another request changed it
+   * first.
+   */
   async setSession(input: { id: string; prev: string | null; session: string | null }): Promise<boolean> {
     let q = this.db.from('payment_links').update({ stripe_session_id: input.session, updated_at: now() }).eq('id', input.id);
     q = input.prev === null ? q.is('stripe_session_id', null) : q.eq('stripe_session_id', input.prev);
@@ -68,7 +74,10 @@ export class PaymentLinksRepo {
     await this.change(id, { processing });
   }
 
-  /** The paid link (whatever its status was: the money is real, a late payment of an expired link included). */
+  /**
+   * The paid link (whatever its status was: the money is real, a late payment of an expired link
+   * included).
+   */
   async markPaid(id: string, paid: { paymentId: string; paidAt: string; paymentIntent: string | null }): Promise<void> {
     const patch = { status: 'paid', processing: false, paid_payment_id: paid.paymentId, paid_at: paid.paidAt };
     await this.change(id, paid.paymentIntent ? { ...patch, stripe_payment_intent: paid.paymentIntent } : patch);

@@ -23,13 +23,18 @@ import { TeacherUsernames } from './teacher-username';
 import type { Teacher as TeacherView, TeacherListRow as TeacherListView } from '@ab/shared';
 import type { Page } from '@ab/core';
 
-/** `?search=` name or phone in any format (teacherSearchFilter); column filters + `sort`/`dir` (R-NFR-08). */
+/**
+ * `?search=` name or phone in any format (teacherSearchFilter); column filters + `sort`/`dir`
+ * (R-NFR-08).
+ */
 const listQuery = pageQuerySchema.extend({
   search: z.string().trim().max(100).optional(),
   ...teacherColumnQueryShape,
 });
 
-/** Admin-only teacher CRUD (R-TCH-01); meeting_mode is written only here (teachers.write: admin). */
+/**
+ * Admin-only teacher CRUD (R-TCH-01); meeting_mode is written only here (teachers.write: admin).
+ */
 @ApiTags('teachers')
 @ApiBearerAuth()
 @Permissions('teachers.write')

@@ -27,13 +27,19 @@ export interface PatchPlan {
   row: RuleRowWrite;
   before: EffectiveRule;
   after: EffectiveRule;
-  /** legacy mode: the mirrored legacy keys to write with the row (parity stays empty); {} in module mode. */
+  /**
+   * legacy mode: the mirrored legacy keys to write with the row (parity stays empty); {} in module
+   * mode.
+   */
   legacy: Partial<RuleSettings>;
   /** An essential row going ON → OFF (confirmed): logged in the activity log too. */
   essentialOff: boolean;
 }
 
-/** A subset of the entry's channels that keeps its first one, in the entry's order; else 422 invalid. */
+/**
+ * A subset of the entry's channels that keeps its first one, in the entry's order; else 422
+ * invalid.
+ */
 function channelsOf(entry: NotificationEntry, wanted: readonly NotificationChannel[]): NotificationChannel[] {
   const first = entry.channels[0];
   if (!wanted.every((c) => entry.channels.includes(c)) || (first !== undefined && !wanted.includes(first))) {

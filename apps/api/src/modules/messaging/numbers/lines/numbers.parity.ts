@@ -55,7 +55,10 @@ function cell(field: ParityField, a: string | null, b: string | null): ParityCel
   return { field, state, legacy: shown(a), module: shown(b) };
 }
 
-/** A role's app secret matters only where that role receives (has a webhook phone id) on either side. */
+/**
+ * A role's app secret matters only where that role receives (has a webhook phone id) on either
+ * side.
+ */
 function relevant(field: ParityField, legacy: Facts, module: Facts): boolean {
   return field !== 'app_secret' || legacy.webhook_phone_number_id !== null || module.webhook_phone_number_id !== null;
 }

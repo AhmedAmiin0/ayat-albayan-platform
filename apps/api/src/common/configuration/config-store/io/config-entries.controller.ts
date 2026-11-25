@@ -31,7 +31,10 @@ export class ConfigEntriesController {
     return this.entries.patch({ key, body: parseOrThrow(configEntryPatchSchema, body), user });
   }
 
-  /** `{text | null}`; null = restore the seeded text (and drop the ar override). Audited `describe:<key>`. */
+  /**
+   * `{text | null}`; null = restore the seeded text (and drop the ar override). Audited
+   * `describe:<key>`.
+   */
   @Put(':key/description')
   @Permissions('settings.write')
   describe(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<ConfigEntryResult> {

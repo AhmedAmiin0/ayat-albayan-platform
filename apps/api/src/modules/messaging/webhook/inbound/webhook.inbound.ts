@@ -50,7 +50,10 @@ export interface RowInput {
   who: Contact;
   leadId: string | null;
   lessonId: string | null;
-  /** One of the academy's own numbers (OwnNumbers): stored already read, so it never counts as unread. */
+  /**
+   * One of the academy's own numbers (OwnNumbers): stored already read, so it never counts as
+   * unread.
+   */
   read?: boolean;
 }
 
@@ -114,12 +117,17 @@ interface PushInput {
   intent: QuickReplyIntent | null;
 }
 
-/** How the admin knows this phone: guardian, lead, teacher, WhatsApp profile name, else the number. */
+/**
+ * How the admin knows this phone: guardian, lead, teacher, WhatsApp profile name, else the number.
+ */
 function senderName({ m, phone, who }: Pick<PushInput, 'm' | 'phone' | 'who'>): string {
   return who.guardian?.name ?? who.lead?.name ?? who.teacher?.name ?? m.name ?? phone;
 }
 
-/** One push per phone per 10 minutes; a reschedule / stop request gets its own (a burst can't hide it). */
+/**
+ * One push per phone per 10 minutes; a reschedule / stop request gets its own (a burst can't hide
+ * it).
+ */
 function messageSubject({ m, phone, intent }: Pick<PushInput, 'm' | 'phone' | 'intent'>): string {
   if (intent === 'reschedule' || intent === 'stop') return `${phone}:${intent}:${m.waMessageId}`;
   return `${phone}:${Math.floor(m.at.getTime() / PUSH_BUCKET_MS)}`;

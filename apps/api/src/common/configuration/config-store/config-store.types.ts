@@ -9,7 +9,9 @@ export const REVISION_CHECK_MS = 2_000;
 export const OVERRIDES_REFRESH = Symbol('OVERRIDES_REFRESH');
 export type OverridesRefresh = () => Promise<unknown>;
 
-/** One public.settings row as the store reads it. `value` may be JSON null (= unset = the default). */
+/**
+ * One public.settings row as the store reads it. `value` may be JSON null (= unset = the default).
+ */
 export interface ConfigRow {
   key: string;
   value: unknown;

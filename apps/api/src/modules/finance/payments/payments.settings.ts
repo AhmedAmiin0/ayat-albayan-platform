@@ -7,7 +7,10 @@ import { SettingsService } from '@/common/settings/settings.service';
 const KEYS = ['academy_timezone', 'upload_max_mb'] as const satisfies readonly SettingKey[];
 export type PaymentsSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
-/** The payments module's academy settings (docs/25 §4), read by PaymentsController. One cached store.all(), only these keys. */
+/**
+ * The payments module's academy settings (docs/25 §4), read by PaymentsController. One cached
+ * store.all(), only these keys.
+ */
 @Injectable()
 export class PaymentsSettings {
   constructor(private readonly store: SettingsService) {}

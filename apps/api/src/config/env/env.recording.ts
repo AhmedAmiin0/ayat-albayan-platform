@@ -15,7 +15,9 @@ export const RECORDING_SHAPE = {
   RECORDING_S3_SECRET: optionalSecret,
 };
 
-/** Where the LiveKit egress uploads lesson recordings (Supabase Storage through its S3 protocol). */
+/**
+ * Where the LiveKit egress uploads lesson recordings (Supabase Storage through its S3 protocol).
+ */
 export interface RecordingEnv {
   endpoint: string;
   region: string;

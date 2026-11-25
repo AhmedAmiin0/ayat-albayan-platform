@@ -28,14 +28,18 @@ interface ImportPlan {
 
 const isCategory = (c: string): c is TemplateCategory => (TEMPLATE_CATEGORIES as readonly string[]).includes(c);
 
-/** The highest numbered {{n}}; null when a variable is named ({{first_name}}): we send by position. */
+/**
+ * The highest numbered {{n}}; null when a variable is named ({{first_name}}): we send by position.
+ */
 function varCount(body: string): number | null {
   const vars = [...body.matchAll(/\{\{([^}]*)\}\}/g)].map((m) => (m[1] ?? '').trim());
   if (vars.some((v) => !/^\d+$/.test(v))) return null;
   return Math.max(0, ...vars.map(Number));
 }
 
-/** No header, or a plain text one: a media header or a header variable needs a part we never send. */
+/**
+ * No header, or a plain text one: a media header or a header variable needs a part we never send.
+ */
 function headerOk(comps: readonly Component[]): boolean {
   const header = comps.find((c) => c.type === 'HEADER');
   return !header || (header.format?.toUpperCase() === 'TEXT' && !(header.text ?? '').includes('{{'));

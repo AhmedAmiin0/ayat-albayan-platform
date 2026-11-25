@@ -13,7 +13,10 @@ interface RpcError {
   hint?: string | null;
 }
 
-/** config_set's P0409 (detail = key, hint = current version) → ConfigConflictError; anything else → Error. */
+/**
+ * config_set's P0409 (detail = key, hint = current version) → ConfigConflictError; anything else →
+ * Error.
+ */
 export function rpcError(what: string, error: RpcError): Error {
   if (error.code === 'P0409') {
     const version = Number(error.hint ?? '0');
@@ -73,8 +76,8 @@ export class ConfigStoreRepo {
 
   /**
    * Rows with a revision that is not newer than them: rev, rows, rev again; when a write landed in
-   * between, once more. The returned rev is the one read BEFORE the rows, so a racing write can only
-   * make the next revision check reload, never hide a change.
+   * between, once more. The returned rev is the one read BEFORE the rows, so a racing write can
+   * only make the next revision check reload, never hide a change.
    */
   async snapshot(): Promise<ConfigSnapshot> {
     let snap = await this.attempt();

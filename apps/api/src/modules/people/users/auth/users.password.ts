@@ -4,7 +4,9 @@ import { randomInt } from 'node:crypto';
 const ALPHABET = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const GENERATED_LENGTH = 16;
 
-/** A random password of at least the configured minimum, with a letter and a digit. Never logged. */
+/**
+ * A random password of at least the configured minimum, with a letter and a digit. Never logged.
+ */
 export function generatePassword(min: number, pick: (n: number) => number = randomInt): string {
   const length = Math.max(GENERATED_LENGTH, min);
   const chars = Array.from({ length }, () => ALPHABET.charAt(pick(ALPHABET.length)));

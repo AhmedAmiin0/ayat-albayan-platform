@@ -45,7 +45,8 @@ export class ReportPdfWriter implements ItemWriter {
       if (hash === item.content_hash) return synced({ googleId: f.id, parentId: place.folderId, hash });
     }
     const bytes = await this.storage.download({ bucket: BUCKETS.reports, path: src.pdfPath });
-    // Counted (backoff, 5 attempts), not `later`: a PDF lost in storage must not poll Google every 15 s forever.
+    // Counted (backoff, 5 attempts), not `later`: a PDF lost in storage must not poll Google every
+    // 15 s forever.
     if (!bytes) throw new Error('pdf_missing_in_storage');
     if (item.google_id) {
       await google.updatePdf({ fileId: item.google_id, name, bytes });

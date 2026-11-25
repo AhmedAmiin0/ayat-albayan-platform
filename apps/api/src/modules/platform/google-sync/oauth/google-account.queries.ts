@@ -23,7 +23,10 @@ const COLUMNS =
 
 const fail = (what: string, error: { message: string }) => new Error(`google ${what} failed: ${error.message}`);
 
-/** google_account (one row) and the refresh token's Vault functions, with the service role. Never logs a value. */
+/**
+ * google_account (one row) and the refresh token's Vault functions, with the service role. Never
+ * logs a value.
+ */
 @Injectable()
 export class GoogleAccountQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -50,7 +53,9 @@ export class GoogleAccountQueries {
     if (error) throw fail('nonce write', error);
   }
 
-  /** Single use: true only for the current, unexpired nonce, which is cleared in the same statement. */
+  /**
+   * Single use: true only for the current, unexpired nonce, which is cleared in the same statement.
+   */
   async consumeNonce(hash: string): Promise<boolean> {
     const { data, error } = await this.db
       .from('google_account')

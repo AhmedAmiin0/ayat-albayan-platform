@@ -7,7 +7,10 @@ import { SettingsService } from '@/common/settings/settings.service';
 const KEYS = ['fx_fresh_hours'] as const satisfies readonly SettingKey[];
 export type FxSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
-/** The fx module's academy settings (docs/25 §4), read by FxService. One cached store.all(), only these keys. */
+/**
+ * The fx module's academy settings (docs/25 §4), read by FxService. One cached store.all(), only
+ * these keys.
+ */
 @Injectable()
 export class FxSettings {
   constructor(private readonly store: SettingsService) {}

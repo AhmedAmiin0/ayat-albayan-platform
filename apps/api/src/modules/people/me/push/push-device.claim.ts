@@ -6,7 +6,9 @@ import { dbError } from '@/common/http/http';
 export interface DeviceClaim {
   userId: string;
   token: string;
-  /** The key this device got on its last registration (registerPush keeps it); absent = none yet. */
+  /**
+   * The key this device got on its last registration (registerPush keeps it); absent = none yet.
+   */
   deviceKey?: string | undefined;
 }
 

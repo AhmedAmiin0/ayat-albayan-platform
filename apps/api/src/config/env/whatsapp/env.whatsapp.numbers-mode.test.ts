@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { setNumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { envFrom, lineEnvs, lineGaps, lineNumbers, loadEnv } from '@/config/env/env';
 
-// PR #142 item 15: in numbers mode (module) the chat line never borrows the notifications token. A chat
-// number without a token is not configured (nothing sends from it), but its phone id still receives.
-// Legacy keeps the fallback exactly as before.
+// PR #142 item 15: in numbers mode (module) the chat line never borrows the notifications token. A
+// chat number without a token is not configured (nothing sends from it), but its phone id still
+// receives. Legacy keeps the fallback exactly as before.
 
 const NOTIF = { WA_API_BASE: 'http://localhost:4010', WA_PHONE_NUMBER_ID: '1000000001', WA_WABA_ID: '2000000001', WA_ACCESS_TOKEN: 'notif-token-fake' };
 const CHAT_NO_TOKEN = { WA_CHAT_PHONE_NUMBER_ID: '1000000002', WA_CHAT_WABA_ID: '2000000002', WA_CHAT_ACCESS_TOKEN: '' };

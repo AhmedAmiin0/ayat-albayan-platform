@@ -30,7 +30,10 @@ export class NumbersSecrets {
     return data === true;
   }
 
-  /** The import: legacy Vault secret `key` → this number, inside the database. false = no legacy secret. */
+  /**
+   * The import: legacy Vault secret `key` → this number, inside the database. false = no legacy
+   * secret.
+   */
   async copy(target: SecretTarget, key: string): Promise<boolean> {
     const { data, error } = await this.db.rpc('wa_number_secret_copy', { p_id: target.id, p_name: target.name, p_key: key });
     if (error) throw new Error(`number secret ${target.name} not copied: ${error.code ?? 'error'}`);

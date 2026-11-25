@@ -64,7 +64,10 @@ const fromCrmStorage = (msg: MediaMessage): boolean =>
 export class InboundMedia {
   /** Module mode's per-number clients (in memory; legacy finds none and uses the lines). */
   private readonly numbers = new NumberClients();
-  /** Property injection keeps the constructor at three parameters; absent (unit tests) = old-CRM files are 410. */
+  /**
+   * Property injection keeps the constructor at three parameters; absent (unit tests) = old-CRM
+   * files are 410.
+   */
   @Optional() @Inject(CrmHistoryMedia) private readonly crm?: CrmHistoryMedia;
 
   constructor(
@@ -73,7 +76,9 @@ export class InboundMedia {
     private readonly storage: StorageService,
   ) {}
 
-  /** The message, checked to be a file we can serve; the caller checks it belongs to the right chat. */
+  /**
+   * The message, checked to be a file we can serve; the caller checks it belongs to the right chat.
+   */
   async load(messageId: string, allow: (mime: string | null) => boolean = isInvoiceMime): Promise<MediaMessage> {
     const msg = await this.queries.message(messageId);
     if (!msg) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
@@ -114,7 +119,10 @@ export class InboundMedia {
     return this.download(msg, msg.media_id);
   }
 
-  /** A Meta 4xx means the id is gone (expired, deleted): 410, not a server error; a dead token is 502. */
+  /**
+   * A Meta 4xx means the id is gone (expired, deleted): 410, not a server error; a dead token is
+   * 502.
+   */
   private async download(msg: MediaMessage, mediaId: string): Promise<{ bytes: Uint8Array }> {
     const from = mediaSource(msg, { lines: this.lines, numbers: this.numbers });
     if (from.kind === 'crm') throw waHttpError(CRM_NO_MEDIA, HttpStatus.CONFLICT);

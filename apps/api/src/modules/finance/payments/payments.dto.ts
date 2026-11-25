@@ -7,10 +7,14 @@ import { z } from 'zod';
 import { pageQuerySchema } from '@/common/http/http';
 import type { PaymentFilter } from './payments.repo';
 
-/** Ranges are local days in the academy's zone (settings.academy_timezone), inclusive (docs/11 §3). */
+/**
+ * Ranges are local days in the academy's zone (settings.academy_timezone), inclusive (docs/11 §3).
+ */
 const DEFAULT_TZ = SETTING_DEFAULTS.academy_timezone;
 
-/** GET /payments?subscriptionId&studentId&from&to&method&kind&sort&dir&page&pageSize (P1, R-NFR-08). */
+/**
+ * GET /payments?subscriptionId&studentId&from&to&method&kind&sort&dir&page&pageSize (P1, R-NFR-08).
+ */
 export const paymentListQuery = pageQuerySchema
   .extend({
     subscriptionId: z.uuid().optional(),

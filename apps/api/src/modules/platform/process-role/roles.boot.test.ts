@@ -3,8 +3,9 @@ import { backgroundJobs } from '@/config/role/background-job';
 import { bootIn } from './roles.boot.probe';
 
 /**
- * The only timers an `api` copy may start (docs/09 «Two API copies + one worker»): per-process caches
- * and buffers, never a pass over shared rows. Anything else that starts a timer must be a @BackgroundJob.
+ * The only timers an `api` copy may start (docs/09 «Two API copies + one worker»): per-process
+ * caches and buffers, never a pass over shared rows. Anything else that starts a timer must be a
+ * @BackgroundJob.
  */
 const PER_COPY: Record<string, string> = {
   'common/configuration/integrations/integration-config.service.ts':

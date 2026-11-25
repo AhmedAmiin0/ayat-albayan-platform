@@ -65,7 +65,10 @@ export class SheetRowsWriter implements ItemWriter {
     return synced({ googleId: updatedRange || null, parentId: sheetId, hash });
   }
 
-  /** The PDF makes the sheet: wait while it is queued; else fail (its sync re-queues this row), never poll forever. */
+  /**
+   * The PDF makes the sheet: wait while it is queued; else fail (its sync re-queues this row),
+   * never poll forever.
+   */
   private async waitForSheet(item: SyncItem, reportId: string): Promise<ItemResult> {
     const pdf = await this.data.items.sibling({ kind: 'report_pdf', subjectId: reportId });
     if (pdf?.state === 'pending') return later(item, 'sheet_not_ready');

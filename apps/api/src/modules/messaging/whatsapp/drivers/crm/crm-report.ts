@@ -11,7 +11,10 @@ interface CrmReportBodies {
   template: CrmBody;
 }
 
-/** null = not the old script's report flow (any other template, or report_ready on its own CRM name). */
+/**
+ * null = not the old script's report flow (any other template, or report_ready on its own CRM
+ * name).
+ */
 export function crmReportBodies(input: TemplateSend): CrmReportBodies | null {
   const report = wabaReport(input);
   if (!report) return null;

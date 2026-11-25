@@ -15,28 +15,33 @@ import { setupOpenApi } from './openapi';
 async function bootstrap(): Promise<void> {
   const env = loadEnv();
   const role = appRole();
-  // trustProxy: the proxies in front (TRUST_PROXY_HOPS: 1 = the host Caddy, 2 = it + deploy/staging's load
-  // balancer) are trusted, so req.ip is the visitor, not a client-sent X-Forwarded-For (the rate limits key on it).
-  // rawBody: the WhatsApp webhook checks X-Hub-Signature-256 over the exact bytes Meta sent
-  // (req.rawBody); re-serialised JSON would not match (docs/12 §3).
-  // Request ids (docs/09 «Logs»): a sane incoming X-Request-Id or a new UUID; every log line of the
-  // request carries it and the answer sends it back. Error lines also go to SENTRY_DSN when set.
+  // trustProxy: the proxies in front (TRUST_PROXY_HOPS: 1 = the host Caddy, 2 = it +
+  // deploy/staging's load balancer) are trusted, so req.ip is the visitor, not a client-sent
+  // X-Forwarded-For (the rate limits key on it). rawBody: the WhatsApp webhook checks
+  // X-Hub-Signature-256 over the exact bytes Meta sent (req.rawBody); re-serialised JSON would not
+  // match (docs/12 §3). Request ids (docs/09 «Logs»): a sane incoming X-Request-Id or a new UUID;
+  // every log line of the request carries it and the answer sends it back. Error lines also go to
+  // SENTRY_DSN when set.
   const adapter = new FastifyAdapter({ trustProxy: trustProxyHops(), ...requestIdOptions() });
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
     rawBody: true,
     logger: new ReportingLogger(apiErrorReporter(process.env)),
   });
   registerRequestId(app);
-  // APP_ROLE (docs/09): the worker answers /health and its kick route only; the API copies never /internal.
+  // APP_ROLE (docs/09): the worker answers /health and its kick route only; the API copies never
+  // /internal.
   registerRoleHttp(app, role);
-  // LiveKit posts application/webhook+json (POST /livekit/webhook), kept as raw bytes for its signature.
+  // LiveKit posts application/webhook+json (POST /livekit/webhook), kept as raw bytes for its
+  // signature.
   registerLivekitWebhookParser(app);
-  // X-AB-Client hits per route × build (docs/26 §2f). No allowedHeaders below: @fastify/cors reflects the request's headers.
+  // X-AB-Client hits per route × build (docs/26 §2f). No allowedHeaders below: @fastify/cors
+  // reflects the request's headers.
   registerClientUsage(app, app.get(ClientUsageService));
   // credentials: the report page's HttpOnly cookie (same-site web app, its listed origins only).
   app.enableCors({ origin: env.WEB_ORIGIN.split(',').map((o) => o.trim()), credentials: true });
   if (servesPublicHttp(role)) setupOpenApi(app);
-  // SIGTERM (a rolling deploy): stop taking connections, finish the requests in flight, stop the jobs' timers.
+  // SIGTERM (a rolling deploy): stop taking connections, finish the requests in flight, stop the
+  // jobs' timers.
   app.enableShutdownHooks();
   await app.listen(env.PORT, '0.0.0.0');
 }

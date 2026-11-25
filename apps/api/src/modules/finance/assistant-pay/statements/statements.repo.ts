@@ -13,7 +13,10 @@ interface StatementFilter {
   hideDrafts?: boolean;
 }
 
-/** Reads of assistant_statements with their lines (service role; the controllers scope every call, rule 9). */
+/**
+ * Reads of assistant_statements with their lines (service role; the controllers scope every call,
+ * rule 9).
+ */
 @Injectable()
 export class StatementsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

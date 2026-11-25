@@ -17,7 +17,10 @@ const ACCEPTING_MS = 30_000;
 /** A call still «active» this long lost its terminate webhook. */
 const ACTIVE_MS = 4 * 3_600_000;
 const EVERY_MS = 10_000;
-/** Calls ON and none live: one look a minute (a wake() after an insert sweeps from the next 10 s tick). */
+/**
+ * Calls ON and none live: one look a minute (a wake() after an insert sweeps from the next 10 s
+ * tick).
+ */
 export const IDLE_MS = 60_000;
 
 type Overdue = CallEndReason | 'hangup';
@@ -59,7 +62,10 @@ export class CallsSweeper implements OnApplicationBootstrap, OnModuleDestroy {
   /** Rows the last sweep left live; null = unknown (boot, or the sweep failed): sweep. */
   private left: number | null = null;
   private sweptAt = 0;
-  /** wake() calls so far: a wake during a sweep must not be overwritten by that sweep's (older) count. */
+  /**
+   * wake() calls so far: a wake during a sweep must not be overwritten by that sweep's (older)
+   * count.
+   */
   private wakes = 0;
 
   /** gate absent (unit tests): calls count as ON. */
@@ -77,7 +83,10 @@ export class CallsSweeper implements OnApplicationBootstrap, OnModuleDestroy {
     if (this.timer) clearInterval(this.timer);
   }
 
-  /** A call was inserted: sweep from the next tick (its 45 s timeout must not wait for the idle pace). */
+  /**
+   * A call was inserted: sweep from the next tick (its 45 s timeout must not wait for the idle
+   * pace).
+   */
   wake(): Promise<void> {
     this.wakes += 1;
     this.left = null;

@@ -9,13 +9,13 @@ import { GOOGLE_CLIENT_FACTORY, type GoogleClient, type GoogleClientFactory } fr
 const CONNECTION_TTL_MS = 10 * 60_000;
 
 /**
- * The connected account's client: the refresh token is read from Vault when needed and kept only
- * in memory (one client per token, so google-auth-library reuses its access token until it expires).
+ * The connected account's client: the refresh token is read from Vault when needed and kept only in
+ * memory (one client per token, so google-auth-library reuses its access token until it expires).
  * The status + token read is reused for CONNECTION_TTL_MS (two round trips a job tick before; never
  * when SETTINGS_CACHE_MS is 0, as in e2e, whose reset writes SQL); every connect, disconnect and
  * refused token calls forget() after its writes, so this API never keeps a stale one. An
- * invalid_grant (revoked or expired consent) disconnects: token cleared, status `disconnected`,
- * one bell alert to the admins — never a crash loop.
+ * invalid_grant (revoked or expired consent) disconnects: token cleared, status `disconnected`, one
+ * bell alert to the admins — never a crash loop.
  */
 @Injectable()
 export class GoogleConnection {
@@ -55,7 +55,10 @@ export class GoogleConnection {
     return acct.status === 'connected' ? this.account.token() : null;
   }
 
-  /** The OAuth client itself is refused (invalid_client): the token stays, the admin fixes the client id/secret. */
+  /**
+   * The OAuth client itself is refused (invalid_client): the token stays, the admin fixes the
+   * client id/secret.
+   */
   async configFailed(): Promise<void> {
     this.forget();
     this.log.warn('google oauth client refused (invalid_client): sync paused, refresh token kept');

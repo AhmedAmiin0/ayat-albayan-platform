@@ -34,7 +34,10 @@ export class FollowUpsRepo {
     @Optional() private readonly own?: OwnNumbers,
   ) {}
 
-  /** Leads in a follow-up status, not paused, with a follow-up left (stage < stages); never our own numbers. */
+  /**
+   * Leads in a follow-up status, not paused, with a follow-up left (stage < stages); never our own
+   * numbers.
+   */
   async candidates(stages: number): Promise<FollowUpLeadRow[]> {
     const own = this.own ? await this.own.notIn() : null;
     return readAll((from, to) => {
@@ -82,7 +85,9 @@ export class FollowUpsRepo {
     if (error) throw dbError(error);
   }
 
-  /** Keeps next_follow_up_at (the computed due time) and follow_up_note current for the lead panel. */
+  /**
+   * Keeps next_follow_up_at (the computed due time) and follow_up_note current for the lead panel.
+   */
   async sync(id: string, state: LeadFollowUpState): Promise<void> {
     const { error } = await this.db.from('leads').update(state).eq('id', id);
     if (error) throw dbError(error);

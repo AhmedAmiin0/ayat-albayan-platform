@@ -5,7 +5,9 @@ import { capsOf } from '@/modules/messaging/whatsapp';
 import { pickSend } from '@/modules/messaging/inbox/send/send-number';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
-/** Where the chat's next session message leaves from (sendLine / pickSend): a line and/or a number. */
+/**
+ * Where the chat's next session message leaves from (sendLine / pickSend): a line and/or a number.
+ */
 type ReactFrom = { line?: WaLine; number_id?: string };
 
 /** A number: its own driver's capability. */

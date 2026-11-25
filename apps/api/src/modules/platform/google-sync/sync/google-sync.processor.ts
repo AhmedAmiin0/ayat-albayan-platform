@@ -6,7 +6,10 @@ import type { ItemResult, SyncItem } from './google-items.queries';
 import { GoogleWriters } from './google-writers';
 import type { WriteCtx } from './write-context';
 
-/** ponytail: 25 a pass is far above a few dozen lessons and reports a day; the pass loops while full. */
+/**
+ * ponytail: 25 a pass is far above a few dozen lessons and reports a day; the pass loops while
+ * full.
+ */
 const BATCH = 25;
 
 type PassSummary = { claimed: number; synced: number; skipped: number; gone: number; failed: number; retried: number; stopped: boolean };
@@ -40,7 +43,8 @@ export class GoogleSyncProcessor {
     const claimed = await this.data.items.claim(BATCH);
     out.claimed = claimed.length;
     for (const [i, item] of claimed.entries()) {
-      // An OFF or a switch to dry_run applies at once (uncached, raw SQL too), not after the rest of a 25-item batch.
+      // An OFF or a switch to dry_run applies at once (uncached, raw SQL too), not after the rest
+      // of a 25-item batch.
       const result = (await this.sameMode(ctx.live)) ? await this.one(item, ctx) : 'switched';
       if (typeof result === 'string') {
         out.stopped = true;

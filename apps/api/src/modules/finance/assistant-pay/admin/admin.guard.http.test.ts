@@ -6,7 +6,10 @@ type Route = { method: 'GET' | 'POST' | 'PUT'; url: string; body?: object };
 const REASON = { reason: 'سبب واضح' };
 const TERMS = { commission: { type: 'percent', value: 10, startsOn: '2026-10-01' }, salary: { amount: 1000, currency: 'SAR', startsOn: '2026-10-01' } };
 
-/** Every admin route of the assistants' pay, with a body that passes validation: only the guard can refuse it. */
+/**
+ * Every admin route of the assistants' pay, with a body that passes validation: only the guard can
+ * refuse it.
+ */
 const ROUTES: Route[] = [
   { method: 'GET', url: '/assistant-pay/terms' },
   { method: 'GET', url: `/assistant-pay/terms/${A}` },

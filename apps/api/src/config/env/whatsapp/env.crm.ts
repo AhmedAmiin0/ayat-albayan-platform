@@ -5,9 +5,9 @@ import { blankIsUnset, optionalSecret } from '@/config/env/env.blank';
 import type { CrmLineEnv } from './env.whatsapp';
 
 /**
- * The crm driver (docs/19 «crm driver»): a line sends through the academy's self-hosted WA CRM's public
- * REST API (POST {base}/messages, Bearer key). The number and its templates are the CRM's: a crm line
- * has no phone_number_id, WABA, app id or Meta token of ours.
+ * The crm driver (docs/19 «crm driver»): a line sends through the academy's self-hosted WA CRM's
+ * public REST API (POST {base}/messages, Bearer key). The number and its templates are the CRM's: a
+ * crm line has no phone_number_id, WABA, app id or Meta token of ours.
  */
 export const CRM_SHAPE = {
   /**
@@ -21,10 +21,16 @@ export const CRM_SHAPE = {
   WACRM_WEBHOOK_SECRET: optionalSecret,
 };
 
-/** Both lines on crm would be one CRM account (one number) twice: the chat line then stays off (duplicate). */
+/**
+ * Both lines on crm would be one CRM account (one number) twice: the chat line then stays off
+ * (duplicate).
+ */
 export const bothOnCrm = (env: Env): boolean => env.WA_PROVIDER === 'crm' && env.WA_CHAT_PROVIDER === 'crm';
 
-/** A line on crm: the CRM's base and key, nothing else. null (refuses every call, rows stay queued) while either is missing. */
+/**
+ * A line on crm: the CRM's base and key, nothing else. null (refuses every call, rows stay queued)
+ * while either is missing.
+ */
 export function crmLine(env: Env, line: WaLine): CrmLineEnv | null {
   const base = env.WACRM_API_BASE?.replace(/\/+$/, '');
   const apiKey = env.WACRM_API_KEY;
@@ -32,7 +38,10 @@ export function crmLine(env: Env, line: WaLine): CrmLineEnv | null {
   return { provider: 'crm', base, apiKey };
 }
 
-/** NAMES (never values) of what a crm line still lacks (both lines on crm is a duplicate flag, not a gap). */
+/**
+ * NAMES (never values) of what a crm line still lacks (both lines on crm is a duplicate flag, not a
+ * gap).
+ */
 export function crmGaps(env: Env): string[] {
   const present: Record<string, string | undefined> = { WACRM_API_BASE: env.WACRM_API_BASE, WACRM_API_KEY: env.WACRM_API_KEY };
   return Object.keys(present).filter((k) => present[k] === undefined);

@@ -27,7 +27,9 @@ export interface SecretStatus {
 export class IntegrationConfigRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Every DB value of a registry key (plain from the table, secret from Vault), for the overlay. */
+  /**
+   * Every DB value of a registry key (plain from the table, secret from Vault), for the overlay.
+   */
   async rawValues(): Promise<Record<string, string>> {
     const [plain, secrets] = await Promise.all([this.plainRows(), this.db.rpc('integration_secrets_read')]);
     if (secrets.error) throw new Error(`integration secrets read failed: ${secrets.error.message}`);

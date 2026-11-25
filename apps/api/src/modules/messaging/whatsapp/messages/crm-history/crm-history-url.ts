@@ -47,7 +47,10 @@ export const looksCrmHistory = (row: CrmHistoryShape): boolean =>
 export const isCrmHistoryRow = (row: CrmHistoryShape & Pick<MediaMessage, 'media_id'>): boolean =>
   !row.media_id && looksCrmHistory(row);
 
-/** A public DNS name: dotted labels ending in letters (never an IP literal, localhost or a bare name). */
+/**
+ * A public DNS name: dotted labels ending in letters (never an IP literal, localhost or a bare
+ * name).
+ */
 const DNS_HOST = /^(?=.{4,100}$)([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,63}$/;
 
 /**

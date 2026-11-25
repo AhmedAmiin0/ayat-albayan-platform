@@ -1,6 +1,9 @@
 import type { NotificationRuleRow, RuleSettings, RulesMode } from '@ab/shared';
 
-/** One consistent read: the mode (settings.comms_source), the stored rows by key and the 8 legacy keys. */
+/**
+ * One consistent read: the mode (settings.comms_source), the stored rows by key and the 8 legacy
+ * keys.
+ */
 export interface RulesSnapshot {
   mode: RulesMode;
   rows: ReadonlyMap<string, NotificationRuleRow>;

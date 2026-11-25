@@ -18,9 +18,9 @@ import { SettingsService } from './settings.service';
 
 /**
  * Academy settings for admins (R-SCH-07, R-SCH-02): late-cancel hours (null = OFF, the default
- * until the owner picks a number, docs/05 q2), the booking horizon, and the Phase 3 keys
- * (docs/11 §2). Changes are audited. In module mode (comms_source) the 8 notification keys show what
- * the notification rules say (docs/26b m1/m3).
+ * until the owner picks a number, docs/05 q2), the booking horizon, and the Phase 3 keys (docs/11
+ * §2). Changes are audited. In module mode (comms_source) the 8 notification keys show what the
+ * notification rules say (docs/26b m1/m3).
  */
 @ApiTags('settings')
 @ApiBearerAuth()
@@ -44,7 +44,8 @@ export class SettingsController {
    * (`saved`), keys owned by a module route are never written here (`moved`: the send gate, the
    * cut-over, comms_source, Google, the 8 notification keys), invalid ones are skipped (`invalid`).
    * followUpHours is the exception (23-P4): with notifications.manage it writes the follow-up rule.
-   * The full settings stay at the top level so clients reading the answer as AcademySettings keep working.
+   * The full settings stay at the top level so clients reading the answer as AcademySettings keep
+   * working.
    */
   @Patch()
   @Permissions('settings.write')
@@ -57,7 +58,8 @@ export class SettingsController {
     const lists = { saved, moved, invalid };
     if (saved.length === 0) return { ...(await this.get()), ...lists };
     const before = await this.get();
-    // The rule first: a refused rule write (503 / 422) saves nothing else and leaves nothing unaudited.
+    // The rule first: a refused rule write (503 / 422) saves nothing else and leaves nothing
+    // unaudited.
     if (followUpHours && this.rules) await this.rules.writeFollowUpHours(followUpHours, user);
     try {
       if (Object.keys(changes).length > 0) await this.settings.write(changes, user.id);

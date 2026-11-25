@@ -20,7 +20,9 @@ import type { UserRow } from './store/users.store';
 /** The system admin: every grantable permission. */
 export const ADMIN_ACTOR: Actor = { id: 'admin1', permissions: [...GRANTABLE_PERMISSIONS] };
 
-/** Everything wired with fakes. `rows` should include the acting admin (role admin, system role). */
+/**
+ * Everything wired with fakes. `rows` should include the acting admin (role admin, system role).
+ */
 export function setupUsers(rows: UserRow[] = [row('admin1', 'admin')], links: Link[] = []) {
   const store = new FakeUserStore(rows, links);
   const auth = new FakeAuthAdmin();

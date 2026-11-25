@@ -11,7 +11,10 @@ import type { ExternalMessage } from './external-message';
 // and attempts 0 (the sender's claim counts every try); a failed one is refused by the admin's
 // retry (MessagesQueries.requeue), so nothing can ever send it again.
 
-/** Registry keys whose Meta name differs (migration 141, as the chat import maps them); else key = Meta name. */
+/**
+ * Registry keys whose Meta name differs (migration 141, as the chat import maps them); else key =
+ * Meta name.
+ */
 const SEEDED_KEYS: Readonly<Record<string, string>> = { lesson_reminder_v2: 'lesson_reminder' };
 
 export const templateKeyFor = (metaName: string): string => SEEDED_KEYS[metaName] ?? metaName;

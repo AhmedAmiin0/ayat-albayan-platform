@@ -32,7 +32,10 @@ export class PaymentFiles {
     readonly attachments: PaymentAttachments,
   ) {}
 
-  /** Before any insert: 400 attachments_not_allowed (not a bank transfer), receipt_path, attachment_path / _type; 409 attachment_in_use. */
+  /**
+   * Before any insert: 400 attachments_not_allowed (not a bank transfer), receipt_path,
+   * attachment_path / _type; 409 attachment_in_use.
+   */
   async check(subscriptionId: string, input: FilesInput): Promise<CheckedAttachment[]> {
     const paths = input.attachments ?? [];
     if (paths.length > 0 && input.method !== 'bank') throw badRequest('attachments_not_allowed');
@@ -50,7 +53,10 @@ export class PaymentFiles {
     return patch;
   }
 
-  /** After the payment is booked (rule 8): a booked payment must never come back as an error, so a failure is logged. */
+  /**
+   * After the payment is booked (rule 8): a booked payment must never come back as an error, so a
+   * failure is logged.
+   */
   async saveBooked(paymentId: string, files: readonly CheckedAttachment[], actorId: string): Promise<void> {
     try {
       await this.attachments.save(paymentId, files, actorId);

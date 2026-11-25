@@ -29,9 +29,14 @@ export interface DueMessage {
   scheduled_for?: string | null;
   /** SENDING = a previous try was claimed and never resolved (send-plan). */
   error_code: string | null;
-  /** The line a session text leaves from (docs/12 §13.3); null = notifications. Templates ignore it. */
+  /**
+   * The line a session text leaves from (docs/12 §13.3); null = notifications. Templates ignore it.
+   */
   line: WaLine | null;
-  /** The number a session text was stamped with at enqueue (module mode, docs/23c decision 5); null = its line's default. */
+  /**
+   * The number a session text was stamped with at enqueue (module mode, docs/23c decision 5); null
+   * = its line's default.
+   */
   number_id: string | null;
   /** A file staff sent from the chat (wa-media out/…); optional so older fixtures compile. */
   media_path?: string | null;

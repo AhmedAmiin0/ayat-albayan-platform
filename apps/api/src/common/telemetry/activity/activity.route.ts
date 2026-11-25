@@ -21,13 +21,17 @@ export function joinRoute(controllerPath: string, handlerPath: string): string {
   return `/${parts.join('/')}`;
 }
 
-/** `ExpensesController` + `create` → 'expenses.create'; `AuthSessionController` → 'authSession.…'. */
+/**
+ * `ExpensesController` + `create` → 'expenses.create'; `AuthSessionController` → 'authSession.…'.
+ */
 export function actionKey(controllerName: string, handlerName: string): string {
   const base = controllerName.replace(/Controller$/, '') || 'app';
   return `${base.charAt(0).toLowerCase()}${base.slice(1)}.${handlerName}`;
 }
 
-/** Only id-like params name an entity: `:id`, `:teacherId`, … — never `:token`, `:phone`, `:key`. */
+/**
+ * Only id-like params name an entity: `:id`, `:teacherId`, … — never `:token`, `:phone`, `:key`.
+ */
 const ID_PARAM = /^:(id|[a-z][A-Za-z]*Id)$/;
 const MAX_ID = 64;
 

@@ -12,13 +12,18 @@ function check(error: PostgrestError | null, what: string): void {
   if (error) throw new Error(`${what} failed: ${error.message}`);
 }
 
-/** One Storage object belongs to one reply (migration 672): a second row on the same path is a bad path. */
+/**
+ * One Storage object belongs to one reply (migration 672): a second row on the same path is a bad
+ * path.
+ */
 function checkWrite(error: PostgrestError | null, what: string): void {
   if (error?.code === '23505') throw waHttpError('file_path', HttpStatus.BAD_REQUEST);
   check(error, what);
 }
 
-/** saved_replies (migration 20261025000670) through the service role; the service decides who may. */
+/**
+ * saved_replies (migration 20261025000670) through the service role; the service decides who may.
+ */
 @Injectable()
 export class SavedRepliesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

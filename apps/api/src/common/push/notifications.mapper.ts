@@ -3,7 +3,10 @@ import type { Tables } from '@ab/db';
 
 type Row = Pick<Tables<'push_notifications'>, 'id' | 'kind' | 'title' | 'body' | 'data' | 'created_at' | 'read_at'>;
 
-/** push_notifications.data is jsonb: only its string fields reach the client (they are all strings when we write them). */
+/**
+ * push_notifications.data is jsonb: only its string fields reach the client (they are all strings
+ * when we write them).
+ */
 export function notificationItem(row: Row): NotificationItem {
   const data: Record<string, string> = {};
   if (row.data !== null && typeof row.data === 'object' && !Array.isArray(row.data)) {

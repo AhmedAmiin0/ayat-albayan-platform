@@ -12,7 +12,10 @@ import type { RoomCandidate } from './reminders.links';
 
 const UNIQUE_VIOLATION = '23505';
 
-/** dedup_keys among `keys` already in messages: those links were minted and queued on an earlier tick. */
+/**
+ * dedup_keys among `keys` already in messages: those links were minted and queued on an earlier
+ * tick.
+ */
 async function queuedKeys(db: Db, keys: readonly string[]): Promise<Set<string>> {
   const { data, error } = await db.from('messages').select('dedup_key').in('dedup_key', [...keys]);
   if (error) throw dbError(error);

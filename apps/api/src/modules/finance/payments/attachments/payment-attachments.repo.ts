@@ -8,7 +8,10 @@ import { dbError } from '@/common/http/http';
 export type PathOwner = { path: string; paymentId: string };
 export type PaymentAttachmentRow = Pick<Tables<'payment_attachments'>, 'id' | 'path' | 'mime' | 'size' | 'created_at'>;
 
-/** All supabase access for `payment_attachments` (service role; the API is the only writer), plus who holds a path. */
+/**
+ * All supabase access for `payment_attachments` (service role; the API is the only writer), plus
+ * who holds a path.
+ */
 @Injectable()
 export class PaymentAttachmentsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -25,7 +28,10 @@ export class PaymentAttachmentsRepo {
     return data;
   }
 
-  /** Who already holds these paths (an attachment row or a payments.receipt_path): one file, one payment. */
+  /**
+   * Who already holds these paths (an attachment row or a payments.receipt_path): one file, one
+   * payment.
+   */
   async owners(paths: readonly string[]): Promise<PathOwner[]> {
     if (paths.length === 0) return [];
     // Either form of each path: a file the move marked «minio:» is the same file (docs/45 §6).

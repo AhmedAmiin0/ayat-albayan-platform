@@ -3,7 +3,10 @@ import type { CacheListener, CacheStore } from './cache-store';
 /** Every key and channel of this app sits under this prefix (one Redis may serve other apps). */
 export const KEY_PREFIX = 'ab:cache:';
 
-/** The commands the store sends (redis-connect.ts adapts ioredis; tests pass a fake, no Redis in CI). */
+/**
+ * The commands the store sends (redis-connect.ts adapts ioredis; tests pass a fake, no Redis in
+ * CI).
+ */
 export interface RedisCommands {
   get(key: string): Promise<string | null>;
   setPx(key: string, value: string, ttlMs: number): Promise<unknown>;

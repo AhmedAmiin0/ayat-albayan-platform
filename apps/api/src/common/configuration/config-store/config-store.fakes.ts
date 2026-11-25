@@ -18,8 +18,8 @@ export function configRow(key: string, value: unknown, over: Partial<ConfigRow> 
 }
 
 /**
- * Tests only: the ConfigStore surface SettingsService and the entry routes use, over `rows` (rev 1).
- * `set` / `describe` resolve; `onChange` keeps the listeners so `fire()` can call them.
+ * Tests only: the ConfigStore surface SettingsService and the entry routes use, over `rows` (rev
+ * 1). `set` / `describe` resolve; `onChange` keeps the listeners so `fire()` can call them.
  */
 export function fakeConfigStore(rows: ConfigRow[] = []) {
   const listeners: (() => void)[] = [];

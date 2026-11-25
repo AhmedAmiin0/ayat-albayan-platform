@@ -90,7 +90,10 @@ export class FollowUpsJob extends TickerJob {
     return summary;
   }
 
-  /** The follow_up_slots rule's timing while it is on; null when off or unreadable (logged by the policy). */
+  /**
+   * The follow_up_slots rule's timing while it is on; null when off or unreadable (logged by the
+   * policy).
+   */
   private async timing(): Promise<({ hours: readonly number[] } & SlotWindow) | null> {
     const snap = await this.policy.snapshot();
     const rule = snap && ruleOf(snap, 'follow_up_slots');

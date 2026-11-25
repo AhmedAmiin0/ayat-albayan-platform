@@ -2,8 +2,8 @@ import { settingZod, type SettingDef } from '@ab/settings';
 import { isDeepStrictEqual } from 'node:util';
 import { CONFIG_DEFS, defaultOf } from './config-defs';
 
-// ConfigStore's read side (docs/26 §2d, §4 «Parity rules»). Written apart from readSettings on purpose:
-// it validates with the write schema (settingZod) and the fail-closed rules below, so GET
+// ConfigStore's read side (docs/26 §2d, §4 «Parity rules»). Written apart from readSettings on
+// purpose: it validates with the write schema (settingZod) and the fail-closed rules below, so GET
 // /admin/config/parity compares two independent paths.
 
 /** The send switches: ON only for a stored JSON boolean `true` ("true", 1, null, missing → off). */

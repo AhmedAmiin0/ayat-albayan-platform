@@ -7,7 +7,10 @@ import { toPayoutView } from './payouts.mapper';
 import { approveBlock, monthWindow } from './payouts.plan';
 import { PayoutsRepo, type PayoutRow } from './payouts.repo';
 
-/** Y1, Y3, Y5: list a month, approve (draft → approved), a teacher's own. Pay / un-pay / reopen: PayoutsLedger. */
+/**
+ * Y1, Y3, Y5: list a month, approve (draft → approved), a teacher's own. Pay / un-pay / reopen:
+ * PayoutsLedger.
+ */
 @Injectable()
 export class PayoutsService {
   constructor(

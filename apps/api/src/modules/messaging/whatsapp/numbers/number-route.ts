@@ -25,10 +25,15 @@ export type Approvals = ReadonlyMap<string, ReadonlyMap<string, string>>;
 /** What one pass routes with. */
 export interface RoutePass {
   numbers: readonly RoutableNumber[];
-  /** template key → its catalogue row's notification_rules.number_id (absent / null = none chosen). */
+  /**
+   * template key → its catalogue row's notification_rules.number_id (absent / null = none chosen).
+   */
   ruleNumbers: ReadonlyMap<string, string | null>;
   approvals: Approvals;
-  /** The crm numbers (docs/19): their approval is message_templates.status (set by hand), never a per-number row. */
+  /**
+   * The crm numbers (docs/19): their approval is message_templates.status (set by hand), never a
+   * per-number row.
+   */
   crm?: ReadonlySet<string>;
   /** The keys a crm number may send (gateApprovedKeys); absent = message_templates.status. */
   crmApproved?: ReadonlySet<string>;
@@ -101,7 +106,10 @@ export function approvedOn(pass: RoutePass, template: Pick<TemplateRow, 'key' | 
   };
 }
 
-/** The row's number now; null = none can send it (it stays queued, untouched). Sessions never fall back. */
+/**
+ * The row's number now; null = none can send it (it stays queued, untouched). Sessions never fall
+ * back.
+ */
 export function routeOf(pass: RoutePass, at: { row: DueMessage; template: TemplateRow | null }): NumberRoute | null {
   const { row, template } = at;
   let id: string | null;

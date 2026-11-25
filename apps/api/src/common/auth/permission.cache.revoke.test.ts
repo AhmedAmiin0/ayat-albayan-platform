@@ -6,7 +6,10 @@ import { PermissionCache } from './permission.cache';
 
 const OLD: readonly Permission[] = ['payments.read'];
 
-/** Three API copies (A revokes, B was loading, C reads next) with their own PermissionCache on one Redis. */
+/**
+ * Three API copies (A revokes, B was loading, C reads next) with their own PermissionCache on one
+ * Redis.
+ */
 function copies() {
   const redis = fakeRedis();
   const clock = () => redis.server.now;
@@ -22,7 +25,8 @@ describe('PermissionCache: a revoke is never undone by a slower copy', () => {
     const slow = vi.fn(() => new Promise<readonly Permission[]>((r) => (release = () => r(OLD))));
     const before = b.get('u1', slow);
     await settle();
-    // A's role change: the keys are already deleted when B's old set lands in Redis, then A announces.
+    // A's role change: the keys are already deleted when B's old set lands in Redis, then A
+    // announces.
     let stored = (): void => undefined;
     const raced = new Promise<void>((r) => (stored = r));
     redis.server.beforePublish = async () => {

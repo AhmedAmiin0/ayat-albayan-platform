@@ -79,7 +79,9 @@ export class AvailabilityRepo {
     return data;
   }
 
-  /** The teacher's occupying lessons overlapping `range` (R-SCH-04): what a new booking can't hit. */
+  /**
+   * The teacher's occupying lessons overlapping `range` (R-SCH-04): what a new booking can't hit.
+   */
   async listBusyLessons(teacherId: string, range: { from: Date; to: Date }): Promise<BusyLesson[]> {
     const { data, error } = await this.db
       .from('lessons')

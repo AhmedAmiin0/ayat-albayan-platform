@@ -3,7 +3,8 @@ import { GOOGLE_SKIP_REASONS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261028000943 (the per-teacher calendar handover, docs/24) read as text: no database in unit tests.
+// Migration 20261028000943 (the per-teacher calendar handover, docs/24) read as text: no database
+// in unit tests.
 const sql = readFileSync(migrationPath('20261028000943_teacher_calendar_owner.sql'), 'utf8');
 const fn = (name: string) => new RegExp(`function public\\.${name}\\([\\s\\S]*?\\n\\$\\$;`).exec(sql)?.[0] ?? '';
 

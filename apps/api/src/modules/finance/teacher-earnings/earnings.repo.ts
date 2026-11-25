@@ -88,7 +88,10 @@ export class EarningsRepo {
     return data;
   }
 
-  /** record_teacher_payment (migration 178): the payment, its items and the earnings in one transaction. */
+  /**
+   * record_teacher_payment (migration 178): the payment, its items and the earnings in one
+   * transaction.
+   */
   async record(payload: Json): Promise<RecordResult> {
     const { data, error } = await this.db.rpc('record_teacher_payment', { p: payload });
     if (error) throw ledgerError(error);

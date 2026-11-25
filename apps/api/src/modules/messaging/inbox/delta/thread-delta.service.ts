@@ -18,7 +18,9 @@ export interface ThreadDeltaQuery {
   limit: number;
 }
 
-/** Who reads: the admin, a salesperson (redacted like her pages) or a teacher (own families only). */
+/**
+ * Who reads: the admin, a salesperson (redacted like her pages) or a teacher (own families only).
+ */
 export type DeltaCaller = { kind: 'admin' } | { kind: 'sales' } | { kind: 'teacher'; scope: TeacherScope };
 
 type Arrived = { window: ThreadDeltaWindow; stamped: boolean };
@@ -84,7 +86,10 @@ export class ThreadDeltaService {
     return Promise.all(rows.filter(visibleToSales).map(async (r) => withoutLinks(await this.views.view(r))));
   }
 
-  /** A new inbound row (created after `after`), or one still unread: the stamp and the window; else nothing. */
+  /**
+   * A new inbound row (created after `after`), or one still unread: the stamp and the window; else
+   * nothing.
+   */
   private async arrived(fresh: readonly ThreadMessageRow[], input: StampInput): Promise<Arrived | undefined> {
     const { q, caller, now } = input;
     const inbound = fresh.filter((r) => r.direction === 'inbound');
@@ -98,7 +103,9 @@ export class ThreadDeltaService {
     return { window: windowOf(view, caller.kind === 'teacher' || stamped ? 0 : view.unread_count), stamped };
   }
 
-  /** Teacher: their own read mark on a new row. Admin / sales: the unread rows, as opening the chat. */
+  /**
+   * Teacher: their own read mark on a new row. Admin / sales: the unread rows, as opening the chat.
+   */
   private async stamp(seen: { inbound: readonly ThreadMessageRow[]; news: boolean; unread: boolean }, input: StampInput): Promise<boolean> {
     const { q, caller, now } = input;
     if (caller.kind === 'teacher') {

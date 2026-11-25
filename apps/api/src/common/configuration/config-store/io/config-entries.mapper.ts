@@ -29,7 +29,9 @@ interface EntryParts {
   value: unknown;
 }
 
-/** The stored row's part of an entry; a missing row is version 0, nothing stored, no description. */
+/**
+ * The stored row's part of an entry; a missing row is version 0, nothing stored, no description.
+ */
 function rowFields(row: ConfigRow | undefined) {
   if (!row) return { stored: false, description: null, descriptionSeed: null, descriptionEdited: false, version: 0, retiredAt: null };
   return {
@@ -42,7 +44,9 @@ function rowFields(row: ConfigRow | undefined) {
   };
 }
 
-/** One GET /config/entries row: the code entry merged with its stored row (missing row → version 0). */
+/**
+ * One GET /config/entries row: the code entry merged with its stored row (missing row → version 0).
+ */
 export function toConfigEntry(parts: EntryParts, names: ReadonlyMap<string, string>): ConfigEntry {
   const { seed, def } = parts;
   const { retiredAt, ...stored } = rowFields(parts.row);

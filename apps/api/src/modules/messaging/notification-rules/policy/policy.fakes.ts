@@ -12,7 +12,9 @@ export interface FakePolicyInput {
   fail?: boolean;
 }
 
-/** Tests only: a RulesReader over fixed rows (registry defaults, legacy mode, no rows by default). */
+/**
+ * Tests only: a RulesReader over fixed rows (registry defaults, legacy mode, no rows by default).
+ */
 export function fakeRulesReader(input: FakePolicyInput = {}): RulesReader & { snapshot: () => Promise<RulesSnapshot> } {
   const rows = new Map<string, NotificationRuleRow>();
   for (const r of input.rows ?? []) {

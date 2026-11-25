@@ -6,7 +6,10 @@ import {
   type SettingDef,
 } from '@ab/settings';
 
-/** Every key the store knows (SEED_ENTRIES): the registry ∪ the google-sync rows, each with its code entry. */
+/**
+ * Every key the store knows (SEED_ENTRIES): the registry ∪ the google-sync rows, each with its code
+ * entry.
+ */
 export const CONFIG_DEFS: Readonly<Record<string, SettingDef>> = Object.freeze({ ...SETTINGS_REGISTRY, ...GOOGLE_SEED_DEFS });
 
 export const CONFIG_KEYS: readonly string[] = SEED_ENTRIES.map((e) => e.key);

@@ -19,7 +19,10 @@ export function toGuardianPatch(dto: GuardianUpdate): TablesUpdate<'guardians'> 
   return { ...dto, country: inferCountry(dto.phone_e164) };
 }
 
-/** PostgREST or() filter on name + phone_e164 (guardians, leads, job applicants): phone digits, else name. */
+/**
+ * PostgREST or() filter on name + phone_e164 (guardians, leads, job applicants): phone digits, else
+ * name.
+ */
 export function guardianSearchFilter(term: string): string | null {
   const digits = searchDigits(term);
   if (digits) return `phone_e164.ilike.*${digits}*`;

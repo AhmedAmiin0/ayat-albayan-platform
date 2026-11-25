@@ -46,7 +46,10 @@ export function templateButtons(json: Json | null): TemplateButton[] {
   return r.success ? r.data : [];
 }
 
-/** message_templates.display (what WhatsApp shows); null when never synced or malformed (the columns' fallback). */
+/**
+ * message_templates.display (what WhatsApp shows); null when never synced or malformed (the
+ * columns' fallback).
+ */
 export function templateDisplay(json: Json | null): TemplateDisplay | null {
   const r = displaySchema.safeParse(json);
   return r.success ? r.data : null;

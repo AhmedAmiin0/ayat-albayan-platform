@@ -24,7 +24,10 @@ export const crmRows = (n: number, from = 0): MediaMessage[] =>
 
 type Failure = { attempts: number; skipped: boolean };
 
-/** Tests only: migrations 891 / 920's three functions over in-memory rows (the same WHERE, in TypeScript). */
+/**
+ * Tests only: migrations 891 / 920's three functions over in-memory rows (the same WHERE, in
+ * TypeScript).
+ */
 function fakeCopyQueries(rows: Map<string, MediaMessage>, failures: Map<string, Failure>) {
   const linkOn = (m: MediaMessage, host: string) => !!m.body?.startsWith(`https://${host.toLowerCase()}${CRM_MEDIA_PREFIX}`);
   return {
@@ -58,7 +61,9 @@ function fakeCopyQueries(rows: Map<string, MediaMessage>, failures: Map<string, 
   };
 }
 
-/** Tests only: a settings store holding `values`; writeSwitch writes into it (the job's turnOff). */
+/**
+ * Tests only: a settings store holding `values`; writeSwitch writes into it (the job's turnOff).
+ */
 function liveStore(values: Partial<AcademySettings>) {
   const state: AcademySettings = { ...SETTING_DEFAULTS, ...values };
   const writeSwitch = vi.fn(async (key: string, value: boolean | string) => void Object.assign(state, { [key]: value }));

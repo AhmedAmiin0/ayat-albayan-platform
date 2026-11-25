@@ -18,7 +18,10 @@ const KICKABLE = new Map<string, { job: JobClass; method: string }>();
 export const kickable = (name: string): { job: JobClass; method: string } | undefined =>
   KICKABLE.get(name);
 
-/** Every @BackgroundJob class, by name: the boot test checks each one is off in `api` and on in `worker`. */
+/**
+ * Every @BackgroundJob class, by name: the boot test checks each one is off in `api` and on in
+ * `worker`.
+ */
 const JOBS = new Map<string, JobClass>();
 
 export const backgroundJobs = (): ReadonlyMap<string, JobClass> => JOBS;
@@ -36,12 +39,13 @@ const hasHook = (proto: Record<string, unknown>, key: string): string[] =>
   typeof proto[key] === 'function' ? [key] : [];
 
 /**
- * The one switch of the process roles (docs/09): a job's timers start in onApplicationBootstrap, which
- * runs only where APP_ROLE runs jobs (worker, all). In an `api` process it does nothing, and the job's
- * `kick` (if named) goes to the worker over the internal network instead of running here, so two API
- * copies never run the outbox sender, the reminders or the Google sync, and PDFs never render beside
- * requests. The role is read on every call (tests set APP_ROLE). The rows' claims and dedup keys stay
- * as the second wall. Event listeners (onModuleInit) are request-driven and are not gated.
+ * The one switch of the process roles (docs/09): a job's timers start in onApplicationBootstrap,
+ * which runs only where APP_ROLE runs jobs (worker, all). In an `api` process it does nothing, and
+ * the job's `kick` (if named) goes to the worker over the internal network instead of running here,
+ * so two API copies never run the outbox sender, the reminders or the Google sync, and PDFs never
+ * render beside requests. The role is read on every call (tests set APP_ROLE). The rows' claims and
+ * dedup keys stay as the second wall. Event listeners (onModuleInit) are request-driven and are not
+ * gated.
  */
 export function BackgroundJob(opts: BackgroundJobOptions): (job: JobClass) => void {
   return (job) => {

@@ -20,7 +20,10 @@ export class NumberRoutes {
     @Optional() private readonly rules?: RulesReader,
   ) {}
 
-  /** Throws when the approvals, templates or rules are unreadable: the pass sends nothing (fail closed). */
+  /**
+   * Throws when the approvals, templates or rules are unreadable: the pass sends nothing (fail
+   * closed).
+   */
   async pass(numbers: readonly OverlayNumber[]): Promise<{ pass: RoutePass; templates: TemplateRow[] }> {
     const approvals = await this.queries.approvals();
     const [rows, rules] = await Promise.all([this.queries.templates(approvals), this.ruleNumbers()]);

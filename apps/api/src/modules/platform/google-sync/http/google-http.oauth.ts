@@ -25,7 +25,9 @@ const answered = (f: HttpFailure): boolean => f.kind === 'status' || f.kind === 
 const noEmailOr = (f: HttpFailure): Error =>
   answered(f) ? new NoEmail() : new Error(`google userinfo: ${f.kind}`);
 
-/** The consent URL (offline, consent prompt), the code exchange, the account's email, the revoke. */
+/**
+ * The consent URL (offline, consent prompt), the code exchange, the account's email, the revoke.
+ */
 export class GoogleOAuthApi implements GoogleOAuth {
   constructor(private readonly env: GoogleEnv) {}
 

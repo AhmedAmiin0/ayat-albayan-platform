@@ -23,7 +23,9 @@ export interface GraphConn {
   timeoutMs: number;
 }
 
-/** The credential by driver (docs/19): Meta's bearer token, or Kapso's project key (never a bearer). */
+/**
+ * The credential by driver (docs/19): Meta's bearer token, or Kapso's project key (never a bearer).
+ */
 export function authHeaders(env: GraphEnv): Record<string, string> {
   return env.provider === 'kapso'
     ? { 'x-api-key': env.apiKey }

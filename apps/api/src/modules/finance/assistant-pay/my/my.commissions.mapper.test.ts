@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { paidVia, toMyCommission, type MyCommissionSource } from './my.commissions.mapper';
 
-/** Staging, 2026-10-29: AB-1022's card payment earned 50 EGP at 16:42:13; the card refund at 16:48:05 voided it. */
+/**
+ * Staging, 2026-10-29: AB-1022's card payment earned 50 EGP at 16:42:13; the card refund at
+ * 16:48:05 voided it.
+ */
 const STAGING: MyCommissionSource = {
   id: 'ca03d8c8', kind: 'first', share_percent: 100, amount: 50, currency: 'EGP', earned_at: '2026-10-29T16:42:13+00:00',
   status: 'voided', void_reason: 'payment_voided', student: { code: 'AB-1022', name: 'lmkl' }, statement: null,

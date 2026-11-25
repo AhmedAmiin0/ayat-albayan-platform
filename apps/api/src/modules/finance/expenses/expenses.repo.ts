@@ -24,7 +24,9 @@ export function toExpenseView(row: ExpenseRow): ExpenseView {
   };
 }
 
-/** All supabase access for `expenses` and `expense_categories` (service role; admin-only routes). */
+/**
+ * All supabase access for `expenses` and `expense_categories` (service role; admin-only routes).
+ */
 @Injectable()
 export class ExpensesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

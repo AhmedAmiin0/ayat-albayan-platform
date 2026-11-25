@@ -5,7 +5,10 @@ import { BUCKETS, isPathOf, teacherReceiptPath } from '@/common/storage/storage.
 import { StorageService } from '@/common/storage/storage.service';
 import { badRequest, notFound } from '@/common/http/errors';
 
-/** Teacher payment receipts in the private `receipts` bucket, under receipts/{teacher_id}/{uuid}.{ext}. */
+/**
+ * Teacher payment receipts in the private `receipts` bucket, under
+ * receipts/{teacher_id}/{uuid}.{ext}.
+ */
 @Injectable()
 export class EarningsReceipts {
   constructor(private readonly storage: StorageService) {}

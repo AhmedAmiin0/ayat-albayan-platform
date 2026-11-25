@@ -14,7 +14,10 @@ export interface LeadLink {
   created: string | null;
   /** Follow-ups already sent; a reply starts the cadence over. */
   stage: number;
-  /** The lead's assistant (assigned_to, after auto-assign); null for a guardian, teacher or applicant. */
+  /**
+   * The lead's assistant (assigned_to, after auto-assign); null for a guardian, teacher or
+   * applicant.
+   */
   owner: string | null;
 }
 
@@ -115,12 +118,17 @@ export class InboundStore {
     });
   }
 
-  /** Legacy mode: the wa_numbers row of the receiving phone_number_id, as the chat import stamps it. Never blocks the row. */
+  /**
+   * Legacy mode: the wa_numbers row of the receiving phone_number_id, as the chat import stamps it.
+   * Never blocks the row.
+   */
   private async numberOf(m: InboundEvent): Promise<string | null> {
     return m.phoneNumberId ? this.queries.numberIdFor(m.phoneNumberId).catch(() => null) : null;
   }
 
-  /** A guardian's lesson_rating tap on lesson_feedback (migration 195); runs only for a new wamid. */
+  /**
+   * A guardian's lesson_rating tap on lesson_feedback (migration 195); runs only for a new wamid.
+   */
   async rate(tap: RatingTap): Promise<void> {
     await this.ratings.record(tap);
   }

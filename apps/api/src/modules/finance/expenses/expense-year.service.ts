@@ -6,7 +6,10 @@ import { expenseYear } from './expense-year';
 import { ExpensesRepo } from './expenses.repo';
 import { ExpensesSettings } from './expenses.settings';
 
-/** GET /expenses/year?year: the 12 months in settings.reporting_currency (existing fx, fx_missing listed). */
+/**
+ * GET /expenses/year?year: the 12 months in settings.reporting_currency (existing fx, fx_missing
+ * listed).
+ */
 @Injectable()
 export class ExpenseYearService {
   constructor(

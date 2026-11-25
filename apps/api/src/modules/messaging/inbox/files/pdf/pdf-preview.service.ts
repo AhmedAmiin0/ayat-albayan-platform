@@ -12,7 +12,9 @@ import { PdfPreviewRepo, type PdfDoc } from './pdf-preview.repo';
 import { pdfPageCount, renderPdfPages, sandboxReady } from './pdf-client';
 import { inSlot, PdfToolError, type PdfPageImage } from './pdf-render';
 
-/** A page run that failed is refused for this long (per process) instead of taking the slot again. */
+/**
+ * A page run that failed is refused for this long (per process) instead of taking the slot again.
+ */
 const FAILED_MS = 10 * 60_000;
 /** The 503's code per PdfToolError reason. */
 const ERROR_CODE: Record<PdfToolError['reason'], string> = { busy: 'pdf_busy', failed: 'pdf_render_failed', unavailable: 'pdf_unavailable' };
@@ -90,7 +92,10 @@ export class PdfPreviewService {
     return inSlot(async () => this.upload(input.id, await renderPdfPages(await this.read(input.file), input.range)));
   }
 
-  /** Storage answers null on any error; the object was just resolved, so it is a blip (503), never 410. */
+  /**
+   * Storage answers null on any error; the object was just resolved, so it is a blip (503), never
+   * 410.
+   */
   private async read(file: InboundFile): Promise<Uint8Array> {
     const bytes = await this.storage.download({ bucket: file.bucket, path: file.path });
     if (!bytes) throw waHttpError('pdf_render_failed', HttpStatus.SERVICE_UNAVAILABLE);

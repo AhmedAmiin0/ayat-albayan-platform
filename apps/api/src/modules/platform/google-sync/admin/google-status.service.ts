@@ -6,7 +6,9 @@ import { GoogleData } from '@/modules/platform/google-sync/google-data';
 import { GOOGLE_CLIENT_FACTORY, type GoogleClientFactory } from '@/modules/platform/google-sync/google-client.port';
 import { GoogleMapQueries } from '@/modules/platform/google-sync/map/google-map.queries';
 
-/** GET /admin/google/status: the connection (never a token), settings, Drive root, counts, warnings. */
+/**
+ * GET /admin/google/status: the connection (never a token), settings, Drive root, counts, warnings.
+ */
 @Injectable()
 export class GoogleStatusService {
   constructor(

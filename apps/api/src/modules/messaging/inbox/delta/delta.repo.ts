@@ -6,9 +6,15 @@ import {
   type ThreadMessageRow,
 } from '@/modules/messaging/whatsapp';
 
-/** The page's own select: the message with its lesson, sending teacher and staff sender (ThreadsQueries.messages). */
+/**
+ * The page's own select: the message with its lesson, sending teacher and staff sender
+ * (ThreadsQueries.messages).
+ */
 const SELECT = `${MESSAGE_SELECT}, lesson:lessons(starts_at, ends_at, status)` as const;
-/** A chat never has more rows in flight than this; past it the NEWEST are kept (the ticks that still move). */
+/**
+ * A chat never has more rows in flight than this; past it the NEWEST are kept (the ticks that still
+ * move).
+ */
 const PENDING_LIMIT = 50;
 
 function check(error: { message: string } | null, what: string): asserts error is null {

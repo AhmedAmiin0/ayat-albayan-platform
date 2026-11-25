@@ -23,14 +23,21 @@ export const UNREACHABLE_PATIENCE = 30;
  */
 export type CopyOutcome = 'copied' | 'retry' | 'failed' | 'skipped' | 'unreachable';
 
-/** Answers that will not change on a retry: not a chat file, gone row, not a CRM file, too large. */
+/**
+ * Answers that will not change on a retry: not a chat file, gone row, not a CRM file, too large.
+ */
 const PERMANENT = new Set([400, 404, 409, 413]);
 
-/** An imported CRM file we may copy: inbound, NO Meta media id, a crm number, the link on `host`. */
+/**
+ * An imported CRM file we may copy: inbound, NO Meta media id, a crm number, the link on `host`.
+ */
 const copyable = (msg: MediaMessage, host: string): boolean =>
   msg.direction === 'inbound' && !msg.media_id && isCrmHistoryRow(msg) && msg.number?.provider === 'crm' && allowedCrmUrl(msg.body, host) !== null;
 
-/** The error as a short code for crm_media_copy_failures (never a URL: waHttpError codes or the message). */
+/**
+ * The error as a short code for crm_media_copy_failures (never a URL: waHttpError codes or the
+ * message).
+ */
 function reason(e: unknown): string {
   if (e instanceof HttpException) {
     const body = e.getResponse();
@@ -71,7 +78,9 @@ export class CrmMediaCopier {
     return Promise.all(done.map((d) => (d.outcome === 'unreachable' ? this.unanswered(d.id, outage) : this.forget(d.id, d.outcome))));
   }
 
-  /** In an outage only past the patience; else (the storage is up) at once: one more failed attempt. */
+  /**
+   * In an outage only past the patience; else (the storage is up) at once: one more failed attempt.
+   */
   private unanswered(id: string, outage: boolean): Promise<CopyOutcome> {
     const rounds = (this.waiting.get(id) ?? 0) + 1;
     if (outage && rounds < UNREACHABLE_PATIENCE) {

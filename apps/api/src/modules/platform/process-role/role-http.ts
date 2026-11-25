@@ -4,7 +4,10 @@ import { PEER_RELOAD_PATH } from '@/config/role/worker-kick';
 
 const WORKER_PATHS = ['/health', '/ready', '/internal/jobs/'];
 
-/** The path as the router matches it (percent-decoded, so `/%69nternal` is `/internal`); undecodable = as is. */
+/**
+ * The path as the router matches it (percent-decoded, so `/%69nternal` is `/internal`); undecodable
+ * = as is.
+ */
 function decoded(path: string): string {
   try {
     return decodeURIComponent(path);
@@ -14,8 +17,9 @@ function decoded(path: string): string {
 }
 
 /**
- * Is this path closed in this role? The worker serves /health, /ready and its kick route only; the others never
- * /internal but the peer config reload (token-checked; deploy/staging's load balancer never forwards /internal).
+ * Is this path closed in this role? The worker serves /health, /ready and its kick route only; the
+ * others never /internal but the peer config reload (token-checked; deploy/staging's load balancer
+ * never forwards /internal).
  */
 export function closedPath(role: AppRole, url: string): boolean {
   const path = decoded(url.split('?')[0] ?? url);

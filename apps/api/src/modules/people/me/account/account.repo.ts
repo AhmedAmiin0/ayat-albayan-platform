@@ -12,7 +12,9 @@ interface RoleName {
   name_en: string | null;
 }
 
-/** AccountStore on the service-role client: the caller's own profile row, whitelisted writes only. */
+/**
+ * AccountStore on the service-role client: the caller's own profile row, whitelisted writes only.
+ */
 @Injectable()
 export class AccountRepo implements AccountStore {
   constructor(@Inject(DB) private readonly db: Db) {}

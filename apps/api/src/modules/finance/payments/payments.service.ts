@@ -99,7 +99,10 @@ export class PaymentsService {
     return this.inputs.receipt(await this.row(id));
   }
 
-  /** A replay re-runs the follow-ups first, then saves (best effort) the form's files a failure lost. */
+  /**
+   * A replay re-runs the follow-ups first, then saves (best effort) the form's files a failure
+   * lost.
+   */
   private async replayed(view: PaymentView, input: PaymentWrite, actorId: string): Promise<PaymentView> {
     const row = await this.row(view.id);
     this.received.fire({ payment: receivedOf(row), recorderId: actorId }); // lost before? once
@@ -108,7 +111,10 @@ export class PaymentsService {
     return view;
   }
 
-  /** Another send of the form booked it (lost the insert race, or a pre-insert check refused it just after): replay. */
+  /**
+   * Another send of the form booked it (lost the insert race, or a pre-insert check refused it just
+   * after): replay.
+   */
   private async raced(input: PaymentWrite, actorId: string, failure?: unknown): Promise<PaymentView> {
     const raced = await this.replayOf(input.clientRequestId);
     if (raced) return this.replayed(raced, input, actorId);

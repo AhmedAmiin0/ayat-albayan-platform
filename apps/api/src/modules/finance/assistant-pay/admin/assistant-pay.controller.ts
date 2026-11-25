@@ -77,7 +77,10 @@ export class AssistantPayController {
     return this.corrections.adjust({ ...parseOrThrow(assistantAdjustmentSchema, body), actorId: user.id });
   }
 
-  /** One student or many (at most 500); assistantId null clears it. 404 student_not_found, 400 invalid_assistant, 409 commission_exists. */
+  /**
+   * One student or many (at most 500); assistantId null clears it. 404 student_not_found, 400
+   * invalid_assistant, 409 commission_exists.
+   */
   @Post('brought-by')
   @HttpCode(200)
   broughtBy(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<BroughtByResult> {

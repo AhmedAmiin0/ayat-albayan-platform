@@ -47,7 +47,9 @@ export function attendanceRow(r: AttendanceInput): CellValue[] {
   ];
 }
 
-/** Where a date stands in the sheet: our own row (its PDF link is ours), the script's row, or none. */
+/**
+ * Where a date stands in the sheet: our own row (its PDF link is ours), the script's row, or none.
+ */
 type DateMatch = { kind: 'ours'; row: number } | { kind: 'script' } | { kind: 'none' };
 
 /** rows = A2:M (data rows, sheet row = index + 2). */

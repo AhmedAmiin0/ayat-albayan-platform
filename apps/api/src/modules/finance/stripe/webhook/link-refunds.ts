@@ -94,7 +94,9 @@ export class LinkRefunds {
     }
   }
 
-  /** The link of a PaymentIntent: saved when it was paid, else found through its Checkout Session. */
+  /**
+   * The link of a PaymentIntent: saved when it was paid, else found through its Checkout Session.
+   */
   private async linkOfIntent(stripe: StripeApi, paymentIntent: string | null): Promise<LinkRow | null> {
     if (!paymentIntent) return null;
     const saved = await this.deps.links.byPaymentIntent(paymentIntent);

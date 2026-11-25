@@ -54,7 +54,10 @@ export class AssistantRpc {
     if (error) throw assistantError(error);
   }
 
-  /** A retry carries the same requestId (unique per assistant) and gets the first adjustment's id back. */
+  /**
+   * A retry carries the same requestId (unique per assistant) and gets the first adjustment's id
+   * back.
+   */
   async adjust(input: { assistantId: string; amount: number; currency: string; reason: string; actorId: string; requestId?: string | undefined }): Promise<string> {
     const { data, error } = await this.db.rpc('add_assistant_adjustment', {
       p_assistant: input.assistantId,
@@ -68,7 +71,10 @@ export class AssistantRpc {
     return data;
   }
 
-  /** Both parts of the terms in one transaction; the start days are checked there (commission_start_in_past, ..._earlier, salary_...). */
+  /**
+   * Both parts of the terms in one transaction; the start days are checked there
+   * (commission_start_in_past, ..._earlier, salary_...).
+   */
   async setTerms(input: { assistantId: string; columns: Json; actorId: string }): Promise<void> {
     const { error } = await this.db.rpc('set_assistant_terms', { p_assistant: input.assistantId, p: input.columns, p_actor: input.actorId });
     if (error) throw assistantError(error);
@@ -83,7 +89,10 @@ export class AssistantRpc {
     if (error) throw assistantError(error);
   }
 
-  /** Attribution of one or many students (null clears it); the commission is evaluated after. Returns how many changed. */
+  /**
+   * Attribution of one or many students (null clears it); the commission is evaluated after.
+   * Returns how many changed.
+   */
   async broughtBy(input: { studentIds: string[]; assistantId: string | null; actorId: string; broughtAt?: string }): Promise<number> {
     const { data, error } = await this.db.rpc('set_students_brought_by', {
       p_students: input.studentIds,
@@ -95,7 +104,10 @@ export class AssistantRpc {
     return Number(field(data, 'changed') ?? 0);
   }
 
-  /** Runs the commission rule for the student of this subscription (safe to repeat: one commission per student). */
+  /**
+   * Runs the commission rule for the student of this subscription (safe to repeat: one commission
+   * per student).
+   */
   async evaluate(subscriptionId: string): Promise<void> {
     const { error } = await this.db.rpc('evaluate_assistant_commission', { p_subscription: subscriptionId });
     if (error) throw assistantError(error);

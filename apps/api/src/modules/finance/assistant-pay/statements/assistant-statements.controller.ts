@@ -45,7 +45,10 @@ export class AssistantStatementsController {
     return this.statements.receipt(id);
   }
 
-  /** Builds or rebuilds the DRAFT of a month (idempotent); 409 invalid_transition once it is approved. */
+  /**
+   * Builds or rebuilds the DRAFT of a month (idempotent); 409 invalid_transition once it is
+   * approved.
+   */
   @Post('statements')
   @HttpCode(200)
   generate(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AssistantStatementView> {
@@ -60,7 +63,10 @@ export class AssistantStatementsController {
     return this.statements.approve(id, user.id);
   }
 
-  /** approved -> draft. Takes back an approval, so it needs the approver's permission (assistantpay.approve). */
+  /**
+   * approved -> draft. Takes back an approval, so it needs the approver's permission
+   * (assistantpay.approve).
+   */
   @Post('statements/:id/reopen')
   @HttpCode(200)
   @Permissions('assistantpay.approve')
@@ -75,7 +81,9 @@ export class AssistantStatementsController {
     return this.statements.pay(id, parseOrThrow(assistantStatementPaySchema, body ?? {}), user.id);
   }
 
-  /** paid -> approved, with a reason. Reverses a payout, so it needs assistantpay.approve as well. */
+  /**
+   * paid -> approved, with a reason. Reverses a payout, so it needs assistantpay.approve as well.
+   */
   @Post('statements/:id/unpay')
   @HttpCode(200)
   @Permissions('assistantpay.approve')

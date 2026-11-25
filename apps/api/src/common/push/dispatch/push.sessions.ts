@@ -16,9 +16,10 @@ export async function liveSessions(db: Db, ids: readonly (string | null)[]): Pro
 /**
  * Each profile's app tokens that may get a push: on the profile, bound to that same profile
  * (push_device_sessions) and to a live session, and not contested (another profile asked for it
- * without its device key: the phone may have changed hands, migration 720). An unbound token (registered before migration 700,
- * or by the previous API) waits until the app registers it again on its next start. A failed lookup
- * means no device push (fail closed), never a lost bell row: the caller still writes those.
+ * without its device key: the phone may have changed hands, migration 720). An unbound token
+ * (registered before migration 700, or by the previous API) waits until the app registers it again
+ * on its next start. A failed lookup means no device push (fail closed), never a lost bell row: the
+ * caller still writes those.
  */
 export async function liveTokens<P extends { id: string; push_tokens: string[] }>(db: Db, profiles: readonly P[]): Promise<P[]> {
   const all = profiles.flatMap((p) => p.push_tokens);

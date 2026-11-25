@@ -3,7 +3,10 @@ import { A, assistantApp, B } from '@/modules/finance/assistant-pay/shared/assis
 
 type App = Awaited<ReturnType<typeof assistantApp>>;
 
-/** A row as a careless select could return it: with the price and the actors the assistant must not get. */
+/**
+ * A row as a careless select could return it: with the price and the actors the assistant must not
+ * get.
+ */
 const dirty = {
   id: 'c1', kind: 'first', share_percent: 100, amount: 50, currency: 'EGP', earned_at: '2026-10-29T16:42:13Z', status: 'earned',
   void_reason: null, base_amount: 180, base_currency: 'SAR', subscription_id: 'sub-1', assistant_id: A, rate: 50,

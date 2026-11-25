@@ -52,7 +52,9 @@ export class IntegrationConfigController {
     return this.config.items();
   }
 
-  /** Plain keys only; null or blank clears a key (the env value applies again). 400 names the key. */
+  /**
+   * Plain keys only; null or blank clears a key (the env value applies again). 400 names the key.
+   */
   @Put()
   @Permissions('settings.write')
   async put(

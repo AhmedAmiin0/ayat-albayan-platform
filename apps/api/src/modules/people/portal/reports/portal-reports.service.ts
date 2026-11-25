@@ -45,7 +45,9 @@ export class PortalReportsService {
     return this.storage.signedDownload({ bucket: BUCKETS.reports, path: row.pdf_path, seconds: SIGNED_URL_SECONDS.portal });
   }
 
-  /** 404 recording_not_found unless it belongs to one of this student's sent reports and is visible. */
+  /**
+   * 404 recording_not_found unless it belongs to one of this student's sent reports and is visible.
+   */
   async recordingUrl(call: FileCall): Promise<PortalFileUrl> {
     await this.scopes.student(call.user, call.studentId);
     // Every sent report, not the list's newest 60: an old recording still opens.

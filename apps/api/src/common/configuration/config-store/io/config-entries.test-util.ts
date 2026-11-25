@@ -1,5 +1,5 @@
-// HTTP test harness for /config/entries and /admin/config/parity (test-only). Real controllers, guards,
-// service, mapper and ownership; ConfigStore and the audit are fakes.
+// HTTP test harness for /config/entries and /admin/config/parity (test-only). Real controllers,
+// guards, service, mapper and ownership; ConfigStore and the audit are fakes.
 import type { Permission } from '@ab/catalog';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';

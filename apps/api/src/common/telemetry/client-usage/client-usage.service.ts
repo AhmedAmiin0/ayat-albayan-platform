@@ -4,9 +4,10 @@ import { ClientUsageCounter, usageSummary, type UsageHit } from './client-usage.
 export const USAGE_LOG_EVERY_MS = 15 * 60_000;
 
 /**
- * Counts API hits per route × client build (X-AB-Client) and logs one summary line every 15 minutes,
- * then resets (docs/26 §2f: an alias goes only after 30 days with zero untagged / old-build hits).
- * In memory only: a restart loses at most one window. The timer is unref'd and cleared on shutdown.
+ * Counts API hits per route × client build (X-AB-Client) and logs one summary line every 15
+ * minutes, then resets (docs/26 §2f: an alias goes only after 30 days with zero untagged /
+ * old-build hits). In memory only: a restart loses at most one window. The timer is unref'd and
+ * cleared on shutdown.
  */
 @Injectable()
 export class ClientUsageService implements OnModuleInit, OnModuleDestroy {

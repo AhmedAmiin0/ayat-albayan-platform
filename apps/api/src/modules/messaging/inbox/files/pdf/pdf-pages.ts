@@ -5,12 +5,18 @@ import { PDF_PREVIEW_PAGES } from '@ab/shared';
 
 /** Pages 2+ render in runs of this many (2–6, 7–11 …), so page 2 never waits for page 30. */
 export const PDF_RUN = 5;
-/** A crafted «Pages: 99999999999» is stored as this many: never a column overflow, a 500 and a probe per view. */
+/**
+ * A crafted «Pages: 99999999999» is stored as this many: never a column overflow, a 500 and a probe
+ * per view.
+ */
 const PDF_PAGES_MAX = 100_000;
 
 export type PageRange = { first: number; last: number };
 
-/** Page 1 alone (the bubble's thumb), else the run of PDF_RUN it falls in, cut at the page count and PDF_PREVIEW_PAGES. */
+/**
+ * Page 1 alone (the bubble's thumb), else the run of PDF_RUN it falls in, cut at the page count and
+ * PDF_PREVIEW_PAGES.
+ */
 export function pageRange(page: number, pages: number): PageRange {
   if (page === 1) return { first: 1, last: 1 };
   const first = 2 + Math.floor((page - 2) / PDF_RUN) * PDF_RUN;
@@ -38,7 +44,10 @@ export function pdftoppmArgs(input: { pdf: string; outRoot: string; range: PageR
   return ['-jpeg', '-jpegopt', 'quality=70', '-scale-to', '1600', '-f', String(first), '-l', String(last), input.pdf, input.outRoot];
 }
 
-/** «p-07.jpg» → 7: pdftoppm pads the number to the digits of the page count, so names are parsed, never built. */
+/**
+ * «p-07.jpg» → 7: pdftoppm pads the number to the digits of the page count, so names are parsed,
+ * never built.
+ */
 export function pageOfFile(name: string): number | null {
   const m = /^p-(\d+)\.jpg$/.exec(name);
   return m ? Number(m[1]) : null;
@@ -57,7 +66,10 @@ export class InFlight<T> {
   }
 }
 
-/** Keys that failed within `ms`: a PDF whose render always fails or hangs does not take the slot on every view. */
+/**
+ * Keys that failed within `ms`: a PDF whose render always fails or hangs does not take the slot on
+ * every view.
+ */
 export class FailedRecently {
   private readonly until = new Map<string, number>();
 

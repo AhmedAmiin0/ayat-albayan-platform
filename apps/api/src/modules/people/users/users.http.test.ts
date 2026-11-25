@@ -24,7 +24,9 @@ const USERS: Record<string, AuthUser> = {
   reader: user('reader1', 'admin'),
   gone: user('gone1', 'admin'),
 };
-/** `reader` is a custom admin-base role that holds users.read only; `gone` has a disabled profile. */
+/**
+ * `reader` is a custom admin-base role that holds users.read only; `gone` has a disabled profile.
+ */
 const resolver: PermissionResolver = async (u) => {
   if (u.id === 'gone1') throw new AccountDisabledError();
   return u.id === 'reader1' ? ['users.read'] : systemResolver(u);

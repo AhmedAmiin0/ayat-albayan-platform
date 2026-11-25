@@ -11,7 +11,9 @@ import { planned, synced, type ItemWriter, type WriteCtx } from '@/modules/platf
 
 const MAIN_CALENDAR = 'primary';
 
-/** Deletes only an event that carries our tag for this lesson; `foreign` = not ours, left untouched. */
+/**
+ * Deletes only an event that carries our tag for this lesson; `foreign` = not ours, left untouched.
+ */
 async function deleteOwn(google: GoogleClient, input: { calendarId: string; eventId: string; lessonId: string }): Promise<'deleted' | 'gone' | 'foreign'> {
   const ev = await google.getEvent({ calendarId: input.calendarId, eventId: input.eventId });
   if (!ev || ev.status === 'cancelled') return 'gone';
@@ -26,12 +28,13 @@ async function deleteOwn(google: GoogleClient, input: { calendarId: string; even
 }
 
 /**
- * teacher_event / main_event (docs/24 §3): one single event per calendar-managed lesson (platform-origin,
- * or any lesson of a teacher whose calendar_owner is 'platform') on the teacher's confirmed calendar, and
- * its copy on the academy's main calendar. It only ever reads, updates or deletes the event id it
- * recorded, after checking our extendedProperties tag; an event someone deleted is `gone` and is not
- * recreated until the lesson changes again (§2.4). Before inserting an imported lesson's event, the
- * duplicate guard looks for the script's event in that slot and, if found, writes nothing.
+ * teacher_event / main_event (docs/24 §3): one single event per calendar-managed lesson
+ * (platform-origin, or any lesson of a teacher whose calendar_owner is 'platform') on the teacher's
+ * confirmed calendar, and its copy on the academy's main calendar. It only ever reads, updates or
+ * deletes the event id it recorded, after checking our extendedProperties tag; an event someone
+ * deleted is `gone` and is not recreated until the lesson changes again (§2.4). Before inserting an
+ * imported lesson's event, the duplicate guard looks for the script's event in that slot and, if
+ * found, writes nothing.
  */
 @Injectable()
 export class CalendarWriter implements ItemWriter {
@@ -81,8 +84,9 @@ export class CalendarWriter implements ItemWriter {
   }
 
   /**
-   * Before a new event: our old one on the previous calendar goes (a new teacher calendar), then the
-   * duplicate guard for an imported lesson — the script's event in that slot ⇒ one alert, write nothing.
+   * Before a new event: our old one on the previous calendar goes (a new teacher calendar), then
+   * the duplicate guard for an imported lesson — the script's event in that slot ⇒ one alert, write
+   * nothing.
    */
   private async beforeInsert(item: SyncItem, input: { google: GoogleClient; calendarId: string; src: LessonSource }): Promise<ItemResult | null> {
     const { google, calendarId, src } = input;
@@ -95,7 +99,9 @@ export class CalendarWriter implements ItemWriter {
     return { state: 'skipped', reason: 'script_event_present', googleId: null, parentId: null };
   }
 
-  /** Cancelled / moved / not calendar-managed: remove our own event if we made one, else nothing. */
+  /**
+   * Cancelled / moved / not calendar-managed: remove our own event if we made one, else nothing.
+   */
   private async remove(item: SyncItem, input: { ctx: WriteCtx; imported: boolean }): Promise<ItemResult> {
     const { ctx } = input;
     if (!item.google_id || !item.google_parent_id) {

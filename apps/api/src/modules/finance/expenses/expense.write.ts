@@ -32,7 +32,10 @@ const COPY = [
   ['note', 'note'],
 ] as const;
 
-/** Only the sent fields; `vendor` is trimmed ('' → null); a paid day moves the month unless one is sent. */
+/**
+ * Only the sent fields; `vendor` is trimmed ('' → null); a paid day moves the month unless one is
+ * sent.
+ */
 export function expensePatch(patch: Partial<ExpenseUpdate>): TablesUpdate<'expenses'> {
   const write: Record<string, unknown> = {};
   for (const [from, to] of COPY) if (patch[from] !== undefined) write[to] = patch[from];

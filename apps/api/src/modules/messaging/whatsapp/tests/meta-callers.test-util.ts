@@ -96,7 +96,9 @@ export function metaCallsIn(source: string): string[] {
  */
 const HOSTS: readonly (readonly [string, RegExp])[] = [['api.kapso.ai', /api\.kapso\.ai/]];
 
-/** `path: label` for every non-whitelisted built source that calls Meta (path relative to src, `/`). */
+/**
+ * `path: label` for every non-whitelisted built source that calls Meta (path relative to src, `/`).
+ */
 export function offenders(files: readonly { path: string; source: string }[]): string[] {
   const built = files.map((f) => ({ ...f, path: f.path.replace(/\\/g, '/') })).filter((f) => !NOT_BUILT.some((re) => re.test(f.path)));
   const calls = built

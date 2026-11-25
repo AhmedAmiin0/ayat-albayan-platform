@@ -41,7 +41,9 @@ export class TeacherEarningsController {
     return toSummaryView(await this.corrections.summary());
   }
 
-  /** Static segment, declared before `:teacherId`. After a rate or a payout_count_* setting changes. */
+  /**
+   * Static segment, declared before `:teacherId`. After a rate or a payout_count_* setting changes.
+   */
   @Post('resync')
   @HttpCode(200)
   @Permissions('earnings.write')

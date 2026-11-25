@@ -98,7 +98,10 @@ export class SubscriptionAlertsService {
     return [];
   }
 
-  /** auto = settings.auto_messages_enabled: OFF raises the task and the push but queues no renewal_due. */
+  /**
+   * auto = settings.auto_messages_enabled: OFF raises the task and the push but queues no
+   * renewal_due.
+   */
   private async raise(input: { studentId: string; plan: AlertPlan; now: Date; auto: boolean }): Promise<void> {
     const { plan } = input;
     const dedupKey = alertDedupKey(plan.alert, plan.subscriptionId);

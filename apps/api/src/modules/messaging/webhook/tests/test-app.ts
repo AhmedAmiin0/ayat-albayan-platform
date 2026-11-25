@@ -87,7 +87,10 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
   /** POSTs `body` as given to /webhooks/kapso with exactly these headers (besides content-type). */
   const postKapso = (body: string, headers: Record<string, string> = { 'x-webhook-signature': kapsoSign(body) }) =>
     app.inject({ method: 'POST', url: '/webhooks/kapso', headers: { 'content-type': 'application/json', ...headers }, payload: body });
-  /** POSTs `body` as given to /webhooks/wacrm, signed now unless `signature` is passed (null = none). */
+  /**
+   * POSTs `body` as given to /webhooks/wacrm, signed now unless `signature` is passed (null =
+   * none).
+   */
   const postWacrm = (body: string, signature: string | null = wacrmSign(body)) =>
     app.inject({
       method: 'POST',

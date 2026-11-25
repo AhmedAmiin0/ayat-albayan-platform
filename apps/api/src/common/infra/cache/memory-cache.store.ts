@@ -1,9 +1,9 @@
 import type { CacheListener, CacheStore } from './cache-store';
 
 /**
- * The in-memory CacheStore (REDIS_URL unset): one process, entries expire after their TTL, a publish
- * reaches this process's own subscribers. SharedCache reads through it in this mode, so every reader
- * keeps exactly its own per-process cache, as before Redis.
+ * The in-memory CacheStore (REDIS_URL unset): one process, entries expire after their TTL, a
+ * publish reaches this process's own subscribers. SharedCache reads through it in this mode, so
+ * every reader keeps exactly its own per-process cache, as before Redis.
  */
 export class MemoryCacheStore implements CacheStore {
   readonly mode = 'memory' as const;

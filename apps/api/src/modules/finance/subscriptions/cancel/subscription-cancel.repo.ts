@@ -10,7 +10,10 @@ const CANCELLED_LESSONS = '(cancelled_by_teacher,cancelled_by_admin)';
 type CancelWrite = { id: string; actorId: string; reason: string | null; now: Date };
 /** The package being cancelled, as ordered by subscription_commission_kind: (created_at, id). */
 type LaterOf = { id: string; studentId: string; createdAt: string };
-/** The cancelled row; null when it was already cancelled (a race); a block the DB guard raised (934). */
+/**
+ * The cancelled row; null when it was already cancelled (a race); a block the DB guard raised
+ * (934).
+ */
 type CancelResult = { row: SubRow } | { row: null; block: CancelBlock };
 
 /** Reads and the one write (service role; the controllers guard). */
@@ -61,7 +64,10 @@ export class SubscriptionCancelRepo {
     return (count ?? 0) > 0;
   }
 
-  /** Compare-and-set: only a package not cancelled yet; the DB guard re-checks money, lessons and commission. */
+  /**
+   * Compare-and-set: only a package not cancelled yet; the DB guard re-checks money, lessons and
+   * commission.
+   */
   async cancel(w: CancelWrite): Promise<CancelResult> {
     const patch = { status: 'cancelled' as const, cancel_kind: 'unused', cancelled_at: w.now.toISOString(), cancelled_by: w.actorId, cancel_reason: w.reason };
     const { data, error } = await this.db

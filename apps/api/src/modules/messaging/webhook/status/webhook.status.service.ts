@@ -61,7 +61,10 @@ export class StatusService {
     return true;
   }
 
-  /** A message sent from the WhatsApp Business app (smb_message_echoes): stored like one from Kapso's inbox. */
+  /**
+   * A message sent from the WhatsApp Business app (smb_message_echoes): stored like one from
+   * Kapso's inbox.
+   */
   async echo(e: EchoEvent): Promise<void> {
     await this.external.echo(e);
   }

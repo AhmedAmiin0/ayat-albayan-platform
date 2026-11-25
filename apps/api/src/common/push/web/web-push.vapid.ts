@@ -4,7 +4,10 @@ import { SignJWT } from 'jose';
 // RFC 8292 VAPID: the application server identifies itself to the push service with an ES256 JWT
 // (aud = the endpoint's origin, exp ≤ 24 h; we use 12 h) and its public key.
 
-/** The three WEB_PUSH_* values (env.web-push.ts); base64url keys as the key-generation one-liner prints them. */
+/**
+ * The three WEB_PUSH_* values (env.web-push.ts); base64url keys as the key-generation one-liner
+ * prints them.
+ */
 export interface VapidKeys {
   publicKey: string;
   privateKey: string;
@@ -14,7 +17,10 @@ export interface VapidKeys {
 
 export const VAPID_TTL_S = 12 * 60 * 60;
 
-/** The P-256 private key as a KeyObject: d from the private key, x/y from the uncompressed public key. */
+/**
+ * The P-256 private key as a KeyObject: d from the private key, x/y from the uncompressed public
+ * key.
+ */
 function signingKey(keys: VapidKeys) {
   const pub = Buffer.from(keys.publicKey, 'base64url');
   if (pub.length !== 65 || pub[0] !== 4) throw new Error('invalid VAPID public key');

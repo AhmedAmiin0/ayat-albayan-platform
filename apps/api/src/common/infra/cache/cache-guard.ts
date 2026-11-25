@@ -4,7 +4,10 @@ import { Logger } from '@nestjs/common';
 const LOG_EVERY_MS = 60_000;
 /** The longest a cache call may take before the caller reads the database instead. */
 const OP_TIMEOUT_MS = 500;
-/** After a failure the cache is skipped this long (straight to the database), so a dead Redis costs nothing. */
+/**
+ * After a failure the cache is skipped this long (straight to the database), so a dead Redis costs
+ * nothing.
+ */
 export const SKIP_AFTER_FAILURE_MS = 5_000;
 
 const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
@@ -19,9 +22,10 @@ function withTimeout<T>(op: Promise<T>, ms: number): Promise<T> {
 }
 
 /**
- * Runs every shared-cache call: a failure or a slow answer returns the fallback (a miss, so the caller
- * reads the database) and never throws; logs at most once a minute (the error text only, never a key's
- * value or the Redis URL), and skips the cache for SKIP_AFTER_FAILURE_MS after a failure.
+ * Runs every shared-cache call: a failure or a slow answer returns the fallback (a miss, so the
+ * caller reads the database) and never throws; logs at most once a minute (the error text only,
+ * never a key's value or the Redis URL), and skips the cache for SKIP_AFTER_FAILURE_MS after a
+ * failure.
  */
 export class CacheGuard {
   errors = 0;
@@ -39,7 +43,10 @@ export class CacheGuard {
     return this.attempt(op, fallback);
   }
 
-  /** As run() but even inside the skip window: an invalidation is always tried (it must not be lost). */
+  /**
+   * As run() but even inside the skip window: an invalidation is always tried (it must not be
+   * lost).
+   */
   async attempt<T>(op: () => Promise<T>, fallback: T): Promise<T> {
     try {
       return await withTimeout(op(), OP_TIMEOUT_MS);

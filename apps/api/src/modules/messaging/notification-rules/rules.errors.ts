@@ -1,7 +1,10 @@
 import type { RuleError } from '@ab/shared';
 import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 
-/** PATCH /admin/notifications/:key refusals (rules.types.ts RULE_ERRORS), worded like the gate routes. */
+/**
+ * PATCH /admin/notifications/:key refusals (rules.types.ts RULE_ERRORS), worded like the gate
+ * routes.
+ */
 export function ruleError(code: Exclude<RuleError, 'confirmation_required'>, detail?: string): HttpException {
   const body = detail ? { code, message: code, detail } : { code, message: code };
   return new HttpException(body, HttpStatus.UNPROCESSABLE_ENTITY);

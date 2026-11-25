@@ -14,14 +14,20 @@ export const EVERY_MS = 10 * 60_000;
 const FIRST_RUN_MS = 2 * 60_000;
 /** Never before the chat import of 2026-10-25, which holds everything older. */
 export const FLOOR = new Date('2026-10-25T00:00:00Z');
-/** Always re-read the last day: a message the webhook failed to fetch is older than the newest stored one. */
+/**
+ * Always re-read the last day: a message the webhook failed to fetch is older than the newest
+ * stored one.
+ */
 export const LOOKBACK_MS = 24 * 3_600_000;
 /** Pages per number per run (100 each); the rest waits for the next run. */
 export const MAX_PAGES = 20;
 
 type CatchUpCounts = Record<ExternalOutcome | 'listed', number>;
 
-/** From the newest stored external message (none: FLOOR), or the last day when that is newer; never before FLOOR. */
+/**
+ * From the newest stored external message (none: FLOOR), or the last day when that is newer; never
+ * before FLOOR.
+ */
 export function catchUpSince(newest: Date | null, now: Date): Date {
   if (!newest) return FLOOR;
   const back = new Date(now.getTime() - LOOKBACK_MS);
@@ -54,7 +60,10 @@ export class ExternalCatchUpJob extends TickerJob {
     super();
   }
 
-  /** One pass over every Kapso chat number. Never throws; one number's failure doesn't stop the others. */
+  /**
+   * One pass over every Kapso chat number. Never throws; one number's failure doesn't stop the
+   * others.
+   */
   async runOnce(now = new Date()): Promise<CatchUpCounts[]> {
     const out: CatchUpCounts[] = [];
     for (const n of kapsoChatNumbers()) out.push(await this.number(n, now));

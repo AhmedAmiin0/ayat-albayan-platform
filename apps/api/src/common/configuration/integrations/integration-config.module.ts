@@ -16,7 +16,8 @@ import { integrationRefreshMs } from './integration-refresh';
   providers: [
     {
       provide: INTEGRATION_REFRESH_MS,
-      // INTEGRATION_REFRESH_MS, else SETTINGS_CACHE_MS; null = INTEGRATION_CONFIG_FROM_DB=false (env only).
+      // INTEGRATION_REFRESH_MS, else SETTINGS_CACHE_MS; null = INTEGRATION_CONFIG_FROM_DB=false
+      // (env only).
       useFactory: (): number | null => integrationRefreshMs(loadEnv()),
     },
     IntegrationConfigRepo,

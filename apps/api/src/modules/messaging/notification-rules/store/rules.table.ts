@@ -8,7 +8,10 @@ export type RuleRowWrite = Pick<NotificationRuleRow, 'key' | 'enabled' | 'channe
 
 const COLUMNS = 'key, enabled, channels, timing, number_id, updated_at, updated_by';
 
-/** public.notification_rules and the wa_numbers lookup (service role; RLS: admins read, the API writes). */
+/**
+ * public.notification_rules and the wa_numbers lookup (service role; RLS: admins read, the API
+ * writes).
+ */
 @Injectable()
 export class RulesTable {
   constructor(@Inject(DB) private readonly db: Db) {}

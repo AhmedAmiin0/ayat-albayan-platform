@@ -20,7 +20,9 @@ export function calendarTeacher(summary: string): string | null {
   return rest ? normalizeArabic(rest) : null;
 }
 
-/** The imported calendar id first (when discovery saw it), then an exact name match on either name. */
+/**
+ * The imported calendar id first (when discovery saw it), then an exact name match on either name.
+ */
 export function suggestCalendar(t: TeacherNames, calendars: readonly GoogleFound[]): GoogleFound | null {
   const byId = t.google_calendar_id ? calendars.find((c) => c.id === t.google_calendar_id) : undefined;
   if (byId) return byId;
@@ -37,7 +39,9 @@ export interface SummaryLink {
   sheetId: string | null;
 }
 
-/** The summary sheet's row of this student, by normalised Arabic name; null when none or ambiguous. */
+/**
+ * The summary sheet's row of this student, by normalised Arabic name; null when none or ambiguous.
+ */
 export function suggestFolder(student: string, links: readonly SummaryLink[]): SummaryLink | null {
   const name = normalizeArabic(student);
   const hits = links.filter((l) => normalizeArabic(l.name) === name);

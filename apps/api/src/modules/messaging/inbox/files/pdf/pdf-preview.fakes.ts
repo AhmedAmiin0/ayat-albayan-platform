@@ -16,7 +16,10 @@ export const ask = (page: number, messageId = 'm1') => ({ phone: PHONE, messageI
 export const jpgs = (range: { first: number; last: number }) =>
   Array.from({ length: range.last - range.first + 1 }, (_, i) => ({ page: range.first + i, jpg: new Uint8Array([0xff, 0xd8, i]) }));
 
-/** `objects`: wa-media by path (a message's PDF is `{id}.pdf`); `docs`: messages.media_pages / media_bytes by id. */
+/**
+ * `objects`: wa-media by path (a message's PDF is `{id}.pdf`); `docs`: messages.media_pages /
+ * media_bytes by id.
+ */
 export function setup() {
   const objects = new Map<string, Uint8Array>();
   const docs = new Map<string, PdfDoc>();

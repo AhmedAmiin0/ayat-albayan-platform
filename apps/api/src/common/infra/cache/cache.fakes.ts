@@ -7,7 +7,8 @@ type Listener = (channel: string, message: string) => void;
 
 /**
  * Tests only: one in-memory "Redis server" that several API copies connect to (no Redis in CI).
- * `down = true` makes every command reject, as a dead Redis does; `now` drives the TTLs and every clock.
+ * `down = true` makes every command reject, as a dead Redis does; `now` drives the TTLs and every
+ * clock.
  */
 export function fakeRedis() {
   const server = {
@@ -15,7 +16,10 @@ export function fakeRedis() {
     down: false,
     data: new Map<string, { value: string; expires: number }>(),
     sets: [] as string[],
-    /** Runs inside every PUBLISH before the message goes out (a race between a delete and its announcement). */
+    /**
+     * Runs inside every PUBLISH before the message goes out (a race between a delete and its
+     * announcement).
+     */
     beforePublish: undefined as (() => Promise<void>) | undefined,
   };
   const listeners: { channel: string; listener: Listener }[] = [];

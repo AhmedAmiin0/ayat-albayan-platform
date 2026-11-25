@@ -6,7 +6,10 @@ import { DriveApi } from './google-http.drive';
 import { GoogleOAuthApi, oauthClient } from './google-http.oauth';
 import { SheetsApi } from './google-http.sheets';
 
-/** The real GoogleClient: Calendar v3, Drive v3, Sheets v4 over google-auth-library's authorised requests. */
+/**
+ * The real GoogleClient: Calendar v3, Drive v3, Sheets v4 over google-auth-library's authorised
+ * requests.
+ */
 export class GoogleHttpClient implements GoogleClient {
   private readonly cal: CalendarApi;
   private readonly drive: DriveApi;

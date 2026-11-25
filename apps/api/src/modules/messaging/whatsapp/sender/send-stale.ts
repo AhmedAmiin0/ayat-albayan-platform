@@ -67,7 +67,10 @@ function newStudentRetimed(row: {
   return !!row.expires_at && Date.parse(row.expires_at) !== Date.parse(row.lesson.starts_at);
 }
 
-/** What dropReason reads: a staff alert also carries its teacher as found at send time (staffAtSend). */
+/**
+ * What dropReason reads: a staff alert also carries its teacher as found at send time
+ * (staffAtSend).
+ */
 export type DropInput = StaleInput & {
   expires_at: string | null;
   lesson: { starts_at: string; status: LessonStatus } | null;

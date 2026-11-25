@@ -74,7 +74,9 @@ export function assertMayAssign(actor: Actor, state: UserState, role: RoleRecord
 export const canAssign = (actor: Actor, state: UserState, role: RoleRecord): boolean =>
   assignRefusal(actor, state, role) === null;
 
-/** 403 unless the actor may change this existing login: only a system admin touches a system admin. */
+/**
+ * 403 unless the actor may change this existing login: only a system admin touches a system admin.
+ */
 export function assertMayTouch(actor: Actor, state: UserState, target: StaffProfile): void {
   if (isSystemAdminProfile(state, target) && !isSystemAdminActor(state, actor))
     throw forbidden('system_admin_only');

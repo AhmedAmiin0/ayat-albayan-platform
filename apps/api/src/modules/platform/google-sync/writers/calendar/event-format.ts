@@ -4,7 +4,9 @@ import { ar } from '@/common/infra/i18n/server-text';
 import type { GoogleEventBody } from '@/modules/platform/google-sync/google-client.port';
 import { EVENT, isJitsi, PLATFORM_SOURCE, POPUP_MINUTES, TZ } from '@/modules/platform/google-sync/google-format';
 
-/** Which copy: the teacher's calendar (no family phone) or the academy's main calendar (with it). */
+/**
+ * Which copy: the teacher's calendar (no family phone) or the academy's main calendar (with it).
+ */
 export type EventCopy = 'teacher' | 'main';
 export type LessonKind = keyof typeof EVENT.kinds;
 
@@ -23,7 +25,9 @@ export interface EventLesson {
   byday: readonly number[] | null;
 }
 
-/** Cancelled or moved lessons have no event (the script deletes both copies for any other status). */
+/**
+ * Cancelled or moved lessons have no event (the script deletes both copies for any other status).
+ */
 export const eventWanted = (status: LessonStatus): boolean => !isClosedLesson(status);
 
 const names = (l: EventLesson): string => l.students.map((s) => s.name.trim()).filter(Boolean).join('، ') || EVENT.newStudent;
@@ -40,7 +44,10 @@ const safeLink = (link: string | null): string | null => (link && !isJitsi(link)
 const repeatOf = (byday: readonly number[]): string =>
   byday.map((d) => ar.enums.weekday[String(d) as keyof typeof ar.enums.weekday]).join('/');
 
-/** The script's description lines, top to bottom; the main copy adds the family lines under the link. */
+/**
+ * The script's description lines, top to bottom; the main copy adds the family lines under the
+ * link.
+ */
 export function eventDescription(l: EventLesson, copy: EventCopy): string {
   const link = safeLink(l.link);
   const phones = l.students.map((s) => s.phone).filter((p): p is string => !!p);

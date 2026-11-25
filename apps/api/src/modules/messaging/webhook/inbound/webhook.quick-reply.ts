@@ -51,7 +51,9 @@ export class QuickReplies {
     return this.queries.recentLessonOutbound({ phone, since, until });
   }
 
-  /** The lesson of the outbound message this replies to (same phone; a rating: only lesson_rating). */
+  /**
+   * The lesson of the outbound message this replies to (same phone; a rating: only lesson_rating).
+   */
   private async answeredLesson(input: { m: InboundEvent; phone: string; rating: boolean }): Promise<string | null> {
     if (!input.m.replyTo) return null;
     const answered = await this.queries.outboundByWaId(input.m.replyTo);

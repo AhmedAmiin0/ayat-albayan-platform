@@ -8,8 +8,8 @@ const provider = z.preprocess(blankIsUnset, z.enum(WA_PROVIDERS).default('meta')
 
 /**
  * WhatsApp drivers (docs/19-messaging-drivers.md): each line sends through Meta's Cloud API
- * directly (meta, the default) or through Kapso's Meta proxy (kapso). A manual per-line switch only,
- * never an automatic failover (an uncertain send could go out twice).
+ * directly (meta, the default) or through Kapso's Meta proxy (kapso). A manual per-line switch
+ * only, never an automatic failover (an uncertain send could go out twice).
  */
 export const KAPSO_SHAPE = {
   /** The notifications line's driver. */
@@ -30,14 +30,19 @@ export const KAPSO_SHAPE = {
 
 type KapsoLine = 'notifications' | 'chat';
 
-/** The per-line ids a kapso line reuses (the same WA_* / WA_CHAT_* keys as under meta), by key name. */
+/**
+ * The per-line ids a kapso line reuses (the same WA_* / WA_CHAT_* keys as under meta), by key name.
+ */
 function idsOf(env: Env, line: KapsoLine) {
   return line === 'chat'
     ? { WA_CHAT_PHONE_NUMBER_ID: env.WA_CHAT_PHONE_NUMBER_ID, WA_CHAT_WABA_ID: env.WA_CHAT_WABA_ID }
     : { WA_PHONE_NUMBER_ID: env.WA_PHONE_NUMBER_ID, WA_WABA_ID: env.WA_WABA_ID };
 }
 
-/** A chat id equal to the notifications one would make two lines of one number: refused under either driver. */
+/**
+ * A chat id equal to the notifications one would make two lines of one number: refused under either
+ * driver.
+ */
 export const duplicateChatPhone = (env: Env): boolean =>
   env.WA_CHAT_PHONE_NUMBER_ID !== undefined && env.WA_CHAT_PHONE_NUMBER_ID === env.WA_PHONE_NUMBER_ID;
 const sameNumber = (env: Env, line: KapsoLine) => line === 'chat' && duplicateChatPhone(env);
@@ -54,7 +59,10 @@ export function kapsoLine(env: Env, line: KapsoLine): KapsoLineEnv | null {
   return { provider: 'kapso', base, version: env.KAPSO_API_VERSION, phoneNumberId, wabaId, apiKey };
 }
 
-/** NAMES (never values) of what a kapso line still lacks (a duplicate chat id is duplicateChatPhone, not a gap). */
+/**
+ * NAMES (never values) of what a kapso line still lacks (a duplicate chat id is duplicateChatPhone,
+ * not a gap).
+ */
 export function kapsoGaps(env: Env, line: KapsoLine): string[] {
   const present: Record<string, string | undefined> = {
     ...idsOf(env, line),

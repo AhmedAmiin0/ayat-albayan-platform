@@ -22,7 +22,9 @@ export class PayoutsLedger {
     private readonly corrections: CorrectionsRepo,
   ) {}
 
-  /** paid → approved: its settlement payment is voided (sessions owed again), audited in the RPC. */
+  /**
+   * paid → approved: its settlement payment is voided (sessions owed again), audited in the RPC.
+   */
   async unpay(id: string, input: { reason: string; actorId: string }): Promise<PayoutView> {
     const row = await this.row(id);
     if (PAYOUT_CORRECTIONS[row.status] !== 'approved') throw conflict('invalid_transition', { from: row.status });

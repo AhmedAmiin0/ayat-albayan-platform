@@ -7,7 +7,10 @@ export const ADMIN = 'ad000000-0000-4000-8000-0000000000ad';
 export const ID = 'c1000000-0000-4000-8000-000000000001';
 export const STUDENT = 'd1000000-0000-4000-8000-000000000001';
 
-/** A statement row as the database returns it (with the receipt path and actors' ids a view must not show). */
+/**
+ * A statement row as the database returns it (with the receipt path and actors' ids a view must not
+ * show).
+ */
 export const statementRow = (over: Partial<StatementRow> = {}): StatementRow => ({
   id: ID, assistant_id: A, month: '2026-10-01', status: 'draft',
   totals: { SAR: { salary: 1000, commissions: 100, adjustments: 0, total: 1100 } },

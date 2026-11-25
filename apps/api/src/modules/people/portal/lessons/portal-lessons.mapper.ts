@@ -40,7 +40,10 @@ export function wayIn(row: PortalLessonRow, ctx: Pick<WayContext, 'academyAuto' 
   return !platform && link ? 'external' : 'none';
 }
 
-/** Whitelist: time, status, the teacher's display names, the way in. The URL only while the room is open. */
+/**
+ * Whitelist: time, status, the teacher's display names, the way in. The URL only while the room is
+ * open.
+ */
 export function toPortalLesson(row: PortalLessonRow, ctx: WayContext): PortalLesson {
   const window = joinWindow(row, ctx.now, ctx.win);
   const way = isOpenLesson(row.status) ? wayIn(row, ctx) : 'none';

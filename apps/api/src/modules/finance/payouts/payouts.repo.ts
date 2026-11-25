@@ -26,7 +26,9 @@ export class PayoutsRepo {
     return data;
   }
 
-  /** The ONE pay rule (v_teacher_payable_lessons, migration 20261005000200), with ledger amounts. */
+  /**
+   * The ONE pay rule (v_teacher_payable_lessons, migration 20261005000200), with ledger amounts.
+   */
   async lessons(w: LessonWindow): Promise<PayoutLesson[]> {
     const { data, error } = await this.db
       .from('v_teacher_payable_lessons')
@@ -62,7 +64,10 @@ export class PayoutsRepo {
     return count ?? 0;
   }
 
-  /** The teacher's lessons in the window whose time was edited after `since` (the draft's last calculation). */
+  /**
+   * The teacher's lessons in the window whose time was edited after `since` (the draft's last
+   * calculation).
+   */
   async editedSince(w: LessonWindow & { since: string }): Promise<number> {
     const { count, error } = await this.db
       .from('lessons')
@@ -82,7 +87,10 @@ export class PayoutsRepo {
     return data.sort(byTeacherName);
   }
 
-  /** A teacher's own rows, newest month first (Y5); a draft is still the admin's to change, so hidden. */
+  /**
+   * A teacher's own rows, newest month first (Y5); a draft is still the admin's to change, so
+   * hidden.
+   */
   async forTeacher(teacherId: string, month?: string): Promise<PayoutRow[]> {
     let q = this.db.from('teacher_payouts').select(SELECT).eq('teacher_id', teacherId).neq('status', 'draft');
     if (month) q = q.eq('month', month);

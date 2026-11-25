@@ -57,7 +57,9 @@ export class RulesJournal {
     });
   }
 
-  /** The flip back to legacy (docs/23b decision 5): the rules' values copied into the legacy keys. */
+  /**
+   * The flip back to legacy (docs/23b decision 5): the rules' values copied into the legacy keys.
+   */
   recordCopy(actorId: string, values: Partial<RuleSettings>): Promise<void> {
     return this.audit.record({
       actorId,

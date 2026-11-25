@@ -9,7 +9,9 @@ import { SettingsService } from './settings.service';
 
 type Rows = { key: string; value: unknown }[];
 
-/** One API copy: ConfigStore + bridge + SettingsService over a db answering `rows()`, on one Redis. */
+/**
+ * One API copy: ConfigStore + bridge + SettingsService over a db answering `rows()`, on one Redis.
+ */
 function copy(redis: ReturnType<typeof fakeRedis>, rows: () => Rows) {
   const select = vi.fn(async () => ({ data: rows(), error: null }));
   const db = { from: vi.fn(() => ({ select })) } as unknown as Db;

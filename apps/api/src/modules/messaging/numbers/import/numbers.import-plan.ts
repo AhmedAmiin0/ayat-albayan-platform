@@ -18,7 +18,9 @@ import type { SecretStatus } from '@/modules/messaging/numbers/config/numbers.se
 export interface PlanInput {
   /** The legacy env (integration overlay on process.env, no numbers). */
   legacy: Env;
-  /** The DB values in use (the integration overlay) and the server env: only their presence is read. */
+  /**
+   * The DB values in use (the integration overlay) and the server env: only their presence is read.
+   */
   db: Readonly<Record<string, string>>;
   env: NodeJS.ProcessEnv;
   rows: readonly NumberRow[];
@@ -33,7 +35,9 @@ export interface RolePlan extends ImportRoleView {
 
 type RowDraft = { provider: string; phone_number_id: string; waba_id: string | null; app_id: string | null };
 
-/** The ids of a row draft checked like wa_numbers does (label and provider are never legacy values). */
+/**
+ * The ids of a row draft checked like wa_numbers does (label and provider are never legacy values).
+ */
 const ID_FIELDS = ['phone_number_id', 'waba_id', 'app_id'] as const;
 
 /** Field NAMES of the draft's ids that fail META_ID_RE (the migration's check), in field order. */
@@ -51,7 +55,10 @@ function sourceOf(input: PlanInput, key: IntegrationKey): IntegrationSource {
   return present(input.env[key]) ? 'env' : 'unset';
 }
 
-/** The legacy key a secret is read from: the chat token falls back to the notifications one (as chatEnv). */
+/**
+ * The legacy key a secret is read from: the chat token falls back to the notifications one (as
+ * chatEnv).
+ */
 /** The secrets a legacy line key holds (an Evolution token has no legacy key). */
 type LegacySecret = Extract<NumberSecretName, ImportField>;
 const LEGACY_SECRETS: readonly LegacySecret[] = ['access_token', 'app_secret'];

@@ -78,7 +78,10 @@ export class ThreadMediaService {
     return { ...signed, mime: file.mime };
   }
 
-  /** bubbleFile's message and stored object, unsigned: the PDF preview (pdf/) reads the same file under the same rules. */
+  /**
+   * bubbleFile's message and stored object, unsigned: the PDF preview (pdf/) reads the same file
+   * under the same rules.
+   */
   async bubbleObject(input: { phone: string; messageId: string }): Promise<{ msg: MediaMessage; file: InboundFile }> {
     const msg = await this.queries.message(input.messageId);
     // A message hidden from the platform keeps its file away from staff too.

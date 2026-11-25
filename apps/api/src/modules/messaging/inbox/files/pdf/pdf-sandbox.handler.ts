@@ -14,7 +14,10 @@ type Op = { op: 'pages' } | { op: 'render'; range: PageRange };
 
 const int = (s: string | null): number | null => (s !== null && /^\d{1,6}$/.test(s) ? Number(s) : null);
 
-/** POST /pages, or POST /render?first=&last= with 1 ≤ first ≤ last < first + PDF_RUN; anything else is null. */
+/**
+ * POST /pages, or POST /render?first=&last= with 1 ≤ first ≤ last < first + PDF_RUN; anything else
+ * is null.
+ */
 export function parseOp(method: string | undefined, url: string | undefined): Op | null {
   const u = method === 'POST' && url ? URL.parse(url, 'http://pdf') : null;
   if (!u) return null;
@@ -26,7 +29,10 @@ export function parseOp(method: string | undefined, url: string | undefined): Op
   return { op: 'render', range: { first, last } };
 }
 
-/** Answers once the request's body is in (read, or drained unread): the sender sees this status, never an EPIPE. */
+/**
+ * Answers once the request's body is in (read, or drained unread): the sender sees this status,
+ * never an EPIPE.
+ */
 function send(res: ServerResponse, status: number, body: unknown): void {
   const answer = () => {
     if (res.headersSent || res.destroyed) return;
@@ -42,7 +48,10 @@ async function run(op: Op, bytes: Uint8Array): Promise<unknown> {
   return { images: images.map((i) => ({ page: i.page, jpg: Buffer.from(i.jpg).toString('base64') })) };
 }
 
-/** 200 the answer; 400 an unknown request; 413 no or too big a Content-Length; 503 queue full; 500 poppler failed. */
+/**
+ * 200 the answer; 400 an unknown request; 413 no or too big a Content-Length; 503 queue full; 500
+ * poppler failed.
+ */
 async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   if (req.method === 'GET' && req.url === '/health') return send(res, 200, { ok: true });
   const op = parseOp(req.method, req.url);

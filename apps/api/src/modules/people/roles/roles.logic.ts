@@ -18,7 +18,9 @@ export interface RoleState {
 /** The system admin: every grantable permission, always (its rows are not consulted). */
 export const isSystemAdmin = (role: RoleRecord): boolean => role.is_system && role.key === 'admin';
 
-/** The system guardian / student roles: their grants are the family portal's, fixed (a rename only). */
+/**
+ * The system guardian / student roles: their grants are the family portal's, fixed (a rename only).
+ */
 export const isPortalRole = (role: RoleRecord): boolean => role.is_system && (role.key === 'guardian' || role.key === 'student');
 
 /** profiles.role_id, or the system role of profiles.role when null. */
@@ -33,10 +35,16 @@ export function permissionsOf(state: RoleState, profile: ProfileRecord): Permiss
   return effectivePermissions({ baseRole: profile.role, granted: role.permissions, allGrantable: isSystemAdmin(role) });
 }
 
-/** The catalog keys a profile holds: self.* scope keys (they come with the base role, not a grant) left out. */
+/**
+ * The catalog keys a profile holds: self.* scope keys (they come with the base role, not a grant)
+ * left out.
+ */
 export const grantsOf = (state: RoleState, profile: ProfileRecord): Permission[] => permissionsOf(state, profile).filter(isGrantable);
 
-/** First of `wanted` the actor does not hold (null = all held): nobody grants beyond their own reach. */
+/**
+ * First of `wanted` the actor does not hold (null = all held): nobody grants beyond their own
+ * reach.
+ */
 export function missingGrant(state: RoleState, actorId: string, wanted: readonly Permission[]): Permission | null {
   const actor = state.profiles.find((p) => p.id === actorId);
   const held = actor ? permissionsOf(state, actor) : [];

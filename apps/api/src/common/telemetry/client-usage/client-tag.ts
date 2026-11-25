@@ -1,4 +1,7 @@
-/** The request header the web and the phone (OTA to 0.2.0+) send: `X-AB-Client: <platform>/<build>` (docs/26 §2f). */
+/**
+ * The request header the web and the phone (OTA to 0.2.0+) send: `X-AB-Client: <platform>/<build>`
+ * (docs/26 §2f).
+ */
 export const CLIENT_HEADER = 'x-ab-client';
 export const UNTAGGED = 'untagged';
 

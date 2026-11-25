@@ -7,7 +7,10 @@ import { StudentStatusRepo } from './student-status.repo';
 import type { StudentTz } from './student-status.types';
 import { SubscriptionsRepo } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 
-/** What triggered the evaluation: a payment create (its id), the periodic sweep, or any other write / lesson change. */
+/**
+ * What triggered the evaluation: a payment create (its id), the periodic sweep, or any other write
+ * / lesson change.
+ */
 export type RenewalCause = { via: 'payment'; paymentId: string } | { via: 'sweep' } | { via: 'event' };
 type RenewalInput = {
   studentId: string;
@@ -70,7 +73,10 @@ export class StudentRenewal {
   }
 }
 
-/** A payment flip records its from-status, so deleting the payment reverts to it (StudentDeactivation). */
+/**
+ * A payment flip records its from-status, so deleting the payment reverts to it
+ * (StudentDeactivation).
+ */
 function viaOf(m: { from: StudentStatus; to: StudentStatus }, cause: RenewalCause): Record<string, string> {
   if (m.to === 'pending_renewal') return { via: 'subscription_ended' };
   if (cause.via !== 'payment') return { via: 'subscription_renewed' };

@@ -4,7 +4,10 @@ import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/temp
 
 /** The old CRM's storage gets this long for the whole file (headers and body). */
 export const CRM_FETCH_TIMEOUT_MS = 10_000;
-/** The storage did not answer about the file (down, timed out, 5xx, 429): try again later, it is not gone. */
+/**
+ * The storage did not answer about the file (down, timed out, 5xx, 429): try again later, it is not
+ * gone.
+ */
 export const CRM_UNREACHABLE = 'crm_unreachable';
 
 type CrmFetchInput = { url: URL; mime: string; maxBytes: number };
@@ -51,7 +54,10 @@ export async function fetchCrmMedia(input: CrmFetchInput): Promise<Uint8Array> {
   return readCapped(res.body, input.maxBytes);
 }
 
-/** The stream's bytes, cancelled (413) the moment they pass `max`; a broken (or timed-out) stream is 502. */
+/**
+ * The stream's bytes, cancelled (413) the moment they pass `max`; a broken (or timed-out) stream is
+ * 502.
+ */
 async function readCapped(body: ReadableStream<Uint8Array>, max: number): Promise<Uint8Array> {
   const reader = body.getReader();
   const chunks: Uint8Array[] = [];

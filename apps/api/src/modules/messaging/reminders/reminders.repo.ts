@@ -75,7 +75,10 @@ export class RemindersRepo {
     return wakeOn(await queueMessages(this.db, rows));
   }
 
-  /** lesson_join_link rows for the candidates not queued yet, each token saved first (reminders.room.ts). */
+  /**
+   * lesson_join_link rows for the candidates not queued yet, each token saved first
+   * (reminders.room.ts).
+   */
   roomLinks(candidates: readonly RoomCandidate[], now: Date): Promise<QueuedMessage[]> {
     return roomLinkRows(this.db, candidates, now);
   }

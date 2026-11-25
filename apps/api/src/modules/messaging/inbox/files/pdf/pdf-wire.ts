@@ -4,7 +4,10 @@ import type { Readable } from 'node:stream';
 // (pdf-sandbox.handler.ts) speak HTTP over one unix socket on the shared pdf-sock volume, and
 // nothing else.
 
-/** Where ayat-pdf listens: the pdf-sock volume, mounted at /run/pdf in ayat-pdf and in both API copies. */
+/**
+ * Where ayat-pdf listens: the pdf-sock volume, mounted at /run/pdf in ayat-pdf and in both API
+ * copies.
+ */
 export const PDF_SOCKET = '/run/pdf/pdf.sock';
 
 /**

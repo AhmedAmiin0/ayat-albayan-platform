@@ -4,8 +4,8 @@ import { neverWritten } from '@/common/configuration/config-store/config-store.t
 import { DB, type Db } from '@/common/db/db.module';
 
 /**
- * Who last changed each stored setting. Rows that were never written have no entry: a missing row, and
- * a row the seeder created (JSON null with no writer; an admin's null save has updated_by set).
+ * Who last changed each stored setting. Rows that were never written have no entry: a missing row,
+ * and a row the seeder created (JSON null with no writer; an admin's null save has updated_by set).
  */
 @Injectable()
 export class SettingsMetaRepo {

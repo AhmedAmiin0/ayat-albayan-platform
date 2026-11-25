@@ -24,11 +24,16 @@ interface CrmRequest {
 
 const errorSchema = z.object({ error: z.object({ code: z.string().optional(), message: z.string().optional() }) });
 
-/** The CRM's own refusals that mean nothing reached WhatsApp: fail with its code, never uncertain. */
+/**
+ * The CRM's own refusals that mean nothing reached WhatsApp: fail with its code, never uncertain.
+ */
 const NOT_SENT_5XX = new Set(['meta_error', 'template_malformed']);
 /** A proxy's 503 page (no envelope): the CRM itself is down, so the lane is held, not the row. */
 const CRM_DOWN = 'http_503';
-/** The CRM's own WhatsApp connection is down (400): the line, not the message, so held like a refused key. */
+/**
+ * The CRM's own WhatsApp connection is down (400): the line, not the message, so held like a
+ * refused key.
+ */
 const LINE_DOWN = 'whatsapp_not_configured';
 const RETRY_DEFAULT_MS = 60_000;
 const RETRY_MAX_MS = 60 * 60_000;
@@ -70,7 +75,10 @@ export function crmErrorFrom(res: { status: number; text: string; retryAfter: st
   return new WaError(message, base);
 }
 
-/** The CRM's error code and message; a body that is not its envelope (a proxy's page) is http_<status> only, never shown. */
+/**
+ * The CRM's error code and message; a body that is not its envelope (a proxy's page) is
+ * http_<status> only, never shown.
+ */
 function envelopeOf(res: { status: number; text: string }): { crmCode: string; said: string | undefined } {
   const parsed = errorSchema.safeParse(json(res.text));
   if (!parsed.success) return { crmCode: `http_${res.status}`, said: undefined };
@@ -81,7 +89,10 @@ function envelopeOf(res: { status: number; text: string }): { crmCode: string; s
 const transportInfo = (e: unknown): WaError['info'] =>
   e instanceof Error && e.name === 'TimeoutError' ? TIMEOUT_INFO : reachInfo(mayHaveReached(e));
 
-/** The `data` of a 2xx answer; throws WaError otherwise (a network error is uncertain unless never connected). */
+/**
+ * The `data` of a 2xx answer; throws WaError otherwise (a network error is uncertain unless never
+ * connected).
+ */
 export async function crmJson(conn: CrmConn, req: CrmRequest): Promise<unknown> {
   const hasBody = req.body !== undefined;
   let res: Response;

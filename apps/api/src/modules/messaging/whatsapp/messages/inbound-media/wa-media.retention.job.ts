@@ -56,7 +56,9 @@ export class WaMediaRetentionJob extends TickerJob {
     return done.files;
   }
 
-  /** One kind's batches; `done.files` counts as it goes, so a failure still reports what was purged. */
+  /**
+   * One kind's batches; `done.files` counts as it goes, so a failure still reports what was purged.
+   */
   private async purge(input: { before: string; echoes: boolean; done: { files: number } }): Promise<void> {
     for (let i = 0; i < MAX_BATCHES; i++) {
       const rows = await this.queries.cachedBefore({ before: input.before, limit: BATCH, echoes: input.echoes });

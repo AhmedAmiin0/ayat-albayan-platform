@@ -54,7 +54,9 @@ export async function stampRead(receipts: ReadReceipts, input: { q: ThreadPageQu
   return (await receipts.open(q.phone, { now, upTo: page.rows[0]?.created_at })).stamped;
 }
 
-/** After a stamp, the answer reads as if stamped first: 0 unread, the page's inbound rows read now. */
+/**
+ * After a stamp, the answer reads as if stamped first: 0 unread, the page's inbound rows read now.
+ */
 export function asRead<T extends { thread: ThreadView | null; messages: MessageView[] }>(detail: T, at: Date): T {
   const readAt = at.toISOString();
   return {

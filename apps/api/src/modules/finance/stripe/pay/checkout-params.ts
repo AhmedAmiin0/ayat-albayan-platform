@@ -5,7 +5,10 @@ import { integrationIdentifier } from '@/modules/finance/stripe/links/link-ids';
 import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';
 
 const MIN = 60_000;
-/** Checkout accepts 30 min – 24 h; the session never outlives its link (but always lasts the minimum). */
+/**
+ * Checkout accepts 30 min – 24 h; the session never outlives its link (but always lasts the
+ * minimum).
+ */
 export function sessionExpiry(linkExpiresAt: string, now: Date): number {
   const latest = Math.min(Date.parse(linkExpiresAt), now.getTime() + 23 * 60 * MIN);
   return Math.floor(Math.max(latest, now.getTime() + 31 * MIN) / 1000);

@@ -8,7 +8,9 @@ const MIN_TTL_MS = 1_000;
 const WEEK_MS = 7 * 24 * 3_600_000;
 const NONE: ReadonlySet<string> = new Set();
 
-/** Every number's display phone (enabled or not), exactly as stored: E.164, no normalising guess. */
+/**
+ * Every number's display phone (enabled or not), exactly as stored: E.164, no normalising guess.
+ */
 export function ownPhonesOf(rows: readonly Pick<NumberRow, 'display_phone_e164'>[]): ReadonlySet<string> {
   return new Set(rows.flatMap((r) => (r.display_phone_e164 ? [r.display_phone_e164] : [])));
 }
@@ -54,13 +56,17 @@ export class OwnNumbers {
     return (await this.phones()).has(phone);
   }
 
-  /** `phoneList` of our numbers for a `.not('phone_e164', 'in', …)`; null = none known (no filter). */
+  /**
+   * `phoneList` of our numbers for a `.not('phone_e164', 'in', …)`; null = none known (no filter).
+   */
   async notIn(): Promise<string | null> {
     const phones = await this.phones();
     return phones.size > 0 ? phoneList(phones) : null;
   }
 
-  /** After a numbers write: the next read loads the rows again (a failed one still keeps this set). */
+  /**
+   * After a numbers write: the next read loads the rows again (a failed one still keeps this set).
+   */
   forget(): void {
     if (this.cached) this.cached = { ...this.cached, at: Number.NEGATIVE_INFINITY };
   }

@@ -17,7 +17,10 @@ export function cacheStoreFromEnv(guard: CacheGuard, source: NodeJS.ProcessEnv =
   return new RedisCacheStore(connectRedis(url, (e) => guard.fail(e)));
 }
 
-/** Global: every reader may take SharedCache (optional, so unit tests without this module keep memory). */
+/**
+ * Global: every reader may take SharedCache (optional, so unit tests without this module keep
+ * memory).
+ */
 @Global()
 @Module({
   providers: [

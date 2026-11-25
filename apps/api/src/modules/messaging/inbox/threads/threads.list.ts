@@ -21,7 +21,10 @@ export const THREAD_SORT: SortSpec<ThreadSortKey> = {
   fallback: { column: 'last_message_at', ascending: false },
 };
 
-/** GET /threads query: page, search, unread, `sort`/`dir`, the lead's status and a chat list (docs/22). */
+/**
+ * GET /threads query: page, search, unread, `sort`/`dir`, the lead's status and a chat list
+ * (docs/22).
+ */
 export const threadListQuery = pageQuerySchema.extend({
   search: z.string().trim().max(100).optional(),
   list: z.string().trim().max(100).optional(),
@@ -41,7 +44,9 @@ export interface ThreadListFilter extends ListSort<ThreadSortKey> {
   list?: string | undefined;
   /** Teacher mode: only these phones (never empty — the caller answers an empty page itself). */
   phones?: readonly string[];
-  /** Never these phones: the academy's own numbers (OwnNumbers, set by ThreadReads for every role). */
+  /**
+   * Never these phones: the academy's own numbers (OwnNumbers, set by ThreadReads for every role).
+   */
   hide?: readonly string[];
 }
 

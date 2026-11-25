@@ -7,7 +7,9 @@ import { blankIsUnset, optionalSecret, optionalUrl } from './env.blank';
 export const GOOGLE_SHAPE = {
   GOOGLE_CLIENT_ID: optionalSecret,
   GOOGLE_CLIENT_SECRET: optionalSecret,
-  /** One base for every Google endpoint (OAuth, Calendar, Drive, Sheets): the stub. Unset = Google. */
+  /**
+   * One base for every Google endpoint (OAuth, Calendar, Drive, Sheets): the stub. Unset = Google.
+   */
   GOOGLE_API_BASE: optionalUrl,
   /** The OAuth callback of this API. Unset = https://api.ayatalbayan.com/integrations/google/callback. */
   GOOGLE_REDIRECT_URI: optionalUrl,

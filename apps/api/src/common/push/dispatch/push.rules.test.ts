@@ -5,7 +5,8 @@ import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from '@/comm
 import { pushRoute } from './push.rules';
 import type { PushTransport } from '@/common/push/push.service';
 
-// docs/23 §2c: every staff push kind asks its notification rule (on/off, channels) before the bell row.
+// docs/23 §2c: every staff push kind asks its notification rule (on/off, channels) before the bell
+// row.
 
 const snap = (input: FakePolicyInput = {}) => fakeRulesReader(input).snapshot();
 /** The catalogue rows with no push channel: the bell row only. */

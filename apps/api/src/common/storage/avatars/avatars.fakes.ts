@@ -1,7 +1,8 @@
 import type { AvatarFiles } from './avatar-files';
 import type { StaffPhotos } from './staff-photos';
 
-// Test helpers (not a test): in-memory avatar Storage and a StaffPhotos double that counts its calls.
+// Test helpers (not a test): in-memory avatar Storage and a StaffPhotos double that counts its
+// calls.
 
 export class FakeAvatarFiles implements AvatarFiles {
   objects = new Map<string, { size: number; contentType: string; bytes: Uint8Array }>();
@@ -32,7 +33,10 @@ export class FakeAvatarFiles implements AvatarFiles {
   }
 }
 
-/** A StaffPhotos double: `urls` maps a teacher / profile id to its URL; `calls` proves one call per list. */
+/**
+ * A StaffPhotos double: `urls` maps a teacher / profile id to its URL; `calls` proves one call per
+ * list.
+ */
 export function fakePhotos(urls: Record<string, string> = {}) {
   const calls: { method: 'ofTeachers' | 'ofProfiles'; ids: string[] }[] = [];
   const pick = (method: 'ofTeachers' | 'ofProfiles') => async (ids: readonly string[]) => {

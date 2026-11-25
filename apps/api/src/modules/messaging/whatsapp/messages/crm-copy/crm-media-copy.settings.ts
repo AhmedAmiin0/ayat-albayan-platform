@@ -7,7 +7,10 @@ import { SettingsService } from '@/common/settings/settings.service';
 const KEYS = ['crm_media_copy_all', 'crm_media_host'] as const satisfies readonly SettingKey[];
 type CrmMediaCopySettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
-/** CrmMediaCopyJob's settings (common/settings/settings-slice.ts): read each tick, switched off when done. */
+/**
+ * CrmMediaCopyJob's settings (common/settings/settings-slice.ts): read each tick, switched off when
+ * done.
+ */
 @Injectable()
 export class CrmMediaCopySettings {
   constructor(private readonly store: SettingsService) {}
@@ -16,7 +19,9 @@ export class CrmMediaCopySettings {
     return readSlice(this.store, KEYS);
   }
 
-  /** The job's own «done»: one unversioned write (OFF is always accepted, docs/26 §2f), no actor. */
+  /**
+   * The job's own «done»: one unversioned write (OFF is always accepted, docs/26 §2f), no actor.
+   */
   turnOff(): Promise<void> {
     return this.store.writeSwitch('crm_media_copy_all', false, null);
   }

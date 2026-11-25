@@ -15,7 +15,9 @@ export interface OverrideWrite {
   actorId: string;
 }
 
-/** All supabase access for `translation_overrides` (service role; writes behind the admin guard). */
+/**
+ * All supabase access for `translation_overrides` (service role; writes behind the admin guard).
+ */
 @Injectable()
 export class TranslationsQueries {
   constructor(@Inject(DB) private readonly db: Db) {}

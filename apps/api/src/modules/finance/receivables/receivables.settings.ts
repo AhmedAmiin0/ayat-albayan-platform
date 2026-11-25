@@ -10,7 +10,10 @@ import { SettingsService } from '@/common/settings/settings.service';
 const KEYS = ['reporting_currency'] as const satisfies readonly SettingKey[];
 export type ReceivablesSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
-/** The receivables module's academy settings (docs/25 §4), read by ReceivablesService. One cached store.all(), only these keys. */
+/**
+ * The receivables module's academy settings (docs/25 §4), read by ReceivablesService. One cached
+ * store.all(), only these keys.
+ */
 @Injectable()
 export class ReceivablesSettings {
   constructor(private readonly store: SettingsService) {}

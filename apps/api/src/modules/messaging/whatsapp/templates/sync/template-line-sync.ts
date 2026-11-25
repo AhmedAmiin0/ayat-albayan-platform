@@ -27,7 +27,10 @@ export interface LineSyncDeps extends CopiesDeps {
 
 const empty = (facts: TemplateLineFacts, now: Date) => ({ ...facts, checked_at: now.toISOString(), meta_count: 0, synced: 0, imported: [], skipped: [] });
 
-/** The line's Meta list, or its failure as the line's error (never thrown: the other line still syncs). */
+/**
+ * The line's Meta list, or its failure as the line's error (never thrown: the other line still
+ * syncs).
+ */
 async function readList(deps: LineSyncDeps, line: WaLine): Promise<MetaTemplate[] | { error: string; message?: string }> {
   try {
     return await deps.lines[line].getTemplates();

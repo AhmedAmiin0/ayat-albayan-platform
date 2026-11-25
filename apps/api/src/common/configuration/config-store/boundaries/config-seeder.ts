@@ -22,7 +22,9 @@ type SeedLog = Pick<Logger, 'log' | 'warn' | 'error'>;
 const asOutcome = (data: unknown): SeedOutcome =>
   data !== null && typeof data === 'object' && !Array.isArray(data) ? data : {};
 
-/** One log line per run: skipped (and why), or applied with the failed keys (a warning when any). */
+/**
+ * One log line per run: skipped (and why), or applied with the failed keys (a warning when any).
+ */
 function report(out: SeedOutcome, log: SeedLog): void {
   if (out.skipped !== undefined) {
     const stored = out.stored === undefined ? '' : ` (stored registry ${out.stored})`;
@@ -35,9 +37,10 @@ function report(out: SeedOutcome, log: SeedLog): void {
 }
 
 /**
- * One config_seed call (docs/26 §2b): SEED_ENTRIES' metadata, with the BUNDLED Arabic hint (ar.json,
- * never the overrides) as description_seed, and REGISTRY_VERSION. It carries no value: the RPC never
- * writes one. Never throws: a failure is logged and answered null, so it can never block boot.
+ * One config_seed call (docs/26 §2b): SEED_ENTRIES' metadata, with the BUNDLED Arabic hint
+ * (ar.json, never the overrides) as description_seed, and REGISTRY_VERSION. It carries no value:
+ * the RPC never writes one. Never throws: a failure is logged and answered null, so it can never
+ * block boot.
  */
 export async function runConfigSeed(db: Db, log: SeedLog = new Logger('ConfigSeeder')): Promise<SeedOutcome | null> {
   try {

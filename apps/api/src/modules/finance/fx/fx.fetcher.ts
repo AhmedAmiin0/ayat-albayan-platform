@@ -2,7 +2,9 @@ import { z } from 'zod';
 import type { HttpFailure } from '@/common/infra/http/failure';
 import { createHttp } from '@/common/infra/http/http';
 
-/** Injection token for the rate source; tests bind a fake so no unit or e2e test hits the network. */
+/**
+ * Injection token for the rate source; tests bind a fake so no unit or e2e test hits the network.
+ */
 export const FX_FETCHER = Symbol('FX_FETCHER');
 
 /** One provider update: SAR → every quote currency. */

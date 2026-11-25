@@ -16,7 +16,10 @@ function studentView(r: StudentRow, links: readonly SummaryLink[]): GoogleStuden
   };
 }
 
-/** Teacher ↔ calendar and student ↔ folder mappings: suggested by discovery, used only once confirmed. */
+/**
+ * Teacher ↔ calendar and student ↔ folder mappings: suggested by discovery, used only once
+ * confirmed.
+ */
 @Injectable()
 export class GoogleMapService {
   constructor(

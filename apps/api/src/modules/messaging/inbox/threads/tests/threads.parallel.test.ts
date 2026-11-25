@@ -8,7 +8,10 @@ import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo
 import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { ThreadsService } from '@/modules/messaging/inbox/threads/threads.service';
 
-/** Every read takes one 60 ms round trip (the edge logs: 30–90 ms each); elapsed / 60 = sequential rounds. */
+/**
+ * Every read takes one 60 ms round trip (the edge logs: 30–90 ms each); elapsed / 60 = sequential
+ * rounds.
+ */
 const RTT = 60;
 const slow = <T>(value: T) => vi.fn(() => new Promise<T>((done) => setTimeout(() => done(value), RTT)));
 

@@ -9,7 +9,10 @@ const DAY_MS = 24 * 3_600_000;
 /** docs/30 §3: per phone on file, counted in the database (login_codes). */
 const PHONE_LIMITS = { per15Min: 3, perDay: 10, failedPerDay: 10 } as const;
 
-/** May another code go to this phone now? Over a limit the request still answers 202 (no enumeration). */
+/**
+ * May another code go to this phone now? Over a limit the request still answers 202 (no
+ * enumeration).
+ */
 export const phoneMaySend = (s: PhoneStats): boolean =>
   s.sentLast15Min < PHONE_LIMITS.per15Min && s.sentLastDay < PHONE_LIMITS.perDay && s.failedLastDay < PHONE_LIMITS.failedPerDay;
 

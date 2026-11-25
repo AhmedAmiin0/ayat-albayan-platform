@@ -11,7 +11,10 @@ interface CatalogueFacts {
   reach: Reach | null;
 }
 
-/** What the catalogue reads besides the rules: settings slice, send gate, templates, numbers, classroom. */
+/**
+ * What the catalogue reads besides the rules: settings slice, send gate, templates, numbers,
+ * classroom.
+ */
 @Injectable()
 export class RulesFacts {
   constructor(

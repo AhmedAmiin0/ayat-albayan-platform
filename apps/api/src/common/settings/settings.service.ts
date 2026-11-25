@@ -12,22 +12,28 @@ import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '@/common/configuration/config
 import { DB, type Db } from '@/common/db/db.module';
 import { writeLatest } from './settings-write';
 
-/** Injection token of the cache TTL in ms (env SETTINGS_CACHE_MS), provided by ConfigStoreModule. */
+/**
+ * Injection token of the cache TTL in ms (env SETTINGS_CACHE_MS), provided by ConfigStoreModule.
+ */
 export { SETTINGS_CACHE_MS };
 
 /**
  * Academy settings (`settings` table, keys in the shared registry): the typed facade the module
- * readers use. Reads stay on the legacy path (one query, `readSettings`, cached for SETTINGS_CACHE_MS)
- * until GET /admin/config/parity has been empty for a week on staging (docs/26 §4); writes go through
- * ConfigStore (config_set). Every ConfigStore invalidation drops this cache too. A module reads its keys
- * through its typed reader (`modules/<m>/<m>.settings.ts`, common/settings/settings-slice.ts).
+ * readers use. Reads stay on the legacy path (one query, `readSettings`, cached for
+ * SETTINGS_CACHE_MS) until GET /admin/config/parity has been empty for a week on staging (docs/26
+ * §4); writes go through ConfigStore (config_set). Every ConfigStore invalidation drops this cache
+ * too. A module reads its keys through its typed reader (`modules/<m>/<m>.settings.ts`,
+ * common/settings/settings-slice.ts).
  */
 @Injectable()
 export class SettingsService {
   private cached: { at: number; value: Promise<AcademySettings> } | null = null;
   /** After an invalidation the next load reads the database (not the shared copy) and shares it. */
   private fresh = false;
-  /** The rows shared with the other API copies (REDIS_URL); absent in unit tests = this process only. */
+  /**
+   * The rows shared with the other API copies (REDIS_URL); absent in unit tests = this process
+   * only.
+   */
   @Optional() @Inject(SharedCache) private readonly shared?: SharedCache;
 
   constructor(
@@ -38,14 +44,17 @@ export class SettingsService {
     store.onChange(() => this.invalidate());
   }
 
-  /** Every setting, defaults filled in for missing or malformed rows (a copy: callers may spread it). */
+  /**
+   * Every setting, defaults filled in for missing or malformed rows (a copy: callers may spread
+   * it).
+   */
   async all(now = Date.now()): Promise<AcademySettings> {
     if (!this.cached || now - this.cached.at >= this.ttlMs) {
       const read = this.load();
       const entry = { at: now, value: read.then((r) => r.value) };
       this.cached = entry;
-      // Rows taken from the shared copy keep only what is left of the TTL since their database read.
-      // A failed read is not cached: the next call asks the database again.
+      // Rows taken from the shared copy keep only what is left of the TTL since their database
+      // read. A failed read is not cached: the next call asks the database again.
       read.then(
         ({ age }) => void (entry.at = now - age),
         () => {
@@ -68,9 +77,9 @@ export class SettingsService {
   }
 
   /**
-   * PATCH /settings and the module writers: ONE config_set for every given key, stamped with the admin
-   * (last writer wins: current versions, retried once on a concurrent write). null is stored as JSON
-   * null, which reads back as the default (late_cancel_hours OFF); a row is never deleted.
+   * PATCH /settings and the module writers: ONE config_set for every given key, stamped with the
+   * admin (last writer wins: current versions, retried once on a concurrent write). null is stored
+   * as JSON null, which reads back as the default (late_cancel_hours OFF); a row is never deleted.
    */
   async write(values: Partial<AcademySettings>, actorId: string): Promise<void> {
     try {
@@ -81,10 +90,10 @@ export class SettingsService {
   }
 
   /**
-   * One switch written WITHOUT a version (the gate routes, comms_source): one upsert, as before 26-P2,
-   * so turning a switch OFF never depends on a version read or a concurrent write (docs/26 §2f: OFF is
-   * always accepted). Never null: those switches are booleans or one of two words. actorId null = a
-   * system job (CrmMediaCopyJob turning its own switch off).
+   * One switch written WITHOUT a version (the gate routes, comms_source): one upsert, as before
+   * 26-P2, so turning a switch OFF never depends on a version read or a concurrent write (docs/26
+   * §2f: OFF is always accepted). Never null: those switches are booleans or one of two words.
+   * actorId null = a system job (CrmMediaCopyJob turning its own switch off).
    */
   async writeSwitch(key: string, value: boolean | string, actorId: string | null): Promise<void> {
     try {
@@ -104,7 +113,8 @@ export class SettingsService {
       if (error) throw new Error(`settings read failed: ${error.message}`);
       return data;
     };
-    // Shared for half the TTL, like the permission sets (an entry's age is taken off the local TTL).
+    // Shared for half the TTL, like the permission sets (an entry's age is taken off the local
+    // TTL).
     const ttlMs = Math.floor(this.ttlMs / 2);
     const rows = this.shared ? await this.shared.readEntry({ key: CACHE_KEYS.settingsRows, ttlMs, load, fresh }) : { value: await load(), age: 0 };
     return { value: readSettings(rows.value), age: rows.age };

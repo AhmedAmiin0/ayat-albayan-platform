@@ -33,7 +33,10 @@ export class MessagesController {
     return this.sendGate.view();
   }
 
-  /** failed → queued, attempts 0 (409 not_retryable otherwise; 409 auto_off for a held row while OFF). */
+  /**
+   * failed → queued, attempts 0 (409 not_retryable otherwise; 409 auto_off for a held row while
+   * OFF).
+   */
   @Post(':id/retry')
   @HttpCode(200)
   async retry(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
@@ -55,7 +58,10 @@ export class MessagesController {
     return this.audited({ change: await this.appSends.start(id), action: 'message_app_send', user });
   }
 
-  /** M3: the admin opened wa.me; held (failed «handed_off») until M2 or M1. 409 not_manual otherwise. */
+  /**
+   * M3: the admin opened wa.me; held (failed «handed_off») until M2 or M1. 409 not_manual
+   * otherwise.
+   */
   @Post(':id/hand-off')
   @HttpCode(200)
   async handOff(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {

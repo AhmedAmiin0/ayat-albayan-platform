@@ -49,7 +49,10 @@ function metaOf(p: TemplatePatch, prev: ApprovalRow | undefined): Meta {
   return { meta_id, quality: p.quality, last_error: p.last_error ?? null };
 }
 
-/** One key on one number: Meta's view, or (absent) not_submitted stays not_submitted and anything else is missing. */
+/**
+ * One key on one number: Meta's view, or (absent) not_submitted stays not_submitted and anything
+ * else is missing.
+ */
 function approval(input: { row: TemplateRow; prev: ApprovalRow | undefined; meta: readonly MetaTemplate[] }, numberId: string, now: Date): ApprovalWrite {
   const { row, prev } = input;
   const p = wabaSyncPatch({ ...row, status: prev?.status ?? 'not_submitted' }, input.meta, now);

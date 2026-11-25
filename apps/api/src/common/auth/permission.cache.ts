@@ -6,7 +6,8 @@ import type { SharedCache } from '@/common/infra/cache/shared-cache';
 export const PERMISSION_TTL_MS = 30_000;
 /**
  * The shared copy lives half as long, and a local copy taken from it keeps only what is left of
- * PERMISSION_TTL_MS since its database read: end to end a set is never older than PERMISSION_TTL_MS.
+ * PERMISSION_TTL_MS since its database read: end to end a set is never older than
+ * PERMISSION_TTL_MS.
  */
 const SHARED_TTL_MS = PERMISSION_TTL_MS / 2;
 
@@ -22,8 +23,8 @@ interface Entry {
  * every role / assignment change) makes changes immediate here and, with Redis, in every other API
  * copy and the worker (the `permissions` topic). On a miss the shared copy (permission names only,
  * 15 s) is asked before the DB, except just after a change (SharedCache reads the DB then).
- * Provided as a plain value by AuthModule (the clock is injectable for tests). Concurrent requests of
- * one user share a single load; a failed load (a disabled account included) is never cached.
+ * Provided as a plain value by AuthModule (the clock is injectable for tests). Concurrent requests
+ * of one user share a single load; a failed load (a disabled account included) is never cached.
  */
 export class PermissionCache {
   private readonly entries = new Map<string, Entry>();

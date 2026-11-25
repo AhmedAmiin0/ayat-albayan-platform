@@ -27,7 +27,9 @@ const ROW_OF: Record<AnyPushKind, NotificationKey> = {
   lesson_request_declined: 'lesson_request_declined',
 };
 
-/** Where a staff notification goes: the bell row (push_notifications), and the browser / app push. */
+/**
+ * Where a staff notification goes: the bell row (push_notifications), and the browser / app push.
+ */
 export interface PushRoute {
   bell: boolean;
   push: boolean;
@@ -35,8 +37,8 @@ export interface PushRoute {
 
 /**
  * The row's notification rule (docs/23 §2c): off → nothing at all; on without 'push' among its
- * channels → the bell row only. Rules unreadable (null snapshot): the bell row still (an alert is never
- * lost), no device push; a locked row (reminder_failed) keeps both. Pure.
+ * channels → the bell row only. Rules unreadable (null snapshot): the bell row still (an alert is
+ * never lost), no device push; a locked row (reminder_failed) keeps both. Pure.
  */
 export function pushRoute(snap: RulesSnapshot | null, kind: AnyPushKind): PushRoute {
   const key = ROW_OF[kind];

@@ -41,7 +41,9 @@ function setup(opts: { source: 'legacy' | 'module'; moduleValues: Record<string,
   return { svc, settings, config, audit, rules, order };
 }
 
-/** The test env has no WhatsApp line: a module side that adds one differs; an empty one does not. */
+/**
+ * The test env has no WhatsApp line: a module side that adds one differs; an empty one does not.
+ */
 const DIFFERENT = { WA_PHONE_NUMBER_ID: '1000000001' };
 const RULE_DIFF: RuleParityDiff = { key: 'lesson_reminder', field: 'timing', legacy: '{"minutes_before":60}', module: '{"minutes_before":30}' };
 

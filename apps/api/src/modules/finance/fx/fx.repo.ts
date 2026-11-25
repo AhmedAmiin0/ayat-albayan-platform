@@ -26,7 +26,10 @@ export class FxRepo {
     return data;
   }
 
-  /** The SAR→quote rate in force at `at`: the newest provider update not after it (payments in another currency). */
+  /**
+   * The SAR→quote rate in force at `at`: the newest provider update not after it (payments in
+   * another currency).
+   */
   async atOrBefore(quote: string, at: string): Promise<FxRow | null> {
     const { data, error } = await this.db
       .from('fx_rates')

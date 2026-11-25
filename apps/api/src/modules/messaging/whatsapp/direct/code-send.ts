@@ -13,7 +13,10 @@ import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp
 /** The line every sign-in / password code leaves from (docs/30 §4). */
 const CODE_LINE = 'chat' as const;
 
-/** sent | unavailable (gate closed, template not approved, no line / number can send it) | failed (the provider refused). */
+/**
+ * sent | unavailable (gate closed, template not approved, no line / number can send it) | failed
+ * (the provider refused).
+ */
 type CodeSendResult = { status: 'sent' } | { status: 'unavailable' } | { status: 'failed'; error: string };
 
 /**
@@ -39,7 +42,10 @@ export class CodeSend {
     @Optional() @Inject(NumberRoutes) private readonly routes?: NumberRoutes,
   ) {}
 
-  /** Can a code go out now? The template approved, the gate open and a chat line / number that can send it. */
+  /**
+   * Can a code go out now? The template approved, the gate open and a chat line / number that can
+   * send it.
+   */
   async available(): Promise<boolean> {
     const template = await this.template();
     if (!template || !(await this.gate.open())) return false;
@@ -84,7 +90,10 @@ export class CodeSend {
   }
 }
 
-/** An in-memory row for the dispatch: the code fills {{1}} and the copy-code button; nothing is stored. */
+/**
+ * An in-memory row for the dispatch: the code fills {{1}} and the copy-code button; nothing is
+ * stored.
+ */
 export function codeRow(input: { phone: string; code: string; template: Pick<TemplateRow, 'key'> }): DueMessage {
   return {
     id: 'account-code',

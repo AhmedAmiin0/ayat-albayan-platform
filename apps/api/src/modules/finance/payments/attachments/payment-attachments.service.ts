@@ -12,7 +12,10 @@ import { PaymentsRepo } from '@/modules/finance/payments/payments.repo';
 /** A client-sent path that passed every check: the mime is the sniffed one, never the client's. */
 export type CheckedAttachment = { path: string; mime: string; size: number | null };
 type WithReceipt = { id: string; receipt_path: string | null };
-/** paymentId: a path this payment already holds is fine (its own replay / edit); any other owner is 409. */
+/**
+ * paymentId: a path this payment already holds is fine (its own replay / edit); any other owner is
+ * 409.
+ */
 export type AttachmentCheck = { subscriptionId: string; paths: readonly string[]; paymentId?: string | undefined };
 
 const MIMES: ReadonlySet<string> = new Set(RECEIPT_MIMES);
@@ -54,7 +57,10 @@ export class PaymentAttachments {
     await this.rows.save(files.map((f) => ({ payment_id: paymentId, path: f.path, mime: f.mime, size: f.size, created_by: actorId })));
   }
 
-  /** The legacy receipt first (id 'receipt'), then the rows oldest first; each signed for 1 h (a lost object is skipped). */
+  /**
+   * The legacy receipt first (id 'receipt'), then the rows oldest first; each signed for 1 h (a
+   * lost object is skipped).
+   */
   async views(payment: WithReceipt): Promise<PaymentAttachmentView[]> {
     const rows = await this.rows.forPayment(payment.id);
     const legacy = payment.receipt_path
@@ -72,7 +78,10 @@ export class PaymentAttachments {
     return signed.flat();
   }
 
-  /** A salesperson's own payment only (recorded_by = her); 404 payment_not_found otherwise (no existence leak). */
+  /**
+   * A salesperson's own payment only (recorded_by = her); 404 payment_not_found otherwise (no
+   * existence leak).
+   */
   async ownViews(paymentId: string, userId: string): Promise<PaymentAttachmentView[]> {
     const row = await this.payments.get(paymentId);
     if (row?.recorded_by !== userId) throw notFound('payment_not_found');

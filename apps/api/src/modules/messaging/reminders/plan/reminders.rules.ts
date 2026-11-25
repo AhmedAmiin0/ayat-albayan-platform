@@ -9,7 +9,10 @@ import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store
  * and the teacher's lead time is the families'.
  */
 export interface ReminderRules {
-  /** lesson_reminder.timing.minutes_before: the same-day reminder, the join link and the confirmation push. */
+  /**
+   * lesson_reminder.timing.minutes_before: the same-day reminder, the join link and the
+   * confirmation push.
+   */
   minutesBefore: number;
   /** lesson_reminder (on unless a module-mode row switches it off). */
   sameDay: boolean;
@@ -44,7 +47,10 @@ export function reminderRules(snap: RulesSnapshot): ReminderRules {
   };
 }
 
-/** A day-before send_at_local can be as early as 06:00 the previous day: up to ~42 h ahead (DST included). */
+/**
+ * A day-before send_at_local can be as early as 06:00 the previous day: up to ~42 h ahead (DST
+ * included).
+ */
 const DAY_BEFORE_AT_HOURS = 48;
 
 /**

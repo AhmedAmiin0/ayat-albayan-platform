@@ -28,7 +28,9 @@ export function bodyValues(row: TemplateRow, params: TemplateParams): string[] {
   });
 }
 
-/** A document header's link and filename (the signed Storage URL); null for a template without one. */
+/**
+ * A document header's link and filename (the signed Storage URL); null for a template without one.
+ */
 export function documentHeader(input: TemplateSend): { link: string; filename: string } | null {
   if (input.template.header_format !== 'document') return null;
   const doc = input.params.document;
@@ -36,7 +38,9 @@ export function documentHeader(input: TemplateSend): { link: string; filename: s
   return { link: input.documentUrl, filename: doc.filename };
 }
 
-/** One send-time button value: a URL suffix ({{1}}) or a quick-reply payload, by the button's index. */
+/**
+ * One send-time button value: a URL suffix ({{1}}) or a quick-reply payload, by the button's index.
+ */
 interface ButtonValue {
   index: number;
   kind: 'url' | 'quick_reply';

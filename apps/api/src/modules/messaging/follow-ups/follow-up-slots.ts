@@ -6,7 +6,9 @@ import { FollowUpsRepo } from './follow-ups.repo';
 
 const HOUR = 60 * 60_000;
 
-/** The follow_up_slots rule's slot window (legacy: settings.follow_up_slots_from_hours / _to_days). */
+/**
+ * The follow_up_slots rule's slot window (legacy: settings.follow_up_slots_from_hours / _to_days).
+ */
 export type SlotWindow = Pick<RuleTiming<'follow_up_slots'>, 'slots_from_hours' | 'slots_to_days'>;
 
 /**

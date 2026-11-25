@@ -15,7 +15,10 @@ const LIVE = { data: [{ key: 'google_sync_enabled', value: true }, { key: 'googl
 const OFF = { data: [{ key: 'google_sync_enabled', value: false }] };
 const factory: GoogleClientFactory = { client: () => new FakeGoogle(), oauth: () => ({}) as never };
 
-/** The real settings / account / outbox queries on a counting fake db (one `trips` entry = one round trip). */
+/**
+ * The real settings / account / outbox queries on a counting fake db (one `trips` entry = one round
+ * trip).
+ */
 function setup(results: Parameters<typeof fakeDb>[0]) {
   const fake = fakeDb(results);
   const account = new GoogleAccountQueries(fake.db);

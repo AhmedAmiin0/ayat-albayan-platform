@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { appSecrets, bootGaps, duplicatePhone, lineEnvs, lineGaps, lineNumbers, lineProvider, loadEnv, sendingAllowed } from '@/config/env/env';
 import { crmGaps, crmWebhookSecret } from './env.crm';
 
-// docs/19 «crm driver»: a line on the academy CRM's REST API — its base and key only, no ids of ours.
+// docs/19 «crm driver»: a line on the academy CRM's REST API — its base and key only, no ids of
+// ours.
 
 const BASE = { SUPABASE_URL: 'http://127.0.0.1:54321', SUPABASE_SERVICE_ROLE_KEY: 'k' };
 const WA = { WA_API_BASE: 'http://localhost:4010', WA_PHONE_NUMBER_ID: 'n-phone', WA_WABA_ID: 'n-waba', WA_ACCESS_TOKEN: 'meta-token', WA_APP_SECRET: 'app-secret' };

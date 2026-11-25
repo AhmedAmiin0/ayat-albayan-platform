@@ -3,10 +3,14 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { inTempDir } from './temp-dir';
 
-/** Runs ffmpeg with these arguments; rejects on a non-zero exit, a missing binary or the timeout. */
+/**
+ * Runs ffmpeg with these arguments; rejects on a non-zero exit, a missing binary or the timeout.
+ */
 export type FfmpegRun = (args: readonly string[]) => Promise<void>;
 
-/** Long enough for a 10-minute note on a small instance; a stuck ffmpeg never holds a send longer. */
+/**
+ * Long enough for a 10-minute note on a small instance; a stuck ffmpeg never holds a send longer.
+ */
 const FFMPEG_TIMEOUT_MS = 30_000;
 
 /**

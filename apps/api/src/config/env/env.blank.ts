@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-// The env schema's blank handling: one copy for env.ts, env.kapso.ts, env.google.ts and env.web-push.ts.
+// The env schema's blank handling: one copy for env.ts, env.kapso.ts, env.google.ts and
+// env.web-push.ts.
 
 /** `KEY=` (empty, as in .env.example) means unset, never a boot failure. */
 export const blankIsUnset = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);

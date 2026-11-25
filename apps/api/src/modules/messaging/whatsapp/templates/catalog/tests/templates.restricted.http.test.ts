@@ -20,7 +20,10 @@ const ROWS = [
 /** The three defaults: trial_reschedule joined free_trial_invite and welcome_greeting. */
 const THREE = ['free_trial_invite', 'welcome_greeting', 'trial_reschedule'];
 
-/** The classroom assistant granted messages.read; the custom role (base sales) and the teacher get customGrants. */
+/**
+ * The classroom assistant granted messages.read; the custom role (base sales) and the teacher get
+ * customGrants.
+ */
 let customGrants: Permission[] = [];
 const resolver: PermissionResolver = async (user) => {
   if (!user.role) return [];

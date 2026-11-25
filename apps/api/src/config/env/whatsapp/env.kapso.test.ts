@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { duplicatePhone, lineEnvs, lineGaps, lineProvider, loadEnv, sendingAllowed } from '@/config/env/env';
 
-// docs/19: each line resolves its own driver; default meta, so nothing changes until an admin switches.
+// docs/19: each line resolves its own driver; default meta, so nothing changes until an admin
+// switches.
 
 const BASE = { SUPABASE_URL: 'http://127.0.0.1:54321', SUPABASE_SERVICE_ROLE_KEY: 'k' };
 const WA = { WA_API_BASE: 'http://localhost:4010', WA_PHONE_NUMBER_ID: 'n-phone', WA_WABA_ID: 'n-waba', WA_ACCESS_TOKEN: 'meta-token', WA_APP_ID: 'app-1' };

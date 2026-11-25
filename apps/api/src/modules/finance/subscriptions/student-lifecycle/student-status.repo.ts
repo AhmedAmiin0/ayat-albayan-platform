@@ -14,7 +14,9 @@ interface StudentTzRow {
   tz: string;
 }
 
-/** The reads and the compare-and-set writes of the automatic student status changes (docs/11 §7). */
+/**
+ * The reads and the compare-and-set writes of the automatic student status changes (docs/11 §7).
+ */
 @Injectable()
 export class StudentStatusRepo {
   constructor(
@@ -51,7 +53,9 @@ export class StudentStatusRepo {
     return data;
   }
 
-  /** A recorded payment (kind payment, amount > 0) of any of the student's packages still exists. */
+  /**
+   * A recorded payment (kind payment, amount > 0) of any of the student's packages still exists.
+   */
   async hasPositivePayment(studentId: string): Promise<boolean> {
     const { count, error } = await this.db
       .from('payments')
@@ -63,7 +67,9 @@ export class StudentStatusRepo {
     return (count ?? 0) > 0;
   }
 
-  /** Compare-and-set on the status read; audited only when it changed a row (idempotent, rule 8). */
+  /**
+   * Compare-and-set on the status read; audited only when it changed a row (idempotent, rule 8).
+   */
   async move(m: StatusMove, audit: MoveAudit): Promise<boolean> {
     const { data, error } = await this.db
       .from('students')

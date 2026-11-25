@@ -40,7 +40,10 @@ export function ruleDifferences(input: RulesInput): RuleParityDiff[] {
   });
 }
 
-/** The legacy keys as the module path's effective rules say them (the flip back, the module-mode overlay). */
+/**
+ * The legacy keys as the module path's effective rules say them (the flip back, the module-mode
+ * overlay).
+ */
 export function moduleLegacyValues(input: RulesInput): Partial<RuleSettings> {
   return Object.assign({}, ...MAPPED.map((key) => legacyValues(key, resolved(key, input, 'module')))) as Partial<RuleSettings>;
 }

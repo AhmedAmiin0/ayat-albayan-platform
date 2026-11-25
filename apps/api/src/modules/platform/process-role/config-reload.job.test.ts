@@ -10,7 +10,10 @@ import { GoogleConnection, GoogleSettings } from '@/modules/platform/google-sync
 import { TranslationsService } from '@/modules/platform/translations';
 import { ConfigReloadJob } from './config-reload.job';
 
-/** The worker's services, each one fake method; `missing` ones are not in the app (ModuleRef throws). */
+/**
+ * The worker's services, each one fake method; `missing` ones are not in the app (ModuleRef
+ * throws).
+ */
 function worker(missing: readonly unknown[] = []) {
   const fakes = new Map<unknown, Record<string, ReturnType<typeof vi.fn>>>([
     [IntegrationConfigService, { reloadHere: vi.fn(async () => undefined) }],

@@ -20,7 +20,10 @@ export const CALL_EVENTS = Symbol('CALL_EVENTS');
 
 const isUuid = (v: string | null): v is string => v !== null && z.uuid().safeParse(v).success;
 
-/** The machine event a webhook item stands for; null = nothing to do (an inbound offer is handled apart). */
+/**
+ * The machine event a webhook item stands for; null = nothing to do (an inbound offer is handled
+ * apart).
+ */
 export function machineEvent(e: CallWebhookEvent): CallEvent | null {
   const at = e.at.toISOString();
   if (e.kind === 'terminate') return { type: 'terminate', at, failed: e.status === 'FAILED', duration: e.duration };

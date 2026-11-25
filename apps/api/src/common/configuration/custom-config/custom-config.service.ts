@@ -11,7 +11,9 @@ const PUBLIC_ROWS_TTL_MS = 60_000;
 
 type PublicRow = { key: string; value: Json; is_public: boolean };
 
-/** `custom_config` (migration 20261005000250): free-form admin entries, written by the service role. */
+/**
+ * `custom_config` (migration 20261005000250): free-form admin entries, written by the service role.
+ */
 @Injectable()
 export class CustomConfigService {
   constructor(
@@ -31,7 +33,10 @@ export class CustomConfigService {
     return data ? toCustomView(data) : null;
   }
 
-  /** Public rows only, as the GET /settings/public whitelist's input (shared for a minute with Redis). */
+  /**
+   * Public rows only, as the GET /settings/public whitelist's input (shared for a minute with
+   * Redis).
+   */
   publicRows(): Promise<PublicRow[]> {
     const load = (): Promise<PublicRow[]> => this.readPublic();
     return this.shared ? this.shared.read({ key: CACHE_KEYS.customPublic, ttlMs: PUBLIC_ROWS_TTL_MS, load }) : load();

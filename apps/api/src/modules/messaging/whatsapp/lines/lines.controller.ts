@@ -24,7 +24,10 @@ export class LinesController {
     private readonly numbers: NumbersHealth,
   ) {}
 
-  /** Always [notifications, chat]; an unconfigured line answers configured:false and makes no request. */
+  /**
+   * Always [notifications, chat]; an unconfigured line answers configured:false and makes no
+   * request.
+   */
   @Post('check')
   @HttpCode(200)
   @Permissions('templates.manage')

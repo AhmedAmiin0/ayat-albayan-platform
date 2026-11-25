@@ -27,7 +27,9 @@ export function pushEndpointAllowed(endpoint: string): boolean {
 
 const base64url = (len: number) => z.string().regex(new RegExp(`^[A-Za-z0-9_-]{${len}}$`), 'invalid_key');
 
-/** PUT /me/web-push: PushSubscription.toJSON() (migration 380's column checks, plus the allow-list). */
+/**
+ * PUT /me/web-push: PushSubscription.toJSON() (migration 380's column checks, plus the allow-list).
+ */
 export const webPushSubscriptionSchema = z.object({
   endpoint: z.string().max(2048).refine(pushEndpointAllowed, 'endpoint_not_allowed'),
   expirationTime: z.number().nullable().optional(),

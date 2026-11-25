@@ -2,7 +2,9 @@ import { publicSettings, SETTING_DEFAULTS, type AcademySettings } from '@ab/sett
 import { vi } from 'vitest';
 import type { SettingsService } from './settings.service';
 
-/** Tests only: a SettingsService (storage API) answering the registry defaults, with `over` on top. */
+/**
+ * Tests only: a SettingsService (storage API) answering the registry defaults, with `over` on top.
+ */
 export function fakeSettings(over: Partial<AcademySettings> = {}): SettingsService {
   const all = vi.fn(async (): Promise<AcademySettings> => ({ ...SETTING_DEFAULTS, ...over }));
   return {

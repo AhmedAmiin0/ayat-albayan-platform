@@ -7,7 +7,10 @@ import { pageQuerySchema, type PageQuery } from '@/common/http/http';
 
 export type InvoiceSortKey = (typeof INVOICE_SORT_KEYS)[number];
 
-/** GET /invoices/recent?from&to (Riyadh days, inclusive)&kind&student&sort&dir&page&pageSize (R-NFR-08). */
+/**
+ * GET /invoices/recent?from&to (Riyadh days, inclusive)&kind&student&sort&dir&page&pageSize
+ * (R-NFR-08).
+ */
 export const invoiceRecentQuery = pageQuerySchema
   .extend({
     from: localDate.optional(),

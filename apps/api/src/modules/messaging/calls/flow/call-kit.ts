@@ -6,7 +6,9 @@ import { CALLS_API, type CallsApi } from '@/modules/messaging/calls/kapso/calls-
 import { callState, type CallMove, type CallRow } from '@/modules/messaging/calls/store/call-row';
 import { CallsRepo } from '@/modules/messaging/calls/store/calls.repo';
 
-/** Concurrent webhook items on one call: each re-read judges the event again, a few times at most. */
+/**
+ * Concurrent webhook items on one call: each re-read judges the event again, a few times at most.
+ */
 const MAX_ATTEMPTS = 4;
 
 /** Extra columns a move may write beside the machine's patch (who took it, why it failed). */

@@ -12,7 +12,10 @@ export const INTERNAL_HEADER = 'x-ab-internal';
 
 const log = new Logger('WorkerKick');
 
-/** Proof that a kick comes from an API copy: an HMAC of the service-role key both read from the same .env. */
+/**
+ * Proof that a kick comes from an API copy: an HMAC of the service-role key both read from the same
+ * .env.
+ */
 export const internalToken = (): string =>
   createHmac('sha256', loadEnv().SUPABASE_SERVICE_ROLE_KEY)
     .update('ab-worker-kick')
@@ -44,7 +47,10 @@ const internalHttp = (url: string) =>
     errors: { default: failed },
   });
 
-/** One authenticated POST to an internal route. Never throws: a refused or slow target is only logged. */
+/**
+ * One authenticated POST to an internal route. Never throws: a refused or slow target is only
+ * logged.
+ */
 async function postInternal(url: string, what: string, query?: KickQuery): Promise<void> {
   try {
     // The token first: an env read that fails is logged with its own message, as before.
@@ -58,8 +64,8 @@ async function postInternal(url: string, what: string, query?: KickQuery): Promi
 
 /**
  * «Run now» from an `api` process: asks the worker to kick the job (its `lane`). The worker answers
- * 202 at once; with `wait` it answers once the pass is done (docs/42 42-8). Never throws (as a local
- * kick): no WORKER_URL, a refused or slow worker only means the job's own poll picks it up.
+ * 202 at once; with `wait` it answers once the pass is done (docs/42 42-8). Never throws (as a
+ * local kick): no WORKER_URL, a refused or slow worker only means the job's own poll picks it up.
  */
 export async function kickWorker(name: string, options: KickOptions = {}): Promise<void> {
   const base = workerUrl();
@@ -72,10 +78,10 @@ export async function kickWorker(name: string, options: KickOptions = {}): Promi
 }
 
 /**
- * After an admin save in an `api` process (which reloaded its own config already): the worker reloads
- * its copy too (ConfigReloadJob), and so does every other API copy (PEER_URLS), so no cache waits for its
- * own refresh. Not awaited: the save never waits on a busy worker (a PDF render), and nothing here
- * throws. Elsewhere a no-op: `all` is one process, a `worker` serves no saves.
+ * After an admin save in an `api` process (which reloaded its own config already): the worker
+ * reloads its copy too (ConfigReloadJob), and so does every other API copy (PEER_URLS), so no cache
+ * waits for its own refresh. Not awaited: the save never waits on a busy worker (a PDF render), and
+ * nothing here throws. Elsewhere a no-op: `all` is one process, a `worker` serves no saves.
  */
 export function kickConfigReload(): void {
   if (appRole() !== 'api') return;

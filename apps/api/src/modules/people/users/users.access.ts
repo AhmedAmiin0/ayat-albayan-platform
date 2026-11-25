@@ -17,7 +17,10 @@ export class UserAccess {
     return { roles, profiles };
   }
 
-  /** The state plus the target profile (404 user_not_found). A student / guardian is not in state.profiles. */
+  /**
+   * The state plus the target profile (404 user_not_found). A student / guardian is not in
+   * state.profiles.
+   */
   async target(id: string): Promise<{ state: UserState; target: StaffProfile }> {
     const [state, target] = await Promise.all([this.state(), this.store.profile(id)]);
     if (!target) throw notFound('user_not_found');

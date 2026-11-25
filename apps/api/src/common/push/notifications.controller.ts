@@ -22,7 +22,10 @@ export class NotificationsController {
     return this.queries.list(user.id, parseOrThrow(notificationsQuerySchema, query));
   }
 
-  /** `{ ids }` marks those; no body / `{}` marks every unread row. Ids of others' rows change nothing. */
+  /**
+   * `{ ids }` marks those; no body / `{}` marks every unread row. Ids of others' rows change
+   * nothing.
+   */
   @Post('read')
   @HttpCode(204)
   read(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
@@ -38,7 +41,9 @@ export class NotificationsController {
 export class WebPushController {
   constructor(private readonly queries: NotificationsRepo) {}
 
-  /** The VAPID public key the browser subscribes with; null = browser push is off on this server. */
+  /**
+   * The VAPID public key the browser subscribes with; null = browser push is off on this server.
+   */
   @Get('key')
   key(): WebPushKey {
     return { publicKey: webPushEnv(loadEnv())?.publicKey ?? null };

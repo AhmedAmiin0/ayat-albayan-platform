@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 
-/** What pdfinfo said about a message's PDF: its page count (0 = no preview) and its size in bytes. */
+/**
+ * What pdfinfo said about a message's PDF: its page count (0 = no preview) and its size in bytes.
+ */
 export type PdfDoc = { pages: number; bytes: number };
 
 /**

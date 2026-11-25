@@ -15,7 +15,10 @@ interface ExternalScope {
   numberId: string | null;
 }
 
-/** Thin supabase-js access for messages sent outside the app (external/); the rules live in the services. */
+/**
+ * Thin supabase-js access for messages sent outside the app (external/); the rules live in the
+ * services.
+ */
 @Injectable()
 export class ExternalRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -47,7 +50,10 @@ export class ExternalRepo {
     return (data ?? []).length > 0;
   }
 
-  /** Inserts the row; false when the wamid is already stored (unique wa_message_id: on conflict do nothing). */
+  /**
+   * Inserts the row; false when the wamid is already stored (unique wa_message_id: on conflict do
+   * nothing).
+   */
   async insert(row: TablesInsert<'messages'>): Promise<boolean> {
     const { data, error } = await this.db
       .from('messages')

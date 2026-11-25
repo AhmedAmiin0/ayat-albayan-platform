@@ -17,7 +17,9 @@ export function isModuleOwned(key: string): boolean {
   return ownerOf(key) !== null || configDef(key)?.patch === false;
 }
 
-/** The base-role admin (not only a custom role holding the permission): the academy's Google rows. */
+/**
+ * The base-role admin (not only a custom role holding the permission): the academy's Google rows.
+ */
 export const isBaseAdmin = (user: AuthUser): boolean => user.role === 'admin';
 
 /**

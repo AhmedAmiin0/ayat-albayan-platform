@@ -27,7 +27,9 @@ const stickerOf = (row: ThreadMessageRow): { payload?: Json } =>
 
 const notForwardable = () => waHttpError('not_forwardable', HttpStatus.BAD_REQUEST);
 
-/** The name a forwarded file reaches the family with: ours as sent, else the copy's own (fwd-….ext). */
+/**
+ * The name a forwarded file reaches the family with: ours as sent, else the copy's own (fwd-….ext).
+ */
 const fileName = (row: ThreadMessageRow, path: string): string => row.media_name ?? storageKeyOf(path).split('/').at(-1) ?? 'file';
 
 /**
@@ -51,7 +53,10 @@ export class ForwardFiles {
     private readonly storage: StorageService,
   ) {}
 
-  /** 400 not_forwardable for a file we never had; 410 media_expired / 409 crm_no_media from the fetch. */
+  /**
+   * 400 not_forwardable for a file we never had; 410 media_expired / 409 crm_no_media from the
+   * fetch.
+   */
   async copy(row: ThreadMessageRow, at: { actorId: string; requestId: string }): Promise<ForwardFile> {
     const from = await this.source(row);
     const mime = baseMime(from.mime);
@@ -79,7 +84,10 @@ export class ForwardFiles {
     });
   }
 
-  /** Ours as sent (out/…); else theirs or an echo of the WhatsApp Business app (Meta's media id), cached first. */
+  /**
+   * Ours as sent (out/…); else theirs or an echo of the WhatsApp Business app (Meta's media id),
+   * cached first.
+   */
   private async source(row: ThreadMessageRow): Promise<{ path: string; mime: string | null }> {
     if (row.direction === 'outbound' && row.media_path && isSentFilePath(row.media_path)) return { path: row.media_path, mime: row.media_mime };
     if (row.direction === 'outbound' && (!row.media_id || !isChatViewMime(row.media_mime))) throw notForwardable();

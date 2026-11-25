@@ -48,7 +48,10 @@ export function compareEffective(sides: ParitySides): ConfigParityDiff[] {
   return diffs;
 }
 
-/** The legacy effective values (readSettings over the rows) vs ConfigStore's decode of the SAME rows. */
+/**
+ * The legacy effective values (readSettings over the rows) vs ConfigStore's decode of the SAME
+ * rows.
+ */
 export function configParity(rows: Rows): ConfigParityResponse {
   const diffs = compareEffective({ legacy: readSettings(rows), store: decodeAll(rows), rows });
   return { diffs, checkedKeys: SETTING_KEYS.length };
@@ -56,7 +59,8 @@ export function configParity(rows: Rows): ConfigParityResponse {
 
 /**
  * GET /admin/config/parity (docs/26 §4 «Parity»): run on staging and in CI on the e2e database; the
- * read switch waits for ≥ 1 week of empty `diffs`. Uncached rows, one select for both sides. Base admin.
+ * read switch waits for ≥ 1 week of empty `diffs`. Uncached rows, one select for both sides. Base
+ * admin.
  */
 @ApiTags('config')
 @ApiBearerAuth()

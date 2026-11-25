@@ -23,7 +23,10 @@ export interface Orderable<T> {
   order(column: string, options?: OrderOptions): T;
 }
 
-/** `.order()` for the requested key (asc unless `dir: 'desc'`), then the fallback; no key → fallback. */
+/**
+ * `.order()` for the requested key (asc unless `dir: 'desc'`), then the fallback; no key →
+ * fallback.
+ */
 export function applySort<K extends string, T extends Orderable<T>>(query: T, sort: ListSort<K>, spec: SortSpec<K>): T {
   const { fallback } = spec;
   const picked = sort.sort === undefined ? undefined : spec.columns[sort.sort];

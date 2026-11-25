@@ -2,7 +2,10 @@ import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { describe, expect, it } from 'vitest';
 import { trustProxyHops } from '@/config/role/app-role';
 
-/** req.ip as the API sees it, behind `hops` trusted proxies (main.ts passes trustProxyHops() to Fastify). */
+/**
+ * req.ip as the API sees it, behind `hops` trusted proxies (main.ts passes trustProxyHops() to
+ * Fastify).
+ */
 async function ipSeen(hops: number, request: { remote: string; xff?: string }): Promise<string> {
   const app = new FastifyAdapter({ trustProxy: hops }).getInstance();
   app.get('/ip', (req) => ({ ip: req.ip }));
@@ -17,7 +20,8 @@ async function ipSeen(hops: number, request: { remote: string; xff?: string }): 
 }
 
 describe('trustProxy hop count', () => {
-  // The host Caddy replaces a visitor's X-Forwarded-For with the visitor; ayat-lb appends the host Caddy's address.
+  // The host Caddy replaces a visitor's X-Forwarded-For with the visitor; ayat-lb appends the host
+  // Caddy's address.
   const viaLb = { remote: '172.18.0.5', xff: '203.0.113.9, 172.18.0.1' };
   const spoofed = { remote: '172.18.0.5', xff: '6.6.6.6, 203.0.113.9, 172.18.0.1' };
 

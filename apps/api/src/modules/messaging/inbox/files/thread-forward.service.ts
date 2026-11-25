@@ -40,7 +40,10 @@ export function skipOf(e: unknown): ForwardSkip {
   return SKIPS.has(code) ? (code as ForwardSkip) : 'send_failed';
 }
 
-/** 404 for a message the actor cannot read (never reveal another chat), 400 for a template or an empty row. */
+/**
+ * 404 for a message the actor cannot read (never reveal another chat), 400 for a template or an
+ * empty row.
+ */
 function assertForwardable(row: ThreadMessageRow | null, who: Omit<ForwardInput, 'input' | 'actorId'>): ThreadMessageRow {
   const hidden = !row || (who.scope && !who.scope.phones.has(row.phone_e164)) || (who.sales && !visibleToSales(row));
   if (hidden) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);

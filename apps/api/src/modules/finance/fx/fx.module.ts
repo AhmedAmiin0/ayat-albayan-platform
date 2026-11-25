@@ -5,7 +5,10 @@ import { FxRepo } from './fx.repo';
 import { FxService } from './fx.service';
 import { FxSettings } from './fx.settings';
 
-/** SAR→X exchange rates for USD quotes (docs/08 §4). No route: pricing (and Phase 3) inject FxService. */
+/**
+ * SAR→X exchange rates for USD quotes (docs/08 §4). No route: pricing (and Phase 3) inject
+ * FxService.
+ */
 @Module({
   providers: [
     FxSettings,

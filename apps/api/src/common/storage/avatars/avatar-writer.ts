@@ -15,10 +15,10 @@ export interface AvatarSlot {
 const isAvatarMime = (mime: string | null): boolean => AVATAR_MIMES.some((m) => m === mime);
 
 /**
- * Registers or removes a photo, the ONE path for every photo (R-ACC-05 and the admin's staff photos).
- * The API trusts neither the client nor the Content-Type it uploaded with: Storage's size and type,
- * then the first bytes. 400 avatar_path / avatar_type / avatar_too_large; a refused object is deleted;
- * the previous photo goes.
+ * Registers or removes a photo, the ONE path for every photo (R-ACC-05 and the admin's staff
+ * photos). The API trusts neither the client nor the Content-Type it uploaded with: Storage's size
+ * and type, then the first bytes. 400 avatar_path / avatar_type / avatar_too_large; a refused
+ * object is deleted; the previous photo goes.
  */
 @Injectable()
 export class AvatarWriter {

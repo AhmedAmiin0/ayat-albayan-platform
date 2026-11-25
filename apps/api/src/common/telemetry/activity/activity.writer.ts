@@ -6,7 +6,9 @@ export type ActivityInsert = TablesInsert<'activity_log'>;
 
 const FLUSH_MS = 3_000;
 const BATCH = 200;
-/** Back-pressure: past this many unwritten rows new ones are dropped (and counted), never awaited. */
+/**
+ * Back-pressure: past this many unwritten rows new ones are dropped (and counted), never awaited.
+ */
 const MAX_QUEUE = 5_000;
 /** An actor whose auth.users row is gone: the batch is retried row by row. */
 const FK_VIOLATION = '23503';

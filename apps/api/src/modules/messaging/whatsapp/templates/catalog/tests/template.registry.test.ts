@@ -9,7 +9,10 @@ import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), saveLineSync: vi.fn(async () => undefined), lineSyncs: vi.fn(async () => new Map()) };
 const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() };
-/** Not configured (reset mocks answer undefined): one line, as before the chat line (template.registry.lines.test). */
+/**
+ * Not configured (reset mocks answer undefined): one line, as before the chat line
+ * (template.registry.lines.test).
+ */
 const chatClient = { configured: vi.fn(), getTemplates: vi.fn() };
 const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');

@@ -52,7 +52,10 @@ export class TemplatesController {
     return this.creator.create(body, user.id);
   }
 
-  /** Each number: driver, WABA and phone ids (env only, no Meta call), its newest check and its last sync. */
+  /**
+   * Each number: driver, WABA and phone ids (env only, no Meta call), its newest check and its last
+   * sync.
+   */
   @Get('lines')
   @UseGuards(TemplateManagerGuard)
   lines(): Promise<TemplateLineView[]> {

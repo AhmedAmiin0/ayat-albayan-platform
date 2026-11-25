@@ -21,7 +21,10 @@ export class TermsEnv {
   ) {}
 }
 
-/** The commission and salary terms of each assistant (R-ASST-02, R-ASST-03): set by an admin, read-only for the assistant. */
+/**
+ * The commission and salary terms of each assistant (R-ASST-02, R-ASST-03): set by an admin,
+ * read-only for the assistant.
+ */
 @Injectable()
 export class TermsService {
   constructor(

@@ -21,7 +21,10 @@ const ID = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
 const teachers = { list: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn(), idByProfile: vi.fn(), photo: async () => null };
 const row = (profile_id: string | null) => ({ id: ID, display_name_ar: 'أ. عمر', meeting_link: null, meeting_mode: null, profile_id });
 
-/** profiles: `select … maybeSingle()` reads `stored`; `update(patch).eq()` resolves to `updateError`. */
+/**
+ * profiles: `select … maybeSingle()` reads `stored`; `update(patch).eq()` resolves to
+ * `updateError`.
+ */
 const profiles = { stored: null as string | null, updateError: null as { code: string; message: string } | null, update: vi.fn() };
 const db = {
   from: () => ({

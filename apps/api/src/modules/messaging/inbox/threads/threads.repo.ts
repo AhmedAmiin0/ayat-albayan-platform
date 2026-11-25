@@ -46,7 +46,10 @@ export class ThreadsRepo {
     return { items: data ?? [], total: count ?? 0 };
   }
 
-  /** The page's rows whose last message is Meta's `unsupported` (last-unsupported.ts): one read at most. */
+  /**
+   * The page's rows whose last message is Meta's `unsupported` (last-unsupported.ts): one read at
+   * most.
+   */
   unsupported(rows: readonly ThreadRow[]): Promise<ListedThreadRow[]> {
     return markUnsupported(this.db, rows);
   }
@@ -70,7 +73,9 @@ export class ThreadsRepo {
     }));
   }
 
-  /** The guardian's / teacher's next open lessons (thread-lessons.ts); with `teacherId` only theirs. */
+  /**
+   * The guardian's / teacher's next open lessons (thread-lessons.ts); with `teacherId` only theirs.
+   */
   lessons(thread: LessonsOf, now: Date, teacherId?: string): Promise<ThreadLesson[]> {
     return upcomingLessons(this.db, { thread, now, teacherId });
   }

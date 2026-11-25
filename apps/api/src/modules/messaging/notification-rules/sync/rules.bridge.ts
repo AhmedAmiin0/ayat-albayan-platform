@@ -22,7 +22,10 @@ export class RulesSettingsBridge extends SettingsRulesPort {
     super();
   }
 
-  /** Module mode only (the given settings' comms_source): only RULE_SETTING_KEYS change. Unreadable rules: unchanged. */
+  /**
+   * Module mode only (the given settings' comms_source): only RULE_SETTING_KEYS change. Unreadable
+   * rules: unchanged.
+   */
   async overlay(settings: AcademySettings): Promise<AcademySettings> {
     if (settings?.comms_source !== 'module') return settings;
     try {

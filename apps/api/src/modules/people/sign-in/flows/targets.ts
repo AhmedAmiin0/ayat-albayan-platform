@@ -4,7 +4,9 @@ import { AUTH_GATE, SUBJECT_STORE, type AuthGate, type ProfileRec, type StudentR
 import type { CodeTarget } from '@/modules/people/sign-in/codes/code-issuer';
 import { isStaff } from '@/modules/people/sign-in/sign-in.roles';
 
-/** Whose password a forgot / reset identifier names, and where its code goes (a phone ON FILE only). */
+/**
+ * Whose password a forgot / reset identifier names, and where its code goes (a phone ON FILE only).
+ */
 export type PasswordTarget =
   | { kind: 'staff'; profile: ProfileRec; code: CodeTarget }
   | { kind: 'student'; student: StudentRec; code: CodeTarget };

@@ -3,7 +3,10 @@ import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { ExpensesSettings } from './expenses.settings';
 
-/** What ExpenseYearService and ExpensesJob read before the reader existed: the reader lists exactly these. */
+/**
+ * What ExpenseYearService and ExpensesJob read before the reader existed: the reader lists exactly
+ * these.
+ */
 const BEFORE = ['reporting_currency', 'academy_timezone'] as const;
 
 describe('ExpensesSettings', () => {

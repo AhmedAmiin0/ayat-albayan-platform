@@ -6,7 +6,10 @@ export type Role = UserRole;
 export interface AuthUser {
   id: string;
   email: string | null;
-  /** From the `user_role` claim added by public.custom_access_token_hook; null until a profile exists. */
+  /**
+   * From the `user_role` claim added by public.custom_access_token_hook; null until a profile
+   * exists.
+   */
   role: Role | null;
   /** The token's `session_id` (auth.sessions): a device's push registration is bound to it. */
   sessionId?: string | null;

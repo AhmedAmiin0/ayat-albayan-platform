@@ -1,11 +1,14 @@
-/** Where the shared cache lives: `redis` when REDIS_URL is set, else `memory` (this process only). */
+/**
+ * Where the shared cache lives: `redis` when REDIS_URL is set, else `memory` (this process only).
+ */
 export type CacheMode = 'redis' | 'memory';
 
 export type CacheListener = (message: string) => void;
 
 /**
- * The backing store of SharedCache (docs/09 «Shared cache»). Values are JSON strings; every method may
- * reject (Redis down or slow) and SharedCache catches it, so a store error never fails a request.
+ * The backing store of SharedCache (docs/09 «Shared cache»). Values are JSON strings; every method
+ * may reject (Redis down or slow) and SharedCache catches it, so a store error never fails a
+ * request.
  */
 export interface CacheStore {
   readonly mode: CacheMode;
@@ -29,7 +32,10 @@ export function parseJson<T>(raw: string): { value: T } | null {
   }
 }
 
-/** What Redis holds: the value and when its load began (its age caps every local copy taken from it). */
+/**
+ * What Redis holds: the value and when its load began (its age caps every local copy taken from
+ * it).
+ */
 export interface Stored<T> {
   at: number;
   v: T;
@@ -42,6 +48,8 @@ export function parseStored<T>(raw: string): Stored<T> | null {
 
 export interface CacheEntry<T> {
   value: T;
-  /** ms since the value's database read began (0 = read now): a local copy lives one TTL minus this. */
+  /**
+   * ms since the value's database read began (0 = read now): a local copy lives one TTL minus this.
+   */
   age: number;
 }

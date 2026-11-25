@@ -81,7 +81,10 @@ export class SeenDeliveries {
     return true;
   }
 
-  /** A delivery whose work failed may come again (the CRM is best-effort, but a retry must not be dropped). */
+  /**
+   * A delivery whose work failed may come again (the CRM is best-effort, but a retry must not be
+   * dropped).
+   */
   forget(id: string): void {
     this.seen.delete(id);
   }

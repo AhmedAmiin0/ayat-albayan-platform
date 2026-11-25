@@ -38,7 +38,9 @@ export class InvoicesService {
     return (await this.queries.byRules(ruleIds)).map(view);
   }
 
-  /** The admin list page (newest first unless sorted), with the payment recorded from each (if any). */
+  /**
+   * The admin list page (newest first unless sorted), with the payment recorded from each (if any).
+   */
   async recent(f: RecentFilter) {
     const { rows, total } = await this.queries.recent(f);
     const paid = await this.queries.paymentsOf(rows.map((r) => r.id));

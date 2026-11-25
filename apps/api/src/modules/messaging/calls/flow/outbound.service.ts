@@ -75,7 +75,10 @@ export class OutboundCalls {
     return this.view(ended ?? (await this.kit.queries.get(id)) ?? row, actor.user.id);
   }
 
-  /** The connecting row, linked to the chat's guardian / lead; null = that request id exists already. */
+  /**
+   * The connecting row, linked to the chat's guardian / lead; null = that request id exists
+   * already.
+   */
   private async insert(input: { phone: string; sdp: string; clientRequestId: string; line: CallingLine; userId: string }): Promise<CallRow | null> {
     const thread = await this.kit.threads.thread(input.phone);
     const row = await this.kit.queries.insert({
@@ -88,7 +91,10 @@ export class OutboundCalls {
     return row;
   }
 
-  /** Calls on, the chat line on Kapso, this chat theirs to write in and the number on the allow-list. */
+  /**
+   * Calls on, the chat line on Kapso, this chat theirs to write in and the number on the
+   * allow-list.
+   */
   private async allowed(actor: CallActor, phone: string): Promise<CallingLine> {
     await this.gate.assertOn();
     const line = this.gate.line();

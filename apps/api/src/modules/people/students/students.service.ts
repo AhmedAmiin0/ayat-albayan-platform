@@ -31,7 +31,10 @@ export class StudentsService {
     this.leadLink = new LeadLink(db, audit);
   }
 
-  /** 409 `duplicate_student` + candidates unless `force` (R-STU-03); `lead_id` → 404 before any write. */
+  /**
+   * 409 `duplicate_student` + candidates unless `force` (R-STU-03); `lead_id` → 404 before any
+   * write.
+   */
   async create(dto: StudentCreateRequest, actorId: string): Promise<Student> {
     const lead = dto.lead_id ? await this.leadLink.find(dto.lead_id) : null;
     const guardianId = await this.resolveGuardian(dto, actorId);
@@ -88,7 +91,9 @@ export class StudentsService {
     return data;
   }
 
-  /** Hard delete (e.g. a typo row). 409 once anything references the student; keeps an audit copy. */
+  /**
+   * Hard delete (e.g. a typo row). 409 once anything references the student; keeps an audit copy.
+   */
   async remove(id: string, actorId: string): Promise<void> {
     const { data, error } = await this.db.from('students').delete().eq('id', id).select();
     if (error) throw dbError(error, 'student_in_use');

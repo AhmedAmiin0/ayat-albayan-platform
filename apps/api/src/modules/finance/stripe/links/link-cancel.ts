@@ -33,7 +33,9 @@ export class LinkCancel {
     return this.deps.views.one(row);
   }
 
-  /** Stripe's word on the session before anything changes (503 when the keys are missing or live). */
+  /**
+   * Stripe's word on the session before anything changes (503 when the keys are missing or live).
+   */
   private async session(id: string): Promise<Found> {
     const api = await this.clients.client();
     try {

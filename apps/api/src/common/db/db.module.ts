@@ -11,9 +11,9 @@ export const DB = Symbol('DB');
 export type Db = SupabaseClient<Database>;
 
 /**
- * Typed service-role supabase-js client, global so feature modules only inject `DB`.
- * It bypasses RLS: every route must be guarded (@Permissions / ownership checks) — rule 9, R-NFR-02.
- * Every database call has a deadline (DB_TIMEOUT_MS, default 15 s): a stall is a DbTimeoutError.
+ * Typed service-role supabase-js client, global so feature modules only inject `DB`. It bypasses
+ * RLS: every route must be guarded (@Permissions / ownership checks) — rule 9, R-NFR-02. Every
+ * database call has a deadline (DB_TIMEOUT_MS, default 15 s): a stall is a DbTimeoutError.
  */
 @Global()
 @Module({

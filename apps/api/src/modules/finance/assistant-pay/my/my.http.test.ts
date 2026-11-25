@@ -6,7 +6,10 @@ const ROUTES = ['/sales/me/students', '/sales/me/earnings', '/sales/me/payments'
 const keys = (v: unknown): string[] =>
   v && typeof v === 'object' ? Object.entries(v).flatMap(([k, x]) => [k, ...keys(x)]) : [];
 
-/** A row of v_assistant_students / payments as a careless query could return it: with money and people the assistant must not get. */
+/**
+ * A row of v_assistant_students / payments as a careless query could return it: with money and
+ * people the assistant must not get.
+ */
 const dirtyStudent = { student_id: 's1', code: 'AB-1001', name: 'ياسمين', brought_at: '2026-10-02T09:00:00Z', first_subscription_paid: true,
   commission_id: 'c1', commission_status: 'earned', commission_amount: 29, commission_currency: 'SAR', commission_earned_at: '2026-10-03T09:00:00Z',
   price: 290, guardian_id: 'g1', notes: 'سر', assistant_id: A };

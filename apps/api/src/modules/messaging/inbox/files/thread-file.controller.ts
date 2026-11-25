@@ -40,7 +40,10 @@ export class ThreadFileController {
     return this.media.bubbleFile({ ...target, download: download === '1' });
   }
 
-  /** Page 1..30 of a chat PDF as a signed JPEG, with its page count and size; page 1 is the bubble's thumb. */
+  /**
+   * Page 1..30 of a chat PDF as a signed JPEG, with its page count and size; page 1 is the bubble's
+   * thumb.
+   */
   @Get(':phone/messages/:messageId/pdf/:page')
   async pdf(@Param() params: Params, @CurrentUser() user: AuthUser): Promise<ThreadPdfPage> {
     const target = await this.target(params);
@@ -56,7 +59,10 @@ export class ThreadFileController {
     return { phone, messageId };
   }
 
-  /** Admin and sales (SalesScope: every chat) pass; a teacher, even of this family, is 403 media_forbidden. */
+  /**
+   * Admin and sales (SalesScope: every chat) pass; a teacher, even of this family, is 403
+   * media_forbidden.
+   */
   private async allow(user: AuthUser): Promise<void> {
     const sales = await this.reads.salesScope(user);
     if (!sales && (await this.reads.scope(user))) throw waHttpError('media_forbidden', HttpStatus.FORBIDDEN);

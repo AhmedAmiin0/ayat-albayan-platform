@@ -5,7 +5,10 @@ import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integ
 import { pickSendLine, type SendLineCode } from './send-line';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
-/** One v_thread_numbers row: a number's newest inbound, or (numberId null) a line's unstamped history. */
+/**
+ * One v_thread_numbers row: a number's newest inbound, or (numberId null) a line's unstamped
+ * history.
+ */
 export interface ThreadWindow {
   numberId: string | null;
   line: WaLine;
@@ -20,7 +23,10 @@ export type SendPick = { line?: WaLine; number_id?: string } | { code: SendLineC
 export interface SendPickInput {
   thread: ThreadRow | null;
   now: Date;
-  /** v_thread_numbers of the thread's phone (ThreadsQueries.numberWindows); read in module mode only. */
+  /**
+   * v_thread_numbers of the thread's phone (ThreadsQueries.numberWindows); read in module mode
+   * only.
+   */
   windows: () => Promise<readonly ThreadWindow[]>;
 }
 

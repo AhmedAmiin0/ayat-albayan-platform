@@ -13,7 +13,10 @@ import { toStatementView } from '@/modules/finance/assistant-pay/statements/stat
 import { toTermsView } from '@/modules/finance/assistant-pay/terms/terms.mapper';
 import { TermsRepo } from '@/modules/finance/assistant-pay/terms/terms.repo';
 
-/** The assistant's own pages (R-ASST-04, R-ASST-06). The profile id comes from the login, never from a parameter. */
+/**
+ * The assistant's own pages (R-ASST-04, R-ASST-06). The profile id comes from the login, never from
+ * a parameter.
+ */
 @Injectable()
 export class MyService {
   constructor(
@@ -22,7 +25,10 @@ export class MyService {
     private readonly statements: StatementsRepo,
   ) {}
 
-  /** The students I brought, newest first: when, the guardian's phone, whether the first subscription is paid, my commission. No price. */
+  /**
+   * The students I brought, newest first: when, the guardian's phone, whether the first
+   * subscription is paid, my commission. No price.
+   */
   async students(user: AuthUser): Promise<MyStudentRow[]> {
     // The phone only for a holder of inbox.read (chatPhone): she sees it in the chats anyway.
     const phones = can(user, 'inbox.read') ? this.queries.guardianPhones(user.id) : Promise.resolve(new Map<string, string>());

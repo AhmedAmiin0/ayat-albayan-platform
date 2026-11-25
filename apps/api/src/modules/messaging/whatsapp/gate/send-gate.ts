@@ -38,7 +38,10 @@ export class SendGate {
     return { open: sendingAllowed(this.env, s.messaging_enabled), automaticOn: s.auto_messages_enabled };
   }
 
-  /** settings.auto_messages_enabled: job-made reminders, follow-ups and renewals go out only when ON. */
+  /**
+   * settings.auto_messages_enabled: job-made reminders, follow-ups and renewals go out only when
+   * ON.
+   */
   async automaticOn(): Promise<boolean> {
     return (await this.settings.read()).auto_messages_enabled;
   }

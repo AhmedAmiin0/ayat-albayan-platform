@@ -1,15 +1,17 @@
 import { UNTAGGED } from './client-tag';
-/** One counted request: the matched route template (never the raw URL) and the parsed client tag. */
+/**
+ * One counted request: the matched route template (never the raw URL) and the parsed client tag.
+ */
 export type UsageHit = { method: string; route: string; client: string };
 
 const DEFAULT_MAX_ENTRIES = 500;
 export const OTHER_BUCKET = 'other';
 
 /**
- * In-memory hits per route × client × build (docs/26 §2f «Retiring an alias»). Beyond `max` distinct
- * keys a new key keeps its method, route and platform and only its build becomes 'other' (bounded by
- * routes × platforms), and 'untagged' keys are always kept: forged builds can never hide an old
- * client's hit on an alias route. Any 'other' count on a route means «not zero».
+ * In-memory hits per route × client × build (docs/26 §2f «Retiring an alias»). Beyond `max`
+ * distinct keys a new key keeps its method, route and platform and only its build becomes 'other'
+ * (bounded by routes × platforms), and 'untagged' keys are always kept: forged builds can never
+ * hide an old client's hit on an alias route. Any 'other' count on a route means «not zero».
  */
 export class ClientUsageCounter {
   private counts = new Map<string, number>();

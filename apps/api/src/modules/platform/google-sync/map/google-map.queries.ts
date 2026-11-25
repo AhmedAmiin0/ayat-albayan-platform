@@ -15,7 +15,9 @@ const fail = (what: string, error: { message: string }) => new Error(`google ${w
 /** Students the sync may write for: everyone who has (or had) lessons in the platform's sense. */
 const STUDENT_STATUSES = ['trial', 'active', 'pending_subscription', 'pending_renewal', 'paused'] as const;
 
-/** google_teacher_calendars / google_student_files and the people they map, with the service role. */
+/**
+ * google_teacher_calendars / google_student_files and the people they map, with the service role.
+ */
 @Injectable()
 export class GoogleMapQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -94,7 +96,10 @@ export class GoogleMapQueries {
     if (error) throw fail('student files record', error);
   }
 
-  /** The platform made a folder / sheet for this student: recorded at once, so a retry never makes a second one. */
+  /**
+   * The platform made a folder / sheet for this student: recorded at once, so a retry never makes a
+   * second one.
+   */
   async recordCreated(input: { studentId: string; patch: Partial<StudentFiles> }): Promise<void> {
     const { error } = await this.db.from('google_student_files').update({ ...input.patch, created_by_platform: true }).eq('student_id', input.studentId);
     if (error) throw fail('student files record', error);

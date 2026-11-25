@@ -18,7 +18,9 @@ export type SubListQuery = PageQuery &
 
 export const SELECT = '*, student:students(id, code, name)';
 
-/** Sort keys → columns (R-NFR-08); a custom count (no package) sorts last. Default: newest first. */
+/**
+ * Sort keys → columns (R-NFR-08); a custom count (no package) sorts last. Default: newest first.
+ */
 export const SUB_SORT: SortSpec<SubSortKey> = {
   columns: {
     created_at: { column: 'created_at' },

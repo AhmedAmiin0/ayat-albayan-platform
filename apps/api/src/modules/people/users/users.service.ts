@@ -46,7 +46,9 @@ export class UsersService {
     return { ...toUserDetail(row), avatar_url: photos.get(row.id) ?? null };
   }
 
-  /** 403 permission_not_held unless the actor holds that table's write permission (students.write…). */
+  /**
+   * 403 permission_not_held unless the actor holds that table's write permission (students.write…).
+   */
   candidates(
     input: { kind: LinkKind; q?: string | undefined },
     actor: Actor,

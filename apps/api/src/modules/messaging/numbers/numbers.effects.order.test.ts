@@ -15,7 +15,9 @@ import type { NumbersRepo } from './numbers.repo';
 import { NumbersSettings } from './numbers.settings';
 import type { OwnNumbers } from './own/own-numbers';
 
-/** One API copy wired as Nest does it: every constructor first, then NumbersEffects.onModuleInit. */
+/**
+ * One API copy wired as Nest does it: every constructor first, then NumbersEffects.onModuleInit.
+ */
 function copy(redis: ReturnType<typeof fakeRedis>, source: () => string) {
   const select = vi.fn(async () => ({ data: [{ key: 'comms_source', value: source() }], error: null }));
   const db = { from: vi.fn(() => ({ select })) } as unknown as Db;

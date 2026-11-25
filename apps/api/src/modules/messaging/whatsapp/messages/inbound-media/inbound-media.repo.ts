@@ -5,7 +5,10 @@ import { DB, type Db } from '@/common/db/db.module';
 import type { MediaRefusal } from '@/modules/messaging/whatsapp/messages/media-refusal/media-refusal.schemas';
 import { RECEIPT_FILTERS } from '@/modules/messaging/whatsapp/messages/receipts/receipt-candidates';
 
-/** The number a message came in on (messages.number_id → wa_numbers): it decides who can fetch its media. */
+/**
+ * The number a message came in on (messages.number_id → wa_numbers): it decides who can fetch its
+ * media.
+ */
 export type MediaNumber = { id: string; provider: string; purpose: NumberPurpose };
 
 /** The columns of an inbound message that carry a file (R-MSG-06). */
@@ -22,9 +25,14 @@ export type MediaMessage = {
   body: string | null;
   media_name?: string | null;
   created_at: string;
-  /** The receiving line: its token is the only one that can fetch the media id (null = notifications; calls = the calls number). */
+  /**
+   * The receiving line: its token is the only one that can fetch the media id (null =
+   * notifications; calls = the calls number).
+   */
   line: NumberPurpose | null;
-  /** Its number (null = not stamped: legacy rows); the old CRM number's history is stamped with it. */
+  /**
+   * Its number (null = not stamped: legacy rows); the old CRM number's history is stamped with it.
+   */
   number?: MediaNumber | null;
   /** Its file is refused like an unknown message. */
   hidden_at?: string | null;
@@ -36,7 +44,10 @@ const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, me
 /** The filters `cached` adds (a select or an update on messages). */
 type Filterable<Q> = { eq(column: 'direction', value: string): Q; not(column: string, op: string, value: unknown): Q };
 
-/** A cached inbound voice note or video, for the 30-day purge (WaMediaRetentionJob); always a Meta media id. */
+/**
+ * A cached inbound voice note or video, for the 30-day purge (WaMediaRetentionJob); always a Meta
+ * media id.
+ */
 export type CachedMedia = { id: string; media_path: string; media_mime: string | null; media_id: string | null };
 /**
  * PostgREST `or`: exactly a PLAYABLE_MIMES base type, bare or with parameters («; codecs=opus»).
@@ -45,7 +56,10 @@ export type CachedMedia = { id: string; media_path: string; media_mime: string |
  */
 export const PLAYABLE_FILTER = PLAYABLE_MIMES.flatMap((m) => [`media_mime.ilike.${m}`, `media_mime.ilike.${m};*`]).join(',');
 
-/** DB touches of InboundMedia and of the chat's file picker (service role; the callers are admin-only). */
+/**
+ * DB touches of InboundMedia and of the chat's file picker (service role; the callers are
+ * admin-only).
+ */
 @Injectable()
 export class InboundMediaRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -109,14 +123,20 @@ export class InboundMediaRepo {
     return data.flatMap((r) => (r.media_path ? [{ id: r.id, media_path: r.media_path, media_mime: r.media_mime, media_id: r.media_id }] : []));
   }
 
-  /** Forget the purged copies (inbound, or cached echoes: a file staff sent keeps its path, messages_content_check). */
+  /**
+   * Forget the purged copies (inbound, or cached echoes: a file staff sent keeps its path,
+   * messages_content_check).
+   */
   async clearPaths(ids: readonly string[], echoes = false): Promise<void> {
     if (!ids.length) return;
     const { error } = await this.cached(this.db.from('messages').update({ media_path: null }).in('id', [...ids]), echoes);
     if (error) throw new Error(`message media_path clear failed: ${error.message}`);
   }
 
-  /** Inbound rows with Meta's media id (never an old-CRM copy), or echoes: outbound with a media id and a cached copy that is not a sent file. */
+  /**
+   * Inbound rows with Meta's media id (never an old-CRM copy), or echoes: outbound with a media id
+   * and a cached copy that is not a sent file.
+   */
   private cached<Q extends Filterable<Q>>(q: Q, echoes = false): Q {
     if (!echoes) return q.eq('direction', 'inbound').not('media_id', 'is', null);
     return q.eq('direction', 'outbound').not('media_id', 'is', null).not('media_path', 'like', 'out/%').not('media_path', 'like', 'minio:out/%');

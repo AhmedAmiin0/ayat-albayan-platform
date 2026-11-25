@@ -7,7 +7,10 @@ import { badRequest } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
 import { SIGN_IN_CONFIG, type AuthGate, type SignInConfig } from '@/modules/people/sign-in/sign-in.ports';
 
-/** GoTrue's admin failures as module codes (a weak password is the user's to fix); anything else is a 500. */
+/**
+ * GoTrue's admin failures as module codes (a weak password is the user's to fix); anything else is
+ * a 500.
+ */
 function authError(error: { code?: string | undefined }): Error {
   if (error.code === 'weak_password') return badRequest('password_too_short');
   return new Error(`auth admin: ${error.code ?? 'unknown'}`);
@@ -54,7 +57,10 @@ export class SupabaseAuthGate implements AuthGate {
     if (error) throw dbError(error);
   }
 
-  /** Only the hashed token leaves: the client trades it with verifyOtp (the action link is never returned). */
+  /**
+   * Only the hashed token leaves: the client trades it with verifyOtp (the action link is never
+   * returned).
+   */
   async magicLink(email: string): Promise<CodeSession> {
     const { data, error } = await this.db.auth.admin.generateLink({ type: 'magiclink', email });
     if (error) throw authError(error);

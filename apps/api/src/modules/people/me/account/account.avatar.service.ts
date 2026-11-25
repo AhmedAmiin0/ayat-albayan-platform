@@ -27,7 +27,10 @@ export class AccountAvatarService {
     return this.files.uploadUrl({ path, file: input });
   }
 
-  /** 400 avatar_path / avatar_type / avatar_too_large; a refused object is deleted. The previous photo goes. */
+  /**
+   * 400 avatar_path / avatar_type / avatar_too_large; a refused object is deleted. The previous
+   * photo goes.
+   */
   async set(user: AuthUser, path: string): Promise<AccountProfile> {
     await this.writer.set(this.slot(user), path);
     return this.account.profile(user);

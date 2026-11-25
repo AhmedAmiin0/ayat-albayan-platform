@@ -16,7 +16,10 @@ export function listFilter(f: ThreadListFilter, user: AuthUser): ThreadListFilte
   return isListId(list) ? { ...rest, list } : null;
 }
 
-/** The open chat's lists on its first page, for callers with inbox.lists; the detail as is otherwise. */
+/**
+ * The open chat's lists on its first page, for callers with inbox.lists; the detail as is
+ * otherwise.
+ */
 export async function withLists(
   detail: ThreadDetail,
   input: { user: AuthUser; lists: ChatListsRepo | undefined; phone: string; first: boolean },

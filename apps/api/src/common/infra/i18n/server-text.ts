@@ -12,5 +12,7 @@ import enBundle from '@ab/shared/i18n/en.json';
 /** The bundled defaults are never mutated: every refresh starts from them. */
 export const BUNDLES = { ar: arBundle, en: enBundle } as const;
 
-/** The academy's Arabic copy with overrides applied. Read it; only TranslationsService writes it. */
+/**
+ * The academy's Arabic copy with overrides applied. Read it; only TranslationsService writes it.
+ */
 export const ar: typeof arBundle = cloneBundle(arBundle);

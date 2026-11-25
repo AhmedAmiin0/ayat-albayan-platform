@@ -48,7 +48,9 @@ export interface StatusEvent {
   errorText: string | null;
   conversationId: string | null;
   pricingCategory: string | null;
-  /** Where the status came in (an unknown wamid on a Kapso number is fetched and stored, external/). */
+  /**
+   * Where the status came in (an unknown wamid on a Kapso number is fetched and stored, external/).
+   */
   line?: NumberPurpose | null;
   numberId?: string;
   phoneNumberId?: string;

@@ -21,7 +21,10 @@ function authError(error: AuthFailure): Error {
   return new Error(`auth admin: ${error.code ?? 'unknown'}`);
 }
 
-/** AuthAdmin on the service-role client: GoTrue's admin endpoints, no SMTP involved. Never logs a secret. */
+/**
+ * AuthAdmin on the service-role client: GoTrue's admin endpoints, no SMTP involved. Never logs a
+ * secret.
+ */
 @Injectable()
 export class SupabaseAuthAdmin implements AuthAdmin {
   constructor(

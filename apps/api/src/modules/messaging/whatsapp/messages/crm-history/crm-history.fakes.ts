@@ -2,7 +2,10 @@ import { vi } from 'vitest';
 import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
 import { CRM_MEDIA_PREFIX } from './crm-history-url';
 
-/** Tests only: a made-up CRM storage host (reserved .example TLD); the real one is a setting, never in the repo. */
+/**
+ * Tests only: a made-up CRM storage host (reserved .example TLD); the real one is a setting, never
+ * in the repo.
+ */
 export const CRM_HOST = 'files.crm.example';
 
 /** Tests only: an old-CRM file link on CRM_HOST (or `host`). */
@@ -28,7 +31,10 @@ export const crmRow = (over: Partial<MediaMessage> = {}): MediaMessage => ({
 export const crmResponse = (size: number, headers: Record<string, string> = { 'content-type': 'image/webp' }, status = 200): Response =>
   new Response(status === 200 ? new Uint8Array(size) : null, { status, headers });
 
-/** Tests only: the global fetch replaced (no test reaches any real host); restore with vi.unstubAllGlobals. */
+/**
+ * Tests only: the global fetch replaced (no test reaches any real host); restore with
+ * vi.unstubAllGlobals.
+ */
 export function stubFetch(answer: (url: string) => Promise<Response>) {
   const fetch = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>((url) => answer(url));
   vi.stubGlobal('fetch', fetch);

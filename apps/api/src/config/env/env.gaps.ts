@@ -27,8 +27,9 @@ const DRIVER_GAPS: Partial<Record<WaProvider, (env: Env, line: WaLine) => string
 };
 
 /**
- * NAMES (never values) of what a line still lacks to send under its provider: crm → crmGaps; kapso → kapsoGaps;
- * meta chat → metaChatGaps; meta notifications → whichever of its four required keys is unset.
+ * NAMES (never values) of what a line still lacks to send under its provider: crm → crmGaps; kapso
+ * → kapsoGaps; meta chat → metaChatGaps; meta notifications → whichever of its four required keys
+ * is unset.
  */
 export function lineGaps(env: Env, line: WaLine): string[] {
   const own = DRIVER_GAPS[lineProvider(env, line)];
@@ -38,9 +39,10 @@ export function lineGaps(env: Env, line: WaLine): string[] {
 }
 
 /**
- * The chat line is the notifications line's number: its phone id is the notifications one (a meta / kapso
- * chat line), or both lines are on crm (one CRM account = one number, docs/19). That line stays off. A crm
- * chat line has no phone id of ours, so a leftover WA_CHAT_PHONE_NUMBER_ID never flags it (crmLine sends).
+ * The chat line is the notifications line's number: its phone id is the notifications one (a meta /
+ * kapso chat line), or both lines are on crm (one CRM account = one number, docs/19). That line
+ * stays off. A crm chat line has no phone id of ours, so a leftover WA_CHAT_PHONE_NUMBER_ID never
+ * flags it (crmLine sends).
  */
 export function duplicatePhone(env: Env, line: WaLine): boolean {
   if (line !== 'chat') return false;

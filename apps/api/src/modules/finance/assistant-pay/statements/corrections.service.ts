@@ -28,13 +28,19 @@ export class CorrectionsService {
     return (await this.queries.list(q)).map(toCommissionView);
   }
 
-  /** A voided commission stays voided (an admin void is terminal); a paid statement gets a negative adjustment in the next open month. */
+  /**
+   * A voided commission stays voided (an admin void is terminal); a paid statement gets a negative
+   * adjustment in the next open month.
+   */
   async voidCommission(input: { commissionId: string; reason: string; actorId: string }): Promise<{ id: string }> {
     await this.rpc.voidCommission(input);
     return { id: input.commissionId };
   }
 
-  /** A retry with the same requestId returns the first adjustment instead of adding a second (the RPC's unique key). */
+  /**
+   * A retry with the same requestId returns the first adjustment instead of adding a second (the
+   * RPC's unique key).
+   */
   async adjust(input: AssistantAdjustmentInput & { actorId: string }): Promise<{ id: string }> {
     return { id: await this.rpc.adjust(input) };
   }

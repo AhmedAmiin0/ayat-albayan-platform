@@ -9,7 +9,9 @@ import type { WebPushSubscriptionInput } from './web/web-push.endpoint';
 /** A retimed lesson's superseded rows (migration 174 appends «:old:<uuid>» to their dedup_key). */
 const SUPERSEDED = '%:old:%';
 const COLUMNS = 'id, kind, title, body, data, created_at, read_at';
-/** Browsers kept per profile (the newest): a script cannot grow one user's fan-out without bound. */
+/**
+ * Browsers kept per profile (the newest): a script cannot grow one user's fan-out without bound.
+ */
 export const WEB_PUSH_MAX_PER_PROFILE = 10;
 
 /**
@@ -58,8 +60,9 @@ export class NotificationsRepo {
 
   /**
    * One row per browser, bound to the caller's session (its end deletes the row: migration 700): a
-   * known endpoint moves to the caller (the browser signed in as someone else) and counts as new again. Then only the caller's newest WEB_PUSH_MAX_PER_PROFILE stay.
-   * Never another person's live browser on its endpoint alone: 409 (assertBrowserClaim).
+   * known endpoint moves to the caller (the browser signed in as someone else) and counts as new
+   * again. Then only the caller's newest WEB_PUSH_MAX_PER_PROFILE stay. Never another person's live
+   * browser on its endpoint alone: 409 (assertBrowserClaim).
    */
   async subscribe(profileId: string, sub: WebPushSubscriptionInput, sessionId: string): Promise<void> {
     await assertBrowserClaim(this.db, { profileId, sub });

@@ -43,7 +43,9 @@ export class PaymentsRepo {
     return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };
   }
 
-  /** The filter's totals per currency (net = payments − refunds), for the period line on the page. */
+  /**
+   * The filter's totals per currency (net = payments − refunds), for the period line on the page.
+   */
   async totals(f: PaymentFilter): Promise<PeriodTotal[]> {
     const rows = await readAll((a, b) =>
       filtered(this.db.from('payments').select('id, amount, currency, kind, subscription:subscriptions!inner(student_id)'), f)

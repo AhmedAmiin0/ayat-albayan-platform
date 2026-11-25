@@ -28,10 +28,15 @@ const DEFAULT_TIMEOUT_MS = 15_000;
 /** The runtime fetch for CRM calls: this file's one global use (H-1). */
 export const crmFetch: FetchLike = fetch;
 
-/** POST /messages answers 201 {data:{message_id, whatsapp_message_id, …}}; only the wamid is kept. */
+/**
+ * POST /messages answers 201 {data:{message_id, whatsapp_message_id, …}}; only the wamid is kept.
+ */
 const sentSchema = z.object({ whatsapp_message_id: z.string().min(1) });
 
-/** What callers recognise as «not supported by the crm driver» (template-env, inbound media, number sync). */
+/**
+ * What callers recognise as «not supported by the crm driver» (template-env, inbound media, number
+ * sync).
+ */
 export const crmUnsupported = (what: string): WaError =>
   new WaError(`${what} is not supported by the crm driver (templates and media live in the CRM)`, { code: null, status: 0, unsupported: 'crm' });
 

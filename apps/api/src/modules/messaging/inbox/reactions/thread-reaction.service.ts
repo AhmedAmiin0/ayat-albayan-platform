@@ -11,10 +11,15 @@ import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { sendsOnCrm } from './reaction-line';
 import { assertReactable, reactionPayload, ReactionRepo } from './reaction.repo';
 
-/** PUT /threads/:phone/messages/:id/reaction: the text send's ThreadSend plus the reacted message. */
+/**
+ * PUT /threads/:phone/messages/:id/reaction: the text send's ThreadSend plus the reacted message.
+ */
 export type ReactionRequest = ThreadSend<ThreadReaction> & { messageId: string };
 
-/** Rule 8: message id + emoji + who + phone + request id, so a retry is one send and a new tap is a new one. */
+/**
+ * Rule 8: message id + emoji + who + phone + request id, so a retry is one send and a new tap is a
+ * new one.
+ */
 export const reactionKey = (r: ReactionRequest): string => `reaction:${r.messageId}:${r.input.emoji ?? '-'}:${dedupKey(r)}`;
 
 /**
@@ -27,7 +32,9 @@ export const reactionKey = (r: ReactionRequest): string => `reaction:${r.message
  */
 @Injectable()
 export class ThreadReactionService {
-  /** The reacted message's view (property-injected: the constructor is at the 3-parameter limit). */
+  /**
+   * The reacted message's view (property-injected: the constructor is at the 3-parameter limit).
+   */
   @Inject(MessageViews) private readonly views?: MessageViews;
 
   constructor(

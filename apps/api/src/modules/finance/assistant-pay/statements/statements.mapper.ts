@@ -13,7 +13,10 @@ type LineRow = {
   amount: number;
   currency: string;
   commission: { kind: string; student: { code: string | null; name: string } | null } | null;
-  /** kind 'reversal': a voided commission taken back (the wallet counts it); 'manual': the admin's +/-. */
+  /**
+   * kind 'reversal': a voided commission taken back (the wallet counts it); 'manual': the admin's
+   * +/-.
+   */
   adjustment: { kind: string; reason: string } | null;
 };
 export type StatementRow = Tables<'assistant_statements'> & {
@@ -29,7 +32,10 @@ const RANK: Record<StatementLineKind, number> = { salary: 0, commission: 1, adju
 const isKind = (k: string): k is StatementLineKind => k === 'salary' || k === 'commission' || k === 'adjustment';
 const num = (v: Json | undefined): number => (typeof v === 'number' ? v : 0);
 
-/** The frozen totals ({currency: {salary, commissions, adjustments, total}}); anything else reads empty. */
+/**
+ * The frozen totals ({currency: {salary, commissions, adjustments, total}}); anything else reads
+ * empty.
+ */
 export function readTotals(v: Json): Record<string, CurrencyTotals> {
   if (typeof v !== 'object' || v === null || Array.isArray(v)) return {};
   const out: Record<string, CurrencyTotals> = {};
@@ -40,7 +46,10 @@ export function readTotals(v: Json): Record<string, CurrencyTotals> {
   return out;
 }
 
-/** A whitelist of columns: the receipt path, the actors' ids and the row's links never leave. A reason code of the database becomes text. */
+/**
+ * A whitelist of columns: the receipt path, the actors' ids and the row's links never leave. A
+ * reason code of the database becomes text.
+ */
 function toLine(l: LineRow & { kind: StatementLineKind }): AssistantStatementLineView {
   const student = l.commission?.student;
   return {

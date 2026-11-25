@@ -30,7 +30,10 @@ export class InvoicesController {
     return this.invoices.list(parseOrThrow(listQuery, query));
   }
 
-  /** `?from&to` (Riyadh days, inclusive) `&kind&student&sort&dir&page&pageSize`: newest first by default. */
+  /**
+   * `?from&to` (Riyadh days, inclusive) `&kind&student&sort&dir&page&pageSize`: newest first by
+   * default.
+   */
   @Get('recent')
   async recent(@Query() query: unknown) {
     const { academy_timezone: tz } = await this.settings.read();

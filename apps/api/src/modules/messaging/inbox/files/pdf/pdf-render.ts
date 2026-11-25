@@ -5,9 +5,15 @@ import { inTempDir } from '@/modules/messaging/inbox/files/temp-dir';
 import { pageOfFile, pdfinfoPages, pdftoppmArgs, type PageRange } from './pdf-pages';
 
 type PopplerTool = 'pdfinfo' | 'pdftoppm';
-/** How a run ended: the exit code (null when killed), the start of stdout, and whether our timeout killed it. */
+/**
+ * How a run ended: the exit code (null when killed), the start of stdout, and whether our timeout
+ * killed it.
+ */
 export type PdfExit = { code: number | null; stdout: string; timedOut: boolean };
-/** Runs a poppler tool on files in a temp folder; rejects (PdfToolError 'failed') only when it cannot start. */
+/**
+ * Runs a poppler tool on files in a temp folder; rejects (PdfToolError 'failed') only when it
+ * cannot start.
+ */
 export type PdfRun = (tool: PopplerTool, args: readonly string[]) => Promise<PdfExit>;
 export type PdfPageImage = { page: number; jpg: Uint8Array };
 
@@ -31,11 +37,19 @@ const TIMEOUT_MS: Record<PopplerTool, number> = { pdfinfo: 5_000, pdftoppm: 20_0
  * API copy (pdf-client.ts).
  */
 const AS_BYTES = 256 * 1024 * 1024;
-/** stdout kept per run; a pdfinfo report this long (a padded Title) may have lost its «Pages:» line. */
+/**
+ * stdout kept per run; a pdfinfo report this long (a padded Title) may have lost its «Pages:» line.
+ */
 const STDOUT_MAX = 64 * 1024;
-/** pdfinfo cannot open the file (1: broken, or a user password) or refuses it (3: permissions): it never previews. */
+/**
+ * pdfinfo cannot open the file (1: broken, or a user password) or refuses it (3: permissions): it
+ * never previews.
+ */
 const NEVER_OPENS = new Set([1, 3]);
-/** One render per process at a time (each API copy, and ayat-pdf); this many may wait, the next is 'busy'. */
+/**
+ * One render per process at a time (each API copy, and ayat-pdf); this many may wait, the next is
+ * 'busy'.
+ */
 const QUEUE_MAX = 8;
 
 /**
@@ -109,7 +123,10 @@ export function pdfPageCount(bytes: Uint8Array, run: PdfRun = spawnPoppler): Pro
   });
 }
 
-/** The JPEGs of `range` in page order; PdfToolError('failed') when pdftoppm fails, hangs or writes none. */
+/**
+ * The JPEGs of `range` in page order; PdfToolError('failed') when pdftoppm fails, hangs or writes
+ * none.
+ */
 export function renderPdfPages(bytes: Uint8Array, range: PageRange, run: PdfRun = spawnPoppler): Promise<PdfPageImage[]> {
   return withPdf(bytes, async (pdf, dir) => {
     const r = await run('pdftoppm', pdftoppmArgs({ pdf, outRoot: join(dir, 'p'), range }));

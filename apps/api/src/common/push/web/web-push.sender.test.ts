@@ -14,7 +14,9 @@ function browser() {
   return { ua, auth, keys: { p256dh: ua.getPublicKey('base64url'), auth: auth.toString('base64url') } };
 }
 
-/** Subscriptions bound to session 'live' unless they say otherwise; push_live_sessions knows `live`. */
+/**
+ * Subscriptions bound to session 'live' unless they say otherwise; push_live_sessions knows `live`.
+ */
 function fakeDb(subs: Sub[], live = ['live']) {
   const deleted: string[] = [];
   const rows = subs.map((s) => ({ session_id: 'live', ...s }));

@@ -47,7 +47,10 @@ export interface EventRef {
 
 export interface GoogleClient {
   listCalendars(): Promise<{ id: string; summary: string }[]>;
-  /** null when the event does not exist (404 / 410). A deleted event may come back with status 'cancelled'. */
+  /**
+   * null when the event does not exist (404 / 410). A deleted event may come back with status
+   * 'cancelled'.
+   */
   getEvent(ref: EventRef): Promise<GoogleEvent | null>;
   /** events.list, singleEvents: the events overlapping [timeMin, timeMax) (ISO instants). */
   listEvents(input: { calendarId: string; timeMin: string; timeMax: string }): Promise<GoogleListedEvent[]>;
@@ -76,7 +79,10 @@ export interface GoogleOAuth {
   revoke(refreshToken: string): Promise<void>;
 }
 
-/** A Google error, classified by its HTTP status and Google's reason ('invalid_grant', 'rateLimitExceeded', …). */
+/**
+ * A Google error, classified by its HTTP status and Google's reason ('invalid_grant',
+ * 'rateLimitExceeded', …).
+ */
 export class GoogleApiError extends Error {
   constructor(
     readonly status: number,

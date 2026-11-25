@@ -10,7 +10,10 @@ import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp
 
 // The worker's job, outcomes and fixed pieces (split from message.worker.ts for the line limit).
 
-/** paused = the line's (module mode: the number's) token is broken: the sender skips it for this pass. */
+/**
+ * paused = the line's (module mode: the number's) token is broken: the sender skips it for this
+ * pass.
+ */
 /** held = a job-made reminder / follow-up / renewal while automatic messages are OFF (auto_off). */
 /** waiting = a staff chat text held behind the reopen template until the family replies. */
 export type SendOutcome =

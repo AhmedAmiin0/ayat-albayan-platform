@@ -57,7 +57,10 @@ export class RolesController {
     return this.roles.create(body, user.id);
   }
 
-  /** 400 admin_role_fixed, 403 permission_not_held (adding a grant the actor lacks), 409 last_admin / self_lockout. */
+  /**
+   * 400 admin_role_fixed, 403 permission_not_held (adding a grant the actor lacks), 409 last_admin
+   * / self_lockout.
+   */
   @Patch('roles/:id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -90,7 +93,10 @@ export class RolesController {
 export class StaffUsersController {
   constructor(private readonly roles: RolesService) {}
 
-  /** Sets profiles.role to the role's base role. 400 not_staff, 403 permission_not_held, 409 last_admin / self_lockout. */
+  /**
+   * Sets profiles.role to the role's base role. 400 not_staff, 403 permission_not_held, 409
+   * last_admin / self_lockout.
+   */
   @Patch(':id/role')
   assign(
     @Param('id', ParseUUIDPipe) id: string,

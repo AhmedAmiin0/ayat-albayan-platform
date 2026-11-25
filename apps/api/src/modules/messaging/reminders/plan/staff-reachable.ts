@@ -1,4 +1,7 @@
-/** What a staff WhatsApp alert knows of its teacher (teachers.status, the linked login's disabled_at). */
+/**
+ * What a staff WhatsApp alert knows of its teacher (teachers.status, the linked login's
+ * disabled_at).
+ */
 export interface StaffOnRecord {
   /** teachers.status; optional in fakes. */
   status?: 'active' | 'inactive';
@@ -15,7 +18,9 @@ export function staffReachable(teacher: StaffOnRecord): boolean {
   return teacher.status !== 'inactive' && !teacher.profile?.disabled_at;
 }
 
-/** The staff WhatsApp alerts: queued to a teacher's number, checked again when sent (send-stale). */
+/**
+ * The staff WhatsApp alerts: queued to a teacher's number, checked again when sent (send-stale).
+ */
 export const STAFF_ALERT_KEYS: readonly string[] = [
   'teacher_new_student',
   'teacher_lesson_reminder',
