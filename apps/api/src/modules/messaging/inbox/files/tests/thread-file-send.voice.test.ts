@@ -5,7 +5,7 @@ import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import { ThreadFileSender } from '@/modules/messaging/inbox/files/thread-file-send.service';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
-// A voice note recorded in the app (owner 2026-10-27): m4a in, a WhatsApp ogg/opus voice note out.
+// A voice note recorded in the app: m4a in, a WhatsApp ogg/opus voice note out.
 const NOW = new Date('2026-10-02T09:00:00Z');
 const ACTOR = 's0000000-0000-4000-8000-000000000001';
 const REQ = 'c0000000-0000-4000-8000-000000000001';

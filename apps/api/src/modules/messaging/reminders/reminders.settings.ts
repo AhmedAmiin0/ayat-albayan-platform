@@ -6,7 +6,8 @@ import { SettingsService } from '@/common/settings/settings.service';
 /**
  * The lookahead, the automatic-messages switch, the academy's default meeting link and the lesson join
  * window (joinWindowConfig), and whether a lesson needs a confirmation at all (the
- * lesson_needs_confirmation push, owner 2026-11-02). The reminder timing and switches are notification rules (NotificationPolicy).
+ * lesson_needs_confirmation push). The reminder timing and switches are notification rules
+ * (NotificationPolicy).
  */
 const KEYS = [
   'reminder_lookahead_hours',

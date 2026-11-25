@@ -2,7 +2,7 @@ import { stickerKey, type StickerItem } from '@ab/shared';
 import { mediaExpired } from '@/modules/messaging/whatsapp';
 import type { Favourite, StickerRow } from './sticker.repo';
 
-// The sticker panel's lists (owner 2026-11-01), as pure functions over the rows StickerRepo reads.
+// The sticker panel's lists, as pure functions over the rows StickerRepo reads.
 
 export const RECENT_MAX = 30;
 

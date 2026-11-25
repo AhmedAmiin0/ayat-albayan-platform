@@ -6,7 +6,7 @@ import type { CrmInboundRepo } from '@/modules/messaging/webhook/crm-inbound/crm
 import { CrmInbound, retryAfterMs, type CrmInboundSource } from '@/modules/messaging/webhook/crm-inbound/crm-inbound.service';
 import { contactCard, crmItem, MEDIA_LINK, queued, WAMID } from './crm-inbound.fakes';
 
-// A queued CRM message.received into the inbox (owner 2026-11-21). Fakes only: no CRM, no db.
+// A queued CRM message.received into the inbox. Fakes only: no CRM, no db.
 
 const NOW = new Date('2026-11-21T10:00:00Z');
 const ok = (data: unknown) => ({ status: 200, body: { data } });

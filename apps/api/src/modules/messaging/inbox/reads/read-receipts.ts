@@ -19,7 +19,7 @@ const tail = (phone: string) => `…${phone.slice(-4)}`;
  * newest one of each line was read, on that line's client (a wamid only works with the receiving
  * line's token, docs/12 §13.7). The receipt is an outbound call on a live number, so it goes out
  * only when the send gate is open (docs/12 §3.1) and the phone is on the allow-list (§13.5c); an
- * unconfigured line is skipped silently. The chat never waits on it (owner 2026-10-27: fire and
+ * unconfigured line is skipped silently. The chat never waits on it (fire and
  * forget); failures are logged with the phone's last 4 digits, never shown to the admin.
  */
 @Injectable()

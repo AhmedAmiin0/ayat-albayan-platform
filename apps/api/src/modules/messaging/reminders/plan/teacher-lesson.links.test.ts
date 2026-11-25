@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { teacherReminderCrm } from './teacher-lesson.crm';
 
-// owner 2026-11-06: no short links any more. The reminder's one-line {{2}} carries the lesson's own
-// meeting link and the teacher's signed-in report page, both as they are (owner 2026-11-14).
+// No short links any more. The reminder's one-line {{2}} carries the lesson's own
+// meeting link and the teacher's signed-in report page, both as they are.
 
 const TEACHER = { display_name_ar: 'أ. خالد', tz: 'Africa/Cairo' };
 const STUDENTS = [{ name: 'سهيلة', code: 'AB-0101' }];

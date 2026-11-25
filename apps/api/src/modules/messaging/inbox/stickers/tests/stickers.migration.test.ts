@@ -3,7 +3,7 @@ import { INTEGRATION_SECRET_KEYS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migration 998 (stickers and GIFs in the chat, owner 2026-11-01), read as text: no database here.
+// Migration 998 (stickers and GIFs in the chat), read as text: no database here.
 const sql = readFileSync(migrationPath('20261101000998_chat_stickers.sql'), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 

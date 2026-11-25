@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { queuedRow } from './queued-row';
 import { at, fakeJob, sampleLesson } from './reminders.fakes';
 
-// settings.meeting_link_auto in the reminders job (owner 2026-10-12): the link is picked when the
+// settings.meeting_link_auto in the reminders job: the link is picked when the
 // reminders are queued. LiveKit and the origin come from the env, read every tick.
 
 const NOW = at('2026-10-04T13:10:00Z');

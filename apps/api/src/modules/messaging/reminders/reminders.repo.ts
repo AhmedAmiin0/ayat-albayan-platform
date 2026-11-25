@@ -85,7 +85,7 @@ export class RemindersRepo {
    * or moved (the sender only checks expiry): still-queued reminder rows whose lesson left
    * scheduled | confirmed are deleted — never sent, and an un-cancel can queue them again.
    * Only unexpired rows (the next 25 h), so rows piling up while the send gate is closed don't
-   * grow the read. ponytail: a row the sender claimed this very second may still go out.
+   * grow the read. A row the sender claimed this very second may still go out.
    */
   async dropCancelled(now: Date): Promise<number> {
     const { data, error } = await this.db

@@ -3,7 +3,7 @@ import { outbound } from '@/modules/messaging/webhook/tests/webhook.fakes';
 import { wacrmSign, webhookApp } from '@/modules/messaging/webhook/tests/test-app';
 
 // POST /webhooks/wacrm (docs/19 «crm driver»): signed + fresh, deduped on the delivery id; ticks and
-// message.received (queued for the inbox mirror, owner 2026-11-21).
+// message.received (queued for the inbox mirror).
 
 let ctx: Awaited<ReturnType<typeof webhookApp>> | undefined;
 afterEach(async () => {

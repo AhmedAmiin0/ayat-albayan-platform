@@ -6,7 +6,7 @@ import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store
 import type { StickerRepo } from '@/modules/messaging/inbox/stickers/sticker.repo';
 import { StickersService } from '@/modules/messaging/inbox/stickers/stickers.service';
 
-// A sticker from the panel (owner 2026-11-01): the window first, then the copy and the queue.
+// A sticker from the panel: the window first, then the copy and the queue.
 const NOW = new Date('2026-10-02T09:00:00Z');
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 const REQ = 'c0000000-0000-4000-8000-000000000001';

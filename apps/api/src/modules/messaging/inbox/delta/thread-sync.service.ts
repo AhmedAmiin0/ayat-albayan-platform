@@ -20,7 +20,7 @@ const EMPTY_SCAN: SyncScan = { rows: [], deleted: [], last: null, more: false };
 const cursorOf = (c: SyncCursor | undefined): string | null => (c ? encodeSyncCursor(c) : null);
 
 /**
- * GET /threads/sync (owner 2026-11-06, docs/43 §5 row 43-5): every message row that changed after
+ * GET /threads/sync (docs/43 §5 row 43-5): every message row that changed after
  * the cursor, oldest change first, in the caller's scope — the same as reading each chat (rule 9):
  * the admin every chat, a salesperson every chat without the signed-link templates (redacted), a
  * teacher her scope's phones; the academy's own numbers never. A scanned row the caller can't hold

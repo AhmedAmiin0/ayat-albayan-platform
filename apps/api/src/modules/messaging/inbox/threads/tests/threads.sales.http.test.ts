@@ -94,7 +94,7 @@ describe('sales mode H1-H4: every chat, with the sales redactions (docs/16)', ()
     expect([closed.statusCode, closed.json().code]).toEqual([409, 'session_closed']);
   });
 
-  // Owner 2026-10-12: sales send only the allow-list the admin ticked (templateRow: sales_starter false).
+  // Sales send only the allow-list the admin ticked (templateRow: sales_starter false).
   it('H4 a non-starter is 403 template_not_allowed; a starter goes out for any lesson; link templates stay refused', async () => {
     const send = (body: object) =>
       t.call({ method: 'POST', url: `${URL}/template`, token: 'salesB', body: { params: { '1': 'ياسمين', '2': 'الأحد 16:00', button: 'ayat-room' }, clientRequestId: REQ, ...body } });

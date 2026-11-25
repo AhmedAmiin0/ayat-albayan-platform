@@ -3,7 +3,7 @@ import { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
 import { OwnNumbers } from './own-numbers';
 
 /**
- * Global (owner 2026-10-27): the webhook, the inbox, the leads, the follow-ups and the dashboard all ask
+ * Global: the webhook, the inbox, the leads, the follow-ups and the dashboard all ask
  * «is this one of our numbers?» without importing NumbersModule. Register in app.module.ts.
  */
 @Global()

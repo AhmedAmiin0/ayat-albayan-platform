@@ -4,9 +4,8 @@ import { TeacherLessonLinks } from '@/modules/teaching/lesson-links';
 import { sampleLesson } from './reminders.fakes';
 import { ReminderTeacherLinks } from './reminders.teacher-links';
 
-// owner 2026-11-06 «now we no more need url shortener»: the reminder path is wired without any
-// database or ShortLinks at all, so it cannot insert a short_links row (owner 2026-11-14: the
-// report link is the signed-in portal page).
+// No url shortener: the reminder path is wired without any database or ShortLinks at all, so
+// it cannot insert a short_links row (the report link is the signed-in portal page).
 
 const SECRET = 's'.repeat(40);
 const TEACHER = '00000000-0000-4000-8000-0000000000b1';

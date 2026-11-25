@@ -72,7 +72,7 @@ export function inboundRow({ m, phone, who, leadId, lessonId, read }: RowInput):
     reply_to_wa_id: m.replyTo,
     media_id: m.mediaId,
     media_mime: m.mediaMime,
-    // Only a document's name (the PDF card's, owner 2026-11-01); none = no key, as today.
+    // Only a document's name (the PDF card's); none = no key, as today.
     ...(m.mediaName ? { media_name: m.mediaName } : {}),
     interactive_payload: m.payload,
     created_at: m.at.toISOString(),

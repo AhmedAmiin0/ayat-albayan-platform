@@ -12,7 +12,7 @@ import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/wh
 import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/teacher-threads.repo';
 import { ADMIN, SALES, TEACHER } from '@/modules/messaging/inbox/test-app';
 
-// Owner 2026-10-27: a photo imported from the old CRM opens in the bubble (web and mobile): fetched
+// A photo imported from the old CRM opens in the bubble (web and mobile): fetched
 // once from the configured CRM storage host, cached in wa-media, then signed like any inbound file.
 const PHONE = '+966552147730';
 const M1 = 'b1111111-1111-4111-8111-111111111111';

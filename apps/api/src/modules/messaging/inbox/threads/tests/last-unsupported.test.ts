@@ -4,8 +4,8 @@ import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { markUnsupported } from '@/modules/messaging/inbox/threads/last-unsupported';
 import { toThreadView } from '@/modules/messaging/inbox/threads/threads.mapper';
 
-// The chats list words a last message that does not show its own content: Meta's 131060 (owner
-// 2026-10-27), a deleted one, the ad's welcome and an unsupported echo (owner 2026-10-30).
+// The chats list words a last message that does not show its own content: Meta's 131060, a
+// deleted one, the ad's welcome and an unsupported echo.
 const UNAVAILABLE = { type: 'unsupported', errors: [{ code: 131060 }] };
 const NOW = new Date('2026-10-27T10:00:00Z');
 const last = (id: string, over: Record<string, unknown> = {}) => ({

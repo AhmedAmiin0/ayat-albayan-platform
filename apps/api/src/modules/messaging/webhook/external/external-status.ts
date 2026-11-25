@@ -12,7 +12,7 @@ const reason = (e: unknown): string => (e instanceof Error ? e.message : String(
 /**
  * A delivery status for a wamid we hold no row for, on a number whose driver is Kapso: staff sent
  * it from Kapso's own inbox. The message is read back from Kapso and stored as an outbound row with
- * WhatsApp's own time and this status (owner report 2026-10-26: replies showed under 4-day-old
+ * WhatsApp's own time and this status (replies once showed under 4-day-old
  * messages). Never throws: a Kapso or database error is logged and the webhook still answers 200;
  * the catch-up job (external-catchup.job.ts) stores it within 10 minutes. Any other number: ignored.
  */

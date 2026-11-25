@@ -4,7 +4,7 @@ import { toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/t
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { assertSendableParams } from '@/modules/messaging/inbox/send/template-params';
 
-// Owner 2026-11-14 («a template that carries your text»): the API checks Meta's parameter rules
+// The API checks Meta's parameter rules
 // (132018) again, whatever the client did. Pure: no WhatsApp, no database.
 
 const ACADEMY = toTemplateView(

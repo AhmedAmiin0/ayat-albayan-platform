@@ -6,7 +6,7 @@ import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ForwardFiles } from '@/modules/messaging/inbox/files/forward-files';
 
-// Owner 2026-10-27: a photo imported from the old CRM forwards like any family file (through
+// A photo imported from the old CRM forwards like any family file (through
 // InboundMedia's cache), and its body, only the CRM storage link, never travels as a caption.
 const row = messageRow({
   id: 'm-crm-1', direction: 'inbound', body: crmLink(), media_id: null, media_path: null,

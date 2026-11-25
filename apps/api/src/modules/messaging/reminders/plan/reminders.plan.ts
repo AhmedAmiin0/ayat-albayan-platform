@@ -54,7 +54,7 @@ export interface ReminderPlanInput {
   origin: string;
   /** Per lesson: the teacher's signed join and report links (the job makes them). */
   teacherLinks?: ReadonlyMap<string, TeacherLinks>;
-  /** teacher_lesson_v3 approved: the teacher's reminder goes as it (owner 2026-11-06). */
+  /** teacher_lesson_v3 approved: the teacher's reminder goes as it. */
   teacherV3?: boolean;
   now: Date;
 }

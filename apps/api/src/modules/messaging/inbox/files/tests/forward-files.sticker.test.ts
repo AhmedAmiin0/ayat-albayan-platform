@@ -5,7 +5,7 @@ import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ForwardFiles } from '@/modules/messaging/inbox/files/forward-files';
 
-// Owner 2026-11-01: a sticker's copy keeps WhatsApp's sha256, so the sticker panel lists it once.
+// A sticker's copy keeps WhatsApp's sha256, so the sticker panel lists it once.
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 const sticker = messageRow({
   id: 'm-st-1', direction: 'outbound', body: null, media_id: null, media_path: 'out/a/r/s.webp',

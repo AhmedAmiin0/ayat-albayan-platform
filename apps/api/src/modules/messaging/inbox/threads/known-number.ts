@@ -10,7 +10,7 @@ function check(error: { message: string } | null): asserts error is null {
 }
 
 /**
- * A number with no message (owner report 2026-10-12, «start the conversation»): a guardian by any family
+ * A number with no message (staff start the conversation): a guardian by any family
  * number (main or second, familyOfPhone), a lead or a teacher by phone, like v_threads joins them, so the
  * first template can name the family's lesson. null = nobody we know (the composer still offers the
  * templates without a lesson).

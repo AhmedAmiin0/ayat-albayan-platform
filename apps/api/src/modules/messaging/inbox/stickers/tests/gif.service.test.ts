@@ -5,7 +5,7 @@ import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { GifService, gifPath } from '@/modules/messaging/inbox/stickers/gif.service';
 
-// The GIF tab (owner 2026-11-01): GIPHY is a fake transport here, never called for real.
+// The GIF tab: GIPHY is a fake transport here, never called for real.
 const NOW = new Date('2026-10-02T09:00:00Z');
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 const REQ = 'c0000000-0000-4000-8000-000000000001';

@@ -8,7 +8,7 @@ import type { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
 import type { EvolutionNumbersRepo } from './evolution-numbers.repo';
 import { NumbersEvolution } from './numbers-evolution';
 
-// Owner 2026-11-06: an Evolution number's options saved (audited, config reloaded) and pushed with
+// An Evolution number's options saved (audited, config reloaded) and pushed with
 // its OWN key; a restriction switches it off once and fails its queued rows.
 
 const evo = numberRow({ provider: 'evolution', phone_number_id: 'secondary-1', evolution_mode: 'baileys' });

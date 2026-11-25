@@ -38,7 +38,7 @@ const readNow = (views: MessageView[], at: Date): MessageView[] =>
   views.map((m) => (m.direction === 'inbound' && !m.read_at ? { ...m, read_at: at.toISOString() } : m));
 
 /**
- * The open chat's periodic refresh (owner 2026-10-27): rows newer than `after` (and up to
+ * The open chat's periodic refresh: rows newer than `after` (and up to
  * DELTA_OVERLAP_MS before it: WhatsApp's own second can land there; clients merge by id) plus the
  * outgoing rows still moving — two reads side by side. Writes nothing unless a new inbound row
  * arrived: then the read stamp of opening the chat (admin / sales: only unread rows, Meta's receipt in

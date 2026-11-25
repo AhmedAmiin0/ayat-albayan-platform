@@ -60,7 +60,7 @@ export async function sendLine(thread: ThreadRow | null, at: LineAt): Promise<Se
 }
 
 /**
- * A free text's line (owner 2026-11-03, «not sent after 24h»): sendLine, except that with every
+ * A free text's line («not sent after 24h»): sendLine, except that with every
  * window closed on a Kapso chat line (chatOnKapso) the row is queued from the chat line (its
  * default number in module mode, as the claim stamps it) marked AWAITING_REPLY: the sender
  * sends the reopen template first and holds the text until the family answers
@@ -82,7 +82,7 @@ interface ChatLineAt extends LineAt {
 }
 
 /**
- * The line of every staff send from a chat (owner 2026-11-01, «do the same as the messages»): a
+ * The line of every staff send from a chat («do the same as the messages»): a
  * text, a reply, a payment link typed into the box, a file or receipt, a sticker, a GIF and a
  * forward all leave as a text does: textLine (held behind the reopen template after the
  * window), and sendLine in teacher mode. Templates and automatic notifications never come here.

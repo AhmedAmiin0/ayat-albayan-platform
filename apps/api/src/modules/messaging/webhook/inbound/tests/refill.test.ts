@@ -6,7 +6,7 @@ import { WebhookRepo } from '@/modules/messaging/webhook/shared/webhook.repo';
 import { WebhookSettings } from '@/modules/messaging/webhook/shared/webhook.settings';
 import { refillPatch } from '@/modules/messaging/webhook/inbound/inbound-refill';
 
-// Meta's 131060 (owner 2026-10-27): a new number's first message arrives as `unsupported`. A re-sent
+// Meta's 131060: a new number's first message arrives as `unsupported`. A re-sent
 // wamid with the real content fills that row in place, once, with no second push or lead.
 const UNAVAILABLE = { type: 'unsupported', unsupported: null, errors: [{ code: 131060, title: 'This message is unavailable.' }] };
 const unavailable = () => event({ type: 'unsupported', body: null, payload: UNAVAILABLE });

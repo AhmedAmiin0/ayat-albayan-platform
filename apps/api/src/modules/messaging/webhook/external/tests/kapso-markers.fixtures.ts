@@ -1,4 +1,4 @@
-// Recorded shapes of the WhatsApp Business app's actions on the chat line (owner 2026-10-30), as
+// Recorded shapes of the WhatsApp Business app's actions on the chat line, as
 // Meta's smb_message_echoes delivers them and as Kapso's history lists them (the same Meta object
 // plus a `kapso` block). Identifiers and phones are replaced; no network in any test.
 import { SENT_TS } from './external.fakes';
