@@ -419,11 +419,6 @@
       "count": 1
     }
   },
-  "src/plan/fake-db.ts": {
-    "typescript/require-await": {
-      "count": 11
-    }
-  },
   "src/plan/match/match.target.ts": {
     "complexity": {
       "count": 1
