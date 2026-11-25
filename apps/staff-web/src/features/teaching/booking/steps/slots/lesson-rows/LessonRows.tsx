@@ -61,7 +61,7 @@ function useRowsCtx(draft: BookingDraft, at: At) {
 }
 
 /**
- * A package's lesson days (owner 2026-11-07: «date input and a time input»): per day a date and a
+ * A package's lesson days: per day a date and a
  * time in the family's zone. A course has exactly its days a week; the admin adds and removes
  * days. Each time is read against the slot grid's data (free, busy, outside the availability,
  * past) with the nearest free times to take; the series check below decides (SeriesCheck).

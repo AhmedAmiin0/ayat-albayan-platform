@@ -3,7 +3,7 @@ import { addCalendarDays, localDateIn, otherZoneClock, wallToUtc } from '@ab/tim
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Clock } from '@ab/web-kit/lib/clock';
 
-// The package's lesson rows (owner 2026-11-07: a date input and a time input per day): their date
+// The package's lesson rows (a date input and a time input per day): their date
 // bounds, the slot window that checks them, and the clocks shown beside a time. Pure.
 
 /** The date inputs' min (and max, when a route has one). */

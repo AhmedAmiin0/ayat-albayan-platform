@@ -14,7 +14,7 @@ type Props = {
 };
 
 /**
- * Amount, the package currency (fixed, owner 2026-10-12), transfer day (never in the future) and an
+ * Amount, the package currency (fixed), transfer day (never in the future) and an
  * optional note; the method is always «bank».
  */
 export function TransferFields({ form, set, packageCurrency, today, amountError }: Props) {

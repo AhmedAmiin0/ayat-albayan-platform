@@ -19,7 +19,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
  * carries courseBodyPackage (ignored by the API) and the wizard names the lesson count (courseFixedText).
  * The slot grid opens on courseOpensOn: the subscription's start, or after a renewal's previous course;
  * with `now` (ISO), never before today in the family's zone. It books the lessons not taken before the
- * platform (courseLessonCount, owner 2026-10-28): 1 of 8 used → 7.
+ * platform (courseLessonCount): 1 of 8 used → 7.
  */
 export function courseDraft(view: SalesCourseView, now?: string): BookingDraft | null {
   const { student, subscription: sub, perWeek } = view;
@@ -42,7 +42,7 @@ export function courseDraft(view: SalesCourseView, now?: string): BookingDraft |
   };
 }
 
-/** Hold mode (owner 2026-11-06): the course's picks are saved as a draft until the payment. */
+/** Hold mode: the course's picks are saved as a draft until the payment. */
 const holdOf = (view: SalesCourseView): { hold?: true } => (view.hold ? { hold: true } : {});
 
 /** The student's own teacher, preselected on the teacher step when available. */

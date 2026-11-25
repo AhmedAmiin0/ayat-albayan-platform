@@ -27,7 +27,7 @@ function courseRows(course: Course, days: string): Row[] {
 }
 
 /**
- * The card's lines (owner 2026-11-17, board CourseXWebPanel): the package, then the course in the
+ * The card's lines (board CourseXWebPanel): the package, then the course in the
  * viewer's zone; before a course is booked, says so.
  */
 export function CardSummary({ card }: { card: CourseCardView }) {
