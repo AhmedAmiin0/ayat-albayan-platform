@@ -47,6 +47,12 @@ describe('call', () => {
     expect(apiFetch.mock.calls[0]?.[0]).toBe('/links?search=%D9%86%D9%88%D8%B1&page=2');
   });
 
+  it('reads with the plain call a hand-written client made, and parses the answer itself', async () => {
+    const { api, apiFetch } = fakeApi({ rows: [], total: 0 });
+    await call(api, routes.list, { query: {} });
+    expect(apiFetch.mock.calls[0]).toEqual(['/links']);
+  });
+
   it('leaves empty query values out', async () => {
     const { api, apiFetch } = fakeApi({ rows: [], total: 0 });
     await call(api, routes.list, { query: { search: '' } });
@@ -58,9 +64,7 @@ describe('call', () => {
     await expect(
       call(api, routes.update, { params: { code: 'a/b' }, body: { title: 'new' } }),
     ).resolves.toEqual({ code: 'a/b', title: 'new' });
-    const [method, path, opts] = apiSend.mock.calls[0] ?? [];
-    expect([method, path]).toEqual(['PATCH', '/links/a%2Fb']);
-    expect(opts).toMatchObject({ body: { title: 'new' } });
+    expect(apiSend.mock.calls[0]).toEqual(['PATCH', '/links/a%2Fb', { title: 'new' }]);
   });
 
   it('resolves undefined for an empty answer', async () => {
