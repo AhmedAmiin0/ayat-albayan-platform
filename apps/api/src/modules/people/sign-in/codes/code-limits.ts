@@ -14,9 +14,9 @@ export const phoneMaySend = (s: PhoneStats): boolean =>
   s.sentLast15Min < PHONE_LIMITS.per15Min && s.sentLastDay < PHONE_LIMITS.perDay && s.failedLastDay < PHONE_LIMITS.failedPerDay;
 
 /**
- * The site-wide breaker (security review): wrong codes over EVERY phone in an hour. Past it no code is
- * sent or checked until the hour rolls on, so guessing across many families (sequential student codes)
- * stalls however many IPs it uses. ~25 times the busiest hour a real academy should see.
+ * The site-wide breaker (security review): wrong codes over EVERY phone in an hour. Past it no code
+ * is sent or checked until the hour rolls on, so guessing across many families (sequential student
+ * codes) stalls however many IPs it uses. ~25 times the busiest hour a real academy should see.
  */
 export const GLOBAL_FAILED_PER_HOUR = 200;
 
@@ -32,9 +32,10 @@ const BUDGET: Record<LimitKind, { ip: number; identifier: number }> = {
 };
 
 /**
- * The public sign-in routes' per-IP and per-identifier buckets (15 minutes). The identifier is folded
- * first (identifierKey: case, spaces, dashes, +), so `AB-1234` and `ab 1234` share one bucket. Counted
- * in the LimitStore: the database in the app (shared by every API copy, docs/09), memory in tests.
+ * The public sign-in routes' per-IP and per-identifier buckets (15 minutes). The identifier is
+ * folded first (identifierKey: case, spaces, dashes, +), so `AB-1234` and `ab 1234` share one
+ * bucket. Counted in the LimitStore: the database in the app (shared by every API copy, docs/09),
+ * memory in tests.
  */
 @Injectable()
 export class SignInLimits {
@@ -53,8 +54,9 @@ export class SignInLimits {
   }
 
   /**
-   * May a code go to this phone (E.164, on file)? The per-phone send limits (3 per 15 minutes, 10 a day)
-   * as shared buckets, taken before the send: atomic across API copies, unlike the login_codes count.
+   * May a code go to this phone (E.164, on file)? The per-phone send limits (3 per 15 minutes, 10 a
+   * day) as shared buckets, taken before the send: atomic across API copies, unlike the login_codes
+   * count.
    */
   async maySend(phone: string, now = Date.now()): Promise<boolean> {
     const key = `send:phone:${phone}`;

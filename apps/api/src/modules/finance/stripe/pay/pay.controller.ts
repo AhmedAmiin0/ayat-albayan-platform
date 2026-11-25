@@ -39,7 +39,8 @@ export class PayController {
       return view;
     }
     if (!view) return html(res, { status: 404, body: notFoundPageHtml() });
-    // Opened from the app: Stripe's way back to /done or /cancelled carries this mark (pay-return.ts).
+    // Opened from the app: Stripe's way back to /done or /cancelled carries this mark
+    // (pay-return.ts).
     const os = appPlatform(req.query?.from);
     if (os) res.header('Set-Cookie', appCookie(token, os));
     return html(res, { status: 200, body: payPageHtml(view, token) });

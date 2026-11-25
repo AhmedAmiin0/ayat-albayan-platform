@@ -17,8 +17,8 @@ export class TeacherMeRepo {
   ) {}
 
   /**
-   * null when the signed-in profile has no teachers row (→ 404 teacher_not_linked). meeting_mode and
-   * platform_classroom (migration 490) tell the dashboard whether to show the fixed link.
+   * null when the signed-in profile has no teachers row (→ 404 teacher_not_linked). meeting_mode
+   * and platform_classroom (migration 490) tell the dashboard whether to show the fixed link.
    */
   async me(profileId: string): Promise<TeacherMe | null> {
     const { data, error } = await this.db

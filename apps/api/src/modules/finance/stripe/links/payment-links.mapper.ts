@@ -6,8 +6,8 @@ import { loadEnv } from '@/config/env/env';
 import { stripeKeyIsLive } from '@/config/env/env.stripe';
 import type { LinkRow } from './payment-links.repo';
 
-// Whitelists (docs/30): explicit keys, never a spread of the row (the token appears only inside the url,
-// the Stripe ids and the client request id never).
+// Whitelists (docs/30): explicit keys, never a spread of the row (the token appears only inside the
+// url, the Stripe ids and the client request id never).
 
 export function toLinkView(row: LinkRow, ctx: { payOrigin: string; now: Date }): PaymentLinkView {
   return {

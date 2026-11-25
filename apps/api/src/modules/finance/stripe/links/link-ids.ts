@@ -10,8 +10,9 @@ export const integrationIdentifier = (): string =>
   `ayat-sales-link-${Array.from({ length: 8 }, () => LETTERS[randomInt(LETTERS.length)]).join('')}`;
 
 /**
- * A stable uuid (v5 layout) for a Stripe id, used as payments.client_request_id (a uuid column): the same
- * Checkout Session or Refund always maps to the same id, so a replayed webhook records nothing twice.
+ * A stable uuid (v5 layout) for a Stripe id, used as payments.client_request_id (a uuid column):
+ * the same Checkout Session or Refund always maps to the same id, so a replayed webhook records
+ * nothing twice.
  */
 export function uuidFor(stripeId: string): string {
   const h = createHash('sha1').update(`ayat-stripe:${stripeId}`).digest();

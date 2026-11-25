@@ -5,9 +5,10 @@ import { statusOf } from './payment-links.mapper';
 import { PaymentLinksRepo } from './payment-links.repo';
 
 /**
- * The unpaid package of a link nobody will pay (cancelled, or expired) is cancelled with the admin's rules
- * (SubscriptionCancel: nothing paid, no lesson), so it is never owed and never makes the student's next
- * package read as a renewal (subscription_commission_kind orders by creation). A failure is logged.
+ * The unpaid package of a link nobody will pay (cancelled, or expired) is cancelled with the
+ * admin's rules (SubscriptionCancel: nothing paid, no lesson), so it is never owed and never makes
+ * the student's next package read as a renewal (subscription_commission_kind orders by creation). A
+ * failure is logged.
  */
 @Injectable()
 export class LinkPackages {

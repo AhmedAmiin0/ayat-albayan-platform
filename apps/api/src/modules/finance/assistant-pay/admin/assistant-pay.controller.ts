@@ -20,7 +20,8 @@ import { TermsService } from '@/modules/finance/assistant-pay/terms/terms.servic
 
 /**
  * The admin side of the assistants' pay (R-ASST-02, R-ASST-03, R-ASST-05): terms per assistant, the
- * commission ledger, voiding, adjustments and attribution. Statements: AssistantStatementsController.
+ * commission ledger, voiding, adjustments and attribution. Statements:
+ * AssistantStatementsController.
  */
 @ApiTags('assistant-pay')
 @ApiBearerAuth()

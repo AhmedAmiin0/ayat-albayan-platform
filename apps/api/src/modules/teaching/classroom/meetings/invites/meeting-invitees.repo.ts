@@ -81,7 +81,8 @@ export class MeetingInviteesRepo {
   /**
    * Cancel or a new time: this meeting's invitation texts still waiting in the queue are dropped
    * (failed / stale), never sent late with a dead link or the old time. A row the sender already
-   * claimed (error_code SENDING) is left alone, like SenderQueries.holdAutomatic. Answers their phones.
+   * claimed (error_code SENDING) is left alone, like SenderQueries.holdAutomatic. Answers their
+   * phones.
    */
   async dropQueuedInvites(meetingId: string): Promise<string[]> {
     const { data, error } = await this.db

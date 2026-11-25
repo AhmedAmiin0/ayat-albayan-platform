@@ -42,8 +42,9 @@ export class RatingRepo {
   }
 
   /**
-   * The family whose number (main or second, familyOfPhone) this is; null for a lead, a teacher or an unknown
-   * number. The rating goes to the chat it was asked from (RatingSendService sends to that phone).
+   * The family whose number (main or second, familyOfPhone) this is; null for a lead, a teacher or
+   * an unknown number. The rating goes to the chat it was asked from (RatingSendService sends to
+   * that phone).
    */
   async guardianByPhone(phone: string): Promise<RatingGuardian | null> {
     const family = await familyOfPhone(this.db, phone);

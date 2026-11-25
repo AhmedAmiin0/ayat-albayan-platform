@@ -19,8 +19,9 @@ export class SubscriptionCancelRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /**
-   * What hangs on the package's course (schedule_rules.subscription_id, 470): its lessons not cancelled, plus
-   * its active rules (a course booked beyond the horizon has none yet; the horizon job would book them).
+   * What hangs on the package's course (schedule_rules.subscription_id, 470): its lessons not
+   * cancelled, plus its active rules (a course booked beyond the horizon has none yet; the horizon
+   * job would book them).
    */
   async linkedLessons(subscriptionId: string): Promise<number> {
     const rules = await this.db
@@ -39,8 +40,9 @@ export class SubscriptionCancelRepo {
   }
 
   /**
-   * A later live priced package of the student, by (created_at, id), already has an assistant commission:
-   * it was kinded 'renewal' because of this one, so cancelling would never earn the 'first' (409 has_commission).
+   * A later live priced package of the student, by (created_at, id), already has an assistant
+   * commission: it was kinded 'renewal' because of this one, so cancelling would never earn the
+   * 'first' (409 has_commission).
    */
   async laterCommission(sub: LaterOf): Promise<boolean> {
     const ts = `"${sub.createdAt}"`;

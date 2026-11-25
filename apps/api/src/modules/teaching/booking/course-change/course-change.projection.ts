@@ -3,8 +3,9 @@ import { addDays } from '@ab/time';
 import { generatedKey } from '@/modules/teaching/scheduling/rules/rule-projection';
 import type { ChangeRule } from './course-change.repo';
 
-// REMAINING's lessons that do not exist yet (review fix 2b): an old active rule stays active until the
-// day before the change point, so the nightly HorizonJob still generates its occurrences up to then. Pure.
+// REMAINING's lessons that do not exist yet (review fix 2b): an old active rule stays active until
+// the day before the change point, so the nightly HorizonJob still generates its occurrences up to
+// then. Pure.
 
 type UnmaterialisedInput = {
   /** The course's active rules. */
@@ -17,8 +18,8 @@ type UnmaterialisedInput = {
 };
 
 /**
- * Occurrences of each rule between max(now, its starts_on) and min(its ends_on, startsOn − 1) that have
- * no row yet (a date it already holds, in any status, is skipped like the generator skips it).
+ * Occurrences of each rule between max(now, its starts_on) and min(its ends_on, startsOn − 1) that
+ * have no row yet (a date it already holds, in any status, is skipped like the generator skips it).
  */
 export function unmaterialised({ rules, held, now, startsOn }: UnmaterialisedInput): number {
   const last = addDays(startsOn, -1);

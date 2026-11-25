@@ -11,9 +11,10 @@ const RETRY_MS = 30 * 60_000;
 const USD_TOLERANCE = 0.05;
 
 /**
- * SAR→X rates (docs/08 §4): a rate fetched < settings.fx_fresh_hours (24) ago is reused; otherwise the API is read and
- * stored; if it fails, the newest stored rate (with its age); if none, USD falls back to the peg.
- * A failed call (or a failed save) is not retried for RETRY_MS: quotes use the fallbacks meanwhile.
+ * SAR→X rates (docs/08 §4): a rate fetched < settings.fx_fresh_hours (24) ago is reused; otherwise
+ * the API is read and stored; if it fails, the newest stored rate (with its age); if none, USD
+ * falls back to the peg. A failed call (or a failed save) is not retried for RETRY_MS: quotes use
+ * the fallbacks meanwhile.
  */
 @Injectable()
 export class FxService {

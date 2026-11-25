@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { teacherAlerts, type AlertLesson } from '@/modules/teaching/booking/teacher/teacher-alert.plan';
 
-// docs/19 «crm driver»: teacher_new_student on a crm line = the CRM's teacher_lesson_v2 (the old script's).
-// The values themselves: teacherLessonCrm (messaging/reminders/plan/teacher-lesson.crm.test.ts).
+// docs/19 «crm driver»: teacher_new_student on a crm line = the CRM's teacher_lesson_v2 (the old
+// script's). The values themselves: teacherLessonCrm
+// (messaging/reminders/plan/teacher-lesson.crm.test.ts).
 
 const NOW = new Date('2026-10-01T08:00:00Z');
 const TEACHER = { id: 'T1', profile_id: 'P1', phone_e164: '+201001234567', tz: 'Africa/Cairo', display_name_ar: 'أ. خالد' };

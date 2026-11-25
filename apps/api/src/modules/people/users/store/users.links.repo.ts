@@ -38,8 +38,8 @@ export async function link(db: Db, ctx: { kind: LinkKind; id: string; profileId:
 
 /**
  * profiles.phone_e164 and teachers.phone_e164 are each unique (at most one row per phone). Taken =
- * another profile has it, or another teacher record has it while the profile `except` owns a teacher
- * record (the PATCH copies the phone to it).
+ * another profile has it, or another teacher record has it while the profile `except` owns a
+ * teacher record (the PATCH copies the phone to it).
  */
 export async function phoneTaken(db: Db, ctx: { phone: string; except: string }): Promise<boolean> {
   const [p, t, mine] = await Promise.all([

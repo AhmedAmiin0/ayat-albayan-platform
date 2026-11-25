@@ -8,9 +8,9 @@ export const bucketDigest = (key: string): string =>
   createHash('sha256').update(key).digest('base64url');
 
 /**
- * The sign-in buckets in Postgres (migration 935, rate_limit_take), so every API copy shares one budget.
- * An unreadable database falls back to this process's own buckets (logged): a limit still holds per copy,
- * and the sign-in itself needs the database anyway.
+ * The sign-in buckets in Postgres (migration 935, rate_limit_take), so every API copy shares one
+ * budget. An unreadable database falls back to this process's own buckets (logged): a limit still
+ * holds per copy, and the sign-in itself needs the database anyway.
  */
 @Injectable()
 export class DbLimitStore implements LimitStore {

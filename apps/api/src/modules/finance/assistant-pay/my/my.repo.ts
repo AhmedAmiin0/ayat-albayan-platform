@@ -15,8 +15,9 @@ export const MY_PAYMENTS_LIMIT = 500;
 
 /**
  * What the signed-in assistant may read of the money tables (service role). Every method takes the
- * profile id from the login, and every query filters on it: another assistant's rows, and any payment
- * recorded by someone else, never match (rule 9; RLS in migrations 271 and 274 is the second wall).
+ * profile id from the login, and every query filters on it: another assistant's rows, and any
+ * payment recorded by someone else, never match (rule 9; RLS in migrations 271 and 274 is the
+ * second wall).
  */
 @Injectable()
 export class MyRepo {

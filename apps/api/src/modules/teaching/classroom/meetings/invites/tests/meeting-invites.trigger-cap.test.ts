@@ -4,7 +4,8 @@ import { MEETING_ID, NOW, scheduledRow } from '@/modules/teaching/classroom/inte
 import { CLOSED_PHONE, OPEN_PHONE, openThread, STUDENT_A, STUDENT_B, stored } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
 import { meetingServices, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
-// Migration 414's race-safe daily cap fails only the recipient it hits (the 'never throws' contract).
+// Migration 414's race-safe daily cap fails only the recipient it hits (the 'never throws'
+// contract).
 let s: MeetingServices;
 const LIMIT = new Error('message enqueue failed: invite_limit');
 const pick = (id: string, phone: string) => ({ id, name: 'سهيلة', code: 'AB-0001', guardian: { id: `g-${id}`, name: 'أم سهيلة', phone_e164: phone, tz: 'Asia/Riyadh' } });

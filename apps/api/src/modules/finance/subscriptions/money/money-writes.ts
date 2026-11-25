@@ -50,8 +50,9 @@ export class MoneyWrites {
   }
 
   /**
-   * A retried payment form (same clientRequestId) that finds its payment already recorded: the follow-ups
-   * and the recompute run again (all idempotent), so a flip lost to a failure after the insert is not lost.
+   * A retried payment form (same clientRequestId) that finds its payment already recorded: the
+   * follow-ups and the recompute run again (all idempotent), so a flip lost to a failure after the
+   * insert is not lost.
    */
   async replayed(entry: Done, studentId: string | null): Promise<void> {
     if (studentId) await this.followUp(entry, studentId);

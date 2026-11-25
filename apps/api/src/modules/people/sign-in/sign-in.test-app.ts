@@ -1,5 +1,6 @@
-// HTTP test harness of the sign-in routes (test-only). Real controller, guards, services, limits and
-// code crypto on AppModule; the stores, GoTrue, the WhatsApp send and the settings are the in-memory fakes.
+// HTTP test harness of the sign-in routes (test-only). Real controller, guards, services, limits
+// and code crypto on AppModule; the stores, GoTrue, the WhatsApp send and the settings are the
+// in-memory fakes.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '@/app.module';

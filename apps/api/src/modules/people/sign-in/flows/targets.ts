@@ -10,9 +10,10 @@ export type PasswordTarget =
   | { kind: 'student'; student: StudentRec; code: CodeTarget };
 
 /**
- * Resolves a typed identifier (email | username | student code | phone) to an account and the phone on
- * file. A typed phone is only a lookup key: the code goes to the account's own phone. Family profiles
- * are reached by student code only (a guardian has no password); a disabled login gets nothing.
+ * Resolves a typed identifier (email | username | student code | phone) to an account and the phone
+ * on file. A typed phone is only a lookup key: the code goes to the account's own phone. Family
+ * profiles are reached by student code only (a guardian has no password); a disabled login gets
+ * nothing.
  */
 @Injectable()
 export class PasswordTargets {

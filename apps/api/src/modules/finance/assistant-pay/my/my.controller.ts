@@ -17,8 +17,9 @@ import {
 import { MyService } from './my.service';
 
 /**
- * The assistant's own pages (R-ASST-04, R-ASST-06): the students they brought, their earnings and the
- * payments they recorded. Read-only, each behind its own scope key; nobody but the sales base role holds them.
+ * The assistant's own pages (R-ASST-04, R-ASST-06): the students they brought, their earnings and
+ * the payments they recorded. Read-only, each behind its own scope key; nobody but the sales base
+ * role holds them.
  */
 @ApiTags('sales')
 @ApiBearerAuth()

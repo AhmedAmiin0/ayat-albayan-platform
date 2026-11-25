@@ -19,7 +19,8 @@ export class MeService {
 
   /**
    * 401 without a session to bind to (a token with no session_id claim, or a session just ended);
-   * 409 when the token is someone else's live device. Returns the key the device keeps for next time.
+   * 409 when the token is someone else's live device. Returns the key the device keeps for next
+   * time.
    */
   async addPushToken(input: DeviceClaim & { sessionId: string | null }): Promise<{ deviceKey: string }> {
     const { userId, token, sessionId } = input;
@@ -52,8 +53,9 @@ export class MeService {
   }
 
   /**
-   * A device belongs to whoever signed in on it last (once claimDevice let it move): a handed-over phone, or one whose sign-out
-   * DELETE never ran (401, offline, timeout), stops receiving the previous admin's pushes.
+   * A device belongs to whoever signed in on it last (once claimDevice let it move): a handed-over
+   * phone, or one whose sign-out DELETE never ran (401, offline, timeout), stops receiving the
+   * previous admin's pushes.
    */
   private async releaseFromOthers(userId: string, token: string): Promise<void> {
     const { data, error } = await this.db

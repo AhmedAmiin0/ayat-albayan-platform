@@ -25,8 +25,9 @@ export class CommissionBell {
     private readonly push: PushService,
   ) {}
 
-  // ponytail: reads the academy's commission audit rows (audit_log_entity_idx leads with entity) to find the last
-  // FRESH_MS; fine for thousands of them, an (entity, at) index if they ever reach the hundreds of thousands.
+  // ponytail: reads the academy's commission audit rows (audit_log_entity_idx leads with entity) to
+  // find the last FRESH_MS; fine for thousands of them, an (entity, at) index if they ever reach
+  // the hundreds of thousands.
   async notify(now = new Date()): Promise<void> {
     try {
       const events = await this.db

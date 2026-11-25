@@ -1,5 +1,6 @@
-// HTTP test harness for the classroom routes (test-only, excluded from the build). Real controllers,
-// guards, services and token minting; the DB-facing queries, the registry and the Outbox are mocks.
+// HTTP test harness for the classroom routes (test-only, excluded from the build). Real
+// controllers, guards, services and token minting; the DB-facing queries, the registry and the
+// Outbox are mocks.
 import type { AuthUser } from '@/common/auth/verify-token';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';

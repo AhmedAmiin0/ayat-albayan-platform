@@ -74,8 +74,8 @@ const moveOf = (m: PayloadInput['moved'][number]) => ({
 
 /**
  * The active rules still reaching the change point (ends_on null or ≥ startsOn), each ending at
- * min(its ends_on, startsOn − 1): a change never lengthens a rule (review fix 1). A rule already ending
- * before has no end_rule step.
+ * min(its ends_on, startsOn − 1): a change never lengthens a rule (review fix 1). A rule already
+ * ending before has no end_rule step.
  */
 function endRules(input: PayloadInput) {
   const endsOld = addDays(input.req.startsOn, -1);
@@ -89,10 +89,10 @@ function endRules(input: PayloadInput) {
 }
 
 /**
- * end_rules (endRules, each with its own open lessons from the change point: rescheduled, chargeable
- * false), changes (every other moved lesson, keyed by its id: `moved` is exactly what is written,
- * review fix 3), new_rules with their lessons, the first new lesson's confirmation
- * and the audit row naming the actor's role and the course (entity subscriptions).
+ * end_rules (endRules, each with its own open lessons from the change point: rescheduled,
+ * chargeable false), changes (every other moved lesson, keyed by its id: `moved` is exactly what is
+ * written, review fix 3), new_rules with their lessons, the first new lesson's confirmation and the
+ * audit row naming the actor's role and the course (entity subscriptions).
  */
 export function changePayload(input: PayloadInput): Record<string, unknown> {
   const [head] = input.active;

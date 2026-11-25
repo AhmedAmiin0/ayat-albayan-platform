@@ -50,8 +50,9 @@ export class LinkRefunds {
   }
 
   /**
-   * A refund of a payment the platform has not recorded: its event may still be on its way (async pending, or
-   * within the hour) → fail so Stripe retries; else (the payment was refused) → the admins settle it by hand.
+   * A refund of a payment the platform has not recorded: its event may still be on its way (async
+   * pending, or within the hour) → fail so Stripe retries; else (the payment was refused) → the
+   * admins settle it by hand.
    */
   private async unrecorded(link: LinkRow, c: { charge: string; created: number }): Promise<string> {
     if (link.processing || Date.now() - c.created * 1000 < RETRY_MS) throw new Error('stripe refund before its payment was recorded');

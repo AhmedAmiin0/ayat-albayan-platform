@@ -4,8 +4,9 @@ import { palette } from '@ab/catalog';
 const c = palette.light;
 
 /**
- * The family pages' only style (the brand tokens, @ab/shared theme: white page, emerald action), readable on
- * a phone. Inline in <style>, allowed by its hash alone (PAGE_CSP): no script, no other source.
+ * The family pages' only style (the brand tokens, @ab/shared theme: white page, emerald action),
+ * readable on a phone. Inline in <style>, allowed by its hash alone (PAGE_CSP): no script, no other
+ * source.
  */
 export const PAY_CSS = [
   `*{box-sizing:border-box}`,

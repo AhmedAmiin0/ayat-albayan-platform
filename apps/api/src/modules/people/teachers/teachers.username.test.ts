@@ -10,7 +10,8 @@ import { AvailabilityRepo } from './availability/availability.repo';
 import { TeachersModule } from './teachers.module';
 import { TeachersRepo } from './teachers.repo';
 
-// A teacher's sign-in username (docs/30 §1, §7): read from and written to the teacher's login profile.
+// A teacher's sign-in username (docs/30 §1, §7): read from and written to the teacher's login
+// profile.
 
 const verify: TokenVerifier = async (token) => {
   if (token !== 'admin') throw new Error('bad token');

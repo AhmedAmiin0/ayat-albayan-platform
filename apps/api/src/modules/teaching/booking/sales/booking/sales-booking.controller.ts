@@ -16,10 +16,11 @@ import { SalesBookingOptions, SalesBookingService } from './sales-booking.servic
 import { bookingBodySchema } from '@/modules/teaching/booking/plan/package-size';
 
 /**
- * Registration by the assistant (R-ASST-01): the booking wizard's check and book, scoped to their own leads
- * and students while SalesOwnershipRule enforces it (any lead otherwise: sales-booking.ownership.ts),
- * with them as the actor so they are recorded as the one who brought the student. Trials only: no price, no
- * invoice, no custom meeting link (assertBookingScope), whatever the switch.
+ * Registration by the assistant (R-ASST-01): the booking wizard's check and book, scoped to their
+ * own leads and students while SalesOwnershipRule enforces it (any lead otherwise:
+ * sales-booking.ownership.ts), with them as the actor so they are recorded as the one who brought
+ * the student. Trials only: no price, no invoice, no custom meeting link (assertBookingScope),
+ * whatever the switch.
  */
 @ApiTags('booking')
 @ApiBearerAuth()

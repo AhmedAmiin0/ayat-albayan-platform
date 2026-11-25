@@ -19,7 +19,8 @@ export type RecordResult = { payment_id: string; replayed: boolean };
 export type SessionFilter = EarningsListQuery;
 
 // Reads (balance, sessions, allocation) go through the view of migration 183: only sessions of
-// subscribed students (not trial, a student with status 'active'). The table is only written by the DB.
+// subscribed students (not trial, a student with status 'active'). The table is only written by the
+// DB.
 const COUNTABLE = 'v_teacher_countable_earnings';
 const PAYMENT = '*, items:teacher_payment_items(earning_id)';
 const CHUNK = 1000; // PostgREST max-rows

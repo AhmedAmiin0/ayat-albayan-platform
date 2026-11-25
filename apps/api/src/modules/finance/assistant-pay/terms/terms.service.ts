@@ -52,11 +52,12 @@ export class TermsService {
   }
 
   /**
-   * Replaces both parts (null clears one) in one RPC, which refuses a start day in the past for a new part
-   * and a start day moved earlier (400 commission_start_in_past / commission_start_earlier / salary_...).
-   * Nothing is retroactive: the commission rule only looks at subscriptions fully paid on or after
-   * commission.startsOn and the day the student was brought, and each commission keeps the rate (and a
-   * renewal its share) it was earned at. Students already brought are evaluated now, every package.
+   * Replaces both parts (null clears one) in one RPC, which refuses a start day in the past for a
+   * new part and a start day moved earlier (400 commission_start_in_past / commission_start_earlier
+   * / salary_...). Nothing is retroactive: the commission rule only looks at subscriptions fully
+   * paid on or after commission.startsOn and the day the student was brought, and each commission
+   * keeps the rate (and a renewal its share) it was earned at. Students already brought are
+   * evaluated now, every package.
    */
   async set(input: { assistantId: string; terms: AssistantTermsInput; actorId: string }): Promise<AssistantTermsView> {
     const before = await this.get(input.assistantId);
@@ -69,7 +70,8 @@ export class TermsService {
     return after;
   }
 
-  // ponytail: one RPC per brought student without a commission, sequential; fine for tens of students per assistant.
+  // ponytail: one RPC per brought student without a commission, sequential; fine for tens of
+  // students per assistant.
   private async evaluateBrought(assistantId: string): Promise<void> {
     const subscriptions = await this.queries.uncommissioned(assistantId);
     for (const subscriptionId of subscriptions) await this.rpc.evaluate(subscriptionId);

@@ -33,9 +33,9 @@ const covers = (rows: readonly CourseRuleRow[], today: string): boolean =>
   rows.some((r) => r.status === 'active' && r.starts_on <= today && (r.ends_on ?? today) >= today);
 
 /**
- * The first day ≥ today any active rule of `rows` may still hold a lesson on (greatest(starts_on, today)
- * over those with ends_on null or ≥ today): a pending change keeps the old rules' days before its own
- * start. today when none.
+ * The first day ≥ today any active rule of `rows` may still hold a lesson on (greatest(starts_on,
+ * today) over those with ends_on null or ≥ today): a pending change keeps the old rules' days
+ * before its own start. today when none.
  */
 const opensFrom = (rows: readonly CourseRuleRow[], today: string): string =>
   rows

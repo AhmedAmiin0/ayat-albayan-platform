@@ -33,8 +33,9 @@ interface ProfileRow {
 }
 
 /**
- * The phone a staff reset code may go to is the profile's own (admins and the user edit it), never the
- * teacher row's: anyone with teachers.write could point that one at their own WhatsApp (review, docs/30 §3).
+ * The phone a staff reset code may go to is the profile's own (admins and the user edit it), never
+ * the teacher row's: anyone with teachers.write could point that one at their own WhatsApp (review,
+ * docs/30 §3).
  */
 
 const toProfile = (r: ProfileRow): ProfileRec => ({ id: r.id, role: r.role, disabled: r.disabled_at !== null, phone: r.phone_e164 });

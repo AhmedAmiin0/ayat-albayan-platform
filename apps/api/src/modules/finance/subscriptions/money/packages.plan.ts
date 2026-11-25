@@ -9,8 +9,9 @@ import {
 } from '@ab/money';
 
 // Pure decisions over one student's packages (R-SUB-01/02). Packages arrive in FIFO order
-// (starts_on, created_at, id), the same order as v_subscription_balance. A cancelled package is skipped by
-// every decision here: never rewritten, never superseding, never the newest (migration 934).
+// (starts_on, created_at, id), the same order as v_subscription_balance. A cancelled package is
+// skipped by every decision here: never rewritten, never superseding, never the newest (migration
+// 934).
 
 export interface PlanPackage {
   id: string;

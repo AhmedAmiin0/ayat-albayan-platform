@@ -6,9 +6,10 @@ const WINDOW_MS = 60_000;
 const digest = (key: string): string => createHash('sha256').update(key).digest('base64url');
 
 /**
- * The public payment page's limit, shared by every API copy (rate_limit_take, migration 935): 30 requests a
- * minute per IP and 10 per IP and link. Buckets are digests, never a raw IP. An unreadable database lets the
- * request through (logged): the page needs the database anyway. 429 too_many_requests.
+ * The public payment page's limit, shared by every API copy (rate_limit_take, migration 935): 30
+ * requests a minute per IP and 10 per IP and link. Buckets are digests, never a raw IP. An
+ * unreadable database lets the request through (logged): the page needs the database anyway. 429
+ * too_many_requests.
  */
 @Injectable()
 export class PayLimit {

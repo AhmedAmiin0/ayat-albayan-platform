@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 
 /**
- * stripe_events: the webhook's idempotency by event.id (primary key). begin() inserts the event once and
- * says whether it was already processed; an event whose handling failed (no processed_at) runs again on
- * Stripe's retry, every step of it being idempotent itself.
+ * stripe_events: the webhook's idempotency by event.id (primary key). begin() inserts the event
+ * once and says whether it was already processed; an event whose handling failed (no processed_at)
+ * runs again on Stripe's retry, every step of it being idempotent itself.
  */
 @Injectable()
 export class StripeEventsRepo {

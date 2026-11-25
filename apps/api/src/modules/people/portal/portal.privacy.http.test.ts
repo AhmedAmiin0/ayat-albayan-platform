@@ -8,8 +8,9 @@ const SECRET = /price|amount|currency|fx|paid|payment|invoice|note|reason|phone|
 describe('/portal responses are whitelists (no money outside the package, notes or contacts)', () => {
   let t: App;
   beforeAll(async () => {
-    // A fixed morning before the fixture lesson's join window (16:00 UTC, opens 15:50): under the real
-    // clock that window is open on 2026-10-27 and the join link is shown by design (portal.join).
+    // A fixed morning before the fixture lesson's join window (16:00 UTC, opens 15:50): under the
+    // real clock that window is open on 2026-10-27 and the join link is shown by design
+    // (portal.join).
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-10-27T08:00:00.000Z'));
     t = await portalApp();

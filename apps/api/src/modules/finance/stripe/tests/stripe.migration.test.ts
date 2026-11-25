@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261028000941 read as text: no database in unit tests (CI's e2e job applies it to local Supabase).
+// Migration 20261028000941 read as text: no database in unit tests (CI's e2e job applies it to
+// local Supabase).
 const sql = readFileSync(migrationPath('20261028000941_stripe_payment_links.sql'), 'utf8');
 const fn = (name: string) => new RegExp(`create or replace function public\\.${name}\\([\\s\\S]*?\\$\\$;`).exec(sql)?.[0] ?? '';
 

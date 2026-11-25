@@ -28,7 +28,8 @@ describe('migration 20261012000432 payment attachments backstop', () => {
     expect(code).toMatch(/before update of method on public\.payments/);
     expect(code).toMatch(/when \(old\.method = 'bank' and new\.method is distinct from 'bank'\)/);
     expect(code).toMatch(/exists \(select 1 from public\.payment_attachments a where a\.payment_id = new\.id\)/);
-    // PaymentsQueries.update maps this message (23514 + "attachments") to 400 attachments_not_allowed.
+    // PaymentsQueries.update maps this message (23514 + "attachments") to 400
+    // attachments_not_allowed.
     expect(code).toMatch(/raise exception 'payment % has attachments[^;]+errcode = '23514'/);
   });
 

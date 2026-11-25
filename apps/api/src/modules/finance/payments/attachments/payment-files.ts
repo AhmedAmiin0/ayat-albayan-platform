@@ -60,10 +60,11 @@ export class PaymentFiles {
   }
 
   /**
-   * A replay or a race loser: the form's files a failure after the insert lost, best effort and never an
-   * error. Only on the same package, only on a bank row (the STORED method), only paths not stored yet (a
-   * lost-reply replay does no storage I/O), at most PAYMENT_ATTACHMENTS_MAX in all; a path whose check fails
-   * is logged and skipped, never saved. The stored receipt is never re-checked.
+   * A replay or a race loser: the form's files a failure after the insert lost, best effort and
+   * never an error. Only on the same package, only on a bank row (the STORED method), only paths
+   * not stored yet (a lost-reply replay does no storage I/O), at most PAYMENT_ATTACHMENTS_MAX in
+   * all; a path whose check fails is logged and skipped, never saved. The stored receipt is never
+   * re-checked.
    */
   async saveLate(row: BookedRow, input: LateInput, actorId: string): Promise<void> {
     const sent = [...new Set(input.attachments ?? [])];

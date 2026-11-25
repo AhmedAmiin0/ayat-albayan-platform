@@ -1,4 +1,5 @@
-// Stripe event payloads of the webhook tests (test-only). Shapes as the API version 2026-09-30.endive sends them.
+// Stripe event payloads of the webhook tests (test-only). Shapes as the API version
+// 2026-09-30.endive sends them.
 import { LINK_ID, SESSION } from './stripe-mocks.fakes';
 
 export const CREATED = 1_793_000_000; // 2026-10-26

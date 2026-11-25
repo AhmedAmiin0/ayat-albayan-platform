@@ -7,7 +7,8 @@ import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 
 /**
  * S6 guard (rule 9): admin sees every student; a teacher only a student in their scope
- * (teacher_has_student: assigned, or a lesson of theirs in the last 90 days). 404 for an unknown student, 403 otherwise.
+ * (teacher_has_student: assigned, or a lesson of theirs in the last 90 days). 404 for an unknown
+ * student, 403 otherwise.
  */
 @Injectable()
 export class StudentAccess {

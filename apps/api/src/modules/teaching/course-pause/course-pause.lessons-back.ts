@@ -27,10 +27,10 @@ export class PauseClashes {
 }
 
 /**
- * The lessons a resume (or a shortened pause) brings back (docs/11 §7b, R-SCH-04): the resumed rules are topped up
- * from now on their same days and times (the generator stores each clash on its new lesson), and the lessons the
- * RPC reopened or the student rejoined are clash-checked the same way (lessons.conflicts). Every clash is stored
- * and counted for the answer, never dropped.
+ * The lessons a resume (or a shortened pause) brings back (docs/11 §7b, R-SCH-04): the resumed
+ * rules are topped up from now on their same days and times (the generator stores each clash on its
+ * new lesson), and the lessons the RPC reopened or the student rejoined are clash-checked the same
+ * way (lessons.conflicts). Every clash is stored and counted for the answer, never dropped.
  */
 @Injectable()
 export class CoursePauseLessonsBack {

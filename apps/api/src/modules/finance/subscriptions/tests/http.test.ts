@@ -104,7 +104,8 @@ describe('subscriptions routes (S1–S6, R-SUB-01)', () => {
     expect(res.statusCode).toBe(200);
     expect(m.access.check).toHaveBeenCalledWith(expect.objectContaining({ role: 'teacher' }), STUDENT_ID);
     expect(res.json()).toMatchObject({ student_id: STUDENT_ID, remaining: 4 });
-    // A teacher gets lesson counts only: no price, paid, fx or quote (and no `current` package row).
+    // A teacher gets lesson counts only: no price, paid, fx or quote (and no `current` package
+    // row).
     expect(res.json().packages[0]).toMatchObject({ subscription_id: SUB_ID });
     expect(JSON.stringify(res.json())).not.toMatch(/price|paid|currency|fx_rate/);
     const admin = await call({ method: 'GET', url: `/students/${STUDENT_ID}/balance` });

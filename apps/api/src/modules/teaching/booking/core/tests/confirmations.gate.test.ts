@@ -12,7 +12,8 @@ import type { TeacherAlert } from '@/modules/teaching/booking/teacher/teacher-al
 import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
 // The booking_confirmation rule at each write that carries confirmations (create_booking,
-// apply_lesson_changes, edit_lesson_time, change_course): on = the payload unchanged; off = no confirmation.
+// apply_lesson_changes, edit_lesson_time, change_course): on = the payload unchanged; off = no
+// confirmation.
 
 const OFF: FakePolicyInput = { mode: 'module', rows: [{ key: 'booking_confirmation', enabled: false }] };
 const msg = { phone_e164: '+966500000001', guardian_id: 'g1', lesson_id: 'l1', template_key: 'booking_confirmation', template_params: {}, dedup_key: 'booking_confirmation:l1:g1' } satisfies QueuedMessage;

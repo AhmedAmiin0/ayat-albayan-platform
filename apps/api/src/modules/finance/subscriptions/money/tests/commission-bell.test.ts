@@ -55,7 +55,8 @@ describe('CommissionBell («عمولة جديدة», owner 2026-10-29)', () => {
     const t = setup([{ data: [reinstate] }, { data: [reinstate] }], [{ data: [ROW] }, { data: [ROW] }]);
     await t.bell.notify(NOW);
     await t.bell.notify(NOW);
-    // The same subject twice: PushService's dedup key keeps one row, so the replay tells no one again.
+    // The same subject twice: PushService's dedup key keeps one row, so the replay tells no one
+    // again.
     expect(t.subjects()).toEqual(['audit-2', 'audit-2']);
   });
 

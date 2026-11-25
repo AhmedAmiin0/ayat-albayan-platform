@@ -14,9 +14,10 @@ import type { MyAdjustment, MyCommission, StatementState } from './my.repo';
 const frozen = (r: StatementState): boolean => r.statement?.status === 'approved' || r.statement?.status === 'paid';
 
 /**
- * The commission money my approved and paid statements hold, as they froze it: their commission lines and
- * their reversal lines (assistant_statement_lines). Never the commission rows: a re-earn sets a row's
- * statement to null and a merge deletes it, while the frozen statement still pays (or paid) that line.
+ * The commission money my approved and paid statements hold, as they froze it: their commission
+ * lines and their reversal lines (assistant_statement_lines). Never the commission rows: a re-earn
+ * sets a row's statement to null and a merge deletes it, while the frozen statement still pays (or
+ * paid) that line.
  */
 export function frozenLines(statements: readonly Pick<StatementRow, 'status' | 'lines'>[]): WalletLine[] {
   return statements.flatMap(({ status, lines }) =>

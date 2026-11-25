@@ -1,4 +1,5 @@
-// Mocks of the money HTTP harness (test-only, excluded from the build): split from test-app.ts (max-lines).
+// Mocks of the money HTTP harness (test-only, excluded from the build): split from test-app.ts
+// (max-lines).
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { vi } from 'vitest';
 

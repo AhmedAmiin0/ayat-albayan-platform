@@ -8,12 +8,13 @@ import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo'
 import { checkoutParams } from './checkout-params';
 
 /**
- * GET /pay/:token/checkout: where the payer's browser goes. An open link reuses its Checkout Session while
- * that is still open, else gets a new one (compare-and-set on the link: of two racing clicks one session
- * wins, the other is expired at once, so a link never has two payable sessions). Anything else (paid,
- * expired, cancelled, processing, unknown) goes back to the platform's page, which says why. An open link
- * whose package was paid another way (a bank transfer, in part or in full) or cancelled is closed here
- * (cancelled, its session expired): never a second payment of the same package.
+ * GET /pay/:token/checkout: where the payer's browser goes. An open link reuses its Checkout
+ * Session while that is still open, else gets a new one (compare-and-set on the link: of two racing
+ * clicks one session wins, the other is expired at once, so a link never has two payable sessions).
+ * Anything else (paid, expired, cancelled, processing, unknown) goes back to the platform's page,
+ * which says why. An open link whose package was paid another way (a bank transfer, in part or in
+ * full) or cancelled is closed here (cancelled, its session expired): never a second payment of the
+ * same package.
  */
 @Injectable()
 export class CheckoutService {

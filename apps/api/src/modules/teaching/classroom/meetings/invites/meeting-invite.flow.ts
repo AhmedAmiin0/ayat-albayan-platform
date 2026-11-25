@@ -44,9 +44,9 @@ interface PersonalSend {
 /**
  * Invites people to a meeting (R-MEET-02): drops the ones already invited, enforces 30 invitees per
  * meeting (400 too_many_invitees) and 100 WhatsApp invitations per login per day (409 invite_limit
- * from the fast check; migration 414's trigger fails only that recipient: failed / invite_limit + link),
- * stores one row each (non-staff: only the sha256 of a personal /m/<token>), delivers, and answers one
- * result per recipient; a non-staff result carries its link and invitation text, once.
+ * from the fast check; migration 414's trigger fails only that recipient: failed / invite_limit +
+ * link), stores one row each (non-staff: only the sha256 of a personal /m/<token>), delivers, and
+ * answers one result per recipient; a non-staff result carries its link and invitation text, once.
  */
 @Injectable()
 export class MeetingInviteFlow {
@@ -85,8 +85,9 @@ export class MeetingInviteFlow {
   }
 
   /**
-   * A fresh personal link (the old one stops working) and its chat text when the caller may chat and a
-   * window is open; the link and the text to copy come back either way (chat_not_allowed, invite_limit).
+   * A fresh personal link (the old one stops working) and its chat text when the caller may chat
+   * and a window is open; the link and the text to copy come back either way (chat_not_allowed,
+   * invite_limit).
    */
   async personal(p: PersonalSend): Promise<MeetingInviteResult> {
     const { meeting, now } = p.run;

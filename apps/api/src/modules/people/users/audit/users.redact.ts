@@ -1,8 +1,8 @@
 import type { Json } from '@ab/db';
 
 /**
- * A secret key: pass / token / secret / jwt anywhere in the name, `link` or `credential` only as its
- * LAST word (action_link, recoveryLink, credential), so audit keys such as `linked` and
+ * A secret key: pass / token / secret / jwt anywhere in the name, `link` or `credential` only as
+ * its LAST word (action_link, recoveryLink, credential), so audit keys such as `linked` and
  * `credential_mode` survive.
  */
 const SECRET_KEY = /pass|token|secret|jwt|link$|credential$/i;

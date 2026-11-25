@@ -16,9 +16,10 @@ interface PortalScope {
 }
 
 /**
- * Who a portal login may see (docs/31, rule 9): a guardian their own students, a student only themself.
- * Every /portal/students/:id route resolves the student here first; anyone else's id is 404
- * student_not_found (the same answer as an unknown id, so ids of other families are not confirmed).
+ * Who a portal login may see (docs/31, rule 9): a guardian their own students, a student only
+ * themself. Every /portal/students/:id route resolves the student here first; anyone else's id is
+ * 404 student_not_found (the same answer as an unknown id, so ids of other families are not
+ * confirmed).
  */
 @Injectable()
 export class PortalScopes {

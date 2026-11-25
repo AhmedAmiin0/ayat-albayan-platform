@@ -8,8 +8,9 @@ import { OverviewRepo } from './overview.repo';
 
 /**
  * GET /lessons/overview (R-SCH-09, R-NFR-08): one round trip of six independent reads — teachers,
- * weekly rows, time off, lessons running into the window, loads and the window's lessons (numbers and unpaid flags batched by
- * LessonViews) — instead of a per-teacher availability / time-off call (N+1).
+ * weekly rows, time off, lessons running into the window, loads and the window's lessons (numbers
+ * and unpaid flags batched by LessonViews) — instead of a per-teacher availability / time-off call
+ * (N+1).
  */
 @Injectable()
 export class OverviewService {

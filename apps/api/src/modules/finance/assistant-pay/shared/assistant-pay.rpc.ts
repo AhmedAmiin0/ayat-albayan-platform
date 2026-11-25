@@ -9,9 +9,9 @@ const field = (data: Json, key: string): unknown =>
   typeof data === 'object' && data !== null && !Array.isArray(data) ? data[key] : undefined;
 
 /**
- * The RPCs of migrations 20261006000272 / 273 (service role only; each is one transaction with its audit
- * row). P0001 messages become the API error codes (assistantError). The statements' flow is the teacher
- * payouts': generate (draft) -> approve -> pay, with reopen and unpay going back.
+ * The RPCs of migrations 20261006000272 / 273 (service role only; each is one transaction with its
+ * audit row). P0001 messages become the API error codes (assistantError). The statements' flow is
+ * the teacher payouts': generate (draft) -> approve -> pay, with reopen and unpay going back.
  */
 @Injectable()
 export class AssistantRpc {

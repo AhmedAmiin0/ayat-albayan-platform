@@ -31,7 +31,8 @@ export class RatingQueue {
     if (!settings.auto_messages_enabled) return { queued: 0, skipped: 'auto_off' };
     if (!(await this.queries.approved())) return { queued: 0, skipped: 'not_approved' };
     const queued = await this.queries.queue(planRatings({ lessons: await read(), now }));
-    // Not awaited: a lesson's status change never waits for WhatsApp (the sender logs its own errors).
+    // Not awaited: a lesson's status change never waits for WhatsApp (the sender logs its own
+    // errors).
     if (queued > 0) void this.sender.kick();
     return { queued, skipped: null };
   }

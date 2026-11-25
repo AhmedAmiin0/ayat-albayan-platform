@@ -14,7 +14,8 @@ export class InstantRepo {
     const p_booking = payload as unknown as Json; // typed payload; create_booking validates it in SQL
     const call = () => this.db.rpc('create_instant_lesson', { p_booking, p_actor: actorId });
     let { data, error } = await call();
-    // Two replays at once: the loser hits client_request_id's unique key; the retry returns the winner's.
+    // Two replays at once: the loser hits client_request_id's unique key; the retry returns the
+    // winner's.
     if (error?.code === '23505' && error.message.includes('client_request_id')) ({ data, error } = await call());
     if (error) throw dbError(error);
     return toBookingResult(data);

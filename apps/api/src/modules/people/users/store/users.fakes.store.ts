@@ -26,9 +26,9 @@ export interface Link {
 }
 
 /**
- * In-memory UserStore: profiles by id, link rows, references per user. `phone_e164` is unique like in
- * the database; `guardLost` makes the guarded writes fail the way migration 287 does when the API's
- * own last-admin check lost a race.
+ * In-memory UserStore: profiles by id, link rows, references per user. `phone_e164` is unique like
+ * in the database; `guardLost` makes the guarded writes fail the way migration 287 does when the
+ * API's own last-admin check lost a race.
  */
 export class FakeUserStore implements UserStore {
   teachers: NewTeacher[] = [];

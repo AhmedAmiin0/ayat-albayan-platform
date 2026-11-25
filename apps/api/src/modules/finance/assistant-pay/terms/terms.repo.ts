@@ -55,9 +55,10 @@ export class TermsRepo {
   }
 
   /**
-   * Every priced subscription of a student this assistant brought that has no commission row yet, oldest
-   * first: what the commission rule is run on when terms are set (it only runs on payment and price changes
-   * otherwise). The rule itself decides first / renewal and refuses what is retroactive or before the cutoff.
+   * Every priced subscription of a student this assistant brought that has no commission row yet,
+   * oldest first: what the commission rule is run on when terms are set (it only runs on payment
+   * and price changes otherwise). The rule itself decides first / renewal and refuses what is
+   * retroactive or before the cutoff.
    */
   async uncommissioned(assistantId: string): Promise<string[]> {
     const students = await this.db.from('students').select('id').eq('brought_by', assistantId);

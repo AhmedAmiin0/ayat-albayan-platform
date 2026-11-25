@@ -35,10 +35,11 @@ export function dedupeInvitees(list: readonly ResolvedInvitee[]): ResolvedInvite
 
 /**
  * Picked invitees → recipients (R-MEET-02). Staff: enabled staff profiles (404 staff_not_found). A
- * student: only one the caller may already see (StudentScope; 404 student_not_found), reached through
- * the guardian's phone, resolved here. A phone: admin and sales only (403 phone_invite_not_allowed),
- * E.164 via normalizePhone (400 invalid_phone); a known guardian lends their name and tz (scope 'all'
- * only: nobody else learns who a number belongs to). The creator never invites themselves.
+ * student: only one the caller may already see (StudentScope; 404 student_not_found), reached
+ * through the guardian's phone, resolved here. A phone: admin and sales only (403
+ * phone_invite_not_allowed), E.164 via normalizePhone (400 invalid_phone); a known guardian lends
+ * their name and tz (scope 'all' only: nobody else learns who a number belongs to). The creator
+ * never invites themselves.
  */
 @Injectable()
 export class MeetingInviteeResolver {

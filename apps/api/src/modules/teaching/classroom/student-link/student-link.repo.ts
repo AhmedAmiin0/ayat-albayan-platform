@@ -81,9 +81,10 @@ export class StudentLinkRepo {
   }
 
   /**
-   * The lesson_join_links row a student-link join goes in by: one per (lesson, student), so a removal
-   * from the room (classroom_blocks.join_link_id) holds on every later join. Its token is never handed
-   * out (the student's own link is the credential); it only exists because the row needs one.
+   * The lesson_join_links row a student-link join goes in by: one per (lesson, student), so a
+   * removal from the room (classroom_blocks.join_link_id) holds on every later join. Its token is
+   * never handed out (the student's own link is the credential); it only exists because the row
+   * needs one.
    */
   async lessonLinkId(input: { lesson: LinkLesson; studentId: string }): Promise<string> {
     const found = await this.findLessonLink(input.lesson.id, input.studentId);

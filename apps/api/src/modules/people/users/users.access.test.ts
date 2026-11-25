@@ -6,7 +6,8 @@ import { ADMIN_ACTOR, row, setupUsers, type Link } from './users.fakes';
 import type { Actor } from './users.rules';
 
 // Review of the users-control PR, M2-M4: users.write alone does not reach students / guardians /
-// teachers, only a system admin touches a system admin, and an admin-base role needs an admin actor.
+// teachers, only a system admin touches a system admin, and an admin-base role needs an admin
+// actor.
 
 const codeOf = async (p: Promise<unknown>) => errorCode(await p.catch((e: unknown) => e));
 const without = (...gone: Permission[]): Permission[] => GRANTABLE_PERMISSIONS.filter((p) => !gone.includes(p));

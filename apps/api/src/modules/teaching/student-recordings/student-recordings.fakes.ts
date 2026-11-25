@@ -1,4 +1,5 @@
-// Test fixtures for the student recordings tests (not shipped; excluded from the build by *.fakes.ts).
+// Test fixtures for the student recordings tests (not shipped; excluded from the build by
+// *.fakes.ts).
 import { vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { RecordingRow } from '@/modules/teaching/classroom/recordings/recording.repo';

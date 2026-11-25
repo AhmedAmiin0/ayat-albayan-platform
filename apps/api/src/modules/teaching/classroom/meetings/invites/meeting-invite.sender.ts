@@ -37,11 +37,11 @@ interface ChatSend {
 /**
  * The two channels of a meeting invitation (R-MEET-02). Staff: one bell row (+ push) through
  * PushService.notifyProfiles, kind meeting_invite, keyed by subject (rule 8). Others: a WhatsApp
- * SESSION TEXT queued like an inbox reply (the line replyLine picks, docs/12 §13.3; in module mode the number
- * replyNumber picks, docs/23c decision 6); never a template.
- * No thread or every window closed → window_closed, nothing queued. The queued row goes out through the
- * usual sender and its gates (WhatsApp configured, WA_ALLOWED_RECIPIENTS, settings.messaging_enabled).
- * Never throws: one recipient's failure never fails the others.
+ * SESSION TEXT queued like an inbox reply (the line replyLine picks, docs/12 §13.3; in module mode
+ * the number replyNumber picks, docs/23c decision 6); never a template. No thread or every window
+ * closed → window_closed, nothing queued. The queued row goes out through the usual sender and its
+ * gates (WhatsApp configured, WA_ALLOWED_RECIPIENTS, settings.messaging_enabled). Never throws: one
+ * recipient's failure never fails the others.
  */
 @Injectable()
 export class MeetingInviteSender {

@@ -15,9 +15,10 @@ import { rescheduleTimes } from './meeting-schedule.rules';
 const HOUR_MS = 3_600_000;
 
 /**
- * A family the cancellation may reach: its invitation found the window closed (it may be open now), or
- * one of its texts went out, whatever a later resend did (failed, invite_limit). Never a family that
- * never got the invitation (markStale only marks never-delivered phones, so a stale row never matches).
+ * A family the cancellation may reach: its invitation found the window closed (it may be open now),
+ * or one of its texts went out, whatever a later resend did (failed, invite_limit). Never a family
+ * that never got the invitation (markStale only marks never-delivered phones, so a stale row never
+ * matches).
  */
 const mayTell = (i: StoredInvitee, delivered: ReadonlySet<string>): boolean =>
   i.status === 'window_closed' || delivered.has(i.phone_e164 ?? '');

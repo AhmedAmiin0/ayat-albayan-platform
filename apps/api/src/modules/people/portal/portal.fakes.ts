@@ -1,4 +1,5 @@
-// Test fixtures and HTTP harness for the family portal (test-only, excluded from the build by *.fakes.ts).
+// Test fixtures and HTTP harness for the family portal (test-only, excluded from the build by
+// *.fakes.ts).
 import type { PortalGuardian, PortalStudent } from '@ab/shared';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';

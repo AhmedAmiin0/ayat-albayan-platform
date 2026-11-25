@@ -14,7 +14,8 @@ const SELECT =
 /**
  * GET /booking/makeup-candidates (R-SCH-10): the lessons one student can still make up. Same rule
  * as makeupEligible and create_booking: a no_show or late-cancel excuse the package charged, not a
- * trial, not itself a makeup, within settings.makeup_window_days, with no active makeup yet. Newest first, at most 20.
+ * trial, not itself a makeup, within settings.makeup_window_days, with no active makeup yet. Newest
+ * first, at most 20.
  */
 @Injectable()
 export class MakeupCandidates {

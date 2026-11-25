@@ -26,9 +26,9 @@ export class InternalMeetingsService {
   ) {}
 
   /**
-   * 404 meeting_not_found, 403 not the creator nor an admin, 409 meeting_not_started for a scheduled
-   * meeting whose window has not opened (reschedule or cancel it instead). Idempotent; the room is
-   * closed for everyone inside.
+   * 404 meeting_not_found, 403 not the creator nor an admin, 409 meeting_not_started for a
+   * scheduled meeting whose window has not opened (reschedule or cancel it instead). Idempotent;
+   * the room is closed for everyone inside.
    */
   async end(input: { user: AuthUser; id: string }, now = new Date()): Promise<void> {
     const row = await this.managed(input);

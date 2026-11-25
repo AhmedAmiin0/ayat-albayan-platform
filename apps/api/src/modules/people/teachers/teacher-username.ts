@@ -4,8 +4,9 @@ import { conflict } from '@/common/http/errors';
 import { dbError } from '@/common/http/http';
 
 /**
- * A teacher's sign-in username (docs/30 §1): it lives on the teacher's login profile (profiles.username,
- * unique, lower-case), so it needs a linked login first (409 username_needs_login).
+ * A teacher's sign-in username (docs/30 §1): it lives on the teacher's login profile
+ * (profiles.username, unique, lower-case), so it needs a linked login first (409
+ * username_needs_login).
  */
 @Injectable()
 export class TeacherUsernames {

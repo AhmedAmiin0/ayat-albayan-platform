@@ -29,10 +29,11 @@ type RescheduleRuleInput = { lessonId: string; body: RuleScope; actor: AuthUser 
 /**
  * Move the tapped lesson and every later one (R-SCH-07, docs/10 route 8 `rule`): the old rule ends
  * the day before the tapped lesson's local day (today for a past one, moveFrom), its open lessons
- * from that day become `rescheduled` (chargeable false), and a new rule with the same students / package generates from
- * `newRule.startsOn` (never before the tapped lesson, RulePlanner) over the horizon, with the first
- * new lesson's confirmation queued. One transaction. Returns the first new lesson's id. Anchoring
- * on the tapped lesson, not the new start, keeps earlier lessons and moves the tapped one.
+ * from that day become `rescheduled` (chargeable false), and a new rule with the same students /
+ * package generates from `newRule.startsOn` (never before the tapped lesson, RulePlanner) over the
+ * horizon, with the first new lesson's confirmation queued. One transaction. Returns the first new
+ * lesson's id. Anchoring on the tapped lesson, not the new start, keeps earlier lessons and moves
+ * the tapped one.
  */
 @Injectable()
 export class RescheduleRuleService {
@@ -44,7 +45,8 @@ export class RescheduleRuleService {
 
   async reschedule({ lessonId, body, actor }: RescheduleRuleInput): Promise<string> {
     const lesson = await this.store.get(lessonId);
-    // A makeup is one lesson on its own rule: the new rule would drop its link to the missed lesson.
+    // A makeup is one lesson on its own rule: the new rule would drop its link to the missed
+    // lesson.
     if ((lesson.makeup_of_id ?? null) !== null) throw badRequest('makeup_scope_one');
     if (!isOpenLesson(lesson.status)) throw invalidTransition(lesson.status, 'reschedule');
     const { old, plan, teacherLink } = await this.planner.plan(lesson, body.newRule);

@@ -1,5 +1,6 @@
-// Mocks of the Stripe test build's HTTP harness (test-only, excluded from the build). Never a real Stripe call:
-// the SDK's network methods are vi.fn(); only its offline signature check (webhooks) is the real one.
+// Mocks of the Stripe test build's HTTP harness (test-only, excluded from the build). Never a real
+// Stripe call: the SDK's network methods are vi.fn(); only its offline signature check (webhooks)
+// is the real one.
 import Stripe from 'stripe';
 import { vi } from 'vitest';
 import type { LinkRow } from '@/modules/finance/stripe/links/payment-links.repo';

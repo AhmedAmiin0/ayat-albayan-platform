@@ -3,7 +3,8 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migration 790 (docs/31), read as text: no database in unit tests (checked against a local stack when written).
+// Migration 790 (docs/31), read as text: no database in unit tests (checked against a local stack
+// when written).
 const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261027000790_portal_scope.sql'), 'utf8');
 const code = sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');

@@ -5,9 +5,9 @@ import { SettingsService } from '@/common/settings/settings.service';
 
 /**
  * BookingPlanner and CourseChangePlanner (horizon, meeting mode, invoice size), BookingParties and
- * MakeupCandidates (makeup window, R-SCH-10), SlotsService and TeacherOptionsQueries (24/7 grid, meeting
- * mode) and BookingExtrasController (invoice size). The teacher's
- * WhatsApp on a new student (R-NOT-03) is the teacher_new_student rule (NotificationPolicy).
+ * MakeupCandidates (makeup window, R-SCH-10), SlotsService and TeacherOptionsQueries (24/7 grid,
+ * meeting mode) and BookingExtrasController (invoice size). The teacher's WhatsApp on a new student
+ * (R-NOT-03) is the teacher_new_student rule (NotificationPolicy).
  */
 const KEYS = [
   'booking_horizon_weeks',

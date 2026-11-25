@@ -10,7 +10,8 @@ const probe = vi.hoisted(() => vi.fn<typeof Schedule.probeOccurrences>());
 vi.mock('@ab/shared', async (load) => ({ ...(await load<object>()), probeOccurrences: probe }));
 vi.mock('@ab/schedule', async (load) => ({ ...(await load<object>()), probeOccurrences: probe }));
 
-// A trial and a makeup are one lesson: there is no series whose later weeks a DST change could move.
+// A trial and a makeup are one lesson: there is no series whose later weeks a DST change could
+// move.
 describe('BookingPlanner — the DST probe is for a package only (R-SCH-10)', () => {
   beforeEach(() => {
     vi.useFakeTimers({ now: NOW, toFake: ['Date'] });

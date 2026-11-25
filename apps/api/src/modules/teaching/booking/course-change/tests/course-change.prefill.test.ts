@@ -6,7 +6,8 @@ import { assertStart } from '@/modules/teaching/booking/course-change/course-cha
 import { bookedCourse, type CourseRuleRow } from '@/modules/teaching/booking/core/course-read';
 
 // The change form's unchanged prefill (shared changePicks) against the server's no_change, with a
-// pending change: the old rules hold the days before the latest set's startsOn (PR #117 review fix 1).
+// pending change: the old rules hold the days before the latest set's startsOn (PR #117 review fix
+// 1).
 
 const TZ = 'Asia/Riyadh';
 const SUB = '00000000-0000-4000-8000-000000000001';

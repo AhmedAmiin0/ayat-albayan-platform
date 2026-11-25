@@ -1,4 +1,5 @@
-// Test fixtures for the teacher-students tests (not shipped; excluded from the build by *.fakes.ts).
+// Test fixtures for the teacher-students tests (not shipped; excluded from the build by
+// *.fakes.ts).
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { TeacherLessonRow, TeacherStudentRow } from './teacher-students.repo';
 

@@ -15,9 +15,10 @@ import { assistantReceiptUploadSchema } from '@/modules/finance/assistant-pay/sh
 import { StatementsService } from './statements.service';
 
 /**
- * The assistants' monthly statements (R-ASST-03, R-ASST-05): salary + commissions +/- adjustments per
- * currency, draft -> approved -> paid. Every transition answers 409 invalid_transition when repeated.
- * approve, reopen and unpay need assistantpay.approve; reading and generating need read / write.
+ * The assistants' monthly statements (R-ASST-03, R-ASST-05): salary + commissions +/- adjustments
+ * per currency, draft -> approved -> paid. Every transition answers 409 invalid_transition when
+ * repeated. approve, reopen and unpay need assistantpay.approve; reading and generating need read /
+ * write.
  */
 @ApiTags('assistant-pay')
 @ApiBearerAuth()

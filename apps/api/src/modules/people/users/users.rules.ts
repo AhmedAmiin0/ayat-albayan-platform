@@ -6,8 +6,8 @@ import { forbidden } from '@/common/http/errors';
 import { assertOutranks, isSystemAdminProfile, missingFor, type UserState } from './users.logic';
 import type { StaffProfile } from './store/users.store';
 
-// Who may touch whom (review of the users-control PR, M2-M4). The actor's own profile comes from the
-// DB state, not from the JWT claim, so a demotion applies at once.
+// Who may touch whom (review of the users-control PR, M2-M4). The actor's own profile comes from
+// the DB state, not from the JWT claim, so a demotion applies at once.
 
 export interface Actor {
   id: string;
@@ -53,9 +53,9 @@ function recordRefusal(actor: Actor, role: UserRole): Refusal | null {
 }
 
 /**
- * Why the actor may not give a login `role` (create, or a role change); null = may. Admin-base roles
- * (custom ones too) need an admin actor; the system admin role needs a system admin; then the usual
- * "no role beyond your own grants".
+ * Why the actor may not give a login `role` (create, or a role change); null = may. Admin-base
+ * roles (custom ones too) need an admin actor; the system admin role needs a system admin; then the
+ * usual "no role beyond your own grants".
  */
 function assignRefusal(actor: Actor, state: UserState, role: RoleRecord): Refusal | null {
   if (role.base_role === 'admin' && myProfile(state, actor)?.role !== 'admin')

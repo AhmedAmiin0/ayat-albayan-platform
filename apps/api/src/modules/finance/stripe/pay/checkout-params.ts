@@ -12,10 +12,11 @@ export function sessionExpiry(linkExpiresAt: string, now: Date): number {
 }
 
 /**
- * One Checkout Session for a link (Stripe best practices): mode payment, the amount inline in minor units in
- * the package currency, NO payment_method_types (dynamic payment methods from the Dashboard), the link and
- * the assistant in metadata (also on the PaymentIntent, so a charge / refund can be traced), the link id as
- * client_reference_id, back to the API's done / cancelled pages (text only: the webhook alone fulfils).
+ * One Checkout Session for a link (Stripe best practices): mode payment, the amount inline in minor
+ * units in the package currency, NO payment_method_types (dynamic payment methods from the
+ * Dashboard), the link and the assistant in metadata (also on the PaymentIntent, so a charge /
+ * refund can be traced), the link id as client_reference_id, back to the API's done / cancelled
+ * pages (text only: the webhook alone fulfils).
  */
 export function checkoutParams(link: LinkRow, ctx: { payOrigin: string; now: Date }): Stripe.Checkout.SessionCreateParams {
   const page = paymentLinkUrl(ctx.payOrigin, link.token);

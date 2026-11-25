@@ -29,8 +29,9 @@ export interface MyCommissionSource {
 }
 
 /**
- * How the package was paid: the payment that completed it, i.e. the latest payment (never a refund) paid at
- * or before earned_at (= subscription_full_at, the paid_at of that payment). Null when there is none.
+ * How the package was paid: the payment that completed it, i.e. the latest payment (never a refund)
+ * paid at or before earned_at (= subscription_full_at, the paid_at of that payment). Null when
+ * there is none.
  */
 export function paidVia(earnedAt: string, payments: readonly PaymentFact[]): PaymentMethod | null {
   const at = Date.parse(earnedAt);

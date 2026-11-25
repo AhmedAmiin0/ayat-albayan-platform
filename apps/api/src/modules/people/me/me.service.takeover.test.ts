@@ -5,8 +5,9 @@ import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { MeService } from './me.service';
 
 // Review of #172 (PR #175) and #177: an admin who knows a teacher's token must not pull the
-// teacher's phone onto the admin's alerts. The rule itself runs in claim_push_device (migration 730,
-// e2e/tests/push-device-claim.sql.spec.ts); here: what the API sends it and makes of its answer.
+// teacher's phone onto the admin's alerts. The rule itself runs in claim_push_device (migration
+// 730, e2e/tests/push-device-claim.sql.spec.ts); here: what the API sends it and makes of its
+// answer.
 const T = 'ExponentPushToken[tttttttttttttttttttttt]';
 const KEY = mintDeviceKey();
 

@@ -30,7 +30,8 @@ export class FeedbackPublicService {
     const ctx = await this.resolve(call, now);
     if (ctx.row.submitted_at) throw conflict('already_submitted');
     const input = parseOrThrow(feedbackSubmitSchema, call.body);
-    // The update only matches an unanswered row: a racing double submit loses here and cannot overwrite.
+    // The update only matches an unanswered row: a racing double submit loses here and cannot
+    // overwrite.
     const saved = await this.queries.answer(ctx.row.id, answerOf(input, ctx, now));
     if (!saved) throw conflict('already_submitted');
     return { submitted: true };

@@ -12,8 +12,9 @@ import { toCommissionView } from '@/modules/finance/assistant-pay/commissions/co
 import { CommissionsRepo } from '@/modules/finance/assistant-pay/commissions/commissions.repo';
 
 /**
- * The admin's hands on the money (R-ASST-02, R-ASST-05): the commission ledger, voiding a commission, a
- * manual +/- adjustment and who brought which student. Each write is one RPC (one transaction + audit row).
+ * The admin's hands on the money (R-ASST-02, R-ASST-05): the commission ledger, voiding a
+ * commission, a manual +/- adjustment and who brought which student. Each write is one RPC (one
+ * transaction + audit row).
  */
 @Injectable()
 export class CorrectionsService {

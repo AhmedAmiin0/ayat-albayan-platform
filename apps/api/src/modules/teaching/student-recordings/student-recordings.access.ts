@@ -15,8 +15,9 @@ interface RecordingScope {
 /**
  * Who may open a student's recordings (rule 9, the API being the gate): any admin; a teacher for
  * the lessons THEY taught, and for every lesson of a student currently assigned to them; an
- * assistant only for students assigned to them (student_assistants). Nobody else: another
- * teacher's student, an unassigned assistant, sales and guardians (the portal will add its own route and RLS policy).
+ * assistant only for students assigned to them (student_assistants). Nobody else: another teacher's
+ * student, an unassigned assistant, sales and guardians (the portal will add its own route and RLS
+ * policy).
  */
 @Injectable()
 export class StudentRecordingAccess {

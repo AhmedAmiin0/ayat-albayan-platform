@@ -49,9 +49,10 @@ export class BookingInvoices {
   }
 
   /**
-   * The invoice row to store, null for a trial (a stray invoice is dropped) or a waived one. 400 invoice_required /
-   * request_id_required / invoice_path / invoice_message / invoice_type, 410 media_expired, 413.
-   * A replay (the request already stored its invoice) returns that row and copies nothing.
+   * The invoice row to store, null for a trial (a stray invoice is dropped) or a waived one. 400
+   * invoice_required / request_id_required / invoice_path / invoice_message / invoice_type, 410
+   * media_expired, 413. A replay (the request already stored its invoice) returns that row and
+   * copies nothing.
    */
   async resolve(req: BookingRequest, scope: InvoiceScope): Promise<InvoiceRow | null> {
     const kind = bookingKindOf(req);

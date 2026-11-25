@@ -17,10 +17,10 @@ import { TermsRepo } from './terms/terms.repo';
 import { TermsEnv, TermsService } from './terms/terms.service';
 
 /**
- * The assistant's (base role sales) pay: commission terms and salary per assistant, the commission ledger,
- * monthly statements (draft -> approved -> paid, per currency), attribution (who brought a student), and the
- * assistant's own read-only pages under /sales/me. R-ASST-02 .. R-ASST-06. The rules live in SQL
- * (migrations 20261006000270..274); this module is the guarded door to them.
+ * The assistant's (base role sales) pay: commission terms and salary per assistant, the commission
+ * ledger, monthly statements (draft -> approved -> paid, per currency), attribution (who brought a
+ * student), and the assistant's own read-only pages under /sales/me. R-ASST-02 .. R-ASST-06. The
+ * rules live in SQL (migrations 20261006000270..274); this module is the guarded door to them.
  */
 @Module({
   // PaymentsModule for attachments; SubscriptionsModule for CommissionBell.

@@ -7,7 +7,8 @@ import { ADMIN_PAY, attachment as file, JPEG, PAYMENT_ID, paymentRow, STUDENT_ID
 const REQ = '7d1c6a52-3b7e-4f0e-9a51-2f7c3e9b8a40';
 const post = (body: object) => ({ method: 'POST' as const, url: '/payments', body: { ...ADMIN_PAY, clientRequestId: REQ, ...body } });
 
-// Rule 8: two sends of the same form (same clientRequestId) book one payment, and neither gets an error.
+// Rule 8: two sends of the same form (same clientRequestId) book one payment, and neither gets an
+// error.
 describe('POST /payments: a retry racing the first send', () => {
   let app: NestFastifyApplication;
   let m: Mocks;

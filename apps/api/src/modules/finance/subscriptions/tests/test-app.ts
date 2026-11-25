@@ -60,8 +60,8 @@ type More = (b: TestingModuleBuilder) => TestingModuleBuilder;
 const same: More = (b) => b;
 
 /**
- * Boots AppModule with the mocks; `call` defaults to the admin token. `resolver`: e.g. a role minus one key;
- * `more`: a module's own overrides on top (the Stripe module's queries and client).
+ * Boots AppModule with the mocks; `call` defaults to the admin token. `resolver`: e.g. a role minus
+ * one key; `more`: a module's own overrides on top (the Stripe module's queries and client).
  */
 export function moneyApp(resolver: PermissionResolver = systemResolver, more: More = same) {
   return moneyAppOf(AppModule, resolver, more);

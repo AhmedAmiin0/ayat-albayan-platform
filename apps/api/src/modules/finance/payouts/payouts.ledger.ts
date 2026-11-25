@@ -8,8 +8,8 @@ import { toPayoutView } from './payouts.mapper';
 import { PayoutsRepo, type PayoutRow } from './payouts.repo';
 
 /**
- * Keeps the monthly statement and the per-session ledger (docs/11 §12) from counting a lesson twice.
- * Rule: the ledger is the record of what was paid. Paying settles it in the same transaction
+ * Keeps the monthly statement and the per-session ledger (docs/11 §12) from counting a lesson
+ * twice. Rule: the ledger is the record of what was paid. Paying settles it in the same transaction
  * (PayoutsPayment); un-paying voids that settlement payment; reopening sends an approved payout
  * back to draft. A payout that is still open shows `ledger_paid`, the part of it the ledger has
  * already covered (per-session payments).

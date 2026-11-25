@@ -9,8 +9,8 @@ export function studentRef(s: StudentRef | null, fallbackId: string): Subscripti
 }
 
 /**
- * An unused-cancelled package has no balance row (v_subscription_balance, migration 934) and nothing
- * left; a stopped one keeps its row (its held lessons stay on it, migration 991).
+ * An unused-cancelled package has no balance row (v_subscription_balance, migration 934) and
+ * nothing left; a stopped one keeps its row (its held lessons stay on it, migration 991).
  */
 function balanceView(sub: SubRow, row: BalanceRow | undefined): BalanceView {
   if (!countsForMoney(sub)) return { ...emptyBalance(sub), remaining: 0 };

@@ -5,7 +5,8 @@ type Row = { month: string; category: string; amount: number; currency: string; 
 
 /**
  * The 12-month table (pure): each confirmed expense converted to the reporting currency and added
- * to its month and category. Drafts are left out; a currency without a rate is listed in fx_missing.
+ * to its month and category. Drafts are left out; a currency without a rate is listed in
+ * fx_missing.
  */
 const noCategories = (): Record<string, number> => ({});
 

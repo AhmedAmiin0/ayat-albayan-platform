@@ -42,7 +42,8 @@ export class PayoutsRepo {
 
   /**
    * (lesson, student) pairs of the teacher's reportable lessons in the window still missing a
-   * submitted report (docs/11 R11's anti-join: the embed keeps submitted reports, `is.null` the rest).
+   * submitted report (docs/11 R11's anti-join: the embed keeps submitted reports, `is.null` the
+   * rest).
    */
   async pendingReports(w: LessonWindow): Promise<number> {
     const { count, error } = await this.db

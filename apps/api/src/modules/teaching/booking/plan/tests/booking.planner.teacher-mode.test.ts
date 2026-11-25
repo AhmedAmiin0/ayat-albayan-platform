@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakePlanner, leadRequest, NOW, TEACHER } from '@/modules/teaching/booking/booking.fakes';
 
-// teachers.meeting_mode (migration 490): the booked teacher's own mode wins over the academy default
-// (settings.meeting_link_auto) for the confirmation; the lessons keep the fixed link either way.
+// teachers.meeting_mode (migration 490): the booked teacher's own mode wins over the academy
+// default (settings.meeting_link_auto) for the confirmation; the lessons keep the fixed link either
+// way.
 
 describe('BookingPlanner — per-teacher meeting mode', () => {
   beforeEach(() => vi.useFakeTimers({ now: NOW, toFake: ['Date'] }));

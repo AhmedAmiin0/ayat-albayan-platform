@@ -29,8 +29,9 @@ import { StudentsService } from './students.service';
 
 const Uuid = new ParseUUIDPipe();
 /**
- * Search + paging + filters (R-STU-01): ?status=trial,active&teacher=<id>|none&program=&package=&weekly=&tz=,
- * column text filters ?code=&name=&guardian= and ?sort=&dir= (R-NFR-08).
+ * Search + paging + filters (R-STU-01):
+ * ?status=trial,active&teacher=<id>|none&program=&package=&weekly=&tz=, column text filters
+ * ?code=&name=&guardian= and ?sort=&dir= (R-NFR-08).
  */
 const studentListQuerySchema = listQuerySchema.extend({
   ...studentListFiltersSchema.shape,

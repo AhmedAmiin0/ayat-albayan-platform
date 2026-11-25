@@ -3,9 +3,10 @@ import { describe, expect, it } from 'vitest';
 import { PERMISSION } from '@/common/auth/decorators';
 import { AssistantStatementsController } from './assistant-statements.controller';
 
-// Who may move a statement along: approving, taking an approval back (reopen) and reversing a payout
-// (unpay) are the approver's (assistantpay.approve); building a draft, paying and the receipt upload are
-// the writer's; reading is the reader's. A role with write but not approve cannot undo what an approver did.
+// Who may move a statement along: approving, taking an approval back (reopen) and reversing a
+// payout (unpay) are the approver's (assistantpay.approve); building a draft, paying and the
+// receipt upload are the writer's; reading is the reader's. A role with write but not approve
+// cannot undo what an approver did.
 
 const reflector = new Reflector();
 const proto = AssistantStatementsController.prototype;

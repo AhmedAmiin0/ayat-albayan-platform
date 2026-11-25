@@ -1,5 +1,6 @@
-// HTTP harness of the Stripe test build (test-only). The test file sets FEATURE_STRIPE first (vi.hoisted),
-// so AppModule mounts StripeTestModule; the money harness's mocks plus the Stripe module's own.
+// HTTP harness of the Stripe test build (test-only). The test file sets FEATURE_STRIPE first
+// (vi.hoisted), so AppModule mounts StripeTestModule; the money harness's mocks plus the Stripe
+// module's own.
 import { PushService } from '@/common/push/push.service';
 import { SalesTeacherAssign } from '@/modules/sales/sales-money';
 import { moneyApp } from '@/modules/finance/subscriptions/tests/test-app';

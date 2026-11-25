@@ -37,8 +37,8 @@ export class CourseChange {
   /**
    * POST …/course/change: 201 CourseChangeResult (a retry with the same clientRequestId returns the
    * first change); 404 subscription_not_found / course_not_found, 403 not_your_student /
-   * override_not_allowed, 409 course_finished / custom_count_admin / course_exists / course_changed /
-   * conflict (the assistant always, the admin without override.reason), 400 date_in_past /
+   * override_not_allowed, 409 course_finished / custom_count_admin / course_exists / course_changed
+   * / conflict (the assistant always, the admin without override.reason), 400 date_in_past /
    * starts_at_mismatch / starts_before_subscription / starts_before_course / no_change /
    * days_count_mismatch / no_occurrences / trial_not_course.
    */
@@ -83,8 +83,8 @@ export class CourseChange {
   }
 
   /**
-   * The course's rules (course_rules_of); 400 trial_not_course, 404 course_not_found, 409 course_finished
-   * (no active rule) / course_unattributed.
+   * The course's rules (course_rules_of); 400 trial_not_course, 404 course_not_found, 409
+   * course_finished (no active rule) / course_unattributed.
    */
   private async load(sub: CourseSub): Promise<Loaded> {
     if (sub.package === 'trial') throw domainError(HttpStatus.BAD_REQUEST, 'trial_not_course');

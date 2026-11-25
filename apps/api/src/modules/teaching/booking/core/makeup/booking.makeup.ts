@@ -9,8 +9,8 @@ type MakeupLookup = { lessonId: string; studentId: string; now: Date; windowDays
 /**
  * The missed lesson a makeup replaces (R-SCH-10): 404 lesson_not_found, 400 makeup_student (the
  * student was not on it), 409 makeup_not_eligible + `reason` (makeupEligible: only a charged
- * no_show / late-cancel excuse within the makeup window; never a trial, a cancel by the teacher or admin, a
- * move, or a makeup). Returns the lesson id for create_booking, which re-checks it in SQL.
+ * no_show / late-cancel excuse within the makeup window; never a trial, a cancel by the teacher or
+ * admin, a move, or a makeup). Returns the lesson id for create_booking, which re-checks it in SQL.
  */
 export async function missedLesson(queries: Pick<BookingRepo, 'makeupOriginal'>, input: MakeupLookup): Promise<string> {
   const original = await queries.makeupOriginal(input.lessonId);

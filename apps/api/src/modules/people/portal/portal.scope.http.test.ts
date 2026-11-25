@@ -10,7 +10,8 @@ const ROUTES: ['GET' | 'POST', string][] = [
   ['POST', `/portal/students/${S1}/reports/f1000000-0000-4000-8000-000000000001/url`],
 ];
 
-// docs/31: a guardian sees only their own students, a student only themself; staff never use /portal.
+// docs/31: a guardian sees only their own students, a student only themself; staff never use
+// /portal.
 describe('/portal scope over HTTP', () => {
   let t: App;
   beforeAll(async () => {

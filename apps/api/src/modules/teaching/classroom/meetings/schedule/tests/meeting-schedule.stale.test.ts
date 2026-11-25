@@ -4,7 +4,8 @@ import { MEETING_ID, NOW, scheduledRow } from '@/modules/teaching/classroom/inte
 import { CLOSED_PHONE, OPEN_PHONE, STAFF_ID, stored } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
 import { meetingServices, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
-// A reschedule drops the queued invitation texts: a family whose text never went out must not read «sent».
+// A reschedule drops the queued invitation texts: a family whose text never went out must not read
+// «sent».
 let s: MeetingServices;
 const staff = stored({ meeting_id: MEETING_ID, kind: 'staff', profile_id: STAFF_ID, display_name: 'مريم', channel: 'in_app', status: 'sent' });
 const family = (phone: string) => stored({ meeting_id: MEETING_ID, kind: 'student', phone_e164: phone, display_name: 'سهيلة', channel: 'whatsapp', status: 'sent' });

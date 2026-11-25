@@ -9,9 +9,9 @@ import { StatementsRepo } from './statements.repo';
 import { toStatementView, type StatementRow } from './statements.mapper';
 
 /**
- * An assistant's monthly statement (R-ASST-03): salary + commissions + adjustments per currency, draft ->
- * approved -> paid like teacher payouts. Every change is one RPC (one transaction + audit); a repeat
- * answers 409 invalid_transition, so a double click never moves money twice.
+ * An assistant's monthly statement (R-ASST-03): salary + commissions + adjustments per currency,
+ * draft -> approved -> paid like teacher payouts. Every change is one RPC (one transaction +
+ * audit); a repeat answers 409 invalid_transition, so a double click never moves money twice.
  */
 @Injectable()
 export class StatementsService {

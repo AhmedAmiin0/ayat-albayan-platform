@@ -1,4 +1,5 @@
-// Test fixtures and HTTP harness for the assistant-pay module (test-only, excluded from the build by *.fakes.ts).
+// Test fixtures and HTTP harness for the assistant-pay module (test-only, excluded from the build
+// by *.fakes.ts).
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';

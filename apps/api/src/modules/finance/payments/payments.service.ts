@@ -12,8 +12,9 @@ import { amountChange, writePayment } from './payment-amount-edit';
 import { PaymentReceived, receivedOf } from './received/payment-received';
 
 /**
- * Manual transfers and refunds recorded by an admin (R-PAY-01, R-MOB-02). Every write is audited, then the
- * package statuses and alerts are recomputed: a full payment turns an unpaid package active.
+ * Manual transfers and refunds recorded by an admin (R-PAY-01, R-MOB-02). Every write is audited,
+ * then the package statuses and alerts are recomputed: a full payment turns an unpaid package
+ * active.
  */
 @Injectable()
 export class PaymentsService {

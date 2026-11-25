@@ -14,8 +14,8 @@ export interface LimitTake {
 }
 
 /**
- * Where the sign-in buckets are counted. Sliding window, in order: the first full bucket answers false and
- * the later ones are not hit (as `a && b` over WindowCounter did).
+ * Where the sign-in buckets are counted. Sliding window, in order: the first full bucket answers
+ * false and the later ones are not hit (as `a && b` over WindowCounter did).
  */
 export interface LimitStore {
   take(input: LimitTake): Promise<boolean>;

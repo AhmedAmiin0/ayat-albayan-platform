@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261028000935 read as text: no database in unit tests (the SQL behaviour, max+1 calls and the
-// grants, is in e2e/tests/rate-limit-take.sql.spec.ts).
+// Migration 20261028000935 read as text: no database in unit tests (the SQL behaviour, max+1 calls
+// and the grants, is in e2e/tests/rate-limit-take.sql.spec.ts).
 const sql = readFileSync(
   migrationPath('20261028000935_rate_limit_hits.sql'),
   'utf8',

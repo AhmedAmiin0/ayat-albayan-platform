@@ -8,8 +8,8 @@ import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.
 import { MeetingInviteSender } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.sender';
 import { CLOSED_PHONE, OPEN_PHONE } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
 
-// R-MEET-02 in module mode (docs/23c decision 6): the invite text leaves from the number the family wrote
-// to; the codes recorded on the invitee are today's.
+// R-MEET-02 in module mode (docs/23c decision 6): the invite text leaves from the number the family
+// wrote to; the codes recorded on the invitee are today's.
 
 const NOW = new Date('2026-10-24T10:00:00Z');
 const FRESH = new Date(NOW.getTime() - 3_600_000).toISOString();

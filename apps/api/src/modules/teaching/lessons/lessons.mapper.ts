@@ -88,7 +88,8 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     conflicts: storedConflicts(row.conflicts),
     // A proposal on a lesson that was cancelled / held meanwhile is moot (approving would 409).
     pending_proposal: isOpenLesson(row.status) ? pendingProposal(row.proposals) : null,
-    // R-SCH-11: only an admin edits a time in place; a teacher proposes (R-SCH-08) or notes it in the report.
+    // R-SCH-11: only an admin edits a time in place; a teacher proposes (R-SCH-08) or notes it in
+    // the report.
     time_edit_mode: ctx.role === 'admin' ? timeEditMode(row.status) : null,
     time_edit: timeEdit(row, ctx.role),
   };
