@@ -1,4 +1,5 @@
 // Test helper: a stub on a random port plus a fake API webhook that records what it receives.
+import { createHmac } from 'node:crypto';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { createStub, type StubOptions } from './stub.ts';
@@ -47,6 +48,18 @@ export async function startHook() {
   const url = `${await listen(server)}/webhooks/whatsapp`;
   return { url, received };
 }
+
+const notReceived = (i: number): never => {
+  throw new Error(`webhook #${i} was not received`);
+};
+
+/** The i-th webhook the fake API got; a missing one fails the test here. */
+export const receivedAt = (hook: { received: Received[] }, i: number): Received =>
+  hook.received[i] ?? notReceived(i);
+
+/** The hex HMAC-SHA256 of a body: Kapso signs with it bare, Meta as `sha256=…`. */
+export const hmacHex = (secret: string, body: string): string =>
+  createHmac('sha256', secret).update(body).digest('hex');
 
 export const AUTH = { authorization: 'Bearer test-token' };
 

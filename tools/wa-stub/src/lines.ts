@@ -1,6 +1,7 @@
 // The stub's Meta numbers (docs/12 §13.12): the notifications line always, the chat line only
 // when its phone-number id is configured. Single-line options give exactly the old identity.
 import type { IncomingMessage } from 'node:http';
+import { defaultChatTemplates, defaultTemplates, type StubTemplate } from './providers/meta.ts';
 import type { ChatLineOptions, LineHealth, StubOptions } from './state.ts';
 
 export interface StubLine {
@@ -89,4 +90,13 @@ export function initialHealth(opts: StubOptions): Map<string, LineHealth> {
     });
   });
   return health;
+}
+
+/** createStub's and /__stub/reset's templates: the given (or default) ones and the starter. */
+export function initialTemplates(opts: StubOptions): StubTemplate[] {
+  const chat = stubLines(opts)[1];
+  return [
+    ...(opts.templates ?? defaultTemplates()),
+    ...(chat ? defaultChatTemplates(chat.wabaId) : []),
+  ];
 }

@@ -1,6 +1,5 @@
-import { createHmac } from 'node:crypto';
 import { afterEach, describe, expect, it } from 'vitest';
-import { closeAll, post, startHook, startStub } from './test-server.ts';
+import { closeAll, hmacHex, post, receivedAt, startHook, startStub } from './test-server.ts';
 
 // docs/28: WhatsApp Calling under the kapso prefix (signaling, no audio) and fake calling webhooks.
 
@@ -71,18 +70,15 @@ describe('wa-stub: calls', () => {
       {},
     );
     expect(res.status).toBe(200);
-    const got = hook.received[0];
-    const body = JSON.parse(got?.body ?? '{}') as {
+    const got = receivedAt(hook, 0);
+    const body = JSON.parse(got.body) as {
       entry: {
         changes: { field: string; value: { calls: { session: { sdp_type: string } }[] } }[];
       }[];
     };
-    expect(body.entry[0]?.changes[0]?.field).toBe('calls');
-    expect(body.entry[0]?.changes[0]?.value.calls[0]?.session.sdp_type).toBe('offer');
-    expect(got?.kapsoSig).toBe(
-      createHmac('sha256', 'fake-kapso-secret')
-        .update(got?.body ?? '')
-        .digest('hex'),
-    );
+    const change = body.entry[0]?.changes[0];
+    expect(change?.field).toBe('calls');
+    expect(change?.value.calls[0]?.session.sdp_type).toBe('offer');
+    expect(got.kapsoSig).toBe(hmacHex('fake-kapso-secret', got.body));
   });
 });

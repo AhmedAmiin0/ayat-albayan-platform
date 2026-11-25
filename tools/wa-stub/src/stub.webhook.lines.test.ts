@@ -1,9 +1,10 @@
-import { createHmac } from 'node:crypto';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   bearer,
   closeAll,
+  hmacHex,
   post,
+  receivedAt,
   startHook,
   startStub,
   templateBody,
@@ -15,11 +16,9 @@ afterEach(closeAll);
 interface Envelope {
   entry: { id: string; changes: { value: { metadata: unknown; statuses?: unknown[] } }[] }[];
 }
-const parse = (body: string | undefined) => JSON.parse(body ?? '{}') as Envelope;
-const hmac = (body: string | undefined, secret: string) =>
-  `sha256=${createHmac('sha256', secret)
-    .update(body ?? '')
-    .digest('hex')}`;
+const entryOf = (body: string) => (JSON.parse(body) as Envelope).entry[0];
+const metadataOf = (body: string) => entryOf(body)?.changes[0]?.value.metadata;
+const hmac = (body: string, secret: string) => `sha256=${hmacHex(secret, body)}`;
 
 async function setup() {
   const hook = await startHook();
@@ -35,11 +34,10 @@ describe('wa-stub: signed webhooks per line (docs/12 §13.12)', () => {
       text: 'سلام',
       phoneNumberId: 'PN-C',
     });
-    const got = hook.received[0];
-    expect(got?.sig).toBe(hmac(got?.body, 'chat-secret'));
-    const env = parse(got?.body);
-    expect(env.entry[0]?.id).toBe('WABA-C');
-    expect(env.entry[0]?.changes[0]?.value.metadata).toEqual({
+    const got = receivedAt(hook, 0);
+    expect(got.sig).toBe(hmac(got.body, 'chat-secret'));
+    expect(entryOf(got.body)?.id).toBe('WABA-C');
+    expect(metadataOf(got.body)).toEqual({
       display_phone_number: '15550002222',
       phone_number_id: 'PN-C',
     });
@@ -48,11 +46,10 @@ describe('wa-stub: signed webhooks per line (docs/12 §13.12)', () => {
   it('the default inbound stays on the notifications line with its secret and identity', async () => {
     const { hook, url } = await setup();
     await post(`${url}/__stub/inbound`, { from: '966500000011', text: 'سلام' });
-    const got = hook.received[0];
-    expect(got?.sig).toBe(hmac(got?.body, 'notif-secret'));
-    const env = parse(got?.body);
-    expect(env.entry[0]?.id).toBe('stub-waba');
-    expect(env.entry[0]?.changes[0]?.value.metadata).toEqual({
+    const got = receivedAt(hook, 0);
+    expect(got.sig).toBe(hmac(got.body, 'notif-secret'));
+    expect(entryOf(got.body)?.id).toBe('stub-waba');
+    expect(metadataOf(got.body)).toEqual({
       display_phone_number: '15550001111',
       phone_number_id: 'PN-N',
     });
@@ -66,7 +63,8 @@ describe('wa-stub: signed webhooks per line (docs/12 §13.12)', () => {
       phoneNumberId: 'PN-C',
       signWith: 'wrong',
     });
-    expect(hook.received[0]?.sig).toBe(hmac(hook.received[0]?.body, 'wrong'));
+    const got = receivedAt(hook, 0);
+    expect(got.sig).toBe(hmac(got.body, 'wrong'));
   });
 
   it('an unknown phoneNumberId is forwarded as given, with the notifications identity', async () => {
@@ -77,9 +75,9 @@ describe('wa-stub: signed webhooks per line (docs/12 §13.12)', () => {
       phoneNumberId: 'PN-OTHER',
     });
     expect(await res.json()).toMatchObject({ forwarded: true, status: 200 });
-    const got = hook.received[0];
-    expect(got?.sig).toBe(hmac(got?.body, 'notif-secret'));
-    expect(parse(got?.body).entry[0]?.changes[0]?.value.metadata).toEqual({
+    const got = receivedAt(hook, 0);
+    expect(got.sig).toBe(hmac(got.body, 'notif-secret'));
+    expect(metadataOf(got.body)).toEqual({
       display_phone_number: '15550001111',
       phone_number_id: 'PN-OTHER',
     });
@@ -93,7 +91,8 @@ describe('wa-stub: signed webhooks per line (docs/12 §13.12)', () => {
       chat: { phoneNumberId: 'PN-C' },
     });
     await post(`${url}/__stub/inbound`, { from: '966500000014', text: 'x', phoneNumberId: 'PN-C' });
-    expect(hook.received[0]?.sig).toBe(hmac(hook.received[0]?.body, 'notif-secret'));
+    const got = receivedAt(hook, 0);
+    expect(got.sig).toBe(hmac(got.body, 'notif-secret'));
   });
 
   it('a delivery status of a chat send is reported on the chat line', async () => {
@@ -103,11 +102,9 @@ describe('wa-stub: signed webhooks per line (docs/12 §13.12)', () => {
     const sent = await post(`${url}/v21.0/PN-C/messages`, text, bearer('chat-token'));
     const id = ((await sent.json()) as { messages: { id: string }[] }).messages[0]?.id;
     await post(`${url}/__stub/status`, { id, status: 'delivered' });
-    const got = hook.received[1];
-    expect(got?.sig).toBe(hmac(got?.body, 'chat-secret'));
-    expect(parse(got?.body).entry[0]?.changes[0]?.value.metadata).toMatchObject({
-      phone_number_id: 'PN-C',
-    });
+    const got = receivedAt(hook, 1);
+    expect(got.sig).toBe(hmac(got.body, 'chat-secret'));
+    expect(metadataOf(got.body)).toMatchObject({ phone_number_id: 'PN-C' });
   });
 
   it('a delivery status of a template send is reported on the notifications line', async () => {
@@ -119,9 +116,8 @@ describe('wa-stub: signed webhooks per line (docs/12 §13.12)', () => {
     );
     const tid = ((await tpl.json()) as { messages: { id: string }[] }).messages[0]?.id;
     await post(`${url}/__stub/status`, { id: tid, status: 'sent' });
-    expect(hook.received[0]?.sig).toBe(hmac(hook.received[0]?.body, 'notif-secret'));
-    expect(parse(hook.received[0]?.body).entry[0]?.changes[0]?.value.metadata).toMatchObject({
-      phone_number_id: 'PN-N',
-    });
+    const got = receivedAt(hook, 0);
+    expect(got.sig).toBe(hmac(got.body, 'notif-secret'));
+    expect(metadataOf(got.body)).toMatchObject({ phone_number_id: 'PN-N' });
   });
 });

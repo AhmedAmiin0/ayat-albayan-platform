@@ -1,6 +1,14 @@
-import { createHmac } from 'node:crypto';
 import { afterEach, describe, expect, it } from 'vitest';
-import { bearer, closeAll, post, startHook, startStub, templateBody } from './test-server.ts';
+import {
+  bearer,
+  closeAll,
+  hmacHex,
+  post,
+  receivedAt,
+  startHook,
+  startStub,
+  templateBody,
+} from './test-server.ts';
 
 // docs/19: Kapso's Meta proxy under /kapso: X-API-Key only, phone_number_id on media, hsm_id edits.
 
@@ -107,23 +115,16 @@ describe('wa-stub: the kapso prefix', () => {
       text: 'السلام عليكم',
     });
     expect(await res.json()).toMatchObject({ forwarded: true, status: 200 });
-    const got = hook.received[0];
-    expect(got?.sig).toBeUndefined();
-    expect(got?.kapsoSig).toBe(
-      createHmac('sha256', 'fake-kapso-secret')
-        .update(got?.body ?? '')
-        .digest('hex'),
-    );
-    expect(JSON.parse(got?.body ?? '{}')).toMatchObject({ object: 'whatsapp_business_account' });
+    const got = receivedAt(hook, 0);
+    expect(got.sig).toBeUndefined();
+    expect(got.kapsoSig).toBe(hmacHex('fake-kapso-secret', got.body));
+    expect(JSON.parse(got.body)).toMatchObject({ object: 'whatsapp_business_account' });
     await post(`${url}/__stub/kapso/inbound`, {
       from: '966598917071',
       text: 'x',
       signWith: 'wrong',
     });
-    expect(hook.received[1]?.kapsoSig).toBe(
-      createHmac('sha256', 'wrong')
-        .update(hook.received[1]?.body ?? '')
-        .digest('hex'),
-    );
+    const wrong = receivedAt(hook, 1);
+    expect(wrong.kapsoSig).toBe(hmacHex('wrong', wrong.body));
   });
 });

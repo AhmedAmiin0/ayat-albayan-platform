@@ -1,6 +1,14 @@
-import { createHmac } from 'node:crypto';
 import { afterEach, describe, expect, it } from 'vitest';
-import { AUTH, closeAll, post, startHook, startStub, templateBody } from './test-server.ts';
+import {
+  AUTH,
+  closeAll,
+  hmacHex,
+  post,
+  receivedAt,
+  startHook,
+  startStub,
+  templateBody,
+} from './test-server.ts';
 
 afterEach(closeAll);
 
@@ -11,6 +19,8 @@ interface Value {
 }
 const valueOf = (body: string) =>
   (JSON.parse(body) as { entry: { changes: { value: Value }[] }[] }).entry[0]?.changes[0]?.value;
+const messageOf = (body: string) => valueOf(body)?.messages?.[0];
+const statusOf = (body: string) => valueOf(body)?.statuses?.[0];
 
 async function setup() {
   const hook = await startHook();
@@ -31,18 +41,13 @@ describe('wa-stub: signed inbound simulation (R-MSG-04)', () => {
       text: 'السلام عليكم',
     });
     expect(await res.json()).toMatchObject({ forwarded: true, status: 200 });
-    const got = hook.received[0];
-    expect(got?.sig).toBe(
-      `sha256=${createHmac('sha256', 's3cret')
-        .update(got?.body ?? '')
-        .digest('hex')}`,
-    );
-    const value = valueOf(got?.body ?? '{}');
-    expect(value?.metadata).toEqual({
+    const got = receivedAt(hook, 0);
+    expect(got.sig).toBe(`sha256=${hmacHex('s3cret', got.body)}`);
+    expect(valueOf(got.body)?.metadata).toEqual({
       display_phone_number: '15550001111',
       phone_number_id: 'PN1',
     });
-    expect(value?.messages?.[0]).toMatchObject({
+    expect(messageOf(got.body)).toMatchObject({
       from: '966598917071',
       type: 'text',
       text: { body: 'السلام عليكم' },
@@ -56,7 +61,7 @@ describe('wa-stub: signed inbound simulation (R-MSG-04)', () => {
       button: { text: 'تمام، هنحضر', payload: 'confirm:lesson-1' },
       context: 'wamid.out1',
     });
-    expect(valueOf(hook.received[0]?.body ?? '{}')?.messages?.[0]).toMatchObject({
+    expect(messageOf(receivedAt(hook, 0).body)).toMatchObject({
       type: 'button',
       button: { payload: 'confirm:lesson-1' },
       context: { id: 'wamid.out1' },
@@ -79,10 +84,8 @@ describe('wa-stub: signed inbound simulation (R-MSG-04)', () => {
       },
     });
     const { mediaId } = (await media.json()) as { mediaId: string };
-    expect(valueOf(hook.received[0]?.body ?? '{}')?.messages?.[0]).toMatchObject({
-      type: 'interactive',
-    });
-    expect(valueOf(hook.received[1]?.body ?? '{}')?.messages?.[0]).toMatchObject({
+    expect(messageOf(receivedAt(hook, 0).body)).toMatchObject({ type: 'interactive' });
+    expect(messageOf(receivedAt(hook, 1).body)).toMatchObject({
       type: 'image',
       image: { id: mediaId, mime_type: 'image/jpeg', caption: 'الواجب' },
     });
@@ -103,14 +106,14 @@ describe('wa-stub: delivery statuses (R-MSG-05)', () => {
     const id = ((await sent.json()) as { messages: { id: string }[] }).messages[0]?.id;
     await post(`${url}/__stub/status`, { id, status: 'sent' });
     await post(`${url}/__stub/status`, { id, status: 'failed', errorCode: 131026 });
-    expect(valueOf(hook.received[0]?.body ?? '{}')?.statuses?.[0]).toMatchObject({
+    expect(statusOf(receivedAt(hook, 0).body)).toMatchObject({
       id,
       status: 'sent',
       recipient_id: '966598917071',
       conversation: { origin: { type: 'utility' } },
       pricing: { category: 'utility' },
     });
-    expect(valueOf(hook.received[1]?.body ?? '{}')?.statuses?.[0]).toMatchObject({
+    expect(statusOf(receivedAt(hook, 1).body)).toMatchObject({
       status: 'failed',
       errors: [{ code: 131026 }],
     });

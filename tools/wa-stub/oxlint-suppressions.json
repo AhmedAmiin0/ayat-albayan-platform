@@ -4,15 +4,7 @@
       "count": 1
     }
   },
-  "src/providers/crm.ts": {
-    "complexity": {
-      "count": 2
-    }
-  },
   "src/providers/kapso-calls.ts": {
-    "complexity": {
-      "count": 2
-    },
     "typescript/no-base-to-string": {
       "count": 2
     }
@@ -31,9 +23,6 @@
     }
   },
   "src/stub.calls.test.ts": {
-    "complexity": {
-      "count": 1
-    },
     "ab/no-unchecked-json": {
       "count": 3
     }
@@ -49,9 +38,6 @@
     }
   },
   "src/stub.kapso.test.ts": {
-    "complexity": {
-      "count": 1
-    },
     "ab/no-unchecked-json": {
       "count": 3
     }
@@ -86,36 +72,22 @@
       "count": 7
     }
   },
-  "src/stub.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/stub.uploads.test.ts": {
     "ab/no-unchecked-json": {
       "count": 3
     }
   },
   "src/stub.webhook.lines.test.ts": {
-    "complexity": {
-      "count": 4
-    },
     "ab/no-unchecked-json": {
       "count": 2
     }
   },
   "src/stub.webhook.test.ts": {
-    "complexity": {
-      "count": 3
-    },
     "ab/no-unchecked-json": {
       "count": 3
     }
   },
   "src/templates.ts": {
-    "complexity": {
-      "count": 3
-    },
     "typescript/no-base-to-string": {
       "count": 9
     }
