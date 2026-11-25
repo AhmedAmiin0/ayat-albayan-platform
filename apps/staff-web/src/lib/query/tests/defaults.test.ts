@@ -2,6 +2,7 @@ import { ApiError, shouldRetryUnanswered } from '@ab/client-core';
 import { QueryObserver, type QueryClient } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createQueryClient, STALE_MS } from '@/lib/query';
+import { pathKey } from '@ab/client-core';
 
 let client: QueryClient | undefined;
 afterEach(() => client?.clear());
@@ -10,7 +11,7 @@ const failingRead = (error: Error) => {
   const made = createQueryClient();
   client = made;
   const queryFn = vi.fn((): Promise<string> => Promise.reject(error));
-  const observer = new QueryObserver(made, { queryKey: ['x'], queryFn, retryDelay: 0 });
+  const observer = new QueryObserver(made, { queryKey: pathKey('/x'), queryFn, retryDelay: 0 });
   return { queryFn, observer };
 };
 

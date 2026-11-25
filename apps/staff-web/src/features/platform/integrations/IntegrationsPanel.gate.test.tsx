@@ -4,6 +4,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { integrationItems } from './integrations.fixture';
 import { IntegrationsPanel } from './IntegrationsPanel';
+import { sendGateQuery } from '@/features/messaging/messaging/api';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -11,7 +12,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 
 const s = t.integrations;
 const field = (key: keyof typeof s.keys) => screen.getByLabelText<HTMLInputElement>(s.keys[key].label);
-const GATE = { queryKey: ['send-gate'] };
+const GATE = { queryKey: sendGateQuery.queryKey };
 
 async function renderPanel() {
   const items = integrationItems().map((i) =>

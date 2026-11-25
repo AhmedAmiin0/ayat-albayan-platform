@@ -2,6 +2,7 @@ import type { Locale } from '@ab/core';
 import type { TranslationKeysPage } from '@ab/i18n';
 import { keepPreviousData, queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { translationKeys } from '@/features/platform/keys';
 
 export const TRANSLATIONS_PAGE_SIZE = 50;
 
@@ -14,7 +15,7 @@ export interface TranslationsSearch {
 /** GET /i18n/keys: every key of the bundle with its defaults and overrides (admin). */
 export const translationKeysQuery = (s: TranslationsSearch) =>
   queryOptions({
-    queryKey: ['translations', s],
+    queryKey: translationKeys.list(s),
     queryFn: () => {
       const qs = new URLSearchParams([['page', String(s.page)], ['pageSize', String(TRANSLATIONS_PAGE_SIZE)]]);
       if (s.search.trim()) qs.set('search', s.search.trim());
@@ -40,6 +41,6 @@ export function useOverrideChange() {
     mutationFn: async (changes: readonly OverrideChange[]) => {
       for (const c of changes) await (c.value === null ? apiSend('DELETE', path(c)) : apiSend('PUT', path(c), { value: c.value }));
     },
-    onSettled: () => qc.invalidateQueries({ queryKey: ['translations'] }),
+    onSettled: () => qc.invalidateQueries({ queryKey: translationKeys.all }),
   });
 }

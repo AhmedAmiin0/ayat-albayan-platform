@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { usePermissions } from '@/features/people/auth';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { fetchStorageBackup } from './integrations-api';
+import { driveBackupKeys } from '@/features/platform/keys';
 
 const b = t.integrations.driveBackup;
 const MB = 1024 * 1024;
@@ -100,7 +101,7 @@ const READ_PERMISSION = 'settings.write';
 export function useDriveBackup() {
   const allowed = usePermissions().can(READ_PERMISSION);
   const query = useQuery({
-    queryKey: ['settings', 'integrations', 'storage-backup'],
+    queryKey: driveBackupKeys.backup(),
     queryFn: async () => viewSchema.parse(await fetchStorageBackup()),
     enabled: allowed,
     retry: false,

@@ -10,9 +10,10 @@ import { reportErrorCode } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, publicApiFetch, publicApiSend, type SendMethod } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { REPORTS_KEY, reportErrorText } from '@/features/reporting/reports/api';
+import { reportErrorText } from '@/features/reporting/reports/api';
 import type { ReportApi } from '@/features/reporting/reports/report-api';
 import { linkFileCalls } from './link-files';
+import { reportKeys } from '@/features/reporting/keys';
 
 // The teacher's signed link to one lesson's report (no login): /public/teacher-report/:token/….
 
@@ -67,7 +68,7 @@ const base = (token: string) => `/public/teacher-report/${encodeURIComponent(tok
 /** GET /public/teacher-report/:token: the lesson's report form, as GET /lessons/:id/report-form. */
 export const linkReportFormQuery = (token: string) =>
   queryOptions({
-    queryKey: [...REPORTS_KEY, 'link', token],
+    queryKey: reportKeys.link(token),
     queryFn: (): Promise<ReportFormResponse> => publicApiFetch(base(token)),
     retry: false,
     refetchOnWindowFocus: false,

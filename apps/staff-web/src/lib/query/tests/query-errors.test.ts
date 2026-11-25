@@ -2,6 +2,7 @@ import { ApiError } from '@ab/client-core';
 import { QueryObserver, type QueryClient } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createQueryClient, queryErrorHandler } from '@/lib/query';
+import { pathKey } from '@ab/client-core';
 
 const report = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/boot/web-errors', () => ({ reportWebError: report }));
@@ -18,7 +19,7 @@ function failingReads(error: Error, count: number) {
   client = made;
   const reads = Array.from({ length: count }, (_, i) => {
     const queryFn = (): Promise<string> => Promise.reject(error);
-    const observer = new QueryObserver(made, { queryKey: ['x', i], queryFn, retry: false });
+    const observer = new QueryObserver(made, { queryKey: pathKey(`/x/${i}`), queryFn, retry: false });
     return new Promise<void>((done) => observer.subscribe((r) => r.isError && done()));
   });
   return { leave, settled: Promise.all(reads) };

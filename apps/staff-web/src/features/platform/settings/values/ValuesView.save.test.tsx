@@ -4,6 +4,7 @@ import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { answerPatch, entryOf } from '@/test/entries-fixture';
 import { findRow, renderValues } from './values-test-utils';
+import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -103,7 +104,7 @@ describe('«القيم» — each row saves on its own', () => {
     const { client } = renderValues(apiFetch);
     const row = await findRow(HORIZON);
     fireEvent.change(within(row).getByLabelText(HORIZON), { target: { value: '8' } });
-    await client.refetchQueries({ queryKey: ['settings'] });
+    await client.refetchQueries({ queryKey: CONFIG_QUERY_KEYS.settings });
     expect((within(await findRow(HORIZON)).getByLabelText<HTMLInputElement>(HORIZON)).value).toBe('8');
   });
 });
