@@ -40,9 +40,13 @@ export async function queueRenewal(input: { phone: string; dedupKey: string }): 
 }
 
 /** Our outbound rows to the phone (the inbound that opens the 24 h window is not counted). */
-export async function messageState(phone: string): Promise<{ status: string; error_code: string | null }[]> {
-  return withSql((sql) => sql<{ status: string; error_code: string | null }[]>`
-    select status, error_code from public.messages where phone_e164 = ${phone} and direction = 'outbound' order by created_at`);
+export async function messageState(
+  phone: string,
+): Promise<{ status: string; error_code: string | null }[]> {
+  return withSql(
+    (sql) => sql<{ status: string; error_code: string | null }[]>`
+    select status, error_code from public.messages where phone_e164 = ${phone} and direction = 'outbound' order by created_at`,
+  );
 }
 
 export const sentToDigits = (sent: StubSent[], digits: string): StubSent[] =>

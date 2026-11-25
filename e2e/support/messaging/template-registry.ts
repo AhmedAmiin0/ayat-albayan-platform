@@ -57,7 +57,9 @@ export async function setTemplateStatus(input: { key: string; status: string }):
     where key = ${input.key}`);
 }
 
-export async function templateRow(key: string): Promise<{ status: string; last_checked_at: Date | null; submitted_at: Date | null }> {
+export async function templateRow(
+  key: string,
+): Promise<{ status: string; last_checked_at: Date | null; submitted_at: Date | null }> {
   return withSql(async (sql) => {
     const [row] = await sql<{ status: string; last_checked_at: Date | null; submitted_at: Date | null }[]>`
       select status, last_checked_at, submitted_at from public.message_templates where key = ${key}`;

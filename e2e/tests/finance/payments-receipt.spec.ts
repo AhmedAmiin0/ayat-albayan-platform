@@ -22,13 +22,18 @@ async function paymentsOf(subscriptionId: string): Promise<Paid[]> {
 }
 
 /** Lists every open package of the student, not only the unpaid ones. */
-async function openForm(page: Page, seed: { subscriptionId: string; student: string }): Promise<Locator> {
+async function openForm(
+  page: Page,
+  seed: { subscriptionId: string; student: string },
+): Promise<Locator> {
   await page.goto('/admin/payments');
   await page.getByRole('button', { name: ar.payments.record }).click();
   const dialog = page.getByRole('dialog');
   await dialog.getByRole('searchbox', { name: ar.payments.mobile.chooseStudent }).fill(seed.student);
   await dialog.getByRole('button', { name: new RegExp(seed.student) }).click();
-  await dialog.getByLabel(ar.payments.mobile.chooseSubscription, { exact: true }).selectOption(seed.subscriptionId);
+  await dialog
+    .getByLabel(ar.payments.mobile.chooseSubscription, { exact: true })
+    .selectOption(seed.subscriptionId);
   // The receipt's input; the bank-only attachments input is the `multiple` one.
   await dialog.locator('input[type=file]:not([multiple])').setInputFiles({ name: 'receipt.png', mimeType: 'image/png', buffer: RECEIPT_PNG });
   await expect(dialog.getByRole('img', { name: ar.payments.receipt })).toBeVisible(); // local preview
@@ -61,7 +66,9 @@ test.describe('payments page and receipts (R-PAY-01)', () => {
     const viewer = page.getByRole('dialog', { name: ar.payments.receipt });
     const image = viewer.getByRole('img', { name: ar.payments.receipt });
     await expect(image).toBeVisible();
-    await expect.poll(() => image.evaluate((el) => (el as unknown as { naturalWidth: number }).naturalWidth)).toBeGreaterThan(0);
+    await expect
+      .poll(() => image.evaluate((el) => (el as unknown as { naturalWidth: number }).naturalWidth))
+      .toBeGreaterThan(0);
     const src = await image.getAttribute('src');
     expect(src).toBeTruthy();
     expect((await page.request.get(src ?? '')).status()).toBe(200);

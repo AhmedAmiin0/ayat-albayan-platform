@@ -65,20 +65,20 @@ export function reportNames(f: Record<string, Cell>): string[] {
 
 /** Free trial: a trial lesson number (A5 text) or a trial send log. */
 export function isTrial(f: Record<string, Cell>): boolean {
-  const n = normalizeArabic(text(f['lesson_number_text']) ?? '');
-  return /تجريب/.test(n) || /تجريبية/.test(text(f['send_status']) ?? '');
+  const n = normalizeArabic(text(f.lesson_number_text) ?? '');
+  return /تجريب/.test(n) || /تجريبية/.test(text(f.send_status) ?? '');
 }
 
 /** A5 lesson number, normalized only to compare two reports of one day; never imported. */
 export function lessonNumber(f: Record<string, Cell>): string {
-  return normalizeArabic(text(f['lesson_number_text']) ?? '')
+  return normalizeArabic(text(f.lesson_number_text) ?? '')
     .replace(/^(?:ال)?حلقه\s*/, '')
     .trim();
 }
 
 /** The PDF reached WhatsApp, directly or via the template fallback. */
 export function wasSent(f: Record<string, Cell>): boolean {
-  return (text(f['send_status']) ?? '').includes('✅');
+  return (text(f.send_status) ?? '').includes('✅');
 }
 
 /** Lesson outcome from attendance — the same derivation as submit_report (migration 131). */

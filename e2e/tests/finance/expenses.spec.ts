@@ -8,9 +8,13 @@ import { withSql } from '../../support/core/schedule';
 const NOTE = `حملة e2e ${Date.now() % 100_000}`;
 const range = () => ({ from: thisMonthStart(), to: riyadhToday() });
 
-async function rowsInDb(): Promise<{ category: string; amount: number; currency: string; note: string | null }[]> {
-  return withSql((sql) => sql<{ category: string; amount: number; currency: string; note: string | null }[]>`
-    select category, amount::float as amount, currency, note from public.expenses where month = ${thisMonthStart()}`);
+async function rowsInDb(): Promise<
+  { category: string; amount: number; currency: string; note: string | null }[]
+> {
+  return withSql(
+    (sql) => sql<{ category: string; amount: number; currency: string; note: string | null }[]>`
+    select category, amount::float as amount, currency, note from public.expenses where month = ${thisMonthStart()}`,
+  );
 }
 
 const total = (page: Page) => page.locator('p', { hasText: ar.expenses.total });

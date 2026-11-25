@@ -50,7 +50,8 @@ test.describe('inbox pushes to assistants (docs/21 D3)', () => {
     await inbound(phone, 'هل وصلت رسالتي؟');
     await expect.poll(() => count(b.id), WAIT).toBe(1);
     // Same 10-minute bucket: A's row has the same dedup key, so A gains nothing.
-    if (Math.floor(first / BUCKET_MS) === Math.floor(second / BUCKET_MS)) expect(await count(a.id)).toBe(1);
+    if (Math.floor(first / BUCKET_MS) === Math.floor(second / BUCKET_MS))
+      expect(await count(a.id)).toBe(1);
   });
 
   test('a new number → new_lead for every assistant', async () => {

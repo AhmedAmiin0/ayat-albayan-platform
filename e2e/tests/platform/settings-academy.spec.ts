@@ -31,7 +31,8 @@ test.describe('settings — «القيم» rows and the follow-up hours', () => 
       await expect(sheet(label)).toBeVisible();
       return sheet(label);
     };
-    const field = (scope: Page | Locator, label: string) => scope.getByLabel(label, { exact: true });
+    const field = (scope: Page | Locator, label: string) =>
+      scope.getByLabel(label, { exact: true });
     const saveRow = (scope: Page | Locator, label: string) =>
       phone ? scope.getByRole('button', { name: v.sheet.save, exact: true }) : scope.getByRole('button', { name: `${ar.common.save}: ${label}`, exact: true });
     const saveValue = async (label: string, value: string) => {

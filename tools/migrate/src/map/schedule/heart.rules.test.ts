@@ -47,13 +47,13 @@ describe('HEART timetable rules', () => {
       package: '8',
       status: 'active',
     });
-    expect(r.by('schedule_rule_students').map((d) => d.record.refs['student_id'])).toEqual([LAYAN]);
+    expect(r.by('schedule_rule_students').map((d) => d.record.refs.student_id)).toEqual([LAYAN]);
   });
 
   it('days with different times become one rule per time', () => {
     const r = run({ timetable: [slotRow({ sun: '15:00', wed: '16:00' })] });
     expect(
-      r.by('schedule_rules').map((d) => [d.key.key.slice(-6), d.record.columns['byday']]),
+      r.by('schedule_rules').map((d) => [d.key.key.slice(-6), d.record.columns.byday]),
     ).toEqual([
       ['@15:00', [0]],
       ['@16:00', [3]],

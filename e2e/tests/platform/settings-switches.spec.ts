@@ -39,8 +39,12 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     const admin = await asRole('admin');
     // The notifications tab says the report PDF is held because sending is off.
     await admin.goto('/admin/settings/communications?tab=catalogue');
-    const report = admin.getByRole('region', { name: ar.notificationRules.title, exact: true }).locator('[data-key="report_ready"]');
-    const held = isMobile ? ar.notificationRules.shortBlockers.messaging_off : ar.notificationCatalogue.blockers.messaging_off;
+    const report = admin
+      .getByRole('region', { name: ar.notificationRules.title, exact: true })
+      .locator('[data-key="report_ready"]');
+    const held = isMobile
+      ? ar.notificationRules.shortBlockers.messaging_off
+      : ar.notificationCatalogue.blockers.messaging_off;
     await expect(report.getByText(held, { exact: false })).toBeVisible();
     // The page head names the sending state on every tab.
     await expect(admin.getByRole('group', { name: ar.settingsPages.sendingNow })).toContainText(s.off);

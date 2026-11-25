@@ -70,9 +70,18 @@ test.describe('assistant statements (20261006000271-274)', () => {
       const y = await brought(tx, { by: a, phone: '+966500000208', price: 200 });
       await pay(tx, y.sub, 200); // the draft does not know yet
       await tx`select public.approve_assistant_statement(${id}, null)`;
-      const frozen = one(await tx<{ totals: unknown }[]>`select totals from public.assistant_statements where id = ${id}`);
-      expect(frozen.totals).toEqual({ SAR: { salary: 0, commissions: 30, adjustments: 0, total: 30 } });
-      expect((await tx`select 1 from public.assistant_statement_lines where statement_id = ${id}`).length).toBe(2);
+      const frozen = one(
+        await tx<
+          { totals: unknown }[]
+        >`select totals from public.assistant_statements where id = ${id}`,
+      );
+      expect(frozen.totals).toEqual({
+        SAR: { salary: 0, commissions: 30, adjustments: 0, total: 30 },
+      });
+      expect(
+        (await tx`select 1 from public.assistant_statement_lines where statement_id = ${id}`)
+          .length,
+      ).toBe(2);
     });
   });
 
@@ -83,7 +92,9 @@ test.describe('assistant statements (20261006000271-274)', () => {
       const d = await brought(tx, { by: a, phone: '+966500000202', price: 200 });
       await pay(tx, d.sub, 200);
       const draft = await generate(tx, a, month);
-      expect(draft.totals).toEqual({ SAR: { salary: 0, commissions: 20, adjustments: 0, total: 20 } });
+      expect(draft.totals).toEqual({
+        SAR: { salary: 0, commissions: 20, adjustments: 0, total: 20 },
+      });
       await pay(tx, d.sub, { amount: 200, kind: 'refund' });
       const rebuilt = one(await tx<{ totals: unknown }[]>`select totals from public.assistant_statements where id = ${draft.statement_id}`);
       expect(rebuilt.totals).toEqual({});
@@ -100,8 +111,12 @@ test.describe('assistant statements (20261006000271-274)', () => {
         effective_month::text, statement_id from public.assistant_adjustments where assistant_id = ${a}`);
       expect(adj).toEqual({ amount: '-50.00', effective_month: month, statement_id: null });
       const next = await generate(tx, a, month);
-      expect(next.totals).toEqual({ SAR: { salary: 0, commissions: 0, adjustments: -50, total: -50 } });
-      expect(await code(tx, () => tx`select public.reopen_assistant_statement(${paid}, null)`)).toBe('invalid_transition');
+      expect(next.totals).toEqual({
+        SAR: { salary: 0, commissions: 0, adjustments: -50, total: -50 },
+      });
+      expect(
+        await code(tx, () => tx`select public.reopen_assistant_statement(${paid}, null)`),
+      ).toBe('invalid_transition');
       await tx`select public.unpay_assistant_statement(${paid}, null, 'check')`;
       expect(await code(tx, () => tx`select public.reopen_assistant_statement(${paid}, null)`)).toBe('reversal_in_later_statement');
     });

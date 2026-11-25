@@ -9,6 +9,7 @@ import type { AssistantLessonView } from '@ab/schedule';
 import { riyadhToday } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { salesKeys } from '@/core/lib/keys';
 
 // The salesperson's pages (docs/16, web parity with apps/staff-web/src/features/sales): read-only, no money.
 
@@ -21,7 +22,7 @@ const asList = <T>(data: T[]): T[] => (Array.isArray(data) ? data : []);
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
 export const useSalesSubscriptions = (kind: SalesSubscriptionKind) =>
   useQuery({
-    queryKey: [...pathKey('/sales/subscriptions'), kind],
+    queryKey: salesKeys.subscriptions(kind),
     queryFn: () => apiFetch<SalesSubscriptionView[]>(`/sales/subscriptions?kind=${kind}`),
     select: asList,
   });
@@ -53,15 +54,20 @@ export const useSalesLive = () =>
 
 /** GET /sales/schedule?date&teacherId — one Riyadh day of the academy, read-only, re-read every minute. */
 const salesScheduleQuery = (date: string, teacherId: string) => ({
-  queryKey: [...pathKey('/sales/schedule'), date, teacherId],
-  queryFn: () => apiFetch<SalesScheduleDay>(`/sales/schedule?date=${date}${teacherId ? `&teacherId=${teacherId}` : ''}`),
+  queryKey: salesKeys.schedule(date, teacherId),
+  queryFn: () =>
+    apiFetch<SalesScheduleDay>(
+      `/sales/schedule?date=${date}${teacherId ? `&teacherId=${teacherId}` : ''}`,
+    ),
   refetchInterval: LIVE_REFRESH_MS,
 });
 
-export const useSalesSchedule = (date: string, teacherId: string) => useQuery(salesScheduleQuery(date, teacherId));
+export const useSalesSchedule = (date: string, teacherId: string) =>
+  useQuery(salesScheduleQuery(date, teacherId));
 
 const lessonsOf = (day: SalesScheduleDay) => day.lessons;
 
 /** Reuses the schedule query on the Riyadh day of `now` for every teacher (one cache). */
 // academy day (docs/34 b): GET /sales/schedule `?date` is a Riyadh day.
-export const useSalesDay = (now: Date) => useQuery({ ...salesScheduleQuery(riyadhToday(now), ''), select: lessonsOf });
+export const useSalesDay = (now: Date) =>
+  useQuery({ ...salesScheduleQuery(riyadhToday(now), ''), select: lessonsOf });

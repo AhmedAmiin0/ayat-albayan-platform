@@ -8,7 +8,9 @@ import { openMyLesson } from '../../support/teaching/my-calendar';
 const MINUTE = 60_000;
 const NOTE = 'مش هقدر في الميعاد ده';
 
-async function proposalOf(lessonId: string): Promise<{ status: string; decided_by: string | null } | undefined> {
+async function proposalOf(
+  lessonId: string,
+): Promise<{ status: string; decided_by: string | null } | undefined> {
   return withSql(async (sql) => {
     const [row] = await sql<{ status: string; decided_by: string | null }[]>`
       select status, decided_by from public.lesson_proposals where lesson_id = ${lessonId}`;

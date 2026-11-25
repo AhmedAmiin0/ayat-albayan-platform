@@ -30,7 +30,12 @@ export async function seedHiba(tag: string): Promise<HibaSeed> {
     await sql`insert into public.messages (direction, phone_e164, body) values ('inbound', ${g.phone}, 'رسالة سرية لهبة')`;
     return { teacherId: t.id, phone: g.phone };
   });
-  const lessonId = await seedLesson({ teacherId: ids.teacherId, studentId, startsAt: startedToday(), minutes: 45 });
+  const lessonId = await seedLesson({
+    teacherId: ids.teacherId,
+    studentId,
+    startsAt: startedToday(),
+    minutes: 45,
+  });
   return withSql(async (sql) => {
     const [r] = await sql<{ id: string }[]>`
       insert into public.lesson_reports (lesson_id, student_id, teacher_id, attendance, notes, status, version, submitted_at)

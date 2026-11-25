@@ -62,7 +62,13 @@ export async function leadOf(assistantId: string, phone: string): Promise<string
 }
 
 /** POST /sales/booking: a new family and a free trial, from her lead, at `time` (Riyadh) next Saturday. */
-export function trialBody(input: { teacherId: string; leadId: string; phone: string; name: string; time: string }): object {
+export function trialBody(input: {
+  teacherId: string;
+  leadId: string;
+  phone: string;
+  name: string;
+  time: string;
+}): object {
   return {
     teacherId: input.teacherId,
     byday: [6],
@@ -78,8 +84,10 @@ export function trialBody(input: { teacherId: string; leadId: string; phone: str
 }
 
 /** The statement month (YYYY-MM) of now in the assistants' zone, Asia/Riyadh. */
-export const thisMonth = (): string => new Date(Date.now() + 3 * 3_600_000).toISOString().slice(0, 7);
-export const dayOffset = (days: number): string => new Date(Date.now() + 3 * 3_600_000 + days * 86_400_000).toISOString().slice(0, 10);
+export const thisMonth = (): string =>
+  new Date(Date.now() + 3 * 3_600_000).toISOString().slice(0, 7);
+export const dayOffset = (days: number): string =>
+  new Date(Date.now() + 3 * 3_600_000 + days * 86_400_000).toISOString().slice(0, 10);
 
 export interface Family {
   student: string;

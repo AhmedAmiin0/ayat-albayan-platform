@@ -7,7 +7,7 @@ describe('migrate:apply config seed (docs/26 §2b)', () => {
     const q = configSeedSql();
     expect(q.text).toBe('select public.config_seed($1::text::jsonb, $2::int) as r');
     const rows = JSON.parse(q.params[0]) as Record<string, unknown>[];
-    expect(rows.map((r) => r['key'])).toEqual(SEED_ENTRIES.map((e) => e.key));
+    expect(rows.map((r) => r.key)).toEqual(SEED_ENTRIES.map((e) => e.key));
     for (const r of rows) expect(r).not.toHaveProperty('value');
     expect(q.params[1]).toBe(REGISTRY_VERSION);
   });

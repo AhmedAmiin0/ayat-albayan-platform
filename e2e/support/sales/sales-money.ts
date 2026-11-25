@@ -10,7 +10,11 @@ import { withSql } from '../core/schedule';
 export const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
 
 /** A Saudi guardian on `phone` with one child in trial, brought by the salesperson (test data, written with SQL). */
-export async function trialFamily(input: { broughtBy: string; phone: string; name: string }): Promise<string> {
+export async function trialFamily(input: {
+  broughtBy: string;
+  phone: string;
+  name: string;
+}): Promise<string> {
   return withSql(async (sql) => {
     const [g] = await sql<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
       values (${`أم ${input.name}`}, ${input.phone}, 'SA', 'Asia/Riyadh') returning id`;
@@ -22,7 +26,10 @@ export async function trialFamily(input: { broughtBy: string; phone: string; nam
 }
 
 /** POST /sales/payments/receipt-upload-url then PUT the PNG to the signed URL: the receipt path. */
-export async function uploadReceipt(request: APIRequestContext, input: { token: string; subscriptionId: string }): Promise<string> {
+export async function uploadReceipt(
+  request: APIRequestContext,
+  input: { token: string; subscriptionId: string },
+): Promise<string> {
   const body = { subscriptionId: input.subscriptionId, mime: 'image/png', size: PNG.byteLength };
   const signed = await call<{ path: string; signed_url: string }>(request, { token: input.token, method: 'POST', path: '/sales/payments/receipt-upload-url', body });
   if (signed.status !== 200) throw new Error(`upload url ${signed.status} ${JSON.stringify(signed.body)}`);
@@ -32,7 +39,10 @@ export async function uploadReceipt(request: APIRequestContext, input: { token: 
 }
 
 /** students.status, and whether an audit row records its trial → active flip by `actor`. */
-export async function statusFacts(studentId: string, actor: string): Promise<{ status: string | undefined; audited: boolean }> {
+export async function statusFacts(
+  studentId: string,
+  actor: string,
+): Promise<{ status: string | undefined; audited: boolean }> {
   return withSql(async (sql) => {
     const [s] = await sql<{ status: string }[]>`select status from public.students where id = ${studentId}`;
     const rows = await sql<{ id: string }[]>`select id from public.audit_log where entity = 'students' and entity_id = ${studentId}

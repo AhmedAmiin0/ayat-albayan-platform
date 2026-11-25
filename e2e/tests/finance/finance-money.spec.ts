@@ -55,7 +55,15 @@ test.describe('finance: part payments, receivables, refunds', () => {
     const page = await asRole('admin');
     await page.goto('/admin/finance');
     const money = (await openNav(page)).getByRole('list', { name: ar.finance.nav, exact: true });
-    for (const name of [ar.payments.title, ar.nav.subscriptions, ar.nav.payouts, ar.nav.expenses, ar.finance.invoicesTitle, ar.finance.receivablesTitle, ar.finance.summaryTitle])
+    for (const name of [
+      ar.payments.title,
+      ar.nav.subscriptions,
+      ar.nav.payouts,
+      ar.nav.expenses,
+      ar.finance.invoicesTitle,
+      ar.finance.receivablesTitle,
+      ar.finance.summaryTitle,
+    ])
       await expect(money.getByRole('link', { name, exact: true })).toBeVisible();
     await page.keyboard.press('Escape'); // The menu sheet on phones; nothing on desktop.
     await expect(page.getByRole('heading', { name: ar.finance.summaryTitle })).toBeVisible();

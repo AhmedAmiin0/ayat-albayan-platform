@@ -30,14 +30,20 @@ interface CancelInput {
 }
 
 async function cancelFromDrawer(page: Page, i: CancelInput): Promise<void> {
-  const drawer = await openLessonDrawer(page, { week: weekOf(i.at), teacherId: i.teacherId, name: i.name, at: i.at });
+  const drawer = await openLessonDrawer(page, {
+    week: weekOf(i.at),
+    teacherId: i.teacherId,
+    name: i.name,
+    at: i.at,
+  });
   await drawer.getByRole('button', { name: ar.lessons.cancelSubmit }).click();
   const form = drawer.getByRole('form', { name: ar.lessons.cancelTitle });
   await form.getByRole('radio', { name: i.by }).check();
   if (i.scope) await form.getByRole('radio', { name: i.scope }).check();
   await form.getByLabel(ar.lessons.reason).fill(i.reason);
   await form.getByRole('button', { name: ar.lessons.cancelSubmit }).click();
-  const done = i.scope === ar.lessons.scope.rule ? ar.lessons.seriesCancelled : ar.lessons.cancelled;
+  const done =
+    i.scope === ar.lessons.scope.rule ? ar.lessons.seriesCancelled : ar.lessons.cancelled;
   await expect(page.getByRole('status').filter({ hasText: done })).toBeVisible();
 }
 
@@ -51,7 +57,12 @@ test.describe('cancel a lesson (R-SCH-07)', () => {
     const name = `ليان${tag()}`;
     const seed = await seedPaidStudent({ teacherId, guardian: `أم ${name}`, student: name });
     const startsAt = riyadh(addDays(nextWeekSaturday(), 1), '16:00');
-    const lessonId = await seedLesson({ teacherId, studentId: seed.studentId, startsAt, minutes: 45 });
+    const lessonId = await seedLesson({
+      teacherId,
+      studentId: seed.studentId,
+      startsAt,
+      minutes: 45,
+    });
     expect((await balanceOf(seed.subscriptionId))?.remaining).toBe(3);
 
     const page = await asRole('admin');
@@ -68,8 +79,18 @@ test.describe('cancel a lesson (R-SCH-07)', () => {
     const seed = await seedPaidStudent({ teacherId, guardian: `أم ${name}`, student: name });
     const soon = new Date(Date.now() + 10 * HOUR);
     const later = new Date(Date.now() + 72 * HOUR);
-    const lateId = await seedLesson({ teacherId, studentId: seed.studentId, startsAt: soon, minutes: 45 });
-    const earlyId = await seedLesson({ teacherId, studentId: seed.studentId, startsAt: later, minutes: 45 });
+    const lateId = await seedLesson({
+      teacherId,
+      studentId: seed.studentId,
+      startsAt: soon,
+      minutes: 45,
+    });
+    const earlyId = await seedLesson({
+      teacherId,
+      studentId: seed.studentId,
+      startsAt: later,
+      minutes: 45,
+    });
 
     const page = await asRole('admin');
     const student = { teacherId, name, by: ar.lessons.by.student, reason: 'سفر' };
@@ -87,7 +108,13 @@ test.describe('cancel a lesson (R-SCH-07)', () => {
     const name = `ريتال${tag()}`;
     const seed = await seedPaidStudent({ teacherId, guardian: `أم ${name}`, student: name });
     const first = riyadh(addDays(nextWeekSaturday(), 1), '16:00');
-    const rule = await seedWeeklyRule({ teacherId, studentIds: [seed.studentId], firstStart: first, weeks: 4, minutes: 45 });
+    const rule = await seedWeeklyRule({
+      teacherId,
+      studentIds: [seed.studentId],
+      firstStart: first,
+      weeks: 4,
+      minutes: 45,
+    });
     const second = new Date(first.getTime() + 7 * 24 * HOUR);
 
     const page = await asRole('admin');

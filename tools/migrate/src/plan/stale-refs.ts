@@ -93,13 +93,16 @@ export function dropOrphanLessons(plan: PlanWithChanges): PlanWithChanges {
   const kept = new Set<string>();
   const linked = new Set<string>();
   for (const l of links) {
-    const lesson = l.record.refs['lesson_id'];
+    const lesson = l.record.refs.lesson_id;
     if (!lesson) continue;
     linked.add(keyId(lesson));
     if (l.action !== 'skip') kept.add(keyId(lesson));
   }
   const orphan = (i: (typeof plan.items)[number]) =>
-    i.key.entity === 'lessons' && i.action === 'create' && linked.has(keyId(i.key)) && !kept.has(keyId(i.key));
+    i.key.entity === 'lessons' &&
+    i.action === 'create' &&
+    linked.has(keyId(i.key)) &&
+    !kept.has(keyId(i.key));
   const items = plan.items.map((i) => (orphan(i) ? { ...i, action: 'skip' as const } : i));
   return { ...plan, items, counts: countPlan({ items, issues: plan.issues }) };
 }
@@ -115,8 +118,10 @@ export async function deltaPlan(o: {
   const stale = await findStale({ db: o.db, plan, existing: o.built.existing, tableOf });
   const r = dropStaleRefs({ plan, stale, tableOf });
   const out = dropOrphanLessons(r.plan);
-  const orphans = out.counts['lessons']?.skip ?? 0;
-  console.log(`creates-only: ${r.cleared} links to rows deleted in the app left empty, ${r.skipped} skipped`);
+  const orphans = out.counts.lessons?.skip ?? 0;
+  console.log(
+    `creates-only: ${r.cleared} links to rows deleted in the app left empty, ${r.skipped} skipped`,
+  );
   console.log(`creates-only: lessons skipped (incl. orphans whose students are gone): ${orphans}`);
   return out;
 }

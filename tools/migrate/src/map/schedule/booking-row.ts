@@ -9,10 +9,10 @@ import { type StudentIndex, findStudent } from '../people/match.ts';
 
 /** Students the row names, or the reject: test row, bad phone, no name, student not imported. */
 export function bookingStudents(row: SourceRow, ix: StudentIndex): NaturalKey[] | IssueInput {
-  const phone = phoneCell(row.fields['phone']);
-  const raw = text(row.fields['name']);
+  const phone = phoneCell(row.fields.phone);
+  const raw = text(row.fields.name);
   const reason = testReason({
-    names: [raw, row.fields['teacher']],
+    names: [raw, row.fields.teacher],
     phone: phone.ok ? phone.e164 : null,
   });
   if (reason) return { code: 'test_row', severity: 'reject', detail: reason };
@@ -35,15 +35,15 @@ function bookingTeacher(
   ix: StudentIndex,
   students: NaturalKey[],
 ): string | IssueInput {
-  const raw = text(row.fields['teacher']);
+  const raw = text(row.fields.teacher);
   if (raw) {
     const slug = teacherFromText(raw);
     return slug ?? { code: 'unknown_teacher', severity: 'reject', field: 'teacher' };
   }
   const ids = new Set(students.map((k) => k.key));
-  const own = ix.all.find((s) => ids.has(s.key.key) && s.record.refs['teacher_id']);
+  const own = ix.all.find((s) => ids.has(s.key.key) && s.record.refs.teacher_id);
   return (
-    own?.record.refs['teacher_id']?.key ?? {
+    own?.record.refs.teacher_id?.key ?? {
       code: 'missing_field',
       severity: 'reject',
       field: 'teacher',

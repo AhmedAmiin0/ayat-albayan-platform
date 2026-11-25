@@ -36,7 +36,13 @@ test.describe('meetings', () => {
       const [m] = await sql<{ n: number }[]>`select count(*)::int as n from public.messages where guardian_id = ${family.guardianId}`;
       return { ...l, messages: m?.n };
     });
-    expect(row).toEqual({ instant: true, opened: true, chargeable: false, teacher_id: teacherId, messages: 0 });
+    expect(row).toEqual({
+      instant: true,
+      opened: true,
+      chargeable: false,
+      teacher_id: teacherId,
+      messages: 0,
+    });
     // An attendance outcome rewrites chargeable (no_show → true): migration 192 keeps an instant
     // lesson free, so it never uses a package unit nor earns a makeup.
     const after = await withSql(async (sql) => {

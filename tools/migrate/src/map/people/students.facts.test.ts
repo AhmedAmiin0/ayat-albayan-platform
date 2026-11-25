@@ -23,7 +23,7 @@ describe('students: SUBS register', () => {
       }),
       MODULES,
     );
-    expect(run.by('students')[0]?.record.columns['status']).toBe('new');
+    expect(run.by('students')[0]?.record.columns.status).toBe('new');
     expect(run.issues.find((i) => i.code === 'status_downgrade')?.detail).toBe(
       'subs_register_only→new',
     );
@@ -64,7 +64,7 @@ describe('students: what the lesson reports say', () => {
       bundleOf({ hub_students: [studentRow({})], hub_reports: [reportRow({})] }),
       MODULES,
     );
-    expect(run.by('students')[0]?.record.columns['status']).toBe('pending_subscription');
+    expect(run.by('students')[0]?.record.columns.status).toBe('pending_subscription');
   });
 
   it('an attended free trial lesson does not: pending_subscription', () => {
@@ -73,7 +73,7 @@ describe('students: what the lesson reports say', () => {
       bundleOf({ hub_students: [studentRow({})], hub_reports: [trial] }),
       MODULES,
     );
-    expect(run.by('students')[0]?.record.columns['status']).toBe('pending_subscription');
+    expect(run.by('students')[0]?.record.columns.status).toBe('pending_subscription');
   });
 
   it('a stale registry teacher yields to the one teacher of every report, for review', () => {
@@ -84,7 +84,7 @@ describe('students: what the lesson reports say', () => {
       }),
       MODULES,
     );
-    expect(run.by('students')[0]?.record.refs['teacher_id']).toEqual(keys.teacher('hend'));
+    expect(run.by('students')[0]?.record.refs.teacher_id).toEqual(keys.teacher('hend'));
     expect(run.issues.filter((i) => i.code !== 'status_downgrade')).toMatchObject([
       { code: 'conflict', severity: 'review', field: 'teacher' },
     ]);

@@ -46,7 +46,9 @@ test.describe('inbound WhatsApp — a new lead', () => {
     // The same number again: one more message row, still one lead, no second new_lead push.
     const again = 'ممكن حلقة تجريبية لبنتي؟';
     await stubInbound({ from: digits, name, text: again });
-    await expect.poll(async () => (await inboundFor(phone)).map((m) => m.body), POLL).toEqual([hello, again]);
+    await expect
+      .poll(async () => (await inboundFor(phone)).map((m) => m.body), POLL)
+      .toEqual([hello, again]);
     expect(await leadsByPhone(phone)).toHaveLength(1);
     expect(await leadPushes()).toHaveLength(pushes);
 
@@ -59,6 +61,8 @@ test.describe('inbound WhatsApp — a new lead', () => {
     const log = admin.getByRole('log', { name: ar.messages.log });
     await expect(log).toContainText(hello);
     await expect(log).toContainText(again);
-    await expect.poll(async () => (await inboundFor(phone)).every((m) => m.read_at !== null), POLL).toBe(true);
+    await expect
+      .poll(async () => (await inboundFor(phone)).every((m) => m.read_at !== null), POLL)
+      .toBe(true);
   });
 });

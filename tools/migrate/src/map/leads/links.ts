@@ -15,7 +15,7 @@ export interface OtherPeople {
 function teacherPhones(bundle: Pick<SourceBundle, 'earlier'>): Set<string> {
   const teachers = new Set<string>();
   for (const d of bundle.earlier.get('teachers') ?? []) {
-    const p = d.record.columns['phone_e164'];
+    const p = d.record.columns.phone_e164;
     if (typeof p === 'string') teachers.add(p);
   }
   return teachers;
@@ -30,8 +30,8 @@ export function otherPeople(
   const jobApplicants = new Set<string>();
   for (const [phone, lead] of sheet.byPhone)
     if (lead.status === 'job_applicant') jobApplicants.add(phone);
-  for (const row of bundle.sheets['hub_job_replies'] ?? []) {
-    const raw = row.fields['phone'];
+  for (const row of bundle.sheets.hub_job_replies ?? []) {
+    const raw = row.fields.phone;
     const p = toE164(typeof raw === 'boolean' ? null : raw);
     if (p) jobApplicants.add(p.e164);
   }

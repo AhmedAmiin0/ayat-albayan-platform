@@ -21,13 +21,13 @@ export function finPrice(
   const [first] = tokens(q.name);
   if (!id || !first) return null;
   const hits = (bundle.sheets[id] ?? []).filter((r) => {
-    const desc = text(r.fields['revenue_desc']);
+    const desc = text(r.fields.revenue_desc);
     return desc !== null && tokens(desc).includes(first);
   });
   const [hit] = hits;
   if (hits.length !== 1 || !hit) return null;
-  const desc = text(hit.fields['revenue_desc']) ?? '';
-  const amount = num(hit.fields['revenue_amount']);
+  const desc = text(hit.fields.revenue_desc) ?? '';
+  const amount = num(hit.fields.revenue_amount);
   if (/[+&,]|\band\b/i.test(desc) || amount === null || amount <= 0) return null;
   return { amount, fin: hit.ref };
 }

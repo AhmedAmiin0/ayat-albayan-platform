@@ -23,7 +23,7 @@ interface OpenZip {
 
 /** --zip, else MIGRATE_ZIP, else the newest repo-root tools/drive-download-*.zip. */
 export function resolveZipPath(explicit: string | undefined): string {
-  const given = explicit ?? process.env['MIGRATE_ZIP'];
+  const given = explicit ?? process.env.MIGRATE_ZIP;
   if (given) return given;
   const toolsDir = join(PKG_DIR, '..');
   const zips = readdirSync(toolsDir)

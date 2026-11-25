@@ -15,7 +15,10 @@ async function lessonOf(tx: Tx, input: { teacherId: string; studentId: string })
   return l.id;
 }
 
-async function recording(tx: Tx, over: { lessonId: string; tag: string; visible?: boolean; status?: string }): Promise<void> {
+async function recording(
+  tx: Tx,
+  over: { lessonId: string; tag: string; visible?: boolean; status?: string },
+): Promise<void> {
   const { lessonId, tag } = over;
   const status = over.status ?? 'done';
   await tx`insert into public.lesson_recordings (lesson_id, file_path, status, ended_at, visible_to_student, deleted_at)

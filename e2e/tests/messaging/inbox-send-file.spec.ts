@@ -50,10 +50,20 @@ test.describe('inbox — the assistant sends a file (docs/21 D2)', () => {
     expect((await lastOutbound(phone)).created_by).toBe(me.id);
 
     const row = bubble(log, caption);
-    await expect(row).toContainText(ar.inbox.sentBy.replace('{name}', `مسؤولة مبيعات sf${test.info().project.name}`));
-    await row.getByRole('button', { name: ar.inbox.viewMedia.replace('{kind}', ar.inbox.media.image) }).click();
-    const thumb = row.getByRole('img', { name: ar.inbox.openMedia.replace('{kind}', ar.inbox.media.image) });
-    await expect.poll(() => thumb.evaluate((i) => (i as unknown as { naturalWidth: number }).naturalWidth), { timeout: 30_000 }).toBeGreaterThan(0);
+    await expect(row).toContainText(
+      ar.inbox.sentBy.replace('{name}', `مسؤولة مبيعات sf${test.info().project.name}`),
+    );
+    await row
+      .getByRole('button', { name: ar.inbox.viewMedia.replace('{kind}', ar.inbox.media.image) })
+      .click();
+    const thumb = row.getByRole('img', {
+      name: ar.inbox.openMedia.replace('{kind}', ar.inbox.media.image),
+    });
+    await expect
+      .poll(() => thumb.evaluate((i) => (i as unknown as { naturalWidth: number }).naturalWidth), {
+        timeout: 30_000,
+      })
+      .toBeGreaterThan(0);
   });
 
   test('a closed 24 h window hides «أرفق صورة أو ملف PDF»', async ({ browser }) => {

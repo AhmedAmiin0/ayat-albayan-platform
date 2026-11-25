@@ -16,7 +16,10 @@ export async function teacherWithRates(tx: Tx): Promise<{ id: string; userId: st
 }
 
 /** A lesson `daysAgo` days back (start at a whole hour), already in `status`. */
-export async function pastLesson(tx: Tx, input: { teacher: string; minutes: number; status: string; daysAgo: number }) {
+export async function pastLesson(
+  tx: Tx,
+  input: { teacher: string; minutes: number; status: string; daysAgo: number },
+) {
   const start = Math.floor((Date.now() - input.daysAgo * 86_400_000) / 3_600_000) * 3_600_000;
   const [l] = await tx<{ id: string }[]>`insert into public.lessons (teacher_id, starts_at, ends_at, status)
     values (${input.teacher}, ${new Date(start).toISOString()},
@@ -39,7 +42,15 @@ export const earningOf = async (tx: Tx, lesson: string): Promise<EarningRow | un
   return e;
 };
 
-export async function pay(tx: Tx, input: { teacher: string; amount: number; items: { earning_id: string; amount: number }[]; request?: string }) {
+export async function pay(
+  tx: Tx,
+  input: {
+    teacher: string;
+    amount: number;
+    items: { earning_id: string; amount: number }[];
+    request?: string;
+  },
+) {
   const p = {
     actor: null,
     teacher_id: input.teacher,

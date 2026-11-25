@@ -111,7 +111,13 @@ test.describe.serial('sales: change a course’s days, then continue it on renew
     });
     expect(res.status, JSON.stringify(res.body)).toBe(201);
     expect(await countedLessons(second)).toBe(8);
-    expect(new Set((await courseRules(second)).map((r) => r.ends_on))).toEqual(new Set([addDays(sunday, 50)]));
-    expect(await courseAudit(second)).toContainEqual({ action: 'book', actor_id: need(a).id, by: 'sales' });
+    expect(new Set((await courseRules(second)).map((r) => r.ends_on))).toEqual(
+      new Set([addDays(sunday, 50)]),
+    );
+    expect(await courseAudit(second)).toContainEqual({
+      action: 'book',
+      actor_id: need(a).id,
+      by: 'sales',
+    });
   });
 });

@@ -48,5 +48,9 @@ interface StubRequest {
 export const stubRequests = () => stub<StubRequest[]>('/__stub/requests');
 
 /** A guardian writes; «Kapso» forwards Meta's raw payload to /webhooks/kapso, signed (or not). */
-export const kapsoInbound = (spec: { from: string; name?: string; text: string; signWith?: string }) =>
-  stub<{ id: string; status: number }>('/__stub/kapso/inbound', spec);
+export const kapsoInbound = (spec: {
+  from: string;
+  name?: string;
+  text: string;
+  signWith?: string;
+}) => stub<{ id: string; status: number }>('/__stub/kapso/inbound', spec);

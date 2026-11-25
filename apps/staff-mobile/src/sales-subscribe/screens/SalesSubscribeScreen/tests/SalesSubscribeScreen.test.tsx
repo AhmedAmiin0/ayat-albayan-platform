@@ -1,8 +1,17 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, ltr, money } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { familyKey } from '@/sales-subscribe/lib/family';
-import { familyOf, KID, KID2, kid, openSub, PHONE, salesQuote, SUB } from '@/sales-subscribe/testing/fixtures';
+import { salesKeys } from '@/core/lib/keys';
+import {
+  familyOf,
+  KID,
+  KID2,
+  kid,
+  openSub,
+  PHONE,
+  salesQuote,
+  SUB,
+} from '@/sales-subscribe/testing/fixtures';
 import { SalesSubscribeScreen } from '@/sales-subscribe/screens/SalesSubscribeScreen/SalesSubscribeScreen';
 
 const mockApiFetch = jest.fn();
@@ -22,7 +31,9 @@ const m = t.salesMoney;
 const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === path);
 /** The admin's free 0–100 discount input (a decimal pad), not the pills' group. */
 const freeDiscountFields = () =>
-  screen.queryAllByLabelText(t.pricing.steps.discount).filter((e) => e.props.keyboardType === 'decimal-pad');
+  screen
+    .queryAllByLabelText(t.pricing.steps.discount)
+    .filter((e) => e.props.keyboardType === 'decimal-pad');
 const saveButton = () => screen.findByRole('button', { name: m.saveSubscription, disabled: false });
 
 beforeEach(() => {
@@ -41,10 +52,17 @@ test('her only child is picked; the sales quote; a failed save retried keeps ONE
     if (sent('/sales/subscriptions').length === 1) throw new ApiError(502, null);
     return openSub();
   });
-  const { client } = await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
+  const { client } = await renderWithQuery(
+    <SalesSubscribeScreen />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   expect(await screen.findByText(money(180, 'SAR'))).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledWith(`/sales/money/family?phone=${encodeURIComponent(PHONE)}`);
-  expect(screen.getByRole('radio', { name: `ريم · ${ltr('AB-0201')}`, checked: true })).toBeTruthy();
+  expect(mockApiFetch).toHaveBeenCalledWith(
+    `/sales/money/family?phone=${encodeURIComponent(PHONE)}`,
+  );
+  expect(
+    screen.getByRole('radio', { name: `ريم · ${ltr('AB-0201')}`, checked: true }),
+  ).toBeTruthy();
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/subscriptions/quote', {
     studentId: KID,
     pricing: { duration: 45, discount: 0, tier: 'standard' },
@@ -61,7 +79,9 @@ test('her only child is picked; the sales quote; a failed save retried keeps ONE
     params: { studentId: KID, phone: PHONE, subscriptionId: SUB },
   });
 
-  const [first, second] = sent('/sales/subscriptions').map((c) => c[2] as { clientRequestId: string });
+  const [first, second] = sent('/sales/subscriptions').map(
+    (c) => c[2] as { clientRequestId: string },
+  );
   expect(first).toEqual({
     studentId: KID,
     pricing: { duration: 45, discount: 0, tier: 'standard' },
@@ -70,14 +90,18 @@ test('her only child is picked; the sales quote; a failed save retried keeps ONE
   expect(second?.clientRequestId).toBe(first?.clientRequestId);
   expect(sent('/subscriptions')).toHaveLength(0);
   // The family refetches (its packages now owe the new one).
-  await waitFor(() => expect(client.getQueryState(familyKey(PHONE))?.dataUpdateCount).toBeGreaterThan(1));
+  await waitFor(() =>
+    expect(client.getQueryState(salesKeys.family(PHONE))?.dataUpdateCount).toBeGreaterThan(1),
+  );
 });
 
 test('two of her children: none picked, «احفظ الاشتراك» stays off until one is', async () => {
   mockApiFetch.mockResolvedValue(familyOf(kid(), kid({ id: KID2, code: 'AB-0202', name: 'سلمى' })));
   await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.press(await screen.findByRole('radio', { name: `سلمى · ${ltr('AB-0202')}` }));
-  await waitFor(() => expect(sent('/sales/subscriptions/quote').at(-1)?.[2]).toMatchObject({ studentId: KID2 }));
+  await waitFor(() =>
+    expect(sent('/sales/subscriptions/quote').at(-1)?.[2]).toMatchObject({ studentId: KID2 }),
+  );
   expect(await saveButton()).toBeTruthy();
 });
 
@@ -102,13 +126,18 @@ test('not her student (403): the API’s reason', async () => {
 test('discount: only the site pills 0/5/10/15 %, no free number field; a pill is what is sent', async () => {
   await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(money(180, 'SAR'))).toBeTruthy();
-  for (const d of ['0', '5', '10', '15'] as const) expect(screen.getByRole('radio', { name: t.pricing.discounts[d] })).toBeTruthy();
+  for (const d of ['0', '5', '10', '15'] as const)
+    expect(screen.getByRole('radio', { name: t.pricing.discounts[d] })).toBeTruthy();
   expect(screen.getByRole('radio', { name: t.pricing.discounts['0'], checked: true })).toBeTruthy();
   expect(freeDiscountFields()).toHaveLength(0);
   await fireEvent.press(screen.getByRole('radio', { name: t.pricing.discounts['15'] }));
   await waitFor(() =>
-    expect(sent('/sales/subscriptions/quote').at(-1)?.[2]).toMatchObject({ pricing: { discount: 15 } }),
+    expect(sent('/sales/subscriptions/quote').at(-1)?.[2]).toMatchObject({
+      pricing: { discount: 15 },
+    }),
   );
   await fireEvent.press(await saveButton());
-  await waitFor(() => expect(sent('/sales/subscriptions').at(-1)?.[2]).toMatchObject({ pricing: { discount: 15 } }));
+  await waitFor(() =>
+    expect(sent('/sales/subscriptions').at(-1)?.[2]).toMatchObject({ pricing: { discount: 15 } }),
+  );
 });

@@ -56,18 +56,18 @@ export type Kind = 'student' | 'registration' | 'booking' | 'heart';
 
 export function fieldsOf(f: Record<string, Cell>, kind: Kind): PersonFields {
   return {
-    age: num(f['age']),
-    gender: text(f['gender']),
-    country: firstText(f['country'], f['tz_country']),
-    tzCountry: text(f['tz_country']),
-    level: text(f['level']),
-    memorized: text(f['memorized']),
-    goal: text(f['goal']),
-    riwaya: text(f['riwaya']),
-    notes: kind === 'booking' ? null : text(f['notes']),
-    guardianName: text(f['guardian_name']),
-    source: firstText(f['source'], f['source_v2']), // A9: two referral-source columns
-    teacherText: text(f['teacher']),
+    age: num(f.age),
+    gender: text(f.gender),
+    country: firstText(f.country, f.tz_country),
+    tzCountry: text(f.tz_country),
+    level: text(f.level),
+    memorized: text(f.memorized),
+    goal: text(f.goal),
+    riwaya: text(f.riwaya),
+    notes: kind === 'booking' ? null : text(f.notes),
+    guardianName: text(f.guardian_name),
+    source: firstText(f.source, f.source_v2), // A9: two referral-source columns
+    teacherText: text(f.teacher),
   };
 }
 
@@ -85,10 +85,10 @@ function claimsOf(status: string | null): OldClaim[] {
 export function personRows(row: SourceRow, kind: Kind): PeopleRowsResult {
   const f = row.fields;
   const issue = issuesFor('students', row.ref);
-  const rawName = text(f['student_name'] ?? f['name']);
-  const phone = phoneCell(f['phone']);
+  const rawName = text(f.student_name ?? f.name);
+  const phone = phoneCell(f.phone);
   const reason = testReason({
-    names: [rawName, f['teacher']],
+    names: [rawName, f.teacher],
     other: cellsOf(f, ['notes']),
     phone: phone.ok ? phone.e164 : null,
   });
@@ -122,9 +122,8 @@ export function personRows(row: SourceRow, kind: Kind): PeopleRowsResult {
     const detail = teacherKnown === null ? 'not_a_teacher' : 'unknown_text'; // A3: cities → null
     issues.push(issue({ code: 'unknown_teacher', severity: 'warn', field: 'teacher', detail }));
   }
-  const claims = claimsOf(text(f['status']));
-  const legacy =
-    legacyCode(f['legacy_code']) ?? (kind === 'booking' ? legacyCode(f['notes']) : null);
+  const claims = claimsOf(text(f.status));
+  const legacy = legacyCode(f.legacy_code) ?? (kind === 'booking' ? legacyCode(f.notes) : null);
   const rows = names.map((name, i) => ({
     ref: row.ref,
     key: keys.student({ guardianPhone: phone.e164, name }),
@@ -140,6 +139,6 @@ export function personRows(row: SourceRow, kind: Kind): PeopleRowsResult {
 
 /** Booking rows that make people: only confirmed / subscribed (docs/06 schedule_rules). */
 export function isPeopleBooking(row: SourceRow): boolean {
-  const s = bookingStatus(text(row.fields['status']));
+  const s = bookingStatus(text(row.fields.status));
   return s === 'confirmed' || s === 'subscribed';
 }

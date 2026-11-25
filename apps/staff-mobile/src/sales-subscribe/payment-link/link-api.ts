@@ -4,16 +4,16 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import { useEffect, useState } from 'react';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
+import { salesKeys } from '@/core/lib/keys';
 
 // docs/30: requires FEATURE_STRIPE (test or live).
-
-const LINKS = ['sales', 'payment-links'] as const;
 
 /** POST /sales/payment-links/quote: the reference price and the admin's cap. Keyed by its body. */
 export function useLinkQuote(studentId: string, pricing: SubscriptionPricing) {
   return useQuery({
-    queryKey: [...LINKS, 'quote', studentId, pricing],
-    queryFn: () => apiSend<PaymentLinkQuoteView>('POST', '/sales/payment-links/quote', { studentId, pricing }),
+    queryKey: salesKeys.linkQuote(studentId, pricing),
+    queryFn: () =>
+      apiSend<PaymentLinkQuoteView>('POST', '/sales/payment-links/quote', { studentId, pricing }),
     placeholderData: keepPreviousData,
     enabled: studentId !== '',
   });
@@ -26,14 +26,14 @@ export function useCreateLink() {
   return useMutation({
     mutationFn: (body: Omit<PaymentLinkCreate, 'clientRequestId'>) =>
       apiSend<PaymentLinkView>('POST', '/sales/payment-links', { ...body, clientRequestId }),
-    onSettled: () => client.invalidateQueries({ queryKey: [...LINKS, 'list'] }),
+    onSettled: () => client.invalidateQueries({ queryKey: salesKeys.linkList() }),
   });
 }
 
 /** GET /sales/payment-links: hers, newest first. */
 export function useLinks() {
   return useQuery({
-    queryKey: [...LINKS, 'list'],
+    queryKey: salesKeys.linkList(),
     queryFn: () => apiFetch<PaymentLinkView[]>('/sales/payment-links'),
   });
 }
@@ -57,9 +57,10 @@ export function useLinkByToken(token: string, wait: boolean) {
     return () => clearTimeout(timer);
   }, [wait, timedOut]);
   const query = useQuery({
-    queryKey: [...LINKS, 'list'],
+    queryKey: salesKeys.linkList(),
     queryFn: () => apiFetch<PaymentLinkView[]>('/sales/payment-links'),
-    refetchInterval: (q) => (wait && !timedOut && byToken(q.state.data, token)?.status === 'open' ? 2000 : false),
+    refetchInterval: (q) =>
+      wait && !timedOut && byToken(q.state.data, token)?.status === 'open' ? 2000 : false,
   });
   const retry = () => {
     setTimedOut(false);
@@ -72,7 +73,8 @@ export function useLinkByToken(token: string, wait: boolean) {
 export function useCancelLink() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => apiSend<PaymentLinkView>('POST', `/sales/payment-links/${encodeURIComponent(id)}/cancel`),
-    onSettled: () => client.invalidateQueries({ queryKey: [...LINKS, 'list'] }),
+    mutationFn: (id: string) =>
+      apiSend<PaymentLinkView>('POST', `/sales/payment-links/${encodeURIComponent(id)}/cancel`),
+    onSettled: () => client.invalidateQueries({ queryKey: salesKeys.linkList() }),
   });
 }

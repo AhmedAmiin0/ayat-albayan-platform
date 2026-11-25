@@ -4,13 +4,23 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import { useState } from 'react';
 import { apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
-import { familyKey, refreshFamily, withOpenPackage } from '@/sales-subscribe/lib/family';
+import { refreshFamily, withOpenPackage } from '@/sales-subscribe/lib/family';
+import { salesKeys } from '@/core/lib/keys';
 
 /** POST /sales/subscriptions/quote: the price she tells the family (no fx details). Keyed by its body. */
-export function useSalesQuote(studentId: string, pricing: SubscriptionPricing, bind: { phone?: string } = {}) {
+export function useSalesQuote(
+  studentId: string,
+  pricing: SubscriptionPricing,
+  bind: { phone?: string } = {},
+) {
   return useQuery({
-    queryKey: ['sales', 'subscriptions', 'quote', studentId, pricing, bind],
-    queryFn: () => apiSend<SalesQuoteView>('POST', '/sales/subscriptions/quote', { studentId, pricing, ...bind }),
+    queryKey: salesKeys.quote(studentId, pricing, bind),
+    queryFn: () =>
+      apiSend<SalesQuoteView>('POST', '/sales/subscriptions/quote', {
+        studentId,
+        pricing,
+        ...bind,
+      }),
     placeholderData: keepPreviousData,
     enabled: studentId !== '',
   });
@@ -40,9 +50,14 @@ export function useSalesCreateSubscription(phone: string) {
   return useMutation({
     mutationKey: ['sales', 'subscriptions', 'create'],
     mutationFn: (input: SalesSubscribeInput) =>
-      apiSend<SalesMoneySubscriptionView>('POST', '/sales/subscriptions', { ...input, clientRequestId }),
+      apiSend<SalesMoneySubscriptionView>('POST', '/sales/subscriptions', {
+        ...input,
+        clientRequestId,
+      }),
     onSuccess: (sub) => {
-      client.setQueryData(familyKey(phone), (f: Parameters<typeof withOpenPackage>[0]) => withOpenPackage(f, sub));
+      client.setQueryData(salesKeys.family(phone), (f: Parameters<typeof withOpenPackage>[0]) =>
+        withOpenPackage(f, sub),
+      );
     },
     onSettled: () => refreshFamily(client, phone),
   });

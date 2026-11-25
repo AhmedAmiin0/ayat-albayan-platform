@@ -38,7 +38,11 @@ test.describe.serial('assistant money: registration and commission (API + DB)', 
   });
   test.afterAll(() => setSetting('sales_require_assignee', false));
 
-  const register = async (request: Parameters<typeof call>[0], who: Assistant, time: string): Promise<Reg> => {
+  const register = async (
+    request: Parameters<typeof call>[0],
+    who: Assistant,
+    time: string,
+  ): Promise<Reg> => {
     const phone = freshPhone();
     const leadId = await leadOf(who.id, phone);
     const res = await call<BookingResult>(request, { token: who.token, method: 'POST', path: '/sales/booking', body: trialBody({ teacherId: teacher, leadId, phone, name: `طالب${time.slice(0, 2)}`, time }) });

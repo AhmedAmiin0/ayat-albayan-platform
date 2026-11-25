@@ -29,8 +29,8 @@ function personOf(row: SourceRow, o: { name: string; phone: string }): Person {
 export function addHeartPeople(rows: readonly SourceRow[], people: Person[]): RowIssue[] {
   const issues: RowIssue[] = [];
   for (const row of rows) {
-    const name = text(row.fields['name']);
-    const phone = phoneCell(row.fields['phone']);
+    const name = text(row.fields.name);
+    const phone = phoneCell(row.fields.phone);
     // Test rows, bad phones and empty names are reported by the subscriptions module (heart.ts).
     if (!name || !phone.ok || testReason({ names: [name], phone: phone.e164 })) continue;
     const issue = issuesFor('students', row.ref);

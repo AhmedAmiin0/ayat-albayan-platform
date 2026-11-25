@@ -32,9 +32,23 @@ test.describe('teacher_session_earnings follows the lessons (migration 177)', ()
   test('a report correction that stops counting the lesson removes an unpaid earning, caps a part-paid one', async () => {
     await rolledBack(async (tx) => {
       const t = await teacherWithRates(tx);
-      const a = await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 4 });
-      const b = await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 3 });
-      await pay(tx, { teacher: t.id, amount: 30, items: [{ earning_id: await earningId(tx, b), amount: 30 }] });
+      const a = await pastLesson(tx, {
+        teacher: t.id,
+        minutes: 45,
+        status: 'completed',
+        daysAgo: 4,
+      });
+      const b = await pastLesson(tx, {
+        teacher: t.id,
+        minutes: 45,
+        status: 'completed',
+        daysAgo: 3,
+      });
+      await pay(tx, {
+        teacher: t.id,
+        amount: 30,
+        items: [{ earning_id: await earningId(tx, b), amount: 30 }],
+      });
       await tx`update public.lessons set status = 'excused' where id in (${a}, ${b})`;
       expect(await earningOf(tx, a)).toBeUndefined();
       expect(await earningOf(tx, b)).toMatchObject({ amount: '30.00', paid_amount: '30.00', status: 'paid' });
@@ -44,11 +58,34 @@ test.describe('teacher_session_earnings follows the lessons (migration 177)', ()
   test('a corrected length re-prices an unpaid or part-paid earning, and a fully paid one is frozen', async () => {
     await rolledBack(async (tx) => {
       const t = await teacherWithRates(tx);
-      const open = await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 5 });
-      const part = await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 4 });
-      const full = await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 3 });
-      await pay(tx, { teacher: t.id, amount: 40, items: [{ earning_id: await earningId(tx, part), amount: 40 }] });
-      await pay(tx, { teacher: t.id, amount: 70, items: [{ earning_id: await earningId(tx, full), amount: 70 }] });
+      const open = await pastLesson(tx, {
+        teacher: t.id,
+        minutes: 45,
+        status: 'completed',
+        daysAgo: 5,
+      });
+      const part = await pastLesson(tx, {
+        teacher: t.id,
+        minutes: 45,
+        status: 'completed',
+        daysAgo: 4,
+      });
+      const full = await pastLesson(tx, {
+        teacher: t.id,
+        minutes: 45,
+        status: 'completed',
+        daysAgo: 3,
+      });
+      await pay(tx, {
+        teacher: t.id,
+        amount: 40,
+        items: [{ earning_id: await earningId(tx, part), amount: 40 }],
+      });
+      await pay(tx, {
+        teacher: t.id,
+        amount: 70,
+        items: [{ earning_id: await earningId(tx, full), amount: 70 }],
+      });
       await tx`update public.lessons set ends_at = starts_at + interval '60 minutes' where id in (${open}, ${part}, ${full})`;
       expect(await earningOf(tx, open)).toMatchObject({ minutes: 60, amount: '90.00', status: 'earned' });
       expect(await earningOf(tx, part)).toMatchObject({ minutes: 60, amount: '90.00', paid_amount: '40.00', status: 'partially_paid' });

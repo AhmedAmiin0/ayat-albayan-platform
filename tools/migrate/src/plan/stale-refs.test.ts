@@ -35,7 +35,8 @@ describe('findStale', () => {
     const db = {
       select: async <T extends object>(q: { text: string; params: unknown[] }) => {
         queries.push(q.text);
-        if (q.text.includes('information_schema')) return [{ t: 'messages', c: 'phone_e164' }] as T[];
+        if (q.text.includes('information_schema'))
+          return [{ t: 'messages', c: 'phone_e164' }] as T[];
         return (q.text.includes('"leads"') ? [{ id: 'l-here' }] : []) as T[];
       },
     };
@@ -65,12 +66,15 @@ describe('dropStaleRefs', () => {
     const out = dropStaleRefs({ plan, stale, tableOf });
     expect(out.plan.items[0]?.action).toBe('skip');
     expect([out.cleared, out.skipped]).toEqual([0, 1]);
-    expect(out.plan.counts['messages']).toMatchObject({ create: 1, skip: 1 });
+    expect(out.plan.counts.messages).toMatchObject({ create: 1, skip: 1 });
   });
 });
 
 describe('dropOrphanLessons', () => {
-  const lesson = (key: string) => ({ ...message(key, {}), key: { entity: 'lessons' as const, key } });
+  const lesson = (key: string) => ({
+    ...message(key, {}),
+    key: { entity: 'lessons' as const, key },
+  });
   const link = (lessonKey: string, action: 'create' | 'skip') => ({
     ...message(`ls-${lessonKey}`, {}),
     key: { entity: 'lesson_students' as const, key: `ls-${lessonKey}` },
@@ -78,9 +82,17 @@ describe('dropOrphanLessons', () => {
     record: { columns: {}, refs: { lesson_id: { entity: 'lessons' as const, key: lessonKey } } },
   });
   it('skips a new lesson whose every new student link was skipped, keeps the rest', () => {
-    const items = [lesson('orphan'), link('orphan', 'skip'), lesson('kept'), link('kept', 'create'), lesson('alone')];
+    const items = [
+      lesson('orphan'),
+      link('orphan', 'skip'),
+      lesson('kept'),
+      link('kept', 'create'),
+      lesson('alone'),
+    ];
     const out = dropOrphanLessons({ ...plan, items } as unknown as PlanWithChanges);
-    const actions = Object.fromEntries(out.items.filter((i) => i.key.entity === 'lessons').map((i) => [i.key.key, i.action]));
+    const actions = Object.fromEntries(
+      out.items.filter((i) => i.key.entity === 'lessons').map((i) => [i.key.key, i.action]),
+    );
     expect(actions).toEqual({ orphan: 'skip', kept: 'create', alone: 'create' });
   });
 });

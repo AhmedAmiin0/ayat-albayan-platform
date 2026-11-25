@@ -20,7 +20,14 @@ test.describe('record_teacher_payment / settle_payout_in_ledger (migration 178)'
       const a = await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 4 });
       const b = await pastLesson(tx, { teacher: t.id, minutes: 60, status: 'completed', daysAgo: 3 });
       const [ea, eb] = [await earningId(tx, a), await earningId(tx, b)];
-      await pay(tx, { teacher: t.id, amount: 100, items: [{ earning_id: ea, amount: 70 }, { earning_id: eb, amount: 30 }] });
+      await pay(tx, {
+        teacher: t.id,
+        amount: 100,
+        items: [
+          { earning_id: ea, amount: 70 },
+          { earning_id: eb, amount: 30 },
+        ],
+      });
       expect(await earningOf(tx, a)).toMatchObject({ paid_amount: '70.00', status: 'paid' });
       expect(await earningOf(tx, b)).toMatchObject({ paid_amount: '30.00', status: 'partially_paid' });
       await pay(tx, { teacher: t.id, amount: 60, items: [{ earning_id: eb, amount: 60 }] });
@@ -33,9 +40,15 @@ test.describe('record_teacher_payment / settle_payout_in_ledger (migration 178)'
   test('refuses an overpayment, a mismatched total, a repeated session and another teacher’s session', async () => {
     await rolledBack(async (tx) => {
       const t = await teacherWithRates(tx);
-      const e = await earningId(tx, await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 3 }));
-      const attempt = (amount: number, items: { earning_id: string; amount: number }[], teacher = t.id) =>
-        refused(tx.savepoint(() => pay(tx, { teacher, amount, items })));
+      const e = await earningId(
+        tx,
+        await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 3 }),
+      );
+      const attempt = (
+        amount: number,
+        items: { earning_id: string; amount: number }[],
+        teacher = t.id,
+      ) => refused(tx.savepoint(() => pay(tx, { teacher, amount, items })));
       expect(await attempt(70.01, [{ earning_id: e, amount: 70.01 }])).toBe('overpayment');
       expect(await attempt(50, [{ earning_id: e, amount: 40 }])).toBe('allocation_mismatch');
       expect(await attempt(20, [{ earning_id: e, amount: 10 }, { earning_id: e, amount: 10 }])).toBe('allocation_invalid');
@@ -50,8 +63,18 @@ test.describe('record_teacher_payment / settle_payout_in_ledger (migration 178)'
       const t = await teacherWithRates(tx);
       const e = await earningId(tx, await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 3 }));
       const request = '6f000000-0000-4000-8000-000000000099';
-      const first = await pay(tx, { teacher: t.id, amount: 30, items: [{ earning_id: e, amount: 30 }], request });
-      const again = await pay(tx, { teacher: t.id, amount: 30, items: [{ earning_id: e, amount: 30 }], request });
+      const first = await pay(tx, {
+        teacher: t.id,
+        amount: 30,
+        items: [{ earning_id: e, amount: 30 }],
+        request,
+      });
+      const again = await pay(tx, {
+        teacher: t.id,
+        amount: 30,
+        items: [{ earning_id: e, amount: 30 }],
+        request,
+      });
       expect(first?.replayed).toBe(false);
       expect(again).toEqual({ payment_id: first?.payment_id, replayed: true });
       const [row] = await tx<{ paid: string }[]>`select paid_amount as paid from public.teacher_session_earnings where id = ${e}`;
@@ -62,9 +85,23 @@ test.describe('record_teacher_payment / settle_payout_in_ledger (migration 178)'
   test('marking a monthly payout paid settles only what is outstanding on its lessons, once', async () => {
     await rolledBack(async (tx) => {
       const t = await teacherWithRates(tx);
-      const a = await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 4 });
-      const b = await pastLesson(tx, { teacher: t.id, minutes: 45, status: 'completed', daysAgo: 3 });
-      await pay(tx, { teacher: t.id, amount: 70, items: [{ earning_id: await earningId(tx, a), amount: 70 }] });
+      const a = await pastLesson(tx, {
+        teacher: t.id,
+        minutes: 45,
+        status: 'completed',
+        daysAgo: 4,
+      });
+      const b = await pastLesson(tx, {
+        teacher: t.id,
+        minutes: 45,
+        status: 'completed',
+        daysAgo: 3,
+      });
+      await pay(tx, {
+        teacher: t.id,
+        amount: 70,
+        items: [{ earning_id: await earningId(tx, a), amount: 70 }],
+      });
       const [po] = await tx<{ id: string }[]>`insert into public.teacher_payouts
         (teacher_id, month, lessons_count, amount, status, approved_at, breakdown)
         values (${t.id}, '2031-03-01', 2, 140, 'approved', now(), ${tx.json({ lesson_ids: [a, b] })}) returning id`;

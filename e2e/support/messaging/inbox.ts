@@ -88,8 +88,12 @@ export async function roleOf(profileId: string | null): Promise<string | null> {
 }
 
 /** Admin push rows (push_notifications) of a kind whose data names this message id. */
-export async function pushesForMessage(input: { messageId: string; kind: string }): Promise<number> {
-  const [row] = await withSql((sql) => sql<{ n: number }[]>`
+export async function pushesForMessage(input: {
+  messageId: string;
+  kind: string;
+}): Promise<number> {
+  const [row] = await withSql(
+    (sql) => sql<{ n: number }[]>`
     select count(*)::int as n from public.push_notifications
     where kind = ${input.kind}::public.push_kind and data->>'messageId' = ${input.messageId}`);
   return row?.n ?? 0;
@@ -104,8 +108,13 @@ export async function pushesForPhone(input: { phone: string; kind: string }): Pr
 }
 
 /** One profile's push rows (the bell) of a kind for a phone (E.164): who was alerted (docs/21 D3). */
-export async function pushesForProfile(input: { profileId: string; kind: string; phone: string }): Promise<number> {
-  const [row] = await withSql((sql) => sql<{ n: number }[]>`
+export async function pushesForProfile(input: {
+  profileId: string;
+  kind: string;
+  phone: string;
+}): Promise<number> {
+  const [row] = await withSql(
+    (sql) => sql<{ n: number }[]>`
     select count(*)::int as n from public.push_notifications
     where profile_id = ${input.profileId} and kind = ${input.kind}::public.push_kind and data->>'phone' = ${input.phone}`);
   return row?.n ?? 0;
