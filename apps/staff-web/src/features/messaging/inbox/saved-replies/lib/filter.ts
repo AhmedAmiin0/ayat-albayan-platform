@@ -8,7 +8,7 @@ export function filterReplies(replies: readonly SavedReply[], input: { scope: Sa
   return replies.filter((r) => r.scope === input.scope && matchesQuery(`${r.title} ${r.body}`, input.query));
 }
 
-/** The «/» list (owner 2026-10-26, as WhatsApp): both tabs in one list, the served order kept. */
+/** The «/» list (as WhatsApp): both tabs in one list, the served order kept. */
 export function matchReplies(replies: readonly SavedReply[], query: string): SavedReply[] {
   return [...filterReplies(replies, { scope: 'shared', query }), ...filterReplies(replies, { scope: 'mine', query })];
 }

@@ -8,7 +8,7 @@ interface StudentPhoneFieldProps {
   error?: string;
 }
 
-/** The student's own WhatsApp (owner 2026-11-17): optional, E.164, their sign-in number. */
+/** The student's own WhatsApp: optional, E.164, their sign-in number. */
 export function StudentPhoneField({ value, onValue, error }: StudentPhoneFieldProps) {
   return (
     <TextField

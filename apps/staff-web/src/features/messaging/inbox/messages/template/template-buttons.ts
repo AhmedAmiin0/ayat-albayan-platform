@@ -1,7 +1,7 @@
 import type { TemplateButtonKind } from '@ab/shared';
 import type { IconName } from '@ab/web-kit/components/ui/display/icon';
 
-/** A template button's leading icon by type, as WhatsApp draws them (owner 2026-10-28). */
+/** A template button's leading icon by type, as WhatsApp draws them. */
 export const BUTTON_ICON: Record<TemplateButtonKind, IconName> = {
   quick_reply: 'reply',
   url: 'external',

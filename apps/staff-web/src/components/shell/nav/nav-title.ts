@@ -5,7 +5,7 @@ export interface NavTitleItem {
 }
 
 /**
- * The phone/tablet top bar's page title (owner, 2026-10-05: one compact bar): the label of the nav
+ * The phone/tablet top bar's page title (one compact bar): the label of the nav
  * item whose path is the longest prefix of `pathname`; the section home (`home`) otherwise.
  */
 export function titleFor(pathname: string | undefined, items: readonly NavTitleItem[], home: string): string {

@@ -16,7 +16,7 @@ export const SCROLL = cn(
 );
 
 /**
- * The work page inside a viewport-high layout (owner, 2026-10-05: "don't make the page scroll"):
+ * The work page inside a viewport-high layout, so the page never scrolls:
  * the browser page never scrolls, only this frame's content does (and boxes inside it).
  */
 export function PageFrame({ children, pageClassName }: { children: ReactNode; pageClassName?: string }) {

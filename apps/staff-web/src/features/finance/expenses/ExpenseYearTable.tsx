@@ -36,7 +36,7 @@ function yearColumns(input: { categories: string[]; label: (key: string) => stri
 }
 
 /**
- * The 12-month table (owner, 2026-10-05): each month's confirmed expenses per category, converted
+ * The 12-month table: each month's confirmed expenses per category, converted
  * to the reporting currency with the stored rates; a currency without a rate is named, not guessed.
  * Sortable by any column (client: the year is loaded whole); twelve fixed months need no filter.
  */

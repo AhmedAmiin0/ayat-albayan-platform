@@ -88,7 +88,7 @@ function fileErrorText(error: unknown): string {
 export function MessageMedia({ message: m }: { message: MessageView }) {
   const kind = t.inbox.media[mediaKind(m.media_mime)];
   const teacher = useInboxMode() === 'teacher';
-  // A sticker or a GIF shows itself at once (owner 2026-11-01).
+  // A sticker or a GIF shows itself at once.
   const own = stickerOrGif(m, teacher);
   if (own) return <StickerMedia message={m} kind={own} />;
   if (m.media_url) {

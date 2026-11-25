@@ -11,7 +11,7 @@ vi.mock('@ab/web-kit/lib/http/supabase', () => ({
 }));
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
-// Owner 2026-11-14 («like Kapso»): the closed window's bar. Nothing is sent from these tests.
+// The closed window's bar, like Kapso's. Nothing is sent from these tests.
 
 const base = { context: {}, noneAllowed: null, trying: true, teacher: false };
 const SENT = { id: 'm-r', template_key: 'welcome_greeting', status: 'delivered' as const };

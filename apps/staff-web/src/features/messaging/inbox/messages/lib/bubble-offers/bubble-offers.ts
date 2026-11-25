@@ -13,7 +13,7 @@ export interface BubbleOffers {
   copy: boolean;
   forward: boolean;
   download: boolean;
-  /** The emoji row on top of the menu (owner 2026-10-27). */
+  /** The emoji row on top of the menu. */
   react: boolean;
   /** Staff who reply in the inbox may hide, never on an already hidden message. */
   hide: boolean;

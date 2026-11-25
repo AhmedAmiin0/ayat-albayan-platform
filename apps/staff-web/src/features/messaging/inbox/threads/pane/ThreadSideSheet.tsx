@@ -16,7 +16,7 @@ export interface ThreadSideSheetProps {
 }
 
 /**
- * Phones (< 640px, owner 2026-10-05): the thread's side panel is not stacked under the chat; a
+ * Phones (< 640px): the thread's side panel is not stacked under the chat; a
  * button in the thread header opens it as a full-screen Dialog, so the chat keeps its place.
  */
 export function ThreadSideSheet({ label, open, onOpenChange, children, compact }: ThreadSideSheetProps) {

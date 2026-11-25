@@ -10,7 +10,7 @@ const stateOf = (thread: SendThread): ChatSendState => ({
 });
 
 /**
- * May a send go from this chat now (owner 2026-11-01, «do the same as the messages»): the text
+ * May a send go from this chat now (the same as the messages): the text
  * rule for a reply, a quote, a payment link, a file and a forward. Teacher mode never tries after
  * the window (docs/19).
  */

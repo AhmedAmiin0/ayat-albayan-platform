@@ -6,7 +6,7 @@ import { returnSearchOf } from '@ab/web-kit/auth/return-to';
 
 /**
  * /teacher/*: a teacher whose code-made login is set up (docs/46 A4), else /account-setup. `back`
- * (the page asked for) rides to /login and /account-setup as `?redirect=` (owner 2026-11-14).
+ * (the page asked for) rides to /login and /account-setup as `?redirect=`.
  */
 export async function requireTeacherPortal(queryClient: QueryClient, back?: string): Promise<Me> {
   const me = await requireRole(queryClient, 'teacher', back);

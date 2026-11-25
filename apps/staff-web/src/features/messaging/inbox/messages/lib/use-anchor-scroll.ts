@@ -27,7 +27,7 @@ const toBottom = (boxRef: RefObject<HTMLDivElement | null>, pinnedRef: RefObject
 };
 
 /**
- * The log's scroll (owner 2026-10-05, docs/37): live, it opens at the newest message and stays
+ * The log's scroll (docs/37): live, it opens at the newest message and stays
  * pinned there as rows arrive unless the reader scrolled up; her own send always snaps down.
  * Anchored, it never pins: it scrolls to and flashes the hit once the window renders; leaving
  * the window pins it to the newest message again.

@@ -11,7 +11,7 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
-/** The teacher page switches answered `on` (they default off, owner 2026-11-13). */
+/** The teacher page switches answered `on` (they default off). */
 const renderPage = (on = true) =>
   render(
     <QueryClientProvider client={setTeacherPages(new QueryClient({ defaultOptions: { queries: { retry: false } } }), on)}>

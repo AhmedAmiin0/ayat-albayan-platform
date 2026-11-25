@@ -37,7 +37,7 @@ function SentBar({ phone, sent, trying }: { phone: string; sent: ReopenSent; try
 }
 
 /**
- * The closed window's bar (owner 2026-11-14, «like Kapso»), over the composer or in its place:
+ * The closed window's bar, like Kapso's, over the composer or in its place:
  * the reopen button that opens the template picker; once a reopen template is live, its tick
  * until the family replies; with no template allowed, what they can do instead (no button).
  */

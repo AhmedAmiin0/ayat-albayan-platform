@@ -12,7 +12,7 @@ import { WideHeader, type BarProps } from './TopBarLayout';
 export interface FixedTopBarLayoutProps {
   topNav: ReactNode;
   bar: BarProps;
-  /** Every page gets the inbox's full width and frame (the assistant's shell, owner 2026-10-20). */
+  /** Every page gets the inbox's full width and frame (the assistant's shell). */
   wide?: boolean;
   children: ReactNode;
 }

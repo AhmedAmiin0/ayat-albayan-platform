@@ -17,7 +17,7 @@ export interface RenewSubscriptionButtonProps {
 }
 
 /** Renew any time the student has a package, prefilled from the last one. */
-/** Package-ended, or a package to renew from (owner 2026-11-17: ANY time). */
+/** Package-ended, or a package to renew from (ANY time). */
 const offered = (ended: boolean, balance: { current: unknown } | undefined): boolean =>
   ended || Boolean(balance?.current);
 

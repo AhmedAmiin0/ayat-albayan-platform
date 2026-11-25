@@ -4,7 +4,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageLog } from '@/features/messaging/inbox/messages/components/MessageLog/MessageLog';
 
-// A reminder carrying a 275-character form link made the whole log scroll sideways (owner 2026-10-19):
+// A reminder carrying a 275-character form link made the whole log scroll sideways:
 // `break-words` does not shrink a grid track's min-content, so one long token widened every row.
 // jsdom has no layout, so this pins the three classes that keep the log inside the chat.
 const LINK = `https://docs.google.com/forms/d/${'x'.repeat(240)}/viewform`;

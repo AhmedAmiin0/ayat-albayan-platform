@@ -16,7 +16,7 @@ interface ReactionRowProps {
 }
 
 /**
- * The six quick emoji on top of the bubble's menu (owner 2026-10-27), each a 44px button on touch
+ * The six quick emoji on top of the bubble's menu, each a 44px button on touch
  * screens with a spoken name; ours is pressed (aria-pressed) and a click on it removes it.
  */
 export function ReactionRow({ message: m, onReact }: ReactionRowProps) {

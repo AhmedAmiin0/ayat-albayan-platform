@@ -5,7 +5,7 @@ import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { useMaySend, useTriesAfterWindow } from './may-send';
 import { InboxModeContext, type InboxMode } from './mode';
 
-// Owner 2026-11-01 «do the same as the messages»: a payment link, a reply, a quote, a file and a
+// Do the same as the messages: a payment link, a reply, a quote, a file and a
 // forward follow the text rule; a chat older than 24 h on a Kapso chat line is still tried.
 
 const old = '2026-10-29T10:00:00Z';

@@ -1,4 +1,4 @@
-// The chat log's scroll rule (owner, 2026-10-05): a thread opens at the newest message and stays
+// The chat log's scroll rule: a thread opens at the newest message and stays
 // pinned there as messages arrive, unless the reader scrolled up to read older ones.
 
 export interface ScrollMetrics {

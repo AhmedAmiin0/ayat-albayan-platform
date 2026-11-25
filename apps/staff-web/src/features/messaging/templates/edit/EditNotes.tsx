@@ -13,7 +13,7 @@ const STAGE_NOTE: Record<EditStage, string | null> = {
   meta: null,
 };
 
-/** Meta's edit rules, the code-bound rule, and this template's own situation (owner 2026-11-14). */
+/** Meta's edit rules, the code-bound rule, and this template's own situation. */
 export function EditNotes({ state }: { state: EditState }) {
   const clock = useClock();
   const note = STAGE_NOTE[state.stage];

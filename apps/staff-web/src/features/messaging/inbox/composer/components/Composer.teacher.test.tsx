@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Composer } from './Composer';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-// Opening a closed window sends nothing (owner 2026-11-07): apiSend must stay untouched.
+// Opening a closed window sends nothing: apiSend must stay untouched.
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),

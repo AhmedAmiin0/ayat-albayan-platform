@@ -26,7 +26,7 @@ const clockAt = (at: Date, clock: Clock): string => clockOf(at, { ...clock, tz: 
 
 export type MediaKind = keyof typeof t.inbox.media;
 
-/** A deleted message, the ad's welcome, an unsupported echo (owner 2026-10-30, marker-notes). */
+/** A deleted message, the ad's welcome, an unsupported echo (marker-notes). */
 export const NOTE_WORDS: NoteWords = {
   deleted: t.inbox.deletedMessage,
   adWelcome: t.inbox.adWelcome,
