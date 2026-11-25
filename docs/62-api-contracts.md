@@ -12,6 +12,7 @@ Plan for: «move the request and response zod schemas to packages so they are us
 - **Prerequisites 3 and 4 of part 1 §5 are not gates.** When C1 or C2 makes `guard:units` fail in a folder, that unit is folded in its own moves-only commit inside the same PR.
 - **Reviews.** The hourly conductor reviews each PR once, when every check on its head is green, and adds `reviewed` + `auto-merge`. E is labelled only if its diff changes nothing outside the approved table.
 - **No `.js` in imports** (owner, 2026-11-25: «i dont want to import .js files»). Relative imports inside packages carry no extension, like the apps. The packages infra PR (docs/64) removes today's `.js` specifiers before this plan's PRs start, and no PR here adds one.
+- **Routes, types, enums and objects defined once** (owner, 2026-11-25: «i need to make the routes schemas types interfaces, enums, objects shared between all the platforms»; route style chosen: own route objects, no contract library). Part 3 below. A builds the route helper, the api decorator and the client `call()`; C1 and C2 add each domain's route table next to its schemas; a new PR **G** after C2 moves the remaining shared types, enums and objects and turns on `guard:shared-types`.
 - **Prerequisites.** `nest/all-modules` and #937 (oxlint only) merged. The api comment sweep and the remaining api unit folds are not prerequisites; they pause while B, E, C1 or C2 is open.
 
 # Part 1 · Contracts, pagination, DRY and reliability
@@ -1034,3 +1035,74 @@ By function: 18 are at least 75% copied, 32 are 40 to 75%, and 38 are under 40%.
   - 3 importers outside the 38 (`outcome-correction.ts`, `lesson-cancel.service.ts`, `teaching/lessons/index.ts`);
   - about 10 tooling files (two rules and their tests, plugin registration, the gate and its test, `package.json`, `ci.yml`, CLAUDE.md).
 - Mapper conversions: up to the 54 mapper files that hold a `to*`. Only the read-only ones convert, inside their domain's schema PR.
+
+# Part 3 · Routes, types, enums and objects defined once
+
+Owner ask: every route, schema, type, interface, enum and constant object that more than one platform uses (api, staff-web, family-web, staff-mobile, family-mobile, tools, e2e) is written once, in a package, and the others import it. Route style: own route objects (no contract library such as ts-rest or oRPC), so the error envelope, paging and strict parsing stay as parts 1 and 2 define them.
+
+Starting point on develop `6992a7fed`: 587 routes in `apps/api/src/route-map/routes.snap.txt`. The apps export about 2,280 types and interfaces (api 1,045, staff-web 929, staff-mobile 279, family-web 18, family-mobile 9) and about 180 literal unions or `as const` tables. Clients build request paths as strings in about 70 files (staff-web 35, staff-mobile 23, client-core 14). The builder recounts.
+
+### 1. Route objects
+
+- **Helper in `@ab/core`** (`packages/core/src/routes/`, tests first):
+  - `defineRoute({ method, path, params?, query?, body?, response })` returns a frozen route object typed by its schemas.
+  - `routePath(route, params)` fills `:name` segments, URI-encodes each value and throws on a missing or extra param.
+  - `RouteParams<R>`, `RouteQuery<R>`, `RouteBody<R>` (each `z.input`) and `RouteResult<R>` (`z.output` of the response) live in `route.types.ts`.
+  - Core imports only zod: no Nest, no fetch, no TanStack.
+- **Route tables** live next to their schemas, in the package part 1 §1 «Where they live» names for that domain: `packages/<owner>/src/<domain>/<feature>/<feature>.routes.ts`, for example `leadRoutes` in `packages/shared/src/sales/leads/`. No new package edge.
+- **Paths** are the full paths the route map prints today, with `:name` params. A route with no JSON body in its answer says so: `response: 'empty'` (204), `'file'` (a stream or download) or `'redirect'`.
+- **What stays out of a route object:** permissions, guards, throttles, success status and anything about access. Route objects ship in every client bundle and describe only the wire; access rules stay in the api.
+- **Routes no client calls** (webhooks, the HTML pay page, provider callbacks) get api-local route objects in their module, built with the same `defineRoute`. Their payload schemas stay in the api («What stays in the api», part 1 §1).
+
+### 2. The api side
+
+- `@Route(route)` method decorator in `apps/api/src/common/http/route/` (tests first). It applies the HTTP method and full path, and `@Returns(route.response)` for JSON answers.
+- `@RouteInput()` parameter decorator: parses `params`, `query` and `body` with the route's own schemas through the existing `ZodParams` / `ZodQuery` / `ZodBody` pipes. It hands the handler one typed `{ params, query, body }`, so no schema is named twice.
+- Controllers move their path from `@Controller('<prefix>')` plus `@Get(':id')` to `@Controller()` plus `@Route(xRoutes.get)`. Class names, handler names, `@Permissions`, guards and `@HttpCode` stay, so `routes.snap.txt` stays byte-identical.
+- Lint `ab/route-from-contract` turns on in C2, at zero, with no exemption: a handler in a `*.controller.ts` takes its method and path from `@Route`, never from `@Get`/`@Post`/`@Put`/`@Patch`/`@Delete` with a path.
+
+### 3. The client side
+
+- `call(api, route, input)` in `packages/client-core/src/core/http/call/` (tests first):
+  - builds the URL with `routePath`;
+  - serialises the query from `RouteQuery<R>`;
+  - sends the body;
+  - parses the answer with `parseResponse(route.response, …)` (strict, per «Decisions»);
+  - returns `RouteResult<R>`.
+- The per-endpoint files of part 1 §1 (`x.api.ts`, `x.keys.ts`, `x.query-options.ts`) call `call()` with the route. Query keys come from `listKey(route.path, params)`.
+- Lint `ab/no-api-path-literal` turns on in C2, at zero: no string or template that starts with `/` is passed to `apiFetch`, `apiSend` or `call` in client-core or an app. Blobs and file downloads use `routePath(route, params)` too.
+
+### 4. Types, interfaces, enums and objects
+
+Rule, added to CLAUDE.md rule 15 in G: a type, interface, enum (a `z.enum` or a literal union) or constant object that two or more workspaces use lives once, in the lowest package that owns what it imports. One that a single app uses stays in that app.
+
+| Kind | Home |
+|---|---|
+| Wire data (requests, answers, events) | The schema, with its `z.infer` type (part 1 naming). No hand-written interface for wire data. |
+| Enums | A `z.enum` in the owning package; value maps between enums per part 2 §1. |
+| Non-wire types that web and mobile share (view models, store state, hook results) | `packages/client-core/src/<domain>/x.types.ts` |
+| Constant objects that web and mobile share: status → i18n key, status → tone name, sort and filter options, step lists | `client-core`, typed from the enum schema |
+| Design values (colours, sizes, tone tokens) | `packages/catalog/src/theme` (rule 17) |
+| Arabic text | i18n files only (rule 10) |
+| Component props | Stay with their component (`Name.types.ts`); they hold `ReactNode` and callbacks, so they are not zod. |
+
+- **Inventory first.** G's first commit is `tools/scripts/shared-types/inventory.mjs` with fixture tests, red first. It lists every exported type, interface, literal union and `as const` object in apps and packages. It groups duplicates by name and by shape (the same literal set, or the same keys and value types) and prints the importers per workspace.
+- **Moves.** One moves-only commit per domain; importers are rewritten by the committed codemod; a same-shape duplicate is deleted in favour of the package one.
+- **Guard.** `guard:shared-types` turns on in G at zero, with no baseline. It fails on:
+  - a type, enum or object declared in an app and imported by another workspace;
+  - a declaration in an app with the same shape as one in a package or another app.
+
+### 5. PRs
+
+| PR | Adds for part 3 |
+|---|---|
+| A | `defineRoute`, `routePath` and the route types in core; `call()` in client-core; `@Route` and `@RouteInput()` in the api. One pilot route table, managed short links, switched end to end on the api and in client-core. |
+| C1, C2 | For each domain they move: `<feature>.routes.ts` next to the schemas; controllers on `@Route`; client-core endpoint files on `call()`. C2 turns on `ab/route-from-contract` and `ab/no-api-path-literal` at zero. |
+| G | `refactor/shared-types` · `refactor(repo): one home for shared types, enums and objects`, after C2: the inventory script, the moves, `guard:shared-types` and the CLAUDE.md rule 15 line. |
+
+- The component-folder bundles for staff-mobile and staff-web (docs/63) start after G, because G rewrites imports in the same files. The family and kits bundles do not wait; when G conflicts with one of them, G re-runs its codemod on fresh develop.
+- **Proof in each PR:**
+  - `routes.snap.txt` is byte-identical;
+  - `contracts.snap.json` changes only where a route's schema moves from inline to a package, and then to the same JSON schema;
+  - the test count per workspace matches develop's except for added tests;
+  - the mobile bundle size step prints both apps' sizes.
