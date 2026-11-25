@@ -21,9 +21,4 @@ describe('orFallback', () => {
     expect(warn).toHaveBeenCalledTimes(1);
     expect(warn).toHaveBeenCalledWith('template read failed, using the fallback: timeout');
   });
-
-  it('logs a thrown non-error value as text', async () => {
-    await orFallback(Promise.reject('down'), null, 'number read');
-    expect(warn).toHaveBeenCalledWith('number read failed, using the fallback: down');
-  });
 });

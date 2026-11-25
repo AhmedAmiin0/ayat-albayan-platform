@@ -12,6 +12,7 @@ import { withCorrection } from './correction/correction-view';
 import { TemplateNames } from '@/modules/messaging/whatsapp/templates/names/template-names';
 import { asRelayTemplateRow, relayTemplateName } from './relay-view/relay-template-row';
 import { CrmSentText } from './crm-sent/crm-sent';
+import { orFallback } from '@/common/infra/errors';
 
 /**
  * MessageView for one row with its registry template and, while the admin may still send it by
@@ -53,7 +54,7 @@ export class MessageViews {
   private async relayed(row: ThreadMessageRow): Promise<ThreadMessageRow> {
     const name = relayTemplateName(row);
     if (!name) return row;
-    const template = await this.names.find(name).catch(() => null);
+    const template = await orFallback(this.names.find(name), null, 'relayed template read');
     return asRelayTemplateRow(row, template);
   }
 }
