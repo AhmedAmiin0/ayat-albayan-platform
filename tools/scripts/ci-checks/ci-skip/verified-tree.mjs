@@ -19,7 +19,8 @@ const TREE = /^[0-9a-f]{40}$/;
 const CACHE_KEYS = [
   /^pnpm-lock\.yaml$/,
   /^[^/]+\/[^/]+\/(babel\.config|jest\.config|jest\.setup)\.cjs$/,
-  /^packages\/mobile-kit\/(jest\.base|babel)\.cjs$/,
+  /^packages\/mobile-kit\/babel\.cjs$/,
+  /^packages\/testing\/jest\.cjs$/,
   /^[^/]+\/[^/]+\/vitest\.config\.mts$/,
   /^[^/]+\/[^/]+\/vite\.config\.ts$/,
   /^packages\/config\/vite\.js$/,

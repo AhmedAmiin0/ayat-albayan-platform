@@ -275,7 +275,7 @@ Each package: ≤ ≈ 40 code files, ≤ 12 per folder, tests next to the code, 
 | `@ab/notifications` | L3 | notifications, messaging/templates, messaging/lesson | messaging, settings, catalog | api, web, mobile | 31 |
 | `@ab/reports` | L3 | reports (18) | core, catalog, schedule, money | api, web, mobile | 18 |
 | `@ab/sales` | L4 | sales (24) | messaging, money, people, schedule, reports | api, web, mobile | 24 |
-| `@ab/testing` | dev | shared `testing/`, the docs/27 E7 fixtures, arabic-literals | — | devDependency everywhere; knip entry | ≈ 8 |
+| `@ab/testing` | T | the one vitest base (`@ab/testing/vitest`) and the jest-expo base (`@ab/testing/jest`); data builders stay in their owning packages, so it has no workspace dependency and no cycle (docs/64 PR 3) | — | devDependency of every tested workspace | 3 |
 | `@ab/client-core` | client | pure TS (no React, DOM or RN): http (+ `ApiError.code`, `apiErrorText`), keys, `repos/<domain>`, stores (`createStore`, clock), `signedUpload`, calls, inbox, channels | core, time, domain types | web, mobile | ≈ 75 |
 | `@ab/client-hooks` | client | react ^19.2 + react-query peers; `ClientPlatform` context; query options on the repos; usePermissions, useNow, useCountdown, useDebounced, useTimeout, useAutosave, useReportEntry, the pay mutations, one `useRealtime(channel)` | client-core | web, mobile | ≈ 40 |
 | `@ab/shared` | facade | `export *` of the packages above (D4) | all | apps | 1 |
