@@ -1,7 +1,7 @@
 import { RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { type PageQuery } from '@/common/http/http';
+import type { PageQuery } from '@/common/http/http';
 import { maybe, pgError } from '@/common/db/errors';
 import { MY_COMMISSION_SELECT, type MyCommissionSource } from './my.commissions.mapper';
 import { MY_PAYMENT_SELECT, MY_STUDENT_COLUMNS, type MyPaymentSource, type MyStudentSource } from './my.mapper';

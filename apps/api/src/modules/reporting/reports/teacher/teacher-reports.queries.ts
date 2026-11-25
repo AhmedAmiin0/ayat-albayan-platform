@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, type SortSpec } from '@/common/db/list-sort';
 import { studentIdsMatching } from '@/common/student-ids';
-import { type PageQuery } from '@/common/http/http';
+import type { PageQuery } from '@/common/http/http';
 import { pgError } from '@/common/db/errors';
 
 export type TeacherReportRow = {

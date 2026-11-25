@@ -3,7 +3,7 @@ import { meetingModeOf, OPEN_LESSON_STATUSES, usesPlatform } from '@ab/schedule'
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
-import { type PageQuery } from '@/common/http/http';
+import type { PageQuery } from '@/common/http/http';
 import { maybe, pgError } from '@/common/db/errors';
 import type { Contact } from './status/confirmation-messages';
 import { LESSON_SELECT, type LessonRow } from './store/lesson-row';

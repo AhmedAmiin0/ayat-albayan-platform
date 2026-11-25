@@ -3,7 +3,7 @@ import type { Page } from '@ab/core';
 import type { AdminTaskView } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { type PageQuery } from '@/common/http/http';
+import type { PageQuery } from '@/common/http/http';
 import { maybe, pgError } from '@/common/db/errors';
 import { studentRef } from '@/modules/finance/subscriptions/subscriptions.mapper';
 import type { StudentRef } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
