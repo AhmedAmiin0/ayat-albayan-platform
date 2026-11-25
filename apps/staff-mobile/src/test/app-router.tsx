@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter } from 'expo-router/testing-library';
-import type * as Token from '@ab/mobile-kit/lib/http/access-token';
-import type * as Within from '@ab/mobile-kit/lib/http/read-within';
+import type { AccessToken as Token, ReadWithin as Within } from '@ab/mobile-kit/testing';
 import { queryClient, pathKey } from '@ab/mobile-kit';
 import type { NavState } from '@/core/nav/chat-groups';
 import { currentBackend, type FakeBackend, setBackend } from './fake-backend';

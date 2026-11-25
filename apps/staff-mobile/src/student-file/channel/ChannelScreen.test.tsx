@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { TeacherChannelScreen } from './ChannelScreen';
 import { SalesChannelScreen } from './SalesChannelScreen';
 
