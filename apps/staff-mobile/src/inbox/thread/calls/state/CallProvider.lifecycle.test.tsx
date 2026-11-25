@@ -1,6 +1,7 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { AppState, type AppStateStatus, Vibration } from 'react-native';
 import { t } from '@ab/mobile-kit';
+import { callConfigQuery } from '@/inbox/thread/calls/api/calls-api';
 import { ON, routes } from './call-test-kit';
 import { mountCalls as mount, placed } from './call-test-mount';
 
@@ -11,7 +12,6 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (...a: unknown[]) => mockFetch(...a),
   apiSend: (...a: unknown[]) => mockSend(...a),
 }));
-
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -29,7 +29,7 @@ describe('the app and the setting around a live call', () => {
     await screen.findByTestId('call-screen');
     mockFetch.mockImplementation(routes({ config: { ...ON, enabled: false }, active: [] }));
     await act(async () => {
-      await client.refetchQueries({ queryKey: ['calls', 'config'] });
+      await client.refetchQueries({ queryKey: callConfigQuery.queryKey });
     });
     await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', '/calls/out1/end'));
   });

@@ -8,6 +8,7 @@ import { createMessageStore } from '@/inbox/thread/store/message-store';
 import { applyAs, id, plan, row } from '@/inbox/thread/store/store-fixtures';
 import { storeReader } from './store-session';
 import { storedPage, viewOf } from './stored-view';
+import { threadKeys } from '@/core/lib/keys';
 
 // docs/43 43-7: the chat reads the phone store: on screen before its GET, its ticks, new rows.
 
@@ -16,7 +17,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => false }));
+jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({
+  useScreenFocused: () => false,
+}));
 
 const mine = (n: number, status: 'sent' | 'read' = 'sent') => row({ n, phone: PHONE, status });
 const page = (...messages: ReturnType<typeof mine>[]) => ({
@@ -72,6 +75,6 @@ test('thread pages never go to disk (the store keeps the chat)', async () => {
   mockApiFetch.mockResolvedValue(page(mine(1)));
   const client = createTestQueryClient();
   await renderHook(() => useThread(PHONE), { wrapper: queryWrapper(client) });
-  const query = client.getQueryCache().find({ queryKey: ['threads', PHONE] });
+  const query = client.getQueryCache().find({ queryKey: threadKeys.chat(PHONE) });
   expect(query?.meta?.noPersist).toBe(true);
 });

@@ -13,6 +13,7 @@ import {
   threadKey,
   threadPath,
 } from '@/inbox/thread/hooks/thread-cache';
+import { threadKeys } from '@/core/lib/keys';
 
 // The emoji panel's GIF and sticker tabs (like WhatsApp): GIPHY through the API
 // (the key never reaches the app) and the stickers of every chat, plus this user's favourites.
@@ -37,8 +38,9 @@ export function useStickers(enabled = true) {
 /** GET /threads/gifs?q=: a search, or GIPHY's trending GIFs while the box is empty. */
 export function useGifs(q: string) {
   return useQuery({
-    queryKey: ['gifs', q],
-    queryFn: async () => gifListSchema.parse(await apiFetch(`/threads/gifs${toQueryString({ q })}`)),
+    queryKey: threadKeys.gifs(q),
+    queryFn: async () =>
+      gifListSchema.parse(await apiFetch(`/threads/gifs${toQueryString({ q })}`)),
     staleTime: 5 * 60_000,
   });
 }
@@ -46,7 +48,8 @@ export function useGifs(q: string) {
 /** What the panel sends: a held sticker again, or a GIPHY GIF (the API fetches its mp4). */
 type PanelSend = { kind: 'sticker'; messageId: string } | { kind: 'gif'; gifId: string };
 
-const bodyOf = (v: PanelSend) => (v.kind === 'sticker' ? { messageId: v.messageId } : { gifId: v.gifId });
+const bodyOf = (v: PanelSend) =>
+  v.kind === 'sticker' ? { messageId: v.messageId } : { gifId: v.gifId };
 
 /**
  * POST /threads/:phone/sticker | gif: the row shows in the chat at once, with its ticks. The sheet

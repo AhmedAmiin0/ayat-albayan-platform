@@ -2417,9 +2417,6 @@
     }
   },
   "src/inbox/leads/detail/LeadAssign.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/no-floating-promises": {
       "count": 1
     }
@@ -2840,9 +2837,6 @@
     }
   },
   "src/inbox/messages/hooks/thread-file.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     },
@@ -3837,7 +3831,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 3
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -3948,7 +3942,7 @@
   },
   "src/inbox/thread/hooks/inbox-sync.test.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/thread/hooks/send-paths.test.tsx": {

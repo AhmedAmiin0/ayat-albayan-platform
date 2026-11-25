@@ -1,6 +1,5 @@
 import type { MessageView, ThreadDetail } from '@ab/shared';
 import type { InfiniteData } from '@tanstack/react-query';
-import { pathKey } from '@ab/mobile-kit';
 
 // One WhatsApp thread (docs/12 H2): paths, query key and the cache edits an optimistic send makes.
 // The cache is an infinite query: pages[0] is the newest page, each next page is older.
@@ -12,7 +11,7 @@ export const threadHref = (phone: string) => `/inbox/thread/${encodeURIComponent
 /** API path of a thread (GET /threads/:phone, POST …/text, POST …/template). */
 export const threadPath = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
 /** ['threads', phone]: a push for this phone refreshes exactly this thread. */
-export const threadKey = (phone: string) => pathKey(`/threads/${phone}`);
+export const threadKey = (phone: string) => threadKeys.chat(phone);
 
 /** The mutation key of a chat's text / template send. */
 export const sendKey = (phone: string) => ['inbox-send', phone];
@@ -39,3 +38,4 @@ export {
   removeMessage,
   replaceMessage,
 } from '@ab/client-core';
+import { threadKeys } from '@/core/lib/keys';
