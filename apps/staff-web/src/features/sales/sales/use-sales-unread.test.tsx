@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { unreadTitle, useSalesUnread } from './use-sales-unread';
+import { pathKey } from '@ab/client-core';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -26,7 +27,7 @@ describe('useSalesUnread (W8)', () => {
     expect(apiFetch.mock.calls[0]?.[0]).toBe('/threads?unread=true&page=1&pageSize=1');
     expect(document.title).toBe(`(3) ${t.app.name}`);
     total(0);
-    await act(() => client.invalidateQueries({ queryKey: ['threads'] }));
+    await act(() => client.invalidateQueries({ queryKey: pathKey('/threads') }));
     await waitFor(() => expect(result.current).toBe(0));
     expect(document.title).toBe(t.app.name);
   });

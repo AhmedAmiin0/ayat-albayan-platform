@@ -13,6 +13,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { RegistrationCheckBy, RegistrationCheckCode } from '@ab/shared';
 import { checkRequest } from './registration-check';
 import { RegistrationMatches } from './RegistrationMatches';
+import { salesKeys } from '@/features/sales/keys';
 
 const R = t.registrationCheck;
 
@@ -42,7 +43,7 @@ export function RegistrationCheckDialog({ phone, onClose }: RegistrationCheckDia
   const [invalid, setInvalid] = useState<RegistrationCheckCode | null>(null);
   const [asked, setAsked] = useState<Asked>(() => firstAsk(phone));
   const answer = useQuery({
-    queryKey: ['sales', 'registration-check', asked?.path ?? ''],
+    queryKey: salesKeys.registrationCheck(asked?.path ?? ''),
     queryFn: () => apiFetch<RegistrationCheckView>(asked?.path ?? ''),
     enabled: asked !== null,
     retry: false,

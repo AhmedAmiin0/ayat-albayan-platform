@@ -3,6 +3,7 @@ import { Select } from '@ab/web-kit/components/ui/form/select';
 import { assignLead, salesPeopleQuery } from '@/features/sales/sales/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { LeadView } from '@ab/shared';
+import { leadKeys, salesKeys } from '@/features/sales/keys';
 
 export function LeadAssignSelect({ lead }: { lead: LeadView }) {
   const queryClient = useQueryClient();
@@ -11,8 +12,8 @@ export function LeadAssignSelect({ lead }: { lead: LeadView }) {
   const save = useMutation({
     mutationFn: assignLead,
     onSuccess: () => Promise.all([
-      queryClient.invalidateQueries({ queryKey: ['leads'] }),
-      queryClient.invalidateQueries({ queryKey: ['sales', 'people'] }),
+      queryClient.invalidateQueries({ queryKey: leadKeys.all }),
+      queryClient.invalidateQueries({ queryKey: salesKeys.people() }),
     ]),
   });
   const current = lead.assigned_to ?? '';

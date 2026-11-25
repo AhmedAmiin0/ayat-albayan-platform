@@ -2,14 +2,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { assignUnassigned } from '@/features/sales/sales/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { leadKeys, salesKeys } from '@/features/sales/keys';
 
 export function AssignUnassignedButton() {
   const queryClient = useQueryClient();
   const run = useMutation({
     mutationFn: assignUnassigned,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['leads'] });
-      await queryClient.invalidateQueries({ queryKey: ['sales', 'people'] });
+      await queryClient.invalidateQueries({ queryKey: leadKeys.all });
+      await queryClient.invalidateQueries({ queryKey: salesKeys.people() });
     },
   });
   return (
