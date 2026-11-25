@@ -1,4 +1,4 @@
-import { pathKey } from '@ab/mobile-kit';
+import { pathKey } from '@ab/client-core';
 import type { LeadKeys, ThreadKeys } from './inbox.keys.types';
 
 const threads = pathKey('/threads');
