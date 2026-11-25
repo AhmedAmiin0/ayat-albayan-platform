@@ -39,6 +39,8 @@ test('bareSpec: packages, data and asset paths stay', () => {
   assert.equal(bareSpec('../../i18n/ar.json'), null);
   assert.equal(bareSpec('./mark.png'), null);
   assert.equal(bareSpec('./index.css'), null);
+  assert.equal(bareSpec('./metro.cjs'), null, 'a real CommonJS file');
+  assert.equal(bareSpec('./tool.mjs'), null, 'a real ES module file');
   assert.equal(bareSpec('./reindex.js'), './reindex');
 });
 

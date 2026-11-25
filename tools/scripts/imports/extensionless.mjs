@@ -1,8 +1,9 @@
 // The extensionless codemod (docs/64 PR 2): packages ship TypeScript source that every consumer
 // resolves without extensions, so a relative module path in packages/* names neither `.js`/`.ts`
 // nor `/index`. Rewrites imports, re-exports, `import()`, `import('x').T`, require and vi/jest
-// mock paths (move-module/specifiers.ts finds them); data and asset paths (`.json`, `.png`, `.css`)
-// keep theirs. A folder import beside a same-named file would change target: it stops the run.
+// mock paths (move-module/specifiers.ts finds them); data, asset and plain JS paths (`.json`,
+// `.png`, `.css`, `.cjs`, `.mjs`) keep theirs. A folder import beside a same-named file would
+// change target: it stops the run.
 // Deterministic (sorted files, span edits only): a second run finds nothing.
 // Usage: pnpm imports:extensionless [--write]   (dry run without --write)
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -14,8 +15,8 @@ import { applyEdits, specifierNodes } from '../ci-checks/move-module/specifiers.
 const TS = /\.[cm]?tsx?$/;
 const SKIP = new Set(['node_modules', 'dist', 'coverage', '.expo', '.turbo']);
 const RELATIVE = /^\.{1,2}(\/|$)/;
-const INDEX = /(^|\/)index(\.[cm]?[jt]sx?)?$/;
-const CODE_EXT = /\.[cm]?[jt]sx?$/;
+const INDEX = /(^|\/)index(\.[jt]sx?)?$/;
+const CODE_EXT = /\.[jt]sx?$/;
 const SOURCE_EXTS = ['.ts', '.tsx'];
 
 const parentOf = (spec) => (spec === 'index' ? '.' : spec.replace(/\/index$/, ''));
