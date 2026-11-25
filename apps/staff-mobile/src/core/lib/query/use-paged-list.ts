@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { apiFetch, toQueryString, listKey, type ListParams } from '@ab/mobile-kit';
 import { usePagedActions, withTracked } from './paged-result';
-import { flattenPages, nextPageParam, type WithId } from './paging';
+import { flattenPages, nextPageParam, type WithId } from '@ab/client-core';
 import type { Page } from '@ab/core';
 
 interface PagedListOptions {

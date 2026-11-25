@@ -1,27 +1,7 @@
-import type { Page } from '@ab/core';
-
-export interface WithId {
-  id: string;
-}
+import type { WithId } from '@ab/client-core';
 
 /** Fields to overwrite on the row with this id, e.g. { id, status: 'contacted' }. */
 export type Patch = WithId & Record<string, unknown>;
-
-export function nextPageParam(last: Page<unknown>): number | undefined {
-  return last.page * last.pageSize < last.total ? last.page + 1 : undefined;
-}
-
-/** Pages → one list. Offset paging repeats a row when one is inserted mid-scroll: keep the first. */
-export function flattenPages<T extends WithId>(pages: readonly Page<T>[]): T[] {
-  const seen = new Set<string>();
-  const out: T[] = [];
-  for (const item of pages.flatMap((p) => p.items)) {
-    if (seen.has(item.id)) continue;
-    seen.add(item.id);
-    out.push(item);
-  }
-  return out;
-}
 
 function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;

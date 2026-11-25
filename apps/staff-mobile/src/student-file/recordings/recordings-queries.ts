@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { apiFetch, toQueryString, listKey } from '@ab/mobile-kit';
 import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
-import { flattenPages, nextPageParam } from '@/core/lib/query/paging';
+import { flattenPages, nextPageParam } from '@ab/client-core';
 
 const PAGE_SIZE = 10;
 
