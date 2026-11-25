@@ -14,9 +14,7 @@ import { StopOwedCalc } from './stop-owed';
 import { StopRefundLedger } from './stop-refund.ledger';
 import type { OwedDecision, RefundPlan, RefundSub } from './stop-refund.plan';
 import { StopRefunds, type RefundChoiceAsk } from './stop-refund.service';
-
-/** Who the assistant ownership rule binds: the sales base role; the admin never (#612). */
-const isAssistant = (user: AuthUser): boolean => user.role === 'sales';
+import { isSales } from '@/common/auth/roles';
 
 /** The refund leg of one stop: the package, its key, the choice. */
 interface RefundAsk {
@@ -112,7 +110,7 @@ export class StopRefundGate {
 
   /** Every student while the rule is off or for a non-assistant; else only hers. */
   private async owns(user: AuthUser, studentId: string): Promise<boolean> {
-    const own = isAssistant(user) ? await this.rule.scope(user) : null;
+    const own = isSales(user) ? await this.rule.scope(user) : null;
     return own === null || own.studentIds.includes(studentId);
   }
 }

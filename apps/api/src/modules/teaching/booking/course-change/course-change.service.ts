@@ -11,6 +11,7 @@ import { CourseChangeRepo, type ChangeRule, type CourseSub } from './course-chan
 import { CourseChangeDeps } from './course-change.writer';
 import { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 import { assertOwnStudents } from '@/modules/teaching/booking/sales/booking/sales-booking.scope';
+import { isSales } from '@/common/auth/roles';
 
 /** anyStudent: a key skips «her own students» (the profile's routes; sales.renew_any, docs/16 row 38). */
 export interface ChangeActor { user: AuthUser; role: ChangeRole; anyStudent?: boolean }
@@ -51,7 +52,7 @@ export class CourseChange {
     if (replay) return replay;
     const planned = await this.deps.planner.planned(req, actor.role, await this.load(sub));
     const conflicts = await this.conflicts(planned, req.teacherId);
-    if (conflicts.length > 0 && (actor.role === 'sales' || !req.override)) {
+    if (conflicts.length > 0 && (isSales(actor) || !req.override)) {
       throw domainError(HttpStatus.CONFLICT, 'conflict', { conflicts });
     }
     const payload = changePayload({
@@ -78,7 +79,7 @@ export class CourseChange {
 
   /** The assistant: 403 not_your_student unless hers, only while SalesOwnershipRule enforces it. */
   async ownsStudent(studentId: string, actor: ChangeActor): Promise<void> {
-    const scoped = actor.role === 'sales' && actor.anyStudent !== true;
+    const scoped = isSales(actor) && actor.anyStudent !== true;
     assertOwnStudents([studentId], scoped ? await this.scope.of(actor.user) : null);
   }
 

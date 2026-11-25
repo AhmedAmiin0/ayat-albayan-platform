@@ -2,6 +2,7 @@ import { randomBytes } from 'node:crypto';
 import { JOIN_ROLES, type JoinRole } from '@ab/schedule';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { hashLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
+import { isAdmin } from '@/common/auth/roles';
 
 // 32 random bytes (43 base64url chars); only the sha256 is stored, so the URL is shown once.
 
@@ -16,7 +17,7 @@ export const hashMeetingToken = hashLinkToken;
 
 /** The creator or any admin may end the meeting and issue a new link. */
 export const canManageMeeting = (user: Pick<AuthUser, 'id' | 'role'>, meeting: { created_by: string | null }): boolean =>
-  user.role === 'admin' || (meeting.created_by !== null && meeting.created_by === user.id);
+  isAdmin(user) || (meeting.created_by !== null && meeting.created_by === user.id);
 
 /**
  * A staff login's role in a meeting's room: an admin stays admin; the creator hosts as `teacher`
@@ -24,7 +25,7 @@ export const canManageMeeting = (user: Pick<AuthUser, 'id' | 'role'>, meeting: {
  * with its own role. null for a login with no staff role (a guardian): refused.
  */
 export function meetingRoleOf(user: Pick<AuthUser, 'id' | 'role'>, meeting: { created_by: string | null }): JoinRole | null {
-  if (user.role === 'admin') return 'admin';
+  if (isAdmin(user)) return 'admin';
   if (meeting.created_by !== null && meeting.created_by === user.id) return 'teacher';
   if (user.role === 'teacher' || user.role === 'assistant' || user.role === 'sales') return user.role;
   return null;

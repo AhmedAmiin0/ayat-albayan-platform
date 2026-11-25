@@ -8,10 +8,11 @@ import { z } from 'zod';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
+import { isAdmin, isSales } from '@/common/auth/roles';
 
 /** Admin and sales with inbox.read only; never teachers or guardians, whatever a role grants. */
 export function assertRepliesUser(user: AuthUser): void {
-  const staff = user.role === 'admin' || user.role === 'sales';
+  const staff = isAdmin(user) || isSales(user);
   if (!staff || !can(user, 'inbox.read')) throw forbidden('saved_replies_forbidden');
 }
 

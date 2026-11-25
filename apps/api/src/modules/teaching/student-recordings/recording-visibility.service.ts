@@ -4,6 +4,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, notFound } from '@/common/http/errors';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { RecordingAdminRepo, type RecordingWithTeacher } from './recording-admin.repo';
+import { isAdmin } from '@/common/auth/roles';
 
 /**
  * PATCH /recordings/:id/visibility: admin any recording; a teacher only their own lessons'. A group
@@ -38,7 +39,7 @@ export class RecordingVisibilityService {
   }
 
   private async assertMay(user: AuthUser, row: RecordingWithTeacher): Promise<void> {
-    if (user.role === 'admin') return;
+    if (isAdmin(user)) return;
     const teacherId = user.role === 'teacher' ? await this.teachers.idByProfile(user.id) : null;
     if (teacherId && row.lessons?.teacher_id === teacherId) return;
     throw new ForbiddenException();

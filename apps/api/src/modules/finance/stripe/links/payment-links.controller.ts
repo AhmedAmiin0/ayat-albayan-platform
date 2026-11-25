@@ -8,6 +8,7 @@ import { StripeEnabledGuard } from '@/modules/finance/stripe/gate/stripe-gate';
 import { LinkCancel } from './link-cancel';
 import { LinkCreate } from './link-create';
 import { LinkDeps } from './link-deps';
+import { isAdmin } from '@/common/auth/roles';
 
 /** Needs FEATURE_STRIPE and STRIPE_ENABLED (docs/30); her links only, admins see all. */
 @ApiTags('sales')
@@ -36,7 +37,7 @@ export class PaymentLinksController {
   @Get()
   async list(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<PaymentLinkView[]> {
     const { status } = parseOrThrow(paymentLinkListSchema, query);
-    const rows = await this.deps.links.list({ createdBy: user.role === 'admin' ? null : user.id });
+    const rows = await this.deps.links.list({ createdBy: isAdmin(user) ? null : user.id });
     const now = new Date();
     // By the status it reads as now: an open link past its expiry is listed as expired.
     return rows.map((r) => this.deps.views.one(r, now)).filter((v) => !status || v.status === status);

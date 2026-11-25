@@ -6,6 +6,7 @@ import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { CLASSROOM_WEB_ORIGIN } from '@/modules/teaching/classroom/classroom.config';
 import { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
 import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
+import { isAdmin } from '@/common/auth/roles';
 
 /** Needs no WhatsApp template; the guest page still admits nobody before the window opens. */
 @Injectable()
@@ -21,7 +22,7 @@ export class JoinLinkCopyService {
     if (!lesson) throw notFound('lesson_not_found');
     const { user } = input;
     const own = user.role === 'teacher' && (await this.teachers.idByProfile(user.id)) === lesson.teacher_id;
-    if (user.role !== 'admin' && !own) throw new ForbiddenException();
+    if (!isAdmin(user) && !own) throw new ForbiddenException();
     const token = newLinkToken();
     const expires_at = linkExpiry(lesson, await this.queries.joinWindow());
     await this.queries.insertLink({ lesson_id: lesson.id, token_hash: hashLinkToken(token), expires_at, created_by: user.id });

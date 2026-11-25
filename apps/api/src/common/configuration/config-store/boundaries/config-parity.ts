@@ -10,8 +10,8 @@ import { isDeepStrictEqual } from 'node:util';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { decodeAll, GATE_KEYS } from '@/common/configuration/config-store/store/config-decode';
-import { isBaseAdmin } from './config-ownership';
 import { ConfigStore } from '@/common/configuration/config-store/store/config-store.service';
+import { isAdmin } from '@/common/auth/roles';
 
 type Rows = readonly { key: string; value: unknown }[];
 
@@ -67,7 +67,7 @@ export class ConfigParityController {
 
   @Get()
   async get(@CurrentUser() user: AuthUser): Promise<ConfigParityResponse> {
-    if (!isBaseAdmin(user)) throw new ForbiddenException({ message: 'admin_only' });
+    if (!isAdmin(user)) throw new ForbiddenException({ message: 'admin_only' });
     return configParity((await this.store.fresh()).rows);
   }
 }

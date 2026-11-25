@@ -19,10 +19,10 @@ import { blanksToNull, GuardianPhonesService } from '@/modules/people/guardians'
 import { PeopleEditService } from './people-edit.service';
 import { PeopleViewService } from './people-view.service';
 import { PeopleOwnership } from './access/people-ownership';
+import { isAdmin } from '@/common/auth/roles';
 
 const studentBody = blanksToNull(peopleStudentPatchSchema);
 const guardianBody = blanksToNull(peopleGuardianPatchSchema);
-const isAdmin = (user: AuthUser): boolean => user.role === 'admin';
 /** Notes stay the admin's: anyone else's `notes` key answers 400. */
 const notesRule = (user: AuthUser): z.ZodType => (isAdmin(user) ? z.object({}) : notesFreeSchema);
 

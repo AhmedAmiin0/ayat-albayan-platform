@@ -4,6 +4,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { notFound } from '@/common/http/errors';
 import { maybe, pgError } from '@/common/db/errors';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { isAdmin } from '@/common/auth/roles';
 
 /**
  * S6 guard (rule 9): admin sees every student; a teacher only a student in their scope
@@ -23,7 +24,7 @@ export class StudentAccess {
       .eq('id', studentId)
       .maybeSingle());
     if (!student) throw notFound('student_not_found');
-    if (user.role === 'admin') return;
+    if (isAdmin(user)) return;
     const teacherId = user.role === 'teacher' ? await this.teachers.idByProfile(user.id) : null;
     if (teacherId === null) throw new ForbiddenException();
     if (student.teacher_id === teacherId || (await this.taughtBy(studentId, teacherId))) return;

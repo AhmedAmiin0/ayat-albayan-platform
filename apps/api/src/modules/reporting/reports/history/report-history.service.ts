@@ -6,6 +6,7 @@ import { ReportAccess } from '@/modules/reporting/reports/shared/report-access';
 import { ReportsSettings } from '@/modules/reporting/reports/shared/reports.settings';
 import { historyResponse, pendingViews } from './report-history.mapper';
 import { ReportHistoryQueries } from './report-history.queries';
+import { isAdmin } from '@/common/auth/roles';
 
 type HistoryInput = { studentId: string; page: PageQuery; user: AuthUser };
 
@@ -22,7 +23,7 @@ export class ReportHistoryService {
   async student({ studentId, page, user }: HistoryInput): Promise<StudentReportsResponse> {
     const student = await this.queries.student(studentId);
     if (!student) throw new NotFoundException();
-    const teacherId = user.role === 'admin' ? null : await this.access.teacherId(user);
+    const teacherId = isAdmin(user) ? null : await this.access.teacherId(user);
     if (teacherId !== null) {
       const own = student.teacher_id === teacherId || (await this.queries.taught({ teacherId, studentId }));
       if (!own) throw new ForbiddenException();
