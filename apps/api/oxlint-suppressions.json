@@ -6867,10 +6867,10 @@
   },
   "src/modules/reporting/reports/shared/report-lesson.queries.ts": {
     "complexity": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/reporting/reports/shared/reports.service.ts": {
