@@ -22,6 +22,15 @@ const isName = (id) => {
   return kinds.includes(parent.getKind()) && parent.getNameNode() === id;
 };
 
+const TYPE_ONLY = /^type\s+/;
+
+/** `import type { … }` when every name left is type-only, as no-import-type-side-effects asks. */
+function importLine(names, source) {
+  const types = names.every((n) => TYPE_ONLY.test(n));
+  const list = types ? names.map((n) => n.replace(TYPE_ONLY, '')) : names;
+  return `import ${types ? 'type ' : ''}{ ${list.join(', ')} } from '${source}';`;
+}
+
 /** The dbError import, replaced in place by what the file still needs from it and the helpers. */
 function importEdits(found, ctx) {
   const specs = found.decl.getNamedImports();
@@ -32,7 +41,7 @@ function importEdits(found, ctx) {
   const source = found.decl.getModuleSpecifierValue();
   const helpers = [...ctx.used].filter((n) => n !== 'peopleErrors').sort();
   const lines = [
-    ...(names.length ? [`import { ${names.join(', ')} } from '${source}';`] : []),
+    ...(names.length ? [importLine(names, source)] : []),
     ...(helpers.length ? [`import { ${helpers.join(', ')} } from '${ERRORS_SOURCE}';`] : []),
   ];
   const end = found.decl.getEnd() + (lines.length ? 0 : 1);
