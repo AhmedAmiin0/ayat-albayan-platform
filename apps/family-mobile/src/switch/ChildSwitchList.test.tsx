@@ -7,7 +7,7 @@ import { closeChildSwitch, openChildSwitch, useChildSwitch } from '@/nav';
 import { lesson, student } from '@/portal/portal.fixtures';
 import { ChildSwitchList } from './ChildSwitchList';
 
-// The children sheet (owner 2026-11-16, canvas SwitchSheet, SwitchDone, Adult).
+// The children sheet (canvas SwitchSheet, SwitchDone, Adult).
 
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

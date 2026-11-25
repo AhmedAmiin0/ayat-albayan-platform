@@ -3,7 +3,7 @@ import app from './app.json';
 import config from './app.config';
 
 /**
- * Lane L06 (owner 2026-11-22): the Google Play build needs push, so an EAS production build
+ * The Google Play build needs push, so an EAS production build
  * without the production environment's GOOGLE_SERVICES_JSON fails instead of shipping no FCM.
  */
 const saved = { ...process.env };

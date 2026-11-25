@@ -4,7 +4,7 @@ import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query'
 import { lesson, student } from '@/portal/portal.fixtures';
 import { ScheduleRow } from './ScheduleRow';
 
-// A week row's live line (owner 2026-11-16, canvas RoomXLivePush).
+// A week row's live line (canvas RoomXLivePush).
 
 const now = new Date('2026-11-16T15:34:00.000Z');
 const clock = { tz: 'Asia/Riyadh', cycle: '12' as const, locale: 'ar' as const };
