@@ -5,6 +5,7 @@ import { usePermissions } from '@/features/people/auth';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { movedKey, ReplyActionsContext, type ReplyActions } from './reply-actions-context';
 import { RescheduleLessonDrawer } from './RescheduleLessonDrawer';
 
@@ -20,7 +21,13 @@ export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsP
   const { can } = usePermissions();
   const client = useQueryClient();
   const [moving, setMoving] = useState<{ messageId: string; lesson: ReplyLesson } | null>(null);
-  const moved = useQuery({ queryKey: movedKey(phone), queryFn: () => [] as string[], initialData: [] as string[], staleTime: Infinity, gcTime: Infinity });
+  const moved = useQuery({
+    queryKey: movedKey(phone),
+    queryFn: () => [] as string[],
+    initialData: [] as string[],
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
   const rights = replyRights(can, mode === 'teacher' ? null : mode);
   const reschedule = rights.reschedule && mode === 'admin';
   const confirm = usePublicConfig().lesson_confirmation_required ? rights.confirm : null;
@@ -32,14 +39,21 @@ export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsP
     reschedule: (messageId, lesson) => setMoving({ messageId, lesson }),
   };
   const done = () => {
-    if (moving) client.setQueryData<string[]>(movedKey(phone), (ids = []) => [...ids, moving.messageId]);
-    void client.invalidateQueries({ queryKey: ['threads', 'detail', phone] });
+    if (moving)
+      client.setQueryData<string[]>(movedKey(phone), (ids = []) => [...ids, moving.messageId]);
+    void client.invalidateQueries({ queryKey: threadKeys.detail(phone) });
     void refreshAnchored(client, phone);
   };
   return (
     <ReplyActionsContext.Provider value={value}>
       {children}
-      {moving && <RescheduleLessonDrawer lesson={moving.lesson} onClose={() => setMoving(null)} onMoved={done} />}
+      {moving && (
+        <RescheduleLessonDrawer
+          lesson={moving.lesson}
+          onClose={() => setMoving(null)}
+          onMoved={done}
+        />
+      )}
     </ReplyActionsContext.Provider>
   );
 }

@@ -2,6 +2,7 @@ import { templateViewSchema, type AuthorTemplate } from '@ab/client-core';
 import { AUTHOR_DAILY_LIMIT, type TemplateAuthorInput, type TemplateEditInput } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
+import { templateKeys } from '@/features/messaging/keys';
 import { templateErrorText } from '@/features/messaging/templates/api';
 import { ApiError, apiFetch, apiSend, type SendMethod } from '@ab/web-kit/lib/http/api';
 
@@ -16,7 +17,7 @@ const saved = (r: unknown): AuthorTemplate => templateViewSchema.parse(r);
 
 /** The author's list: the chat allow-list and their own templates, every status. */
 export const authoredTemplatesQuery = queryOptions({
-  queryKey: ['templates', 'authored'],
+  queryKey: templateKeys.authored(),
   queryFn: async () => listSchema.parse(await apiFetch(AUTHORED)),
 });
 

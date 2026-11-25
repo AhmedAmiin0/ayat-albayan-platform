@@ -1,14 +1,29 @@
-import type { NotificationEntryView, NotificationRuleView, NotificationsOverview, RulePatchInput } from '@ab/shared';
+import type {
+  NotificationEntryView,
+  NotificationRuleView,
+  NotificationsOverview,
+  RulePatchInput,
+} from '@ab/shared';
 import { useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useClock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
-import { CATALOGUE_QUERY_KEY } from '@/features/messaging/notification-catalogue/catalogue-api';
-import { draftOf, draftResult, isDirty, type DraftResult, type RuleDraft } from '@/features/messaging/notification-rules/rule-draft';
+import { catalogueKeys } from '@/features/messaging/keys';
+import {
+  draftOf,
+  draftResult,
+  isDirty,
+  type DraftResult,
+  type RuleDraft,
+} from '@/features/messaging/notification-rules/rule-draft';
 import { numberName, useRules } from '@/features/messaging/notification-rules/rules-context';
 import { failureText } from '@/features/messaging/notification-rules/rule-text';
-import { patchRule, ruleFailure, type RuleFailure } from '@/features/messaging/notification-rules/rules-api';
+import {
+  patchRule,
+  ruleFailure,
+  type RuleFailure,
+} from '@/features/messaging/notification-rules/rules-api';
 
 export interface SwitchInput {
   on: boolean;
@@ -33,16 +48,19 @@ export interface RuleRowState {
   failure: RuleFailure | null;
 }
 
-const isEntry = (v: unknown): v is NotificationEntryView => typeof v === 'object' && v !== null && 'key' in v && 'audience' in v;
+const isEntry = (v: unknown): v is NotificationEntryView =>
+  typeof v === 'object' && v !== null && 'key' in v && 'audience' in v;
 
 /** The answer replaces the row in every cached catalogue, then the catalogue and the settings refetch. */
 function afterSave(client: QueryClient, updated: unknown) {
   if (isEntry(updated)) {
-    client.setQueriesData<NotificationsOverview>({ queryKey: CATALOGUE_QUERY_KEY }, (old) =>
-      old ? { ...old, entries: old.entries.map((e) => (e.key === updated.key ? updated : e)) } : old,
+    client.setQueriesData<NotificationsOverview>({ queryKey: catalogueKeys.all }, (old) =>
+      old
+        ? { ...old, entries: old.entries.map((e) => (e.key === updated.key ? updated : e)) }
+        : old,
     );
   }
-  void client.invalidateQueries({ queryKey: CATALOGUE_QUERY_KEY });
+  void client.invalidateQueries({ queryKey: catalogueKeys.all });
   void client.invalidateQueries({ queryKey: CONFIG_QUERY_KEYS.settings });
 }
 
@@ -61,7 +79,8 @@ export function useRuleRow(rule: NotificationRuleView): RuleRowState {
   const fail = (error: unknown) => {
     const why = ruleFailure(error);
     setFailure(why);
-    if (why !== 'confirmation_required') api.announce(`${t.notificationCatalogue.entries[rule.key].name}: ${failureText(why)}`);
+    if (why !== 'confirmation_required')
+      api.announce(`${t.notificationCatalogue.entries[rule.key].name}: ${failureText(why)}`);
   };
   const send = (body: RulePatchInput, onDone?: () => void) => {
     setFailure(null);
@@ -96,7 +115,8 @@ export function useRuleRow(rule: NotificationRuleView): RuleRowState {
       if (result.ok && result.changes.length > 0) send(result.patch, onDone);
       else if (result.ok) onDone?.();
     },
-    setEnabled: ({ on, confirmText, onDone }) => send(confirmText === undefined ? { enabled: on } : { enabled: on, confirmText }, onDone),
+    setEnabled: ({ on, confirmText, onDone }) =>
+      send(confirmText === undefined ? { enabled: on } : { enabled: on, confirmText }, onDone),
     saving: mutation.isPending,
     failure,
   };
