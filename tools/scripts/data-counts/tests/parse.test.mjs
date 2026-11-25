@@ -23,6 +23,12 @@ for (const { name, text } of rejectedCases()) {
   });
 }
 
+test('parse: a string may hold quotes, semicolons and any script', () => {
+  const where = "status not in ('it''s', 'a;b -- c', 'نشط')";
+  const items = parseCounts(`-- count: odd\nselect count(*) from t where ${where};`);
+  assert.deepEqual(items, [{ name: 'odd', sql: `select count(*) from t where ${where}` }]);
+});
+
 test('parse: a statement needs a «-- count: <name>» line before it', () => {
   assert.throws(() => parseCounts(fixture('unnamed')), /statement 1 has no name/);
 });

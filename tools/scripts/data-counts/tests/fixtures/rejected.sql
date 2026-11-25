@@ -14,3 +14,21 @@ select count(*) from students /* x */;
 select count(*) from students where name = $$a$$;
 -- count: alias
 select count(*) as n from students;
+-- count: escaped_quote
+select count(*) from students where name = E'\'' or id is null or name = E'\'';
+-- count: backslash
+select count(*) from students where name = 'a\b';
+-- count: string_prefix
+select count(*) from students where name = E'a';
+-- count: unicode_prefix
+select count(*) from students where name = U&'a';
+-- count: stray_quote
+select count(*) from students where name = 'a' or name = ';
+-- count: quoted_name
+select count(*) from students where "left"(name, 1) = 'a';
+-- count: backtick
+select count(*) from students where name = `a`;
+-- count: name_outside_ascii
+select count(*) from students where fé(name) = 'a';
+-- count: other_schema
+select count(*) from auth.users;

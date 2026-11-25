@@ -6,13 +6,17 @@ import { fixturePath } from './fixtures.mjs';
 const URL_VALUE = 'postgres://reader:pw@db.example/postgres';
 
 const fakeDb = (answer) => {
-  const seen = { modes: [], ended: false, url: null };
+  const seen = { modes: [], sent: [], ended: false, url: null };
   const connect = (url) => {
     seen.url = url;
     return {
       begin: (mode, run) => {
         seen.modes.push(mode);
-        return run({ unsafe: (sql) => answer(sql) });
+        const unsafe = (sql, args, options) => {
+          seen.sent.push([args, options]);
+          return answer(sql);
+        };
+        return run({ unsafe });
       },
       end: () => {
         seen.ended = true;
@@ -31,7 +35,7 @@ const run = async (file, answer, url = URL_VALUE) => {
   return { code, out, seen: db.seen };
 };
 
-test('main: each count runs in a read-only transaction and prints only «name: n»', async () => {
+test('main: each count runs alone, read-only, and prints only «name: n»', async () => {
   const { code, out, seen } = await run('valid', async (sql) => [
     { count: String(sql.length % 7) },
   ]);
@@ -41,6 +45,8 @@ test('main: each count runs in a read-only transaction and prints only «name: n
     ['payments_amount_null: n', 'payments_status_unknown: n', 'payments_total: n'],
   );
   assert.deepEqual(seen.modes, ['read only', 'read only', 'read only']);
+  const oneStatement = [[], { simple: false }];
+  assert.deepEqual(seen.sent, [oneStatement, oneStatement, oneStatement]);
   assert.equal(seen.ended, true);
 });
 
