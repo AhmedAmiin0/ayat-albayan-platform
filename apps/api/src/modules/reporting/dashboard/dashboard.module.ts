@@ -4,7 +4,7 @@ import { DashboardController } from './dashboard.controller';
 import { DashboardQueries } from './dashboard.queries';
 import { DashboardService } from './dashboard.service';
 import { DashboardSettings } from './dashboard.settings';
-import { FinanceQueries } from './finance/finance.queries';
+import { FinanceRepo } from './finance/finance.repo';
 import { FinanceService } from './finance/finance.service';
 import { FxConverter } from './finance/fx-converter';
 import { WorkQueries } from './work/work.queries';
@@ -21,7 +21,7 @@ import { WorkQueries } from './work/work.queries';
     DashboardQueries,
     DashboardSettings,
     FinanceService,
-    FinanceQueries,
+    FinanceRepo,
     WorkQueries,
     FxConverter,
   ],
