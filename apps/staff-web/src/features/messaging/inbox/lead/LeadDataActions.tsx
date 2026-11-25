@@ -5,6 +5,8 @@ import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { CreateStudentDialog } from '@/features/people/students/create/CreateStudentDialog';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
+import { leadKeys } from '@/features/sales/keys';
 import { registerInitial } from './lead-summary';
 import { QualificationForm } from './qualification/QualificationForm';
 
@@ -22,7 +24,8 @@ export function LeadDataActions({ lead, onDone }: LeadDataActionsProps) {
     setOpen(null);
     onDone(notice);
     // The thread now belongs to a guardian: the aside becomes the family's panel.
-    for (const key of ['leads', 'threads']) void queryClient.invalidateQueries({ queryKey: [key] });
+    for (const queryKey of [leadKeys.all, threadKeys.all])
+      void queryClient.invalidateQueries({ queryKey });
   };
 
   return (
@@ -43,7 +46,11 @@ export function LeadDataActions({ lead, onDone }: LeadDataActionsProps) {
         />
       )}
       {open === 'edit' && (
-        <Dialog title={t.inbox.editLeadDataTitle} onClose={() => setOpen(null)} className="max-w-[640px]">
+        <Dialog
+          title={t.inbox.editLeadDataTitle}
+          onClose={() => setOpen(null)}
+          className="max-w-[640px]"
+        >
           <QualificationForm
             key={lead.id}
             lead={lead}

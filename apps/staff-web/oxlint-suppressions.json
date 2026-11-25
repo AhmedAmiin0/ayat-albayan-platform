@@ -1682,11 +1682,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/composer/quote/QuoteDialog/tests/send.test.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/features/messaging/inbox/composer/quote/use-quote-offer.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -1711,9 +1706,6 @@
     },
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/features/messaging/inbox/lead/LeadDataActions.tsx": {
@@ -2030,11 +2022,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/messages/forward/ForwardDialog.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/features/messaging/inbox/messages/forward/ForwardDialog.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -2129,11 +2116,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/messages/reply-actions/ReplyActionsProvider.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/features/messaging/inbox/messages/reply-actions/ReplyConfirmButton.tsx": {
     "ab/forbidden-imports": {
       "count": 1
@@ -2202,7 +2184,7 @@
   },
   "src/features/messaging/inbox/sales/SalesRegisterAction.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 2
@@ -2735,9 +2717,6 @@
     }
   },
   "src/features/messaging/notification-catalogue/catalogue-api.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 1
     }
@@ -2951,10 +2930,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
-    },
-    "ab/module-boundaries": {
-      "count": 1
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 5
@@ -3120,14 +3096,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/numbers/use-numbers-mutation.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/features/messaging/templates/TemplateHealth.crm.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -3170,7 +3138,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     },
     "ab/no-untyped-api-calls": {
       "count": 11
@@ -3251,11 +3219,6 @@
   },
   "src/features/messaging/templates/lines/TemplateLines.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/templates/lines/use-line-sync.ts": {
-    "ab/module-boundaries": {
       "count": 1
     }
   },

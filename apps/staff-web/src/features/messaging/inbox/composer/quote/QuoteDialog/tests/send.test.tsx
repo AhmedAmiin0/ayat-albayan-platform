@@ -4,6 +4,7 @@ import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { fakePricingApi } from '@/features/finance/pricing/fake-pricing-api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
@@ -11,7 +12,11 @@ import { QuoteDialog } from '@/features/messaging/inbox/composer/quote/QuoteDial
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const PHONE = '+966501234567';
 const SA = '/pricing/quote?country=SA&duration=45&tier=standard&students=1&discount=0';
@@ -21,7 +26,9 @@ const button = (name: string) => screen.getByRole('button', { name });
 
 async function show(open = true) {
   const done = { onClose: vi.fn(), onFilled: vi.fn() };
-  renderWithClient(<QuoteDialog thread={thread({ phone_e164: PHONE, session_open: open })} {...done} />);
+  renderWithClient(
+    <QuoteDialog thread={thread({ phone_e164: PHONE, session_open: open })} {...done} />,
+  );
   await screen.findByTestId('quote-text');
   return done;
 }
@@ -44,14 +51,25 @@ it('«أرسل العرض» posts the offer once through the chat text route, ev
   fireEvent.click(send);
   await waitFor(() => expect(apiSend).toHaveBeenCalled());
   expect(apiSend).toHaveBeenCalledTimes(1);
-  const [method, path, body] = apiSend.mock.calls[0] as [string, string, { text: string; clientRequestId: string }];
-  expect([method, path, body.text]).toEqual(['POST', `/threads/${encodeURIComponent(PHONE)}/text`, TEXT]);
+  const [method, path, body] = apiSend.mock.calls[0] as [
+    string,
+    string,
+    { text: string; clientRequestId: string },
+  ];
+  expect([method, path, body.text]).toEqual([
+    'POST',
+    `/threads/${encodeURIComponent(PHONE)}/text`,
+    TEXT,
+  ]);
   expect(body.clientRequestId).toMatch(/^[0-9a-f-]{36}$/);
 });
 
 it('a sent offer closes the sheet', async () => {
   // The API echoes the offer it sent (another body would be a replay of a first offer).
-  apiSend.mockImplementation(async (_m: string, _p: string, b: { text: string }) => ({ id: 'm1', body: b.text }));
+  apiSend.mockImplementation(async (_m: string, _p: string, b: { text: string }) => ({
+    id: 'm1',
+    body: b.text,
+  }));
   const { onClose } = await show();
   fireEvent.click(button(q.send));
   await waitFor(() => expect(onClose).toHaveBeenCalled());
@@ -91,11 +109,17 @@ it('outside the 24 h window: send and edit are disabled with the closed note; co
 it('a 409 session_closed refetches the thread so the sheet locks send and edit', async () => {
   const { ApiError } = await import('@ab/web-kit/lib/http/api/api');
   apiSend.mockRejectedValue(new ApiError(409, { code: 'session_closed' }));
-  const client = renderWithClient(<QuoteDialog thread={thread({ phone_e164: PHONE, session_open: true })} onClose={vi.fn()} onFilled={vi.fn()} />);
+  const client = renderWithClient(
+    <QuoteDialog
+      thread={thread({ phone_e164: PHONE, session_open: true })}
+      onClose={vi.fn()}
+      onFilled={vi.fn()}
+    />,
+  );
   const refetch = vi.spyOn(client, 'invalidateQueries');
   await screen.findByTestId('quote-text');
   fireEvent.click(button(q.send));
   expect(await screen.findByText(t.inbox.error.session_closed)).toBeTruthy();
-  await waitFor(() => expect(refetch).toHaveBeenCalledWith({ queryKey: ['threads', 'detail', PHONE] }));
-  expect(refetch).not.toHaveBeenCalledWith({ queryKey: ['threads'] });
+  await waitFor(() => expect(refetch).toHaveBeenCalledWith({ queryKey: threadKeys.detail(PHONE) }));
+  expect(refetch).not.toHaveBeenCalledWith({ queryKey: threadKeys.all });
 });

@@ -1,9 +1,7 @@
 import type { NotificationsOverview } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
-
-/** Every version of the catalogue query (invalidate this to refetch it, e.g. after a template sync). */
-export const CATALOGUE_QUERY_KEY = ['admin-notifications'] as const;
+import { catalogueKeys } from '@/features/messaging/keys';
 
 /**
  * GET /admin/notifications (settings.read): the catalogue with each row's state from today's
@@ -11,7 +9,7 @@ export const CATALOGUE_QUERY_KEY = ['admin-notifications'] as const;
  */
 export const catalogueQuery = (version: number) =>
   queryOptions({
-    queryKey: [...CATALOGUE_QUERY_KEY, version],
+    queryKey: catalogueKeys.version(version),
     queryFn: () => apiFetch<NotificationsOverview>('/admin/notifications'),
     placeholderData: (previous) => previous,
   });

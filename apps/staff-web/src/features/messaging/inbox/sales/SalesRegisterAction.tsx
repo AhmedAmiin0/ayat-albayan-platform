@@ -9,6 +9,8 @@ import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
 import { BookingWizard, type BookingWizardProps } from '@/features/teaching/booking/BookingWizard';
 import { BookingModeContext, ChatReturnContext } from '@/features/teaching/booking/mode';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
+import { leadKeys } from '@/features/sales/keys';
 import { registerDrafts, resumable } from './register-drafts';
 import { draftFromThread } from './sales-register';
 
@@ -28,7 +30,13 @@ export function SalesRegisterButton({ compact, onOpen }: { compact: boolean; onO
 }
 
 /** Booked via /sales/booking so the student is credited to the salesperson (R-ASST-01, docs/16). */
-export function SalesRegisterDialog({ thread, onClose }: { thread: ThreadView & { lead_id: string }; onClose: () => void }) {
+export function SalesRegisterDialog({
+  thread,
+  onClose,
+}: {
+  thread: ThreadView & { lead_id: string };
+  onClose: () => void;
+}) {
   const queryClient = useQueryClient();
   const phone = thread.phone_e164;
   // A draft for another lead, or with a first lesson now past, does not resume as it was (review M3).
@@ -42,7 +50,8 @@ export function SalesRegisterDialog({ thread, onClose }: { thread: ThreadView & 
   };
   const close = () => {
     onClose();
-    for (const key of ['threads', 'leads']) void queryClient.invalidateQueries({ queryKey: [key] });
+    for (const queryKey of [threadKeys.all, leadKeys.all])
+      void queryClient.invalidateQueries({ queryKey });
   };
   return (
     <Dialog title={t.inbox.registerNew} onClose={close} wide>

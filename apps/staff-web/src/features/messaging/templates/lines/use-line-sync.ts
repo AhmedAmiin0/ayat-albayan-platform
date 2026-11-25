@@ -3,8 +3,13 @@ import type { WaLine } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { CATALOGUE_QUERY_KEY } from '@/features/messaging/notification-catalogue/catalogue-api';
-import { checkTemplateHealth, lineSyncErrorText, templateErrorText, templatesQuery } from '@/features/messaging/templates/api';
+import { catalogueKeys } from '@/features/messaging/keys';
+import {
+  checkTemplateHealth,
+  lineSyncErrorText,
+  templateErrorText,
+  templatesQuery,
+} from '@/features/messaging/templates/api';
 import type { Notice } from '@/features/messaging/templates/use-template-actions';
 
 export interface LineSyncOptions {
@@ -13,7 +18,9 @@ export interface LineSyncOptions {
 }
 
 const failed = (line: WaLine, error: string): Notice => ({
-  message: t.templates.perNumber.syncFailed.replace('{line}', t.enums.waLine[line]).replace('{error}', error),
+  message: t.templates.perNumber.syncFailed
+    .replace('{line}', t.enums.waLine[line])
+    .replace('{error}', error),
   tone: 'error',
 });
 
@@ -26,10 +33,11 @@ export function useLineSync({ line, onNotice }: LineSyncOptions) {
     onSuccess: (view) => {
       queryClient.setQueryData(templatesQuery.queryKey, view.templates);
       // The catalogue shows each row's template status, so refetch it (#134 item 10).
-      void queryClient.invalidateQueries({ queryKey: CATALOGUE_QUERY_KEY });
+      void queryClient.invalidateQueries({ queryKey: catalogueKeys.all });
       const mine = view.lines.find((l) => l.line === line) ?? null;
       setResult(mine);
-      if (mine?.ok) onNotice({ message: t.templates.perNumber.synced.replace('{line}', t.enums.waLine[line]) });
+      if (mine?.ok)
+        onNotice({ message: t.templates.perNumber.synced.replace('{line}', t.enums.waLine[line]) });
       else onNotice(failed(line, mine ? lineSyncErrorText(mine) : t.common.error));
     },
     onError: (e) => onNotice(failed(line, templateErrorText(e))),
