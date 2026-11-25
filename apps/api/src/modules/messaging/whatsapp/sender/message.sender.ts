@@ -20,7 +20,7 @@ import {
 import { senderTiming } from './sender-timing';
 import { BackgroundJob } from '@/config/role/background-job';
 
-/** ponytail: 50 per pass; lanes in parallel, one row at a time per lane unless pooled (drain/). */
+/** 50 per pass; lanes in parallel, one row at a time per lane unless pooled (drain/). */
 const BATCH = 50;
 
 export type { SendSummary } from './pass';

@@ -35,7 +35,7 @@ export async function documentLink(storage: StorageService, doc: TemplateDocumen
 }
 
 /**
- * A 7-day signed link to a file staff sent from the chat (owner 2026-10-19 #2), signed again on
+ * A 7-day signed link to a file staff sent from the chat, signed again on
  * every try. Only wa-media paths under out/ are ever signed: never an inbound cache, never a report.
  */
 export async function mediaLink(storage: StorageService, path: string): Promise<string> {

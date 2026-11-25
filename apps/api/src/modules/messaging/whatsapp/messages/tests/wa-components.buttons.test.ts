@@ -5,7 +5,7 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { submitPayload } from '@/modules/messaging/whatsapp/messages/submit';
 import { buttonValues } from '@/modules/messaging/whatsapp/messages/wa-components';
 
-// teacher_lesson_v3 (owner 2026-11-06): two URL buttons, each with its own {{1}} suffix.
+// teacher_lesson_v3: two URL buttons, each with its own {{1}} suffix.
 
 const V3 = templateRow({
   key: 'teacher_lesson_v3',

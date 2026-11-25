@@ -4,7 +4,7 @@ import { MessageDispatch } from '@/modules/messaging/whatsapp/sender/message.dis
 import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// A voice note recorded in the app (owner 2026-10-27): the API's ogg/opus copy goes as voice:true.
+// A voice note recorded in the app: the API's ogg/opus copy goes as voice:true.
 const client = { sendTemplate: vi.fn(), sendText: vi.fn(), sendDocument: vi.fn() };
 const lines = { notifications: client, chat: client } as unknown as WhatsappLines;
 const storage = { signedDownload: vi.fn() };

@@ -2,7 +2,7 @@ import type { Tables } from '@ab/db';
 import { reopenDedupKey } from '@ab/shared';
 import { UNCERTAIN } from '@/modules/messaging/whatsapp/sender/send-plan';
 
-// Which reopen template rows count (owner 2026-11-03, merge-gate review 2026-11-05): only one that
+// Which reopen template rows count (merge-gate review): only one that
 // is still pending or went out. A failed, expired or unsent one never stops the next try, so a
 // held text never waits behind a template that will not reach the family.
 

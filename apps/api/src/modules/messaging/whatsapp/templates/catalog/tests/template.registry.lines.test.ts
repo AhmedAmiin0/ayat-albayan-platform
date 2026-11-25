@@ -3,7 +3,7 @@ import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/te
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError, type MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// The health check per number (owner 2026-10-12, 2026-10-18, docs/12 §3.4): each line syncs only its own
+// The health check per number (docs/12 §3.4): each line syncs only its own
 // rows against its own WABA's list, imports that WABA's new templates, and reports its own failure.
 
 const synced = new Map<string, unknown>();

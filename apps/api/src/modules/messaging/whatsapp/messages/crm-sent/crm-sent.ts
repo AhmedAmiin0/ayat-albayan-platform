@@ -27,7 +27,7 @@ function shownAs(view: MessageView, row: ThreadMessageRow, out: SentRender): Mes
 }
 
 /**
- * Owner 2026-11-07 («the reminder is not right»): a template row sent through the CRM shows the
+ * A template row sent through the CRM shows the
  * CRM template's own text with the values sent, not the registry row of its key. Any other row,
  * a CRM template we hold no copy of yet, or a copy with a {{n}} no sent value fills (copyFits),
  * keeps the registry's rendering.

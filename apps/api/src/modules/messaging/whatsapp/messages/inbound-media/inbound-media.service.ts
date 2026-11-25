@@ -21,7 +21,7 @@ const DAY_MS = 86_400_000;
 
 export type InboundFile = { bucket: typeof BUCKETS.waMedia; path: string; mime: string };
 
-/** «image/jpeg; codecs=…» → «image/jpeg» (shared since owner 2026-10-19 #1). */
+/** «image/jpeg; codecs=…» → «image/jpeg» (shared). */
 export { baseMime };
 const isInvoiceMime = (mime: string | null): boolean => (INVOICE_MIMES as readonly string[]).includes(baseMime(mime));
 

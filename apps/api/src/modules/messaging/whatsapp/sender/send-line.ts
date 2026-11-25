@@ -4,7 +4,7 @@ import type { DueMessage } from './sender.due';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /**
- * The line a queued row leaves from (docs/12 §13.3, owner 2026-10-12): a template from its registry
+ * The line a queued row leaves from (docs/12 §13.3): a template from its registry
  * line (a chat-WABA starter from chat; every producer template from notifications), a chat one from
  * notifications while the chat line is not configured (one line = one WABA); a session text from the
  * line it was stamped with at enqueue.

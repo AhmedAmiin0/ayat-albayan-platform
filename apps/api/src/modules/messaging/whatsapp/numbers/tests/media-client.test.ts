@@ -5,7 +5,7 @@ import type { MediaNumber } from '@/modules/messaging/whatsapp/messages/inbound-
 import type { WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { mediaSource } from '@/modules/messaging/whatsapp/numbers/media-client';
 
-// Owner 2026-10-27: a file is fetched by the NUMBER it came in on, never the notifications line by default.
+// A file is fetched by the NUMBER it came in on, never the notifications line by default.
 const client = (name: string) => ({ name }) as unknown as WhatsappClient;
 const lines = { notifications: client('notifications'), chat: client('chat') };
 const none = { client: vi.fn(() => null) };

@@ -2,7 +2,7 @@ import type { Json } from '@ab/db';
 import type { TemplateAuthorInput, TemplateDisplay } from '@ab/shared';
 import type { ImportRow } from '@/modules/messaging/whatsapp/templates/sync/template-import';
 
-// A sales template's registry row (owner 2026-11-14), pure: on the chat line (where the restricted
+// A sales template's registry row, pure: on the chat line (where the restricted
 // roles send from), on the allow-list from the start, written by `created_by`.
 
 /** A Meta name for a template the author did not name: tpl_<yyyymmdd>_<6 random>. */

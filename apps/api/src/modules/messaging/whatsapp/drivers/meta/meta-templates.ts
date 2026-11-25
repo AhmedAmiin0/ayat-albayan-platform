@@ -7,7 +7,7 @@ import { submitSchema, templatesPageSchema, toMetaTemplate } from './meta-shapes
 
 // GET /{waba}/message_templates, every page (out of whatsapp.client.ts, 150-line cap).
 
-/** ponytail: 20 × 100 templates; the academy has 12. */
+/** 20 × 100 templates; the academy has 12. */
 const MAX_TEMPLATE_PAGES = 20;
 const TEMPLATE_PAGE = 100;
 const TEMPLATE_FIELDS = 'id,name,language,status,category,quality_score,components,rejected_reason';

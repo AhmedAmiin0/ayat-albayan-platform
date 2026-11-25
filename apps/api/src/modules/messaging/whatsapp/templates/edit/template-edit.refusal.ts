@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { ar } from '@/common/infra/i18n/server-text';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 
-// A refused edit or new template (owner 2026-11-14): the code the clients map, and the same
+// A refused edit or new template: the code the clients map, and the same
 // reason in clear Modern Standard Arabic (`message_ar`, ar.json templates.error) for any reader.
 
 /** Everything else is 409 (the template's state or content). */

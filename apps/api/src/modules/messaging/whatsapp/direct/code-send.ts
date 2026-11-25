@@ -64,7 +64,7 @@ export class CodeSend {
   }
 
   /**
-   * The CHAT line only (owner 2026-10-29: «For login make it with chat number»), never a fallback to
+   * The CHAT line only (login codes leave from the chat number), never a fallback to
    * notifications: no chat line (or number) that can send = unavailable. Legacy: the chat line's own
    * client. Module mode: routing over the enabled chat numbers only. Never a crm line or number
    * (docs/30 §4): the CRM's inbox would show the code to its users, and its OTP button is untested.

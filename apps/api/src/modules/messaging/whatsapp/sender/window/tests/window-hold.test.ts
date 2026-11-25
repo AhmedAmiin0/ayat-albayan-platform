@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { NOW, PHONE, reopenOf, STAFF, staffText, windowFakes } from '@/modules/messaging/whatsapp/sender/window/window.fakes';
 
-// Owner 2026-11-03: after the window a staff text is never sent as free text. ONE reopen template
+// After the window a staff text is never sent as free text. ONE reopen template
 // per phone per 24 h, the text held until the family replies, failed after 7 days. Fakes only.
 
 let f = windowFakes();

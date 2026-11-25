@@ -12,7 +12,7 @@ import { metaDisplay } from './template-display';
 import { wabaNames } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';
 import type { MetaTemplate, TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// One line's sync, pure part (owner 2026-10-12, 2026-10-18, docs/12 §3.4): an approved template on a
+// One line's sync, pure part (docs/12 §3.4): an approved template on a
 // line's WABA the registry does not know becomes a row on THAT line; on the restricted allow-list only
 // when it comes from the chat WABA and is one of RESTRICTED_TEMPLATE_DEFAULTS (a notifications import
 // is never flagged). Only what the sender and the composers can send is imported; the rest is skipped

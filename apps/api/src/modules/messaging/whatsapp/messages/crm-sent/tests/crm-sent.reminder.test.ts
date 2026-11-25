@@ -4,7 +4,7 @@ import {
   CRM_REMINDER_BODY, FOOTER, LINE, REMINDER_COPY, REMINDER_MEET, reminderRow, sentViews,
 } from '@/modules/messaging/whatsapp/messages/crm-sent/tests/crm-sent.fakes';
 
-// Owner 2026-11-07: «the reminder is not right»: a row sent through the CRM shows the CRM's text.
+// A reminder sent through the CRM shows the CRM's text.
 
 const sentText = renderTemplateBody(CRM_REMINDER_BODY, { 1: 'محمد', 2: LINE });
 

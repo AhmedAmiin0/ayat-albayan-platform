@@ -8,7 +8,7 @@ import { CrmMediaSettings } from '@/modules/messaging/whatsapp/messages/crm-hist
 import type { InboundMediaRepo, MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
 import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
 
-// Owner 2026-11-21: a file a family sent to the notifications number, mirrored from the CRM
+// A file a family sent to the notifications number, mirrored from the CRM
 // (webhook/crm-inbound), is stored like an imported CRM file. Legacy mode stamps no number on it:
 // it is still fetched from the crm_media_host (and only from there). No real host is reached.
 

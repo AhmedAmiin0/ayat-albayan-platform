@@ -73,7 +73,7 @@ const tooLarge = (): Error => waHttpError('invoice_too_large', HttpStatus.PAYLOA
  * Inbound media bytes, as the line's driver serves them: never Kapso's `url` (Meta's lookaside,
  * which needs a Meta token this line does not have). The byte fetch gets 60 s (a 16 MB video),
  * the body read included, and is cut while streaming at chatFileMaxBytes(mime): 413
- * invoice_too_large. ponytail: a timeout surfaces as WaError status 0 that InboundMedia rethrows
+ * invoice_too_large. A timeout surfaces as WaError status 0 that InboundMedia rethrows
  * as a 500; mapping it to 502/504 is a follow-up (docs/21 §10).
  */
 export async function fetchMedia(

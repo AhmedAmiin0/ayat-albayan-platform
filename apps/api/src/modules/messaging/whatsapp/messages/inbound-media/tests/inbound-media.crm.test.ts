@@ -9,7 +9,7 @@ import type { InboundMediaRepo, MediaMessage } from '@/modules/messaging/whatsap
 import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
 import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// Owner 2026-10-27: photos and voice notes imported from the old CRM (no media id, the body is only
+// Photos and voice notes imported from the old CRM (no media id, the body is only
 // the CRM storage link) are fetched once from the configured host and cached in wa-media.
 
 function setup(msg: MediaMessage, host = CRM_HOST) {

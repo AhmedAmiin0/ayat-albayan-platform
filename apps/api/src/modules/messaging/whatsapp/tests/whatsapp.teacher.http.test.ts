@@ -25,7 +25,7 @@ describe('WhatsApp routes in teacher mode (R-MSG-05, R-TCH-03)', () => {
     ]);
   });
 
-  // Owner 2026-10-12: the restricted allow-list replaced the reminder templates (no manual reminders).
+  // The restricted allow-list replaced the reminder templates (no manual reminders).
   it('T1: a teacher lists only the allow-list, never a lesson reminder; the admin sees all', async () => {
     const teacher = await t.call({ method: 'GET', url: '/messaging/templates', token: 'teacher' });
     expect(teacher.statusCode).toBe(200);

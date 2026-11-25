@@ -9,8 +9,8 @@ import type { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-r
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { CodeSend } from '@/modules/messaging/whatsapp/direct/code-send';
 
-// Owner 2026-10-29 («For login make it with chat number»): codes leave from the CHAT line only. A crm
-// chat line stays refused (its inbox would show the code); no chat line = unavailable, never notifications.
+// Codes leave from the CHAT line only. A crm chat line stays refused (its inbox would show the
+// code); no chat line = unavailable, never notifications.
 
 const ACCOUNT_CODE = templateRow({ key: 'account_code', category: 'authentication', status: 'approved', line: 'chat' });
 const gate = { open: vi.fn() };

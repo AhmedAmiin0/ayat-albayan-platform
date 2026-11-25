@@ -11,7 +11,7 @@ import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catal
 import type { TemplateRow, WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Submitting a template (T3, docs/12 §3.4), out of template.registry.ts (150-line cap). It goes to the
-// template's OWN line's WABA (owner 2026-10-18), chat rows included, under that line's driver.
+// template's OWN line's WABA, chat rows included, under that line's driver.
 
 /**
  * Made in the CRM dashboard (docs/39): a document header (the CRM has no PDF sample upload), or a
