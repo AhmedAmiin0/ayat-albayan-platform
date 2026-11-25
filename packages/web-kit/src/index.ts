@@ -81,6 +81,7 @@ export * from './components/ui/layout/theme-toggle';
 export * from './components/ui/layout/use-narrow';
 export * from './components/ui/overlay/ConfirmSwitchDialog';
 export * from './components/ui/overlay/Drawer';
+export * from './components/ui/overlay/RouteLeaveGuard';
 export * from './components/ui/overlay/dialog';
 export * from './components/ui/overlay/more-menu';
 export * from './components/ui/overlay/toast';
