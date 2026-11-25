@@ -11,8 +11,8 @@ export const cancelDistance = (width: number): number => Math.max(100, 0.35 * wi
 export const towardStart = (dx: number, rtl: boolean): number => dx * (rtl ? 1 : -1);
 
 /**
- * The round button's physical translateX: follows the finger, clamped to the start side within
- * `max`.
+ * The round button's physical translateX: follows the finger, clamped to the start side
+ * within `max`.
  */
 export function micShift(dx: number, rtl: boolean, max: number): number {
   return rtl ? Math.min(Math.max(dx, 0), max) : Math.max(Math.min(dx, 0), -max);

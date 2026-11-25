@@ -55,8 +55,8 @@ export function MessageList({ phone, query: live }: { phone: string; query: Thre
   // `?msg=` (a search hit): the live chat, or the window around the hit (docs/37).
   const { query, anchored, target, to } = useThreadLog(phone, live);
   const list = useRef<FlatList<LogRow>>(null);
-  // Her own pull only: a background refetch (open, send, push) must not spin over the newest
-  // bubble.
+  // Her own pull only: a background refetch (open, send, push) must not spin over the
+  // newest bubble.
   const [pulling, setPulling] = useState(false);
   // Calls merged in by time (docs/28 §5); none while calls are off. One array per change: a new one
   // each render would reset the list's viewability (the floating day).

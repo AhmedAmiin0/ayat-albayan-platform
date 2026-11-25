@@ -11,8 +11,8 @@ export const threadPollKey = (phone: string) => ['thread-poll', phone];
 export const threadDeltaKey = (phone: string) => ['thread-delta', phone];
 
 /**
- * A send or a thread fetch in flight wins: its answer would overwrite a merge, or show a sent row
- * twice.
+ * A send or a thread fetch in flight wins: its answer would overwrite a merge, or show a sent
+ * row twice.
  */
 const busy = (client: QueryClient, phone: string) =>
   client.isMutating({ mutationKey: sendKey(phone) }) + client.isFetching({ queryKey: threadKey(phone) }) > 0;
@@ -43,8 +43,8 @@ const foldPage = (fresh: ThreadDetail, moved: boolean) => (old: ThreadCache | un
  * pages are not re-read. Too many new rows for one answer (a gap) re-read the whole thread instead.
  * Realtime (docs/12 §15) runs the delta sooner on an event (docs/43 AU5, refreshOpenChat); while it
  * is connected the delta slows to INBOX_FALLBACK_MS (the one safety net for a socket that died
- * quietly) and the page to THREAD_FULL_LIVE_MS; a change under another screen re-reads it on
- * return.
+ * quietly) and the page to THREAD_FULL_LIVE_MS; a change under another screen re-reads it
+ * on return.
  */
 export function useThreadPoll(phone: string, loaded: boolean) {
   const client = useQueryClient();

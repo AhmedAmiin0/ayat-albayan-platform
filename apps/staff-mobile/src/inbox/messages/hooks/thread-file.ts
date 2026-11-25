@@ -67,8 +67,8 @@ export const pdfPagePath = (phone: string, messageId: string, page: number): str
   `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/pdf/${page}`;
 
 /**
- * A 4xx: an answer that ends there (the PDF bubble then shows today's opener or a note, never a
- * retry).
+ * A 4xx: an answer that ends there (the PDF bubble then shows today's opener or a note, never
+ * a retry).
  */
 export const finalError = (e: unknown): boolean => e instanceof ApiError && e.status >= 400 && e.status < 500;
 

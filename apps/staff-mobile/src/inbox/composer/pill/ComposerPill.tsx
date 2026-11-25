@@ -14,8 +14,8 @@ export interface PillProps {
   /** The box lost focus (a tap on the chat): closes the «/» list. */
   onLeave?: (() => void) | undefined;
   /**
-   * Staff (not a teacher): the price tag and the paperclip; a teacher gets emoji and template
-   * icons.
+   * Staff (not a teacher): the price tag and the paperclip; a teacher gets emoji and
+   * template icons.
    */
   staff: boolean;
   onTemplate: () => void;

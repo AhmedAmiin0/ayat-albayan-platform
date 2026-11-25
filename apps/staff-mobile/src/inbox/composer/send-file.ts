@@ -58,8 +58,8 @@ async function pickPdf(maxBytes: number): Promise<ChatFilePick | null> {
 
 /**
  * A photo from the gallery or the camera (compressed JPEG, no EXIF, as a receipt; the camera asks
- * its permission first) or a PDF; null when cancelled. A PDF over maxBytes throws before it is
- * read.
+ * its permission first) or a PDF; null when cancelled. A PDF over maxBytes throws before it
+ * is read.
  */
 export async function pickChatFile(source: ChatFileSource, maxBytes: number): Promise<ChatFilePick | null> {
   if (source === 'pdf') return pickPdf(maxBytes);
@@ -106,8 +106,8 @@ export async function sendChatFile({ phone, file, id, maxBytes, replyToMessageId
 }
 
 /**
- * sendChatFile as a mutation: the API's row joins the thread at once, then it refetches (a text
- * send).
+ * sendChatFile as a mutation: the API's row joins the thread at once, then it refetches (a
+ * text send).
  */
 export function useSendFile(phone: string) {
   const client = useQueryClient();

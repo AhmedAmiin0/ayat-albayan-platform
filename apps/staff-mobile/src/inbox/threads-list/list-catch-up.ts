@@ -14,8 +14,8 @@ import { type ThreadCache, threadKey } from '@/inbox/thread/hooks/thread-cache';
 import type { ThreadListCache } from '@/inbox/thread/hooks/thread-list-cache';
 
 // The owner's pending tick (docs/43 §2, 43-1): the chat merges ✓ / ✓✓ while the list under it
-// waits. The list row takes the tick the chat holds for the same last message when it is further
-// along.
+// waits. The list row takes the tick the chat holds for the same last message when it is
+// further along.
 
 const updatedAt = (client: QueryClient, queryKey: QueryKey) =>
   client.getQueryState(queryKey)?.dataUpdatedAt ?? 0;

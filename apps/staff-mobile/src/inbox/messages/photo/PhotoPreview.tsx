@@ -18,8 +18,8 @@ interface PhotoPreviewProps {
 }
 
 /**
- * The photos already re-signed once after a failed load, by message: kept across a remount (scroll
- * back).
+ * The photos already re-signed once after a failed load, by message: kept across a remount
+ * (scroll back).
  */
 const resigned = new Set<string>();
 

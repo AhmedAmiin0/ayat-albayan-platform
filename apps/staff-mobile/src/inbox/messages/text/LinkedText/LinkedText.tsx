@@ -26,8 +26,8 @@ function LinkSpan({ text, href, onHold, onFail, plain }: LinkSpanProps) {
   const { color } = useTheme();
   const open = () => {
     // Never crash on a link the phone cannot open: the generic error under the text instead. A pay
-    // link in a Stripe build is marked as opened from the app (its page brings the payer back
-    // here).
+    // link in a Stripe build is marked as opened from the app (its page brings the payer
+    // back here).
     Promise.resolve()
       .then(() => Linking.openURL(appOpenUrl(href, STRIPE_FEATURE)))
       .catch(onFail);
