@@ -1,13 +1,14 @@
 import {
   courseActionsKey,
-  courseCardKey,
   courseCardPath,
   courseExtendPreviewPath,
+  courseKeys,
   coursePauseKey,
   courseResumePreviewPath,
   parseCourseCard,
   parseExtendPreview,
   parseResumePreview,
+  pauseKeys,
   postCourseExtend,
   readLessonAt,
   type CardTree,
@@ -22,7 +23,7 @@ import { apiFetch, pathKey } from '@ab/mobile-kit';
 /** GET the card: the admin's route or the assistant's (any student). */
 export const useCourseCard = (input: { studentId: string; tree: CardTree }) =>
   useQuery({
-    queryKey: [...courseCardKey(input.studentId), input.tree],
+    queryKey: courseKeys.card(input.studentId, input.tree),
     queryFn: async () => parseCourseCard(await apiFetch(courseCardPath(input))),
     enabled: input.studentId !== '',
   });
@@ -33,7 +34,7 @@ export const useCourseCard = (input: { studentId: string; tree: CardTree }) =>
  */
 export const useCardLesson = (lesson: CourseCardLesson | null) =>
   useQuery({
-    queryKey: ['course-card-lesson', lesson?.id],
+    queryKey: courseKeys.cardLesson(lesson?.id ?? ''),
     queryFn: () => (lesson ? readLessonAt<LessonView>(apiFetch, lesson) : null),
     enabled: lesson !== null,
     staleTime: 0,
@@ -41,14 +42,14 @@ export const useCardLesson = (lesson: CourseCardLesson | null) =>
 
 export const useExtendPreview = (input: { studentId: string; subscriptionId: string }) =>
   useQuery({
-    queryKey: [...courseCardKey(input.studentId), 'extend', input.subscriptionId],
+    queryKey: courseKeys.extend(input),
     queryFn: async () => parseExtendPreview(await apiFetch(courseExtendPreviewPath(input))),
   });
 
 /** Only fetched while asking. */
 export const useResumePreview = (input: { studentId: string; enabled: boolean }) =>
   useQuery({
-    queryKey: [...courseCardKey(input.studentId), 'resume'],
+    queryKey: pauseKeys.resume(input.studentId),
     queryFn: async () =>
       parseResumePreview(await apiFetch(courseResumePreviewPath(input.studentId))),
     enabled: input.enabled,
@@ -65,7 +66,7 @@ function useCardRefresh(studentId: string) {
     pathKey('/lessons'),
   ];
   return async (): Promise<void> => {
-    const stale = keys.map((queryKey) => client.invalidateQueries({ queryKey: [...queryKey] }));
+    const stale = keys.map((queryKey) => client.invalidateQueries({ queryKey }));
     await Promise.all(stale);
   };
 }

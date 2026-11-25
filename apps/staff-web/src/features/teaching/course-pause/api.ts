@@ -7,6 +7,7 @@ import {
   coursePausePreviewPath,
   coursePauseResumePath,
   coursePauseUntilPath,
+  pauseKeys,
 } from '@ab/client-core';
 import type {
   CoursePausePreview,
@@ -16,7 +17,6 @@ import type {
 } from '@ab/shared';
 import { keepPreviousData, queryOptions, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { pauseKeys } from '@/features/teaching/course-pause/keys';
 
 // Paths and the key come from @ab/client-core, the same as mobile.
 
