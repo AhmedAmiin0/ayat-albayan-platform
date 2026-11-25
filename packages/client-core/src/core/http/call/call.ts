@@ -1,37 +1,63 @@
-import { fillRoutePath, type RouteResult } from '@ab/core';
+import { fillRoutePath, type RouteMethod, type RouteResult } from '@ab/core';
 import { z } from 'zod';
-import { parseResponse, type ApiClient } from '../api-client';
+import { parseResponse, type ApiClient, type SendMethod } from '../api-client';
 import { toQueryString } from '../query-string';
-import type { AnyCallInput, CallableRoute, CallInput } from './call.types';
+import type { AnyCallRequest, Call, CallableRoute, CallRequest } from './call.types';
 
 const NO_BODY = z.undefined();
-const queryValue = z
-  .union([z.string(), z.number(), z.boolean(), z.null(), z.undefined()])
-  .transform((value) => (value === null ? undefined : value))
-  .transform((value) => (typeof value === 'boolean' ? String(value) : value));
+
+/** The schema an answer is parsed with: the route's own, or nothing for an empty answer. */
+const answerSchema = z.union([
+  z.instanceof(z.ZodType),
+  z.literal('empty').transform(() => NO_BODY),
+]);
+
+const queryValue = z.union([
+  z.string(),
+  z.number(),
+  z.boolean().transform(String),
+  z.null().transform(() => undefined),
+  z.undefined(),
+]);
 const querySchema = z.record(z.string(), queryValue).default({});
 
-const answerOf = (route: CallableRoute): z.ZodType =>
-  route.response instanceof z.ZodType ? route.response : NO_BODY;
+const read = (api: ApiClient, url: string): Promise<unknown> => api.apiFetch(url);
+const send =
+  (method: SendMethod) =>
+  (api: ApiClient, url: string, body: unknown): Promise<unknown> =>
+    api.apiSend(method, url, body);
 
-function urlOf(route: CallableRoute, input: AnyCallInput): string {
-  const query = toQueryString(querySchema.parse(input.query));
-  return `${fillRoutePath(route.path, input.params)}${query}`;
+/** Reads go through apiFetch; writes through apiSend, which adds the send deadline. */
+const ASK = {
+  GET: read,
+  POST: send('POST'),
+  PUT: send('PUT'),
+  PATCH: send('PATCH'),
+  DELETE: send('DELETE'),
+} satisfies Record<RouteMethod, unknown>;
+
+function urlOf({ route, params, query }: AnyCallRequest): string {
+  const search = toQueryString(querySchema.parse(query));
+  return `${fillRoutePath(route.path, params)}${search}`;
+}
+
+function ask<R extends CallableRoute>(
+  api: ApiClient,
+  request: CallRequest<R>,
+): Promise<RouteResult<R>>;
+function ask(api: ApiClient, request: AnyCallRequest): Promise<unknown> {
+  const url = urlOf(request);
+  return ASK[request.route.method](api, url, request.body).then((body: unknown) =>
+    parseResponse(answerSchema.parse(request.route.response), body, url),
+  );
 }
 
 /**
- * One call of a route object (docs/62 part 3 §3): the path from routePath, the query string, the
- * body, and the answer parsed strictly with the route's own schema. The client sees the same
+ * The call() of one api client (docs/62 part 3 §3), bound once where the client is in scope: each
+ * call takes one request, the route object and its inputs. The path comes from the route, the
+ * answer is parsed strictly with the route's own schema, and the client sees the same
  * apiFetch(path) / apiSend(method, path, body) a hand-written call made.
  */
-export function call<R extends CallableRoute>(
-  api: ApiClient,
-  route: R,
-  input: CallInput<R>,
-): Promise<RouteResult<R>>;
-export function call(api: ApiClient, route: CallableRoute, input: AnyCallInput): Promise<unknown> {
-  const url = urlOf(route, input);
-  const answer =
-    route.method === 'GET' ? api.apiFetch(url) : api.apiSend(route.method, url, input.body);
-  return answer.then((body: unknown) => parseResponse(answerOf(route), body, url));
+export function callWith(api: ApiClient): Call {
+  return (request) => ask(api, request);
 }
