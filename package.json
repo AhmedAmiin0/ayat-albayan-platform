@@ -40,7 +40,8 @@
     "guard:units": "node tools/scripts/units/guard.ts",
     "guard:move-only": "node tools/scripts/units/move-only/gate.mjs",
     "units:fold": "node tools/scripts/units/fold.ts",
-    "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs"
+    "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs",
+    "imports:extensionless": "node tools/scripts/imports/extensionless.mjs"
   },
   "devDependencies": {
     "@ab/config": "workspace:*",
