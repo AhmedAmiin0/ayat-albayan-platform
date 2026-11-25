@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { RouteLeaveGuard } from '@ab/web-kit/components/ui/overlay/leave-guard';
+import { RouteLeaveGuard } from '@ab/web-kit/components/ui/overlay/RouteLeaveGuard';
 
 interface BlockOpts {
   shouldBlockFn: (a: { current: { pathname: string }; next: { pathname: string } }) => boolean;

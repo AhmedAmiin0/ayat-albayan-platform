@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
-import { RouteLeaveGuard } from '@ab/web-kit/components/ui/overlay/leave-guard';
+import { RouteLeaveGuard } from '@ab/web-kit/components/ui/overlay/RouteLeaveGuard';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { BookingPage, parseBookSearch, searchForStudent } from '@/features/teaching/booking';
 

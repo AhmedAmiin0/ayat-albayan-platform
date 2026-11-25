@@ -18,7 +18,7 @@
     "./components/shell": "./src/components/shell/index.ts",
     "./components/ui/display/query-state": "./src/components/ui/display/query-state/index.ts",
     "./components/ui/layout/tabs": "./src/components/ui/layout/tabs/index.ts",
-    "./components/ui/overlay/leave-guard": "./src/components/ui/overlay/leave-guard/index.ts",
+    "./components/ui/overlay/RouteLeaveGuard": "./src/components/ui/overlay/RouteLeaveGuard/index.ts",
     "./components/ui/overlay/more-menu": "./src/components/ui/overlay/more-menu/index.ts",
     "./components/ui/surface/warn-line": "./src/components/ui/surface/warn-line/index.ts",
     "./lib/http/api": "./src/lib/http/api/index.ts",
