@@ -1325,6 +1325,7 @@ Starting point on develop `6992a7fed`: 587 routes in `apps/api/src/route-map/rou
 - **Helper in `@ab/core`** (`packages/core/src/routes/`, tests first):
   - `defineRoute({ method, path, params?, query?, body?, response })` returns a frozen route object typed by its schemas.
   - `routePath(route, params)` fills `:name` segments, URI-encodes each value and throws on a missing or extra param.
+  - `fillRoutePath(path, params)` runs the same checks for a caller that holds the params untyped (`call()`).
   - `RouteParams<R>`, `RouteQuery<R>`, `RouteBody<R>` (each `z.input`) and `RouteResult<R>` (`z.output` of the response) live in `route.types.ts`.
   - Core imports only zod: no Nest, no fetch, no TanStack.
 - **Route tables** live next to their schemas, in the package part 1 §1 «Where they live» names for that domain: `packages/<owner>/src/<domain>/<feature>/<feature>.routes.ts`, for example `leadRoutes` in `packages/shared/src/sales/leads/`. No new package edge.
@@ -1335,7 +1336,7 @@ Starting point on develop `6992a7fed`: 587 routes in `apps/api/src/route-map/rou
 ### 2. The api side
 
 - `@Route(route)` method decorator in `apps/api/src/common/http/route/` (tests first). It applies the HTTP method and full path, and `@Returns(route.response)` for JSON answers.
-- `@RouteInput()` parameter decorator: parses `params`, `query` and `body` with the route's own schemas through the existing `ZodParams` / `ZodQuery` / `ZodBody` pipes. It hands the handler one typed `{ params, query, body }`, so no schema is named twice.
+- `@RouteInput()` parameter decorator: parses `params`, `query` and `body` with the route's own schemas through the existing `ZodParams` / `ZodQuery` / `ZodBody` pipes. It hands the handler one typed `{ params, query, body }`, so no schema is named twice. A route whose bad `:param` answers its own error passes it as `@RouteInput({ badParam: () => notFound('<code>') })`, like `ZodParam`'s third argument.
 - Controllers move their path from `@Controller('<prefix>')` plus `@Get(':id')` to `@Controller()` plus `@Route(xRoutes.get)`. Class names, handler names, `@Permissions`, guards and `@HttpCode` stay, so `routes.snap.txt` stays byte-identical.
 - Lint `ab/route-from-contract` turns on in C2, at zero, with no exemption: a handler in a `*.controller.ts` takes its method and path from `@Route`, never from `@Get`/`@Post`/`@Put`/`@Patch`/`@Delete` with a path.
 
@@ -1345,6 +1346,7 @@ Starting point on develop `6992a7fed`: 587 routes in `apps/api/src/route-map/rou
   - builds the URL with `routePath`;
   - serialises the query from `RouteQuery<R>`;
   - sends the body;
+  - asks with the same `apiFetch(path)` / `apiSend(method, path, body)` a hand-written call made, so apps and their test mocks see no change;
   - parses the answer with `parseResponse(route.response, …)` (strict, per «Decisions»);
   - returns `RouteResult<R>`.
 - The per-endpoint files of part 1 §1 (`x.api.ts`, `x.keys.ts`, `x.query-options.ts`) call `call()` with the route. Query keys come from `listKey(route.path, params)`.
