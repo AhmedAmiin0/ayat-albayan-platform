@@ -71,7 +71,13 @@ export class SalesThreadsService {
     ]);
     const view = at.found ? forSales(toThreadView(at.found, now, { reopenUsable })) : null;
     const thread = view && this.pick ? await this.pick.thread(view, now) : view;
-    const detail: ThreadDetail = { thread, messages, has_more: at.rows.length > q.limit, lessons, people };
+    const detail: ThreadDetail = {
+      thread,
+      messages,
+      has_more: at.rows.length > q.limit,
+      lessons,
+      people,
+    };
     return read ? asRead(detail, now) : detail;
   }
 

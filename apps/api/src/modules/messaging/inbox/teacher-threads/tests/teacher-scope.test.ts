@@ -9,8 +9,13 @@ const OWN = '+201001234567';
 const user = (role: AuthUser['role']): AuthUser => ({ id: 'p1', email: null, role });
 const scope: TeacherScope = { teacherId: 'tch-1', teacherName: 'أبرار', phones: new Set([GUARDIAN, OWN]), ownPhone: OWN };
 
-function scopes(teacher: { id: string; display_name_ar: string; phone_e164: string | null } | null) {
-  const queries = { teacher: vi.fn(async () => teacher), phones: vi.fn(async () => [GUARDIAN, OWN]) };
+function scopes(
+  teacher: { id: string; display_name_ar: string; phone_e164: string | null } | null,
+) {
+  const queries = {
+    teacher: vi.fn(async () => teacher),
+    phones: vi.fn(async () => [GUARDIAN, OWN]),
+  };
   return { queries, scopes: new TeacherScopes(queries as unknown as TeacherThreadsRepo) };
 }
 const failure = (fn: () => unknown): [number, unknown] | null => {
@@ -18,7 +23,9 @@ const failure = (fn: () => unknown): [number, unknown] | null => {
     fn();
     return null;
   } catch (e) {
-    return e instanceof HttpException ? [e.getStatus(), (e.getResponse() as { code?: string }).code] : null;
+    return e instanceof HttpException
+      ? [e.getStatus(), (e.getResponse() as { code?: string }).code]
+      : null;
   }
 };
 

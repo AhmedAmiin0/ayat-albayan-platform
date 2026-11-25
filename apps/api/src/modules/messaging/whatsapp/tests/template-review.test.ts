@@ -8,8 +8,14 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { migrationPath } from '@/common/db/repo-paths.test-util';
 
 const MIGRATION = migrationPath('20261001000141_message_templates.sql');
-type Component = { type: string; text?: string; example?: { body_text?: string[][] }; buttons?: { type: string; text: string }[] };
-const components = (row: (typeof SEEDS)[number]) => submitPayload(row, 'h')['components'] as Component[];
+type Component = {
+  type: string;
+  text?: string;
+  example?: { body_text?: string[][] };
+  buttons?: { type: string; text: string }[];
+};
+const components = (row: (typeof SEEDS)[number]) =>
+  submitPayload(row, 'h')['components'] as Component[];
 
 describe('the four new templates, as Meta will review them (docs/12 §3.4)', () => {
   it('the fakes are migration 141’s rows byte for byte', () => {

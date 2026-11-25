@@ -30,7 +30,9 @@ export function kapsoPage(names: readonly string[], after?: string) {
 }
 
 /** A fetch that records every request and answers from the script; `bytes` replies are raw. */
-export function kapsoFetch(...replies: ({ status: number; body: unknown } | { bytes: Uint8Array })[]) {
+export function kapsoFetch(
+  ...replies: ({ status: number; body: unknown } | { bytes: Uint8Array })[]
+) {
   const requests: { url: string; headers: Record<string, string> }[] = [];
   const fetch = async (url: string, init: RequestInit): Promise<Response> => {
     requests.push({ url, headers: { ...(init.headers as Record<string, string>) } });

@@ -41,7 +41,10 @@ export class ThreadsRepo {
     const search = f.search ? threadSearchFilter(f.search) : null;
     if (search) query = query.or(search);
     const from = (f.page - 1) * f.pageSize;
-    const { data, error, count } = await applySort(query, f, THREAD_SORT).range(from, from + f.pageSize - 1);
+    const { data, error, count } = await applySort(query, f, THREAD_SORT).range(
+      from,
+      from + f.pageSize - 1,
+    );
     check(error, 'threads read');
     return { items: data ?? [], total: count ?? 0 };
   }

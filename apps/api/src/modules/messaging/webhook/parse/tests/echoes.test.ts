@@ -14,7 +14,10 @@ const echoes = (items: unknown[], phoneNumberId = PHONE_NUMBER_ID) => ({
 
 describe('smb_message_echoes', () => {
   it('parses each echo with where it came in; nothing as inbound', () => {
-    const batch = parseWebhook(echoes([echo]), { now: TS_DATE, numbers: { notifications: PHONE_NUMBER_ID } });
+    const batch = parseWebhook(echoes([echo]), {
+      now: TS_DATE,
+      numbers: { notifications: PHONE_NUMBER_ID },
+    });
     expect(batch.messages).toEqual([]);
     expect(batch.echoes).toEqual([{ message: echo, line: null, phoneNumberId: PHONE_NUMBER_ID }]);
   });

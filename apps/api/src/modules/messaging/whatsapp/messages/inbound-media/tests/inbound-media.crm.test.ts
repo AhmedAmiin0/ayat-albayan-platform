@@ -17,13 +17,21 @@ function setup(msg: MediaMessage, host = CRM_HOST) {
   const queries = {
     message: vi.fn(async () => stored),
     setRefusal: vi.fn(),
-    setPath: vi.fn(async (_id: string, path: string) => void (stored = { ...stored, media_path: path })),
+    setPath: vi.fn(
+      async (_id: string, path: string) => void (stored = { ...stored, media_path: path }),
+    ),
   };
   const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
   const lines = { notifications: client, chat: client } as unknown as WhatsappLines;
-  const media = new InboundMedia(queries as unknown as InboundMediaRepo, lines, storage as unknown as StorageService);
-  Object.assign(media, { crm: new CrmHistoryMedia(readerOf(CrmMediaSettings, { crm_media_host: host })) });
+  const media = new InboundMedia(
+    queries as unknown as InboundMediaRepo,
+    lines,
+    storage as unknown as StorageService,
+  );
+  Object.assign(media, {
+    crm: new CrmHistoryMedia(readerOf(CrmMediaSettings, { crm_media_host: host })),
+  });
   return { media, queries, storage, client };
 }
 
@@ -38,7 +46,11 @@ describe('InboundMedia: files imported from the old CRM', () => {
     expect(storage.upload).toHaveBeenCalledWith(expect.objectContaining({ bucket: 'wa-media', path: 'm-crm-1.webp', contentType: 'image/webp' }));
     expect(queries.setPath).toHaveBeenCalledWith('m-crm-1', 'm-crm-1.webp');
     expect(await media.cache(await media.loadChat('m-crm-1'))).toEqual(first);
-    expect([fetch.mock.calls.length, storage.upload.mock.calls.length, client.getMedia.mock.calls.length]).toEqual([1, 1, 0]);
+    expect([
+      fetch.mock.calls.length,
+      storage.upload.mock.calls.length,
+      client.getMedia.mock.calls.length,
+    ]).toEqual([1, 1, 0]);
   });
 
   it('older than 29 days is still fetched (the CRM keeps it; Meta\'s limit does not apply)', async () => {
@@ -101,7 +113,13 @@ describe('InboundMedia: files imported from the old CRM', () => {
       setRefusal: vi.fn(),
       setPath: vi.fn(),
     };
-    const media = new InboundMedia(queries as unknown as InboundMediaRepo, {} as WhatsappLines, {} as StorageService);
-    await expect(media.cache(await media.loadChat('m-crm-1'))).rejects.toMatchObject({ status: 410 });
+    const media = new InboundMedia(
+      queries as unknown as InboundMediaRepo,
+      {} as WhatsappLines,
+      {} as StorageService,
+    );
+    await expect(media.cache(await media.loadChat('m-crm-1'))).rejects.toMatchObject({
+      status: 410,
+    });
   });
 });

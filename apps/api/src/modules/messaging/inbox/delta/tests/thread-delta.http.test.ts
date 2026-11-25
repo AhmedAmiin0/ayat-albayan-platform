@@ -36,7 +36,9 @@ describe('GET /threads/:phone?after= — the delta refresh', () => {
     expect(res.statusCode).toBe(200);
     expect(res.json()).toMatchObject({ messages: [], has_more: false, pending: [{ id: SENT, status: 'sent' }] });
     expect(res.json().thread).toBeUndefined();
-    expect(t.delta.pending).toHaveBeenCalledWith(expect.objectContaining({ phone: PHONE, ids: [SENT] }));
+    expect(t.delta.pending).toHaveBeenCalledWith(
+      expect.objectContaining({ phone: PHONE, ids: [SENT] }),
+    );
     expect(t.queries.thread).not.toHaveBeenCalled();
     expect(t.queries.markInboundRead).not.toHaveBeenCalled();
     expect(t.queries.messages).not.toHaveBeenCalled(); // never the whole page

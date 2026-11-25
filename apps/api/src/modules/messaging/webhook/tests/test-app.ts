@@ -52,7 +52,14 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
       throw new Error('no users in webhook tests');
     })
     .overrideProvider(WEBHOOK_CONFIG)
-    .useValue({ appSecrets: [SECRET], verifyToken: VERIFY, numbers: { notifications: PHONE_NUMBER_ID }, kapsoSecret: KAPSO_SECRET, wacrmSecret: WACRM_SECRET, ...config })
+    .useValue({
+      appSecrets: [SECRET],
+      verifyToken: VERIFY,
+      numbers: { notifications: PHONE_NUMBER_ID },
+      kapsoSecret: KAPSO_SECRET,
+      wacrmSecret: WACRM_SECRET,
+      ...config,
+    })
     .overrideProvider(WebhookRepo)
     .useValue(deps.queries)
     .overrideProvider(LeadsService)
@@ -73,7 +80,9 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
     .overrideProvider(CrmInboundRepo)
     .useValue(crmQueue)
     .compile();
-  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
+  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), {
+    rawBody: true,
+  });
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   /** POSTs `body` exactly as given (a string), signed unless `signature` is passed. */

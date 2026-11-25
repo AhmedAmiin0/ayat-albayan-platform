@@ -3,7 +3,10 @@ import type { Db } from '@/common/db/db.module';
 import { SavedRepliesRepo } from './saved-replies.repo';
 
 // A one-call stand-in for supabase-js: every chain ends in the given result.
-function dbReturning(result: { data: unknown; error: { code: string; message: string } | null }): Db {
+function dbReturning(result: {
+  data: unknown;
+  error: { code: string; message: string } | null;
+}): Db {
   const chain: Record<string, unknown> = {};
   for (const name of ['from', 'insert', 'update', 'eq', 'select']) chain[name] = () => chain;
   chain.single = async () => result;

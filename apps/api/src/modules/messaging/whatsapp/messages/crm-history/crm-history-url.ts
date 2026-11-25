@@ -27,7 +27,8 @@ const parsed = (text: string): URL | null => {
 };
 
 /** No userinfo, port, query or fragment. */
-const bare = (url: URL): boolean => !(url.username || url.password || url.port || url.search || url.hash);
+const bare = (url: URL): boolean =>
+  !(url.username || url.password || url.port || url.search || url.hash);
 
 /** A file under CRM_MEDIA_PREFIX (not the prefix itself, not a folder). */
 const underPrefix = (path: string): boolean => {

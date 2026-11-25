@@ -33,7 +33,19 @@ export const THREE: readonly OverlayNumber[] = [
   overlayNum({ id: C1, phone_number_id: '1000000003', purpose: 'chat' }),
 ];
 
-export function routePass(input: { numbers?: readonly OverlayNumber[]; rules?: Record<string, string | null>; approvals?: Record<string, Record<string, string>> } = {}): RoutePass {
-  const approvals: Approvals = new Map(Object.entries(input.approvals ?? {}).map(([k, v]) => [k, new Map(Object.entries(v))]));
-  return { numbers: messagingNumbers(input.numbers ?? THREE).map(routable), ruleNumbers: new Map(Object.entries(input.rules ?? {})), approvals };
+export function routePass(
+  input: {
+    numbers?: readonly OverlayNumber[];
+    rules?: Record<string, string | null>;
+    approvals?: Record<string, Record<string, string>>;
+  } = {},
+): RoutePass {
+  const approvals: Approvals = new Map(
+    Object.entries(input.approvals ?? {}).map(([k, v]) => [k, new Map(Object.entries(v))]),
+  );
+  return {
+    numbers: messagingNumbers(input.numbers ?? THREE).map(routable),
+    ruleNumbers: new Map(Object.entries(input.rules ?? {})),
+    approvals,
+  };
 }

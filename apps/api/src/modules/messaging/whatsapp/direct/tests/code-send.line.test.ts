@@ -18,7 +18,12 @@ const queries = { approvedTemplates: vi.fn(), chatConfigured: true };
 const dispatch = { ready: vi.fn(), send: vi.fn() };
 const routes = {
   pass: vi.fn(async (numbers: readonly OverlayNumber[]) => ({
-    pass: { numbers: messagingNumbers(numbers).map(routable), ruleNumbers: new Map(), approvals: new Map(), crm: new Set<string>() },
+    pass: {
+      numbers: messagingNumbers(numbers).map(routable),
+      ruleNumbers: new Map(),
+      approvals: new Map(),
+      crm: new Set<string>(),
+    },
     templates: [],
   })),
 };
@@ -90,7 +95,8 @@ describe('CodeSend — legacy lines: the chat line only', () => {
 });
 
 describe('CodeSend — module mode: chat numbers only', () => {
-  const overlay = (numbers: OverlayNumber[]) => setNumbersOverlay({ values: {}, numberIds: {}, numbers });
+  const overlay = (numbers: OverlayNumber[]) =>
+    setNumbersOverlay({ values: {}, numberIds: {}, numbers });
 
   it.each(['meta', 'kapso'] as const)('an enabled %s chat number sends it', async (provider) => {
     overlay([number('n1', { purpose: 'notifications' }), number('c1', { purpose: 'chat', provider })]);

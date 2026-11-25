@@ -32,12 +32,21 @@ export class NotificationPolicy {
   }
 
   /** Every catalogue row's effective rule from one snapshot (each one closed when unreadable), and that snapshot. */
-  async all(): Promise<{ snapshot: RulesSnapshot | null; rules: Map<NotificationKey, EffectiveRule> }> {
+  async all(): Promise<{
+    snapshot: RulesSnapshot | null;
+    rules: Map<NotificationKey, EffectiveRule>;
+  }> {
     const snap = await this.snapshot();
     const rules = new Map<NotificationKey, EffectiveRule>(
       NOTIFICATION_CATALOGUE.map((e) => [
         e.key,
-        snap ? resolveRule(e, { mode: snap.mode, row: snap.rows.get(e.key) ?? null, settings: snap.settings }) : closed(e.key),
+        snap
+          ? resolveRule(e, {
+              mode: snap.mode,
+              row: snap.rows.get(e.key) ?? null,
+              settings: snap.settings,
+            })
+          : closed(e.key),
       ]),
     );
     return { snapshot: snap, rules };
@@ -46,14 +55,22 @@ export class NotificationPolicy {
   async rule(key: NotificationKey): Promise<EffectiveRule> {
     const snap = await this.snapshot();
     if (!snap) return closed(key);
-    return resolveRule(notificationEntry(key), { mode: snap.mode, row: snap.rows.get(key) ?? null, settings: snap.settings });
+    return resolveRule(notificationEntry(key), {
+      mode: snap.mode,
+      row: snap.rows.get(key) ?? null,
+      settings: snap.settings,
+    });
   }
 
   /** The rule, or null when the rules cannot be read (a caller that must retry rather than drop). */
   async known(key: NotificationKey): Promise<EffectiveRule | null> {
     const snap = await this.snapshot();
     if (!snap) return null;
-    return resolveRule(notificationEntry(key), { mode: snap.mode, row: snap.rows.get(key) ?? null, settings: snap.settings });
+    return resolveRule(notificationEntry(key), {
+      mode: snap.mode,
+      row: snap.rows.get(key) ?? null,
+      settings: snap.settings,
+    });
   }
 
   async isOn(key: NotificationKey): Promise<boolean> {

@@ -7,7 +7,9 @@ import { RECORDED, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fak
 
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 const ID = 'b0000000-0000-4000-8000-000000000009';
-const recorded = RECORDED.templates.body.data.map((t) => toMetaTemplate({ ...t, components: [...t.components] }));
+const recorded = RECORDED.templates.body.data.map((t) =>
+  toMetaTemplate({ ...t, components: [...t.components] }),
+);
 
 describe('WhatsApp admin routes T1–T3, M1–M2 (docs/12 §4)', () => {
   let t: App;
@@ -20,8 +22,14 @@ describe('WhatsApp admin routes T1–T3, M1–M2 (docs/12 §4)', () => {
     t.client.configured.mockReturnValue(true);
     t.templates.all.mockResolvedValue([templateRow()]);
     t.templates.get.mockResolvedValue(templateRow());
-    t.templates.update.mockImplementation(async (key: string, patch: object) => ({ ...templateRow({ key }), ...patch }));
-    t.storage.signedDownload.mockResolvedValue({ url: 'https://storage.local/r.pdf', expires_at: 'x' });
+    t.templates.update.mockImplementation(async (key: string, patch: object) => ({
+      ...templateRow({ key }),
+      ...patch,
+    }));
+    t.storage.signedDownload.mockResolvedValue({
+      url: 'https://storage.local/r.pdf',
+      expires_at: 'x',
+    });
   });
 
   it('every write is admin only (teacher reads: whatsapp.teacher.http.test)', async () => {

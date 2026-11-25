@@ -31,13 +31,24 @@ describe('GET /threads?list= and the thread\'s lists (docs/22 §3)', () => {
       expect(res.statusCode).toBe(200);
     }
     expect(t.queries.list).toHaveBeenCalledTimes(2);
-    expect(t.queries.list).toHaveBeenCalledWith(expect.objectContaining({ list: LIST, search: 'أم', unread: true, status: 'new' }));
-    expect(t.queries.list).not.toHaveBeenCalledWith(expect.objectContaining({ phones: expect.anything() }));
+    expect(t.queries.list).toHaveBeenCalledWith(
+      expect.objectContaining({ list: LIST, search: 'أم', unread: true, status: 'new' }),
+    );
+    expect(t.queries.list).not.toHaveBeenCalledWith(
+      expect.objectContaining({ phones: expect.anything() }),
+    );
   });
 
   it('a malformed list is an empty page, never a 500 (an unknown one is empty in SQL)', async () => {
-    const res = await t.call({ method: 'GET', url: '/threads?list=not-a-uuid&page=2', token: 'sales' });
-    expect([res.statusCode, res.json()]).toEqual([200, { items: [], total: 0, page: 2, pageSize: 25 }]);
+    const res = await t.call({
+      method: 'GET',
+      url: '/threads?list=not-a-uuid&page=2',
+      token: 'sales',
+    });
+    expect([res.statusCode, res.json()]).toEqual([
+      200,
+      { items: [], total: 0, page: 2, pageSize: 25 },
+    ]);
     expect(t.queries.list).not.toHaveBeenCalled();
   });
 
@@ -47,7 +58,12 @@ describe('GET /threads?list= and the thread\'s lists (docs/22 §3)', () => {
     t.teacher.unread.mockResolvedValue(new Map());
     const res = await t.call({ method: 'GET', url: `/threads?list=${LIST}`, token: 'teacher' });
     expect(res.statusCode).toBe(200);
-    expect(t.queries.list).toHaveBeenCalledWith({ page: 1, pageSize: 25, unread: false, phones: [PHONE] });
+    expect(t.queries.list).toHaveBeenCalledWith({
+      page: 1,
+      pageSize: 25,
+      unread: false,
+      phones: [PHONE],
+    });
   });
 
   it('the first page of a chat carries its lists for admin and sales; older pages do not', async () => {

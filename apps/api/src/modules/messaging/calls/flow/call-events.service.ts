@@ -108,8 +108,18 @@ export class CallEvents implements CallEventsPort {
     if (!phone) return this.log.warn(`call ${e.waCallId}: the caller's wa_id is not a phone`);
     const thread = await this.kit.threads.thread(phone);
     await this.kit.queries.insert({
-      ...{ direction: 'inbound', status: 'ringing', phone_e164: phone, wa_call_id: e.waCallId, offer_sdp: e.sdp },
-      ...{ number_id: line.numberId, guardian_id: thread?.guardian_id ?? null, lead_id: thread?.lead_id ?? null },
+      ...{
+        direction: 'inbound',
+        status: 'ringing',
+        phone_e164: phone,
+        wa_call_id: e.waCallId,
+        offer_sdp: e.sdp,
+      },
+      ...{
+        number_id: line.numberId,
+        guardian_id: thread?.guardian_id ?? null,
+        lead_id: thread?.lead_id ?? null,
+      },
       started_at: e.at.toISOString(),
     });
     // The sweeper (on the worker) ends it as missed if its terminate webhook is lost.

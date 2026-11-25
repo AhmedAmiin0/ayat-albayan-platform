@@ -12,7 +12,10 @@ const OFF_READS: [string, FakeResult][] = [
   ['no data at all', { data: null }],
   ['malformed rows', { data: [{ key: 'messaging_enabled' }, { value: true }, null] }],
   ['another key holding true', rows({ crm_cutover_done: true, comms_source: true })],
-  ...OFF_VALUES.map(([name, value]): [string, FakeResult] => [name, rows({ messaging_enabled: value, auto_messages_enabled: value })]),
+  ...OFF_VALUES.map(([name, value]): [string, FakeResult] => [
+    name,
+    rows({ messaging_enabled: value, auto_messages_enabled: value }),
+  ]),
 ];
 
 describe('SendGate — fail-closed on every uncached read', () => {
@@ -40,14 +43,20 @@ describe('SendGate — fail-closed on every uncached read', () => {
 
   it('ON only for a stored JSON true, per switch', async () => {
     configure();
-    const { gate } = fakeGate([rows({ messaging_enabled: true }), rows({ messaging_enabled: true })]);
+    const { gate } = fakeGate([
+      rows({ messaging_enabled: true }),
+      rows({ messaging_enabled: true }),
+    ]);
     await expect(gate.open()).resolves.toBe(true);
     await expect(gate.automaticOn()).resolves.toBe(false);
   });
 
   it('never cached: each call is one primary-key read, and a switch turned off is seen at once', async () => {
     configure();
-    const { gate, calls } = fakeGate([rows({ messaging_enabled: true }), rows({ messaging_enabled: false })]);
+    const { gate, calls } = fakeGate([
+      rows({ messaging_enabled: true }),
+      rows({ messaging_enabled: false }),
+    ]);
     await expect(gate.open()).resolves.toBe(true);
     await expect(gate.open()).resolves.toBe(false);
     const reads = calls.filter((c) => c.table === 'settings');

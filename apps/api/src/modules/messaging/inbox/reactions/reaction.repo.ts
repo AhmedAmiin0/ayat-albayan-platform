@@ -31,7 +31,10 @@ interface OurReaction {
  * 404 message_not_found for another chat's message, an unknown id or a reaction row; 409 not_reactable
  * without a wamid (WhatsApp does not know it); 409 reaction_too_old past WhatsApp's 30 days.
  */
-export function assertReactable(target: ReactionTarget | null, now: Date): asserts target is ReactionTarget {
+export function assertReactable(
+  target: ReactionTarget | null,
+  now: Date,
+): asserts target is ReactionTarget {
   if (!target || isReactionPayload(target.interactive_payload)) throw notFound('message_not_found');
   if (!target.wa_message_id) throw waHttpError('not_reactable', HttpStatus.CONFLICT);
   if (reactionTooOld(target.created_at, now)) throw waHttpError('reaction_too_old', HttpStatus.CONFLICT);
@@ -86,8 +89,16 @@ export class ReactionRepo {
   /** Ours at once (optimistic); a failed send puts back `previous` (trigger messages_reaction_failed). */
   async setOurs(input: { targetId: string; phone: string; ours: OurReaction }): Promise<void> {
     const { emoji, by, at } = input.ours;
-    const patch = { our_reaction: emoji, our_reaction_by: emoji ? by : null, our_reaction_at: emoji ? at : null };
-    const { error } = await this.db.from('messages').update(patch).eq('id', input.targetId).eq('phone_e164', input.phone);
+    const patch = {
+      our_reaction: emoji,
+      our_reaction_by: emoji ? by : null,
+      our_reaction_at: emoji ? at : null,
+    };
+    const { error } = await this.db
+      .from('messages')
+      .update(patch)
+      .eq('id', input.targetId)
+      .eq('phone_e164', input.phone);
     if (error) throw new Error(`reaction write failed: ${error.message}`);
   }
 }

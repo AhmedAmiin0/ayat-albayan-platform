@@ -52,7 +52,13 @@ describe('movedOrder', () => {
   it('renumbers the list 0…n−1 with the row swapped, listing only changed rows', () => {
     expect(movedOrder({ rows, id: rows[2]?.id ?? '', direction: 'up' }).map((m) => m.position)).toEqual([1, 2]);
     const ids = movedOrder({ rows, id: rows[1]?.id ?? '', direction: 'down' });
-    expect(ids).toEqual([{ id: rows[0]?.id, position: 0 }, { id: rows[1]?.id, position: 1 }, { id: rows[2]?.id, position: 2 }].filter((m) => m.position !== 0));
+    expect(ids).toEqual(
+      [
+        { id: rows[0]?.id, position: 0 },
+        { id: rows[1]?.id, position: 1 },
+        { id: rows[2]?.id, position: 2 },
+      ].filter((m) => m.position !== 0),
+    );
   });
 
   it('does nothing at either end or for an unknown id', () => {

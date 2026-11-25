@@ -7,7 +7,11 @@ import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 const badge = { page: 1, pageSize: 1, unread: true };
 const queries = (f: ReturnType<typeof fakeDb>) =>
-  new ThreadsRepo(f.db, undefined as unknown as PackagesService, undefined as unknown as BalanceRepo);
+  new ThreadsRepo(
+    f.db,
+    undefined as unknown as PackagesService,
+    undefined as unknown as BalanceRepo,
+  );
 
 describe('the unread badge fast path (GET /threads?unread=true&pageSize=1)', () => {
   it('only the bare badge request takes it: any list, status or search filter, or a real page, reads v_threads', () => {

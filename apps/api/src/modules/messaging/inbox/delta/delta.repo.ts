@@ -40,7 +40,11 @@ export class DeltaRepo {
    * the caller passes) and the chat's outbound rows queued / sent / delivered created after `since`.
    * Also any row an edit, delete or reaction changed after `since` (migration 992 stamps now()).
    */
-  async pending(q: { phone: string; ids: readonly string[]; since: string }): Promise<ThreadMessageRow[]> {
+  async pending(q: {
+    phone: string;
+    ids: readonly string[];
+    since: string;
+  }): Promise<ThreadMessageRow[]> {
     const moving = `and(direction.eq.outbound,status.in.(queued,sent,delivered),created_at.gt."${q.since}")`;
     const marked = ['edited_at', 'deleted_at', 'our_reaction_at'].map((c) => `${c}.gt."${q.since}"`);
     const ids = q.ids.length > 0 ? [`id.in.(${q.ids.join(',')})`] : [];

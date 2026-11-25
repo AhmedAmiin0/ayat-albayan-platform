@@ -39,12 +39,20 @@ describe('W6 bubble files: echoes of the WhatsApp Business app', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [messagingRoot(InboxModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(InboundMediaRepo).useValue(queries)
-      .overrideProvider(TeacherThreadsRepo).useValue(teachers)
-      .overrideProvider(WHATSAPP_CLIENT).useValue(client)
-      .overrideProvider(WHATSAPP_LINES).useValue({ notifications: client, chat: client })
-      .overrideProvider(StorageService).useValue(storage)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(InboundMediaRepo)
+      .useValue(queries)
+      .overrideProvider(TeacherThreadsRepo)
+      .useValue(teachers)
+      .overrideProvider(WHATSAPP_CLIENT)
+      .useValue(client)
+      .overrideProvider(WHATSAPP_LINES)
+      .useValue({ notifications: client, chat: client })
+      .overrideProvider(StorageService)
+      .useValue(storage)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -92,7 +100,9 @@ describe('W6 bubble files: echoes of the WhatsApp Business app', () => {
   });
 
   it('an echo past the 29 days is 410 media_expired without a call; a type no bubble opens is 400', async () => {
-    queries.message.mockResolvedValue(echo({ created_at: new Date(Date.now() - 30 * 86_400_000).toISOString() }));
+    queries.message.mockResolvedValue(
+      echo({ created_at: new Date(Date.now() - 30 * 86_400_000).toISOString() }),
+    );
     expect((await call('sales')).json()).toMatchObject({ code: 'media_expired' });
     queries.message.mockResolvedValue(echo({ media_mime: 'application/zip' }));
     expect((await call('sales')).json()).toMatchObject({ code: 'invoice_message' });

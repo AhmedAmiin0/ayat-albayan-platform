@@ -29,7 +29,11 @@ export function v1Entry(view: NotificationEntryView): NotificationEntryView {
 }
 
 /** The admin's choices for a row, as v2 shows them next to its v1 fields. */
-export function ruleView(view: NotificationEntryView, rule: EffectiveRule, row: NotificationRuleRow | null): NotificationRuleView {
+export function ruleView(
+  view: NotificationEntryView,
+  rule: EffectiveRule,
+  row: NotificationRuleRow | null,
+): NotificationRuleView {
   const entry = notificationEntry(view.key);
   return {
     key: view.key,

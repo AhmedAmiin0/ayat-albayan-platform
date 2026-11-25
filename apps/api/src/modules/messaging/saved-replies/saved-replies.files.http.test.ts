@@ -43,7 +43,12 @@ describe('saved reply attachments (wa-media saved/{actor}/…)', () => {
   it('removing the attachment (null) clears its columns and its file', async () => {
     const res = await t.call({ method: 'PATCH', url: `/saved-replies/${replyId(1)}`, token: 'sales', body: { attachment: null } });
     expect(res.json<{ attachment: unknown }>().attachment).toBeNull();
-    expect(t.replies.table[0]).toMatchObject({ attachment_path: null, attachment_mime: null, attachment_name: null, attachment_size: null });
+    expect(t.replies.table[0]).toMatchObject({
+      attachment_path: null,
+      attachment_mime: null,
+      attachment_name: null,
+      attachment_size: null,
+    });
     expect(t.storage.remove).toHaveBeenCalledWith({ bucket: 'wa-media', path: OLD });
   });
 

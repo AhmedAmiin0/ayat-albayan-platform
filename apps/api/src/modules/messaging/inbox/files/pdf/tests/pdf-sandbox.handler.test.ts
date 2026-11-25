@@ -78,7 +78,10 @@ describe('the sandbox over its socket', () => {
 
   it('pages and render: the PDF reaches poppler byte for byte, the answers come back', async () => {
     count.mockResolvedValue(7);
-    render.mockResolvedValue([{ page: 2, jpg: new Uint8Array([1, 2]) }, { page: 3, jpg: new Uint8Array([3]) }]);
+    render.mockResolvedValue([
+      { page: 2, jpg: new Uint8Array([1, 2]) },
+      { page: 3, jpg: new Uint8Array([3]) },
+    ]);
     await expect(askPages(PDF, { socket })).resolves.toBe(7);
     const pages = await askRender(PDF, { first: 2, last: 3 }, { socket });
     expect(pages.map((p) => [p.page, [...p.jpg]])).toEqual([[2, [1, 2]], [3, [3]]]);

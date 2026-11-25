@@ -28,9 +28,14 @@ describe('crmTemplateBody', () => {
     expect(body).toMatchObject({ template: { name: 'booking_confirmation', params: { body: ['سارة', 'الأحد'], buttonParams: { '0': 'room-1' } } } });
   });
 
-  it('a static template sends params {}; the meta driver\'s checks refuse the same bad sends (132000)', () => {
-    const fixed = templateRow({ body_ar: 'أهلًا', buttons: [{ type: 'url', url: 'https://example.test' }] });
-    expect(crmTemplateBody({ to: TO, template: fixed, params: {} })).toMatchObject({ template: { params: {} } });
+  it("a static template sends params {}; the meta driver's checks refuse the same bad sends (132000)", () => {
+    const fixed = templateRow({
+      body_ar: 'أهلًا',
+      buttons: [{ type: 'url', url: 'https://example.test' }],
+    });
+    expect(crmTemplateBody({ to: TO, template: fixed, params: {} })).toMatchObject({
+      template: { params: {} },
+    });
     const err = (() => {
       try {
         crmTemplateBody({ to: TO, template: REPORT_READY, params: { '1': 'سارة', '2': 'الأحد' } });

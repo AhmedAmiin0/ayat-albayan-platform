@@ -8,7 +8,13 @@ import { WaError, type MetaTemplate } from '@/modules/messaging/whatsapp/whatsap
 
 const synced = new Map<string, unknown>();
 const queries = {
-  ...{ all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []) },
+  ...{
+    all: vi.fn(),
+    get: vi.fn(),
+    update: vi.fn(),
+    insert: vi.fn(),
+    approvals: vi.fn(async () => []),
+  },
   saveLineSync: vi.fn(async (s: { line: string }) => void synced.set(s.line, s)),
   lineSyncs: vi.fn(async () => new Map(synced)),
 };
@@ -24,8 +30,15 @@ const meta = (name: string, over: Partial<MetaTemplate> = {}): MetaTemplate => (
   id: `id-${name}`, name, language: 'ar', status: 'APPROVED', category: 'MARKETING', quality: 'GREEN',
   components: [{ type: 'BODY', text: `${name} {{1}}` }], rejectedReason: null, ...over,
 });
-const crm = templateRow({ key: 'teacher_lesson_v2', meta_name: 'teacher_lesson_v2', line: 'chat', params: ['var_1'], status: 'approved' });
-const patched = (key: string) => queries.update.mock.calls.filter(([k]) => k === key).map(([, p]) => p as { status?: string });
+const crm = templateRow({
+  key: 'teacher_lesson_v2',
+  meta_name: 'teacher_lesson_v2',
+  line: 'chat',
+  params: ['var_1'],
+  status: 'approved',
+});
+const patched = (key: string) =>
+  queries.update.mock.calls.filter(([k]) => k === key).map(([, p]) => p as { status?: string });
 
 describe('TemplateRegistry — per-number sync', () => {
   beforeEach(() => {
@@ -38,7 +51,10 @@ describe('TemplateRegistry — per-number sync', () => {
     notifications.getTemplates.mockResolvedValue([meta('booking_confirmation'), meta('promo_offer')]);
     chat.getTemplates.mockResolvedValue([meta('teacher_lesson_v2', { status: 'PAUSED' }), meta('academy_welcome'), meta('copy_code', { components: [] })]);
     queries.all.mockResolvedValue([templateRow(), crm]);
-    queries.update.mockImplementation(async (key: string, patch: object) => ({ ...templateRow({ key }), ...patch }));
+    queries.update.mockImplementation(async (key: string, patch: object) => ({
+      ...templateRow({ key }),
+      ...patch,
+    }));
     queries.insert.mockImplementation(async (row: object) => ({ ...templateRow(), ...row }));
   });
 
@@ -109,7 +125,9 @@ describe('TemplateRegistry — per-number sync', () => {
     await registry().verifier.verifyAll({ line: 'chat', now: NOW });
     expect(queries.saveLineSync).toHaveBeenCalledWith(expect.objectContaining({ line: 'chat', ok: true, checked_at: NOW.toISOString() }));
     const views = await registry().catalog.lineViews();
-    expect(views.map((v) => [v.line, v.configured, v.last_checked_at, v.last_sync?.ok ?? null])).toEqual([
+    expect(
+      views.map((v) => [v.line, v.configured, v.last_checked_at, v.last_sync?.ok ?? null]),
+    ).toEqual([
       ['notifications', true, '2026-10-01T00:00:00Z', null],
       ['chat', true, null, true],
     ]);

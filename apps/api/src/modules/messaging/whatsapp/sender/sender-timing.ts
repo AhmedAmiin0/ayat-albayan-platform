@@ -5,5 +5,7 @@ export const SENDER_FIRST_RUN_MS = 30_000;
 
 /** env MESSAGE_SENDER_POLL_MS (e2e) replaces both; unset keeps the 30 s production cadence. */
 export function senderTiming(pollMs: number | undefined): { firstMs: number; everyMs: number } {
-  return pollMs ? { firstMs: pollMs, everyMs: pollMs } : { firstMs: SENDER_FIRST_RUN_MS, everyMs: SENDER_POLL_MS };
+  return pollMs
+    ? { firstMs: pollMs, everyMs: pollMs }
+    : { firstMs: SENDER_FIRST_RUN_MS, everyMs: SENDER_POLL_MS };
 }

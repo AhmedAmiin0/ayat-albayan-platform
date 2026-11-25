@@ -23,11 +23,21 @@ const msg = (over: Partial<MediaMessage> = {}): MediaMessage => ({
 });
 
 function setup(row: MediaMessage, size = 3) {
-  const queries = { message: vi.fn().mockResolvedValue(row), setRefusal: vi.fn(), setPath: vi.fn().mockResolvedValue(undefined) };
-  const client = { getMedia: vi.fn().mockResolvedValue({ bytes: new Uint8Array(size), mime: 'x' }) };
+  const queries = {
+    message: vi.fn().mockResolvedValue(row),
+    setRefusal: vi.fn(),
+    setPath: vi.fn().mockResolvedValue(undefined),
+  };
+  const client = {
+    getMedia: vi.fn().mockResolvedValue({ bytes: new Uint8Array(size), mime: 'x' }),
+  };
   const storage = { upload: vi.fn(async (r: { path: string }) => r.path) };
   const lines = { notifications: client, chat: client } as unknown as WhatsappLines;
-  const media = new InboundMedia(queries as unknown as InboundMediaRepo, lines, storage as unknown as StorageService);
+  const media = new InboundMedia(
+    queries as unknown as InboundMediaRepo,
+    lines,
+    storage as unknown as StorageService,
+  );
   return { media, storage, queries };
 }
 const code = async (p: Promise<unknown>) => {
@@ -56,7 +66,9 @@ describe('InboundMedia for the chat bubble (D1)', () => {
     const image = msg({ media_mime: 'image/jpeg' });
     const photo = setup(image, INVOICE_MAX_BYTES + 1);
     expect(await code(photo.media.cache(image))).toMatchObject({ status: 413 });
-    expect([audio.storage.upload, photo.storage.upload].map((f) => f.mock.calls.length)).toEqual([0, 0]);
+    expect([audio.storage.upload, photo.storage.upload].map((f) => f.mock.calls.length)).toEqual([
+      0, 0,
+    ]);
   });
 
   it('the default load() still refuses audio with invoice_message', async () => {

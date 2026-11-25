@@ -28,7 +28,10 @@ describe('templates per number (HTTP)', () => {
     vi.resetAllMocks();
     t.templates.all.mockResolvedValue([row]);
     t.templates.get.mockResolvedValue(row);
-    t.templates.update.mockImplementation(async (_key: string, patch: object) => ({ ...row, ...patch }));
+    t.templates.update.mockImplementation(async (_key: string, patch: object) => ({
+      ...row,
+      ...patch,
+    }));
   });
   afterEach(() => setNumbersOverlay(null));
 

@@ -47,7 +47,10 @@ describe('POST /webhooks/wacrm', () => {
     const body = delivery('d-3');
     expect((await ctx.postWacrm(body, wacrmSign(body, { secret: 'other' }))).statusCode).toBe(401);
     expect((await ctx.postWacrm(body, null)).statusCode).toBe(401);
-    expect((await ctx.postWacrm(body, wacrmSign(body, { t: Math.floor(Date.now() / 1000) - 600 }))).statusCode).toBe(401);
+    expect(
+      (await ctx.postWacrm(body, wacrmSign(body, { t: Math.floor(Date.now() / 1000) - 600 })))
+        .statusCode,
+    ).toBe(401);
     await ctx.app.close();
     ctx = await webhookApp({ wacrmSecret: undefined });
     expect((await ctx.postWacrm(body)).statusCode).toBe(401);

@@ -21,7 +21,10 @@ function submit(row: TemplateRow, env: typeof STUB_ENV, ...replies: Reply[]) {
   const registry = templateServices(queries, lines, audit);
   const result = registry.admin.submit(row.key, 'admin-1').then(
     (view) => ({ view, error: null }),
-    (e: { getStatus: () => number; getResponse: () => unknown }) => ({ view: null, error: [e.getStatus(), e.getResponse()] }),
+    (e: { getStatus: () => number; getResponse: () => unknown }) => ({
+      view: null,
+      error: [e.getStatus(), e.getResponse()],
+    }),
   );
   return { result, requests: f.requests };
 }
@@ -29,11 +32,20 @@ function submit(row: TemplateRow, env: typeof STUB_ENV, ...replies: Reply[]) {
 describe('POST /messaging/templates/:key/submit with a document header (report_ready)', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    queries.update.mockImplementation(async (_key: string, patch: object) => ({ ...REPORT_READY_SEED, ...patch }));
+    queries.update.mockImplementation(async (_key: string, patch: object) => ({
+      ...REPORT_READY_SEED,
+      ...patch,
+    }));
   });
 
   it('uploads the sample PDF, then creates the template with its handle: pending, meta id, audited', async () => {
-    const { result, requests } = submit(REPORT_READY_SEED, APP_ENV, RECORDED_UPLOAD.session, RECORDED_UPLOAD.handle, RECORDED_UPLOAD.createDoc);
+    const { result, requests } = submit(
+      REPORT_READY_SEED,
+      APP_ENV,
+      RECORDED_UPLOAD.session,
+      RECORDED_UPLOAD.handle,
+      RECORDED_UPLOAD.createDoc,
+    );
     const { view, error } = await result;
     expect(error).toBeNull();
     expect(requests.map((r) => r.url.replace('http://127.0.0.1:4010/v21.0/', ''))).toEqual([
@@ -60,8 +72,16 @@ describe('POST /messaging/templates/:key/submit with a document header (report_r
   });
 
   it('a failed upload is 502 meta_error and the template is never created', async () => {
-    const { result, requests } = submit(REPORT_READY_SEED, APP_ENV, RECORDED_UPLOAD.session, RECORDED.badToken);
-    expect((await result).error).toEqual([502, expect.objectContaining({ code: 'meta_error', meta_code: 190 })]);
+    const { result, requests } = submit(
+      REPORT_READY_SEED,
+      APP_ENV,
+      RECORDED_UPLOAD.session,
+      RECORDED.badToken,
+    );
+    expect((await result).error).toEqual([
+      502,
+      expect.objectContaining({ code: 'meta_error', meta_code: 190 }),
+    ]);
     expect(requests).toHaveLength(2);
     expect(queries.update).not.toHaveBeenCalled();
     expect(audit.record).not.toHaveBeenCalled();

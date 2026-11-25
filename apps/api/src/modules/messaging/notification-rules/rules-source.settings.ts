@@ -30,7 +30,9 @@ export class RulesSourceSettings {
 
   /** Only RULE_SETTING_KEYS (typed); an empty object writes nothing. */
   async writeLegacy(values: Partial<RuleSettings>, actorId: string): Promise<void> {
-    const only = Object.fromEntries(Object.entries(values).filter(([k]) => (RULE_SETTING_KEYS as readonly string[]).includes(k)));
+    const only = Object.fromEntries(
+      Object.entries(values).filter(([k]) => (RULE_SETTING_KEYS as readonly string[]).includes(k)),
+    );
     if (Object.keys(only).length === 0) return;
     await this.store.write(only, actorId);
   }

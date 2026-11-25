@@ -64,7 +64,9 @@ export class CrmMediaCopier {
    * attempt and cannot block the batch's head.
    */
   async round(ids: readonly string[], host: string): Promise<CopyOutcome[]> {
-    const done = await Promise.all(ids.map(async (id) => ({ id, outcome: await this.copy(id, host) })));
+    const done = await Promise.all(
+      ids.map(async (id) => ({ id, outcome: await this.copy(id, host) })),
+    );
     const outage = done.every((d) => d.outcome === 'unreachable');
     return Promise.all(done.map((d) => (d.outcome === 'unreachable' ? this.unanswered(d.id, outage) : this.forget(d.id, d.outcome))));
   }
@@ -79,7 +81,10 @@ export class CrmMediaCopier {
     return this.forget(id, this.mark({ id, error: CRM_UNREACHABLE, skip: false }));
   }
 
-  private async forget(id: string, outcome: CopyOutcome | Promise<CopyOutcome>): Promise<CopyOutcome> {
+  private async forget(
+    id: string,
+    outcome: CopyOutcome | Promise<CopyOutcome>,
+  ): Promise<CopyOutcome> {
     this.waiting.delete(id);
     return outcome;
   }
@@ -95,7 +100,10 @@ export class CrmMediaCopier {
   }
 
   /** null = copied (or already cached); else why not. */
-  private async attempt(id: string, host: string): Promise<{ error: string; skip: boolean; status: number } | null> {
+  private async attempt(
+    id: string,
+    host: string,
+  ): Promise<{ error: string; skip: boolean; status: number } | null> {
     let loaded = false;
     try {
       const msg = await this.media.loadChat(id);
@@ -106,7 +114,11 @@ export class CrmMediaCopier {
     } catch (e) {
       const status = e instanceof HttpException ? e.getStatus() : 0;
       // The gate's 410 (a file with no usable link, servable) never changes; a fetch's 410 may.
-      return { error: reason(e), skip: PERMANENT.has(status) || (status === 410 && !loaded), status };
+      return {
+        error: reason(e),
+        skip: PERMANENT.has(status) || (status === 410 && !loaded),
+        status,
+      };
     }
   }
 

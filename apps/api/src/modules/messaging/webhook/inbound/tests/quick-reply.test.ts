@@ -79,8 +79,13 @@ describe('confirm by reply (R-SCH-03)', () => {
   it('a payload lesson that is not theirs (or no longer exists) is neither confirmed nor linked', async () => {
     const s = asGuardian();
     s.queries.guardianLesson.mockResolvedValue(false);
-    await s.inbound.handle(event({ type: 'button', body: 'تمام، هنحضر', replyKey: `confirm:${OTHER_LESSON}` }));
-    expect(s.queries.guardianLesson).toHaveBeenCalledWith({ lessonId: OTHER_LESSON, guardianId: GUARDIAN_ID });
+    await s.inbound.handle(
+      event({ type: 'button', body: 'تمام، هنحضر', replyKey: `confirm:${OTHER_LESSON}` }),
+    );
+    expect(s.queries.guardianLesson).toHaveBeenCalledWith({
+      lessonId: OTHER_LESSON,
+      guardianId: GUARDIAN_ID,
+    });
     expect(s.lessons.confirm).not.toHaveBeenCalled();
     expect(s.queries.stored).toHaveLength(1);
     expect(s.queries.stored[0]?.lesson_id).toBeNull();

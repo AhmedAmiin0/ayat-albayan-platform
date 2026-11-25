@@ -11,7 +11,13 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/19 «crm driver» in the worker: a 429 waits (line paused this pass) without the token alarm.
 
-const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn(), staffAtSend: vi.fn() };
+const queries = {
+  claim: vi.fn(),
+  sent: vi.fn(),
+  failure: vi.fn(),
+  expire: vi.fn(),
+  staffAtSend: vi.fn(),
+};
 const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };
 const push = { notifyAdmins: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
@@ -19,7 +25,11 @@ const answer = (status: number, code: string, retryAfter: string | null = null) 
   crmErrorFrom({ status, text: JSON.stringify(crmFailure(status, code).body), retryAfter });
 
 function worker() {
-  return new MessageWorker(queries as unknown as SenderRepo, dispatch as unknown as MessageDispatch, push as unknown as PushService);
+  return new MessageWorker(
+    queries as unknown as SenderRepo,
+    dispatch as unknown as MessageDispatch,
+    push as unknown as PushService,
+  );
 }
 
 describe('MessageWorker — crm failures', () => {
@@ -38,8 +48,13 @@ describe('MessageWorker — crm failures', () => {
 
   it('401: the credential hold still pushes once (per line per day)', async () => {
     dispatch.send.mockRejectedValue(answer(401, 'unauthorized'));
-    await expect(worker().process({ row: dueMessage(), template: templateRow(), now: NOW, autoOn: true })).resolves.toBe('paused');
-    expect(queries.failure).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ error_code: CRM_AUTH }));
+    await expect(
+      worker().process({ row: dueMessage(), template: templateRow(), now: NOW, autoOn: true }),
+    ).resolves.toBe('paused');
+    expect(queries.failure).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({ error_code: CRM_AUTH }),
+    );
     expect(push.notifyAdmins).toHaveBeenCalledTimes(1);
   });
 
