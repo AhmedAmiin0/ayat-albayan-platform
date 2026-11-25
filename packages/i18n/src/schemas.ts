@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LOCALES } from '@ab/core';
+import { LOCALES, pageQuery } from '@ab/core';
 
 // /i18n endpoints: the public overrides map and the admin translations editor.
 
@@ -16,8 +16,7 @@ export const translationValueSchema = z.object({
 export const translationKeysQuerySchema = z.object({
   search: z.string().trim().max(200).optional(),
   section: z.string().trim().max(60).optional(),
-  page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(50),
+  ...pageQuery({ size: 50 }),
 });
 export type TranslationKeysQuery = z.output<typeof translationKeysQuerySchema>;
 

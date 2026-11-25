@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { USER_ROLES } from '@ab/catalog';
-import { listSortShape } from '@ab/core';
+import { listSortShape, pageQuery } from '@ab/core';
 
 // Activity log (R-NFR-08): the API logs every mutating request and sign-in/out.
 
@@ -21,8 +21,7 @@ const blank = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefi
 const trimmed = (v: unknown) => (typeof v === 'string' ? v.trim() : v);
 
 export const activityListQuery = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(25),
+  ...pageQuery({ size: 25 }),
   actor_id: z.preprocess(blank, z.uuid().optional()),
   role: z.preprocess(blank, z.enum(ACTIVITY_ROLES).optional()),
   /** Prefix of the action key: 'students' matches 'students.create', 'students.update', … */

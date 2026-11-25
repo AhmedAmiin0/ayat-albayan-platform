@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { pageQuery } from '@ab/core';
 import type { AnyPushKind } from '@ab/catalog';
 
 // The bell (R-NOT-01): GET /me/notifications and POST /me/notifications/read. The rows are
@@ -39,8 +40,7 @@ export function newestOfKind(
 }
 
 export const notificationsQuerySchema = z.object({
-  page: z.coerce.number().int().min(1).max(10_000).default(1),
-  pageSize: z.coerce.number().int().min(1).max(NOTIFICATIONS_PAGE_MAX).default(20),
+  ...pageQuery({ size: 20, max: NOTIFICATIONS_PAGE_MAX, lastPage: 10_000 }),
 });
 export type NotificationsQuery = z.infer<typeof notificationsQuerySchema>;
 

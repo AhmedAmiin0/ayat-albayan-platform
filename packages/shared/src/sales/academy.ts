@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { pageQuery } from '@ab/core';
 import type { Gender, PaymentKind, Program, StudentStatus, SubscriptionStatus } from '@ab/catalog';
 import type { TeacherStudentCounts } from '../people/students/student-lists';
 import type { SalesPackageSummary } from './student/student-package';
@@ -63,8 +64,7 @@ export interface SalesStudentView {
 
 /** `?page&pageSize&search`: search is a name (Arabic-normalised) or a code. */
 export const salesStudentsQuerySchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(25),
+  ...pageQuery({ size: 25 }),
   search: z.string().trim().max(100).optional(),
 });
 export type SalesStudentsQuery = z.output<typeof salesStudentsQuerySchema>;
