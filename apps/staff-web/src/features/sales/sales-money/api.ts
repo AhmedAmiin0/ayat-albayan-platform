@@ -13,6 +13,8 @@ import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
+import { pathKey } from '@ab/client-core';
+import { myMoneyKeys, salesMoneyKeys, salesSubscriptionKeys } from '@/features/sales/keys';
 
 // The salesperson's money writes from the chat (R-ASST-01/04, docs/16): /sales/money/*,
 // /sales/subscriptions and /sales/payments. Only her students; the price always from the API. `Bind`: the chat's
@@ -23,26 +25,26 @@ const scopeQuery = (studentId: string, bind: Bind) =>
   `studentId=${studentId}${bind.phone ? `&phone=${encodeURIComponent(bind.phone)}` : ''}`;
 
 /** Every sales money read lives under it (family, chat receipts, quotes). */
-export const SALES_MONEY_KEY = ['sales', 'money'] as const;
+export const SALES_MONEY_KEY = salesMoneyKeys.all;
 
 /** GET /sales/money/family: her students in this chat's family, each with its packages still owed. */
 export const salesFamilyQuery = (phone: string) =>
   queryOptions({
-    queryKey: [...SALES_MONEY_KEY, 'family', phone],
+    queryKey: salesMoneyKeys.family(phone),
     queryFn: () => apiFetch<SalesFamilyView>(`/sales/money/family?phone=${encodeURIComponent(phone)}`),
   });
 
 /** GET /sales/money/chat-receipts: the images / PDFs the family sent (metadata only). */
 export const chatReceiptsQuery = (studentId: string, bind: Bind = {}) =>
   queryOptions({
-    queryKey: [...SALES_MONEY_KEY, 'chat-receipts', studentId],
+    queryKey: salesMoneyKeys.chatReceipts(studentId),
     queryFn: () => apiFetch<SalesChatReceipt[]>(`/sales/money/chat-receipts?${scopeQuery(studentId, bind)}`),
   });
 
 /** GET /sales/money/chat-receipts/:messageId: a short-lived thumbnail URL, asked per item. */
 export const chatReceiptFileQuery = (studentId: string, messageId: string, bind: Bind = {}) =>
   queryOptions({
-    queryKey: [...SALES_MONEY_KEY, 'chat-receipt', studentId, messageId],
+    queryKey: salesMoneyKeys.chatReceipt(studentId, messageId),
     queryFn: () => apiFetch<SalesChatReceiptFile>(`/sales/money/chat-receipts/${messageId}?${scopeQuery(studentId, bind)}`),
     staleTime: 60_000,
   });
@@ -105,16 +107,16 @@ export async function uploadSalesReceipt(input: { subscriptionId: string; file: 
 /** Refreshes the chat list (subscribed badge), her money reads and her payments and students. */
 export async function refreshAfterSalesWrite(queryClient: QueryClient): Promise<void> {
   await Promise.all([
-    queryClient.invalidateQueries({ queryKey: ['threads'] }),
+    queryClient.invalidateQueries({ queryKey: pathKey('/threads') }),
     queryClient.invalidateQueries({ queryKey: SALES_MONEY_KEY }),
-    queryClient.invalidateQueries({ queryKey: ['sales', 'me'] }),
-    queryClient.invalidateQueries({ queryKey: ['sales', 'subscriptions'] }),
+    queryClient.invalidateQueries({ queryKey: myMoneyKeys.all }),
+    queryClient.invalidateQueries({ queryKey: salesSubscriptionKeys.all }),
   ]);
 }
 
 /** What the course-days dialog needs: the subscription's facts, or why she can't book. */
 export const salesCourseQuery = (studentId: string) =>
   queryOptions({
-    queryKey: [...SALES_MONEY_KEY, 'course', studentId],
+    queryKey: salesMoneyKeys.course(studentId),
     queryFn: () => apiFetch<SalesCourseView>(`/sales/booking/course?studentId=${encodeURIComponent(studentId)}`),
   });

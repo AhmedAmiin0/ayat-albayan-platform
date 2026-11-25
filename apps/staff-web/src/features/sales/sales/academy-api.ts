@@ -7,6 +7,7 @@ import type {
 import type { AssistantLessonView } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { salesKeys, salesSubscriptionKeys } from '@/features/sales/keys';
 
 // The salesperson's assistant side (docs/16) and a subscription's history. Read-only, no money.
 
@@ -23,14 +24,14 @@ export interface Paged<T> {
 
 /** GET /sales/teachers — every active teacher with the students they teach. */
 export const salesTeachersQuery = queryOptions({
-  queryKey: ['sales', 'teachers'],
+  queryKey: salesKeys.teachers(),
   queryFn: () => apiFetch<SalesTeacherView[]>('/sales/teachers'),
 });
 
 /** GET /sales/students/all?page&pageSize&search — every student, one page. */
 export const salesAllStudentsQuery = (q: { page: number; search: string }) =>
   queryOptions({
-    queryKey: ['sales', 'students', 'all', q.page, q.search],
+    queryKey: salesKeys.allStudents(q),
     queryFn: () => {
       const params = new URLSearchParams({ page: String(q.page), pageSize: String(ALL_STUDENTS_PAGE_SIZE) });
       if (q.search) params.set('search', q.search);
@@ -41,7 +42,7 @@ export const salesAllStudentsQuery = (q: { page: number; search: string }) =>
 
 /** GET /sales/live — the lessons running now across the academy. */
 export const salesLiveQuery = queryOptions({
-  queryKey: ['sales', 'live'],
+  queryKey: salesKeys.live(),
   queryFn: () => apiFetch<AssistantLessonView[]>('/sales/live'),
   refetchInterval: LIVE_REFRESH_MS,
 });
@@ -49,7 +50,7 @@ export const salesLiveQuery = queryOptions({
 /** GET /sales/schedule?date&teacherId — one Riyadh day of the academy, read-only; re-read every minute (now moves). */
 export const salesScheduleQuery = (q: { date: string; teacherId?: string | undefined }) =>
   queryOptions({
-    queryKey: ['sales', 'schedule', q.date, q.teacherId ?? ''],
+    queryKey: salesKeys.scheduleDay(q),
     queryFn: () => {
       const params = new URLSearchParams({ date: q.date });
       if (q.teacherId) params.set('teacherId', q.teacherId);
@@ -62,6 +63,6 @@ export const salesScheduleQuery = (q: { date: string; teacherId?: string | undef
 /** GET /sales/subscriptions/:id/history — one of my subscriptions and its student's history. */
 export const subscriptionHistoryQuery = (id: string) =>
   queryOptions({
-    queryKey: ['sales', 'subscriptions', 'history', id],
+    queryKey: salesSubscriptionKeys.history(id),
     queryFn: () => apiFetch<SalesSubscriptionHistory>(`/sales/subscriptions/${id}/history`),
   });

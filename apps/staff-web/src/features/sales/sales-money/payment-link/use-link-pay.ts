@@ -10,10 +10,10 @@ import { useState } from 'react';
 import { useDebounced } from '@/features/finance/pricing';
 import {
   createPaymentLink,
-  PAYMENT_LINKS_KEY,
   quotePaymentLink,
 } from '@/features/sales/payment-links';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { paymentLinkKeys } from '@/features/sales/keys';
 
 /** What the subscribe step adds: the start day, the used lessons, the teacher (API: the kind). */
 type LinkExtra = Omit<
@@ -50,14 +50,14 @@ export function useLinkPay({ studentId, pricing, onCreated }: Opts) {
   const [requestId] = useState(() => crypto.randomUUID());
   const settled = useDebounced(pricing, 300);
   const quote = useQuery({
-    queryKey: [...PAYMENT_LINKS_KEY, 'quote', studentId, settled],
+    queryKey: paymentLinkKeys.quote(studentId, settled),
     queryFn: () => quotePaymentLink({ studentId, pricing: settled }),
     enabled: !!studentId,
   });
   const create = useMutation({
     mutationFn: createPaymentLink,
     onSuccess: async (link) => {
-      await queryClient.invalidateQueries({ queryKey: PAYMENT_LINKS_KEY });
+      await queryClient.invalidateQueries({ queryKey: paymentLinkKeys.all });
       await onCreated(link);
     },
   });

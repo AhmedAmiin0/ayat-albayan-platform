@@ -14,6 +14,7 @@ import { LeadsToolbar } from './list/LeadsToolbar';
 import { parseLeadSearch, type LeadSearch } from './types';
 import { TableBox } from '@/components/data-table/TableBox';
 import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { applicantKeys, leadKeys } from '@/features/sales/keys';
 
 export interface LeadsInboxProps {
   search: LeadSearch;
@@ -42,8 +43,8 @@ export function LeadsInbox({ search, onSearch }: LeadsInboxProps) {
     onSuccess: async () => {
       setConfirmId(null);
       setNotice({ message: t.leads.reclassified });
-      await queryClient.invalidateQueries({ queryKey: ['leads'] });
-      await queryClient.invalidateQueries({ queryKey: ['job-applicants'] });
+      await queryClient.invalidateQueries({ queryKey: leadKeys.all });
+      await queryClient.invalidateQueries({ queryKey: applicantKeys.all });
     },
     onError: () => setNotice({ message: t.common.error, tone: 'error' }),
   });

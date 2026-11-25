@@ -6,9 +6,10 @@ import { Field } from '@ab/web-kit/components/ui/form/field';
 import { Select } from '@ab/web-kit/components/ui/form/select';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { salesSubscriptionKeys } from '@/features/sales/keys';
 
 export const salesTeachersQuery = queryOptions({
-  queryKey: ['sales', 'subscriptions', 'teachers'],
+  queryKey: salesSubscriptionKeys.teachers(),
   queryFn: () => apiFetch<SalesTeacherOption[]>('/sales/subscriptions/teachers'),
   staleTime: 5 * 60_000,
 });

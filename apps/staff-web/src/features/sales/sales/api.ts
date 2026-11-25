@@ -3,11 +3,12 @@ import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@a
 import type { SalesPersonView, SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { myMoneyKeys, salesKeys, salesSubscriptionKeys } from '@/features/sales/keys';
 
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
 export const salesSubscriptionsQuery = (kind: SalesSubscriptionKind) =>
   queryOptions({
-    queryKey: ['sales', 'subscriptions', kind],
+    queryKey: salesSubscriptionKeys.list(kind),
     queryFn: () => apiFetch<SalesSubscriptionView[]>(`/sales/subscriptions?kind=${kind}`),
   });
 
@@ -16,31 +17,31 @@ export const salesSubscriptionsQuery = (kind: SalesSubscriptionKind) =>
 
 /** GET /sales/me/students — the students I brought, newest first; no price, only «paid or not». */
 export const myStudentsQuery = queryOptions({
-  queryKey: ['sales', 'me', 'students'],
+  queryKey: myMoneyKeys.students(),
   queryFn: () => apiFetch<MyStudentRow[]>('/sales/me/students'),
 });
 
 /** GET /sales/me/earnings — my terms, this month so far, commissions earned and my statements. */
 export const myEarningsQuery = queryOptions({
-  queryKey: ['sales', 'me', 'earnings'],
+  queryKey: myMoneyKeys.earnings(),
   queryFn: () => apiFetch<MyEarnings>('/sales/me/earnings'),
 });
 
 /** Both wallet queries sit under this key, so one invalidation refreshes the page. */
-export const MY_MONEY_KEY = ['sales', 'me'] as const;
+export const MY_MONEY_KEY = myMoneyKeys.all;
 export const MY_COMMISSIONS_PAGE_SIZE = 20;
 
 /** GET /sales/me/commissions — one page of my commissions, newest first (the previous page stays while the next loads). */
 export const myCommissionsQuery = (page: number) =>
   queryOptions({
-    queryKey: [...MY_MONEY_KEY, 'commissions', page],
+    queryKey: myMoneyKeys.commissions(page),
     queryFn: () => apiFetch<Page<MyCommissionRow>>(`/sales/me/commissions?page=${page}&pageSize=${MY_COMMISSIONS_PAGE_SIZE}`),
     placeholderData: keepPreviousData,
   });
 
 /** GET /sales/me/payments — only the payments I recorded. */
 export const myPaymentsQuery = queryOptions({
-  queryKey: ['sales', 'me', 'payments'],
+  queryKey: myMoneyKeys.payments(),
   queryFn: () => apiFetch<MyPaymentRow[]>('/sales/me/payments'),
 });
 
@@ -50,7 +51,7 @@ export const updateMyPaymentAmount = (id: string, amount: number) =>
 
 /** GET /sales/people (admin):the salespeople with their open-lead counts. */
 export const salesPeopleQuery = queryOptions({
-  queryKey: ['sales', 'people'],
+  queryKey: salesKeys.people(),
   queryFn: () => apiFetch<SalesPersonView[]>('/sales/people'),
 });
 
