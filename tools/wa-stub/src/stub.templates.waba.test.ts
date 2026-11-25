@@ -1,16 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { bearer, closeAll, post, startStub, templateBody, TWO_LINES } from './test-server.ts';
+import { z } from 'zod';
+import { bearer, closeAll, post, read, startStub, templateBody, TWO_LINES } from './test-server.ts';
 
 // Per-number templates: a created template lives on the WABA it was created on only, the review
 // control route can pick the WABA, and Meta's rejected_reason is listed.
 
 afterEach(closeAll);
 
-interface Listed {
-  name: string;
-  status: string;
-  rejected_reason: string;
-}
+const LISTED = z.object({ name: z.string(), status: z.string(), rejected_reason: z.string() });
 const NOTIF = bearer('notif-token');
 const BODY = {
   type: 'BODY',
@@ -23,11 +20,12 @@ const create = (url: string, waba: string, name = 'trial_reschedule') =>
     { name, language: 'ar', category: 'UTILITY', components: [BODY] },
     NOTIF,
   );
-const list = async (url: string, waba: string): Promise<Listed[]> =>
+const list = async (url: string, waba: string): Promise<z.infer<typeof LISTED>[]> =>
   (
-    (await (await fetch(`${url}/v21.0/${waba}/message_templates`, { headers: NOTIF })).json()) as {
-      data: Listed[];
-    }
+    await read(
+      fetch(`${url}/v21.0/${waba}/message_templates`, { headers: NOTIF }),
+      z.object({ data: z.array(LISTED) }),
+    )
   ).data;
 const names = async (url: string, waba: string) => (await list(url, waba)).map((t) => t.name);
 

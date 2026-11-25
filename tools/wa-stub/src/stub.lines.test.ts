@@ -1,8 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { z } from 'zod';
 import {
   bearer,
   closeAll,
+  errorCode,
   post,
+  read,
   startHook,
   startStub,
   templateBody,
@@ -14,7 +17,11 @@ afterEach(closeAll);
 const NOTIF = bearer(TWO_LINES.accessToken);
 const CHAT = bearer(TWO_LINES.chat.accessToken);
 const msgPath = (pn: string) => `/v21.0/${pn}/messages`;
-const read = (id: string) => ({ messaging_product: 'whatsapp', status: 'read', message_id: id });
+const readMark = (id: string) => ({
+  messaging_product: 'whatsapp',
+  status: 'read',
+  message_id: id,
+});
 
 async function twoLines() {
   const hook = await startHook();
@@ -36,16 +43,17 @@ describe('wa-stub: two lines (docs/12 §13.12, R-MSG-04)', () => {
       ['template', 'PN-N'],
       ['text', 'PN-C'],
     ]);
-    const listed = (await (await fetch(`${url}/__stub/messages`)).json()) as {
-      phoneNumberId: string;
-    }[];
+    const listed = await read(
+      fetch(`${url}/__stub/messages`),
+      z.array(z.object({ phoneNumberId: z.string() })),
+    );
     expect(listed.map((m) => m.phoneNumberId)).toEqual(['PN-N', 'PN-C']);
   });
 
   it('logs reads by line; the plain read log is unchanged; reset clears both', async () => {
     const { url } = await twoLines();
-    await post(`${url}${msgPath('PN-C')}`, read('wamid.c1'), CHAT);
-    await post(`${url}${msgPath('PN-N')}`, read('wamid.n1'), NOTIF);
+    await post(`${url}${msgPath('PN-C')}`, readMark('wamid.c1'), CHAT);
+    await post(`${url}${msgPath('PN-N')}`, readMark('wamid.n1'), NOTIF);
     expect(await (await fetch(`${url}/__stub/reads`)).json()).toEqual(['wamid.c1', 'wamid.n1']);
     expect(await (await fetch(`${url}/__stub/reads/by-line`)).json()).toEqual([
       { phoneNumberId: 'PN-C', messageId: 'wamid.c1' },
@@ -53,7 +61,7 @@ describe('wa-stub: two lines (docs/12 §13.12, R-MSG-04)', () => {
     ]);
     await post(`${url}/__stub/reset`, {});
     expect(await (await fetch(`${url}/__stub/reads/by-line`)).json()).toEqual([]);
-    await post(`${url}${msgPath('PN-N')}`, read('wamid.n2'), NOTIF);
+    await post(`${url}${msgPath('PN-N')}`, readMark('wamid.n2'), NOTIF);
     await fetch(`${url}/__stub/messages`, { method: 'DELETE' });
     expect(await (await fetch(`${url}/__stub/reads/by-line`)).json()).toEqual([]);
   });
@@ -65,7 +73,7 @@ describe('wa-stub: two lines (docs/12 §13.12, R-MSG-04)', () => {
     expect((await post(`${url}${msgPath('PN-C')}`, body, NOTIF)).status).toBe(200);
     const bad = await post(`${url}${msgPath('PN-C')}`, body, bearer('stranger'));
     expect(bad.status).toBe(401);
-    expect(((await bad.json()) as { error: { code: number } }).error.code).toBe(190);
+    expect(await errorCode(bad)).toBe(190);
     expect((await post(`${url}${msgPath('PN-C')}`, body, {})).status).toBe(401);
   });
 
