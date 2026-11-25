@@ -5,7 +5,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { OwnNumbers } from '@/modules/messaging/numbers';
 import { readAll } from '@/common/db/read-all';
 import { pgError, rows } from '@/common/db/errors';
-import type { Window } from './finance/finance.queries';
+import type { Window } from './finance/finance.types';
 
 const HOURS_48 = 48 * 3_600_000;
 

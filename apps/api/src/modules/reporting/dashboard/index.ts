@@ -1,21 +1,8 @@
 export { DashboardModule } from './dashboard.module';
 export { DashboardSettings, type DashboardSettingsValues } from './dashboard.settings';
-export {
-  costFacts,
-  type CostLessonIn,
-  currenciesOf,
-  expenseFacts,
-  type ExpenseIn,
-  type LessonSourceIn,
-  paymentFacts,
-  type PaymentIn,
-} from './finance/finance.mapper';
-export {
-  type ExpenseRow,
-  FinanceQueries,
-  type PaymentRow,
-  type Window,
-} from './finance/finance.queries';
+export { cardFacts, currenciesOf } from './finance/finance.mapper';
+export { FinanceRepo } from './finance/finance.repo';
+export type { FinanceCardQuery, Window } from './finance/finance.types';
 export { FxConverter } from './finance/fx-converter';
 export { monthShift, monthsOf, parseRange, rangeWindow, riyadhDate, riyadhMonth } from './range';
 export {

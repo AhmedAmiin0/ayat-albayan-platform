@@ -7,10 +7,13 @@ import type { SheetSpec } from './headers/headers.ts';
 export function cellOf(v: unknown): Cell {
   if (v === null || v === undefined) return null;
   if (v instanceof Date) return wallClock(v);
-  if (typeof v === 'string') return v.trim() === '' ? null : v.trim();
-  if (typeof v === 'number' || typeof v === 'boolean') return v;
-  return String(v);
+  return typeof v === 'string' ? trimmedCell(v) : scalarCell(v);
 }
+
+const trimmedCell = (v: string): Cell => (v.trim() === '' ? null : v.trim());
+
+const scalarCell = (v: unknown): Cell =>
+  typeof v === 'number' || typeof v === 'boolean' ? v : String(v);
 
 /** Header texts with repeats numbered: a second copy gets " 2". */
 export function headerNames(row: readonly unknown[]): string[] {

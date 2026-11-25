@@ -6569,25 +6569,6 @@
       "count": 1
     }
   },
-  "src/modules/reporting/dashboard/finance/finance.mapper.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 2
-    },
-    "typescript/no-unnecessary-type-conversion": {
-      "count": 5
-    }
-  },
-  "src/modules/reporting/dashboard/finance/finance.queries.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/modules/reporting/dashboard/finance/finance.ts": {
     "complexity": {
       "count": 1
@@ -6662,9 +6643,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/modules/reporting/exports/exports.rows.ts": {
@@ -6696,9 +6674,6 @@
   },
   "src/modules/reporting/exports/finance-exports.queries.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
       "count": 1
     },
     "typescript/no-deprecated": {
