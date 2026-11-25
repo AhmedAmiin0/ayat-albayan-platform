@@ -345,9 +345,6 @@
   "src/features/finance/expenses/AddCategory.tsx": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/features/finance/expenses/ExpenseActions.tsx": {
@@ -428,9 +425,6 @@
     "stylistic/max-len": {
       "count": 3
     },
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 9
     }
@@ -501,9 +495,6 @@
     },
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "ab/no-untyped-api-calls": {
       "count": 3
@@ -662,11 +653,6 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/finance/payments/attachments/ReceiptDialog.tsx": {
-    "ab/module-boundaries": {
       "count": 1
     }
   },
@@ -829,9 +815,6 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
       "count": 1
     },
     "ab/no-untyped-api-calls": {
@@ -1257,9 +1240,6 @@
     },
     "stylistic/max-len": {
       "count": 5
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "ab/no-untyped-api-calls": {
       "count": 7

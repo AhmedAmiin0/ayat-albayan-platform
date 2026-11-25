@@ -5,7 +5,7 @@ import type { ExpenseCategoryView, ExpenseView, ExpenseYearView } from '@ab/mone
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
+import { moneyKeys } from '@/features/finance/keys';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 
@@ -14,18 +14,18 @@ export type { ExpenseCategoryView, ExpenseView, ExpenseYearView } from '@ab/mone
 
 export const expensesQuery = (month: string) =>
   queryOptions({
-    queryKey: [...MONEY_KEY, 'expenses', month],
+    queryKey: moneyKeys.expenses(month),
     queryFn: () => apiFetch<ExpenseView[]>(`/expenses?month=${month}`),
   });
 
 export const expenseYearQuery = (year: string) =>
   queryOptions({
-    queryKey: [...MONEY_KEY, 'expenses', 'year', year],
+    queryKey: moneyKeys.expenseYear(year),
     queryFn: () => apiFetch<ExpenseYearView>(`/expenses/year?year=${year}`),
   });
 
 export const categoriesQuery = queryOptions({
-  queryKey: [...MONEY_KEY, 'expense-categories'],
+  queryKey: moneyKeys.expenseCategories(),
   queryFn: () => apiFetch<ExpenseCategoryView[]>('/expense-categories'),
   staleTime: 10 * 60_000,
 });

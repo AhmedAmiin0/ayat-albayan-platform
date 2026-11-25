@@ -4,14 +4,14 @@ import type { PayoutGenerateResult, PayoutView, TeacherEarningsSummaryView } fro
 import { riyadhToday } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
+import { moneyKeys } from '@/features/finance/keys';
 
 // apps/api/src/modules/payouts (docs/11 §8, R-PAY-02, R-TCH-04). Teacher money is EGP.
 export type { PayoutGenerateResult, PayoutView } from '@ab/money';
 
 export const payoutsQuery = (month: string) =>
   queryOptions({
-    queryKey: [...MONEY_KEY, 'payouts', month],
+    queryKey: moneyKeys.payouts(month),
     queryFn: () => apiFetch<PayoutView[]>(`/payouts?month=${month}`),
   });
 
@@ -34,7 +34,7 @@ export const payoutReceiptUrl = (id: string) => apiFetch<SignedDownload>(`/payou
 /** Earned, paid and owed per teacher from the ledger. */
 export const earningsSummaryQuery = () =>
   queryOptions({
-    queryKey: [...MONEY_KEY, 'teacher-earnings', 'summary'],
+    queryKey: moneyKeys.earningsSummary(),
     queryFn: () => apiFetch<TeacherEarningsSummaryView>('/teacher-earnings/summary'),
   });
 
