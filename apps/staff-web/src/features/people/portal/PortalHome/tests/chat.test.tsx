@@ -21,8 +21,7 @@ async function tabsOf(answers: Answers): Promise<(string | null)[]> {
   return screen.getAllByRole('tab').map((x) => x.textContent);
 }
 
-// docs/50 §2: the chat for every family login, a child's too (owner 2026-11-16), while
-// family_chat_enabled is on.
+// docs/50 §2: the chat for every family login, a child's too, while family_chat_enabled is on.
 describe('PortalHome: the teacher chat tab', () => {
   afterEach(() => apiFetch.mockReset());
 

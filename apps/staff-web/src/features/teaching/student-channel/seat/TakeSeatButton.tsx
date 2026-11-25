@@ -14,7 +14,7 @@ interface TakeSeatButtonProps {
 }
 
 /**
- * Take the seat (owner 2026-11-16): a free one, one a former assistant left behind, or the
+ * Take the seat: a free one, one a former assistant left behind, or the
  * student I brought, from whoever holds it («who brought the student have the priority»). Once
  * mine, the row's chat button takes its place.
  */

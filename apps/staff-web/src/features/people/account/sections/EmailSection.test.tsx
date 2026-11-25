@@ -1,8 +1,10 @@
+import { pathKey } from '@ab/client-core';
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { domainError, PROFILE, renderWithClient, section } from '@/features/people/account/account-test-kit';
 import { AccountPage } from '@/features/people/account/AccountPage';
+import { PROFILE_KEY } from '@/features/people/account';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -41,8 +43,8 @@ describe('EmailSection (R-ACC-03)', () => {
     type(' New@AB.co ', 'secret-1');
     expect(await screen.findByText(t.account.toast.email)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledWith('PUT', '/me/email', { email: 'new@ab.co', current_password: 'secret-1' });
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['me', 'profile'] });
-    await vi.waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: ['auth', 'me'] }));
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: PROFILE_KEY });
+    await vi.waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: pathKey('/auth/me') }));
     expect((s.getByLabelText<HTMLInputElement>(M.label)).value).toBe('');
   });
 

@@ -22,7 +22,7 @@ export interface ReplyOptionsProps {
 export const optionId = (listId: string, index: number) => `${listId}-opt-${index}`;
 
 /**
- * The replies as a listbox, each row as WhatsApp Business draws it (owner 2026-10-26): «/title» bold
+ * The replies as a listbox, each row as WhatsApp Business draws it: «/title» bold
  * in the accent (isolated, so the slash leads in Arabic and English), the text in the secondary ink on
  * at most two lines, a paperclip when a file goes with it, a hairline between rows; about five rows
  * show, the rest scroll. A mouse click or Enter fills the composer; focus stays in the box.

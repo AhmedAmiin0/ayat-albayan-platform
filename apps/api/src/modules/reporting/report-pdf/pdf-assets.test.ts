@@ -10,9 +10,13 @@ describe('PDF assets — self-hosted fonts and the real emblem (docs/07 §13)', 
     expect(faces).toHaveLength(8);
     expect(faces.filter((f) => f.includes("font-family:'Amiri'"))).toHaveLength(2);
     for (const w of [400, 600, 700]) {
-      expect(faces.filter((f) => f.includes("'IBM Plex Sans Arabic'") && f.includes(`font-weight:${w};`))).toHaveLength(2);
+      expect(
+        faces.filter(
+          (f) => f.includes("'IBM Plex Sans Arabic'") && f.includes(`font-weight:${w};`),
+        ),
+      ).toHaveLength(2);
     }
-    expect(faces.every((f) => f.includes("src:url(data:font/woff2;base64,"))).toBe(true);
+    expect(faces.every((f) => f.includes('src:url(data:font/woff2;base64,'))).toBe(true);
   });
 
   it('never prints with a fallback: font-display block, no remote URL', () => {
@@ -30,6 +34,10 @@ describe('PDF assets — self-hosted fonts and the real emblem (docs/07 §13)', 
     expect(existsSync(LOGO_PATH)).toBe(true);
     expect(readFileSync(LOGO_PATH).subarray(1, 4).toString('latin1')).toBe('PNG');
     expect(logoDataUri()).toMatch(/^data:image\/png;base64,iVBOR/);
+  });
+
+  it('finds the emblem through @ab/catalog, wherever the code runs from (a bundle in dist/)', () => {
+    expect(LOGO_PATH).toBe(require.resolve('@ab/catalog/brand/mark.png'));
   });
 
   it('reads the files once per process', () => {

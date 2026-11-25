@@ -27,7 +27,7 @@ export const changePassword = (body: PasswordChange) => apiSend('PUT', '/me/pass
  * A photo goes straight to the private `avatars` bucket through a one-off signed URL (same flow as
  * the payment receipt): POST `{base}/upload-url` {mime,size} → upload to it → PUT `{base}` {path}
  * (the API re-checks it). `base` is '/me/avatar' (R-ACC-05) or an admin's '/teachers/:id/avatar' /
- * '/users/:id/avatar' (owner 2026-10-28).
+ * '/users/:id/avatar'.
  */
 export async function uploadPhoto<T>(base: string, file: File): Promise<T> {
   const signed = await apiSend<SignedUpload>('POST', `${base}/upload-url`, { mime: file.type, size: file.size });

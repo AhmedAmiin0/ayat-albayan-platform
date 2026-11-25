@@ -32,7 +32,7 @@ export const guardianQuery = (id: string) =>
 /** apiSend with its reply left unknown, for the schema to parse. */
 const put: (method: 'PUT', path: string, body: unknown) => Promise<unknown> = apiSend;
 
-/** PUT /sales/booking/course/draft (owner 2026-11-06): null = kept until the payment. */
+/** PUT /sales/booking/course/draft: null = kept until the payment. */
 async function saveCourseDraft(body: BookingRequest): Promise<BookingResult | null> {
   const saved = courseDraftSavedSchema.parse(await put('PUT', '/sales/booking/course/draft', body));
   return saved.state === 'booked' ? saved.booking : null;

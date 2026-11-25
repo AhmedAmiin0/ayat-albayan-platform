@@ -25,7 +25,7 @@ const STOPPED = {
   student: student('stu-s', 'ياسمين'),
 };
 const UNUSED = { ...STOPPED, id: 'sub-unused', cancel_kind: 'unused', student: student('stu-u', 'مريم') };
-// Owner 2026-11-06: a refund stop stored owed = the net paid left, so nothing more is due.
+// A refund stop stored owed = the net paid left, so nothing more is due.
 const SETTLED = { ...STOPPED, id: 'sub-settled', stop_owed_amount: 50, student: student('stu-r', 'هدى') };
 
 async function rowOf(name: string) {

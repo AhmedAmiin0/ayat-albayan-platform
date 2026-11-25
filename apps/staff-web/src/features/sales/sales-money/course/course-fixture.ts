@@ -2,7 +2,7 @@ import type { BookedCourse, CourseSubscription, SalesCourseView } from '@ab/shar
 import type { Mock } from 'vitest';
 import { ABRAR, SLOT, WED_SLOT } from '@/features/teaching/booking/wizard-fixture';
 
-// Test data only: GET /sales/booking/course and the sales wizard's reads (owner 2026-10-18).
+// Test data only: GET /sales/booking/course and the sales wizard's reads.
 
 export const COURSE_STUDENT_ID = '0b6a7c1e-2222-4a8e-9b00-000000000002';
 
@@ -49,7 +49,7 @@ export function routeCourseSend(apiSend: Mock, check: unknown = { conflicts: [] 
   apiSend.mockImplementation((_m: string, path: string) => Promise.resolve(path === '/sales/booking/check' ? check : BOOKED));
 }
 
-// A renewal (owner 2026-10-18): the previous course ran Sunday 17:00 + Wednesday 19:30 until Saturday
+// A renewal: the previous course ran Sunday 17:00 + Wednesday 19:30 until Saturday
 // 10 October, so the new one opens on Sunday 11 October with the same days prefilled.
 export const PREVIOUS: BookedCourse = {
   subscriptionId: 'sub-0',

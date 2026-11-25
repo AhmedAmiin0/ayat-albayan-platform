@@ -35,9 +35,9 @@ export function previousMonth(today: string): string {
 const card = 'rounded-md border border-rule p-4';
 
 /**
- * /admin (R-RPT-01/02/03; owner 2026-10-05 «enhance the main dashboard»): quick actions, today's
- * four numbers, then a grid (1 column on phones, 2 on tablets, 3 on desktops) of today's lessons,
- * the work queue and the latest messages; below them this week, the period and the CSV exports.
+ * /admin (R-RPT-01/02/03): quick actions, today's four numbers, then a grid (1 column on phones,
+ * 2 on tablets, 3 on desktops) of today's lessons, the work queue and the latest messages; below
+ * them this week, the period and the CSV exports.
  * Every number comes from the API.
  */
 export function DashboardPage({ search, onSearch }: DashboardPageProps) {

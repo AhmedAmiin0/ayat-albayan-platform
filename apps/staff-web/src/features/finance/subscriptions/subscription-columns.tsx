@@ -91,7 +91,7 @@ export function subscriptionColumns({ onPay, onPause, onResume, canPause, onCanc
     col.accessor('status', {
       header: () => t.subscriptions.status,
       cell: (c) => {
-        // «Why is this unpaid» (owner 2026-10-28): 80 of 81 stays unpaid; the line says what is left.
+        // Why is this unpaid: 80 of 81 stays unpaid; the line says what is left.
         const part = partPaidText(c.row.original);
         return (
           <div className="grid justify-items-start gap-0.5">
@@ -107,7 +107,7 @@ export function subscriptionColumns({ onPay, onPause, onResume, canPause, onCanc
       header: () => t.common.actions,
       cell: (c) => {
         const s = c.row.original;
-        // An unused cancel (owner 2026-10-28) is history only; a stopped one (991) still takes payments
+        // An unused cancel is history only; a stopped one (991) still takes payments
         // and refunds (countsForMoney), never a pause.
         if (!countsForMoney(s)) return null;
         return (

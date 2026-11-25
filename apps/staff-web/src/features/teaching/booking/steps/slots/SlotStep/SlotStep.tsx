@@ -34,7 +34,7 @@ export function courseNear(startsOn: string, now: Date = new Date()): string {
 }
 
 /**
- * Step 4 (R-SCH-06): a package picks a date and a time per lesson day (owner 2026-11-07), each read
+ * Step 4 (R-SCH-06): a package picks a date and a time per lesson day, each read
  * against the teacher's free slots; the earliest is the first lesson. A trial or a makeup is one
  * lesson: one slot on the grid, no repeat.
  */

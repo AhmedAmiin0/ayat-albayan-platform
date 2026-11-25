@@ -29,7 +29,7 @@ export const templateLinesQuery = queryOptions({
   queryFn: () => apiFetch<TemplateLineView[]>('/messaging/templates/lines'),
 });
 
-/** T2 per number (owner 2026-10-18): one line's rows against its own WABA, or both when no line is given. */
+/** T2 per number: one line's rows against its own WABA, or both when no line is given. */
 export const checkTemplateHealth = (line?: WaLine) =>
   line
     ? apiSend<TemplateHealthView>('POST', '/messaging/templates/health', { line })

@@ -7,7 +7,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 import { InboxPage } from '@/features/messaging/inbox/threads/list/InboxPage';
 import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane';
 
-// Owner 2026-11-07 (option 1): opening a chat whose 24 h window is closed sends NOTHING (an admin
+// Opening a chat whose 24 h window is closed sends NOTHING (an admin
 // opened one at night and the family got the welcome template). The starter goes on send only.
 
 const apiFetch = vi.hoisted(() => vi.fn());

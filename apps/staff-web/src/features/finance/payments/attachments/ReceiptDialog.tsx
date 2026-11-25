@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
+import { moneyKeys } from '@/features/finance/keys';
 import { apiErrorText, studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { receiptUrl, type PaymentView } from '@/features/finance/payments/api';
@@ -9,7 +9,7 @@ import { receiptUrl, type PaymentView } from '@/features/finance/payments/api';
 /** A stored receipt through a 1-hour signed URL (P7): the image inline, a PDF in a frame. */
 export function ReceiptDialog({ payment, onClose }: { payment: PaymentView; onClose: () => void }) {
   const signed = useQuery({
-    queryKey: [...MONEY_KEY, 'receipt', payment.id],
+    queryKey: moneyKeys.receipt(payment.id),
     queryFn: () => receiptUrl(payment.id),
     staleTime: 30 * 60_000,
   });

@@ -6,7 +6,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./brand/mark.png": "./brand/mark.png"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

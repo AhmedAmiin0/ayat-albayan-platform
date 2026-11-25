@@ -3,7 +3,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { previewText } from '@/features/messaging/inbox/format';
 import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 
-// The chats list's last line never shows «[edit]» etc. (owner 2026-10-30): the API sends last_note.
+// The chats list's last line never shows «[edit]» etc.: the API sends last_note.
 describe('previewText: notes', () => {
   it('a deleted last message reads «تم حذف هذه الرسالة», its text and file withheld', () => {
     const th = thread({ last_note: 'deleted', last_body: null, last_media_mime: null });

@@ -61,7 +61,7 @@ const EDITORS = {
   e164: TextEditor,
 } satisfies Record<SettingDef['type'], (props: EditorProps) => ReactNode>;
 
-/** A key with its own control instead of its type's (owner 2026-11-06: the reopen choice). */
+/** A key with its own control instead of its type's (the reopen choice). */
 const KEY_EDITORS: Partial<Record<SettingKey, (props: EditorProps) => ReactNode>> = {
   chat_reopen_template: ReopenTemplateEditor,
 };

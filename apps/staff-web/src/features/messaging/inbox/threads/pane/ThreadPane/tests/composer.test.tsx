@@ -89,7 +89,7 @@ describe('after the 24 h window: approved templates only', () => {
     expect(when.readOnly).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
     expect((await screen.findAllByText(t.inbox.composer.pickLesson)).length).toBeGreaterThan(1);
-    // Nothing went out: opening a closed chat sends nothing (owner 2026-11-07), no template yet.
+    // Nothing went out: opening a closed chat sends nothing, no template yet.
     expect(apiSend).not.toHaveBeenCalled();
 
     apiSend.mockResolvedValue(message({ id: 'm-t', direction: 'outbound', status: 'queued' }));

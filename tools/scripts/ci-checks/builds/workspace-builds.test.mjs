@@ -10,17 +10,26 @@ const root = (p) => fileURLToPath(new URL(`../../../../${p}`, import.meta.url));
 const read = (p) => readFileSync(root(p), 'utf8');
 const NAMED_PACKAGE_BUILD = /--filter\s+@ab\/[\w-]+(?:\s+--filter\s+@ab\/[\w-]+)*\s+build/;
 
-test('api image: installs api..., builds api^... before the api itself', () => {
+test("api image: installs api..., then bundles the api from the packages' source", () => {
   const dockerfile = read('apps/api/Dockerfile');
   // The install (stage deps, before the source) and the build (stage build) are separate layers.
-  assert.match(dockerfile, /pnpm install --offline --frozen-lockfile --store-dir \/pnpm\/store --filter "api\.\.\."/);
+  assert.match(
+    dockerfile,
+    /pnpm install --offline --frozen-lockfile --store-dir \/pnpm\/store --filter "api\.\.\."/,
+  );
   const start = dockerfile.indexOf('AS build\n');
   const run = dockerfile.slice(start, dockerfile.indexOf('\nFROM', start));
-  const deps = run.indexOf('pnpm --filter "api^..." build');
-  const api = run.indexOf('pnpm --filter api build');
-  assert.ok(deps > 0, 'builds every workspace dependency of the api');
-  assert.ok(api > deps, 'the api builds after its dependencies');
+  assert.match(run, /\nRUN pnpm --filter api build\n/);
+  assert.doesNotMatch(
+    run,
+    /api\^\.\.\./,
+    "the bundle reads the packages' source: no package build",
+  );
   assert.doesNotMatch(run, NAMED_PACKAGE_BUILD, 'no hand-kept package list');
+  assert.equal(
+    JSON.parse(read('apps/api/package.json')).scripts.build,
+    'rolldown -c rolldown.config.mjs',
+  );
 });
 
 test('mobile EAS build: post-install builds staff-mobile^...', () => {
@@ -32,7 +41,10 @@ test('mobile EAS build: post-install builds staff-mobile^...', () => {
 
 test('the pattern catches the old hand-kept lists', () => {
   assert.match('pnpm --filter @ab/shared build', NAMED_PACKAGE_BUILD);
-  assert.match('pnpm --dir ../.. --filter @ab/shared --filter @ab/client-core build', NAMED_PACKAGE_BUILD);
+  assert.match(
+    'pnpm --dir ../.. --filter @ab/shared --filter @ab/client-core build',
+    NAMED_PACKAGE_BUILD,
+  );
   assert.doesNotMatch('pnpm --filter "staff-web^..." build', NAMED_PACKAGE_BUILD);
 });
 

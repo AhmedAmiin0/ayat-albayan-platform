@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 import { cn } from '@ab/web-kit/lib/utils';
 
 /**
- * The fixed-height box a list screen's table lives in (owner, 2026-10-05: "make tables have a
- * static height"): it takes the rest of the page frame (a flex column: toolbar auto, this box
- * `h-0 flex-auto`: basis = the 0 height, so the rows never size it; the pager under it) and never less than 320px; rows scroll inside it on both axes and
+ * The fixed-height box a list screen's table lives in: it takes the rest of the page frame (a flex
+ * column: toolbar auto, this box `h-0 flex-auto`: basis = the 0 height, so the rows never size it;
+ * the pager under it) and never less than 320px; rows scroll inside it on both axes and
  * the header row stays pinned (PageFrame's `thead th` sticky rule). Few rows leave the space empty.
  * Phones (< 640px, rows stacked as cards): no box-in-a-scrolling-page; the rows flow with the page.
  */

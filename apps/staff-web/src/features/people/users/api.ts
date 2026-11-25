@@ -12,9 +12,10 @@ import type {
 import type { UsersView } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { userKeys } from '@/features/people/keys';
 
 // users.read lists and opens, users.write does the rest.
-export const USERS_KEY = ['users'] as const;
+export const USERS_KEY = userKeys.all;
 export const USERS_PAGE_SIZE = 20;
 
 /** The list's filters and the web's page (the table pages by hand). */
@@ -22,7 +23,7 @@ export type UsersPageView = UsersView & { page: number };
 
 export const userListQuery = (view: UsersPageView) =>
   queryOptions({
-    queryKey: [...USERS_KEY, 'list', view],
+    queryKey: userKeys.list(view),
     queryFn: () => {
       const qs = new URLSearchParams({ page: String(view.page), pageSize: String(USERS_PAGE_SIZE) });
       for (const key of ['q', 'role', 'status'] as const) if (view[key]) qs.set(key, view[key]);
@@ -32,7 +33,7 @@ export const userListQuery = (view: UsersPageView) =>
   });
 
 export const roleOptionsQuery = queryOptions({
-  queryKey: [...USERS_KEY, 'role-options'],
+  queryKey: userKeys.roleOptions(),
   queryFn: () => apiFetch<UserRoleOption[]>('/users/role-options'),
   staleTime: 60_000,
 });
@@ -40,12 +41,12 @@ export const roleOptionsQuery = queryOptions({
 /** Records of `kind` without a login, matching `q` (name or student code). */
 export const candidatesQuery = (kind: LinkKind, q: string) =>
   queryOptions({
-    queryKey: [...USERS_KEY, 'candidates', kind, q],
+    queryKey: userKeys.candidates(kind, q),
     queryFn: () => apiFetch<LinkCandidate[]>(`/users/link-candidates?${new URLSearchParams({ kind, q })}`),
   });
 
 export const userQuery = (id: string) =>
-  queryOptions({ queryKey: [...USERS_KEY, 'detail', id], queryFn: () => apiFetch<UserDetail>(`/users/${id}`) });
+  queryOptions({ queryKey: userKeys.detail(id), queryFn: () => apiFetch<UserDetail>(`/users/${id}`) });
 
 // The credential in these answers is shown once: the mutations that return one use gcTime 0 and
 // the dialogs copy it into their own state, never into the query cache.

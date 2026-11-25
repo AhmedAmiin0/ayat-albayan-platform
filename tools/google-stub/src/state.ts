@@ -36,30 +36,70 @@ export interface StubState {
 
 export type Reply = [number, unknown] | { status: number; location: string };
 /** m = the path match, s = the state, url = the request URL. */
-export type At = { m: RegExpExecArray; s: StubState; url: URL };
-export type Handler = (req: IncomingMessage, at: At) => Promise<Reply>;
+export interface At {
+  m: RegExpExecArray;
+  s: StubState;
+  url: URL;
+}
+export type Handler = (req: IncomingMessage, at: At) => Reply | Promise<Reply>;
 export type Route = [method: string, path: RegExp, handler: Handler];
 
 const FOLDER = 'application/vnd.google-apps.folder';
 export const SHEET = 'application/vnd.google-apps.spreadsheet';
 const ROOT_NAME = 'تقارير آيات البيان';
 const SUMMARY_NAME = 'سجل الطلاب المشتركين';
-export const SUMMARY_HEADER = ['اسم الطالب', 'المعلمة', 'البرنامج', 'تاريخ أول حلقة', 'آخر حلقة', 'عدد الحلقات', 'مجلد الطالب', 'سجل الحضور'];
+export const SUMMARY_HEADER = [
+  'اسم الطالب',
+  'المعلمة',
+  'البرنامج',
+  'تاريخ أول حلقة',
+  'آخر حلقة',
+  'عدد الحلقات',
+  'مجلد الطالب',
+  'سجل الحضور',
+];
 
 export function nextId(s: StubState, prefix: string): string {
   s.seq += 1;
   return `${prefix}${String(s.seq).padStart(14, '0')}`;
 }
 
-/** A fresh account: the primary calendar, one teacher calendar, the reports root with the summary sheet. */
+/**
+ * A fresh account: the primary calendar, one teacher calendar, the reports root with the summary
+ * sheet.
+ */
 export function initialState(): StubState {
-  const s: StubState = { calendars: new Map(), events: new Map(), files: new Map(), sheets: new Map(), requests: [], revoked: new Set(), seq: 0 };
+  const s: StubState = {
+    calendars: new Map(),
+    events: new Map(),
+    files: new Map(),
+    sheets: new Map(),
+    requests: [],
+    revoked: new Set(),
+    seq: 0,
+  };
   s.calendars.set('primary', 'academy@stub.test');
   s.calendars.set('stub-teacher-cal@group.calendar.google.com', 'آيات البيان — E2E Teacher');
   const root = nextId(s, 'stubRoot');
-  s.files.set(root, { id: root, name: ROOT_NAME, mimeType: FOLDER, parents: ['root'], trashed: false, appProperties: {}, size: 0 });
+  s.files.set(root, {
+    id: root,
+    name: ROOT_NAME,
+    mimeType: FOLDER,
+    parents: ['root'],
+    trashed: false,
+    appProperties: {},
+    size: 0,
+  });
   const summary = nextId(s, 'stubSummary');
-  s.files.set(summary, { id: summary, name: SUMMARY_NAME, mimeType: SHEET, parents: [root], trashed: false, appProperties: {}, size: 0 });
+  s.files.set(summary, {
+    id: summary,
+    name: SUMMARY_NAME,
+    mimeType: SHEET,
+    parents: [root],
+    trashed: false,
+    appProperties: {},
+    size: 0,
+  });
   s.sheets.set(summary, [SUMMARY_HEADER]);
   return s;
 }
@@ -75,4 +115,7 @@ export async function readJson<T>(req: IncomingMessage): Promise<T> {
   return (raw ? JSON.parse(raw) : {}) as T;
 }
 
-export const notFound = (): Reply => [404, { error: { code: 404, status: 'NOT_FOUND', errors: [{ reason: 'notFound' }] } }];
+export const notFound = (): Reply => [
+  404,
+  { error: { code: 404, status: 'NOT_FOUND', errors: [{ reason: 'notFound' }] } },
+];

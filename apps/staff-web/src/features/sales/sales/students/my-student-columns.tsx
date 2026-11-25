@@ -68,7 +68,7 @@ export const myStudentColumns = col.columns([
     },
     meta: { className: 'max-sm:order-4' },
   }),
-  // docs/31 §2: the student's chat, one assistant seat (owner 2026-11-16 «… but only 1»).
+  // docs/31 §2: the student's chat, one assistant seat (only one).
   col.display({
     id: 'channel',
     header: () => t.studentChannel.open,

@@ -2,10 +2,11 @@ import type { FamilyPhone } from '@ab/shared';
 import type { LeadSource } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { guardianKeys } from '@/features/people/keys';
 
 // apps/api/src/modules/guardians (R-STU-02, R-STU-04): GET / PATCH /guardians/:id, admin only.
 
-export const GUARDIANS_KEY = ['guardians'] as const;
+export const GUARDIANS_KEY = guardianKeys.all;
 
 export type GuardianDetail = {
   id: string;
@@ -15,14 +16,14 @@ export type GuardianDetail = {
   tz: string;
   source: LeadSource | null;
   notes: string | null;
-  /** Every family number: the main one (is_primary) and at most one second (owner 2026-10-29); absent from an older API. */
+  /** Every family number: the main one (is_primary) and at most one second; older APIs omit it. */
   phones?: (FamilyPhone & { created_at: string })[];
 };
 
 /** Same key as the booking wizard's guardian row (same endpoint, every column). */
 export const guardianDetailQuery = (id: string) =>
   queryOptions({
-    queryKey: [...GUARDIANS_KEY, id],
+    queryKey: guardianKeys.detail(id),
     queryFn: () => apiFetch<GuardianDetail>(`/guardians/${id}`),
   });
 

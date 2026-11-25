@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { inboxLive, useInboxRealtime } from '@/features/messaging/inbox/api/live/live';
 
-// Owner 2026-10-27: close the connection when it is not needed, no leaks. Mocked client, no socket.
+// Close the connection when it is not needed, no leaks. Mocked client, no socket.
 
 type Status = (s: string) => void;
 const rt = vi.hoisted(() => {

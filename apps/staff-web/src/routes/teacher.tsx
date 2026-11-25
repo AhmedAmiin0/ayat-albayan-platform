@@ -4,7 +4,7 @@ import { requireTeacherPortal } from '@/features/people/auth';
 
 /**
  * The teacher portal; a code-made login sets its email + password first (docs/46 A4). A signed-out
- * teacher returns to the page she opened (a report link) after signing in (owner 2026-11-14).
+ * teacher returns to the page she opened (a report link) after signing in.
  */
 export const Route = createFileRoute('/teacher')({
   beforeLoad: ({ context, location }) =>

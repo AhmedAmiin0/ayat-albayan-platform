@@ -4,7 +4,7 @@ import { uploadSigned } from '@/lib/storage/upload-slot';
 import type { AttachmentCalls } from '@/features/reporting/reports/report-api';
 
 /**
- * The teacher's attachments on the no-login report page (owner 2026-11-06), bound to the link:
+ * The teacher's attachments on the no-login report page, bound to the link:
  * /public/teacher-report/:token/reports/:id/attachments/…, never the browser's session. The upload
  * goes to the signed slot the API hands out (Supabase or MinIO by its path, docs/45).
  */

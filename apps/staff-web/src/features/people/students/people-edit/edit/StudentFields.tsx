@@ -15,7 +15,7 @@ export interface StudentFieldsProps {
   onChange: (patch: Partial<StudentForm>) => void;
   /** Keys the last save refused. */
   invalid: readonly string[];
-  /** Notes are the admin's only (owner 2026-10-27). */
+  /** Notes are the admin's only. */
   notes: boolean;
 }
 

@@ -70,12 +70,12 @@ export const threadFileDownload = (phone: string, messageId: string) =>
     `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file?download=1`,
   );
 
-/** H3; `replyToMessageId` (owner 2026-10-25): the message of this chat it answers (400 reply_not_in_thread otherwise). */
+/** H3; `replyToMessageId`: the message of this chat it answers (else 400 reply_not_in_thread). */
 /** The row, and whether its request id replayed the FIRST one (TextAnswer). */
 export const sendText = ({ phone, ...body }: ThreadText & { phone: string }) =>
   apiSend<TextAnswer>('POST', `${threadPath(phone)}/text`, body);
 
-/** Meta 132018 (owner 2026-11-14): every body value normalised (free-text.ts) before it goes. */
+/** Meta 132018: every body value normalised (free-text.ts) before it goes. */
 export const sendTemplate = ({ phone, params, ...body }: ThreadTemplate & { phone: string }) =>
   apiSend<MessageView>('POST', `${threadPath(phone)}/template`, {
     ...body,

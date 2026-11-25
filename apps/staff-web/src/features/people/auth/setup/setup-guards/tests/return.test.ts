@@ -6,7 +6,7 @@ import { requireTeacherPortal } from '@/features/people/auth/setup/setup-guards/
 
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: { getSession: vi.fn() } } }));
 
-// owner 2026-11-14: the teacher's report link is the signed-in page; the guard carries it through
+// The teacher's report link is the signed-in page; the guard carries it through
 // /login (and /account-setup) as ?redirect= so she lands on it after signing in.
 
 const BACK = '/teacher/report/0b9f3c2e-1a2b-4c3d-8e4f-5a6b7c8d9e0f';

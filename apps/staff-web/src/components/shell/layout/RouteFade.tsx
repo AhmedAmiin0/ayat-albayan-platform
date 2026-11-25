@@ -13,7 +13,7 @@ export function prefersReducedMotion(): boolean {
 }
 
 /**
- * Fades the page content up on every navigation (owner, 2026-10-05: "add animations"). It replays
+ * Fades the page content up on every navigation. It replays
  * a Web Animation instead of re-keying, so the route below keeps its state, focus and scroll.
  * No motion under `prefers-reduced-motion: reduce`, and nothing where `Element.animate` is missing.
  */

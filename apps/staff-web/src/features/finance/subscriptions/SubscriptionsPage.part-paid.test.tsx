@@ -8,7 +8,7 @@ import { SubscriptionsPage } from './SubscriptionsPage';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
 
-// «Why is this unpaid» (owner 2026-10-28): the status cell says how much came in and what is left.
+// Why is this unpaid: the status cell says how much came in and what is left.
 function renderRows(rows: (typeof WEEKLY)[]) {
   apiFetch.mockImplementation(async (path: string) => ({ items: path.startsWith('/subscriptions') ? rows : [], total: rows.length, page: 1, pageSize: 20 }));
   render(

@@ -1,7 +1,7 @@
 import { NO_REPLY_RIGHTS, type ReplyLesson, type ReplyRights, type ThreadLesson } from '@ab/shared';
 import { createContext, useContext } from 'react';
 
-// What the reply notes of the open chat may offer (owner 2026-10-28): the family's next lessons, the
+// What the reply notes of the open chat may offer: the family's next lessons, the
 // viewer's rights, which replies' lessons she moved from their button, and how to open the move.
 
 export interface ReplyActions {

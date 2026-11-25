@@ -7,6 +7,7 @@ import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { teacherKeys, userKeys } from '@/features/people/keys';
 import {
   apiErrorMessage,
   emptyTeacherForm,
@@ -37,8 +38,8 @@ export function TeacherDialog({ teacher, onClose }: Props) {
         ? apiSend<Teacher>('PATCH', `/teachers/${teacher.id}`, payload)
         : apiSend<Teacher>('POST', '/teachers', payload),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['teachers'] });
-      await queryClient.invalidateQueries({ queryKey: ['users'] });
+      await queryClient.invalidateQueries({ queryKey: teacherKeys.all });
+      await queryClient.invalidateQueries({ queryKey: userKeys.all });
       onClose();
     },
     onError: (e) =>

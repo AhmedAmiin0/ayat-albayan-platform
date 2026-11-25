@@ -13,7 +13,7 @@ const s = t.templates.settings.lines;
 
 afterEach(() => apiSend.mockReset());
 
-// The template blocks read each line's formatted number from LinesCard's last good check (owner 2026-10-18).
+// The template blocks read each line's formatted number from LinesCard's last good check.
 describe('LinesCard shares its answer', () => {
   it('a good check lands in the shared lines-check cache; a failed one leaves it as it was', async () => {
     const views = [checked('notifications', '+1 555-000-1111'), checked('chat', null)];

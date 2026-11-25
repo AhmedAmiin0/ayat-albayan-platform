@@ -12,7 +12,7 @@ interface Props {
 }
 
 /**
- * A teacher page behind its academy switch (owner 2026-11-13): a skeleton until the settings
+ * A teacher page behind its academy switch: a skeleton until the settings
  * answer, the page when on, back to /teacher when off (a typed link, a bookmark, a notification),
  * a plain error when the settings cannot be read.
  */
