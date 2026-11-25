@@ -5,7 +5,7 @@ import { AppState } from 'react-native';
 import type { FakeBackend } from '@/test/fake-backend';
 import { GUARDIAN_PHONE } from './flow-backend';
 
-// The chats list follows a new message (owner 2026-10-30, «the chat list is not being updated»):
+// The chats list follows a new message («the chat list is not being updated»):
 // the realtime 'thread_changed' nudge and the poll, through the real tab trees (test/app-router).
 // Import after '@/test/app-router': it patches that file's Supabase stub with one fake channel.
 

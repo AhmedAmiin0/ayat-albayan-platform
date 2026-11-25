@@ -88,7 +88,7 @@ test('back on screen: the chat\'s tick lands in the cache at once, keeping the l
   await hook.rerender({ focused: true });
   expect(listed(client)?.last_status).toBe('delivered');
   expect(client.getQueryState(KEY)?.dataUpdatedAt).toBe(1000);
-  expect(refetch).toHaveBeenCalledTimes(1); // back from hidden: one read (owner 2026-11-07)
+  expect(refetch).toHaveBeenCalledTimes(1); // back from hidden: one read
 });
 
 test('back on screen it reads though no mark was set while hidden (a lost event)', async () => {

@@ -7,7 +7,7 @@ import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 const NOTICE_MS = 5000;
 
 /**
- * The chat's short notice over the composer (owner 2026-10-25): why a jump found no original, what a
+ * The chat's short notice over the composer: why a jump found no original, what a
  * forward did. Announced politely; one with details (each skipped chat and why) stays until ✕.
  */
 export function ChatNotice() {

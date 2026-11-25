@@ -19,7 +19,7 @@ interface VoiceInput {
 }
 
 /**
- * One chat's voice note (owner 2026-10-27): the state machine, the recorder and the send. The state
+ * One chat's voice note: the state machine, the recorder and the send. The state
  * is also kept in a ref so a gesture's events see each transition at once (no double stop or send).
  */
 export function useVoice({ phone, onError, busy }: VoiceInput) {
@@ -30,7 +30,7 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
     now.current = voiceReducer(now.current, e);
     setState(now.current);
   };
-  // One hook call per declarator: the React Compiler cached an array of these useRefs and skipped them on re-render.
+  // One hook per declarator: the React Compiler cached an array of these refs and skipped them.
   const down = useRef(false), startedAt = useRef(0), keeping = useRef(false), aborted = useRef(false);
   const [drag] = useState(() => new Animated.Value(0));
   const [hint] = useState(() => new Animated.Value(1));
@@ -54,7 +54,7 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
   });
   const send = async (take: Take) => {
     if (now.current.kind === 'sending') return;
-    // Another send of this chat is on its way: the recording waits in the bar (never lost, never twice).
+    // Another send of this chat is under way: the recording waits in the bar, never lost.
     if (busy) return go({ type: 'keep', take });
     go({ type: 'send', take });
     if ((now.current as VoiceState).kind !== 'sending') return; // cancelled or deleted meanwhile: never sent
@@ -96,8 +96,8 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
       if (result === 'blocked') setNote('blocked');
       return;
     }
-    // Lifted while the recorder was getting ready (a tap), or the touch was taken, the app left or a call
-    // started then (keep): never a live recording that a later tap on the mic would send (review of #328).
+    // Lifted while the recorder was getting ready (a tap), or the touch was taken, the app left or
+    // a call started (keep): never a live recording that a later tap on the mic would send.
     if (aborted.current || (!locked && !down.current)) {
       await rec.stop();
       go({ type: 'reset' });

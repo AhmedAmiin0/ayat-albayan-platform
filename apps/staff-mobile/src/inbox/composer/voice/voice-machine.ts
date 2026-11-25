@@ -1,4 +1,4 @@
-// A voice note's life in the composer (owner 2026-10-27, as WhatsApp), as a pure reducer:
+// A voice note's life in the composer (as WhatsApp), as a pure reducer:
 // idle → arming → holding → (cancelled | locked | sending) → stopped → sending → idle | failed.
 
 /** A release sooner than this is a tap: nothing is sent, the hint is shown. */

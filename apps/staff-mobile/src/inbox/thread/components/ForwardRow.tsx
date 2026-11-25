@@ -18,7 +18,7 @@ interface ForwardRowProps {
 
 /**
  * One chat in the forward picker, a 56pt checkbox row. Where a text cannot go (the text rule,
- * owner 2026-11-01) it says so but stays selectable: the server decides, and answers «skipped»
+ * see the composer) it says so but stays selectable: the server decides, and answers «skipped»
  * with the reason.
  */
 export const ForwardRow = memo(function ForwardRow({ thread: th, checked, disabled, onToggle }: ForwardRowProps) {
@@ -43,7 +43,7 @@ export const ForwardRow = memo(function ForwardRow({ thread: th, checked, disabl
         paddingHorizontal: 16,
         paddingVertical: 8,
         opacity: disabled ? 0.45 : 1,
-        // The list's inset card draws the fill and the rules (owner 2026-10-28: one container rule).
+        // The list's inset card draws the fill and the rules (one container rule).
         backgroundColor: pressed || checked ? color.lapisWash : 'transparent',
       })}
     >

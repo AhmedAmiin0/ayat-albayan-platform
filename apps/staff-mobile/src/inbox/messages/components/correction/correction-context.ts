@@ -1,7 +1,7 @@
 import { correctionsOf, type MessageView } from '@ab/shared';
 import { createContext, use } from 'react';
 
-/** A corrected bubble's link (owner 2026-11-07): its newest correction and the list's jump. */
+/** A corrected bubble's link: its newest correction and the list's jump. */
 interface CorrectionLink {
   to: string;
   onJump: (id: string) => void;

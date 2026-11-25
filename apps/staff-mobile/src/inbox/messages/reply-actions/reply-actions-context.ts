@@ -10,7 +10,7 @@ export interface ReplyMove {
   flow: ReplyFlow;
 }
 
-/** The open chat's reply-note actions (owner 2026-10-28); the default (no provider) offers none. */
+/** The open chat's reply-note actions; the default (no provider) offers none. */
 export interface ReplyActionsValue {
   phone: string;
   /** pages[0].lessons: the family's next open lessons. */

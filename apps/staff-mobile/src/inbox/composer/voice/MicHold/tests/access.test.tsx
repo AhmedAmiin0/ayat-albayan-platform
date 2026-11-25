@@ -4,7 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { hold, lift, openChat, rec, resetVoice, tick } from '@/inbox/composer/voice/voice-test-kit';
 import type * as mockVoiceTestKit from '@/inbox/composer/voice/voice-test-kit';
 
-// A screen reader's tap, the bin, leaving the app and a call (owner 2026-10-27; RTL).
+// A screen reader's tap, the bin, leaving the app and a call (RTL).
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 let mockInCall = false;

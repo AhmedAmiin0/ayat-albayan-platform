@@ -5,7 +5,7 @@ import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { InboxScreen } from '@/inbox/screens/InboxScreen';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
-// Owner 2026-11-07 (option 1): opening a chat whose 24 h window is closed sends NOTHING (an admin
+// Opening a chat whose 24 h window is closed sends NOTHING (an admin
 // opened one at night and the family got the welcome template). The starter goes on send only.
 // Fakes only.
 

@@ -6,7 +6,7 @@ import { Composer } from '@/inbox/composer/Composer';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { cachedThread, detail, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 
-// The paperclip's sheet (owner 2026-10-27): everything that left the bar, most used first.
+// The paperclip's sheet: everything that left the bar, most used first.
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: jest.fn(async (mockPath: string) =>

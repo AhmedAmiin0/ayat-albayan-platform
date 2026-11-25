@@ -6,7 +6,7 @@ import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 // The typing bar on an Arabic phone (jest.setup: RTL): the row is mirrored, the round button on the
-// physical left, the box on the right. Owner 2026-10-27: only the price tag and the paperclip stay in it.
+// physical left, the box on the right. Only the price tag and the paperclip stay in it.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

@@ -4,7 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { ChatFileError, pickChatFile, sendChatFile } from './send-file';
 import { PHONE } from '@/inbox/shared/thread-fixtures';
 
-// The pill's camera and a recorded voice note (owner 2026-10-27).
+// The pill's camera and a recorded voice note.
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

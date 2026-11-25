@@ -8,7 +8,7 @@ import { useInboxRealtime } from '@/inbox/thread/live/use-inbox-realtime/use-inb
 
 jest.mock('@/inbox/thread/live/list-marks', () => ({ changeLists: jest.fn() }));
 
-// Owner 2026-10-27: close the connection when it is not needed, no leaks. Mocked client, no socket.
+// Close the connection when it is not needed, no leaks. Mocked client, no socket.
 
 type Status = (s: string) => void;
 const mockRt = { joins: [] as { status?: Status }[], removed: [] as unknown[] };

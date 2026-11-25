@@ -84,7 +84,7 @@ export function MessageFile({ message: m, phone, onLongPress }: MessageFileProps
   if (teacher) return <MediaNote text={`${kind} · ${t.inbox.mediaNotAllowed}`} />;
   const box = photoBox(m.media_mime);
   if (box) return <PhotoPreview message={m} phone={phone} box={box} kind={kind} onLongPress={onLongPress} />;
-  // A GIF (owner 2026-11-01) plays inline, muted and looping, before any other video.
+  // A GIF plays inline, muted and looping, before any other video.
   const gif = isGifMessage(m) ? t.inbox.media.gif : null;
   if (gif) return <GifBubble message={m} phone={phone} kind={gif} onLongPress={onLongPress} />;
   const playable = isPlayableMime(m.media_mime);

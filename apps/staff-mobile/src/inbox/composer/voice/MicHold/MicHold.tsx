@@ -24,10 +24,10 @@ function useScreenReader(): boolean {
 }
 
 /**
- * Hold the microphone to record, lift to send (owner 2026-10-27, as WhatsApp): slide toward the
- * start (left in English, right in Arabic) past the line to cancel, slide up to lock. The responder
- * keeps the touch from the list's scroll and the swipe-to-reply (as Waveform). The system taking the
- * touch stops and keeps the recording. With a screen reader: a tap («activate») records locked.
+ * Hold the microphone to record, lift to send (as WhatsApp): slide toward the start (left in
+ * English, right in Arabic) past the line to cancel, slide up to lock. The responder keeps the
+ * touch from the list's scroll and the swipe-to-reply (as Waveform). The system taking the touch
+ * stops and keeps the recording. With a screen reader: a tap («activate») records locked.
  */
 export function MicHold({ voice, children }: { voice: Hold; children: ReactNode }) {
   const { width } = useWindowDimensions();

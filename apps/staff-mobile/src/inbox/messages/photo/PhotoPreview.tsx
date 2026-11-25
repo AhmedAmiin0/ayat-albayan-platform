@@ -17,7 +17,10 @@ interface PhotoPreviewProps {
   onLongPress?: () => void;
 }
 
-/** The photos already re-signed once after a failed load, by message: kept across a remount (scroll back). */
+/**
+ * The photos already re-signed once after a failed load, by message: kept across a remount (scroll
+ * back).
+ */
 const resigned = new Set<string>();
 
 function RetryLine({ onPress }: { onPress: () => void }) {
@@ -32,7 +35,7 @@ function RetryLine({ onPress }: { onPress: () => void }) {
 }
 
 /**
- * A photo inside the bubble (owner 2026-10-26), signed as the bubble renders: this supersedes W6's
+ * A photo inside the bubble, signed as the bubble renders: this supersedes W6's
  * «signed only on the tap» for photos only. The box is fixed (the inverted list never jumps when it
  * loads); the cached answer keeps a 410 from asking again on every scroll back (threadFileQuery).
  * An image that fails to load is re-signed once (an expired URL), then says so with a retry.

@@ -5,7 +5,7 @@ import { renderWithQuery } from '@/test/query';
 import { MessageFile } from '@/inbox/messages/components/MessageFile';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 
-// A GIF bubble (owner 2026-11-01): it plays inline, muted and looping, as WhatsApp.
+// A GIF bubble: it plays inline, muted and looping, as WhatsApp.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

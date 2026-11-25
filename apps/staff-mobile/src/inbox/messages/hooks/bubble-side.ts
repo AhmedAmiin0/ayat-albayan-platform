@@ -6,7 +6,7 @@ import type { ViewStyle } from 'react-native';
 const BARE: ViewStyle = { borderWidth: 0, backgroundColor: 'transparent', paddingHorizontal: 0 };
 
 /**
- * A sticker has no bubble around it, as WhatsApp (owner 2026-11-01): its time, ticks and
+ * A sticker has no bubble around it, as WhatsApp: its time, ticks and
  * reactions stay. A teacher, whom the API refuses the file, keeps the bubble and its label.
  */
 export const stickerBubble = (

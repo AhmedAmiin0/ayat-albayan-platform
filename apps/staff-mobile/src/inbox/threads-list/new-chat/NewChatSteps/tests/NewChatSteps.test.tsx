@@ -38,7 +38,7 @@ beforeEach(() => {
   jest.mocked(router.push).mockReset();
 });
 
-// Owner 2026-11-06: «manage new chat like kapso»: number → template → params → send, in one sheet.
+// New chat like Kapso: number → template → params → send, in one sheet.
 test('a new number: its templates, the params, «أرسل» sends once and opens the new chat', async () => {
   serve(EMPTY);
   mockApiSend.mockResolvedValue(ROW);

@@ -13,7 +13,7 @@ interface ChatHeaderProps {
   /** The contact's initials circle, beside the chevron (decorative: the title reads the name). */
   avatar?: ReactNode;
   trailing?: ReactNode;
-  /** Tapping the name or number: the student's details (owner 2026-10-29). Unset = not tappable. */
+  /** Tapping the name or number: the student's details. Unset = not tappable. */
   onTitlePress?: () => void;
 }
 

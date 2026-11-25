@@ -41,7 +41,7 @@ function GifPlayer({ uri, kind }: { uri: string; kind: string }) {
 }
 
 /**
- * A GIF bubble (owner 2026-11-01): one staff sent from GIPHY (or a video the webhook flags as
+ * A GIF bubble: one staff sent from GIPHY (or a video the webhook flags as
  * animated), signed as the bubble renders like a photo, in the video's fixed tile so the inverted
  * list never jumps. A long press opens the bubble's menu.
  */

@@ -31,7 +31,7 @@ const b = message({ id: 'b', direction: 'outbound', body: 'وعليكم السل
 
 beforeEach(() => mockDraws.clear());
 
-// Owner 2026-10-27, «Avoid rerenders»: the cache keeps unchanged messages the same objects.
+// Avoid rerenders: the cache keeps unchanged messages the same objects.
 test('a tick change on one message redraws only that bubble', async () => {
   const view = await renderWithQuery(<MessageList phone={PHONE} query={stub([a, b])} />);
   await screen.findByText('وعليكم السلام');

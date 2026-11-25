@@ -10,7 +10,7 @@ import { cachedThread, detail, inbound, message, PHONE, thread } from '@/inbox/s
 import { LIT_MS } from '@/inbox/thread/hooks/use-jump';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
-// A bubble that answers another shows its quote on top; a tap goes to the original (owner 2026-10-25).
+// A bubble that answers another shows its quote on top; a tap goes to the original.
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),

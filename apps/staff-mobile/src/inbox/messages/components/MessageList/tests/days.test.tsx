@@ -9,7 +9,7 @@ import { clock } from '@/inbox/messages/hooks/message-text';
 import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
-// Owner 2026-10-27: a chip over each day's first message, a floating day while scrolling, and the
+// A chip over each day's first message, a floating day while scrolling, and the
 // bubbles' times without the date.
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

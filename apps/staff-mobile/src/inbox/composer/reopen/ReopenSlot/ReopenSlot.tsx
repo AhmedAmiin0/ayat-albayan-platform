@@ -24,7 +24,7 @@ interface ReopenSlotProps {
 const asReopen = (out: Outgoing): Outgoing =>
   out.kind === 'template' ? { ...out, reopen: true } : out;
 
-/** academy_message's free-text slot, filled with the draft (owner 2026-11-14). */
+/** academy_message's free-text slot, filled with the draft. */
 const SLOT = freeTextSlot(MESSAGE_TEMPLATE);
 const carried = (draft: string) => (SLOT ? { [SLOT]: draft } : {});
 /** academy_message went (another pick leaves the draft in the box). */

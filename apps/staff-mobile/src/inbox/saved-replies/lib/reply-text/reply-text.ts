@@ -1,7 +1,10 @@
 import type { SavedReply, SavedReplyScope } from '@ab/shared';
 import { matchesQuery } from '@ab/core';
 
-/** One tab's replies whose title or body holds the search (Arabic letter variants and case ignored), in the served order. */
+/**
+ * One tab's replies whose title or body holds the search (Arabic letter variants and case ignored),
+ * in the served order.
+ */
 export function filterReplies(list: readonly SavedReply[], input: { scope: SavedReplyScope; query: string }): SavedReply[] {
   return list.filter((r) => r.scope === input.scope && matchesQuery(`${r.title} ${r.body}`, input.query));
 }
@@ -27,7 +30,7 @@ export function filledText(input: { text: string; reply: string; slash: number |
 }
 
 /**
- * What the docked list searches (owner 2026-10-26, as WhatsApp): the text after the open «/» at
+ * What the docked list searches (as WhatsApp): the text after the open «/» at
  * `slash`; null once that «/» is deleted (or sent) or the search runs onto a new line.
  */
 export function slashSearch(text: string, slash: number | null): string | null {

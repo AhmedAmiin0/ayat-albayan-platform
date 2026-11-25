@@ -9,7 +9,9 @@ import { threadPath } from '@/inbox/thread/hooks/thread-cache';
 export const threadFilePath = (phone: string, messageId: string): string =>
   `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file`;
 
-/** The API signs for an hour (SIGNED_URL_SECONDS.ui); a URL is re-signed 5 minutes before it ends. */
+/**
+ * The API signs for an hour (SIGNED_URL_SECONDS.ui); a URL is re-signed 5 minutes before it ends.
+ */
 const MARGIN_MS = 5 * 60_000;
 const SIGNED_MS = 60 * 60_000;
 
@@ -37,9 +39,9 @@ const SIGNED_QUERY = {
 };
 
 /**
- * The file of one bubble (owner 2026-10-19 #1). Not under ['threads'] (as the web): a send or an
- * opened chat invalidates those, and that would sign the file again mid-play. A photo thumbnail
- * mounts it on every scroll back: an hour of cache and no retry on mount keep a 410 from asking again.
+ * The file of one bubble. Not under ['threads'] (as the web): a send or an opened chat invalidates
+ * those, and that would sign the file again mid-play. A photo thumbnail mounts it on every scroll
+ * back: an hour of cache and no retry on mount keep a 410 from asking again.
  */
 export const threadFileQuery = (phone: string, messageId: string) =>
   queryOptions({
@@ -60,11 +62,14 @@ export function useThreadFile(phone: string, messageId: string): () => Promise<T
 export const fetchDownload = (phone: string, messageId: string): Promise<ThreadFile> =>
   apiFetch<ThreadFile>(`${threadFilePath(phone, messageId)}?download=1`);
 
-/** GET /threads/:phone/messages/:id/pdf/:page (owner 2026-10-29): one page of a chat PDF as a signed JPEG. */
+/** GET /threads/:phone/messages/:id/pdf/:page: one page of a chat PDF as a signed JPEG. */
 export const pdfPagePath = (phone: string, messageId: string, page: number): string =>
   `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/pdf/${page}`;
 
-/** A 4xx: an answer that ends there (the PDF bubble then shows today's opener or a note, never a retry). */
+/**
+ * A 4xx: an answer that ends there (the PDF bubble then shows today's opener or a note, never a
+ * retry).
+ */
 export const finalError = (e: unknown): boolean => e instanceof ApiError && e.status >= 400 && e.status < 500;
 
 /**

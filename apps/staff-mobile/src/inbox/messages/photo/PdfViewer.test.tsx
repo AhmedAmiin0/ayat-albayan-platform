@@ -13,7 +13,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
-// The PDF viewer (owner 2026-10-29): every page in the app, asked as the list nears it.
+// The PDF viewer: every page in the app, asked as the list nears it.
 const pageOf = (n: number, total = 12) => t.inbox.pdf.pageOf.replace('{n}', String(n)).replace('{total}', String(total));
 const serve = (pages = 12, broken = 0) =>
   mockApiFetch.mockImplementation(async (path: string) => {

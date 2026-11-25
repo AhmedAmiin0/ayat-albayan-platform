@@ -19,7 +19,7 @@ import { heldLine } from '@/inbox/messages/hooks/held-line';
 
 type MediaKind = keyof typeof t.inbox.media;
 
-/** A deleted message, the ad's welcome, an unsupported echo (owner 2026-10-30, marker-notes). */
+/** A deleted message, the ad's welcome, an unsupported echo (marker-notes). */
 const NOTES: NoteWords = {
   deleted: t.inbox.deletedMessage,
   adWelcome: t.inbox.adWelcome,

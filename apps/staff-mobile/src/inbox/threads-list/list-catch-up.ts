@@ -64,8 +64,8 @@ const justRead = (client: QueryClient, queryKey: QueryKey): boolean =>
  * Back on screen (the chat closed): the ticks the chat merged show at once, and a list that was
  * hidden reads again once. A change recorded while hidden (a send, an opened chat, an event:
  * list-marks.ts, docs/43 AU2) is not enough on its own: an event for another chat can be lost under
- * the chat (a channel rejoin gap, a quietly dead socket; owner 2026-11-07 «i go back but the chat
- * list is not updated»), so coming back from hidden always reads, unless the list was just read.
+ * the chat (a channel rejoin gap, a quietly dead socket, so the list
+ * looked stale), so coming back from hidden always reads, unless the list was just read.
  * The mark is a time, not TanStack's isInvalidated, so a read that lands or fails meanwhile and the
  * lift above never clear it. A first mount on screen keeps the mark-only gate (no extra read).
  */

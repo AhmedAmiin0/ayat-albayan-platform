@@ -12,7 +12,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-// Invented rows (owner 2026-11-06: «remove the tags from the chat list»): a lead nobody answered,
+// Invented rows (the chat list shows no tags): a lead nobody answered,
 // a guardian from an ad who owes money, and a converted lead.
 const noReply: ThreadView = { ...thread, lead_status: 'no_reply', unread_count: 2 };
 const guardian: ThreadView = {

@@ -38,7 +38,7 @@ test('list → lead thread → reply → back: no row tags, the reply is sent on
 
   await fireEvent.press(screen.getByRole('button', { name: t.common.back }));
   expect(app.pathname()).toBe('/inbox');
-  // The list follows the send with no pull to refresh (owner 2026-10-27).
+  // The list follows the send with no pull to refresh.
   expect(await within(screen.getByRole('button', { name: /هدى سالم/ })).findByText(/أهلًا يا هدى/)).toBeTruthy();
 });
 

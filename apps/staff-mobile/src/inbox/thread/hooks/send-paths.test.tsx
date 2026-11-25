@@ -10,7 +10,7 @@ import { useMessageAction, useSendMessage } from './use-thread';
 import { ApiError } from '@ab/client-core';
 
 // Every way a chat sends (text, template, quote, file, saved reply, forward, retry) goes
-// through the inbox refresh (owner 2026-10-27), and the ones that know their row touch the list. A
+// through the inbox refresh, and the ones that know their row touch the list. A
 // send into one chat refreshes its lists and its newest page only (refreshSent, docs/43 AU4).
 
 const mockApiSend = jest.fn();

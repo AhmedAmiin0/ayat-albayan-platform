@@ -2,7 +2,7 @@ import { t } from '@ab/mobile-kit';
 import { dayLabel, opensDay, rowTime } from './day-label';
 import { clock, deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 
-// Day separators as WhatsApp (owner 2026-10-27), in the device's zone, as `stamp` counts days.
+// Day separators as WhatsApp, in the device's zone, as `stamp` counts days.
 const now = new Date('2026-10-27T09:00:00Z'); // Tuesday, 12:00 in Riyadh
 const RIYADH = { now, tz: 'Asia/Riyadh' };
 

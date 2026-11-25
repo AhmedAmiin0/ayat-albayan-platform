@@ -13,7 +13,7 @@ import { useQuoteSend, useQuoteSheet } from '@/inbox/composer/quote/use-quote-sh
 
 interface QuoteSheetProps {
   phone: string;
-  /** A text may go (the composer's rule, owner 2026-11-01): no → send and edit off, copy stays. */
+  /** A text may go (the composer's rule): no → send and edit off, copy stays. */
   open: boolean;
   onClose: () => void;
 }

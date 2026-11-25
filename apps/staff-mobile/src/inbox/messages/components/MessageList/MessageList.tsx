@@ -28,8 +28,8 @@ export const AT_NEWEST = 48;
 export const OLDER_THRESHOLD = 0.4;
 
 /**
- * Reaching the top loads the next older page by itself, as WhatsApp (owner 2026-10-27): one at a
- * time (the list can report the end twice before isFetchingNextPage turns true), only while there is one.
+ * Reaching the top loads the next older page by itself, as WhatsApp: one at a time (the list can
+ * report the end twice before isFetchingNextPage turns true), only while there is one.
  */
 function useOlder(query: ThreadQuery) {
   const asking = useRef(false);
@@ -41,24 +41,25 @@ function useOlder(query: ThreadQuery) {
 }
 
 /**
- * Inverted, newest first: offset 0 is exactly the newest message, so a chat opens on it and keeps it
- * in sight when the keyboard shrinks the list, with no guessed scroll. Older pages load at the top (the
- * footer of an inverted list, a spinner meanwhile); they grow the content away from offset 0, so the
- * bubbles on screen stay put. A day chip opens each day; while scrolling, the topmost day floats on top.
- * A new message follows in only near the newest; one she sends always: her optimistic row, the only
- * outbound row with no sender line (a job's or a colleague's has one).
- * ponytail: a file goes up with no optimistic row, so it follows in only near the newest; key the send
- * mutations and read useMutationState if it must always follow.
+ * Inverted, newest first: offset 0 is exactly the newest message, so a chat opens on it and keeps
+ * it in sight when the keyboard shrinks the list, with no guessed scroll. Older pages load at the
+ * top (the footer of an inverted list, a spinner meanwhile); they grow the content away from offset
+ * 0, so the bubbles on screen stay put. A day chip opens each day; while scrolling, the topmost day
+ * floats on top. A new message follows in only near the newest; one she sends always: her
+ * optimistic row, the only outbound row with no sender line (a job's or a colleague's has one).
+ * ponytail: a file goes up with no optimistic row, so it follows in only near the newest; key the
+ * send mutations and read useMutationState if it must always follow.
  */
 export function MessageList({ phone, query: live }: { phone: string; query: ThreadQuery }) {
   const { color } = useTheme();
   // `?msg=` (a search hit): the live chat, or the window around the hit (docs/37).
   const { query, anchored, target, to } = useThreadLog(phone, live);
   const list = useRef<FlatList<LogRow>>(null);
-  // Her own pull only: a background refetch (open, send, push) must not spin over the newest bubble.
+  // Her own pull only: a background refetch (open, send, push) must not spin over the newest
+  // bubble.
   const [pulling, setPulling] = useState(false);
-  // Calls merged in by time (docs/28 §5); none while calls are off. One array per change: a new one each
-  // render would reset the list's viewability (the floating day).
+  // Calls merged in by time (docs/28 §5); none while calls are off. One array per change: a new one
+  // each render would reset the list's viewability (the floating day).
   const calls = useThreadCalls(phone);
   const callBack = useCallBack({ phone, thread: query.data?.pages[0]?.thread ?? null });
   const more = query.hasNextPage;
@@ -99,7 +100,7 @@ export function MessageList({ phone, query: live }: { phone: string; query: Thre
   // Today's key redraws the day chips at midnight even without a new message.
   const today = chatDayKey(new Date(), deviceTimeZone());
   const top = useTopDay(rows, query.hasNextPage);
-  // The rows seen on screen: a PDF asks its page 1 only then (owner 2026-11-01), never a burst.
+  // The rows seen on screen: a PDF asks its page 1 only then, never a burst.
   const seen = useSeenRows<LogRow>(top.list.onViewableItemsChanged);
   return (
     <SeenRowsContext value={seen.rows}>
@@ -131,7 +132,8 @@ export function MessageList({ phone, query: live }: { phone: string; query: Thre
                 <ActivityIndicator testID="older-loading" accessibilityLabel={t.common.loading} color={color.ink2} style={{ padding: 12 }} />
               ) : null
             }
-            // The list clones its empty cell to flip it upright; EmptyState drops that style, a View keeps it.
+            // The list clones its empty cell to flip it upright; EmptyState drops that style, a
+            // View keeps it.
             ListEmptyComponent={
               <View testID="message-empty">
                 <EmptyState title={t.inbox.empty} />

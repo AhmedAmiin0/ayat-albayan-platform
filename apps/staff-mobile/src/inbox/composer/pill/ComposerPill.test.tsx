@@ -8,7 +8,8 @@ import { cachedThread, detail, PHONE, thread } from '@/inbox/shared/thread-fixtu
 import { type ThreadMode, ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { clearComposerDrafts } from '@/inbox/composer/draft-store';
 
-// The pill: the emoji in the bar as WhatsApp (owner 2026-10-29; no camera since 2026-11-01), the paperclip's sheet's tiles, and the teacher's own pill.
+// The pill: the emoji in the bar as WhatsApp (no camera), the paperclip's sheet's tiles, and the
+// teacher's own pill.
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

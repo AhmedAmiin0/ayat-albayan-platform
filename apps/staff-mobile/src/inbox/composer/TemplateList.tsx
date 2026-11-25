@@ -22,7 +22,7 @@ interface TemplateListProps {
 
 export function TemplateList({ templates, teacher, onPick, only }: TemplateListProps) {
   // Without templates.manage or templates.send_all, and always for sales, an assistant or a
-  // teacher, only the admin's allow-list (owner 2026-10-12 / 10-15 / 10-18): none ticked (or not
+  // teacher, only the admin's allow-list: none ticked (or not
   // imported yet) is not «nothing approved».
   const restricted = !useSendsAllTemplates();
   const audience = (templates.data ?? []).filter((row) => forAudience(row.key, teacher));

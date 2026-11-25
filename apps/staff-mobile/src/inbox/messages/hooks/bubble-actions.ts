@@ -24,13 +24,16 @@ export interface BubbleActions {
   a11y: BubbleA11y;
 }
 
-/** The held element's top in the window (the touch's pageY less its offset in it); none without a real touch. */
+/**
+ * The held element's top in the window (the touch's pageY less its offset in it); none without a
+ * real touch.
+ */
 export function holdTop(e?: GestureResponderEvent): number | undefined {
   const n = e?.nativeEvent;
   return typeof n?.pageY === 'number' && typeof n.locationY === 'number' ? n.pageY - n.locationY : undefined;
 }
 
-/** What one bubble offers (owner 2026-10-25). Off outside a chat screen (no ChatActionsProvider). */
+/** What one bubble offers. Off outside a chat screen (no ChatActionsProvider). */
 export function useBubbleActions(m: MessageView): BubbleActions {
   const { enabled, canSend, setReply, openMenu, openForward, reactable } = useBubbleChatActions();
   const rights = useHideRights();

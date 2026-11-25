@@ -32,7 +32,7 @@ interface Live extends Loaded {
 const chipGuess = (fontScale: number) => type.lineHeight(type.size['2xs']) * fontScale + CHIP_BOX;
 
 /**
- * Whether an inline separator covers the floating day's place (chipCovered, owner 2026-10-27): the
+ * Whether an inline separator covers the floating day's place (chipCovered): the
  * cells' frames (DayCell), the rows on screen and the list's offset and length live in a ref,
  * checked on each scroll, layout, viewability and rows change; a re-render only when it flips.
  * `viewable` also gives the topmost row's day (the floating label).

@@ -3,7 +3,7 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { askMic, hold, lift, moveTo, openChat, perms, rec, replyToAsked, resetVoice, tick, voiceRow } from '@/inbox/composer/voice/voice-test-kit';
 import type * as mockVoiceTestKit from '@/inbox/composer/voice/voice-test-kit';
 
-// Hold to record, lift to send (owner 2026-10-27) on an Arabic phone (jest.setup: RTL). No real
+// Hold to record, lift to send on an Arabic phone (jest.setup: RTL). No real
 // recorder, upload or WhatsApp: expo-audio, the API and Storage are fakes.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

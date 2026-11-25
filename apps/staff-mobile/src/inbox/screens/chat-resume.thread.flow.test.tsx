@@ -15,7 +15,7 @@ import {
   stallReads,
 } from '@/test/app-resume';
 
-// Owner 2026-11-05: the open chat (or one a push tap opens) showed the saved copy, not the new
+// The open chat (or one a push tap opens) showed the saved copy, not the new
 // message. A chat read stuck on a dead connection was joined by every refresh and by a new mount.
 
 const NEW = 'وصلت رسالتي الجديدة';

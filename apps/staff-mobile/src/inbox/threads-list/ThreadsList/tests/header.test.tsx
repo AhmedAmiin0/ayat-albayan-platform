@@ -13,7 +13,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-// Owner 2026-10-27 («This topbar takes alot of space»): three short rows, 8pt apart, then the chats.
+// Three short rows, 8pt apart, then the chats.
 beforeEach(() => mockApiFetch.mockResolvedValue({ items: [thread], total: 1, page: 1, pageSize: 25 }));
 
 test('RTL: «المحادثات» as a one-line h2 header, a compact pill search, the blocks 8pt apart', async () => {

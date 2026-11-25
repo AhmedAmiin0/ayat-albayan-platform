@@ -1,7 +1,7 @@
 import { t } from '@ab/mobile-kit';
 import { errorLine, queuedLine } from '@/inbox/messages/hooks/message-text/message-text';
 
-// Owner 2026-11-03: a text held behind the reopen template, as the web says it.
+// A text held behind the reopen template, as the web says it.
 
 const OPTS = { now: new Date('2026-11-03T09:00:00Z'), tz: 'Asia/Riyadh', cycle: '24' as const };
 

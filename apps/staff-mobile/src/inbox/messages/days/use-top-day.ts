@@ -12,11 +12,11 @@ const FADE_MS = 200;
 type Viewable = { viewableItems: ViewToken<DayRow>[] };
 
 /**
- * The floating day chip (owner 2026-10-27, as WhatsApp): while she scrolls, the day of the topmost
- * message on screen (the highest index of the inverted list); it fades out a moment after the scroll
- * stops. With Reduce Motion it only shows and hides. Never over an inline separator (useDayBand): it
- * hides while one is in its band, and comes back with the new day once it has scrolled past; never
- * beside the inline chip of its own day. `label` is null while hidden. `more`: an older page exists.
+ * The floating day chip (as WhatsApp): while she scrolls, the day of the topmost message on screen
+ * (the highest index of the inverted list); it fades out a moment after the scroll stops. With
+ * Reduce Motion it only shows and hides. Never over an inline separator (useDayBand): it hides
+ * while one is in its band, and comes back with the new day once it has scrolled past; never beside
+ * the inline chip of its own day. `label` is null while hidden. `more`: an older page exists.
  */
 export function useTopDay(rows: readonly DayRow[], more: boolean) {
   const still = useA11yPref('reduceMotion');

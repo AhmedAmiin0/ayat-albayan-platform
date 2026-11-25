@@ -7,7 +7,7 @@ interface IconProps {
   size?: number;
 }
 
-// The leading icon of a template button, as WhatsApp draws them (owner 2026-10-28). Decorative: the
+// The leading icon of a template button, as WhatsApp draws them. Decorative: the
 // row names itself. The reply arrow mirrors in RTL (chat-icons); the link and the phone never do.
 
 /** A URL button: a box with an arrow leaving it. */

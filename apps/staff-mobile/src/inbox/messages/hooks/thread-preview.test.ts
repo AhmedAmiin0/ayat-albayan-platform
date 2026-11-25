@@ -2,7 +2,7 @@ import { t } from '@ab/mobile-kit';
 import { threadPreview } from './message-text';
 import { thread } from '@/inbox/shared/thread-fixtures';
 
-// A chats list row's last line (R-MOB-02); Meta's `unsupported` has its own words (owner 2026-10-27).
+// A chats list row's last line (R-MOB-02); Meta's `unsupported` has its own words.
 const empty = { ...thread, last_direction: 'inbound' as const, last_body: null, last_media_mime: null, last_template_key: null };
 
 test('a last message whose content never arrived: «رسالة لم يصل محتواها», not the generic line', () => {

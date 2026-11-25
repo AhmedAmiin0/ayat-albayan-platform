@@ -6,7 +6,7 @@ import { renderWithQuery } from '@/test/query';
 import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
 import { delivered, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 
-// A template drawn like WhatsApp (owner 2026-10-28): header, body, grey footer, buttons under it.
+// A template drawn like WhatsApp: header, body, grey footer, buttons under it.
 
 const s = t.inbox.templateBubble;
 const block = (over: Partial<MessageTemplateBlock> = {}): MessageTemplateBlock => ({ header: null, footer: null, buttons: [], ...over });

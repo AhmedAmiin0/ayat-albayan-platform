@@ -14,7 +14,7 @@ export interface BubbleOffers {
   copy: boolean;
   forward: boolean;
   download: boolean;
-  /** The reaction row (owner 2026-10-27): ChatActions.reactable. */
+  /** The reaction row: ChatActions.reactable. */
   react: boolean;
   /** Staff only; never sent to WhatsApp. */
   hide: boolean;

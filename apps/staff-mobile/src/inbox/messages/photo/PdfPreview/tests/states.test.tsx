@@ -13,7 +13,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
-// The PDF card's states (review 2026-10-30): every PDF shows page 1 as WhatsApp (owner 2026-11-01),
+// The PDF card's states (review 2026-10-30): every PDF shows page 1 as WhatsApp,
 // a spinner until the image itself loads, the page's own shape, and a retry that keeps the card.
 const serve = (first: () => Promise<unknown>) =>
   mockApiFetch.mockImplementation(async (path: string) => (path === pdfPath(1) ? first() : pdfPage(Number(path.split('/').pop()))));

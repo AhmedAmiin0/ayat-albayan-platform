@@ -55,7 +55,9 @@ test('a thumbnail remount never asks again after a 410: no retry on mount, an ho
   expect(q.gcTime).toBe(60 * 60_000);
 });
 
-/** A refetch or retry option, as TanStack resolves it (for one query, or a failure count and error). */
+/**
+ * A refetch or retry option, as TanStack resolves it (for one query, or a failure count and error).
+ */
 const resolve = (option: unknown, ...args: unknown[]): unknown => (typeof option === 'function' ? Reflect.apply(option, undefined, args) : option);
 
 test('a failure is not asked again on mount, focus or reconnect; a success follows the defaults', async () => {
@@ -73,7 +75,7 @@ test('a failure is not asked again on mount, focus or reconnect; a success follo
   expect(resolve(q.refetchOnWindowFocus, query)).toBe(true);
 });
 
-// A chat PDF's pages (owner 2026-10-29).
+// A chat PDF's pages.
 test('a PDF page: its own key and path, off the disk cache, an hour of cache', () => {
   const q = pdfPageQuery(PHONE, 'm1', 3);
   expect(q.queryKey).toEqual(['thread-pdf', PHONE, 'm1', 3]);

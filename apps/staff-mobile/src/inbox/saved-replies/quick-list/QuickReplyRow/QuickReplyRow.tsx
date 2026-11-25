@@ -14,10 +14,10 @@ interface QuickReplyRowProps {
 export const slashTitle = (title: string) => isolate(`/${title}`);
 
 /**
- * One quick reply as WhatsApp Business lists it (owner 2026-10-26): «/title» bold in the accent,
- * the text under it in the secondary ink on at most two lines, a paperclip when a file goes with
- * it; ≥ 44pt, a hairline between rows, a wash while pressed. Each line aligns by its own language
- * (HighlightText through ContentText): English on the left in Arabic, Arabic on the right in English.
+ * One quick reply as WhatsApp Business lists it: «/title» bold in the accent, the text under it in
+ * the secondary ink on at most two lines, a paperclip when a file goes with it; ≥ 44pt, a hairline
+ * between rows, a wash while pressed. Each line aligns by its own language (HighlightText through
+ * ContentText): English on the left in Arabic, Arabic on the right in English.
  */
 export function QuickReplyRow({ reply, query, onPress }: QuickReplyRowProps) {
   const { color } = useTheme();
