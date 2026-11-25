@@ -84,7 +84,7 @@ Defaults taken:
 
 **Proof.** The `repoConfig` and `lintDirs` unit tests; the effective oxlint config (the JSON the binary receives) byte-identical on the base and the head, dumped from one checkout in a cloud session; `.oxfmtrc.json` unchanged; `guard:loosened` silent; lint green. The CI format check stays off until the format sweep reaches zero (docs/31b §9).
 
-## PR 5 · Short kit public api (`refactor/kits-solid`)
+## PR 5 · Short kit public api (`lane/kits-solid`)
 
 **Scope.** Audit `packages/mobile-kit` (31 exports) and `packages/web-kit` (23 exports) first, then:
 
@@ -100,12 +100,14 @@ Defaults taken:
 
 One PR at a time; each starts from the develop that holds the one before it.
 
+Lane branches are named `lane/<name>`, never `refactor/<name>`: CI's `refactor` job runs the pure-move gate on every `refactor/*` head, so a branch that changes code cannot pass under that prefix (docs/52 D7).
+
 | # | Branch | Title | Waits for | CI proves |
 |---|---|---|---|---|
 | 1 | `build/api-bundle` | `build(api): bundle the api into one file for the image` | #937 | the api boots from the bundle: app.module smoke test, job «api image» (`/health`, PDF sandbox, report PDF), e2e |
 | 2 | `build/jit-packages` | `build(repo): ship packages as typescript source` | 1 | typecheck, lint, every workspace's tests, the mobile bundles, the api image and e2e with packages as source and one-line package tsconfigs |
 | 3 | `build/testing-package` | `build(repo): add the shared testing package and one vitest base` | 2 | every workspace's test count unchanged through the one base; `guard:packages` shows only the new layer |
 | 4 | `build/oxc-base` | `build(repo): one oxlint and oxfmt base in @ab/config` | 3 | the effective lint and format config is identical; `guard:loosened` silent; lint green |
-| 5 | `refactor/kits-solid` | `refactor(kits): give mobile-kit and web-kit a short public api` | 4 | every app import resolves; the mobile bundles and startup imports; e2e |
+| 5 | `lane/kits-solid` | `refactor(kits): give mobile-kit and web-kit a short public api` | 4 | every app import resolves; the mobile bundles and startup imports; e2e |
 
 The docs/62 and docs/63 lanes start after PR 5 merges.
