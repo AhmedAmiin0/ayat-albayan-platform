@@ -6,7 +6,13 @@ import type { IncomingMessage } from 'node:http';
 import { ERR } from './providers/meta.ts';
 import { readBytes, type Reply, type Route, type StubState } from './state.ts';
 
-const FILE_TYPES = new Set(['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'video/mp4']);
+const FILE_TYPES = new Set([
+  'application/pdf',
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'video/mp4',
+]);
 const MAX_BYTES = 100 * 1024 * 1024;
 
 const query = (req: IncomingMessage) => new URL(req.url ?? '/', 'http://stub').searchParams;
@@ -30,7 +36,8 @@ async function upload(req: IncomingMessage, id: string, s: StubState): Promise<R
   const session = s.uploads.get(id);
   if (session?.sig !== query(req).get('sig')) return [400, ERR.noObject(`upload:${id}`)];
   if (!/^OAuth \S+/.test(req.headers.authorization ?? '')) return [401, ERR.auth()];
-  if (req.headers['file_offset'] !== '0') return [400, ERR.invalid('file_offset must be 0 for a new upload')];
+  if (req.headers.file_offset !== '0')
+    return [400, ERR.invalid('file_offset must be 0 for a new upload')];
   const bytes = await readBytes(req);
   if (bytes.length !== session.length) {
     return [400, ERR.invalid(`file_length was ${session.length} bytes, got ${bytes.length}`)];
