@@ -2,7 +2,7 @@ import type { CourseCardPackage } from '@ab/shared';
 import { owedFor, type StudentBalanceView } from '@ab/money';
 
 /**
- * The card's package (owner 2026-11-17): its status, lessons used and left, what was paid of what
+ * The card's package: its status, lessons used and left, what was paid of what
  * it is owed for and its projected end, from the student's balance; null when the balance does
  * not list it (or no package).
  */

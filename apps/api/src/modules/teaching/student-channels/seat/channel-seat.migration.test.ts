@@ -3,8 +3,8 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Owner 2026-11-16 «… but only 1» and «who brought the student have the priority»: read as text,
-// no database in unit tests.
+// One assistant per chat seat, the one who brought the student first: read as text, no database
+// in unit tests.
 const strip = (sql: string) => sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 const sql = strip(readFileSync(join(MIGRATIONS_DIR, '20261117090200_channel_seat.sql'), 'utf8'));
 /** The SQL between a function's two `$$` (its body). */

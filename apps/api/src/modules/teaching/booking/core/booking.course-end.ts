@@ -27,10 +27,10 @@ export function plannedCourseStarts({ rule, now, lessonsTotal }: CourseEndInput)
 }
 
 /**
- * The assistant's course ends on its N-th lesson (owner 2026-10-18 decision 1): the local date (in the
- * family's tz) of the N-th earliest occurrence from now over every time group, so lessons that already
- * passed in the start week are not counted (PR #113 review m5). null when a picked day has no lesson or
- * nothing is counted.
+ * The assistant's course ends on its N-th lesson (decision 1): the local date (in the
+ * family's tz) of the N-th earliest occurrence from now over every time group, so lessons that
+ * already passed in the start week are not counted (PR #113 review m5). null when a picked day has
+ * no lesson or nothing is counted.
  */
 export function plannedCourseEnd(input: CourseEndInput): string | null {
   const starts = plannedCourseStarts(input);

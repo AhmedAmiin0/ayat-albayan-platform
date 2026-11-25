@@ -2,7 +2,7 @@ import { joinNames, lessonWhenAt, type OutboundTemplate } from '@ab/shared';
 import { clockOf } from '@ab/time';
 import type { Notice } from './notice.types';
 
-// The four templates' positional params (owner 2026-10-30, exact bodies in the migration):
+// The four templates' positional params (exact bodies in the migration):
 // {{1}} the recipient's name, {{2}} the student(s), then the time(s) in the RECIPIENT's own zone.
 
 /** Meta rejects a param with a newline, a tab or 4+ spaces in a row: one line, single spaces. */

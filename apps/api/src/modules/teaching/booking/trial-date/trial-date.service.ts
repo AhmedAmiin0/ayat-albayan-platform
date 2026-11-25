@@ -21,7 +21,7 @@ import { bookPick, movePick, type MovedTrial } from './trial-date.plan';
 import { TrialDateRepo } from './trial-date.repo';
 import { assertCanPick, targetOf, trialStudentId, type TrialTarget } from './trial-date.target';
 
-/** What a picked date sets in motion after its commit (one injectable, so constructors stay at ≤ 3 params). */
+/** What a picked date sets in motion after its commit (one injectable: constructors stay ≤ 3). */
 @Injectable()
 export class TrialDateDeps {
   constructor(
@@ -49,7 +49,7 @@ export class TrialDates {
     return trialHistory({ student, lessons, names, now: new Date() });
   }
 
-  /** 400 trial_date_invalid, 404 student_not_found, 409 trial_date_subscribed; the trial it would move. */
+  /** 400 trial_date_invalid, 404 student_not_found, 409 trial_date_subscribed; the trial to move */
   async target(req: BookingRequest): Promise<TrialTarget> {
     const studentId = trialStudentId(req);
     assertCanPick(await this.queries.student(studentId));
@@ -61,7 +61,7 @@ export class TrialDates {
     return targetOf({ req, studentId, old, requestId: randomUUID() });
   }
 
-  /** The first pick of this request id for this student, if any (its idempotent trial status re-check runs again). */
+  /** This request id's first pick for this student, if any (its idempotent re-check reruns). */
   async replay(req: BookingRequest, actorId: string): Promise<TrialDateResult | null> {
     const first = req.clientRequestId ? await this.queries.replay(req.clientRequestId, trialStudentId(req)) : null;
     if (first) await this.deps.after.afterReplay({ req, result: asBooking(first, { req, alerted: [] }), actorId });
@@ -73,7 +73,10 @@ export class TrialDates {
     return this.planner.conflicts(req, { excludeLessonIds: old ? [old.id] : [] });
   }
 
-  /** 201 TrialDateResult; 409 conflict unless override.reason (the admin's), trial_date_subscribed, trial_changed. */
+  /**
+   * 201 TrialDateResult; 409 conflict unless override.reason (the admin's), trial_date_subscribed,
+   * trial_changed.
+   */
   async pick(target: TrialTarget, actorId: string): Promise<TrialDateResult> {
     const { req, old } = target;
     const prepared = await this.planner.prepare(req, { excludeLessonIds: old ? [old.id] : [] });
@@ -88,7 +91,8 @@ export class TrialDates {
     try {
       result = await this.queries.pick(pick);
     } catch (e) {
-      // The same request twice at once: the loser (trial_changed, or the request id's unique key) finds the winner's pick.
+      // The same request twice at once: the loser (trial_changed, or the request id's unique key)
+      // finds the winner's pick.
       const first = await this.queries.replay(lessonId, trialStudentId(req));
       if (!first) throw e;
       return first;
@@ -107,10 +111,11 @@ export class TrialDates {
   private async followUps(done: FollowUp): Promise<void> {
     const { req, result, old, actorId, familyNotice } = done;
     if (old) await this.deps.events.changed([old.id, result.lesson_id]);
-    // The move's own notice (owner 2026-10-30): the teacher and the family hear the new time.
+    // The move's own notice: the teacher and the family hear the new time.
     if (old) await this.deps.events.scheduleChanged(movedTrial({ old, result, actorId, familyNotice }));
-    // Always the new lesson's alert (dedup by its id): the old lesson's queued one goes stale, and a
-    // same-teacher move has no moved-lesson notice, so this is how that teacher learns the new time.
+    // Always the new lesson's alert (dedup by its id): the old lesson's queued one goes stale, and
+    // a same-teacher move has no moved-lesson notice, so this is how that teacher learns the new
+    // time.
     await this.deps.after.afterBooking({ req, result: asBooking(result, { req, alerted: [result] }), actorId });
   }
 }
@@ -133,7 +138,7 @@ function movedTrial({ old, result, actorId, familyNotice }: Moved): ScheduleChan
   return { kind: 'lesson_rescheduled', lessonId: result.lesson_id, fromStartsAt, actorId, familyNotice };
 }
 
-/** The picked lesson in the BookingResult shape the booking follow-ups read (lessons: who is alerted). */
+/** The picked lesson as the BookingResult the booking follow-ups read (lessons: who is alerted). */
 function asBooking(r: TrialDateResult, o: { req: BookingRequest; alerted: readonly TrialDateResult[] }): BookingResult {
   const lessons = o.alerted.map((l) => ({ id: l.lesson_id, starts_at: l.starts_at, ends_at: l.ends_at }));
   const studentIds = 'studentIds' in o.req ? o.req.studentIds : [];

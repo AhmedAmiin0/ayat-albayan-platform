@@ -11,7 +11,7 @@ interface Prepared<T> {
 }
 
 /**
- * A course change (change_course) tells the teacher and the family (owner 2026-10-30), as a
+ * A course change (change_course) tells the teacher and the family, as a
  * lesson reschedule does: before the write FamilyMoveNotice chooses the family's ONE message
  * (lesson_rescheduled, then the write's booking confirmation is dropped; otherwise the
  * confirmation stays), after the commit ScheduleNotices hears each change (course-change.

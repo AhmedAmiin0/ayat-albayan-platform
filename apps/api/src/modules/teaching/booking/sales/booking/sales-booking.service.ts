@@ -21,12 +21,13 @@ import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
 import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
 
 /**
- * The booking wizard for an assistant (R-ASST-01): the same planner, conflict check and create_booking
- * transaction as the admin's, with the assistant as the actor, so the new student's created_by is her and
- * the students trigger (migration 270) records brought_by / brought_at. Scope: sales-booking.scope.ts; the
- * ownership part only while SalesOwnershipRule enforces it (sales-booking.ownership.ts). A course
- * (kind 'package', self.sales_money, owner 2026-10-18) is one student's (hers while enforced, ANY with sales.renew_any) and passes SalesCourse: it
- * is booked with no invoice and ends on its N-th lesson; the rules' created_by is her.
+ * The booking wizard for an assistant (R-ASST-01): the admin's planner, conflict check and
+ * create_booking transaction with the assistant as the actor, so the new student's created_by is
+ * her and the students trigger (migration 270) records brought_by / brought_at. Scope:
+ * sales-booking.scope.ts; ownership only while SalesOwnershipRule enforces it
+ * (sales-booking.ownership.ts). A course (kind 'package', self.sales_money) is one student's (hers
+ * while enforced, ANY with sales.renew_any) and passes SalesCourse: no invoice, it ends on its N-th
+ * lesson; the rules' created_by is her.
  */
 @Injectable()
 export class SalesBookingService {
@@ -42,15 +43,15 @@ export class SalesBookingService {
   }
 
   /**
-   * 201 BookingResult; 409 conflict (never overridden) or duplicate_student; 403 (while the rule enforces)
-   * not_your_lead / not_your_student / not_your_family; 409 course_held (save it as the draft); 400 date_in_past (a trial whose first lesson
-   * already passed: the planner would book next week's occurrence instead, review M3); a course's codes: SalesCourse.options.
+   * 201 BookingResult; 409 conflict (never overridden) / duplicate_student / course_held (save the
+   * draft); 403 (enforced) not_your_lead / not_your_student / not_your_family; 400 date_in_past
+   * (a trial's first lesson passed, review M3); a course's codes: SalesCourse.options.
    */
   async book(req: BookingRequest, user: AuthUser): Promise<BookingResult> {
     const own = await this.ownership(req, user);
     const course = bookingKindOf(req) === 'package';
     if (!course && req.startsAt && Date.parse(req.startsAt) < Date.now()) throw domainError(HttpStatus.BAD_REQUEST, 'date_in_past');
-    // A retry after a booked course returns that booking (BookingService replays it), not course_exists.
+    // A booked course's retry gets that booking back (BookingService replays it), no course_exists.
     if (course && (await this.course.isReplay(req))) return this.scoped(own, () => this.booking.book(req, user.id));
     const opts = await this.courseOptions(req);
     await this.assertNotHeld(opts);
@@ -69,7 +70,7 @@ export class SalesBookingService {
 
   /**
    * The scope, then for a course its guard: the options it is booked with (undefined for a trial).
-   * Also a course draft's check (CourseDrafts.save, owner 2026-11-06).
+   * Also a course draft's check (CourseDrafts.save).
    */
   async allowed(req: BookingRequest, user: AuthUser): Promise<{ own: BookingOwnership; opts?: PrepareOptions }> {
     const own = await this.ownership(req, user);
@@ -102,7 +103,7 @@ function courseGrant(user: AuthUser): CourseGrant {
   return can(user, 'sales.renew_any') ? 'any' : true;
 }
 
-/** The wizard's two reads for an assistant: the same teachers and slots as the admin's, naming only her own students (any while the rule does not enforce). */
+/** An assistant's wizard reads: the admin's, naming only her students (any while not enforced). */
 @Injectable()
 export class SalesBookingOptions {
   constructor(
@@ -111,7 +112,7 @@ export class SalesBookingOptions {
     private readonly slotsService: SlotsService,
   ) {}
 
-  /** Without the teachers' meeting links (the room is entered through the API); platform_classroom stays. */
+  /** No teachers' meeting links (the room is entered via the API); platform_classroom stays. */
   async teacherOptions(q: TeacherOptionsQuery, user: AuthUser): Promise<BookingTeacherOption[]> {
     if (q.studentId) assertOwnStudents([q.studentId], await this.scope.of(user));
     return (await this.teachers.list(q)).map((t) => ({ ...t, meeting_link: null }));
@@ -135,7 +136,7 @@ export class SalesBookingOptions {
     return { excludeLessonId: keep ? q.excludeLessonId : undefined };
   }
 
-  /** Hers while the rule enforces it (any otherwise), or the lesson she moves; a course's always hers then. */
+  /** Hers while the rule enforces it (else any), or the lesson she moves; a course is hers. */
   private async assertOwnGrid(q: OutsideSlotsQuery, user: AuthUser): Promise<void> {
     const ids = q.studentIds ?? [];
     const free = !q.excludeCourse && (await this.moving(q, user));

@@ -4,7 +4,7 @@ import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 import { errorCode } from '@/common/http/errors';
 import { assertBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.scope';
 
-// The assistant's course (owner 2026-10-18): kind 'package' with self.sales_money, one student of hers.
+// The assistant's course: kind 'package' with self.sales_money, one student of hers.
 
 const TEACHER = 'a0000000-0000-4000-8000-000000000001';
 const LEAD = 'b0000000-0000-4000-8000-000000000001';

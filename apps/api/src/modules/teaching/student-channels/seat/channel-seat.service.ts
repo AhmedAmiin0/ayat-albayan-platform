@@ -6,8 +6,8 @@ import { ChannelSeatRepo, type SeatRow } from './channel-seat.repo';
 
 /**
  * The seat as `me` sees it: I may take it when it is free (a holder who is no longer an
- * assistant counts as free) or when I brought the student (owner 2026-11-16 «who brought the
- * student have the priority»), never when it is already mine.
+ * assistant counts as free) or when I brought the student (the bringer comes first),
+ * never when it is already mine.
  */
 function seatView(row: SeatRow, me: string): ChannelSeat {
   const mine = row.holder?.id === me;
@@ -16,10 +16,10 @@ function seatView(row: SeatRow, me: string): ChannelSeat {
 }
 
 /**
- * One assistant seat per student chat (owner 2026-11-16 «any assistant can subscribe to the
- * chating channel but only 1»): any assistant reads it and takes a free one, the bringer takes it
- * from anyone, the holder leaves it. The seat is not sales ownership: it opens the chat only
- * (ChannelAccess.assistant), never money, leads or commission. Unknown student: 404.
+ * One assistant seat per student chat (any assistant may take it, one at a time): any assistant
+ * reads it and takes a free one, the bringer takes it from anyone, the holder leaves it. The seat
+ * is not sales ownership: it opens the chat only (ChannelAccess.assistant), never money, leads or
+ * commission. Unknown student: 404.
  */
 @Injectable()
 export class ChannelSeatService {

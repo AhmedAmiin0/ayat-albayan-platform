@@ -4,7 +4,7 @@ import { MEETING_ID, NOW, scheduledRow } from '@/modules/teaching/classroom/inte
 import { CLOSED_PHONE, OPEN_PHONE, openThread, STUDENT_A, stored } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
 import { meetingServices, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
-// The WhatsApp policy of invitations (owner 2026-10-13): who may queue a chat text, what the others get.
+// The WhatsApp policy of invitations: who may queue a chat text, what the others get.
 let s: MeetingServices;
 const OTHER = '+201000000109';
 const pick = (phone: string) => ({ id: STUDENT_A, name: 'سهيلة', code: 'AB-0001', guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: phone, tz: 'Asia/Riyadh' } });

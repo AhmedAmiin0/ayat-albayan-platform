@@ -17,11 +17,11 @@ const hears = (m: ChannelMember, ctx: { sender: string; teachersOn: boolean }): 
   m.profileId !== ctx.sender && (ctx.teachersOn || m.role !== 'teacher');
 
 /**
- * docs/31 §2 (owner 2026-11-16 «all 4 will receive the message»): a participant's message pushes
+ * docs/31 §2 (every participant receives it): a participant's message pushes
  * kind channel_message to everyone in the chat but its sender: the student's current teacher(s),
  * the guardian and the student logins (only while family_chat_enabled is on) and the one
- * assistant in the seat (owner 2026-11-16 «… but only 1»; none while it is free). The assistant
- * writes too (owner 2026-11-16 «yes it can write also»): hers reaches the teacher(s) and the
+ * assistant in the seat (one per chat; none while it is free). The assistant
+ * writes too: hers reaches the teacher(s) and the
  * family, never herself. The teachers only while teacher_student_messages_enabled shows them
  * the chat (no push, no bell row while it is off). Never an admin. Its notification rule decides
  * bell / push (PushService). The recipients are ChannelMembers, the same people whose read marks

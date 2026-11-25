@@ -11,8 +11,8 @@ import { TrialDates } from '@/modules/teaching/booking/trial-date/trial-date.ser
 import type { TrialTarget } from '@/modules/teaching/booking/trial-date/trial-date.target';
 
 /**
- * An assistant's own meeting link for the trial she moves (owner 2026-11-02, «update student
- * booking»): https only; anything else is 400 meeting_link_invalid. Absent = the teacher's link.
+ * An assistant's own meeting link for the trial she moves: https only; anything else is 400
+ * meeting_link_invalid. Absent = the teacher's link.
  */
 const salesLinkSchema = z
   .url({ protocol: /^https$/ })

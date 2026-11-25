@@ -26,9 +26,9 @@ import { ChannelViews } from './views/channel-views.service';
 
 /**
  * The student channel (docs/31 §2): an in-platform teacher ↔ family chat per student, opened by the
- * students INSERT trigger (migration 800); the one assistant in its seat writes too (owner
- * 2026-11-16, ChannelSeatService), student_channels.monitor only reads.
- * PushService and StorageService come from global modules. Edit / delete (owner 2026-10-30):
+ * students INSERT trigger (migration 800); the one assistant in its seat writes too
+ * (ChannelSeatService), student_channels.monitor only reads.
+ * PushService and StorageService come from global modules. Edit / delete:
  * ChannelEdits.
  */
 @Module({

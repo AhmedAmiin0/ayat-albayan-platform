@@ -15,8 +15,9 @@ import { assertBookingScope, assertOwnStudents, scopeDuplicates } from '@/module
 import { SalesBookingService } from '@/modules/teaching/booking/sales/booking/sales-booking.service';
 import type { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-course.service';
 
-// SalesOwnershipRule not enforcing (owner 2026-11-02: require assignee OFF, or auto-assign OFF): /sales/booking
-// checks no ownership (own = null); the four trial-only rules still hold. Enforced keeps the rules (sales-booking.scope.test.ts).
+// SalesOwnershipRule not enforcing (require assignee OFF, or auto-assign OFF): /sales/booking
+// checks no ownership (own = null); the four trial-only rules still hold. Enforced keeps the rules
+// (sales-booking.scope.test.ts).
 
 const TEACHER = 'a0000000-0000-4000-8000-000000000001';
 const OTHER_LEAD = 'b0000000-0000-4000-8000-000000000002';

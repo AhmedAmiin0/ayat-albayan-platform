@@ -66,7 +66,7 @@ export function replayMismatch(input: {
   return cardOff || manualOff;
 }
 
-/** The refund the person chose in the sheet (owner 2026-11-06); custom carries its amount. */
+/** The refund the person chose in the sheet; custom carries its amount. */
 export interface RefundChoiceAsk {
   choice: StopRefundChoice;
   amount?: number | undefined;

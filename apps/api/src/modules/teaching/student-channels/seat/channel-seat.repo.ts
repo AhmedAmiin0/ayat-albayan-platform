@@ -4,7 +4,7 @@ import { dbError } from '@/common/http/http';
 
 /** One student's seat as stored, with what the rule needs. */
 export interface SeatRow {
-  /** students.brought_by: she has the priority (owner 2026-11-16). */
+  /** students.brought_by: she has the priority. */
   broughtBy: string | null;
   /** student_channels.assistant_id as stored (the compare-and-set compares against it). */
   heldBy: string | null;
@@ -14,8 +14,8 @@ export interface SeatRow {
 
 /**
  * The one assistant seat of a student chat (student_channels.assistant_id, migration
- * 20261117090200; owner 2026-11-16 «any assistant can subscribe to the chating channel but only
- * 1»). Service role: ChannelSeatService decides who may take it.
+ * 20261117090200; any assistant may take it, one at a time). Service role: ChannelSeatService
+ * decides who may take it.
  */
 @Injectable()
 export class ChannelSeatRepo {

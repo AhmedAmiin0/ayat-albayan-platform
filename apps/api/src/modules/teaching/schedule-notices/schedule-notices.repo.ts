@@ -25,7 +25,7 @@ interface NextLessonQuery {
   after: Date;
 }
 
-/** Reads and the idempotent queue write of the schedule-change notices (owner 2026-10-30). */
+/** Reads and the idempotent queue write of the schedule-change notices. */
 @Injectable()
 export class ScheduleNoticesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

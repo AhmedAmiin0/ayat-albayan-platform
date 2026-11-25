@@ -8,7 +8,7 @@ import type { CourseTold } from '@/modules/teaching/booking/course-change/notice
 import { CourseChangeNotices } from '@/modules/teaching/booking/course-change/notices/course-change.notices';
 import { CourseChangeWriter } from '@/modules/teaching/booking/course-change/course-change.writer';
 
-// change_course and who hears it (owner 2026-10-30): the family's ONE message (FamilyMoveNotice),
+// change_course and who hears it: the family's ONE message (FamilyMoveNotice),
 // then ScheduleNotices and, for a new teacher, TeacherAlert. Nothing is sent: every sink is a fake.
 
 const SUN = { id: 'old-sun', starts_at: '2026-11-01T14:00:00Z' };

@@ -7,7 +7,7 @@ import { dbError } from '@/common/http/http';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import type { AlertLesson } from './teacher-alert.plan';
 
-/** The templates the alert can go as: teacher_lesson_v3 first (owner 2026-11-06), else its own. */
+/** The templates the alert can go as: teacher_lesson_v3 first, else its own. */
 const ALERT_KEYS: readonly string[] = ['teacher_new_student', 'teacher_lesson_v3'];
 
 /** An alert lesson with its teacher's meeting_mode (teacher_lesson_v3's room). */

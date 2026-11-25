@@ -15,7 +15,7 @@ const NOT_SUBSCRIBED = `(${NOT_SUBSCRIBED_STATUSES.join(',')})`;
 /**
  * The students a login may already see, so may invite (R-MEET-02): admin and sales every student
  * (sales: the /sales/students/all scope), a teacher their own subscribed ones, never new / trial /
- * pending_subscription (owner 2026-10-11, 2026-10-15; like teacher_thread_phones: sales manages a family
+ * pending_subscription (like teacher_thread_phones: sales manages a family
  * not subscribed yet), an assistant the ones assigned to them.
  */
 export type StudentScope = { kind: 'all' } | { kind: 'ids'; ids: readonly string[] };
@@ -36,7 +36,9 @@ interface StudentPick {
 
 const STUDENT_COLUMNS = 'id, name, code, guardian:guardians(id, name, phone_e164, tz)';
 
-/** Reads behind the invitee picker and the invitee resolution (service role; the services guard). */
+/**
+ * Reads behind the invitee picker and the invitee resolution (service role; the services guard).
+ */
 @Injectable()
 export class MeetingInviteeRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -64,7 +66,10 @@ export class MeetingInviteeRepo {
     return data;
   }
 
-  /** A teacher's own subscribed students' ids, never the not-subscribed ones (students.teacher_id → teachers.profile_id; migration 20261015000441). */
+  /**
+   * A teacher's own subscribed students' ids, never the not-subscribed ones (students.teacher_id →
+   * teachers.profile_id; migration 20261015000441).
+   */
   async teacherStudentIds(profileId: string): Promise<string[]> {
     const { data: teacher, error } = await this.db.from('teachers').select('id').eq('profile_id', profileId).maybeSingle();
     if (error) throw dbError(error);
@@ -81,7 +86,9 @@ export class MeetingInviteeRepo {
     return data.map((r) => r.student_id);
   }
 
-  /** A family known by this number, main or second (their name and tz for a typed number), or null. */
+  /**
+   * A family known by this number, main or second (their name and tz for a typed number), or null.
+   */
   async guardianByPhone(phone: string): Promise<{ id: string; name: string; tz: string } | null> {
     const family = await familyOfPhone(this.db, phone);
     return family && { id: family.id, name: family.name, tz: family.tz };

@@ -12,13 +12,13 @@ export type DeletedPayment = { id: string; kind: string; amount: number | string
 type Ctx = { payment: DeletedPayment; ids: { studentId: string; actorId: string }; current: StudentStatus };
 
 /**
- * A deleted payment reverts the automatic flip it caused (owner 2026-10-12, docs/11 §7): only when the
- * newest status_change of the student is that payment's flip (a status set by hand, or a flip by another
- * payment, wins). A recorded from of pending_renewal / expired goes back to it while still active
- * (revertMove). A recorded not-subscribed from (owner 2026-10-15) does so only when no other positive
- * payment remains; else, like an older flip without a recorded from, revertTarget: another payment →
- * active, or pending_renewal when the subscription has ended; none → by the trial facts (new / trial /
- * pending_subscription). Compare-and-set, audited by the deleting admin.
+ * A deleted payment reverts the automatic flip it caused (docs/11 §7): only when the
+ * newest status_change of the student is that payment's flip (a status set by hand, or a flip by
+ * another payment, wins). A recorded from of pending_renewal / expired goes back to it while still
+ * active (revertMove). A recorded not-subscribed from does so only when no other positive
+ * payment remains; else, like an older flip without a recorded from, revertTarget: another payment
+ * → active, or pending_renewal when the subscription has ended; none → by the trial facts (new /
+ * trial / pending_subscription). Compare-and-set, audited by the deleting admin.
  */
 @Injectable()
 export class StudentDeactivation {

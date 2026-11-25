@@ -12,7 +12,7 @@ type SeriesInput = {
   now: Date;
   horizonWeeks: number;
   /**
-   * The assistant's course (owner 2026-10-18 decision 1): every rule ends on this local day
+   * The assistant's course (decision 1): every rule ends on this local day
    * (plannedCourseEnd), so exactly the plan's lesson count is generated, all of it planned and
    * checked now whatever the horizon. Absent = open-ended.
    */
@@ -34,7 +34,9 @@ function capped(plan: Plan, endsOn: string): Plan {
   return { timing: { ...plan.timing, ends_on: endsOn }, occurrences };
 }
 
-/** Weeks from now to the start of the day after endsOn (in the family's tz), at least the horizon. */
+/**
+ * Weeks from now to the start of the day after endsOn (in the family's tz), at least the horizon.
+ */
 function courseWeeks(input: SeriesInput, endsOn: string): number {
   const end = startOfLocalDay(addDays(endsOn, 1), input.rule.tz).getTime();
   return Math.max(input.horizonWeeks, (end - input.now.getTime()) / (7 * DAY_MS));
@@ -42,7 +44,10 @@ function courseWeeks(input: SeriesInput, endsOn: string): number {
 
 const overlaps = (a: Occurrence, b: Occurrence) => a.starts_at < b.ends_at && b.starts_at < a.ends_at;
 
-/** 400 day_times_overlap when a lesson of one time runs into a lesson of another (e.g. across midnight). */
+/**
+ * 400 day_times_overlap when a lesson of one time runs into a lesson of another (e.g. across
+ * midnight).
+ */
 function assertApart(plans: readonly Plan[]): void {
   plans.forEach((plan, i) => {
     const others = plans.slice(i + 1).flatMap((p) => p.occurrences);

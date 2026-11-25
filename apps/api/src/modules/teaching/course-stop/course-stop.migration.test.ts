@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migration 990 (owner 2026-10-30): the three keys' seed and the stopped mode of 934's cancel
+// Migration 990: the three keys' seed and the stopped mode of 934's cancel
 // guard.
 const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
 const sql = readFileSync(join(dir, '20261030000990_course_stop_permissions.sql'), 'utf8').replace(

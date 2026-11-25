@@ -4,7 +4,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { EXPENSE_ID, expenseRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 
-// Expenses re-managed (owner, 2026-10-05): categories table, receipts, drafts, the year table.
+// Expenses re-managed: categories table, receipts, drafts, the year table.
 
 describe('expenses v2 routes', () => {
   let app: NestFastifyApplication;

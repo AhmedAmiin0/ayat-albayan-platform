@@ -20,7 +20,7 @@ import { ExpensesService } from './expenses.service';
 
 const yearQuery = z.object({ year: z.string().regex(/^\d{4}$/, 'invalid_year') });
 
-/** Expenses (X1–X4, R-RPT-02, issue E4; owner 2026-10-05): list, year table, CRUD, receipts. Admin only, audited. */
+/** Expenses (X1–X4, R-RPT-02, issue E4): list, year table, CRUD, receipts. Admin only, audited. */
 @ApiTags('expenses')
 @ApiBearerAuth()
 @Permissions('expenses.write')

@@ -12,8 +12,8 @@ import { assertUsedBeforeFits } from '@/modules/finance/subscriptions/used-befor
  * S2: priced from the catalog with the same quote as /pricing; never a typed price. A retry of the
  * same form (clientRequestId, rule 8) returns the package it already created; only a new one is
  * audited and converts the family's lead (MoneyWrites). The callers gate lessonsUsedBefore
- * (assertUsedBefore); its bound needs the quote's size. `price`: only a Stripe payment link's agreed amount
- * (owner 2026-10-28, docs/30), so paying the link in full makes the package paid.
+ * (assertUsedBefore); its bound needs the quote's size. `price`: only a Stripe payment link's
+ * agreed amount (docs/30), so paying the link in full makes the package paid.
  */
 @Injectable()
 export class SubscriptionCreator {
@@ -36,7 +36,10 @@ export class SubscriptionCreator {
     return view;
   }
 
-  /** The quote S2 stores. An unknown guardian country is quoted in USD (docs/08 §1): 503 fx_unavailable. */
+  /**
+   * The quote S2 stores. An unknown guardian country is quoted in USD (docs/08 §1): 503
+   * fx_unavailable.
+   */
   async quote(input: SubscriptionQuote): Promise<QuoteResponse> {
     const student = await this.subs.studentForQuote(input.studentId);
     if (!student) throw notFound('student_not_found');

@@ -34,12 +34,13 @@ type PayloadInput = {
   meetingLink: string | null;
   /**
    * The link the confirmation names: meetingLink, or null for a teacher who holds lessons in our
-   * classroom (usesPlatform(meeting_mode, settings.meeting_link_auto); booking_confirmation_plain; the classroom link goes with the same-day reminder).
+   * classroom (usesPlatform(meeting_mode, settings.meeting_link_auto); booking_confirmation_plain;
+   * the classroom link goes with the same-day reminder).
    */
   confirmationLink: string | null;
   /** The missed lesson, for a makeup. */
   makeupOf: string | null;
-  /** The assistant's course: the subscription's label and id on every rule, whatever the request says. */
+  /** The assistant's course: the subscription's label and id on every rule, whatever was sent. */
   course?: CourseLabel | undefined;
 };
 
@@ -49,7 +50,7 @@ const rulePackage = (req: BookingRequest, kind: BookingKind): PackageSize | null
   kind === 'makeup' ? null : (req.package ?? null);
 
 /**
- * The lead path's new student (owner 2026-10-15, docs/11 §7): booked with a trial lesson it starts as
+ * The lead path's new student (docs/11 §7): booked with a trial lesson it starts as
  * trial (registrationStatus), else as the request says (the schema default is new). create_booking
  * keeps this explicit status.
  */
@@ -60,7 +61,7 @@ function newStudentRow(who: Resolved, kind: BookingKind): Resolved['new_student'
 }
 
 /**
- * docs/18 row 1 (owner 2026-10-15): a lead booked straight onto a package starts `new` and becomes
+ * docs/18 row 1: a lead booked straight onto a package starts `new` and becomes
  * `active` only with a positive payment. Any status sent by a caller but an admin is ignored: it
  * becomes the registration status (trial with a trial lesson, else new). Applied by both POST
  * /booking controllers, where the caller's role is known.
@@ -71,7 +72,7 @@ export function clientRequest(req: BookingRequest, role: string | null): Booking
 }
 
 
-/** The other times' rules and lessons: the same link, package, subscription and override rule as the first. */
+/** Other times' rules and lessons: the first one's link, package, subscription and override. */
 function siblingRows(input: PayloadInput, pkg: PackageSize | null): SiblingRow[] {
   const { req, conflicts } = input;
   return input.siblings.map((p) => ({
@@ -85,11 +86,11 @@ function siblingRows(input: PayloadInput, pkg: PackageSize | null): SiblingRow[]
   }));
 }
 
-/** audit.after.day_times only when the request has per-day times (an old body's audit is unchanged). */
+/** audit.after.day_times only with per-day times (an old body's audit is unchanged). */
 const dayTimesAudit = (req: BookingRequest) =>
   req.dayTimes?.length ? { day_times: req.dayTimes.map((d) => ({ weekday: d.weekday, start_time_local: d.startTimeLocal })) } : {};
 
-/** What create_booking writes (docs/10 §5 #14), minus the invoice the service resolves afterwards. */
+/** What create_booking writes (docs/10 §5 #14), minus the invoice the service resolves later. */
 export function bookingPayload(input: PayloadInput): BookingPayload {
   const { req, kind, teacher, who, lead, plan, conflicts } = input;
   const reason = req.override?.reason ?? null;
@@ -139,7 +140,7 @@ export function bookingPayload(input: PayloadInput): BookingPayload {
   };
 }
 
-/** The payload with its stored invoice (null for a trial); the audit row says where it came from. */
+/** The payload with its stored invoice (null for a trial); the audit row says where it's from. */
 export function withInvoice(payload: BookingPayload, invoice: InvoiceRow | null): BookingPayload {
   const after = { ...payload.audit.after, invoice_source: invoice?.source ?? null };
   return { ...payload, invoice, audit: { after } };

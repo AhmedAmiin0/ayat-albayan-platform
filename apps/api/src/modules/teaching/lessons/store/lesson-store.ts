@@ -18,7 +18,7 @@ export type Commit = {
   /** Reported in the 409 when the compare-and-set loses (the lesson changed meanwhile). */
   transition: { from: LessonStatus; event: LessonEvent };
   /**
-   * The teacher and the family hear it after the commit (ScheduleNotices, owner 2026-10-30). A move
+   * The teacher and the family hear it after the commit (ScheduleNotices). A move
    * (lesson_rescheduled): FamilyMoveNotice first chooses the family's one message for it.
    */
   notice?: ScheduleChange;

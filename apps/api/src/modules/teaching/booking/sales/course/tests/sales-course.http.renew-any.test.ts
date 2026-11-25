@@ -14,7 +14,7 @@ import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
 import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { SalesCourseRepo } from '@/modules/teaching/booking/sales/course/sales-course.repo';
 
-/** No payment link held, no draft (owner 2026-11-06). */
+/** No payment link held, no draft. */
 const NO_DRAFTS = { held: async () => false, get: async () => null };
 
 // docs/16 row 38: any student's course with renew_any; the slot grid is checked too.

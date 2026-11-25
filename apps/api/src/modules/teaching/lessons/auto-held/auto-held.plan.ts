@@ -1,7 +1,7 @@
 import type { LessonStatus, SubscriptionStatus } from '@ab/catalog';
 import { isAutoHeldDue, startOfLocalDay } from '@ab/schedule';
 
-// Which open lessons the auto-held job closes (owner 2026-11-02): isAutoHeldDue on each, with every
+// Which open lessons the auto-held job closes: isAutoHeldDue on each, with every
 // student's CURRENT package start (the latest one, not cancelled, that has started by now): a
 // lesson
 // left open on an earlier package is never closed onto the balance now.

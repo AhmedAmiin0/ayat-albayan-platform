@@ -6,7 +6,7 @@ import { stripeApp } from '@/modules/finance/stripe/testing/stripe-app.fakes';
 import { chargeEvent, sessionEvent } from '@/modules/finance/stripe/testing/stripe-events.fakes';
 import { signed, stripeDefaults, type StripeMocks } from '@/modules/finance/stripe/testing/stripe-mocks.fakes';
 
-// Go live (owner 2026-11-01, docs/30): the key's mode is the server's (a live key only with
+// Go live (docs/30): the key's mode is the server's (a live key only with
 // FEATURE_STRIPE=live, a sandbox one only without). A sandbox event on a live server is test money:
 // mode_mismatch, closed. A live event on a server not in live mode is real money: never closed.
 vi.hoisted(() => {

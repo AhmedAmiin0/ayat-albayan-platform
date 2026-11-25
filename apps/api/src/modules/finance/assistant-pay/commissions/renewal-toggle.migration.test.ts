@@ -3,8 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migration 996 (owner 2026-11-01: «dont apply the commission on renewal — toggle it off
-// from configuration»).
+// Migration 996: a renewal earns no commission while the configuration toggle is off.
 const code = (name: string) => readFileSync(join(MIGRATIONS_DIR, name), 'utf8').replace(/--.*$/gm, '');
 const sql = code('20261101000996_renewal_commission_toggle.sql');
 const rules = code('20261027000751_renewal_commission_rules.sql');

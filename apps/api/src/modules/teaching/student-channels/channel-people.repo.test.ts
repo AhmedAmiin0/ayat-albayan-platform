@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Db } from '@/common/db/db.module';
 import { ChannelPeopleRepo } from './channel-people.repo';
 
-// The chat's one assistant (owner 2026-11-16 «… but only 1»): the seat holder while she is a
+// The chat's one assistant: the seat holder while she is a
 // salesperson, never an admin or a former assistant.
 
 const PROFILES = [
@@ -45,7 +45,7 @@ describe('ChannelPeopleRepo.assistantId', () => {
   });
 });
 
-// Owner 2026-11-16 «yes it can write also»: her bubble and push carry her name.
+// The seated assistant writes too: her bubble and push carry her name.
 describe('ChannelPeopleRepo.names', () => {
   it('an assistant who wrote is named by her profile; an admin profile is not', async () => {
     expect(await repo(null).names(['s1', 'a1'])).toEqual(new Map([['s1', 'سارة']]));

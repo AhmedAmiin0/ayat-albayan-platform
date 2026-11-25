@@ -7,7 +7,7 @@ import { dbError } from '@/common/http/http';
 import type { OpenEndedLesson, PackageRow } from './auto-held.plan';
 
 const DAY_MS = 86_400_000;
-/** A family reminder the platform got out (owner 2026-11-03: sent, delivered or read). */
+/** A family reminder the platform got out (sent, delivered or read). */
 const REMINDER_OUT = ['sent', 'delivered', 'read'] as const;
 const sinceSchema = z.iso.datetime({ offset: true });
 const OPEN_SELECT =

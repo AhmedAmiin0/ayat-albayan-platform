@@ -27,7 +27,7 @@ import { studentLinkQueries } from '@/modules/teaching/classroom/student-link/st
 import { GuestJoinService } from '@/modules/teaching/classroom/join/guest-join.service';
 import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
 
-// Room server bugs (owner 2026-11-16): the family's signed /join link asked for a typed name.
+// Room server bugs: the family's signed /join link asked for a typed name.
 
 let q: ReturnType<typeof queries>;
 let students: ReturnType<typeof studentLinkQueries>;

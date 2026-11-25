@@ -43,7 +43,7 @@ export class ModerationRepo {
     if (error) throw dbError(error);
   }
 
-  /** A trial lesson (its rule's package is 'trial'): the room has no text chat (owner, 2026-10-11). */
+  /** A trial lesson (its rule's package is 'trial'): the room has no text chat. */
   async isTrialLesson(lessonId: string): Promise<boolean> {
     const { data, error } = await this.db
       .from('lessons')
@@ -79,7 +79,9 @@ export class ModerationRepo {
     return data.length > 0;
   }
 
-  /** Idempotent: a second removal of the same principal keeps the one block (and is audited again). */
+  /**
+   * Idempotent: a second removal of the same principal keeps the one block (and is audited again).
+   */
   async block(input: BlockInput): Promise<void> {
     const cols = principalColumns(input.principal);
     const { error } = await this.db

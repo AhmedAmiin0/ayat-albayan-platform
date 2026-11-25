@@ -1,7 +1,7 @@
 import type { TrialFacts } from '@ab/shared';
 import type { Attendance, LessonStatus, PackageSize } from '@ab/catalog';
 
-// The trial facts trialMove reads (owner 2026-10-15, docs/11 §7, R-STU-05), from the student's lessons.
+// The trial facts trialMove reads (docs/11 §7, R-STU-05), from the student's lessons.
 
 /** A lesson with what tells a trial apart: its rule's package, or the imported marker. */
 export interface TrialLesson {
@@ -36,9 +36,10 @@ export function isTrialLesson(lesson: TrialLesson, chargeable: boolean): boolean
 }
 
 /**
- * Per student: open = a trial lesson still scheduled / confirmed; attended = a trial lesson completed
- * or late where the student was not marked absent / excused. Other lessons (packages, makeups, instant
- * lessons) are ignored. Students without a row are absent. `paid` is filled later (StudentTrialStatus).
+ * Per student: open = a trial lesson still scheduled / confirmed; attended = a trial lesson
+ * completed or late where the student was not marked absent / excused. Other lessons (packages,
+ * makeups, instant lessons) are ignored. Students without a row are absent. `paid` is filled later
+ * (StudentTrialStatus).
  */
 export function trialFactsOf(rows: readonly TrialLessonRow[]): Map<string, TrialFacts> {
   const out = new Map<string, TrialFacts>();

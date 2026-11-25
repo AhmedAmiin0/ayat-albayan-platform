@@ -19,12 +19,12 @@ import { ChannelSeatService } from '@/modules/teaching/student-channels/seat/cha
 const id = z.uuid();
 
 /**
- * The assistant in the chat (owner 2026-11-16 «yes it can write also», docs/31 §2): sends, read
+ * The assistant in the chat writes too (docs/31 §2): sends, read
  * marks and her unread count, as the teacher and the family do, for the one assistant in the
- * chat's seat («any assistant can subscribe to the chating channel but only 1»); any other
+ * chat's seat (any assistant may take it, one at a time); any other
  * assistant is 404. Her send and read mark: 403 family_chat_off while the family chat is off,
  * 409 channel_not_open on a closed chat. The seat: any assistant reads it and takes a free one,
- * the student's bringer takes it from anyone («who brought the student have the priority»), the
+ * the student's bringer takes it from anyone (the bringer comes first), the
  * holder leaves it. Her page stays GET …/messages (MonitorChannelController).
  */
 @ApiTags('student-channels')

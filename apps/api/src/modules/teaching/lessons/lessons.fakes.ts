@@ -17,7 +17,7 @@ export const OTHER_TEACHER_ID = '00000000-0000-4000-8000-0000000000b2';
 
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 export const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
-/** A guardian's portal login (the family's own lesson actions, owner 2026-11-17). */
+/** A guardian's portal login (the family's own lesson actions). */
 export const FAMILY_USER: AuthUser = { id: 'g0000000-0000-4000-8000-000000000003', email: null, role: 'guardian' };
 
 /** Sunday 2026-10-04 17:00–17:45 Riyadh, scheduled, one student, teacher link. */

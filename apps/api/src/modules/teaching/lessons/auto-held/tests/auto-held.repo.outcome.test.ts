@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { AutoHeldRepo } from '@/modules/teaching/lessons/auto-held/auto-held.repo';
 
-// The reads of the confirmation-required pass (owner 2026-11-03).
+// The reads of the confirmation-required pass.
 describe('AutoHeldRepo: reminded / outcomesSince', () => {
   it('reminded: the lessons whose family lesson_reminder* the platform got out', async () => {
     const rows = [

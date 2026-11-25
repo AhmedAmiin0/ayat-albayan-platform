@@ -38,7 +38,7 @@ const USERS: Record<string, AuthUser> = {
   otherGuardian: { id: 'p-g2', email: null, role: 'guardian' },
   /** An adult student who is their own contact (contact_is_self). */
   student: { id: 'p-s', email: null, role: 'student' },
-  /** A child's own login (chats too, owner 2026-11-16). */
+  /** A child's own login (chats too). */
   child: { id: 'p-c', email: null, role: 'student' },
   admin: { id: 'p-ad', email: null, role: 'admin' },
   sales: { id: 'p-sa', email: null, role: 'sales' },

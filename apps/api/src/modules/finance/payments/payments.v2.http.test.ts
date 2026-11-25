@@ -3,7 +3,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { PAYMENT_ID, paymentRow, REQUEST_ID, STUDENT_ID, SUB_ID } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 
-// Payments re-managed (owner, 2026-10-05): filters + period totals, refunds, invoice as receipt.
+// Payments re-managed: filters + period totals, refunds, invoice as receipt.
 
 const INVOICE = '1f000000-0000-4000-8000-000000000001';
 const inv = { rule_id: null, kind: 'package', mime: 'image/png', size_bytes: 10, source: 'upload', created_at: '2026-10-01T09:00:00Z', storage_path: 'r/x.png' };

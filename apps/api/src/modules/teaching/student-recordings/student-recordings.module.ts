@@ -16,7 +16,7 @@ import { StudentRecordingRepo } from './student-recordings.repo';
 import { StudentRecordingsService } from './student-recordings.service';
 
 /**
- * Recordings in the teacher-student file (owner, 2026-10-05): GET /students/:id/recordings, the
+ * Recordings in the teacher-student file: GET /students/:id/recordings, the
  * visible-to-student toggle, the admin delete, and the hourly stuck sweeper + retention job.
  * Settings, Storage and Audit are global modules; RecordingViews comes from ClassroomModule.
  */

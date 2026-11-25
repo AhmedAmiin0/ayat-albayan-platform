@@ -62,7 +62,7 @@ export class CourseDue {
   }
 
   /**
-   * A draft's days clashed at payment (owner 2026-11-06): nothing was booked, the draft stays as
+   * A draft's days clashed at payment: nothing was booked, the draft stays as
    * the wizard's prefill; its assistant and the admins pick again (once per saved version).
    */
   async clash(subscriptionId: string, draft: DraftMiss): Promise<void> {

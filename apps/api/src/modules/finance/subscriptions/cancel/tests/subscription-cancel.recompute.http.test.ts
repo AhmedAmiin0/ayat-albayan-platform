@@ -3,7 +3,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { STUDENT_ID, subRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 
-// A cancelled package (owner 2026-10-28) is never current, never counted, never recomputed back to life.
+// A cancelled package is never current, never counted, never recomputed back to life.
 
 const OLD = '5b000000-0000-4000-8000-0000000000aa';
 const CANCELLED = '5b000000-0000-4000-8000-0000000000cc';

@@ -7,7 +7,7 @@ import type { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-dr
 import type { CourseDraft } from '@/modules/teaching/booking/sales/course-draft/course-draft.rules';
 import { CourseDrafts } from '@/modules/teaching/booking/sales/course-draft/course-draft.service';
 
-// Test-only: CourseDrafts over an in-memory draft table and fake booking (owner 2026-11-06).
+// Test-only: CourseDrafts over an in-memory draft table and fake booking.
 
 export const SUB = 'e0000000-0000-4000-8000-000000000001';
 export const USER: AuthUser = { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'sales' };

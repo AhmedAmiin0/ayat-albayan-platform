@@ -13,8 +13,8 @@ const GONE: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * GET /report-link/legacy/<path> (owner 2026-11-06): the old Vercel report redirector's links,
- * answered with the signed-in portal report page of exactly ONE lesson (owner 2026-11-14):
+ * GET /report-link/legacy/<path>: the old Vercel report redirector's links,
+ * answered with the signed-in portal report page of exactly ONE lesson:
  * (a) teacher/report/<lessonId>; (b) <studentCode>/<teacherName>/… → the pair's most recent lesson
  * started within 24 h, else its next one today. null → the «invalid link» page.
  */

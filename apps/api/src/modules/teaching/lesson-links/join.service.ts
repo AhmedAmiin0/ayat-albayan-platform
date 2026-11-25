@@ -8,7 +8,7 @@ import { LessonLinksRepo } from './lesson-links.repo';
 import { LessonLinksSettings } from './lesson-links.settings';
 
 /**
- * GET /join/:token (owner 2026-11-06): the signed token's lesson, still its teacher's, read now;
+ * GET /join/:token: the signed token's lesson, still its teacher's, read now;
  * the answer is that lesson's own room (joinTarget) or null (the «invalid link» page).
  */
 @Injectable()

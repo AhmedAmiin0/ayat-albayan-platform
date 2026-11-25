@@ -9,7 +9,7 @@ const SALES = `/sales/students/${ST}/channel/messages/${M}`;
 const ago = (ms: number) => new Date(Date.now() - ms).toISOString();
 const MIN = 60_000;
 
-// Owner 2026-10-30: the sender edits within 15 minutes; every rule is the server's.
+// The sender edits within 15 minutes; every rule is the server's.
 describe('PATCH …/messages/:id: edit in the student channel', () => {
   let t: App;
   beforeAll(async () => {

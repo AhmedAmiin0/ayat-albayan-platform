@@ -11,7 +11,7 @@ import { studentIdsOf, type LessonRow } from '@/modules/teaching/lessons/store/l
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { invalidTransition } from '@/modules/teaching/lessons/status/transition';
 
-/** The teacher and the family hear the move (ScheduleNotices, owner 2026-10-30). */
+/** The teacher and the family hear the move (ScheduleNotices). */
 function movedNotice(old: LessonRow, lessonId: string, actor: AuthUser): ScheduleChange {
   return { kind: 'lesson_rescheduled', lessonId, fromStartsAt: old.starts_at, actorId: actor.id };
 }

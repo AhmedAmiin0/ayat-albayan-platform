@@ -2,7 +2,7 @@ import { targetOfRoom, type RoomTarget } from '@/modules/teaching/classroom/reco
 
 const MINUTE_MS = 60_000;
 
-/** The audit reason of a meeting this job ended (owner 2026-10-30). */
+/** The audit reason of a meeting this job ended. */
 export const AUTO_END_REASON = 'auto_max_duration';
 
 /**

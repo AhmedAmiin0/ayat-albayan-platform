@@ -22,7 +22,7 @@ export class ChannelPeopleRepo {
 
   /**
    * Display name per sender profile: the teacher's display name, else the student's or guardian's
-   * name, else the assistant's profile name (she writes too, owner 2026-11-16).
+   * name, else the assistant's profile name (she writes too).
    */
   async names(profileIds: readonly string[]): Promise<Map<string, string>> {
     const ids = [...new Set(profileIds)];
@@ -55,7 +55,7 @@ export class ChannelPeopleRepo {
   }
 
   /**
-   * The chat's one assistant (owner 2026-11-16 «… but only 1»): the seat holder
+   * The chat's one assistant: the seat holder
    * (student_channels.assistant_id) while she is still a salesperson; null when free.
    */
   async assistantId(studentId: string): Promise<string | null> {

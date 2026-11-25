@@ -6,7 +6,7 @@ import type { ReceivablesRepo } from './receivables.repo';
 import { ReceivablesService } from './receivables.service';
 import { ReceivablesSettings } from './receivables.settings';
 
-// A 1000 SAR course stopped: it owes what the stop stored (stop_owed_amount, owner 2026-11-06).
+// A 1000 SAR course stopped: it owes what the stop stored (stop_owed_amount).
 const stopped = (id: string, owed: number | null): ReceivableIn => ({
   id,
   student: { id: `s-${id}`, code: 'AB-0001', name: id },

@@ -7,7 +7,7 @@ import { BookingService } from '@/modules/teaching/booking/core/booking.service'
 import { BookingWriter } from '@/modules/teaching/booking/core/booking.writer';
 import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.fakes';
 
-// The invoice waiver is a server-side option only (the assistant's course, owner 2026-10-18 decision 2):
+// The invoice waiver is a server-side option only (the assistant's course, decision 2):
 // the request body has no way to ask for it, so the admin's POST /booking still needs an invoice.
 
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';

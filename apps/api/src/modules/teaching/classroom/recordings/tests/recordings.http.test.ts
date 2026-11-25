@@ -4,8 +4,9 @@ import { MEETING_ID, meetingRow } from '@/modules/teaching/classroom/internal-me
 import { recordingRow } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { classroomApp } from '@/modules/teaching/classroom/test-app';
 
-// «I need all the meetings to be recorded» (owner, 2026-10-05): internal meetings are recorded on
-// join like lessons, listed for the admin and the creator; the panels can ask whether recording works.
+// Every meeting is recorded: internal meetings are recorded on
+// join like lessons, listed for the admin and the creator; the panels can ask whether recording
+// works.
 
 const list = `/meetings/${MEETING_ID}/recordings`;
 const meetingRec = recordingRow({ lesson_id: null, meeting_id: MEETING_ID, file_path: `meetings/${MEETING_ID}/a.mp4` });

@@ -13,7 +13,7 @@ export type CourseSub = {
   package: PackageSize | null;
   duration: number;
   lessons_total: number;
-  /** Taken before the platform (owner 2026-10-28): the course carries lessons_total − this. */
+  /** Taken before the platform: the course carries lessons_total − this. */
   lessons_used_before: number;
   starts_on: string;
 };
@@ -43,9 +43,9 @@ export type ChangeRule = {
 };
 
 /**
- * course_rules_of: a rule of the course. linked = its subscription_id; else the student's rule inside
- * the package's period, its lessons counting only in [from_on, until_on). clean = false: cannot be
- * attributed (a group, or it runs into the next package).
+ * course_rules_of: a rule of the course. linked = its subscription_id; else the student's rule
+ * inside the package's period, its lessons counting only in [from_on, until_on). clean = false:
+ * cannot be attributed (a group, or it runs into the next package).
  */
 export interface CourseRuleRef {
   rule_id: string;

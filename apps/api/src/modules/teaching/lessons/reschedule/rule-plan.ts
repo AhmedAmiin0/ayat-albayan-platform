@@ -17,7 +17,7 @@ export type RulePlan = { rule: NewRule; occurrences: Occurrence[] };
  * The replacement rule of a whole-rule reschedule (R-SCH-07, docs/10 route 8 `rule`): same
  * students, package and link (a new teacher drops the old rule's link so their own applies),
  * occurrences over the horizon; a trial keeps one lesson and ends on its day (invariant 4). The
- * assistant's course (owner 2026-10-18; its rules carry subscription_id) keeps its last day, so it
+ * assistant's course (its rules carry subscription_id) keeps its last day, so it
  * never becomes open-ended; any other rule's replacement is open-ended, as before. The replacement
  * keeps subscription_id and first_rule_id, so rescheduling it again still keeps the last day.
  */

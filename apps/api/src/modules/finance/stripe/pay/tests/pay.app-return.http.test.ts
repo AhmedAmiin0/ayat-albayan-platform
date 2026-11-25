@@ -15,7 +15,8 @@ const DESKTOP = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/130.0
 const HTML = 'text/html,application/xhtml+xml,*/*;q=0.8';
 const META = /<meta http-equiv="refresh"/;
 
-// A pay link the Stripe test app opened (?from=<its Platform.OS>) brings the payer back into the app (owner 2026-10-29).
+// A pay link the Stripe test app opened (?from=<its Platform.OS>) brings the payer back into the
+// app.
 describe('back to the app: GET /pay/:token?from=android|ios, then /done and /cancelled', () => {
   let app: NestFastifyApplication;
   let s: StripeMocks;

@@ -23,12 +23,13 @@ import { SalesCourseRepo } from './sales-course.repo';
 import { courseBlock, courseProblem } from './sales-course.rules';
 
 /**
- * The assistant books the weekly course of the subscription she sold (owner 2026-10-18, R-ASST-01,
- * R-ASST-04): exactly lessons_total − lessons_used_before lessons (courseLessonCount, owner 2026-10-28;
+ * The assistant books the weekly course of the subscription she sold (R-ASST-01,
+ * R-ASST-04): exactly lessons_total − lessons_used_before lessons (courseLessonCount;
  * every rule ends on plannedCourseEnd), the plan's days a
- * week, no invoice (the transfer is recorded on the subscription), the subscription's own package and
- * one course per subscription (every rule carries its subscription_id, migration 470). Ownership and
- * the request's shape are checked before (assertBookingScope); this guard reads the subscription and rules.
+ * week, no invoice (the transfer is recorded on the subscription), the subscription's own package
+ * and one course per subscription (every rule carries its subscription_id, migration 470).
+ * Ownership and the request's shape are checked before (assertBookingScope); this guard reads the
+ * subscription and rules.
  */
 @Injectable()
 export class SalesCourse {
@@ -39,11 +40,12 @@ export class SalesCourse {
   ) {}
 
   /**
-   * The booking options of an allowed course: { invoiceWaived, endsOn, course }. Throws courseProblem's
-   * code (409 subscription_required / custom_count_admin / course_exists, 400 course_mismatch /
-   * starts_before_subscription / days_count_mismatch / no_occurrences) or 400 date_in_past (the
-   * earliest pick already passed). `req` is a one-student course (assertBookingScope); `only` books
-   * that package (a draft on its payment) instead of the one the wizard would pick.
+   * The booking options of an allowed course: { invoiceWaived, endsOn, course }. Throws
+   * courseProblem's code (409 subscription_required / custom_count_admin / course_exists, 400
+   * course_mismatch / starts_before_subscription / days_count_mismatch / no_occurrences) or 400
+   * date_in_past (the earliest pick already passed). `req` is a one-student course
+   * (assertBookingScope); `only` books that package (a draft on its payment) instead of the one the
+   * wizard would pick.
    */
   async options(req: BookingRequest, only?: string): Promise<PrepareOptions> {
     const studentId = 'studentIds' in req ? (req.studentIds[0] ?? '') : '';
@@ -65,17 +67,19 @@ export class SalesCourse {
     return { invoiceWaived: true, endsOn, course };
   }
 
-  /** A retry of a course this clientRequestId already booked (review m6): replayed before the guard. */
+  /**
+   * A retry of a course this clientRequestId already booked (review m6): replayed before the guard.
+   */
   async isReplay(req: BookingRequest): Promise<boolean> {
     return req.clientRequestId ? this.queries.requested(req.clientRequestId) : false;
   }
 
   /**
-   * GET /sales/booking/course: the student, the subscription to book, its days a week, why not (blocked),
-   * the previous course a renewal may continue (owner 2026-10-18) and the running course she may change.
-   * A previous course still running does not block: the new one starts after its last day (the guard's
-   * rule). 403 not_your_student unless the student is hers while SalesOwnershipRule enforces
-   * it; ANY student with sales.renew_any (owner 2026-11-01, docs/16 row 38) or while it does not.
+   * GET /sales/booking/course: the student, the subscription to book, its days a week, why not
+   * (blocked), the previous course a renewal may continue and the running course she may change.
+   * A previous course still running does not block: the new one starts after its last day (the
+   * guard's rule). 403 not_your_student unless the student is hers while SalesOwnershipRule
+   * enforces it; ANY student with sales.renew_any (docs/16 row 38) or while it does not.
    */
   async view(studentId: string, user: AuthUser): Promise<SalesCourseView> {
     if (!can(user, 'sales.renew_any')) assertOwnStudents([studentId], await this.scope.of(user));

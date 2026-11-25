@@ -69,7 +69,7 @@ describe('AlertsJob', () => {
     const ok = job(async () => ['s1', 's2']);
     expect(await ok.j.runOnce(now)).toEqual({ students: 2, failed: 1 });
     expect(ok.alerts.evaluateStudents).toHaveBeenCalledWith(['s1', 's2'], { now, cause: { via: 'sweep' } });
-    // The packages paid 2 h ago with no weekly course (owner 2026-11-06).
+    // The packages paid 2 h ago with no weekly course.
     expect(ok.courseDue.sweep).toHaveBeenCalledWith(now);
     const broken = job(async () => Promise.reject(new Error('db down')));
     expect(await broken.j.runOnce(now)).toEqual({ students: 0, failed: 0 });

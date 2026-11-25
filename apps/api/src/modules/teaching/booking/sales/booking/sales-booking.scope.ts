@@ -9,25 +9,28 @@ const all = (ids: readonly string[], allowed: readonly string[]): boolean => ids
 /**
  * What /sales/booking checks ownership against (SalesBookingScope): her leads, families and
  * students while SalesOwnershipRule enforces it (require assignee AND auto-assign ON); null
- * otherwise = no ownership check at all (owner 2026-11-02, docs/16 row 39). null is NOT
+ * otherwise = no ownership check at all (docs/16 row 39). null is NOT
  * NO_OWNERSHIP (owns nothing): never write `own ?? NO_OWNERSHIP`, it would block everyone.
  */
 export type BookingOwnership = SalesOwnership | null;
 
-/** A course: false = none (kind_not_allowed), true = hers (self.sales_money), 'any' = ANY student. */
+/**
+ * A course: false = none (kind_not_allowed), true = hers (self.sales_money), 'any' = ANY student.
+ */
 export type CourseGrant = boolean | 'any';
 
 /**
- * What an assistant (base role sales) may book (R-ASST-01): a free TRIAL, and with self.sales_money (`canCourse`)
- * the weekly course of a subscription she sold (owner 2026-10-18: kind 'package', no invoice: the money is the
- * subscription's). Never a makeup, never over a clash (the override is the admin's, R-SCH-04), never a custom
- * meeting link or an invoice: these always hold. A course is one existing student, of HERS while
- * ownership is checked (own not null). A trial too, only while it is: her own leads' families
- * and her own students, and a new guardian must be the family
- * of one of her leads (its phone is one of hers): otherwise any phone could be typed in to attach an existing
- * family. 403 with the code: override_not_allowed, kind_not_allowed, meeting_link_not_allowed, invoice_not_allowed,
- * then course_one_student / not_your_student (a course), or (ON only) not_your_lead, not_your_student, not_your_family.
- * canCourse 'any' (sales.renew_any, owner 2026-11-01, docs/16 row 38): a course of ANY one student.
+ * What an assistant (base role sales) may book (R-ASST-01): a free TRIAL, and with self.sales_money
+ * (`canCourse`) the weekly course of a subscription she sold (kind 'package', no invoice: the money
+ * is the subscription's). Never a makeup, never over a clash (the override is the admin's,
+ * R-SCH-04), never a custom meeting link or an invoice: these always hold. A course is one existing
+ * student, of HERS while ownership is checked (own not null). A trial too, only while it is: her
+ * own leads' families and her own students, and a new guardian must be the family
+ * of one of her leads (its phone is one of hers): otherwise any phone could be typed in to attach
+ * an existing family. 403 with the code: override_not_allowed, kind_not_allowed,
+ * meeting_link_not_allowed, invoice_not_allowed, then course_one_student / not_your_student (a
+ * course), or (ON only) not_your_lead, not_your_student, not_your_family. canCourse 'any'
+ * (sales.renew_any, docs/16 row 38): a course of ANY one student.
  */
 export function assertBookingScope(req: BookingRequest, own: BookingOwnership, canCourse: CourseGrant = false): void {
   if (req.override) throw forbidden('override_not_allowed');
@@ -59,7 +62,10 @@ function assertOwned(req: BookingRequest, own: SalesOwnership): void {
   if (!own.phones.includes(req.guardian.phone_e164)) throw forbidden('not_your_family');
 }
 
-/** The teachers list and the slots grid name a student only when it is hers (any student while own is null). */
+/**
+ * The teachers list and the slots grid name a student only when it is hers (any student while own
+ * is null).
+ */
 export function assertOwnStudents(ids: readonly string[], own: BookingOwnership): void {
   if (own && !all(ids, own.studentIds)) throw forbidden('not_your_student');
 }
@@ -69,10 +75,10 @@ const isCandidates = (v: unknown): v is Candidate[] =>
   Array.isArray(v) && v.every((c) => typeof c === 'object' && c !== null && typeof c.id === 'string' && typeof c.name === 'string');
 
 /**
- * 409 duplicate_student names the guardian's children, as id and name only (never notes or the guardian id).
- * While ownership is checked only her own children are listed (she could not book the others: not_your_student);
- * with own = null every child, which the chat's people panel shows her anyway (docs/16 decision 1, salesPeople).
- * Any other error passes through.
+ * 409 duplicate_student names the guardian's children, as id and name only (never notes or the
+ * guardian id). While ownership is checked only her own children are listed (she could not book the
+ * others: not_your_student); with own = null every child, which the chat's people panel shows her
+ * anyway (docs/16 decision 1, salesPeople). Any other error passes through.
  */
 export function scopeDuplicates(e: Error, own: BookingOwnership): Error {
   if (!(e instanceof HttpException) || e.getStatus() !== 409) return e;

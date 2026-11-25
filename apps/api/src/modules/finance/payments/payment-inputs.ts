@@ -17,7 +17,7 @@ export type Converted = {
 };
 
 /**
- * What a payment needs besides its row (owner, 2026-10-05): an amount sent in another currency
+ * What a payment needs besides its row: an amount sent in another currency
  * converted to the package's at the rate in force at paid_at (400 fx_unavailable when there is
  * none), a booking invoice used as the receipt (it must be one of the student's), and its files.
  */

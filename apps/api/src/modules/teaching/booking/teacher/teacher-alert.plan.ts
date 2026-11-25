@@ -7,7 +7,7 @@ import { staffReachable, type StaffOnRecord } from '@/modules/messaging/reminder
 import { teacherLessonCrm, teacherLessonV3 } from '@/modules/messaging/reminders';
 import type { TeacherLessonTokens } from '@/modules/teaching/lesson-links';
 
-// R-NOT-03 (owner 2026-10-12): after a booking, the teacher hears about the new student in the bell
+// R-NOT-03: after a booking, the teacher hears about the new student in the bell
 // (always) and on WhatsApp (teacher_new_student, only while settings.teacher_whatsapp_new_student
 // is ON and Meta approved it). Pure: TeacherAlert reads, this plans, the dedup keys make a repeat a
 // no-op (rule 8). The WhatsApp row expires at the first lesson's start; a lesson retimed before it
@@ -32,7 +32,7 @@ export interface AlertLesson {
   teacher: AlertTeacher | null;
 }
 
-/** teacher_lesson_v3's parts of one lesson (owner 2026-11-06): its room and its signed links. */
+/** teacher_lesson_v3's parts of one lesson: its room and its signed links. */
 export interface AlertV3 {
   room: string;
   links: TeacherLessonTokens;
@@ -47,7 +47,10 @@ interface AlertInput {
   v3?: ReadonlyMap<string, AlertV3>;
 }
 
-/** One teacher's alert: the bell row (a profile to show it to) and the WhatsApp row (a phone to send to). */
+/**
+ * One teacher's alert: the bell row (a profile to show it to) and the WhatsApp row (a phone to send
+ * to).
+ */
 interface TeacherAlertPlan {
   push: PushTarget | null;
   message: QueuedMessage | null;

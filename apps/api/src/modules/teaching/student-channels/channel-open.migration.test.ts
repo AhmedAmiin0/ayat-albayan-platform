@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migrations 971–972 (owner 2026-10-29, docs/31 §2), read as text: no database in unit tests.
+// Migrations 971–972 (docs/31 §2), read as text: no database in unit tests.
 const dir = MIGRATIONS_DIR;
 const strip = (sql: string) => sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
 const open = strip(readFileSync(join(dir, '20261029000971_channel_after_subscribe.sql'), 'utf8'));
@@ -47,7 +47,8 @@ describe('migration 972: assign_student_teacher', () => {
     const fn = body(assign, 'assign_student_teacher');
     expect(fn).toContain("t.status = 'active'");
     expect(fn).toContain('if v_before is not distinct from p_teacher then\n    return false;');
-    // Unchanged before the active check: keeping an inactive trial teacher never fails the subscribe.
+    // Unchanged before the active check: keeping an inactive trial teacher never fails the
+    // subscribe.
     expect(fn.indexOf('is not distinct from p_teacher')).toBeLessThan(fn.indexOf("t.status = 'active'"));
     expect(fn).toContain("'students', p_student, 'teacher_assign'");
     expect(assign).toContain('revoke execute on function public.assign_student_teacher(uuid, uuid, uuid) from public, anon, authenticated;');
