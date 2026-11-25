@@ -5,6 +5,13 @@ name: ui-screens
 # with UI_SHOTS=1. Never staging or production, no secrets. Same setup as ci.yml «e2e».
 on:
   workflow_dispatch:
+    inputs:
+      # A web bundle PR (docs/63 §5) shoots its base too and lists the pages that changed in the
+      # step summary: a report, never a failure.
+      base_ref:
+        description: Base branch to shoot first and compare with (report only)
+        required: false
+        default: ''
   pull_request:
     paths:
       - e2e/tests/screens/**
@@ -65,6 +72,27 @@ jobs:
           cat "$RUNNER_TEMP/supabase.log"
           test "$(cat "$RUNNER_TEMP/supabase.rc" 2>/dev/null)" = 0
       - run: pnpm env:local
+      # The base's shots first, then a fresh database for the head (the spec seeds demo data once).
+      - name: Base screenshots (report only)
+        if: inputs.base_ref != ''
+        env:
+          CI: 'true'
+          UI_SHOTS: '1'
+          BASE_REF: ${{ inputs.base_ref }}
+        run: |
+          head=$(git rev-parse HEAD)
+          git fetch --no-tags --depth=1 origin "$BASE_REF"
+          git checkout --detach FETCH_HEAD
+          pnpm i --frozen-lockfile
+          pnpm turbo build --filter=e2e^...
+          pnpm --filter e2e exec playwright test --project=desktop --retries=0 --trace=off \
+            screens/ui-screens.spec.ts || echo "::warning::base screenshots had failures"
+          mv e2e/ui-screens "$RUNNER_TEMP/base-shots"
+          git checkout --detach "$head"
+          pnpm i --frozen-lockfile
+          pnpm turbo build --filter=e2e^...
+          pnpm supabase db reset
+          pnpm env:local
       # Playwright directly, not turbo: turbo's strict env would drop UI_SHOTS. No retry: a retried
       # test would seed the demo data twice.
       - name: UI screenshots
@@ -74,6 +102,11 @@ jobs:
         run: >-
           pnpm --filter e2e exec playwright test --project=desktop --retries=0 --trace=off
           screens/ui-screens.spec.ts
+      - name: Compare with the base (report only)
+        if: always() && inputs.base_ref != ''
+        run: >-
+          pnpm --silent --filter e2e compare-screens --base "$RUNNER_TEMP/base-shots" --head ui-screens
+          >> "$GITHUB_STEP_SUMMARY" || echo "::warning::screenshot compare did not finish"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

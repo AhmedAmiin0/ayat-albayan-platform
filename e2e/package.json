@@ -6,6 +6,7 @@
     "e2e": "playwright test",
     "typecheck": "tsgo --noEmit",
     "screens": "node --import tsx scripts/screens.ts",
+    "compare-screens": "node --import tsx scripts/compare-screens.ts",
     "test": "node --import tsx --test support/screens/tests/*.test.ts support/core/db-error/*.test.ts"
   },
   "devDependencies": {

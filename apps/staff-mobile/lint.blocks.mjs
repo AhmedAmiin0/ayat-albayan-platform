@@ -4,6 +4,7 @@ import {
   boundaries,
   domainModuleRegex,
   forbiddenImports,
+  LOCAL_HOOKS,
   noParentImports,
   reactRestrictions,
   routeImportGroup,
@@ -73,9 +74,9 @@ export default {
     // The query cache patcher reads its own cached pages (Z-2).
     syntaxExempt({ files: ['src/core/lib/query/paging.ts'], shapes: true }),
     // docs/32 R8: a component calls the API through a query or mutation hook, not apiFetch /
-    // apiSend.
+    // apiSend; its own local hook neither (docs/63 §3).
     forbiddenImports({
-      files: TSX,
+      files: [...TSX, ...LOCAL_HOOKS],
       bans: [
         {
           regex: API,
