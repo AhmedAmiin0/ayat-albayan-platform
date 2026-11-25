@@ -37,7 +37,7 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const mode = useInboxMode();
   const sales = mode === 'sales' && !!thread.guardian_id;
   const family = useQuery({ ...salesFamilyQuery(thread.phone_e164), enabled: sales });
-  // A payment link's text goes into the box wherever a text goes (owner 2026-11-01).
+  // A payment link's text goes into the box wherever a text goes.
   const canSend = useMaySend(thread);
   const { can } = usePermissions();
   const check = can('students.check_registration');

@@ -19,7 +19,7 @@ const summary: SalesPackageSummary = {
 };
 const S = t.sales.allStudents;
 
-// Owner 2026-10-30: «Why i cant see the subscription lessoons and ststus of this user».
+// The list shows each student's subscription lessons and status.
 describe('AllStudents: every student\'s status chip and current package', () => {
   it('another assistant\'s student and one of hers: the chip and the package line, no price', async () => {
     apiFetch.mockResolvedValue({

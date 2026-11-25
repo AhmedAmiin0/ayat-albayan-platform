@@ -5,6 +5,7 @@ import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
 import { errorCode, lessonErrorText } from '@/features/teaching/schedule';
 import { apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { salesKeys } from '@/features/sales/keys';
 
 /** The confirm's own wording for lesson_ended and invalid_transition; the lessons wording otherwise. */
 export function confirmErrorText(error: unknown): string {
@@ -29,7 +30,7 @@ export function SalesConfirmLesson({ lessonId, onConfirmed, secondary = false }:
     mutationFn: () => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/confirm`),
     onSuccess: onConfirmed,
     // A 409 (cancelled or confirmed elsewhere) re-reads the day too, so the stale button and status go.
-    onSettled: () => client.invalidateQueries({ queryKey: ['sales', 'schedule'] }),
+    onSettled: () => client.invalidateQueries({ queryKey: salesKeys.schedule }),
   });
   return (
     <div className="grid gap-2">

@@ -7,12 +7,19 @@ import { StudentProfileForm } from '@/features/people/students/profile/StudentPr
 import type { StudentProfile } from '@ab/shared';
 
 const api = vi.hoisted(() => ({ updateStudent: vi.fn(), fetchStudent: vi.fn() }));
-vi.mock('@/features/people/students/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  updateStudent: api.updateStudent,
-  teacherOptionsQuery: queryOptions({ queryKey: ['teacher-options-test'], queryFn: async () => [] }),
-  studentQuery: (id: string) => queryOptions({ queryKey: ['students', id], queryFn: api.fetchStudent }),
-}));
+vi.mock('@/features/people/students/api', async (importOriginal) => {
+  const { studentKeys } = await import('@/features/people/keys');
+  return {
+    ...(await importOriginal<object>()),
+    updateStudent: api.updateStudent,
+    teacherOptionsQuery: queryOptions({
+      queryKey: studentKeys.teacherOptions(),
+      queryFn: async () => [],
+    }),
+    studentQuery: (id: string) =>
+      queryOptions({ queryKey: studentKeys.detail(id), queryFn: api.fetchStudent }),
+  };
+});
 
 const STUDENT = {
   id: 's1', name: 'سهيلة', program: 'quran', status: 'trial', teacher_id: null, tz: 'Asia/Riyadh',

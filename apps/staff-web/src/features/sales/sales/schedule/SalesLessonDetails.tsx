@@ -33,7 +33,7 @@ export function salesClockLines(
 /**
  * The admin drawer's details, read-only for sales (docs/16): status and tags, the viewer's time with
  * each student's and the teacher's own clock, the length, the teacher and the students with their
- * codes, and the lesson's link (owner 2026-10-26). Sales' lesson never carries a reason, a flag or
+ * codes, and the lesson's link. Sales' lesson never carries a reason, a flag or
  * money, so none of them is shown.
  */
 export function SalesLessonDetails({ lesson }: { lesson: SalesScheduleLesson }) {

@@ -2,9 +2,9 @@ import { CHANNEL_REFRESH_MS, channelSeatKey, channelSeats } from '@ab/client-cor
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 
-// The assistant seat of a student chat (owner 2026-11-16 «any assistant can subscribe to the
-// chating channel but only 1»): its read and its two writes live in @ab/client-core, the same as
-// the staff app's; this hook binds them to the web's API client.
+// The assistant seat of a student chat (any assistant may take it, but only one at a time): its
+// read and its two writes live in @ab/client-core, the same as the staff app's; this hook binds
+// them to the web's API client.
 
 const seats = channelSeats({ apiFetch, apiSend });
 

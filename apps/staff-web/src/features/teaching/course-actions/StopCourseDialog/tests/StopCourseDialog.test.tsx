@@ -69,7 +69,7 @@ describe('StopCourseDialog «إلغاء الاشتراك» (owner 2026-10-30)', 
     const result = { subscriptionId: SUB, cancelledLessons: 4, endedRules: 1, refund: null };
     apiSend.mockResolvedValue({ ...result, studentStatus: 'churned' });
     fireEvent.click(confirm() as HTMLButtonElement);
-    // owner 2026-11-17 (board CourseXWebDone): the status now, the next step, who was told, chat.
+    // The status now, the next step, who was told, chat.
     expect(await screen.findByText(words.done)).toBeTruthy();
     const status = words.doneStatus.replace('{status}', t.enums.studentStatus.churned);
     for (const line of [status, words.nextTitle, words.nextTell, words.notifiedFamily])

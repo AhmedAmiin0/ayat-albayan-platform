@@ -95,7 +95,7 @@ export async function pickSlot(): Promise<void> {
   pick();
 }
 
-/** A package's second day at its own time: Wednesday 19:30 (a second row, owner 2026-10-18). */
+/** A package's second day at its own time: Wednesday 19:30 (a second row). */
 export function pickWednesday(): void {
   const second = screen.queryByRole('group', { name: rowName(2) });
   if (!second) fireEvent.click(screen.getByRole('button', { name: t.lessonTimes.addDay }));

@@ -12,7 +12,7 @@ export const ChatReturnContext = createContext<(() => void) | null>(null);
 
 export const useChatReturn = (): (() => void) | null => useContext(ChatReturnContext);
 
-/** A course's picks kept as a draft until the payment (owner 2026-11-06): the dialog says so. */
+/** A course's picks kept as a draft until the payment: the dialog says so. */
 export const CourseHeldContext = createContext<(() => void) | null>(null);
 
 export const useCourseHeld = (): (() => void) | null => useContext(CourseHeldContext);

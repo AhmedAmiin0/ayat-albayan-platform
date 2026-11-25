@@ -13,6 +13,7 @@ import type { AssistantRow, LedgerFilter, StatementFilter } from '@ab/client-cor
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { uploadSigned } from '@/lib/storage/upload-slot';
+import { assistantPayKeys } from '@/features/people/keys';
 
 // Reads need assistantpay.read, writes .write, approval .approve; amounts are per currency.
 export type {
@@ -21,11 +22,11 @@ export type {
   AssistantTermsView,
 } from '@ab/money';
 
-export const ASSISTANTS_KEY = ['assistant-pay'] as const;
+export const ASSISTANTS_KEY = assistantPayKeys.all;
 
 /** GET /assistant-pay/terms: every assistant (base role sales) with their terms, reshaped to the list's row. */
 export const assistantsQuery = queryOptions({
-  queryKey: [...ASSISTANTS_KEY, 'assistants'],
+  queryKey: assistantPayKeys.assistants(),
   queryFn: async (): Promise<AssistantRow[]> => {
     const rows = await apiFetch<AssistantTermsRow[]>('/assistant-pay/terms');
     return rows.map(({ name, ...terms }) => ({ id: terms.assistant_id, name, terms }));
@@ -50,7 +51,7 @@ export const ledgerMonthRange = (month: string): Record<string, string> => {
 
 export const commissionsQuery = (f: LedgerFilter) =>
   queryOptions({
-    queryKey: [...ASSISTANTS_KEY, 'commissions', f],
+    queryKey: assistantPayKeys.commissions(f),
     queryFn: () => apiFetch<AssistantCommissionView[]>(`/assistant-pay/commissions${qs({ assistantId: f.assistantId, status: f.status, ...ledgerMonthRange(f.month) })}`),
   });
 
@@ -59,7 +60,7 @@ export const voidCommission = (input: { id: string; reason: string }) =>
 
 export const statementsQuery = (f: StatementFilter) =>
   queryOptions({
-    queryKey: [...ASSISTANTS_KEY, 'statements', f],
+    queryKey: assistantPayKeys.statements(f),
     queryFn: () => apiFetch<AssistantStatementView[]>(`/assistant-pay/statements${qs({ ...f })}`),
   });
 
@@ -91,7 +92,7 @@ export type BroughtBy = { assistant: { id: string; name: string } | null; brough
 
 export const broughtByQuery = (studentId: string) =>
   queryOptions({
-    queryKey: [...ASSISTANTS_KEY, 'brought-by', studentId],
+    queryKey: assistantPayKeys.broughtBy(studentId),
     queryFn: () => apiFetch<BroughtBy>(`/assistant-pay/brought-by/${studentId}`),
   });
 

@@ -2,7 +2,7 @@ import type { BookedCourse, ProfileCourseView } from '@ab/shared';
 import type { BookingTeacherOption } from '@ab/schedule';
 import type { Mock } from 'vitest';
 
-// Test data only: the profile course actions (owner 2026-10-30). Now is Saturday 3 October 2026,
+// Test data only: the profile course actions. Now is Saturday 3 October 2026,
 // 12:00 Riyadh; the course runs Sunday 17:00 and Wednesday 19:30 (Riyadh).
 
 export const NOW = '2026-10-03T09:00:00.000Z';

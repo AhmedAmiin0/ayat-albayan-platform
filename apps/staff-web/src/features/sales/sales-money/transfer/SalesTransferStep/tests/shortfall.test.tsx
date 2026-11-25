@@ -10,7 +10,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-// Owner 2026-10-28 («Why is this unpaid»): 81 SAR, a receipt of 80 leaves it unpaid; say so before saving.
+// Why is this unpaid: 81 SAR, a receipt of 80 leaves it unpaid; say so before saving.
 const SUB = { ...OPEN_SUB, price: 81, due: 81 };
 const SHORT = 'المبلغ أقل من المستحق بـ 1 ر.س، ستبقى الباقة غير مدفوعة حتى يكتمل المبلغ';
 const payments = () => apiSend.mock.calls.filter(([, path]) => path === '/sales/payments').map((c) => c[2] as Record<string, unknown>);

@@ -5,12 +5,13 @@ import type { ListUrlState } from '@/lib/list/list-url';
 import type { LeadSearch } from './types';
 import type { JobApplicantView, LeadView } from '@ab/shared';
 import type { Page } from '@ab/core';
+import { applicantKeys, leadKeys } from '@/features/sales/keys';
 
 export const PAGE_SIZE = 25;
 
 export const leadsQuery = (s: LeadSearch) =>
   queryOptions({
-    queryKey: ['leads', s],
+    queryKey: leadKeys.list(s),
     queryFn: () => {
       const params = new URLSearchParams({ page: String(s.page), pageSize: String(PAGE_SIZE) });
       if (s.status) params.set('status', s.status);
@@ -28,7 +29,7 @@ export const leadsQuery = (s: LeadSearch) =>
 /** GET /job-applicants: page, column sort and filters (R-NFR-08). */
 export const jobApplicantsQuery = (s: ListUrlState) =>
   queryOptions({
-    queryKey: ['job-applicants', s],
+    queryKey: applicantKeys.list(s),
     queryFn: () => {
       const qs = new URLSearchParams([['page', String(s.page)], ['pageSize', String(PAGE_SIZE)], ...sortFilterParams(s.sort, s.filters)]);
       return apiFetch<Page<JobApplicantView>>(`/job-applicants?${qs}`);

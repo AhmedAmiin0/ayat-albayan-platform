@@ -5,7 +5,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 import { OPEN_SUB, paymentView, student } from '@/features/sales/sales-money/sales-money-fixture';
 import { SalesMoneyFlow } from '@/features/sales/sales-money/SalesMoneyFlow';
 
-// sales.renew_any (owner 2026-10-29, docs/16 row 38): the transfer for a child of the chat's family not hers.
+// sales.renew_any (docs/16 row 38): the transfer for a child of the chat's family not hers.
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

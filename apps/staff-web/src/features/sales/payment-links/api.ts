@@ -9,15 +9,16 @@ import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
+import { paymentLinkKeys, publicLinkKeys, stripeKeys } from '@/features/sales/keys';
 
 // Payment links (docs/30) need FEATURE_STRIPE; reads go behind stripeBuild(); 404 means no Stripe.
 
 /** Her links and their quotes. */
-export const PAYMENT_LINKS_KEY = ['sales', 'payment-links'] as const;
+export const PAYMENT_LINKS_KEY = paymentLinkKeys.all;
 
 /** GET /stripe/feature (public): never retried, a 404 is an answer (OFF). */
 export const stripeFeatureQuery = queryOptions({
-  queryKey: ['stripe', 'feature'],
+  queryKey: stripeKeys.feature(),
   queryFn: () => apiFetch<StripeFeature>('/stripe/feature'),
   retry: false,
   staleTime: 5 * 60_000,
@@ -25,7 +26,7 @@ export const stripeFeatureQuery = queryOptions({
 
 /** GET /sales/payment-links: hers, newest first. */
 export const paymentLinksQuery = queryOptions({
-  queryKey: [...PAYMENT_LINKS_KEY, 'list'],
+  queryKey: paymentLinkKeys.list(),
   queryFn: () => apiFetch<PaymentLinkView[]>('/sales/payment-links'),
 });
 
@@ -39,7 +40,7 @@ export const cancelPaymentLink = (id: string) => apiSend<PaymentLinkView>('POST'
 /** GET /pay/:token (public, no login) as JSON: without the Accept header the API answers its own HTML page. */
 export const publicLinkQuery = (token: string) =>
   queryOptions({
-    queryKey: ['pay', token],
+    queryKey: publicLinkKeys.link(token),
     queryFn: () => apiFetch<PublicPaymentLink>(`/pay/${encodeURIComponent(token)}`, { headers: { Accept: 'application/json' } }),
     retry: false,
   });

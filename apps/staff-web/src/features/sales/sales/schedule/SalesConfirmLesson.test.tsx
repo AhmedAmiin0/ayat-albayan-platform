@@ -15,7 +15,7 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
 
 const NOW = new Date('2026-10-12T14:00:00.000Z');
 const a = t.sales.lessonActions;
-// Another family's lesson (owner 2026-10-28: any lesson), scheduled, 15:00–15:30Z.
+// Another family's lesson (sales confirms any lesson), scheduled, 15:00–15:30Z.
 const LESSON = scheduleLesson({ id: 'l-9', status: 'scheduled' });
 
 function open(lesson = LESSON) {
