@@ -14,7 +14,7 @@ export interface SentRow {
 const masked = (phone: string): string => `…${phone.slice(-4)}`;
 
 /**
- * The reopen template a family no longer needs (owner 2026-11-06, docs/19): one still QUEUED and
+ * The reopen template a family no longer needs (docs/19): one still QUEUED and
  * not claimed is failed REOPEN_NOT_NEEDED in a compare-and-set (a sending, sent or failed one is
  * never touched), and only while no other text of that family is queued. Never throws: a template
  * left queued only asks the family to reply.
@@ -31,9 +31,9 @@ export class ReopenCancel {
   }
 
   /**
-   * The hold missed after ReopenRequest queued `key` for it (the row moved meanwhile, review
-   * 2026-11-06): that reopen goes too, unless a text of the family is still queued (even this one,
-   * held by another pass).
+   * The hold missed after ReopenRequest queued `key` for it (the row moved meanwhile): that
+   * reopen goes too, unless a text of the family is still queued (even this one, held by another
+   * pass).
    */
   async dropLost(phone: string, key: string): Promise<CancelOutcome> {
     return this.safely(phone, async () => {

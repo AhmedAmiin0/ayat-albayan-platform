@@ -1,10 +1,13 @@
 import { replyConfirmPath, type ConfirmRoute } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@ab/web-kit/components/ui/form/button';
+import { salesKeys } from '@/features/sales/keys';
 import { confirmErrorText } from '@/features/sales/sales';
+import { lessonKeys } from '@/features/teaching/schedule';
 import { apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
 export interface ReplyConfirmButtonProps {
   phone: string;
@@ -21,18 +24,30 @@ export function ReplyConfirmButton({ phone, lessonId, route, label }: ReplyConfi
     mutationFn: () => apiSend('POST', replyConfirmPath(lessonId, route)),
     onSettled: () =>
       Promise.all([
-        client.invalidateQueries({ queryKey: ['threads', 'detail', phone] }),
+        client.invalidateQueries({ queryKey: threadKeys.detail(phone) }),
         refreshAnchored(client, phone),
-        client.invalidateQueries({ queryKey: ['lessons'] }),
-        client.invalidateQueries({ queryKey: ['sales', 'schedule'] }),
+        client.invalidateQueries({ queryKey: lessonKeys.all }),
+        client.invalidateQueries({ queryKey: salesKeys.schedule }),
       ]),
   });
   return (
     <>
-      <Button type="button" size="sm" variant="secondary" aria-label={label} title={label} disabled={confirm.isPending} onClick={() => confirm.mutate()}>
+      <Button
+        type="button"
+        size="sm"
+        variant="secondary"
+        aria-label={label}
+        title={label}
+        disabled={confirm.isPending}
+        onClick={() => confirm.mutate()}
+      >
         {confirm.isPending ? t.common.saving : t.inbox.replyAction.confirm}
       </Button>
-      {confirm.isError && <p role="alert" className="basis-full text-xs text-danger">{confirmErrorText(confirm.error)}</p>}
+      {confirm.isError && (
+        <p role="alert" className="basis-full text-xs text-danger">
+          {confirmErrorText(confirm.error)}
+        </p>
+      )}
     </>
   );
 }

@@ -3,10 +3,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { anchoredThreadPrefix } from '@ab/client-core';
 import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
-import { action, fakeTab, held, renderBubble } from '@/features/messaging/inbox/messages/whatsapp-send/whatsapp-send.test-util';
+import {
+  action,
+  fakeTab,
+  held,
+  renderBubble,
+} from '@/features/messaging/inbox/messages/whatsapp-send/whatsapp-send.test-util';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch: vi.fn(),
+  apiSend: vi.fn(),
+}));
 
 const refused = (status: string, error_code: string | null = null) =>
   new ApiError(409, { code: 'not_app_send', message: 'not_app_send', status, error_code });
@@ -24,7 +34,9 @@ describe('«أرسل عبر واتساب» in the web bubble: app-send, then ope
   afterEach(() => open.mockRestore());
 
   it('app-send first (nothing marked sent), then the tab goes to WhatsApp Web with the text', async () => {
-    vi.mocked(apiSend).mockResolvedValue(message({ ...held, app_send_until: '2026-11-06T12:10:00Z' }));
+    vi.mocked(apiSend).mockResolvedValue(
+      message({ ...held, app_send_until: '2026-11-06T12:10:00Z' }),
+    );
     renderBubble({});
     fireEvent.click(action() as HTMLElement);
     await waitFor(() => expect(tab.location.replace).toHaveBeenCalled());
@@ -44,10 +56,10 @@ describe('«أرسل عبر واتساب» in the web bubble: app-send, then ope
     const invalidate = vi.spyOn(client, 'invalidateQueries');
     fireEvent.click(action() as HTMLElement);
     await waitFor(() => expect(invalidate).toHaveBeenCalledTimes(4));
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'detail', '+966500000001'] });
-    expect(invalidate).not.toHaveBeenCalledWith({ queryKey: ['threads'] });
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'list'] });
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: threadKeys.detail('+966500000001') });
+    expect(invalidate).not.toHaveBeenCalledWith({ queryKey: threadKeys.all });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: threadKeys.lists });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: threadKeys.navCount });
     expect(invalidate).toHaveBeenCalledWith({ queryKey: anchoredThreadPrefix('+966500000001') });
   });
 
@@ -57,12 +69,15 @@ describe('«أرسل عبر واتساب» in the web bubble: app-send, then ope
     ['marked by hand', refused('sent_manually'), t.messages.whatsappSend.alreadySent],
     ['no longer held', refused('failed', 'network'), t.messages.whatsappSend.notNow],
     ['a network error', new Error('offline'), t.common.error],
-  ])('refused (%s): the tab is closed, WhatsApp never opens, the copy fits', async (_n, e, copy) => {
-    vi.mocked(apiSend).mockRejectedValue(e);
-    renderBubble({});
-    fireEvent.click(action() as HTMLElement);
-    await waitFor(() => expect(tab.close).toHaveBeenCalled());
-    expect(tab.location.replace).not.toHaveBeenCalled();
-    expect((await screen.findByRole('alert')).textContent).toBe(copy);
-  });
+  ])(
+    'refused (%s): the tab is closed, WhatsApp never opens, the copy fits',
+    async (_n, e, copy) => {
+      vi.mocked(apiSend).mockRejectedValue(e);
+      renderBubble({});
+      fireEvent.click(action() as HTMLElement);
+      await waitFor(() => expect(tab.close).toHaveBeenCalled());
+      expect(tab.location.replace).not.toHaveBeenCalled();
+      expect((await screen.findByRole('alert')).textContent).toBe(copy);
+    },
+  );
 });

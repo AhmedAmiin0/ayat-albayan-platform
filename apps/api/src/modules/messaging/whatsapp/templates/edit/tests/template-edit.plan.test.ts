@@ -4,7 +4,7 @@ import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { isRefusal, planEdit, type EditPlan } from '@/modules/messaging/whatsapp/templates/edit/template-edit.plan';
 
-// One edit's plan (owner 2026-11-14): Meta's rules, the code-bound rule and the body rules. Pure.
+// One edit's plan: Meta's rules, the code-bound rule and the body rules. Pure.
 
 const now = new Date('2026-11-14T12:00:00Z');
 const jitsi = { type: 'url' as const, text: 'ادخل', url: 'https://meet.jit.si/{{1}}' };

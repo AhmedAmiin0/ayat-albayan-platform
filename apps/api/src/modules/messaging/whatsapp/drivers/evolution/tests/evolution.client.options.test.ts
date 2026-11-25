@@ -4,7 +4,7 @@ import { EvolutionWhatsappClient } from '@/modules/messaging/whatsapp/drivers/ev
 import { EvolutionPacer } from '@/modules/messaging/whatsapp/drivers/evolution/evolution-pacer';
 import { EVO_BAILEYS, EVO_CLOUD, evoSent } from '@/modules/messaging/whatsapp/drivers/evolution/evolution.fakes';
 
-// Owner 2026-11-06: the number's own sending option (link preview) rides on each send, never a
+// The number's own sending option (link preview) rides on each send, never a
 // typing delay («dont make the family see typing»), and the Baileys pace is asked, never slept on
 // (docs/19 «Evolution driver»).
 

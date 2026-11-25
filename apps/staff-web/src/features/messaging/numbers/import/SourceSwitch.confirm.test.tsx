@@ -3,13 +3,19 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
-import { CATALOGUE_QUERY_KEY } from '@/features/messaging/notification-catalogue/catalogue-api';
+import { catalogueKeys } from '@/features/messaging/keys';
 import { fetchCount, renderPanel } from '@/features/messaging/numbers/numbers-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({
+  usePermissions: () => ({ permissions: [], can: () => true }),
+}));
 
 const s = t.numbers.source;
 
@@ -33,13 +39,17 @@ describe('the source switch: confirm, then POST', () => {
     expect(apiSend).not.toHaveBeenCalled();
     apiSend.mockResolvedValue({ source: 'module' });
     fireEvent.click(within(dialog).getByRole('button', { name: s.confirm }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin/communications/source', { source: 'module' }));
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('POST', '/admin/communications/source', {
+        source: 'module',
+      }),
+    );
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
     expect(onSaved).toHaveBeenCalledWith(s.changed);
     expect(fetchCount(apiFetch, '/admin/communications/parity')).toBe(2);
     expect(fetchCount(apiFetch, '/admin/numbers')).toBe(2);
     expect(invalidate).toHaveBeenCalledWith({ queryKey: CONFIG_QUERY_KEYS.settings });
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: CATALOGUE_QUERY_KEY });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: catalogueKeys.all });
   });
 
   it('a 409 parity_not_empty stays inside the dialog, in words', async () => {

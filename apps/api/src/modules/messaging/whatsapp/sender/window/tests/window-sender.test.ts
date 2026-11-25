@@ -5,7 +5,7 @@ import type { MessageWorker } from '@/modules/messaging/whatsapp/sender/message.
 import { dueMessage, fakeSwitches } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo';
 
-// The pass and the chat window (owner 2026-11-03): released first, a fresh hold's template at once.
+// The pass and the chat window: released first, a fresh hold's template at once.
 
 const gate = fakeSwitches();
 const queries = {

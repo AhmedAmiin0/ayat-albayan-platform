@@ -6,7 +6,7 @@ import { lineEnvs, loadEnv, type KapsoLineEnv, type WhatsappEnv } from '@/config
 import { reopenKapsoConversation } from '@/modules/messaging/whatsapp/drivers/kapso/kapso-conversations';
 import type { NumberRoute } from '@/modules/messaging/whatsapp/numbers/number-route';
 
-/** Kapso gets this long, list and PATCH together (the reopener's budget, owner 2026-10-27). */
+/** Kapso gets this long, list and PATCH together (the reopener's budget). */
 const KAPSO_HOLD_MS = 5_000;
 /** error_text keeps this much of Kapso's failure (never a key: the http core's message only). */
 const MAX_TEXT = 200;
@@ -35,7 +35,7 @@ const kapsoFailText = (message: string): string =>
   `kapso conversation reopen failed: ${message}`.slice(0, MAX_TEXT);
 
 /**
- * Owner 2026-11-06: when a staff text is held after the window on a chat line that runs on Kapso,
+ * When a staff text is held after the window on a chat line that runs on Kapso,
  * Kapso's own conversation record goes back to `active` (PATCH /whatsapp/conversations/{id},
  * through the Kapso driver: the id is Kapso's, found by the phone on that number, since our
  * messages only keep Meta's conversation id). None found, or not ended: no PATCH. It does not

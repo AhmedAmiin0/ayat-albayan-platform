@@ -26,7 +26,7 @@ interface HoldWrite {
 const fail = (what: string, message: string): Error => new Error(`${what} failed: ${message}`);
 
 /**
- * The 24 h window's reads and writes on `messages` (owner 2026-11-03). Every state change is
+ * The 24 h window's reads and writes on `messages`. Every state change is
  * compare-and-set on status = queued; the reopen template row is deduped by its dedup_key (rule 8).
  */
 @Injectable()

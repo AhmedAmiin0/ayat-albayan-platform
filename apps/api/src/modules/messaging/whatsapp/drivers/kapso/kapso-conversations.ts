@@ -3,7 +3,7 @@ import type { FetchLike } from '@/common/infra/http/failure';
 import type { KapsoLineEnv } from '@/config/env/env';
 import { kapsoPlatformHttp } from './kapso-platform.http';
 
-// Kapso's own conversation record (Platform API v1, owner 2026-10-26): status `active` | `ended`
+// Kapso's own conversation record (Platform API v1): status `active` | `ended`
 // (ended after 24 h without activity, or by hand). Switching it back to `active` does NOT reopen
 // WhatsApp's 24 h window (only an approved template does); it keeps Kapso's inbox in step with
 // ours. The base comes from the line's config (KAPSO_API_BASE, the Meta proxy), never a literal

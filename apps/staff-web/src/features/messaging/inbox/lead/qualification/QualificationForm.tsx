@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { patchQualification, type InboxLead } from '@/features/messaging/inbox/api/api';
+import { leadKeys } from '@/features/sales/keys';
 import { RequestFields } from './FamilyFields';
 import { PreferenceFields } from './PreferenceFields';
 import { QualificationFields } from './QualificationFields';
@@ -23,7 +24,7 @@ export function QualificationForm({ lead, onDone }: QualificationFormProps) {
     mutationFn: patchQualification,
     onSuccess: async () => {
       onDone(t.inbox.qualificationSaved);
-      await queryClient.invalidateQueries({ queryKey: ['leads'] });
+      await queryClient.invalidateQueries({ queryKey: leadKeys.all });
     },
     onError: () => onDone(t.common.error, 'error'),
   });

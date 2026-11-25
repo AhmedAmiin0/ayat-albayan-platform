@@ -10,7 +10,7 @@ import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fake
 import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { KapsoHold } from '@/modules/messaging/whatsapp/sender/window/kapso-hold';
 
-// Owner 2026-11-06: the Kapso conversation PATCH runs only for a number on the kapso driver,
+// The Kapso conversation PATCH runs only for a number on the kapso driver,
 // never on Meta or CRM. A scripted fetch only: never Kapso.
 
 const PHONE = '+201000000001';

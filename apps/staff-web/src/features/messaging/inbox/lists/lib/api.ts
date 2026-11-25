@@ -3,6 +3,7 @@ import type { ChatList } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
 // docs/22 §3: one academy-wide shared set of chat lists; lists only organise chats.
 
@@ -16,11 +17,13 @@ export const chatListsQuery = queryOptions({
 });
 
 const listPath = (id: string) => `/chat-lists/${encodeURIComponent(id)}`;
-const memberPath = (input: { id: string; phone: string }) => `${listPath(input.id)}/threads/${encodeURIComponent(input.phone)}`;
+const memberPath = (input: { id: string; phone: string }) =>
+  `${listPath(input.id)}/threads/${encodeURIComponent(input.phone)}`;
 
 export const createList = (name: string) => apiSend<ChatList>('POST', '/chat-lists', { name });
 
-export const renameList = (input: { id: string; name: string }) => apiSend<ChatList>('PATCH', listPath(input.id), { name: input.name });
+export const renameList = (input: { id: string; name: string }) =>
+  apiSend<ChatList>('PATCH', listPath(input.id), { name: input.name });
 
 export const deleteList = (id: string) => apiSend('DELETE', listPath(id));
 
@@ -32,7 +35,7 @@ export const setMember = (input: { id: string; phone: string; member: boolean })
 export const refreshLists = (queryClient: QueryClient) =>
   Promise.all([
     queryClient.invalidateQueries({ queryKey: CHAT_LISTS_KEY }),
-    queryClient.invalidateQueries({ queryKey: ['threads'] }),
+    queryClient.invalidateQueries({ queryKey: threadKeys.all }),
   ]);
 
 /** The dialogs' inline error: a taken name, the 30-list cap, a list deleted meanwhile, or a generic one. */

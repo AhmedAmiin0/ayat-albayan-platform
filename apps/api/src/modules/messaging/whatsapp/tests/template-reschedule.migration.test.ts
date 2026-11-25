@@ -4,7 +4,7 @@ import { RESTRICTED_TEMPLATE_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migration 460 (owner 2026-10-18). No database runs in unit tests: this pins the shape.
+// Migration 460. No database runs in unit tests: this pins the shape.
 const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261018000460_template_reschedule.sql'), 'utf8');
 

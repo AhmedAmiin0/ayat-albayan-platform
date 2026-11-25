@@ -58,8 +58,7 @@ export class InboundMediaRepo {
 
   /**
    * The pickers' files of one phone since `since`, newest first, never hidden: RECEIPT_FILTERS
-   * run here, before the limit, so a run of stickers or voice notes never pushes a PDF out
-   * (owner 2026-10-31).
+   * run here, before the limit, so a run of stickers or voice notes never pushes a PDF out.
    */
   async receipts(input: { phone: string; since: string; limit: number }): Promise<MediaMessage[]> {
     const { data, error } = await this.db
@@ -92,12 +91,12 @@ export class InboundMediaRepo {
   }
 
   /**
-   * Cached inbound audio / video older than `before`, oldest first (owner 2026-10-19 #2: photos
+   * Cached inbound audio / video older than `before`, oldest first (photos
    * and PDFs are never purged). Uses messages_media_cached_idx (migration 500). `echoes`: the same
    * for cached echoes (outbound with Meta's media id, sent from the WhatsApp Business app), never a
    * file staff sent (out/…); few rows, so no index of their own. Only rows with Meta's media id: an
    * imported old-CRM file (no media id, cached from the CRM link) is our ONLY copy once the CRM's
-   * storage is private, so it is never purged (owner 2026-10-27, CrmMediaCopyJob).
+   * storage is private, so it is never purged (CrmMediaCopyJob).
    */
   async cachedBefore(input: { before: string; limit: number; echoes?: boolean }): Promise<CachedMedia[]> {
     const { data, error } = await this.cached(this.db.from('messages').select('id, media_path, media_mime, media_id'), input.echoes)

@@ -3,6 +3,7 @@ import { PROGRAMS } from '@ab/catalog';
 import { counted } from '@ab/core';
 import { useQueries, type UseQueryResult } from '@tanstack/react-query';
 import { z } from 'zod';
+import { teacherKeys } from '@/features/people/keys';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
@@ -31,7 +32,7 @@ export function factsLine(s: Omit<StudentFacts, 'id'>): string {
 }
 
 export const studentFactsQuery = (kind: TeacherStudentKind) => ({
-  queryKey: ['teachers', 'me', 'students', kind] as const,
+  queryKey: teacherKeys.myStudents(kind),
   queryFn: async () => factsSchema.parse(await apiFetch(`/teachers/me/students?kind=${kind}`)),
   staleTime: FACTS_STALE_MS,
 });

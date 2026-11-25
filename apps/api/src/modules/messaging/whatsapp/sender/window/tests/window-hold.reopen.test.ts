@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { NOW, PHONE, reopenOf, staffText, windowFakes } from '@/modules/messaging/whatsapp/sender/window/window.fakes';
 
-// Merge-gate review 2026-11-05: a held text never waits behind a reopen template that will not
+// A held text never waits behind a reopen template that will not
 // reach the family. Only a pending or sent reopen counts; a failed or expired one gets a new try
 // (its own dedup key), and when none can go the text fails at once with a visible reason.
 

@@ -8,7 +8,7 @@ import {
 } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // A voice note recorded in the app, on a line that uploads media (capsOf().mediaUpload: meta,
-// kapso; 2026-11-14): the ogg is uploaded and sent by its media id. A refused upload or send
+// kapso): the ogg is uploaded and sent by its media id. A refused upload or send
 // sends the recorded m4a once instead, by link as plain audio; the row records it (WaSent.media).
 
 const log = new Logger('VoiceDispatch');

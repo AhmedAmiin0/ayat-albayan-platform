@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient, type MutationFunction } from '@tanstack/react-query';
 import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';
-import { CATALOGUE_QUERY_KEY } from '@/features/messaging/notification-catalogue/catalogue-api';
+import { catalogueKeys } from '@/features/messaging/keys';
 import { useNumbersNote } from './numbers-note';
 
 export interface NumbersMutationOptions<T> {
@@ -12,7 +12,10 @@ export interface NumbersMutationOptions<T> {
 }
 
 /** A refused write also refetches, since the page's copy is out of date (final review 4). */
-export function useNumbersMutation<T, V>(mutationFn: MutationFunction<T, V>, options: NumbersMutationOptions<T> = {}) {
+export function useNumbersMutation<T, V>(
+  mutationFn: MutationFunction<T, V>,
+  options: NumbersMutationOptions<T> = {},
+) {
   const queryClient = useQueryClient();
   const onNote = useNumbersNote();
   return useMutation({
@@ -21,7 +24,7 @@ export function useNumbersMutation<T, V>(mutationFn: MutationFunction<T, V>, opt
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: NUMBERS_QUERY_KEYS.numbers }),
         queryClient.invalidateQueries({ queryKey: NUMBERS_QUERY_KEYS.parity }),
-        queryClient.invalidateQueries({ queryKey: CATALOGUE_QUERY_KEY }),
+        queryClient.invalidateQueries({ queryKey: catalogueKeys.all }),
       ]);
       if (options.note) onNote(options.note);
       options.onDone?.(data);

@@ -13,7 +13,7 @@ import {
   WaError, type MetaTemplate, type TemplateRow, type WhatsappLines,
 } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// One number's sync with Meta (owner 2026-10-18: «more options to sync it with meta for each number»):
+// One number's sync with Meta, each number on its own:
 // only that line's rows, against only that line's WABA list, then that WABA's new templates imported.
 // A row is never matched against (nor marked missing from) the other WABA's list.
 

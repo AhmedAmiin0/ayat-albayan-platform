@@ -6,7 +6,7 @@ import { TemplateNames } from '@/modules/messaging/whatsapp/templates/names/temp
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import { REPORT_READY, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// The template block of a message view (owner 2026-10-28): header, footer and buttons like WhatsApp.
+// The template block of a message view: header, footer and buttons like WhatsApp.
 
 const views = (rows: Record<string, ReturnType<typeof templateRow>>) => {
   const cached = vi.fn(async (key: string) => rows[key] ?? null);

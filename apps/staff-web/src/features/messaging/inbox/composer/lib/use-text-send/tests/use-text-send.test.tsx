@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SEND_UNCONFIRMED } from '@ab/client-core';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
+import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { detail, message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { clearAllDrafts, draftGeneration, getDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { ownSendGeneration } from '@/features/messaging/inbox/composer/lib/own-send';
@@ -141,7 +142,7 @@ describe('useTextSend: an optimistic send', () => {
     act(() => answer(server));
     const detailKey = threadQuery(PHONE).queryKey;
     await waitFor(() => expect(spy).toHaveBeenCalledWith({ queryKey: detailKey }));
-    expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
-    expect(spy).not.toHaveBeenCalledWith({ queryKey: ['threads'] });
+    expect(spy).toHaveBeenCalledWith({ queryKey: threadKeys.navCount });
+    expect(spy).not.toHaveBeenCalledWith({ queryKey: threadKeys.all });
   });
 });
