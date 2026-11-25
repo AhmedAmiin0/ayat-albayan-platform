@@ -1,6 +1,6 @@
 import { fillRoutePath, type RouteResult } from '@ab/core';
 import { z } from 'zod';
-import type { ApiClient } from '../api-client';
+import { parseResponse, type ApiClient } from '../api-client';
 import { toQueryString } from '../query-string';
 import type { AnyCallInput, CallableRoute, CallInput } from './call.types';
 
@@ -21,7 +21,8 @@ function urlOf(route: CallableRoute, input: AnyCallInput): string {
 
 /**
  * One call of a route object (docs/62 part 3 §3): the path from routePath, the query string, the
- * body, and the answer parsed strictly with the route's own schema.
+ * body, and the answer parsed strictly with the route's own schema. The client sees the same
+ * apiFetch(path) / apiSend(method, path, body) a hand-written call made.
  */
 export function call<R extends CallableRoute>(
   api: ApiClient,
@@ -30,8 +31,7 @@ export function call<R extends CallableRoute>(
 ): Promise<RouteResult<R>>;
 export function call(api: ApiClient, route: CallableRoute, input: AnyCallInput): Promise<unknown> {
   const url = urlOf(route, input);
-  const schema = answerOf(route);
-  return route.method === 'GET'
-    ? api.apiFetch(url, { schema })
-    : api.apiSend(route.method, url, { body: input.body, schema });
+  const answer =
+    route.method === 'GET' ? api.apiFetch(url) : api.apiSend(route.method, url, input.body);
+  return answer.then((body: unknown) => parseResponse(answerOf(route), body, url));
 }
