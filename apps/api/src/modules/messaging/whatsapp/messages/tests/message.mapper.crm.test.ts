@@ -3,7 +3,7 @@ import { crmLink } from '@/modules/messaging/whatsapp/messages/crm-history/crm-h
 import { toMessageView } from '@/modules/messaging/whatsapp/messages/message.mapper';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 
-// Owner 2026-10-27: an imported CRM file's body is only its storage link; the bubble is a photo /
+// An imported CRM file's body is only its storage link; the bubble is a photo /
 // voice note with no caption, never the raw link. The stored row is not edited.
 
 const crm = { direction: 'inbound', media_id: null, media_path: null, template_key: null, template_params: null } as const;

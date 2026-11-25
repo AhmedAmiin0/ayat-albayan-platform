@@ -4,7 +4,7 @@ import { BATCH } from '@/modules/messaging/whatsapp/messages/crm-copy/crm-media-
 import { copyWorld, crmRows } from '@/modules/messaging/whatsapp/messages/crm-copy/tests/crm-copy.fakes';
 import { copyHost } from '@/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.job';
 
-// Owner 2026-10-27 «Fix it»: our own copy of EVERY imported old-CRM file, only while the switch is on.
+// Our own copy of EVERY imported old-CRM file, only while the switch is on.
 const ogg = () => crmResponse(4, { 'content-type': 'audio/ogg' });
 
 describe('CrmMediaCopyJob: the switch and the host', () => {

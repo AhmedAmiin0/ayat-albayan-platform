@@ -23,7 +23,7 @@ const listed = (userId: string) => (t: TemplateView): boolean =>
   (t.sales_starter && t.line === 'chat') || t.created_by === userId;
 
 /**
- * Sales authoring (owner 2026-11-14), templates.author: never the templates.manage routes, never
+ * Sales authoring, templates.author: never the templates.manage routes, never
  * past the allow-list. A new template goes straight to Meta on the chat line, flagged for the
  * allow-list (no admin step by default); 5 a day per user. Audited template_authored (and the
  * submit's template_submitted).

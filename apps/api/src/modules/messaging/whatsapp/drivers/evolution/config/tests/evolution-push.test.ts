@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { EVO_BAILEYS } from '@/modules/messaging/whatsapp/drivers/evolution/evolution.fakes';
 import { syncEvolution, type PushTarget } from '@/modules/messaging/whatsapp/drivers/evolution/config/evolution-push';
 
-// Owner 2026-11-06: every option pushed to Evolution on save and read back. All HTTP is faked
+// Every option pushed to Evolution on save and read back. All HTTP is faked
 // (never a real Evolution): one answer per «METHOD path».
 
 interface Reply { status: number; body: unknown }

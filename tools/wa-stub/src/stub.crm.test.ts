@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { bearer, closeAll, post, startStub } from './test-server.ts';
+import { z } from 'zod';
+import { bearer, closeAll, post, read, startStub } from './test-server.ts';
 
 // docs/19 «crm driver»: the academy CRM's REST API under /crm/api/v1, Bearer key,
 // {data} / {error} envelope.
@@ -14,6 +15,8 @@ const template = {
   template: { name: 'lesson_reminder_v2', language: 'ar', params: { body: ['a', 'b'] } },
 };
 
+const SENT = z.object({ data: z.object({ whatsapp_message_id: z.string() }) });
+
 describe('wa-stub: the crm prefix', () => {
   it('GET /me answers the key scopes; POST /messages records the send with its wamid', async () => {
     const { url, stub } = await startStub({ crm: { apiKey: 'fake-crm-key' } });
@@ -25,7 +28,7 @@ describe('wa-stub: the crm prefix', () => {
     });
     const res = await post(`${url}${BASE}/messages`, template, KEY);
     expect(res.status).toBe(201);
-    const { data } = (await res.json()) as { data: { whatsapp_message_id: string } };
+    const { data } = await read(res, SENT);
     expect(stub.sent).toEqual([
       expect.objectContaining({
         id: data.whatsapp_message_id,

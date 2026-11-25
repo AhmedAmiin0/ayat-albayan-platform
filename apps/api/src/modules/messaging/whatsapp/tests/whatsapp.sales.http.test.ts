@@ -7,7 +7,7 @@ const ID = 'b0000000-0000-4000-8000-000000000009';
 const GATE = { open: true, reason: null, queued: 0 };
 const keys = (rows: { key: string }[]) => rows.map((r) => r.key);
 
-// Owner report 2026-10-12 («it is not able to start the conversation»): messages.read is a sales grant now.
+// messages.read is a sales grant, so a salesperson can start the conversation.
 describe('WhatsApp templates for a salesperson (messages.read, docs/16)', () => {
   let t: App;
   beforeAll(async () => {
@@ -30,7 +30,7 @@ describe('WhatsApp templates for a salesperson (messages.read, docs/16)', () => 
     ]);
   });
 
-  // Owner 2026-10-12: the restricted allow-list only (the admin ticks it; only the two defaults come ticked).
+  // The restricted allow-list only (the admin ticks it; only the two defaults come ticked).
   it('T1: sales lists only the approved starters she may send (no PDF, no own-button one), not 403', async () => {
     const res = await t.call({ method: 'GET', url: '/messaging/templates', token: 'sales' });
     expect(res.statusCode).toBe(200);

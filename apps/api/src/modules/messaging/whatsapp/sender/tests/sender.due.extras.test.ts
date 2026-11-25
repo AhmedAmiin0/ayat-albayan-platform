@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { sentExtras } from '@/modules/messaging/whatsapp/sender/sender.due';
 
-// What a send adds to the sent row (2026-11-14: a refused voice note's m4a is recorded).
+// What a send adds to the sent row (a refused voice note's m4a is recorded).
 
 describe('sentExtras', () => {
   it('nothing for a plain send', () => {

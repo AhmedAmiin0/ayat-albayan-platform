@@ -5,7 +5,7 @@ import { REGISTRY_ENTITY_ID, toTemplateView } from './template.mapper';
 import { TemplatesRepo } from './templates.repo';
 
 /**
- * The restricted allow-list (owner 2026-10-12, docs/16): the admin offers a template to every role
+ * The restricted allow-list (docs/16): the admin offers a template to every role
  * without templates.send_all (teachers, sales, the classroom assistant, custom roles), or stops
  * offering it. Those roles list and send only these (restrictedMay). Audited.
  */

@@ -4,7 +4,7 @@ import { MessageDispatch, mediaLink } from '@/modules/messaging/whatsapp/sender/
 import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// A file staff sent from the chat (owner 2026-10-19 #2): by link, before the text branch.
+// A file staff sent from the chat: by link, before the text branch.
 
 const client = { sendTemplate: vi.fn(), sendText: vi.fn(), sendDocument: vi.fn() };
 const lines = { notifications: client, chat: client } as unknown as WhatsappLines;

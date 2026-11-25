@@ -8,7 +8,7 @@ import {
 } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// docs/19 «Report flow» (owner 2026-11-05): report_ready as the WABA's approved session_report_pdf
+// docs/19 «Report flow»: report_ready as the WABA's approved session_report_pdf
 // (migration 20261105000301): ONE template call, the PDF as its document header, four body values.
 
 const TO = '+966500000003';

@@ -6,9 +6,10 @@ import {
 } from './whatsapp.types';
 
 /**
- * One line's client that reads its config per call (integration config in the database, owner
- * 2026-10-12): an admin's change of a WA_* value or token applies to the next call, no restart. The
- * client (client-factory.ts: by the line's driver) is rebuilt only when that line's config (or the allow-list) changed.
+ * One line's client that reads its config per call (integration config in the database): an
+ * admin's change of a WA_* value or token applies to the next call, no restart. The client
+ * (client-factory.ts: by the line's driver) is rebuilt only when that line's config (or the
+ * allow-list) changed.
  */
 export class LiveWhatsappClient implements WhatsappClient {
   private cached: { fingerprint: string; client: WhatsappClient } | null = null;

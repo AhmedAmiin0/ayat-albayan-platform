@@ -3,7 +3,7 @@ import { setIntegrationOverlay } from '@/common/configuration/integrations/integ
 import { LiveWhatsappClient } from '@/modules/messaging/whatsapp/live-client';
 import { RECORDED, scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// Integration config in the database (owner, 2026-10-12): a line's client reads its config per
+// Integration config in the database: a line's client reads its config per
 // call, so a token or id the admin saves applies to the next send without a restart.
 
 const LINE = { WA_PHONE_NUMBER_ID: 'p1', WA_WABA_ID: 'w1', WA_ACCESS_TOKEN: 'token-a' };

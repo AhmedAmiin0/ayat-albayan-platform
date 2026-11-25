@@ -11,7 +11,7 @@ import {
   displayAfter, hasForeignButtons, registryAfter, reworded, shownButtons,
 } from './template-edit.buttons';
 
-// One edit of a template's words (owner 2026-11-14), pure: Meta's rules (which statuses, how often,
+// One edit of a template's words, pure: Meta's rules (which statuses, how often,
 // back to review), the code-bound rule (same variables and buttons), and Meta's body rules.
 
 type EditRefusalCode =

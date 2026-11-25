@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { NO_TEMPLATE_NOTE } from '@/modules/messaging/whatsapp/sender/window/window-reopen';
 import { NOW, PHONE, staffText, windowFakes } from '@/modules/messaging/whatsapp/sender/window/window.fakes';
 
-// Owner 2026-11-06: each hold on the chat line asks KapsoHold once to reopen Kapso's
+// Each hold on the chat line asks KapsoHold once to reopen Kapso's
 // conversation; its failure is noted on the row and never fails or blocks the text. KapsoHold is
 // a mock here (never Kapso); kapso-hold.test.ts covers which lines call Kapso at all.
 

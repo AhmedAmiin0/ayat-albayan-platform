@@ -94,7 +94,7 @@ export class WindowHold {
   }
 
   /**
-   * The row moved between ensure() and the hold's compare-and-set (review 2026-11-06): a reopen
+   * The row moved between ensure() and the hold's compare-and-set: a reopen
    * template this pass queued for it is failed too, unless a text of the family is still queued.
    */
   private async missed(row: DueMessage, plan: HoldPlan): Promise<HoldOutcome> {

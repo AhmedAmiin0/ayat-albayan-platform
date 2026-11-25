@@ -1,12 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { closeAll, post, startStub } from './test-server.ts';
+import { closeAll, errorCode, post, startStub } from './test-server.ts';
 
 afterEach(closeAll);
 
 const MSG = '/v21.0/PHONE/messages';
 const to = '+966500000001';
-const code = async (res: Response) =>
-  ((await res.json()) as { error: { code: number } }).error.code;
+const code = errorCode;
 
 describe('wa-stub: outbound media (owner 2026-10-19 #2)', () => {
   it('an image or a document without link or id gets 400 with Meta code 100, and is not logged', async () => {

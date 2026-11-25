@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { reopenOf, windowFakes } from '@/modules/messaging/whatsapp/sender/window/window.fakes';
 
-// The family's reply releases every held text of THAT phone, oldest first (owner 2026-11-03).
+// The family's reply releases every held text of THAT phone, oldest first.
 
 const A = '+966500000001';
 const B = '+966500000002';
