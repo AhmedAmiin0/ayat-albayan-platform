@@ -11,7 +11,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-// One choice in the one row, as WhatsApp (owner 2026-10-27): All = no filter and no list.
+// One choice in the one row, as WhatsApp: All = no filter and no list.
 const row = () => within(screen.getByLabelText(t.inbox.filterRow));
 const lastThreads = () => mockApiFetch.mock.calls.map(([p]: [string]) => p).filter((p) => p.startsWith('/threads')).at(-1);
 const selected = (name: string) => row().getByRole('tab', { name }).props.accessibilityState.selected;

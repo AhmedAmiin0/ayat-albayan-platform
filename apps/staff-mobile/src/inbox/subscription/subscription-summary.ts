@@ -3,7 +3,7 @@ import { counted } from '@ab/core';
 import { t, isolate } from '@ab/mobile-kit';
 import { childChip, running } from './subscription-words';
 
-// A family's one folded line over the chat (owner 2026-10-29: the messages get the room): pure.
+// A family's one folded line over the chat (the messages get the room): pure.
 
 type Chip = NonNullable<ReturnType<typeof childChip>>;
 

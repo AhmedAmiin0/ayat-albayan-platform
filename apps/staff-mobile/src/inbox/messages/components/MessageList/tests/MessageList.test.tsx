@@ -7,7 +7,7 @@ import { AT_NEWEST, MessageList } from '@/inbox/messages/components/MessageList/
 import { cachedThread, delivered, detail, inbound, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
 
-// Owner 2026-10-24 («the chat scrolled to the last point»): every mobile chat opens on the newest
+// Every mobile chat opens on the newest
 // message. Inverted, so offset 0 is exactly the newest: no scrollToEnd aimed at a guessed height.
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

@@ -17,7 +17,7 @@ export const studentLine = (s: ThreadStudentView): string =>
 
 /**
  * Tapping the chat's name or number opens the student's details, as WhatsApp opens the contact
- * (owner 2026-10-29): one student at once, several from a sheet of studentLine. No student: no tap.
+ *: one student at once, several from a sheet of studentLine. No student: no tap.
  */
 export function useHeaderStudents(students: readonly ThreadStudentView[]) {
   const base = useTreeBase();

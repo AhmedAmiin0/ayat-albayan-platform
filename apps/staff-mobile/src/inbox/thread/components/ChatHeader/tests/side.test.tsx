@@ -4,7 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { leftToRight } from '@/inbox/shared/physical-row.helpers';
 import { ChatHeader } from '@/inbox/thread/components/ChatHeader/ChatHeader';
 
-// Arabic (jest.setup: RTL). As WhatsApp in Arabic (owner 2026-10-27): back on the right, the icons on the left.
+// Arabic (jest.setup: RTL). As WhatsApp in Arabic: back on the right, the icons on the left.
 test('Arabic: the icons on the physical left, the name in the middle, back on the right', async () => {
   await render(<ChatHeader title="هدى سالم" subtitle="عميل محتمل" onBack={jest.fn()} trailing={<View testID="icons" />} />);
   expect(leftToRight(screen.getByTestId('chat-header'), true)).toEqual(['icons', 'chat-names', t.common.back]);

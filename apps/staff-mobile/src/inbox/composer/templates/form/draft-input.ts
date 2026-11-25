@@ -4,7 +4,7 @@ import {
   type TemplateEditButton, type TemplateView,
 } from '@ab/shared';
 
-// The template form (owner 2026-11-14), pure: what the fields hold, what each route takes (parsed
+// The template form, pure: what the fields hold, what each route takes (parsed
 // by the shared zod schemas), and the preview's template.
 
 export interface Draft {

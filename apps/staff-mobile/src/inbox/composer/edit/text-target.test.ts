@@ -5,7 +5,7 @@ import { t } from '@ab/mobile-kit';
 import { CORRECTION_PREFIX_ROOM, WA_TEXT_MAX } from '@ab/shared';
 import { bareText, targetKey, textMax, textOut } from './text-target';
 
-// The box's text send (owner 2026-11-07): a correction carries correctsId, never a reply.
+// The box's text send: a correction carries correctsId, never a reply.
 const original = message({ id: 'o1', direction: 'outbound', body: 'الحلقة غدًا' });
 const asked = message({ id: 'i1', direction: 'inbound', body: 'متى الحلقة؟' });
 

@@ -19,7 +19,7 @@ interface AvatarRingProps {
 }
 
 /**
- * A status ring around the row's avatar (owner 2026-11-06): 2px, 2px off the circle. Every row
+ * A status ring around the row's avatar: 2px, 2px off the circle. Every row
  * keeps the frame (transparent without a ring), so names line up whatever the family's state.
  * Drawn only: the row reads ringHint (a child's label is lost inside the row's button on iOS).
  */

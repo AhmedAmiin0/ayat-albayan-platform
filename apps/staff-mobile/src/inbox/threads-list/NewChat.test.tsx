@@ -29,7 +29,7 @@ beforeEach(() => {
   mockApiSend.mockReset();
 });
 
-// Owner 2026-10-27: «Remove new chat from the top and make it a floating circle icon in the bottom corner».
+// New chat is a floating circle in the bottom corner, not at the top.
 test('«محادثة جديدة» is a named 56pt round button in the bottom inline-end corner; it opens the same sheet', async () => {
   await renderWithQuery(
     <TreeBaseProvider value="/sales">
@@ -77,7 +77,7 @@ function newNumber() {
   });
 }
 
-// Owner 2026-11-06: «open the conversation with the allowed templates if its a new chat».
+// A new chat opens with the allowed templates.
 test('a number with no message yet opens on its templates by itself; the send queues the one picked', async () => {
   newNumber();
   mockApiSend.mockReturnValue(new Promise(() => undefined));

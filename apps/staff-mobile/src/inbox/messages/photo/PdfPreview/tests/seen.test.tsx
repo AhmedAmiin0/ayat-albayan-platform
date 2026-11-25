@@ -15,7 +15,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
-// Owner 2026-11-01 «for the pdf do it like WhatsApp»: page 1 once the row is on screen (never a
+// A PDF as WhatsApp: page 1 once the row is on screen (never a
 // burst for a long thread), and a name that is never «File / File».
 interface Row {
   id: string;

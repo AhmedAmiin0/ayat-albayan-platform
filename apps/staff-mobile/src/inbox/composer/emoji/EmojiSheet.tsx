@@ -14,8 +14,8 @@ interface EmojiSheetProps {
 }
 
 /**
- * The pill's emoji (owner 2026-10-27): a curated grid (no emoji library). Staff get WhatsApp's
- * tabs, Emoji | GIF | Stickers (owner 2026-11-01): a GIF or a sticker is sent at once and the
+ * The pill's emoji: a curated grid (no emoji library). Staff get WhatsApp's
+ * tabs, Emoji | GIF | Stickers: a GIF or a sticker is sent at once and the
  * sheet closes.
  */
 export function EmojiSheet({ visible, onPick, onClose, media }: EmojiSheetProps) {

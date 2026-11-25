@@ -10,7 +10,7 @@ import { touchInbox } from '@/inbox/thread/hooks/inbox-sync';
 import { refreshSent } from '@/inbox/thread/hooks/use-thread';
 import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '@/inbox/thread/hooks/thread-cache';
 
-// The assistant sends a photo or a PDF from the chat (owner 2026-10-19 #1/#2), inside the 24 h
+// The assistant sends a photo or a PDF from the chat, inside the 24 h
 // window: the API signs an upload into wa-media, then queues the file as her message.
 
 /** A picked file, its bytes ready for the signed upload. */
@@ -23,7 +23,7 @@ export interface ChatFilePick {
   filename: string;
 }
 
-/** The gallery, the camera (owner 2026-10-27, the pill's camera) or a PDF. */
+/** The gallery, the camera (the pill's camera) or a PDF. */
 export type ChatFileSource = 'image' | 'camera' | 'pdf';
 
 /** A refusal before or during the upload, as inbox.error.<code>. */
@@ -35,7 +35,10 @@ export class ChatFileError extends Error {
   }
 }
 
-/** The picked PDF's own name, made safe for the API (no path separators or control characters, ≤ 200). */
+/**
+ * The picked PDF's own name, made safe for the API: no path separators or control characters,
+ * at most 200 characters.
+ */
 export function pdfName(name: string | undefined): string {
   const clean = (name ?? '').replace(/[/\\\p{Cc}]/gu, '_').trim().slice(0, 200).trim();
   return clean || 'file.pdf';
@@ -55,7 +58,8 @@ async function pickPdf(maxBytes: number): Promise<ChatFilePick | null> {
 
 /**
  * A photo from the gallery or the camera (compressed JPEG, no EXIF, as a receipt; the camera asks
- * its permission first) or a PDF; null when cancelled. A PDF over maxBytes throws before it is read.
+ * its permission first) or a PDF; null when cancelled. A PDF over maxBytes throws before it
+ * is read.
  */
 export async function pickChatFile(source: ChatFileSource, maxBytes: number): Promise<ChatFilePick | null> {
   if (source === 'pdf') return pickPdf(maxBytes);
@@ -101,7 +105,10 @@ export async function sendChatFile({ phone, file, id, maxBytes, replyToMessageId
   });
 }
 
-/** sendChatFile as a mutation: the API's row joins the thread at once, then it refetches (a text send). */
+/**
+ * sendChatFile as a mutation: the API's row joins the thread at once, then it refetches (a
+ * text send).
+ */
 export function useSendFile(phone: string) {
   const client = useQueryClient();
   return useMutation({ mutationFn: sendChatFile, ...fileSendSteps(client, phone) });

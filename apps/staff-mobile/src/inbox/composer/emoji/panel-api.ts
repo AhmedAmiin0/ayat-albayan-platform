@@ -14,7 +14,7 @@ import {
   threadPath,
 } from '@/inbox/thread/hooks/thread-cache';
 
-// The emoji panel's GIF and sticker tabs (owner 2026-11-01, like WhatsApp): GIPHY through the API
+// The emoji panel's GIF and sticker tabs (like WhatsApp): GIPHY through the API
 // (the key never reaches the app) and the stickers of every chat, plus this user's favourites.
 
 const STICKERS_KEY = ['stickers'] as const;

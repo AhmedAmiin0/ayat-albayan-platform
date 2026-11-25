@@ -31,7 +31,9 @@ type ThreadQuery = ReturnType<typeof useThread>;
 
 const NO_LESSONS: ThreadLesson[] = [];
 
-/** The phone icon: only once the chat is loaded (no flash), never in a teacher's own chat (docs/28). */
+/**
+ * The phone icon: only once the chat is loaded (no flash), never in a teacher's own chat (docs/28).
+ */
 const callable = (mode: ThreadMode, thread: ThreadView | null): boolean =>
   thread !== null && !isOwnThread(mode, thread);
 
@@ -100,7 +102,7 @@ export function ThreadScreen() {
           <SubscriptionPanel data={query.data} phone={phone} />
         )}
         {query.data ? (
-          // Composer, quote strip and staged file stay on the keyboard (owner 2026-10-25, Android).
+          // Composer, quote strip and staged file stay on the keyboard (Android).
           <KeyboardFrame style={{ flex: 1, gap: 4 }}>
             <ReplyActionsProvider phone={phone} lessons={query.data.pages[0]?.lessons ?? NO_LESSONS}>
               <MessageList phone={phone} query={query} />

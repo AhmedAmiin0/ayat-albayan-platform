@@ -25,8 +25,9 @@ interface LinkSpanProps {
 function LinkSpan({ text, href, onHold, onFail, plain }: LinkSpanProps) {
   const { color } = useTheme();
   const open = () => {
-    // Never crash on a link the phone cannot open: the generic error under the text instead. A pay link
-    // in a Stripe build is marked as opened from the app (its page brings the payer back here).
+    // Never crash on a link the phone cannot open: the generic error under the text instead. A pay
+    // link in a Stripe build is marked as opened from the app (its page brings the payer
+    // back here).
     Promise.resolve()
       .then(() => Linking.openURL(appOpenUrl(href, STRIPE_FEATURE)))
       .catch(onFail);
@@ -52,9 +53,9 @@ interface LinkedTextProps {
 }
 
 /**
- * A bubble's text with its http(s) and www. links clickable (owner 2026-10-26, splitLinks as the web's
- * W11). A link opens in the phone's browser; one that fails says so instead of crashing. The text sits
- * on the side of its own language (ContentText), as WhatsApp, in an Arabic or an English UI.
+ * A bubble's text with its http(s) and www. links clickable (splitLinks as the web's W11). A link
+ * opens in the phone's browser; one that fails says so instead of crashing. The text sits on the
+ * side of its own language (ContentText), as WhatsApp, in an Arabic or an English UI.
  */
 export function LinkedText({ text, touch, a11y }: LinkedTextProps) {
   const { color } = useTheme();

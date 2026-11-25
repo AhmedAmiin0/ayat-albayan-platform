@@ -13,10 +13,13 @@ export interface PillProps {
   onText: (text: string) => void;
   /** The box lost focus (a tap on the chat): closes the «/» list. */
   onLeave?: (() => void) | undefined;
-  /** Staff (not a teacher): the price tag and the paperclip; a teacher gets emoji and template icons. */
+  /**
+   * Staff (not a teacher): the price tag and the paperclip; a teacher gets emoji and
+   * template icons.
+   */
   staff: boolean;
   onTemplate: () => void;
-  /** Tried after the 24 h window (owner 2026-10-31): a plain, not highlighted, template icon. */
+  /** Tried after the 24 h window: a plain, not highlighted, template icon. */
   quietTemplate?: boolean;
   onReplies: () => void;
   /** Absent means no price tag in the bar. */

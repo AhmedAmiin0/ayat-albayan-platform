@@ -5,7 +5,7 @@ import type { PanelMedia } from './panel-api';
 import { GifTab } from './GifTab';
 import { StickerTab } from './StickerTab';
 
-// The emoji panel's tabs as WhatsApp (owner 2026-11-01): Emoji | GIF | Stickers, staff only.
+// The emoji panel's tabs as WhatsApp: Emoji | GIF | Stickers, staff only.
 
 export type PanelTab = 'emoji' | 'gif' | 'stickers';
 

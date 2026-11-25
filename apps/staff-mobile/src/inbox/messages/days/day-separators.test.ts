@@ -5,7 +5,7 @@ import { separatorsOf, topmost } from './day-separators';
 import { message } from '@/inbox/shared/thread-fixtures';
 import { CHIP_MARGIN } from '@ab/mobile-kit';
 
-// The separators on screen, from the rows as they are now (owner 2026-10-27: the floating day).
+// The separators on screen, from the rows as they are now (the floating day).
 const at = (id: string, created_at: string, direction: 'inbound' | 'outbound' = 'inbound') =>
   message({ id, direction, body: id, created_at });
 const C = at('c', '2026-10-02T08:00:00Z', 'outbound');

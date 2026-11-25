@@ -10,11 +10,17 @@ import { leavesGap, mergeNewest, sendKey, threadKey, threadPath, type ThreadCach
 export const threadPollKey = (phone: string) => ['thread-poll', phone];
 export const threadDeltaKey = (phone: string) => ['thread-delta', phone];
 
-/** A send or a thread fetch in flight wins: its answer would overwrite a merge, or show a sent row twice. */
+/**
+ * A send or a thread fetch in flight wins: its answer would overwrite a merge, or show a sent
+ * row twice.
+ */
 const busy = (client: QueryClient, phone: string) =>
   client.isMutating({ mutationKey: sendKey(phone) }) + client.isFetching({ queryKey: threadKey(phone) }) > 0;
 
-/** Polls that run on their own timer while on screen; no fetch on open (the thread query just read the page). */
+/**
+ * Polls that run on their own timer while on screen; no fetch on open (the thread query just read
+ * the page).
+ */
 const POLL = { initialData: 0, staleTime: Infinity, gcTime: 0, meta: { noPersist: true } } as const;
 
 /** The chat's cache changed after `at` (a delta or a send landed while a read was out). */
@@ -30,15 +36,15 @@ const foldPage = (fresh: ThreadDetail, moved: boolean) => (old: ThreadCache | un
   moved ? mergeNewest(old, laterTicks(old, fresh)) : mergeNewest(old, fresh, freshRow);
 
 /**
- * An open chat shows new messages and ticks (owner 2026-10-27) while its screen is focused and the app
- * is active (TanStack skips an interval tick in the background, focusManager):
- *   every INBOX_REFRESH_MS  a delta, GET /threads/:phone?after=…&pending=… (~2 reads), merged by mergeDelta;
- *   every THREAD_FULL_MS    the newest page (GET /threads/:phone), folded in by mergeNewest; the loaded
- *                           older pages are not re-read.
- * Too many new rows for one answer (a gap) re-read the whole thread instead.
- * Realtime (docs/12 §15) runs the delta sooner on an event (docs/43 AU5, refreshOpenChat); while it is
- * connected the delta slows to INBOX_FALLBACK_MS (the one safety net for a socket that died quietly) and
- * the page to THREAD_FULL_LIVE_MS; a change under another screen re-reads it on return.
+ * An open chat shows new messages and ticks while its screen is focused and the app is active
+ * (TanStack skips an interval tick in the background, focusManager): every INBOX_REFRESH_MS a
+ * delta, GET /threads/:phone?after=…&pending=… (~2 reads), merged by mergeDelta; every
+ * THREAD_FULL_MS the newest page (GET /threads/:phone), folded in by mergeNewest; the loaded older
+ * pages are not re-read. Too many new rows for one answer (a gap) re-read the whole thread instead.
+ * Realtime (docs/12 §15) runs the delta sooner on an event (docs/43 AU5, refreshOpenChat); while it
+ * is connected the delta slows to INBOX_FALLBACK_MS (the one safety net for a socket that died
+ * quietly) and the page to THREAD_FULL_LIVE_MS; a change under another screen re-reads it
+ * on return.
  */
 export function useThreadPoll(phone: string, loaded: boolean) {
   const client = useQueryClient();

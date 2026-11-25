@@ -1,7 +1,7 @@
 import { ApiError, t } from '@ab/mobile-kit';
 import { sendError } from '@/inbox/messages/hooks/message-text/message-text';
 
-// A refused correction (owner 2026-11-07) says why, from inbox.correction.errors.
+// A refused correction says why, from inbox.correction.errors.
 test.each([
   ['correction_not_in_thread', t.inbox.correction.errors.correction_not_in_thread],
   ['not_correctable', t.inbox.correction.errors.not_correctable],

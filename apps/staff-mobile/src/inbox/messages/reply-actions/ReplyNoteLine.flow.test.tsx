@@ -14,7 +14,8 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
-// The sheets are their own features' (Reschedule / SalesReschedule tests): here, which one opens on which lesson.
+// The sheets are their own features' (Reschedule / SalesReschedule tests): here, which one opens on
+// which lesson.
 function mockSheet(who: string) {
   return function Sheet(p: { lesson: { id: string } | null; onDone: () => void }) {
     return (
@@ -41,7 +42,7 @@ const YES = message({ id: 'm-y', direction: 'inbound', body: 'ايوة', guardia
 const NO = 'لم تتأكد أي حلقة بهذا الرد';
 const SALES: Permission[] = [...selfPermissionsOf('sales'), 'lessons.reschedule', 'lessons.confirm'];
 
-/** `required`: settings.lesson_confirmation_required (default OFF since owner 2026-11-02). */
+/** `required`: settings.lesson_confirmation_required (default OFF). */
 async function renderNote(m: typeof ASK, permissions?: Permission[], required = true) {
   const client = createTestQueryClient();
   seedPublicConfig(client, { lesson_confirmation_required: required });

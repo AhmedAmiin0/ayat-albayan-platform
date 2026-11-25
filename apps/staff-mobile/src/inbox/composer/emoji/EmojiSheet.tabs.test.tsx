@@ -4,7 +4,7 @@ import { renderWithQuery } from '@/test/query';
 import { PHONE } from '@/inbox/shared/thread-fixtures';
 import { EmojiSheet } from './EmojiSheet';
 
-// The emoji panel's tabs as WhatsApp (owner 2026-11-01): Emoji | GIF | Stickers, staff only.
+// The emoji panel's tabs as WhatsApp: Emoji | GIF | Stickers, staff only.
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

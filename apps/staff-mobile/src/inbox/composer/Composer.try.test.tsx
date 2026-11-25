@@ -5,7 +5,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, plainReminder, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
-// Owner 2026-11-14 («reopen like Kapso»): after the 24 h window a known chat shows the reopen bar.
+// After the 24 h window a known chat shows the reopen bar.
 // A Kapso chat line (try_after_window) keeps the box under it: staff texts are held as before.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

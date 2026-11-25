@@ -40,7 +40,7 @@ interface ReopenBarInput {
 }
 
 /**
- * The composer's bar after the 24 h window (owner 2026-11-14, «like Kapso»): windowBar over the
+ * The composer's bar after the 24 h window («like Kapso»): windowBar over the
  * thread's live reopen (reopen_sent) and this user's chat-line templates; the tick is the
  * reopen bubble's own, as the poll moves it.
  */

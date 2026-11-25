@@ -5,7 +5,7 @@ import { renderWithQuery } from '@/test/query';
 import { TemplatePreview } from './TemplatePreview';
 import { meetReminder, plainReminder } from '@/inbox/shared/thread-fixtures';
 
-// The composer's preview draws the template like WhatsApp (owner 2026-10-28).
+// The composer's preview draws the template like WhatsApp.
 
 test('the body filled in, the footer and the meeting button with the code typed so far', async () => {
   const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);

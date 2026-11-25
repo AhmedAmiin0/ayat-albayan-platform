@@ -46,7 +46,7 @@ export function Composer({
   const send = useComposerSend({ phone, text, setText, ...replies });
   const { sendTemplate, sendText, renew, errors, pending } = send;
   const [picking, setPicking] = useState(false);
-  // A new chat opens on its allowed templates (owner 2026-11-06), until closed or one is sent.
+  // A new chat opens on its allowed templates, until closed or one is sent.
   const [dismissed, setDismissed] = useState(false);
   const picker = picking || (fresh && staff && !dismissed);
   const closePicker = () => {
@@ -57,7 +57,7 @@ export function Composer({
   const [fileError, setFileError] = useState<string | null>(null);
   const chat = sendState(thread, new Date());
   const open = chat.open;
-  // Owner 2026-10-31 / 2026-11-01: a Kapso chat line still tries every staff send after the window.
+  // A Kapso chat line still tries every staff send after the window.
   const trying = triesAfterWindow(chat, staff);
   const may = open || trying;
   const teacher = !!thread?.teacher_id && !thread.guardian_id;

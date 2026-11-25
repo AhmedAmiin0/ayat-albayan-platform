@@ -1,4 +1,4 @@
-// Hold-to-record's finger maths (owner 2026-10-27, as WhatsApp): pure, so both directions are tested.
+// Hold-to-record's finger maths (as WhatsApp): pure, so both directions are tested.
 // dx and dy are PHYSICAL (pageX/pageY deltas); the start side is the left in LTR, the right in RTL.
 
 /** Slide up this far (pt) to lock the recording hands-free. */
@@ -10,7 +10,10 @@ export const cancelDistance = (width: number): number => Math.max(100, 0.35 * wi
 /** How far the finger moved toward the inline-start (negative = toward the end). */
 export const towardStart = (dx: number, rtl: boolean): number => dx * (rtl ? 1 : -1);
 
-/** The round button's physical translateX: follows the finger, clamped to the start side within `max`. */
+/**
+ * The round button's physical translateX: follows the finger, clamped to the start side
+ * within `max`.
+ */
 export function micShift(dx: number, rtl: boolean, max: number): number {
   return rtl ? Math.min(Math.max(dx, 0), max) : Math.max(Math.min(dx, 0), -max);
 }

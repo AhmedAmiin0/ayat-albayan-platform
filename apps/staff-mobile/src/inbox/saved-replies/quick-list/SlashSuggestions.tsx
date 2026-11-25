@@ -20,7 +20,7 @@ const MAX_ROWS = 5;
 const ROW = 76;
 
 /**
- * WhatsApp Business's «/» list (owner 2026-10-26), docked right over the composer: the chat stays in
+ * WhatsApp Business's «/» list, docked right over the composer: the chat stays in
  * view above it and the keyboard stays up (a tap on a row is handled, not a dismiss). Both tabs in
  * one list, filtered live by the box's text after «/»; scrolls inside itself past five rows.
  */

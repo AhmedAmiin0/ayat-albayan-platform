@@ -65,7 +65,8 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
   const { openReactors, openFailed } = useBubbleChatActions();
   const mode = useThreadMode().kind;
   const admin = mode === 'admin';
-  // The sales tree has no thread mode either: the actions' endpoints need messages.manage (admin-only).
+  // The sales tree has no thread mode either: the actions' endpoints need messages.manage
+  // (admin-only).
   const manages = useHolds('messages.manage');
   const small = useSmallText();
   const ours = m.direction === 'outbound';
@@ -77,7 +78,7 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
   const why = ours && m.status === 'failed' && m.error_code !== 'handed_off';
   const asking = stuck && m.error_code === 'handed_off';
   // The screen reader's way to the menu sits on the text; a file-only bubble keeps its own buttons.
-  // A PDF's caption that is only its name stays off: its card shows it (owner 2026-11-01).
+  // A PDF's caption that is only its name stays off: its card shows it.
   const caption = pdfCaptionIsName(m) ? null : m.body;
   const a11yOn = caption ? 'body' : m.template_key ? 'template' : null;
   const side = bubbleSide(ours);
@@ -103,7 +104,7 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
         {caption ? <LinkedText text={caption} touch={touch} a11y={a11yOn === 'body'} /> : null}
       </TemplateFrame>
       <ReplyNoteLine message={m} />
-      {/* A held hand-off's «!» too, on purpose: its sheet reopens WhatsApp if the admin left before sending. */}
+      {/* A held hand-off's «!» too: its sheet reopens WhatsApp if the admin left unsent. */}
       <MessageMeta message={m} onTicksPress={stuck ? () => openFailed(m) : undefined} />
       {m.template ? (
         <TemplateButtons buttons={m.template.buttons} inset={{ x: PAD.x, bottom: why || asking ? 0 : PAD.bottom }} onLongPress={touch.has ? hold : undefined} />

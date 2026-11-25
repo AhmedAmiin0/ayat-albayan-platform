@@ -4,7 +4,7 @@ import type { Page } from '@ab/core';
 import type { InfiniteData } from '@tanstack/react-query';
 import type { ThreadCache } from './thread-cache';
 
-// The cache edits the chats list makes while a refetch confirms them (owner 2026-10-27): a send moves
+// The cache edits the chats list makes while a refetch confirms them: a send moves
 // its chat to the top, an opened chat loses its unread badge. A chat a cached list does not hold
 // (another filter, a search) is left to that list's refetch.
 
@@ -24,7 +24,9 @@ export function touchList(data: ThreadListCache | undefined, row: MessageView): 
   return { ...data, pages };
 }
 
-/** The chat's unread badge cleared (the API stamped it read); the same object when nothing changes. */
+/**
+ * The chat's unread badge cleared (the API stamped it read); the same object when nothing changes.
+ */
 export function clearUnread(data: ThreadListCache | undefined, phone: string): ThreadListCache | undefined {
   const unread = (th: ThreadView) => th.phone_e164 === phone && th.unread_count > 0;
   if (!data?.pages.some((p) => p.items.some(unread))) return data;

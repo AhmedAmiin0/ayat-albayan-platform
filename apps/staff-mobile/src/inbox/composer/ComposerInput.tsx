@@ -18,7 +18,7 @@ interface ComposerInputProps {
   inputRef?: RefObject<TextInput | null>;
 }
 
-/** One line's padding and height (owner 2026-11-01: «Message» and the caret sat high). */
+/** One line's padding and height, so «Message» and the caret do not sit high. */
 interface InputLine {
   paddingVertical: number;
   lineHeight?: number;
@@ -41,7 +41,7 @@ export const inputLine = (os: string): InputLine => LINES[os === 'android' ? 'an
 /**
  * The free-text box inside the pill (the pill draws the border): grows with the text up to ~5 lines
  * (120pt), then scrolls inside itself. One line is the 44pt touch height with the pill's border
- * (inputLine) + 2 × 1pt. No textAlign: the text runs the way it is typed. Owner 2026-10-27: the
+ * (inputLine) + 2 × 1pt. No textAlign: the text runs the way it is typed. The
  * text and the placeholder sit in the middle of the box and keep 12pt from the pill's inline start.
  */
 export function ComposerInput({ value, onChange, onBlur, onSelection, inputRef }: ComposerInputProps) {

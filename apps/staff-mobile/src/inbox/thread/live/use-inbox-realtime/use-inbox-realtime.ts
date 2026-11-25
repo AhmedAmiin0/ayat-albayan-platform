@@ -15,7 +15,9 @@ import { changeLists } from '@/inbox/thread/live/list-marks';
 
 const active = () => AppState.currentState === 'active';
 
-/** An event re-reads the open chat, the chats list and the badge; never while the app is not active. */
+/**
+ * An event re-reads the open chat, the chats list and the badge; never while the app is not active.
+ */
 // Every event also syncs the phone store (docs/43 43-7; its engine throttles to one a second).
 const targets: LiveTargets = {
   chat: (phone) => {
@@ -49,16 +51,16 @@ const targets: LiveTargets = {
 const noResync = (): void => undefined;
 
 /**
- * The staff inbox's realtime nudge (owner 2026-10-27), mounted once by the admin and sales tab trees
- * (never the teacher's, the family's or the assistant's): the private 'inbox:staff' channel while the
- * app is active, the push otherwise. An event re-reads through useThreadPoll's own query (its merge,
- * its yield to a send, its gap rule). In the background the channel is left (and the socket closed when
- * nothing else uses it), so the polls take over and nothing of the inbox stays awake; 'inactive' (iOS)
- * leaves after INBOX_INACTIVE_LEAVE_MS. Back to 'active': one rejoin, one resync on SUBSCRIBED.
- * A dropped channel (CHANNEL_ERROR, TIMED_OUT, CLOSED) rejoins with backoff 1 s, 2 s, 5 s, 10 s,
- * then every 30 s (client-core live-rejoin.ts), at once on 'active' or the network coming back;
- * SUBSCRIBED again resyncs (every target nudges the phone store's sync).
- * Unmount (sign-out flips the tree) leaves at once. The app's one (persisted) query client.
+ * The staff inbox's realtime nudge, mounted once by the admin and sales tab trees (never the
+ * teacher's, the family's or the assistant's): the private 'inbox:staff' channel while the app is
+ * active, the push otherwise. An event re-reads through useThreadPoll's own query (its merge, its
+ * yield to a send, its gap rule). In the background the channel is left (and the socket closed when
+ * nothing else uses it), so the polls take over and nothing of the inbox stays awake; 'inactive'
+ * (iOS) leaves after INBOX_INACTIVE_LEAVE_MS. Back to 'active': one rejoin, one resync on
+ * SUBSCRIBED. A dropped channel (CHANNEL_ERROR, TIMED_OUT, CLOSED) rejoins with backoff 1 s, 2 s, 5
+ * s, 10 s, then every 30 s (client-core live-rejoin.ts), at once on 'active' or the network coming
+ * back; SUBSCRIBED again resyncs (every target nudges the phone store's sync). Unmount (sign-out
+ * flips the tree) leaves at once. The app's one (persisted) query client.
  */
 export function useInboxRealtime(enabled: boolean): void {
   useEffect(() => {

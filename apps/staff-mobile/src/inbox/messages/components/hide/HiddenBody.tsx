@@ -5,7 +5,7 @@ import { clockAt } from '@/inbox/shared/format';
 import { MessageMeta } from '@/inbox/messages/components/MessageMeta';
 
 /**
- * A message hidden from the platform (owner 2026-10-30): a muted placeholder that says it is still
+ * A message hidden from the platform: a muted placeholder that says it is still
  * on the customer's phone, who hid it and when; never its text or file. The time and ticks stay.
  */
 export function HiddenBody({ message: m }: { message: MessageView }) {

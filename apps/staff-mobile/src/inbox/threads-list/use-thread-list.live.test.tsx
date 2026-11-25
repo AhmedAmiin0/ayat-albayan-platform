@@ -5,7 +5,7 @@ import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { inboxLive } from '@/inbox/thread/live';
 import { useThreadList } from './use-thread-list';
 
-// The chats tab re-reads its list while focused, so unread counts and order update (owner 2026-10-27).
+// The chats tab re-reads its list while focused, so unread counts and order update.
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

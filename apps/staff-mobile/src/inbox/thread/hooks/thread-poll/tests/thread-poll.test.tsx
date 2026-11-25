@@ -8,7 +8,7 @@ import { cachedThread, delivered, detail, failed, inbound, PHONE } from '@/inbox
 import { provisionalMessage, sendKey, threadKey, threadMessages, threadPath } from '@/inbox/thread/hooks/thread-cache';
 import { useThread } from '@/inbox/thread/hooks/use-thread';
 
-// An open chat stays live while focused and the app is active (owner 2026-10-27): a delta every
+// An open chat stays live while focused and the app is active: a delta every
 // INBOX_REFRESH_MS (~2 reads), the newest page every THREAD_FULL_MS.
 
 const mockApiFetch = jest.fn();

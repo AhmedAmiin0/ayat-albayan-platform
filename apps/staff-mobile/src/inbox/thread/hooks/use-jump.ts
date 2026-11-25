@@ -19,11 +19,11 @@ interface IndexFailed {
 type OlderPages = Pick<ReturnType<typeof useThread>, 'hasNextPage' | 'fetchNextPage'>;
 
 /**
- * A tap on a quote (owner 2026-10-25): the inverted list scrolls to the original (centred) and lights it
- * up a moment. A row not laid out yet: jump near it by the average row height, then once more exactly.
- * Older than the loaded pages: older pages load (as the top of the list does) until it is there,
- * then the list goes to it once it renders; no more pages, or JUMP_PAGES without it: the chat says so;
- * a page that fails stops the search with the load error.
+ * A tap on a quote: the inverted list scrolls to the original (centred) and lights it up a moment.
+ * A row not laid out yet: jump near it by the average row height, then once more exactly. Older
+ * than the loaded pages: older pages load (as the top of the list does) until it is there, then the
+ * list goes to it once it renders; no more pages, or JUMP_PAGES without it: the chat says so; a
+ * page that fails stops the search with the load error.
  */
 export function useJump<T extends { id: string }>(
   list: RefObject<FlatList<T> | null>,

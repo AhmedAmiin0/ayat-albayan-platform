@@ -12,7 +12,7 @@ import type { PinKind } from './pinned-send';
 
 /**
  * What the composer sends: session text, or an approved template with its params (H3 / H4). Any
- * registry key: a producer's, or a chat starter imported from Meta (owner 2026-10-12).
+ * registry key: a producer's, or a chat starter imported from Meta.
  */
 export type Outgoing =
   | { kind: 'text'; text: string; replyTo?: MessageQuote; correctsId?: string }
@@ -54,7 +54,7 @@ export const correctionPrefixes = (): [string, string] => {
   return [locale === 'ar' ? t.inbox.correction.prefix : fallback, fallback];
 };
 
-/** What the API's row will say: a correction (owner 2026-11-07) after its prefix; else the text. */
+/** What the API's row will say: a correction after its prefix; else the text. */
 export function echoed(out: Outgoing): string {
   const [prefix, fallback] = correctionPrefixes();
   const fixes = out.kind === 'text' && out.correctsId;
@@ -71,7 +71,7 @@ export function sendBody({ out, id }: SendInput) {
   }
   const lesson = out.lessonId ? { lessonId: out.lessonId } : {};
   const reopen = out.reopen ? { reopen: true } : {};
-  // Meta 132018 (owner 2026-11-14): no newline, tab or run of spaces in a body value.
+  // Meta 132018: no newline, tab or run of spaces in a body value.
   const params = normaliseTemplateParams(out.params);
   return { key: out.key, params, clientRequestId: id, ...lesson, ...reopen };
 }
