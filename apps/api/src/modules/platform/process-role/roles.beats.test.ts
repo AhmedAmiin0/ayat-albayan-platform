@@ -2,8 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { jobBeats } from '@/common/jobs/beats';
 import { bootIn } from './roles.boot.probe';
 
-/** Jobs with their own timers (not a Ticker, whose beats ticker.beats.test.ts covers). */
-const OWN_TIMERS = ['GoogleSyncJob'];
+/** The interval jobs: each starts a Ticker, whose heartbeat ticker.beats.test.ts covers. */
+const INTERVAL_JOBS = ['expenses', 'report-pdf', 'crm-media-copy', 'calls-sweeper', 'google-sync'];
 
 afterEach(() => {
   vi.useRealTimers();
@@ -18,10 +18,8 @@ describe('heartbeats on the real AppModule (docs/09 «Readiness»)', () => {
     expect(register).not.toHaveBeenCalled();
   }, 60_000);
 
-  it('worker: every interval job with its own timers registers one', async () => {
-    const register = vi.spyOn(jobBeats, 'register');
-    await bootIn('worker');
-    const names = register.mock.calls.map(([plan]) => plan.name);
-    expect(OWN_TIMERS.filter((n) => !names.includes(n))).toEqual([]);
+  it('worker: every interval job beats through its Ticker', async () => {
+    const probe = await bootIn('worker');
+    expect(INTERVAL_JOBS.filter((n) => !probe.tickers.includes(n))).toEqual([]);
   }, 60_000);
 });
