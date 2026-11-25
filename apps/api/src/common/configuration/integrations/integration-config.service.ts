@@ -47,6 +47,7 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
     if (this.everyMs === null) return;
     this.shared?.on('integrations', () => void this.refresh());
     await this.refresh();
+    // poll: catches up on a bus message this copy missed while the bus was down.
     this.timer = setInterval(() => void this.refresh(), Math.max(this.everyMs, MIN_REFRESH_MS)).unref();
   }
 
