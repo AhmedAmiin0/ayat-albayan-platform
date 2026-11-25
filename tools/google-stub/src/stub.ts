@@ -1,11 +1,13 @@
 // Fake Google for local dev + e2e (docs/24 §5): the API's GoogleHttpClient talks to this through
 // GOOGLE_API_BASE; no test or CI job ever reaches Google. /__stub/* inspects and resets it.
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { z } from 'zod';
 import { calendarRoutes } from './calendar.ts';
 import { driveRoutes } from './drive.ts';
 import { oauthRoutes } from './oauth.ts';
 import { sheetRoutes } from './sheets.ts';
 import { initialState, readJson, type Reply, type Route, type StubState } from './state.ts';
+import { revokeBody } from './stub.schemas.ts';
 
 function controlRoutes(state: { s: StubState }): Route[] {
   return [
@@ -36,12 +38,24 @@ function controlRoutes(state: { s: StubState }): Route[] {
       'POST',
       /^\/__stub\/revoke$/,
       async (req, { s }) => {
-        const { token } = await readJson<{ token?: string }>(req);
+        const { token } = await readJson(req, revokeBody);
         s.revoked.add(token ?? 'stub-refresh-token');
         return [200, { ok: true }];
       },
     ],
   ];
+}
+
+const isBadBody = (err: unknown) => err instanceof SyntaxError || err instanceof z.ZodError;
+const BAD_REQUEST: Reply = [
+  400,
+  { error: { code: 400, status: 'INVALID_ARGUMENT', errors: [{ reason: 'badRequest' }] } },
+];
+
+/** A body the schema refuses is the caller's mistake (Google's 400); any other error is ours. */
+function badRequest(err: unknown): Reply {
+  if (!isBadBody(err)) throw err;
+  return BAD_REQUEST;
 }
 
 const bearer = (req: IncomingMessage) => /^Bearer\s+\S+/.test(req.headers.authorization ?? '');
@@ -72,7 +86,7 @@ export function createStub() {
   }
 
   async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
-    const reply = await route(req, new URL(req.url ?? '/', 'http://stub'));
+    const reply = await route(req, new URL(req.url ?? '/', 'http://stub')).catch(badRequest);
     if (!Array.isArray(reply))
       return void res.writeHead(reply.status, { location: reply.location }).end();
     const [status, body] = reply;

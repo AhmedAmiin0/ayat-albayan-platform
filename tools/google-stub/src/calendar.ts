@@ -1,5 +1,6 @@
 // Calendar v3: the calendar list and one calendar's events.
 import { nextId, notFound, readJson, type Route, type StubEvent, type StubState } from './state.ts';
+import { eventBody } from './stub.schemas.ts';
 
 const cal = (s: StubState, id: string) => {
   const name = decodeURIComponent(id);
@@ -38,7 +39,7 @@ export const calendarRoutes: Route[] = [
     async (req, { m, s }) => {
       const events = cal(s, m[1] ?? '');
       if (!events) return notFound();
-      const body = await readJson<Omit<StubEvent, 'id' | 'status'>>(req);
+      const body = await readJson(req, eventBody);
       const id = nextId(s, 'stubev');
       events.set(id, { ...body, id, status: 'confirmed' });
       return [200, events.get(id)];
@@ -60,7 +61,7 @@ export const calendarRoutes: Route[] = [
       const id = decodeURIComponent(m[2] ?? '');
       if (!events?.has(id)) return notFound();
       events.set(id, {
-        ...(await readJson<Omit<StubEvent, 'id' | 'status'>>(req)),
+        ...(await readJson(req, eventBody)),
         id,
         status: 'confirmed',
       });

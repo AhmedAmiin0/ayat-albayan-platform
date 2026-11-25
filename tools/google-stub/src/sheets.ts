@@ -1,5 +1,6 @@
 // Sheets v4 values (A1 ranges on the first tab) and batchUpdate (accepted, counted).
-import { notFound, readJson, type Cell, type Route } from './state.ts';
+import { notFound, readJson, type Route } from './state.ts';
+import { valuesBody } from './stub.schemas.ts';
 
 const col = (letters: string) =>
   letters.split('').reduce((n, c) => n * 26 + c.charCodeAt(0) - 64, 0) - 1;
@@ -41,7 +42,7 @@ export const sheetRoutes: Route[] = [
     async (req, { m, s }) => {
       const rows = s.sheets.get(decodeURIComponent(m[1] ?? ''));
       if (!rows) return notFound();
-      const { values } = await readJson<{ values: Cell[][] }>(req);
+      const { values } = await readJson(req, valuesBody);
       rows.push(...values);
       return [200, { updates: { updatedRange: `Sheet1!A${rows.length}:M${rows.length}` } }];
     },
@@ -53,7 +54,7 @@ export const sheetRoutes: Route[] = [
       const rows = s.sheets.get(decodeURIComponent(m[1] ?? ''));
       if (!rows) return notFound();
       const r = range(m[2] ?? '');
-      const { values } = await readJson<{ values: Cell[][] }>(req);
+      const { values } = await readJson(req, valuesBody);
       values.forEach((vals, i) => {
         const row = rows[r.r0 - 1 + i] ?? [];
         vals.forEach((v, j) => (row[r.c0 + j] = v));
