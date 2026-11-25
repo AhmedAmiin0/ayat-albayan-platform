@@ -3,8 +3,8 @@ import { meetingModeOf, usesPlatform, type JoinWindowConfig } from '@ab/schedule
 import { linkExpiry } from '@/modules/teaching/classroom/join/join-link.token';
 import { isOpen, type ReminderLesson } from './reminders.plan';
 
-// Which link the reminders carry, per lesson: its teacher's meeting_mode (migration 490, owner
-// 2026-10-19), else the academy default settings.meeting_link_auto (owner 2026-10-12). Pure, decided
+// Which link the reminders carry, per lesson: its teacher's meeting_mode (migration 490), else the
+// academy default settings.meeting_link_auto. Pure, decided
 // when the job queues and never written back: lessons.meeting_link keeps the fixed link in both
 // modes, so switching a teacher (or the academy) back to the fixed link brings it straight back.
 
@@ -75,7 +75,7 @@ function lessonCandidates(lesson: ReminderLesson, at: CandidateTiming): RoomCand
   return lesson.students.flatMap((s) => {
     const g = s.guardian;
     if (!g || !reminderDue({ kind: 'same_day', startsAt, tz: g.tz, minutesBefore: at.minutesBefore, now: at.now })) return [];
-    // ponytail: the key reuses the `lesson_reminder:` prefix on purpose, so edit_lesson_time (migration
+    // the key reuses the `lesson_reminder:` prefix on purpose, so edit_lesson_time (migration
     // 175's regex) expires and frees it when the time moves; renaming it means changing that regex too.
     const dedupKey = `lesson_reminder:${lesson.id}:${s.id}:room`;
     return [{ lessonId: lesson.id, studentId: s.id, name: s.name, phone: g.phone_e164, guardianId: g.id, dedupKey, expiresAt }];

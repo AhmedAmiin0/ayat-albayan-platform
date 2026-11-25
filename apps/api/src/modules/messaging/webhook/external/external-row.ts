@@ -54,7 +54,7 @@ export function externalRow({ msg, phone, who, from, at, event }: ExternalRowInp
     phone_e164: phone,
     guardian_id: who.guardian?.id ?? null,
     lead_id: who.guardian ? null : (who.lead?.id ?? null),
-    // Only real text or a caption, never a «[image]» placeholder (owner 2026-10-30): the
+    // Only real text or a caption, never a «[image]» placeholder: the
     // payload says what a row without text is (migration 992 lets an outbound row carry only it).
     body: secret ? null : msg.body,
     template_key: templateKey,

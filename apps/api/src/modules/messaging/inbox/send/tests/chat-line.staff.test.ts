@@ -6,7 +6,7 @@ import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 
-// Owner 2026-11-01 «do the same as the messages»: files, receipts, stickers and forwards leave on a
+// Like messages: files, receipts, stickers and forwards leave on a
 // text's line (chatLine). Fakes only: no Kapso, no Meta, no Storage.
 
 const NOW = new Date('2026-11-01T10:00:00Z');

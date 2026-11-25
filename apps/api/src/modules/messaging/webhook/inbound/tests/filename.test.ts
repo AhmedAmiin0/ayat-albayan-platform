@@ -4,7 +4,7 @@ import { envelope, inboundValue, mediaPart, PHONE_NUMBER_ID } from '@/modules/me
 import { parseWebhook } from '@/modules/messaging/webhook/parse/webhook.parse';
 import { services } from '@/modules/messaging/webhook/tests/webhook.fakes';
 
-// Owner 2026-11-01 («File / File»): a family's document keeps its file name in messages.media_name,
+// A family's document keeps its file name in messages.media_name,
 // so the chat's PDF card shows it as WhatsApp does (Meta's document.filename, Kapso's media_data).
 const NOW = new Date('2026-10-03T13:05:00Z');
 const ONE: LineNumbers = { notifications: PHONE_NUMBER_ID };

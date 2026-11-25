@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { favouriteItems, recentItems, RECENT_MAX, sendable } from '@/modules/messaging/inbox/stickers/sticker-rows';
 import type { StickerRow } from '@/modules/messaging/inbox/stickers/sticker.repo';
 
-// The sticker panel's lists (owner 2026-11-01).
+// The sticker panel's lists.
 const NOW = new Date('2026-11-01T12:00:00Z');
 const row = (id: string, over: Partial<StickerRow> = {}): StickerRow => ({
   id,

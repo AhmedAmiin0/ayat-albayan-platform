@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { at, fakeJob as setup, sampleLesson } from './reminders.fakes';
 import { planReminders } from './plan/reminders.plan';
 
-// R-NOT-03 (owner 2026-10-12): the teacher's WhatsApp reminder can be switched off in /admin/settings.
+// R-NOT-03: the teacher's WhatsApp reminder can be switched off in /admin/settings.
 describe('settings.teacher_whatsapp_lesson_reminder', () => {
   beforeEach(() => vi.stubEnv('LIVEKIT_URL', ''));
   afterEach(() => vi.unstubAllEnvs());

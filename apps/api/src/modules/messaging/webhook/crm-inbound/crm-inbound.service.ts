@@ -13,11 +13,11 @@ import { CrmInboundRepo } from './crm-inbound.repo';
 import type { CrmReceived } from './crm-received.schema';
 
 // A family's or teacher's message to the notifications number, mirrored from the CRM into the
-// inbox (owner 2026-11-21; docs/19 «crm driver»). Each due queue row: the contact (phone, name)
+// inbox (docs/19 «crm driver»). Each due queue row: the contact (phone, name)
 // and, for a file, its CRM message; then InboundService.handle (row, thread, broadcast, push;
 // idempotent by wamid) and the row is deleted. A failure keeps the row, retried later: never
-// dropped. An active teacher's message is not mirrored (owner 2026-11-22: «teachers can only use
-// platform chat»): its row is deleted, it stays only in the CRM.
+// dropped. An active teacher's message is not mirrored (teachers use the platform chat
+// only): its row is deleted, it stays only in the CRM.
 
 /** Read per pass: the CRM env, where a message lands, the fetch (a fake in tests). */
 export interface CrmInboundSource {

@@ -6,7 +6,7 @@ import { lineEnvs, loadEnv } from '@/config/env/env';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 import { pickSend, type SendPick, type SendPickInput, type ThreadWindow } from './send-number';
 
-// Staff sends from a chat leave from the chat line (owner 2026-11-21, every driver): an inbound
+// Staff sends from a chat leave from the chat line (every driver): an inbound
 // on the notifications line (a family writing to the notifications number, mirrored from the CRM)
 // never opens a window a staff text, file or forward leaves from. With no chat line at all (a
 // single line) the notifications window still answers, as before.

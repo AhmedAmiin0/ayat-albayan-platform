@@ -50,7 +50,7 @@ async function saveToken(db: Db, c: RoomCandidate, hash: string): Promise<void> 
  * This tick's lesson_join_link messages. A candidate whose key is already in messages went out (or
  * is queued) from an earlier tick: nothing is minted for it, so the 5-minute ticks pile up no rows.
  * Each other one gets a fresh token saved on its row first; only the message carries the token.
- * ponytail: check-then-queue relies on the job's single flight; two API instances could each mint
+ * check-then-queue relies on the job's single flight; two API instances could each mint
  * one, and the later save would kill the link the first one queued. One instance runs today.
  */
 export async function roomLinkRows(db: Db, candidates: readonly RoomCandidate[], now: Date): Promise<QueuedMessage[]> {

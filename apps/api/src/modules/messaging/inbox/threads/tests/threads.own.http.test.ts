@@ -3,7 +3,7 @@ import { OwnNumbers } from '@/modules/messaging/numbers';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
-// GET /threads for every role hides the academy's own numbers (owner 2026-10-27). Example numbers only.
+// GET /threads for every role hides the academy's own numbers. Example numbers only.
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const OWN = '+966500000009';
 const LIST = '0c000000-0000-4000-8000-000000000001';

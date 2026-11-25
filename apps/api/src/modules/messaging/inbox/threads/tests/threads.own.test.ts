@@ -5,7 +5,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { teacherListFilter } from '@/modules/messaging/inbox/threads/threads.list';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
-// The academy's own numbers (owner 2026-10-27) leave the list in SQL, so total and pages agree. Example numbers.
+// The academy's own numbers leave the list in SQL, so total and pages agree. Example numbers.
 const OWN = ['+966500000009', '+966500000008'];
 const page = { page: 1, pageSize: 25 };
 const queriesOn = (db: ReturnType<typeof fakeDb>['db']) => new ThreadsRepo(db, {} as PackagesService, {} as BalanceRepo);

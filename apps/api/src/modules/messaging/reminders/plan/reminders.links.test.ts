@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { at, sampleLesson } from '@/modules/messaging/reminders/reminders.fakes';
 import { joinCandidates, roomFor, sentLinks, type RoomContext } from './reminders.links';
 
-// settings.meeting_link_auto (owner 2026-10-12): which link the reminders carry, and which families
+// settings.meeting_link_auto: which link the reminders carry, and which families
 // get their own classroom link. Invented data (reminders.fakes): lesson 14:00–14:45Z, two guardians.
 
 const ORIGIN = 'https://app.example';

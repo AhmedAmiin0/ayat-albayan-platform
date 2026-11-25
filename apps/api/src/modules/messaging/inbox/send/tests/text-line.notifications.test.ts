@@ -5,7 +5,7 @@ import type { ThreadWindow } from '@/modules/messaging/inbox/send/send-number';
 import { NUMBERS } from '@/modules/messaging/inbox/send/send-number.fakes';
 import { sendLine, textLine } from '@/modules/messaging/inbox/send/text-line';
 
-// Owner 2026-11-21: a family that writes to the notifications number is answered from the chat
+// A family that writes to the notifications number is answered from the chat
 // line. An open notifications window never makes a staff send leave from the notifications line
 // while a chat line exists. Fakes only: no Kapso, no CRM, no WhatsApp.
 

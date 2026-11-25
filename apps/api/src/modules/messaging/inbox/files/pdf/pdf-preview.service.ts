@@ -17,7 +17,7 @@ const FAILED_MS = 10 * 60_000;
 const ERROR_CODE: Record<PdfToolError['reason'], string> = { busy: 'pdf_busy', failed: 'pdf_render_failed', unavailable: 'pdf_unavailable' };
 
 /**
- * A chat PDF like WhatsApp's (owner 2026-10-29): GET /threads/:phone/messages/:id/pdf/:page signs
+ * A chat PDF like WhatsApp's: GET /threads/:phone/messages/:id/pdf/:page signs
  * one page as a JPEG, with the PDF's page count and size; page 1 is the bubble's thumb. The file is
  * resolved as /file resolves it (ThreadMediaService.bubbleObject, its 404 / 410 / 409 / 413 / 502 /
  * 503 unchanged), so every PDF a bubble opens previews: a family's, an echo, one staff sent or
@@ -27,14 +27,14 @@ const ERROR_CODE: Record<PdfToolError['reason'], string> = { busy: 'pdf_busy', f
  * Concurrent asks share one probe or render (InFlight, per process); every PDF byte is parsed in
  * ayat-pdf, never in this process. 400 invoice_message (not a PDF) / page_out_of_range, 422
  * pdf_no_preview (encrypted, broken), 503 pdf_busy / pdf_render_failed / pdf_unavailable (no
- * sandbox: local dev, CI; a retry may work; nothing stored). ponytail: the Meta / CRM download
+ * sandbox: local dev, CI; a retry may work; nothing stored). The Meta / CRM download
  * inside bubbleObject (the first view of an uncached PDF) runs before the render slot, unbounded as
  * the photo bubbles' is; the slot then reads that stored copy once more. Pass the fresh bytes to
  * the probe if that ever shows in memory.
  */
 @Injectable()
 export class PdfPreviewService {
-  // ponytail: per process; the two API copies may each render a run once (same paths, uploads upsert).
+  // per process; the two API copies may each render a run once (same paths, uploads upsert).
   private readonly probes = new InFlight<PdfDoc>();
   private readonly renders = new InFlight<void>();
   private readonly failed = new FailedRecently(FAILED_MS);

@@ -4,8 +4,8 @@ import type { StorageService } from '@/common/storage/storage.service';
 import type { InboundMedia, InboundMediaRepo, MediaMessage } from '@/modules/messaging/whatsapp';
 import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media.service';
 
-// The chat pickers' files (owner 2026-10-31: «I get the stickers and I am not able to attach the
-// pdf»): photos and PDFs only, a stored copy served as stored, an octet-stream «x.pdf» as a PDF.
+// The chat pickers' files (stickers and PDFs must both attach): photos and PDFs only, a stored
+// copy served as stored, an octet-stream «x.pdf» as a PDF.
 
 const PHONE = '+966552147730';
 const CRM_LINK = 'https://crm.example.com/storage/v1/object/public/chat-media/a/1.jpg';

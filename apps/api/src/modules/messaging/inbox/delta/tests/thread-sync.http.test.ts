@@ -4,7 +4,7 @@ import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { inboxApp } from '@/modules/messaging/inbox/test-app';
 
-// GET /threads/sync (owner 2026-11-06, docs/43 §5): every changed row in the caller's scope, the
+// GET /threads/sync (docs/43 §5): every changed row in the caller's scope, the
 // rows it may not hold as `gone`, a keyset cursor. Example numbers only.
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const OWN = '+966500000009';

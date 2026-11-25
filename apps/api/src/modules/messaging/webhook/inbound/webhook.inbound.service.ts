@@ -18,7 +18,7 @@ interface InboundOptions {
   /**
    * A message the catch-up job back-filled (external/inbound, older than LATE_MS when stored): the
    * row, lead and quick reply as usual, its unread count included, but no admin / assistant push.
-   * Its lead's follow-up cycle starts at `now` (the back-fill), never in the past (owner, 10-30).
+   * Its lead's follow-up cycle starts at `now` (the back-fill), never in the past.
    */
   quiet?: boolean;
   /** The catch-up run's time (a quiet message); defaults to the clock. */
@@ -34,9 +34,9 @@ interface InboundOptions {
  * the error goes up (500): Meta's re-send then finds no row and does it all again. Past the
  * deadline Meta already has its 200 and will not re-send, so the row stays (the message is in the
  * inbox; only the confirm / pause and the push are lost) and the error is only logged.
- * ponytail: a pending flag on the row + a sweeper would retry those too; add it if logs show any.
+ * a pending flag on the row + a sweeper would retry those too; add it if logs show any.
  * A reaction, edit or revoke stops first (marker()): no lead, reply, push or unread.
- * The ONE gate for the academy's own numbers (owner 2026-10-27): a message from one of them is stored
+ * The ONE gate for the academy's own numbers: a message from one of them is stored
  * (audit, already read) and nothing else runs: no lead, quick reply, rating or push.
  */
 @Injectable()

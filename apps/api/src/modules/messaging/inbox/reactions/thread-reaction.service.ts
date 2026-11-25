@@ -18,7 +18,7 @@ export type ReactionRequest = ThreadSend<ThreadReaction> & { messageId: string }
 export const reactionKey = (r: ReactionRequest): string => `reaction:${r.messageId}:${r.input.emoji ?? '-'}:${dedupKey(r)}`;
 
 /**
- * A reaction (owner 2026-10-27), guarded exactly like a text in that chat: the caller's role and scope
+ * A reaction, guarded exactly like a text in that chat: the caller's role and scope
  * (a teacher: own families only, never their own chat), the 24 h window and the chat's send line
  * (sendLine), the target in THIS chat with a wamid and ≤ 30 days old. Not a template, so the
  * restricted-templates rule does not apply. The CRM line has no reaction call: 409 reaction_unsupported.

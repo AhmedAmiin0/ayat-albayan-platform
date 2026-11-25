@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { QueuedMessage } from './queued-row';
 import { at, fakeJob, sampleLesson } from './reminders.fakes';
 
-// owner 2026-11-06: teacher_lesson_v3 once approved (two link buttons), else the older reminder
+// teacher_lesson_v3 once approved (two link buttons), else the older reminder
 // with direct links. No short link is made on this path.
 
 const PAGE = 'https://app.example/teacher/report/L1';

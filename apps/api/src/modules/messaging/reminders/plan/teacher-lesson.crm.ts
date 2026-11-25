@@ -10,7 +10,7 @@ import { classroomUrl, teacherReportUrl } from './reminders.links';
 /**
  * A v2 URL button's {{1}}: the path after the origin. The CRM's v2 buttons are really
  * meet.google.com/{{1}} and the old Vercel report redirector, which forwards to
- * /report-link/legacy/<path> (owner 2026-11-06): teacher/report/<id> opens the portal page.
+ * /report-link/legacy/<path>: teacher/report/<id> opens the portal page.
  */
 const suffix = (url: string): string => url.replace(/^\/+/, '');
 
@@ -108,7 +108,7 @@ interface TeacherReminderInput {
   links?: TeacherLinks;
 }
 
-/** The teacher's signed links of one lesson (lesson-links, owner 2026-11-06: no short links). */
+/** The teacher's signed links of one lesson (lesson-links, no short links). */
 export type TeacherLinks = TeacherLessonTokens;
 
 /** <join>: the lesson's own link (Meet, a fixed link, our classroom), else our classroom. */

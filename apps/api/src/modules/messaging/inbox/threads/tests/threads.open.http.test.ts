@@ -3,7 +3,7 @@ import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { inboxApp, NO_PEOPLE } from '@/modules/messaging/inbox/test-app';
 
-// Opening a chat fast (owner 2026-10-27): two parallel stages, no write when nothing is unread, and
+// Opening a chat fast: two parallel stages, no write when nothing is unread, and
 // Meta's read receipt never awaited — for the admin and the sales twin.
 
 type App = Awaited<ReturnType<typeof inboxApp>>;

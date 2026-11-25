@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store/thread-messages.repo';
 
-// A thread is ordered by each message's time, whatever its direction or how it got stored (owner
-// report 2026-10-26): created_at, then id, so a late-stored message lands where it was sent.
+// A thread is ordered by each message's time, whatever its direction or how it got stored:
+// created_at, then id, so a late-stored message lands where it was sent.
 
 const queriesOn = (db: ReturnType<typeof fakeDb>['db']) => new ThreadMessagesRepo(db);
 

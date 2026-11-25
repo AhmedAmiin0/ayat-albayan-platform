@@ -1,6 +1,6 @@
 import { PDF_PREVIEW_PAGES } from '@ab/shared';
 
-// The pure part of the chat PDF preview (owner 2026-10-29): which pages one request renders, poppler's
+// The pure part of the chat PDF preview: which pages one request renders, poppler's
 // arguments and outputs, and two per-process maps (shared in-flight work, recent failures).
 
 /** Pages 2+ render in runs of this many (2–6, 7–11 …), so page 2 never waits for page 30. */

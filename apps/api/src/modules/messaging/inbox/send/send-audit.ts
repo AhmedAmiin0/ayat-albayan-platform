@@ -11,7 +11,7 @@ export interface SendAudit {
   user: AuthUser;
   scope: TeacherScope | null;
   sales: SalesScope | null;
-  /** A sent file (owner 2026-10-19 #2): logged in place of template_key. */
+  /** A sent file: logged in place of template_key. */
   media?: { media_mime: string | null; media_name: string };
 }
 

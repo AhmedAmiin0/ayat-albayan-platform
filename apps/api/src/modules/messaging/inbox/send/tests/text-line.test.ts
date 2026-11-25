@@ -5,7 +5,7 @@ import type { ThreadWindow } from '@/modules/messaging/inbox/send/send-number';
 import { NUMBERS } from '@/modules/messaging/inbox/send/send-number.fakes';
 import { textLine } from '@/modules/messaging/inbox/send/text-line';
 
-// Owner 2026-11-03: after the 24 h window a staff text on a Kapso chat line is queued marked
+// After the 24 h window a staff text on a Kapso chat line is queued marked
 // awaiting_reply (the sender sends the reopen template first). Fakes only: no Kapso, no WhatsApp.
 
 const NOW = new Date('2026-10-31T10:00:00Z');

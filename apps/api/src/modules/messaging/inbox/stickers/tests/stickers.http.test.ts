@@ -14,7 +14,7 @@ const sticker = {
   interactive_payload: { type: 'sticker', sticker: { sha256: 'abc=' } },
 };
 
-// Stickers and GIFs in the chat (owner 2026-11-01): the admin and sales only; a teacher is 403.
+// Stickers and GIFs in the chat: the admin and sales only; a teacher is 403.
 describe('stickers and GIFs routes', () => {
   let t: App;
   beforeAll(async () => {

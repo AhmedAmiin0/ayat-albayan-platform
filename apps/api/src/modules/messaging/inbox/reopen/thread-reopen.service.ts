@@ -15,7 +15,7 @@ const OPEN: ThreadReopenView = { kapso_reopened: false, template: 'window_open' 
 const ON_SEND: ThreadReopenView = { kapso_reopened: false, template: 'on_send' };
 
 /**
- * POST /threads/:phone/reopen, answer only (owner 2026-11-07, option 1). Opening a chat sends
+ * POST /threads/:phone/reopen, answer only (option 1). Opening a chat sends
  * nothing: an admin opened a closed chat at night and the family got the welcome template. The
  * starter template now goes only when a staff member presses send in a closed window (inbox
  * textLine marks the row AWAITING_REPLY; the sender's WindowHold queues the template once per

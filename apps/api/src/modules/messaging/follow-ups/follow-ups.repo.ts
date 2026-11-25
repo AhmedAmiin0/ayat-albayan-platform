@@ -30,7 +30,7 @@ export interface AdvanceInput {
 export class FollowUpsRepo {
   constructor(
     @Inject(DB) private readonly db: Db,
-    /** The academy's own numbers: their old lead never gets a follow-up (owner 2026-10-27). */
+    /** The academy's own numbers: their old lead never gets a follow-up. */
     @Optional() private readonly own?: OwnNumbers,
   ) {}
 

@@ -10,8 +10,8 @@ interface NamedFile {
 }
 
 /**
- * The file's own name, cleaned: a family's document keeps the name it was sent under (owner
- * 2026-11-01), so no control or bidi characters («‮fdp.exe»), no path, and a PDF always saved .pdf.
+ * The file's own name, cleaned: a family's document keeps the name it was sent under,
+ * so no control or bidi characters («‮fdp.exe»), no path, and a PDF always saved .pdf.
  */
 function ownName(file: NamedFile): string {
   const own = cleanFileName(file.media_name).replace(/[/\\]/g, '_');

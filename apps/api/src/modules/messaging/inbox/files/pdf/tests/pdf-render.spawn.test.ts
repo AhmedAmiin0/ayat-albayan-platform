@@ -3,7 +3,7 @@ import { PassThrough } from 'node:stream';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { pdfPageCount, renderPdfPages } from '@/modules/messaging/inbox/files/pdf/pdf-render';
 
-// The real spawn wrapper against a fake child process: the limits a crafted PDF meets (owner 2026-10-29).
+// The real spawn wrapper against a fake child process: the limits a crafted PDF meets.
 const spawn = vi.hoisted(() => vi.fn());
 vi.mock('node:child_process', () => ({ spawn }));
 
