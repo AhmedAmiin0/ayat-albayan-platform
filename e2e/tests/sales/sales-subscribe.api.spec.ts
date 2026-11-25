@@ -61,8 +61,14 @@ test.describe.serial('sales subscribe from the chat with a bank-transfer receipt
     expect([first.status, again.body.id]).toEqual([201, first.body.id]);
     expect(first.body).toMatchObject({ price: quote.body.afterDiscount, paid: 0, due: quote.body.afterDiscount, status: 'unpaid' });
     sub = first.body;
-    const fam = await call<{ students: { id: string; open: { id: string }[] }[] }>(request, { token, method: 'GET', path: `/sales/money/family?phone=${encodeURIComponent(phone)}` });
-    expect(fam.body.students.map((s) => [s.id, s.open.map((o) => o.id)])).toEqual([[student, [sub.id]]]);
+    const fam = await call<{ students: { id: string; open: { id: string }[] }[] }>(request, {
+      token,
+      method: 'GET',
+      path: `/sales/money/family?phone=${encodeURIComponent(phone)}`,
+    });
+    expect(fam.body.students.map((s) => [s.id, s.open.map((o) => o.id)])).toEqual([
+      [student, [sub.id]],
+    ]);
   });
 
   test('A: a partial transfer with an uploaded receipt counts at once: the trial student is «مشترك», audited as hers', async ({ request }) => {
@@ -70,8 +76,20 @@ test.describe.serial('sales subscribe from the chat with a bank-transfer receipt
     const s = need(sub);
     const receiptPath = await uploadReceipt(request, { token: me.token, subscriptionId: s.id });
     const half = Math.round(s.price * 40) / 100;
-    const body = { subscriptionId: s.id, amount: half, currency: s.currency, paidAt: new Date().toISOString(), receiptPath, clientRequestId: randomUUID() };
-    const res = await call<SalesPaymentView>(request, { token: me.token, method: 'POST', path: '/sales/payments', body });
+    const body = {
+      subscriptionId: s.id,
+      amount: half,
+      currency: s.currency,
+      paidAt: new Date().toISOString(),
+      receiptPath,
+      clientRequestId: randomUUID(),
+    };
+    const res = await call<SalesPaymentView>(request, {
+      token: me.token,
+      method: 'POST',
+      path: '/sales/payments',
+      body,
+    });
     expect(res.status, JSON.stringify(res.body)).toBe(201);
     expect(res.body).toMatchObject({ method: 'bank', kind: 'payment', student: { id: student, status: 'active' } });
     paid.push(res.body.id);
@@ -93,9 +111,24 @@ test.describe.serial('sales subscribe from the chat with a bank-transfer receipt
     const copied = await call<{ receipt_path: string }>(request, { token: me.token, method: 'POST', path: '/sales/payments/receipt-from-chat', body: copyBody });
     expect(copied.status, JSON.stringify(copied.body)).toBe(200);
     const rest = Math.round((s.price - Math.round(s.price * 40) / 100) * 100) / 100;
-    const body = { subscriptionId: s.id, amount: rest, currency: s.currency, paidAt: new Date().toISOString(), receiptPath: copied.body.receipt_path, clientRequestId: randomUUID() };
-    expect((await call(request, { token: need(b).token, method: 'POST', path: '/sales/payments', body })).status).toBe(403);
-    const res = await call<SalesPaymentView>(request, { token: me.token, method: 'POST', path: '/sales/payments', body });
+    const body = {
+      subscriptionId: s.id,
+      amount: rest,
+      currency: s.currency,
+      paidAt: new Date().toISOString(),
+      receiptPath: copied.body.receipt_path,
+      clientRequestId: randomUUID(),
+    };
+    expect(
+      (await call(request, { token: need(b).token, method: 'POST', path: '/sales/payments', body }))
+        .status,
+    ).toBe(403);
+    const res = await call<SalesPaymentView>(request, {
+      token: me.token,
+      method: 'POST',
+      path: '/sales/payments',
+      body,
+    });
     expect(res.status, JSON.stringify(res.body)).toBe(201);
     paid.push(res.body.id);
     const [pkg] = await withSql((sql) => sql<{ status: string }[]>`select status from public.subscriptions where id = ${s.id}`);

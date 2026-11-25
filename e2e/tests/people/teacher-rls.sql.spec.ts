@@ -27,8 +27,16 @@ async function seed(tx: Tx) {
   // Active students: a trial family is never in a teacher's chats (trial-no-teacher-chat.sql.spec).
   const active = 'active' as const;
   await family(tx, { phone: PHONE.assigned, teacherId: abrar.id, status: active });
-  await lesson(tx, { teacherId: abrar.id, studentId: await family(tx, { phone: PHONE.recent, teacherId: other.id, status: active }), daysAgo: 10 });
-  await lesson(tx, { teacherId: abrar.id, studentId: await family(tx, { phone: PHONE.old, teacherId: other.id, status: active }), daysAgo: 91 });
+  await lesson(tx, {
+    teacherId: abrar.id,
+    studentId: await family(tx, { phone: PHONE.recent, teacherId: other.id, status: active }),
+    daysAgo: 10,
+  });
+  await lesson(tx, {
+    teacherId: abrar.id,
+    studentId: await family(tx, { phone: PHONE.old, teacherId: other.id, status: active }),
+    daysAgo: 91,
+  });
   await family(tx, { phone: PHONE.other, teacherId: other.id, status: active });
   for (const phone of Object.values(PHONE)) {
     await tx`insert into public.messages (direction, phone_e164, body) values ('inbound', ${phone}, 'السلام عليكم')`;
@@ -39,8 +47,10 @@ async function seed(tx: Tx) {
 }
 
 /** Only this spec's rows: other journeys leave messages and read marks in the shared DB. */
-const ours = <T extends { phone_e164: string }>(rows: readonly T[]) => rows.filter((r) => r.phone_e164.startsWith('+966500164'));
-const phonesIn = (rows: readonly { phone_e164: string }[]) => [...new Set(ours(rows).map((r) => r.phone_e164))].sort();
+const ours = <T extends { phone_e164: string }>(rows: readonly T[]) =>
+  rows.filter((r) => r.phone_e164.startsWith('+966500164'));
+const phonesIn = (rows: readonly { phone_e164: string }[]) =>
+  [...new Set(ours(rows).map((r) => r.phone_e164))].sort();
 type ReadRow = { teacher_id: string; phone_e164: string };
 
 test.describe('teacher mode RLS (migration 164, rule 9)', () => {
@@ -76,7 +86,12 @@ test.describe('teacher mode RLS (migration 164, rule 9)', () => {
         return r?.ok;
       };
       // assigned, or a lesson ≤ 90 days ago: yes. A lesson 91 days ago, or someone else's: no.
-      expect([await has(PHONE.assigned), await has(PHONE.recent), await has(PHONE.old), await has(PHONE.other)]).toEqual([true, true, false, false]);
+      expect([
+        await has(PHONE.assigned),
+        await has(PHONE.recent),
+        await has(PHONE.old),
+        await has(PHONE.other),
+      ]).toEqual([true, true, false, false]);
 
       await tx`insert into public.teacher_payouts (teacher_id, month, lessons_count, amount, status, approved_at)
         values (${t.abrar}, '2031-01-01', 3, 300, 'draft', null), (${t.abrar}, '2031-02-01', 3, 300, 'approved', now())`;

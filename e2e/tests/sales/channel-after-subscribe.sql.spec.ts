@@ -33,7 +33,14 @@ async function seed(tx: Tx) {
   if (!ch) throw new Error('channel not opened by the trigger');
   await tx`insert into public.channel_messages (channel_id, sender_role, body) values (${ch.id}, 'guardian', 'السلام عليكم')`;
   await familyChat(tx, true);
-  return { teacher, teacherId: t.id, student, guardian, own, admin: await userId(tx, USERS.admin.email) };
+  return {
+    teacher,
+    teacherId: t.id,
+    student,
+    guardian,
+    own,
+    admin: await userId(tx, USERS.admin.email),
+  };
 }
 
 // A boolean parameter would reach jsonb as the string "true" (settings_kind refuses it): literals.
@@ -52,12 +59,20 @@ test.describe('student channel opens after the subscription (20261029000971–97
   test('closed during the trial even with the trial teacher; open once active; closed again without a teacher', async () => {
     await rolledBack(async (tx) => {
       const s = await seed(tx);
-      expect([await reads(tx, s.teacher), await reads(tx, s.guardian), await reads(tx, s.admin)]).toEqual([0, 0, 1]);
+      expect([
+        await reads(tx, s.teacher),
+        await reads(tx, s.guardian),
+        await reads(tx, s.admin),
+      ]).toEqual([0, 0, 1]);
       await tx`update public.students set status = 'active' where id = ${s.student}`;
       expect([await reads(tx, s.teacher), await reads(tx, s.guardian)]).toEqual([1, 1]);
       expect(await tx`select 1 from public.teacher_channel_student_ids(${s.teacherId}) id where id = ${s.student}`).toHaveLength(1);
       await tx`update public.students set teacher_id = null where id = ${s.student}`;
-      expect([await reads(tx, s.teacher), await reads(tx, s.guardian), await reads(tx, s.admin)]).toEqual([0, 0, 1]);
+      expect([
+        await reads(tx, s.teacher),
+        await reads(tx, s.guardian),
+        await reads(tx, s.admin),
+      ]).toEqual([0, 0, 1]);
     });
   });
 

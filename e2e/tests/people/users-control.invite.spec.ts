@@ -35,6 +35,8 @@ test.describe('users control: invite link', () => {
     await expect(invited).not.toHaveURL(/\/set-password/);
     await ctx.close();
 
-    await expectSignedIn(await signInAs(browser, { email: INVITED.email, password: INVITED.password }));
+    await expectSignedIn(
+      await signInAs(browser, { email: INVITED.email, password: INVITED.password }),
+    );
   });
 });

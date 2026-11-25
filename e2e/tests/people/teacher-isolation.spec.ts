@@ -79,7 +79,8 @@ test.describe('teacher isolation (R-NFR-02, rule 9)', () => {
         const { status, json } = await call(teacher, { method: 'GET', path });
         expect(status, path).toBe(200);
         const text = JSON.stringify(json);
-        for (const secret of [hiba.studentId, hiba.lessonId, hiba.reportId, hiba.phone]) expect(text, path).not.toContain(secret);
+        for (const secret of [hiba.studentId, hiba.lessonId, hiba.reportId, hiba.phone])
+          expect(text, path).not.toContain(secret);
       }
       // The same month holds both teachers' approved rows: she gets hers only.
       const payouts = await call(teacher, { method: 'GET', path: `/teachers/me/payouts?month=${HIBA_MONTH.slice(0, 7)}` });

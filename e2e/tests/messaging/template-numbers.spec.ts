@@ -90,7 +90,9 @@ test.describe('templates per number (owner 2026-10-18)', () => {
     await dialog.getByRole('button', { name: t.submitConfirmYes }).click();
     await expect(admin.getByText(t.submitted)).toBeVisible();
     expect(await rescheduleRow()).toMatchObject({ line: 'chat', status: 'pending' });
-    const meta = (await stubTemplates()).filter((m) => m.name === RESCHEDULE) as unknown as { wabaId?: string }[];
+    const meta = (await stubTemplates()).filter((m) => m.name === RESCHEDULE) as unknown as {
+      wabaId?: string;
+    }[];
     expect(meta.map((m) => m.wabaId)).toEqual([CHAT_WABA]);
 
     await stubTemplateStatus(RESCHEDULE, 'APPROVED', CHAT_WABA);

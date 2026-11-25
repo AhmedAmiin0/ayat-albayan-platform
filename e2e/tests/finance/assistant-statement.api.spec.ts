@@ -83,8 +83,12 @@ test.describe.serial('assistant statement and own pages (API + DB)', () => {
   test('as P: her students (with their commission), her earnings (paid statement, per currency) and the payment she recorded', async ({ request }) => {
     const me = need(p);
     const students = await get<MyStudentRow[]>(me.token, '/sales/me/students', request);
-    expect(students.body.map((s) => s.id).sort()).toEqual([need(sar).student, need(usd).student].sort());
-    expect(students.body.every((s) => s.first_subscription_paid && s.commission?.status === 'earned')).toBe(true);
+    expect(students.body.map((s) => s.id).sort()).toEqual(
+      [need(sar).student, need(usd).student].sort(),
+    );
+    expect(
+      students.body.every((s) => s.first_subscription_paid && s.commission?.status === 'earned'),
+    ).toBe(true);
     expect(JSON.stringify(students.body)).not.toMatch(/price|notes|fx_|receipt/);
     const earnings = await get<MyEarnings>(me.token, '/sales/me/earnings', request);
     expect(earnings.body.terms).toMatchObject({ commission: { type: 'percent', value: 10 }, salary: { amount: 1000, currency: 'SAR' } });
@@ -100,7 +104,11 @@ test.describe.serial('assistant statement and own pages (API + DB)', () => {
     expect(students.body.map((s) => s.id)).toEqual([need(other).student]);
     expect(students.body[0]?.commission).toBeNull();
     const earnings = await get<MyEarnings>(me.token, '/sales/me/earnings', request);
-    expect([earnings.body.terms?.commission ?? null, earnings.body.statements, earnings.body.commissions_total]).toEqual([null, [], {}]);
+    expect([
+      earnings.body.terms?.commission ?? null,
+      earnings.body.statements,
+      earnings.body.commissions_total,
+    ]).toEqual([null, [], {}]);
     const pays = await get<MyPaymentRow[]>(me.token, '/sales/me/payments', request);
     expect(pays.body.map((r) => r.amount)).toEqual([25]);
   });

@@ -18,8 +18,13 @@ test.describe('pick_trial_date guards (R-SCH-12)', () => {
       const s = await seedTrial(tx);
       await tx`update public.lessons set rule_id = null where id = ${s.lesson}`;
       const p = movePayload(s);
-      const [row] = await pick(tx, { ...p, change: { ...p.change, lessons: p.change.lessons.map((l) => ({ ...l, rule_id: null })) } });
-      const [ls] = await tx<{ chargeable: boolean }[]>`select chargeable from public.lesson_students where lesson_id = ${row?.r.lesson_id ?? ''}`;
+      const [row] = await pick(tx, {
+        ...p,
+        change: { ...p.change, lessons: p.change.lessons.map((l) => ({ ...l, rule_id: null })) },
+      });
+      const [ls] = await tx<
+        { chargeable: boolean }[]
+      >`select chargeable from public.lesson_students where lesson_id = ${row?.r.lesson_id ?? ''}`;
       expect(ls?.chargeable).toBe(false);
     });
   });

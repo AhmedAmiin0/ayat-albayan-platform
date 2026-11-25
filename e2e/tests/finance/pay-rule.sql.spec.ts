@@ -70,7 +70,11 @@ test.describe('one rule for teacher pay (20261005000200)', () => {
     await rolledBack(async (tx) => {
       const t = await teacherWithRates(tx);
       const l = await ruleLesson(tx, { teacher: t.id, pkg: '4', daysAgo: 3 });
-      await pay(tx, { teacher: t.id, amount: 30, items: [{ earning_id: await earningId(tx, l), amount: 30 }] });
+      await pay(tx, {
+        teacher: t.id,
+        amount: 30,
+        items: [{ earning_id: await earningId(tx, l), amount: 30 }],
+      });
       await tx`update public.schedule_rules set package = 'trial' where id = (select rule_id from public.lessons where id = ${l})`;
       await tx`select public.resync_teacher_earnings(${t.id})`;
       expect(await earningOf(tx, l)).toMatchObject({ amount: '30.00', paid_amount: '30.00', status: 'paid' });

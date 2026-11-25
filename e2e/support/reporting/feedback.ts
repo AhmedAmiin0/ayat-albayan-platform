@@ -33,7 +33,10 @@ export async function unapproveTemplate(): Promise<void> {
 }
 
 /** A student with a completed lesson next week (the API only asks about lessons that took place). */
-export async function completedLesson(teacherId: string, student: string): Promise<{ lessonId: string; studentId: string; guardianId: string }> {
+export async function completedLesson(
+  teacherId: string,
+  student: string,
+): Promise<{ lessonId: string; studentId: string; guardianId: string }> {
   const family = await seedFamily(`أم ${student}`, [student]);
   const [studentId = ''] = family.studentIds;
   const startsAt = riyadh(addDays(nextWeekSaturday(), 1), '14:00');
@@ -54,12 +57,20 @@ export async function tokenSentTo(guardianId: string): Promise<string> {
   });
   let token = '';
   await expect
-    .poll(async () => {
-      const sent = (await stubSent()).filter((m) => m.template === TEMPLATE && m.to.replace(/\D/g, '') === phone);
-      const body = sent[0]?.body as { template?: { components?: { type: string; parameters?: { text?: string }[] }[] } } | undefined;
-      token = body?.template?.components?.find((c) => c.type === 'button')?.parameters?.[0]?.text ?? '';
-      return token;
-    }, { timeout: 60_000 })
+    .poll(
+      async () => {
+        const sent = (await stubSent()).filter(
+          (m) => m.template === TEMPLATE && m.to.replace(/\D/g, '') === phone,
+        );
+        const body = sent[0]?.body as
+          | { template?: { components?: { type: string; parameters?: { text?: string }[] }[] } }
+          | undefined;
+        token =
+          body?.template?.components?.find((c) => c.type === 'button')?.parameters?.[0]?.text ?? '';
+        return token;
+      },
+      { timeout: 60_000 },
+    )
     .not.toBe('');
   return token;
 }

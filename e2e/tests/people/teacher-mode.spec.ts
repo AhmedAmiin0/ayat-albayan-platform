@@ -33,7 +33,11 @@ async function dropTeacher(id: string): Promise<void> {
  * The child is this teacher's (students.teacher_id), active (a trial family is never in a teacher's
  * chats: trial-no-teacher-chat.spec), and the guardian's phone, wa_id digits.
  */
-async function assign(input: { studentId: string; guardianId: string; teacherId: string }): Promise<string> {
+async function assign(input: {
+  studentId: string;
+  guardianId: string;
+  teacherId: string;
+}): Promise<string> {
   return withSql(async (sql) => {
     await sql`update public.students set teacher_id = ${input.teacherId}, status = 'active' where id = ${input.studentId}`;
     const [g] = await sql<{ phone_e164: string }[]>`select phone_e164 from public.guardians where id = ${input.guardianId}`;
@@ -56,8 +60,16 @@ test.describe('teacher mode (R-TCH-03, R-MSG-05)', () => {
       const theirs = await seedFamily(`أم هالة ${tag}`, [`هالة ${tag}`]);
       const [rim, hala] = [mine.studentIds[0], theirs.studentIds[0]];
       if (!rim || !hala) throw new Error('students not written');
-      const myPhone = await assign({ studentId: rim, guardianId: mine.guardianId, teacherId: abrar });
-      const theirPhone = await assign({ studentId: hala, guardianId: theirs.guardianId, teacherId: other });
+      const myPhone = await assign({
+        studentId: rim,
+        guardianId: mine.guardianId,
+        teacherId: abrar,
+      });
+      const theirPhone = await assign({
+        studentId: hala,
+        guardianId: theirs.guardianId,
+        teacherId: other,
+      });
       const today = riyadhToday();
       await seedLesson({ teacherId: abrar, studentId: rim, startsAt: riyadh(today, '10:00'), minutes: 30 });
       await seedLesson({ teacherId: other, studentId: hala, startsAt: riyadh(today, '11:00'), minutes: 30 });
@@ -76,7 +88,9 @@ test.describe('teacher mode (R-TCH-03, R-MSG-05)', () => {
       // Another teacher's family by URL: the API answers 403 not_your_thread.
       await teacher.goto(`/teacher/inbox?phone=${encodeURIComponent(theirPhone)}`);
       // (react-query retries a failed read 3 times with backoff before it shows the error)
-      await expect(teacher.getByText(ar.inbox.error.not_your_thread)).toBeVisible({ timeout: 20_000 });
+      await expect(teacher.getByText(ar.inbox.error.not_your_thread)).toBeVisible({
+        timeout: 20_000,
+      });
 
       // A reply from the academy number, in the 24 h window.
       await teacher.goto(`/teacher/inbox?phone=${encodeURIComponent(myPhone)}`);

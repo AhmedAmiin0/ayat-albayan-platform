@@ -15,10 +15,23 @@ test.describe('assistant terms, merge and adjustment retries (20261006000272-273
   test('a new part cannot start in the past; a saved start day can move later, never earlier', async () => {
     await rolledBack(async (tx) => {
       const a = await assistant(tx, 'terms');
-      const [yesterday, today, tomorrow] = [await riyadhDay(tx, -1), await riyadhDay(tx, 0), await riyadhDay(tx, 1)];
-      const terms = (commission: string | null, salary: string, rate = 10): Record<string, string | number | null> => ({
-        commission_type: commission ? 'percent' : null, commission_value: commission ? rate : null, commission_currency: null,
-        commission_starts_on: commission, salary_amount: 100, salary_currency: 'EGP', salary_starts_on: salary,
+      const [yesterday, today, tomorrow] = [
+        await riyadhDay(tx, -1),
+        await riyadhDay(tx, 0),
+        await riyadhDay(tx, 1),
+      ];
+      const terms = (
+        commission: string | null,
+        salary: string,
+        rate = 10,
+      ): Record<string, string | number | null> => ({
+        commission_type: commission ? 'percent' : null,
+        commission_value: commission ? rate : null,
+        commission_currency: null,
+        commission_starts_on: commission,
+        salary_amount: 100,
+        salary_currency: 'EGP',
+        salary_starts_on: salary,
       });
       // tx.json sends a real jsonb: a plain string parameter cast to jsonb would be stored as a JSON string, not an object.
       const set = (p: Record<string, string | number | null>, who = a) => code(tx, () => tx`select public.set_assistant_terms(${who}, ${tx.json(p)}, null)`);

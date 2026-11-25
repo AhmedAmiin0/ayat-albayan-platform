@@ -10,7 +10,10 @@ export async function snapshotSettings(keys: string[]): Promise<{ key: string; v
 }
 
 /** Writes the snapshot back; a key that had no row gets its row deleted again. */
-export async function restoreSettings(input: { keys: string[]; rows: { key: string; value: unknown }[] }): Promise<void> {
+export async function restoreSettings(input: {
+  keys: string[];
+  rows: { key: string; value: unknown }[];
+}): Promise<void> {
   await withSql(async (sql) => {
     for (const key of input.keys) {
       const row = input.rows.find((r) => r.key === key);

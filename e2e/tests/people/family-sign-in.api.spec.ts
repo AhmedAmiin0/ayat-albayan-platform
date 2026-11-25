@@ -28,7 +28,10 @@ test.describe('family sign-in by WhatsApp code', () => {
     expect(res.status).toBe(200);
     const link = (await res.json()) as { token_hash: string; type: 'magiclink' };
     expect(Object.keys(link).sort()).toEqual(['token_hash', 'type']);
-    const { data, error } = await client().auth.verifyOtp({ type: link.type, token_hash: link.token_hash });
+    const { data, error } = await client().auth.verifyOtp({
+      type: link.type,
+      token_hash: link.token_hash,
+    });
     expect(error).toBeNull();
     expect(data.session?.access_token).toBeTruthy();
     const rows = await withSql((sql) => sql<{ email: string; role: string }[]>`

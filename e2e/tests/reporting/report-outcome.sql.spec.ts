@@ -49,7 +49,10 @@ async function seed(tx: Tx, students: number) {
 type Seeded = Awaited<ReturnType<typeof seed>>;
 
 /** One submit: the first report of an open lesson moves it (siblings follow), later ones sync. */
-async function submit(tx: Tx, input: { s: Seeded; index: number; attendance: Attendance; version: number }) {
+async function submit(
+  tx: Tx,
+  input: { s: Seeded; index: number; attendance: Attendance; version: number },
+) {
   const { s, attendance, version } = input;
   const report = s.reports[input.index];
   if (!report) throw new Error('no such report');
@@ -62,8 +65,15 @@ async function submit(tx: Tx, input: { s: Seeded; index: number; attendance: Att
     report_id: report.id,
     expected_version: version,
     actor: s.actor,
-    report: { attendance, version: version + 1, submitted_at: new Date().toISOString(), edited_at: null },
-    ...(open ? { lesson_change: { actor: s.actor, changes: [change] } } : { student: { attendance, chargeable } }),
+    report: {
+      attendance,
+      version: version + 1,
+      submitted_at: new Date().toISOString(),
+      edited_at: null,
+    },
+    ...(open
+      ? { lesson_change: { actor: s.actor, changes: [change] } }
+      : { student: { attendance, chargeable } }),
   };
   await tx`select public.submit_report(${tx.json(p)})`;
 }

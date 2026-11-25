@@ -48,8 +48,20 @@ test.describe('sales meetings', () => {
       data: { title, startsAt, durationMin: 30, invitees, clientRequestId: crypto.randomUUID() },
     });
     expect(res.status()).toBe(201);
-    const created = (await res.json()) as { id: string; invitees: { kind: string; status: string; link: string | null; invitation_text: string | null }[] };
-    expect(created.invitees.map((i) => [i.kind, i.status])).toEqual([['staff', 'sent'], ['student', 'sent'], ['student', 'window_closed']]);
+    const created = (await res.json()) as {
+      id: string;
+      invitees: {
+        kind: string;
+        status: string;
+        link: string | null;
+        invitation_text: string | null;
+      }[];
+    };
+    expect(created.invitees.map((i) => [i.kind, i.status])).toEqual([
+      ['staff', 'sent'],
+      ['student', 'sent'],
+      ['student', 'window_closed'],
+    ]);
     const closedLink = created.invitees[2]?.link ?? '';
     expect(created.invitees[2]?.invitation_text).toContain(closedLink);
     expect(JSON.stringify(created)).not.toContain(openPhone?.phone_e164 ?? 'never');

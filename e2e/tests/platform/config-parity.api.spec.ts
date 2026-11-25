@@ -16,7 +16,10 @@ const KEYS = [
 ];
 type Json = Record<string, unknown>;
 
-async function get(request: APIRequestContext, input: { token: string; path: string }): Promise<Json> {
+async function get(
+  request: APIRequestContext,
+  input: { token: string; path: string },
+): Promise<Json> {
   const res = await request.get(`${API}${input.path}`, {
     headers: { authorization: `Bearer ${input.token}`, 'x-ab-client': 'e2e/1' },
   });

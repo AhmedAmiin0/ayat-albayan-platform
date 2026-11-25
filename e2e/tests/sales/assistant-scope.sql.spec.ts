@@ -69,7 +69,10 @@ test.describe('assistant scope: what a salesperson can read directly (2026100600
 
   test('v_assistant_students: her brought students only, whitelisted columns; the admin all of them; a teacher and nobody none', async () => {
     await rolledBack(async (tx) => {
-      const [admin, teacher] = [await userId(tx, USERS.admin.email), await userId(tx, USERS.teacher.email)];
+      const [admin, teacher] = [
+        await userId(tx, USERS.admin.email),
+        await userId(tx, USERS.teacher.email),
+      ];
       const a = await assistant(tx, 'view-a', TERMS);
       const b = await assistant(tx, 'view-b', TERMS);
       const mine = await brought(tx, { by: a, phone: '+966500000209', price: 100 });

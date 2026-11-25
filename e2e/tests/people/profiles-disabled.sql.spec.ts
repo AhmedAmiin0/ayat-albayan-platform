@@ -51,9 +51,23 @@ test.describe('disabled logins (migrations 286, 287)', () => {
       await clearClaims(tx);
       expect(active[0]?.n).toBeGreaterThan(1);
       await tx`update public.profiles set disabled_at = now() where id = ${admin}`;
-      const rows = await as(tx, admin, () => tx<{ id: string; admin: boolean }[]>`select id, public.is_admin() as admin from public.profiles`);
-      expect(rows.map((r) => ({ id: r.id, admin: r.admin }))).toEqual([{ id: admin, admin: false }]);
-      const edited = await as(tx, admin, () => tx`update public.profiles set full_name = 'محاولة' where id = ${teacher} returning id`);
+      const rows = await as(
+        tx,
+        admin,
+        () =>
+          tx<
+            { id: string; admin: boolean }[]
+          >`select id, public.is_admin() as admin from public.profiles`,
+      );
+      expect(rows.map((r) => ({ id: r.id, admin: r.admin }))).toEqual([
+        { id: admin, admin: false },
+      ]);
+      const edited = await as(
+        tx,
+        admin,
+        () =>
+          tx`update public.profiles set full_name = 'محاولة' where id = ${teacher} returning id`,
+      );
       expect(edited).toHaveLength(0);
       await clearClaims(tx);
     });

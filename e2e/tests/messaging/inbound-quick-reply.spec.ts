@@ -1,6 +1,12 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import {
-  auditActions, guardianName, guardianPhone, inboundFor, lessonView, pushesLike, seedSentConfirmation,
+  auditActions,
+  guardianName,
+  guardianPhone,
+  inboundFor,
+  lessonView,
+  pushesLike,
+  seedSentConfirmation,
 } from '../../support/messaging/inbound';
 import { resetAbrar, seedFamily, seedLesson } from '../../support/core/schedule';
 import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
@@ -22,7 +28,12 @@ async function scene(input: { name: string; days: number; teacherId: string }): 
   const { teacherId } = input;
   const family = await seedFamily(input.name, ['سلمى']);
   const studentId = family.studentIds[0] ?? '';
-  const lessonId = await seedLesson({ teacherId, studentId, startsAt: new Date(Date.now() + input.days * DAY), minutes: 30 });
+  const lessonId = await seedLesson({
+    teacherId,
+    studentId,
+    startsAt: new Date(Date.now() + input.days * DAY),
+    minutes: 30,
+  });
   const phone = await guardianPhone(family.guardianId);
   const waId = `wamid.e2e-${Date.now()}-${family.guardianId.slice(0, 8)}`;
   await seedSentConfirmation({ phone, guardianId: family.guardianId, lessonId, waId });
@@ -50,7 +61,11 @@ test.describe('inbound WhatsApp — quick replies', () => {
     expect(lesson.confirmed_at).not.toBeNull();
     expect(await auditActions(s.lessonId)).toContain('confirm_by_whatsapp');
     const [row] = await inboundFor(s.phone);
-    expect(row).toMatchObject({ lesson_id: s.lessonId, guardian_id: s.guardianId, reply_to_wa_id: s.waId });
+    expect(row).toMatchObject({
+      lesson_id: s.lessonId,
+      guardian_id: s.guardianId,
+      reply_to_wa_id: s.waId,
+    });
     expect(row?.interactive_payload).not.toBeNull();
   });
 

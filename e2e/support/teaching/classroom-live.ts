@@ -15,8 +15,16 @@ const MEDIA: BrowserContextOptions = { locale: AR_LOCALE, permissions: ['camera'
 export const MEDIA_FLAGS = ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream', '--auto-select-desktop-capture-source=Entire screen'];
 
 /** A fresh page with camera and mic allowed: signed in as `role`, or a visitor (null). */
-export async function roomPage(browser: Browser, role: keyof typeof USERS | null, extra: BrowserContextOptions = {}): Promise<Page> {
-  const ctx = await browser.newContext({ ...MEDIA, ...(role && { storageState: authFile(role) }), ...extra });
+export async function roomPage(
+  browser: Browser,
+  role: keyof typeof USERS | null,
+  extra: BrowserContextOptions = {},
+): Promise<Page> {
+  const ctx = await browser.newContext({
+    ...MEDIA,
+    ...(role && { storageState: authFile(role) }),
+    ...extra,
+  });
   const page = await ctx.newPage();
   page.on('pageerror', (e) => console.log(`[${role ?? 'guest'} pageerror]`, e.message));
   return page;
@@ -59,7 +67,11 @@ export const videoWidth = (tile: Locator): Promise<number> =>
 
 /** The page's scroll width (no sideways scroll on a phone). */
 export const pageScrollWidth = (page: Page): Promise<number> =>
-  page.evaluate(() => (globalThis as unknown as { document: { documentElement: { scrollWidth: number } } }).document.documentElement.scrollWidth);
+  page.evaluate(
+    () =>
+      (globalThis as unknown as { document: { documentElement: { scrollWidth: number } } }).document
+        .documentElement.scrollWidth,
+  );
 
 /** The board canvas' inked pixels (anything not fully transparent or white). */
 export function boardInk(page: Page): Promise<number> {
@@ -67,7 +79,8 @@ export function boardInk(page: Page): Promise<number> {
     const c = el as unknown as CanvasLike;
     const data = c.getContext('2d')?.getImageData(0, 0, c.width, c.height).data ?? [];
     let n = 0;
-    for (let i = 0; i < data.length; i += 4) if ((data[i + 3] ?? 0) > 0 && (data[i] ?? 255) < 128) n += 1;
+    for (let i = 0; i < data.length; i += 4)
+      if ((data[i + 3] ?? 0) > 0 && (data[i] ?? 255) < 128) n += 1;
     return n;
   });
 }
@@ -87,7 +100,9 @@ export async function touchStroke(page: Page): Promise<void> {
   const box = await page.getByRole('img', { name: BOARD.title }).boundingBox();
   if (!box) throw new Error('no board');
   const cdp = await page.context().newCDPSession(page);
-  const at = (f: number) => [{ x: box.x + box.width * (0.2 + f * 0.5), y: box.y + box.height * (0.3 + f * 0.4) }];
+  const at = (f: number) => [
+    { x: box.x + box.width * (0.2 + f * 0.5), y: box.y + box.height * (0.3 + f * 0.4) },
+  ];
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: at(0) });
   for (let i = 1; i <= 10; i += 1) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: at(i / 10) });
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });

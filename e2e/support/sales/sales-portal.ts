@@ -13,8 +13,14 @@ const PASSWORD = 'Assistant-e2e-123';
 export const salesNav = async (page: Page) => (await openNav(page)).getByRole('navigation', { name: ar.sales.nav.label });
 
 /** A salesperson's page, signed in through the login form (Arabic UI). `videoDir` records the page (saved on context close). */
-export async function signInSales(browser: Browser, email: string, videoDir?: string): Promise<Page> {
-  const recordVideo = videoDir ? { recordVideo: { dir: videoDir, size: { width: 1280, height: 720 } } } : {};
+export async function signInSales(
+  browser: Browser,
+  email: string,
+  videoDir?: string,
+): Promise<Page> {
+  const recordVideo = videoDir
+    ? { recordVideo: { dir: videoDir, size: { width: 1280, height: 720 } } }
+    : {};
   const page = await (await browser.newContext({ locale: AR_LOCALE, ...recordVideo })).newPage();
   await page.goto('/login');
   await page.getByLabel(ar.auth.email).fill(email);
@@ -25,7 +31,11 @@ export async function signInSales(browser: Browser, email: string, videoDir?: st
 }
 
 /** A fresh teacher; a lesson of theirs for the student starting `minutes` from now (negative = running). */
-async function teacherWithLesson(input: { student: string; teacher: string; minutes: number }): Promise<string> {
+async function teacherWithLesson(input: {
+  student: string;
+  teacher: string;
+  minutes: number;
+}): Promise<string> {
   return withSql(async (sql) => {
     const t = one(await sql<{ id: string }[]>`insert into public.teachers (display_name_ar, gender, programs, tz)
       values (${input.teacher}, 'female', '{quran}', 'Asia/Riyadh') returning id`);
@@ -39,7 +49,11 @@ async function teacherWithLesson(input: { student: string; teacher: string; minu
 }
 
 /** My student with a confirmed (active) package paid 333, taught by a fresh teacher, in a lesson running now. */
-export async function seedMine(input: { salesId: string; name: string; teacher: string }): Promise<{ phone: string }> {
+export async function seedMine(input: {
+  salesId: string;
+  name: string;
+  teacher: string;
+}): Promise<{ phone: string }> {
   const mine = await family(input.salesId, input.name);
   await teacherWithLesson({ student: mine.student, teacher: input.teacher, minutes: -5 });
   await withSql(async (sql) => {
@@ -52,7 +66,10 @@ export async function seedMine(input: { salesId: string; name: string; teacher: 
 }
 
 /** A booked family that never wrote: a lesson tomorrow, no message on its number. */
-export async function seedBooked(input: { name: string; teacher: string }): Promise<{ phone: string; guardian: string }> {
+export async function seedBooked(input: {
+  name: string;
+  teacher: string;
+}): Promise<{ phone: string; guardian: string }> {
   const booked = await family(null, input.name);
   await teacherWithLesson({ student: booked.student, teacher: input.teacher, minutes: 24 * 60 });
   return { phone: booked.phone, guardian: booked.guardian };

@@ -63,7 +63,10 @@ test.describe('stale confirmation (S6)', () => {
 
     await setMessaging(true);
     await expect
-      .poll(async () => (await messagesFor(phone)).map((m) => [m.status, m.error_code]), SENDER_WAIT)
+      .poll(
+        async () => (await messagesFor(phone)).map((m) => [m.status, m.error_code]),
+        SENDER_WAIT,
+      )
       .toEqual([['failed', 'stale']]);
     const toGuardian = (await stubSent()).filter((m) => m.to.replace(/\D/g, '') === phone.replace(/\D/g, ''));
     expect(toGuardian).toEqual([]);

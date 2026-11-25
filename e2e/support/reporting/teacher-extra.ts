@@ -36,19 +36,26 @@ export async function pickGrade(page: Page, input: { row: string; grade: Grade }
 
 /** The six rubric rows and the overall grade, all the same grade. */
 async function gradeAll(page: Page, grade: Grade): Promise<void> {
-  for (const rubric of REPORT_RUBRICS) await pickGrade(page, { row: ar.reports.rubric[rubric], grade });
+  for (const rubric of REPORT_RUBRICS)
+    await pickGrade(page, { row: ar.reports.rubric[rubric], grade });
   await pickGrade(page, { row: ar.reports.overall, grade });
 }
 
 /** Text fields by their form titles. */
-export async function fillTexts(page: Page, texts: Partial<Record<TextKey, string>>): Promise<void> {
+export async function fillTexts(
+  page: Page,
+  texts: Partial<Record<TextKey, string>>,
+): Promise<void> {
   for (const [key, text] of Object.entries(texts) as [TextKey, string][]) {
     await page.getByRole('textbox', { name: ar.reports[key], exact: true }).fill(text);
   }
 }
 
 /** A full report for a student who attended: attendance, every grade, the five required texts. */
-export async function fillAttended(page: Page, texts: Partial<Record<TextKey, string>> = {}): Promise<void> {
+export async function fillAttended(
+  page: Page,
+  texts: Partial<Record<TextKey, string>> = {},
+): Promise<void> {
   await pickAttendance(page, 'on_time');
   await gradeAll(page, 'excellent');
   const required = Object.fromEntries(REQUIRED_TEXTS.map((k) => [k, TEXTS[k]]));
@@ -117,7 +124,10 @@ interface StoredObject {
 }
 
 /** One Storage object by bucket and path, or undefined when it is not there. */
-export async function storedObject(input: { bucket: string; path: string }): Promise<StoredObject | undefined> {
+export async function storedObject(input: {
+  bucket: string;
+  path: string;
+}): Promise<StoredObject | undefined> {
   return withSql(async (sql) => {
     const [row] = await sql<StoredObject[]>`
       select metadata ->> 'eTag' as etag, updated_at from storage.objects

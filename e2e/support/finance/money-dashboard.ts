@@ -36,8 +36,16 @@ export async function seedDashboard(teacherId: string): Promise<DashboardSeed> {
   const paid = await seedPackageStudent({ teacherId, paid: true, guardian: 'أم لوحة', student: 'لوحة' });
   const unpaid = await seedPackageStudent({ teacherId, paid: false, guardian: 'أم عداد', student: 'عداد' });
   const today = riyadhToday();
-  for (const [hour, status] of [['12:00', 'confirmed'], ['13:00', 'no_show']] as const) {
-    const id = await seedLesson({ teacherId, studentId: paid.studentId, startsAt: riyadh(today, hour), minutes: 45 });
+  for (const [hour, status] of [
+    ['12:00', 'confirmed'],
+    ['13:00', 'no_show'],
+  ] as const) {
+    const id = await seedLesson({
+      teacherId,
+      studentId: paid.studentId,
+      startsAt: riyadh(today, hour),
+      minutes: 45,
+    });
     await withSql((sql) => sql`update public.lessons set status = ${status} where id = ${id}`);
   }
   const expense = 120;

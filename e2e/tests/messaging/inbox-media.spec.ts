@@ -55,8 +55,14 @@ test.describe('inbox — inbound media (R-MSG-05)', () => {
     // A click downloads it from «Meta» (the stub) into our bucket: a thumbnail for the photo, a link
     // for the PDF, named by its file name.
     await viewPhoto.click();
-    const thumb = bubble(log, photo).getByRole('img', { name: ar.inbox.openMedia.replace('{kind}', ar.inbox.media.image) });
-    await expect.poll(() => thumb.evaluate((i) => (i as unknown as { naturalWidth: number }).naturalWidth), { timeout: 30_000 }).toBeGreaterThan(0);
+    const thumb = bubble(log, photo).getByRole('img', {
+      name: ar.inbox.openMedia.replace('{kind}', ar.inbox.media.image),
+    });
+    await expect
+      .poll(() => thumb.evaluate((i) => (i as unknown as { naturalWidth: number }).naturalWidth), {
+        timeout: 30_000,
+      })
+      .toBeGreaterThan(0);
     await viewFile.click();
     const pdf = bubble(log, file).getByRole('link', { name: 'receipt.pdf' });
     await expect(pdf).toHaveAttribute('target', '_blank', { timeout: 30_000 });
@@ -78,7 +84,9 @@ test.describe('inbox — inbound media (R-MSG-05)', () => {
     await seedLead({ phone, name });
     const voice = { kind: 'audio', mime: 'audio/ogg; codecs=opus', base64: OGG } as const;
     expect((await stubInboundMedia({ from: digits, name, media: voice })).status).toBe(200);
-    await expect.poll(async () => (await inboundRows(phone)).map((r) => r.media_mime)).toEqual([voice.mime]);
+    await expect
+      .poll(async () => (await inboundRows(phone)).map((r) => r.media_mime))
+      .toEqual([voice.mime]);
 
     const log = await openThread(await asRole('admin'), name);
     const play = log.getByRole('button', { name: ar.inbox.playMedia.replace('{kind}', ar.inbox.media.audio) });

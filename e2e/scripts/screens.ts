@@ -71,7 +71,10 @@ type Shot = { path: string; name: string };
 async function shoot(run: Run, opts: { variant: Variant; shots: Shot[]; state: BrowserContextOptions['storageState'] }) {
   for (const shot of opts.shots) {
     const signedOut = shot.path === '/login';
-    const page = await newPage(run, { variant: opts.variant, state: signedOut ? undefined : opts.state });
+    const page = await newPage(run, {
+      variant: opts.variant,
+      state: signedOut ? undefined : opts.state,
+    });
     await page.goto(`${run.base}${shot.path}`);
     await settle(page);
     const file = join(run.out, `${opts.variant.name}-${shot.name}.png`);

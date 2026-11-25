@@ -45,7 +45,9 @@ interface RuleSeed {
 }
 
 /** A weekly package rule with `weeks` generated lessons, the way booking leaves it. */
-export async function seedWeeklyRule(r: RuleSeed): Promise<{ ruleId: string; lessonIds: string[] }> {
+export async function seedWeeklyRule(
+  r: RuleSeed,
+): Promise<{ ruleId: string; lessonIds: string[] }> {
   const day = riyadhDay(r.firstStart);
   const clock = new Date(r.firstStart.getTime() + 3 * HOUR).toISOString().slice(11, 16);
   const weekday = new Date(r.firstStart.getTime() + 3 * HOUR).getUTCDay();
@@ -77,7 +79,11 @@ export async function seedWeeklyRule(r: RuleSeed): Promise<{ ruleId: string; les
 }
 
 /** A paid package student (3 of 4 left) whose only open lesson is the one the spec seeds later. */
-export async function seedPaidStudent(input: { teacherId: string; guardian: string; student: string }): Promise<PackageSeed> {
+export async function seedPaidStudent(input: {
+  teacherId: string;
+  guardian: string;
+  student: string;
+}): Promise<PackageSeed> {
   const seed = await seedPackageStudent({ ...input, paid: true });
   await withSql((sql) => sql`delete from public.lessons where id = ${seed.todayLessonId}`);
   return seed;
@@ -118,7 +124,10 @@ export async function ruleStateOf(ruleId: string): Promise<RuleState | undefined
  * student also has a completed lesson three days back, which lands in the same Riyadh week from
  * Tuesday on: `at` picks the chip showing that Riyadh wall clock instead of the first one.
  */
-export async function openLessonDrawer(page: Page, input: { week: string; teacherId: string; name: string; at?: Date }): Promise<Locator> {
+export async function openLessonDrawer(
+  page: Page,
+  input: { week: string; teacherId: string; name: string; at?: Date },
+): Promise<Locator> {
   await page.goto(`/admin/schedule?week=${input.week}&teacher=${input.teacherId}`);
   const chips = weekGrid(page).getByRole('button', { name: new RegExp(input.name) });
   const clock = input.at && new Date(input.at.getTime() + 3 * HOUR).toISOString().slice(11, 16);

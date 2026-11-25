@@ -20,8 +20,13 @@ export async function ruleLesson(tx: Tx, input: { teacher: string; pkg: '4' | 't
 }
 
 /** A student with `status` on the lesson; returns the student id. */
-export async function studentOn(tx: Tx, input: { lesson: string; status: string }): Promise<string> {
-  const [g] = await tx<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
+export async function studentOn(
+  tx: Tx,
+  input: { lesson: string; status: string },
+): Promise<string> {
+  const [g] = await tx<
+    { id: string }[]
+  >`insert into public.guardians (name, phone_e164, country, tz)
     values ('ولي أمر قاعدة الأجر', ${`+9665${String(Date.now()).slice(-8)}`}, 'SA', 'Asia/Riyadh') returning id`;
   if (!g) throw new Error('guardian not written');
   const [s] = await tx<{ id: string }[]>`insert into public.students (guardian_id, name, name_normalized, tz, status)
@@ -43,7 +48,10 @@ export async function countableIds(tx: Tx, teacher: string): Promise<string[]> {
   return rows.map((r) => r.lesson_id);
 }
 
-export async function approvedPayout(tx: Tx, input: { teacher: string; lessons: string[]; amount: number }): Promise<string> {
+export async function approvedPayout(
+  tx: Tx,
+  input: { teacher: string; lessons: string[]; amount: number },
+): Promise<string> {
   const [po] = await tx<{ id: string }[]>`insert into public.teacher_payouts
     (teacher_id, month, lessons_count, amount, status, approved_at, breakdown)
     values (${input.teacher}, '2031-05-01', ${input.lessons.length}, ${input.amount}, 'approved', now(),

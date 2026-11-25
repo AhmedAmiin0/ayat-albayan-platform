@@ -50,8 +50,12 @@ test.describe('booking override with a reason (R-SCH-04)', () => {
       select l.starts_at, l.override_reason from public.lessons l join public.lesson_students ls on ls.lesson_id = l.id
       where ls.student_id = ${studentId} order by l.starts_at`);
     expect(rows.length).toBeGreaterThan(1);
-    expect(rows.map((l) => l.override_reason)).toEqual(rows.map((_, i) => (i === 0 ? REASON : null)));
+    expect(rows.map((l) => l.override_reason)).toEqual(
+      rows.map((_, i) => (i === 0 ? REASON : null)),
+    );
     expect(rows[0]?.starts_at.toISOString()).toBe(riyadh(sunday, '16:00').toISOString());
-    expect(await ruleOf(studentId)).toEqual([{ client_request_id: expect.any(String), meeting_link: null, audits: 1 }]);
+    expect(await ruleOf(studentId)).toEqual([
+      { client_request_id: expect.any(String), meeting_link: null, audits: 1 },
+    ]);
   });
 });

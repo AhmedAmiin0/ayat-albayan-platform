@@ -79,7 +79,9 @@ test.describe('student recordings (real API + database)', () => {
     expect(res.status()).toBe(200);
     const body = await res.json();
     expect(body.total).toBe(2);
-    expect(body.items.map((i: { lesson_id: string }) => i.lesson_id).sort()).toEqual([w.lessons.both, w.lessons.onlyA].sort());
+    expect(body.items.map((i: { lesson_id: string }) => i.lesson_id).sort()).toEqual(
+      [w.lessons.both, w.lessons.onlyA].sort(),
+    );
     const text = JSON.stringify(body);
     expect(text).not.toContain(w.b);
     expect(text).not.toContain(w.lessons.onlyB);

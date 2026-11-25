@@ -52,7 +52,9 @@ test.describe('guardian deliveries over WhatsApp (R-REP-03, R-SUB-02)', () => {
     const date = (info?.starts_at ?? new Date()).toLocaleDateString('en-CA', { timeZone: tz });
     const doc = documentOf(sent);
     expect(doc?.filename).toBe(`${info?.code ?? ''}_${date}_${ar.reports.pdfFileSuffix}.pdf`);
-    await expect.poll(async () => (await reportRow(seed.todayLessonId)).sent_at, WAIT).not.toBeNull();
+    await expect
+      .poll(async () => (await reportRow(seed.todayLessonId)).sent_at, WAIT)
+      .not.toBeNull();
 
     // The link in the message is a signed URL that serves the PDF.
     const file = await fetch(doc?.link ?? '');

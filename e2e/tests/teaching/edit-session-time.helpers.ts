@@ -14,7 +14,10 @@ export function cairo(at: Date) {
   return { date: `${get('year')}-${get('month')}-${get('day')}`, time: `${get('hour')}:${get('minute')}` };
 }
 
-export async function openForm(page: Page, p: { date: string; teacherId: string; name: string }): Promise<Locator> {
+export async function openForm(
+  page: Page,
+  p: { date: string; teacherId: string; name: string },
+): Promise<Locator> {
   const week = addDays(p.date, -((new Date(`${p.date}T00:00:00Z`).getUTCDay() + 1) % 7));
   await page.goto(`/admin/schedule?week=${week}&teacher=${p.teacherId}`);
   const grid = page.getByRole('table', { name: ar.schedule.grid }).or(page.getByRole('group', { name: ar.schedule.grid }));
@@ -46,7 +49,13 @@ export async function fillForm(d: Locator, f: Pick) {
 
 export const save = (d: Locator) => d.getByRole('button', { name: L.submit }).click();
 
-export type LessonRow = { id: string; status: string; starts_at: Date; ends_at: Date; override_reason: string | null };
+export type LessonRow = {
+  id: string;
+  status: string;
+  starts_at: Date;
+  ends_at: Date;
+  override_reason: string | null;
+};
 
 export const lessonRows = (teacherId: string) =>
   withSql((sql) => sql<LessonRow[]>`
