@@ -27,7 +27,7 @@ test('each app bundles with the shared Babel config, where app.json switches the
   for (const dir of ['apps/staff-mobile', 'apps/family-mobile']) {
     const app = JSON.parse(read(`${dir}/app.json`));
     assert.equal(app.expo.experiments.reactCompiler, true);
-    assert.match(read(`${dir}/babel.config.cjs`), /@ab\/mobile-kit\/babel/);
+    assert.match(read(`${dir}/babel.config.cjs`), /@ab\/config\/babel/);
   }
-  assert.match(read('packages/mobile-kit/babel.cjs'), /babel-plugin-react-compiler/);
+  assert.match(read('packages/config/expo/babel.cjs'), /babel-plugin-react-compiler/);
 });

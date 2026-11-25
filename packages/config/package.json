@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./babel": "./expo/babel.cjs",
     "./lint": "./lint.js",
+    "./metro": "./expo/metro.cjs",
     "./oxlint": "./oxlint/config.js",
     "./vite": {
       "types": "./vite.d.ts",

@@ -3,7 +3,7 @@ import type { StaffPresenceRow } from '@ab/shared';
 import { act, screen, waitFor, within } from '@testing-library/react-native';
 import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { realtime } from '@ab/mobile-kit/testing/presence-realtime';
+import { realtime } from '@ab/testing/presence-realtime';
 import { fullAccessMe } from '@/test/staff-me';
 import { StaffPresenceSection } from './StaffPresenceSection';
 
@@ -13,7 +13,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('@ab/mobile-kit/lib/http/supabase', () =>
-  jest.requireActual('@ab/mobile-kit/testing/presence-realtime').realtime.module(),
+  jest.requireActual('@ab/testing/presence-realtime').realtime.module(),
 );
 
 const p = t.presence;

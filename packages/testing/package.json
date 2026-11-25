@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./vitest": "./src/vitest.ts",
-    "./jest": "./jest.cjs"
+    "./jest": "./jest.cjs",
+    "./presence-realtime": "./src/presence-realtime.ts",
+    "./vitest": "./src/vitest.ts"
   },
   "scripts": {
     "build": "tsgo --noEmit",

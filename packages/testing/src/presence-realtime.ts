@@ -1,6 +1,6 @@
 // A fake Supabase Realtime for the presence tests (docs/33): in an app test wire it with
 //   jest.mock('@ab/mobile-kit/lib/http/supabase', () =>
-//     jest.requireActual('@ab/mobile-kit/testing/presence-realtime').realtime.module());
+//     jest.requireActual('@ab/testing/presence-realtime').realtime.module());
 // then steer it through `realtime`: join the topics, put a person online, read what was tracked.
 
 interface FakeTopic {

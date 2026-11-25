@@ -13,7 +13,8 @@ const appAlias = (appDir, next) => (context, name, platform) => {
 
 /** `appDir`: the app's folder (its metro.config.mjs `import.meta.dirname`). */
 const metroConfig = (appDir) => {
-  const { getDefaultConfig } = require('expo/metro-config');
+  // expo is the app's dependency, not this package's.
+  const { getDefaultConfig } = require(require.resolve('expo/metro-config', { paths: [appDir] }));
   const config = getDefaultConfig(appDir);
   const next = config.resolver.resolveRequest;
   config.resolver.resolveRequest = appAlias(appDir, (context, name, platform) =>

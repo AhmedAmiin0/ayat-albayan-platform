@@ -3,7 +3,7 @@ import type { ChannelPresence } from '@ab/shared';
 import { act, screen, waitFor } from '@testing-library/react-native';
 import { t } from '../lib/i18n/i18n';
 import { freshQueryClient, renderWithQuery } from '../testing/query';
-import { realtime } from '../testing/presence-realtime';
+import { realtime } from '@ab/testing/presence-realtime';
 import { ChannelPresenceLine } from './ChannelPresenceLine';
 
 const mockApiFetch = jest.fn();
@@ -12,7 +12,7 @@ jest.mock('../lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('../lib/http/supabase', () =>
-  jest.requireActual('../testing/presence-realtime').realtime.module(),
+  jest.requireActual('@ab/testing/presence-realtime').realtime.module(),
 );
 
 const p = t.presence;

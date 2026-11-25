@@ -195,7 +195,7 @@ base, so an Expo upgrade re-checks them. The `@/` alias is defined once, in the 
 `"paths": { "@/*": ["${configDir}/src/*"] }`, which TypeScript expands to each extending workspace's own `src`
 (tsgo, tsc and tsc-alias 1.9.7 do). No other tsconfig has `paths` or `baseUrl`. Runtime resolvers keep their
 own alias: Vite and Vitest (`@ab/config/vite`, api `vitest.config.mts`), jest (`moduleNameMapper`) and Metro
-(`@ab/mobile-kit/metro`; Expo 57's own tsconfig `paths` support expands `${configDir}` against the root, so
+(`@ab/config/metro`; Expo 57's own tsconfig `paths` support expands `${configDir}` against the root, so
 app.json turns it off). Packages never import `@/`: an app compiles their source, where `@/` is the app's src.
 `@ab/web-kit/<path>` deep imports resolve through the kit's package.json `exports`. `pnpm guard:tsconfig` checks
 all of it.
