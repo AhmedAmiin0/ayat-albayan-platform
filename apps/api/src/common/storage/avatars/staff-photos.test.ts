@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { FakeAvatarFiles } from './avatars.fakes';
 import { StaffPhotos, staffPhotoPath } from './staff-photos';
@@ -7,8 +8,12 @@ import { StaffPhotos, staffPhotoPath } from './staff-photos';
 
 describe('staffPhotoPath', () => {
   it('prefers the login’s own photo, else the teacher record’s', () => {
-    expect(staffPhotoPath({ own: 'u/avatar-1.png', teacher: 'teachers/t/avatar-2.png' })).toBe('u/avatar-1.png');
-    expect(staffPhotoPath({ own: null, teacher: 'teachers/t/avatar-2.png' })).toBe('teachers/t/avatar-2.png');
+    expect(staffPhotoPath({ own: 'u/avatar-1.png', teacher: 'teachers/t/avatar-2.png' })).toBe(
+      'u/avatar-1.png',
+    );
+    expect(staffPhotoPath({ own: null, teacher: 'teachers/t/avatar-2.png' })).toBe(
+      'teachers/t/avatar-2.png',
+    );
     expect(staffPhotoPath({ own: undefined, teacher: null })).toBeNull();
   });
 });
@@ -16,11 +21,19 @@ describe('staffPhotoPath', () => {
 describe('StaffPhotos', () => {
   it('ofTeachers: one teachers read, one batch for the whole list, no entry without a photo', async () => {
     const f = fakeDb({
-      teachers: [{ data: [
-        { id: 't1', avatar_path: 'teachers/t1/avatar-1.png', profile: null },
-        { id: 't2', avatar_path: 'teachers/t2/avatar-1.png', profile: { avatar_path: 'p2/avatar-9.png' } },
-        { id: 't3', avatar_path: null, profile: null },
-      ] }],
+      teachers: [
+        {
+          data: [
+            { id: 't1', avatar_path: 'teachers/t1/avatar-1.png', profile: null },
+            {
+              id: 't2',
+              avatar_path: 'teachers/t2/avatar-1.png',
+              profile: { avatar_path: 'p2/avatar-9.png' },
+            },
+            { id: 't3', avatar_path: null, profile: null },
+          ],
+        },
+      ],
     });
     const files = new FakeAvatarFiles();
     const urls = await new StaffPhotos(f.db, files).ofTeachers(['t1', 't2', 't3', 't1']);
@@ -35,13 +48,17 @@ describe('StaffPhotos', () => {
 
   it('ofProfiles: falls back to the linked teacher record’s photo; a student or guardian photo is never signed', async () => {
     const f = fakeDb({
-      profiles: [{ data: [
-        { id: 'p1', avatar_path: null, role: 'teacher' },
-        { id: 'p2', avatar_path: 'p2/avatar-1.png', role: 'admin' },
-        { id: 'p3', avatar_path: null, role: 'sales' },
-        { id: 'p4', avatar_path: 'p4/avatar-1.png', role: 'student' },
-        { id: 'p5', avatar_path: 'p5/avatar-1.png', role: 'guardian' },
-      ] }],
+      profiles: [
+        {
+          data: [
+            { id: 'p1', avatar_path: null, role: 'teacher' },
+            { id: 'p2', avatar_path: 'p2/avatar-1.png', role: 'admin' },
+            { id: 'p3', avatar_path: null, role: 'sales' },
+            { id: 'p4', avatar_path: 'p4/avatar-1.png', role: 'student' },
+            { id: 'p5', avatar_path: 'p5/avatar-1.png', role: 'guardian' },
+          ],
+        },
+      ],
       teachers: [{ data: [{ profile_id: 'p1', avatar_path: 'teachers/t1/avatar-1.png' }] }],
     });
     const files = new FakeAvatarFiles();
@@ -57,5 +74,20 @@ describe('StaffPhotos', () => {
     expect((await new StaffPhotos(f.db, files).ofProfiles([])).size).toBe(0);
     expect(f.trips).toEqual([]);
     expect(files.batches).toEqual([]);
+  });
+});
+
+// The dbError of a failed lookup never reaches the client: a photo is a hint, so it shows initials.
+describe('StaffPhotos error paths: the answer a failed query gives today', () => {
+  it('ofTeachers: a failed teachers read answers an empty map', async () => {
+    const f = fakeDb({ teachers: [{ error: PG_ERRORS.unique }] });
+    const urls = await new StaffPhotos(f.db, new FakeAvatarFiles()).ofTeachers(['t1']);
+    expect(urls.size).toBe(0);
+  });
+
+  it('ofProfiles: a failed profiles read answers an empty map', async () => {
+    const f = fakeDb({ profiles: [{ error: PG_ERRORS.other }], teachers: [{ data: [] }] });
+    const urls = await new StaffPhotos(f.db, new FakeAvatarFiles()).ofProfiles(['p1']);
+    expect(urls.size).toBe(0);
   });
 });
