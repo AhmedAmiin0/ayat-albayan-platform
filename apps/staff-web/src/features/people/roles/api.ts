@@ -3,19 +3,20 @@ import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { roleKeys } from '@/features/people/keys';
 
 // All behind roles.manage.
 export type { RoleView, StaffUserView } from '@ab/catalog';
 
-export const ROLES_KEY = ['roles'] as const;
+export const ROLES_KEY = roleKeys.all;
 
 export const rolesQuery = queryOptions({
-  queryKey: [...ROLES_KEY, 'list'],
+  queryKey: roleKeys.list(),
   queryFn: () => apiFetch<RoleView[]>('/roles'),
 });
 
 export const staffUsersQuery = queryOptions({
-  queryKey: [...ROLES_KEY, 'users'],
+  queryKey: roleKeys.staffUsers(),
   queryFn: () => apiFetch<StaffUserView[]>('/roles/staff-users'),
 });
 
