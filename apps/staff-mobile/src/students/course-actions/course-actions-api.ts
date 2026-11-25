@@ -1,5 +1,6 @@
 import {
   courseActionsKey,
+  courseKeys,
   courseMoveBase,
   courseMoveViewPath,
   courseStopPath,
@@ -60,7 +61,7 @@ export function useCurrentPackage(input: {
 }) {
   const path = input.given ? null : currentPath(input.studentId, input.keys);
   const current = useQuery({
-    queryKey: [...courseActionsKey(input.studentId), 'current', path],
+    queryKey: courseKeys.current(input.studentId, path),
     queryFn: () => apiFetch<CourseStopPreview | ProfileCourseView>(path ?? ''),
     enabled: path !== null,
   });
@@ -97,21 +98,21 @@ export function useHeldPackage(current: string | null, keep: boolean): string | 
 /** GET …/course-stop?subscriptionId=: the stop sheet's lines. */
 export const useStopPreview = (sub: SubRef) =>
   useQuery({
-    queryKey: [...courseActionsKey(sub.studentId), 'stop', sub.subscriptionId],
+    queryKey: courseKeys.stopPreview(sub),
     queryFn: () => apiFetch<CourseStopPreview>(courseStopPreviewPath(sub)),
   });
 
 /** GET …/course-teacher|course-times/change?subscriptionId=: the course and its next lesson. */
 export const useMoveView = (sub: SubRef & { kind: CourseMoveKind }) =>
   useQuery({
-    queryKey: [...courseActionsKey(sub.studentId), sub.kind, sub.subscriptionId],
+    queryKey: courseKeys.move(sub, sub.kind),
     queryFn: () => apiFetch<ProfileCourseView>(courseMoveViewPath(sub)),
   });
 
 /** GET …/course-teacher/teachers: the student's program and gender preference. */
 export const useTeacherOptions = (studentId: string) =>
   useQuery({
-    queryKey: [...courseActionsKey(studentId), 'teachers'],
+    queryKey: courseKeys.teachers(studentId),
     queryFn: () => apiFetch<BookingTeacherOption[]>(courseTeacherOptionsPath(studentId)),
   });
 

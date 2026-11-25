@@ -64,3 +64,12 @@ export {
 } from './course-stop-form';
 export * from './course-card';
 export * from './lesson-times';
+export {
+  type CourseKey,
+  type CourseKeys,
+  courseKeys,
+  type CourseRef,
+  type PauseKeys,
+  pauseKeys,
+  type PauseWindow,
+} from './course.keys';

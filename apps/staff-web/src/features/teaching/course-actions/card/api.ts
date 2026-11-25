@@ -1,6 +1,7 @@
 import {
   courseCardPath,
   courseExtendPreviewPath,
+  courseKeys,
   parseCourseCard,
   parseExtendPreview,
   postCourseExtend,
@@ -12,7 +13,6 @@ import type { LessonView } from '@ab/schedule';
 import { queryOptions, useMutation } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { useInvalidateCourseActions } from '@/features/teaching/course-actions/api';
-import { courseKeys } from '@/features/teaching/course-actions/course.keys';
 
 // Paths, keys and parsers come from @ab/client-core; the card key sits under the actions' key.
 
