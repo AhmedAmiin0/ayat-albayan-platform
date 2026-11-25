@@ -11,6 +11,7 @@ import type {
 } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { googleKeys } from '@/features/platform/keys';
 
 // The Google sync admin API (docs/24 §3): every route needs a signed-in admin.
 
@@ -18,26 +19,26 @@ const BASE = '/admin/google';
 
 /** GET /admin/google/status: connection, settings, drive, discovery, counts. */
 export const googleStatusQuery = queryOptions({
-  queryKey: ['google', 'status'],
+  queryKey: googleKeys.status(),
   queryFn: () => apiFetch<GoogleStatusView>(`${BASE}/status`),
 });
 
 /** GET /admin/google/teachers: one row per active teacher. */
 export const googleTeachersQuery = queryOptions({
-  queryKey: ['google', 'teachers'],
+  queryKey: googleKeys.teachers(),
   queryFn: () => apiFetch<GoogleTeacherMapRow[]>(`${BASE}/teachers`),
 });
 
 /** GET /admin/google/students?q=: trial/active students (max 200). */
 export const googleStudentsQuery = (q: string) =>
   queryOptions({
-    queryKey: ['google', 'students', q],
+    queryKey: googleKeys.studentSearch(q),
     queryFn: () => apiFetch<GoogleStudentMapRow[]>(`${BASE}/students?q=${encodeURIComponent(q)}`),
   });
 
 /** GET /admin/google/items: the last 100 sync items, newest first. */
 export const googleItemsQuery = queryOptions({
-  queryKey: ['google', 'items'],
+  queryKey: googleKeys.items(),
   queryFn: () => apiFetch<GoogleSyncItemView[]>(`${BASE}/items`),
 });
 
@@ -66,7 +67,7 @@ export const reconcileGoogle = () => apiSend<{ queued: number }>('POST', `${BASE
 
 export const teacherCalendarQuery = (teacherId: string) =>
   queryOptions({
-    queryKey: ['google', 'teacher-calendar', teacherId],
+    queryKey: googleKeys.teacherCalendar(teacherId),
     queryFn: () => apiFetch<TeacherCalendarView>(`${BASE}/teachers/${teacherId}/calendar-owner`),
   });
 

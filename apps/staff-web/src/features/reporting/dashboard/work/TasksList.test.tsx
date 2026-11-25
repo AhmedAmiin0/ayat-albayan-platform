@@ -5,6 +5,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { WORK } from '@/features/reporting/dashboard/dashboard-fixture';
 import { TasksList } from './TasksList';
 import { taskText } from './work-text';
+import { dashboardKeys } from '@/features/reporting/keys';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
@@ -39,7 +40,7 @@ describe('TasksList (R-SUB-02 admin tasks)', () => {
     fireEvent.click(screen.getByRole('button', { name: t.dashboard.taskDone }));
     await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.dashboard.taskClosed));
     expect(apiSend).toHaveBeenCalledWith('POST', '/admin-tasks/k1/done');
-    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['dashboard'] });
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: dashboardKeys.all });
   });
 
   it('a failure shows the error toast; no tasks shows the empty line', async () => {

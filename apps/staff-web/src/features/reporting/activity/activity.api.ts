@@ -3,6 +3,7 @@ import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ListUrlState } from '@/lib/list/list-url';
+import { activityKeys } from '@/features/reporting/keys';
 
 export const ACTIVITY_PAGE_SIZE = 25;
 
@@ -14,7 +15,7 @@ export interface ActivityScope {
 /** GET /activity: page, column sort and filters (R-NFR-08), optionally scoped to one entity. */
 export const activityQuery = (s: ListUrlState, scope?: ActivityScope) =>
   queryOptions({
-    queryKey: ['activity', s, scope ?? null],
+    queryKey: activityKeys.list(s, scope),
     queryFn: () => {
       const qs = new URLSearchParams([
         ['page', String(s.page)],

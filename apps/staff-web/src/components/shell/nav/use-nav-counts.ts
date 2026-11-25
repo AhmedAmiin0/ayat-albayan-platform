@@ -4,6 +4,7 @@ import type { AdminNavProps } from '@/components/shell/nav/AdminNav';
 import { unreadCountQuery, useInboxLive } from '@/features/messaging/inbox';
 import { apiFetch } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { navCountKey } from './nav-count.keys';
 
 type Total = { total: number };
 
@@ -11,7 +12,7 @@ type Total = { total: number };
  *  features' own invalidateQueries(['students']) etc. refresh the counts too. */
 const countQuery = (prefix: string, path: string, enabled: boolean) => ({
   enabled,
-  queryKey: [prefix, 'nav-count', path],
+  queryKey: navCountKey(prefix, path),
   queryFn: ({ signal }: { signal: AbortSignal }) => apiFetch<Total>(path, { signal }),
   staleTime: 60_000,
   select: (p: Total) => p.total,

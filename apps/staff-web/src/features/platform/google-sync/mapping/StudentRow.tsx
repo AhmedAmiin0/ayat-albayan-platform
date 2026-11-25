@@ -9,6 +9,7 @@ import { deleteStudentFolder, putStudentFolder } from '@/features/platform/googl
 import { fill } from '@/features/platform/google-sync/google-format';
 import { StudentActions } from './StudentActions';
 import { StudentManualLink } from './StudentManualLink';
+import { googleKeys } from '@/features/platform/keys';
 
 const s = t.googleSync.students;
 
@@ -23,7 +24,8 @@ export function StudentRow({ row, onNote }: { row: GoogleStudentMapRow; onNote: 
   const done = async () => {
     setManual(false);
     onNote(t.googleSync.common.saved);
-    await Promise.all(['students', 'status', 'items'].map((k) => queryClient.invalidateQueries({ queryKey: ['google', k] })));
+    const refreshed = [googleKeys.students(), googleKeys.status(), googleKeys.items()];
+    await Promise.all(refreshed.map((queryKey) => queryClient.invalidateQueries({ queryKey })));
   };
   const put = useMutation({ mutationFn: putStudentFolder, onSuccess: done });
   const unmap = useMutation({ mutationFn: deleteStudentFolder, onSuccess: done });

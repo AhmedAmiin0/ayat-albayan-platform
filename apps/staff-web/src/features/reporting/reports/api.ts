@@ -16,15 +16,16 @@ import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { uploadSigned } from '@/lib/storage/upload-slot';
+import { reportKeys } from '@/features/reporting/keys';
 
 // Report routes (docs/11 §4 R1–R12). Commands camelCase, responses snake_case.
 
-export const REPORTS_KEY = ['reports'] as const;
+export const REPORTS_KEY = reportKeys.all;
 
 /** R1: GET /lessons/:id/report-form — creates the drafts on first open. */
 export const reportFormQuery = (lessonId: string) =>
   queryOptions({
-    queryKey: [...REPORTS_KEY, 'form', lessonId],
+    queryKey: reportKeys.form(lessonId),
     queryFn: () => apiFetch<ReportFormResponse>(`/lessons/${lessonId}/report-form`),
     retry: false,
     // No refetch on focus: each entry seeds its state once; a submit invalidates REPORTS_KEY.
@@ -34,13 +35,13 @@ export const reportFormQuery = (lessonId: string) =>
 /** R5: submitted reports newest first + the whole grade series. */
 export const studentReportsQuery = (studentId: string, page: number) =>
   queryOptions({
-    queryKey: [...REPORTS_KEY, 'student', studentId, page],
+    queryKey: reportKeys.student(studentId, page),
     queryFn: () => apiFetch<StudentReportsResponse>(`/students/${studentId}/reports?page=${page}&pageSize=10`),
   });
 
 /** R11: polled every 30 s with her lessons (docs/48). */
 export const pendingReportsQuery = queryOptions({
-  queryKey: [...REPORTS_KEY, 'pending'],
+  queryKey: reportKeys.pending(),
   queryFn: () => apiFetch<PendingReportView[]>('/teachers/me/pending-reports'),
   refetchInterval: TEACHER_REFRESH_MS,
 });

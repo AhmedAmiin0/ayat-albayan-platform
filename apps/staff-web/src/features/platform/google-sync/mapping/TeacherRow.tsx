@@ -7,6 +7,7 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { googleTeachersQuery, putTeacherCalendar } from '@/features/platform/google-sync/google-api';
 import { NO_CALENDAR as NONE } from '@/features/platform/google-sync/google-input';
 import { CalendarSelect, TeacherState } from './TeacherCalendarSelect';
+import { googleKeys } from '@/features/platform/keys';
 
 interface Props {
   row: GoogleTeacherMapRow;
@@ -24,7 +25,11 @@ export function TeacherRow({ row, calendars, onNote }: Props) {
       queryClient.setQueryData(googleTeachersQuery.queryKey, rows);
       onNote(t.googleSync.common.saved);
       // The live confirmation names the mapped calendars from the status; the API re-queued items.
-      await Promise.all([queryClient.invalidateQueries({ queryKey: ['google', 'status'] }), queryClient.invalidateQueries({ queryKey: ['google', 'items'] })]);
+      await Promise.all(
+        [googleKeys.status(), googleKeys.items()].map((queryKey) =>
+          queryClient.invalidateQueries({ queryKey }),
+        ),
+      );
     },
   });
   const unchanged = row.confirmed_at !== null && pick === initial;

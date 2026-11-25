@@ -2,6 +2,7 @@ import type { GoogleStatusView } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { discoverGoogle, googleStatusQuery, putGoogleDrive } from '@/features/platform/google-sync/google-api';
+import { googleKeys } from '@/features/platform/keys';
 
 /** Both return the new status, since teacher and student suggestions may change. */
 export function useDriveActions(onNote: (message: string) => void) {
@@ -9,7 +10,11 @@ export function useDriveActions(onNote: (message: string) => void) {
   const onStatus = async (next: GoogleStatusView) => {
     queryClient.setQueryData(googleStatusQuery.queryKey, next);
     // Discovery feeds both suggestion lists: teachers (calendars) and students (summary sheet links).
-    await Promise.all(['teachers', 'students'].map((k) => queryClient.invalidateQueries({ queryKey: ['google', k] })));
+    await Promise.all(
+      [googleKeys.teachers(), googleKeys.students()].map((queryKey) =>
+        queryClient.invalidateQueries({ queryKey }),
+      ),
+    );
   };
   const discover = useMutation({ mutationFn: discoverGoogle, onSuccess: onStatus });
   const confirm = useMutation({
