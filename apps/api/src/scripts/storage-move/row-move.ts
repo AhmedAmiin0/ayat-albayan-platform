@@ -1,19 +1,22 @@
 import { storageProviderOf, storedPath } from '@ab/shared';
+import { z } from 'zod';
 import type { PathColumn } from './columns';
 import type { MoveDb, PathRow } from './move-db';
-import { placeInMinio, type Placed, type Stores } from './place';
+import { placedSchema, placeInMinio, type Placed, type Stores } from './place';
 
 // One row (docs/45 §6): its object into MinIO and verified, then its path rewritten to
 // «minio:<key>» only if the row still holds the path it was read with.
 
-export type RowOutcome =
-  | 'rewritten'
-  | 'skipped'
-  | 'missing'
-  | 'mismatch'
-  | 'too_large'
-  | 'changed'
-  | 'failed';
+export const rowOutcomeSchema = z.enum([
+  'rewritten',
+  'skipped',
+  'missing',
+  'mismatch',
+  'too_large',
+  'changed',
+  'failed',
+]);
+export type RowOutcome = z.infer<typeof rowOutcomeSchema>;
 
 export interface RowStep {
   outcome: RowOutcome;
@@ -28,13 +31,16 @@ interface RowCtx {
 }
 
 /** Placed in MinIO and verified → rewrite; anything else is the row's outcome as it stands. */
-const NEXT: Record<Placed, RowOutcome | 'rewrite'> = {
-  copied: 'rewrite',
-  present: 'rewrite',
-  missing: 'missing',
-  mismatch: 'mismatch',
-  too_large: 'too_large',
-};
+const NEXT = z
+  .record(placedSchema, z.union([rowOutcomeSchema, z.literal('rewrite')]))
+  .readonly()
+  .decode({
+    copied: 'rewrite',
+    present: 'rewrite',
+    missing: 'missing',
+    mismatch: 'mismatch',
+    too_large: 'too_large',
+  });
 
 const step = (outcome: RowOutcome, copied = false): RowStep => ({ outcome, copied });
 
