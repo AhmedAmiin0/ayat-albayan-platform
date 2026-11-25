@@ -11,7 +11,8 @@ const ME_KEY = ['me'];
 vi.mock('@ab/web-kit/auth/me/me', () => ({
   meQuery: { queryKey: ['me'], queryFn: () => null },
 }));
-vi.mock('@ab/web-kit/portal/api', () => ({
+vi.mock('@ab/web-kit/portal/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
   portalHomeQuery: { queryKey: ['portal-me'], queryFn: () => null },
 }));
 
