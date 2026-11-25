@@ -21,7 +21,7 @@ describe('crm rows', () => {
       { m: [{ created_at: '2026-09-02' }, { created_at: '2026-09-01' }] },
       'm',
     );
-    expect(rows.map((r) => r['created_at'])).toEqual(['2026-09-01', '2026-09-02']);
+    expect(rows.map((r) => r.created_at)).toEqual(['2026-09-01', '2026-09-02']);
     expect(rowsByAge({}, 'none')).toEqual([]);
   });
 });
@@ -49,7 +49,7 @@ describe('crmIndex', () => {
 
   it('groups messages per contact, oldest first, ignoring unknown conversations', () => {
     expect(idx.contactOf.get('c-k2')).toBe('k2');
-    expect(idx.messages.get('k1')?.map((m) => m['id'])).toEqual(['m1', 'm2']);
+    expect(idx.messages.get('k1')?.map((m) => m.id)).toEqual(['m1', 'm2']);
     expect([...idx.messages.keys()]).toEqual(['k1']);
   });
 });

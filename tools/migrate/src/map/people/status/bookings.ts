@@ -22,14 +22,14 @@ function runningSeries(bundle: SourceBundle, students: readonly Desired[]): Set<
   const from = importFrom(bundle);
   const subscribed = new Set(
     bookingRows(bundle.sheets)
-      .filter((r) => bookingStatus(text(r.fields['status'])) === 'subscribed')
+      .filter((r) => bookingStatus(text(r.fields.status)) === 'subscribed')
       .map((r) => r.ref),
   );
   const earlier = new Map(bundle.earlier).set('students', students);
   const last = new Map<string, { running: boolean; students: NaturalKey[] }>();
   for (const r of bookingRules({ ...bundle, earlier })) {
     if (!('key' in r)) continue;
-    const until = r.record.columns['ends_on'];
+    const until = r.record.columns.ends_on;
     const running = subscribed.has(r.ref) && (typeof until !== 'string' || until >= from);
     last.set(keyId(r.key), { running, students: r.students });
   }
@@ -44,7 +44,7 @@ export function bookingFacts(
 ): BookingFacts {
   const done = new Set<string>();
   for (const r of bookingRows(bundle.sheets)) {
-    if (bookingStatus(text(r.fields['status'])) !== 'done') continue;
+    if (bookingStatus(text(r.fields.status)) !== 'done') continue;
     const found = bookingStudents(r, o.ix);
     if (Array.isArray(found)) for (const k of found) done.add(keyId(k));
   }

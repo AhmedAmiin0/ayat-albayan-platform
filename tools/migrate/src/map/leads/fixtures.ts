@@ -70,7 +70,7 @@ export function crm(o: CrmInput): Record<string, CrmRow[]> {
   const tagNames = [...new Set(Object.values(o.tags ?? {}).flat())];
   return {
     contacts,
-    conversations: contacts.map((c) => ({ id: `c-${String(c['id'])}`, contact_id: c['id'] })),
+    conversations: contacts.map((c) => ({ id: `c-${String(c.id)}`, contact_id: c.id })),
     tags: tagNames.map((name, i) => ({ id: `t${i}`, name })),
     contact_tags: Object.entries(o.tags ?? {}).flatMap(([contactId, names]) =>
       names.map((n) => ({ contact_id: contactId, tag_id: `t${tagNames.indexOf(n)}` })),

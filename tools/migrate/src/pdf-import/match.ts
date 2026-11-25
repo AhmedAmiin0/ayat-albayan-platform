@@ -34,9 +34,9 @@ interface ReportRef {
 
 function reportRefs(reports: readonly Desired[]): ReportRef[] {
   return reports.flatMap((d) => {
-    const student = d.record.refs['student_id'];
-    const lesson = d.record.refs['lesson_id'];
-    const sent = Date.parse(String(d.record.columns['submitted_at'] ?? ''));
+    const student = d.record.refs.student_id;
+    const lesson = d.record.refs.lesson_id;
+    const sent = Date.parse(String(d.record.columns.submitted_at ?? ''));
     const sentDay = Number.isNaN(sent) ? '' : riyadhDay(sent);
     return student && lesson
       ? [{ report: d.key, student, lesson, day: lessonDay(lesson.key), sentDay }]
@@ -105,8 +105,8 @@ export function matchPdfs(bundle: SourceBundle): Mapped[] {
     reports: reportRefs(bundle.earlier.get('lesson_reports') ?? []),
     approved: bundle.approvedPdfs ?? new Set(),
   };
-  const pdfs = (bundle.sheets[ZIP_FILES] ?? []).filter((r) => isPdf(String(r.fields['name'])));
-  const parsed = pdfs.map((row) => ({ row, name: parsePdfName(String(row.fields['name'])) }));
+  const pdfs = (bundle.sheets[ZIP_FILES] ?? []).filter((r) => isPdf(String(r.fields.name)));
+  const parsed = pdfs.map((row) => ({ row, name: parsePdfName(String(row.fields.name)) }));
   // Originals before their «(n)» re-downloads, so resolve() keeps the original and flags the copy.
   parsed.sort((a, b) => (a.name?.copy ?? 0) - (b.name?.copy ?? 0));
   return parsed.map((p) => matchOne(p, ctx));

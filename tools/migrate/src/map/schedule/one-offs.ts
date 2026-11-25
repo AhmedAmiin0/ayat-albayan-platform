@@ -27,7 +27,7 @@ function oneOf(row: SourceRow, o: { ix: StudentIndex; from: string }): OneOffRes
   const f = row.fields;
   const issue = issuesFor('lessons', row.ref);
   const slot = bookingSlot(f, o.from);
-  if (slot.kind === 'issue' && !text(f['recurrence'])) return { issues: [issue(slot.issue)] };
+  if (slot.kind === 'issue' && !text(f.recurrence)) return { issues: [issue(slot.issue)] };
   if (slot.kind !== 'once') return null;
   const who = bookingWho(row, o.ix);
   if (!('teacher' in who)) return { issues: [issue(who)] };
@@ -38,13 +38,13 @@ function oneOf(row: SourceRow, o: { ix: StudentIndex; from: string }): OneOffRes
     key: keys.lesson({
       teacher: who.teacher,
       students: who.students.map((k) => k.key),
-      at: `booking:${text(f['calendar_event_id']) ?? slot.date}`,
+      at: `booking:${text(f.calendar_event_id) ?? slot.date}`,
     }),
     teacher: who.teacher,
     students: who.students,
     startsAt,
     endsAt: new Date(start.getTime() + slot.duration * 60_000).toISOString(),
-    trial: packageSize(text(f['package_text'])) === 'trial',
+    trial: packageSize(text(f.package_text)) === 'trial',
   };
 }
 

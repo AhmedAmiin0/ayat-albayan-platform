@@ -15,8 +15,8 @@ export const BUMP_CODE_SEQ = `select setval(s.seq, greatest(x.m, coalesce(pg_seq
 /** Columns an update writes: never code_seq (generated) nor status (the app owns it). */
 function updateColumns(columns: Record<string, ColumnValue>): Record<string, ColumnValue> {
   const rest = { ...columns };
-  delete rest['code_seq'];
-  delete rest['status'];
+  delete rest.code_seq;
+  delete rest.status;
   return rest;
 }
 
@@ -28,7 +28,7 @@ export async function writeStudent(ctx: WriteContext): Promise<WriteResult> {
     await ctx.tx.update({ table: 'students', id, columns: updateColumns(ctx.columns) });
     return { targetId: id };
   }
-  const code = ctx.columns['code_seq'];
+  const code = ctx.columns.code_seq;
   if (typeof code !== 'number') {
     const id = await ctx.tx.insert({ table: 'students', columns: ctx.columns });
     if (!id) throw new Error('students insert returned no id');

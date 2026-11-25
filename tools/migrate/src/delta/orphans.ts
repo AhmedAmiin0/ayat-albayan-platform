@@ -20,7 +20,7 @@ export interface RecreateScope {
 function recreatable(d: Desired, scope: RecreateScope): boolean {
   if (!scope.only.has(d.key.entity) || scope.tableOf(d.key.entity).includes('.')) return false;
   if (d.key.entity !== 'lessons') return true;
-  const start = d.record.columns['starts_at'];
+  const start = d.record.columns.starts_at;
   return typeof start === 'string' && Date.parse(start) >= Date.parse(scope.fromUtc);
 }
 

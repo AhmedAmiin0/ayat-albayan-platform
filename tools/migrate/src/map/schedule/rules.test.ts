@@ -67,9 +67,9 @@ describe('schedule rules', () => {
       r
         .by('schedule_rules')
         .map((d) => [
-          d.record.columns['status'],
-          d.record.columns['ends_on'],
-          d.record.refs['teacher_id']?.key,
+          d.record.columns.status,
+          d.record.columns.ends_on,
+          d.record.refs.teacher_id?.key,
         ]),
     ).toEqual([['active', '2026-12-01', 'hend']]);
   });
@@ -85,7 +85,7 @@ describe('schedule rules', () => {
 
   it('B1: the latest row of a teacher + student set wins, the older goes to review', () => {
     const r = run([booking({ start_time: '08:00' }), booking({ start_time: '10:00' })]);
-    expect(r.by('schedule_rules')[0]?.record.columns['start_time_local']).toBe('10:00');
+    expect(r.by('schedule_rules')[0]?.record.columns.start_time_local).toBe('10:00');
     expect(r.issues).toMatchObject([
       { code: 'conflict', severity: 'review', entity: 'schedule_rules' },
     ]);
@@ -124,7 +124,7 @@ describe('schedule rules', () => {
       { code: 'missing_field', field: 'teacher' },
     ]);
     const w = run([booking({ package_text: 'نظام جماعي' })]);
-    expect(w.by('schedule_rules')[0]?.record.columns['package']).toBeNull();
+    expect(w.by('schedule_rules')[0]?.record.columns.package).toBeNull();
     expect(w.issues).toMatchObject([
       { code: 'unmapped_value', severity: 'warn', field: 'package_text' },
     ]);

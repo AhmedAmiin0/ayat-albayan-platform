@@ -85,7 +85,7 @@ describe('subscriptions', () => {
       heart({ name: 'Jana', lessons_used: 7, lessons_remaining: 0 }),
     ]);
     expect(
-      r.by('subscriptions').map((d) => [d.record.columns['status'], d.record.columns['package']]),
+      r.by('subscriptions').map((d) => [d.record.columns.status, d.record.columns.package]),
     ).toEqual([
       ['unpaid', '8'],
       ['expired', null],
@@ -95,7 +95,7 @@ describe('subscriptions', () => {
 
   it('no price: 0 + review, and no payment for a «Paid» row without an amount', () => {
     const r = run([heart({})], [fin('Reem + Jana', 2686)]);
-    expect(r.by('subscriptions')[0]?.record.columns['price']).toBe(0);
+    expect(r.by('subscriptions')[0]?.record.columns.price).toBe(0);
     expect(r.by('payments')).toEqual([]);
     expect(r.issues.filter((i) => i.entity === 'subscriptions')).toMatchObject([
       { code: 'missing_field', severity: 'review', field: 'price' },

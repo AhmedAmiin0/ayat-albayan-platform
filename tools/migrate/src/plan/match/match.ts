@@ -74,8 +74,8 @@ export function matchTeachers(input: MatchInput<TeacherRow>): MatchResult {
   const out: MatchResult = { adopt: new Map(), issues: [] };
   for (const d of input.fresh) {
     if (d.key.entity !== 'teachers') continue;
-    const phone = str(d.record.columns['phone_e164']);
-    const name = personName(str(d.record.columns['display_name_ar']));
+    const phone = str(d.record.columns.phone_e164);
+    const name = personName(str(d.record.columns.display_name_ar));
     const byPhone = phone ? input.rows.find((r) => r.phone_e164 === phone) : undefined;
     const byName = name
       ? input.rows.find((r) => personName(r.display_name_ar) === name)
@@ -94,7 +94,7 @@ interface StudentMatchInput extends MatchInput<StudentRow> {
 export function matchStudents(input: StudentMatchInput): MatchResult {
   const out: MatchResult = { adopt: new Map(), issues: [] };
   for (const d of input.fresh) {
-    const g = d.key.entity === 'students' ? d.record.refs['guardian_id'] : undefined;
+    const g = d.key.entity === 'students' ? d.record.refs.guardian_id : undefined;
     const gid = g && input.guardianIds.get(keyId(g));
     if (!gid) continue;
     const [, name] = splitStudentKey(d.key.key);

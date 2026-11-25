@@ -50,10 +50,10 @@ export async function writeLessonStudent(ctx: WriteContext) {
       text: `update public.lesson_students set attendance = coalesce($3::public.attendance, attendance), chargeable = $4
              where lesson_id = $1 and student_id = $2`,
       params: [
-        String(c['lesson_id']),
-        String(c['student_id']),
-        typeof c['attendance'] === 'string' ? c['attendance'] : null,
-        c['chargeable'] === true,
+        String(c.lesson_id),
+        String(c.student_id),
+        typeof c.attendance === 'string' ? c.attendance : null,
+        c.chargeable === true,
       ],
     });
   }

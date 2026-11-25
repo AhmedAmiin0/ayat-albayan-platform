@@ -25,7 +25,7 @@ const booking = (status: string, recurrence: string | null = 'أسبوعي: ال
 function run(sheets: Record<string, SourceRow[]>, student: Record<string, string> = {}) {
   const r = pipeline(bundleOf({ hub_students: [studentRow(student)], ...sheets }), MODULES);
   const downgrade = r.issues.find((i) => i.code === 'status_downgrade');
-  return { status: r.by('students')[0]?.record.columns['status'], downgrade: downgrade?.detail };
+  return { status: r.by('students')[0]?.record.columns.status, downgrade: downgrade?.detail };
 }
 const statusOf = (sheets: Record<string, SourceRow[]>, student?: Record<string, string>) =>
   run(sheets, student).status;
@@ -64,7 +64,7 @@ describe('students: imported status', () => {
       heart_subscriptions: [heart('2026-08-01')],
     });
     const r = pipeline({ ...b, expiryDays: 45 }, MODULES);
-    expect(r.by('students')[0]?.record.columns['status']).toBe('pending_renewal');
+    expect(r.by('students')[0]?.record.columns.status).toBe('pending_renewal');
   });
 
   it('the newest paid period wins', () => {
@@ -110,8 +110,8 @@ describe('students: imported status', () => {
       }),
       MODULES,
     );
-    const by = Object.fromEntries(r.by('students').map((s) => [s.record.columns['name'], s]));
-    expect(by['دانة']?.record.columns['status']).toBe('active');
-    expect(by['ليان']?.record.columns['status']).toBe('new');
+    const by = Object.fromEntries(r.by('students').map((s) => [s.record.columns.name, s]));
+    expect(by['دانة']?.record.columns.status).toBe('active');
+    expect(by['ليان']?.record.columns.status).toBe('new');
   });
 });

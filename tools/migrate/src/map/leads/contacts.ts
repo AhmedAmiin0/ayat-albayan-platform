@@ -51,9 +51,9 @@ function push<V>(map: Map<string, V[]>, key: string | null | undefined, value: V
 }
 
 function tagsByContact(crm: CrmTables): Map<string, string[]> {
-  const names = new Map((crm['tags'] ?? []).map((t) => [text(t, 'id'), text(t, 'name')]));
+  const names = new Map((crm.tags ?? []).map((t) => [text(t, 'id'), text(t, 'name')]));
   const out = new Map<string, string[]>();
-  for (const ct of crm['contact_tags'] ?? []) {
+  for (const ct of crm.contact_tags ?? []) {
     const tag = names.get(text(ct, 'tag_id'));
     if (tag) push(out, text(ct, 'contact_id'), tag);
   }
@@ -76,7 +76,7 @@ function contactFrom(row: CrmRow, tags: readonly string[]): CrmContact {
 
 function contactOfConversation(crm: CrmTables): Map<string, string> {
   const contactOf = new Map<string, string>();
-  for (const c of crm['conversations'] ?? []) {
+  for (const c of crm.conversations ?? []) {
     const id = text(c, 'id');
     const contact = text(c, 'contact_id');
     if (id && contact) contactOf.set(id, contact);
@@ -87,7 +87,7 @@ function contactOfConversation(crm: CrmTables): Map<string, string> {
 export function crmIndex(crm: CrmTables): CrmIndex {
   const tags = tagsByContact(crm);
   const contacts = new Map<string, CrmContact>();
-  for (const row of crm['contacts'] ?? []) {
+  for (const row of crm.contacts ?? []) {
     const c = contactFrom(row, tags.get(text(row, 'id') ?? '') ?? []);
     if (c.id) contacts.set(c.id, c);
   }

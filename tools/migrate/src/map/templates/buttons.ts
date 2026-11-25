@@ -14,9 +14,9 @@ const str = (v: unknown): string | undefined =>
 function urlButton(b: unknown): UrlButton | undefined {
   if (!b || typeof b !== 'object') return undefined;
   const rec = b as Record<string, unknown>;
-  const url = str(rec['url']);
-  if (str(rec['type'])?.toUpperCase() !== 'URL' || !url) return undefined;
-  const text = str(rec['text']);
+  const url = str(rec.url);
+  if (str(rec.type)?.toUpperCase() !== 'URL' || !url) return undefined;
+  const text = str(rec.text);
   return text ? { type: 'url', url, text } : { type: 'url', url };
 }
 

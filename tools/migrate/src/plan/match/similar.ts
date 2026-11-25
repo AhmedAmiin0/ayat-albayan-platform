@@ -44,7 +44,7 @@ export function samePhoneTeachers(desired: readonly Desired[]): RowIssue[] {
   const seen = new Map<string, Desired>();
   const issues: RowIssue[] = [];
   for (const d of desired) {
-    const phone = d.key.entity === 'teachers' ? d.record.columns['phone_e164'] : null;
+    const phone = d.key.entity === 'teachers' ? d.record.columns.phone_e164 : null;
     if (typeof phone !== 'string' || !phone) continue;
     const first = seen.get(phone);
     if (!first) {

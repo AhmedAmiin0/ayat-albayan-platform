@@ -38,7 +38,7 @@ describe('booking rules from --from', () => {
       items: r.by('schedule_rules').map((d) => ({ ...d, action, targetId: null })),
     });
     const starts = (p: ReturnType<typeof plan>) =>
-      p.items.map((i) => i.record.columns['starts_on']);
+      p.items.map((i) => i.record.columns.starts_on);
     expect(starts(clampRuleStarts(plan('create'), '2026-10-28'))).toEqual([
       '2026-10-28',
       '2026-11-03',
@@ -47,7 +47,7 @@ describe('booking rules from --from', () => {
       '2026-09-01',
       '2026-11-03',
     ]);
-    expect(cols(r).map((c) => c['ends_on'])).toEqual(['2026-12-20', null]);
+    expect(cols(r).map((c) => c.ends_on)).toEqual(['2026-12-20', null]);
   });
 
   it('a series that ended before --from creates nothing and is counted, not reported', () => {

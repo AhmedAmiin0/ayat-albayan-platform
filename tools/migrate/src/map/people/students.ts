@@ -43,15 +43,15 @@ function studentRecord(p: Person): Built {
     notes: f.notes,
   };
   // Legacy AB-nnnn kept (docs/06 step 5): written with OVERRIDING SYSTEM VALUE (students.write.ts).
-  if (p.legacy !== null) columns['code_seq'] = p.legacy;
+  if (p.legacy !== null) columns.code_seq = p.legacy;
   const refs: TargetRecord['refs'] = { guardian_id: keys.guardian(p.phone) };
-  if (teacher) refs['teacher_id'] = keys.teacher(teacher);
+  if (teacher) refs.teacher_id = keys.teacher(teacher);
   return { columns, refs, issues };
 }
 
 /** A3: the single teacher of all a student's reports beats an empty or stale registry teacher. */
 function reportTeacher(o: { p: Person; refs: TargetRecord['refs']; slug: string | undefined }) {
-  const now = o.refs['teacher_id']?.key;
+  const now = o.refs.teacher_id?.key;
   if (!o.slug || now === o.slug) return { refs: o.refs, issues: [] };
   const refs = { ...o.refs, teacher_id: keys.teacher(o.slug) };
   if (!now) return { refs, issues: [] };

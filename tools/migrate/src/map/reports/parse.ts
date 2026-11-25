@@ -48,11 +48,11 @@ interface ReportCtx {
 function gate(row: SourceRow, today: string): IssueInput | string {
   const f = row.fields;
   const reason = testReason({
-    names: [f['student_name'], f['student_registry_name'], f['teacher'], f['teacher_locked']],
+    names: [f.student_name, f.student_registry_name, f.teacher, f.teacher_locked],
     other: cellsOf(f, [...TEXT_FIELDS, 'send_status']),
   });
   if (reason) return { code: 'test_row', severity: 'reject', detail: reason };
-  const date = ymd(f['lesson_date']);
+  const date = ymd(f.lesson_date);
   if (!date || !inWindow({ date, from: REPORTS_FROM, to: today }))
     return { code: 'bad_date', severity: 'reject', field: 'lesson_date', detail: 'outside_window' };
   return date;
@@ -72,9 +72,9 @@ export function parseReport(row: SourceRow, ctx: ReportCtx): ParsedReport | RowI
   const who = reportWho(f, ctx.ix);
   if (!('teacher' in who)) return [issue(who)];
   const { teacher } = who;
-  const att = attendance(text(f['attendance']));
+  const att = attendance(text(f.attendance));
   if (!att) return [issue({ code: 'unmapped_value', severity: 'reject', field: 'attendance' })];
-  const submitted = dateTime(f['submitted_at']);
+  const submitted = dateTime(f.submitted_at);
   if (!submitted)
     return [issue({ code: 'missing_field', severity: 'reject', field: 'submitted_at' })];
   const student = who.student.key;
@@ -107,7 +107,7 @@ export function parseReport(row: SourceRow, ctx: ReportCtx): ParsedReport | RowI
     lessonNo: lessonNumber(f),
     names: reportNames(f),
     sent: wasSent(f),
-    meetingLink: meetingLink(text(f['meeting_link'])),
+    meetingLink: meetingLink(text(f.meeting_link)),
     submittedAt: utc({ ...submitted, plusMs: submitted.sec * 1000 }),
     body: body.columns,
     lessonKey,

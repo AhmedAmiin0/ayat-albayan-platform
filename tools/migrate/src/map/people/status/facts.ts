@@ -24,8 +24,8 @@ interface LessonFacts {
 /** Phones of every HEART «subscription» row (the old rule's paying families). */
 function heartPhones(bundle: SourceBundle): Set<string> {
   const out = new Set<string>();
-  for (const r of bundle.sheets['heart_subscriptions'] ?? []) {
-    const p = phoneCell(r.fields['phone']);
+  for (const r of bundle.sheets.heart_subscriptions ?? []) {
+    const p = phoneCell(r.fields.phone);
     if (p.ok) out.add(p.e164);
   }
   return out;

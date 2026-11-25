@@ -15,7 +15,7 @@ const tally = (keys: readonly string[]): Map<string, number> => {
 
 /** SUBS rows per teacher slug ('?' = no or unknown teacher). */
 export function subsByTeacher(rows: readonly SourceRow[]): Map<string, number> {
-  return tally(rows.map((r) => teacherFromText(String(r.fields['teacher'] ?? '')) ?? '?'));
+  return tally(rows.map((r) => teacherFromText(String(r.fields.teacher ?? '')) ?? '?'));
 }
 
 /** ATT rows per student, by personName of the student folder of the attendance file. */
@@ -52,7 +52,7 @@ export async function sourceChecks(db: TargetDb, bundle: SourceBundle): Promise<
     params: [],
   });
   const dbBy = new Map(perTeacher.map((r) => [teacherSlug(r.name_en ?? '?'), r.n]));
-  const subs = subsByTeacher(bundle.sheets['subs_students'] ?? []);
+  const subs = subsByTeacher(bundle.sheets.subs_students ?? []);
   const slugs = [...new Set([...subs.keys(), ...dbBy.keys()])].sort();
   const out: CheckResult[] = slugs.map((slug) => ({
     name: `active students of ${slug} (SUBS ${subs.get(slug) ?? 0})`,
@@ -65,7 +65,7 @@ export async function sourceChecks(db: TargetDb, bundle: SourceBundle): Promise<
            left join public.lessons l on l.id = ls.lesson_id group by s.id, s.name`,
     params: [],
   });
-  const att = compareAtt({ att: attByStudent(bundle.sheets['att_attendance'] ?? []), db: lessons });
+  const att = compareAtt({ att: attByStudent(bundle.sheets.att_attendance ?? []), db: lessons });
   out.push(
     { name: 'ATT students: completed lessons ≠ attendance rows', n: att.differ, ok: true },
     { name: 'ATT students without one matching DB student', n: att.unmatched, ok: true },

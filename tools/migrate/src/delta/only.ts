@@ -36,7 +36,7 @@ function pastLessons(items: readonly PlanItem[], fromUtc: string): Set<string> {
     items
       .filter((i) => i.key.entity === 'lessons')
       .filter((i) => {
-        const at = i.record.columns['starts_at'];
+        const at = i.record.columns.starts_at;
         return typeof at !== 'string' || Date.parse(at) < from;
       })
       .map((i) => keyId(i.key)),
@@ -104,7 +104,7 @@ export function onlyEntities(plan: PlanWithChanges, scope: OnlyScope): PlanWithC
   const past = pastLessons(plan.items, scope.fromUtc);
   const untouched = (i: PlanItem): boolean => {
     if (!scope.only.has(i.key.entity) || past.has(keyId(i.key))) return true;
-    const lesson = i.key.entity === 'lesson_students' ? i.record.refs['lesson_id'] : undefined;
+    const lesson = i.key.entity === 'lesson_students' ? i.record.refs.lesson_id : undefined;
     return lesson !== undefined && past.has(keyId(lesson));
   };
   const items = plan.items.map((i) => (untouched(i) ? skip(i) : i));

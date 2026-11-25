@@ -38,11 +38,11 @@ interface Ctx {
 function ruleRows(row: SourceRow, o: Ctx): RuleResult[] {
   const issue = issuesFor('schedule_rules', row.ref);
   const fail = (i: IssueInput): RuleResult[] => [{ ref: row.ref, issues: [issue(i)] }];
-  const name = text(row.fields['name']);
+  const name = text(row.fields.name);
   const times = slots(row.fields);
   if (!name || times.size === 0) return []; // no booked days: nothing to schedule
-  const sub = o.subs.find((s) => lower(text(s.fields['name'])) === lower(name));
-  const phone = phoneCell(sub?.fields['phone']);
+  const sub = o.subs.find((s) => lower(text(s.fields.name)) === lower(name));
+  const phone = phoneCell(sub?.fields.phone);
   if (!sub || !phone.ok)
     return fail({
       code: 'missing_ref',
@@ -60,7 +60,7 @@ function ruleRows(row: SourceRow, o: Ctx): RuleResult[] {
     });
   const students = [found.student.key];
   const total =
-    (num(sub.fields['lessons_used']) ?? 0) + (num(sub.fields['lessons_remaining']) ?? 0);
+    (num(sub.fields.lessons_used) ?? 0) + (num(sub.fields.lessons_remaining) ?? 0);
   return [...times].map(([time, byday]) => ({
     ref: row.ref,
     key: keys.scheduleRule({
@@ -83,7 +83,7 @@ function ruleRows(row: SourceRow, o: Ctx): RuleResult[] {
         start_time_local: time,
         tz: SHEET_TZ,
         byday,
-        starts_on: ymd(sub.fields['date']) ?? o.today,
+        starts_on: ymd(sub.fields.date) ?? o.today,
         ends_on: null,
         status: 'active',
         package: packageOf(total),
@@ -95,7 +95,7 @@ function ruleRows(row: SourceRow, o: Ctx): RuleResult[] {
 
 /** Every timetable row of every teacher tab, after the bookings (prefer 'last': HEART wins). */
 export function heartRules(bundle: SourceBundle, ix: StudentIndex): RuleResult[] {
-  const subs = bundle.sheets['heart_subscriptions'] ?? [];
+  const subs = bundle.sheets.heart_subscriptions ?? [];
   return HEART_TIMETABLES.flatMap((id) => {
     const teacher = teacherFromText(id.replace(/^heart_/, ''));
     if (!teacher) return [];

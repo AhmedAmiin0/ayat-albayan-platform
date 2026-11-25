@@ -54,7 +54,7 @@ describe('one-off bookings', () => {
       from: '2026-11-02',
       bookings: [once({ date: '2026-10-30' }), once({ date: '2026-11-02' })],
     });
-    expect(r.by('lessons').map((d) => d.record.columns['starts_at'])).toEqual([
+    expect(r.by('lessons').map((d) => d.record.columns.starts_at)).toEqual([
       '2026-11-02T14:30:00.000Z',
     ]);
     expect(r.issues).toEqual([]);
@@ -62,7 +62,7 @@ describe('one-off bookings', () => {
 
   it('teacher column: a known name wins, unknown text is rejected', () => {
     const r = runBookings({ bookings: [once({ teacher: 'Hend' }), once({ teacher: 'Someone' })] });
-    expect(r.by('lessons').map((d) => d.record.refs['teacher_id']?.key)).toEqual(['hend']);
+    expect(r.by('lessons').map((d) => d.record.refs.teacher_id?.key)).toEqual(['hend']);
     expect(r.issues.map((i) => [i.entity, i.code])).toEqual([['lessons', 'unknown_teacher']]);
   });
 

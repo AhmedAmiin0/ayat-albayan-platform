@@ -65,7 +65,7 @@ describe('dropStaleRefs', () => {
     const out = dropStaleRefs({ plan, stale, tableOf });
     expect(out.plan.items[0]?.action).toBe('skip');
     expect([out.cleared, out.skipped]).toEqual([0, 1]);
-    expect(out.plan.counts['messages']).toMatchObject({ create: 1, skip: 1 });
+    expect(out.plan.counts.messages).toMatchObject({ create: 1, skip: 1 });
   });
 });
 
