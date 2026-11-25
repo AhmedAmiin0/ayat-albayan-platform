@@ -1,6 +1,7 @@
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { SUMMARY_HEADER } from './state.ts';
 import { createStub } from './stub.ts';
 
 let server: Server;
@@ -58,7 +59,7 @@ describe('google-stub', () => {
     const q = (s: string) => `${base}/drive/v3/files?q=${encodeURIComponent(s)}`;
     const roots = await (await fetch(q("name = 'تقارير آيات البيان' and trashed = false and mimeType = 'application/vnd.google-apps.folder'"), { headers: AUTH })).json() as { files: { id: string }[] };
     expect(roots.files).toHaveLength(1);
-    const sheets = await (await fetch(q(`name = 'سجل الطلاب المشتركين' and '${roots.files[0]?.id}' in parents`), { headers: AUTH })).json() as { files: { id: string }[] };
+    const sheets = await (await fetch(q(`name = 'سجل الطلاب المشتركين' and '${roots.files[0]?.id ?? ''}' in parents`), { headers: AUTH })).json() as { files: { id: string }[] };
     const id = sheets.files[0]?.id ?? '';
     const app = await (await fetch(`${base}/v4/spreadsheets/${id}/values/A1:append`, json({ values: [['طالب', 'T']] }))).json() as { updates: { updatedRange: string } };
     expect(app.updates.updatedRange).toBe('Sheet1!A2:M2');
@@ -73,5 +74,17 @@ describe('google-stub', () => {
     expect(res.status).toBe(200);
     const state = await (await fetch(`${base}/__stub/state`)).json() as { files: { name: string; appProperties: Record<string, string> }[] };
     expect(state.files.find((f) => f.name === 'r.pdf')?.appProperties).toEqual({ ab_source: 'platform' });
+  });
+
+  it('reads A1 ranges: one cell, a sheet prefix, an open row end and a bad end cell', async () => {
+    const values = async (range: string): Promise<unknown> => {
+      const sheet = 'stubSummary00000000000002';
+      const url = `${base}/v4/spreadsheets/${sheet}/values/${encodeURIComponent(range)}`;
+      return (await fetch(url, { headers: AUTH })).json();
+    };
+    expect(await values('B1')).toEqual({ values: [SUMMARY_HEADER.slice(1, 2)] });
+    expect(await values('Sheet1!A1:B')).toEqual({ values: [SUMMARY_HEADER.slice(0, 2)] });
+    expect(await values('C1:')).toEqual({ values: [SUMMARY_HEADER.slice(2, 3)] });
+    expect(await values('B1:x')).toEqual({ values: [SUMMARY_HEADER.slice(1)] });
   });
 });
