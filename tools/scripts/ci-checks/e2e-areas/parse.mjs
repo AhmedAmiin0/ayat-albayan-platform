@@ -32,6 +32,14 @@ export function parseImports(src) {
   return out;
 }
 
+const localName = (part) =>
+  part
+    .trim()
+    .replace(/^type\s+/, '')
+    .split(/\s+as\s+/)
+    .pop()
+    ?.trim();
+
 /** Names a file declares itself (not re-exports). */
 export function ownExports(src) {
   const out = new Set();
@@ -39,14 +47,6 @@ export function ownExports(src) {
     /\bexport\s+(?:declare\s+)?(?:default\s+)?(?:async\s+)?(?:abstract\s+)?(?:function\*?|const|let|var|class|interface|type|enum|namespace)\s+([\w$]+)/g;
   for (const m of src.matchAll(decl)) out.add(m[1]);
   for (const m of src.matchAll(/\bexport\s+(?:type\s+)?\{([^}]*)\}(?!\s*from)/g))
-    for (const part of m[1].split(',')) {
-      const name = part
-        .trim()
-        .replace(/^type\s+/, '')
-        .split(/\s+as\s+/)
-        .pop()
-        ?.trim();
-      if (name) out.add(name);
-    }
+    for (const name of m[1].split(',').map(localName).filter(Boolean)) out.add(name);
   return out;
 }

@@ -6,54 +6,23 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, posix } from 'node:path';
 import { ownExports, parseImports } from './parse.mjs';
+import { ALIAS, CODE, ROOTS, UNIT } from './graph-roots.mjs';
 import { baseOf } from './spec-base.mjs';
 
-export const ROOTS = [
-  'apps/staff-web/src',
-  'apps/family-web/src',
-  'packages/web-kit/src',
-  'apps/api/src',
-  'packages/core/src',
-  'packages/i18n/src',
-  'packages/time/src',
-  'packages/catalog/src',
-  'packages/settings/src',
-  'packages/money/src',
-  'packages/schedule/src',
-  'packages/shared/src',
-  'packages/client-core/src',
-  'e2e',
-];
-const CODE = /\.(ts|tsx|mjs)$/;
-const UNIT =
-  /\.test\.(ts|tsx|mjs)$|(^|\/)(node_modules|dist|__snapshots__|playwright-report|test-results)\//;
-const ALIAS = {
-  '@ab/core': 'packages/core/src/index.ts',
-  '@ab/i18n': 'packages/i18n/src/index.ts',
-  '@ab/time': 'packages/time/src/index.ts',
-  '@ab/catalog': 'packages/catalog/src/index.ts',
-  '@ab/settings': 'packages/settings/src/index.ts',
-  '@ab/settings/seed': 'packages/settings/src/seed/index.ts',
-  '@ab/money': 'packages/money/src/index.ts',
-  '@ab/schedule': 'packages/schedule/src/index.ts',
-  '@ab/shared': 'packages/shared/src/index.ts',
-  '@ab/shared/testing': 'packages/shared/src/testing/index.ts',
-  '@ab/client-core': 'packages/client-core/src/index.ts',
-  '@ab/web-kit': 'packages/web-kit/src/index.ts',
-  '@ab/web-kit/room': 'packages/web-kit/src/room.ts',
-  '@ab/web-kit/testing': 'packages/web-kit/src/testing/index.ts',
-};
+const keepDir = (p) => !UNIT.test(`${p}/`);
+const keepFile = (p, name) => CODE.test(name) && !UNIT.test(p);
 
 /** Repo-relative code files under the roots, unit tests excluded (e2e never runs them). */
 export function listFiles(root) {
   const out = [];
+  const visit = (rel, e) => {
+    const p = posix.join(rel, e.name);
+    const dir = e.isDirectory();
+    if (dir && keepDir(p)) walk(p);
+    if (!dir && keepFile(p, e.name)) out.push(p);
+  };
   const walk = (rel) => {
-    for (const e of readdirSync(join(root, rel), { withFileTypes: true })) {
-      const p = posix.join(rel, e.name);
-      if (e.isDirectory()) {
-        if (!UNIT.test(`${p}/`)) walk(p);
-      } else if (CODE.test(e.name) && !UNIT.test(p)) out.push(p);
-    }
+    for (const e of readdirSync(join(root, rel), { withFileTypes: true })) visit(rel, e);
   };
   for (const r of ROOTS) if (existsSync(join(root, r))) walk(r);
   return out.sort();
@@ -77,9 +46,7 @@ export function resolveSpec(files, from, spec) {
   return null;
 }
 
-/** { files, edges, … } — forward edges file -> files, name-precise through re-exports. */
-export function buildGraph(root, fileList = listFiles(root)) {
-  const files = new Set(fileList);
+function readSources(root, fileList) {
   const parsed = new Map();
   const own = new Map();
   for (const f of fileList) {
@@ -87,24 +54,34 @@ export function buildGraph(root, fileList = listFiles(root)) {
     parsed.set(f, parseImports(src));
     own.set(f, ownExports(src));
   }
+  return { files: new Set(fileList), parsed, own };
+}
+
+function makeDefiners({ files, parsed, own }) {
   const memo = new Map();
   /** The files that declare `name` as exported from `file` (through its re-exports), or null. */
   const definers = (file, name, seen = new Set()) => {
     const key = `${file}#${name}`;
-    if (memo.has(key)) return memo.get(key);
-    if (seen.has(file)) return null;
-    seen.add(file);
-    let found = own.get(file)?.has(name) ? [file] : null;
-    for (const { spec, names, reexport } of parsed.get(file) ?? []) {
-      const target = reexport && !found ? resolveSpec(files, file, spec) : null;
-      if (!target) continue;
-      const hit = names?.find((n) => n.as === name);
-      if (names === null) found = definers(target, name, seen);
-      else if (hit) found = definers(target, hit.from, seen) ?? [target];
-    }
-    memo.set(key, found);
+    if (!memo.has(key) && !seen.has(file)) memo.set(key, search({ file, name, seen }));
+    return memo.get(key) ?? null;
+  };
+  const search = (at) => {
+    at.seen.add(at.file);
+    let found = own.get(at.file)?.has(at.name) ? [at.file] : null;
+    for (const imp of parsed.get(at.file) ?? []) found ??= viaReexport(at, imp);
     return found;
   };
+  const viaReexport = (at, { spec, names, reexport }) => {
+    const target = reexport ? resolveSpec(files, at.file, spec) : null;
+    if (!target) return null;
+    if (names === null) return definers(target, at.name, at.seen);
+    const hit = names.find((n) => n.as === at.name);
+    return hit ? (definers(target, hit.from, at.seen) ?? [target]) : null;
+  };
+  return definers;
+}
+
+function makeWholeBarrel({ files, parsed }) {
   /** A barrel and every file it re-exports, transitively (the fallback for a name not found). */
   const wholeBarrel = (file, seen = new Set()) => {
     if (seen.has(file)) return seen;
@@ -115,27 +92,40 @@ export function buildGraph(root, fileList = listFiles(root)) {
     }
     return seen;
   };
+  return wholeBarrel;
+}
+
+const add = (map, key, value) => (map.get(key) ?? map.set(key, new Set()).get(key)).add(value);
+
+/** { files, edges, … } — forward edges file -> files, name-precise through re-exports. */
+export function buildGraph(root, fileList = listFiles(root)) {
+  const src = readSources(root, fileList);
+  const { files, parsed } = src;
+  const definers = makeDefiners(src);
+  const wholeBarrel = makeWholeBarrel(src);
   const edges = new Map();
   /** File-level importers (any import or re-export) and the files each one re-exports from. */
   const importers = new Map();
   const reexportsFrom = new Map();
-  const add = (map, key, value) => (map.get(key) ?? map.set(key, new Set()).get(key)).add(value);
   const bareOf = (file) =>
     (parsed.get(file) ?? []).filter((i) => i.bare).map((i) => resolveSpec(files, file, i.spec));
+  const namedTargets = (target, names) =>
+    names.flatMap((n) => [...(definers(target, n.from) ?? wholeBarrel(target))]);
+  const targetsOf = (target, names) => {
+    if (names === null) return [target];
+    // A barrel's own side-effect imports (`import './register'`) run for whoever imports from it.
+    return [...namedTargets(target, names), ...bareOf(target).filter(Boolean)];
+  };
+  const link = (f, out, { spec, names, reexport }) => {
+    const target = resolveSpec(files, f, spec);
+    if (!target) return;
+    add(importers, target, f);
+    if (reexport) add(reexportsFrom, f, target);
+    for (const d of targetsOf(target, names)) out.add(d);
+  };
   for (const f of fileList) {
     const out = new Set();
-    for (const { spec, names, reexport } of parsed.get(f) ?? []) {
-      const target = resolveSpec(files, f, spec);
-      if (!target) continue;
-      add(importers, target, f);
-      if (reexport) add(reexportsFrom, f, target);
-      if (names === null) out.add(target);
-      else
-        for (const n of names)
-          for (const d of definers(target, n.from) ?? wholeBarrel(target)) out.add(d);
-      // A barrel's own side-effect imports (`import './register'`) run for whoever imports from it.
-      if (names !== null) for (const b of bareOf(target)) if (b) out.add(b);
-    }
+    for (const imp of parsed.get(f) ?? []) link(f, out, imp);
     edges.set(f, out);
   }
   return { files, edges, importers, reexportsFrom };
