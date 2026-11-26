@@ -413,7 +413,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/finance/finance/finance-tables.test.tsx": {

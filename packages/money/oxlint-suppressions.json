@@ -173,9 +173,6 @@
   "src/pricing/quote/quote.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/pricing/renewal.ts": {
