@@ -66,7 +66,7 @@ export function reportNames(f: Record<string, Cell>): string[] {
 /** Free trial: a trial lesson number (A5 text) or a trial send log. */
 export function isTrial(f: Record<string, Cell>): boolean {
   const n = normalizeArabic(text(f.lesson_number_text) ?? '');
-  return /تجريب/.test(n) || /تجريبية/.test(text(f.send_status) ?? '');
+  return n.includes('تجريب') || (text(f.send_status) ?? '').includes('تجريبية');
 }
 
 /** A5 lesson number, normalized only to compare two reports of one day; never imported. */

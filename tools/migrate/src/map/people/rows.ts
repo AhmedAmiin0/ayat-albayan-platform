@@ -26,12 +26,12 @@ export function fieldsOf(f: Record<string, Cell>, kind: Kind): PersonFields {
   };
 }
 
-const ACTIVE = /طالب حالي/;
+const ACTIVE = 'طالب حالي';
 
 /** What the old rule read in the status column. */
 function claimsOf(status: string | null): OldClaim[] {
   const out: OldClaim[] = [];
-  if (ACTIVE.test(status ?? '')) out.push('hub_current');
+  if ((status ?? '').includes(ACTIVE)) out.push('hub_current');
   if (bookingStatus(status) === 'subscribed') out.push('subscribed_booking');
   return out;
 }
