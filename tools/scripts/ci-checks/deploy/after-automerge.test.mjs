@@ -18,18 +18,15 @@ const BOT = 'github-actions[bot]';
 const SHA = 'a'.repeat(40);
 const SCOPE = ['github', 'needs', 'inputs', 'cancelled'];
 
-/** A workflow `if` evaluated as JS: strings and booleans compare the same way in both. */
-function holds(cond, scope) {
-  const js = cond.replace(/^\$\{\{|\}\}\s*$/g, '').replace(/([!=])=/g, '$1==');
-  return Boolean(new Function(...SCOPE, `return ${js};`)(...SCOPE.map((name) => scope[name])));
+/** A workflow expression evaluated as JS: strings and booleans compare the same way in both. */
+function evaluate(expr, scope) {
+  const js = expr.replace(/^\$\{\{|\}\}\s*$/g, '').replace(/([!=])=/g, '$1==');
+  return new Function(...SCOPE, `return ${js};`)(...SCOPE.map((name) => scope[name]));
 }
+const holds = (cond, scope) => Boolean(evaluate(cond, scope));
 
 const results = (check, e2e) => ({ check: { result: check }, e2e: { result: e2e } });
-const dispatched = (ref, actor) => ({
-  event_name: 'workflow_dispatch',
-  ref,
-  triggering_actor: actor,
-});
+const dispatched = (ref, actor) => ({ event_name: 'workflow_dispatch', ref, actor });
 const ciRun = (over) => ({
   cancelled: () => false,
   needs: results('success', 'success'),
@@ -105,8 +102,21 @@ test('a deploy started by ci decides migrations as an automatic run does', () =>
   assert.equal(byHand({ migrate: true, env_only: false }), true, 'by hand: the inputs decide');
   assert.equal(byHand({ migrate: false, env_only: false }), false);
   assert.equal(byHand({ migrate: true, env_only: true }), false);
+  const unticked = { sha: '', migrate: false, env_only: false };
+  for (const plan of ['true', '']) {
+    assert.equal(migrates({ needs: planned(plan), inputs: unticked }), false, 'plan never decides');
+  }
   const envOnly = { sha: SHA, migrate: true, env_only: true };
   assert.equal(migrates({ inputs: envOnly }), false, 'env only never migrates');
+});
+
+test('the title says no-migrate only for a by-hand run without a named commit', () => {
+  const [, marker] = deploy['run-name'].match(/\$\{\{.*?\}\}/gs);
+  const said = (inputs) => evaluate(marker, deployRun({ inputs }));
+  assert.equal(said({ sha: '', migrate: false }), ' no-migrate');
+  assert.equal(said({ sha: SHA, migrate: false }), '');
+  assert.equal(said({ sha: '', migrate: true }), '');
+  assert.equal(said({ sha: '', migrate: true, env_only: true }), ' env-only');
 });
 
 /** Runs preflight's commit check with a fake gh that answers `state` for the compare call. */

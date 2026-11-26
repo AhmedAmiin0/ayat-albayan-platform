@@ -1,6 +1,6 @@
 // lane-automerge.yml merges low-risk lane PRs (tools/scripts/automerge/). A merge made with the
-// built-in token starts no push workflow, so it dispatches ci on develop; that run starts the deploy
-// itself (deploy/after-automerge.test.mjs).
+// built-in token starts no push workflow, so it dispatches ci on develop; that run starts the
+// deploy itself (deploy/after-automerge.test.mjs).
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';

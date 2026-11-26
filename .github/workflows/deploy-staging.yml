@@ -11,7 +11,7 @@ name: deploy-staging
 # the «plan» job of the next run reads it back to know what staging last received.
 run-name: >-
   deploy-staging ${{ inputs.sha || github.event.workflow_run.head_sha || github.sha }}${{ inputs.env_only && ' env-only'
-  || (github.event_name == 'workflow_dispatch' && !inputs.migrate) && ' no-migrate' || '' }}
+  || (github.event_name == 'workflow_dispatch' && !inputs.sha && !inputs.migrate) && ' no-migrate' || '' }}
 on:
   # Automatic: every merge into develop, once ci has passed on it (a red develop never ships). A merge
   # by lane-automerge starts no push run, so it dispatches ci on develop. A run started with the
