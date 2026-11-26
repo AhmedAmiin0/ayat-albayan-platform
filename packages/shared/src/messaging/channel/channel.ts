@@ -42,7 +42,8 @@ export const channelPageQuerySchema = z.object({
 
 /** channel_messages.sender_role (migrations 800, 20261116000200): 'sales' = the assistant. */
 export const CHANNEL_SENDER_ROLES = ['teacher', 'guardian', 'student', 'sales'] as const;
-export type ChannelSenderRole = (typeof CHANNEL_SENDER_ROLES)[number];
+export const channelSenderRoleSchema = z.enum(CHANNEL_SENDER_ROLES);
+export type ChannelSenderRole = z.infer<typeof channelSenderRoleSchema>;
 
 /** POST …/read: read up to the newest message shown (never later than now); now when absent. */
 export const channelReadSchema = z.object({
