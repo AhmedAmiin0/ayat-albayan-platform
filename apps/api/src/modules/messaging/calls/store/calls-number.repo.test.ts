@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import type { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import { CallsNumberRepo } from './calls-number.repo';
@@ -85,5 +86,13 @@ describe('CallsNumberRepo (docs/28 §10)', () => {
     expect(
       calls.filter((c) => c.method === 'eq' && c.args[0] === 'error_code').map((c) => c.args[1]),
     ).toEqual(['sending', 'sending']);
+  });
+
+  it('a failed read answers through the default db error map', async () => {
+    const { db } = fakeDb({ wa_call_permissions: [{ error: PG_ERRORS.unique }] });
+    const answer = await answerOfRejection(
+      new CallsNumberRepo(db, views).reply('pn', '+201001234567'),
+    );
+    expect(answer.status).toBe(409);
   });
 });
