@@ -3,17 +3,17 @@ import { test } from 'node:test';
 import { parseCounts } from '../parse.mjs';
 import { fixture, rejectedCases } from './fixtures.mjs';
 
-test('parse: named count statements, one or many lines, comments and blank lines skipped', () => {
+test('parse: named counts on a table in public; comments and blank lines skipped', () => {
   assert.deepEqual(parseCounts(fixture('valid')), [
     {
       name: 'payments_amount_null',
-      sql: 'select count(*) from payments where amount_minor is null',
+      sql: 'select count(*) from public.payments where amount_minor is null',
     },
     {
       name: 'payments_status_unknown',
       sql: "select count(*) from public.payments where status::text not in ('pending', 'paid', 'refunded')",
     },
-    { name: 'payments_total', sql: 'select count(*) from payments' },
+    { name: 'payments_total', sql: 'select count(*) from public.payments' },
   ]);
 });
 
@@ -26,7 +26,22 @@ for (const { name, text } of rejectedCases()) {
 test('parse: a string may hold quotes, semicolons and any script', () => {
   const where = "status not in ('it''s', 'a;b -- c', 'نشط')";
   const items = parseCounts(`-- count: odd\nselect count(*) from t where ${where};`);
-  assert.deepEqual(items, [{ name: 'odd', sql: `select count(*) from t where ${where}` }]);
+  assert.deepEqual(items, [{ name: 'odd', sql: `select count(*) from public.t where ${where}` }]);
+});
+
+test('parse: a bare table name is sent as a table in public, whatever else has that name', () => {
+  const [item] = parseCounts('-- count: roles\nselect count(*) from pg_authid;');
+  assert.equal(item.sql, 'select count(*) from public.pg_authid');
+});
+
+test('parse: a word that only looks like a keyword function is a plain name', () => {
+  const where = "user_id is null and role = 'user' and note = 'current_user'";
+  assert.equal(parseCounts(`-- count: names\nselect count(*) from t where ${where};`).length, 1);
+});
+
+test('parse: a counts file has a size limit', () => {
+  const text = `-- count: a\nselect count(*) from t;\n${' '.repeat(65_536)}`;
+  assert.throws(() => parseCounts(text), /counts file is too long/);
 });
 
 test('parse: a statement needs a «-- count: <name>» line before it', () => {

@@ -64,6 +64,18 @@ test('main: a result that is not an integer prints nothing', async () => {
   assert.deepEqual([code, out], [1, []]);
 });
 
+test('main: a connect that throws prints nothing, not even its error', async () => {
+  const out = [];
+  const warned = [];
+  const connect = () => {
+    throw Object.assign(new TypeError('Invalid URL'), { input: URL_VALUE });
+  };
+  const write = (line) => out.push(line);
+  const warn = (line) => warned.push(line);
+  const code = await main({ file: fixturePath('valid'), url: URL_VALUE, connect, write, warn });
+  assert.deepEqual([code, out, warned], [1, [], []]);
+});
+
 test('main: a rejected file never connects', async () => {
   const { code, out, seen } = await run('rejected', async () => [{ count: '1' }]);
   assert.deepEqual([code, out, seen.url], [1, [], null]);

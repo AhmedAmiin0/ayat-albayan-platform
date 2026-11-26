@@ -32,3 +32,7 @@ select count(*) from students where name = `a`;
 select count(*) from students where fé(name) = 'a';
 -- count: other_schema
 select count(*) from auth.users;
+-- count: keyword_function
+select count(*) from students where name = current_user;
+-- count: keyword_function_upper
+select count(*) from students where created_at < CURRENT_TIMESTAMP;
