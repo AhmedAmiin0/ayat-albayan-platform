@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  configDescriptionSchema, configEntryPatchSchema, DESCRIPTION_MAX, needsTypedConfirm, typedConfirmMatches,
+  configDescriptionSchema,
+  configEntryPatchSchema,
+  DESCRIPTION_MAX,
+  needsTypedConfirm,
+  typedConfirmMatches,
 } from './entries';
 
 describe('needsTypedConfirm (data-deleting values, docs/26 §8 q3)', () => {
@@ -37,9 +41,13 @@ describe('typedConfirmMatches', () => {
 
 describe('entry bodies', () => {
   it('a value patch needs a whole, non-negative expected version; null is a value', () => {
-    expect(configEntryPatchSchema.safeParse({ value: null, expectedVersion: 0 }).success).toBe(true);
+    expect(configEntryPatchSchema.safeParse({ value: null, expectedVersion: 0 }).success).toBe(
+      true,
+    );
     expect(configEntryPatchSchema.safeParse({ value: 1, expectedVersion: -1 }).success).toBe(false);
-    expect(configEntryPatchSchema.safeParse({ value: 1, expectedVersion: 1.5 }).success).toBe(false);
+    expect(configEntryPatchSchema.safeParse({ value: 1, expectedVersion: 1.5 }).success).toBe(
+      false,
+    );
     expect(configEntryPatchSchema.safeParse({ value: 1 }).success).toBe(false);
   });
 

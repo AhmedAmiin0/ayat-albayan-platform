@@ -29,6 +29,7 @@ describe('«القيم» groups agree with the registry', () => {
   });
 
   it('never lets «القيم» edit a key the API treats as owned', () => {
-    for (const keys of Object.values(VALUE_GROUPS)) for (const key of keys) expect(isOwnedSettingKey(key)).toBe(false);
+    for (const keys of Object.values(VALUE_GROUPS))
+      for (const key of keys) expect(isOwnedSettingKey(key)).toBe(false);
   });
 });

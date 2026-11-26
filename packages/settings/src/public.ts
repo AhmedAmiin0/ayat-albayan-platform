@@ -2,7 +2,9 @@ import { SETTING_DEFAULTS, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings
 
 type Registry = typeof SETTINGS_REGISTRY;
 /** The keys marked `public: true`: safe for anyone (public pages, the apps before login). */
-export type PublicSettingKey = { [K in SettingKey]: Registry[K] extends { public: true } ? K : never }[SettingKey];
+export type PublicSettingKey = {
+  [K in SettingKey]: Registry[K] extends { public: true } ? K : never;
+}[SettingKey];
 
 /** GET /settings/public (no login). */
 export type PublicSettings = Pick<AcademySettings, PublicSettingKey>;
