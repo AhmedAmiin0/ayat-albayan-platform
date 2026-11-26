@@ -1,13 +1,5 @@
 import { Avatar, Card } from '@ab/web-kit';
-
-interface Props {
-  name: string;
-  line: string;
-  /** The signed photo URL, else null (the initials). */
-  photo: string | null;
-  /** A student's id, so their initials keep the tone of their home; else the name. */
-  seed: string | null;
-}
+import type { Props } from './ProfileHero.types';
 
 /** The profile's head: the photo or initials in a gold ring, the name, who signed in. */
 export function ProfileHero({ name, line, photo, seed }: Props) {
