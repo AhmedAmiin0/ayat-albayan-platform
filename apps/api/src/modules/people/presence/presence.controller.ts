@@ -1,8 +1,9 @@
-import type { PresenceSelf, StaffPresence } from '@ab/shared';
-import { Controller, Get } from '@nestjs/common';
+import { presenceRoutes as routes, type PresenceSelf, type StaffPresence } from '@ab/shared';
+import { Controller } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions, SignedIn } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route } from '@/common/http/route';
 import { PresenceService } from './presence.service';
 
 /**
@@ -11,17 +12,17 @@ import { PresenceService } from './presence.service';
  */
 @ApiTags('presence')
 @ApiBearerAuth()
-@Controller('presence')
+@Controller()
 export class PresenceController {
   constructor(private readonly presence: PresenceService) {}
 
-  @Get('me')
+  @Route(routes.self)
   @SignedIn()
   me(): Promise<PresenceSelf> {
     return this.presence.self();
   }
 
-  @Get('staff')
+  @Route(routes.staff)
   @Permissions('users.read')
   staff(@CurrentUser() user: AuthUser): Promise<StaffPresence> {
     return this.presence.staff(user);

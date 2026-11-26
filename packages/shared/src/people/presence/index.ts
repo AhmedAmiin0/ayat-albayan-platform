@@ -1,5 +1,12 @@
 export { maySeePresence, type PresencePair } from './presence-rules';
-export { channelPresenceSchema } from './presence.schemas';
+export * from './presence.routes';
+export {
+  channelPresenceSchema,
+  presencePeerSchema,
+  presenceSelfSchema,
+  staffPresenceRowSchema,
+  staffPresenceSchema,
+} from './presence.schemas';
 export { presenceWhen, type PresenceWhenInput, type PresenceWords } from './presence-when';
 export {
   isOnline,
@@ -16,4 +23,4 @@ export type {
   PresenceSelf,
   StaffPresence,
   StaffPresenceRow,
-} from './presence.views';
+} from './presence.schemas';

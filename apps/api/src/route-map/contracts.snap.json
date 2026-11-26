@@ -1218,6 +1218,72 @@
    ]
   }
  },
+ "GET /presence/me": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "enabled"
+   ]
+  }
+ },
+ "GET /presence/staff": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "enabled": {
+     "type": "boolean"
+    },
+    "staff": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "profile_id": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string",
+        "enum": [
+         "admin",
+         "teacher",
+         "guardian",
+         "assistant",
+         "sales",
+         "student"
+        ]
+       },
+       "last_seen_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "name": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "profile_id",
+       "role",
+       "last_seen_at",
+       "name"
+      ]
+     }
+    }
+   },
+   "required": [
+    "enabled",
+    "staff"
+   ]
+  }
+ },
  "GET /pricing/catalog": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
