@@ -26,6 +26,17 @@ export interface SendOptions<S extends z.ZodType> {
   schema: S;
 }
 
+/** A file the API sent: its bytes and the response headers (Content-Disposition…). */
+export interface ApiBlob {
+  blob: Blob;
+  headers: Headers;
+}
+
+/** Files (CSV exports): what createApiClient adds to the JSON calls. */
+export interface BlobClient {
+  apiBlob(path: string, init?: RequestInit): Promise<ApiBlob>;
+}
+
 /**
  * The schema overloads parse the answer and throw `bad_response` on a mismatch. The generic ones
  * stay for blobs, 204s and the calls not moved to a schema yet.

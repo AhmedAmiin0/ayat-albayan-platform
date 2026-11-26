@@ -19,7 +19,9 @@ export function ExportsPanel({ period, month: initialMonth }: ExportsPanelProps)
   const [month, setMonth] = useState(initialMonth);
   const [busy, setBusy] = useState<ExportKind | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const span = t.dashboard.weekOf.replace('{from}', dayMonthLabel(period.from)).replace('{to}', dayMonthLabel(period.to));
+  const span = t.dashboard.weekOf
+    .replace('{from}', dayMonthLabel(period.from))
+    .replace('{to}', dayMonthLabel(period.to));
   const run = async (req: ExportRequest) => {
     setBusy(req.kind);
     setError(null);
@@ -32,7 +34,13 @@ export function ExportsPanel({ period, month: initialMonth }: ExportsPanelProps)
     }
   };
   const button = (req: ExportRequest, label: string) => (
-    <Button variant="secondary" size="sm" disabled={busy !== null} aria-label={`${t.exports.download}: ${label}`} onClick={() => void run(req)}>
+    <Button
+      variant="secondary"
+      size="sm"
+      disabled={busy !== null}
+      aria-label={`${t.exports.download}: ${label}`}
+      onClick={() => void run(req)}
+    >
       {busy === req.kind ? t.exports.preparing : t.exports.download}
     </Button>
   );
@@ -40,7 +48,8 @@ export function ExportsPanel({ period, month: initialMonth }: ExportsPanelProps)
     { kind: 'lessons' as const, label: t.exports.lessons },
     { kind: 'payments' as const, label: t.exports.payments },
   ];
-  const row = 'flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-rule py-2.5 last:border-b-0';
+  const row =
+    'flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-rule py-2.5 last:border-b-0';
   return (
     <section aria-labelledby="dash-exports" className="grid gap-1">
       <h2 id="dash-exports" className="font-display text-h4 font-bold text-ink">
