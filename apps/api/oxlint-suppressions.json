@@ -6282,9 +6282,6 @@
     "typescript/consistent-type-definitions": {
       "count": 2
     },
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     }
@@ -8694,7 +8691,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 6
     }
   },
   "src/modules/teaching/feedback/read/feedback.read.service.ts": {
