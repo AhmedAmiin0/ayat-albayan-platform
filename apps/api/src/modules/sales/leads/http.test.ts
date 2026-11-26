@@ -33,9 +33,12 @@ describe('http helpers (R-NFR-08)', () => {
     expect(parseOrThrow(pageQuery, { q: '0501' }).q).toBe('0501');
   });
 
-  it('throwIfDbError: unique violation → 409, others → plain error, null → nothing', () => {
+  it('throwIfDbError: duplicate_phone on a unique violation, else the default map', () => {
     expect(() => throwIfDbError(null)).not.toThrow();
-    expect(() => throwIfDbError(pgError('23505'))).toThrow(ConflictException);
-    expect(() => throwIfDbError(pgError('42P01'))).toThrow(/db:/);
+    expect(badRequestBody(() => throwIfDbError(pgError('23505')))).toMatchObject({
+      response: { code: 'duplicate_phone' },
+    });
+    expect(() => throwIfDbError(pgError('23503'))).toThrow(ConflictException);
+    expect(() => throwIfDbError(pgError('42P01'))).toThrow(/db error 42P01/);
   });
 });
