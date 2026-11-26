@@ -9,24 +9,34 @@ import { AREAS_FILE, listSpecs, loadAreas, pathMatches, SPEC_DIR } from './areas
 
 /** Problems with the map, as sentences (empty = fine). `specFiles`: paths under e2e/tests/ (folders allowed). */
 export function checkMap(map, specFiles, files) {
-  const problems = [];
   const inAreas = new Set(Object.values(map.areas).flatMap((a) => a.specs));
   const dev = new Set(map.developOnly);
-  for (const s of specFiles) {
-    if (!inAreas.has(s) && !dev.has(s))
-      problems.push(`${s} is in no area and not in developOnly: it would never run on a PR`);
-    if (inAreas.has(s) && dev.has(s))
-      problems.push(`${s} is in an area and in developOnly: pick one`);
-  }
   const known = new Set(specFiles);
-  for (const s of new Set([...inAreas, ...dev]))
-    if (!known.has(s)) problems.push(`${s} is listed but there is no ${SPEC_DIR}${s}`);
-  for (const [name, a] of Object.entries(map.areas))
-    for (const p of a.paths)
-      if (!files.some((f) => pathMatches(p, f)))
-        problems.push(`area «${name}»: ${p} matches no file`);
+  const missing = [...new Set([...inAreas, ...dev])]
+    .filter((s) => !known.has(s))
+    .map((s) => `${s} is listed but there is no ${SPEC_DIR}${s}`);
+  return [
+    ...specFiles.flatMap((s) => membership(s, inAreas, dev)),
+    ...missing,
+    ...unmatchedPaths(map, files),
+  ];
+}
+
+function membership(s, inAreas, dev) {
+  const problems = [];
+  if (!inAreas.has(s) && !dev.has(s))
+    problems.push(`${s} is in no area and not in developOnly: it would never run on a PR`);
+  if (inAreas.has(s) && dev.has(s))
+    problems.push(`${s} is in an area and in developOnly: pick one`);
   return problems;
 }
+
+const unmatchedPaths = (map, files) =>
+  Object.entries(map.areas).flatMap(([name, a]) =>
+    a.paths
+      .filter((p) => !files.some((f) => pathMatches(p, f)))
+      .map((p) => `area «${name}»: ${p} matches no file`),
+  );
 
 function main() {
   const root = fileURLToPath(new URL('../../../../', import.meta.url));

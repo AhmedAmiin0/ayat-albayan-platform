@@ -7,10 +7,11 @@ export const BUNDLES = /^packages\/shared\/i18n\/(ar|en)\.json$/;
 
 /** Every key path (a.b.c) whose value differs between two bundles (added, removed or changed). */
 export function changedKeys(before, after) {
+  const branch = (v) => v && typeof v === 'object' && !Array.isArray(v);
   const flat = (tree, prefix = '', out = new Map()) => {
     for (const [k, v] of Object.entries(tree ?? {})) {
       const path = prefix ? `${prefix}.${k}` : k;
-      if (v && typeof v === 'object' && !Array.isArray(v)) flat(v, path, out);
+      if (branch(v)) flat(v, path, out);
       else out.set(path, JSON.stringify(v));
     }
     return out;
@@ -48,13 +49,9 @@ export function keyUsers(keys, sources, ignore = () => false) {
   const unknown = [];
   for (const key of keys) {
     const re = keyPattern(key);
-    let found = false;
-    for (const [file, text] of sources) {
-      if (!re.test(text)) continue;
-      found = true;
-      if (!ignore(file)) users.add(file);
-    }
-    if (!found) unknown.push(key);
+    const hits = [...sources].filter(([, text]) => re.test(text)).map(([file]) => file);
+    for (const file of hits.filter((f) => !ignore(f))) users.add(file);
+    if (!hits.length) unknown.push(key);
   }
   return { users, unknown };
 }

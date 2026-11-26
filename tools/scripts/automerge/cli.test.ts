@@ -25,13 +25,20 @@ test('a mergeable PR writes the subject, the scrubbed body and action=merge', ()
 });
 
 test('a stale lockfile PR writes the comment', () => {
-  const compare = { base_commit: { sha: 'd'.repeat(40) }, merge_base_commit: { sha: 'b'.repeat(40) } };
-  const dir = gathered({ compare, files: [{ filename: 'pnpm-lock.yaml' }] });
+  const behind = { known: true, files: [{ filename: 'pnpm-lock.yaml' }] };
+  const dir = gathered({ behind, files: [{ filename: 'pnpm-lock.yaml' }] });
   assert.equal(run(dir)[0], 'action=comment');
   assert.match(readFileSync(join(dir, 'comment.txt'), 'utf8'), /needs update from develop/);
 });
 
-test('gh output of the wrong shape fails loudly instead of merging', () => {
+test('a lockfile PR reads the fallback the workflow writes as not known, and waits', () => {
+  const behind = { known: false, files: [] };
+  const dir = gathered({ behind, files: [{ filename: 'package.json' }] });
+  assert.equal(run(dir)[0], 'action=skip');
+});
+
+test('gathered output of the wrong shape fails loudly instead of merging', () => {
   assert.throws(() => run(gathered({ pr: { number: 'x' } })));
   assert.throws(() => run(gathered({ checks: [{ name: 'check' }] })));
+  assert.throws(() => run(gathered({ behind: { files: [] } })));
 });

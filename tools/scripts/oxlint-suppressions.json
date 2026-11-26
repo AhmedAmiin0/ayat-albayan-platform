@@ -77,15 +77,6 @@
     }
   },
   "ci-checks/e2e-areas/closure.mjs": {
-    "max-depth": {
-      "count": 3
-    },
-    "complexity": {
-      "count": 1
-    },
-    "no-unused-expressions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     }
@@ -101,37 +92,16 @@
     }
   },
   "ci-checks/e2e-areas/graph.mjs": {
-    "max-depth": {
-      "count": 9
-    },
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 2
-    },
     "stylistic/max-len": {
       "count": 2
     }
   },
   "ci-checks/e2e-areas/guard.mjs": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     }
   },
   "ci-checks/e2e-areas/i18n.mjs": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 2
-    },
     "stylistic/max-len": {
       "count": 2
     },
@@ -140,9 +110,6 @@
     }
   },
   "ci-checks/e2e-areas/parse.mjs": {
-    "max-depth": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     }
@@ -161,12 +128,6 @@
     }
   },
   "ci-checks/e2e-shards.mjs": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 3
-    },
     "stylistic/max-len": {
       "count": 9
     },

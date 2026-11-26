@@ -38,11 +38,11 @@ export const fileSchema = z.object({
   previous_filename: z.string().nullish(),
 });
 
-/** `compare/develop...<head>`: base_commit is the develop head. */
-export const compareSchema = z.object({
-  base_commit: z.object({ sha }),
-  merge_base_commit: z.object({ sha }),
-});
+/**
+ * What develop gained since the PR's merge base, as `git diff --name-only` of the two trees.
+ * `known` is false when the workflow could not read it.
+ */
+export const behindSchema = z.object({ known: z.boolean(), files: z.array(fileSchema) });
 
 export const commentSchema = z.object({ body: z.string() });
 
@@ -62,7 +62,7 @@ export const factsSchema = z.object({
   statuses: z.array(statusSchema),
   annotations: z.array(annotationSchema),
   files: z.array(fileSchema),
-  compare: compareSchema,
+  behind: behindSchema,
   comments: z.array(commentSchema),
   events: z.array(eventSchema),
   suites: z.array(suiteSchema),
@@ -74,7 +74,7 @@ export type CheckRun = z.infer<typeof checkRunSchema>;
 export type CommitStatus = z.infer<typeof statusSchema>;
 export type Annotation = z.infer<typeof annotationSchema>;
 export type ChangedFile = z.infer<typeof fileSchema>;
-export type Compare = z.infer<typeof compareSchema>;
+export type Behind = z.infer<typeof behindSchema>;
 export type Comment = z.infer<typeof commentSchema>;
 export type IssueEvent = z.infer<typeof eventSchema>;
 export type Suite = z.infer<typeof suiteSchema>;

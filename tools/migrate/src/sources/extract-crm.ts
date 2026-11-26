@@ -3,7 +3,7 @@
 import { cachePath, readJson, writeJson } from '../cache.ts';
 import type { CrmRow } from '../types.ts';
 import { type CrmReader, maxCursor, mergeById, selectAll } from './crm.ts';
-import { CRM_TABLES } from './crm.schema.ts';
+import { CRM_TABLES, type CrmTableSpec } from './crm.schema.ts';
 
 /** Per table: the newest cursor value extracted. `--since last` resumes from here. */
 type CrmCursor = Record<string, string>;
@@ -15,7 +15,7 @@ interface ExtractCrmOptions {
   accountId?: string;
 }
 
-export async function extractCrm(opts: ExtractCrmOptions): Promise<Record<string, number>> {
+function accountIdOf(opts: ExtractCrmOptions): string {
   // The academy's account (the only one with data). Its id is the owner's: env only, never committed.
   const accountId = opts.accountId ?? process.env.CRM_ACCOUNT_ID;
   if (!accountId) {
@@ -23,17 +23,31 @@ export async function extractCrm(opts: ExtractCrmOptions): Promise<Record<string
       'CRM_ACCOUNT_ID missing (tools/migrate/.env; value in .claude/artifacts/crm/crm.env)',
     );
   }
+  return accountId;
+}
+
+/** One table into its cache file; moves `cursor` to its newest row. Returns its row count. */
+async function extractTable(
+  opts: ExtractCrmOptions & { accountId: string },
+  spec: CrmTableSpec,
+  cursor: CrmCursor,
+): Promise<number> {
+  const since = opts.since === 'last' ? cursor[spec.table] : opts.since;
+  const fresh = await selectAll(opts.reader, { spec, accountId: opts.accountId, since });
+  const cached = since ? readJson<CrmRow[]>(cachePath.crm(spec.table), []) : [];
+  const rows = mergeById(cached, fresh);
+  writeJson(cachePath.crm(spec.table), rows);
+  const top = maxCursor(rows, spec.cursor);
+  if (top) cursor[spec.table] = top;
+  return rows.length;
+}
+
+export async function extractCrm(opts: ExtractCrmOptions): Promise<Record<string, number>> {
+  const accountId = accountIdOf(opts);
   const cursor = readJson<CrmCursor>(cachePath.crmCursor(), {});
   const counts: Record<string, number> = {};
   for (const spec of CRM_TABLES) {
-    const since = opts.since === 'last' ? cursor[spec.table] : opts.since;
-    const fresh = await selectAll(opts.reader, { spec, accountId, since });
-    const cached = since ? readJson<CrmRow[]>(cachePath.crm(spec.table), []) : [];
-    const rows = mergeById(cached, fresh);
-    writeJson(cachePath.crm(spec.table), rows);
-    const top = maxCursor(rows, spec.cursor);
-    if (top) cursor[spec.table] = top;
-    counts[spec.table] = rows.length;
+    counts[spec.table] = await extractTable({ ...opts, accountId }, spec, cursor);
   }
   writeJson(cachePath.crmCursor(), cursor);
   return counts;
