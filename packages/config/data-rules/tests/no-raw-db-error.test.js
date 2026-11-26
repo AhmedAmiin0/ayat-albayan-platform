@@ -14,6 +14,8 @@ testRule({ name: 'no-raw-db-error', rule: noRawDbErrorRule, lang: 'ts' }, {
     'throw new NotFoundException(error.code);',
     "const code = '23503';",
     'if (isUniqueViolation(error)) return null;',
+    'const answer = dbError(error);',
+    'log.warn(error.message);',
     { code: "export const UNIQUE_VIOLATION = '23505';", filename: ERRORS_UNIT },
   ],
   invalid: [
@@ -22,6 +24,7 @@ testRule({ name: 'no-raw-db-error', rule: noRawDbErrorRule, lang: 'ts' }, {
     { code: 'throw new Error(`read failed: ${error.message}`);', errors: [raw] },
     { code: 'if (res.error) throw new Error(res.error.message);', errors: [raw] },
     { code: "throw new Error('db: ' + error.message);", errors: [raw] },
+    { code: 'throw new Error(`read failed: ${res.error?.message}`);', errors: [raw] },
     { code: "if (error?.code === '23505') return null;", errors: [unique] },
   ],
 });
