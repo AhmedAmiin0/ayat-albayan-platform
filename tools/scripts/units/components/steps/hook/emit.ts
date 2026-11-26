@@ -40,8 +40,14 @@ export function hookText(s: Shape, name: string): string {
   ].join('\n');
 }
 
+/** With no props to infer from, the view names the hook's type arguments itself. */
+const typeArgs = (s: Shape): string =>
+  s.inputs.param === '' && s.fn.typeParameters !== undefined
+    ? `<${s.fn.typeParameters.map((t) => t.name.text).join(', ')}>`
+    : '';
+
 function viewBody(s: Shape, name: string): string {
-  const call = `use${name}(${s.inputs.arg})`;
+  const call = `use${name}${typeArgs(s)}(${s.inputs.arg})`;
   const own = s.outputs.length === 0 ? `${call};` : `const { ${s.outputs.join(', ')} } = ${call};`;
   const lines = [
     ...(s.theme === undefined ? [] : [textOf(s.theme, s.sf)]),

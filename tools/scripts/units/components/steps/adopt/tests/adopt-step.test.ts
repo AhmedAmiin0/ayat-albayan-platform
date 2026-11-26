@@ -59,3 +59,18 @@ test('private values follow the export that reads them', () => {
   const own = adopted(run({ ...BASE, [OLD]: hook })).files[`${DIR}/use-my-payment-amount.ts`];
   assert.match(own ?? '', /const KEY = 1;\nconst read = \(\) => KEY;/);
 });
+
+test('a test mock of the hook module follows the hook into the folder', () => {
+  const testPath = `${MONEY}/money.test.tsx`;
+  const mock = `import { useMyPaymentAmount } from './use-my-payment-amount';
+vi.mock('./use-my-payment-amount', () => ({ useMyPaymentAmount: vi.fn() }));
+vi.mock('./api');
+`;
+  const out = adopted(run({ ...BASE, [testPath]: mock })).files[testPath] ?? '';
+  assert.match(
+    out,
+    /import \{ useMyPaymentAmount \} from '\.\/MyPaymentAmount\/use-my-payment-amount';/,
+  );
+  assert.match(out, /vi\.mock\('\.\/MyPaymentAmount\/use-my-payment-amount', \(\) =>/);
+  assert.match(out, /vi\.mock\('\.\/api'\);/);
+});
