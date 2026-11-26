@@ -90,6 +90,8 @@ export interface UserStore {
   forgetBrowsers(id: string): Promise<void>;
   /** Is the phone on another profile or on a teacher record that is not this profile's? */
   phoneTaken(phone: string, exceptProfile: string): Promise<boolean>;
+  /** Does a teacher record carry the phone (the one a new teacher row would take)? */
+  teacherPhoneHeld(phone: string): Promise<boolean>;
   linkTarget(kind: LinkKind, id: string): Promise<LinkTarget | null>;
   /** Sets profile_id only while it is still null; false = somebody linked it first. */
   link(kind: LinkKind, id: string, profileId: string): Promise<boolean>;

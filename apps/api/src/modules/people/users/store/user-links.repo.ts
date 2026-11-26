@@ -2,7 +2,7 @@ import type { LinkKind } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { phoneAware } from '@/modules/people/users/users.errors';
-import { adoptTeacherPhone } from './teacher-phone.repo';
+import { adoptTeacherPhone, teacherHoldsPhone } from './teacher-phone.repo';
 import * as links from './users.links.repo';
 import type { NewTeacher } from './users.store';
 
@@ -21,6 +21,10 @@ export class UserLinksRepo {
 
   phoneTaken(phone: string, exceptProfile: string) {
     return links.phoneTaken(this.db, { phone, except: exceptProfile });
+  }
+
+  teacherPhoneHeld(phone: string) {
+    return teacherHoldsPhone(this.db, phone);
   }
 
   linkTarget(kind: LinkKind, id: string) {

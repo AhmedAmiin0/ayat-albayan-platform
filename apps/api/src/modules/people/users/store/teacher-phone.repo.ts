@@ -44,3 +44,13 @@ export async function adoptTeacherPhone(
   // A unique clash means someone took the number meanwhile: the profile keeps none.
   if (error && !isUniqueViolation(error)) throw pgError(error);
 }
+
+/** teachers.phone_e164 is unique: a new teacher row cannot take a number a teacher row holds. */
+export async function teacherHoldsPhone(db: Db, phone: string): Promise<boolean> {
+  const { count, error } = await db
+    .from('teachers')
+    .select('id', { count: 'exact', head: true })
+    .eq('phone_e164', phone);
+  if (error) throw pgError(error);
+  return (count ?? 0) > 0;
+}

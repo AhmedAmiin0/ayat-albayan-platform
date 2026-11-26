@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { adoptTeacherPhone, phoneIsFree } from './teacher-phone.repo';
+import { adoptTeacherPhone, phoneIsFree, teacherHoldsPhone } from './teacher-phone.repo';
 
 const PHONE = '+966500000002';
 const ctx = { teacherId: 't1', profileId: 'p1' };
@@ -50,5 +50,17 @@ describe('adoptTeacherPhone (docs/46 A7)', () => {
   it('phoneIsFree', () => {
     expect(phoneIsFree({ profiles: 0, guardians: 0 })).toBe(true);
     expect(phoneIsFree({ profiles: 0, guardians: 2 })).toBe(false);
+  });
+});
+
+describe('teacherHoldsPhone', () => {
+  it('counts the teacher rows that carry the number; an error throws', async () => {
+    const held = fakeDb({ teachers: [{ count: 1 }] });
+    expect(await teacherHoldsPhone(held.db, PHONE)).toBe(true);
+    expect(held.calls.find((c) => c.method === 'eq')?.args).toEqual(['phone_e164', PHONE]);
+    const free = fakeDb({ teachers: [{ count: 0 }] });
+    expect(await teacherHoldsPhone(free.db, PHONE)).toBe(false);
+    const broken = fakeDb({ teachers: [{ error: { message: 'down' } }] });
+    await expect(teacherHoldsPhone(broken.db, PHONE)).rejects.toThrow();
   });
 });

@@ -79,7 +79,7 @@ export class UsersUpdateService {
     }
     const record = this.recordOf({ input, before, to: chosen?.choice.role });
     await this.writer.check(id, input, record);
-    await this.writer.write(id, { patch, input, record });
+    await this.writer.write(id, { patch, input, record, before });
     if (chosen) this.journal.forget();
     await this.writer.setEmail(id, input.email);
     const after = await this.users.row(id);
