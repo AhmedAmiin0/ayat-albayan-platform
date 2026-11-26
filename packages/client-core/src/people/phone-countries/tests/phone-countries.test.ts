@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { COUNTRIES } from '../../family-auth';
 import { countriesOfPhone } from '../phone-countries';
 
 const codes = (phone: string): string[] => countriesOfPhone(phone).map((c) => c.code);
@@ -25,11 +26,28 @@ describe('countriesOfPhone — where a number is from, by its calling code', () 
     ]);
   });
 
-  it('a shared code is every country that has it, in list order', () => {
-    expect(codes('+12025550123')).toEqual(['CA', 'UM', 'US']);
-    expect(codes('+14165550101')).toEqual(['CA', 'UM', 'US']);
-    expect(codes('+77010000000')).toEqual(['KZ', 'RU']);
-    expect(codes('+447700900123')).toEqual(['GB', 'GG', 'IM', 'JE']);
+  it('a code two full countries share is both, the larger first', () => {
+    expect(codes('+12025550123')).toEqual(['US', 'CA']);
+    expect(codes('+14165550101')).toEqual(['US', 'CA']);
+    expect(codes('+77010000000')).toEqual(['RU', 'KZ']);
+    expect(codes('+79161234567')).toEqual(['RU', 'KZ']);
+  });
+
+  it.each([
+    ['+447700900123', 'GB'],
+    ['+212612345678', 'MA'],
+    ['+61412345678', 'AU'],
+    ['+393331234567', 'IT'],
+    ['+358401234567', 'FI'],
+    ['+4791234567', 'NO'],
+    ['+64211234567', 'NZ'],
+  ])('%s, a code a country shares with its territories, is %s alone', (phone, code) => {
+    expect(codes(phone)).toEqual([code]);
+  });
+
+  it('every calling code in the list names at least one country, and two at most', () => {
+    const sizes = COUNTRIES.map((c) => countriesOfPhone(`${c.dial}5550123456`).length);
+    expect(sizes.every((n) => n === 1 || n === 2)).toBe(true);
   });
 
   it('the longest code wins over a shorter one it starts with', () => {

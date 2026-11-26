@@ -41,8 +41,8 @@ async function sheet(phone: string) {
 
 test.each([
   ['+201000000005', '🇪🇬 Egypt', '+20'],
-  ['+77010000000', 'Kazakhstan or Russia', '+7'],
-  ['+447700900123', 'United Kingdom or Guernsey or Isle of Man', '+44'],
+  ['+77010000000', 'Russia or Kazakhstan', '+7'],
+  ['+447700900123', '🇬🇧 United Kingdom', '+44'],
 ])('English UI, %s: the line and the country names are English', async (phone, country, code) => {
   await sheet(phone);
   expect(screen.getByText(line(country, code))).toBeTruthy();

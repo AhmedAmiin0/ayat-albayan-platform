@@ -18,24 +18,19 @@ describe('phoneCountryLine — the sheet line that says where the chat number is
     expect(inEnglish('+2348031234567')).toBe("Client's country by number: 🇳🇬 Nigeria (+234)");
   });
 
-  it('a code two or three countries share: their names joined, no flag', () => {
-    expect(inArabic('+77010000000')).toBe('دولة العميل حسب الرقم: كازاخستان أو روسيا (+7)');
-    expect(inEnglish('+77010000000')).toBe("Client's country by number: Kazakhstan or Russia (+7)");
+  it('a code two full countries share: both names joined, the larger first, no flag', () => {
+    expect(inArabic('+12025550123')).toBe('دولة العميل حسب الرقم: الولايات المتحدة أو كندا (+1)');
     expect(inEnglish('+12025550123')).toBe(
-      "Client's country by number: Canada or U.S. Outlying Islands or United States (+1)",
+      "Client's country by number: United States or Canada (+1)",
     );
-    expect(inArabic('+12025550123')).toBe(
-      'دولة العميل حسب الرقم: كندا أو جزر الولايات المتحدة الصغيرة النائية أو الولايات المتحدة (+1)',
-    );
+    expect(inArabic('+77010000000')).toBe('دولة العميل حسب الرقم: روسيا أو كازاخستان (+7)');
+    expect(inEnglish('+77010000000')).toBe("Client's country by number: Russia or Kazakhstan (+7)");
   });
 
-  it('a code more than three countries share names the first three in list order', () => {
-    expect(inArabic('+447700900123')).toBe(
-      'دولة العميل حسب الرقم: المملكة المتحدة أو غيرنزي أو جزيرة مان (+44)',
-    );
-    expect(inEnglish('+447700900123')).toBe(
-      "Client's country by number: United Kingdom or Guernsey or Isle of Man (+44)",
-    );
+  it('a code a country shares with its territories names the country alone, with its flag', () => {
+    expect(inArabic('+447700900123')).toBe('دولة العميل حسب الرقم: 🇬🇧 المملكة المتحدة (+44)');
+    expect(inEnglish('+447700900123')).toBe("Client's country by number: 🇬🇧 United Kingdom (+44)");
+    expect(inArabic('+212612345678')).toBe('دولة العميل حسب الرقم: 🇲🇦 المغرب (+212)');
   });
 
   it('a longer code is its own country, not the shared shorter one', () => {
@@ -54,7 +49,7 @@ describe('phoneCountryLine — the sheet line that says where the chat number is
     const line = (phone: string) =>
       phoneCountryLine(phone, { lang: 'en', words: en.inbox.quote, wrap });
     expect(line('+201000000005')).toBe("Client's country by number: 🇪🇬 Egypt (<+20>)");
-    expect(line('+77010000000')).toBe("Client's country by number: Kazakhstan or Russia (<+7>)");
+    expect(line('+77010000000')).toBe("Client's country by number: Russia or Kazakhstan (<+7>)");
   });
 
   it('fills the slots wherever the label puts them', () => {

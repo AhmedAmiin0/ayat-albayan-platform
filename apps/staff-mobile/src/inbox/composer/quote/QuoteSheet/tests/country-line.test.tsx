@@ -47,11 +47,11 @@ test.each([
 );
 
 test.each([
-  ['+77010000000', 'كازاخستان أو روسيا', '+7'],
-  ['+12025550123', 'كندا أو جزر الولايات المتحدة الصغيرة النائية أو الولايات المتحدة', '+1'],
-  ['+447700900123', 'المملكة المتحدة أو غيرنزي أو جزيرة مان', '+44'],
+  ['+12025550123', 'الولايات المتحدة أو كندا', '+1'],
+  ['+77010000000', 'روسيا أو كازاخستان', '+7'],
+  ['+447700900123', '🇬🇧 المملكة المتحدة', '+44'],
 ])(
-  '%s: a shared code joins its countries, three at most, with no flag',
+  '%s: two countries sharing a code are joined; a country and its territories is the country',
   async (phone, names, code) => {
     await sheet(phone);
     expect(screen.getByText(line(names, code))).toBeTruthy();

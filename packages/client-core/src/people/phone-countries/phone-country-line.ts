@@ -2,17 +2,13 @@ import { type Country, nameOf } from '../family-auth';
 import { countriesOfPhone } from './phone-countries';
 import type { PhoneCountryLineOptions } from './phone-countries.types';
 
-/** A shared code names its first countries only: +44 has four, and a fourth name adds noise. */
-const MAX_NAMES = 3;
-
 const unwrapped = (code: string): string => code;
 
-/** One country shows its flag; a shared code joins the names of its first countries. */
+/** One country shows its flag; two that share a code are joined by name. */
 function namesOf(countries: readonly Country[], o: PhoneCountryLineOptions): string {
   const [only] = countries;
   if (only !== undefined && countries.length === 1) return `${only.flag} ${nameOf(only, o.lang)}`;
-  const names = countries.slice(0, MAX_NAMES).map((c) => nameOf(c, o.lang));
-  return names.join(` ${o.words.countryJoin} `);
+  return countries.map((c) => nameOf(c, o.lang)).join(` ${o.words.countryJoin} `);
 }
 
 /**

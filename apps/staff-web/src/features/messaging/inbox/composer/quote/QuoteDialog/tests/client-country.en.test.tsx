@@ -1,4 +1,3 @@
-import { COUNTRIES } from '@ab/client-core';
 import { offerText, type Quote } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
 import en from '@ab/shared/i18n/en.json';
@@ -34,9 +33,7 @@ it('an English UI reads the line in English', async () => {
 
 it('a shared code joins the English names with «or»', async () => {
   await showSheet({ phone_e164: '+79161234567' });
-  const names = COUNTRIES.filter((c) => c.dial === '+7').map((c) => c.en);
-  expect(names).toHaveLength(2);
-  expect(line()).toBe(`Client's country by number: ${names.join(' or ')} (+7)`);
+  expect(line()).toBe("Client's country by number: Russia or Kazakhstan (+7)");
 });
 
 it('the controls are English while the client’s message stays Arabic', async () => {

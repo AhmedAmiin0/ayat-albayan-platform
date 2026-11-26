@@ -1,7 +1,7 @@
 export { CODE_STATUS_KEY, CODE_STATUS_STALE_MS, codesOpen, type CodesSide } from './codes-open';
 export { CODE_LENGTH, codeDigits, isWholeCode } from './code-digits';
 export { COUNTRIES, defaultCountry, nameOf, USUAL, type Country } from './countries';
-export { splitInternational } from './country-dial';
+export { mainCountryOf, splitInternational } from './country-dial';
 export { orderCountries, searchCountries } from './country-search';
 export { checkPhone, type PhoneCheck, type PhoneState } from './phone-check';
 export {

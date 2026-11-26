@@ -1,4 +1,3 @@
-import { COUNTRIES } from '@ab/client-core';
 import { offerText, priceListText, type PriceListResponse, type Quote } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
 import { cleanup, screen, waitFor, within } from '@testing-library/react';
@@ -19,8 +18,6 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 const EGYPT = '+201001234567';
 const USD = '/pricing/quote?duration=45&tier=standard&students=1&discount=0';
 const line = () => screen.queryByTestId('quote-client-country');
-/** The Arabic names of the countries sharing `dial`, in the list's order. */
-const sharing = (dial: string) => COUNTRIES.filter((c) => c.dial === dial).map((c) => c.ar);
 
 beforeEach(() => apiFetch.mockImplementation(async (path: string) => fakePricingApi(path)));
 afterEach(() => {
@@ -44,20 +41,14 @@ it('the code is its own left-to-right island, so the line cannot print «20+»',
   expect([code.tagName, code.getAttribute('dir')]).toEqual(['BDI', 'ltr']);
 });
 
-it('a shared code joins its countries’ names, without a flag', async () => {
+it('a code two countries share joins both names, without a flag', async () => {
   await showSheet({ phone_e164: '+12025550123' });
-  const names = sharing('+1');
-  expect(names.length).toBeGreaterThan(1);
-  expect(line()?.textContent).toBe(`دولة العميل حسب الرقم: ${names.join(' أو ')} (+1)`);
+  expect(line()?.textContent).toBe('دولة العميل حسب الرقم: الولايات المتحدة أو كندا (+1)');
 });
 
-it('a code shared by more than three names the first three only', async () => {
+it('a code a country shares with its territories names the country alone', async () => {
   await showSheet({ phone_e164: '+447700900123' });
-  const names = sharing('+44');
-  expect(names).toHaveLength(4);
-  const text = line()?.textContent;
-  expect(text).toBe(`دولة العميل حسب الرقم: ${names.slice(0, 3).join(' أو ')} (+44)`);
-  expect(text).not.toContain(names.at(-1));
+  expect(line()?.textContent).toBe('دولة العميل حسب الرقم: 🇬🇧 المملكة المتحدة (+44)');
 });
 
 it('a number whose code no country has shows no line', async () => {

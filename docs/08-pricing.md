@@ -84,7 +84,7 @@ The «عرض سعر» sheet in the staff chat has two modes: «باقة واحد
 جميع الباقات تبدأ بجلسة تجريبية مجانية بالكامل — جرّب أولاً ثم قرّر.
 ```
 
-**Client's country from the number.** Above the steps the sheet says where the chat's number is from, for any country in the calling-code list (`packages/shared/data/countries.json`): the longest calling code the E.164 number starts with. One country shows its flag and name («🇪🇬 مصر (+20)»); a shared code (+1, +7, +44) joins the names of its countries in list order with «أو», the first three at most («المملكة المتحدة أو غيرنزي أو جزيرة مان (+44)»); an unknown code shows nothing. It is information only: the country step still defaults to one of the five site countries, else «دولة أخرى (بالدولار)», and nothing of it goes into the client's message.
+**Client's country from the number.** Above the steps the sheet says where the chat's number is from, for any country in the calling-code list (`packages/shared/data/countries.json`): the longest calling code the E.164 number starts with. One country shows its flag and name («🇪🇬 مصر (+20)»); a code two countries share joins both names with «أو», the larger first («الولايات المتحدة أو كندا (+1)», «روسيا أو كازاخستان (+7)»); a code a country shares with its territories names the country alone («🇬🇧 المملكة المتحدة (+44)»); an unknown code shows nothing. It is information only: the country step still defaults to one of the five site countries, else «دولة أخرى (بالدولار)», and nothing of it goes into the client's message.
 
 ## 4. Currency API
 
