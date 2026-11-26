@@ -1,19 +1,9 @@
 import { phoneCountryLine } from '@ab/client-core';
-import { ROUNDING_MODES } from '@ab/money';
-import { isolateLtr, locale, t, type SegmentOption } from '@ab/web-kit';
+import { isolateLtr, locale, t } from '@ab/web-kit';
 import { CalcSteps, SegmentStep } from '@/features/finance/pricing';
 import { CustomAmountToggle, CustomPriceField } from '@/features/finance/subscriptions';
-import type { QuoteMode } from '@/features/messaging/inbox/composer/quote/use-quote-offer.types';
 import type { QuoteChoicesProps } from './QuoteChoices.types';
-
-const MODE_OPTIONS: SegmentOption<QuoteMode>[] = [
-  { value: 'one', label: t.inbox.quote.mode.one },
-  { value: 'all', label: t.inbox.quote.mode.all },
-];
-const ROUNDING_OPTIONS = ROUNDING_MODES.map((mode) => ({
-  value: mode,
-  label: t.inbox.quote.rounding[mode],
-}));
+import { MODE_OPTIONS, ROUNDING_OPTIONS } from './quote-choices.helpers';
 
 /**
  * What the staff member chooses on the sheet. The line about the number's country is for them

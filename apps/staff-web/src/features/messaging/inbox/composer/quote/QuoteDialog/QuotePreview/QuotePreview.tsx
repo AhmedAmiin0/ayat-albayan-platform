@@ -1,7 +1,6 @@
 import { cn, FormAlert, t } from '@ab/web-kit';
 import type { QuotePreviewProps } from './QuotePreview.types';
-
-const TEXT = 'whitespace-pre-line rounded-md border border-rule bg-sunk p-3 text-sm text-ink';
+import { PREVIEW_TEXT } from './quote-preview.helpers';
 
 /** The text exactly as the client will get it, or why there is none yet. */
 export function QuotePreview({ text, held, query }: QuotePreviewProps) {
@@ -13,7 +12,7 @@ export function QuotePreview({ text, held, query }: QuotePreviewProps) {
       {query.isError && <FormAlert>{t.common.error}</FormAlert>}
       {text === null && query.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
       {text !== null && (
-        <p data-testid="quote-text" className={cn(TEXT, held && 'opacity-60')}>
+        <p data-testid="quote-text" className={cn(PREVIEW_TEXT, held && 'opacity-60')}>
           {text}
         </p>
       )}

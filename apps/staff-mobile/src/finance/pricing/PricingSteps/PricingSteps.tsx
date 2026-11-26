@@ -1,25 +1,15 @@
-import { DISCOUNTS, SITE_COUNTRIES, STUDENTS_MAX, STUDENTS_MIN } from '@ab/money';
-import { t, FilterPills, type FilterPill, Note, Section } from '@ab/mobile-kit';
+import { STUDENTS_MAX, STUDENTS_MIN } from '@ab/money';
+import { t, FilterPills, Note, Section } from '@ab/mobile-kit';
 import { DiscountField } from '@/finance/pricing/DiscountField';
-import type { CountryChoice } from '@/finance/pricing/selection';
 import { Stepper } from '@/finance/pricing/Stepper';
 import { PlanSteps } from './PlanSteps';
 import type { PricingStepsProps } from './PricingSteps.types';
-
-const p = t.pricing;
-
-const COUNTRIES: readonly FilterPill<CountryChoice>[] = [
-  ...SITE_COUNTRIES.map((c) => ({ value: c, label: p.countries[c] })),
-  { value: 'other', label: p.otherCountry },
-];
-const DISCOUNT_PILLS = DISCOUNTS.map((d) => {
-  const value = `${d}` as const;
-  return { value, label: p.discounts[value] };
-});
+import { COUNTRIES, DISCOUNT_PILLS } from './pricing-steps.helpers';
 
 /** The calculator's steps (docs/08 §3). As on the site, any discount may also be typed. */
 export function PricingSteps(props: PricingStepsProps) {
   const { selection: s, onChange, planSteps = true, discountExtra } = props;
+  const p = t.pricing;
   return (
     <>
       <Section title={p.steps.country}>

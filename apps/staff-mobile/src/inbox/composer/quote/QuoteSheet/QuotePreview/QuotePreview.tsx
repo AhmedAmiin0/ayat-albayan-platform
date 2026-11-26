@@ -1,22 +1,15 @@
-import { ActivityIndicator } from 'react-native';
-import { t, shape, space, type, useTheme, AppText, ErrorState, Section } from '@ab/mobile-kit';
+import { t, shape, space, type, useTheme, AppText, Section } from '@ab/mobile-kit';
 import type { QuotePreviewProps } from './QuotePreview.types';
-
-/** A held text is the last choice's and may not leave, so it is dimmed. */
-const HELD_OPACITY = 0.6;
+import { HELD_OPACITY } from './quote-preview.helpers';
+import { QuoteWaiting } from './QuoteWaiting';
 
 /** The message as the client will read it; until a price comes, the wait or the failed load. */
 export function QuotePreview({ offer }: QuotePreviewProps) {
   const { color } = useTheme();
-  const waiting = offer.failed ? (
-    <ErrorState onRetry={offer.retry} />
-  ) : (
-    <ActivityIndicator color={color.lapis} />
-  );
   return (
     <Section title={t.inbox.quote.preview}>
       {offer.text === null ? (
-        waiting
+        <QuoteWaiting offer={offer} />
       ) : (
         <AppText
           testID="quote-preview"

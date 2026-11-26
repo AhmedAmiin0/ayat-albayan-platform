@@ -1,23 +1,12 @@
-import { CUSTOM_COUNT_MAX, CUSTOM_COUNT_MIN, PRICING_DURATIONS } from '@ab/money';
-import { t, FilterPills, type FilterPill, Note, Section } from '@ab/mobile-kit';
-import type { PlanChoice } from '@/finance/pricing/selection';
+import { CUSTOM_COUNT_MAX, CUSTOM_COUNT_MIN } from '@ab/money';
+import { t, FilterPills, Note, Section } from '@ab/mobile-kit';
 import { Stepper } from '@/finance/pricing/Stepper';
 import type { PlanStepsProps } from './PlanSteps.types';
-
-const p = t.pricing;
-
-const DURATIONS = PRICING_DURATIONS.map((d) => {
-  const value = `${d}` as const;
-  return { value, label: p.durations[value] };
-});
-const BY_FREQUENCY = ['weekly', 'starter', 'standard', 'premium', 'monthly', 'bulk'] as const;
-const PLANS: readonly FilterPill<PlanChoice>[] = [
-  ...BY_FREQUENCY.map((id) => ({ value: id, label: p.frequencies[id] })),
-  { value: 'custom', label: p.customLabel },
-];
+import { DURATIONS, PLANS } from './plan-steps.helpers';
 
 /** The two steps that pick one package: the lesson's duration, then the package or a count. */
 export function PlanSteps({ selection: s, onChange }: PlanStepsProps) {
+  const p = t.pricing;
   return (
     <>
       <Section title={p.steps.duration}>
