@@ -84,9 +84,9 @@ describe('SubscriptionsPage (R-SUB-01/02)', () => {
 
   it('a task is marked done', async () => {
     renderPage();
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue({ ...TASK, done_at: '2026-10-03T09:00:00Z' });
     fireEvent.click(await screen.findByRole('button', { name: t.dashboard.taskDone }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin-tasks/k1/done'));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin-tasks/k1/done', undefined));
   });
 
   it('new package: pick the student, the API quote is shown, saved with calculator inputs only', async () => {
