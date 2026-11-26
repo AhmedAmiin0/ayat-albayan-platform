@@ -15,8 +15,8 @@ const ORDER = {
   domainError: (args) => args,
   waHttpError: ([code, status, ...rest]) => [status, code, ...rest],
 };
-const OPEN = new Set(['(', '[', '{']);
-const CLOSE = new Set([')', ']', '}']);
+const DEPTH = { '(': 1, '[': 1, '{': 1, ')': -1, ']': -1, '}': -1 };
+const QUOTES = new Set(["'", '"', '`']);
 
 /** The index past a string literal starting at `i`, template literals included. */
 function skipString(text, i) {
@@ -26,24 +26,27 @@ function skipString(text, i) {
   return j + 1;
 }
 
-/** The top-level arguments of the call whose `(` is at `open`, and the index of its `)`. */
-function argsOf(text, open) {
-  const args = [];
+/** The index after the char at `i`, past a whole string literal when one starts there. */
+const next = (text, i) => (QUOTES.has(text[i]) ? skipString(text, i) : i + 1);
+
+/** The index of the `)` closing the call opened at `open`, and its top-level commas. */
+function closeOf(text, open) {
+  const commas = [];
   let depth = 0;
-  let start = open + 1;
-  for (let i = open + 1; i < text.length; ) {
-    const c = text[i];
-    if (c === "'" || c === '"' || c === '`') { i = skipString(text, i); continue; }
-    if (OPEN.has(c)) depth += 1;
-    if (CLOSE.has(c) && depth === 0) {
-      args.push(text.slice(start, i));
-      return { args: args.map((a) => a.trim()).filter((a) => a !== ''), end: i };
-    }
-    if (CLOSE.has(c)) depth -= 1;
-    if (c === ',' && depth === 0) { args.push(text.slice(start, i)); start = i + 1; }
-    i += 1;
+  for (let i = open + 1; i < text.length; i = next(text, i)) {
+    depth += QUOTES.has(text[i]) ? 0 : (DEPTH[text[i]] ?? 0);
+    if (depth < 0) return { end: i, commas };
+    if (depth === 0 && text[i] === ',') commas.push(i);
   }
   throw new Error(`unbalanced call at ${open}`);
+}
+
+/** The top-level arguments of the call whose `(` is at `open`, and the index of its `)`. */
+function argsOf(text, open) {
+  const { end, commas } = closeOf(text, open);
+  const bounds = [open, ...commas, end];
+  const args = bounds.slice(1).map((b, k) => text.slice(bounds[k] + 1, b).trim());
+  return { args: args.filter((a) => a !== ''), end };
 }
 
 function rewriteCalls(text) {
