@@ -45,26 +45,24 @@ test('the automerge job itself is ignored while it runs', () => {
 });
 
 test('a cancelled run is superseded by a later success of the same check on the head', () => {
-  const twice = [aRun('pr title', { conclusion: 'cancelled' }), aRun('pr title')];
+  const twice = [aRun('secret-scan', { conclusion: 'cancelled' }), aRun('secret-scan')];
   assert.equal(verdict({ checks: [...base, ...twice] }), null);
-  const alone = [aRun('pr title', { conclusion: 'cancelled' })];
-  assert.match(verdict({ checks: [...base, ...alone] }) ?? '', /not green: pr title cancelled/);
-  const failedToo = [aRun('pr title', { conclusion: 'failure' }), aRun('pr title')];
-  assert.match(verdict({ checks: [...base, ...failedToo] }) ?? '', /pr title failure/);
+  const alone = [aRun('secret-scan', { conclusion: 'cancelled' })];
+  assert.match(verdict({ checks: [...base, ...alone] }) ?? '', /not green: secret-scan cancelled/);
+  const failedToo = [aRun('secret-scan', { conclusion: 'failure' }), aRun('secret-scan')];
+  assert.match(verdict({ checks: [...base, ...failedToo] }) ?? '', /secret-scan failure/);
 });
 
-test('a failed run is superseded only by a newer success of the same check', () => {
-  const fixed = [aRun('pr title', { id: 1, conclusion: 'failure' }), aRun('pr title', { id: 2 })];
-  assert.equal(verdict({ checks: [...base, ...fixed] }), null);
-  const broken = [aRun('pr title', { id: 2, conclusion: 'failure' }), aRun('pr title', { id: 1 })];
-  assert.match(verdict({ checks: [...base, ...broken] }) ?? '', /not green: pr title failure/);
-  const other = [aRun('pr title', { id: 1, conclusion: 'failure' }), aRun('guards', { id: 2 })];
-  assert.match(verdict({ checks: [...base, ...other] }) ?? '', /not green: pr title failure/);
-  const slow = [aRun('e2e (2)', { id: 1, conclusion: 'timed_out' }), aRun('e2e (2)', { id: 2 })];
-  assert.equal(verdict({ checks: [...base, ...slow] }), null);
+test('a failed check stays red when another workflow has a passing job of the same name', () => {
+  const twice = [aRun('check', { conclusion: 'failure' }), aRun('check')];
+  assert.match(verdict({ checks: [aRun('guards'), ...twice] }) ?? '', /not green: check failure/);
 });
 
-test('a run still in progress is never superseded', () => {
-  const stuck = aRun('e2e (2)', { id: 1, status: 'in_progress', conclusion: null });
-  assert.match(verdict({ checks: [...base, stuck, aRun('e2e (2)', { id: 2 })] }) ?? '', /pending/);
+test('the title check is left to the live title rule, whatever its runs say', () => {
+  const failed = aRun('pr title', { conclusion: 'failure' });
+  const edited = [aRun('pr title', { conclusion: 'cancelled' }), failed, aRun('pr title')];
+  assert.equal(verdict({ checks: [...base, ...edited] }), null);
+  assert.equal(verdict({ checks: [...base, failed] }), null);
+  const running = aRun('pr title', { status: 'in_progress', conclusion: null });
+  assert.equal(verdict({ checks: [...base, running] }), null);
 });
