@@ -28,7 +28,9 @@ const refine = (req: z.infer<typeof changeBase>, ctx: z.RefinementCtx) => refine
 export const courseChangeCheckSchema = changeBase.superRefine(refine);
 
 /** POST …/course/change: idempotent on clientRequestId (rule 8). */
-export const courseChangeSchema = changeBase.extend({ clientRequestId: z.uuid() }).superRefine(refine);
+export const courseChangeSchema = changeBase
+  .extend({ clientRequestId: z.uuid() })
+  .superRefine(refine);
 
 /** GET /booking/course/change?subscriptionId= (the admin's read of a course to change). */
 export const courseChangeQuerySchema = z.object({ subscriptionId: z.uuid() });

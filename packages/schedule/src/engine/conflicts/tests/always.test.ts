@@ -3,7 +3,10 @@ import { allDayRows } from '../../free-slots';
 import { findConflicts, type ConflictInput } from '../conflicts';
 
 // settings.teachers_always_available: the grid is every day 00:00–24:00 Riyadh (UTC+3).
-const occ = (start: string, end: string) => ({ starts_at: new Date(start), ends_at: new Date(end) });
+const occ = (start: string, end: string) => ({
+  starts_at: new Date(start),
+  ends_at: new Date(end),
+});
 const AT_3 = occ('2026-10-04T00:00:00Z', '2026-10-04T00:45:00Z'); // Sun 03:00–03:45 Riyadh
 const OVER_MIDNIGHT = occ('2026-10-04T20:30:00Z', '2026-10-04T21:15:00Z'); // Sun 23:30 → Mon 00:15
 const base: ConflictInput = {
@@ -38,8 +41,8 @@ describe('findConflicts with every teacher available 24/7', () => {
 
   it('without the switch the saved grid still says outside_availability at 03:00', () => {
     const evening = [{ weekday: 0, start_time: '16:00', end_time: '22:00', tz: 'Asia/Riyadh' }];
-    expect(findConflicts({ ...base, proposed: [AT_3], availability: evening }).map((c) => c.kind)).toEqual([
-      'outside_availability',
-    ]);
+    expect(
+      findConflicts({ ...base, proposed: [AT_3], availability: evening }).map((c) => c.kind),
+    ).toEqual(['outside_availability']);
   });
 });
