@@ -71,7 +71,10 @@ export function ContactStep({ value, withDuration, onChange, onNext }: ContactSt
       ) : null}
       {group(
         t.familyAuth.contactIsSelf.label,
-        <ContactIsSelfPills value={value.contactIsSelf === true} onChange={(contactIsSelf) => onChange({ contactIsSelf })} />,
+        <ContactIsSelfPills
+          value={value.contactIsSelf === true}
+          onChange={(contactIsSelf) => onChange({ contactIsSelf })}
+        />,
       )}
       <Note>{t.familyAuth.contactIsSelf.hint}</Note>
       <Field

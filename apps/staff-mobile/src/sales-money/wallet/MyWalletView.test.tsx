@@ -14,19 +14,25 @@ const bellRow = (id: string): NotificationItem =>
   ({ id, kind: 'commission_earned', title: '', body: '', data: {}, created_at: '2026-10-29T16:42:15Z', read_at: null });
 let bell: NotificationItem[] = [];
 
-function serve(rows = [myCommission()], over: { wallet?: object; total?: number; earningsDown?: boolean } = {}) {
+function serve(
+  rows = [myCommission()],
+  over: { wallet?: object; total?: number; earningsDown?: boolean } = {},
+) {
   mockApiFetch.mockImplementation((path: string) => {
     if (path.startsWith('/sales/me/commissions')) {
       // Each page answers as itself, so the list knows when it has them all.
       const page = Number(/page=(\d+)/.exec(path)?.[1] ?? 1);
-      return Promise.resolve(commissionPage(page === 1 ? rows : [], over.total ?? rows.length, page));
+      return Promise.resolve(
+        commissionPage(page === 1 ? rows : [], over.total ?? rows.length, page),
+      );
     }
     if (path.startsWith('/me/notifications')) return Promise.resolve({ items: bell, total: bell.length, page: 1, pageSize: 20, unread: 0 });
     if (over.earningsDown) return Promise.reject(new Error('down'));
     return Promise.resolve(earnings(over.wallet ? { wallet: over.wallet as never } : {}));
   });
 }
-const calls = (prefix: string) => mockApiFetch.mock.calls.filter(([p]) => String(p).startsWith(prefix)).length;
+const calls = (prefix: string) =>
+  mockApiFetch.mock.calls.filter(([p]) => String(p).startsWith(prefix)).length;
 
 beforeEach(() => {
   mockApiFetch.mockReset();
@@ -85,7 +91,11 @@ test('the end of the list asks for page 2 (25 in all, 20 a page)', async () => {
   serve([myCommission(), myCommission({ id: 'c2' })], { total: 25 });
   await renderWithQuery(<MyWalletView />);
   await screen.findAllByText(/AB-1022/);
-  const nativeEvent = { contentOffset: { x: 0, y: 2000 }, contentSize: { width: 400, height: 2300 }, layoutMeasurement: { width: 400, height: 900 } };
+  const nativeEvent = {
+    contentOffset: { x: 0, y: 2000 },
+    contentSize: { width: 400, height: 2300 },
+    layoutMeasurement: { width: 400, height: 900 },
+  };
   await act(async () => screen.getByTestId('wallet-list').props.onScroll({ nativeEvent }));
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/sales/me/commissions?page=2&pageSize=20'));
 });

@@ -36,7 +36,11 @@ export function SubscriptionsList() {
   // Keyed by package because FlashList recycling would carry an open cancel confirm to another row.
   const renderItem = useCallback(
     ({ item }: { item: SubscriptionView }) => (
-      <SubscriptionItem key={item.id} sub={item} {...(threshold === undefined ? {} : { threshold })} />
+      <SubscriptionItem
+        key={item.id}
+        sub={item}
+        {...(threshold === undefined ? {} : { threshold })}
+      />
     ),
     [threshold],
   );
@@ -44,7 +48,12 @@ export function SubscriptionsList() {
   return (
     <>
       <SearchField compact onSearch={setSearch} label={t.mobileMoney.searchStudent} />
-      <FilterPills items={PILLS} value={filter} onChange={setFilter} accessibilityLabel={t.mobileMoney.statusFilter} />
+      <FilterPills
+        items={PILLS}
+        value={filter}
+        onChange={setFilter}
+        accessibilityLabel={t.mobileMoney.statusFilter}
+      />
       <LazyList
         paged={list}
         keyExtractor={keyOf}
@@ -55,7 +64,11 @@ export function SubscriptionsList() {
           ) : list.isError ? (
             <ErrorState onRetry={list.refresh} />
           ) : (
-            <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+            <ActivityIndicator
+              accessibilityLabel={t.common.loading}
+              color={color.lapis}
+              style={{ paddingVertical: 32 }}
+            />
           )
         }
       />

@@ -11,7 +11,11 @@ vi.mock('@/features/people/students/api', async (importOriginal) => ({ ...(await
 const C = t.familyAuth.contactIsSelf;
 
 function fillAndSubmit(self: boolean) {
-  render(<QueryClientProvider client={new QueryClient()}><CreateStudentDialog onClose={vi.fn()} onDone={vi.fn()} /></QueryClientProvider>);
+  render(
+    <QueryClientProvider client={new QueryClient()}>
+      <CreateStudentDialog onClose={vi.fn()} onDone={vi.fn()} />
+    </QueryClientProvider>,
+  );
   expect(screen.getByRole('radio', { name: C.guardian })).toHaveProperty('checked', true);
   if (self) fireEvent.click(screen.getByRole('radio', { name: C.self }));
   fireEvent.change(screen.getByLabelText(t.guardians.phone), { target: { value: '0501234567' } });
@@ -32,6 +36,8 @@ describe('CreateStudentDialog: contact_is_self', () => {
   it('«الطالب نفسه» sends contact_is_self: true', async () => {
     fillAndSubmit(true);
     await waitFor(() => expect(api.createStudent).toHaveBeenCalled());
-    expect(api.createStudent).toHaveBeenCalledWith(expect.objectContaining({ contact_is_self: true }));
+    expect(api.createStudent).toHaveBeenCalledWith(
+      expect.objectContaining({ contact_is_self: true }),
+    );
   });
 });

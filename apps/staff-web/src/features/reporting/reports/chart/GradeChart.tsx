@@ -21,7 +21,12 @@ export function GradeChart({ series, tz }: { series: readonly GradePoint[]; tz: 
 
   return (
     <figure className="grid gap-3">
-      <SegmentedControl label={t.reports.chart.series} options={SERIES_KEYS.map((k) => ({ value: k, label: seriesLabel(k) }))} value={key} onChange={setKey} />
+      <SegmentedControl
+        label={t.reports.chart.series}
+        options={SERIES_KEYS.map((k) => ({ value: k, label: seriesLabel(k) }))}
+        value={key}
+        onChange={setKey}
+      />
       <figcaption className="text-xs text-ink-2">{summary}</figcaption>
       <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3">
         <div className="relative h-52 w-24 py-3 sm:w-28" aria-hidden="true">

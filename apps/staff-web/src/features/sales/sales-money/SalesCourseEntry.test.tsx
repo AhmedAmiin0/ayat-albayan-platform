@@ -110,7 +110,9 @@ describe('the entries to «أيام الحلقات» (owner 2026-10-18)', () => 
 
   it('after the transfer too: «احجز أيام الحلقات الآن» on the result', () => {
     const onBookCourse = vi.fn();
-    renderWithClient(<SalesDoneStep payment={paymentView()} onClose={vi.fn()} onBookCourse={onBookCourse} />);
+    renderWithClient(
+      <SalesDoneStep payment={paymentView()} onClose={vi.fn()} onBookCourse={onBookCourse} />,
+    );
     fireEvent.click(screen.getByRole('button', { name: t.booking.bookCourseDays }));
     expect(onBookCourse).toHaveBeenCalled();
   });

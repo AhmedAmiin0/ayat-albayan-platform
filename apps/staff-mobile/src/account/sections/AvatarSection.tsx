@@ -32,7 +32,8 @@ export function AvatarSection({ profile }: { profile: AccountProfile }) {
     }
   }
 
-  const error = upload.errors.avatar ?? upload.errors.form ?? remove.errors.avatar ?? remove.errors.form;
+  const error =
+    upload.errors.avatar ?? upload.errors.form ?? remove.errors.avatar ?? remove.errors.form;
   return (
     <AccountCard title={a.title} error={error} notice={upload.notice ?? remove.notice}>
       <View style={{ alignItems: 'center', gap: 8 }}>

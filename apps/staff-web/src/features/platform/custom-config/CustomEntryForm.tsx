@@ -23,7 +23,13 @@ function Err({ id, message }: { id: string; message?: string | undefined }) {
 }
 
 /** Add or edit one custom entry: key, JSON value, description, public flag; validated before it is sent. */
-export function CustomEntryForm({ initial, editing, saving, onSave, onCancel }: CustomEntryFormProps) {
+export function CustomEntryForm({
+  initial,
+  editing,
+  saving,
+  onSave,
+  onCancel,
+}: CustomEntryFormProps) {
   const id = useId();
   const [draft, setDraft] = useState<CustomDraft>(initial);
   const [errors, setErrors] = useState<CustomDraftErrors>({});

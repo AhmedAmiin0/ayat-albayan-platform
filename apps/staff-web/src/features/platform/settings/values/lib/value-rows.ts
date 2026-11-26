@@ -88,7 +88,11 @@ export function allRows(custom: readonly CustomConfigView[], query: RowQuery): V
   return GROUP_IDS.flatMap((g) => groupRows(g, custom)).filter((row) => rowMatches(row, query));
 }
 
-export function valueCounts(settings: AcademySettings): { total: number; modified: number; public: number } {
+export function valueCounts(settings: AcademySettings): {
+  total: number;
+  modified: number;
+  public: number;
+} {
   const keys = GROUP_IDS.filter((g) => !isOwnedGroup(g)).flatMap(groupKeys);
   return {
     total: keys.length,

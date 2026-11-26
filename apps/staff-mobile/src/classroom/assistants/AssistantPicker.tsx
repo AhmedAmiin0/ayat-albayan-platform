@@ -6,7 +6,13 @@ import { Note } from '@/core/ui/feedback/Note';
 
 const A = t.classroom.assistants;
 
-export function AssistantPicker({ free, onPick }: { free: readonly AssistantView[]; onPick: (profileId: string) => void }) {
+export function AssistantPicker({
+  free,
+  onPick,
+}: {
+  free: readonly AssistantView[];
+  onPick: (profileId: string) => void;
+}) {
   const [open, setOpen] = useState(false);
   if (free.length === 0) return <Note>{A.noneAvailable}</Note>;
   return (

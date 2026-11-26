@@ -16,7 +16,9 @@ describe('useValueDrafts', () => {
   });
 
   it('keeps every local edit when the settings are refetched (and only discards the one asked)', () => {
-    const { result, rerender } = renderHook(({ s }) => useValueDrafts(s), { initialProps: { s: SETTINGS } });
+    const { result, rerender } = renderHook(({ s }) => useValueDrafts(s), {
+      initialProps: { s: SETTINGS },
+    });
     act(() => result.current.edit('booking_horizon_weeks', { bookingHorizonWeeks: '8' }));
     act(() => result.current.edit('fx_fresh_hours', { fxFreshHours: '6' }));
     rerender({ s: { ...SETTINGS, booking_horizon_weeks: 3, fx_fresh_hours: 12 } });
@@ -35,7 +37,9 @@ describe('useValueDrafts', () => {
   });
 
   it('a draft typed back to the stored value is dropped, so a refetched value shows through', () => {
-    const { result, rerender } = renderHook(({ s }) => useValueDrafts(s), { initialProps: { s: SETTINGS } });
+    const { result, rerender } = renderHook(({ s }) => useValueDrafts(s), {
+      initialProps: { s: SETTINGS },
+    });
     act(() => result.current.edit('booking_horizon_weeks', { bookingHorizonWeeks: '8' }));
     act(() => result.current.edit('booking_horizon_weeks', { bookingHorizonWeeks: '5' }));
     rerender({ s: { ...SETTINGS, booking_horizon_weeks: 9 } });
@@ -46,7 +50,9 @@ describe('useValueDrafts', () => {
   });
 
   it('a refetch that now holds the draft drops it', () => {
-    const { result, rerender } = renderHook(({ s }) => useValueDrafts(s), { initialProps: { s: SETTINGS } });
+    const { result, rerender } = renderHook(({ s }) => useValueDrafts(s), {
+      initialProps: { s: SETTINGS },
+    });
     act(() => result.current.edit('booking_horizon_weeks', { bookingHorizonWeeks: '8' }));
     rerender({ s: { ...SETTINGS, booking_horizon_weeks: 8 } });
     rerender({ s: { ...SETTINGS, booking_horizon_weeks: 3 } });

@@ -52,7 +52,9 @@ describe('StudentProfileForm (R-STU-05)', () => {
     const select = screen.getByLabelText<HTMLSelectElement>(t.students.status);
     expect(select.value).toBe('trial');
     expect([...select.options].map((o) => o.value)).toEqual([...STUDENT_STATUSES]);
-    expect([...select.options].map((o) => o.textContent)).toEqual(STUDENT_STATUSES.map((st) => t.enums.studentStatus[st]));
+    expect([...select.options].map((o) => o.textContent)).toEqual(
+      STUDENT_STATUSES.map((st) => t.enums.studentStatus[st]),
+    );
   });
 
   it('saves level, status and teacher as a PATCH', async () => {

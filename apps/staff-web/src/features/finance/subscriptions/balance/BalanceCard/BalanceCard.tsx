@@ -61,7 +61,11 @@ export function BalanceCard({ student }: { student: PickedStudent }) {
       {view && !current && <p className="text-sm text-ink-3">{t.subscriptions.empty}</p>}
       {view && current && <BalanceDetails view={view} current={current} />}
       {dialog === 'pay' && current && (
-        <RecordPaymentDialog subscription={current} onClose={() => setDialog(null)} onSaved={saved(t.payments.saved)} />
+        <RecordPaymentDialog
+          subscription={current}
+          onClose={() => setDialog(null)}
+          onSaved={saved(t.payments.saved)}
+        />
       )}
       {dialog === 'cancel' && current && (
         <CancelPackageDialog
@@ -72,7 +76,11 @@ export function BalanceCard({ student }: { student: PickedStudent }) {
         />
       )}
       {dialog === 'new' && (
-        <CreateSubscriptionDialog student={student} onClose={() => setDialog(null)} onSaved={saved(t.subscriptions.saved)} />
+        <CreateSubscriptionDialog
+          student={student}
+          onClose={() => setDialog(null)}
+          onSaved={saved(t.subscriptions.saved)}
+        />
       )}
       {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
     </section>

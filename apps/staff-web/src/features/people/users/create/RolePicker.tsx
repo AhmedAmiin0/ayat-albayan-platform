@@ -17,7 +17,8 @@ export interface RolePickerProps {
 /** Only custom roles are listed; none picked means the default role. */
 export function RolePicker({ role, roleId, options, onChange, disabled, hint }: RolePickerProps) {
   const custom = options.filter((o) => o.base_role === role && !o.is_system);
-  const locked = (r: UserRole) => options.some((o) => o.base_role === r && o.is_system && !o.assignable);
+  const locked = (r: UserRole) =>
+    options.some((o) => o.base_role === r && o.is_system && !o.assignable);
   return (
     <>
       <Field label={F.role} hint={hint}>
@@ -34,7 +35,12 @@ export function RolePicker({ role, roleId, options, onChange, disabled, hint }: 
       {custom.length > 0 && (
         <Field label={F.customRole}>
           {(p) => (
-            <Select {...p} value={roleId} disabled={disabled} onChange={(e) => onChange({ role, roleId: e.target.value })}>
+            <Select
+              {...p}
+              value={roleId}
+              disabled={disabled}
+              onChange={(e) => onChange({ role, roleId: e.target.value })}
+            >
               <option value="">{F.defaultRole}</option>
               {custom.map((o) => (
                 <option key={o.id} value={o.id} disabled={!o.assignable && o.id !== roleId}>

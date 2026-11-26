@@ -36,7 +36,15 @@ function Pane() {
   const narrow = useBelowShell();
   return (
     <SalesChatFrame thread={thread()} compact={narrow}>
-      {(actions: ReactNode) => (narrow ? <header>{actions}</header> : <section><div>{actions}</div></section>)}
+      {(actions: ReactNode) =>
+        narrow ? (
+          <header>{actions}</header>
+        ) : (
+          <section>
+            <div>{actions}</div>
+          </section>
+        )
+      }
     </SalesChatFrame>
   );
 }

@@ -57,11 +57,29 @@ export function UsersPage() {
         onRowClick={(r) => setOpened(r.id)}
         emptyText={data ? t.users.empty : t.common.loading}
         label={t.users.title}
-        toolbar={{ search: <UsersSearch initial={view.q} onSearch={search} />, extra: usersFilters(view, setView), total: data?.total }}
+        toolbar={{
+          search: <UsersSearch initial={view.q} onSearch={search} />,
+          extra: usersFilters(view, setView),
+          total: data?.total,
+        }}
       />
-      {data && <Pager page={view.page} total={data.total} pageSize={data.pageSize} onPage={(page) => setView({ ...view, page })} />}
+      {data && (
+        <Pager
+          page={view.page}
+          total={data.total}
+          pageSize={data.pageSize}
+          onPage={(page) => setView({ ...view, page })}
+        />
+      )}
       {creating && <CreateUserDialog onClose={() => setCreating(false)} />}
-      {opened && <UserDetailDialog userId={opened} canWrite={canWrite} onClose={() => setOpened(null)} onDone={done} />}
+      {opened && (
+        <UserDetailDialog
+          userId={opened}
+          canWrite={canWrite}
+          onClose={() => setOpened(null)}
+          onDone={done}
+        />
+      )}
       {notice && <Toast key={notice} message={notice} onDismiss={() => setNotice(null)} />}
     </>
   );

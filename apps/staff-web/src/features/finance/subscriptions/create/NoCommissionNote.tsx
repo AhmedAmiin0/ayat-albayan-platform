@@ -13,6 +13,13 @@ type Props = {
 /** Course started before signup (migration 20261028000942) means no commission. */
 export function NoCommissionNote({ startsOn, usedBefore, now }: Props) {
   const createdAt = (now ?? new Date()).toISOString();
-  if (!subscriptionAlreadyStarted({ starts_on: startsOn, created_at: createdAt, lessons_used_before: usedBefore })) return null;
+  if (
+    !subscriptionAlreadyStarted({
+      starts_on: startsOn,
+      created_at: createdAt,
+      lessons_used_before: usedBefore,
+    })
+  )
+    return null;
   return <p className="text-xs text-ink-3">{t.salesMoney.noCommissionStarted}</p>;
 }

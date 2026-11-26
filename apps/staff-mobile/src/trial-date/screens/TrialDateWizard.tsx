@@ -17,7 +17,12 @@ import { TrialSlotStep } from '@/trial-date/fields/TrialSlotStep';
 
 type Step = 'teacher' | 'slot' | 'confirm';
 const STEPS: readonly Step[] = ['teacher', 'slot', 'confirm'];
-const stepName = (s: Step) => ({ teacher: t.booking.steps.teacher, slot: t.booking.steps.slot, confirm: t.booking.steps.review })[s];
+const stepName = (s: Step) =>
+  ({
+    teacher: t.booking.steps.teacher,
+    slot: t.booking.steps.slot,
+    confirm: t.booking.steps.review,
+  })[s];
 
 interface TrialDateWizardProps {
   history: TrialHistory;
@@ -86,7 +91,11 @@ export function TrialDateWizard({ history, title, program, fallback }: TrialDate
             history={history}
             body={body}
             onLink={(meetingLink) => patch({ meetingLink })}
-            submit={{ busy: book.isPending, failure: book.isError ? bookFailure(book.error, cycle, tz) : null, onSubmit: () => body && book.mutate(body) }}
+            submit={{
+              busy: book.isPending,
+              failure: book.isError ? bookFailure(book.error, cycle, tz) : null,
+              onSubmit: () => body && book.mutate(body),
+            }}
             onChangeSlot={() => {
               patch({ startsAt: null });
               go('slot');

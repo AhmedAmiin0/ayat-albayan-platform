@@ -58,7 +58,13 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
   );
 }
 
-export function TodayLessons({ lessons, className }: { lessons: LessonView[] | undefined; className?: string }) {
+export function TodayLessons({
+  lessons,
+  className,
+}: {
+  lessons: LessonView[] | undefined;
+  className?: string;
+}) {
   const now = useNow();
   const win = useJoinWindow();
   const list = lessons ? todaysLessons(lessons) : undefined;

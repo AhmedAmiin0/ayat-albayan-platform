@@ -10,7 +10,15 @@ const step = (end: string, button: string) =>
 
 function openPicker(target: PickTarget = { kind: 'new', index: -1, start: { surah: 67, from: 16, to: 30 }, after: 15 }) {
   const onDone = vi.fn();
-  render(<SurahPicker title={t.reports.v2.segment.new} target={target} recent={[67, 68]} onDone={onDone} onClose={vi.fn()} />);
+  render(
+    <SurahPicker
+      title={t.reports.v2.segment.new}
+      target={target}
+      recent={[67, 68]}
+      onDone={onDone}
+      onClose={vi.fn()}
+    />,
+  );
   return onDone;
 }
 

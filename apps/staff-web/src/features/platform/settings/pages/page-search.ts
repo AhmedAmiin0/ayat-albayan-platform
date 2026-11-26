@@ -33,7 +33,10 @@ export function parseCommunicationsSearch(search: Record<string, unknown>): Comm
 export const shownTab = (search: CommunicationsSearch): CommunicationsTab => (isTab(search.tab) ? search.tab : 'overview');
 
 /** The default tab leaves the search empty. */
-export function communicationsSearch(tab: CommunicationsTab, audience?: NotificationAudience): CommunicationsSearch {
+export function communicationsSearch(
+  tab: CommunicationsTab,
+  audience?: NotificationAudience,
+): CommunicationsSearch {
   if (tab === 'overview') return {};
   return tab === 'catalogue' && audience ? { tab, audience } : { tab };
 }

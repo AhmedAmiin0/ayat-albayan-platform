@@ -5,7 +5,11 @@ import { SALES_QUOTE } from '@/features/sales/sales-money/sales-money-fixture';
 
 // Test fixtures, not app code: quotes and the link, answered by path.
 
-export const LINK_QUOTE: PaymentLinkQuoteView = { quote: SALES_QUOTE, max_discount_pct: 10, min_amount: minLinkAmount(SALES_QUOTE.afterDiscount, 10) };
+export const LINK_QUOTE: PaymentLinkQuoteView = {
+  quote: SALES_QUOTE,
+  max_discount_pct: 10,
+  min_amount: minLinkAmount(SALES_QUOTE.afterDiscount, 10),
+};
 export const CREATED = linkView({ amount: 270, reference_price: SALES_QUOTE.afterDiscount });
 
 export function answer(apiSend: Mock, quote: PaymentLinkQuoteView = LINK_QUOTE) {

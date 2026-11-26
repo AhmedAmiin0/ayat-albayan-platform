@@ -15,9 +15,16 @@ export function SessionActions({ lesson, group }: { lesson: LessonView; group: S
   return (
     <View style={{ gap: 8, alignItems: 'stretch' }}>
       <JoinClassroomButton lesson={lesson} />
-      {open && can('classroom.links') && lesson.students.map((s) => (
-        <SendLinkAction key={s.id} lessonId={lesson.id} student={s} named={lesson.students.length > 1} />
-      ))}
+      {open &&
+        can('classroom.links') &&
+        lesson.students.map((s) => (
+          <SendLinkAction
+            key={s.id}
+            lessonId={lesson.id}
+            student={s}
+            named={lesson.students.length > 1}
+          />
+        ))}
       {open && can('classroom.host') ? <CopyLinkAction lessonId={lesson.id} /> : null}
       <Button
         variant="secondary"

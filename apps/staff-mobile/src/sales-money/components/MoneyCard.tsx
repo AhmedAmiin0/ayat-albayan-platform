@@ -6,7 +6,16 @@ import { shape, useTheme } from '@ab/mobile-kit';
 export function MoneyCard({ children }: { children: ReactNode }) {
   const { color } = useTheme();
   return (
-    <View style={{ gap: 8, padding: 12, borderRadius: shape.radius.lg, borderWidth: 1, borderColor: color.rule, backgroundColor: color.raised }}>
+    <View
+      style={{
+        gap: 8,
+        padding: 12,
+        borderRadius: shape.radius.lg,
+        borderWidth: 1,
+        borderColor: color.rule,
+        backgroundColor: color.raised,
+      }}
+    >
       {children}
     </View>
   );

@@ -21,8 +21,14 @@ const SARA: Teacher = teacherFixture({
 function open(teacher: Teacher | null) {
   apiFetch.mockResolvedValue([]);
   apiSend.mockResolvedValue({});
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity } } });
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: false });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+  });
+  client.setQueryData(publicConfigQuery.queryKey, {
+    ...PUBLIC_SETTING_DEFAULTS,
+    custom: {},
+    meeting_link_auto: false,
+  });
   render(
     <QueryClientProvider client={client}>
       <TeacherDialog teacher={teacher} onClose={vi.fn()} />

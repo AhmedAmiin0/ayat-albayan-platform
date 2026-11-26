@@ -11,7 +11,15 @@ export function lastChangeText(meta: SettingMeta | undefined, clock: Clock): str
 }
 
 /** The default, with the bounds under it (their id describes the editor). */
-export function DefaultCell({ text, note, noteId }: { text: string; note?: string | undefined; noteId?: string }) {
+export function DefaultCell({
+  text,
+  note,
+  noteId,
+}: {
+  text: string;
+  note?: string | undefined;
+  noteId?: string;
+}) {
   return (
     <span className="grid gap-0.5 text-sm text-ink-2">
       <span>{text}</span>

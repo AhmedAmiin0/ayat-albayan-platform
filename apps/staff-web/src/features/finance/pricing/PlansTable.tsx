@@ -7,7 +7,10 @@ import { Money } from './Money';
 
 const col = createColumnHelper<DataTableFeatures, Quote>();
 
-const durationOptions = Object.keys(t.pricing.durations).map((m) => ({ value: m, label: durationLabel(Number(m)) }));
+const durationOptions = Object.keys(t.pricing.durations).map((m) => ({
+  value: m,
+  label: durationLabel(Number(m)),
+}));
 
 // Stacked under 640px: plan name, then lessons · duration, then the two prices.
 const columns = col.columns([
@@ -49,5 +52,14 @@ const columns = col.columns([
 ]);
 
 export function PlansTable({ packages }: { packages: Quote[] }) {
-  return <DataTable stacked clientSort clientFilter columns={columns} data={packages} getRowId={(q) => q.package} />;
+  return (
+    <DataTable
+      stacked
+      clientSort
+      clientFilter
+      columns={columns}
+      data={packages}
+      getRowId={(q) => q.package}
+    />
+  );
 }

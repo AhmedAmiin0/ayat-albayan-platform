@@ -15,7 +15,10 @@ export const salesTeachersQuery = queryOptions({
 export function useTeacherPick(students: readonly SalesFamilyStudent[], studentId: string) {
   const [pick, setPick] = useState<TeacherPick | null>(null);
   const options = useQuery(salesTeachersQuery).data;
-  return { ...teacherChoice(students, { studentId, pick, options }), setTeacher: (teacherId: string) => setPick({ studentId, teacherId }) };
+  return {
+    ...teacherChoice(students, { studentId, pick, options }),
+    setTeacher: (teacherId: string) => setPick({ studentId, teacherId }),
+  };
 }
 
 type Props = { value: string; onChange: (id: string) => void };

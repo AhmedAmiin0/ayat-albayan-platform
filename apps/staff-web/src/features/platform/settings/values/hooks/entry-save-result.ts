@@ -34,8 +34,14 @@ export interface FailureInput {
 }
 
 /** The row's status and the save's end for a refused save. */
-export function saveFailure(error: unknown, input: FailureInput): { status: RowStatus; end: SaveEnd } {
-  const failed = { status: { state: 'failed', message: serverMessage(error) } as RowStatus, end: 'failed' as const };
+export function saveFailure(
+  error: unknown,
+  input: FailureInput,
+): { status: RowStatus; end: SaveEnd } {
+  const failed = {
+    status: { state: 'failed', message: serverMessage(error) } as RowStatus,
+    end: 'failed' as const,
+  };
   if (!(error instanceof ApiError)) return failed;
   const code = codeOf(error.body);
   if (error.status === 409 && isConflict(error.body)) {

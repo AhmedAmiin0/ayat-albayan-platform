@@ -31,9 +31,15 @@ export function useReportForm(lessonId: string) {
 }
 
 /** The saved form with this report replaced by the server's copy (after an autosave). */
-export function withReport(form: ReportFormResponse | undefined, view: ReportView): ReportFormResponse | undefined {
+export function withReport(
+  form: ReportFormResponse | undefined,
+  view: ReportView,
+): ReportFormResponse | undefined {
   if (!form) return form;
-  return { ...form, entries: form.entries.map((e) => (e.report.id === view.id ? { ...e, report: view } : e)) };
+  return {
+    ...form,
+    entries: form.entries.map((e) => (e.report.id === view.id ? { ...e, report: view } : e)),
+  };
 }
 
 /** After a send: the lesson moved (completed …), the pending list shrank, history has a new row. */

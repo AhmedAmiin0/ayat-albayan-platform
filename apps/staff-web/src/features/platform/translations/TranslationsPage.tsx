@@ -28,7 +28,11 @@ export function TranslationsPage() {
         </Field>
         <Field label={t.translations.section}>
           {(p) => (
-            <Select {...p} value={search.section} onChange={(e) => setSearch({ ...search, section: e.target.value, page: 1 })}>
+            <Select
+              {...p}
+              value={search.section}
+              onChange={(e) => setSearch({ ...search, section: e.target.value, page: 1 })}
+            >
               <option value="">{t.translations.allSections}</option>
               {(data?.sections ?? []).map((s) => (
                 <option key={s} value={s}>
@@ -53,10 +57,17 @@ export function TranslationsPage() {
             onRowClick={setEditing}
             emptyText={t.translations.empty}
           />
-          <Pager page={search.page} total={data.total} pageSize={data.pageSize} onPage={(page) => setSearch({ ...search, page })} />
+          <Pager
+            page={search.page}
+            total={data.total}
+            pageSize={data.pageSize}
+            onPage={(page) => setSearch({ ...search, page })}
+          />
         </>
       )}
-      {editing && <TranslationEditor row={editing} onClose={() => setEditing(null)} onDone={setNotice} />}
+      {editing && (
+        <TranslationEditor row={editing} onClose={() => setEditing(null)} onDone={setNotice} />
+      )}
     </>
   );
 }

@@ -53,7 +53,14 @@ function Requests({ lesson, students }: { lesson: LessonView; students: LessonVi
   return (
     <View style={{ gap: 8 }}>
       {students.map((s) => (
-        <RequestFor key={s.id} lessonId={lesson.id} studentId={s.id} name={s.name} many={many} approved={approved} />
+        <RequestFor
+          key={s.id}
+          lessonId={lesson.id}
+          studentId={s.id}
+          name={s.name}
+          many={many}
+          approved={approved}
+        />
       ))}
       {!approved && templates.isSuccess ? <Note>{t.feedback.templateNotApproved}</Note> : null}
     </View>

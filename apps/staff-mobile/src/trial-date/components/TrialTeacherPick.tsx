@@ -17,21 +17,41 @@ interface TrialTeacherPickProps {
 }
 
 /** The last trial's teacher is preselected; others use the booking's filters. */
-export function TrialTeacherPick({ current, program, gender = null, onKeep, onPick }: TrialTeacherPickProps) {
+export function TrialTeacherPick({
+  current,
+  program,
+  gender = null,
+  onKeep,
+  onPick,
+}: TrialTeacherPickProps) {
   const { color } = useTheme();
-  const [filter, setFilter] = useState<{ program: Program; gender: Gender | null }>({ program, gender });
+  const [filter, setFilter] = useState<{ program: Program; gender: Gender | null }>({
+    program,
+    gender,
+  });
   const pick = (o: BookingTeacherOption) => onPick({ id: o.id, name: teacherName(o, locale) });
   return (
     <View style={{ gap: 12 }}>
       {current ? (
         <View style={{ gap: 6 }}>
-          <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 }}>
+          <AppText
+            style={{
+              fontFamily: type.ui[500],
+              fontSize: type.size.sm,
+              lineHeight: type.lineHeight(type.size.sm),
+              color: color.ink2,
+            }}
+          >
             {t.trialDate.lastTeacher}
           </AppText>
           <Button label={t.booking.mobile.keepTeacher.replace('{teacher}', current.name)} onPress={onKeep} />
         </View>
       ) : null}
-      <TeacherStep {...filter} onFilter={(f) => setFilter((old) => ({ ...old, ...f }))} onPick={pick} />
+      <TeacherStep
+        {...filter}
+        onFilter={(f) => setFilter((old) => ({ ...old, ...f }))}
+        onPick={pick}
+      />
     </View>
   );
 }

@@ -33,7 +33,9 @@ function Row({ label, value, onPress }: { label: string; value: string; onPress?
   );
   return (
     <View style={{ gap: 2 }}>
-      <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink3 }}>{label}</AppText>
+      <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink3 }}>
+        {label}
+      </AppText>
       {onPress ? (
         <Pressable
           accessibilityRole="link"
@@ -64,14 +66,22 @@ function Panel({ children, label }: { children: ReactNode; label: string }) {
 }
 
 /** Read-only identity (R-REP-01, issue D1), all from the lesson, never typed. */
-export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; entry: ReportFormEntry }) {
+export function IdentityBlock({
+  lesson,
+  entry,
+}: {
+  lesson: ReportFormLesson;
+  entry: ReportFormEntry;
+}) {
   const cycle = useClockCycle();
   const { color } = useTheme();
   const { student } = entry;
   const when = `${whenIn(new Date(lesson.starts_at), student.tz, cycle)} (${cities[student.tz] ?? ltr(student.tz)})`;
   return (
     <Panel label={t.reports.identity}>
-      <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink3 }}>{t.reports.readOnlyHint}</AppText>
+      <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink3 }}>
+        {t.reports.readOnlyHint}
+      </AppText>
       <Row label={t.reports.studentId} value={ltr(student.code)} />
       <Row label={t.reports.teacher} value={teacherName(lesson.teacher, locale)} />
       <Row label={t.reports.student} value={student.name} />

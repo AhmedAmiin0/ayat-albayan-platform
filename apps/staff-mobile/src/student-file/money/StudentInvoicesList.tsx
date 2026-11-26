@@ -6,7 +6,9 @@ import { useStudentInvoices } from './money-queries';
 import { StudentInvoiceRow } from './StudentInvoiceRow';
 
 const keyOf = (i: InvoiceView) => i.id;
-const renderInvoice = ({ item }: ListRenderItemInfo<InvoiceView>) => <StudentInvoiceRow invoice={item} />;
+const renderInvoice = ({ item }: ListRenderItemInfo<InvoiceView>) => (
+  <StudentInvoiceRow invoice={item} />
+);
 
 /**
  * GET /invoices?studentId=: the student's booking invoices (payment proofs), newest first, in one
@@ -28,9 +30,16 @@ export function StudentInvoicesList({ studentId }: { studentId: string }) {
         list.data ? (
           <EmptyState title={t.mobileStudentFile.money.invoicesEmpty} />
         ) : list.isError ? (
-          <ErrorState onRetry={() => void list.refetch()} message={t.mobileStudentFile.money.error} />
+          <ErrorState
+            onRetry={() => void list.refetch()}
+            message={t.mobileStudentFile.money.error}
+          />
         ) : (
-          <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+          <ActivityIndicator
+            accessibilityLabel={t.common.loading}
+            color={color.lapis}
+            style={{ paddingVertical: 32 }}
+          />
         )
       }
       {...rows}

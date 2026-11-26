@@ -69,7 +69,10 @@ export function RegistrationCheckScreen() {
               error={invalid}
             />
             {!search || invalid ? null : check.isError ? (
-              <ErrorState message={checkErrorText(check.error)} onRetry={() => void check.refetch()} />
+              <ErrorState
+                message={checkErrorText(check.error)}
+                onRetry={() => void check.refetch()}
+              />
             ) : check.data ? (
               <RegistrationResults view={check.data} by={search.by} />
             ) : null}

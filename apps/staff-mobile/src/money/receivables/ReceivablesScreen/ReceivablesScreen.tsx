@@ -56,7 +56,11 @@ export function ReceivablesScreen() {
           ) : q.isError ? (
             <ErrorState onRetry={() => void q.refetch()} />
           ) : (
-            <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+            <ActivityIndicator
+              accessibilityLabel={t.common.loading}
+              color={color.lapis}
+              style={{ paddingVertical: 32 }}
+            />
           )
         }
       />

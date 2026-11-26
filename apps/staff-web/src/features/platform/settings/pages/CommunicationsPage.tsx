@@ -30,10 +30,25 @@ export function CommunicationsPage({ tab, audience, onTab, renderGuard }: Commun
   const meta = useQuery(settingsMetaQuery);
   return (
     <SettingsViewContext.Provider value={{ query: '', meta: meta.data ?? {} }}>
-      <ModuleHead title={t.settingsPages.communications}>{settings.data && <SendingState settings={settings.data} />}</ModuleHead>
-      <Tabs label={t.settingsPages.tabs} tabs={TABS} value={tab} onChange={onTab} idPrefix={COMMUNICATIONS_TABS_ID} />
+      <ModuleHead title={t.settingsPages.communications}>
+        {settings.data && <SendingState settings={settings.data} />}
+      </ModuleHead>
+      <Tabs
+        label={t.settingsPages.tabs}
+        tabs={TABS}
+        value={tab}
+        onChange={onTab}
+        idPrefix={COMMUNICATIONS_TABS_ID}
+      />
       <QueryState query={settings} quiet errorText={t.settingsPages.loadError}>
-        {(data) => <CommunicationsBody tab={tab} audience={audience} settings={data} renderGuard={renderGuard} />}
+        {(data) => (
+          <CommunicationsBody
+            tab={tab}
+            audience={audience}
+            settings={data}
+            renderGuard={renderGuard}
+          />
+        )}
       </QueryState>
     </SettingsViewContext.Provider>
   );

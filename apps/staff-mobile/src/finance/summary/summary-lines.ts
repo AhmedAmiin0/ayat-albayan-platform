@@ -3,7 +3,9 @@ import type { DashboardResponse, MonthFinance } from '@ab/money';
 
 /** Months with any money, newest first; the API sends all twelve. */
 export const activeMonths = (months: readonly MonthFinance[]): MonthFinance[] =>
-  months.filter((m) => m.revenue !== 0 || m.teacher_cost !== 0 || m.expenses !== 0).sort((a, b) => b.month.localeCompare(a.month));
+  months
+    .filter((m) => m.revenue !== 0 || m.teacher_cost !== 0 || m.expenses !== 0)
+    .sort((a, b) => b.month.localeCompare(a.month));
 
 /** Warnings under the cards: currencies with no rate (left out of the totals) and lessons with no rate. */
 export function summaryWarnings(f: DashboardResponse['finance']): string[] {

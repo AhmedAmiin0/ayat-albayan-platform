@@ -17,7 +17,9 @@ jest.mock('expo-constants', () => ({
 const TOKEN = 'ExponentPushToken[flow]';
 // The tab's accessible name carries the unread count.
 const inboxTab = new RegExp(`^${t.nav.conversations}`);
-const tap = (data: Record<string, unknown>) => ({ notification: { request: { content: { data } } } });
+const tap = (data: Record<string, unknown>) => ({
+  notification: { request: { content: { data } } },
+});
 
 beforeEach(async () => {
   await resetApp();

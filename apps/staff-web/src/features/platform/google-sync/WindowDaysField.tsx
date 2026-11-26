@@ -24,7 +24,11 @@ export function WindowDaysField({ value, save }: Props) {
   };
   return (
     <div className="max-w-sm">
-      <Field label={s.window} hint={s.windowHint} {...(invalid ? { error: fill(t.googleSync.web.windowInvalid, { min, max }) } : {})}>
+      <Field
+        label={s.window}
+        hint={s.windowHint}
+        {...(invalid ? { error: fill(t.googleSync.web.windowInvalid, { min, max }) } : {})}
+      >
         {(p) => (
           <div className="flex gap-2">
             <Input

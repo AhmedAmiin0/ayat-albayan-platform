@@ -17,7 +17,10 @@ type Props = {
 export function TeacherMeetingModeField({ form, set, teacher = null }: Props) {
   const notesId = useId();
   const config = useQuery(publicConfigQuery);
-  const academyAuto = knownAcademyAuto(config.isSuccess ? config.data.meeting_link_auto : undefined, teacher);
+  const academyAuto = knownAcademyAuto(
+    config.isSuccess ? config.data.meeting_link_auto : undefined,
+    teacher,
+  );
   const options: { value: MeetingModeChoice; label: string }[] = [
     { value: 'academy', label: academyOptionText(academyAuto) },
     { value: 'static', label: t.teachers.meetingModeOption.static },
@@ -33,7 +36,11 @@ export function TeacherMeetingModeField({ form, set, teacher = null }: Props) {
         onChange={(choice) => set('meeting_mode', fromChoice(choice))}
         describedBy={notesId}
       />
-      <MeetingModeWarnings id={notesId} platform={effectivePlatform(form.meeting_mode, academyAuto)} link={form.meeting_link} />
+      <MeetingModeWarnings
+        id={notesId}
+        platform={effectivePlatform(form.meeting_mode, academyAuto)}
+        link={form.meeting_link}
+      />
     </div>
   );
 }

@@ -48,7 +48,9 @@ describe('«القيم» — «تعديل الوصف»', () => {
   });
 
   it('an empty text is never sent; «أعد الوصف الأصلي» (only once edited) sends null', async () => {
-    apiSend.mockImplementation(async () => ({ entry: { ...edited, description: null, descriptionEdited: false } }));
+    apiSend.mockImplementation(async () => ({
+      entry: { ...edited, description: null, descriptionEdited: false },
+    }));
     renderValues(apiFetch, { entries: [edited] });
     await openLine(HORIZON, MINE);
     const dialog = screen.getByRole('dialog', { name: d.title });

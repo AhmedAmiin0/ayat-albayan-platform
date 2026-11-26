@@ -23,5 +23,7 @@ export function sizeText(bytes: number | null): string {
 }
 
 /** A teacher's name in the UI language (the English name when the English UI has one). */
-export const teacherLabel = (teacher: { display_name_ar: string; display_name_en?: string | null }): string =>
-  teacherName(teacher, locale);
+export const teacherLabel = (teacher: {
+  display_name_ar: string;
+  display_name_en?: string | null;
+}): string => teacherName(teacher, locale);

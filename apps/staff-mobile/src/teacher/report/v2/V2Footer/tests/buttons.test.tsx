@@ -37,5 +37,8 @@ test('«احذف هذا المقطع» is a danger button: outlined in the bad t
   await open(graded);
   const [remove] = screen.getAllByRole('button', { name: `${v2.removeSegment} — ${v2.segment.new}` });
   if (!remove) throw new Error('no remove');
-  expect(StyleSheet.flatten(remove.props.style)).toMatchObject({ borderWidth: 1, borderColor: light.bad });
+  expect(StyleSheet.flatten(remove.props.style)).toMatchObject({
+    borderWidth: 1,
+    borderColor: light.bad,
+  });
 });

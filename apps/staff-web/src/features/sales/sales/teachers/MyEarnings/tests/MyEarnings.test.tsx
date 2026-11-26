@@ -45,7 +45,9 @@ const EARNINGS: Earnings = {
 function open(data: Earnings) {
   apiFetch.mockResolvedValue(data);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <MyEarnings />
     </QueryClientProvider>,
   );

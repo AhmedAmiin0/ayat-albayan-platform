@@ -15,8 +15,16 @@ const EMPTY: StudentReportsResponse = { items: [], total: 0, page: 1, pageSize: 
 function renderPage(notice: ReactNode) {
   apiFetch.mockResolvedValue(EMPTY);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-      <StudentReportsPage studentId="s-1" name="سهيلة" role="teacher" tz="Asia/Riyadh" notice={notice} />
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      <StudentReportsPage
+        studentId="s-1"
+        name="سهيلة"
+        role="teacher"
+        tz="Asia/Riyadh"
+        notice={notice}
+      />
     </QueryClientProvider>,
   );
 }

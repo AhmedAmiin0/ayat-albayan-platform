@@ -16,7 +16,9 @@ describe('PricingFields discount', () => {
 
   it('with discounts: only those pills, the chosen one pressed, no number input', () => {
     const set = vi.fn();
-    render(<PricingFields form={{ ...INITIAL_PRICING, discount: 5 }} set={set} discounts={DISCOUNTS} />);
+    render(
+      <PricingFields form={{ ...INITIAL_PRICING, discount: 5 }} set={set} discounts={DISCOUNTS} />,
+    );
     expect(screen.queryByRole('spinbutton', { name: t.subscriptions.discount })).toBeNull();
     expect(screen.getAllByRole('button', { pressed: false })).toHaveLength(3);
     expect(screen.getByRole('button', { pressed: true }).textContent).toBe(t.pricing.discounts['5']);

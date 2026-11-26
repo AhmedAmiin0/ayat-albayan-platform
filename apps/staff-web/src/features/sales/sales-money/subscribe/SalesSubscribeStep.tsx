@@ -102,13 +102,34 @@ export function SalesSubscribeStep(props: SalesSubscribeStepProps) {
           set={(patch) => setForm((f) => ({ ...f, ...patch }))}
           discountExtra={<CustomAmountToggle {...(online ? pay.toggle : price.toggle)} />}
         />
-        {canOnline && <SegmentedControl label={t.payments.method} options={METHODS} value={method} onChange={setMethod} />}
-        {studentId && (online ? <OnlinePayFields pay={pay} /> : <SalesQuotePreview studentId={studentId} pricing={pricing} bind={bind} />)}
+        {canOnline && (
+          <SegmentedControl
+            label={t.payments.method}
+            options={METHODS}
+            value={method}
+            onChange={setMethod}
+          />
+        )}
+        {studentId &&
+          (online ? (
+            <OnlinePayFields pay={pay} />
+          ) : (
+            <SalesQuotePreview studentId={studentId} pricing={pricing} bind={bind} />
+          ))}
         <CustomPriceField price={price} />
         {studentId && <SalesTeacherField value={teacher.teacherId} onChange={teacher.setTeacher} />}
-        <SalesStartField canSet={canSet} today={today} value={startShown} usedMax={usedMax} onChange={patch} error={error} />
+        <SalesStartField
+          canSet={canSet}
+          today={today}
+          value={startShown}
+          usedMax={usedMax}
+          onChange={patch}
+          error={error}
+        />
         {!online && save.isError && <FormAlert>{salesErrorText(save.error)}</FormAlert>}
-        {online && pay.create.isError && <FormAlert>{linkStepErrorText(pay.create.error)}</FormAlert>}
+        {online && pay.create.isError && (
+          <FormAlert>{linkStepErrorText(pay.create.error)}</FormAlert>
+        )}
       </form>
     </Dialog>
   );

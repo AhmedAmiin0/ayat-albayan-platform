@@ -33,7 +33,14 @@ const formFor = (s: SalesMoneySubscriptionView | undefined, day: string): Transf
 });
 
 /** A smaller amount leaves the package unpaid but still saves (R-ASST-04). */
-export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCourse, bindOf }: Props) {
+export function SalesTransferStep({
+  fixed,
+  packages,
+  onClose,
+  onSaved,
+  onBookCourse,
+  bindOf,
+}: Props) {
   const formId = useId();
   const maxBytes = useUploadMaxBytes();
   const [pickedId, setPickedId] = useState(() => fixed?.id ?? (packages.length === 1 ? (packages[0]?.id ?? '') : ''));
@@ -94,9 +101,25 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCou
                   {t.booking.bookCourseDays}
                 </Button>
               )}
-              <ReceiptChooser sub={sub} value={attachments} onChange={setChosen} maxBytes={maxBytes} bind={bind} />
-              <TransferFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} packageCurrency={sub.currency} today={today} amountError={amountError} />
-              <ShortfallNote amount={form.amount} due={sub.due} currencyLabel={currencySymbol(sub.currency)} />
+              <ReceiptChooser
+                sub={sub}
+                value={attachments}
+                onChange={setChosen}
+                maxBytes={maxBytes}
+                bind={bind}
+              />
+              <TransferFields
+                form={form}
+                set={(patch) => setForm((f) => ({ ...f, ...patch }))}
+                packageCurrency={sub.currency}
+                today={today}
+                amountError={amountError}
+              />
+              <ShortfallNote
+                amount={form.amount}
+                due={sub.due}
+                currencyLabel={currencySymbol(sub.currency)}
+              />
             </>
           )}
           {save.isError && <FormAlert>{salesErrorText(save.error)}</FormAlert>}

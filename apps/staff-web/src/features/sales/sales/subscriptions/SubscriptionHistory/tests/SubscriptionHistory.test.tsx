@@ -14,7 +14,14 @@ const CONFIRMED = [{ id: HISTORY_ID, student: { id: 's1', code: 'AB-0183', name:
 /** The route's `kind` and `history` as local state, like /sales/subscriptions?kind=confirmed&history=. */
 function Harness({ kind = 'confirmed' as const }: { kind?: 'confirmed' | 'pending' }) {
   const [open, setOpen] = useState<string | null>(null);
-  return <SalesSubscriptions kind={kind} onKind={() => undefined} history={open ?? undefined} onHistory={setOpen} />;
+  return (
+    <SalesSubscriptions
+      kind={kind}
+      onKind={() => undefined}
+      history={open ?? undefined}
+      onHistory={setOpen}
+    />
+  );
 }
 
 afterEach(() => apiFetch.mockReset());

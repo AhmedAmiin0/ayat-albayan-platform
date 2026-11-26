@@ -33,5 +33,7 @@ test('empty, unreadable and zero amounts, and a missing method, say why', () => 
 });
 
 test('no ticks: ids are left out so the API pays oldest first', () => {
-  expect(checkPayDraft(draft(), { ...ctx, earningIds: undefined }).input?.earningIds).toBeUndefined();
+  expect(
+    checkPayDraft(draft(), { ...ctx, earningIds: undefined }).input?.earningIds,
+  ).toBeUndefined();
 });

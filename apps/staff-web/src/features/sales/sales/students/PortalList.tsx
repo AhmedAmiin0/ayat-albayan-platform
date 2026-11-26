@@ -15,7 +15,13 @@ export interface PortalListProps<T extends RowData> {
 }
 
 /** The shell of the assistant's read-only lists: loading, a failed load with a retry, the empty state, the table. */
-export function PortalList<T extends RowData>({ title, query, columns, getRowId, empty }: PortalListProps<T>): ReactNode {
+export function PortalList<T extends RowData>({
+  title,
+  query,
+  columns,
+  getRowId,
+  empty,
+}: PortalListProps<T>): ReactNode {
   return (
     <>
       {query.isPending && <ListSkeleton />}
@@ -29,7 +35,15 @@ export function PortalList<T extends RowData>({ title, query, columns, getRowId,
       )}
       {query.data?.length === 0 && <EmptyState title={empty.title}>{empty.hint}</EmptyState>}
       {query.data && query.data.length > 0 && (
-        <DataTable stacked clientSort clientFilter label={title} columns={columns} data={query.data} getRowId={getRowId} />
+        <DataTable
+          stacked
+          clientSort
+          clientFilter
+          label={title}
+          columns={columns}
+          data={query.data}
+          getRowId={getRowId}
+        />
       )}
     </>
   );

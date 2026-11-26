@@ -14,7 +14,9 @@ interface RescheduleSheetProps {
 export function RescheduleSheet({ lesson, onClose, onDone }: RescheduleSheetProps) {
   return (
     <RescheduleFrame open={lesson !== null} onClose={onClose}>
-      {lesson ? <RescheduleForm key={lesson.id} lesson={lesson} onClose={onClose} onDone={onDone} /> : null}
+      {lesson ? (
+        <RescheduleForm key={lesson.id} lesson={lesson} onClose={onClose} onDone={onDone} />
+      ) : null}
     </RescheduleFrame>
   );
 }

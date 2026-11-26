@@ -20,8 +20,16 @@ test('R-ACC-01: Arabic title, role, admin hint, current email (LTR) and the five
   expect(screen.getByRole('header', { name: 'حسابي' })).toBeTruthy();
   expect(await screen.findByText(t.account.role.replace('{role}', 'مدير'))).toBeTruthy();
   expect(screen.getByText(t.account.adminManagedHint)).toBeTruthy();
-  expect(screen.getByText(t.account.email.current.replace('{email}', '⁦huda@example.com⁩'))).toBeTruthy();
-  for (const title of [t.account.avatar.title, t.account.name.title, t.account.phone.title, t.account.email.title, t.account.password.title]) {
+  expect(
+    screen.getByText(t.account.email.current.replace('{email}', '⁦huda@example.com⁩')),
+  ).toBeTruthy();
+  for (const title of [
+    t.account.avatar.title,
+    t.account.name.title,
+    t.account.phone.title,
+    t.account.email.title,
+    t.account.password.title,
+  ]) {
     expect(screen.getByRole('header', { name: title })).toBeTruthy();
   }
   expect(fetchMock).toHaveBeenCalledWith('/me/profile');

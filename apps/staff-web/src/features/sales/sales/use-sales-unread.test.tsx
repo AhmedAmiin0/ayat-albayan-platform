@@ -10,8 +10,11 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 let client: QueryClient;
-const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
-const total = (n: number) => apiFetch.mockResolvedValue({ items: [], total: n, page: 1, pageSize: 1 });
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <QueryClientProvider client={client}>{children}</QueryClientProvider>
+);
+const total = (n: number) =>
+  apiFetch.mockResolvedValue({ items: [], total: n, page: 1, pageSize: 1 });
 
 beforeEach(() => {
   client = new QueryClient({ defaultOptions: { queries: { retry: false } } });

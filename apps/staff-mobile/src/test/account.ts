@@ -18,4 +18,7 @@ export const fetchWithProfile =
     url === '/me/profile' ? profile : other;
 
 /** The /me write as the API answers it: the fixture with `over` applied. */
-export const savedProfile = (over: Partial<AccountProfile>): AccountProfile => ({ ...profileFixture, ...over });
+export const savedProfile = (over: Partial<AccountProfile>): AccountProfile => ({
+  ...profileFixture,
+  ...over,
+});

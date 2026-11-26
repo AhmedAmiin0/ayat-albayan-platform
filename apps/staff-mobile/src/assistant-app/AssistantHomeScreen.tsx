@@ -35,11 +35,26 @@ export function AssistantHomeScreen({ can }: { can: Can }) {
   const inset = useTabBarInset();
   return (
     <Screen list>
-      <ScreenHeader title={t.mobileRoles.lessonsTitle} subtitle={zone} trailing={<HeldBell tree="assistant" />} />
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 + inset }}>
-        <DaySwitcher date={date} isToday={isToday} onStep={(n) => setDate(addDays(date, n))} onToday={() => setDate(today)} />
+      <ScreenHeader
+        title={t.mobileRoles.lessonsTitle}
+        subtitle={zone}
+        trailing={<HeldBell tree="assistant" />}
+      />
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ gap: 16, paddingBottom: 32 + inset }}
+      >
+        <DaySwitcher
+          date={date}
+          isToday={isToday}
+          onStep={(n) => setDate(addDays(date, n))}
+          onToday={() => setDate(today)}
+        />
         <Note>{t.mobileRoles.joinNote}</Note>
-        <AssistantLessonsList day={assistantDay(date)} emptyTitle={isToday ? undefined : t.mobileRoles.dayEmpty} />
+        <AssistantLessonsList
+          day={assistantDay(date)}
+          emptyTitle={isToday ? undefined : t.mobileRoles.dayEmpty}
+        />
         {canOpen(can, 'meetings') ? (
           <InsetGroup>
             <ListRow title={t.mobileClassroom.meetingsRow} onPress={() => router.push('/assistant/lessons/meetings')} />

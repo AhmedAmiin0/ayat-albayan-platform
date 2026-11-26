@@ -25,7 +25,11 @@ export function TextEditor({ settingKey, ids, sheet }: EditorProps) {
         dir={phone ? 'ltr' : undefined}
         inputMode={phone ? 'tel' : undefined}
         aria-labelledby={ids.label}
-        aria-describedby={describedBy(boundsText(settingKey) && ids.bounds, preview !== null && previewId, error && ids.error)}
+        aria-describedby={describedBy(
+          boundsText(settingKey) && ids.bounds,
+          preview !== null && previewId,
+          error && ids.error,
+        )}
         aria-invalid={error ? true : undefined}
         disabled={api.status(settingKey).state === 'saving'}
         value={value}

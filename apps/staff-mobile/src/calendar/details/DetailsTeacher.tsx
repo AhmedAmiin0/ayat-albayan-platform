@@ -12,7 +12,10 @@ interface DetailsTeacherProps {
 
 /** Read once; the avatar beside it is decorative. */
 export function DetailsTeacher({ teacher, photo }: DetailsTeacherProps) {
-  const name = localizedName({ ar: teacher.display_name_ar, en: teacher.display_name_en ?? null }, locale);
+  const name = localizedName(
+    { ar: teacher.display_name_ar, en: teacher.display_name_en ?? null },
+    locale,
+  );
   if (!photo) return <DetailsLine tone="ink">{name}</DetailsLine>;
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>

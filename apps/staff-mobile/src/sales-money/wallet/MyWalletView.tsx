@@ -41,7 +41,12 @@ export function MyWalletView() {
         ) : null
       }
       ListEmptyComponent={
-        <LoadState status={{ data: list.data, isError: list.isError, refetch: pull }} empty emptyTitle={W.empty} emptyHint={W.emptyHint} />
+        <LoadState
+          status={{ data: list.data, isError: list.isError, refetch: pull }}
+          empty
+          emptyTitle={W.empty}
+          emptyHint={W.emptyHint}
+        />
       }
     />
   );

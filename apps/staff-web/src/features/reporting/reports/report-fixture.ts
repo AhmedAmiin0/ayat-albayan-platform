@@ -6,7 +6,10 @@ import { reportView } from '@ab/shared/testing';
 export { FULL_GRADES, reportView } from '@ab/shared/testing';
 
 /** Saturday 3 Oct 2026, 16:00 Riyadh (13:00Z), started; one student with a 4-lesson package. */
-export function formResponse(over: Partial<ReportFormResponse> = {}, report: Partial<ReportView> = {}): ReportFormResponse {
+export function formResponse(
+  over: Partial<ReportFormResponse> = {},
+  report: Partial<ReportView> = {},
+): ReportFormResponse {
   return {
     lesson: {
       id: 'l-1',

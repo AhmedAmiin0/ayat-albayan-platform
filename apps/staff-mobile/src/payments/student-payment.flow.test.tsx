@@ -58,7 +58,9 @@ test('students → search → student → camera attachment → POST /payments �
   });
   expect(state.sub.status).toBe('active');
   await waitFor(() => expect(screen.queryByText(t.enums.subscriptionStatus.unpaid)).toBeNull());
-  expect(screen.getAllByText(t.enums.subscriptionStatus.active).length).toBeGreaterThan(activeBefore);
+  expect(screen.getAllByText(t.enums.subscriptionStatus.active).length).toBeGreaterThan(
+    activeBefore,
+  );
 });
 
 test('offline: the error line shows, the form keeps its values; retry re-sends the same id, no second upload', async () => {
@@ -82,5 +84,7 @@ test('offline: the error line shows, the form keeps its values; retry re-sends t
   expect(backend.sent('POST /payments/receipt-upload-url')).toHaveLength(1);
   expect(backend.uploads).toHaveLength(1);
   await waitFor(() => expect(screen.queryByText(t.enums.subscriptionStatus.unpaid)).toBeNull());
-  expect(screen.getAllByText(t.enums.subscriptionStatus.active).length).toBeGreaterThan(seen.activeWords);
+  expect(screen.getAllByText(t.enums.subscriptionStatus.active).length).toBeGreaterThan(
+    seen.activeWords,
+  );
 });

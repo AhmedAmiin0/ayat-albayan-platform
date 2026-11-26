@@ -22,24 +22,33 @@ const action = () => screen.queryByRole('button', { name: `${t.trialDate.action}
 
 beforeEach(() => jest.clearAllMocks());
 
-test.each(['new', 'trial', 'pending_subscription'] as const)('%s: the action opens the trial-date screen; the history under it', async (status) => {
-  serve(status);
-  await renderWithQuery(<TrialDateSection student={{ ...profile, status }} />, createTestQueryClient({ meFromApi: true }));
-  await screen.findByText(t.trialDate.count.one);
-  expect(mockApiFetch).toHaveBeenCalledWith(`/booking/trial-dates?studentId=${profile.id}`);
-  expect(screen.queryByText(t.trialDate.notAllowed)).toBeNull();
-  const button = action();
-  expect(button).toBeTruthy();
-  if (button) await fireEvent.press(button);
-  expect(mockPush).toHaveBeenCalledWith({
-    pathname: '/students/trial-date/[studentId]',
-    params: { studentId: profile.id, name: profile.name, program: 'quran' },
-  });
-});
+test.each(['new', 'trial', 'pending_subscription'] as const)(
+  '%s: the action opens the trial-date screen; the history under it',
+  async (status) => {
+    serve(status);
+    await renderWithQuery(
+      <TrialDateSection student={{ ...profile, status }} />,
+      createTestQueryClient({ meFromApi: true }),
+    );
+    await screen.findByText(t.trialDate.count.one);
+    expect(mockApiFetch).toHaveBeenCalledWith(`/booking/trial-dates?studentId=${profile.id}`);
+    expect(screen.queryByText(t.trialDate.notAllowed)).toBeNull();
+    const button = action();
+    expect(button).toBeTruthy();
+    if (button) await fireEvent.press(button);
+    expect(mockPush).toHaveBeenCalledWith({
+      pathname: '/students/trial-date/[studentId]',
+      params: { studentId: profile.id, name: profile.name, program: 'quran' },
+    });
+  },
+);
 
 test('active: no action, the reason in its place, the history still shown', async () => {
   serve('active');
-  await renderWithQuery(<TrialDateSection student={profile} />, createTestQueryClient({ meFromApi: true }));
+  await renderWithQuery(
+    <TrialDateSection student={profile} />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   expect(await screen.findByText(t.trialDate.notAllowed)).toBeTruthy();
   expect(action()).toBeNull();
   expect(await screen.findByText(t.trialDate.outcome.upcoming)).toBeTruthy();

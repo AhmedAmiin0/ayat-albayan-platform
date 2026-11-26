@@ -24,7 +24,14 @@ export interface ValuesBodyProps {
 }
 
 /** The page: head, search and filters, the group list (side list ≥ shell, chips below) and one table. */
-export function ValuesBody({ search, onSearch, loading, failed, onRetry, custom }: ValuesBodyProps) {
+export function ValuesBody({
+  search,
+  onSearch,
+  loading,
+  failed,
+  onRetry,
+  custom,
+}: ValuesBodyProps) {
   const api = useValues();
   const phone = usePhone();
   const chips = useBelowShell();
@@ -66,11 +73,19 @@ export function ValuesBody({ search, onSearch, loading, failed, onRetry, custom 
         {chips ? <div className="min-w-0">{nav}</div> : <aside className="shell:sticky shell:top-20 shell:self-start">{nav}</aside>}
         <div className="min-w-0">
           {failed && <ValuesLoadError onRetry={onRetry} />}
-          {!failed && view.customFailed && <ValuesLoadError onRetry={view.retryCustom} message={t.config.custom.loadError} />}
+          {!failed && view.customFailed && (
+            <ValuesLoadError onRetry={view.retryCustom} message={t.config.custom.loadError} />
+          )}
           {!failed && empty && <ValuesEmpty onClear={clear} />}
           {!failed && groupEmpty && <GroupEmpty />}
           {!failed && !empty && !groupEmpty && !view.customFailed && (
-            <ValuesTable caption={view.caption} note={view.note} rows={view.rows} env={env} loading={busy} />
+            <ValuesTable
+              caption={view.caption}
+              note={view.note}
+              rows={view.rows}
+              env={env}
+              loading={busy}
+            />
           )}
           {view.all && !empty && (
             <button type="button" onClick={clear} className="mt-3 min-h-11 text-sm font-semibold text-lapis underline underline-offset-4 sm:min-h-8">

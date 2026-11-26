@@ -23,10 +23,15 @@ function AttachmentsBody({ path, open }: { path: string; open: boolean }) {
       </AppText>
     );
   }
-  if (!files.data) return <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} />;
+  if (!files.data)
+    return <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} />;
   const rows = attachmentRows(Array.isArray(files.data) ? files.data : []);
   if (rows.length === 0) {
-    return <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink3 }}>{t.payments.noAttachments}</AppText>;
+    return (
+      <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink3 }}>
+        {t.payments.noAttachments}
+      </AppText>
+    );
   }
   return (
     <View style={{ gap: 12 }}>

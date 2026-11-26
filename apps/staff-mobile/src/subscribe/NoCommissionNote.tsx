@@ -13,6 +13,10 @@ interface NoCommissionNoteProps {
 
 /** Course started before signup (migration 20261028000942) means no commission. */
 export function NoCommissionNote({ startsOn, usedBefore, now }: NoCommissionNoteProps) {
-  const fact = { starts_on: startsOn, created_at: now.toISOString(), lessons_used_before: usedBefore };
+  const fact = {
+    starts_on: startsOn,
+    created_at: now.toISOString(),
+    lessons_used_before: usedBefore,
+  };
   return subscriptionAlreadyStarted(fact) ? <Note>{t.salesMoney.noCommissionStarted}</Note> : null;
 }

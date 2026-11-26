@@ -19,7 +19,13 @@ describe('AccountPage «حسابي» (R-ACC-01)', () => {
     expect(await screen.findByText(t.account.role.replace('{role}', 'معلمة القرآن'))).toBeTruthy();
     expect(screen.getByText(t.account.adminManagedHint)).toBeTruthy();
     const A = t.account;
-    for (const title of [A.avatar.title, A.name.title, A.phone.title, A.email.title, A.password.title]) {
+    for (const title of [
+      A.avatar.title,
+      A.name.title,
+      A.phone.title,
+      A.email.title,
+      A.password.title,
+    ]) {
       expect(screen.getByRole('region', { name: title })).toBeTruthy();
     }
     expect(screen.getAllByText(PROFILE.email ?? '')[0]?.getAttribute('dir')).toBe('ltr');
@@ -43,7 +49,10 @@ describe('AccountPage «حسابي» (R-ACC-01)', () => {
   it('error: the message and «إعادة المحاولة», which loads again', async () => {
     // profileQuery retries once (1s) before it shows the error.
     const offline = () => Promise.reject(new Error('offline'));
-    apiFetch.mockImplementationOnce(offline).mockImplementationOnce(offline).mockResolvedValue(PROFILE);
+    apiFetch
+      .mockImplementationOnce(offline)
+      .mockImplementationOnce(offline)
+      .mockResolvedValue(PROFILE);
     renderWithClient(<AccountPage />);
     expect(await screen.findByText(t.account.loadError)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.account.retry }));

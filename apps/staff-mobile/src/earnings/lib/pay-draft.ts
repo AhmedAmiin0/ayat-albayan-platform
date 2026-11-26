@@ -32,7 +32,10 @@ interface PayCheck {
  * The payment to send, or why not. `ceiling` = what the ticked sessions (or the whole balance)
  * still owe.
  */
-export function checkPayDraft(draft: PayDraft, ctx: { ceiling: number; now: Date; earningIds: string[] | undefined }): PayCheck {
+export function checkPayDraft(
+  draft: PayDraft,
+  ctx: { ceiling: number; now: Date; earningIds: string[] | undefined },
+): PayCheck {
   const amount = parseAmount(draft.amountText);
   const problem = amountProblem({ amount, text: draft.amountText, ceiling: ctx.ceiling });
   const errors: PayCheck['errors'] = {};
@@ -42,5 +45,14 @@ export function checkPayDraft(draft: PayDraft, ctx: { ceiling: number; now: Date
   if (!draft.method) errors.method = t.common.required;
   if (problem || amount === null || !draft.method) return { errors };
   const paidAt = paidAtFor(ctx.now, draft.daysAgo).toISOString();
-  return { errors, input: { amount, method: draft.method, paidAt, receipt: draft.receipt, earningIds: ctx.earningIds } };
+  return {
+    errors,
+    input: {
+      amount,
+      method: draft.method,
+      paidAt,
+      receipt: draft.receipt,
+      earningIds: ctx.earningIds,
+    },
+  };
 }

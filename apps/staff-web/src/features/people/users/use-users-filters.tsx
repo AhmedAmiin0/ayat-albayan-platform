@@ -24,8 +24,18 @@ export function usersFilters(
   return {
     fields: (
       <>
-        <SelectFilterField label={F.role} value={view.role} options={ROLE_OPTIONS} onChange={(role) => set({ role })} />
-        <SelectFilterField label={F.status} value={view.status} options={STATUS_OPTIONS} onChange={(status) => set({ status })} />
+        <SelectFilterField
+          label={F.role}
+          value={view.role}
+          options={ROLE_OPTIONS}
+          onChange={(role) => set({ role })}
+        />
+        <SelectFilterField
+          label={F.status}
+          value={view.status}
+          options={STATUS_OPTIONS}
+          onChange={(status) => set({ status })}
+        />
       </>
     ),
     chips,

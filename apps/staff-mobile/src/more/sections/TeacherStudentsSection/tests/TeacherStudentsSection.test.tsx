@@ -13,7 +13,16 @@ const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
 
 const L = t.studentLists;
-const COUNTS = { new: 1, trial: 1, pending_subscription: 0, active: 2, pending_renewal: 1, expired: 1, paused: 1, churned: 0 };
+const COUNTS = {
+  new: 1,
+  trial: 1,
+  pending_subscription: 0,
+  active: 2,
+  pending_renewal: 1,
+  expired: 1,
+  paused: 1,
+  churned: 0,
+};
 const ROWS = {
   active: [listItem({ id: 's1', name: 'هدى' }), listItem({ id: 's2', name: 'يوسف' })],
   trial: [listItem({ id: 's3', name: 'مريم', status: 'trial' })],

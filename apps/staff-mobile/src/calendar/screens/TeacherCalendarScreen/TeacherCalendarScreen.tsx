@@ -66,7 +66,11 @@ export function TeacherCalendarScreen() {
           <AgendaDayView
             day={item}
             today={item.date === today}
-            available={availabilityLine(grid.data ?? [], { date: item.date, teacherTz: teacher.data?.tz ?? RIYADH_TZ, cycle })}
+            available={availabilityLine(grid.data ?? [], {
+              date: item.date,
+              teacherTz: teacher.data?.tz ?? RIYADH_TZ,
+              cycle,
+            })}
             onReschedule={setMoving}
             onEditTime={setEditing}
             onOpen={details.open}
@@ -78,7 +82,13 @@ export function TeacherCalendarScreen() {
           void grid.refetch();
         }}
         // A new week has no data yet: say it is loading rather than show a blank screen.
-        ListEmptyComponent={lessons.isPending ? <Note>{t.common.loading}</Note> : <ErrorState onRetry={() => void lessons.refetch()} />}
+        ListEmptyComponent={
+          lessons.isPending ? (
+            <Note>{t.common.loading}</Note>
+          ) : (
+            <ErrorState onRetry={() => void lessons.refetch()} />
+          )
+        }
       />
       <LessonDetailsSheet
         lesson={details.lesson}

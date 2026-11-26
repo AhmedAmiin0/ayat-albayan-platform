@@ -76,4 +76,9 @@ export const myCommission = (over: Partial<MyCommissionRow> = {}): MyCommissionR
   ...over,
 });
 
-export const commissionPage = (items: MyCommissionRow[], total = items.length, page = 1) => ({ items, total, page, pageSize: 20 });
+export const commissionPage = (items: MyCommissionRow[], total = items.length, page = 1) => ({
+  items,
+  total,
+  page,
+  pageSize: 20,
+});

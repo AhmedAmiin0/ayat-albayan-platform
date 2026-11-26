@@ -34,7 +34,9 @@ function renderPage(role: 'admin' | 'teacher', recordings: unknown) {
     return DATA;
   });
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <StudentReportsPage studentId="s-1" role={role} tz="Asia/Riyadh" />
     </QueryClientProvider>,
   );

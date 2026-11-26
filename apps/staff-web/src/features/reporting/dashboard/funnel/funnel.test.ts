@@ -14,7 +14,15 @@ const zero = {
 
 describe('funnelSteps (R-RPT-01)', () => {
   it('a lead counts at every stage up to its current one; rates are stage over the previous stage', () => {
-    const steps = funnelSteps({ ...zero, new: 3, contacted: 1, lost: 1, trial_booked: 1, trial_done: 2, converted: 2 });
+    const steps = funnelSteps({
+      ...zero,
+      new: 3,
+      contacted: 1,
+      lost: 1,
+      trial_booked: 1,
+      trial_done: 2,
+      converted: 2,
+    });
     expect(steps).toEqual([
       { stage: 'new', reached: 10, rate: null },
       { stage: 'trial_booked', reached: 5, rate: 0.5 },

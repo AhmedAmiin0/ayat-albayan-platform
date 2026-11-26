@@ -33,7 +33,10 @@ export const balanceQuery = (s: Scope) =>
   });
 
 /** One page of sessions, sorted server-side (R-NFR-08); no sort = newest first. */
-export const sessionsQuery = (s: Scope, q: { status: SessionFilter; page: number; sort?: SortSearch }) =>
+export const sessionsQuery = (
+  s: Scope,
+  q: { status: SessionFilter; page: number; sort?: SortSearch },
+) =>
   queryOptions({
     queryKey: moneyKeys.earningsSessions(owner(s), q),
     queryFn: () => {
@@ -83,7 +86,10 @@ export const receiptUrl = (s: Scope, paymentId: string) =>
   apiFetch<SignedDownload>(s.kind === 'admin' ? `/teacher-earnings/payments/${paymentId}/receipt` : `${base(s)}/payments/${paymentId}/receipt`);
 
 /** Straight to the private bucket through a one-off signed URL; the path is then sent with the payment. */
-export async function uploadTeacherReceipt(input: { teacherId: string; file: File }): Promise<string> {
+export async function uploadTeacherReceipt(input: {
+  teacherId: string;
+  file: File;
+}): Promise<string> {
   const { file } = input;
   const signed = await apiSend<SignedUpload>('POST', `/teacher-earnings/${input.teacherId}/receipt-upload-url`, {
     mime: file.type,

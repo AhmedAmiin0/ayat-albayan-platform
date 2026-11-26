@@ -70,14 +70,18 @@ describe('dashboard charts (one bar system, each a labelled table)', () => {
   });
 
   it('expenses by category: only categories with spend; none → one line', () => {
-    const { unmount } = render(<ExpensesByCategory byCategory={SUMMARY.finance.expenses_by_category} />);
+    const { unmount } = render(
+      <ExpensesByCategory byCategory={SUMMARY.finance.expenses_by_category} />,
+    );
     expect(screen.getAllByRole('rowheader').map((h) => h.textContent)).toEqual([
       t.enums.expenseCategory.ads,
       t.enums.expenseCategory.content,
       t.enums.expenseCategory.tools,
     ]);
     unmount();
-    render(<ExpensesByCategory byCategory={{ ads: 0, content: 0, tools: 0, operations: 0, other: 0 }} />);
+    render(
+      <ExpensesByCategory byCategory={{ ads: 0, content: 0, tools: 0, operations: 0, other: 0 }} />,
+    );
     expect(screen.getByText(t.dashboard.noExpenses)).toBeTruthy();
   });
 });

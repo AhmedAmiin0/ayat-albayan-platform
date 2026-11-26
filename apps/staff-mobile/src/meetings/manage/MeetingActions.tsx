@@ -21,11 +21,24 @@ export function MeetingActions({ meeting, tz }: { meeting: MeetingView; tz: stri
   const enter = useEnterMeeting(tz);
   const base = meetingsBase(useSegments()[0]);
   const { manage, startsAt } = manageOf(meeting);
-  if (moving && startsAt) return <RescheduleMeeting meeting={{ ...meeting, starts_at: startsAt }} tz={tz} onDone={() => setMoving(false)} />;
+  if (moving && startsAt)
+    return (
+      <RescheduleMeeting
+        meeting={{ ...meeting, starts_at: startsAt }}
+        tz={tz}
+        onDone={() => setMoving(false)}
+      />
+    );
   const c = m.confirm;
   return (
     <View style={{ gap: 8 }}>
-      {meeting.can_join ? <Button label={t.meetings.internal.enter} busy={enter.pending} onPress={() => enter.run(meeting.id)} /> : null}
+      {meeting.can_join ? (
+        <Button
+          label={t.meetings.internal.enter}
+          busy={enter.pending}
+          onPress={() => enter.run(meeting.id)}
+        />
+      ) : null}
       {c ? (
         <InlineConfirm
           tone={c.danger ? 'danger' : meeting.can_join ? 'secondary' : undefined}
@@ -36,7 +49,11 @@ export function MeetingActions({ meeting, tz }: { meeting: MeetingView; tz: stri
           onCancel={() => !c.busy && m.close()}
         />
       ) : manage ? (
-        <MeetingManageButtons scheduled={startsAt !== null} onAsk={m.ask} onMove={() => setMoving(true)} />
+        <MeetingManageButtons
+          scheduled={startsAt !== null}
+          onAsk={m.ask}
+          onMove={() => setMoving(true)}
+        />
       ) : null}
       {m.newUrl ? <MeetingLinkShare url={m.newUrl} note={t.mobileClassroom.newLinkReady} /> : null}
       {meeting.can_manage ? (

@@ -34,8 +34,13 @@ function renderDay() {
 afterEach(() => apiFetch.mockReset());
 
 const ADMIN_ONLY = [
-  t.lessons.cancelTitle, t.lessons.rescheduleTitle, t.lessons.timeEdit.title, t.booking.invoice.label,
-  t.reports.formTitle, t.booking.makeup.missedLabel, t.subscriptions.unpaidFlag,
+  t.lessons.cancelTitle,
+  t.lessons.rescheduleTitle,
+  t.lessons.timeEdit.title,
+  t.booking.invoice.label,
+  t.reports.formTitle,
+  t.booking.makeup.missedLabel,
+  t.subscriptions.unpaidFlag,
 ];
 
 describe('sales: a lesson chip opens the read-only admin drawer', () => {
@@ -48,7 +53,8 @@ describe('sales: a lesson chip opens the read-only admin drawer', () => {
     expect(within(drawer).queryByText(t.enums.lessonStatus.scheduled)).toBeNull();
     expect(within(drawer).getByText(t.schedule.trialTag)).toBeTruthy();
     expect(within(drawer).getByText(new RegExp(t.schedule.viewerTime))).toBeTruthy();
-    for (const line of salesClockLines(LATER, Z24)) expect(within(drawer).getByText(line)).toBeTruthy();
+    for (const line of salesClockLines(LATER, Z24))
+      expect(within(drawer).getByText(line)).toBeTruthy();
     expect(within(drawer).getByText('أبرار')).toBeTruthy();
     expect(within(drawer).getByText('AB-0183')).toBeTruthy();
     expect(within(drawer).getByText(t.lessons.sheet.readOnly)).toBeTruthy();

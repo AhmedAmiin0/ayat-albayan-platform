@@ -15,9 +15,16 @@ export function StudentMap({ onNote }: { onNote: (message: string) => void }) {
   const list = useQuery({ ...googleStudentsQuery(q), placeholderData: keepPreviousData });
   return (
     <GoogleBlock title={s.title} hint={s.hint}>
-      <SearchInput aria-label={s.search} placeholder={s.search} value={text} onChange={(e) => setText(e.target.value)} />
+      <SearchInput
+        aria-label={s.search}
+        placeholder={s.search}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
       {list.isPending && <BlockSkeleton />}
-      {list.isError && <LoadError message={t.googleSync.loadError} onRetry={() => void list.refetch()} />}
+      {list.isError && (
+        <LoadError message={t.googleSync.loadError} onRetry={() => void list.refetch()} />
+      )}
       {list.data?.length === 0 && <p className="text-sm text-ink-3">{s.empty}</p>}
       {list.data && list.data.length > 0 && (
         <ul aria-label={s.title} aria-busy={list.isFetching} className="grid divide-y divide-rule border-y border-rule">

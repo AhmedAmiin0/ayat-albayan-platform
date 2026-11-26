@@ -98,7 +98,9 @@ describe('TeacherDetailPage (R-TCH-01, R-TCH-02, docs/07 §8)', () => {
     RESPONSES['/teachers/t1'] = { ...FATMA, meeting_mode: 'static', platform_classroom: false };
     renderPage();
     fireEvent.click(await screen.findByRole('tab', { name: t.teachers.tabData }));
-    expect(screen.getByText(t.teachers.meetingMode).nextElementSibling?.textContent).toBe(t.teachers.meetingModeOption.static);
+    expect(screen.getByText(t.teachers.meetingMode).nextElementSibling?.textContent).toBe(
+      t.teachers.meetingModeOption.static,
+    );
     RESPONSES['/teachers/t1'] = FATMA;
   });
 

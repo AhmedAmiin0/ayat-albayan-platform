@@ -18,7 +18,13 @@ export interface ReportHistoryListProps {
 }
 
 /** Newest first (R-REP-05); edit shows only while the window is open on this clock (docs/46 B7). */
-export function ReportHistoryList({ items, role, tz, studentId, recorded }: ReportHistoryListProps) {
+export function ReportHistoryList({
+  items,
+  role,
+  tz,
+  studentId,
+  recorded,
+}: ReportHistoryListProps) {
   const clock = useClock();
   const now = useNow();
   return (
@@ -43,7 +49,12 @@ export function ReportHistoryList({ items, role, tz, studentId, recorded }: Repo
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {recorded.has(r.lesson_id) && (
-              <RecordingLink studentId={studentId} lessonId={r.lesson_id} role={role} when={lessonWhenAt(new Date(r.starts_at), { tz, ...clock })} />
+              <RecordingLink
+                studentId={studentId}
+                lessonId={r.lesson_id}
+                role={role}
+                when={lessonWhenAt(new Date(r.starts_at), { tz, ...clock })}
+              />
             )}
             {editableNow(r, now) && (
               <ReportLink href={reportFormHref({ role, lessonId: r.lesson_id, studentId })}>

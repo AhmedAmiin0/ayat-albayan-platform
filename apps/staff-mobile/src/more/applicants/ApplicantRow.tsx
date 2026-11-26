@@ -13,7 +13,12 @@ export const ApplicantRow = memo(function ApplicantRow({ applicant }: { applican
       title={applicant.name ?? ltr(phone)}
       meta={applicant.name ? phone : undefined}
       tags={<ApplicantLinks cv={applicant.cv_url} recitation={applicant.recitation_url} />}
-      trailing={<StatusChip {...jobApplicantStatusStyle[applicant.status]} label={t.enums.jobApplicantStatus[applicant.status]} />}
+      trailing={
+        <StatusChip
+          {...jobApplicantStatusStyle[applicant.status]}
+          label={t.enums.jobApplicantStatus[applicant.status]}
+        />
+      }
     />
   );
 });

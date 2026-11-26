@@ -21,6 +21,12 @@ test('docs/07 §6: «تأكيد الحلقة» (filled) and «التفاصيل»
   expect(cells).toHaveLength(2);
   expect(within(cells[0] as (typeof cells)[number]).getByText(t.today.confirmLesson)).toBeTruthy();
   expect(within(cells[1] as (typeof cells)[number]).getByText(t.today.details)).toBeTruthy();
-  expect(styleOf(t.today.confirmLesson)).toMatchObject({ minHeight: 48, backgroundColor: palette.light.lapisFill });
-  expect(styleOf(t.today.details)).toMatchObject({ borderWidth: 1, borderColor: palette.light.ruleInput });
+  expect(styleOf(t.today.confirmLesson)).toMatchObject({
+    minHeight: 48,
+    backgroundColor: palette.light.lapisFill,
+  });
+  expect(styleOf(t.today.details)).toMatchObject({
+    borderWidth: 1,
+    borderColor: palette.light.ruleInput,
+  });
 });

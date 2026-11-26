@@ -33,7 +33,8 @@ async function avatarSection() {
   renderWithClient(<AccountPage />);
   await screen.findByRole('region', { name: A.title });
   const s = section(A.title);
-  const pick = (file: File) => fireEvent.change(s.getByLabelText(A.choose), { target: { files: [file] } });
+  const pick = (file: File) =>
+    fireEvent.change(s.getByLabelText(A.choose), { target: { files: [file] } });
   return { s, pick };
 }
 

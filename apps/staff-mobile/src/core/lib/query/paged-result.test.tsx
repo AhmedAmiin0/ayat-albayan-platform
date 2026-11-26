@@ -3,7 +3,10 @@ import { usePagedActions, withTracked } from './paged-result';
 
 test('withTracked adds fields without reading the result (no spread of tracked getters)', () => {
   const read: string[] = [];
-  const result = new Proxy({ data: 1, isFetching: false }, { get: (t, k) => (read.push(String(k)), Reflect.get(t, k)) });
+  const result = new Proxy(
+    { data: 1, isFetching: false },
+    { get: (t, k) => (read.push(String(k)), Reflect.get(t, k)) },
+  );
   const out = withTracked(result, { items: [1] });
   expect(read).toEqual([]);
   expect(out.items).toEqual([1]);
@@ -15,7 +18,9 @@ test('loadMore asks for the next page only when there is one and none is on its 
   const fetchNextPage = jest.fn(async () => undefined);
   const refetch = jest.fn(async () => undefined);
   const base = { hasNextPage: true, isFetchingNextPage: false, fetchNextPage, refetch };
-  const { result, rerender } = await renderHook((p: typeof base) => usePagedActions(p), { initialProps: base });
+  const { result, rerender } = await renderHook((p: typeof base) => usePagedActions(p), {
+    initialProps: base,
+  });
   const first = result.current;
   await act(async () => first.loadMore());
   expect(fetchNextPage).toHaveBeenCalledTimes(1);

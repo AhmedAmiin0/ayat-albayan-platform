@@ -45,9 +45,17 @@ export function parseDraft(d: CustomDraft): CustomDraftResult {
   } catch {
     errors.value = c.invalidJson;
   }
-  const body = !errors.value && customConfigUpsertSchema.safeParse({ value, description: d.description.trim() || null, isPublic: d.isPublic });
-  if (body && !body.success) errors.value = VALUE_MESSAGES[body.error.issues[0]?.message ?? ''] ?? c.invalidJson;
-  if (errors.key || errors.value || !body || !body.success || !key.success) return { ok: false, errors };
+  const body =
+    !errors.value &&
+    customConfigUpsertSchema.safeParse({
+      value,
+      description: d.description.trim() || null,
+      isPublic: d.isPublic,
+    });
+  if (body && !body.success)
+    errors.value = VALUE_MESSAGES[body.error.issues[0]?.message ?? ''] ?? c.invalidJson;
+  if (errors.key || errors.value || !body || !body.success || !key.success)
+    return { ok: false, errors };
   return { ok: true, key: key.data, body: body.data };
 }
 

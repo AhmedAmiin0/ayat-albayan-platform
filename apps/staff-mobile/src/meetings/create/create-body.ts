@@ -16,7 +16,9 @@ export function createBody(draft: CreateDraft, tz: string): CreateMeeting {
   const title = draft.title.trim();
   return {
     ...(title ? { title } : {}),
-    ...(draft.slot ? { startsAt: startsAtUtc(draft.slot, tz), durationMin: draft.slot.durationMin } : {}),
+    ...(draft.slot
+      ? { startsAt: startsAtUtc(draft.slot, tz), durationMin: draft.slot.durationMin }
+      : {}),
     ...(draft.invitees.length ? { invitees: draft.invitees.map((d) => d.input) } : {}),
     clientRequestId: draft.requestId,
   };

@@ -19,12 +19,18 @@ import { LazyList } from '@/core/ui/lists/LazyList';
 
 const statusPills = (): FilterPill<ApplicantStatusFilter>[] => [
   { value: 'all', label: t.leads.filterAll },
-  ...JOB_APPLICANT_STATUSES.map((s) => ({ value: s, label: t.enums.jobApplicantStatus[s], ...jobApplicantStatusStyle[s] })),
+  ...JOB_APPLICANT_STATUSES.map((s) => ({
+    value: s,
+    label: t.enums.jobApplicantStatus[s],
+    ...jobApplicantStatusStyle[s],
+  })),
 ];
 
 const keyOf = (applicant: JobApplicant) => applicant.id;
 // Keyed by the applicant: its links hold a «failed» line that a recycled row must not carry over.
-const renderRow = ({ item }: { item: JobApplicant }) => <ApplicantRow key={item.id} applicant={item} />;
+const renderRow = ({ item }: { item: JobApplicant }) => (
+  <ApplicantRow key={item.id} applicant={item} />
+);
 
 /** R-LEAD-04: read-only; moving an applicant through the pipeline stays on the web. */
 export function JobApplicantsScreen() {
@@ -32,13 +38,26 @@ export function JobApplicantsScreen() {
   const [sort, setSort] = useState('');
   const list = usePagedList<JobApplicant>({ path: '/job-applicants', params: applicantParams(status, sort) });
   const loaded = list.data !== undefined;
-  const pills = statusPills().map((p) => (loaded && p.value === status ? { ...p, count: list.total } : p));
+  const pills = statusPills().map((p) =>
+    loaded && p.value === status ? { ...p, count: list.total } : p,
+  );
   const filtered = status !== 'all';
   return (
     <Screen list>
       <ScreenHeader title={t.nav.jobApplicants} size="h2" connecting />
-      <FilterPills items={pills} value={status} onChange={setStatus} accessibilityLabel={t.mobileLeads.applicantsFilter} />
-      <FilterPills items={applicantSortChoices()} value={sort} onChange={setSort} accessibilityLabel={t.mobileLeads.applicantsSort} role="radiogroup" />
+      <FilterPills
+        items={pills}
+        value={status}
+        onChange={setStatus}
+        accessibilityLabel={t.mobileLeads.applicantsFilter}
+      />
+      <FilterPills
+        items={applicantSortChoices()}
+        value={sort}
+        onChange={setSort}
+        accessibilityLabel={t.mobileLeads.applicantsSort}
+        role="radiogroup"
+      />
       <LazyList
         paged={list}
         keyExtractor={keyOf}

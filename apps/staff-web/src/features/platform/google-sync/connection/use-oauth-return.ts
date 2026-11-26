@@ -13,7 +13,13 @@ export function useOauthReturn(): { note: OauthNote | null; clear: () => void } 
     if (!returned) return;
     const { pathname, hash } = window.location;
     const anchor = hash.replace(/^#/, '');
-    if (router) void router.navigate({ to: pathname, search: {}, ...(anchor ? { hash: anchor } : {}), replace: true });
+    if (router)
+      void router.navigate({
+        to: pathname,
+        search: {},
+        ...(anchor ? { hash: anchor } : {}),
+        replace: true,
+      });
     else window.history.replaceState(window.history.state, '', `${pathname}${hash}`);
   }, [returned, router]);
   return { note, clear: () => setNote(null) };

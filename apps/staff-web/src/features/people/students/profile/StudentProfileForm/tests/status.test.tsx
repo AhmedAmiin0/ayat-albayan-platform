@@ -27,11 +27,14 @@ const STUDENT = {
 
 const statusSelect = () => screen.getByLabelText<HTMLSelectElement>(t.students.status);
 const save = () => fireEvent.click(screen.getByRole('button', { name: t.common.save }));
-const sentPatch = (call = 0): Record<string, unknown> => api.updateStudent.mock.calls[call]?.[1] as Record<string, unknown>;
+const sentPatch = (call = 0): Record<string, unknown> =>
+  api.updateStudent.mock.calls[call]?.[1] as Record<string, unknown>;
 
 function renderForm() {
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <StudentProfileForm student={STUDENT} />
     </QueryClientProvider>,
   );
@@ -86,7 +89,9 @@ describe('StudentProfileForm status safety (R-STU-05)', () => {
     api.updateStudent.mockResolvedValue({ ...STUDENT, status: 'expired' });
     const client = new QueryClient();
     const view = (student: StudentProfile) => (
-      <QueryClientProvider client={client}><StudentProfileForm student={student} /></QueryClientProvider>
+      <QueryClientProvider client={client}>
+        <StudentProfileForm student={student} />
+      </QueryClientProvider>
     );
     const { rerender } = render(view(STUDENT));
     rerender(view({ ...STUDENT, status: 'active' })); // e.g. a payment moved it

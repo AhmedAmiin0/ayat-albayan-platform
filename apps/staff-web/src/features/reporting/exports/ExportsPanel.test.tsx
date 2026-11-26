@@ -38,7 +38,9 @@ describe('ExportsPanel (R-RPT-03)', () => {
     expect((button(t.exports.students) as HTMLButtonElement).disabled).toBe(true);
     finish();
     downloadCsv.mockRejectedValueOnce(new ApiError(400, { code: 'range_too_large' }));
-    await waitFor(() => expect((button(t.exports.students) as HTMLButtonElement).disabled).toBe(false));
+    await waitFor(() =>
+      expect((button(t.exports.students) as HTMLButtonElement).disabled).toBe(false),
+    );
     fireEvent.click(button(t.exports.payments));
     expect((await screen.findByRole('alert')).textContent).toBe(t.exports.error.range_too_large);
   });

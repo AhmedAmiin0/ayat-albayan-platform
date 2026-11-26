@@ -40,10 +40,16 @@ export function SalesTeachers() {
           </Button>
         </FormAlert>
       )}
-      {query.data?.length === 0 && <EmptyState title={t.sales.teachers.empty}>{t.sales.teachers.emptyHint}</EmptyState>}
+      {query.data?.length === 0 && (
+        <EmptyState title={t.sales.teachers.empty}>{t.sales.teachers.emptyHint}</EmptyState>
+      )}
       {all.length > 0 && (
         <>
-          <TeacherFilters value={filter} programs={programsOf(all, PROGRAMS)} onChange={setFilter} />
+          <TeacherFilters
+            value={filter}
+            programs={programsOf(all, PROGRAMS)}
+            onChange={setFilter}
+          />
           {shown.length === 0 ? (
             <EmptyState
               title={t.sales.teachers.noMatch}
@@ -60,7 +66,12 @@ export function SalesTeachers() {
           ) : (
             <ul aria-label={t.sales.teachers.listLabel} className="border-t border-rule">
               {shown.map((tc) => (
-                <TeacherListItem key={tc.id} teacher={tc} selected={tc.id === openId} onSelect={setOpenId} />
+                <TeacherListItem
+                  key={tc.id}
+                  teacher={tc}
+                  selected={tc.id === openId}
+                  onSelect={setOpenId}
+                />
               ))}
             </ul>
           )}

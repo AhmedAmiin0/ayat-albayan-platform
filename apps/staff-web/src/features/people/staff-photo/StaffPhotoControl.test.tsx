@@ -18,7 +18,9 @@ const SIGNED = { bucket: 'avatars', path: 't1/avatar-1.png', token: 'tok', signe
 const calls: string[] = [];
 
 function renderControl(props: Partial<StaffPhotoControlProps> = {}) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
   const invalidate = vi.spyOn(client, 'invalidateQueries');
   render(
     <QueryClientProvider client={client}>
@@ -32,7 +34,8 @@ const png = (size = 1024) => {
   Object.defineProperty(f, 'size', { value: size });
   return f;
 };
-const pick = (file: File) => fireEvent.change(screen.getByLabelText(P.change), { target: { files: [file] } });
+const pick = (file: File) =>
+  fireEvent.change(screen.getByLabelText(P.change), { target: { files: [file] } });
 
 beforeEach(() => {
   calls.length = 0;

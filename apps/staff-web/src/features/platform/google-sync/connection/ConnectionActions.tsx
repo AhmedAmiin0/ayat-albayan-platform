@@ -7,7 +7,13 @@ import { disconnectGoogle, getConnectUrl, googleStatusQuery } from '@/features/p
 const s = t.googleSync.connection;
 
 /** Disconnecting asks first. */
-export function ConnectionActions({ status, onNote }: { status: GoogleStatusView; onNote: (message: string) => void }) {
+export function ConnectionActions({
+  status,
+  onNote,
+}: {
+  status: GoogleStatusView;
+  onNote: (message: string) => void;
+}) {
   const queryClient = useQueryClient();
   const [confirming, setConfirming] = useState(false);
   const connect = useMutation({

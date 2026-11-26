@@ -22,7 +22,10 @@ function open(phones: { phone_e164: string; is_primary: boolean; created_at: str
   return { onDone, invalidate: vi.spyOn(client, 'invalidateQueries') };
 }
 
-const TWO = [{ phone_e164: MAIN, is_primary: true, created_at: at }, { phone_e164: SECOND, is_primary: false, created_at: at }];
+const TWO = [
+  { phone_e164: MAIN, is_primary: true, created_at: at },
+  { phone_e164: SECOND, is_primary: false, created_at: at },
+];
 
 describe('«تعديل ولي الأمر»: the family’s second number (owner 2026-10-29)', () => {
   beforeEach(() => {

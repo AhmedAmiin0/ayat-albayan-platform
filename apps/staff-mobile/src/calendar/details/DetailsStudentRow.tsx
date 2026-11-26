@@ -52,7 +52,13 @@ interface DetailsStudentRowProps {
 }
 
 /** No phone or guardian contact here. */
-export function DetailsStudentRow({ lesson, student, role, onLeave, here = false }: DetailsStudentRowProps) {
+export function DetailsStudentRow({
+  lesson,
+  student,
+  role,
+  onLeave,
+  here = false,
+}: DetailsStudentRowProps) {
   const { color } = useTheme();
   const now = useNow();
   const base = useTreeBase();

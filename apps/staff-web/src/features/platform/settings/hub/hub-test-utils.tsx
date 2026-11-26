@@ -34,12 +34,17 @@ export function answerHub(apiFetch: Mock, answers: HubAnswers): void {
 
 /** Renders inside a fresh query client (no retries, nothing stale). */
 export function renderHub(ui: ReactNode) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity } } });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+  });
   return render(<QueryClientProvider client={client}>{ui}</QueryClientProvider>);
 }
 
 /** The seeded settings with a few values changed. */
-export const settingsWith = (patch: Partial<AcademySettings>): AcademySettings => ({ ...SETTINGS, ...patch });
+export const settingsWith = (patch: Partial<AcademySettings>): AcademySettings => ({
+  ...SETTINGS,
+  ...patch,
+});
 
 /** One integrations row. */
 export const item = (key: IntegrationConfigItem['key'], group: IntegrationConfigItem['group'], o: { secret?: boolean; set?: boolean } = {}): IntegrationConfigItem => ({
@@ -59,7 +64,12 @@ export const googleStatus = (patch: Partial<GoogleStatusView> = {}): GoogleStatu
   settings: { enabled: true, mode: 'dry_run', window_days: 60 },
   redirect_uri: 'http://localhost:3000/admin/google/callback',
   scopes: [],
-  drive: { root_folder_id: null, root_folder_name: null, summary_sheet_id: null, confirmed_at: null },
+  drive: {
+    root_folder_id: null,
+    root_folder_name: null,
+    summary_sheet_id: null,
+    confirmed_at: null,
+  },
   discovery: null,
   counts: { pending: 0, synced: 0, gone: 0, failed: 0, skipped: 0 },
   warnings: { teacher_unmapped: 0, student_unmapped: 0, drive_unconfirmed: 0 },

@@ -9,7 +9,13 @@ import appConfig from '../app.config';
 // `stripe-test`. Only `stripe-test`'s APP_VARIANT makes a separate app (own package, own name) installable beside
 // the normal one, on its own update channel.
 
-type Profile = { channel?: string; environment?: string; distribution?: string; env?: Record<string, string>; android?: { buildType?: string } };
+type Profile = {
+  channel?: string;
+  environment?: string;
+  distribution?: string;
+  env?: Record<string, string>;
+  android?: { buildType?: string };
+};
 const profiles: Record<string, Profile> = eas.build;
 
 const configFor = (variant: string | undefined): ExpoConfig => {
@@ -55,7 +61,9 @@ test('the stripe-test profile: the flag and its variant; an internal APK on its 
     node: eas.build.preview.node,
     pnpm: eas.build.preview.pnpm,
   });
-  const flagged = Object.entries(profiles).filter(([, p]) => p.env?.EXPO_PUBLIC_FEATURE_STRIPE !== undefined);
+  const flagged = Object.entries(profiles).filter(
+    ([, p]) => p.env?.EXPO_PUBLIC_FEATURE_STRIPE !== undefined,
+  );
   expect(flagged.map(([name]) => name)).toEqual(['preview', 'stripe-test']);
 });
 
@@ -86,7 +94,10 @@ test('the default config is app.json’s (plus the FCM file)', () => {
 const FCM_FILE = (): string => process.env.GOOGLE_SERVICES_JSON ?? './google-services.json';
 
 test('the normal config is exactly app.json plus the Firebase file (the stripe-test variant changed nothing)', () => {
-  const expected = { ...app.expo, android: { ...app.expo.android, googleServicesFile: FCM_FILE() } };
+  const expected = {
+    ...app.expo,
+    android: { ...app.expo.android, googleServicesFile: FCM_FILE() },
+  };
   expect(configFor(undefined)).toStrictEqual(expected);
   expect(configFor('preview')).toStrictEqual(expected);
   expect(JSON.stringify(configFor(undefined))).toBe(JSON.stringify(expected));

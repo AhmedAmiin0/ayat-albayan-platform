@@ -15,7 +15,10 @@ vi.mock('@tanstack/react-router', async (orig) => ({
 const s = t.templates.settings;
 
 function renderPage(auto: boolean, cutover = false) {
-  renderCommunications({ apiFetch, settings: { auto_messages_enabled: auto, crm_cutover_done: cutover } });
+  renderCommunications({
+    apiFetch,
+    settings: { auto_messages_enabled: auto, crm_cutover_done: cutover },
+  });
 }
 
 afterEach(() => {

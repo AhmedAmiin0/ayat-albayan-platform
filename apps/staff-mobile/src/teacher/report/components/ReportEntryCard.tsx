@@ -85,7 +85,12 @@ export function ReportEntryCard({ form, entry, tz, scroll }: ReportEntryCardProp
       <Section title={t.reports.done}>{DONE_FIELDS.map(text)}</Section>
       <RubricSection s={s} locked={locked} register={register} />
       <Section title={t.reports.notesTitle}>{AFTER_FIELDS.map(text)}</Section>
-      <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments} editable={!locked} />
+      <AttachmentsField
+        reportId={report.id}
+        files={report.attachments}
+        onChange={s.setAttachments}
+        editable={!locked}
+      />
       <LessonFilesLink lessonId={form.lesson.id} admin={false} />
       <ReportFooter s={s} block={form.submit_block} tz={tz} />
     </View>

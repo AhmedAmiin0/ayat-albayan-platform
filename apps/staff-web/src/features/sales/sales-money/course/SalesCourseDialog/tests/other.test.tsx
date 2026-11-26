@@ -11,7 +11,8 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-const openDialog = () => renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
+const openDialog = () =>
+  renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
 
 describe('«اختر أيامًا أخرى» and the first course (owner 2026-10-18)', () => {
   beforeEach(() => {

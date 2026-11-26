@@ -22,7 +22,13 @@ export function fileLabel(file: Pick<ReportAttachmentView, 'mime' | 'size'>): st
 }
 
 /** Optional attachments (R-REP-02): signed upload to Storage, then registered on the report. */
-export function AttachmentsField({ reportId, files, onChange, editable, addLabel = t.reports.attach }: AttachmentsFieldProps) {
+export function AttachmentsField({
+  reportId,
+  files,
+  onChange,
+  editable,
+  addLabel = t.reports.attach,
+}: AttachmentsFieldProps) {
   const { files: calls } = useReportApi();
   const input = useRef<HTMLInputElement>(null);
   const [local, setLocal] = useState<string | null>(null);
@@ -32,7 +38,8 @@ export function AttachmentsField({ reportId, files, onChange, editable, addLabel
   });
   const remove = useMutation({
     mutationFn: calls.remove,
-    onSuccess: (_v, { attachmentId }) => onChange((list) => list.filter((f) => f.id !== attachmentId)),
+    onSuccess: (_v, { attachmentId }) =>
+      onChange((list) => list.filter((f) => f.id !== attachmentId)),
   });
   const pick = (file: File | undefined) => {
     if (!file) return;
@@ -45,7 +52,9 @@ export function AttachmentsField({ reportId, files, onChange, editable, addLabel
     const { url } = await calls.url({ id: reportId, attachmentId });
     window.open(url, '_blank', 'noopener');
   };
-  const error = local ? (t.reports.error as Record<string, string>)[local] : upload.error ?? remove.error;
+  const error = local
+    ? (t.reports.error as Record<string, string>)[local]
+    : (upload.error ?? remove.error);
 
   return (
     <section aria-label={t.reports.attachments} className="grid gap-2">

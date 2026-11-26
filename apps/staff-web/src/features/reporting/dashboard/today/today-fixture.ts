@@ -3,7 +3,12 @@ import type { LessonView } from '@ab/schedule';
 
 // Test fixture (not a test): one lesson of today as GET /lessons returns it.
 
-export function lessonAt(opts: { id: string; startsAt: string; status?: LessonStatus; student?: string }): LessonView {
+export function lessonAt(opts: {
+  id: string;
+  startsAt: string;
+  status?: LessonStatus;
+  student?: string;
+}): LessonView {
   const ends = new Date(Date.parse(opts.startsAt) + 30 * 60_000).toISOString();
   return {
     id: opts.id,

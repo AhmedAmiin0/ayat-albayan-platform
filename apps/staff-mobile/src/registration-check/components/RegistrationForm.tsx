@@ -19,7 +19,15 @@ const MODES = (): { value: RegistrationCheckBy; label: string }[] => [
 ];
 
 /** The phone / name-or-code switch, that mode's one field, submit, and why it was not sent. */
-export function RegistrationForm({ by, onBy, text, onText, onSubmit, busy, error }: RegistrationFormProps) {
+export function RegistrationForm({
+  by,
+  onBy,
+  text,
+  onText,
+  onSubmit,
+  busy,
+  error,
+}: RegistrationFormProps) {
   const rc = t.registrationCheck;
   const phone = by === 'phone';
   return (

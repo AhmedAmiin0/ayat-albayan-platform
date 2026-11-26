@@ -7,7 +7,9 @@ function Form({ scroll, firstInvalid }: { scroll: never; firstInvalid: string | 
   return <View ref={register('overall')} />;
 }
 
-const field = (y: number) => ({ measureLayout: jest.fn((_inner: unknown, ok: (x: number, y: number) => void) => ok(0, y)) });
+const field = (y: number) => ({
+  measureLayout: jest.fn((_inner: unknown, ok: (x: number, y: number) => void) => ok(0, y)),
+});
 
 test('scrolls the ScrollView to the first invalid question (16 above it), only after a failed send', async () => {
   const scrollTo = jest.fn();

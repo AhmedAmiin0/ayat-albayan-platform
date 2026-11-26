@@ -7,7 +7,9 @@ describe('«القيم» groups', () => {
   it('lists the editable groups, then «قيم مخصصة», then the three module views', () => {
     expect(GROUP_IDS.slice(-4)).toEqual(['custom', 'notifications', 'sending', 'google']);
     expect(GROUP_IDS[0]).toBe('schedule');
-    expect(GROUP_IDS.flatMap((id) => (isOwnedGroup(id) ? [] : groupKeys(id)))).toEqual(EDITABLE_VALUE_KEYS);
+    expect(GROUP_IDS.flatMap((id) => (isOwnedGroup(id) ? [] : groupKeys(id)))).toEqual(
+      EDITABLE_VALUE_KEYS,
+    );
   });
 
   it('a missing or unknown group opens the first group', () => {

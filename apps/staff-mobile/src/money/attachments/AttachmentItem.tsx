@@ -13,7 +13,9 @@ export function AttachmentItem({ row }: { row: AttachmentRow }) {
   }
   return (
     <View style={{ gap: 4 }}>
-      <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>{row.label}</AppText>
+      <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
+        {row.label}
+      </AppText>
       <Image
         source={{ uri: url }}
         accessibilityLabel={row.label}

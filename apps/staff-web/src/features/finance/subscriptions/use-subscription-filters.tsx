@@ -17,10 +17,20 @@ export interface SubscriptionFiltersOptions {
   onChange: (patch: Record<string, unknown>) => void;
 }
 
-export function useSubscriptionFilters({ status, onChange }: SubscriptionFiltersOptions): ExtraFilters {
-  const setStatus = (v: string) => onChange({ status: (v || undefined) });
+export function useSubscriptionFilters({
+  status,
+  onChange,
+}: SubscriptionFiltersOptions): ExtraFilters {
+  const setStatus = (v: string) => onChange({ status: v || undefined });
   return {
-    fields: <SelectFilterField label={t.subscriptions.status} value={status} options={statusOptions} onChange={setStatus} />,
+    fields: (
+      <SelectFilterField
+        label={t.subscriptions.status}
+        value={status}
+        options={statusOptions}
+        onChange={setStatus}
+      />
+    ),
     chips: chipIfSet({
       id: 'status',
       label: t.subscriptions.status,

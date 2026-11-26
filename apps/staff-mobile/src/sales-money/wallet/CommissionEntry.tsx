@@ -6,7 +6,11 @@ import { commissionDay, commissionLine, walletMoney, walletStateText } from '@/s
 import { useViewerTz } from '@/core/lib/clock';
 
 /** A voided entry shows the amount struck without a sign, then why. */
-export const CommissionEntry = memo(function CommissionEntry({ entry }: { entry: MyCommissionRow }) {
+export const CommissionEntry = memo(function CommissionEntry({
+  entry,
+}: {
+  entry: MyCommissionRow;
+}) {
   const tz = useViewerTz();
   const { color } = useTheme();
   const voided = entry.state === 'voided';

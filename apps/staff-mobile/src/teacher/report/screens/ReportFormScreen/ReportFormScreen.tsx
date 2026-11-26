@@ -20,7 +20,11 @@ import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** The report's own form: the new one (form_version 2), else the Google Form's (v1, unchanged). */
 function EntryForm(p: ComponentProps<typeof ReportEntryCard>) {
-  return p.entry.report.form_version === 2 ? <ReportEntryCardV2 form={p.form} entry={p.entry} tz={p.tz} /> : <ReportEntryCard {...p} />;
+  return p.entry.report.form_version === 2 ? (
+    <ReportEntryCardV2 form={p.form} entry={p.entry} tz={p.tz} />
+  ) : (
+    <ReportEntryCard {...p} />
+  );
 }
 
 const back = () => backWithin('/teacher/reports');

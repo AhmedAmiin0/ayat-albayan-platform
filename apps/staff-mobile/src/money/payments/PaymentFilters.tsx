@@ -27,8 +27,18 @@ export function PaymentFilters({ kind, month, onKind, onMonth }: PaymentFiltersP
   ];
   return (
     <>
-      <FilterPills items={kinds} value={kind} onChange={onKind} accessibilityLabel={t.mobileMoney.kindFilter} />
-      <FilterPills items={months} value={month} onChange={onMonth} accessibilityLabel={t.mobileMoney.monthFilter} />
+      <FilterPills
+        items={kinds}
+        value={kind}
+        onChange={onKind}
+        accessibilityLabel={t.mobileMoney.kindFilter}
+      />
+      <FilterPills
+        items={months}
+        value={month}
+        onChange={onMonth}
+        accessibilityLabel={t.mobileMoney.monthFilter}
+      />
     </>
   );
 }

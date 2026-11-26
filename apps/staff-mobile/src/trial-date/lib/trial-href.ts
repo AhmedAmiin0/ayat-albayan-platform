@@ -8,7 +8,11 @@ interface TrialDateTarget {
   program?: Program;
 }
 
-const params = (s: TrialDateTarget) => ({ studentId: s.studentId, name: s.name, ...(s.program ? { program: s.program } : {}) });
+const params = (s: TrialDateTarget) => ({
+  studentId: s.studentId,
+  name: s.name,
+  ...(s.program ? { program: s.program } : {}),
+});
 
 /** From the admin student file: its own screen in the Students tab's stack. */
 export function studentFileTrialHref(s: TrialDateTarget): Href {

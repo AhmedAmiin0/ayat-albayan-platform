@@ -32,7 +32,13 @@ test('a tab’s student route moves to the chat group’s copy; nothing else mov
 });
 
 test('student links stay the tab’s routes outside a chat group and become its copies inside one', async () => {
-  expect((await renderHook(useStudentHref)).result.current('/students/payment/s1')).toBe('/students/payment/s1');
-  const wrapper = ({ children }: { children: ReactNode }) => <InChatProvider>{children}</InChatProvider>;
-  expect((await renderHook(useStudentHref, { wrapper })).result.current('/students/payment/s1')).toBe('/inbox/student/payment/s1');
+  expect((await renderHook(useStudentHref)).result.current('/students/payment/s1')).toBe(
+    '/students/payment/s1',
+  );
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <InChatProvider>{children}</InChatProvider>
+  );
+  expect(
+    (await renderHook(useStudentHref, { wrapper })).result.current('/students/payment/s1'),
+  ).toBe('/inbox/student/payment/s1');
 });

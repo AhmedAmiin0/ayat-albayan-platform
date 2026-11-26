@@ -4,7 +4,16 @@ import { t } from '@ab/web-kit';
 import { StudentKindSwitch } from './StudentKindSwitch';
 
 const L = t.studentLists;
-const COUNTS = { new: 1, trial: 4, pending_subscription: 2, active: 30, pending_renewal: 3, expired: 1, paused: 5, churned: 2 };
+const COUNTS = {
+  new: 1,
+  trial: 4,
+  pending_subscription: 2,
+  active: 30,
+  pending_renewal: 3,
+  expired: 1,
+  paused: 5,
+  churned: 2,
+};
 const TRIAL_KIND = 'new,trial,pending_subscription';
 
 function show(status: string | undefined, counts?: typeof COUNTS) {

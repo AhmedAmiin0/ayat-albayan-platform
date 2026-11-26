@@ -29,7 +29,10 @@ export interface HandSort<T, K extends string> {
   toggle: (key: K) => void;
 }
 
-export function useHandSort<T, K extends string>(rows: readonly T[], valueOf: (row: T, key: K) => unknown): HandSort<T, K> {
+export function useHandSort<T, K extends string>(
+  rows: readonly T[],
+  valueOf: (row: T, key: K) => unknown,
+): HandSort<T, K> {
   const [sort, setSort] = useState<HandSortState<K>>(null);
   const sorted = useMemo(() => sortRows(rows, sort, valueOf), [rows, sort, valueOf]);
   return { rows: sorted, sort, toggle: (key) => setSort((s) => toggleSort(s, key)) };

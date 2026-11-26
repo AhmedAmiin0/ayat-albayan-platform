@@ -75,7 +75,10 @@ export function MakeupWizard({ source }: { source: MakeupSource }) {
               {...filter}
               onFilter={(f) => setFilter((old) => ({ ...old, ...f }))}
               onPick={(teacher) => {
-                patch({ teacher: { id: teacher.id, name: teacherName(teacher, locale) }, startsAt: null });
+                patch({
+                  teacher: { id: teacher.id, name: teacherName(teacher, locale) },
+                  startsAt: null,
+                });
                 onward();
               }}
             />

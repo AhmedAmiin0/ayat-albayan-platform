@@ -11,7 +11,12 @@ import { AttachmentsDialog } from './attachments/AttachmentsDialog';
 import type { PaymentAction } from './payment-columns';
 import { ReceiptDialog } from './attachments/ReceiptDialog';
 
-type Props = { payment: PaymentView; action: PaymentAction; onClose: () => void; onDone: (message: string) => void };
+type Props = {
+  payment: PaymentView;
+  action: PaymentAction;
+  onClose: () => void;
+  onDone: (message: string) => void;
+};
 
 /** Delete asks first and is audited by the API. */
 export function PaymentDialogs({ payment, action, onClose, onDone }: Props) {

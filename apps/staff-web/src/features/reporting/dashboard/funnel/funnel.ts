@@ -30,7 +30,9 @@ export interface FunnelStep {
 
 export function funnelSteps(funnel: Readonly<Record<LeadStatus, number>>): FunnelStep[] {
   const entries = Object.entries(funnel) as [LeadStatus, number][];
-  const reached = FUNNEL_STAGES.map((_, i) => entries.reduce((n, [s, c]) => (STAGE_OF[s] >= i ? n + c : n), 0));
+  const reached = FUNNEL_STAGES.map((_, i) =>
+    entries.reduce((n, [s, c]) => (STAGE_OF[s] >= i ? n + c : n), 0),
+  );
   return FUNNEL_STAGES.map((stage, i) => {
     const prev = i === 0 ? 0 : (reached[i - 1] ?? 0);
     const here = reached[i] ?? 0;

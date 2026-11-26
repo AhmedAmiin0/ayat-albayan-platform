@@ -50,7 +50,11 @@ export function RoleDialog({ role, onClose }: Props) {
             </Button>
           )}
           {resettable && (
-            <RoleResetButton role={resettable} onReset={(view) => setForm((f) => ({ ...f, permissions: [...view.permissions] }))} onError={setResetError} />
+            <RoleResetButton
+              role={resettable}
+              onReset={(view) => setForm((f) => ({ ...f, permissions: [...view.permissions] }))}
+              onError={setResetError}
+            />
           )}
           <Button type="button" variant="ghost" onClick={onClose}>
             {P.cancel}
@@ -64,7 +68,13 @@ export function RoleDialog({ role, onClose }: Props) {
       <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label={P.nameAr} required error={nameError}>
-            {(p) => <Input {...p} value={form.name_ar} onChange={(e) => setForm({ ...form, name_ar: e.target.value })} />}
+            {(p) => (
+              <Input
+                {...p}
+                value={form.name_ar}
+                onChange={(e) => setForm({ ...form, name_ar: e.target.value })}
+              />
+            )}
           </Field>
           <Field label={P.nameEn}>
             {(p) => <Input {...p} dir="ltr" value={form.name_en} onChange={(e) => setForm({ ...form, name_en: e.target.value })} />}

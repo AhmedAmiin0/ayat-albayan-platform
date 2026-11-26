@@ -12,14 +12,21 @@ const SAVED: AcademySettings = { ...SETTING_DEFAULTS, booking_horizon_weeks: 6 }
 const KEYS: SettingKey[] = ['booking_horizon_weeks', 'late_cancel_hours'];
 
 function setup(keys?: SettingKey[]) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
   const invalidate = vi.spyOn(client, 'invalidateQueries');
   const onSaved = vi.fn();
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
-  const hook = renderHook(({ settings }) => useSettingsForm(settings, keys ? { keys, onSaved } : { onSaved }), {
-    wrapper,
-    initialProps: { settings: SAVED },
-  });
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
+  const hook = renderHook(
+    ({ settings }) => useSettingsForm(settings, keys ? { keys, onSaved } : { onSaved }),
+    {
+      wrapper,
+      initialProps: { settings: SAVED },
+    },
+  );
   return { client, invalidate, onSaved, ...hook };
 }
 

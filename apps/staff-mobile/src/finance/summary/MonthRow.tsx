@@ -9,8 +9,24 @@ export function MonthRow({ month: m, currency }: { month: MonthFinance; currency
   const { color } = useTheme();
   const line = (label: string, value: number, strong = false) => (
     <View key={label} style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 8 }}>
-      <AppText style={{ flexShrink: 1, fontFamily: type.ui[strong ? 700 : 400], fontSize: type.size.sm, color: strong ? color.ink : color.ink2 }}>{label}</AppText>
-      <AppText style={{ fontFamily: type.ui[strong ? 700 : 500], fontSize: type.size.sm, color: strong && value < 0 ? color.bad : color.ink, fontVariant: ['tabular-nums'] }}>
+      <AppText
+        style={{
+          flexShrink: 1,
+          fontFamily: type.ui[strong ? 700 : 400],
+          fontSize: type.size.sm,
+          color: strong ? color.ink : color.ink2,
+        }}
+      >
+        {label}
+      </AppText>
+      <AppText
+        style={{
+          fontFamily: type.ui[strong ? 700 : 500],
+          fontSize: type.size.sm,
+          color: strong && value < 0 ? color.bad : color.ink,
+          fontVariant: ['tabular-nums'],
+        }}
+      >
         {wholeText(value, currency)}
       </AppText>
     </View>

@@ -41,11 +41,20 @@ interface TodayPlan<L extends TodayLesson> {
 }
 
 /** `lessons`: the day's visible lessons (visibleLessons), earliest first. */
-export function todayPlan<L extends TodayLesson>(lessons: readonly L[], filter: TodayFilter, now: Date): TodayPlan<L> {
+export function todayPlan<L extends TodayLesson>(
+  lessons: readonly L[],
+  filter: TodayFilter,
+  now: Date,
+): TodayPlan<L> {
   const at = now.getTime();
   const hero = filter === 'all' ? pickHero(lessons, now) : null;
   const shown = applyFilter(lessons, filter);
   const rest = shown.filter((l) => !ended(l, at) && l.id !== hero?.lesson.id);
   const left = lessons.some((l) => !ended(l, at));
-  return { hero, rest, ended: shown.filter((l) => ended(l, at)), quiet: lessons.length > 0 && !left };
+  return {
+    hero,
+    rest,
+    ended: shown.filter((l) => ended(l, at)),
+    quiet: lessons.length > 0 && !left,
+  };
 }

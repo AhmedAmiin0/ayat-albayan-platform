@@ -12,8 +12,14 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 /** `auto`: settings.meeting_link_auto as GET /settings/public answered it. */
 async function platform(flag: boolean | undefined, auto: boolean): Promise<boolean> {
   const client = createTestQueryClient();
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto });
-  const { result } = await renderHook(() => usePlatformClassroom(flag), { wrapper: queryWrapper(client) });
+  client.setQueryData(publicConfigQuery.queryKey, {
+    ...PUBLIC_SETTING_DEFAULTS,
+    custom: {},
+    meeting_link_auto: auto,
+  });
+  const { result } = await renderHook(() => usePlatformClassroom(flag), {
+    wrapper: queryWrapper(client),
+  });
   return result.current;
 }
 

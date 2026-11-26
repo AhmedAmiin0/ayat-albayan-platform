@@ -22,6 +22,10 @@ describe('useSubscriptionFilters', () => {
     extra.chips[0]?.onRemove();
     expect(onChange).toHaveBeenLastCalledWith({ status: undefined });
     extra.onClearAll(['student', 'package']);
-    expect(onChange).toHaveBeenLastCalledWith({ status: undefined, f_student: undefined, f_package: undefined });
+    expect(onChange).toHaveBeenLastCalledWith({
+      status: undefined,
+      f_student: undefined,
+      f_package: undefined,
+    });
   });
 });

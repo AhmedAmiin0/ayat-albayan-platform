@@ -13,7 +13,14 @@ export function PaymentTotals({ totals }: { totals: readonly PeriodTotal[] }) {
   return (
     <View
       accessibilityLabel={t.mobileMoney.periodTotal}
-      style={{ gap: 2, padding: 12, borderRadius: shape.radius.lg, borderWidth: 1, borderColor: color.rule, backgroundColor: color.raised }}
+      style={{
+        gap: 2,
+        padding: 12,
+        borderRadius: shape.radius.lg,
+        borderWidth: 1,
+        borderColor: color.rule,
+        backgroundColor: color.raised,
+      }}
     >
       <AppText style={small}>{t.mobileMoney.periodTotal}</AppText>
       {totals.map((x) => (

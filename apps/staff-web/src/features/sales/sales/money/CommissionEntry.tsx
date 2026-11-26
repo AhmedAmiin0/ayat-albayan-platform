@@ -10,8 +10,14 @@ const W = P.wallet;
 const SHORT_METHOD: Partial<Record<PaymentMethod, string>> = W.method;
 
 function stateWord(c: MyCommissionRow): string {
-  if (c.state === 'in_statement' && c.statement_month) return W.state.in_statement.replace('{month}', monthLabel(c.statement_month.slice(0, 7)));
-  return { due: P.commission.earned, in_statement: P.commission.earned, paid: W.state.paid, voided: P.commission.voided }[c.state];
+  if (c.state === 'in_statement' && c.statement_month)
+    return W.state.in_statement.replace('{month}', monthLabel(c.statement_month.slice(0, 7)));
+  return {
+    due: P.commission.earned,
+    in_statement: P.commission.earned,
+    paid: W.state.paid,
+    voided: P.commission.voided,
+  }[c.state];
 }
 
 /** After the student: the kind and how it was paid; a voided entry says why instead, in short. */

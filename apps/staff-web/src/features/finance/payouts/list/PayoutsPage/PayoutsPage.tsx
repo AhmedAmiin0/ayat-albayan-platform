@@ -50,7 +50,10 @@ export function PayoutsPage({ month, onMonth }: Props) {
   const columns = useMemo(
     () =>
       payoutColumns({
-        teachers: [...new Set(rows.map((p) => p.teacher.display_name_ar))].map((n) => ({ value: n, label: n })),
+        teachers: [...new Set(rows.map((p) => p.teacher.display_name_ar))].map((n) => ({
+          value: n,
+          label: n,
+        })),
         onAction: (p, action) => {
           if (action === 'approve') approve(p.id);
           else if (action === 'receipt') openReceipt(p.id);
@@ -67,7 +70,12 @@ export function PayoutsPage({ month, onMonth }: Props) {
       <TeacherDuesSummary />
       <PageHead>
         <Cartouche>{t.payouts.title}</Cartouche>
-        <MonthSelect label={t.payouts.month} value={month} latest={currentMonth()} onChange={onMonth} />
+        <MonthSelect
+          label={t.payouts.month}
+          value={month}
+          latest={currentMonth()}
+          onChange={onMonth}
+        />
         <div className="ms-auto flex flex-wrap gap-2.5">
           <Button type="button" variant="secondary" disabled={rows.length === 0 || csv.isPending} onClick={() => csv.mutate(month)}>
             {t.payouts.exportCsv}
@@ -80,7 +88,9 @@ export function PayoutsPage({ month, onMonth }: Props) {
           </Button>
         </div>
       </PageHead>
-      {error && <FormAlert>{apiErrorText(error, { ...t.payouts.error, ...t.earnings.error })}</FormAlert>}
+      {error && (
+        <FormAlert>{apiErrorText(error, { ...t.payouts.error, ...t.earnings.error })}</FormAlert>
+      )}
       {dialog && <PayoutDialogs open={dialog} onClose={() => setDialog(null)} />}
       {(csv.isError || ledger.isError) && <FormAlert>{t.common.error}</FormAlert>}
       <MissingRates items={missing} />
@@ -91,7 +101,15 @@ export function PayoutsPage({ month, onMonth }: Props) {
       >
         {(data) => (
           <>
-            <DataTable fill stacked clientSort clientFilter columns={columns} data={data} getRowId={(r) => r.id} />
+            <DataTable
+              fill
+              stacked
+              clientSort
+              clientFilter
+              columns={columns}
+              data={data}
+              getRowId={(r) => r.id}
+            />
             <p className="mt-3 flex justify-end gap-2 text-sm">
               <span className="text-ink-3">{t.expenses.total}</span>
               <Amount amount={total} currency="EGP" className="font-semibold" />

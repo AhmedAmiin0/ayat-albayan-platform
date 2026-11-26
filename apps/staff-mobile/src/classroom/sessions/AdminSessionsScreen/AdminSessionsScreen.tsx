@@ -31,13 +31,19 @@ export function AdminSessionsScreen() {
   const none = SESSION_GROUPS.every((g) => groups[g].length === 0);
   const back = <BackButton onPress={() => router.back()} />;
   let body = <AppText>{t.common.loading}</AppText>;
-  if (lessons.isError && !lessons.data) body = <ErrorState onRetry={() => void lessons.refetch()} />;
+  if (lessons.isError && !lessons.data)
+    body = <ErrorState onRetry={() => void lessons.refetch()} />;
   else if (lessons.data && none) body = <EmptyState title={t.classroom.admin.empty} />;
   else if (lessons.data) body = <SessionGroupList groups={groups} />;
   return (
     <Screen>
       <ScreenHeader title={t.mobileClassroom.title} leading={back} />
-      <DaySwitcher date={date} isToday={date === today} onStep={(n) => setDate(addDays(date, n))} onToday={() => setDate(today)} />
+      <DaySwitcher
+        date={date}
+        isToday={date === today}
+        onStep={(n) => setDate(addDays(date, n))}
+        onToday={() => setDate(today)}
+      />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 32 }}>
         <View style={{ gap: 16 }}>{body}</View>
       </ScrollView>

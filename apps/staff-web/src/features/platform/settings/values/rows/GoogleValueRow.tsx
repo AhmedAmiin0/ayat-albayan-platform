@@ -33,7 +33,11 @@ export function GoogleValueRow({ field, google, groupName, phone }: GoogleValueR
   const ids = useRowIds();
   const row = { kind: 'google', field, group: 'google' } as const;
   const words = rowWords(row);
-  const target = { key: rowKey(row), label: words.label, hintKey: api.entry(rowKey(row))?.hintKey ?? null };
+  const target = {
+    key: rowKey(row),
+    label: words.label,
+    hintKey: api.entry(rowKey(row))?.hintKey ?? null,
+  };
   const value = <OwnedValue text={googleText(field, google)} group="google" />;
   const name = (
     <NameCell

@@ -15,8 +15,16 @@ export function invoiceRangeFilters({ search, onChange }: InvoiceRangeOptions): 
   return {
     fields: (
       <div className="grid grid-cols-2 gap-3">
-        <DateFilterField label={t.finance.from} value={search.from} onChange={(from) => onChange({ from })} />
-        <DateFilterField label={t.finance.to} value={search.to} onChange={(to) => onChange({ to })} />
+        <DateFilterField
+          label={t.finance.from}
+          value={search.from}
+          onChange={(from) => onChange({ from })}
+        />
+        <DateFilterField
+          label={t.finance.to}
+          value={search.to}
+          onChange={(to) => onChange({ to })}
+        />
       </div>
     ),
     chips: [

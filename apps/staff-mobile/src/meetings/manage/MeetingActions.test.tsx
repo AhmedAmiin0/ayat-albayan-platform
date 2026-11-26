@@ -16,8 +16,20 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 
 const meeting = {
-  id: 'm1', title: 'x', state: 'open', can_manage: true, can_join: true, created_by: 'u', created_at: '2026-10-05T11:30:00.000Z', ends_at: null,
-  starts_at: null, planned_end_at: null, cancelled_at: null, window: null, invitees_count: 0, my_invite: null,
+  id: 'm1',
+  title: 'x',
+  state: 'open',
+  can_manage: true,
+  can_join: true,
+  created_by: 'u',
+  created_at: '2026-10-05T11:30:00.000Z',
+  ends_at: null,
+  starts_at: null,
+  planned_end_at: null,
+  cancelled_at: null,
+  window: null,
+  invitees_count: 0,
+  my_invite: null,
 } as const;
 const press = (name: string) => fireEvent.press(screen.getByRole('button', { name }));
 beforeEach(() => {

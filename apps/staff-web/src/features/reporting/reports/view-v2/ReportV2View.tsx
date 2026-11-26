@@ -16,7 +16,12 @@ export interface ReportV2ViewProps {
 /** Read-only lines in form order via reportV2Lines, shared with the mobile app. */
 export function ReportV2View({ lesson, entry, tz }: ReportV2ViewProps) {
   const { report } = entry;
-  const lines = reportV2Lines(report, { v2: t.reports.v2, grade: t.enums.grade, program: t.enums.program, lang: locale });
+  const lines = reportV2Lines(report, {
+    v2: t.reports.v2,
+    grade: t.enums.grade,
+    program: t.enums.program,
+    lang: locale,
+  });
   return (
     <article aria-label={t.reports.entryFor.replace('{name}', entry.student.name)} className="grid max-w-3xl gap-4">
       <V2Header lesson={lesson} entry={entry} />
@@ -30,7 +35,12 @@ export function ReportV2View({ lesson, entry, tz }: ReportV2ViewProps) {
         ))}
       </dl>
       {report.attachments.length > 0 && (
-        <AttachmentsField reportId={report.id} files={report.attachments} onChange={() => undefined} editable={false} />
+        <AttachmentsField
+          reportId={report.id}
+          files={report.attachments}
+          onChange={() => undefined}
+          editable={false}
+        />
       )}
       <SubmittedNote report={report} tz={tz} />
       {report.status === 'submitted' && <PdfAction report={report} role="admin" />}
