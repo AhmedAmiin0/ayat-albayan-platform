@@ -2408,7 +2408,7 @@
       "count": 4
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-client.ts": {
@@ -2562,7 +2562,7 @@
   },
   "src/modules/messaging/inbox/files/thread-file-send.controller.ts": {
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     },
     "ab/zod-inputs": {
       "count": 2
@@ -2576,15 +2576,12 @@
       "count": 5
     },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/files/thread-file.controller.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "ab/zod-inputs": {
       "count": 3
@@ -2612,7 +2609,7 @@
       "count": 3
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -2640,7 +2637,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/inbox/files/voice-ogg.ts": {
@@ -2844,7 +2841,7 @@
       "count": 5
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/inbox/stickers/stickers.controller.ts": {
@@ -2854,9 +2851,6 @@
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
       "count": 1
     }
   },
@@ -2908,11 +2902,6 @@
       "count": 1
     },
     "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/threads/phone-param.ts": {
-    "ab/module-boundaries": {
       "count": 1
     }
   },
@@ -2973,9 +2962,6 @@
     },
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "typescript/no-unnecessary-condition": {
       "count": 1
@@ -3542,7 +3528,7 @@
       "count": 3
     },
     "ab/module-boundaries": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/saved-replies/saved-replies.guard.ts": {
@@ -3561,9 +3547,6 @@
   "src/modules/messaging/saved-replies/saved-replies.repo.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/modules/messaging/saved-replies/saved-replies.service.ts": {
@@ -4552,7 +4535,7 @@
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.mapper.ts": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.registry.ts": {
@@ -6363,9 +6346,6 @@
     "typescript/consistent-type-definitions": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     },
@@ -6912,11 +6892,6 @@
     }
   },
   "src/modules/sales/sales/tests/sales-admin.http.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/booking/booking.errors.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -7498,9 +7473,6 @@
   "src/modules/teaching/booking/sales/booking/tests/sales-booking.http.test.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "typescript/no-unsafe-enum-assignment": {
-      "count": 2
     }
   },
   "src/modules/teaching/booking/sales/booking/tests/sales-booking.move-slots.test.ts": {
@@ -7548,9 +7520,6 @@
   "src/modules/teaching/booking/sales/course/tests/sales-course.http.test.ts": {
     "stylistic/max-len": {
       "count": 4
-    },
-    "typescript/no-unsafe-enum-assignment": {
-      "count": 1
     }
   },
   "src/modules/teaching/booking/sales/course/tests/sales-course.previous.test.ts": {
@@ -7914,7 +7883,7 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/join/join-link.token.ts": {
@@ -8709,14 +8678,11 @@
     },
     "complexity": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/modules/teaching/feedback/request/feedback.sender.ts": {
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/feedback/test-app.ts": {
@@ -8814,7 +8780,7 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/lesson-rating/rating.store.ts": {
