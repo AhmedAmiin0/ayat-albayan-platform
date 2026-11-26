@@ -52,3 +52,4 @@ export type QuoteQuery = z.output<typeof quoteQuerySchema>;
 /** The whole list has every duration and package, so only the country and the pricing choice. */
 export const priceListQuerySchema = z.object({ country, ...priced });
 export type PriceListQueryParams = z.output<typeof priceListQuerySchema>;
+export type PriceListQueryInput = z.input<typeof priceListQuerySchema>;
