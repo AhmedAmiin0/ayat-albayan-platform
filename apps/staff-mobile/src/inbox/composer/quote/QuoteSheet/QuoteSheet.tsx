@@ -1,22 +1,25 @@
 import { useState } from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { copyOrShare } from '@/core/lib/clipboard';
-import { t, shape, type, useTheme, AppText, ErrorState, ErrorLine } from '@ab/mobile-kit';
-import { PricingSteps } from '@/finance';
-import { CustomAmountPill } from '@/payments';
-import { CustomPriceField } from '@/subscribe';
+import { t, space, type, useTheme, AppText, ErrorLine } from '@ab/mobile-kit';
 import { ClosedNote } from '@/inbox/thread/components/ClosedNote';
 import { ReplySheetFrame } from '@/inbox/saved-replies/quick-list/ReplySheetFrame';
 import { appendComposerText } from '@/inbox/composer/draft-store';
 import { QuoteActions } from '@/inbox/composer/quote/QuoteActions';
 import { useQuoteSend, useQuoteSheet } from '@/inbox/composer/quote/use-quote-sheet';
+import { QuoteChoices } from './QuoteChoices';
+import { QuotePreview } from './QuotePreview';
+import type { QuoteSheetProps } from './QuoteSheet.types';
 
-interface QuoteSheetProps {
-  phone: string;
-  /** A text may go (the composer's rule): no → send and edit off, copy stays. */
-  open: boolean;
-  onClose: () => void;
-}
+const q = t.inbox.quote;
+
+const CONTENT = { gap: space[4], paddingHorizontal: space[4], paddingBottom: space[6] };
+const TITLE = {
+  fontFamily: type.ui[700],
+  fontSize: type.size.lg,
+  lineHeight: type.lineHeight(type.size.lg),
+};
+const COPIED = { fontFamily: type.ui[500], fontSize: type.size.sm };
 
 /** Works for a lead with no student; nothing is created. */
 export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
@@ -25,9 +28,7 @@ export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
   const sender = useQuoteSend(phone, onClose);
   // Copy falls back to the share sheet when the clipboard fails.
   const [copied, setCopied] = useState<'copied' | 'shared' | 'failed' | null>(null);
-  const text = sheet.text;
-  // An invalid custom amount blocks sending, like a stale price.
-  const held = sheet.stale || sheet.invalid;
+  const { text, held } = sheet.offer;
   const ready = text !== null && !held;
   const edit = () => {
     if (!text) return;
@@ -36,51 +37,18 @@ export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
   };
   return (
     <ReplySheetFrame onClose={() => !sender.pending && onClose()} tall>
-      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: 16, paddingHorizontal: 16, paddingBottom: 32 }}>
-        <AppText accessibilityRole="header" style={{ fontFamily: type.ui[700], fontSize: type.size.lg, lineHeight: type.lineHeight(type.size.lg), color: color.ink }}>
-          {t.inbox.quote.title}
+      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={CONTENT}>
+        <AppText accessibilityRole="header" style={{ ...TITLE, color: color.ink }}>
+          {q.title}
         </AppText>
-        <PricingSteps
-          selection={sheet.selection}
-          onChange={sheet.change}
-          freeDiscount={false}
-          discountExtra={<CustomAmountPill on={sheet.custom.on} onChange={sheet.custom.setOn} />}
-        />
-        <CustomPriceField price={sheet.custom} />
-        <View style={{ gap: 6 }}>
-          <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}>
-            {t.inbox.quote.preview}
-          </AppText>
-          {text ? (
-            <AppText
-              testID="quote-preview"
-              style={{
-                padding: 12,
-                borderRadius: shape.radius.md,
-                borderWidth: 1,
-                borderColor: color.rule,
-                backgroundColor: color.sunk,
-                fontFamily: type.ui[400],
-                fontSize: type.size.body,
-                lineHeight: type.lineHeight(type.size.body),
-                color: color.ink,
-                opacity: held ? 0.6 : 1,
-              }}
-            >
-              {text}
-            </AppText>
-          ) : sheet.quote.isError ? (
-            <ErrorState onRetry={() => void sheet.quote.refetch()} />
-          ) : (
-            <ActivityIndicator color={color.lapis} />
-          )}
-        </View>
+        <QuoteChoices phone={phone} sheet={sheet} />
+        <QuotePreview offer={sheet.offer} />
         {open ? null : <ClosedNote known />}
         {sender.error ? <ErrorLine message={sender.error} /> : null}
-        {copied === 'failed' ? <ErrorLine message={t.inbox.quote.copyFailed} /> : null}
+        {copied === 'failed' ? <ErrorLine message={q.copyFailed} /> : null}
         {copied === 'copied' ? (
-          <AppText accessibilityLiveRegion="polite" style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ok }}>
-            {t.inbox.quote.copied}
+          <AppText accessibilityLiveRegion="polite" style={{ ...COPIED, color: color.ok }}>
+            {q.copied}
           </AppText>
         ) : null}
         <QuoteActions
