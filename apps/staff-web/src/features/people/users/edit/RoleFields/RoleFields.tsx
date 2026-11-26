@@ -1,10 +1,8 @@
 import { roleSection, withRole } from '@ab/client-core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { RecordFields } from '@/features/people/users/create/RecordFields';
 import { RolePicker } from '@/features/people/users/create/RolePicker';
 import type { RoleFieldsProps } from './RoleFields.types';
-
-const F = t.users.form;
 
 /**
  * The role of a login and, when an unlinked staff login takes a teacher / student / guardian
@@ -12,7 +10,7 @@ const F = t.users.form;
  */
 export function RoleFields(props: RoleFieldsProps) {
   const { form, onChange, errors, options } = props;
-  const { picker, recordKind } = roleSection(props, F);
+  const { picker, recordKind } = roleSection(props, t.users.form);
   return (
     <>
       <RolePicker

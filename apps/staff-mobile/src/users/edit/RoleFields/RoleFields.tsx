@@ -10,11 +10,14 @@ import type { RoleFieldsProps } from './RoleFields.types';
  */
 export function RoleFields(props: RoleFieldsProps) {
   const section = roleSection(props, t.users.form);
-  const pick = (next: Parameters<typeof withRole>[1]) => props.onChange(withRole(props.form, next));
   const kind = section.recordKind;
   return (
     <>
-      <RolePicker {...section.picker} options={props.options} onChange={pick} />
+      <RolePicker
+        {...section.picker}
+        options={props.options}
+        onChange={(next) => props.onChange(withRole(props.form, next))}
+      />
       {kind ? (
         <RecordFields
           kind={kind}

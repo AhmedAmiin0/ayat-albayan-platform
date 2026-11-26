@@ -1,10 +1,12 @@
-import { isLinkedRole, type LinkKind, type UserRole } from '@ab/shared';
+import { linkKindSchema, type LinkKind } from '@ab/shared';
+import type { UserRole } from '@ab/catalog';
 import { badRequest, conflict } from '@/common/http/errors';
 import type { UserStore } from '@/modules/people/users/store/users.store';
 import type { RecordLink, RecordRequest } from './users.record-linker.types';
 
 /** The record kind a base role's login belongs to (null = a staff role without one). */
-export const linkKindOf = (role: UserRole): LinkKind | null => (isLinkedRole(role) ? role : null);
+export const linkKindOf = (role: UserRole): LinkKind | null =>
+  linkKindSchema.safeParse(role).data ?? null;
 
 /**
  * The teacher / student / guardian record of a login, shared by POST /users and PATCH /users/:id:

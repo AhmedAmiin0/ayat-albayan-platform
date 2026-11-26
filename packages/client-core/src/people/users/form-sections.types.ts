@@ -33,3 +33,13 @@ export interface RoleSection {
   recordKind: LinkKind | null;
   picker: { role: UserRole; roleId: string; disabled: boolean; hint: string | undefined };
 }
+
+export interface TeacherModeText {
+  existingTeacher: string;
+  newTeacher: string;
+}
+
+export interface TeacherMode {
+  value: CreateForm['teacherMode'];
+  label: string;
+}

@@ -7,6 +7,8 @@ import type {
   RoleSection,
   RoleSectionInput,
   RoleText,
+  TeacherMode,
+  TeacherModeText,
 } from './form-sections.types';
 
 type Patch = (patch: Partial<RecordForm>) => void;
@@ -35,6 +37,12 @@ export function recordView(kind: LinkKind, value: RecordForm, onChange: Patch): 
     picker: shown(!fresh, picker),
   };
 }
+
+/** The teacher record choice: an existing teacher first, then a new one. */
+export const teacherModes = (text: TeacherModeText): readonly TeacherMode[] => [
+  { value: 'existing', label: text.existingTeacher },
+  { value: 'new', label: text.newTeacher },
+];
 
 const recordKindOf = (f: EditForm, locked: boolean): LinkKind | null =>
   !locked && isLinkedRole(f.role) ? f.role : null;

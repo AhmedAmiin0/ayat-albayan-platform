@@ -10,4 +10,4 @@ export { userErrors, type UserErrorText } from './errors';
 export { userChecks, type FieldKey, type FormErrors, type UserCheckText } from './validation';
 export { tidyUsername, usernameApiError, usernameChange, type TeacherUsernameText, type UsernameChange } from './teacher-username';
 export type * from './users-view';
-export { recordView, roleSection, withRole } from './form-sections';
+export { recordView, roleSection, teacherModes, withRole } from './form-sections';

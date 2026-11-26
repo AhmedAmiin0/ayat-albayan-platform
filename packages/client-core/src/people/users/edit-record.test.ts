@@ -7,6 +7,7 @@ import {
   recordView,
   roleLocked,
   roleSection,
+  teacherModes,
   withRole,
   type EditForm,
 } from '../../index';
@@ -97,5 +98,15 @@ describe('the record section of the create and edit forms', () => {
     fresh.newTeacher?.onChange(value.newTeacher);
     const calls = [[{ teacherMode: 'existing' }], [{ newTeacher: value.newTeacher }]];
     expect(onChange.mock.calls).toEqual(calls);
+  });
+});
+
+describe('teacherModes', () => {
+  it('offers an existing teacher first, then a new one, in the app language', () => {
+    const modes = teacherModes({ existingTeacher: 'existing', newTeacher: 'new' });
+    expect(modes).toEqual([
+      { value: 'existing', label: 'existing' },
+      { value: 'new', label: 'new' },
+    ]);
   });
 });
