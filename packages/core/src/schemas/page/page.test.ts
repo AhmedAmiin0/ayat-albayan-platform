@@ -1,3 +1,4 @@
+import { pageGoldenCases, pageOutcome } from '@ab/testing/page-golden';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { listSortShape } from '../list-sort';
@@ -39,6 +40,14 @@ describe('pageQuery', () => {
     const short = z.object(pageQuery({ size: 20, lastPage: 50 }));
     expect(short.safeParse({ page: '50' }).success).toBe(true);
     expect(short.safeParse({ page: '51' }).success).toBe(false);
+  });
+});
+
+describe('pageQuery golden cases', () => {
+  const small = z.object(pageQuery({ size: 20, max: 50 }));
+
+  it.each(pageGoldenCases({ size: 20, max: 50 }))('answers $input', ({ input, expected }) => {
+    expect(pageOutcome(small, input)).toEqual(expected);
   });
 });
 
