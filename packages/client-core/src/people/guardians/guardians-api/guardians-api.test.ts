@@ -47,7 +47,9 @@ describe('guardian calls (R-STU-02, R-STU-04)', () => {
 
   it('throws bad_response for a guardian without its numbers', async () => {
     const { client } = clientAnswering(guardian);
-    const failure = await guardianCalls(client).get(ID).catch((e: unknown) => e);
+    const failure = await guardianCalls(client)
+      .get(ID)
+      .catch((e: unknown) => e);
     expect(failure).toBeInstanceOf(ApiError);
     expect(failure).toMatchObject({ body: { code: 'bad_response', path: `/guardians/${ID}` } });
   });
