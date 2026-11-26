@@ -53,6 +53,14 @@ export const expenseCategoryCreateSchema = z.object({
   labelEn: z.string().trim().max(60).nullish(),
 });
 
+/** One row of GET /expense-categories, and the answer of POST /expense-categories. */
+export const expenseCategoryViewSchema = z.object({
+  key: z.string(),
+  label_ar: z.string(),
+  label_en: z.string().nullable(),
+  active: z.boolean(),
+});
+
 /** POST /expenses/receipt-upload-url. */
 export const expenseReceiptUploadSchema = z.object({
   mime: z.enum(RECEIPT_MIMES, { message: 'receipt_type' }),
@@ -68,3 +76,4 @@ export const expenseListQuery = z.union([
 export type ExpenseCreate = z.output<typeof expenseCreateSchema>;
 export type ExpenseUpdate = z.output<typeof expenseUpdateSchema>;
 export type ExpenseCategoryCreate = z.output<typeof expenseCategoryCreateSchema>;
+export type ExpenseCategoryView = z.infer<typeof expenseCategoryViewSchema>;

@@ -30,10 +30,3 @@ export interface ExpenseYearView {
   fx_missing: string[];
   fx_date: string | null;
 }
-
-export interface ExpenseCategoryView {
-  key: string;
-  label_ar: string;
-  label_en: string | null;
-  active: boolean;
-}

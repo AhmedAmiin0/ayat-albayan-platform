@@ -53,6 +53,7 @@ export * from './finance/invoices';
 export * from './finance/pricing';
 export * from './finance/stripe';
 export * from './finance/receivables';
+export * from './finance/expenses';
 export * from './notifications';
 export * from './messaging/numbers';
 export * from './reports/stored-path';

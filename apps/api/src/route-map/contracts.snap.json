@@ -473,6 +473,38 @@
    ]
   }
  },
+ "GET /expense-categories": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "key": {
+      "type": "string"
+     },
+     "label_ar": {
+      "type": "string"
+     },
+     "label_en": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "active": {
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "key",
+     "label_ar",
+     "label_en",
+     "active"
+    ]
+   }
+  }
+ },
  "GET /guardians": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -8367,6 +8399,65 @@
    },
    "required": [
     "name"
+   ]
+  }
+ },
+ "POST /expense-categories": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string",
+     "pattern": "^[a-z][a-z0-9_]{1,39}$"
+    },
+    "labelAr": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 60
+    },
+    "labelEn": {
+     "anyOf": [
+      {
+       "type": "string",
+       "maxLength": 60
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "key",
+    "labelAr"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    },
+    "label_ar": {
+     "type": "string"
+    },
+    "label_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "active": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "key",
+    "label_ar",
+    "label_en",
+    "active"
    ]
   }
  },

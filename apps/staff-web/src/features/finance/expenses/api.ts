@@ -1,3 +1,4 @@
+import { expenseCategoryCalls } from '@ab/client-core';
 import type { SignedDownload, SignedUpload } from '@ab/shared';
 import type { PaymentMethod } from '@ab/catalog';
 import { localizedName, round2 } from '@ab/core';
@@ -22,13 +23,15 @@ export const expenseYearQuery = (year: string) =>
     queryFn: () => apiFetch<ExpenseYearView>(`/expenses/year?year=${year}`),
   });
 
+const categoryCalls = expenseCategoryCalls({ apiFetch, apiSend });
+
 export const categoriesQuery = queryOptions({
   queryKey: moneyKeys.expenseCategories(),
-  queryFn: () => apiFetch<ExpenseCategoryView[]>('/expense-categories'),
+  queryFn: categoryCalls.list,
   staleTime: 10 * 60_000,
 });
 
-export const addCategory = (body: { key: string; labelAr: string }) => apiSend<ExpenseCategoryView>('POST', '/expense-categories', body);
+export const addCategory = categoryCalls.add;
 
 /**
  * The table's label in the UI language (English UI: label_en, else the seeded English word, else
