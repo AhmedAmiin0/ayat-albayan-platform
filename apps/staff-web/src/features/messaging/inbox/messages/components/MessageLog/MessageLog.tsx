@@ -26,11 +26,12 @@ export interface MessageLogProps {
   waitingKeys: ReadonlySet<string>;
   /**
    * From which width the log fills its column (the reply box pinned under it): `shell` (900px)
-   * when nothing sits beside the thread, `xl` when the lead/family panel does. Below that width
+   * when nothing sits beside the thread, `beside` when the lead/family panel may (container
+   * `thread` from 48rem). Below that width
    * the log is a capped box and the thread scrolls as one column. `phone` (< 900px): the
    * full-screen chat, where the log always fills the room between the header and the composer.
    */
-  fill?: 'shell' | 'xl' | 'phone';
+  fill?: 'shell' | 'beside' | 'phone';
   /** May this user call from this chat: its call entries (docs/28) then call back when tapped. */
   canCall?: boolean;
   /** The family's next open lessons for the reply notes' actions; none means no actions. */
@@ -41,7 +42,9 @@ export interface MessageLogProps {
 
 const BOX = {
   shell: 'min-h-[240px] shell:min-h-0 shell:flex-1 shell:overflow-y-auto shell:overscroll-contain shell:pe-1',
-  xl: 'min-h-[240px] shell:max-h-[min(62vh,620px)] shell:overflow-y-auto shell:overscroll-contain shell:pe-1 xl:max-h-none xl:min-h-0 xl:flex-1',
+  beside:
+    'min-h-[240px] shell:max-h-[min(62vh,620px)] shell:overflow-y-auto shell:overscroll-contain ' +
+    'shell:pe-1 @3xl/thread:max-h-none @3xl/thread:min-h-0 @3xl/thread:flex-1',
   phone: 'min-h-0 flex-1 overflow-y-auto overscroll-contain bg-sunk px-2.5 py-3',
 };
 
