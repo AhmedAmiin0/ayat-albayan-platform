@@ -1,7 +1,12 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import type { z } from 'zod';
-import { quote, type FxRate, type Quote } from '../quote';
-import { fxRateSchema, quoteSchema } from '../quote.schemas';
+import { quote, type CatalogResponse, type FxRate, type Quote, type QuoteResponse } from '../quote';
+import {
+  catalogResponseSchema,
+  fxRateSchema,
+  quoteResponseSchema,
+  quoteSchema,
+} from '../quote.schemas';
 
 const sample = quote({ tier: 'bulk', duration: 45, country: 'KW', students: 2, discount: 10 });
 
@@ -52,5 +57,18 @@ describe('fxRateSchema', () => {
 
   it('refuses a rate that is not a number', () => {
     expect(fxRateSchema.safeParse({ ...peg, rate: '0.25' }).success).toBe(false);
+  });
+});
+
+describe('quoteResponseSchema and catalogResponseSchema (GET /pricing/quote, /catalog)', () => {
+  it('are exactly the answers the API builds', () => {
+    expectTypeOf<z.infer<typeof quoteResponseSchema>>().toEqualTypeOf<QuoteResponse>();
+    expectTypeOf<z.infer<typeof catalogResponseSchema>>().toEqualTypeOf<CatalogResponse>();
+    expect(quoteResponseSchema.parse({ ...sample, fx: null })).toEqual({ ...sample, fx: null });
+  });
+
+  it('refuses a catalog whose country is not a site country', () => {
+    const catalog = { country: 'EG', currency: 'USD', duration: 45, packages: [sample], fx: null };
+    expect(catalogResponseSchema.safeParse(catalog).success).toBe(false);
   });
 });
