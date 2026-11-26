@@ -46,12 +46,6 @@
     }
   },
   "support/durations-reporter.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     }
@@ -82,17 +76,6 @@
   "support/finance/course-renew.ts": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "support/finance/exports-csv.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    },
-    "ab/no-if-chains": {
-      "count": 3
     }
   },
   "support/finance/invoice.ts": {
@@ -174,9 +157,6 @@
     }
   },
   "support/people/family-sign-in.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 4
     }
@@ -208,9 +188,6 @@
     }
   },
   "support/reporting/feedback.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 4
     }
@@ -222,11 +199,6 @@
   },
   "support/reporting/teacher-extra.ts": {
     "ab/no-unchecked-json": {
-      "count": 1
-    }
-  },
-  "support/reporting/teacher-templates.ts": {
-    "complexity": {
       "count": 1
     }
   },

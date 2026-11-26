@@ -2,6 +2,7 @@ import { expect } from '../core/fixtures';
 import { API, setSetting } from '../core/messages';
 import { seedFamily, withSql } from '../core/schedule';
 import { STUB_URL, setMessaging, stubSent, stubTemplateStatus } from '../core/wa-stub';
+import { templateParam } from '../core/stub-template';
 
 // Family accounts (docs/30): the account_code template on the stub, the switch, a fresh family, and the
 // code as the stub captured it. Example data only; «Meta» is tools/wa-stub.
@@ -71,11 +72,7 @@ export async function codeSentTo(phone: string, after = 0): Promise<string> {
         const sent = (await stubSent())
           .filter((m) => m.template === TEMPLATE && m.to.replace(/\D/g, '') === digits)
           .slice(after);
-        const body = sent.at(-1)?.body as
-          | { template?: { components?: { type: string; parameters?: { text?: string }[] }[] } }
-          | undefined;
-        code =
-          body?.template?.components?.find((c) => c.type === 'body')?.parameters?.[0]?.text ?? '';
+        code = templateParam(sent.at(-1)?.body, 'body')?.text ?? '';
         return code;
       },
       { timeout: 30_000 },
