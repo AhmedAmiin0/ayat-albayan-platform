@@ -2,6 +2,8 @@ import type { NotificationItem, NotificationsPage, NotificationsQuery } from '@a
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { done, pgError } from '@/common/db/errors';
 import { DB, type Db } from '@/common/db/db.module';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage, toPage } from '@/common/db/page';
 import { notificationItem } from './notifications.mapper';
 import { assertBrowserClaim } from './web/web-push.claim';
 import type { WebPushSubscriptionInput } from './web/web-push.endpoint';
@@ -9,6 +11,13 @@ import type { WebPushSubscriptionInput } from './web/web-push.endpoint';
 /** A retimed lesson's superseded rows (migration 174 appends «:old:<uuid>» to their dedup_key). */
 const SUPERSEDED = '%:old:%';
 const COLUMNS = 'id, kind, title, body, data, created_at, read_at';
+const NEWEST_FIRST: SortSpec<never> = {
+  columns: {},
+  fallback: [
+    { column: 'created_at', ascending: false },
+    { column: 'id', ascending: false },
+  ],
+};
 /** Browsers kept per profile (the newest): a script cannot grow one user's fan-out without bound. */
 export const WEB_PUSH_MAX_PER_PROFILE = 10;
 
@@ -21,16 +30,14 @@ export class NotificationsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(profileId: string, q: NotificationsQuery): Promise<NotificationsPage> {
-    const from = (q.page - 1) * q.pageSize;
-    const [rows, unread] = await Promise.all([
+    const mine = () =>
       this.db
         .from('push_notifications')
         .select(COLUMNS, { count: 'exact' })
         .eq('profile_id', profileId)
-        .not('dedup_key', 'like', SUPERSEDED)
-        .order('created_at', { ascending: false })
-        .order('id', { ascending: false })
-        .range(from, from + q.pageSize - 1),
+        .not('dedup_key', 'like', SUPERSEDED);
+    const [read, unread] = await Promise.all([
+      readPage(mine, q, NEWEST_FIRST),
       this.db
         .from('push_notifications')
         .select('id', { count: 'exact', head: true })
@@ -38,16 +45,9 @@ export class NotificationsRepo {
         .is('read_at', null)
         .not('dedup_key', 'like', SUPERSEDED),
     ]);
-    if (rows.error) throw pgError(rows.error);
     if (unread.error) throw pgError(unread.error);
-    const items: NotificationItem[] = rows.data.map(notificationItem);
-    return {
-      items,
-      total: rows.count ?? items.length,
-      page: q.page,
-      pageSize: q.pageSize,
-      unread: unread.count ?? 0,
-    };
+    const items: NotificationItem[] = read.rows.map(notificationItem);
+    return { ...toPage(items, read.total, q), unread: unread.count ?? 0 };
   }
 
   /** Stamps read_at on the caller's unread rows: the given ids, or all of them. */

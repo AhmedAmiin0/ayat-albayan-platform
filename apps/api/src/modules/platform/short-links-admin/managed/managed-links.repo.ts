@@ -2,11 +2,18 @@ import type { TablesInsert, TablesUpdate } from '@ab/db';
 import type { ShortLinkListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage } from '@/common/db/page';
 import { maybe, one, pgError } from '@/common/db/errors';
 import { MANAGED_KIND, type ShortLinkRow } from '@/modules/platform/short-links';
 
 /** Postgres unique_violation: the code already exists (the caller draws another). */
 const UNIQUE = '23505';
+
+const NEWEST_FIRST: SortSpec<never> = {
+  columns: {},
+  fallback: [{ column: 'created_at', ascending: false }],
+};
 
 interface ListScope {
   query: ShortLinkListQuery;
@@ -64,15 +71,12 @@ export class ManagedLinksRepo {
   /** One page, newest first, with the total. */
   async page(scope: ListScope): Promise<{ rows: ShortLinkRow[]; total: number }> {
     const { query } = scope;
-    const from = (query.page - 1) * query.pageSize;
-    const { data, error, count } = await this.db
-      .from('short_links')
-      .select('*', { count: 'exact' })
-      .match({ kind: MANAGED_KIND, ...filtersOf(scope) })
-      .ilike('title', like(query.search ?? ''))
-      .order('created_at', { ascending: false })
-      .range(from, from + query.pageSize - 1);
-    if (error) throw pgError(error);
-    return { rows: data, total: count ?? 0 };
+    const read = () =>
+      this.db
+        .from('short_links')
+        .select('*', { count: 'exact' })
+        .match({ kind: MANAGED_KIND, ...filtersOf(scope) })
+        .ilike('title', like(query.search ?? ''));
+    return readPage(read, query, NEWEST_FIRST);
   }
 }
