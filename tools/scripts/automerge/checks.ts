@@ -6,7 +6,7 @@ export const SELF = 'lane automerge';
  * The title check runs again on the same commit when the title is edited and its old failure
  * stays on the head; decide.ts reads the live title itself, so its runs are not read here.
  */
-const TITLE = 'pr title';
+export const TITLE = 'pr title';
 const UNREAD = new Set([SELF, TITLE]);
 export const REQUIRED: readonly string[] = ['check', 'guards'];
 const OK = new Set(['success', 'skipped', 'neutral']);
