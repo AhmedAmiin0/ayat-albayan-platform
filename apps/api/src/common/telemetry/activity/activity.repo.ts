@@ -1,9 +1,9 @@
 import { addCalendarDays } from '@ab/time';
 import type { ActivityListQuery, ActivityPage, ActivitySortKey, ActivityView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { pgError } from '@/common/db/errors';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort, type SortSpec } from '@/common/db/list-sort';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage } from '@/common/db/page';
 
 /** Newest first by default; every key sorts server-side (R-NFR-08). */
 const SORT: SortSpec<ActivitySortKey> = {
@@ -59,7 +59,11 @@ export class ActivityRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(f: ActivityListQuery): Promise<ActivityPage> {
-    const from = (f.page - 1) * f.pageSize;
+    const { rows, total } = await readPage(() => this.filtered(f), f, SORT);
+    return { items: rows.map(toView), total, page: f.page, pageSize: f.pageSize };
+  }
+
+  private filtered(f: ActivityListQuery) {
     let q = this.db.from('v_activity_log').select('*', { count: 'exact' });
     if (f.actor_id) q = q.eq('actor_id', f.actor_id);
     if (f.role) q = q.eq('actor_role', f.role);
@@ -70,10 +74,6 @@ export class ActivityRepo {
     if (f.result === 'error') q = q.gte('status', 400);
     if (f.from) q = q.gte('at', dayStart(f.from));
     if (f.to) q = q.lt('at', nextDayStart(f.to));
-    const { data, count, error } = await applySort(q, f, SORT)
-      .range(from, from + f.pageSize - 1)
-      .returns<Row[]>();
-    if (error) throw pgError(error);
-    return { items: data.map(toView), total: count ?? 0, page: f.page, pageSize: f.pageSize };
+    return q.returns<Row[]>();
   }
 }

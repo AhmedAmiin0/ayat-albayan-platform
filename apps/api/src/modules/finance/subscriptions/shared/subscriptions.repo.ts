@@ -2,7 +2,7 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { netPaidIn } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort } from '@/common/db/list-sort';
+import { readPage, toPage } from '@/common/db/page';
 import { ilikeContains } from '@/common/db/or-filter';
 import { done, maybe, pgError, rows } from '@/common/db/errors';
 import { readChunked, readChunkedAll } from '@/common/db/read-all';
@@ -20,17 +20,18 @@ export class SubscriptionsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(q: SubListQuery): Promise<Page<SubRow>> {
-    const from = (q.page - 1) * q.pageSize;
+    const read = await readPage(() => this.listQuery(q), q, SUB_SORT);
+    return toPage(read.rows, read.total, q);
+  }
+
+  private listQuery(q: SubListQuery) {
     let query = this.db.from('subscriptions').select(listSelect(q), { count: 'exact' });
     if (q.paid === 'partial') query = query.eq('status', 'unpaid');
     if (q.status) query = query.eq('status', q.status);
     if (q.studentId) query = query.eq('student_id', q.studentId);
     if (q.student) query = query.ilike('student.name', ilikeContains(q.student));
     if (q.package) query = query.eq('package', q.package);
-    const { data, count, error } = await applySort(query, q, SUB_SORT)
-      .range(from, from + q.pageSize - 1);
-    if (error) throw pgError(error);
-    return { items: data, total: count ?? 0, page: q.page, pageSize: q.pageSize };
+    return query;
   }
 
   async get(id: string): Promise<SubRow | null> {

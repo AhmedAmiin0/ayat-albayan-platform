@@ -3,7 +3,7 @@ import type { PaymentKind, SubscriptionStatus } from '@ab/catalog';
 import { netPaid } from '@ab/money';
 import { type HttpException, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort } from '@/common/db/list-sort';
+import { readPage, toPage } from '@/common/db/page';
 import type { StudentRef } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 import { readAll } from '@/common/db/read-all';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
@@ -34,12 +34,9 @@ export class PaymentsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(f: PaymentFilter): Promise<Page<PaymentRow>> {
-    const from = (f.page - 1) * f.pageSize;
-    const query = filtered(this.db.from('payments').select(SELECT, { count: 'exact' }), f);
-    const { data, count, error } = await applySort(query, f, PAYMENT_SORT)
-      .range(from, from + f.pageSize - 1);
-    if (error) throw pgError(error);
-    return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };
+    const query = () => filtered(this.db.from('payments').select(SELECT, { count: 'exact' }), f);
+    const read = await readPage(query, f, PAYMENT_SORT);
+    return toPage(read.rows, read.total, f);
   }
 
   /** The filter's totals per currency (net = payments − refunds), for the period line on the page. */

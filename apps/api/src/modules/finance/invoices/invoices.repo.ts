@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { readPage } from '@/common/db/page';
 import { ilikeContains } from '@/common/db/or-filter';
-import { applySort, type SortSpec } from '@/common/db/list-sort';
+import type { SortSpec } from '@/common/db/list-sort';
 import { maybe, pgError } from '@/common/db/errors';
 import type { InvoiceSortKey, RecentFilter } from './invoices.dto';
 
@@ -49,20 +50,19 @@ export class InvoicesRepo {
 
   /** Every invoice in a created_at window, newest first unless sorted (the admin list page). */
   async recent(f: RecentFilter): Promise<{ rows: InvoiceRowOut[]; total: number }> {
-    const start = (f.page - 1) * f.pageSize;
     const rules = f.student === undefined ? undefined : await this.ruleIdsNamed(f.student);
     if (rules?.length === 0) return { rows: [], total: 0 };
+    const read = await readPage(() => this.recentQuery(f, rules), f, RECENT_SORT);
+    return { rows: read.rows.flatMap(toRow), total: read.total };
+  }
+
+  private recentQuery(f: RecentFilter, rules: string[] | undefined) {
     let q = this.db.from('invoices').select(SELECT, { count: 'exact' });
     if (f.from) q = q.gte('created_at', f.from);
     if (f.to) q = q.lt('created_at', f.to);
     if (f.kind) q = q.eq('kind', f.kind);
     if (rules) q = q.in('rule_id', rules);
-    const { data, count, error } = await applySort(q, f, RECENT_SORT).range(
-      start,
-      start + f.pageSize - 1,
-    );
-    if (error) throw pgError(error);
-    return { rows: data.flatMap(toRow), total: count ?? 0 };
+    return q;
   }
 
   private async ruleIdsNamed(name: string): Promise<string[]> {
