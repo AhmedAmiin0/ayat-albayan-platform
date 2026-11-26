@@ -7,6 +7,8 @@ import { isWaLine, type TemplateStatus, type WaLine } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { LineHealthStore } from '@/modules/messaging/whatsapp/lines/line-health.store';
+import { pgError } from '@/common/db/errors';
+import type { PostgrestError } from '@supabase/supabase-js';
 
 type TemplateFacts = ReadonlyMap<string, { status: TemplateStatus; line: WaLine }>;
 export type Reach = NonNullable<NotificationsOverview['reach']>;
@@ -39,11 +41,11 @@ export class RulesRepo {
   async reach(): Promise<Reach> {
     const count = async (
       name: string,
-      run: () => PromiseLike<{ count: number | null; error: { message: string } | null }>,
+      run: () => PromiseLike<{ count: number | null; error: PostgrestError | null }>,
     ) => {
       try {
         const { count: n, error } = await run();
-        if (error) throw new Error(error.message);
+        if (error) throw pgError(error);
         return n ?? 0;
       } catch (e) {
         this.log.warn(`reach ${name} uncounted: ${e instanceof Error ? e.message : String(e)}`);
@@ -74,7 +76,7 @@ export class RulesRepo {
 
   async templates(): Promise<TemplateFacts> {
     const { data, error } = await this.db.from('message_templates').select('key, status, line').in('key', [...CATALOGUE_TEMPLATE_KEYS]);
-    if (error) throw new Error(`templates read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return new Map(
       data.flatMap((r) =>
         isWaLine(r.line) ? [[r.key, { status: r.status, line: r.line }] as const] : [],

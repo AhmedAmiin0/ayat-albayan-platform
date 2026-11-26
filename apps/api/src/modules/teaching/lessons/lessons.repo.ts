@@ -3,8 +3,10 @@ import { meetingModeOf, OPEN_LESSON_STATUSES, usesPlatform } from '@ab/schedule'
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage, toPage } from '@/common/db/page';
 import type { PageQuery } from '@/common/http/http';
-import { maybe, pgError } from '@/common/db/errors';
+import { maybe, pgError, rows } from '@/common/db/errors';
 import type { Contact } from './status/confirmation-messages';
 import { LESSON_SELECT, type LessonRow } from './store/lesson-row';
 import { LessonsSettings } from './lessons.settings';
@@ -14,6 +16,11 @@ export type LessonWindow = { from: Date; to: Date; teacherId?: string };
 type OpenLesson = { id: string; status: LessonStatus; starts_at: string };
 /** `${lesson_id}:${student_id}` → lesson number (v_lesson_sequence). */
 export type SeqMap = ReadonlyMap<string, number>;
+
+const STUDENT_LESSON_ORDER: SortSpec<never> = {
+  columns: {},
+  fallback: [{ column: 'starts_at', ascending: false }],
+};
 
 /** Reads of lessons for the views and the write services (service role — callers guard). */
 @Injectable()
@@ -31,14 +38,8 @@ export class LessonsRepo {
   /** By starts_at; ids are few (one action's lessons). */
   async byIds(ids: readonly string[]): Promise<LessonRow[]> {
     if (ids.length === 0) return [];
-    const { data, error } = await this.db
-      .from('lessons')
-      .select(LESSON_SELECT)
-      .in('id', [...ids])
-      .order('starts_at')
-      .order('id');
-    if (error) throw pgError(error);
-    return data;
+    const byId = this.db.from('lessons').select(LESSON_SELECT).in('id', [...ids]);
+    return rows(await byId.order('starts_at').order('id'));
   }
 
   /** starts_at ∈ [from, to), every status, by starts_at (docs/10 routes 1, 2, 4). */
@@ -54,21 +55,18 @@ export class LessonsRepo {
     });
   }
 
-  /** One student's lessons, newest first (route 5). */
-  async studentPage(studentId: string, { page, pageSize }: PageQuery): Promise<Page<LessonRow>> {
-    const start = (page - 1) * pageSize;
-    const { data, count, error } = await this.db
-      .from('lessons')
-      .select('id, lesson_students!inner(student_id)', { count: 'exact' })
-      .eq('lesson_students.student_id', studentId)
-      .order('starts_at', { ascending: false })
-      .order('id')
-      .range(start, start + pageSize - 1);
-    if (error) throw pgError(error);
-    const order = new Map(data.map((r, i) => [r.id, i]));
-    const rows = await this.byIds(data.map((r) => r.id));
-    rows.sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
-    return { items: rows, total: count ?? 0, page, pageSize };
+  /** One student's lessons, newest first (route 5); the rows are re-read whole, in page order. */
+  async studentPage(studentId: string, input: PageQuery): Promise<Page<LessonRow>> {
+    const read = () =>
+      this.db
+        .from('lessons')
+        .select('id, lesson_students!inner(student_id)', { count: 'exact' })
+        .eq('lesson_students.student_id', studentId);
+    const { rows: ids, total } = await readPage(read, input, STUDENT_LESSON_ORDER);
+    const order = new Map(ids.map((r, i) => [r.id, i]));
+    const lessons = await this.byIds(ids.map((r) => r.id));
+    lessons.sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
+    return toPage(lessons, total, input);
   }
 
   /**

@@ -26,7 +26,7 @@ export const TEACHER_SORT: SortSpec<TeacherSortKey> = {
     max_students: { column: 'max_students' },
     status: { column: 'status' },
   },
-  fallback: { column: 'display_name_ar', ascending: true },
+  fallback: [{ column: 'display_name_ar', ascending: true }],
 };
 
 interface TeacherFilterable<Q> {

@@ -2,13 +2,13 @@ import type { ForwardResult, ForwardSkip, ThreadForward } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { ForwardFiles, type ForwardFile } from './forward-files';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { visibleToSales } from '@/modules/messaging/inbox/sales-threads/sales-threads';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { ThreadSendService } from '@/modules/messaging/inbox/send/thread-send.service';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
+import { httpError } from '@/common/http/errors';
 
 interface ForwardInput {
   input: ThreadForward;
@@ -48,8 +48,8 @@ function assertForwardable(
     !row ||
     (who.scope && !who.scope.phones.has(row.phone_e164)) ||
     (who.sales && !visibleToSales(row));
-  if (hidden) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
-  if (nothingToCopy(row)) throw waHttpError('not_forwardable', HttpStatus.BAD_REQUEST);
+  if (hidden) throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
+  if (nothingToCopy(row)) throw httpError(HttpStatus.BAD_REQUEST, 'not_forwardable');
   return row;
 }
 
@@ -115,7 +115,7 @@ export class ThreadForwardService {
   }): Promise<Sent> {
     const clientRequestId = t.f.input.clientRequestId;
     if (t.source.media_mime) {
-      if (!t.file) throw waHttpError('files_forbidden', HttpStatus.FORBIDDEN);
+      if (!t.file) throw httpError(HttpStatus.FORBIDDEN, 'files_forbidden');
       return this.files.send({ ...t.base, input: { clientRequestId } }, t.file);
     }
     return this.sends.text({ ...t.base, input: { text: t.source.body?.trim() ?? '', clientRequestId } });

@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { Approvals } from './number-route';
 import { templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { pgError } from '@/common/db/errors';
 
 /** Template keys are snake_case registry keys; anything else is never put into a filter. */
 const KEY = /^[a-z0-9_]{1,64}$/;
@@ -18,7 +19,7 @@ export class RouteRepo {
   /** Every message_template_numbers row as key → number → status (decision 4). */
   async approvals(): Promise<Approvals> {
     const { data, error } = await this.db.from('message_template_numbers').select('template_key, number_id, status');
-    if (error) throw new Error(`template approvals read failed: ${error.message}`);
+    if (error) throw pgError(error);
     const out = new Map<string, Map<string, string>>();
     for (const r of data)
       out.set(
@@ -37,7 +38,7 @@ export class RouteRepo {
     const keys = [...new Set([...onSome, ...CRM_GATED_KEYS])];
     const onNumber = keys.length ? `,key.in.(${keys.join(',')})` : '';
     const { data, error } = await this.db.from('message_templates').select('*').or(`status.eq.approved${onNumber}`);
-    if (error) throw new Error(`templates read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return templateRows(data);
   }
 }

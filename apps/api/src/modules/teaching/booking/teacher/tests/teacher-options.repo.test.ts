@@ -10,7 +10,7 @@ import {
 
 const SETTINGS = readerOf(BookingSettings);
 const FILTER: TeacherFilter = { program: 'quran' };
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 const setup = (on: boolean) => {
   const f = fakeDb({
@@ -37,7 +37,7 @@ describe('TeacherOptionsQueries.withAvailability (R-SCH-06)', () => {
 });
 
 describe('TeacherOptionsRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ teachers: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new TeacherOptionsRepo(db, SETTINGS).active(FILTER))).toEqual(
       DUPLICATE,

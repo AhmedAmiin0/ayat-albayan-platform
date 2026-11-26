@@ -1,7 +1,7 @@
 import { makeupEligible } from '@ab/schedule';
 import { HttpStatus } from '@nestjs/common';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
+import { httpError } from '@/common/http/errors';
 
 /** windowDays: settings.makeup_window_days. */
 type MakeupLookup = { lessonId: string; studentId: string; now: Date; windowDays: number };
@@ -14,9 +14,9 @@ type MakeupLookup = { lessonId: string; studentId: string; now: Date; windowDays
  */
 export async function missedLesson(queries: Pick<BookingRepo, 'makeupOriginal'>, input: MakeupLookup): Promise<string> {
   const original = await queries.makeupOriginal(input.lessonId);
-  if (!original) throw domainError(HttpStatus.NOT_FOUND, 'lesson_not_found');
+  if (!original) throw httpError(HttpStatus.NOT_FOUND, 'lesson_not_found');
   const mine = original.lesson_students.find((s) => s.student_id === input.studentId);
-  if (!mine) throw domainError(HttpStatus.BAD_REQUEST, 'makeup_student');
+  if (!mine) throw httpError(HttpStatus.BAD_REQUEST, 'makeup_student');
   const reason = makeupEligible(
     {
       status: original.status,
@@ -28,6 +28,6 @@ export async function missedLesson(queries: Pick<BookingRepo, 'makeupOriginal'>,
     input.now,
     input.windowDays,
   );
-  if (reason !== 'ok') throw domainError(HttpStatus.CONFLICT, 'makeup_not_eligible', { reason });
+  if (reason !== 'ok') throw httpError(HttpStatus.CONFLICT, 'makeup_not_eligible', { reason });
   return original.id;
 }

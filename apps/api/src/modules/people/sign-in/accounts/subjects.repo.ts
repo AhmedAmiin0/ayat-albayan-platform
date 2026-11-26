@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { maybe, pgError, rows } from '@/common/db/errors';
+import { isUniqueViolation, maybe, pgError, rows } from '@/common/db/errors';
 import { conflict } from '@/common/http/errors';
 import type {
   FamilyLogin,
@@ -96,7 +96,7 @@ export class SubjectsRepo implements SubjectStore {
       phone_e164: row.phone,
       tz: row.tz,
     });
-    if (error?.code === '23505') throw conflict('phone_belongs_to_staff');
+    if (isUniqueViolation(error)) throw conflict('phone_belongs_to_staff');
     if (error) throw pgError(error);
   }
 

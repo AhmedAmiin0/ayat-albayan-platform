@@ -5,9 +5,9 @@ import { BUCKETS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { InboundMediaRepo, type MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
 import { baseMime, chatServable, InboundMedia, type InboundFile, mediaExpired, servable } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { isCrmHistoryRow, receiptMime, receiptName } from '@/modules/messaging/whatsapp';
 import { downloadName } from './download-name';
+import { httpError } from '@/common/http/errors';
 
 const DAY_MS = 86_400_000;
 /** The picker looks back this far and shows this many files. */
@@ -47,7 +47,7 @@ export class ThreadMediaService {
   /** A listed file as a signed URL: 404 outside this chat, 400 invoice_message for another file. */
   async file(input: { phone: string; messageId: string }): Promise<ThreadFile> {
     const picked = await this.pick(input);
-    if (!picked) throw waHttpError('invoice_message', HttpStatus.BAD_REQUEST);
+    if (!picked) throw httpError(HttpStatus.BAD_REQUEST, 'invoice_message');
     const { bucket, path, mime } = picked.file;
     return { ...(await this.storage.signedDownload({ bucket, path })), mime };
   }
@@ -61,7 +61,7 @@ export class ThreadMediaService {
   async pick(input: { phone: string; messageId: string }): Promise<PickedFile | null> {
     const msg = await this.queries.message(input.messageId);
     if (msg?.phone_e164 !== input.phone || msg.hidden_at) {
-      throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+      throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
     }
     const mime = msg.direction === 'inbound' ? receiptMime(msg) : null;
     if (!mime) return null;
@@ -93,7 +93,7 @@ export class ThreadMediaService {
   }): Promise<{ msg: MediaMessage; file: InboundFile }> {
     const msg = await this.queries.message(input.messageId);
     // A message hidden from the platform keeps its file away from staff too.
-    if (msg?.phone_e164 !== input.phone || msg.hidden_at) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+    if (msg?.phone_e164 !== input.phone || msg.hidden_at) throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
     if (msg.direction === 'outbound' && msg.media_path) {
       return {
         msg,

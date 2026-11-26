@@ -2,14 +2,13 @@ import type { Tables, TablesInsert } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
-import { done, maybe, pgError, rows } from '@/common/db/errors';
+import { done, isUniqueViolation, maybe, pgError, rows } from '@/common/db/errors';
 
 export type ParticipantRow = Tables<'classroom_participants'>;
 
 /** Who is (or was) let in: a staff login, or the guest link a family came by. */
 export type Principal = { userId: string } | { joinLinkId: string };
 
-const UNIQUE_VIOLATION = '23505';
 
 /** classroom_participants / classroom_blocks columns of a principal. */
 export const principalColumns = (p: Principal): { user_id: string | null; join_link_id: string | null } =>
@@ -83,7 +82,7 @@ export class ModerationRepo {
     const { error } = await this.db
       .from('classroom_blocks')
       .insert({ lesson_id: input.lessonId, blocked_by: input.blockedBy, ...cols });
-    if (error && error.code !== UNIQUE_VIOLATION) throw pgError(error);
+    if (error && !isUniqueViolation(error)) throw pgError(error);
     await this.audit.record({
       actorId: input.blockedBy,
       entity: 'lessons',

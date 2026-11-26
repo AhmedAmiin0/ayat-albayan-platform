@@ -1,1 +1,1 @@
-export { applySort, type SortSpec } from './list-sort';
+export { applySort, type Orderable, type SortSpec } from './list-sort';

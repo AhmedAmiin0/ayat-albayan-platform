@@ -7,11 +7,11 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { SalesRepo } from '@/modules/sales/sales/shared';
 import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
 import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
+import { httpError } from '@/common/http/errors';
 
 const A = 'a1000000-0000-4000-8000-00000000000a';
 const B = 'b1000000-0000-4000-8000-00000000000b';
@@ -114,12 +114,12 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
   it('book: the input is validated like the admin booking (400), and a clash stays a 409 the assistant cannot override', async () => {
     expect((await call({ method: 'POST', url: '/sales/booking', token: 'salesA', body: { ...NEW_FAMILY, startTimeLocal: '5pm' } })).statusCode).toBe(400);
     expect((await call({ method: 'POST', url: '/sales/booking', token: 'salesA', body: { ...NEW_FAMILY, guardian: { ...NEW_FAMILY.guardian, phone_e164: 'abc' } } })).statusCode).toBe(400);
-    booking.book.mockRejectedValue(domainError(409, 'conflict', { conflicts: [] }));
+    booking.book.mockRejectedValue(httpError(409, 'conflict', { conflicts: [] }));
     expect((await call({ method: 'POST', url: '/sales/booking', token: 'salesA', body: NEW_FAMILY })).json().code).toBe('conflict');
   });
 
   it('book: the duplicate_student 409 shows only her own children', async () => {
-    booking.book.mockRejectedValue(domainError(409, 'duplicate_student', { guardian_id: 'g1', candidates: [{ id: S1, name: 'ياسمين', notes: 'x' }, { id: S2, name: 'ياسمينة', notes: 'x' }] }));
+    booking.book.mockRejectedValue(httpError(409, 'duplicate_student', { guardian_id: 'g1', candidates: [{ id: S1, name: 'ياسمين', notes: 'x' }, { id: S2, name: 'ياسمينة', notes: 'x' }] }));
     const res = await call({ method: 'POST', url: '/sales/booking', token: 'salesA', body: NEW_FAMILY });
     expect([res.statusCode, res.json()]).toEqual([409, { code: 'duplicate_student', message: 'duplicate_student', candidates: [{ id: S1, name: 'ياسمين' }] }]);
   });

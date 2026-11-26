@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { EVOLUTION_NUMBER_OFF } from '@/modules/messaging/numbers';
 import { scopeFilter, type RecipientScope } from './evolution-pace.scope';
+import { pgError } from '@/common/db/errors';
 
 // The sender's writes for an Evolution number (docs/19 «Evolution driver»): a paced row is moved
 // to later (never slept on), the day's sends are counted for the cap, and a row pinned to a number
@@ -39,7 +40,7 @@ export class EvolutionPaceRepo {
     const { error } = await this.db.from('messages').update({ next_attempt_at: at })
       .eq('phone_e164', input.phone).eq('direction', 'outbound').eq('status', 'queued')
       .or(deferFilter(input, at));
-    if (error) throw new Error(`message defer failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   /**
@@ -53,7 +54,7 @@ export class EvolutionPaceRepo {
       .gt('next_attempt_at', input.now.toISOString()).or(scopeFilter(input));
     const older = input.createdAt === null ? q : q.lt('created_at', input.createdAt);
     const { data, error } = await older.order('next_attempt_at', { ascending: false }).limit(1);
-    if (error) throw new Error(`message order read failed: ${error.message}`);
+    if (error) throw pgError(error);
     const at = data[0]?.next_attempt_at;
     return at ? new Date(at) : null;
   }
@@ -62,7 +63,7 @@ export class EvolutionPaceRepo {
   async sentSince(numberId: string, since: Date): Promise<number> {
     const { count, error } = await this.db.from('messages').select('id', { count: 'exact', head: true })
       .eq('number_id', numberId).eq('direction', 'outbound').gte('sent_at', since.toISOString());
-    if (error) throw new Error(`evolution send count failed: ${error.message}`);
+    if (error) throw pgError(error);
     return count ?? 0;
   }
 
@@ -72,6 +73,6 @@ export class EvolutionPaceRepo {
     const { error } = await this.db.from('messages')
       .update({ status: 'failed', error_code: EVOLUTION_NUMBER_OFF, error_text: text, next_attempt_at: null })
       .eq('id', id).eq('status', 'queued');
-    if (error) throw new Error(`message failure write failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 }

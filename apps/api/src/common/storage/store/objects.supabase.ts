@@ -1,7 +1,7 @@
 import type { Db } from '@/common/db/db.module';
 import { headBytes } from '@/common/storage/storage.head';
 import type { Bucket } from '@/common/storage/storage.paths';
-import { listAll } from './list.supabase';
+import { fail, listAll } from './list.supabase';
 import type {
   ObjectInfo,
   ObjectKey,
@@ -11,9 +11,6 @@ import type {
   SignedPut,
   SlotKey,
 } from './object-store';
-
-const fail = (what: string, error: { message: string }): Error =>
-  new Error(`storage ${what} failed: ${error.message}`);
 
 interface SignMany {
   bucket: Bucket;

@@ -4,13 +4,13 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { ChannelEditsRepo } from './channel-edits.repo';
 
 describe('ChannelEditsRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ channel_messages: [{ error: PG_ERRORS.unique }] });
     expect(
       await answerOfRejection(new ChannelEditsRepo(db).message({ channelId: 'c1', id: 'm1' })),
     ).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

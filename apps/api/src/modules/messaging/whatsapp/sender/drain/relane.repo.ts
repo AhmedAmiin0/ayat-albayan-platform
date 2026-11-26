@@ -2,6 +2,7 @@ import type { Db } from '@/common/db/db.module';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { z } from 'zod';
 import { LANE_ROWS, laneOfRow, laneSchema } from './lanes';
+import { pgError } from '@/common/db/errors';
 
 // A line move restamps queued unclaimed rows so each lane drains only its own sends.
 
@@ -25,6 +26,6 @@ export async function relaneQueued(db: Db, input: RelaneInput): Promise<number> 
     .or(LANE_ROWS[OTHER[laneOfRow(input)]])
     .or('line.is.null,line.neq.calls')
     .select('id');
-  if (error) throw new Error(`queued rows lane write failed: ${error.message}`);
+  if (error) throw pgError(error);
   return data.length;
 }

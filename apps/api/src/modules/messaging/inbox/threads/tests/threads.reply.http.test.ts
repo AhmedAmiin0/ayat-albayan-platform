@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
 import { inboxApp } from '@/modules/messaging/inbox/test-app';
 import { ThreadQuotes } from '@/modules/messaging/inbox/threads/thread-quotes';
+import { httpError } from '@/common/http/errors';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}`;
@@ -37,7 +37,7 @@ describe('«رد»: POST /threads/:phone/text with replyToMessageId (owner 2026-
   });
 
   it("another chat's message (or one without a wamid) is refused before anything is queued", async () => {
-    vi.spyOn(quotes, 'target').mockRejectedValue(waHttpError('reply_not_in_thread', 400));
+    vi.spyOn(quotes, 'target').mockRejectedValue(httpError(400, 'reply_not_in_thread'));
     const res = await t.call(reply());
     expect([res.statusCode, res.json().code]).toEqual([400, 'reply_not_in_thread']);
     expect(t.queries.enqueue).not.toHaveBeenCalled();

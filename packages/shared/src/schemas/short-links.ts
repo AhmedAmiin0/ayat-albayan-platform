@@ -67,7 +67,7 @@ export const shortLinkListQuerySchema = z.object({
   status: z.enum(SHORT_LINK_STATUSES).optional(),
   owner: z.uuid().optional(),
   search: z.string().trim().min(1).max(80).optional(),
-  ...pageQuery({ size: 20, lastPage: 10_000 }),
+  ...pageQuery({ size: 20 }),
 });
 export type ShortLinkListQuery = z.infer<typeof shortLinkListQuerySchema>;
 

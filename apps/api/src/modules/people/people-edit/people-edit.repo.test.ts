@@ -6,11 +6,11 @@ import { PeopleEditRepo } from './people-edit.repo';
 const PHONE = { studentId: 's1', phone: '+201000000001', actorId: 'a1' };
 
 describe('PeopleEditRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation on a read is 409 duplicate with the detail', async () => {
+  it('a unique violation on a read is 409 duplicate', async () => {
     const { db } = fakeDb({ students: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new PeopleEditRepo(db).view('s1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

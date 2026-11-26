@@ -14,10 +14,10 @@ const failing = (error: (typeof PG_ERRORS)[keyof typeof PG_ERRORS]) => {
 };
 
 describe('OverviewRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     expect(await answerOfRejection(failing(PG_ERRORS.unique))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

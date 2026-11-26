@@ -1,5 +1,6 @@
 import { ConflictException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
+import { MAX_ROWS } from '@/common/db/read-all';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { ExpensesRepo } from './expenses.repo';
 
@@ -11,7 +12,7 @@ const CATEGORY_COLUMNS = 'key, label_ar, label_en, active';
 const boom = { code: 'XX000', message: 'boom' };
 
 describe('ExpensesRepo.between: one bounded read of the month span', () => {
-  it('selects *, month span, sorted month → category → created_at, ≤ 5000', async () => {
+  it('selects *, month span, sorted month → category → created_at, ≤ MAX_ROWS (the server cap)', async () => {
     const rows = [{ id: 'e1' }];
     const { db, calls, trips } = fakeDb({ expenses: [{ data: rows }] });
     const out = await new ExpensesRepo(db).between('2026-01-01', '2026-03-01');
@@ -21,7 +22,7 @@ describe('ExpensesRepo.between: one bounded read of the month span', () => {
     expect(argsAll(calls, 'gte')).toEqual([['month', '2026-01-01']]);
     expect(argsAll(calls, 'lte')).toEqual([['month', '2026-03-01']]);
     expect(argsAll(calls, 'order')).toEqual([['month'], ['category'], ['created_at']]);
-    expect(argsAll(calls, 'limit')).toEqual([[5000]]);
+    expect(argsAll(calls, 'limit')).toEqual([[MAX_ROWS]]);
   });
 
   it('a database error is thrown with its code', async () => {

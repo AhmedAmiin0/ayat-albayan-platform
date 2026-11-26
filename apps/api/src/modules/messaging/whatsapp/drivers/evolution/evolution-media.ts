@@ -1,9 +1,9 @@
 import { HttpStatus } from '@nestjs/common';
 import type { z } from 'zod';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { evolutionHttp, evolutionPath, type EvolutionConn } from './evolution-http';
 import { MEDIA_BASE64_MAX, mediaSchema } from './evolution-shapes';
+import { httpError } from '@/common/http/errors';
 
 // Inbound media on an Evolution number (docs/19 «Evolution driver»): the webhook stores only the
 // message id; the bytes come from Evolution's own store the first time a file is opened, then live
@@ -25,7 +25,7 @@ const cloudMedia = (): WaError =>
   });
 
 /** Final for this file: InboundMedia keeps it on the row and never asks again. */
-const tooLarge = (): Error => waHttpError('invoice_too_large', HttpStatus.PAYLOAD_TOO_LARGE);
+const tooLarge = (): Error => httpError(HttpStatus.PAYLOAD_TOO_LARGE, 'invoice_too_large');
 
 const malformed = (): WaError =>
   new WaError('Unexpected Evolution response', { code: null, status: 200 });

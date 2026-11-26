@@ -3,14 +3,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
 import type { MessageChange } from '@/modules/messaging/whatsapp/messages/messages.service';
 import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { AppSendAdopt } from '@/modules/messaging/whatsapp/sender/window/manual-send';
 import { appSendable } from './app-send.rules';
 import { AppSendRepo } from './app-send.repo';
+import { httpError } from '@/common/http/errors';
 
 /** 409 not_app_send with the row as it is now: the clients word it from its status. */
 const refused = (row: ThreadMessageRow) =>
-  waHttpError('not_app_send', 409, { status: row.status, error_code: row.error_code });
+  httpError(409, 'not_app_send', { status: row.status, error_code: row.error_code });
 
 /** The tap only holds the row off for APP_SEND_MS (docs/19); the echo confirms; idempotent. */
 @Injectable()

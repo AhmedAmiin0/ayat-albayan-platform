@@ -10,7 +10,6 @@ import { randomUUID } from 'node:crypto';
 import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
 import { gateConfirmations } from '@/common/rules/confirmations';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingFollowUps } from '@/modules/teaching/booking/core/booking.follow-ups';
 import { BookingPlanner } from '@/modules/teaching/booking/plan/booking.planner';
 import type { BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
@@ -20,6 +19,7 @@ import { trialHistory, trialLessonsOf } from './trial-date.history';
 import { bookPick, movePick, type MovedTrial } from './trial-date.plan';
 import { TrialDateRepo } from './trial-date.repo';
 import { assertCanPick, targetOf, trialStudentId, type TrialTarget } from './trial-date.target';
+import { httpError } from '@/common/http/errors';
 
 /** What a picked date sets in motion after its commit (one injectable: constructors stay ≤ 3). */
 @Injectable()
@@ -43,7 +43,7 @@ export class TrialDates {
 
   async history(studentId: string): Promise<TrialHistory> {
     const student = await this.queries.student(studentId);
-    if (!student) throw domainError(HttpStatus.NOT_FOUND, 'student_not_found');
+    if (!student) throw httpError(HttpStatus.NOT_FOUND, 'student_not_found');
     const lessons = trialLessonsOf(await this.queries.trialLessons(studentId));
     const names = await this.queries.names([...new Set(lessons.flatMap((l) => (l.created_by ? [l.created_by] : [])))]);
     return trialHistory({ student, lessons, names, now: new Date() });

@@ -4,9 +4,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { pgError } from '@/common/db/errors';
 
 function check(error: PostgrestError | null): void {
-  if (error) throw new Error(`db: ${error.message}`);
+  if (error) throw pgError(error);
 }
 
 /** Where the catch-up looks: the number's rows, else (legacy, no wa_numbers row) the line's. */

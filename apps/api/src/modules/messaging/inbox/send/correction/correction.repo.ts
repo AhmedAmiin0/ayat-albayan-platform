@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 
 /** What a correction reads of the message it corrects. */
 export interface CorrectionTarget {
@@ -33,7 +34,7 @@ export class CorrectionRepo {
       .select(TARGET_SELECT)
       .eq('id', id)
       .maybeSingle();
-    if (error) throw new Error(`correction target read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 }

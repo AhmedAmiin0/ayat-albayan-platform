@@ -4,9 +4,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { MessageViews, type MessageRow } from '@/modules/messaging/whatsapp';
 import type { CallPermissionReplyEvent } from '@/modules/messaging/webhook';
+import { pgError } from '@/common/db/errors';
+import type { PostgrestError } from '@supabase/supabase-js';
 
-function check(error: { message: string } | null, what: string): asserts error is null {
-  if (error) throw new Error(`${what} failed: ${error.message}`);
+function check(error: PostgrestError | null): asserts error is null {
+  if (error) throw pgError(error);
 }
 
 /**
@@ -42,7 +44,7 @@ export class CallsNumberRepo {
       .eq('phone_number_id', phoneNumberId)
       .eq('phone_e164', phone)
       .maybeSingle();
-    check(error, 'call permission read');
+    check(error);
     if (!data || (data.response !== 'accepted' && data.response !== 'rejected')) return null;
     return { response: data.response, at: data.replied_at, expires_at: data.expires_at };
   }
@@ -65,7 +67,7 @@ export class CallsNumberRepo {
     const { error } = await this.db
       .from('wa_call_permissions')
       .upsert({ ...row, ...when }, { onConflict: 'phone_number_id,phone_e164' });
-    check(error, 'call permission write');
+    check(error);
   }
 
   /** The family's newest message to THIS calls number (its 24 h window); null = none. */
@@ -80,7 +82,7 @@ export class CallsNumberRepo {
       .eq('number_id', numberId)
       .order('created_at', { ascending: false })
       .limit(1);
-    check(error, 'calls number window read');
+    check(error);
     return data[0]?.created_at ?? null;
   }
 
@@ -119,7 +121,7 @@ export class CallsNumberRepo {
       .eq('error_code', IN_FLIGHT)
       .select('*')
       .maybeSingle();
-    check(error, 'call permission request write');
+    check(error);
     return data;
   }
 }

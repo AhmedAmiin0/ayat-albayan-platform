@@ -4,7 +4,6 @@ import type { FetchLike } from '@/common/infra/http/failure';
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { loadEnv } from '@/config/env/env';
-import { waHttpError } from '@/modules/messaging/whatsapp';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
 import {
   dedupKey,
@@ -14,6 +13,7 @@ import {
 } from '@/modules/messaging/inbox/send/thread-send.service';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { Giphy } from './giphy';
+import { httpError } from '@/common/http/errors';
 
 const GIF_MIME = 'video/mp4';
 
@@ -49,7 +49,7 @@ export class GifService {
     const at = { now, windows, teacher: !!s.scope };
     const line = await chatLine(thread, at);
     const giphy = this.giphy();
-    if (!giphy) throw waHttpError('giphy_not_configured', HttpStatus.SERVICE_UNAVAILABLE);
+    if (!giphy) throw httpError(HttpStatus.SERVICE_UNAVAILABLE, 'giphy_not_configured');
     const bytes = await giphy.mp4(s.input.gifId);
     const file = gifPath({ actorId: s.actorId, requestId: s.input.clientRequestId });
     const gif = { bucket: BUCKETS.waMedia, path: file, body: bytes, contentType: GIF_MIME };

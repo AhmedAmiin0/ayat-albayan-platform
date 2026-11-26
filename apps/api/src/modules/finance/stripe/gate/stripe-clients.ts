@@ -11,9 +11,16 @@ export type StripeApi = Pick<Stripe, 'checkout' | 'refunds' | 'webhooks'>;
 type StripeFactory = (key: string) => StripeApi;
 export const STRIPE_FACTORY = Symbol('STRIPE_FACTORY');
 
+/** Per attempt, with the SDK's retries; its default of 80 s let a hung call hold the request. */
+const STRIPE_TIMEOUT_MS = 15_000;
+
 /** One client per key (never the global key): the SDK's own retries, the pinned API version. */
 export const stripeFactory: StripeFactory = (key) =>
-  new Stripe(key, { apiVersion: STRIPE_API_VERSION, maxNetworkRetries: 2 });
+  new Stripe(key, {
+    apiVersion: STRIPE_API_VERSION,
+    maxNetworkRetries: 2,
+    timeout: STRIPE_TIMEOUT_MS,
+  });
 
 const notConfigured = () =>
   new HttpException({ code: 'stripe_not_configured', message: 'stripe_not_configured' }, HttpStatus.SERVICE_UNAVAILABLE);

@@ -10,6 +10,7 @@ import { templateRow, templateRows, type TemplateRow } from '@/modules/messaging
 import { sendableCache } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
 import { relaneQueued, type RelaneInput } from '@/modules/messaging/whatsapp/sender/drain';
 import type { ApprovalRow, ApprovalWrite, NumberRef } from './types';
+import { isUniqueViolation, pgError } from '@/common/db/errors';
 
 const TEMPLATE_COPY_MS = 60_000; // cached() trusts its copy this long (another copy may write)
 type MaybeRow = TemplateRow | null; // a row, or null when none matched
@@ -60,13 +61,13 @@ export class TemplatesRepo {
 
   async all(): Promise<TemplateRow[]> {
     const { data, error } = await this.db.from('message_templates').select('*').order('key');
-    if (error) throw new Error(`templates read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return templateRows(data);
   }
 
   async get(key: string): Promise<TemplateRow | null> {
     const { data, error } = await this.db.from('message_templates').select('*').eq('key', key).maybeSingle();
-    if (error) throw new Error(`template read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return templateRow(data);
   }
 
@@ -75,7 +76,7 @@ export class TemplatesRepo {
     const base = this.db.from('message_templates').update(patch).eq('key', key);
     const { data, error } = await (onlyIf ? base.eq('status', onlyIf) : base).select('*').maybeSingle();
     this.forget();
-    if (error) throw new Error(`template update failed: ${error.message}`);
+    if (error) throw pgError(error);
     return templateRow(data);
   }
 
@@ -90,7 +91,7 @@ export class TemplatesRepo {
       .select('*')
       .maybeSingle();
     this.forget();
-    if (error) throw new Error(`template insert failed: ${error.message}`);
+    if (error) throw pgError(error);
     return templateRow(data);
   }
 
@@ -98,8 +99,8 @@ export class TemplatesRepo {
   async create(row: ImportRow): Promise<MaybeRow> {
     const { data, error } = await this.db.from('message_templates').insert(row).select('*').maybeSingle();
     this.forget();
-    if (error?.code === '23505') return null;
-    if (error) throw new Error(`template create failed: ${error.message}`);
+    if (isUniqueViolation(error)) return null;
+    if (error) throw pgError(error);
     return templateRow(data);
   }
 
@@ -107,7 +108,7 @@ export class TemplatesRepo {
   async approvals(key?: string): Promise<ApprovalRow[]> {
     const base = this.db.from('message_template_numbers').select('*');
     const { data, error } = await (key ? base.eq('template_key', key) : base).order('number_id');
-    if (error) throw new Error(`template numbers read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -115,7 +116,7 @@ export class TemplatesRepo {
   async upsertApprovals(rows: readonly ApprovalWrite[]): Promise<number> {
     if (!rows.length) return 0;
     const { error } = await this.db.from('message_template_numbers').upsert([...rows], { onConflict: 'template_key,number_id' });
-    if (error) throw new Error(`template numbers write failed: ${error.message}`);
+    if (error) throw pgError(error);
     return rows.length;
   }
 
@@ -123,12 +124,12 @@ export class TemplatesRepo {
   async saveLineSync(sync: TemplateLineSync): Promise<void> {
     const row = { line: sync.line, result: sync as unknown as Json, synced_at: sync.checked_at };
     const { error } = await this.db.from('wa_template_line_syncs').upsert(row, { onConflict: 'line' });
-    if (error) throw new Error(`template line sync write failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   async lineSyncs(): Promise<Map<WaLine, TemplateLineSync>> {
     const { data, error } = await this.db.from('wa_template_line_syncs').select('line, result');
-    if (error) throw new Error(`template line syncs read failed: ${error.message}`);
+    if (error) throw pgError(error);
     const rows = data.flatMap((r) => (isWaLine(r.line) ? [[r.line, r] as const] : []));
     return new Map(rows.map(([line, r]) => [line, r.result as unknown as TemplateLineSync]));
   }
@@ -141,7 +142,7 @@ export class TemplatesRepo {
   /** null = no such wa_numbers row. */
   async numberRef(id: string): Promise<NumberRef | null> {
     const { data, error } = await this.db.from('wa_numbers').select('id, purpose, is_default, waba_id').eq('id', id).maybeSingle();
-    if (error) throw new Error(`number read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 }

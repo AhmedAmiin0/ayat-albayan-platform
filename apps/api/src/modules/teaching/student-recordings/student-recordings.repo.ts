@@ -2,10 +2,20 @@ import type { StudentRecordingsQuery } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { maybe, pgError } from '@/common/db/errors';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage } from '@/common/db/page';
 import { dayBounds, type RecordingJoinRow } from './student-recordings.mapper';
 
 const SELECT =
   '*, lessons!inner(starts_at, teacher_id, teachers(id, display_name_ar, display_name_en), lesson_students!inner(student_id))';
+
+const RECORDING_ORDER: SortSpec<never> = {
+  columns: {},
+  fallback: [
+    { column: 'started_at', ascending: false },
+    { column: 'id', ascending: false },
+  ],
+};
 
 interface RecordingsPageInput {
   studentId: string;
@@ -76,18 +86,15 @@ export class StudentRecordingRepo {
   async page(input: RecordingsPageInput): Promise<{ rows: RecordingJoinRow[]; total: number }> {
     const { query } = input;
     const { gte, lt } = dayBounds(query);
-    const from = (query.page - 1) * query.pageSize;
-    let q = this.db
-      .from('lesson_recordings')
-      .select(SELECT, { count: 'exact' })
-      .eq('lessons.lesson_students.student_id', input.studentId);
-    for (const [column, value] of pageFilters(input)) q = q.eq(column, value);
-    if (gte) q = q.gte('lessons.starts_at', gte);
-    if (lt) q = q.lt('lessons.starts_at', lt);
-    const { data, error, count } = await q
-      .order('started_at', { ascending: false })
-      .range(from, from + query.pageSize - 1);
-    if (error) throw pgError(error);
-    return { rows: data, total: count ?? 0 };
+    const read = () => {
+      let q = this.db
+        .from('lesson_recordings')
+        .select(SELECT, { count: 'exact' })
+        .eq('lessons.lesson_students.student_id', input.studentId);
+      for (const [column, value] of pageFilters(input)) q = q.eq(column, value);
+      if (gte) q = q.gte('lessons.starts_at', gte);
+      return lt ? q.lt('lessons.starts_at', lt) : q;
+    };
+    return readPage(read, query, RECORDING_ORDER);
   }
 }

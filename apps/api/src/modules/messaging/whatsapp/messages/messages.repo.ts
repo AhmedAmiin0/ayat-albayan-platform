@@ -1,9 +1,11 @@
 import { APP_SEND_UNCONFIRMED, AWAITING_REPLY } from '@ab/shared';
+import type { TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { MESSAGE_SELECT, type ThreadMessageRow } from './message.mapper';
 import { stampDelivered } from './delivered';
 import { HANDED_OFF, SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { pgError } from '@/common/db/errors';
 
 /** Not while the sender holds the row (its claim): Meta may be sending it right now. */
 const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
@@ -27,7 +29,7 @@ export class MessagesRepo {
 
   async get(id: string): Promise<ThreadMessageRow | null> {
     const { data, error } = await this.db.from('messages').select(MESSAGE_SELECT).eq('id', id).maybeSingle();
-    if (error) throw new Error(`message read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -48,7 +50,7 @@ export class MessagesRepo {
       .or(NOT_APP_SEND_UNCONFIRMED)
       .select(MESSAGE_SELECT)
       .maybeSingle();
-    if (error) throw new Error(`message retry failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -58,16 +60,13 @@ export class MessagesRepo {
    */
   async markSentManually(id: string, at: Date): Promise<ThreadMessageRow | null> {
     const stamp = at.toISOString();
-    const { data, error } = await this.db
-      .from('messages')
-      .update({ status: 'sent_manually', sent_manually_at: stamp, next_attempt_at: null, error_code: null, error_text: null })
-      .eq('id', id)
-      .eq('direction', 'outbound')
-      .in('status', ['queued', 'failed'])
-      .or(NOT_CLAIMED)
-      .select(MESSAGE_SELECT)
-      .maybeSingle();
-    if (error) throw new Error(`message manual send failed: ${error.message}`);
+    const data = await this.updateUnclaimed(id, {
+      status: 'sent_manually',
+      sent_manually_at: stamp,
+      next_attempt_at: null,
+      error_code: null,
+      error_text: null,
+    });
     if (data)
       await stampDelivered(this.db, { leadId: data.lead_id, dedupKey: data.dedup_key, at: stamp });
     return data;
@@ -78,16 +77,29 @@ export class MessagesRepo {
    * (the sender never reads failed rows) until they confirm (M2) or put it back (M1).
    */
   async handOff(id: string): Promise<ThreadMessageRow | null> {
+    return await this.updateUnclaimed(id, {
+      status: 'failed',
+      error_code: HANDED_OFF,
+      error_text: 'the admin is sending it from WhatsApp',
+      next_attempt_at: null,
+    });
+  }
+
+  /** An outbound queued or failed row the sender has not claimed, compare-and-set. */
+  private async updateUnclaimed(
+    id: string,
+    patch: TablesUpdate<'messages'>,
+  ): Promise<ThreadMessageRow | null> {
     const { data, error } = await this.db
       .from('messages')
-      .update({ status: 'failed', error_code: HANDED_OFF, error_text: 'the admin is sending it from WhatsApp', next_attempt_at: null })
+      .update(patch)
       .eq('id', id)
       .eq('direction', 'outbound')
       .in('status', ['queued', 'failed'])
       .or(NOT_CLAIMED)
       .select(MESSAGE_SELECT)
       .maybeSingle();
-    if (error) throw new Error(`message hand-off failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 }

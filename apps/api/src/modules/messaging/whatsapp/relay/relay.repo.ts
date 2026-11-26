@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { CLAIM_LEASE_MS, SENDING, UNCERTAIN } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { isUniqueViolation, pgError } from '@/common/db/errors';
 
 // The relay's messages rows (docs/19 «script relay»). Written claimed (error_code SENDING, a
 // lease) so the outbox worker never sends it itself; no lead, guardian or staff is linked
@@ -20,7 +21,6 @@ export interface RelayIds {
   waMessageId: string | null;
 }
 
-const UNIQUE_VIOLATION = '23505';
 
 @Injectable()
 export class RelayRepo {
@@ -45,8 +45,8 @@ export class RelayRepo {
       })
       .select('id')
       .single();
-    if (error?.code === UNIQUE_VIOLATION) return null;
-    if (error) throw new Error(`relay row insert failed: ${error.message}`);
+    if (isUniqueViolation(error)) return null;
+    if (error) throw pgError(error);
     return { id: data.id, waMessageId: null };
   }
 
@@ -57,7 +57,7 @@ export class RelayRepo {
       .select('id, wa_message_id')
       .eq('dedup_key', dedupKey)
       .maybeSingle();
-    if (error) throw new Error(`relay row read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data ? { id: data.id, waMessageId: data.wa_message_id } : null;
   }
 
@@ -74,7 +74,7 @@ export class RelayRepo {
         error_text: null,
       })
       .eq('id', input.id);
-    if (error) throw new Error(`relay sent write failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   /** May have been sent: kept and held for the admin (uncertain), never resent by the worker. */
@@ -88,12 +88,12 @@ export class RelayRepo {
         error_text: input.text,
       })
       .eq('id', input.id);
-    if (error) throw new Error(`relay failure write failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   /** Never sent: the row goes, so the script's own retry is a fresh send (nothing to resend). */
   async drop(id: string): Promise<void> {
     const { error } = await this.db.from('messages').delete().eq('id', id);
-    if (error) throw new Error(`relay row delete failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 }

@@ -13,7 +13,10 @@ async function list(f: ApplicantListFilter) {
 describe('GET /job-applicants sort + column filters (R-LEAD-04, R-NFR-08)', () => {
   it('default: newest first, as before', async () => {
     const of = await list(page);
-    expect(of('order')).toEqual([['created_at', { ascending: false }]]);
+    expect(of('order')).toEqual([
+      ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
   });
 
   it('a key → its column, newest first as the tiebreaker', async () => {
@@ -21,12 +24,16 @@ describe('GET /job-applicants sort + column filters (R-LEAD-04, R-NFR-08)', () =
     expect(of('order')).toEqual([
       ['name', { ascending: false, nullsFirst: false }],
       ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
     ]);
   });
 
-  it('created_at ascending is the oldest first, without a second order', async () => {
+  it('created_at ascending is the oldest first, then id', async () => {
     const of = await list({ ...page, sort: 'created_at' });
-    expect(of('order')).toEqual([['created_at', { ascending: true }]]);
+    expect(of('order')).toEqual([
+      ['created_at', { ascending: true }],
+      ['id', { ascending: true }],
+    ]);
   });
 
   it('text filters: name, phone digits, notes', async () => {

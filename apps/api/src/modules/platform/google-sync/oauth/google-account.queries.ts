@@ -1,6 +1,7 @@
 import type { Json } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 
 export type AccountRow = {
   status: 'disconnected' | 'connected' | 'error';
@@ -21,7 +22,6 @@ type AccountPatch = Partial<AccountRow> & { drive_confirmed_by?: string | null }
 const COLUMNS =
   'status, email, scopes, connected_at, connected_by, last_error, discovery, root_folder_id, root_folder_name, summary_sheet_id, drive_confirmed_at, last_run_at';
 
-const fail = (what: string, error: { message: string }) => new Error(`google ${what} failed: ${error.message}`);
 
 /** google_account (one row) and the refresh token's Vault functions, with the service role. Never logs a value. */
 @Injectable()
@@ -30,7 +30,7 @@ export class GoogleAccountQueries {
 
   async get(): Promise<AccountRow> {
     const { data, error } = await this.db.from('google_account').select(COLUMNS).eq('id', true).maybeSingle();
-    if (error) throw fail('account read', error);
+    if (error) throw pgError(error);
     return (data ?? {
       status: 'disconnected',
       email: null,
@@ -49,7 +49,7 @@ export class GoogleAccountQueries {
 
   async update(patch: AccountPatch): Promise<void> {
     const { error } = await this.db.from('google_account').upsert({ id: true, ...patch });
-    if (error) throw fail('account write', error);
+    if (error) throw pgError(error);
   }
 
   /** The pending OAuth round trip: only the nonce's hash, with its expiry. */
@@ -62,7 +62,7 @@ export class GoogleAccountQueries {
         oauth_nonce_expires_at: input.expiresAt.toISOString(),
       })
       .eq('id', true);
-    if (error) throw fail('nonce write', error);
+    if (error) throw pgError(error);
   }
 
   /** Single use: true only for the current, unexpired nonce, which is cleared in the same statement. */
@@ -74,23 +74,23 @@ export class GoogleAccountQueries {
       .eq('oauth_nonce_hash', hash)
       .gt('oauth_nonce_expires_at', new Date().toISOString())
       .select('status');
-    if (error) throw fail('nonce check', error);
+    if (error) throw pgError(error);
     return data.length === 1;
   }
 
   async setToken(value: string): Promise<void> {
     const { error } = await this.db.rpc('google_token_set', { p_value: value });
-    if (error) throw fail('token write', error);
+    if (error) throw pgError(error);
   }
 
   async token(): Promise<string | null> {
     const { data, error } = await this.db.rpc('google_token_read');
-    if (error) throw fail('token read', error);
+    if (error) throw pgError(error);
     return typeof data === 'string' && data !== '' ? data : null;
   }
 
   async clearToken(): Promise<void> {
     const { error } = await this.db.rpc('google_token_clear');
-    if (error) throw fail('token clear', error);
+    if (error) throw pgError(error);
   }
 }

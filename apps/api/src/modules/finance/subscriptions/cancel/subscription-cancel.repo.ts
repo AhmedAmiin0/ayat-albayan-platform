@@ -1,6 +1,7 @@
 import type { CancelBlock } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { afterCursor } from '@/common/db/page';
 import { pgError } from '@/common/db/errors';
 import { SELECT } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
 import type { SubRow } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
@@ -43,14 +44,14 @@ export class SubscriptionCancelRepo {
    * it was kinded 'renewal' because of this one, so cancelling would never earn the 'first' (409 has_commission).
    */
   async laterCommission(sub: LaterOf): Promise<boolean> {
-    const ts = `"${sub.createdAt}"`;
-    const later = await this.db
+    const live = this.db
       .from('subscriptions')
       .select('id')
       .eq('student_id', sub.studentId)
       .gt('price', 0)
-      .neq('status', 'cancelled')
-      .or(`created_at.gt.${ts},and(created_at.eq.${ts},id.gt.${sub.id})`);
+      .neq('status', 'cancelled');
+    const after = { at: sub.createdAt, id: sub.id };
+    const later = await afterCursor(live, { column: 'created_at', ascending: true }, after);
     if (later.error) throw pgError(later.error);
     const ids = later.data.map((r) => r.id);
     if (ids.length === 0) return false;

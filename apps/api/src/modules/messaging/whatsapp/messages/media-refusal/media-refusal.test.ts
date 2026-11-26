@@ -1,13 +1,13 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { keepingRefusal, refusalOf, rejectStored, withinCap } from './media-refusal';
+import { httpError } from '@/common/http/errors';
 
 describe('media refusal', () => {
   it.each([
-    [waHttpError('invoice_too_large', 413), 'invoice_too_large'],
-    [waHttpError('media_expired', 410), 'media_expired'],
-    [waHttpError('evolution_auth', 502), null],
+    [httpError(413, 'invoice_too_large'), 'invoice_too_large'],
+    [httpError(410, 'media_expired'), 'media_expired'],
+    [httpError(502, 'evolution_auth'), null],
     [new HttpException('plain', 413), null],
     [new Error('timeout'), null],
     ['not an error', null],
@@ -44,7 +44,7 @@ describe('media refusal', () => {
 
   it('keepingRefusal keeps a final refusal and rethrows the same error', async () => {
     const keep = vi.fn().mockResolvedValue(undefined);
-    const e = waHttpError('media_expired', 410);
+    const e = httpError(410, 'media_expired');
     await expect(keepingRefusal(() => Promise.reject(e), keep)).rejects.toBe(e);
     expect(keep).toHaveBeenCalledWith('media_expired');
   });

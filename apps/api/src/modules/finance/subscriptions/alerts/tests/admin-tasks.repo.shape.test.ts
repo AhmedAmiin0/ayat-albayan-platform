@@ -41,7 +41,7 @@ describe('AdminTasksRepo.list: one page of tasks, then their students in one tri
     expect(of(calls, 'not')).toEqual([]);
     expect(of(calls, 'order')).toEqual([
       ['admin_tasks', 'created_at', { ascending: false }],
-      ['admin_tasks', 'id'],
+      ['admin_tasks', 'id', { ascending: true }],
     ]);
     expect(of(calls, 'range')).toEqual([['admin_tasks', 10, 19]]);
     expect(of(calls, 'in')).toEqual([['subscriptions', 'id', ['sub-t1']]]);

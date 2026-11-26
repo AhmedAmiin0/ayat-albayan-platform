@@ -16,7 +16,10 @@ describe('InvoicesRepo.recent shape', () => {
     expect(await new InvoicesRepo(db).recent(page)).toEqual({ rows: [], total: 12 });
     const inv = on(calls, 'invoices');
     expect(inv('select')).toEqual([[SELECT, { count: 'exact' }]]);
-    expect(inv('order')).toEqual([['created_at', { ascending: false }], ['id']]);
+    expect(inv('order')).toEqual([
+      ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
     expect(inv('range')).toEqual([[10, 14]]);
     expect([...inv('gte'), ...inv('lt'), ...inv('eq'), ...inv('in')]).toEqual([]);
     expect(trips).toEqual(['invoices']);
@@ -62,7 +65,7 @@ describe('InvoicesRepo.recent shape', () => {
     expect(on(calls, 'invoices')('order')).toEqual([
       ['kind', { ascending: true }],
       ['created_at', { ascending: false }],
-      ['id'],
+      ['id', { ascending: true }],
     ]);
   });
 

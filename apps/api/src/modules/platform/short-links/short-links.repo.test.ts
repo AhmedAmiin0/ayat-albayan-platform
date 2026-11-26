@@ -6,11 +6,11 @@ import { ShortLinksRepo } from './short-links.repo';
 const ROW = { code: 'c1', kind: 'k', subject: 's', target_url: '/x', expires_at: null };
 
 describe('ShortLinksRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ short_links: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new ShortLinksRepo(db).byCode('c1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 
