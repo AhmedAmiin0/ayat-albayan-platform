@@ -6,6 +6,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import type { NumberPatch } from './numbers.patch';
 import type { HealthTarget } from './lines/numbers.health-target';
 import { pgError } from '@/common/db/errors';
+import type { PostgrestError } from '@supabase/supabase-js';
 
 export type NumberRow = Database['public']['Tables']['wa_numbers']['Row'];
 type Health = Pick<NumberRow, 'health' | 'checked_at'> & { display_phone_e164?: string };
@@ -15,8 +16,8 @@ const COLUMNS =
   'id, label, purpose, provider, phone_number_id, waba_id, app_id, display_phone_e164, enabled, is_default, fallback_rank, health, checked_at, created_at, updated_at, updated_by, evolution_mode, evolution_auto_sends, evolution_state, evolution_state_at, evolution_config, evolution_sync, evolution_enabled_at';
 
 /** A unique violation in words: the phone id or the role's live default is taken. */
-function conflictOf(error: { code?: string; message: string }): never {
-  if (error.code !== '23505') throw new Error(`numbers write failed: ${error.message}`);
+function conflictOf(error: PostgrestError): never {
+  if (error.code !== '23505') throw pgError(error);
   const reason: NumberError = error.message.includes('default_per_purpose') ? 'default_taken' : 'phone_taken';
   throw new ConflictException({ message: reason });
 }

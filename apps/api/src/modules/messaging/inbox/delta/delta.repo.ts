@@ -5,14 +5,16 @@ import {
   NOT_A_REACTION,
   type ThreadMessageRow,
 } from '@/modules/messaging/whatsapp';
+import { pgError } from '@/common/db/errors';
+import type { PostgrestError } from '@supabase/supabase-js';
 
 /** The page's own select: the message with its lesson, sending teacher and staff sender (ThreadsQueries.messages). */
 const SELECT = `${MESSAGE_SELECT}, lesson:lessons(starts_at, ends_at, status)` as const;
 /** A chat never has more rows in flight than this; past it the NEWEST are kept (the ticks that still move). */
 const PENDING_LIMIT = 50;
 
-function check(error: { message: string } | null, what: string): asserts error is null {
-  if (error) throw new Error(`${what} failed: ${error.message}`);
+function check(error: PostgrestError | null): asserts error is null {
+  if (error) throw pgError(error);
 }
 
 /** The delta refresh's two reads (thread-delta.service.ts), both on messages_phone_idx. */
@@ -31,7 +33,7 @@ export class DeltaRepo {
       .order('created_at', { ascending: false })
       .order('id', { ascending: false })
       .limit(q.limit + 1);
-    check(error, 'thread delta read');
+    check(error);
     return data ?? [];
   }
 
@@ -56,7 +58,7 @@ export class DeltaRepo {
       .or(filter)
       .order('created_at', { ascending: false })
       .limit(PENDING_LIMIT);
-    check(error, 'thread pending read');
+    check(error);
     return data ?? [];
   }
 }

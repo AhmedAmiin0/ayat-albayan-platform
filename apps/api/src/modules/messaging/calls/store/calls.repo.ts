@@ -2,9 +2,11 @@ import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { CallMove, CallRow, CallSdp, NewCall } from './call-row';
+import { pgError } from '@/common/db/errors';
+import type { PostgrestError } from '@supabase/supabase-js';
 
-function check(error: { message: string } | null, what: string): asserts error is null {
-  if (error) throw new Error(`${what} failed: ${error.message}`);
+function check(error: PostgrestError | null): asserts error is null {
+  if (error) throw pgError(error);
 }
 
 /** Postgres unique_violation: a repeated request id, or a wacid the webhook already stored. */
@@ -30,21 +32,21 @@ export class CallsRepo {
     const { offer_sdp, ...row } = input;
     const { data, error } = await this.db.from('wa_calls').insert(row).select('id').single();
     if (isDuplicate(error)) return null;
-    check(error, 'call insert');
+    check(error);
     const sdp = await this.db.from('wa_call_sdp').insert({ call_id: data.id, offer_sdp: offer_sdp ?? null });
-    check(sdp.error, 'call sdp insert');
+    check(sdp.error);
     return this.get(data.id);
   }
 
   async get(id: string): Promise<CallRow | null> {
     const { data, error } = await this.db.from('wa_calls').select(SELECT).eq('id', id).maybeSingle();
-    check(error, 'call read');
+    check(error);
     return data ? flat(data) : null;
   }
 
   async byWaCallId(waCallId: string): Promise<CallRow | null> {
     const { data, error } = await this.db.from('wa_calls').select(SELECT).eq('wa_call_id', waCallId).maybeSingle();
-    check(error, 'call read by wacid');
+    check(error);
     return data ? flat(data) : null;
   }
 
@@ -52,14 +54,14 @@ export class CallsRepo {
   async byRequest(createdBy: string, requestId: string): Promise<CallRow | null> {
     const { data, error } = await this.db
       .from('wa_calls').select(SELECT).eq('created_by', createdBy).eq('client_request_id', requestId).maybeSingle();
-    check(error, 'call read by request');
+    check(error);
     return data ? flat(data) : null;
   }
 
   /** Records Meta's call id once (the connect answer or its webhook, whichever comes first). */
   async setWaCallId(id: string, waCallId: string): Promise<void> {
     const { error } = await this.db.from('wa_calls').update({ wa_call_id: waCallId }).eq('id', id).is('wa_call_id', null);
-    check(error, 'call wacid update');
+    check(error);
   }
 
   /**
@@ -70,12 +72,12 @@ export class CallsRepo {
     const { answer_sdp, ...patch } = m.patch;
     if (Object.keys(patch).length > 0) {
       const { data, error } = await this.db.from('wa_calls').update(patch).eq('id', m.id).eq('status', m.from).select('id').maybeSingle();
-      check(error, 'call update');
+      check(error);
       if (!data) return null;
     }
     if (answer_sdp !== undefined) {
       const { data, error } = await this.db.from('wa_call_sdp').update({ answer_sdp }).eq('call_id', m.id).is('answer_sdp', null).select('call_id').maybeSingle();
-      check(error, 'call answer update');
+      check(error);
       if (!data) return null;
     }
     return this.get(m.id);
@@ -84,7 +86,7 @@ export class CallsRepo {
   /** Every call not ended yet (a handful): the incoming-call screen, the busy check and the sweep. */
   async live(): Promise<CallRow[]> {
     const { data, error } = await this.db.from('wa_calls').select(SELECT).neq('status', 'ended').order('started_at', { ascending: false }).limit(50);
-    check(error, 'live calls read');
+    check(error);
     return (data ?? []).map(flat);
   }
 
@@ -94,7 +96,7 @@ export class CallsRepo {
     if (q.phone) query = query.eq('phone_e164', q.phone);
     if (q.phones) query = query.in('phone_e164', [...q.phones]);
     const { data, error } = await query.order('started_at', { ascending: false }).limit(q.limit);
-    check(error, 'calls read');
+    check(error);
     return (data ?? []).map((r) => ({ ...r, offer_sdp: null, answer_sdp: null }));
   }
 
@@ -102,7 +104,7 @@ export class CallsRepo {
   async names(phones: readonly string[]): Promise<Map<string, string>> {
     if (phones.length === 0) return new Map();
     const { data, error } = await this.db.from('v_threads').select('phone_e164, display_name').in('phone_e164', [...new Set(phones)]);
-    check(error, 'call names read');
+    check(error);
     return new Map((data ?? []).flatMap((r) => (r.phone_e164 && r.display_name ? [[r.phone_e164, r.display_name]] : [])));
   }
 }
