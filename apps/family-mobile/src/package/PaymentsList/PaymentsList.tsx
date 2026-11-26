@@ -1,16 +1,12 @@
 import { signedAmount } from '@ab/client-core';
-import type { PortalPayment } from '@ab/shared';
 import { dateText } from '@ab/time';
 import { View } from 'react-native';
 import { AppText, InsetGroup, locale, money, t, type, useTheme } from '@ab/mobile-kit';
-
-const KIND_WORD: Record<PortalPayment['kind'], () => string> = {
-  payment: () => t.portal.app.package.paid,
-  refund: () => t.portal.app.package.refund,
-};
+import type { PaymentsListProps } from './PaymentsList.types';
+import { KIND_WORD } from './payments-list.helpers';
 
 /** Payments are listed newest first. */
-export function PaymentsList({ payments, tz }: { payments: readonly PortalPayment[]; tz: string }) {
+export function PaymentsList({ payments, tz }: PaymentsListProps) {
   const { color } = useTheme();
   if (payments.length === 0) return null;
   return (
