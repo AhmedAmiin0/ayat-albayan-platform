@@ -55,5 +55,3 @@ export function useWhatsAppSignIn() {
   const code = { ...flow, setDigits };
   return { entry, check, flow: code, refusals, send, verify };
 }
-
-export type WhatsAppSignIn = ReturnType<typeof useWhatsAppSignIn>;

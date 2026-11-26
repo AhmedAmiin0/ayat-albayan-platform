@@ -1,7 +1,7 @@
 import { CodeStep, t } from '@ab/web-kit';
 import { CodeNote } from '@/features/sign-in/CodeNote';
 import { PhoneStep } from '@/features/sign-in/PhoneStep';
-import { useWhatsAppSignIn } from '@/features/sign-in/use-whatsapp-sign-in';
+import { useWhatsAppSignIn } from './use-whatsapp-sign-in';
 
 /**
  * The family pages' default way in: number → code → signed in (docs/50 §4). Each
