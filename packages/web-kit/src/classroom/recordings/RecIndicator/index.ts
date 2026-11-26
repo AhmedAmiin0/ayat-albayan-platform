@@ -1,0 +1,1 @@
+export { RecIndicator } from './RecIndicator';

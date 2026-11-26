@@ -1,0 +1,1 @@
+export { LessonsPanel } from './LessonsPanel';

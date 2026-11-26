@@ -1,0 +1,1 @@
+export { ChildPage } from './ChildPage';

@@ -1,0 +1,1 @@
+export { LessonChip } from './LessonChip';

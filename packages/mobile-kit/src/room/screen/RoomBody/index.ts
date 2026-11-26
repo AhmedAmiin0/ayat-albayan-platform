@@ -1,0 +1,1 @@
+export { RoomBody } from './RoomBody';

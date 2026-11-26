@@ -1,0 +1,1 @@
+export { RecDot } from './RecDot';

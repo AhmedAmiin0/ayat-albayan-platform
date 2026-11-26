@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { Dialog } from './dialog';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { FormAlert } from '@ab/web-kit/components/ui/form/FormAlert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 export interface ConfirmSwitchProps {

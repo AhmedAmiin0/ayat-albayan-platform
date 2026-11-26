@@ -1,0 +1,1 @@
+export { PdfViewerHead } from './PdfViewerHead';

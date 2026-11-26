@@ -1,0 +1,1 @@
+export { PdfStrip } from './PdfStrip';

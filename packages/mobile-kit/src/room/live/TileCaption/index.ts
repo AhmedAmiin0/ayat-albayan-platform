@@ -1,0 +1,1 @@
+export { TileCaption } from './TileCaption';

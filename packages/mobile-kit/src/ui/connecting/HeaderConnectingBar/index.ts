@@ -1,0 +1,1 @@
+export { HeaderConnectingBar } from './HeaderConnectingBar';

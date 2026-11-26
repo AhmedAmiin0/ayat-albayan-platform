@@ -1,0 +1,1 @@
+export { TopConnectingBar } from './TopConnectingBar';

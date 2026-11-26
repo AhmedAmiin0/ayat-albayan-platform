@@ -1,5 +1,5 @@
 import { useRouter } from '@tanstack/react-router';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { Card } from '@ab/web-kit/components/ui/surface/card';
 import type { RouteErrorProps } from './RouteError.types';
 

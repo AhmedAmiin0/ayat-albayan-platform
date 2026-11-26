@@ -1,0 +1,1 @@
+export { ViewerPager } from './ViewerPager';

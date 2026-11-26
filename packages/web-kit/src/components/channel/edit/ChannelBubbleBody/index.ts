@@ -1,0 +1,1 @@
+export { ChannelBubbleBody } from './ChannelBubbleBody';

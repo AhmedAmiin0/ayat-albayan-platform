@@ -1,0 +1,1 @@
+export { FamilyRecordingsPage } from './FamilyRecordingsPage';
