@@ -48,19 +48,30 @@ interface Valid {
 
 const field = (row: CrmRow, col: string): string => text(row, col) ?? '';
 
-/** The row's phone, direction, status and time — or why it cannot be imported. */
-function check(row: CrmRow, ctx: Ctx): Valid | Pick<RowIssue, 'code' | 'field'> {
+type Problem = Pick<RowIssue, 'code' | 'field'>;
+
+function contactPhone(
+  row: CrmRow,
+  ctx: Ctx,
+): { ok: true; e164: string } | { ok: false; issue: Problem } {
   const contact = ctx.idx.contacts.get(ctx.idx.contactOf.get(field(row, 'conversation_id')) ?? '');
-  if (!contact) return { code: 'missing_field', field: 'conversation_id' };
-  if (!contact.phone) return { code: 'bad_phone', field: 'phone' };
-  if (contact.test) return { code: 'test_row', field: 'phone' };
+  if (!contact) return { ok: false, issue: { code: 'missing_field', field: 'conversation_id' } };
+  if (!contact.phone) return { ok: false, issue: { code: 'bad_phone', field: 'phone' } };
+  if (contact.test) return { ok: false, issue: { code: 'test_row', field: 'phone' } };
+  return { ok: true, e164: contact.phone.e164 };
+}
+
+/** The row's phone, direction, status and time — or why it cannot be imported. */
+function check(row: CrmRow, ctx: Ctx): Valid | Problem {
+  const contact = contactPhone(row, ctx);
+  if (!contact.ok) return contact.issue;
   const direction = SENDER_DIRECTION[field(row, 'sender_type')];
   if (!direction) return { code: 'unmapped_value', field: 'sender_type' };
   const status = MESSAGE_STATUS[field(row, 'status')];
   if (!status) return { code: 'unmapped_value', field: 'status' };
   const createdAt = text(row, 'created_at');
   if (!createdAt) return { code: 'missing_field', field: 'created_at' };
-  return { e164: contact.phone.e164, direction, status, createdAt };
+  return { e164: contact.e164, direction, status, createdAt };
 }
 
 /**
