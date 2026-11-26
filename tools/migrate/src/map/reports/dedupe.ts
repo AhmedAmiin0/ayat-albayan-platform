@@ -36,12 +36,17 @@ function groupBy(list: readonly ParsedReport[], by: (r: ParsedReport) => string)
   return [...out.values()];
 }
 
+/** Identical copies keep the first; differing ones keep the latest submission. */
+function keptOf(group: readonly ParsedReport[], head: ParsedReport) {
+  const same = group.every((r) => content(r) === content(head));
+  const latest = [...group].sort((a, b) => a.submittedAt.localeCompare(b.submittedAt)).at(-1);
+  return { kept: same ? head : (latest ?? head), same };
+}
+
 function pickOne(group: readonly ParsedReport[], issues: RowIssue[]): ParsedReport | undefined {
   const [head] = group;
   if (!head) return undefined;
-  const same = group.every((r) => content(r) === content(head));
-  const latest = [...group].sort((a, b) => a.submittedAt.localeCompare(b.submittedAt)).at(-1);
-  const kept = same ? head : (latest ?? head);
+  const { kept, same } = keptOf(group, head);
   for (const r of group) {
     if (r === kept) continue;
     issues.push(
