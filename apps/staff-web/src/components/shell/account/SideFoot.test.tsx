@@ -10,7 +10,6 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 
 vi.mock('./LogoutButton', () => ({ LogoutButton: () => <button type="button">out</button> }));
 vi.mock('@ab/web-kit/components/shell/LanguageSwitch', () => ({ LanguageSwitch: () => <button type="button">lang</button> }));
-vi.mock('@ab/web-kit/components/ui/layout/theme-toggle', () => ({ ThemeToggle: () => <button type="button">theme</button> }));
 
 // The profile query fails here and the foot still shows the email.
 const render = (ui: ReactElement) =>
@@ -23,13 +22,13 @@ const render = (ui: ReactElement) =>
   );
 
 describe('SideFoot', () => {
-  it('stays pinned to the bottom of the sidebar on its own background (short viewports)', () => {
+  it('sits below the nav on the sidebar background instead of over it', () => {
     const { container } = render(<SideFoot email="a@b.co" />);
-    const foot = container.querySelector('[data-side-foot]');
-    expect(foot).not.toBeNull();
-    for (const c of ['shell:sticky', 'shell:bottom-0', 'shell:bg-cover', 'shell:mt-auto', 'shell:pb-6']) {
-      expect(foot?.className).toContain(c);
+    const cls = container.querySelector('[data-side-foot]')?.className ?? '';
+    for (const c of ['shell:shrink-0', 'shell:bg-cover', 'shell:border-t', 'shell:pb-6']) {
+      expect(cls).toContain(c);
     }
+    expect(cls).not.toContain('sticky');
   });
 
   it('spans the full sidebar width and keeps its content on the icon edge, symmetric in RTL and LTR', () => {
@@ -41,9 +40,14 @@ describe('SideFoot', () => {
     expect(cls).not.toMatch(/\b(?:pl|pr|ml|mr|left|right)-/);
   });
 
-  it('shows the account (always LTR) and the three controls', () => {
+  it('shows the account (always LTR), the language and sign-out', () => {
     render(<SideFoot email="a@b.co" />);
     expect(screen.getByText('a@b.co').getAttribute('dir')).toBe('ltr');
-    for (const name of ['out', 'lang', 'theme']) expect(screen.getByRole('button', { name })).toBeTruthy();
+    for (const name of ['out', 'lang']) expect(screen.getByRole('button', { name })).toBeTruthy();
+  });
+
+  it('leaves the theme and time-format switches to the account page, so nothing scrolls sideways', () => {
+    render(<SideFoot email="a@b.co" />);
+    expect(screen.queryByRole('group')).toBeNull();
   });
 });
