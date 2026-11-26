@@ -103,9 +103,16 @@ export class FakeUserStore implements UserStore {
   }
 
   async createTeacher(t: NewTeacher) {
+    const held = t.phone_e164 && this.otherTeacherPhones.includes(t.phone_e164);
+    if (held) throw conflict('phone_taken');
     this.teachers.push(t);
     this.links.push({ kind: 'teacher', id: `t-${this.teachers.length}`, name: t.display_name_ar, code: null, profile_id: t.profile_id });
     return `t-${this.teachers.length}`;
+  }
+
+  teacherPhoneHeld(phone: string): Promise<boolean> {
+    const held = [...this.otherTeacherPhones, ...this.teachers.map((t) => t.phone_e164)];
+    return Promise.resolve(held.includes(phone));
   }
 
   /** docs/46 A7: the teacher phones a link copied onto a phoneless profile. */

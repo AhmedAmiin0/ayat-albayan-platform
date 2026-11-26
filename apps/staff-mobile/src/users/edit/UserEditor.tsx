@@ -6,7 +6,7 @@ import { t, Button, BackButton, Screen, ScreenHeader, ErrorLine } from '@ab/mobi
 import { Note } from '@/core/ui/feedback/Note';
 import { ActionPanel } from '@/users/panels/ActionPanel';
 import { updateUser, USERS_KEY } from '@/users/shared/api';
-import { editBody, editErrors, initialEditForm, type EditForm } from './edit-form';
+import { editBody, editErrors, initialEditForm, recordMissing, roleLocked, type EditForm } from './edit-form';
 import { userErrorText } from '@/users/shared/errors';
 import { backToUsers } from '@/users/shared/nav';
 import { UserActions, type ActionMode } from '@/users/panels/UserActions';
@@ -74,11 +74,16 @@ export function UserEditor({ user, options, canWrite }: UserEditorProps) {
               errors={errors}
               options={options}
               readOnly={!canWrite}
-              roleLocked={user.linked !== null}
+              roleLocked={roleLocked(user)}
             />
             {save.error ? <ErrorLine message={userErrorText(save.error)} /> : null}
             {canWrite ? (
-              <Button label={t.users.detail.save} busy={save.isPending} onPress={submit} />
+              <Button
+                label={t.users.detail.save}
+                busy={save.isPending}
+                disabled={recordMissing(user, form)}
+                onPress={submit}
+              />
             ) : (
               <Note>{t.users.detail.readOnly}</Note>
             )}

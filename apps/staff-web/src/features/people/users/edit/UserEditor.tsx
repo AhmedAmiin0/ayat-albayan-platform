@@ -1,14 +1,15 @@
 import type { UserDetail, UserRoleOption } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button, Dialog, FormAlert, t } from '@ab/web-kit';
+import { Dialog, FormAlert, t } from '@ab/web-kit';
 import { updateUser, USERS_KEY } from '@/features/people/users/api';
 import { DeleteUserDialog } from '@/features/people/users/actions/DeleteUserDialog';
 import { DisableDialog } from '@/features/people/users/actions/DisableDialog';
-import { editBody, editErrors, initialEditForm, type EditForm } from './edit-form';
+import { editBody, editErrors, initialEditForm, recordMissing, roleLocked, type EditForm } from './edit-form';
 import { userErrorText } from '@/features/people/users/errors';
 import { ResetPasswordDialog } from '@/features/people/users/actions/ResetPasswordDialog';
 import { UserActions, type ActionMode } from '@/features/people/users/actions/UserActions';
+import { EditorActions } from './EditorActions';
 import { UserEditFields } from './UserEditFields';
 import { UserPhoto } from './UserPhoto';
 import { TestFlagSwitch } from '@/features/people/test-accounts';
@@ -58,16 +59,13 @@ export function UserEditor({ user, options, canWrite, onClose, onDone }: UserEdi
       wide
       hint={canWrite ? undefined : t.users.detail.readOnly}
       actions={
-        <>
-          <Button type="button" variant="ghost" onClick={onClose}>
-            {t.common.cancel}
-          </Button>
-          {canWrite && (
-            <Button type="submit" form={formId} disabled={save.isPending}>
-              {t.users.detail.save}
-            </Button>
-          )}
-        </>
+        <EditorActions
+          formId={formId}
+          canWrite={canWrite}
+          saving={save.isPending}
+          recordMissing={recordMissing(user, form)}
+          onClose={onClose}
+        />
       }
     >
       <div className="grid gap-4">
@@ -81,7 +79,7 @@ export function UserEditor({ user, options, canWrite, onClose, onDone }: UserEdi
             errors={errors}
             options={options}
             readOnly={!canWrite}
-            roleLocked={!!user.linked}
+            roleLocked={roleLocked(user)}
           />
           {save.error && <FormAlert>{userErrorText(save.error)}</FormAlert>}
         </form>

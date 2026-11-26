@@ -2,7 +2,7 @@ import { GRANTABLE_PERMISSIONS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { systemRoles } from '@/modules/people/roles/roles.fakes';
 import type { RoleRecord } from '@/modules/people/roles/roles.store';
-import { adminProblem, assertOutranks, assertRoleAssignable, chooseRole, isAssignable, lockedOutOfUsers, profilePatch, roleChangeBlocked, type UserState } from './users.logic';
+import { adminProblem, assertOutranks, assertRoleAssignable, chooseRole, isAssignable, lockedOutOfUsers, opensRecord, profilePatch, roleChangeBlocked, type UserState } from './users.logic';
 import type { StaffProfile } from './store/users.store';
 
 const prof = (id: string, role: StaffProfile['role'], extra: Partial<StaffProfile> = {}): StaffProfile => ({ id, full_name: id, role, role_id: null, disabled_at: null, ...extra });
@@ -59,10 +59,20 @@ describe('lockedOutOfUsers / roleChangeBlocked / profilePatch', () => {
     expect(lockedOutOfUsers(state([prof('me', 'admin')]), 'me')).toBe(false);
   });
   it('blocks a base role change that involves a teacher / student / guardian record', () => {
-    expect(roleChangeBlocked({ from: 'admin', to: 'sales', linked: false })).toBe(false);
-    expect(roleChangeBlocked({ from: 'sales', to: 'admin', linked: true })).toBe(true);
-    expect(roleChangeBlocked({ from: 'admin', to: 'teacher', linked: false })).toBe(true);
-    expect(roleChangeBlocked({ from: 'teacher', to: 'teacher', linked: true })).toBe(false);
+    const move = { linked: false, named: false };
+    expect(roleChangeBlocked({ ...move, from: 'admin', to: 'sales' })).toBe(false);
+    expect(roleChangeBlocked({ ...move, from: 'sales', to: 'admin', linked: true })).toBe(true);
+    expect(roleChangeBlocked({ ...move, from: 'admin', to: 'teacher' })).toBe(true);
+    expect(roleChangeBlocked({ ...move, from: 'teacher', to: 'teacher', linked: true })).toBe(false);
+  });
+  it('lets an unlinked staff login take a record-backed role whose record it names', () => {
+    const named = { linked: false, named: true };
+    expect(roleChangeBlocked({ ...named, from: 'sales', to: 'teacher' })).toBe(false);
+    expect(opensRecord({ ...named, from: 'admin', to: 'guardian' })).toBe(true);
+    expect(roleChangeBlocked({ ...named, from: 'sales', to: 'teacher', linked: true })).toBe(true);
+    expect(roleChangeBlocked({ ...named, from: 'teacher', to: 'student' })).toBe(true);
+    expect(opensRecord({ ...named, from: 'teacher', to: 'teacher' })).toBe(false);
+    expect(opensRecord({ ...named, from: 'sales', to: 'admin' })).toBe(false);
   });
   it('keeps only what was sent', () => {
     expect(profilePatch({ full_name: 'علي', phone_e164: null })).toEqual({ full_name: 'علي', phone_e164: null });

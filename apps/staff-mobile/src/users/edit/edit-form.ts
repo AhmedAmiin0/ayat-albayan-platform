@@ -1,3 +1,9 @@
 // What the edit panel edits and its PATCH body: one definition in @ab/client-core (docs/27 E3).
-export { editBody, initialEditForm, type EditForm } from '@ab/client-core';
+export {
+  editBody,
+  initialEditForm,
+  recordMissing,
+  roleLocked,
+  type EditForm,
+} from '@ab/client-core';
 export { editErrors } from '@/users/shared/validation';

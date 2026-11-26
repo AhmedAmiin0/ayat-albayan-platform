@@ -3,7 +3,7 @@ import { tzChoices, tzOptionLabel } from '@ab/time';
 import { t } from '@ab/mobile-kit';
 import { Choice } from '@/users/shared/Choice';
 import type { EditForm } from './edit-form';
-import { RolePicker } from '@/users/create/RolePicker';
+import { RoleFields } from './RoleFields';
 import { TextField } from '@/users/shared/TextField';
 import type { FormErrors } from '@/users/shared/validation';
 
@@ -13,7 +13,7 @@ export interface UserEditFieldsProps {
   errors: FormErrors;
   options: readonly UserRoleOption[];
   readOnly: boolean;
-  /** A login linked to a record keeps its role (API: role_change_linked). */
+  /** A linked login, or one of a record-backed role, keeps its role (API: role_change_linked). */
   roleLocked: boolean;
 }
 
@@ -58,13 +58,13 @@ export function UserEditFields({ form, onChange, errors, options, readOnly, role
       />
       <Choice label={F.locale} items={locales} value={form.locale} onChange={(locale) => set({ locale })} />
       <Choice label={F.tz} items={zones} value={form.tz} onChange={(tz) => set({ tz })} />
-      <RolePicker
-        role={form.role}
-        roleId={form.role_id}
+      <RoleFields
+        form={form}
+        onChange={set}
+        errors={errors}
         options={options}
-        disabled={readOnly || roleLocked}
-        hint={roleLocked ? F.roleLocked : undefined}
-        onChange={(next) => set({ role: next.role, role_id: next.roleId })}
+        readOnly={readOnly}
+        roleLocked={roleLocked}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import { linkKindSchema, type LinkKind, type UserCreate, type UserWithCredential } from '@ab/shared';
+import type { UserCreate, UserWithCredential } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { UserJournal } from '@/modules/people/users/audit/users.journal';
@@ -8,6 +8,7 @@ import { toUserDetail } from '@/modules/people/users/users.mapper';
 import { UserAccess } from '@/modules/people/users/users.access';
 import { assertMayAssign, type Actor } from '@/modules/people/users/users.rules';
 import { USER_STORE, type UserStore } from '@/modules/people/users/store/users.store';
+import { linkKindOf, UserRecordLinker } from './users.record-linker';
 
 const profileDefaults = (input: UserCreate) => ({
   full_name: input.full_name,
@@ -16,22 +17,19 @@ const profileDefaults = (input: UserCreate) => ({
   tz: input.tz ?? 'Asia/Riyadh',
 });
 
-/** A teacher link with no phone typed: the linked record whose number may follow (docs/46 A7). */
-const teacherPhoneSource = (ctx: {
-  kind: LinkKind | undefined;
-  input: UserCreate;
-}): string | null =>
-  ctx.kind === 'teacher' && !ctx.input.phone_e164 ? (ctx.input.linked_id ?? null) : null;
-
 /** POST /users: the login through the Auth Admin API, its profile, and the linked record. */
 @Injectable()
 export class UsersCreateService {
+  private readonly records: UserRecordLinker;
+
   constructor(
     @Inject(USER_STORE) private readonly store: UserStore,
     private readonly access: UserAccess,
     private readonly logins: UserLogins,
     private readonly journal: UserJournal,
-  ) {}
+  ) {
+    this.records = new UserRecordLinker(store);
+  }
 
   /**
    * 403 permission_not_held / system_admin_only / admin_role_only, 409 email_taken / link_taken,
@@ -42,13 +40,14 @@ export class UsersCreateService {
     const chosen = chooseRole(state.roles, input);
     if (typeof chosen === 'string' || chosen === null) throw badRequest(chosen ?? 'unknown_role');
     assertMayAssign(actor, state, chosen.record);
-    const kind = linkKindSchema.safeParse(input.role).data;
-    if (kind && input.linked_id) await this.assertLinkable(kind, input.linked_id);
+    const kind = linkKindOf(input.role);
+    if (kind) await this.records.assertLinkable(kind, input);
     const prepared = this.logins.prepare({ mode: input.credential, password: input.password });
     const { id, adopted } = await this.login(input, prepared.password);
     try {
-      await this.store.upsertProfile({ id, ...chosen.choice, ...profileDefaults(input) });
-      await this.linkRecord({ kind, input, profileId: id });
+      const profile = { id, ...profileDefaults(input) };
+      await this.store.upsertProfile({ ...profile, ...chosen.choice });
+      if (kind) await this.records.link({ kind, request: input, profile });
     } catch (e) {
       if (!adopted) await this.logins.remove(id);
       throw e;
@@ -95,47 +94,5 @@ export class UsersCreateService {
     });
     await this.logins.revokeSessions(existing);
     return { id: existing, adopted: true };
-  }
-
-  private async assertLinkable(kind: LinkKind, id: string): Promise<void> {
-    const target = await this.store.linkTarget(kind, id);
-    if (!target) throw badRequest('link_target_not_found');
-    if (target.hasLogin) throw conflict('link_taken');
-  }
-
-  private async linkRecord(ctx: {
-    kind: LinkKind | undefined;
-    input: UserCreate;
-    profileId: string;
-  }): Promise<void> {
-    const { kind, input, profileId } = ctx;
-    if (!kind) return;
-    if (input.new_teacher) {
-      await this.store.createTeacher({
-        profile_id: profileId,
-        display_name_ar: input.new_teacher.display_name_ar,
-        display_name_en: input.new_teacher.display_name_en ?? null,
-        gender: input.new_teacher.gender,
-        phone_e164: input.phone_e164 ?? null,
-        tz: input.tz ?? 'Asia/Riyadh',
-      });
-      return;
-    }
-    if (input.linked_id && !(await this.store.link(kind, input.linked_id, profileId)))
-      throw conflict('link_taken');
-    await this.copyTeacherPhone({ kind, input, profileId });
-  }
-
-  /**
-   * docs/46 A7: a teacher login left without a phone takes the record's (when nobody else holds
-   * it).
-   */
-  private async copyTeacherPhone(ctx: {
-    kind: LinkKind | undefined;
-    input: UserCreate;
-    profileId: string;
-  }) {
-    const teacherId = teacherPhoneSource(ctx);
-    if (teacherId) await this.store.adoptTeacherPhone(teacherId, ctx.profileId);
   }
 }

@@ -2621,6 +2621,7 @@
       "locale": "Interface language",
       "tz": "Time zone",
       "roleLocked": "The role of an account linked to a record cannot change.",
+      "roleRecord": "This role needs a linked record. Choose the record to enable Save.",
       "required": "* required"
     },
     "link": {
@@ -2740,6 +2741,7 @@
       "self_lockout": "You cannot do this to your own account: it could lock you out of managing users.",
       "phone_taken": "This phone number is already used by another record.",
       "link_target_not_found": "The record to link was not found.",
+      "link_not_allowed": "A record can be linked only when the role changes to teacher, student or guardian.",
       "unknown_role": "The chosen role does not exist.",
       "role_mismatch": "The chosen role does not belong to the selected base role.",
       "system_admin_only": "Only a system admin can change a system admin account.",
