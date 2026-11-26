@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Inject, Injectable } from '@nestjs/common';
 import { authEmailOf } from '@/common/auth/auth-users';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 import { badRequest, conflict } from '@/common/http/errors';
 import { ACCOUNT_CONFIG, type AccountAuth, type AccountConfig } from './account.ports';
 
@@ -54,6 +55,6 @@ export class SupabaseAccountAuth implements AccountAuth {
 
   async revokeOtherSessions(input: { userId: string; keep: string | null }): Promise<void> {
     const { error } = await this.db.rpc('revoke_other_user_sessions', { p_user: input.userId, p_keep: input.keep });
-    if (error) throw new Error(`revoke sessions: ${error.message}`);
+    if (error) throw pgError(error);
   }
 }
