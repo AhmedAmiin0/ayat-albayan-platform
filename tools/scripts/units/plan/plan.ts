@@ -74,7 +74,7 @@ function planFolder(dir: string, floating: FloatingUnit[], input: PlanInput): Fo
 export function planFolders(input: PlanInput): FolderPlan[] {
   return [...foldersOf(input.paths)]
     .filter(([dir]) => input.only === undefined || inside(dir, input.only))
-    .map(([dir, names]) => ({ dir, floating: floatingIn(dir, names) }))
+    .map(([dir, names]) => ({ dir, floating: (input.scan ?? floatingIn)(dir, names) }))
     .filter(({ floating }) => floating.length > 0)
     .sort((a, b) => a.dir.localeCompare(b.dir))
     .map(({ dir, floating }) => planFolder(dir, floating, input));

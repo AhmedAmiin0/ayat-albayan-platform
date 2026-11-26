@@ -1,6 +1,6 @@
 import { foldArgs, type FoldArgs } from './args.schemas.ts';
 
-const BOOLEANS = ['--dry-run', '--write', '--skip-open-prs'];
+const BOOLEANS = ['--dry-run', '--write', '--skip-open-prs', '--components'];
 const isFlag = (a: string): boolean => a.startsWith('--');
 
 /** The words after `--paths` up to the next flag. */
@@ -21,6 +21,7 @@ export function parseFoldArgs(argv: readonly string[]): FoldArgs {
     dryRun: args.includes('--dry-run'),
     write: args.includes('--write'),
     skipOpenPrs: args.includes('--skip-open-prs'),
+    components: args.includes('--components'),
     paths,
     unknown: args.filter((a, i) => !used.has(i) && !known.has(a)),
   });

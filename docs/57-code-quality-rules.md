@@ -148,7 +148,7 @@ file; the suffix says the role. One role per file.
 | `x.registry.ts` | picks the adapter (by env, provider, platform) | beside the port |
 | `x.builder.ts` | test-data builder (`aLesson().held().build()`) | `testing/` folder of the package that owns the type |
 | `x.store.ts` | a zustand vanilla store | `packages/client-core/src/<domain>/` |
-| `use-x.ts` | a hook (selector hook, query hook, effect hook) | beside what it serves |
+| `use-x.ts` | a component's own logic: `Name/use-name.ts`; a hook that 2+ components share: `use-x.ts` beside them, named for its purpose | `Name/`, or beside the components that share it |
 | `x.keys.ts` | a TanStack Query key factory | `packages/client-core/src/<domain>/` |
 | `x.events.ts` | a domain event catalogue (names + zod payloads) | `packages/shared/src/<domain>/` |
 | `x.listener.ts` | an api listener of domain events | api module that reacts |
@@ -158,13 +158,13 @@ file; the suffix says the role. One role per file.
 ### 2.1 Web component (kit)
 
 ```
-packages/web-kit/src/components/ui/form/button/
+packages/web-kit/src/components/ui/form/Button/
   Button.tsx             // export function Button(props: ButtonProps) — nothing else
   Button.types.ts        // export interface ButtonProps; export type ButtonVariant = …
   button.variants.ts     // cva() table (logic, testable on its own)
   Button.test.tsx        // red first: variants, disabled, loading, focus, RTL, 44 px
   Button.showcase.tsx    // every variant × size × state, light/dark, ar/en
-  index.ts               // export { Button } from './Button'; export type * from './Button.types'
+  index.ts               // export { Button } from './Button'; export type { ButtonProps } from './Button.types'
 ```
 
 Before (today, `wk/src/components/ui/form/button.tsx`): `buttonVariants`, `ButtonProps` and the
@@ -173,7 +173,7 @@ Before (today, `wk/src/components/ui/form/button.tsx`): `buttonVariants`, `Butto
 ### 2.2 Mobile component (kit)
 
 ```
-packages/mobile-kit/src/ui/form/search-field/
+packages/mobile-kit/src/ui/form/SearchField/
   SearchField.tsx            // TextInput wrapped once, tokens only, logical start/end
   SearchField.types.ts
   search-field.style.ts      // StyleSheet built from theme tokens (no raw numbers)
@@ -316,6 +316,43 @@ critique-brand-consistency on the showcase) → app migration PRs`.
 | mobile component | jest-expo + RNTL | `Name.test.tsx` | `accessibilityState`, 44 pt |
 | event | catalogue parse + listener test + client invalidate map test | beside each | a malformed payload is dropped |
 | journey | Playwright (CI only) | `e2e/tests/<area>/` | the six journeys of docs/03 §5 |
+
+### 2.12 Component folder and local hook
+
+```
+apps/staff-web/src/features/people/roles/RoleDialog/
+  RoleDialog.tsx          // export function RoleDialog(p: RoleDialogProps) { const {…} = useRoleDialog(p); if (…) return …; return <Dialog…/> }
+  RoleDialog.types.ts     // RoleDialogProps, plus any named type the hook needs
+  use-role-dialog.ts      // useQueryClient, useId, useState ×4, useMutation ×2, done/submit/onDelete/onReset, derived values
+  role-dialog.helpers.ts  // module values and pure functions that the JSX, guards or parameter defaults read
+  index.ts                // export { RoleDialog } from './RoleDialog'
+  tests/RoleDialog.test.tsx
+  PermissionRow/          // a private sub-component, nested in its parent's folder
+```
+
+| `use-name.ts` (logic) | `Name.tsx` (view) |
+|---|---|
+| Every hook call except `useTheme`: state, refs (`xRef`), context, router, i18n hooks, TanStack, `useId`, `useViewerTz`, `usePermissions` | At most `const { … } = useTheme()` and `const { … } = useName(arg)` |
+| Derived values, setState-during-render resets, and named handlers (anything with a condition or more than one step) | Guards `if (x) return …;` that read only names from the hook, the theme or the props |
+| Calls shared hooks (`useTimeout`, client-core `queryOptions`); never `apiFetch` / `apiSend` or a raw effect | The JSX return |
+| Returns one object holding exactly the names the guards and JSX read | With `useName`, no other statement. Without it, only value consts (no function literal, no hook call). No types, extra exports or array derivations |
+
+JSX arrows in `Name.tsx`: an arrow whose body is JSX or conditional JSX is allowed (render props, `renderItem`, `.map(r => <Row/>)`), and arrows nested in it follow the same rules. Any other arrow is one expression with no `?:`, `&&`, `||` or `??` and no nested function: a call (object and spread arguments allowed), `void call(…)`, or an accessor such as `(c) => c.id`. JSX holds no `filter`, `sort`, `toSorted`, `reduce`, `find`, `some`, `every` or `flatMap` call; those derivations belong in the hook.
+
+A component that calls no hook besides `useTheme` gets no `use-name.ts`: the React Compiler runs in `infer` mode here and does not compile a `use*` function that calls no hook. Its value-only consts stay in `Name.tsx`; any function literal moves to a pure function in `<kebab>.helpers.ts`.
+
+A local hook takes at most 3 arguments; past 50 lines it calls more `use-<purpose>.ts` files in the same folder; `Name.tsx` calls only `use-name.ts`, and every local hook is imported only from inside `Name/`. The file is `use-<kebab(Name)>.ts` and exports `use<Name>`.
+
+Exceptions: route files (TanStack `src/routes/**` holds router config and at most one adapter that calls only `Route.use*` / `getRouteApi` and returns one element; an expo-router `app/**` file is a re-export, or one component returning one element, plus `ErrorBoundary`), `*.showcase.tsx`, `*.testing.tsx`, tests, `test/`, `testing/`, fixtures and `*-icons.tsx` icon sets.
+
+| Suffix | Holds |
+|---|---|
+| `x.helpers.ts` | Module values and pure functions |
+| `x.style.ts` | `StyleSheet.create` |
+| `x.variants.ts` | `cva()` |
+| `x.context.ts` | `createContext` |
+
+`pnpm guard:components` checks this on every PR (docs/63 §3).
 
 ## 3. Performance audit (R10)
 

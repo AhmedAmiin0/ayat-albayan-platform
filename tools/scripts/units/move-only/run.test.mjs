@@ -1,9 +1,7 @@
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { rmSync } from 'node:fs';
 import { test } from 'node:test';
+import { gitRepo } from './git-repo.testing.mjs';
 import { gate } from './run.mjs';
 
 const P = 'apps/w/src/p';
@@ -29,31 +27,7 @@ const FOLD = {
   },
 };
 
-function repo(branch, edit) {
-  const cwd = mkdtempSync(join(tmpdir(), 'move-only-'));
-  const git = (...args) => execFileSync('git', args, { cwd, encoding: 'utf8' });
-  const write = (files) =>
-    Object.entries(files).forEach(([path, text]) => {
-      mkdirSync(dirname(join(cwd, path)), { recursive: true });
-      writeFileSync(join(cwd, path), text);
-    });
-  const move = (from, to) => {
-    mkdirSync(dirname(join(cwd, to)), { recursive: true });
-    git('mv', from, to);
-  };
-  git('init', '-q', '-b', 'develop');
-  git('config', 'user.email', 'ci@example.test');
-  git('config', 'user.name', 'ci');
-  write(BASE_FILES);
-  git('add', '-A');
-  git('commit', '-qm', 'base');
-  git('update-ref', 'refs/remotes/origin/develop', 'HEAD');
-  git('checkout', '-qb', branch);
-  edit({ write, move, remove: (path) => git('rm', '-q', path) });
-  git('add', '-A');
-  git('commit', '-qm', 'head', '--allow-empty');
-  return cwd;
-}
+const repo = (branch, edit) => gitRepo({ base: BASE_FILES, branch, edit });
 
 const fold = ({ write, move }) => {
   FOLD.moves.forEach(([from, to]) => move(from, to));

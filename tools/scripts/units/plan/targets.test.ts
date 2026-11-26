@@ -65,3 +65,24 @@ test('tests: only the tests move, into tests/ of the folder they are in', () => 
     ],
   });
 });
+
+test('a renamed component unit folds into <Name>/ and its files take the new stem', () => {
+  const tests = ['fields.test.tsx', 'fields.more.test.tsx'];
+  const u = unit({
+    name: 'fields',
+    rename: 'Fields',
+    files: ['fields.tsx', 'fields.types.ts', ...tests],
+    tests,
+  });
+  const plan = planUnit(u, new Set());
+  assert.equal(plan.home, `${DIR}/Fields`);
+  assert.deepEqual(
+    plan.moves.map((m) => m.to),
+    [
+      `${DIR}/Fields/Fields.tsx`,
+      `${DIR}/Fields/Fields.types.ts`,
+      `${DIR}/Fields/tests/Fields.test.tsx`,
+      `${DIR}/Fields/tests/more.test.tsx`,
+    ],
+  );
+});

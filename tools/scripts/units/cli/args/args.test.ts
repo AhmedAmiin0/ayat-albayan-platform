@@ -7,6 +7,7 @@ test('--dry-run alone plans every folder', () => {
     dryRun: true,
     write: false,
     skipOpenPrs: false,
+    components: false,
     paths: [],
     unknown: [],
   });
@@ -15,6 +16,10 @@ test('--dry-run alone plans every folder', () => {
 test('--write takes the folders after --paths and may skip open PRs', () => {
   const args = parseFoldArgs(['--write', '--paths', 'apps/a', 'apps/b', '--skip-open-prs']);
   assert.deepEqual([args.write, args.paths, args.skipOpenPrs], [true, ['apps/a', 'apps/b'], true]);
+});
+
+test('--components folds component files (docs/63 §4)', () => {
+  assert.equal(parseFoldArgs(['--dry-run', '--components']).components, true);
 });
 
 const BAD: [string, string[]][] = [

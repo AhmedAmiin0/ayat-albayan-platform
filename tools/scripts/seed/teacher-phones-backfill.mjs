@@ -3,10 +3,10 @@
 // profile or a guardian row holds it («Shared numbers»: the family keeps its code sign-in). Never
 // connects to a database: it prints SQL the operator reviews and runs. Production: owner's go only.
 //
-//   node tools/scripts/teacher-phones/teacher-phones-backfill.mjs          → dry run (the default):
+//   node tools/scripts/seed/teacher-phones-backfill.mjs          → dry run (the default):
 //      a read-only SELECT listing every row it would write (teacher id + name, login id, masked
 //      phone) and the checksum of the login ids; psql "$DB" -f dry-run.sql writes nothing.
-//   node tools/scripts/teacher-phones/teacher-phones-backfill.mjs --apply \
+//   node tools/scripts/seed/teacher-phones-backfill.mjs --apply \
 //      --ids=<id,…> --checksum=<md5>
 //      → one transaction writing EXACTLY the reviewed rows (login ids AND phones, from the dry
 //      run's ids + checksum); it rolls back when anything differs. Re-runnable (a set phone no
