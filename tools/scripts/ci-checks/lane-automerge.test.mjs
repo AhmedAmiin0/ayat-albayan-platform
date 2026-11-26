@@ -53,12 +53,16 @@ test('lane-automerge: gathers the reviewed path facts from GitHub, not from git 
 });
 
 test('lane-automerge: what develop gained since the merge base comes from git', () => {
-  assert.match(script, /compare\/develop\.\.\.\$sha\?per_page=1/);
-  assert.match(script, /git fetch -q --depth=1 --filter=blob:none origin "\$1" "\$2" \|\| return 1/);
-  assert.match(script, /git -c core\.quotePath=false diff --name-only --no-renames "\$1" "\$2"/);
-  assert.match(script, /if names=\$\(gained "\$base" "\$tip"\); then/);
-  assert.match(script, /jq -s '\{known: true, files: \.\}' > "\$d\/behind\.json"/);
-  assert.match(script, /echo '\{"known": false, "files": \[\]\}' > "\$d\/behind\.json"/);
+  const has = (text) => assert.ok(script.includes(text), text);
+  has('compare/develop...$sha?per_page=1');
+  has('[[ $1 =~ ^[0-9a-f]{40}$ && $2 =~ ^[0-9a-f]{40}$ ]] || return 1');
+  has('[[ $1 == "$2" ]] && return 0');
+  has('git fetch -q --depth=1 --filter=blob:none origin "$1" "$2" || return 1');
+  has(`git diff -z --name-only --no-renames "$1" "$2" | tr '\\0' '\\n'`);
+  has('if names=$(gained "$base" "$tip"); then');
+  has(`jq -s '{known: true, files: .}' > "$d/behind.json"`);
+  has('::warning::#$n: what develop changed could not be read');
+  has(`echo '{"known": false, "files": []}' > "$d/behind.json"`);
   assert.ok(!script.includes('compare.json'), 'cli.ts reads behind.json, not the compare answer');
 });
 

@@ -1,6 +1,12 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { alreadyAsked, staleComment, staleLockBase, touchesLock } from './lockfile.ts';
+import {
+  alreadyAsked,
+  staleComment,
+  staleLockBase,
+  touchesLock,
+  unknownLockBase,
+} from './lockfile.ts';
 import { HEAD } from './testing/facts.builder.ts';
 
 const files = (...names: string[]) => names.map((filename) => ({ filename }));
@@ -13,6 +19,7 @@ test('any package.json or pnpm-lock.yaml counts as a lockfile change', () => {
   assert.equal(touchesLock(files('package.json')), true);
   assert.equal(touchesLock(files('docs/package.json.md', 'a/my-package.json5', 'x.ts')), false);
   assert.equal(touchesLock(files('apps/x/pnpm-lock.yaml.bak')), false);
+  assert.equal(touchesLock(files('a/my-package.json', 'x/old.npmrc', 'patches')), false);
   assert.equal(touchesLock([]), false);
 });
 
@@ -20,6 +27,7 @@ test('pnpm-workspace.yaml, .npmrc, .pnpmfile.cjs and patches count too', () => {
   assert.equal(touchesLock(files('pnpm-workspace.yaml')), true);
   assert.equal(touchesLock(files('.npmrc')), true);
   assert.equal(touchesLock(files('.pnpmfile.cjs')), true);
+  assert.equal(touchesLock(files('.pnpmfile.mjs')), true);
   assert.equal(touchesLock(files('patches/expo-sharing@57.0.24.patch')), true);
   assert.equal(touchesLock(files('docs/patches/a.md', 'apps/x/npmrc.md')), false);
 });
@@ -33,10 +41,17 @@ test('a lockfile PR is stale only once develop changed a lockfile input since it
   assert.equal(staleLockBase(files('a.ts'), gained('pnpm-lock.yaml')), false);
 });
 
-test('a lockfile PR waits while what develop changed is not known', () => {
+test('a lockfile input renamed away still counts, by its old path', () => {
+  const moved = { filename: 'a/package.json.off', previous_filename: 'a/package.json' };
+  assert.equal(touchesLock([moved]), true);
+});
+
+test('only a lockfile PR has to wait while what develop changed is not known', () => {
   const unknown = { known: false, files: [] };
-  assert.equal(staleLockBase(files('pnpm-lock.yaml'), unknown), true);
-  assert.equal(staleLockBase(files('a.ts'), unknown), false);
+  assert.equal(unknownLockBase(files('pnpm-lock.yaml'), unknown), true);
+  assert.equal(unknownLockBase(files('a.ts'), unknown), false);
+  assert.equal(unknownLockBase(files('pnpm-lock.yaml'), gained()), false);
+  assert.equal(staleLockBase(files('pnpm-lock.yaml'), unknown), false);
 });
 
 test('the stale comment is posted once per head commit', () => {

@@ -34,10 +34,10 @@ test('a stale lockfile PR writes the comment', () => {
 test('a lockfile PR reads the fallback the workflow writes as not known, and waits', () => {
   const behind = { known: false, files: [] };
   const dir = gathered({ behind, files: [{ filename: 'package.json' }] });
-  assert.equal(run(dir)[0], 'action=comment');
+  assert.equal(run(dir)[0], 'action=skip');
 });
 
-test('gh output of the wrong shape fails loudly instead of merging', () => {
+test('gathered output of the wrong shape fails loudly instead of merging', () => {
   assert.throws(() => run(gathered({ pr: { number: 'x' } })));
   assert.throws(() => run(gathered({ checks: [{ name: 'check' }] })));
   assert.throws(() => run(gathered({ behind: { files: [] } })));

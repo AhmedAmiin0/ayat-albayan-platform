@@ -33,9 +33,10 @@ test('a stale lockfile PR gets one comment, then waits', () => {
   assert.equal(action(asked), 'skip');
 });
 
-test('a lockfile PR waits when what develop changed could not be read', () => {
+test('a lockfile PR waits, with no comment, while what develop changed is not known', () => {
   const unknown = { ...lockPr(), behind: { known: false, files: [] } };
-  assert.equal(action(unknown), 'comment');
+  const waits = { action: 'skip', reason: 'what develop changed is not known' };
+  assert.deepEqual(decide(unknown), waits);
   assert.equal(action({ ...aFacts(), behind: { known: false, files: [] } }), 'merge');
 });
 
