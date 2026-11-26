@@ -4,7 +4,7 @@ import { ApiError, t } from '@ab/web-kit';
 import { ExportsPanel } from './ExportsPanel';
 
 const downloadCsv = vi.hoisted(() => vi.fn());
-vi.mock('./api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), downloadCsv }));
+vi.mock('./api', async (importOriginal) => ({ ...(await importOriginal<object>()), downloadCsv }));
 
 const PERIOD = { from: '2026-05-01', to: '2026-10-02' };
 const button = (label: string) => screen.getByRole('button', { name: `${t.exports.download}: ${label}` });
