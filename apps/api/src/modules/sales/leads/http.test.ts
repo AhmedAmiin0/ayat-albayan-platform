@@ -3,7 +3,7 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { parseOrThrow } from '@/common/http/http';
-import { pageQueryShape, pageRange, throwIfDbError } from './http';
+import { pageQueryShape, throwIfDbError } from './http';
 
 const pgError = (code: string) => ({ code, message: 'x', details: '', hint: '' }) as PostgrestError;
 const pageQuery = z.object(pageQueryShape);
@@ -31,11 +31,6 @@ describe('http helpers (R-NFR-08)', () => {
     expect(parseOrThrow(pageQuery, { q: 'a,b),status.eq.lost' }).q).toBe('a b  status.eq.lost');
     expect(parseOrThrow(pageQuery, { q: ' (*) ' }).q).toBeUndefined();
     expect(parseOrThrow(pageQuery, { q: '0501' }).q).toBe('0501');
-  });
-
-  it('pageRange maps 1-based pages to inclusive row ranges', () => {
-    expect(pageRange({ page: 1, pageSize: 25 })).toEqual([0, 24]);
-    expect(pageRange({ page: 3, pageSize: 10 })).toEqual([20, 29]);
   });
 
   it('throwIfDbError: unique violation → 409, others → plain error, null → nothing', () => {

@@ -27,9 +27,3 @@ export interface PageQuery {
   q?: string;
 }
 
-
-
-export function pageRange({ page, pageSize }: PageQuery): [number, number] {
-  const from = (page - 1) * pageSize;
-  return [from, from + pageSize - 1];
-}
