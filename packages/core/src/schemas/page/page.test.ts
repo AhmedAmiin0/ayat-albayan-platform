@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { listSortShape } from '../list-sort';
 import { MAX_PAGE, pageOf, pageQuery } from './page.schemas';
+import { pageWindow } from './page-window';
 
 const query = z.object({ ...pageQuery({ size: 25 }), ...listSortShape(['name'] as const) });
 
@@ -57,5 +58,12 @@ describe('pageOf', () => {
   it('strips keys the client does not know, so an older client reads a newer server', () => {
     const body = { items: [], total: 0, page: 1, pageSize: 25, cursor: 'x' };
     expect(page.parse(body)).toEqual({ items: [], total: 0, page: 1, pageSize: 25 });
+  });
+});
+
+describe('pageWindow', () => {
+  it('turns a 1-based page into an inclusive row window', () => {
+    expect(pageWindow({ page: 1, pageSize: 25 })).toEqual({ from: 0, to: 24 });
+    expect(pageWindow({ page: 3, pageSize: 10 })).toEqual({ from: 20, to: 29 });
   });
 });
