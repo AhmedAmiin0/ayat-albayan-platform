@@ -1,11 +1,11 @@
-import { Card, SectionHeader, teacherLabel } from '@ab/web-kit';
+import { Card, SectionHeader } from '@ab/web-kit';
 import type { WeekSummaryProps } from './WeekSummary.types';
-import { S } from './week-summary.helpers';
+import { S, teachersLine } from './week-summary.helpers';
 import { Row } from './Row';
 import { Awaiting } from './Awaiting';
 
 export function WeekSummary({ summary, guardian }: WeekSummaryProps) {
-  const teachers = summary.teachers.map((x) => teacherLabel(x)).join(' · ');
+  const teachers = teachersLine(summary.teachers);
   return (
     <Card asChild className="grid gap-1 p-4">
       <section aria-labelledby="week-summary-title">

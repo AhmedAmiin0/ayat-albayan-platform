@@ -29,7 +29,7 @@ const lessonsAsked = () => mockFetch.mock.calls.filter(([path]) => path.startsWi
 beforeEach(() => jest.clearAllMocks());
 
 test("a student's own week: «my schedule», this week, and its lessons by day", async () => {
-  asStudent({ lessons: [lesson(new Date(), 60, { id: 'a' })] });
+  asStudent({ lessons: [lesson(new Date(), 0, { id: 'a' })] });
   await show();
   expect(await screen.findByText(S.mine)).toBeTruthy();
   expect(screen.getByText(S.thisWeek)).toBeTruthy();
