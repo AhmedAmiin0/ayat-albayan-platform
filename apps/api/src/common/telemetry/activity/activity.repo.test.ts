@@ -42,7 +42,7 @@ describe('ActivityQueries.list (GET /activity)', () => {
     expect(calls[0]).toEqual(['from', 'v_activity_log']);
     expect(calls).toContainEqual(['select', '*', { count: 'exact' }]);
     expect(calls).toContainEqual(['order', 'at', { ascending: false }]);
-    expect(calls).toContainEqual(['order', 'id']);
+    expect(calls).toContainEqual(['order', 'id', { ascending: true }]);
     expect(calls).toContainEqual(['range', 0, 24]);
     expect(page).toEqual({ items: [row], total: 1, page: 1, pageSize: 25 });
   });

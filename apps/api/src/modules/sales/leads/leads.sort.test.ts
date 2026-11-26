@@ -12,25 +12,32 @@ async function list(f: LeadListFilter) {
 }
 
 describe('GET /leads sort + assignee filter (R-LEAD-01, R-LEAD-05, R-NFR-08)', () => {
-  it('default: latest inbound first (nulls last), then newest', async () => {
+  it('default: latest inbound first (nulls last), then newest, then id', async () => {
     const of = await list(page);
     expect(of('order')).toEqual([
       ['last_inbound_at', { ascending: false, nullsFirst: false }],
       ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
     ]);
   });
 
-  it('a requested key → its column, newest first as the tiebreaker', async () => {
+  it('a requested key → its column, then the default order as the tiebreaker', async () => {
     const of = await list({ ...page, sort: 'name' });
     expect(of('order')).toEqual([
       ['name', { ascending: true, nullsFirst: false }],
+      ['last_inbound_at', { ascending: false, nullsFirst: false }],
       ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
     ]);
   });
 
-  it('oldest first: created_at ascending alone', async () => {
+  it('oldest first: created_at ascending, without ordering created_at twice', async () => {
     const of = await list({ ...page, sort: 'created_at' });
-    expect(of('order')).toEqual([['created_at', { ascending: true }]]);
+    expect(of('order')).toEqual([
+      ['created_at', { ascending: true }],
+      ['last_inbound_at', { ascending: false, nullsFirst: false }],
+      ['id', { ascending: true }],
+    ]);
   });
 
   it('assignee: a person → eq, none → is null', async () => {

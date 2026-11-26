@@ -7,7 +7,7 @@ function sortedTeachers(db: Db) {
   const query = db.from('teachers').select('*', { count: 'exact' });
   const sorted: typeof query = applySort(query, { sort: 'name', dir: 'desc' }, {
     columns: { name: { column: 'display_name_ar' } },
-    fallback: { column: 'id', ascending: true },
+    fallback: [{ column: 'id', ascending: true }],
   });
   return sorted.range(0, 24);
 }

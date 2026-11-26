@@ -31,7 +31,10 @@ describe('FeedbackReadQueries', () => {
     ]);
     expect(args('gte')).toEqual([['requested_at', '2026-10-01T00:00:00Z']]);
     expect(args('lt')).toEqual([['requested_at', '2026-11-01T00:00:00.000Z']]);
-    expect(args('order')).toEqual([['requested_at', { ascending: false }]]);
+    expect(args('order')).toEqual([
+      ['requested_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
     expect(args('range')).toEqual([[20, 29]]);
   });
 

@@ -18,13 +18,16 @@ const spec: SortSpec<Key> = {
     teacher: { column: 'name', referencedTable: 'teachers' },
     created: { column: 'created_at' },
   },
-  fallback: { column: 'created_at', ascending: false },
+  fallback: [{ column: 'created_at', ascending: false }],
 };
 
 describe('applySort (R-NFR-08)', () => {
   it('no sort → the fallback order only', () => {
     const q = applySort(new FakeQuery(), {}, spec);
-    expect(q.calls).toEqual([['created_at', { ascending: false }]]);
+    expect(q.calls).toEqual([
+      ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
   });
 
   it('a key alone sorts ascending, then the fallback as tiebreaker', () => {
@@ -32,6 +35,7 @@ describe('applySort (R-NFR-08)', () => {
     expect(q.calls).toEqual([
       ['name', { ascending: true }],
       ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
     ]);
   });
 
@@ -48,11 +52,17 @@ describe('applySort (R-NFR-08)', () => {
 
   it('skips the tiebreaker when the key is the fallback column', () => {
     const q = applySort(new FakeQuery(), { sort: 'created', dir: 'asc' }, spec);
-    expect(q.calls).toEqual([['created_at', { ascending: true }]]);
+    expect(q.calls).toEqual([
+      ['created_at', { ascending: true }],
+      ['id', { ascending: true }],
+    ]);
   });
 
   it('an unknown key (cast past the schema) falls back', () => {
     const q = applySort(new FakeQuery(), { sort: 'password' as Key }, spec);
-    expect(q.calls).toEqual([['created_at', { ascending: false }]]);
+    expect(q.calls).toEqual([
+      ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
   });
 });
