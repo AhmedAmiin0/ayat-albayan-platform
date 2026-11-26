@@ -50,19 +50,43 @@
    ]
   }
  },
+ "DELETE /guardians/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
+ },
  "DELETE /guardians/:id/phones/:phone": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
    "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
     "phone": {
      "type": "string"
     }
    },
    "required": [
+    "id",
     "phone"
    ]
-  }
+  },
+  "response": "empty"
  },
  "DELETE /i18n/:locale/:key": {
   "params": {
@@ -665,6 +689,270 @@
      "maximum": 100
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "name": {
+        "type": "string"
+       },
+       "phone_e164": {
+        "type": "string"
+       },
+       "country": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "tz": {
+        "type": "string"
+       },
+       "source": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "facebook_ad",
+           "instagram_ad",
+           "whatsapp_direct",
+           "referral",
+           "other"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "notes": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "profile_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_by": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_at": {
+        "type": "string"
+       },
+       "updated_at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "name",
+       "phone_e164",
+       "country",
+       "tz",
+       "source",
+       "notes",
+       "profile_id",
+       "created_by",
+       "created_at",
+       "updated_at"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
+  }
+ },
+ "GET /guardians/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "country": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "source": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "facebook_ad",
+        "instagram_ad",
+        "whatsapp_direct",
+        "referral",
+        "other"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "notes": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "profile_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "updated_at": {
+     "type": "string"
+    },
+    "students": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "code": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "name": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "new",
+         "trial",
+         "pending_subscription",
+         "active",
+         "pending_renewal",
+         "expired",
+         "paused",
+         "churned"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "code",
+       "name",
+       "status"
+      ]
+     }
+    },
+    "phones": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "phone_e164": {
+        "type": "string"
+       },
+       "is_primary": {
+        "type": "boolean"
+       },
+       "created_at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "phone_e164",
+       "is_primary",
+       "created_at"
+      ]
+     }
+    }
+   },
+   "required": [
+    "id",
+    "name",
+    "phone_e164",
+    "country",
+    "tz",
+    "source",
+    "notes",
+    "profile_id",
+    "created_by",
+    "created_at",
+    "updated_at",
+    "students",
+    "phones"
+   ]
   }
  },
  "GET /i18n/:locale/overrides": {
@@ -4083,6 +4371,20 @@
   }
  },
  "PATCH /guardians/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -4137,6 +4439,84 @@
      ]
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "country": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "source": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "facebook_ad",
+        "instagram_ad",
+        "whatsapp_direct",
+        "referral",
+        "other"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "notes": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "profile_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "name",
+    "phone_e164",
+    "country",
+    "tz",
+    "source",
+    "notes",
+    "profile_id",
+    "created_by",
+    "created_at",
+    "updated_at"
+   ]
   }
  },
  "PATCH /lesson-files/:id/visibility": {
@@ -8981,6 +9361,84 @@
     "name",
     "phone_e164",
     "tz"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "country": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "source": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "facebook_ad",
+        "instagram_ad",
+        "whatsapp_direct",
+        "referral",
+        "other"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "notes": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "profile_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "name",
+    "phone_e164",
+    "country",
+    "tz",
+    "source",
+    "notes",
+    "profile_id",
+    "created_by",
+    "created_at",
+    "updated_at"
    ]
   }
  },

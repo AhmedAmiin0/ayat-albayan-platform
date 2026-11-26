@@ -105,7 +105,7 @@ describe('GuardiansController is admin-only (R-STU-02, R-NFR-02)', () => {
       updated_at: '2026-10-03T09:00:00.000Z',
     };
     const detail = { ...row, students: [], phones: [] };
-    results['guardians'] = [{ data: detail }];
+    results.guardians = [{ data: detail }];
     const res = await send({ method: 'GET', url: `/guardians/${ID}`, token: 'admin' });
     expect([res.statusCode, res.json()]).toEqual([200, detail]);
   });

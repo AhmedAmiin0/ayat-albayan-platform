@@ -7,7 +7,7 @@ import {
   type PeopleGuardianPatch,
   type PeopleStudentPatch,
 } from '@ab/shared';
-import { phoneE164 } from '@ab/core';
+import { blanksToNull, phoneE164 } from '@ab/core';
 import { Controller, Delete, Get, HttpCode, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -15,7 +15,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
-import { blanksToNull, GuardianPhonesService } from '@/modules/people/guardians';
+import { GuardianPhonesService } from '@/modules/people/guardians';
 import { PeopleEditService } from './people-edit.service';
 import { PeopleViewService } from './people-view.service';
 import { PeopleOwnership } from './access/people-ownership';

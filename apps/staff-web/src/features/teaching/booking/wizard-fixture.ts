@@ -40,9 +40,14 @@ const PROFILE = {
 const SAR = { tier: 'standard', duration: 45, country: 'SA', students: 2, discount: 0 } as const;
 const QUOTE = { ...quote(SAR), total: 1080, fx: null };
 
+const AT = '2026-10-03T09:00:00.000Z';
+const GUARDIAN = { ...PROFILE.guardian, country: 'SA', tz: 'Asia/Riyadh', source: null, notes: null };
+const WIRE = { profile_id: null, created_by: null, created_at: AT, updated_at: AT };
+const GUARDIAN_DETAIL = { ...GUARDIAN, ...WIRE, students: [], phones: [] };
+
 export const RESPONSES: [string, unknown][] = [
   [`/students/${STUDENT_ID}`, PROFILE],
-  ['/guardians/g-1', { id: 'g-1', name: 'أم سهيلة', phone_e164: '+966501234567', country: 'SA', tz: 'Asia/Riyadh' }],
+  ['/guardians/g-1', GUARDIAN_DETAIL],
   ['/booking/teachers', [ABRAR, NOOR]],
   ['/booking/slots', { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [SLOT, WED_SLOT].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] })) }],
   ['/pricing/quote', QUOTE],

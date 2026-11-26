@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { GENDERS, LEAD_SOURCES, PROGRAMS, STUDENT_STATUSES, TEACHER_STATUSES } from '@ab/catalog';
 import { TEACHER_MEETING_MODES } from '@ab/schedule';
-import { optionalText, phoneE164, requiredText, timeZone } from '@ab/core';
+import { optionalText, partialOf, phoneE164, requiredText, timeZone } from '@ab/core';
 import { username } from '../users';
 
 // DTOs use DB column names (snake_case) so they map 1:1 onto TablesInsert<...>.
@@ -16,7 +16,7 @@ export const guardianCreateSchema = z.object({
   source: z.enum(LEAD_SOURCES).nullish(),
   notes: optionalText,
 });
-export const guardianUpdateSchema = guardianCreateSchema.partial();
+export const guardianUpdateSchema = partialOf(guardianCreateSchema);
 
 /** R-STU-01, R-STU-05. */
 export const studentCreateSchema = z.object({

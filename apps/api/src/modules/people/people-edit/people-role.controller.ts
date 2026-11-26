@@ -1,3 +1,4 @@
+import { blanksToNull } from '@ab/core';
 import {
   contactSelfSchema,
   familyMoveSchema,
@@ -14,7 +15,6 @@ import type { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
-import { blanksToNull } from '@/modules/people/guardians';
 import { FamilyMoveService, type MoveTarget } from './family-move.service';
 import { RoleSwitchService } from './role-switch.service';
 import { PeopleOwnership } from './access/people-ownership';

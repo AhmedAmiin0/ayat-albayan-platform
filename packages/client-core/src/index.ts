@@ -48,6 +48,7 @@ export * from './teaching/room-host';
 export * from './people/portal';
 export * from './people/teacher-students';
 export * from './people/presence';
+export * from './people/guardians';
 export * from './teaching/audio-player';
 export * from './teaching/lesson-files';
 export * from './teaching/lesson-room';

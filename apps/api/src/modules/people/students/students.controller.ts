@@ -9,14 +9,18 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { studentColumnQueryShape, studentListFiltersSchema } from '@ab/shared';
+import { blanksToNull } from '@ab/core';
+import {
+  peopleListQuerySchema,
+  studentColumnQueryShape,
+  studentListFiltersSchema,
+} from '@ab/shared';
 import { z } from 'zod';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { DB, type Db } from '@/common/db/db.module';
 import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
-import { blanksToNull, listQuerySchema } from '@/modules/people/guardians/http';
 import { MergeService } from './merge.service';
 import { mergeRequestSchema, studentCreateRequestSchema, studentPatchSchema } from './students.dto';
 import {
@@ -32,7 +36,7 @@ const Uuid = new ParseUUIDPipe();
  * Search + paging + filters (R-STU-01): ?status=trial,active&teacher=<id>|none&program=&package=&weekly=&tz=,
  * column text filters ?code=&name=&guardian= and ?sort=&dir= (R-NFR-08).
  */
-const studentListQuerySchema = listQuerySchema.extend({
+const studentListQuerySchema = peopleListQuerySchema.extend({
   ...studentListFiltersSchema.shape,
   ...studentColumnQueryShape,
 });

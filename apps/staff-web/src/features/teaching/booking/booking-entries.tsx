@@ -4,7 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { FormAlert, t } from '@ab/web-kit';
 import { leadByPhoneQuery, type InboxLead } from '@/features/messaging/inbox/api/api';
 import { studentQuery } from '@/features/people/students/api';
-import { guardianQuery, type BookSearch, type GuardianRow } from './api';
+import type { GuardianDetail } from '@ab/shared';
+import { guardianQuery, type BookSearch } from './api';
 import type { BookingWizardProps } from './BookingWizard';
 import { emptyDraft, type BookingDraft } from './draft/draft';
 import { KeptBookingWizard, keptKey, type KeptBookingWizardProps } from './kept';
@@ -19,7 +20,7 @@ type ProfileWithPref = StudentProfile & { teacher_gender_pref?: Gender | null };
 /** A student's own wizard: their zone, program, preference, price currency and chat number prefill it. */
 export function draftFromStudent(
   s: ProfileWithPref,
-  guardian: GuardianRow | undefined,
+  guardian: GuardianDetail | undefined,
   kind: BookingDraft['kind'] = 'package',
 ): BookingDraft {
   const owner = guardian ?? s.guardian;

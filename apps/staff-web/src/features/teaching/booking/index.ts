@@ -5,7 +5,6 @@ export {
   type BookSearch,
   createBooking,
   guardianQuery,
-  type GuardianRow,
   parseBookSearch,
 } from './api';
 export {

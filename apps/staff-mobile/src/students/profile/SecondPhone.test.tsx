@@ -50,7 +50,7 @@ test('«إزالة الرقم الثاني» asks, then DELETEs the encoded numb
   await fireEvent.press(screen.getByRole('button', { name: t.guardians.removePhone }));
   // Announced: the button the reader was on is gone.
   expect(await screen.findByRole('alert')).toHaveTextContent(t.guardians.phoneRemoved);
-  expect(mockApiSend).toHaveBeenCalledWith('DELETE', '/guardians/g1/phones/%2B966552220000');
+  expect(mockApiSend).toHaveBeenCalledWith('DELETE', '/guardians/g1/phones/%2B966552220000', undefined);
   const keys = refresh.mock.calls.map((c) => c[0]?.queryKey);
   expect(keys).toEqual(expect.arrayContaining([['students'], ['threads']]));
 });

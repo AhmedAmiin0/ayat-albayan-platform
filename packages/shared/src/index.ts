@@ -48,6 +48,7 @@ export * from './sales/course/course-card';
 export * from './people/users';
 export * from './people/account';
 export * from './people/presence';
+export * from './people/guardians';
 export * from './people/test-accounts';
 export * from './finance/invoices';
 export * from './finance/pricing';

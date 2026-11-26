@@ -1,5 +1,5 @@
 import type { BookingRequest } from '@ab/shared';
-import type { BookingMode } from '@ab/client-core';
+import { guardianCalls, type BookingMode } from '@ab/client-core';
 import { courseDraftSavedSchema } from '@ab/shared';
 import { PACKAGE_SIZES, type Gender, type PackageSize, type Program } from '@ab/catalog';
 import type { BookingResult, BookingTeacherOption, Conflict } from '@ab/schedule';
@@ -25,20 +25,11 @@ export const bookingTeachersQuery = (
   });
 };
 
-export type GuardianRow = {
-  id: string;
-  name: string;
-  phone_e164: string;
-  country: string | null;
-  tz: string;
-};
+const guardians = guardianCalls({ apiFetch, apiSend });
 
-/** GET /guardians/:id — the stored country picks the price currency (docs/08 §1). */
+/** GET /guardians/:id: the stored country picks the price currency (docs/08 §1). */
 export const guardianQuery = (id: string) =>
-  queryOptions({
-    queryKey: guardianKeys.detail(id),
-    queryFn: () => apiFetch<GuardianRow>(`/guardians/${id}`),
-  });
+  queryOptions({ queryKey: guardianKeys.detail(id), queryFn: () => guardians.get(id) });
 
 /** apiSend with its reply left unknown, for the schema to parse. */
 const put: (method: 'PUT', path: string, body: unknown) => Promise<unknown> = apiSend;
