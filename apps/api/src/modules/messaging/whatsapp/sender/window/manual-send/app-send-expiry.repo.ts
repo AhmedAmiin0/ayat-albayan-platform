@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 import type { HeldRow } from './app-send-adopt';
+import { pgError } from '@/common/db/errors';
 
 /** Not claimed by the sender, and not already answered-for (already unconfirmed). */
 const OPEN = `error_code.is.null,error_code.not.in.(${SENDING},${APP_SEND_UNCONFIRMED})`;
@@ -32,7 +33,7 @@ export class AppSendExpiryRepo {
       .or(OPEN)
       .order('app_send_until', { ascending: true })
       .limit(BATCH);
-    if (error) throw new Error(`app send expiry read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -57,7 +58,7 @@ export class AppSendExpiryRepo {
       .lte('app_send_until', settledAt(now))
       .or(OPEN)
       .select('id');
-    if (error) throw new Error(`app send expiry failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data.map((r) => r.id);
   }
 }

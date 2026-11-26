@@ -6,7 +6,7 @@ import type { Db } from '@/common/db/db.module';
 import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import { LessonWriter } from './lesson-writer';
 
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 const AT = '2026-11-01T14:00:00.000Z';
 const END = '2026-11-01T14:45:00.000Z';
@@ -15,7 +15,7 @@ const CONFLICTS: Conflict[] = [{ kind: 'teacher_busy', startsAt: AT, endsAt: END
 const flag = (db: Db) => new LessonWriter(db, fakePolicy()).flagConflicts(LESSONS, CONFLICTS);
 
 describe('LessonWriter error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(flag(db))).toEqual(DUPLICATE);
   });

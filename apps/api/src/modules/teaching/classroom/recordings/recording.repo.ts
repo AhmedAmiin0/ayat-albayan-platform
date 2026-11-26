@@ -1,12 +1,11 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { done, maybe, pgError, rows } from '@/common/db/errors';
+import { done, isUniqueViolation, maybe, pgError, rows } from '@/common/db/errors';
 import { ownerColumns, type RoomTarget } from './recording-target';
 
 export type RecordingRow = Tables<'lesson_recordings'>;
 
-const UNIQUE_VIOLATION = '23505';
 
 export interface FinishInput {
   status: 'done' | 'failed';
@@ -31,7 +30,7 @@ export class RecordingRepo {
       .insert({ ...ownerColumns(input.target), file_path: input.filePath, started_at: input.startedAt })
       .select('id')
       .single();
-    if (error?.code === UNIQUE_VIOLATION) return null;
+    if (isUniqueViolation(error)) return null;
     if (error) throw pgError(error);
     return data.id;
   }

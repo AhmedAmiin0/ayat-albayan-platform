@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { NOT_A_REACTION } from '@/modules/messaging/whatsapp';
 import { DeltaRepo } from '@/modules/messaging/inbox/delta/delta.repo';
@@ -29,15 +30,21 @@ describe('DeltaQueries (the delta refresh reads)', () => {
     await q.pending({ phone: PHONE, ids: [ID], since: '2026-10-27T09:30:00.000Z' });
     await q.pending({ phone: PHONE, ids: [], since: '2026-10-27T09:30:00.000Z' });
     const ors = f.calls.filter((c) => c.method === 'or').map((c) => c.args[0]);
-    const moving = 'and(direction.eq.outbound,status.in.(queued,sent,delivered),created_at.gt."2026-10-27T09:30:00.000Z")';
+    const moving =
+      'and(direction.eq.outbound,status.in.(queued,sent,delivered),created_at.gt."2026-10-27T09:30:00.000Z")';
     const at = '"2026-10-27T09:30:00.000Z"';
     const marked = `edited_at.gt.${at},deleted_at.gt.${at},our_reaction_at.gt.${at}`;
     expect(ors).toEqual([`id.in.(${ID}),${moving},${marked}`, `${moving},${marked}`]);
-    expect(f.calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([['phone_e164', PHONE], ['phone_e164', PHONE]]);
+    expect(f.calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([
+      ['phone_e164', PHONE],
+      ['phone_e164', PHONE],
+    ]);
   });
 
-  it('a failed read throws', async () => {
-    const f = fakeDb({ messages: [{ error: { message: 'boom' } }] });
-    await expect(new DeltaRepo(f.db).newer({ phone: PHONE, after: 'x', limit: 1 })).rejects.toThrow('thread delta read failed: boom');
+  it('a failed read answers through the default db error map', async () => {
+    const f = fakeDb({ messages: [{ error: PG_ERRORS.other }, { error: PG_ERRORS.unique }] });
+    const read = () => new DeltaRepo(f.db).newer({ phone: PHONE, after: 'x', limit: 1 });
+    await expect(read()).rejects.toThrow('db error XX000: boom');
+    expect((await answerOfRejection(read())).status).toBe(409);
   });
 });

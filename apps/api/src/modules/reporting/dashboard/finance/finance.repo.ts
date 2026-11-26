@@ -4,6 +4,7 @@ import { financeCardKey } from '@/common/infra/cache/cache-keys';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { type FinanceTotalsRow, financeTotalsRows } from './finance.schemas';
 import type { FinanceCardQuery } from './finance.types';
+import { pgError } from '@/common/db/errors';
 
 /** Shared between the API copies for a minute (Redis only): a dashboard total may lag that long. */
 const FINANCE_CARD_TTL_MS = 60_000;
@@ -29,7 +30,7 @@ export class FinanceRepo {
       p_first: `${first}-01`,
       p_last: `${last}-01`,
     });
-    if (error) throw new Error(`finance_card_totals failed: ${error.message}`);
+    if (error) throw pgError(error);
     return financeTotalsRows.parse(data);
   }
 }

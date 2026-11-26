@@ -2,11 +2,12 @@ import { AWAITING_REPLY } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
 import { activeNumberId } from '@/common/configuration/integrations/numbers-overlay';
 import { lineEnvs, loadEnv } from '@/config/env/env';
-import { waHttpError, windowless } from '@/modules/messaging/whatsapp';
+import { windowless } from '@/modules/messaging/whatsapp';
 import { pickStaffSend } from './chat-first';
 import type { ThreadWindow } from './send-number';
 import type { SendLineCode } from './send-line';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
+import { httpError } from '@/common/http/errors';
 
 interface SendFromLine {
   line?: WaLine;
@@ -44,7 +45,7 @@ const goesFree = (thread: ThreadRow | null, code: SendLineCode): boolean =>
   thread !== null && code === 'session_closed' && chatWindowless();
 
 const lineError = (code: SendLineCode) =>
-  code === 'line_not_configured' ? waHttpError('line_not_configured', 503) : waHttpError('session_closed', 409);
+  code === 'line_not_configured' ? httpError(503, 'line_not_configured') : httpError(409, 'session_closed');
 
 /**
  * pickSend as the inbox answers it: 409 session_closed (no thread too), 503 line_not_configured.

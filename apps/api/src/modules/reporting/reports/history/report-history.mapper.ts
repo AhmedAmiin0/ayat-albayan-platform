@@ -11,6 +11,8 @@ import {
   type StudentReportsResponse,
 } from '@ab/shared';
 import type { UserRole } from '@ab/catalog';
+import { pageWindow } from '@ab/core';
+import { toPage } from '@/common/db/page';
 import type { PageQuery } from '@/common/http/http';
 import type { HistoryLesson, HistoryRow, PendingRow } from './report-history.queries';
 import { iso } from '@/modules/reporting/reports/submit/report-form.mapper';
@@ -48,18 +50,12 @@ export function historyResponse(p: HistoryParts): StudentReportsResponse {
       return lesson ? [{ row, lesson, at: Date.parse(lesson.starts_at) }] : [];
     })
     .sort((a, b) => a.at - b.at || a.row.id.localeCompare(b.row.id));
-  const start = (p.page.page - 1) * p.page.pageSize;
+  const { from, to } = pageWindow(p.page);
   const items = [...joined]
     .reverse()
-    .slice(start, start + p.page.pageSize)
+    .slice(from, to + 1)
     .map((j) => ({ ...summary(j, p.seq), ...editWindow(j.row, p.window) }));
-  return {
-    items,
-    total: joined.length,
-    page: p.page.page,
-    pageSize: p.page.pageSize,
-    series: joined.map(point),
-  };
+  return { ...toPage(items, joined.length, p.page), series: joined.map(point) };
 }
 
 function summary({ row, lesson }: Joined, seq: ReadonlyMap<string, number>): ReportSummaryView {

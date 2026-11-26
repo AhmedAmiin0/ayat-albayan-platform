@@ -31,7 +31,10 @@ describe('FeedbackReadQueries', () => {
     ]);
     expect(args('gte')).toEqual([['requested_at', '2026-10-01T00:00:00Z']]);
     expect(args('lt')).toEqual([['requested_at', '2026-11-01T00:00:00.000Z']]);
-    expect(args('order')).toEqual([['requested_at', { ascending: false }]]);
+    expect(args('order')).toEqual([
+      ['requested_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
     expect(args('range')).toEqual([[20, 29]]);
   });
 
@@ -87,11 +90,11 @@ describe('FeedbackReadQueries', () => {
 });
 
 describe('FeedbackReadRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ v_teacher_feedback_avg: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new FeedbackReadRepo(db).averages())).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

@@ -3,12 +3,19 @@ import type { Page } from '@ab/core';
 import type { AdminTaskView } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage, toPage } from '@/common/db/page';
 import type { PageQuery } from '@/common/http/http';
 import { maybe, pgError } from '@/common/db/errors';
 import { studentRef } from '@/modules/finance/subscriptions/subscriptions.mapper';
 import type { StudentRef } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 
 type TaskRow = Tables<'admin_tasks'>;
+
+const TASK_SORT: SortSpec<never> = {
+  columns: {},
+  fallback: [{ column: 'created_at', ascending: false }],
+};
 
 export function toTaskView(row: TaskRow, students: ReadonlyMap<string, StudentRef>): AdminTaskView {
   const student = row.subject_type === 'subscription' ? students.get(row.subject_id) : undefined;
@@ -31,21 +38,14 @@ export class AdminTasksRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(q: PageQuery & { open: boolean }): Promise<Page<AdminTaskView>> {
-    const from = (q.page - 1) * q.pageSize;
-    let query = this.db.from('admin_tasks').select('*', { count: 'exact' });
-    query = q.open ? query.is('done_at', null) : query.not('done_at', 'is', null);
-    const { data, count, error } = await query
-      .order('created_at', { ascending: false })
-      .order('id')
-      .range(from, from + q.pageSize - 1);
-    if (error) throw pgError(error);
-    const students = await this.studentsOf(data);
-    return {
-      items: data.map((r) => toTaskView(r, students)),
-      total: count ?? 0,
-      page: q.page,
-      pageSize: q.pageSize,
-    };
+    const { rows, total } = await readPage(() => this.listQuery(q.open), q, TASK_SORT);
+    const students = await this.studentsOf(rows);
+    return toPage(rows.map((r) => toTaskView(r, students)), total, q);
+  }
+
+  private listQuery(open: boolean) {
+    const query = this.db.from('admin_tasks').select('*', { count: 'exact' });
+    return open ? query.is('done_at', null) : query.not('done_at', 'is', null);
   }
 
   /** null when no task has this id. Marking a done task again keeps the first done_at. */

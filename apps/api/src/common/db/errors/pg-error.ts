@@ -1,10 +1,30 @@
-import { BadRequestException, ConflictException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Logger } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { PgErrorMap, ToError } from './errors.types';
 
+const log = new Logger('DbError');
+
+export const UNIQUE_VIOLATION = '23505';
+
+/** Structural, so a storage or RPC error that carries a SQLSTATE can be tested too. */
+export const isUniqueViolation = (error: { code?: string } | null | undefined): boolean =>
+  error?.code === UNIQUE_VIOLATION;
+
+/** A unique violation whose message names `text`, such as part of a constraint name. */
+export const uniqueViolationMentions = (
+  error: { code?: string; message: string } | null | undefined,
+  text: string,
+): boolean => isUniqueViolation(error) && error?.message.includes(text) === true;
+
+/** A conflict answers its code only: the database's text can carry row values (docs/62 §3.2). */
+const conflict = (message: string): ToError => (e) => {
+  log.warn(`${e.code} ${e.message}: ${e.details}`);
+  return new ConflictException({ message });
+};
+
 const DEFAULT_CODES: Readonly<Record<string, ToError>> = {
-  '23505': (e) => new ConflictException({ message: 'duplicate', detail: e.details }),
-  '23503': (e) => new ConflictException({ message: 'fk_violation', detail: e.details }),
+  [UNIQUE_VIOLATION]: conflict('duplicate'),
+  '23503': conflict('fk_violation'),
   PGRST103: () => new BadRequestException({ message: 'page_out_of_range' }),
 };
 
@@ -33,5 +53,5 @@ export function pgError(error: PostgrestError, map: PgErrorMap = {}): Error {
 }
 
 export function uniqueViolationOn(error: PostgrestError, constraint: string): boolean {
-  return error.code === '23505' && constraintOf(error) === constraint;
+  return isUniqueViolation(error) && constraintOf(error) === constraint;
 }

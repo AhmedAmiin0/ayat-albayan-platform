@@ -1,10 +1,10 @@
 import type { BookedCourse, CourseChangeView } from '@ab/shared';
 import { wallParts } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { CourseChangeRepo, type ChangeRule, type CourseSub } from './course-change.repo';
 import { studentCourses, type CourseRuleRow } from '@/modules/teaching/booking/core/course-read';
 import { SalesCourseRepo } from '@/modules/teaching/booking/sales/course/sales-course.repo';
+import { httpError } from '@/common/http/errors';
 
 /** An open-ended rule without subscription_id (an import) still runs: it has no last day yet. */
 const OPEN_END = '9999-12-31';
@@ -39,9 +39,9 @@ export class CourseChangeViews {
   /** 404 subscription_not_found / student_not_found / course_not_found. */
   async view(subscriptionId: string): Promise<CourseChangeView> {
     const { student, course } = await this.booked(subscriptionId);
-    if (!course) throw domainError(HttpStatus.NOT_FOUND, 'course_not_found');
+    if (!course) throw httpError(HttpStatus.NOT_FOUND, 'course_not_found');
     const today = wallParts(new Date().toISOString(), course.tz).date;
-    if (course.endsOn < today) throw domainError(HttpStatus.CONFLICT, 'course_finished');
+    if (course.endsOn < today) throw httpError(HttpStatus.CONFLICT, 'course_finished');
     return { student, course };
   }
 

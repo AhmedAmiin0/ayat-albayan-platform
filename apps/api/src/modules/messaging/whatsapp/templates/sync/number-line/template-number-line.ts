@@ -1,11 +1,9 @@
 import type { TemplateLineSync, TemplateNumberSyncView } from '@ab/shared';
 import { isWaLine, type WaLine } from '@ab/catalog';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
-import {
-  CRM_MANAGED,
-  waHttpError,
-} from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { CRM_MANAGED } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
+import { httpError } from '@/common/http/errors';
 
 // Under legacy a number has no client of its own, so it runs its role's line sync; read-only.
 
@@ -57,7 +55,7 @@ export async function syncByLine(
   now: Date,
 ): Promise<TemplateNumberSyncView> {
   const ref = await deps.queries.numberRef(numberId);
-  if (!ref) throw waHttpError('unknown_number', 404);
+  if (!ref) throw httpError(404, 'unknown_number');
   const line = isWaLine(ref.purpose) ? ref.purpose : null;
   if (!line) return { ...unread(numberId, now), ok: false, error: CALLS_NO_TEMPLATES };
   return lineAsNumber(await deps.syncLine(line, now), numberId);

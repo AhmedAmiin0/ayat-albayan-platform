@@ -1,10 +1,10 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { InboundMediaRepo, MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
 import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
+import { httpError } from '@/common/http/errors';
 
 // R-MSG-06 / R-NFR-07: a final refusal is kept on the row; later views answer it with no call.
 
@@ -47,7 +47,7 @@ const TOO_LARGE = { status: 413, body: { code: 'invoice_too_large' } };
 
 describe('InboundMedia: a refused file is remembered', () => {
   it('too large from the driver: 413, kept on the row', async () => {
-    const { media, queries } = setup(row(), waHttpError('invoice_too_large', 413));
+    const { media, queries } = setup(row(), httpError(413, 'invoice_too_large'));
     expect(await answer(media.ensure('m1'))).toMatchObject(TOO_LARGE);
     expect(queries.setRefusal).toHaveBeenCalledWith('m1', 'invoice_too_large');
   });
@@ -84,7 +84,7 @@ describe('InboundMedia: a refused file is remembered', () => {
     ['a timeout', new WaError('timed out', { code: null, status: 0 })],
     ['a 5xx', new WaError('down', { code: null, status: 503 })],
     ['a rate limit (429)', new WaError('slow down', { code: 4, status: 429 })],
-    ['a refused key', waHttpError('evolution_auth', 502)],
+    ['a refused key', httpError(502, 'evolution_auth')],
   ])('%s is not kept: a retry may work', async (_name, failure) => {
     const { media, queries } = setup(row(), failure);
     await expect(media.ensure('m1')).rejects.toBeDefined();

@@ -4,8 +4,10 @@ import { searchDigits } from '@ab/core';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { guardianSearchFilter, toGuardianInsert, toGuardianPatch } from './guardians.mapper';
-import { peopleErrors, pageRange, type ListQuery } from './http';
-import { maybe, one, pgError, rows } from '@/common/db/errors';
+import { peopleErrors, type ListQuery } from './http';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage, toPage } from '@/common/db/page';
+import { maybe, one, rows } from '@/common/db/errors';
 import type { Page } from '@ab/core';
 
 export type Guardian = Tables<'guardians'>;
@@ -14,24 +16,27 @@ type FamilyNumber = Pick<Tables<'guardian_phones'>, 'phone_e164' | 'is_primary' 
 /** phones: every family number, the main one (is_primary) and a second one (guardian_phones). */
 export type GuardianWithStudents = Guardian & { students: Sibling[]; phones: FamilyNumber[] };
 
+const GUARDIAN_ORDER: SortSpec<never> = {
+  columns: {},
+  fallback: [{ column: 'created_at', ascending: false }],
+};
+
 /** Guardians CRUD (R-STU-02, R-STU-04). A guardian owns many students (siblings). */
 @Injectable()
 export class GuardiansService {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(q: ListQuery): Promise<Page<Guardian>> {
-    let query = this.db
-      .from('guardians')
-      .select('*', { count: 'exact' })
-      .order('created_at', { ascending: false });
     const digits = searchDigits(q.search);
-    if (digits) query = query.in('id', await this.idsByNumber(digits));
+    const ids = digits ? await this.idsByNumber(digits) : null;
     const filter = digits ? null : guardianSearchFilter(q.search);
-    if (filter) query = query.or(filter);
-    const [from, to] = pageRange(q);
-    const { data, error, count } = await query.range(from, to);
-    if (error) throw pgError(error, peopleErrors());
-    return { items: data, total: count ?? 0, page: q.page, pageSize: q.pageSize };
+    const read = () => {
+      const query = this.db.from('guardians').select('*', { count: 'exact' });
+      const scoped = ids ? query.in('id', ids) : query;
+      return filter ? scoped.or(filter) : scoped;
+    };
+    const { rows: items, total } = await readPage(read, q, GUARDIAN_ORDER);
+    return toPage(items, total, q);
   }
 
   /**

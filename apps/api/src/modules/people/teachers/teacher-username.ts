@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict } from '@/common/http/errors';
-import { maybe, pgError } from '@/common/db/errors';
+import { isUniqueViolation, maybe, pgError } from '@/common/db/errors';
 
 /**
  * A teacher's sign-in username (docs/30 §1): it lives on the teacher's login profile (profiles.username,
@@ -21,7 +21,7 @@ export class TeacherUsernames {
   async set(profileId: string | null, username: string | null): Promise<void> {
     if (!profileId) throw conflict('username_needs_login');
     const { error } = await this.db.from('profiles').update({ username }).eq('id', profileId);
-    if (error?.code === '23505') throw conflict('username_taken');
+    if (isUniqueViolation(error)) throw conflict('username_taken');
     if (error) throw pgError(error);
   }
 }

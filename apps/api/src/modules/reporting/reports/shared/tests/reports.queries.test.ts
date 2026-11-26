@@ -4,11 +4,11 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { ReportsQueries } from '@/modules/reporting/reports/shared/reports.queries';
 
 describe('ReportsQueries error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lesson_reports: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new ReportsQueries(db).get('r1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

@@ -10,9 +10,9 @@ import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { BUCKETS, chatOutPath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { sniffMime, SNIFF_BYTES } from '@/modules/teaching/booking/invoice/invoice-sniff';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { isSavedReplyPathOf, savedReplyPath } from './saved-replies.paths';
 import { SavedReplySettings } from './saved-replies.settings';
+import { httpError } from '@/common/http/errors';
 
 /** What Storage holds for an uploaded attachment: the columns saved_replies keeps. */
 export interface StoredFile {
@@ -24,11 +24,11 @@ export interface StoredFile {
 /** 400 file_type / 413 file_too_large: the chat's own limits (JPEG/PNG ≤ 5 MB, PDF ≤ upload_max_mb). */
 function assertSendable(f: { mime: string; size: number; maxBytes: number }): void {
   const problem = chatFileProblem(f);
-  if (problem === 'file_type') throw waHttpError('file_type', HttpStatus.BAD_REQUEST);
-  if (problem) throw waHttpError(problem, HttpStatus.PAYLOAD_TOO_LARGE);
+  if (problem === 'file_type') throw httpError(HttpStatus.BAD_REQUEST, 'file_type');
+  if (problem) throw httpError(HttpStatus.PAYLOAD_TOO_LARGE, problem);
 }
 
-const filePath = () => waHttpError('file_path', HttpStatus.BAD_REQUEST);
+const filePath = () => httpError(HttpStatus.BAD_REQUEST, 'file_path');
 const ref = (path: string) => ({ bucket: BUCKETS.waMedia, path });
 
 /**
@@ -59,7 +59,7 @@ export class SavedReplyFiles {
     const mime = baseMime(info.contentType);
     assertSendable({ mime, size: info.size, maxBytes: await this.maxBytes() });
     const head = await this.storage.head(ref(path), SNIFF_BYTES);
-    if (!head || sniffMime(head) !== mime) throw waHttpError('file_type', HttpStatus.BAD_REQUEST);
+    if (!head || sniffMime(head) !== mime) throw httpError(HttpStatus.BAD_REQUEST, 'file_type');
     return { path, mime, size: info.size };
   }
 

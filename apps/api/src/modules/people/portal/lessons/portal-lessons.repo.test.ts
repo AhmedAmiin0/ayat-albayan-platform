@@ -9,11 +9,11 @@ import { PortalLessonsRepo } from './portal-lessons.repo';
 const repoOf = (db: Db) => new PortalLessonsRepo(db, readerOf(PortalSettings));
 
 describe('PortalLessonsRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ students: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(repoOf(db).override('s1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

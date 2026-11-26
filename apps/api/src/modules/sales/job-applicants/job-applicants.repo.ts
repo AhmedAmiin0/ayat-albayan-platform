@@ -1,9 +1,9 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort } from '@/common/db/list-sort';
+import { readPage } from '@/common/db/page';
 import { guardianSearchFilter } from '@/modules/people/guardians/guardians.mapper';
-import { pageRange, throwIfDbError, type PageQuery } from '@/modules/sales/leads/http';
+import { throwIfDbError, type PageQuery } from '@/modules/sales/leads/http';
 import type { ApplicantStatus } from './applicant-state-machine';
 import { APPLICANT_SORT, applyApplicantFilters, type ApplicantColumnQuery } from './job-applicants.list';
 
@@ -79,12 +79,14 @@ export class JobApplicantsRepo {
   }
 
   async list(f: ApplicantListFilter): Promise<{ items: JobApplicantRow[]; total: number }> {
-    let query = applyApplicantFilters(this.db.from('job_applicants').select('*', { count: 'exact' }), f);
-    if (f.status) query = query.eq('status', f.status);
     const search = f.q ? guardianSearchFilter(f.q) : null;
-    if (search) query = query.or(search);
-    const { data, error, count } = await applySort(query, f, APPLICANT_SORT).range(...pageRange(f));
-    throwIfDbError(error);
-    return { items: data ?? [], total: count ?? 0 };
+    const read = () => {
+      const all = this.db.from('job_applicants').select('*', { count: 'exact' });
+      let query = applyApplicantFilters(all, f);
+      if (f.status) query = query.eq('status', f.status);
+      return search ? query.or(search) : query;
+    };
+    const { rows, total } = await readPage(read, f, APPLICANT_SORT);
+    return { items: rows, total };
   }
 }

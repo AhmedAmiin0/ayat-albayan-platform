@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 
 /** The author's own reads of message_templates; every write goes through TemplatesRepo (caches). */
 @Injectable()
@@ -13,7 +14,7 @@ export class TemplateAuthorRepo {
       .select('key', { count: 'exact', head: true })
       .eq('created_by', userId)
       .gte('created_at', since.toISOString());
-    if (error) throw new Error(`template count failed: ${error.message}`);
+    if (error) throw pgError(error);
     return count ?? 0;
   }
 }

@@ -1,7 +1,7 @@
 import type { HttpException } from '@nestjs/common';
 import { z } from 'zod';
 import { ar } from '@/common/infra/i18n/server-text';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { httpError } from '@/common/http/errors';
 
 // A refused edit or new template: the code the clients map, and the same
 // reason in clear Modern Standard Arabic (`message_ar`, ar.json templates.error) for any reader.
@@ -26,5 +26,5 @@ export function refusalHttp(code: string, details: Record<string, unknown> = {})
   const texts: Readonly<Record<string, string | undefined>> = ar.templates.error;
   const text = texts[code];
   const message_ar = text ? { message_ar: filled(text, details) } : {};
-  return waHttpError(code, STATUS[code] ?? 409, { ...details, ...message_ar });
+  return httpError(STATUS[code] ?? 409, code, { ...details, ...message_ar });
 }

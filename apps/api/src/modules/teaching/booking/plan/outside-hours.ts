@@ -1,7 +1,7 @@
 import type { BookingRequest } from '@ab/shared';
 import type { Conflict } from '@ab/schedule';
 import { HttpStatus } from '@nestjs/common';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
+import { httpError } from '@/common/http/errors';
 
 // The flag skips only the hours check; clashes and the past still refuse it.
 
@@ -18,5 +18,5 @@ export function bookableConflicts(conflicts: Conflict[], req: OutsideFlag): Conf
 export function assertNotPast(req: OutsideFlag, now: Date): void {
   const past =
     req.outsideHours === true && !!req.startsAt && Date.parse(req.startsAt) < now.getTime();
-  if (past) throw domainError(HttpStatus.BAD_REQUEST, 'date_in_past');
+  if (past) throw httpError(HttpStatus.BAD_REQUEST, 'date_in_past');
 }

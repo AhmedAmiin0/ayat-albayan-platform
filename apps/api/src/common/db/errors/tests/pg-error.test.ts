@@ -1,21 +1,34 @@
-import { BadRequestException, ConflictException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Logger } from '@nestjs/common';
 import { PostgrestError } from '@supabase/supabase-js';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { answerOf } from '@/common/db/testing/db-answer';
-import { pgError, uniqueViolationOn } from '@/common/db/errors';
+import {
+  isUniqueViolation,
+  pgError,
+  uniqueViolationMentions,
+  UNIQUE_VIOLATION,
+  uniqueViolationOn,
+} from '@/common/db/errors';
 
 const pg = (code: string, message = 'boom', details = 'd') =>
   new PostgrestError({ code, message, details, hint: '' });
 const unique = pg('23505', 'duplicate key value violates unique constraint "leads_phone_key"');
 
-describe('pgError: the default map is the api dbError answer, unchanged', () => {
+describe('pgError: the default map', () => {
   it.each([
-    ['23505', 409, { message: 'duplicate', detail: 'd' }],
-    ['23503', 409, { message: 'fk_violation', detail: 'd' }],
+    ['23505', 409, { message: 'duplicate' }],
+    ['23503', 409, { message: 'fk_violation' }],
     ['PGRST103', 400, { message: 'page_out_of_range' }],
     ['XX000', 500, 'db error XX000: boom'],
   ])('%s answers %i', (code, status, body) => {
     expect(answerOf(pgError(pg(code)))).toEqual({ status, body });
+  });
+
+  it('logs the message and details a conflict no longer answers', () => {
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+    pgError(pg('23503', 'fk violation', 'Key (id)=(x) is not present.'));
+    expect(warn).toHaveBeenCalledWith('23503 fk violation: Key (id)=(x) is not present.');
+    warn.mockRestore();
   });
 
   it('keeps the exception classes callers test with instanceof', () => {
@@ -68,5 +81,28 @@ describe('uniqueViolationOn', () => {
     expect(uniqueViolationOn(unique, 'leads_phone_key')).toBe(true);
     expect(uniqueViolationOn(unique, 'other_key')).toBe(false);
     expect(uniqueViolationOn(pg('23503', unique.message), 'leads_phone_key')).toBe(false);
+  });
+});
+
+describe('isUniqueViolation', () => {
+  it('is true for SQLSTATE 23505 only', () => {
+    expect(UNIQUE_VIOLATION).toBe('23505');
+    expect(isUniqueViolation(unique)).toBe(true);
+    expect(isUniqueViolation(pg('23503'))).toBe(false);
+  });
+
+  it('is false without an error or a code', () => {
+    expect(isUniqueViolation(null)).toBe(false);
+    expect(isUniqueViolation(undefined)).toBe(false);
+    expect(isUniqueViolation({})).toBe(false);
+  });
+});
+
+describe('uniqueViolationMentions', () => {
+  it('is a unique violation whose message has the text', () => {
+    expect(uniqueViolationMentions(unique, 'phone_key')).toBe(true);
+    expect(uniqueViolationMentions(unique, 'client_request_id')).toBe(false);
+    expect(uniqueViolationMentions(pg('23503', unique.message), 'phone_key')).toBe(false);
+    expect(uniqueViolationMentions(null, 'phone_key')).toBe(false);
   });
 });

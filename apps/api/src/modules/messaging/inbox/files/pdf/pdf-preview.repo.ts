@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 
 /** What pdfinfo said about a message's PDF: its page count (0 = no preview) and its size in bytes. */
 export type PdfDoc = { pages: number; bytes: number };
@@ -16,7 +17,7 @@ export class PdfPreviewRepo {
   /** null = not probed yet. */
   async doc(id: string): Promise<PdfDoc | null> {
     const { data, error } = await this.db.from('messages').select('media_pages, media_bytes').eq('id', id).maybeSingle();
-    if (error) throw new Error(`message pdf read failed: ${error.message}`);
+    if (error) throw pgError(error);
     if (data?.media_pages == null) return null;
     return { pages: data.media_pages, bytes: data.media_bytes ?? 0 };
   }
@@ -28,6 +29,6 @@ export class PdfPreviewRepo {
       .update({ media_pages: doc.pages, media_bytes: doc.bytes })
       .eq('id', id)
       .is('media_pages', null);
-    if (error) throw new Error(`message pdf update failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 }

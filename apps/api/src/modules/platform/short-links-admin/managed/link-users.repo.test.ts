@@ -4,11 +4,11 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { LinkUsersRepo } from './link-users.repo';
 
 describe('LinkUsersRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ short_link_users: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new LinkUsersRepo(db).users('c1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

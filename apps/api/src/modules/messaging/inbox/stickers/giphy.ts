@@ -4,7 +4,7 @@ import { z } from 'zod';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { createHttp } from '@/common/infra/http/http';
 import type { Http } from '@/common/infra/http/http.types';
-import { waHttpError } from '@/modules/messaging/whatsapp';
+import { httpError } from '@/common/http/errors';
 
 // GIPHY for the chat's GIF panel, through the api's one HTTP client (docs/36
 // H-1). The key goes in the query only (never logged: whereOf keeps the path); G-rated GIFs only,
@@ -40,7 +40,7 @@ const listSchema = z.object({ data: z.array(z.unknown()) }).transform((page) =>
 const oneSchema = z.object({ data: gifSchema });
 
 /** Every GIPHY failure is one answer: 502 giphy_failed. */
-const giphyFailed = (): Error => waHttpError('giphy_failed', HttpStatus.BAD_GATEWAY);
+const giphyFailed = (): Error => httpError(HttpStatus.BAD_GATEWAY, 'giphy_failed');
 
 /** The panel's tile: the small animated preview (200 px wide, fewer frames when GIPHY has it). */
 function toGifItem(gif: GiphyGif): GifItem {

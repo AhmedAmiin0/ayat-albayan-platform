@@ -3,7 +3,7 @@ import { BadRequestException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { parseOrThrow } from '@/common/http/http';
-import { blankToNull, blanksToNull, listQuerySchema, pageRange } from './http';
+import { blankToNull, blanksToNull, listQuerySchema } from './http';
 
 const createBody = blanksToNull(guardianCreateSchema);
 
@@ -54,17 +54,15 @@ describe('blankToNull', () => {
   });
 });
 
-describe('listQuerySchema + pageRange (R-NFR-08)', () => {
+describe('listQuerySchema (R-NFR-08)', () => {
   it('defaults to page 1 of 20', () => {
     const q = listQuerySchema.parse({});
     expect(q).toEqual({ search: '', page: 1, pageSize: 20 });
-    expect(pageRange(q)).toEqual([0, 19]);
   });
 
-  it('coerces query strings and computes the inclusive range', () => {
+  it('coerces query strings and trims the search', () => {
     const q = listQuerySchema.parse({ page: '3', pageSize: '10', search: ' سهيلة ' });
-    expect(q.search).toBe('سهيلة');
-    expect(pageRange(q)).toEqual([20, 29]);
+    expect(q).toEqual({ search: 'سهيلة', page: 3, pageSize: 10 });
   });
 
   it('caps pageSize at 100', () => {

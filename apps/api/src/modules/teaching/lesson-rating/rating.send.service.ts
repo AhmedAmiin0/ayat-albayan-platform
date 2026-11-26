@@ -1,10 +1,10 @@
 import { lessonRatingMessage, RATING_TEMPLATE } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { ratingFamilies } from './rating.plan';
 import { RatingRepo } from './rating.repo';
+import { httpError } from '@/common/http/errors';
 
 interface RatingSend {
   phone: string;
@@ -22,12 +22,12 @@ export class RatingSendService {
   ) {}
 
   async send(input: RatingSend, now = new Date()): Promise<Sent> {
-    if (!(await this.templates.approved(RATING_TEMPLATE))) throw waHttpError('template_not_approved', 409);
+    if (!(await this.templates.approved(RATING_TEMPLATE))) throw httpError(409, 'template_not_approved');
     const guardian = await this.queries.guardianByPhone(input.phone);
-    if (!guardian) throw waHttpError('not_a_guardian', 404);
+    if (!guardian) throw httpError(404, 'not_a_guardian');
     const lesson = await this.queries.latestHeld({ guardianId: guardian.id, now });
     const family = lesson ? ratingFamilies(lesson).find((f) => f.guardian.id === guardian.id) : undefined;
-    if (!lesson || !family) throw waHttpError('no_completed_lesson', 404);
+    if (!lesson || !family) throw httpError(404, 'no_completed_lesson');
     const { key, params } = lessonRatingMessage({
       lessonId: lesson.id,
       studentNames: family.names,

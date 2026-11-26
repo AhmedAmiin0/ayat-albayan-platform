@@ -11,13 +11,17 @@ describe('GET /payments sort + filters (R-NFR-08)', () => {
   it('no sort: newest paid first, then id (stable pages)', async () => {
     const { db, calls } = fakeDb({ payments: [{ data: [], count: 0 }] });
     await new PaymentsRepo(db).list(page);
-    expect(orders(calls)).toEqual([['paid_at', { ascending: false }], ['id']]);
+    expect(orders(calls)).toEqual([['paid_at', { ascending: false }], ['id', { ascending: true }]]);
   });
 
   it('a sort key orders by its column, then the default order and id', async () => {
     const { db, calls } = fakeDb({ payments: [{ data: [], count: 0 }] });
     await new PaymentsRepo(db).list({ ...page, sort: 'amount', dir: 'desc', method: 'cash' });
-    expect(orders(calls)).toEqual([['amount', { ascending: false }], ['paid_at', { ascending: false }], ['id']]);
+    expect(orders(calls)).toEqual([
+      ['amount', { ascending: false }],
+      ['paid_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
     expect(calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([['method', 'cash']]);
   });
 

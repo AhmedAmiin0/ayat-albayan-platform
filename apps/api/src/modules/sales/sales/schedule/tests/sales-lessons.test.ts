@@ -37,11 +37,11 @@ describe('inSalesScope: the one rule for the meetings list and the classroom', (
 describe('sales lessons error paths: the answer a failed query gives today', () => {
   const LESSON = { profileId: 'p1', lessonId: 'l1' };
 
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(isSalesLesson(db, LESSON))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

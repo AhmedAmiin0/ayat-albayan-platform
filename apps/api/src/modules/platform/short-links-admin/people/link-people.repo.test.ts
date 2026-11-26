@@ -4,11 +4,11 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { LinkPeopleRepo } from './link-people.repo';
 
 describe('LinkPeopleRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ profiles: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new LinkPeopleRepo(db).byIds(['p1']))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

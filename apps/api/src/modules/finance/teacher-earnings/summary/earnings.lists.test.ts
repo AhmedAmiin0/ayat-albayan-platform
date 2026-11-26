@@ -17,7 +17,10 @@ describe('teacher earnings lists (R-NFR-08)', () => {
   it('sessions: newest first by default, then id', async () => {
     const { db, calls } = fakeDb({ [V]: [{ data: [], count: 0 }] });
     await sessionsPage(db, { teacherId: TEACHER, filter: page });
-    expect(on(calls, V, 'order')).toEqual([['starts_at', { ascending: false }], ['id']]);
+    expect(on(calls, V, 'order')).toEqual([
+      ['starts_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
   });
 
   it('sessions: a sort key, then the default order as tiebreaker', async () => {
@@ -29,7 +32,7 @@ describe('teacher earnings lists (R-NFR-08)', () => {
     expect(on(calls, V, 'order')).toEqual([
       ['paid_amount', { ascending: false }],
       ['starts_at', { ascending: false }],
-      ['id'],
+      ['id', { ascending: true }],
     ]);
   });
 
@@ -55,17 +58,20 @@ describe('teacher earnings lists (R-NFR-08)', () => {
     });
     expect(on(calls, P, 'not')).toEqual([['voided_at', 'is', null]]);
     expect(on(calls, P, 'ilike')).toEqual([['note', '%أكتوبر%']]);
-    expect(on(calls, P, 'order')).toEqual([['paid_at', { ascending: false }], ['id']]);
+    expect(on(calls, P, 'order')).toEqual([
+      ['paid_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
   });
 });
 
 describe('earnings lists error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ [P]: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(paymentsPage(db, { teacherId: TEACHER, filter: page }))).toEqual(
       {
         status: 409,
-        body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+        body: { message: 'duplicate' },
       },
     );
   });

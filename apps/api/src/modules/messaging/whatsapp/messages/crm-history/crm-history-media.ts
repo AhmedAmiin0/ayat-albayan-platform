@@ -1,10 +1,10 @@
 import { baseMime, chatFileMaxBytes } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
 import { allowedCrmUrl } from './crm-history-url';
 import { fetchCrmMedia } from './crm-media.fetch';
 import { CrmMediaSettings } from './crm-media.settings';
+import { httpError } from '@/common/http/errors';
 
 /**
  * A family's file imported from the old CRM (no Meta media id; the body is only its storage link):
@@ -30,7 +30,7 @@ export class CrmHistoryMedia {
   private async fetch(msg: MediaMessage): Promise<{ bytes: Uint8Array }> {
     const { crm_media_host: host } = await this.settings.read();
     const url = allowedCrmUrl(msg.body, host);
-    if (!url) throw waHttpError('media_expired', HttpStatus.GONE);
+    if (!url) throw httpError(HttpStatus.GONE, 'media_expired');
     const mime = baseMime(msg.media_mime);
     return { bytes: await fetchCrmMedia({ url, mime, maxBytes: chatFileMaxBytes(mime) }) };
   }

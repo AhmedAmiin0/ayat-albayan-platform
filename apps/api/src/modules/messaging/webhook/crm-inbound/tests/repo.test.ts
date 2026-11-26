@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { CrmInboundRepo } from '@/modules/messaging/webhook/crm-inbound/crm-inbound.repo';
 import { RECEIVED_AT, WAMID } from './crm-inbound.fakes';
@@ -61,8 +62,13 @@ describe('CrmInboundRepo', () => {
     await expect(repo.isActiveTeacher('+966500000002')).resolves.toBe(false);
   });
 
-  it('a database error is thrown with what failed', async () => {
-    const { db } = fakeDb({ [T]: [{ error: { message: 'down' } }] });
-    await expect(new CrmInboundRepo(db).enqueue(received)).rejects.toThrow('crm inbound enqueue');
+  it('a database error answers through the default db error map', async () => {
+    const { db } = fakeDb({ [T]: [{ error: PG_ERRORS.other }, { error: PG_ERRORS.foreignKey }] });
+    await expect(new CrmInboundRepo(db).enqueue(received)).rejects.toThrow('db error XX000: boom');
+    const answer = await answerOfRejection(new CrmInboundRepo(db).enqueue(received));
+    expect(answer).toEqual({
+      status: 409,
+      body: expect.objectContaining({ message: 'fk_violation' }),
+    });
   });
 });

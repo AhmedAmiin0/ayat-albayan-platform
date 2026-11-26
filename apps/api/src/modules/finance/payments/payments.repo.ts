@@ -3,11 +3,11 @@ import type { PaymentKind, SubscriptionStatus } from '@ab/catalog';
 import { netPaid } from '@ab/money';
 import { type HttpException, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort } from '@/common/db/list-sort';
+import { readPage, toPage } from '@/common/db/page';
 import type { StudentRef } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 import { readAll } from '@/common/db/read-all';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import { done, maybe, pgError } from '@/common/db/errors';
+import { done, maybe, pgError, uniqueViolationMentions } from '@/common/db/errors';
 import { filtered, PAYMENT_SORT, type PaymentFilter } from './payments.list-query';
 import type { Page } from '@ab/core';
 import type { PeriodTotal } from '@ab/money';
@@ -34,13 +34,9 @@ export class PaymentsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(f: PaymentFilter): Promise<Page<PaymentRow>> {
-    const from = (f.page - 1) * f.pageSize;
-    const query = filtered(this.db.from('payments').select(SELECT, { count: 'exact' }), f);
-    const { data, count, error } = await applySort(query, f, PAYMENT_SORT)
-      .order('id')
-      .range(from, from + f.pageSize - 1);
-    if (error) throw pgError(error);
-    return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };
+    const query = () => filtered(this.db.from('payments').select(SELECT, { count: 'exact' }), f);
+    const read = await readPage(query, f, PAYMENT_SORT);
+    return toPage(read.rows, read.total, f);
   }
 
   /** The filter's totals per currency (net = payments − refunds), for the period line on the page. */
@@ -75,7 +71,7 @@ export class PaymentsRepo {
   /** null: a payment with this client_request_id is already recorded (a retry raced it). */
   async insert(row: TablesInsert<'payments'>): Promise<PaymentRow | null> {
     const { data, error } = await this.db.from('payments').insert(row).select(SELECT).single();
-    if (error?.code === '23505' && error.message.includes('client_request_id')) return null;
+    if (uniqueViolationMentions(error, 'client_request_id')) return null;
     if (error) throw pgError(error);
     return data;
   }

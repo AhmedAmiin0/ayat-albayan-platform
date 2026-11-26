@@ -47,7 +47,7 @@ describe('SettingsMetaQueries.meta (GET /config/meta)', () => {
   });
 
   it('throws on a read error of either table', async () => {
-    await expect(queries(fail('boom')).q.meta()).rejects.toThrow('settings read failed: boom');
-    await expect(queries(ok([row('a', 'u1')]), fail('nope')).q.meta()).rejects.toThrow('profiles read failed: nope');
+    await expect(queries(fail('boom')).q.meta()).rejects.toThrow('db error undefined: boom');
+    await expect(queries(ok([row('a', 'u1')]), fail('nope')).q.meta()).rejects.toThrow('db error undefined: nope');
   });
 });

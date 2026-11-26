@@ -1,8 +1,8 @@
 import { HttpStatus } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BOOKING, REQ, setup, SUB, USER } from '@/modules/teaching/booking/sales/course-draft/tests/course-draft.fakes';
 import { draftRequestId } from '@/modules/teaching/booking/sales/course-draft/course-draft.rules';
+import { httpError } from '@/common/http/errors';
 
 describe('CourseDrafts', () => {
   it('first save on a held package: a draft, nothing booked, nobody told (no 409)', async () => {
@@ -48,7 +48,7 @@ describe('CourseDrafts', () => {
   it('a clash at payment: nothing booked, the draft kept as the prefill, the staff told to pick again', async () => {
     const t = setup({ held: [true, true] });
     await t.drafts.save(REQ, USER);
-    t.env.booking.book.mockRejectedValueOnce(domainError(HttpStatus.CONFLICT, 'conflict'));
+    t.env.booking.book.mockRejectedValueOnce(httpError(HttpStatus.CONFLICT, 'conflict'));
     expect(await t.drafts.confirm(SUB)).toBe('clash');
     expect(t.rows.size).toBe(1);
     const who = expect.objectContaining({ savedBy: USER.id });
@@ -68,7 +68,7 @@ describe('CourseDrafts', () => {
   it('a redelivered event lost to a concurrent confirm that booked it: done, no false alert', async () => {
     const t = setup({ held: [true, true] });
     await t.drafts.save(REQ, USER);
-    t.env.booking.book.mockRejectedValueOnce(domainError(HttpStatus.CONFLICT, 'duplicate'));
+    t.env.booking.book.mockRejectedValueOnce(httpError(HttpStatus.CONFLICT, 'duplicate'));
     t.env.course.isBooked.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
     expect(await t.drafts.confirm(SUB)).toBe('booked');
     expect(t.env.due.clash).not.toHaveBeenCalled();

@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 
 const flagRow = z.object({ is_test: z.boolean() }).nullable();
 
@@ -15,14 +16,14 @@ export class TestFlagRepo {
   /** The profile's flag; a missing profile is real. Throws on a failed read (fail closed). */
   async ofProfile(id: string): Promise<boolean> {
     const { data, error } = await this.db.from('profiles').select('is_test').eq('id', id).maybeSingle();
-    if (error) throw new Error(`test flag: ${error.message}`);
+    if (error) throw pgError(error);
     return flagRow.parse(data)?.is_test ?? false;
   }
 
   /** The student's flag; a missing student is real. */
   async ofStudent(id: string): Promise<boolean> {
     const { data, error } = await this.db.from('students').select('is_test').eq('id', id).maybeSingle();
-    if (error) throw new Error(`test flag: ${error.message}`);
+    if (error) throw pgError(error);
     return flagRow.parse(data)?.is_test ?? false;
   }
 
@@ -32,7 +33,7 @@ export class TestFlagRepo {
       .from('lesson_students')
       .select('student:students(is_test)')
       .eq('lesson_id', lessonId);
-    if (error) throw new Error(`test flag: ${error.message}`);
+    if (error) throw pgError(error);
     const flags = data.map((r) => r.student.is_test);
     return flags.length > 0 && flags.every(Boolean);
   }

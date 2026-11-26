@@ -29,20 +29,26 @@ describe('GET /threads list query (R-NFR-08)', () => {
 describe('ThreadsQueries.list order and filters', () => {
   const page = { page: 2, pageSize: 10 };
 
-  it('no sort: newest message first (the old order), windowed', async () => {
+  it('no sort: newest message first, then the phone so ties keep their page', async () => {
     const { db, calls } = fakeDb({ [V]: [{ data: [], count: 0 }] });
     await queriesOn(db).list(page);
-    expect(calls.filter((c) => c.method === 'order').map((c) => c.args)).toEqual([['last_message_at', { ascending: false }]]);
+    expect(calls.filter((c) => c.method === 'order').map((c) => c.args)).toEqual([
+      ['last_message_at', { ascending: false }],
+      ['phone_e164', { ascending: true }],
+    ]);
     expect(calls.find((c) => c.method === 'range')?.args).toEqual([10, 19]);
   });
 
   it('unread first: unread_count desc, then newest; the status filter is one .eq', async () => {
     const { db, calls } = fakeDb({ [V]: [{ data: [], count: 0 }] });
     await queriesOn(db).list({ ...page, sort: 'unread', dir: 'desc', status: 'trial_booked' });
-    expect(calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([['lead_status', 'trial_booked']]);
+    expect(calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([
+      ['lead_status', 'trial_booked'],
+    ]);
     expect(calls.filter((c) => c.method === 'order').map((c) => c.args)).toEqual([
       ['unread_count', { ascending: false }],
       ['last_message_at', { ascending: false }],
+      ['phone_e164', { ascending: true }],
     ]);
   });
 
