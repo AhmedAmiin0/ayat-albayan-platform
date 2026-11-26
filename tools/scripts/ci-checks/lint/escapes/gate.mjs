@@ -8,13 +8,17 @@ import { escapesOf, inScope, mayHold } from './escapes.mjs';
 
 /** `file:line comment` for every escape under `root`. */
 export function escapesIn(root) {
-  const tracked = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' });
+  // The tracked list is past execFileSync's 1 MiB default buffer.
+  const options = { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 };
+  const tracked = execFileSync('git', ['ls-files'], options);
   return tracked
     .split('\n')
     .filter((path) => inScope(path) && existsSync(join(root, path)))
     .map((path) => ({ path, text: readFileSync(join(root, path), 'utf8') }))
     .filter(({ text }) => mayHold(text))
-    .flatMap(({ path, text }) => escapesOf(text, path).map((e) => `${path}:${e.line} ${e.comment}`));
+    .flatMap(({ path, text }) =>
+      escapesOf(text, path).map((e) => `${path}:${e.line} ${e.comment}`),
+    );
 }
 
 function main() {
