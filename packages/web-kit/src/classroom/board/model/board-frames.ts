@@ -6,7 +6,11 @@ interface FrameTrack {
 }
 
 /** captureStream sends no frame unless drawn, so LiveKit kept it pending; frames are forced. */
-export function keepFrames(canvas: HTMLCanvasElement, track: MediaStreamTrack, every = KEEP_FRAMES_MS): () => void {
+export function keepFrames(
+  canvas: HTMLCanvasElement,
+  track: MediaStreamTrack,
+  every = KEEP_FRAMES_MS,
+): () => void {
   const ctx = canvas.getContext('2d');
   const tick = () => {
     if (ctx) ctx.putImageData(ctx.getImageData(0, 0, 1, 1), 0, 0);

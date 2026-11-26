@@ -28,8 +28,12 @@ export interface MuteOptions {
   call: MuteCall | null;
 }
 
-const isOn = (tile: TileView, source: MuteSource): boolean => (source === 'microphone' ? tile.micOn : tile.hasVideo);
-const DONE: Record<MuteSource, string> = { microphone: t.classroom.mute.micDone, camera: t.classroom.mute.camDone };
+const isOn = (tile: TileView, source: MuteSource): boolean =>
+  source === 'microphone' ? tile.micOn : tile.hasVideo;
+const DONE: Record<MuteSource, string> = {
+  microphone: t.classroom.mute.micDone,
+  camera: t.classroom.mute.camDone,
+};
 
 /**
  * Staff mute someone's track server-side (no confirm: they can turn it back on). The tile updates

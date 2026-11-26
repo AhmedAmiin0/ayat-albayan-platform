@@ -7,7 +7,15 @@ import { cn } from '@ab/web-kit/lib/utils';
  * named region, so Tab lands on it (the global lapis focus ring) and the arrow keys scroll it.
  * `label` is the table's own name, which names the region too.
  */
-export function ScrollX({ label, className, children }: { label: string; className?: string; children: ReactNode }) {
+export function ScrollX({
+  label,
+  className,
+  children,
+}: {
+  label: string;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
     <div role="region" tabIndex={0} aria-label={label} className={cn('ab-scroll-x rounded-xs', className)}>
       {children}

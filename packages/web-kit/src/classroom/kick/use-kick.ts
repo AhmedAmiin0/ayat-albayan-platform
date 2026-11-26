@@ -34,7 +34,11 @@ export interface KickOptions {
  * Ask → confirm → POST remove. On success the tile goes away by itself (LiveKit
  * ParticipantDisconnected); 403 / 404 come back as their classroom.error words in a toast.
  */
-export function useKick({ lessonId, role, remove = removeParticipant }: KickOptions): KickController {
+export function useKick({
+  lessonId,
+  role,
+  remove = removeParticipant,
+}: KickOptions): KickController {
   const [target, setTarget] = useState<TileView | null>(null);
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState<KickToast | null>(null);

@@ -69,7 +69,13 @@ function Body({ source }: { source: RecordingSource }) {
 }
 
 /** A lesson's recordings (admin, teacher) or a meeting's (admin, creator). */
-export function RecordingsPanel({ source, onClose }: { source: RecordingSource; onClose: () => void }) {
+export function RecordingsPanel({
+  source,
+  onClose,
+}: {
+  source: RecordingSource;
+  onClose: () => void;
+}) {
   return (
     <Drawer title={R.title} onClose={onClose}>
       <Body source={source} />

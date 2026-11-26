@@ -15,7 +15,9 @@ function open(role: JoinRole, opts: { room?: string; recording?: 'on' | 'off' } 
   const c = fakeClient({ tiles: [tile({ key: 'me', isLocal: true, role })] });
   const join = { url: 'wss://lk.test', token: 'tok', room: opts.room ?? 'lesson-L1', role, recording: opts.recording ?? 'on' };
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <ClassroomRoom join={join} make={() => c} />
     </QueryClientProvider>,
   );
