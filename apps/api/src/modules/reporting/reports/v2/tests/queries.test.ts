@@ -32,7 +32,7 @@ describe('v2 queries', () => {
     ];
     const { db, calls } = fakeDb({ lesson_reports: [{ data: rows }] });
     const out = await new ReportLessonQueries(db).memory([STUDENT_ID], ['this']);
-    expect(calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([['form_version', 2], ['status', 'submitted']]);
+    expect(calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([['student_id', STUDENT_ID], ['form_version', 2], ['status', 'submitted']]);
     expect(out.get(STUDENT_ID)?.last.new).toEqual({ surah: 67, from: 1, to: 15 });
     expect(await new ReportLessonQueries(fakeDb({}).db).memory([], [])).toEqual(new Map());
   });
