@@ -2,7 +2,7 @@
 import type { StudentStatus } from '@ab/catalog';
 import { issuesFor } from '../../../sources/sheets/issues.ts';
 import type { RowIssue, SourceRef } from '../../../types.ts';
-import type { OldClaim } from '../rows.ts';
+import type { OldClaim } from '../rows.types.ts';
 
 /** The old rule's grounds for active, in the order they are reported. */
 interface OldGrounds {
