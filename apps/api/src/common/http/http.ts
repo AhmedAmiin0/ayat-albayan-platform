@@ -1,4 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { pageQuery } from '@ab/core';
 import { z } from 'zod';
 
 // ponytail: module-local; lift to common/ once a second module needs the same helpers.
@@ -26,8 +27,5 @@ export function orNotFound<T>(row: T | null): T {
 }
 
 /** `?page=1&pageSize=25` (R-NFR-08: every list endpoint is paginated). */
-export const pageQuerySchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(25),
-});
+export const pageQuerySchema = z.object(pageQuery({ size: 25 }));
 export type PageQuery = z.output<typeof pageQuerySchema>;

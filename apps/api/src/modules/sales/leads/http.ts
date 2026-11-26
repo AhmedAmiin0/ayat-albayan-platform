@@ -1,5 +1,6 @@
 import { ConflictException } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
+import { pageQuery } from '@ab/core';
 import { z } from 'zod';
 import { orFilterTerm } from '@/common/db/or-filter';
 
@@ -14,8 +15,7 @@ export function throwIfDbError(error: PostgrestError | null): asserts error is n
 
 /** Pagination + search shared by the list endpoints (R-NFR-08). */
 export const pageQueryShape = {
-  page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(100).default(25),
+  ...pageQuery({ size: 25 }),
   q: z
     .string()
     .optional()
