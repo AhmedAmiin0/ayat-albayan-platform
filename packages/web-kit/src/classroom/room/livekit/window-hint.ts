@@ -22,7 +22,11 @@ export interface JoinHint {
 }
 
 /** The join rule shared by every button: 15 min before to 2 h after by default. */
-export function joinHint(lesson: WindowLesson, now: Date, opts: { win?: JoinWindowConfig; cycle: ClockCycle }): JoinHint {
+export function joinHint(
+  lesson: WindowLesson,
+  now: Date,
+  opts: { win?: JoinWindowConfig; cycle: ClockCycle },
+): JoinHint {
   const win = opts.win ?? DEFAULT_JOIN_WINDOW;
   if (canJoinNow(lesson, now, win)) return { canJoin: true, hint: null };
   const w = joinWindow(lesson, now, win);

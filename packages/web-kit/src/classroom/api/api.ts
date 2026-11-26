@@ -67,11 +67,21 @@ export const studentAssistantsQuery = (studentId: string) =>
     queryFn: () => apiFetch<AssistantView[]>(`/students/${studentId}/assistants`),
   });
 
-export const assignAssistant = ({ studentId, profileId }: { studentId: string; profileId: string }) =>
-  apiSend<AssistantView[]>('POST', `/students/${studentId}/assistants`, { profileId });
+export const assignAssistant = ({
+  studentId,
+  profileId,
+}: {
+  studentId: string;
+  profileId: string;
+}) => apiSend<AssistantView[]>('POST', `/students/${studentId}/assistants`, { profileId });
 
-export const removeAssistant = ({ studentId, profileId }: { studentId: string; profileId: string }) =>
-  apiSend<AssistantView[]>('DELETE', `/students/${studentId}/assistants/${profileId}`);
+export const removeAssistant = ({
+  studentId,
+  profileId,
+}: {
+  studentId: string;
+  profileId: string;
+}) => apiSend<AssistantView[]>('DELETE', `/students/${studentId}/assistants/${profileId}`);
 
 /** The local day `date` in `tz` [00:00, next 00:00) as ISO instants (classroom-day.golden). */
 function dayIn(date: string, tz: string): { from: string; to: string } {

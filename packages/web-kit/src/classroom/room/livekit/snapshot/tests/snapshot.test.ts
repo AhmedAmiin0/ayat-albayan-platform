@@ -3,7 +3,11 @@ import { snapshotOf, type ParticipantLike, type PublicationLike } from '@ab/web-
 
 const pub = (source: string, sid: string, isMuted = false): PublicationLike => ({ source, isMuted, track: { sid, mediaStreamTrack: { id: `m-${sid}` } } });
 
-function person(identity: string, pubs: PublicationLike[], o: Partial<ParticipantLike> = {}): ParticipantLike {
+function person(
+  identity: string,
+  pubs: PublicationLike[],
+  o: Partial<ParticipantLike> = {},
+): ParticipantLike {
   return {
     identity,
     name: identity.toUpperCase(),

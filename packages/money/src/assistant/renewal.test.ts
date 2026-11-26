@@ -5,14 +5,42 @@ import { commissionKindOf, DEFAULT_RENEWAL_SHARE, RENEWAL_CUTOFF } from './kind'
 import { planRenewalCommission } from './renewal';
 
 const AFTER = '2026-11-02T09:00:00Z';
-const pay = (amount: number, paid_at = AFTER): PaymentFact => ({ amount, kind: 'payment', paid_at });
-const sub = (id: string, price: number, created_at: string): SubscriptionFact => ({ id, price, currency: 'SAR', created_at, payments: [] });
-const paid = (s: SubscriptionFact, ...payments: PaymentFact[]): SubscriptionFact => ({ ...s, payments });
+const pay = (amount: number, paid_at = AFTER): PaymentFact => ({
+  amount,
+  kind: 'payment',
+  paid_at,
+});
+const sub = (id: string, price: number, created_at: string): SubscriptionFact => ({
+  id,
+  price,
+  currency: 'SAR',
+  created_at,
+  payments: [],
+});
+const paid = (s: SubscriptionFact, ...payments: PaymentFact[]): SubscriptionFact => ({
+  ...s,
+  payments,
+});
 const PERCENT = { type: 'percent', value: 10, currency: null, startsOn: '2026-10-01' } as const;
 const FIXED = { type: 'fixed', value: 30, currency: 'EGP', startsOn: '2026-10-01' } as const;
-const ctx = { broughtBy: 'a1', broughtAt: '2026-10-02T08:00:00Z', terms: PERCENT, tz: 'Asia/Riyadh' } as const;
-const renewal = (subscriptions: SubscriptionFact[], subscriptionId: string, over: Partial<Parameters<typeof planRenewalCommission>[0]> = {}) =>
-  planRenewalCommission({ ...ctx, share: DEFAULT_RENEWAL_SHARE, subscriptionId, subscriptions, ...over });
+const ctx = {
+  broughtBy: 'a1',
+  broughtAt: '2026-10-02T08:00:00Z',
+  terms: PERCENT,
+  tz: 'Asia/Riyadh',
+} as const;
+const renewal = (
+  subscriptions: SubscriptionFact[],
+  subscriptionId: string,
+  over: Partial<Parameters<typeof planRenewalCommission>[0]> = {},
+) =>
+  planRenewalCommission({
+    ...ctx,
+    share: DEFAULT_RENEWAL_SHARE,
+    subscriptionId,
+    subscriptions,
+    ...over,
+  });
 
 describe('commissionKindOf: subscription ORDER decides, never payment order (rule 2)', () => {
   const trial = sub('t', 0, '2026-10-01T00:00:00Z');

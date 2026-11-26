@@ -61,7 +61,10 @@ export function useShareRequests({ room, role, grant, board }: ShareRequestOptio
   const [notice, setNotice] = useState<string | null>(null);
   const { snap, sendData, onData } = room;
   const me = snap.tiles.find((x) => x.isLocal)?.identity ?? '';
-  const send = useCallback((msg: ShareMessage) => sendData(encodeShare(msg), { topic: SHARE_TOPIC }), [sendData]);
+  const send = useCallback(
+    (msg: ShareMessage) => sendData(encodeShare(msg), { topic: SHARE_TOPIC }),
+    [sendData],
+  );
   useEffect(
     () =>
       onData((packet) => {
@@ -70,7 +73,12 @@ export function useShareRequests({ room, role, grant, board }: ShareRequestOptio
       }),
     [onData, me],
   );
-  useGrantNotices({ flags: { screen: snap.shareAllowed, draw: board.canDraw, open: board.state.open }, mine: state.mine, dispatch, setNotice });
+  useGrantNotices({
+    flags: { screen: snap.shareAllowed, draw: board.canDraw, open: board.state.open },
+    mine: state.mine,
+    dispatch,
+    setNotice,
+  });
 
   const { studentsCanDraw, allowed, open } = board.state;
   const answered: Record<RequestKind, (tile: TileView) => boolean> = {
@@ -87,7 +95,9 @@ export function useShareRequests({ room, role, grant, board }: ShareRequestOptio
   const settle = (identity: string, what: RequestKind) => dispatch({ kind: 'settled', identity, what });
   const share = (tile: TileView, on: boolean) => {
     settle(tile.identity, 'screen');
-    grant?.({ identity: tile.identity, allow: on }).catch((e: unknown) => setNotice(classroomErrorText(e)));
+    grant?.({ identity: tile.identity, allow: on }).catch((e: unknown) =>
+      setNotice(classroomErrorText(e)),
+    );
   };
   const deniedKind = REQUEST_KINDS.find((k) => state.mine[k] === 'denied');
 

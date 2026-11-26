@@ -21,7 +21,11 @@ export function listenData(room: Room, listener: (packet: DataPacketIn) => void)
   // (payload, participant, kind, topic): the kind and topic arrive as the rest.
   const handler = (payload: Uint8Array, participant?: Sender, ...rest: [unknown?, string?]) => {
     if (!participant) return;
-    listener({ bytes: payload, topic: rest[1], from: { identity: participant.identity, role: roleOfMeta(participant.metadata) } });
+    listener({
+      bytes: payload,
+      topic: rest[1],
+      from: { identity: participant.identity, role: roleOfMeta(participant.metadata) },
+    });
   };
   room.on(RoomEvent.DataReceived, handler);
   return () => void room.off(RoomEvent.DataReceived, handler);

@@ -10,7 +10,12 @@ import type { WalletTotals } from './wallet';
 /** GET /assistant-pay/terms (admin) and the `terms` of /sales/me/earnings. */
 export interface AssistantTermsView {
   assistant_id: string;
-  commission: { type: AssistantCommissionType; value: number; currency: string | null; starts_on: string } | null;
+  commission: {
+    type: AssistantCommissionType;
+    value: number;
+    currency: string | null;
+    starts_on: string;
+  } | null;
   salary: { amount: number; currency: string; starts_on: string } | null;
   /** Renewal commission share now; 0 while renewal commission is off (renewalShareNow). */
   renewal_share_percent: number;
@@ -105,7 +110,12 @@ export interface MyStudentRow {
   guardian_phone: string | null;
   /** Has any of their subscriptions been paid in full? (No price, no amounts.) */
   first_subscription_paid: boolean;
-  commission: { amount: number; currency: string; status: AssistantCommissionStatus; earned_at: string } | null;
+  commission: {
+    amount: number;
+    currency: string;
+    status: AssistantCommissionStatus;
+    earned_at: string;
+  } | null;
   /** Renewal commissions this student earned her (no per-student amounts after the first). */
   renewal_commissions: number;
 }

@@ -15,8 +15,13 @@ describe('teacherPaymentCreateSchema', () => {
     expect(teacherPaymentCreateSchema.safeParse({ ...base, earningIds: [ID] }).success).toBe(true);
   });
 
-  it.each([['missing', undefined], ['not a uuid', 'x']])('refuses a clientRequestId that is %s', (_c, id) => {
-    expect(teacherPaymentCreateSchema.safeParse({ ...base, clientRequestId: id }).success).toBe(false);
+  it.each([
+    ['missing', undefined],
+    ['not a uuid', 'x'],
+  ])('refuses a clientRequestId that is %s', (_c, id) => {
+    expect(teacherPaymentCreateSchema.safeParse({ ...base, clientRequestId: id }).success).toBe(
+      false,
+    );
   });
 
   it('refuses zero, negative, three decimals, a future date, an empty selection, a bad method', () => {

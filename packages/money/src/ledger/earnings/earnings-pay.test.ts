@@ -6,7 +6,8 @@ const SESSIONS = [
   { id: 'e2', outstanding: 60 },
   { id: 'e1', outstanding: 0 },
 ];
-const pick = (...ids: string[]) => new Map(SESSIONS.filter((s) => ids.includes(s.id)).map((s) => [s.id, s]));
+const pick = (...ids: string[]) =>
+  new Map(SESSIONS.filter((s) => ids.includes(s.id)).map((s) => [s.id, s]));
 
 describe('payCeiling', () => {
   it('no ticks → the whole balance; ticks → what those sessions still owe', () => {

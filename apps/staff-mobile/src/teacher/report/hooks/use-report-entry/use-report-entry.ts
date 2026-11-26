@@ -1,4 +1,10 @@
-import { reportEntryValues, sendChecked, withServerWindow } from '@ab/client-core';
+import {
+  reportEntryValues,
+  sendChecked,
+  useDraftSave,
+  withServerWindow,
+  type SaveState,
+} from '@ab/client-core';
 import {
   draftBody,
   reportDraftSchema,
@@ -12,9 +18,13 @@ import {
 import type { Grade, Program } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import { dropStoredDraft, useStoredDraft, viewWithDraft } from '@/teacher/report/drafts';
-import { refreshAfterSubmit, submitReport } from '@/teacher/report/hooks/api';
-import { useAutosave } from '@/teacher/report/hooks/use-autosave';
+import {
+  dropStoredDraft,
+  useDraftPorts,
+  useStoredDraft,
+  viewWithDraft,
+} from '@/teacher/report/drafts';
+import { refreshAfterSubmit, saveDraft, submitReport } from '@/teacher/report/hooks/api';
 import { useFormMode } from '@/teacher/report/hooks/use-form-mode';
 
 /** The program is the report's own, else the student's prefill. */
@@ -38,6 +48,18 @@ function useRestoredDraft(input: Restore, setValues: Dispatch<SetStateAction<For
   });
 }
 
+/** Debounced draft save of the whole v1 form while it is a draft (R-REP-02). */
+function useEntryDraft(report: ReportView, values: FormValues, sending: boolean): SaveState {
+  const { id } = report;
+  return useDraftSave({
+    id,
+    body: draftBody(values),
+    enabled: report.status === 'draft' && !sending,
+    save: (body) => saveDraft(id, body),
+    ports: useDraftPorts(),
+  }).state;
+}
+
 /** Nothing shows as sent until the API says so; offline the submit fails and says so (R-REP-02). */
 export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const client = useQueryClient();
@@ -58,7 +80,7 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
     },
   });
   useRestoredDraft({ report, studentProgram, values }, setValues);
-  const saveState = useAutosave({ id: report.id, values, enabled: report.status === 'draft' && !submit.isPending });
+  const saveState = useEntryDraft(report, values, submit.isPending);
 
   const set = <K extends keyof FormValues>(key: K, value: FormValues[K]) => {
     setProblem(null);
@@ -66,7 +88,8 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
   };
   const setProgram = (next: Program) => set('program', next);
   const program = values.program ?? studentProgram;
-  const setGrade = (rubric: Rubric, grade: Grade) => set('grades', { ...values.grades, [rubric]: grade });
+  const setGrade = (rubric: Rubric, grade: Grade) =>
+    set('grades', { ...values.grades, [rubric]: grade });
   const check = () => submitProblem(values, report.version);
   const request = (done: () => void) => submit.mutate(report.version, { onSettled: done });
   // One request at a time: a second tap while pending does nothing (the guard, not the button).

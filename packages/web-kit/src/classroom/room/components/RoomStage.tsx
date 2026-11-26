@@ -27,7 +27,11 @@ export function RoomStage({ stage, board, strip, attach, actionFor, wideStrip = 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2 lg:flex-row">
       <div className="min-h-0 flex-1">
-        {stage ? <StageScreen screen={stage} strip={strip} attach={attach} actionFor={actionFor} /> : board}
+        {stage ? (
+          <StageScreen screen={stage} strip={strip} attach={attach} actionFor={actionFor} />
+        ) : (
+          board
+        )}
       </div>
       {strip.length > 0 && (
         <div className="flex shrink-0 items-start gap-2 lg:flex-col">

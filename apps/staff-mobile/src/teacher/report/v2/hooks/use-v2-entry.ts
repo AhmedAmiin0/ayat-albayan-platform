@@ -1,4 +1,4 @@
-import { sendChecked, withServerWindow } from '@ab/client-core';
+import { sendChecked, useDraftSave, withServerWindow } from '@ab/client-core';
 import {
   reportV2DraftSchema,
   v2DraftBody,
@@ -8,7 +8,6 @@ import {
   type ReportAttachmentView,
   type ReportContent,
   type ReportFormEntry,
-  type ReportV2DraftBody,
   type V2Values,
 } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -16,9 +15,13 @@ import { useState } from 'react';
 import arBundle from '@ab/shared/i18n/ar.json';
 import { t } from '@ab/mobile-kit';
 import { refreshAfterSubmit } from '@/teacher/report/hooks/api';
-import { useDraftAutosave } from '@/teacher/report/hooks/use-autosave';
 import { useFormMode } from '@/teacher/report/hooks/use-form-mode';
-import { dropStoredDraft, useStoredDraft, viewWithDraft } from '@/teacher/report/drafts';
+import {
+  dropStoredDraft,
+  useDraftPorts,
+  useStoredDraft,
+  viewWithDraft,
+} from '@/teacher/report/drafts';
 import { saveDraftV2, submitReportV2 } from './api';
 
 /** The suggestion templates, read per call (t can be overridden after boot). */
@@ -49,20 +52,21 @@ export function useV2Entry(entry: ReportFormEntry) {
       await refreshAfterSubmit(client);
     },
   });
-  const body = JSON.stringify(v2DraftBody(values));
+  const body = v2DraftBody(values);
   useStoredDraft({
     id: report.id,
     enabled: report.status === 'draft',
     schema: reportV2DraftSchema,
-    body,
+    body: JSON.stringify(body),
     restore: (kept) =>
       setValues(v2ValuesOf(viewWithDraft(report, kept), studentProgram, storedWords())),
   });
-  const draft = useDraftAutosave({
+  const draft = useDraftSave({
     id: report.id,
     body,
     enabled: report.status === 'draft' && !submit.isPending,
-    save: (b) => saveDraftV2(report.id, JSON.parse(b) as ReportV2DraftBody),
+    save: (next) => saveDraftV2(report.id, next),
+    ports: useDraftPorts(),
   });
   const update = (patch: Partial<V2Values>) => {
     setProblem(null);
@@ -93,7 +97,7 @@ export function useV2Entry(entry: ReportFormEntry) {
     problem,
     submit,
     saveState: draft.state,
-    saveDraft: draft.flush,
+    saveDraft: draft.saveNow,
     setAttachments,
   };
 }

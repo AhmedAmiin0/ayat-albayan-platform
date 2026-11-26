@@ -27,7 +27,11 @@ async function fire(type: string, event: object): Promise<void> {
 }
 
 const pushOf = (payload: unknown) => ({ data: { json: () => payload } });
-const shown = () => worker.registration.showNotification.mock.calls[0] as unknown as [string, Record<string, unknown>];
+const shown = () =>
+  worker.registration.showNotification.mock.calls[0] as unknown as [
+    string,
+    Record<string, unknown>,
+  ];
 
 beforeEach(() => {
   handlers = {};
@@ -50,7 +54,10 @@ describe('sw.js push', () => {
   it('never carries a foreign url: another origin or a javascript: url becomes the root', async () => {
     await fire('push', pushOf({ title: 'T', url: 'https://evil.example/x' }));
     await fire('push', pushOf({ title: 'T', url: 'javascript:alert(1)' }));
-    const calls = worker.registration.showNotification.mock.calls as unknown as [string, { data: unknown }][];
+    const calls = worker.registration.showNotification.mock.calls as unknown as [
+      string,
+      { data: unknown },
+    ][];
     expect(calls.map(([, o]) => o.data)).toEqual([{ url: `${ORIGIN}/` }, { url: `${ORIGIN}/` }]);
   });
 

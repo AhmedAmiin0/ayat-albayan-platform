@@ -1,3 +1,4 @@
+import { paymentViewSchema } from '@ab/money';
 import type { PaymentView } from '@ab/money';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -15,7 +16,9 @@ const boxName = T.newAmount.replace('{currency}', 'ر.س');
 function open(payment: PaymentView = PAYMENT) {
   const onClose = vi.fn();
   const onDone = vi.fn();
-  renderWithClient(<PaymentDialogs payment={payment} action="amount" onClose={onClose} onDone={onDone} />);
+  renderWithClient(
+    <PaymentDialogs payment={payment} action="amount" onClose={onClose} onDone={onDone} />,
+  );
   return { onClose, onDone };
 }
 
@@ -43,7 +46,10 @@ describe('«تعديل المبلغ» by the admin (owner 2026-11-02)', () => {
     expect(screen.getByText(body)).toBeTruthy();
     confirm();
     await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(T.saved));
-    expect(apiSend).toHaveBeenCalledWith('PATCH', '/payments/pay-1', { amount: 120 });
+    expect(apiSend).toHaveBeenCalledWith('PATCH', '/payments/pay-1', {
+      body: { amount: 120 },
+      schema: paymentViewSchema,
+    });
   });
 
   it('the same amount is refused in the box: no confirm, no request', () => {
