@@ -4,7 +4,7 @@ import { titleProblems } from '../ci-checks/lint/commit-header/pr-title.ts';
 import { notGreen } from './checks.ts';
 import { notEligible } from './eligible.ts';
 import type { Facts } from './facts.schemas.ts';
-import { alreadyAsked, staleLockBase } from './lockfile.ts';
+import { alreadyAsked, staleLockBase, unknownLockBase } from './lockfile.ts';
 
 const skip = (reason: string): Decision => ({ action: 'skip', reason });
 
@@ -24,6 +24,7 @@ const RULES: readonly ((f: Facts) => Decision | null)[] = [
   },
   (f) => (widened(f.annotations) ? skip('layer table widened: the owner merges it') : null),
   (f) => (f.pr.mergeable === 'MERGEABLE' ? null : skip(`mergeable is ${f.pr.mergeable}`)),
+  (f) => (unknownLockBase(f.files, f.behind) ? skip('what develop changed is not known') : null),
   (f) => {
     if (!staleLockBase(f.files, f.behind)) return null;
     return alreadyAsked(f.comments, f.pr.headRefOid)
