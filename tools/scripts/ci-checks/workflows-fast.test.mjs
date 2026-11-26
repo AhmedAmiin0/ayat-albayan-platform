@@ -125,7 +125,7 @@ test('release tags: only after a green release, no environment or secret, a fail
   assert.match(app.if, /needs\.deploy\.result == 'success' && !inputs\.env_only/);
   assert.match(phone.if, /needs\.build\.result == 'success' \|\| needs\.ota\.result == 'success'/);
   const step = (job, kind) => job.steps.find((s) => s.env?.KIND === kind);
-  assert.equal(step(app, 'app').env.SHA, '${{ github.event.workflow_run.head_sha || github.sha }}');
+  assert.equal(step(app, 'app').env.SHA, '${{ inputs.sha || github.event.workflow_run.head_sha || github.sha }}');
   assert.match(step(phone, 'apk').if, /^\$\{\{ needs\.build\.result == 'success' && /);
   assert.equal(step(phone, 'ota').if, "${{ needs.ota.result == 'success' }}");
   assert.equal(step(phone, 'ota').env.CHANNEL, mobile['run-name'].match(/\$\{\{ inputs\.app.*\}\}/)[0]);

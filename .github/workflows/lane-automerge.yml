@@ -123,7 +123,7 @@ jobs:
             gh pr merge "$n" --repo "$REPO" --squash --match-head-commit "$sha" \
               --subject "$(cat "$d/subject.txt")" --body-file "$d/body.txt" \
               || { echo "::warning::#$n: merge refused"; continue; }
-            # A merge with the built-in token starts no push workflow: start ci on develop so that
-            # deploy-staging (ci workflow_run, event workflow_dispatch on develop) still deploys it.
+            # A merge with the built-in token starts no push workflow: start ci on develop. That run
+            # starts deploy-staging itself once it is green (ci job «start-deploy»).
             gh workflow run ci.yml --repo "$REPO" --ref develop
           done
