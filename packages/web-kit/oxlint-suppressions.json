@@ -545,11 +545,6 @@
       "count": 6
     }
   },
-  "src/lib/i18n/i18n-overrides.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/lib/i18n/locale-strings.ts": {
     "complexity": {
       "count": 1
