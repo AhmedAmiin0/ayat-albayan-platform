@@ -1,4 +1,10 @@
-import type { PortalLesson, PortalReport, PortalStudent, ReportPageView } from '@ab/shared';
+import type {
+  PortalHistoryRow,
+  PortalLesson,
+  PortalReport,
+  PortalStudent,
+  ReportPageView,
+} from '@ab/shared';
 
 // Sample family data for the app's tests (names made up).
 
@@ -78,4 +84,17 @@ export const reportPage = (over: Partial<ReportPageView['report']> = {}): Report
   },
   attachments: [],
   pdf: { url: 'https://files.example/report.pdf' },
+});
+
+/** A past lesson attended with its sent report and no recording. */
+export const historyRow = (over: Partial<PortalHistoryRow> = {}): PortalHistoryRow => ({
+  lesson_id: '22222222-2222-4222-8222-222222222222',
+  starts_at: '2026-11-04T14:00:00Z',
+  ends_at: '2026-11-04T14:45:00Z',
+  teacher: { display_name_ar: 'فاطمة', display_name_en: null },
+  outcome: 'attended',
+  absence_reason: null,
+  report_id: '33333333-3333-4333-8333-333333333333',
+  recording_id: null,
+  ...over,
 });
