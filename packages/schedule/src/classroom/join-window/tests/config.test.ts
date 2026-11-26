@@ -15,7 +15,10 @@ describe('joinWindow with the settings (join_opens_before_min / join_closes_afte
   });
 
   it('joinWindowConfig reads the two settings; the defaults give DEFAULT_JOIN_WINDOW', () => {
-    expect(joinWindowConfig({ join_opens_before_min: 5, join_closes_after_min: 30 })).toEqual({ opensBeforeMin: 5, closesAfterMin: 30 });
+    expect(joinWindowConfig({ join_opens_before_min: 5, join_closes_after_min: 30 })).toEqual({
+      opensBeforeMin: 5,
+      closesAfterMin: 30,
+    });
     const defaults = { join_opens_before_min: 15, join_closes_after_min: 120 };
     expect(joinWindowConfig(defaults)).toEqual(DEFAULT_JOIN_WINDOW);
   });

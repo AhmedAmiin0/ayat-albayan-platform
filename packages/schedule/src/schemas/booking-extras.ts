@@ -44,7 +44,10 @@ export const bookingExtras = {
 export type InvoiceInput = z.infer<typeof invoiceInputSchema>;
 export type InvoiceUpload = z.infer<typeof invoiceUploadSchema>;
 
-export function bookingKindOf(req: { kind?: BookingKind | undefined; package?: string | undefined }): BookingKind {
+export function bookingKindOf(req: {
+  kind?: BookingKind | undefined;
+  package?: string | undefined;
+}): BookingKind {
   return req.kind ?? (req.package === 'trial' ? 'trial' : 'package');
 }
 
@@ -95,7 +98,8 @@ type KindFacts = {
 function makeupProblems(req: KindFacts): string[] {
   const out: string[] = [];
   if (req.makeupOfLessonId === undefined) out.push('makeupOfLessonId:makeup_lesson_required');
-  const single = req.studentIds?.length === 1 && req.leadId === undefined && req.newStudent === undefined;
+  const single =
+    req.studentIds?.length === 1 && req.leadId === undefined && req.newStudent === undefined;
   if (!single) out.push('studentIds:makeup_one_student');
   return out;
 }

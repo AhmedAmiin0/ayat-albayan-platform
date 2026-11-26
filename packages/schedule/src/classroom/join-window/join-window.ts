@@ -5,7 +5,10 @@ export interface JoinWindowConfig {
 }
 
 /** settings.join_opens_before_min / join_closes_after_min → the window joinWindow takes. */
-export const joinWindowConfig = (s: { join_opens_before_min: number; join_closes_after_min: number }): JoinWindowConfig => ({
+export const joinWindowConfig = (s: {
+  join_opens_before_min: number;
+  join_closes_after_min: number;
+}): JoinWindowConfig => ({
   opensBeforeMin: s.join_opens_before_min,
   closesAfterMin: s.join_closes_after_min,
 });
@@ -38,20 +41,33 @@ export interface WindowLesson {
  * Window of a lesson at `now`. Edges are inclusive, so the boundary minute still joins. A room
  * opened early by staff opens at min(room_opened_at, starts_at − opensBeforeMin).
  */
-export function joinWindow(lesson: WindowLesson, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): JoinWindow {
+export function joinWindow(
+  lesson: WindowLesson,
+  now: Date,
+  win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
+): JoinWindow {
   const usual = Date.parse(lesson.starts_at) - win.opensBeforeMin * MIN_MS;
   const opened = lesson.room_opened_at ? Date.parse(lesson.room_opened_at) : Number.NaN;
   const opens = Number.isNaN(opened) ? usual : Math.min(opened, usual);
   const closes = Date.parse(lesson.ends_at) + win.closesAfterMin * MIN_MS;
   const t = now.getTime();
   const state: JoinState = t < opens ? 'early' : t > closes ? 'closed' : 'open';
-  return { state, opens_at: new Date(opens).toISOString(), closes_at: new Date(closes).toISOString() };
+  return {
+    state,
+    opens_at: new Date(opens).toISOString(),
+    closes_at: new Date(closes).toISOString(),
+  };
 }
 
 /** What the join buttons check; the API checks again. */
-export const canJoinNow = (lesson: WindowLesson, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): boolean =>
-  joinWindow(lesson, now, win).state === 'open';
+export const canJoinNow = (
+  lesson: WindowLesson,
+  now: Date,
+  win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
+): boolean => joinWindow(lesson, now, win).state === 'open';
 
 /** The instant a lesson's room closes (a guest link expires then). */
-export const roomClosesAt = (lesson: { ends_at: string }, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): string =>
-  new Date(Date.parse(lesson.ends_at) + win.closesAfterMin * MIN_MS).toISOString();
+export const roomClosesAt = (
+  lesson: { ends_at: string },
+  win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
+): string => new Date(Date.parse(lesson.ends_at) + win.closesAfterMin * MIN_MS).toISOString();

@@ -32,7 +32,8 @@ export interface DayTimesInput {
 export function timeGroups(input: DayTimesInput): TimeGroup[] {
   const out = new Map<string, number[]>();
   for (const day of [...input.byday].sort((a, b) => a - b)) {
-    const time = input.dayTimes?.find((d) => d.weekday === day)?.startTimeLocal ?? input.startTimeLocal;
+    const time =
+      input.dayTimes?.find((d) => d.weekday === day)?.startTimeLocal ?? input.startTimeLocal;
     out.set(time, [...(out.get(time) ?? []), day]);
   }
   return [...out].map(([startTimeLocal, byday]) => ({ startTimeLocal, byday }));

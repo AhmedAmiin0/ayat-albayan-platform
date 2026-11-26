@@ -2,7 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { firstName, instantLessonSchema, studentJoinSchema } from './meetings';
 import { pickStudentLesson } from './student-lesson';
 
-const lesson = (id: string, start: string, end: string) => ({ id, starts_at: start, ends_at: end, room_opened_at: null as string | null });
+const lesson = (id: string, start: string, end: string) => ({
+  id,
+  starts_at: start,
+  ends_at: end,
+  room_opened_at: null as string | null,
+});
 const A = lesson('a', '2026-10-05T16:00:00.000Z', '2026-10-05T17:00:00.000Z');
 const B = lesson('b', '2026-10-05T17:00:00.000Z', '2026-10-05T18:00:00.000Z');
 const C = lesson('c', '2026-10-07T16:00:00.000Z', '2026-10-07T17:00:00.000Z');
@@ -41,14 +46,29 @@ describe('meeting schemas', () => {
   const ids = ['8f9c1c1e-3c2a-4a43-9d38-1b8c4d1e2f30', '5d1f0c5a-2b7e-4f5b-8a1d-0f0e7c9b6a21'];
 
   it('accepts an instant lesson with students, teacher and an allowed duration', () => {
-    const ok = instantLessonSchema.safeParse({ studentIds: [ids[0]], teacherId: ids[1], durationMin: 30 });
+    const ok = instantLessonSchema.safeParse({
+      studentIds: [ids[0]],
+      teacherId: ids[1],
+      durationMin: 30,
+    });
     expect(ok.success).toBe(true);
   });
 
   it('refuses no students, repeated students and a duration outside DURATIONS', () => {
-    expect(instantLessonSchema.safeParse({ studentIds: [], teacherId: ids[1], durationMin: 30 }).success).toBe(false);
-    expect(instantLessonSchema.safeParse({ studentIds: [ids[0], ids[0]], teacherId: ids[1], durationMin: 30 }).success).toBe(false);
-    expect(instantLessonSchema.safeParse({ studentIds: [ids[0]], teacherId: ids[1], durationMin: 25 }).success).toBe(false);
+    expect(
+      instantLessonSchema.safeParse({ studentIds: [], teacherId: ids[1], durationMin: 30 }).success,
+    ).toBe(false);
+    expect(
+      instantLessonSchema.safeParse({
+        studentIds: [ids[0], ids[0]],
+        teacherId: ids[1],
+        durationMin: 30,
+      }).success,
+    ).toBe(false);
+    expect(
+      instantLessonSchema.safeParse({ studentIds: [ids[0]], teacherId: ids[1], durationMin: 25 })
+        .success,
+    ).toBe(false);
   });
 
   it('makes the student-link name optional but never blank', () => {
