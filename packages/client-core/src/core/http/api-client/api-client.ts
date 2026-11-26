@@ -5,8 +5,10 @@ import { CLIENT_HEADER } from '../client-header';
 import { withDeadline } from '../deadline';
 import { sendTimeoutFor } from '../timeouts';
 import type {
+  ApiBlob,
   ApiClient,
   ApiClientOptions,
+  BlobClient,
   SchemaInit,
   SendMethod,
   SendOptions,
@@ -18,21 +20,24 @@ const ignore = (): void => undefined;
 
 type FetchInit = RequestInit & { schema?: z.ZodType };
 
+/** The API's answer once it is 2xx; anything else throws ApiError with the parsed error body. */
+async function respond(opts: ApiClientOptions, path: string, init: RequestInit): Promise<Response> {
+  const token = await opts.accessToken();
+  const headers = new Headers(init.headers);
+  headers.set(CLIENT_HEADER, opts.clientTag());
+  // This build fills a MinIO slot (signed-upload.ts): the API may sign one (docs/45 §4 step 9).
+  headers.set(UPLOAD_CAPABILITY_HEADER, UPLOAD_SLOT_V2);
+  if (token) headers.set('Authorization', `Bearer ${token}`);
+  const send = opts.fetch ?? fetch;
+  const res = await send(`${opts.baseUrl()}${path}`, { ...init, headers });
+  if (!res.ok) throw new ApiError(res.status, (await readJson(res)) ?? null);
+  return res;
+}
+
 /** fetch against the Nest API with the access token and the client tag (`X-AB-Client`). */
-export function createApiClient(opts: ApiClientOptions): ApiClient {
-  async function request(path: string, init: RequestInit): Promise<unknown> {
-    const token = await opts.accessToken();
-    const headers = new Headers(init.headers);
-    headers.set(CLIENT_HEADER, opts.clientTag());
-    // This build fills a MinIO slot (signed-upload.ts): the API may sign one (docs/45 §4 step 9).
-    headers.set(UPLOAD_CAPABILITY_HEADER, UPLOAD_SLOT_V2);
-    if (token) headers.set('Authorization', `Bearer ${token}`);
-    const send = opts.fetch ?? fetch;
-    const res = await send(`${opts.baseUrl()}${path}`, { ...init, headers });
-    const body = await readJson(res);
-    if (!res.ok) throw new ApiError(res.status, body ?? null);
-    return body;
-  }
+export function createApiClient(opts: ApiClientOptions): ApiClient & BlobClient {
+  const request = async (path: string, init: RequestInit): Promise<unknown> =>
+    readJson(await respond(opts, path, init));
 
   function apiFetch<S extends z.ZodType>(path: string, init: SchemaInit<S>): Promise<z.output<S>>;
   function apiFetch<T>(path: string, init?: RequestInit): Promise<T>;
@@ -65,5 +70,11 @@ export function createApiClient(opts: ApiClientOptions): ApiClient {
     return withDeadline(send, { onTimeout: opts.onStall ?? ignore, timeoutMs });
   }
 
-  return { apiFetch, apiSend };
+  /** A file (CSV export…): its bytes and headers. No deadline: a large export takes its time. */
+  async function apiBlob(path: string, init: RequestInit = {}): Promise<ApiBlob> {
+    const res = await respond(opts, path, init);
+    return { blob: await res.blob(), headers: res.headers };
+  }
+
+  return { apiBlob, apiFetch, apiSend };
 }
