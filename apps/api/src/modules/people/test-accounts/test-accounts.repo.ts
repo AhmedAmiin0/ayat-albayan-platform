@@ -2,10 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
-
-/** Which row the switch is on: a student (students.id) or a login (profiles.id). */
-export type TestTarget = 'student' | 'profile';
+import { pgError } from '@/common/db/errors';
+import type { TestTarget } from './test-accounts.schemas';
 
 export interface TestFlagWrite {
   kind: TestTarget;
@@ -38,7 +36,7 @@ export class TestAccountsRepo {
       p_actor: write.actorId,
     });
     if (error?.code === MISMATCH) throw conflict('test_family_mismatch');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return flippedSchema.parse(data);
   }
 }

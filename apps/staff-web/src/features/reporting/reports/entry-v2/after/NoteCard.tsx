@@ -12,7 +12,8 @@ export interface NoteCardProps {
   report: ReportView;
 }
 
-const toggled = (list: readonly QuickNote[], q: QuickNote) => (list.includes(q) ? list.filter((x) => x !== q) : [...list, q]);
+const toggled = (list: readonly QuickNote[], q: QuickNote) =>
+  list.includes(q) ? list.filter((x) => x !== q) : [...list, q];
 
 export function NoteCard({ s, report }: NoteCardProps) {
   const v2 = t.reports.v2;
@@ -40,8 +41,13 @@ export function NoteCard({ s, report }: NoteCardProps) {
         className={cn(controlClass, 'field-sizing-content min-h-20 py-2 leading-relaxed')}
       />
       {attachments && (
-        <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments}
-          editable={!s.mode.locked} addLabel={t.reports.v2.attach} />
+        <AttachmentsField
+          reportId={report.id}
+          files={report.attachments}
+          onChange={s.setAttachments}
+          editable={!s.mode.locked}
+          addLabel={t.reports.v2.attach}
+        />
       )}
     </section>
   );

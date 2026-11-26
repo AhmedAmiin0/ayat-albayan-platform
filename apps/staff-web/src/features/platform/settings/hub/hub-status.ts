@@ -35,7 +35,9 @@ export function sameValue(a: unknown, b: unknown): boolean {
 const PUBLIC: ReadonlySet<string> = new Set(PUBLIC_SETTING_KEYS);
 
 export function valuesSummary(settings: AcademySettings): string {
-  const modified = EDITABLE_VALUE_KEYS.filter((k) => !sameValue(settings[k], SETTING_DEFAULTS[k])).length;
+  const modified = EDITABLE_VALUE_KEYS.filter(
+    (k) => !sameValue(settings[k], SETTING_DEFAULTS[k]),
+  ).length;
   const open = EDITABLE_VALUE_KEYS.filter((k) => PUBLIC.has(k)).length;
   return [
     counted(H.valuesCount, EDITABLE_VALUE_KEYS.length),
@@ -72,7 +74,9 @@ export function integrationChips(items: readonly IntegrationConfigItem[]): HubCh
 export function googleChips(status: GoogleStatusView): HubChip[] {
   if (!status.configured) return [{ tone: 'neutral', glyph: 'hollow', label: H.googleNotConfigured }];
   const account = status.connection.status;
-  const chips: HubChip[] = [{ ...accountStyle[account], label: t.googleSync.connection.status[account] }];
+  const chips: HubChip[] = [
+    { ...accountStyle[account], label: t.googleSync.connection.status[account] },
+  ];
   const sw = t.googleSync.switches;
   if (!status.settings.enabled) chips.push({ tone: 'neutral', glyph: 'struck', label: H.googleOff });
   else if (status.settings.mode === 'live') chips.push({ tone: 'ok', glyph: 'fill', label: sw.live });

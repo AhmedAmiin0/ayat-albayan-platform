@@ -7,18 +7,8 @@
       "count": 1
     }
   },
-  "src/auth/code/CodeBoxes.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/auth/code/CodeBoxes.tsx": {
     "typescript/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/auth/code/RequestStep.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -32,15 +22,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/auth/login/PasswordForm.tsx": {
     "max-lines-per-function": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/auth/login/auth-api.ts": {
@@ -62,22 +49,17 @@
       "count": 2
     }
   },
-  "src/auth/reset/ResetFlow.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/auth/reset/ResetFlow.tsx": {
     "max-lines-per-function": {
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/auth/reset/reset-checks.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/auth/session-activity.ts": {
@@ -90,46 +72,25 @@
       "count": 1
     }
   },
-  "src/auth/sign-out.timeout.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/auth/use-permissions.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/auth/use-permissions.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
   "src/classroom/api/api.ts": {
-    "no-restricted-globals": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     },
     "ab/no-untyped-api-calls": {
       "count": 9
-    },
-    "ab/no-shape-checks": {
-      "count": 1
     }
   },
   "src/classroom/api/moderation-api.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 2
     },
     "ab/no-untyped-api-calls": {
       "count": 2
-    }
-  },
-  "src/classroom/board/BoardStage.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/classroom/board/BoardToolbar.tsx": {
@@ -145,20 +106,12 @@
       "count": 1
     }
   },
-  "src/classroom/board/board-fixture.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/board/model/board-frames.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/classroom/board/model/draw.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/no-base-to-string": {
       "count": 2
     }
@@ -178,16 +131,13 @@
     "complexity": {
       "count": 3
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 3
     }
   },
   "src/classroom/board/model/model.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/classroom/board/model/reducer/reducer.ts": {
@@ -195,21 +145,13 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 2
     },
     "typescript/switch-exhaustiveness-check": {
       "count": 1
     }
   },
-  "src/classroom/board/use-board-share.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/board/use-board-share.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "typescript/no-confusing-void-expression": {
       "count": 1
     }
@@ -231,75 +173,21 @@
     }
   },
   "src/classroom/board/use-pen.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
   },
   "src/classroom/kick/use-kick.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
   },
   "src/classroom/mute/use-mute.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
   },
-  "src/classroom/recordings/RecordingsPanel.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/recordings/RecordingsPanel.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/components/ClassroomRoom/tests/boardRequest.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/components/ClassroomRoom/tests/en.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/components/ClassroomRoom/tests/recordingOff.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/components/ClassroomRoom/tests/share.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/components/ClassroomRoom/tests/shareRequest.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/room/components/ParticipantGrid.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/components/RoomStage.max.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/components/RoomStage.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -325,11 +213,6 @@
       "count": 2
     }
   },
-  "src/classroom/room/livekit/errors.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/room/livekit/errors.ts": {
     "complexity": {
       "count": 1
@@ -342,16 +225,13 @@
     }
   },
   "src/classroom/room/livekit/fake-client.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/no-confusing-void-expression": {
       "count": 5
     }
   },
   "src/classroom/room/livekit/livekit-data.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/classroom/room/livekit/livekit-room/livekit-room.ts": {
@@ -365,31 +245,8 @@
       "count": 1
     }
   },
-  "src/classroom/room/livekit/livekit-room/tests/livekit-room.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/classroom/room/livekit/media-attach.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/room/livekit/snapshot/snapshot.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/classroom/room/livekit/snapshot/tests/share.test.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/classroom/room/livekit/snapshot/tests/snapshot.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -407,24 +264,13 @@
     "max-lines-per-function": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/livekit/window-hint.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
   "src/classroom/share/share-messages.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -445,9 +291,6 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 3
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     },
@@ -465,14 +308,9 @@
   },
   "src/classroom/stage/use-maximize.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/components/channel/ChannelThread/tests/ChannelThread.test.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -489,11 +327,6 @@
   "src/components/channel/edit/edit-api.ts": {
     "ab/no-untyped-api-calls": {
       "count": 2
-    }
-  },
-  "src/components/channel/use-channel-live.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/components/ui/display/avatar.tsx": {
@@ -534,20 +367,10 @@
       "count": 1
     }
   },
-  "src/components/ui/form/button.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/components/ui/form/field.tsx": {
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/components/ui/form/input.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -585,11 +408,6 @@
       "count": 1
     }
   },
-  "src/components/ui/layout/pager.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/components/ui/layout/pager.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -602,7 +420,7 @@
   },
   "src/components/ui/layout/running-head.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -610,9 +428,6 @@
   },
   "src/components/ui/layout/scroll-x.tsx": {
     "jsx-a11y/no-noninteractive-tabindex": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -627,7 +442,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/components/ui/layout/theme-toggle.test.tsx": {
@@ -637,14 +452,9 @@
   },
   "src/components/ui/layout/use-narrow.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/components/ui/overlay/ConfirmSwitchDialog.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -664,15 +474,7 @@
       "count": 1
     }
   },
-  "src/components/ui/overlay/dialog-layout.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/components/ui/overlay/dialog.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
@@ -683,9 +485,6 @@
     },
     "jsx-a11y/no-static-element-interactions": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/components/ui/overlay/toast.test.tsx": {
@@ -695,11 +494,6 @@
   },
   "src/components/ui/overlay/toast.tsx": {
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/components/ui/overlay/use-dismiss.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -751,11 +545,6 @@
       "count": 6
     }
   },
-  "src/lib/http/env/tests/env.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/lib/i18n/i18n-overrides.ts": {
     "no-restricted-globals": {
       "count": 1
@@ -774,9 +563,6 @@
     "max-depth": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-shape-checks": {
       "count": 2
     },
@@ -787,11 +573,6 @@
   "src/lib/i18n/locale.test.ts": {
     "typescript/no-misused-spread": {
       "count": 2
-    }
-  },
-  "src/lib/i18n/teacher-label.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/lib/settings/public-config.ts": {
@@ -812,24 +593,9 @@
       "count": 2
     }
   },
-  "src/portal/lessons/LessonWhen.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/portal/open-file.ts": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/portal/portal.render.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/push/WebPushToggle.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/push/WebPushToggle.tsx": {
@@ -843,26 +609,18 @@
     }
   },
   "src/push/sw.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "typescript/no-implied-eval": {
       "count": 1
     }
   },
   "src/push/use-web-push.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/push/web-push-api.ts": {
     "ab/no-untyped-api-calls": {
       "count": 2
-    }
-  },
-  "src/push/web-push-session.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/push/web-push-session.ts": {
@@ -890,15 +648,7 @@
     }
   },
   "src/push/web-push.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/styles/tokens.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },

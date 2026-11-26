@@ -28,7 +28,10 @@ export function parseSubscriptionsSearch(s: Record<string, unknown>): Subscripti
 }
 
 /** The table's server sort and column filters (API keys) of a parsed URL. */
-export function subscriptionsTable(s: SubscriptionsUrlSearch): { sort: SortSearch; filters: FilterSearch } {
+export function subscriptionsTable(s: SubscriptionsUrlSearch): {
+  sort: SortSearch;
+  filters: FilterSearch;
+} {
   const sort: SortSearch = s.sort ? { sort: s.sort, ...(s.dir ? { dir: s.dir } : {}) } : {};
   const filters: FilterSearch = {};
   if (s.f_student) filters['student'] = s.f_student;

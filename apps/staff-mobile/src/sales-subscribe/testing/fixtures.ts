@@ -19,7 +19,9 @@ export const MSG = '99999999-9999-4999-8999-999999999999';
 
 export const familyThread = { ...thread, phone_e164: PHONE, guardian_id: 'g-9', lead_id: null, lead_status: null, guardian_tz: 'Asia/Riyadh' };
 
-export function openSub(fields: Partial<SalesMoneySubscriptionView> = {}): SalesMoneySubscriptionView {
+export function openSub(
+  fields: Partial<SalesMoneySubscriptionView> = {},
+): SalesMoneySubscriptionView {
   return {
     id: SUB,
     student: { id: KID, code: 'AB-0201', name: 'ريم' },

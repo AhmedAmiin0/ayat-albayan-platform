@@ -76,7 +76,9 @@ describe('the audio around a call', () => {
     await act(async () => prompt.resolve('granted'));
     await waitFor(() => expect(rtc.peers).toHaveLength(1));
     expect(rtc.track.enabled).toBe(false);
-    expect(mode).toHaveBeenLastCalledWith(expect.objectContaining({ allowsRecording: true, shouldRouteThroughEarpiece: false }));
+    expect(mode).toHaveBeenLastCalledWith(
+      expect.objectContaining({ allowsRecording: true, shouldRouteThroughEarpiece: false }),
+    );
   });
 
   it('a refused microphone after the speaker was chosen restores the playback mode, and says so', async () => {
@@ -100,7 +102,12 @@ describe('the server rows', () => {
   it('a slow poll begun before the call existed does not end it', async () => {
     const slow = deferred<ReturnType<typeof ringing>[]>();
     let first = true;
-    mockFetch.mockImplementation(routes({ config: ON, active: () => (first ? ((first = false), slow.promise) : Promise.resolve([placed])) }));
+    mockFetch.mockImplementation(
+      routes({
+        config: ON,
+        active: () => (first ? ((first = false), slow.promise) : Promise.resolve([placed])),
+      }),
+    );
     await mount();
     await fireEvent.press(await screen.findByTestId('call-button'));
     await waitFor(() => expect(sentTo('/calls')).toBe(true));

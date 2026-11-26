@@ -23,7 +23,12 @@ interface PagedQuery {
  * stable across renders: FlashList and memo rows get the same function until a page boundary.
  * `pulling`: the viewer's own pull is running (the spinner), never a background refetch.
  */
-export function usePagedActions({ hasNextPage, isFetchingNextPage, fetchNextPage, refetch }: PagedQuery) {
+export function usePagedActions({
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
+  refetch,
+}: PagedQuery) {
   const loadMore = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) void fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);

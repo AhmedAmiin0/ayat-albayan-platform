@@ -28,7 +28,9 @@ beforeEach(() => {
   mockApiSend.mockReset();
   mockLists = [PAID];
   const threads = (p: string) => (p.includes('list=') ? page([]) : page());
-  mockApiFetch.mockImplementation((p: string) => answer({ me: withLists, lists: mockLists, threads })(p));
+  mockApiFetch.mockImplementation((p: string) =>
+    answer({ me: withLists, lists: mockLists, threads })(p),
+  );
 });
 
 test('«إنشاء» stays off until the name has a character; spaces alone do not count', async () => {

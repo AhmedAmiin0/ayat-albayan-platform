@@ -20,7 +20,10 @@ type Handlers = {
 };
 
 /** Also used by the teacher's own statements. */
-export const payoutStatusOptions: FilterOption[] = PAYOUT_STATUSES.map((s) => ({ value: s, label: t.enums.payoutStatus[s] }));
+export const payoutStatusOptions: FilterOption[] = PAYOUT_STATUSES.map((s) => ({
+  value: s,
+  label: t.enums.payoutStatus[s],
+}));
 
 /** The breakdown stored at generate time. */
 export function breakdownLines(p: PayoutView): string[] {

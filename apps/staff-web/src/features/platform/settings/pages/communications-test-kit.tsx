@@ -40,7 +40,14 @@ interface HarnessProps {
 
 function Harness({ initial, audience, renderGuard }: HarnessProps) {
   const [tab, setTab] = useState<CommunicationsTab>(initial);
-  return <CommunicationsPage tab={tab} audience={audience} onTab={setTab} {...(renderGuard ? { renderGuard } : {})} />;
+  return (
+    <CommunicationsPage
+      tab={tab}
+      audience={audience}
+      onTab={setTab}
+      {...(renderGuard ? { renderGuard } : {})}
+    />
+  );
 }
 
 /** The first matching prefix wins. */

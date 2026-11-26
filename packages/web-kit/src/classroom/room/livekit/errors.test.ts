@@ -8,7 +8,9 @@ const named = (name: string) => Object.assign(new Error(name), { name });
 describe('classroom error mapping', () => {
   it.each(['join_closed', 'link_expired', 'template_not_approved', 'forbidden', 'too_many_requests'])('%s has its own line', (code) => {
     expect(classroomErrorKey(code)).toBe(code);
-    expect(classroomErrorText(new ApiError(400, { code }))).toBe(t.classroom.error[code as keyof typeof t.classroom.error]);
+    expect(classroomErrorText(new ApiError(400, { code }))).toBe(
+      t.classroom.error[code as keyof typeof t.classroom.error],
+    );
   });
 
   it('anything else reads «حصلت مشكلة»', () => {

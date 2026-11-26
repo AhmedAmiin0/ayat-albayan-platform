@@ -71,7 +71,15 @@ describe('settings form (generated from the settings registry)', () => {
   });
 
   it('a stored value shows as stored', () => {
-    const form = settingsForm({ ...SETTING_DEFAULTS, late_cancel_hours: 6, join_closes_after_min: 30 });
-    expect([form['lateCancelHoursOn'], form['lateCancelHours'], form['joinClosesAfterMin']]).toEqual([true, '6', '30']);
+    const form = settingsForm({
+      ...SETTING_DEFAULTS,
+      late_cancel_hours: 6,
+      join_closes_after_min: 30,
+    });
+    expect([
+      form['lateCancelHoursOn'],
+      form['lateCancelHours'],
+      form['joinClosesAfterMin'],
+    ]).toEqual([true, '6', '30']);
   });
 });

@@ -1,7 +1,7 @@
 import type { Gender, Program } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError, rows } from '@/common/db/errors';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 
 type TeacherOptionRow = {
@@ -34,7 +34,7 @@ export class TeacherOptionsRepo {
       .contains('programs', [f.program]);
     if (f.gender) query = query.eq('gender', f.gender);
     const { data, error } = await query.order('display_name_ar').order('id');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -46,11 +46,10 @@ export class TeacherOptionsRepo {
   /** Teachers among `teacherIds` with at least one weekly availability row (all of them while 24/7 is on). */
   async withAvailability(teacherIds: readonly string[]): Promise<Set<string>> {
     if ((await this.settings.read()).teachers_always_available) return new Set(teacherIds);
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('teacher_availability')
       .select('teacher_id')
-      .in('teacher_id', teacherIds);
-    if (error) throw dbError(error);
+      .in('teacher_id', teacherIds));
     return new Set(data.map((r) => r.teacher_id));
   }
 }

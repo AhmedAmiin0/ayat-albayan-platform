@@ -1,3 +1,4 @@
+import { payoutViewSchema } from '@ab/money';
 import { Linking } from 'react-native';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t, isolate } from '@ab/mobile-kit';
@@ -18,19 +19,29 @@ jest.mock('@/core/ui/form/ReceiptPicker', () => {
   const { Pressable, View } = jest.requireActual('react-native');
   return {
     ReceiptPicker: ({ onChange }: { onChange: (r: unknown) => void }) => (
-      <View><Pressable accessibilityRole="button" accessibilityLabel="pick" onPress={() => onChange(mockPicked)} /></View>
+      <View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="pick"
+          onPress={() => onChange(mockPicked)}
+        />
+      </View>
     ),
   };
 });
 const mockUpload = jest.fn();
-jest.mock('@/earnings/hooks/upload-receipt', () => ({ uploadTeacherReceipt: (...a: unknown[]) => mockUpload(...a) }));
+jest.mock('@/earnings/hooks/upload-receipt', () => ({
+  uploadTeacherReceipt: (...a: unknown[]) => mockUpload(...a),
+}));
 
 let mockOpen: jest.SpyInstance;
 beforeEach(() => {
   jest.clearAllMocks();
   mockOpen = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
   mockApiFetch.mockImplementation((p: string) =>
-    Promise.resolve(p.includes('/receipt') ? { url: 'https://files/r.jpg', expires_at: 'x' } : [APPROVED, PAID]),
+    Promise.resolve(
+      p.includes('/receipt') ? { url: 'https://files/r.jpg', expires_at: 'x' } : [APPROVED, PAID],
+    ),
   );
 });
 
@@ -47,7 +58,10 @@ test('«تأكيد الدفع» uploads the receipt once and POSTs method, day, 
   await fireEvent.press(screen.getByText(t.finance.confirmPaid));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalled());
   expect(mockUpload).toHaveBeenCalledWith('t2', mockPicked);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payouts/p2/pay', expect.objectContaining({ method: 'wallet', note: 'محفظة', receiptPath: 't2/r.jpg' }));
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payouts/p2/pay', {
+    body: expect.objectContaining({ method: 'wallet', note: 'محفظة', receiptPath: 't2/r.jpg' }),
+    schema: payoutViewSchema,
+  });
   expect(await screen.findByText(t.mobileFinance.payouts.done.pay)).toBeTruthy();
 });
 
@@ -68,8 +82,14 @@ test('a refused payment keeps the form and the receipt is not uploaded again on 
 test('a paid month shows how it was paid and opens its receipt through a signed link', async () => {
   await renderWithQuery(<PayoutsScreen />);
   await fireEvent.press(await screen.findByText('هدى'));
-  expect(screen.getByText(t.mobileFinance.payouts.method.replace('{method}', t.enums.paymentMethod.bank))).toBeTruthy();
-  expect(screen.getByText(t.mobileFinance.payouts.note.replace('{note}', isolate('دفعة أكتوبر')))).toBeTruthy();
+  expect(
+    screen.getByText(
+      t.mobileFinance.payouts.method.replace('{method}', t.enums.paymentMethod.bank),
+    ),
+  ).toBeTruthy();
+  expect(
+    screen.getByText(t.mobileFinance.payouts.note.replace('{note}', isolate('دفعة أكتوبر'))),
+  ).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.earnings.viewReceipt }));
   await waitFor(() => expect(mockOpen).toHaveBeenCalledWith('https://files/r.jpg'));
 });

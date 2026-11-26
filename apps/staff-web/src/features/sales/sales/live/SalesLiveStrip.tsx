@@ -4,7 +4,13 @@ import { t } from '@ab/web-kit';
 import { salesLiveQuery } from '@/features/sales/sales/academy-api';
 
 /** Hidden while loading, on error or without the scope key; compact uses a router Link. */
-export function SalesLiveStrip({ enabled, compact = false }: { enabled: boolean; compact?: boolean }) {
+export function SalesLiveStrip({
+  enabled,
+  compact = false,
+}: {
+  enabled: boolean;
+  compact?: boolean;
+}) {
   const live = useQuery({ ...salesLiveQuery, enabled });
   const n = live.data?.length ?? 0;
   if (!enabled || n === 0) return null;

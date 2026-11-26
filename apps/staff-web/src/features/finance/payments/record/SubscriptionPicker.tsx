@@ -41,7 +41,10 @@ export function SubscriptionPicker({ student, onStudent, picked, onPick }: Props
           {t.finance.changeStudent}
         </button>
       </p>
-      <Field label={t.payments.mobile.chooseSubscription} hint={list.isSuccess && open.length === 0 ? t.finance.noOpenPackages : undefined}>
+      <Field
+        label={t.payments.mobile.chooseSubscription}
+        hint={list.isSuccess && open.length === 0 ? t.finance.noOpenPackages : undefined}
+      >
         {(p) => (
           <Select {...p} value={picked?.id ?? ''} onChange={(e) => onPick(open.find((s) => s.id === e.target.value) ?? null)}>
             <option value="" disabled>

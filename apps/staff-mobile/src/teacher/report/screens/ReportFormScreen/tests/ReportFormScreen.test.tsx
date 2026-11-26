@@ -21,7 +21,9 @@ const mockPick = jest.fn();
 jest.mock('@/core/lib/receipts/receipt', () => ({ pickReceipt: (s: string) => mockPick(s) }));
 const mockUpload = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
-  supabase: { storage: { from: () => ({ uploadToSignedUrl: (...a: unknown[]) => mockUpload(...a) }) } },
+  supabase: {
+    storage: { from: () => ({ uploadToSignedUrl: (...a: unknown[]) => mockUpload(...a) }) },
+  },
 }));
 
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };

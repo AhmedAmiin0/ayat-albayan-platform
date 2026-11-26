@@ -34,7 +34,10 @@ export interface SettingsFormOptions {
 }
 
 /** Save sends only the page's changed keys, so values saved elsewhere are never overwritten. */
-export function useSettingsForm(settings: AcademySettings, options: SettingsFormOptions): SettingsFormState {
+export function useSettingsForm(
+  settings: AcademySettings,
+  options: SettingsFormOptions,
+): SettingsFormState {
   const keys = options.keys ?? FORM_KEYS;
   const queryClient = useQueryClient();
   const [pair, setPair] = useState<FormPair>(() => {
@@ -63,9 +66,15 @@ export function useSettingsForm(settings: AcademySettings, options: SettingsForm
         const moved = movedKeys(res, sent);
         const invalid = invalidKeys(res, sent);
         const written = sent.filter((k) => !moved.includes(k) && !invalid.includes(k));
-        setErrors(Object.fromEntries(invalid.map((k) => [SETTING_FIELD_OF[k], t.settings.invalid])));
+        setErrors(
+          Object.fromEntries(invalid.map((k) => [SETTING_FIELD_OF[k], t.settings.invalid])),
+        );
         setPair((p) => afterSave(p, written, snapshot));
-        for (const queryKey of [CONFIG_QUERY_KEYS.settings, CONFIG_QUERY_KEYS.settingsMeta, CONFIG_QUERY_KEYS.publicConfig]) {
+        for (const queryKey of [
+          CONFIG_QUERY_KEYS.settings,
+          CONFIG_QUERY_KEYS.settingsMeta,
+          CONFIG_QUERY_KEYS.publicConfig,
+        ]) {
           void queryClient.invalidateQueries({ queryKey });
         }
         if (written.length > 0 || moved.length > 0) options.onSaved({ moved });

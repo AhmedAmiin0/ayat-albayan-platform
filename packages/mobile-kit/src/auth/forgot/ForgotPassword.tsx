@@ -19,7 +19,13 @@ function IdentifierStep({ forgot, mode }: StepProps) {
   const words = forgotWords(mode);
   return (
     <>
-      <AppText style={{ fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 }}>
+      <AppText
+        style={{
+          fontSize: type.size.sm,
+          lineHeight: type.lineHeight(type.size.sm),
+          color: color.ink2,
+        }}
+      >
         {words.intro}
       </AppText>
       <Field
@@ -65,7 +71,12 @@ export function ForgotPassword({ onBack, mode = 'staff' }: ForgotPasswordProps) 
     <>
       <AppText
         accessibilityRole="header"
-        style={{ fontFamily: type.ui[600], fontSize: type.size.h3, lineHeight: type.lineHeight(type.size.h3, true), color: color.ink }}
+        style={{
+          fontFamily: type.ui[600],
+          fontSize: type.size.h3,
+          lineHeight: type.lineHeight(type.size.h3, true),
+          color: color.ink,
+        }}
       >
         {forgotWords(mode).title}
       </AppText>

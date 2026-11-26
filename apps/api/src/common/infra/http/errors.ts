@@ -1,15 +1,18 @@
+import { z } from 'zod';
 import type { HttpFailure } from './failure';
 
 // A profile's status → domain error mapping, as data (docs/36 H-3): no if-chains in the callers.
 
-type TableKey = number | '4xx' | '5xx' | 'timeout' | 'network' | 'shape';
+const bandSchema = z.enum(['4xx', '5xx']);
+
+type TableKey = number | z.infer<typeof bandSchema> | 'timeout' | 'network' | 'shape';
 type Build<E extends Error> = (failure: HttpFailure) => E;
 
 export type ErrorTable<E extends Error> = Partial<Record<TableKey, Build<E>>> & {
   default: Build<E>;
 };
 
-const BANDS: Readonly<Record<string, '4xx' | '5xx'>> = { '4': '4xx', '5': '5xx' };
+const BANDS = z.record(z.string(), bandSchema).readonly().decode({ '4': '4xx', '5': '5xx' });
 
 /** 404 → '4xx', 503 → '5xx', anything else no band. */
 function bandOf(status: number): readonly TableKey[] {

@@ -13,7 +13,8 @@ export const remainingLabel = (n: number | null | undefined): string =>
   n === null || n === undefined ? s.noPackage : s.remainingN.replace('{n}', String(n));
 
 const text = { kind: 'text' } as const;
-const packageOptions = () => STUDENT_PACKAGE_FILTERS.map((p) => ({ value: p, label: s.packageFilter[p] }));
+const packageOptions = () =>
+  STUDENT_PACKAGE_FILTERS.map((p) => ({ value: p, label: s.packageFilter[p] }));
 const weeklyOptions = () => [
   { value: 'yes', label: s.weeklyYes },
   { value: 'no', label: s.weeklyNo },
@@ -41,7 +42,12 @@ export const teacherStudentColumns = col.columns([
   }),
   col.accessor('status', {
     header: () => s.status,
-    cell: (c) => <StatusChip {...studentStatusStyle[c.getValue()]} label={t.enums.studentStatus[c.getValue()]} />,
+    cell: (c) => (
+      <StatusChip
+        {...studentStatusStyle[c.getValue()]}
+        label={t.enums.studentStatus[c.getValue()]}
+      />
+    ),
     meta: { className: 'max-sm:order-2', sortKey: 'status' },
   }),
   col.accessor('package_remaining', {

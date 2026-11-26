@@ -41,7 +41,14 @@ export function LineDrivers() {
       {!canWrite && <Note>{h.driverReadOnly}</Note>}
       <View style={{ gap: 12 }}>
         {WA_LINES.map((line) => (
-          <LineDriverRow key={line} line={line} items={items} canWrite={canWrite} busy={save.isPending} onSave={onSave} />
+          <LineDriverRow
+            key={line}
+            line={line}
+            items={items}
+            canWrite={canWrite}
+            busy={save.isPending}
+            onSave={onSave}
+          />
         ))}
       </View>
       {said && (

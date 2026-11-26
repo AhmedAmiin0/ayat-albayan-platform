@@ -24,7 +24,12 @@ test('blocked: the API’s reason first, no subscription, or no days a week to p
 });
 
 test('the request: a package for the one student, the plan’s size and length, a time per day', () => {
-  const body = courseRequest({ view: courseView(), teacherId: maryam.id, picks: [THU_18, SUN_17], requestId: REQ });
+  const body = courseRequest({
+    view: courseView(),
+    teacherId: maryam.id,
+    picks: [THU_18, SUN_17],
+    requestId: REQ,
+  });
   expect(body).toEqual({
     kind: 'package',
     studentIds: [STUDENT_ID],
@@ -40,21 +45,44 @@ test('the request: a package for the one student, the plan’s size and length, 
     clientRequestId: REQ,
   });
   expect(bookingRequestSchema.safeParse(body).success).toBe(true);
-  const same = courseRequest({ view: courseView(), teacherId: maryam.id, picks: [SUN_17, TUE_17], requestId: REQ });
+  const same = courseRequest({
+    view: courseView(),
+    teacherId: maryam.id,
+    picks: [SUN_17, TUE_17],
+    requestId: REQ,
+  });
   expect(same).not.toHaveProperty('dayTimes');
-  expect(courseRequest({ view: courseView(), teacherId: maryam.id, picks: [], requestId: REQ })).toBeNull();
+  expect(
+    courseRequest({ view: courseView(), teacherId: maryam.id, picks: [], requestId: REQ }),
+  ).toBeNull();
 });
 
 test('a custom count (24 lessons, 6 days) books its days; the body’s package only fills the schema', () => {
-  const body = courseRequest({ view: custom(24, 6), teacherId: maryam.id, picks: [SUN_17, TUE_17], requestId: REQ });
-  expect(body).toMatchObject({ kind: 'package', byday: [0, 2], durationMin: 60, package: '8', clientRequestId: REQ });
+  const body = courseRequest({
+    view: custom(24, 6),
+    teacherId: maryam.id,
+    picks: [SUN_17, TUE_17],
+    requestId: REQ,
+  });
+  expect(body).toMatchObject({
+    kind: 'package',
+    byday: [0, 2],
+    durationMin: 60,
+    package: '8',
+    clientRequestId: REQ,
+  });
   expect(bookingRequestSchema.safeParse(body).success).toBe(true);
   // The label comes from the subscription (24 lessons), never from that body value.
   expect(courseRows({ view: custom(24, 6), teacherName: 'مريم', body, viewer: R24 })[2]?.[1]).toContain(counted(t.schedule.lessonCount, 24));
 });
 
 test('the course ends on its lessons_total-th lesson over every day', () => {
-  const body = courseRequest({ view: courseView(), teacherId: maryam.id, picks: [SUN_17, THU_18], requestId: REQ });
+  const body = courseRequest({
+    view: courseView(),
+    teacherId: maryam.id,
+    picks: [SUN_17, THU_18],
+    requestId: REQ,
+  });
   if (!body) throw new Error('no body');
   // Sun 4, Thu 8, Sun 11, Thu 15, Sun 18, Thu 22, Sun 25, Thu 29 Oct.
   expect(courseEnd(body, 8)).toBe('2026-10-29');
@@ -65,7 +93,11 @@ test('the review: the «الباقة» row holds the plan itself, no prefix', ()
   expect(courseFixedText(courseView().subscription)).toBe(`${t.enums.packageSize['8']} · ${minutes('45')}`);
   expect(courseFixedText(custom(24, 6).subscription)).toBe(`${counted(t.schedule.lessonCount, 24)} · ${minutes('60')}`);
   const rows = courseRows({ view: courseView(), teacherName: 'مريم', body: null, viewer: R24 });
-  expect(rows.map(([label]) => label)).toEqual([t.booking.studentSection, t.booking.steps.teacher, t.booking.steps.package]);
+  expect(rows.map(([label]) => label)).toEqual([
+    t.booking.studentSection,
+    t.booking.steps.teacher,
+    t.booking.steps.package,
+  ]);
   expect(rows[2]?.[1]).not.toContain(t.booking.steps.package);
 });
 

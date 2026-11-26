@@ -45,7 +45,14 @@ export function PackageDaysNote({ pkg, days }: { pkg: TrialDraft['pkg']; days: n
   if (!note) return null;
   return (
     <View style={{ borderStartWidth: 3, borderStartColor: color.goldSoft, paddingStart: 10 }}>
-      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.act }}>
+      <AppText
+        style={{
+          fontFamily: type.ui[600],
+          fontSize: type.size.xs,
+          lineHeight: type.lineHeight(type.size.xs),
+          color: color.act,
+        }}
+      >
         {note}
       </AppText>
     </View>

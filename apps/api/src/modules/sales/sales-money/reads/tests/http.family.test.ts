@@ -25,12 +25,13 @@ describe('GET /sales/money/family: her students of this chat, with the packages 
   });
 
   it('only her own child (not the sibling brought by someone else), with its unpaid package, whitelisted', async () => {
-    m.subs.list.mockResolvedValue({ items: [subRow()], total: 1, page: 1, pageSize: 20 });
+    m.subs.forStudent.mockResolvedValue([subRow()]);
     m.subs.paid.mockResolvedValue(new Map([[SUB_ID, 45]]));
     const res = await call({ method: 'GET', url: URL, token: 'salesA' });
     expect(res.statusCode).toBe(200);
     expect(m.family.studentsOfPhone).toHaveBeenCalledWith('+966551110000');
-    expect(m.subs.list).toHaveBeenCalledWith(expect.objectContaining({ studentId: STUDENT_ID, status: 'unpaid' }));
+    expect(m.subs.withStudentFor).toHaveBeenCalledWith([STUDENT_ID]);
+    expect(m.subs.list).not.toHaveBeenCalled();
     const [student, ...rest] = res.json().students;
     expect(rest).toEqual([]);
     expect(student).toMatchObject({ id: STUDENT_ID, status: 'trial', open: [{ id: SUB_ID, price: 145, paid: 45, due: 100 }] });
@@ -39,18 +40,29 @@ describe('GET /sales/money/family: her students of this chat, with the packages 
   });
 
   it('a package already paid in full is not offered for a transfer', async () => {
-    m.subs.list.mockResolvedValue({ items: [subRow()], total: 1, page: 1, pageSize: 20 });
+    m.subs.forStudent.mockResolvedValue([subRow()]);
     m.subs.paid.mockResolvedValue(new Map([[SUB_ID, 145]]));
     const res = await call({ method: 'GET', url: URL, token: 'salesA' });
     expect(res.json().students[0].open).toEqual([]);
   });
 
   it('a package a payment link is still open for is the link’s to pay: never offered for a transfer too', async () => {
-    m.subs.list.mockResolvedValue({ items: [subRow()], total: 1, page: 1, pageSize: 20 });
+    m.subs.forStudent.mockResolvedValue([subRow()]);
     m.family.linkPackages.mockResolvedValue([SUB_ID]);
     const res = await call({ method: 'GET', url: URL, token: 'salesA' });
     expect(m.family.linkPackages).toHaveBeenCalledWith([SUB_ID]);
     expect(res.json().students[0].open).toEqual([]);
+  });
+
+  it('offers at most the newest twenty unpaid packages of a child', async () => {
+    const day = (i: number) => `2026-09-${String(i + 1).padStart(2, '0')}T09:00:00Z`;
+    const sub = (i: number) => subRow({ id: `sub-${i}`, created_at: day(i) });
+    const many = Array.from({ length: 21 }, (_, i) => sub(i));
+    m.subs.forStudent.mockResolvedValue(many);
+    const res = await call({ method: 'GET', url: URL, token: 'salesA' });
+    const open: { id: string }[] = res.json().students[0].open;
+    expect(open).toHaveLength(20);
+    expect(open.map((o) => o.id)).not.toContain('sub-0');
   });
 
   it('a phone that is not E.164 → 400', async () => {

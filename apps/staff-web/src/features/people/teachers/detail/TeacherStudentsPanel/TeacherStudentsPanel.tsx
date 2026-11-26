@@ -46,7 +46,8 @@ export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {
     setColumns((c) => Object.fromEntries(Object.entries(c).filter(([k]) => !keys.includes(k))));
     setPage(1);
   };
-  const toggle = (s: StudentStatus) => pick(statuses.includes(s) ? statuses.filter((x) => x !== s) : [...statuses, s]);
+  const toggle = (s: StudentStatus) =>
+    pick(statuses.includes(s) ? statuses.filter((x) => x !== s) : [...statuses, s]);
   const all = statuses.length === 0;
 
   return (
@@ -86,7 +87,9 @@ export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {
         getRowId={(r) => r.id}
         emptyText={list.data ? t.teachers.studentsEmpty : t.common.loading}
       />
-      {list.data && <Pager page={page} total={list.data.total} pageSize={list.data.pageSize} onPage={setPage} />}
+      {list.data && (
+        <Pager page={page} total={list.data.total} pageSize={list.data.pageSize} onPage={setPage} />
+      )}
     </section>
   );
 }

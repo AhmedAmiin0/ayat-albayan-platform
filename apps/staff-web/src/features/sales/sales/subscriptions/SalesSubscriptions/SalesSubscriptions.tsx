@@ -27,7 +27,10 @@ export function SalesSubscriptions({ kind, onKind, history, onHistory }: SalesSu
   const list = useQuery(salesSubscriptionsQuery(kind));
   const withHistory = kind === 'confirmed' && onHistory !== undefined;
   const columns = useMemo(
-    () => (withHistory ? [...salesSubscriptionColumns, historyColumn((id) => onHistory(id))] : salesSubscriptionColumns),
+    () =>
+      withHistory
+        ? [...salesSubscriptionColumns, historyColumn((id) => onHistory(id))]
+        : salesSubscriptionColumns,
     [withHistory, onHistory],
   );
   return (
@@ -37,7 +40,9 @@ export function SalesSubscriptions({ kind, onKind, history, onHistory }: SalesSu
       </PageHead>
       <Tabs label={t.sales.subscriptions.kinds} tabs={KINDS()} value={kind} onChange={onKind} />
       <div role="tabpanel" aria-label={t.sales.subscriptions[kind]}>
-        {withHistory && history && <SubscriptionHistory key={history} id={history} onClose={() => onHistory(null)} />}
+        {withHistory && history && (
+          <SubscriptionHistory key={history} id={history} onClose={() => onHistory(null)} />
+        )}
         {list.isPending && <ListSkeleton />}
         {list.isError && (
           <FormAlert>

@@ -2,7 +2,11 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { systemResolver } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
-import { STUDENT_ID } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import {
+  STUDENT_ID,
+  SUB_ID,
+  subRow,
+} from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 import { salesMoneyApp } from '@/modules/sales/sales-money/tests/sales-money.test-app';
 import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fakes';
@@ -20,7 +24,6 @@ function twoChildren(m: Mocks): void {
     { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'active' },
     { id: SIBLING, code: 'AB-0184', name: 'أخوها', status: 'expired' },
   ]);
-  m.subs.list.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 20 });
   m.subs.forStudent.mockResolvedValue([]);
 }
 
@@ -43,6 +46,17 @@ describe('GET /sales/money/family and sales.renew_any', () => {
   it('only that phone’s family: the children of another chat never appear', async () => {
     m.family.studentsOfPhone.mockResolvedValue([]);
     expect(await family('salesB')).toEqual([]);
+  });
+
+  it('reads the packages owed of every child at once, each child keeping its own', async () => {
+    const own = (id: string) => [subRow({ id: id === STUDENT_ID ? SUB_ID : 'sibling-sub' })];
+    m.subs.forStudent.mockImplementation(async (id: string) => own(id));
+    const students: { open: { id: string }[] }[] = await family('salesA');
+    const open = students.map((s) => s.open.map((o) => o.id));
+    expect(open).toEqual([[SUB_ID], ['sibling-sub']]);
+    expect(m.subs.list).not.toHaveBeenCalled();
+    expect(m.family.linkPackages).toHaveBeenCalledTimes(1);
+    expect(m.family.linkPackages).toHaveBeenCalledWith([SUB_ID, 'sibling-sub']);
   });
 });
 

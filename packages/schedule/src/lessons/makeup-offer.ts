@@ -13,8 +13,17 @@ export interface MakeupOffer {
  * The one rule web and mobile share for the makeup button, per student of the lesson (a group's
  * children are separate). The API decides again (makeup_not_eligible, makeup_exists).
  */
-export function makeupOffer(lesson: LessonView, now: Date, windowDays: number = MAKEUP_WINDOW_DAYS): MakeupOffer {
-  const facts = { status: lesson.status, trial: lesson.trial === true, makeup: lesson.makeup === true, startsAt: lesson.starts_at };
+export function makeupOffer(
+  lesson: LessonView,
+  now: Date,
+  windowDays: number = MAKEUP_WINDOW_DAYS,
+): MakeupOffer {
+  const facts = {
+    status: lesson.status,
+    trial: lesson.trial === true,
+    makeup: lesson.makeup === true,
+    startsAt: lesson.starts_at,
+  };
   const offer: MakeupOffer = { open: [], booked: [] };
   for (const s of lesson.students) {
     if (makeupEligible({ ...facts, chargeable: s.chargeable }, now, windowDays) !== 'ok') continue;

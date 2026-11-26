@@ -23,7 +23,12 @@ export const PickContext = createContext<Pick | null>(null);
 
 const payable = (rows: readonly TeacherEarningView[]) => rows.filter((r) => r.outstanding > 0);
 
-const Box = (props: { label: string; checked: boolean; disabled?: boolean; onChange: (on: boolean) => void }) => (
+const Box = (props: {
+  label: string;
+  checked: boolean;
+  disabled?: boolean;
+  onChange: (on: boolean) => void;
+}) => (
   <input
     type="checkbox"
     aria-label={props.label}
@@ -39,7 +44,14 @@ function TickAll() {
   if (!pick) return null;
   const open = payable(pick.rows);
   const all = open.length > 0 && open.every((r) => pick.selected.has(r.id));
-  return <Box label={t.earnings.selectAll} checked={all} disabled={open.length === 0} onChange={(on) => pick.onToggleAll(open, on)} />;
+  return (
+    <Box
+      label={t.earnings.selectAll}
+      checked={all}
+      disabled={open.length === 0}
+      onChange={(on) => pick.onToggleAll(open, on)}
+    />
+  );
 }
 
 function TickRow({ row }: { row: TeacherEarningView }) {
@@ -47,7 +59,14 @@ function TickRow({ row }: { row: TeacherEarningView }) {
   const clock = useClock();
   if (!pick) return null;
   const label = t.earnings.selectRow.replace('{date}', formatDateTime(row.starts_at, clock));
-  return <Box label={label} checked={pick.selected.has(row.id)} disabled={row.outstanding <= 0} onChange={() => pick.onToggle(row)} />;
+  return (
+    <Box
+      label={label}
+      checked={pick.selected.has(row.id)}
+      disabled={row.outstanding <= 0}
+      onChange={() => pick.onToggle(row)}
+    />
+  );
 }
 
 /** The session's date and time in the viewer's cycle (12 or 24 h). */

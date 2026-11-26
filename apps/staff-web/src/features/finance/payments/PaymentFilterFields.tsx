@@ -15,7 +15,12 @@ export interface PaymentFilterFieldsProps {
 
 const kindOptions = [{ value: '', label: t.finance.all }, ...PAYMENT_KINDS.map((k) => ({ value: k, label: t.enums.paymentKind[k] }))];
 
-export function PaymentFilterFields({ value, onChange, name, setPicked }: PaymentFilterFieldsProps) {
+export function PaymentFilterFields({
+  value,
+  onChange,
+  name,
+  setPicked,
+}: PaymentFilterFieldsProps) {
   return (
     <>
       {value.studentId ? (
@@ -29,8 +34,16 @@ export function PaymentFilterFields({ value, onChange, name, setPicked }: Paymen
         <StudentPicker onPick={(s) => (setPicked(s.name), onChange({ studentId: s.id }))} />
       )}
       <div className="grid grid-cols-2 gap-3">
-        <DateFilterField label={t.finance.from} value={value.from} onChange={(from) => onChange({ from })} />
-        <DateFilterField label={t.finance.to} value={value.to} onChange={(to) => onChange({ to })} />
+        <DateFilterField
+          label={t.finance.from}
+          value={value.from}
+          onChange={(from) => onChange({ from })}
+        />
+        <DateFilterField
+          label={t.finance.to}
+          value={value.to}
+          onChange={(to) => onChange({ to })}
+        />
       </div>
       <SelectFilterField
         label={t.finance.kind}

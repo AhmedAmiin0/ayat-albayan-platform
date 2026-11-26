@@ -1,4 +1,8 @@
-import type { PortalLessonFamily, PortalLessonRequest } from '@ab/shared';
+import {
+  portalRequestStatusSchema,
+  type PortalLessonFamily,
+  type PortalLessonRequest,
+} from '@ab/shared';
 import { isChargeable } from '@ab/schedule';
 import type { PortalLessonRow, PortalRequestRow } from './portal-lessons.repo';
 
@@ -12,12 +16,6 @@ interface FamilyContext {
   requests: readonly PortalRequestRow[];
 }
 
-/** The family's request states the card shows: waiting, or declined with the note. */
-const SHOWN: Readonly<Record<string, PortalLessonRequest['status']>> = {
-  pending: 'pending',
-  rejected: 'rejected',
-};
-
 /** The lesson's newest family request, when it still waits or was declined (else none). */
 export function latestRequest(
   rows: readonly PortalRequestRow[],
@@ -25,7 +23,7 @@ export function latestRequest(
 ): PortalLessonRequest | null {
   const own = rows.filter((r) => r.lesson_id === lessonId);
   const [last] = own.sort((a, b) => b.created_at.localeCompare(a.created_at));
-  const status = last ? SHOWN[last.status] : undefined;
+  const status = portalRequestStatusSchema.safeParse(last?.status).data;
   if (!last || !status) return null;
   return {
     id: last.id,

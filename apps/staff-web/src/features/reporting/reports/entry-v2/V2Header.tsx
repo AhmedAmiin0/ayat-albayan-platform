@@ -10,7 +10,9 @@ export interface V2HeaderProps {
 function lessonChip(entry: ReportFormEntry): string {
   const n = entry.lesson_no;
   const total = entry.package?.lessons_total;
-  return total ? fillSlots(t.reports.v2.lessonOf, { n, total }) : fillSlots(t.reports.v2.lessonNo, { n });
+  return total
+    ? fillSlots(t.reports.v2.lessonOf, { n, total })
+    : fillSlots(t.reports.v2.lessonNo, { n });
 }
 
 const CHIP = 'rounded-full bg-sunk px-2.5 py-1 text-xs text-ink-2';
@@ -27,7 +29,9 @@ export function V2Header({ lesson, entry }: V2HeaderProps) {
       <ul className="flex flex-wrap gap-1.5" aria-label={t.reports.identity}>
         <li className={CHIP}>{lessonChip(entry)}</li>
         <li className={CHIP}>{when}</li>
-        <li className={CHIP}>{fillSlots(t.reports.v2.teacherChip, { name: teacherLabel(lesson.teacher) })}</li>
+        <li className={CHIP}>
+          {fillSlots(t.reports.v2.teacherChip, { name: teacherLabel(lesson.teacher) })}
+        </li>
       </ul>
       <p className="text-xs text-ink-3">{t.reports.v2.autoFilled}</p>
     </header>

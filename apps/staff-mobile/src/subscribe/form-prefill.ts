@@ -21,13 +21,17 @@ export type FormPrefill = Partial<
 const PLANS: readonly PlanChoice[] = [...PACKAGE_IDS, 'custom'];
 
 function planOf(p: FormPrefill): PlanChoice | undefined {
-  return PLANS.find((id) => id === p.plan) ?? PACKAGE_IDS.find((id) => String(lessonsOf(id)) === p.pkg);
+  return (
+    PLANS.find((id) => id === p.plan) ?? PACKAGE_IDS.find((id) => String(lessonsOf(id)) === p.pkg)
+  );
 }
 
 /** A whole lesson count within the custom range. */
 function countOf(text: string | undefined): number | undefined {
   const n = Number(text);
-  return text && Number.isInteger(n) && n >= CUSTOM_COUNT_MIN && n <= CUSTOM_COUNT_MAX ? n : undefined;
+  return text && Number.isInteger(n) && n >= CUSTOM_COUNT_MIN && n <= CUSTOM_COUNT_MAX
+    ? n
+    : undefined;
 }
 
 /** 0–100 (decimals allowed), as the field's text. */

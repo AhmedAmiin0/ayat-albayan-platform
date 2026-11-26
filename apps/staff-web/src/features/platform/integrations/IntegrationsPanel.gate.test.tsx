@@ -11,7 +11,8 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const s = t.integrations;
-const field = (key: keyof typeof s.keys) => screen.getByLabelText<HTMLInputElement>(s.keys[key].label);
+const field = (key: keyof typeof s.keys) =>
+  screen.getByLabelText<HTMLInputElement>(s.keys[key].label);
 const GATE = { queryKey: sendGateQuery.queryKey };
 
 async function renderPanel() {

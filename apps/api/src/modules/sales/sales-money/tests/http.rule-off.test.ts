@@ -70,7 +70,6 @@ describe('the ownership rule off: any student’s money, as her, commission unto
   it('her family view lists every child, each `mine` (she may act on it)', async () => {
     const child = { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'trial' };
     m.family.studentsOfPhone.mockResolvedValue([child]);
-    m.subs.list.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 20 });
     const url = `/sales/money/family?phone=${encodeURIComponent(FAMILY_PHONE)}`;
     const res = await call({ method: 'GET', url, token: 'salesB' });
     const listed = expect.objectContaining({ id: STUDENT_ID, mine: true });

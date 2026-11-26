@@ -52,7 +52,8 @@ function DriveFound({ found }: { found: GoogleStatusView['discovery'] }) {
 function ConfirmButton({ status, confirm }: { status: GoogleStatusView; confirm: ReturnType<typeof useDriveActions>['confirm'] }) {
   const root = status.discovery?.root_folder ?? null;
   const sheetId = status.discovery?.summary_sheet?.id ?? null;
-  if (!root || (status.drive.confirmed_at !== null && status.drive.root_folder_id === root.id)) return null;
+  if (!root || (status.drive.confirmed_at !== null && status.drive.root_folder_id === root.id))
+    return null;
   return (
     <Button
       variant="secondary"

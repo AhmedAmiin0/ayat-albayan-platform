@@ -30,13 +30,17 @@ const counts = (s: OrderFact): boolean =>
 
 /** created_at, then id (uuid order = lowercase hex order). */
 const before = (a: OrderFact, b: OrderFact): boolean =>
-  Date.parse(a.created_at) < Date.parse(b.created_at) || (Date.parse(a.created_at) === Date.parse(b.created_at) && a.id < b.id);
+  Date.parse(a.created_at) < Date.parse(b.created_at) ||
+  (Date.parse(a.created_at) === Date.parse(b.created_at) && a.id < b.id);
 
 /**
  * 'first' when no other priced subscription of the student was created earlier, else 'renewal'; null for a
  * free one (a trial never counts), a cancelled one or an unknown id. A row already earned keeps its kind: this decides new rows.
  */
-export function commissionKindOf(subs: readonly OrderFact[], id: string): AssistantCommissionKind | null {
+export function commissionKindOf(
+  subs: readonly OrderFact[],
+  id: string,
+): AssistantCommissionKind | null {
   const sub = subs.find((s) => s.id === id);
   if (!sub || !counts(sub)) return null;
   return subs.some((o) => o.id !== id && counts(o) && before(o, sub)) ? 'renewal' : 'first';

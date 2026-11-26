@@ -3,6 +3,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, notFound } from '@/common/http/errors';
 import { RecordingAdminRepo } from '@/modules/teaching/student-recordings/recording-admin.repo';
 import { RecordingEraser } from './recording-eraser';
+import { isAdmin } from '@/common/auth/roles';
 
 /** DELETE /recordings/:id (admin): the file goes, the row stays as `deleted`. Idempotent. */
 @Injectable()
@@ -16,7 +17,7 @@ export class RecordingDeleteService {
   async remove(input: { user: AuthUser; id: string }, now = new Date()): Promise<void> {
     const row = await this.queries.byId(input.id);
     if (!row) throw notFound('recording_not_found');
-    if (input.user.role !== 'admin') throw new ForbiddenException();
+    if (!isAdmin(input.user)) throw new ForbiddenException();
     if (row.status === 'deleted') return;
     if (row.status === 'recording') throw conflict('recording_in_progress');
     await this.eraser.erase({

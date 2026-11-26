@@ -8,7 +8,10 @@ import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { ADMIN, ASSISTANT, GUARDIAN, joinRow, SIBLING, STUDENT, studentQueries, teachersFake, TEACHER, TEACHER_ID } from './student-recordings.fakes';
 
 let q: ReturnType<typeof studentQueries>;
-const views = { urlOf: vi.fn() };
+const views = { urlsOf: vi.fn() };
+const LINK = 'https://signed.example.test/r.mp4?token=1h';
+const linksOf = async (rows: readonly { id: string; status: string }[]) =>
+  new Map(rows.filter((r) => r.status === 'done').map((r) => [r.id, LINK]));
 const query = { page: 1, pageSize: 10 };
 const service = () =>
   new StudentRecordingsService(
@@ -19,7 +22,7 @@ const service = () =>
 
 beforeEach(() => {
   q = studentQueries();
-  views.urlOf.mockReset().mockResolvedValue('https://signed.example.test/r.mp4?token=1h');
+  views.urlsOf.mockReset().mockImplementation(linksOf);
 });
 
 describe('GET /students/:id/recordings', () => {
@@ -58,7 +61,7 @@ describe('GET /students/:id/recordings', () => {
     const { items } = await service().list({ user: ADMIN, studentId: STUDENT, query });
     expect(items.map((i) => [i.status, i.url !== null])).toEqual([['recording', false], ['failed', false], ['deleted', false], ['done', true]]);
     expect(items[0]?.duration_seconds).toBeNull();
-    expect(views.urlOf).toHaveBeenCalledTimes(1);
+    expect(views.urlsOf).toHaveBeenCalledTimes(1);
   });
 
   it('passes the teacher scope, the filters and the page to the query', async () => {
@@ -107,7 +110,7 @@ describe('GET /students/:id/recorded-lesson-ids', () => {
   it('returns the ids without signing a single link, under the same access rules', async () => {
     expect(await service().recordedLessonIds({ user: TEACHER, studentId: STUDENT })).toEqual(['les-1']);
     expect(q.doneLessonIds).toHaveBeenCalledWith({ studentId: STUDENT, onlyTeacherId: null });
-    expect(views.urlOf).not.toHaveBeenCalled();
+    expect(views.urlsOf).not.toHaveBeenCalled();
     q.doneLessonIds.mockClear();
     await expect(service().recordedLessonIds({ user: GUARDIAN, studentId: STUDENT })).rejects.toBeInstanceOf(ForbiddenException);
     expect(q.doneLessonIds).not.toHaveBeenCalled();

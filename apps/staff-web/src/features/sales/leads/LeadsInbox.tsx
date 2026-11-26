@@ -52,7 +52,8 @@ export function LeadsInbox({ search, onSearch }: LeadsInboxProps) {
     onError: () => setNotice({ message: t.common.error, tone: 'error' }),
   });
   // Any filter change goes back to page 1; parseLeadSearch drops blank / unknown values.
-  const filter = (patch: Record<string, unknown>) => onSearch(parseLeadSearch({ ...search, ...patch, page: 1 }));
+  const filter = (patch: Record<string, unknown>) =>
+    onSearch(parseLeadSearch({ ...search, ...patch, page: 1 }));
 
   return (
     <>
@@ -63,7 +64,11 @@ export function LeadsInbox({ search, onSearch }: LeadsInboxProps) {
           <span className="text-sm text-ink-3 tabular-nums">{countLabel(leads.data.total, search.status)}</span>
         )}
       </PageHead>
-      <LeadsToolbar search={search} onFilter={filter} total={leads.isPlaceholderData ? undefined : leads.data?.total} />
+      <LeadsToolbar
+        search={search}
+        onFilter={filter}
+        total={leads.isPlaceholderData ? undefined : leads.data?.total}
+      />
       <div className="grid flex-auto gap-[22px] shell:h-0 shell:min-h-[420px] shell:grid-cols-[196px_minmax(0,1fr)] shell:grid-rows-[minmax(0,1fr)]">
         <LeadStatusTabs value={search.status} onChange={(status) => filter({ status })} />
         <div

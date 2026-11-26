@@ -31,7 +31,11 @@ export function ReceiptChooser({ sub, value, onChange, maxBytes, bind }: Props) 
     <fieldset className="grid content-start gap-2">
       <legend className="mb-1 text-sm font-semibold text-ink">{t.salesMoney.attachments}</legend>
       <p className="text-xs text-ink-3">{t.salesMoney.attachmentsHint}</p>
-      <AttachmentItems items={value.map(attachmentItem)} texts={t.salesMoney} onRemove={(i) => apply({ list: value.filter((_, j) => j !== i), problem: null })} />
+      <AttachmentItems
+        items={value.map(attachmentItem)}
+        texts={t.salesMoney}
+        onRemove={(i) => apply({ list: value.filter((_, j) => j !== i), problem: null })}
+      />
       {full ? (
         <p className="text-xs text-ink-3">{t.salesMoney.attachmentsMax}</p>
       ) : (

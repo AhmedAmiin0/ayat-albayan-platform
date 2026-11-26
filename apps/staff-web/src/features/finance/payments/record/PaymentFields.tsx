@@ -47,7 +47,11 @@ export function PaymentFields({ form, set, currency, today, amountError, amountL
       </Field>
       <Field label={t.payments.method}>
         {(p) => (
-          <Select {...p} value={form.method} onChange={(e) => set({ method: e.target.value as PaymentMethod })}>
+          <Select
+            {...p}
+            value={form.method}
+            onChange={(e) => set({ method: e.target.value as PaymentMethod })}
+          >
             {PAYMENT_METHODS.map((m) => (
               <option key={m} value={m}>
                 {t.enums.paymentMethod[m]}

@@ -6,7 +6,13 @@ import { fromPhone, type DraftInvitee } from './invitee-draft';
 const L = t.meetingInvites;
 
 /** Checked by the shared normalizePhone as E.164 with its country code. */
-export function PhoneInvitee({ onAdd, disabled }: { onAdd: (d: DraftInvitee) => void; disabled: boolean }) {
+export function PhoneInvitee({
+  onAdd,
+  disabled,
+}: {
+  onAdd: (d: DraftInvitee) => void;
+  disabled: boolean;
+}) {
   const [text, setText] = useState('');
   const [bad, setBad] = useState(false);
   const add = () => {

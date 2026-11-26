@@ -55,7 +55,9 @@ test('the sheet asks 15-minute starts for this lesson’s own length and student
 });
 
 test('a free start: the change line, the teacher’s clock, the guardian toggle (on), and the body', async () => {
-  mockApiSend.mockResolvedValue(result({ lesson: { ...upcoming, starts_at: SAT_17 }, notified: 1 }));
+  mockApiSend.mockResolvedValue(
+    result({ lesson: { ...upcoming, starts_at: SAT_17 }, notified: 1 }),
+  );
   const { onClose, client } = await open();
   await fireEvent.press(screen.getByRole('radio', { name: '17:00' }));
   expect(screen.getByText('الأحد 4 أكتوبر 17:00 · 45 دقيقة ← السبت 3 أكتوبر 17:00 · 45 دقيقة')).toBeTruthy();

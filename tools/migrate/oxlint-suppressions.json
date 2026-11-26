@@ -7,14 +7,6 @@
       "count": 1
     }
   },
-  "src/cli.args.ts": {
-    "complexity": {
-      "count": 2
-    },
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 2
-    }
-  },
   "src/cli.commands.ts": {
     "complexity": {
       "count": 1
@@ -26,13 +18,7 @@
     }
   },
   "src/config.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/switch-exhaustiveness-check": {
       "count": 1
     }
   },
@@ -87,44 +73,9 @@
       "count": 3
     }
   },
-  "src/map/applicants/applicants.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/map/expenses/expenses.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/map/leads/contacts.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/map/leads/fixtures.ts": {
     "typescript/no-redundant-type-constituents": {
       "count": 3
-    }
-  },
-  "src/map/leads/leads.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/map/leads/links.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/map/leads/record.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/map/leads/sheet-leads.ts": {
-    "complexity": {
-      "count": 2
     }
   },
   "src/map/lessons/lessons.ts": {
@@ -133,22 +84,11 @@
     }
   },
   "src/map/messages/messages.ts": {
-    "complexity": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
   },
-  "src/map/money/fin.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/map/money/heart.ts": {
-    "complexity": {
-      "count": 1
-    },
     "typescript/no-base-to-string": {
       "count": 1
     },
@@ -161,92 +101,33 @@
       "count": 1
     }
   },
-  "src/map/people/collect.heart.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/map/people/collect.merge.test.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/map/people/collect.merge.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/map/people/collect.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 3
-    },
     "typescript/restrict-template-expressions": {
       "count": 1
     }
   },
   "src/map/people/match.ts": {
-    "complexity": {
-      "count": 3
-    },
     "typescript/no-base-to-string": {
       "count": 1
     }
   },
-  "src/map/people/rows.ts": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "typescript/prefer-includes": {
-      "count": 1
-    }
-  },
   "src/map/people/status/bookings.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 2
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
   },
   "src/map/people/status/downgrade.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/map/people/status/payments.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/map/people/students.ts": {
-    "complexity": {
       "count": 1
     }
   },
   "src/map/people/students.write.test.ts": {
     "no-empty-function": {
-      "count": 1
-    }
-  },
-  "src/map/people/subs.ts": {
-    "complexity": {
-      "count": 2
-    }
-  },
-  "src/map/people/taught.ts": {
-    "complexity": {
       "count": 1
     }
   },
@@ -258,29 +139,8 @@
       "count": 1
     }
   },
-  "src/map/reports/dedupe.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/map/reports/fields.ts": {
-    "typescript/prefer-includes": {
-      "count": 2
-    }
-  },
   "src/map/reports/parse.ts": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/map/reports/parse.who.ts": {
-    "complexity": {
       "count": 1
     }
   },
@@ -289,34 +149,8 @@
       "count": 1
     }
   },
-  "src/map/reports/times.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/map/schedule/booking-row.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/map/schedule/booking-slot.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/map/schedule/bookings.ts": {
-    "complexity": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/map/schedule/heart.rules.ts": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
       "count": 1
     }
   },
@@ -330,36 +164,12 @@
       "count": 4
     }
   },
-  "src/map/teachers/teachers.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "typescript/prefer-includes": {
-      "count": 1
-    }
-  },
   "src/map/templates/buttons.ts": {
-    "complexity": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
   },
-  "src/map/templates/templates.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/pdf-import/files.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/pdf-import/match.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     },
@@ -377,37 +187,14 @@
       "count": 1
     }
   },
-  "src/plan/changes.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/plan/codes.ts": {
-    "complexity": {
-      "count": 1
-    },
     "typescript/no-unnecessary-type-conversion": {
       "count": 1
-    }
-  },
-  "src/plan/match/match.target.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/plan/match/match.ts": {
-    "complexity": {
-      "count": 2
     }
   },
   "src/plan/match/templates.target.ts": {
     "typescript/no-base-to-string": {
       "count": 1
-    }
-  },
-  "src/plan/resolve.ts": {
-    "complexity": {
-      "count": 2
     }
   },
   "src/plan/stale-refs.test.ts": {
@@ -416,20 +203,11 @@
     }
   },
   "src/plan/stale-refs.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     }
   },
   "src/report/report.ts": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     }
@@ -461,9 +239,6 @@
     }
   },
   "src/sources/crm/rows.ts": {
-    "no-nested-ternary": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     },
@@ -508,28 +283,13 @@
       "count": 2
     }
   },
-  "src/sources/sheets/fixtures.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/sources/sheets/issues.ts": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/sources/sheets/siblings.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/sources/teachers.dir.ts": {
     "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "src/sources/values.schedule.ts": {
-    "complexity": {
       "count": 1
     }
   },
@@ -555,11 +315,6 @@
     },
     "stylistic/max-len": {
       "count": 5
-    }
-  },
-  "src/validate.sources.ts": {
-    "complexity": {
-      "count": 1
     }
   },
   "src/validate.ts": {

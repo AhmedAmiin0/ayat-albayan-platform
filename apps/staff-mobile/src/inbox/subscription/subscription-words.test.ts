@@ -24,9 +24,16 @@ test('a child: the package and what is left, the due on its own, a chip only whe
   expect(dueLine(sub())).toBe(s.due.replace('{amount}', money(120, 'SAR')));
   expect(dueLine(sub({ due_amount: 0 }))).toBeNull();
   // A partial payment shows what was paid of the price.
-  expect(dueLine(sub({ price: 81, paid_amount: 80, due_amount: 1 }))).toBe(partPaidLine({ paid: 80, price: 81, currency: 'SAR' }));
-  expect(childChip(sub())).toEqual({ ...subscriptionStatusStyle.unpaid, label: t.enums.subscriptionStatus.unpaid });
-  expect(childChip(sub({ status: 'paused', due_amount: 0 }))?.label).toBe(t.enums.subscriptionStatus.paused);
+  expect(dueLine(sub({ price: 81, paid_amount: 80, due_amount: 1 }))).toBe(
+    partPaidLine({ paid: 80, price: 81, currency: 'SAR' }),
+  );
+  expect(childChip(sub())).toEqual({
+    ...subscriptionStatusStyle.unpaid,
+    label: t.enums.subscriptionStatus.unpaid,
+  });
+  expect(childChip(sub({ status: 'paused', due_amount: 0 }))?.label).toBe(
+    t.enums.subscriptionStatus.paused,
+  );
   // Paid in full and used up stays unpaid in the DB until renewed, but must not read as unpaid.
   expect(childChip(sub({ status: 'unpaid', due_amount: 0, lessons_remaining: 0 }))).toBeNull();
   expect(childChip(null)).toBeNull();
@@ -34,7 +41,9 @@ test('a child: the package and what is left, the due on its own, a chip only whe
 
 test('a guardian: the one child whose package ended gets «جدّد الاشتراك», the name in its spoken name', () => {
   const running = child({ id: 'other', name: 'سارة' });
-  expect(subscribeAction({ people: family([running, child({ subscription: usedUp })]), phone: PHONE })).toEqual({
+  expect(
+    subscribeAction({ people: family([running, child({ subscription: usedUp })]), phone: PHONE }),
+  ).toEqual({
     label: s.renew,
     accessibilityLabel: `${s.renew} — يوسف`,
     href: { pathname: '/inbox/subscribe', params: { studentId: CHILD_ID, phone: PHONE, renew: '1' } },
@@ -49,7 +58,10 @@ test('a guardian: the one child whose package ended gets «جدّد الاشتر
 test('several children qualify: «لأيّ طالب؟» rows, each with its code and its own new / renew', () => {
   // The API allows duplicate child names, so the code tells them apart; both bidi-isolated.
   const twin = child({ id: 'c2', code: 'AB-0184', subscription: null });
-  const action = subscribeAction({ people: family([twin, child({ subscription: usedUp })]), phone: PHONE });
+  const action = subscribeAction({
+    people: family([twin, child({ subscription: usedUp })]),
+    phone: PHONE,
+  });
   expect(action).toEqual({
     label: t.subscriptions.new,
     targets: [

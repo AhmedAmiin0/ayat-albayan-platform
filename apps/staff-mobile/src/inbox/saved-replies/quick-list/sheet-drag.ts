@@ -12,4 +12,5 @@ export const dragClaims = (dy: number, dx: number): boolean => dy > START && dy 
 /** Where the sheet sits while dragged: only downward. */
 export const dragOffset = (dy: number): number => Math.max(dy, 0);
 
-export const dragCloses = (dy: number, vy: number): boolean => dy >= CLOSE_AT || (dy > START && vy >= FLICK);
+export const dragCloses = (dy: number, vy: number): boolean =>
+  dy >= CLOSE_AT || (dy > START && vy >= FLICK);

@@ -49,7 +49,8 @@ export function setFilter(f: StudentsFilters, key: FilterKey, value: string): St
   return parseStudentFilters({ ...f, [key]: value });
 }
 
-export const selectedStatuses = (f: StudentsFilters): StudentStatus[] => parseStatusList(f.status) ?? [];
+export const selectedStatuses = (f: StudentsFilters): StudentStatus[] =>
+  parseStatusList(f.status) ?? [];
 
 /** Toggles one status chip in the comma-joined list. */
 export function toggleStatus(f: StudentsFilters, status: StudentStatus): StudentsFilters {

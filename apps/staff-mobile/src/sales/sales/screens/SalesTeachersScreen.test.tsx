@@ -14,9 +14,21 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }
 
 const counts = (students: number, today: number) =>
   `${t.sales.teachers.studentsCount.replace('{n}', String(students))} · ${t.sales.teachers.lessonsToday.replace('{n}', String(today))}`;
-const kinds = (active: number, trial: number) => t.studentLists.counts.replace('{active}', String(active)).replace('{trial}', String(trial));
-const KHALID = { id: 't2', name: 'خالد', name_en: null, gender: 'male' as const, programs: ['quran' as const], lessons_today: 0, students: [] };
-const TEACHERS = [teacher({ live_now: true, active_count: 4, trial_count: 2 }), teacher({ ...KHALID, active_count: 0, trial_count: 0 })];
+const kinds = (active: number, trial: number) =>
+  t.studentLists.counts.replace('{active}', String(active)).replace('{trial}', String(trial));
+const KHALID = {
+  id: 't2',
+  name: 'خالد',
+  name_en: null,
+  gender: 'male' as const,
+  programs: ['quran' as const],
+  lessons_today: 0,
+  students: [],
+};
+const TEACHERS = [
+  teacher({ live_now: true, active_count: 4, trial_count: 2 }),
+  teacher({ ...KHALID, active_count: 0, trial_count: 0 }),
+];
 
 beforeEach(() => mockApiFetch.mockReset());
 

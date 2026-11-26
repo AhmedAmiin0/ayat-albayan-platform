@@ -55,11 +55,18 @@ describe('takenDays: only clashes on a day still holding its prefilled pick (the
   });
   it('reads the zone: late Saturday UTC is Sunday in Riyadh', () => {
     const late = '2026-10-10T22:30:00.000Z';
-    expect(takenDays({ picks: [late], prefilled: [late], tz: RIYADH }, [{ startsAt: late }])).toEqual([0]);
+    expect(
+      takenDays({ picks: [late], prefilled: [late], tz: RIYADH }, [{ startsAt: late }]),
+    ).toEqual([0]);
   });
   it('one grammatical line per day', () => {
-    const lines = takenTexts({ picks: prefilled, prefilled, tz: RIYADH }, [{ startsAt: SUN }, { startsAt: THU }]);
-    expect(lines).toEqual([0, 4].map((w) => t.booking.courseChange.continueTaken.replace('{day}', weekdayName(w))));
+    const lines = takenTexts({ picks: prefilled, prefilled, tz: RIYADH }, [
+      { startsAt: SUN },
+      { startsAt: THU },
+    ]);
+    expect(lines).toEqual(
+      [0, 4].map((w) => t.booking.courseChange.continueTaken.replace('{day}', weekdayName(w))),
+    );
   });
   it('an unknown weekday reads empty', () => expect(weekdayName(9)).toBe(''));
 });

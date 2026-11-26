@@ -1,5 +1,6 @@
-import { createHmac } from 'node:crypto';
-import { safeEqual } from './webhook.signature';
+import { safeEqual } from '@/common/infra/crypto/safe-equal';
+import { hmacSha256Hex } from '@/common/infra/crypto/hmac';
+
 
 // The academy CRM's webhook authentication (docs/19 «crm driver»). Fails closed: no WACRM_WEBHOOK_SECRET →
 // every request is refused. Only that secret is tried here; the Meta and Kapso routes never try it.
@@ -34,7 +35,7 @@ export function verifyWacrmSignature(req: WacrmSignedRequest): WacrmVerdict {
   if (!rawBody || !secret || secret.trim() === '' || !req.header) return 'bad';
   const parts = signatureParts(req.header);
   if (!parts) return 'bad';
-  const expected = createHmac('sha256', secret).update(`${parts.t}.`).update(rawBody).digest('hex');
+  const expected = hmacSha256Hex(secret, [`${parts.t}.`, rawBody]);
   if (!safeEqual(parts.v1, expected)) return 'bad';
   return Math.abs(req.now.getTime() - Number(parts.t) * 1000) <= WACRM_TOLERANCE_MS ? 'ok' : 'stale';
 }

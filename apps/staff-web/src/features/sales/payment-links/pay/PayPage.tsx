@@ -20,7 +20,8 @@ const LINE: Record<Exclude<PayScreen, 'open'>, { text: string; tone: 'ok' | 'act
 type Props = { token: string; back: PayReturn };
 
 /** A wrong token (404 link_not_found) gets its own line; anything else the generic one. */
-const loadErrorText = (e: unknown): string => (e instanceof ApiError && e.status === 404 ? P.notFound : t.common.error);
+const loadErrorText = (e: unknown): string =>
+  e instanceof ApiError && e.status === 404 ? P.notFound : t.common.error;
 
 /** Public payment page (docs/30, no login); Checkout returns with `?done=1` or `?cancelled=1`. */
 export function PayPage({ token, back }: Props) {

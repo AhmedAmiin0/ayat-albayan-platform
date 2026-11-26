@@ -3,6 +3,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, forbidden, notFound } from '@/common/http/errors';
 import { SalesOwnershipRule, SalesRepo, type SalesOwnership } from '@/modules/sales/sales';
 import { type LessonFacts, SalesStudentRepo } from './sales-student.repo';
+import { isSales } from '@/common/auth/roles';
 
 interface StudentAccess {
   own: SalesOwnership;
@@ -17,9 +18,6 @@ interface LessonCheck {
   user: AuthUser;
   afterEnd?: boolean;
 }
-
-/** Who the assistant ownership rule binds: the sales base role; the admin never. */
-const isAssistant = (user: AuthUser): boolean => user.role === 'sales';
 
 /** Every student of the lesson is hers (a group lesson moves / cancels for all of them). */
 const ownsEvery = (own: SalesOwnership, lesson: LessonFacts): boolean =>
@@ -54,7 +52,7 @@ export class SalesStudentScope {
 
   /** While enforced, only a lesson whose every student is hers; off (default), any lesson. */
   private async assertOwnsLesson(user: AuthUser, lesson: LessonFacts): Promise<void> {
-    const own = isAssistant(user) ? await this.rule.scope(user) : null;
+    const own = isSales(user) ? await this.rule.scope(user) : null;
     if (own && !ownsEvery(own, lesson)) throw forbidden('not_your_student');
   }
 }

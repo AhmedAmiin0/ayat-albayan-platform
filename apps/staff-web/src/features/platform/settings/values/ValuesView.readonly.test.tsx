@@ -53,8 +53,12 @@ describe('«القيم» — read-only and module-owned rows', () => {
     renderValues(apiFetch, { search: { group: 'google' }, google: { enabled: true, mode: 'live', window_days: 30 } });
     const row = await findRow(t.googleSync.switches.enabled);
     await waitFor(() => expect(within(row).getByText(t.googleSync.switches.on)).toBeTruthy());
-    expect(within(row).getByRole('link', { name: v.editFrom.google }).getAttribute('href')).toContain('/admin/settings/google');
-    expect(within(await findRow(t.googleSync.switches.mode)).getByText(t.googleSync.switches.live)).toBeTruthy();
+    expect(
+      within(row).getByRole('link', { name: v.editFrom.google }).getAttribute('href'),
+    ).toContain('/admin/settings/google');
+    expect(
+      within(await findRow(t.googleSync.switches.mode)).getByText(t.googleSync.switches.live),
+    ).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/admin/google/status');
   });
 

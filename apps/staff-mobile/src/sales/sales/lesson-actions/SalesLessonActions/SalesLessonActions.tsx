@@ -31,7 +31,9 @@ export function SalesLessonActions({ lesson, onReschedule, onConfirmed }: SalesL
   const cancel = rights.cancelBy.length > 0;
   const a = t.sales.lessonActions;
   const confirm = (secondary: boolean) =>
-    onConfirmed ? <SalesConfirmLesson lessonId={lesson.id} onConfirmed={onConfirmed} secondary={secondary} /> : null;
+    onConfirmed ? (
+      <SalesConfirmLesson lessonId={lesson.id} onConfirmed={onConfirmed} secondary={secondary} />
+    ) : null;
   const changes = reschedule || cancel;
   return (
     <View style={{ gap: 8 }}>

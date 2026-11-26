@@ -11,7 +11,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { AvailabilityRow } from '@ab/shared';
 import type { BusyLesson } from '@ab/schedule';
-import { dbError } from '@/common/http/http';
+import { maybe, one, pgError } from '@/common/db/errors';
 import { TeachersSettings } from '@/modules/people/teachers/teachers.settings';
 export type TimeOff = Tables<'teacher_time_off'>;
 type Owned = { teacherId: string; actorId: string };
@@ -44,7 +44,7 @@ export class AvailabilityRepo {
       .eq('teacher_id', teacherId)
       .order('weekday')
       .order('start_time');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.map((r) => ({ ...r, start_time: hhmm(r.start_time), end_time: hhmm(r.end_time) }));
   }
 
@@ -62,13 +62,13 @@ export class AvailabilityRepo {
         created_by: opts.actorId,
       }));
       const { data, error } = await this.db.from('teacher_availability').insert(rows).select('id');
-      if (error) throw dbError(error);
+      if (error) throw pgError(error);
       keep = data.map((r) => r.id);
     }
     let stale = this.db.from('teacher_availability').delete().eq('teacher_id', opts.teacherId);
     if (keep.length > 0) stale = stale.not('id', 'in', `(${keep.join(',')})`);
     const { error } = await stale;
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return this.listSlots(opts.teacherId);
   }
 
@@ -79,7 +79,7 @@ export class AvailabilityRepo {
       query = query.lt('starts_at', range.to.toISOString()).gt('ends_at', range.from.toISOString());
     }
     const { data, error } = await query.order('starts_at', { ascending: false });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -92,7 +92,7 @@ export class AvailabilityRepo {
       .in('status', OCCUPYING_LESSON_STATUSES)
       .lt('starts_at', range.to.toISOString())
       .gt('ends_at', range.from.toISOString());
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.map((l) => ({
       id: l.id,
       starts_at: new Date(l.starts_at),
@@ -102,8 +102,7 @@ export class AvailabilityRepo {
 
   async insertTimeOff(opts: Owned & { body: TimeOffCreate }): Promise<TimeOff> {
     const row = { ...opts.body, teacher_id: opts.teacherId, created_by: opts.actorId };
-    const { data, error } = await this.db.from('teacher_time_off').insert(row).select('*').single();
-    if (error) throw dbError(error);
+    const data = one(await this.db.from('teacher_time_off').insert(row).select('*').single());
     return data;
   }
 
@@ -112,14 +111,15 @@ export class AvailabilityRepo {
     id: string;
     body: TimeOffCreate;
   }): Promise<TimeOff | null> {
-    const { data, error } = await this.db
-      .from('teacher_time_off')
-      .update(opts.body)
-      .eq('id', opts.id)
-      .eq('teacher_id', opts.teacherId)
-      .select('*')
-      .maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(
+      await this.db
+        .from('teacher_time_off')
+        .update(opts.body)
+        .eq('id', opts.id)
+        .eq('teacher_id', opts.teacherId)
+        .select('*')
+        .maybeSingle(),
+    );
     return data;
   }
 
@@ -131,7 +131,7 @@ export class AvailabilityRepo {
       .eq('id', id)
       .eq('teacher_id', teacherId)
       .select('id');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.length > 0;
   }
 }

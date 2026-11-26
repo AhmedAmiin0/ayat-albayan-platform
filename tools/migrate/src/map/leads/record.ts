@@ -33,6 +33,13 @@ export function lastMessageTimes(messages: readonly CrmRow[]): Record<string, st
   return { last_inbound_at: latest(true), last_outbound_at: latest(false) };
 }
 
+function sheetNotes(sheet: SheetLead | undefined): Record<string, ColumnValue> {
+  const q: Record<string, ColumnValue> = {};
+  if (sheet?.summary) q.legacy_summary = sheet.summary;
+  if (sheet?.agreedSlot) q.agreed_slot = sheet.agreedSlot;
+  return q;
+}
+
 function qualification(o: {
   tags: readonly string[];
   sheet: SheetLead | undefined;
@@ -41,8 +48,7 @@ function qualification(o: {
   const q: Record<string, ColumnValue> = {};
   const crmTags = o.tags.filter((t) => !STATUS_TAGS.has(t));
   if (crmTags.length) q.crm_tags = crmTags;
-  if (o.sheet?.summary) q.legacy_summary = o.sheet.summary;
-  if (o.sheet?.agreedSlot) q.agreed_slot = o.sheet.agreedSlot;
+  Object.assign(q, sheetNotes(o.sheet));
   if (o.hints.length) q.job_seeker_hints = [...o.hints];
   return q;
 }

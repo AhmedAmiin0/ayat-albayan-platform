@@ -19,7 +19,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
-  supabase: { storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) } },
+  supabase: {
+    storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) },
+  },
 }));
 jest.mock('./inbox-sync', () => ({
   refreshInbox: jest.fn(async () => undefined),
@@ -37,7 +39,9 @@ async function run<T>(hook: () => { mutate: (input: T) => void }, input: T) {
   const client = createTestQueryClient();
   const { result } = await renderHook(hook, { wrapper: queryWrapper(client) });
   await act(async () => result.current.mutate(input));
-  await waitFor(() => expect(refreshed.mock.calls.length + sent.mock.calls.length).toBeGreaterThan(0));
+  await waitFor(() =>
+    expect(refreshed.mock.calls.length + sent.mock.calls.length).toBeGreaterThan(0),
+  );
   return client;
 }
 

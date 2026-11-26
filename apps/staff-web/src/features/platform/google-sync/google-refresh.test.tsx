@@ -9,7 +9,8 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 // What a mapping or a search changes elsewhere in the section is fetched again, not left stale.
-const calls = (prefix: string) => apiFetch.mock.calls.filter(([p]) => String(p).startsWith(prefix)).length;
+const calls = (prefix: string) =>
+  apiFetch.mock.calls.filter(([p]) => String(p).startsWith(prefix)).length;
 
 afterEach(() => {
   apiFetch.mockReset();

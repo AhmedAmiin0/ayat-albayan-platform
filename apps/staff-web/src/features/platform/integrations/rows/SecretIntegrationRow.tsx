@@ -17,7 +17,13 @@ import { SecretStatusChip } from './SecretStatusChip';
 const s = t.integrations;
 
 /** Never prefilled or shown; the API refuses a Stripe key whose mode is not enabled. */
-export function SecretIntegrationRow({ item, onNote }: { item: IntegrationConfigItem; onNote: (message: string) => void }) {
+export function SecretIntegrationRow({
+  item,
+  onNote,
+}: {
+  item: IntegrationConfigItem;
+  onNote: (message: string) => void;
+}) {
   const queryClient = useQueryClient();
   const [value, setValue] = useState('');
   const [confirming, setConfirming] = useState(false);

@@ -1,6 +1,7 @@
 import type { SalesCancel, SalesLessonMoved, SalesReschedule } from '@ab/shared';
 import type { LessonStatus } from '@ab/catalog';
-import { CANCEL_STATUS, type CancelBy, type LessonCorrect } from '@ab/schedule';
+import { CANCEL_STATUS, cancelBySchema, type LessonCorrect } from '@ab/schedule';
+import { z } from 'zod';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
@@ -14,11 +15,11 @@ import { SalesStudentRepo } from '@/modules/sales/sales-students/shared/sales-st
 import { SalesStudentScope } from '@/modules/sales/sales-students/shared/sales-student-scope';
 
 /** Who may be recorded once the lesson is over: what happened, never the academy's own cancel. */
-const AFTER_END: Record<CancelBy, boolean> = {
+const AFTER_END = z.record(cancelBySchema, z.boolean()).readonly().decode({
   admin: false,
   teacher: true,
   student: true,
-};
+});
 
 type Move = { lessonId: string; body: SalesReschedule; actor: AuthUser };
 type Cancel = { lessonId: string; body: SalesCancel; actor: AuthUser };

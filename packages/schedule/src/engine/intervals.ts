@@ -14,7 +14,10 @@ export function mergeIntervals(list: readonly Interval[]): Interval[] {
 }
 
 /** `base` minus every interval in `cuts`. Result is merged and sorted. */
-export function subtractIntervals(base: readonly Interval[], cuts: readonly Interval[]): Interval[] {
+export function subtractIntervals(
+  base: readonly Interval[],
+  cuts: readonly Interval[],
+): Interval[] {
   const blockers = mergeIntervals(cuts);
   const out: Interval[] = [];
   for (const b of mergeIntervals(base)) {

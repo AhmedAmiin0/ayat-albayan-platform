@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 import { MANAGED_KIND } from '@/modules/platform/short-links';
 
 /**
@@ -13,26 +13,24 @@ export class LinkExpiryRepo {
 
   /** active → expired once past expires_at; the number of links stopped. */
   async expire(now: Date): Promise<number> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('short_links')
       .update({ status: 'expired' })
       .eq('kind', MANAGED_KIND)
       .eq('status', 'active')
       .lte('expires_at', now.toISOString())
-      .select('code');
-    if (error) throw dbError(error);
+      .select('code'));
     return data.length;
   }
 
   /** Deletes managed links that expired before `cutoff` (their users and visits cascade). */
   async purge(cutoff: Date): Promise<number> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('short_links')
       .delete()
       .eq('kind', MANAGED_KIND)
       .lt('expires_at', cutoff.toISOString())
-      .select('code');
-    if (error) throw dbError(error);
+      .select('code'));
     return data.length;
   }
 }

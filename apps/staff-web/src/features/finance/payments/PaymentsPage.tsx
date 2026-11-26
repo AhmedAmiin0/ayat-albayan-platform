@@ -12,7 +12,7 @@ import {
   PageHead,
   Pager,
   Toast,
-  ListSkeleton,
+  QueryState,
   t,
   HeadActions,
 } from '@ab/web-kit';
@@ -56,7 +56,11 @@ export function PaymentsPage({ search, onSearch }: Props) {
   );
   const reset = (patch: Partial<PaymentsUrlSearch>) => onSearch({ ...patch, page: undefined });
   const items = list.data?.items ?? [];
-  const extra = usePaymentFilters({ value: filters, studentName: items[0]?.student.name, onChange: reset });
+  const extra = usePaymentFilters({
+    value: filters,
+    studentName: items[0]?.student.name,
+    onChange: reset,
+  });
   // A filter that matches nothing keeps the table (its toolbar and chips) on screen.
   const bare = list.data?.total === 0 && Object.keys(filterParams(filters)).length === 0;
 
@@ -79,25 +83,46 @@ export function PaymentsPage({ search, onSearch }: Props) {
         />
       </PageHead>
       {list.data && <PeriodTotals totals={list.data.totals} />}
-      {(list.isError || csv.isError) && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isPending && <ListSkeleton />}
-      {bare && <TableBox center><EmptyState title={t.payments.empty} /></TableBox>}
-      {list.data && !bare && (
-        <>
-          <DataTable
-            fill
-            stacked
-            columns={columns}
-            data={items}
-            getRowId={(r) => r.id}
-            emptyText={t.payments.empty}
-            sort={{ key: sort.sort, dir: sort.dir, onChange: (next) => reset(toSortSearch(next)) }}
-            filters={{ values: { method: search.f_method ?? '' }, onChange: (_, v) => reset({ f_method: (v || undefined) as PaymentFilters['method'] }) }}
-            toolbar={{ extra, total: list.isPlaceholderData ? undefined : list.data?.total }}
-          />
-          <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onSearch({ page: p > 1 ? p : undefined })} />
-        </>
-      )}
+      {csv.isError && <FormAlert>{t.common.error}</FormAlert>}
+      <QueryState
+        query={list}
+        isEmpty={() => bare}
+        empty={
+          <TableBox center>
+            <EmptyState title={t.payments.empty} />
+          </TableBox>
+        }
+      >
+        {(data) => (
+          <>
+            <DataTable
+              fill
+              stacked
+              columns={columns}
+              data={items}
+              getRowId={(r) => r.id}
+              emptyText={t.payments.empty}
+              sort={{
+                key: sort.sort,
+                dir: sort.dir,
+                onChange: (next) => reset(toSortSearch(next)),
+              }}
+              filters={{
+                values: { method: search.f_method ?? '' },
+                onChange: (_, v) =>
+                  reset({ f_method: (v || undefined) as PaymentFilters['method'] }),
+              }}
+              toolbar={{ extra, total: list.isPlaceholderData ? undefined : list.data?.total }}
+            />
+            <Pager
+              page={data.page}
+              total={data.total}
+              pageSize={data.pageSize}
+              onPage={(p) => onSearch({ page: p > 1 ? p : undefined })}
+            />
+          </>
+        )}
+      </QueryState>
       {recording && (
         <RecordPaymentDialog
           onClose={() => setRecording(false)}
@@ -107,7 +132,14 @@ export function PaymentsPage({ search, onSearch }: Props) {
           }}
         />
       )}
-      {open && <PaymentDialogs payment={open.payment} action={open.action} onClose={() => setOpen(null)} onDone={setToast} />}
+      {open && (
+        <PaymentDialogs
+          payment={open.payment}
+          action={open.action}
+          onClose={() => setOpen(null)}
+          onDone={setToast}
+        />
+      )}
       {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
     </>
   );

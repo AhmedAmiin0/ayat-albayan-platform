@@ -2,7 +2,8 @@ import type { LeadStatus } from '@ab/catalog';
 import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '@/common/audit/audit.service';
 import type { Db } from '@/common/db/db.module';
-import { dbError } from '@/modules/people/guardians/http';
+import { peopleErrors } from '@/modules/people/guardians/http';
+import { done, maybe } from '@/common/db/errors';
 import { canTransitionLead } from '@ab/catalog';
 
 export type LinkedLead = { id: string; status: LeadStatus; converted_guardian_id: string | null };
@@ -17,12 +18,11 @@ export class LeadLink {
 
   /** Checked before any write: 404 `lead_not_found`. */
   async find(id: string): Promise<LinkedLead> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('leads')
       .select('id, status, converted_guardian_id')
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle(), peopleErrors());
     if (!data) throw new NotFoundException('lead_not_found');
     return data;
   }
@@ -33,25 +33,23 @@ export class LeadLink {
       if (!lead.converted_guardian_id) await this.linkOnly(lead.id, guardianId);
       return;
     }
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('leads')
       .update({ status: 'converted', converted_guardian_id })
       .eq('id', lead.id)
       .eq('status', lead.status)
       .select('id')
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle(), peopleErrors());
     if (!data) return;
     const entry = { actorId, entity: 'leads', entityId: lead.id, action: 'status_change' };
     await this.audit.record({ ...entry, before: { status: lead.status }, after: { status: 'converted', via: 'registration' } });
   }
 
   private async linkOnly(id: string, guardianId: string): Promise<void> {
-    const { error } = await this.db
+    done(await this.db
       .from('leads')
       .update({ converted_guardian_id: guardianId })
       .eq('id', id)
-      .is('converted_guardian_id', null);
-    if (error) throw dbError(error);
+      .is('converted_guardian_id', null), peopleErrors());
   }
 }

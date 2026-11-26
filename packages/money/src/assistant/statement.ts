@@ -1,6 +1,7 @@
 import { fromCents, toCents } from '@ab/core';
 import { localDay } from './first-paid';
 import { addCalendarDays, addCalendarMonths } from '@ab/time';
+import { z } from 'zod';
 
 // An assistant's monthly statement (migration 20261006000273: build_assistant_statement) in pure code:
 // salary + the commissions earned up to that month +/- adjustments, per currency, never summed across
@@ -28,7 +29,9 @@ export interface StatementAdjustmentInput {
   effectiveMonth: string;
 }
 
-export type StatementLineKind = 'salary' | 'commission' | 'adjustment';
+export const STATEMENT_LINE_KINDS = ['salary', 'commission', 'adjustment'] as const;
+export const statementLineKindSchema = z.enum(STATEMENT_LINE_KINDS);
+export type StatementLineKind = z.infer<typeof statementLineKindSchema>;
 export interface StatementLine {
   kind: StatementLineKind;
   /** The commission or adjustment id; null for the salary. */
@@ -90,7 +93,12 @@ export function totalsOf(lines: readonly StatementLine[]): Record<string, Curren
   return Object.fromEntries(
     Object.entries(cents).map(([cur, t]) => [
       cur,
-      { salary: fromCents(t.salary), commissions: fromCents(t.commissions), adjustments: fromCents(t.adjustments), total: fromCents(t.total) },
+      {
+        salary: fromCents(t.salary),
+        commissions: fromCents(t.commissions),
+        adjustments: fromCents(t.adjustments),
+        total: fromCents(t.total),
+      },
     ]),
   );
 }
@@ -99,7 +107,11 @@ export function totalsOf(lines: readonly StatementLine[]): Record<string, Curren
  * The month a correction made now belongs to (assistant_next_open_month): this month in the
  * assistant's tz, or the month after their newest approved / paid statement, whichever is later.
  */
-export function nextOpenMonth(input: { now: string; tz: string; latestFrozenMonth: string | null }): string {
+export function nextOpenMonth(input: {
+  now: string;
+  tz: string;
+  latestFrozenMonth: string | null;
+}): string {
   const current = monthOf(input.now, input.tz);
   if (!input.latestFrozenMonth) return current;
   const after = addCalendarMonths(input.latestFrozenMonth, 1);
@@ -114,9 +126,19 @@ export function voidEffect(
   statement: 'draft' | 'approved' | 'paid' | null,
   commission: { amount: number; currency: string },
   month: string,
-): { adjustment: { amount: number; currency: string; effectiveMonth: string } | null; rebuildDraft: boolean } {
+): {
+  adjustment: { amount: number; currency: string; effectiveMonth: string } | null;
+  rebuildDraft: boolean;
+} {
   if (statement === 'approved' || statement === 'paid') {
-    return { adjustment: { amount: -commission.amount, currency: commission.currency, effectiveMonth: month }, rebuildDraft: false };
+    return {
+      adjustment: {
+        amount: -commission.amount,
+        currency: commission.currency,
+        effectiveMonth: month,
+      },
+      rebuildDraft: false,
+    };
   }
   return { adjustment: null, rebuildDraft: statement === 'draft' };
 }

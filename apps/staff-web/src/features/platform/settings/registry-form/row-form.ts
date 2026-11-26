@@ -82,7 +82,9 @@ export function rowError(def: SettingDef, message: string): string {
   return t.settings.invalidText;
 }
 
-export type RowResult = { ok: true; body: SettingsUpdate; value: unknown } | { ok: false; error: string };
+export type RowResult =
+  | { ok: true; body: SettingsUpdate; value: unknown }
+  | { ok: false; error: string };
 
 /** Validates one setting with the API's own schema; the body holds only that setting. */
 export function rowUpdate(key: SettingKey, form: SettingsForm): RowResult {

@@ -13,7 +13,11 @@ jest.mock('../http/env', () => ({ env: { apiUrl: 'http://api' } }));
 // jest.setup turns refreshOverrides off for the flow tests; this file tests the real module.
 jest.unmock('./i18n-overrides');
 
-const json = (body: unknown, status = 200) => ({ ok: status < 300, status, json: async () => body });
+const json = (body: unknown, status = 200) => ({
+  ok: status < 300,
+  status,
+  json: async () => body,
+});
 const fetchMock = jest.fn();
 
 beforeEach(async () => {

@@ -12,7 +12,12 @@ interface IconProps {
 const hidden = { accessibilityElementsHidden: true, importantForAccessibility: 'no-hide-descendants' } as const;
 const HANDSET = 'M6.6 3.5h2.6l1.4 4-1.9 1.3a12 12 0 0 0 6.5 6.5l1.3-1.9 4 1.4v2.6a2 2 0 0 1-2.2 2A17 17 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z';
 
-function Line({ d, color, size = 22, rotate = 0 }: IconProps & { d: readonly string[]; rotate?: number }) {
+function Line({
+  d,
+  color,
+  size = 22,
+  rotate = 0,
+}: IconProps & { d: readonly string[]; rotate?: number }) {
   return (
     <Svg {...hidden} viewBox="0 0 24 24" width={size} height={size} fill="none" stroke={color} strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" style={rotate ? { transform: [{ rotate: `${rotate}deg` }] } : undefined}>
       {d.map((p) => (

@@ -1,3 +1,4 @@
+import { errorMessage } from '@ab/core';
 import { expiryMove } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { pendingSince } from './student-renewal.plan';
@@ -17,8 +18,6 @@ interface ExpirySummary {
   failed: number;
 }
 type Outcome = 'expired' | 'kept' | 'failed';
-
-const errorText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /** Transition 6 (docs/11 §7, R-STU-05): pending_renewal expires after the setting's days. */
 @BackgroundJob({ name: 'student-expiry' })
@@ -65,7 +64,7 @@ export class StudentExpiryJob extends TickerJob {
     try {
       return (await this.expire(studentId, o)) ? 'expired' : 'kept';
     } catch (e) {
-      this.log.error(`expiry of student ${studentId} failed: ${errorText(e)}`);
+      this.log.error(`expiry of student ${studentId} failed: ${errorMessage(e)}`);
       return 'failed';
     }
   }

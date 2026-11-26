@@ -5,7 +5,11 @@ import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { studentLabel } from '@/features/finance/subscriptions';
 
 /** `onBookCourse` books the course days for the paid package's student. */
-type Props = { payment: SalesPaymentView; onClose: () => void; onBookCourse?: (() => void) | undefined };
+type Props = {
+  payment: SalesPaymentView;
+  onClose: () => void;
+  onBookCourse?: (() => void) | undefined;
+};
 
 /** The transfer is recorded and counts at once (R-ASST-04). */
 export function SalesDoneStep({ payment, onClose, onBookCourse }: Props) {

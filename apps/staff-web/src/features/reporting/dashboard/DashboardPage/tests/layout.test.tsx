@@ -27,7 +27,9 @@ const hasBaseColumns = (el: Element) => [...el.classList].some((c) => c.startsWi
 
 async function renderPage(): Promise<HTMLElement> {
   const { container } = render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <DashboardPage search={{}} onSearch={vi.fn()} />
     </QueryClientProvider>,
   );

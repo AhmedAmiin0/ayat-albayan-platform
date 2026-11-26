@@ -21,7 +21,9 @@ export function PayoutsScreen() {
   const payouts = usePayouts(month);
   const open = payouts.data?.find((p) => p.id === openId) ?? null;
   const renderRow = useCallback(
-    ({ item }: ListRenderItemInfo<PayoutView>) => <PayoutRow payout={item} onPress={() => setOpenId(item.id)} />,
+    ({ item }: ListRenderItemInfo<PayoutView>) => (
+      <PayoutRow payout={item} onPress={() => setOpenId(item.id)} />
+    ),
     [],
   );
   const cells = useInsetRows(renderRow, payouts.data?.length ?? 0);

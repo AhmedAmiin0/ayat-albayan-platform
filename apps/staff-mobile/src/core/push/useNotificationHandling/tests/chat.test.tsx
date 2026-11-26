@@ -38,10 +38,14 @@ jest.mock('expo-notifications', () => ({
 }));
 
 const PHONE = '+966552147730';
-const tap = (data: Record<string, unknown>) => ({ notification: { request: { content: { data } } } });
+const tap = (data: Record<string, unknown>) => ({
+  notification: { request: { content: { data } } },
+});
 
 async function tapIn(tree: PushTree, data: Record<string, unknown>) {
-  await renderHook(() => useNotificationHandling(tree), { wrapper: queryWrapper(createTestQueryClient()) });
+  await renderHook(() => useNotificationHandling(tree), {
+    wrapper: queryWrapper(createTestQueryClient()),
+  });
   await act(async () => mockListeners.response?.(tap(data)));
 }
 

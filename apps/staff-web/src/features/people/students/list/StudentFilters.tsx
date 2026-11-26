@@ -55,7 +55,10 @@ export function StudentFilters({ value, onChange }: StudentFiltersProps) {
         <span aria-hidden="true" className="text-xs font-semibold text-ink-2">
           {s.status}
         </span>
-        <StatusChips value={selectedStatuses(value)} onToggle={(st) => onChange(toggleStatus(value, st))} />
+        <StatusChips
+          value={selectedStatuses(value)}
+          onToggle={(st) => onChange(toggleStatus(value, st))}
+        />
       </div>
       {keys.map((key) => (
         <SelectFilterField

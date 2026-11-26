@@ -1,5 +1,4 @@
-import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
-import type { PostgrestError } from '@supabase/supabase-js';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { z } from 'zod';
 
 // ponytail: module-local; lift to common/ once a second module needs the same helpers.
@@ -24,14 +23,6 @@ export function sentOnly<T extends object>(parsed: T, body: unknown): Partial<T>
 export function orNotFound<T>(row: T | null): T {
   if (row === null) throw new NotFoundException();
   return row;
-}
-
-/** Postgres / PostgREST error → HTTP. Unknown errors become a plain Error (500). */
-export function dbError(error: PostgrestError): Error {
-  if (error.code === '23505') return new ConflictException({ message: 'duplicate', detail: error.details });
-  if (error.code === '23503') return new ConflictException({ message: 'fk_violation', detail: error.details });
-  if (error.code === 'PGRST103') return new BadRequestException({ message: 'page_out_of_range' });
-  return new Error(`db error ${error.code}: ${error.message}`);
 }
 
 /** `?page=1&pageSize=25` (R-NFR-08: every list endpoint is paginated). */

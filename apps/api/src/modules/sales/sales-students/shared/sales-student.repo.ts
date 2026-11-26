@@ -3,7 +3,7 @@ import type { Attendance, LessonStatus } from '@ab/catalog';
 import { OPEN_LESSON_STATUSES } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, rows } from '@/common/db/errors';
 import { type SalesScheduleRow, WEEKLY_RULE_COLUMNS, type WeeklyRuleRow } from '@/modules/sales/sales';
 import { TrialDateRepo } from '@/modules/teaching/booking';
 
@@ -66,60 +66,55 @@ export class SalesStudentRepo {
   constructor(@Inject(DB) private readonly db: Db, readonly trialDates: TrialDateRepo) {}
 
   async student(id: string): Promise<DetailsStudentRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('students')
       .select(DETAILS_SELECT)
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   /** The price and currency of her student's packages: read ONLY for a viewer with self.sales_money (part_paid). */
   async prices(studentId: string): Promise<PriceRow[]> {
-    const { data, error } = await this.db.from('subscriptions').select('id, price, currency, cancel_kind, stop_owed_amount').eq('student_id', studentId);
-    if (error) throw dbError(error);
+    const data = rows(await this.db.from('subscriptions').select('id, price, currency, cancel_kind, stop_owed_amount').eq('student_id', studentId));
     return data;
   }
 
   /** Lessons of the student that started before `now`, newest first, at most ATTENDANCE_LIMIT. */
   async pastLessons(studentId: string, now: Date): Promise<AttendanceRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lessons')
       .select('id, starts_at, status, lesson_students!inner(student_id, attendance)')
       .eq('lesson_students.student_id', studentId)
       .lt('starts_at', now.toISOString())
       .order('starts_at', { ascending: false })
       .limit(ATTENDANCE_LIMIT)
-      .overrideTypes<AttendanceRow[], { merge: false }>();
-    if (error) throw dbError(error);
+      .overrideTypes<AttendanceRow[], { merge: false }>());
     return data;
   }
 
   async lesson(id: string): Promise<LessonFacts | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lessons')
       .select('id, starts_at, ends_at, status, lesson_students(student_id)')
       .eq('id', id)
-      .maybeSingle<LessonFacts>();
-    if (error) throw dbError(error);
+      .maybeSingle<LessonFacts>());
     return data;
   }
 
   /** The student's active rules (schedule_rule_students → schedule_rules.status = 'active'). */
   async rules(studentId: string): Promise<WeeklyRuleRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('schedule_rule_students')
       .select(RULE_SELECT)
       .eq('student_id', studentId)
-      .eq('rule.status', 'active');
-    if (error) throw dbError(error);
+      .eq('rule.status', 'active'));
     return data.map((r) => r.rule);
   }
 
   /** The student's open lessons (scheduled / confirmed) starting inside [from, to), by start, at most `limit`. */
   async upcoming(studentId: string, w: Window): Promise<SalesScheduleRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lessons')
       .select(UPCOMING_SELECT)
       .eq('own.student_id', studentId)
@@ -128,8 +123,7 @@ export class SalesStudentRepo {
       .in('status', [...OPEN_LESSON_STATUSES])
       .order('starts_at')
       .limit(w.limit)
-      .overrideTypes<SalesScheduleRow[], { merge: false }>();
-    if (error) throw dbError(error);
+      .overrideTypes<SalesScheduleRow[], { merge: false }>());
     return data;
   }
 }

@@ -15,7 +15,13 @@ function RowState({ row }: { row: GoogleStudentMapRow }) {
   return <StatusChip size="sm" tone="ok" glyph="fill" label={row.create_new ? s.createNew : s.existing} />;
 }
 
-export function StudentRow({ row, onNote }: { row: GoogleStudentMapRow; onNote: (message: string) => void }) {
+export function StudentRow({
+  row,
+  onNote,
+}: {
+  row: GoogleStudentMapRow;
+  onNote: (message: string) => void;
+}) {
   const queryClient = useQueryClient();
   const [manual, setManual] = useState(false);
   const done = async () => {
@@ -35,9 +41,20 @@ export function StudentRow({ row, onNote }: { row: GoogleStudentMapRow; onNote: 
         <Ltr className="text-xs text-ink-3">{row.code}</Ltr>
         <RowState row={row} />
       </div>
-      {!row.confirmed_at && row.suggestion && <p className="text-xs text-ink-3 break-words">{fill(s.suggested, { name: row.suggestion.name })}</p>}
-      <StudentActions row={row} busy={busy} manual={manual} on={{ send, unmap: () => unmap.mutate(row.student_id), toggle: () => setManual((v) => !v) }} />
-      {manual && <StudentManualLink busy={busy} onSubmit={send} onCancel={() => setManual(false)} />}
+      {!row.confirmed_at && row.suggestion && (
+        <p className="text-xs text-ink-3 break-words">
+          {fill(s.suggested, { name: row.suggestion.name })}
+        </p>
+      )}
+      <StudentActions
+        row={row}
+        busy={busy}
+        manual={manual}
+        on={{ send, unmap: () => unmap.mutate(row.student_id), toggle: () => setManual((v) => !v) }}
+      />
+      {manual && (
+        <StudentManualLink busy={busy} onSubmit={send} onCancel={() => setManual(false)} />
+      )}
       {(put.isError || unmap.isError) && <FormAlert>{t.googleSync.common.saveError}</FormAlert>}
     </li>
   );

@@ -13,7 +13,13 @@ export function NewTeacherFields({ value, onChange, error }: NewTeacherFieldsPro
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <Field label={N.nameAr} required error={error}>
-        {(p) => <Input {...p} value={value.display_name_ar} onChange={(e) => onChange({ ...value, display_name_ar: e.target.value })} />}
+        {(p) => (
+          <Input
+            {...p}
+            value={value.display_name_ar}
+            onChange={(e) => onChange({ ...value, display_name_ar: e.target.value })}
+          />
+        )}
       </Field>
       <Field label={N.nameEn}>
         {(p) => <Input {...p} dir="ltr" value={value.display_name_en} onChange={(e) => onChange({ ...value, display_name_en: e.target.value })} />}

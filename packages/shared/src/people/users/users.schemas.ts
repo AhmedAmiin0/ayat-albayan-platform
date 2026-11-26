@@ -34,9 +34,10 @@ export const usersListQuery = z.object({
 export type UsersListQuery = z.output<typeof usersListQuery>;
 
 export const LINK_KINDS = ['teacher', 'student', 'guardian'] as const;
-export type LinkKind = (typeof LINK_KINDS)[number];
+export const linkKindSchema = z.enum(LINK_KINDS);
+export type LinkKind = z.infer<typeof linkKindSchema>;
 export const linkCandidatesQuery = z.object({
-  kind: z.enum(LINK_KINDS),
+  kind: linkKindSchema,
   q: z.preprocess(blank, z.string().trim().max(100).optional()),
 });
 
@@ -69,7 +70,7 @@ export const userCreateSchema = z
     if (needsExistingRecord(v.role) && !v.linked_id) issue('linked_id', 'link_required');
     if (v.role === 'teacher' && !v.linked_id && !v.new_teacher) issue('linked_id', 'link_required');
     if (v.role === 'teacher' && v.linked_id && v.new_teacher) issue('new_teacher', 'link_or_new');
-    if (!['teacher', 'student', 'guardian'].includes(v.role) && (v.linked_id || v.new_teacher))
+    if (!linkKindSchema.validate(v.role) && (v.linked_id || v.new_teacher))
       issue('linked_id', 'link_not_allowed');
   });
 export type UserCreate = z.output<typeof userCreateSchema>;

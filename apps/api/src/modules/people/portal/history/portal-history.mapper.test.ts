@@ -1,5 +1,12 @@
-import { COURSE_PAUSE_REASON } from '@ab/shared';
-import { describe, expect, it } from 'vitest';
+import {
+  attendanceKindSchema,
+  COURSE_PAUSE_REASON,
+  portalOutcomeSchema,
+  type AttendanceKind,
+  type PortalOutcome,
+} from '@ab/shared';
+import { describe, expect, expectTypeOf, it } from 'vitest';
+import { z } from 'zod';
 import { pastRow } from '@/modules/people/portal/portal.family.fakes';
 import { monthCounts, outcomeOf, pickFor, toHistoryRow } from './portal-history.mapper';
 
@@ -65,5 +72,23 @@ describe('portal history mapper (docs/50 §5)', () => {
     const row = toHistoryRow(paused, refs([], [['l-02', 'rec']]));
     expect([row.absence_reason, row.report_id, row.recording_id]).toEqual([null, null, null]);
     expect(row.teacher).toEqual({ display_name_ar: '', display_name_en: null });
+  });
+});
+
+describe('the outcome table as a zod record (docs/62 part 2 §1)', () => {
+  const schema = z.record(attendanceKindSchema, portalOutcomeSchema.nullable()).readonly();
+  const full = { present: 'attended', absent: 'absent', excused: 'excused', cancelled: null };
+
+  it('needs every attendance kind, with null for no outcome', () => {
+    expectTypeOf<z.input<typeof schema>>().toEqualTypeOf<
+      Readonly<Record<AttendanceKind, PortalOutcome | null>>
+    >();
+  });
+
+  it('refuses a missing kind, a wrong outcome and an extra key', () => {
+    expect(() => schema.parse(full)).toThrow();
+    expect(() => schema.parse({ ...full, unmarked: null, present: 'here' })).toThrow();
+    expect(() => schema.parse({ ...full, unmarked: null, late: null })).toThrow();
+    expect(schema.parse({ ...full, unmarked: null })).toEqual({ ...full, unmarked: null });
   });
 });

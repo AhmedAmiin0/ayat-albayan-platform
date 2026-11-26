@@ -10,7 +10,13 @@ import { useClockCycle, whenIn } from '@/core/lib/clock';
 
 export const reportFormHref = (lessonId: string) => `/teacher/reports/${lessonId}`;
 
-export const PendingReportRow = memo(function PendingReportRow({ row, tz }: { row: PendingReportView; tz: string }) {
+export const PendingReportRow = memo(function PendingReportRow({
+  row,
+  tz,
+}: {
+  row: PendingReportView;
+  tz: string;
+}) {
   const cycle = useClockCycle();
   return (
     <ListRow
@@ -28,11 +34,21 @@ export const PendingReportRow = memo(function PendingReportRow({ row, tz }: { ro
  * this clock (editableNow, docs/46 B5: not the cached can_edit, so a list left open never offers a
  * closed edit).
  */
-export const SubmittedReportRow = memo(function SubmittedReportRow({ row, tz }: { row: TeacherReportView; tz: string }) {
+export const SubmittedReportRow = memo(function SubmittedReportRow({
+  row,
+  tz,
+}: {
+  row: TeacherReportView;
+  tz: string;
+}) {
   const cycle = useClockCycle();
   const editable = editableNow(row, useNow());
   const when = whenIn(new Date(row.starts_at), tz, cycle);
-  const grade = row.grade_overall ? t.enums.grade[row.grade_overall] : row.attendance ? t.enums.attendance[row.attendance] : null;
+  const grade = row.grade_overall
+    ? t.enums.grade[row.grade_overall]
+    : row.attendance
+      ? t.enums.attendance[row.attendance]
+      : null;
   const tone = row.grade_overall ? gradeStyle[row.grade_overall].tone : 'neutral';
   return (
     <ListRow
@@ -52,7 +68,11 @@ export const SubmittedReportRow = memo(function SubmittedReportRow({ row, tz }: 
   );
 });
 
-export const StudentHistoryRow = memo(function StudentHistoryRow({ student }: { student: { id: string; code: string; name: string } }) {
+export const StudentHistoryRow = memo(function StudentHistoryRow({
+  student,
+}: {
+  student: { id: string; code: string; name: string };
+}) {
   return (
     <ListRow
       title={student.name}
@@ -65,8 +85,13 @@ export const StudentHistoryRow = memo(function StudentHistoryRow({ student }: { 
 
 /** The lesson number, then the overall grade or, without grades, the attendance. */
 function summaryLine(r: ReportSummaryView): string {
-  const no = r.lesson_no === null ? null : t.reports.lessonNoShort.replace('{n}', String(r.lesson_no));
-  const grade = r.grade_overall ? t.enums.grade[r.grade_overall] : r.attendance ? t.enums.attendance[r.attendance] : null;
+  const no =
+    r.lesson_no === null ? null : t.reports.lessonNoShort.replace('{n}', String(r.lesson_no));
+  const grade = r.grade_overall
+    ? t.enums.grade[r.grade_overall]
+    : r.attendance
+      ? t.enums.attendance[r.attendance]
+      : null;
   return [no, grade].filter((part): part is string => part !== null).join(' · ');
 }
 
@@ -80,7 +105,12 @@ interface ReportHistoryRowProps {
 }
 
 /** Read-only for sales. */
-export const ReportHistoryRow = memo(function ReportHistoryRow({ row, tz, onPdf, onPress }: ReportHistoryRowProps) {
+export const ReportHistoryRow = memo(function ReportHistoryRow({
+  row,
+  tz,
+  onPdf,
+  onPress,
+}: ReportHistoryRowProps) {
   const cycle = useClockCycle();
   return (
     <ListRow

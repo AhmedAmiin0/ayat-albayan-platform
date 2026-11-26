@@ -5,7 +5,11 @@ import { consumesPackage, subscriptionBalances, type PackageLesson } from '../us
 // The same scenario the migration 123 SQL check ran (begin … rollback on the local DB): a free
 // trial, six completed lessons, an excuse and a teacher cancel that don't count, two booked.
 let seq = 0;
-function lesson(day: string, status: LessonStatus, extra: Partial<PackageLesson> = {}): PackageLesson {
+function lesson(
+  day: string,
+  status: LessonStatus,
+  extra: Partial<PackageLesson> = {},
+): PackageLesson {
   seq += 1;
   return {
     lessonId: `l${String(seq).padStart(3, '0')}`,
@@ -48,7 +52,13 @@ describe('consumesPackage (migration 123 rules 1–3, R-SUB-01, issue E1)', () =
     ['cancelled_by_teacher', false, false, false],
     ['rescheduled', false, false, false],
   ];
-  const cases = rows.map(([status, chargeable, trial, expected]) => ({ status, chargeable, trial, makeup: false, expected }));
+  const cases = rows.map(([status, chargeable, trial, expected]) => ({
+    status,
+    chargeable,
+    trial,
+    makeup: false,
+    expected,
+  }));
   it.each(cases)('$status chargeable=$chargeable trial=$trial → $expected', (c) => {
     expect(consumesPackage(c)).toBe(c.expected);
   });
@@ -114,8 +124,12 @@ describe('subscriptionBalances: FIFO across packages (R-SUB-01, R-SUB-03, issue 
     const done = [lesson('2026-09-28', 'completed')];
     const today = lesson('2026-10-02', 'scheduled');
     const pkg = [sub('S', 4, { startsOn: '2026-09-27' })];
-    expect(subscriptionBalances({ lessons: [...done, today], subscriptions: pkg })[0]?.remaining).toBe(3);
+    expect(
+      subscriptionBalances({ lessons: [...done, today], subscriptions: pkg })[0]?.remaining,
+    ).toBe(3);
     const after = { ...today, status: 'completed' as const };
-    expect(subscriptionBalances({ lessons: [...done, after], subscriptions: pkg })[0]?.remaining).toBe(2);
+    expect(
+      subscriptionBalances({ lessons: [...done, after], subscriptions: pkg })[0]?.remaining,
+    ).toBe(2);
   });
 });

@@ -2,7 +2,7 @@ import type { Tables, TablesInsert } from '@ab/db';
 import { storageKeyOf, storedPath } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, pgError } from '@/common/db/errors';
 
 /** A path already held by a payment, as an attachment or its single legacy receipt. */
 export type PathOwner = { path: string; paymentId: string };
@@ -21,7 +21,7 @@ export class PaymentAttachmentsRepo {
       .eq('payment_id', paymentId)
       .order('created_at')
       .order('id');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -35,8 +35,8 @@ export class PaymentAttachmentsRepo {
       this.db.from('payment_attachments').select('path, payment_id').in('path', forms),
       this.db.from('payments').select('id, receipt_path').in('receipt_path', forms),
     ]);
-    if (files.error) throw dbError(files.error);
-    if (receipts.error) throw dbError(receipts.error);
+    if (files.error) throw pgError(files.error);
+    if (receipts.error) throw pgError(receipts.error);
     return [
       ...files.data.map((r) => ({ path: r.path, paymentId: r.payment_id })),
       ...receipts.data.flatMap((r) => (r.receipt_path ? [{ path: r.receipt_path, paymentId: r.id }] : [])),
@@ -46,9 +46,8 @@ export class PaymentAttachmentsRepo {
   /** Idempotent on the unique path: a replayed form never duplicates a row. */
   async save(rows: readonly TablesInsert<'payment_attachments'>[]): Promise<void> {
     if (rows.length === 0) return;
-    const { error } = await this.db
+    done(await this.db
       .from('payment_attachments')
-      .upsert([...rows], { onConflict: 'path', ignoreDuplicates: true });
-    if (error) throw dbError(error);
+      .upsert([...rows], { onConflict: 'path', ignoreDuplicates: true }));
   }
 }

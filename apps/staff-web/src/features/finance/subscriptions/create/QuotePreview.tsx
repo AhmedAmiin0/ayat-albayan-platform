@@ -15,7 +15,8 @@ type Props = { studentId: string; pricing: SubscriptionPricing };
 export function QuotePreview({ studentId, pricing }: Props) {
   const quote = useSubscriptionQuote(studentId, pricing);
 
-  if (quote.isError) return <FormAlert>{apiErrorText(quote.error, t.subscriptions.error)}</FormAlert>;
+  if (quote.isError)
+    return <FormAlert>{apiErrorText(quote.error, t.subscriptions.error)}</FormAlert>;
   const q = quote.data;
   return (
     <figure

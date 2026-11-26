@@ -34,7 +34,10 @@ export function ExpenseForm({ categories, onDone }: ExpenseFormProps) {
           role="radiogroup"
           wrap
           accessibilityLabel={t.expenses.category}
-          items={activeCategories(categories).map((c) => ({ value: c.key, label: categoryLabel(categories, c.key) }))}
+          items={activeCategories(categories).map((c) => ({
+            value: c.key,
+            label: categoryLabel(categories, c.key),
+          }))}
           value={draft.category}
           onChange={(category) => set({ category })}
         />
@@ -43,7 +46,12 @@ export function ExpenseForm({ categories, onDone }: ExpenseFormProps) {
       <AmountField value={draft.amountText} onChange={(amountText) => set({ amountText })} currency="EGP" {...(shown.amount ? { error: shown.amount } : {})} />
       <Note>{t.mobileFinance.expenses.currencyNote}</Note>
       <PaidDayPicker daysAgo={draft.daysAgo} onChange={(daysAgo) => set({ daysAgo })} now={now} />
-      <Field label={t.finance.vendor} value={draft.vendor} onChangeText={(vendor) => set({ vendor })} maxLength={200} />
+      <Field
+        label={t.finance.vendor}
+        value={draft.vendor}
+        onChangeText={(vendor) => set({ vendor })}
+        maxLength={200}
+      />
       <View style={{ gap: 6 }}>
         <FormLabel>{t.payments.method}</FormLabel>
         <FilterPills
@@ -55,7 +63,12 @@ export function ExpenseForm({ categories, onDone }: ExpenseFormProps) {
           onChange={(method) => set({ method: method === draft.method ? null : method })}
         />
       </View>
-      <Field label={t.expenses.note} value={draft.note} onChangeText={(note) => set({ note })} maxLength={500} />
+      <Field
+        label={t.expenses.note}
+        value={draft.note}
+        onChangeText={(note) => set({ note })}
+        maxLength={500}
+      />
       <ReceiptPicker receipt={draft.receipt} onChange={(receipt) => set({ receipt })} />
       {add.isError ? <ErrorLine message={financeErrorText(add.error)} /> : null}
       <Button

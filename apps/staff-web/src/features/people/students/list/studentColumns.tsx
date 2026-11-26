@@ -76,7 +76,12 @@ export function studentColumns(onOpen: (studentId: string) => void, pick?: PickC
     }),
     col.accessor('status', {
       header: () => t.students.status,
-      cell: (c) => <StatusChip {...studentStatusStyle[c.getValue()]} label={t.enums.studentStatus[c.getValue()]} />,
+      cell: (c) => (
+        <StatusChip
+          {...studentStatusStyle[c.getValue()]}
+          label={t.enums.studentStatus[c.getValue()]}
+        />
+      ),
       meta: { className: stacked.status, sortKey: 'status' },
     }),
     col.display({

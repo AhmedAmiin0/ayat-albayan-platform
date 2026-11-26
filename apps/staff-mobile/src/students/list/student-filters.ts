@@ -38,5 +38,7 @@ export function countOf(counts: unknown, status: StudentStatus): number | undefi
 /** Undefined until every per-status count is known. */
 export function totalOf(counts: unknown): number | undefined {
   const all = STUDENT_STATUSES.map((s) => countOf(counts, s));
-  return all.every((n): n is number => n !== undefined) ? all.reduce((a, b) => a + b, 0) : undefined;
+  return all.every((n): n is number => n !== undefined)
+    ? all.reduce((a, b) => a + b, 0)
+    : undefined;
 }

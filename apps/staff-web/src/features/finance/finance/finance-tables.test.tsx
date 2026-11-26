@@ -14,7 +14,17 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await i
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
 const by = (col: string) => t.table.filterBy.replace('{col}', col);
-const row = ({ id, name, owed, days }: { id: string; name: string; owed: number; days: number }) => ({
+const row = ({
+  id,
+  name,
+  owed,
+  days,
+}: {
+  id: string;
+  name: string;
+  owed: number;
+  days: number;
+}) => ({
   id,
   student: { id: `s-${id}`, code: 'AB-0001', name },
   guardian: { name: `أم ${name}`, phone_e164: null },
@@ -31,7 +41,13 @@ const OWED = { rows: [row({ id: 'a', name: 'سهيلة', owed: 300, days: 96 }),
 const INVOICE = { id: 'inv-1', rule_id: 'r1', kind: 'package', mime: 'image/png', size_bytes: 10, source: 'upload', created_at: '2026-10-01T09:00:00Z', students: [], payment_id: null };
 
 function show(node: ReactNode) {
-  render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>{node}</QueryClientProvider>);
+  render(
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      {node}
+    </QueryClientProvider>,
+  );
 }
 const names = () => screen.getAllByRole('link').map((a) => a.textContent);
 

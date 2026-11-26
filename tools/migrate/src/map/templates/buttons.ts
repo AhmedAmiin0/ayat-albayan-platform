@@ -11,13 +11,15 @@ interface UrlButton {
 const str = (v: unknown): string | undefined =>
   typeof v === 'string' && v.trim() !== '' ? v.trim() : undefined;
 
+const isUrlType = (rec: Record<string, unknown>): boolean => str(rec.type)?.toUpperCase() === 'URL';
+
 function urlButton(b: unknown): UrlButton | undefined {
   if (!b || typeof b !== 'object') return undefined;
   const rec = b as Record<string, unknown>;
   const url = str(rec.url);
-  if (str(rec.type)?.toUpperCase() !== 'URL' || !url) return undefined;
+  if (!isUrlType(rec) || !url) return undefined;
   const text = str(rec.text);
-  return text ? { type: 'url', url, text } : { type: 'url', url };
+  return { type: 'url', url, ...(text ? { text } : {}) };
 }
 
 /** undefined = a button we cannot represent (quick reply, phone, malformed). null/[] = none. */

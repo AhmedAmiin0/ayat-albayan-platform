@@ -16,7 +16,20 @@ interface AssistantTabBodyProps {
 
 /** One salesperson's open tab: terms (edited with assistantpay.write, else read-only), commissions, statements. */
 export function AssistantTabBody({ tab, assistant, can, onNotice }: AssistantTabBodyProps) {
-  if (tab === 'commissions') return <CommissionLedger assistantId={assistant.id} canWrite={can.write} onNotice={onNotice} />;
-  if (tab === 'statements') return <StatementsPanel assistants={[assistant]} assistantId={assistant.id} can={can} onNotice={onNotice} />;
-  return can.write ? <TermsEditor key={assistant.id} assistant={assistant} onNotice={onNotice} /> : <TermsView terms={assistant.terms} />;
+  if (tab === 'commissions')
+    return <CommissionLedger assistantId={assistant.id} canWrite={can.write} onNotice={onNotice} />;
+  if (tab === 'statements')
+    return (
+      <StatementsPanel
+        assistants={[assistant]}
+        assistantId={assistant.id}
+        can={can}
+        onNotice={onNotice}
+      />
+    );
+  return can.write ? (
+    <TermsEditor key={assistant.id} assistant={assistant} onNotice={onNotice} />
+  ) : (
+    <TermsView terms={assistant.terms} />
+  );
 }

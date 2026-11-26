@@ -19,9 +19,22 @@ const OLD = message({ id: 'm0', direction: 'inbound', body: 'رسالة قديم
 const LATER = message({ id: 'm4', direction: 'inbound', body: 'شكرًا', created_at: '2026-10-02T08:20:00Z' });
 
 /** pages[0] is the newest page, as useThread caches it. */
-function stub(pages: MessageView[][], more: { hasNextPage?: boolean; fetchNextPage?: () => void } = {}) {
-  const fields = { hasNextPage: false, isRefetching: false, isFetchingNextPage: false, refetch: jest.fn(), fetchNextPage: jest.fn(), ...more };
-  return { data: cachedThread(...pages.map((m) => detail(m))), ...fields } as unknown as ThreadQuery;
+function stub(
+  pages: MessageView[][],
+  more: { hasNextPage?: boolean; fetchNextPage?: () => void } = {},
+) {
+  const fields = {
+    hasNextPage: false,
+    isRefetching: false,
+    isFetchingNextPage: false,
+    refetch: jest.fn(),
+    fetchNextPage: jest.fn(),
+    ...more,
+  };
+  return {
+    data: cachedThread(...pages.map((m) => detail(m))),
+    ...fields,
+  } as unknown as ThreadQuery;
 }
 const show = (query: ThreadQuery) => renderWithQuery(<MessageList phone={PHONE} query={query} />);
 const rowIds = () => screen.getAllByTestId(/^message-row-/).map((n) => String(n.props.testID).replace('message-row-', ''));
@@ -35,7 +48,10 @@ test('opens on the newest: an inverted list, newest first, never a guessed scrol
   expect(rowIds()).toEqual([delivered.id, inbound.id, OLD.id]);
   const list = screen.getByTestId('message-list');
   expect(list.props.inverted).toBe(true);
-  expect(list.props.maintainVisibleContentPosition).toEqual({ minIndexForVisible: 0, autoscrollToTopThreshold: AT_NEWEST });
+  expect(list.props.maintainVisibleContentPosition).toEqual({
+    minIndexForVisible: 0,
+    autoscrollToTopThreshold: AT_NEWEST,
+  });
   expect(toEnd).not.toHaveBeenCalled();
 });
 
@@ -47,7 +63,9 @@ test('a message she sends brings her to the newest; one that comes in, or an old
   expect(toOffset).toHaveBeenCalledTimes(1);
   expect(toOffset).toHaveBeenCalledWith({ offset: 0, animated: true });
   await view.rerender(<MessageList phone={PHONE} query={stub([[inbound, delivered], [OLD]])} />);
-  await view.rerender(<MessageList phone={PHONE} query={stub([[inbound, delivered, LATER], [OLD]])} />);
+  await view.rerender(
+    <MessageList phone={PHONE} query={stub([[inbound, delivered, LATER], [OLD]])} />,
+  );
   expect(toOffset).toHaveBeenCalledTimes(1);
 });
 

@@ -6,7 +6,9 @@ import { useAssistants } from '@/assistants/api/api';
 import { AssistantItem } from './AssistantItem';
 import type { AssistantRow } from '@ab/client-core';
 
-const renderRow = ({ item }: ListRenderItemInfo<AssistantRow>) => <AssistantItem assistant={item} />;
+const renderRow = ({ item }: ListRenderItemInfo<AssistantRow>) => (
+  <AssistantItem assistant={item} />
+);
 
 export function AssistantsList() {
   const list = useAssistants();

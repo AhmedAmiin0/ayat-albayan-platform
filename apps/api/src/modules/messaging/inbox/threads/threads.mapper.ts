@@ -12,7 +12,7 @@ import {
 import type { WaLine } from '@ab/catalog';
 import { searchDigits } from '@ab/core';
 import { lineEnvs, loadEnv } from '@/config/env/env';
-import { orSafe } from '@/modules/people/guardians/http';
+import { orFilterTerm } from '@/common/db/or-filter';
 import { looksCrmHistory, windowless } from '@/modules/messaging/whatsapp';
 import type { FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
 
@@ -127,7 +127,7 @@ function familyFields(tag: FamilyTag | null): FamilyFields {
 export function threadSearchFilter(term: string): string | null {
   const digits = searchDigits(term);
   if (digits) return `phone_e164.ilike.*${digits}*`;
-  const safe = orSafe(term);
+  const safe = orFilterTerm(term);
   return safe ? `display_name.ilike.*${safe}*` : null;
 }
 

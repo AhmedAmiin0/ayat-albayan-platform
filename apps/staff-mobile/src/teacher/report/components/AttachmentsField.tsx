@@ -28,7 +28,13 @@ export function fileLabel(file: Pick<ReportAttachmentView, 'mime' | 'size'>): st
 const ERRORS: Record<string, string> = t.reports.error;
 
 /** Files open through a signed URL (R-REP-02); photos only, PDF and audio need a doc picker. */
-export function AttachmentsField({ reportId, files, onChange, editable, addLabel }: AttachmentsFieldProps) {
+export function AttachmentsField({
+  reportId,
+  files,
+  onChange,
+  editable,
+  addLabel,
+}: AttachmentsFieldProps) {
   const [local, setLocal] = useState<string | null>(null);
   const upload = useMutation({
     mutationFn: (file: Receipt) => uploadAttachment(reportId, file),
@@ -59,7 +65,9 @@ export function AttachmentsField({ reportId, files, onChange, editable, addLabel
         <>
           <Button
             variant="secondary"
-            label={upload.isPending ? t.reports.uploading : (addLabel ?? t.payments.mobile.pickPhoto)}
+            label={
+              upload.isPending ? t.reports.uploading : (addLabel ?? t.payments.mobile.pickPhoto)
+            }
             busy={upload.isPending}
             onPress={() => void add()}
           />

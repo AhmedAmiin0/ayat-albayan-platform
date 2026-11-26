@@ -13,7 +13,10 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await i
 
 const STUDENT = { id: 'stu-1', name: 'سهيلة', code: 'AB-0183' };
 // A package made by mistake: nothing paid and no lesson used (WEEKLY has used 2).
-const FRESH = { ...WEEKLY, balance: { ...WEEKLY.balance, lessons_used: 0, remaining: WEEKLY.lessons_total } };
+const FRESH = {
+  ...WEEKLY,
+  balance: { ...WEEKLY.balance, lessons_used: 0, remaining: WEEKLY.lessons_total },
+};
 
 function renderCard(view = balanceOf([FRESH])) {
   apiFetch.mockResolvedValue(view);

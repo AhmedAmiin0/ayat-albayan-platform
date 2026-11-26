@@ -19,12 +19,22 @@ export const useAllAssistants = (enabled: boolean) =>
   useQuery({ queryKey: pathKey('/assistants'), queryFn: () => apiFetch<AssistantView[]>('/assistants'), select: asList, enabled });
 
 /** POST /students/:id/assistants {profileId}: answers the new list. */
-export const assignAssistant = ({ studentId, profileId }: { studentId: string; profileId: string }) =>
-  apiSend<AssistantView[]>('POST', `/students/${studentId}/assistants`, { profileId });
+export const assignAssistant = ({
+  studentId,
+  profileId,
+}: {
+  studentId: string;
+  profileId: string;
+}) => apiSend<AssistantView[]>('POST', `/students/${studentId}/assistants`, { profileId });
 
 /** DELETE /students/:id/assistants/:profileId: answers the new list. */
-export const removeAssistant = ({ studentId, profileId }: { studentId: string; profileId: string }) =>
-  apiSend<AssistantView[]>('DELETE', `/students/${studentId}/assistants/${profileId}`);
+export const removeAssistant = ({
+  studentId,
+  profileId,
+}: {
+  studentId: string;
+  profileId: string;
+}) => apiSend<AssistantView[]>('DELETE', `/students/${studentId}/assistants/${profileId}`);
 
 /** GET /assistants/me/lessons for a [from, to) day (the assistant's own sessions; role `assistant`). */
 export const useAssistantLessons = (day: { from: string; to: string }) =>

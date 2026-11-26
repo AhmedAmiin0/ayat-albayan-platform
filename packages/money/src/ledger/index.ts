@@ -23,6 +23,7 @@ export * from './dashboard-work';
 export type * from './earnings/earnings-views';
 export type * from './expense-views';
 export type * from './views';
-export type * from './payments/payments-page';
+export * from './payments/payment-view.schemas';
+export * from './payouts/payout-view.schemas';
 export type * from './family-views';
 export * from './edit/payment-amount';

@@ -24,7 +24,12 @@ export async function applyPlaybackMode(): Promise<void> {
 /** The call's mode: recording on, the earpiece or (speaker) the loudspeaker. */
 export async function routeCallAudio(speaker: boolean): Promise<void> {
   routed = true;
-  const call = { ...PLAYBACK, playsInSilentMode: true, allowsRecording: true, shouldRouteThroughEarpiece: !speaker };
+  const call = {
+    ...PLAYBACK,
+    playsInSilentMode: true,
+    allowsRecording: true,
+    shouldRouteThroughEarpiece: !speaker,
+  };
   await setAudioModeAsync(call).catch(() => undefined);
 }
 

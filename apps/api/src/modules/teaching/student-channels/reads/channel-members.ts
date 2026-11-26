@@ -1,4 +1,4 @@
-import type { ChannelSenderRole } from '@ab/shared';
+import { channelSenderRoleSchema, type ChannelSenderRole } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { PresenceRepo } from '@/modules/people/presence';
 import { ChannelPeopleRepo } from '@/modules/teaching/student-channels/channel-people.repo';
@@ -9,11 +9,8 @@ export interface ChannelMember {
   role: ChannelSenderRole;
 }
 
-const CHAT_ROLES: Partial<Record<string, ChannelSenderRole>> = {
-  teacher: 'teacher',
-  guardian: 'guardian',
-  student: 'student',
-};
+/** A chat person's role; the seat holder is added as `sales` on its own. */
+const chatRoleSchema = channelSenderRoleSchema.exclude(['sales']);
 
 const inChat = (role: ChannelSenderRole, familyOn: boolean): boolean =>
   familyOn || role === 'teacher';
@@ -26,7 +23,7 @@ function membersOf(input: {
 }): ChannelMember[] {
   const members = new Map<string, ChannelSenderRole>();
   for (const p of input.people) {
-    const role = CHAT_ROLES[p.role];
+    const role = chatRoleSchema.safeParse(p.role).data;
     if (role && inChat(role, input.familyOn)) members.set(p.profile_id, role);
   }
   const seat = input.assistant;

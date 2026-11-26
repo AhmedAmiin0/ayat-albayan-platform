@@ -1,4 +1,4 @@
-import { WA_LINES, WA_PROVIDERS, type WaLine, type WaProvider } from '@ab/catalog';
+import { WA_LINES, WA_PROVIDERS, waLineSchema, type WaLine, type WaProvider } from '@ab/catalog';
 import { Logger } from '@nestjs/common';
 import { z } from 'zod';
 
@@ -29,7 +29,10 @@ export function lineSaved(saved: LineSaved): void {
   }
 }
 
-const PROVIDER_KEYS: Readonly<Record<string, WaLine>> = { WA_PROVIDER: 'notifications', WA_CHAT_PROVIDER: 'chat' };
+const PROVIDER_KEYS = z
+  .record(z.string(), waLineSchema)
+  .readonly()
+  .decode({ WA_PROVIDER: 'notifications', WA_CHAT_PROVIDER: 'chat' });
 const provider = z.enum(WA_PROVIDERS);
 
 type Values = Readonly<Record<string, string | null | undefined>>;

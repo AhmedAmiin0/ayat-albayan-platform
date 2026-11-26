@@ -21,8 +21,25 @@ export function UntilField({ from, until, onChange }: UntilFieldProps) {
   const c = t.coursePause;
   return (
     <View style={{ gap: 8 }}>
-      <View style={{ minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-        <AppText style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}>{c.until}</AppText>
+      <View
+        style={{
+          minHeight: 44,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+        }}
+      >
+        <AppText
+          style={{
+            flexShrink: 1,
+            fontFamily: type.ui[600],
+            fontSize: type.size.sm,
+            color: color.ink,
+          }}
+        >
+          {c.until}
+        </AppText>
         <Switch
           accessibilityLabel={c.until}
           value={until !== null}
@@ -32,7 +49,12 @@ export function UntilField({ from, until, onChange }: UntilFieldProps) {
       {until === null ? (
         <Note>{c.untilHint}</Note>
       ) : (
-        <StartDayPicker label={c.changeUntilTitle} day={until < from ? from : until} min={from} onChange={onChange} />
+        <StartDayPicker
+          label={c.changeUntilTitle}
+          day={until < from ? from : until}
+          min={from}
+          onChange={onChange}
+        />
       )}
     </View>
   );

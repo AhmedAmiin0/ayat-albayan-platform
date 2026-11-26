@@ -16,6 +16,7 @@ import { StorageService } from '@/common/storage/storage.service';
 import type { ChannelActor } from '@/modules/teaching/student-channels/channel-access';
 import { ChannelRepo } from '@/modules/teaching/student-channels/channel.repo';
 import { matchesUpload, type StoredObject } from './channel-upload-check';
+import { orFallback } from '@/common/infra/errors';
 
 const BUCKET = BUCKETS.channelMedia;
 
@@ -63,7 +64,7 @@ export class ChannelMedia {
 
   /** The object's size and type; a store failure counts as not there. */
   private stored(path: string): Promise<StoredObject> {
-    return this.storage.info({ bucket: BUCKET, path }).catch(() => null);
+    return orFallback(this.storage.info({ bucket: BUCKET, path }), null, 'channel media info read');
   }
 
   /** 1 h GET URLs by stored path; a storage failure leaves the links out (the page still loads). */

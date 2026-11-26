@@ -103,14 +103,21 @@ export interface CommissionContext {
  * brought (in the assistant's tz: nothing is retroactive), the course did not start before it was recorded
  * (subscriptionAlreadyStarted) and the amount is above zero.
  */
-export function planOn(ctx: CommissionContext, sub: SubscriptionFact, share: number): PlannedCommission | null {
+export function planOn(
+  ctx: CommissionContext,
+  sub: SubscriptionFact,
+  share: number,
+): PlannedCommission | null {
   const fullAt = subscriptionFullAt(sub);
-  if (!ctx.broughtBy || !ctx.broughtAt || !ctx.terms || !fullAt || subscriptionAlreadyStarted(sub)) return null;
+  if (!ctx.broughtBy || !ctx.broughtAt || !ctx.terms || !fullAt || subscriptionAlreadyStarted(sub))
+    return null;
   const day = localDay(fullAt, ctx.tz);
   if (day < ctx.terms.startsOn || day < localDay(ctx.broughtAt, ctx.tz)) return null;
   const { price, currency, id } = sub;
   const amount = computeCommission({ ...ctx.terms, base: price, baseCurrency: currency, share });
-  return amount ? { ...amount, subscriptionId: id, fullAt, base: price, baseCurrency: currency } : null;
+  return amount
+    ? { ...amount, subscriptionId: id, fullAt, base: price, baseCurrency: currency }
+    : null;
 }
 
 /**

@@ -25,17 +25,31 @@ interface CreateMeetingFormProps {
 }
 
 /** The create form: a title, the time (scheduled only), and invitees (optional on an instant one). */
-export function CreateMeetingForm({ scheduled, tz, busy, error, onSubmit, onCancel }: CreateMeetingFormProps) {
+export function CreateMeetingForm({
+  scheduled,
+  tz,
+  busy,
+  error,
+  onSubmit,
+  onCancel,
+}: CreateMeetingFormProps) {
   const [title, setTitle] = useState('');
   const [slot, setSlot] = useState<Slot>(() => defaultSlot(new Date(), tz));
   const [invitees, setInvitees] = useState<DraftInvitee[]>([]);
   const [picking, setPicking] = useState(scheduled);
   const [key] = useState(requestId);
-  const submit = () => onSubmit(createBody({ title, slot: scheduled ? slot : null, invitees, requestId: key }, tz));
+  const submit = () =>
+    onSubmit(createBody({ title, slot: scheduled ? slot : null, invitees, requestId: key }, tz));
   return (
     <View style={{ gap: 12 }}>
       {scheduled ? <Note>{I.scheduleHint}</Note> : null}
-      <Field label={L.title} value={title} maxLength={60} placeholder={L.titlePlaceholder} onChangeText={setTitle} />
+      <Field
+        label={L.title}
+        value={title}
+        maxLength={60}
+        placeholder={L.titlePlaceholder}
+        onChangeText={setTitle}
+      />
       {scheduled ? <ScheduleFields slot={slot} onChange={setSlot} tz={tz} /> : null}
       {picking ? (
         <InviteePicker value={invitees} onChange={setInvitees} />

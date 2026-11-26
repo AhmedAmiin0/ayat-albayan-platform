@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { familyOfPhone } from '@/common/db/family-of-phone';
 import { studentNameOrCodeFilter } from '@/modules/people/students/students.mapper';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 
 /** One more row than the answer lists, so `more` can be told without a count. */
 const READ = REGISTRATION_CHECK_MAX + 1;
@@ -23,8 +23,7 @@ export class SalesRegistrationRepo {
   async byPhone(phone: string): Promise<RegistrationMatch[]> {
     const family = await familyOfPhone(this.db, phone);
     if (!family) return [];
-    const { data, error } = await this.db.from('students').select(COLUMNS).eq('guardian_id', family.id).order('name').limit(READ);
-    if (error) throw dbError(error);
+    const data = rows(await this.db.from('students').select(COLUMNS).eq('guardian_id', family.id).order('name').limit(READ));
     return data.map(toMatch);
   }
 
@@ -33,8 +32,7 @@ export class SalesRegistrationRepo {
     // `_` is ilike's one-character wildcard: the check would match too much, so it searches it as a space.
     const filter = studentNameOrCodeFilter(q.replace(/_/g, ' '));
     if (!filter) return [];
-    const { data, error } = await this.db.from('students').select(COLUMNS).or(filter).order('name').limit(READ);
-    if (error) throw dbError(error);
+    const data = rows(await this.db.from('students').select(COLUMNS).or(filter).order('name').limit(READ));
     return data.map(toMatch);
   }
 }

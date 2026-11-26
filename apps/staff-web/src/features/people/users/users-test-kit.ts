@@ -15,8 +15,15 @@ export const YOUSEF: UserView = {
 };
 export const DETAIL: UserDetail = { ...SARA, locale: 'ar', tz: 'Asia/Riyadh', disabled_reason: null };
 
-type RoleSeed = Pick<UserRoleOption, 'id' | 'base_role' | 'name_ar'> & Partial<Pick<UserRoleOption, 'is_system' | 'assignable'>>;
-const role = (r: RoleSeed): UserRoleOption => ({ key: r.id, name_en: null, is_system: false, assignable: true, ...r });
+type RoleSeed = Pick<UserRoleOption, 'id' | 'base_role' | 'name_ar'> &
+  Partial<Pick<UserRoleOption, 'is_system' | 'assignable'>>;
+const role = (r: RoleSeed): UserRoleOption => ({
+  key: r.id,
+  name_en: null,
+  is_system: false,
+  assignable: true,
+  ...r,
+});
 export const OPTIONS: UserRoleOption[] = [
   role({ id: 'sys-admin', base_role: 'admin', is_system: true, name_ar: 'مدير النظام' }),
   role({ id: 'sys-assistant', base_role: 'assistant', is_system: true, name_ar: 'مساعد/ة' }),
@@ -29,7 +36,12 @@ export const CANDIDATES: LinkCandidate[] = [
   { kind: 'student', id: '0b0c53a6-6f0e-4f56-9d5d-0d6a3a0e6a12', name: 'مريم', code: 'AB-0008' },
 ];
 
-export const page = (items: UserView[]): UserPage => ({ items, total: items.length, page: 1, pageSize: 20 });
+export const page = (items: UserView[]): UserPage => ({
+  items,
+  total: items.length,
+  page: 1,
+  pageSize: 20,
+});
 
 /** GET answers by path; `detail` is what /users/u1 returns. */
 export function fakeApi(items: UserView[] = [SARA, YOUSEF], detail: UserDetail = DETAIL) {
@@ -37,7 +49,9 @@ export function fakeApi(items: UserView[] = [SARA, YOUSEF], detail: UserDetail =
     if (path.startsWith('/users/role-options')) return OPTIONS;
     if (path.startsWith('/users/link-candidates')) {
       const q = new URL(path, 'http://x').searchParams.get('q') ?? '';
-      return CANDIDATES.filter((c) => !q || c.name.includes(q) || c.code?.toLowerCase() === q.toLowerCase());
+      return CANDIDATES.filter(
+        (c) => !q || c.name.includes(q) || c.code?.toLowerCase() === q.toLowerCase(),
+      );
     }
     if (path.startsWith('/users?')) return page(items);
     if (path.startsWith('/users/')) return detail;

@@ -1,4 +1,4 @@
-import type { OutboxRow } from './outbox.schemas';
+import type { OutboxRow, SettleState } from './outbox.schemas';
 
 export interface ClaimRequest {
   limit: number;
@@ -7,8 +7,6 @@ export interface ClaimRequest {
   /** A claim older than this belongs to a worker that died: the row is claimed again. */
   staleBefore: Date;
 }
-
-export type SettleState = 'done' | 'retry' | 'parked';
 
 export interface Settled {
   id: string;

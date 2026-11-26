@@ -1,15 +1,20 @@
 import {
   createApiClient,
+  parseResponse,
   readTimeoutFor,
+  type SchemaInit,
   type SendMethod,
   withReadDeadline,
 } from '@ab/client-core';
+import type { z } from 'zod';
 import { WEB_CLIENT_TAG } from '@ab/web-kit/lib/http/client-tag';
 import { env } from '@ab/web-kit/lib/http/env';
 import { supabase } from '@ab/web-kit/lib/http/supabase';
 
 // The one client lives in @ab/client-core (docs/27 E1); this module injects web's env, session and tag.
 export { ApiError, type SendMethod } from '@ab/client-core';
+
+type ReadInit = RequestInit & { schema?: z.ZodType };
 
 const client = createApiClient({
   baseUrl: () => env.apiUrl,
@@ -22,10 +27,17 @@ const client = createApiClient({
  * (`X-AB-Client`). A read with no answer within readTimeoutFor(path) (20 s; a chat file 120 s)
  * rejects as no answer and frees its request (docs/43 AU9, the same deadline as mobile).
  */
-export const apiFetch = <T>(path: string, init?: RequestInit): Promise<T> => {
+export function apiFetch<S extends z.ZodType>(
+  path: string,
+  init: SchemaInit<S>,
+): Promise<z.output<S>>;
+export function apiFetch<T>(path: string, init?: RequestInit): Promise<T>;
+export function apiFetch(path: string, init: ReadInit = {}): Promise<unknown> {
+  const { schema, ...rest } = init;
   const timeoutMs = readTimeoutFor(path);
-  return withReadDeadline((sent) => client.apiFetch(path, sent), init, { timeoutMs });
-};
+  const read = withReadDeadline((sent) => client.apiFetch(path, sent), rest, { timeoutMs });
+  return schema === undefined ? read : read.then((body) => parseResponse(schema, body, path));
+}
 
 /** JSON mutation helper for TanStack Query `mutationFn`s. Resolves undefined on 204. */
 export const apiSend = client.apiSend;

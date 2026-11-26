@@ -11,7 +11,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
-  supabase: { storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) } },
+  supabase: {
+    storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) },
+  },
 }));
 jest.mock('expo-image-picker', () => ({
   launchCameraAsync: jest.fn(),
@@ -27,15 +29,26 @@ const shot = { uri: 'file:///c.jpg', width: 1, height: 1, base64: 'aGVsbG8=', mi
 beforeEach(() => jest.clearAllMocks());
 
 test('the camera, allowed: a JPEG photo taken now', async () => {
-  jest.mocked(ImagePicker.getCameraPermissionsAsync).mockResolvedValue({ granted: true, canAskAgain: true } as never);
-  jest.mocked(ImagePicker.launchCameraAsync).mockResolvedValue({ canceled: false, assets: [shot] } as never);
-  await expect(pickChatFile('camera', 10 * MB)).resolves.toMatchObject({ mime: 'image/jpeg', filename: 'photo.jpg' });
+  jest
+    .mocked(ImagePicker.getCameraPermissionsAsync)
+    .mockResolvedValue({ granted: true, canAskAgain: true } as never);
+  jest
+    .mocked(ImagePicker.launchCameraAsync)
+    .mockResolvedValue({ canceled: false, assets: [shot] } as never);
+  await expect(pickChatFile('camera', 10 * MB)).resolves.toMatchObject({
+    mime: 'image/jpeg',
+    filename: 'photo.jpg',
+  });
   expect(ImagePicker.launchImageLibraryAsync).not.toHaveBeenCalled();
 });
 
 test('the camera, never asked: the chat’s own reason (not the receipt’s); refused → nothing', async () => {
-  jest.mocked(ImagePicker.getCameraPermissionsAsync).mockResolvedValue({ granted: false, canAskAgain: true } as never);
-  const alert = jest.spyOn(Alert, 'alert').mockImplementation((_t, _m, buttons) => buttons?.[0]?.onPress?.());
+  jest
+    .mocked(ImagePicker.getCameraPermissionsAsync)
+    .mockResolvedValue({ granted: false, canAskAgain: true } as never);
+  const alert = jest
+    .spyOn(Alert, 'alert')
+    .mockImplementation((_t, _m, buttons) => buttons?.[0]?.onPress?.());
   await expect(pickChatFile('camera', 10 * MB)).resolves.toBeNull();
   expect(alert.mock.calls[0]?.[1]).toBe(t.inbox.composer.cameraRationale);
   expect(ImagePicker.launchCameraAsync).not.toHaveBeenCalled();

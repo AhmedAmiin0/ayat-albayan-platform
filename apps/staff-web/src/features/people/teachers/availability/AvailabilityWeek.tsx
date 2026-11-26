@@ -53,7 +53,10 @@ function Legend() {
 }
 
 /** One row per weekday from Saturday to Friday (docs/07 §8). */
-export const AvailabilityWeek = forwardRef<HTMLDivElement, Props>(function AvailabilityWeek({ grid, tz, onDay }, ref) {
+export const AvailabilityWeek = forwardRef<HTMLDivElement, Props>(function AvailabilityWeek(
+  { grid, tz, onDay },
+  ref,
+) {
   const clock = wallClock(useMinuteClock(), tz);
   return (
     <>

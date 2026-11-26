@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict } from '@/common/http/errors';
 import { readAll } from '@/common/db/read-all';
-import { dbError } from '@/common/http/http';
+import { done, maybe, pgError } from '@/common/db/errors';
 
 /** `note`: the asker's reason, the move reason on approval (docs/47). `created_by`: who asked. */
 export interface ProposalRow {
@@ -44,16 +44,15 @@ export class LessonProposalRepo {
   async create(row: NewProposal): Promise<void> {
     const { error } = await this.db.from('lesson_proposals').insert(row);
     if (error?.code === '23505') throw conflict('proposal_pending');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
   }
 
   async get(id: string): Promise<ProposalRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lesson_proposals')
       .select(COLUMNS)
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -65,7 +64,7 @@ export class LessonProposalRepo {
       .eq('id', id)
       .eq('status', 'pending')
       .select('id');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.length > 0;
   }
 
@@ -79,16 +78,15 @@ export class LessonProposalRepo {
       .update({ status: 'pending', decided_by: null, decided_at: null })
       .eq('id', id)
       .eq('status', 'approved');
-    if (error && error.code !== '23505') throw dbError(error);
+    if (error && error.code !== '23505') throw pgError(error);
   }
 
   /** The approved proposal's moved lesson. */
   async link(id: string, newLessonId: string): Promise<void> {
-    const { error } = await this.db
+    done(await this.db
       .from('lesson_proposals')
       .update({ new_lesson_id: newLessonId })
-      .eq('id', id);
-    if (error) throw dbError(error);
+      .eq('id', id));
   }
 
   /** The asker's own pending request becomes withdrawn; false when there is none. */
@@ -100,7 +98,7 @@ export class LessonProposalRepo {
       .eq('requested_by', 'family')
       .eq('status', 'pending')
       .select('id');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.length > 0;
   }
 

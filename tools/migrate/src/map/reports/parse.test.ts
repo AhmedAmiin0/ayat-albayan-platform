@@ -129,4 +129,9 @@ describe('parseReport', () => {
     expect(t).toMatchObject({ trial: true, sent: false, attendance: 'on_time' });
     expect(t.issues).toMatchObject([{ code: 'unmapped_value', field: 'grade_revision' }]);
   });
+
+  it('flags a trial from its send log alone', () => {
+    expect(ok({ send_status: 'حلقة تجريبية' })).toMatchObject({ trial: true });
+    expect(ok({ send_status: null })).toMatchObject({ trial: false });
+  });
 });

@@ -18,7 +18,9 @@ function normalize(path: string): string {
 
 /** The glob key ('../../lib/api.ts', './x.ts') as a path under src. */
 const srcPath = (key: string): string => normalize(`features/platform/settings/${key}`);
-const sources = Object.fromEntries(Object.entries(raw).map(([key, source]) => [srcPath(key), source]));
+const sources = Object.fromEntries(
+  Object.entries(raw).map(([key, source]) => [srcPath(key), source]),
+);
 
 /** Every module a source imports, re-exports, lazy-imports or mocks, resolved under src (externals dropped). */
 function imports(file: string, source: string): string[] {

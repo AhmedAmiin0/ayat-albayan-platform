@@ -20,7 +20,9 @@ const MESSAGE = P.message
 
 async function created({ canSend = true } = {}) {
   const onClose = vi.fn();
-  renderWithClient(<CreatedLink link={CREATED} phone={PHONE} canSend={canSend} onClose={onClose} />);
+  renderWithClient(
+    <CreatedLink link={CREATED} phone={PHONE} canSend={canSend} onClose={onClose} />,
+  );
   await screen.findByRole('button', { name: P.sendInChat });
   return onClose;
 }

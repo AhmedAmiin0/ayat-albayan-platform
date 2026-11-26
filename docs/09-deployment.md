@@ -415,6 +415,7 @@ Owner request 2026-10-05: deploys, mobile builds/OTA, database migrations and th
 | `lane-automerge` | `ci` finished on a PR; label `auto-merge` added; every 30 min | squash-merges a green low-risk lane PR, or a freshly `reviewed` one, into `develop`, then dispatches `ci` on `develop` (see «Lane auto-merge») | none (built-in token only) | skipped: fork heads never merge |
 | `pr-title` | PR opened, edited, synchronized or reopened | fails a PR whose title is not an Angular header `<type>(<scope>): <subject>` (CLAUDE.md rule 25; its squash subject is the title plus ` (#n)`) | none | runs on forks too: it reads only the title |
 | `db-backup` | nightly 02:17 UTC; manual | `pg_dump` (public + auth) of production, encrypted with the owner's age public key, kept 90 days as an artifact; off (green, a notice) until `SUPABASE_DB_URL` and `BACKUP_AGE_RECIPIENT` exist, a failure instead when the repository variable `BACKUP_REQUIRED` is `true`; logs the database size and warns above 400 MB (docs/backups.md) | `db-backup` | never triggered by a PR |
+| `data-counts` | manual (`domain`, `sha`) | read-only counts (`select count(*) …` only) for a domain's schema conversion (docs/62, PR D); runner from `develop`, the counts file read at `sha`; prints `name: n` integers only | `prod-readonly` | never triggered by a PR |
 
 Migrations are **never applied by surprise**: the `apply` job waits in `staging-db` for the required reviewer. Since 2026-10-23 an automatic deploy **skips** the migrate job (no approval click) only when its `plan` job proves that nothing under `packages/db/supabase/migrations/` changed since the last deploy that pushed migrations (`tools/scripts/env/deploy-baseline.mjs` reads the run titles `deploy-staging <sha>`); if that deploy cannot be found or anything fails, migrate runs and waits for review as before. Every apply that does run pauses at «waiting for review»; approve it after reading the diff.
 
@@ -445,7 +446,7 @@ Since 2026-10-31 no PR edits `refactor/guards/` to record an improvement, so PRs
 
 ### What you must add (Settings → Secrets and variables → Actions, and Settings → Environments)
 
-**Environments:** `develop` (exists; Deployment branches = `develop`), `staging-db` (**add a required reviewer = you**; branches `develop`), `mobile` (branches `develop`; optional reviewer), `db-backup` (created by its first run; set Deployment branches = `develop` and put its secret there).
+**Environments:** `develop` (exists; Deployment branches = `develop`), `staging-db` (**add a required reviewer = you**; branches `develop`), `mobile` (branches `develop`; optional reviewer), `db-backup` (created by its first run; set Deployment branches = `develop` and put its secret there), `prod-readonly` (exists; Deployment branches = `develop`; holds the `data-counts` secret).
 
 | Secret | Where to get it | Used by |
 |---|---|---|
@@ -469,6 +470,7 @@ Since 2026-10-31 no PR edits `refactor/guards/` to record an improvement, so PRs
 | `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` | console.anthropic.com key, or `claude setup-token` | `claude-tasks` (the only secret it sees); `CLAUDE_CODE_OAUTH_TOKEN` also `claude-code-review` |
 | `TEST_ACCOUNT_PASSWORD`, `TEST_TEACHER_EMAIL` | Your choice (see «Test teacher on staging») | `staging-test-account` |
 | `SUPABASE_DB_URL` | **Optional, switches the nightly copy on:** Supabase → Connect → **Session pooler** URI of the production project, with the password (GitHub runners have no IPv6). Put it in the `db-backup` environment, never as a repository secret. With the variable `BACKUP_AGE_RECIPIENT` (your age public key) | `db-backup` (docs/backups.md) |
+| `PROD_READONLY_DATABASE_URL` | **Owner adds it:** a connection URI of a read-only production role. Put it in the `prod-readonly` environment, never as a repository secret | `data-counts` |
 
 Variables (all optional, defaults in the workflows): `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR`, `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `RUN_E2E`, `VERIFIED_TREE_SKIP`, `OTA_BASELINE_SHA`, `BACKUP_AGE_RECIPIENT`, `BACKUP_PG_MAJOR` and `BACKUP_REQUIRED` (`db-backup`, docs/backups.md), `VITE_SENTRY_DSN` (the web apps' optional error tracker). `VERIFIED_TREE_SKIP` = `false` turns off the develop skip of `ci` (a push whose tree a green PR run already put through verify and guards runs only e2e, the full suite, and the baselines prune; `tools/scripts/ci-checks/ci-skip/verified-tree.mjs`). The Turborepo cache needs neither secret nor variable: `ci` keeps it in the GitHub Actions cache (`rharkor/caching-for-turbo`, one entry per task hash; the `TURBO_TOKEN` secret and `TURBO_TEAM` variable are unused since 2026-10-30 and can be deleted). **`develop` is NOT branch-protected today** (and neither is `main`): `claude-tasks` can only open PRs by convention, not by rule. Enabling protection (PR required) is an owner step, see the checklist.
 

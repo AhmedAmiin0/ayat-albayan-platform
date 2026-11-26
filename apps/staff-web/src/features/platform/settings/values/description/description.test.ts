@@ -7,7 +7,10 @@ const bundle = { settings: { hints: { horizon: 'نص الترجمة' } } };
 const HINT = 'settings.hints.horizon';
 const base = entryOf('booking_horizon_weeks', { hintKey: HINT });
 
-const rights = (held: readonly Permission[], baseAdmin = false): DescribeRights => ({ can: (p) => held.includes(p), baseAdmin });
+const rights = (held: readonly Permission[], baseAdmin = false): DescribeRights => ({
+  can: (p) => held.includes(p),
+  baseAdmin,
+});
 
 describe('textIn', () => {
   it('reads a dotted path; a missing, blank or non-string path is undefined', () => {

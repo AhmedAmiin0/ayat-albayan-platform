@@ -57,4 +57,15 @@ describe('KapsoHistory', () => {
     expect(q.get('direction')).toBe('inbound');
     expect(q.get('since')).toBe('2026-10-30T08:49:00.000Z');
   });
+
+  it('without an injected fetch, reads through the runtime fetch', async () => {
+    const fetch = vi.fn<FetchLike>(async () => new Response(JSON.stringify({ data: kapsoText() })));
+    vi.stubGlobal('fetch', fetch);
+    try {
+      expect(await new KapsoHistory().message(kapsoEnv(), 'w')).toMatchObject({ id: 'wamid.EXT1' });
+      expect(urlOf(fetch).pathname).toBe('/kapso/v24.0/kapso-chat-1/messages/w');
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
 });

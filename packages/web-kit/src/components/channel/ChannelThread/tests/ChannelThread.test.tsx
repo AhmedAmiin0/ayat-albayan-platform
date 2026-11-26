@@ -12,7 +12,9 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 const c = t.studentChannel;
 const show = (audience: 'teacher' | 'portal' | 'admin' | 'sales') =>
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <ChannelThread refs={{ audience, studentId: 's1' }} tz="Asia/Riyadh" />
     </QueryClientProvider>,
   );

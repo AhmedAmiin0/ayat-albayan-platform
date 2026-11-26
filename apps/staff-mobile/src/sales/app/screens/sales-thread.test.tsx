@@ -45,7 +45,11 @@ afterEach(() => jest.useRealTimers());
 
 test('a lead’s chat: «⋮» → «تسجيل طالب جديد» opens the sales wizard inside /sales, no subscription panel', async () => {
   await open(thread);
-  for (const word of [t.inbox.subscription.subscribe, t.inbox.subscription.renew, t.inbox.subscription.title]) {
+  for (const word of [
+    t.inbox.subscription.subscribe,
+    t.inbox.subscription.renew,
+    t.inbox.subscription.title,
+  ]) {
     expect(screen.queryByText(word)).toBeNull();
   }
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.chatMenu }));

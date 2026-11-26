@@ -6,6 +6,7 @@ export const foldArgs = z
     dryRun: z.boolean(),
     write: z.boolean(),
     skipOpenPrs: z.boolean(),
+    components: z.boolean(),
     paths: z.array(z.string().min(1)),
     unknown: z.array(z.string()).max(0, 'unknown argument'),
   })

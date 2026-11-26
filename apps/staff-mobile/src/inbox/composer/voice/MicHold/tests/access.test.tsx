@@ -73,7 +73,9 @@ test('the app leaving while the recorder gets ready: no recording goes live, a l
     return { remove: jest.fn() };
   });
   let ready: () => void = () => undefined;
-  rec.prepareToRecordAsync.mockImplementationOnce(() => new Promise<undefined>((resolve) => (ready = () => resolve(undefined))));
+  rec.prepareToRecordAsync.mockImplementationOnce(
+    () => new Promise<undefined>((resolve) => (ready = () => resolve(undefined))),
+  );
   await openChat(mockApiFetch);
   await hold(); // the recorder is still getting ready
   await act(async () => listeners.forEach((fn) => fn('background')));

@@ -12,7 +12,15 @@ beforeEach(() => jest.clearAllMocks());
 test('0 → 1 linearly over the duration, looped, on the native driver', async () => {
   await renderHook(() => useCycle({ duration: 1600, still: false }));
   expect(loop).toHaveBeenCalledTimes(1);
-  expect(timing).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ toValue: 1, duration: 1600, easing: Easing.linear, useNativeDriver: true }));
+  expect(timing).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.objectContaining({
+      toValue: 1,
+      duration: 1600,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }),
+  );
   expect(delay).not.toHaveBeenCalled();
 });
 

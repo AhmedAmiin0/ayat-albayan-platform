@@ -2,9 +2,10 @@ import { spawn } from 'node:child_process';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { inTempDir } from '@/modules/messaging/inbox/files/temp-dir';
+import { z } from 'zod';
 import { pageOfFile, pdfinfoPages, pdftoppmArgs, type PageRange } from './pdf-pages';
+import { popplerToolSchema, type PdfFailure, type PopplerTool } from './pdf.schemas';
 
-type PopplerTool = 'pdfinfo' | 'pdftoppm';
 /** How a run ended: the exit code (null when killed), the start of stdout, and whether our timeout killed it. */
 export type PdfExit = { code: number | null; stdout: string; timedOut: boolean };
 /** Runs a poppler tool on files in a temp folder; rejects (PdfToolError 'failed') only when it cannot start. */
@@ -16,13 +17,16 @@ export type PdfPageImage = { page: number; jpg: Uint8Array };
  * 'unavailable': no PDF sandbox to ask (pdf-client.ts: local dev, tests, CI, ayat-pdf restarting).
  */
 export class PdfToolError extends Error {
-  constructor(readonly reason: 'busy' | 'failed' | 'unavailable') {
+  constructor(readonly reason: PdfFailure) {
     super(`pdf preview ${reason}`);
   }
 }
 
 // Calibration knobs (docs/09: measure with a scanned 10 MB PDF on staging).
-const TIMEOUT_MS: Record<PopplerTool, number> = { pdfinfo: 5_000, pdftoppm: 20_000 };
+const TIMEOUT_MS = z
+  .record(popplerToolSchema, z.number())
+  .readonly()
+  .decode({ pdfinfo: 5_000, pdftoppm: 20_000 });
 /**
  * Address space per run: a crafted page fails its own malloc, never the sandbox's node. Resources only, like
  * nice, choom and the timeout; the isolation is the container: this runs in ayat-pdf only (pdf-sandbox.ts:

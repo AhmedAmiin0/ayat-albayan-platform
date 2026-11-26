@@ -4,7 +4,11 @@ import { SegmentedControl, t } from '@ab/web-kit';
 import { TeacherStudentItem } from './TeacherStudentItem';
 
 const L = t.studentLists;
-const EMPTY: Record<StudentListKind, string> = { active: L.emptyActive, trial: L.emptyTrial, all: L.emptyAll };
+const EMPTY: Record<StudentListKind, string> = {
+  active: L.emptyActive,
+  trial: L.emptyTrial,
+  all: L.emptyAll,
+};
 
 /** Active and trial counts are the API's; the all count is the list's (paused included). */
 export function TeacherStudentsByKind({ teacher }: { teacher: SalesTeacherView }) {

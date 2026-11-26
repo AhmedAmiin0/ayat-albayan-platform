@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { isSales } from '@/common/auth/roles';
 
 /**
  * A signed-in salesperson in the inbox. Sales play two roles, sales and assistant:
@@ -17,6 +18,6 @@ export interface SalesScope {
 @Injectable()
 export class SalesScopes {
   of(user: AuthUser): Promise<SalesScope | null> {
-    return Promise.resolve(user.role === 'sales' ? { salesId: user.id } : null);
+    return Promise.resolve(isSales(user) ? { salesId: user.id } : null);
   }
 }

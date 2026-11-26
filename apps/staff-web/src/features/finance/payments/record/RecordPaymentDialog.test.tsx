@@ -28,7 +28,7 @@ function open(subscription?: typeof WEEKLY) {
   return { dialog, amount, save, onSaved };
 }
 
-const posts = () => apiSend.mock.calls.filter(([, path]) => path === '/payments');
+const posts = () => apiSend.mock.calls.filter(([, path]) => path === '/payments').map(([m, p, options]) => [m, p, (options as { body: unknown }).body]);
 
 describe('RecordPaymentDialog (R-PAY-01)', () => {
   beforeEach(() => {
@@ -96,7 +96,9 @@ describe('RecordPaymentDialog (R-PAY-01)', () => {
   it('a lost reply: says it may be saved; the retry re-sends the same id and the same receipt', async () => {
     const { dialog, save, onSaved } = open(WEEKLY);
     const receipt = new File([new Uint8Array(16)], 'r.jpg', { type: 'image/jpeg' });
-    fireEvent.change(within(dialog).getByLabelText(t.payments.addReceipt), { target: { files: [receipt] } });
+    fireEvent.change(within(dialog).getByLabelText(t.payments.addReceipt), {
+      target: { files: [receipt] },
+    });
     uploadToSignedUrl.mockResolvedValue({ data: {}, error: null });
     apiSend.mockImplementation(async (_m: string, path: string) => {
       if (path === '/payments/receipt-upload-url') return SIGNED;
@@ -108,7 +110,9 @@ describe('RecordPaymentDialog (R-PAY-01)', () => {
     apiSend.mockImplementation(async (_m: string, path: string) => (path === '/payments' ? PAYMENT : SIGNED));
     save();
     await vi.waitFor(() => expect(onSaved).toHaveBeenCalled());
-    const [first, retry] = posts().map((c) => c[2] as { clientRequestId: string; receiptPath: string });
+    const [first, retry] = posts().map(
+      (c) => c[2] as { clientRequestId: string; receiptPath: string },
+    );
     expect(first?.clientRequestId).toMatch(/^[0-9a-f-]{36}$/);
     expect(retry).toMatchObject({ clientRequestId: first?.clientRequestId, receiptPath: 'sub-1/abc.jpg' });
     expect(uploadToSignedUrl).toHaveBeenCalledTimes(1);

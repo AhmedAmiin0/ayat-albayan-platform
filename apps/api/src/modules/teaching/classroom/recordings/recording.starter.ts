@@ -1,3 +1,4 @@
+import { errorMessage } from '@ab/core';
 import { MINIO_MARK, storageKeyOf } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { BUCKETS } from '@/common/storage/storage.paths';
@@ -52,7 +53,7 @@ export class RecordingStarter {
       ({ s3, filePath } = this.where(recordingPath(target, now)));
       claim = await this.queries.claim({ target, filePath, startedAt: now.toISOString() });
     } catch (e) {
-      this.log.warn(`recording claim failed for ${roomNameOf(target)}: ${messageOf(e)}`);
+      this.log.warn(`recording claim failed for ${roomNameOf(target)}: ${errorMessage(e)}`);
       return 'failed';
     }
     if (!claim) return 'running';
@@ -78,13 +79,12 @@ export class RecordingStarter {
       await this.queries.attachEgress(input.id, egressId);
       return 'started';
     } catch (e) {
-      this.log.warn(`recording did not start for ${room}: ${messageOf(e)}`);
+      this.log.warn(`recording did not start for ${room}: ${errorMessage(e)}`);
       await this.queries
-        .finish(input.id, { status: 'failed', endedAt: new Date().toISOString(), error: messageOf(e).slice(0, 500) })
+        .finish(input.id, { status: 'failed', endedAt: new Date().toISOString(), error: errorMessage(e).slice(0, 500) })
         .catch(() => undefined);
       return 'failed';
     }
   }
 }
 
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));

@@ -4,7 +4,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
 import { readAll, readChunked } from '@/common/db/read-all';
 import { wakeOn } from '@/common/jobs';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError, rows } from '@/common/db/errors';
 import type { OpenTask, Recipient, RenewalMessage } from './alerts.types';
 
 /** Reads and idempotent writes for the R-SUB-02 alerts (dedup keys, rule 8). */
@@ -41,7 +41,7 @@ export class AlertsRepo {
    * balance line when it was raised: the UI fills {left} of dashboard.task.renewal_due with it.
    */
   async raiseTask(task: { kind: AdminTaskKind; subjectId: string; dedupKey: string; title: string }): Promise<boolean> {
-    const { data, error } = await this.db.from('admin_tasks').upsert(
+    const data = rows(await this.db.from('admin_tasks').upsert(
       {
         kind: task.kind,
         subject_type: 'subscription',
@@ -50,8 +50,7 @@ export class AlertsRepo {
         title: task.title,
       },
       { onConflict: 'dedup_key', ignoreDuplicates: true },
-    ).select('id');
-    if (error) throw dbError(error);
+    ).select('id'));
     return (data?.length ?? 0) > 0;
   }
 
@@ -71,7 +70,7 @@ export class AlertsRepo {
       .is('done_at', null);
     if (input.keep.length > 0) q = q.not('dedup_key', 'in', `(${input.keep.map((k) => `"${k}"`).join(',')})`);
     const { data, error } = await q.select('dedup_key');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     await this.failStale((data ?? []).map((t) => t.dedup_key));
   }
 
@@ -91,13 +90,12 @@ export class AlertsRepo {
   /** closeTasks for keys already chosen (the sweep reads the open tasks once for every student). */
   async closeKeys(keys: readonly string[], now: Date): Promise<void> {
     if (keys.length === 0) return;
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('admin_tasks')
       .update({ done_at: now.toISOString(), done_by: null })
       .in('dedup_key', [...keys])
       .is('done_at', null)
-      .select('dedup_key');
-    if (error) throw dbError(error);
+      .select('dedup_key'));
     await this.failStale(data.map((t) => t.dedup_key));
   }
 
@@ -108,16 +106,15 @@ export class AlertsRepo {
       .update({ status: 'failed', error_code: 'stale', error_text: 'renewal no longer due', next_attempt_at: null })
       .in('dedup_key', [...closed])
       .or('status.eq.queued,error_code.eq.auto_off');
-    if (stale.error) throw dbError(stale.error);
+    if (stale.error) throw pgError(stale.error);
   }
 
   async recipient(studentId: string): Promise<Recipient | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('students')
       .select('name, guardian:guardians(id, phone_e164)')
       .eq('id', studentId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     if (!data?.guardian) return null;
     return { studentName: data.name, guardianId: data.guardian.id, phone: data.guardian.phone_e164 };
   }
@@ -131,7 +128,7 @@ export class AlertsRepo {
       this.log.log(`renewal_due off: ${m.dedupKey} not queued`);
       return;
     }
-    const { data, error } = await this.db.from('messages').upsert(
+    const data = rows(await this.db.from('messages').upsert(
       {
         direction: 'outbound',
         status: 'queued',
@@ -143,8 +140,7 @@ export class AlertsRepo {
         scheduled_for: m.now.toISOString(),
       },
       { onConflict: 'dedup_key', ignoreDuplicates: true },
-    ).select('id');
-    if (error) throw dbError(error);
+    ).select('id'));
     wakeOn(data.length); // a new row wakes the sender (docs/42 42-1); a duplicate does not
   }
 }

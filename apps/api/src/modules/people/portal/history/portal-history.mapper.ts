@@ -1,11 +1,14 @@
 import {
   attendanceKind,
-  type AttendanceKind,
+  attendanceKindSchema,
+  portalHistoryStatusSchema,
+  portalOutcomeSchema,
   type PortalHistoryRow,
   type PortalHistoryStatus,
   type PortalMonth,
   type PortalOutcome,
 } from '@ab/shared';
+import { z } from 'zod';
 import { familyReason } from '@/modules/sales/sales-students';
 import type { PortalPastRow } from './portal-history.repo';
 
@@ -13,22 +16,27 @@ import type { PortalPastRow } from './portal-history.repo';
 export type PastLesson = PortalPastRow & { outcome: PortalOutcome };
 
 /** Staff's attendanceKind → the family's outcome; cancelled and unmarked lessons are in no list. */
-const OUTCOME: Partial<Record<AttendanceKind, PortalOutcome>> = {
-  present: 'attended',
-  absent: 'absent',
-  excused: 'excused',
-};
+const OUTCOME = z
+  .record(attendanceKindSchema, portalOutcomeSchema.nullable())
+  .readonly()
+  .decode({
+    present: 'attended',
+    absent: 'absent',
+    excused: 'excused',
+    cancelled: null,
+    unmarked: null,
+  });
 /** An excused absence still counts as absent. */
-const LIST: Record<PortalOutcome, PortalHistoryStatus> = {
+const LIST = z.record(portalOutcomeSchema, portalHistoryStatusSchema).readonly().decode({
   attended: 'attended',
   absent: 'absent',
   excused: 'absent',
-};
+});
 
 /** The student's outcome of a lesson (attendanceKind on its own row), null when in no list. */
 export function outcomeOf(row: PortalPastRow): PortalOutcome | null {
   const kind = attendanceKind(row.status, row.own[0]?.attendance ?? null);
-  return kind === null ? null : (OUTCOME[kind] ?? null);
+  return kind === null ? null : OUTCOME[kind];
 }
 
 /** The rows of one list, with their outcome ([] = not in it): collectPage's `pick`. */

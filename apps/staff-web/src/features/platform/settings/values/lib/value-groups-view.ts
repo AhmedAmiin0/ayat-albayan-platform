@@ -61,7 +61,10 @@ export function groupKeys(id: ValuesGroupId): readonly SettingKey[] {
 }
 
 /** Where a module-owned group is edited (the page, and its tab when it has one), and the link's words. */
-export const OWNER_PAGE: Record<OwnedValueGroupId, { to: string; search?: Record<string, string>; label: string }> = {
+export const OWNER_PAGE: Record<
+  OwnedValueGroupId,
+  { to: string; search?: Record<string, string>; label: string }
+> = {
   notifications: {
     to: '/admin/settings/communications',
     search: { tab: 'catalogue' },

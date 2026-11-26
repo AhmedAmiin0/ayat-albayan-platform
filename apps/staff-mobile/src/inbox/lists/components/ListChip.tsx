@@ -17,7 +17,11 @@ type Palette = ReturnType<typeof useTheme>['color'];
 /** Filled when active; «＋» reads as an action (lapis on the input edge). */
 function look(color: Palette, { selected = false, action = false }: Pick<ListChipProps, 'selected' | 'action'>) {
   if (selected) return { bg: color.inverse, edge: color.inverse, ink: color.onInverse };
-  return { bg: color.raised, edge: action ? color.ruleInput : color.rule, ink: action ? color.lapis : color.ink };
+  return {
+    bg: color.raised,
+    edge: action ? color.ruleInput : color.rule,
+    ink: action ? color.lapis : color.ink,
+  };
 }
 
 /** The long-press and its named accessibility action, on a list's chip only. */
@@ -32,7 +36,14 @@ const editProps = (onEdit: (() => void) | undefined) =>
     : {};
 
 /** A 32pt pill with a 44pt hit area; list chips expose edit as a named accessibility action. */
-export function ListChip({ label, onPress, selected = false, onEdit, action = false, name }: ListChipProps) {
+export function ListChip({
+  label,
+  onPress,
+  selected = false,
+  onEdit,
+  action = false,
+  name,
+}: ListChipProps) {
   const ink = look(useTheme().color, { selected, action });
   return (
     <Pressable

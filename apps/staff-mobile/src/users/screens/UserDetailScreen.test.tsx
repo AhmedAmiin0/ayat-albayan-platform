@@ -10,7 +10,8 @@ const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: (mockMethod: string, mockPath: string, mockBody?: unknown) => mockApiSend(mockMethod, mockPath, mockBody),
+  apiSend: (mockMethod: string, mockPath: string, mockBody?: unknown) =>
+    mockApiSend(mockMethod, mockPath, mockBody),
 }));
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn(), replace: jest.fn(), canDismiss: () => true },
@@ -44,7 +45,13 @@ test('without users.write: read-only fields and no save or account actions', asy
   await renderWithQuery(<UserDetailScreen can={readOnly} />);
   expect(await screen.findByText(t.users.detail.readOnly)).toBeTruthy();
   expect(screen.getByLabelText(F.email).props.editable).toBe(false);
-  for (const name of [t.users.detail.save, t.users.actions.disable, t.users.actions.resetPassword, t.users.actions.signOut, t.users.actions.delete]) {
+  for (const name of [
+    t.users.detail.save,
+    t.users.actions.disable,
+    t.users.actions.resetPassword,
+    t.users.actions.signOut,
+    t.users.actions.delete,
+  ]) {
     expect(screen.queryByRole('button', { name })).toBeNull();
   }
 });

@@ -29,7 +29,9 @@ beforeEach(() => {
   mockApiFetch.mockReset();
   mockApiSend.mockReset();
   mockLists = [PAID, TRIAL];
-  mockApiFetch.mockImplementation((p: string) => answer({ me: withLists, lists: mockLists, threads: () => page() })(p));
+  mockApiFetch.mockImplementation((p: string) =>
+    answer({ me: withLists, lists: mockLists, threads: () => page() })(p),
+  );
 });
 
 test('a list chip names its edit action and hint for screen readers; the action opens the sheet', async () => {

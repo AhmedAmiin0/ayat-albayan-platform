@@ -12,8 +12,10 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-const openDialog = () => renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
-const courseReads = () => apiFetch.mock.calls.filter(([path]) => String(path).startsWith('/sales/booking/course')).length;
+const openDialog = () =>
+  renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
+const courseReads = () =>
+  apiFetch.mock.calls.filter(([path]) => String(path).startsWith('/sales/booking/course')).length;
 
 describe('«أيام الحلقات» dialog (owner 2026-10-18, R-ASST-01)', () => {
   beforeEach(() => {

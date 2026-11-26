@@ -25,7 +25,13 @@ describe('changePicks: the course’s own days, from today while it runs, else i
   it('a pending change (latest set from Sun 4 Oct): the unchanged picks start on it, the server’s no_change', () => {
     const pending = { ...course, startsOn: '2026-10-04' };
     const prefilled = changePicks(pending, new Date('2026-10-01T00:00:00Z'));
-    const req = changeRequest({ subscriptionId: SUB, picks: ats(prefilled), tz: RIYADH, requestId: REQ, prefilled });
+    const req = changeRequest({
+      subscriptionId: SUB,
+      picks: ats(prefilled),
+      tz: RIYADH,
+      requestId: REQ,
+      prefilled,
+    });
     expect(req).toMatchObject({ startsOn: '2026-10-04', startsAt: '2026-10-04T14:00:00.000Z' });
     expect(req && sameDays(req, pending.days)).toBe(true);
   });

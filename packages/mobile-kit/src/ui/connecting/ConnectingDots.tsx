@@ -13,12 +13,23 @@ export const STILL_DOT_OPACITY = 0.7;
 /** One dot: 0.25 → 1 → 0.25 and 0 → −3 → 0 pt every 1.2 s, peaking at 40 %. */
 function Dot({ index, color, still }: { index: number; color: string; still: boolean }) {
   const wave = useCycle({ duration: CYCLE_MS, delay: index * STAGGER_MS, still });
-  const opacity = still ? STILL_DOT_OPACITY : wave.interpolate({ inputRange: [0, PEAK, 1], outputRange: [0.25, 1, 0.25] });
-  const translateY = still ? 0 : wave.interpolate({ inputRange: [0, PEAK, 1], outputRange: [0, -3, 0] });
+  const opacity = still
+    ? STILL_DOT_OPACITY
+    : wave.interpolate({ inputRange: [0, PEAK, 1], outputRange: [0.25, 1, 0.25] });
+  const translateY = still
+    ? 0
+    : wave.interpolate({ inputRange: [0, PEAK, 1], outputRange: [0, -3, 0] });
   return (
     <Animated.View
       testID="connecting-dot"
-      style={{ width: SIZE, height: SIZE, borderRadius: SIZE / 2, backgroundColor: color, opacity, transform: [{ translateY }] }}
+      style={{
+        width: SIZE,
+        height: SIZE,
+        borderRadius: SIZE / 2,
+        backgroundColor: color,
+        opacity,
+        transform: [{ translateY }],
+      }}
     />
   );
 }

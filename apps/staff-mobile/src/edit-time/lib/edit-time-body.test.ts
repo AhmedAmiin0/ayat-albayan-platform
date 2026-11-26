@@ -18,7 +18,12 @@ describe('editBody, move', () => {
 
   test('a new length alone keeps the start and sends no notify (nothing the guardian sees changed)', () => {
     const body = editBody(upcoming, state({ durationMin: 60 }), NOW);
-    expect(body).toEqual({ expectedStartsAt: SUN_17, expectedEndsAt: upcoming.ends_at, startsAt: SUN_17, durationMin: 60 });
+    expect(body).toEqual({
+      expectedStartsAt: SUN_17,
+      expectedEndsAt: upcoming.ends_at,
+      startsAt: SUN_17,
+      durationMin: 60,
+    });
   });
 
   test('a trimmed reason goes along, cut at 300 characters', () => {
@@ -30,7 +35,9 @@ describe('editBody, move', () => {
     expect(editBody(upcoming, state(), NOW)).toBeNull();
     expect(editBody(upcoming, state({ picked: '2026-10-01T10:00:00.000Z' }), NOW)).toBeNull();
     expect(editBody(lesson({ id: 'plain' }), state({ durationMin: 60 }), NOW)).toBeNull();
-    expect(editBody({ ...upcoming, time_edit_mode: null }, state({ durationMin: 60 }), NOW)).toBeNull();
+    expect(
+      editBody({ ...upcoming, time_edit_mode: null }, state({ durationMin: 60 }), NOW),
+    ).toBeNull();
   });
 });
 

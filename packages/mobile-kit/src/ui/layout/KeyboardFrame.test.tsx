@@ -5,7 +5,10 @@ import { KeyboardFrame, keyboardAvoidProps } from './KeyboardFrame';
 
 // A 400 × 800 window, 40pt status bar, 24pt navigation bar / home indicator; the frame's parent (the
 // Screen body) starts under the status bar, and the frame ends at 736 = 800 − 24 − 40 in it.
-const metrics = { frame: { x: 0, y: 0, width: 400, height: 800 }, insets: { top: 40, bottom: 24, left: 0, right: 0 } };
+const metrics = {
+  frame: { x: 0, y: 0, width: 400, height: 800 },
+  insets: { top: 40, bottom: 24, left: 0, right: 0 },
+};
 const KEYBOARD = 300;
 
 async function frame(inScreen = true) {

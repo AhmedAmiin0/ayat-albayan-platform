@@ -19,7 +19,9 @@ export function usePayTeacher(teacherId: string) {
 
   async function receiptPath(input: PayInput): Promise<string | null> {
     const { receipt } = input;
-    return receipt ? receiptOnce(receipt.uri, () => uploadTeacherReceipt(teacherId, receipt)) : null;
+    return receipt
+      ? receiptOnce(receipt.uri, () => uploadTeacherReceipt(teacherId, receipt))
+      : null;
   }
 
   return useMutation({

@@ -19,7 +19,9 @@ interface RescheduleMeetingProps {
 }
 
 export function RescheduleMeeting({ meeting, tz, onDone }: RescheduleMeetingProps) {
-  const [slot, setSlot] = useState<Slot>(() => slotOf(meeting.starts_at, meeting.planned_end_at, tz));
+  const [slot, setSlot] = useState<Slot>(() =>
+    slotOf(meeting.starts_at, meeting.planned_end_at, tz),
+  );
   const client = useQueryClient();
   const save = useMutation({
     mutationFn: updateMeeting,

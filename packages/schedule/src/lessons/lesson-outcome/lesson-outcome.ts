@@ -1,4 +1,5 @@
 import type { LessonStatus } from '@ab/catalog';
+import { z } from 'zod';
 import { AUTO_HELD_REASON } from '../auto-held';
 import { OPEN_LESSON_STATUSES } from '../state-machine';
 
@@ -28,7 +29,8 @@ export const CORRECT_TO = [
   'excused',
   'cancelled_by_teacher',
 ] as const satisfies readonly LessonStatus[];
-export type CorrectTo = (typeof CORRECT_TO)[number];
+export const correctToSchema = z.enum(CORRECT_TO);
+export type CorrectTo = z.infer<typeof correctToSchema>;
 
 /** no_show means reminded without a yes; unresolved stays needs confirmation for the assistant. */
 export type OutcomeDecision = 'completed' | 'no_show' | 'unresolved' | 'wait' | 'skip';

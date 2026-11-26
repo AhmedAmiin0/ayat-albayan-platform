@@ -12,7 +12,9 @@ export function InviteResults({ results }: { results: readonly MeetingInviteResu
   if (results.length === 0) return null;
   return (
     <View accessibilityLiveRegion="polite" style={{ gap: 4 }}>
-      <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>{R.title}</AppText>
+      <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>
+        {R.title}
+      </AppText>
       {results.some((r) => r.link) ? <Note>{R.linkOnce}</Note> : null}
       {results.map((r) => (
         <InviteResultRow key={r.id} result={r} />

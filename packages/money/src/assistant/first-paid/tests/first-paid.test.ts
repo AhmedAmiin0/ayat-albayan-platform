@@ -5,8 +5,18 @@ const pay = (amount: number, paid_at: string, kind: PaymentFact['kind'] = 'payme
 const sub = (id: string, price: number, payments: PaymentFact[]): SubscriptionFact =>
   ({ id, price, currency: 'SAR', created_at: '2026-09-01T00:00:00Z', payments });
 const TERMS = { type: 'percent', value: 10, currency: null, startsOn: '2026-10-01' } as const;
-const plan = (subscriptions: SubscriptionFact[], over: Partial<Parameters<typeof planCommission>[0]> = {}) =>
-  planCommission({ broughtBy: 'a1', broughtAt: '2026-09-15T10:00:00Z', terms: TERMS, tz: 'Asia/Riyadh', subscriptions, ...over });
+const plan = (
+  subscriptions: SubscriptionFact[],
+  over: Partial<Parameters<typeof planCommission>[0]> = {},
+) =>
+  planCommission({
+    broughtBy: 'a1',
+    broughtAt: '2026-09-15T10:00:00Z',
+    terms: TERMS,
+    tz: 'Asia/Riyadh',
+    subscriptions,
+    ...over,
+  });
 
 describe('subscriptionFullAt (twin of subscription_full_at)', () => {
   it('is null until the net paid reaches the price, then the date of the completing payment', () => {

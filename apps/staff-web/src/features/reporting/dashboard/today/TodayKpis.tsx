@@ -13,7 +13,17 @@ export interface TodayKpisProps {
 const tile =
   'ab-lift grid content-between gap-2 rounded-md border border-rule bg-page p-4 no-underline min-h-[104px] hover:bg-sunk/60';
 
-function Tile({ value, label, act, live }: { value: number | undefined; label: string; act?: boolean; live?: boolean }): ReactNode {
+function Tile({
+  value,
+  label,
+  act,
+  live,
+}: {
+  value: number | undefined;
+  label: string;
+  act?: boolean;
+  live?: boolean;
+}): ReactNode {
   return (
     <>
       <span className="flex items-center gap-2 text-sm text-ink-2">

@@ -38,7 +38,11 @@ describe('StudentProfileForm: contact_is_self', () => {
 
   it('defaults to «ولي الأمر»; switching to «الطالب نفسه» saves true', async () => {
     api.updateStudent.mockResolvedValue({ ...STUDENT, contact_is_self: true });
-    render(<QueryClientProvider client={new QueryClient()}><StudentProfileForm student={STUDENT} /></QueryClientProvider>);
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <StudentProfileForm student={STUDENT} />
+      </QueryClientProvider>,
+    );
     expect(screen.getByRole('radio', { name: C.guardian })).toHaveProperty('checked', true);
     fireEvent.click(screen.getByRole('radio', { name: C.self }));
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
@@ -47,7 +51,11 @@ describe('StudentProfileForm: contact_is_self', () => {
   });
 
   it('a saved self-contact student loads as «الطالب نفسه»', () => {
-    render(<QueryClientProvider client={new QueryClient()}><StudentProfileForm student={{ ...STUDENT, contact_is_self: true }} /></QueryClientProvider>);
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <StudentProfileForm student={{ ...STUDENT, contact_is_self: true }} />
+      </QueryClientProvider>,
+    );
     expect(screen.getByRole('radio', { name: C.self })).toHaveProperty('checked', true);
   });
 });

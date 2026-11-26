@@ -64,6 +64,14 @@ function utc(o: { date: string; time: string; plusMs?: number }): string {
   return new Date(t + (o.plusMs ?? 0)).toISOString();
 }
 
+function slotOf(slots: ReportCtx['slots'], key: string) {
+  const booked = slots.get(key);
+  const unbooked: IssueInput[] = booked
+    ? []
+    : [{ code: 'missing_field', severity: 'warn', field: 'start_time', detail: 'noon_riyadh' }];
+  return { slot: booked ?? UNKNOWN_TIME, unbooked };
+}
+
 export function parseReport(row: SourceRow, ctx: ReportCtx): ParsedReport | RowIssue[] {
   const f = row.fields;
   const issue = issuesFor('lesson_reports', row.ref);
@@ -79,21 +87,12 @@ export function parseReport(row: SourceRow, ctx: ReportCtx): ParsedReport | RowI
     return [issue({ code: 'missing_field', severity: 'reject', field: 'submitted_at' })];
   const student = who.student.key;
   const body = reportBody(f);
+  const { slot, unbooked } = slotOf(ctx.slots, `${student.key}|${date}`);
   const issues = [
     ...who.issues.map(issue),
     ...body.unmapped.map((field) => issue({ code: 'unmapped_value', severity: 'warn', field })),
+    ...unbooked.map(issue),
   ];
-  const booked = ctx.slots.get(`${student.key}|${date}`);
-  if (!booked)
-    issues.push(
-      issue({
-        code: 'missing_field',
-        severity: 'warn',
-        field: 'start_time',
-        detail: 'noon_riyadh',
-      }),
-    );
-  const slot = booked ?? UNKNOWN_TIME;
   const lessonKey = keys.lesson({ teacher, students: [student.key], at: date });
   return {
     ref: row.ref,

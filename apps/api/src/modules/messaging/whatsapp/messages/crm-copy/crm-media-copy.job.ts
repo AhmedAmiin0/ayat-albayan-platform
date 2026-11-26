@@ -1,10 +1,10 @@
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CRM_MEDIA_PREFIX, allowedCrmUrl } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history-url';
 import { CrmMediaCopier, type CopyOutcome } from './crm-media-copier';
 import { CrmMediaCopyDone } from './crm-media-copy.done';
 import { CrmMediaCopySettings } from './crm-media-copy.settings';
 import { BackgroundJob } from '@/config/role/background-job';
-import { beatTick } from '@/common/jobs/beats';
+import { Ticker, TickerJob } from '@/common/jobs';
 
 /** Two files at a time: the batch of 20 takes ten rounds at most (10 s fetch timeout each). */
 const CONCURRENCY = 2;
@@ -35,29 +35,23 @@ export function copyHost(setting: string): string | null {
  */
 @BackgroundJob({ name: 'crm-media-copy' })
 @Injectable()
-export class CrmMediaCopyJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class CrmMediaCopyJob extends TickerJob {
   private readonly log = new Logger(CrmMediaCopyJob.name);
-  private readonly timers: NodeJS.Timeout[] = [];
+  protected readonly ticker = new Ticker({
+    name: CrmMediaCopyJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: EVERY_MS,
+    intervalFrom: 'first',
+    run: () => this.runOnce(),
+  });
   private running = false;
 
   constructor(
     private readonly settings: CrmMediaCopySettings,
     private readonly copier: CrmMediaCopier,
     private readonly done: CrmMediaCopyDone,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    const plan = { name: CrmMediaCopyJob.name, firstMs: FIRST_RUN_MS, everyMs: EVERY_MS };
-    const tick = beatTick(plan, () => this.runOnce());
-    const start = () => {
-      tick();
-      this.timers.push(setInterval(tick, EVERY_MS).unref());
-    };
-    this.timers.push(setTimeout(start, FIRST_RUN_MS).unref());
-  }
-
-  onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+  ) {
+    super();
   }
 
   /** Never throws: an error is logged and the next tick tries again. */

@@ -29,7 +29,10 @@ export async function resolveGate(
 ): Promise<void> {
   if (session) return set(await verifyRole(session, set));
   // Before the login screen shows; registerPush also waits for a slower one (silenceSettled).
-  await Promise.race([silencePush(), new Promise((resolve) => setTimeout(resolve, SILENCE_WAIT_MS))]);
+  await Promise.race([
+    silencePush(),
+    new Promise((resolve) => setTimeout(resolve, SILENCE_WAIT_MS)),
+  ]);
   set('out');
   await clearQueryCaches();
 }
@@ -59,7 +62,9 @@ export function useAuthGate(): GateStatus {
     // Still booting (a slow /auth/me): ask again; the newest check wins, as above. Only with a session
     // in hand: offline, an expired token whose refresh failed reads as none, and that must never sign out.
     const offRetry = onGateRetry(() => {
-      void supabase.auth.getSession().then(({ data: current }) => (current.session ? check(current.session) : undefined));
+      void supabase.auth
+        .getSession()
+        .then(({ data: current }) => (current.session ? check(current.session) : undefined));
     });
     return () => {
       live = false;

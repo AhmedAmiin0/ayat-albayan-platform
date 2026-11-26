@@ -1,5 +1,13 @@
 import type { LessonStatus } from '@ab/catalog';
-import { CANCEL_STATUS, isChargeable, type CancelBy, type LessonEvent } from '@ab/schedule';
+import {
+  CANCEL_STATUS,
+  cancelBySchema,
+  isChargeable,
+  lessonEventSchema,
+  type CancelBy,
+  type LessonEvent,
+} from '@ab/schedule';
+import { z } from 'zod';
 import type { LessonChange } from '@/modules/teaching/scheduling/change-set';
 import { conflict } from '@/common/http/errors';
 
@@ -8,11 +16,11 @@ export const invalidTransition = (from: LessonStatus, event: LessonEvent) =>
   conflict('invalid_transition', { from, event });
 
 /** Which event a cancellation is; a student's cancellation is an excuse (CANCEL_STATUS). */
-export const CANCEL_EVENT: Record<CancelBy, LessonEvent> = {
+export const CANCEL_EVENT = z.record(cancelBySchema, lessonEventSchema).readonly().decode({
   teacher: 'cancel_by_teacher',
   admin: 'cancel_by_admin',
   student: 'excuse',
-};
+});
 
 export type CancelContext = {
   by: CancelBy;

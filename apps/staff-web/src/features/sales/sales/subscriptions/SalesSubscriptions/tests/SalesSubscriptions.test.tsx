@@ -27,10 +27,14 @@ function Harness() {
   return <SalesSubscriptions kind={kind} onKind={setKind} />;
 }
 
-function open(rows: Record<string, SalesSubscriptionView[]> = { pending: PENDING, confirmed: CONFIRMED }) {
+function open(
+  rows: Record<string, SalesSubscriptionView[]> = { pending: PENDING, confirmed: CONFIRMED },
+) {
   apiFetch.mockImplementation(async (path: string) => rows[path.split('kind=')[1] ?? ''] ?? []);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <Harness />
     </QueryClientProvider>,
   );
@@ -71,7 +75,9 @@ describe('SalesSubscriptions «الاشتراكات»', () => {
   it('a failed load shows the error with a retry', async () => {
     apiFetch.mockRejectedValue(new Error('down'));
     render(
-      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <QueryClientProvider
+        client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+      >
         <Harness />
       </QueryClientProvider>,
     );

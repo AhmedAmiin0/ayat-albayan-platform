@@ -29,10 +29,27 @@ export function CallNotice({ text, action, onDismiss }: CallNoticeProps) {
       accessibilityLiveRegion="polite"
       style={{ position: 'absolute', start: 12, end: 12, bottom: insets.bottom + 16, flexDirection: 'row', alignItems: 'center', gap: 4, paddingStart: 14, borderRadius: shape.radius.md, backgroundColor: color.inverse }}
     >
-      <AppText style={{ flex: 1, fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.onInverse }}>{text}</AppText>
+      <AppText
+        style={{
+          flex: 1,
+          fontSize: type.size.sm,
+          lineHeight: type.lineHeight(type.size.sm),
+          color: color.onInverse,
+        }}
+      >
+        {text}
+      </AppText>
       {action === 'settings' ? (
-        <Pressable accessibilityRole="button" onPress={() => void Linking.openSettings()} style={{ minHeight: 44, justifyContent: 'center', paddingHorizontal: 8 }}>
-          <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.inverseGold }}>{t.calls.mic.openSettings}</AppText>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => void Linking.openSettings()}
+          style={{ minHeight: 44, justifyContent: 'center', paddingHorizontal: 8 }}
+        >
+          <AppText
+            style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.inverseGold }}
+          >
+            {t.calls.mic.openSettings}
+          </AppText>
         </Pressable>
       ) : null}
       <IconButton label={t.common.close} onPress={onDismiss}>

@@ -5,6 +5,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { waHttpError } from '@/modules/messaging/whatsapp';
 import { visibleToSales } from '@/modules/messaging/inbox/sales-threads/sales-threads';
 import { MessageHideRepo, type HideTarget } from './message-hide.repo';
+import { isSales } from '@/common/auth/roles';
 
 export interface HideInput {
   phone: string;
@@ -38,7 +39,7 @@ export class MessageHideService {
   /** 404 for another chat's message or one sales may not read (never reveal it). */
   private async target(input: HideInput): Promise<HideTarget> {
     const row = await this.repo.target(input.messageId);
-    const salesWall = row !== null && input.user.role === 'sales' && !visibleToSales(row);
+    const salesWall = row !== null && isSales(input.user) && !visibleToSales(row);
     if (row?.phone_e164 !== input.phone || salesWall) {
       throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     }

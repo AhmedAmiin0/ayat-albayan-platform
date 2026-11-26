@@ -27,7 +27,8 @@ describe('meeting recordings routes', () => {
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual([expect.objectContaining({ id: meetingRec.id, status: 'done', url: 'https://signed.example.test/r.mp4' })]);
     expect(h.recordings.forTarget).toHaveBeenCalledWith({ kind: 'meeting', id: MEETING_ID });
-    expect(h.storage.signedDownload).toHaveBeenCalledWith(expect.objectContaining({ bucket: 'recordings', path: meetingRec.file_path }));
+    const signed = expect.objectContaining({ bucket: 'recordings', paths: [meetingRec.file_path] });
+    expect(h.storage.signedDownloads).toHaveBeenCalledWith(signed);
     expect((await h.call({ method: 'GET', url: list, token: 'admin' })).statusCode).toBe(200);
   });
 

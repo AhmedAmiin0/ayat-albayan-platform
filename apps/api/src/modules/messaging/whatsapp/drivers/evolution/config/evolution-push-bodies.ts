@@ -1,5 +1,5 @@
 import type { EvolutionConfig } from '@ab/shared';
-import type { EvolutionMode } from '@ab/catalog';
+import { evolutionModeSchema, type EvolutionMode } from '@ab/catalog';
 import { z } from 'zod';
 
 // What the API pushes to Evolution API v2 for one number (docs/19 «Evolution
@@ -49,10 +49,10 @@ export function proxyBody(c: EvolutionConfig, password: string | null): Body {
   };
 }
 
-const INTEGRATION: Record<EvolutionMode, string> = {
+const INTEGRATION = z.record(evolutionModeSchema, z.string()).readonly().decode({
   baileys: 'WHATSAPP-BAILEYS',
   cloud: 'WHATSAPP-BUSINESS',
-};
+});
 
 /** POST /instance/create (global key): no QR now, the admin asks for it from the QR panel. */
 export function createBody(at: {

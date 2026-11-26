@@ -17,7 +17,13 @@ const segments = [
 ] as const;
 
 /** At most 30 invitees; typed phones are for admin and sales only. */
-export function InviteePicker({ value, onChange }: { value: DraftInvitee[]; onChange: (list: DraftInvitee[]) => void }) {
+export function InviteePicker({
+  value,
+  onChange,
+}: {
+  value: DraftInvitee[];
+  onChange: (list: DraftInvitee[]) => void;
+}) {
   const [segment, setSegment] = useState<Segment>('staff');
   const phones = useMayInvitePhones();
   const items = phones ? segments : segments.filter((x) => x.value !== 'phone');
@@ -26,7 +32,12 @@ export function InviteePicker({ value, onChange }: { value: DraftInvitee[]; onCh
   const add = (d: DraftInvitee) => onChange(addInvitee(value, d));
   return (
     <View style={{ gap: 10 }}>
-      <FilterPills items={items} value={shown} onChange={setSegment} accessibilityLabel={L.invitees} />
+      <FilterPills
+        items={items}
+        value={shown}
+        onChange={setSegment}
+        accessibilityLabel={L.invitees}
+      />
       {shown === 'phone' ? (
         <PhoneInvitee onAdd={add} disabled={full} />
       ) : (

@@ -7,7 +7,9 @@ const REQ = '99999999-9999-4999-8999-999999999999';
 const riyadh = { pkg: '12' as const, tz: 'Asia/Riyadh' };
 
 test('a package: every pick’s weekday, the earliest pick starts it, dayTimes only for the days at another time', () => {
-  const body = toBookingRequest(draft({ ...riyadh, ...fromPicks([THU_18, SUN_17, TUE_17]) }), { requestId: REQ });
+  const body = toBookingRequest(draft({ ...riyadh, ...fromPicks([THU_18, SUN_17, TUE_17]) }), {
+    requestId: REQ,
+  });
   expect(body).toMatchObject({
     kind: 'package',
     byday: [0, 2, 4],
@@ -20,7 +22,9 @@ test('a package: every pick’s weekday, the earliest pick starts it, dayTimes o
 });
 
 test('a package whose days share one time sends no dayTimes', () => {
-  const body = toBookingRequest(draft({ ...riyadh, ...fromPicks([SUN_17, TUE_17]) }), { requestId: REQ });
+  const body = toBookingRequest(draft({ ...riyadh, ...fromPicks([SUN_17, TUE_17]) }), {
+    requestId: REQ,
+  });
   expect(body).toMatchObject({ byday: [0, 2], startTimeLocal: '17:00' });
   expect(body).not.toHaveProperty('dayTimes');
 });

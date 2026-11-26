@@ -17,7 +17,11 @@ export function SubscriptionSection({ data }: { data: Pick<SalesStudentDetails, 
   return (
     <View style={{ gap: 8 }}>
       <SectionLabel>{s.subscription}</SectionLabel>
-      {current ? <HistoryEntryCard entry={current} current brief /> : <Note>{s.noSubscription}</Note>}
+      {current ? (
+        <HistoryEntryCard entry={current} current brief />
+      ) : (
+        <Note>{s.noSubscription}</Note>
+      )}
       {current ? <UsedBeforeEdit sub={current} stale={[pathKey('/sales')]} /> : null}
       {current ? <StartDateEdit sub={current} stale={[pathKey('/sales')]} /> : null}
       {past.length > 0 ? (
@@ -27,7 +31,9 @@ export function SubscriptionSection({ data }: { data: Pick<SalesStudentDetails, 
           onPress={() => setOpen(!open)}
         />
       ) : null}
-      {open ? past.map((sub) => <HistoryEntryCard key={sub.id} entry={sub} current={false} brief />) : null}
+      {open
+        ? past.map((sub) => <HistoryEntryCard key={sub.id} entry={sub} current={false} brief />)
+        : null}
     </View>
   );
 }

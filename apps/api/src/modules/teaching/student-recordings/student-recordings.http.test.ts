@@ -26,7 +26,7 @@ const verify: TokenVerifier = async (token) => {
 describe('student recordings routes', () => {
   const sq = studentQueries();
   const admin = { byId: vi.fn(), setVisible: vi.fn(), markDeleted: vi.fn(), attendeeCount: vi.fn() };
-  const storage = { signedDownload: vi.fn(), remove: vi.fn() };
+  const storage = { signedDownloads: vi.fn(), remove: vi.fn() };
   const audit = { record: vi.fn() };
   let app: NestFastifyApplication;
   const call = (method: 'GET' | 'PATCH' | 'DELETE', url: string, opts: { token?: string; payload?: object } = {}) =>
@@ -54,7 +54,9 @@ describe('student recordings routes', () => {
     vi.resetAllMocks();
     Object.assign(sq, studentQueries());
     sq.assists.mockImplementation(async ({ profileId }: { profileId: string }) => profileId === ASSISTANT.id);
-    storage.signedDownload.mockResolvedValue({ url: 'https://signed.example.test/r.mp4', expires_at: '' });
+    storage.signedDownloads.mockImplementation(async (i: { paths: readonly string[] }) =>
+      new Map(i.paths.map((p) => [p, 'https://signed.example.test/r.mp4'])),
+    );
     admin.byId.mockResolvedValue({ ...recording(), lessons: { teacher_id: TEACHER_ID } });
     admin.attendeeCount.mockResolvedValue(1);
     admin.markDeleted.mockResolvedValue(1);
@@ -64,7 +66,8 @@ describe('student recordings routes', () => {
     const res = await call('GET', `${list}?page=2&pageSize=5&from=2026-10-01`, { token: 'teacher' });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toMatchObject({ total: 1, page: 2, pageSize: 5, items: [{ id: REC_ID, status: 'done', url: 'https://signed.example.test/r.mp4' }] });
-    expect(storage.signedDownload).toHaveBeenCalledWith({ bucket: 'recordings', path: joinRow().file_path, seconds: 3600 });
+    const one = { bucket: 'recordings', paths: [joinRow().file_path], seconds: 3600 };
+    expect(storage.signedDownloads).toHaveBeenCalledWith(one);
     expect(res.body).not.toContain(joinRow().file_path);
     expect(sq.page).toHaveBeenCalledWith(expect.objectContaining({ query: expect.objectContaining({ page: 2, pageSize: 5, from: '2026-10-01' }) }));
   });
@@ -78,7 +81,7 @@ describe('student recordings routes', () => {
     const url = `/students/${STUDENT}/recorded-lesson-ids`;
     const res = await call('GET', url, { token: 'teacher' });
     expect([res.statusCode, res.json()]).toEqual([200, ['les-1']]);
-    expect(storage.signedDownload).not.toHaveBeenCalled();
+    expect(storage.signedDownloads).not.toHaveBeenCalled();
     expect((await call('GET', url, { token: 'guardian' })).statusCode).toBe(403);
   });
 

@@ -15,8 +15,13 @@ export function runtimeRecords(runtime: string | null | undefined): boolean {
 /** Needs Android, a recording APK runtime and expo-audio's native recorder; else no microphone. */
 export function voiceSupported(): boolean {
   try {
-    const recorder: unknown = (AudioModule as { AudioRecorder?: unknown } | undefined)?.AudioRecorder;
-    return Platform.OS === 'android' && runtimeRecords(Updates.runtimeVersion) && typeof recorder === 'function';
+    const recorder: unknown = (AudioModule as { AudioRecorder?: unknown } | undefined)
+      ?.AudioRecorder;
+    return (
+      Platform.OS === 'android' &&
+      runtimeRecords(Updates.runtimeVersion) &&
+      typeof recorder === 'function'
+    );
   } catch {
     return false;
   }

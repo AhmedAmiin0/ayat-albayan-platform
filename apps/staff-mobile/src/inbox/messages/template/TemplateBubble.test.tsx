@@ -9,7 +9,12 @@ import { delivered, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 // A template drawn like WhatsApp: header, body, grey footer, buttons under it.
 
 const s = t.inbox.templateBubble;
-const block = (over: Partial<MessageTemplateBlock> = {}): MessageTemplateBlock => ({ header: null, footer: null, buttons: [], ...over });
+const block = (over: Partial<MessageTemplateBlock> = {}): MessageTemplateBlock => ({
+  header: null,
+  footer: null,
+  buttons: [],
+  ...over,
+});
 const show = (m: Partial<MessageView>) =>
   renderWithQuery(<MessageBubble message={{ ...delivered, template_key: 'lesson_reminder_meet', body: 'Salma’s lesson today', ...m }} phone={PHONE} />);
 

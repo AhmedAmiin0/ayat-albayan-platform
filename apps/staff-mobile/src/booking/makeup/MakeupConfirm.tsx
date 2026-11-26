@@ -31,7 +31,11 @@ export function MakeupConfirm({ draft, busy, failure, onSubmit, ...go }: MakeupC
         <FailureNotice failure={failure} busy={busy} onSubmit={onSubmit} {...go} />
       ) : null}
       {failure?.kind === 'conflict' ? null : (
-        <Button label={busy ? t.booking.submitting : t.booking.submit} busy={busy} onPress={onSubmit} />
+        <Button
+          label={busy ? t.booking.submitting : t.booking.submit}
+          busy={busy}
+          onPress={onSubmit}
+        />
       )}
     </View>
   );

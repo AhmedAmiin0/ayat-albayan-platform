@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 
 export interface ReadMark {
   profile_id: string;
@@ -14,11 +14,10 @@ export class ChannelReadsRepo {
 
   /** Every participant's read mark in this channel (the primary key's prefix). */
   async marks(channelId: string): Promise<ReadMark[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('channel_reads')
       .select('profile_id, last_read_at')
-      .eq('channel_id', channelId);
-    if (error) throw dbError(error);
+      .eq('channel_id', channelId));
     return data;
   }
 }

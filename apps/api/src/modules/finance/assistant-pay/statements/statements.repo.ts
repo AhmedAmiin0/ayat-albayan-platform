@@ -1,7 +1,7 @@
 import type { Enums } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import { STATEMENT_SELECT, type StatementRow } from './statements.mapper';
 
 interface StatementFilter {
@@ -26,17 +26,16 @@ export class StatementsRepo {
     if (f.status) q = q.eq('status', f.status);
     if (f.hideDrafts) q = q.neq('status', 'draft');
     const { data, error } = await q.order('month', { ascending: false }).overrideTypes<StatementRow[], { merge: false }>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.sort((a, b) => b.month.localeCompare(a.month) || (a.assistant?.full_name ?? '').localeCompare(b.assistant?.full_name ?? '', 'ar'));
   }
 
   async get(id: string): Promise<StatementRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('assistant_statements')
       .select(STATEMENT_SELECT)
       .eq('id', id)
-      .maybeSingle<StatementRow>();
-    if (error) throw dbError(error);
+      .maybeSingle<StatementRow>());
     return data;
   }
 }

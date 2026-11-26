@@ -12,7 +12,8 @@ export interface ConflictTextInput {
   now?: Date;
 }
 
-export const conflictBy = (conflict: ConfigEntryConflict): string => conflict.updatedByName ?? c.someone;
+export const conflictBy = (conflict: ConfigEntryConflict): string =>
+  conflict.updatedByName ?? c.someone;
 
 /** The 409 conflict message with the new value, age, author and the admin's value (docs/26b §2). */
 export function conflictText({ key, conflict, mine, now }: ConflictTextInput): string {

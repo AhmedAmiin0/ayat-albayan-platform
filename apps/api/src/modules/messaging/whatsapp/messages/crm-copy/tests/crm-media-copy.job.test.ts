@@ -132,7 +132,7 @@ describe('CrmMediaCopyJob: a run', () => {
     await vi.advanceTimersByTimeAsync(3 * 60_000);
     expect(read).toHaveBeenCalledTimes(4);
     const after = read.mock.calls.length;
-    w.job.onModuleDestroy();
+    await w.job.beforeApplicationShutdown();
     await vi.advanceTimersByTimeAsync(60 * 60_000);
     expect(read).toHaveBeenCalledTimes(after);
     vi.useRealTimers();

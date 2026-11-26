@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, maybe, one, pgError } from '@/common/db/errors';
 import type { ReportAttachmentRow } from '@/modules/reporting/reports/report-row';
 
 const COLUMNS = 'id, storage_path, mime, size, created_at' as const;
@@ -27,8 +27,8 @@ export class ReportAttachmentsQueries {
       this.db.from('students').select('code, guardian:guardians(tz)').eq('id', input.studentId).maybeSingle(),
       this.db.from('lessons').select('starts_at').eq('id', input.lessonId).maybeSingle(),
     ]);
-    if (student.error) throw dbError(student.error);
-    if (lesson.error) throw dbError(lesson.error);
+    if (student.error) throw pgError(student.error);
+    if (lesson.error) throw pgError(lesson.error);
     if (!student.data?.code || !student.data.guardian || !lesson.data) return null;
     return {
       code: student.data.code,
@@ -38,25 +38,22 @@ export class ReportAttachmentsQueries {
   }
 
   async add(row: NewAttachment): Promise<ReportAttachmentRow> {
-    const { data, error } = await this.db.from('report_attachments').insert(row).select(COLUMNS).single();
-    if (error) throw dbError(error);
+    const data = one(await this.db.from('report_attachments').insert(row).select(COLUMNS).single());
     return data;
   }
 
   /** The attachment, only when it belongs to that report. */
   async get(reportId: string, id: string): Promise<ReportAttachmentRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('report_attachments')
       .select(COLUMNS)
       .eq('id', id)
       .eq('report_id', reportId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   async remove(id: string): Promise<void> {
-    const { error } = await this.db.from('report_attachments').delete().eq('id', id);
-    if (error) throw dbError(error);
+    done(await this.db.from('report_attachments').delete().eq('id', id));
   }
 }

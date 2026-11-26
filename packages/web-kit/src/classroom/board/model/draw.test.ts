@@ -32,7 +32,11 @@ describe('paintBoard', () => {
 
   it('a tap leaves a dot; the eraser paints with the paper; an empty stroke draws nothing', () => {
     const { ctx, calls } = stubCtx();
-    paintBoard(ctx, [s({ pts: [0, 0] }), s({ erase: true, pts: [0, 0, 0.1, 0.1] }), s({ pts: [] })], { width: 100, height: 100, resolve });
+    paintBoard(
+      ctx,
+      [s({ pts: [0, 0] }), s({ erase: true, pts: [0, 0, 0.1, 0.1] }), s({ pts: [] })],
+      { width: 100, height: 100, resolve },
+    );
     expect(calls).toContain('line 0.01,0');
     expect(calls).toContain('stroke var(raised) 1');
     expect(calls.filter((c) => c === 'begin')).toHaveLength(2);

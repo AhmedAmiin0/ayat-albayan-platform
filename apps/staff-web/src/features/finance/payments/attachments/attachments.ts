@@ -36,7 +36,9 @@ export type Uploader = (input: { subscriptionId: string; file: File }) => Promis
  * Uploads each file once per package: the retry after a lost reply re-sends the same paths instead of
  * uploading the files again (the clientRequestId then returns the payment already recorded).
  */
-export function useUploadOnce(upload: Uploader): (subscriptionId: string, file: File) => Promise<string> {
+export function useUploadOnce(
+  upload: Uploader,
+): (subscriptionId: string, file: File) => Promise<string> {
   const done = useRef(new Map<File, { subscriptionId: string; path: string }>());
   return async (subscriptionId, file) => {
     const hit = done.current.get(file);

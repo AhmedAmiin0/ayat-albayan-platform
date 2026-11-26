@@ -27,8 +27,15 @@ describe('walletTotals', () => {
 
   it('per currency in exact cents, never summed across currencies', () => {
     const lines = [line(0.1), line(0.2), line(50, { currency: 'SAR' })];
-    const out = walletTotals(lines, [earning(0.1), earning(0.2), earning(50, { currency: 'SAR' })], AT);
-    expect(out).toEqual({ EGP: { due: 0.3, paid: 0, this_month: 0.3 }, SAR: { due: 50, paid: 0, this_month: 50 } });
+    const out = walletTotals(
+      lines,
+      [earning(0.1), earning(0.2), earning(50, { currency: 'SAR' })],
+      AT,
+    );
+    expect(out).toEqual({
+      EGP: { due: 0.3, paid: 0, this_month: 0.3 },
+      SAR: { due: 50, paid: 0, this_month: 50 },
+    });
   });
 
   it('owed = not on a paid statement (none, draft or approved); paid = on a paid one', () => {

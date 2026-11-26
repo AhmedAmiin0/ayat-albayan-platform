@@ -10,7 +10,8 @@ import {
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
 import { GuardiansService } from '@/modules/people/guardians/guardians.service';
-import { dbError } from '@/modules/people/guardians/http';
+import { peopleErrors } from '@/modules/people/guardians/http';
+import { maybe, one, rows } from '@/common/db/errors';
 import { detectDuplicates } from './duplicate-detector';
 import { LeadLink } from './lead-link';
 import type { StudentCreateRequest } from './students.dto';
@@ -42,12 +43,11 @@ export class StudentsService {
         throw new ConflictException({ message: 'duplicate_student', guardian_id: guardianId, candidates });
       }
     }
-    const { data, error } = await this.db
+    const data = one(await this.db
       .from('students')
       .insert(toStudentInsert({ dto, guardianId, actorId }))
       .select()
-      .single();
-    if (error) throw dbError(error, 'guardian_not_found');
+      .single(), peopleErrors('guardian_not_found'));
     if (lead) await this.leadLink.convert({ lead, guardianId, actorId });
     return data;
   }
@@ -70,8 +70,7 @@ export class StudentsService {
     const before = await this.getRow(id);
     const base = this.db.from('students').update(toStudentPatch(fields)).eq('id', id);
     const query = expected ? base.eq('status', expected) : base;
-    const { data, error } = await query.select().maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await query.select().maybeSingle(), peopleErrors());
     if (!data && expected) throw new ConflictException({ code: 'status_changed', message: 'status_changed' });
     if (!data) throw new NotFoundException();
     const from = expected ?? before.status;
@@ -90,16 +89,14 @@ export class StudentsService {
 
   /** Hard delete (e.g. a typo row). 409 once anything references the student; keeps an audit copy. */
   async remove(id: string, actorId: string): Promise<void> {
-    const { data, error } = await this.db.from('students').delete().eq('id', id).select();
-    if (error) throw dbError(error, 'student_in_use');
+    const data = rows(await this.db.from('students').delete().eq('id', id).select(), peopleErrors('student_in_use'));
     const [row] = data;
     if (!row) throw new NotFoundException();
     await this.audit.record({ actorId, entity: 'students', entityId: id, action: 'delete', before: row });
   }
 
   private async getRow(id: string): Promise<Student> {
-    const { data, error } = await this.db.from('students').select('*').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('students').select('*').eq('id', id).maybeSingle(), peopleErrors());
     if (!data) throw new NotFoundException();
     return data;
   }

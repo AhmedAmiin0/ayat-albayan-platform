@@ -12,7 +12,8 @@ export function RecordingsList({ source }: { source: RecordingSource }) {
   const list = useRecordings(source);
   const status = useRecordingStatus();
   if (list.isPending) return <AppText>{R.loading}</AppText>;
-  if (list.isError && !list.data) return <ErrorState message={R.error} onRetry={() => void list.refetch()} />;
+  if (list.isError && !list.data)
+    return <ErrorState message={R.error} onRetry={() => void list.refetch()} />;
   const items = list.data ?? [];
   return (
     <View style={{ gap: 8 }}>

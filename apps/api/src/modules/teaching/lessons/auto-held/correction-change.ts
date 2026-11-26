@@ -1,5 +1,11 @@
 import type { LessonStatus } from '@ab/catalog';
-import { OUTCOME_CORRECTION_REASON, type CorrectTo, type LessonEvent } from '@ab/schedule';
+import {
+  correctToSchema,
+  lessonEventSchema,
+  OUTCOME_CORRECTION_REASON,
+  type CorrectTo,
+} from '@ab/schedule';
+import { z } from 'zod';
 import type { LessonChange } from '@/modules/teaching/scheduling';
 import type { Commit } from '@/modules/teaching/lessons/store/lesson-store';
 import { cancelChange } from '@/modules/teaching/lessons/status/transition';
@@ -17,12 +23,12 @@ interface ChangeContext {
 }
 
 /** The event each correction is (the 409 on a lost compare-and-set names it). */
-export const CORRECT_EVENT: Record<CorrectTo, LessonEvent> = {
+export const CORRECT_EVENT = z.record(correctToSchema, lessonEventSchema).readonly().decode({
   completed: 'complete',
   no_show: 'mark_no_show',
   excused: 'excuse',
   cancelled_by_teacher: 'cancel_by_teacher',
-};
+});
 
 type Build = (lesson: Lesson, ctx: ChangeContext) => LessonChange;
 const outcome =

@@ -21,7 +21,10 @@ const serve = (first: () => Promise<unknown>) =>
     if (path === FILE) return { url: SIGNED_PDF, mime: 'application/pdf', expires_at: '' };
     return path.includes('/pdf/') ? pdfPage(Number(path.split('/').pop())) : null;
   });
-const fail = (status: number, code: string) => serve(async () => { throw new ApiError(status, { code }); });
+const fail = (status: number, code: string) =>
+  serve(async () => {
+    throw new ApiError(status, { code });
+  });
 const calls = (path: string) => mockApiFetch.mock.calls.filter(([p]) => p === path).length;
 const hold = jest.fn();
 const show = (client = createTestQueryClient()) =>

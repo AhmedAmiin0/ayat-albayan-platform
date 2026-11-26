@@ -8,14 +8,18 @@ export const overrideOf = (row: TranslationKeyRow, locale: Locale): string | nul
   locale === 'ar' ? row.arOverride : row.enOverride;
 
 /** What the UI shows today: the override when there is one, else the bundled text. */
-export const effectiveText = (row: TranslationKeyRow, locale: Locale): string => overrideOf(row, locale) ?? defaultOf(row, locale);
+export const effectiveText = (row: TranslationKeyRow, locale: Locale): string =>
+  overrideOf(row, locale) ?? defaultOf(row, locale);
 
 export type Drafts = Record<Locale, string>;
 
 export const draftsOf = (row: TranslationKeyRow): Drafts => ({ ar: effectiveText(row, 'ar'), en: effectiveText(row, 'en') });
 
 /** The slots a draft dropped, per locale (nothing to save until they are back). */
-export function draftProblems(row: TranslationKeyRow, drafts: Drafts): Partial<Record<Locale, string[]>> {
+export function draftProblems(
+  row: TranslationKeyRow,
+  drafts: Drafts,
+): Partial<Record<Locale, string[]>> {
   const out: Partial<Record<Locale, string[]>> = {};
   for (const l of LOCALES) {
     if (editedOnValues(row.key, l)) continue;

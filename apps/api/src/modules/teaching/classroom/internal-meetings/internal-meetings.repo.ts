@@ -3,7 +3,7 @@ import { joinWindowConfig, type JoinWindowConfig } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
-import { dbError } from '@/common/http/http';
+import { done, maybe, pgError, rows } from '@/common/db/errors';
 
 export type MeetingRow = Pick<
   Tables<'meetings'>,
@@ -54,77 +54,68 @@ export class InternalMeetingsRepo {
       .select(MEETING_COLUMNS)
       .single();
     if (error?.code === '23505' && row.clientRequestId) return null;
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** The meeting a retried POST /meetings already created (rule 8). */
   async byRequest(createdBy: string, clientRequestId: string): Promise<MeetingRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('meetings')
       .select(MEETING_COLUMNS)
       .eq('created_by', createdBy)
       .eq('client_request_id', clientRequestId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   async byId(id: string): Promise<MeetingRow | null> {
-    const { data, error } = await this.db.from('meetings').select(MEETING_COLUMNS).eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('meetings').select(MEETING_COLUMNS).eq('id', id).maybeSingle());
     return data;
   }
 
   async byHash(hash: string): Promise<MeetingRow | null> {
-    const { data, error } = await this.db.from('meetings').select(MEETING_COLUMNS).eq('link_token_hash', hash).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('meetings').select(MEETING_COLUMNS).eq('link_token_hash', hash).maybeSingle());
     return data;
   }
 
   /** The meeting behind an invitee's personal link (migration 411; cleared when cancelled). */
   async byInviteHash(hash: string): Promise<MeetingRow | null> {
-    const { data, error } = await this.db.from('meeting_invitees').select('meeting_id').eq('token_hash', hash).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('meeting_invitees').select('meeting_id').eq('token_hash', hash).maybeSingle());
     return data ? this.byId(data.meeting_id) : null;
   }
 
   /** Stamps ends_at once (a second call keeps the first time). */
   async end(id: string, at: string): Promise<MeetingRow | null> {
-    const { error } = await this.db.from('meetings').update({ ends_at: at }).eq('id', id).is('ends_at', null);
-    if (error) throw dbError(error);
+    done(await this.db.from('meetings').update({ ends_at: at }).eq('id', id).is('ends_at', null));
     return this.byId(id);
   }
 
   /** PATCH /meetings/:id: a new title and/or a new time. */
   async update(id: string, patch: { title?: string; starts_at?: string; planned_end_at?: string }): Promise<void> {
-    const { error } = await this.db.from('meetings').update(patch).eq('id', id);
-    if (error) throw dbError(error);
+    done(await this.db.from('meetings').update(patch).eq('id', id));
   }
 
   /** Stamps cancelled_at once; false when already cancelled or the meeting was ended meanwhile. */
   async cancel(id: string, at: string): Promise<boolean> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('meetings')
       .update({ cancelled_at: at })
       .eq('id', id)
       .is('cancelled_at', null)
       .is('ends_at', null)
-      .select('id');
-    if (error) throw dbError(error);
+      .select('id'));
     return data.length > 0;
   }
 
   /** The name a staff login shows in the room. */
   async profileName(profileId: string): Promise<string | null> {
-    const { data, error } = await this.db.from('profiles').select('full_name').eq('id', profileId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('profiles').select('full_name').eq('id', profileId).maybeSingle());
     return data?.full_name ?? null;
   }
 
   /** The hash is replaced in place, so the previous link stops working. */
   async rotate(id: string, hash: string): Promise<void> {
-    const { error } = await this.db.from('meetings').update({ link_token_hash: hash }).eq('id', id);
-    if (error) throw dbError(error);
+    done(await this.db.from('meetings').update({ link_token_hash: hash }).eq('id', id));
   }
 }

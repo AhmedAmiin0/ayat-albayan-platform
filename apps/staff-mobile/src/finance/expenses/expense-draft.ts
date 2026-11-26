@@ -29,14 +29,22 @@ interface ExpenseCheck {
 export function checkExpense(draft: ExpenseDraft): ExpenseCheck {
   const errors: ExpenseCheck['errors'] = {};
   if (!draft.category) errors.category = t.mobileFinance.expenses.categoryRequired;
-  const problem = amountProblem({ amount: parseAmount(draft.amountText), text: draft.amountText, ceiling: Number.POSITIVE_INFINITY });
+  const problem = amountProblem({
+    amount: parseAmount(draft.amountText),
+    text: draft.amountText,
+    ceiling: Number.POSITIVE_INFINITY,
+  });
   if (problem === 'required') errors.amount = t.common.required;
   else if (problem) errors.amount = t.payments.mobile.amountInvalid;
   return { errors, ok: Object.keys(errors).length === 0 };
 }
 
 /** POST /expenses: the paid day decides the accounting month (no month is sent). */
-export function expenseBody(draft: ExpenseDraft, receiptPath: string | null, now: Date): ExpenseCreate {
+export function expenseBody(
+  draft: ExpenseDraft,
+  receiptPath: string | null,
+  now: Date,
+): ExpenseCreate {
   return {
     category: draft.category,
     amount: parseAmount(draft.amountText) ?? 0,

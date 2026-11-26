@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { listRow, LESSON_ID, TEACHER_ID } from '@/modules/teaching/feedback/feedback.fakes';
 import { FeedbackReadRepo } from './feedback.read.repo';
@@ -10,12 +11,24 @@ describe('FeedbackReadQueries', () => {
   it('page: filters by teacher, lesson, kind and rating; `to` is inclusive (the next UTC midnight); newest first, windowed', async () => {
     const { db, calls } = fakeDb({ [T]: [{ data: [listRow()], count: 31 }] });
     const res = await new FeedbackReadRepo(db).page({
-      filter: { teacher: TEACHER_ID, lesson: LESSON_ID, kind: 'trial', rating: 4, from: '2026-10-01', to: '2026-10-31' },
+      filter: {
+        teacher: TEACHER_ID,
+        lesson: LESSON_ID,
+        kind: 'trial',
+        rating: 4,
+        from: '2026-10-01',
+        to: '2026-10-31',
+      },
       page: PAGE,
     });
     expect(res).toEqual({ rows: [listRow()], total: 31 });
     const args = (m: string) => calls.filter((c) => c.method === m).map((c) => c.args);
-    expect(args('eq')).toEqual([['teacher_id', TEACHER_ID], ['lesson_id', LESSON_ID], ['kind', 'trial'], ['rating', 4]]);
+    expect(args('eq')).toEqual([
+      ['teacher_id', TEACHER_ID],
+      ['lesson_id', LESSON_ID],
+      ['kind', 'trial'],
+      ['rating', 4],
+    ]);
     expect(args('gte')).toEqual([['requested_at', '2026-10-01T00:00:00Z']]);
     expect(args('lt')).toEqual([['requested_at', '2026-11-01T00:00:00.000Z']]);
     expect(args('order')).toEqual([['requested_at', { ascending: false }]]);
@@ -32,7 +45,10 @@ describe('FeedbackReadQueries', () => {
 
   it('mine: the teacher id comes from the caller, never a filter', async () => {
     const { db, calls } = fakeDb({ [T]: [{ data: [listRow()], count: 1 }] });
-    await new FeedbackReadRepo(db).mine(TEACHER_ID, { filter: { teacher: 'someone-else' }, page: { page: 1, pageSize: 25 } });
+    await new FeedbackReadRepo(db).mine(TEACHER_ID, {
+      filter: { teacher: 'someone-else' },
+      page: { page: 1, pageSize: 25 },
+    });
     expect(calls.find((c) => c.method === 'eq')?.args).toEqual(['teacher_id', TEACHER_ID]);
   });
 
@@ -67,5 +83,23 @@ describe('FeedbackReadQueries', () => {
     expect(await q.teachers([])).toEqual([]);
     await q.students(['a', 'a', 'b']);
     expect(argsOf('students', 'in')).toEqual(['id', ['a', 'b']]);
+  });
+});
+
+describe('FeedbackReadRepo error paths: the answer a failed query gives today', () => {
+  it('a unique violation is 409 duplicate with the detail', async () => {
+    const { db } = fakeDb({ v_teacher_feedback_avg: [{ error: PG_ERRORS.unique }] });
+    expect(await answerOfRejection(new FeedbackReadRepo(db).averages())).toEqual({
+      status: 409,
+      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+    });
+  });
+
+  it('any other error is a 500 naming the code', async () => {
+    const { db } = fakeDb({ v_teacher_feedback_avg: [{ error: PG_ERRORS.other }] });
+    expect(await answerOfRejection(new FeedbackReadRepo(db).averages())).toEqual({
+      status: 500,
+      body: 'db error XX000: boom',
+    });
   });
 });

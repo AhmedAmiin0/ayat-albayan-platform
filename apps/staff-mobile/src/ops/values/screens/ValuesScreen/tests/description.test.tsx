@@ -54,7 +54,9 @@ test('the sheet shows the stored description; «عدّل الوصف» opens the 
 test('without an admin text the editor starts from the hint and has no «أعد الوصف الأصلي»', async () => {
   const { sheet, edit } = await openSheet();
   await fireEvent.press(edit);
-  expect(within(sheet).getByLabelText(d.label).props.value).toBe(t.settings.hints.bookingHorizonWeeks);
+  expect(within(sheet).getByLabelText(d.label).props.value).toBe(
+    t.settings.hints.bookingHorizonWeeks,
+  );
   expect(within(sheet).queryByRole('button', { name: d.restore })).toBeNull();
 });
 

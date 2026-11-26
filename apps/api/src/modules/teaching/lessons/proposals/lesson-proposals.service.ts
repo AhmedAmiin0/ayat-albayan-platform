@@ -13,6 +13,7 @@ import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { RescheduleOneService } from '@/modules/teaching/lessons/reschedule/reschedule-one.service';
 import { invalidTransition } from '@/modules/teaching/lessons/status/transition';
 import { RequestDeclinePush } from './request-decline.push';
+import { isSales } from '@/common/auth/roles';
 
 type ProposeInput = { lessonId: string; body: LessonProposalRequest; actor: AuthUser };
 type DecideInput = { proposalId: string; actor: AuthUser };
@@ -21,7 +22,7 @@ type ApproveInput = DecideInput & { body: ProposalApprove };
 type RejectInput = DecideInput & { note?: string };
 
 /** An assistant (base role sales) never books over a clash. */
-const overrideRefused = (actor: AuthUser): boolean => actor.role === 'sales';
+const overrideRefused = (actor: AuthUser): boolean => isSales(actor);
 
 /** A teacher's proposed new time for their own open lesson (R-SCH-08); returns the lesson id. */
 @Injectable()

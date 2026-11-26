@@ -23,7 +23,12 @@ export function DetailsLink({ link, platform }: { link: string | null; platform:
     Linking.openURL(text).catch(() => setNote('failed'));
   };
   const small = { fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 };
-  const head = { fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink3 };
+  const head = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.xs,
+    lineHeight: type.lineHeight(type.size.xs),
+    color: color.ink3,
+  };
   if (!url) {
     return (
       <DetailsFact label={t.lessons.joinLink}>

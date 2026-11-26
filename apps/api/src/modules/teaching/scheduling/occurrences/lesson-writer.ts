@@ -6,7 +6,7 @@ import { gateConfirmations } from '@/common/rules/confirmations';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
 import type { ChangeSet, TimeEditChange } from '@/modules/teaching/scheduling/change-set';
 import { callRpc } from '@/modules/teaching/scheduling/rpc';
-import { dbError } from '@/common/http/http';
+import { done } from '@/common/db/errors';
 
 /** One occurrence to persist for a rule (UTC ISO instants + the link copied onto the lesson). */
 export type OccurrenceRow = { starts_at: string; ends_at: string; meeting_link: string | null };
@@ -55,8 +55,7 @@ export class LessonWriter {
       return found ? [{ id: l.id, conflicts: found.map((c) => ({ ...c })) }] : [];
     });
     for (const f of flagged) {
-      const { error } = await this.db.from('lessons').update({ conflicts: f.conflicts }).eq('id', f.id);
-      if (error) throw dbError(error);
+      done(await this.db.from('lessons').update({ conflicts: f.conflicts }).eq('id', f.id));
     }
   }
 

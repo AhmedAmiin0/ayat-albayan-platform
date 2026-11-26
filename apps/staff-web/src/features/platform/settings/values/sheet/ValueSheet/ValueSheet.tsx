@@ -15,10 +15,21 @@ import { useValues } from '@/features/platform/settings/values/values-context';
 
 const v = t.settingsValues;
 
-const DISCARD_WORDS = { title: v.sheet.discardTitle, body: v.sheet.discardBody, discard: v.sheet.discard, keep: v.sheet.keep };
+const DISCARD_WORDS = {
+  title: v.sheet.discardTitle,
+  body: v.sheet.discardBody,
+  discard: v.sheet.discard,
+  keep: v.sheet.keep,
+};
 
 /** Phone editor (docs/26b §2); closing with an unsaved edit asks first; read-only has no editor. */
-export function ValueSheet({ settingKey, onClose }: { settingKey: SettingKey; onClose: () => void }) {
+export function ValueSheet({
+  settingKey,
+  onClose,
+}: {
+  settingKey: SettingKey;
+  onClose: () => void;
+}) {
   const api = useValues();
   const clock = useClock();
   const ids = useRowIds();

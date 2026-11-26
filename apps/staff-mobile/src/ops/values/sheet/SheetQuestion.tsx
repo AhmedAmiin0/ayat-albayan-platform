@@ -7,7 +7,13 @@ import type { ValueSheetState } from '@/ops/values/hooks/use-value-sheet';
 import { impactOf } from '@/ops/values/lib/value-text';
 
 /** Same confirmations as the web (VALUE_CONFIRM). */
-export function SheetQuestion({ valueKey, sheet }: { valueKey: SettingKey; sheet: ValueSheetState }) {
+export function SheetQuestion({
+  valueKey,
+  sheet,
+}: {
+  valueKey: SettingKey;
+  sheet: ValueSheetState;
+}) {
   const v = t.mobileValues;
   if (sheet.stage === 'closing') {
     return (

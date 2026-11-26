@@ -21,14 +21,26 @@ export function SummaryScreen() {
         title={t.mobileFinance.rows.summary}
         leading={<BackButton onPress={() => router.back()} />}
       />
-      <FilterPills accessibilityLabel={t.finance.year} items={years.map((y) => ({ value: y, label: y }))} value={year} onChange={setYear} />
+      <FilterPills
+        accessibilityLabel={t.finance.year}
+        items={years.map((y) => ({ value: y, label: y }))}
+        value={year}
+        onChange={setYear}
+      />
       <StaleNote isError={summary.isError} hasData={!!finance} />
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ gap: 16, paddingBottom: 32 }}
-        refreshControl={<RefreshControl refreshing={summary.isRefetching} onRefresh={() => void summary.refetch()} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={summary.isRefetching}
+            onRefresh={() => void summary.refetch()}
+          />
+        }
       >
-        {summary.isError && !finance ? <ErrorState onRetry={() => void summary.refetch()} message={t.mobileFinance.loadFailed} /> : null}
+        {summary.isError && !finance ? (
+          <ErrorState onRetry={() => void summary.refetch()} message={t.mobileFinance.loadFailed} />
+        ) : null}
         {!finance && !summary.isError ? <Note>{t.common.loading}</Note> : null}
         <SummaryCards finance={finance} />
         {finance ? <SummaryMonths finance={finance} /> : null}

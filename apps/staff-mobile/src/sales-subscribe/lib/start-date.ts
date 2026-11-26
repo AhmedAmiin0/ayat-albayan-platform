@@ -38,7 +38,20 @@ export function checkStart(draft: StartDraft, context: StartContext): StartCheck
   if (!result.ok) return { ok: false, error: t.salesMoney.error[result.code] };
   if (!alreadyStarted) return { ok: true, body: { startsOn: result.startsOn } };
   const lessonsUsedBefore = usedBeforeOf(draft, context.lessonsTotal);
-  const problem = usedBeforeProblem({ lessonsUsedBefore, startsOn: result.startsOn, today: context.today, canSet: true, lessonsTotal: context.lessonsTotal });
+  const problem = usedBeforeProblem({
+    lessonsUsedBefore,
+    startsOn: result.startsOn,
+    today: context.today,
+    canSet: true,
+    lessonsTotal: context.lessonsTotal,
+  });
   if (problem) return { ok: false, error: t.salesMoney.error[problem] };
-  return { ok: true, body: { startsOn: result.startsOn, alreadyStarted, ...(lessonsUsedBefore > 0 ? { lessonsUsedBefore } : {}) } };
+  return {
+    ok: true,
+    body: {
+      startsOn: result.startsOn,
+      alreadyStarted,
+      ...(lessonsUsedBefore > 0 ? { lessonsUsedBefore } : {}),
+    },
+  };
 }

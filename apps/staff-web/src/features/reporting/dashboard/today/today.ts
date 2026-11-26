@@ -8,12 +8,17 @@ import {
 
 /** Today's lessons that still happen (not cancelled/rescheduled), earliest first. */
 export function todaysLessons(lessons: LessonView[]): LessonView[] {
-  return lessons.filter((l) => isOpenLesson(l.status)).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+  return lessons
+    .filter((l) => isOpenLesson(l.status))
+    .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 }
 
 /** A lesson whose room can be entered right now (the join window is open). */
-export const isLiveNow = (lesson: LessonView, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): boolean =>
-  joinWindow(lesson, now, win).state === 'open';
+export const isLiveNow = (
+  lesson: LessonView,
+  now: Date,
+  win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
+): boolean => joinWindow(lesson, now, win).state === 'open';
 
 /** The two «today» numbers of the dashboard's first row; undefined while the day is loading. */
 export function todayCounts(

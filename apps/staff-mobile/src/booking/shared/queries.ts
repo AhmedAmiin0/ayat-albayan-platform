@@ -5,7 +5,11 @@ import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
 import { bookingPath, useBookingMode } from './booking-mode';
 
 /** GET /booking/teachers?program&gender? (docs/10 route 12; sales: /sales/booking/teachers): active teachers by name, with load. */
-export function useBookingTeachers(f: { program: Program; gender: Gender | null; enabled?: boolean }) {
+export function useBookingTeachers(f: {
+  program: Program;
+  gender: Gender | null;
+  enabled?: boolean;
+}) {
   const params = { program: f.program, gender: f.gender ?? undefined };
   const path = bookingPath(useBookingMode(), '/teachers');
   return useQuery({

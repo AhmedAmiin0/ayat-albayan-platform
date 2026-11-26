@@ -24,7 +24,9 @@ describe('PlansTable (clientSort + clientFilter)', () => {
     render(<PlansTable packages={PACKAGES} />);
     const price = screen.getByRole('button', { name: t.pricing.packagePrice });
     fireEvent.click(price);
-    const prices = [...PACKAGES].sort((a, b) => a.price - b.price).map((q) => t.pricing.packages[q.package].name);
+    const prices = [...PACKAGES]
+      .sort((a, b) => a.price - b.price)
+      .map((q) => t.pricing.packages[q.package].name);
     expect(plans()).toEqual(prices);
     fireEvent.click(price);
     expect(plans()).toEqual([...prices].reverse());

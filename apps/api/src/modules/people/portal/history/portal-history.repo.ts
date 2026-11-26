@@ -1,7 +1,7 @@
 import type { Attendance, LessonStatus, PackageSize } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 /**
  * A past lesson of the student as the family's history reads it (whitelisted select: never the
@@ -46,7 +46,7 @@ export class PortalHistoryRepo {
       .order('starts_at', { ascending: false })
       .limit(input.limit)
       .overrideTypes<PortalPastRow[], { merge: false }>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -57,7 +57,7 @@ export class PortalHistoryRepo {
       .lt('starts_at', input.to.toISOString())
       .limit(MONTH_LIMIT)
       .overrideTypes<PortalPastRow[], { merge: false }>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 

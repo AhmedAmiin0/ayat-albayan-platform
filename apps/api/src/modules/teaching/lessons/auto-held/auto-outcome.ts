@@ -1,3 +1,4 @@
+import { errorMessage } from '@ab/core';
 import type { LessonStatus } from '@ab/catalog';
 import { AUTO_HELD_REASON, AUTO_NO_SHOW_REASON, type LessonEvent } from '@ab/schedule';
 import type { Logger } from '@nestjs/common';
@@ -35,8 +36,6 @@ function autoCommit(lesson: { id: string; status: LessonStatus }, to: AutoTo): C
   };
 }
 
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
-
 interface AutoWrite {
   store: LessonStore;
   log: Logger;
@@ -52,7 +51,7 @@ export async function writeAuto(
     await w.store.commit(autoCommit(lesson, to));
     return true;
   } catch (e) {
-    if (errorCode(e) !== 'invalid_transition') w.log.warn(`lesson ${lesson.id} not settled: ${messageOf(e)}`);
+    if (errorCode(e) !== 'invalid_transition') w.log.warn(`lesson ${lesson.id} not settled: ${errorMessage(e)}`);
     return false;
   }
 }

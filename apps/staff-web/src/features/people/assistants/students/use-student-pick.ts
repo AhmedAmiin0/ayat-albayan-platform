@@ -26,6 +26,9 @@ export function useStudentPick(): StudentPick {
     [],
   );
   const clear = useCallback(() => setPicked(new Set()), []);
-  const column = useMemo(() => (enabled ? { isPicked: (id: string) => picked.has(id), toggle } : undefined), [enabled, picked, toggle]);
+  const column = useMemo(
+    () => (enabled ? { isPicked: (id: string) => picked.has(id), toggle } : undefined),
+    [enabled, picked, toggle],
+  );
   return { enabled, ids: [...picked], column, clear };
 }

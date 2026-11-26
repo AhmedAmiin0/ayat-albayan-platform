@@ -1,4 +1,5 @@
 import {
+  lessonFileKindSchema,
   lessonFileMediaOf,
   portalLessonFileSchema,
   type LessonAssetRecording,
@@ -19,18 +20,14 @@ import type { LessonFileRow } from './lesson-files.repo';
 export const lessonFileKey = (input: { lessonId: string; mime: string }): string =>
   `${input.lessonId}/${uploadName(input.mime)}`;
 
-const KIND_OF: Readonly<Record<string, LessonFileView['kind']>> = {
-  homework: 'homework',
-  voice_note: 'voice_note',
-  whiteboard: 'whiteboard',
-};
+const fileKindSchema = lessonFileKindSchema.catch('material');
 
 /** A row as staff see it: no storage path, the media read from the mime. */
 export function lessonFileView(row: LessonFileRow): LessonFileView {
   return {
     id: row.id,
     lesson_id: row.lesson_id,
-    kind: KIND_OF[row.kind] ?? 'material',
+    kind: fileKindSchema.parse(row.kind),
     title: row.title,
     mime: row.mime,
     size: row.size,

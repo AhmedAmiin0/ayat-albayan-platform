@@ -1,7 +1,7 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 import { isSalesLesson, salesLessonsBetween, type SalesLessonRow } from '@/modules/sales/sales/schedule/sales-lessons';
 import { ownershipOf, type SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 
@@ -21,13 +21,12 @@ export class SalesRepo {
 
   async subscriptions(input: { studentIds: readonly string[]; statuses: readonly Tables<'subscriptions'>['status'][] }): Promise<SalesSubscriptionRow[]> {
     if (input.studentIds.length === 0) return [];
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('subscriptions')
       .select('id, package, status, starts_on, lessons_total, student:students(id, code, name)')
       .in('student_id', [...input.studentIds])
       .in('status', [...input.statuses])
-      .order('starts_on', { ascending: false });
-    if (error) throw dbError(error);
+      .order('starts_on', { ascending: false }));
     return data;
   }
 

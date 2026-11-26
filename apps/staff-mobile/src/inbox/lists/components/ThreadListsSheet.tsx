@@ -48,7 +48,9 @@ export function ThreadListsSheet({ phone, member, open, onClose }: ThreadListsSh
           key={list.id}
           list={list}
           checked={ids.has(list.id)}
-          onToggle={() => toggle.mutate({ list: { id: list.id, name: list.name }, member: !ids.has(list.id) })}
+          onToggle={() =>
+            toggle.mutate({ list: { id: list.id, name: list.name }, member: !ids.has(list.id) })
+          }
         />
       ))}
       {toggle.isError ? <ErrorLine message={t.inbox.lists.saveError} /> : null}

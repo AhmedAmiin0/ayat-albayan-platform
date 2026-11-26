@@ -16,6 +16,13 @@ const options = () => GRADES.map((g) => ({ value: g, label: t.enums.grade[g] }))
 /** The best grade first, as native radios. */
 export function GradeChips({ name, label, value, onChange, invalid }: GradeChipsProps) {
   return (
-    <RadioChips name={name} legend={label} options={options()} value={value} onChange={onChange} invalid={invalid === true && value === null} />
+    <RadioChips
+      name={name}
+      legend={label}
+      options={options()}
+      value={value}
+      onChange={onChange}
+      invalid={invalid === true && value === null}
+    />
   );
 }

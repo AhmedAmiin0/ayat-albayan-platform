@@ -13,7 +13,9 @@ export interface ReplyOptionsProps {
   onActive: (index: number) => void;
   onPick: (index: number) => void;
   /** Row edit and delete sit outside the option itself. */
-  manage?: { onEdit: (reply: SavedReply) => void; onDelete: (reply: SavedReply) => void } | undefined;
+  manage?:
+    | { onEdit: (reply: SavedReply) => void; onDelete: (reply: SavedReply) => void }
+    | undefined;
 }
 
 /** The option id of row `index`, for aria-activedescendant. */
@@ -25,7 +27,15 @@ export const optionId = (listId: string, index: number) => `${listId}-opt-${inde
  * at most two lines, a paperclip when a file goes with it, a hairline between rows; about five rows
  * show, the rest scroll. A mouse click or Enter fills the composer; focus stays in the box.
  */
-export function ReplyOptions({ id, replies, query, active, onActive, onPick, manage }: ReplyOptionsProps) {
+export function ReplyOptions({
+  id,
+  replies,
+  query,
+  active,
+  onActive,
+  onPick,
+  manage,
+}: ReplyOptionsProps) {
   return (
     <ul id={id} role="listbox" aria-label={t.savedReplies.listLabel} className="max-h-72 divide-y divide-rule overflow-y-auto overscroll-contain">
       {replies.map((reply, i) => (

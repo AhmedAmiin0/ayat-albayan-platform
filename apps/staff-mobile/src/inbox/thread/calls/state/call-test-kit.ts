@@ -3,8 +3,18 @@
 import type { ActiveCallView, CallConfigView } from '@ab/shared';
 import type { MicAnswer, NativePeer, RtcDeps } from '@/inbox/thread/calls/rtc/media';
 
-export const ON: CallConfigView = { enabled: true, available: true, canCall: true, iceServers: [{ urls: ['stun:stun.example.org'] }] };
-export const OFF: CallConfigView = { enabled: false, available: true, canCall: true, iceServers: [] };
+export const ON: CallConfigView = {
+  enabled: true,
+  available: true,
+  canCall: true,
+  iceServers: [{ urls: ['stun:stun.example.org'] }],
+};
+export const OFF: CallConfigView = {
+  enabled: false,
+  available: true,
+  canCall: true,
+  iceServers: [],
+};
 
 export function ringing(over: Partial<ActiveCallView> = {}): ActiveCallView {
   return {
@@ -64,7 +74,11 @@ export function deferred<T>() {
 }
 
 /** apiFetch answers: config, the active rows (a value, or a function per call), the permission state and the lists. */
-export function routes(input: { config: CallConfigView; active?: ActiveCallView[] | (() => Promise<ActiveCallView[]>); permission?: string }) {
+export function routes(input: {
+  config: CallConfigView;
+  active?: ActiveCallView[] | (() => Promise<ActiveCallView[]>);
+  permission?: string;
+}) {
   return async (path: string): Promise<unknown> => {
     if (path === '/calls/config') return input.config;
     if (path === '/calls/active') return typeof input.active === 'function' ? input.active() : (input.active ?? []);

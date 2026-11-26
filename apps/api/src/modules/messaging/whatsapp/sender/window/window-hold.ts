@@ -1,3 +1,4 @@
+import { errorMessage } from '@ab/core';
 import type { WaLine } from '@ab/catalog';
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import {
@@ -34,7 +35,6 @@ interface WindowAt {
 }
 
 const last4 = (phone: string): string => `…${phone.slice(-4)}`;
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /** A closed-window text is never sent free: one reopen template per 24 h, held until reply. */
 @Injectable()
@@ -69,7 +69,7 @@ export class WindowHold {
       // Not held (not ready now, or moved): fail it as planned, never left marked SENDING.
       return out === 'skipped' ? null : out;
     } catch (e) {
-      this.log.warn(`hold failed for ${last4(at.row.phone_e164)}: ${messageOf(e)}`);
+      this.log.warn(`hold failed for ${last4(at.row.phone_e164)}: ${errorMessage(e)}`);
       return null;
     }
   }
@@ -109,7 +109,7 @@ export class WindowHold {
       const text = [note, failed].filter(Boolean).join('; ');
       if (failed) await this.repo.note(at.row.id, text);
     } catch (e) {
-      this.log.warn(`Kapso note not kept for ${last4(at.row.phone_e164)}: ${messageOf(e)}`);
+      this.log.warn(`Kapso note not kept for ${last4(at.row.phone_e164)}: ${errorMessage(e)}`);
     }
   }
 

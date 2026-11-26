@@ -1,3 +1,4 @@
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 import { WA_LINES } from '@ab/catalog';
 import { leadQualificationSchema } from '../people/schemas/leads';
@@ -16,7 +17,7 @@ export const threadTextSchema = z
   .object({
     text: z.string().trim().min(1).max(WA_TEXT_MAX),
     /** Idempotency (rule 8): a retried send returns the first row. */
-    clientRequestId: z.uuid().optional(),
+    clientRequestId: clientRequestId.optional(),
     /** The quoted message, from this chat (400 reply_not_in_thread). */
     replyToMessageId: z.uuid().optional(),
     /** This text corrects that message, sent as a prefixed reply. */
@@ -29,14 +30,14 @@ export const threadTextSchema = z
 
 /** POST /threads/:phone/file-upload-url: a signed upload for one image, PDF or voice note. */
 export const threadFileUploadSchema = z.object({
-  clientRequestId: z.uuid(),
+  clientRequestId,
   mime: z.enum(CHAT_FILE_MIMES, { message: 'file_type' }),
   size: z.int().min(1),
 });
 
 /** POST /threads/:phone/file: send the uploaded file; the id makes a retry return the first row. */
 export const threadFileSendSchema = z.object({
-  clientRequestId: z.uuid(),
+  clientRequestId,
   path: z.string().min(1),
   // No path separators and no control characters (a newline would reach the family's WhatsApp).
   filename: z
@@ -69,13 +70,13 @@ export const threadTemplateSchema = z.object({
   key: z.string().trim().regex(TEMPLATE_KEY_PATTERN),
   params: templateParamsInputSchema,
   lessonId: z.uuid().optional(),
-  clientRequestId: z.uuid().optional(),
+  clientRequestId: clientRequestId.optional(),
   /** Sent as this phone's reopen template when the chat-line window is closed. */
   reopen: z.boolean().optional(),
 });
 
 /** The API picks the lesson; the id makes a retry safe. */
-export const threadRatingSchema = z.object({ clientRequestId: z.uuid() });
+export const threadRatingSchema = z.object({ clientRequestId });
 
 /**
  * PATCH /messaging/templates/:key/starter: the admin offers a template to sales to start a chat, or

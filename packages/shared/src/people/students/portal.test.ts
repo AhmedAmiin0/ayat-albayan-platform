@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { portalHomeSchema } from './portal';
+import {
+  PORTAL_HISTORY_STATUSES,
+  PORTAL_OUTCOMES,
+  portalHistoryStatusSchema,
+  portalOutcomeSchema,
+} from './portal-family';
 
 const base = { kind: 'guardian', students: [], renew_url: null };
 
@@ -18,5 +24,13 @@ describe('portalHomeSchema guardian', () => {
   it('rejects a guardian without a number', () => {
     const res = portalHomeSchema.safeParse({ ...base, guardian: { name: 'أحمد' } });
     expect(res.success).toBe(false);
+  });
+});
+
+describe('portal history enums', () => {
+  it('accept each outcome and list and nothing else', () => {
+    expect(portalOutcomeSchema.options).toEqual([...PORTAL_OUTCOMES]);
+    expect(portalHistoryStatusSchema.options).toEqual([...PORTAL_HISTORY_STATUSES]);
+    expect(portalHistoryStatusSchema.validate('excused')).toBe(false);
   });
 });

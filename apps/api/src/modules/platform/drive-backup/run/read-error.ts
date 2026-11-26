@@ -1,5 +1,5 @@
 import { errorText } from '@/modules/platform/google-sync';
-import type { SkipWhy } from './summary';
+import type { SkipWhy } from './skip.schemas';
 
 /** A failure reading an object from MinIO (not Drive, not the DB): the admin looks at MinIO. */
 export class SourceReadError extends Error {

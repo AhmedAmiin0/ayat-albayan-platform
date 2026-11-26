@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 import { studentOwnerIds } from '@/modules/sales/sales';
 
 /** Reads for the payment-received notice, service role only, never a write. */
@@ -10,12 +10,11 @@ export class PaymentReceivedRepo {
 
   /** Every enabled base-role admin. */
   async adminIds(): Promise<string[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('profiles')
       .select('id')
       .eq('role', 'admin')
-      .is('disabled_at', null);
-    if (error) throw dbError(error);
+      .is('disabled_at', null));
     return data.map((p) => p.id);
   }
 

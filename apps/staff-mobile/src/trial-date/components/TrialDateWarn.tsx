@@ -8,8 +8,18 @@ export function TrialDateWarn({ count }: { count: number }) {
   const line = warnLine(count);
   if (!line) return null;
   return (
-    <View testID="trial-date-warn" style={{ borderStartWidth: 3, borderStartColor: color.goldSoft, paddingStart: 10 }}>
-      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.act }}>
+    <View
+      testID="trial-date-warn"
+      style={{ borderStartWidth: 3, borderStartColor: color.goldSoft, paddingStart: 10 }}
+    >
+      <AppText
+        style={{
+          fontFamily: type.ui[600],
+          fontSize: type.size.sm,
+          lineHeight: type.lineHeight(type.size.sm),
+          color: color.act,
+        }}
+      >
         {line}
       </AppText>
     </View>

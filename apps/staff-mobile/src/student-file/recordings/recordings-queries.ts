@@ -30,7 +30,14 @@ export function useRecordings(studentId: string, params: Record<string, string |
   const { loadMore, refresh, pulling } = usePagedActions(query);
   const loadPage: LoadPage = (page) => apiFetch<StudentRecordingsPage>(`${path}${toQueryString({ ...params, page, pageSize: PAGE_SIZE })}`);
   const freshUrl = (id: string) => freshRecordingUrl(loadPage, pages ?? [], id);
-  return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh, pulling, freshUrl });
+  return withTracked(query, {
+    items,
+    total: pages?.[0]?.total ?? 0,
+    loadMore,
+    refresh,
+    pulling,
+    freshUrl,
+  });
 }
 
 type LoadPage = (page: number) => Promise<StudentRecordingsPage>;
@@ -40,7 +47,11 @@ type LoadPage = (page: number) => Promise<StudentRecordingsPage>;
  * the row (not every loaded page) and reads the URL off that answer. A failed load throws (the Play
  * button shows its error); null when the row moved, is gone or no longer has a file.
  */
-export async function freshRecordingUrl(load: LoadPage, pages: readonly StudentRecordingsPage[], id: string): Promise<string | null> {
+export async function freshRecordingUrl(
+  load: LoadPage,
+  pages: readonly StudentRecordingsPage[],
+  id: string,
+): Promise<string | null> {
   const held = pages.find((p) => p.items.some((r) => r.id === id));
   if (!held) return null;
   const fresh = await load(held.page);

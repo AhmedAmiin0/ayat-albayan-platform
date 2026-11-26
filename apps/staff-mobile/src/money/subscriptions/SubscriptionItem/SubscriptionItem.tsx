@@ -52,7 +52,13 @@ function SubscriptionActions({ sub, pay }: { sub: SubscriptionView; pay: boolean
 }
 
 /** Pay while not fully paid, cancel while nothing is paid; a cancelled package has no action. */
-export const SubscriptionItem = memo(function SubscriptionItem({ sub, threshold }: { sub: SubscriptionView; threshold?: number }) {
+export const SubscriptionItem = memo(function SubscriptionItem({
+  sub,
+  threshold,
+}: {
+  sub: SubscriptionView;
+  threshold?: number;
+}) {
   const { color } = useTheme();
   const toStudents = useTabOpen('students');
   const progress = subscriptionProgress(sub, threshold);
@@ -76,7 +82,9 @@ export const SubscriptionItem = memo(function SubscriptionItem({ sub, threshold 
           >
             {gone ? '—' : due ? `${progress.remainingLabel} · ${t.mobileMoney.renewalDue}` : progress.remainingLabel}
           </AppText>
-          {partial ? <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>{paidLine(sub)}</AppText> : null}
+          {partial ? (
+            <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>{paidLine(sub)}</AppText>
+          ) : null}
           <SubscriptionActions sub={sub} pay={partial && toStudents} />
         </>
       }

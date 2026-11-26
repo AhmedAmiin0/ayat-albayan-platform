@@ -2,7 +2,7 @@ import type { Tables } from '@ab/db';
 import type { LessonStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, rows } from '@/common/db/errors';
 
 /** A student as the overview names them: name and code, nothing else. */
 interface NamedStudent {
@@ -36,25 +36,23 @@ export class SalesTeacherOverviewRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async exists(teacherId: string): Promise<boolean> {
-    const { data, error } = await this.db.from('teachers').select('id').eq('id', teacherId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('teachers').select('id').eq('id', teacherId).maybeSingle());
     return data !== null;
   }
 
   async rules(teacherId: string): Promise<TeacherRuleRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('schedule_rules')
       .select(RULE_SELECT)
       .eq('teacher_id', teacherId)
       .eq('status', 'active')
-      .overrideTypes<TeacherRuleRow[], { merge: false }>();
-    if (error) throw dbError(error);
+      .overrideTypes<TeacherRuleRow[], { merge: false }>());
     return data;
   }
 
   /** The teacher's lessons that started inside [from, to), newest first. */
   async lessons(teacherId: string, w: { from: Date; to: Date }): Promise<TeacherLessonRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lessons')
       .select(LESSON_SELECT)
       .eq('teacher_id', teacherId)
@@ -62,8 +60,7 @@ export class SalesTeacherOverviewRepo {
       .lt('starts_at', w.to.toISOString())
       .order('starts_at', { ascending: false })
       .limit(LESSONS_LIMIT)
-      .overrideTypes<TeacherLessonRow[], { merge: false }>();
-    if (error) throw dbError(error);
+      .overrideTypes<TeacherLessonRow[], { merge: false }>());
     return data;
   }
 }

@@ -39,7 +39,11 @@ export function SalesRescheduleForm({ lesson, onDone }: SalesRescheduleFormProps
   if (move.data) return <RescheduleDone moved={move.data} scope="one" tz={tz} onClose={onDone} />;
   return (
     <View style={{ gap: 16 }}>
-      <RescheduleHeading names={lesson.students.map((s) => s.name).join(t.common.listSeparator)} startsAt={lesson.starts_at} tz={tz} />
+      <RescheduleHeading
+        names={lesson.students.map((s) => s.name).join(t.common.listSeparator)}
+        startsAt={lesson.starts_at}
+        tz={tz}
+      />
       {durationMin === null ? (
         <ErrorLine message={t.reschedule.badDuration} />
       ) : failure?.kind === 'conflict' ? (

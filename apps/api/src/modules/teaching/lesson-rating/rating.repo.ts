@@ -5,7 +5,7 @@ import { familyOfPhone } from '@/common/db/family-of-phone';
 import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.repo';
 import { readAll } from '@/common/db/read-all';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import type { RatingGuardian, RatingLesson } from './rating.plan';
 
 const LESSON_SELECT =
@@ -37,7 +37,7 @@ export class RatingRepo {
   async byIds(ids: readonly string[]): Promise<RatingLesson[]> {
     if (ids.length === 0) return [];
     const { data, error } = await this.db.from('lessons').select(LESSON_SELECT).in('id', [...ids]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -60,7 +60,7 @@ export class RatingRepo {
       .lte('starts_at', input.now.toISOString())
       .order('starts_at', { ascending: false })
       .limit(1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const id = data[0]?.id;
     return id ? ((await this.byIds([id]))[0] ?? null) : null;
   }

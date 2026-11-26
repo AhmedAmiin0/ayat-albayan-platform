@@ -1,7 +1,7 @@
 import type { PortalPayment } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 
 /** A family's payment history is short; a long one shows its newest rows. */
 const PAYMENTS_LIMIT = 100;
@@ -17,13 +17,12 @@ export class PortalPackageRepo {
    * (never the receipt, the note, the method or who recorded it).
    */
   async payments(studentId: string): Promise<PortalPayment[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('payments')
       .select(PAYMENT_SELECT)
       .eq('subscription.student_id', studentId)
       .order('paid_at', { ascending: false })
-      .limit(PAYMENTS_LIMIT);
-    if (error) throw dbError(error);
+      .limit(PAYMENTS_LIMIT));
     return data.map((p) => ({
       paid_at: p.paid_at,
       amount: p.amount,

@@ -50,4 +50,9 @@ export function leadFilterChips({ search, people, onFilter }: LeadChipsOptions):
 }
 
 /** The search box keeps its text, like the tables. */
-export const CLEAR_LEAD_FILTERS = { source: undefined, assignee: undefined, sort: undefined, dir: undefined };
+export const CLEAR_LEAD_FILTERS = {
+  source: undefined,
+  assignee: undefined,
+  sort: undefined,
+  dir: undefined,
+};

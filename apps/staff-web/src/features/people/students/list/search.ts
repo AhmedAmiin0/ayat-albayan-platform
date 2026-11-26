@@ -32,7 +32,8 @@ export function parseStudentsSearch(s: Record<string, unknown>): StudentsUrlSear
     ...parseSortSearch(s, STUDENT_SORT_KEYS),
   };
   const columns = parseFilterSearch(s, STUDENT_TEXT_FILTER_KEYS);
-  for (const [key, value] of Object.entries(columns)) Object.assign(out, { [filterParam(key)]: value });
+  for (const [key, value] of Object.entries(columns))
+    Object.assign(out, { [filterParam(key)]: value });
   return out;
 }
 
@@ -62,7 +63,10 @@ export function toStudentsUrl(next: StudentsSearch): StudentsUrlSearch {
 }
 
 /** One column filter change: the trimmed value, or the key dropped when blank. */
-export function setColumnFilter(columns: FilterSearch = {}, change: { key: string; value: string }): FilterSearch {
+export function setColumnFilter(
+  columns: FilterSearch = {},
+  change: { key: string; value: string },
+): FilterSearch {
   const rest = Object.fromEntries(Object.entries(columns).filter(([k]) => k !== change.key));
   const value = change.value.trim();
   return value === '' ? rest : { ...rest, [change.key]: value };
@@ -70,7 +74,9 @@ export function setColumnFilter(columns: FilterSearch = {}, change: { key: strin
 
 /** Nothing searched or filtered: an empty result means the academy has no student yet. */
 export const isUnfiltered = (v: StudentsSearch): boolean =>
-  !v.search && activeFilterCount(v.filters ?? {}) === 0 && Object.keys(v.columns ?? {}).length === 0;
+  !v.search &&
+  activeFilterCount(v.filters ?? {}) === 0 &&
+  Object.keys(v.columns ?? {}).length === 0;
 
 /** DataTable's server `sort` / `filters` props for this state; every change goes to page 1. */
 export function studentTableControls(v: StudentsSearch, onChange: (next: StudentsSearch) => void) {
@@ -78,11 +84,13 @@ export function studentTableControls(v: StudentsSearch, onChange: (next: Student
   const sort: DataTableSort = {
     key: v.sort?.sort,
     dir: v.sort?.dir,
-    onChange: (next) => onChange({ ...base, sort: next.key ? { sort: next.key, dir: next.dir } : {} }),
+    onChange: (next) =>
+      onChange({ ...base, sort: next.key ? { sort: next.key, dir: next.dir } : {} }),
   };
   const filters: DataTableFilters = {
     values: v.columns ?? {},
-    onChange: (key, value) => onChange({ ...base, columns: setColumnFilter(v.columns, { key, value }) }),
+    onChange: (key, value) =>
+      onChange({ ...base, columns: setColumnFilter(v.columns, { key, value }) }),
   };
   return { sort, filters };
 }

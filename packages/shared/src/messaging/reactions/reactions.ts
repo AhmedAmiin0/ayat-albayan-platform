@@ -1,3 +1,4 @@
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 import type { MessageStatus } from '@ab/catalog';
 import type { MessageView } from '../chat/views';
@@ -30,7 +31,7 @@ export const isReactionEmoji = (value: string): boolean =>
  */
 export const threadReactionSchema = z.object({
   emoji: z.string().refine(isReactionEmoji, { message: 'not_an_emoji' }).nullable(),
-  clientRequestId: z.uuid(),
+  clientRequestId,
 });
 export type ThreadReaction = z.infer<typeof threadReactionSchema>;
 

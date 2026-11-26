@@ -40,20 +40,42 @@ export function ListCheckRow({ list, checked, onToggle }: ListCheckRowProps) {
           justifyContent: 'center',
         }}
       >
-        {checked ? <View style={{ width: 10, height: 10, borderRadius: shape.radius.xs, backgroundColor: color.onLapis }} /> : null}
+        {checked ? (
+          <View
+            style={{
+              width: 10,
+              height: 10,
+              borderRadius: shape.radius.xs,
+              backgroundColor: color.onLapis,
+            }}
+          />
+        ) : null}
       </View>
       <View style={{ flex: 1, gap: 2 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <AppText
             numberOfLines={1}
-            style={{ flexShrink: 1, fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink }}
+            style={{
+              flexShrink: 1,
+              fontFamily: type.ui[500],
+              fontSize: type.size.body,
+              lineHeight: type.lineHeight(type.size.body),
+              color: color.ink,
+            }}
           >
             {list.name}
           </AppText>
           {list.auto_rule ? <AutoListChip /> : null}
         </View>
         {list.auto_rule ? (
-          <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink3 }}>
+          <AppText
+            style={{
+              fontFamily: type.ui[400],
+              fontSize: type.size.xs,
+              lineHeight: type.lineHeight(type.size.xs),
+              color: color.ink3,
+            }}
+          >
             {t.inbox.lists.autoRule[list.auto_rule]}
           </AppText>
         ) : null}

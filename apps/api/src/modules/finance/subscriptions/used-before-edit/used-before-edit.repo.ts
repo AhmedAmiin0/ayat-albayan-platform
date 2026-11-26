@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import type { SubRow } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 import { SELECT } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
 
@@ -21,21 +21,20 @@ export class UsedBeforeEditRepo {
       .from('schedule_rules')
       .select('id', { count: 'exact', head: true })
       .eq('subscription_id', subscriptionId);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return (count ?? 0) > 0;
   }
 
   /** null: another write changed the number (or cancelled the package) since it was read. */
   async setUsedBefore(write: UsedBeforeWrite): Promise<SubRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('subscriptions')
       .update({ lessons_used_before: write.to })
       .eq('id', write.id)
       .eq('lessons_used_before', write.from)
       .neq('status', 'cancelled')
       .select(SELECT)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 }

@@ -40,7 +40,8 @@ export function EditTimeForm({ lesson, onClose }: EditTimeFormProps) {
     setState((s) => ({ ...s, ...patch }));
   };
   const body = editBody(lesson, state, now);
-  const save = () => body && edit.mutate(body, { onError: (e) => setLock((l) => payoutLockOf(e) ?? l) });
+  const save = () =>
+    body && edit.mutate(body, { onError: (e) => setLock((l) => payoutLockOf(e) ?? l) });
 
   if (edit.data) return <EditTimeDone done={edit.data} tz={tz} onClose={onClose} />;
   if (mode === null) return <ErrorLine message={t.editTime.error.time_edit_not_allowed} />;

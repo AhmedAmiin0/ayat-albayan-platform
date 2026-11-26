@@ -14,7 +14,10 @@ interface HoldPress {
  * is not a tap; a release or a scroll (press out) before then cancels the hold. Without `onHold` it is
  * a plain tap.
  */
-export function useHoldPress(p: { onPress: () => void; onHold: (() => void) | undefined }): HoldPress {
+export function useHoldPress(p: {
+  onPress: () => void;
+  onHold: (() => void) | undefined;
+}): HoldPress {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const held = useRef(false);
   const stop = () => {

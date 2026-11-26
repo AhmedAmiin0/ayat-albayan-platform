@@ -21,7 +21,10 @@ test('docs/07 «الأزرار»: one outlined, full-width «حجز تعويضي
   const buttons = screen.getAllByRole('button');
   expect(buttons).toHaveLength(2);
   buttons.forEach((b) => {
-    expect(StyleSheet.flatten(b.props.style)).toMatchObject({ borderColor: palette.light.ruleInput, borderWidth: 1 });
+    expect(StyleSheet.flatten(b.props.style)).toMatchObject({
+      borderColor: palette.light.ruleInput,
+      borderWidth: 1,
+    });
     const parent = StyleSheet.flatten(b.parent?.props.style ?? {});
     expect(parent.flexWrap).toBeUndefined();
   });

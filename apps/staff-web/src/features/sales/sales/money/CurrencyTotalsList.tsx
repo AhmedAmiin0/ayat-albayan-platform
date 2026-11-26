@@ -8,7 +8,13 @@ const PARTS = ['salary', 'commissions', 'adjustments', 'total'] as const;
  * The totals of a month, one block per currency (docs: amounts are never summed across currencies).
  * Zero adjustments or commissions still show, so the four lines always read the same way.
  */
-export function CurrencyTotalsList({ totals, label }: { totals: Record<string, CurrencyTotals>; label: string }) {
+export function CurrencyTotalsList({
+  totals,
+  label,
+}: {
+  totals: Record<string, CurrencyTotals>;
+  label: string;
+}) {
   const currencies = Object.keys(totals).sort();
   if (currencies.length === 0) return <p className="text-sm text-ink-3">—</p>;
   return (

@@ -1,3 +1,4 @@
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 import type { LessonStatus } from '@ab/catalog';
 
@@ -24,7 +25,7 @@ export const invoiceInputSchema = z.discriminatedUnion('source', [
 
 /** POST /booking/invoice-upload-url. */
 export const invoiceUploadSchema = z.object({
-  clientRequestId: z.uuid(),
+  clientRequestId,
   mime: z.enum(INVOICE_MIMES, { message: 'invoice_type' }),
   size: z.int().min(1).max(INVOICE_MAX_BYTES, { message: 'invoice_too_large' }),
 });
@@ -44,7 +45,10 @@ export const bookingExtras = {
 export type InvoiceInput = z.infer<typeof invoiceInputSchema>;
 export type InvoiceUpload = z.infer<typeof invoiceUploadSchema>;
 
-export function bookingKindOf(req: { kind?: BookingKind | undefined; package?: string | undefined }): BookingKind {
+export function bookingKindOf(req: {
+  kind?: BookingKind | undefined;
+  package?: string | undefined;
+}): BookingKind {
   return req.kind ?? (req.package === 'trial' ? 'trial' : 'package');
 }
 
@@ -95,7 +99,8 @@ type KindFacts = {
 function makeupProblems(req: KindFacts): string[] {
   const out: string[] = [];
   if (req.makeupOfLessonId === undefined) out.push('makeupOfLessonId:makeup_lesson_required');
-  const single = req.studentIds?.length === 1 && req.leadId === undefined && req.newStudent === undefined;
+  const single =
+    req.studentIds?.length === 1 && req.leadId === undefined && req.newStudent === undefined;
   if (!single) out.push('studentIds:makeup_one_student');
   return out;
 }

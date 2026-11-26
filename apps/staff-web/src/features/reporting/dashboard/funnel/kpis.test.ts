@@ -2,7 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { t } from '@ab/web-kit';
 import { kpisOf } from './kpis';
 
-const COUNTS = { needs_confirmation: 3, pending_reports: 0, unpaid_subscriptions: 2, open_tasks: 0 };
+const COUNTS = {
+  needs_confirmation: 3,
+  pending_reports: 0,
+  unpaid_subscriptions: 2,
+  open_tasks: 0,
+};
 
 describe('kpisOf (docs/07 §6 KPI strip)', () => {
   it('four numbers in strip order, with their ar.json labels', () => {

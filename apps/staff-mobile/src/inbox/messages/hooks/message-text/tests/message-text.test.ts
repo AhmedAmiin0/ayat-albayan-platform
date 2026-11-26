@@ -34,13 +34,23 @@ test('media line: the file kind, «لا يمكن عرضها هنا» with neithe
 });
 
 test('media line: Meta’s unsupported says «غير متاحة» for 131060, else that its content never arrived', () => {
-  const unsupported = (code: number) => ({ type: 'unsupported', errors: [{ code }], unsupported: { type: 'unknown' } });
-  expect(mediaLine({ body: null, media_mime: null, interactive_payload: unsupported(131060) })).toBe(t.inbox.unavailable);
-  expect(mediaLine({ body: null, media_mime: null, interactive_payload: unsupported(131051) })).toBe(t.inbox.unsupported);
+  const unsupported = (code: number) => ({
+    type: 'unsupported',
+    errors: [{ code }],
+    unsupported: { type: 'unknown' },
+  });
+  expect(
+    mediaLine({ body: null, media_mime: null, interactive_payload: unsupported(131060) }),
+  ).toBe(t.inbox.unavailable);
+  expect(
+    mediaLine({ body: null, media_mime: null, interactive_payload: unsupported(131051) }),
+  ).toBe(t.inbox.unsupported);
   expect(t.inbox.unsupported).not.toMatch(/افتحها/); // no WhatsApp app on a Cloud API number
   // A location / contact card did arrive: never «ask for it again».
   const location = { type: 'location', location: { latitude: 1, longitude: 2 } };
-  expect(mediaLine({ body: null, media_mime: null, interactive_payload: location })).toBe(t.inbox.media.other);
+  expect(mediaLine({ body: null, media_mime: null, interactive_payload: location })).toBe(
+    t.inbox.media.other,
+  );
 });
 
 test('media line: a WhatsApp reaction row names its emoji, never «رسالة لا يمكن عرضها هنا»', () => {

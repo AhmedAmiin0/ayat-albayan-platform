@@ -26,7 +26,9 @@ export type SalesStudentSubscription = Omit<SalesHistoryEntry, 'payments' | 'sta
 };
 
 /** One past lesson for this student, as the attendance list says it. */
-export type AttendanceKind = 'present' | 'absent' | 'excused' | 'cancelled' | 'unmarked';
+export const ATTENDANCE_KINDS = ['present', 'absent', 'excused', 'cancelled', 'unmarked'] as const;
+export const attendanceKindSchema = z.enum(ATTENDANCE_KINDS);
+export type AttendanceKind = z.infer<typeof attendanceKindSchema>;
 
 export interface SalesAttendanceDay {
   lesson_id: string;

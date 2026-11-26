@@ -1,6 +1,6 @@
 import type { NotificationItem, NotificationsPage, NotificationsQuery } from '@ab/shared';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { dbError } from '@/common/http/http';
+import { done, pgError } from '@/common/db/errors';
 import { DB, type Db } from '@/common/db/db.module';
 import { notificationItem } from './notifications.mapper';
 import { assertBrowserClaim } from './web/web-push.claim';
@@ -38,8 +38,8 @@ export class NotificationsRepo {
         .is('read_at', null)
         .not('dedup_key', 'like', SUPERSEDED),
     ]);
-    if (rows.error) throw dbError(rows.error);
-    if (unread.error) throw dbError(unread.error);
+    if (rows.error) throw pgError(rows.error);
+    if (unread.error) throw pgError(unread.error);
     const items: NotificationItem[] = rows.data.map(notificationItem);
     return {
       items,
@@ -58,8 +58,7 @@ export class NotificationsRepo {
       .eq('profile_id', profileId)
       .is('read_at', null);
     if (ids) query = query.in('id', [...ids]);
-    const { error } = await query;
-    if (error) throw dbError(error);
+    done(await query);
   }
 
   /**
@@ -86,7 +85,7 @@ export class NotificationsRepo {
       .upsert(row, { onConflict: 'endpoint' });
     // foreign_key_violation: the session just ended. 401 like PUT /me/push-tokens, nothing bound.
     if (error?.code === '23503') throw new UnauthorizedException('no_session');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const extra = await this.db
       .from('web_push_subscriptions')
       .select('id')
@@ -94,7 +93,7 @@ export class NotificationsRepo {
       .order('created_at', { ascending: false })
       .order('id', { ascending: false })
       .range(WEB_PUSH_MAX_PER_PROFILE, WEB_PUSH_MAX_PER_PROFILE + 999);
-    if (extra.error) throw dbError(extra.error);
+    if (extra.error) throw pgError(extra.error);
     if (extra.data.length === 0) return;
     const del = await this.db
       .from('web_push_subscriptions')
@@ -104,12 +103,11 @@ export class NotificationsRepo {
         'id',
         extra.data.map((r) => r.id),
       );
-    if (del.error) throw dbError(del.error);
+    if (del.error) throw pgError(del.error);
   }
 
   /** The caller's own row only; 204 even when there was none. */
   async unsubscribe(profileId: string, endpoint: string): Promise<void> {
-    const { error } = await this.db.from('web_push_subscriptions').delete().eq('profile_id', profileId).eq('endpoint', endpoint);
-    if (error) throw dbError(error);
+    done(await this.db.from('web_push_subscriptions').delete().eq('profile_id', profileId).eq('endpoint', endpoint));
   }
 }

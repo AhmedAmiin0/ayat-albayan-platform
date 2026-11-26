@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import { ownershipOf } from '@/modules/sales/sales';
 import type { PageFacts, PageKey, PageReportRow } from './report-page.types';
 
@@ -18,13 +18,12 @@ export class ReportPageRepo {
   /** A SUBMITTED report by its public id or its uuid; null for a draft or an unknown key. */
   async report(key: PageKey): Promise<PageReportRow | null> {
     const column = key.by === 'public' ? 'public_id' : 'id';
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lesson_reports')
       .select(REPORT)
       .eq(column, key.value)
       .eq('status', 'submitted')
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -49,7 +48,7 @@ export class ReportPageRepo {
         .eq('id', row.teacher_id)
         .maybeSingle(),
     ]);
-    for (const res of [lesson, student, teacher]) if (res.error) throw dbError(res.error);
+    for (const res of [lesson, student, teacher]) if (res.error) throw pgError(res.error);
     if (!lesson.data || !student.data || !teacher.data) return null;
     return { lesson: lesson.data, student: student.data, teacher: teacher.data };
   }

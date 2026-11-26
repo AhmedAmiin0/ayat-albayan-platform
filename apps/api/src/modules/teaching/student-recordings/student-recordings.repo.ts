@@ -1,7 +1,7 @@
 import type { StudentRecordingsQuery } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import { dayBounds, type RecordingJoinRow } from './student-recordings.mapper';
 
 const SELECT =
@@ -30,8 +30,7 @@ export class StudentRecordingRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async student(id: string): Promise<{ id: string; teacher_id: string | null } | null> {
-    const { data, error } = await this.db.from('students').select('id, teacher_id').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('students').select('id, teacher_id').eq('id', id).maybeSingle());
     return data;
   }
 
@@ -43,18 +42,17 @@ export class StudentRecordingRepo {
       .eq('student_id', input.studentId)
       .eq('lessons.teacher_id', input.teacherId)
       .limit(1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.length > 0;
   }
 
   async assists(input: { profileId: string; studentId: string }): Promise<boolean> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('student_assistants')
       .select('student_id')
       .eq('profile_id', input.profileId)
       .eq('student_id', input.studentId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data !== null;
   }
 
@@ -67,7 +65,7 @@ export class StudentRecordingRepo {
       .eq('status', 'done');
     if (input.onlyTeacherId) q = q.eq('lessons.teacher_id', input.onlyTeacherId);
     const { data, error } = await q.limit(1000);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return [...new Set(data.flatMap((r) => (r.lesson_id ? [r.lesson_id] : [])))];
   }
 
@@ -89,7 +87,7 @@ export class StudentRecordingRepo {
     const { data, error, count } = await q
       .order('started_at', { ascending: false })
       .range(from, from + query.pageSize - 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return { rows: data, total: count ?? 0 };
   }
 }

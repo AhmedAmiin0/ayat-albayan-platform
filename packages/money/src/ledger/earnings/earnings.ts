@@ -66,14 +66,19 @@ export interface AllocationItem {
   amount: number;
 }
 export type AllocationError = 'invalid_amount' | 'nothing_outstanding' | 'overpayment';
-export type Allocation = { ok: true; items: AllocationItem[] } | { ok: false; error: AllocationError };
+export type Allocation =
+  | { ok: true; items: AllocationItem[] }
+  | { ok: false; error: AllocationError };
 
 /**
  * Spreads a payment over the given sessions, oldest lesson first (ties by id), each up to what it
  * still owes. A partial amount leaves the newest sessions untouched; more than the total
  * outstanding of the chosen sessions is refused (`overpayment`), never carried over.
  */
-export function allocatePayment(input: { amount: number; earnings: readonly Allocatable[] }): Allocation {
+export function allocatePayment(input: {
+  amount: number;
+  earnings: readonly Allocatable[];
+}): Allocation {
   let left = toCents(input.amount);
   if (!Number.isFinite(left) || left <= 0) return { ok: false, error: 'invalid_amount' };
   const open = input.earnings

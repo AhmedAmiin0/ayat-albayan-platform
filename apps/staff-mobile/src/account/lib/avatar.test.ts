@@ -33,13 +33,18 @@ test('the gallery needs no permission; a square crop is asked for', async () => 
   library.mockResolvedValue({ canceled: false, assets: [asset({ mimeType: 'image/png' })] });
   await expect(pickAvatar('library')).resolves.toMatchObject({ mime: 'image/png' });
   expect(allowed).not.toHaveBeenCalled();
-  expect(library).toHaveBeenCalledWith(expect.objectContaining({ allowsEditing: true, aspect: [1, 1], exif: false }));
+  expect(library).toHaveBeenCalledWith(
+    expect.objectContaining({ allowsEditing: true, aspect: [1, 1], exif: false }),
+  );
 });
 
 test('the camera asks with the avatar reason; refused or cancelled gives null', async () => {
   allowed.mockResolvedValue(false);
   await expect(pickAvatar('camera')).resolves.toBeNull();
-  expect(allowed).toHaveBeenCalledWith({ rationale: t.account.mobile.cameraRationale, confirm: t.account.avatar.camera });
+  expect(allowed).toHaveBeenCalledWith({
+    rationale: t.account.mobile.cameraRationale,
+    confirm: t.account.avatar.camera,
+  });
   expect(camera).not.toHaveBeenCalled();
   allowed.mockResolvedValue(true);
   camera.mockResolvedValue({ canceled: true, assets: null });

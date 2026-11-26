@@ -30,7 +30,8 @@ export function actionLabel(action: string, entity: string | null): string {
 
 export const roleLabel = (role: string): string => lookup(t.activity.roles, role) ?? role;
 
-export const entityLabel = (entity: string): string => lookup(t.activity.entities, entity) ?? entity;
+export const entityLabel = (entity: string): string =>
+  lookup(t.activity.entities, entity) ?? entity;
 
 export const resultStyle = (status: number): StatusStyle =>
   status >= 400 ? { tone: 'bad', glyph: 'struck' } : { tone: 'ok', glyph: 'fill' };

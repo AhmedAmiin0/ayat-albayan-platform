@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { z } from 'zod';
 import type { ObjectInfo, ObjectKey, ObjectStore } from '@/common/storage/store/object-store';
 import { putAbsent } from '@/scripts/storage-copy.plan';
 
@@ -13,7 +14,8 @@ export interface Stores {
 }
 
 /** copied / present = in MinIO and verified; anything else = the row must keep its path. */
-export type Placed = 'copied' | 'present' | 'missing' | 'mismatch' | 'too_large';
+export const placedSchema = z.enum(['copied', 'present', 'missing', 'mismatch', 'too_large']);
+export type Placed = z.infer<typeof placedSchema>;
 
 interface Source {
   info: ObjectInfo;

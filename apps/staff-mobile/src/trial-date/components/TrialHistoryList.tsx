@@ -27,7 +27,12 @@ function stateOf(history: TrialHistory | undefined, failed: boolean): State {
 export function TrialHistoryList({ history, onRetry }: TrialHistoryListProps) {
   const { color } = useTheme();
   const [all, setAll] = useState(false);
-  const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
+  const note = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.ink2,
+  };
   const { items, family_tz: familyTz } = history ?? NONE;
   const rows = all ? items : items.slice(0, HISTORY_CAP);
   const state = stateOf(history, onRetry !== undefined);

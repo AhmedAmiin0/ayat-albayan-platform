@@ -4,7 +4,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
 import { applySort } from '@/common/db/list-sort';
 import { readAll } from '@/common/db/read-all';
-import { dbError } from '@/common/http/http';
+import { maybe, one, pgError } from '@/common/db/errors';
 import { CURRENT_STUDENT_STATUSES, NOT_SUBSCRIBED_STATUSES, type TeacherStudentCounts } from '@ab/shared';
 import {
   applyTeacherFilters,
@@ -48,7 +48,7 @@ export class TeachersRepo {
     const { data, count, error } = await applySort(query, q, TEACHER_SORT)
       .order('id')
       .range(from, from + pageSize - 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const ids = data.map((row) => row.id);
     const [counts, photos] = await Promise.all([
       this.studentCounts(ids),
@@ -84,32 +84,29 @@ export class TeachersRepo {
   }
 
   async get(id: string): Promise<Teacher | null> {
-    const { data, error } = await this.db.from('teachers').select('*').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('teachers').select('*').eq('id', id).maybeSingle());
     return data;
   }
 
   async insert(row: TablesInsert<'teachers'>): Promise<Teacher> {
-    const { data, error } = await this.db.from('teachers').insert(row).select('*').single();
-    if (error) throw dbError(error);
+    const data = one(await this.db.from('teachers').insert(row).select('*').single());
     return data;
   }
 
   async update(id: string, patch: TablesUpdate<'teachers'>): Promise<Teacher | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('teachers')
       .update(patch)
       .eq('id', id)
       .select('*')
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   /** false when no row matched. Fails with 409 while students still reference the teacher. */
   async remove(id: string): Promise<boolean> {
     const { data, error } = await this.db.from('teachers').delete().eq('id', id).select('id');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.length > 0;
   }
 
@@ -133,12 +130,11 @@ export class TeachersRepo {
 
   /** teachers.id of the signed-in user (JWT sub = profiles.id = teachers.profile_id). */
   async idByProfile(profileId: string): Promise<string | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('teachers')
       .select('id')
       .eq('profile_id', profileId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data?.id ?? null;
   }
 }

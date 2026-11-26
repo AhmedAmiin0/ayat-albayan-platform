@@ -6,7 +6,7 @@ import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.repo';
 import { readAll } from '@/common/db/read-all';
 import { wakeOn } from '@/common/jobs';
-import { dbError } from '@/common/http/http';
+import { done, maybe, rows } from '@/common/db/errors';
 import type { FollowUpLeadRow, StageRow } from './follow-ups.plan';
 
 const LEAD_SELECT =
@@ -60,37 +60,33 @@ export class FollowUpsRepo {
 
   /** Active teachers: whose free slots are proposed (the lead has no program / teacher yet). */
   async activeTeacherIds(): Promise<string[]> {
-    const { data, error } = await this.db.from('teachers').select('id').eq('status', 'active').order('id');
-    if (error) throw dbError(error);
+    const data = rows(await this.db.from('teachers').select('id').eq('status', 'active').order('id'));
     return data.map((t) => t.id);
   }
 
   /** The row already queued for this follow-up (its dedup key), if any. */
   async stageRow(dedupKey: string): Promise<StageRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('messages')
       .select('id, status, error_code')
       .eq('dedup_key', dedupKey)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   /** Frees the key of a follow-up that expired / went stale unsent, so fresh slots can go out. */
   async drop(id: string): Promise<void> {
-    const { error } = await this.db.from('messages').delete().eq('id', id).eq('status', 'failed');
-    if (error) throw dbError(error);
+    done(await this.db.from('messages').delete().eq('id', id).eq('status', 'failed'));
   }
 
   /** Keeps next_follow_up_at (the computed due time) and follow_up_note current for the lead panel. */
   async sync(id: string, state: LeadFollowUpState): Promise<void> {
-    const { error } = await this.db.from('leads').update(state).eq('id', id);
-    if (error) throw dbError(error);
+    done(await this.db.from('leads').update(state).eq('id', id));
   }
 
   /** stage → stage + 1 (CAS): false when another run, or a new inbound, changed it meanwhile. */
   async advance(input: AdvanceInput): Promise<boolean> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('leads')
       .update({
         follow_up_stage: input.stage + 1,
@@ -99,8 +95,7 @@ export class FollowUpsRepo {
       })
       .eq('id', input.id)
       .eq('follow_up_stage', input.stage)
-      .select('id');
-    if (error) throw dbError(error);
+      .select('id'));
     return data.length > 0;
   }
 }

@@ -15,7 +15,10 @@ const EDIT = t.sales.student.trial.edit.replace('{name}', STUDENT.name);
 // Newest first: the latest outcome decides, an older miss does not.
 const trials = (...outcomes: TrialOutcome[]) => outcomes.map((outcome, i) => ({ ...trialLesson, lesson_id: `tr${i}`, outcome }));
 
-function show(outcomes: TrialOutcome[], over: { student?: typeof STUDENT | null; permissions?: string[] } = {}) {
+function show(
+  outcomes: TrialOutcome[],
+  over: { student?: typeof STUDENT | null; permissions?: string[] } = {},
+) {
   const permissions = over.permissions ?? ['self.sales', 'self.sales_money'];
   // /auth/me answered before the render, so a hidden action is hidden for its reason, not still loading.
   const client = createTestQueryClient({ meFromApi: true });

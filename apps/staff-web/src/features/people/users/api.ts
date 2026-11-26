@@ -25,7 +25,10 @@ export const userListQuery = (view: UsersPageView) =>
   queryOptions({
     queryKey: userKeys.list(view),
     queryFn: () => {
-      const qs = new URLSearchParams({ page: String(view.page), pageSize: String(USERS_PAGE_SIZE) });
+      const qs = new URLSearchParams({
+        page: String(view.page),
+        pageSize: String(USERS_PAGE_SIZE),
+      });
       for (const key of ['q', 'role', 'status'] as const) if (view[key]) qs.set(key, view[key]);
       return apiFetch<UserPage>(`/users?${qs}`);
     },

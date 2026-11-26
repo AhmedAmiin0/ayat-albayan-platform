@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe } from '@/common/db/errors';
 import type { SubRow } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 import { SELECT } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
 
@@ -17,15 +17,14 @@ export class StartDateEditRepo {
 
   /** null: another write changed the day (or cancelled the package) since it was read. */
   async setStartsOn(write: StartsOnWrite): Promise<SubRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('subscriptions')
       .update({ starts_on: write.to })
       .eq('id', write.id)
       .eq('starts_on', write.from)
       .neq('status', 'cancelled')
       .select(SELECT)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 }

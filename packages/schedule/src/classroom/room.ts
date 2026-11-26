@@ -31,7 +31,8 @@ export const CHAT_TOPIC = 'chat';
 export const chatOpen = (join: Pick<RoomJoinResult, 'chat'>): boolean => join.chat !== false;
 
 /** A data packet on the chat topic while chat is off: not sent, not delivered (the board and requests pass). */
-export const dropsChat = (chatOn: boolean, topic: string | undefined): boolean => !chatOn && topic === CHAT_TOPIC;
+export const dropsChat = (chatOn: boolean, topic: string | undefined): boolean =>
+  !chatOn && topic === CHAT_TOPIC;
 
 /** Stable error codes of the classroom routes (the clients map them to ar/en messages). */
 export const CLASSROOM_ERRORS = [

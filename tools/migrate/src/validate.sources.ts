@@ -28,13 +28,18 @@ interface StudentLessons {
   n: number;
 }
 
-/** ATT students whose completed-lesson count differs, and those with no (or no unique) DB match. */
-export function compareAtt(o: { att: ReadonlyMap<string, number>; db: readonly StudentLessons[] }) {
+function groupByName(students: readonly StudentLessons[]): Map<string, StudentLessons[]> {
   const byName = new Map<string, StudentLessons[]>();
-  for (const s of o.db) {
+  for (const s of students) {
     const k = personName(s.name);
     byName.set(k, [...(byName.get(k) ?? []), s]);
   }
+  return byName;
+}
+
+/** ATT students whose completed-lesson count differs, and those with no (or no unique) DB match. */
+export function compareAtt(o: { att: ReadonlyMap<string, number>; db: readonly StudentLessons[] }) {
+  const byName = groupByName(o.db);
   let differ = 0;
   let unmatched = 0;
   for (const [name, n] of o.att) {

@@ -1,3 +1,4 @@
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindow, type JoinWindowConfig } from './join-window';
 import {
@@ -19,7 +20,7 @@ export const createMeetingSchema = z.object({
   startsAt: z.iso.datetime({ offset: true }).optional(),
   durationMin: meetingDurationSchema.optional(),
   invitees: z.array(meetingInviteeInputSchema).max(MAX_MEETING_INVITEES).optional(),
-  clientRequestId: z.uuid().optional(),
+  clientRequestId: clientRequestId.optional(),
 });
 export type CreateMeeting = z.output<typeof createMeetingSchema>;
 
@@ -77,20 +78,32 @@ export interface MeetingTimes {
 }
 
 /** A scheduled meeting's window (the lesson rules: opens N min before, closes M min after); null if instant. */
-export function meetingWindow(row: MeetingTimes, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): JoinWindow | null {
+export function meetingWindow(
+  row: MeetingTimes,
+  now: Date,
+  win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
+): JoinWindow | null {
   if (!row.starts_at || !row.planned_end_at) return null;
   return joinWindow({ starts_at: row.starts_at, ends_at: row.planned_end_at }, now, win);
 }
 
 /** Ended once ends_at is stamped, cancelled or revoked, or a scheduled one's window closed. */
-export function meetingState(row: MeetingTimes, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): MeetingState {
+export function meetingState(
+  row: MeetingTimes,
+  now: Date,
+  win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
+): MeetingState {
   if (row.revoked || row.cancelled_at) return 'ended';
   if (row.ends_at !== null && Date.parse(row.ends_at) <= now.getTime()) return 'ended';
   return meetingWindow(row, now, win)?.state === 'closed' ? 'ended' : 'open';
 }
 
 /** Joinable now: open and, when scheduled, inside the window. */
-export function canJoinMeeting(row: MeetingTimes, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): boolean {
+export function canJoinMeeting(
+  row: MeetingTimes,
+  now: Date,
+  win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
+): boolean {
   if (meetingState(row, now, win) === 'ended') return false;
   const w = meetingWindow(row, now, win);
   return w === null || w.state === 'open';

@@ -8,7 +8,10 @@ import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
  * POST /assistant-pay/receipt-upload-url ({assistantId, mime, size}, as the web), then the signed
  * upload straight into the private bucket. Resolves the path sent with the statement's pay.
  */
-export async function uploadStatementReceipt(assistantId: string, receipt: Receipt): Promise<string> {
+export async function uploadStatementReceipt(
+  assistantId: string,
+  receipt: Receipt,
+): Promise<string> {
   const signed = await apiSend<SignedUpload>('POST', '/assistant-pay/receipt-upload-url', {
     assistantId,
     mime: receipt.mime,

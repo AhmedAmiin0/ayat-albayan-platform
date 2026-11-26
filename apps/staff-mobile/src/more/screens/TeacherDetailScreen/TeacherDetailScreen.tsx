@@ -60,7 +60,10 @@ export function TeacherDetailScreen() {
         contentContainerStyle={{ gap: 20, paddingHorizontal: 16, paddingBottom: 32 }}
       >
         <ScreenHeader title={teacherName(data, locale)} leading={back} />
-        <StatusChip {...teacherStatusStyle[data.status]} label={t.enums.teacherStatus[data.status]} />
+        <StatusChip
+          {...teacherStatusStyle[data.status]}
+          label={t.enums.teacherStatus[data.status]}
+        />
         {admin ? (
           <StaffPhotoControl
             name={teacherName(data, locale)}

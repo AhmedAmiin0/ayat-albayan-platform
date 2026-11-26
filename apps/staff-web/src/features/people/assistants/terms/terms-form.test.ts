@@ -64,7 +64,11 @@ describe('start days: nothing is retroactive (twin of set_assistant_terms)', () 
   });
 
   it('a saved day can stay or move later, never earlier', () => {
-    const form = (day: string) => ({ ...formOf(ASSISTANT.terms, TODAY), salaryStartsOn: day, commStartsOn: day });
+    const form = (day: string) => ({
+      ...formOf(ASSISTANT.terms, TODAY),
+      salaryStartsOn: day,
+      commStartsOn: day,
+    });
     expect('value' in toInput(form('2026-10-01'), saved)).toBe(true); // unchanged although already in the past
     expect('value' in toInput(form('2026-12-01'), saved)).toBe(true);
     expect(toInput(form('2026-09-30'), saved)).toEqual({ errors: { salaryStartsOn: 'salary_start_earlier', commStartsOn: 'commission_start_earlier' } });

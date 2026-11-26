@@ -29,8 +29,19 @@ test('the course guard’s refusal keeps its line and offers no retry', async ()
 
 test('a clash in any week: its line and «اختر موعدًا آخر»', async () => {
   const onChangeSlot = jest.fn();
-  const conflicts = [{ kind: 'teacher_busy' as const, startsAt: '2026-10-22T15:00:00.000Z', endsAt: '2026-10-22T15:45:00.000Z' }];
-  await render(<CourseCheckNotice check={{ isPending: false, error: null, data: { conflicts }, refetch }} onChangeSlot={onChangeSlot} />);
+  const conflicts = [
+    {
+      kind: 'teacher_busy' as const,
+      startsAt: '2026-10-22T15:00:00.000Z',
+      endsAt: '2026-10-22T15:45:00.000Z',
+    },
+  ];
+  await render(
+    <CourseCheckNotice
+      check={{ isPending: false, error: null, data: { conflicts }, refetch }}
+      onChangeSlot={onChangeSlot}
+    />,
+  );
   await fireEvent.press(screen.getByRole('button', { name: t.booking.changeSlot }));
   expect(onChangeSlot).toHaveBeenCalledTimes(1);
 });

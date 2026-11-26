@@ -52,10 +52,14 @@ const SCREEN_SHARE_SOURCE = 3;
 export function mayShareScreen(p: Pick<ParticipantLike, 'permissions' | 'metadata'>): boolean {
   const perm = p.permissions;
   if (!perm) return roleOfMeta(p.metadata) !== 'guest';
-  return perm.canPublish && (perm.canPublishSources.length === 0 || perm.canPublishSources.includes(SCREEN_SHARE_SOURCE));
+  return (
+    perm.canPublish &&
+    (perm.canPublishSources.length === 0 || perm.canPublishSources.includes(SCREEN_SHARE_SOURCE))
+  );
 }
 
-const isBoardPub = (pub: PublicationLike | undefined): boolean => pub?.trackName === BOARD_TRACK_NAME;
+const isBoardPub = (pub: PublicationLike | undefined): boolean =>
+  pub?.trackName === BOARD_TRACK_NAME;
 
 /** The camera tile (always) and, while someone shares, a screen tile for them. */
 export function tilesOf(p: ParticipantLike, speakingIds: ReadonlySet<string>): TileView[] {
@@ -96,7 +100,11 @@ export function tilesOf(p: ParticipantLike, speakingIds: ReadonlySet<string>): T
 }
 
 /** Everything the UI draws, read off the room in one pass. */
-export function snapshotOf(room: RoomLike, status: RoomStatus, speakingIds: ReadonlySet<string>): RoomSnapshot {
+export function snapshotOf(
+  room: RoomLike,
+  status: RoomStatus,
+  speakingIds: ReadonlySet<string>,
+): RoomSnapshot {
   const everyone = [room.localParticipant, ...room.remoteParticipants.values()];
   const me = room.localParticipant;
   const boardShareOn = me.isScreenShareEnabled && isBoardPub(pubOf(me, 'screen_share'));

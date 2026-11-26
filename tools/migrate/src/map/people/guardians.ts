@@ -6,7 +6,7 @@ import { accepted } from '../../sources/sheets/issues.ts';
 import { leadSource } from '../../sources/values.ts';
 import type { Mapped } from '../../types.ts';
 import { collectPeople } from './collect.ts';
-import type { PhoneOnly } from './rows.ts';
+import type { PhoneOnly } from './rows.types.ts';
 
 /** A people row as the guardian sees it: phone, fields and (unless phone-only) a child name. */
 type Row = PhoneOnly & { name?: string };

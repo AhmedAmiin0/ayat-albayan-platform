@@ -6,7 +6,10 @@ import { keepFrames } from './model/board-frames';
 export const BOARD_FPS = 15;
 
 /** The canvas as a video track, or null where the browser has no canvas.captureStream. */
-export function captureBoard(canvas: HTMLCanvasElement | null, fps = BOARD_FPS): MediaStreamTrack | null {
+export function captureBoard(
+  canvas: HTMLCanvasElement | null,
+  fps = BOARD_FPS,
+): MediaStreamTrack | null {
   if (!canvas || typeof canvas.captureStream !== 'function') return null;
   return canvas.captureStream(fps).getVideoTracks()[0] ?? null;
 }
@@ -21,7 +24,10 @@ export interface BoardShare {
 }
 
 /** Closing the board while it is shared stops the share too. */
-export function useBoardShare(canvas: RefObject<HTMLCanvasElement | null>, room: RoomController): BoardShare {
+export function useBoardShare(
+  canvas: RefObject<HTMLCanvasElement | null>,
+  room: RoomController,
+): BoardShare {
   const sharing = room.snap.boardShareOn;
   const live = useRef({ sharing, stop: () => room.setBoardTrack(null) });
   const frames = useRef<(() => void) | null>(null);

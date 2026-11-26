@@ -34,7 +34,13 @@ const TEXT_FIELDS = {
 type TextName = keyof typeof TEXT_FIELDS;
 
 /** `noValidate` so errors are the Arabic field errors, never the browser's bubble (docs/07 §10). */
-export function CreateStudentForm({ onSubmit, onCancel, error, initial, title }: CreateStudentFormProps) {
+export function CreateStudentForm({
+  onSubmit,
+  onCancel,
+  error,
+  initial,
+  title,
+}: CreateStudentFormProps) {
   const formId = useId();
   const defaultValues: CreateStudentValues = { ...EMPTY_STUDENT, ...initial };
   const form = useForm({ defaultValues, onSubmit: ({ value }) => onSubmit(value) });
@@ -42,7 +48,13 @@ export function CreateStudentForm({ onSubmit, onCancel, error, initial, title }:
   const lockedPhone = Boolean(initial?.guardianPhone);
 
   const textField = (name: TextName) => {
-    const f: { label: string; check: (v: string) => string | undefined; dir?: string; type?: string; hint?: string } = TEXT_FIELDS[name];
+    const f: {
+      label: string;
+      check: (v: string) => string | undefined;
+      dir?: string;
+      type?: string;
+      hint?: string;
+    } = TEXT_FIELDS[name];
     return (
       <form.Field name={name} validators={{ onSubmit: ({ value }) => f.check(value) }}>
         {(field) => (
@@ -92,14 +104,22 @@ export function CreateStudentForm({ onSubmit, onCancel, error, initial, title }:
           {(field) => <ContactIsSelfField name={`${formId}-contact`} value={field.state.value} onChange={field.handleChange} />}
         </form.Field>
         <form.Field name="age" validators={{ onSubmit: ({ value }) => ageError(value) }}>
-          {(field) => <AgeField value={field.state.value} error={field.state.meta.errors[0]} onChange={field.handleChange} />}
+          {(field) => (
+            <AgeField
+              value={field.state.value}
+              error={field.state.meta.errors[0]}
+              onChange={field.handleChange}
+            />
+          )}
         </form.Field>
         <form.Field name="gender">{(field) => <GenderField value={field.state.value} onChange={field.handleChange} />}</form.Field>
         {textField('guardianName')}
         <form.Field name="tz">
           {(field) => (
             <Field label={t.students.tz}>
-              {(p) => <TimeZoneSelect {...p} value={field.state.value} onValue={field.handleChange} />}
+              {(p) => (
+                <TimeZoneSelect {...p} value={field.state.value} onValue={field.handleChange} />
+              )}
             </Field>
           )}
         </form.Field>

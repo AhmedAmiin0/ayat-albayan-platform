@@ -33,7 +33,9 @@ const JOIN_NOTE = {
 } as const satisfies Record<TemplateStatus, MeetingModeNote | null>;
 
 /** lesson_join_link's row status in GET /messaging/templates; null when the row is not there. */
-export function joinStatus(templates: readonly { key: string; status: TemplateStatus }[] | undefined): TemplateStatus | null {
+export function joinStatus(
+  templates: readonly { key: string; status: TemplateStatus }[] | undefined,
+): TemplateStatus | null {
   return templates?.find((x) => x.key === JOIN_TEMPLATE)?.status ?? null;
 }
 
@@ -54,7 +56,13 @@ export function livekitConfigured(items: readonly Pick<IntegrationConfigItem, 'k
  * teacher with no link gives families our room only when both hold, so their note stays until then.
  * The template notes need the row itself: no row = no note.
  */
-export function meetingModeNotes({ platform, link, join, livekit, settled }: NotesInput): MeetingModeNote[] {
+export function meetingModeNotes({
+  platform,
+  link,
+  join,
+  livekit,
+  settled,
+}: NotesInput): MeetingModeNote[] {
   if (platform === null) return [];
   return platform ? platformNotes(join, livekit) : fixedLinkNotes({ link, join, livekit, settled });
 }

@@ -11,7 +11,10 @@ import { courseDraft, courseFixedText, courseHint, courseTitle, subscriptionStar
 
 // Saturday 3 … Thursday 8 October 2026, 17:00 Riyadh: six weekdays.
 const SIX_DAYS = [3, 4, 5, 6, 7, 8].map((d) => `2026-10-0${d}T14:00:00.000Z`);
-const custom = (lessons_total: number) => ({ ...COURSE_VIEW, subscription: { ...COURSE_SUB, package: null, lessons_total } });
+const custom = (lessons_total: number) => ({
+  ...COURSE_VIEW,
+  subscription: { ...COURSE_SUB, package: null, lessons_total },
+});
 
 describe('the course wizard’s draft from GET /sales/booking/course (owner 2026-10-18)', () => {
   it('fixes the student, zone, program, preference, package, length and the counts from the view', () => {
@@ -65,10 +68,25 @@ describe('the course wizard’s draft from GET /sales/booking/course (owner 2026
   });
 
   it('preselects the student’s teacher; the fixed line names the package and minutes', () => {
-    expect(courseHint(COURSE_VIEW)).toEqual({ teacherId: COURSE_VIEW.student.teacher_id, startsAt: null });
-    expect(courseHint({ ...COURSE_VIEW, student: { ...COURSE_VIEW.student, teacher_id: null } })).toBeNull();
-    const sub = { id: 's', package: null, duration: 30, lessons_total: 12, starts_on: '2026-10-03' } as const;
-    expect(courseFixedText(sub)).toBe(t.booking.courseFixed.replace('{package}', counted(t.schedule.lessonCount, 12)).replace('{minutes}', '30'));
+    expect(courseHint(COURSE_VIEW)).toEqual({
+      teacherId: COURSE_VIEW.student.teacher_id,
+      startsAt: null,
+    });
+    expect(
+      courseHint({ ...COURSE_VIEW, student: { ...COURSE_VIEW.student, teacher_id: null } }),
+    ).toBeNull();
+    const sub = {
+      id: 's',
+      package: null,
+      duration: 30,
+      lessons_total: 12,
+      starts_on: '2026-10-03',
+    } as const;
+    expect(courseFixedText(sub)).toBe(
+      t.booking.courseFixed
+        .replace('{package}', counted(t.schedule.lessonCount, 12))
+        .replace('{minutes}', '30'),
+    );
   });
 
   it('the title names the child with the code; the start line its date', () => {

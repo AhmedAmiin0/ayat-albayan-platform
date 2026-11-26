@@ -5,6 +5,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
 import { LeadFamilyService } from './lead-family.service';
+import { isAdmin } from '@/common/auth/roles';
 
 /** leads.link_family; body is a generated code; answers never an id or a phone. */
 @ApiTags('leads')
@@ -18,6 +19,6 @@ export class LeadFamilyController {
   @Permissions('leads.link_family')
   link(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<LeadFamilyLinked> {
     const { code } = parseOrThrow(leadFamilyLinkSchema, body);
-    return this.family.link({ leadId: id, code, actorId: user.id, admin: user.role === 'admin' });
+    return this.family.link({ leadId: id, code, actorId: user.id, admin: isAdmin(user) });
   }
 }

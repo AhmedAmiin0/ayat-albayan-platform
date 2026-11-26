@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError, rows } from '@/common/db/errors';
 import { conflict } from '@/common/http/errors';
 import type {
   FamilyLogin,
@@ -45,18 +45,16 @@ export class SubjectsRepo implements SubjectStore {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async guardianByPhone(phone: string): Promise<GuardianRec | null> {
-    const { data, error } = await this.db.from('guardians').select('id, name, phone_e164, tz, profile_id').eq('phone_e164', phone).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('guardians').select('id, name, phone_e164, tz, profile_id').eq('phone_e164', phone).maybeSingle());
     return data ? { id: data.id, name: data.name, phone: data.phone_e164, tz: data.tz, profileId: data.profile_id } : null;
   }
 
   async studentByCode(code: string): Promise<StudentRec | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('students')
       .select('id, name, tz, profile_id, guardian:guardians!inner(phone_e164)')
       .eq('code', code)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     if (!data) return null;
     return { id: data.id, name: data.name, tz: data.tz, profileId: data.profile_id, guardianPhone: data.guardian.phone_e164 };
   }
@@ -76,8 +74,7 @@ export class SubjectsRepo implements SubjectStore {
   async staffByPhone(phone: string): Promise<ProfileRec | null> {
     const own = await this.profileByPhone(phone);
     if (own) return isStaff(own.role) ? own : null;
-    const { data, error } = await this.db.from('teachers').select('profile_id').eq('phone_e164', phone).not('profile_id', 'is', null).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('teachers').select('profile_id').eq('phone_e164', phone).not('profile_id', 'is', null).maybeSingle());
     return data?.profile_id ? this.profileById(data.profile_id) : null;
   }
 
@@ -100,17 +97,16 @@ export class SubjectsRepo implements SubjectStore {
       tz: row.tz,
     });
     if (error?.code === '23505') throw conflict('phone_belongs_to_staff');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
   }
 
   async link(input: { kind: LinkKind; recordId: string; profileId: string }): Promise<boolean> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from(LINK_TABLE[input.kind])
       .update({ profile_id: input.profileId })
       .eq('id', input.recordId)
       .is('profile_id', null)
-      .select('id');
-    if (error) throw dbError(error);
+      .select('id'));
     return data.length === 1;
   }
 
@@ -121,7 +117,7 @@ export class SubjectsRepo implements SubjectStore {
           .from(table)
           .select('id', { count: 'exact', head: true })
           .eq('profile_id', profileId);
-        if (error) throw dbError(error);
+        if (error) throw pgError(error);
         return count ?? 0;
       }),
     );
@@ -129,8 +125,7 @@ export class SubjectsRepo implements SubjectStore {
   }
 
   private async oneProfile(column: 'id' | 'username' | 'phone_e164', value: string): Promise<ProfileRec | null> {
-    const { data, error } = await this.db.from('profiles').select(PROFILE).eq(column, value).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('profiles').select(PROFILE).eq(column, value).maybeSingle());
     return data ? toProfile(data) : null;
   }
 }

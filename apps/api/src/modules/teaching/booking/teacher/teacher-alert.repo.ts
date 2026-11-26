@@ -3,7 +3,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import { queueMessages } from '@/modules/messaging/reminders/reminders.repo';
 import { sendableTemplates } from '@/modules/messaging/whatsapp';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import type { AlertLesson } from './teacher-alert.plan';
 
@@ -26,14 +26,14 @@ export class TeacherAlertRepo {
       .from('lessons')
       .select('id, starts_at, ends_at, meeting_link, teacher:teachers(id, profile_id, phone_e164, tz, display_name_ar, status, meeting_mode, profile:profiles!teachers_profile_id_fkey(disabled_at))')
       .in('id', [...ids]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   async students(ids: readonly string[]): Promise<{ id: string; name: string; code: string | null }[]> {
     if (ids.length === 0) return [];
     const { data, error } = await this.db.from('students').select('id, name, code').in('id', [...ids]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     // The booking's order (the wizard's), not the database's.
     return ids.flatMap((id) => data.filter((s) => s.id === id).map((s) => ({ id: s.id, name: s.name ?? '', code: s.code })));
   }

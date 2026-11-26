@@ -5,7 +5,8 @@ import { attachmentUploadSchema } from '../schema';
 
 /** A homework sheet, a teacher's voice note, a whiteboard snapshot, or other teacher material. */
 export const LESSON_FILE_KINDS = ['homework', 'voice_note', 'whiteboard', 'material'] as const;
-export type LessonFileKind = (typeof LESSON_FILE_KINDS)[number];
+export const lessonFileKindSchema = z.enum(LESSON_FILE_KINDS);
+export type LessonFileKind = z.infer<typeof lessonFileKindSchema>;
 
 /** How a client shows the file: a picture, a PDF, or the in-app audio player. */
 export const LESSON_FILE_MEDIA = ['image', 'pdf', 'audio'] as const;
@@ -24,7 +25,7 @@ const title = z.string().trim().min(1).max(120);
 export const lessonFileViewSchema = z.object({
   id: z.string(),
   lesson_id: z.string(),
-  kind: z.enum(LESSON_FILE_KINDS),
+  kind: lessonFileKindSchema,
   title: z.string().nullable(),
   mime: z.string(),
   size: z.number(),
@@ -36,7 +37,7 @@ export type LessonFileView = z.output<typeof lessonFileViewSchema>;
 
 /** POST /lessons/:id/files/upload-url: the file's type, size and kind (checked before signing). */
 export const lessonFileUploadSchema = attachmentUploadSchema.extend({
-  kind: z.enum(LESSON_FILE_KINDS),
+  kind: lessonFileKindSchema,
 });
 export type LessonFileUpload = z.output<typeof lessonFileUploadSchema>;
 

@@ -34,7 +34,14 @@ describe('«مزامنة Google» page', () => {
     renderPage();
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(t.settingsPages.google);
     expect(screen.getByRole('heading', { name: g.title })).toBeTruthy();
-    for (const title of [g.connection.title, g.switches.title, g.drive.title, g.teachers.title, g.students.title, g.log.title]) {
+    for (const title of [
+      g.connection.title,
+      g.switches.title,
+      g.drive.title,
+      g.teachers.title,
+      g.students.title,
+      g.log.title,
+    ]) {
       expect(await screen.findByRole('heading', { name: title })).toBeTruthy();
     }
     expect(screen.queryByRole('status')).toBeNull();

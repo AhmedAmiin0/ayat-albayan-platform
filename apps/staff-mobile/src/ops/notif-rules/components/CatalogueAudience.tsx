@@ -16,7 +16,12 @@ interface CatalogueAudienceProps {
 }
 
 /** docs/26b §6 1.10: guardian first so each view fits a 390x844 phone. */
-export function CatalogueAudience({ data, canManage, toggles, initialAudience }: CatalogueAudienceProps) {
+export function CatalogueAudience({
+  data,
+  canManage,
+  toggles,
+  initialAudience,
+}: CatalogueAudienceProps) {
   const [tab, setTab] = useState<AudienceTab>(initialAudience ?? 'guardian');
   const rows = rowsOf(data.entries, tab);
   const choose = (next: AudienceTab) => {
@@ -25,13 +30,24 @@ export function CatalogueAudience({ data, canManage, toggles, initialAudience }:
   };
   return (
     <>
-      <FilterPills items={audienceTabs(data.entries)} value={tab} onChange={choose} accessibilityLabel={t.settingsPages.audiences} />
+      <FilterPills
+        items={audienceTabs(data.entries)}
+        value={tab}
+        onChange={choose}
+        accessibilityLabel={t.settingsPages.audiences}
+      />
       {rows.length === 0 ? (
         <Note>{t.mobileNotificationRules.audienceEmpty}</Note>
       ) : (
         <InsetGroup>
           {rows.map((e) => (
-            <CatalogueRow key={e.key} entry={e} canManage={canManage} reach={data.reach} toggles={toggles} />
+            <CatalogueRow
+              key={e.key}
+              entry={e}
+              canManage={canManage}
+              reach={data.reach}
+              toggles={toggles}
+            />
           ))}
         </InsetGroup>
       )}

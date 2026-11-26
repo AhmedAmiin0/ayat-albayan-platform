@@ -8,7 +8,9 @@ const track = { kind: 'video', id: 'board-track' } as unknown as MediaStreamTrac
 
 describe('ClassroomRoom «مشاركة السبورة»', () => {
   beforeEach(() => {
-    HTMLCanvasElement.prototype.captureStream = vi.fn(() => ({ getVideoTracks: () => [track] }) as unknown as MediaStream);
+    HTMLCanvasElement.prototype.captureStream = vi.fn(
+      () => ({ getVideoTracks: () => [track] }) as unknown as MediaStream,
+    );
   });
   afterEach(() => {
     vi.restoreAllMocks();

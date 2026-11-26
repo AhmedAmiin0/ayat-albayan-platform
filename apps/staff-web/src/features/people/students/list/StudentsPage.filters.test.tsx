@@ -9,7 +9,16 @@ import { StudentsPage } from './StudentsPage';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
-const COUNTS = { new: 1, trial: 2, pending_subscription: 1, active: 9, pending_renewal: 0, expired: 1, paused: 1, churned: 0 };
+const COUNTS = {
+  new: 1,
+  trial: 2,
+  pending_subscription: 1,
+  active: 9,
+  pending_renewal: 0,
+  expired: 1,
+  paused: 1,
+  churned: 0,
+};
 
 function renderPage(filters: StudentsFilters, total = 0, search = 'سهيلة') {
   apiFetch.mockImplementation((path: string) => {
@@ -19,7 +28,13 @@ function renderPage(filters: StudentsFilters, total = 0, search = 'سهيلة') 
   const onChange = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <StudentsPage search={search} page={3} filters={filters} onChange={onChange} onOpen={vi.fn()} />
+      <StudentsPage
+        search={search}
+        page={3}
+        filters={filters}
+        onChange={onChange}
+        onOpen={vi.fn()}
+      />
     </QueryClientProvider>,
   );
   return onChange;

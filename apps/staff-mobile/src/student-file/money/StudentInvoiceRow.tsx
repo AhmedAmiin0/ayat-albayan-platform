@@ -9,7 +9,11 @@ import { useViewerTz } from '@/core/lib/clock';
 const M = t.mobileStudentFile.money;
 
 /** Opens a fresh signed link in the system viewer; the list's inset card draws fill and rules. */
-export const StudentInvoiceRow = memo(function StudentInvoiceRow({ invoice }: { invoice: InvoiceView }) {
+export const StudentInvoiceRow = memo(function StudentInvoiceRow({
+  invoice,
+}: {
+  invoice: InvoiceView;
+}) {
   const tz = useViewerTz();
   const { color } = useTheme();
   const [busy, setBusy] = useState(false);

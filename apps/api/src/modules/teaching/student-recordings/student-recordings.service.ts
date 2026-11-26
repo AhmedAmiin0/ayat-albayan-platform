@@ -28,11 +28,12 @@ export class StudentRecordingsService {
     return this.queries.doneLessonIds({ studentId: input.studentId, onlyTeacherId });
   }
 
-  private signed(rows: RecordingJoinRow[], manage: ManageRule) {
-    return Promise.all(
-      rows.map(async (row) =>
-        studentRecordingView(row, { url: row.status === 'done' ? await this.views.urlOf(row) : null, canManage: canManage(manage, row) }),
-      ),
-    );
+  private async signed(rows: RecordingJoinRow[], manage: ManageRule) {
+    const urls = await this.views.urlsOf(rows);
+    const viewOf = (row: RecordingJoinRow) => {
+      const url = urls.get(row.id) ?? null;
+      return studentRecordingView(row, { url, canManage: canManage(manage, row) });
+    };
+    return rows.map(viewOf);
   }
 }

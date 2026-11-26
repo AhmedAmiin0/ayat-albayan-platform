@@ -6,8 +6,9 @@ import type {
   TeacherPaymentListQuery,
 } from '@ab/money';
 import type { Db } from '@/common/db/db.module';
-import { applySort, ilikeContains, type SortSpec } from '@/common/db/list-sort';
-import { dbError } from '@/common/http/http';
+import { ilikeContains } from '@/common/db/or-filter';
+import { applySort, type SortSpec } from '@/common/db/list-sort';
+import { pgError } from '@/common/db/errors';
 import { lessonNames } from './earnings.names';
 import type {
   EarningRow,
@@ -36,7 +37,11 @@ const SESSION_SORT: SortSpec<(typeof EARNING_SORT_KEYS)[number]> = {
 
 /** Payments: newest first by default. */
 const PAYMENT_SORT: SortSpec<(typeof TEACHER_PAYMENT_SORT_KEYS)[number]> = {
-  columns: { paid_at: { column: 'paid_at' }, amount: { column: 'amount' }, method: { column: 'method' } },
+  columns: {
+    paid_at: { column: 'paid_at' },
+    amount: { column: 'amount' },
+    method: { column: 'method' },
+  },
   fallback: { column: 'paid_at', ascending: false },
 };
 
@@ -53,7 +58,7 @@ export async function sessionsPage(db: Db, q: For<EarningsListQuery>): Promise<P
     .order('id')
     .range(from, from + f.pageSize - 1)
     .returns<EarningRow[]>();
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   const names = await lessonNames(
     db,
     data.map((r) => r.lesson_id),
@@ -72,7 +77,10 @@ export async function paymentsPage(
 ): Promise<Page<PaymentRow>> {
   const f = q.filter;
   const from = (f.page - 1) * f.pageSize;
-  let query = db.from('teacher_payments').select(PAYMENT, { count: 'exact' }).eq('teacher_id', q.teacherId);
+  let query = db
+    .from('teacher_payments')
+    .select(PAYMENT, { count: 'exact' })
+    .eq('teacher_id', q.teacherId);
   if (f.method) query = query.eq('method', f.method);
   if (f.voided === 'true') query = query.not('voided_at', 'is', null);
   else if (f.voided === 'false') query = query.is('voided_at', null);
@@ -80,6 +88,6 @@ export async function paymentsPage(
   const { data, count, error } = await applySort(query, f, PAYMENT_SORT)
     .order('id')
     .range(from, from + f.pageSize - 1);
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };
 }

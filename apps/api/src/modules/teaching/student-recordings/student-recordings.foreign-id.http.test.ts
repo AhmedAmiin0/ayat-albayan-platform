@@ -24,7 +24,7 @@ describe('student recordings routes with another teacher’s ids', () => {
   const admin = {
     byId: vi.fn(), setVisible: vi.fn(), markDeleted: vi.fn(), attendeeCount: vi.fn(),
   };
-  const storage = { signedDownload: vi.fn(), remove: vi.fn() };
+  const storage = { signedDownloads: vi.fn(), remove: vi.fn() };
   const audit = { record: vi.fn() };
   let app: NestFastifyApplication;
   const call = (method: 'GET' | 'DELETE', url: string, token: string) =>

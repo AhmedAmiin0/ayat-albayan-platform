@@ -18,7 +18,9 @@ const photo = { uri: 'file:///cache/me.jpg', width: 600, height: 600, base64: 'a
 
 beforeEach(() => {
   jest.clearAllMocks();
-  jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValue({ canceled: false, assets: [photo] });
+  jest
+    .mocked(ImagePicker.launchImageLibraryAsync)
+    .mockResolvedValue({ canceled: false, assets: [photo] });
 });
 
 test('R-ACC-05: initials, pick from the gallery, preview, upload-url then PUT /me/avatar, photo shown', async () => {

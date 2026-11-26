@@ -27,6 +27,8 @@ describe('template health sync (docs/12 §3.4)', () => {
     ['DELETED', 'disabled'],
     ['approved', 'approved'],
     ['SOMETHING_NEW', 'pending'],
+    ['constructor', 'pending'],
+    ['__proto__', 'pending'],
   ])('Meta %s → %s', (m, ours) => {
     expect(ourStatus(m)).toBe(ours);
   });

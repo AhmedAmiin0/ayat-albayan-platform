@@ -1,7 +1,7 @@
 import type { Database, Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, pgError } from '@/common/db/errors';
 
 export type LinkUserRow = Tables<'short_link_users'>;
 export type LinkVisitRow = Tables<'short_link_visits'>;
@@ -30,26 +30,23 @@ export class LinkUsersRepo {
       .select('*')
       .eq('code', code)
       .order('created_at');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** Adds the rows not listed yet (unique per link and profile / phone): idempotent. */
   async add(rows: TablesInsert<'short_link_users'>[]): Promise<void> {
     if (rows.length === 0) return;
-    const { error } = await this.db.from('short_link_users').insert(rows);
-    if (error) throw dbError(error);
+    done(await this.db.from('short_link_users').insert(rows));
   }
 
   async remove(ids: string[]): Promise<void> {
     if (ids.length === 0) return;
-    const { error } = await this.db.from('short_link_users').delete().in('id', ids);
-    if (error) throw dbError(error);
+    done(await this.db.from('short_link_users').delete().in('id', ids));
   }
 
   async mark(id: string, patch: TablesUpdate<'short_link_users'>): Promise<void> {
-    const { error } = await this.db.from('short_link_users').update(patch).eq('id', id);
-    if (error) throw dbError(error);
+    done(await this.db.from('short_link_users').update(patch).eq('id', id));
   }
 
   async visits(code: string): Promise<LinkVisitRow[]> {
@@ -58,14 +55,14 @@ export class LinkUsersRepo {
       .select('*')
       .eq('code', code)
       .order('last_at', { ascending: false });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** short_link_record_visit: 'recorded' | 'limit_reached' | 'gone' (atomic per link). */
   async recordVisit(code: string, key: Omit<VisitArgs, 'p_code'>): Promise<string> {
     const { data, error } = await this.db.rpc('short_link_record_visit', { p_code: code, ...key });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -75,8 +72,8 @@ export class LinkUsersRepo {
       this.db.from('short_link_users').select('code').in('code', codes),
       this.db.from('short_link_visits').select('code').in('code', codes),
     ]);
-    if (users.error) throw dbError(users.error);
-    if (visits.error) throw dbError(visits.error);
+    if (users.error) throw pgError(users.error);
+    if (visits.error) throw pgError(visits.error);
     return { users: tally(users.data), visitors: tally(visits.data) };
   }
 }

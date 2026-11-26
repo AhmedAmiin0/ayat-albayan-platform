@@ -9,7 +9,10 @@ export const useFeedbackList = () => usePagedList<FeedbackRowView>({ path: '/fee
 /** GET /feedback/summary (admin): the average, answers and yes share per teacher. */
 export function useFeedbackSummary() {
   const path = '/feedback/summary';
-  return useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<TeacherFeedbackSummary[]>(path) });
+  return useQuery({
+    queryKey: pathKey(path),
+    queryFn: () => apiFetch<TeacherFeedbackSummary[]>(path),
+  });
 }
 
 /** GET /teachers/me/feedback: only my rows (no contact number, no guardian) and my average. */

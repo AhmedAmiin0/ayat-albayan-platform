@@ -2,7 +2,7 @@ import type { Tables, TablesInsert } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, maybe, pgError, rows } from '@/common/db/errors';
 
 export type ParticipantRow = Tables<'classroom_participants'>;
 
@@ -39,29 +39,26 @@ export class ModerationRepo {
   ) {}
 
   async addParticipant(row: TablesInsert<'classroom_participants'>): Promise<void> {
-    const { error } = await this.db.from('classroom_participants').insert(row);
-    if (error) throw dbError(error);
+    done(await this.db.from('classroom_participants').insert(row));
   }
 
   /** A trial lesson (its rule's package is 'trial'): the room has no text chat. */
   async isTrialLesson(lessonId: string): Promise<boolean> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lessons')
       .select('rule:schedule_rules!lessons_rule_id_fkey(package)')
       .eq('id', lessonId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data?.rule?.package === 'trial';
   }
 
   /** The participant behind an identity, only within this lesson. */
   async participant(lessonId: string, identity: string): Promise<ParticipantRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('classroom_participants')
       .select('*')
       .match({ lesson_id: lessonId, identity })
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -69,13 +66,12 @@ export class ModerationRepo {
     const cols = principalColumns(principal);
     const column = cols.user_id ? 'user_id' : 'join_link_id';
     const value = cols.user_id ?? cols.join_link_id ?? '';
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('classroom_blocks')
       .select('id')
       .eq('lesson_id', lessonId)
       .eq(column, value)
-      .limit(1);
-    if (error) throw dbError(error);
+      .limit(1));
     return data.length > 0;
   }
 
@@ -87,7 +83,7 @@ export class ModerationRepo {
     const { error } = await this.db
       .from('classroom_blocks')
       .insert({ lesson_id: input.lessonId, blocked_by: input.blockedBy, ...cols });
-    if (error && error.code !== UNIQUE_VIOLATION) throw dbError(error);
+    if (error && error.code !== UNIQUE_VIOLATION) throw pgError(error);
     await this.audit.record({
       actorId: input.blockedBy,
       entity: 'lessons',

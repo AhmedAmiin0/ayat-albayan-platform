@@ -9,7 +9,12 @@ export interface StatusChipsProps {
 }
 
 /** None checked means every status. */
-export function StatusChips({ value, onToggle, counts, legend = t.students.status }: StatusChipsProps) {
+export function StatusChips({
+  value,
+  onToggle,
+  counts,
+  legend = t.students.status,
+}: StatusChipsProps) {
   return (
     <fieldset className="flex flex-wrap items-center gap-2">
       <legend className="sr-only">{legend}</legend>

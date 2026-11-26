@@ -1,7 +1,7 @@
 import { joinWindowConfig, type JoinWindowConfig } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { one, pgError } from '@/common/db/errors';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
 
 /** lessons.room_ended_at (migration 20261117100100; service role). */
@@ -24,13 +24,12 @@ export class LessonEndRepo {
       .update({ room_ended_at: at })
       .eq('id', lessonId)
       .is('room_ended_at', null);
-    if (set.error) throw dbError(set.error);
-    const { data, error } = await this.db
+    if (set.error) throw pgError(set.error);
+    const data = one(await this.db
       .from('lessons')
       .select('room_ended_at')
       .eq('id', lessonId)
-      .single();
-    if (error) throw dbError(error);
+      .single());
     return data.room_ended_at ?? at;
   }
 }

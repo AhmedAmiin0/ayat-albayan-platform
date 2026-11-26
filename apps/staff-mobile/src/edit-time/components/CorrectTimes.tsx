@@ -22,7 +22,12 @@ export function CorrectTimes({ lesson, durationMin, tz, now, value, onPick }: Co
   const viewer = useViewerClock();
   const viewerZone = viewer.tz;
   const { color } = useTheme();
-  const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
+  const note = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.ink2,
+  };
   const starts = correctStarts(lesson, durationMin, now);
   const current = value ?? lesson.starts_at;
   const day = dayLabel(localDate(new Date(lesson.starts_at), tz));

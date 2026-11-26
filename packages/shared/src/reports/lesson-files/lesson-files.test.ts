@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  LESSON_FILE_KINDS,
+  lessonFileKindSchema,
   lessonFileMediaOf,
   lessonFileRegisterSchema,
   lessonFileUploadSchema,
@@ -47,5 +49,12 @@ describe('portalLessonFileSchema', () => {
       media: 'pdf', visible_to_family: true, created_at: '2026-11-17T10:00:00.000Z',
     });
     expect('visible_to_family' in v).toBe(false);
+  });
+});
+
+describe('lessonFileKindSchema', () => {
+  it('accepts each lesson file kind and nothing else', () => {
+    expect(lessonFileKindSchema.options).toEqual([...LESSON_FILE_KINDS]);
+    expect(lessonFileKindSchema.validate('video')).toBe(false);
   });
 });

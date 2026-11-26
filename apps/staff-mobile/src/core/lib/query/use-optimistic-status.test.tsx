@@ -111,7 +111,9 @@ test('patchPath sends the row PATCH for resources without a /status route (stude
   client.setQueryData(studentKey, { id: 's1', status: 'trial', name: 'هدى' });
   const invalidate = jest.spyOn(client, 'invalidateQueries');
   const options = { path: '/students', patchPath: (id: string) => `/students/${id}` };
-  const { result } = await renderHook(() => useOptimisticStatus(options), { wrapper: queryWrapper(client) });
+  const { result } = await renderHook(() => useOptimisticStatus(options), {
+    wrapper: queryWrapper(client),
+  });
 
   await act(async () => result.current.mutate({ id: 's1', status: 'active' }));
   await waitFor(() => expect(result.current.isSuccess).toBe(true));

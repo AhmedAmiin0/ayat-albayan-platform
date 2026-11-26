@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { lastDayOf, monthOf, nextOpenMonth, planStatement, totalsOf, voidEffect } from './statement';
+import {
+  lastDayOf,
+  monthOf,
+  nextOpenMonth,
+  planStatement,
+  statementLineKindSchema,
+  totalsOf,
+  voidEffect,
+} from './statement';
 
 const SALARY = { amount: 1000, currency: 'EGP', startsOn: '2026-01-01' };
 const base = { month: '2026-10-01', tz: 'Asia/Riyadh', salary: SALARY, commissions: [], adjustments: [] };
@@ -8,7 +16,9 @@ describe('planStatement', () => {
   it('is the salary alone when nothing else is open', () => {
     const p = planStatement(base);
     expect(p.lines).toEqual([{ kind: 'salary', ref: null, amount: 1000, currency: 'EGP' }]);
-    expect(p.totals).toEqual({ EGP: { salary: 1000, commissions: 0, adjustments: 0, total: 1000 } });
+    expect(p.totals).toEqual({
+      EGP: { salary: 1000, commissions: 0, adjustments: 0, total: 1000 },
+    });
   });
 
   it('adds the commissions earned up to the month, per currency, never across them', () => {
@@ -105,5 +115,12 @@ describe('voidEffect', () => {
         rebuildDraft: false,
       });
     }
+  });
+});
+
+describe('statementLineKindSchema', () => {
+  it('names the three line kinds in statement order and nothing else', () => {
+    expect(statementLineKindSchema.options).toEqual(['salary', 'commission', 'adjustment']);
+    expect(statementLineKindSchema.validate('reversal')).toBe(false);
   });
 });

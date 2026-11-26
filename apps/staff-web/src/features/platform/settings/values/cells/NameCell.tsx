@@ -49,7 +49,16 @@ function HintLine({ hint, onDescribe }: { hint: string; onDescribe?: (() => void
 }
 
 /** The label, its tags and one truncated description line (full text in the title and dialog). */
-export function NameCell({ label, labelId, hint, settingKey, modified, isPublic, groupName, onDescribe }: NameCellProps) {
+export function NameCell({
+  label,
+  labelId,
+  hint,
+  settingKey,
+  modified,
+  isPublic,
+  groupName,
+  onDescribe,
+}: NameCellProps) {
   const confirm = settingKey ? VALUE_CONFIRM[settingKey] : undefined;
   const shown = isPublic ?? (settingKey ? settingDef(settingKey).public === true : false);
   return (

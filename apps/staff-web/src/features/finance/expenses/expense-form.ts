@@ -29,13 +29,18 @@ export function expenseForm(e: ExpenseView | null, today: string): ExpenseForm {
   };
 }
 
-export type ExpenseCheck = { ok: true; body: ExpenseBody } | { ok: false; errors: { amount?: string } };
+export type ExpenseCheck =
+  | { ok: true; body: ExpenseBody }
+  | { ok: false; errors: { amount?: string } };
 
 /** Field errors instead of a silent no-op: an empty, zero or badly written amount says why. */
 export function expenseBody(form: ExpenseForm, month: string): ExpenseCheck {
   const amount = parseAmount(form.amount);
   if (amount === null || amount <= 0)
-    return { ok: false, errors: { amount: form.amount.trim() ? t.payments.mobile.amountInvalid : t.common.required } };
+    return {
+      ok: false,
+      errors: { amount: form.amount.trim() ? t.payments.mobile.amountInvalid : t.common.required },
+    };
   const paidOn = form.paidOn || null;
   return {
     ok: true,

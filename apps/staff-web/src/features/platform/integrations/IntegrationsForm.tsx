@@ -52,7 +52,17 @@ export function IntegrationsForm({ items, query, onNote }: FormProps) {
       {INTEGRATION_GROUPS.map((group) => {
         const rows = shown.filter((i) => i.group === group);
         if (rows.length === 0) return null;
-        return <IntegrationGroup key={group} group={group} items={rows} draft={draft} invalid={invalid} onDraft={setDraft} onNote={onNote} />;
+        return (
+          <IntegrationGroup
+            key={group}
+            group={group}
+            items={rows}
+            draft={draft}
+            invalid={invalid}
+            onDraft={setDraft}
+            onNote={onNote}
+          />
+        );
       })}
       {save.isError && !confirming && <FormAlert>{t.common.error}</FormAlert>}
       {confirming && (

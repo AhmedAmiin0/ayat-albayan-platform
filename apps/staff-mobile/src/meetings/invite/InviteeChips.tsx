@@ -2,7 +2,13 @@ import { Pressable, View } from 'react-native';
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import type { DraftInvitee } from './invitee-draft';
 
-export function InviteeChips({ list, onRemove }: { list: readonly DraftInvitee[]; onRemove: (key: string) => void }) {
+export function InviteeChips({
+  list,
+  onRemove,
+}: {
+  list: readonly DraftInvitee[];
+  onRemove: (key: string) => void;
+}) {
   const { color } = useTheme();
   if (list.length === 0) return null;
   return (
@@ -26,8 +32,12 @@ export function InviteeChips({ list, onRemove }: { list: readonly DraftInvitee[]
             backgroundColor: color.lapisWash,
           }}
         >
-          <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}>{d.label}</AppText>
-          <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.lapis }}>×</AppText>
+          <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}>
+            {d.label}
+          </AppText>
+          <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.lapis }}>
+            ×
+          </AppText>
         </Pressable>
       ))}
     </View>

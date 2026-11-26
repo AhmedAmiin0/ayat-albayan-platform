@@ -81,7 +81,18 @@ export function LinkedText({ text, touch, a11y }: LinkedTextProps) {
       >
         {parts.some((part) => part.href)
           ? parts.map((part, i) =>
-              part.href ? <LinkSpan key={i} text={part.text} href={part.href} onHold={onHold} onFail={() => setFailed(true)} plain={!touch.has} /> : <Fragment key={i}>{draw(part.text)}</Fragment>,
+              part.href ? (
+                <LinkSpan
+                  key={i}
+                  text={part.text}
+                  href={part.href}
+                  onHold={onHold}
+                  onFail={() => setFailed(true)}
+                  plain={!touch.has}
+                />
+              ) : (
+                <Fragment key={i}>{draw(part.text)}</Fragment>
+              ),
             )
           : draw(text)}
       </ContentText>

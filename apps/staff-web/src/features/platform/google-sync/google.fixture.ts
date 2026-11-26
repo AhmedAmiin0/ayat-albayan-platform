@@ -19,7 +19,12 @@ export function googleStatus(over: Partial<GoogleStatusView> = {}): GoogleStatus
     settings: { enabled: true, mode: 'dry_run', window_days: 60 },
     redirect_uri: 'http://localhost:3000/integrations/google/callback',
     scopes: GOOGLE_SCOPES,
-    drive: { root_folder_id: null, root_folder_name: null, summary_sheet_id: null, confirmed_at: null },
+    drive: {
+      root_folder_id: null,
+      root_folder_name: null,
+      summary_sheet_id: null,
+      confirmed_at: null,
+    },
     discovery: {
       at: AT,
       calendars: [
@@ -77,7 +82,14 @@ export function googleStudents(): GoogleStudentMapRow[] {
 }
 
 export function googleItems(): GoogleSyncItemView[] {
-  const base = { google_id: null, attempts: 1, last_error: null, planned: null, updated_at: AT, skip_reason: null } as const;
+  const base = {
+    google_id: null,
+    attempts: 1,
+    last_error: null,
+    planned: null,
+    updated_at: AT,
+    skip_reason: null,
+  } as const;
   return [
     { ...base, id: 'item-1', kind: 'teacher_event', state: 'failed', subject: 'Student One 2026-10-22', last_error: 'HTTP 500' },
     {

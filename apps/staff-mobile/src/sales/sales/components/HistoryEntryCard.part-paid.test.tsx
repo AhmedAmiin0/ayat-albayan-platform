@@ -4,8 +4,30 @@ import { entry } from '@/sales/sales/testing/fixtures';
 import { HistoryEntryCard } from './HistoryEntryCard';
 
 // part_paid comes only to a self.sales_money viewer, and only when part-paid.
-const { id, package: pkg, status, starts_on, lessons_total, renews_on, ended_at, created_at, lessons_used, lessons_remaining } = entry({ status: 'unpaid' });
-const brief = { id, package: pkg, status, starts_on, lessons_total, renews_on, ended_at, created_at, lessons_used, lessons_remaining };
+const {
+  id,
+  package: pkg,
+  status,
+  starts_on,
+  lessons_total,
+  renews_on,
+  ended_at,
+  created_at,
+  lessons_used,
+  lessons_remaining,
+} = entry({ status: 'unpaid' });
+const brief = {
+  id,
+  package: pkg,
+  status,
+  starts_on,
+  lessons_total,
+  renews_on,
+  ended_at,
+  created_at,
+  lessons_used,
+  lessons_remaining,
+};
 const part = { paid: 80, price: 81, due: 1, currency: 'SAR' };
 
 test('with part_paid: «مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1»', async () => {

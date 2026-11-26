@@ -97,8 +97,17 @@ export function CreateSubscriptionDialog({ student: preset, initial, onClose, on
           </Field>
         </div>
         <NoCommissionNote startsOn={startsOn} usedBefore={usedBefore.value} />
-        <UsedBeforeField shown={usedBefore.shown} value={usedBefore.value} max={usedBefore.max} onChange={usedBefore.set} />
-        {save.isError && <FormAlert>{apiErrorText(save.error, { ...t.subscriptions.error, ...t.packagePayment.error })}</FormAlert>}
+        <UsedBeforeField
+          shown={usedBefore.shown}
+          value={usedBefore.value}
+          max={usedBefore.max}
+          onChange={usedBefore.set}
+        />
+        {save.isError && (
+          <FormAlert>
+            {apiErrorText(save.error, { ...t.subscriptions.error, ...t.packagePayment.error })}
+          </FormAlert>
+        )}
       </form>
     </Dialog>
   );

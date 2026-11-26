@@ -48,13 +48,22 @@ export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
         />
         <CustomPriceField price={sheet.custom} />
         <View style={{ gap: 6 }}>
-          <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}>{t.inbox.quote.preview}</AppText>
+          <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}>
+            {t.inbox.quote.preview}
+          </AppText>
           {text ? (
             <AppText
               testID="quote-preview"
               style={{
-                padding: 12, borderRadius: shape.radius.md, borderWidth: 1, borderColor: color.rule, backgroundColor: color.sunk,
-                fontFamily: type.ui[400], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink,
+                padding: 12,
+                borderRadius: shape.radius.md,
+                borderWidth: 1,
+                borderColor: color.rule,
+                backgroundColor: color.sunk,
+                fontFamily: type.ui[400],
+                fontSize: type.size.body,
+                lineHeight: type.lineHeight(type.size.body),
+                color: color.ink,
                 opacity: held ? 0.6 : 1,
               }}
             >

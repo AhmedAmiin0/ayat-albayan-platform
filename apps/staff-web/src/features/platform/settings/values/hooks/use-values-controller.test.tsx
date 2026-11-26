@@ -14,8 +14,20 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 function setup(canWrite = true) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   seedEntries(client);
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
-  return renderHook(() => useValuesController({ settings: SETTINGS, meta: {}, canWrite, entries: [], describe: vi.fn() }), { wrapper });
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
+  return renderHook(
+    () =>
+      useValuesController({
+        settings: SETTINGS,
+        meta: {},
+        canWrite,
+        entries: [],
+        describe: vi.fn(),
+      }),
+    { wrapper },
+  );
 }
 
 const patch = (key: string, body: object) => ['PATCH', `/config/entries/${key}`, body] as const;
@@ -108,10 +120,22 @@ describe('useValuesController', () => {
   it('without the entries in the cache, the save reads them first (a failed read fails the save)', async () => {
     apiFetch.mockRejectedValue(new Error('down'));
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
-    const { result } = renderHook(() => useValuesController({ settings: SETTINGS, meta: {}, canWrite: true, entries: [], describe: vi.fn() }), {
-      wrapper,
-    });
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    );
+    const { result } = renderHook(
+      () =>
+        useValuesController({
+          settings: SETTINGS,
+          meta: {},
+          canWrite: true,
+          entries: [],
+          describe: vi.fn(),
+        }),
+      {
+        wrapper,
+      },
+    );
     act(() => result.current.api.apply('fx_fresh_hours', { fxFreshHours: '6' }));
     await waitFor(() => expect(result.current.api.status('fx_fresh_hours').state).toBe('failed'));
     expect(apiFetch).toHaveBeenCalledWith('/config/entries');

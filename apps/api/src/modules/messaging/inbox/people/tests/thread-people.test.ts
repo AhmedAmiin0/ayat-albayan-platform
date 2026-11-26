@@ -8,9 +8,8 @@ import { familyTagsOf, threadPeople } from '@/modules/messaging/inbox/people/thr
 function deps(results: Parameters<typeof fakeDb>[0]) {
   const { db, calls, argsOf } = fakeDb(results);
   const empty = (id: string) => ({ student_id: id, remaining: 0, current: null, packages: [] });
-  const packages = {
-    studentBalance: vi.fn(async (id: string) => empty(id)),
-  } as unknown as PackagesService;
+  const many = vi.fn(async (kids: { id: string }[]) => kids.map((k) => [k, empty(k.id)]));
+  const packages = { studentBalances: many } as unknown as PackagesService;
   const balances = { forStudents: vi.fn(async () => []) } as unknown as BalanceRepo;
   return { deps: { db, packages, balances }, calls, argsOf, packages, balances };
 }
@@ -19,18 +18,34 @@ describe('threadPeople (R-SUB-01)', () => {
   it('a lead-only thread: the lead, no guardian, no reads', async () => {
     const t = deps({});
     const people = await threadPeople(t.deps, threadRow());
-    expect(people).toEqual({ guardian: null, lead: { id: threadRow().lead_id, status: 'new' }, students: [] });
+    expect(people).toEqual({
+      guardian: null,
+      lead: { id: threadRow().lead_id, status: 'new' },
+      students: [],
+    });
     expect(t.calls).toEqual([]);
   });
 
   it('a guardian: every child, oldest first, each with its S6 balance', async () => {
-    const kids = [{ id: 's1', code: 'AB-0001', name: 'ياسمين', status: 'active', teacher: null }, { id: 's2', code: null, name: 'جود', status: 'trial', teacher: null }];
+    const kids = [
+      { id: 's1', code: 'AB-0001', name: 'ياسمين', status: 'active', teacher: null },
+      { id: 's2', code: null, name: 'جود', status: 'trial', teacher: null },
+    ];
     const t = deps({ students: [{ data: kids }] });
-    const people = await threadPeople(t.deps, threadRow({ guardian_id: 'g1', guardian_name: 'أم ياسمين', lead_id: null }));
+    const people = await threadPeople(
+      t.deps,
+      threadRow({ guardian_id: 'g1', guardian_name: 'أم ياسمين', lead_id: null }),
+    );
     expect(people.guardian).toEqual({ id: 'g1', name: 'أم ياسمين' });
-    expect(people.students.map((s) => [s.id, s.code, s.subscription])).toEqual([['s1', 'AB-0001', null], ['s2', '', null]]);
-    expect([t.argsOf('students', 'eq'), t.argsOf('students', 'order')]).toEqual([['guardian_id', 'g1'], ['created_at']]);
-    expect(t.packages.studentBalance).toHaveBeenCalledTimes(2);
+    expect(people.students.map((s) => [s.id, s.code, s.subscription])).toEqual([
+      ['s1', 'AB-0001', null],
+      ['s2', '', null],
+    ]);
+    expect([t.argsOf('students', 'eq'), t.argsOf('students', 'order')]).toEqual([
+      ['guardian_id', 'g1'],
+      ['created_at'],
+    ]);
+    expect(t.packages.studentBalances).toHaveBeenCalledOnce();
   });
 
   it('no thread row → nobody', async () => {

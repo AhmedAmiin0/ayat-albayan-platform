@@ -28,7 +28,14 @@ const point = (id: string, day: number, overall: number | null): GradePoint => (
   lesson_id: `l-${id}`,
   starts_at: `2026-09-${String(day).padStart(2, '0')}T13:00:00.000Z`,
   overall,
-  rubrics: { recitation: 5, memorization: 4, revision: 3, tajweed: 1, engagement: 2, commitment: null },
+  rubrics: {
+    recitation: 5,
+    memorization: 4,
+    revision: 3,
+    tajweed: 1,
+    engagement: 2,
+    commitment: null,
+  },
 });
 const DATA: StudentReportsResponse = {
   items: [item('b'), item('a', { pdf_status: 'failed', lesson_no: null, version: 2 })],
@@ -41,7 +48,9 @@ const DATA: StudentReportsResponse = {
 function renderPage(data: StudentReportsResponse, role: 'admin' | 'teacher' = 'admin') {
   apiFetch.mockImplementation((path: string) => (path.startsWith('/students/s-1/reports') ? Promise.resolve(data) : Promise.resolve({ url: 'https://x/pdf' })));
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <StudentReportsPage studentId="s-1" name="سهيلة" role={role} tz="Asia/Riyadh" />
     </QueryClientProvider>,
   );

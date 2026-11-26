@@ -7,7 +7,13 @@ import { ViewHead } from '@/features/sales/sales/ViewHead';
 
 export type MoneyView = 'earnings' | 'statements' | 'payments';
 
-export function SalesMoney({ view, onView }: { view: MoneyView; onView: (view: MoneyView) => void }) {
+export function SalesMoney({
+  view,
+  onView,
+}: {
+  view: MoneyView;
+  onView: (view: MoneyView) => void;
+}) {
   return (
     <>
       <ViewHead

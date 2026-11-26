@@ -1,7 +1,7 @@
 // The shared mobile kit's own lint blocks (flat-config shape), read by oxlint.config.ts:
 // docs/31b-oxlint-mapping.md. Its modules import each other by
 // relative path (no `@/` alias: two apps consume these sources).
-import { forbiddenImports, reactRestrictions, syntaxExempt } from '@ab/config/lint';
+import { forbiddenImports, LOCAL_HOOKS, reactRestrictions, syntaxExempt } from '@ab/config/lint';
 
 const SRC = ['src/**/*.{ts,tsx}'];
 const TSX = ['src/**/*.tsx'];
@@ -34,9 +34,10 @@ export default {
       rules: { 'no-restricted-imports': ['error', { paths: [TEXT] }] },
     },
     syntaxExempt({ files: FETCH, http: true }),
-    // docs/32 R8: a component calls the API through a query or mutation hook.
+    // docs/32 R8: a component calls the API through a query or mutation hook; its own local hook
+    // does not call it either (docs/63 §3).
     forbiddenImports({
-      files: TSX,
+      files: [...TSX, ...LOCAL_HOOKS],
       bans: [
         {
           regex: '(^|/)http/api$',

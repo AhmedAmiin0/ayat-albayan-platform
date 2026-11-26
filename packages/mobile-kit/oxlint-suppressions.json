@@ -31,11 +31,6 @@
       "count": 2
     }
   },
-  "src/auth/forgot/ForgotPassword.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/auth/forgot/auth-errors.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -71,7 +66,7 @@
   },
   "src/auth/use-auth-gate.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -87,12 +82,7 @@
   },
   "src/auth/verify-role.ts": {
     "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/lib/connectivity/connectivity-machine.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
+      "count": 3
     }
   },
   "src/lib/connectivity/connectivity-machine.ts": {
@@ -127,7 +117,7 @@
   },
   "src/lib/connectivity/probe.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/lib/http/api.connectivity.test.ts": {
@@ -142,7 +132,7 @@
   },
   "src/lib/http/api.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "typescript/no-unsafe-return": {
       "count": 1
@@ -169,11 +159,6 @@
       "count": 2
     }
   },
-  "src/lib/i18n/i18n-overrides.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/lib/i18n/i18n-overrides.ts": {
     "no-restricted-globals": {
       "count": 1
@@ -182,11 +167,6 @@
       "count": 2
     },
     "typescript/no-unsafe-argument": {
-      "count": 1
-    }
-  },
-  "src/lib/i18n/locale-switch.phone.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -210,11 +190,6 @@
   },
   "src/lib/query/pull-refresh.ts": {
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/lib/query/query-client.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -249,18 +224,8 @@
       "count": 1
     }
   },
-  "src/push/live-session.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/push/permission.test.ts": {
     "typescript/no-unsafe-enum-assignment": {
-      "count": 1
-    }
-  },
-  "src/push/registerPush.device-key.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -306,24 +271,9 @@
       "count": 4
     }
   },
-  "src/ui/call/call-icons.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/ui/connecting/BarCard.test.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/ui/connecting/BarCard.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/ui/connecting/CheckBadge.test.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unnecessary-boolean-literal-compare": {
       "count": 1
@@ -338,16 +288,13 @@
     }
   },
   "src/ui/connecting/ConnectingBar.test.tsx": {
-    "stylistic/max-len": {
-      "count": 5
-    },
     "typescript/no-unnecessary-boolean-literal-compare": {
       "count": 1
     }
   },
   "src/ui/connecting/ConnectingBar.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/no-restricted-syntax": {
       "count": 2
@@ -355,7 +302,7 @@
   },
   "src/ui/connecting/ConnectingDots.test.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unnecessary-boolean-literal-compare": {
       "count": 1
@@ -363,17 +310,12 @@
   },
   "src/ui/connecting/ConnectingDots.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/ui/connecting/HeaderConnectingBar.tsx": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/ui/connecting/TopConnectingBar.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/ui/connecting/TopConnectingBar.tsx": {
@@ -383,7 +325,7 @@
   },
   "src/ui/connecting/use-bar-phase.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/ui/connecting/use-bar-reveal.ts": {
@@ -391,7 +333,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "typescript/no-confusing-void-expression": {
       "count": 1
@@ -423,7 +365,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/ui/form/Field/tests/Field.test.tsx": {
@@ -436,7 +378,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/ui/layout/KeyboardFrame.tsx": {
@@ -449,7 +391,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "src/ui/layout/Screen/Screen.tsx": {
@@ -457,7 +399,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -491,22 +433,7 @@
       "count": 1
     }
   },
-  "src/ui/motion/use-cycle.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/ui/motion/use-cycle.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/ui/motion/use-pulse.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/ui/primitives/AppText.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -516,25 +443,15 @@
       "count": 1
     }
   },
-  "src/ui/primitives/Avatar.test.tsx": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
   "src/ui/primitives/Avatar.tsx": {
     "stylistic/max-len": {
-      "count": 8
+      "count": 7
     },
     "ab/no-restricted-syntax": {
       "count": 1
     }
   },
   "src/ui/primitives/Button.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/ui/primitives/Chevron.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -566,12 +483,12 @@
   },
   "src/ui/startup/RetryButton.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/ui/startup/StartupEmblem.test.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unnecessary-boolean-literal-compare": {
       "count": 1
@@ -584,7 +501,7 @@
   },
   "src/ui/startup/StartupScreen.test.tsx": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     }
   },
   "src/ui/startup/StartupScreen.tsx": {
@@ -593,15 +510,7 @@
     }
   },
   "src/ui/startup/StartupStatus.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/ui/startup/startup-mode.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -612,7 +521,7 @@
   },
   "src/ui/surface/inset.tsx": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     },
     "ab/no-restricted-syntax": {
       "count": 3

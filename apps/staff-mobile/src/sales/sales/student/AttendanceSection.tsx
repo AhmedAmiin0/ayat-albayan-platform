@@ -20,7 +20,13 @@ export function AttendanceSection({ studentId, attendance }: AttendanceSectionPr
   const tz = useViewerTz();
   const to = useStudentHref();
   const s = t.sales.student;
-  const text = { flex: 1, fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink };
+  const text = {
+    flex: 1,
+    fontFamily: type.ui[500],
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.ink,
+  };
   return (
     <View style={{ gap: 8 }}>
       <SectionLabel>{s.attendance}</SectionLabel>

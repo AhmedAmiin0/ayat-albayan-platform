@@ -29,7 +29,9 @@ async function fillAll() {
   await fireEvent.press(screen.getByRole('radio', { name: t.enums.attendance.on_time }));
   for (const radio of screen.getAllByRole('radio', { name: t.enums.grade.excellent })) await fireEvent.press(radio);
   await fireEvent.changeText(screen.getByLabelText(t.reports.recited), 'الفاتحة');
-  const [newMemorization] = screen.getAllByLabelText(t.reports.newMemorization).filter((n) => n.props.multiline);
+  const [newMemorization] = screen
+    .getAllByLabelText(t.reports.newMemorization)
+    .filter((n) => n.props.multiline);
   if (newMemorization) await fireEvent.changeText(newMemorization, 'الملك 1-5');
   const [revision] = screen.getAllByLabelText(t.reports.revision).filter((n) => n.props.multiline);
   if (revision) await fireEvent.changeText(revision, 'النبأ');

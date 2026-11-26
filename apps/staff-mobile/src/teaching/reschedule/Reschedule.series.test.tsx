@@ -21,7 +21,10 @@ beforeEach(() => {
 afterEach(() => jest.useRealTimers());
 
 async function open(l: ReturnType<typeof lesson>) {
-  await renderWithQuery(<RescheduleSheet lesson={l} onClose={jest.fn()} />, createTestQueryClient());
+  await renderWithQuery(
+    <RescheduleSheet lesson={l} onClose={jest.fn()} />,
+    createTestQueryClient(),
+  );
 }
 
 test('a lesson three weeks out opens on its own week (verifier: the picker only offered the next 14 days)', async () => {

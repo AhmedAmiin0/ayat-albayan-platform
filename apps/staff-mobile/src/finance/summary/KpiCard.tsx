@@ -17,8 +17,17 @@ export function KpiCard({ label, value, tone = 'ink' }: KpiCardProps) {
       accessibilityLabel={`${label}: ${value}`}
       style={{ flexGrow: 1, flexBasis: '45%', gap: 4, padding: 12, borderRadius: shape.radius.lg, borderWidth: 1, borderColor: color.rule, backgroundColor: color.raised }}
     >
-      <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>{label}</AppText>
-      <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.h3, color: tone === 'bad' ? color.bad : color.ink, fontVariant: ['tabular-nums'] }}>
+      <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
+        {label}
+      </AppText>
+      <AppText
+        style={{
+          fontFamily: type.ui[700],
+          fontSize: type.size.h3,
+          color: tone === 'bad' ? color.bad : color.ink,
+          fontVariant: ['tabular-nums'],
+        }}
+      >
         {value}
       </AppText>
     </View>
