@@ -2,7 +2,12 @@ import { BadRequestException, ConflictException, Logger } from '@nestjs/common';
 import { PostgrestError } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
 import { answerOf } from '@/common/db/testing/db-answer';
-import { pgError, uniqueViolationOn } from '@/common/db/errors';
+import {
+  isUniqueViolation,
+  pgError,
+  UNIQUE_VIOLATION,
+  uniqueViolationOn,
+} from '@/common/db/errors';
 
 const pg = (code: string, message = 'boom', details = 'd') =>
   new PostgrestError({ code, message, details, hint: '' });
@@ -75,5 +80,19 @@ describe('uniqueViolationOn', () => {
     expect(uniqueViolationOn(unique, 'leads_phone_key')).toBe(true);
     expect(uniqueViolationOn(unique, 'other_key')).toBe(false);
     expect(uniqueViolationOn(pg('23503', unique.message), 'leads_phone_key')).toBe(false);
+  });
+});
+
+describe('isUniqueViolation', () => {
+  it('is true for SQLSTATE 23505 only', () => {
+    expect(UNIQUE_VIOLATION).toBe('23505');
+    expect(isUniqueViolation(unique)).toBe(true);
+    expect(isUniqueViolation(pg('23503'))).toBe(false);
+  });
+
+  it('is false without an error or a code', () => {
+    expect(isUniqueViolation(null)).toBe(false);
+    expect(isUniqueViolation(undefined)).toBe(false);
+    expect(isUniqueViolation({})).toBe(false);
   });
 });
