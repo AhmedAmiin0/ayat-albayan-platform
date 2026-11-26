@@ -348,7 +348,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 9
+      "count": 7
     }
   },
   "src/features/finance/expenses/expense-columns.tsx": {

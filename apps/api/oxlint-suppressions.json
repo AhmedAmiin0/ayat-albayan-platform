@@ -1193,11 +1193,6 @@
       "count": 5
     }
   },
-  "src/modules/finance/expenses/expense-categories.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/finance/expenses/expense-receipts.ts": {
     "stylistic/max-len": {
       "count": 1
