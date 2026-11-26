@@ -19,7 +19,8 @@ type Props = {
 export function ChatReceiptGrid({ sub, picked, onPicked, bind = {} }: Props) {
   const list = useQuery(chatReceiptsQuery(sub.student.id, bind));
   const copy = useMutation({
-    mutationFn: (r: SalesChatReceipt) => receiptFromChat({ subscriptionId: sub.id, messageId: r.message_id, ...bind }),
+    mutationFn: (r: SalesChatReceipt) =>
+      receiptFromChat({ subscriptionId: sub.id, messageId: r.message_id, ...bind }),
     onSuccess: (res, r) =>
       onPicked({ kind: 'chat', messageId: r.message_id, subscriptionId: sub.id, path: res.receipt_path, label: chatReceiptLabel(r) }),
   });

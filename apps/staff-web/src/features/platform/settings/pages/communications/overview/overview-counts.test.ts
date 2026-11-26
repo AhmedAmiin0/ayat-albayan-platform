@@ -10,7 +10,9 @@ describe('«ماذا يُرسل الآن» counts', () => {
   it('one row per audience, in the audience tabs order, named as there', () => {
     const rows = audienceCounts(views('switch_off'));
     expect(rows.map((r) => r.audience)).toEqual([...NOTIFICATION_AUDIENCES]);
-    expect(rows.map((r) => r.label)).toEqual(NOTIFICATION_AUDIENCES.map((a) => t.notificationCatalogue.audience[a]));
+    expect(rows.map((r) => r.label)).toEqual(
+      NOTIFICATION_AUDIENCES.map((a) => t.notificationCatalogue.audience[a]),
+    );
   });
 
   it('counts each automatic row once per audience it reaches, by its own state; manual rows are left out', () => {
@@ -27,6 +29,8 @@ describe('«ماذا يُرسل الآن» counts', () => {
     const off = views('switch_off');
     const on = off.filter((e) => !e.manual && e.state === 'on');
     expect(on.every((e) => !e.channels.includes('whatsapp'))).toBe(true);
-    expect(audienceCounts([])).toEqual(NOTIFICATION_AUDIENCES.map((a) => expect.objectContaining({ audience: a, on: 0, off: 0 })));
+    expect(audienceCounts([])).toEqual(
+      NOTIFICATION_AUDIENCES.map((a) => expect.objectContaining({ audience: a, on: 0, off: 0 })),
+    );
   });
 });

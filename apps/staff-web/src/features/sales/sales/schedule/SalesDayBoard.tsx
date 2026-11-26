@@ -22,7 +22,13 @@ export function byTeacher(lessons: readonly SalesScheduleLesson[]): TeacherDay[]
  * Sales' read-only day board: a row per teacher (the admin DayBoard's layout: name at the start, the
  * day's chips beside it), without the availability track, free gaps or the lesson drawer.
  */
-export function SalesDayBoard({ lessons, now }: { lessons: readonly SalesScheduleLesson[]; now: Date }) {
+export function SalesDayBoard({
+  lessons,
+  now,
+}: {
+  lessons: readonly SalesScheduleLesson[];
+  now: Date;
+}) {
   return (
     <section aria-label={t.schedule.dayBoard} className="border-t border-rule">
       {byTeacher(lessons).map((row) => (

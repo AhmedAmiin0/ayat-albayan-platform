@@ -9,7 +9,10 @@ import { useValues } from '@/features/platform/settings/values/values-context';
 
 
 /** Undefined with neither text nor edit right; `hideText` when the impact note repeats it. */
-export function useSheetDescription(settingKey: SettingKey, hideText: boolean): ReactNode | undefined {
+export function useSheetDescription(
+  settingKey: SettingKey,
+  hideText: boolean,
+): ReactNode | undefined {
   const api = useValues();
   const rights = useDescribeRights();
   const words = settingText(settingKey);

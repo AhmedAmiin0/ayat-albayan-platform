@@ -36,7 +36,8 @@ function open(rows: MyCommissionRow[], over: { total?: number; wallet?: MyEarnin
   );
   return client;
 }
-const calls = (prefix: string) => apiFetch.mock.calls.filter(([p]) => String(p).startsWith(prefix)).length;
+const calls = (prefix: string) =>
+  apiFetch.mock.calls.filter(([p]) => String(p).startsWith(prefix)).length;
 
 afterEach(() => {
   apiFetch.mockReset();

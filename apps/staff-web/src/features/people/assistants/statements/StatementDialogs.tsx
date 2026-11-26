@@ -9,7 +9,13 @@ import { StatementLinesDialog } from './StatementLinesDialog';
 export type StatementDialog = { statement: AssistantStatementView; kind: 'details' | 'pay' | 'reopen' | 'unpay' };
 
 /** The dialog behind a statement row action: details, pay (receipt), reopen, un-pay (with a reason). */
-export function StatementDialogs({ open, onClose }: { open: StatementDialog; onClose: () => void }) {
+export function StatementDialogs({
+  open,
+  onClose,
+}: {
+  open: StatementDialog;
+  onClose: () => void;
+}) {
   const queryClient = useQueryClient();
   const { statement, kind } = open;
   const fix = useMutation({

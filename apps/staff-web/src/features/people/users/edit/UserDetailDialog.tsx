@@ -15,7 +15,16 @@ export function UserDetailDialog({ userId, canWrite, onClose, onDone }: UserDeta
   const user = useQuery(userQuery(userId));
   const options = useQuery(roleOptionsQuery);
   if (user.data && !options.isPending) {
-    return <UserEditor key={user.data.id} user={user.data} options={options.data ?? []} canWrite={canWrite} onClose={onClose} onDone={onDone} />;
+    return (
+      <UserEditor
+        key={user.data.id}
+        user={user.data}
+        options={options.data ?? []}
+        canWrite={canWrite}
+        onClose={onClose}
+        onDone={onDone}
+      />
+    );
   }
   return (
     <Dialog title={t.users.detail.title} onClose={onClose}>

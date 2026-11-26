@@ -20,10 +20,14 @@ import { t } from '@ab/web-kit';
 /** One value per camelCase field; a nullable number also has `<field>On` (late cancel ON/OFF). */
 export type SettingsForm = Record<string, string | boolean>;
 export type SettingsErrors = Partial<Record<string, string>>;
-export type SettingsResult = { ok: true; value: SettingsUpdate } | { ok: false; errors: SettingsErrors };
+export type SettingsResult =
+  | { ok: true; value: SettingsUpdate }
+  | { ok: false; errors: SettingsErrors };
 
 /** The keys the generic form edits, in page order (SETTINGS_LAYOUT, section by section). */
-export const FORM_KEYS: SettingKey[] = Object.values(SETTINGS_LAYOUT).flat().filter((k) => settingDef(k).form !== false);
+export const FORM_KEYS: SettingKey[] = Object.values(SETTINGS_LAYOUT)
+  .flat()
+  .filter((k) => settingDef(k).form !== false);
 
 export const onKey = (field: string): string => `${field}On`;
 export const str = (form: SettingsForm, key: string): string => {
@@ -73,7 +77,10 @@ const phone = (v: string): string => {
 };
 
 /** A json setting's object: the filled boxes only; null (unset) when the setting may be and none is filled. */
-function shapeValue(def: JsonDef, input: { form: SettingsForm; field: string }): Record<string, string> | null {
+function shapeValue(
+  def: JsonDef,
+  input: { form: SettingsForm; field: string },
+): Record<string, string> | null {
   const out: Record<string, string> = {};
   for (const f of def.shape) {
     const v = str(input.form, shapeId(input.field, f.name)).trim();
@@ -104,7 +111,10 @@ function errorText(def: SettingDef, message: string): string {
  * The form as one PATCH, validated with the API's own (registry-generated) schema: every form key,
  * or only `keys` (a page sends just what it changed, so it never rewrites another page's values).
  */
-export function settingsUpdate(form: SettingsForm, keys: readonly SettingKey[] = FORM_KEYS): SettingsResult {
+export function settingsUpdate(
+  form: SettingsForm,
+  keys: readonly SettingKey[] = FORM_KEYS,
+): SettingsResult {
   const body: Record<string, unknown> = {};
   for (const key of keys) {
     const field = SETTING_FIELD_OF[key];

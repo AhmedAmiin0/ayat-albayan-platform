@@ -48,8 +48,15 @@ export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
     const required = textRequired(k, values.attendance, report.version);
     const missing = required && s.problem === 'missing_text' && !values[k].trim();
     return (
-      <ReportTextField key={k} label={t.reports[k]} value={values[k]} onChange={(v) => s.set(k, v)} disabled={locked}
-        required={required} error={missing ? t.common.required : undefined} />
+      <ReportTextField
+        key={k}
+        label={t.reports[k]}
+        value={values[k]}
+        onChange={(v) => s.set(k, v)}
+        disabled={locked}
+        required={required}
+        error={missing ? t.common.required : undefined}
+      />
     );
   };
 

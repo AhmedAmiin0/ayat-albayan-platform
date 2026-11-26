@@ -29,8 +29,10 @@ function open() {
     </QueryClientProvider>,
   );
   const dialog = within(screen.getByRole('dialog', { name: t.subscriptions.new }));
-  const day = (value: string) => fireEvent.change(dialog.getByLabelText(t.subscriptions.startsOn), { target: { value } });
-  const more = () => fireEvent.click(dialog.getByRole('button', { name: t.salesMoney.usedBeforeMore }));
+  const day = (value: string) =>
+    fireEvent.change(dialog.getByLabelText(t.subscriptions.startsOn), { target: { value } });
+  const more = () =>
+    fireEvent.click(dialog.getByRole('button', { name: t.salesMoney.usedBeforeMore }));
   const stepper = () => dialog.queryByRole('group', { name: t.salesMoney.usedBefore });
   const save = () => fireEvent.click(dialog.getByRole('button', { name: t.common.save }));
   return { dialog, day, more, stepper, save };

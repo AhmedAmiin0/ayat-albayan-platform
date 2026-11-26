@@ -14,7 +14,12 @@ function queryString(filters: StudentRecordingFilters, page: number, pageSize: n
 }
 
 /** GET /students/:id/recordings (admin, the teacher, an assigned assistant): newest first. */
-export const studentRecordingsQuery = (input: { studentId: string; filters: StudentRecordingFilters; page: number; pageSize?: number }) =>
+export const studentRecordingsQuery = (input: {
+  studentId: string;
+  filters: StudentRecordingFilters;
+  page: number;
+  pageSize?: number;
+}) =>
   queryOptions({
     queryKey: recordingKeys.page({ ...input, pageSize: input.pageSize ?? RECORDINGS_PAGE_SIZE }),
     queryFn: () =>

@@ -21,7 +21,13 @@ export interface IntegrationsPanelProps {
 }
 
 /** A saved value wins over the server's env and clearing restores it; secrets are write-only. */
-export function IntegrationsPanel({ query, onSaved, groups, title, intro }: IntegrationsPanelProps) {
+export function IntegrationsPanel({
+  query,
+  onSaved,
+  groups,
+  title,
+  intro,
+}: IntegrationsPanelProps) {
   const list = useQuery(integrationsQuery);
   if (!(groups ? groupsMatch(groups)(query) : integrationsMatch(query))) return null;
   const items = groups ? list.data?.filter((i) => groups.includes(i.group)) : list.data;

@@ -3,7 +3,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { ConfirmDialog } from './ConfirmDialog';
 
-const base = { title: t.expenses.deleteConfirm, confirmLabel: t.common.delete, pending: false, error: null, onConfirm: vi.fn(), onClose: vi.fn() };
+const base = {
+  title: t.expenses.deleteConfirm,
+  confirmLabel: t.common.delete,
+  pending: false,
+  error: null,
+  onConfirm: vi.fn(),
+  onClose: vi.fn(),
+};
 
 describe('ConfirmDialog on phones', () => {
   it('a plain yes / no stays a compact floating card', () => {

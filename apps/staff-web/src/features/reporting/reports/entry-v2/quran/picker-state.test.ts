@@ -3,7 +3,11 @@ import { describe, expect, it } from 'vitest';
 import { clampRange, pickTarget, surahStart } from './picker-state';
 
 const memory: MemoryView = {
-  last: { recited: null, new: { surah: 67, from: 1, to: 15 }, revision: { surah: 114, from: 1, to: 6 } },
+  last: {
+    recited: null,
+    new: { surah: 67, from: 1, to: 15 },
+    revision: { surah: 114, from: 1, to: 6 },
+  },
   recent_surahs: [67, 68],
 };
 
@@ -35,8 +39,16 @@ describe('picker state (surah / ayah range)', () => {
 
   it('a picked surah is the whole surah; the one already picked keeps its range', () => {
     expect(surahStart(null, 67)).toEqual({ surah: 67, from: 1, to: 30 });
-    expect(surahStart({ surah: 67, from: 16, to: 22 }, 67)).toEqual({ surah: 67, from: 16, to: 22 });
-    expect(surahStart({ surah: 67, from: 16, to: 22 }, 112)).toEqual({ surah: 112, from: 1, to: 4 });
+    expect(surahStart({ surah: 67, from: 16, to: 22 }, 67)).toEqual({
+      surah: 67,
+      from: 16,
+      to: 22,
+    });
+    expect(surahStart({ surah: 67, from: 16, to: 22 }, 112)).toEqual({
+      surah: 112,
+      from: 1,
+      to: 4,
+    });
   });
 
   it('another part of a track continues after today’s last part, not the history', () => {

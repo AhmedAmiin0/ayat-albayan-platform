@@ -91,7 +91,11 @@ export const receiptFromChat = (body: Bind & { subscriptionId: string; messageId
   apiSend<SalesReceiptCopied>('POST', '/sales/payments/receipt-from-chat', body);
 
 /** The admin's uploadReceipt, through the sales signed URL (the package must be her student's). */
-export async function uploadSalesReceipt(input: { subscriptionId: string; file: File; bind?: Bind }): Promise<string> {
+export async function uploadSalesReceipt(input: {
+  subscriptionId: string;
+  file: File;
+  bind?: Bind;
+}): Promise<string> {
   const { file } = input;
   const signed = await apiSend<SignedUpload>('POST', '/sales/payments/receipt-upload-url', {
     subscriptionId: input.subscriptionId,

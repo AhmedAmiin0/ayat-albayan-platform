@@ -18,8 +18,13 @@ export const staffUsersQuery = queryOptions({
   queryFn: () => apiFetch<StaffUserView[]>('/roles/staff-users'),
 });
 
-export function saveRole(input: { id: string | null; body: RoleCreate | RoleUpdate }): Promise<RoleView> {
-  return input.id ? apiSend<RoleView>('PATCH', `/roles/${input.id}`, input.body) : apiSend<RoleView>('POST', '/roles', input.body);
+export function saveRole(input: {
+  id: string | null;
+  body: RoleCreate | RoleUpdate;
+}): Promise<RoleView> {
+  return input.id
+    ? apiSend<RoleView>('PATCH', `/roles/${input.id}`, input.body)
+    : apiSend<RoleView>('POST', '/roles', input.body);
 }
 
 export const deleteRole = (id: string) => apiSend('DELETE', `/roles/${id}`);

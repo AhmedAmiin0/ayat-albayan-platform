@@ -14,7 +14,14 @@ export interface ValuesHeadProps {
   phone: boolean;
 }
 
-export function ValuesHead({ canWrite, counts, unsaved, onUnsaved, onAdd, phone }: ValuesHeadProps) {
+export function ValuesHead({
+  canWrite,
+  counts,
+  unsaved,
+  onUnsaved,
+  onAdd,
+  phone,
+}: ValuesHeadProps) {
   const summary =
     counts &&
     v.summary

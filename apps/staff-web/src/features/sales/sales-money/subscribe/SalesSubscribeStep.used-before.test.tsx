@@ -56,7 +56,11 @@ describe('lessons used before the platform, in «اشتراك جديد»', () =>
     more(2);
     save();
     await vi.waitFor(() => expect(creates()).toHaveLength(1));
-    expect(creates()[0]).toMatchObject({ startsOn: past, alreadyStarted: true, lessonsUsedBefore: 2 });
+    expect(creates()[0]).toMatchObject({
+      startsOn: past,
+      alreadyStarted: true,
+      lessonsUsedBefore: 2,
+    });
   });
 
   it('unticking the box puts it back to 0, and 0 is not sent', async () => {

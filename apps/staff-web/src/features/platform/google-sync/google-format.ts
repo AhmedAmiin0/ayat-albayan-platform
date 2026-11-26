@@ -54,7 +54,8 @@ export function skipLabel(reason: GoogleSkipReason): string {
 }
 
 /** A stored error code in MSA words (unknown codes keep the code for support). */
-export const errorText = (code: string): string => fill(t.googleSync.errors[googleErrorKey(code)], { code });
+export const errorText = (code: string): string =>
+  fill(t.googleSync.errors[googleErrorKey(code)], { code });
 
 /** The OAuth return (?google=connected | ?google=error&reason=…) as a toast, or null. */
 export function oauthReturnNote(search: string): { message: string; tone: 'info' | 'error' } | null {
@@ -64,6 +65,8 @@ export function oauthReturnNote(search: string): { message: string; tone: 'info'
   if (google !== 'error') return null;
   const code = params.get('reason') ?? '';
   const reasons = t.googleSync.connection.reasons;
-  const reason = Object.hasOwn(reasons, code) ? reasons[code as keyof typeof reasons] : reasons.exchange;
+  const reason = Object.hasOwn(reasons, code)
+    ? reasons[code as keyof typeof reasons]
+    : reasons.exchange;
   return { message: fill(t.googleSync.connection.failed, { reason }), tone: 'error' };
 }

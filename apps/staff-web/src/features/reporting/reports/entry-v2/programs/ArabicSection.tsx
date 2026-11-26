@@ -10,7 +10,8 @@ const arabicOf = (c: ReportContent): ArabicContent => c.arabic ?? arabicContentS
 export function ArabicSection({ s }: { s: ReportEntryV2State }) {
   const v2 = t.reports.v2;
   const a = arabicOf(s.values.content);
-  const change = (next: Partial<ArabicContent>) => s.setContent((c) => ({ ...c, arabic: { ...arabicOf(c), ...next } }));
+  const change = (next: Partial<ArabicContent>) =>
+    s.setContent((c) => ({ ...c, arabic: { ...arabicOf(c), ...next } }));
   return (
     <section aria-label={t.enums.program.arabic} className={CARD}>
       <TopicField label={v2.topic} value={a.topic} onChange={(topic) => change({ topic })} invalid={s.problem === 'missing_topic'} required />

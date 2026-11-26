@@ -28,15 +28,23 @@ const uploadToSignedUrl = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl }) } } }));
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (
-    <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>
-  ),
+  Link: ({
+    to,
+    search,
+    children,
+  }: {
+    to: string;
+    search: Record<string, string>;
+    children: ReactNode;
+  }) => <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>,
 }));
 
 function renderBooking() {
   apiFetch.mockImplementation(respond);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <BookingPage search={{ studentId: STUDENT_ID }} onOpenStudent={vi.fn()} />
     </QueryClientProvider>,
   );

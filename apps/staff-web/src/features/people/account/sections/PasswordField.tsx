@@ -13,8 +13,20 @@ export interface PasswordFieldProps {
 export function PasswordField({ value, onValue, error, label, hint, fresh }: PasswordFieldProps) {
   const current = label === undefined;
   return (
-    <Field label={label ?? t.account.currentPassword} hint={current ? t.account.currentPasswordHint : hint} error={error} required>
-      {(p) => <PasswordInput {...p} value={value} onValue={onValue} autoComplete={fresh ? 'new-password' : 'current-password'} />}
+    <Field
+      label={label ?? t.account.currentPassword}
+      hint={current ? t.account.currentPasswordHint : hint}
+      error={error}
+      required
+    >
+      {(p) => (
+        <PasswordInput
+          {...p}
+          value={value}
+          onValue={onValue}
+          autoComplete={fresh ? 'new-password' : 'current-password'}
+        />
+      )}
     </Field>
   );
 }

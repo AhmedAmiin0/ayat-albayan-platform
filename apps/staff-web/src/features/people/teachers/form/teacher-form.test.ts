@@ -75,7 +75,9 @@ describe('teacher form (R-TCH-01)', () => {
   it('maps API errors to Arabic messages', () => {
     expect(apiErrorMessage(new ApiError(409, { message: 'duplicate' }))).toBe(t.teachers.phoneTaken);
     const issues = [{ path: 'phone_e164', message: 'invalid_length' }];
-    expect(apiErrorMessage(new ApiError(400, { issues }))).toBe(t.common.phoneErrors.invalid_length);
+    expect(apiErrorMessage(new ApiError(400, { issues }))).toBe(
+      t.common.phoneErrors.invalid_length,
+    );
     expect(apiErrorMessage(new ApiError(500))).toBe(t.common.error);
     expect(apiErrorMessage(new Error('network'))).toBe(t.common.error);
   });

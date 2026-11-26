@@ -6,7 +6,10 @@ import type { SalesSubscriptionView } from '@ab/shared';
 
 const col = createColumnHelper<DataTableFeatures, SalesSubscriptionView>();
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
-const statusOptions = SUBSCRIPTION_STATUSES.map((s) => ({ value: s, label: t.enums.subscriptionStatus[s] }));
+const statusOptions = SUBSCRIPTION_STATUSES.map((s) => ({
+  value: s,
+  label: t.enums.subscriptionStatus[s],
+}));
 
 // The whole list is loaded, so it sorts and filters locally; never a price or payment.
 

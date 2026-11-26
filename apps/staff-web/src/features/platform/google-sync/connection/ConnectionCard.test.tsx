@@ -30,7 +30,10 @@ describe('Google connection card', () => {
   });
 
   it('not configured: says where to enter the client and connect is disabled', async () => {
-    renderGoogle({ apiFetch, status: googleStatus({ configured: false, connection: { ...disconnected } }) });
+    renderGoogle({
+      apiFetch,
+      status: googleStatus({ configured: false, connection: { ...disconnected } }),
+    });
     expect(await screen.findByText(s.notConfigured)).toBeTruthy();
     expect((screen.getByRole<HTMLButtonElement>('button', { name: s.connect })).disabled).toBe(true);
     expect(screen.queryByRole('button', { name: s.disconnect })).toBeNull();

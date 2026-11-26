@@ -29,7 +29,12 @@ function Figure({ kpi, loading }: { kpi: Kpi; loading: boolean }): ReactNode {
 }
 
 export function KpiStrip({ summary, work }: KpiStripProps) {
-  const counts = summary ?? { needs_confirmation: 0, pending_reports: 0, unpaid_subscriptions: 0, open_tasks: 0 };
+  const counts = summary ?? {
+    needs_confirmation: 0,
+    pending_reports: 0,
+    unpaid_subscriptions: 0,
+    open_tasks: 0,
+  };
   const kpis = kpisOf(counts, usePublicConfig().lesson_confirmation_required);
   return (
     <nav aria-label={t.dashboard.kpiStrip} className="border-y border-rule py-1.5">

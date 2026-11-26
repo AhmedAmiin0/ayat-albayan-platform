@@ -78,7 +78,10 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
       <PageHead className="mb-3.5">
         <Avatar name={teacherLabel(data)} id={data.id} src={data.avatar_url} size="lg" decorative />
         <Cartouche>{teacherLabel(data)}</Cartouche>
-        <StatusChip {...teacherStatusStyle[data.status]} label={t.enums.teacherStatus[data.status]} />
+        <StatusChip
+          {...teacherStatusStyle[data.status]}
+          label={t.enums.teacherStatus[data.status]}
+        />
         <HeadActions
           primary={
             <Button variant="secondary" onClick={() => setEditing(true)}>

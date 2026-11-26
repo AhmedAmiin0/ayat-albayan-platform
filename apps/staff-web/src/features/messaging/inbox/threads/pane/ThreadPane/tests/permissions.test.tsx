@@ -22,7 +22,9 @@ function open(mode: InboxMode, permissions: Permission[], session_open = true) {
     ['/settings', {}],
     ['/leads?', { items: [], total: 0, page: 1, pageSize: 5 }],
   ]);
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
   // The shells load /auth/me before the page (requireRole): seeded the same way here.
   const me: Me = { id: 'u-1', email: null, role: mode === 'admin' ? 'admin' : 'sales', permissions };
   client.setQueryData(meQuery.queryKey, me);

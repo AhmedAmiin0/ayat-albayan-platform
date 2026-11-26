@@ -24,7 +24,10 @@ export function UserActions({ user, onMode, onDone }: UserActionsProps) {
       onDone(t.users.toast.enabled);
     },
   });
-  const signOut = useMutation({ mutationFn: signOutUser, onSuccess: () => onDone(t.users.toast.signedOut) });
+  const signOut = useMutation({
+    mutationFn: signOutUser,
+    onSuccess: () => onDone(t.users.toast.signedOut),
+  });
   const failed = enable.error ?? signOut.error;
   return (
     <section className="grid gap-3 border-t border-rule pt-4">

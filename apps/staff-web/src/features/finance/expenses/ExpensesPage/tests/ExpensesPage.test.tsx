@@ -96,8 +96,14 @@ describe('ExpensesPage (R-RPT-02, E4)', () => {
 
 describe('totalsByCurrency', () => {
   it('sums per currency without float drift, sorted; drafts left out', () => {
-    const row = (amount: number, currency: string, is_draft = false) => ({ amount, currency, is_draft });
-    expect(totalsByCurrency([row(0.1, 'USD'), row(0.2, 'USD'), row(5, 'EGP'), row(50, 'EGP', true)])).toEqual([
+    const row = (amount: number, currency: string, is_draft = false) => ({
+      amount,
+      currency,
+      is_draft,
+    });
+    expect(
+      totalsByCurrency([row(0.1, 'USD'), row(0.2, 'USD'), row(5, 'EGP'), row(50, 'EGP', true)]),
+    ).toEqual([
       ['EGP', 5],
       ['USD', 0.3],
     ]);

@@ -11,8 +11,16 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
 
 const page = <T,>(items: T[]) => ({ items, total: items.length, page: 1, pageSize: 20 });
-const FRESH = { ...WEEKLY, balance: { ...WEEKLY.balance, lessons_used: 0, remaining: WEEKLY.lessons_total } };
-const CANCELLED = { ...WEEKLY, id: 'sub-x', status: 'cancelled' as const, student: { ...WEEKLY.student, name: 'ياسمين' } };
+const FRESH = {
+  ...WEEKLY,
+  balance: { ...WEEKLY.balance, lessons_used: 0, remaining: WEEKLY.lessons_total },
+};
+const CANCELLED = {
+  ...WEEKLY,
+  id: 'sub-x',
+  status: 'cancelled' as const,
+  student: { ...WEEKLY.student, name: 'ياسمين' },
+};
 
 describe('subscription rows: cancel offered, cancelled shown', () => {
   it('an unpaid row offers «إلغاء الباقة»; a cancelled row shows «ملغاة» and no action at all', async () => {
@@ -26,7 +34,12 @@ describe('subscription rows: cancel offered, cancelled shown', () => {
     expect(within(live).getByRole('button', { name: t.subscriptions.cancel.action })).toBeTruthy();
     const gone = screen.getByText('ياسمين').closest('tr') as HTMLElement;
     expect(within(gone).getByText(t.enums.subscriptionStatus.cancelled)).toBeTruthy();
-    for (const name of [t.payments.record, t.coursePause.action, t.coursePause.resume, t.subscriptions.cancel.action])
+    for (const name of [
+      t.payments.record,
+      t.coursePause.action,
+      t.coursePause.resume,
+      t.subscriptions.cancel.action,
+    ])
       expect(within(gone).queryByRole('button', { name })).toBeNull();
   });
 });

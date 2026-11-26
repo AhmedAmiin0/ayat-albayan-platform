@@ -25,7 +25,14 @@ describe('«إضافة طالب»: «المعلم/المعلمة» (registration
 
   it('asks name and WhatsApp first, then age and gender (the form’s order)', () => {
     renderDialog();
-    const labels = [t.leads.studentName, t.guardians.phone, t.students.age, t.students.gender, t.students.teacher, t.guardians.source];
+    const labels = [
+      t.leads.studentName,
+      t.guardians.phone,
+      t.students.age,
+      t.students.gender,
+      t.students.teacher,
+      t.guardians.source,
+    ];
     const html = document.body.textContent ?? '';
     const at = labels.map((x) => html.indexOf(x));
     expect(at.every((i) => i >= 0)).toBe(true);

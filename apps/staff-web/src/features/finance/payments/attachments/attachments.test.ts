@@ -11,9 +11,18 @@ const row = (id: string, legacy = false): PaymentAttachmentView => ({ id, mime: 
 describe('payment attachments «المرفقات»', () => {
   it('adds good files, leaves out a wrong type or a too large one and says why', () => {
     const jpg = file('image/jpeg');
-    expect(addAttachments([], [jpg], { maxBytes: 100, wrap })).toEqual({ list: [jpg], problem: null });
-    expect(addAttachments([], [file('text/plain'), jpg], { maxBytes: 100, wrap })).toEqual({ list: [jpg], problem: 'receipt_type' });
-    expect(addAttachments([], [file('application/pdf', 200)], { maxBytes: 100, wrap })).toEqual({ list: [], problem: 'receipt_too_large' });
+    expect(addAttachments([], [jpg], { maxBytes: 100, wrap })).toEqual({
+      list: [jpg],
+      problem: null,
+    });
+    expect(addAttachments([], [file('text/plain'), jpg], { maxBytes: 100, wrap })).toEqual({
+      list: [jpg],
+      problem: 'receipt_type',
+    });
+    expect(addAttachments([], [file('application/pdf', 200)], { maxBytes: 100, wrap })).toEqual({
+      list: [],
+      problem: 'receipt_too_large',
+    });
   });
 
   it('never more than five', () => {
@@ -33,6 +42,8 @@ describe('payment attachments «المرفقات»', () => {
 
   it('a file another payment holds (409 attachment_in_use) reads as its own line', () => {
     const e = new ApiError(409, { code: 'attachment_in_use' });
-    expect(apiErrorText(e, { ...t.payments.error, ...t.finance.error })).toBe(t.payments.error.attachment_in_use);
+    expect(apiErrorText(e, { ...t.payments.error, ...t.finance.error })).toBe(
+      t.payments.error.attachment_in_use,
+    );
   });
 });

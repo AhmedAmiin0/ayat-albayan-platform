@@ -27,7 +27,9 @@ export function PayoutDialogs({ open, onClose }: { open: PayoutDialog; onClose: 
       confirmLabel={kind === 'unpay' ? t.finance.unpay : t.finance.reopen}
       withReason={kind === 'unpay'}
       pending={fix.isPending}
-      error={fix.isError ? apiErrorText(fix.error, { ...t.payouts.error, ...t.earnings.error }) : null}
+      error={
+        fix.isError ? apiErrorText(fix.error, { ...t.payouts.error, ...t.earnings.error }) : null
+      }
       onConfirm={(reason) => fix.mutate(reason)}
       onClose={onClose}
     >

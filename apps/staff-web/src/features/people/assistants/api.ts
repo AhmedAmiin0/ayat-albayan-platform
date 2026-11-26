@@ -75,8 +75,14 @@ export const approveStatement = (id: string) => act(id, 'approve');
 export const reopenStatement = (id: string) => act(id, 'reopen');
 export const unpayStatement = (input: { id: string; reason: string }) => act(input.id, 'unpay', { reason: input.reason });
 
-export type PayStatementBody = { paidAt: string; method: PaymentMethod; note: string | null; receiptPath: string | null };
-export const payStatement = (input: { id: string; body: PayStatementBody }) => act(input.id, 'pay', input.body);
+export type PayStatementBody = {
+  paidAt: string;
+  method: PaymentMethod;
+  note: string | null;
+  receiptPath: string | null;
+};
+export const payStatement = (input: { id: string; body: PayStatementBody }) =>
+  act(input.id, 'pay', input.body);
 
 export const statementReceiptUrl = (id: string) => apiFetch<SignedDownload>(`/assistant-pay/statements/${id}/receipt`);
 
@@ -88,7 +94,10 @@ export async function uploadStatementReceipt(file: File, assistantId: string): P
   return signed.path;
 }
 
-export type BroughtBy = { assistant: { id: string; name: string } | null; brought_at: string | null };
+export type BroughtBy = {
+  assistant: { id: string; name: string } | null;
+  brought_at: string | null;
+};
 
 export const broughtByQuery = (studentId: string) =>
   queryOptions({

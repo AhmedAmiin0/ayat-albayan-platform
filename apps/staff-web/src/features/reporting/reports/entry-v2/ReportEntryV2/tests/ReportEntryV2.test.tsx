@@ -28,7 +28,16 @@ describe('the new report form (form_version 2): sections', () => {
 
   it('Quran: the three tracks, tajweed, overall, homework, next lesson and the note', async () => {
     await openV2({ apiFetch });
-    for (const name of [v2.segment.recited, v2.segment.new, v2.segment.revision, v2.tajweedTitle, v2.overall, v2.homework, v2.nextTitle, v2.note]) {
+    for (const name of [
+      v2.segment.recited,
+      v2.segment.new,
+      v2.segment.revision,
+      v2.tajweedTitle,
+      v2.overall,
+      v2.homework,
+      v2.nextTitle,
+      v2.note,
+    ]) {
       expect(region(name)).toBeTruthy();
     }
     expect(screen.getAllByRole('button', { name: v2.pickRange })).toHaveLength(3);
@@ -82,7 +91,8 @@ describe('the new report form (form_version 2): sections', () => {
     expect(card?.textContent).toContain(v2.absentHint);
     expect(card?.textContent).toContain(v2.charged);
     expect(screen.getByLabelText(v2.absentNote)).toBeTruthy();
-    for (const name of [v2.segment.recited, v2.tajweedTitle, v2.overall, v2.homework, v2.note]) expect(region(name)).toBeNull();
+    for (const name of [v2.segment.recited, v2.tajweedTitle, v2.overall, v2.homework, v2.note])
+      expect(region(name)).toBeNull();
     pick(v2.attendanceTitle, v2.attendance.excused);
     expect(region(v2.excusedTitle)?.textContent).toContain(v2.notCharged);
   });

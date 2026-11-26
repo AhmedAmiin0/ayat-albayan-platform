@@ -63,13 +63,19 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
     </Link>
   );
   const ended = isPackageEnded(student.status);
-  const head = headOf(ended, { renew: <RenewSubscriptionButton student={student} primary={ended} />, book });
+  const head = headOf(ended, {
+    renew: <RenewSubscriptionButton student={student} primary={ended} />,
+    book,
+  });
 
   return (
     <>
       <PageHead className="mb-3">
         <Cartouche>{student.name}</Cartouche>
-        <StatusChip {...studentStatusStyle[student.status]} label={t.enums.studentStatus[student.status]} />
+        <StatusChip
+          {...studentStatusStyle[student.status]}
+          label={t.enums.studentStatus[student.status]}
+        />
         <TestChip when={student.is_test === true} />
         <HeadActions
           primary={head.primary}

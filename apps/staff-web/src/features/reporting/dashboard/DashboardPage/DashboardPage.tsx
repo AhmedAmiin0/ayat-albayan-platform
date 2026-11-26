@@ -79,7 +79,12 @@ export function DashboardPage({ search, onSearch }: DashboardPageProps) {
           <RecentInbox />
         </div>
         <WeekSection week={week} data={weekQ.data} />
-        <PeriodSection period={period} onPeriod={onPeriod} data={periodQ.data} stale={periodQ.isPlaceholderData} />
+        <PeriodSection
+          period={period}
+          onPeriod={onPeriod}
+          data={periodQ.data}
+          stale={periodQ.isPlaceholderData}
+        />
         <ExportsPanel period={period} month={previousMonth(today)} />
       </div>
     </>

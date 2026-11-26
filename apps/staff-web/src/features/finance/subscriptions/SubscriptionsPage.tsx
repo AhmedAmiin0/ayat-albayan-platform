@@ -94,17 +94,36 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
             data={list.data.items}
             getRowId={(r) => r.id}
             emptyText={t.subscriptions.emptyList}
-            sort={{ key: table.sort.sort, dir: table.sort.dir, onChange: (next) => reset(toSortSearch(next)) }}
+            sort={{
+              key: table.sort.sort,
+              dir: table.sort.dir,
+              onChange: (next) => reset(toSortSearch(next)),
+            }}
             filters={{ values: filterValues, onChange: (key, v) => reset(toFilterSearch(key, v)) }}
             toolbar={{ extra, total: list.isPlaceholderData ? undefined : list.data?.total }}
           />
-          <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onSearch({ page: p > 1 ? p : undefined })} />
+          <Pager
+            page={list.data.page}
+            total={list.data.total}
+            pageSize={list.data.pageSize}
+            onPage={(p) => onSearch({ page: p > 1 ? p : undefined })}
+          />
         </>
       )}
       <OpenTasks />
-      {creating && <CreateSubscriptionDialog onClose={() => setCreating(false)} onSaved={saved(t.subscriptions.saved)} />}
+      {creating && (
+        <CreateSubscriptionDialog
+          onClose={() => setCreating(false)}
+          onSaved={saved(t.subscriptions.saved)}
+        />
+      )}
       {paying && (
-        <RecordPaymentDialog subscription={paying.sub} kind={paying.kind} onClose={() => setPaying(null)} onSaved={saved(t.payments.saved)} />
+        <RecordPaymentDialog
+          subscription={paying.sub}
+          kind={paying.kind}
+          onClose={() => setPaying(null)}
+          onSaved={saved(t.payments.saved)}
+        />
       )}
       {cancelling && (
         <CancelPackageDialog
@@ -114,7 +133,11 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
           onDone={saved(t.subscriptions.cancel.done)}
         />
       )}
-      <CoursePauseDialogs target={course} onClose={() => setCourse(null)} onDone={(m) => saved(m)()} />
+      <CoursePauseDialogs
+        target={course}
+        onClose={() => setCourse(null)}
+        onDone={(m) => saved(m)()}
+      />
       {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
     </>
   );

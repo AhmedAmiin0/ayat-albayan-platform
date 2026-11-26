@@ -33,7 +33,13 @@ function MoneyCell({ value, max }: { value: number; max: number }) {
  * scale, so a month's bars compare honestly. The margin is a signed number, no bar. Every column
  * sorts (months chronologically by their YYYY-MM key); a short summary, so no filters.
  */
-export function FinanceByMonth({ months, currency }: { months: readonly MonthFinance[]; currency: string }) {
+export function FinanceByMonth({
+  months,
+  currency,
+}: {
+  months: readonly MonthFinance[];
+  currency: string;
+}) {
   const sorter = useHandSort(months, valueOf);
   const max = Math.max(0, ...months.flatMap((m) => MEASURES.map((x) => m[x.key])));
   return (

@@ -16,14 +16,24 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ pe
 
 const FAMILY = thread({ guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' });
 const JUD = 'f7c1a0de-3333-4a8e-9b00-000000000003';
-const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+const client = new QueryClient({
+  defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+});
 
 /** The phone header and the wide header put the buttons in different trees, like ThreadPane. */
 const pane = (compact: boolean) => (
   <QueryClientProvider client={client}>
     <InboxModeContext.Provider value="sales">
       <SalesChatFrame thread={FAMILY} compact={compact}>
-        {(actions: ReactNode) => (compact ? <header>{actions}</header> : <section><div>{actions}</div></section>)}
+        {(actions: ReactNode) =>
+          compact ? (
+            <header>{actions}</header>
+          ) : (
+            <section>
+              <div>{actions}</div>
+            </section>
+          )
+        }
       </SalesChatFrame>
     </InboxModeContext.Provider>
   </QueryClientProvider>

@@ -23,7 +23,13 @@ type CreateStudentDialogProps = {
  * new entry into the existing student — it is created then folded in, so the typed data stays in
  * the merge history — or creates it anyway as a sibling.
  */
-export function CreateStudentDialog({ onClose, onDone, initial, leadId, title }: CreateStudentDialogProps) {
+export function CreateStudentDialog({
+  onClose,
+  onDone,
+  initial,
+  leadId,
+  title,
+}: CreateStudentDialogProps) {
   const queryClient = useQueryClient();
   const [pending, setPending] = useState<CreateStudentValues | null>(null);
   const [candidates, setCandidates] = useState<StudentRef[] | null>(null);

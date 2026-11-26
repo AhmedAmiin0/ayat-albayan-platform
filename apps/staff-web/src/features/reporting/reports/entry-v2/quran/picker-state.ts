@@ -14,12 +14,18 @@ export interface PickTarget {
  * The picker for a track's part: the part itself, or a new part right after today's last part of
  * the track, else after the student's last saved range (the history).
  */
-export function pickTarget(content: ReportContent, opts: { kind: SegmentKind; index: number; memory: MemoryView | null | undefined }): PickTarget {
+export function pickTarget(
+  content: ReportContent,
+  opts: { kind: SegmentKind; index: number; memory: MemoryView | null | undefined },
+): PickTarget {
   const { kind, index } = opts;
   const part = index >= 0 ? content.segments[index] : undefined;
-  if (part) return { kind, index, start: { surah: part.surah, from: part.from, to: part.to }, after: null };
+  if (part)
+    return { kind, index, start: { surah: part.surah, from: part.from, to: part.to }, after: null };
   const today = segmentsOf(content, kind).at(-1)?.segment;
-  const last = today ? { surah: today.surah, from: today.from, to: today.to } : (opts.memory?.last[kind] ?? null);
+  const last = today
+    ? { surah: today.surah, from: today.from, to: today.to }
+    : (opts.memory?.last[kind] ?? null);
   const start = suggestRange(last);
   return { kind, index: -1, start, after: start && last ? last.to : null };
 }

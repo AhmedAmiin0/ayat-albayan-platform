@@ -28,7 +28,8 @@ type Props = {
 };
 
 /** Her packages still owed, across her students of the family (the transfer step's picker). */
-export const openPackages = (students: SalesFamilyStudent[]): SalesMoneySubscriptionView[] => students.flatMap((s) => s.open);
+export const openPackages = (students: SalesFamilyStudent[]): SalesMoneySubscriptionView[] =>
+  students.flatMap((s) => s.open);
 
 /** The course wizard may open before the transfer; closing it returns to the step as left. */
 export function SalesMoneyFlow({ start, studentId, renew, students, phone = '', canSend = false, onClose }: Props) {
@@ -37,7 +38,12 @@ export function SalesMoneyFlow({ start, studentId, renew, students, phone = '', 
   // The course opens on top: the step under it stays mounted, so a typed transfer survives it.
   return (
     <>
-      <FlowStep step={step} setStep={setStep} onCourse={setCourse} {...{ studentId, renew, students, phone, canSend, onClose }} />
+      <FlowStep
+        step={step}
+        setStep={setStep}
+        onCourse={setCourse}
+        {...{ studentId, renew, students, phone, canSend, onClose }}
+      />
       {course && <SalesCourseDialog studentId={course} onClose={() => setCourse(null)} />}
     </>
   );
@@ -52,7 +58,12 @@ function FlowStep({ step, setStep, onCourse, studentId, renew, students, phone =
   if (step.kind === 'subscribe') {
     const onSaved = (sub: SalesMoneySubscriptionView) => setStep({ kind: 'transfer', sub });
     const onLinked = (link: PaymentLinkView) => setStep({ kind: 'link', link });
-    return <SalesSubscribeStep {...{ students, phone, renew, onClose, onSaved, onLinked }} picked={studentId} />;
+    return (
+      <SalesSubscribeStep
+        {...{ students, phone, renew, onClose, onSaved, onLinked }}
+        picked={studentId}
+      />
+    );
   }
   if (step.kind === 'link') {
     const book = course(step.link.student.id);
@@ -72,5 +83,11 @@ function FlowStep({ step, setStep, onCourse, studentId, renew, students, phone =
       />
     );
   }
-  return <SalesDoneStep payment={step.payment} onClose={onClose} onBookCourse={course(step.payment.student.id)} />;
+  return (
+    <SalesDoneStep
+      payment={step.payment}
+      onClose={onClose}
+      onBookCourse={course(step.payment.student.id)}
+    />
+  );
 }

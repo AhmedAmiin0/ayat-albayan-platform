@@ -39,7 +39,9 @@ export function TeacherRow({ row, calendars, onNote }: Props) {
         size="sm"
         variant="secondary"
         disabled={pick === '' || unchanged || save.isPending}
-        onClick={() => save.mutate({ teacherId: row.teacher_id, calendarId: pick === NONE ? null : pick })}
+        onClick={() =>
+          save.mutate({ teacherId: row.teacher_id, calendarId: pick === NONE ? null : pick })
+        }
       >
         {t.googleSync.common.confirm}
       </Button>

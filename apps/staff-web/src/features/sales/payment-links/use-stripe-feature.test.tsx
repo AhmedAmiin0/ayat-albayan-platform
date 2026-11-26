@@ -10,7 +10,9 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 
 function run() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
   return renderHook(() => useStripeFeature(), { wrapper });
 }
 

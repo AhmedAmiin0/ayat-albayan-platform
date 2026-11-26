@@ -30,7 +30,9 @@ export function LeadFilterFields({ search, people, onFilter }: LeadChipsOptions)
         label={t.leads.sortBy}
         value={leadSortValue(search)}
         options={leadSortChoices()}
-        onChange={(value) => onFilter({ sort: undefined, dir: undefined, ...leadSortFromValue(value) })}
+        onChange={(value) =>
+          onFilter({ sort: undefined, dir: undefined, ...leadSortFromValue(value) })
+        }
       />
     </>
   );

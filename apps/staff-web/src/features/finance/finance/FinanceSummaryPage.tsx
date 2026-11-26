@@ -36,7 +36,10 @@ export function FinanceSummaryPage() {
         {summary.data ? (
           <>
             <FinanceTotals finance={summary.data.finance} />
-            <FinanceByMonth months={summary.data.finance.by_month} currency={summary.data.finance.currency} />
+            <FinanceByMonth
+              months={summary.data.finance.by_month}
+              currency={summary.data.finance.currency}
+            />
           </>
         ) : (
           <p className="text-sm text-ink-3">{t.common.loading}</p>

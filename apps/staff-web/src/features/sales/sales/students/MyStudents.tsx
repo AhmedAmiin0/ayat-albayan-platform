@@ -11,7 +11,10 @@ export function MyStudents() {
       query={useQuery(myStudentsQuery)}
       columns={myStudentColumns}
       getRowId={(s) => s.id}
-      empty={{ title: t.assistantPortal.students.empty, hint: t.assistantPortal.students.emptyHint }}
+      empty={{
+        title: t.assistantPortal.students.empty,
+        hint: t.assistantPortal.students.emptyHint,
+      }}
     />
   );
 }

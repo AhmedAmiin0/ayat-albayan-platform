@@ -13,19 +13,38 @@ export const MEMORY: MemoryView = {
   recent_surahs: [67, 68],
 };
 
-export const v2Content = (over: Partial<ReportContent> = {}): ReportContent => ({ ...emptyContent(), ...over });
+export const v2Content = (over: Partial<ReportContent> = {}): ReportContent => ({
+  ...emptyContent(),
+  ...over,
+});
 
-export const v2Report = (over: Partial<ReportView> = {}): ReportView => reportView({ form_version: 2, content: emptyContent(), ...over });
+export const v2Report = (over: Partial<ReportView> = {}): ReportView =>
+  reportView({ form_version: 2, content: emptyContent(), ...over });
 
 /** Opens the report page on a v2 entry (role teacher unless said) and waits for its article. */
-export async function openV2(opts: { apiFetch: Mock; report?: Partial<ReportView>; role?: UserRole; memory?: MemoryView | null }) {
+export async function openV2(opts: {
+  apiFetch: Mock;
+  report?: Partial<ReportView>;
+  role?: UserRole;
+  memory?: MemoryView | null;
+}) {
   const form = formResponse({}, {});
   const entry = form.entries[0];
   if (!entry) throw new Error('fixture without an entry');
-  form.entries = [{ ...entry, report: v2Report(opts.report), memory: opts.memory === undefined ? MEMORY : opts.memory }];
-  opts.apiFetch.mockImplementation((path: string) => Promise.resolve(path === '/lessons/l-1/report-form' ? form : []));
+  form.entries = [
+    {
+      ...entry,
+      report: v2Report(opts.report),
+      memory: opts.memory === undefined ? MEMORY : opts.memory,
+    },
+  ];
+  opts.apiFetch.mockImplementation((path: string) =>
+    Promise.resolve(path === '/lessons/l-1/report-form' ? form : []),
+  );
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <ReportFormPage lessonId="l-1" role={opts.role ?? 'teacher'} />
     </QueryClientProvider>,
   );

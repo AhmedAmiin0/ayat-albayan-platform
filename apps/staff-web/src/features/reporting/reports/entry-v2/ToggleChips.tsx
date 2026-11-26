@@ -9,7 +9,12 @@ export interface ToggleChipsProps<V extends string> {
 }
 
 /** Chips that turn on and off (aria-pressed): the tajweed topic and the quick notes to the family. */
-export function ToggleChips<V extends string>({ label, options, selected, onToggle }: ToggleChipsProps<V>) {
+export function ToggleChips<V extends string>({
+  label,
+  options,
+  selected,
+  onToggle,
+}: ToggleChipsProps<V>) {
   return (
     <div role="group" aria-label={label} className="flex flex-wrap gap-2">
       {options.map((o) => {

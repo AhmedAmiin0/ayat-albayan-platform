@@ -29,8 +29,8 @@ export function useDescriptionSave(target: DescribeTarget) {
       storeEntry(client, res.entry);
       mirrorOverride(res.entry.hintKey ?? target.hintKey, text);
       await Promise.all(
-        [CONFIG_QUERY_KEYS.entries, TRANSLATIONS_QUERY_PREFIX, CONFIG_QUERY_KEYS.settingsMeta].map((queryKey) =>
-          client.invalidateQueries({ queryKey }),
+        [CONFIG_QUERY_KEYS.entries, TRANSLATIONS_QUERY_PREFIX, CONFIG_QUERY_KEYS.settingsMeta].map(
+          (queryKey) => client.invalidateQueries({ queryKey }),
         ),
       );
     },

@@ -18,7 +18,13 @@ export interface SavedRepliesTableProps {
 }
 
 /** One row per shared reply: order (up / down, no drag), title, the text on one line, file, actions. */
-export function SavedRepliesTable({ labelledBy, replies, manage, onEdit, onDelete }: SavedRepliesTableProps) {
+export function SavedRepliesTable({
+  labelledBy,
+  replies,
+  manage,
+  onEdit,
+  onDelete,
+}: SavedRepliesTableProps) {
   const queryClient = useQueryClient();
   const move = useMutation({
     mutationFn: moveReply,

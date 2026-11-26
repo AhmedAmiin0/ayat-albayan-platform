@@ -42,12 +42,28 @@ function answer(path: string, o: Required<ShowOptions>): Promise<unknown> {
   return Promise.resolve([]);
 }
 
-export function showMeetingMode(apiFetch: Mock, start: Partial<TeacherForm>, opts: ShowOptions = {}) {
-  const o: Required<ShowOptions> = { auto: false, status: 'approved', livekit: true, teacher: null, ...opts };
+export function showMeetingMode(
+  apiFetch: Mock,
+  start: Partial<TeacherForm>,
+  opts: ShowOptions = {},
+) {
+  const o: Required<ShowOptions> = {
+    auto: false,
+    status: 'approved',
+    livekit: true,
+    teacher: null,
+    ...opts,
+  };
   apiFetch.mockImplementation((path: string) => answer(path, o));
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity } } });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+  });
   if (typeof o.auto === 'boolean') {
-    client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: o.auto });
+    client.setQueryData(publicConfigQuery.queryKey, {
+      ...PUBLIC_SETTING_DEFAULTS,
+      custom: {},
+      meeting_link_auto: o.auto,
+    });
   }
   render(
     <QueryClientProvider client={client}>

@@ -14,7 +14,14 @@ export interface SegmentPartProps {
   invalid: boolean;
 }
 
-export function SegmentPart({ name, segment, onPick, onGrade, onRemove, invalid }: SegmentPartProps) {
+export function SegmentPart({
+  name,
+  segment,
+  onPick,
+  onGrade,
+  onRemove,
+  invalid,
+}: SegmentPartProps) {
   const v2 = t.reports.v2;
   return (
     <div className="grid gap-2 border-t border-rule pt-3 first:border-t-0 first:pt-0">

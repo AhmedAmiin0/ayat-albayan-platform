@@ -34,7 +34,12 @@ export function PlainIntegrationRow({ item, value, invalid, onChange }: Props) {
     >
       {(p) =>
         options ? (
-          <Select {...p} className={selectClass} value={value} onChange={(e) => onChange(e.target.value)}>
+          <Select
+            {...p}
+            className={selectClass}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+          >
             <option value="">{enumEmptyLabel(item, options[0] ?? '')}</option>
             {options.map((o) => (
               <option key={o} value={o}>

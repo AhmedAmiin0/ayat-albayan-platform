@@ -21,7 +21,12 @@ export interface DescriptionInput {
 }
 
 /** Arabic: admin description, else t(hintKey), else seeded text; English: t(hintKey) only. */
-export function shownDescription({ entry, hintKey, locale, bundle }: DescriptionInput): string | undefined {
+export function shownDescription({
+  entry,
+  hintKey,
+  locale,
+  bundle,
+}: DescriptionInput): string | undefined {
   const hint = textIn(bundle, entry?.hintKey ?? hintKey);
   if (locale === 'en') return hint;
   return entry?.description ?? hint ?? entry?.descriptionSeed ?? undefined;
@@ -48,7 +53,10 @@ const OWNER_RIGHT: Record<SettingOwner, (r: DescribeRights) => boolean> = {
 };
 
 /** Can this user edit the row's description? Never without an API row (nothing to write to). */
-export function canEditDescription(entry: ConfigEntry | undefined, rights: DescribeRights): boolean {
+export function canEditDescription(
+  entry: ConfigEntry | undefined,
+  rights: DescribeRights,
+): boolean {
   if (!entry || entry.retired) return false;
   if (entry.ownedBy) return OWNER_RIGHT[entry.ownedBy](rights);
   return rights.can('settings.write');

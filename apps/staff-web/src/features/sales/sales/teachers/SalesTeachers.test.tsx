@@ -49,9 +49,11 @@ describe('SalesTeachers «المعلمون» (master-detail)', () => {
     const kinds = within(drawer).getByRole('group', { name: t.studentLists.kinds });
     const seg = (label: string) => within(kinds).getByRole('button', { name: new RegExp(label) });
     expect(seg(t.studentLists.active).getAttribute('aria-pressed')).toBe('true');
-    expect([seg(t.studentLists.active), seg(t.studentLists.trial), seg(t.studentLists.all)].map((b) => b.textContent)).toEqual([
-      `${t.studentLists.active}1`, `${t.studentLists.trial}1`, `${t.studentLists.all}3`,
-    ]);
+    expect(
+      [seg(t.studentLists.active), seg(t.studentLists.trial), seg(t.studentLists.all)].map(
+        (b) => b.textContent,
+      ),
+    ).toEqual([`${t.studentLists.active}1`, `${t.studentLists.trial}1`, `${t.studentLists.all}3`]);
     expect(within(drawer).getByText('AB-0183').getAttribute('dir')).toBe('ltr');
     expect(within(drawer).getByText('الاثنين 12 أكتوبر 18:00')).toBeTruthy();
     expect(within(drawer).queryByText('جود')).toBeNull();

@@ -13,8 +13,14 @@ const LINK = 'https://meet.example.org/room-with-a-long-name?pwd=abc';
 const L = t.studentLists;
 
 function show(over: Parameters<typeof scheduleLesson>[0]) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity } } });
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: false });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+  });
+  client.setQueryData(publicConfigQuery.queryKey, {
+    ...PUBLIC_SETTING_DEFAULTS,
+    custom: {},
+    meeting_link_auto: false,
+  });
   render(
     <QueryClientProvider client={client}>
       <LessonMeetingLink lesson={scheduleLesson(over)} />

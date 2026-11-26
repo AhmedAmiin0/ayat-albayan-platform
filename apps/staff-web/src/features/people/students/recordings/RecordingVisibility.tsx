@@ -30,7 +30,9 @@ export function RecordingVisibility({ rec }: { rec: StudentRecordingView }) {
         <span className="font-semibold">{R.label}</span>
       </label>
       <p className="text-xs text-ink-3">{rec.visible_to_student ? R.on : R.off}</p>
-      {toggle.isError && <FormAlert>{isGroupRefusal(toggle.error) ? R.groupLesson : R.failed}</FormAlert>}
+      {toggle.isError && (
+        <FormAlert>{isGroupRefusal(toggle.error) ? R.groupLesson : R.failed}</FormAlert>
+      )}
     </div>
   );
 }

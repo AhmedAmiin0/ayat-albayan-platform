@@ -16,7 +16,13 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await i
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-mock')).Link }));
 
 const wrap = (ui: ReactNode) =>
-  render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>{ui}</QueryClientProvider>);
+  render(
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      {ui}
+    </QueryClientProvider>,
+  );
 
 const thread = (n: number): ThreadView =>
   ({
@@ -92,7 +98,12 @@ describe('TodayLessons', () => {
 
 describe('RecentInbox', () => {
   it('the newest five threads, each opening in the inbox, unread in bold', async () => {
-    apiFetch.mockResolvedValue({ items: [1, 2, 3, 4, 5, 6, 7].map(thread), total: 7, page: 1, pageSize: 30 });
+    apiFetch.mockResolvedValue({
+      items: [1, 2, 3, 4, 5, 6, 7].map(thread),
+      total: 7,
+      page: 1,
+      pageSize: 30,
+    });
     wrap(<RecentInbox />);
     const first = await screen.findByRole('link', { name: t.inbox.openThread.replace('{name}', 'ولي أمر 1') });
     expect(first.getAttribute('href')).toBe('/admin/inbox?page=1&phone=%2B966500000001');

@@ -26,10 +26,22 @@ export function parseInvoicesSearch(s: Record<string, unknown>): InvoicesUrlSear
 }
 
 /** The list query of a parsed URL: range, sort and the column filters under their API keys. */
-export function invoicesList(s: InvoicesUrlSearch): { page: number; from?: string; to?: string; sort: SortSearch; filters: FilterSearch } {
+export function invoicesList(s: InvoicesUrlSearch): {
+  page: number;
+  from?: string;
+  to?: string;
+  sort: SortSearch;
+  filters: FilterSearch;
+} {
   const filters: FilterSearch = {};
   if (s.f_student) filters['student'] = s.f_student;
   if (s.f_kind) filters['kind'] = s.f_kind;
   const sort: SortSearch = s.sort ? { sort: s.sort, ...(s.dir ? { dir: s.dir } : {}) } : {};
-  return { page: s.page ?? 1, ...(s.from ? { from: s.from } : {}), ...(s.to ? { to: s.to } : {}), sort, filters };
+  return {
+    page: s.page ?? 1,
+    ...(s.from ? { from: s.from } : {}),
+    ...(s.to ? { to: s.to } : {}),
+    sort,
+    filters,
+  };
 }

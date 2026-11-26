@@ -11,8 +11,19 @@ import type { LeadView } from '@ab/shared';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, search, children, ...rest }: { to: string; search: Record<string, string>; children: ReactNode }) => (
-    <a href={`${to}?${new URLSearchParams(search)}`} {...rest}>{children}</a>
+  Link: ({
+    to,
+    search,
+    children,
+    ...rest
+  }: {
+    to: string;
+    search: Record<string, string>;
+    children: ReactNode;
+  }) => (
+    <a href={`${to}?${new URLSearchParams(search)}`} {...rest}>
+      {children}
+    </a>
   ),
 }));
 
@@ -27,12 +38,22 @@ const ROW: LeadView = {
   created_at: '2026-09-28T10:00:00+00:00',
 };
 
-function renderInbox(search: LeadSearch = { page: 1 }, opts: { total?: number; items?: LeadView[] } = {}) {
+function renderInbox(
+  search: LeadSearch = { page: 1 },
+  opts: { total?: number; items?: LeadView[] } = {},
+) {
   const items = opts.items ?? [ROW];
-  apiFetch.mockResolvedValue({ items, total: opts.total ?? items.length, page: search.page, pageSize: 25 });
+  apiFetch.mockResolvedValue({
+    items,
+    total: opts.total ?? items.length,
+    page: search.page,
+    pageSize: 25,
+  });
   const onSearch = vi.fn();
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <LeadsInbox search={search} onSearch={onSearch} />
     </QueryClientProvider>,
   );

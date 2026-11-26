@@ -15,7 +15,8 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ pe
 
 const r = t.notificationRules;
 const name = t.notificationCatalogue.entries.lesson_reminder.name;
-const minutesOf = (row: HTMLElement) => within(row).getByLabelText<HTMLInputElement>(r.timing.minutesLabel);
+const minutesOf = (row: HTMLElement) =>
+  within(row).getByLabelText<HTMLInputElement>(r.timing.minutesLabel);
 const commsTab = (label: string) => fireEvent.click(screen.getByRole('tab', { name: label }));
 
 afterEach(() => {

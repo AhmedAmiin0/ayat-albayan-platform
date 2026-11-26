@@ -13,7 +13,9 @@ const listCalls = () => apiFetch.mock.calls.map(([p]) => String(p)).filter((p) =
 
 function renderList(role: 'admin' | 'teacher' = 'teacher') {
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <StudentRecordings studentId="s-1" role={role} />
     </QueryClientProvider>,
   );

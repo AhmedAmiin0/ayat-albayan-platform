@@ -40,7 +40,11 @@ export function invalidKeys(res: unknown, sent: readonly SettingKey[]): SettingK
  * After a save: what was sent for the written keys becomes their baseline (the moved ones stay
  * unsaved; an edit typed while saving stays dirty against what was sent).
  */
-export function afterSave(pair: FormPair, written: readonly SettingKey[], sentForm: SettingsForm): FormPair {
+export function afterSave(
+  pair: FormPair,
+  written: readonly SettingKey[],
+  sentForm: SettingsForm,
+): FormPair {
   return { form: pair.form, initial: { ...pair.initial, ...fieldsOf(written, sentForm) } };
 }
 

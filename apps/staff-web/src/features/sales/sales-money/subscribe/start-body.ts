@@ -16,13 +16,30 @@ type StartOpts = {
  * subscriptions.set_start_date nothing is sent; with it the day, plus `alreadyStarted` only when ticked,
  * and `lessonsUsedBefore` only then and when > 0.
  */
-export function startBody(value: StartValue, opts: StartOpts): { ok: true; body: StartBody } | { ok: false; code: SalesStartProblem | UsedBeforeProblem } {
+export function startBody(
+  value: StartValue,
+  opts: StartOpts,
+): { ok: true; body: StartBody } | { ok: false; code: SalesStartProblem | UsedBeforeProblem } {
   if (!opts.canSet) return { ok: true, body: {} };
-  const res = salesStartDate({ startsOn: value.startsOn || undefined, alreadyStarted: value.alreadyStarted, canSet: true, today: opts.today });
+  const res = salesStartDate({
+    startsOn: value.startsOn || undefined,
+    alreadyStarted: value.alreadyStarted,
+    canSet: true,
+    today: opts.today,
+  });
   if (!res.ok) return res;
   const used = value.alreadyStarted ? value.usedBefore : 0;
-  const problem = usedBeforeProblem({ lessonsUsedBefore: used, startsOn: res.startsOn, today: opts.today, canSet: true, lessonsTotal: opts.lessonsTotal });
+  const problem = usedBeforeProblem({
+    lessonsUsedBefore: used,
+    startsOn: res.startsOn,
+    today: opts.today,
+    canSet: true,
+    lessonsTotal: opts.lessonsTotal,
+  });
   if (problem) return { ok: false, code: problem };
   const started = value.alreadyStarted ? { alreadyStarted: true as const } : {};
-  return { ok: true, body: { startsOn: res.startsOn, ...started, ...(used > 0 ? { lessonsUsedBefore: used } : {}) } };
+  return {
+    ok: true,
+    body: { startsOn: res.startsOn, ...started, ...(used > 0 ? { lessonsUsedBefore: used } : {}) },
+  };
 }

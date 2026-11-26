@@ -5,7 +5,13 @@ const P = t.permissions.page;
 const TH = 'px-3 py-2 text-start text-xs font-semibold text-ink-3';
 const TD = 'px-3 py-2 align-middle';
 
-export function RolesList({ roles, onEdit }: { roles: readonly RoleView[]; onEdit: (role: RoleView) => void }) {
+export function RolesList({
+  roles,
+  onEdit,
+}: {
+  roles: readonly RoleView[];
+  onEdit: (role: RoleView) => void;
+}) {
   return (
     <table className="w-full border-collapse text-sm">
       <caption className="sr-only">{P.roles}</caption>

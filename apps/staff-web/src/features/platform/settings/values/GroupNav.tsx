@@ -44,7 +44,9 @@ export function GroupNav({ current, counts, allCount, onPick, phone }: GroupNavP
     if (phone && on && typeof on.scrollIntoView === 'function') on.scrollIntoView({ inline: 'center', block: 'nearest' });
   }, [phone, current]);
   const items = (ids: readonly ValuesGroupId[]) =>
-    ids.map((id) => <Item key={id} id={id} on={id === current} count={counts[id]} onPick={onPick} phone={phone} />);
+    ids.map((id) => (
+      <Item key={id} id={id} on={id === current} count={counts[id]} onPick={onPick} phone={phone} />
+    ));
   const all = allCount !== undefined && (
     <span aria-current="true" className={itemClass(true, phone)}>
       <span>{v.all}</span>

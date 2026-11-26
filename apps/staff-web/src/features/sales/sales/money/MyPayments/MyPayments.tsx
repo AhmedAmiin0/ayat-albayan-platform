@@ -15,7 +15,10 @@ export function MyPayments() {
   const [open, setOpen] = useState<MyPaymentRow | null>(null);
   const [editing, setEditing] = useState<MyPaymentRow | null>(null);
   const canEdit = usePermissions().can('subscriptions.edit_terms');
-  const columns = myPaymentColumns({ onAttachments: setOpen, onEditAmount: canEdit ? setEditing : null });
+  const columns = myPaymentColumns({
+    onAttachments: setOpen,
+    onEditAmount: canEdit ? setEditing : null,
+  });
   return (
     <>
       <PortalList
@@ -23,7 +26,10 @@ export function MyPayments() {
         query={useQuery(myPaymentsQuery)}
         columns={columns}
         getRowId={(p) => p.id}
-        empty={{ title: t.assistantPortal.payments.empty, hint: t.assistantPortal.payments.emptyHint }}
+        empty={{
+          title: t.assistantPortal.payments.empty,
+          hint: t.assistantPortal.payments.emptyHint,
+        }}
       />
       {open && (
         <AttachmentsDialog

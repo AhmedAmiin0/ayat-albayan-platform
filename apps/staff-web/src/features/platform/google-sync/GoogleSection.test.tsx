@@ -23,7 +23,13 @@ describe('Google section: states', () => {
     renderGoogle({ apiFetch });
     expect(screen.getByTestId('google-skeleton').getAttribute('aria-busy')).toBe('true');
     expect(await screen.findByRole('heading', { name: s.connection.title })).toBeTruthy();
-    for (const title of [s.switches.title, s.drive.title, s.teachers.title, s.students.title, s.log.title]) {
+    for (const title of [
+      s.switches.title,
+      s.drive.title,
+      s.teachers.title,
+      s.students.title,
+      s.log.title,
+    ]) {
       expect(screen.getByRole('heading', { name: title })).toBeTruthy();
     }
     expect(screen.getByText(s.gap)).toBeTruthy();

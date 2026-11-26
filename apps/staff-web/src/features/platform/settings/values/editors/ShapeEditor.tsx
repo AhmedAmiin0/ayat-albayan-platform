@@ -37,7 +37,12 @@ function ShapeDialog({ settingKey, onClose }: { settingKey: SettingKey; onClose:
         </>
       }
     >
-      <ShapeFields settingKey={settingKey} form={form} errorId={error ? errorId : undefined} onChange={(p) => setForm((f) => ({ ...f, ...p }))} />
+      <ShapeFields
+        settingKey={settingKey}
+        form={form}
+        errorId={error ? errorId : undefined}
+        onChange={(p) => setForm((f) => ({ ...f, ...p }))}
+      />
       {error && (
         <p id={errorId} role="alert" className="mt-3 flex items-center gap-1.5 text-xs text-danger">
           <NuqtaGlyph shape="struck" />

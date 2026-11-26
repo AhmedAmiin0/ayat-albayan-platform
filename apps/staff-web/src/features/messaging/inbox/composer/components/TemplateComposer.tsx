@@ -101,7 +101,12 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
     >
       <Field label={t.inbox.composer.chooseTemplate}>
         {(p) => (
-          <Select {...p} value={key} onChange={(e) => pick(e.target.value)} disabled={approved.length === 0}>
+          <Select
+            {...p}
+            value={key}
+            onChange={(e) => pick(e.target.value)}
+            disabled={approved.length === 0}
+          >
             <option value="">—</option>
             {approved.map((x) => (
               <option key={x.key} value={x.key}>
@@ -124,7 +129,14 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
           error={tried && !lessonId ? t.inbox.composer.pickLesson : undefined}
         />
       )}
-      {tpl && <TemplateParamFields template={tpl} values={values} missing={missing} onChange={setValues} />}
+      {tpl && (
+        <TemplateParamFields
+          template={tpl}
+          values={values}
+          missing={missing}
+          onChange={setValues}
+        />
+      )}
       {send.isError && <FormAlert>{sendErrorText(send.error)}</FormAlert>}
       <div className="flex justify-end">
         <Button type="submit" disabled={!tpl || send.isPending || (withLesson && lessons.length === 0)}>

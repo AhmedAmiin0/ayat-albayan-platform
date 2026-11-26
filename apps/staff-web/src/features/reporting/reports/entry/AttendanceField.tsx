@@ -13,7 +13,13 @@ export interface AttendanceFieldProps {
 const OPTIONS = ATTENDANCES.map((a) => ({ value: a, label: t.enums.attendance[a] }));
 
 /** Attendance per student (R-REP-02) decides the lesson outcome. */
-export function AttendanceField({ name, value, onChange, disabled, invalid }: AttendanceFieldProps) {
+export function AttendanceField({
+  name,
+  value,
+  onChange,
+  disabled,
+  invalid,
+}: AttendanceFieldProps) {
   return (
     <RadioChips
       name={name}
