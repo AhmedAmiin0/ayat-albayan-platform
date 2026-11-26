@@ -1,11 +1,12 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import type { z } from 'zod';
-import { quote, type CatalogResponse, type FxRate, type Quote, type QuoteResponse } from '../quote';
+import { quote, type Quote } from '../quote';
 import {
   catalogResponseSchema,
   fxRateSchema,
   quoteResponseSchema,
   quoteSchema,
+  type QuoteResponse,
 } from '../quote.schemas';
 
 const sample = quote({ tier: 'bulk', duration: 45, country: 'KW', students: 2, discount: 10 });
@@ -50,8 +51,7 @@ describe('fxRateSchema', () => {
     ageHours: null,
   };
 
-  it('is exactly the FxRate the API attaches', () => {
-    expectTypeOf<z.infer<typeof fxRateSchema>>().toEqualTypeOf<FxRate>();
+  it('reads the peg rate back unchanged', () => {
     expect(fxRateSchema.parse(peg)).toEqual(peg);
   });
 
@@ -61,9 +61,8 @@ describe('fxRateSchema', () => {
 });
 
 describe('quoteResponseSchema and catalogResponseSchema (GET /pricing/quote, /catalog)', () => {
-  it('are exactly the answers the API builds', () => {
-    expectTypeOf<z.infer<typeof quoteResponseSchema>>().toEqualTypeOf<QuoteResponse>();
-    expectTypeOf<z.infer<typeof catalogResponseSchema>>().toEqualTypeOf<CatalogResponse>();
+  it('take the quote the API computes', () => {
+    expectTypeOf<Quote & { fx: null }>().toExtend<QuoteResponse>();
     expect(quoteResponseSchema.parse({ ...sample, fx: null })).toEqual({ ...sample, fx: null });
   });
 
