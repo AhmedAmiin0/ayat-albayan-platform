@@ -48,7 +48,9 @@ describe('invoice calls (R-PAY-03)', () => {
 
   it('throws bad_response for an answer that does not match the schema', async () => {
     const { client } = clientAnswering([{ ...invoice, kind: 'trial' }]);
-    const error = await invoiceCalls(client).list({ ruleId: RULE }).catch((e: unknown) => e);
+    const error = await invoiceCalls(client)
+      .list({ ruleId: RULE })
+      .catch((e: unknown) => e);
     expect(error).toBeInstanceOf(ApiError);
     expect(error).toMatchObject({ body: { code: 'bad_response', path: '/invoices' } });
   });
