@@ -60,3 +60,14 @@ test('the new import goes after a multi-line import, never inside it', () => {
   const out = rewriteText(file(head, ['  if (error) throw new Error(`r failed: ${error.message}`);']));
   assert.match(out.text, /\} from '@\/modules\/x';\nimport \{ pgError \} from '@\/common\/db\/errors';\n/);
 });
+
+test('an error typed only as { message: string } is not a PostgrestError: listed, not rewritten', () => {
+  const text = file(DB, [
+    '  const check = (error: { message: string } | null, what: string) => {',
+    '    if (error) throw new Error(`${what} failed: ${error.message}`);',
+    '  };',
+  ]);
+  const out = rewriteText(text);
+  assert.equal(out.text, text);
+  assert.deepEqual(out.unmapped.map((u) => u.line), [5]);
+});
