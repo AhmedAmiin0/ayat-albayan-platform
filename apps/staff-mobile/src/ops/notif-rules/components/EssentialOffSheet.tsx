@@ -16,7 +16,13 @@ interface EssentialOffSheetProps {
 }
 
 /** The OFF word must be typed exactly and the API logs it; accessibilityViewIsModal is iOS-only. */
-export function EssentialOffSheet({ name, busy, error, onConfirm, onClose }: EssentialOffSheetProps) {
+export function EssentialOffSheet({
+  name,
+  busy,
+  error,
+  onConfirm,
+  onClose,
+}: EssentialOffSheetProps) {
   const { color } = useTheme();
   const [typed, setTyped] = useState('');
   const title = useRef<AppTextNode>(null);

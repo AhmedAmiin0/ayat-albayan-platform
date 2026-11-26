@@ -27,7 +27,10 @@ export function useAdminReplyLesson(lesson: ReplyLesson) {
     queryKey: offPathKeys.replyLesson('admin', lesson.id),
     queryFn: async (): Promise<LessonView | null> => {
       const start = Date.parse(lesson.starts_at);
-      const window = { from: new Date(start).toISOString(), to: new Date(start + MINUTE_MS).toISOString() };
+      const window = {
+        from: new Date(start).toISOString(),
+        to: new Date(start + MINUTE_MS).toISOString(),
+      };
       const rows = await apiFetch<LessonView[]>(`/lessons${toQueryString(window)}`);
       return rows.find((l) => l.id === lesson.id) ?? null;
     },

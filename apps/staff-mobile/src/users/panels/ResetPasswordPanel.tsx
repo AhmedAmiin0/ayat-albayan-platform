@@ -23,19 +23,41 @@ export function ResetPasswordPanel({ user, onBack }: ResetPasswordPanelProps) {
   const [error, setError] = useState<string | undefined>();
   // Only here: no query or storage ever holds the credential.
   const [issued, setIssued] = useState<{ credential: IssuedCredential | null } | null>(null);
-  const reset = useMutation({ mutationFn: resetPassword, gcTime: 0, onSuccess: (r) => setIssued({ credential: r.credential }) });
+  const reset = useMutation({
+    mutationFn: resetPassword,
+    gcTime: 0,
+    onSuccess: (r) => setIssued({ credential: r.credential }),
+  });
   const submit = () => {
     const problem = mode === 'set' ? passwordError(password) : undefined;
     setError(problem);
     if (!problem) reset.mutate({ id: user.id, body: mode === 'set' ? { credential: mode, password } : { credential: mode } });
   };
-  if (issued) return <CredentialResult title={t.users.result.resetTitle} credential={issued.credential} onClose={onBack} />;
+  if (issued)
+    return (
+      <CredentialResult
+        title={t.users.result.resetTitle}
+        credential={issued.credential}
+        onClose={onBack}
+      />
+    );
   return (
     <Section title={R.title}>
-      <CredentialPicker mode={mode} password={password} error={error} onMode={setMode} onPassword={setPassword} />
+      <CredentialPicker
+        mode={mode}
+        password={password}
+        error={error}
+        onMode={setMode}
+        onPassword={setPassword}
+      />
       <Note>{R.hint}</Note>
       {reset.error ? <ErrorLine message={userErrorText(reset.error)} /> : null}
-      <PanelButtons confirmLabel={R.confirm} busy={reset.isPending} onConfirm={submit} onCancel={onBack} />
+      <PanelButtons
+        confirmLabel={R.confirm}
+        busy={reset.isPending}
+        onConfirm={submit}
+        onCancel={onBack}
+      />
     </Section>
   );
 }

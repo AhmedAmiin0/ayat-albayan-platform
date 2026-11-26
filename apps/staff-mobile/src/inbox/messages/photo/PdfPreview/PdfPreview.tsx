@@ -120,7 +120,12 @@ export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: P
             <ContentText
               source={name}
               numberOfLines={2}
-              style={{ fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink }}
+              style={{
+                fontFamily: type.ui[600],
+                fontSize: type.size.sm,
+                lineHeight: type.lineHeight(type.size.sm),
+                color: color.ink,
+              }}
             >
               {name}
             </ContentText>
@@ -129,7 +134,15 @@ export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: P
         </View>
       </Pressable>
       <DownloadLink message={m} phone={phone} />
-      {open && doc ? <ThreadPdfViewer message={m} phone={phone} doc={doc} name={name} onClose={() => setOpen(false)} /> : null}
+      {open && doc ? (
+        <ThreadPdfViewer
+          message={m}
+          phone={phone}
+          doc={doc}
+          name={name}
+          onClose={() => setOpen(false)}
+        />
+      ) : null}
     </View>
   );
 }

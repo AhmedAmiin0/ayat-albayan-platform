@@ -33,7 +33,15 @@ function AdminSheet({ lesson, onClose, onDone }: SheetProps) {
 }
 
 /** Reuses sales' one-lesson sheet (docs/16 row 37) or the admin's (R-SCH-07) on a fresh read. */
-export function ReplyRescheduleSheet({ move, onClose, onDone }: { move: ReplyMove; onClose: () => void; onDone: () => void }) {
+export function ReplyRescheduleSheet({
+  move,
+  onClose,
+  onDone,
+}: {
+  move: ReplyMove;
+  onClose: () => void;
+  onDone: () => void;
+}) {
   const props = { lesson: move.lesson, onClose, onDone };
   return move.flow === 'sales' ? <SalesSheet {...props} /> : <AdminSheet {...props} />;
 }

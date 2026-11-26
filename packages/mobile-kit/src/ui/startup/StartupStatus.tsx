@@ -44,8 +44,15 @@ export function StartupStatus({ stage, still, onRetry, font }: StartupStatusProp
       <View style={{ marginTop: 8, minHeight: type.lineHeight(STATUS), justifyContent: 'center' }}>
         {stage !== 'mark' ? (
           <FadeIn>
-            <View accessible accessibilityLiveRegion="polite" accessibilityLabel={c.startupConnecting} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-              <AppText style={{ ...line(STATUS), fontFamily: font(type.ui[500]) }}>{c.startupConnecting}</AppText>
+            <View
+              accessible
+              accessibilityLiveRegion="polite"
+              accessibilityLabel={c.startupConnecting}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}
+            >
+              <AppText style={{ ...line(STATUS), fontFamily: font(type.ui[500]) }}>
+                {c.startupConnecting}
+              </AppText>
               <ConnectingDots color={ink.dots} still={still} />
             </View>
           </FadeIn>
@@ -54,7 +61,9 @@ export function StartupStatus({ stage, still, onRetry, font }: StartupStatusProp
       <View testID="startup-retry-area" style={{ height: RETRY_AREA, paddingTop: 18, alignItems: 'center' }}>
         {stage === 'retry' ? (
           <FadeIn gap={14}>
-            <AppText style={{ ...line(HINT), fontFamily: font(type.ui[400]) }}>{c.checkInternet}</AppText>
+            <AppText style={{ ...line(HINT), fontFamily: font(type.ui[400]) }}>
+              {c.checkInternet}
+            </AppText>
             <RetryButton label={c.retry} onPress={onRetry} fontFamily={font(type.ui[600])} />
           </FadeIn>
         ) : null}

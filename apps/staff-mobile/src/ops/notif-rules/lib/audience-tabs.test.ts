@@ -6,7 +6,13 @@ const c = t.notificationCatalogue;
 
 test('the pills follow the web order, with their counts, «يدوي» last', () => {
   const tabs = audienceTabs(catalogue.entries);
-  expect(tabs.map((x) => x.label)).toEqual([c.audience.guardian, c.audience.teacher, c.audience.lead, c.audience.staff, c.states.manual]);
+  expect(tabs.map((x) => x.label)).toEqual([
+    c.audience.guardian,
+    c.audience.teacher,
+    c.audience.lead,
+    c.audience.staff,
+    c.states.manual,
+  ]);
   expect(tabs.reduce((sum, x) => sum + x.count, 0)).toBe(catalogue.entries.length);
 });
 

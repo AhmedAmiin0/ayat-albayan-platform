@@ -21,7 +21,13 @@ export function useSendVoice(phone: string) {
   const sendTake = async (take: Take): Promise<void> => {
     const to = reply?.id;
     const file = await voiceFile(take.uri);
-    await send.mutateAsync({ phone, file, id: take.id, maxBytes, ...(to ? { replyToMessageId: to } : {}) });
+    await send.mutateAsync({
+      phone,
+      file,
+      id: take.id,
+      maxBytes,
+      ...(to ? { replyToMessageId: to } : {}),
+    });
     if (to) setReply((now) => (now?.id === to ? null : now));
   };
   return { sendTake, pending: send.isPending };

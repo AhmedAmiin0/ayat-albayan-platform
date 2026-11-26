@@ -19,7 +19,9 @@ jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({ useScreenFoc
 const wait = (ms: number) => act(() => jest.advanceTimersByTimeAsync(ms));
 
 async function open() {
-  const hook = await renderHook(() => useThread(PHONE), { wrapper: queryWrapper(createTestQueryClient()) });
+  const hook = await renderHook(() => useThread(PHONE), {
+    wrapper: queryWrapper(createTestQueryClient()),
+  });
   await waitFor(() => expect(hook.result.current.data).toBeDefined());
   mockApiFetch.mockClear();
   return hook;

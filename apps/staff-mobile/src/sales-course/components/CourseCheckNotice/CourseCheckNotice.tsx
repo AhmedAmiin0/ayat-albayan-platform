@@ -28,9 +28,16 @@ export function CourseCheckNotice({ check, onChangeSlot }: CourseCheckNoticeProp
     const message = failure.kind === 'error' ? failure.text : t.common.error;
     return <ErrorState message={message} onRetry={() => void check.refetch()} />;
   }
-  if (check.isPending || !check.data) return <AppText style={note}>{t.booking.seriesChecking}</AppText>;
+  if (check.isPending || !check.data)
+    return <AppText style={note}>{t.booking.seriesChecking}</AppText>;
   const conflicts = Array.isArray(check.data.conflicts) ? check.data.conflicts : [];
-  if (conflicts.length > 0) return <ConflictNotice lines={conflicts.map((c) => conflictLine(c, cycle, tz))} onChangeSlot={onChangeSlot} />;
+  if (conflicts.length > 0)
+    return (
+      <ConflictNotice
+        lines={conflicts.map((c) => conflictLine(c, cycle, tz))}
+        onChangeSlot={onChangeSlot}
+      />
+    );
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
       <NuqtaGlyph shape="fill" color={color.ok} size={10} />

@@ -16,7 +16,9 @@ export function dayDateOf(iso: string, tz: string): string {
 
 export const monthOf = (month: string): string => monthText(month, locale);
 
-export function totalsItems(totals: Record<AttendanceTotalKind, number>): { key: string; label: string; n: number }[] {
+export function totalsItems(
+  totals: Record<AttendanceTotalKind, number>,
+): { key: string; label: string; n: number }[] {
   const w = t.sales.student.log.totals;
   return [
     { key: 'held', label: w.held, n: totals.held },

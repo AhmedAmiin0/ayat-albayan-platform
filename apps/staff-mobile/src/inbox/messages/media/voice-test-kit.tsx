@@ -14,11 +14,23 @@ export const pathOf = (id: string) => `/threads/%2B966552147730/messages/${id}/f
 export const signed = (id: string) => `https://storage.test/wa-media/${id}.ogg?token=x`;
 
 type Status = ReturnType<typeof useAudioPlayerStatus>;
-const fakePlayer = () => ({ play: jest.fn(), pause: jest.fn(), seekTo: jest.fn(async () => undefined), setPlaybackRate: jest.fn() });
+const fakePlayer = () => ({
+  play: jest.fn(),
+  pause: jest.fn(),
+  seekTo: jest.fn(async () => undefined),
+  setPlaybackRate: jest.fn(),
+});
 type FakePlayer = ReturnType<typeof fakePlayer>;
 export const players = new Map<string, FakePlayer>();
 
-const LOADED = { playing: false, currentTime: 0, duration: 65, didJustFinish: false, isLoaded: true, isBuffering: false };
+const LOADED = {
+  playing: false,
+  currentTime: 0,
+  duration: 65,
+  didJustFinish: false,
+  isLoaded: true,
+  isBuffering: false,
+};
 let status = LOADED as Status;
 const listeners = new Set<() => void>();
 const subscribe = (listener: () => void) => {
@@ -51,7 +63,9 @@ export function resetPlayers() {
 const voiceRow = (id = 'v1', over: Partial<MessageView> = {}) =>
   message({ id, direction: 'inbound', status: 'delivered', body: null, media_mime: 'audio/ogg; codecs=opus', ...over });
 
-export const voiceNote = (m: MessageView = voiceRow()) => <VoiceNote message={m} phone={PHONE} kind={KIND} />;
+export const voiceNote = (m: MessageView = voiceRow()) => (
+  <VoiceNote message={m} phone={PHONE} kind={KIND} />
+);
 export const showVoice = (m: MessageView = voiceRow()) => renderWithQuery(voiceNote(m));
 
 export const tapPlay = () => fireEvent.press(screen.getByRole('button', { name: PLAY }));

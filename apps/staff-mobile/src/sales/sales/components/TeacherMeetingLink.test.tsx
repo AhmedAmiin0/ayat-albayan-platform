@@ -68,7 +68,11 @@ test.each([null, '', 'javascript:alert(1)', 'meet now'])('no usable link (%p): t
 /** The academy setting set opposite to the teacher's own flag: only the teacher's flag may count. */
 function academySetting(auto: boolean) {
   const client = createTestQueryClient();
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto });
+  client.setQueryData(publicConfigQuery.queryKey, {
+    ...PUBLIC_SETTING_DEFAULTS,
+    custom: {},
+    meeting_link_auto: auto,
+  });
   return client;
 }
 

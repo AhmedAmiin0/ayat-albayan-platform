@@ -54,7 +54,10 @@ export function GoogleSyncCard() {
         {query.data ? (
           <Body text={googleStatusText(query.data)} />
         ) : query.isError ? (
-          <ErrorState message={t.googleSync.mobile.loadError} onRetry={() => void query.refetch()} />
+          <ErrorState
+            message={t.googleSync.mobile.loadError}
+            onRetry={() => void query.refetch()}
+          />
         ) : (
           <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} />
         )}

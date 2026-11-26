@@ -76,7 +76,8 @@ export function refreshSent(client: QueryClient, phone: string, own: string[] = 
 /** An answer refreshes the newest page (refreshSent); no answer only the lists: a full read now
  *  would drop the «unconfirmed» bubble (docs/44 BUG7), the polls' merges keep it. */
 function afterSend(client: QueryClient, phone: string, done: SendDone): Promise<void> {
-  if (!unanswered(done.error)) return refreshSent(client, phone, [done.id, done.row?.id ?? done.id]);
+  if (!unanswered(done.error))
+    return refreshSent(client, phone, [done.id, done.row?.id ?? done.id]);
   refreshLists(client);
   return Promise.resolve();
 }

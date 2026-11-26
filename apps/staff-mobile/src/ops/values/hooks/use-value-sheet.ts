@@ -26,7 +26,9 @@ export function useValueSheet({ valueKey, saved, onSaved, onClose }: ValueSheetO
   const [typed, setTypedState] = useState('');
   const save = useSaveValue();
   const parsed = parseDraft(valueKey, draft);
-  const dirty = parsed.ok ? !sameValue(parsed.value, saved) : !sameValue(draft, draftOf(valueKey, saved));
+  const dirty = parsed.ok
+    ? !sameValue(parsed.value, saved)
+    : !sameValue(draft, draftOf(valueKey, saved));
   const confirm = parsed.ok ? confirmOf(valueKey, parsed.value, saved) : null;
 
   const setDraft = (patch: Partial<Draft>) => {
@@ -56,7 +58,11 @@ export function useValueSheet({ valueKey, saved, onSaved, onClose }: ValueSheetO
           onClose();
         },
         onError: (e) =>
-          setNotice(e instanceof ApiError && e.status === 400 ? t.settings.invalid : t.mobileValues.saveFailed),
+          setNotice(
+            e instanceof ApiError && e.status === 400
+              ? t.settings.invalid
+              : t.mobileValues.saveFailed,
+          ),
       },
     );
   const submit = () => {

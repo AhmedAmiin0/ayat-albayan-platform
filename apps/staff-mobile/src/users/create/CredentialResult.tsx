@@ -51,7 +51,9 @@ export function CredentialResult({ title, credential, onClose }: CredentialResul
           <Button variant="secondary" label={t.mobileUsers.share} onPress={share} />
         </View>
       ) : (
-        <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink }}>{R.setDone}</AppText>
+        <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink }}>
+          {R.setDone}
+        </AppText>
       )}
       <Button label={R.close} onPress={onClose} />
     </Section>

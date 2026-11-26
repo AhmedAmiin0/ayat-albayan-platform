@@ -61,7 +61,9 @@ test('open window: one line of text makes the pill exactly 44pt (26 line + 8 + 8
   const pill = StyleSheet.flatten(screen.getByTestId('composer-pill').props.style);
   expect(style.borderWidth).toBeUndefined();
   expect(style.lineHeight).toBe(type.lineHeight(type.size.base));
-  expect(style.lineHeight + 2 * style.paddingVertical + 2 * pill.borderWidth).toBe(shape.control.touch);
+  expect(style.lineHeight + 2 * style.paddingVertical + 2 * pill.borderWidth).toBe(
+    shape.control.touch,
+  );
   expect(style.minHeight + 2 * pill.borderWidth).toBe(shape.control.touch);
   expect(pill.borderRadius).toBe(shape.radius.pill);
 });

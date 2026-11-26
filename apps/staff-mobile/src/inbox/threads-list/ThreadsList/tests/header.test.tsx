@@ -14,7 +14,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 // Three short rows, 8pt apart, then the chats.
-beforeEach(() => mockApiFetch.mockResolvedValue({ items: [thread], total: 1, page: 1, pageSize: 25 }));
+beforeEach(() =>
+  mockApiFetch.mockResolvedValue({ items: [thread], total: 1, page: 1, pageSize: 25 }),
+);
 
 test('RTL: «المحادثات» as a one-line h2 header, a compact pill search, the blocks 8pt apart', async () => {
   expect(I18nManager.isRTL).toBe(true);
@@ -23,7 +25,10 @@ test('RTL: «المحادثات» as a one-line h2 header, a compact pill search
   const title = screen.getByRole('header', { name: t.nav.chats });
   expect(title).toHaveStyle({ fontSize: 20 });
   expect(title.props.numberOfLines).toBe(1);
-  expect(screen.getByLabelText(t.inbox.searchPlaceholder)).toHaveStyle({ minHeight: 44, fontSize: 16 });
+  expect(screen.getByLabelText(t.inbox.searchPlaceholder)).toHaveStyle({
+    minHeight: 44,
+    fontSize: 16,
+  });
   expect(screen.getByTestId('chats-list')).toHaveStyle({ gap: 8 });
   expect(screen.getByRole('button', { name: t.inbox.newChat.title })).toBeTruthy();
 });

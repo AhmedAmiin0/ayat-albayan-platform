@@ -22,7 +22,9 @@ function fakePeer(): NativePeer & { remote: unknown[]; listeners: Map<string, ()
     createOffer: jest.fn(async () => ({ type: 'offer' as const, sdp: 'v=0 offer' })),
     createAnswer: jest.fn(async () => ({ type: 'answer' as const, sdp: 'v=0 answer' })),
     setLocalDescription: jest.fn(async (d: { sdp: string }) => void (pc.localDescription = d)),
-    setRemoteDescription: jest.fn(async (d: unknown) => void (remote.push(d), (pc.remoteDescription = d))),
+    setRemoteDescription: jest.fn(
+      async (d: unknown) => void (remote.push(d), (pc.remoteDescription = d)),
+    ),
     addTrack: jest.fn(),
     addEventListener: (type: string, l: () => void) => void listeners.set(type, l),
     removeEventListener: jest.fn(),

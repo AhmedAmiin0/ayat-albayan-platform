@@ -12,7 +12,11 @@ import { RosterLines } from '@/sales/sales/roster/RosterLines';
 const S = t.sales.allStudents;
 
 /** Never a price, payment, note or meeting link; every row opens the student's details. */
-export const AllStudentRow = memo(function AllStudentRow({ student }: { student: SalesStudentView }) {
+export const AllStudentRow = memo(function AllStudentRow({
+  student,
+}: {
+  student: SalesStudentView;
+}) {
   const base = useTreeBase();
   const phone = student.guardian_phone;
   const open = () => pushInTab(studentDetailsHref(base, student.id));

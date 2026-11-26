@@ -37,7 +37,13 @@ export function CallsLog({ switcher }: { switcher?: ReactNode }) {
         {...cells}
         refreshing={calls.isRefetching}
         onRefresh={() => void calls.refetch()}
-        ListEmptyComponent={calls.isPending ? null : calls.isError ? <ErrorState onRetry={() => void calls.refetch()} /> : <EmptyState title={t.calls.log.empty} />}
+        ListEmptyComponent={
+          calls.isPending ? null : calls.isError ? (
+            <ErrorState onRetry={() => void calls.refetch()} />
+          ) : (
+            <EmptyState title={t.calls.log.empty} />
+          )
+        }
       />
     </View>
   );

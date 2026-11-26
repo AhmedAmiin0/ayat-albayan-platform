@@ -14,6 +14,14 @@ interface SavedReplyPickerProps {
 export function SavedReplyPicker({ contact, onClose, onFill }: SavedReplyPickerProps) {
   const { pick, known } = useFillReply(contact, onFill);
   const asking = onFill.asking;
-  const form = asking ? <FillReplyForm key={asking.id} reply={asking} known={known} onInsert={(text) => onFill(text, asking)} onCancel={onClose} /> : null;
+  const form = asking ? (
+    <FillReplyForm
+      key={asking.id}
+      reply={asking}
+      known={known}
+      onInsert={(text) => onFill(text, asking)}
+      onCancel={onClose}
+    />
+  ) : null;
   return <SavedRepliesSheet onClose={onClose} onPick={pick} form={form} />;
 }

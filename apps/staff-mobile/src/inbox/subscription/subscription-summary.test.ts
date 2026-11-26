@@ -6,7 +6,8 @@ import { familySummary } from './subscription-summary';
 
 const s = t.inbox.subscription;
 const paid = sub({ due_amount: 0 });
-const kid = (id: string, subscription: ReturnType<typeof sub> | null) => child({ id, name: id, subscription });
+const kid = (id: string, subscription: ReturnType<typeof sub> | null) =>
+  child({ id, name: id, subscription });
 const unpaidChip = { ...subscriptionStatusStyle.unpaid, label: t.enums.subscriptionStatus.unpaid };
 const pausedChip = { ...subscriptionStatusStyle.paused, label: t.enums.subscriptionStatus.paused };
 
@@ -23,7 +24,12 @@ test('nobody has a package: the count, no chips, one «بلا باقة» naming 
 
 test('every package runs: «طالبان», never «مشترك: 2 من 2»', () => {
   const kids = [kid('a', paid), kid('b', paid)];
-  expect(familySummary(kids)).toEqual({ chips: [], count: counted(s.students, 2), packaged: kids, noPackage: null });
+  expect(familySummary(kids)).toEqual({
+    chips: [],
+    count: counted(s.students, 2),
+    packaged: kids,
+    noPackage: null,
+  });
 });
 
 test('mixed: «مشترك: 1 من 3», the ended package keeps its line, the child without one is named once', () => {
@@ -52,7 +58,12 @@ test('paused and unpaid both show while folded, once each', () => {
 
 test('every package ended: the plain count (no «مشترك: 0 من 2»), each line kept', () => {
   const kids = [kid('a', usedUp), kid('b', usedUp)];
-  expect(familySummary(kids)).toEqual({ chips: [], count: counted(s.students, 2), packaged: kids, noPackage: null });
+  expect(familySummary(kids)).toEqual({
+    chips: [],
+    count: counted(s.students, 2),
+    packaged: kids,
+    noPackage: null,
+  });
 });
 
 test('Latin names (the owner’s own family) never merge into one run read backwards in RTL: each isolated', () => {

@@ -11,5 +11,8 @@ test('docs/07 «الأزرار»: «إيقاف» (danger) then «إلغاء» (s
   expect(cells.map((cell) => within(cell).queryByText(r.turnOff) !== null)).toEqual([true, false]);
   expect(cells.map((cell) => within(cell).queryByText(r.cancel) !== null)).toEqual([false, true]);
   const off = screen.getByRole('button', { name: r.turnOff });
-  expect(StyleSheet.flatten(off.props.style)).toMatchObject({ borderWidth: 1, borderColor: palette.light.bad });
+  expect(StyleSheet.flatten(off.props.style)).toMatchObject({
+    borderWidth: 1,
+    borderColor: palette.light.bad,
+  });
 });

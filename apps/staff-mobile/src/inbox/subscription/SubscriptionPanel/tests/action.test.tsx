@@ -10,7 +10,9 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 const s = t.inbox.subscription;
 const PHONE = '+966552147730';
 const panel = (people: ThreadPeople) =>
-  render(<SubscriptionPanel data={{ pages: [{ people }], pageParams: [undefined] }} phone={PHONE} />);
+  render(
+    <SubscriptionPanel data={{ pages: [{ people }], pageParams: [undefined] }} phone={PHONE} />,
+  );
 
 beforeEach(() => {
   jest.mocked(router.push).mockClear();

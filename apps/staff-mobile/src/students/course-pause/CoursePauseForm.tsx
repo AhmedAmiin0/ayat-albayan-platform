@@ -17,7 +17,11 @@ interface CoursePauseFormProps {
   onClose: () => void;
 }
 
-const bodyOf = (draft: { from: string; until: string | null; reason: string }): CoursePauseStart => {
+const bodyOf = (draft: {
+  from: string;
+  until: string | null;
+  reason: string;
+}): CoursePauseStart => {
   const reason = draft.reason.trim();
   return { fromDate: draft.from, untilDate: draft.until, ...(reason ? { reason } : {}) };
 };
@@ -44,7 +48,12 @@ export function CoursePauseForm({ studentId, onDone, onClose }: CoursePauseFormP
       <PausePreviewLine studentId={studentId} from={from} until={until} />
       <Note>{c.noMessage}</Note>
       {start.isError ? <ErrorLine message={pauseErrorText(start.error)} /> : null}
-      <SheetActions label={c.confirm} busy={start.isPending} onConfirm={submit} onCancel={onClose} />
+      <SheetActions
+        label={c.confirm}
+        busy={start.isPending}
+        onConfirm={submit}
+        onCancel={onClose}
+      />
     </View>
   );
 }

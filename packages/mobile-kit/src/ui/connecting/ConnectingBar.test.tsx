@@ -11,7 +11,10 @@ const c = t.mobile.connection;
 const CARD = 52;
 
 async function mountBar({ connectingFor }: { connectingFor?: number } = {}) {
-  const store = createConnectivity({ probe: () => new Promise(() => undefined), setOnline: jest.fn() });
+  const store = createConnectivity({
+    probe: () => new Promise(() => undefined),
+    setOnline: jest.fn(),
+  });
   if (connectingFor !== undefined) {
     store.reportFailure();
     jest.advanceTimersByTime(connectingFor);
@@ -23,7 +26,10 @@ async function mountBar({ connectingFor }: { connectingFor?: number } = {}) {
 const advance = (ms: number) => act(async () => jest.advanceTimersByTime(ms));
 const measure = () => fireEvent(screen.getByTestId('connecting-bar-measure'), 'layout', { nativeEvent: { layout: { height: CARD } } });
 const height = () => screen.getByTestId('connecting-bar-reveal');
-const heightRuns = () => timing.mock.calls.map(([, config]) => config).filter((config) => config.useNativeDriver === false);
+const heightRuns = () =>
+  timing.mock.calls
+    .map(([, config]) => config)
+    .filter((config) => config.useNativeDriver === false);
 
 beforeEach(() => {
   timing.mockClear();
@@ -41,7 +47,10 @@ test('hidden while online and for the first 800 ms; then it grows to its card ov
   expect(height()).toHaveStyle({ height: 0, overflow: 'hidden' });
   await measure();
   expect(heightRuns()).toEqual([expect.objectContaining({ toValue: CARD, duration: 260 })]);
-  expect(timing).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ toValue: 1, duration: 260, useNativeDriver: true }));
+  expect(timing).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.objectContaining({ toValue: 1, duration: 260, useNativeDriver: true }),
+  );
   await advance(300);
   expect(height()).toHaveStyle({ height: CARD });
 });
@@ -81,11 +90,17 @@ test('Reduce Motion: no slide (the height jumps), a 150 ms fade, the dots still'
   await measure();
   expect(height()).toHaveStyle({ height: CARD });
   expect(heightRuns()).toEqual([]);
-  expect(timing).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ toValue: 1, duration: 150 }));
+  expect(timing).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.objectContaining({ toValue: 1, duration: 150 }),
+  );
   expect(loop).not.toHaveBeenCalled();
   await act(async () => store.reportReached());
   await advance(1500);
-  expect(timing).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({ toValue: 0, duration: 150 }));
+  expect(timing).toHaveBeenLastCalledWith(
+    expect.anything(),
+    expect.objectContaining({ toValue: 0, duration: 150 }),
+  );
   await advance(200);
   expect(screen.queryByTestId('connecting-bar')).toBeNull();
 });

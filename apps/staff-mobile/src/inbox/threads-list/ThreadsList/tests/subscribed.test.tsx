@@ -37,7 +37,11 @@ test('the avatar ring: green subscribed, gray renewal, none for the rest; read a
 
   const green = ringOf('أم يوسف');
   expect(green.props.testID).toBe('avatar-ring-subscribed');
-  expect(green.props.style).toMatchObject({ borderWidth: 2, padding: 2, borderColor: palette.light.ok });
+  expect(green.props.style).toMatchObject({
+    borderWidth: 2,
+    padding: 2,
+    borderColor: palette.light.ok,
+  });
   expect(rowOf('أم يوسف').props.accessibilityHint).toBe(t.inbox.ring.subscribed);
 
   const gray = ringOf('أم ليان');

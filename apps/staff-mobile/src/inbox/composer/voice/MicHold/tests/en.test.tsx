@@ -17,7 +17,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
-  supabase: { storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) } },
+  supabase: {
+    storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) },
+  },
 }));
 jest.mock('expo-audio', () => jest.requireActual<typeof mockVoiceTestKit>('@/inbox/composer/voice/voice-test-kit').audioMock());
 jest.mock('@/inbox/composer/voice/voice-support', () => ({ voiceSupported: () => true }));

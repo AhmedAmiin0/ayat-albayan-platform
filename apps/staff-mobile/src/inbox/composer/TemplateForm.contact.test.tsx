@@ -32,6 +32,14 @@ test('contact_name is labelled, prefilled with the display name, editable, and s
 });
 
 test('without a display name (a new chat) the field starts empty', async () => {
-  await render(<TemplateForm template={RESCHEDULE} lessons={[]} contactName={null} onBack={jest.fn()} onSend={jest.fn()} />);
+  await render(
+    <TemplateForm
+      template={RESCHEDULE}
+      lessons={[]}
+      contactName={null}
+      onBack={jest.fn()}
+      onSend={jest.fn()}
+    />,
+  );
   expect(field().props.value).toBe('');
 });

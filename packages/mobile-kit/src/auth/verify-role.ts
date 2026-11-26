@@ -61,7 +61,8 @@ async function liveRole(): Promise<AppRole | null> {
 }
 
 /** Offline or a 5xx (not an ApiError below 500) may trust the token; a refusal never does. */
-const trustsClaim = (error: unknown): boolean => !(error instanceof ApiError) || error.status >= 500;
+const trustsClaim = (error: unknown): boolean =>
+  !(error instanceof ApiError) || error.status >= 500;
 
 /** After a failed /auth/me: the token's own claim when the failure allows it, else no role. */
 function claimFallback(session: Session, error: unknown): AppRole | null {

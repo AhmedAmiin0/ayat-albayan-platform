@@ -34,7 +34,13 @@ interface CourseInput {
  * Its `package` only satisfies the schema (courseBodyPackage: a custom count sends '8'); the API
  * labels the rule with the subscription's own package, and so does every label here.
  */
-export function courseRequest({ view, teacherId, picks, requestId, prefilled = [] }: CourseInput): BookingRequest | null {
+export function courseRequest({
+  view,
+  teacherId,
+  picks,
+  requestId,
+  prefilled = [],
+}: CourseInput): BookingRequest | null {
   const picked = dayTimesKeeping(picks, view.student.tz, prefilled);
   if (!view.subscription || !picked) return null;
   const { dayTimes, ...rule } = picked;

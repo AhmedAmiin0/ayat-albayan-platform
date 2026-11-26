@@ -21,7 +21,14 @@ export function CoursePauseSection({ studentId }: { studentId: string }) {
   return (
     <View style={{ gap: 8 }}>
       {notice ? <Note>{notice}</Note> : null}
-      {open ? <CoursePauseBanner studentId={studentId} pause={open} canChange={holds} onNotice={setNotice} /> : null}
+      {open ? (
+        <CoursePauseBanner
+          studentId={studentId}
+          pause={open}
+          canChange={holds}
+          onNotice={setNotice}
+        />
+      ) : null}
       {!open && holds ? (
         <ActionRow
           title={c.action}

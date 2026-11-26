@@ -19,7 +19,9 @@ let online = true;
 beforeEach(() => {
   jest.clearAllMocks();
   online = true;
-  mockApiFetch.mockImplementation((path: string) => (online ? answer(hudaProfile)(path) : Promise.reject(noNetwork())));
+  mockApiFetch.mockImplementation((path: string) =>
+    online ? answer(hudaProfile)(path) : Promise.reject(noNetwork()),
+  );
 });
 
 const offlineLine = t.leads.mobile.offline;

@@ -15,7 +15,12 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 const mockReplace = jest.fn();
 jest.mock('expo-router', () => ({
   useFocusEffect: jest.fn(),
-  router: { back: jest.fn(), canDismiss: () => false, replace: (h: string) => mockReplace(h), push: jest.fn() },
+  router: {
+    back: jest.fn(),
+    canDismiss: () => false,
+    replace: (h: string) => mockReplace(h),
+    push: jest.fn(),
+  },
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));
 

@@ -14,7 +14,15 @@ export const useInset = () => useContext(InsetContext);
 /** The rule between two rows, inset 16pt from both sides. */
 function Rule() {
   const { color } = useTheme();
-  return <View style={{ height: StyleSheet.hairlineWidth, marginHorizontal: 16, backgroundColor: color.rule }} />;
+  return (
+    <View
+      style={{
+        height: StyleSheet.hairlineWidth,
+        marginHorizontal: 16,
+        backgroundColor: color.rule,
+      }}
+    />
+  );
 }
 
 /** A short static group of rows in the card; null or false children are skipped. */
@@ -81,7 +89,14 @@ export function InsetSeparator() {
   const { color } = useTheme();
   const edge = StyleSheet.hairlineWidth;
   return (
-    <View style={{ backgroundColor: color.raised, borderColor: color.rule, borderLeftWidth: edge, borderRightWidth: edge }}>
+    <View
+      style={{
+        backgroundColor: color.raised,
+        borderColor: color.rule,
+        borderLeftWidth: edge,
+        borderRightWidth: edge,
+      }}
+    >
       <Rule />
     </View>
   );

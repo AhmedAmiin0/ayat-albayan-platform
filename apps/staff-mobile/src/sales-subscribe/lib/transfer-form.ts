@@ -36,7 +36,10 @@ interface TransferCheck {
   errors: { amount?: string };
 }
 
-export function checkTransfer(draft: TransferDraft, context: { sub: SalesMoneySubscriptionView; now: Date }): TransferCheck {
+export function checkTransfer(
+  draft: TransferDraft,
+  context: { sub: SalesMoneySubscriptionView; now: Date },
+): TransferCheck {
   const amount = parseAmount(draft.amountText);
   if (amount === null || amount <= 0) return { errors: { amount: t.salesMoney.error.amount } };
   const note = draft.note.trim();

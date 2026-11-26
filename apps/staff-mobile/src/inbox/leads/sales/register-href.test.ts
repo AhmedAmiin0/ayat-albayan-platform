@@ -6,7 +6,9 @@ test('a lead in the funnel opens the sales wizard with the lead, the number, the
     pathname: '/inbox/book',
     params: { leadId: 'a1', phone: '+966552147730', mode: 'register', name: 'هدى سالم', source: 'facebook_ad' },
   });
-  expect(registerHref({ ...thread, lead_name: null, display_name: null, lead_source: null })).toEqual({
+  expect(
+    registerHref({ ...thread, lead_name: null, display_name: null, lead_source: null }),
+  ).toEqual({
     pathname: '/inbox/book',
     params: { leadId: 'a1', phone: '+966552147730', mode: 'register' },
   });

@@ -27,7 +27,12 @@ interface Voice {
 function Row({ p, voice }: { p: OpenRowProps; voice: Voice }) {
   const { ui } = voice;
   const state = ui?.state ?? IDLE;
-  const mode = roundMode({ voice: ui !== null && !voice.inCall, text: p.text, staged: p.staged, state });
+  const mode = roundMode({
+    voice: ui !== null && !voice.inCall,
+    text: p.text,
+    staged: p.staged,
+    state,
+  });
   const bar = ui !== null && state.kind !== 'idle' && state.kind !== 'arming';
   const empty = (p.text.trim() === '' || p.blocked === true) && !p.staged;
   const round =

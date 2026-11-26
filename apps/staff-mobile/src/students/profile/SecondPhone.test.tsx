@@ -73,7 +73,9 @@ test('without guardians.write: the second number, no remove; a family with one n
   expect(screen.getByText(ltr(formatPhone(SECOND)))).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.guardians.removePhone })).toBeNull();
   screen.unmount();
-  await renderWithQuery(<GuardianCard guardian={{ ...guardian, phones: [{ phone_e164: MAIN, is_primary: true }] }} />);
+  await renderWithQuery(
+    <GuardianCard guardian={{ ...guardian, phones: [{ phone_e164: MAIN, is_primary: true }] }} />,
+  );
   expect(screen.queryByText(t.guardians.mainPhone)).toBeNull();
   expect(screen.queryByText(t.guardians.secondPhone)).toBeNull();
 });

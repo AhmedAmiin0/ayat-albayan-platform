@@ -11,7 +11,14 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn(), navigate: jest.fn()
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 
 // No admin action for sales (docs/16); join only on a running lesson.
-const ADMIN_ACTIONS = [t.today.confirmLesson, t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit, t.editTime.action, t.booking.makeup.action];
+const ADMIN_ACTIONS = [
+  t.today.confirmLesson,
+  t.today.confirm,
+  t.today.cancel,
+  t.lessons.rescheduleSubmit,
+  t.editTime.action,
+  t.booking.makeup.action,
+];
 const running = scheduleLesson({ status: 'scheduled' });
 const soon = scheduleLesson({ id: 'l2', status: 'scheduled', starts_at: '2026-10-12T15:20:00.000Z', ends_at: '2026-10-12T15:50:00.000Z', students: [{ id: 'st3', code: 'AB-0200', name: 'سلمى' }] });
 
@@ -21,7 +28,11 @@ const noAdminAction = () => {
 };
 const salesActions = () => {
   expect(screen.getAllByRole('button', { name: /^تأكيد/ })).toHaveLength(1);
-  for (const label of [t.sales.lessonActions.confirm, t.sales.lessonActions.reschedule, t.sales.lessonActions.cancel]) {
+  for (const label of [
+    t.sales.lessonActions.confirm,
+    t.sales.lessonActions.reschedule,
+    t.sales.lessonActions.cancel,
+  ]) {
     expect(screen.getByRole('button', { name: label })).toBeTruthy();
   }
   // The admin's confirm reads like hers and is counted once above, so only the rest are checked.

@@ -9,7 +9,13 @@ interface StatusPillsProps<S extends string> {
   onChange: (status: '' | S) => void;
 }
 
-export function StatusPills<S extends string>({ statuses, labels, styles, value, onChange }: StatusPillsProps<S>) {
+export function StatusPills<S extends string>({
+  statuses,
+  labels,
+  styles,
+  value,
+  onChange,
+}: StatusPillsProps<S>) {
   const items = [
     { value: '' as const, label: t.assistants.ledger.allStatuses },
     ...statuses.map((s) => ({ value: s, label: labels[s], ...styles[s] })),

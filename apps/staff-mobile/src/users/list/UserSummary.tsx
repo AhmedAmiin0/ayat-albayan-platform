@@ -14,7 +14,9 @@ export function UserSummary({ user }: { user: UserDetail }) {
   const disabled = user.status === 'disabled';
   const linked = user.linked ? `${t.users.kinds[user.linked.kind]}: ${recordText(user.linked)}` : t.users.link.none;
   return (
-    <View style={{ gap: 8, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: color.rule }}>
+    <View
+      style={{ gap: 8, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: color.rule }}
+    >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         <AppText style={label}>{t.users.detail.status}</AppText>
         <StatusChip {...statusStyle(user.status)} label={t.users.status[user.status]} />

@@ -6,7 +6,13 @@ import { t, FilterPills } from '@ab/mobile-kit';
 type Span = 'all' | 'one';
 
 /** Empty string means every month. */
-export function MonthFilter({ month, onChange }: { month: string; onChange: (month: string) => void }) {
+export function MonthFilter({
+  month,
+  onChange,
+}: {
+  month: string;
+  onChange: (month: string) => void;
+}) {
   const items: { value: Span; label: string }[] = [
     { value: 'all', label: t.assistants.ledger.allMonths },
     { value: 'one', label: t.mobileSalesMoney.oneMonth },

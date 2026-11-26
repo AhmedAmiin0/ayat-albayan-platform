@@ -18,7 +18,8 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 const h = t.communicationsHub;
 const onOpenAudience = jest.fn();
 const onOpenNumbers = jest.fn();
-const show = () => renderWithQuery(<CommsOverview onOpenAudience={onOpenAudience} onOpenNumbers={onOpenNumbers} />);
+const show = () =>
+  renderWithQuery(<CommsOverview onOpenAudience={onOpenAudience} onOpenNumbers={onOpenNumbers} />);
 
 beforeEach(() => {
   jest.clearAllMocks();

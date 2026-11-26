@@ -44,7 +44,13 @@ export const inputLine = (os: string): InputLine => LINES[os === 'android' ? 'an
  * (inputLine) + 2 × 1pt. No textAlign: the text runs the way it is typed. The
  * text and the placeholder sit in the middle of the box and keep 12pt from the pill's inline start.
  */
-export function ComposerInput({ value, onChange, onBlur, onSelection, inputRef }: ComposerInputProps) {
+export function ComposerInput({
+  value,
+  onChange,
+  onBlur,
+  onSelection,
+  inputRef,
+}: ComposerInputProps) {
   const { color } = useTheme();
   const { editing } = useChatActions();
   return (

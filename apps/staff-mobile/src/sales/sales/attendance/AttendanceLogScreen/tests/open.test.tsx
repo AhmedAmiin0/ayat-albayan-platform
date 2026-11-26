@@ -60,7 +60,9 @@ test('rows are keyed by lesson id (FlashList recycles by key)', async () => {
   await inSales(<AttendanceLogScreen />);
   await screen.findByText(w.sent);
   const list = screen.getByLabelText(w.title);
-  const keyOf = list.props.keyExtractor as ((row: { lesson_id: string }, i: number) => string) | undefined;
+  const keyOf = list.props.keyExtractor as
+    | ((row: { lesson_id: string }, i: number) => string)
+    | undefined;
   expect(logTable().items.map((r, i) => keyOf?.(r, i))).toEqual(['l1', 'l2', 'l3']);
 });
 

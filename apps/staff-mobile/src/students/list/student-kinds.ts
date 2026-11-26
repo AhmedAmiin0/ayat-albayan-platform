@@ -13,12 +13,22 @@ import { countOf, totalOf } from './student-filters';
 
 const L = t.studentLists;
 
-export const KIND_LABEL: Record<StudentListKind, string> = { active: L.active, trial: L.trial, all: L.all };
+export const KIND_LABEL: Record<StudentListKind, string> = {
+  active: L.active,
+  trial: L.trial,
+  all: L.all,
+};
 
-export const KIND_EMPTY: Record<StudentListKind, string> = { active: L.emptyActive, trial: L.emptyTrial, all: L.emptyAll };
+export const KIND_EMPTY: Record<StudentListKind, string> = {
+  active: L.emptyActive,
+  trial: L.emptyTrial,
+  all: L.emptyAll,
+};
 
 /** The switch's pills, each with its count when the API gave one (never an invented number). */
-export function kindPills(counts: Partial<Record<StudentListKind, number>>): FilterPill<StudentListKind>[] {
+export function kindPills(
+  counts: Partial<Record<StudentListKind, number>>,
+): FilterPill<StudentListKind>[] {
   return STUDENT_LIST_KINDS.map((kind) => {
     const count = counts[kind];
     return { value: kind, label: KIND_LABEL[kind], ...(count === undefined ? {} : { count }) };
@@ -32,7 +42,9 @@ export function countsLine(c: TeacherStudentCounts): string {
 /** Trial sums new, trial and pending_subscription; undefined until each is known. */
 export function kindCounts(counts: unknown): Partial<Record<StudentListKind, number>> {
   const parts = NOT_SUBSCRIBED_STATUSES.map((s) => countOf(counts, s));
-  const trial = parts.every((n): n is number => n !== undefined) ? parts.reduce((a, b) => a + b, 0) : undefined;
+  const trial = parts.every((n): n is number => n !== undefined)
+    ? parts.reduce((a, b) => a + b, 0)
+    : undefined;
   return { active: countOf(counts, 'active'), trial, all: totalOf(counts) };
 }
 

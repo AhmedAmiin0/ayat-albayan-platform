@@ -8,7 +8,11 @@ import { useSalesHrefs } from '@/sales/sales/lib/sales-href';
 import { teacherCounts, teacherLabel, teacherSubtitle } from '@/sales/sales/lib/sales-text';
 
 /** Never pay, rates or phone; the fixed meeting link only on the teacher's page. */
-export const SalesTeacherRow = memo(function SalesTeacherRow({ teacher }: { teacher: SalesTeacherView }) {
+export const SalesTeacherRow = memo(function SalesTeacherRow({
+  teacher,
+}: {
+  teacher: SalesTeacherView;
+}) {
   const href = useSalesHrefs();
   const name = teacherLabel(teacher);
   return (

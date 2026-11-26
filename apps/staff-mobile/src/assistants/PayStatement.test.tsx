@@ -14,7 +14,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 const mockUpload = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
-  supabase: { storage: { from: () => ({ uploadToSignedUrl: (...a: unknown[]) => mockUpload(...a) }) } },
+  supabase: {
+    storage: { from: () => ({ uploadToSignedUrl: (...a: unknown[]) => mockUpload(...a) }) },
+  },
 }));
 const mockPicked = { uri: 'file://r.jpg', mime: 'image/jpeg', bytes: new ArrayBuffer(4), size: 4 };
 jest.mock('@/core/ui/form/ReceiptPicker', () => {

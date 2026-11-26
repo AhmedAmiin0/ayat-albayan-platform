@@ -26,8 +26,20 @@ test('a tier: its plan, lesson length, discount and country, titled as a renewal
 });
 
 test('a custom count keeps its count; a USD quote leaves the country to the guardian', () => {
-  const source = priced({ count: 14, duration: 30, country: null, usdRate: 3.75, students: 1, discount: 5 });
-  const last = subscription({ package: null, duration: 30, lessons_total: 14, price_source: source });
+  const source = priced({
+    count: 14,
+    duration: 30,
+    country: null,
+    usdRate: 3.75,
+    students: 1,
+    discount: 5,
+  });
+  const last = subscription({
+    package: null,
+    duration: 30,
+    lessons_total: 14,
+    price_source: source,
+  });
   const href = renewHref({ id: 's1', status: 'pending_renewal' }, last);
   expect(href?.params).toEqual({ studentId: 's1', renew: '1', plan: 'custom', count: '14', minutes: '30', discount: '5' });
   // The subscribe screen opens on exactly that package.

@@ -15,7 +15,13 @@ import { fill } from '@/sales/sales/lib/sales-text';
 const UPCOMING_SHOWN = 5;
 
 /** No link, and this student's name stays plain in the lesson details. */
-export function UpcomingLessons({ lessons, studentId }: { lessons: readonly SalesStudentLesson[]; studentId: string }) {
+export function UpcomingLessons({
+  lessons,
+  studentId,
+}: {
+  lessons: readonly SalesStudentLesson[];
+  studentId: string;
+}) {
   const [all, setAll] = useState(false);
   const details = useLessonDetails(lessons);
   const s = t.sales.student.schedule;

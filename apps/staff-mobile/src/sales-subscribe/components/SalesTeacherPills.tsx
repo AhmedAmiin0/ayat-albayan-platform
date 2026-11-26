@@ -38,8 +38,17 @@ export function SalesTeacherPills({ hidden, value, onChange }: SalesTeacherPills
   return (
     <Section title={t.salesMoney.teacher}>
       <View style={{ gap: 8 }}>
-        {teachers.length > SEARCH_FROM ? <SearchField compact onSearch={setQ} label={t.salesMoney.teacherSearch} /> : null}
-        <FilterPills wrap role="radiogroup" accessibilityLabel={t.salesMoney.teacher} items={items} value={value} onChange={onChange} />
+        {teachers.length > SEARCH_FROM ? (
+          <SearchField compact onSearch={setQ} label={t.salesMoney.teacherSearch} />
+        ) : null}
+        <FilterPills
+          wrap
+          role="radiogroup"
+          accessibilityLabel={t.salesMoney.teacher}
+          items={items}
+          value={value}
+          onChange={onChange}
+        />
         <Note>{t.salesMoney.teacherHint}</Note>
       </View>
     </Section>
