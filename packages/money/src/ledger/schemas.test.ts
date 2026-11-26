@@ -29,8 +29,12 @@ describe('subscriptionCreateSchema (R-SUB-01: priced from the catalog, never typ
   });
 
   it('a custom count 1–60', () => {
-    expect(subscriptionCreateSchema.safeParse({ ...base, pricing: { count: 10 } }).success).toBe(true);
-    expect(subscriptionCreateSchema.safeParse({ ...base, pricing: { count: 61 } }).success).toBe(false);
+    expect(subscriptionCreateSchema.safeParse({ ...base, pricing: { count: 10 } }).success).toBe(
+      true,
+    );
+    expect(subscriptionCreateSchema.safeParse({ ...base, pricing: { count: 61 } }).success).toBe(
+      false,
+    );
   });
 
   it.each([

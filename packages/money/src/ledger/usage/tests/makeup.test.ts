@@ -5,7 +5,11 @@ import { consumesPackage, subscriptionBalances, type PackageLesson } from '../us
 // R-SCH-10, migration 172: a makeup replaces a miss the package already charged, so it never
 // consumes a unit and never moves the projected end date.
 let seq = 0;
-function lesson(day: string, status: LessonStatus, extra: Partial<PackageLesson> = {}): PackageLesson {
+function lesson(
+  day: string,
+  status: LessonStatus,
+  extra: Partial<PackageLesson> = {},
+): PackageLesson {
   seq += 1;
   return {
     lessonId: `m${String(seq).padStart(3, '0')}`,

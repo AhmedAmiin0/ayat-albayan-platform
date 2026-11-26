@@ -4,7 +4,11 @@ import { consumesPackage, subscriptionBalances, type PackageLesson } from '../us
 
 // Migration 190: an instant lesson never consumes a package unit, even when marked chargeable.
 let seq = 0;
-function lesson(day: string, status: LessonStatus, extra: Partial<PackageLesson> = {}): PackageLesson {
+function lesson(
+  day: string,
+  status: LessonStatus,
+  extra: Partial<PackageLesson> = {},
+): PackageLesson {
   seq += 1;
   return {
     lessonId: `i${String(seq).padStart(3, '0')}`,
@@ -20,10 +24,15 @@ function lesson(day: string, status: LessonStatus, extra: Partial<PackageLesson>
 const A = { id: 'A', lessonsTotal: 4, startsOn: '2026-09-01', createdAt: '2026-09-01T00:00:00Z' };
 
 describe('an instant lesson never consumes a package unit', () => {
-  it.each(['completed', 'late', 'no_show', 'excused'] as const)('%s + chargeable + instant → no unit', (status) => {
-    expect(consumesPackage({ status, chargeable: true, trial: false, makeup: false, instant: true })).toBe(false);
-    expect(consumesPackage({ status, chargeable: true, trial: false, makeup: false })).toBe(true);
-  });
+  it.each(['completed', 'late', 'no_show', 'excused'] as const)(
+    '%s + chargeable + instant → no unit',
+    (status) => {
+      expect(
+        consumesPackage({ status, chargeable: true, trial: false, makeup: false, instant: true }),
+      ).toBe(false);
+      expect(consumesPackage({ status, chargeable: true, trial: false, makeup: false })).toBe(true);
+    },
+  );
 
   it('the completed instant lesson uses no unit and does not move the projected end', () => {
     const lessons = [

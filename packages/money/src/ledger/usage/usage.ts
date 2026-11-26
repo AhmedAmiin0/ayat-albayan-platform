@@ -59,8 +59,16 @@ export interface SubscriptionBalance {
 }
 
 /** Rules 1–3 of migration 123 plus 172 and 190: chargeable, has an outcome, not a trial, makeup or instant lesson. */
-export function consumesPackage(l: Pick<PackageLesson, 'status' | 'chargeable' | 'trial' | 'makeup' | 'instant'>): boolean {
-  return l.chargeable && !l.trial && !l.makeup && !l.instant && (CONSUMING_LESSON_STATUSES as readonly string[]).includes(l.status);
+export function consumesPackage(
+  l: Pick<PackageLesson, 'status' | 'chargeable' | 'trial' | 'makeup' | 'instant'>,
+): boolean {
+  return (
+    l.chargeable &&
+    !l.trial &&
+    !l.makeup &&
+    !l.instant &&
+    (CONSUMING_LESSON_STATUSES as readonly string[]).includes(l.status)
+  );
 }
 
 const byTime = (a: PackageLesson, b: PackageLesson) =>
@@ -84,7 +92,9 @@ export function subscriptionBalances(input: {
   const subs = [...input.subscriptions].sort(byStart);
   const first = subs[0]?.startsOn;
   if (first === undefined) return [];
-  const counted = input.lessons.filter((l) => l.localDate >= first && !l.trial && !l.makeup && !l.instant && l.chargeable);
+  const counted = input.lessons.filter(
+    (l) => l.localDate >= first && !l.trial && !l.makeup && !l.instant && l.chargeable,
+  );
   const used = counted.filter(consumesPackage).sort(byTime);
   const booked = counted.filter((l) => BOOKED.includes(l.status)).sort(byTime);
   let capFrom = 0;
