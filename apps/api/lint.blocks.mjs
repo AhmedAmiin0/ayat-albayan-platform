@@ -81,6 +81,12 @@ export default {
         'ab/consistent-type-imports': 'error',
       },
     },
+    // docs/62 part 2 §4 rule A: enum value tables are decoded zod records.
+    {
+      files: ['src/**/*.ts'],
+      ignores: ['**/*.test.ts'],
+      rules: { 'ab/no-typed-value-table': 'error' },
+    },
     forbiddenImports({
       files: ['src/**/*.ts'],
       ignores: DB_CLIENT,
