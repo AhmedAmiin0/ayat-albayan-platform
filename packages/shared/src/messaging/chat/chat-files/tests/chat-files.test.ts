@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { CHAT_FILE_MIMES, WA_IMAGE_MAX_BYTES, chatFileProblem, waMediaKind } from '../chat-files';
+import {
+  CHAT_FILE_MIMES,
+  WA_IMAGE_MAX_BYTES,
+  WA_SEND_KINDS,
+  chatFileProblem,
+  waMediaKind,
+  waSendKind,
+  waSendKindSchema,
+} from '../chat-files';
 
 const TEN_MB = 10 * 1024 * 1024;
 
@@ -51,5 +59,24 @@ describe('chatFileProblem: a voice note (owner 2026-10-27)', () => {
 
   it('the chat send still refuses ogg and other audio', () => {
     expect(chatFileProblem({ mime: 'audio/ogg', size: 10, maxBytes: TEN_MB }, CHAT_FILE_MIMES)).toBe('file_type');
+  });
+});
+
+describe('waSendKind', () => {
+  it('names each send kind in one schema', () => {
+    expect(waSendKindSchema.options).toEqual([...WA_SEND_KINDS]);
+  });
+
+  it('reads the kind by mime; an unknown or Object property mime goes as a document', () => {
+    expect(['image/webp', 'audio/ogg', 'text/plain'].map(waSendKind)).toEqual([
+      'sticker',
+      'audio',
+      'document',
+    ]);
+    expect(['__proto__', 'constructor', null].map(waSendKind)).toEqual([
+      'document',
+      'document',
+      'document',
+    ]);
   });
 });
