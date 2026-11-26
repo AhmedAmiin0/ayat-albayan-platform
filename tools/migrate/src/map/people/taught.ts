@@ -18,6 +18,15 @@ interface Taught {
 
 const ATTENDED: ReadonlySet<string> = new Set(['on_time', 'late']);
 
+function singleTeachers(seen: ReadonlyMap<string, ReadonlySet<string>>): Map<string, string> {
+  const teacher = new Map<string, string>();
+  for (const [id, set] of seen) {
+    const [only] = set;
+    if (set.size === 1 && only) teacher.set(id, only);
+  }
+  return teacher;
+}
+
 export function reportFacts(bundle: SourceBundle, students: readonly Desired[]): Taught {
   const earlier = new Map(bundle.earlier);
   earlier.set('students', students);
@@ -30,10 +39,5 @@ export function reportFacts(bundle: SourceBundle, students: readonly Desired[]):
     if (!r.trial) chargeable.add(id);
     if (ATTENDED.has(r.attendance)) attended.add(id);
   }
-  const teacher = new Map<string, string>();
-  for (const [id, set] of seen) {
-    const [only] = set;
-    if (set.size === 1 && only) teacher.set(id, only);
-  }
-  return { teacher, chargeable, attended };
+  return { teacher: singleTeachers(seen), chargeable, attended };
 }
