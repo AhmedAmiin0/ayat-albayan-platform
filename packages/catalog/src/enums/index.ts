@@ -1,4 +1,6 @@
 // Domain enums (docs/03 §2). Each mirrors a DB enum; the api's enum-parity tests catch drift.
+import { z } from 'zod';
+
 export const LEAD_STATUSES = [
   'new',
   'contacted',
@@ -97,11 +99,13 @@ export const WEEKDAYS = [0, 1, 2, 3, 4, 5, 6] as const;
 
 export type LeadStatus = (typeof LEAD_STATUSES)[number];
 export type LeadSource = (typeof LEAD_SOURCES)[number];
-export type LessonStatus = (typeof LESSON_STATUSES)[number];
+export const lessonStatusSchema = z.enum(LESSON_STATUSES);
+export type LessonStatus = z.infer<typeof lessonStatusSchema>;
 export type SubscriptionStatus = (typeof SUBSCRIPTION_STATUSES)[number];
 export type Program = (typeof PROGRAMS)[number];
 export type Grade = (typeof GRADES)[number];
-export type Attendance = (typeof ATTENDANCES)[number];
+export const attendanceSchema = z.enum(ATTENDANCES);
+export type Attendance = z.infer<typeof attendanceSchema>;
 export type PackageSize = (typeof PACKAGE_SIZES)[number];
 export type Gender = (typeof GENDERS)[number];
 export type StudentStatus = (typeof STUDENT_STATUSES)[number];
