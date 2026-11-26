@@ -22,12 +22,13 @@ describe('TableToolbar', () => {
     expect(screen.queryByText('حقول')).toBeNull();
   });
 
-  it('compact (the inbox list): a smaller search basis and «تصفية» as an icon, still named «تصفية»', () => {
+  it('compact (the inbox list): the search on a row of its own and «تصفية» as an icon, still named «تصفية»', () => {
     render(<TableToolbar compact search={<input aria-label="بحث" />} fields={<p>حقول</p>} chips={[]} onClearAll={vi.fn()} end={<b>تبويبات</b>} />);
     const button = screen.getByRole('button', { name: t.table.filter });
     expect(button.querySelector('.sr-only')?.textContent).toBe(t.table.filter);
     const box = screen.getByRole('textbox', { name: 'بحث' }).parentElement;
-    expect(box?.className).toContain('basis-24');
+    // A narrow list column cannot hold the search beside the filter and the tabs (docs/65 UX-6).
+    expect(box?.className).toContain('basis-full');
     expect(box?.className).not.toContain('basis-44');
   });
 
