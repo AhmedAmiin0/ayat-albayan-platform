@@ -1,38 +1,13 @@
-import { historyMonths, historyRows } from '@ab/client-core';
-import type { PortalHistory, PortalHistoryStatus, PortalStudent } from '@ab/shared';
-import { AppText, Button, EmptyState, t, type, useTheme } from '@ab/mobile-kit';
-import { LoadState, MonthSection } from '@/ui';
-import { useChildHistory } from '@/portal';
-import { HistoryRow } from '@/child/HistoryRow';
-
-interface HistoryPanelProps {
-  student: PortalStudent;
-  status: PortalHistoryStatus;
-}
-
-const EMPTY: Record<PortalHistoryStatus, () => string> = {
-  attended: () => t.portal.attendedEmpty,
-  absent: () => t.portal.absentEmpty,
-};
-
-/** The loaded pages under their months, or the empty note. */
-function HistoryMonths({ pages, ...p }: HistoryPanelProps & { pages: readonly PortalHistory[] }) {
-  const months = historyMonths(historyRows(pages, p.status), p.student.tz);
-  if (months.length === 0) return <EmptyState title={EMPTY[p.status]()} />;
-  return months.map(({ month, rows }) => (
-    <MonthSection key={month} month={month}>
-      {rows.map((row) => (
-        <HistoryRow key={row.lesson_id} row={row} student={p.student} />
-      ))}
-    </MonthSection>
-  ));
-}
+import { AppText, Button, t, type, useTheme } from '@ab/mobile-kit';
+import { LoadState } from '@/ui';
+import { HistoryMonths } from './HistoryMonths';
+import type { HistoryPanelProps } from './HistoryPanel.types';
+import { useHistoryPanel } from './use-history-panel';
 
 /** Newest first, grouped by month. */
 export function HistoryPanel({ student, status }: HistoryPanelProps) {
   const { color } = useTheme();
-  const history = useChildHistory(student.id, status);
-  const more = history.isFetchingNextPage;
+  const { history, more, loadMore } = useHistoryPanel(student.id, status);
   return (
     <>
       <LoadState query={history}>
@@ -43,7 +18,7 @@ export function HistoryPanel({ student, status }: HistoryPanelProps) {
           variant="secondary"
           label={more ? t.portal.loadingMore : t.portal.more}
           busy={more}
-          onPress={() => void history.fetchNextPage()}
+          onPress={loadMore}
         />
       ) : null}
       {status === 'absent' ? (
