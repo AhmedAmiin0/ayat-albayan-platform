@@ -1,22 +1,17 @@
-import { TEACHER_STUDENT_KINDS, type TeacherStudentKind } from '@ab/shared';
-import { PROGRAMS } from '@ab/catalog';
+import { myStudentsCall } from '@ab/client-core';
+import {
+  TEACHER_STUDENT_KINDS,
+  type TeacherStudentKind,
+  type TeacherStudentView,
+} from '@ab/shared';
 import { counted } from '@ab/core';
 import { useQueries, type UseQueryResult } from '@tanstack/react-query';
-import { z } from 'zod';
 import { teacherKeys } from '@/features/people/keys';
-import { apiFetch, t } from '@ab/web-kit';
+import { apiFetch, apiSend, t } from '@ab/web-kit';
 
 // Facts joined by id from GET /teachers/me/students?kind= without widening TeacherMe (docs/48).
 
-const factsSchema = z.array(
-  z.object({
-    id: z.string(),
-    program: z.enum(PROGRAMS),
-    level: z.string().nullable(),
-    age: z.number().nullable(),
-  }),
-);
-export type StudentFacts = z.infer<typeof factsSchema>[number];
+const myStudents = myStudentsCall({ apiFetch, apiSend });
 
 /** The facts of a student keyed by id (a missing id: no line). */
 export type FactsById = ReadonlyMap<string, string>;
@@ -25,19 +20,19 @@ export type FactsById = ReadonlyMap<string, string>;
 const FACTS_STALE_MS = 300_000;
 
 /** program · level · age (plural), nulls dropped, never «—». */
-export function factsLine(s: Omit<StudentFacts, 'id'>): string {
+export function factsLine(s: Pick<TeacherStudentView, 'program' | 'level' | 'age'>): string {
   const age = s.age === null ? null : counted(t.teacherStudents.ageYears, s.age);
   return [t.enums.program[s.program], s.level, age].filter(Boolean).join(' · ');
 }
 
 export const studentFactsQuery = (kind: TeacherStudentKind) => ({
   queryKey: teacherKeys.myStudents(kind),
-  queryFn: async () => factsSchema.parse(await apiFetch(`/teachers/me/students?kind=${kind}`)),
+  queryFn: () => myStudents(kind),
   staleTime: FACTS_STALE_MS,
 });
 
 /** Module-level (a stable reference): the Map is rebuilt only when the results change. */
-function combineFacts(results: UseQueryResult<StudentFacts[]>[]): FactsById {
+function combineFacts(results: UseQueryResult<TeacherStudentView[]>[]): FactsById {
   const pairs = results.flatMap((r) => r.data ?? []).map((s) => [s.id, factsLine(s)] as const);
   return new Map(pairs);
 }

@@ -3,6 +3,7 @@ export * from './people-sort';
 export * from './people';
 export * from './student-filters';
 export * from './teacher-students';
+export * from './teacher-students.routes';
 export * from './people-edit';
 export * from './people-edit-view';
 export type * from './lead-views';

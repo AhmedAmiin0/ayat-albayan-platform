@@ -3524,6 +3524,73 @@
    "required": [
     "kind"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "code": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "new",
+       "trial",
+       "pending_subscription",
+       "active",
+       "pending_renewal",
+       "expired",
+       "paused",
+       "churned"
+      ]
+     },
+     "program": {
+      "type": "string",
+      "enum": [
+       "quran",
+       "arabic",
+       "islamic_studies"
+      ]
+     },
+     "level": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "age": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "next_lesson_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "code",
+     "name",
+     "status",
+     "program",
+     "level",
+     "age",
+     "next_lesson_at"
+    ]
+   }
   }
  },
  "GET /teachers/me/students/:id": {
