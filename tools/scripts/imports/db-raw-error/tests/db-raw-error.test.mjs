@@ -4,10 +4,11 @@ import { rewriteText } from '../db-raw-error.mjs';
 
 const DB = "import { DB, type Db } from '@/common/db/db.module';\n";
 const ERRORS = "import { maybe, rows } from '@/common/db/errors';\n";
+const RAW_GUARD = '  if (error) throw new Error(`r failed: ${error.message}`);';
 const file = (head, lines) => `${head}\nasync function f(db: Db) {\n${lines.join('\n')}\n}\n`;
 
 test('a template naming the error becomes pgError, with a new errors import', () => {
-  const out = rewriteText(file(DB, ['  if (error) throw new Error(`pending read failed: ${error.message}`);']));
+  const out = rewriteText(file(DB, [RAW_GUARD]));
   assert.match(out.text, /^ {2}if \(error\) throw pgError\(error\);$/m);
   assert.match(out.text, /^import \{ pgError \} from '@\/common\/db\/errors';$/m);
   assert.equal(out.sites, 1);
@@ -49,7 +50,7 @@ test('a guard naming another error, a helper and a code check stay and are liste
 });
 
 test('a second run finds nothing', () => {
-  const once = rewriteText(file(DB, ['  if (error) throw new Error(`r failed: ${error.message}`);']));
+  const once = rewriteText(file(DB, [RAW_GUARD]));
   const twice = rewriteText(once.text);
   assert.equal(twice.text, once.text);
   assert.equal(twice.sites, 0);
@@ -57,8 +58,9 @@ test('a second run finds nothing', () => {
 
 test('the new import goes after a multi-line import, never inside it', () => {
   const head = `${DB}import {\n  MESSAGE_SELECT,\n  type Row,\n} from '@/modules/x';\n`;
-  const out = rewriteText(file(head, ['  if (error) throw new Error(`r failed: ${error.message}`);']));
-  assert.match(out.text, /\} from '@\/modules\/x';\nimport \{ pgError \} from '@\/common\/db\/errors';\n/);
+  const out = rewriteText(file(head, [RAW_GUARD]));
+  const after = "} from '@/modules/x';\nimport { pgError } from '@/common/db/errors';\n";
+  assert.ok(out.text.includes(after));
 });
 
 test('an error typed only as { message: string } is not a PostgrestError: listed, not rewritten', () => {

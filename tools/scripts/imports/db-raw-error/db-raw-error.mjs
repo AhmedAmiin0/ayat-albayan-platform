@@ -18,7 +18,7 @@ const TEST = /\.test\.ts$/;
 const namesError = (arg, err) =>
   arg === `${err}.message` || (arg.startsWith('`') && arg.includes(`\${${err}.message}`));
 
-/** pgError takes a PostgrestError; a name the file also types as `{ message: string }` may not be one. */
+/** pgError takes a PostgrestError; a name also typed as `{ message: string }` may not be one. */
 const looselyTyped = (text, err) => {
   const name = err.split('.').at(-1) ?? err;
   return new RegExp(`\\b${name}\\??: \\{ message: string \\}`).test(text);
