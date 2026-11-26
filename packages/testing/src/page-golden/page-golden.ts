@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import type { z } from 'zod';
 import type { PageGoldenCase, PageGoldenSpec, PageOutcome } from './page-golden.types';
 
 /** Every page query stops at page 10 000 unless it sets a lower last page (docs/62 §6). */

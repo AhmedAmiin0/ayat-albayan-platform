@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { type MediaMessage } from '@/modules/messaging/whatsapp';
+import type { MediaMessage } from '@/modules/messaging/whatsapp';
 import { ask, jpgs, PDF_BYTES, setup, status } from '@/modules/messaging/inbox/files/pdf/pdf-preview.fakes';
 import { pdfPageCount, renderPdfPages, sandboxReady } from '@/modules/messaging/inbox/files/pdf/pdf-client';
 import { httpError } from '@/common/http/errors';

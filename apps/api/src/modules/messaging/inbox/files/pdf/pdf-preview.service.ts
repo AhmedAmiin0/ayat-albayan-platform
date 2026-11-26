@@ -4,7 +4,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { BUCKETS, pdfPagePath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
-import { type InboundFile } from '@/modules/messaging/whatsapp';
+import type { InboundFile } from '@/modules/messaging/whatsapp';
 import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media.service';
 import { FailedRecently, InFlight, pageRange, type PageRange } from './pdf-pages';
 import { PdfPreviewRepo, type PdfDoc } from './pdf-preview.repo';
