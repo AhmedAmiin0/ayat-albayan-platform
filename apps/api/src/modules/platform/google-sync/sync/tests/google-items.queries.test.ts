@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
+import { fakeDb } from '@/common/db/testing/fake-db';
 import { GoogleItemsQueries } from '@/modules/platform/google-sync/sync/google-items.queries';
 import { item } from '@/modules/platform/google-sync/google-sync.fakes';
 
@@ -38,5 +40,13 @@ describe('GoogleItemsQueries.finish', () => {
     const db = { from: vi.fn().mockReturnValue(chain) };
     await new GoogleItemsQueries(db as unknown as Db).finish({ id: 'i', claim_token: 't' }, { state: 'gone', error: 'deleted_in_google' });
     expect(updates[1]).toMatchObject({ state: 'pending', google_id: null });
+  });
+});
+
+describe('GoogleItemsQueries errors', () => {
+  it('a failed claim answers through the default db error map', async () => {
+    const { db } = fakeDb({ 'rpc:google_sync_claim': [{ error: PG_ERRORS.foreignKey }] });
+    const answer = await answerOfRejection(new GoogleItemsQueries(db).claim(25));
+    expect(answer).toEqual({ status: 409, body: expect.objectContaining({ message: 'fk_violation' }) });
   });
 });
