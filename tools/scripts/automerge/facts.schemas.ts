@@ -17,7 +17,6 @@ export const prSchema = z.object({
 });
 
 export const checkRunSchema = z.object({
-  id: z.number(),
   name: z.string(),
   status: z.string(),
   conclusion: z.string().nullable(),

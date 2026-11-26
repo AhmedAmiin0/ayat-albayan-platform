@@ -2,6 +2,12 @@ import type { CheckRun, Facts } from './facts.schemas.ts';
 
 /** The workflow's own job (lane-automerge.yml) is still in progress while it decides. */
 export const SELF = 'lane automerge';
+/**
+ * The title check runs again on the same commit when the title is edited and its old failure
+ * stays on the head; decide.ts reads the live title itself, so its runs are not read here.
+ */
+const TITLE = 'pr title';
+const UNREAD = new Set([SELF, TITLE]);
 export const REQUIRED: readonly string[] = ['check', 'guards'];
 const OK = new Set(['success', 'skipped', 'neutral']);
 
@@ -11,13 +17,8 @@ const passed = (runs: readonly CheckRun[], name: string): boolean =>
 /** A run cancelled by a newer one (a `concurrency` group) is moot once the same check passed. */
 const superseded = (r: CheckRun, runs: readonly CheckRun[]): boolean =>
   r.conclusion === 'cancelled' && passed(runs, r.name);
-/** So is a failed run once a newer run of the same check passed: a re-run on the same commit. */
-const rerunPassed = (r: CheckRun, runs: readonly CheckRun[]): boolean =>
-  runs.some((o) => o.name === r.name && o.conclusion === 'success' && o.id > r.id);
-const moot = (r: CheckRun, runs: readonly CheckRun[]): boolean =>
-  superseded(r, runs) || rerunPassed(r, runs);
 const failed = (r: CheckRun, runs: readonly CheckRun[]): boolean =>
-  !OK.has(r.conclusion ?? '') && !moot(r, runs);
+  !OK.has(r.conclusion ?? '') && !superseded(r, runs);
 const names = (runs: readonly CheckRun[]): string => runs.map((r) => r.name).join(', ');
 const failures = (runs: readonly CheckRun[]): string =>
   runs.map((r) => `${r.name} ${r.conclusion ?? ''}`).join(', ');
@@ -45,7 +46,7 @@ const RULES: readonly Rule[] = [
 
 /** Why the head commit's checks are not all green, or null when they are. */
 export function notGreen(facts: Pick<Facts, 'checks' | 'statuses'>): string | null {
-  const checks = facts.checks.filter((r) => r.name !== SELF);
+  const checks = facts.checks.filter((r) => !UNREAD.has(r.name));
   for (const rule of RULES) {
     const reason = rule({ checks, statuses: facts.statuses });
     if (reason !== null) return reason;

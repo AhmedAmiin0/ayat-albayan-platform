@@ -9,7 +9,6 @@ type Run = Facts['checks'][number];
 type Event = Facts['events'][number];
 
 export const aRun = (name: string, over: Partial<Run> = {}): Run => ({
-  id: 0,
   name,
   status: 'completed',
   conclusion: 'success',
