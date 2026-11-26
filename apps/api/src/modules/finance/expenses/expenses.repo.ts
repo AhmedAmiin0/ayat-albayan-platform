@@ -2,6 +2,7 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import type { ExpenseCategoryView, ExpenseView } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { MAX_ROWS } from '@/common/db/read-all';
 import { done, maybe, one, pgError, rows } from '@/common/db/errors';
 
 export type ExpenseRow = Tables<'expenses'>;
@@ -29,7 +30,7 @@ export function toExpenseView(row: ExpenseRow): ExpenseView {
 export class ExpensesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Months `first`…`last` (YYYY-MM-01), inclusive; one month when equal. */
+  /** Months `first`…`last` (YYYY-MM-01), inclusive; one month when equal; the server caps rows. */
   async between(first: string, last: string): Promise<ExpenseRow[]> {
     const data = rows(await this.db
       .from('expenses')
@@ -39,7 +40,7 @@ export class ExpensesRepo {
       .order('month')
       .order('category')
       .order('created_at')
-      .limit(5000));
+      .limit(MAX_ROWS));
     return data;
   }
 
