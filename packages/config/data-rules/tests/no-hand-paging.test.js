@@ -22,6 +22,7 @@ testRule({ name: 'no-hand-paging', rule: noHandPagingRule, lang: 'ts' }, {
       code: 'const shape = z.object({ pageSize: z.coerce.number() });',
       filename: PAGE_UNIT,
     },
+    { code: 'const from = (input.page - 1) * input.pageSize;', filename: PAGE_UNIT },
   ],
   invalid: [
     { code: 'q.range(from, from + input.pageSize - 1);', errors: [range] },
