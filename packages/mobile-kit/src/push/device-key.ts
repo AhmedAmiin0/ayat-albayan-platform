@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ApiError, apiSend } from '../lib/http/api';
+import { pushTokenCalls } from '@ab/client-core';
+import { ApiError, apiFetch, apiSend } from '../lib/http/api';
 import { silencePush } from './silence-push';
 
 /** The token this device put on the profile, so sign-out removes exactly it (survives restarts). */
@@ -11,6 +12,9 @@ export const TOKEN_KEY = 'push.token';
  */
 export const DEVICE_KEY = 'push.deviceKey';
 
+/** PUT and DELETE /me/push-tokens on the app's api client. */
+export const pushTokens = pushTokenCalls({ apiFetch, apiSend });
+
 /**
  * PUT /me/push-tokens with this device's key, then keeps the token and the key answered. A 409 is
  * the token still bound to another person's live session (an old phone whose sign-out never reached
@@ -19,16 +23,16 @@ export const DEVICE_KEY = 'push.deviceKey';
  */
 export async function putPushToken(token: string): Promise<void> {
   const deviceKey = await AsyncStorage.getItem(DEVICE_KEY);
-  let res: { deviceKey?: string } | undefined;
+  let res: { deviceKey: string };
   try {
-    res = await apiSend<{ deviceKey?: string } | undefined>('PUT', '/me/push-tokens', deviceKey ? { token, deviceKey } : { token });
+    res = await pushTokens.add(deviceKey ? { token, deviceKey } : { token });
   } catch (error) {
     if (!(error instanceof ApiError && error.status === 409)) throw error;
     await silencePush();
     return;
   }
   await AsyncStorage.setItem(TOKEN_KEY, token);
-  if (res?.deviceKey) await AsyncStorage.setItem(DEVICE_KEY, res.deviceKey);
+  await AsyncStorage.setItem(DEVICE_KEY, res.deviceKey);
 }
 
 // docs/50 §6: off keeps this device out of pushes across restarts; the staff app never sets it.

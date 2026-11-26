@@ -130,6 +130,7 @@ test('unregister: DELETE with the URL-encoded token, then forget it', async () =
   expect(mockApiSend).toHaveBeenCalledWith(
     'DELETE',
     `/me/push-tokens/${encodeURIComponent(TOKEN)}`,
+    undefined,
   );
   expect(await AsyncStorage.getItem(TOKEN_KEY)).toBeNull();
 });

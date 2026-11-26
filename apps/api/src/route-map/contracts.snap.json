@@ -135,7 +135,8 @@
    "required": [
     "token"
    ]
-  }
+  },
+  "response": "empty"
  },
  "DELETE /people/guardians/:id/phones/:phone": {
   "params": {
@@ -17074,6 +17075,19 @@
    },
    "required": [
     "token"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "deviceKey": {
+     "type": "string",
+     "pattern": "^[\\w-]{43}$"
+    }
+   },
+   "required": [
+    "deviceKey"
    ]
   }
  },
