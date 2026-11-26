@@ -4,11 +4,9 @@ import { stripeFactory } from '@/modules/finance/stripe';
 const made = vi.hoisted(() => ({ options: new Array<unknown>() }));
 
 vi.mock('stripe', () => ({
-  default: class {
-    constructor(_key: string, options: unknown) {
-      made.options.push(options);
-    }
-  },
+  default: vi.fn(function stripe(_key: string, options: unknown) {
+    made.options.push(options);
+  }),
 }));
 
 describe('stripeFactory', () => {
