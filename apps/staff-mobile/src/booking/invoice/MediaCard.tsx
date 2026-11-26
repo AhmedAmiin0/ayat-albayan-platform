@@ -22,7 +22,12 @@ export function MediaCard({ phone, item, onPick }: MediaCardProps) {
   const uri = file.data?.url ?? null;
   const failed = image && !item.expired && file.isError;
   const when = whenIn(new Date(item.created_at), tz, cycle);
-  const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 };
+  const small = {
+    fontFamily: type.ui[400],
+    fontSize: type.size.xs,
+    lineHeight: type.lineHeight(type.size.xs),
+    color: color.ink2,
+  };
   return (
     <Pressable
       accessibilityRole="button"
@@ -60,11 +65,18 @@ function Tile(p: { uri: string | null; image: boolean; expired: boolean; failed:
     return (
       <>
         <ReceiptIcon />
-        <AppText style={{ ...small, fontFamily: type.ui[600], color: color.ink }}>{t.booking.mobile.pdfFile}</AppText>
+        <AppText style={{ ...small, fontFamily: type.ui[600], color: color.ink }}>
+          {t.booking.mobile.pdfFile}
+        </AppText>
       </>
     );
   }
-  if (p.expired) return <AppText style={{ ...small, fontFamily: type.ui[600], color: color.ink }}>{t.booking.invoice.expiredBadge}</AppText>;
+  if (p.expired)
+    return (
+      <AppText style={{ ...small, fontFamily: type.ui[600], color: color.ink }}>
+        {t.booking.invoice.expiredBadge}
+      </AppText>
+    );
   if (p.failed) return <AppText style={small}>{t.booking.invoice.thumbRetry}</AppText>;
   return <ActivityIndicator accessibilityRole="progressbar" accessibilityLabel={t.common.loading} color={color.ink3} />;
 }

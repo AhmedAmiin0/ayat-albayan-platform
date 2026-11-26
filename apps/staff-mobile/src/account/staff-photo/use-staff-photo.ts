@@ -36,7 +36,12 @@ export function useStaffPhoto({ base, photo, invalidate }: StaffPhotoOptions) {
     onSuccess: done(t.staffPhoto.saved),
     onError: failed,
   });
-  const remove = useMutation({ mutationFn: () => removeStaffPhoto(base), onMutate: before, onSuccess: done(t.staffPhoto.removed), onError: failed });
+  const remove = useMutation({
+    mutationFn: () => removeStaffPhoto(base),
+    onMutate: before,
+    onSuccess: done(t.staffPhoto.removed),
+    onError: failed,
+  });
 
   async function change() {
     before();

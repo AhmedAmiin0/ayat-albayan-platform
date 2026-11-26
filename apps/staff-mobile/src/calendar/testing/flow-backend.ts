@@ -13,10 +13,14 @@ const TEACHERS: OverviewTeacher[] = [
   { ...omar, windows: [], free: [] },
 ];
 const MINUTE = 60_000;
-const riyadhDate = (iso: string) => new Date(Date.parse(iso) + 3 * 60 * MINUTE).toISOString().slice(0, 10);
+const riyadhDate = (iso: string) =>
+  new Date(Date.parse(iso) + 3 * 60 * MINUTE).toISOString().slice(0, 10);
 
 export function calendarBackend() {
-  const state: { lessons: LessonView[]; slots: typeof SLOTS } = { lessons: [pending, muscat], slots: SLOTS };
+  const state: { lessons: LessonView[]; slots: typeof SLOTS } = {
+    lessons: [pending, muscat],
+    slots: SLOTS,
+  };
   const within = (l: LessonView, from = '', to = '9') => l.starts_at >= from && l.starts_at < to;
   const backend = new FakeBackend()
     .on('GET /teachers', () => ({ items: [{ ...TEACHER, active_count: 0, trial_count: 0 }], total: 1, page: 1, pageSize: 25 }))

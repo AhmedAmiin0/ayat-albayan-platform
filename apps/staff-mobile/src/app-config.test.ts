@@ -15,7 +15,11 @@ const plugin = (name: string): unknown =>
 test('expo-audio props unchanged (recording rides on the webrtc RECORD_AUDIO; no background service); its iOS microphone text is the shared rationale', () => {
   expect(plugin('expo-audio')).toEqual([
     'expo-audio',
-    { microphonePermission: t.mobileRoom.native.mic, recordAudioAndroid: false, enableBackgroundPlayback: false },
+    {
+      microphonePermission: t.mobileRoom.native.mic,
+      recordAudioAndroid: false,
+      enableBackgroundPlayback: false,
+    },
   ]);
 });
 

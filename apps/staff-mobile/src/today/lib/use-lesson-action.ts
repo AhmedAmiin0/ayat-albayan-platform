@@ -66,7 +66,8 @@ export function useLessonAction() {
       action.mutate({ id, status: CANCEL_STATUS[cancel.by], cancel }),
     correct: (id: string, to: CorrectTo) => action.mutate({ id, status: to, correct: to }),
     busyId: action.isPending ? last?.id : undefined,
-    errorFor: (id: string) => (action.isError && last?.id === id ? errorText(action.error) : undefined),
+    errorFor: (id: string) =>
+      action.isError && last?.id === id ? errorText(action.error) : undefined,
     /** Said once a change lands, for the 5s it stays: a cancelled card has left the list. */
     notice: isSuccess ? NOTICE[noticeKind(last)] : undefined,
   };

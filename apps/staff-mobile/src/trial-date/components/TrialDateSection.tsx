@@ -24,14 +24,34 @@ export function TrialDateSection({ student }: { student: StudentProfile }) {
           variant="secondary"
           label={t.trialDate.action}
           accessibilityLabel={`${t.trialDate.action} — ${student.name}`}
-          onPress={() => router.push(to(studentFileTrialHref({ studentId: student.id, name: student.name, program: student.program })))}
+          onPress={() =>
+            router.push(
+              to(
+                studentFileTrialHref({
+                  studentId: student.id,
+                  name: student.name,
+                  program: student.program,
+                }),
+              ),
+            )
+          }
         />
       ) : (
-        <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 }}>
+        <AppText
+          style={{
+            fontFamily: type.ui[500],
+            fontSize: type.size.sm,
+            lineHeight: type.lineHeight(type.size.sm),
+            color: color.ink2,
+          }}
+        >
           {t.trialDate.notAllowed}
         </AppText>
       )}
-      <TrialHistoryList history={history.data} onRetry={history.isError ? () => void history.refetch() : undefined} />
+      <TrialHistoryList
+        history={history.data}
+        onRetry={history.isError ? () => void history.refetch() : undefined}
+      />
     </View>
   );
 }

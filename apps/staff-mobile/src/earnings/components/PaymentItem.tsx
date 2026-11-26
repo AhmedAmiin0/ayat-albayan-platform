@@ -17,7 +17,9 @@ export const PaymentItem = memo(function PaymentItem({ payment }: { payment: Tea
       <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink, fontVariant: ['tabular-nums'] }}>
         {egp(payment.amount)}
       </AppText>
-      <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 }}>{detail}</AppText>
+      <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 }}>
+        {detail}
+      </AppText>
     </View>
   );
 });

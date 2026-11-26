@@ -4,7 +4,13 @@ import type { DashboardResponse } from '@ab/money';
 
 const month = (m: string, revenue: number, extra: { cost?: number; expenses?: number } = {}) => {
   const { cost = 0, expenses = 0 } = extra;
-  return { month: m, revenue, teacher_cost: cost, expenses, gross_margin: revenue - cost - expenses };
+  return {
+    month: m,
+    revenue,
+    teacher_cost: cost,
+    expenses,
+    gross_margin: revenue - cost - expenses,
+  };
 };
 const finance = (patch: Partial<DashboardResponse['finance']> = {}): DashboardResponse['finance'] => ({
   currency: 'EGP', revenue: 0, teacher_cost: 0, expenses: 0, gross_margin: 0, by_source: [], fx_date: null, fx_missing: [], by_month: [], unrated_lessons: 0,

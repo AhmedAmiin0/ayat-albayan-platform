@@ -47,7 +47,9 @@ export function WizardStep({ step, steps, draft, patch, go, requestId, booking }
     // Duration is asked here unless a package step follows.
     return (
       <View style={{ gap: 16 }}>
-        {sales ? null : <KindPills value={draft.kind} onChange={(kind) => patch(kindPatch(kind))} />}
+        {sales ? null : (
+          <KindPills value={draft.kind} onChange={(kind) => patch(kindPatch(kind))} />
+        )}
         <ContactStep
           value={draft}
           withDuration={!steps.includes('package')}

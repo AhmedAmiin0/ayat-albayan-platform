@@ -17,7 +17,12 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 const mockReplace = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { back: jest.fn(), canDismiss: () => false, replace: (h: unknown) => mockReplace(h), push: jest.fn() },
+  router: {
+    back: jest.fn(),
+    canDismiss: () => false,
+    replace: (h: unknown) => mockReplace(h),
+    push: jest.fn(),
+  },
   useLocalSearchParams: () => ({ studentId: '44444444-4444-4444-8444-444444444444', name: 'ريم' }),
 }));
 

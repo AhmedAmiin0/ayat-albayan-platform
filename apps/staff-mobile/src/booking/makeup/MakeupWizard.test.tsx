@@ -22,7 +22,12 @@ jest.mock('@/booking/invoice/invoice-upload', () => ({ uploadInvoice: jest.fn() 
 const mockBack = jest.fn();
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { back: () => mockBack(), canDismiss: () => true, replace: jest.fn(), push: (h: unknown) => mockPush(h) },
+  router: {
+    back: () => mockBack(),
+    canDismiss: () => true,
+    replace: jest.fn(),
+    push: (h: unknown) => mockPush(h),
+  },
 }));
 
 const source: MakeupSource = {
@@ -114,7 +119,9 @@ test('offline: the honest line, and the retry sends the same request id (books o
   mockApiSend.mockResolvedValueOnce(booked(SUN_17));
   await press(t.booking.submit);
   await screen.findByText(t.booking.makeup.booked);
-  expect(mockApiSend.mock.calls[1]?.[2].clientRequestId).toBe(mockApiSend.mock.calls[0]?.[2].clientRequestId);
+  expect(mockApiSend.mock.calls[1]?.[2].clientRequestId).toBe(
+    mockApiSend.mock.calls[0]?.[2].clientRequestId,
+  );
 });
 
 test('the API refusing the invoice (400 invoice_required) sends the admin back to «الفاتورة»', async () => {

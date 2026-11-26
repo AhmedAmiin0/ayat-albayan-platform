@@ -36,7 +36,8 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-const show = (role: DetailsRole, l = held) => renderWithQuery(<LessonDetailsSheet lesson={l} role={role} onClose={jest.fn()} />);
+const show = (role: DetailsRole, l = held) =>
+  renderWithQuery(<LessonDetailsSheet lesson={l} role={role} onClose={jest.fn()} />);
 
 test('admin: status, tags, every clock, length, series, students with code / unpaid / report, link, reasons, clashes', async () => {
   await show('admin');
@@ -62,7 +63,9 @@ test('admin: a student opens the file, a sent report opens the report; the sheet
   await renderWithQuery(<LessonDetailsSheet lesson={held} role="admin" onClose={onClose} />);
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }));
   expect(router.push).toHaveBeenCalledWith('/students/s2', { withAnchor: true });
-  expect(onClose.mock.invocationCallOrder[0]).toBeLessThan(jest.mocked(router.push).mock.invocationCallOrder[0] ?? 0);
+  expect(onClose.mock.invocationCallOrder[0]).toBeLessThan(
+    jest.mocked(router.push).mock.invocationCallOrder[0] ?? 0,
+  );
   await fireEvent.press(screen.getByRole('button', { name: `${t.reports.view} — جنى وليد` }));
   expect(router.push).toHaveBeenCalledWith('/students/reports/view/r1', { withAnchor: true });
 });

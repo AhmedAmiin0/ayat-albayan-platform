@@ -7,7 +7,12 @@ export function PhoneText({ phone }: { phone: string }) {
   return (
     <Ltr
       numberOfLines={undefined}
-      style={{ fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 }}
+      style={{
+        fontFamily: type.ui[500],
+        fontSize: type.size.xs,
+        lineHeight: type.lineHeight(type.size.xs),
+        color: color.ink2,
+      }}
     >
       {formatPhone(phone)}
     </Ltr>

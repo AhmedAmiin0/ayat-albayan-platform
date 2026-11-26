@@ -21,7 +21,9 @@ function stripeTestVariant(config: ExpoConfig): ExpoConfig {
   return {
     ...config,
     name: 'Ayat – Stripe test',
-    ...(config.ios ? { ios: { ...config.ios, bundleIdentifier: suffix(config.ios.bundleIdentifier) } } : {}),
+    ...(config.ios
+      ? { ios: { ...config.ios, bundleIdentifier: suffix(config.ios.bundleIdentifier) } }
+      : {}),
     android,
     plugins: noShareTarget(config.plugins),
   };

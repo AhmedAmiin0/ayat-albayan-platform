@@ -9,7 +9,9 @@ import { LazyList } from '@/core/ui/lists/LazyList';
 
 const keyOf = (p: PaymentView) => p.id;
 // Keyed by the payment: its receipt viewers hold state that a recycled row must not carry over.
-const renderPayment = ({ item }: { item: PaymentView }) => <PaymentItem key={item.id} payment={item} />;
+const renderPayment = ({ item }: { item: PaymentView }) => (
+  <PaymentItem key={item.id} payment={item} />
+);
 
 /** GET /payments?studentId=: the student's payments and refunds, newest first, with the net; each with its receipt. */
 export function StudentPaymentsList({ studentId }: { studentId: string }) {
@@ -28,7 +30,11 @@ export function StudentPaymentsList({ studentId }: { studentId: string }) {
         ) : list.isError ? (
           <ErrorState onRetry={list.refresh} message={t.mobileStudentFile.money.error} />
         ) : (
-          <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+          <ActivityIndicator
+            accessibilityLabel={t.common.loading}
+            color={color.lapis}
+            style={{ paddingVertical: 32 }}
+          />
         )
       }
     />

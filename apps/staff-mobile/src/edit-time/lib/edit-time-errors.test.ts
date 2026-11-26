@@ -1,7 +1,8 @@
 import { ApiError, t } from '@ab/mobile-kit';
 import { editTimeFailure, failureCode, isStale } from './edit-time-errors';
 
-const api = (status: number, code: string, extra: object = {}) => new ApiError(status, { code, ...extra });
+const api = (status: number, code: string, extra: object = {}) =>
+  new ApiError(status, { code, ...extra });
 const own: Record<string, string> = t.editTime.error;
 
 test('offline: not sure the edit landed (a TypeError, no HTTP answer)', () => {

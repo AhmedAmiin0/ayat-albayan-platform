@@ -58,7 +58,10 @@ test('the invoices tab lists them and opens a fresh signed link in the system vi
 test('empty and failed states; a missing permission hides its tab', async () => {
   serve([]);
   permissions = ['invoices.read'];
-  const view = await renderWithQuery(<StudentMoneyScreen />, createTestQueryClient({ meFromApi: true }));
+  const view = await renderWithQuery(
+    <StudentMoneyScreen />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   expect(await screen.findByText(M.invoicesEmpty)).toBeTruthy();
   expect(screen.queryByRole('tab', { name: M.tabPayments })).toBeNull();
   view.unmount();

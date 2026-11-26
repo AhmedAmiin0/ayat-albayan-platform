@@ -8,7 +8,13 @@ import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 
 const A = t.classroom.assistants;
 
-export function AssistantLessonItem({ view, lesson }: { view: AssistantLessonView; lesson: JoinableLesson }) {
+export function AssistantLessonItem({
+  view,
+  lesson,
+}: {
+  view: AssistantLessonView;
+  lesson: JoinableLesson;
+}) {
   const { color } = useTheme();
   const tz = useViewerTz();
   const cycle = useClockCycle();

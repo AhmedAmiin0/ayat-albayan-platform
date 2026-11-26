@@ -46,7 +46,9 @@ test('wrong_password shows at the current-password field; phone reasons read inv
   send.mockRejectedValueOnce(new ApiError(400, { message: 'validation_failed', issues: [{ path: ['phone_e164'], message: 'invalid_length' }] }));
   await fireEvent.press(saveIn(t.account.phone.title));
   expect(await screen.findByText(e.invalid_phone)).toBeTruthy();
-  expect(screen.getByLabelText(t.account.phone.label).props.accessibilityHint).toBe(e.invalid_phone);
+  expect(screen.getByLabelText(t.account.phone.label).props.accessibilityHint).toBe(
+    e.invalid_phone,
+  );
 });
 
 test('«إزالة الرقم» empties the field and sends null', async () => {

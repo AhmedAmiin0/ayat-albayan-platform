@@ -36,7 +36,9 @@ test('a paid package: a weekly rule on its days, its length and size, the new ch
     newStudent: { status: 'trial' },
   });
   // A trial takes the duration too (30 / 45 / 60 / 90).
-  expect(toBookingRequest(draft({ durationMin: 30 }), { requestId: REQ })).toMatchObject({ durationMin: 30 });
+  expect(toBookingRequest(draft({ durationMin: 30 }), { requestId: REQ })).toMatchObject({
+    durationMin: 30,
+  });
 });
 
 test('after a paid package: on to its subscription, prefilled; a trial goes nowhere', () => {

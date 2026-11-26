@@ -21,7 +21,9 @@ const show = (photo: string | null) =>
 
 beforeEach(() => {
   jest.clearAllMocks();
-  jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValue({ canceled: false, assets: [asset] });
+  jest
+    .mocked(ImagePicker.launchImageLibraryAsync)
+    .mockResolvedValue({ canceled: false, assets: [asset] });
 });
 
 test('«تغيير الصورة»: the square-crop gallery, then upload-url → the signed upload → PUT, the photo shown', async () => {
@@ -30,7 +32,9 @@ test('«تغيير الصورة»: the square-crop gallery, then upload-url → 
   const invalidate = jest.spyOn(client, 'invalidateQueries');
   await fireEvent.press(screen.getByRole('button', { name: s.change }));
   expect(await screen.findByText(s.saved)).toBeTruthy();
-  expect(ImagePicker.launchImageLibraryAsync).toHaveBeenCalledWith(expect.objectContaining({ allowsEditing: true, aspect: [1, 1] }));
+  expect(ImagePicker.launchImageLibraryAsync).toHaveBeenCalledWith(
+    expect.objectContaining({ allowsEditing: true, aspect: [1, 1] }),
+  );
   expect(send.mock.calls).toEqual([
     ['POST', `${base}/upload-url`, { mime: 'image/jpeg', size: 5 }],
     ['PUT', base, { path: signed.path }],
@@ -64,7 +68,9 @@ test('no photo: no «حذف الصورة»; a student or guardian login reads it
 });
 
 test('a cancelled pick sends nothing', async () => {
-  jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValue({ canceled: true, assets: null });
+  jest
+    .mocked(ImagePicker.launchImageLibraryAsync)
+    .mockResolvedValue({ canceled: true, assets: null });
   await show(null);
   await fireEvent.press(screen.getByRole('button', { name: s.change }));
   expect(send).not.toHaveBeenCalled();

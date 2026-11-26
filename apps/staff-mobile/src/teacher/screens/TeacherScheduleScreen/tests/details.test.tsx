@@ -29,7 +29,12 @@ test('a tap opens my lesson: no confirm, cancel, move or time edit; «ادخل �
   await renderWithQuery(<TeacherScheduleScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد') }));
   expect(screen.getByRole('header', { name: 'يوسف أحمد' })).toBeTruthy();
-  for (const label of [t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit, t.editTime.action]) {
+  for (const label of [
+    t.today.confirm,
+    t.today.cancel,
+    t.lessons.rescheduleSubmit,
+    t.editTime.action,
+  ]) {
     expect(screen.queryByRole('button', { name: new RegExp(`^${label}`) })).toBeNull();
   }
   // The row's and the sheet's.

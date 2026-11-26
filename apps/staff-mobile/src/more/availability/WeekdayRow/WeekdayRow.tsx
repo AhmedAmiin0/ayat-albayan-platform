@@ -6,7 +6,11 @@ import { slotRange, weekdayName, type WeekdaySlots } from '@/more/schedule';
 export function WeekdayRow({ day }: { day: WeekdaySlots }) {
   const { color } = useTheme();
   const cycle = useClockCycle();
-  const text = { fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
+  const text = {
+    fontSize: type.size.body,
+    lineHeight: type.lineHeight(type.size.body),
+    color: color.ink,
+  };
   return (
     <View
       style={{
@@ -16,7 +20,9 @@ export function WeekdayRow({ day }: { day: WeekdaySlots }) {
         paddingVertical: 10,
       }}
     >
-      <AppText style={[text, { width: 84, fontFamily: type.ui[600] }]}>{weekdayName(day.weekday)}</AppText>
+      <AppText style={[text, { width: 84, fontFamily: type.ui[600] }]}>
+        {weekdayName(day.weekday)}
+      </AppText>
       <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', columnGap: 16, rowGap: 4 }}>
         {day.slots.map((slot) => (
           <AppText key={slot.id} numberOfLines={1} style={[text, { fontFamily: type.ui[500], fontVariant: ['tabular-nums'] }]}>

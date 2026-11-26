@@ -25,20 +25,34 @@ export const FeedbackRow = memo(function FeedbackRow({ row }: { row: FeedbackLis
   return (
     <View
       accessibilityLabel={who}
-      style={{ gap: 4, padding: 12, borderRadius: shape.radius.lg, borderWidth: 1, borderColor: color.rule, backgroundColor: color.raised }}
+      style={{
+        gap: 4,
+        padding: 12,
+        borderRadius: shape.radius.lg,
+        borderWidth: 1,
+        borderColor: color.rule,
+        backgroundColor: color.raised,
+      }}
     >
-      <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>{who}</AppText>
+      <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>
+        {who}
+      </AppText>
       {answer ? (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <NuqtaGlyph shape="fill" color={color.ok} />
-          <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>{answer}</AppText>
+          <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>
+            {answer}
+          </AppText>
         </View>
       ) : (
         <StatusChip tone="neutral" glyph="hollow" size="sm" label={text.pending} />
       )}
       <Note>{`${text.kind[row.kind]} · ${ltr(when)}`}</Note>
       {row.note ? (
-        <ContentText source={row.note} style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink }}>
+        <ContentText
+          source={row.note}
+          style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink }}
+        >
           {row.note}
         </ContentText>
       ) : null}

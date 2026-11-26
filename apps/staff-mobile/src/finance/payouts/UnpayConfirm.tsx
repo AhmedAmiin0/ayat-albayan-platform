@@ -17,9 +17,24 @@ export function UnpayConfirm({ message, busy, onConfirm, onCancel }: UnpayConfir
   const [tried, setTried] = useState(false);
   const short = reason.trim().length < 3;
   return (
-    <View style={{ gap: 10, padding: 12, borderRadius: shape.radius.md, borderWidth: 1, borderColor: color.goldSoft, backgroundColor: color.goldWash }}>
+    <View
+      style={{
+        gap: 10,
+        padding: 12,
+        borderRadius: shape.radius.md,
+        borderWidth: 1,
+        borderColor: color.goldSoft,
+        backgroundColor: color.goldWash,
+      }}
+    >
       <AppText style={{ color: color.ink }}>{message}</AppText>
-      <Field label={t.finance.reason} value={reason} onChangeText={setReason} maxLength={500} required />
+      <Field
+        label={t.finance.reason}
+        value={reason}
+        onChangeText={setReason}
+        maxLength={500}
+        required
+      />
       {tried && short ? <ErrorLine message={t.finance.reasonRequired} /> : null}
       <ButtonRow>
         <Button

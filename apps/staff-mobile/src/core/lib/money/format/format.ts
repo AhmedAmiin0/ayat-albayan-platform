@@ -69,8 +69,13 @@ export function partPaidLine(sub: PaidPackage): string | null {
 export const paidLine = (sub: PaidPackage): string => partPaidLine(sub) ?? paidOf(sub);
 
 /** Warns before saving a receipt smaller than what is still due, else null. */
-export function shortfallLine(input: { amount: number | null; due: number; currency: string }): string | null {
-  const short = input.amount === null ? 0 : receiptShortfall({ amount: input.amount, due: input.due });
+export function shortfallLine(input: {
+  amount: number | null;
+  due: number;
+  currency: string;
+}): string | null {
+  const short =
+    input.amount === null ? 0 : receiptShortfall({ amount: input.amount, due: input.due });
   if (short <= 0) return null;
   return t.packagePayment.shortfall.replace('{amount}', amount(short)).replace('{currency}', currencyName(input.currency));
 }

@@ -43,7 +43,8 @@ export function correctStarts(lesson: LessonView, durationMin: number, now: Date
 }
 
 /** The start the form stands for. */
-export const chosenStart = (lesson: LessonView, picked: string | null): string => picked ?? lesson.starts_at;
+export const chosenStart = (lesson: LessonView, picked: string | null): string =>
+  picked ?? lesson.starts_at;
 
 export const lengthOf = (l: Pick<LessonView, 'starts_at' | 'ends_at'>) =>
   Math.round((Date.parse(l.ends_at) - Date.parse(l.starts_at)) / MINUTE);
@@ -61,7 +62,8 @@ export function willNotify(lesson: LessonView, s: EditState, now: Date): boolean
 }
 
 /** A length the API and the slot grid accept (30 / 45 / 60 / 90); an odd recorded one must be replaced. */
-export const isBookable = (durationMin: number): boolean => DURATIONS.some((d) => d === durationMin);
+export const isBookable = (durationMin: number): boolean =>
+  DURATIONS.some((d) => d === durationMin);
 
 /** The submit is ready: a bookable length, something changed, a move starts ahead, a correction says why. */
 export function canSubmit(lesson: LessonView, s: EditState, now: Date): boolean {

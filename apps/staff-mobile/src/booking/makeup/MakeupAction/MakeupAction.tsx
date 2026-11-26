@@ -7,7 +7,13 @@ import { makeupParams } from '@/booking/makeup/makeup-draft';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
 
 /** R-SCH-10: per still-charged student, not a trial or makeup, within 60 days; admin only. */
-export function MakeupAction({ lesson, onLeave }: { lesson: LessonView; onLeave?: (() => void) | undefined }) {
+export function MakeupAction({
+  lesson,
+  onLeave,
+}: {
+  lesson: LessonView;
+  onLeave?: (() => void) | undefined;
+}) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const { color } = useTheme();
@@ -38,7 +44,12 @@ export function MakeupAction({ lesson, onLeave }: { lesson: LessonView; onLeave?
       {booked.map((s) => (
         <AppText
           key={s.id}
-          style={{ fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 }}
+          style={{
+            fontFamily: type.ui[500],
+            fontSize: type.size.xs,
+            lineHeight: type.lineHeight(type.size.xs),
+            color: color.ink2,
+          }}
         >
           {group ? `${s.name}: ` : ''}
           {t.booking.makeup.bookedChip.replace('{when}', whenIn(new Date(s.makeup.starts_at), tz, cycle))}

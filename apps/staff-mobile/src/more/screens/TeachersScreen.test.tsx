@@ -22,7 +22,12 @@ const teacher = (id: string, over: Partial<TeacherListRow> = {}): TeacherListRow
     tz: 'Asia/Riyadh',
     ...over,
   });
-const page = (items: TeacherListRow[], total = items.length) => ({ items, total, page: 1, pageSize: 25 });
+const page = (items: TeacherListRow[], total = items.length) => ({
+  items,
+  total,
+  page: 1,
+  pageSize: 25,
+});
 // The rows are on page 1; the list asks for page 2 at its end (a total over 25), which is empty.
 const byPage = (first: ReturnType<typeof page>) => async (path: string) =>
   path.includes('page=1&') ? first : { ...first, items: [], page: 2 };

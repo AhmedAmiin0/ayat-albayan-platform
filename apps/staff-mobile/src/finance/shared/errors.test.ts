@@ -9,8 +9,13 @@ test('a known API code gets its own sentence, from any finance table', () => {
 });
 
 test('a zod issue message is read when it is a known code', () => {
-  const body = { code: 'validation_failed', issues: [{ message: 'x' }, { message: 'reason_required' }] };
-  expect(financeErrorText(new ApiError(400, { issues: body.issues }))).toBe(t.finance.reasonRequired);
+  const body = {
+    code: 'validation_failed',
+    issues: [{ message: 'x' }, { message: 'reason_required' }],
+  };
+  expect(financeErrorText(new ApiError(400, { issues: body.issues }))).toBe(
+    t.finance.reasonRequired,
+  );
 });
 
 test('no answer is offline, a failed upload says so, anything else is the generic line', () => {

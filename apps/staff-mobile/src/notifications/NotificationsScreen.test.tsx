@@ -16,9 +16,31 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 
 const B = t.bell.mobile;
 const at = '2026-10-12T08:00:00.000Z';
-const lead = { id: 'n1', kind: 'new_message', title: 'رسالة جديدة', body: 'أم سلمى', data: { phone: '+966552147730' }, created_at: at, read_at: null };
-const student = { id: 'n2', kind: 'new_student', title: 'طالب جديد', body: 'يوسف', data: { kind: 'new_student', studentId: 's-1', lessonId: 'l1' }, created_at: at, read_at: at };
-const page = (items: unknown[], unread: number) => ({ items, total: items.length, page: 1, pageSize: 20, unread });
+const lead = {
+  id: 'n1',
+  kind: 'new_message',
+  title: 'رسالة جديدة',
+  body: 'أم سلمى',
+  data: { phone: '+966552147730' },
+  created_at: at,
+  read_at: null,
+};
+const student = {
+  id: 'n2',
+  kind: 'new_student',
+  title: 'طالب جديد',
+  body: 'يوسف',
+  data: { kind: 'new_student', studentId: 's-1', lessonId: 'l1' },
+  created_at: at,
+  read_at: at,
+};
+const page = (items: unknown[], unread: number) => ({
+  items,
+  total: items.length,
+  page: 1,
+  pageSize: 20,
+  unread,
+});
 const me = fullAccessMe('admin');
 
 function serve(list: unknown) {

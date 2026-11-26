@@ -16,7 +16,8 @@ beforeEach(() => {
   mockApiFetch.mockImplementation(async (path: string) => ({ total: path === THREADS ? 3 : 2 }));
 });
 
-const wrapper = (): (({ children }: { children: ReactNode }) => ReactNode) => queryWrapper(createTestQueryClient());
+const wrapper = (): (({ children }: { children: ReactNode }) => ReactNode) =>
+  queryWrapper(createTestQueryClient());
 
 test('shows the unread threads only: a new lead is already one of them (no double count)', async () => {
   const { result } = await renderHook(() => useInboxBadge(() => true), { wrapper: wrapper() });

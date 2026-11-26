@@ -13,7 +13,9 @@ export function useAddExpense() {
   return useMutation({
     mutationFn: async (draft: ExpenseDraft) => {
       const { receipt } = draft;
-      const path = receipt ? await receiptOnce(receipt.uri, () => uploadExpenseReceipt(receipt)) : null;
+      const path = receipt
+        ? await receiptOnce(receipt.uri, () => uploadExpenseReceipt(receipt))
+        : null;
       return apiSend<ExpenseView>('POST', '/expenses', expenseBody(draft, path, new Date()));
     },
     onSuccess: () => Promise.all(['expenses', 'dashboard'].map((key) => client.invalidateQueries({ queryKey: [key] }))),

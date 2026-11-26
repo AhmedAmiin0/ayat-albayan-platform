@@ -6,7 +6,9 @@ import { ApiError, t, locale, cityOf } from '@ab/mobile-kit';
 const L = t.meetingInvites;
 const errors: Record<string, string | undefined> = L.errors;
 /** Codes the meetings API shares with the room (a 410 on a cancel after the meeting ended), like web EXTRA. */
-const extra: Record<string, string | undefined> = { meeting_ended: t.classroom.error.meeting_ended };
+const extra: Record<string, string | undefined> = {
+  meeting_ended: t.classroom.error.meeting_ended,
+};
 
 
 export function scheduleLine(meeting: Pick<MeetingView, 'starts_at'>, tz: string, cycle: ClockCycle): string {

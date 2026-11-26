@@ -5,7 +5,13 @@ import { averageLine, recommendLine } from './feedback-text';
 import type { FeedbackAverage } from './types';
 
 /** A teacher's average rating, answer count and yes share; nothing before an answer. */
-export function AverageCard({ name, average }: { name: string | null; average: FeedbackAverage | null }) {
+export function AverageCard({
+  name,
+  average,
+}: {
+  name: string | null;
+  average: FeedbackAverage | null;
+}) {
   const { color } = useTheme();
   const rating = averageLine(average);
   const yes = recommendLine(average);

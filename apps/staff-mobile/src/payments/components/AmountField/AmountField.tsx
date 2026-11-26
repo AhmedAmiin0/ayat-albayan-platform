@@ -13,7 +13,13 @@ interface AmountFieldProps {
 }
 
 /** 16pt avoids iOS zoom (docs/07 §12); numeric pad with LTR digits. */
-export function AmountField({ value, onChange, currency, error, label = t.payments.amount }: AmountFieldProps) {
+export function AmountField({
+  value,
+  onChange,
+  currency,
+  error,
+  label = t.payments.amount,
+}: AmountFieldProps) {
   const { color } = useTheme();
   const [focused, setFocused] = useState(false);
   return (

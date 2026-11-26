@@ -83,7 +83,12 @@ export function TeacherReportsScreen() {
   return (
     <Screen list>
       <ScreenHeader title={t.teacherNav.reports} size="h2" connecting />
-      <FilterPills items={views()} value={view} onChange={setView} accessibilityLabel={t.teacherNav.reports} />
+      <FilterPills
+        items={views()}
+        value={view}
+        onChange={setView}
+        accessibilityLabel={t.teacherNav.reports}
+      />
       <LazyList
         data={shown.data}
         keyExtractor={keyOf}

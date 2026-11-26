@@ -34,6 +34,8 @@ export function addInvitee(list: readonly DraftInvitee[], next: DraftInvitee): D
   return [...list, next];
 }
 
-export const removeInvitee = (list: readonly DraftInvitee[], key: string): DraftInvitee[] => list.filter((d) => d.key !== key);
+export const removeInvitee = (list: readonly DraftInvitee[], key: string): DraftInvitee[] =>
+  list.filter((d) => d.key !== key);
 
-export const isFull = (list: readonly DraftInvitee[]): boolean => list.length >= MAX_MEETING_INVITEES;
+export const isFull = (list: readonly DraftInvitee[]): boolean =>
+  list.length >= MAX_MEETING_INVITEES;

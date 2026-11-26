@@ -23,7 +23,11 @@ export function TeacherCalendarOwner({ teacherId }: { teacherId: string }) {
   const T = t.googleSync.teacherCalendar;
   const admin = useIsAdmin();
   const path = `/admin/google/teachers/${teacherId}/calendar-owner`;
-  const query = useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<TeacherCalendarView>(path), enabled: admin });
+  const query = useQuery({
+    queryKey: pathKey(path),
+    queryFn: () => apiFetch<TeacherCalendarView>(path),
+    enabled: admin,
+  });
   const client = useQueryClient();
   const save = useMutation({
     mutationFn: (owner: Owner) => apiSend<TeacherCalendarView>('PUT', path, { owner }),
@@ -39,7 +43,11 @@ export function TeacherCalendarOwner({ teacherId }: { teacherId: string }) {
             role="radiogroup"
             wrap
             accessibilityLabel={T.title}
-            items={TEACHER_CALENDAR_OWNERS.map((value) => ({ value, label: T[value], disabled: save.isPending }))}
+            items={TEACHER_CALENDAR_OWNERS.map((value) => ({
+              value,
+              label: T[value],
+              disabled: save.isPending,
+            }))}
             value={view.owner}
             onChange={(owner) => {
               if (owner !== view.owner) save.mutate(owner);

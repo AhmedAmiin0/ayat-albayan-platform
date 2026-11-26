@@ -26,9 +26,19 @@ export function EarningsHeader({ balance, tab, onTab, filter, onFilter }: Earnin
   return (
     <View style={{ gap: 12 }}>
       {balance ? <EarningsSummary balance={balance} /> : null}
-      <FilterPills items={tabs()} value={tab} onChange={onTab} accessibilityLabel={t.earnings.title} />
+      <FilterPills
+        items={tabs()}
+        value={tab}
+        onChange={onTab}
+        accessibilityLabel={t.earnings.title}
+      />
       {tab === 'sessions' ? (
-        <FilterPills items={filters()} value={filter} onChange={onFilter} accessibilityLabel={t.earnings.status} />
+        <FilterPills
+          items={filters()}
+          value={filter}
+          onChange={onFilter}
+          accessibilityLabel={t.earnings.status}
+        />
       ) : null}
     </View>
   );

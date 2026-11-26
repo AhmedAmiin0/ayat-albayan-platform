@@ -2,7 +2,8 @@ import { PERMISSIONS } from '@ab/catalog';
 import { allowedRows, canOpen, ROUTE_PERMISSION, type RouteKey, tabOpen } from './route-permissions';
 
 test('every route needs a permission that exists in the catalog', () => {
-  for (const permission of Object.values(ROUTE_PERMISSION)) expect(PERMISSIONS).toContain(permission);
+  for (const permission of Object.values(ROUTE_PERMISSION))
+    expect(PERMISSIONS).toContain(permission);
 });
 
 test.each<[RouteKey, string]>([

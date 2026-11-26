@@ -20,7 +20,8 @@ import { amountText } from '@/finance/shared/format';
 import { dueOf, type PayDraft } from './payout-actions';
 import { usePayPayout } from './use-payout-move';
 
-const methodPills = (): FilterPill<PaymentMethod>[] => PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
+const methodPills = (): FilterPill<PaymentMethod>[] =>
+  PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 
 /** The amount is not typed: the server settles what per-session payments left, atomically. */
 export function PayoutPayForm({ payout, onDone }: { payout: PayoutView; onDone: () => void }) {
@@ -36,7 +37,12 @@ export function PayoutPayForm({ payout, onDone }: { payout: PayoutView; onDone: 
         <FilterPills role="radiogroup" accessibilityLabel={t.payments.method} items={methodPills()} value={draft.method} onChange={(method) => set({ method })} wrap />
       </View>
       <PaidDayPicker daysAgo={draft.daysAgo} onChange={(daysAgo) => set({ daysAgo })} now={now} />
-      <Field label={t.payments.note} value={draft.note} onChangeText={(note) => set({ note })} maxLength={500} />
+      <Field
+        label={t.payments.note}
+        value={draft.note}
+        onChangeText={(note) => set({ note })}
+        maxLength={500}
+      />
       <ReceiptPicker receipt={draft.receipt} onChange={(receipt) => set({ receipt })} />
       {pay.isError ? <ErrorLine message={financeErrorText(pay.error)} /> : null}
       <Button
