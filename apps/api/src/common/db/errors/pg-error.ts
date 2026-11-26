@@ -1,10 +1,18 @@
-import { BadRequestException, ConflictException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Logger } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { PgErrorMap, ToError } from './errors.types';
 
+const log = new Logger('DbError');
+
+/** A conflict answers its code only: the database's text can carry row values (docs/62 §3.2). */
+const conflict = (message: string): ToError => (e) => {
+  log.warn(`${e.code} ${e.message}: ${e.details}`);
+  return new ConflictException({ message });
+};
+
 const DEFAULT_CODES: Readonly<Record<string, ToError>> = {
-  '23505': (e) => new ConflictException({ message: 'duplicate', detail: e.details }),
-  '23503': (e) => new ConflictException({ message: 'fk_violation', detail: e.details }),
+  '23505': conflict('duplicate'),
+  '23503': conflict('fk_violation'),
   PGRST103: () => new BadRequestException({ message: 'page_out_of_range' }),
 };
 
