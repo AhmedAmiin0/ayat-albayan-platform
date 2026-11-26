@@ -1,7 +1,7 @@
 import type { NotificationItem } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
-import { AlertRow } from './AlertRow';
+import { AlertRow } from '@/nav/AlertRow';
 
 const clock = { tz: 'Asia/Riyadh', cycle: '24', locale: 'ar' } as const;
 const item = (over: Partial<NotificationItem> = {}): NotificationItem => ({

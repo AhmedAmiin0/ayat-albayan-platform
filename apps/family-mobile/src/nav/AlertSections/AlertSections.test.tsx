@@ -59,3 +59,19 @@ test('a read alert with nothing to open: no mark, no navigation', async () => {
   expect(router.push).not.toHaveBeenCalled();
   expect(router.navigate).not.toHaveBeenCalled();
 });
+
+test('older alerts sit under «أمس», «هذا الأسبوع» and «أقدم»', async () => {
+  const DAY = 86_400_000;
+  const ago = (days: number) => new Date(Date.now() - days * DAY).toISOString();
+  const A = t.portal.app.alerts;
+  await show(
+    page([
+      item({ id: 'y', created_at: ago(1) }),
+      item({ id: 'w', created_at: ago(3) }),
+      item({ id: 'o', created_at: ago(30) }),
+    ]),
+  );
+  for (const head of [A.yesterday, A.week, A.older]) {
+    expect(screen.getByRole('header', { name: head })).toBeTruthy();
+  }
+});

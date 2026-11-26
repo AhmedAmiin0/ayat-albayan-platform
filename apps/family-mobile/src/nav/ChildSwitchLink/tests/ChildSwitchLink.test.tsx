@@ -2,7 +2,7 @@ import { fireEvent, render, renderHook, screen } from '@testing-library/react-na
 import { t } from '@ab/mobile-kit';
 import { student } from '@/portal/portal.fixtures';
 import { closeChildSwitch, useChildSwitch } from '@/nav/switch-store';
-import { ChildSwitchLink } from './ChildSwitchLink';
+import { ChildSwitchLink } from '@/nav/ChildSwitchLink';
 
 afterEach(() => closeChildSwitch());
 

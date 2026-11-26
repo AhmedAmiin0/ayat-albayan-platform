@@ -1,6 +1,7 @@
 import { Pressable } from 'react-native';
 import { AppText, Avatar, Chevron, t, type, useTheme } from '@ab/mobile-kit';
 import { openChildSwitch } from '@/nav/switch-store';
+import { linkStyle } from './child-switch-link.helpers';
 import type { ChildSwitchLinkProps } from './ChildSwitchLink.types';
 
 /**
@@ -14,15 +15,7 @@ export function ChildSwitchLink({ student }: ChildSwitchLinkProps) {
       accessibilityRole="button"
       accessibilityLabel={t.portal.app.pick.open.replace('{name}', student.name)}
       onPress={openChildSwitch}
-      style={({ pressed }) => ({
-        alignSelf: 'flex-start',
-        minHeight: 44,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-        borderRadius: 12,
-        opacity: pressed ? 0.7 : 1,
-      })}
+      style={linkStyle}
     >
       <Avatar name={student.name} id={student.id} size="sm" decorative />
       <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>

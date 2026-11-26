@@ -4,7 +4,7 @@ import { PICKED_CHILD_KEY } from '@ab/client-core';
 import { pathKey, t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { student } from '@/portal/portal.fixtures';
-import { GreetingHeader } from './GreetingHeader';
+import { GreetingHeader } from '@/nav/GreetingHeader';
 import { closeChildSwitch, useChildSwitch } from '@/nav/switch-store';
 
 // Home's header as the child switch (canvas SwitchHome).
@@ -42,6 +42,7 @@ test('a guardian of several: avatar, name and chevron are one button opening the
   const sheet = await renderHook(() => useChildSwitch());
   expect(sheet.result.current.open).toBe(true);
 });
+
 
 test('an only child: the plain greeting, no switch', async () => {
   await show([yusuf]);

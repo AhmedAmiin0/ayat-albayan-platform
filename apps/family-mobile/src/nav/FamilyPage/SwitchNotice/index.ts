@@ -1,0 +1,1 @@
+export { SwitchNotice } from './SwitchNotice';
