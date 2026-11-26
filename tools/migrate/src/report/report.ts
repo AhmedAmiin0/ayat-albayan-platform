@@ -36,12 +36,7 @@ function downgradeTable(issues: readonly RowIssue[]): string[] {
   return ['', '## Student status: no longer «مشترك»', '', ...head, ...rows];
 }
 
-export function reportMarkdown(o: {
-  plan: Plan;
-  manifest?: SheetManifest;
-  crm?: Record<string, number>;
-}): string {
-  const { plan } = o;
+function planSection(plan: Plan): string[] {
   const lines = [
     `# Import ${plan.target === 'production' ? 'PRODUCTION' : plan.target} — ${plan.createdAt}`,
     '',
@@ -57,39 +52,53 @@ export function reportMarkdown(o: {
     if (c) lines.push(`| ${e} | ${ACTIONS.map((a) => c[a]).join(' | ')} |`);
   }
   lines.push('', '## Issues', '', ...issueTable(plan.issues), ...downgradeTable(plan.issues));
-  if (o.manifest) {
-    lines.push(
-      '',
-      `## Sources`,
-      '',
-      `Drive export \`${o.manifest.zip}\` (sha256 ${o.manifest.sha256.slice(0, 12)}…)`,
-      '',
-    );
-    lines.push(
-      '| sheet | rows |',
-      '|---|---|',
-      ...Object.entries(o.manifest.rows).map(([id, n]) => `| ${id} | ${n} |`),
-    );
-    const unknown = Object.entries(o.manifest.unknownHeaders);
-    if (unknown.length)
-      lines.push(
-        '',
-        'Unmapped headers: ' + unknown.map(([id, hs]) => `${id} (${hs.length})`).join(', '),
-      );
-  }
-  if (o.crm)
-    lines.push(
-      '',
-      '| CRM table | rows |',
-      '|---|---|',
-      ...Object.entries(o.crm).map(([t, n]) => `| ${t} | ${n} |`),
-    );
-  lines.push(
+  return lines;
+}
+
+function unmappedHeaders(manifest: SheetManifest): string[] {
+  const unknown = Object.entries(manifest.unknownHeaders);
+  if (!unknown.length) return [];
+  return ['', 'Unmapped headers: ' + unknown.map(([id, hs]) => `${id} (${hs.length})`).join(', ')];
+}
+
+function sourcesSection(manifest: SheetManifest | undefined): string[] {
+  if (!manifest) return [];
+  return [
+    '',
+    `## Sources`,
+    '',
+    `Drive export \`${manifest.zip}\` (sha256 ${manifest.sha256.slice(0, 12)}…)`,
+    '',
+    '| sheet | rows |',
+    '|---|---|',
+    ...Object.entries(manifest.rows).map(([id, n]) => `| ${id} | ${n} |`),
+    ...unmappedHeaders(manifest),
+  ];
+}
+
+function crmSection(crm: Record<string, number> | undefined): string[] {
+  if (!crm) return [];
+  return [
+    '',
+    '| CRM table | rows |',
+    '|---|---|',
+    ...Object.entries(crm).map(([t, n]) => `| ${t} | ${n} |`),
+  ];
+}
+
+export function reportMarkdown(o: {
+  plan: Plan;
+  manifest?: SheetManifest;
+  crm?: Record<string, number>;
+}): string {
+  return [
+    ...planSection(o.plan),
+    ...sourcesSection(o.manifest),
+    ...crmSection(o.crm),
     '',
     '## Not imported',
     '',
     ...Object.entries(SKIPPED_TABS).map(([tab, why]) => `- ${tab}: ${why}`),
     '',
-  );
-  return lines.join('\n');
+  ].join('\n');
 }

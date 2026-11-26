@@ -19,5 +19,5 @@ export function crmRef(table: string, row: CrmRow): SourceRef {
 /** Rows of one extracted table, oldest first by `created_at` (code-point order; stable on ties). */
 export function rowsByAge(crm: CrmTables, table: string): CrmRow[] {
   const at = (r: CrmRow): string => text(r, 'created_at') ?? '';
-  return [...(crm[table] ?? [])].sort((a, b) => (at(a) < at(b) ? -1 : at(a) > at(b) ? 1 : 0));
+  return [...(crm[table] ?? [])].sort((a, b) => Number(at(a) > at(b)) - Number(at(a) < at(b)));
 }
