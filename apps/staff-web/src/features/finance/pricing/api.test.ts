@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { catalogSearch, INITIAL_SELECTION, OTHER, quoteSearch, type Selection } from './api';
+import {
+  catalogSearch,
+  INITIAL_SELECTION,
+  OTHER,
+  quoteQuery,
+  quoteSearch,
+  type Selection,
+} from './api';
 
 const sel = (patch: Partial<Selection>): Selection => ({ ...INITIAL_SELECTION, ...patch });
 
@@ -29,5 +36,24 @@ describe('pricing query strings (GET /pricing/quote, /pricing/catalog)', () => {
 
   it('catalog takes only country and duration', () => {
     expect(catalogSearch({ country: 'SA', duration: 30 })).toBe('country=SA&duration=30');
+  });
+
+  it('says no rounding unless one is chosen, so the other forms ask as before', () => {
+    const plain = quoteSearch(sel({ discount: 7 }));
+    expect(plain).toBe('country=SA&duration=45&tier=standard&students=1&discount=7');
+    expect(quoteSearch(sel({ discount: 7 }), 'nearest')).toBe(plain);
+    expect(quoteQuery(sel({ discount: 7 })).queryKey).toEqual(
+      quoteQuery(sel({ discount: 7 }), 'nearest').queryKey,
+    );
+  });
+
+  it.each(['up', 'down'] as const)('sends rounding=%s last, in the search and the key', (mode) => {
+    const search = quoteSearch(sel({ discount: 7 }), mode);
+    expect(search).toBe(
+      `country=SA&duration=45&tier=standard&students=1&discount=7&rounding=${mode}`,
+    );
+    expect(quoteQuery(sel({ discount: 7 }), mode).queryKey).not.toEqual(
+      quoteQuery(sel({ discount: 7 })).queryKey,
+    );
   });
 });
