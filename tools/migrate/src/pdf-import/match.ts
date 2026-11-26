@@ -69,30 +69,47 @@ function candidates(name: PdfName, reports: readonly ReportRef[]) {
   return { ...sent, weak: `a report submitted that day${sent.similar ? ', similar name' : ''}` };
 }
 
-function matchOne(o: { row: SourceRow; name: PdfName | undefined }, ctx: MatchCtx): Mapped {
-  const { row, name } = o;
-  if (!name) return { ok: false, ref: row.ref, issues: [issue(row, 'no date in the file name')] };
+type Picked = { ok: true; hit: ReportRef } | { ok: false; why: string };
+
+const noSoleHit = (hits: readonly ReportRef[]): string =>
+  hits.length ? `${hits.length} reports match` : 'no report';
+
+function pickReport(name: PdfName, ctx: MatchCtx): Picked {
   const { hits, weak } = candidates(name, ctx.reports);
   const who = name.folder ?? name.person;
   const hit = hits[0];
   if (!hit || hits.length > 1) {
-    const why = hits.length ? `${hits.length} reports match` : 'no report';
-    return { ok: false, ref: row.ref, issues: [issue(row, `${why} for «${who}» on ${name.date}`)] };
+    return { ok: false, why: `${noSoleHit(hits)} for «${who}» on ${name.date}` };
   }
   if (weak && !ctx.approved.has(name.path)) {
-    const detail = `only ${weak} matches «${who}» on ${name.date}: «${splitStudentKey(hit.student.key)[1]}» lesson ${lessonDay(hit.lesson.key)}; add the zip path to cache/pdf-approved.json to attach it`;
-    return { ok: false, ref: row.ref, issues: [issue(row, detail)] };
+    const why = `only ${weak} matches «${who}» on ${name.date}: «${splitStudentKey(hit.student.key)[1]}» lesson ${lessonDay(hit.lesson.key)}; add the zip path to cache/pdf-approved.json to attach it`;
+    return { ok: false, why };
   }
-  return {
-    ok: true,
-    key: keys.reportPdf(hit.report.key),
-    ref: row.ref,
-    value: {
-      columns: { zip_path: name.path },
-      refs: { report_id: hit.report, student_id: hit.student, lesson_id: hit.lesson },
-    },
-    issues: [],
-  };
+  return { ok: true, hit };
+}
+
+const rejected = (row: SourceRow, detail: string): Mapped => ({
+  ok: false,
+  ref: row.ref,
+  issues: [issue(row, detail)],
+});
+
+const attached = (row: SourceRow, name: PdfName, hit: ReportRef): Mapped => ({
+  ok: true,
+  key: keys.reportPdf(hit.report.key),
+  ref: row.ref,
+  value: {
+    columns: { zip_path: name.path },
+    refs: { report_id: hit.report, student_id: hit.student, lesson_id: hit.lesson },
+  },
+  issues: [],
+});
+
+function matchOne(o: { row: SourceRow; name: PdfName | undefined }, ctx: MatchCtx): Mapped {
+  const { row, name } = o;
+  if (!name) return rejected(row, 'no date in the file name');
+  const picked = pickReport(name, ctx);
+  return picked.ok ? attached(row, name, picked.hit) : rejected(row, picked.why);
 }
 
 interface MatchCtx {

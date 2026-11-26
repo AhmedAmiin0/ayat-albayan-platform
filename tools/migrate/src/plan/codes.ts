@@ -31,6 +31,22 @@ interface DropCodesInput {
   holders: ReadonlyMap<number, string>;
 }
 
+const keepsCode = (self: string | null | undefined, holder: string | undefined): boolean =>
+  self ? holder === self : !holder;
+
+function takenCodeIssue(d: Desired, c: number, self: string | null | undefined): RowIssue {
+  return {
+    code: 'conflict',
+    severity: self ? 'warn' : 'review',
+    entity: 'students',
+    ref: d.ref,
+    field: 'legacy_code',
+    detail: self
+      ? `imported earlier without ${label(c)} (it was taken then); codes never change after insert`
+      : `${label(c)} is already used by a student in the target; this student would get a new code (free ${label(c)} there first to keep it)`,
+  };
+}
+
 /** Pure: the desired list with codes the student cannot have removed (rehashed), plus issues. */
 export function dropTakenCodes(o: DropCodesInput): { desired: Desired[]; issues: RowIssue[] } {
   const issues: RowIssue[] = [];
@@ -40,20 +56,11 @@ export function dropTakenCodes(o: DropCodesInput): { desired: Desired[]; issues:
     const self = o.existing.get(keyId(d.key))?.targetId;
     const holder = o.holders.get(c);
     // Fresh: dropped only when someone holds it. Imported earlier: kept only if it is its own.
-    if (self ? holder === self : !holder) return d;
+    if (keepsCode(self, holder)) return d;
     const columns = { ...d.record.columns };
     delete columns.code_seq;
     const record = { ...d.record, columns };
-    issues.push({
-      code: 'conflict',
-      severity: self ? 'warn' : 'review',
-      entity: 'students',
-      ref: d.ref,
-      field: 'legacy_code',
-      detail: self
-        ? `imported earlier without ${label(c)} (it was taken then); codes never change after insert`
-        : `${label(c)} is already used by a student in the target; this student would get a new code (free ${label(c)} there first to keep it)`,
-    });
+    issues.push(takenCodeIssue(d, c, self));
     return { ...d, record, hash: recordHash(record) };
   });
   return { desired, issues };
