@@ -1,0 +1,1 @@
+export { FamilyRoomRoute } from './FamilyRoomRoute';

@@ -1,0 +1,1 @@
+export { ReportPageBody } from './ReportPageBody';

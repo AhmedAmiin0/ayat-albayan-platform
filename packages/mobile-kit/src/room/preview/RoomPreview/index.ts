@@ -1,0 +1,1 @@
+export { RoomPreview } from './RoomPreview';

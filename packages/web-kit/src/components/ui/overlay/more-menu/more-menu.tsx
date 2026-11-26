@@ -1,7 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { iconButtonClass } from '@ab/web-kit/components/ui/form/icon-button';
+import { iconButtonClass } from '@ab/web-kit/components/ui/form/IconButton';
 import { useDismiss } from '@ab/web-kit/components/ui/overlay/use-dismiss';
 
 /** Only a click inside the panel's DOM is a pick, since React clicks bubble through portals. */

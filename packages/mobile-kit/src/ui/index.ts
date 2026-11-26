@@ -41,7 +41,7 @@ export { Wordmark } from './primitives/Wordmark';
 export { criticalSpring } from './motion/spring';
 export { StepStage } from './motion/StepStage';
 export { type StepDirection, type StepMotion, useStepMotion } from './motion/use-step-motion';
-export { InsetCell, InsetGroup, InsetSeparator, useInset } from './surface/inset';
+export { InsetCell, InsetGroup, InsetSeparator, useInset } from './surface/Inset';
 export { Section } from './surface/Section';
 export { hairline, raisedCard } from './surface/surface';
 export { AppNativeTabs, type TabItem } from './tabs/AppNativeTabs';

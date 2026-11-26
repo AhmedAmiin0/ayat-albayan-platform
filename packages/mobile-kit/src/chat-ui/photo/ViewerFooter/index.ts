@@ -1,0 +1,1 @@
+export { ViewerFooter } from './ViewerFooter';

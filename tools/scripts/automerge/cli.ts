@@ -1,6 +1,6 @@
 // lane-automerge: what to do with one PR. Usage: node tools/scripts/automerge/cli.ts <dir>
-// <dir> holds what the workflow gathered with gh: pr, checks, status, annotations, files,
-// compare, comments, events and suites (.json). Prints action=merge|comment|skip, sha= and
+// <dir> holds what the workflow gathered with gh and git: pr, checks, status, annotations, files,
+// behind, comments, events and suites (.json). Prints action=merge|comment|skip, sha= and
 // reason= for $GITHUB_OUTPUT and writes subject.txt and body.txt (merge) or comment.txt (comment).
 import { writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -16,7 +16,7 @@ const NAMES = [
   'checks',
   'annotations',
   'files',
-  'compare',
+  'behind',
   'comments',
   'events',
   'suites',

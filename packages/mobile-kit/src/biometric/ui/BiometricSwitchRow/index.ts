@@ -1,0 +1,1 @@
+export { BiometricSwitchRow } from './BiometricSwitchRow';

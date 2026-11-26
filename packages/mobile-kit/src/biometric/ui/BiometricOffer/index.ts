@@ -1,0 +1,1 @@
+export { BiometricOffer } from './BiometricOffer';

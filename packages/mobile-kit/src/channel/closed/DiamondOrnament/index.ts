@@ -1,0 +1,1 @@
+export { DiamondOrnament } from './DiamondOrnament';
