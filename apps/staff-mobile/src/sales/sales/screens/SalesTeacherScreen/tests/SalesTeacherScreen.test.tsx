@@ -51,10 +51,22 @@ test('an unknown teacher says not found; no students says so', async () => {
 });
 
 test('«تجريبي» = new, trial and pending_subscription; a package-ended student shows under «الكل» only', async () => {
-  const st = (id: string, name: string, status: 'new' | 'pending_subscription' | 'expired') =>
-    ({ id, code: `AB-0${id}`, name, program: 'quran' as const, status, next_lesson_at: null });
-  const extra = [st('301', 'سارة', 'new'), st('302', 'ليلى', 'pending_subscription'), st('303', 'عمر', 'expired')];
-  mockApiFetch.mockResolvedValue([teacher({ trial_count: 3, students: [...teacher().students, ...extra] })]);
+  const st = (id: string, name: string, status: 'new' | 'pending_subscription' | 'expired') => ({
+    id,
+    code: `AB-0${id}`,
+    name,
+    program: 'quran' as const,
+    status,
+    next_lesson_at: null,
+  });
+  const extra = [
+    st('301', 'سارة', 'new'),
+    st('302', 'ليلى', 'pending_subscription'),
+    st('303', 'عمر', 'expired'),
+  ];
+  mockApiFetch.mockResolvedValue([
+    teacher({ trial_count: 3, students: [...teacher().students, ...extra] }),
+  ]);
   await renderWithQuery(<SalesTeacherScreen />);
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();
   expect(screen.queryByText('عمر')).toBeNull();

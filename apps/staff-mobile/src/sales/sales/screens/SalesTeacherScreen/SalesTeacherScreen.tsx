@@ -67,7 +67,11 @@ export function SalesTeacherScreen() {
         ) : list.data ? (
           <EmptyState title={t.common.notFound} />
         ) : (
-          <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+          <ActivityIndicator
+            accessibilityLabel={t.common.loading}
+            color={color.lapis}
+            style={{ paddingVertical: 32 }}
+          />
         )}
       </Screen>
     );
@@ -90,11 +94,17 @@ export function SalesTeacherScreen() {
           contentContainerStyle={{ paddingBottom: 24 }}
           accessibilityLabel={t.sales.mobile.studentsOf.replace('{name}', name)}
           data={rows}
-          ListHeaderComponent={<SalesTeacherHeader teacher={teacher} kind={kind} onKind={setKind} />}
+          ListHeaderComponent={
+            <SalesTeacherHeader teacher={teacher} kind={kind} onKind={setKind} />
+          }
           keyExtractor={(s) => s.id}
           extraData={cycle}
           {...cells}
-          ListEmptyComponent={<EmptyState title={teacher.students.length === 0 ? t.sales.teachers.noStudents : KIND_EMPTY[kind]} />}
+          ListEmptyComponent={
+            <EmptyState
+              title={teacher.students.length === 0 ? t.sales.teachers.noStudents : KIND_EMPTY[kind]}
+            />
+          }
         />
       )}
     </Screen>

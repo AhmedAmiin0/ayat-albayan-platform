@@ -55,6 +55,8 @@ test('disconnected, dry run: no account line, sync off, the last error', async (
   expect(screen.getByText(fill(g.mobile.sync, { state: g.switches.off }))).toBeTruthy();
   expect(screen.getByText(fill(g.mobile.mode, { mode: g.switches.dryRun }))).toBeTruthy();
   expect(screen.getByText(fill(g.mobile.counts, { pending: '0', failed: '4' }))).toBeTruthy();
-  expect(screen.getByText(fill(g.mobile.lastError, { error: g.errors.invalid_grant }))).toBeTruthy();
+  expect(
+    screen.getByText(fill(g.mobile.lastError, { error: g.errors.invalid_grant })),
+  ).toBeTruthy();
   expect(screen.getByTestId('chip-neutral')).toBeTruthy();
 });

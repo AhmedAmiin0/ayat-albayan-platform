@@ -121,7 +121,9 @@ test('the same template sent again after a failure keeps its clientRequestId (ru
     await fireEvent.press(sendButton());
     await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(i + 1));
   }
-  const ids = mockApiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
+  const ids = mockApiSend.mock.calls.map(
+    (c) => (c[2] as { clientRequestId: string }).clientRequestId,
+  );
   expect(ids[0]).toBe(ids[1]);
 });
 

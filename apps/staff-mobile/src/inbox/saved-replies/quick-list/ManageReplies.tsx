@@ -15,7 +15,11 @@ interface ManageRepliesProps {
   state: 'ready' | 'loading' | 'failed';
 }
 
-const NOTE = { ready: () => t.savedReplies.emptyMine, loading: () => t.common.loading, failed: () => t.savedReplies.loadError };
+const NOTE = {
+  ready: () => t.savedReplies.emptyMine,
+  loading: () => t.common.loading,
+  failed: () => t.savedReplies.loadError,
+};
 
 export function ManageReplies({ mine, state }: ManageRepliesProps) {
   const [editing, setEditing] = useState<{ reply: SavedReply | null } | null>(null);
@@ -35,9 +39,17 @@ export function ManageReplies({ mine, state }: ManageRepliesProps) {
           <View>
             <ReplyRow
               reply={item}
-              trailing={<EditDelete reply={item} onEdit={() => setEditing({ reply: item })} onDelete={() => setDeleting(item.id)} />}
+              trailing={
+                <EditDelete
+                  reply={item}
+                  onEdit={() => setEditing({ reply: item })}
+                  onDelete={() => setDeleting(item.id)}
+                />
+              }
             />
-            {deleting === item.id ? <DeleteConfirm reply={item} onDone={() => setDeleting(null)} /> : null}
+            {deleting === item.id ? (
+              <DeleteConfirm reply={item} onDone={() => setDeleting(null)} />
+            ) : null}
           </View>
         )}
         ListEmptyComponent={

@@ -16,7 +16,8 @@ export function CreateAccountButton({ student }: CreateAccountButtonProps) {
   const allowed = can('users.write');
   const free = useQuery({ ...candidatesQuery('student', student.code ?? student.name), enabled: allowed });
   // Not an array (an older API, a stubbed answer): no button rather than a crash of the student file.
-  if (!allowed || !Array.isArray(free.data) || !free.data.some((c) => c.id === student.id)) return null;
+  if (!allowed || !Array.isArray(free.data) || !free.data.some((c) => c.id === student.id))
+    return null;
   const close = () => setOpen(false);
   return (
     <>

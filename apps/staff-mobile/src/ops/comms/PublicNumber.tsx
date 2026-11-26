@@ -12,7 +12,10 @@ export function PublicNumber() {
   return (
     <View style={{ gap: 4 }}>
       <InsetGroup>
-        <ListRow title={h.publicNumber} trailing={<Note>{phone ? ltr(formatPhone(phone)) : h.publicNumberNone}</Note>} />
+        <ListRow
+          title={h.publicNumber}
+          trailing={<Note>{phone ? ltr(formatPhone(phone)) : h.publicNumberNone}</Note>}
+        />
       </InsetGroup>
       <Note>{h.publicNumberEdit}</Note>
     </View>

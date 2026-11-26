@@ -6,7 +6,10 @@ import { openMic, rtcConfig, type RtcDeps } from './media';
  * The peer for a call (react-native-webrtc): the microphone opened (or MicError), its track added on a
  * new connection; nothing leaks on failure. The SDP steps are @ab/client-core's callPeer.
  */
-export async function createCallPeer(input: { deps: RtcDeps | null; iceServers: readonly CallIceServer[] }): Promise<CallPeer> {
+export async function createCallPeer(input: {
+  deps: RtcDeps | null;
+  iceServers: readonly CallIceServer[];
+}): Promise<CallPeer> {
   const mic = await openMic(input.deps);
   try {
     if (!input.deps) throw new Error('no webrtc');

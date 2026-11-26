@@ -15,11 +15,23 @@ export interface RolePickerProps {
 }
 
 /** Custom roles only; a role the actor cannot grant is shown but not choosable. */
-export function RolePicker({ role, roleId, options, onChange, disabled = false, hint }: RolePickerProps) {
+export function RolePicker({
+  role,
+  roleId,
+  options,
+  onChange,
+  disabled = false,
+  hint,
+}: RolePickerProps) {
   const F = t.users.form;
   const custom = options.filter((o) => o.base_role === role && !o.is_system);
-  const locked = (r: UserRole) => options.some((o) => o.base_role === r && o.is_system && !o.assignable);
-  const bases = USER_ROLES.map((r) => ({ value: r, label: roleText(r), disabled: disabled || (locked(r) && r !== role) }));
+  const locked = (r: UserRole) =>
+    options.some((o) => o.base_role === r && o.is_system && !o.assignable);
+  const bases = USER_ROLES.map((r) => ({
+    value: r,
+    label: roleText(r),
+    disabled: disabled || (locked(r) && r !== role),
+  }));
   const roles = [
     { value: '', label: F.defaultRole, disabled },
     ...custom.map((o) => ({
@@ -33,7 +45,12 @@ export function RolePicker({ role, roleId, options, onChange, disabled = false, 
       <Choice label={F.role} items={bases} value={role} onChange={(next) => onChange({ role: next, roleId: '' })} />
       {hint ? <Note>{hint}</Note> : null}
       {custom.length > 0 ? (
-        <Choice label={F.customRole} items={roles} value={roleId} onChange={(next) => onChange({ role, roleId: next })} />
+        <Choice
+          label={F.customRole}
+          items={roles}
+          value={roleId}
+          onChange={(next) => onChange({ role, roleId: next })}
+        />
       ) : null}
     </>
   );

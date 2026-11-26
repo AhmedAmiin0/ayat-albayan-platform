@@ -13,8 +13,15 @@ export const YOUSEF: UserView = {
 };
 export const DETAIL: UserDetail = { ...SARA, locale: 'ar', tz: 'Asia/Riyadh', disabled_reason: null };
 
-type RoleSeed = Pick<UserRoleOption, 'id' | 'base_role' | 'name_ar'> & Partial<Pick<UserRoleOption, 'is_system' | 'assignable'>>;
-const role = (r: RoleSeed): UserRoleOption => ({ key: r.id, name_en: null, is_system: false, assignable: true, ...r });
+type RoleSeed = Pick<UserRoleOption, 'id' | 'base_role' | 'name_ar'> &
+  Partial<Pick<UserRoleOption, 'is_system' | 'assignable'>>;
+const role = (r: RoleSeed): UserRoleOption => ({
+  key: r.id,
+  name_en: null,
+  is_system: false,
+  assignable: true,
+  ...r,
+});
 export const OPTIONS: UserRoleOption[] = [
   role({ id: 'sys-admin', base_role: 'admin', is_system: true, name_ar: 'مدير النظام', assignable: false }),
   role({ id: 'sys-assistant', base_role: 'assistant', is_system: true, name_ar: 'مساعد/ة' }),
@@ -38,12 +45,19 @@ interface FakeUsers {
 const pageOf = (path: string) => Number(/[?&]page=(\d+)/.exec(path)?.[1] ?? 1);
 
 /** The users GETs by path, for a mocked apiFetch. */
-export function usersGet({ items = [SARA, YOUSEF], total, detail = DETAIL, failList = false }: FakeUsers = {}) {
+export function usersGet({
+  items = [SARA, YOUSEF],
+  total,
+  detail = DETAIL,
+  failList = false,
+}: FakeUsers = {}) {
   return async (path: string): Promise<unknown> => {
     if (path.startsWith('/users/role-options')) return OPTIONS;
     if (path.startsWith('/users/link-candidates')) {
       const q = decodeURIComponent(path.split('&q=')[1] ?? '');
-      return CANDIDATES.filter((c) => !q || c.name.includes(q) || c.code?.toLowerCase() === q.toLowerCase());
+      return CANDIDATES.filter(
+        (c) => !q || c.name.includes(q) || c.code?.toLowerCase() === q.toLowerCase(),
+      );
     }
     if (path.startsWith('/users?')) {
       if (failList) throw new ApiError(500, null);

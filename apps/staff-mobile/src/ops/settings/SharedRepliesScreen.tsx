@@ -57,7 +57,9 @@ export function SharedRepliesScreen() {
             />
           }
         />
-        {deleting === item.id ? <DeleteConfirm reply={item} onDone={() => setDeleting(null)} /> : null}
+        {deleting === item.id ? (
+          <DeleteConfirm reply={item} onDone={() => setDeleting(null)} />
+        ) : null}
       </View>
     ),
     [count, isPending, mutate, deleting],
@@ -66,7 +68,9 @@ export function SharedRepliesScreen() {
   if (editing) {
     return (
       <Screen>
-        <SubScreenHeader title={editing.reply ? t.savedReplies.editTitle : t.savedReplies.addTitle} />
+        <SubScreenHeader
+          title={editing.reply ? t.savedReplies.editTitle : t.savedReplies.addTitle}
+        />
         <ReplyEditor reply={editing.reply} scope="shared" onDone={() => setEditing(null)} />
       </Screen>
     );

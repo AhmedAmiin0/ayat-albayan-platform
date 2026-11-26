@@ -28,7 +28,8 @@ jest.mock('expo-router', () => ({
 
 const TZ = 'Asia/Riyadh';
 const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === path);
-const serve = (patch: Parameters<typeof courseView>[0]) => mockApiFetch.mockImplementation(fakeCourseApi(courseView(patch)).fetch);
+const serve = (patch: Parameters<typeof courseView>[0]) =>
+  mockApiFetch.mockImplementation(fakeCourseApi(courseView(patch)).fetch);
 
 beforeEach(() => {
   jest.clearAllMocks();

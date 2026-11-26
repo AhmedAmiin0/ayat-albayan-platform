@@ -22,7 +22,13 @@ export function LinkPicker({ kind, value, onChange, error, locked = false }: Lin
   const { color } = useTheme();
   const [q, setQ] = useState('');
   const found = useQuery({ ...candidatesQuery(kind, q), enabled: !value });
-  const box = { minHeight: 44, borderWidth: 1, borderColor: color.rule, borderRadius: shape.radius.md, paddingHorizontal: 12 };
+  const box = {
+    minHeight: 44,
+    borderWidth: 1,
+    borderColor: color.rule,
+    borderRadius: shape.radius.md,
+    paddingHorizontal: 12,
+  };
   const text = { fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink };
   if (value) {
     return (

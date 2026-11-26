@@ -16,7 +16,9 @@ export {
 } from '@ab/client-core';
 
 /** The academy pays in EGP; the site currencies follow (web CurrencySelect). */
-export const TERM_CURRENCIES: readonly string[] = [...new Set([TERMS_DEFAULT_CURRENCY, ...CURRENCY_ISOS])];
+export const TERM_CURRENCIES: readonly string[] = [
+  ...new Set([TERMS_DEFAULT_CURRENCY, ...CURRENCY_ISOS]),
+];
 
 /** Today in Riyadh, YYYY-MM-DD (the web's paidAtDay). */
 // academy day (docs/34 b): terms start on an academy day.

@@ -34,7 +34,8 @@ function useRowLists({ wanted, value, onChange }: Omit<ChatListChipsProps, 'list
   const query = useChatLists(allowed);
   const lists = allowed ? listsOf(query.data) : [];
   const listId = listOf(value);
-  const gone = listId !== null && (!allowed || (query.isSuccess && !lists.some((l) => l.id === listId)));
+  const gone =
+    listId !== null && (!allowed || (query.isSuccess && !lists.some((l) => l.id === listId)));
   useEffect(() => {
     if (gone) onChange('all');
   }, [gone, onChange]);
@@ -63,7 +64,12 @@ function ListExtras({ active, loadError, creating, editing, onCreated, onClose }
 }
 
 /** docs/22 §5: lists need inbox.lists outside teacher mode; loading never blocks the chats. */
-export function ChatListChips({ value, onChange, lists: wanted = false, children }: ChatListChipsProps) {
+export function ChatListChips({
+  value,
+  onChange,
+  lists: wanted = false,
+  children,
+}: ChatListChipsProps) {
   const { allowed, query, lists, listId, gone } = useRowLists({ wanted, value, onChange });
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState<ChatList | null>(null);

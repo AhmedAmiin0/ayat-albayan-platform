@@ -11,7 +11,10 @@ interface MemberChange {
 }
 
 /** The thread detail with the chat's `lists` (on the newest page) changed as the toggle asks. */
-export function withMembership(data: ThreadCache | undefined, change: MemberChange): ThreadCache | undefined {
+export function withMembership(
+  data: ThreadCache | undefined,
+  change: MemberChange,
+): ThreadCache | undefined {
   const [first, ...rest] = data?.pages ?? [];
   if (!data || !first) return data;
   const others = (first.lists ?? []).filter((l) => l.id !== change.list.id);
@@ -20,7 +23,10 @@ export function withMembership(data: ThreadCache | undefined, change: MemberChan
 }
 
 /** The toggle that puts one failed change back (the rollback of useListMembership). */
-export const undoChange = (change: MemberChange): MemberChange => ({ ...change, member: !change.member });
+export const undoChange = (change: MemberChange): MemberChange => ({
+  ...change,
+  member: !change.member,
+});
 
 /**
  * Adds or removes this chat (by its phone) from a list, optimistically: the checkmark moves at
@@ -38,7 +44,8 @@ export function useListMembership(phone: string) {
       client.setQueryData<ThreadCache>(queryKey, (old) => withMembership(old, change));
     },
     // Undo only this toggle: a snapshot would also undo a later toggle or a message cached meanwhile.
-    onError: (_error, change) => client.setQueryData<ThreadCache>(queryKey, (old) => withMembership(old, undoChange(change))),
+    onError: (_error, change) =>
+      client.setQueryData<ThreadCache>(queryKey, (old) => withMembership(old, undoChange(change))),
     onSettled: () => {
       void client.invalidateQueries({ queryKey: threadsKey });
       void client.invalidateQueries({ queryKey: listsKey });

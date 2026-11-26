@@ -14,13 +14,24 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
 
 const c = t.coursePause;
-const OPEN = { id: 'p1', from_date: '2026-10-28', until_date: null, reason: null, created_at: '2026-10-28T08:00:00.000Z', created_by_name: null, resumed_at: null, extended_days: null };
-const serve = (input: { mine: boolean; open: typeof OPEN | null }) => mockApiFetch.mockImplementation(async (path: string) => {
-  if (path === '/sales/students/st1') return details({ mine: input.mine });
-  if (path === '/students/st1/course-pause') return { open: input.open, history: [] };
-  if (path.startsWith('/students/st1/course-pause/preview')) return { from_date: '2026-10-28', until_date: null, lessons: 1 };
-  throw new ApiError(404);
-});
+const OPEN = {
+  id: 'p1',
+  from_date: '2026-10-28',
+  until_date: null,
+  reason: null,
+  created_at: '2026-10-28T08:00:00.000Z',
+  created_by_name: null,
+  resumed_at: null,
+  extended_days: null,
+};
+const serve = (input: { mine: boolean; open: typeof OPEN | null }) =>
+  mockApiFetch.mockImplementation(async (path: string) => {
+    if (path === '/sales/students/st1') return details({ mine: input.mine });
+    if (path === '/students/st1/course-pause') return { open: input.open, history: [] };
+    if (path.startsWith('/students/st1/course-pause/preview'))
+      return { from_date: '2026-10-28', until_date: null, lessons: 1 };
+    throw new ApiError(404);
+  });
 const asSales = (permissions: string[]) => {
   const client = createTestQueryClient();
   client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions: [...permissions, ...selfPermissionsOf('sales')] });

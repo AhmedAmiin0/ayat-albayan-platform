@@ -14,6 +14,9 @@ export function useCallsRealtime(input: { enabled: boolean; active: boolean }): 
   const on = input.enabled && input.active;
   useEffect(() => {
     if (!on) return;
-    return subscribeCalls(supabase, () => void client.invalidateQueries({ queryKey: CALLS_KEY, predicate: isCallsData }));
+    return subscribeCalls(
+      supabase,
+      () => void client.invalidateQueries({ queryKey: CALLS_KEY, predicate: isCallsData }),
+    );
   }, [on, client]);
 }

@@ -43,7 +43,11 @@ const older = message({
 });
 
 async function show(rows: MessageView[]) {
-  const query = { data: cachedThread(detail(rows)), hasNextPage: false, refetch: jest.fn() } as unknown as ThreadQuery;
+  const query = {
+    data: cachedThread(detail(rows)),
+    hasNextPage: false,
+    refetch: jest.fn(),
+  } as unknown as ThreadQuery;
   await renderWithQuery(
     <ChatActionsProvider phone={PHONE} thread={thread}>
       <MessageList phone={PHONE} query={query} />

@@ -8,7 +8,12 @@ import { reportFields, type FieldsReport, type ReportField } from './report-fiel
  * @ab/client-core). Absent / excused: the attendance and the note only.
  */
 function reportV2Fields(r: FieldsReport): ReportField[] {
-  return reportV2Lines(r, { v2: t.reports.v2, grade: t.enums.grade, program: t.enums.program, lang: locale });
+  return reportV2Lines(r, {
+    v2: t.reports.v2,
+    grade: t.enums.grade,
+    program: t.enums.program,
+    lang: locale,
+  });
 }
 
 /** The fields the admin reads: the new form's lines, or the original form's (v1, unchanged). */

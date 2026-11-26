@@ -37,7 +37,12 @@ export function AssistantDetailScreen() {
   return (
     <Screen>
       <ScreenHeader title={assistant.name} leading={back} />
-      <FilterPills items={TABS()} value={tab} onChange={show} accessibilityLabel={t.mobileSalesMoney.tabs.label} />
+      <FilterPills
+        items={TABS()}
+        value={tab}
+        onChange={show}
+        accessibilityLabel={t.mobileSalesMoney.tabs.label}
+      />
       {notice ? <Note>{notice}</Note> : null}
       <AssistantTabBody tab={tab} assistant={assistant} can={can} onNotice={setNotice} />
     </Screen>

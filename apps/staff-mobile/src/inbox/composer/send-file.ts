@@ -61,7 +61,10 @@ async function pickPdf(maxBytes: number): Promise<ChatFilePick | null> {
  * its permission first) or a PDF; null when cancelled. A PDF over maxBytes throws before it
  * is read.
  */
-export async function pickChatFile(source: ChatFileSource, maxBytes: number): Promise<ChatFilePick | null> {
+export async function pickChatFile(
+  source: ChatFileSource,
+  maxBytes: number,
+): Promise<ChatFilePick | null> {
   if (source === 'pdf') return pickPdf(maxBytes);
   // The chat's own reason first (not the receipt's); pickReceipt then finds the camera allowed.
   const copy = { rationale: t.inbox.composer.cameraRationale, confirm: t.inbox.composer.takePhoto };
@@ -87,7 +90,13 @@ interface SendFileInput {
  * Checked here first (chatFileProblem, as the API does), then POST …/file-upload-url, the signed
  * upload (as assistants/upload-receipt.ts) and POST …/file with no caption. Resolves the API's row.
  */
-export async function sendChatFile({ phone, file, id, maxBytes, replyToMessageId }: SendFileInput): Promise<MessageView> {
+export async function sendChatFile({
+  phone,
+  file,
+  id,
+  maxBytes,
+  replyToMessageId,
+}: SendFileInput): Promise<MessageView> {
   const problem = chatFileProblem({ mime: file.mime, size: file.size, maxBytes }, CHAT_FILE_MIMES);
   if (problem) throw new ChatFileError(problem);
   const signed = await apiSend<SignedUpload>('POST', `${threadPath(phone)}/file-upload-url`, {

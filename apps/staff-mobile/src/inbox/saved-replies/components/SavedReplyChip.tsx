@@ -18,7 +18,15 @@ export function SavedReplyChip({ file, onRemove }: { file: Pick<SavedReplyAttach
       }}
     >
       <AttachIcon color={color.lapis} size={18} />
-      <AppText numberOfLines={1} style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}>
+      <AppText
+        numberOfLines={1}
+        style={{
+          flexShrink: 1,
+          fontFamily: type.ui[600],
+          fontSize: type.size.sm,
+          color: color.ink,
+        }}
+      >
         {file.name}
       </AppText>
       <AppText numberOfLines={1} style={{ flex: 1, fontFamily: type.ui[400], fontSize: type.size['2xs'], color: color.ink2 }}>

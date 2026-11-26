@@ -23,7 +23,12 @@ export function AttachFile({ phone, onError, ...actions }: AttachFileProps) {
   if (teacher) return null;
   return (
     <>
-      <IconButton label={t.inbox.composer.attach} disabled={pending} onPress={() => setChoosing(true)} compact>
+      <IconButton
+        label={t.inbox.composer.attach}
+        disabled={pending}
+        onPress={() => setChoosing(true)}
+        compact
+      >
         <AttachIcon color={color.lapis} />
       </IconButton>
       <AttachSheet

@@ -21,7 +21,10 @@ import { SalesSubscribeForm } from '@/sales-subscribe/components/SalesSubscribeF
 type Params = { phone?: string; studentId?: string; renew?: string };
 
 /** The picked child (one of hers), else the route's, else the only one, else none yet (''). */
-function childOf(students: readonly SalesFamilyStudent[], ids: { picked: string | undefined; route: string | undefined }): string {
+function childOf(
+  students: readonly SalesFamilyStudent[],
+  ids: { picked: string | undefined; route: string | undefined },
+): string {
   const id = ids.picked ?? ids.route ?? (students.length === 1 ? students[0]?.id : undefined) ?? '';
   return students.some((s) => s.id === id) ? id : '';
 }
@@ -61,8 +64,17 @@ export function SalesSubscribeScreen() {
           <EmptyState title={t.salesMoney.noOwnStudents} />
         ) : (
           <>
-            {courseDays ? <Button variant="secondary" label={t.booking.courseDays} onPress={courseDays} /> : null}
-            <SalesSubscribeForm phone={phone} students={students} studentId={studentId} onPick={setPicked} renew={renew} onDone={back} />
+            {courseDays ? (
+              <Button variant="secondary" label={t.booking.courseDays} onPress={courseDays} />
+            ) : null}
+            <SalesSubscribeForm
+              phone={phone}
+              students={students}
+              studentId={studentId}
+              onPick={setPicked}
+              renew={renew}
+              onDone={back}
+            />
           </>
         )}
       </ScrollView>

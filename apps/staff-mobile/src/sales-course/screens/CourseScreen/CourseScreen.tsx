@@ -42,9 +42,17 @@ export function CourseScreen() {
   const refusal = change && block === 'course_exists' ? null : block;
   const content = () => {
     if (view && current && changing) {
-      return <CourseChangeFlow student={view.student} course={current} onLeave={() => setChanging(false)} onDone={leave} />;
+      return (
+        <CourseChangeFlow
+          student={view.student}
+          course={current}
+          onLeave={() => setChanging(false)}
+          onDone={leave}
+        />
+      );
     }
-    if (view && !block) return <CourseWizard view={view} onLeave={leave} transfer={transfer} change={change} />;
+    if (view && !block)
+      return <CourseWizard view={view} onLeave={leave} transfer={transfer} change={change} />;
     return (
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>
         <ScreenHeader
@@ -53,7 +61,9 @@ export function CourseScreen() {
           leading={<BackButton onPress={leave} />}
         />
         <CourseStatus course={course} block={refusal} missing={!params.studentId} />
-        {change ? <CurrentCourse course={change.course} onChange={change.open} secondary={!!transfer} /> : null}
+        {change ? (
+          <CurrentCourse course={change.course} onChange={change.open} secondary={!!transfer} />
+        ) : null}
         {transfer ? <Button label={t.salesMoney.stepTransfer} onPress={transfer} /> : null}
       </ScrollView>
     );

@@ -16,7 +16,12 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 const mockPush = jest.fn();
 const mockParams: { current: Record<string, string> } = { current: {} };
 jest.mock('expo-router', () => ({
-  router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn(), push: (h: unknown) => mockPush(h) },
+  router: {
+    back: jest.fn(),
+    canGoBack: () => true,
+    replace: jest.fn(),
+    push: (h: unknown) => mockPush(h),
+  },
   useLocalSearchParams: () => mockParams.current,
 }));
 

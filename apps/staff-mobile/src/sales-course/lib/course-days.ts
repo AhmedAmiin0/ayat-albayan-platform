@@ -24,8 +24,12 @@ export function daysText(days: readonly DayTime[], tz: string, viewer: ViewerClo
 }
 
 /** The weekdays and times a change request asks for (its own groups, so a kept day keeps its time). */
-export function requestDays(body: Pick<CourseChangeRequest, 'byday' | 'startTimeLocal' | 'dayTimes'>): DayTime[] {
-  return timeGroups(body).flatMap((g) => g.byday.map((weekday) => ({ weekday, startTimeLocal: g.startTimeLocal })));
+export function requestDays(
+  body: Pick<CourseChangeRequest, 'byday' | 'startTimeLocal' | 'dayTimes'>,
+): DayTime[] {
+  return timeGroups(body).flatMap((g) =>
+    g.byday.map((weekday) => ({ weekday, startTimeLocal: g.startTimeLocal })),
+  );
 }
 
 export interface TakenInput {
@@ -38,9 +42,16 @@ export interface TakenInput {
 }
 
 /** Weekdays in `tz`, Saturday first, matching the web's rule. */
-export function takenDays({ picks, prefilled, tz }: TakenInput, conflicts: readonly Pick<Conflict, 'startsAt'>[]): number[] {
-  const kept = new Set(picks.filter((p) => prefilled.includes(p)).map((p) => wallParts(p, tz).weekday));
-  const hit = new Set(conflicts.map((c) => wallParts(c.startsAt, tz).weekday).filter((w) => kept.has(w)));
+export function takenDays(
+  { picks, prefilled, tz }: TakenInput,
+  conflicts: readonly Pick<Conflict, 'startsAt'>[],
+): number[] {
+  const kept = new Set(
+    picks.filter((p) => prefilled.includes(p)).map((p) => wallParts(p, tz).weekday),
+  );
+  const hit = new Set(
+    conflicts.map((c) => wallParts(c.startsAt, tz).weekday).filter((w) => kept.has(w)),
+  );
   return WEEK_ORDER.filter((w) => hit.has(w));
 }
 

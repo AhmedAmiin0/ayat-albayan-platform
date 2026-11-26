@@ -55,7 +55,9 @@ export function SlashSuggestions({ search, contact, onFill }: SlashSuggestionsPr
           keyboardShouldPersistTaps="always"
           data={shown}
           keyExtractor={(r) => r.id}
-          renderItem={({ item }) => <QuickReplyRow reply={item} query={search} onPress={() => pick(item)} />}
+          renderItem={({ item }) => (
+            <QuickReplyRow reply={item} query={search} onPress={() => pick(item)} />
+          )}
         />
       ) : (
         <View style={{ padding: 12 }}>

@@ -12,7 +12,16 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-const counts = { new: 6, trial: 2, pending_subscription: 7, active: 5, pending_renewal: 4, expired: 8, paused: 1, churned: 3 };
+const counts = {
+  new: 6,
+  trial: 2,
+  pending_subscription: 7,
+  active: 5,
+  pending_renewal: 4,
+  expired: 8,
+  paused: 1,
+  churned: 3,
+};
 function serve() {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path.startsWith('/students/status-counts')) return counts;

@@ -32,7 +32,15 @@ export function AttendanceLogHead({ data, month, onMonth, tz: zone, wideReport }
       />
       <View accessibilityRole="summary" style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 12, rowGap: 4 }}>
         {totalsItems(data.totals).map((item) => (
-          <AppText key={item.key} style={{ fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink }}>
+          <AppText
+            key={item.key}
+            style={{
+              fontFamily: type.ui[600],
+              fontSize: type.size.sm,
+              lineHeight: type.lineHeight(type.size.sm),
+              color: color.ink,
+            }}
+          >
             {`${item.label} ${item.n}`}
           </AppText>
         ))}

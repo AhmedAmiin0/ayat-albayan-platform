@@ -56,7 +56,12 @@ test('a blocker this build does not know renders no reason and nothing breaks', 
 
 test('a key this build does not know is left out', async () => {
   const extra = { ...catalogueV2.entries[0], key: 'future_key' };
-  mockApiFetch.mockImplementation(answer({ ...catalogueV2, entries: [...catalogueV2.entries, extra] } as unknown as typeof catalogueV2, MANAGER));
+  mockApiFetch.mockImplementation(
+    answer(
+      { ...catalogueV2, entries: [...catalogueV2.entries, extra] } as unknown as typeof catalogueV2,
+      MANAGER,
+    ),
+  );
   await renderWithQuery(<NotificationCatalogue />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(c.entries.report_ready.name)).toBeTruthy();
   expect(screen.queryByText('future_key')).toBeNull();

@@ -29,7 +29,10 @@ export function UserActions({ user, onMode, onDone }: UserActionsProps) {
       onDone(t.users.toast.enabled);
     },
   });
-  const signOut = useMutation({ mutationFn: signOutUser, onSuccess: () => onDone(t.users.toast.signedOut) });
+  const signOut = useMutation({
+    mutationFn: signOutUser,
+    onSuccess: () => onDone(t.users.toast.signedOut),
+  });
   const failed = enable.error ?? signOut.error;
   const confirm = () => (asking === 'enable' ? enable.mutate(user.id) : signOut.mutate(user.id));
   const question = asking === 'enable' ? t.mobileUsers.enableConfirm : t.mobileUsers.signOutConfirm;

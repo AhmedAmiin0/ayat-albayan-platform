@@ -6,7 +6,12 @@ import { CallsContext } from '@/inbox/thread/calls/state/call-context';
 import { OFF, ON } from '@/inbox/thread/calls/state/call-test-kit';
 import { CallButton } from './CallButton';
 
-const ui = (over: Partial<CallsUi> = {}): CallsUi => ({ config: ON, busy: false, call: jest.fn(), ...over });
+const ui = (over: Partial<CallsUi> = {}): CallsUi => ({
+  config: ON,
+  busy: false,
+  call: jest.fn(),
+  ...over,
+});
 const show = (value: CallsUi | null, canSend = true, client = createTestQueryClient()) =>
   renderWithQuery(
     <CallsContext.Provider value={value}>

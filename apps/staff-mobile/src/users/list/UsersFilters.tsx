@@ -13,7 +13,10 @@ interface UsersFiltersProps {
 export function UsersFilters({ view, onChange }: UsersFiltersProps) {
   const all = { value: '', label: t.users.filters.all };
   const roles = [all, ...USER_ROLES.map((r) => ({ value: r, label: roleText(r) }))];
-  const statuses = [all, ...USER_STATUSES.map((s) => ({ value: s, label: t.users.status[s], ...statusStyle(s) }))];
+  const statuses = [
+    all,
+    ...USER_STATUSES.map((s) => ({ value: s, label: t.users.status[s], ...statusStyle(s) })),
+  ];
   return (
     <>
       <FilterPills

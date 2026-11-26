@@ -33,7 +33,15 @@ export function CallBar({ session, row, phase, onExpand }: CallBarProps) {
         style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, minHeight: 44, borderRadius: shape.radius.pill, backgroundColor: pressed ? color.lapisHover : color.lapisFill })}
       >
         <PhoneIcon color={color.onLapis} size={18} />
-        <AppText numberOfLines={1} style={{ maxWidth: 180, fontFamily: type.ui[600], fontSize: type.size.sm, color: color.onLapis }}>
+        <AppText
+          numberOfLines={1}
+          style={{
+            maxWidth: 180,
+            fontFamily: type.ui[600],
+            fontSize: type.size.sm,
+            color: color.onLapis,
+          }}
+        >
           {session.name}
         </AppText>
         <AppText style={{ fontSize: type.size.sm, color: color.onLapis, fontVariant: ['tabular-nums'] }}>{callStatusText(phase, { row, now, text: t.calls })}</AppText>

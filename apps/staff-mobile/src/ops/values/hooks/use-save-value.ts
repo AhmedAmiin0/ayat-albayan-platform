@@ -23,7 +23,8 @@ export function outcomeOf(key: SettingKey, answer: unknown): SaveOutcome {
     const list: unknown = isObject(answer) ? Reflect.get(answer, name) : undefined;
     return Array.isArray(list) ? list : [];
   };
-  const names = (name: string) => lists(name).includes(key) || lists(name).includes(SETTING_FIELD_OF[key]);
+  const names = (name: string) =>
+    lists(name).includes(key) || lists(name).includes(SETTING_FIELD_OF[key]);
   if (names('moved')) return 'moved';
   return names('invalid') ? 'invalid' : 'saved';
 }

@@ -62,25 +62,47 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
       openForward: setForward,
       showCopy: setCopy,
       // The window as of now (windowOpen), not as of the last fetch.
-      reactable: (m) => enabled && windowOpen && canReact(m, { reactable: reactableNow, session_open: true }, new Date()),
+      reactable: (m) =>
+        enabled &&
+        windowOpen &&
+        canReact(m, { reactable: reactableNow, session_open: true }, new Date()),
       react: (m, emoji) => reactNow({ message: m, emoji }),
       openReactors: setReactors,
       openFailed: setFailed,
     }),
     [enabled, canSend, setReply, windowOpen, threadName, reactableNow, reactNow],
   );
-  const value = useMemo<ChatActions>(() => ({ ...bubble, ...target, notice, say }), [bubble, target, notice]);
+  const value = useMemo<ChatActions>(
+    () => ({ ...bubble, ...target, notice, say }),
+    [bubble, target, notice],
+  );
   const removable = reactors !== null && value.reactable(reactors);
   return (
     <ChatActionsContext.Provider value={value}>
       <BubbleActionsContext.Provider value={bubble}>
         <ChatSearchProvider phone={phone}>{children}</ChatSearchProvider>
       </BubbleActionsContext.Provider>
-      <MessageMenu message={menu?.m ?? null} at={menu?.at ?? null} phone={phone} onClose={() => setMenu(null)} onMoreEmoji={setEmojiFor} />
+      <MessageMenu
+        message={menu?.m ?? null}
+        at={menu?.at ?? null}
+        phone={phone}
+        onClose={() => setMenu(null)}
+        onMoreEmoji={setEmojiFor}
+      />
       <ForwardSheet phone={phone} message={forward} onClose={() => setForward(null)} />
       <CopySheet request={copy} onClose={() => setCopy(null)} />
-      <FailedSheet phone={phone} message={failed} onClose={() => setFailed(null)} onError={(text) => say({ text })} />
-      <ReactorsSheet message={reactors} contact={threadName} onRemove={removable ? (m) => value.react(m, null) : undefined} onClose={() => setReactors(null)} />
+      <FailedSheet
+        phone={phone}
+        message={failed}
+        onClose={() => setFailed(null)}
+        onError={(text) => say({ text })}
+      />
+      <ReactorsSheet
+        message={reactors}
+        contact={threadName}
+        onRemove={removable ? (m) => value.react(m, null) : undefined}
+        onClose={() => setReactors(null)}
+      />
       <EmojiSheet
         visible={emojiFor !== null}
         onPick={(e) => {

@@ -45,7 +45,13 @@ afterEach(() => jest.useRealTimers());
 
 test('a text message: «نسخ النص» after «رد», no «تنزيل»; it opens the sheet with the exact, selectable text', async () => {
   const menu = await longPress(text);
-  expect(labels(menu)).toEqual([t.inbox.reply.action, t.inbox.copy.label, t.inbox.forward.action, t.inbox.hide.action, t.common.cancel]);
+  expect(labels(menu)).toEqual([
+    t.inbox.reply.action,
+    t.inbox.copy.label,
+    t.inbox.forward.action,
+    t.inbox.hide.action,
+    t.common.cancel,
+  ]);
   await fireEvent.press(menu.getByRole('button', { name: t.inbox.copy.label }));
   await act(async () => jest.runOnlyPendingTimers());
   const copied = screen.getByTestId('copy-text');

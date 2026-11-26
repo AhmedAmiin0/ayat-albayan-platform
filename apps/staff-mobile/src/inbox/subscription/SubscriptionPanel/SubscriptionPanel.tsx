@@ -30,10 +30,24 @@ export function SubscriptionPanel({ data, phone }: SubscriptionPanelProps) {
   const summary = kids.length > 1 ? familySummary(kids) : null;
   const only = kids.length === 1 ? kids[0] : undefined;
   return (
-    <View style={{ gap: 6, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: color.rule }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+    <View
+      style={{ gap: 6, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: color.rule }}
+    >
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 8,
+        }}
+      >
         {summary && chip ? (
-          <FamilyToggle chip={chip} summary={summary} open={open} onToggle={() => setOpen((v) => !v)} />
+          <FamilyToggle
+            chip={chip}
+            summary={summary}
+            open={open}
+            onToggle={() => setOpen((v) => !v)}
+          />
         ) : (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexShrink: 1 }}>
             {chip ? <StatusChip {...chip} size="sm" /> : null}
@@ -42,7 +56,9 @@ export function SubscriptionPanel({ data, phone }: SubscriptionPanelProps) {
         )}
         {action ? <SubscribePill action={action} /> : null}
       </View>
-      {summary && open ? <FamilyList packaged={summary.packaged} noPackage={summary.noPackage} /> : null}
+      {summary && open ? (
+        <FamilyList packaged={summary.packaged} noPackage={summary.noPackage} />
+      ) : null}
     </View>
   );
 }
@@ -95,7 +111,10 @@ function SubscribePill({ action }: { action: SubscribeAction }) {
         <ThreadMenu
           open={picking}
           label={t.inbox.subscription.pickStudent}
-          items={targets.map((target) => ({ label: target.label, onPress: () => router.push(target.href) }))}
+          items={targets.map((target) => ({
+            label: target.label,
+            onPress: () => router.push(target.href),
+          }))}
           onClose={() => setPicking(false)}
         />
       ) : null}

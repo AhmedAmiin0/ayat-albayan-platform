@@ -43,7 +43,11 @@ const contactAvatar = (thread: ThreadView | null, phone: string) => (
 );
 
 /** Offline: when the saved thread was fetched. Else who the number is, then the number if named. */
-function subtitleOf(phone: string, query: ThreadQuery, who: { teacher: boolean; cycle: ClockCycle; tz: string }): string {
+function subtitleOf(
+  phone: string,
+  query: ThreadQuery,
+  who: { teacher: boolean; cycle: ClockCycle; tz: string },
+): string {
   const { teacher, cycle, tz } = who;
   if (query.isError && query.dataUpdatedAt > 0) {
     return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt, cycle, tz));
@@ -104,7 +108,10 @@ export function ThreadScreen() {
         {query.data ? (
           // Composer, quote strip and staged file stay on the keyboard (Android).
           <KeyboardFrame style={{ flex: 1, gap: 4 }}>
-            <ReplyActionsProvider phone={phone} lessons={query.data.pages[0]?.lessons ?? NO_LESSONS}>
+            <ReplyActionsProvider
+              phone={phone}
+              lessons={query.data.pages[0]?.lessons ?? NO_LESSONS}
+            >
               <MessageList phone={phone} query={query} />
             </ReplyActionsProvider>
             <ChatNotice />

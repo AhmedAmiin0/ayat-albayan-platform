@@ -6,7 +6,8 @@ const other: ThreadView = { ...thread, phone_e164: '+966500000001', display_name
 const third: ThreadView = { ...thread, phone_e164: '+966500000002', display_name: 'مريم' };
 
 const sent = message({ id: 'p1', body: 'وصلت الرسالة', created_at: '2026-10-02T09:00:00Z' });
-const phones = (data: ThreadListCache | undefined) => data?.pages.map((p) => p.items.map((th) => th.phone_e164));
+const phones = (data: ThreadListCache | undefined) =>
+  data?.pages.map((p) => p.items.map((th) => th.phone_e164));
 
 test('a send moves its chat to the top of the newest page with the new last message', () => {
   const next = touchList(listCache([other, third], [thread]), sent);

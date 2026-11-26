@@ -15,7 +15,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
-  supabase: { storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) } },
+  supabase: {
+    storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) },
+  },
 }));
 jest.mock('expo-image-picker', () => ({ launchCameraAsync: jest.fn(), launchImageLibraryAsync: jest.fn() }));
 jest.mock('expo-document-picker', () => ({ getDocumentAsync: jest.fn() }));
@@ -42,7 +44,9 @@ async function answerWithPhoto() {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValue({ canceled: false, assets: [photo] });
+  jest
+    .mocked(ImagePicker.launchImageLibraryAsync)
+    .mockResolvedValue({ canceled: false, assets: [photo] });
 });
 
 test('the file goes with replyToMessageId, and the strip clears once it is sent', async () => {

@@ -35,7 +35,14 @@ export function StatementItem({ statement: s, can, onPay, onNotice }: StatementI
       {s.method ? <Note>{t.mobileFinance.payouts.method.replace('{method}', t.enums.paymentMethod[s.method])}</Note> : null}
       {s.note ? <Note>{t.mobileFinance.payouts.note.replace('{note}', s.note)}</Note> : null}
       {linesOpen ? <StatementLines lines={s.lines} /> : null}
-      <StatementActionBar statement={s} can={can} linesOpen={linesOpen} onLines={() => setLinesOpen((o) => !o)} onPay={onPay} onNotice={onNotice} />
+      <StatementActionBar
+        statement={s}
+        can={can}
+        linesOpen={linesOpen}
+        onLines={() => setLinesOpen((o) => !o)}
+        onPay={onPay}
+        onNotice={onNotice}
+      />
     </MoneyCard>
   );
 }

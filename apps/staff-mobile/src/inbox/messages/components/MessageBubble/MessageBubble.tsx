@@ -59,7 +59,12 @@ export interface MessageBubbleProps {
 }
 
 /** R-MSG-05: why a send failed is for everyone; retry and manual send stay the admin's. */
-export const MessageBubble = memo(function MessageBubble({ message: m, phone, onJump, highlight = false }: MessageBubbleProps) {
+export const MessageBubble = memo(function MessageBubble({
+  message: m,
+  phone,
+  onJump,
+  highlight = false,
+}: MessageBubbleProps) {
   const touch = useBubbleActions(m);
   const hold = (e?: GestureResponderEvent) => touch.openMenu(holdTop(e));
   const { openReactors, openFailed } = useBubbleChatActions();
@@ -98,8 +103,12 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
       ) : null}
       <TappedLabel message={m} />
       <TemplateFrame block={m.template} hasMedia={m.media_mime !== null || m.media_url !== null}>
-        {file ? <MessageFile message={m} phone={phone} onLongPress={touch.has ? hold : undefined} /> : null}
-        {media && !file ? <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} /> : null}
+        {file ? (
+          <MessageFile message={m} phone={phone} onLongPress={touch.has ? hold : undefined} />
+        ) : null}
+        {media && !file ? (
+          <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} />
+        ) : null}
         <ResendAsk message={m} phone={phone} />
         {caption ? <LinkedText text={caption} touch={touch} a11y={a11yOn === 'body'} /> : null}
       </TemplateFrame>
@@ -107,7 +116,11 @@ export const MessageBubble = memo(function MessageBubble({ message: m, phone, on
       {/* A held hand-off's «!» too: its sheet reopens WhatsApp if the admin left unsent. */}
       <MessageMeta message={m} onTicksPress={stuck ? () => openFailed(m) : undefined} />
       {m.template ? (
-        <TemplateButtons buttons={m.template.buttons} inset={{ x: PAD.x, bottom: why || asking ? 0 : PAD.bottom }} onLongPress={touch.has ? hold : undefined} />
+        <TemplateButtons
+          buttons={m.template.buttons}
+          inset={{ x: PAD.x, bottom: why || asking ? 0 : PAD.bottom }}
+          onLongPress={touch.has ? hold : undefined}
+        />
       ) : null}
       {why ? <FailReason message={m} onPress={stuck ? () => openFailed(m) : undefined} /> : null}
       {asking ? <MessageActions message={m} phone={phone} /> : null}

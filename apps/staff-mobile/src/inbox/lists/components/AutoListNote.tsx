@@ -29,7 +29,15 @@ export function AutoListNote({ rule }: { rule: ChatListAutoRule }) {
   return (
     <View accessible accessibilityRole="text" accessibilityLabel={`${t.inbox.lists.auto}. ${line}`} style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8, paddingVertical: 4 }}>
       <AutoListChip />
-      <AppText style={{ flexShrink: 1, fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink3 }}>
+      <AppText
+        style={{
+          flexShrink: 1,
+          fontFamily: type.ui[400],
+          fontSize: type.size.xs,
+          lineHeight: type.lineHeight(type.size.xs),
+          color: color.ink3,
+        }}
+      >
         {line}
       </AppText>
     </View>

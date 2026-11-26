@@ -55,7 +55,12 @@ export function DeletePanel({ user, onBack, onDone }: DeletePanelProps) {
           onCancel={onBack}
         />
       ) : (
-        <PanelButtons confirmLabel={D.confirm} busy={remove.isPending} onConfirm={() => remove.mutate(user.id)} onCancel={onBack} />
+        <PanelButtons
+          confirmLabel={D.confirm}
+          busy={remove.isPending}
+          onConfirm={() => remove.mutate(user.id)}
+          onCancel={onBack}
+        />
       )}
     </Section>
   );

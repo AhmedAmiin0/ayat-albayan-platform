@@ -38,7 +38,12 @@ export function InboxScreen() {
   const view = viewOf(picked, { threads: hasThreads, leads: hasLeads, calls: hasCalls });
   const switcher =
     hasThreads && (hasLeads || hasCalls) ? (
-      <FilterPills items={views({ leads: hasLeads, calls: hasCalls })} value={view} onChange={setPicked} accessibilityLabel={t.nav.conversations} />
+      <FilterPills
+        items={views({ leads: hasLeads, calls: hasCalls })}
+        value={view}
+        onChange={setPicked}
+        accessibilityLabel={t.nav.conversations}
+      />
     ) : null;
   return <Screen list>{body(view, switcher)}</Screen>;
 }

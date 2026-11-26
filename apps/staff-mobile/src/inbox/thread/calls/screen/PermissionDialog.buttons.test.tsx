@@ -10,10 +10,17 @@ test('docs/07 «الأزرار»: «اطلب إذن الاتصال» (filled) th
   await renderWithQuery(<PermissionDialog ask={{ phone: '+966552147730', state: 'request' }} onClose={jest.fn()} onSent={jest.fn()} />);
   const cells = within(screen.getByTestId('call-permission-actions')).getAllByTestId('button-row-cell');
   expect(cells).toHaveLength(2);
-  expect(within(cells[0] as (typeof cells)[number]).getByText(t.calls.permission.request)).toBeTruthy();
+  expect(
+    within(cells[0] as (typeof cells)[number]).getByText(t.calls.permission.request),
+  ).toBeTruthy();
   expect(within(cells[1] as (typeof cells)[number]).getByText(t.common.close)).toBeTruthy();
-  expect(styleOf(t.calls.permission.request)).toMatchObject({ backgroundColor: palette.light.lapisFill });
-  expect(styleOf(t.common.close)).toMatchObject({ borderWidth: 1, borderColor: palette.light.ruleInput });
+  expect(styleOf(t.calls.permission.request)).toMatchObject({
+    backgroundColor: palette.light.lapisFill,
+  });
+  expect(styleOf(t.common.close)).toMatchObject({
+    borderWidth: 1,
+    borderColor: palette.light.ruleInput,
+  });
 });
 
 test('outside the window only «إغلاق» shows, filling the row', async () => {

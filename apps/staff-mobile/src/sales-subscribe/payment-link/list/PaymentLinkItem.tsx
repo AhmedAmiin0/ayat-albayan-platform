@@ -49,7 +49,9 @@ export function PaymentLinkItem({ link, now, readOnly = false }: PaymentLinkItem
           ) : (
             <Button variant="danger" label={pl.cancel} accessibilityLabel={`${pl.cancel} — ${link.student.name}`} onPress={() => setAsking(true)} />
           )}
-          {cancel.isError ? <ErrorLine message={linkErrorText(cancel.error, pl.mobile.cancelFailed)} /> : null}
+          {cancel.isError ? (
+            <ErrorLine message={linkErrorText(cancel.error, pl.mobile.cancelFailed)} />
+          ) : null}
         </View>
       ) : null}
     </View>

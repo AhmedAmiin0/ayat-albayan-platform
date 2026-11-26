@@ -26,7 +26,10 @@ export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {
     );
   return (
     <>
-      <PillButton label={due.length > 0 ? t.students.renew : t.salesMoney.newSubscription} onPress={subscribe} />
+      <PillButton
+        label={due.length > 0 ? t.students.renew : t.salesMoney.newSubscription}
+        onPress={subscribe}
+      />
       {owed ? (
         <PillButton
           label={t.salesMoney.recordTransfer}
