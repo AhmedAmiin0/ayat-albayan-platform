@@ -27,7 +27,9 @@ describe('expenseCategoryCalls', () => {
 
   it('refuses a list whose rows lack the active flag', async () => {
     const { client } = clientAnswering([{ key: 'fuel', label_ar: 'وقود', label_en: null }]);
-    const failure = await expenseCategoryCalls(client).list().catch((e: unknown) => e);
+    const failure = await expenseCategoryCalls(client)
+      .list()
+      .catch((e: unknown) => e);
     expect(failure).toBeInstanceOf(ApiError);
     expect(failure).toMatchObject({ body: { code: 'bad_response', path: '/expense-categories' } });
   });
