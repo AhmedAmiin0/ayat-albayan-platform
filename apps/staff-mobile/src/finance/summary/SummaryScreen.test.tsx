@@ -3,6 +3,7 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { SummaryScreen } from './SummaryScreen';
 import { summaryYears } from '@/finance/shared/month';
+import { receivablesView } from '@/money/shared/fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
@@ -23,7 +24,7 @@ beforeEach(() => {
     Promise.resolve(
       p.startsWith('/dashboard/summary') ? { finance }
         : p.startsWith('/teacher-earnings/summary') ? { totals: { owed: 750 } }
-        : { total: 20, currency: 'SAR', fx_missing: [] },
+        : { ...receivablesView([]), total: 20 },
     ),
   );
 });
