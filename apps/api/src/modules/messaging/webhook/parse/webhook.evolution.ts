@@ -5,6 +5,8 @@ import type { Receiving } from '@/modules/messaging/webhook/lines/webhook.lines'
 import { evolutionMetaMessage } from './webhook.evolution-message';
 import { toInbound } from './webhook.parse';
 import { EVOLUTION_SEND_ERROR } from '@/modules/messaging/numbers';
+import { own } from '@/common/infra/own-value';
+import { deliveryStatusSchema } from '@/modules/messaging/webhook/webhook.events';
 
 // What POST /webhooks/evolution/:instance reads out of Evolution API v2's webhook (docs/19
 // «Evolution driver», src/api/integrations/event/webhook/webhook.controller.ts):
@@ -42,18 +44,13 @@ const failureOf = (u: Update): Pick<StatusEvent, 'errorCode' | 'errorText'> =>
   (u.status === 'ERROR' ? SEND_ERROR : NO_FAILURE);
 
 /** Evolution's (Baileys') status spelling → our delivery ticks. */
-const TICK: Readonly<Record<string, StatusEvent['status']>> = {
+const TICK = z.record(z.string(), deliveryStatusSchema).readonly().decode({
   SERVER_ACK: 'sent',
   DELIVERY_ACK: 'delivered',
   READ: 'read',
   PLAYED: 'read',
   ERROR: 'failed',
-};
-
-/** A table entry for a name the sender chose: own keys only (never «constructor», «__proto__»). */
-function own<T>(table: Readonly<Record<string, T>>, key: string): T | undefined {
-  return Object.hasOwn(table, key) ? table[key] : undefined;
-}
+});
 
 /** An ERROR only on a message marked ours (fromMe true): it may switch the number off. */
 const errorOfOurs = (u: Update): boolean => u.status !== 'ERROR' || u.fromMe === true;

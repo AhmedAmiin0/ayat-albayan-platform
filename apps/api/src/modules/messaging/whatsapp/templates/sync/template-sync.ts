@@ -1,14 +1,15 @@
 import type { TablesUpdate } from '@ab/db';
 import { quickReplyIntent, type TemplateButton } from '@ab/shared';
-import type { TemplateStatus } from '@ab/catalog';
+import { templateStatusSchema, type TemplateStatus } from '@ab/catalog';
 import { z } from 'zod';
 import { templateButtons } from '@/modules/messaging/whatsapp/messages/wa-json';
+import { own } from '@/common/infra/own-value';
 import { metaDisplay } from './template-display';
 import type { MetaTemplate, TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The health check's pure part (docs/12 §3.4): Meta's view of one template → our registry row.
 
-const META_STATUS: Record<string, TemplateStatus> = {
+const META_STATUS = z.record(z.string(), templateStatusSchema).readonly().decode({
   APPROVED: 'approved',
   PENDING: 'pending',
   IN_APPEAL: 'pending',
@@ -19,11 +20,11 @@ const META_STATUS: Record<string, TemplateStatus> = {
   ARCHIVED: 'disabled',
   PENDING_DELETION: 'disabled',
   DELETED: 'disabled',
-};
+});
 
 /** Meta status → ours. Anything new from Meta reads as pending: never sendable by mistake. */
 export function ourStatus(metaStatus: string): TemplateStatus {
-  return META_STATUS[metaStatus.toUpperCase()] ?? 'pending';
+  return own(META_STATUS, metaStatus.toUpperCase()) ?? 'pending';
 }
 
 const componentSchema = z.object({
