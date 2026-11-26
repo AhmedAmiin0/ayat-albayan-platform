@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { IN_CHUNK } from '@/common/db/read-all';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { StudentAttendanceRepo } from '@/modules/sales/sales-students/attendance/student-attendance.repo';
 
@@ -57,5 +58,16 @@ describe('StudentAttendanceQueries (whitelisted selects)', () => {
     expect(await new StudentAttendanceRepo(fakeDb({ students: [{ data: null }] }).db).exists('s1')).toBe(false);
     const broken = fakeDb({ lessons: [{ error: { message: 'boom' } }] });
     await expect(new StudentAttendanceRepo(broken.db).starts('s1', new Date())).rejects.toThrow(/boom/);
+  });
+});
+
+describe('StudentAttendanceRepo.reports: a long lesson list', () => {
+  it('reads the lesson ids in IN_CHUNK requests, rows in chunk order', async () => {
+    const ids = Array.from({ length: IN_CHUNK + 20 }, (_, i) => `l${i}`);
+    const f = fakeDb({ lesson_reports: [{ data: [{ id: 'r1' }] }, { data: [{ id: 'r2' }] }] });
+    const out = await new StudentAttendanceRepo(f.db).reports('s1', ids);
+    const sent = f.calls.filter((c) => c.method === 'in').map((c) => c.args[1]);
+    expect(sent).toEqual([ids.slice(0, IN_CHUNK), ids.slice(IN_CHUNK)]);
+    expect(out.map((r) => r.id)).toEqual(['r1', 'r2']);
   });
 });
