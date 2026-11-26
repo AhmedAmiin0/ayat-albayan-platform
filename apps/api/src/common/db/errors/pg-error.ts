@@ -4,6 +4,12 @@ import type { PgErrorMap, ToError } from './errors.types';
 
 const log = new Logger('DbError');
 
+export const UNIQUE_VIOLATION = '23505';
+
+/** Structural, so a storage or RPC error that carries a SQLSTATE can be tested too. */
+export const isUniqueViolation = (error: { code?: string } | null | undefined): boolean =>
+  error?.code === UNIQUE_VIOLATION;
+
 /** A conflict answers its code only: the database's text can carry row values (docs/62 §3.2). */
 const conflict = (message: string): ToError => (e) => {
   log.warn(`${e.code} ${e.message}: ${e.details}`);
@@ -11,7 +17,7 @@ const conflict = (message: string): ToError => (e) => {
 };
 
 const DEFAULT_CODES: Readonly<Record<string, ToError>> = {
-  '23505': conflict('duplicate'),
+  [UNIQUE_VIOLATION]: conflict('duplicate'),
   '23503': conflict('fk_violation'),
   PGRST103: () => new BadRequestException({ message: 'page_out_of_range' }),
 };
@@ -41,5 +47,5 @@ export function pgError(error: PostgrestError, map: PgErrorMap = {}): Error {
 }
 
 export function uniqueViolationOn(error: PostgrestError, constraint: string): boolean {
-  return error.code === '23505' && constraintOf(error) === constraint;
+  return isUniqueViolation(error) && constraintOf(error) === constraint;
 }
