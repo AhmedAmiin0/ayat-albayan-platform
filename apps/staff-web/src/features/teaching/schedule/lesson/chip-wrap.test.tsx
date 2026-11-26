@@ -13,7 +13,7 @@ describe('LessonChip in a narrow week cell', () => {
     render(<LessonChip lesson={l} onOpen={vi.fn()} />, { wrapper: configWrapper() });
     const name = screen.getByText(LONG, { exact: false });
     expect(name.className).not.toContain('truncate');
-    expect(name.className).toContain('[overflow-wrap:anywhere]');
+    expect(name.className).toMatch(/(^| )wrap-anywhere( |$)/);
     expect(name.parentElement?.className).toContain('flex-wrap');
   });
 

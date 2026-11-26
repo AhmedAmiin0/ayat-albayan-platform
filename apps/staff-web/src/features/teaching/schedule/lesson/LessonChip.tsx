@@ -89,9 +89,9 @@ export function LessonChip<L extends ChipLesson>({
         <span dir={clockDir(clock)} className="font-semibold tabular-nums">
           {clockOf(new Date(lesson.starts_at), { ...clock, tz: viewer })}
         </span>
-        <span className="min-w-0 font-medium [overflow-wrap:anywhere]">{studentNames(lesson)}</span>
+        <span className="min-w-0 font-medium wrap-anywhere">{studentNames(lesson)}</span>
       </span>
-      {!hideTeacher && <span className="text-ink-3 [overflow-wrap:anywhere]">{teacherLabel(lesson.teacher)}</span>}
+      {!hideTeacher && <span className="text-ink-3 wrap-anywhere">{teacherLabel(lesson.teacher)}</span>}
       <span className={cn('flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5', INK[style.tone])}>
         <span className="flex min-w-0 items-center gap-1">
           <NuqtaGlyph shape={style.glyph} />
