@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { channelPage, portalApi, type Answers, kid } from '@ab/web-kit/testing';
 import { t } from '@ab/web-kit';
 import { renderAt } from '@/test/render-at';
-import { ChildBody } from './ChildBody';
+import { ChildBody } from '@/features/children/ChildBody/ChildBody';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn(async () => ({})));
