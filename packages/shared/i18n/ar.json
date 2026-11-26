@@ -1932,6 +1932,9 @@
     "sendWhatsapp": "أرسله على واتساب",
     "waIntro": "السلام عليكم، الباقة المقترحة لك:",
     "trialNote": "جميع الباقات تبدأ بجلسة تجريبية مجانية بالكامل — جرّب أولاً ثم قرّر.",
+    "listIntro": "السلام عليكم، هذه أسعار باقاتنا:",
+    "listDiscount": "الأسعار بعد خصم {pct}%",
+    "listDuration": "مدة الحلقة {duration}:",
     "tableTitle": "أسعار كل الخطط",
     "tableSubtitle": "الأسعار المعلنة",
     "planColumn": "الباقة",
@@ -3535,7 +3538,20 @@
       "copy": "انسخ",
       "copied": "نُسخ العرض",
       "copyFailed": "تعذّر نسخ العرض",
-      "close": "أغلق عرض السعر"
+      "close": "أغلق عرض السعر",
+      "mode": {
+        "label": "نوع العرض",
+        "one": "باقة واحدة",
+        "all": "كل الأسعار"
+      },
+      "rounding": {
+        "label": "التقريب",
+        "nearest": "الأقرب",
+        "up": "للأعلى",
+        "down": "للأدنى"
+      },
+      "clientCountry": "دولة العميل حسب الرقم: {country} ({code})",
+      "countryJoin": "أو"
     },
     "templateBubble": {
       "buttons": "أزرار القالب",

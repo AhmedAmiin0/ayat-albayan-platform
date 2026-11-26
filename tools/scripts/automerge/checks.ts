@@ -2,6 +2,12 @@ import type { CheckRun, Facts } from './facts.schemas.ts';
 
 /** The workflow's own job (lane-automerge.yml) is still in progress while it decides. */
 export const SELF = 'lane automerge';
+/**
+ * The title check runs again on the same commit when the title is edited and its old failure
+ * stays on the head; decide.ts reads the live title itself, so its runs are not read here.
+ */
+export const TITLE = 'pr title';
+const UNREAD = new Set([SELF, TITLE]);
 export const REQUIRED: readonly string[] = ['check', 'guards'];
 const OK = new Set(['success', 'skipped', 'neutral']);
 
@@ -40,7 +46,7 @@ const RULES: readonly Rule[] = [
 
 /** Why the head commit's checks are not all green, or null when they are. */
 export function notGreen(facts: Pick<Facts, 'checks' | 'statuses'>): string | null {
-  const checks = facts.checks.filter((r) => r.name !== SELF);
+  const checks = facts.checks.filter((r) => !UNREAD.has(r.name));
   for (const rule of RULES) {
     const reason = rule({ checks, statuses: facts.statuses });
     if (reason !== null) return reason;

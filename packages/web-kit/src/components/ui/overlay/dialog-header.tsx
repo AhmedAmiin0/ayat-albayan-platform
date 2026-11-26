@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
+import { IconButton } from '@ab/web-kit/components/ui/form/IconButton';
 import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { toneClass } from '@ab/web-kit/components/ui/display/status-chip';
 

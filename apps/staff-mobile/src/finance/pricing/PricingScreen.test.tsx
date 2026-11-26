@@ -111,7 +111,7 @@ test('failed with nothing cached: error + retry', async () => {
   expect(await screen.findByText(p.packages.bulk.name)).toBeTruthy();
 });
 
-test('the calculator keeps the free discount field beside the pills (the chat sheet has pills only)', async () => {
+test('the calculator keeps the free discount field beside the pills', async () => {
   mockApiFetch.mockResolvedValue(bulkSa);
   await renderWithQuery(<PricingScreen />);
   await screen.findByText(p.packages.bulk.name);

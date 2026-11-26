@@ -1,0 +1,1 @@
+export { RoomNotice } from './RoomNotice';

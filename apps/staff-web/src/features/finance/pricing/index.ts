@@ -11,8 +11,10 @@ export {
   quoteSearch,
   type Selection,
 } from './api';
-export { CalcSteps, type CalcStepsProps } from './calculator/CalcSteps';
+export { CalcSteps } from './calculator/CalcSteps';
+export type { CalcStepsProps } from './calculator/CalcSteps.types';
 export { FxNote } from './calculator/FxNote';
+export { SegmentStep } from './calculator/SegmentStep';
 export { Stepper } from './calculator/Stepper';
 export {
   durationLabel,

@@ -1,0 +1,1 @@
+export { ChannelQuote } from './ChannelQuote';

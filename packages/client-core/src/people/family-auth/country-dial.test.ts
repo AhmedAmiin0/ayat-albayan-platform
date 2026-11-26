@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { defaultCountry } from './countries';
-import { splitInternational } from './country-dial';
+import { mainCountryOf, splitInternational } from './country-dial';
 
 const saudi = defaultCountry('SA');
 const split = (typed: string, current = saudi) => {
@@ -20,6 +20,13 @@ test('the longest calling code wins; a shared one keeps the current country, els
   expect(split('+1 202 555 0123')).toEqual({ code: 'US', national: '2025550123' });
   expect(split('+1 416 555 0101', defaultCountry('CA'))?.code).toBe('CA');
   expect(split('+7 701 000 0000')?.code).toBe('RU');
+});
+
+test('a calling code stands for its main country; one no country has stands for none', () => {
+  const main = (dial: string) => mainCountryOf(dial)?.code;
+  expect(['+1', '+7', '+44', '+212', '+61'].map(main)).toEqual(['US', 'RU', 'GB', 'MA', 'AU']);
+  expect(['+20', '+966'].map(main)).toEqual(['EG', 'SA']);
+  expect(['+999', '20', ''].map(main)).toEqual([undefined, undefined, undefined]);
 });
 
 test('a national number, or a code not yet whole, is left alone', () => {

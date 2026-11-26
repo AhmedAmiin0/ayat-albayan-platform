@@ -1,0 +1,1 @@
+export { ReportBody } from './ReportBody';

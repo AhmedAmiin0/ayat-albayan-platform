@@ -1,6 +1,6 @@
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '../../../lib/i18n/i18n';
-import type * as FrameModule from '../../../ui/layout/KeyboardFrame';
+import type * as FrameModule from '../../../ui/layout/KeyboardFrame/KeyboardFrame';
 import { freshQueryClient, renderWithQuery } from '../../../testing/query';
 import { ChannelThread } from '../ChannelThread';
 import type { ChannelMediaPort, ChannelPickedFile } from '../../media-port';
@@ -16,8 +16,8 @@ jest.mock('../../../lib/http/api', () => ({
 }));
 
 const mockFrames: (boolean | undefined)[] = [];
-jest.mock('../../../ui/layout/KeyboardFrame', () => {
-  const actual = jest.requireActual<typeof FrameModule>('../../../ui/layout/KeyboardFrame');
+jest.mock('../../../ui/layout/KeyboardFrame/KeyboardFrame', () => {
+  const actual = jest.requireActual<typeof FrameModule>('../../../ui/layout/KeyboardFrame/KeyboardFrame');
   return {
     ...actual,
     KeyboardFrame: (p: Parameters<typeof actual.KeyboardFrame>[0]) => {

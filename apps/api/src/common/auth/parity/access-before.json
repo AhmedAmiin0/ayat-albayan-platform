@@ -308,6 +308,7 @@
   "ReportPublicController.code": "public",
   "ReportPublicController.verify": "public",
   "PricingController.catalog": ["admin","sales"],
+  "PricingController.list": ["admin","sales"],
   "PricingController.quote": ["admin","sales"],
   "PublicConfigController.get": "public",
   "RatingController.send": ["admin"],

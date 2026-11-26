@@ -7,13 +7,14 @@
 export function barrelConsumers(graph, file) {
   const out = new Set();
   const q = [file];
+  const visit = (x, y) => {
+    if (out.has(y)) return;
+    out.add(y);
+    if (graph.reexportsFrom.get(y)?.has(x)) q.push(y);
+  };
   while (q.length) {
     const x = q.pop();
-    for (const y of graph.importers.get(x) ?? []) {
-      if (out.has(y)) continue;
-      out.add(y);
-      if (graph.reexportsFrom.get(y)?.has(x)) q.push(y);
-    }
+    for (const y of graph.importers.get(x) ?? []) visit(x, y);
   }
   return out;
 }
@@ -23,8 +24,12 @@ export function reverseClosure(graph, start, stop = () => false) {
   const rev = (graph.rev ??= invert(graph.edges));
   const seen = new Set(start);
   const q = [...start];
-  while (q.length)
-    for (const x of rev.get(q.pop()) ?? []) if (!seen.has(x) && !stop(x)) seen.add(x) && q.push(x);
+  const visit = (x) => {
+    if (seen.has(x) || stop(x)) return;
+    seen.add(x);
+    q.push(x);
+  };
+  while (q.length) for (const x of rev.get(q.pop()) ?? []) visit(x);
   return seen;
 }
 

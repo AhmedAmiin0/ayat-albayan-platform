@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { ListSkeleton, Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button } from '@ab/web-kit/components/ui/form/Button';
+import { FormAlert } from '@ab/web-kit/components/ui/form/FormAlert';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { queryStateOf } from './query-state';
 import type { QueryStateKind, QueryStateProps } from './QueryState.types';

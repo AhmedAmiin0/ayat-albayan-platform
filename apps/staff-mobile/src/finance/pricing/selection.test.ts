@@ -24,6 +24,16 @@ test('the free discount field is parsed like the site (Arabic digits, clamped to
   expect(['١٢٫٥', '12.', '', '150'].map(sent)).toEqual([12.5, 12, 0, 100]);
 });
 
+test('rounding up or down is asked for; nearest is left out, so the request stays today’s', () => {
+  const asked = (rounding?: 'nearest' | 'up' | 'down') =>
+    toQueryString(quoteParams({ ...DEFAULT_SELECTION, discount: '10' }, rounding));
+  const today = '?tier=standard&duration=45&country=SA&students=1&discount=10';
+  expect(asked()).toBe(today);
+  expect(asked('nearest')).toBe(today);
+  expect(asked('up')).toBe(`${today}&rounding=up`);
+  expect(asked('down')).toBe(`${today}&rounding=down`);
+});
+
 test('a package ignores the custom count it remembers', () => {
   const params = quoteParams({ ...DEFAULT_SELECTION, plan: 'weekly', count: 40, discount: '15' });
   expect(toQueryString(params)).toBe('?tier=weekly&duration=45&country=SA&students=1&discount=15');

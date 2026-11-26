@@ -1494,14 +1494,6 @@
       "count": 1
     }
   },
-  "src/finance/pricing/PricingSteps.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/finance/pricing/QuoteCard.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -1677,29 +1669,8 @@
       "count": 1
     }
   },
-  "src/inbox/composer/quote/QuoteSheet/QuoteSheet.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
   "src/inbox/composer/quote/QuoteSheet/tests/actions.test.tsx": {
     "typescript/no-deprecated": {
-      "count": 1
-    }
-  },
-  "src/inbox/composer/quote/QuoteSheet/tests/prefill.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/inbox/composer/quote/use-quote-sheet.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },

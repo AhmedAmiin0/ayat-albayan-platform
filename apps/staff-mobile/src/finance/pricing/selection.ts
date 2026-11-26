@@ -1,10 +1,12 @@
 import {
   CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
+  DEFAULT_ROUNDING,
   parseDiscount,
   STUDENTS_MIN,
   type PackageId,
   type PricingDuration,
+  type Rounding,
   type SiteCountry,
 } from '@ab/money';
 import type { ListParams } from '@ab/mobile-kit';
@@ -35,8 +37,15 @@ export const DEFAULT_SELECTION: Selection = {
   discount: '0',
 };
 
+/**
+ * Nearest is what the API does when `rounding` is left out, so it is never sent: the calculator's
+ * request, and every quote already cached, stay as they were.
+ */
+const sentRounding = (rounding: Rounding): Rounding | undefined =>
+  rounding === DEFAULT_ROUNDING ? undefined : rounding;
+
 /** Query params for /pricing/quote: `tier` xor `count`, and no `country` at all for USD. */
-export function quoteParams(s: Selection): ListParams {
+export function quoteParams(s: Selection, rounding: Rounding = DEFAULT_ROUNDING): ListParams {
   const custom = s.plan === 'custom';
   return {
     tier: custom ? undefined : s.plan,
@@ -45,5 +54,6 @@ export function quoteParams(s: Selection): ListParams {
     country: s.country === 'other' ? undefined : s.country,
     students: s.students,
     discount: parseDiscount(s.discount),
+    rounding: sentRounding(rounding),
   };
 }

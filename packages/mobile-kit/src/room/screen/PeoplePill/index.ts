@@ -1,0 +1,1 @@
+export { PeoplePill } from './PeoplePill';

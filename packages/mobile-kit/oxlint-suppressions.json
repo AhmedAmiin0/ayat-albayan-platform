@@ -26,7 +26,7 @@
       "count": 1
     }
   },
-  "src/auth/forgot/AuthAlert.tsx": {
+  "src/auth/forgot/AuthAlert/AuthAlert.tsx": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -263,7 +263,7 @@
       "count": 1
     }
   },
-  "src/ui/call/RoundButton.tsx": {
+  "src/ui/call/RoundButton/RoundButton.tsx": {
     "complexity": {
       "count": 1
     },
@@ -271,7 +271,7 @@
       "count": 4
     }
   },
-  "src/ui/connecting/CheckBadge.test.tsx": {
+  "src/ui/connecting/CheckBadge/CheckBadge.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     },
@@ -279,7 +279,7 @@
       "count": 1
     }
   },
-  "src/ui/connecting/CheckBadge.tsx": {
+  "src/ui/connecting/CheckBadge/CheckBadge.tsx": {
     "stylistic/max-len": {
       "count": 5
     },
@@ -287,12 +287,12 @@
       "count": 1
     }
   },
-  "src/ui/connecting/ConnectingBar.test.tsx": {
+  "src/ui/connecting/ConnectingBar/ConnectingBar.test.tsx": {
     "typescript/no-unnecessary-boolean-literal-compare": {
       "count": 1
     }
   },
-  "src/ui/connecting/ConnectingBar.tsx": {
+  "src/ui/connecting/ConnectingBar/ConnectingBar.tsx": {
     "stylistic/max-len": {
       "count": 2
     },
@@ -300,7 +300,7 @@
       "count": 2
     }
   },
-  "src/ui/connecting/ConnectingDots.test.tsx": {
+  "src/ui/connecting/ConnectingDots/ConnectingDots.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     },
@@ -308,17 +308,17 @@
       "count": 1
     }
   },
-  "src/ui/connecting/ConnectingDots.tsx": {
+  "src/ui/connecting/ConnectingDots/ConnectingDots.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/ui/connecting/HeaderConnectingBar.tsx": {
+  "src/ui/connecting/HeaderConnectingBar/HeaderConnectingBar.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/ui/connecting/TopConnectingBar.tsx": {
+  "src/ui/connecting/TopConnectingBar/TopConnectingBar.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -347,12 +347,12 @@
       "count": 1
     }
   },
-  "src/ui/feedback/ErrorState.tsx": {
+  "src/ui/feedback/ErrorState/ErrorState.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/ui/feedback/StatusChip.tsx": {
+  "src/ui/feedback/StatusChip/StatusChip.tsx": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -373,7 +373,7 @@
       "count": 1
     }
   },
-  "src/ui/layout/KeyboardFrame.test.tsx": {
+  "src/ui/layout/KeyboardFrame/KeyboardFrame.test.tsx": {
     "no-nested-ternary": {
       "count": 1
     },
@@ -381,12 +381,12 @@
       "count": 2
     }
   },
-  "src/ui/layout/KeyboardFrame.tsx": {
+  "src/ui/layout/KeyboardFrame/KeyboardFrame.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
     }
   },
-  "src/ui/layout/ListRow.tsx": {
+  "src/ui/layout/ListRow/ListRow.tsx": {
     "max-lines-per-function": {
       "count": 1
     },
@@ -415,7 +415,7 @@
       "count": 1
     }
   },
-  "src/ui/layout/ScreenHeader.tsx": {
+  "src/ui/layout/ScreenHeader/ScreenHeader.tsx": {
     "max-lines-per-function": {
       "count": 1
     },
@@ -428,7 +428,7 @@
       "count": 1
     }
   },
-  "src/ui/lists/ListRowTitle.tsx": {
+  "src/ui/lists/ListRowTitle/ListRowTitle.tsx": {
     "complexity": {
       "count": 1
     }
@@ -514,12 +514,12 @@
       "count": 1
     }
   },
-  "src/ui/surface/inset.test.tsx": {
+  "src/ui/surface/Inset/Inset.test.tsx": {
     "typescript/no-unnecessary-condition": {
       "count": 1
     }
   },
-  "src/ui/surface/inset.tsx": {
+  "src/ui/surface/Inset/Inset.tsx": {
     "stylistic/max-len": {
       "count": 3
     },

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { Dialog } from './dialog';
 import { bottomSheetLayout, pickLayout, sheetLayout } from './dialog-classes';
 

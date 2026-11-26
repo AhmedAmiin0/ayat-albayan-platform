@@ -28,20 +28,26 @@ test.each([
 ] as const)('a %s chat opens on its country (%s), still editable', async (phone, country) => {
   await sheet(phone);
   await screen.findByTestId('quote-preview');
-  expect(mockApiFetch).toHaveBeenCalledWith(`/pricing/quote?tier=standard&duration=45&country=${country}&students=1&discount=0`);
+  expect(mockApiFetch).toHaveBeenCalledWith(
+    `/pricing/quote?tier=standard&duration=45&country=${country}&students=1&discount=0`,
+  );
   expect(screen.getByRole('radio', { name: p.countries[country], checked: true })).toBeTruthy();
 });
 
 test('any other code opens on «دولة أخرى» and asks in USD (no country sent)', async () => {
   await sheet('+447700900123');
   await screen.findByTestId('quote-preview');
-  expect(mockApiFetch).toHaveBeenCalledWith('/pricing/quote?tier=standard&duration=45&students=1&discount=0');
+  expect(mockApiFetch).toHaveBeenCalledWith(
+    '/pricing/quote?tier=standard&duration=45&students=1&discount=0',
+  );
   expect(screen.getByRole('radio', { name: p.otherCountry, checked: true })).toBeTruthy();
 });
 
-test('the preview is the calculator offer text, in Arabic; the discount is pills only', async () => {
+test('the preview is the calculator offer text, in Arabic; the discount is pills and a free field', async () => {
   await sheet('+966501234567');
-  expect((await screen.findByTestId('quote-preview')).props.children).toBe(offerText(bulkSa, ar.pricing));
+  expect((await screen.findByTestId('quote-preview')).props.children).toBe(
+    offerText(bulkSa, ar.pricing),
+  );
   expect(screen.getByRole('radio', { name: p.discounts['15'] })).toBeTruthy();
-  expect(screen.getAllByLabelText(p.steps.discount)).toHaveLength(1); // the pills' group; no free field
+  expect(screen.getAllByLabelText(p.steps.discount)).toHaveLength(2); // the pills' group, the field
 });

@@ -1,0 +1,1 @@
+export { AgendaLesson } from './AgendaLesson';

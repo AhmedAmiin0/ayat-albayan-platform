@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
+import { IconButton } from '@ab/web-kit/components/ui/form/IconButton';
 import { useFocusTrap } from './use-focus-trap';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 

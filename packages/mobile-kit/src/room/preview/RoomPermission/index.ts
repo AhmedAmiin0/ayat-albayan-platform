@@ -1,0 +1,1 @@
+export { RoomPermission } from './RoomPermission';

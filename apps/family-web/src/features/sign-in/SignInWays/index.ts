@@ -1,0 +1,1 @@
+export { SignInWays } from './SignInWays';

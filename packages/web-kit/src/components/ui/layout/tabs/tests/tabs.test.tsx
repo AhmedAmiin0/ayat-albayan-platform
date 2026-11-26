@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { SegmentedControl } from '@ab/web-kit/components/ui/form/segmented-control';
+import { SegmentedControl } from '@ab/web-kit/components/ui/form/SegmentedControl';
 import { Tabs } from '@ab/web-kit/components/ui/layout/tabs/tabs';
 
 const TABS = [

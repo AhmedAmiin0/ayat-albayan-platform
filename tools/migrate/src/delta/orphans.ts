@@ -24,13 +24,15 @@ function recreatable(d: Desired, scope: RecreateScope): boolean {
   return typeof start === 'string' && Date.parse(start) >= Date.parse(scope.fromUtc);
 }
 
-/** Which import items of recreatable records name a row the target no longer has. Reads only. */
-async function goneRows(o: {
+interface OrphanQuery {
   db: Pick<TargetDb, 'select'>;
   existing: ReadonlyMap<string, Existing>;
   desired: readonly Desired[];
   scope: RecreateScope;
-}): Promise<Set<string>> {
+}
+
+/** Per table: target id → keyId of each recreatable record the ledger says was imported. */
+function importedByTable(o: OrphanQuery): Map<string, Map<string, string>> {
   const byTable = new Map<string, Map<string, string>>();
   for (const d of o.desired) {
     const id = o.existing.get(keyId(d.key))?.targetId;
@@ -38,16 +40,37 @@ async function goneRows(o: {
     const table = o.scope.tableOf(d.key.entity);
     byTable.set(table, (byTable.get(table) ?? new Map<string, string>()).set(id, keyId(d.key)));
   }
+  return byTable;
+}
+
+/** The keyIds among `ids` whose target row is not in `table`. */
+async function missingIn(
+  db: OrphanQuery['db'],
+  table: string,
+  ids: ReadonlyMap<string, string>,
+): Promise<string[]> {
+  const rows = await db.select<{ id: string }>({
+    text: `select id::text as id from ${tableIdent(table)} where id::text = any($1)`,
+    params: [[...ids.keys()]],
+  });
+  const found = new Set(rows.map((r) => r.id));
+  return [...ids].filter(([id]) => !found.has(id)).map(([, key]) => key);
+}
+
+/** Which import items of recreatable records name a row the target no longer has. Reads only. */
+async function goneRows(o: OrphanQuery): Promise<Set<string>> {
   const gone = new Set<string>();
-  for (const [table, ids] of byTable) {
-    const rows = await o.db.select<{ id: string }>({
-      text: `select id::text as id from ${tableIdent(table)} where id::text = any($1)`,
-      params: [[...ids.keys()]],
-    });
-    const found = new Set(rows.map((r) => r.id));
-    for (const [, key] of [...ids].filter(([id]) => !found.has(id))) gone.add(key);
+  for (const [table, ids] of importedByTable(o)) {
+    for (const key of await missingIn(o.db, table, ids)) gone.add(key);
   }
   return gone;
+}
+
+/** A link row (no target id) in scope that names a gone parent. */
+function followsGoneParent(d: Desired, o: OrphanQuery, gone: ReadonlySet<string>): boolean {
+  const isLink = o.existing.get(keyId(d.key))?.targetId === null;
+  const parentGone = Object.values(d.record.refs).some((nk) => gone.has(keyId(nk)));
+  return isLink && o.scope.only.has(d.key.entity) && parentGone;
 }
 
 /**
@@ -55,18 +78,12 @@ async function goneRows(o: {
  * (no target id) follow a recreated parent; one that also names a gone row that is not recreated
  * (a past lesson) is then skipped by deltaPlan's stale-ref check, never inserted.
  */
-export async function dropOrphans(o: {
-  db: Pick<TargetDb, 'select'>;
-  existing: Map<string, Existing>;
-  desired: readonly Desired[];
-  scope: RecreateScope;
-}): Promise<Set<string>> {
+export async function dropOrphans(
+  o: OrphanQuery & { existing: Map<string, Existing> },
+): Promise<Set<string>> {
   const gone = await goneRows(o);
   for (const d of o.desired) {
-    const id = keyId(d.key);
-    const e = o.existing.get(id);
-    if (e?.targetId !== null || !o.scope.only.has(d.key.entity)) continue;
-    if (Object.values(d.record.refs).some((nk) => gone.has(keyId(nk)))) gone.add(id);
+    if (followsGoneParent(d, o, gone)) gone.add(keyId(d.key));
   }
   for (const id of gone) o.existing.delete(id);
   return gone;

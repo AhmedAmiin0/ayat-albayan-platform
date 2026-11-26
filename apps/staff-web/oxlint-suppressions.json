@@ -758,11 +758,6 @@
       "count": 2
     }
   },
-  "src/features/finance/pricing/calculator/CalcSteps.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
   "src/features/finance/pricing/calculator/QuoteResult.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -1321,19 +1316,6 @@
     }
   },
   "src/features/messaging/inbox/composer/lib/use-reply-target.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/composer/quote/QuoteDialog/QuoteDialog.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/composer/quote/use-quote-offer.ts": {
     "stylistic/max-len": {
       "count": 1
     }

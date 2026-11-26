@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { parse } from 'yaml';
-import { SELF } from '../automerge/checks.ts';
+import { SELF, TITLE } from '../automerge/checks.ts';
 import { LABEL } from '../automerge/lanes.ts';
 
 const read = (f) => parse(readFileSync(new URL(`../../../.github/workflows/${f}`, import.meta.url), 'utf8'));
@@ -23,6 +23,10 @@ test('lane-automerge: triggers, one merge at a time, the token permissions it ne
   assert.deepEqual(job.permissions, perms);
   assert.equal(job.name, SELF, 'checks.ts ignores this job by its name');
   assert.ok(!JSON.stringify(lane).includes('secrets.'), 'no secret, only github.token');
+});
+
+test('lane-automerge: the title job keeps the name checks.ts leaves unread', () => {
+  assert.equal(read('pr-title.yml').jobs.title.name, TITLE);
 });
 
 test('lane-automerge: only PR ci runs, the label on a same-repo PR, or the schedule start it', () => {
@@ -50,6 +54,20 @@ test('lane-automerge: gathers the reviewed path facts from GitHub, not from git 
   assert.match(script, /commits\/\$sha\/check-suites\?per_page=100" --paginate/);
   assert.match(script, /\{filename, previous_filename\}/);
   for (const f of ['events', 'suites']) assert.match(script, new RegExp(`> "\\$d/${f}\\.json"`));
+});
+
+test('lane-automerge: what develop gained since the merge base comes from git', () => {
+  const has = (text) => assert.ok(script.includes(text), text);
+  has('compare/develop...$sha?per_page=1');
+  has('[[ $1 =~ ^[0-9a-f]{40}$ && $2 =~ ^[0-9a-f]{40}$ ]] || return 1');
+  has('[[ $1 == "$2" ]] && return 0');
+  has('git fetch -q --depth=1 --filter=blob:none origin "$1" "$2" || return 1');
+  has(`git diff -z --name-only --no-renames "$1" "$2" | tr '\\0' '\\n'`);
+  has('if names=$(gained "$base" "$tip"); then');
+  has(`jq -s '{known: true, files: .}' > "$d/behind.json"`);
+  has('::warning::#$n: what develop changed could not be read');
+  has(`echo '{"known": false, "files": []}' > "$d/behind.json"`);
+  assert.ok(!script.includes('compare.json'), 'cli.ts reads behind.json, not the compare answer');
 });
 
 /** deploy-staging's preflight `if`, evaluated for one ci run (GitHub `==` on these strings). */

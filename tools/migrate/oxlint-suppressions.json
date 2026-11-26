@@ -43,11 +43,6 @@
       "count": 2
     }
   },
-  "src/delta/orphans.ts": {
-    "complexity": {
-      "count": 2
-    }
-  },
   "src/delta/scope.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -247,20 +242,11 @@
     }
   },
   "src/sources/extract-crm.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     }
   },
   "src/sources/extract-sheets.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 2
-    },
     "ab/no-shape-checks": {
       "count": 1
     }

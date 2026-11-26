@@ -1,0 +1,1 @@
+export { RecordingBar } from './RecordingBar';
