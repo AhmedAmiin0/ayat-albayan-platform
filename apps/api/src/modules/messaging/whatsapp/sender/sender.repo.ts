@@ -17,7 +17,6 @@ export type { DueMessage } from './sender.due';
 
 /** Without a chat client, chat-stamped texts are never read (they would fill the batch forever). */
 const NOT_CHAT_TEXT = 'template_key.not.is.null,line.is.null,line.neq.chat';
-/** due(): the approved keys, now, the batch and (a lane's pass) its lane. */
 interface DueInput { keys: readonly string[]; now: Date; limit: number; lane?: Lane }
 
 /** The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set. */
