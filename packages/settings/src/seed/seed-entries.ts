@@ -65,7 +65,10 @@ export function seedEntry(key: string, def: SettingDef): SeedEntry {
  * kept outside the generic write path (comms_source is a registry entry with patch: false, so it is
  * listed once). INERT: nothing calls a seeder yet (26-P2).
  */
-const SEED_DEFS: Readonly<Record<string, SettingDef>> = { ...SETTINGS_REGISTRY, ...GOOGLE_SEED_DEFS };
+const SEED_DEFS: Readonly<Record<string, SettingDef>> = {
+  ...SETTINGS_REGISTRY,
+  ...GOOGLE_SEED_DEFS,
+};
 
 export const SEED_ENTRIES: readonly SeedEntry[] = Object.freeze(
   Object.entries(SEED_DEFS).map(([key, def]) => Object.freeze(seedEntry(key, def))),
