@@ -28,5 +28,6 @@ test('Reduce Motion: no animation, every dot at 0.7, no lift', async () => {
   await render(<ConnectingDots color="gold-token" still />);
   expect(timing).not.toHaveBeenCalled();
   expect(STILL_DOT_OPACITY).toBe(0.7);
-  for (const dot of dots()) expect(dot).toHaveStyle({ opacity: 0.7, transform: [{ translateY: 0 }] });
+  for (const dot of dots())
+    expect(dot).toHaveStyle({ opacity: 0.7, transform: [{ translateY: 0 }] });
 });

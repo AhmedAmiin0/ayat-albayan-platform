@@ -28,7 +28,13 @@ interface ScreenProps {
 }
 
 /** Put a FlatList last with flex 1; `scroll` for plain-row screens so the last row shows. */
-export function Screen({ children, scroll = false, chat = false, list = false, sheet = false }: ScreenProps) {
+export function Screen({
+  children,
+  scroll = false,
+  chat = false,
+  list = false,
+  sheet = false,
+}: ScreenProps) {
   const bar = useTabBarInset();
   const inset = sheet ? 0 : bar;
   const { color } = useTheme();

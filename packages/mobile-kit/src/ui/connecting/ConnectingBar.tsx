@@ -34,7 +34,12 @@ interface ConnectingBarProps {
  * and pushes the content down, never covering it. It measures its card and animates to that height,
  * so the hint's second line and large OS text sizes never clip.
  */
-export function ConnectingBar({ store = connectivity, inset = 0, background, gutter = 0 }: ConnectingBarProps) {
+export function ConnectingBar({
+  store = connectivity,
+  inset = 0,
+  background,
+  gutter = 0,
+}: ConnectingBarProps) {
   const phase = useBarPhase(useConnectivity(store));
   const still = useA11yPref('reduceMotion');
   // The card keeps its last words while it closes.

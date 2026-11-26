@@ -12,7 +12,13 @@ export const TEXT_AFTER_MS = 0;
 export const QUIET_TEXT_AFTER_MS = 3000;
 export const RETRY_AFTER_MS = 10_000;
 
-export function startupMode({ restoring, hasSaved }: { restoring: boolean; hasSaved: boolean }): StartupMode {
+export function startupMode({
+  restoring,
+  hasSaved,
+}: {
+  restoring: boolean;
+  hasSaved: boolean;
+}): StartupMode {
   return restoring || hasSaved ? 'quiet' : 'loading';
 }
 
