@@ -25,7 +25,7 @@ export * from './sales/family-link';
 export * from './sales/start-date';
 export * from './sales/used-before/used-before-edit';
 export * from './sales/used-before/used-before-state';
-export * from './sales/start-date-edit/start-date-edit';
+export * from './sales/start-date-edit';
 export * from './sales/renewal-due';
 export * from './sales/qualification-form';
 export * from './sales/student/student-attendance';

@@ -10,6 +10,7 @@ export * from './people/family-auth';
 export * from './people/phone-countries';
 export * from './finance/invoices';
 export * from './finance/payments';
+export * from './finance/start-date-edit';
 export * from './finance/quote-custom';
 export * from './finance/price-list';
 export * from './finance/quote-sheet';

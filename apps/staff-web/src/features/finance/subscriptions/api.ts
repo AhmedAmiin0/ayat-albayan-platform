@@ -7,11 +7,8 @@ import type {
   SubscriptionPricing,
   SubscriptionView,
 } from '@ab/money';
-import {
-  startDateEditResultSchema,
-  usedBeforeEditResultSchema,
-  usedBeforeStateSchema,
-} from '@ab/shared';
+import { startDateEditCall } from '@ab/client-core';
+import { usedBeforeEditResultSchema, usedBeforeStateSchema } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { moneyKeys } from '@/features/finance/keys';
@@ -90,10 +87,7 @@ export const editUsedBefore = (id: string, lessonsUsedBefore: number) =>
   );
 
 /** Needs subscriptions.edit_terms; changes starts_on only. */
-export const editStartDate = (id: string, startsOn: string) =>
-  apiSend('PATCH', `/subscriptions/${id}/start-date`, { startsOn }).then((raw: unknown) =>
-    startDateEditResultSchema.parse(raw),
-  );
+export const editStartDate = startDateEditCall({ apiFetch, apiSend });
 
 /** GET /subscriptions/:id/lessons-used-before: the stored number, the max, a refusal. */
 export const usedBeforeStateQuery = (id: string) =>

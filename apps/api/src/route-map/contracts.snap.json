@@ -4307,6 +4307,22 @@
     "startsOn"
    ],
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscription_id": {
+     "type": "string"
+    },
+    "starts_on": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "subscription_id",
+    "starts_on"
+   ]
   }
  },
  "PATCH /teachers/:id": {
