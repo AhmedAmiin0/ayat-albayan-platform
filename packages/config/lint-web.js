@@ -1,7 +1,7 @@
 // The lint blocks of every React DOM workspace (apps/staff-web, apps/family-web, packages/web-kit,
 // docs/51 §2), so their lint.blocks.mjs are not clones.
 import { boundaries, forbiddenImports, noParentImports } from './eslint-boundaries.js';
-import { reactRestrictions } from './eslint-react.js';
+import { LOCAL_HOOKS, reactRestrictions } from './eslint-react.js';
 import { a11yRules } from './jsx-a11y.js';
 
 const SRC = ['src/**/*.{ts,tsx}'];
@@ -32,10 +32,13 @@ export function webBlocks({ root, module }) {
     // React 19 + the React Compiler (each app's Vite): no manual memo, effects in hooks. The React
     // 19 rules (forwardRef, useContext, .Provider) turn on once docs/32 x2–x5 remove the old uses.
     ...reactRestrictions({ files: SRC, effects: TSX, compiler: true, react19: false }),
-    // docs/32 R8: a component calls the API through a query or mutation hook, not apiFetch /
-    // apiSend.
-    forbiddenImports({ files: TSX, bans: module ? [HTTP, KIT_HTTP, KIT_PATHS] : [HTTP] }),
     // docs/64 PR 5: an app reaches the kit through its entries only.
     ...(module ? [forbiddenImports({ files: TS, bans: [KIT_PATHS] })] : []),
+    // docs/32 R8: a component calls the API through a query or mutation hook, not apiFetch /
+    // apiSend; its own local hook neither (docs/63 §3). After the TS block, which it overrides.
+    forbiddenImports({
+      files: [...TSX, ...LOCAL_HOOKS],
+      bans: module ? [HTTP, KIT_HTTP, KIT_PATHS] : [HTTP],
+    }),
   ];
 }

@@ -4,6 +4,7 @@ import {
   boundaries,
   domainModuleRegex,
   forbiddenImports,
+  LOCAL_HOOKS,
   noParentImports,
   reactRestrictions,
 } from '@ab/config/lint';
@@ -34,6 +35,6 @@ export default {
     noParentImports({ root, files: CODE }),
     // RTL: a raw Text with no textAlign can sit at the physical left (docs/07 §14.1).
     { files: VIEWS, rules: { 'no-restricted-imports': ['error', { paths: [RAW_TEXT] }] } },
-    forbiddenImports({ files: VIEWS, bans: [API_CALLS] }),
+    forbiddenImports({ files: [...VIEWS, ...LOCAL_HOOKS], bans: [API_CALLS] }),
   ],
 };
