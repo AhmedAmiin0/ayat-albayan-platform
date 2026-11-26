@@ -2,6 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { LANE_ROWS, laneOfRow, lanesOf } from '@/modules/messaging/whatsapp/sender/drain/lanes';
 
 describe('sender lanes (docs/42 42-7)', () => {
+  it('the lane row filters are a frozen table over both lanes', () => {
+    expect(Object.isFrozen(LANE_ROWS)).toBe(true);
+    expect(Object.keys(LANE_ROWS)).toEqual(['chat', 'main']);
+  });
+
   it('a chat-line row is the chat lane; anything else the main lane', () => {
     expect(laneOfRow({ line: 'chat' })).toBe('chat');
     expect(laneOfRow({ line: 'notifications' })).toBe('main');

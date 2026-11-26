@@ -12,6 +12,13 @@ const row = (over: Partial<PresenceRow> = {}): PresenceRow => ({
 });
 
 describe('presenceRole', () => {
+  it('a role named after an Object property is a guest', () => {
+    expect(['constructor', '__proto__'].map((role) => presenceRole(row({ role })))).toEqual([
+      'guest',
+      'guest',
+    ]);
+  });
+
   it('names staff by what they are to the family', () => {
     expect(presenceRole(row({ role: 'teacher' }))).toBe('teacher');
     expect(['admin', 'assistant', 'sales'].map((role) => presenceRole(row({ role })))).toEqual([
