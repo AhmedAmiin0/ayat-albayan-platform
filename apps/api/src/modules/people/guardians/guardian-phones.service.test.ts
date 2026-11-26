@@ -25,10 +25,7 @@ describe('GuardianPhonesService error paths: the answer a failed query gives tod
     });
   });
 
-  it('any other error is a 500 carrying the message', async () => {
-    expect(await removeWith(PG_ERRORS.other)).toEqual({
-      status: 500,
-      body: { statusCode: 500, message: 'boom', error: 'Internal Server Error' },
-    });
+  it('any other error is the plain 500 of the default map', async () => {
+    expect(await removeWith(PG_ERRORS.other)).toEqual({ status: 500, body: 'db error XX000: boom' });
   });
 });
