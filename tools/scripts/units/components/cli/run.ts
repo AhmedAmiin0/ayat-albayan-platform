@@ -6,7 +6,7 @@ import { repoContext } from './context.ts';
 import { parseExcludes, targetsOf } from './discover.ts';
 import { planAll } from './plan.ts';
 import { reportLines } from './report.ts';
-import { formatFiles, writeFiles } from './write.ts';
+import { formatFiles, removeFiles, writeFiles } from './write.ts';
 import { trackedFiles } from '../../scan/tree.ts';
 import { groupBy } from '../model/group.ts';
 import { subfoldersOf } from './subfolders.ts';
@@ -19,7 +19,8 @@ export interface ComponentsIo {
   format?: (root: string, paths: string[]) => void;
 }
 
-const ORDER: Step[] = ['types', 'helpers', 'split', 'hook'];
+// adopt runs before hook: a same-name hook moved into the folder leaves the hook step done.
+const ORDER: Step[] = ['types', 'helpers', 'split', 'adopt', 'hook'];
 
 /** `pnpm components -- --dry-run|--write [--step <s>] --paths <dir...> [--exclude <f>] [--json]` */
 export function runComponents(argv: readonly string[], io: ComponentsIo): void {
@@ -38,11 +39,11 @@ export function runComponents(argv: readonly string[], io: ComponentsIo): void {
     excludes,
   };
   const steps = args.step === 'all' ? ORDER : [args.step];
-  const { rows, files } = planAll(targetsOf(paths, only), steps, ctx);
-  if (args.json) io.log(JSON.stringify({ rows }, null, 2));
-  else reportLines(rows).forEach((l) => io.log(l));
-  if (args.write)
-    io.log(
-      `components: ${writeFiles(io.root, files, io.format ?? formatFiles).length} files written`,
-    );
+  const planned = planAll(targetsOf(paths, only), steps, ctx);
+  if (args.json) io.log(JSON.stringify({ rows: planned.rows }, null, 2));
+  else reportLines(planned.rows).forEach((l) => io.log(l));
+  if (!args.write) return;
+  const written = writeFiles(io.root, planned.files, io.format ?? formatFiles).length;
+  const removed = removeFiles(io.root, planned.deleted).length;
+  io.log(`components: ${written} files written, ${removed} removed`);
 }

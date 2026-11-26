@@ -20,6 +20,11 @@ const parses = (path: string, text: string): boolean =>
       .diagnostics ?? []
   ).length === 0;
 
+interface Result {
+  rows: Row[];
+  refused: boolean;
+}
+
 interface Run {
   t: Target;
   steps: readonly Step[];
@@ -27,7 +32,7 @@ interface Run {
 }
 
 /** Each step in order on the overlay; the first refusal stops the component. */
-function runSteps({ t, steps, ctx }: Run, overlay: Overlay): { rows: Row[]; refused: boolean } {
+function runSteps({ t, steps, ctx }: Run, overlay: Overlay, gone: Set<string>): Result {
   const rows: Row[] = [];
   for (const step of steps) {
     const out = RUNNERS[step](t, overlay, ctx);
@@ -42,6 +47,7 @@ function runSteps({ t, steps, ctx }: Run, overlay: Overlay): { rows: Row[]; refu
       });
     if (out.result === 'refused' || broken !== undefined) return { rows, refused: true };
     Object.entries(out.files).forEach(([p, text]) => overlay.set(p, text));
+    out.deleted.forEach((p) => gone.add(p));
   }
   return { rows, refused: false };
 }
@@ -49,6 +55,8 @@ function runSteps({ t, steps, ctx }: Run, overlay: Overlay): { rows: Row[]; refu
 export interface Planned {
   rows: Row[];
   files: Map<string, string>;
+  /** Files an adopted hook moved away from. */
+  deleted: Set<string>;
 }
 
 /** Every step's verdict for every target before anything is written; a refused one stays whole. */
@@ -58,14 +66,18 @@ export function planAll(
   ctx: PlanContext,
 ): Planned {
   const files = new Map<string, string>();
+  const deleted = new Set<string>();
   const rows = targets.flatMap((t): Row[] => {
     const why = excludedWhy(t.path, ctx.excludes);
     if (why !== undefined)
       return [{ path: t.path, step: 'exclude', result: 'refused', reason: `excluded: ${why}` }];
     const overlay: Overlay = new Map();
-    const run = runSteps({ t, steps, ctx }, overlay);
-    if (!run.refused) overlay.forEach((text, p) => files.set(p, text));
+    const gone = new Set<string>();
+    const run = runSteps({ t, steps, ctx }, overlay, gone);
+    if (run.refused) return run.rows;
+    overlay.forEach((text, p) => files.set(p, text));
+    gone.forEach((p) => deleted.add(p));
     return run.rows;
   });
-  return { rows, files };
+  return { rows, files, deleted };
 }

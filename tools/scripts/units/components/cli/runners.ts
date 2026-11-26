@@ -10,6 +10,8 @@ import type { TypesVerdict } from '../steps/types/types.types.ts';
 import { typesStep } from '../steps/types/types-step.ts';
 import type { SplitVerdict } from '../steps/split/split.types.ts';
 import { splitStep } from '../steps/split/split-step.ts';
+import type { AdoptVerdict } from '../steps/adopt/adopt.types.ts';
+import { adoptStep } from '../steps/adopt/adopt-step.ts';
 
 export type PlanContext = RepoContext & {
   names: (dir: string) => string[];
@@ -22,6 +24,7 @@ export interface Outcome {
   result: string;
   why: string;
   files: Record<string, string>;
+  deleted: string[];
 }
 
 export type Overlay = Map<string, string>;
@@ -30,7 +33,13 @@ const outcome = (result: string, why = '', files: Record<string, string> = {}): 
   result,
   why,
   files,
+  deleted: [],
 });
+
+function fromAdopt(v: AdoptVerdict): Outcome {
+  if (v.result === 'adopted') return { ...outcome('adopted', '', v.files), deleted: v.deleted };
+  return v.result === 'refused' ? outcome('refused', v.why) : outcome('unchanged');
+}
 
 function fromTypes(v: TypesVerdict): Outcome {
   if (v.result === 'typed') return outcome('typed', '', v.files);
@@ -89,6 +98,11 @@ export const RUNNERS: Record<Step, Runner> = {
     return fromSplit(
       splitStep({ path: t.path, text, name: t.name, files, subfolders: ctx.subfolders(dir), hook }),
     );
+  },
+  adopt: (t, overlay, ctx) => {
+    const { names, text } = folderOf(t, overlay, ctx);
+    const read = (p: string): string => overlay.get(p) ?? ctx.read(p);
+    return fromAdopt(adoptStep({ ...ctx, read, path: t.path, text, name: t.name, folder: names }));
   },
   hook: (t, overlay, ctx) => {
     const { names, text } = folderOf(t, overlay, ctx);

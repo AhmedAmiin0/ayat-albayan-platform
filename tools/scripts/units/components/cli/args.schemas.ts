@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const STEPS = ['types', 'helpers', 'split', 'hook'] as const;
+export const STEPS = ['types', 'helpers', 'split', 'adopt', 'hook'] as const;
 
 /** `pnpm components` flags (docs/63 §4). */
 export const componentArgs = z

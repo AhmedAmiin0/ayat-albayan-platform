@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import ts from 'typescript';
-import { loadAliases, resolveSpec } from '../../../ci-checks/move-module/resolve.ts';
+import { formatSpec, loadAliases, resolveSpec } from '../../../ci-checks/move-module/resolve.ts';
 import { groupBy } from '../model/group.ts';
 import { parseFile } from '../model/source.ts';
 
@@ -10,6 +10,11 @@ export interface RepoContext {
   read: (path: string) => string;
   tested: (name: string, ws: string) => boolean;
   importers: (path: string) => { file: string; names: string[] }[];
+  /** Every file that imports `path`, its own folder included. */
+  users: (path: string) => string[];
+  resolve: (from: string, spec: string) => string | undefined;
+  /** The specifier `from` writes for `file`: relative, or the app alias instead of `../`. */
+  specFor: (from: string, file: string) => string;
 }
 
 const CODE = /^(?:apps|packages)\/[^/]+\/src\/.*\.(?:tsx?|mts)$/;
@@ -61,5 +66,9 @@ export function repoContext(root: string, paths: readonly string[]): RepoContext
       (byTarget.get(path) ?? [])
         .filter((e) => !e.from.startsWith(`${posix.dirname(path)}/`))
         .map((e) => ({ file: e.from, names: namesOf(parseFile(e.from, read(e.from)), e.spec) })),
+    users: (path) => [...new Set((byTarget.get(path) ?? []).map((e) => e.from))],
+    resolve: (from, spec) => resolveSpec(r, from, spec)?.file,
+    specFor: (from, file) =>
+      formatSpec({ file, style: 'bare' }, { from, file, aliases: r.aliases }),
   };
 }

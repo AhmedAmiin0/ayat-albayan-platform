@@ -44,7 +44,7 @@ const lastLine = (lines: string[]): string => lines.at(-1) ?? '';
 
 test('--write runs every step once; a second run changes nothing', () => {
   const root = repo();
-  assert.match(lastLine(write(root)), /components: 4 files written/);
+  assert.match(lastLine(write(root)), /components: 4 files written, 0 removed/);
   const snap = snapshot(root);
   const s = (path: string): string => snap[path] ?? '';
   assert.match(s(`${DIR}/Card.types.ts`), /export interface CardProps \{ a: number \}/);
@@ -54,7 +54,7 @@ test('--write runs every step once; a second run changes nothing', () => {
     /const START = 3;[\s\S]*export function useCard\(props: CardProps\)/,
   );
   assert.match(s(`${DIR}/Card.tsx`), /const \{ n \} = useCard\(props\);/);
-  assert.match(lastLine(write(root)), /components: 0 files written/);
+  assert.match(lastLine(write(root)), /components: 0 files written, 0 removed/);
 });
 
 test('--dry-run writes nothing and reports one row per step', () => {
@@ -67,7 +67,7 @@ test('--dry-run writes nothing and reports one row per step', () => {
   });
   assert.deepEqual(
     out.filter((l) => l.startsWith(DIR)).map((l) => l.split('\t').slice(1, 3).join(':')),
-    ['types:typed', 'helpers:helpers', 'split:unchanged', 'hook:hooked'],
+    ['types:typed', 'helpers:helpers', 'split:unchanged', 'adopt:unchanged', 'hook:hooked'],
   );
   assert.equal(snapshot(root)[`${DIR}/Card.tsx`], FILES[`${DIR}/Card.tsx`]);
 });

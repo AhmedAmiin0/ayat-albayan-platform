@@ -24,13 +24,13 @@ const fixClassA = (root: string, paths: string[]): void => {
   }
 };
 
-/** Writes the planned files, formats them and stages them. */
 /** oxlint's class-A fixes, then oxfmt, on the files the codemod wrote. */
 export function formatFiles(root: string, paths: string[]): void {
   fixClassA(root, paths);
   run(root, 'pnpm', ['exec', 'oxfmt', ...paths]);
 }
 
+/** Writes the planned files, formats them and stages them. */
 export function writeFiles(
   root: string,
   files: ReadonlyMap<string, string>,
@@ -45,4 +45,11 @@ export function writeFiles(
   format(root, paths);
   run(root, 'git', ['add', '--', ...paths]);
   return paths;
+}
+
+/** Removes the files an adopted hook left (`git rm`, so the move shows as a rename). */
+export function removeFiles(root: string, paths: ReadonlySet<string>): string[] {
+  const gone = [...paths].toSorted();
+  if (gone.length > 0) run(root, 'git', ['rm', '-q', '--', ...gone]);
+  return gone;
 }
