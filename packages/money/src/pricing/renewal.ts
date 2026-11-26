@@ -38,7 +38,8 @@ const field = (o: unknown, key: string): unknown =>
 
 const among = <T>(list: readonly T[], v: unknown): T | undefined => list.find((x) => x === v);
 
-const clampCount = (n: number): number => Math.min(CUSTOM_COUNT_MAX, Math.max(CUSTOM_COUNT_MIN, Math.round(n)));
+const clampCount = (n: number): number =>
+  Math.min(CUSTOM_COUNT_MAX, Math.max(CUSTOM_COUNT_MIN, Math.round(n)));
 
 const discountOf = (v: unknown): number => (typeof v === 'number' && v >= 0 && v <= 100 ? v : 0);
 

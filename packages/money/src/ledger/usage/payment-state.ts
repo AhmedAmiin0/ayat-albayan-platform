@@ -32,7 +32,11 @@ export function netPaidIn(
  * An amount sent in another currency, in the package currency: `rate` = package units per 1 unit
  * of what was sent (cross rate through SAR: rate(SAR→package) / rate(SAR→sent)), 2 decimals.
  */
-export function convertPayment(input: { amount: number; sarToSent: number; sarToPackage: number }): {
+export function convertPayment(input: {
+  amount: number;
+  sarToSent: number;
+  sarToPackage: number;
+}): {
   amount: number;
   rate: number;
 } {
@@ -41,9 +45,16 @@ export function convertPayment(input: { amount: number; sarToSent: number; sarTo
 }
 
 /** Null unless 0 < paid < price; such a package still stays 'unpaid'. */
-export function partPaid(input: { paid: number; price: number }): { paid: number; price: number; due: number } | null {
+export function partPaid(input: {
+  paid: number;
+  price: number;
+}): { paid: number; price: number; due: number } | null {
   if (paymentState(input) !== 'partial') return null;
-  return { paid: input.paid, price: input.price, due: (toCents(input.price) - toCents(input.paid)) / 100 };
+  return {
+    paid: input.paid,
+    price: input.price,
+    due: (toCents(input.price) - toCents(input.paid)) / 100,
+  };
 }
 
 /** How much a receipt falls short of what is still due: 0 when it covers it or nothing is due. */

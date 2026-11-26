@@ -19,7 +19,12 @@ export interface PlannedRenewal extends PlannedCommission {
 
 /** A renewal earns only when fully paid after RENEWAL_CUTOFF; each subscription row is its own. */
 export function planRenewalCommission(
-  input: CommissionContext & { share: number; subscriptionId: string; subscriptions: readonly SubscriptionFact[]; excluded?: boolean },
+  input: CommissionContext & {
+    share: number;
+    subscriptionId: string;
+    subscriptions: readonly SubscriptionFact[];
+    excluded?: boolean;
+  },
 ): PlannedRenewal | null {
   const sub = input.subscriptions.find((s) => s.id === input.subscriptionId);
   if (!sub || input.excluded || commissionKindOf(input.subscriptions, sub.id) !== 'renewal') return null;

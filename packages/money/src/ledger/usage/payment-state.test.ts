@@ -50,6 +50,9 @@ describe('convertPayment (another currency → the package currency)', () => {
   });
 
   it('the same currency converts 1:1', () => {
-    expect(convertPayment({ amount: 145, sarToSent: 1, sarToPackage: 1 })).toEqual({ amount: 145, rate: 1 });
+    expect(convertPayment({ amount: 145, sarToSent: 1, sarToPackage: 1 })).toEqual({
+      amount: 145,
+      rate: 1,
+    });
   });
 });

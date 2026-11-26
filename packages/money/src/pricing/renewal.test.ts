@@ -22,8 +22,24 @@ describe('renewalPricing («جدّد الاشتراك» from the last package)',
   });
 
   it('a custom count keeps the count; a USD quote leaves the country to the guardian', () => {
-    const last = { ...WEEKLY, price_source: source({ count: 14, duration: 30, country: null, usdRate: 3.75, students: 1, discount: 0 }) };
-    expect(renewalPricing(last)).toEqual({ pkg: 'custom', count: 14, duration: 30, discount: 0, country: '' });
+    const last = {
+      ...WEEKLY,
+      price_source: source({
+        count: 14,
+        duration: 30,
+        country: null,
+        usdRate: 3.75,
+        students: 1,
+        discount: 0,
+      }),
+    };
+    expect(renewalPricing(last)).toEqual({
+      pkg: 'custom',
+      count: 14,
+      duration: 30,
+      discount: 0,
+      country: '',
+    });
   });
 
   it('weekly (90 min) keeps weekly, the duration falls back to the default', () => {

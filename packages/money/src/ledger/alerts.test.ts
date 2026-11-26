@@ -26,10 +26,17 @@ describe('alertFor (R-SUB-02: 2 left → renewal, 0 → unpaid)', () => {
     [1, 2, 'trial', null],
     [0, 2, 'cancelled', null],
   ];
-  const cases = rows.map(([remaining, threshold, status, expected]) => ({ remaining, threshold, status, expected }));
+  const cases = rows.map(([remaining, threshold, status, expected]) => ({
+    remaining,
+    threshold,
+    status,
+    expected,
+  }));
   it.each(cases)('remaining $remaining, threshold $threshold, $status → $expected', (c) => {
     const status = c.status ? { status: c.status } : {};
-    expect(alertFor({ remaining: c.remaining, threshold: c.threshold, ...status })).toBe(c.expected);
+    expect(alertFor({ remaining: c.remaining, threshold: c.threshold, ...status })).toBe(
+      c.expected,
+    );
   });
 });
 

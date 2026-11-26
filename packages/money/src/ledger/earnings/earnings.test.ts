@@ -32,7 +32,14 @@ describe('outstanding / earningStatus', () => {
 describe('balanceOf', () => {
   it('earned, paid, outstanding and the count of sessions still owed', () => {
     const b = balanceOf([e('a', 1, [70, 70]), e('b', 2, [90, 30]), e('c', 3, [50])]);
-    expect(b).toEqual({ earned: 210, paid: 100, outstanding: 110, overpaid: 0, sessions: 3, unpaid_sessions: 2 });
+    expect(b).toEqual({
+      earned: 210,
+      paid: 100,
+      outstanding: 110,
+      overpaid: 0,
+      sessions: 3,
+      unpaid_sessions: 2,
+    });
   });
 
   it('an overpaid session is reported apart and not netted against another', () => {
@@ -41,7 +48,14 @@ describe('balanceOf', () => {
   });
 
   it('no sessions → zeros', () => {
-    expect(balanceOf([])).toEqual({ earned: 0, paid: 0, outstanding: 0, overpaid: 0, sessions: 0, unpaid_sessions: 0 });
+    expect(balanceOf([])).toEqual({
+      earned: 0,
+      paid: 0,
+      outstanding: 0,
+      overpaid: 0,
+      sessions: 0,
+      unpaid_sessions: 0,
+    });
   });
 });
 
