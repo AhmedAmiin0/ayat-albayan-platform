@@ -1,6 +1,7 @@
 import { Pressable } from 'react-native';
 import { AppText, locale, Ltr, t, type, useTheme } from '@ab/mobile-kit';
 import { nameOf } from '@ab/client-core';
+import { buttonStyle } from './country-button.helpers';
 import type { CountryButtonProps } from './CountryButton.types';
 
 export function CountryButton({ country, onPress }: CountryButtonProps) {
@@ -11,15 +12,7 @@ export function CountryButton({ country, onPress }: CountryButtonProps) {
       accessibilityRole="button"
       accessibilityLabel={t.familyApp.signIn.country.replace('{name}', name)}
       onPress={onPress}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 6,
-        paddingHorizontal: 12,
-        borderEndWidth: 1,
-        borderEndColor: color.rule,
-        backgroundColor: pressed ? color.sunk : 'transparent',
-      })}
+      style={buttonStyle(color.rule, color.sunk)}
     >
       <AppText style={{ fontSize: 20 }}>{country.flag}</AppText>
       {/* An LTR island: bare, an Arabic (RTL) line on Android prints «966+». */}

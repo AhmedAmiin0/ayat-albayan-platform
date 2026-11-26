@@ -8,7 +8,7 @@ import { usePhoneStep } from './use-phone-step';
 
 /** The send button waits for a whole number and shows progress while the code is requested. */
 export function PhoneStep({ sign }: PhoneStepProps) {
-  const { flow, phone, picking, setPicking, bad } = usePhoneStep({ sign });
+  const { flow, phone, picking, setPicking, bad, pick } = usePhoneStep({ sign });
   return (
     <View style={{ gap: 12 }}>
       <PhoneField
@@ -34,10 +34,7 @@ export function PhoneStep({ sign }: PhoneStepProps) {
       <CountryPicker
         open={picking}
         current={phone.country}
-        onPick={(c) => {
-          phone.setCountry(c);
-          setPicking(false);
-        }}
+        onPick={pick}
         onClose={() => setPicking(false)}
       />
     </View>

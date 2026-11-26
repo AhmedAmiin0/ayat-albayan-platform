@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react-native';
 import { ltr } from '@ab/mobile-kit';
 import { defaultCountry } from '@/sign-in/phone/countries';
-import { CountryButton } from './CountryButton';
+import { CountryButton } from '@/sign-in/phone/CountryButton';
 
 const saudi = defaultCountry('SA');
 
