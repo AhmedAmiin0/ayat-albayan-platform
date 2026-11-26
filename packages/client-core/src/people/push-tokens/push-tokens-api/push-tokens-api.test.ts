@@ -27,7 +27,9 @@ describe('pushTokenCalls (R-MOB-01)', () => {
 
   it('throws bad_response for a PUT answer without a device key', async () => {
     const { client } = clientAnswering(undefined);
-    const failure = await pushTokenCalls(client).add({ token: TOKEN }).catch((e: unknown) => e);
+    const failure = await pushTokenCalls(client)
+      .add({ token: TOKEN })
+      .catch((e: unknown) => e);
     expect(failure).toBeInstanceOf(ApiError);
     expect(failure).toMatchObject({ body: { code: 'bad_response' } });
   });

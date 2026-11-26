@@ -4,7 +4,13 @@ import { Platform } from 'react-native';
 import { t } from '../lib/i18n/i18n';
 import { hasLiveSession } from './live-session';
 import { ensurePushPermission } from './permission';
-import { ANDROID_CHANNEL, easProjectId, registerPush, TOKEN_KEY, unregisterPush } from './registerPush';
+import {
+  ANDROID_CHANNEL,
+  easProjectId,
+  registerPush,
+  TOKEN_KEY,
+  unregisterPush,
+} from './registerPush';
 
 const mockIsDevice = jest.fn(() => true);
 const mockExtra = jest.fn((): unknown => ({ eas: { projectId: 'proj-1' } }));
@@ -37,12 +43,16 @@ jest.mock('../lib/http/api', () => ({
 }));
 
 const TOKEN = 'ExponentPushToken[abc-123]';
+// The api answers a PUT with the device key to send next time, a DELETE with 204.
+const answerFor = async (method: unknown) =>
+  method === 'PUT' ? { deviceKey: 'k'.repeat(43) } : undefined;
 const getToken = jest.mocked(Notifications.getExpoPushTokenAsync);
 const allowed = jest.mocked(ensurePushPermission);
 const live = jest.mocked(hasLiveSession);
 
 beforeEach(async () => {
   jest.clearAllMocks();
+  mockApiSend.mockImplementation(answerFor);
   await AsyncStorage.clear();
   allowed.mockResolvedValue(true);
   live.mockResolvedValue(true);
@@ -117,7 +127,10 @@ test('android: the channel exists (Arabic name) before the permission prompt', a
 test('unregister: DELETE with the URL-encoded token, then forget it', async () => {
   await AsyncStorage.setItem(TOKEN_KEY, TOKEN);
   await unregisterPush();
-  expect(mockApiSend).toHaveBeenCalledWith('DELETE', `/me/push-tokens/${encodeURIComponent(TOKEN)}`);
+  expect(mockApiSend).toHaveBeenCalledWith(
+    'DELETE',
+    `/me/push-tokens/${encodeURIComponent(TOKEN)}`,
+  );
   expect(await AsyncStorage.getItem(TOKEN_KEY)).toBeNull();
 });
 
