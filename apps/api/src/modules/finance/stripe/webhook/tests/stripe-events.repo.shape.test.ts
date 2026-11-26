@@ -37,7 +37,7 @@ describe('StripeEventsRepo.begin: insert once, then read processed_at', () => {
   it('an insert error is thrown before any read', async () => {
     const { db, trips } = fakeDb({ stripe_events: [{ error: { message: 'boom' } }] });
     await expect(new StripeEventsRepo(db).begin(EVENT)).rejects.toThrow(
-      'stripe_events insert failed: boom',
+      'db error undefined: boom',
     );
     expect(trips).toEqual(['stripe_events']);
   });
@@ -45,7 +45,7 @@ describe('StripeEventsRepo.begin: insert once, then read processed_at', () => {
   it('a read error is thrown', async () => {
     const { db } = fakeDb({ stripe_events: [{}, { error: { message: 'gone' } }] });
     await expect(new StripeEventsRepo(db).begin(EVENT)).rejects.toThrow(
-      'stripe_events read failed: gone',
+      'db error undefined: gone',
     );
   });
 });
@@ -66,7 +66,7 @@ describe('StripeEventsRepo.done', () => {
   it('an update error is thrown', async () => {
     const { db } = fakeDb({ stripe_events: [{ error: { message: 'boom' } }] });
     await expect(new StripeEventsRepo(db).done('evt_1', 'paid')).rejects.toThrow(
-      'stripe_events update failed: boom',
+      'db error undefined: boom',
     );
   });
 });

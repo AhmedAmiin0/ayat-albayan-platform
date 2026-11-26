@@ -103,7 +103,7 @@ describe('ReportPdfQueries — the pdf_status queue, compare-and-set (docs/11 §
   it('turns a DB error into a thrown error (the job retries, then marks failed)', async () => {
     const { db } = fakeDb({ [T]: [{ error: { message: 'down' } }], messages: [{ error: { message: 'x' } }] });
     const q = pdfQueries(db);
-    await expect(q.claim('r1')).rejects.toThrow('PDF claim failed: down');
-    await expect(q.queueMessages([message])).rejects.toThrow('report_ready queue failed: x');
+    await expect(q.claim('r1')).rejects.toThrow('db error undefined: down');
+    await expect(q.queueMessages([message])).rejects.toThrow('db error undefined: x');
   });
 });

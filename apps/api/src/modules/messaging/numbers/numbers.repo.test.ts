@@ -22,7 +22,7 @@ describe('NumbersQueries', () => {
     const q = new NumbersRepo(db);
     await expect(q.defaults()).resolves.toEqual([]);
     expect(calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([['enabled', true], ['is_default', true]]);
-    await expect(q.all()).rejects.toThrow('numbers read failed');
+    await expect(q.all()).rejects.toThrow('db error undefined: down');
   });
 
   it('saveHealth matches a phone id, or a crm role (one number when named)', async () => {

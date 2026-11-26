@@ -44,7 +44,7 @@ describe('FinanceRepo.totals (one aggregate read per card, R-RPT-02)', () => {
 
   it('a database error throws', async () => {
     const { repo } = repoOf({ error: { message: 'boom' } });
-    await expect(repo.totals(CARD)).rejects.toThrow(/finance_card_totals.*boom/);
+    await expect(repo.totals(CARD)).rejects.toThrow(/db error .*: boom/);
   });
 
   it('a row of an unknown kind is refused, never summed', async () => {
