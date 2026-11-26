@@ -16,7 +16,7 @@ test('a 503 is an answer too (the caller classes it)', async () => {
   expect(await probe('u', { fetch: reply('down', 503) })).toEqual({ status: 503, body: 'down' });
 });
 
-test('one bare GET: no-store, no headers, the caller\'s mode', async () => {
+test("one bare GET: no-store, no headers, the caller's mode", async () => {
   const send = reply('');
   await probe('u', { fetch: send, mode: 'no-cors' });
   const init = vi.mocked(send).mock.calls[0]?.[1];
@@ -40,7 +40,9 @@ test('no answer within the deadline aborts and resolves null', async () => {
   let signal: AbortSignal | null | undefined;
   const hang: typeof fetch = (_url, init) => {
     signal = init?.signal;
-    return new Promise((_ok, no) => signal?.addEventListener('abort', () => no(new Error('aborted'))));
+    return new Promise((_ok, no) =>
+      signal?.addEventListener('abort', () => no(new Error('aborted'))),
+    );
   };
   const answer = probe('u', { fetch: hang });
   await vi.advanceTimersByTimeAsync(PROBE_TIMEOUT_MS - 1);
@@ -53,4 +55,10 @@ test('no answer within the deadline aborts and resolves null', async () => {
 test('a settled probe clears its timer', async () => {
   await probe('u', { fetch: reply('{}'), timeoutMs: 50 });
   expect(vi.getTimerCount()).toBe(0);
+});
+
+test("the caller's cache mode replaces no-store (an ETag revalidation)", async () => {
+  const send = reply('{}');
+  await probe('u', { fetch: send, cache: 'no-cache' });
+  expect(vi.mocked(send).mock.calls[0]?.[1]).toMatchObject({ cache: 'no-cache' });
 });
