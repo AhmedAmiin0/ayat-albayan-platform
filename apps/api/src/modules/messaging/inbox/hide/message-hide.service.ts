@@ -2,10 +2,10 @@ import { canHideMessages, canUnhideMessages } from '@ab/shared';
 import { ForbiddenException, HttpStatus, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { waHttpError } from '@/modules/messaging/whatsapp';
 import { visibleToSales } from '@/modules/messaging/inbox/sales-threads/sales-threads';
 import { MessageHideRepo, type HideTarget } from './message-hide.repo';
 import { isSales } from '@/common/auth/roles';
+import { httpError } from '@/common/http/errors';
 
 export interface HideInput {
   phone: string;
@@ -41,7 +41,7 @@ export class MessageHideService {
     const row = await this.repo.target(input.messageId);
     const salesWall = row !== null && isSales(input.user) && !visibleToSales(row);
     if (row?.phone_e164 !== input.phone || salesWall) {
-      throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+      throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
     }
     return row;
   }

@@ -1,8 +1,9 @@
 import type { TemplateLineFacts } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
 import { isGraphEnv, lineEnvs, lineProvider, loadEnv } from '@/config/env/env';
-import { graphHttpError, waHttpError } from './template.mapper';
+import { graphHttpError } from './template.mapper';
 import { WaError, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { httpError } from '@/common/http/errors';
 
 // What every registry action checks first (docs/12 §3.4, §13.9), out of template.registry.ts (150-line cap).
 
@@ -11,12 +12,12 @@ export const syncOn = (): boolean => loadEnv().WA_TEMPLATE_SYNC !== false;
 
 /** WA_TEMPLATE_SYNC=false (docs/12 §13.9): staging on Meta TEST credentials must not touch the registry. */
 export function requireSync(): void {
-  if (!syncOn()) throw waHttpError('template_sync_off', 409);
+  if (!syncOn()) throw httpError(409, 'template_sync_off');
 }
 
 /** 503 not_configured naming the line: the action needs that line's WABA. */
 export function requireLine(client: WhatsappClient, line: WaLine): void {
-  if (!client.configured()) throw waHttpError('not_configured', 503, { line });
+  if (!client.configured()) throw httpError(503, 'not_configured', { line });
 }
 
 /** The line's templates are the CRM's (docs/19): no sync, no submit, never marked missing from here. */

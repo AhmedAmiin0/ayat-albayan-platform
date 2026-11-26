@@ -1,7 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { notFound } from '@/common/http/errors';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { httpError, notFound } from '@/common/http/errors';
 import { TeacherThreadsRepo } from './teacher-threads.repo';
 import { isAdmin } from '@/common/auth/roles';
 
@@ -22,13 +21,13 @@ export interface TeacherScope {
 
 /** 403 not_your_thread for any phone outside the teacher's scope (rule 9, server-side). */
 export function assertPhone(scope: TeacherScope, phone: string): void {
-  if (!scope.phones.has(phone)) throw waHttpError('not_your_thread', 403);
+  if (!scope.phones.has(phone)) throw httpError(403, 'not_your_thread');
 }
 
 /** A send also stays off the teacher's own chat with the academy (403 own_thread_read_only). */
 export function assertCanSend(scope: TeacherScope, phone: string): void {
   assertPhone(scope, phone);
-  if (phone === scope.ownPhone) throw waHttpError('own_thread_read_only', 403);
+  if (phone === scope.ownPhone) throw httpError(403, 'own_thread_read_only');
 }
 
 /** Resolves the caller's scope once per request. */

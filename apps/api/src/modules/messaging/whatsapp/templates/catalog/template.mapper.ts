@@ -4,6 +4,7 @@ import { paramNames, templateButtons, templateDisplay } from '@/modules/messagin
 import { CRM_AUTH, EVOLUTION_AUTH, KAPSO_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
 import type { ApprovalRow } from './types';
 import type { TemplateRow, WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { httpError } from '@/common/http/errors';
 
 /** audit_log.entity_id is a uuid; the template key goes in before/after (as settings do). */
 export const REGISTRY_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
@@ -81,15 +82,15 @@ type ToHttp = (e: WaError) => HttpException | undefined;
 
 const unsupportedHttp: ToHttp = (e) => {
   const code = e.info.unsupported ? UNSUPPORTED_CODE[e.info.unsupported] : undefined;
-  return code ? waHttpError(code, 409) : undefined;
+  return code ? httpError(409, code) : undefined;
 };
 
 const scopeHttp: ToHttp = (e) =>
-  (e.info.missingScope ? waHttpError(CRM_SCOPE_MISSING, 502, { scope: e.info.missingScope }) : undefined);
+  (e.info.missingScope ? httpError(502, CRM_SCOPE_MISSING, { scope: e.info.missingScope }) : undefined);
 
 const credentialHttp: ToHttp = (e) => {
   const code = e.info.credential ? CREDENTIAL_CODE[e.info.credential] : undefined;
-  return code ? waHttpError(code, 502) : undefined;
+  return code ? httpError(502, code) : undefined;
 };
 
 /**
@@ -99,5 +100,5 @@ const credentialHttp: ToHttp = (e) => {
  */
 export function graphHttpError(e: WaError): HttpException {
   return unsupportedHttp(e) ?? scopeHttp(e) ?? credentialHttp(e)
-    ?? waHttpError('meta_error', 502, { meta_code: e.info.code, meta_message: e.info.details ?? e.message });
+    ?? httpError(502, 'meta_error', { meta_code: e.info.code, meta_message: e.info.details ?? e.message });
 }

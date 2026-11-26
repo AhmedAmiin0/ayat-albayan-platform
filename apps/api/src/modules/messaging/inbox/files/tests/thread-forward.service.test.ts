@@ -1,13 +1,13 @@
 import { HttpStatus } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { messageRow } from '@/modules/messaging/whatsapp/sender/sender.fakes';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { ForwardFiles } from '@/modules/messaging/inbox/files/forward-files';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { allReplayed, forwardAudit, freshResults } from '@/modules/messaging/inbox/files/thread-forward.controller';
 import { skipOf, ThreadForwardService, type ForwardOutcome } from '@/modules/messaging/inbox/files/thread-forward.service';
 import type { ThreadSendService } from '@/modules/messaging/inbox/send/thread-send.service';
 import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
+import { httpError } from '@/common/http/errors';
 
 const SRC = 'a0000000-0000-4000-8000-0000000000f1';
 const A = '+966500000001';
@@ -28,8 +28,8 @@ const run = (svc: ThreadForwardService) => svc.forward({ input, actorId: 'admin-
 
 describe('skipOf', () => {
   it('maps a known refusal code to its reason, any other HTTP code and any other error to send_failed', () => {
-    expect(skipOf(waHttpError('session_closed', HttpStatus.CONFLICT))).toBe('session_closed');
-    expect(skipOf(waHttpError('invalid_param', 422))).toBe('send_failed');
+    expect(skipOf(httpError(HttpStatus.CONFLICT, 'session_closed'))).toBe('session_closed');
+    expect(skipOf(httpError(422, 'invalid_param'))).toBe('send_failed');
     expect(skipOf(new Error('db down'))).toBe('send_failed');
   });
 });

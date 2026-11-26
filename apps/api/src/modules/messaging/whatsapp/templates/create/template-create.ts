@@ -3,14 +3,11 @@ import { registryButtons, type TemplateCreateInput, type TemplateView } from '@a
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { templateProblem } from '@/modules/messaging/whatsapp/template-review';
-import {
-  REGISTRY_ENTITY_ID,
-  toTemplateView,
-  waHttpError,
-} from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { REGISTRY_ENTITY_ID, toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import type { ImportRow } from '@/modules/messaging/whatsapp/templates/sync/template-import';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { httpError } from '@/common/http/errors';
 
 // A registry row like any other: submitted to its line's WABA; on a crm line made in the CRM.
 
@@ -56,9 +53,9 @@ export class TemplateCreator {
   async create(input: TemplateCreateInput, actorId: string): Promise<TemplateView> {
     const row = createdRow(input);
     const problem = templateProblem(row);
-    if (problem) throw waHttpError('invalid_template', 409, { reason: problem });
+    if (problem) throw httpError(409, 'invalid_template', { reason: problem });
     const saved = await this.queries.create(row);
-    if (!saved) throw waHttpError('template_exists', 409, { key: row.key });
+    if (!saved) throw httpError(409, 'template_exists', { key: row.key });
     const { key, line, language, category } = input;
     await this.audit.record({
       actorId,

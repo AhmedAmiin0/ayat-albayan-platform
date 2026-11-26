@@ -4,7 +4,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { BUCKETS, pdfPagePath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
-import { type InboundFile, waHttpError } from '@/modules/messaging/whatsapp';
+import { type InboundFile } from '@/modules/messaging/whatsapp';
 import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media.service';
 import { FailedRecently, InFlight, pageRange, type PageRange } from './pdf-pages';
 import { PdfPreviewRepo, type PdfDoc } from './pdf-preview.repo';
@@ -12,6 +12,7 @@ import { PdfPreviewRepo, type PdfDoc } from './pdf-preview.repo';
 import { pdfPageCount, renderPdfPages, sandboxReady } from './pdf-client';
 import { inSlot, PdfToolError, type PdfPageImage } from './pdf-render';
 import { pdfFailureSchema } from './pdf.schemas';
+import { httpError } from '@/common/http/errors';
 
 /** A page run that failed is refused for this long (per process) instead of taking the slot again. */
 const FAILED_MS = 10 * 60_000;
@@ -53,11 +54,11 @@ export class PdfPreviewService {
 
   async page(input: { phone: string; messageId: string; page: number }): Promise<ThreadPdfPage> {
     const { msg, file } = await this.media.bubbleObject(input);
-    if (!isPdfMime(file.mime)) throw waHttpError('invoice_message', HttpStatus.BAD_REQUEST);
+    if (!isPdfMime(file.mime)) throw httpError(HttpStatus.BAD_REQUEST, 'invoice_message');
     const known = await this.queries.doc(msg.id);
     const doc = known ?? (await this.guard(`${msg.id}:1`, () => this.probes.run(msg.id, () => this.probe(msg.id, file))));
-    if (doc.pages === 0) throw waHttpError('pdf_no_preview', HttpStatus.UNPROCESSABLE_ENTITY);
-    if (input.page > Math.min(doc.pages, PDF_PREVIEW_PAGES)) throw waHttpError('page_out_of_range', HttpStatus.BAD_REQUEST);
+    if (doc.pages === 0) throw httpError(HttpStatus.UNPROCESSABLE_ENTITY, 'pdf_no_preview');
+    if (input.page > Math.min(doc.pages, PDF_PREVIEW_PAGES)) throw httpError(HttpStatus.BAD_REQUEST, 'page_out_of_range');
     // A page cache: looked up where new files go now (docs/45); a miss renders it there.
     const path = this.storage.storedPathFor(pdfPagePath({ messageId: msg.id, page: input.page }));
     const ref = { bucket: BUCKETS.waMedia, path };
@@ -105,7 +106,7 @@ export class PdfPreviewService {
   /** Storage answers null on any error; the object was just resolved, so it is a blip (503), never 410. */
   private async read(file: InboundFile): Promise<Uint8Array> {
     const bytes = await this.storage.download({ bucket: file.bucket, path: file.path });
-    if (!bytes) throw waHttpError('pdf_render_failed', HttpStatus.SERVICE_UNAVAILABLE);
+    if (!bytes) throw httpError(HttpStatus.SERVICE_UNAVAILABLE, 'pdf_render_failed');
     return bytes;
   }
 
@@ -122,15 +123,15 @@ export class PdfPreviewService {
    * 'failed' → 503 pdf_render_failed, and the key is refused for FAILED_MS.
    */
   private async guard<T>(key: string, fn: () => Promise<T>): Promise<T> {
-    if (this.failed.has(key)) throw waHttpError('pdf_render_failed', HttpStatus.SERVICE_UNAVAILABLE);
+    if (this.failed.has(key)) throw httpError(HttpStatus.SERVICE_UNAVAILABLE, 'pdf_render_failed');
     // No sandbox: 503 at once, before the slot and before reading up to 10 MB of PDF.
-    if (!(await sandboxReady())) throw waHttpError('pdf_unavailable', HttpStatus.SERVICE_UNAVAILABLE);
+    if (!(await sandboxReady())) throw httpError(HttpStatus.SERVICE_UNAVAILABLE, 'pdf_unavailable');
     try {
       return await fn();
     } catch (e) {
       if (!(e instanceof PdfToolError)) throw e;
       if (e.reason === 'failed') this.failed.add(key);
-      throw waHttpError(ERROR_CODE[e.reason], HttpStatus.SERVICE_UNAVAILABLE);
+      throw httpError(HttpStatus.SERVICE_UNAVAILABLE, ERROR_CODE[e.reason]);
     }
   }
 }

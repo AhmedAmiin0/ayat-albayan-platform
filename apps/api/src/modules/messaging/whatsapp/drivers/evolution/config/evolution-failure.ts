@@ -1,8 +1,8 @@
 import { WA_ERROR } from '@ab/catalog';
 import { HttpException } from '@nestjs/common';
 import { z } from 'zod';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { httpError } from '@/common/http/errors';
 
 // Evolution's failure for the admin, in words (502): the key refused (evolution_auth), a value
 // Evolution refused (evolution_rejected, with its own message), else unreachable. `saved`: the
@@ -34,7 +34,7 @@ function savedHttp(e: HttpException): HttpException {
 
 function waFailure(e: WaError, saved: boolean): HttpException {
   const code = CODES.find((c) => c.test(e))?.code ?? 'evolution_unreachable';
-  return waHttpError(code, 502, { ...detailOf(e, code), ...savedFlag(saved) });
+  return httpError(502, code, { ...detailOf(e, code), ...savedFlag(saved) });
 }
 
 export function evolutionFailure(e: unknown, saved = false): unknown {

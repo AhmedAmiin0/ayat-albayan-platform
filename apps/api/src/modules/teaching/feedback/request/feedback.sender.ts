@@ -1,8 +1,8 @@
 import type { TablesInsert } from '@ab/db';
 import { Injectable } from '@nestjs/common';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
+import { httpError } from '@/common/http/errors';
 
 export const FEEDBACK_TEMPLATE = 'lesson_feedback_request';
 
@@ -16,7 +16,7 @@ export class FeedbackSender {
 
   /** 409 template_not_approved (as H4 answers) until Meta has approved lesson_feedback_request. */
   async assertApproved(): Promise<void> {
-    if (!(await this.templates.approved(FEEDBACK_TEMPLATE))) throw waHttpError('template_not_approved', 409);
+    if (!(await this.templates.approved(FEEDBACK_TEMPLATE))) throw httpError(409, 'template_not_approved');
   }
 
   send(row: Omit<TablesInsert<'messages'>, 'direction' | 'status' | 'template_key'>): Promise<Sent> {

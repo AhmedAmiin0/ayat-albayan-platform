@@ -2,8 +2,8 @@ import type { Json } from '@ab/db';
 import { isReactionPayload, reactionTooOld } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { notFound } from '@/common/http/errors';
-import { SENDING, waHttpError } from '@/modules/messaging/whatsapp';
+import { httpError, notFound } from '@/common/http/errors';
+import { SENDING } from '@/modules/messaging/whatsapp';
 import { pgError } from '@/common/db/errors';
 
 /** The message a reaction targets, as the guard and the payload read it. */
@@ -37,8 +37,8 @@ export function assertReactable(
   now: Date,
 ): asserts target is ReactionTarget {
   if (!target || isReactionPayload(target.interactive_payload)) throw notFound('message_not_found');
-  if (!target.wa_message_id) throw waHttpError('not_reactable', HttpStatus.CONFLICT);
-  if (reactionTooOld(target.created_at, now)) throw waHttpError('reaction_too_old', HttpStatus.CONFLICT);
+  if (!target.wa_message_id) throw httpError(HttpStatus.CONFLICT, 'not_reactable');
+  if (reactionTooOld(target.created_at, now)) throw httpError(HttpStatus.CONFLICT, 'reaction_too_old');
 }
 
 /** The reaction send's marker (dispatch reads `reaction`; the revert trigger `target_id` and `previous`). */

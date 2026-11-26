@@ -13,7 +13,6 @@ import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { plannedCourseEnd } from '@/modules/teaching/booking/core/booking.course-end';
 import { courseFacts } from '@/modules/teaching/booking/core/course-read';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { PrepareOptions } from '@/modules/teaching/booking/plan/booking.planner';
 import { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 import { assertOwnStudents } from '@/modules/teaching/booking/sales/booking/sales-booking.scope';
@@ -21,6 +20,7 @@ import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/c
 import { draftCourse } from '@/modules/teaching/booking/sales/course-draft/course-draft.rules';
 import { SalesCourseRepo } from './sales-course.repo';
 import { courseBlock, courseProblem } from './sales-course.rules';
+import { httpError } from '@/common/http/errors';
 
 /**
  * The assistant books the weekly course of the subscription she sold (R-ASST-01,
@@ -50,7 +50,7 @@ export class SalesCourse {
   async options(req: BookingRequest, only?: string): Promise<PrepareOptions> {
     const studentId = 'studentIds' in req ? (req.studentIds[0] ?? '') : '';
     const now = new Date();
-    if (req.startsAt && Date.parse(req.startsAt) < now.getTime()) throw domainError(HttpStatus.BAD_REQUEST, 'date_in_past');
+    if (req.startsAt && Date.parse(req.startsAt) < now.getTime()) throw httpError(HttpStatus.BAD_REQUEST, 'date_in_past');
     const [sub, rules, rows] = await Promise.all([
       this.queries.subscription(studentId, only),
       this.queries.rules(studentId),
@@ -59,8 +59,8 @@ export class SalesCourse {
     const booked = await this.booked(sub);
     const endsOn = sub && plannedCourseEnd({ rule: { ...req, single: false }, now, lessonsTotal: courseLessonCount(sub) });
     const bad = courseProblem({ req, sub, rules, endsOn, booked });
-    if (bad) throw domainError(bad.status, bad.code);
-    if (!sub) throw domainError(HttpStatus.CONFLICT, 'subscription_required');
+    if (bad) throw httpError(bad.status, bad.code);
+    if (!sub) throw httpError(HttpStatus.CONFLICT, 'subscription_required');
     // The audit names the course a renewal follows, whichever days were picked.
     const { previous } = courseFacts({ rows, now, subscriptionId: sub.id, booked });
     const course = { package: sub.package, subscriptionId: sub.id, follows: previous?.subscriptionId ?? null };

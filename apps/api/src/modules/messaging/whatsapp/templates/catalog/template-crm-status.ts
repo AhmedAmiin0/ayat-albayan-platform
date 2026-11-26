@@ -2,8 +2,9 @@ import type { CRM_TEMPLATE_STATUSES, TemplateView } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '@/common/audit/audit.service';
 import { onCrm } from './template-env';
-import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from './template.mapper';
+import { REGISTRY_ENTITY_ID, toTemplateView } from './template.mapper';
 import type { TemplatesRepo } from './templates.repo';
+import { httpError } from '@/common/http/errors';
 
 export type CrmTemplateStatus = (typeof CRM_TEMPLATE_STATUSES)[number];
 
@@ -28,7 +29,7 @@ export async function setCrmStatus(
   const { key, status } = input;
   const row = await deps.queries.get(key);
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
-  if (!onCrm(row.line)) throw waHttpError('not_crm_line', 409, { line: row.line });
+  if (!onCrm(row.line)) throw httpError(409, 'not_crm_line', { line: row.line });
   const patch = { status, last_error: null, last_checked_at: new Date().toISOString() };
   const updated = await deps.queries.update(key, patch);
   await deps.audit.record({

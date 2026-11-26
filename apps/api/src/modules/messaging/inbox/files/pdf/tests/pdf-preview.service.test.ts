@@ -1,8 +1,9 @@
 import { HttpStatus } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { type MediaMessage, waHttpError } from '@/modules/messaging/whatsapp';
+import { type MediaMessage } from '@/modules/messaging/whatsapp';
 import { ask, jpgs, PDF_BYTES, setup, status } from '@/modules/messaging/inbox/files/pdf/pdf-preview.fakes';
 import { pdfPageCount, renderPdfPages, sandboxReady } from '@/modules/messaging/inbox/files/pdf/pdf-client';
+import { httpError } from '@/common/http/errors';
 
 // The sandbox's two calls (pdf-client.ts); the slot and PdfToolError stay pdf-render's own.
 vi.mock('@/modules/messaging/inbox/files/pdf/pdf-client', () => ({ pdfPageCount: vi.fn(), renderPdfPages: vi.fn(), sandboxReady: vi.fn() }));
@@ -94,7 +95,7 @@ describe('PdfPreviewService.page (owner 2026-10-29: a PDF bubble like WhatsApp)'
     const t = setup();
     t.media.bubbleObject.mockResolvedValueOnce({ msg: { id: 'm1' } as MediaMessage, file: { bucket: 'wa-media', path: 'm1.jpg', mime: 'image/jpeg' } });
     expect(await status(t.service.page(ask(1)))).toMatchObject({ status: 400, body: { code: 'invoice_message' } });
-    t.media.bubbleObject.mockRejectedValueOnce(waHttpError('media_expired', HttpStatus.GONE));
+    t.media.bubbleObject.mockRejectedValueOnce(httpError(HttpStatus.GONE, 'media_expired'));
     expect(await status(t.service.page(ask(1)))).toMatchObject({ status: 410, body: { code: 'media_expired' } });
     expect(t.queries.doc).not.toHaveBeenCalled();
   });

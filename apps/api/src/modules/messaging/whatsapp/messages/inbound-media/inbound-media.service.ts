@@ -10,8 +10,8 @@ import { keepingRefusal, rejectStored, withinCap } from '@/modules/messaging/wha
 import { mediaSource } from '@/modules/messaging/whatsapp/numbers/media-client';
 import { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clients';
 import { CRM_NO_MEDIA, mediaHttpError } from '@/modules/messaging/whatsapp/drivers/media-errors';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { WHATSAPP_LINES, WaError, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { httpError } from '@/common/http/errors';
 
 export { CRM_NO_MEDIA };
 
@@ -27,9 +27,9 @@ const isInvoiceMime = (mime: string | null): boolean => (INVOICE_MIMES as readon
 
 /** An inbound file with no id and no link is 410, an honest answer instead of a futile retry. */
 export function servable(msg: MediaMessage, allow: (mime: string | null) => boolean = isInvoiceMime): MediaMessage {
-  if (msg.direction === 'inbound' && msg.media_mime && !msg.media_id && !isCrmHistoryRow(msg)) throw waHttpError('media_expired', HttpStatus.GONE);
+  if (msg.direction === 'inbound' && msg.media_mime && !msg.media_id && !isCrmHistoryRow(msg)) throw httpError(HttpStatus.GONE, 'media_expired');
   if (msg.direction !== 'inbound' || !(msg.media_id || isCrmHistoryRow(msg)) || !allow(msg.media_mime)) {
-    throw waHttpError('invoice_message', HttpStatus.BAD_REQUEST);
+    throw httpError(HttpStatus.BAD_REQUEST, 'invoice_message');
   }
   return msg;
 }
@@ -42,8 +42,8 @@ export function servable(msg: MediaMessage, allow: (mime: string | null) => bool
  */
 export function chatServable(msg: MediaMessage): MediaMessage {
   if (msg.direction === 'inbound') return servable(msg, isChatViewMime);
-  if (!msg.media_id) throw waHttpError('media_expired', HttpStatus.GONE);
-  if (!isChatViewMime(msg.media_mime)) throw waHttpError('invoice_message', HttpStatus.BAD_REQUEST);
+  if (!msg.media_id) throw httpError(HttpStatus.GONE, 'media_expired');
+  if (!isChatViewMime(msg.media_mime)) throw httpError(HttpStatus.BAD_REQUEST, 'invoice_message');
   return msg;
 }
 
@@ -76,14 +76,14 @@ export class InboundMedia {
   /** The message, checked to be a file we can serve; the caller checks it belongs to the right chat. */
   async load(messageId: string, allow: (mime: string | null) => boolean = isInvoiceMime): Promise<MediaMessage> {
     const msg = await this.queries.message(messageId);
-    if (!msg) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+    if (!msg) throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
     return servable(msg, allow);
   }
 
   /** As load, through chatServable: an echo of the WhatsApp Business app too. */
   async loadChat(messageId: string): Promise<MediaMessage> {
     const msg = await this.queries.message(messageId);
-    if (!msg) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+    if (!msg) throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
     return chatServable(msg);
   }
 
@@ -110,16 +110,16 @@ export class InboundMedia {
 
   private fetch(msg: MediaMessage): Promise<{ bytes: Uint8Array }> {
     if (fromCrmStorage(msg) && this.crm) return this.crm.download(msg);
-    if (mediaExpired(msg, new Date()) || !msg.media_id) throw waHttpError('media_expired', HttpStatus.GONE);
+    if (mediaExpired(msg, new Date()) || !msg.media_id) throw httpError(HttpStatus.GONE, 'media_expired');
     return this.download(msg, msg.media_id);
   }
 
   /** A Meta 4xx means the id is gone (expired, deleted): 410, not a server error; a dead token is 502. */
   private async download(msg: MediaMessage, mediaId: string): Promise<{ bytes: Uint8Array }> {
     const from = mediaSource(msg, { lines: this.lines, numbers: this.numbers });
-    if (from.kind === 'crm') throw waHttpError(CRM_NO_MEDIA, HttpStatus.CONFLICT);
-    if (from.kind === 'none') throw waHttpError('line_not_configured', HttpStatus.SERVICE_UNAVAILABLE);
-    if (from.line === 'chat' && !from.client.configured()) throw waHttpError('line_not_configured', HttpStatus.SERVICE_UNAVAILABLE);
+    if (from.kind === 'crm') throw httpError(HttpStatus.CONFLICT, CRM_NO_MEDIA);
+    if (from.kind === 'none') throw httpError(HttpStatus.SERVICE_UNAVAILABLE, 'line_not_configured');
+    if (from.line === 'chat' && !from.client.configured()) throw httpError(HttpStatus.SERVICE_UNAVAILABLE, 'line_not_configured');
     try {
       return await from.client.getMedia(mediaId);
     } catch (e) {

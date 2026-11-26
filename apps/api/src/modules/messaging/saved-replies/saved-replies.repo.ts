@@ -2,9 +2,9 @@ import type { Database } from '@ab/db';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { REPLY_COLUMNS, type SavedReplyRow } from './saved-replies.mapper';
 import { pgError } from '@/common/db/errors';
+import { httpError } from '@/common/http/errors';
 
 export type ReplyInsert = Database['public']['Tables']['saved_replies']['Insert'];
 export type ReplyPatch = Database['public']['Tables']['saved_replies']['Update'];
@@ -15,7 +15,7 @@ function check(error: PostgrestError | null): void {
 
 /** One Storage object belongs to one reply (migration 672): a second row on the same path is a bad path. */
 function checkWrite(error: PostgrestError | null): void {
-  if (error?.code === '23505') throw waHttpError('file_path', HttpStatus.BAD_REQUEST);
+  if (error?.code === '23505') throw httpError(HttpStatus.BAD_REQUEST, 'file_path');
   check(error);
 }
 

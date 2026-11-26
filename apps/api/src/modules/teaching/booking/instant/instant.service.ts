@@ -1,17 +1,17 @@
 import type { BookingResult, InstantLessonRequest, InstantLessonResult } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { meetingLinkFor } from '@/modules/teaching/booking/core/booking.mapper';
 import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { instantPayload, instantPlan } from './instant.plan';
 import { InstantRepo } from './instant.repo';
+import { httpError } from '@/common/http/errors';
 
 type InstantInput = { req: InstantLessonRequest; actorId: string };
 
 const firstLesson = (r: BookingResult): InstantLessonResult => {
   const [first] = r.lessons;
-  if (!first) throw domainError(HttpStatus.INTERNAL_SERVER_ERROR, 'no_lesson');
+  if (!first) throw httpError(HttpStatus.INTERNAL_SERVER_ERROR, 'no_lesson');
   return { lessonId: first.id };
 };
 
@@ -28,9 +28,9 @@ export class InstantLessonService {
     const first = req.clientRequestId ? await this.booking.replay(req.clientRequestId) : null;
     if (first) return firstLesson(first);
     const teacher = await this.booking.teacher(req.teacherId);
-    if (!teacher) throw domainError(HttpStatus.NOT_FOUND, 'teacher_not_found');
+    if (!teacher) throw httpError(HttpStatus.NOT_FOUND, 'teacher_not_found');
     const students = await this.booking.students(req.studentIds);
-    if (students.length !== req.studentIds.length) throw domainError(HttpStatus.NOT_FOUND, 'student_not_found');
+    if (students.length !== req.studentIds.length) throw httpError(HttpStatus.NOT_FOUND, 'student_not_found');
     const plan = instantPlan({ now, tz: teacher.tz, durationMin: req.durationMin });
     const conflicts = await this.checker.check({
       teacherId: teacher.id,
@@ -38,7 +38,7 @@ export class InstantLessonService {
       proposed: [plan.occurrence],
       excludeIds: [],
     });
-    if (conflicts.length > 0 && !req.override) throw domainError(HttpStatus.CONFLICT, 'conflict', { conflicts });
+    if (conflicts.length > 0 && !req.override) throw httpError(HttpStatus.CONFLICT, 'conflict', { conflicts });
     const meetingLink = meetingLinkFor({
       overrides: students.map((s) => s.meeting_link_override),
       teacherLink: teacher.meeting_link,

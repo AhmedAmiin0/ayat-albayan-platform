@@ -6,10 +6,10 @@ import { StorageService } from '@/common/storage/storage.service';
 import { isCrmHistoryRow } from '@/modules/messaging/whatsapp';
 import { InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
 import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
 import { chatLine, dedupKey, outboundBase, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
+import { httpError } from '@/common/http/errors';
 
 /** Our copy of a forwarded file in wa-media/out/… (the sender signs it again on every try). */
 export interface ForwardFile {
@@ -25,7 +25,7 @@ export interface ForwardFile {
 const stickerOf = (row: ThreadMessageRow): { payload?: Json } =>
   isStickerMessage(row) ? { payload: stickerPayloadOf(row.interactive_payload) } : {};
 
-const notForwardable = () => waHttpError('not_forwardable', HttpStatus.BAD_REQUEST);
+const notForwardable = () => httpError(HttpStatus.BAD_REQUEST, 'not_forwardable');
 
 /** The name a forwarded file reaches the family with: ours as sent, else the copy's own (fwd-….ext). */
 const fileName = (row: ThreadMessageRow, path: string): string => row.media_name ?? storageKeyOf(path).split('/').at(-1) ?? 'file';

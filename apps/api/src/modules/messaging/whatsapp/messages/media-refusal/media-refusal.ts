@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { z } from 'zod';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { mediaRefusalSchema, type MediaRefusal } from './media-refusal.schemas';
+import { httpError } from '@/common/http/errors';
 
 // A file too large for the chat cap, or whose id the provider refused, is refused the same way on
 // every later view with no second provider call (R-MSG-06, R-NFR-07: one oversized answer per
@@ -22,7 +22,7 @@ export function refusalOf(e: unknown): MediaRefusal | null {
 
 /** The file, or 413 invoice_too_large past `max` bytes. */
 export function withinCap<T extends { bytes: Uint8Array }>(file: T, max: number): T {
-  if (file.bytes.byteLength > max) throw waHttpError('invoice_too_large', STATUS.invoice_too_large);
+  if (file.bytes.byteLength > max) throw httpError(STATUS.invoice_too_large, 'invoice_too_large');
   return file;
 }
 
@@ -43,5 +43,5 @@ export async function keepingRefusal<T>(
 /** Throws the refusal stored on a row; an empty or unknown value lets the file be fetched. */
 export function rejectStored(stored: string | null | undefined): void {
   const refusal = mediaRefusalSchema.safeParse(stored);
-  if (refusal.success) throw waHttpError(refusal.data, STATUS[refusal.data]);
+  if (refusal.success) throw httpError(STATUS[refusal.data], refusal.data);
 }

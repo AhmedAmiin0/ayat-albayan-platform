@@ -1,10 +1,10 @@
 import { meetingModeOf, usesPlatform, type BookingTeacherOption } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import type { TeacherOptionsQuery } from '@/modules/teaching/booking/booking.dto';
 import { TeacherOptionsRepo, type TeacherFilter } from './teacher-options.repo';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { httpError } from '@/common/http/errors';
 
 /**
  * GET /booking/teachers (R-SCH-06): active teachers of the program, filtered by gender — the
@@ -39,11 +39,11 @@ export class TeacherOptionsService {
   private async filter(q: TeacherOptionsQuery): Promise<TeacherFilter> {
     if (!q.studentId) {
       // The DTO already requires one of the two; never fall back to a program silently.
-      if (!q.program) throw domainError(HttpStatus.BAD_REQUEST, 'student_or_program');
+      if (!q.program) throw httpError(HttpStatus.BAD_REQUEST, 'student_or_program');
       return { program: q.program, gender: q.gender };
     }
     const [student] = await this.queries.students([q.studentId]);
-    if (!student) throw domainError(HttpStatus.NOT_FOUND, 'student_not_found');
+    if (!student) throw httpError(HttpStatus.NOT_FOUND, 'student_not_found');
     return { program: student.program, gender: q.gender ?? student.teacher_gender_pref ?? undefined };
   }
 }

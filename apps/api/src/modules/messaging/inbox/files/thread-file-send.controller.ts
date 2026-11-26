@@ -13,11 +13,11 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import { ZodBody } from '@/common/http/zod-inputs';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
 import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
 import { ThreadFileSender } from './thread-file-send.service';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
+import { httpError } from '@/common/http/errors';
 
 /**
  * The admin and a salesperson send a JPEG/PNG image or a PDF from the chat
@@ -65,7 +65,7 @@ export class ThreadFileSendController {
   private async sender(user: AuthUser): Promise<SalesScope | null> {
     const sales = await this.reads.salesScope(user);
     if (!sales && (await this.reads.scope(user)))
-      throw waHttpError('files_forbidden', HttpStatus.FORBIDDEN);
+      throw httpError(HttpStatus.FORBIDDEN, 'files_forbidden');
     return sales;
   }
 }

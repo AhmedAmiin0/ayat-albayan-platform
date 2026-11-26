@@ -1,8 +1,7 @@
 import type { JoinLinkRequest, JoinLinkResult } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { Outbox } from '@/modules/messaging/inbox/send/outbox';
-import { notFound } from '@/common/http/errors';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { httpError, notFound } from '@/common/http/errors';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
 import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
@@ -21,7 +20,7 @@ export class JoinLinkService {
 
   async send(input: { lessonId: string; body: JoinLinkRequest; actorId: string }, now = new Date()): Promise<JoinLinkResult> {
     const { lessonId, body } = input;
-    if (!(await this.templates.approved(JOIN_LINK_TEMPLATE))) throw waHttpError('template_not_approved', 409);
+    if (!(await this.templates.approved(JOIN_LINK_TEMPLATE))) throw httpError(409, 'template_not_approved');
     const lesson = await this.queries.lesson(lessonId);
     if (!lesson) throw notFound('lesson_not_found');
     const ctx = await this.queries.sendContext(lessonId, body.studentId);

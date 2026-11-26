@@ -3,8 +3,8 @@ import { type TimeGroup, timeGroups, startOfLocalDay } from '@ab/schedule';
 import { DAY_MS, dayInZone, addDays } from '@ab/time';
 import { HttpStatus } from '@nestjs/common';
 import type { Occurrence } from '@ab/schedule';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { planBooking, type Plan, type PlanRule } from './booking.plan';
+import { httpError } from '@/common/http/errors';
 
 export type SeriesRule = PlanRule & Pick<BookingRequest, 'dayTimes'>;
 type SeriesInput = {
@@ -52,7 +52,7 @@ function assertApart(plans: readonly Plan[]): void {
   plans.forEach((plan, i) => {
     const others = plans.slice(i + 1).flatMap((p) => p.occurrences);
     if (plan.occurrences.some((o) => others.some((x) => overlaps(o, x)))) {
-      throw domainError(HttpStatus.BAD_REQUEST, 'day_times_overlap');
+      throw httpError(HttpStatus.BAD_REQUEST, 'day_times_overlap');
     }
   });
 }
@@ -75,9 +75,9 @@ const isEmpty = (p: Plan): boolean => p.occurrences.length === 0;
 
 /** Fewer lessons than days keeps empty-day rules so the course's days stay whole; else 400. */
 function courseCut(planned: readonly Plan[], endsOn: string): Plan[] {
-  if (planned.some(isEmpty)) throw domainError(HttpStatus.BAD_REQUEST, 'no_occurrences');
+  if (planned.some(isEmpty)) throw httpError(HttpStatus.BAD_REQUEST, 'no_occurrences');
   const cut = planned.map((p) => capped(p, endsOn));
-  if (cut.every(isEmpty)) throw domainError(HttpStatus.BAD_REQUEST, 'no_occurrences');
+  if (cut.every(isEmpty)) throw httpError(HttpStatus.BAD_REQUEST, 'no_occurrences');
   return cut;
 }
 
