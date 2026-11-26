@@ -2,7 +2,7 @@
 import { basename } from 'node:path';
 import { cachePath, writeJson } from '../cache.ts';
 import type { SourceRow } from '../types.ts';
-import { SHEETS, specsFor } from './headers/headers.ts';
+import { SHEETS, type SheetSpec, specsFor } from './headers/headers.ts';
 import { sheetRows } from './rows.ts';
 import { openZip, readWorkbook, resolveZipPath } from './zip.ts';
 
@@ -23,6 +23,25 @@ interface Collected {
   problems: string[];
 }
 
+type SheetGrids = Awaited<ReturnType<typeof readWorkbook>>;
+
+/** One spec's tab of one workbook into `out`. */
+function collectTab(out: Collected, o: { spec: SheetSpec; grids: SheetGrids; name: string }) {
+  const { spec, name } = o;
+  const grid = o.grids.find((g) => g.sheet === spec.tab);
+  if (!grid) {
+    out.problems.push(`${spec.id}: tab «${spec.tab}» missing in ${name}`);
+    return;
+  }
+  const r = sheetRows({ spec, data: grid.data, file: name });
+  if (r.missing.length) out.problems.push(`${spec.id}: headers missing ${r.missing.join(', ')}`);
+  out.unknown[spec.id] = [...new Set([...(out.unknown[spec.id] ?? []), ...r.unknown])];
+  out.rows.get(spec.id)?.push(...r.rows);
+}
+
+const fileMissing = (spec: SheetSpec, files: Record<string, Uint8Array>): boolean =>
+  typeof spec.file === 'string' && !(spec.file in files);
+
 /** Every workbook's tabs through their specs. Missing tabs/headers become problems (fail loud). */
 async function collect(files: Record<string, Uint8Array>): Promise<Collected> {
   const out: Collected = {
@@ -32,22 +51,10 @@ async function collect(files: Record<string, Uint8Array>): Promise<Collected> {
   };
   for (const [name, bytes] of Object.entries(files)) {
     const grids = await readWorkbook(bytes);
-    for (const spec of specsFor(name)) {
-      const grid = grids.find((g) => g.sheet === spec.tab);
-      if (!grid) {
-        out.problems.push(`${spec.id}: tab «${spec.tab}» missing in ${name}`);
-        continue;
-      }
-      const r = sheetRows({ spec, data: grid.data, file: name });
-      if (r.missing.length)
-        out.problems.push(`${spec.id}: headers missing ${r.missing.join(', ')}`);
-      out.unknown[spec.id] = [...new Set([...(out.unknown[spec.id] ?? []), ...r.unknown])];
-      out.rows.get(spec.id)?.push(...r.rows);
-    }
+    for (const spec of specsFor(name)) collectTab(out, { spec, grids, name });
   }
-  for (const spec of SHEETS) {
-    if (typeof spec.file === 'string' && !(spec.file in files))
-      out.problems.push(`${spec.id}: file not in zip`);
+  for (const spec of SHEETS.filter((sp) => fileMissing(sp, files))) {
+    out.problems.push(`${spec.id}: file not in zip`);
   }
   return out;
 }
