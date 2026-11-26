@@ -72,7 +72,7 @@ jobs:
             gh api "repos/$REPO/commits/$sha/check-runs?per_page=100" --paginate \
               --jq '.check_runs[] | {id, name, status, conclusion, n: .output.annotations_count}' \
               | jq -s . > "$d/runs.json"
-            jq '[.[] | {name, status, conclusion}]' "$d/runs.json" > "$d/checks.json"
+            jq '[.[] | {id, name, status, conclusion}]' "$d/runs.json" > "$d/checks.json"
             gh api "repos/$REPO/commits/$sha/status?per_page=100" --paginate \
               --jq '.statuses[] | {context, state}' | jq -s '{statuses: .}' > "$d/status.json"
             # The guard:packages «layer table widened» warning is a check-run annotation.

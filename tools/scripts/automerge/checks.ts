@@ -11,8 +11,13 @@ const passed = (runs: readonly CheckRun[], name: string): boolean =>
 /** A run cancelled by a newer one (a `concurrency` group) is moot once the same check passed. */
 const superseded = (r: CheckRun, runs: readonly CheckRun[]): boolean =>
   r.conclusion === 'cancelled' && passed(runs, r.name);
+/** So is a failed run once a newer run of the same check passed: a re-run on the same commit. */
+const rerunPassed = (r: CheckRun, runs: readonly CheckRun[]): boolean =>
+  runs.some((o) => o.name === r.name && o.conclusion === 'success' && o.id > r.id);
+const moot = (r: CheckRun, runs: readonly CheckRun[]): boolean =>
+  superseded(r, runs) || rerunPassed(r, runs);
 const failed = (r: CheckRun, runs: readonly CheckRun[]): boolean =>
-  !OK.has(r.conclusion ?? '') && !superseded(r, runs);
+  !OK.has(r.conclusion ?? '') && !moot(r, runs);
 const names = (runs: readonly CheckRun[]): string => runs.map((r) => r.name).join(', ');
 const failures = (runs: readonly CheckRun[]): string =>
   runs.map((r) => `${r.name} ${r.conclusion ?? ''}`).join(', ');

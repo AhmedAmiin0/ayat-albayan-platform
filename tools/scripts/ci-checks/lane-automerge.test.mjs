@@ -66,7 +66,7 @@ test('lane-automerge: what develop gained since the merge base comes from git', 
   assert.ok(!script.includes('compare.json'), 'cli.ts reads behind.json, not the compare answer');
 });
 
-test('lane-automerge: each check run keeps its id, so a newer run is told from an older one', () => {
+test('lane-automerge: a check run keeps its id, so a newer run is told from an older one', () => {
   const kept = `jq '[.[] | {id, name, status, conclusion}]' "$d/runs.json" > "$d/checks.json"`;
   assert.ok(script.includes(kept), kept);
 });
