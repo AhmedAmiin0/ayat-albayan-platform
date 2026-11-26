@@ -22,7 +22,7 @@ const SELECT =
 
 const RECENT_SORT: SortSpec<InvoiceSortKey> = {
   columns: { created_at: { column: 'created_at' }, kind: { column: 'kind' } },
-  fallback: { column: 'created_at', ascending: false },
+  fallback: [{ column: 'created_at', ascending: false }],
 };
 
 /** The invoices table (service role; the controller is admin-only, and RLS has no other policy). */
@@ -57,7 +57,10 @@ export class InvoicesRepo {
     if (f.to) q = q.lt('created_at', f.to);
     if (f.kind) q = q.eq('kind', f.kind);
     if (rules) q = q.in('rule_id', rules);
-    const { data, count, error } = await applySort(q, f, RECENT_SORT).order('id').range(start, start + f.pageSize - 1);
+    const { data, count, error } = await applySort(q, f, RECENT_SORT).range(
+      start,
+      start + f.pageSize - 1,
+    );
     if (error) throw pgError(error);
     return { rows: data.flatMap(toRow), total: count ?? 0 };
   }

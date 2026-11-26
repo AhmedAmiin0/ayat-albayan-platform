@@ -32,7 +32,7 @@ const SESSION_SORT: SortSpec<(typeof EARNING_SORT_KEYS)[number]> = {
     paid_amount: { column: 'paid_amount' },
     status: { column: 'status' },
   },
-  fallback: { column: 'starts_at', ascending: false },
+  fallback: [{ column: 'starts_at', ascending: false }],
 };
 
 /** Payments: newest first by default. */
@@ -42,7 +42,7 @@ const PAYMENT_SORT: SortSpec<(typeof TEACHER_PAYMENT_SORT_KEYS)[number]> = {
     amount: { column: 'amount' },
     method: { column: 'method' },
   },
-  fallback: { column: 'paid_at', ascending: false },
+  fallback: [{ column: 'paid_at', ascending: false }],
 };
 
 type For<F> = { teacherId: string; filter: F };
@@ -55,7 +55,6 @@ export async function sessionsPage(db: Db, q: For<EarningsListQuery>): Promise<P
   if (f.status === 'unpaid') query = query.in('status', [...UNPAID]);
   else if (f.status) query = query.eq('status', f.status);
   const { data, count, error } = await applySort(query, f, SESSION_SORT)
-    .order('id')
     .range(from, from + f.pageSize - 1)
     .returns<EarningRow[]>();
   if (error) throw pgError(error);
@@ -86,7 +85,6 @@ export async function paymentsPage(
   else if (f.voided === 'false') query = query.is('voided_at', null);
   if (f.note) query = query.ilike('note', ilikeContains(f.note));
   const { data, count, error } = await applySort(query, f, PAYMENT_SORT)
-    .order('id')
     .range(from, from + f.pageSize - 1);
   if (error) throw pgError(error);
   return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };

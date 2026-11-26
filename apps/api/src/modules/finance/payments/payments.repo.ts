@@ -37,7 +37,6 @@ export class PaymentsRepo {
     const from = (f.page - 1) * f.pageSize;
     const query = filtered(this.db.from('payments').select(SELECT, { count: 'exact' }), f);
     const { data, count, error } = await applySort(query, f, PAYMENT_SORT)
-      .order('id')
       .range(from, from + f.pageSize - 1);
     if (error) throw pgError(error);
     return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };

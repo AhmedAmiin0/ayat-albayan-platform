@@ -26,7 +26,7 @@ export const SUB_SORT: SortSpec<SubSortKey> = {
     price: { column: 'price' },
     status: { column: 'status' },
   },
-  fallback: { column: 'created_at', ascending: false },
+  fallback: [{ column: 'created_at', ascending: false }],
 };
 
 /** The inner embed filters rows: the student by name, or a payment for partly paid. */

@@ -13,7 +13,7 @@ const SORT: SortSpec<ActivitySortKey> = {
     status: { column: 'status' },
     duration_ms: { column: 'duration_ms' },
   },
-  fallback: { column: 'at', ascending: false },
+  fallback: [{ column: 'at', ascending: false }],
 };
 
 /** The academy's calendar day (Asia/Riyadh, UTC+3 all year) → its UTC bounds. */
@@ -71,7 +71,6 @@ export class ActivityRepo {
     if (f.from) q = q.gte('at', dayStart(f.from));
     if (f.to) q = q.lt('at', nextDayStart(f.to));
     const { data, count, error } = await applySort(q, f, SORT)
-      .order('id')
       .range(from, from + f.pageSize - 1)
       .returns<Row[]>();
     if (error) throw pgError(error);

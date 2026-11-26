@@ -29,7 +29,7 @@ const TEACHER_REPORT_SORT: SortSpec<TeacherReportSortKey> = {
     attendance: { column: 'attendance', nullsFirst: false },
     grade: { column: 'grade_overall', nullsFirst: false },
   },
-  fallback: { column: 'submitted_at', ascending: false },
+  fallback: [{ column: 'submitted_at', ascending: false }],
 };
 
 /** GET /teachers/me/reports reads (R-REP-02, R-TCH-03). Service role; the service scopes by teacher. */
@@ -56,7 +56,6 @@ export class TeacherReportsQueries {
     if (filter.grade) q = q.eq('grade_overall', filter.grade);
     if (students) q = q.in('student_id', students);
     const { data, count, error } = await applySort(q, filter, TEACHER_REPORT_SORT)
-      .order('id')
       .range(start, start + input.page.pageSize - 1);
     if (error) throw pgError(error);
     return { rows: data, total: count ?? 0 };

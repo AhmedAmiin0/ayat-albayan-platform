@@ -17,7 +17,8 @@ export const THREAD_SORT: SortSpec<ThreadSortKey> = {
     unread: { column: 'unread_count' },
     name: { column: 'display_name', nullsFirst: false },
   },
-  fallback: { column: 'last_message_at', ascending: false },
+  fallback: [{ column: 'last_message_at', ascending: false }],
+  key: 'phone_e164',
 };
 
 /** GET /threads query: page, search, unread, `sort`/`dir`, the lead's status and a chat list (docs/22). */

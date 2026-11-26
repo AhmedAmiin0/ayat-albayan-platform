@@ -28,7 +28,6 @@ export class SubscriptionsRepo {
     if (q.student) query = query.ilike('student.name', ilikeContains(q.student));
     if (q.package) query = query.eq('package', q.package);
     const { data, count, error } = await applySort(query, q, SUB_SORT)
-      .order('id')
       .range(from, from + q.pageSize - 1);
     if (error) throw pgError(error);
     return { items: data, total: count ?? 0, page: q.page, pageSize: q.pageSize };

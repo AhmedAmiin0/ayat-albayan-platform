@@ -27,7 +27,7 @@ const FEEDBACK_SORT: SortSpec<FeedbackSortKey> = {
     recommend: { column: 'recommend', nullsFirst: false },
     note: { column: 'note', nullsFirst: false },
   },
-  fallback: { column: 'requested_at', ascending: false },
+  fallback: [{ column: 'requested_at', ascending: false }],
 };
 
 export type FeedbackListRow = Pick<

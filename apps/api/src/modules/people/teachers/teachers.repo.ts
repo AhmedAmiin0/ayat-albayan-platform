@@ -46,7 +46,6 @@ export class TeachersRepo {
     const filter = search ? teacherSearchFilter(search) : null;
     if (filter) query = query.or(filter);
     const { data, count, error } = await applySort(query, q, TEACHER_SORT)
-      .order('id')
       .range(from, from + pageSize - 1);
     if (error) throw pgError(error);
     const ids = data.map((row) => row.id);
