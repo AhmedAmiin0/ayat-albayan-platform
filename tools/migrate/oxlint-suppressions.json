@@ -116,11 +116,6 @@
       "count": 1
     }
   },
-  "src/map/people/rows.ts": {
-    "typescript/prefer-includes": {
-      "count": 1
-    }
-  },
   "src/map/people/status/bookings.ts": {
     "ab/no-shape-checks": {
       "count": 1
@@ -142,11 +137,6 @@
     },
     "typescript/prefer-find": {
       "count": 1
-    }
-  },
-  "src/map/reports/fields.ts": {
-    "typescript/prefer-includes": {
-      "count": 2
     }
   },
   "src/map/reports/parse.ts": {
@@ -172,11 +162,6 @@
   "src/map/schedule/rules.ts": {
     "ab/no-shape-checks": {
       "count": 4
-    }
-  },
-  "src/map/teachers/teachers.ts": {
-    "typescript/prefer-includes": {
-      "count": 1
     }
   },
   "src/map/templates/buttons.ts": {

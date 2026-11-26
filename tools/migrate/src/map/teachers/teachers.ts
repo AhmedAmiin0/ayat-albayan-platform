@@ -30,7 +30,7 @@ function calendars(bundle: SourceBundle): Map<string, string> {
 }
 
 const teacherStatus = (raw: string | null): string =>
-  /نشط/.test(raw ?? '') ? 'active' : 'inactive';
+  (raw ?? '').includes('نشط') ? 'active' : 'inactive';
 
 /** A bad phone only warns: the teacher is kept without one, on Cairo time. */
 function teacherContact(row: SourceRow, issue: ReturnType<typeof issuesFor>) {
