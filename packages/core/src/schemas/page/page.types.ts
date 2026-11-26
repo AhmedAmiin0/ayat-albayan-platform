@@ -8,7 +8,7 @@ export interface Page<T> {
   pageSize: number;
 }
 
-/** An endpoint's page size: its default, its maximum, and its last page when it caps one. */
+/** An endpoint's page size: its default, its maximum, and a last page below MAX_PAGE. */
 export interface PageSize {
   size: number;
   max?: number;
