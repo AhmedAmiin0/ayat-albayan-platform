@@ -1,10 +1,10 @@
+import { askedRounding, type QuoteMode, roundingShows } from '@ab/client-core';
 import {
   DEFAULT_ROUNDING,
   offerText,
   parseDiscount,
   priceListText,
   pricingCountryOfPhone,
-  type Rounding,
 } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
 import { useIsMutating } from '@tanstack/react-query';
@@ -16,7 +16,7 @@ import { PINS, pinnedId, useReplayed } from '@/inbox/thread/send/pinned-send';
 import { chatSendError } from '@/inbox/thread/send/send-error';
 import { usePriceList } from './use-price-list';
 import { useQuoteCustom } from './use-quote-custom';
-import type { QuoteMode, QuoteOffer } from './use-quote-sheet.types';
+import type { QuoteOffer } from './use-quote-sheet.types';
 import { sendKey, useSendMessage } from '@/inbox/thread/hooks/use-thread';
 
 /** What either price query tells the sheet. */
@@ -30,13 +30,6 @@ interface Priced {
 function initialSelection(phone: string): PricingSelection {
   return { ...DEFAULT_PRICING, country: pricingCountryOfPhone(phone) ?? 'other' };
 }
-
-/**
- * Rounding only moves a discounted price, so with no discount the choice is not asked for and
- * the request stays the one the sheet always made.
- */
-const askedRounding = (discount: number, rounding: Rounding): Rounding =>
-  discount > 0 ? rounding : DEFAULT_ROUNDING;
 
 /**
  * A price still loading for a new choice is the last choice's: its text is held back. A price
@@ -71,8 +64,6 @@ export function useQuoteSheet(phone: string) {
     one: offerOf(quote, one, !custom.valid),
     all: offerOf(list, all),
   };
-  // A custom amount is the total itself: rounding has nothing to move. The list has no such amount.
-  const customTotal = mode === 'one' && custom.price.on;
   return {
     mode,
     setMode,
@@ -80,7 +71,7 @@ export function useQuoteSheet(phone: string) {
     change: (patch: Partial<PricingSelection>) => setSelection((s) => ({ ...s, ...patch })),
     rounding,
     setRounding,
-    roundable: discount > 0 && !customTotal,
+    roundable: roundingShows({ discount, mode, customOn: custom.price.on }),
     custom: custom.price,
     offer: offers[mode],
   };

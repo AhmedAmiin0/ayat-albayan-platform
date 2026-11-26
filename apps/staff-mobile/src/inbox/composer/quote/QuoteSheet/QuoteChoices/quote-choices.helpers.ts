@@ -1,6 +1,6 @@
 import { ROUNDING_MODES, type Rounding } from '@ab/money';
 import { t, type FilterPill } from '@ab/mobile-kit';
-import type { QuoteMode } from '@/inbox/composer/quote/use-quote-sheet.types';
+import type { QuoteMode } from '@ab/client-core';
 
 const q = t.inbox.quote;
 

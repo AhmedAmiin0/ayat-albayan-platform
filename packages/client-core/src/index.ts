@@ -11,6 +11,7 @@ export * from './people/phone-countries';
 export * from './finance/payments';
 export * from './finance/quote-custom';
 export * from './finance/price-list';
+export * from './finance/quote-sheet';
 export type * from './finance/list-filters';
 export * from './sales/lead-sort';
 export * from './people/assistants';

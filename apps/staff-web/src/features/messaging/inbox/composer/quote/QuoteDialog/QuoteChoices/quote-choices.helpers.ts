@@ -1,6 +1,6 @@
 import { ROUNDING_MODES } from '@ab/money';
 import { t, type SegmentOption } from '@ab/web-kit';
-import type { QuoteMode } from '@/features/messaging/inbox/composer/quote/use-quote-offer.types';
+import type { QuoteMode } from '@ab/client-core';
 
 export const MODE_OPTIONS: SegmentOption<QuoteMode>[] = [
   { value: 'one', label: t.inbox.quote.mode.one },

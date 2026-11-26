@@ -3,10 +3,10 @@ import { useIsMutating, useMutation, useQueryClient } from '@tanstack/react-quer
 import { useRef, useState } from 'react';
 import { quotePins } from './quote-id';
 import { useListOffer, useOneOffer } from './use-offer-texts';
-import type { QuoteChoice, QuoteMode } from './use-quote-offer.types';
+import type { QuoteChoice } from './use-quote-offer.types';
 import { INITIAL_SELECTION, OTHER, useDebounced } from '@/features/finance/pricing';
 import { sendText } from '@/features/messaging/inbox/api/api';
-import { replayedOther, SEND_UNCONFIRMED } from '@ab/client-core';
+import { type QuoteMode, replayedOther, roundingShows, SEND_UNCONFIRMED } from '@ab/client-core';
 import {
   ReplayedSend,
   rereadsAfter,
@@ -42,7 +42,7 @@ export function useQuoteOffer(phone: string) {
       onMode: setMode,
       choice,
       onChange: (patch: Partial<QuoteChoice>) => setChoice((c) => ({ ...c, ...patch })),
-      rounds: choice.discount > 0 && shown.rounds,
+      rounds: roundingShows({ discount: choice.discount, mode, customOn: one.custom.on }),
       custom: one.custom,
     },
     query: shown.query,

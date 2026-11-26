@@ -1,8 +1,6 @@
+import type { QuoteMode } from '@ab/client-core';
 import type { CustomPrice } from '@/features/finance/subscriptions';
-import type {
-  QuoteChoice,
-  QuoteMode,
-} from '@/features/messaging/inbox/composer/quote/use-quote-offer.types';
+import type { QuoteChoice } from '@/features/messaging/inbox/composer/quote/use-quote-offer.types';
 
 export interface QuoteChoicesProps {
   /** The chat's number, for the line saying which country it is from. */
