@@ -94,7 +94,11 @@ export const MAX_SYNC_BYTES = 12_000;
 
 /** The whole board as `sync` messages of at most ~maxBytes each (a lone huge stroke goes alone). */
 export function syncMessages(state: BoardState, maxBytes = MAX_SYNC_BYTES): BoardMessage[] {
-  const flags = { studentsCanDraw: state.studentsCanDraw, open: state.open, allowed: state.allowed };
+  const flags = {
+    studentsCanDraw: state.studentsCanDraw,
+    open: state.open,
+    allowed: state.allowed,
+  };
   const out: BoardMessage[] = [];
   let batch: Stroke[] = [];
   let size = 0;

@@ -12,7 +12,9 @@ export function LessonWhen({ startsAt, tz }: { startsAt: string; tz: string }) {
   const clock = useClock();
   const viewer = useViewerTz();
   const at = new Date(startsAt);
-  const mine = sameClockAt(at, { a: tz, b: viewer }) ? null : lessonWhenAt(at, { tz: viewer, ...clock });
+  const mine = sameClockAt(at, { a: tz, b: viewer })
+    ? null
+    : lessonWhenAt(at, { tz: viewer, ...clock });
   return (
     <div className="grid gap-0.5">
       <p className="text-body font-semibold">{lessonWhenAt(at, { tz, ...clock })}</p>

@@ -68,7 +68,8 @@ export function useWebPush(): WebPushState {
     failed: failed || key.isError,
     enable: () =>
       run(async () => {
-        const publicKey = key.data?.publicKey ?? (await key.refetch({ throwOnError: true })).data?.publicKey;
+        const publicKey =
+          key.data?.publicKey ?? (await key.refetch({ throwOnError: true })).data?.publicKey;
         if (!publicKey) throw new Error('web push is not configured');
         return (await subscribeWebPush(publicKey)) === 'subscribed';
       }),

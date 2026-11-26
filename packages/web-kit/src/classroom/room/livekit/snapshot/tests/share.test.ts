@@ -23,10 +23,30 @@ describe('mayShareScreen', () => {
   });
 
   it('empty sources = everything; a guest list without SCREEN_SHARE (3) may not; after «سماح» may', () => {
-    expect(mayShareScreen({ metadata: guestMeta, permissions: { canPublish: true, canPublishSources: [] } })).toBe(true);
-    expect(mayShareScreen({ metadata: guestMeta, permissions: { canPublish: true, canPublishSources: [1, 2] } })).toBe(false);
-    expect(mayShareScreen({ metadata: guestMeta, permissions: { canPublish: true, canPublishSources: [1, 2, 3, 4] } })).toBe(true);
-    expect(mayShareScreen({ metadata: guestMeta, permissions: { canPublish: false, canPublishSources: [] } })).toBe(false);
+    expect(
+      mayShareScreen({
+        metadata: guestMeta,
+        permissions: { canPublish: true, canPublishSources: [] },
+      }),
+    ).toBe(true);
+    expect(
+      mayShareScreen({
+        metadata: guestMeta,
+        permissions: { canPublish: true, canPublishSources: [1, 2] },
+      }),
+    ).toBe(false);
+    expect(
+      mayShareScreen({
+        metadata: guestMeta,
+        permissions: { canPublish: true, canPublishSources: [1, 2, 3, 4] },
+      }),
+    ).toBe(true);
+    expect(
+      mayShareScreen({
+        metadata: guestMeta,
+        permissions: { canPublish: false, canPublishSources: [] },
+      }),
+    ).toBe(false);
   });
 
   it('the snapshot carries it for me and on every tile', () => {
