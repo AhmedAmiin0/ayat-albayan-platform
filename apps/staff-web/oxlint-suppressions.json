@@ -3683,11 +3683,6 @@
       "count": 1
     }
   },
-  "src/features/platform/presence/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/features/platform/settings/boundaries.test.ts": {
     "no-nested-ternary": {
       "count": 1

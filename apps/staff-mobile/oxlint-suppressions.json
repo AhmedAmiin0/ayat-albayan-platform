@@ -914,11 +914,6 @@
       "count": 6
     }
   },
-  "src/core/lib/presence/use-presence-self.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/core/lib/query/paged-result.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -5853,11 +5848,6 @@
   },
   "src/users/list/UserSummary.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/users/presence/use-staff-presence.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
