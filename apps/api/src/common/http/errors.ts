@@ -8,6 +8,9 @@ import {
 
 type Details = Record<string, unknown>;
 
+export const httpError = (status: number, code: string, details: object = {}) =>
+  new HttpException({ code, message: code, ...details }, status);
+
 // Domain errors carry both keys, `{ code, message: code, …details }`; clients switch on `code`
 // (docs/10 §3). The 400 validation error keeps `{ message: 'validation_failed', issues }`.
 
