@@ -9,10 +9,14 @@ const LITERAL = /'(?:[^']|'')*'/g;
 // a backtick, which is no SQL, so what is left is the statement's own code.
 const UNREADABLE = /[\\"`]/;
 const FORBIDDEN = /;|--|\/\*|\$|'|[a-z0-9_&]`|[^\x20-\x7e]|\b(?:select|table|values)\b/i;
+// A dot before a name selects a field, which can also call a function of the row (`t.fn`), and
+// a cast to a reg type reads the catalog: one table's own columns need neither.
+const REACHES_OUT = /\.\s*[a-z_]|::\s*reg/i;
 const OPERATORS = new Set(['in', 'and', 'or', 'not']);
 const CALL = /\b([a-z_][a-z0-9_]*)\s*\(/gi;
-// Standard SQL calls these without parentheses, so CALL cannot see them.
-const KEYWORD_CALLS = new Set([
+// Standard SQL calls the first group without parentheses, so CALL cannot see them. The second
+// group starts a clause after the condition, and a count has none.
+const REFUSED_WORDS = new Set([
   'current_catalog',
   'current_date',
   'current_role',
@@ -25,6 +29,17 @@ const KEYWORD_CALLS = new Set([
   'session_user',
   'system_user',
   'user',
+  'except',
+  'fetch',
+  'for',
+  'group',
+  'having',
+  'intersect',
+  'limit',
+  'offset',
+  'order',
+  'union',
+  'window',
 ]);
 const WORD = /[a-z_][a-z0-9_]*/gi;
 // A bare name follows search_path, where pg_catalog comes first, so the schema is always sent.
@@ -34,13 +49,19 @@ const MAX_LENGTH = 65_536;
 const hasCall = (where) =>
   [...where.matchAll(CALL)].some(([, word]) => !OPERATORS.has(word.toLowerCase()));
 
-const hasKeywordCall = (where) =>
-  (where.match(WORD) ?? []).some((word) => KEYWORD_CALLS.has(word.toLowerCase()));
+const hasRefusedWord = (where) =>
+  (where.match(WORD) ?? []).some((word) => REFUSED_WORDS.has(word.toLowerCase()));
 
 const isPlainWhere = (where) => {
   const bare = where.replace(LITERAL, '`');
-  const called = hasCall(bare) || hasKeywordCall(bare);
-  return !UNREADABLE.test(where) && !FORBIDDEN.test(bare) && !called;
+  const refused = [
+    UNREADABLE.test(where),
+    FORBIDDEN.test(bare),
+    REACHES_OUT.test(bare),
+    hasCall(bare),
+    hasRefusedWord(bare),
+  ];
+  return !refused.includes(true);
 };
 
 const isPlainCount = (sql) => {

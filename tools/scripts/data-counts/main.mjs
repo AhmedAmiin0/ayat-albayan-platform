@@ -4,11 +4,16 @@ import { parseCounts } from './parse.mjs';
 
 // The extended protocol carries one statement, whatever the text holds.
 const ONE_STATEMENT = { simple: false };
+// Set inside the transaction, so it also holds behind a pooler that drops session settings.
+const TIME_LIMIT = "set local statement_timeout = '30s'";
 
 // A database error can quote a row value, so every failure becomes a bare null.
 const countIn = (sql, statement) =>
   sql
-    .begin('read only', (tx) => tx.unsafe(statement, [], ONE_STATEMENT))
+    .begin('read only', async (tx) => {
+      await tx.unsafe(TIME_LIMIT, [], ONE_STATEMENT);
+      return tx.unsafe(statement, [], ONE_STATEMENT);
+    })
     .then(countOf)
     .catch(() => null);
 
