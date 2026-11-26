@@ -1,4 +1,4 @@
-import type { PayoutView } from '@ab/money';
+import { payoutListSchema } from '@ab/money';
 import type { LessonProposalRequest, LessonView, TeacherMe } from '@ab/schedule';
 import { TEACHER_REFRESH_MS } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
@@ -37,5 +37,5 @@ export const proposeLesson = ({ id, body }: { id: string; body: LessonProposalRe
 /** GET /teachers/me/payouts — every month of mine, newest first (R-TCH-04). */
 export const myPayoutsQuery = queryOptions({
   queryKey: moneyKeys.myPayouts(),
-  queryFn: () => apiFetch<PayoutView[]>('/teachers/me/payouts'),
+  queryFn: () => apiFetch('/teachers/me/payouts', { schema: payoutListSchema }),
 });

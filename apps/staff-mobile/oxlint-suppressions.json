@@ -1920,13 +1920,10 @@
   },
   "src/finance/payouts/use-payout-move.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/finance/pricing/DiscountField/DiscountField.tsx": {
@@ -2001,7 +1998,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 4
     }
   },
   "src/finance/shared/receipt-link.ts": {
@@ -4420,10 +4417,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 3
-    },
-    "ab/no-shape-checks": {
-      "count": 6
+      "count": 1
     }
   },
   "src/money/subscriptions/SubscriptionItem/SubscriptionItem.tsx": {
@@ -5261,20 +5255,12 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 3
-    }
-  },
-  "src/payments/hooks/use-record-payment.test.tsx": {
-    "stylistic/max-len": {
       "count": 2
     }
   },
   "src/payments/hooks/use-record-payment.ts": {
     "ab/no-shape-checks": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/payments/index.ts": {
@@ -7300,11 +7286,8 @@
     }
   },
   "src/teacher/lib/queries.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 4
     }
   },
   "src/teacher/lib/students-queries.ts": {

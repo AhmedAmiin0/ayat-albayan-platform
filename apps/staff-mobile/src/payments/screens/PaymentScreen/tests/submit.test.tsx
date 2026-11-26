@@ -1,3 +1,4 @@
+import { paymentViewSchema } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { t } from '@ab/mobile-kit';
@@ -29,7 +30,12 @@ jest.mock('expo-image-picker', () => ({
 }));
 
 const m = t.payments.mobile;
-const signed = { bucket: 'receipts', path: `${SUB_ID}/9f.jpg`, token: 'tok', signed_url: 'http://x/sign' };
+const signed = {
+  bucket: 'receipts',
+  path: `${SUB_ID}/9f.jpg`,
+  token: 'tok',
+  signed_url: 'http://x/sign',
+};
 const listKey = ['payments', 'list', { studentId: 's1', pageSize: 5 }];
 
 beforeEach(() => {
@@ -44,7 +50,15 @@ beforeEach(() => {
   // "hello": 5 bytes of compressed JPEG, as the picker hands it over.
   jest.mocked(ImagePicker.launchCameraAsync).mockResolvedValue({
     canceled: false,
-    assets: [{ uri: 'file:///cache/slip.jpg', width: 900, height: 1200, base64: 'aGVsbG8=', mimeType: 'image/jpeg' }],
+    assets: [
+      {
+        uri: 'file:///cache/slip.jpg',
+        width: 900,
+        height: 1200,
+        base64: 'aGVsbG8=',
+        mimeType: 'image/jpeg',
+      },
+    ],
   });
 });
 
@@ -65,7 +79,9 @@ test('header names the student; the package, what is paid of it, and its currenc
 test('bank: a photo in «المرفقات» → signed upload → POST /payments with it in attachments → back; the list showed it at once', async () => {
   let answer: (v: unknown) => void = () => undefined;
   mockApiSend.mockImplementation((_method: string, path: string) =>
-    path === '/payments/receipt-upload-url' ? Promise.resolve(signed) : new Promise((r) => (answer = r)),
+    path === '/payments/receipt-upload-url'
+      ? Promise.resolve(signed)
+      : new Promise((r) => (answer = r)),
   );
   mockUpload.mockResolvedValue({ data: { path: signed.path }, error: null });
   const client = createTestQueryClient();
@@ -88,13 +104,16 @@ test('bank: a photo in «المرفقات» → signed upload → POST /payments
     contentType: 'image/jpeg',
   });
   expect(mockApiSend).toHaveBeenLastCalledWith('POST', '/payments', {
-    clientRequestId: expect.any(String),
-    subscriptionId: SUB_ID,
-    amount: 145,
-    currency: 'SAR',
-    method: 'bank',
-    paidAt: expect.any(String),
-    attachments: [signed.path],
+    body: {
+      clientRequestId: expect.any(String),
+      subscriptionId: SUB_ID,
+      amount: 145,
+      currency: 'SAR',
+      method: 'bank',
+      paidAt: expect.any(String),
+      attachments: [signed.path],
+    },
+    schema: paymentViewSchema,
   });
   answer(payment({ id: 'p2' }));
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
@@ -108,7 +127,10 @@ test('no photo (cash): straight to POST /payments, no upload', async () => {
   await fireEvent.press(screen.getByRole('button', { name: m.record }));
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
   expect(mockApiSend).toHaveBeenCalledTimes(1);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', expect.not.objectContaining({ receiptPath: expect.anything() }));
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', {
+    body: expect.not.objectContaining({ receiptPath: expect.anything() }),
+    schema: paymentViewSchema,
+  });
   expect(mockUpload).not.toHaveBeenCalled();
 });
 
@@ -122,6 +144,6 @@ test('«اليوم السابق» moves the day back to أمس; «اليوم ا�
   await fill('145');
   await fireEvent.press(screen.getByRole('button', { name: m.record }));
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
-  const body = mockApiSend.mock.calls[0]?.[2] as { paidAt: string };
-  expect(body.paidAt).toMatch(/T09:00:00\.000Z$/);
+  const sent = mockApiSend.mock.calls[0]?.[2] as { body: { paidAt: string } } | undefined;
+  expect(sent?.body.paidAt).toMatch(/T09:00:00\.000Z$/);
 });

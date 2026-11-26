@@ -1,4 +1,5 @@
-import type { PayoutView } from '@ab/money';
+import { payoutListSchema, type PayoutView } from '@ab/money';
+import { parseResponse } from '@ab/client-core';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
@@ -32,7 +33,21 @@ afterEach(() => apiFetch.mockReset());
 
 describe('«مستحقاتي» (R-TCH-04)', () => {
   it('every month of mine, newest first, with the breakdown and no approve / pay', async () => {
-    routeFetch(apiFetch, [['/teachers/me/payouts', [payout({}), payout({ id: 'p-0', month: '2026-08', status: 'draft', paid_at: null, approved_at: null })]]]);
+    routeFetch(apiFetch, [
+      [
+        '/teachers/me/payouts',
+        [
+          payout({}),
+          payout({
+            id: 'p-0',
+            month: '2026-08',
+            status: 'draft',
+            paid_at: null,
+            approved_at: null,
+          }),
+        ],
+      ],
+    ]);
     renderWithClient(<MyPayouts />);
     expect(await screen.findByText(monthLabel('2026-09'))).toBeTruthy();
     expect(screen.getByText(monthLabel('2026-08'))).toBeTruthy();
@@ -46,12 +61,22 @@ describe('«مستحقاتي» (R-TCH-04)', () => {
     expect(screen.getByText(monthLabel('2026-08'))).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.payouts.approve })).toBeNull();
     expect(screen.queryByRole('button', { name: t.payouts.markPaid })).toBeNull();
-    expect(apiFetch).toHaveBeenCalledWith('/teachers/me/payouts');
+    expect(apiFetch).toHaveBeenCalledWith('/teachers/me/payouts', { schema: payoutListSchema });
   });
 
   it('none yet says so', async () => {
     routeFetch(apiFetch, [['/teachers/me/payouts', []]]);
     renderWithClient(<MyPayouts />);
     expect(await screen.findByText(t.payouts.mineEmpty)).toBeTruthy();
+  });
+
+  it('an answer that breaks the contract shows the load error with a retry', async () => {
+    const broken = [{ ...payout({}), amount: '700' }];
+    apiFetch.mockImplementation(async (path: string, init: { schema: typeof payoutListSchema }) =>
+      parseResponse(init.schema, broken, path),
+    );
+    renderWithClient(<MyPayouts />);
+    expect(await screen.findByText(t.common.loadFailed, { exact: false })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t.common.retry })).toBeTruthy();
   });
 });

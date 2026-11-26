@@ -2,18 +2,13 @@ import { payoutStatusStyle, type PayoutView } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable, type DataTableFeatures } from '@/components/data-table/DataTable';
-import {
-  Cartouche,
-  EmptyState,
-  FormAlert,
-  PageHead,
-  StatusChip,
-  ListSkeleton,
-  t,
-} from '@ab/web-kit';
+import { Cartouche, EmptyState, PageHead, QueryState, StatusChip, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
-import { breakdownLines, payoutStatusOptions } from '@/features/finance/payouts/list/payout-columns';
+import {
+  breakdownLines,
+  payoutStatusOptions,
+} from '@/features/finance/payouts/list/payout-columns';
 import { LedgerPaid } from '@/features/finance/payouts/shared/LedgerPaid';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { myPayoutsQuery } from './api';
@@ -61,7 +56,11 @@ const COLUMNS = col.columns([
       const when = p.paid_at ?? p.approved_at;
       return (
         <div className="grid justify-items-start gap-0.5">
-          <StatusChip size="sm" {...payoutStatusStyle[p.status]} label={t.enums.payoutStatus[p.status]} />
+          <StatusChip
+            size="sm"
+            {...payoutStatusStyle[p.status]}
+            label={t.enums.payoutStatus[p.status]}
+          />
           {when && <span className="text-2xs text-ink-3">{formatDate(when)}</span>}
         </div>
       );
@@ -78,19 +77,22 @@ export function MyPayouts() {
       <PageHead>
         <Cartouche>{t.teacherNav.statements}</Cartouche>
       </PageHead>
-      {list.isPending && <ListSkeleton />}
-      {list.isError && <FormAlert>{t.common.error}</FormAlert>}
-      {list.data?.length === 0 && <EmptyState title={t.payouts.mineEmpty} />}
-      {list.data && list.data.length > 0 && (
-        <DataTable
-          stacked
-          clientSort
-          clientFilter
-          columns={COLUMNS}
-          data={list.data}
-          getRowId={(r) => r.id}
-        />
-      )}
+      <QueryState
+        query={list}
+        isEmpty={(data) => data.length === 0}
+        empty={<EmptyState title={t.payouts.mineEmpty} />}
+      >
+        {(data) => (
+          <DataTable
+            stacked
+            clientSort
+            clientFilter
+            columns={COLUMNS}
+            data={data}
+            getRowId={(r) => r.id}
+          />
+        )}
+      </QueryState>
     </>
   );
 }
