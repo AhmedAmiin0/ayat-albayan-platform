@@ -14,10 +14,13 @@ export const settingsPatchBodySchema = z.record(z.string(), z.unknown(), {
 export type SettingsPatchBody = z.infer<typeof settingsPatchBodySchema>;
 
 /** One rejected field, worded like parseOrThrow's 400 (path = the camelCase field, then the inner path). */
-export type SettingsPatchIssue = { path: string; message: string };
+export interface SettingsPatchIssue {
+  path: string;
+  message: string;
+}
 
 /** PATCH /settings, applied per key (docs/26 §2f): what is written and what each field became. */
-export type SettingsPatchSplit = {
+export interface SettingsPatchSplit {
   /** The rows to write (snake_case), only the valid registry fields. */
   changes: Partial<AcademySettings>;
   /** snake_case keys written. */
@@ -27,7 +30,7 @@ export type SettingsPatchSplit = {
   /** snake_case keys whose value failed validation: not written. */
   invalid: SettingKey[];
   issues: SettingsPatchIssue[];
-};
+}
 
 /** The PATCH /settings answer: the full settings after the write, plus the per-key lists. */
 export type SettingsPatchResult = AcademySettings & {
