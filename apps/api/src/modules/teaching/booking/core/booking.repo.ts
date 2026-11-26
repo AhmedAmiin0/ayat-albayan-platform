@@ -5,7 +5,7 @@ import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { gateConfirmations } from '@/common/rules/confirmations';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
-import { maybe, pgError, rows } from '@/common/db/errors';
+import { maybe, pgError, rows, uniqueViolationMentions } from '@/common/db/errors';
 import type { LeadFacts } from './booking.lead-merge';
 import { toBookingResult, type BookingPayload, type InvoiceRow } from './booking.mapper';
 import type { BookingStudent, BookingTeacher, MakeupOriginalRow } from './types';
@@ -109,15 +109,15 @@ export class BookingRepo {
     let { data, error } = await call();
     // Two replays at once: the loser hits client_request_id's unique key; the retry returns the
     // winner's booking (migration 111).
-    if (error?.code === '23505' && error.message.includes('client_request_id')) ({ data, error } = await call());
+    if (uniqueViolationMentions(error, 'client_request_id')) ({ data, error } = await call());
     const raised = error?.code === 'P0001' ? BOOKING_RAISED.find((c) => error.message.includes(c)) : undefined;
     if (raised) throw httpError(HttpStatus.CONFLICT, raised);
     // Another admin booked the same missed lesson a moment ago (lessons_makeup_of_key).
-    if (error?.code === '23505' && error.message.includes('lessons_makeup_of_key')) {
+    if (uniqueViolationMentions(error, 'lessons_makeup_of_key')) {
       throw httpError(HttpStatus.CONFLICT, 'makeup_exists');
     }
     // A new guardian on a family's SECOND number (migration 973): guardianByPhone reads main numbers only.
-    if (error?.code === '23505' && error.message.includes('guardian_phones_pkey')) throw httpError(HttpStatus.CONFLICT, 'number_taken');
+    if (uniqueViolationMentions(error, 'guardian_phones_pkey')) throw httpError(HttpStatus.CONFLICT, 'number_taken');
     if (error) throw pgError(error);
     return toBookingResult(data);
   }

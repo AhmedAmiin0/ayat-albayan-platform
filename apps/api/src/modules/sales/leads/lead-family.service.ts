@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict, notFound } from '@/common/http/errors';
-import { maybe, pgError } from '@/common/db/errors';
+import { isUniqueViolation, maybe, pgError, uniqueViolationMentions } from '@/common/db/errors';
 
 type LinkInput = { leadId: string; code: string; actorId: string; admin: boolean };
 
@@ -11,12 +11,12 @@ const NOT_FOUND: readonly string[] = ['lead_not_found', 'student_not_found'];
 
 /** A guardians write took the number between link_family_phone's read and its insert. */
 const lostRace = (error: PostgrestError | null): boolean =>
-  error?.code === '23505' && error.message.includes('guardian_phones_pkey');
+  uniqueViolationMentions(error, 'guardian_phones_pkey');
 
 /** link_family_phone's refusals (migration 973) as the API's 404 / 409 codes. */
 function linkError(error: PostgrestError): Error {
-  if (error.code === '23505' && error.message.includes('guardian_phones_one_second')) return conflict('family_has_second_number');
-  if (error.code === '23505') return conflict('number_taken');
+  if (uniqueViolationMentions(error, 'guardian_phones_one_second')) return conflict('family_has_second_number');
+  if (isUniqueViolation(error)) return conflict('number_taken');
   const code = error.code === 'P0001' ? LEAD_FAMILY_LINK_ERRORS.find((c) => c === error.message) : undefined;
   if (!code) return pgError(error);
   return NOT_FOUND.includes(code) ? notFound(code) : conflict(code);

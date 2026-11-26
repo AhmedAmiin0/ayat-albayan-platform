@@ -3,7 +3,7 @@ import { joinWindowConfig, type JoinWindowConfig } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
-import { done, maybe, pgError, rows } from '@/common/db/errors';
+import { done, isUniqueViolation, maybe, pgError, rows } from '@/common/db/errors';
 
 export type MeetingRow = Pick<
   Tables<'meetings'>,
@@ -53,7 +53,7 @@ export class InternalMeetingsRepo {
       })
       .select(MEETING_COLUMNS)
       .single();
-    if (error?.code === '23505' && row.clientRequestId) return null;
+    if (isUniqueViolation(error) && row.clientRequestId) return null;
     if (error) throw pgError(error);
     return data;
   }

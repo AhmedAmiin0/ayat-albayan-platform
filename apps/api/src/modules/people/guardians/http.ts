@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
-import type { PgErrorMap } from '@/common/db/errors';
+import { type PgErrorMap, UNIQUE_VIOLATION } from '@/common/db/errors';
 import { pageQuery } from '@ab/core';
 import { z } from 'zod';
 
@@ -32,7 +32,7 @@ export function peopleErrors(conflict = 'conflict'): PgErrorMap {
   const taken = () => new ConflictException(conflict);
   return {
     codes: {
-      '23505': taken,
+      [UNIQUE_VIOLATION]: taken,
       '23503': taken,
       P0002: notFound,
       PGRST116: notFound,

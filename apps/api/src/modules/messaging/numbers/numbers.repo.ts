@@ -5,7 +5,7 @@ import type { Database } from '@ab/db';
 import { DB, type Db } from '@/common/db/db.module';
 import type { NumberPatch } from './numbers.patch';
 import type { HealthTarget } from './lines/numbers.health-target';
-import { pgError } from '@/common/db/errors';
+import { isUniqueViolation, pgError } from '@/common/db/errors';
 import type { PostgrestError } from '@supabase/supabase-js';
 
 export type NumberRow = Database['public']['Tables']['wa_numbers']['Row'];
@@ -17,7 +17,7 @@ const COLUMNS =
 
 /** A unique violation in words: the phone id or the role's live default is taken. */
 function conflictOf(error: PostgrestError): never {
-  if (error.code !== '23505') throw pgError(error);
+  if (!isUniqueViolation(error)) throw pgError(error);
   const reason: NumberError = error.message.includes('default_per_purpose') ? 'default_taken' : 'phone_taken';
   throw new ConflictException({ message: reason });
 }

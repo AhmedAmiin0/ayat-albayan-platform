@@ -2,7 +2,7 @@ import { type ChatList, type ChatListRef, isChatListAutoRule } from '@ab/shared'
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
-import { pgError } from '@/common/db/errors';
+import { isUniqueViolation, pgError } from '@/common/db/errors';
 
 /** What a write ran into: a taken name_key (23505) or the 30-list cap trigger (chat_lists_cap, 23514). */
 export type ListClash = 'taken' | 'limit';
@@ -26,7 +26,7 @@ function check(error: PostgrestError | null): void {
 }
 
 function clashOf(error: PostgrestError | null): ListClash | null {
-  if (error?.code === '23505') return 'taken';
+  if (isUniqueViolation(error)) return 'taken';
   if (error?.code === '23514' && error.message.includes('at most 30 lists')) return 'limit';
   return null;
 }

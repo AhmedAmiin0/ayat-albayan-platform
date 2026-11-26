@@ -4,11 +4,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { SortSpec } from '@/common/db/list-sort';
 import { readPage } from '@/common/db/page';
-import { maybe, one, pgError } from '@/common/db/errors';
+import { isUniqueViolation, maybe, one, pgError } from '@/common/db/errors';
 import { MANAGED_KIND, type ShortLinkRow } from '@/modules/platform/short-links';
 
 /** Postgres unique_violation: the code already exists (the caller draws another). */
-const UNIQUE = '23505';
 
 const NEWEST_FIRST: SortSpec<never> = {
   columns: {},
@@ -42,7 +41,7 @@ export class ManagedLinksRepo {
   /** The new row; null when the code is taken (astronomically rare). */
   async insert(row: TablesInsert<'short_links'>): Promise<ShortLinkRow | null> {
     const { data, error } = await this.db.from('short_links').insert(row).select('*').maybeSingle();
-    if (error?.code === UNIQUE) return null;
+    if (isUniqueViolation(error)) return null;
     if (error) throw pgError(error);
     return data;
   }

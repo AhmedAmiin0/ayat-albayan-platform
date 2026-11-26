@@ -1,7 +1,7 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { maybe, pgError } from '@/common/db/errors';
+import { isUniqueViolation, maybe, pgError } from '@/common/db/errors';
 
 export type ShortLinkRow = Tables<'short_links'>;
 interface Key {
@@ -14,7 +14,6 @@ interface Target {
 }
 
 /** Postgres unique_violation: another writer made the row first. */
-const UNIQUE = '23505';
 
 /**
  * public.short_links (migration 20261105000300): service role only, RLS on with no client policy.
@@ -49,7 +48,7 @@ export class ShortLinksRepo {
    */
   async insert(row: Key & Target & { code: string }): Promise<ShortLinkRow | null> {
     const { data, error } = await this.db.from('short_links').insert(row).select('*').maybeSingle();
-    if (error?.code === UNIQUE) return null;
+    if (isUniqueViolation(error)) return null;
     if (error) throw pgError(error);
     return data;
   }

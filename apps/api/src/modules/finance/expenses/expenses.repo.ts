@@ -3,7 +3,7 @@ import type { ExpenseCategoryView, ExpenseView } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { MAX_ROWS } from '@/common/db/read-all';
-import { done, maybe, one, pgError, rows } from '@/common/db/errors';
+import { done, isUniqueViolation, maybe, one, pgError, rows } from '@/common/db/errors';
 
 export type ExpenseRow = Tables<'expenses'>;
 
@@ -79,7 +79,7 @@ export class ExpensesRepo {
       .insert(row)
       .select('key, label_ar, label_en, active')
       .single();
-    if (error?.code === '23505') return null;
+    if (isUniqueViolation(error)) return null;
     if (error) throw pgError(error);
     return data;
   }

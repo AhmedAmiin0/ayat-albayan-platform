@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readPage, toPage } from '@/common/db/page';
 import { ilikeContains } from '@/common/db/or-filter';
-import { done, maybe, pgError, rows } from '@/common/db/errors';
+import { done, maybe, pgError, rows, uniqueViolationMentions } from '@/common/db/errors';
 import { readChunked, readChunkedAll } from '@/common/db/read-all';
 import { listSelect, SELECT, SUB_SORT, type SubListQuery } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
 import type { Page } from '@ab/core';
@@ -84,7 +84,7 @@ export class SubscriptionsRepo {
   /** null: a package with this client_request_id already exists (a retry raced it). */
   async insert(row: TablesInsert<'subscriptions'>): Promise<SubRow | null> {
     const { data, error } = await this.db.from('subscriptions').insert(row).select(SELECT).single();
-    if (error?.code === '23505' && error.message.includes('client_request_id')) return null;
+    if (uniqueViolationMentions(error, 'client_request_id')) return null;
     if (error) throw pgError(error);
     return data;
   }

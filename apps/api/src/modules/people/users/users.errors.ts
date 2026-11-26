@@ -1,9 +1,9 @@
 import { conflict } from '@/common/http/errors';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { pgError, type PgErrorMap } from '@/common/db/errors';
+import { pgError, type PgErrorMap, UNIQUE_VIOLATION } from '@/common/db/errors';
 
 /** A unique violation on a phone is the admin's mistake (409 phone_taken), not a server error. */
-const PHONE_ERRORS: PgErrorMap = { codes: { '23505': () => conflict('phone_taken') } };
+const PHONE_ERRORS: PgErrorMap = { codes: { [UNIQUE_VIOLATION]: () => conflict('phone_taken') } };
 
 /**
  * A profiles write that can take the last system admin away: when the API's own check lost a race,

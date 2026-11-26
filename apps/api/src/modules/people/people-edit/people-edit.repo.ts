@@ -3,7 +3,7 @@ import { type HttpException, Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict, notFound } from '@/common/http/errors';
-import { maybe, one, pgError, rows } from '@/common/db/errors';
+import { maybe, one, pgError, rows, UNIQUE_VIOLATION } from '@/common/db/errors';
 
 export type StudentRow = Tables<'students'>;
 export type GuardianRow = Tables<'guardians'>;
@@ -19,7 +19,7 @@ const VIEW = [
 
 /** The refusals of set_student_phone, by SQLSTATE (23505) or P0001 message. */
 const PHONE_ERRORS: Record<string, (() => HttpException) | undefined> = {
-  '23505': () => conflict('phone_taken'),
+  [UNIQUE_VIOLATION]: () => conflict('phone_taken'),
   teacher_number: () => conflict('teacher_number'),
   student_not_found: () => notFound('student_not_found'),
 };

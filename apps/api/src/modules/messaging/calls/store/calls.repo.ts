@@ -2,15 +2,12 @@ import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { CallMove, CallRow, CallSdp, NewCall } from './call-row';
-import { pgError } from '@/common/db/errors';
+import { isUniqueViolation, pgError } from '@/common/db/errors';
 import type { PostgrestError } from '@supabase/supabase-js';
 
 function check(error: PostgrestError | null): asserts error is null {
   if (error) throw pgError(error);
 }
-
-/** Postgres unique_violation: a repeated request id, or a wacid the webhook already stored. */
-const isDuplicate = (error: { code?: string } | null): boolean => error?.code === '23505';
 
 const SELECT = '*, sdp:wa_call_sdp(offer_sdp, answer_sdp)' as const;
 type Joined = Tables<'wa_calls'> & { sdp: CallSdp | CallSdp[] | null };
@@ -31,7 +28,8 @@ export class CallsRepo {
   async insert(input: NewCall): Promise<CallRow | null> {
     const { offer_sdp, ...row } = input;
     const { data, error } = await this.db.from('wa_calls').insert(row).select('id').single();
-    if (isDuplicate(error)) return null;
+    // A repeated request id, or a wacid the webhook already stored.
+    if (isUniqueViolation(error)) return null;
     check(error);
     const sdp = await this.db.from('wa_call_sdp').insert({ call_id: data.id, offer_sdp: offer_sdp ?? null });
     check(sdp.error);

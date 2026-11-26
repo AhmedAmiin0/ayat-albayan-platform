@@ -7,7 +7,7 @@ import { readPage, toPage } from '@/common/db/page';
 import type { StudentRef } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 import { readAll } from '@/common/db/read-all';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
-import { done, maybe, pgError } from '@/common/db/errors';
+import { done, maybe, pgError, uniqueViolationMentions } from '@/common/db/errors';
 import { filtered, PAYMENT_SORT, type PaymentFilter } from './payments.list-query';
 import type { Page } from '@ab/core';
 import type { PeriodTotal } from '@ab/money';
@@ -71,7 +71,7 @@ export class PaymentsRepo {
   /** null: a payment with this client_request_id is already recorded (a retry raced it). */
   async insert(row: TablesInsert<'payments'>): Promise<PaymentRow | null> {
     const { data, error } = await this.db.from('payments').insert(row).select(SELECT).single();
-    if (error?.code === '23505' && error.message.includes('client_request_id')) return null;
+    if (uniqueViolationMentions(error, 'client_request_id')) return null;
     if (error) throw pgError(error);
     return data;
   }

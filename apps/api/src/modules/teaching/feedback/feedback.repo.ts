@@ -2,7 +2,7 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import type { Attendance, FeedbackKind, LessonStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { maybe, pgError } from '@/common/db/errors';
+import { isUniqueViolation, maybe, pgError } from '@/common/db/errors';
 
 export type FeedbackRow = Tables<'lesson_feedback'>;
 
@@ -77,7 +77,7 @@ export class FeedbackRepo {
   async issue(row: TablesInsert<'lesson_feedback'>): Promise<FeedbackRow | null> {
     const created = await this.db.from('lesson_feedback').insert(row).select('*').single();
     if (!created.error) return created.data;
-    if (created.error.code !== '23505') throw pgError(created.error);
+    if (!isUniqueViolation(created.error)) throw pgError(created.error);
     const { lesson_id, student_id, ...link } = row;
     const data = maybe(await this.db
       .from('lesson_feedback')

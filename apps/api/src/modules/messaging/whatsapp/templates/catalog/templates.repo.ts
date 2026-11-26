@@ -10,7 +10,7 @@ import { templateRow, templateRows, type TemplateRow } from '@/modules/messaging
 import { sendableCache } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
 import { relaneQueued, type RelaneInput } from '@/modules/messaging/whatsapp/sender/drain';
 import type { ApprovalRow, ApprovalWrite, NumberRef } from './types';
-import { pgError } from '@/common/db/errors';
+import { isUniqueViolation, pgError } from '@/common/db/errors';
 
 const TEMPLATE_COPY_MS = 60_000; // cached() trusts its copy this long (another copy may write)
 type MaybeRow = TemplateRow | null; // a row, or null when none matched
@@ -99,7 +99,7 @@ export class TemplatesRepo {
   async create(row: ImportRow): Promise<MaybeRow> {
     const { data, error } = await this.db.from('message_templates').insert(row).select('*').maybeSingle();
     this.forget();
-    if (error?.code === '23505') return null;
+    if (isUniqueViolation(error)) return null;
     if (error) throw pgError(error);
     return templateRow(data);
   }

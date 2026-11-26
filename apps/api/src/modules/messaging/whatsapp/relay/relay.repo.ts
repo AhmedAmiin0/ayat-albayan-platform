@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { CLAIM_LEASE_MS, SENDING, UNCERTAIN } from '@/modules/messaging/whatsapp/sender/send-plan';
-import { pgError } from '@/common/db/errors';
+import { isUniqueViolation, pgError } from '@/common/db/errors';
 
 // The relay's messages rows (docs/19 «script relay»). Written claimed (error_code SENDING, a
 // lease) so the outbox worker never sends it itself; no lead, guardian or staff is linked
@@ -21,7 +21,6 @@ export interface RelayIds {
   waMessageId: string | null;
 }
 
-const UNIQUE_VIOLATION = '23505';
 
 @Injectable()
 export class RelayRepo {
@@ -46,7 +45,7 @@ export class RelayRepo {
       })
       .select('id')
       .single();
-    if (error?.code === UNIQUE_VIOLATION) return null;
+    if (isUniqueViolation(error)) return null;
     if (error) throw pgError(error);
     return { id: data.id, waMessageId: null };
   }
