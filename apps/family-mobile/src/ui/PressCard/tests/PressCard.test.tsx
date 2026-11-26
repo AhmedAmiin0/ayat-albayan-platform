@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo, Animated } from 'react-native';
 import { AppText } from '@ab/mobile-kit';
-import { PressCard } from './PressCard';
+import { PressCard } from '@/ui/PressCard';
 
 // The press: a critically damped spring to 98 % and back on the native driver, interruptible (each
 // touch starts a new spring from where the card is); Reduce Motion: the wash alone, no scale.

@@ -1,18 +1,6 @@
 import { View } from 'react-native';
 import { AppText, type, useTheme } from '@ab/mobile-kit';
-
-/** A small line under a row's title: quiet (ink-3) or the recording's link colour. */
-export interface RowNote {
-  text: string;
-  tone: 'quiet' | 'link';
-}
-
-interface RowTextProps {
-  title: string;
-  /** The line under it (time, teacher). */
-  line?: string | null;
-  notes?: readonly RowNote[];
-}
+import type { RowNote, RowTextProps } from './RowText.types';
 
 /** A row's words at the inline-start: its title, one line, then short notes. */
 export function RowText({ title, line, notes = [] }: RowTextProps) {
