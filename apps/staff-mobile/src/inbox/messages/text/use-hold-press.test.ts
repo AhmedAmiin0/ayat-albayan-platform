@@ -7,7 +7,9 @@ afterEach(() => jest.useRealTimers());
 const setup = async (withHold = true) => {
   const onPress = jest.fn();
   const onHold = jest.fn();
-  const { result } = await renderHook(() => useHoldPress({ onPress, onHold: withHold ? onHold : undefined }));
+  const { result } = await renderHook(() =>
+    useHoldPress({ onPress, onHold: withHold ? onHold : undefined }),
+  );
   return { onPress, onHold, press: () => result.current };
 };
 

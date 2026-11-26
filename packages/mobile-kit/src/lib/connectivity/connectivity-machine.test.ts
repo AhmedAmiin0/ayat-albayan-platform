@@ -16,7 +16,9 @@ test('any answer → online; failed probes count up only while connecting', () =
 });
 
 test('probe backoff: 1 s, 2 s, 4 s … capped at 30 s', () => {
-  expect([0, 1, 2, 3, 4, 5, 6, 10].map(backoffMs)).toEqual([1000, 2000, 4000, 8000, 16000, 30000, 30000, 30000]);
+  expect([0, 1, 2, 3, 4, 5, 6, 10].map(backoffMs)).toEqual([
+    1000, 2000, 4000, 8000, 16000, 30000, 30000, 30000,
+  ]);
 });
 
 test('back in the foreground: probe at once while connecting, online only after more than 30 s away', () => {

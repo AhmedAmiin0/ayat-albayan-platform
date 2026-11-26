@@ -17,7 +17,9 @@ export function StudentFacts({ student }: { student: StudentProfile }) {
           {fact.ltr ? (
             <Ltr style={[value, { alignSelf: 'flex-start' }]}>{fact.value}</Ltr>
           ) : (
-            <AppText style={[value, { lineHeight: type.lineHeight(type.size.body) }]}>{fact.value}</AppText>
+            <AppText style={[value, { lineHeight: type.lineHeight(type.size.body) }]}>
+              {fact.value}
+            </AppText>
           )}
         </View>
       ))}

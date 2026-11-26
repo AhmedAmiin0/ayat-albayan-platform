@@ -22,13 +22,24 @@ const on = lessonStatusText(true);
 test('the totals in the owner\'s order; both cancellations count as «ألغيت»', () => {
   const totals = { ...logTable().totals, cancelled_by_admin: 2, rescheduled: 1 };
   expect(totalsItems(totals).map((i) => [i.label, i.n])).toEqual([
-    [w.totals.held, 2], [w.totals.absent, 0], [w.totals.excused, 0], [w.totals.late, 1], [w.totals.cancelled, 3], [w.totals.rescheduled, 1],
+    [w.totals.held, 2],
+    [w.totals.absent, 0],
+    [w.totals.excused, 0],
+    [w.totals.late, 1],
+    [w.totals.cancelled, 3],
+    [w.totals.rescheduled, 1],
   ]);
 });
 
-test('the chip: the student\'s day as «الحضور» says it; a cancelled or moved lesson by its status', () => {
-  expect(rowChip(logRow(), on)).toEqual({ ...ATTENDANCE_STYLE.present, label: t.sales.student.kind.present });
-  expect(rowChip(logRow({ kind: 'absent' }), on)).toEqual({ ...ATTENDANCE_STYLE.absent, label: t.sales.student.kind.absent });
+test("the chip: the student's day as «الحضور» says it; a cancelled or moved lesson by its status", () => {
+  expect(rowChip(logRow(), on)).toEqual({
+    ...ATTENDANCE_STYLE.present,
+    label: t.sales.student.kind.present,
+  });
+  expect(rowChip(logRow({ kind: 'absent' }), on)).toEqual({
+    ...ATTENDANCE_STYLE.absent,
+    label: t.sales.student.kind.absent,
+  });
   expect(rowChip(logRow({ kind: 'cancelled', status: 'cancelled_by_admin' }), on)).toEqual({
     ...lessonStatusStyle.cancelled_by_admin, label: t.enums.lessonStatus.cancelled_by_admin,
   });

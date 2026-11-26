@@ -42,7 +42,8 @@ async function render({ messages, thread: fields = {}, teacher = false }: Setup)
 }
 
 const words = () => [CHAT, NOTIFICATIONS].flatMap((w) => screen.queryAllByText(w));
-const anyReplyFrom = () => [CHAT, NOTIFICATIONS].flatMap((w) => screen.queryAllByText(replyFrom(w)));
+const anyReplyFrom = () =>
+  [CHAT, NOTIFICATIONS].flatMap((w) => screen.queryAllByText(replyFrom(w)));
 
 beforeEach(() => {
   fakeNow(NOW);
@@ -69,7 +70,10 @@ test.each(['chat', 'notifications'] as const)('open window, reply line %s: no «
 });
 
 test('no note when there is no reply line (a single line)', async () => {
-  await render({ messages: [inbound], thread: { ...openWindow, last_inbound_line: null, reply_line: null } });
+  await render({
+    messages: [inbound],
+    thread: { ...openWindow, last_inbound_line: null, reply_line: null },
+  });
   expect(anyReplyFrom()).toHaveLength(0);
 });
 

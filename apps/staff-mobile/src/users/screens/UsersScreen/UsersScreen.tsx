@@ -46,7 +46,11 @@ export function UsersScreen({ can }: { can: Can }) {
           ) : undefined
         }
       />
-      <SearchField compact label={t.users.searchPlaceholder} onSearch={(q) => setView((v) => ({ ...v, q }))} />
+      <SearchField
+        compact
+        label={t.users.searchPlaceholder}
+        onSearch={(q) => setView((v) => ({ ...v, q }))}
+      />
       <UsersFilters view={view} onChange={setView} />
       <LazyList
         paged={list}
@@ -61,7 +65,11 @@ export function UsersScreen({ can }: { can: Can }) {
           ) : list.isError ? (
             <ErrorState onRetry={list.refresh} />
           ) : (
-            <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+            <ActivityIndicator
+              accessibilityLabel={t.common.loading}
+              color={color.lapis}
+              style={{ paddingVertical: 32 }}
+            />
           )
         }
       />

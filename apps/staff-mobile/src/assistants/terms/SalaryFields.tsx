@@ -24,8 +24,18 @@ export function SalaryFields({ form, errors, set, min }: TermsFieldsProps) {
         <Field label={T.salaryAmount} ltr keyboardType="decimal-pad" value={form.salaryAmount} onChangeText={(salaryAmount) => set({ salaryAmount })} />
         {amountError ? <ErrorLine message={amountError} /> : null}
       </View>
-      <CurrencyPills label={T.salaryCurrency} value={form.salaryCurrency} onChange={(salaryCurrency) => set({ salaryCurrency })} />
-      <StartDayPicker label={T.salaryStartsOn} day={form.salaryStartsOn} min={min} onChange={(salaryStartsOn) => set({ salaryStartsOn })} error={fieldError(errors.salaryStartsOn)} />
+      <CurrencyPills
+        label={T.salaryCurrency}
+        value={form.salaryCurrency}
+        onChange={(salaryCurrency) => set({ salaryCurrency })}
+      />
+      <StartDayPicker
+        label={T.salaryStartsOn}
+        day={form.salaryStartsOn}
+        min={min}
+        onChange={(salaryStartsOn) => set({ salaryStartsOn })}
+        error={fieldError(errors.salaryStartsOn)}
+      />
     </Section>
   );
 }

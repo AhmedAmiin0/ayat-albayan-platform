@@ -31,7 +31,9 @@ jest.mock('expo-router', () => ({
 }));
 
 async function open() {
-  const th = detail([inbound], { thread: { ...thread, last_inbound_at: new Date(Date.now() - 5 * 60_000).toISOString() } });
+  const th = detail([inbound], {
+    thread: { ...thread, last_inbound_at: new Date(Date.now() - 5 * 60_000).toISOString() },
+  });
   mockApiFetch.mockImplementation(async (p: string) =>
     p === '/saved-replies' ? [...REPLIES, DEPOSIT] : p === '/me/profile' ? { full_name: 'سارة' } : p === '/messages/gate' ? { open: true, reason: null, queued: 0 } : th,
   );

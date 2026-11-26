@@ -3,7 +3,9 @@ import { I18nManager, StyleSheet } from 'react-native';
 import { Chevron } from './Chevron';
 
 const scaleOf = (id: string) => {
-  const style = StyleSheet.flatten(screen.getByTestId(id, { includeHiddenElements: true }).props.style);
+  const style = StyleSheet.flatten(
+    screen.getByTestId(id, { includeHiddenElements: true }).props.style,
+  );
   return (style.transform as { scaleX: number }[])[0]?.scaleX;
 };
 

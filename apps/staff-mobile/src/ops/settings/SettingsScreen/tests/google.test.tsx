@@ -22,8 +22,12 @@ test('«مزامنة Google» with settings.read shows the read-only card, uncha
   mockApiFetch.mockImplementation(answer(['settings.read']));
   await renderWithQuery(<GoogleSyncScreen />, createTestQueryClient({ meFromApi: true }));
   // The card waits for /auth/me, then its status: give a loaded runner time.
-  expect(await screen.findByText(t.googleSync.connection.status.connected, {}, { timeout: 5000 })).toBeTruthy();
-  expect(screen.getAllByRole('header', { name: t.googleSync.mobile.title }).length).toBeGreaterThan(0);
+  expect(
+    await screen.findByText(t.googleSync.connection.status.connected, {}, { timeout: 5000 }),
+  ).toBeTruthy();
+  expect(screen.getAllByRole('header', { name: t.googleSync.mobile.title }).length).toBeGreaterThan(
+    0,
+  );
 });
 
 test('without settings.read: no card and no Google request', async () => {

@@ -28,12 +28,23 @@ export function ReplyRow({ reply, onPress, trailing }: ReplyRowProps) {
         style={({ pressed }) => ({ flex: 1, minHeight: 44, justifyContent: 'center', paddingVertical: 6, opacity: pressed ? 0.7 : 1 })}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-          <AppText numberOfLines={1} style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.base, color: color.ink }}>
+          <AppText
+            numberOfLines={1}
+            style={{
+              flexShrink: 1,
+              fontFamily: type.ui[600],
+              fontSize: type.size.base,
+              color: color.ink,
+            }}
+          >
             {reply.title}
           </AppText>
           {file ? <AttachIcon color={color.ink3} size={16} /> : null}
         </View>
-        <AppText numberOfLines={1} style={{ fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink2 }}>
+        <AppText
+          numberOfLines={1}
+          style={{ fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink2 }}
+        >
           {reply.body.replace(/\s+/g, ' ')}
         </AppText>
       </Pressable>

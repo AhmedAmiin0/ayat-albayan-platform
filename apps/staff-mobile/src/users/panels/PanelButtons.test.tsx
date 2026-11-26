@@ -13,7 +13,10 @@ test('docs/07 «الأزرار»: the verb filled first, «إلغاء» outlined
   expect(holds('احذف')).toEqual([true, false]);
   expect(holds(t.common.cancel)).toEqual([false, true]);
   expect(styleOf('احذف')).toMatchObject({ backgroundColor: palette.light.lapisFill });
-  expect(styleOf(t.common.cancel)).toMatchObject({ borderWidth: 1, borderColor: palette.light.ruleInput });
+  expect(styleOf(t.common.cancel)).toMatchObject({
+    borderWidth: 1,
+    borderColor: palette.light.ruleInput,
+  });
   await fireEvent.press(screen.getByRole('button', { name: t.common.cancel }));
   expect(onCancel).toHaveBeenCalledTimes(1);
 });

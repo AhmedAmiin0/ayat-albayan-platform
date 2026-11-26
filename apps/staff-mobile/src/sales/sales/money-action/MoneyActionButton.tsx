@@ -10,8 +10,16 @@ interface MoneyActionButtonProps {
   variant?: ButtonVariant;
 }
 
-export function MoneyActionButton({ student, subscriptionId, variant = 'primary' }: MoneyActionButtonProps) {
-  const action = useMoneyAction({ studentId: student.id, ...(student.phone === undefined ? {} : { phone: student.phone }), ...(subscriptionId ? { subscriptionId } : {}) });
+export function MoneyActionButton({
+  student,
+  subscriptionId,
+  variant = 'primary',
+}: MoneyActionButtonProps) {
+  const action = useMoneyAction({
+    studentId: student.id,
+    ...(student.phone === undefined ? {} : { phone: student.phone }),
+    ...(subscriptionId ? { subscriptionId } : {}),
+  });
   if (!action) return null;
   const m = t.sales.money;
   const transfer = action.kind === 'transfer';

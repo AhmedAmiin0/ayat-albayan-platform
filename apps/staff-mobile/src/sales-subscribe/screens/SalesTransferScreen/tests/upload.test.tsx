@@ -29,7 +29,9 @@ const other = openSub({ id: 'sub-2', student: { id: KID2, code: 'AB-0202', name:
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockResolvedValue(familyOf(kid({ open: [openSub()] }), kid({ id: KID2, open: [other] })));
+  mockApiFetch.mockResolvedValue(
+    familyOf(kid({ open: [openSub()] }), kid({ id: KID2, open: [other] })),
+  );
   mockUpload.mockResolvedValue({ data: { path: signed.path }, error: null });
   jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValue({
     canceled: false,

@@ -21,7 +21,14 @@ interface StatementActionBarProps {
 }
 
 /** The web's actions for the state and permission; approve and reopen ask once, un-pay asks why, pay opens the form. */
-export function StatementActionBar({ statement: s, can, linesOpen, onLines, onPay, onNotice }: StatementActionBarProps) {
+export function StatementActionBar({
+  statement: s,
+  can,
+  linesOpen,
+  onLines,
+  onPay,
+  onNotice,
+}: StatementActionBarProps) {
   const [asking, setAsking] = useState<Move | null>(null);
   const move = useStatementMove();
   const S = t.assistants.statements;

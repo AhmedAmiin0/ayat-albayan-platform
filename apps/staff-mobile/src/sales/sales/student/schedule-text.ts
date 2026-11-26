@@ -36,7 +36,9 @@ export const weeklyLine = (slot: Pick<SalesWeeklySlot, 'next'>, viewer: ViewerCl
 export function studentLine(slot: Pick<SalesWeeklySlot, 'next'>, tz: string, viewer: ViewerClock): string | null {
   const days = daysAt(slot.next, tz, viewer.cycle);
   if (days === weeklyLine(slot, viewer)) return null;
-  return fill(s.studentTime, { days: fill(t.schedule.inCity, { time: days, city: cities[tz] ?? ltr(tz) }) });
+  return fill(s.studentTime, {
+    days: fill(t.schedule.inCity, { time: days, city: cities[tz] ?? ltr(tz) }),
+  });
 }
 
 export function slotLines(
@@ -50,7 +52,9 @@ export function slotLines(
 }
 
 export function slotMeta(slot: Pick<SalesWeeklySlot, 'teacher' | 'duration_min'>): string {
-  const name = slot.teacher ? localizedName({ ar: slot.teacher.display_name_ar, en: slot.teacher.display_name_en }, locale) : null;
+  const name = slot.teacher
+    ? localizedName({ ar: slot.teacher.display_name_ar, en: slot.teacher.display_name_en }, locale)
+    : null;
   const teacher = name ? fill(t.today.withTeacher, { teacher: name }) : null;
   return [teacher, durations[String(slot.duration_min)]].filter(Boolean).join(' · ');
 }

@@ -7,7 +7,13 @@ const TABS = (): { value: SavedReplyScope; label: string }[] => [
   { value: 'mine', label: t.savedReplies.tabMine },
 ];
 
-export function ScopeTabs({ value, onChange }: { value: SavedReplyScope; onChange: (next: SavedReplyScope) => void }) {
+export function ScopeTabs({
+  value,
+  onChange,
+}: {
+  value: SavedReplyScope;
+  onChange: (next: SavedReplyScope) => void;
+}) {
   const { color } = useTheme();
   return (
     <View
@@ -30,7 +36,14 @@ export function ScopeTabs({ value, onChange }: { value: SavedReplyScope; onChang
               borderWidth: on ? 1 : 0, borderColor: color.rule,
             }}
           >
-            <AppText style={{ fontFamily: type.ui[on ? 600 : 500], fontSize: type.size.sm, lineHeight: 22, color: on ? color.ink : color.ink2 }}>
+            <AppText
+              style={{
+                fontFamily: type.ui[on ? 600 : 500],
+                fontSize: type.size.sm,
+                lineHeight: 22,
+                color: on ? color.ink : color.ink2,
+              }}
+            >
               {tab.label}
             </AppText>
           </Pressable>

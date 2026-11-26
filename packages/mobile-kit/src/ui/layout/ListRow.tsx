@@ -37,7 +37,18 @@ interface ListRowProps {
  * the group draws the fill and the rules between rows; alone it keeps its own fill and hairline below.
  */
 export function ListRow(props: ListRowProps) {
-  const { leading, title, subtitle, subtitleLeading, subtitleLabel, meta, metaStrong, tags, trailing, onPress } = props;
+  const {
+    leading,
+    title,
+    subtitle,
+    subtitleLeading,
+    subtitleLabel,
+    meta,
+    metaStrong,
+    tags,
+    trailing,
+    onPress,
+  } = props;
   const { titleLink } = props;
   const { color } = useTheme();
   const inset = useInset();
@@ -48,7 +59,9 @@ export function ListRow(props: ListRowProps) {
     gap: 12,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    ...(inset ? null : { borderBottomWidth: 1, borderBottomColor: color.rule, backgroundColor: color.raised }),
+    ...(inset
+      ? null
+      : { borderBottomWidth: 1, borderBottomColor: color.rule, backgroundColor: color.raised }),
   };
   const body = (
     <>
@@ -97,7 +110,10 @@ export function ListRow(props: ListRowProps) {
       accessibilityRole="button"
       accessibilityHint={props.accessibilityHint}
       onPress={onPress}
-      style={({ pressed }) => [row, pressed ? { backgroundColor: color.sunk, opacity: 0.85 } : null]}
+      style={({ pressed }) => [
+        row,
+        pressed ? { backgroundColor: color.sunk, opacity: 0.85 } : null,
+      ]}
     >
       {body}
     </Pressable>

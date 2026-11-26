@@ -39,7 +39,9 @@ export function ChatReceiptRow({ studentId, bind, item, busy, onPick }: ChatRece
     >
       <ChatReceiptThumb studentId={studentId} item={item} {...(bind ? { bind } : {})} />
       <View style={{ flex: 1, gap: 2 }}>
-        <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}>{name}</AppText>
+        <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}>
+          {name}
+        </AppText>
         {item.expired ? (
           <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink3 }}>
             {t.salesMoney.receiptExpired}

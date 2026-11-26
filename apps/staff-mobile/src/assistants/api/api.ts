@@ -38,7 +38,11 @@ export const useAssistants = () =>
     queryKey: [...ASSISTANTS_KEY, 'assistants'],
     queryFn: async (): Promise<AssistantRow[]> => {
       const rows = await apiFetch<AssistantTermsRow[]>('/assistant-pay/terms');
-      return (Array.isArray(rows) ? rows : []).map(({ name, ...terms }) => ({ id: terms.assistant_id, name, terms }));
+      return (Array.isArray(rows) ? rows : []).map(({ name, ...terms }) => ({
+        id: terms.assistant_id,
+        name,
+        terms,
+      }));
     },
   });
 

@@ -13,7 +13,11 @@ interface SalesConfirmLessonProps {
 }
 
 /** One tap from scheduled to confirmed, with no message to the family or the teacher. */
-export function SalesConfirmLesson({ lessonId, onConfirmed, secondary = false }: SalesConfirmLessonProps) {
+export function SalesConfirmLesson({
+  lessonId,
+  onConfirmed,
+  secondary = false,
+}: SalesConfirmLessonProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const confirm = useSalesConfirm(lessonId);

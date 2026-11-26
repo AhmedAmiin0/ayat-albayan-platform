@@ -5,7 +5,17 @@ import { QuoteButton } from '@/inbox/composer/quote/QuoteButton';
 import { SavedRepliesButton } from '@/inbox/saved-replies/components/SavedRepliesButton';
 
 /** The note sits on its own line so it never squeezes beside the button. */
-export function ClosedRow({ known, staff, onTemplate, onQuote }: { known: boolean; staff: boolean; onTemplate: () => void; onQuote?: (() => void) | undefined }) {
+export function ClosedRow({
+  known,
+  staff,
+  onTemplate,
+  onQuote,
+}: {
+  known: boolean;
+  staff: boolean;
+  onTemplate: () => void;
+  onQuote?: (() => void) | undefined;
+}) {
   return (
     <View style={{ gap: 6 }}>
       {known ? null : <ClosedNote known={false} />}

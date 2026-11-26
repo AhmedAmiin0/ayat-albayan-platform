@@ -14,7 +14,10 @@ const GATE_PATH = '/messages/gate';
  * by side. Quiet while loading or when the read fails (the switches still show).
  */
 function GateLine() {
-  const gate = useQuery({ queryKey: pathKey(GATE_PATH), queryFn: () => apiFetch<SendGateView>(GATE_PATH) });
+  const gate = useQuery({
+    queryKey: pathKey(GATE_PATH),
+    queryFn: () => apiFetch<SendGateView>(GATE_PATH),
+  });
   if (!gate.data) return null;
   return (
     <View testID="gate-state" style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
@@ -41,5 +44,9 @@ export function SendState() {
       </View>
     );
   }
-  return query.isError ? <ErrorState onRetry={() => void query.refetch()} /> : <Note>{t.common.loading}</Note>;
+  return query.isError ? (
+    <ErrorState onRetry={() => void query.refetch()} />
+  ) : (
+    <Note>{t.common.loading}</Note>
+  );
 }

@@ -33,14 +33,24 @@ function Group({ label, children }: { label: string; children: ReactNode }) {
   const { color } = useTheme();
   return (
     <View style={{ gap: 4 }}>
-      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}>{label}</AppText>
+      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}>
+        {label}
+      </AppText>
       {children}
     </View>
   );
 }
 
 /** Mirrors the web LeadFilterFields; bulk assignment needs leads.assign. */
-export function LeadFilterSheet({ visible, filters, people, assign, total, onChange, onClose }: LeadFilterSheetProps) {
+export function LeadFilterSheet({
+  visible,
+  filters,
+  people,
+  assign,
+  total,
+  onChange,
+  onClose,
+}: LeadFilterSheetProps) {
   const sources: FilterPill<string>[] = [
     { value: '', label: t.leads.sourceAll },
     ...LEAD_SOURCES.map((s) => ({ value: s, label: t.enums.leadSource[s] })),
@@ -67,7 +77,9 @@ export function LeadFilterSheet({ visible, filters, people, assign, total, onCha
               accessibilityLabel={t.leads.source}
               items={sources}
               value={filters.source ?? ''}
-              onChange={(v) => onChange({ ...filters, source: LEAD_SOURCES.find((s): s is LeadSource => s === v) })}
+              onChange={(v) =>
+                onChange({ ...filters, source: LEAD_SOURCES.find((s): s is LeadSource => s === v) })
+              }
             />
           </Group>
           <Group label={t.sales.assign.label}>

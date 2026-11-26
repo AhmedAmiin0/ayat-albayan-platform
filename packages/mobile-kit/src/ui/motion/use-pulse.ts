@@ -20,8 +20,11 @@ export function usePulse({ duration, lead = 0, trail = 0, still }: PulseOptions)
       return undefined;
     }
     const ease = Easing.inOut(Easing.sin);
-    const step = (toValue: number) => Animated.timing(value, { toValue, duration, easing: ease, useNativeDriver: true });
-    const loop = Animated.loop(Animated.sequence([Animated.delay(lead), step(1), step(0), Animated.delay(trail)]));
+    const step = (toValue: number) =>
+      Animated.timing(value, { toValue, duration, easing: ease, useNativeDriver: true });
+    const loop = Animated.loop(
+      Animated.sequence([Animated.delay(lead), step(1), step(0), Animated.delay(trail)]),
+    );
     loop.start();
     return () => loop.stop();
   }, [value, duration, lead, trail, still]);

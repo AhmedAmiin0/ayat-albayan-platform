@@ -40,12 +40,30 @@ export function CreateUserForm({ onClose, prefill }: CreateUserFormProps) {
     setErrors(found);
     if (Object.keys(found).length === 0) create.mutate(createBody(form));
   };
-  if (issued) return <CredentialResult title={t.users.result.createdTitle} credential={issued.credential} onClose={onClose} />;
+  if (issued)
+    return (
+      <CredentialResult
+        title={t.users.result.createdTitle}
+        credential={issued.credential}
+        onClose={onClose}
+      />
+    );
   return (
     <View style={{ gap: 16 }}>
-      <CreateUserFields form={form} onChange={setForm} errors={errors} options={options.data ?? []} lockedLink={prefill?.linked !== undefined} />
+      <CreateUserFields
+        form={form}
+        onChange={setForm}
+        errors={errors}
+        options={options.data ?? []}
+        lockedLink={prefill?.linked !== undefined}
+      />
       {create.error ? <ErrorLine message={userErrorText(create.error)} /> : null}
-      <PanelButtons confirmLabel={create.isPending ? C.submitting : C.submit} busy={create.isPending} onConfirm={submit} onCancel={onClose} />
+      <PanelButtons
+        confirmLabel={create.isPending ? C.submitting : C.submit}
+        busy={create.isPending}
+        onConfirm={submit}
+        onCancel={onClose}
+      />
     </View>
   );
 }

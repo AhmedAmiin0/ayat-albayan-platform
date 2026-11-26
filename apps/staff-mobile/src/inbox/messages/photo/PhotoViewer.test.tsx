@@ -23,7 +23,11 @@ const open = async () => {
   await screen.findByTestId('photo-image-p1');
 };
 
-beforeEach(() => mockApiFetch.mockReset().mockImplementation(async (path: string) => (path === PATH ? signed() : null)));
+beforeEach(() =>
+  mockApiFetch
+    .mockReset()
+    .mockImplementation(async (path: string) => (path === PATH ? signed() : null)),
+);
 
 test('a tap on the thumbnail opens the photo full screen, labelled with its kind and caption', async () => {
   await open();

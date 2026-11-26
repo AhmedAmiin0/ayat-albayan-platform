@@ -19,12 +19,14 @@ jest.mock('expo-router', () => ({
 }));
 
 const c = t.coursePause;
-const serve = (state: ReturnType<typeof pauseState>) => mockApiFetch.mockImplementation(async (path: string) => {
-  if (path === '/students/s1') return profile;
-  if (path === '/students/s1/course-pause') return state;
-  if (path.startsWith('/students/s1/course-pause/preview')) return { from_date: '2026-10-28', until_date: null, lessons: 0 };
-  throw new ApiError(404);
-});
+const serve = (state: ReturnType<typeof pauseState>) =>
+  mockApiFetch.mockImplementation(async (path: string) => {
+    if (path === '/students/s1') return profile;
+    if (path === '/students/s1/course-pause') return state;
+    if (path.startsWith('/students/s1/course-pause/preview'))
+      return { from_date: '2026-10-28', until_date: null, lessons: 0 };
+    throw new ApiError(404);
+  });
 
 beforeEach(() => {
   mockApiFetch.mockReset();

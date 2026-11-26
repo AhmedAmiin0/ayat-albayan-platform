@@ -19,10 +19,14 @@ export function useThreadCalls(phone: string): readonly CallView[] {
  * A call entry's «call back», as the header's phone icon allows it: calls on, inbox.send, a loaded chat
  * and never a teacher's own chat; undefined = the entry is plain text.
  */
-export function useCallBack(input: { phone: string; thread: ThreadView | null }): ((call: CallView) => void) | undefined {
+export function useCallBack(input: {
+  phone: string;
+  thread: ThreadView | null;
+}): ((call: CallView) => void) | undefined {
   const ui = useCalls();
   const mode = useThreadMode();
   const sends = useHolds('inbox.send');
-  if (!ui || ui.busy || !sends || input.thread === null || isOwnThread(mode, input.thread)) return undefined;
+  if (!ui || ui.busy || !sends || input.thread === null || isOwnThread(mode, input.thread))
+    return undefined;
   return (call) => ui.call({ phone: input.phone, name: callerName(call, mode.kind !== 'teacher') });
 }

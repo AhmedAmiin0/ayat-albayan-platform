@@ -2,8 +2,14 @@ import type { Permission } from '@ab/catalog';
 import { t } from '@ab/mobile-kit';
 import { salesTabItems } from './sales-tabs';
 
-const holds = (...keys: Permission[]) => (p: Permission) => keys.includes(p);
-const shown = (can: (p: Permission) => boolean) => salesTabItems(can).filter((tab) => !tab.hidden).map((tab) => tab.name);
+const holds =
+  (...keys: Permission[]) =>
+  (p: Permission) =>
+    keys.includes(p);
+const shown = (can: (p: Permission) => boolean) =>
+  salesTabItems(can)
+    .filter((tab) => !tab.hidden)
+    .map((tab) => tab.name);
 
 test('the full sales role: «اليوم» first (her landing), then chats, students, schedule, more', () => {
   const tabs = salesTabItems(holds('inbox.read', 'self.sales', 'self.sales_academy', 'self.sales_earnings'), '3');

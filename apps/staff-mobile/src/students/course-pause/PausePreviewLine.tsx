@@ -23,7 +23,12 @@ export function PausePreviewLine(props: { studentId: string; from: string; until
   const shown = linesOf(usePausePreview(props), tz);
   if (shown.length === 0) return null;
   const size = type.size.sm;
-  const style = { fontFamily: type.ui[600], fontSize: size, lineHeight: type.lineHeight(size), color: color.ink };
+  const style = {
+    fontFamily: type.ui[600],
+    fontSize: size,
+    lineHeight: type.lineHeight(size),
+    color: color.ink,
+  };
   return (
     <View style={{ gap: 4 }} accessibilityLiveRegion="polite">
       <SectionLabel>{t.courseCard.whatHappens}</SectionLabel>

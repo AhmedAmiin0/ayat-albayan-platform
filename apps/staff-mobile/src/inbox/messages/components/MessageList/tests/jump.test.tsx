@@ -28,9 +28,18 @@ const answer = message({
 });
 
 function stub(pages: MessageView[][], fetchNextPage: jest.Mock, hasNextPage = true) {
-  return { data: cachedThread(...pages.map((m) => detail(m))), hasNextPage, isFetchingNextPage: false, refetch: jest.fn(), fetchNextPage } as unknown as ThreadQuery;
+  return {
+    data: cachedThread(...pages.map((m) => detail(m))),
+    hasNextPage,
+    isFetchingNextPage: false,
+    refetch: jest.fn(),
+    fetchNextPage,
+  } as unknown as ThreadQuery;
 }
-const page = (pages: MessageView[][], hasNextPage: boolean) => ({ data: cachedThread(...pages.map((m) => detail(m))), hasNextPage });
+const page = (pages: MessageView[][], hasNextPage: boolean) => ({
+  data: cachedThread(...pages.map((m) => detail(m))),
+  hasNextPage,
+});
 const tree = (query: ThreadQuery) => (
   <ChatActionsProvider phone={PHONE} thread={thread}>
     <MessageList phone={PHONE} query={query} />
@@ -83,7 +92,9 @@ test('it gives up after JUMP_PAGES pages, and when a page fails', async () => {
 });
 
 test('a page that fails (fetchNextPage answers with the error) stops the search with the load error', async () => {
-  const fetchNextPage = jest.fn().mockResolvedValue({ ...page([[inbound, answer]], true), isFetchNextPageError: true });
+  const fetchNextPage = jest
+    .fn()
+    .mockResolvedValue({ ...page([[inbound, answer]], true), isFetchNextPageError: true });
   await renderWithQuery(tree(stub([[inbound, answer]], fetchNextPage)));
   await act(async () => undefined);
   await fireEvent.press(screen.getByTestId(`quote-${ORIGINAL.id}`));

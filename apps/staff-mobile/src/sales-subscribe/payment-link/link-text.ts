@@ -8,11 +8,17 @@ import { fill } from '@/sales/sales';
 const pl = t.paymentLinks;
 
 /** «{amount} {currency}» lines: the isolated amount, the currency's name. */
-const moneyValues = (amount: number, currency: string) => ({ amount: ltr(formatAmount(amount)), currency: currencyName(currency) });
+const moneyValues = (amount: number, currency: string) => ({
+  amount: ltr(formatAmount(amount)),
+  currency: currencyName(currency),
+});
 
-export const referenceLine = (amount: number, currency: string): string => fill(pl.referencePrice, moneyValues(amount, currency));
-export const minLine = (amount: number, currency: string): string => fill(pl.minAmount, moneyValues(amount, currency));
-export const agreedLine = (amount: number, currency: string): string => fill(pl.mobile.agreed, moneyValues(amount, currency));
+export const referenceLine = (amount: number, currency: string): string =>
+  fill(pl.referencePrice, moneyValues(amount, currency));
+export const minLine = (amount: number, currency: string): string =>
+  fill(pl.minAmount, moneyValues(amount, currency));
+export const agreedLine = (amount: number, currency: string): string =>
+  fill(pl.mobile.agreed, moneyValues(amount, currency));
 
 interface Reference {
   /** The calculator price (the quote's afterDiscount). */

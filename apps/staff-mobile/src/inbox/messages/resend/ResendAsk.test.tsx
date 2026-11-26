@@ -69,8 +69,16 @@ test('the sheet shows the exact Arabic text; «أرسل» sends it once through 
   // The second tap lands once the button says it is sending (the state change is async).
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.resend.sending }));
   expect(mockApiSend).toHaveBeenCalledTimes(1);
-  const [method, path, body] = mockApiSend.mock.calls[0] as [string, string, { text: string; clientRequestId: string }];
-  expect([method, path, body.text]).toEqual(['POST', `/threads/${encodeURIComponent(PHONE)}/text`, ar.inbox.resend.text]);
+  const [method, path, body] = mockApiSend.mock.calls[0] as [
+    string,
+    string,
+    { text: string; clientRequestId: string },
+  ];
+  expect([method, path, body.text]).toEqual([
+    'POST',
+    `/threads/${encodeURIComponent(PHONE)}/text`,
+    ar.inbox.resend.text,
+  ]);
   expect(body.clientRequestId).toEqual(expect.any(String));
   await act(async () => answer(message({ id: 'srv', status: 'queued', body: ar.inbox.resend.text })));
   await waitFor(() => expect(screen.queryByTestId('resend-sheet')).toBeNull());
@@ -85,7 +93,9 @@ test('a refused send stays on the sheet with the reason; asking again reuses the
   await fireEvent.press(screen.getAllByRole('button', { name: t.common.cancel }).at(-1) ?? screen.getByText('missing'));
   await fireEvent.press(ask() ?? screen.getByText('missing'));
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.resend.send }));
-  const ids = mockApiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
+  const ids = mockApiSend.mock.calls.map(
+    (c) => (c[2] as { clientRequestId: string }).clientRequestId,
+  );
   expect(ids).toHaveLength(2);
   expect(ids[0]).toBe(ids[1]);
 });

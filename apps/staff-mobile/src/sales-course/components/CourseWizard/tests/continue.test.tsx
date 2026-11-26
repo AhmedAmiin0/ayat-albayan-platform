@@ -30,7 +30,8 @@ const SUN_11 = '2026-10-11T14:00:00.000Z';
 const THU_15 = '2026-10-15T15:00:00.000Z';
 const previous = bookedCourse({ endsOn: '2026-10-10' });
 const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === path);
-const reads = (prefix: string) => mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith(prefix));
+const reads = (prefix: string) =>
+  mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith(prefix));
 
 beforeEach(() => {
   jest.clearAllMocks();

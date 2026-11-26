@@ -10,7 +10,13 @@ interface PanelButtonsProps {
 }
 
 /** One ButtonRow (docs/07 §6), the verb first; cancel only closes the step. */
-export function PanelButtons({ confirmLabel, onConfirm, onCancel, busy = false, disabled = false }: PanelButtonsProps) {
+export function PanelButtons({
+  confirmLabel,
+  onConfirm,
+  onCancel,
+  busy = false,
+  disabled = false,
+}: PanelButtonsProps) {
   return (
     <ButtonRow>
       <Button label={confirmLabel} onPress={onConfirm} busy={busy} disabled={disabled} />

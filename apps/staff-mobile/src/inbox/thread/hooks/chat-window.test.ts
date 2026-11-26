@@ -10,7 +10,11 @@ const newClient = () => new QueryClient({ defaultOptions: { queries: { gcTime: I
 
 function cached(lastInbound: string | null, tries = false) {
   const client = newClient();
-  const row = { ...thread, last_inbound_at: lastInbound, ...(tries ? { try_after_window: true } : {}) };
+  const row = {
+    ...thread,
+    last_inbound_at: lastInbound,
+    ...(tries ? { try_after_window: true } : {}),
+  };
   const page = { thread: row, messages: [], has_more: false, lessons: [] };
   client.setQueryData(threadKey(PHONE), { pages: [page], pageParams: [undefined] });
   return client;

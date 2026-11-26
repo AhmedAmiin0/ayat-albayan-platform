@@ -17,7 +17,13 @@ export interface DescriptionEditorProps {
 }
 
 /** docs/26b §2, §4: errors stay inside the sheet. */
-export function DescriptionEditor({ valueKey, initial, edited, onDone, onCancel }: DescriptionEditorProps) {
+export function DescriptionEditor({
+  valueKey,
+  initial,
+  edited,
+  onDone,
+  onCancel,
+}: DescriptionEditorProps) {
   const ed = useDescriptionEditor({ valueKey, initial, onDone });
   const d = t.mobileValues.description;
   return (

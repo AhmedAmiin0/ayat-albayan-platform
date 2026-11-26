@@ -13,7 +13,12 @@ interface TeacherFiltersBarProps {
 export function TeacherFiltersBar({ value, programs, onChange }: TeacherFiltersBarProps) {
   return (
     <View style={{ gap: 8 }}>
-      <SearchField compact label={t.sales.teachers.search} initial={value.q} onSearch={(q) => onChange({ ...value, q })} />
+      <SearchField
+        compact
+        label={t.sales.teachers.search}
+        initial={value.q}
+        onSearch={(q) => onChange({ ...value, q })}
+      />
       <FilterPills<Program | ''>
         accessibilityLabel={t.sales.teachers.programs}
         items={[{ value: '', label: t.schedule.allPrograms }, ...programs.map((p) => ({ value: p, label: t.enums.program[p] }))]}

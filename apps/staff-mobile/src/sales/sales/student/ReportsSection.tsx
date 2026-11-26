@@ -31,7 +31,11 @@ export function ReportsSection({ studentId, reports }: { studentId: string; repo
             key={row.id}
             row={row}
             tz={tz}
-            onPdf={() => void openStudentReportPdf(studentId, row.id).catch((e: unknown) => setError(pdfError(e)))}
+            onPdf={() =>
+              void openStudentReportPdf(studentId, row.id).catch((e: unknown) =>
+                setError(pdfError(e)),
+              )
+            }
             onPress={() => router.push(`/sales/students/report/${row.id}`)}
           />
         ))}

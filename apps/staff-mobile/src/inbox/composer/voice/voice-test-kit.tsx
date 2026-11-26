@@ -30,10 +30,17 @@ export const rec: FakeRecorder = {
   stop: jest.fn(async (): Promise<void> => {
     rec.isRecording = false;
   }),
-  getStatus: jest.fn(() => ({ canRecord: rec.canRecord, durationMillis: rec.ms, isRecording: rec.isRecording })),
+  getStatus: jest.fn(() => ({
+    canRecord: rec.canRecord,
+    durationMillis: rec.ms,
+    isRecording: rec.isRecording,
+  })),
 };
 type Perm = { granted: boolean; canAskAgain: boolean };
-export const perms: { now: Perm; asked: Perm } = { now: { granted: true, canAskAgain: true }, asked: { granted: true, canAskAgain: true } };
+export const perms: { now: Perm; asked: Perm } = {
+  now: { granted: true, canAskAgain: true },
+  asked: { granted: true, canAskAgain: true },
+};
 export const askMic = jest.fn(async () => perms.asked);
 
 /** The expo-audio module for `jest.mock` (loaded with jest.requireActual). @public */
@@ -42,11 +49,28 @@ export function audioMock() {
     AudioModule: { AudioRecorder: function AudioRecorder() {} },
     RecordingPresets: { HIGH_QUALITY: {} },
     useAudioRecorder: () => rec,
-    useAudioRecorderState: () => ({ durationMillis: rec.ms, metering: -20, canRecord: true, isRecording: rec.isRecording }),
+    useAudioRecorderState: () => ({
+      durationMillis: rec.ms,
+      metering: -20,
+      canRecord: true,
+      isRecording: rec.isRecording,
+    }),
     getRecordingPermissionsAsync: async () => perms.now,
     requestRecordingPermissionsAsync: () => askMic(),
-    useAudioPlayer: () => ({ play: jest.fn(), pause: jest.fn(), seekTo: jest.fn(async () => undefined), setPlaybackRate: jest.fn() }),
-    useAudioPlayerStatus: () => ({ playing: false, currentTime: 0, duration: 0, didJustFinish: false, isLoaded: false, isBuffering: false }),
+    useAudioPlayer: () => ({
+      play: jest.fn(),
+      pause: jest.fn(),
+      seekTo: jest.fn(async () => undefined),
+      setPlaybackRate: jest.fn(),
+    }),
+    useAudioPlayerStatus: () => ({
+      playing: false,
+      currentTime: 0,
+      duration: 0,
+      didJustFinish: false,
+      isLoaded: false,
+      isBuffering: false,
+    }),
     setAudioModeAsync: async () => undefined,
   };
 }
@@ -64,7 +88,9 @@ export function resetVoice() {
   perms.now = { granted: true, canAskAgain: true };
   perms.asked = { granted: true, canAskAgain: true };
   jest.spyOn(Date, 'now').mockImplementation(() => clock);
-  globalThis.fetch = jest.fn(async () => ({ arrayBuffer: async () => new ArrayBuffer(10) })) as unknown as typeof fetch;
+  globalThis.fetch = jest.fn(async () => ({
+    arrayBuffer: async () => new ArrayBuffer(10),
+  })) as unknown as typeof fetch;
 }
 
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();

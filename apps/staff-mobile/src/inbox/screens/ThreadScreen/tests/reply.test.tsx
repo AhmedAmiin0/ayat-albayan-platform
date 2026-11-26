@@ -32,7 +32,9 @@ const ours = message({ id: 'm2', body: 'أهلًا وسهلًا', status: 'sent'
 const forwarded = message({ id: 'm3', body: 'رابط الحلقة', status: 'sent', forwarded: true, created_at: minutesAgo(6) });
 
 async function open(inboundAt = minutesAgo(5), teacher = false) {
-  const data = detail([asked, ours, forwarded], { thread: { ...thread, last_inbound_at: inboundAt } });
+  const data = detail([asked, ours, forwarded], {
+    thread: { ...thread, last_inbound_at: inboundAt },
+  });
   mockApiFetch.mockImplementation(async (path: string) =>
     path === '/messages/gate' ? { open: true, reason: null, queued: 0 } : data,
   );

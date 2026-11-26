@@ -40,8 +40,15 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
         {formatPhone(phone)}
       </Ltr>
       <ButtonRow>
-        <Button variant="secondary" label={t.mobile.call} onPress={() => void Linking.openURL(`tel:${phone}`)} />
-        <Button label={t.mobile.whatsapp} onPress={() => void Linking.openURL(clickToChatLink(phone))} />
+        <Button
+          variant="secondary"
+          label={t.mobile.call}
+          onPress={() => void Linking.openURL(`tel:${phone}`)}
+        />
+        <Button
+          label={t.mobile.whatsapp}
+          onPress={() => void Linking.openURL(clickToChatLink(phone))}
+        />
       </ButtonRow>
       {guardian.phones ? <SecondPhone guardianId={guardian.id} phones={guardian.phones} /> : null}
     </View>

@@ -16,7 +16,10 @@ export interface MoneyAction {
   href: Href;
 }
 
-export function pickMoneyAction(family: SalesFamilyView | undefined, target: MoneyTarget): MoneyAction | null {
+export function pickMoneyAction(
+  family: SalesFamilyView | undefined,
+  target: MoneyTarget,
+): MoneyAction | null {
   const { studentId, phone, subscriptionId } = target;
   const student = family?.students?.find((s) => s.id === studentId);
   if (!student || phone === '') return null;

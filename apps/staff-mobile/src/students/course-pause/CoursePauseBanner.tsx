@@ -19,7 +19,12 @@ interface CoursePauseBannerProps {
 }
 
 /** Resume asks first, since the lessons come back from today. */
-export function CoursePauseBanner({ studentId, pause, canChange, onNotice }: CoursePauseBannerProps) {
+export function CoursePauseBanner({
+  studentId,
+  pause,
+  canChange,
+  onNotice,
+}: CoursePauseBannerProps) {
   const { color } = useTheme();
   const [asking, setAsking] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -29,10 +34,29 @@ export function CoursePauseBanner({ studentId, pause, canChange, onNotice }: Cou
   const lines = bannerLines(pause, riyadhToday());
   const ask = useResumeAsk({ studentId, asking });
   const confirm = () =>
-    resume.isPending ? undefined : resume.mutate(undefined, { onSuccess: (result) => onNotice(resumedText(result)) });
+    resume.isPending
+      ? undefined
+      : resume.mutate(undefined, { onSuccess: (result) => onNotice(resumedText(result)) });
   return (
-    <View style={{ gap: 10, padding: 16, borderRadius: shape.radius.md, borderWidth: 1, borderColor: color.rule, backgroundColor: color.lapisWash }}>
-      <AppText accessibilityRole="header" style={{ fontFamily: type.ui[600], fontSize: type.size.base, lineHeight: type.lineHeight(type.size.base), color: color.ink }}>
+    <View
+      style={{
+        gap: 10,
+        padding: 16,
+        borderRadius: shape.radius.md,
+        borderWidth: 1,
+        borderColor: color.rule,
+        backgroundColor: color.lapisWash,
+      }}
+    >
+      <AppText
+        accessibilityRole="header"
+        style={{
+          fontFamily: type.ui[600],
+          fontSize: type.size.base,
+          lineHeight: type.lineHeight(type.size.base),
+          color: color.ink,
+        }}
+      >
         {lines.title}
       </AppText>
       {lines.starts ? <Note>{lines.starts}</Note> : null}

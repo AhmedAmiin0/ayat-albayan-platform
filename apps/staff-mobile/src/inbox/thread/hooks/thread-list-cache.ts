@@ -12,7 +12,10 @@ import type { ThreadCache } from './thread-cache';
 export type ThreadListCache = InfiniteData<Page<ThreadView>>;
 
 /** The chat on top of the list with `row` as its last message, as WhatsApp does on a send. */
-export function touchList(data: ThreadListCache | undefined, row: MessageView): ThreadListCache | undefined {
+export function touchList(
+  data: ThreadListCache | undefined,
+  row: MessageView,
+): ThreadListCache | undefined {
   const phone = row.phone_e164;
   const found = data?.pages.flatMap((p) => p.items).find((th) => th.phone_e164 === phone);
   if (!data || !found) return data;
@@ -27,7 +30,10 @@ export function touchList(data: ThreadListCache | undefined, row: MessageView): 
 /**
  * The chat's unread badge cleared (the API stamped it read); the same object when nothing changes.
  */
-export function clearUnread(data: ThreadListCache | undefined, phone: string): ThreadListCache | undefined {
+export function clearUnread(
+  data: ThreadListCache | undefined,
+  phone: string,
+): ThreadListCache | undefined {
   const unread = (th: ThreadView) => th.phone_e164 === phone && th.unread_count > 0;
   if (!data?.pages.some((p) => p.items.some(unread))) return data;
   const read = (th: ThreadView) => (unread(th) ? { ...th, unread_count: 0 } : th);

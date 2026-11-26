@@ -81,7 +81,9 @@ test('while a change is saving the pills are off and a second tap sends nothing'
   await screen.findByRole('header', { name: 'هدى' });
   await fireEvent.press(pill(t.enums.studentStatus.expired));
   await screen.findByRole('radio', { checked: true, name: t.enums.studentStatus.expired });
-  expect(pill(t.enums.studentStatus.churned).props.accessibilityState).toMatchObject({ disabled: true });
+  expect(pill(t.enums.studentStatus.churned).props.accessibilityState).toMatchObject({
+    disabled: true,
+  });
   await fireEvent.press(pill(t.enums.studentStatus.churned));
   expect(mockApiSend).toHaveBeenCalledTimes(1);
 });

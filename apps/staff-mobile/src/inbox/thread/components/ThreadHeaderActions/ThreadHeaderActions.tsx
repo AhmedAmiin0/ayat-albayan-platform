@@ -29,7 +29,9 @@ interface MenuOptions {
 /** Only on a lead still in the funnel; opens the trial wizard in sales mode, prefilled. */
 function registerItem(base: TreeBase, thread: ThreadView | null): ThreadMenuItem[] {
   const href = registerHref(thread);
-  return href ? [{ label: t.inbox.registerNew, onPress: () => router.push(inTree(base, href)) }] : [];
+  return href
+    ? [{ label: t.inbox.registerNew, onPress: () => router.push(inTree(base, href)) }]
+    : [];
 }
 
 /** Registration comes first, and only on a lead still in the funnel (registerHref). */
@@ -45,7 +47,10 @@ function useMenuItems({ phone, sales, thread, openLists }: MenuOptions) {
   const items: ThreadMenuItem[] = [
     ...registerItem(base, sales ? thread : null),
     ...(search ? [{ label: t.inbox.chatSearch.open, onPress: search.open }] : []),
-    { label: t.inbox.copy.phone, onPress: () => copyText({ title: t.inbox.copy.phoneTitle, text: phone }, showCopy) },
+    {
+      label: t.inbox.copy.phone,
+      onPress: () => copyText({ title: t.inbox.copy.phoneTitle, text: phone }, showCopy),
+    },
   ];
   if (lists) items.push({ label: t.inbox.lists.title, onPress: openLists });
   if (check) {
@@ -65,7 +70,12 @@ export function ThreadHeaderActions({ phone, data, sales }: ThreadHeaderActionsP
   const [menu, setMenu] = useState(false);
   const [listsOpen, setListsOpen] = useState(false);
   const thread = data?.pages[0]?.thread ?? null;
-  const { items, lists } = useMenuItems({ phone, sales, thread, openLists: () => setListsOpen(true) });
+  const { items, lists } = useMenuItems({
+    phone,
+    sales,
+    thread,
+    openLists: () => setListsOpen(true),
+  });
   return (
     <>
       <IconButton label={t.inbox.chatMenu} onPress={() => setMenu(true)}>

@@ -23,7 +23,9 @@ export function useBarPhase({ status, since }: Pick<ConnState, 'status' | 'since
     if (status === 'online') return undefined;
     const start = since ?? Date.now();
     const update = () => setPhase(connectingPhase(Date.now() - start));
-    const timers = [0, BAR_DELAY_MS, HINT_AFTER_MS].map((at) => setTimeout(update, Math.max(0, at - (Date.now() - start))));
+    const timers = [0, BAR_DELAY_MS, HINT_AFTER_MS].map((at) =>
+      setTimeout(update, Math.max(0, at - (Date.now() - start))),
+    );
     return () => timers.forEach(clearTimeout);
   }, [status, since]);
   return phase;

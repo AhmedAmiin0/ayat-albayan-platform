@@ -15,7 +15,14 @@ export function RuleControl({ control, name, busy, onChange }: RuleControlProps)
   if (control.kind === 'none') return null;
   if (control.kind === 'locked') {
     return (
-      <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 }}>
+      <AppText
+        style={{
+          fontFamily: type.ui[500],
+          fontSize: type.size.xs,
+          lineHeight: type.lineHeight(type.size.xs),
+          color: color.ink2,
+        }}
+      >
         {t.mobileNotificationRules.locked}
       </AppText>
     );
