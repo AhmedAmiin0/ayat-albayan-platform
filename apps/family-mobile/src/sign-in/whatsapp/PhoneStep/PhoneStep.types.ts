@@ -1,5 +1,5 @@
-import type { WhatsAppSignIn } from '@/sign-in/whatsapp/use-whatsapp-sign-in';
+import type { WhatsAppSignInState } from '@/sign-in/whatsapp/WhatsAppSignIn';
 
 export interface PhoneStepProps {
-  sign: WhatsAppSignIn;
+  sign: WhatsAppSignInState;
 }

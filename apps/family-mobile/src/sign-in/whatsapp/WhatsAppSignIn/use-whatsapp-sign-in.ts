@@ -3,8 +3,7 @@ import { authApi, useA11yPref, useCodeSignIn, useStepMotion } from '@ab/mobile-k
 import { useState } from 'react';
 import { feel } from '@/sign-in/feedback';
 import { phoneRegion } from '@/sign-in/phone/countries';
-
-export type WhatsAppStep = 'phone' | 'code';
+import type { WhatsAppStep } from './WhatsAppSignIn.types';
 
 /** docs/50 §4: number, then code, then session; each answer gives a haptic. */
 export function useWhatsAppSignIn() {
@@ -52,5 +51,3 @@ export function useWhatsAppSignIn() {
     changePhone,
   };
 }
-
-export type WhatsAppSignIn = ReturnType<typeof useWhatsAppSignIn>;
