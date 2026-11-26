@@ -22,7 +22,7 @@ const ROW: NewMeeting = {
 const repo = (db: Db) => new InternalMeetingsRepo(db, readerOf(ClassroomSettings));
 
 describe('InternalMeetingsRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation without a request id is 409 duplicate with the detail', async () => {
+  it('a unique violation without a request id is 409 duplicate', async () => {
     const { db } = fakeDb({ meetings: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(repo(db).insert(ROW))).toEqual(DUPLICATE);
   });

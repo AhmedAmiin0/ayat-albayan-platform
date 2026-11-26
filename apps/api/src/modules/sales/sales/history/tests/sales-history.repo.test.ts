@@ -49,7 +49,7 @@ describe('SalesHistoryQueries', () => {
 });
 
 describe('SalesHistoryRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ subscriptions: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new SalesHistoryRepo(db).studentOf('x'))).toEqual({
       status: 409,

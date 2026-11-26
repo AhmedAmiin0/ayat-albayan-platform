@@ -13,7 +13,7 @@ const create = (db: Db) => new InstantRepo(db).create(PAYLOAD, 'actor');
 const REPLAY_RACE = { code: '23505', message: 'duplicate key "lessons_client_request_id_key"' };
 
 describe('InstantRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ [RPC]: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(create(db))).toEqual(DUPLICATE);
   });

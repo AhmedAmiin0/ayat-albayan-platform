@@ -4,7 +4,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { RecordingAdminRepo } from './recording-admin.repo';
 
 describe('RecordingAdminRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lesson_recordings: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new RecordingAdminRepo(db).byId('r1'))).toEqual({
       status: 409,

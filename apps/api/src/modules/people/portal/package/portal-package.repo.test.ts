@@ -4,7 +4,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { PortalPackageRepo } from './portal-package.repo';
 
 describe('PortalPackageRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ payments: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new PortalPackageRepo(db).payments('s1'))).toEqual({
       status: 409,

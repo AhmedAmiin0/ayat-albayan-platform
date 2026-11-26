@@ -66,7 +66,7 @@ describe('teacher earnings lists (R-NFR-08)', () => {
 });
 
 describe('earnings lists error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ [P]: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(paymentsPage(db, { teacherId: TEACHER, filter: page }))).toEqual(
       {

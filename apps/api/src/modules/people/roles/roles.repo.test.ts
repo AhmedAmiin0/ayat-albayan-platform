@@ -4,7 +4,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { RolesRepo } from './roles.repo';
 
 describe('RolesRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ roles: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new RolesRepo(db).deleteRole('r1'))).toEqual({
       status: 409,

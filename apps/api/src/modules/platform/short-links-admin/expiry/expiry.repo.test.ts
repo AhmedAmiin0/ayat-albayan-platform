@@ -4,7 +4,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { LinkExpiryRepo } from './expiry.repo';
 
 describe('LinkExpiryRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ short_links: [{ error: PG_ERRORS.unique }] });
     expect(
       await answerOfRejection(new LinkExpiryRepo(db).expire(new Date('2026-11-01T00:00:00Z'))),

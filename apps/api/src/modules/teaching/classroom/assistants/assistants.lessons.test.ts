@@ -9,7 +9,7 @@ const REFS = [{ lesson_id: 'l1', student_id: 's1' }];
 const RANGE = { from: '2026-11-01T00:00:00Z', to: '2026-11-08T00:00:00Z' };
 
 describe('AssistantLessonsRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new AssistantLessonsRepo(db).between(REFS, RANGE))).toEqual(
       DUPLICATE,

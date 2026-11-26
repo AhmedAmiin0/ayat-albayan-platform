@@ -11,7 +11,7 @@ const FAILED = { status: 500, body: 'db error XX000: boom' };
 const repo = (db: Db) => new ClassroomRepo(db, readerOf(ClassroomSettings));
 
 describe('ClassroomRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(repo(db).lesson('l1'))).toEqual(DUPLICATE);
   });

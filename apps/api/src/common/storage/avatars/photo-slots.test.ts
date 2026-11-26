@@ -4,7 +4,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { profileSlot, teacherSlot } from './photo-slots';
 
 describe('photo slots error paths: the answer a failed query gives today', () => {
-  it('a unique violation on the profile read is 409 duplicate with the detail', async () => {
+  it('a unique violation on the profile read is 409 duplicate', async () => {
     const { db } = fakeDb({ profiles: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(profileSlot(db, 'p1').read())).toEqual({
       status: 409,

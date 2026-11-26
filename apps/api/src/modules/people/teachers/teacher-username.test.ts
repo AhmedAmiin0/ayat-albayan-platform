@@ -17,7 +17,7 @@ describe('TeacherUsernames error paths: the answer a failed query gives today', 
     });
   });
 
-  it('a unique violation on the read is 409 duplicate with the detail', async () => {
+  it('a unique violation on the read is 409 duplicate', async () => {
     const { db } = fakeDb({ profiles: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new TeacherUsernames(db).of('p1'))).toEqual({
       status: 409,

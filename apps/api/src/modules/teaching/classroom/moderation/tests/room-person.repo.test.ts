@@ -8,7 +8,7 @@ const FAILED = { status: 500, body: 'db error XX000: boom' };
 const KICKED = [{ userId: 'u1' }];
 
 describe('RoomPersonRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ classroom_participants: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new RoomPersonRepo(db).identitiesOf('l1', KICKED))).toEqual(
       DUPLICATE,

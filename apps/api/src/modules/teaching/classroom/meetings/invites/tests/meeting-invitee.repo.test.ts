@@ -39,7 +39,7 @@ describe('MeetingInviteeQueries.guardianByPhone (a typed number)', () => {
 });
 
 describe('MeetingInviteeRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ profiles: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new MeetingInviteeRepo(db).staff({ q: 'x' }))).toEqual(
       DUPLICATE,

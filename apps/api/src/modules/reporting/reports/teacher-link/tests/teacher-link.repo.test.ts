@@ -4,7 +4,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { TeacherLinkRepo } from '@/modules/reporting/reports/teacher-link/teacher-link.repo';
 
 describe('TeacherLinkRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ teachers: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new TeacherLinkRepo(db).profileOf('t1'))).toEqual({
       status: 409,

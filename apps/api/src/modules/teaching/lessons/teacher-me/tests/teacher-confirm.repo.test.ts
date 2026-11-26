@@ -4,7 +4,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { TeacherConfirmRepo } from '@/modules/teaching/lessons/teacher-me/teacher-confirm.repo';
 
 describe('TeacherConfirmRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ 'rpc:teacher_confirm_lesson': [{ error: PG_ERRORS.unique }] });
     expect(
       await answerOfRejection(

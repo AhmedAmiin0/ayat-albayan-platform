@@ -15,7 +15,7 @@ const CONFLICTS: Conflict[] = [{ kind: 'teacher_busy', startsAt: AT, endsAt: END
 const flag = (db: Db) => new LessonWriter(db, fakePolicy()).flagConflicts(LESSONS, CONFLICTS);
 
 describe('LessonWriter error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(flag(db))).toEqual(DUPLICATE);
   });

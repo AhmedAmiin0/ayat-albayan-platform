@@ -25,7 +25,7 @@ describe('RatingQueries.guardianByPhone («إرسال تقييم الحلقة» 
 });
 
 describe('RatingRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new RatingRepo(db).byIds(['l1']))).toEqual({
       status: 409,

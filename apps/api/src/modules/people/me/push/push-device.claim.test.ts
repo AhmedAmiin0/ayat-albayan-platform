@@ -6,7 +6,7 @@ import { claimDevice } from './push-device.claim';
 const CLAIM = { userId: 'p1', token: 'ExponentPushToken[x]', sessionId: 's1' };
 
 describe('claimDevice error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ 'rpc:claim_push_device': [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(claimDevice(db, CLAIM))).toEqual({
       status: 409,

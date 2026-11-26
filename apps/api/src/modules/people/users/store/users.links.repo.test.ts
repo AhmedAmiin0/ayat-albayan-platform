@@ -95,7 +95,7 @@ describe('link queries', () => {
 const SYNC = { profileId: 'p1', patch: { display_name_ar: 'أحمد' } };
 
 describe('link queries error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ teachers: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(syncTeacher(db, SYNC))).toEqual({
       status: 409,

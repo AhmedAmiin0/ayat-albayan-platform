@@ -4,7 +4,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { ChannelBellRepo } from './channel-bell.repo';
 
 describe('ChannelBellRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ push_notifications: [{ error: PG_ERRORS.unique }] });
     expect(
       await answerOfRejection(new ChannelBellRepo(db).rewrite({ messageId: 'm1', body: '-' })),

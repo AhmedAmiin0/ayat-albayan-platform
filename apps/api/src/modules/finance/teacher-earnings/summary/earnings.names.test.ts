@@ -4,7 +4,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { lessonNames } from './earnings.names';
 
 describe('lessonNames error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lesson_students: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(lessonNames(db, ['l1']))).toEqual({
       status: 409,

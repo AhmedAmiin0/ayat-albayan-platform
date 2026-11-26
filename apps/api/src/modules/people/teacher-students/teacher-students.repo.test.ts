@@ -33,7 +33,7 @@ describe('TeacherStudentsQueries: statuses of one kind', () => {
 });
 
 describe('TeacherStudentsRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
     expect(
       await answerOfRejection(new TeacherStudentsRepo(db).lessons({ teacherId: 't1', since: 'x' })),

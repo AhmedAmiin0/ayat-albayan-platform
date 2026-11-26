@@ -86,7 +86,7 @@ describe('dayBounds', () => {
 });
 
 describe('StudentRecordingRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ students: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new StudentRecordingRepo(db).student('s1'))).toEqual({
       status: 409,

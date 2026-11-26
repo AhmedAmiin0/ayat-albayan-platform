@@ -50,7 +50,7 @@ describe('ChatNumber error paths: the answer a failed query gives today', () => 
     return new ChatNumber(db).e164();
   };
 
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ wa_numbers: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(withChatLine(db))).toEqual({
       status: 409,

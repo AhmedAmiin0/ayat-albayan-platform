@@ -17,7 +17,7 @@ describe('StudentRecordsRepo error paths: the answer a failed query gives today'
     });
   });
 
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     expect(await removeWith(PG_ERRORS.unique)).toEqual({
       status: 409,
       body: { message: 'duplicate' },

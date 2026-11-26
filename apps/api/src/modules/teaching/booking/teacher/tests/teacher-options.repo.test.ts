@@ -37,7 +37,7 @@ describe('TeacherOptionsQueries.withAvailability (R-SCH-06)', () => {
 });
 
 describe('TeacherOptionsRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ teachers: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new TeacherOptionsRepo(db, SETTINGS).active(FILTER))).toEqual(
       DUPLICATE,
