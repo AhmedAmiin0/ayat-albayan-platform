@@ -1,11 +1,13 @@
 import { posix } from 'node:path';
 import type { SplitCtx, SplitInput, SplitVerdict } from './split.types.ts';
-import { componentsOf, type Component } from '../../model/components.ts';
-import { no, ok, type Result } from '../../model/result.ts';
+import { componentsOf } from '../../model/components.ts';
+import { no, ok } from '../../model/result.ts';
 import { isExported, parseFile } from '../../model/source.ts';
 import { closesOver, parentLocals } from './locals.ts';
 import { indexText, parentText, subPathOf, subText } from './sub-file.ts';
 import { subTypes } from './sub-types.ts';
+import type { Component } from '../../model/model.types.ts';
+import type { Result } from '../../model/model.types.ts';
 
 const CAP = 12;
 

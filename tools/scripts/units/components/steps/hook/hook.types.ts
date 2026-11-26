@@ -1,5 +1,5 @@
 import type ts from 'typescript';
-import type { Inputs } from './inputs.ts';
+import type { Component, Parts } from '../../model/model.types.ts';
 
 export interface HookInput {
   /** Repo path of `Name/Name.tsx`. */
@@ -32,4 +32,23 @@ export interface Shape {
   moved: ts.Statement[];
   outputs: string[];
   inputs: Inputs;
+}
+/** A hook called in the JSX (`can={usePermissions()}`), lifted into the hook under `name`. */
+export interface Hoist {
+  call: ts.CallExpression;
+  name: string;
+}
+/** How the hook receives the props: its parameter text and the call's argument text. */
+export interface Inputs {
+  param: string;
+  arg: string;
+}
+export interface Pass {
+  sf: ts.SourceFile;
+  c: Component;
+  parts: Parts;
+}
+export interface Hoisted {
+  text: string;
+  hoists: Shape['hoists'];
 }

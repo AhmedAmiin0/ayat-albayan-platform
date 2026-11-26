@@ -1,10 +1,12 @@
 import { posix } from 'node:path';
 import type { SplitCtx } from './split.types.ts';
-import type { Component } from '../../model/components.ts';
 import { readsAny } from '../../model/names.ts';
-import { no, ok, type Result } from '../../model/result.ts';
+import { no, ok } from '../../model/result.ts';
 import { restOf, typeNamesFrom } from './locals.ts';
 import { moveTypes } from './types-move.ts';
+import type { Component } from '../../model/model.types.ts';
+import type { Result } from '../../model/model.types.ts';
+import type { SubTypes } from './split.types.ts';
 
 const mentions = (text: string, name: string): boolean => new RegExp(`\\b${name}\\b`).test(text);
 
@@ -20,11 +22,6 @@ function ownTypes(ctx: SplitCtx, sub: Component): Result<string[]> {
   return shared === undefined
     ? ok(mine)
     : no(`${sub.name} shares the type ${shared} with ${ctx.input.name}`);
-}
-
-export interface SubTypes {
-  names: string[];
-  files: Record<string, string>;
 }
 
 /** `sub`'s own types moved from the running `Name.types.ts` to `Sub/Sub.types.ts`. */

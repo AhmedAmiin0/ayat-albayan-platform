@@ -1,11 +1,11 @@
 import { posix } from 'node:path';
 import ts from 'typescript';
-import type { Component } from '../../model/components.ts';
 import { applyEdits } from '../../model/edits.ts';
 import { emitImports, importsOf } from '../../model/imports.ts';
 import { readsAny } from '../../model/names.ts';
 import { parseFile } from '../../model/source.ts';
 import { repoint } from './specs.ts';
+import type { Component } from '../../model/model.types.ts';
 
 interface SubAt {
   sf: ts.SourceFile;

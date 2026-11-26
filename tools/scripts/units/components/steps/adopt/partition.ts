@@ -1,13 +1,9 @@
 import ts from 'typescript';
 import { declaredNames, readsAny } from '../../model/names.ts';
-import { no, ok, type Result } from '../../model/result.ts';
+import { no, ok } from '../../model/result.ts';
 import { HOOK, isExported } from '../../model/source.ts';
-
-/** One exported hook of the adopted file and the private statements only it reads. */
-export interface Group {
-  root: string;
-  statements: ts.Statement[];
-}
+import type { Result } from '../../model/model.types.ts';
+import type { Group } from './adopt.types.ts';
 
 const isReexport = (s: ts.Statement): boolean =>
   ts.isExportDeclaration(s) || ts.isExportAssignment(s);

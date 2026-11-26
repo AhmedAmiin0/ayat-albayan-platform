@@ -1,7 +1,5 @@
 import { posix } from 'node:path';
 import type { Step } from './args.schemas.ts';
-import type { RepoContext } from './context.ts';
-import type { Target } from './discover.ts';
 import type { HelpersVerdict } from '../steps/helpers/helpers.types.ts';
 import { helpersStep } from '../steps/helpers/helpers-step.ts';
 import type { HookVerdict } from '../steps/hook/hook.types.ts';
@@ -12,22 +10,10 @@ import type { SplitVerdict } from '../steps/split/split.types.ts';
 import { splitStep } from '../steps/split/split-step.ts';
 import type { AdoptVerdict } from '../steps/adopt/adopt.types.ts';
 import { adoptStep } from '../steps/adopt/adopt-step.ts';
-
-export type PlanContext = RepoContext & {
-  names: (dir: string) => string[];
-  subfolders: (dir: string) => string[];
-  excludes: ReadonlyMap<string, string>;
-};
-
-/** What one step did: `typed`, `hooked`, `unchanged`, `no-hook` or `refused` (with why). */
-export interface Outcome {
-  result: string;
-  why: string;
-  files: Record<string, string>;
-  deleted: string[];
-}
-
-export type Overlay = Map<string, string>;
+import type { Target } from './cli.types.ts';
+import type { PlanContext } from './cli.types.ts';
+import type { Outcome } from './cli.types.ts';
+import type { Overlay } from './cli.types.ts';
 
 const outcome = (result: string, why = '', files: Record<string, string> = {}): Outcome => ({
   result,

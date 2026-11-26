@@ -6,10 +6,12 @@ import { applyEdits } from '../../model/edits.ts';
 import { emitImports, importedNames, importsOf } from '../../model/imports.ts';
 import { readsAny } from '../../model/names.ts';
 import { parseFile } from '../../model/source.ts';
-import { exportedText, isTypeDecl, readsValue, valueNames, type TypeDecl } from './declarations.ts';
+import { exportedText, isTypeDecl, readsValue, valueNames } from './declarations.ts';
 import { reexportTypes } from './index-exports.ts';
-import { propsPlan, type PropsPlan } from './props-plan.ts';
+import { propsPlan } from './props-plan.ts';
 import { typesFileText, viewText } from './types-file.ts';
+import type { TypeDecl } from './types.types.ts';
+import type { PropsPlan } from './types.types.ts';
 
 const refuse = (why: string): TypesVerdict => ({ result: 'refused', why });
 

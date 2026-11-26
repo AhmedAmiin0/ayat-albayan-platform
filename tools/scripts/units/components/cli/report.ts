@@ -1,5 +1,5 @@
-import type { Row } from './plan.ts';
 import { groupBy } from '../model/group.ts';
+import type { Row } from './cli.types.ts';
 
 const wsOf = (path: string): string => path.split('/').slice(0, 2).join('/');
 

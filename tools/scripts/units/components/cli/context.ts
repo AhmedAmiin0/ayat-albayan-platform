@@ -4,18 +4,7 @@ import ts from 'typescript';
 import { formatSpec, loadAliases, resolveSpec } from '../../../ci-checks/move-module/resolve.ts';
 import { groupBy } from '../model/group.ts';
 import { parseFile } from '../model/source.ts';
-
-/** What the steps learn from the repo: tests that render a component, path importers. */
-export interface RepoContext {
-  read: (path: string) => string;
-  tested: (name: string, ws: string) => boolean;
-  importers: (path: string) => { file: string; names: string[] }[];
-  /** Every file that imports `path`, its own folder included. */
-  users: (path: string) => string[];
-  resolve: (from: string, spec: string) => string | undefined;
-  /** The specifier `from` writes for `file`: relative, or the app alias instead of `../`. */
-  specFor: (from: string, file: string) => string;
-}
+import type { RepoContext } from './cli.types.ts';
 
 const CODE = /^(?:apps|packages)\/[^/]+\/src\/.*\.(?:tsx?|mts)$/;
 const TEST = /\.(?:test|spec)\.tsx?$/;

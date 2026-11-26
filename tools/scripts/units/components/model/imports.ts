@@ -1,14 +1,5 @@
 import ts from 'typescript';
-
-/** One import declaration, reduced to what a file can re-emit for a subset of its names. */
-export interface ImportDecl {
-  spec: string;
-  typeOnly: boolean;
-  sideEffect: boolean;
-  defaultName?: string;
-  namespace?: string;
-  named: { local: string; text: string; typeOnly: boolean }[];
-}
+import type { ImportDecl } from './model.types.ts';
 
 const namedOf = (b: ts.NamedImportBindings | undefined, sf: ts.SourceFile): ImportDecl['named'] =>
   b !== undefined && ts.isNamedImports(b)

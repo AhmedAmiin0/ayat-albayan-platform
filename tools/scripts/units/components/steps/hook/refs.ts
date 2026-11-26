@@ -1,7 +1,7 @@
 import ts from 'typescript';
-import type { TextEdit } from '../../model/edits.ts';
 import { bindingNames, isKey } from '../../model/names.ts';
 import { calleeName, findAll } from '../../model/source.ts';
+import type { TextEdit } from '../../model/model.types.ts';
 
 const isRefDecl = (d: ts.VariableDeclaration): boolean =>
   d.initializer !== undefined &&

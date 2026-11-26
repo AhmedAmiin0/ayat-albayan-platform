@@ -1,15 +1,12 @@
 import ts from 'typescript';
 import type { Step } from './args.schemas.ts';
-import { excludedWhy, type Target } from './discover.ts';
-import { RUNNERS, type Overlay, type PlanContext } from './runners.ts';
-
-/** One TSV line of the report: what a step did to a component. */
-export interface Row {
-  path: string;
-  step: Step | 'exclude';
-  result: string;
-  reason: string;
-}
+import { excludedWhy } from './discover.ts';
+import { RUNNERS } from './runners.ts';
+import type { Target } from './cli.types.ts';
+import type { Overlay } from './cli.types.ts';
+import type { PlanContext } from './cli.types.ts';
+import type { Row } from './cli.types.ts';
+import type { Planned } from './cli.types.ts';
 
 const SYNTAX = { jsx: ts.JsxEmit.Preserve, noResolve: true, isolatedModules: true };
 
@@ -50,13 +47,6 @@ function runSteps({ t, steps, ctx }: Run, overlay: Overlay, gone: Set<string>): 
     out.deleted.forEach((p) => gone.add(p));
   }
   return { rows, refused: false };
-}
-
-export interface Planned {
-  rows: Row[];
-  files: Map<string, string>;
-  /** Files an adopted hook moved away from. */
-  deleted: Set<string>;
 }
 
 /** Every step's verdict for every target before anything is written; a refused one stays whole. */

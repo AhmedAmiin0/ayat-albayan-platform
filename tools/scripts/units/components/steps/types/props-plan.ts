@@ -1,14 +1,6 @@
 import ts from 'typescript';
-import type { Component } from '../../model/components.ts';
-import type { TextEdit } from '../../model/edits.ts';
-
-/** What the types step adds for the props parameter: the declaration and the parameter edit. */
-export interface PropsPlan {
-  texts: string[];
-  moved: Set<string>;
-  edits: TextEdit[];
-  nodes: ts.Node[];
-}
+import type { Component } from '../../model/model.types.ts';
+import type { PropsPlan } from './types.types.ts';
 
 const EMPTY: PropsPlan = { texts: [], moved: new Set(), edits: [], nodes: [] };
 

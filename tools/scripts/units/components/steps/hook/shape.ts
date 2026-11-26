@@ -1,11 +1,12 @@
 import ts from 'typescript';
 import type { Shape } from './hook.types.ts';
-import type { Pass } from './passes.ts';
 import { isTheme } from '../../model/calls.ts';
 import { declaredNames, readsAny } from '../../model/names.ts';
-import { no, ok, type Result } from '../../model/result.ts';
+import { no, ok } from '../../model/result.ts';
 import { has, isJsx } from '../../model/source.ts';
 import { inputsOf } from './inputs.ts';
+import type { Pass } from './hook.types.ts';
+import type { Result } from '../../model/model.types.ts';
 
 interface Split {
   setup: ts.Statement[];

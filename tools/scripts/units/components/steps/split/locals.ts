@@ -1,7 +1,7 @@
 import ts from 'typescript';
-import type { Component } from '../../model/components.ts';
 import { importedNames, importsOf } from '../../model/imports.ts';
 import { declaredNames, readsAny } from '../../model/names.ts';
+import type { Component } from '../../model/model.types.ts';
 
 /** Names a sub-component may not read once it lives in its own folder (docs/63 §4 step 4). */
 export function parentLocals(sf: ts.SourceFile, typesSpec: string): Set<string> {

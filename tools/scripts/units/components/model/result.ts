@@ -1,5 +1,4 @@
-/** A step's value, or why it stopped. */
-export type Result<T> = { ok: true; value: T } | { ok: false; why: string };
+import type { Result } from './model.types.ts';
 
 export const ok = <T>(value: T): Result<T> => ({ ok: true, value });
 

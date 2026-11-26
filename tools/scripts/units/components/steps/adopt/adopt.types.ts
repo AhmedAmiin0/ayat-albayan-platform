@@ -1,3 +1,5 @@
+import type ts from 'typescript';
+
 /** Where `use<Name>` comes from and who else reads that file (docs/63 §2 «same-name hooks»). */
 export interface AdoptInput {
   /** Repo path of `Name/Name.tsx`. */
@@ -19,3 +21,15 @@ export type AdoptVerdict =
   | { result: 'adopted'; files: Record<string, string>; deleted: string[] }
   | { result: 'none' }
   | { result: 'refused'; why: string };
+export interface Retarget {
+  old: string;
+  /** Exported name → its new file. */
+  targets: ReadonlyMap<string, string>;
+  ownFile: string;
+  repo: Pick<AdoptInput, 'resolve' | 'specFor'>;
+}
+/** One exported hook of the adopted file and the private statements only it reads. */
+export interface Group {
+  root: string;
+  statements: ts.Statement[];
+}

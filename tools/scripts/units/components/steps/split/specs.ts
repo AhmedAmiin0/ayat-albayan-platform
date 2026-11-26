@@ -1,5 +1,5 @@
 import { posix } from 'node:path';
-import type { ImportDecl } from '../../model/imports.ts';
+import type { ImportDecl } from '../../model/model.types.ts';
 
 const APP_SRC = /^apps\/[^/]+\/src\//;
 

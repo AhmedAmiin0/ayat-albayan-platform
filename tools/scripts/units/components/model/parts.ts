@@ -1,13 +1,5 @@
 import ts from 'typescript';
-
-/** A component body as `S` (setup), `G` (guards) and `R` (the final return's expression). */
-export interface Parts {
-  setup: ts.Statement[];
-  guards: ts.IfStatement[];
-  ret: ts.Expression | undefined;
-  /** A statement after the first guard that is not a guard («narrowing after guard»). */
-  stray: ts.Statement | undefined;
-}
+import type { Parts } from './model.types.ts';
 
 const returnsOnly = (s: ts.Statement): boolean =>
   ts.isReturnStatement(s) ||

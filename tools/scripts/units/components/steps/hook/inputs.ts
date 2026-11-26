@@ -1,12 +1,8 @@
 import ts from 'typescript';
 import { bindingNames } from '../../model/names.ts';
-import { no, ok, type Result } from '../../model/result.ts';
-
-/** How the hook receives the props: its parameter text and the call's argument text. */
-export interface Inputs {
-  param: string;
-  arg: string;
-}
+import { no, ok } from '../../model/result.ts';
+import type { Result } from '../../model/model.types.ts';
+import type { Inputs } from './hook.types.ts';
 
 const NONE: Inputs = { param: '', arg: '' };
 

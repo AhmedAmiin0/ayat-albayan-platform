@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { planAll } from '../plan.ts';
-import type { PlanContext } from '../runners.ts';
+import type { PlanContext } from '../cli.types.ts';
 
 const PATH = 'apps/family-web/src/x/Card/Card.tsx';
 const TARGET = { path: PATH, name: 'Card', ws: 'apps/family-web' };

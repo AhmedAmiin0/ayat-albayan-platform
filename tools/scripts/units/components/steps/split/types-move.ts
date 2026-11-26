@@ -2,15 +2,11 @@ import { posix } from 'node:path';
 import ts from 'typescript';
 import { emitImports, importsOf } from '../../model/imports.ts';
 import { readsAny } from '../../model/names.ts';
-import { no, ok, type Result } from '../../model/result.ts';
+import { no, ok } from '../../model/result.ts';
 import { parseFile } from '../../model/source.ts';
 import { repoint } from './specs.ts';
-
-/** The type files after the move: the parent's without `names`, the sub's with them. */
-export interface TypesMove {
-  parent: string;
-  sub: string;
-}
+import type { Result } from '../../model/model.types.ts';
+import type { TypesMove } from './split.types.ts';
 
 const typeName = (s: ts.Statement): string | undefined =>
   ts.isInterfaceDeclaration(s) || ts.isTypeAliasDeclaration(s) || ts.isEnumDeclaration(s)

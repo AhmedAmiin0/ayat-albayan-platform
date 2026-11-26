@@ -27,3 +27,12 @@ export interface SplitCtx {
   typesSpec: string;
   locals: ReadonlySet<string>;
 }
+export interface SubTypes {
+  names: string[];
+  files: Record<string, string>;
+}
+/** The type files after the move: the parent's without `names`, the sub's with them. */
+export interface TypesMove {
+  parent: string;
+  sub: string;
+}

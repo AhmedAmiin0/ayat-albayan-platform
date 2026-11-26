@@ -1,7 +1,8 @@
 import type ts from 'typescript';
-import { emitImports, importsOf, type ImportDecl } from '../../model/imports.ts';
+import { emitImports, importsOf } from '../../model/imports.ts';
 import { groupBy } from '../../model/group.ts';
 import { declaredNames, readsAny } from '../../model/names.ts';
+import type { ImportDecl } from '../../model/model.types.ts';
 
 /** `export …` with the declaration's own leading comment kept above it. */
 export function exportedDecl(s: ts.Statement, sf: ts.SourceFile): string {

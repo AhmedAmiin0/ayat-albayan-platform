@@ -1,7 +1,6 @@
 import ts from 'typescript';
 import { declaredNames, readsAny } from '../../model/names.ts';
-
-export type TypeDecl = ts.InterfaceDeclaration | ts.TypeAliasDeclaration;
+import type { TypeDecl } from './types.types.ts';
 
 export const isTypeDecl = (s: ts.Statement): s is TypeDecl =>
   ts.isInterfaceDeclaration(s) || ts.isTypeAliasDeclaration(s);

@@ -1,15 +1,7 @@
 import ts from 'typescript';
 import { has, isJsx, PASCAL } from './source.ts';
-
-export type ComponentFn = ts.ArrowFunction | ts.FunctionExpression | ts.FunctionDeclaration;
-
-/** A top-level component: its name, its function, whether a call wraps it, its statement. */
-export interface Component {
-  name: string;
-  fn: ComponentFn;
-  wrapped: boolean;
-  statement: ts.Statement;
-}
+import type { ComponentFn } from './model.types.ts';
+import type { Component } from './model.types.ts';
 
 const isInnerFn = (a: ts.Node): a is ts.ArrowFunction | ts.FunctionExpression =>
   ts.isArrowFunction(a) || ts.isFunctionExpression(a);

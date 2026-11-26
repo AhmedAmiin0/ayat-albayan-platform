@@ -4,12 +4,14 @@ import type { HookInput, HookVerdict, Shape } from './hook.types.ts';
 import { declaresCallTo, isCallStatement, isTheme } from '../../model/calls.ts';
 import { componentsOf } from '../../model/components.ts';
 import { importedNames, importsOf } from '../../model/imports.ts';
-import { no, type Result } from '../../model/result.ts';
+import { no } from '../../model/result.ts';
 import { calleeName } from '../../model/source.ts';
 import { hookFileOf, hookText, viewText } from './emit.ts';
-import { hoisted, passOf, renamedRefs, type Pass } from './passes.ts';
+import { hoisted, passOf, renamedRefs } from './passes.ts';
 import { ownHookCalls, refusalOf } from './refusals.ts';
 import { shapeOf } from './shape.ts';
+import type { Result } from '../../model/model.types.ts';
+import type { Pass } from './hook.types.ts';
 
 const refuse = (why: string): HookVerdict => ({ result: 'refused', why });
 

@@ -1,9 +1,7 @@
 import { posix } from 'node:path';
 import ts from 'typescript';
 import { parseFile } from './source.ts';
-
-/** Where moved names now live: name → repo path without extension. */
-export type Moved = ReadonlyMap<string, string>;
+import type { Moved } from './model.types.ts';
 
 type Clause = ts.ImportDeclaration | ts.ExportDeclaration;
 

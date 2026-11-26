@@ -1,21 +1,19 @@
 import type ts from 'typescript';
-import type { HookInput, Shape } from './hook.types.ts';
-import { componentsOf, type Component } from '../../model/components.ts';
+import type { HookInput } from './hook.types.ts';
+import { componentsOf } from '../../model/components.ts';
 import { applyEdits } from '../../model/edits.ts';
 import { importedNames, importsOf } from '../../model/imports.ts';
 import { declaredNames } from '../../model/names.ts';
-import { partsOf, type Parts } from '../../model/parts.ts';
-import { no, ok, type Result } from '../../model/result.ts';
+import { partsOf } from '../../model/parts.ts';
+import { no, ok } from '../../model/result.ts';
 import { parseFile } from '../../model/source.ts';
 import { hoistsOf } from './hoist.ts';
 import { readsCurrent, refRenames, renameEdits } from './refs.ts';
 import { ownHookCalls } from './refusals.ts';
-
-export interface Pass {
-  sf: ts.SourceFile;
-  c: Component;
-  parts: Parts;
-}
+import type { Parts } from '../../model/model.types.ts';
+import type { Result } from '../../model/model.types.ts';
+import type { Pass } from './hook.types.ts';
+import type { Hoisted } from './hook.types.ts';
 
 export function passOf(path: string, text: string, name: string): Result<Pass> {
   const sf = parseFile(path, text);
@@ -36,11 +34,6 @@ export function renamedRefs(input: HookInput, first: Pass): Result<string> {
   const refs = new Set([...renames.keys(), ...renames.values()]);
   if (readsCurrent(viewOf(first.parts), refs)) return no('the JSX reads a ref (.current)');
   return ok(applyEdits(input.text, renameEdits(first.c.fn, { renames, sf: first.sf })));
-}
-
-export interface Hoisted {
-  text: string;
-  hoists: Shape['hoists'];
 }
 
 /** Pass 2: hook calls in the JSX replaced by consts the hook returns. */

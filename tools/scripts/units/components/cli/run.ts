@@ -10,14 +10,7 @@ import { formatFiles, removeFiles, writeFiles } from './write.ts';
 import { trackedFiles } from '../../scan/tree.ts';
 import { groupBy } from '../model/group.ts';
 import { subfoldersOf } from './subfolders.ts';
-
-export interface ComponentsIo {
-  root: string;
-  cwd: string;
-  log: (line: string) => void;
-  /** Formats written files; oxlint class-A fixes and oxfmt unless a test passes its own. */
-  format?: (root: string, paths: string[]) => void;
-}
+import type { ComponentsIo } from './cli.types.ts';
 
 // adopt runs before hook: a same-name hook moved into the folder leaves the hook step done.
 const ORDER: Step[] = ['types', 'helpers', 'split', 'adopt', 'hook'];

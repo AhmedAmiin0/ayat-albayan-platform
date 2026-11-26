@@ -1,11 +1,13 @@
 import { posix } from 'node:path';
 import type ts from 'typescript';
 import type { AdoptInput } from './adopt.types.ts';
-import type { Group } from './partition.ts';
-import { emitImports, importsOf, type ImportDecl } from '../../model/imports.ts';
+import { emitImports, importsOf } from '../../model/imports.ts';
 import { readsAny } from '../../model/names.ts';
-import { all, no, ok, type Result } from '../../model/result.ts';
+import { all, no, ok } from '../../model/result.ts';
 import { kebabOf } from '../../model/source.ts';
+import type { Group } from './adopt.types.ts';
+import type { ImportDecl } from '../../model/model.types.ts';
+import type { Result } from '../../model/model.types.ts';
 
 /** `useQuoteSend` → `use-quote-send.ts` in `dir`. */
 export const fileOfHook = (dir: string, hook: string): string =>

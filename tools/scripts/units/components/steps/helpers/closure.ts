@@ -1,9 +1,9 @@
 import type ts from 'typescript';
-import type { Component } from '../../model/components.ts';
 import { declaredNames, readsAny } from '../../model/names.ts';
 import { partsOf } from '../../model/parts.ts';
 import { HOOK, isExported } from '../../model/source.ts';
 import { ownHookCalls } from '../hook/refusals.ts';
+import type { Component } from '../../model/model.types.ts';
 
 const viewOfBody = (c: Component): ts.Node[] => {
   if (c.fn.body === undefined) return [];

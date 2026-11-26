@@ -1,7 +1,7 @@
 import { posix } from 'node:path';
 import ts from 'typescript';
 import type { HelpersInput, HelpersVerdict } from './helpers.types.ts';
-import { componentsOf, type Component } from '../../model/components.ts';
+import { componentsOf } from '../../model/components.ts';
 import { applyEdits } from '../../model/edits.ts';
 import { groupBy } from '../../model/group.ts';
 import { emitImports, importsOf } from '../../model/imports.ts';
@@ -12,6 +12,7 @@ import { isTypeDecl } from '../types/declarations.ts';
 import { movedDecls } from './closure.ts';
 import { targetText } from './emit.ts';
 import { targetOf } from './targets.ts';
+import type { Component } from '../../model/model.types.ts';
 
 const refuse = (why: string): HelpersVerdict => ({ result: 'refused', why });
 

@@ -1,7 +1,7 @@
 import ts from 'typescript';
-import type { Component } from '../../model/components.ts';
-import type { Parts } from '../../model/parts.ts';
 import { calleeName, findAll, has, HOOK, isCallTo, isJsx } from '../../model/source.ts';
+import type { Component } from '../../model/model.types.ts';
+import type { Parts } from '../../model/model.types.ts';
 
 // Shapes the hook step leaves for hand work (docs/63 §4 step 5.9): moving them would hide a rule
 // 19/21 violation in a local hook or change behaviour.

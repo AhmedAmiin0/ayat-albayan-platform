@@ -1,12 +1,8 @@
 import ts from 'typescript';
-import { no, ok, type Result } from '../../model/result.ts';
+import { no, ok } from '../../model/result.ts';
 import { calleeName, isFunctionLike } from '../../model/source.ts';
-
-/** A hook called in the JSX (`can={usePermissions()}`), lifted into the hook under `name`. */
-export interface Hoist {
-  call: ts.CallExpression;
-  name: string;
-}
+import type { Result } from '../../model/model.types.ts';
+import type { Hoist } from './hook.types.ts';
 
 const LOGIC = new Set([
   ts.SyntaxKind.AmpersandAmpersandToken,

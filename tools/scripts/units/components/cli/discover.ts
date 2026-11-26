@@ -1,17 +1,11 @@
 import { posix } from 'node:path';
+import type { Target } from './cli.types.ts';
 
 // The folded component files phase 2 works on (docs/63 §4): `Name/Name.tsx` in the six frontend
 // workspaces, minus routes, tests, showcases, test helpers and icon sets.
 const SCOPE = /^(?:apps\/(?:staff|family)-(?:web|mobile)|packages\/(?:web|mobile)-kit)\/src\//;
 const SKIP =
   /\/routes\/|\/(?:tests?|testing|__tests__|fixtures)\/|\.(?:test|spec|showcase|testing)\.tsx$|-icons\.tsx$/;
-
-export interface Target {
-  path: string;
-  name: string;
-  ws: string;
-}
-
 const under = (path: string, prefixes: readonly string[]): boolean =>
   prefixes.some((p) => `${path}/`.startsWith(`${p.replace(/\/$/, '')}/`) || path === p);
 

@@ -1,20 +1,13 @@
 import ts from 'typescript';
-import type { AdoptInput } from './adopt.types.ts';
-import { applyEdits, type TextEdit as Edit } from '../../model/edits.ts';
+import { applyEdits } from '../../model/edits.ts';
 import { groupBy } from '../../model/group.ts';
-import { all, no, ok, type Result } from '../../model/result.ts';
+import { all, no, ok } from '../../model/result.ts';
 import { findAll, parseFile } from '../../model/source.ts';
+import type { TextEdit } from '../../model/model.types.ts';
+import type { Result } from '../../model/model.types.ts';
+import type { Retarget } from './adopt.types.ts';
 
 const MOCK = /^(?:vi|jest)\.(?:mock|doMock|unmock|doUnmock|importActual|requireActual)$/;
-
-export interface Retarget {
-  old: string;
-  /** Exported name → its new file. */
-  targets: ReadonlyMap<string, string>;
-  ownFile: string;
-  repo: Pick<AdoptInput, 'resolve' | 'specFor'>;
-}
-
 const specOf = (d: ts.ImportDeclaration): string =>
   ts.isStringLiteral(d.moduleSpecifier) ? d.moduleSpecifier.text : '';
 
@@ -32,7 +25,7 @@ interface Placed {
   text: string;
 }
 
-function importEdit(path: string, d: ts.ImportDeclaration, rt: Retarget): Result<Edit> {
+function importEdit(path: string, d: ts.ImportDeclaration, rt: Retarget): Result<TextEdit> {
   const b = namedOnly(d);
   if (b === undefined) return no(`${path} imports the hook module whole`);
   const placed = all([...b.elements], (e): Result<Placed> => {
@@ -51,7 +44,7 @@ function importEdit(path: string, d: ts.ImportDeclaration, rt: Retarget): Result
   return ok({ start: d.getStart(), end: d.getEnd(), value });
 }
 
-function mockEdits(path: string, sf: ts.SourceFile, rt: Retarget): Result<Edit[]> {
+function mockEdits(path: string, sf: ts.SourceFile, rt: Retarget): Result<TextEdit[]> {
   const hits = findAll(sf, (n) => ts.isCallExpression(n) && MOCK.test(n.expression.getText()))
     .filter(ts.isCallExpression)
     .flatMap((c) => c.arguments.slice(0, 1).filter(ts.isStringLiteral))
