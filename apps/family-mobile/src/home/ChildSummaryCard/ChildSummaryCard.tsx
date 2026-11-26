@@ -1,48 +1,19 @@
-import { isSelfChild, packageSummary, reportAt } from '@ab/client-core';
-import type { PortalKind, PortalReport, PortalStudent } from '@ab/shared';
-import type { ClockOptions } from '@ab/time';
 import { View } from 'react-native';
-import { AppText, Chevron, t, type, useTheme } from '@ab/mobile-kit';
+import { AppText, Chevron, type, useTheme } from '@ab/mobile-kit';
 import { Figure, NewMark, PressCard, StudentIdentity } from '@/ui';
-import { dateLine } from '@/lessons';
-import { UsedBar } from '@/package';
-import { useChildPackage, useChildSummary, useFamilyClock } from '@/portal';
 import { ChildNextLine } from '@/home/ChildNextLine';
-
-const count = (n: number | null): string => (n === null ? '–' : String(n));
-
-/** On a guardian's own card the name reads "Me"; otherwise the student's name. */
-const selfName = (kind: PortalKind, student: PortalStudent): string | undefined =>
-  isSelfChild(kind, student) ? t.portal.app.pick.me : undefined;
-
-function lastReportLine(last: PortalReport | null, clock: ClockOptions): string {
-  const C = t.portal.app.children;
-  if (!last) return C.noReport;
-  return C.lastReport.replace('{date}', dateLine(new Date(reportAt(last)), clock));
-}
-
-/** Shown only to a viewer who sees money, and absent without a package. */
-function PackageBar({ studentId }: { studentId: string }) {
-  const pkg = useChildPackage(studentId, true).data?.package;
-  return pkg ? <UsedBar summary={packageSummary(pkg)} /> : null;
-}
-
-interface ChildSummaryCardProps {
-  student: PortalStudent;
-  kind: PortalKind;
-  /** The whole card is one button that switches to working as this child. */
-  onPress: () => void;
-}
+import { count, selfName } from './child-summary-card.helpers';
+import type { ChildSummaryCardProps } from './ChildSummaryCard.types';
+import { PackageBar } from './PackageBar';
+import { useChildSummaryCard } from './use-child-summary-card';
 
 export function ChildSummaryCard({ student, kind, onPress }: ChildSummaryCardProps) {
   const { color } = useTheme();
-  const clock = { ...useFamilyClock(), tz: student.tz };
-  const s = useChildSummary(student, kind);
-  const C = t.portal.app.children;
+  const { clock, s, words, hint, lastLine } = useChildSummaryCard({ student, kind });
   return (
     <PressCard
       label={`${student.name} ${student.code}`}
-      hint={t.portal.app.home.open.replace('{name}', student.name)}
+      hint={hint}
       onPress={onPress}
       style={{ gap: 14 }}
     >
@@ -53,16 +24,14 @@ export function ChildSummaryCard({ student, kind, onPress }: ChildSummaryCardPro
       </View>
       <ChildNextLine student={student} clock={clock} />
       <View style={{ flexDirection: 'row', gap: 8 }}>
-        <Figure tone="ink" value={count(s.upcoming)} label={C.upcoming} />
-        <Figure tone="ok" value={count(s.month?.attended ?? null)} label={C.attended} />
-        <Figure tone="bad" value={count(s.month?.absent ?? null)} label={C.absent} />
-        {s.money ? <Figure tone="ink" value={count(s.remaining)} label={C.left} /> : null}
+        <Figure tone="ink" value={count(s.upcoming)} label={words.upcoming} />
+        <Figure tone="ok" value={count(s.month?.attended ?? null)} label={words.attended} />
+        <Figure tone="bad" value={count(s.month?.absent ?? null)} label={words.absent} />
+        {s.money ? <Figure tone="ink" value={count(s.remaining)} label={words.left} /> : null}
       </View>
       {s.money ? <PackageBar studentId={student.id} /> : null}
       <View style={{ paddingTop: 12, borderTopWidth: 1, borderTopColor: color.rule }}>
-        <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>
-          {lastReportLine(s.lastReport, clock)}
-        </AppText>
+        <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>{lastLine}</AppText>
       </View>
     </PressCard>
   );
