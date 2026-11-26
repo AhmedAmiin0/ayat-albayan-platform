@@ -6,6 +6,6 @@ export interface RoundingFacts {
   /** The chosen discount, in percent. */
   discount: number;
   mode: QuoteMode;
-  /** «مبلغ مخصص» is switched on; it belongs to the single offer only. */
+  /** The custom amount is switched on; it belongs to the single offer only. */
   customOn: boolean;
 }
