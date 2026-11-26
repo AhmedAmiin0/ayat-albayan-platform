@@ -3,9 +3,7 @@ import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict } from '@/common/http/errors';
 import { pgError } from '@/common/db/errors';
-
-/** Which row the switch is on: a student (students.id) or a login (profiles.id). */
-export type TestTarget = 'student' | 'profile';
+import type { TestTarget } from './test-accounts.schemas';
 
 export interface TestFlagWrite {
   kind: TestTarget;
