@@ -19,7 +19,9 @@ const row = {
 
 const view = {
   rows: [row],
-  totals: [{ currency: 'SAR', owed: 200, buckets: { '0_30': 0, '31_60': 200, '61_90': 0, '90_plus': 0 } }],
+  totals: [
+    { currency: 'SAR', owed: 200, buckets: { '0_30': 0, '31_60': 200, '61_90': 0, '90_plus': 0 } },
+  ],
   total: 200,
   currency: 'SAR',
   fx_missing: [],

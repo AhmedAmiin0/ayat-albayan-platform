@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { agingBucket, daysSince, receivablesOf, receivableTotals, type ReceivableIn } from './receivables';
+import { agingBucket, daysSince, receivablesOf, receivableTotals } from './receivables';
+import type { ReceivableIn } from './receivables.schemas';
 
 const sub = (id: string, extra: Partial<ReceivableIn> = {}): ReceivableIn => ({
   id,
@@ -52,8 +53,16 @@ describe('receivablesOf / receivableTotals', () => {
 
   it('totals per currency with the buckets', () => {
     expect(receivableTotals(rows)).toEqual([
-      { currency: 'EGP', owed: 3000, buckets: { '0_30': 0, '31_60': 0, '61_90': 0, '90_plus': 3000 } },
-      { currency: 'SAR', owed: 300, buckets: { '0_30': 0, '31_60': 300, '61_90': 0, '90_plus': 0 } },
+      {
+        currency: 'EGP',
+        owed: 3000,
+        buckets: { '0_30': 0, '31_60': 0, '61_90': 0, '90_plus': 3000 },
+      },
+      {
+        currency: 'SAR',
+        owed: 300,
+        buckets: { '0_30': 0, '31_60': 300, '61_90': 0, '90_plus': 0 },
+      },
     ]);
   });
 });
@@ -61,7 +70,14 @@ describe('receivablesOf / receivableTotals', () => {
 describe('receivablesOf: a stopped course owes its stored decision (owedFor), never its price', () => {
   const stopped = (paid: number, owed: number | null = 300) =>
     receivablesOf({
-      subs: [sub('s', { status: 'cancelled', cancel_kind: 'stopped', price: 1000, stop_owed_amount: owed })],
+      subs: [
+        sub('s', {
+          status: 'cancelled',
+          cancel_kind: 'stopped',
+          price: 1000,
+          stop_owed_amount: owed,
+        }),
+      ],
       paid: new Map([['s', paid]]),
       today: '2026-10-05',
     }).map((r) => r.owed);

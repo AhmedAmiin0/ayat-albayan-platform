@@ -1,6 +1,5 @@
-import { invoiceCalls } from '@ab/client-core';
+import { invoiceCalls, receivablesCall } from '@ab/client-core';
 import type { Page } from '@ab/core';
-import type { ReceivablesView } from '@ab/money';
 import type { InvoiceView } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -13,7 +12,7 @@ export type { InvoiceView } from '@ab/schedule';
 /** GET /receivables: who owes, how much, how long, with one total in the reporting currency. */
 export const receivablesQuery = queryOptions({
   queryKey: moneyKeys.receivables(),
-  queryFn: () => apiFetch<ReceivablesView>('/receivables'),
+  queryFn: receivablesCall({ apiFetch, apiSend }),
   staleTime: 60_000,
 });
 

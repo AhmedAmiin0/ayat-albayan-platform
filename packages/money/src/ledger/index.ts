@@ -13,6 +13,7 @@ export * from './usage/package-cancel';
 export * from './usage/payment-state';
 export * from './usage/owed';
 export * from './usage/receivables';
+export * from './usage/receivables.schemas';
 export * from './earnings/payout';
 export * from './earnings/payout-breakdown.schemas';
 export * from './schemas';

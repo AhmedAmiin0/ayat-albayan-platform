@@ -1966,6 +1966,185 @@
    ]
   }
  },
+ "GET /receivables": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "rows": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "student": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "code": {
+          "type": "string"
+         },
+         "name": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "id",
+         "code",
+         "name"
+        ]
+       },
+       "guardian": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "name": {
+            "type": "string"
+           },
+           "phone_e164": {
+            "type": [
+             "string",
+             "null"
+            ]
+           }
+          },
+          "required": [
+           "name",
+           "phone_e164"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "price": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string"
+       },
+       "starts_on": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string"
+       },
+       "cancel_kind": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "stop_owed_amount": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "paid": {
+        "type": "number"
+       },
+       "owed": {
+        "type": "number"
+       },
+       "days_overdue": {
+        "type": "number"
+       },
+       "bucket": {
+        "type": "string",
+        "enum": [
+         "0_30",
+         "31_60",
+         "61_90",
+         "90_plus"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "student",
+       "guardian",
+       "price",
+       "currency",
+       "starts_on",
+       "status",
+       "paid",
+       "owed",
+       "days_overdue",
+       "bucket"
+      ]
+     }
+    },
+    "totals": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "currency": {
+        "type": "string"
+       },
+       "owed": {
+        "type": "number"
+       },
+       "buckets": {
+        "type": "object",
+        "properties": {
+         "0_30": {
+          "type": "number"
+         },
+         "31_60": {
+          "type": "number"
+         },
+         "61_90": {
+          "type": "number"
+         },
+         "90_plus": {
+          "type": "number"
+         }
+        },
+        "required": [
+         "0_30",
+         "31_60",
+         "61_90",
+         "90_plus"
+        ]
+       }
+      },
+      "required": [
+       "currency",
+       "owed",
+       "buckets"
+      ]
+     }
+    },
+    "total": {
+     "type": "number"
+    },
+    "currency": {
+     "type": "string"
+    },
+    "fx_missing": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   },
+   "required": [
+    "rows",
+    "totals",
+    "total",
+    "currency",
+    "fx_missing"
+   ]
+  }
+ },
  "GET /report-pages/:publicId": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",

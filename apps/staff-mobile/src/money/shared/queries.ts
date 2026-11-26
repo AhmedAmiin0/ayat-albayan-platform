@@ -1,15 +1,12 @@
+import { receivablesCall } from '@ab/client-core';
 import { signedDownloadSchema } from '@ab/shared';
-import {
-  paymentAttachmentListSchema,
-  periodTotalSchema,
-  type PeriodTotal,
-  type ReceivablesView,
-} from '@ab/money';
+import { paymentAttachmentListSchema, periodTotalSchema, type PeriodTotal } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { z } from 'zod';
 
 const MINUTE = 60_000;
+const receivables = receivablesCall({ apiFetch, apiSend });
 
 // A signed URL expires, so `noPersist` keeps it off the disk cache (lib/query-client): a restart
 // would show a dead receipt.
@@ -19,7 +16,7 @@ const meta = { noPersist: true };
 export function useReceivables() {
   return useQuery({
     queryKey: pathKey('/receivables'),
-    queryFn: () => apiFetch<ReceivablesView>('/receivables'),
+    queryFn: receivables,
   });
 }
 

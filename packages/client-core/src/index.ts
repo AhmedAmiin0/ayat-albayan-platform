@@ -15,6 +15,7 @@ export * from './finance/quote-custom';
 export * from './finance/price-list';
 export * from './finance/pricing';
 export * from './finance/stripe-feature';
+export * from './finance/receivables';
 export * from './finance/quote-sheet';
 export type * from './finance/list-filters';
 export * from './sales/lead-sort';
