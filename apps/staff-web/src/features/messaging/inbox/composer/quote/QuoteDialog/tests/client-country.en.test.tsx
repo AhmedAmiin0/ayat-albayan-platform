@@ -43,3 +43,8 @@ it('the controls are English while the client’s message stays Arabic', async (
   const usd = '/pricing/quote?duration=45&tier=standard&students=1&discount=0';
   expect(shownText()).toBe(offerText(fakePricingApi(usd) as Quote, ar.pricing));
 });
+
+it('the Arabic message reads right to left inside the English sheet', async () => {
+  await showSheet({ phone_e164: '+201001234567' });
+  expect(screen.getByTestId('quote-text').getAttribute('dir')).toBe('auto');
+});

@@ -38,10 +38,13 @@ function initialSelection(phone: string): PricingSelection {
 const askedRounding = (discount: number, rounding: Rounding): Rounding =>
   discount > 0 ? rounding : DEFAULT_ROUNDING;
 
-/** A price still loading for a new choice is the last choice's: its text is held back. */
+/**
+ * A price still loading for a new choice is the last choice's: its text is held back. A price
+ * whose reload failed is no longer confirmed: the failed load shows in its place.
+ */
 function offerOf(priced: Priced, text: string | null, blocked = false): QuoteOffer {
   return {
-    text,
+    text: priced.isError ? null : text,
     held: priced.isPlaceholderData || blocked,
     failed: priced.isError,
     retry: () => void priced.refetch(),

@@ -12,7 +12,7 @@ export function QuotePreview({ text, held, query }: QuotePreviewProps) {
       {query.isError && <FormAlert>{t.common.error}</FormAlert>}
       {text === null && query.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
       {text !== null && (
-        <p data-testid="quote-text" className={cn(PREVIEW_TEXT, held && 'opacity-60')}>
+        <p data-testid="quote-text" dir="auto" className={cn(PREVIEW_TEXT, held && 'opacity-60')}>
           {text}
         </p>
       )}

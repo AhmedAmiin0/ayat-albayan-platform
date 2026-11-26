@@ -4,7 +4,9 @@ import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { fakePricingApi } from '@/features/finance/pricing/fake-pricing-api';
+import { currencySymbol } from '@/features/finance/subscriptions';
 import {
+  askedOf,
   isPressed,
   lastAsked,
   press,
@@ -21,6 +23,10 @@ const SA = '/pricing/quote?country=SA&duration=45&tier=standard&students=1';
 const r = t.inbox.quote.rounding;
 const group = () => screen.queryByRole('group', { name: r.label });
 const asked = () => lastAsked(apiFetch, '/pricing/quote');
+// The sheet asks 250 ms after the last change.
+const PAST_DEBOUNCE_MS = 400;
+const AMOUNT = t.subscriptions.customPrice.label.replace('{currency}', currencySymbol('SAR'));
+const amount = () => screen.getByLabelText(AMOUNT);
 const discount = (value: string) =>
   fireEvent.change(screen.getByRole('spinbutton', { name: t.pricing.steps.discount }), {
     target: { value },
@@ -80,6 +86,23 @@ it('«مبلغ مخصص» hides the choice, which has no say in a typed amount, 
   expect(group()).toBeNull();
   press(t.paymentLinks.customAmount);
   expect(isPressed(r.up)).toBe(true);
+});
+
+it('an amount typed in «مبلغ مخصص» asks nothing new, so the request keeps the rounding', async () => {
+  await showSheet();
+  discount('7');
+  press(r.up);
+  const path = `${SA}&discount=7&rounding=up`;
+  const quote = fakePricingApi(path) as Quote;
+  await waitFor(() => expect(shownText()).toBe(offerText(quote, ar.pricing)));
+  const before = askedOf(apiFetch, '/pricing/quote');
+  press(t.paymentLinks.customAmount);
+  fireEvent.change(amount(), { target: { value: '100' } });
+  await new Promise((resolve) => setTimeout(resolve, PAST_DEBOUNCE_MS));
+  expect(askedOf(apiFetch, '/pricing/quote')).toEqual(before);
+  expect(before.at(-1)).toBe(path);
+  expect(amount()).toHaveProperty('value', '100');
+  expect(shownText()).toBe(offerText(quote, ar.pricing, 100));
 });
 
 it('«كل الأسعار» has no custom amount, so one left on does not hide the choice there', async () => {

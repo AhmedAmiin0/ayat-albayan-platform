@@ -1,10 +1,11 @@
+import { priceListKeys } from '@ab/client-core';
 import { priceList, priceListText } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { bulkSa } from '@/finance/pricing/fixtures';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { QuoteSheet } from '@/inbox/composer/quote/QuoteSheet/QuoteSheet';
 
 const mockApiFetch = jest.fn();
@@ -44,14 +45,17 @@ beforeEach(() => {
 });
 
 async function sheet() {
-  await renderWithQuery(<QuoteSheet phone="+966501234567" open onClose={jest.fn()} />);
+  const client = createTestQueryClient();
+  await renderWithQuery(<QuoteSheet phone="+966501234567" open onClose={jest.fn()} />, client);
   await screen.findByTestId('quote-preview');
+  return client;
 }
 
 async function listSheet() {
-  await sheet();
+  const client = await sheet();
   await press(q.mode.all);
   await waitFor(() => expect(text()).toBe(TEXT));
+  return client;
 }
 
 test('while the next list loads the last one stays, dimmed, and nothing may leave', async () => {
@@ -89,6 +93,19 @@ test('a new choice whose list fails shows the error, never the last choice’s l
   expect(await screen.findByText(t.common.error)).toBeTruthy();
   expect(screen.queryByTestId('quote-preview')).toBeNull();
   for (const name of ACTIONS) expect(off(name)).toBe(true);
+});
+
+test('a shown list whose reload fails gives way to the error; «retry» brings it back', async () => {
+  const client = await listSheet();
+  lists(offline);
+  await act(() => client.refetchQueries({ queryKey: priceListKeys.all }));
+  expect(await screen.findByText(t.common.error)).toBeTruthy();
+  expect(screen.queryByTestId('quote-preview')).toBeNull();
+  for (const name of ACTIONS) expect(off(name)).toBe(true);
+  lists(() => Promise.resolve(listOf(0)));
+  await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
+  await waitFor(() => expect(text()).toBe(TEXT));
+  for (const name of ACTIONS) expect(off(name)).toBeFalsy();
 });
 
 test('an answer that is not a price list is refused: nothing to send', async () => {

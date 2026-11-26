@@ -76,6 +76,19 @@ it('the chosen country, students, discount and rounding reach the list, and only
   expect(askedOf(apiFetch, '/pricing/quote')).toHaveLength(1);
 });
 
+it('the discount back at 0 asks the default list, whatever rounding was chosen', async () => {
+  await showSheet();
+  press(q.mode.all);
+  discount('7');
+  press(q.rounding.down);
+  await waitFor(() => expect(queryOf(listAsked()).rounding).toBe('down'));
+  press(p.discounts['0']);
+  const defaults = { country: 'SA', students: '1', discount: '0', rounding: 'nearest' };
+  await waitFor(() => expect(queryOf(listAsked())).toEqual(defaults));
+  press(p.discounts['10']);
+  expect(isPressed(q.rounding.down)).toBe(true);
+});
+
 it('a list price is the single quote’s for the same choice: 180 less 7 %, rounded up', async () => {
   await showSheet();
   press(q.mode.all);

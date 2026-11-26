@@ -26,7 +26,8 @@ function initialChoice(phone: string): QuoteChoice {
 
 /**
  * The sheet's state: one choice for both modes and the text of the mode that shows. `stale`
- * means that text still belongs to the previous choice, so it must not leave.
+ * means that text is not a confirmed price of the choice on screen (it belongs to the previous
+ * choice, or its last reload failed), so it must not leave.
  */
 export function useQuoteOffer(phone: string) {
   const [choice, setChoice] = useState(() => initialChoice(phone));
@@ -46,7 +47,7 @@ export function useQuoteOffer(phone: string) {
     },
     query: shown.query,
     text: shown.text,
-    stale: choice !== asked || shown.query.isPlaceholderData,
+    stale: choice !== asked || shown.query.isPlaceholderData || shown.query.isError,
     invalid: shown.invalid,
   };
 }

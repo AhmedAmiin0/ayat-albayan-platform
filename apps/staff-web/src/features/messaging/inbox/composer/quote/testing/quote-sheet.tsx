@@ -11,9 +11,9 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 export async function showSheet(patch: Partial<ThreadView> = {}) {
   const done = { onClose: vi.fn(), onFilled: vi.fn() };
   const chat = thread({ phone_e164: '+966501234567', session_open: true, ...patch });
-  renderWithClient(<QuoteDialog thread={chat} {...done} />);
+  const client = renderWithClient(<QuoteDialog thread={chat} {...done} />);
   await screen.findByTestId('quote-text');
-  return done;
+  return { ...done, client };
 }
 
 export const button = (name: string) => screen.getByRole('button', { name });
