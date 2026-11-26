@@ -3,15 +3,15 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { pageQuery } from '@ab/core';
 import { z } from 'zod';
 import { orFilterTerm } from '@/common/db/or-filter';
-import { isUniqueViolation } from '@/common/db/errors';
+import { pgError, UNIQUE_VIOLATION, type PgErrorMap } from '@/common/db/errors';
 
-// ponytail: shared by leads + job-applicants only; hoist to common/ when a third module needs it.
+const PERSON_ERRORS: PgErrorMap = {
+  codes: { [UNIQUE_VIOLATION]: () => new ConflictException({ code: 'duplicate_phone' }) },
+};
 
-/** Unique-violation (phone already exists) → 409; any other DB error → 500. */
+/** A phone that already exists answers 409 `duplicate_phone`; the rest the default map. */
 export function throwIfDbError(error: PostgrestError | null): asserts error is null {
-  if (!error) return;
-  if (isUniqueViolation(error)) throw new ConflictException({ code: 'duplicate_phone' });
-  throw new Error(`db: ${error.message}`);
+  if (error) throw pgError(error, PERSON_ERRORS);
 }
 
 /** Pagination + search shared by the list endpoints (R-NFR-08). */
