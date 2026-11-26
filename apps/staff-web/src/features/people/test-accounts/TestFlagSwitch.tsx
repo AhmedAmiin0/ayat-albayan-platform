@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { SwitchTrack, switchInputClass } from '@/components/settings/fields/SwitchTrack';
 import { Button, FormAlert, t } from '@ab/web-kit';
-import { testFlagError, type TestFlagTarget } from './test-flag.api';
+import type { TestFlagTarget } from '@ab/client-core';
+import { testFlagError } from './test-flag.api';
 import { useSetTestFlag } from './use-test-flag';
 
 const T = t.testAccounts;

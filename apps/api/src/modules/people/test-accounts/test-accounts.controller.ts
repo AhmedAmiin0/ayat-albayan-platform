@@ -1,46 +1,43 @@
-import { testFlagBodySchema, type TestFlagBody, type TestFlagResult } from '@ab/shared';
-import { Controller, Inject, Patch } from '@nestjs/common';
-import { z } from 'zod';
+import { testAccountRoutes as routes, type TestFlagResult } from '@ab/shared';
+import { Controller, Inject } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { TestAccountsService } from './test-accounts.service';
-
-const idSchema = z.uuid();
 
 /** users.write; 404, 409, 400. */
 @ApiTags('users')
 @ApiBearerAuth()
-@Controller('admin/users')
+@Controller()
 export class UserTestController {
   constructor(@Inject(TestAccountsService) private readonly accounts: TestAccountsService) {}
 
-  @Patch(':id/test')
+  @Route(routes.user)
   @Permissions('users.write')
   set(
-    @ZodParam('id', idSchema) id: string,
-    @ZodBody(testFlagBodySchema) body: TestFlagBody,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.user>,
     @CurrentUser() user: AuthUser,
   ): Promise<TestFlagResult> {
-    return this.accounts.set({ kind: 'profile', id, isTest: body.is_test, actorId: user.id });
+    const write = { id: params.id, isTest: body.is_test, actorId: user.id };
+    return this.accounts.set({ kind: 'profile', ...write });
   }
 }
 
 /** students.write; 404, 409. */
 @ApiTags('students')
 @ApiBearerAuth()
-@Controller('students')
+@Controller()
 export class StudentTestController {
   constructor(@Inject(TestAccountsService) private readonly accounts: TestAccountsService) {}
 
-  @Patch(':id/test')
+  @Route(routes.student)
   @Permissions('students.write')
   set(
-    @ZodParam('id', idSchema) id: string,
-    @ZodBody(testFlagBodySchema) body: TestFlagBody,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.student>,
     @CurrentUser() user: AuthUser,
   ): Promise<TestFlagResult> {
-    return this.accounts.set({ kind: 'student', id, isTest: body.is_test, actorId: user.id });
+    const write = { id: params.id, isTest: body.is_test, actorId: user.id };
+    return this.accounts.set({ kind: 'student', ...write });
   }
 }
