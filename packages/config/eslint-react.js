@@ -5,6 +5,9 @@
 /** Hook files: the only place a raw useEffect / useLayoutEffect may live. */
 const HOOK_FILES = ['**/use-*.ts', '**/use-*.tsx', '**/hooks/**'];
 
+/** A component's own hook (`Name/use-name.ts`, docs/57 §2.12) calls shared effect hooks only. */
+export const LOCAL_HOOKS = ['src/**/[A-Z]*/use-*.ts'];
+
 const fromReact = (names, message) => [
   {
     selector: `ImportDeclaration[source.value='react'] > ImportSpecifier[imported.name=/^(${names})$/]`,
@@ -42,7 +45,7 @@ const EFFECTS = [
 /**
  * Two blocks: `files` (every React file of the package) get the no-memo rule when the React
  * Compiler builds them (`compiler`) and the React 19 rules when the package runs React 19
- * (`react19`); `effects` (outside HOOK_FILES) also refuse a raw effect.
+ * (`react19`); `effects` (outside HOOK_FILES) and LOCAL_HOOKS also refuse a raw effect.
  */
 export function reactRestrictions({ files, effects, compiler, react19 }) {
   const base = [...(compiler ? COMPILER : []), ...(react19 ? REACT_19 : [])];
@@ -53,5 +56,6 @@ export function reactRestrictions({ files, effects, compiler, react19 }) {
       ignores: HOOK_FILES,
       rules: { 'no-restricted-syntax': ['error', ...base, ...EFFECTS] },
     },
+    { files: LOCAL_HOOKS, rules: { 'no-restricted-syntax': ['error', ...base, ...EFFECTS] } },
   ];
 }

@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { test } from 'node:test';
-import { makeRepo, snapshot } from '../../ci-checks/move-module/fixture.test-util.ts';
-import { runFold } from './run.ts';
+import { makeRepo, snapshot } from '../../../../ci-checks/move-module/fixture.test-util.ts';
+import { runFold } from '../run.ts';
 
 const P = 'apps/web/src/pane';
 

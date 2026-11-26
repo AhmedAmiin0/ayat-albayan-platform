@@ -253,6 +253,11 @@ jobs:
           exit "$status"
         env:
           JEST_CACHE_DIR: ${{ matrix.jcache && format('{0}/node_modules/.jest-cache', github.workspace) || '' }}
+      # The web typecheck regenerates the TanStack route tree (tsr generate): a fold that moved a route
+      # file or a component under routes/ shows here (docs/63 §5 «Route snapshot»).
+      - name: Route tree unchanged
+        if: matrix.name == 'typecheck + bundles'
+        run: git diff --exit-code apps/*/src/routeTree.gen.ts
       # The size of each Metro bundle, so a contracts PR can compare it with develop's (docs/62 §1 «Mobile
       # bundle»). A bundle task the turbo cache replayed wrote no dist/: the summary says so.
       - name: Mobile bundle size
@@ -375,6 +380,9 @@ jobs:
       - run: pnpm guard:escapes
       - run: pnpm guard:units
       - run: pnpm guard:move-only
+      # Rule 16: one folder per component with its local hook; new and regressed components fail, and
+      # every offender in a finished (STRICT) workspace (docs/63 §3).
+      - run: pnpm guard:components
       # On a PR: every suppressions file per file and per rule against the base branch's (docs/59), and the
       # refactor/guards and refactor/folder-cap baselines: only shrink, never a new entry or file.
       - run: pnpm guard:lint

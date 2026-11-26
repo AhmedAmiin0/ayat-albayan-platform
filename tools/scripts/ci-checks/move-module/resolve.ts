@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { posix } from 'node:path';
+import { selfExportPaths } from './package-self.ts';
 import { ownPaths, workspacePaths } from './tsconfig-paths.ts';
 
 /** A tsconfig `paths` alias such as `@/*` → `apps/staff-web/src/*`, for files under `scope`. */
@@ -34,11 +35,11 @@ const JS_TO_TS: Record<string, string[]> = {
 
 /**
  * An app takes the `@/*` its tsconfig inherits from the root base; a package or tool only its
- * own paths, since packages never import `@/` (CLAUDE.md rule 13).
+ * own paths, since packages never import `@/` (CLAUDE.md rule 13); a package also its own name.
  */
 const PATHS_OF: Record<string, typeof workspacePaths> = {
   apps: workspacePaths,
-  packages: ownPaths,
+  packages: (root, scope) => [...ownPaths(root, scope), ...selfExportPaths(root, scope)],
   tools: ownPaths,
 };
 
@@ -75,7 +76,8 @@ function lookup(r: Resolver, base: string): Omit<Target, 'alias'> | undefined {
     if (isFile(r, file)) return { file, style: 'js', written: ext };
   }
   for (const e of EXTS) if (isFile(r, base + e)) return { file: base + e, style: 'bare' };
-  for (const e of EXTS) if (isFile(r, `${base}/index${e}`)) return { file: `${base}/index${e}`, style: 'index' };
+  for (const e of EXTS)
+    if (isFile(r, `${base}/index${e}`)) return { file: `${base}/index${e}`, style: 'index' };
   return undefined;
 }
 
@@ -96,7 +98,8 @@ const stripExt = (file: string): string =>
 function pathFor(target: Target, file: string): string {
   if (target.style === 'exact') return file;
   if (target.style === 'js') return stripExt(file) + (target.written ?? '.js');
-  if (target.style === 'index' && posix.basename(file).startsWith('index.')) return posix.dirname(file);
+  if (target.style === 'index' && posix.basename(file).startsWith('index.'))
+    return posix.dirname(file);
   return stripExt(file);
 }
 
@@ -119,7 +122,9 @@ export function formatSpec(
   }
   const rel = posix.relative(posix.dirname(opts.from), path);
   if (rel === '') return '.';
-  const app = rel.startsWith('../') ? opts.aliases?.find((a) => covers(a, opts.from, path)) : undefined;
+  const app = rel.startsWith('../')
+    ? opts.aliases?.find((a) => covers(a, opts.from, path))
+    : undefined;
   if (app !== undefined) return app.prefix + posix.relative(app.dir, path);
   return rel.startsWith('.') ? rel : `./${rel}`;
 }

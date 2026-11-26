@@ -8,6 +8,8 @@ export interface FloatingUnit {
   files: string[];
   tests: string[];
   action: UnitAction;
+  /** The folder and file stem after the fold when it differs from `name` (`button` → `Button`). */
+  rename?: string;
 }
 
 /** Why a folder is scanned but never folded (route trees, Nest modules, generated code). */

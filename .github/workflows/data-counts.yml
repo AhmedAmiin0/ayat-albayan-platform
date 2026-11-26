@@ -1,0 +1,53 @@
+name: data-counts
+# Owner-run, read-only production counts for a domain's schema conversion (docs/62 Decisions, D).
+# The runner always comes from develop; only the counts file is read at the given sha, and the
+# runner prints «name: n» integers only, because Actions logs are public.
+on:
+  workflow_dispatch:
+    inputs:
+      domain:
+        description: Counts file name under tools/scripts/data-counts (without .sql)
+        required: true
+        type: string
+      sha:
+        description: Full commit sha that holds the counts file
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: data-counts
+  cancel-in-progress: false
+
+jobs:
+  counts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: prod-readonly
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: develop
+          persist-credentials: false
+      - name: Read the counts file at the given sha
+        env:
+          DOMAIN: ${{ inputs.domain }}
+          SHA: ${{ inputs.sha }}
+        run: |
+          [[ "$DOMAIN" =~ ^[a-z][a-z0-9-]*$ ]] || { echo "::error::domain must be lower-case words"; exit 1; }
+          [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::sha must be a full commit sha"; exit 1; }
+          git fetch --no-tags --depth=1 origin "$SHA"
+          git show "$SHA:tools/scripts/data-counts/$DOMAIN.sql" > "$RUNNER_TEMP/counts.sql"
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: pnpm i --frozen-lockfile --filter . > /dev/null
+      - name: Count
+        env:
+          PROD_READONLY_DATABASE_URL: ${{ secrets.PROD_READONLY_DATABASE_URL }}
+        run: node tools/scripts/data-counts/run.mjs "$RUNNER_TEMP/counts.sql"

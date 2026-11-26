@@ -33,6 +33,8 @@ export interface PlanInput {
   refs: ReadonlyMap<string, string[]>;
   /** Folder → open PRs that touch it; empty when open PRs are not skipped. */
   prDirs: ReadonlyMap<string, number[]>;
+  /** A folder's floating units; scan/floating.ts floatingIn when absent. */
+  scan?: (dir: string, names: readonly string[]) => FloatingUnit[];
   /** Folder prefixes to plan; all folders when absent. */
   only?: readonly string[];
 }
