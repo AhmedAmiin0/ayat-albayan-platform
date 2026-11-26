@@ -1,9 +1,5 @@
-import {
-  invoiceRoutes as routes,
-  type InvoiceRecentPage,
-  type InvoiceView,
-  type SignedDownload,
-} from '@ab/shared';
+import type { InvoiceView } from '@ab/schedule';
+import { invoiceRoutes as routes, type InvoiceRecentPage, type SignedDownload } from '@ab/shared';
 import { Controller } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '@/common/auth/decorators';

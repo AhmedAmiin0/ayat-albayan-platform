@@ -1,4 +1,4 @@
-import type { InvoiceView } from '@ab/shared';
+import type { InvoiceView } from '@ab/schedule';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiError, type ApiClient } from '../../../core/http';
 import { invoiceCalls } from './invoices-api';
