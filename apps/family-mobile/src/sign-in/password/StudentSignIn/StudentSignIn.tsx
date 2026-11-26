@@ -1,16 +1,13 @@
-import { useState } from 'react';
 import { View } from 'react-native';
 import { Button, ForgotPassword, PasswordSignIn, t } from '@ab/mobile-kit';
 import { feel } from '@/sign-in/feedback';
 import { studentCodeOnTrack } from '@ab/client-core';
-
-/** password: student code + password; family (forgot) / firstTime: a code to the guardian. */
-type StudentView = 'password' | 'family' | 'firstTime';
+import type { StudentSignInProps } from './StudentSignIn.types';
+import { useStudentSignIn } from './use-student-sign-in';
 
 /** docs/50 §4: first password and reset use a WhatsApp code; both hide while codes are off. */
-export function StudentSignIn({ codes }: { codes: boolean }) {
-  const [view, setView] = useState<StudentView>('password');
-  const toPassword = () => setView('password');
+export function StudentSignIn({ codes }: StudentSignInProps) {
+  const { view, setView, toPassword } = useStudentSignIn();
   if (view !== 'password') return <ForgotPassword key={view} mode={view} onBack={toPassword} />;
   return (
     <View style={{ gap: 16 }}>

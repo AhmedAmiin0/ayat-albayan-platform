@@ -1,16 +1,14 @@
-import { useState } from 'react';
 import { View } from 'react-native';
 import { AuthAlert, AuthHint, Button, t } from '@ab/mobile-kit';
 import { CountryPicker } from '@/sign-in/phone/CountryPicker';
 import { PhoneField } from '@/sign-in/phone/PhoneField';
 import { progressIcon } from '@/sign-in/progress';
-import type { WhatsAppSignIn } from '@/sign-in/whatsapp/use-whatsapp-sign-in';
+import type { PhoneStepProps } from './PhoneStep.types';
+import { usePhoneStep } from './use-phone-step';
 
 /** The send button waits for a whole number and shows progress while the code is requested. */
-export function PhoneStep({ sign }: { sign: WhatsAppSignIn }) {
-  const { flow, phone } = sign;
-  const [picking, setPicking] = useState(false);
-  const bad = phone.check.state === 'bad';
+export function PhoneStep({ sign }: PhoneStepProps) {
+  const { flow, phone, picking, setPicking, bad } = usePhoneStep({ sign });
   return (
     <View style={{ gap: 12 }}>
       <PhoneField

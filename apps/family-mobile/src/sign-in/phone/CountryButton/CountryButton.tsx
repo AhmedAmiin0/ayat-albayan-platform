@@ -1,8 +1,9 @@
 import { Pressable } from 'react-native';
 import { AppText, locale, Ltr, t, type, useTheme } from '@ab/mobile-kit';
-import { type Country, nameOf } from '@ab/client-core';
+import { nameOf } from '@ab/client-core';
+import type { CountryButtonProps } from './CountryButton.types';
 
-export function CountryButton({ country, onPress }: { country: Country; onPress: () => void }) {
+export function CountryButton({ country, onPress }: CountryButtonProps) {
   const { color } = useTheme();
   const name = nameOf(country, locale);
   return (

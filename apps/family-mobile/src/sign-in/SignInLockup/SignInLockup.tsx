@@ -1,9 +1,6 @@
 import { View } from 'react-native';
 import { AppText, Mark, t, type, useTheme, Wordmark } from '@ab/mobile-kit';
-
-const TILE = 76;
-/** The emblem inside the tile (canvas LoginFamily: 59 of 76). */
-const MARK = 59;
+import { TILE, MARK } from './sign-in-lockup.helpers';
 
 export function SignInLockup() {
   const { color } = useTheme();

@@ -1,12 +1,7 @@
 import { Pressable, View } from 'react-native';
 import { AppText, locale, Ltr, type, useTheme } from '@ab/mobile-kit';
-import { type Country, nameOf } from '@ab/client-core';
-
-interface CountryRowProps {
-  country: Country;
-  picked: boolean;
-  onPick: (country: Country) => void;
-}
+import { nameOf } from '@ab/client-core';
+import type { CountryRowProps } from './CountryRow.types';
 
 /** One country in the picker: flag, name, calling code; the picked one ticked and announced. */
 export function CountryRow({ country, picked, onPick }: CountryRowProps) {
