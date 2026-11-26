@@ -27,6 +27,13 @@ test('workflow: the runner comes from develop and only the counts file comes fro
   assert.match(reads[0], /git show "\$SHA:tools\/scripts\/data-counts\/\$DOMAIN\.sql"/);
 });
 
+test('workflow: the domain and the sha are checked before either is used', () => {
+  const [domain, sha] = stepsUsing('git show')[0].run.split('\n');
+  assert.ok(domain.startsWith('[[ "$DOMAIN" =~ ^[a-z][a-z0-9-]*$ ]] || {'));
+  assert.ok(sha.startsWith('[[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || {'));
+  assert.deepEqual([domain.endsWith('exit 1; }'), sha.endsWith('exit 1; }')], [true, true]);
+});
+
 test('workflow: the secret reaches only the step that runs the runner', () => {
   const holders = stepsUsing('secrets.');
   assert.equal(holders.length, 1);

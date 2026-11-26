@@ -49,6 +49,25 @@ test('parse: a counts file has a size limit', () => {
   assert.throws(() => parseCounts(text), /counts file is too long/);
 });
 
+test('parse: a control character is refused, inside a string too', () => {
+  const text = "-- count: ctl\nselect count(*) from t where name = 'a\u0001b';";
+  assert.throws(() => parseCounts(text), /statement 1 is not a plain count/);
+});
+
+test('parse: a comment line never ends a statement', () => {
+  const lines = ['-- count: big', 'select count(*) from t', 'where amount_minor > 100'];
+  const text = [...lines, '-- big ones only;', ';'].join('\n');
+  const sql = 'select count(*) from public.t where amount_minor > 100';
+  assert.deepEqual(parseCounts(text), [{ name: 'big', sql }]);
+});
+
+test('parse: a name is lower-case letters, digits and underscores', () => {
+  for (const name of ['Bad-Name', '::x']) {
+    const text = `-- count: ${name}\nselect count(*) from t;`;
+    assert.throws(() => parseCounts(text), /statement 1 has no name/);
+  }
+});
+
 test('parse: a statement needs a «-- count: <name>» line before it', () => {
   assert.throws(() => parseCounts(fixture('unnamed')), /statement 1 has no name/);
 });

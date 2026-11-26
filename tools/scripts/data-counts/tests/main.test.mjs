@@ -1,27 +1,31 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { main } from '../main.mjs';
+import { exitQuietly, main } from '../main.mjs';
 import { fixturePath } from './fixtures.mjs';
 
 const URL_VALUE = 'postgres://reader:pw@db.example/postgres';
 
 const fakeDb = (answer) => {
-  const seen = { modes: [], sent: [], setup: [], ended: false, url: null };
-  const connect = (url) => {
-    seen.url = url;
+  const seen = { modes: [], sent: [], setup: [], order: [], ended: false, url: null, driver: null };
+  const connect = (url, driverOptions) => {
+    Object.assign(seen, { url, driver: driverOptions });
     return {
       begin: (mode, run) => {
         seen.modes.push(mode);
-        const setLocal = (sql) => {
-          seen.setup.push(sql);
+        const log = [];
+        seen.order.push(log);
+        const setLocal = (sql, args, options) => {
+          log.push('limit');
+          seen.setup.push([sql, args, options]);
           return [];
         };
         const count = (sql, args, options) => {
+          log.push('count');
           seen.sent.push([args, options]);
           return answer(sql);
         };
         const unsafe = async (sql, args, options) =>
-          sql.startsWith('set local') ? setLocal(sql) : count(sql, args, options);
+          sql.startsWith('set local') ? setLocal(sql, args, options) : count(sql, args, options);
         return run({ unsafe });
       },
       end: () => {
@@ -56,10 +60,28 @@ test('main: each count runs alone, read-only, and prints only «name: n»', asyn
   assert.equal(seen.ended, true);
 });
 
-test('main: each count has a time limit set inside its own transaction', async () => {
+test('main: each count sets its time limit first, inside its own transaction', async () => {
   const { seen } = await run('valid', async () => [{ count: '1' }]);
-  const limit = "set local statement_timeout = '30s'";
+  const limit = ["set local statement_timeout = '30s'", [], { simple: false }];
   assert.deepEqual(seen.setup, [limit, limit, limit]);
+  const each = ['limit', 'count'];
+  assert.deepEqual(seen.order, [each, each, each]);
+});
+
+test('main: the driver gets one connection, no type lookup and no notices', async () => {
+  const { seen } = await run('valid', async () => [{ count: '1' }]);
+  const { onnotice, ...plain } = seen.driver;
+  assert.deepEqual(plain, { max: 1, connect_timeout: 15, fetch_types: false });
+  assert.equal(onnotice({ message: 'row "Ahmed"' }), undefined);
+});
+
+test('exitQuietly: an error thrown outside main ends the run with code 1, unprinted', () => {
+  const handlers = {};
+  const codes = [];
+  const on = (event, handle) => Object.assign(handlers, { [event]: handle });
+  exitQuietly({ on, exit: (code) => codes.push(code) });
+  handlers.uncaughtException(new Error(URL_VALUE));
+  assert.deepEqual([Object.keys(handlers), codes], [['uncaughtException'], [1]]);
 });
 
 test('main: a failing statement fails the run and prints nothing, not even the error', async () => {
