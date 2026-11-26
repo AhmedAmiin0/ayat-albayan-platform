@@ -1,5 +1,5 @@
 import { expenseRoutes as routes } from '@ab/shared';
-import { callWith, type ApiClient } from '../../core/http';
+import { callWith, type ApiClient } from '../../../core/http';
 import type { ExpenseCategoryCalls } from './expense-categories-api.types';
 
 /** Expense categories on one api client; paths and answers from the routes. */

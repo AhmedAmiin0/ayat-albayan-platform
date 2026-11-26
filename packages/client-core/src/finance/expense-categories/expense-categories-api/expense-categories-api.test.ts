@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../core/http';
+import { ApiError, type ApiClient } from '../../../core/http';
 import { expenseCategoryCalls } from './expense-categories-api';
 
 const category = { key: 'fuel', label_ar: 'وقود', label_en: null, active: true };
