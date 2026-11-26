@@ -1,4 +1,4 @@
-import { BASE, iso, MIN, type Tx } from '../edit-time';
+import { BASE, freeTeacher, iso, MIN, type Tx } from '../edit-time';
 import { USERS } from '../core/users';
 
 // Helpers for create_booking with `siblings` (migration 465), payloads as bookingPayload builds.
@@ -19,6 +19,7 @@ export async function seedSiblings(tx: Tx): Promise<DaySeed> {
     select t.id, t.profile_id from public.teachers t join auth.users u on u.id = t.profile_id
     where u.email = ${USERS.teacher.email}`;
   if (!t) throw new Error('e2e teacher missing (global setup)');
+  await freeTeacher(tx, t.id);
   const [g] = await tx<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
     values ('ولي أمر أيام', ${PHONE}, 'SA', 'Asia/Riyadh') returning id`;
   if (!g) throw new Error('guardian not written');

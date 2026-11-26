@@ -132,7 +132,7 @@
   },
   "src/lib/http/api.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "typescript/no-unsafe-return": {
       "count": 1

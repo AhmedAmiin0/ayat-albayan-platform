@@ -9,7 +9,11 @@ export type TermStartError = 'start_in_past' | 'start_earlier';
  * `next`, `current` and `today` are YYYY-MM-DD. `current` = the part's saved start day (none =
  * creating it).
  */
-export function termStartError(next: string, current: string | null | undefined, today: string): TermStartError | null {
+export function termStartError(
+  next: string,
+  current: string | null | undefined,
+  today: string,
+): TermStartError | null {
   if (current) return next < current ? 'start_earlier' : null;
   return next < today ? 'start_in_past' : null;
 }
@@ -18,4 +22,5 @@ export function termStartError(next: string, current: string | null | undefined,
  * The earliest day a start day may be set to now: the saved one, or today for a part that is not
  * set yet.
  */
-export const earliestTermStart = (current: string | null | undefined, today: string): string => current ?? today;
+export const earliestTermStart = (current: string | null | undefined, today: string): string =>
+  current ?? today;

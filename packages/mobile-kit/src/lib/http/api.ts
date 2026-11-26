@@ -1,4 +1,11 @@
-import { createApiClient, markSending, readTimeoutFor } from '@ab/client-core';
+import {
+  createApiClient,
+  markSending,
+  parseResponse,
+  readTimeoutFor,
+  type SchemaInit,
+} from '@ab/client-core';
+import type { z } from 'zod';
 import { connectivity } from '../connectivity/connectivity';
 import { isNetworkError } from '../connectivity/network-error';
 import { mobileClientTag } from './client-tag';
@@ -32,9 +39,22 @@ const client = createApiClient({
   onStall: reportStall,
 });
 
-/** fetch against the Nest API with the current Supabase access token and the client tag (`X-AB-Client`). */
-export const apiFetch = <T>(path: string, init?: RequestInit): Promise<T> =>
-  withReadDeadline((sent) => client.apiFetch(path, sent), init, readTimeoutFor(path));
+type ReadInit = RequestInit & { schema?: z.ZodType };
+
+/**
+ * fetch against the Nest API with the current Supabase access token and the client tag
+ * (`X-AB-Client`); with a `schema` the answer is parsed and a mismatch is ApiError bad_response.
+ */
+export function apiFetch<S extends z.ZodType>(
+  path: string,
+  init: SchemaInit<S>,
+): Promise<z.output<S>>;
+export function apiFetch<T>(path: string, init?: RequestInit): Promise<T>;
+export function apiFetch(path: string, init: ReadInit = {}): Promise<unknown> {
+  const { schema, ...rest } = init;
+  const read = withReadDeadline((sent) => client.apiFetch(path, sent), rest, readTimeoutFor(path));
+  return schema === undefined ? read : read.then((body) => parseResponse(schema, body, path));
+}
 
 /** JSON mutation helper for TanStack Query `mutationFn`s. Resolves undefined on 204. */
 export const apiSend = client.apiSend;

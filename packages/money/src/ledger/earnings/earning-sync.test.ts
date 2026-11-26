@@ -5,7 +5,9 @@ const RATES = { 30: 50, 45: 70, 60: 90, 90: null };
 const earning = (patch: Partial<SyncEarning> = {}): SyncEarning => ({
   teacherId: 't1', minutes: 45, rate: 70, amount: 70, paid_amount: 0, status: 'earned', ...patch,
 });
-const input = (patch: Partial<SyncInput> & { status?: string; minutes?: number } = {}): SyncInput => ({
+const input = (
+  patch: Partial<SyncInput> & { status?: string; minutes?: number } = {},
+): SyncInput => ({
   lesson: { status: patch.status ?? 'completed', minutes: patch.minutes ?? 45, teacherId: 't1' },
   earning: patch.earning ?? null,
   rates: RATES,
@@ -60,7 +62,10 @@ describe('planEarningSync: a corrected duration (PATCH /lessons/:id/time)', () =
   });
 
   it('same length keeps the frozen rate even when the teacher rate changed', () => {
-    const r = planEarningSync({ ...input({ earning: earning({ rate: 60, amount: 60 }) }), rates: { ...RATES, 45: 100 } });
+    const r = planEarningSync({
+      ...input({ earning: earning({ rate: 60, amount: 60 }) }),
+      rates: { ...RATES, 45: 100 },
+    });
     expect(r).toEqual({ kind: 'update', rate: 60, amount: 60, status: 'earned' });
   });
 

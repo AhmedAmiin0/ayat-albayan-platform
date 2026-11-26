@@ -43,7 +43,10 @@ export interface MyCommissionRow {
 }
 
 /** A commission's place in the wallet: voided wins; then the statement it sits in, if any. */
-export function walletState(status: AssistantCommissionStatus, statement: PayoutStatus | null): WalletState {
+export function walletState(
+  status: AssistantCommissionStatus,
+  statement: PayoutStatus | null,
+): WalletState {
   if (status === 'voided') return 'voided';
   if (statement === 'paid') return 'paid';
   return statement === 'approved' ? 'in_statement' : 'due';
@@ -79,13 +82,18 @@ export function walletTotals(
   at: { month: string; tz: string },
 ): Record<string, WalletTotals> {
   const cents: Record<string, WalletTotals> = {};
-  const of = (currency: string): WalletTotals => (cents[currency] ??= { due: 0, paid: 0, this_month: 0 });
+  const of = (currency: string): WalletTotals =>
+    (cents[currency] ??= { due: 0, paid: 0, this_month: 0 });
   for (const l of lines) {
     if (l.statement?.status === 'paid') of(l.currency).paid += toCents(l.amount);
     else of(l.currency).due += toCents(l.amount);
   }
-  for (const e of earned) if (monthOf(e.earned_at, at.tz) === at.month) of(e.currency).this_month += toCents(e.amount);
+  for (const e of earned)
+    if (monthOf(e.earned_at, at.tz) === at.month) of(e.currency).this_month += toCents(e.amount);
   return Object.fromEntries(
-    Object.entries(cents).map(([currency, s]) => [currency, { due: fromCents(s.due), paid: fromCents(s.paid), this_month: fromCents(s.this_month) }]),
+    Object.entries(cents).map(([currency, s]) => [
+      currency,
+      { due: fromCents(s.due), paid: fromCents(s.paid), this_month: fromCents(s.this_month) },
+    ]),
   );
 }

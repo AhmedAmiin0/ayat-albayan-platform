@@ -1,3 +1,4 @@
+import { paymentsPageSchema } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
@@ -9,7 +10,10 @@ import { PaymentsPage } from './PaymentsPage';
 import { parsePaymentsSearch, paymentsView, type PaymentsUrlSearch } from './search';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  apiFetch,
+}));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: {} }));
 
 const by = (col: string) => t.table.filterBy.replace('{col}', col);
@@ -17,7 +21,12 @@ const onSearch = vi.fn();
 
 function Harness() {
   const [search, setSearch] = useState<PaymentsUrlSearch>({ page: 3 });
-  return <PaymentsPage search={search} onSearch={(patch) => (onSearch(patch), setSearch((s) => ({ ...s, ...patch })))} />;
+  return (
+    <PaymentsPage
+      search={search}
+      onSearch={(patch) => (onSearch(patch), setSearch((s) => ({ ...s, ...patch })))}
+    />
+  );
 }
 
 function renderPage(items = [PAYMENT]) {
@@ -36,9 +45,17 @@ describe('PaymentsPage sort + filters (R-NFR-08)', () => {
     renderPage();
     fireEvent.click(await screen.findByRole('button', { name: t.payments.amount }));
     expect(onSearch).toHaveBeenLastCalledWith({ sort: 'amount', dir: undefined, page: undefined });
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/payments?sort=amount&page=1&pageSize=20'));
+    await vi.waitFor(() =>
+      expect(apiFetch).toHaveBeenCalledWith('/payments?sort=amount&page=1&pageSize=20', {
+        schema: paymentsPageSchema,
+      }),
+    );
     fireEvent.click(screen.getByRole('button', { name: t.payments.amount }));
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('sort=amount&dir=desc')));
+    await vi.waitFor(() =>
+      expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('sort=amount&dir=desc'), {
+        schema: paymentsPageSchema,
+      }),
+    );
   });
 
   it('nothing recorded and no column filter: the empty state, no table', async () => {
@@ -52,8 +69,14 @@ describe('PaymentsPage sort + filters (R-NFR-08)', () => {
     renderPage();
     await screen.findByRole('button', { name: t.payments.amount });
     openFilters();
-    fireEvent.change(screen.getByRole('combobox', { name: by(t.payments.method) }), { target: { value: 'cash' } });
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('method=cash')));
+    fireEvent.change(screen.getByRole('combobox', { name: by(t.payments.method) }), {
+      target: { value: 'cash' },
+    });
+    await vi.waitFor(() =>
+      expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('method=cash'), {
+        schema: paymentsPageSchema,
+      }),
+    );
     expect(onSearch).toHaveBeenLastCalledWith({ f_method: 'cash', page: undefined });
     expect(screen.getByRole('combobox', { name: by(t.payments.method) })).toBeTruthy();
   });
@@ -63,20 +86,45 @@ describe('PaymentsPage sort + filters (R-NFR-08)', () => {
     await screen.findByRole('button', { name: t.payments.amount });
     openFilters();
     fireEvent.change(screen.getByLabelText(t.finance.from), { target: { value: '2026-10-01' } });
-    fireEvent.change(screen.getByRole('combobox', { name: t.finance.kind }), { target: { value: 'refund' } });
+    fireEvent.change(screen.getByRole('combobox', { name: t.finance.kind }), {
+      target: { value: 'refund' },
+    });
     expect(onSearch).toHaveBeenLastCalledWith({ kind: 'refund', page: undefined });
     closeFilters();
     const chips = screen.getByRole('list', { name: t.table.activeFilters });
     expect(chips.textContent).toContain(`${t.finance.from}: 2026-10-01`);
     expect(chips.textContent).toContain(`${t.finance.kind}: ${t.enums.paymentKind.refund}`);
     fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
-    expect(onSearch).toHaveBeenLastCalledWith({ studentId: undefined, from: undefined, to: undefined, kind: undefined, f_method: undefined, page: undefined });
+    expect(onSearch).toHaveBeenLastCalledWith({
+      studentId: undefined,
+      from: undefined,
+      to: undefined,
+      kind: undefined,
+      f_method: undefined,
+      page: undefined,
+    });
   });
 
   it('the URL is parsed against allowlists', () => {
-    const s = parsePaymentsSearch({ sort: 'amount', dir: 'desc', f_method: 'cash', kind: 'refund', from: 'x', studentId: 'nope' });
-    expect(s).toMatchObject({ sort: 'amount', dir: 'desc', f_method: 'cash', kind: 'refund', from: undefined, studentId: undefined });
-    expect(parsePaymentsSearch({ sort: 'recorded_by', f_method: 'gold' })).not.toHaveProperty('sort');
+    const s = parsePaymentsSearch({
+      sort: 'amount',
+      dir: 'desc',
+      f_method: 'cash',
+      kind: 'refund',
+      from: 'x',
+      studentId: 'nope',
+    });
+    expect(s).toMatchObject({
+      sort: 'amount',
+      dir: 'desc',
+      f_method: 'cash',
+      kind: 'refund',
+      from: undefined,
+      studentId: undefined,
+    });
+    expect(parsePaymentsSearch({ sort: 'recorded_by', f_method: 'gold' })).not.toHaveProperty(
+      'sort',
+    );
     expect(parsePaymentsSearch({ f_method: 'gold' }).f_method).toBeUndefined();
     expect(paymentsView({ sort: 'paid_at', f_method: 'bank', to: '2026-10-01' })).toEqual({
       filters: { method: 'bank', to: '2026-10-01' },

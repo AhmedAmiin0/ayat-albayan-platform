@@ -8,8 +8,13 @@ export interface FullscreenDocLike {
 }
 
 /** The Fullscreen API where the browser offers it on this element, else the overlay. */
-export function maximizeModeOf(el: { requestFullscreen?: unknown } | null, doc: FullscreenDocLike): MaximizeMode {
-  return el !== null && typeof el.requestFullscreen === 'function' && doc.fullscreenEnabled === true ? 'fullscreen' : 'overlay';
+export function maximizeModeOf(
+  el: { requestFullscreen?: unknown } | null,
+  doc: FullscreenDocLike,
+): MaximizeMode {
+  return el !== null && typeof el.requestFullscreen === 'function' && doc.fullscreenEnabled === true
+    ? 'fullscreen'
+    : 'overlay';
 }
 
 export interface Maximize {

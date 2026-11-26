@@ -12,8 +12,18 @@ it('the room reads English, no Arabic letters left', () => {
     canPlayAudio: false,
     tiles: [tile({ key: 'me', name: 'Abrar', isLocal: true }), tile({ key: 's', name: 'Joud', speaking: true, micOn: false })],
   });
-  render(<ClassroomRoom join={{ url: 'u', token: 't', room: 'r', role: 'admin' }} make={() => c} />);
-  for (const text of [en.classroom.enableAudio, en.classroom.micOn, en.classroom.camOn, en.classroom.shareOn, en.classroom.leave, en.classroom.speaking, en.classroom.muted]) {
+  render(
+    <ClassroomRoom join={{ url: 'u', token: 't', room: 'r', role: 'admin' }} make={() => c} />,
+  );
+  for (const text of [
+    en.classroom.enableAudio,
+    en.classroom.micOn,
+    en.classroom.camOn,
+    en.classroom.shareOn,
+    en.classroom.leave,
+    en.classroom.speaking,
+    en.classroom.muted,
+  ]) {
     expect(screen.getByText(text)).toBeTruthy();
   }
   expect(screen.getByText(`Abrar (${en.classroom.you})`)).toBeTruthy();

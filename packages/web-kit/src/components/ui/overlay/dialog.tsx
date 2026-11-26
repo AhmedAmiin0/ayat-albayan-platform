@@ -74,7 +74,10 @@ export function Dialog(props: DialogProps) {
         tabIndex={-1}
         className={cn(jadwalClass, l.panel, className, l.phone)}
       >
-        <DialogHeader {...{ title, titleId, descId, onClose, description, glyph }} className={l.header} />
+        <DialogHeader
+          {...{ title, titleId, descId, onClose, description, glyph }}
+          className={l.header}
+        />
         {/* Taller than the screen: only the body scrolls, title and actions stay in view. */}
         <div className={cn(l.body, !footer && l.bodyAlone)}>
           {children}

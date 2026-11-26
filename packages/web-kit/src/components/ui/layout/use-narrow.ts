@@ -17,7 +17,11 @@ function useMedia(media: string): boolean {
     },
     [media],
   );
-  return useSyncExternalStore(subscribe, () => hasMedia() && matchMedia(media).matches, () => false);
+  return useSyncExternalStore(
+    subscribe,
+    () => hasMedia() && matchMedia(media).matches,
+    () => false,
+  );
 }
 
 /** True under md (768px): phones, where a 7-column board gives way to a list per day. */

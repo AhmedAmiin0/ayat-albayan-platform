@@ -1,4 +1,4 @@
-import type { PaymentAttachmentView } from '@ab/money';
+import { paymentAttachmentListSchema, type PaymentAttachmentView } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { useState } from 'react';
@@ -10,23 +10,43 @@ import { PaymentsPage } from '@/features/finance/payments/PaymentsPage';
 import type { PaymentsUrlSearch } from '@/features/finance/payments/search';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  apiFetch,
+}));
 
-const row = (id: string, legacy = false): PaymentAttachmentView => ({ id, mime: 'image/jpeg', size: 9, url: `https://signed/${id}`, expires_at: '', legacy });
+const row = (id: string, legacy = false): PaymentAttachmentView => ({
+  id,
+  mime: 'image/jpeg',
+  size: 9,
+  url: `https://signed/${id}`,
+  expires_at: '',
+  legacy,
+});
 
 function Harness() {
   const [search, setSearch] = useState<PaymentsUrlSearch>({});
-  return <PaymentsPage search={search} onSearch={(patch) => setSearch((s) => ({ ...s, ...patch }))} />;
+  return (
+    <PaymentsPage search={search} onSearch={(patch) => setSearch((s) => ({ ...s, ...patch }))} />
+  );
 }
 
-const wrap = (ui: React.ReactNode) => render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>{ui}</QueryClientProvider>);
+const wrap = (ui: React.ReactNode) =>
+  render(
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      {ui}
+    </QueryClientProvider>,
+  );
 
 describe('«عرض المرفقات»', () => {
   beforeEach(() => apiFetch.mockReset());
 
   it('admin list: a bank payment opens its attachments, the legacy receipt first, then numbered links', async () => {
     apiFetch.mockImplementation(async (path: unknown) => {
-      if (String(path).endsWith('/attachments')) return [row('receipt', true), row('a1'), row('a2')];
+      if (String(path).endsWith('/attachments'))
+        return [row('receipt', true), row('a1'), row('a2')];
       return { items: [PAYMENT], total: 1, page: 1, pageSize: 20, totals: [] };
     });
     wrap(<Harness />);
@@ -39,11 +59,19 @@ describe('«عرض المرفقات»', () => {
       [t.payments.attachmentN.replace('{n}', '2'), 'https://signed/a2'],
     ]);
     expect(links[0]?.getAttribute('target')).toBe('_blank');
-    expect(apiFetch).toHaveBeenCalledWith('/payments/pay-1/attachments');
+    expect(apiFetch).toHaveBeenCalledWith('/payments/pay-1/attachments', {
+      schema: paymentAttachmentListSchema,
+    });
   });
 
   it('a cash payment without a receipt has no «عرض المرفقات»', async () => {
-    apiFetch.mockResolvedValue({ items: [{ ...PAYMENT, method: 'cash', receipt_path: null }], total: 1, page: 1, pageSize: 20, totals: [] });
+    apiFetch.mockResolvedValue({
+      items: [{ ...PAYMENT, method: 'cash', receipt_path: null }],
+      total: 1,
+      page: 1,
+      pageSize: 20,
+      totals: [],
+    });
     wrap(<Harness />);
     await screen.findByRole('button', { name: `${t.common.delete} سهيلة` });
     expect(screen.queryByRole('button', { name: t.payments.viewAttachments })).toBeNull();
@@ -51,7 +79,9 @@ describe('«عرض المرفقات»', () => {
 
   it('none: «لا توجد مرفقات»; a failure says why', async () => {
     apiFetch.mockResolvedValueOnce([]);
-    const { unmount } = wrap(<AttachmentsDialog path="/payments/p/attachments" description="x" onClose={vi.fn()} />);
+    const { unmount } = wrap(
+      <AttachmentsDialog path="/payments/p/attachments" description="x" onClose={vi.fn()} />,
+    );
     expect(await screen.findByText(t.payments.noAttachments)).toBeTruthy();
     unmount();
     apiFetch.mockRejectedValueOnce(new ApiError(404, { code: 'payment_not_found' }));

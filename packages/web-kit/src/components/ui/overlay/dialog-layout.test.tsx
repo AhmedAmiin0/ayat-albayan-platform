@@ -9,7 +9,12 @@ type Opts = Pick<DialogProps, 'compact' | 'layout' | 'wide' | 'className'>;
 
 function open(opts: Opts = {}) {
   render(
-    <Dialog title={t.students.mergeTitle} onClose={() => undefined} actions={<Button>{t.students.merge}</Button>} {...opts}>
+    <Dialog
+      title={t.students.mergeTitle}
+      onClose={() => undefined}
+      actions={<Button>{t.students.merge}</Button>}
+      {...opts}
+    >
       <input aria-label={t.students.name} />
     </Dialog>,
   );

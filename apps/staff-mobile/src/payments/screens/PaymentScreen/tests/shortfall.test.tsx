@@ -1,3 +1,4 @@
+import { paymentViewSchema } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
@@ -18,7 +19,10 @@ jest.mock('expo-router', () => ({
 }));
 jest.mock('expo-image-picker', () => ({}));
 
-const shortBy = (n: string) => t.packagePayment.shortfall.replace('{amount}', ltr(n)).replace('{currency}', t.pricing.currencies.SAR);
+const shortBy = (n: string) =>
+  t.packagePayment.shortfall
+    .replace('{amount}', ltr(n))
+    .replace('{currency}', t.pricing.currencies.SAR);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -38,5 +42,10 @@ test('80 against 81 due: the note, and «سجّل دفعة» still records it', 
   expect(screen.getByText(shortBy('1'))).toBeTruthy();
   await fireEvent.press(screen.getByRole('radio', { name: t.enums.paymentMethod.cash }));
   await fireEvent.press(screen.getByRole('button', { name: t.payments.mobile.record }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', expect.objectContaining({ amount: 80 })));
+  await waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', {
+      body: expect.objectContaining({ amount: 80 }),
+      schema: paymentViewSchema,
+    }),
+  );
 });

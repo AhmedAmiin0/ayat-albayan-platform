@@ -76,7 +76,10 @@ export interface CommissionState {
  *   earned, not full    void (and earned again on another subscription when that one is eligible)
  *   voided by a payment reinstate when eligible, else none; voided by an admin: keep (stays voided)
  */
-export function commissionAction(existing: CommissionState | null, eligible: boolean): CommissionAction {
+export function commissionAction(
+  existing: CommissionState | null,
+  eligible: boolean,
+): CommissionAction {
   if (!existing) return eligible ? 'earn' : 'none';
   if (existing.status === 'earned') return existing.stillFullyPaid ? 'keep' : 'void';
   if (existing.voidAuto === false) return 'keep';

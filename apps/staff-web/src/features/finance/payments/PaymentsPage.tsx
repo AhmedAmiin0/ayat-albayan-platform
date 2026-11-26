@@ -12,7 +12,7 @@ import {
   PageHead,
   Pager,
   Toast,
-  ListSkeleton,
+  QueryState,
   t,
   HeadActions,
 } from '@ab/web-kit';
@@ -79,10 +79,17 @@ export function PaymentsPage({ search, onSearch }: Props) {
         />
       </PageHead>
       {list.data && <PeriodTotals totals={list.data.totals} />}
-      {(list.isError || csv.isError) && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isPending && <ListSkeleton />}
-      {bare && <TableBox center><EmptyState title={t.payments.empty} /></TableBox>}
-      {list.data && !bare && (
+      {csv.isError && <FormAlert>{t.common.error}</FormAlert>}
+      <QueryState
+        query={list}
+        isEmpty={() => bare}
+        empty={
+          <TableBox center>
+            <EmptyState title={t.payments.empty} />
+          </TableBox>
+        }
+      >
+        {(data) => (
         <>
           <DataTable
             fill
@@ -95,9 +102,10 @@ export function PaymentsPage({ search, onSearch }: Props) {
             filters={{ values: { method: search.f_method ?? '' }, onChange: (_, v) => reset({ f_method: (v || undefined) as PaymentFilters['method'] }) }}
             toolbar={{ extra, total: list.isPlaceholderData ? undefined : list.data?.total }}
           />
-          <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onSearch({ page: p > 1 ? p : undefined })} />
+          <Pager page={data.page} total={data.total} pageSize={data.pageSize} onPage={(p) => onSearch({ page: p > 1 ? p : undefined })} />
         </>
-      )}
+        )}
+      </QueryState>
       {recording && (
         <RecordPaymentDialog
           onClose={() => setRecording(false)}
