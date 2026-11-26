@@ -44,23 +44,32 @@ function paramNames(body: string): string[] {
   return Array.from({ length: n }, (_, i) => `var_${i + 1}`);
 }
 
-function mapTemplate(row: CrmRow): Mapped {
-  const ref = crmRef('message_templates', row);
-  const name = text(row, 'name');
-  const body = text(row, 'body_text');
-  if (!name || !body) {
-    const field = name ? 'body_text' : 'name';
-    return { ok: false, ref, issues: [issue({ code: 'missing_field', ref, field })] };
-  }
-  const rawStatus = upper(row, 'status');
-  const status = STATUS[rawStatus];
-  if (status === 'skip') {
-    const skipped = issue(
-      { code: 'unmapped_value', ref, field: 'status', detail: rawStatus },
-      'warn',
-    );
-    return { ok: false, ref, issues: [skipped] };
-  }
+type Ref = Mapped['ref'];
+type Lookups =
+  | {
+      ok: true;
+      status: string;
+      category: string;
+      header: string | null;
+      buttons: NonNullable<ReturnType<typeof templateButtons>>;
+    }
+  | { ok: false; issues: RowIssue[] };
+
+function missingText(ref: Ref, name: string | null): Mapped {
+  const field = name ? 'body_text' : 'name';
+  return { ok: false, ref, issues: [issue({ code: 'missing_field', ref, field })] };
+}
+
+function skippedStatus(ref: Ref, rawStatus: string): Mapped {
+  const skipped = issue(
+    { code: 'unmapped_value', ref, field: 'status', detail: rawStatus },
+    'warn',
+  );
+  return { ok: false, ref, issues: [skipped] };
+}
+
+function lookups(row: CrmRow, ref: Ref): Lookups {
+  const status = STATUS[upper(row, 'status')];
   const category = CATEGORY[upper(row, 'category')];
   const header = HEADER[upper(row, 'header_type', 'NONE')];
   const buttons = templateButtons(row.buttons);
@@ -68,8 +77,21 @@ function mapTemplate(row: CrmRow): Mapped {
     const found = { status, category, header_type: header, buttons };
     const fields = Object.entries(found).filter(([, v]) => v === undefined);
     const issues = fields.map(([field]) => issue({ code: 'unmapped_value', ref, field }));
-    return { ok: false, ref, issues };
+    return { ok: false, issues };
   }
+  return { ok: true, status, category, header, buttons };
+}
+
+function mapTemplate(row: CrmRow): Mapped {
+  const ref = crmRef('message_templates', row);
+  const name = text(row, 'name');
+  const body = text(row, 'body_text');
+  if (!name || !body) return missingText(ref, name);
+  const rawStatus = upper(row, 'status');
+  if (STATUS[rawStatus] === 'skip') return skippedStatus(ref, rawStatus);
+  const found = lookups(row, ref);
+  if (!found.ok) return { ok: false, ref, issues: found.issues };
+  const { status, category, header, buttons } = found;
   const columns = {
     key: templateKeyFor(name),
     meta_name: name,
