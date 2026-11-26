@@ -1,5 +1,7 @@
 // Phase 4 enums (migrations 072, 140–143): WhatsApp messages, the template registry, admin pushes.
 // Each mirrors a DB enum; the api's enum-parity tests catch drift.
+import { z } from 'zod';
+
 export const MESSAGE_DIRECTIONS = [
   'inbound',
   'outbound',
@@ -66,8 +68,10 @@ export const NUMBER_PURPOSES = [
 ] as const;
 
 export type MessageDirection = (typeof MESSAGE_DIRECTIONS)[number];
-export type MessageStatus = (typeof MESSAGE_STATUSES)[number];
-export type TemplateStatus = (typeof TEMPLATE_STATUSES)[number];
+export const messageStatusSchema = z.enum(MESSAGE_STATUSES);
+export type MessageStatus = z.infer<typeof messageStatusSchema>;
+export const templateStatusSchema = z.enum(TEMPLATE_STATUSES);
+export type TemplateStatus = z.infer<typeof templateStatusSchema>;
 export type TemplateCategory = (typeof TEMPLATE_CATEGORIES)[number];
 /** A staff kind (the staff apps' exhaustive maps); AnyPushKind for whatever is stored or sent. */
 export type PushKind = (typeof PUSH_KINDS)[number];
