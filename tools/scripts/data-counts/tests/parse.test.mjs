@@ -39,6 +39,11 @@ test('parse: a word that only looks like a keyword function is a plain name', ()
   assert.equal(parseCounts(`-- count: names\nselect count(*) from t where ${where};`).length, 1);
 });
 
+test('parse: a decimal, a dotted string and a clause word inside a name stay legal', () => {
+  const where = "amount > 1.5 and note = 'a.b' and order_id is null and format = 'group'";
+  assert.equal(parseCounts(`-- count: plain\nselect count(*) from t where ${where};`).length, 1);
+});
+
 test('parse: a counts file has a size limit', () => {
   const text = `-- count: a\nselect count(*) from t;\n${' '.repeat(65_536)}`;
   assert.throws(() => parseCounts(text), /counts file is too long/);

@@ -36,3 +36,15 @@ select count(*) from auth.users;
 select count(*) from students where name = current_user;
 -- count: keyword_function_upper
 select count(*) from students where created_at < CURRENT_TIMESTAMP;
+-- count: row_function
+select count(*) from students where students.row_to_json is null;
+-- count: field_function
+select count(*) from students where (name).length > 3;
+-- count: qualified_column
+select count(*) from students where public.students.id is null;
+-- count: group_by
+select count(*) from students where status is null group by status;
+-- count: order_and_limit
+select count(*) from students where status is null order by 1 limit 1;
+-- count: catalog_cast
+select count(*) from students where 'students'::regclass is not null;
