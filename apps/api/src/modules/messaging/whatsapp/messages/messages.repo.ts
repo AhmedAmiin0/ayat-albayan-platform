@@ -1,4 +1,5 @@
 import { APP_SEND_UNCONFIRMED, AWAITING_REPLY } from '@ab/shared';
+import type { TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { MESSAGE_SELECT, type ThreadMessageRow } from './message.mapper';
@@ -59,16 +60,13 @@ export class MessagesRepo {
    */
   async markSentManually(id: string, at: Date): Promise<ThreadMessageRow | null> {
     const stamp = at.toISOString();
-    const { data, error } = await this.db
-      .from('messages')
-      .update({ status: 'sent_manually', sent_manually_at: stamp, next_attempt_at: null, error_code: null, error_text: null })
-      .eq('id', id)
-      .eq('direction', 'outbound')
-      .in('status', ['queued', 'failed'])
-      .or(NOT_CLAIMED)
-      .select(MESSAGE_SELECT)
-      .maybeSingle();
-    if (error) throw pgError(error);
+    const data = await this.updateUnclaimed(id, {
+      status: 'sent_manually',
+      sent_manually_at: stamp,
+      next_attempt_at: null,
+      error_code: null,
+      error_text: null,
+    });
     if (data)
       await stampDelivered(this.db, { leadId: data.lead_id, dedupKey: data.dedup_key, at: stamp });
     return data;
@@ -79,9 +77,22 @@ export class MessagesRepo {
    * (the sender never reads failed rows) until they confirm (M2) or put it back (M1).
    */
   async handOff(id: string): Promise<ThreadMessageRow | null> {
+    return await this.updateUnclaimed(id, {
+      status: 'failed',
+      error_code: HANDED_OFF,
+      error_text: 'the admin is sending it from WhatsApp',
+      next_attempt_at: null,
+    });
+  }
+
+  /** An outbound queued or failed row the sender has not claimed, compare-and-set. */
+  private async updateUnclaimed(
+    id: string,
+    patch: TablesUpdate<'messages'>,
+  ): Promise<ThreadMessageRow | null> {
     const { data, error } = await this.db
       .from('messages')
-      .update({ status: 'failed', error_code: HANDED_OFF, error_text: 'the admin is sending it from WhatsApp', next_attempt_at: null })
+      .update(patch)
       .eq('id', id)
       .eq('direction', 'outbound')
       .in('status', ['queued', 'failed'])
