@@ -51,6 +51,7 @@ export * from './people/presence';
 export * from './people/guardians';
 export * from './people/test-accounts';
 export * from './people/push-tokens';
+export * from './teaching/instant-lesson';
 export * from './teaching/audio-player';
 export * from './teaching/lesson-files';
 export * from './teaching/lesson-room';
