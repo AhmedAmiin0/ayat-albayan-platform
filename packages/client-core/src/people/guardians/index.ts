@@ -1,2 +1,2 @@
 export { guardianCalls } from './guardians-api';
-export type { GuardianCalls, GuardianPhoneRef } from './guardians-api.types';
+export type { GuardianCalls, GuardianPhoneRef } from './guardians-api';

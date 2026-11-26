@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../core/http';
+import { ApiError, type ApiClient } from '../../../core/http';
 import { guardianCalls } from './guardians-api';
 
 const ID = '11111111-1111-4111-8111-111111111111';
