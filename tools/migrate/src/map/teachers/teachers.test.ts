@@ -68,6 +68,14 @@ describe('teachers', () => {
     });
   });
 
+  it('marks a teacher inactive unless the status says نشط', () => {
+    const [off, blank] = mapTeachers(
+      bundleOf({ hub_teachers: [t({ status: 'متوقف' }), t({ status: null })] }),
+    );
+    expect(off).toMatchObject({ ok: true, value: { columns: { status: 'inactive' } } });
+    expect(blank).toMatchObject({ ok: true, value: { columns: { status: 'inactive' } } });
+  });
+
   it('meetingLink adds the scheme and drops non-links', () => {
     expect(meetingLink('https://us06web.zoom.us/j/123?pwd=x')).toBe(
       'https://us06web.zoom.us/j/123?pwd=x',
