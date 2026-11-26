@@ -1,6 +1,7 @@
 import { NIL_UUID, type SyncCursor } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { afterCursor, type Keyset } from '@/common/db/page';
 import { MESSAGE_SELECT, type ThreadMessageRow } from '@/modules/messaging/whatsapp';
 import { phoneList } from '@/modules/messaging/numbers';
 import { check } from '@/modules/messaging/inbox/threads/store/check';
@@ -28,21 +29,16 @@ interface SyncPageInput {
 }
 
 /** The PostgREST calls both reads share (a messages or a message_tombstones builder). */
-interface Keyset<Q> {
-  gte(column: string, value: string): Q;
-  or(filters: string): Q;
+interface Scoped<Q> extends Keyset<Q> {
   not(column: string, op: 'in', value: string): Q;
   in(column: string, values: readonly string[]): Q;
-  order(column: string, opts: { ascending: boolean }): Q;
 }
 
 /** After (stamp, id) in the caller's scope, oldest first; the caller adds `.limit`. */
-function keyset<Q extends Keyset<Q>>(q: Q, stamp: string, input: SyncPageInput): Q {
-  const { at, id } = input.after;
-  const after = q.gte(stamp, at).or(`${stamp}.gt."${at}",id.gt.${id}`);
-  const shown = input.hide.length > 0 ? after.not('phone_e164', 'in', phoneList(input.hide)) : after;
+function keyset<Q extends Scoped<Q>>(q: Q, stamp: string, input: SyncPageInput): Q {
+  const shown = input.hide.length > 0 ? q.not('phone_e164', 'in', phoneList(input.hide)) : q;
   const scoped = input.phones ? shown.in('phone_e164', input.phones) : shown;
-  return scoped.order(stamp, { ascending: true }).order('id', { ascending: true });
+  return afterCursor(scoped, { column: stamp, ascending: true }, input.after);
 }
 
 /** messages and their tombstones after the cursor, oldest change first (migration 1200 indexes). */
