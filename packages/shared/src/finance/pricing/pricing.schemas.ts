@@ -37,6 +37,7 @@ const quoteShape = { ...shape, ...priced };
 
 export const catalogQuerySchema = z.object(shape);
 export type CatalogQuery = z.output<typeof catalogQuerySchema>;
+export type CatalogQueryInput = z.input<typeof catalogQuerySchema>;
 
 /** Exactly one of `tier` (a package id) or `count` (custom lesson count). */
 export const quoteQuerySchema = z.union([
@@ -48,6 +49,7 @@ export const quoteQuerySchema = z.union([
   }),
 ]);
 export type QuoteQuery = z.output<typeof quoteQuerySchema>;
+export type QuoteQueryInput = z.input<typeof quoteQuerySchema>;
 
 /** The whole list has every duration and package, so only the country and the pricing choice. */
 export const priceListQuerySchema = z.object({ country, ...priced });

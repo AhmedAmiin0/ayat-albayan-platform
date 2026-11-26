@@ -14,7 +14,13 @@ const clientAnswering = (answer: unknown) => {
 describe('pricing calls (docs/08)', () => {
   it('asks GET /pricing/quote with the choice in the order it was given', async () => {
     const { client, apiFetch } = clientAnswering({ ...sar, fx: null });
-    const query = { country: 'SA', duration: 45, tier: 'standard', students: 1, discount: 0 };
+    const query = {
+      country: 'SA',
+      duration: 45,
+      tier: 'standard',
+      students: 1,
+      discount: 0,
+    } as const;
     await expect(pricingCalls(client).quote(query)).resolves.toEqual({ ...sar, fx: null });
     expect(apiFetch).toHaveBeenCalledWith(
       '/pricing/quote?country=SA&duration=45&tier=standard&students=1&discount=0',
