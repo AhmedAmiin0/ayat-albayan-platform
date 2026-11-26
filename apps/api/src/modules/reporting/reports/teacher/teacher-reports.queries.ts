@@ -2,7 +2,8 @@ import type { TeacherReportSortKey, TeacherReportsQuery } from '@ab/shared';
 import type { Attendance, Grade, PdfStatus, ReportStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort, type SortSpec } from '@/common/db/list-sort';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage } from '@/common/db/page';
 import { studentIdsMatching } from '@/common/student-ids';
 import type { PageQuery } from '@/common/http/http';
 import { pgError } from '@/common/db/errors';
@@ -46,19 +47,18 @@ export class TeacherReportsQueries {
     const filter = input.filter ?? {};
     const students = filter.student ? await studentIdsMatching(this.db, filter.student) : null;
     if (students?.length === 0) return { rows: [], total: 0 };
-    const start = (input.page.page - 1) * input.page.pageSize;
-    let q = this.db
-      .from('lesson_reports')
-      .select(COLUMNS, { count: 'exact' })
-      .eq('teacher_id', input.teacherId)
-      .eq('status', 'submitted');
-    if (filter.attendance) q = q.eq('attendance', filter.attendance);
-    if (filter.grade) q = q.eq('grade_overall', filter.grade);
-    if (students) q = q.in('student_id', students);
-    const { data, count, error } = await applySort(q, filter, TEACHER_REPORT_SORT)
-      .range(start, start + input.page.pageSize - 1);
-    if (error) throw pgError(error);
-    return { rows: data, total: count ?? 0 };
+    const read = () => {
+      let q = this.db
+        .from('lesson_reports')
+        .select(COLUMNS, { count: 'exact' })
+        .eq('teacher_id', input.teacherId)
+        .eq('status', 'submitted');
+      if (filter.attendance) q = q.eq('attendance', filter.attendance);
+      if (filter.grade) q = q.eq('grade_overall', filter.grade);
+      return students ? q.in('student_id', students) : q;
+    };
+    const order = { ...input.page, sort: filter.sort, dir: filter.dir };
+    return readPage(read, order, TEACHER_REPORT_SORT);
   }
 
   /** The page's students (a page is at most 100 rows, so one `in`). */

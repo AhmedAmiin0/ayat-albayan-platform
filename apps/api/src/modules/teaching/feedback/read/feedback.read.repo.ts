@@ -1,10 +1,10 @@
 import { addCalendarDays } from '@ab/time';
 import type { FeedbackAverage, FeedbackQuery, FeedbackSortKey } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { ilikeContains } from '@/common/db/or-filter';
-import { applySort, type SortSpec } from '@/common/db/list-sort';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage } from '@/common/db/page';
 import { studentIdsMatching } from '@/common/student-ids';
 import type { PageQuery } from '@/common/http/http';
 import { pgError } from '@/common/db/errors';
@@ -39,13 +39,7 @@ export type FeedbackPage = { rows: FeedbackListRow[]; total: number };
 export type AverageRow = FeedbackAverage & { teacher_id: string };
 
 
-const bounds = (p: PageQuery): [number, number] => [(p.page - 1) * p.pageSize, p.page * p.pageSize - 1];
 const EMPTY: FeedbackPage = { rows: [], total: 0 };
-
-function rows(res: { data: FeedbackListRow[] | null; count: number | null; error: PostgrestError | null }): FeedbackPage {
-  if (res.error) throw pgError(res.error);
-  return { rows: res.data ?? [], total: res.count ?? 0 };
-}
 
 /** GET /feedback, /feedback/summary and /teachers/me/feedback reads (service role; services scope by role). */
 @Injectable()
@@ -61,18 +55,21 @@ export class FeedbackReadRepo {
     const { filter, page } = input;
     const students = filter.student ? await studentIdsMatching(this.db, filter.student) : null;
     if (students?.length === 0) return EMPTY;
-    let q = this.db.from('lesson_feedback').select(LIST_COLUMNS, { count: 'exact' });
-    if (filter.teacher) q = q.eq('teacher_id', filter.teacher);
-    if (filter.lesson) q = q.eq('lesson_id', filter.lesson);
-    if (filter.kind) q = q.eq('kind', filter.kind);
-    if (filter.rating) q = q.eq('rating', filter.rating);
-    if (filter.recommend) q = q.eq('recommend', filter.recommend);
-    if (filter.quick_rating) q = q.eq('quick_rating', filter.quick_rating);
-    if (filter.note) q = q.ilike('note', ilikeContains(filter.note));
-    if (students) q = q.in('student_id', students);
-    if (filter.from) q = q.gte('requested_at', `${filter.from}T00:00:00Z`);
-    if (filter.to) q = q.lt('requested_at', `${addCalendarDays(filter.to, 1)}T00:00:00.000Z`);
-    return rows(await applySort(q, filter, FEEDBACK_SORT).range(...bounds(page)));
+    const read = () => {
+      let q = this.db.from('lesson_feedback').select(LIST_COLUMNS, { count: 'exact' });
+      if (filter.teacher) q = q.eq('teacher_id', filter.teacher);
+      if (filter.lesson) q = q.eq('lesson_id', filter.lesson);
+      if (filter.kind) q = q.eq('kind', filter.kind);
+      if (filter.rating) q = q.eq('rating', filter.rating);
+      if (filter.recommend) q = q.eq('recommend', filter.recommend);
+      if (filter.quick_rating) q = q.eq('quick_rating', filter.quick_rating);
+      if (filter.note) q = q.ilike('note', ilikeContains(filter.note));
+      if (students) q = q.in('student_id', students);
+      if (filter.from) q = q.gte('requested_at', `${filter.from}T00:00:00Z`);
+      if (filter.to) q = q.lt('requested_at', `${addCalendarDays(filter.to, 1)}T00:00:00.000Z`);
+      return q;
+    };
+    return readPage(read, { ...page, sort: filter.sort, dir: filter.dir }, FEEDBACK_SORT);
   }
 
   /** A teacher's own rows: the teacher filter is the login, never a request parameter. */
