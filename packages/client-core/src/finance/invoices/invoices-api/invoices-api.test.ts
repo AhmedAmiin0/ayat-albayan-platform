@@ -1,6 +1,6 @@
 import type { InvoiceView } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../core/http';
+import { ApiError, type ApiClient } from '../../../core/http';
 import { invoiceCalls } from './invoices-api';
 
 const RULE = 'e1111111-1111-4111-8111-111111111111';

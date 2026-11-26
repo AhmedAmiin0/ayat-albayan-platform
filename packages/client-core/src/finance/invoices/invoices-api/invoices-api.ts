@@ -1,5 +1,5 @@
 import { invoiceRoutes as routes } from '@ab/shared';
-import { callWith, type ApiClient } from '../../core/http';
+import { callWith, type ApiClient } from '../../../core/http';
 import type { InvoiceCalls } from './invoices-api.types';
 
 /** Booking invoices (R-PAY-03, admin only) on one api client; paths and answers from the routes. */
