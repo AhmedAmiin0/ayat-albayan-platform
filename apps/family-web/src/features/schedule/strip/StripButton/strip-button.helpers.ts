@@ -3,7 +3,7 @@ import { counted } from '@ab/core';
 import { t, cn } from '@ab/web-kit';
 import { longDay } from '@/features/schedule/day-text';
 
-export const S = t.portal.app.schedule;
+const S = t.portal.app.schedule;
 
 export const BUTTON = cn(
   'ab-press relative z-10 flex min-h-14 min-w-11 flex-1 flex-col items-center justify-center',
