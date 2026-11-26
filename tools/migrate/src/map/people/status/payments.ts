@@ -18,18 +18,32 @@ interface PaymentCtx {
   expiryDays: number;
 }
 
-/** A paid HEART row → its student's keyId and period start, else null. */
-function paidRow(r: SourceRow, c: PaymentCtx): { id: string; startsOn: string } | null {
+interface HeartPeriod {
+  name: string;
+  phone: string;
+  startsOn: string;
+  paidStatus: string | null;
+}
+
+function heartPeriod(r: SourceRow): HeartPeriod | null {
   const name = text(r.fields.name);
   const phone = phoneCell(r.fields.phone);
   const startsOn = ymd(r.fields.date);
   if (!name || !phone.ok || !startsOn || testReason({ names: [name], phone: phone.e164 }))
     return null;
-  const paid =
-    /^paid$/i.test(text(r.fields.paid_status) ?? '') ||
-    finPrice(c.bundle, { name, month: startsOn.slice(0, 7) }) !== null;
-  const found = paid ? findStudent(c.ix, { phone: phone.e164, name }) : null;
-  return found?.ok ? { id: keyId(found.student.key), startsOn } : null;
+  return { name, phone: phone.e164, startsOn, paidStatus: text(r.fields.paid_status) };
+}
+
+const isPaid = (h: HeartPeriod, bundle: SourceBundle): boolean =>
+  /^paid$/i.test(h.paidStatus ?? '') ||
+  finPrice(bundle, { name: h.name, month: h.startsOn.slice(0, 7) }) !== null;
+
+/** A paid HEART row → its student's keyId and period start, else null. */
+function paidRow(r: SourceRow, c: PaymentCtx): { id: string; startsOn: string } | null {
+  const h = heartPeriod(r);
+  if (!h) return null;
+  const found = isPaid(h, c.bundle) ? findStudent(c.ix, { phone: h.phone, name: h.name }) : null;
+  return found?.ok ? { id: keyId(found.student.key), startsOn: h.startsOn } : null;
 }
 
 /** student keyId → the best state of their paid periods on the import date. */

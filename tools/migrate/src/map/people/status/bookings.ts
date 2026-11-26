@@ -33,9 +33,8 @@ function runningSeries(bundle: SourceBundle, students: readonly Desired[]): Set<
     const running = subscribed.has(r.ref) && (typeof until !== 'string' || until >= from);
     last.set(keyId(r.key), { running, students: r.students });
   }
-  const out = new Set<string>();
-  for (const s of last.values()) if (s.running) for (const k of s.students) out.add(keyId(k));
-  return out;
+  const running = [...last.values()].filter((s) => s.running);
+  return new Set(running.flatMap((s) => s.students.map((k) => keyId(k))));
 }
 
 export function bookingFacts(
@@ -46,7 +45,7 @@ export function bookingFacts(
   for (const r of bookingRows(bundle.sheets)) {
     if (bookingStatus(text(r.fields.status)) !== 'done') continue;
     const found = bookingStudents(r, o.ix);
-    if (Array.isArray(found)) for (const k of found) done.add(keyId(k));
+    for (const k of Array.isArray(found) ? found : []) done.add(keyId(k));
   }
   return { series: runningSeries(bundle, o.students), done };
 }

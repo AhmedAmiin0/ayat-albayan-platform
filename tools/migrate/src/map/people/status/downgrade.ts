@@ -22,13 +22,17 @@ type DowngradeReason =
   | 'reported_lessons_only'
   | 'subs_register_only';
 
+const GROUNDS: readonly (readonly [DowngradeReason, (g: OldGrounds) => boolean])[] = [
+  ['hub_current_student', (g) => g.claims.includes('hub_current')],
+  ['subscribed_booking_not_running', (g) => g.claims.includes('subscribed_booking')],
+  ['heart_payment_not_current', (g) => g.claims.includes('heart_row') || g.payingPhone],
+  ['reported_lessons_only', (g) => g.chargeable],
+  ['subs_register_only', (g) => g.subsRegister],
+];
+
 /** The first ground the old rule made this student active on, or null when it did not. */
 export function oldActiveReason(g: OldGrounds): DowngradeReason | null {
-  if (g.claims.includes('hub_current')) return 'hub_current_student';
-  if (g.claims.includes('subscribed_booking')) return 'subscribed_booking_not_running';
-  if (g.claims.includes('heart_row') || g.payingPhone) return 'heart_payment_not_current';
-  if (g.chargeable) return 'reported_lessons_only';
-  return g.subsRegister ? 'subs_register_only' : null;
+  return GROUNDS.find(([, holds]) => holds(g))?.[0] ?? null;
 }
 
 /** A warn issue when the old rule said active and the new one does not; `detail` = reason→status. */
