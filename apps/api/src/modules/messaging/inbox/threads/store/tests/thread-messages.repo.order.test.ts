@@ -32,7 +32,7 @@ describe('ThreadMessagesRepo.messages order', () => {
     await queriesOn(db).messages({ phone: '+966501234567', before: at, before_id: id, limit: 50 });
     expect(calls.find((c) => c.method === 'lte')?.args).toEqual(['created_at', at]);
     expect(calls.filter((c) => c.method === 'or').map((c) => c.args[0])).toContain(
-      `created_at.lt."${at}",and(created_at.eq."${at}",id.lt.${id})`,
+      `created_at.lt."${at}",id.lt.${id}`,
     );
     expect(calls.find((c) => c.method === 'lt')).toBeUndefined();
   });
