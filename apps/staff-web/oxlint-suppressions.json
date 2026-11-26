@@ -753,11 +753,6 @@
       "count": 1
     }
   },
-  "src/features/finance/pricing/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/features/finance/pricing/calculator/QuoteResult.tsx": {
     "max-lines-per-function": {
       "count": 1

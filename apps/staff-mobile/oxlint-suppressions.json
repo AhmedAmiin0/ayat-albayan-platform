@@ -1507,11 +1507,6 @@
       "count": 1
     }
   },
-  "src/finance/pricing/use-quote.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/finance/shared/StateNote.tsx": {
     "stylistic/max-len": {
       "count": 2

@@ -1540,11 +1540,6 @@
       "count": 2
     }
   },
-  "src/modules/finance/pricing/pricing.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/finance/pricing/pricing.module.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -1965,9 +1960,6 @@
     }
   },
   "src/modules/finance/subscriptions/subscriptions.dto.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
