@@ -1,8 +1,7 @@
-/** An endpoint's page query as it stands: default size, maximum size, last page if capped. */
+/** An endpoint's page query: its default size and its maximum size. */
 export interface PageGoldenSpec {
   size: number;
   max: number;
-  lastPage?: number;
 }
 
 export interface PageIssue {

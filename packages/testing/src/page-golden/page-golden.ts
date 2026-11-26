@@ -1,24 +1,21 @@
 import { z } from 'zod';
 import type { PageGoldenCase, PageGoldenSpec, PageOutcome } from './page-golden.types';
 
-const PAST_CAP = 10_001;
+/** Every page query stops at page 10 000 unless it sets a lower last page (docs/62 §6). */
+const LAST_PAGE = 10_000;
+const PAST_CAP = LAST_PAGE + 1;
 const read = z.object({ page: z.number(), pageSize: z.number() });
 
 const issue = (code: string, key: string): PageOutcome => ({ issues: [{ code, path: [key] }] });
 
-function pastCap(spec: PageGoldenSpec): PageOutcome {
-  const capped = spec.lastPage !== undefined && spec.lastPage < PAST_CAP;
-  return capped ? issue('too_big', 'page') : { page: PAST_CAP, pageSize: spec.size };
-}
-
-/** The payloads every page query copy is pinned with, and what it answers today. */
+/** The payloads every page query copy is pinned with, and what it answers. */
 export function pageGoldenCases(spec: PageGoldenSpec): PageGoldenCase[] {
   const { size, max } = spec;
   return [
     { input: {}, expected: { page: 1, pageSize: size } },
     { input: { page: '2', pageSize: String(max) }, expected: { page: 2, pageSize: max } },
-    { input: { page: '10000' }, expected: { page: 10_000, pageSize: size } },
-    { input: { page: String(PAST_CAP) }, expected: pastCap(spec) },
+    { input: { page: String(LAST_PAGE) }, expected: { page: LAST_PAGE, pageSize: size } },
+    { input: { page: String(PAST_CAP) }, expected: issue('too_big', 'page') },
     { input: { page: '0' }, expected: issue('too_small', 'page') },
     { input: { page: '1.5' }, expected: issue('invalid_type', 'page') },
     { input: { page: 'x' }, expected: issue('invalid_type', 'page') },

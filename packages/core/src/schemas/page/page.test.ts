@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { listSortShape } from '../list-sort';
-import { pageOf, pageQuery } from './page.schemas';
+import { MAX_PAGE, pageOf, pageQuery } from './page.schemas';
 
 const query = z.object({ ...pageQuery({ size: 25 }), ...listSortShape(['name'] as const) });
 
@@ -31,11 +31,13 @@ describe('pageQuery', () => {
     expect(small.safeParse({ pageSize: '51' }).success).toBe(false);
   });
 
-  it('has no page cap unless the endpoint sets one', () => {
-    expect(query.parse({ page: '10001' }).page).toBe(10_001);
-    const capped = z.object(pageQuery({ size: 20, lastPage: 10_000 }));
-    expect(capped.safeParse({ page: '10000' }).success).toBe(true);
-    expect(capped.safeParse({ page: '10001' }).success).toBe(false);
+  it('stops at MAX_PAGE unless the endpoint sets a lower last page', () => {
+    expect(MAX_PAGE).toBe(10_000);
+    expect(query.parse({ page: '10000' }).page).toBe(10_000);
+    expect(query.safeParse({ page: '10001' }).success).toBe(false);
+    const short = z.object(pageQuery({ size: 20, lastPage: 50 }));
+    expect(short.safeParse({ page: '50' }).success).toBe(true);
+    expect(short.safeParse({ page: '51' }).success).toBe(false);
   });
 });
 
