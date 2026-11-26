@@ -151,6 +151,7 @@ GET /portal/students/:id/reports access=self.portal guards=- code=- PortalRecord
 GET /presence/me access=signed-in guards=- code=- PresenceController.me
 GET /presence/staff access=users.read guards=- code=- PresenceController.staff
 GET /pricing/catalog access=pricing.read guards=- code=- PricingController.catalog
+GET /pricing/list access=pricing.read guards=- code=- PricingController.list
 GET /pricing/quote access=pricing.read guards=- code=- PricingController.quote
 GET /public/feedback/:token access=public guards=- code=- FeedbackPublicController.form
 GET /public/meetings/:token access=public guards=- code=- InternalMeetingsPublicController.view

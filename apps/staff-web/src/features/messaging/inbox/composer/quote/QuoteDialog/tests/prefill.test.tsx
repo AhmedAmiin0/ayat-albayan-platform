@@ -48,10 +48,10 @@ it('any other code opens on «دولة أخرى»: no country sent, the API quot
   expect(screen.getByRole('button', { name: p.otherCountry }).getAttribute('aria-pressed')).toBe('true');
 });
 
-it('the preview is exactly the calculator offer text; the discount is the pills only', async () => {
+it('the preview is exactly the calculator offer text; the discount is the pills or any percent', async () => {
   show('+966501234567');
   const quote = fakePricingApi(quotePath()) as Quote;
   await waitFor(() => expect(screen.getByTestId('quote-text').textContent).toBe(offerText(quote, ar.pricing)));
   expect(screen.getByRole('button', { name: p.discounts['15'] })).toBeTruthy();
-  expect(screen.queryByRole('spinbutton', { name: p.steps.discount })).toBeNull();
+  expect(screen.getByRole('spinbutton', { name: p.steps.discount })).toBeTruthy();
 });

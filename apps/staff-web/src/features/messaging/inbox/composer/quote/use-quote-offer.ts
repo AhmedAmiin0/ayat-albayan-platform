@@ -1,12 +1,12 @@
-import { offerText, pricingCountryOfPhone } from '@ab/money';
-import ar from '@ab/shared/i18n/ar.json';
-import { useIsMutating, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { DEFAULT_ROUNDING, pricingCountryOfPhone } from '@ab/money';
+import { useIsMutating, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { quotePins } from './quote-id';
-import { useQuoteCustom } from './use-quote-custom';
-import { INITIAL_SELECTION, OTHER, quoteQuery, type Selection, useDebounced } from '@/features/finance/pricing';
+import { useListOffer, useOneOffer } from './use-offer-texts';
+import type { QuoteChoice } from './use-quote-offer.types';
+import { INITIAL_SELECTION, OTHER, useDebounced } from '@/features/finance/pricing';
 import { sendText } from '@/features/messaging/inbox/api/api';
-import { replayedOther, SEND_UNCONFIRMED } from '@ab/client-core';
+import { type QuoteMode, replayedOther, roundingShows, SEND_UNCONFIRMED } from '@ab/client-core';
 import {
   ReplayedSend,
   rereadsAfter,
@@ -15,25 +15,40 @@ import {
 import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/lib/send-start';
 import { rereadSentChat, showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
-/** The calculator's default choice, with the country of the chat's number (+966 → SA …, else USD). */
-export function initialSelection(phone: string): Selection {
-  return { ...INITIAL_SELECTION, country: pricingCountryOfPhone(phone) ?? OTHER };
+/** The calculator's default choice, in the country of the chat's number (+966 → SA, else USD). */
+function initialChoice(phone: string): QuoteChoice {
+  return {
+    ...INITIAL_SELECTION,
+    country: pricingCountryOfPhone(phone) ?? OTHER,
+    rounding: DEFAULT_ROUNDING,
+  };
 }
 
-/** The offer text is Arabic whatever the UI language; `stale` means the old choice's price. */
+/**
+ * The sheet's state: one choice for both modes and the text of the mode that shows. `stale`
+ * means that text is not a confirmed price of the choice on screen (it belongs to the previous
+ * choice, or its last reload failed), so it must not leave.
+ */
 export function useQuoteOffer(phone: string) {
-  const [sel, setSel] = useState(() => initialSelection(phone));
-  const asked = useDebounced(sel);
-  const quote = useQuery(quoteQuery(asked));
-  const custom = useQuoteCustom(quote.data);
+  const [choice, setChoice] = useState(() => initialChoice(phone));
+  const [mode, setMode] = useState<QuoteMode>('one');
+  const asked = useDebounced(choice);
+  const one = useOneOffer(asked, mode === 'one');
+  const all = useListOffer(asked, mode === 'all');
+  const shown = { one, all }[mode];
   return {
-    sel,
-    change: (patch: Partial<Selection>) => setSel((s) => ({ ...s, ...patch })),
-    quote,
-    text: quote.data ? offerText(quote.data, ar.pricing, custom.total) : null,
-    stale: sel !== asked || quote.isPlaceholderData,
-    custom: custom.price,
-    invalid: !custom.valid,
+    steps: {
+      mode,
+      onMode: setMode,
+      choice,
+      onChange: (patch: Partial<QuoteChoice>) => setChoice((c) => ({ ...c, ...patch })),
+      rounds: roundingShows({ discount: choice.discount, mode, customOn: one.custom.on }),
+      custom: one.custom,
+    },
+    query: shown.query,
+    text: shown.text,
+    stale: choice !== asked || shown.query.isPlaceholderData || shown.query.isError,
+    invalid: shown.invalid,
   };
 }
 

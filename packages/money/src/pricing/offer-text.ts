@@ -25,11 +25,27 @@ export function formatAmount(n: number): string {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-function packageLine(q: Quote, t: OfferLabels): string {
-  const name = q.package === 'custom' ? t.packages.custom.name : t.packages[q.package].name;
-  const sessions =
-    q.package === 'custom' ? counted(t.customSessions, q.lessons) : t.packages[q.package].sessions;
-  return `${name} (${sessions} - ${t.durations[String(q.duration)] ?? q.duration} ${t.perCircle})`;
+/** A package's name and lesson count in words; a custom count follows the plural rules. */
+export function packageWords(
+  q: Quote,
+  t: Pick<OfferLabels, 'packages' | 'customSessions'>,
+): { name: string; sessions: string } {
+  if (q.package !== 'custom') return t.packages[q.package];
+  return { name: t.packages.custom.name, sessions: counted(t.customSessions, q.lessons) };
+}
+
+/** A lesson duration in words; one without a label stays its minutes. */
+export function durationWords(minutes: number, t: Pick<OfferLabels, 'durations'>): string {
+  return t.durations[String(minutes)] ?? String(minutes);
+}
+
+/** The package as the offer and the price list name it: name, lessons, minutes per lesson. */
+export function packageLine(
+  q: Quote,
+  t: Pick<OfferLabels, 'packages' | 'customSessions' | 'durations' | 'perCircle'>,
+): string {
+  const { name, sessions } = packageWords(q, t);
+  return `${name} (${sessions} - ${durationWords(q.duration, t)} ${t.perCircle})`;
 }
 
 /** A custom `total` is the only total said, so the contradicting discount lines are dropped. */

@@ -87,9 +87,9 @@ describe('system-role parity with the old @Roles table', () => {
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('inbox.lists'))).toEqual(['admin', 'sales']);
   });
 
-  it('pricing.read gates the two pricing routes only, for admin and sales', () => {
+  it('pricing.read gates the pricing routes only, for admin and sales', () => {
     const gated = routes.filter((r) => r.permission === 'pricing.read').map((r) => r.key).sort();
-    expect(gated).toEqual(['PricingController.catalog', 'PricingController.quote']);
+    expect(gated).toEqual(['catalog', 'list', 'quote'].map((h) => `PricingController.${h}`));
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('pricing.read'))).toEqual(['admin', 'sales']);
   });
 

@@ -53,6 +53,15 @@ test('a reviewed non-lane PR merges only when green too; a stale review skips', 
   assert.match(decide(pushed).reason, /head is newer than the review/);
 });
 
+test('an old failed title check does not block a PR whose title is valid now', () => {
+  const edited = [aRun('pr title', { conclusion: 'failure' }), aRun('pr title')];
+  const facts = { ...aFacts(), checks: [...aFacts().checks, ...edited] };
+  assert.equal(action(facts), 'merge');
+  const checks = [...aFacts().checks, aRun('pr title')];
+  const bad = { ...withPr({ title: 'Cut shared from db' }), checks };
+  assert.match(decide(bad).reason, /^title: /);
+});
+
 test('a PR whose title breaks the angular header is skipped, naming the rule', () => {
   const reason = decide(withPr({ title: 'Cut shared from db' })).reason;
   assert.match(reason, /^title: the header is not <type>\(<scope>\): <subject>/);
