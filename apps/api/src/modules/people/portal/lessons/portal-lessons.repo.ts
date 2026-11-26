@@ -1,7 +1,7 @@
 import type { LessonStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, rows } from '@/common/db/errors';
 import { PortalSettings, type PortalSettingsValues } from '@/modules/people/portal/portal.settings';
 
 /** A lesson row as the portal reads it (whitelisted select; mapped again before it leaves). */
@@ -47,9 +47,11 @@ interface Embed {
   lesson: PortalLessonRow | null;
 }
 
-const LESSON = 'id, teacher_id, starts_at, ends_at, status, room_opened_at, room_ended_at, meeting_link, teacher:teachers(display_name_ar, display_name_en, meeting_mode), lesson_students(student_id, chargeable)';
+const LESSON =
+  'id, teacher_id, starts_at, ends_at, status, room_opened_at, room_ended_at, meeting_link, teacher:teachers(display_name_ar, display_name_en, meeting_mode), lesson_students(student_id, chargeable)';
 /** The family's own words and the academy's answer to them; never a teacher's proposal. */
-const REQUEST = 'id, lesson_id, status, proposed_starts_at, note, decision_note, decided_at, created_at';
+const REQUEST =
+  'id, lesson_id, status, proposed_starts_at, note, decision_note, decided_at, created_at';
 
 /** Service role; PortalScopes already decided the student is the caller's. */
 @Injectable()
@@ -73,16 +75,17 @@ export class PortalLessonsRepo {
     since: string;
     until: string;
   }): Promise<PortalLessonRow[]> {
-    const { data, error } = await this.db
-      .from('lesson_students')
-      .select(`lesson:lessons!inner(${LESSON})`)
-      .eq('student_id', input.studentId)
-      .gte('lesson.ends_at', input.since)
-      .lt('lesson.starts_at', input.until)
-      .neq('lesson.status', 'rescheduled')
-      .limit(100)
-      .overrideTypes<Embed[], { merge: false }>();
-    if (error) throw dbError(error);
+    const data = rows(
+      await this.db
+        .from('lesson_students')
+        .select(`lesson:lessons!inner(${LESSON})`)
+        .eq('student_id', input.studentId)
+        .gte('lesson.ends_at', input.since)
+        .lt('lesson.starts_at', input.until)
+        .neq('lesson.status', 'rescheduled')
+        .limit(100)
+        .overrideTypes<Embed[], { merge: false }>(),
+    );
     return data
       .flatMap((r) => (r.lesson ? [r.lesson] : []))
       .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
@@ -90,20 +93,26 @@ export class PortalLessonsRepo {
 
   /** One lesson of the student, or null when the student is not on it. */
   async one(input: { studentId: string; lessonId: string }): Promise<PortalLessonRow | null> {
-    const { data, error } = await this.db
-      .from('lesson_students')
-      .select(`lesson:lessons!inner(${LESSON})`)
-      .match({ student_id: input.studentId, lesson_id: input.lessonId })
-      .maybeSingle()
-      .overrideTypes<Embed | null, { merge: false }>();
-    if (error) throw dbError(error);
+    const data = maybe(
+      await this.db
+        .from('lesson_students')
+        .select(`lesson:lessons!inner(${LESSON})`)
+        .match({ student_id: input.studentId, lesson_id: input.lessonId })
+        .maybeSingle()
+        .overrideTypes<Embed | null, { merge: false }>(),
+    );
     return data?.lesson ?? null;
   }
 
   /** students.meeting_link_override: the student's own room for an external one-student lesson. */
   async override(studentId: string): Promise<string | null> {
-    const { data, error } = await this.db.from('students').select('meeting_link_override').eq('id', studentId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(
+      await this.db
+        .from('students')
+        .select('meeting_link_override')
+        .eq('id', studentId)
+        .maybeSingle(),
+    );
     return data?.meeting_link_override ?? null;
   }
 
@@ -113,12 +122,13 @@ export class PortalLessonsRepo {
    */
   async requests(input: RequestsOf): Promise<PortalRequestRow[]> {
     if (input.lessonIds.length === 0) return [];
-    const { data, error } = await this.db
-      .from('lesson_proposals')
-      .select(REQUEST)
-      .in('lesson_id', [...input.lessonIds])
-      .match({ requested_by: 'family', created_by: input.userId });
-    if (error) throw dbError(error);
+    const data = rows(
+      await this.db
+        .from('lesson_proposals')
+        .select(REQUEST)
+        .in('lesson_id', [...input.lessonIds])
+        .match({ requested_by: 'family', created_by: input.userId }),
+    );
     return data;
   }
 }

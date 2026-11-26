@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { instant, localDate, timeOfDay } from '@ab/core';
+import { clientRequestId, instant, localDate, timeOfDay } from '@ab/core';
 import { dayTimesSchema, refineDayTimes } from './day-times';
 import { bydaySchema, overrideSchema } from './scheduling';
 
@@ -19,7 +19,7 @@ const changeBase = z.object({
    * The admin only, with a reason (R-SCH-04); the assistant is refused (403 override_not_allowed).
    */
   override: overrideSchema.optional(),
-  clientRequestId: z.uuid().optional(),
+  clientRequestId: clientRequestId.optional(),
 });
 
 const refine = (req: z.infer<typeof changeBase>, ctx: z.RefinementCtx) => refineDayTimes({ ...req, kind: 'package' }, ctx);
@@ -28,9 +28,7 @@ const refine = (req: z.infer<typeof changeBase>, ctx: z.RefinementCtx) => refine
 export const courseChangeCheckSchema = changeBase.superRefine(refine);
 
 /** POST …/course/change: idempotent on clientRequestId (rule 8). */
-export const courseChangeSchema = changeBase
-  .extend({ clientRequestId: z.uuid() })
-  .superRefine(refine);
+export const courseChangeSchema = changeBase.extend({ clientRequestId }).superRefine(refine);
 
 /** GET /booking/course/change?subscriptionId= (the admin's read of a course to change). */
 export const courseChangeQuerySchema = z.object({ subscriptionId: z.uuid() });
@@ -45,7 +43,7 @@ export const courseTeacherCheckSchema = teacherBase.superRefine(refine);
 
 /** POST /students/:id/course-teacher/change: idempotent on clientRequestId (rule 8). */
 export const courseTeacherChangeSchema = teacherBase
-  .extend({ clientRequestId: z.uuid() })
+  .extend({ clientRequestId })
   .superRefine(refine);
 
 /**

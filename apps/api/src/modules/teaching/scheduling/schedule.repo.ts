@@ -1,7 +1,7 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, rows } from '@/common/db/errors';
 import { readAll } from '@/common/db/read-all';
 
 const RULE_SELECT =
@@ -22,12 +22,11 @@ export class ScheduleRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async rule(id: string): Promise<RuleWithLinks | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('schedule_rules')
       .select(RULE_SELECT)
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -36,13 +35,12 @@ export class ScheduleRepo {
    * stays active until then, R-SCH-07). Returns how many were ended.
    */
   async endExpired(before: string): Promise<number> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('schedule_rules')
       .update({ status: 'ended' })
       .eq('status', 'active')
       .lt('ends_on', before)
-      .select('id');
-    if (error) throw dbError(error);
+      .select('id'));
     return data.length;
   }
 

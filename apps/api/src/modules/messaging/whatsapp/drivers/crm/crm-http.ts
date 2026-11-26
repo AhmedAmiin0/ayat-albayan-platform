@@ -1,8 +1,11 @@
 import { z } from 'zod';
 import type { CrmLineEnv } from '@/config/env/env';
-import { mayHaveReached, type FetchLike } from '@/common/infra/http/failure';
+import type { ErrorTable } from '@/common/infra/http/errors';
+import type { FetchLike, HttpFailure } from '@/common/infra/http/failure';
+import { createHttp } from '@/common/infra/http/http';
 import { reachInfo, TIMEOUT_INFO } from '@/modules/messaging/whatsapp/drivers/transport-info';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { recordingFetch } from '@/modules/messaging/whatsapp/drivers/crm/crm-fetch';
 
 // One call to the academy CRM's public REST API (docs/19 «crm driver»): Bearer key, JSON, timeout, and the
 // CRM's envelope ({data} / {error:{code,message}}) → WaError. The CRM has no idempotency key, so an answer
@@ -57,12 +60,23 @@ function retryAfterMs(header: string | null, now: Date = new Date()): number {
   return Number.isFinite(ms) && ms > 0 ? Math.min(ms, RETRY_MAX_MS) : RETRY_DEFAULT_MS;
 }
 
-/** 401/403 bad key or scope; 429 retryAfterMs; 503 no envelope is down; other 5xx is uncertain. */
+interface CrmAnswer {
+  status: number;
+  body: unknown;
+  retryAfter: string | null;
+}
+
+/** A CRM error answer as its raw text (tests and the send plan build one this way). */
 export function crmErrorFrom(res: {
   status: number;
   text: string;
   retryAfter: string | null;
 }): WaError {
+  return crmErrorOf({ status: res.status, body: json(res.text), retryAfter: res.retryAfter });
+}
+
+/** 401/403 bad key or scope; 429 retryAfterMs; 503 no envelope is down; other 5xx is uncertain. */
+function crmErrorOf(res: CrmAnswer): WaError {
   const { crmCode, said } = envelopeOf(res);
   const base = { code: null, status: res.status, crmCode, details: said };
   const message = `CRM HTTP ${res.status} ${crmCode}${said ? `: ${said}` : ''}`;
@@ -83,38 +97,54 @@ export function crmErrorFrom(res: {
 }
 
 /** The CRM's error code and message; a body that is not its envelope (a proxy's page) is http_<status> only, never shown. */
-function envelopeOf(res: { status: number; text: string }): {
+function envelopeOf(res: Pick<CrmAnswer, 'status' | 'body'>): {
   crmCode: string;
   said: string | undefined;
 } {
-  const parsed = errorSchema.safeParse(json(res.text));
+  const parsed = errorSchema.safeParse(res.body);
   if (!parsed.success) return { crmCode: `http_${res.status}`, said: undefined };
-  return { crmCode: parsed.data.error.code ?? `http_${res.status}`, said: parsed.data.error.message };
+  return {
+    crmCode: parsed.data.error.code ?? `http_${res.status}`,
+    said: parsed.data.error.message,
+  };
 }
 
-/** A thrown fetch: its deadline (uncertain, counted by the lane), else whether it left at all. */
-const transportInfo = (e: unknown): WaError['info'] =>
-  e instanceof Error && e.name === 'TimeoutError' ? TIMEOUT_INFO : reachInfo(mayHaveReached(e));
+/** Only a status failure reaches the default: every other kind has its own entry. */
+const NO_STATUS: CrmAnswer = { status: 0, body: null, retryAfter: null };
+const answerOf = (f: HttpFailure): CrmAnswer => (f.kind === 'status' ? f : NO_STATUS);
 
-/** The `data` of a 2xx answer; throws WaError otherwise (a network error is uncertain unless never connected). */
+/** Uncertain unless never connected; each keeps the text it had before (AbortSignal.timeout's). */
+const crmErrors = (seen: { cause: string }): ErrorTable<WaError> => ({
+  network: (f) =>
+    new WaError(`CRM request failed: ${seen.cause}`, reachInfo(f.kind === 'network' && f.reached)),
+  timeout: () => new WaError('CRM request failed: The operation was aborted due to timeout', TIMEOUT_INFO),
+  default: (f) => crmErrorOf(answerOf(f)),
+});
+
+/** The envelope's `data`; any other 2xx body is null. */
+const dataSchema = z.union([
+  z.looseObject({ data: z.unknown() }).transform((b) => b.data ?? null),
+  z.unknown().transform(() => null),
+]);
+
+// The CRM never redirects: a 3xx (a wrong base) is a plain «not sent» failure, never a POST turned GET.
+const crmHttp = (conn: CrmConn) => {
+  const transport = recordingFetch(conn.fetch);
+  return createHttp({
+    name: 'crm',
+    base: () => conn.env.base,
+    headers: () =>
+      Promise.resolve({ authorization: `Bearer ${conn.env.apiKey}`, accept: 'application/json' }),
+    timeoutMs: conn.timeoutMs,
+    redirect: 'manual',
+    errorBody: z.unknown(),
+    errors: crmErrors(transport.seen),
+    fetch: transport.fetch,
+  });
+};
+
+/** The `data` of a 2xx answer; throws WaError otherwise. */
 export async function crmJson(conn: CrmConn, req: CrmRequest): Promise<unknown> {
-  const hasBody = req.body !== undefined;
-  let res: Response;
-  try {
-    res = await conn.fetch(`${conn.env.base}/${req.path}`, {
-      method: req.method ?? 'GET',
-      headers: { authorization: `Bearer ${conn.env.apiKey}`, accept: 'application/json', ...(hasBody ? { 'content-type': 'application/json' } : {}) },
-      body: hasBody ? JSON.stringify(req.body) : undefined,
-      signal: AbortSignal.timeout(conn.timeoutMs),
-      // The CRM never redirects: a 3xx (a wrong base) is a plain «not sent» failure, never a POST turned GET.
-      redirect: 'manual',
-    });
-  } catch (e) {
-    const message = `CRM request failed: ${e instanceof Error ? e.message : String(e)}`;
-    throw new WaError(message, transportInfo(e));
-  }
-  const text = await res.text().catch(() => '');
-  if (!res.ok) throw crmErrorFrom({ status: res.status, text, retryAfter: res.headers.get('retry-after') });
-  const body = json(text);
-  return body && typeof body === 'object' && 'data' in body ? body.data : null;
+  const call = { path: req.path, method: req.method ?? 'GET', json: req.body, schema: dataSchema };
+  return crmHttp(conn).json(call);
 }

@@ -1,5 +1,5 @@
 import type { Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, maybe } from '@/common/db/errors';
 import { notFound } from '@/common/http/errors';
 import { isTeacherAvatarPathOf, isUserAvatarPathOf } from '@/common/storage/storage.paths';
 import type { AvatarSlot } from './avatar-writer';
@@ -12,14 +12,12 @@ export function profileSlot(db: Db, profileId: string): AvatarSlot {
   return {
     owns: (path) => isUserAvatarPathOf(path, profileId),
     read: async () => {
-      const { data, error } = await db.from('profiles').select('avatar_path').eq('id', profileId).maybeSingle();
-      if (error) throw dbError(error);
+      const data = maybe(await db.from('profiles').select('avatar_path').eq('id', profileId).maybeSingle());
       if (!data) throw notFound('user_not_found');
       return data.avatar_path;
     },
     write: async (path) => {
-      const { error } = await db.from('profiles').update({ avatar_path: path }).eq('id', profileId);
-      if (error) throw dbError(error);
+      done(await db.from('profiles').update({ avatar_path: path }).eq('id', profileId));
     },
   };
 }
@@ -29,14 +27,12 @@ export function teacherSlot(db: Db, teacherId: string): AvatarSlot {
   return {
     owns: (path) => isTeacherAvatarPathOf(path, teacherId),
     read: async () => {
-      const { data, error } = await db.from('teachers').select('avatar_path').eq('id', teacherId).maybeSingle();
-      if (error) throw dbError(error);
+      const data = maybe(await db.from('teachers').select('avatar_path').eq('id', teacherId).maybeSingle());
       if (!data) throw notFound('teacher_not_found');
       return data.avatar_path;
     },
     write: async (path) => {
-      const { error } = await db.from('teachers').update({ avatar_path: path }).eq('id', teacherId);
-      if (error) throw dbError(error);
+      done(await db.from('teachers').update({ avatar_path: path }).eq('id', teacherId));
     },
   };
 }

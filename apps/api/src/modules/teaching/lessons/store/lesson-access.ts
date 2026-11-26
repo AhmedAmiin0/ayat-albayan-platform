@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { isAdmin } from '@/common/auth/roles';
 
 /**
  * Who may touch which lesson (rule 9). The API (service role) is the only writer of lessons —
@@ -21,7 +22,7 @@ export class LessonAccess {
 
   /** 403 unless admin, or the teacher who teaches this lesson. */
   async assertCanTouch(user: AuthUser, lesson: { teacher_id: string }): Promise<void> {
-    if (user.role === 'admin') return;
+    if (isAdmin(user)) return;
     if (user.role === 'teacher' && (await this.teachers.idByProfile(user.id)) === lesson.teacher_id) {
       return;
     }

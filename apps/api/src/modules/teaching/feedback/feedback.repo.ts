@@ -2,7 +2,7 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import type { Attendance, FeedbackKind, LessonStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 
 export type FeedbackRow = Tables<'lesson_feedback'>;
 
@@ -35,12 +35,11 @@ export class FeedbackRepo {
 
   /** null when the lesson does not exist or the student is not on it. */
   async requestContext(lessonId: string, studentId: string): Promise<RequestContext | null> {
-    const { data: lesson, error } = await this.db
+    const lesson = maybe(await this.db
       .from('lessons')
       .select('status, teacher_id, rule_id')
       .eq('id', lessonId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     if (!lesson) return null;
     const [onLesson, trial, teacher, student] = await Promise.all([
       this.db.from('lesson_students').select('student_id, attendance').match({ lesson_id: lessonId, student_id: studentId }).maybeSingle(),
@@ -48,7 +47,7 @@ export class FeedbackRepo {
       this.db.from('teachers').select('id, display_name_ar').eq('id', lesson.teacher_id).maybeSingle(),
       this.db.from('students').select('id, name, guardian_id').eq('id', studentId).maybeSingle(),
     ]);
-    for (const r of [onLesson, teacher, student]) if (r.error) throw dbError(r.error);
+    for (const r of [onLesson, teacher, student]) if (r.error) throw pgError(r.error);
     if (!onLesson.data || !teacher.data || !student.data) return null;
     const guardian = await this.guardian(student.data.guardian_id);
     if (!guardian) return null;
@@ -63,12 +62,11 @@ export class FeedbackRepo {
   }
 
   async find(lessonId: string, studentId: string): Promise<FeedbackRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lesson_feedback')
       .select('*')
       .match({ lesson_id: lessonId, student_id: studentId })
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -79,55 +77,50 @@ export class FeedbackRepo {
   async issue(row: TablesInsert<'lesson_feedback'>): Promise<FeedbackRow | null> {
     const created = await this.db.from('lesson_feedback').insert(row).select('*').single();
     if (!created.error) return created.data;
-    if (created.error.code !== '23505') throw dbError(created.error);
+    if (created.error.code !== '23505') throw pgError(created.error);
     const { lesson_id, student_id, ...link } = row;
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lesson_feedback')
       .update(link)
       .match({ lesson_id, student_id })
       .is('submitted_at', null)
       .select('*')
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   async byTokenHash(hash: string): Promise<PublicContext | null> {
-    const { data: row, error } = await this.db.from('lesson_feedback').select('*').eq('token_hash', hash).maybeSingle();
-    if (error) throw dbError(error);
+    const row = maybe(await this.db.from('lesson_feedback').select('*').eq('token_hash', hash).maybeSingle());
     if (!row) return null;
     const [teacher, guardian] = await Promise.all([
       this.db.from('teachers').select('display_name_ar').eq('id', row.teacher_id).maybeSingle(),
       this.guardian(row.guardian_id),
     ]);
-    if (teacher.error) throw dbError(teacher.error);
+    if (teacher.error) throw pgError(teacher.error);
     return { row, teacherName: teacher.data?.display_name_ar ?? '', guardianPhone: guardian?.phone ?? '' };
   }
 
   /** The one write of an answer: only while unanswered, so a second submit finds nothing (null). */
   async answer(id: string, patch: Answer): Promise<FeedbackRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lesson_feedback')
       .update(patch)
       .eq('id', id)
       .is('submitted_at', null)
       .select('*')
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   /** The lesson's rule is the free trial (docs/08); a lesson without a rule is not. */
   private async isTrial(ruleId: string | null): Promise<boolean> {
     if (!ruleId) return false;
-    const { data, error } = await this.db.from('schedule_rules').select('package').eq('id', ruleId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('schedule_rules').select('package').eq('id', ruleId).maybeSingle());
     return data?.package === 'trial';
   }
 
   private async guardian(id: string): Promise<{ id: string; phone: string } | null> {
-    const { data, error } = await this.db.from('guardians').select('id, phone_e164').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('guardians').select('id, phone_e164').eq('id', id).maybeSingle());
     return data ? { id: data.id, phone: data.phone_e164 } : null;
   }
 }

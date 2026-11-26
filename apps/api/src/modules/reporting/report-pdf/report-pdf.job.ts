@@ -1,16 +1,11 @@
 import { retry } from '@ab/core';
-import {
-  Injectable,
-  Logger,
-  type OnApplicationBootstrap,
-  type OnModuleDestroy,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { sleep } from '@/common/infra/cache/sleep';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
 import { ReportPdfPublisher } from './report-pdf.publisher';
 import { ReportPdfQueries } from './report-pdf.queries';
 import { BackgroundJob } from '@/config/role/background-job';
-import { beatTick } from '@/common/jobs/beats';
+import { Ticker, TickerJob } from '@/common/jobs';
 
 const POLL_MS = 60_000;
 /** Soon after boot, not at once: every API test boots AppModule (as HorizonJob notes). */
@@ -42,11 +37,15 @@ export class RulesUnreadError extends Error {
  */
 @BackgroundJob({ name: 'report-pdf', kick: 'kick' })
 @Injectable()
-export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class ReportPdfJob extends TickerJob {
   private readonly log = new Logger(ReportPdfJob.name);
-  private readonly timers: NodeJS.Timeout[] = [];
-  private running: Promise<void> | null = null;
-  private again = false;
+  protected readonly ticker = new Ticker({
+    name: ReportPdfJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: POLL_MS,
+    run: () => this.runOnce(),
+    timer: 'kick',
+  });
   /** Backoff wait; tests replace it. */
   wait: (ms: number) => Promise<void> = sleep;
 
@@ -54,16 +53,8 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
     private readonly queries: ReportPdfQueries,
     private readonly publisher: ReportPdfPublisher,
     private readonly policy: NotificationPolicy,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    const plan = { name: ReportPdfJob.name, firstMs: FIRST_RUN_MS, everyMs: POLL_MS };
-    const tick = beatTick(plan, () => this.kick());
-    this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, POLL_MS).unref());
-  }
-
-  onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+  ) {
+    super();
   }
 
   /**
@@ -71,20 +62,7 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
    * a run queues exactly one more run, so a report submitted mid-run is not left for a minute.
    */
   kick(): Promise<void> {
-    if (this.running) {
-      this.again = true;
-      return this.running;
-    }
-    const loop = async () => {
-      do {
-        this.again = false;
-        await this.runOnce();
-      } while (this.again);
-    };
-    this.running = loop().finally(() => {
-      this.running = null;
-    });
-    return this.running;
+    return this.ticker.kick();
   }
 
   /** One pass over the queue. Never throws. */

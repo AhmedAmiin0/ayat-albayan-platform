@@ -6,6 +6,7 @@ import { plannedCourseEnd } from '@/modules/teaching/booking/core/booking.course
 import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { Plan } from '@/modules/teaching/booking/plan/booking.plan';
 import { planSeries, type SeriesRule } from '@/modules/teaching/booking/plan/booking.series-plan';
+import { isSales } from '@/common/auth/roles';
 
 // Pure plan of a course's remaining lessons on new days.
 
@@ -32,9 +33,9 @@ export type ChangeFacts = {
 export function assertChange(req: CourseChangeRequest, facts: ChangeFacts, now: Date): void {
   if (Date.parse(req.startsAt) <= now.getTime())
     throw domainError(HttpStatus.BAD_REQUEST, 'date_in_past');
-  if (facts.role === 'sales' && req.override)
+  if (isSales(facts) && req.override)
     throw domainError(HttpStatus.FORBIDDEN, 'override_not_allowed');
-  if (facts.perWeek === null && facts.role === 'sales')
+  if (facts.perWeek === null && isSales(facts))
     throw domainError(HttpStatus.CONFLICT, 'custom_count_admin');
   if (facts.perWeek !== null && req.byday.length !== facts.perWeek)
     throw domainError(HttpStatus.BAD_REQUEST, 'days_count_mismatch');

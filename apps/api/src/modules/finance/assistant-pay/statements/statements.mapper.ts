@@ -1,11 +1,13 @@
 import type { Json, Tables } from '@ab/db';
 import {
   isCommissionKind,
+  statementLineKindSchema,
   type AssistantStatementLineView,
   type AssistantStatementView,
   type CurrencyTotals,
   type StatementLineKind,
 } from '@ab/money';
+import { z } from 'zod';
 import { reasonText } from '@/modules/finance/assistant-pay/shared/reasons';
 
 type LineRow = {
@@ -25,8 +27,11 @@ export type StatementRow = Tables<'assistant_statements'> & {
 export const STATEMENT_SELECT =
   '*, assistant:profiles!assistant_id(id, full_name), lines:assistant_statement_lines(kind, amount, currency, commission:assistant_commissions(kind, student:students(code, name)), adjustment:assistant_adjustments(kind, reason))';
 
-const RANK: Record<StatementLineKind, number> = { salary: 0, commission: 1, adjustment: 2 };
-const isKind = (k: string): k is StatementLineKind => k === 'salary' || k === 'commission' || k === 'adjustment';
+const RANK = z
+  .record(statementLineKindSchema, z.number())
+  .readonly()
+  .decode({ salary: 0, commission: 1, adjustment: 2 });
+const isKind = (k: string): k is StatementLineKind => statementLineKindSchema.validate(k);
 const num = (v: Json | undefined): number => (typeof v === 'number' ? v : 0);
 
 /** The frozen totals ({currency: {salary, commissions, adjustments, total}}); anything else reads empty. */

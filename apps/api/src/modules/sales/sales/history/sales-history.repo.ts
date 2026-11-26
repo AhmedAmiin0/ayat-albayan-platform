@@ -1,7 +1,7 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 
 type Sub = Tables<'subscriptions'>;
 /** Whitelisted subscription columns: never price, currency, fx_*, price_source or notes. */
@@ -33,8 +33,7 @@ export class SalesHistoryRepo {
 
   /** The subscription's student, or null for an unknown id. */
   async studentOf(subscriptionId: string): Promise<string | null> {
-    const { data, error } = await this.db.from('subscriptions').select('student_id').eq('id', subscriptionId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('subscriptions').select('student_id').eq('id', subscriptionId).maybeSingle());
     return data?.student_id ?? null;
   }
 
@@ -48,8 +47,8 @@ export class SalesHistoryRepo {
         .order('starts_on')
         .order('created_at'),
     ]);
-    if (student.error) throw dbError(student.error);
-    if (subs.error) throw dbError(subs.error);
+    if (student.error) throw pgError(student.error);
+    if (subs.error) throw pgError(subs.error);
     if (!student.data) return null;
     const ids = subs.data.map((s) => s.id);
     if (ids.length === 0) return { student: student.data, subscriptions: [], balances: [], payments: [], audit: [] };
@@ -64,7 +63,7 @@ export class SalesHistoryRepo {
         .order('at')
         .overrideTypes<HistoryAuditRow[], { merge: false }>(),
     ]);
-    for (const r of [balances, payments, audit]) if (r.error) throw dbError(r.error);
+    for (const r of [balances, payments, audit]) if (r.error) throw pgError(r.error);
     return { student: student.data, subscriptions: subs.data, balances: balances.data ?? [], payments: payments.data ?? [], audit: audit.data ?? [] };
   }
 }

@@ -1,5 +1,6 @@
 import { counted, type PluralForm } from '@ab/core';
 import type { SignedDownload } from '../../../reports';
+import { z } from 'zod';
 import { baseMime } from '../../../schemas/chat-media';
 
 // Files staff send from the chat: by link, inside the 24 h window.
@@ -26,11 +27,14 @@ export type WaMediaKind = 'image' | 'document';
 export const waMediaKind = (mime: string | null): WaMediaKind =>
   baseMime(mime).startsWith('image/') ? 'image' : 'document';
 
+export const WA_SEND_KINDS = ['image', 'audio', 'video', 'sticker', 'document'] as const;
+export const waSendKindSchema = z.enum(WA_SEND_KINDS);
+export type WaSendKind = z.infer<typeof waSendKindSchema>;
 /**
  * Meta's session media types by mime (images JPEG/PNG only; WhatsApp's own audio and video formats;
  * a WebP is WhatsApp's sticker).
  */
-const SEND_KINDS: Record<string, Exclude<WaSendKind, 'document'>> = {
+const SEND_KINDS = z.record(z.string(), waSendKindSchema.exclude(['document'])).readonly().decode({
   'image/jpeg': 'image',
   'image/png': 'image',
   'image/webp': 'sticker',
@@ -41,12 +45,12 @@ const SEND_KINDS: Record<string, Exclude<WaSendKind, 'document'>> = {
   'audio/ogg': 'audio',
   'video/mp4': 'video',
   'video/3gpp': 'video',
-};
-export type WaSendKind = 'image' | 'audio' | 'video' | 'sticker' | 'document';
+});
+const sendKindOf = (key: string) => (Object.hasOwn(SEND_KINDS, key) ? SEND_KINDS[key] : undefined);
 
 /** The type a stored file travels as (a forwarded voice note or video too); anything else goes as a document. */
 export const waSendKind = (mime: string | null): WaSendKind =>
-  SEND_KINDS[baseMime(mime)] ?? 'document';
+  sendKindOf(baseMime(mime)) ?? 'document';
 
 export type ChatFileProblem = 'file_type' | 'file_too_large';
 

@@ -1,7 +1,7 @@
 import type { Program, StudentStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 
 /** The only student columns a teacher gets: no phone, guardian or money (R-TCH-03). */
 export type TeacherStudentRow = {
@@ -31,24 +31,26 @@ export class TeacherStudentsRepo {
     teacherId: string;
     statuses: readonly StudentStatus[];
   }): Promise<TeacherStudentRow[]> {
-    const { data, error } = await this.db
-      .from('students')
-      .select(COLUMNS)
-      .eq('teacher_id', input.teacherId)
-      .in('status', [...input.statuses]);
-    if (error) throw dbError(error);
+    const data = rows(
+      await this.db
+        .from('students')
+        .select(COLUMNS)
+        .eq('teacher_id', input.teacherId)
+        .in('status', [...input.statuses]),
+    );
     return data;
   }
 
   /** My lessons (any status) starting at or after `since`, with their student ids. */
   async lessons(input: { teacherId: string; since: string }): Promise<TeacherLessonRow[]> {
-    const { data, error } = await this.db
-      .from('lessons')
-      .select('starts_at, status, lesson_students(student_id)')
-      .eq('teacher_id', input.teacherId)
-      .gte('starts_at', input.since)
-      .order('starts_at');
-    if (error) throw dbError(error);
+    const data = rows(
+      await this.db
+        .from('lessons')
+        .select('starts_at, status, lesson_students(student_id)')
+        .eq('teacher_id', input.teacherId)
+        .gte('starts_at', input.since)
+        .order('starts_at'),
+    );
     return data;
   }
 
@@ -58,12 +60,13 @@ export class TeacherStudentsRepo {
     statuses: readonly StudentStatus[];
   }): Promise<TeacherStudentRow[]> {
     if (input.ids.length === 0) return [];
-    const { data, error } = await this.db
-      .from('students')
-      .select(COLUMNS)
-      .in('id', [...input.ids])
-      .in('status', [...input.statuses]);
-    if (error) throw dbError(error);
+    const data = rows(
+      await this.db
+        .from('students')
+        .select(COLUMNS)
+        .in('id', [...input.ids])
+        .in('status', [...input.statuses]),
+    );
     return data;
   }
 }

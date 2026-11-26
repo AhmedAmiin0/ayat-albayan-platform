@@ -10,11 +10,11 @@ import { byProvider, dropCopies, missingWhenUnconfigured, STORE_SOURCE } from '.
 import { transfer, urlsByPath } from './store/routing';
 import type { Download, ManyPaths, ObjectRef, S3Target, Upload, UploadSlot } from './store/routing';
 import type { StoreSource } from './store/store-source';
+import { orFallback } from '@/common/infra/errors';
 
 /**
- * The object-storage port's router (R-REP-02/03, R-PAY-01, docs/45; clients only get signed URLs,
- * rule 9). Reads follow the stored path's marker; every write goes to the active store
- * (STORAGE_DRIVER) and returns the path to keep, «minio:…» in MinIO.
+ * The object-storage router (R-REP-02/03, R-PAY-01, docs/45): reads follow the stored path's
+ * marker; every write goes to the active store and returns the path to keep, «minio:…» in MinIO.
  */
 @Injectable()
 export class StorageService {
@@ -105,7 +105,7 @@ export class StorageService {
 
   /** Is a client-uploaded object there (and within its bucket's limits)? */
   exists(ref: ObjectRef): Promise<boolean> {
-    return this.on(ref, (store, key) => store.exists(key)).catch(() => false);
+    return orFallback(this.on(ref, (store, key) => store.exists(key)), false, 'exists check');
   }
 
   info(ref: ObjectRef): Promise<{ size: number; contentType: string } | null> {

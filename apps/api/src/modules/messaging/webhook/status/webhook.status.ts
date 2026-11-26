@@ -1,11 +1,20 @@
 import type { TablesUpdate } from '@ab/db';
-import type { MessageStatus } from '@ab/catalog';
+import { messageStatusSchema, type MessageStatus } from '@ab/catalog';
+import { z } from 'zod';
 import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 
 // R-MSG-05: Meta delivery statuses move an outbound row forward only. Webhooks arrive out of
 // order and are retried, so «delivered» after «read» or a repeated «sent» changes nothing.
 
-const RANK: Partial<Record<MessageStatus, number>> = { queued: 0, sent: 1, delivered: 2, read: 3 };
+/** A failed or manually sent row has no rank: it never moves. */
+const RANK = z.record(messageStatusSchema, z.number().nullable()).readonly().decode({
+  queued: 0,
+  sent: 1,
+  delivered: 2,
+  read: 3,
+  failed: null,
+  sent_manually: null,
+});
 
 /**
  * The status the row should take, or null for no change: forward along queued < sent <
@@ -13,7 +22,7 @@ const RANK: Partial<Record<MessageStatus, number>> = { queued: 0, sent: 1, deliv
  */
 export function nextStatus(current: MessageStatus, incoming: StatusEvent['status']): MessageStatus | null {
   const from = RANK[current];
-  if (from === undefined) return null;
+  if (from === null) return null;
   if (incoming === 'failed') return current === 'read' ? null : 'failed';
   const to = RANK[incoming] ?? -1;
   return to > from ? incoming : null;

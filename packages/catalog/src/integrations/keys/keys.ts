@@ -2,6 +2,7 @@
 
 import { GROUP_OF } from '../keys.groups';
 import { STORAGE_DRIVERS, STORAGE_PLAIN_KEYS } from '../storage';
+import { z } from 'zod';
 
 /** The form's groups, in page order. */
 export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wacrm', 'evolution', 'wa_safety', 'calls', 'livekit', 'expo', 'web_push', 'fx', 'google', 'giphy', 'storage', 'stripe'] as const;
@@ -99,7 +100,8 @@ export type WaProvider = (typeof WA_PROVIDERS)[number];
 export const WA_LINE_PROVIDERS = ['meta', 'kapso', 'crm'] as const;
 /** An Evolution instance's engine: Baileys (WhatsApp Web, no 24 h window) or Meta's Cloud API. */
 export const EVOLUTION_MODES = ['baileys', 'cloud'] as const;
-export type EvolutionMode = (typeof EVOLUTION_MODES)[number];
+export const evolutionModeSchema = z.enum(EVOLUTION_MODES);
+export type EvolutionMode = z.infer<typeof evolutionModeSchema>;
 
 /** Plain keys with a fixed set of values: the form renders a select, the API refuses anything else. */
 export const INTEGRATION_ENUMS: Partial<Record<IntegrationPlainKey, readonly string[]>> = {

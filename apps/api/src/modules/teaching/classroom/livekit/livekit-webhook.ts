@@ -1,5 +1,6 @@
-import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
+import { createHash, createHmac } from 'node:crypto';
 import type { LivekitEnv } from '@/config/env/env';
+import { safeEqual } from '@/common/infra/crypto/safe-equal';
 
 // LiveKit signs every webhook POST with a JWT in the Authorization header (no "Bearer"): HS256
 // with the API secret, iss = API key, and a `sha256` claim = base64 (standard) of sha256(body).
@@ -12,12 +13,6 @@ interface WebhookCheck {
   config: Pick<LivekitEnv, 'apiKey' | 'apiSecret'>;
   now: Date;
 }
-
-const safeEqual = (a: string, b: string): boolean => {
-  const x = Buffer.from(a);
-  const y = Buffer.from(b);
-  return x.length === y.length && timingSafeEqual(x, y);
-};
 
 function claimsOf(part: string): Record<string, unknown> | null {
   try {

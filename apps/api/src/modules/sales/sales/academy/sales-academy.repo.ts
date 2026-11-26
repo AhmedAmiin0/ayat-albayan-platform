@@ -5,7 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
 import { studentNameOrCodeFilter } from '@/modules/people/students/students.mapper';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 type Student = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program'>;
 
@@ -48,7 +48,7 @@ export class SalesAcademyRepo {
       .select('id, display_name_ar, display_name_en, gender, programs, meeting_link, meeting_mode, students(id, code, name, status, program)')
       .eq('status', 'active')
       .order('display_name_ar');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const photos = await this.photos.ofTeachers(data.map((t) => t.id));
     return data.map((t) => ({ ...t, avatar_url: photos.get(t.id) ?? null }));
   }
@@ -64,7 +64,7 @@ export class SalesAcademyRepo {
     if (filter) query = query.or(filter);
     const from = (q.page - 1) * q.pageSize;
     const { data, error, count } = await query.range(from, from + q.pageSize - 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return { rows: data, total: count ?? 0 };
   }
 
@@ -80,7 +80,7 @@ export class SalesAcademyRepo {
       .gt('ends_at', at)
       .in('status', [...OPEN_LESSON_STATUSES])
       .order('starts_at');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 }

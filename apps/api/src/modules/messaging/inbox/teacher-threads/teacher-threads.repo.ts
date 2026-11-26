@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { TeacherMeRepo } from '@/modules/teaching/lessons/teacher-me/teacher-me.repo';
-import { dbError } from '@/common/http/http';
+import { done, maybe, pgError, rows } from '@/common/db/errors';
 import type { PeopleStudentRow } from '@/modules/messaging/inbox/people/thread-people.mapper';
 
 interface ScopeTeacher {
@@ -23,27 +23,31 @@ export class TeacherThreadsRepo {
 
   /** The signed-in teacher's row (JWT sub = teachers.profile_id); null when not linked. */
   async teacher(profileId: string): Promise<ScopeTeacher | null> {
-    const { data, error } = await this.db
-      .from('teachers')
-      .select('id, display_name_ar, phone_e164')
-      .eq('profile_id', profileId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(
+      await this.db
+        .from('teachers')
+        .select('id, display_name_ar, phone_e164')
+        .eq('profile_id', profileId)
+        .maybeSingle(),
+    );
     return data;
   }
 
   /** teacher_thread_phones: their subscribed students' guardians (never new / trial / pending_subscription; assigned or taught ≤ 90 days) + their own. */
   async phones(teacherId: string): Promise<string[]> {
     const { data, error } = await this.db.rpc('teacher_thread_phones', { p_teacher_id: teacherId });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.map((r) => r.phone_e164);
   }
 
   /** The teacher's own unread per phone (teacher_unread); never the admin's read_at. */
   async unread(teacherId: string, phones: readonly string[]): Promise<Map<string, number>> {
     if (phones.length === 0) return new Map();
-    const { data, error } = await this.db.rpc('teacher_unread', { p_teacher_id: teacherId, p_phones: [...phones] });
-    if (error) throw dbError(error);
+    const { data, error } = await this.db.rpc('teacher_unread', {
+      p_teacher_id: teacherId,
+      p_phones: [...phones],
+    });
+    if (error) throw pgError(error);
     return new Map(data.map((r) => [r.phone_e164, r.unread]));
   }
 
@@ -54,10 +58,11 @@ export class TeacherThreadsRepo {
       phone_e164: input.phone,
       read_at: input.at.toISOString(),
     };
-    const { error } = await this.db
-      .from('teacher_thread_reads')
-      .upsert(row, { onConflict: 'teacher_id,phone_e164' });
-    if (error) throw dbError(error);
+    done(
+      await this.db
+        .from('teacher_thread_reads')
+        .upsert(row, { onConflict: 'teacher_id,phone_e164' }),
+    );
   }
 
   /** Ids of the teacher's own students (TeacherMeQueries.students: assigned + active rules). */
@@ -67,12 +72,13 @@ export class TeacherThreadsRepo {
 
   /** The guardian's students, oldest first, without packages (no money in teacher mode). */
   async guardianStudents(guardianId: string): Promise<PeopleStudentRow[]> {
-    const { data, error } = await this.db
-      .from('students')
-      .select('id, code, name, status, teacher:teachers(display_name_ar)')
-      .eq('guardian_id', guardianId)
-      .order('created_at');
-    if (error) throw dbError(error);
+    const data = rows(
+      await this.db
+        .from('students')
+        .select('id, code, name, status, teacher:teachers(display_name_ar)')
+        .eq('guardian_id', guardianId)
+        .order('created_at'),
+    );
     return data;
   }
 }

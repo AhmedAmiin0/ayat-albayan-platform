@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done } from '@/common/db/errors';
 
 /**
  * The bell rows of one channel message (push_notifications kind channel_message, dedup key
@@ -13,11 +13,10 @@ export class ChannelBellRepo {
 
   /** Every recipient's row of this message gets this body (an edit's new text, a deletion). */
   async rewrite(input: { messageId: string; body: string }): Promise<void> {
-    const { error } = await this.db
+    done(await this.db
       .from('push_notifications')
       .update({ body: input.body })
       .eq('kind', 'channel_message')
-      .like('dedup_key', `channel_message:${input.messageId}:%`);
-    if (error) throw dbError(error);
+      .like('dedup_key', `channel_message:${input.messageId}:%`));
   }
 }

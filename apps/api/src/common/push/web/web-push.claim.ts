@@ -1,5 +1,5 @@
 import { ConflictException } from '@nestjs/common';
-import { dbError } from '@/common/http/http';
+import { maybe } from '@/common/db/errors';
 import type { Db } from '@/common/db/db.module';
 import { DEVICE_IN_USE, mayClaimDevice } from '@/common/push/expo/push-claim';
 import { liveSessions } from '@/common/push/dispatch/push.sessions';
@@ -16,12 +16,13 @@ export async function assertBrowserClaim(
   db: Db,
   input: { profileId: string; sub: WebPushSubscriptionInput },
 ): Promise<void> {
-  const { data, error } = await db
-    .from('web_push_subscriptions')
-    .select('profile_id, session_id, p256dh, auth')
-    .eq('endpoint', input.sub.endpoint)
-    .maybeSingle();
-  if (error) throw dbError(error);
+  const data = maybe(
+    await db
+      .from('web_push_subscriptions')
+      .select('profile_id, session_id, p256dh, auth')
+      .eq('endpoint', input.sub.endpoint)
+      .maybeSingle(),
+  );
   if (!data || data.profile_id === input.profileId) return;
   const proven = data.p256dh === input.sub.keys.p256dh && data.auth === input.sub.keys.auth;
   const live =

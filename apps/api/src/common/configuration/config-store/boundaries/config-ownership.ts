@@ -2,6 +2,7 @@ import { isOwnedSettingKey, OWNED_SETTING_KEYS, type SettingOwner } from '@ab/se
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { configDef, seedEntryOf } from '@/common/configuration/config-store/store/config-defs';
+import { isAdmin } from '@/common/auth/roles';
 
 // Who owns a key is decided IN CODE (docs/26 §2a, §9 #6): OWNED_SETTING_KEYS and the registry's
 // `ownedBy` / `patch: false`, never a DB column.
@@ -17,9 +18,6 @@ export function isModuleOwned(key: string): boolean {
   return ownerOf(key) !== null || configDef(key)?.patch === false;
 }
 
-/** The base-role admin (not only a custom role holding the permission): the academy's Google rows. */
-export const isBaseAdmin = (user: AuthUser): boolean => user.role === 'admin';
-
 /**
  * The extra check, beyond settings.write, to edit an owned key's description: the owning module's
  * permission. Exhaustive: a new SettingOwner fails to compile until it is given one.
@@ -27,7 +25,7 @@ export const isBaseAdmin = (user: AuthUser): boolean => user.role === 'admin';
 export const OWNER_MAY_DESCRIBE: Readonly<Record<SettingOwner, (user: AuthUser) => boolean>> = {
   messages_gate: (user) => can(user, 'settings.write'),
   communications: (user) => can(user, 'numbers.manage'),
-  google_sync: isBaseAdmin,
+  google_sync: isAdmin,
   notifications: (user) => can(user, 'notifications.manage'),
 };
 
@@ -38,4 +36,4 @@ export function mayDescribe(user: AuthUser, key: string): boolean {
 }
 
 /** Google rows are listed to base admins only (docs/26 §2f). */
-export const mayView = (user: AuthUser, key: string): boolean => ownerOf(key) !== 'google_sync' || isBaseAdmin(user);
+export const mayView = (user: AuthUser, key: string): boolean => ownerOf(key) !== 'google_sync' || isAdmin(user);

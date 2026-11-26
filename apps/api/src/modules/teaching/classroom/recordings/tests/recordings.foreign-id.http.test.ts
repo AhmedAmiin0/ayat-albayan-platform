@@ -22,6 +22,6 @@ describe('GET /meetings/:id/recordings with another login’s meeting', () => {
     expect(res.statusCode).toBe(403);
     expect(res.body).not.toContain(rec.id);
     expect(h.recordings.forTarget).not.toHaveBeenCalled();
-    expect(h.storage.signedDownload).not.toHaveBeenCalled();
+    expect(h.storage.signedDownloads).not.toHaveBeenCalled();
   });
 });

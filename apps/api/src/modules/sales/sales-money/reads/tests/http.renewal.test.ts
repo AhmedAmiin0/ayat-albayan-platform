@@ -26,7 +26,6 @@ describe('GET /sales/money/family: renew_due and the renewal seed (owner 2026-10
       { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'active' },
       { id: SIBLING, code: 'AB-0184', name: 'أخوها', status: 'expired' },
     ]);
-    m.subs.list.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 20 });
     m.subs.forStudent.mockResolvedValue([subRow({ status: 'active', price_source: PREMIUM_AE as never, notes: 'x' })]);
   });
 

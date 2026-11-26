@@ -1,5 +1,11 @@
-import { BadRequestException, ConflictException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import type { HttpException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import type { PostgrestError } from '@supabase/supabase-js';
+import type { PgErrorMap } from '@/common/db/errors';
 import { z } from 'zod';
 
 // Request helpers shared by the guardians and students modules.
@@ -23,33 +29,31 @@ export const listQuerySchema = z.object({
 });
 export type ListQuery = z.infer<typeof listQuerySchema>;
 
-
 /** Inclusive row range for supabase-js `.range(from, to)`. */
 export function pageRange(q: ListQuery): [number, number] {
   const from = (q.page - 1) * q.pageSize;
   return [from, from + q.pageSize - 1];
 }
 
-/** Drops characters that would break a PostgREST `or=(...)` filter. */
-export function orSafe(term: string): string {
-  return term.replace(/[,()*%\\:"]/g, ' ').trim();
-}
 
-type PgError = { code?: string; message: string };
 
-/** Maps a Postgres/PostgREST error to an HTTP exception. */
-export function dbError(error: PgError, conflict = 'conflict'): HttpException {
-  switch (error.code) {
-    case '23505': // unique_violation
-    case '23503': // foreign_key_violation
-      return new ConflictException(conflict);
-    case 'P0002':
-    case 'PGRST116':
-      return new NotFoundException();
-    case '22023':
-    case '23514':
-      return new BadRequestException(error.message);
-    default:
-      return new InternalServerErrorException(error.message);
-  }
+const internal = (e: PostgrestError) => new InternalServerErrorException(e.message);
+const badRequest = (e: PostgrestError) => new BadRequestException(e.message);
+const notFound = () => new NotFoundException();
+
+/** The people modules' answers: a conflict names its code, and every other error is a 500. */
+export function peopleErrors(conflict = 'conflict'): PgErrorMap {
+  const taken = () => new ConflictException(conflict);
+  return {
+    codes: {
+      '23505': taken,
+      '23503': taken,
+      P0002: notFound,
+      PGRST116: notFound,
+      '22023': badRequest,
+      '23514': badRequest,
+      PGRST103: internal,
+    },
+    otherwise: internal,
+  };
 }

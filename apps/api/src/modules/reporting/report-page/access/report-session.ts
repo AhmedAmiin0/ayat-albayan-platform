@@ -1,4 +1,5 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { createHmac } from 'node:crypto';
+import { safeEqual } from '@/common/infra/crypto/safe-equal';
 
 /** How long a verified viewer reads the report without a new code. */
 export const REPORT_SESSION_SECONDS = 30 * 60;
@@ -28,16 +29,12 @@ interface SessionCheck {
   now: Date;
 }
 
-/** Constant-time compare of two signatures of any length. */
-const sameSig = (got: Buffer, want: Buffer): boolean =>
-  got.length === want.length && timingSafeEqual(got, want);
-
 /** true only for an unexpired token signed for this report. */
 export function validReportSession(input: SessionCheck): boolean {
   const [, expText = '0', sig = ''] = TOKEN.exec(input.token) ?? [];
   const exp = Number(expText);
   const want = Buffer.from(sign({ pepper: input.pepper, reportId: input.reportId, exp }));
-  return exp * 1000 > input.now.getTime() && sameSig(Buffer.from(sig), want);
+  return exp * 1000 > input.now.getTime() && safeEqual(Buffer.from(sig), want);
 }
 
 /** HttpOnly, this report's public routes only, 30 minutes; same-site with the web app (Lax). */

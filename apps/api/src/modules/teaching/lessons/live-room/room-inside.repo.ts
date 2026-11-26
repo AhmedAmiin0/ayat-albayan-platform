@@ -1,7 +1,7 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 
 /** Someone inside a lesson room now: their row, and the student of the guest link they came by. */
 export type PresenceRow = Pick<
@@ -25,15 +25,14 @@ export class RoomInsideRepo {
   /** Everyone inside these lessons' rooms now, earliest arrival first. */
   async inside(lessonIds: readonly string[]): Promise<PresenceRow[]> {
     if (lessonIds.length === 0) return [];
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('classroom_participants')
       .select(INSIDE)
       .in('lesson_id', [...lessonIds])
       .not('entered_at', 'is', null)
       .is('left_at', null)
       .order('entered_at')
-      .limit(LIMIT);
-    if (error) throw dbError(error);
+      .limit(LIMIT));
     return data;
   }
 }

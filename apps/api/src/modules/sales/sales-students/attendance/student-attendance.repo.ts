@@ -2,7 +2,7 @@ import type { LessonStatus } from '@ab/catalog';
 import { COUNTS_FOR_MONEY } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError, rows } from '@/common/db/errors';
 import type {
   AttendanceLessonRow,
   AttendanceReportRow,
@@ -45,8 +45,7 @@ export class StudentAttendanceRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async exists(studentId: string): Promise<boolean> {
-    const { data, error } = await this.db.from('students').select('id').eq('id', studentId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('students').select('id').eq('id', studentId).maybeSingle());
     return data !== null;
   }
 
@@ -59,7 +58,7 @@ export class StudentAttendanceRepo {
       .order('starts_at', { ascending: false })
       .limit(MONTH_LIMIT)
       .overrideTypes<AttendanceLessonRow[], { merge: false }>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -73,59 +72,55 @@ export class StudentAttendanceRepo {
       .lt('starts_at', now.toISOString())
       .order('starts_at', { ascending: false })
       .limit(HISTORY_LIMIT);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.map((r) => r.starts_at);
   }
 
   /** The student's submitted reports of these lessons. */
   async reports(studentId: string, lessonIds: readonly string[]): Promise<AttendanceReportRow[]> {
     if (lessonIds.length === 0) return [];
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lesson_reports')
       .select('id, lesson_id, submitted_at, sent_at')
       .eq('student_id', studentId)
       .eq('status', 'submitted')
-      .in('lesson_id', [...lessonIds]);
-    if (error) throw dbError(error);
+      .in('lesson_id', [...lessonIds]));
     return data;
   }
 
   /** The file head (docs/47); null for an unknown id. */
   async student(id: string): Promise<AttendanceStudent | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('students')
       .select('id, code, name, status')
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   /** Whether she has a lesson with the student (TAUGHT) that starts at `since` or later. */
   async taughtBy(q: TaughtQuery): Promise<boolean> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lessons')
       .select('id, own:lesson_students!inner(student_id)')
       .eq('own.student_id', q.studentId)
       .eq('teacher_id', q.teacherId)
       .in('status', [...TAUGHT])
       .gte('starts_at', q.since.toISOString())
-      .limit(1);
-    if (error) throw dbError(error);
+      .limit(1));
     return data.length > 0;
   }
 
   /** The student's packages that count (an unused cancel is out), newest first. */
   async packages(studentId: string): Promise<CoursePackageRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('subscriptions')
       .select(PACKAGE_SELECT)
       .eq('student_id', studentId)
       .or(COUNTS_FOR_MONEY)
       .order('starts_on', { ascending: false })
       .order('created_at', { ascending: false })
-      .order('id', { ascending: false });
-    if (error) throw dbError(error);
+      .order('id', { ascending: false }));
     return data;
   }
 }

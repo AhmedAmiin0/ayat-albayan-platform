@@ -1,3 +1,4 @@
+import { errorMessage } from '@ab/core';
 import { ar } from '@/common/infra/i18n/server-text';
 import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/money';
 import { Injectable, Logger } from '@nestjs/common';
@@ -9,7 +10,6 @@ import { StudentRenewal } from '@/modules/finance/subscriptions/student-lifecycl
 import { SubscriptionsSettings } from '@/modules/finance/subscriptions/shared/subscriptions.settings';
 import type { StudentTz } from '@/modules/finance/subscriptions/student-lifecycle/student-status.types';
 import type { EvaluateOptions, Outcome, Run, Subject } from './alerts.types';
-
 
 /**
  * R-SUB-02 «2 lessons remaining» → renewal reminder to the guardian + an admin task; at 0 the
@@ -50,7 +50,7 @@ export class SubscriptionAlertsService {
     try {
       return await this.evaluateAll(ids, await this.runOf(opts));
     } catch (e) {
-      this.log.error(`alerts failed for ${ids.length} students: ${messageOf(e)}`);
+      this.log.error(`alerts failed for ${ids.length} students: ${errorMessage(e)}`);
       return ids.length;
     }
   }
@@ -94,7 +94,7 @@ export class SubscriptionAlertsService {
   }
 
   private failed(s: Subject, e: unknown): Outcome[] {
-    this.log.error(`alerts failed for student ${s.studentId}: ${messageOf(e)}`);
+    this.log.error(`alerts failed for student ${s.studentId}: ${errorMessage(e)}`);
     return [];
   }
 
@@ -123,8 +123,6 @@ export class SubscriptionAlertsService {
     await this.queries.closeTasks({ subjectIds: [subscriptionId], keep: [], now });
   }
 }
-
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 function subjectsOf(
   ids: readonly string[],

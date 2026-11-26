@@ -3,6 +3,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
+import { isAdmin } from '@/common/auth/roles';
 
 /**
  * A teacher acting through the signed per-lesson report link (no login, docs/19 «Teacher report
@@ -49,7 +50,7 @@ export class ReportAccess {
   }
 
   private async signedIn(user: AuthUser, row: { teacher_id: string }): Promise<boolean> {
-    if (user.role === 'admin') return true;
+    if (isAdmin(user)) return true;
     return user.role === 'teacher' && (await this.teachers.idByProfile(user.id)) === row.teacher_id;
   }
 }

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 
 /**
  * A teacher's sign-in username (docs/30 §1): it lives on the teacher's login profile (profiles.username,
@@ -13,8 +13,7 @@ export class TeacherUsernames {
 
   async of(profileId: string | null): Promise<string | null> {
     if (!profileId) return null;
-    const { data, error } = await this.db.from('profiles').select('username').eq('id', profileId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('profiles').select('username').eq('id', profileId).maybeSingle());
     return data?.username ?? null;
   }
 
@@ -23,6 +22,6 @@ export class TeacherUsernames {
     if (!profileId) throw conflict('username_needs_login');
     const { error } = await this.db.from('profiles').update({ username }).eq('id', profileId);
     if (error?.code === '23505') throw conflict('username_taken');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
   }
 }

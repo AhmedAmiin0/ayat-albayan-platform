@@ -1,5 +1,6 @@
 import type { Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import type { PostgrestError } from '@supabase/supabase-js';
+import { pgError } from '@/common/db/errors';
 
 export interface PhoneRow {
   profileId: string;
@@ -15,8 +16,8 @@ interface Pair {
 const rowsOf = (pairs: Pair[]): PhoneRow[] =>
   pairs.flatMap((p) => (p.profile && p.phone ? [{ profileId: p.profile, phone: p.phone }] : []));
 
-function checked<T>(res: { data: T[] | null; error: Parameters<typeof dbError>[0] | null }): T[] {
-  if (res.error) throw dbError(res.error);
+function checked<T>(res: { data: T[] | null; error: PostgrestError | null }): T[] {
+  if (res.error) throw pgError(res.error);
   return res.data ?? [];
 }
 

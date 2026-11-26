@@ -11,10 +11,13 @@ export const isFamilyActionable = (
   now: Date,
 ): boolean => isOpenLesson(l.status) && Date.parse(l.starts_at) > now.getTime();
 
+/** The family request states a lesson card shows: waiting, or declined. */
+export const portalRequestStatusSchema = z.enum(['pending', 'rejected']);
+
 /** The family's latest request on a lesson: waiting, or declined with the academy's note. */
 export const portalLessonRequestSchema = z.object({
   id: z.string(),
-  status: z.enum(['pending', 'rejected']),
+  status: portalRequestStatusSchema,
   proposed_starts_at: z.string(),
   note: z.string().nullable(),
   decision_note: z.string().nullable(),

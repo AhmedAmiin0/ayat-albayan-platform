@@ -4,6 +4,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { ClassroomRepo, type JoinLesson } from '@/modules/teaching/classroom/classroom.repo';
+import { isAdmin, isSales } from '@/common/auth/roles';
 
 type StaffRole = Exclude<JoinRole, 'guest'>;
 
@@ -35,11 +36,11 @@ export class LessonRoleService {
   }
 
   private async roleOf(user: AuthUser, lesson: JoinLesson): Promise<StaffRole> {
-    if (user.role === 'admin') return 'admin';
+    if (isAdmin(user)) return 'admin';
     if (user.role === 'teacher' && (await this.teachers.idByProfile(user.id)) === lesson.teacher_id) return 'teacher';
     if (user.role === 'assistant' && (await this.queries.assistsLesson(user.id, lesson.id))) return 'assistant';
     // docs/16: a salesperson is also the academy's classroom assistant: her own trial as sales, any other lesson as assistant.
-    if (user.role === 'sales') return (await this.queries.salesOwnsLesson(user.id, lesson.id)) ? 'sales' : 'assistant';
+    if (isSales(user)) return (await this.queries.salesOwnsLesson(user.id, lesson.id)) ? 'sales' : 'assistant';
     throw new ForbiddenException();
   }
 }

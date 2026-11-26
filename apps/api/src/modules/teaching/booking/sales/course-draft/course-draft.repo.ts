@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, maybe, one, pgError } from '@/common/db/errors';
 import { bookingBodySchema } from '@/modules/teaching/booking/plan/package-size';
 import type { CourseDraft } from './course-draft.rules';
 
@@ -25,12 +25,11 @@ export class CourseDraftRepo {
 
   /** The package's draft; null without one (or a row that no longer parses, logged). */
   async get(subscriptionId: string): Promise<CourseDraft | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('subscription_course_drafts')
       .select('subscription_id, request, saved_by, saved_at')
       .eq('subscription_id', subscriptionId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     const row = rowSchema.safeParse(data);
     if (data && !row.success) this.log.warn(`course draft ${subscriptionId} does not parse`);
     return row.success ? toDraft(row.data) : null;
@@ -45,23 +44,21 @@ export class CourseDraftRepo {
       saved_by: input.savedBy,
       saved_at: savedAt,
     };
-    const { data, error } = await this.db
+    const data = one(await this.db
       .from('subscription_course_drafts')
       .upsert(row, { onConflict: 'subscription_id' })
       .select('saved_at')
-      .single();
-    if (error) throw dbError(error);
+      .single());
     return data.saved_at;
   }
 
   /** Deletes that saved version only (saved_at as read): an edit saved since stays. */
   async remove(draft: Pick<CourseDraft, 'subscriptionId' | 'savedAt'>): Promise<void> {
-    const { error } = await this.db
+    done(await this.db
       .from('subscription_course_drafts')
       .delete()
       .eq('subscription_id', draft.subscriptionId)
-      .eq('saved_at', draft.savedAt);
-    if (error) throw dbError(error);
+      .eq('saved_at', draft.savedAt));
   }
 
   /** Hold mode: the package is unpaid AND one of its payment links is still open. */
@@ -76,14 +73,13 @@ export class CourseDraftRepo {
         .gt('expires_at', now.toISOString())
         .limit(1),
     ]);
-    if (links.error) throw dbError(links.error);
+    if (links.error) throw pgError(links.error);
     return status === 'unpaid' && links.data.length > 0;
   }
 
   /** The package's status (null when unknown). */
   async status(subscriptionId: string): Promise<string | null> {
-    const { data, error } = await this.db.from('subscriptions').select('status').eq('id', subscriptionId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('subscriptions').select('status').eq('id', subscriptionId).maybeSingle());
     return data?.status ?? null;
   }
 }

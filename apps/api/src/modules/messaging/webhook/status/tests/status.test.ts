@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { StatusEvent } from '@/modules/messaging/webhook/webhook.events';
+import { deliveryStatusSchema, type StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 import { nextStatus, statusPatch, type StatusRow } from '@/modules/messaging/webhook/status/webhook.status';
 
 const AT = new Date('2026-10-02T15:00:00Z');
@@ -81,5 +81,11 @@ describe('statusPatch', () => {
   it('is null when nothing changes (replayed or late status)', () => {
     expect(statusPatch(row({ status: 'read' }), ev())).toBeNull();
     expect(statusPatch(row({ status: 'delivered' }), ev())).toBeNull();
+  });
+});
+
+describe('deliveryStatusSchema', () => {
+  it('names the four delivery ticks a webhook reports', () => {
+    expect(deliveryStatusSchema.options).toEqual(['sent', 'delivered', 'read', 'failed']);
   });
 });

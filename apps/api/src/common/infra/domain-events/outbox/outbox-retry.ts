@@ -37,4 +37,3 @@ export function settleFailure(
     : { id: row.id, state: 'retry', at: retryAt(attempts, opts), error: text };
 }
 
-export const errorText = (e: unknown): string => (e instanceof Error ? e.message : String(e));

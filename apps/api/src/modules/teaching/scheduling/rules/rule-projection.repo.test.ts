@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { RuleProjectionRepo } from './rule-projection.repo';
 
@@ -14,13 +15,27 @@ const RULE = {
   schedule_rule_students: [{ student_id: 's1' }],
 };
 const SPAN = { from: new Date('2026-10-04T14:00:00Z'), to: new Date('2026-10-04T14:45:00Z') };
+const QUERY = { teacherId: 't1', studentIds: [], span: SPAN, excludeRuleIds: [] };
+const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const FAILED = { status: 500, body: 'db error XX000: boom' };
 
 describe('RuleProjectionQueries — generated dates are keyed on local_date (R-SCH-11, migration 174)', () => {
   it('looks up the held dates by local_date (±2 days), not by starts_at', async () => {
     const { db, calls } = fakeDb({ schedule_rules: [{ data: [RULE] }], lessons: [{ data: [] }] });
-    await new RuleProjectionRepo(db).busy({ teacherId: 't1', studentIds: [], span: SPAN, excludeRuleIds: [] }, new Date('2026-10-02T10:00:00Z'));
-    expect(calls).toContainEqual({ table: 'lessons', method: 'gte', args: ['local_date', '2026-10-02'] });
-    expect(calls).toContainEqual({ table: 'lessons', method: 'lte', args: ['local_date', '2026-10-06'] });
+    await new RuleProjectionRepo(db).busy(
+      { teacherId: 't1', studentIds: [], span: SPAN, excludeRuleIds: [] },
+      new Date('2026-10-02T10:00:00Z'),
+    );
+    expect(calls).toContainEqual({
+      table: 'lessons',
+      method: 'gte',
+      args: ['local_date', '2026-10-02'],
+    });
+    expect(calls).toContainEqual({
+      table: 'lessons',
+      method: 'lte',
+      args: ['local_date', '2026-10-06'],
+    });
     expect(calls.filter((c) => c.table === 'lessons' && c.args[0] === 'starts_at')).toEqual([]);
   });
 
@@ -30,13 +45,31 @@ describe('RuleProjectionQueries — generated dates are keyed on local_date (R-S
       schedule_rules: [{ data: [RULE] }],
       lessons: [{ data: [{ id: 'moved', rule_id: 'r1', local_date: '2026-10-04' }] }],
     });
-    const busy = await new RuleProjectionRepo(db).busy({ teacherId: 't1', studentIds: [], span: SPAN, excludeRuleIds: [] }, new Date('2026-10-02T10:00:00Z'));
+    const busy = await new RuleProjectionRepo(db).busy(
+      { teacherId: 't1', studentIds: [], span: SPAN, excludeRuleIds: [] },
+      new Date('2026-10-02T10:00:00Z'),
+    );
     expect(busy.teacher).toEqual([]);
   });
 
   it('an empty held list projects the occurrence (control)', async () => {
     const { db } = fakeDb({ schedule_rules: [{ data: [RULE] }], lessons: [{ data: [] }] });
-    const busy = await new RuleProjectionRepo(db).busy({ teacherId: 't1', studentIds: [], span: SPAN, excludeRuleIds: [] }, new Date('2026-10-02T10:00:00Z'));
+    const busy = await new RuleProjectionRepo(db).busy(
+      { teacherId: 't1', studentIds: [], span: SPAN, excludeRuleIds: [] },
+      new Date('2026-10-02T10:00:00Z'),
+    );
     expect(busy.teacher).toHaveLength(1);
+  });
+});
+
+describe('RuleProjectionRepo error paths: the answer a failed query gives today', () => {
+  it('a unique violation is 409 duplicate with the detail', async () => {
+    const { db } = fakeDb({ schedule_rules: [{ error: PG_ERRORS.unique }] });
+    expect(await answerOfRejection(new RuleProjectionRepo(db).busy(QUERY))).toEqual(DUPLICATE);
+  });
+
+  it('any other error is a 500 naming the code', async () => {
+    const { db } = fakeDb({ schedule_rules: [{ error: PG_ERRORS.other }] });
+    expect(await answerOfRejection(new RuleProjectionRepo(db).busy(QUERY))).toEqual(FAILED);
   });
 });

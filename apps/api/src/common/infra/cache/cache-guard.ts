@@ -1,3 +1,4 @@
+import { errorMessage } from '@ab/core';
 import { Logger } from '@nestjs/common';
 
 /** One warning a minute at most while the shared cache keeps failing. */
@@ -6,8 +7,6 @@ const LOG_EVERY_MS = 60_000;
 const OP_TIMEOUT_MS = 500;
 /** After a failure the cache is skipped this long (straight to the database), so a dead Redis costs nothing. */
 export const SKIP_AFTER_FAILURE_MS = 5_000;
-
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 function withTimeout<T>(op: Promise<T>, ms: number): Promise<T> {
   let timer: NodeJS.Timeout | undefined;
@@ -56,6 +55,6 @@ export class CacheGuard {
     this.skipUntil = now + SKIP_AFTER_FAILURE_MS;
     if (now - this.lastLog < LOG_EVERY_MS) return;
     this.lastLog = now;
-    this.log.warn(`shared cache unavailable, reading the database instead: ${messageOf(e)}`);
+    this.log.warn(`shared cache unavailable, reading the database instead: ${errorMessage(e)}`);
   }
 }

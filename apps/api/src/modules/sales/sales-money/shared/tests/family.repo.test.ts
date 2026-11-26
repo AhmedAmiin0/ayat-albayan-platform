@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { SalesFamilyRepo } from '@/modules/sales/sales-money/shared/sales-family.repo';
 
@@ -7,10 +8,14 @@ describe('SalesFamilyQueries', () => {
     const family = { id: 'g1', name: 'أم سهيلة', tz: 'Asia/Riyadh', phone_e164: '+966551110000' };
     const t = fakeDb({
       guardian_phones: [{ data: { guardian: family } }],
-      students: [{ data: [{ id: 's1', code: 'AB-1', name: 'س', status: 'trial', teacher_id: null }] }],
+      students: [
+        { data: [{ id: 's1', code: 'AB-1', name: 'س', status: 'trial', teacher_id: null }] },
+      ],
     });
     const rows = await new SalesFamilyRepo(t.db).studentsOfPhone('+966552220000');
-    expect(rows).toEqual([{ id: 's1', code: 'AB-1', name: 'س', status: 'trial', teacher_id: null }]);
+    expect(rows).toEqual([
+      { id: 's1', code: 'AB-1', name: 'س', status: 'trial', teacher_id: null },
+    ]);
     expect(t.argsOf('guardian_phones', 'eq')).toEqual(['phone_e164', '+966552220000']);
     expect(t.argsOf('students', 'eq')).toEqual(['guardian_id', 'g1']);
   });
@@ -31,7 +36,9 @@ describe('SalesFamilyQueries', () => {
   });
 
   it('familyPhone: 404 for an unknown student', async () => {
-    const t = fakeDb({ students: [{ data: null }, { data: { guardian: { phone_e164: '+966551110000' } } }] });
+    const t = fakeDb({
+      students: [{ data: null }, { data: { guardian: { phone_e164: '+966551110000' } } }],
+    });
     const q = new SalesFamilyRepo(t.db);
     await expect(q.familyPhone('x')).rejects.toThrow();
     expect(await q.familyPhone('s1')).toBe('+966551110000');
@@ -46,7 +53,9 @@ describe('SalesFamilyQueries', () => {
 
   it('linkPackages: the packages with an open, unexpired link; no read for none', async () => {
     const now = new Date('2026-10-29T10:00:00Z');
-    const t = fakeDb({ payment_links: [{ data: [{ subscription_id: 'sub1' }, { subscription_id: null }] }] });
+    const t = fakeDb({
+      payment_links: [{ data: [{ subscription_id: 'sub1' }, { subscription_id: null }] }],
+    });
     const q = new SalesFamilyRepo(t.db);
     expect(await q.linkPackages(['sub1', 'sub2'], now)).toEqual(['sub1']);
     expect(t.argsOf('payment_links', 'in')).toEqual(['subscription_id', ['sub1', 'sub2']]);
@@ -54,5 +63,23 @@ describe('SalesFamilyQueries', () => {
     expect(t.argsOf('payment_links', 'gt')).toEqual(['expires_at', now.toISOString()]);
     expect(await q.linkPackages([])).toEqual([]);
     expect(t.trips).toEqual(['payment_links']);
+  });
+});
+
+describe('SalesFamilyRepo error paths: the answer a failed query gives today', () => {
+  it('a unique violation is 409 duplicate with the detail', async () => {
+    const { db } = fakeDb({ students: [{ error: PG_ERRORS.unique }] });
+    expect(await answerOfRejection(new SalesFamilyRepo(db).studentStatus('s1'))).toEqual({
+      status: 409,
+      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+    });
+  });
+
+  it('any other error is a 500 naming the code', async () => {
+    const { db } = fakeDb({ students: [{ error: PG_ERRORS.other }] });
+    expect(await answerOfRejection(new SalesFamilyRepo(db).studentStatus('s1'))).toEqual({
+      status: 500,
+      body: 'db error XX000: boom',
+    });
   });
 });

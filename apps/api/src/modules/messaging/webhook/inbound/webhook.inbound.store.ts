@@ -7,6 +7,7 @@ import type { RatingTap } from '@/modules/teaching/lesson-rating/rating.rows';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { inboundRow, orderedAt, type RowInput } from './webhook.inbound';
 import { WebhookRepo, type Contact } from '@/modules/messaging/webhook/shared/webhook.repo';
+import { orFallback } from '@/common/infra/errors';
 
 export interface LeadLink {
   id: string | null;
@@ -117,7 +118,7 @@ export class InboundStore {
 
   /** Legacy mode: the wa_numbers row of the receiving phone_number_id, as the chat import stamps it. Never blocks the row. */
   private async numberOf(m: InboundEvent): Promise<string | null> {
-    return m.phoneNumberId ? this.queries.numberIdFor(m.phoneNumberId).catch(() => null) : null;
+    return m.phoneNumberId ? orFallback(this.queries.numberIdFor(m.phoneNumberId), null, 'receiving number read') : null;
   }
 
   /** A guardian's lesson_rating tap on lesson_feedback (migration 195); runs only for a new wamid. */

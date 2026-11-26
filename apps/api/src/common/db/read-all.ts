@@ -1,5 +1,5 @@
 import type { PostgrestError } from '@supabase/supabase-js';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 /** PostgREST `max_rows` (packages/db/supabase/config.toml): longer results are cut silently. */
 export const MAX_ROWS = 1000;
@@ -16,7 +16,7 @@ export async function readAll<T>(
   const out: T[] = [];
   for (let from = 0; ; from += MAX_ROWS) {
     const { data, error } = await page(from, from + MAX_ROWS - 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     out.push(...(data ?? []));
     if (!data || data.length < MAX_ROWS) return out;
   }
@@ -36,7 +36,7 @@ export async function readChunked<T>(
   const out: T[] = [];
   for (let i = 0; i < ids.length; i += IN_CHUNK) {
     const { data, error } = await read(ids.slice(i, i + IN_CHUNK));
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     out.push(...(data ?? []));
   }
   return out;

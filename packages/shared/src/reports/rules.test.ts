@@ -44,6 +44,11 @@ describe('ATTENDANCE_EVENT: report attendance → lesson outcome (R-REP-03)', ()
     expect(LESSON_EVENT_TARGET[ATTENDANCE_EVENT[attendance]]).toBe(status);
   });
 
+  it('is decoded frozen, one event per attendance', () => {
+    expect(Object.isFrozen(ATTENDANCE_EVENT)).toBe(true);
+    expect(Object.keys(ATTENDANCE_EVENT)).toEqual([...ATTENDANCES]);
+  });
+
   it('only on_time and late count as attended (grades required)', () => {
     expect(ATTENDANCES.filter(attended)).toEqual(['on_time', 'late']);
   });

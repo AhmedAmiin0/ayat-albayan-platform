@@ -1,4 +1,4 @@
-import { Injectable, Logger, Optional, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import type { CallEndReason } from '@ab/shared';
 import { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
 import { callingLine } from '@/modules/messaging/calls/kapso/calling-line';
@@ -6,7 +6,7 @@ import type { CallRow } from '@/modules/messaging/calls/store/call-row';
 import { logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
 import { BackgroundJob } from '@/config/role/background-job';
-import { beatTick } from '@/common/jobs/beats';
+import { Ticker, TickerJob } from '@/common/jobs';
 
 /** An outbound call nobody answered within this is ended (and terminated on WhatsApp). */
 export const UNANSWERED_MS = 45_000;
@@ -51,9 +51,14 @@ export function overdue(row: CallRow, now: Date): Overdue | null {
  */
 @BackgroundJob({ name: 'calls-sweeper', kick: 'wake' })
 @Injectable()
-export class CallsSweeper implements OnApplicationBootstrap, OnModuleDestroy {
+export class CallsSweeper extends TickerJob {
   private readonly log = new Logger(CallsSweeper.name);
-  private timer: NodeJS.Timeout | null = null;
+  protected readonly ticker = new Ticker({
+    name: CallsSweeper.name,
+    firstMs: EVERY_MS,
+    everyMs: EVERY_MS,
+    run: () => this.tick(),
+  });
   /** Rows the last sweep left live; null = unknown (boot, or the sweep failed): sweep. */
   private left: number | null = null;
   private sweptAt = 0;
@@ -64,15 +69,8 @@ export class CallsSweeper implements OnApplicationBootstrap, OnModuleDestroy {
   constructor(
     private readonly kit: CallsKit,
     @Optional() private readonly gate?: CallsGate,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    const plan = { name: CallsSweeper.name, firstMs: EVERY_MS, everyMs: EVERY_MS };
-    this.timer = setInterval(beatTick(plan, () => this.tick()), EVERY_MS).unref();
-  }
-
-  onModuleDestroy(): void {
-    if (this.timer) clearInterval(this.timer);
+  ) {
+    super();
   }
 
   /** A call was inserted: sweep from the next tick (its 45 s timeout must not wait for the idle pace). */

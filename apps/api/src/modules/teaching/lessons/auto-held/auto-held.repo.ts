@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll, readChunked } from '@/common/db/read-all';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import type { OpenEndedLesson, PackageRow } from './auto-held.plan';
 
 const DAY_MS = 86_400_000;
@@ -46,7 +46,7 @@ export class AutoHeldRepo {
   /** lesson_outcomes_since() (migration 1000): the job never settles a lesson that ended before. */
   async outcomesSince(): Promise<Date> {
     const { data, error } = await this.db.rpc('lesson_outcomes_since');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return new Date(sinceSchema.parse(data));
   }
 
@@ -113,7 +113,7 @@ export class AutoHeldRepo {
       .eq('lesson_id', lessonId)
       .gt('paid_amount', 0)
       .limit(1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.length > 0;
   }
 }

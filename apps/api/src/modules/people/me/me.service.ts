@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, maybe, rows } from '@/common/db/errors';
 import { claimDevice, type DeviceClaim } from './push/push-device.claim';
 import { withoutPushToken, withPushToken } from './push/push-tokens';
 
@@ -38,17 +38,19 @@ export class MeService {
     const tokens = await this.pushTokens(userId);
     const next = withoutPushToken(tokens, token);
     if (next !== tokens) await this.savePushTokens(userId, next);
-    const { error } = await this.db.from('push_device_sessions').delete().eq('token', token).eq('profile_id', userId);
-    if (error) throw dbError(error);
+    done(
+      await this.db
+        .from('push_device_sessions')
+        .delete()
+        .eq('token', token)
+        .eq('profile_id', userId),
+    );
   }
 
   private async pushTokens(userId: string): Promise<string[]> {
-    const { data, error } = await this.db
-      .from('profiles')
-      .select('push_tokens')
-      .eq('id', userId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(
+      await this.db.from('profiles').select('push_tokens').eq('id', userId).maybeSingle(),
+    );
     if (!data) throw new NotFoundException();
     return data.push_tokens;
   }
@@ -58,18 +60,18 @@ export class MeService {
    * DELETE never ran (401, offline, timeout), stops receiving the previous admin's pushes.
    */
   private async releaseFromOthers(userId: string, token: string): Promise<void> {
-    const { data, error } = await this.db
-      .from('profiles')
-      .select('id, push_tokens')
-      .contains('push_tokens', [token])
-      .neq('id', userId);
-    if (error) throw dbError(error);
+    const data = rows(
+      await this.db
+        .from('profiles')
+        .select('id, push_tokens')
+        .contains('push_tokens', [token])
+        .neq('id', userId),
+    );
     for (const p of data ?? [])
       await this.savePushTokens(p.id, withoutPushToken(p.push_tokens, token));
   }
 
   private async savePushTokens(userId: string, tokens: string[]): Promise<void> {
-    const { error } = await this.db.from('profiles').update({ push_tokens: tokens }).eq('id', userId);
-    if (error) throw dbError(error);
+    done(await this.db.from('profiles').update({ push_tokens: tokens }).eq('id', userId));
   }
 }

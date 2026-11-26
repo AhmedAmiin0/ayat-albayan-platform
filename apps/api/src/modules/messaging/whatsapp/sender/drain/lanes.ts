@@ -10,10 +10,10 @@ export const laneSchema = z.enum(LANES);
 export type Lane = z.infer<typeof laneSchema>;
 
 /** PostgREST `or` for the rows a lane's pass reads (AND-ed with due()'s own filters). */
-export const LANE_ROWS: Record<Lane, string> = {
+export const LANE_ROWS = z.record(laneSchema, z.string()).readonly().decode({
   chat: 'line.eq.chat',
   main: 'line.is.null,line.neq.chat',
-};
+});
 
 /** The lane a queued row is drained by (the kick after an enqueue names it). */
 export const laneOfRow = (row: { line?: string | null }): Lane =>

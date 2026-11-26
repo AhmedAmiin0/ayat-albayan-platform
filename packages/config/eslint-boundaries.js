@@ -7,6 +7,7 @@ import { forbiddenImportsRule } from './eslint-imports.js';
 import { maxParamsRule } from './eslint-params.js';
 import { noParentImportsRule } from './eslint-parent-imports.js';
 import { syntaxRules } from './eslint-syntax.js';
+import { noTypedValueTableRule } from './eslint-value-table.js';
 import { zodInputsRule } from './eslint-zod-inputs.js';
 
 const INDEX = /^\/index(\.[cm]?[jt]sx?)?$/;
@@ -85,6 +86,7 @@ export const boundariesPlugin = {
     'forbidden-imports': forbiddenImportsRule,
     'no-parent-imports': noParentImportsRule,
     'zod-inputs': zodInputsRule,
+    'no-typed-value-table': noTypedValueTableRule,
     ...syntaxRules,
   },
 };

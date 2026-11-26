@@ -3,7 +3,7 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { parseOrThrow } from '@/common/http/http';
-import { pageQueryShape, pageRange, searchTerm, throwIfDbError } from './http';
+import { pageQueryShape, pageRange, throwIfDbError } from './http';
 
 const pgError = (code: string) => ({ code, message: 'x', details: '', hint: '' }) as PostgrestError;
 const pageQuery = z.object(pageQueryShape);
@@ -28,7 +28,7 @@ describe('http helpers (R-NFR-08)', () => {
   });
 
   it('search text cannot inject PostgREST or() syntax', () => {
-    expect(searchTerm('a,b),status.eq.lost')).toBe('a b  status.eq.lost');
+    expect(parseOrThrow(pageQuery, { q: 'a,b),status.eq.lost' }).q).toBe('a b  status.eq.lost');
     expect(parseOrThrow(pageQuery, { q: ' (*) ' }).q).toBeUndefined();
     expect(parseOrThrow(pageQuery, { q: '0501' }).q).toBe('0501');
   });

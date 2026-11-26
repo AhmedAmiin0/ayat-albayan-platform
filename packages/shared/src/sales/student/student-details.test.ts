@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { attendanceKind, attendanceTotals, salesCancelSchema, salesRescheduleSchema } from './student-details';
+import {
+  ATTENDANCE_KINDS,
+  attendanceKind,
+  attendanceKindSchema,
+  attendanceTotals,
+  salesCancelSchema,
+  salesRescheduleSchema,
+} from './student-details';
 
 describe('attendanceKind', () => {
   it.each([
@@ -57,5 +64,12 @@ describe('sales lesson bodies', () => {
     expect(salesCancelSchema.safeParse({ scope: 'rule' }).success).toBe(false);
     expect(salesCancelSchema.parse({ by: 'student' })).toEqual({ by: 'student' });
     expect(salesCancelSchema.safeParse({ by: 'family' }).success).toBe(false);
+  });
+});
+
+describe('attendanceKindSchema', () => {
+  it('accepts each attendance list kind and nothing else', () => {
+    expect(attendanceKindSchema.options).toEqual([...ATTENDANCE_KINDS]);
+    expect(attendanceKindSchema.validate('late')).toBe(false);
   });
 });

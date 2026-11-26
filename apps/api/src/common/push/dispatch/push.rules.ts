@@ -3,30 +3,6 @@ import type { AnyPushKind } from '@ab/catalog';
 import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
 import { ruleOf } from '@/common/rules/rule-of';
 
-/** Each push kind's catalogue row (docs/23a §B3 P1–P9; catalogue.test.ts keeps them in step). */
-const ROW_OF: Record<AnyPushKind, NotificationKey> = {
-  new_lead: 'new_lead',
-  new_message: 'new_message',
-  lesson_needs_confirmation: 'lesson_needs_confirmation',
-  report_submitted: 'report_submitted',
-  reminder_failed: 'reminder_failed',
-  payment_due: 'payment_due',
-  new_student: 'new_student',
-  meeting_invite: 'meeting_invite',
-  google_sync_alert: 'google_sync_alert',
-  channel_message: 'channel_message',
-  commission_earned: 'commission_earned',
-  lesson_rescheduled: 'lesson_rescheduled',
-  lesson_cancelled: 'lesson_cancelled',
-  course_paused: 'course_paused',
-  course_resumed: 'course_resumed',
-  payment_received: 'payment_received',
-  lesson_starting: 'lesson_starting',
-  lesson_live: 'lesson_live',
-  report_sent: 'report_sent',
-  lesson_request_declined: 'lesson_request_declined',
-};
-
 /** Where a staff notification goes: the bell row (push_notifications), and the browser / app push. */
 export interface PushRoute {
   bell: boolean;
@@ -39,7 +15,7 @@ export interface PushRoute {
  * lost), no device push; a locked row (reminder_failed) keeps both. Pure.
  */
 export function pushRoute(snap: RulesSnapshot | null, kind: AnyPushKind): PushRoute {
-  const key = ROW_OF[kind];
+  const key: NotificationKey = kind;
   if (!snap) return { bell: true, push: notificationEntry(key).locked };
   const rule = ruleOf(snap, key);
   if (!rule.enabled) return { bell: false, push: false };

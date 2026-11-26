@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeMoveDb, id, moveStores, RECEIPTS } from './move.fakes';
-import { moveRow } from './row-move';
+import { moveRow, rowOutcomeSchema } from './row-move';
 
 const row = { id: id(1), path: 's/a.pdf' };
 
@@ -56,5 +56,19 @@ describe('moveRow (docs/45 §6)', () => {
     ctx.db.rewrite = () => Promise.reject(new Error('payment frozen'));
     expect(await moveRow(ctx, row)).toEqual({ outcome: 'failed', copied: false });
     expect(table.get(row.id)).toBe('s/a.pdf');
+  });
+});
+
+describe('rowOutcomeSchema', () => {
+  it('names the seven row outcomes', () => {
+    expect(rowOutcomeSchema.options).toEqual([
+      'rewritten',
+      'skipped',
+      'missing',
+      'mismatch',
+      'too_large',
+      'changed',
+      'failed',
+    ]);
   });
 });

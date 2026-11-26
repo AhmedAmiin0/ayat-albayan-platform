@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { PAYMENT_METHODS } from '@ab/catalog';
-import { listSortShape, optionalText, pageQuery } from '@ab/core';
+import { clientRequestId, listSortShape, optionalText, pageQuery } from '@ab/core';
 import { EARNING_STATUSES } from './earnings';
 import { EARNING_SORT_KEYS, TEACHER_PAYMENT_SORT_KEYS } from '../list-sorts';
 import { moneyAmount, pastInstant, RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '../schemas';
@@ -18,7 +18,7 @@ export const teacherPaymentCreateSchema = z.object({
   receiptPath: z.string().min(1).nullish(),
   note: optionalText,
   /** Once per pay dialog, re-sent on every retry (rule 8). */
-  clientRequestId: z.uuid(),
+  clientRequestId,
 });
 
 export const teacherReceiptUploadSchema = z.object({

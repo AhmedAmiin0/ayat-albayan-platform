@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, one, pgError } from '@/common/db/errors';
 
 /** The package's price, its lessons and the lessons it used (v_subscription_balance). */
 export interface RefundPackage {
@@ -56,22 +56,20 @@ export class StopRefundRepo {
   }
 
   private async sub(subscriptionId: string): Promise<z.infer<typeof pkgSchema>> {
-    const { data, error } = await this.db
+    const data = one(await this.db
       .from('subscriptions')
       .select('price, lessons_total, student:students(name)')
       .eq('id', subscriptionId)
-      .single();
-    if (error) throw dbError(error);
+      .single());
     return pkgSchema.parse(data);
   }
 
   private async used(subscriptionId: string): Promise<number> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('v_subscription_balance')
       .select('lessons_used')
       .eq('subscription_id', subscriptionId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data?.lessons_used ?? 0;
   }
 
@@ -84,7 +82,7 @@ export class StopRefundRepo {
       )
       .eq('subscription_id', subscriptionId)
       .order('paid_at', { ascending: true });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return moneySchema.parse(data);
   }
 
@@ -96,7 +94,7 @@ export class StopRefundRepo {
       .select('paid_payment_id, stripe_payment_intent')
       .in('paid_payment_id', paymentIds)
       .not('stripe_payment_intent', 'is', null);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const rows = intentsSchema.parse(data);
     return new Map(rows.map((r) => [r.paid_payment_id, r.stripe_payment_intent]));
   }

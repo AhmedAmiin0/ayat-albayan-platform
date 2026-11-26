@@ -1,5 +1,6 @@
 import type { Json } from '@ab/db';
 import type { NumberPurpose } from '@ab/catalog';
+import { z } from 'zod';
 
 // What the webhook reads out of Meta's envelope (webhook.parse.ts), one item per message / status.
 
@@ -38,7 +39,8 @@ export interface InboundEvent {
 }
 
 export const DELIVERY_STATUSES = ['sent', 'delivered', 'read', 'failed'] as const;
-export type DeliveryStatus = (typeof DELIVERY_STATUSES)[number];
+export const deliveryStatusSchema = z.enum(DELIVERY_STATUSES);
+export type DeliveryStatus = z.infer<typeof deliveryStatusSchema>;
 
 export interface StatusEvent {
   waMessageId: string;

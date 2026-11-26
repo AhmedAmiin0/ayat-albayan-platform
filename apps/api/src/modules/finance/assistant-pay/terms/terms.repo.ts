@@ -1,7 +1,7 @@
 import { COUNTS_FOR_MONEY, renewalShareNow } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError, rows } from '@/common/db/errors';
 import { AssistantPaySettings } from '@/modules/finance/assistant-pay/shared/assistant-pay.settings';
 import type { TermsRow } from './terms.mapper';
 
@@ -20,43 +20,54 @@ export class TermsRepo {
 
   /** Every assistant (base role sales), by name. */
   async assistants(): Promise<{ id: string; full_name: string }[]> {
-    const { data, error } = await this.db.from('profiles').select('id, full_name').eq('role', 'sales');
-    if (error) throw dbError(error);
-    return data.sort((a, b) => a.full_name.localeCompare(b.full_name, 'ar') || a.id.localeCompare(b.id));
+    const data = rows(await this.db.from('profiles').select('id, full_name').eq('role', 'sales'));
+    return data.sort(
+      (a, b) => a.full_name.localeCompare(b.full_name, 'ar') || a.id.localeCompare(b.id),
+    );
   }
 
   /** null when the student does not exist. */
   async broughtBy(
     studentId: string,
   ): Promise<{ brought_by: string | null; brought_at: string | null; name: string | null } | null> {
-    const { data, error } = await this.db
-      .from('students')
-      .select('brought_by, brought_at')
-      .eq('id', studentId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(
+      await this.db
+        .from('students')
+        .select('brought_by, brought_at')
+        .eq('id', studentId)
+        .maybeSingle(),
+    );
     if (!data) return null;
     if (!data.brought_by) return { ...data, name: null };
-    const person = await this.db.from('profiles').select('full_name').eq('id', data.brought_by).maybeSingle();
-    if (person.error) throw dbError(person.error);
+    const person = await this.db
+      .from('profiles')
+      .select('full_name')
+      .eq('id', data.brought_by)
+      .maybeSingle();
+    if (person.error) throw pgError(person.error);
     return { ...data, name: person.data?.full_name ?? null };
   }
 
   async isAssistant(id: string): Promise<boolean> {
-    const { data, error } = await this.db.from('profiles').select('id').eq('id', id).eq('role', 'sales').maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(
+      await this.db.from('profiles').select('id').eq('id', id).eq('role', 'sales').maybeSingle(),
+    );
     return data !== null;
   }
 
   async all(): Promise<TermsRow[]> {
-    const { data, error } = await this.db.from('assistant_terms').select('*');
-    if (error) throw dbError(error);
+    const data = rows(await this.db.from('assistant_terms').select('*'));
     return data;
   }
 
   async get(assistantId: string): Promise<TermsRow | null> {
-    const { data, error } = await this.db.from('assistant_terms').select('*').eq('assistant_id', assistantId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(
+      await this.db
+        .from('assistant_terms')
+        .select('*')
+        .eq('assistant_id', assistantId)
+        .maybeSingle(),
+    );
     return data;
   }
 
@@ -67,7 +78,7 @@ export class TermsRepo {
    */
   async uncommissioned(assistantId: string): Promise<string[]> {
     const students = await this.db.from('students').select('id').eq('brought_by', assistantId);
-    if (students.error) throw dbError(students.error);
+    if (students.error) throw pgError(students.error);
     const ids = students.data.map((s) => s.id);
     if (ids.length === 0) return [];
     const [commissions, subs] = await Promise.all([
@@ -82,8 +93,8 @@ export class TermsRepo {
         .order('created_at')
         .order('id'),
     ]);
-    if (commissions.error) throw dbError(commissions.error);
-    if (subs.error) throw dbError(subs.error);
+    if (commissions.error) throw pgError(commissions.error);
+    if (subs.error) throw pgError(subs.error);
     const done = new Set(commissions.data.map((c) => c.subscription_id));
     return subs.data.filter((s) => !done.has(s.id)).map((s) => s.id);
   }

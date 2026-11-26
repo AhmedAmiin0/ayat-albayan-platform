@@ -38,8 +38,15 @@ describe('metaDisplay: what WhatsApp shows of a template (owner 2026-10-28)', ()
     [{ type: 'HEADER', format: 'LOCATION' }, { type: 'location' }],
     [{ type: 'HEADER', format: 'GIF' }, null],
     [{ type: 'HEADER', format: 'TEXT' }, null],
+    [{ type: 'HEADER', text: 'بلا صيغة' }, { type: 'text', text: 'بلا صيغة' }],
+    [{ type: 'HEADER', format: 'constructor' }, null],
   ])('header %j → %j', (part, header) => {
     expect(display([part, { type: 'BODY', text: 'x' }])).toEqual({ header, buttons: [] });
+  });
+
+  it('a button type named after an Object property is left out', () => {
+    const buttons = [{ type: 'constructor', text: 'x' }, { type: '__proto__', text: 'y' }];
+    expect(display([{ type: 'BUTTONS', buttons }])).toEqual({ header: null, buttons: [] });
   });
 
   it('no header and no buttons: an empty display', () => {

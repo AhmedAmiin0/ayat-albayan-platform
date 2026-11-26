@@ -1,7 +1,8 @@
 import { isNotSubscribed, type TEACHER_SORT_KEYS, type TeacherStudentCounts } from '@ab/shared';
 import type { Program, StudentStatus, TeacherStatus } from '@ab/catalog';
 import { searchDigits, type ListSort } from '@ab/core';
-import { ilikeContains, type SortSpec } from '@/common/db/list-sort';
+import type { SortSpec } from '@/common/db/list-sort';
+import { ilikeContains } from '@/common/db/or-filter';
 import type { PageQuery } from '@/common/http/http';
 
 type TeacherSortKey = (typeof TEACHER_SORT_KEYS)[number];

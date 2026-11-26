@@ -5,6 +5,7 @@ import { grantsOf, heldRole, isSystemAdmin, permissionsOf, roleView, type RoleSt
 import type { RoleRecord } from '@/modules/people/roles/roles.store';
 import { forbidden } from '@/common/http/errors';
 import type { ProfilePatch, StaffProfile } from './store/users.store';
+import { isAdmin } from '@/common/auth/roles';
 
 // Pure rules: who may touch whom, and the academy always keeps an active admin.
 
@@ -37,7 +38,7 @@ const active = (p: StaffProfile): boolean => p.disabled_at === null;
 /** The system admin: base role admin holding the system admin role (role_id null). */
 export const isSystemAdminProfile = (state: UserState, p: StaffProfile): boolean => {
   const role = heldRole(state, p);
-  return p.role === 'admin' && role !== null && isSystemAdmin(role);
+  return isAdmin(p) && role !== null && isSystemAdmin(role);
 };
 
 type AdminProblem = 'last_admin' | 'self_lockout';

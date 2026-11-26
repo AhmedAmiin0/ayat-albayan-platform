@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { phoneE164 } from '@ab/core';
+import { clientRequestId, phoneE164 } from '@ab/core';
 
 // Request bodies of the calls routes (docs/28 §4). camelCase, like every other request.
 
@@ -17,7 +17,7 @@ export const startCallSchema = z.object({
   phone: phoneE164,
   sdp,
   /** Idempotency (rule 8): a repeated tap returns the first call, never a second (billed) connect. */
-  clientRequestId: z.uuid(),
+  clientRequestId,
 });
 export type StartCallInput = z.input<typeof startCallSchema>;
 
@@ -26,7 +26,7 @@ export const acceptCallSchema = z.object({ sdp });
 export type AcceptCallInput = z.input<typeof acceptCallSchema>;
 
 /** Request call permission, a staff send through the outbox. */
-export const callPermissionRequestSchema = z.object({ clientRequestId: z.uuid() });
+export const callPermissionRequestSchema = z.object({ clientRequestId });
 
 /** GET /calls: the calls log (newest first), optionally one chat's. */
 export const callListQuerySchema = z.object({

@@ -1,7 +1,7 @@
 import type { MakeupCandidate } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 
 const DAY_MS = 86_400_000;
@@ -26,7 +26,7 @@ export class MakeupCandidates {
   async list(studentId: string): Promise<MakeupCandidate[]> {
     const { makeup_window_days: days } = await this.settings.read();
     const since = new Date(Date.now() - days * DAY_MS).toISOString();
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lessons')
       .select(SELECT)
       .eq('lesson_students.student_id', studentId)
@@ -35,8 +35,7 @@ export class MakeupCandidates {
       .gte('starts_at', since)
       .is('makeup_of_id', null)
       .order('starts_at', { ascending: false })
-      .limit(LIMIT * 2);
-    if (error) throw dbError(error);
+      .limit(LIMIT * 2));
     const missed = data.filter((l) => l.rule?.package !== 'trial');
     const taken = await this.taken(missed.map((l) => l.id), studentId);
     return missed
@@ -54,13 +53,12 @@ export class MakeupCandidates {
   /** Missed lessons that already have an active makeup for this student (a group's others still can). */
   private async taken(ids: string[], studentId: string): Promise<Set<string>> {
     if (ids.length === 0) return new Set();
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lessons')
       .select('makeup_of_id')
       .in('makeup_of_id', ids)
       .eq('makeup_student_id', studentId)
-      .not('status', 'in', INACTIVE);
-    if (error) throw dbError(error);
+      .not('status', 'in', INACTIVE));
     return new Set(data.flatMap((r) => (r.makeup_of_id ? [r.makeup_of_id] : [])));
   }
 }

@@ -1,3 +1,4 @@
+import { errorMessage } from '@ab/core';
 import { AWAITING_REPLY } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { AppSendExpiry } from './manual-send';
@@ -9,7 +10,6 @@ import { RELEASE_BATCH, WindowRepo } from './window.repo';
 /** At most this many pages per pass (RELEASE_BATCH each): the rest wait for the next tick. */
 const RELEASE_PAGES = 10;
 
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 const phonesOf = (rows: readonly WaitingRow[]): string[] => [
   ...new Set(rows.map((r) => r.phone_e164)),
 ];
@@ -36,7 +36,7 @@ export class WindowRelease {
       if (released > 0) this.log.log(`released ${released} held message(s)`);
       return released;
     } catch (e) {
-      this.log.error(`held messages release failed: ${messageOf(e)}`);
+      this.log.error(`held messages release failed: ${errorMessage(e)}`);
       return 0;
     }
   }

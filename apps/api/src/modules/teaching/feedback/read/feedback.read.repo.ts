@@ -3,9 +3,11 @@ import type { FeedbackAverage, FeedbackQuery, FeedbackSortKey } from '@ab/shared
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort, ilikeContains, type SortSpec } from '@/common/db/list-sort';
+import { ilikeContains } from '@/common/db/or-filter';
+import { applySort, type SortSpec } from '@/common/db/list-sort';
 import { studentIdsMatching } from '@/common/student-ids';
-import { dbError, type PageQuery } from '@/common/http/http';
+import type { PageQuery } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import type { FeedbackRow } from '@/modules/teaching/feedback/feedback.repo';
 
 /**
@@ -41,7 +43,7 @@ const bounds = (p: PageQuery): [number, number] => [(p.page - 1) * p.pageSize, p
 const EMPTY: FeedbackPage = { rows: [], total: 0 };
 
 function rows(res: { data: FeedbackListRow[] | null; count: number | null; error: PostgrestError | null }): FeedbackPage {
-  if (res.error) throw dbError(res.error);
+  if (res.error) throw pgError(res.error);
   return { rows: res.data ?? [], total: res.count ?? 0 };
 }
 
@@ -82,7 +84,7 @@ export class FeedbackReadRepo {
   async averages(teacherId?: string): Promise<AverageRow[]> {
     const q = this.db.from('v_teacher_feedback_avg').select('teacher_id, avg_rating, n, recommend_yes_pct');
     const { data, error } = await (teacherId ? q.eq('teacher_id', teacherId) : q);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.flatMap((r) =>
       r.teacher_id === null || r.n === null || r.n === 0
         ? []
@@ -93,14 +95,14 @@ export class FeedbackReadRepo {
   async students(ids: readonly string[]): Promise<{ id: string; code: string | null; name: string }[]> {
     if (ids.length === 0) return [];
     const { data, error } = await this.db.from('students').select('id, code, name').in('id', [...new Set(ids)]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   async teachers(ids: readonly string[]): Promise<{ id: string; display_name_ar: string }[]> {
     if (ids.length === 0) return [];
     const { data, error } = await this.db.from('teachers').select('id, display_name_ar').in('id', [...new Set(ids)]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 }

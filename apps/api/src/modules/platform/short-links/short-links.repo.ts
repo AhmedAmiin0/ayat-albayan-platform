@@ -1,7 +1,7 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 
 export type ShortLinkRow = Tables<'short_links'>;
 interface Key {
@@ -24,24 +24,22 @@ export class ShortLinksRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async byCode(code: string): Promise<ShortLinkRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('short_links')
       .select('*')
       .eq('code', code)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   /** The row of (kind, subject) with its target refreshed; null when there is none yet. */
   async refresh(key: Key, target: Target): Promise<ShortLinkRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('short_links')
       .update(target)
       .match(key)
       .select('*')
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -52,7 +50,7 @@ export class ShortLinksRepo {
   async insert(row: Key & Target & { code: string }): Promise<ShortLinkRow | null> {
     const { data, error } = await this.db.from('short_links').insert(row).select('*').maybeSingle();
     if (error?.code === UNIQUE) return null;
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 }

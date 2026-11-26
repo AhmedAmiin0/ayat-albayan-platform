@@ -14,6 +14,7 @@ import type { UserRole } from '@ab/catalog';
 import type { PageQuery } from '@/common/http/http';
 import type { HistoryLesson, HistoryRow, PendingRow } from './report-history.queries';
 import { iso } from '@/modules/reporting/reports/submit/report-form.mapper';
+import { isAdmin } from '@/common/auth/roles';
 
 interface HistoryParts {
   rows: readonly HistoryRow[];
@@ -82,7 +83,7 @@ const instantOf = (at: string | null | undefined): Date | null => (at ? new Date
 const isoOf = (at: Date | null): string | null => (at === null ? null : at.toISOString());
 /** A teacher edits only her own report; admins keep the link to any. */
 const ownsOrAdmin = (w: SummaryWindow, row: HistoryRow): boolean =>
-  w.role === 'admin' || row.teacher_id === w.teacherId;
+  isAdmin(w) || row.teacher_id === w.teacherId;
 const mayEdit = (w: SummaryWindow, row: HistoryRow): boolean => {
   const at = { submittedAt: instantOf(row.submitted_at), sentAt: instantOf(row.sent_at) };
   const window = { ...at, now: w.now, minutes: w.minutes };

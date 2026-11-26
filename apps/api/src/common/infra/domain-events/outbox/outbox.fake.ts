@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import type { OutboxRow } from './outbox.schemas';
-import type { ClaimRequest, OutboxStore, Settled, SettleState } from './outbox.types';
+import type { OutboxRow, SettleState } from './outbox.schemas';
+import type { ClaimRequest, OutboxStore, Settled } from './outbox.types';
 
 // Test helper (not a test): public.domain_events in memory, with the claim and finish rules of
 // claim_domain_events / finish_domain_events.

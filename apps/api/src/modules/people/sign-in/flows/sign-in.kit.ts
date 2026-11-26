@@ -1,3 +1,4 @@
+import { errorMessage } from '@ab/core';
 import {
   HttpException,
   HttpStatus,
@@ -81,7 +82,7 @@ export class SignInKit {
   later(task: () => Promise<unknown>): void {
     const run: Promise<void> = task()
       .then(() => undefined)
-      .catch((e: unknown) => this.log.error(`sign-in background task: ${messageOf(e)}`))
+      .catch((e: unknown) => this.log.error(`sign-in background task: ${errorMessage(e)}`))
       .finally(() => this.running.delete(run));
     this.running.add(run);
   }
@@ -103,4 +104,3 @@ export class SignInKit {
   }
 }
 
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));

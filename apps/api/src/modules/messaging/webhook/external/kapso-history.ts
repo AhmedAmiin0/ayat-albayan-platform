@@ -39,7 +39,8 @@ const nextOf = (after: string | undefined, count: number): string | undefined =>
   count >= PAGE_LIMIT && after ? after : undefined;
 
 export class KapsoHistory {
-  constructor(private readonly fetch: FetchLike = (url, init) => globalThis.fetch(url, init)) {}
+  /** `fetch` only for tests: absent, the shared http client's runtime fetch. */
+  constructor(private readonly fetch?: FetchLike) {}
 
   private conn(env: KapsoLineEnv): GraphConn {
     return { env, fetch: this.fetch, timeoutMs: READ_TIMEOUT_MS };

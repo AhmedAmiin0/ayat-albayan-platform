@@ -1,7 +1,7 @@
 import { joinWindowConfig, OPEN_LESSON_STATUSES, type JoinWindowConfig } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 import { FAMILY_STUDENT_SELECT } from '@/common/push/family-readers';
 import { ClassroomSettings } from '@/modules/teaching/classroom';
 import { STARTED_GRACE_MIN, type FamilyLesson, type SentReport } from './family-push.plan';
@@ -34,27 +34,25 @@ export class FamilyPushRepo {
 
   /** Open lessons from STARTED_GRACE_MIN ago up to the window's (or an early room's) reach. */
   async lessonsNearStart(now: Date, win: JoinWindowConfig): Promise<FamilyLesson[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lessons')
       .select(LESSON)
       .in('status', [...OPEN_LESSON_STATUSES])
       .gte('starts_at', at(now, -STARTED_GRACE_MIN))
       .lte('starts_at', at(now, win.opensBeforeMin + EARLY_ROOM_MIN))
       .order('starts_at')
-      .limit(LIMIT);
-    if (error) throw dbError(error);
+      .limit(LIMIT));
     return data.map(lessonOf);
   }
 
   /** Reports whose sent_at was stamped since `since` (the report_ready message went out). */
   async reportsSentSince(since: Date): Promise<SentReport[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lesson_reports')
       .select(REPORT)
       .gte('sent_at', since.toISOString())
       .order('sent_at')
-      .limit(LIMIT);
-    if (error) throw dbError(error);
+      .limit(LIMIT));
     return data.flatMap(reportOf);
   }
 }

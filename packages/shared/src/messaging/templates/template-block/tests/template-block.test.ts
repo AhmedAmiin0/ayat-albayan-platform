@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { templateBlock, templateButtonLink, type TemplateBlockSource } from '../template-block';
+import {
+  TEMPLATE_BUTTON_KINDS,
+  TEMPLATE_HEADER_KINDS,
+  templateBlock,
+  templateButtonKindSchema,
+  templateButtonLink,
+  templateHeaderKindSchema,
+  type TemplateBlockSource,
+} from '../template-block';
 
 const src = (over: Partial<TemplateBlockSource> = {}): TemplateBlockSource => ({
   key: 'lesson_reminder_meet',
@@ -96,5 +104,13 @@ describe('templateButtonLink', () => {
     expect(templateButtonLink({ type: 'url', text: 'x' })).toBeNull();
     expect(templateButtonLink({ type: 'phone_number', text: 'x', phone: '+966500000000' })).toBeNull();
     expect(templateButtonLink({ type: 'quick_reply', text: 'x' })).toBeNull();
+  });
+});
+
+describe('template header and button kind schemas', () => {
+  it('accept each kind and nothing else', () => {
+    expect(templateHeaderKindSchema.options).toEqual([...TEMPLATE_HEADER_KINDS]);
+    expect(templateButtonKindSchema.options).toEqual([...TEMPLATE_BUTTON_KINDS]);
+    expect(templateButtonKindSchema.validate('otp')).toBe(false);
   });
 });

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { DURATIONS, PACKAGE_SIZES } from '@ab/catalog';
 import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../../lessons/state-machine';
 import { bookingExtras } from '../booking-extras';
-import { instant, localDate, requiredText, timeOfDay, timeZone } from '@ab/core';
+import { clientRequestId, instant, localDate, requiredText, timeOfDay, timeZone } from '@ab/core';
 import { dayTimesSchema } from '../day-times';
 
 // Scheduling commands (docs/10-phase2-contracts.md). Command DTOs are camelCase; POST /booking's
@@ -40,7 +40,7 @@ export const bookingBaseSchema = weeklyRuleSchema.extend({
   meetingLink: z.url().nullish(),
   override: overrideSchema.optional(),
   /** Idempotency key: a replay with the same id returns the first booking (rule 8). */
-  clientRequestId: z.uuid().optional(),
+  clientRequestId: clientRequestId.optional(),
   /** The slot the admin picked; pins the first lesson when its wall time repeats (DST fall-back). */
   startsAt: instant.optional(),
   /** A package's weekdays with their own time (only those differing from startTimeLocal). */

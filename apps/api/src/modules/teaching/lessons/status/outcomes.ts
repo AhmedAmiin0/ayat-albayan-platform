@@ -1,14 +1,20 @@
-import type { Attendance, LessonStatus } from '@ab/catalog';
-import { isChargeable, LESSON_EVENT_TARGET, type StatusRouteEvent } from '@ab/schedule';
+import { attendanceSchema, type LessonStatus } from '@ab/catalog';
+import {
+  isChargeable,
+  LESSON_EVENT_TARGET,
+  statusRouteEventSchema,
+  type StatusRouteEvent,
+} from '@ab/schedule';
+import { z } from 'zod';
 import type { LessonChange } from '@/modules/teaching/scheduling/change-set';
 
 /** Attendance recorded by each outcome event (docs/10 route 7). */
-export const ATTENDANCE: Record<StatusRouteEvent, Attendance> = {
+export const ATTENDANCE = z.record(statusRouteEventSchema, attendanceSchema).readonly().decode({
   complete: 'on_time',
   mark_late: 'late',
   mark_no_show: 'absent',
   excuse: 'excused',
-};
+});
 
 export type OutcomeInput = {
   lesson: { id: string; status: LessonStatus; starts_at: string };

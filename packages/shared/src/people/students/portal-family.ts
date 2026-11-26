@@ -12,16 +12,18 @@ export const PACKAGE_GUARDIAN_ONLY = 'package_guardian_only';
 export const FAMILY_CHAT_OFF = 'family_chat_off';
 
 export const PORTAL_HISTORY_STATUSES = ['attended', 'absent'] as const;
-export type PortalHistoryStatus = (typeof PORTAL_HISTORY_STATUSES)[number];
+export const portalHistoryStatusSchema = z.enum(PORTAL_HISTORY_STATUSES);
+export type PortalHistoryStatus = z.infer<typeof portalHistoryStatusSchema>;
 /** An excused absence still counts as absent. */
 export const PORTAL_OUTCOMES = ['attended', 'absent', 'excused'] as const;
-export type PortalOutcome = (typeof PORTAL_OUTCOMES)[number];
+export const portalOutcomeSchema = z.enum(PORTAL_OUTCOMES);
+export type PortalOutcome = z.infer<typeof portalOutcomeSchema>;
 /** Rows per page of the history. */
 export const PORTAL_HISTORY_PAGE = 20;
 
 /** GET …/history?status=&cursor= (cursor: the last row's starts_at, ISO). */
 export const portalHistoryQuerySchema = z.object({
-  status: z.enum(PORTAL_HISTORY_STATUSES),
+  status: portalHistoryStatusSchema,
   cursor: z.iso.datetime({ offset: true }).optional(),
 });
 export type PortalHistoryQuery = z.infer<typeof portalHistoryQuerySchema>;
@@ -31,7 +33,7 @@ export const portalHistoryRowSchema = z.object({
   starts_at: z.string(),
   ends_at: z.string(),
   teacher: portalTeacherSchema,
-  outcome: z.enum(PORTAL_OUTCOMES),
+  outcome: portalOutcomeSchema,
   /** The family's own excuse when one was recorded; never an internal note. */
   absence_reason: z.string().nullable(),
   /** The SENT report of this lesson, else null. */

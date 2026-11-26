@@ -3,6 +3,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { TeacherThreadsRepo } from './teacher-threads.repo';
+import { isAdmin } from '@/common/auth/roles';
 
 /**
  * What a signed-in teacher may see in the inbox (R-TCH-03, R-MSG-05):
@@ -37,7 +38,7 @@ export class TeacherScopes {
 
   /** null for an admin (everything); a teacher's scope, 404 teacher_not_linked without a row. */
   async of(user: AuthUser): Promise<TeacherScope | null> {
-    if (user.role === 'admin') return null;
+    if (isAdmin(user)) return null;
     if (user.role !== 'teacher') throw new ForbiddenException();
     const teacher = await this.queries.teacher(user.id);
     if (!teacher) throw notFound('teacher_not_linked');

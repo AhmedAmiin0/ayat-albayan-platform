@@ -1,3 +1,4 @@
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 import type { LessonStatus, StudentStatus, SubscriptionStatus } from '@ab/catalog';
 import { OPEN_LESSON_STATUSES, wallParts } from '@ab/schedule';
@@ -13,7 +14,7 @@ export const courseStopSchema = z
   .strictObject({
     subscriptionId: z.uuid(),
     reason: z.string().trim().min(2).max(COURSE_STOP_REASON_MAX),
-    clientRequestId: z.uuid(),
+    clientRequestId,
     refund: stopRefundAskSchema.optional(),
     owe: stopOweAskSchema.optional(),
   })

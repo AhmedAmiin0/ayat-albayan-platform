@@ -1,21 +1,24 @@
 import { z } from 'zod';
 
+const liveKitEventSchema = z.enum(['participant_joined', 'participant_left', 'room_finished']);
+export const participantKindSchema = z.enum(['joined', 'left', 'finished']);
+
 /**
  * participant_joined / participant_left / room_finished: who came into or left which room (maybe
  * now empty), at the event's own time (createdAt; null when LiveKit sent none).
  */
 export interface ParticipantEvent {
-  kind: 'joined' | 'left' | 'finished';
+  kind: z.infer<typeof participantKindSchema>;
   room: string;
   identity: string;
   at: string | null;
 }
 
-const KIND = {
+const KIND = z.record(liveKitEventSchema, participantKindSchema).readonly().decode({
   participant_joined: 'joined',
   participant_left: 'left',
   room_finished: 'finished',
-} as const;
+});
 
 const S_MS = 1000;
 
@@ -24,7 +27,7 @@ const createdAtSchema = z.union([z.string().regex(/^\d+$/), z.number().int().non
 
 /** LiveKit's WebhookEvent as far as presence reads it (protojson; other fields pass). */
 const participantEventSchema = z.object({
-  event: z.enum(['participant_joined', 'participant_left', 'room_finished']),
+  event: liveKitEventSchema,
   room: z.object({ name: z.string().min(1) }),
   participant: z.object({ identity: z.string().optional() }).optional(),
   createdAt: createdAtSchema.optional(),

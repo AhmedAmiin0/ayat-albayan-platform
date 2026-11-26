@@ -1,6 +1,7 @@
 import type { APPLICANT_SORT_KEYS, PresenceFilter } from '@ab/shared';
 import { searchDigits, type ListSort } from '@ab/core';
-import { ilikeContains, type SortSpec } from '@/common/db/list-sort';
+import { ilikeContains } from '@/common/db/or-filter';
+import type { SortSpec } from '@/common/db/list-sort';
 
 type ApplicantSortKey = (typeof APPLICANT_SORT_KEYS)[number];
 

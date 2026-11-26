@@ -2,8 +2,9 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { netPaidIn } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort, ilikeContains } from '@/common/db/list-sort';
-import { dbError } from '@/common/http/http';
+import { applySort } from '@/common/db/list-sort';
+import { ilikeContains } from '@/common/db/or-filter';
+import { done, maybe, pgError, rows } from '@/common/db/errors';
 import { readChunked, readChunkedAll } from '@/common/db/read-all';
 import { listSelect, SELECT, SUB_SORT, type SubListQuery } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
 import type { Page } from '@ab/core';
@@ -29,31 +30,27 @@ export class SubscriptionsRepo {
     const { data, count, error } = await applySort(query, q, SUB_SORT)
       .order('id')
       .range(from, from + q.pageSize - 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return { items: data, total: count ?? 0, page: q.page, pageSize: q.pageSize };
   }
 
   async get(id: string): Promise<SubRow | null> {
-    const { data, error } = await this.db
+    return maybe(await this.db
       .from('subscriptions')
       .select(SELECT)
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
-    return data;
+      .maybeSingle());
   }
 
   /** A student's packages in FIFO order (starts_on, created_at, id), as the balance view. */
   async forStudent(studentId: string): Promise<SubRow[]> {
-    const { data, error } = await this.db
+    return rows(await this.db
       .from('subscriptions')
       .select(SELECT)
       .eq('student_id', studentId)
       .order('starts_on')
       .order('created_at')
-      .order('id');
-    if (error) throw dbError(error);
-    return data;
+      .order('id'));
   }
 
   /** Several students' packages (no join), FIFO order within each student. */
@@ -70,39 +67,48 @@ export class SubscriptionsRepo {
     );
   }
 
+  /** forStudent for several students at once, FIFO order within each student. */
+  async withStudentFor(studentIds: readonly string[]): Promise<SubRow[]> {
+    return readChunkedAll(studentIds, (chunk, from, to) =>
+      this.db
+        .from('subscriptions')
+        .select(SELECT)
+        .in('student_id', chunk)
+        .order('starts_on')
+        .order('created_at')
+        .order('id')
+        .range(from, to),
+    );
+  }
+
   /** null: a package with this client_request_id already exists (a retry raced it). */
   async insert(row: TablesInsert<'subscriptions'>): Promise<SubRow | null> {
     const { data, error } = await this.db.from('subscriptions').insert(row).select(SELECT).single();
     if (error?.code === '23505' && error.message.includes('client_request_id')) return null;
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** The package a subscribe form already created (its client_request_id), or null. */
   async byRequest(clientRequestId: string): Promise<SubRow | null> {
-    const { data, error } = await this.db
+    return maybe(await this.db
       .from('subscriptions')
       .select(SELECT)
       .eq('client_request_id', clientRequestId)
-      .maybeSingle();
-    if (error) throw dbError(error);
-    return data;
+      .maybeSingle());
   }
 
   async update(id: string, patch: TablesUpdate<'subscriptions'>): Promise<SubRow | null> {
-    const { data, error } = await this.db
+    return maybe(await this.db
       .from('subscriptions')
       .update(patch)
       .eq('id', id)
       .select(SELECT)
-      .maybeSingle();
-    if (error) throw dbError(error);
-    return data;
+      .maybeSingle());
   }
 
   async remove(id: string): Promise<void> {
-    const { error } = await this.db.from('subscriptions').delete().eq('id', id);
-    if (error) throw dbError(error);
+    done(await this.db.from('subscriptions').delete().eq('id', id));
   }
 
   async hasPayments(id: string): Promise<boolean> {
@@ -110,7 +116,7 @@ export class SubscriptionsRepo {
       .from('payments')
       .select('id', { count: 'exact', head: true })
       .eq('subscription_id', id);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return (count ?? 0) > 0;
   }
 
@@ -133,12 +139,11 @@ export class SubscriptionsRepo {
 
   /** The student and the guardian's country (the quote's default country, S2). */
   async studentForQuote(id: string): Promise<{ id: string; country: string | null } | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('students')
       .select('id, guardian:guardians(country)')
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data ? { id: data.id, country: data.guardian?.country ?? null } : null;
   }
 }

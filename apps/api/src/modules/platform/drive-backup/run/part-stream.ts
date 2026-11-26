@@ -7,6 +7,7 @@ import type {
 import { STREAMED_MIN } from '@/modules/platform/drive-backup/plan/parts';
 import { entryHead, padding, TAR_END } from '@/modules/platform/drive-backup/archive/tar';
 import { fromSource, SourceReadError } from './read-error';
+import type { SkipReason } from './skip.schemas';
 
 /**
  * Objects up to this size are read whole first (a failed read skips them cleanly), into one buffer
@@ -21,8 +22,6 @@ export interface PartEntry {
   size: number;
   contentType: string;
 }
-/** changed: a new version since the listing (retried next night, never streamed past its cost). */
-export type SkipReason = 'missing' | 'read_failed' | 'changed';
 export interface PartReport {
   entries: PartEntry[];
   skipped: { bucket: string; key: string; size: number; reason: SkipReason }[];

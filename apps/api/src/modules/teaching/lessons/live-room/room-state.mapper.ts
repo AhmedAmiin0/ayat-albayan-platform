@@ -1,22 +1,29 @@
-import type { LessonRoomState, RoomPresence, RoomPresenceRole } from '@ab/schedule';
+import {
+  roomPresenceRoleSchema,
+  type LessonRoomState,
+  type RoomPresence,
+  type RoomPresenceRole,
+} from '@ab/schedule';
+import { z } from 'zod';
+import { own } from '@/common/infra/own-value';
 import type { PresenceRow } from './room-inside.repo';
 
 // Presence rows → the `room` of a lesson payload (lessonRoomStateSchema). Pure.
 
 /** A staff login is named by what it is to the family: the teacher, or the academy's staff. */
-const STAFF_ROLE: Readonly<Record<string, RoomPresenceRole>> = {
+const STAFF_ROLE = z.record(z.string(), roomPresenceRoleSchema).readonly().decode({
   teacher: 'teacher',
   admin: 'staff',
   assistant: 'staff',
   sales: 'staff',
-};
+});
 
 /** A guest by a student's link (the family app, the student's link) is the student's side. */
 const guestRole = (row: PresenceRow): RoomPresenceRole =>
   row.link?.student_id ? 'student' : 'guest';
 
 export const presenceRole = (row: PresenceRow): RoomPresenceRole =>
-  STAFF_ROLE[row.role] ?? guestRole(row);
+  own(STAFF_ROLE, row.role) ?? guestRole(row);
 
 /** Who may be named to the viewer; staff see everyone's name. */
 export type Named = (row: PresenceRow) => boolean;

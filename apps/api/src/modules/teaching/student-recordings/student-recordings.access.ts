@@ -4,6 +4,7 @@ import { notFound } from '@/common/http/errors';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import type { ManageRule } from './student-recordings.mapper';
 import { StudentRecordingRepo } from './student-recordings.repo';
+import { isAdmin } from '@/common/auth/roles';
 
 /** Which of a student's lessons a login may see recordings of: `onlyTeacherId` null = all of them. */
 interface RecordingScope {
@@ -29,7 +30,7 @@ export class StudentRecordingAccess {
   async scopeFor(user: AuthUser, studentId: string): Promise<RecordingScope> {
     const student = await this.queries.student(studentId);
     if (!student) throw notFound('student_not_found');
-    if (user.role === 'admin') return { onlyTeacherId: null, manage: 'all' };
+    if (isAdmin(user)) return { onlyTeacherId: null, manage: 'all' };
     if (user.role === 'assistant' && (await this.queries.assists({ profileId: user.id, studentId }))) return { onlyTeacherId: null, manage: 'none' };
     if (user.role === 'teacher') return this.teacherScope(user, student);
     throw new ForbiddenException();

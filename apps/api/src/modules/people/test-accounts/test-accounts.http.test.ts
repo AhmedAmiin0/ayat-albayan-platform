@@ -50,5 +50,8 @@ describe('PATCH /admin/users/:id/test and /students/:id/test (docs/56)', () => {
     repo.set.mockResolvedValueOnce(null);
     const res = await patch(`/admin/users/${ID}/test`, 'admin', { is_test: true });
     expect([res.statusCode, res.json().code]).toEqual([404, 'user_not_found']);
+    repo.set.mockResolvedValueOnce(null);
+    const student = await patch(`/students/${ID}/test`, 'admin', { is_test: true });
+    expect([student.statusCode, student.json().code]).toEqual([404, 'student_not_found']);
   });
 });

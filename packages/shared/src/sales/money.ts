@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { localDate, optionalText, phoneE164 } from '@ab/core';
+import { clientRequestId, localDate, optionalText, phoneE164 } from '@ab/core';
 import {
   currencyIso,
   LESSONS_USED_BEFORE_MAX,
@@ -47,7 +47,7 @@ export const salesSubscriptionCreateSchema = z.strictObject({
   teacherId: z.uuid().optional(),
   /** The package price, not the quote's (the link's cap). */
   customPrice: moneyAmount.optional(),
-  clientRequestId: z.uuid(),
+  clientRequestId,
   phone: chatPhone,
 });
 
@@ -61,7 +61,7 @@ export const salesPaymentCreateSchema = z.strictObject({
   receiptPath: z.string().min(1).nullish(),
   attachments: paymentAttachmentPaths.optional(),
   note: optionalText,
-  clientRequestId: z.uuid(),
+  clientRequestId,
   phone: chatPhone,
 });
 

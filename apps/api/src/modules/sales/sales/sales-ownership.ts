@@ -1,5 +1,5 @@
 import type { Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 
 /**
  * What a salesperson owns (migrations 187 and 274, in TypeScript because the API runs as the
@@ -29,8 +29,8 @@ export async function ownershipOf(db: Db, profileId: string): Promise<SalesOwner
     db.from('leads').select('id, phone_e164, converted_guardian_id').eq('assigned_to', profileId),
     db.from('students').select('id, guardian_id').eq('brought_by', profileId),
   ]);
-  if (leads.error) throw dbError(leads.error);
-  if (brought.error) throw dbError(brought.error);
+  if (leads.error) throw pgError(leads.error);
+  if (brought.error) throw pgError(brought.error);
   const leadGuardians = uniq(leads.data.flatMap((l) => (l.converted_guardian_id ? [l.converted_guardian_id] : [])));
   const guardianIds = uniq([...leadGuardians, ...brought.data.map((s) => s.guardian_id)]);
   const phones = new Set(leads.data.map((l) => l.phone_e164));
@@ -43,8 +43,8 @@ export async function ownershipOf(db: Db, profileId: string): Promise<SalesOwner
     // came from.
     leadGuardians.length > 0 ? db.from('students').select('id').in('guardian_id', leadGuardians) : { data: [], error: null },
   ]);
-  if (guardians.error) throw dbError(guardians.error);
-  if (families.error) throw dbError(families.error);
+  if (guardians.error) throw pgError(guardians.error);
+  if (families.error) throw pgError(families.error);
   for (const g of guardians.data) if (g.phone_e164) phones.add(g.phone_e164);
   const studentIds = uniq([...families.data.map((s) => s.id), ...brought.data.map((s) => s.id)]);
   return { leadIds, guardianIds, studentIds, phones: [...phones] };
@@ -59,8 +59,8 @@ export async function guardianOwnerIds(db: Db, guardianId: string): Promise<stri
     db.from('students').select('brought_by').eq('guardian_id', guardianId),
     db.from('leads').select('assigned_to').eq('converted_guardian_id', guardianId),
   ]);
-  if (brought.error) throw dbError(brought.error);
-  if (leads.error) throw dbError(leads.error);
+  if (brought.error) throw pgError(brought.error);
+  if (leads.error) throw pgError(leads.error);
   const ids = [...brought.data.map((s) => s.brought_by), ...leads.data.map((l) => l.assigned_to)];
   return uniq(ids.flatMap((id) => (id ? [id] : [])));
 }
@@ -70,18 +70,17 @@ export async function guardianOwnerIds(db: Db, guardianId: string): Promise<stri
  * brought it and who holds the lead its family came from; never a sibling's assistant.
  */
 export async function studentOwnerIds(db: Db, studentId: string): Promise<string[]> {
-  const { data, error } = await db
+  const data = maybe(await db
     .from('students')
     .select('brought_by, guardian_id')
     .eq('id', studentId)
-    .maybeSingle();
-  if (error) throw dbError(error);
+    .maybeSingle());
   if (!data) return [];
   const leads = await db
     .from('leads')
     .select('assigned_to')
     .eq('converted_guardian_id', data.guardian_id);
-  if (leads.error) throw dbError(leads.error);
+  if (leads.error) throw pgError(leads.error);
   const ids = [data.brought_by, ...leads.data.map((l) => l.assigned_to)];
   return uniq(ids.flatMap((id) => (id ? [id] : [])));
 }

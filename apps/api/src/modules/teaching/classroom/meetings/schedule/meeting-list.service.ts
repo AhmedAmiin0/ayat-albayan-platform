@@ -4,6 +4,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { MeetingListRepo } from './meeting-list.repo';
 import { orderMeetings, toMeetingView } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.mapper';
+import { isAdmin } from '@/common/auth/roles';
 
 const DAY_MS = 86_400_000;
 
@@ -16,7 +17,7 @@ export class MeetingListService {
   ) {}
 
   async list(user: AuthUser, now = new Date()): Promise<MeetingView[]> {
-    const createdBy = user.role === 'admin' ? null : user.id;
+    const createdBy = isAdmin(user) ? null : user.id;
     const since = new Date(now.getTime() - DAY_MS).toISOString();
     const [latest, upcoming, invites, win] = await Promise.all([
       this.lists.latest(createdBy),

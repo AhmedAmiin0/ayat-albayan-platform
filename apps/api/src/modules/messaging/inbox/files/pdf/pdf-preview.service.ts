@@ -1,6 +1,7 @@
 import { isPdfMime, PDF_PREVIEW_PAGES, type ThreadPdfPage } from '@ab/shared';
 import { INVOICE_MAX_BYTES } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { z } from 'zod';
 import { BUCKETS, pdfPagePath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { type InboundFile, waHttpError } from '@/modules/messaging/whatsapp';
@@ -10,11 +11,16 @@ import { PdfPreviewRepo, type PdfDoc } from './pdf-preview.repo';
 // poppler runs in ayat-pdf (pdf-client.ts over its socket), never here; pdf-render gives the slot and the error.
 import { pdfPageCount, renderPdfPages, sandboxReady } from './pdf-client';
 import { inSlot, PdfToolError, type PdfPageImage } from './pdf-render';
+import { pdfFailureSchema } from './pdf.schemas';
 
 /** A page run that failed is refused for this long (per process) instead of taking the slot again. */
 const FAILED_MS = 10 * 60_000;
 /** The 503's code per PdfToolError reason. */
-const ERROR_CODE: Record<PdfToolError['reason'], string> = { busy: 'pdf_busy', failed: 'pdf_render_failed', unavailable: 'pdf_unavailable' };
+const ERROR_CODE = z.record(pdfFailureSchema, z.string()).readonly().decode({
+  busy: 'pdf_busy',
+  failed: 'pdf_render_failed',
+  unavailable: 'pdf_unavailable',
+});
 
 /**
  * A chat PDF like WhatsApp's: GET /threads/:phone/messages/:id/pdf/:page signs

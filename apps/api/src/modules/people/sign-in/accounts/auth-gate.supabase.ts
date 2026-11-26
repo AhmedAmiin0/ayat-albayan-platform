@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { authEmailOf, createAuthUser } from '@/common/auth/auth-users';
 import { DB, type Db } from '@/common/db/db.module';
 import { badRequest } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { done, pgError } from '@/common/db/errors';
 import { SIGN_IN_CONFIG, type AuthGate, type SignInConfig } from '@/modules/people/sign-in/sign-in.ports';
 
 /** GoTrue's admin failures as module codes (a weak password is the user's to fix); anything else is a 500. */
@@ -27,7 +27,7 @@ export class SupabaseAuthGate implements AuthGate {
 
   async idByEmail(email: string): Promise<string | null> {
     const { data, error } = await this.db.rpc('auth_user_id_by_email', { p_email: email });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -50,8 +50,7 @@ export class SupabaseAuthGate implements AuthGate {
   }
 
   async revokeSessions(id: string): Promise<void> {
-    const { error } = await this.db.rpc('revoke_user_sessions', { p_user: id });
-    if (error) throw dbError(error);
+    done(await this.db.rpc('revoke_user_sessions', { p_user: id }));
   }
 
   /** Only the hashed token leaves: the client trades it with verifyOtp (the action link is never returned). */

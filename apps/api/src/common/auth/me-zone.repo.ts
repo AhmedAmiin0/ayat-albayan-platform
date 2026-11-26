@@ -2,7 +2,7 @@ import { LOCALES, type Locale } from '@ab/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done } from '@/common/db/errors';
 import { personZone } from './me-zone';
 
 type TzRead = PromiseLike<{ data: { tz: string | null } | null; error: unknown }>;
@@ -47,7 +47,6 @@ export class MeZoneRepo {
 
   /** Writes the login's own language. */
   async setLocale(profileId: string, locale: Locale): Promise<void> {
-    const { error } = await this.db.from('profiles').update({ locale }).eq('id', profileId);
-    if (error) throw dbError(error);
+    done(await this.db.from('profiles').update({ locale }).eq('id', profileId));
   }
 }

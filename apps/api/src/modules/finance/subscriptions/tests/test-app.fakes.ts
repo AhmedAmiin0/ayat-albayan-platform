@@ -7,7 +7,7 @@ export function mocks() {
     subs: {
       list: vi.fn(), get: vi.fn(), forStudent: vi.fn(), forStudents: vi.fn(), insert: vi.fn(),
       update: vi.fn(), remove: vi.fn(), hasPayments: vi.fn(), paid: vi.fn(), studentForQuote: vi.fn(),
-      byRequest: vi.fn(),
+      byRequest: vi.fn(), withStudentFor: vi.fn(),
     },
     cancels: { linkedLessons: vi.fn(), laterCommission: vi.fn(), cancel: vi.fn() },
     leads: { afterPackage: vi.fn() },
@@ -75,6 +75,13 @@ export function resetMocks(m: Mocks): void {
   m.drafts.held.mockResolvedValue(false);
   m.subs.forStudents.mockImplementation(async (ids: string[]) =>
     (await Promise.all(ids.map((id) => m.subs.forStudent(id)))).flat(),
+  );
+  const ownRows = async (id: string) =>
+    ((await m.subs.forStudent(id)) ?? []).map((r: { student: object | null }) => ({
+      ...r, student_id: id, student: r.student && { ...r.student, id },
+    }));
+  m.subs.withStudentFor.mockImplementation(async (ids: string[]) =>
+    (await Promise.all(ids.map(ownRows))).flat(),
   );
   m.family.linkPackages.mockResolvedValue([]);
   m.subs.paid.mockResolvedValue(new Map());

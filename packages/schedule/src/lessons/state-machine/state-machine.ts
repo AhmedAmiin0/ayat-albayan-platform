@@ -1,4 +1,5 @@
-import type { LessonStatus } from '@ab/catalog';
+import { lessonStatusSchema, type LessonStatus } from '@ab/catalog';
+import { z } from 'zod';
 
 // Lifecycle (R-SCH-03/07/08, issue B2): an outcome needs no prior confirm; others are terminal.
 
@@ -37,31 +38,37 @@ export const LESSON_EVENTS = [
   'cancel_by_admin',
   'reschedule',
 ] as const;
-export type LessonEvent = (typeof LESSON_EVENTS)[number];
+export const lessonEventSchema = z.enum(LESSON_EVENTS);
+export type LessonEvent = z.infer<typeof lessonEventSchema>;
 
-export const LESSON_EVENT_TARGET: Record<LessonEvent, LessonStatus> = {
-  confirm: 'confirmed',
-  complete: 'completed',
-  mark_late: 'late',
-  excuse: 'excused',
-  mark_no_show: 'no_show',
-  cancel_by_teacher: 'cancelled_by_teacher',
-  cancel_by_admin: 'cancelled_by_admin',
-  reschedule: 'rescheduled',
-};
+export const LESSON_EVENT_TARGET = z
+  .record(lessonEventSchema, lessonStatusSchema)
+  .readonly()
+  .decode({
+    confirm: 'confirmed',
+    complete: 'completed',
+    mark_late: 'late',
+    excuse: 'excused',
+    mark_no_show: 'no_show',
+    cancel_by_teacher: 'cancelled_by_teacher',
+    cancel_by_admin: 'cancelled_by_admin',
+    reschedule: 'rescheduled',
+  });
 
 /** Events accepted by `POST /lessons/:id/status`; the others have their own routes. */
 export const STATUS_ROUTE_EVENTS = ['complete', 'mark_late', 'mark_no_show', 'excuse'] as const;
-export type StatusRouteEvent = (typeof STATUS_ROUTE_EVENTS)[number];
+export const statusRouteEventSchema = z.enum(STATUS_ROUTE_EVENTS);
+export type StatusRouteEvent = z.infer<typeof statusRouteEventSchema>;
 
 /** Who cancelled (CancelRequest.by) → status. A student's cancellation is an excuse. */
 export const CANCEL_BY = ['teacher', 'admin', 'student'] as const;
-export type CancelBy = (typeof CANCEL_BY)[number];
-export const CANCEL_STATUS: Record<CancelBy, LessonStatus> = {
+export const cancelBySchema = z.enum(CANCEL_BY);
+export type CancelBy = z.infer<typeof cancelBySchema>;
+export const CANCEL_STATUS = z.record(cancelBySchema, lessonStatusSchema).readonly().decode({
   teacher: 'cancelled_by_teacher',
   admin: 'cancelled_by_admin',
   student: 'excused',
-};
+});
 
 /** Statuses whose time is taken: a booking over one of these is a conflict (R-SCH-04). */
 export const OCCUPYING_LESSON_STATUSES = [

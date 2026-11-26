@@ -1,7 +1,7 @@
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import type { Db } from '@/common/db/db.module';
 import { DEVICE_IN_USE, deviceKeyHash, mintDeviceKey } from '@/common/push/expo/push-claim';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 export interface DeviceClaim {
   userId: string;
@@ -30,7 +30,7 @@ export async function claimDevice(
     p_new_hash: deviceKeyHash(fresh),
     ...(claim.deviceKey ? { p_presented: deviceKeyHash(claim.deviceKey) } : {}),
   });
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   if (data === 'no_session') throw new UnauthorizedException('no_session');
   if (data === 'in_use') throw new ConflictException(DEVICE_IN_USE);
   if (data !== 'bound' && data !== 'proven') throw new Error(`claim_push_device: ${String(data)}`);

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, rows } from '@/common/db/errors';
 import { guardedError, phoneAware } from '@/modules/people/users/users.errors';
 import type { NewProfile, ProfilePatch, StaffProfile } from './users.store';
 
@@ -28,17 +28,15 @@ export class UserProfilesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async staff(): Promise<StaffProfile[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('profiles')
       .select(STAFF)
-      .in('role', [...STAFF_ROLES]);
-    if (error) throw dbError(error);
+      .in('role', [...STAFF_ROLES]));
     return data;
   }
 
   async profile(id: string): Promise<StaffProfile | null> {
-    const { data, error } = await this.db.from('profiles').select(STAFF).eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('profiles').select(STAFF).eq('id', id).maybeSingle());
     return data;
   }
 
