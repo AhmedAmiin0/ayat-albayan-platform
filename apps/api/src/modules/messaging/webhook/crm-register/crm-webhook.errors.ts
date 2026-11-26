@@ -31,8 +31,6 @@ export const CRM_WEBHOOK_ERRORS = {
   secret_store_failed: () => new InternalServerErrorException({ message: 'secret_store_failed' }),
 } as const;
 
-type CrmWebhookErrorCode = keyof typeof CRM_WEBHOOK_ERRORS;
-
 const BY_STATUS = z
   .record(z.string(), z.enum(['crm_key_refused', 'crm_scope_missing']))
   .readonly()

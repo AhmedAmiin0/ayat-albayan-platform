@@ -41,16 +41,19 @@ export const LESSON_EVENTS = [
 export const lessonEventSchema = z.enum(LESSON_EVENTS);
 export type LessonEvent = z.infer<typeof lessonEventSchema>;
 
-export const LESSON_EVENT_TARGET = z.record(lessonEventSchema, lessonStatusSchema).readonly().decode({
-  confirm: 'confirmed',
-  complete: 'completed',
-  mark_late: 'late',
-  excuse: 'excused',
-  mark_no_show: 'no_show',
-  cancel_by_teacher: 'cancelled_by_teacher',
-  cancel_by_admin: 'cancelled_by_admin',
-  reschedule: 'rescheduled',
-});
+export const LESSON_EVENT_TARGET = z
+  .record(lessonEventSchema, lessonStatusSchema)
+  .readonly()
+  .decode({
+    confirm: 'confirmed',
+    complete: 'completed',
+    mark_late: 'late',
+    excuse: 'excused',
+    mark_no_show: 'no_show',
+    cancel_by_teacher: 'cancelled_by_teacher',
+    cancel_by_admin: 'cancelled_by_admin',
+    reschedule: 'rescheduled',
+  });
 
 /** Events accepted by `POST /lessons/:id/status`; the others have their own routes. */
 export const STATUS_ROUTE_EVENTS = ['complete', 'mark_late', 'mark_no_show', 'excuse'] as const;

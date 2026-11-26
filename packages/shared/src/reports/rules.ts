@@ -32,12 +32,15 @@ export const RUBRIC_COLUMN = {
 } as const satisfies Record<Rubric, `grade_${string}`>;
 
 /** Attendance in the report → the lesson outcome event (inverse of the API's outcomes.ts). */
-export const ATTENDANCE_EVENT = z.record(attendanceSchema, statusRouteEventSchema).readonly().decode({
-  on_time: 'complete',
-  late: 'mark_late',
-  excused: 'excuse',
-  absent: 'mark_no_show',
-});
+export const ATTENDANCE_EVENT = z
+  .record(attendanceSchema, statusRouteEventSchema)
+  .readonly()
+  .decode({
+    on_time: 'complete',
+    late: 'mark_late',
+    excused: 'excuse',
+    absent: 'mark_no_show',
+  });
 
 /** The student was in the lesson, so the rubric grades and the overall grade are required. */
 export function attended(attendance: Attendance): boolean {
