@@ -10,6 +10,8 @@ import {
 } from '../catalog';
 import { currencyForCountry, siteCountry, type CurrencyIso, type SiteCountry } from '../currency';
 import { customBase, priceIn, roundCents, starterRateBase } from '../price';
+import { roundPrice } from './rounding';
+import type { Rounding } from './rounding.schemas';
 
 /** A package, or a custom lesson count (1–60), never both. */
 export type QuotePackage =
@@ -24,6 +26,8 @@ export type QuoteOptions = QuotePackage & {
   discount: number;
   /** SAR→USD; required when the country is quoted in USD. */
   usdRate?: number | undefined;
+  /** How afterDiscount reaches a whole unit; absent is nearest, the price a package is sold at. */
+  rounding?: Rounding | undefined;
 };
 
 export interface Quote {
@@ -40,7 +44,7 @@ export interface Quote {
   /** price × students. */
   total: number;
   discount: number;
-  /** round(total × (1 − discount%)). */
+  /** total × (1 − discount%) as a whole unit: nearest, unless the quote asked for up or down. */
   afterDiscount: number;
   /** One student's price per lesson after the discount, 2 decimals max (rounded like the site). */
   perLesson: number;
@@ -77,7 +81,7 @@ export function quote(o: QuoteOptions): Quote {
     students: o.students,
     total,
     discount: o.discount,
-    afterDiscount: Math.round(total * keep),
+    afterDiscount: roundPrice(total * keep, o.rounding),
     perLesson: roundCents((price * keep) / lessons),
     insteadOf,
     savingsPct: insteadOf === null ? null : Math.round((1 - price / insteadOf) * 100),

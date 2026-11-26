@@ -1,11 +1,13 @@
 import {
   CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
+  DEFAULT_ROUNDING,
   STUDENTS_MIN,
   type CatalogResponse,
   type PackageId,
   type PricingDuration,
   type QuoteResponse,
+  type Rounding,
   type SiteCountry,
 } from '@ab/money';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
@@ -54,19 +56,24 @@ export function catalogSearch(sel: CatalogSelection): string {
   return baseParams(sel).toString();
 }
 
-/** Exactly one of `tier` / `count`, as GET /pricing/quote requires. */
-export function quoteSearch(sel: Selection): string {
+/**
+ * Exactly one of `tier` / `count`, as GET /pricing/quote requires. Nearest is the API's own
+ * rounding and is left out, so only the chat's quote sheet, which offers the choice, ever sends
+ * one: the calculator and the package forms keep their requests and their cache keys.
+ */
+export function quoteSearch(sel: Selection, rounding: Rounding = DEFAULT_ROUNDING): string {
   const params = baseParams(sel);
   if (sel.pkg === 'custom') params.set('count', String(sel.count));
   else params.set('tier', sel.pkg);
   params.set('students', String(sel.students));
   params.set('discount', String(sel.discount));
+  if (rounding !== DEFAULT_ROUNDING) params.set('rounding', rounding);
   return params.toString();
 }
 
 // keepPreviousData: the result keeps showing the last quote while the next one loads.
-export const quoteQuery = (sel: Selection) => {
-  const search = quoteSearch(sel);
+export const quoteQuery = (sel: Selection, rounding?: Rounding) => {
+  const search = quoteSearch(sel, rounding);
   return queryOptions({
     queryKey: pricingKeys.quote(search),
     queryFn: () => apiFetch<QuoteResponse>(`/pricing/quote?${search}`),

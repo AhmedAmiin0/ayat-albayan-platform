@@ -3,5 +3,8 @@ export * from './currency';
 export * from './offer-text';
 export * from './price/price';
 export * from './quote/quote';
+export * from './quote/quote.schemas';
+export * from './quote/rounding.schemas';
+export * from './price-list';
 export * from './renewal';
 export * from './phone-country';

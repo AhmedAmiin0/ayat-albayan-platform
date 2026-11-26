@@ -14,6 +14,10 @@ const OWNERS = [
 
 const ownerOf = (whole: string) => OWNERS.find((c) => whole.startsWith(c.dial.slice(1)));
 
+/** The country a calling code («+44») stands for when several entries share it. */
+export const mainCountryOf = (dial: string): Country | undefined =>
+  OWNERS.find((c) => c.dial === dial);
+
 /** Typed with «+» or «00»: a whole international number. */
 export const isInternational = (typed: string): boolean => /^\s*(\+|00)/.test(asciiDigits(typed));
 

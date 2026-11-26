@@ -1932,6 +1932,9 @@
     "sendWhatsapp": "Send on WhatsApp",
     "waIntro": "Assalamu alaikum, here's the package we suggest for you:",
     "trialNote": "Every package starts with a completely free trial lesson. Try first, then decide.",
+    "listIntro": "Assalamu alaikum, here are our package prices:",
+    "listDiscount": "Prices after a {pct}% discount",
+    "listDuration": "Lesson duration {duration}:",
     "tableTitle": "Prices for all plans",
     "tableSubtitle": "Published prices",
     "planColumn": "Package",
@@ -3535,7 +3538,20 @@
       "copy": "Copy",
       "copied": "Offer copied",
       "copyFailed": "Could not copy the offer",
-      "close": "Close the price quote"
+      "close": "Close the price quote",
+      "mode": {
+        "label": "Quote type",
+        "one": "One package",
+        "all": "All prices"
+      },
+      "rounding": {
+        "label": "Rounding",
+        "nearest": "Nearest",
+        "up": "Round up",
+        "down": "Round down"
+      },
+      "clientCountry": "Client's country by number: {country} ({code})",
+      "countryJoin": "or"
     },
     "templateBubble": {
       "buttons": "Template buttons",

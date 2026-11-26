@@ -718,6 +718,38 @@
    ]
   }
  },
+ "GET /pricing/list": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "country": {
+     "type": "string",
+     "pattern": "^[A-Za-z]{2}$"
+    },
+    "students": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 6
+    },
+    "discount": {
+     "default": 0,
+     "type": "number",
+     "minimum": 0,
+     "maximum": 100
+    },
+    "rounding": {
+     "type": "string",
+     "enum": [
+      "nearest",
+      "up",
+      "down"
+     ]
+    }
+   }
+  }
+ },
  "GET /public/report-pages/:publicId": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",

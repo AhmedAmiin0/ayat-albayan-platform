@@ -41,6 +41,51 @@ Site "frequency" labels: weekly «مرة — ٩٠ دقيقة», starter «مرت
 - **WhatsApp offer text** (site format, one line each; the greeting and the package share line 1, joined by a space): «السلام عليكم، الباقة المقترحة لك: name (lessons - duration للحلقة)» · «عدد الطلاب: n» · «الإجمالي: X SYM» [+ «الخصم: d%» + «الإجمالي بعد الخصم: Y SYM»] · trial note «جميع الباقات تبدأ بجلسة تجريبية مجانية بالكامل — جرّب أولاً ثم قرّر.»
 - Platform display follows docs/07: Western digits for every number (the site copy's Eastern digits are changed to Western, wording unchanged).
 
+## 3b. Chat quote sheet: rounding and the whole price list
+
+The «عرض سعر» sheet in the staff chat has two modes: «باقة واحدة» (one package, the offer text of §3) and «كل الأسعار» (every price of the client's country in one message). Both take the discount pills or the free field (any 0–100) and a rounding choice. They only write a message: a package is still priced, with its own discount rules, when it is recorded.
+
+**Rounding.** `quote()` takes `rounding`: `nearest` (default), `up` or `down`, applied to the price after the discount (`afterDiscount`) and to nothing else; the `Quote` shape is unchanged.
+
+- `nearest` is the calculator's `round(total × (1 − d/100))` on the raw product, exactly as §3. Everything that prices a subscription or a payment link calls `quote()` without the option, so those prices do not move.
+- `up` and `down` bring the product to cents first, then `ceil` / `floor` to a whole unit, so floating-point noise never moves a price: 90 × (1 − 70 %) = 27.000000000000004 stays 27 rounding up, and 90 × (1 − 30 %) = 62.99999999999999 stays 63 rounding down. A real cent still counts (261.01 rounds up to 262).
+- With no discount every mode gives the total.
+- `GET /pricing/quote` takes `rounding=nearest|up|down` (left out: nearest; anything else is a 400).
+
+**Price list.** `GET /pricing/list?country=SA&students=2&discount=10&rounding=down`: the same permission (`pricing.read`) and the same query rules as the quote, without `duration`, `tier` or `count`. `country` left out, or not one of the site's countries, lists USD through the stored rate (§4). The answer is `{ country, currency, students, discount, groups: [{ duration, packages }], weekly, fx }`:
+
+- `groups`: 30, 45 and 60 minutes, each with the five packages priced per duration in site order (starter, standard, premium, bulk, monthly);
+- `weekly`: once, because its lesson is always 90 minutes;
+- every entry is the `Quote` of §3 for that package, so a list price always equals the single quote for the same country, students, discount and rounding (`priceList()` in `@ab/money` is built only from `quote()`);
+- `fx`: the rate a USD list used, as on a quote; null for the site's currencies.
+
+**List text** (`priceListText()`, labels from ar.json `pricing`; Arabic whatever the UI language; a blank line between blocks; each price is the one after the discount):
+
+```
+السلام عليكم، هذه أسعار باقاتنا:
+الأسعار بعد خصم 10%                  ← only when the discount is above 0, the percent as chosen (12.5%)
+عدد الطلاب: 2                         ← only for more than one student
+
+مدة الحلقة 30 دقيقة:
+• الباقة الأساسية (8 حلقات): 162 ر.س
+• الباقة المتقدمة (12 حلقة): 243 ر.س
+• الباقة الشاملة (16 حلقة): 315 ر.س
+• باقة الـ28 حلقة (28 حلقة): 495 ر.س
+• الاشتراك الشهري المكثّف (20 حلقة في الشهر): 378 ر.س
+
+مدة الحلقة 45 دقيقة:
+(the same five lines at the 45-minute prices)
+
+مدة الحلقة 60 دقيقة:
+(the same five lines at the 60-minute prices)
+
+باقة الحلقة الأسبوعية (4 حلقات - 90 دقيقة للحلقة): 261 ر.س
+
+جميع الباقات تبدأ بجلسة تجريبية مجانية بالكامل — جرّب أولاً ثم قرّر.
+```
+
+**Client's country from the number.** Above the steps the sheet says where the chat's number is from, for any country in the calling-code list (`packages/shared/data/countries.json`): the longest calling code the E.164 number starts with. One country shows its flag and name («🇪🇬 مصر (+20)»); a code two countries share joins both names with «أو», the larger first («الولايات المتحدة أو كندا (+1)», «روسيا أو كازاخستان (+7)»); a code a country shares with its territories names the country alone («🇬🇧 المملكة المتحدة (+44)»); an unknown code shows nothing. It is information only: the country step still defaults to one of the five site countries, else «دولة أخرى (بالدولار)», and nothing of it goes into the client's message.
+
 ## 4. Currency API
 
 - Provider: **ExchangeRate-API open access** — `https://open.er-api.com/v6/latest/SAR` (no key; daily updates; requires attribution «Rates By Exchange Rate API» linking to https://www.exchangerate-api.com; rate-limited, so the platform fetches at most once per update window).
