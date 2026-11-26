@@ -18,11 +18,18 @@ const TEST = /\.test\.ts$/;
 const namesError = (arg, err) =>
   arg === `${err}.message` || (arg.startsWith('`') && arg.includes(`\${${err}.message}`));
 
-function rewriteLine(line) {
+/** pgError takes a PostgrestError; a name the file also types as `{ message: string }` may not be one. */
+const looselyTyped = (text, err) => {
+  const name = err.split('.').at(-1) ?? err;
+  return new RegExp(`\\b${name}\\??: \\{ message: string \\}`).test(text);
+};
+
+function rewriteLine(line, text) {
   const m = GUARD.exec(line);
   if (m === null) return null;
   const [, indent, err, arg] = m;
-  return namesError(arg, err) ? `${indent}if (${err}) throw pgError(${err});` : null;
+  const mapped = namesError(arg, err) && !looselyTyped(text, err);
+  return mapped ? `${indent}if (${err}) throw pgError(${err});` : null;
 }
 
 function withImport(text) {
@@ -43,7 +50,7 @@ export function rewriteText(text) {
   const unmapped = [];
   let sites = 0;
   const lines = text.split('\n').map((line, i) => {
-    const next = rewriteLine(line);
+    const next = rewriteLine(line, text);
     if (next !== null) sites += 1;
     if (next === null && RAW.test(line)) unmapped.push({ line: i + 1, text: line.trim() });
     return next ?? line;
