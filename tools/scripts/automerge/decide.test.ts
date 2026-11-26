@@ -6,11 +6,16 @@ import { staleComment } from './lockfile.ts';
 
 const action = (facts: ReturnType<typeof aFacts>) => decide(facts).action;
 const lockPr = () => ({ ...aFacts(), files: [{ filename: 'pnpm-lock.yaml' }] });
-const OLD = { base_commit: { sha: 'd'.repeat(40) }, merge_base_commit: { sha: 'b'.repeat(40) } };
+const gained = (filename: string) => ({ known: true, files: [{ filename }] });
+const MOVED = gained('packages/time/package.json');
 
 test('a green eligible PR merges', () => {
   assert.deepEqual(decide(aFacts()), { action: 'merge', reason: 'every condition holds' });
   assert.equal(action(lockPr()), 'merge');
+});
+
+test('a lockfile PR behind develop merges while develop changed no lockfile input', () => {
+  assert.equal(action({ ...lockPr(), behind: gained('apps/api/src/a.ts') }), 'merge');
 });
 
 test('an ineligible, red, widened or unmergeable PR is skipped', () => {
@@ -22,14 +27,21 @@ test('an ineligible, red, widened or unmergeable PR is skipped', () => {
 });
 
 test('a stale lockfile PR gets one comment, then waits', () => {
-  const stale = { ...lockPr(), compare: OLD };
+  const stale = { ...lockPr(), behind: MOVED };
   assert.deepEqual(decide(stale), { action: 'comment', reason: 'needs update from develop' });
   const asked = { ...stale, comments: [{ body: staleComment(HEAD) }] };
   assert.equal(action(asked), 'skip');
 });
 
+test('a lockfile PR waits, with no comment, while what develop changed is not known', () => {
+  const unknown = { ...lockPr(), behind: { known: false, files: [] } };
+  const waits = { action: 'skip', reason: 'what develop changed is not known' };
+  assert.deepEqual(decide(unknown), waits);
+  assert.equal(action({ ...aFacts(), behind: { known: false, files: [] } }), 'merge');
+});
+
 test('eligibility is decided before anything else', () => {
-  const facts = { ...withPr({ labels: [] }), compare: OLD, files: [{ filename: 'package.json' }] };
+  const facts = { ...withPr({ labels: [] }), behind: MOVED, files: [{ filename: 'package.json' }] };
   assert.match(decide(facts).reason, /no auto-merge label/);
 });
 

@@ -1,14 +1,33 @@
-import type { ChangedFile, Comment, Compare } from './facts.schemas.ts';
+import type { Behind, ChangedFile, Comment } from './facts.schemas.ts';
 
-const LOCK = /(^|\/)(package\.json|pnpm-lock\.yaml)$/;
+/** What pnpm resolves from: a change to any of them can change the lockfile. */
+const LOCK_INPUTS = new Set([
+  'package.json',
+  'pnpm-lock.yaml',
+  'pnpm-workspace.yaml',
+  '.npmrc',
+  '.pnpmfile.cjs',
+  '.pnpmfile.mjs',
+]);
 const marker = (head: string): string => `<!-- lane-automerge:stale ${head} -->`;
 
-export const touchesLock = (files: readonly ChangedFile[]): boolean =>
-  files.some((f) => LOCK.test(f.filename));
+const isLockInput = (path: string): boolean =>
+  path.startsWith('patches/') || LOCK_INPUTS.has(path.slice(path.lastIndexOf('/') + 1));
 
-/** Two lockfile PRs never merge on stale bases: such a PR must sit on the develop head. */
-export const staleLockBase = (files: readonly ChangedFile[], compare: Compare): boolean =>
-  touchesLock(files) && compare.merge_base_commit.sha !== compare.base_commit.sha;
+/** A rename carries the old path too: moving an input away still changes it. */
+export const touchesLock = (files: readonly ChangedFile[]): boolean =>
+  files.some((f) => [f.filename, f.previous_filename ?? ''].some(isLockInput));
+
+/**
+ * Two lockfile changes never merge without knowing each other: a lockfile PR is stale once
+ * develop, since the PR's merge base, changed a lockfile input too.
+ */
+export const staleLockBase = (files: readonly ChangedFile[], behind: Behind): boolean =>
+  touchesLock(files) && touchesLock(behind.files);
+
+/** What develop changed could not be read: a lockfile PR waits for a run that can read it. */
+export const unknownLockBase = (files: readonly ChangedFile[], behind: Behind): boolean =>
+  touchesLock(files) && !behind.known;
 
 export const staleComment = (head: string): string =>
   `needs update from develop\n\n${marker(head)}`;
