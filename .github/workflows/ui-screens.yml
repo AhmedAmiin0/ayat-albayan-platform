@@ -77,18 +77,18 @@ jobs:
       # the head commit.
       - name: Base screenshots (report only)
         if: inputs.base_ref != ''
-        continue-on-error: true
         env:
           CI: 'true'
           UI_SHOTS: '1'
           BASE_REF: ${{ inputs.base_ref }}
         run: |
-          git fetch --no-tags --depth=1 origin "$BASE_REF"
-          git checkout --detach FETCH_HEAD
-          pnpm i --frozen-lockfile
-          pnpm turbo build --filter=e2e^...
-          pnpm --filter e2e exec playwright test --project=desktop --retries=0 --trace=off \
-            screens/ui-screens.spec.ts || echo "::warning::base screenshots had failures"
+          if git fetch --no-tags --depth=1 origin "$BASE_REF" && git checkout --detach FETCH_HEAD \
+            && pnpm i --frozen-lockfile && pnpm turbo build --filter=e2e^...; then
+            pnpm --filter e2e exec playwright test --project=desktop --retries=0 --trace=off \
+              screens/ui-screens.spec.ts || echo "::warning::base screenshots had failures"
+          else
+            echo "::warning::base checkout, install or build failed"
+          fi
           if [ -d e2e/ui-screens ]; then mv e2e/ui-screens "$RUNNER_TEMP/base-shots"; fi
       - name: Back to the head commit
         if: inputs.base_ref != ''
