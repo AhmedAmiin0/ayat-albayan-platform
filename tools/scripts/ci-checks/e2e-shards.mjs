@@ -46,14 +46,8 @@ export function shardSizes(groups, ms, total) {
   const best = Array.from({ length: total + 1 }, () => new Array(n + 1).fill(Infinity));
   const cut = Array.from({ length: total + 1 }, () => new Array(n + 1).fill(0));
   best[0][0] = 0;
-  for (let k = 1; k <= total; k++) {
-    for (let i = 0; i <= n; i++) {
-      for (let j = 0; j <= i; j++) {
-        const v = Math.max(best[k - 1][j], pre[i] - pre[j]);
-        if (v < best[k][i]) [best[k][i], cut[k][i]] = [v, j];
-      }
-    }
-  }
+  for (let k = 1; k <= total; k++)
+    for (let i = 0; i <= n; i++) [best[k][i], cut[k][i]] = bestCut(best[k - 1], pre, i);
   const sizes = [];
   for (let k = total, i = n; k > 0; k--) {
     const j = cut[k][i];
@@ -63,16 +57,27 @@ export function shardSizes(groups, ms, total) {
   return sizes;
 }
 
+function bestCut(prev, pre, i) {
+  let out = [Infinity, 0];
+  for (let j = 0; j <= i; j++) {
+    const v = Math.max(prev[j], pre[i] - pre[j]);
+    if (v < out[0]) out = [v, j];
+  }
+  return out;
+}
+
+function addPart(out, part) {
+  for (const [file, row] of Object.entries(part)) {
+    const target = (out[file] ??= {});
+    for (const [project, ms] of Object.entries(row))
+      target[project] = Math.round((target[project] ?? 0) + ms);
+  }
+}
+
 /** Sums several shard outputs (each file ran on one shard) into one { file: { project: ms } } map. */
 export function mergeDurations(parts) {
   const out = {};
-  for (const part of parts) {
-    for (const [file, row] of Object.entries(part)) {
-      const target = (out[file] ??= {});
-      for (const [project, ms] of Object.entries(row))
-        target[project] = Math.round((target[project] ?? 0) + ms);
-    }
-  }
+  for (const part of parts) addPart(out, part);
   return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a.localeCompare(b)));
 }
 
