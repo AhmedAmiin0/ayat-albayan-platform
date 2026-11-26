@@ -14,7 +14,7 @@ const form = vi.hoisted(() => ({
   ready: false,
   submit: vi.fn(async () => undefined),
 }));
-vi.mock('@/features/sign-in/use-student-sign-in', () => ({ useStudentSignIn: () => form }));
+vi.mock('./use-student-password-form', () => ({ useStudentPasswordForm: () => ({ form }) }));
 
 const submit = () => screen.getByRole('button', { name: t.auth.submit });
 

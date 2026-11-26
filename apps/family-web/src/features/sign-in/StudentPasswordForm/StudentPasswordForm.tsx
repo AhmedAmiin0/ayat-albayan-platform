@@ -1,18 +1,12 @@
 import { PasswordInput, Button, Field, FormAlert, Input, t } from '@ab/web-kit';
 import type { StudentPasswordFormProps } from './StudentPasswordForm.types';
+import { submitWith } from '@/features/sign-in/sign-in.helpers';
 import { useStudentPasswordForm } from './use-student-password-form';
 
 export function StudentPasswordForm({ children }: StudentPasswordFormProps) {
   const { form } = useStudentPasswordForm();
   return (
-    <form
-      noValidate
-      className="grid gap-[22px]"
-      onSubmit={(e) => {
-        e.preventDefault();
-        void form.submit();
-      }}
-    >
+    <form noValidate className="grid gap-[22px]" onSubmit={submitWith(form.submit)}>
       <Field
         label={t.familyApp.signIn.studentCode}
         hint={t.familyAuth.studentUsernameHint}
