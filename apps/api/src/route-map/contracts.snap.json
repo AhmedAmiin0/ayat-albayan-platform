@@ -251,6 +251,143 @@
    ]
   }
  },
+ "GET /admin-tasks": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10000
+    },
+    "pageSize": {
+     "default": 25,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 100
+    },
+    "open": {
+     "default": "true",
+     "type": "string",
+     "enum": [
+      "true",
+      "false"
+     ]
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "kind": {
+        "type": "string",
+        "enum": [
+         "renewal_due",
+         "subscription_unpaid"
+        ]
+       },
+       "subject_type": {
+        "type": "string"
+       },
+       "subject_id": {
+        "type": "string"
+       },
+       "student": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string"
+           },
+           "code": {
+            "type": "string"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "code",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "title": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "due_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "done_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "kind",
+       "subject_type",
+       "subject_id",
+       "student",
+       "title",
+       "due_at",
+       "done_at",
+       "created_at"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
+  }
+ },
  "GET /admin/numbers/:id/evolution/qr": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -5541,6 +5678,102 @@
    },
    "required": [
     "role_id"
+   ]
+  }
+ },
+ "POST /admin-tasks/:id/done": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "kind": {
+     "type": "string",
+     "enum": [
+      "renewal_due",
+      "subscription_unpaid"
+     ]
+    },
+    "subject_type": {
+     "type": "string"
+    },
+    "subject_id": {
+     "type": "string"
+    },
+    "student": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "code": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "id",
+        "code",
+        "name"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "title": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "due_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "done_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "kind",
+    "subject_type",
+    "subject_id",
+    "student",
+    "title",
+    "due_at",
+    "done_at",
+    "created_at"
    ]
   }
  },

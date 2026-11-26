@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../core/http';
+import { ApiError, type ApiClient } from '../../../core/http';
 import { adminTaskCalls } from './admin-tasks-api';
 
 const ID = '5a000000-0000-4000-8000-000000000001';

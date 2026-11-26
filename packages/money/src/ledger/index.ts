@@ -17,6 +17,7 @@ export * from './usage/receivables/receivables.schemas';
 export * from './earnings/payout';
 export * from './earnings/payout-breakdown.schemas';
 export * from './schemas';
+export * from './tasks/admin-task.schemas';
 export * from './usage/tiers';
 export * from './usage/usage';
 export type * from './dashboard-views';

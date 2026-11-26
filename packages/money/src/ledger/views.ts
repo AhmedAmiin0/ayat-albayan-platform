@@ -1,4 +1,4 @@
-import type { AdminTaskKind, Duration, PackageSize, SubscriptionStatus } from '@ab/catalog';
+import type { Duration, PackageSize, SubscriptionStatus } from '@ab/catalog';
 import type { QuoteResponse } from '../pricing/quote';
 
 // Money responses (docs/11 §5–9). snake_case rows; instants ISO UTC; money as numbers
@@ -60,17 +60,4 @@ export interface TeacherBalanceView {
   student_id: string;
   remaining: number;
   packages: BalanceView[];
-}
-
-export interface AdminTaskView {
-  id: string;
-  kind: AdminTaskKind;
-  subject_type: string;
-  subject_id: string;
-  /** For subscription tasks: the student, so the UI can name them. */
-  student: { id: string; code: string; name: string } | null;
-  title: string | null;
-  due_at: string | null;
-  done_at: string | null;
-  created_at: string;
 }

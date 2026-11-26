@@ -26,14 +26,6 @@ export const subscriptionQuoteSchema = z.object({
 });
 export type SubscriptionQuote = z.output<typeof subscriptionQuoteSchema>;
 
-/** GET /admin-tasks?open=true&page&pageSize (S7). */
-export const adminTaskListQuery = pageQuerySchema.extend({
-  open: z
-    .enum(['true', 'false'])
-    .default('true')
-    .transform((v) => v === 'true'),
-});
-
 /** The calculator inputs → one student's quote (S2 step 2): `students: 1`, country resolved. */
 export function quoteQueryFor(p: SubscriptionPricing, country: string | undefined): QuoteQuery {
   const common = { duration: p.duration, discount: p.discount, students: 1, country };
