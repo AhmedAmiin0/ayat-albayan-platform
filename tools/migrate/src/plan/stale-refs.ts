@@ -19,26 +19,41 @@ interface Stale {
 
 type TableOf = (entity: EntityName) => string;
 
-/** Reads only: which refs of planned creates point at rows that are gone. */
-export async function findStale(o: {
+interface FindStaleInput {
   db: Pick<TargetDb, 'select'>;
   plan: PlanWithChanges;
   existing: ReadonlyMap<string, Existing>;
   tableOf: TableOf;
-}): Promise<Stale> {
-  const byTable = new Map<string, Map<string, string[]>>();
+}
+
+type RefTarget = readonly [table: string, id: string, key: string];
+
+type IdsByTable = Map<string, Map<string, string[]>>;
+
+function createRefTargets(o: FindStaleInput): RefTarget[] {
   const creates = o.plan.items.filter((item) => item.action === 'create');
-  for (const nk of creates.flatMap((item) => Object.values(item.record.refs))) {
+  const refs = creates.flatMap((item) => Object.values(item.record.refs));
+  return refs.flatMap((nk): RefTarget[] => {
     const id = o.existing.get(keyId(nk))?.targetId;
     const table = o.tableOf(nk.entity);
-    if (!id || table.includes('.')) continue;
+    return !id || table.includes('.') ? [] : [[table, id, keyId(nk)]];
+  });
+}
+
+function groupByTable(targets: readonly RefTarget[]): IdsByTable {
+  const byTable: IdsByTable = new Map();
+  for (const [table, id, key] of targets) {
     const ids = byTable.get(table) ?? new Map<string, string[]>();
-    ids.set(id, [...(ids.get(id) ?? []), keyId(nk)]);
+    ids.set(id, [...(ids.get(id) ?? []), key]);
     byTable.set(table, ids);
   }
+  return byTable;
+}
+
+async function missingKeys(db: FindStaleInput['db'], byTable: IdsByTable): Promise<Set<string>> {
   const missing = new Set<string>();
   for (const [table, ids] of byTable) {
-    const rows = await o.db.select<{ id: string }>({
+    const rows = await db.select<{ id: string }>({
       text: `select id::text as id from ${tableIdent(table)} where id::text = any($1)`,
       params: [[...ids.keys()]],
     });
@@ -46,14 +61,22 @@ export async function findStale(o: {
     const lost = [...ids].filter(([id]) => !found.has(id)).flatMap(([, keys]) => keys);
     for (const k of lost) missing.add(k);
   }
-  const required = new Set<string>();
-  if (missing.size === 0) return { missing, required };
-  const cols = await o.db.select<{ t: string; c: string }>({
+  return missing;
+}
+
+async function requiredColumns(db: FindStaleInput['db']): Promise<Set<string>> {
+  const cols = await db.select<{ t: string; c: string }>({
     text: `select table_name as t, column_name as c from information_schema.columns
            where table_schema = 'public' and is_nullable = 'NO'`,
     params: [],
   });
-  for (const r of cols) required.add(`${r.t}.${r.c}`);
+  return new Set(cols.map((r) => `${r.t}.${r.c}`));
+}
+
+/** Reads only: which refs of planned creates point at rows that are gone. */
+export async function findStale(o: FindStaleInput): Promise<Stale> {
+  const missing = await missingKeys(o.db, groupByTable(createRefTargets(o)));
+  const required = missing.size === 0 ? new Set<string>() : await requiredColumns(o.db);
   return { missing, required };
 }
 
