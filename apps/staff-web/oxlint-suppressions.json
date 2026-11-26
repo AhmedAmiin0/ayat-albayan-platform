@@ -2818,17 +2818,6 @@
       "count": 1
     }
   },
-  "src/features/people/guardians/api.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/features/people/guardians/guardian-form.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -5200,13 +5189,13 @@
   },
   "src/features/teaching/booking/api.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "complexity": {
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 4
+      "count": 3
     },
     "typescript/dot-notation": {
       "count": 9

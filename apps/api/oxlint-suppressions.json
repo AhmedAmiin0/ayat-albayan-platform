@@ -4779,11 +4779,6 @@
       "count": 1
     }
   },
-  "src/modules/people/guardians/guardians.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/people/guardians/guardians.mapper.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -4792,11 +4787,6 @@
   "src/modules/people/guardians/guardians.service.ts": {
     "ab/forbidden-imports": {
       "count": 2
-    }
-  },
-  "src/modules/people/guardians/http.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
     }
   },
   "src/modules/people/me/account/account.auth.ts": {
@@ -5083,9 +5073,6 @@
     },
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
     },
     "ab/zod-inputs": {
       "count": 4

@@ -5147,9 +5147,6 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/forbidden-imports": {
       "count": 1
     }
   },
