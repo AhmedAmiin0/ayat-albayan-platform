@@ -9,7 +9,8 @@ export interface ParticipantMeta {
   role: JoinRole;
 }
 
-export const participantMeta = (role: JoinRole): string => JSON.stringify({ role } satisfies ParticipantMeta);
+export const participantMeta = (role: JoinRole): string =>
+  JSON.stringify({ role } satisfies ParticipantMeta);
 
 /** The role in a participant's metadata, or null when absent or malformed. */
 export function roleOfMeta(metadata: string | undefined | null): JoinRole | null {
@@ -36,7 +37,13 @@ export function canGrantShare(actor: JoinRole | null, target: JoinRole | null): 
 }
 
 /** Seniority in the room: a staff member mutes only someone below them. */
-const RANK: Readonly<Record<JoinRole, number>> = { admin: 4, teacher: 3, assistant: 2, sales: 1, guest: 0 };
+const RANK: Readonly<Record<JoinRole, number>> = {
+  admin: 4,
+  teacher: 3,
+  assistant: 2,
+  sales: 1,
+  guest: 0,
+};
 
 /** Mutes lower ranks only (admin > teacher > assistant > sales > guest). */
 export function canMute(actor: JoinRole | null, target: JoinRole | null): boolean {

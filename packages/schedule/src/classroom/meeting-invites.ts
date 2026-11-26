@@ -36,7 +36,11 @@ export const meetingInviteeInputSchema = z.discriminatedUnion('kind', [
 ]);
 export type MeetingInviteeInput = z.output<typeof meetingInviteeInputSchema>;
 
-export const meetingDurationSchema = z.number().int().min(MEETING_DURATION_MIN).max(MEETING_DURATION_MAX);
+export const meetingDurationSchema = z
+  .number()
+  .int()
+  .min(MEETING_DURATION_MIN)
+  .max(MEETING_DURATION_MAX);
 
 /** PATCH /meetings/:id (creator or admin): a new title and/or a new time. */
 export const updateMeetingSchema = z
@@ -57,7 +61,9 @@ export const addMeetingInviteesSchema = z.object({
 export const resendMeetingInviteSchema = z.object({ clientRequestId: z.uuid() });
 
 /** GET /meetings/invitee-options?q= */
-export const meetingInviteeOptionsQuerySchema = z.object({ q: z.string().trim().max(60).optional() });
+export const meetingInviteeOptionsQuerySchema = z.object({
+  q: z.string().trim().max(60).optional(),
+});
 
 /** GET /meetings/:id/invitees (creator or admin): never a phone. */
 export interface MeetingInviteeView {

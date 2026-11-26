@@ -6,7 +6,10 @@ import { timeOfDay } from '@ab/core';
 // size); scheduling.ts adds `dayTimes` to the booking body and refines it here.
 
 /** One weekday with a time that differs from the booking's startTimeLocal. */
-export const dayTimeSchema = z.object({ weekday: z.int().min(0).max(6), startTimeLocal: timeOfDay });
+export const dayTimeSchema = z.object({
+  weekday: z.int().min(0).max(6),
+  startTimeLocal: timeOfDay,
+});
 
 /** Optional: absent = every byday at startTimeLocal (old clients behave exactly as before). */
 export const dayTimesSchema = z.array(dayTimeSchema).max(7).optional();
