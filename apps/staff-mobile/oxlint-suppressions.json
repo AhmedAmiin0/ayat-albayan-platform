@@ -5316,11 +5316,6 @@
       "count": 4
     }
   },
-  "src/teacher/lib/students-queries.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/teacher/report/components/AttachmentsField.tsx": {
     "no-nested-ternary": {
       "count": 1
