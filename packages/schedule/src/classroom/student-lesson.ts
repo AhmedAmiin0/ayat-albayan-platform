@@ -9,7 +9,11 @@ import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig, type WindowLess
  *   3. else the next lesson whose room has not opened yet (earliest start).
  * null when none of them is left. Closed rooms are never picked.
  */
-export function pickStudentLesson<T extends WindowLesson>(lessons: readonly T[], now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): T | null {
+export function pickStudentLesson<T extends WindowLesson>(
+  lessons: readonly T[],
+  now: Date,
+  win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
+): T | null {
   const t = now.getTime();
   const byStart = [...lessons].sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at));
   const open = byStart.filter((l) => joinWindow(l, now, win).state === 'open');

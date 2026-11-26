@@ -6,7 +6,7 @@ import { personName } from '../../keys.ts';
 import { issuesFor } from '../../sources/sheets/issues.ts';
 import { leadSource, teacherFromText } from '../../sources/values.ts';
 import type { RowIssue } from '../../types.ts';
-import type { PersonFields, PersonRow } from './rows.ts';
+import type { PersonFields, PersonRow } from './rows.types.ts';
 import { latinMatchesArabic } from './translit.ts';
 
 export interface Person extends PersonRow {
@@ -36,8 +36,7 @@ function same(field: Field, a: unknown, b: unknown): boolean {
 
 const ref = (p: { ref: PersonRow['ref'] }) => `${p.ref.source}:${p.ref.tab}:${p.ref.row}`;
 
-/** Merges `row` into `into` (first non-null wins); every disagreement becomes an issue. */
-export function mergeInto(into: Person, row: PersonRow): RowIssue[] {
+function mergeFields(into: Person, row: PersonRow): RowIssue[] {
   const issues: RowIssue[] = [];
   const fields = { ...into.fields };
   for (const k of Object.keys(fields) as Field[]) {
@@ -58,6 +57,12 @@ export function mergeInto(into: Person, row: PersonRow): RowIssue[] {
       );
   }
   into.fields = fields;
+  return issues;
+}
+
+/** Merges `row` into `into` (first non-null wins); every disagreement becomes an issue. */
+export function mergeInto(into: Person, row: PersonRow): RowIssue[] {
+  const issues = mergeFields(into, row);
   const spelling = personName(row.name);
   if (spelling !== personName(into.name) && !into.aliases.some((a) => personName(a) === spelling))
     into.aliases.push(row.name);

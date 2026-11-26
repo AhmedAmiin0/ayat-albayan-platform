@@ -42,6 +42,21 @@ const validDay = (s: string): boolean =>
   !Number.isNaN(Date.parse(`${s}T00:00:00Z`)) &&
   new Date(`${s}T00:00:00Z`).toISOString().startsWith(s);
 
+const inExpiryRange = (days: string): boolean =>
+  /^\d+$/.test(days) && Number(days) >= 1 && Number(days) <= 90;
+
+function checkFrom(from: string | undefined): void {
+  if (from !== undefined && !validDay(from))
+    throw new Error(`--from must be a date YYYY-MM-DD (got ${from})`);
+}
+
+function parseExpiryDays(days: string | undefined): number | undefined {
+  if (days === undefined) return undefined;
+  if (!inExpiryRange(days))
+    throw new Error(`--expiry-days must be a whole number 1..90 (got ${days})`);
+  return Number(days);
+}
+
 /** --only names entities; --from is a real calendar day; --expiry-days is the setting's 1..90. */
 function checkScope(v: {
   from?: string;
@@ -49,16 +64,26 @@ function checkScope(v: {
   'expiry-days'?: string;
 }): number | undefined {
   if (v.only !== undefined) parseOnly(v.only);
-  if (v.from !== undefined && !validDay(v.from))
-    throw new Error(`--from must be a date YYYY-MM-DD (got ${v.from})`);
-  const days = v['expiry-days'];
-  if (days === undefined) return undefined;
-  if (!/^\d+$/.test(days) || Number(days) < 1 || Number(days) > 90)
-    throw new Error(`--expiry-days must be a whole number 1..90 (got ${days})`);
-  return Number(days);
+  checkFrom(v.from);
+  return parseExpiryDays(v['expiry-days']);
 }
 
 const NEEDS_TARGET: readonly Command[] = ['dry-run', 'apply', 'validate'];
+
+function parseCommand(command: string | undefined): Command {
+  const cmd = COMMANDS.find((c) => c === command);
+  if (cmd === undefined) throw new Error(USAGE);
+  return cmd;
+}
+
+function checkTarget(cmd: Command, target: string | undefined): void {
+  if (NEEDS_TARGET.includes(cmd) && !target) throw new Error(`${cmd} needs --target\n${USAGE}`);
+}
+
+function checkSince(since: string | undefined): void {
+  if (since && since !== 'last' && Number.isNaN(Date.parse(since)))
+    throw new Error(`--since must be an ISO date-time or 'last' (got ${since})`);
+}
 
 export function parseCli(argv: readonly string[]): CliArgs {
   const { values, positionals } = parseArgs({
@@ -76,22 +101,17 @@ export function parseCli(argv: readonly string[]): CliArgs {
       'expiry-days': { type: 'string' },
     },
   });
-  const command = positionals[0];
-  if (!command || !(COMMANDS as readonly string[]).includes(command)) throw new Error(USAGE);
-  const cmd = command as Command;
-  if (NEEDS_TARGET.includes(cmd) && !values.target)
-    throw new Error(`${cmd} needs --target\n${USAGE}`);
-  if (values.since && values.since !== 'last' && Number.isNaN(Date.parse(values.since))) {
-    throw new Error(`--since must be an ISO date-time or 'last' (got ${values.since})`);
-  }
+  const cmd = parseCommand(positionals[0]);
+  checkTarget(cmd, values.target);
+  checkSince(values.since);
   const expiryDays = checkScope(values);
   return {
     command: cmd,
     target: values.target,
     zip: values.zip,
     since: values.since,
-    confirmProduction: values['confirm-production'] === true,
-    createsOnly: values['creates-only'] === true,
+    confirmProduction: values['confirm-production'],
+    createsOnly: values['creates-only'],
     from: values.from,
     only: values.only,
     expiryDays,

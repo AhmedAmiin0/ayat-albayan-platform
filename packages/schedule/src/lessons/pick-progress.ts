@@ -10,7 +10,11 @@ export interface PickProgressTexts {
 }
 
 /** The progress line for `picked` of `need` days; null once exactly `need` are picked. */
-export function pickProgress(texts: PickProgressTexts, picked: number, need: number): string | null {
+export function pickProgress(
+  texts: PickProgressTexts,
+  picked: number,
+  need: number,
+): string | null {
   if (picked === need) return null;
   if (picked < need) {
     return texts.pickProgress

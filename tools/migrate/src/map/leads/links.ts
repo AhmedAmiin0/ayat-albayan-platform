@@ -21,21 +21,31 @@ function teacherPhones(bundle: Pick<SourceBundle, 'earlier'>): Set<string> {
   return teachers;
 }
 
+function jobReplyPhones(bundle: Pick<SourceBundle, 'sheets'>): string[] {
+  const phones: string[] = [];
+  for (const row of bundle.sheets.hub_job_replies ?? []) {
+    const raw = row.fields.phone;
+    const p = toE164(typeof raw === 'boolean' ? null : raw);
+    if (p) phones.push(p.e164);
+  }
+  return phones;
+}
+
+function jobApplicantPhones(bundle: Pick<SourceBundle, 'sheets'>, sheet: SheetLeads): Set<string> {
+  const jobApplicants = new Set<string>();
+  for (const [phone, lead] of sheet.byPhone)
+    if (lead.status === 'job_applicant') jobApplicants.add(phone);
+  for (const p of jobReplyPhones(bundle)) jobApplicants.add(p);
+  return jobApplicants;
+}
+
 export function otherPeople(
   bundle: Pick<SourceBundle, 'earlier' | 'sheets'>,
   sheet: SheetLeads,
 ): OtherPeople {
   const guardians = new Set((bundle.earlier.get('guardians') ?? []).map((d) => d.key.key));
   const teachers = teacherPhones(bundle);
-  const jobApplicants = new Set<string>();
-  for (const [phone, lead] of sheet.byPhone)
-    if (lead.status === 'job_applicant') jobApplicants.add(phone);
-  for (const row of bundle.sheets.hub_job_replies ?? []) {
-    const raw = row.fields.phone;
-    const p = toE164(typeof raw === 'boolean' ? null : raw);
-    if (p) jobApplicants.add(p.e164);
-  }
-  return { guardians, teachers, jobApplicants };
+  return { guardians, teachers, jobApplicants: jobApplicantPhones(bundle, sheet) };
 }
 
 /** Why a phone gets no lead, or undefined when it may be one. */

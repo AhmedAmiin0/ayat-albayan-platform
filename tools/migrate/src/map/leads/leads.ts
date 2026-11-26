@@ -7,7 +7,7 @@ import { type CrmContact, crmIndex, isTestRow } from './contacts.ts';
 import { jobSeekerHints } from './job-seeker.ts';
 import { type OtherPeople, notALead, otherPeople } from './links.ts';
 import { crmLeadRecord, sheetLeadRecord } from './record.ts';
-import { type SheetLead, sheetLeads } from './sheet-leads.ts';
+import { type SheetLead, type SheetLeads, sheetLeads } from './sheet-leads.ts';
 
 const reject = (o: Omit<RowIssue, 'entity' | 'severity'>): RowIssue => ({
   entity: 'leads',
@@ -63,6 +63,27 @@ function fromSheet(s: SheetLead, people: OtherPeople): Mapped | undefined {
   };
 }
 
+function crmLeads(contacts: Iterable<CrmContact>, ctx: Ctx) {
+  const leads: Mapped[] = [];
+  const phones = new Set<string>();
+  for (const c of contacts) {
+    if (c.phone) phones.add(c.phone.e164);
+    const m = fromContact(c, ctx);
+    if (m) leads.push(m);
+  }
+  return { leads, phones };
+}
+
+function sheetOnlyLeads(sheet: SheetLeads, o: { inCrm: Set<string>; people: OtherPeople }) {
+  const out: Mapped[] = [];
+  for (const [phone, s] of sheet.byPhone) {
+    if (o.inCrm.has(phone)) continue;
+    const m = fromSheet(s, o.people);
+    if (m) out.push(m);
+  }
+  return out;
+}
+
 export function mapLeads(bundle: SourceBundle): Mapped[] {
   const idx = crmIndex(bundle.crm);
   const sheet = sheetLeads(bundle);
@@ -71,18 +92,11 @@ export function mapLeads(bundle: SourceBundle): Mapped[] {
     sheet: sheet.byPhone,
     messages: idx.messages,
   };
-  const out: Mapped[] = [];
-  const inCrm = new Set<string>();
-  for (const c of idx.contacts.values()) {
-    if (c.phone) inCrm.add(c.phone.e164);
-    const m = fromContact(c, ctx);
-    if (m) out.push(m);
-  }
-  for (const [phone, s] of sheet.byPhone) {
-    if (inCrm.has(phone)) continue;
-    const m = fromSheet(s, ctx.people);
-    if (m) out.push(m);
-  }
+  const crm = crmLeads(idx.contacts.values(), ctx);
+  const out: Mapped[] = [
+    ...crm.leads,
+    ...sheetOnlyLeads(sheet, { inCrm: crm.phones, people: ctx.people }),
+  ];
   // Sheet rows with a bad phone or an unknown status: one entry per issue, no record.
   for (const i of sheet.issues) out.push({ ok: false, ref: i.ref, issues: [i] });
   return out;

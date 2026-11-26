@@ -67,6 +67,13 @@ describe('students: imported status', () => {
     expect(r.by('students')[0]?.record.columns.status).toBe('pending_renewal');
   });
 
+  it('an unpaid HEART row priced by a FIN row of its month is paid; one without a date is not', () => {
+    const fin = row({ revenue_desc: 'Layan', revenue_amount: 500 }, { source: 'FIN', tab: 'sept' });
+    const unpaid = heart('2026-09-15', 'Not paid');
+    expect(statusOf({ heart_subscriptions: [unpaid], fin_sept: [fin] })).toBe('active');
+    expect(statusOf({ heart_subscriptions: [heart('')] })).toBe('new');
+  });
+
   it('the newest paid period wins', () => {
     const both = [heart('2026-07-01'), heart('2026-09-20')];
     expect(statusOf({ heart_subscriptions: both })).toBe('active');

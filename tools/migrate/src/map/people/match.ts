@@ -11,12 +11,13 @@ export interface StudentIndex {
 }
 
 export function studentIndex(students: readonly Desired[] | undefined): StudentIndex {
+  const all = students ?? [];
   const byPhone = new Map<string, Desired[]>();
-  for (const s of students ?? []) {
+  for (const s of all) {
     const phone = s.record.refs.guardian_id?.key;
     if (phone) byPhone.set(phone, [...(byPhone.get(phone) ?? []), s]);
   }
-  return { all: students ?? [], byPhone };
+  return { all, byPhone };
 }
 
 type Found = { ok: true; student: Desired } | { ok: false; reason: 'not_found' | 'ambiguous' };
@@ -48,28 +49,42 @@ function byName(cands: readonly Desired[], name: string): Found | null {
   return null;
 }
 
+function soleChild(cands: readonly Desired[], hits: readonly Desired[]): Desired | undefined {
+  const [only] = hits.length === 1 ? hits : cands;
+  return hits.length === 1 || cands.length === 1 ? only : undefined;
+}
+
+const latinOf = (name: string | null): string | null =>
+  name !== null && !ARABIC.test(name) ? name : null;
+
+function bySkeleton(cands: readonly Desired[], name: string | null): Found | null {
+  const latin = latinOf(name);
+  // Latin names (HEART, FIN) against the Arabic registry: consonant skeletons pick the child.
+  const hits = latin === null ? [] : cands.filter((s) => latinMatchesArabic(latin, nameOf(s)));
+  const only = soleChild(cands, hits);
+  // One child on the phone: accept unless an Arabic name clearly names someone else.
+  const accepts = latin !== null || !name;
+  return only && accepts ? { ok: true, student: only } : null;
+}
+
+const unmatched = (cands: readonly Desired[]): Found => ({
+  ok: false,
+  reason: cands.length > 1 ? 'ambiguous' : 'not_found',
+});
+
 function byPhone(ix: StudentIndex, phone: string, name: string | null): Found {
   const cands = ix.byPhone.get(phone) ?? [];
   const named = name ? byName(cands, name) : null;
-  if (named) return named;
-  const latin = name !== null && !ARABIC.test(name);
-  // Latin names (HEART, FIN) against the Arabic registry: consonant skeletons pick the child.
-  const hits = latin ? cands.filter((s) => latinMatchesArabic(name, nameOf(s))) : [];
-  const [only] = hits.length === 1 ? hits : cands;
-  // One child on the phone: accept unless an Arabic name clearly names someone else.
-  if ((hits.length === 1 || cands.length === 1) && only && (latin || !name))
-    return { ok: true, student: only };
-  return { ok: false, reason: cands.length > 1 ? 'ambiguous' : 'not_found' };
+  return named ?? bySkeleton(cands, name) ?? unmatched(cands);
 }
+
+const nameTiers = (ix: StudentIndex, teacher: string | null | undefined): (readonly Desired[])[] =>
+  teacher ? [ix.all.filter((s) => s.record.refs.teacher_id?.key === teacher), ix.all] : [ix.all];
 
 export function findStudent(ix: StudentIndex, q: StudentQuery): Found {
   if (q.phone) return byPhone(ix, q.phone, q.name ?? null);
   if (!q.name) return { ok: false, reason: 'not_found' };
-  const teacher = q.teacher;
-  const tiers = teacher
-    ? [ix.all.filter((s) => s.record.refs.teacher_id?.key === teacher), ix.all]
-    : [ix.all];
-  for (const cands of tiers) {
+  for (const cands of nameTiers(ix, q.teacher)) {
     const r = byName(cands, q.name);
     if (r) return r;
   }

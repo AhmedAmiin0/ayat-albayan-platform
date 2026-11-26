@@ -26,6 +26,8 @@ export interface HeartSub {
 }
 
 type HeartResult = HeartSub | { ref: SourceRow['ref']; issues: RowIssue[] };
+type Fields = SourceRow['fields'];
+type Located = { ok: true; student: NaturalKey } | { ok: false; issue: IssueInput };
 
 function teacherCheck(o: { ix: StudentIndex; student: NaturalKey; raw: string | null }): boolean {
   const slug = teacherFromText(o.raw);
@@ -34,39 +36,64 @@ function teacherCheck(o: { ix: StudentIndex; student: NaturalKey; raw: string | 
   return !slug || !own || slug === own;
 }
 
+function unmatched(o: { ix: StudentIndex; phone: string; reason: string }): IssueInput {
+  // Several children fit the Latin name (siblings): the owner picks, nothing is rejected.
+  const kids = (o.ix.byPhone.get(o.phone) ?? []).map((s) => `«${s.record.columns.name}»`);
+  const ambiguous = o.reason === 'ambiguous';
+  return {
+    code: 'missing_ref',
+    severity: ambiguous ? 'review' : 'reject',
+    field: 'student',
+    detail: ambiguous ? `ambiguous: one of ${kids.join(', ')}` : o.reason,
+  };
+}
+
+function locate(f: Fields, o: { ix: StudentIndex; name: string | null }): Located {
+  if (testReason({ names: [o.name] }))
+    return { ok: false, issue: { code: 'test_row', severity: 'reject' } };
+  const phone = phoneCell(f.phone);
+  if (!phone.ok) {
+    const detail = phone.reason;
+    return { ok: false, issue: { code: 'bad_phone', severity: 'reject', field: 'phone', detail } };
+  }
+  const found = findStudent(o.ix, { phone: phone.e164, name: o.name });
+  if (!found.ok)
+    return { ok: false, issue: unmatched({ ix: o.ix, phone: phone.e164, reason: found.reason }) };
+  return { ok: true, student: found.student.key };
+}
+
+function warnings(f: Fields, o: { ix: StudentIndex; student: NaturalKey; priced: boolean }) {
+  const checks: [boolean, IssueInput][] = [
+    [
+      !teacherCheck({ ix: o.ix, student: o.student, raw: text(f.teacher) }),
+      { code: 'conflict', severity: 'warn', field: 'teacher' },
+    ],
+    [!o.priced, { code: 'missing_field', severity: 'review', field: 'price' }],
+  ];
+  return checks.filter(([raised]) => raised).map(([, i]) => i);
+}
+
+const isPaid = (f: Fields): boolean => /^paid$/i.test(text(f.paid_status) ?? '');
+
+function heartPrice(bundle: SourceBundle, o: { name: string | null; startsOn: string }) {
+  return o.name ? finPrice(bundle, { name: o.name, month: o.startsOn.slice(0, 7) }) : null;
+}
+
 function heartRow(row: SourceRow, o: { ix: StudentIndex; bundle: SourceBundle }): HeartResult {
   const f = row.fields;
   const issue = issuesFor('subscriptions', row.ref);
   const fail = (i: IssueInput) => ({ ref: row.ref, issues: [issue(i)] });
   const name = text(f.name);
-  if (testReason({ names: [name] })) return fail({ code: 'test_row', severity: 'reject' });
-  const phone = phoneCell(f.phone);
-  if (!phone.ok)
-    return fail({ code: 'bad_phone', severity: 'reject', field: 'phone', detail: phone.reason });
-  const found = findStudent(o.ix, { phone: phone.e164, name });
-  if (!found.ok) {
-    // Several children fit the Latin name (siblings): the owner picks, nothing is rejected.
-    const kids = (o.ix.byPhone.get(phone.e164) ?? []).map((s) => `«${s.record.columns.name}»`);
-    const ambiguous = found.reason === 'ambiguous';
-    return fail({
-      code: 'missing_ref',
-      severity: ambiguous ? 'review' : 'reject',
-      field: 'student',
-      detail: ambiguous ? `ambiguous: one of ${kids.join(', ')}` : found.reason,
-    });
-  }
+  const located = locate(f, { ix: o.ix, name });
+  if (!located.ok) return fail(located.issue);
   const startsOn = ymd(f.date);
   if (!startsOn) return fail({ code: 'missing_field', severity: 'reject', field: 'date' });
   const used = num(f.lessons_used) ?? 0;
   const remaining = num(f.lessons_remaining) ?? 0;
   if (used + remaining <= 0)
     return fail({ code: 'missing_field', severity: 'reject', field: 'lessons' });
-  const student = found.student.key;
-  const issues: RowIssue[] = [];
-  if (!teacherCheck({ ix: o.ix, student, raw: text(f.teacher) }))
-    issues.push(issue({ code: 'conflict', severity: 'warn', field: 'teacher' }));
-  const price = name ? finPrice(o.bundle, { name, month: startsOn.slice(0, 7) }) : null;
-  if (!price) issues.push(issue({ code: 'missing_field', severity: 'review', field: 'price' }));
+  const student = located.student;
+  const price = heartPrice(o.bundle, { name, startsOn });
   return {
     ref: row.ref,
     key: keys.subscription({ student: student.key, startsOn }),
@@ -74,9 +101,9 @@ function heartRow(row: SourceRow, o: { ix: StudentIndex; bundle: SourceBundle })
     startsOn,
     total: used + remaining,
     remaining,
-    paid: /^paid$/i.test(text(f.paid_status) ?? ''),
+    paid: isPaid(f),
     price,
-    issues,
+    issues: warnings(f, { ix: o.ix, student, priced: price !== null }).map(issue),
   };
 }
 

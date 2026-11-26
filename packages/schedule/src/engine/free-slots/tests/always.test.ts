@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { allDayRows, freeSlots } from '../free-slots';
 
 const MIN = 60_000;
-const gaps = (starts: Date[]) => starts.slice(1).map((s, i) => (s.getTime() - (starts[i]?.getTime() ?? 0)) / MIN);
+const gaps = (starts: Date[]) =>
+  starts.slice(1).map((s, i) => (s.getTime() - (starts[i]?.getTime() ?? 0)) / MIN);
 
 describe('allDayRows (settings.teachers_always_available)', () => {
   it('is every weekday 00:00–24:00 in the given zone', () => {

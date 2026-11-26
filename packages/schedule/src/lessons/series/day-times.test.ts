@@ -42,10 +42,16 @@ describe('togglePick: one pick per weekday, within 7 days', () => {
     expect(togglePick({ picks: [SUN_17, TUE_1930], slot: SUN_17, tz: RIYADH })).toEqual([TUE_1930]);
   });
   it('another slot on a picked weekday replaces that day', () => {
-    expect(togglePick({ picks: [SUN_17, TUE_1930], slot: TUE_17, tz: RIYADH })).toEqual([SUN_17, TUE_17]);
+    expect(togglePick({ picks: [SUN_17, TUE_1930], slot: TUE_17, tz: RIYADH })).toEqual([
+      SUN_17,
+      TUE_17,
+    ]);
   });
   it('a slot a week away drops the picks 7+ days from it (and its own weekday)', () => {
-    expect(togglePick({ picks: [SUN_17, THU_17], slot: NEXT_SUN_17, tz: RIYADH })).toEqual([THU_17, NEXT_SUN_17]);
+    expect(togglePick({ picks: [SUN_17, THU_17], slot: NEXT_SUN_17, tz: RIYADH })).toEqual([
+      THU_17,
+      NEXT_SUN_17,
+    ]);
   });
   it('weekdays are the family zone’s, not UTC’s', () => {
     const lateSat = '2026-10-17T21:30:00Z'; // Sun 00:30 in Riyadh
