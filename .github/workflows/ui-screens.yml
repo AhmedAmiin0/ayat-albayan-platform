@@ -29,7 +29,8 @@ jobs:
   shots:
     name: ui screens
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    # One pass over every page takes 40 to 60 minutes; a run with base_ref makes two.
+    timeout-minutes: 180
     env:
       SUPABASE_EXCLUDE: studio,imgproxy,mailpit,edge-runtime,logflare,vector,realtime,postgres-meta,supavisor
       # The default registry (public.ecr.aws) rate-limits pulls: ci.yml «e2e».
