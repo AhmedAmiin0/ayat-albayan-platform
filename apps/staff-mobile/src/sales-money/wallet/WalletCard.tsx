@@ -17,10 +17,32 @@ export function WalletCard({ wallet }: { wallet: Readonly<Record<string, WalletT
         <AppText style={{ ...small, fontSize: type.size.sm }}>{W.none}</AppText>
       ) : (
         rows.map(([currency, w]) => (
-          <View key={currency} testID={`wallet-${currency}`} style={{ gap: 2, minHeight: 44, justifyContent: 'center' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-              <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}>{w.due < 0 ? W.owedBack : W.due}</AppText>
-              <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.h4, color: color.ink, fontVariant: ['tabular-nums'] }}>
+          <View
+            key={currency}
+            testID={`wallet-${currency}`}
+            style={{ gap: 2, minHeight: 44, justifyContent: 'center' }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                gap: 8,
+              }}
+            >
+              <AppText
+                style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}
+              >
+                {w.due < 0 ? W.owedBack : W.due}
+              </AppText>
+              <AppText
+                style={{
+                  fontFamily: type.ui[700],
+                  fontSize: type.size.h4,
+                  color: color.ink,
+                  fontVariant: ['tabular-nums'],
+                }}
+              >
                 {walletMoney(Math.abs(w.due), currency)}
               </AppText>
             </View>

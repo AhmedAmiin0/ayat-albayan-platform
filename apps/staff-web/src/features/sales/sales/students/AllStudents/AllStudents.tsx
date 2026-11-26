@@ -45,7 +45,12 @@ export function AllStudents() {
             getRowId={(s) => s.id}
             emptyText={t.sales.allStudents.empty}
           />
-          <Pager page={page} total={list.data.total} pageSize={ALL_STUDENTS_PAGE_SIZE} onPage={setPage} />
+          <Pager
+            page={page}
+            total={list.data.total}
+            pageSize={ALL_STUDENTS_PAGE_SIZE}
+            onPage={setPage}
+          />
         </>
       )}
     </>

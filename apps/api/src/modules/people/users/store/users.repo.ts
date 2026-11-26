@@ -1,7 +1,7 @@
 import { isFamilyEmail, type UsersListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import * as links from './users.links.repo';
 import { mapListRow } from './users.rows';
 import type { RefRow, UserRow } from './users.store';
@@ -37,7 +37,7 @@ export class UsersRepo {
       'admin_list_users',
       listArgs(query, query.pageSize, (query.page - 1) * query.pageSize),
     );
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const tests = await this.testLogins(data.map((r) => r.id));
     const rows = data.map((r) => ({ ...mapListRow(r), is_test: tests.has(r.id) }));
     return { rows, total: data[0]?.total ?? (await this.totalBeyond(query)) };
@@ -47,7 +47,7 @@ export class UsersRepo {
   private async testLogins(ids: readonly string[]): Promise<Set<string>> {
     if (ids.length === 0) return new Set();
     const { data, error } = await this.db.from('profiles').select('id').in('id', ids).eq('is_test', true);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return new Set(data.map((p) => p.id));
   }
 
@@ -55,17 +55,16 @@ export class UsersRepo {
   private async totalBeyond(query: UsersListQuery): Promise<number> {
     if (query.page <= 1) return 0;
     const { data, error } = await this.db.rpc('admin_list_users', listArgs(query, 1, 0));
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data[0]?.total ?? 0;
   }
 
   async get(id: string): Promise<UserRow | null> {
-    const { data: p, error } = await this.db
+    const p = maybe(await this.db
       .from('profiles')
       .select(PROFILE)
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     if (!p) return null;
     const [auth, linked, roleKey] = await Promise.all([
       this.db.auth.admin.getUserById(id),
@@ -94,7 +93,7 @@ export class UsersRepo {
 
   async references(id: string): Promise<RefRow[]> {
     const { data, error } = await this.db.rpc('user_references', { user_id: id });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.map((r) => ({
       ref_table: r.ref_table,
       ref_column: r.ref_column,
@@ -105,10 +104,9 @@ export class UsersRepo {
 
   private async roleKey(role: UserRow['role'], roleId: string | null): Promise<string | null> {
     const query = this.db.from('roles').select('key');
-    const { data, error } = await (
+    const data = maybe(await (
       roleId ? query.eq('id', roleId) : query.eq('is_system', true).eq('base_role', role)
-    ).maybeSingle();
-    if (error) throw dbError(error);
+    ).maybeSingle());
     return data?.key ?? null;
   }
 }

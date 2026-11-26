@@ -13,6 +13,14 @@ const OPTIONS = PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
 /** Program choice as the report form asks it, prefilled from the student. */
 export function ProgramField({ name, value, onChange, disabled }: ProgramFieldProps) {
   return (
-    <RadioChips name={name} legend={t.reports.program} options={OPTIONS} value={value} onChange={onChange} disabled={disabled} required />
+    <RadioChips
+      name={name}
+      legend={t.reports.program}
+      options={OPTIONS}
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+      required
+    />
   );
 }

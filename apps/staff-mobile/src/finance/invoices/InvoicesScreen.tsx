@@ -27,8 +27,20 @@ export function InvoicesScreen() {
         keyExtractor={keyOf}
         renderItem={renderRow}
         refreshing={list.isRefetching && !list.isFetchingNextPage}
-        ListEmptyComponent={<StateNote status={{ data: list.data, isError: list.isError, refetch: list.refetch }} empty emptyTitle={t.mobileFinance.invoices.empty} />}
-        ListFooterComponent={list.isFetchingNextPage ? <Note>{t.common.loading}</Note> : <View style={{ height: 24 }} />}
+        ListEmptyComponent={
+          <StateNote
+            status={{ data: list.data, isError: list.isError, refetch: list.refetch }}
+            empty
+            emptyTitle={t.mobileFinance.invoices.empty}
+          />
+        }
+        ListFooterComponent={
+          list.isFetchingNextPage ? (
+            <Note>{t.common.loading}</Note>
+          ) : (
+            <View style={{ height: 24 }} />
+          )
+        }
       />
     </Screen>
   );

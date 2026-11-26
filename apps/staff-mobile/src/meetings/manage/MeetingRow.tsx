@@ -36,7 +36,10 @@ export function MeetingRow({ meeting, tz }: { meeting: MeetingView; tz: string }
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-        <AppText numberOfLines={2} style={{ flex: 1, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>
+        <AppText
+          numberOfLines={2}
+          style={{ flex: 1, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}
+        >
           {meeting.title}
         </AppText>
         <StatusChip tone={open ? 'ok' : 'neutral'} glyph={open ? 'fill' : 'struck'} label={chip} size="sm" />

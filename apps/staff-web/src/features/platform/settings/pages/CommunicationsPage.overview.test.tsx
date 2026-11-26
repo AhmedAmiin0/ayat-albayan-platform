@@ -60,7 +60,11 @@ describe('«التواصل» › «نظرة عامة»', () => {
   });
 
   it('with WhatsApp messaging off, a line says the counts are in-app alerts only', async () => {
-    renderCommunications({ apiFetch, catalogue: CATALOGUE, settings: { messaging_enabled: false } });
+    renderCommunications({
+      apiFetch,
+      catalogue: CATALOGUE,
+      settings: { messaging_enabled: false },
+    });
     await screen.findByRole('table', { name: h.whatCaption });
     expect(screen.getByText(h.inAppOnlyNote)).toBeTruthy();
   });

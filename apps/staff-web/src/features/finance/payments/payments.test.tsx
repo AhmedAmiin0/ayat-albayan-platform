@@ -26,7 +26,9 @@ const STUDENT = { id: 'stu-1', name: 'سهيلة', code: 'AB-0183', guardian_nam
 /** The route's URL search, held in state. */
 function Harness() {
   const [search, setSearch] = useState<PaymentsUrlSearch>({});
-  return <PaymentsPage search={search} onSearch={(patch) => setSearch((s) => ({ ...s, ...patch }))} />;
+  return (
+    <PaymentsPage search={search} onSearch={(patch) => setSearch((s) => ({ ...s, ...patch }))} />
+  );
 }
 
 function renderPage() {

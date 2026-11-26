@@ -14,7 +14,11 @@ interface LessonRowProps<L extends TodayLesson> {
 }
 
 /** The whole row is one button (docs/29 §4); every action is in the sheet. */
-export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = false }: LessonRowProps<L>) {
+export function LessonRow<L extends TodayLesson>({
+  lesson,
+  onOpen,
+  compact = false,
+}: LessonRowProps<L>) {
   const { color } = useTheme();
   const statusText = useLessonStatusText();
   const tone = toneColors(color, statusText.look(lesson.status).tone).fg;
@@ -58,17 +62,35 @@ export function LessonRow<L extends TodayLesson>({ lesson, onOpen, compact = fal
       <View style={{ flex: 1 }}>
         <AppText
           numberOfLines={1}
-          style={{ fontFamily: type.ui[compact ? 500 : 600], fontSize: compact ? 14 : 15, lineHeight: 24, color: compact ? color.ink2 : color.ink }}
+          style={{
+            fontFamily: type.ui[compact ? 500 : 600],
+            fontSize: compact ? 14 : 15,
+            lineHeight: 24,
+            color: compact ? color.ink2 : color.ink,
+          }}
         >
           {names}
         </AppText>
-        <AppText numberOfLines={1} style={{ fontFamily: type.ui[400], fontSize: 12, lineHeight: 18, color: color.ink3 }}>
+        <AppText
+          numberOfLines={1}
+          style={{ fontFamily: type.ui[400], fontSize: 12, lineHeight: 18, color: color.ink3 }}
+        >
           {subtitle}
         </AppText>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1, maxWidth: '38%' }}>
         <View style={{ width: 7, height: 7, borderRadius: 3.5, backgroundColor: tone }} />
-        <AppText style={{ flexShrink: 1, fontFamily: type.ui[500], fontSize: 12, lineHeight: 18, color: tone }}>{status}</AppText>
+        <AppText
+          style={{
+            flexShrink: 1,
+            fontFamily: type.ui[500],
+            fontSize: 12,
+            lineHeight: 18,
+            color: tone,
+          }}
+        >
+          {status}
+        </AppText>
       </View>
     </Pressable>
   );

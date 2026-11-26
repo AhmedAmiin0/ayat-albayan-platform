@@ -14,7 +14,14 @@ export interface CredentialPickerProps {
 }
 
 /** How the user gets a password: typed here, generated (shown once) or an invite link (shown once). */
-export function CredentialPicker({ name, mode, password, onMode, onPassword, error }: CredentialPickerProps) {
+export function CredentialPicker({
+  name,
+  mode,
+  password,
+  onMode,
+  onPassword,
+  error,
+}: CredentialPickerProps) {
   return (
     <div className="grid gap-3">
       <RadioChips

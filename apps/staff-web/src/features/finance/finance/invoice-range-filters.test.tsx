@@ -11,7 +11,11 @@ describe('invoiceRangeFilters', () => {
     extra.chips[0]?.onRemove();
     expect(onChange).toHaveBeenLastCalledWith({ from: undefined });
     extra.onClearAll(['kind']);
-    expect(onChange).toHaveBeenLastCalledWith({ from: undefined, to: undefined, f_kind: undefined });
+    expect(onChange).toHaveBeenLastCalledWith({
+      from: undefined,
+      to: undefined,
+      f_kind: undefined,
+    });
   });
 
   it('the panel fields: from and to days', () => {

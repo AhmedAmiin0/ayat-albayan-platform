@@ -6,6 +6,7 @@ import { conflict, notFound } from '@/common/http/errors';
 import { StripeClients, type StripeApi } from '@/modules/finance/stripe/gate/stripe-clients';
 import { LinkDeps } from './link-deps';
 import { LinkPackages } from './link-packages';
+import { isAdmin } from '@/common/auth/roles';
 
 type Found = { api: StripeApi; id: string; status: Stripe.Checkout.Session['status'] };
 
@@ -22,7 +23,7 @@ export class LinkCancel {
 
   async cancel(id: string, user: AuthUser): Promise<PaymentLinkView> {
     const link = await this.deps.links.get(id);
-    if (!link || (user.role !== 'admin' && link.created_by !== user.id)) throw notFound('link_not_found');
+    if (!link || (!isAdmin(user) && link.created_by !== user.id)) throw notFound('link_not_found');
     if (link.processing) throw conflict('link_processing');
     const found = link.stripe_session_id ? await this.session(link.stripe_session_id) : null;
     const row = await this.deps.links.cancel(id);

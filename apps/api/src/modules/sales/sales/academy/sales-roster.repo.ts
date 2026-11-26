@@ -2,7 +2,7 @@ import type { Tables } from '@ab/db';
 import type { Attendance, LessonStatus } from '@ab/catalog';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import { WEEKLY_RULE_COLUMNS, type WeeklyRuleRow } from '@/modules/sales/sales/schedule/weekly-slot';
 
 /** An active rule of one of the page's students (never its link or subscription). */
@@ -55,7 +55,7 @@ export class SalesRosterRepo {
       .select(RULE_SELECT)
       .in('student_id', [...studentIds])
       .eq('rule.status', 'active');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -71,7 +71,7 @@ export class SalesRosterRepo {
         .order('created_at', { ascending: false })
         .order('id', { ascending: false })
         .range(...rangeOf(page));
-      if (error) throw dbError(error);
+      if (error) throw pgError(error);
       return data;
     });
   }
@@ -83,7 +83,7 @@ export class SalesRosterRepo {
       .from('v_subscription_balance')
       .select(BALANCE_SELECT)
       .in('subscription_id', [...subscriptionIds]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -122,7 +122,7 @@ export class SalesRosterRepo {
       .order('student_id')
       .range(...rangeOf(w.page))
       .overrideTypes<RosterLessonRow[], { merge: false }>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 }

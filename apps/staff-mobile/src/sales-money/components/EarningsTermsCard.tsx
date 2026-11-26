@@ -17,8 +17,12 @@ export function EarningsTermsCard({ terms }: { terms: AssistantTermsView | null 
       <CardTitle>{p.terms}</CardTitle>
       {!salary && !commission ? <Note>{p.noTerms}</Note> : null}
       {salary ? <AppText style={body}>{`${p.salary}: ${salaryFrom(salary)}`}</AppText> : null}
-      {commission ? <AppText style={body}>{`${p.commission}: ${myCommissionText(commission)}`}</AppText> : null}
-      {commission ? <Note>{commissionNote(commission.starts_on, terms?.renewal_share_percent)}</Note> : null}
+      {commission ? (
+        <AppText style={body}>{`${p.commission}: ${myCommissionText(commission)}`}</AppText>
+      ) : null}
+      {commission ? (
+        <Note>{commissionNote(commission.starts_on, terms?.renewal_share_percent)}</Note>
+      ) : null}
       {terms && !commission && salary ? <Note>{p.noCommission}</Note> : null}
     </MoneyCard>
   );

@@ -25,7 +25,12 @@ function ruleTiming(d: TrialDraft, startsAt: string) {
   const picked = d.kind === 'package' ? dayTimesFromPicks(picksOf(d), d.tz) : null;
   if (!picked) {
     const rule = ruleFromSlot(startsAt, d.tz);
-    return { byday: [rule.weekday], startTimeLocal: rule.startTimeLocal, startsOn: rule.startsOn, startsAt };
+    return {
+      byday: [rule.weekday],
+      startTimeLocal: rule.startTimeLocal,
+      startsOn: rule.startsOn,
+      startsAt,
+    };
   }
   const { dayTimes, ...rest } = picked;
   return { ...rest, ...(dayTimes.length > 0 ? { dayTimes } : {}) };

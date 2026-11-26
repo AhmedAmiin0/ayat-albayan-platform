@@ -85,7 +85,9 @@ export function useValuesController(input: ControllerInput) {
       const s = saves.status(key);
       if (s.state !== 'conflict') return;
       // The edit, or (a refetch dropped it as equal) the value the conflicting save sent.
-      const form = raw.dirty(key) ? raw.form(key) : rowForm(key, s.mine as AcademySettings[SettingKey]);
+      const form = raw.dirty(key)
+        ? raw.form(key)
+        : rowForm(key, s.mine as AcademySettings[SettingKey]);
       saveForm(key, form, s.conflict.version);
     },
     takeTheirs: (key) => drafts.discard(key),

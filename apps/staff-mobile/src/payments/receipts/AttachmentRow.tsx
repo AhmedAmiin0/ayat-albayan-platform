@@ -33,7 +33,11 @@ export function AttachmentRow({ item, n, text, onRemove }: AttachmentRowProps) {
       ) : (
         <NuqtaGlyph shape="fill" color={color.ok} size={12} />
       )}
-      <AppText style={{ flex: 1, fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}>{name}</AppText>
+      <AppText
+        style={{ flex: 1, fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}
+      >
+        {name}
+      </AppText>
       <View testID="attachment-remove" style={{ flex: 1 }}>
         <Button variant="danger" label={text.attachmentRemove} accessibilityLabel={`${text.attachmentRemove} · ${name}`} onPress={onRemove} />
       </View>

@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import { AVATAR_FILES, type AvatarFiles } from './avatar-files';
 
 /** Roles whose photo is never shown (students and families are initials only). */
@@ -74,7 +74,7 @@ export class StaffPhotos {
       .from('teachers')
       .select('id, avatar_path, profile:profiles!teachers_profile_id_fkey(avatar_path)')
       .in('id', unique);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return this.sign(
       data.map((t) => ({
         id: t.id,
@@ -88,10 +88,14 @@ export class StaffPhotos {
     if (!unique.length) return new Map();
     const [profiles, teachers] = await Promise.all([
       this.db.from('profiles').select('id, avatar_path, role').in('id', unique),
-      this.db.from('teachers').select('profile_id, avatar_path').in('profile_id', unique).not('avatar_path', 'is', null),
+      this.db
+        .from('teachers')
+        .select('profile_id, avatar_path')
+        .in('profile_id', unique)
+        .not('avatar_path', 'is', null),
     ]);
-    if (profiles.error) throw dbError(profiles.error);
-    if (teachers.error) throw dbError(teachers.error);
+    if (profiles.error) throw pgError(profiles.error);
+    if (teachers.error) throw pgError(teachers.error);
     const ofTeacher = new Map(teachers.data.map((t) => [t.profile_id, t.avatar_path]));
     // Students and families show initials only, even when they have a photo of their own.
     const staff = profiles.data.filter((p) => !NOT_STAFF.has(p.role));

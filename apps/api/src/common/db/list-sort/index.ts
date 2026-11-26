@@ -1,1 +1,1 @@
-export { applySort, ilikeContains, type SortSpec } from './list-sort';
+export { applySort, type SortSpec } from './list-sort';

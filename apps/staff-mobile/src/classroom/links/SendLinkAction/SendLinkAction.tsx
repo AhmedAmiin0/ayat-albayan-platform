@@ -14,7 +14,15 @@ const sentNote = (r: JoinLinkResult): string =>
   r.message_status === 'queued' ? t.inbox.messagingOff : r.replayed ? t.classroom.linkResent : t.classroom.linkSent;
 
 /** It messages the guardian, so a press asks first; a double tap must not reach a family twice. */
-export function SendLinkAction({ lessonId, student, named }: { lessonId: string; student: Student; named: boolean }) {
+export function SendLinkAction({
+  lessonId,
+  student,
+  named,
+}: {
+  lessonId: string;
+  student: Student;
+  named: boolean;
+}) {
   const [asking, setAsking] = useState(false);
   const send = useMutation({ mutationFn: sendJoinLink, onSettled: () => setAsking(false) });
   const label = named
@@ -27,7 +35,9 @@ export function SendLinkAction({ lessonId, student, named }: { lessonId: string;
       {asking ? (
         <InlineConfirm
           message={t.mobileClassroom.sendConfirm.replace('{name}', student.name)}
-          confirmLabel={send.isPending ? t.classroom.sendingLink : t.mobileClassroom.sendConfirmAction}
+          confirmLabel={
+            send.isPending ? t.classroom.sendingLink : t.mobileClassroom.sendConfirmAction
+          }
           busy={send.isPending}
           onConfirm={() => send.mutate({ lessonId, studentId: student.id })}
           onCancel={() => !send.isPending && setAsking(false)}

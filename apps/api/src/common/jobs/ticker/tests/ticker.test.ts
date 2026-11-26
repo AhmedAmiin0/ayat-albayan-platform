@@ -49,4 +49,30 @@ describe('Ticker (single flight, rule 8)', () => {
     await vi.advanceTimersByTimeAsync(900_000);
     expect(run).toHaveBeenCalledTimes(2);
   });
+
+  it('with intervalFrom first, no interval tick comes before the first run', async () => {
+    vi.useFakeTimers();
+    const run = vi.fn(async () => undefined);
+    const ticker = new Ticker({ name: 't', firstMs: 900_000, everyMs: 60_000, run });
+    ticker.start({ firstMs: 900_000, everyMs: 60_000, intervalFrom: 'first' });
+    await vi.advanceTimersByTimeAsync(899_999);
+    expect(run).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    expect(run).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(180_000);
+    expect(run).toHaveBeenCalledTimes(4);
+    await ticker.stop();
+    await vi.advanceTimersByTimeAsync(900_000);
+    expect(run).toHaveBeenCalledTimes(4);
+  });
+
+  it('a stop before the first run leaves no interval behind', async () => {
+    vi.useFakeTimers();
+    const run = vi.fn(async () => undefined);
+    const ticker = new Ticker({ name: 't', firstMs: 1_000, everyMs: 1_000, intervalFrom: 'first', run });
+    ticker.start();
+    await ticker.stop();
+    await vi.advanceTimersByTimeAsync(10_000);
+    expect(run).not.toHaveBeenCalled();
+  });
 });

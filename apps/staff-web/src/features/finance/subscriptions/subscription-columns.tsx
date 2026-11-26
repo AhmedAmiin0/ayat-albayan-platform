@@ -37,7 +37,14 @@ const packageOptions = PACKAGE_SIZES.filter((p) => p !== 'trial').map((p) => ({ 
  * package here, the status in the page head. The student (an embedded name) and the package line
  * (derived from the lessons) do not sort server-side.
  */
-export function subscriptionColumns({ onPay, onPause, onResume, canPause, onCancel, onOpen }: Handlers) {
+export function subscriptionColumns({
+  onPay,
+  onPause,
+  onResume,
+  canPause,
+  onCancel,
+  onOpen,
+}: Handlers) {
   return col.columns([
     col.accessor('student', {
       header: () => t.subscriptions.student,

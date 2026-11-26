@@ -38,8 +38,16 @@ export function parsePaymentsSearch(s: Record<string, unknown>): PaymentsUrlSear
 
 /** The API filters (bar + column) and the sort of a parsed URL. */
 export function paymentsView(s: PaymentsUrlSearch): { filters: PaymentFilters; sort: SortSearch } {
-  const picked = { studentId: s.studentId, from: s.from, to: s.to, method: s.f_method, kind: s.kind };
-  const filters = Object.fromEntries(Object.entries(picked).filter(([, v]) => v !== undefined)) as PaymentFilters;
+  const picked = {
+    studentId: s.studentId,
+    from: s.from,
+    to: s.to,
+    method: s.f_method,
+    kind: s.kind,
+  };
+  const filters = Object.fromEntries(
+    Object.entries(picked).filter(([, v]) => v !== undefined),
+  ) as PaymentFilters;
   const sort: SortSearch = s.sort ? { sort: s.sort, ...(s.dir ? { dir: s.dir } : {}) } : {};
   return { filters, sort };
 }

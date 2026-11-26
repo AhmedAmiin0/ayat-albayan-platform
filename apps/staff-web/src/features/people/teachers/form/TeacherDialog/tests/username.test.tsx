@@ -16,16 +16,41 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 
 const U = t.familyAuth.teacherUsername;
 const OMAR: Teacher = teacherFixture({
-  id: 't1', display_name_ar: 'أ. عمر', display_name_en: null, gender: 'male', programs: ['quran'], phone_e164: null,
-  meeting_link: null, meeting_mode: null, platform_classroom: false, rate_30: null, rate_45: null, rate_60: null,
-  rate_90: null, max_students: null, status: 'active', tz: 'Africa/Cairo', profile_id: 'p1', username: 'omar',
+  id: 't1',
+  display_name_ar: 'أ. عمر',
+  display_name_en: null,
+  gender: 'male',
+  programs: ['quran'],
+  phone_e164: null,
+  meeting_link: null,
+  meeting_mode: null,
+  platform_classroom: false,
+  rate_30: null,
+  rate_45: null,
+  rate_60: null,
+  rate_90: null,
+  max_students: null,
+  status: 'active',
+  tz: 'Africa/Cairo',
+  profile_id: 'p1',
+  username: 'omar',
 });
 
 function show(teacher: Teacher | null) {
   apiFetch.mockResolvedValue([]);
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity } } });
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: false });
-  render(<QueryClientProvider client={client}><TeacherDialog teacher={teacher} onClose={vi.fn()} /></QueryClientProvider>);
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+  });
+  client.setQueryData(publicConfigQuery.queryKey, {
+    ...PUBLIC_SETTING_DEFAULTS,
+    custom: {},
+    meeting_link_auto: false,
+  });
+  render(
+    <QueryClientProvider client={client}>
+      <TeacherDialog teacher={teacher} onClose={vi.fn()} />
+    </QueryClientProvider>,
+  );
 }
 
 const field = () => screen.getByLabelText<HTMLInputElement>(U.label);

@@ -4,9 +4,7 @@ import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SubscriptionCancel } from '@/modules/finance/subscriptions';
 import { SalesMoneyScope } from '@/modules/sales/sales-money/shared';
-
-/** Who the assistant ownership rule binds: the sales base role; the admin never. */
-const isAssistant = (user: AuthUser): boolean => user.role === 'sales';
+import { isSales } from '@/common/auth/roles';
 
 /** Any student's package unless the assignment rule is enforced; answers id and status only. */
 @Injectable()
@@ -31,7 +29,7 @@ export class AnyPackageCancel {
   /** The package (404), then the ownership rule for an assistant (403) before anything is read. */
   private async allowed(id: string, user: AuthUser): Promise<SubscriptionView> {
     const before = await this.cancels.view(id);
-    if (isAssistant(user)) await this.scope.assertOwns(user, before.student.id);
+    if (isSales(user)) await this.scope.assertOwns(user, before.student.id);
     return before;
   }
 }

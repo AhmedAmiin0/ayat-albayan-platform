@@ -5,9 +5,12 @@ import { useLessonDetails } from './use-lesson-details';
 
 test('reads the open lesson from the current list, keeps the last version seen, closes', async () => {
   const confirmed = { ...pending, status: 'confirmed' as const };
-  const { result, rerender } = await renderHook(({ list }: { list: LessonView[] }) => useLessonDetails(list), {
-    initialProps: { list: [pending] },
-  });
+  const { result, rerender } = await renderHook(
+    ({ list }: { list: LessonView[] }) => useLessonDetails(list),
+    {
+      initialProps: { list: [pending] },
+    },
+  );
   expect(result.current.lesson).toBeNull();
   await act(() => result.current.open(pending));
   await rerender({ list: [confirmed] });

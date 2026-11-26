@@ -24,8 +24,19 @@ export function MyMoneyScreen() {
         title={t.assistantPortal.nav.earnings}
         leading={<BackButton onPress={() => router.back()} />}
       />
-      <FilterPills items={VIEWS()} value={view} onChange={setView} accessibilityLabel={t.sales.views.money} />
-      {view === 'payments' ? <MyPaymentsView /> : view === 'statements' ? <MyEarningsView /> : <MyWalletView />}
+      <FilterPills
+        items={VIEWS()}
+        value={view}
+        onChange={setView}
+        accessibilityLabel={t.sales.views.money}
+      />
+      {view === 'payments' ? (
+        <MyPaymentsView />
+      ) : view === 'statements' ? (
+        <MyEarningsView />
+      ) : (
+        <MyWalletView />
+      )}
     </Screen>
   );
 }

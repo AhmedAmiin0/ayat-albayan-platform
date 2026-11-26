@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 
 type Teacher = { display_name_ar: string; display_name_en: string | null } | null;
 
@@ -51,7 +51,7 @@ export class PortalReportsRepo {
     const { data, error } = await this.sentQuery(studentId)
       .order('sent_at', { ascending: false })
       .limit(limit);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return this.withLessons(data);
   }
 
@@ -65,9 +65,8 @@ export class PortalReportsRepo {
   async oneSent(
     input: { studentId: string; reportId: string },
   ): Promise<Omit<PortalReportRow, 'lesson'> | null> {
-    const { data, error } = await this.sentQuery(input.studentId).eq('id', input.reportId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.sentQuery(input.studentId).eq('id', input.reportId)
+      .maybeSingle());
     return data;
   }
 
@@ -80,12 +79,11 @@ export class PortalReportsRepo {
 
   /** docs/50 §2: texts of a report the sent rule already picked. */
   async texts(reportId: string): Promise<ReportTexts | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lesson_reports')
       .select('homework, next_plan')
       .eq('id', reportId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -136,6 +134,6 @@ export class PortalReportsRepo {
 /** The rows of a list read; a database error throws. */
 async function rows<T>(query: Reply<T[]>): Promise<T[]> {
   const { data, error } = await query;
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   return data ?? [];
 }

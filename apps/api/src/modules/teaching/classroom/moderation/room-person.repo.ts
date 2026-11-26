@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 import { principalColumns, type Principal } from './moderation.repo';
 import { personLinkIds, type LessonStudentRow, type LinkRow } from './room-person.mapper';
 
@@ -34,32 +34,29 @@ export class RoomPersonRepo {
       ...(users.length ? [`user_id.in.(${users.join(',')})`] : []),
     ];
     if (or.length === 0) return [];
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('classroom_participants')
       .select('identity')
       .eq('lesson_id', lessonId)
       .is('left_at', null)
       .or(or.join(','))
-      .limit(LIMIT);
-    if (error) throw dbError(error);
+      .limit(LIMIT));
     return data.map((r) => r.identity);
   }
 
   private async links(lessonId: string): Promise<LinkRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lesson_join_links')
       .select('id, student_id, sent_for_student_id')
-      .eq('lesson_id', lessonId);
-    if (error) throw dbError(error);
+      .eq('lesson_id', lessonId));
     return data;
   }
 
   private async students(lessonId: string): Promise<LessonStudentRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lesson_students')
       .select('student_id, student:students(guardian_id)')
-      .eq('lesson_id', lessonId);
-    if (error) throw dbError(error);
+      .eq('lesson_id', lessonId));
     return data.map((r) => ({ student_id: r.student_id, guardian_id: r.student.guardian_id }));
   }
 }

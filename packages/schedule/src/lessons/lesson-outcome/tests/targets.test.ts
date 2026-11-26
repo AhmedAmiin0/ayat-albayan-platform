@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LessonStatus } from '@ab/catalog';
-import { CORRECT_TO, correctionTargets } from '../lesson-outcome';
+import { CORRECT_TO, correctionTargets, correctToSchema } from '../lesson-outcome';
 
 const ENDS = '2026-11-03T16:00:00Z';
 const AFTER = new Date('2026-11-03T16:01:00Z');
@@ -33,5 +33,12 @@ describe('correctionTargets («تصحيح الحالة», owner 2026-11-03)', ()
     expect(correctionTargets(row('completed'), AFTER)).toHaveLength(3);
     expect(correctionTargets(row('no_show'), AFTER)).toHaveLength(3);
     expect(correctionTargets(row('excused'), AFTER)).toEqual([]);
+  });
+});
+
+describe('correctToSchema', () => {
+  it('accepts each correction target and nothing else', () => {
+    expect(correctToSchema.options).toEqual([...CORRECT_TO]);
+    expect(correctToSchema.validate('late')).toBe(false);
   });
 });

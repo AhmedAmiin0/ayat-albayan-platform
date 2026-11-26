@@ -11,3 +11,9 @@ export const outboxRow = z.object({
 export type OutboxRow = z.infer<typeof outboxRow>;
 
 export const outboxRows = z.array(outboxRow);
+
+export const settleStateSchema = z.enum(['done', 'retry', 'parked']);
+export type SettleState = z.infer<typeof settleStateSchema>;
+
+/** The DrainSummary counters a settled row adds to. */
+export const drainCounterSchema = z.enum(['done', 'retried', 'parked']);

@@ -16,7 +16,9 @@ const payout = { id: 'p1', teacher: { id: 't1' } } as PayoutView;
 
 function render() {
   const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
   return renderHook(() => usePayPayout(payout, vi.fn()), { wrapper }).result;
 }
 

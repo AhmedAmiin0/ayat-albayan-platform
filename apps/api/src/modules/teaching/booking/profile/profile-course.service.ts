@@ -16,6 +16,7 @@ import {
 } from '@/modules/teaching/booking/course-change/course-change.service';
 import { CourseChangeViews } from '@/modules/teaching/booking/course-change/course-change.view';
 import { ProfileCourseRepo } from './profile-course.repo';
+import { isAdmin, isSales } from '@/common/auth/roles';
 
 interface Move {
   studentId: string;
@@ -28,11 +29,11 @@ interface Move {
  * enforces it, ANY with sales.renew_any; every other
  * holder of the key, and every assistant while the rule is off, ANY student.
  */
-const ownsOnly = (user: AuthUser): boolean => user.role === 'sales' && !can(user, 'sales.renew_any');
+const ownsOnly = (user: AuthUser): boolean => isSales(user) && !can(user, 'sales.renew_any');
 
 export const actorOf = (user: AuthUser): ChangeActor => ({
   user,
-  role: user.role === 'admin' ? 'admin' : 'sales',
+  role: isAdmin(user) ? 'admin' : 'sales',
   anyStudent: !ownsOnly(user),
 });
 

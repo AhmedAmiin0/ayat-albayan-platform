@@ -9,7 +9,8 @@ interface Card {
 }
 
 const DASH = '—';
-const money = (n: number | undefined, currency?: string) => (n === undefined ? DASH : wholeText(n, currency));
+const money = (n: number | undefined, currency?: string) =>
+  n === undefined ? DASH : wholeText(n, currency);
 
 /** The six cards: the year's four totals (reporting currency), owed to teachers (EGP), owed by students. */
 export function summaryCards(

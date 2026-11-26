@@ -8,7 +8,8 @@ import { declaredSchema } from '@/common/http/zod-inputs';
 import { appControllers, handlersOf } from './route-map.test-util';
 import type { RouteContract, RouteHandler } from './route-map.types';
 
-type Part = 'params' | 'query' | 'body';
+const partSchema = z.enum(['params', 'query', 'body']);
+type Part = z.infer<typeof partSchema>;
 
 const pipeSchema = z.custom<PipeTransform>(
   (p) => z.looseObject({ transform: z.function() }).safeParse(p).success,
@@ -16,11 +17,11 @@ const pipeSchema = z.custom<PipeTransform>(
 const argsSchema = z
   .record(z.string(), z.object({ data: z.unknown(), pipes: z.array(z.unknown()).default([]) }))
   .default({});
-const PARTS: Partial<Record<string, Part>> = {
+const PARTS = z.record(z.string(), partSchema).readonly().decode({
   [RouteParamtypes.BODY]: 'body',
   [RouteParamtypes.QUERY]: 'query',
   [RouteParamtypes.PARAM]: 'params',
-};
+});
 
 /** Pipe classes (ParseUUIDPipe) and other pipes declare no schema. */
 function schemaOfPipe(pipe: unknown): z.ZodType | undefined {

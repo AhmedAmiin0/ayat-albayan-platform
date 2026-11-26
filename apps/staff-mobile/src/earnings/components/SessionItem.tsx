@@ -29,13 +29,21 @@ function Tick({ checked, disabled }: { checked: boolean; disabled: boolean }) {
         justifyContent: 'center',
       }}
     >
-      {checked ? <AppText style={{ color: color.onLapis, fontSize: type.size.sm, lineHeight: 18 }}>✓</AppText> : null}
+      {checked ? (
+        <AppText style={{ color: color.onLapis, fontSize: type.size.sm, lineHeight: 18 }}>
+          ✓
+        </AppText>
+      ) : null}
     </View>
   );
 }
 
 /** One session: when, length and students, what it earned and still owes, its status. */
-export const SessionItem = memo(function SessionItem({ row, checked = false, onToggle }: SessionItemProps) {
+export const SessionItem = memo(function SessionItem({
+  row,
+  checked = false,
+  onToggle,
+}: SessionItemProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const { color } = useTheme();
@@ -48,7 +56,9 @@ export const SessionItem = memo(function SessionItem({ row, checked = false, onT
         <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink, fontVariant: ['tabular-nums'] }}>
           {sessionWhen(row.starts_at, cycle, tz)}
         </AppText>
-        <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 }}>{sessionDetail(row)}</AppText>
+        <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2 }}>
+          {sessionDetail(row)}
+        </AppText>
       </View>
       <View style={{ alignItems: 'flex-end', gap: 4 }}>
         <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.sm, color: color.ink, fontVariant: ['tabular-nums'] }}>

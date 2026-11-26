@@ -17,7 +17,9 @@ describe('ReportFormPage: required marks and a failed submit (web matches the ap
     Element.prototype.scrollIntoView = vi.fn();
     apiFetch.mockImplementation((path: string) => Promise.resolve(path === '/lessons/l-1/report-form' ? formResponse() : []));
     render(
-      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <QueryClientProvider
+        client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+      >
         <ReportFormPage lessonId="l-1" role="teacher" />
       </QueryClientProvider>,
     );

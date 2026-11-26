@@ -50,8 +50,12 @@ export const courseHint = (view: SalesCourseView): BookHint | null =>
   view.student.teacher_id ? { teacherId: view.student.teacher_id, startsAt: null } : null;
 
 export function courseFixedText(sub: CourseSubscription): string {
-  const name = sub.package ? t.enums.packageSize[sub.package] : counted(t.schedule.lessonCount, sub.lessons_total);
-  return t.booking.courseFixed.replace('{package}', name).replace('{minutes}', String(sub.duration));
+  const name = sub.package
+    ? t.enums.packageSize[sub.package]
+    : counted(t.schedule.lessonCount, sub.lessons_total);
+  return t.booking.courseFixed
+    .replace('{package}', name)
+    .replace('{minutes}', String(sub.duration));
 }
 
 export const courseTitle = (view: SalesCourseView | undefined): string =>

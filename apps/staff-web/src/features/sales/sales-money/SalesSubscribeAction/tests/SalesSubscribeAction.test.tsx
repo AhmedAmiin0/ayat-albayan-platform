@@ -13,7 +13,10 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 
 const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
 
-function open(mode: InboxMode, opts: { patch?: Parameters<typeof detail>[1]; students?: ReturnType<typeof student>[] } = {}) {
+function open(
+  mode: InboxMode,
+  opts: { patch?: Parameters<typeof detail>[1]; students?: ReturnType<typeof student>[] } = {},
+) {
   routeFetch(apiFetch, [
     ['/threads/%2B966501234567', detail([], opts.patch ?? FAMILY)],
     ['/messaging/templates', []],

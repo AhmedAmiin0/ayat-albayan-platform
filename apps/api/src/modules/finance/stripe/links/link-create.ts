@@ -17,6 +17,7 @@ import { loadEnv } from '@/config/env/env';
 import { newLinkToken } from './link-ids';
 import { LinkCreateDeps, LinkDeps } from './link-deps';
 import type { LinkRow } from './payment-links.repo';
+import { isAdmin } from '@/common/auth/roles';
 
 /** Package built like a new subscription at the agreed price (docs/30); retries idempotent. */
 @Injectable()
@@ -97,7 +98,9 @@ export class LinkCreate {
 
   /** Own student only while SalesOwnershipRule enforces; sales.renew_any never widens it. */
   private async mayAssign(input: PaymentLinkCreate, user: AuthUser): Promise<void> {
-    if (input.teacherId && user.role !== 'admin') await this.extra.sales.scope.assertOwns(user, input.studentId);
+    if (input.teacherId && !isAdmin(user)) {
+      await this.extra.sales.scope.assertOwns(user, input.studentId);
+    }
   }
 
   private async assign(input: PaymentLinkCreate, user: AuthUser): Promise<void> {

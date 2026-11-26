@@ -19,5 +19,15 @@ export function AssistantsList() {
       </TableBox>
     );
   }
-  return <DataTable fill stacked clientSort clientFilter columns={columns} data={list.data} getRowId={(r) => r.id} />;
+  return (
+    <DataTable
+      fill
+      stacked
+      clientSort
+      clientFilter
+      columns={columns}
+      data={list.data}
+      getRowId={(r) => r.id}
+    />
+  );
 }

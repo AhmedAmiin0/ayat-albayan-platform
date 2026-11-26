@@ -10,8 +10,19 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, search, children, ...rest }: { to: string; search: Record<string, string>; children: ReactNode }) => (
-    <a href={`${to}?${new URLSearchParams(search)}`} {...rest}>{children}</a>
+  Link: ({
+    to,
+    search,
+    children,
+    ...rest
+  }: {
+    to: string;
+    search: Record<string, string>;
+    children: ReactNode;
+  }) => (
+    <a href={`${to}?${new URLSearchParams(search)}`} {...rest}>
+      {children}
+    </a>
   ),
 }));
 
@@ -26,7 +37,9 @@ function open(row: LeadView = ROW) {
   apiFetch.mockImplementation(async (path: string) =>
     path.startsWith('/sales/people') ? PEOPLE : { items: [row], total: 1, page: 1, pageSize: 25 });
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <LeadsInbox search={{ page: 1 }} onSearch={vi.fn()} />
     </QueryClientProvider>,
   );

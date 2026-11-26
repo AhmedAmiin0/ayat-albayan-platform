@@ -43,7 +43,8 @@ export function SessionsPanel({ scope, selected, onSelected }: Props) {
         change((m) => {
           if (!m.delete(r.id)) m.set(r.id, r);
         }),
-      onToggleAll: (all, on) => change((m) => all.forEach((r) => (on ? m.set(r.id, r) : m.delete(r.id)))),
+      onToggleAll: (all, on) =>
+        change((m) => all.forEach((r) => (on ? m.set(r.id, r) : m.delete(r.id)))),
     };
   }, [selected, onSelected, rows]);
   const selectable = selected !== undefined;
@@ -75,10 +76,24 @@ export function SessionsPanel({ scope, selected, onSelected }: Props) {
               columns={columns}
               data={rows}
               getRowId={(r) => r.id}
-              sort={{ key: sort.sort, dir: sort.dir, onChange: (next) => (setSort(next.key ? { sort: next.key, ...(next.dir ? { dir: next.dir } : {}) } : {}), setPage(1)) }}
+              sort={{
+                key: sort.sort,
+                dir: sort.dir,
+                onChange: (next) => (
+                  setSort(
+                    next.key ? { sort: next.key, ...(next.dir ? { dir: next.dir } : {}) } : {},
+                  ),
+                  setPage(1)
+                ),
+              }}
             />
           </PickContext.Provider>
-          <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={setPage} />
+          <Pager
+            page={list.data.page}
+            total={list.data.total}
+            pageSize={list.data.pageSize}
+            onPage={setPage}
+          />
         </>
       )}
     </section>

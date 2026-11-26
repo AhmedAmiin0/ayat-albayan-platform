@@ -27,7 +27,11 @@ export function HeroActions({ lesson, running, busy, onConfirm, onDetails }: Her
       <ButtonRow testID="hero-actions">
         {primary === 'confirm' && onConfirm ? <Button label={t.today.confirmLesson} onPress={onConfirm} busy={busy} /> : null}
         {primary === 'join' ? (
-          <Button label={join.busy ? t.classroom.joining : t.classroom.enter} onPress={() => void join.join()} busy={join.busy} />
+          <Button
+            label={join.busy ? t.classroom.joining : t.classroom.enter}
+            onPress={() => void join.join()}
+            busy={join.busy}
+          />
         ) : null}
         <Button variant="secondary" label={t.today.details} onPress={onDetails} />
       </ButtonRow>

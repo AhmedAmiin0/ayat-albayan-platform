@@ -14,7 +14,10 @@ function Item({ icon, children }: { icon: IconName; children: ReactNode }) {
 
 /** docs/07 §8. */
 export function TeacherMeta({ teacher }: { teacher: Teacher }) {
-  const role = [t.teachers.genderLabel[teacher.gender], ...teacher.programs.map((p) => t.enums.program[p])];
+  const role = [
+    t.teachers.genderLabel[teacher.gender],
+    ...teacher.programs.map((p) => t.enums.program[p]),
+  ];
   return (
     <ul className="mb-[18px] flex flex-wrap gap-x-[22px] gap-y-1.5 text-xs text-ink-2">
       <Item icon="teacher">

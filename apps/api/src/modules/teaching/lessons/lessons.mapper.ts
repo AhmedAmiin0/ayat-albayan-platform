@@ -18,6 +18,7 @@ import type { LessonRow } from './store/lesson-row';
 import { lessonReport, readerWindow } from './store/lesson-report';
 import type { SeqMap } from './lessons.repo';
 import { iso, pendingProposal } from './proposals/proposal-view';
+import { isAdmin } from '@/common/auth/roles';
 
 /** What a teacher may do to their own lesson (docs/10 §3 Guards); the rest is admin-only. */
 const TEACHER_EVENTS: ReadonlySet<LessonEvent> = new Set([
@@ -89,7 +90,7 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     // A proposal on a lesson that was cancelled / held meanwhile is moot (approving would 409).
     pending_proposal: isOpenLesson(row.status) ? pendingProposal(row.proposals) : null,
     // R-SCH-11: only an admin edits a time in place; a teacher proposes (R-SCH-08) or notes it in the report.
-    time_edit_mode: ctx.role === 'admin' ? timeEditMode(row.status) : null,
+    time_edit_mode: isAdmin(ctx) ? timeEditMode(row.status) : null,
     time_edit: timeEdit(row, ctx.role),
   };
 }

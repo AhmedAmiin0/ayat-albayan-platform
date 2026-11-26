@@ -48,7 +48,7 @@ describe('ReportPdfJob — scheduling and single flight', () => {
     expect(queries.pendingIds).toHaveBeenCalledTimes(2);
   });
 
-  it('first run 30 s after boot, then every minute; destroy stops the timers', async () => {
+  it('first run 30 s after boot, then every minute; shutdown stops the timers', async () => {
     vi.useFakeTimers();
     const { j, queries } = job();
     j.onApplicationBootstrap();
@@ -58,8 +58,31 @@ describe('ReportPdfJob — scheduling and single flight', () => {
     expect(queries.pendingIds).toHaveBeenCalledTimes(1);
     await vi.advanceTimersByTimeAsync(30_000);
     expect(queries.pendingIds).toHaveBeenCalledTimes(2);
-    j.onModuleDestroy();
+    await j.beforeApplicationShutdown();
     await vi.advanceTimersByTimeAsync(180_000);
     expect(queries.pendingIds).toHaveBeenCalledTimes(2);
+  });
+
+  it('shutdown waits for the run in flight and refuses later kicks', async () => {
+    const { j, queries } = job();
+    let release: () => void = () => undefined;
+    queries.pendingIds.mockImplementationOnce(
+      () =>
+        new Promise<string[]>((done) => {
+          release = () => done([]);
+        }),
+    );
+    const run = j.kick();
+    await vi.waitFor(() => expect(queries.pendingIds).toHaveBeenCalledTimes(1));
+    let stopped = false;
+    const stop = j.beforeApplicationShutdown().then(() => {
+      stopped = true;
+    });
+    await Promise.resolve();
+    expect(stopped).toBe(false);
+    release();
+    await Promise.all([run, stop]);
+    await j.kick();
+    expect(queries.pendingIds).toHaveBeenCalledTimes(1);
   });
 });

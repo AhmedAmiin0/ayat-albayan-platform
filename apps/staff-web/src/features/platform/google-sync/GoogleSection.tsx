@@ -34,7 +34,9 @@ export function GoogleSection({ onNote }: { onNote: (message: string) => void })
           <SyncLog status={status.data} onNote={onNote} />
         </>
       )}
-      {oauth.note && <Toast message={oauth.note.message} tone={oauth.note.tone} onDismiss={oauth.clear} />}
+      {oauth.note && (
+        <Toast message={oauth.note.message} tone={oauth.note.tone} onDismiss={oauth.clear} />
+      )}
     </div>
   );
 }

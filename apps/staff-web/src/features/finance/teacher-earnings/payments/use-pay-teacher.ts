@@ -16,7 +16,9 @@ export function usePayTeacher(teacherId: string, onSaved: (replayed: boolean) =>
   const [receiptOnce] = useState(() => uploadOnce<File>());
 
   const receiptPath = (file: File | null): Promise<string | null> =>
-    file ? receiptOnce(file, () => uploadTeacherReceipt({ teacherId, file })) : Promise.resolve(null);
+    file
+      ? receiptOnce(file, () => uploadTeacherReceipt({ teacherId, file }))
+      : Promise.resolve(null);
 
   return useMutation({
     mutationFn: async ({ form, file, earningIds }: PayInput) => {

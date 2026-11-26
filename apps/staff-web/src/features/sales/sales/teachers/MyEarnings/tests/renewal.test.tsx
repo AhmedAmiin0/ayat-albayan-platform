@@ -32,7 +32,9 @@ describe('MyEarnings «الكشوف»: renewal commissions (owner 2026-10-26)', 
   it('the note says each renewal earns the share the admin set; a renewal line reads «عمولة تجديد»', async () => {
     apiFetch.mockResolvedValue(EARNINGS);
     render(
-      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <QueryClientProvider
+        client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+      >
         <MyEarnings />
       </QueryClientProvider>,
     );

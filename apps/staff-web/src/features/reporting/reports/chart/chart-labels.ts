@@ -10,4 +10,5 @@ export function gradeWord(score: number | null): string {
   return grade ? t.enums.grade[grade] : t.reports.chart.noGrade;
 }
 
-export const shortDate = (at: string, tz: string): string => dayMonthLabel(zonedPartsIn(new Date(at), tz).date);
+export const shortDate = (at: string, tz: string): string =>
+  dayMonthLabel(zonedPartsIn(new Date(at), tz).date);

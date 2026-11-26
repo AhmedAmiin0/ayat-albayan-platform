@@ -33,7 +33,10 @@ export const salesAllStudentsQuery = (q: { page: number; search: string }) =>
   queryOptions({
     queryKey: salesKeys.allStudents(q),
     queryFn: () => {
-      const params = new URLSearchParams({ page: String(q.page), pageSize: String(ALL_STUDENTS_PAGE_SIZE) });
+      const params = new URLSearchParams({
+        page: String(q.page),
+        pageSize: String(ALL_STUDENTS_PAGE_SIZE),
+      });
       if (q.search) params.set('search', q.search);
       return apiFetch<Paged<SalesStudentView>>(`/sales/students/all?${params}`);
     },

@@ -16,7 +16,8 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 // The course to change, booked ahead from Sunday 11 October (its own first week, after today).
 const CURRENT = { ...PREVIOUS, startsOn: '2026-10-11', opensOn: '2026-10-11', endsOn: '2026-11-07', running: false };
 const RUNNING = { ...COURSE_VIEW, blocked: 'course_exists' as const, current: CURRENT };
-const openDialog = () => renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
+const openDialog = () =>
+  renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
 const changeButton = () => screen.findByRole('button', { name: t.booking.courseChange.changeDays });
 const weekdayDay = (weekday: 0 | 3, date: number) => new RegExp(`^${t.enums.weekday[weekday]} ${date} `);
 const day = (weekday: 0 | 3, date: number) => screen.findByRole('region', { name: weekdayDay(weekday, date) });
@@ -25,7 +26,11 @@ const day = (weekday: 0 | 3, date: number) => screen.findByRole('region', { name
 function routeWithToday(view: typeof RUNNING): void {
   routeRenewal(apiFetch, view);
   const base = apiFetch.getMockImplementation();
-  const slots = [SLOT, NEXT_SUN, NEXT_SUN_LATER, NEXT_WED].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] }));
+  const slots = [SLOT, NEXT_SUN, NEXT_SUN_LATER, NEXT_WED].map((at) => ({
+    starts_at: at,
+    ends_at: at,
+    conflicts: [],
+  }));
   apiFetch.mockImplementation((path: string) =>
     path.startsWith('/sales/booking/slots') ? Promise.resolve({ teacher_tz: 'Africa/Cairo', step_min: 45, slots }) : base?.(path),
   );

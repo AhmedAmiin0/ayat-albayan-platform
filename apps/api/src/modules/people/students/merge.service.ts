@@ -1,6 +1,7 @@
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/modules/people/guardians/http';
+import { peopleErrors } from '@/modules/people/guardians/http';
+import { pgError } from '@/common/db/errors';
 
 type MergeOptions = { keptId: string; mergedId: string; actorId: string };
 
@@ -19,7 +20,7 @@ export class MergeService {
       p_merged: opts.mergedId,
       p_actor: opts.actorId,
     });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error, peopleErrors());
     if (!data) throw new InternalServerErrorException('merge_students returned no id');
     return { merge_id: data };
   }

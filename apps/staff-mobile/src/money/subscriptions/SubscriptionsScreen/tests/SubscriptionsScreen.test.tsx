@@ -44,7 +44,9 @@ test('packages: student, code, status word; the renewal-due one is flagged, the 
   expect(mockApiFetch).toHaveBeenCalledWith('/subscriptions?page=1&pageSize=25');
   expect(screen.getAllByText(ltr('AB-0183')).length).toBe(1);
   expect(screen.getAllByText(t.enums.subscriptionStatus.active)).toHaveLength(3); // the filter chip and the two rows
-  await waitFor(() => expect(screen.getAllByText(new RegExp(t.mobileMoney.renewalDue))).toHaveLength(1));
+  await waitFor(() =>
+    expect(screen.getAllByText(new RegExp(t.mobileMoney.renewalDue))).toHaveLength(1),
+  );
 });
 
 test('«سجّل دفعة» only on a package not fully paid, and it opens the existing payment form', async () => {

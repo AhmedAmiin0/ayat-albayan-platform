@@ -15,7 +15,12 @@ function Landing({ home }: { home: Home }) {
   }
   if (student) {
     return (
-      <ChildView key={student.id} kind={home.kind} student={student} onBack={() => setPicked(null)} />
+      <ChildView
+        key={student.id}
+        kind={home.kind}
+        student={student}
+        onBack={() => setPicked(null)}
+      />
     );
   }
   return <GuardianHome home={home} onOpen={setPicked} />;

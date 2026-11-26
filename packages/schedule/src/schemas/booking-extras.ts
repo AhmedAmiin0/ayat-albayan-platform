@@ -1,3 +1,4 @@
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 import type { LessonStatus } from '@ab/catalog';
 
@@ -24,7 +25,7 @@ export const invoiceInputSchema = z.discriminatedUnion('source', [
 
 /** POST /booking/invoice-upload-url. */
 export const invoiceUploadSchema = z.object({
-  clientRequestId: z.uuid(),
+  clientRequestId,
   mime: z.enum(INVOICE_MIMES, { message: 'invoice_type' }),
   size: z.int().min(1).max(INVOICE_MAX_BYTES, { message: 'invoice_too_large' }),
 });

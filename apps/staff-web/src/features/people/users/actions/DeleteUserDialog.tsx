@@ -23,8 +23,14 @@ export function DeleteUserDialog({ user, onBack, onDone }: DeleteUserDialogProps
     queryClient.removeQueries({ queryKey: userKeys.detail(user.id) });
     void queryClient.invalidateQueries({ queryKey: userKeys.all });
   };
-  const remove = useMutation({ mutationFn: deleteUser, onSuccess: () => finish(t.users.toast.deleted) });
-  const disable = useMutation({ mutationFn: disableUser, onSuccess: () => finish(t.users.toast.disabled) });
+  const remove = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => finish(t.users.toast.deleted),
+  });
+  const disable = useMutation({
+    mutationFn: disableUser,
+    onSuccess: () => finish(t.users.toast.disabled),
+  });
   const references = historyReferences(remove.error);
   const failed = disable.error ?? (references ? null : remove.error);
   return (

@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict, notFound } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 
 type LinkInput = { leadId: string; code: string; actorId: string; admin: boolean };
 
@@ -18,7 +18,7 @@ function linkError(error: PostgrestError): Error {
   if (error.code === '23505' && error.message.includes('guardian_phones_one_second')) return conflict('family_has_second_number');
   if (error.code === '23505') return conflict('number_taken');
   const code = error.code === 'P0001' ? LEAD_FAMILY_LINK_ERRORS.find((c) => c === error.message) : undefined;
-  if (!code) return dbError(error);
+  if (!code) return pgError(error);
   return NOT_FOUND.includes(code) ? notFound(code) : conflict(code);
 }
 
@@ -40,8 +40,7 @@ export class LeadFamilyService {
   /** An unknown code passes: link_family_phone answers 404 student_not_found. */
   private async assertNoLogin(code: string): Promise<void> {
     const query = this.db.from('students').select('guardian:guardians!inner(profile_id)');
-    const { data, error } = await query.eq('code', code).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await query.eq('code', code).maybeSingle());
     if (data?.guardian.profile_id) throw conflict('guardian_has_login');
   }
 }

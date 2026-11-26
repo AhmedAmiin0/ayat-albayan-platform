@@ -43,7 +43,13 @@ export type DetailsLesson = Pick<LessonView, 'id' | 'starts_at' | 'ends_at' | 's
       | 'teacher_confirmed_at'
     >
   > & {
-    teacher: { id?: string; display_name_ar: string; display_name_en?: string | null; tz?: string; avatar_url?: string | null };
+    teacher: {
+      id?: string;
+      display_name_ar: string;
+      display_name_en?: string | null;
+      tz?: string;
+      avatar_url?: string | null;
+    };
     students: readonly DetailsStudent[];
   };
 
@@ -101,8 +107,19 @@ export function seriesLine(lesson: Pick<DetailsLesson, 'rule_id' | 'rule_byday' 
 export type ReportState = 'submitted' | 'draft' | 'none';
 
 /** The student's report once one can be written (the lesson started, not cancelled or moved); else null. */
-export function reportState(lesson: Pick<DetailsLesson, 'status' | 'starts_at'>, student: DetailsStudent, now: Date): ReportState | null {
-  if (reportBlock({ lessonStatus: lesson.status, lessonStartsAt: new Date(lesson.starts_at), now }) !== null) return null;
+export function reportState(
+  lesson: Pick<DetailsLesson, 'status' | 'starts_at'>,
+  student: DetailsStudent,
+  now: Date,
+): ReportState | null {
+  if (
+    reportBlock({
+      lessonStatus: lesson.status,
+      lessonStartsAt: new Date(lesson.starts_at),
+      now,
+    }) !== null
+  )
+    return null;
   return student.report?.status ?? 'none';
 }
 

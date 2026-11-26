@@ -53,7 +53,12 @@ export function MyWallet() {
         ) : (
           <ListSkeleton />
         )}
-        <Pager page={page} total={list.data?.total ?? 0} pageSize={MY_COMMISSIONS_PAGE_SIZE} onPage={setPage} />
+        <Pager
+          page={page}
+          total={list.data?.total ?? 0}
+          pageSize={MY_COMMISSIONS_PAGE_SIZE}
+          onPage={setPage}
+        />
       </section>
     </div>
   );

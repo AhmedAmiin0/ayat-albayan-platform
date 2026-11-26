@@ -25,7 +25,8 @@ export function ScheduleFields({ slot, onChange, tz }: ScheduleFieldsProps) {
   const cycle = useClockCycle();
   const days = useMemo(() => dateChoices(new Date(), tz), [tz]);
   const items = days.map((d, i) => ({ value: d, label: dayChipLabel(d, i === 0) }));
-  if (!days.includes(slot.date)) items.unshift({ value: slot.date, label: dayChipLabel(slot.date, false) });
+  if (!days.includes(slot.date))
+    items.unshift({ value: slot.date, label: dayChipLabel(slot.date, false) });
   const set = (patch: Partial<Slot>) => onChange({ ...slot, ...patch });
   const caption = { fontFamily: type.ui[600], fontSize: type.size.xs, color: color.ink2 };
   return (
@@ -34,8 +35,25 @@ export function ScheduleFields({ slot, onChange, tz }: ScheduleFieldsProps) {
       <FilterPills items={items} value={slot.date} onChange={(date) => set({ date })} accessibilityLabel={L.date} role="radiogroup" />
       <AppText style={caption}>{L.time}</AppText>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
-        <Stepper label={L.mobile.hour} value={slot.hour} min={0} max={23} wrap format={(h) => hourLabel(h, cycle, locale)} onChange={(hour) => set({ hour })} />
-        <Stepper label={L.mobile.minute} value={slot.minute} min={0} max={45} step={15} wrap format={two} onChange={(minute) => set({ minute })} />
+        <Stepper
+          label={L.mobile.hour}
+          value={slot.hour}
+          min={0}
+          max={23}
+          wrap
+          format={(h) => hourLabel(h, cycle, locale)}
+          onChange={(hour) => set({ hour })}
+        />
+        <Stepper
+          label={L.mobile.minute}
+          value={slot.minute}
+          min={0}
+          max={45}
+          step={15}
+          wrap
+          format={two}
+          onChange={(minute) => set({ minute })}
+        />
       </View>
       <AppText style={caption}>{L.duration}</AppText>
       <Stepper

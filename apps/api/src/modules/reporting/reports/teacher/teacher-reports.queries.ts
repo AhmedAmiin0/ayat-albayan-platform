@@ -4,7 +4,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, type SortSpec } from '@/common/db/list-sort';
 import { studentIdsMatching } from '@/common/student-ids';
-import { dbError, type PageQuery } from '@/common/http/http';
+import type { PageQuery } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 export type TeacherReportRow = {
   id: string;
@@ -57,7 +58,7 @@ export class TeacherReportsQueries {
     const { data, count, error } = await applySort(q, filter, TEACHER_REPORT_SORT)
       .order('id')
       .range(start, start + input.page.pageSize - 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return { rows: data, total: count ?? 0 };
   }
 
@@ -65,7 +66,7 @@ export class TeacherReportsQueries {
   async students(ids: readonly string[]): Promise<ReportStudent[]> {
     if (ids.length === 0) return [];
     const { data, error } = await this.db.from('students').select('id, code, name').in('id', [...new Set(ids)]);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 }

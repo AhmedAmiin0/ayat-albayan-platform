@@ -13,7 +13,8 @@ interface GuardianPhonesProps {
   onDone: (notice: string) => void;
 }
 
-const failure = (e: unknown) => (e instanceof ApiError && e.status === 404 ? G.phoneNotFound : t.common.error);
+const failure = (e: unknown) =>
+  e instanceof ApiError && e.status === 404 ? G.phoneNotFound : t.common.error;
 
 /** Removing the second number is admin only; nothing shows without one. */
 export function GuardianPhones({ guardian, onDone }: GuardianPhonesProps) {

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import type { CommissionsQuery } from '@/modules/finance/assistant-pay/shared/assistant-pay.dto';
 import { COMMISSION_SELECT, type CommissionRow } from './commissions.mapper';
 
@@ -23,7 +23,7 @@ export class CommissionsRepo {
       .order('id')
       .limit(LEDGER_LIMIT)
       .overrideTypes<CommissionRow[], { merge: false }>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 }

@@ -24,7 +24,13 @@ export function GroupEmpty() {
 }
 
 /** Settings could not load: an inline alert and retry; nothing is editable. */
-export function ValuesLoadError({ onRetry, message = v.loadError }: { onRetry: () => void; message?: string }) {
+export function ValuesLoadError({
+  onRetry,
+  message = v.loadError,
+}: {
+  onRetry: () => void;
+  message?: string;
+}) {
   return (
     <div role="alert" className="flex flex-wrap items-center gap-3 rounded-md bg-danger-soft px-3 py-2.5 text-sm text-ink">
       <NuqtaGlyph shape="struck" className="text-danger" />

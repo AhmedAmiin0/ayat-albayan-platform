@@ -1,7 +1,7 @@
 import type { CancelBlock } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import { SELECT } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
 import type { SubRow } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 
@@ -28,13 +28,13 @@ export class SubscriptionCancelRepo {
       .select('id', { count: 'exact', head: true })
       .eq('subscription_id', subscriptionId)
       .eq('status', 'active');
-    if (rules.error) throw dbError(rules.error);
+    if (rules.error) throw pgError(rules.error);
     const { count, error } = await this.db
       .from('lessons')
       .select('id, rule:schedule_rules!lessons_rule_id_fkey!inner(subscription_id)', { count: 'exact', head: true })
       .eq('rule.subscription_id', subscriptionId)
       .not('status', 'in', CANCELLED_LESSONS);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return (rules.count ?? 0) + (count ?? 0);
   }
 
@@ -51,11 +51,11 @@ export class SubscriptionCancelRepo {
       .gt('price', 0)
       .neq('status', 'cancelled')
       .or(`created_at.gt.${ts},and(created_at.eq.${ts},id.gt.${sub.id})`);
-    if (later.error) throw dbError(later.error);
+    if (later.error) throw pgError(later.error);
     const ids = later.data.map((r) => r.id);
     if (ids.length === 0) return false;
     const { count, error } = await this.db.from('assistant_commissions').select('id', { count: 'exact', head: true }).in('subscription_id', ids);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return (count ?? 0) > 0;
   }
 
@@ -72,7 +72,7 @@ export class SubscriptionCancelRepo {
     if (error?.code === '23514' && error.message.startsWith('has_payments')) return { row: null, block: 'has_payments' };
     if (error?.code === '23514' && error.message.startsWith('has_lessons')) return { row: null, block: 'has_lessons' };
     if (error?.code === '23514' && error.message.startsWith('has_commission')) return { row: null, block: 'has_commission' };
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data ? { row: data } : { row: null, block: 'already_cancelled' };
   }
 }

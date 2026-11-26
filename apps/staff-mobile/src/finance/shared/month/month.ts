@@ -3,7 +3,8 @@ import { localDate } from '@/today/lib/timeline';
 
 /** This month in Riyadh, `YYYY-MM` (the academy's reporting clock, as the web's currentMonth). */
 // academy day (docs/34 b): the finance month is the academy's.
-export const currentMonth = (now: Date = new Date()): string => localDate(now, RIYADH_TZ).slice(0, 7);
+export const currentMonth = (now: Date = new Date()): string =>
+  localDate(now, RIYADH_TZ).slice(0, 7);
 
 /** `2026-12` + 1 → `2027-01`. */
 export function shiftMonth(month: string, delta: number): string {
@@ -11,7 +12,8 @@ export function shiftMonth(month: string, delta: number): string {
 }
 
 /** Months after the current one hold nothing yet: the picker stops there. */
-export const canGoNext = (month: string, now: Date = new Date()): boolean => month < currentMonth(now);
+export const canGoNext = (month: string, now: Date = new Date()): boolean =>
+  month < currentMonth(now);
 
 /** The four years the summary offers, newest first (the web's list). */
 export function summaryYears(now: Date = new Date()): string[] {

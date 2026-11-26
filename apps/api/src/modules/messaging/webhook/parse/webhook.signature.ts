@@ -1,18 +1,12 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { safeEqual } from '@/common/infra/crypto/safe-equal';
+import { hmacSha256Hex } from '@/common/infra/crypto/hmac';
 
 // Meta webhook authentication (R-MSG-04, docs/12 §3.5). Both checks fail closed: no secret or no
 // token configured → every request is refused.
 
-/** Constant-time string compare; unequal lengths are a plain false (timingSafeEqual throws). */
-export function safeEqual(a: string, b: string): boolean {
-  const x = Buffer.from(a);
-  const y = Buffer.from(b);
-  return x.length === y.length && timingSafeEqual(x, y);
-}
-
 /** «sha256=<hex>» of the raw body with one app secret. */
 function signatureOf(rawBody: Buffer, secret: string): string {
-  return `sha256=${createHmac('sha256', secret).update(rawBody).digest('hex')}`;
+  return `sha256=${hmacSha256Hex(secret, [rawBody])}`;
 }
 
 export interface SignedRequest {

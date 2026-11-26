@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { FamilySearchRepo } from './family-search.repo';
 
@@ -37,5 +38,23 @@ describe('FamilySearchRepo, the guardian picker', () => {
     expect(t.argsOf('guardian_phones', 'limit')).toEqual([10]);
     expect(t.argsOf('guardians', 'in')).toEqual(['id', ['g1']]);
     expect(t.argsOf('guardians', 'select')).toEqual(['id, name, phone_e164, students(code, name)']);
+  });
+});
+
+describe('FamilySearchRepo error paths: the answer a failed query gives today', () => {
+  it('a unique violation is 409 duplicate with the detail', async () => {
+    const { db } = fakeDb({ guardians: [{ error: PG_ERRORS.unique }] });
+    expect(await answerOfRejection(new FamilySearchRepo(db).search('سهيلة'))).toEqual({
+      status: 409,
+      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+    });
+  });
+
+  it('any other error is a 500 naming the code', async () => {
+    const { db } = fakeDb({ guardians: [{ error: PG_ERRORS.other }] });
+    expect(await answerOfRejection(new FamilySearchRepo(db).search('سهيلة'))).toEqual({
+      status: 500,
+      body: 'db error XX000: boom',
+    });
   });
 });

@@ -23,7 +23,11 @@ export function TasksList() {
         ) : list.isError ? (
           <ErrorState onRetry={list.refresh} />
         ) : (
-          <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+          <ActivityIndicator
+            accessibilityLabel={t.common.loading}
+            color={color.lapis}
+            style={{ paddingVertical: 32 }}
+          />
         )
       }
     />

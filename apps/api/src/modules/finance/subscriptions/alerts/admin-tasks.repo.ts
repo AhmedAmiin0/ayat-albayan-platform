@@ -3,7 +3,8 @@ import type { Page } from '@ab/core';
 import type { AdminTaskView } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError, type PageQuery } from '@/common/http/http';
+import type { PageQuery } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import { studentRef } from '@/modules/finance/subscriptions/subscriptions.mapper';
 import type { StudentRef } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 
@@ -37,7 +38,7 @@ export class AdminTasksRepo {
       .order('created_at', { ascending: false })
       .order('id')
       .range(from, from + q.pageSize - 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     const students = await this.studentsOf(data);
     return {
       items: data.map((r) => toTaskView(r, students)),
@@ -49,8 +50,7 @@ export class AdminTasksRepo {
 
   /** null when no task has this id. Marking a done task again keeps the first done_at. */
   async done(id: string, actorId: string): Promise<AdminTaskView | null> {
-    const { data: row, error } = await this.db.from('admin_tasks').select('*').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const row = maybe(await this.db.from('admin_tasks').select('*').eq('id', id).maybeSingle());
     if (!row) return null;
     let done = row;
     if (row.done_at === null) {
@@ -60,7 +60,7 @@ export class AdminTasksRepo {
         .eq('id', id)
         .select('*')
         .single();
-      if (res.error) throw dbError(res.error);
+      if (res.error) throw pgError(res.error);
       done = res.data;
     }
     return toTaskView(done, await this.studentsOf([done]));
@@ -73,7 +73,7 @@ export class AdminTasksRepo {
       .from('subscriptions')
       .select('id, student:students(id, code, name)')
       .in('id', ids);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return new Map(data.flatMap((s) => (s.student ? [[s.id, s.student] as const] : [])));
   }
 }

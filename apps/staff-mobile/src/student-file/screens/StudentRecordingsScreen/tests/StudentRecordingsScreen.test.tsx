@@ -109,7 +109,10 @@ test('without recordings.manage there is no delete and the switch is read-only',
 
 test('teacher mode never shows delete; an empty list and an error have their states', async () => {
   serve([]);
-  const view = await renderWithQuery(<StudentRecordingsScreen admin={false} />, createTestQueryClient({ meFromApi: true }));
+  const view = await renderWithQuery(
+    <StudentRecordingsScreen admin={false} />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   expect(await screen.findByText(R.empty)).toBeTruthy();
   view.unmount();
   mockApiFetch.mockReset().mockImplementation(async (p: string) => {

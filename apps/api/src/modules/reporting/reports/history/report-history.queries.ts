@@ -1,8 +1,8 @@
 import type { Attendance, Grade, LessonStatus, PdfStatus, ReportStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { readAll } from '@/common/db/read-all';
-import { dbError } from '@/common/http/http';
+import { readAll, readChunked } from '@/common/db/read-all';
+import { maybe, pgError } from '@/common/db/errors';
 
 const HISTORY_COLUMNS =
   'id, lesson_id, teacher_id, attendance, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, status, version, pdf_status, sent_at, submitted_at' as const;
@@ -42,8 +42,6 @@ export type PendingRow = {
   lesson_reports: { id: string; status: ReportStatus } | null;
 };
 
-const CHUNK = 100;
-
 /** Report history (R5, R-REP-05) and pending reports (R11, R-TCH-03). Service role; callers guard. */
 @Injectable()
 export class ReportHistoryQueries {
@@ -63,16 +61,12 @@ export class ReportHistoryQueries {
   }
 
   async lessons(ids: readonly string[]): Promise<HistoryLesson[]> {
-    const out: HistoryLesson[] = [];
-    for (let i = 0; i < ids.length; i += CHUNK) {
-      const { data, error } = await this.db
+    return readChunked(ids, (chunk) =>
+      this.db
         .from('lessons')
         .select('id, starts_at, teacher:teachers(id, display_name_ar, display_name_en)')
-        .in('id', ids.slice(i, i + CHUNK));
-      if (error) throw dbError(error);
-      out.push(...data);
-    }
-    return out;
+        .in('id', chunk),
+    );
   }
 
   /** Completed lessons only (v_lesson_sequence). */
@@ -87,8 +81,7 @@ export class ReportHistoryQueries {
 
   /** The student's assigned teacher; null when the student does not exist. */
   async student(id: string): Promise<{ teacher_id: string | null } | null> {
-    const { data, error } = await this.db.from('students').select('teacher_id').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('students').select('teacher_id').eq('id', id).maybeSingle());
     return data;
   }
 
@@ -98,7 +91,7 @@ export class ReportHistoryQueries {
       p_teacher_id: input.teacherId,
       p_student_id: input.studentId,
     });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data === true;
   }
 

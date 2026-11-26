@@ -10,7 +10,8 @@ const v = t.settingsValues;
 const c = v.confirm;
 
 /** The typed number matches the days on any keypad, so Arabic-Indic digits count too. */
-export const typedMatches = (typed: string, days: number): boolean => westernDigits(typed) === String(days);
+export const typedMatches = (typed: string, days: number): boolean =>
+  westernDigits(typed) === String(days);
 
 /** Uses the counted plural form of days. */
 export const typedTitle = (days: number): string => c.typedTitleCount.replace('{count}', counted(v.units.days, days));

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
-import { dbError } from '@/common/http/http';
+import { done, pgError } from '@/common/db/errors';
 
 /**
  * A push_notifications row with tickets left to check. ticket_tokens reads as {} on rows the
@@ -43,8 +43,7 @@ export class PushReceiptsRepo {
 
   /** Keeps only the tickets still without a receipt (and their tokens); records the first error. */
   async settle(id: string, values: Settled): Promise<void> {
-    const { error } = await this.db.from('push_notifications').update(values).eq('id', id);
-    if (error) throw dbError(error);
+    done(await this.db.from('push_notifications').update(values).eq('id', id));
   }
 
   /**
@@ -62,7 +61,7 @@ export class PushReceiptsRepo {
       .in('token', dead)
       .lte('created_at', row.created_at)
       .select('token');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data.map((b) => b.token);
   }
 }

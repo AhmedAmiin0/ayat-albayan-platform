@@ -1,2 +1,2 @@
 export { BeatBook, jobBeats } from './beat-book';
-export { type BeatPlan, type BeatSink, type LoggedFailures } from './beat-book.types';
+export { type BeatSink, type LoggedFailures } from './beat-book.types';

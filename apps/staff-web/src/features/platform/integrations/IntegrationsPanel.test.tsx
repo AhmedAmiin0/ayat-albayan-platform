@@ -12,7 +12,8 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 const s = t.integrations;
 /** The form is there once GET /settings/integrations answered. */
 const ready = () => screen.findByRole('button', { name: s.saveValues });
-const field = (key: keyof typeof s.keys) => screen.getByLabelText<HTMLInputElement>(s.keys[key].label);
+const field = (key: keyof typeof s.keys) =>
+  screen.getByLabelText<HTMLInputElement>(s.keys[key].label);
 
 function renderPanel(query = '') {
   routeFetch(apiFetch, [['/settings/integrations', integrationItems()]]);

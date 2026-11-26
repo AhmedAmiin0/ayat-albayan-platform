@@ -36,7 +36,9 @@ const PHONE_COLS = ['', 'w-[45%]'];
 
 /** Table per docs/26b §2; phones keep the first two columns; skeleton rows while loading. */
 export function ValuesTable({ caption, note, rows, env, loading }: ValuesTableProps) {
-  const cols = env.phone ? [v.cols.name, v.cols.value] : [v.cols.name, v.cols.value, v.cols.default, v.cols.last, v.cols.action];
+  const cols = env.phone
+    ? [v.cols.name, v.cols.value]
+    : [v.cols.name, v.cols.value, v.cols.default, v.cols.last, v.cols.action];
   return (
     <div className="min-w-0 overflow-x-auto">
       <table aria-busy={loading || undefined} className={cn('w-full table-fixed border-collapse text-start', !env.phone && 'min-w-[680px]')}>
@@ -61,7 +63,13 @@ export function ValuesTable({ caption, note, rows, env, loading }: ValuesTablePr
             ))}
           </tr>
         </thead>
-        <tbody>{loading ? <SkeletonRows cols={cols.length} /> : rows.map((row) => <ValueRowView key={rowKey(row)} row={row} env={env} />)}</tbody>
+        <tbody>
+          {loading ? (
+            <SkeletonRows cols={cols.length} />
+          ) : (
+            rows.map((row) => <ValueRowView key={rowKey(row)} row={row} env={env} />)
+          )}
+        </tbody>
       </table>
     </div>
   );

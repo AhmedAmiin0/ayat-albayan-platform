@@ -56,7 +56,8 @@ interface ModuleEntry {
   matches: (query: string) => boolean;
 }
 
-const linesOrLegacyMatch = (query: string): boolean => linesMatch(query) || groupsMatch(LEGACY_LINE_GROUPS)(query);
+const linesOrLegacyMatch = (query: string): boolean =>
+  linesMatch(query) || groupsMatch(LEGACY_LINE_GROUPS)(query);
 
 const savedRepliesMatch = (query: string): boolean => matchesText(`${t.savedReplies.title} ${t.savedReplies.manageIntro}`, query);
 
@@ -78,7 +79,14 @@ const MODULES: readonly ModuleEntry[] = [
 /** Every hit for the search, settings first (registry order), then module pages; none for an empty search. */
 export function searchHub(query: string): HubHit[] {
   if (query.trim() === '') return [];
-  const settings = SETTING_KEYS.filter((k) => matchesSetting(k, query)).map((k) => settingHit(k, query));
-  const modules = MODULES.filter((m) => m.matches(query)).map((m) => ({ id: `page:${m.id}`, label: m.label, where: m.where, href: m.href }));
+  const settings = SETTING_KEYS.filter((k) => matchesSetting(k, query)).map((k) =>
+    settingHit(k, query),
+  );
+  const modules = MODULES.filter((m) => m.matches(query)).map((m) => ({
+    id: `page:${m.id}`,
+    label: m.label,
+    where: m.where,
+    href: m.href,
+  }));
   return [...settings, ...modules];
 }

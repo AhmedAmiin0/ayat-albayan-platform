@@ -4,13 +4,15 @@ import { z } from 'zod';
 // stays the liveness probe. Public: statuses and counts only, never an error text or a job name.
 
 export const READY_STATES = ['ok', 'degraded', 'down'] as const;
-export type ReadyState = (typeof READY_STATES)[number];
+export const readyStateSchema = z.enum(READY_STATES);
+export type ReadyState = z.infer<typeof readyStateSchema>;
 
 /** `off`: not configured here (no REDIS_URL), or not readable from this process (jobs). */
 export const CHECK_STATES = ['ok', 'degraded', 'down', 'off'] as const;
-export type CheckState = (typeof CHECK_STATES)[number];
+export const checkStateSchema = z.enum(CHECK_STATES);
+export type CheckState = z.infer<typeof checkStateSchema>;
 
-const check = z.object({ status: z.enum(CHECK_STATES) });
+const check = z.object({ status: checkStateSchema });
 
 export const readinessChecksSchema = z.object({
   /** One tiny query through the API's database client, under a short timeout. */
@@ -23,7 +25,7 @@ export const readinessChecksSchema = z.object({
 export type ReadinessChecks = z.infer<typeof readinessChecksSchema>;
 
 export const readinessSchema = z.object({
-  status: z.enum(READY_STATES),
+  status: readyStateSchema,
   checks: readinessChecksSchema,
 });
 export type Readiness = z.infer<typeof readinessSchema>;

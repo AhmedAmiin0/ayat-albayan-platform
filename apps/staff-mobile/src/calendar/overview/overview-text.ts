@@ -50,7 +50,8 @@ const RANGE = '{from} – {to}';
 /** The whole range is one LTR island so Arabic never reverses it. */
 export function freeLabel(span: Span, cycle: ClockCycle, tz: string): string {
   const { from, to } = spanClock(span, cycle, tz);
-  if (t.schedule.free.includes(RANGE)) return t.schedule.free.replace(RANGE, rangeOf(from, to, cycle));
+  if (t.schedule.free.includes(RANGE))
+    return t.schedule.free.replace(RANGE, rangeOf(from, to, cycle));
   // A translation override that splits the range: each time its own island.
   return t.schedule.free.replace('{from}', isolated(from, cycle)).replace('{to}', isolated(to, cycle));
 }

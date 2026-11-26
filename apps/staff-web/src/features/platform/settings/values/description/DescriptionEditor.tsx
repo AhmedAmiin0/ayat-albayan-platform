@@ -30,7 +30,13 @@ export interface DescriptionEditorProps {
 }
 
 /** Arabic description editor, at most 500 characters with a live count; restore once edited. */
-export function DescriptionEditor({ target, entry, start, onClose, onDone }: DescriptionEditorProps) {
+export function DescriptionEditor({
+  target,
+  entry,
+  start,
+  onClose,
+  onDone,
+}: DescriptionEditorProps) {
   const formId = useId();
   const [text, setText] = useState(start);
   const [tried, setTried] = useState(false);
@@ -71,7 +77,12 @@ export function DescriptionEditor({ target, entry, start, onClose, onDone }: Des
       }
     >
       <form id={formId} className="grid gap-3" onSubmit={submit} noValidate>
-        <Field label={d.label} hint={count} error={tried && empty ? d.required : undefined} required>
+        <Field
+          label={d.label}
+          hint={count}
+          error={tried && empty ? d.required : undefined}
+          required
+        >
           {(control) => (
             <textarea
               {...control}
@@ -92,7 +103,9 @@ export function DescriptionEditor({ target, entry, start, onClose, onDone }: Des
           </Button>
         )}
         {locale === 'en' && <p className="text-xs text-ink-3">{d.englishNote}</p>}
-        {save.isError && <FormAlert>{ownerRefused(save.error) ? d.readOnlyNote : d.error}</FormAlert>}
+        {save.isError && (
+          <FormAlert>{ownerRefused(save.error) ? d.readOnlyNote : d.error}</FormAlert>
+        )}
       </form>
     </Dialog>
   );

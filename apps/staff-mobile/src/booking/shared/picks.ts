@@ -17,7 +17,11 @@ export { bookingPicks as picksOf, bookingPicksFrom as fromPicks } from '@ab/clie
 const weekdays: Record<string, string | undefined> = t.enums.weekday;
 
 /** Weekday and time in tz, naming the zone when it differs from the viewer's. */
-export function dayAtText(day: { weekday: number; time: string }, tz: string, viewer: ViewerClock): string {
+export function dayAtText(
+  day: { weekday: number; time: string },
+  tz: string,
+  viewer: ViewerClock,
+): string {
   const clock = hhmm(day.time, viewer.cycle);
   const time = tz === viewer.tz ? clock : t.schedule.inCity.replace('{time}', clock).replace('{city}', cityOf(tz));
   return t.booking.dayAt.replace('{day}', weekdays[String(day.weekday)] ?? '').replace('{time}', time);

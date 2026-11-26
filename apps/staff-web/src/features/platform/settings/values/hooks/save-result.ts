@@ -20,7 +20,9 @@ export function isSaveOutcome(res: unknown): res is SaveOutcome {
 
 /** Did the API refuse this key as owned by a module page (by row key or camelCase field)? */
 export function wasMoved(res: unknown, key: SettingKey): boolean {
-  return isSaveOutcome(res) && (res.moved.includes(key) || res.moved.includes(SETTING_FIELD_OF[key]));
+  return (
+    isSaveOutcome(res) && (res.moved.includes(key) || res.moved.includes(SETTING_FIELD_OF[key]))
+  );
 }
 
 /**

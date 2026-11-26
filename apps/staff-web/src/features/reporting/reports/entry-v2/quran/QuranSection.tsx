@@ -21,14 +21,24 @@ export function QuranSection({ s, memory }: QuranSectionProps) {
   const done = (range: SurahRange) => {
     if (!target) return;
     const { kind, index } = target;
-    s.setContent((c) => withSegment(c, { index, segment: { kind, ...range, grade: c.segments[index]?.grade ?? null } }));
+    s.setContent((c) =>
+      withSegment(c, {
+        index,
+        segment: { kind, ...range, grade: c.segments[index]?.grade ?? null },
+      }),
+    );
     setTarget(null);
   };
   const tajweed = TAJWEED_TOPICS.map((k) => ({ value: k, label: v2.tajweed[k] }));
   return (
     <>
       {SEGMENT_KINDS.map((kind) => (
-        <SegmentCard key={kind} s={s} kind={kind} onPick={(index) => setTarget(pickTarget(content, { kind, index, memory }))} />
+        <SegmentCard
+          key={kind}
+          s={s}
+          kind={kind}
+          onPick={(index) => setTarget(pickTarget(content, { kind, index, memory }))}
+        />
       ))}
       <section aria-label={v2.tajweedTitle} className={CARD}>
         <h3 className={CARD_TITLE}>

@@ -28,7 +28,10 @@ export async function saveProfile(o: SaveProfileOptions): Promise<SaveProfileRes
   try {
     const row = await updateStudent(o.student.id, r.patch);
     await o.queryClient.invalidateQueries({ queryKey: STUDENTS_KEY });
-    return { message: { ok: true, text: t.students.updated }, saved: toProfileValues({ ...o.student, ...row }) };
+    return {
+      message: { ok: true, text: t.students.updated },
+      saved: toProfileValues({ ...o.student, ...row }),
+    };
   } catch (error) {
     if (!isStatusChanged(error)) return { message: { ok: false, text: t.common.error } };
     await o.queryClient.invalidateQueries({ queryKey: STUDENTS_KEY });

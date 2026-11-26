@@ -1,3 +1,4 @@
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 import { CHAT_SEND_MIMES, type ChatSendMime } from '../chat/chat-files';
 import { WA_TEXT_MAX } from '../schemas';
@@ -75,7 +76,7 @@ export const savedReplyUploadSchema = z.object({
 export type SavedReplyUpload = z.infer<typeof savedReplyUploadSchema>;
 
 /** POST /saved-replies/:id/stage: the id of the file send that follows. */
-export const savedReplyStageSchema = z.object({ clientRequestId: z.uuid() });
+export const savedReplyStageSchema = z.object({ clientRequestId });
 
 /** The 4xx codes of the saved-replies endpoints. */
 export const SAVED_REPLY_ERRORS = [

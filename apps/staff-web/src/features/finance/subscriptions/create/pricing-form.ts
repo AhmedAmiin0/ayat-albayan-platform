@@ -30,7 +30,8 @@ export const INITIAL_PRICING: PricingForm = {
   country: '',
 };
 
-const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, Math.round(n) || min));
+const clamp = (n: number, min: number, max: number) =>
+  Math.min(max, Math.max(min, Math.round(n) || min));
 
 /** The `pricing` body of POST /subscriptions(/quote): exactly one of tier / count. */
 export function pricingBody(f: PricingForm): SubscriptionPricing {

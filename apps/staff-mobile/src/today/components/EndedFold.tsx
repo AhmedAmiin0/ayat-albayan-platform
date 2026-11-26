@@ -37,7 +37,14 @@ export function EndedFold<L extends TodayLesson>(props: EndedFoldProps<L>) {
           opacity: pressed ? 0.6 : 1,
         })}
       >
-        <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: 22, color: color.ink3 }}>
+        <AppText
+          style={{
+            fontFamily: type.ui[500],
+            fontSize: type.size.sm,
+            lineHeight: 22,
+            color: color.ink3,
+          }}
+        >
           {counted(t.today.endedFold, lessons.length)}
         </AppText>
         <Svg

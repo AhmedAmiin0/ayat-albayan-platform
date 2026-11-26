@@ -4,12 +4,13 @@ import { z } from 'zod';
 
 /** How a person in the room is named to the others: never a login role the family must not see. */
 export const ROOM_PRESENCE_ROLES = ['teacher', 'student', 'guardian', 'staff', 'guest'] as const;
-export type RoomPresenceRole = (typeof ROOM_PRESENCE_ROLES)[number];
+export const roomPresenceRoleSchema = z.enum(ROOM_PRESENCE_ROLES);
+export type RoomPresenceRole = z.infer<typeof roomPresenceRoleSchema>;
 
 /** name: absent for someone the viewer may not know by name (the family sees roles only). */
 export const roomPresenceSchema = z.object({
   name: z.string().optional(),
-  role: z.enum(ROOM_PRESENCE_ROLES),
+  role: roomPresenceRoleSchema,
 });
 export type RoomPresence = z.infer<typeof roomPresenceSchema>;
 

@@ -29,6 +29,7 @@ describe('the gate decision table (docs/19)', () => {
   });
 
   it("maps the database's answer; an unknown answer is gone", () => {
+    expect(['constructor', '__proto__'].map(outcomeOfRecord)).toEqual(['gone', 'gone']);
     expect(['recorded', 'limit_reached', 'gone', 'x'].map(outcomeOfRecord)).toEqual([
       'open',
       'limit_reached',

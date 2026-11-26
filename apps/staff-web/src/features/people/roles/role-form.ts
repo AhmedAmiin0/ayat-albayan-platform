@@ -35,7 +35,10 @@ export function togglePermission(form: RoleForm, permission: Permission): RoleFo
 
 export type GroupState = 'all' | 'some' | 'none';
 
-export function groupState(permissions: readonly Permission[], keys: readonly Permission[]): GroupState {
+export function groupState(
+  permissions: readonly Permission[],
+  keys: readonly Permission[],
+): GroupState {
   const held = keys.filter((k) => permissions.includes(k)).length;
   if (held === 0) return 'none';
   return held === keys.length ? 'all' : 'some';
@@ -55,12 +58,24 @@ export function toggleGroup(form: RoleForm, keys: readonly Permission[]): RoleFo
 export type RoleBody = { ok: true; body: RoleCreate | RoleUpdate } | { ok: false; error: 'name_required' };
 
 /** POST body for a new role; PATCH body (names + grants, never the base role) for an existing one. */
-export function roleBody(form: RoleForm, input: { creating: boolean; fixedGrants: boolean }): RoleBody {
+export function roleBody(
+  form: RoleForm,
+  input: { creating: boolean; fixedGrants: boolean },
+): RoleBody {
   const name_ar = form.name_ar.trim();
   if (!name_ar) return { ok: false, error: 'name_required' };
   const name_en = form.name_en.trim() || null;
-  if (input.creating) return { ok: true, body: { name_ar, name_en, base_role: form.base_role, permissions: form.permissions } };
-  return { ok: true, body: input.fixedGrants ? { name_ar, name_en } : { name_ar, name_en, permissions: form.permissions } };
+  if (input.creating)
+    return {
+      ok: true,
+      body: { name_ar, name_en, base_role: form.base_role, permissions: form.permissions },
+    };
+  return {
+    ok: true,
+    body: input.fixedGrants
+      ? { name_ar, name_en }
+      : { name_ar, name_en, permissions: form.permissions },
+  };
 }
 
 /** Only system teacher, sales or assistant roles are resettable; else null. */

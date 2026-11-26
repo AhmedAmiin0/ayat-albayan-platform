@@ -3,7 +3,7 @@ import { joinWindowConfig, OPEN_LESSON_STATUSES, type JoinWindowConfig } from '@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
-import { dbError } from '@/common/http/http';
+import { done, maybe, pgError, rows } from '@/common/db/errors';
 import { hashLinkToken, linkExpiry, newLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 import type { LinkStudent } from './student-link.flags';
 
@@ -36,21 +36,18 @@ export class StudentLinkRepo {
 
   /** is_test: the student half of the double condition (docs/56). */
   async student(id: string): Promise<LinkStudent | null> {
-    const { data, error } = await this.db.from('students').select('id, name, is_test').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('students').select('id, name, is_test').eq('id', id).maybeSingle());
     return data;
   }
 
   /** Creates the student's link, or rotates it: the new hash replaces the old one (which then dies). */
   async saveLink(input: { studentId: string; hash: string; actorId: string }): Promise<void> {
     const row = { student_id: input.studentId, token_hash: input.hash, revoked_at: null, created_by: input.actorId, created_at: new Date().toISOString() };
-    const { error } = await this.db.from('student_join_links').upsert(row, { onConflict: 'student_id' });
-    if (error) throw dbError(error);
+    done(await this.db.from('student_join_links').upsert(row, { onConflict: 'student_id' }));
   }
 
   async linkByHash(hash: string): Promise<StudentLinkRow | null> {
-    const { data, error } = await this.db.from('student_join_links').select('id, student_id, revoked_at').eq('token_hash', hash).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('student_join_links').select('id, student_id, revoked_at').eq('token_hash', hash).maybeSingle());
     return data;
   }
 
@@ -58,7 +55,7 @@ export class StudentLinkRepo {
   async lessonsAhead(studentId: string, now: Date): Promise<StudentLesson[]> {
     const { closesAfterMin } = await this.joinWindow();
     const since = new Date(now.getTime() - closesAfterMin * 60_000).toISOString();
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lessons')
       .select(
         'id, starts_at, ends_at, room_opened_at, room_ended_at, teacher:teachers(display_name_ar), lesson_students!inner(student_id)',
@@ -68,8 +65,7 @@ export class StudentLinkRepo {
       .gte('ends_at', since)
       .order('starts_at')
       .limit(AHEAD)
-      .overrideTypes<LessonEmbed[], { merge: false }>();
-    if (error) throw dbError(error);
+      .overrideTypes<LessonEmbed[], { merge: false }>());
     return data.map((l) => ({
       id: l.id,
       starts_at: l.starts_at,
@@ -98,17 +94,16 @@ export class StudentLinkRepo {
     if (!error) return data.id;
     // Two joins at once: the other one created it.
     const raced = error.code === UNIQUE_VIOLATION ? await this.findLessonLink(input.lesson.id, input.studentId) : null;
-    if (!raced) throw dbError(error);
+    if (!raced) throw pgError(error);
     return raced;
   }
 
   private async findLessonLink(lessonId: string, studentId: string): Promise<string | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('lesson_join_links')
       .select('id')
       .match({ lesson_id: lessonId, student_id: studentId })
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data?.id ?? null;
   }
 }

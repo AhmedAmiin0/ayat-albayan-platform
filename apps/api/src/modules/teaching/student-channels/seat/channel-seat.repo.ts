@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, maybe, pgError } from '@/common/db/errors';
 
 /** One student's seat as stored, with what the rule needs. */
 export interface SeatRow {
@@ -31,8 +31,8 @@ export class ChannelSeatRepo {
         .eq('student_id', studentId)
         .maybeSingle(),
     ]);
-    if (student.error) throw dbError(student.error);
-    if (channel.error) throw dbError(channel.error);
+    if (student.error) throw pgError(student.error);
+    if (channel.error) throw pgError(channel.error);
     if (!student.data) return null;
     const heldBy = channel.data?.assistant_id ?? null;
     return { broughtBy: student.data.brought_by, heldBy, holder: await this.assistant(heldBy) };
@@ -47,32 +47,29 @@ export class ChannelSeatRepo {
       .from('student_channels')
       .update({ assistant_id: input.profileId })
       .eq('student_id', input.studentId);
-    const { error } = await (input.from === null
+    done(await (input.from === null
       ? seat.is('assistant_id', null)
-      : seat.eq('assistant_id', input.from));
-    if (error) throw dbError(error);
+      : seat.eq('assistant_id', input.from)));
   }
 
   /** The holder frees it; anyone else changes nothing. */
   async leave(input: { studentId: string; profileId: string }): Promise<void> {
-    const { error } = await this.db
+    done(await this.db
       .from('student_channels')
       .update({ assistant_id: null })
       .eq('student_id', input.studentId)
-      .eq('assistant_id', input.profileId);
-    if (error) throw dbError(error);
+      .eq('assistant_id', input.profileId));
   }
 
   /** A salesperson's profile name (never a phone or email); null for anyone else. */
   private async assistant(id: string | null): Promise<SeatRow['holder']> {
     if (id === null) return null;
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('profiles')
       .select('id, full_name')
       .eq('id', id)
       .eq('role', 'sales')
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data && { id: data.id, name: data.full_name };
   }
 }

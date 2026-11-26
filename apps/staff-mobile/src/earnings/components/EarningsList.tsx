@@ -12,7 +12,12 @@ import { SessionItem } from './SessionItem';
 
 // The sessions and the payments sit in one inset card under the header.
 type Common = { scope: EarningsScope; header: ReactElement };
-type Query = { isPending: boolean; isError: boolean; isRefetching: boolean; refetch: () => unknown };
+type Query = {
+  isPending: boolean;
+  isError: boolean;
+  isRefetching: boolean;
+  refetch: () => unknown;
+};
 
 function stateOf(q: Query, empty: string): ReactElement {
   if (q.isError) return <ErrorState onRetry={() => void q.refetch()} />;
@@ -35,7 +40,11 @@ export function SessionsList({ scope, header, filter, selected, onToggle }: Sess
   // tick changed.
   const renderItem = useCallback(
     ({ item }: { item: TeacherEarningView }) => (
-      <SessionItem row={item} checked={selected?.has(item.id) ?? false} {...(onToggle ? { onToggle } : {})} />
+      <SessionItem
+        row={item}
+        checked={selected?.has(item.id) ?? false}
+        {...(onToggle ? { onToggle } : {})}
+      />
     ),
     [selected, onToggle],
   );

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { rows } from '@/common/db/errors';
 import type { ReportLinkKey } from './report-link-message';
 
 const LINK_KEYS: readonly ReportLinkKey[] = ['report_ready_family', 'report_ready_teacher'];
@@ -14,12 +14,11 @@ export class ReportReadyRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async approved(): Promise<Set<string>> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('message_templates')
       .select('key')
       .in('key', [...LINK_KEYS])
-      .eq('status', 'approved');
-    if (error) throw dbError(error);
+      .eq('status', 'approved'));
     return new Set(data.map((r) => r.key));
   }
 }

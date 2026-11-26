@@ -7,7 +7,7 @@ import { gateConfirmations } from '@/common/rules/confirmations';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { callRpc } from '@/modules/teaching/scheduling/rpc';
-import { dbError } from '@/common/http/http';
+import { maybe } from '@/common/db/errors';
 import { CourseChangePlanner } from './course-change.planner';
 import type { CourseTold } from './notices/course-change.notice-plan';
 import { CourseChangeNotices } from './notices/course-change.notices';
@@ -33,8 +33,7 @@ export class CourseChangeWriter {
 
   /** The change this clientRequestId already made (a retry), or null. */
   async replay(requestId: string, subscriptionId: string): Promise<CourseChangeResult | null> {
-    const { data, error } = await this.db.from('schedule_rules').select('id').eq('client_request_id', requestId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('schedule_rules').select('id').eq('client_request_id', requestId).maybeSingle());
     if (!data) return null;
     return this.result(await callRpc(this.db, 'course_change_result', { p_first: data.id }), subscriptionId);
   }

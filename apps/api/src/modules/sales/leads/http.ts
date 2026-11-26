@@ -1,6 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { z } from 'zod';
+import { orFilterTerm } from '@/common/db/or-filter';
 
 // ponytail: shared by leads + job-applicants only; hoist to common/ when a third module needs it.
 
@@ -18,7 +19,7 @@ export const pageQueryShape = {
   q: z
     .string()
     .optional()
-    .transform((v) => (v ? searchTerm(v) : '') || undefined),
+    .transform((v) => (v ? orFilterTerm(v) : '') || undefined),
 };
 export interface PageQuery {
   page: number;
@@ -27,10 +28,6 @@ export interface PageQuery {
 }
 
 
-/** Strip PostgREST `or()` syntax characters so free text cannot break or widen the filter. */
-export function searchTerm(q: string): string {
-  return q.replace(/[,()*%\\:"]/g, ' ').trim();
-}
 
 export function pageRange({ page, pageSize }: PageQuery): [number, number] {
   const from = (page - 1) * pageSize;

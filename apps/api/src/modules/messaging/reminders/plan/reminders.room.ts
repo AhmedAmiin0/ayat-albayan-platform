@@ -1,7 +1,7 @@
 import type { OutboundTemplate } from '@ab/shared';
 import type { Db } from '@/common/db/db.module';
 import { hashLinkToken, newLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import type { RoomCandidate } from './reminders.links';
 
@@ -14,17 +14,16 @@ const UNIQUE_VIOLATION = '23505';
 /** dedup_keys among `keys` already in messages: those links were minted and queued on an earlier tick. */
 async function queuedKeys(db: Db, keys: readonly string[]): Promise<Set<string>> {
   const { data, error } = await db.from('messages').select('dedup_key').in('dedup_key', [...keys]);
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
   return new Set(data.flatMap((m) => (m.dedup_key ? [m.dedup_key] : [])));
 }
 
 async function findLink(db: Db, c: RoomCandidate): Promise<string | null> {
-  const { data, error } = await db
+  const data = maybe(await db
     .from('lesson_join_links')
     .select('id')
     .match({ lesson_id: c.lessonId, student_id: c.studentId })
-    .maybeSingle();
-  if (error) throw dbError(error);
+    .maybeSingle());
   return data?.id ?? null;
 }
 
@@ -40,10 +39,10 @@ async function saveToken(db: Db, c: RoomCandidate, hash: string): Promise<void> 
     if (!error) return;
     // A student-link join created the row meanwhile (student-link.queries.ts): take it over.
     id = error.code === UNIQUE_VIOLATION ? await findLink(db, c) : null;
-    if (!id) throw dbError(error);
+    if (!id) throw pgError(error);
   }
   const { error } = await db.from('lesson_join_links').update(fields).eq('id', id);
-  if (error) throw dbError(error);
+  if (error) throw pgError(error);
 }
 
 /**

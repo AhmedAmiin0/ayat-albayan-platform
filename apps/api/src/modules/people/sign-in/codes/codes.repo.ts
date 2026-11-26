@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, maybe, one, pgError, rows } from '@/common/db/errors';
 import type { CodePurpose, CodeStore, LiveCode, NewCode, PhoneStats, Subject } from '@/modules/people/sign-in/sign-in.ports';
 
 const DAY_MS = 24 * 3600_000;
@@ -18,8 +18,8 @@ export class CodesRepo implements CodeStore {
   /** Also drops codes older than a week (spent or dead: nothing reads them after a day). */
   async insert(row: NewCode): Promise<string> {
     const old = await this.db.from('login_codes').delete().lt('created_at', new Date(Date.now() - 7 * DAY_MS).toISOString());
-    if (old.error) throw dbError(old.error);
-    const { data, error } = await this.db
+    if (old.error) throw pgError(old.error);
+    const data = one(await this.db
       .from('login_codes')
       .insert({
         purpose: row.purpose,
@@ -31,13 +31,12 @@ export class CodesRepo implements CodeStore {
         expires_at: row.expiresAt.toISOString(),
       })
       .select('id')
-      .single();
-    if (error) throw dbError(error);
+      .single());
     return data.id;
   }
 
   async latest(subject: Subject, purposes: readonly CodePurpose[]): Promise<LiveCode | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('login_codes')
       .select('id, purpose, phone_e164')
       .eq('subject_kind', subject.kind)
@@ -45,45 +44,41 @@ export class CodesRepo implements CodeStore {
       .in('purpose', [...purposes])
       .order('created_at', { ascending: false })
       .limit(1)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data ? { id: data.id, purpose: asPurpose(data.purpose), phone: data.phone_e164 } : null;
   }
 
   async take(id: string): Promise<string | null> {
     const { data, error } = await this.db.rpc('login_code_take', { p_id: id });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data ?? null;
   }
 
   async spend(id: string): Promise<boolean> {
     const { data, error } = await this.db.rpc('login_code_spend', { p_id: id });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data === true;
   }
 
   async delivered(id: string, sendError: string | null): Promise<void> {
     const patch = sendError ? { send_error: sendError } : { sent_at: new Date().toISOString() };
-    const { error } = await this.db.from('login_codes').update(patch).eq('id', id);
-    if (error) throw dbError(error);
+    done(await this.db.from('login_codes').update(patch).eq('id', id));
   }
 
   async failedLastHour(now: Date): Promise<number> {
     const since = new Date(now.getTime() - 3600_000).toISOString();
-    const { data, error } = await this.db.from('login_codes').select('attempts, used_at').gte('created_at', since);
-    if (error) throw dbError(error);
+    const data = rows(await this.db.from('login_codes').select('attempts, used_at').gte('created_at', since));
     return data.reduce((n, r) => n + r.attempts - (r.used_at ? 1 : 0), 0);
   }
 
   /** The phone's codes of the last 24 hours; a spent code's last attempt was the right one. */
   async phoneStats(phone: string, now: Date): Promise<PhoneStats> {
     const since = new Date(now.getTime() - DAY_MS).toISOString();
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('login_codes')
       .select('created_at, attempts, used_at')
       .eq('phone_e164', phone)
-      .gte('created_at', since);
-    if (error) throw dbError(error);
+      .gte('created_at', since));
     const quarter = now.getTime() - QUARTER_MS;
     return {
       sentLast15Min: data.filter((r) => new Date(r.created_at).getTime() > quarter).length,

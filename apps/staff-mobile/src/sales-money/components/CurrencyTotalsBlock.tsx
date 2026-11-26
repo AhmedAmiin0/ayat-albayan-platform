@@ -11,7 +11,13 @@ const PARTS = ['salary', 'commissions', 'adjustments', 'total'] as const;
  * A month's totals, one block per currency (web CurrencyTotalsList): salary, commissions, adjustments
  * and the total; zero parts still show so the four lines always read the same way. Never summed across currencies.
  */
-export function CurrencyTotalsBlock({ totals, label }: { totals: Readonly<Record<string, CurrencyTotals>>; label: string }) {
+export function CurrencyTotalsBlock({
+  totals,
+  label,
+}: {
+  totals: Readonly<Record<string, CurrencyTotals>>;
+  label: string;
+}) {
   const entries = byCurrency(totals);
   if (entries.length === 0) return <Note>—</Note>;
   return (

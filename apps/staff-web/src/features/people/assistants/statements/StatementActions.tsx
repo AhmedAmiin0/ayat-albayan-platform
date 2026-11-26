@@ -3,7 +3,11 @@ import { Button, t } from '@ab/web-kit';
 import type { AssistantStatementView } from '@/features/people/assistants/api';
 
 export type { StatementAction, StatementCan };
-type Props = { statement: AssistantStatementView; can: StatementCan; onAction: (action: StatementAction) => void };
+type Props = {
+  statement: AssistantStatementView;
+  can: StatementCan;
+  onAction: (action: StatementAction) => void;
+};
 type Look = { label: () => string; variant: 'secondary' | 'ghost' };
 
 const LOOK = {

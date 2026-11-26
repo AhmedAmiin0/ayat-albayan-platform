@@ -21,7 +21,11 @@ interface SalesConfirmLessonProps {
 }
 
 /** Any lesson (all assistants see the family's reply), scheduled to confirmed, no message sent. */
-export function SalesConfirmLesson({ lessonId, onConfirmed, secondary = false }: SalesConfirmLessonProps) {
+export function SalesConfirmLesson({
+  lessonId,
+  onConfirmed,
+  secondary = false,
+}: SalesConfirmLessonProps) {
   const client = useQueryClient();
   const confirm = useMutation({
     mutationFn: () => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/confirm`),

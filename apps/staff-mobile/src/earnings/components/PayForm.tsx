@@ -31,7 +31,11 @@ export function PayForm({ teacherId, selected, outstanding, onDone }: PayFormPro
   const now = useNow();
   const ceiling = payCeiling(selected, outstanding);
   const pay = usePayTeacher(teacherId);
-  const [draft, setDraft] = useState<PayDraft>({ amountText: String(ceiling), daysAgo: 0, receipt: null });
+  const [draft, setDraft] = useState<PayDraft>({
+    amountText: String(ceiling),
+    daysAgo: 0,
+    receipt: null,
+  });
   const [tried, setTried] = useState(false);
   const check = checkPayDraft(draft, { ceiling, now, earningIds: earningIdsOf(selected) });
   const errors = tried ? check.errors : {};
@@ -58,7 +62,11 @@ export function PayForm({ teacherId, selected, outstanding, onDone }: PayFormPro
       <ReceiptPicker receipt={draft.receipt} onChange={(receipt) => set({ receipt })} />
       <Note>{t.earnings.allocation}</Note>
       {pay.isError ? <ErrorLine message={earningsErrorText(pay.error)} /> : null}
-      <Button label={pay.isPending ? t.earnings.saving : t.earnings.confirm} onPress={submit} busy={pay.isPending} />
+      <Button
+        label={pay.isPending ? t.earnings.saving : t.earnings.confirm}
+        onPress={submit}
+        busy={pay.isPending}
+      />
     </View>
   );
 }

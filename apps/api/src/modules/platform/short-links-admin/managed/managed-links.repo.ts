@@ -2,7 +2,7 @@ import type { TablesInsert, TablesUpdate } from '@ab/db';
 import type { ShortLinkListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, one, pgError } from '@/common/db/errors';
 import { MANAGED_KIND, type ShortLinkRow } from '@/modules/platform/short-links';
 
 /** Postgres unique_violation: the code already exists (the caller draws another). */
@@ -36,30 +36,28 @@ export class ManagedLinksRepo {
   async insert(row: TablesInsert<'short_links'>): Promise<ShortLinkRow | null> {
     const { data, error } = await this.db.from('short_links').insert(row).select('*').maybeSingle();
     if (error?.code === UNIQUE) return null;
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   async byCode(code: string): Promise<ShortLinkRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('short_links')
       .select('*')
       .eq('kind', MANAGED_KIND)
       .eq('code', code)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   async update(code: string, patch: TablesUpdate<'short_links'>): Promise<ShortLinkRow> {
-    const { data, error } = await this.db
+    const data = one(await this.db
       .from('short_links')
       .update(patch)
       .eq('kind', MANAGED_KIND)
       .eq('code', code)
       .select('*')
-      .single();
-    if (error) throw dbError(error);
+      .single());
     return data;
   }
 
@@ -74,7 +72,7 @@ export class ManagedLinksRepo {
       .ilike('title', like(query.search ?? ''))
       .order('created_at', { ascending: false })
       .range(from, from + query.pageSize - 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return { rows: data, total: count ?? 0 };
   }
 }

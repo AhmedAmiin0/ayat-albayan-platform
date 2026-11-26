@@ -24,7 +24,10 @@ const STYLE: Record<PaymentLinkStatus, { tone: Tone; glyph: Glyph }> = {
   cancelled: { tone: 'neutral', glyph: 'struck' },
 };
 
-const whenText = (l: PaymentLinkView) => (l.paid_at ? fillText(P.paidAt, { when: formatDate(l.paid_at) }) : fillText(P.expiresAt, { when: formatDate(l.expires_at) }));
+const whenText = (l: PaymentLinkView) =>
+  l.paid_at
+    ? fillText(P.paidAt, { when: formatDate(l.paid_at) })
+    : fillText(P.expiresAt, { when: formatDate(l.expires_at) });
 
 type Opts = { now: Date; onCancel: (link: PaymentLinkView) => void };
 

@@ -56,7 +56,9 @@ export function ValuesView({ search, onSearch, renderGuard }: ValuesViewProps) {
       <p aria-live="polite" className="sr-only">
         {ctl.said}
       </p>
-      {ctl.pending && <ConfirmValueDialog pending={ctl.pending} onYes={ctl.confirm} onClose={ctl.cancel} />}
+      {ctl.pending && (
+        <ConfirmValueDialog pending={ctl.pending} onYes={ctl.confirm} onClose={ctl.cancel} />
+      )}
       {describing && (
         <DescriptionDialog
           target={describing}
@@ -75,7 +77,9 @@ export function ValuesView({ search, onSearch, renderGuard }: ValuesViewProps) {
           onUndo={() => ctl.note && ctl.undo(ctl.note)}
         />
       )}
-      {customNote && !ctl.note && <Toast message={customNote} onDismiss={() => setCustomNote(null)} />}
+      {customNote && !ctl.note && (
+        <Toast message={customNote} onDismiss={() => setCustomNote(null)} />
+      )}
       {renderGuard?.(dirtyNames)}
     </ValuesContext.Provider>
   );

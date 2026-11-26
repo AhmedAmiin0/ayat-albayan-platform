@@ -2,7 +2,7 @@ import type { Tables } from '@ab/db';
 import { OPEN_LESSON_STATUSES } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError, rows } from '@/common/db/errors';
 
 /** Never reasons, attendance, notes or money; meeting link and mode are included. */
 const SALES_SCHEDULE_SELECT =
@@ -54,20 +54,19 @@ export class SalesScheduleRepo {
       .neq('status', 'rescheduled');
     if (range.teacherId) query = query.eq('teacher_id', range.teacherId);
     const { data, error } = await query.order('starts_at');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** Open lessons starting inside [from, to), by start, with their students' ids only. */
   async upcoming(range: DayRange): Promise<UpcomingRow[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lessons')
       .select('starts_at, lesson_students(student_id)')
       .gte('starts_at', range.from.toISOString())
       .lt('starts_at', range.to.toISOString())
       .in('status', [...OPEN_LESSON_STATUSES])
-      .order('starts_at');
-    if (error) throw dbError(error);
+      .order('starts_at'));
     return data;
   }
 }

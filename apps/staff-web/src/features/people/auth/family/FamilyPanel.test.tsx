@@ -4,7 +4,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { FamilyPanel } from './FamilyPanel';
 
-const auth = vi.hoisted(() => ({ verifyOtp: vi.fn(), setSession: vi.fn(), signOut: vi.fn(), getSession: vi.fn() }));
+const auth = vi.hoisted(() => ({
+  verifyOtp: vi.fn(),
+  setSession: vi.fn(),
+  signOut: vi.fn(),
+  getSession: vi.fn(),
+}));
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 const navigate = vi.hoisted(() => vi.fn());

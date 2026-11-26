@@ -64,7 +64,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     recordings: recordingQueries(),
     http: http(),
     storage: {
-      signedDownload: vi.fn(),
+      signedDownloads: vi.fn(),
       writesTo: () => 'supabase',
       recordsToMinio: () => false,
       egressTarget: () => null,
@@ -117,7 +117,9 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     Object.assign(m.meetings, meetingQueries());
     resetMeetingInvites(m.invites);
     m.http.mockImplementation(http({ body: { egress_id: 'EG_new' } }));
-    m.storage.signedDownload.mockResolvedValue({ url: 'https://signed.example.test/r.mp4', expires_at: '' });
+    m.storage.signedDownloads.mockImplementation(async (i: { paths: readonly string[] }) =>
+      new Map(i.paths.map((p) => [p, 'https://signed.example.test/r.mp4'])),
+    );
     m.teachers.idByProfile.mockImplementation(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null));
     m.templates.approved.mockResolvedValue({ key: 'lesson_join_link', status: 'approved' });
     m.outbox.send.mockResolvedValue({ view: { status: 'queued' }, replayed: false });

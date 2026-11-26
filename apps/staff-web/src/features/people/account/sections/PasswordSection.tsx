@@ -15,13 +15,20 @@ const EMPTY: PasswordForm = { current: '', next: '', confirm: '' };
 /** R-ACC-04: a new password (typed twice) for the current one; this session stays signed in. */
 export function PasswordSection({ onDone }: Pick<SectionProps, 'onDone'>) {
   const [form, setForm] = useState<PasswordForm>(EMPTY);
-  const set = (key: keyof PasswordForm) => (value: string) => setForm((f) => ({ ...f, [key]: value }));
-  const save = useAccountSave({ save: changePassword, toast: t.account.toast.password, onDone, onSaved: () => setForm(EMPTY) });
+  const set = (key: keyof PasswordForm) => (value: string) =>
+    setForm((f) => ({ ...f, [key]: value }));
+  const save = useAccountSave({
+    save: changePassword,
+    toast: t.account.toast.password,
+    onDone,
+    onSaved: () => setForm(EMPTY),
+  });
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const found = passwordErrors(form);
     save.setErrors(found);
-    if (Object.keys(found).length === 0) save.submit({ current_password: form.current, new_password: form.next });
+    if (Object.keys(found).length === 0)
+      save.submit({ current_password: form.current, new_password: form.next });
   };
   return (
     <AccountSection title={W.title}>

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { localDate } from '@ab/core';
+import { clientRequestId, localDate } from '@ab/core';
 import type { PaymentMethod } from '@ab/catalog';
 import {
   CURRENCY_ISOS,
@@ -50,7 +50,7 @@ export const paymentLinkCreateSchema = z.strictObject({
   teacherId: z.uuid().optional(),
   amount: moneyAmount,
   currency: currencyIso,
-  clientRequestId: z.uuid(),
+  clientRequestId,
 });
 
 /** GET /sales/payment-links?status=: her links, newest first. */

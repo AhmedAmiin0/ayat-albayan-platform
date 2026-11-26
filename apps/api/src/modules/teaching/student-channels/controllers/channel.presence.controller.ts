@@ -9,6 +9,7 @@ import {
   ChannelAccess,
   type ChannelActor,
 } from '@/modules/teaching/student-channels/channel-access';
+import { isAdmin } from '@/common/auth/roles';
 
 const UUID = new ParseUUIDPipe();
 
@@ -47,7 +48,7 @@ export class ChannelPresenceController {
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
     const actor = await this.access.monitor(user, id);
-    if (user.role !== 'admin') throw forbidden('presence_admin_only');
+    if (!isAdmin(user)) throw forbidden('presence_admin_only');
     return this.of(user, actor);
   }
 

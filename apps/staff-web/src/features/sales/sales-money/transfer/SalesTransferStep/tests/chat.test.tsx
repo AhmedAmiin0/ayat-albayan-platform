@@ -40,7 +40,11 @@ describe('step 2 «سجّل التحويل البنكي» with attachments from 
     expect(dialog.getByText(t.salesMoney.attachments)).toBeTruthy();
     save();
     await vi.waitFor(() => expect(payments()).toHaveLength(1));
-    expect(payments()[0]).toMatchObject({ subscriptionId: OPEN_SUB.id, amount: 290, attachments: [] });
+    expect(payments()[0]).toMatchObject({
+      subscriptionId: OPEN_SUB.id,
+      amount: 290,
+      attachments: [],
+    });
     expect(payments()[0]).not.toHaveProperty('receiptPath');
     expect(await screen.findByRole('dialog', { name: t.salesMoney.becameSubscribed })).toBeTruthy();
   });

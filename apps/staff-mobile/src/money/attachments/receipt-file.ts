@@ -15,5 +15,7 @@ export const isPdfName = (name: string) => name.split('?')[0]?.toLowerCase().end
 
 /** A PDF is opened outside the app, an image shown inline. The stored path or the signed URL says which. */
 export function isPdfReceipt(p: Pick<PaymentView, 'receipt_path'>, url?: string): boolean {
-  return (p.receipt_path !== null && isPdfName(p.receipt_path)) || (url !== undefined && isPdfName(url));
+  return (
+    (p.receipt_path !== null && isPdfName(p.receipt_path)) || (url !== undefined && isPdfName(url))
+  );
 }

@@ -88,10 +88,22 @@ describe('«تغيير أيام الحلقات»: pick, review, save (owner 2026
     const lines = within(status).getAllByRole('listitem').map((li) => li.textContent);
     const newDays = newDaysText({ byday: [1, 3], startTimeLocal: '18:00', dayTimes: [{ weekday: 3, startTimeLocal: '19:30' }] }, COURSE.tz, C24);
     // The current and the new days together, above what is left and the new end.
-    expect(lines.slice(0, 3)).toEqual([currentDaysText(COURSE.days, COURSE.tz, C24), newDays, counted(t.booking.courseChange.remaining, 5)]);
-    expect(screen.getByText(t.booking.courseChange.newEnd.replace('{date}', dateLabel('2026-10-21')))).toBeTruthy();
-    const checked = apiSend.mock.calls.find(([, path]) => path === '/sales/booking/course/change/check');
-    expect(checked?.[2]).toMatchObject({ subscriptionId: COURSE.subscriptionId, byday: [1, 3], startsAt: MON });
+    expect(lines.slice(0, 3)).toEqual([
+      currentDaysText(COURSE.days, COURSE.tz, C24),
+      newDays,
+      counted(t.booking.courseChange.remaining, 5),
+    ]);
+    expect(
+      screen.getByText(t.booking.courseChange.newEnd.replace('{date}', dateLabel('2026-10-21'))),
+    ).toBeTruthy();
+    const checked = apiSend.mock.calls.find(
+      ([, path]) => path === '/sales/booking/course/change/check',
+    );
+    expect(checked?.[2]).toMatchObject({
+      subscriptionId: COURSE.subscriptionId,
+      byday: [1, 3],
+      startsAt: MON,
+    });
     fireEvent.click(screen.getByRole('button', { name: t.booking.courseChange.submit }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.booking.courseChange.done));
     const [body] = changeBodies(apiSend);

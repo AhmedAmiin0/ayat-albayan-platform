@@ -10,6 +10,7 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden } from '@/common/http/errors';
 import { PresenceRepo } from './presence.repo';
 import { PresenceSettings } from './presence.settings';
+import { isAdmin } from '@/common/auth/roles';
 
 /** A channel the caller already passed the channel's own access check for (ChannelAccess). */
 interface ChannelSeat {
@@ -53,7 +54,7 @@ export class PresenceService {
 
   /** The admin's staff list (base role admin only, whatever the permission set). */
   async staff(viewer: AuthUser): Promise<StaffPresence> {
-    if (viewer.role !== 'admin') throw forbidden('presence_admin_only');
+    if (!isAdmin(viewer)) throw forbidden('presence_admin_only');
     if (!(await this.settings.enabled())) return { ...OFF, staff: [] };
     const rows = await this.repo.staff();
     const seen = await this.repo.lastSeen(rows.map((r) => r.id));

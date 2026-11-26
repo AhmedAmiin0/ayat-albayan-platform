@@ -13,7 +13,10 @@ test('docs/07 «الأزرار»: a scheduled meeting: reschedule | new link | c
   await render(<MeetingManageButtons scheduled onAsk={onAsk} onMove={jest.fn()} />);
   expect(screen.getAllByTestId('button-row-cell')).toHaveLength(3);
   expect(styleOf(M.cancel)).toMatchObject(DANGER);
-  expect(styleOf(L.newLink)).toMatchObject({ borderWidth: 1, borderColor: palette.light.ruleInput });
+  expect(styleOf(L.newLink)).toMatchObject({
+    borderWidth: 1,
+    borderColor: palette.light.ruleInput,
+  });
   await fireEvent.press(screen.getByRole('button', { name: M.cancel }));
   expect(onAsk).toHaveBeenCalledWith('cancel');
 });

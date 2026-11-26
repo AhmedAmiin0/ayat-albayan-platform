@@ -1,5 +1,12 @@
 import type { IntegrationConfigItem, IntegrationPlainKey, IntegrationSecretKey } from '@ab/catalog';
-import { Inject, Injectable, Logger, Optional, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  Optional,
+  type OnModuleDestroy,
+  type OnModuleInit,
+} from '@nestjs/common';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { setIntegrationOverlay } from './integration-overlay';
 import { validOverlay } from '@/config/env/env';
@@ -19,7 +26,9 @@ const MIN_REFRESH_MS = 1_000;
 const LOAD_TIMEOUT_MS = 5_000;
 
 function timeout(ms: number): Promise<never> {
-  return new Promise((_, reject) => setTimeout(() => reject(new Error(`timed out after ${ms} ms`)), ms).unref());
+  return new Promise((_, reject) =>
+    setTimeout(() => reject(new Error(`timed out after ${ms} ms`)), ms).unref(),
+  );
 }
 
 /**
@@ -47,6 +56,7 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
     if (this.everyMs === null) return;
     this.shared?.on('integrations', () => void this.refresh());
     await this.refresh();
+    // poll: catches up on a bus message this copy missed while the bus was down.
     this.timer = setInterval(
       () => void this.refresh(),
       Math.max(this.everyMs, MIN_REFRESH_MS),
@@ -65,12 +75,17 @@ export class IntegrationConfigService implements OnModuleInit, OnModuleDestroy {
       setIntegrationOverlay(validOverlay(raw, (key) => bad.push(key)));
       // One warning per bad key, not one per refresh.
       for (const key of bad) {
-        if (!this.badKeys.has(key)) this.log.warn(`integration config ${key}: invalid value in the database ignored, the env value applies`);
+        if (!this.badKeys.has(key))
+          this.log.warn(
+            `integration config ${key}: invalid value in the database ignored, the env value applies`,
+          );
       }
       this.badKeys = new Set(bad);
       return true;
     } catch (e) {
-      this.log.warn(`integration config not loaded, keeping the current values: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(
+        `integration config not loaded, keeping the current values: ${e instanceof Error ? e.message : String(e)}`,
+      );
       return false;
     }
   }

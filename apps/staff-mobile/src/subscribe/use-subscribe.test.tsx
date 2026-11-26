@@ -15,16 +15,20 @@ const input: SubscribeInput = {
   pricing: { duration: 45, discount: 0, tier: 'standard' },
   startsOn: '2026-10-03',
 };
-const keyOf = (call: number) => (mockApiSend.mock.calls[call]?.[2] as { clientRequestId: string }).clientRequestId;
+const keyOf = (call: number) =>
+  (mockApiSend.mock.calls[call]?.[2] as { clientRequestId: string }).clientRequestId;
 
-const setup = () => renderHook(() => useCreateSubscription(), { wrapper: queryWrapper(createTestQueryClient()) });
+const setup = () =>
+  renderHook(() => useCreateSubscription(), { wrapper: queryWrapper(createTestQueryClient()) });
 
 beforeEach(() => jest.clearAllMocks());
 
 test('a double tap joins the save in flight: one POST /subscriptions with a key', async () => {
   mockApiSend.mockResolvedValue(saved('new-sub'));
   const { result } = await setup();
-  const both = await act(() => Promise.all([result.current.mutateAsync(input), result.current.mutateAsync(input)]));
+  const both = await act(() =>
+    Promise.all([result.current.mutateAsync(input), result.current.mutateAsync(input)]),
+  );
   expect(both.map((s) => s.id)).toEqual(['new-sub', 'new-sub']);
   expect(mockApiSend).toHaveBeenCalledTimes(1);
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/subscriptions', { ...input, notes: null, clientRequestId: keyOf(0) });

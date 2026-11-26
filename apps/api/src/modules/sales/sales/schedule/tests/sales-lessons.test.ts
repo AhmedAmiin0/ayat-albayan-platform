@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { inSalesScope } from '@/modules/sales/sales/schedule/sales-lessons';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
+import { fakeDb } from '@/common/db/testing/fake-db';
+import { inSalesScope, isSalesLesson } from '@/modules/sales/sales/schedule/sales-lessons';
 import { meetingRow, NONE, OWN_A } from '@/modules/sales/sales/sales.fakes';
 
 describe('inSalesScope: the one rule for the meetings list and the classroom', () => {
@@ -18,8 +20,36 @@ describe('inSalesScope: the one rule for the meetings list and the classroom', (
   });
 
   it("another salesperson's lead and a lesson with no rule are out", () => {
-    expect(inSalesScope(meetingRow({ rule: { created_from_lead_id: 'l9', package: 'trial', lead: null }, lesson_students: [] }), OWN_A)).toBe(false);
+    expect(
+      inSalesScope(
+        meetingRow({
+          rule: { created_from_lead_id: 'l9', package: 'trial', lead: null },
+          lesson_students: [],
+        }),
+        OWN_A,
+      ),
+    ).toBe(false);
     expect(inSalesScope(meetingRow({ rule: null }), OWN_A)).toBe(false);
     expect(inSalesScope(meetingRow(), NONE)).toBe(false);
+  });
+});
+
+describe('sales lessons error paths: the answer a failed query gives today', () => {
+  const LESSON = { profileId: 'p1', lessonId: 'l1' };
+
+  it('a unique violation is 409 duplicate with the detail', async () => {
+    const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
+    expect(await answerOfRejection(isSalesLesson(db, LESSON))).toEqual({
+      status: 409,
+      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+    });
+  });
+
+  it('any other error is a 500 naming the code', async () => {
+    const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.other }] });
+    expect(await answerOfRejection(isSalesLesson(db, LESSON))).toEqual({
+      status: 500,
+      body: 'db error XX000: boom',
+    });
   });
 });

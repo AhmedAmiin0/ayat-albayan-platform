@@ -31,8 +31,12 @@ describe('«القيم» editors by type', () => {
   it('a number that can be OFF has its switch in the same cell; OFF disables the box', async () => {
     renderValues(apiFetch);
     const row = await findRow(t.settings.lateCancelHours);
-    expect((within(row).getByRole<HTMLInputElement>('switch', { name: t.settings.lateCancel })).checked).toBe(false);
-    expect((within(row).getByLabelText<HTMLInputElement>(t.settings.lateCancelHours)).disabled).toBe(true);
+    expect(
+      within(row).getByRole<HTMLInputElement>('switch', { name: t.settings.lateCancel }).checked,
+    ).toBe(false);
+    expect(within(row).getByLabelText<HTMLInputElement>(t.settings.lateCancelHours).disabled).toBe(
+      true,
+    );
   });
 
   it('a phone is type=tel, LTR, with the form it will be saved in', async () => {

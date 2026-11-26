@@ -35,6 +35,14 @@ export function ValueRowView({ row, env }: { row: ValueRow; env: RowEnv }) {
       />
     );
   }
-  if (env.phone) return <SettingPhoneRow settingKey={row.key} group={row.group} groupName={groupName} onOpen={env.onOpen} />;
+  if (env.phone)
+    return (
+      <SettingPhoneRow
+        settingKey={row.key}
+        group={row.group}
+        groupName={groupName}
+        onOpen={env.onOpen}
+      />
+    );
   return <SettingValueRow settingKey={row.key} group={row.group} groupName={groupName} />;
 }

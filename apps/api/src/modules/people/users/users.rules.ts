@@ -1,5 +1,6 @@
 import type { LinkKind } from '@ab/shared';
-import type { Permission, UserRole } from '@ab/catalog';
+import { permissionSchema, userRoleSchema, type Permission, type UserRole } from '@ab/catalog';
+import { z } from 'zod';
 import { isSystemAdmin, roleView } from '@/modules/people/roles/roles.logic';
 import type { RoleRecord } from '@/modules/people/roles/roles.store';
 import { forbidden } from '@/common/http/errors';
@@ -25,11 +26,17 @@ export const actorOf = (user: { id: string; permissions?: readonly Permission[] 
  * needs the matching write permission of its table too (create, reset, sign-out, disable, enable,
  * update, delete, and the link pickers).
  */
-const RECORD_WRITE: Partial<Record<UserRole, Permission>> = {
-  teacher: 'teachers.write',
-  student: 'students.write',
-  guardian: 'guardians.write',
-};
+export const RECORD_WRITE = z
+  .record(userRoleSchema, permissionSchema.nullable())
+  .readonly()
+  .decode({
+    admin: null,
+    teacher: 'teachers.write',
+    guardian: 'guardians.write',
+    assistant: null,
+    sales: null,
+    student: 'students.write',
+  });
 
 interface Refusal {
   code: string;

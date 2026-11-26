@@ -22,7 +22,10 @@ export function visibleLessons<L extends TodayLesson>(lessons: readonly L[]): L[
     .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 }
 
-export function applyFilter<L extends TodayLesson>(lessons: readonly L[], filter: TodayFilter): L[] {
+export function applyFilter<L extends TodayLesson>(
+  lessons: readonly L[],
+  filter: TodayFilter,
+): L[] {
   return filter === 'all' ? [...lessons] : lessons.filter((l) => l.status === filter);
 }
 

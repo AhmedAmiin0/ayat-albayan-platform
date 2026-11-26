@@ -7,14 +7,17 @@ import { RecordingListService, recordingView, RecordingViews } from '@/modules/t
 import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 
 let rq: ReturnType<typeof recordingQueries>;
-const storage = { signedDownload: vi.fn() };
+const storage = { signedDownloads: vi.fn() };
+const SIGNED = 'https://signed.example.test/a.mp4';
+const signAll = async (input: { paths: readonly string[] }) =>
+  new Map(input.paths.map((p) => [p, SIGNED]));
 const views = () => new RecordingViews(rq as unknown as RecordingRepo, storage as unknown as StorageService);
 const service = () => new RecordingListService(rolesOf({ q: queries() }), views());
 const list = (user = ADMIN) => service().list({ user, lessonId: LESSON_ID });
 
 beforeEach(() => {
   rq = recordingQueries();
-  storage.signedDownload.mockReset().mockResolvedValue({ url: 'https://signed.example.test/a.mp4', expires_at: '' });
+  storage.signedDownloads.mockReset().mockImplementation(signAll);
 });
 
 describe('GET /lessons/:id/recordings', () => {
@@ -22,14 +25,29 @@ describe('GET /lessons/:id/recordings', () => {
     expect(await list()).toEqual([
       { id: recordingRow().id, status: 'done', started_at: recordingRow().started_at, ended_at: recordingRow().ended_at, url: 'https://signed.example.test/a.mp4' },
     ]);
-    expect(storage.signedDownload).toHaveBeenCalledWith({ bucket: 'recordings', path: recordingRow().file_path, seconds: 3600 });
+    const one = { bucket: 'recordings', paths: [recordingRow().file_path], seconds: 3600 };
+    expect(storage.signedDownloads).toHaveBeenCalledWith(one);
   });
 
   it('running and failed rows have no link (and sign nothing)', async () => {
     rq.forTarget.mockResolvedValue([recordingRow({ status: 'recording', ended_at: null }), recordingRow({ status: 'failed' })]);
     const views = await list();
     expect(views.map((v) => [v.status, v.url])).toEqual([['recording', null], ['failed', null]]);
-    expect(storage.signedDownload).not.toHaveBeenCalled();
+    expect(storage.signedDownloads).not.toHaveBeenCalled();
+  });
+
+  it('signs every finished file of the list in one call', async () => {
+    const row = (id: string, file_path: string) => recordingRow({ id, file_path });
+    const two = [row('r1', 'a.mp4'), row('r2', 'b.mp4')];
+    rq.forTarget.mockResolvedValue(two);
+    expect((await list()).map((v) => v.url)).toEqual([SIGNED, SIGNED]);
+    expect(storage.signedDownloads).toHaveBeenCalledTimes(1);
+    expect(storage.signedDownloads.mock.calls[0]?.[0].paths).toEqual(['a.mp4', 'b.mp4']);
+  });
+
+  it('a finished file that cannot be signed fails the list, as a refused single link did', async () => {
+    storage.signedDownloads.mockResolvedValue(new Map());
+    await expect(list()).rejects.toThrow('not signed');
   });
 
   it('the lesson teacher may see them', async () => {

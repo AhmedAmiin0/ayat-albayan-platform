@@ -21,7 +21,9 @@ const INVOICE: InvoiceView = {
 
 function renderInvoices() {
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <StudentInvoices studentId="s-1" />
     </QueryClientProvider>,
   );

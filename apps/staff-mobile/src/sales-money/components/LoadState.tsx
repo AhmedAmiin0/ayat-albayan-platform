@@ -20,7 +20,11 @@ export function LoadState({ status, empty, emptyTitle, emptyHint }: LoadStatePro
     return status.isError ? (
       <ErrorState message={t.sales.loadFailed} onRetry={() => void status.refetch()} />
     ) : (
-      <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+      <ActivityIndicator
+        accessibilityLabel={t.common.loading}
+        color={color.lapis}
+        style={{ paddingVertical: 32 }}
+      />
     );
   }
   if (!empty) return null;

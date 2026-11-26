@@ -12,7 +12,8 @@ export type Attachment =
 // A chat file by its message: each pick is copied under a new path, so the path would let it in twice.
 const keyOf = (a: Attachment) => (a.kind === 'chat' ? `chat:${a.messageId}` : a.receipt.uri);
 
-export const attachmentsFull = (list: readonly Attachment[]) => list.length >= PAYMENT_ATTACHMENTS_MAX;
+export const attachmentsFull = (list: readonly Attachment[]) =>
+  list.length >= PAYMENT_ATTACHMENTS_MAX;
 
 /** One more at the end; the same file twice or a sixth is ignored. */
 export function withAttachment(list: readonly Attachment[], item: Attachment): Attachment[] {

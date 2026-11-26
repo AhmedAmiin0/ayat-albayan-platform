@@ -9,8 +9,12 @@ describe('knownAcademyAuto', () => {
   });
 
   it('not answered: an academy-mode teacher’s resolved platform_classroom', () => {
-    expect(knownAcademyAuto(undefined, { meeting_mode: null, platform_classroom: true })).toBe(true);
-    expect(knownAcademyAuto(undefined, { meeting_mode: null, platform_classroom: false })).toBe(false);
+    expect(knownAcademyAuto(undefined, { meeting_mode: null, platform_classroom: true })).toBe(
+      true,
+    );
+    expect(knownAcademyAuto(undefined, { meeting_mode: null, platform_classroom: false })).toBe(
+      false,
+    );
   });
 
   it('not answered and nothing to go by (a new teacher, or a teacher with a mode of their own): unknown', () => {

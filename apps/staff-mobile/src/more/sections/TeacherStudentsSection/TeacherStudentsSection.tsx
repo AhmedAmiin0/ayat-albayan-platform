@@ -28,7 +28,12 @@ export function TeacherStudentsSection({ teacherId, status }: TeacherStudentsSec
   });
   return (
     <Section title={L.section}>
-      <FilterPills items={kindPills(kindCounts(counts.data))} value={kind} onChange={setKind} accessibilityLabel={L.kinds} />
+      <FilterPills
+        items={kindPills(kindCounts(counts.data))}
+        value={kind}
+        onChange={setKind}
+        accessibilityLabel={L.kinds}
+      />
       {list.data ? (
         list.items.length === 0 ? (
           <Note>{KIND_EMPTY[kind]}</Note>

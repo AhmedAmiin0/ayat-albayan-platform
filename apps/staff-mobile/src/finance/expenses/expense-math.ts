@@ -27,7 +27,9 @@ export function totalsByCurrency(rows: readonly ExpenseView[]): CurrencyTotals[]
   return [...sums.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([currency, cats]) => {
-      const categories = [...cats.entries()].map(([category, amount]) => ({ category, amount })).sort((a, b) => b.amount - a.amount);
+      const categories = [...cats.entries()]
+        .map(([category, amount]) => ({ category, amount }))
+        .sort((a, b) => b.amount - a.amount);
       return { currency, total: round2(categories.reduce((s, c) => s + c.amount, 0)), categories };
     });
 }

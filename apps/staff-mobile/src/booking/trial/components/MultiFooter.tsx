@@ -17,7 +17,11 @@ export function MultiFooter({ multi, tz }: MultiFooterProps) {
   const progress = need ? pickProgress(t.booking, picks.length, need) : null;
   return (
     <>
-      <PicksList picks={picks} tz={tz} onRemove={(p) => multi.onChange(picks.filter((x) => x !== p))} />
+      <PicksList
+        picks={picks}
+        tz={tz}
+        onRemove={(p) => multi.onChange(picks.filter((x) => x !== p))}
+      />
       {progress ? (
         <AppText
           accessibilityLiveRegion="polite"

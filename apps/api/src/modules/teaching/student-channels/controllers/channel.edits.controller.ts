@@ -10,6 +10,7 @@ import { ZodBody, ZodParams } from '@/common/http/zod-inputs';
 import { ChannelAccess } from '@/modules/teaching/student-channels/channel-access';
 import { ChannelEdits } from '@/modules/teaching/student-channels/channel-edits.service';
 import { messageParams } from './channel-message-params';
+import { isAdmin } from '@/common/auth/roles';
 
 type Params = Record<string, string | undefined>;
 const TEACHER = 'teachers/me/channels/:studentId/messages/:messageId';
@@ -80,7 +81,7 @@ export class ChannelEditsController {
   @Delete('students/:id/channel/messages/:messageId')
   @Permissions('student_channels.monitor')
   async moderate(@Param() p: Params, @CurrentUser() user: AuthUser): Promise<ChannelMessageView> {
-    if (user.role !== 'admin') throw forbidden('moderation_admin_only');
+    if (!isAdmin(user)) throw forbidden('moderation_admin_only');
     const { studentId, messageId } = await messageParams(p, 'id');
     const actor = await this.access.monitor(user, studentId);
     return this.edits.remove({ actor, messageId, moderator: true });

@@ -35,8 +35,10 @@ const callerAbort: Rule = (c) =>
   c.run.caller?.aborted ? { thrown: c.run.caller.reason } : undefined;
 const callersOwn: Rule = (c) =>
   c.error instanceof Passthrough ? { thrown: c.error.error } : undefined;
+/** A TimeoutError the transport throws itself means a deadline of its own fired. */
+const isTimeoutError = (e: unknown): boolean => e instanceof Error && e.name === 'TimeoutError';
 const timedOut: Rule = (c) =>
-  c.deadline.aborted
+  c.deadline.aborted || isTimeoutError(c.error)
     ? { thrown: tableError(c, { kind: 'timeout', where: c.run.where }) }
     : undefined;
 const classified: Rule = (c) =>

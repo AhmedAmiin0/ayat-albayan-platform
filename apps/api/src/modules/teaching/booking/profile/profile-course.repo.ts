@@ -5,7 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
 import { notFound } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { maybe, rows } from '@/common/db/errors';
 
 interface PickedTeacher {
   id: string;
@@ -33,25 +33,23 @@ export class ProfileCourseRepo {
 
   /** 404 student_not_found; the student's assigned teacher (students.teacher_id). */
   async studentTeacher(studentId: string): Promise<string | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('students')
       .select('teacher_id')
       .eq('id', studentId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     if (!data) throw notFound('student_not_found');
     return data.teacher_id;
   }
 
   /** The student's current package id (currentPackage); 404 subscription_not_found when none. */
   async currentSubscription(studentId: string): Promise<string> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('subscriptions')
       .select('id, status')
       .eq('student_id', studentId)
       .order('starts_on', { ascending: false })
-      .order('created_at', { ascending: false });
-    if (error) throw dbError(error);
+      .order('created_at', { ascending: false }));
     const current = currentPackage(data);
     if (!current) throw notFound('subscription_not_found');
     return current.id;
@@ -59,12 +57,11 @@ export class ProfileCourseRepo {
 
   /** Null when unknown. */
   async teacher(id: string): Promise<PickedTeacher | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('teachers')
       .select('id, status, display_name_ar')
       .eq('id', id)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -74,15 +71,14 @@ export class ProfileCourseRepo {
     limit = 1,
   ): Promise<{ id: string; status: LessonStatus; starts_at: string }[]> {
     if (ruleIds.length === 0) return [];
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('lessons')
       .select('id, status, starts_at')
       .in('rule_id', [...ruleIds])
       .in('status', [...OPEN_LESSON_STATUSES])
       .gte('starts_at', new Date().toISOString())
       .order('starts_at')
-      .limit(limit);
-    if (error) throw dbError(error);
+      .limit(limit));
     return data;
   }
 
@@ -94,8 +90,7 @@ export class ProfileCourseRepo {
   async assignTeacher(a: Assign): Promise<boolean> {
     let q = this.db.from('students').update({ teacher_id: a.to }).eq('id', a.studentId);
     q = a.from === null ? q.is('teacher_id', null) : q.eq('teacher_id', a.from);
-    const { data, error } = await q.select('id').maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await q.select('id').maybeSingle());
     if (!data) return false;
     await this.audit.record({
       actorId: a.actorId,

@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { maybe, one, pgError } from '@/common/db/errors';
 import type { StudentRow } from './people-edit.repo';
 
 type Count = PromiseLike<{ count: number | null; error: PostgrestError | null }>;
@@ -52,21 +52,19 @@ export class StudentRecordsRepo {
     const entries = Object.entries(RECORDS);
     const counts = await Promise.all(entries.map(([, count]) => count(this.db, studentId)));
     const failed = counts.find((c) => c.error);
-    if (failed?.error) throw dbError(failed.error);
+    if (failed?.error) throw pgError(failed.error);
     return entries.filter((_, i) => (counts[i]?.count ?? 0) > 0).map(([table]) => table);
   }
 
   async insert(row: TablesInsert<'students'>): Promise<StudentRow> {
-    const { data, error } = await this.db.from('students').insert(row).select().single();
-    if (error) throw dbError(error);
+    const data = one(await this.db.from('students').insert(row).select().single());
     return data;
   }
 
   /** The student's own number (guardian_phones.student_id): the delete cascades it away. */
   async ownPhone(id: string): Promise<string | null> {
     const query = this.db.from('guardian_phones').select('phone_e164').eq('student_id', id);
-    const { data, error } = await query.maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await query.maybeSingle());
     return data?.phone_e164 ?? null;
   }
 
@@ -75,7 +73,7 @@ export class StudentRecordsRepo {
     const query = this.db.from('students').delete().eq('id', id).is('profile_id', null);
     const { data, error } = await query.select();
     if (error?.code === '23503') throw conflict('student_has_records');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data[0] ?? null;
   }
 }

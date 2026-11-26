@@ -11,7 +11,13 @@ import { t } from '@ab/web-kit';
 import { CrmCutoverCard } from '@/features/platform/settings/pages/communications/CrmCutoverCard';
 
 /** docs/23 §2d tab 5, docs/26b §6a: emptying the allow-list still asks first. */
-export function SafetyTab({ settings, onNote }: { settings: AcademySettings; onNote: (message: string) => void }) {
+export function SafetyTab({
+  settings,
+  onNote,
+}: {
+  settings: AcademySettings;
+  onNote: (message: string) => void;
+}) {
   return (
     <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
       <div className="grid min-w-0 gap-6">

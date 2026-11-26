@@ -1,7 +1,7 @@
 import { addCalendarDays } from '@ab/time';
 import type { ActivityListQuery, ActivityPage, ActivitySortKey, ActivityView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 import { DB, type Db } from '@/common/db/db.module';
 import { applySort, type SortSpec } from '@/common/db/list-sort';
 
@@ -74,7 +74,7 @@ export class ActivityRepo {
       .order('id')
       .range(from, from + f.pageSize - 1)
       .returns<Row[]>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return { items: data.map(toView), total: count ?? 0, page: f.page, pageSize: f.pageSize };
   }
 }

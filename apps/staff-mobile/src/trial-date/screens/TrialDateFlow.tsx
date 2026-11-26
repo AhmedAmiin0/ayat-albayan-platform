@@ -19,7 +19,9 @@ export function TrialDateFlow({ studentId, name, program, fallback }: TrialDateF
   const history = useTrialHistory(studentId);
   const title = name ? t.trialDate.title.replace('{name}', name) : t.trialDate.action;
   if (history.data?.allowed) {
-    return <TrialDateWizard history={history.data} title={title} program={program} fallback={fallback} />;
+    return (
+      <TrialDateWizard history={history.data} title={title} program={program} fallback={fallback} />
+    );
   }
   const back = () => backOr(fallback);
   return (
@@ -29,12 +31,20 @@ export function TrialDateFlow({ studentId, name, program, fallback }: TrialDateF
         {history.data ? (
           <AppText
             accessibilityRole="alert"
-            style={{ fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink }}
+            style={{
+              fontFamily: type.ui[500],
+              fontSize: type.size.sm,
+              lineHeight: type.lineHeight(type.size.sm),
+              color: color.ink,
+            }}
           >
             {t.trialDate.notAllowed}
           </AppText>
         ) : null}
-        <TrialHistoryList history={history.data} onRetry={history.isError ? () => void history.refetch() : undefined} />
+        <TrialHistoryList
+          history={history.data}
+          onRetry={history.isError ? () => void history.refetch() : undefined}
+        />
       </ScrollView>
     </>
   );

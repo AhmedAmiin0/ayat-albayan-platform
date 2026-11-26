@@ -55,7 +55,9 @@ export function warnLine(count: number): string | null {
 
 /** What the new date does: moves the upcoming trial (its time), or books a new trial lesson. */
 export function effectLine(history: TrialHistory, viewer: ViewerClock): string {
-  const upcoming = history.upcoming_id ? history.items.find((r) => r.lesson_id === history.upcoming_id) : undefined;
+  const upcoming = history.upcoming_id
+    ? history.items.find((r) => r.lesson_id === history.upcoming_id)
+    : undefined;
   if (!history.upcoming_id) return t.trialDate.newLesson;
   const when = upcoming ? whenLines(upcoming.starts_at, history.family_tz, viewer).when : '';
   return t.trialDate.moves.replace('{when}', when);

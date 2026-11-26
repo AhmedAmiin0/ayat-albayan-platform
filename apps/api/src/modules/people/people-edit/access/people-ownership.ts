@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden } from '@/common/http/errors';
 import { SalesOwnershipRule } from '@/modules/sales/sales';
-
-/** Who the assistant ownership rule binds: the sales base role; the admin never. */
-const isAssistant = (user: AuthUser): boolean => user.role === 'sales';
+import { isSales } from '@/common/auth/roles';
 
 /** Any student while sales_require_assignee is off (default); the admin is never bound. */
 @Injectable()
@@ -12,12 +10,12 @@ export class PeopleOwnership {
   constructor(private readonly rule: SalesOwnershipRule) {}
 
   async student(user: AuthUser, studentId: string): Promise<void> {
-    const own = isAssistant(user) ? await this.rule.scope(user) : null;
+    const own = isSales(user) ? await this.rule.scope(user) : null;
     if (own && !own.studentIds.includes(studentId)) throw forbidden('not_your_student');
   }
 
   async family(user: AuthUser, guardianId: string): Promise<void> {
-    const own = isAssistant(user) ? await this.rule.scope(user) : null;
+    const own = isSales(user) ? await this.rule.scope(user) : null;
     if (own && !own.guardianIds.includes(guardianId)) throw forbidden('not_your_family');
   }
 

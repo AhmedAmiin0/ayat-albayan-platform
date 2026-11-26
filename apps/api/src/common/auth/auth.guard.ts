@@ -13,6 +13,7 @@ import { IS_PUBLIC, PERMISSION, SIGNED_IN } from './decorators';
 import { forbidden } from '@/common/http/errors';
 import { AccountDisabledError, PERMISSION_RESOLVER, type PermissionResolver } from './permissions';
 import type { AuthUser } from './verify-token';
+import { isAdmin } from '@/common/auth/roles';
 
 export { PERMISSION_RESOLVER, systemResolver } from './permissions';
 
@@ -66,7 +67,7 @@ export class AuthGuard implements CanActivate {
       return await this.resolve(user);
     } catch (e) {
       if (e instanceof AccountDisabledError) throw forbidden('account_disabled');
-      if (!signedIn || user.role === 'admin') throw e;
+      if (!signedIn || isAdmin(user)) throw e;
       this.log.warn(`permissions unavailable for ${user.id}: ${e instanceof Error ? e.message : 'unknown'}`);
       return [];
     }

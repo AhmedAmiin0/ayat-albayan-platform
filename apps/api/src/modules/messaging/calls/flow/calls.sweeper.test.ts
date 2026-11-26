@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { FAMILY, LINE, fakeKit } from '@/modules/messaging/calls/calls.fakes';
 import type { CallRow } from '@/modules/messaging/calls/store/call-row';
 import { CallsSweeper, overdue, UNANSWERED_MS } from './calls.sweeper';
@@ -48,5 +48,48 @@ describe('CallsSweeper.runOnce', () => {
     const { kit, queries } = fakeKit();
     vi.spyOn(queries, 'live').mockRejectedValue(new Error('db down'));
     await expect(new CallsSweeper(kit).runOnce()).resolves.toBe(0);
+  });
+});
+
+describe('CallsSweeper timers', () => {
+  afterEach(() => vi.useRealTimers());
+
+  function slowSweeper() {
+    const sweeper = new CallsSweeper(fakeKit().kit);
+    let finish = (): void => undefined;
+    const tick = vi.spyOn(sweeper, 'tick').mockImplementation(
+      () =>
+        new Promise<number>((resolve) => {
+          finish = () => resolve(0);
+        }),
+    );
+    return { sweeper, tick, finish: () => finish() };
+  }
+
+  it('ticks every 10 s from boot and never after shutdown', async () => {
+    vi.useFakeTimers();
+    const { sweeper, tick, finish } = slowSweeper();
+    sweeper.onApplicationBootstrap();
+    await vi.advanceTimersByTimeAsync(9_999);
+    expect(tick).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    expect(tick).toHaveBeenCalledTimes(1);
+    finish();
+    await vi.advanceTimersByTimeAsync(10_000);
+    expect(tick).toHaveBeenCalledTimes(2);
+    finish();
+    await sweeper.beforeApplicationShutdown();
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(tick).toHaveBeenCalledTimes(2);
+  });
+
+  it('a tick while a sweep is still going joins it', async () => {
+    vi.useFakeTimers();
+    const { sweeper, tick, finish } = slowSweeper();
+    sweeper.onApplicationBootstrap();
+    await vi.advanceTimersByTimeAsync(30_000);
+    expect(tick).toHaveBeenCalledTimes(1);
+    finish();
+    await sweeper.beforeApplicationShutdown();
   });
 });

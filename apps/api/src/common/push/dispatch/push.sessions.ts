@@ -1,4 +1,5 @@
 import type { Db } from '@/common/db/db.module';
+import { orFallback } from '@/common/infra/errors';
 
 /**
  * The given auth sessions that are still live (migration 700's push_live_sessions: not ended, not
@@ -29,10 +30,8 @@ export async function liveTokens<P extends { id: string; push_tokens: string[] }
   const { data, error } = await db.from('push_device_sessions').select('token, profile_id, session_id, contested_at').in('token', all);
   const none = () => profiles.map((p) => ({ ...p, push_tokens: [] }));
   if (error) return none();
-  const live = await liveSessions(
-    db,
-    data.map((b) => b.session_id),
-  ).catch(() => null);
+  const ids = data.map((b) => b.session_id);
+  const live = await orFallback(liveSessions(db, ids), null, 'push live sessions read');
   if (!live) return none();
   const ok = new Set(data.filter((b) => !b.contested_at && live.has(b.session_id)).map((b) => `${b.profile_id}|${b.token}`));
   return profiles.map((p) => ({ ...p, push_tokens: p.push_tokens.filter((t) => ok.has(`${p.id}|${t}`)) }));

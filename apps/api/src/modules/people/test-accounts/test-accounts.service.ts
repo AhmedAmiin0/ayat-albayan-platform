@@ -2,13 +2,15 @@ import { testFlagResultSchema, type TestFlagResult } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { TestFlagReader } from '@/common/auth/test-flag';
 import { notFound } from '@/common/http/errors';
+import { z } from 'zod';
 import { TestAccountsRepo, type TestFlagWrite } from './test-accounts.repo';
+import { testTargetSchema } from './test-accounts.schemas';
 
 /** The 404 code of each target. */
-const MISSING: Readonly<Record<TestFlagWrite['kind'], string>> = {
+const MISSING = z.record(testTargetSchema, z.string()).readonly().decode({
   student: 'student_not_found',
   profile: 'user_not_found',
-};
+});
 
 /** docs/56: the whole family flips, audited in one transaction; grants no visibility. */
 @Injectable()

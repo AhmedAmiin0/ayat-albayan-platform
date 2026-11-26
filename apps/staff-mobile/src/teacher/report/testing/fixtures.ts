@@ -35,7 +35,11 @@ export function formResponse(report: Partial<ReportView> = {}): ReportFormRespon
 
 /** Al-Mulk 1–15 recited and memorised last time, Al-Qalam revised; Al-Mulk and Al-Qalam recent. */
 const MEMORY: MemoryView = {
-  last: { recited: { surah: 67, from: 1, to: 15 }, new: { surah: 67, from: 1, to: 15 }, revision: { surah: 68, from: 1, to: 20 } },
+  last: {
+    recited: { surah: 67, from: 1, to: 15 },
+    new: { surah: 67, from: 1, to: 15 },
+    revision: { surah: 68, from: 1, to: 20 },
+  },
   recent_surahs: [67, 68],
 };
 

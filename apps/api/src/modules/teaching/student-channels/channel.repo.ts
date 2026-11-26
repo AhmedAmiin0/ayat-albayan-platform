@@ -7,7 +7,7 @@ import {
 } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, maybe, pgError } from '@/common/db/errors';
 import type { ChannelMessageRow, ClientSend, NewChannelMessage } from './send/channel-row';
 
 export type { ChannelMessageRow } from './send/channel-row';
@@ -36,13 +36,13 @@ export class ChannelRepo {
   /** The student's channel id; opened here only if the trigger never ran for it (a read first, then an idempotent insert). */
   async channelOf(studentId: string): Promise<string> {
     const found = await this.db.from('student_channels').select('id').eq('student_id', studentId).maybeSingle();
-    if (found.error) throw dbError(found.error);
+    if (found.error) throw pgError(found.error);
     if (found.data) return found.data.id;
     const opened = await this.db
       .from('student_channels')
       .upsert({ student_id: studentId }, { onConflict: 'student_id', ignoreDuplicates: true })
       .select('id');
-    if (opened.error) throw dbError(opened.error);
+    if (opened.error) throw pgError(opened.error);
     return opened.data[0]?.id ?? this.channelOf(studentId);
   }
 
@@ -51,7 +51,7 @@ export class ChannelRepo {
     let q = this.db.from('channel_messages').select(COLUMNS).eq('channel_id', input.channelId);
     if (input.before) q = q.lt('created_at', input.before);
     const { data, error } = await q.order('created_at', { ascending: false }).limit(CHANNEL_PAGE_SIZE + 1);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -66,20 +66,19 @@ export class ChannelRepo {
     const send = { channelId: row.channel_id, profileId: row.sender_profile_id };
     const resent = error.code === DUPLICATE && row.client_id;
     const stored = resent ? await this.byClientId({ ...send, clientId: resent }) : null;
-    if (!stored) throw dbError(error);
+    if (!stored) throw pgError(error);
     return { row: stored, created: false };
   }
 
   /** The row this sender already stored under this client id (a resend), if any. */
   async byClientId(send: ClientSend): Promise<ChannelMessageRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('channel_messages')
       .select(COLUMNS)
       .eq('channel_id', send.channelId)
       .eq('sender_profile_id', send.profileId)
       .eq('client_id', send.clientId)
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
@@ -89,8 +88,7 @@ export class ChannelRepo {
    */
   async setReadMark(input: { channelId: string; profileId: string; at: string }): Promise<void> {
     const args = { p_channel: input.channelId, p_profile: input.profileId, p_at: input.at };
-    const { error } = await this.db.rpc('channel_mark_read', args);
-    if (error) throw dbError(error);
+    done(await this.db.rpc('channel_mark_read', args));
   }
 
   /** channelOpen, as channel_is_open (migration 971): subscribed (past the trial), a teacher assigned. */
@@ -107,22 +105,21 @@ export class ChannelRepo {
 
   private async gate(studentId: string) {
     const read = this.db.from('students').select('status, teacher_id').eq('id', studentId);
-    const { data, error } = await read.maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await read.maybeSingle());
     return data;
   }
 
   /** The student's current teachers (teachers.id), channel_teacher_ids. */
   async teacherIds(studentId: string): Promise<string[]> {
     const { data, error } = await this.db.rpc('channel_teacher_ids', { p_student_id: studentId });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** The students whose channel this teacher is in now (teacher_channel_student_ids). */
   async teacherStudentIds(teacherId: string): Promise<string[]> {
     const { data, error } = await this.db.rpc('teacher_channel_student_ids', { p_teacher_id: teacherId });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -131,7 +128,7 @@ export class ChannelRepo {
     if (input.studentIds.length === 0) return [];
     const args = { p_profile: input.profileId, p_student_ids: [...input.studentIds], p_count_roles: [...input.countRoles] };
     const { data, error } = await this.db.rpc('channel_summaries', args);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 }

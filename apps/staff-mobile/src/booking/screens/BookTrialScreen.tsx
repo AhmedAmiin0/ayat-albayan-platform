@@ -19,7 +19,12 @@ type Params = {
 /** The chat's own lead, from the route params (none without its id and number). */
 function chatLead({ leadId, phone, name, source }: Params): BookingLead | undefined {
   if (!leadId || !phone) return undefined;
-  return { id: leadId, phone_e164: phone, name: name ?? null, ...(isLeadSource(source) ? { source } : {}) };
+  return {
+    id: leadId,
+    phone_e164: phone,
+    name: name ?? null,
+    ...(isLeadSource(source) ? { source } : {}),
+  };
 }
 
 /** R-MOB-02: the lead comes from the cached inbox or the chat; an unknown lead says so. */

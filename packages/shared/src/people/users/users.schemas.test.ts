@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { passwordResetSchema, userCreateSchema, userUpdateSchema, usersListQuery } from './users.schemas';
+import {
+  LINK_KINDS,
+  linkKindSchema,
+  passwordResetSchema,
+  userCreateSchema,
+  userUpdateSchema,
+  usersListQuery,
+} from './users.schemas';
 
 const base = { email: ' Ali@Example.com ', full_name: 'علي أحمد', role: 'admin' as const };
 const ID = '0b6a0f9e-4a3a-4c1c-8c2e-5d7a3b1f9e11';
@@ -47,5 +54,19 @@ describe('userUpdateSchema / passwordResetSchema / usersListQuery', () => {
   it('treats blank filters as unset and pages from 1', () => {
     expect(usersListQuery.parse({ q: ' ', role: '', status: 'disabled' })).toEqual({ page: 1, pageSize: 25, status: 'disabled' });
     expect(usersListQuery.safeParse({ role: 'owner' }).success).toBe(false);
+  });
+});
+
+describe('linkKindSchema', () => {
+  it('names the roles whose login links to a record', () => {
+    expect(linkKindSchema.options).toEqual([...LINK_KINDS]);
+    expect(linkKindSchema.validate('admin')).toBe(false);
+  });
+
+  it('a link is refused on a role without a record and kept on one with', () => {
+    const linked = { ...base, linked_id: ID };
+    const admin = userCreateSchema.safeParse(linked);
+    expect(admin.error?.issues.map((i) => i.message)).toEqual(['link_not_allowed']);
+    expect(userCreateSchema.parse({ ...linked, role: 'guardian' }).linked_id).toBe(ID);
   });
 });

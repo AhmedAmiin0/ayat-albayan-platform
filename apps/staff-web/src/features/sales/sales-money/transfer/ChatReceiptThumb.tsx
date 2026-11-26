@@ -10,7 +10,10 @@ type Props = { studentId: string; receipt: SalesChatReceipt; bind?: Bind | undef
  */
 export function ChatReceiptThumb({ studentId, receipt, bind }: Props) {
   const image = receipt.mime.startsWith('image/') && !receipt.expired;
-  const file = useQuery({ ...chatReceiptFileQuery(studentId, receipt.message_id, bind), enabled: image });
+  const file = useQuery({
+    ...chatReceiptFileQuery(studentId, receipt.message_id, bind),
+    enabled: image,
+  });
   if (image && file.data) {
     return <img src={file.data.url} alt="" className="h-24 w-full rounded-sm object-cover" loading="lazy" />;
   }

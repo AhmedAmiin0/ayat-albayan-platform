@@ -11,7 +11,8 @@ test('today is now; earlier days are 12:00 Riyadh of that Riyadh day', () => {
 });
 
 test('a picked day is never after now', () => {
-  for (const days of [0, 1, 2, 30]) expect(paidAtFor(now, days).getTime()).toBeLessThanOrEqual(now.getTime());
+  for (const days of [0, 1, 2, 30])
+    expect(paidAtFor(now, days).getTime()).toBeLessThanOrEqual(now.getTime());
 });
 
 test('labels: اليوم and أمس first, then the date alone', () => {

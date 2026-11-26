@@ -2,7 +2,10 @@ import { freshRecordingUrl } from './recordings-queries';
 import { recording, recordingsPage } from '@/student-file/testing/fixtures';
 
 const rec = (id: string, url: string | null) => recording({ id, url });
-const page = (n: number, items: ReturnType<typeof rec>[]) => ({ ...recordingsPage(items), page: n });
+const page = (n: number, items: ReturnType<typeof rec>[]) => ({
+  ...recordingsPage(items),
+  page: n,
+});
 
 test('loads only the page that holds the row and reads the new url off it', async () => {
   const load = jest.fn().mockResolvedValue(page(2, [rec('b', 'https://x/new-b')]));

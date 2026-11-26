@@ -18,7 +18,9 @@ export function TeacherMap({ calendars, onNote }: Props) {
   return (
     <GoogleBlock title={s.title} hint={s.hint}>
       {list.isPending && <BlockSkeleton />}
-      {list.isError && <LoadError message={t.googleSync.loadError} onRetry={() => void list.refetch()} />}
+      {list.isError && (
+        <LoadError message={t.googleSync.loadError} onRetry={() => void list.refetch()} />
+      )}
       {list.data?.length === 0 && <p className="text-sm text-ink-3">{s.empty}</p>}
       {list.data && list.data.length > 0 && (
         <ul aria-label={s.title} className="grid divide-y divide-rule border-y border-rule">

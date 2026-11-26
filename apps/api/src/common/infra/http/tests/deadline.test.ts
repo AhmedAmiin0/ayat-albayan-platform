@@ -97,4 +97,10 @@ describe('the deadline', () => {
     expect((await call).key).toBe('timeout');
     caller.abort();
   });
+
+  it('a TimeoutError from the transport is a timeout too: some deadline of its own fired', async () => {
+    const own: FetchLike = () => Promise.reject(new DOMException('timed out', 'TimeoutError'));
+    const http = createHttp(profileOf({ fetch: own, timeoutMs: 5_000 }));
+    expect(await caught(http.json({ path: 'm', schema }))).toMatchObject({ key: 'timeout' });
+  });
 });

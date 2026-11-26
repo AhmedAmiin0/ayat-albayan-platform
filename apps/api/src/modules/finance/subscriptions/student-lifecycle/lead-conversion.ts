@@ -2,7 +2,7 @@ import type { LeadStatus } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { maybe, pgError, rows } from '@/common/db/errors';
 import { canTransitionLead } from '@ab/catalog';
 
 type LeadRef = { id: string; status: LeadStatus; converted_guardian_id: string | null };
@@ -19,14 +19,13 @@ export class LeadConversion {
     const lead = await this.leadOf(studentId);
     if (!lead || !canTransitionLead(lead.lead.status, 'converted')) return;
     const { id, status } = lead.lead;
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('leads')
       .update({ status: 'converted', converted_guardian_id: lead.lead.converted_guardian_id ?? lead.guardianId })
       .eq('id', id)
       .eq('status', status)
       .select('id')
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     if (!data) return;
     const entry = { actorId, entity: 'leads', entityId: id, action: 'status_change' };
     await this.audit.record({ ...entry, before: { status }, after: { status: 'converted', via: 'subscription' } });
@@ -34,16 +33,15 @@ export class LeadConversion {
 
   private async leadOf(studentId: string): Promise<{ lead: LeadRef; guardianId: string } | null> {
     const student = await this.db.from('students').select('guardian:guardians(id, phone_e164)').eq('id', studentId).maybeSingle();
-    if (student.error) throw dbError(student.error);
+    if (student.error) throw pgError(student.error);
     const guardian = student.data?.guardian;
     if (!guardian) return null;
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('leads')
       .select('id, status, converted_guardian_id')
       .or(`converted_guardian_id.eq.${guardian.id},phone_e164.eq."${guardian.phone_e164}"`)
       .order('created_at')
-      .limit(1);
-    if (error) throw dbError(error);
+      .limit(1));
     const [lead] = data;
     return lead ? { lead, guardianId: guardian.id } : null;
   }

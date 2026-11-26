@@ -22,7 +22,9 @@ export function barBox(range: Range): { start: number; width: number } | null {
 }
 
 const valid = (ranges: readonly Range[]) =>
-  ranges.filter((r) => r.start && r.end && r.start < r.end).toSorted((a, b) => a.start.localeCompare(b.start));
+  ranges
+    .filter((r) => r.start && r.end && r.start < r.end)
+    .toSorted((a, b) => a.start.localeCompare(b.start));
 
 /** Spans where a day's ranges overlap each other: the hatched clash on the track. */
 export function overlaps(ranges: readonly Range[]): Range[] {

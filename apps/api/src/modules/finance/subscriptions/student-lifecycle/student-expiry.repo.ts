@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readAll } from '@/common/db/read-all';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 /** The reads of StudentExpiryJob (docs/11 §7): pending_renewal students, payments since. */
 @Injectable()
@@ -28,7 +28,7 @@ export class StudentExpiryRepo {
       .eq('kind', 'payment')
       .gt('amount', 0)
       .gte('created_at', since);
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return (count ?? 0) > 0;
   }
 }

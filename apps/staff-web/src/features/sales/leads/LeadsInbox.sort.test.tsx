@@ -31,7 +31,9 @@ function renderInbox(search: LeadSearch) {
   );
   const onSearch = vi.fn();
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <LeadsInbox search={search} onSearch={onSearch} />
     </QueryClientProvider>,
   );

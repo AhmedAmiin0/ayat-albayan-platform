@@ -41,7 +41,12 @@ function LinkDone({ linked, onBack }: { linked: boolean; onBack: () => void }) {
     <View style={{ gap: 12 }}>
       <AppText
         accessibilityRole="alert"
-        style={{ fontFamily: type.ui[600], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink }}
+        style={{
+          fontFamily: type.ui[600],
+          fontSize: type.size.body,
+          lineHeight: type.lineHeight(type.size.body),
+          color: color.ink,
+        }}
       >
         {linked ? t.inbox.linkFamily.done : t.inbox.linkFamily.already}
       </AppText>

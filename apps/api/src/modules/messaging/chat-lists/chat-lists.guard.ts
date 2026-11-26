@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, forbidden, notFound } from '@/common/http/errors';
+import { isAdmin, isSales } from '@/common/auth/roles';
 
 /**
  * Every lists route needs inbox.lists (the route's @Permissions) AND inbox.read, and the inbox of the
@@ -16,7 +17,7 @@ import { badRequest, forbidden, notFound } from '@/common/http/errors';
  * (docs/22 §2). 403 lists_forbidden otherwise.
  */
 export function assertListsUser(user: AuthUser): void {
-  const staff = user.role === 'admin' || user.role === 'sales';
+  const staff = isAdmin(user) || isSales(user);
   if (!staff || !can(user, 'inbox.read') || !can(user, 'inbox.lists'))
     throw forbidden('lists_forbidden');
 }
@@ -32,7 +33,7 @@ export class ListsUserGuard implements CanActivate {
 
 /** May this caller see a chat's lists and filter by one (GET /threads, /threads/:phone)? */
 export function seesLists(user: AuthUser): boolean {
-  return (user.role === 'admin' || user.role === 'sales') && can(user, 'inbox.lists');
+  return (isAdmin(user) || isSales(user)) && can(user, 'inbox.lists');
 }
 
 /** `:id` that is not a uuid cannot name a list: 404 list_not_found (never a 500 from Postgres). */

@@ -26,11 +26,15 @@ type Props = {
   onOpen: (teacherId: string) => void;
 };
 
-type TableProps = Props & { data: Page<TeacherListRow>; columns: ReturnType<typeof teacherColumns> };
+type TableProps = Props & {
+  data: Page<TeacherListRow>;
+  columns: ReturnType<typeof teacherColumns>;
+};
 
 function TeachersTable({ data, columns, list, onList, onOpen }: TableProps) {
   // No teacher at all (no filter): the empty state; a filter with no match keeps its controls.
-  if (data.total === 0 && Object.keys(list.filters).length === 0) return <EmptyState title={t.teachers.empty} />;
+  if (data.total === 0 && Object.keys(list.filters).length === 0)
+    return <EmptyState title={t.teachers.empty} />;
   return (
     <>
       <DataTable
@@ -41,11 +45,24 @@ function TeachersTable({ data, columns, list, onList, onOpen }: TableProps) {
         getRowId={(row) => row.id}
         onRowClick={(row) => onOpen(row.id)}
         emptyText={t.common.notFound}
-        sort={{ key: list.sort.sort, dir: list.sort.dir, onChange: (next) => onList(withSort(list, next)) }}
-        filters={{ values: list.filters, onChange: (key, value) => onList(withFilter(list, { key, value })), onClear: (keys) => onList(withoutFilters(list, keys)) }}
+        sort={{
+          key: list.sort.sort,
+          dir: list.sort.dir,
+          onChange: (next) => onList(withSort(list, next)),
+        }}
+        filters={{
+          values: list.filters,
+          onChange: (key, value) => onList(withFilter(list, { key, value })),
+          onClear: (keys) => onList(withoutFilters(list, keys)),
+        }}
         toolbar={{ total: data.total }}
       />
-      <Pager page={data.page} total={data.total} pageSize={data.pageSize} onPage={(page) => onList({ ...list, page })} />
+      <Pager
+        page={data.page}
+        total={data.total}
+        pageSize={data.pageSize}
+        onPage={(page) => onList({ ...list, page })}
+      />
     </>
   );
 }
@@ -73,7 +90,15 @@ export function TeachersPage({ list: state, onList, onOpen }: Props) {
       </PageHead>
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.isPending && <ListSkeleton />}
-      {list.data && <TeachersTable data={list.data} columns={columns} list={state} onList={onList} onOpen={onOpen} />}
+      {list.data && (
+        <TeachersTable
+          data={list.data}
+          columns={columns}
+          list={state}
+          onList={onList}
+          onOpen={onOpen}
+        />
+      )}
       {editing && (
         <TeacherDialog teacher={editing === 'new' ? null : editing} onClose={() => setEditing(null)} />
       )}

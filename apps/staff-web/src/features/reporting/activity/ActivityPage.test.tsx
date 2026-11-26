@@ -10,7 +10,15 @@ import { ActivityPage } from './ActivityPage';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, params, children }: { to: string; params: Record<string, string>; children: ReactNode }) => (
+  Link: ({
+    to,
+    params,
+    children,
+  }: {
+    to: string;
+    params: Record<string, string>;
+    children: ReactNode;
+  }) => (
     <a href={Object.entries(params).reduce((h, [k, v]) => h.replace(`$${k}`, v), to)}>{children}</a>
   ),
 }));

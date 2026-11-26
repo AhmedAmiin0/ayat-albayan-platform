@@ -36,7 +36,13 @@ function PaymentLinksList() {
       <h2 id="payment-links-title" className="text-h4 font-bold">
         {P.list}
       </h2>
-      <PortalList title={P.list} query={useQuery(paymentLinksQuery)} columns={columns} getRowId={(l) => l.id} empty={{ title: P.empty, hint: P.web.emptyHint }} />
+      <PortalList
+        title={P.list}
+        query={useQuery(paymentLinksQuery)}
+        columns={columns}
+        getRowId={(l) => l.id}
+        empty={{ title: P.empty, hint: P.web.emptyHint }}
+      />
       {cancelling && (
         <ConfirmDialog
           title={P.cancel}

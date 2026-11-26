@@ -1,9 +1,15 @@
 import { RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError, type PageQuery } from '@/common/http/http';
+import type { PageQuery } from '@/common/http/http';
+import { maybe, pgError } from '@/common/db/errors';
 import { MY_COMMISSION_SELECT, type MyCommissionSource } from './my.commissions.mapper';
-import { MY_PAYMENT_SELECT, MY_STUDENT_COLUMNS, type MyPaymentSource, type MyStudentSource } from './my.mapper';
+import {
+  MY_PAYMENT_SELECT,
+  MY_STUDENT_COLUMNS,
+  type MyPaymentSource,
+  type MyStudentSource,
+} from './my.mapper';
 
 export type StatementState = { statement: { status: 'draft' | 'approved' | 'paid' } | null };
 export type MyCommission = StatementState & {
@@ -41,14 +47,17 @@ export class MyRepo {
       .eq('assistant_id', assistantId)
       .order('brought_at', { ascending: false })
       .order('student_id');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** The guardian's phone of each student this assistant brought (student id → E.164), nothing else of the guardian. */
   async guardianPhones(assistantId: string): Promise<Map<string, string>> {
-    const { data, error } = await this.db.from('students').select('id, guardian:guardians(phone_e164)').eq('brought_by', assistantId);
-    if (error) throw dbError(error);
+    const { data, error } = await this.db
+      .from('students')
+      .select('id, guardian:guardians(phone_e164)')
+      .eq('brought_by', assistantId);
+    if (error) throw pgError(error);
     return new Map(
       data.flatMap((s) => (s.guardian?.phone_e164 ? [[s.id, s.guardian.phone_e164] as const] : [])),
     );
@@ -64,13 +73,14 @@ export class MyRepo {
       .order('id')
       .limit(MY_PAYMENTS_LIMIT)
       .overrideTypes<MyPaymentSource[], { merge: false }>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
   async tz(assistantId: string): Promise<string> {
-    const { data, error } = await this.db.from('profiles').select('tz').eq('id', assistantId).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(
+      await this.db.from('profiles').select('tz').eq('id', assistantId).maybeSingle(),
+    );
     // The database's own fallback (assistant_commission_plan, build_assistant_statement): Riyadh.
     return data?.tz ?? RIYADH_TZ;
   }
@@ -83,7 +93,7 @@ export class MyRepo {
       .eq('assistant_id', assistantId)
       .eq('status', 'earned')
       .overrideTypes<MyCommission[], { merge: false }>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -101,7 +111,7 @@ export class MyRepo {
       .order('id', { ascending: false })
       .range(from, from + q.pageSize - 1)
       .overrideTypes<MyCommissionSource[], { merge: false }>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return { rows: data, total: count ?? 0 };
   }
 
@@ -111,7 +121,7 @@ export class MyRepo {
       .select('id, kind, amount, currency, effective_month, statement:assistant_statements(status)')
       .eq('assistant_id', assistantId)
       .overrideTypes<MyAdjustment[], { merge: false }>();
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 }

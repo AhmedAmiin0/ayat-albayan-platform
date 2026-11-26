@@ -40,7 +40,12 @@ test('an early renewal: what is left counts across both packages', () => {
   const old = subscription({
     id: OLD_SUB_ID,
     status: 'active',
-    balance: { ...subscription().balance, subscription_id: OLD_SUB_ID, lessons_used: 3, remaining: 1 },
+    balance: {
+      ...subscription().balance,
+      subscription_id: OLD_SUB_ID,
+      lessons_used: 3,
+      remaining: 1,
+    },
   });
   const renewed = subscription({
     status: 'active',

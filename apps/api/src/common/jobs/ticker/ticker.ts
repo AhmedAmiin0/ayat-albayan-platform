@@ -1,3 +1,4 @@
+import { errorMessage } from '@ab/core';
 import { Logger } from '@nestjs/common';
 import { jobBeats } from '@/common/jobs/beats/beat-book';
 import type { BeatSink } from '@/common/jobs/beats/beat-book';
@@ -8,6 +9,8 @@ interface TickerTiming {
   firstMs: number;
   /** Absent: one run after boot, no interval (e.g. the template boot check). */
   everyMs?: number;
+  /** 'first': the interval starts at the first run, so no interval tick comes before it. */
+  intervalFrom?: 'boot' | 'first';
 }
 
 interface TickerOptions extends TickerTiming {
@@ -19,8 +22,6 @@ interface TickerOptions extends TickerTiming {
   /** Where each pass is recorded (the process's heartbeats; a fake in tests). */
   beats?: BeatSink;
 }
-
-const messageOf = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /**
  * In-process interval with single flight: a tick while the previous run is still going joins it
@@ -46,11 +47,28 @@ export class Ticker {
   start(timing: TickerTiming = this.opts): void {
     const method = this.opts.timer ?? 'tick';
     const fire = () => void this[method]();
-    const every = timing.everyMs === undefined ? [] : [setInterval(fire, timing.everyMs).unref()];
-    this.timers.push(setTimeout(fire, timing.firstMs).unref(), ...every);
+    this.timers.push(setTimeout(this.firstRun(fire, timing), timing.firstMs).unref());
     // Interval jobs only: a one-shot boot job has no interval to be late against.
     const { everyMs, firstMs } = timing;
     if (everyMs !== undefined) this.beats.register({ name: this.opts.name, firstMs, everyMs });
+  }
+
+  /** The first timer's callback; an interval from boot starts now, one from the first run then. */
+  private firstRun(fire: () => void, timing: TickerTiming): () => void {
+    const every = () => this.every(fire, timing.everyMs);
+    if ((timing.intervalFrom ?? this.opts.intervalFrom) !== 'first') {
+      every();
+      return fire;
+    }
+    return () => {
+      fire();
+      every();
+    };
+  }
+
+  private every(fire: () => void, everyMs: number | undefined): void {
+    if (everyMs === undefined || this.stopped) return;
+    this.timers.push(setInterval(fire, everyMs).unref());
   }
 
   /** Stops the timers and new runs; settles once the run in flight ends (BE-14). */
@@ -96,7 +114,7 @@ export class Ticker {
   }
 
   private failed(e: unknown): void {
-    this.log.error(`run aborted: ${messageOf(e)}`);
+    this.log.error(`run aborted: ${errorMessage(e)}`);
     this.beats.fail(this.opts.name, e);
   }
 

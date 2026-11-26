@@ -4,7 +4,13 @@ import { createContext, type ReactNode, useContext } from 'react';
 /** docs/16: sales mirror is her own leads only: trial, no price or invoice, credited to her. */
 const BookingModeContext = createContext<BookingMode>('admin');
 
-export function BookingModeProvider({ value, children }: { value: BookingMode; children: ReactNode }) {
+export function BookingModeProvider({
+  value,
+  children,
+}: {
+  value: BookingMode;
+  children: ReactNode;
+}) {
   return <BookingModeContext.Provider value={value}>{children}</BookingModeContext.Provider>;
 }
 

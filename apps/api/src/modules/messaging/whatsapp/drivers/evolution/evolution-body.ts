@@ -1,4 +1,5 @@
-import type { WaSendKind } from '@ab/shared';
+import { waSendKindSchema } from '@ab/shared';
+import { z } from 'zod';
 import { waTo } from '@/modules/messaging/whatsapp/messages/wa-components';
 import { wabaComponents } from '@/modules/messaging/whatsapp/drivers/waba/waba-graph';
 import type { WabaTemplate } from '@/modules/messaging/whatsapp/drivers/waba/waba-template';
@@ -30,12 +31,12 @@ export function textSend(input: {
 }
 
 /** Evolution's mediatype per our kind; audio goes as a voice note (sendWhatsAppAudio) instead. */
-const MEDIA_TYPE: Record<Exclude<WaSendKind, 'audio'>, string> = {
+const MEDIA_TYPE = z.record(waSendKindSchema.exclude(['audio']), z.string()).readonly().decode({
   image: 'image',
   video: 'video',
   document: 'document',
   sticker: 'image',
-};
+});
 
 /** A voice note: POST /message/sendWhatsAppAudio/{instance} {number, audio: url}. */
 const audioSend = (input: MediaSend): EvolutionSend => ({

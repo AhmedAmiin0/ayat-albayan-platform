@@ -16,7 +16,11 @@ describe('valuesSummary («القيم» — N قيمة · M معدَّلة · K 
   });
 
   it('counts only editable values that differ from the default', () => {
-    const s = settingsWith({ booking_horizon_weeks: 6, upload_max_mb: 99, messaging_enabled: !SETTING_DEFAULTS.messaging_enabled });
+    const s = settingsWith({
+      booking_horizon_weeks: 6,
+      upload_max_mb: 99,
+      messaging_enabled: !SETTING_DEFAULTS.messaging_enabled,
+    });
     expect(valuesSummary(s)).toBe(summary(62, 2, 20));
   });
 
@@ -79,7 +83,10 @@ describe('googleChips («مزامنة Google»)', () => {
   const status = t.googleSync.connection.status;
 
   it('connected in dry run', () => {
-    expect(googleChips(googleStatus()).map((c) => c.label)).toEqual([status.connected, t.settingsHub.googleDryRun]);
+    expect(googleChips(googleStatus()).map((c) => c.label)).toEqual([
+      status.connected,
+      t.settingsHub.googleDryRun,
+    ]);
   });
 
   it('live, off, and an error', () => {

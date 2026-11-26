@@ -40,7 +40,9 @@ const ROWS = [
 function open(rows: MyStudentRow[]) {
   apiFetch.mockResolvedValue(rows);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <MyStudents />
     </QueryClientProvider>,
   );
@@ -86,7 +88,9 @@ describe('MyStudents «طلابي»', () => {
   it('a failed load shows the error with a retry that asks again', async () => {
     apiFetch.mockRejectedValue(new Error('down'));
     render(
-      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <QueryClientProvider
+        client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+      >
         <MyStudents />
       </QueryClientProvider>,
     );

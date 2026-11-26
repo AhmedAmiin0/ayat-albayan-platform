@@ -1,7 +1,10 @@
+import { z } from 'zod';
+
 // Who asked to move a lesson (R-SCH-08): teacher or family; staff answer both the same way.
 
 export const PROPOSAL_REQUESTERS = ['teacher', 'family'] as const;
-export type ProposalRequester = (typeof PROPOSAL_REQUESTERS)[number];
+export const proposalRequesterSchema = z.enum(PROPOSAL_REQUESTERS);
+export type ProposalRequester = z.infer<typeof proposalRequesterSchema>;
 
 /** A proposed new time for one lesson; staff approve (a reschedule) or reject. */
 export interface LessonProposalView {

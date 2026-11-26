@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { pgError } from '@/common/db/errors';
 
 const ids = (values: readonly (string | null)[]): string[] =>
   [...new Set(values.filter((v): v is string => v !== null))];
@@ -25,13 +25,13 @@ export class TeacherCancelRepo {
       .from('students')
       .select('id, brought_by, guardian_id')
       .in('id', [...new Set(studentIds)]);
-    if (students.error) throw dbError(students.error);
+    if (students.error) throw pgError(students.error);
     const guardians = ids(students.data.map((s) => s.guardian_id));
     const leads = await this.db
       .from('leads')
       .select('assigned_to, converted_guardian_id')
       .in('converted_guardian_id', guardians);
-    if (leads.error) throw dbError(leads.error);
+    if (leads.error) throw pgError(leads.error);
     const holders = (guardian: string | null) =>
       leads.data.filter((l) => l.converted_guardian_id === guardian).map((l) => l.assigned_to);
     type Student = (typeof students.data)[number];

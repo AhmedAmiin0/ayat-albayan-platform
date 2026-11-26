@@ -31,7 +31,12 @@ export interface PriceInput {
 /** Null without a catalog price: the free trial, a group above 6, or 90 minutes outside 4 x 90. */
 export function quoteSelection(p: PriceInput): Selection | null {
   if (p.pkg === 'trial' || p.students < 1 || p.students > STUDENTS_MAX) return null;
-  const base = { country: siteCountry(p.country) ?? OTHER, count: Number(p.pkg), students: p.students, discount: 0 };
+  const base = {
+    country: siteCountry(p.country) ?? OTHER,
+    count: Number(p.pkg),
+    students: p.students,
+    discount: 0,
+  };
   // Weekly ignores the duration; the quote route still wants one of 30/45/60.
   if (p.durationMin === 90) return p.pkg === '4' ? { ...base, pkg: 'weekly', duration: DEFAULT_DURATION } : null;
   const duration = PRICING_DURATIONS.find((d) => d === p.durationMin);

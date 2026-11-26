@@ -10,7 +10,11 @@ interface RestSectionProps<L extends TodayLesson> {
 }
 
 /** Nothing when none is left (docs/29 §4). */
-export function RestSection<L extends TodayLesson>({ lessons, onOpen, onShowAll }: RestSectionProps<L>) {
+export function RestSection<L extends TodayLesson>({
+  lessons,
+  onOpen,
+  onShowAll,
+}: RestSectionProps<L>) {
   const { color } = useTheme();
   if (lessons.length === 0) return null;
   return (
@@ -28,7 +32,14 @@ export function RestSection<L extends TodayLesson>({ lessons, onOpen, onShowAll 
           hitSlop={8}
           style={({ pressed }) => ({ minHeight: 44, minWidth: 44, justifyContent: 'center', alignItems: 'flex-end', opacity: pressed ? 0.6 : 1 })}
         >
-          <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: 22, color: color.lapis }}>
+          <AppText
+            style={{
+              fontFamily: type.ui[600],
+              fontSize: type.size.sm,
+              lineHeight: 22,
+              color: color.lapis,
+            }}
+          >
             {t.today.all}
           </AppText>
         </Pressable>

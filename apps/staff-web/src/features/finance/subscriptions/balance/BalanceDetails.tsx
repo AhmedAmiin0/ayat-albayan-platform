@@ -13,7 +13,13 @@ export function endLine(s: SubscriptionView): string {
 }
 
 /** The package line across every package, then the current package: used, paid, end date. */
-export function BalanceDetails({ view, current }: { view: StudentBalanceView; current: SubscriptionView }) {
+export function BalanceDetails({
+  view,
+  current,
+}: {
+  view: StudentBalanceView;
+  current: SubscriptionView;
+}) {
   const progress = studentProgress(view);
   const used = t.subscriptions.usedOf
     .replace('{used}', String(current.balance.lessons_used))

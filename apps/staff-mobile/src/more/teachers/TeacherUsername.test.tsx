@@ -10,7 +10,8 @@ import { teacherFixture } from '@ab/shared/testing';
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiSend: (mockMethod: string, mockPath: string, mockBody?: unknown) => mockApiSend(mockMethod, mockPath, mockBody),
+  apiSend: (mockMethod: string, mockPath: string, mockBody?: unknown) =>
+    mockApiSend(mockMethod, mockPath, mockBody),
 }));
 
 const U = t.familyAuth.teacherUsername;
@@ -34,7 +35,9 @@ test('shown LTR with the hint, lower-cased on blur', async () => {
 });
 
 test('without a login: read-only with the needs-login note and no save', async () => {
-  await renderWithQuery(<TeacherUsername teacher={{ ...OMAR, profile_id: null, username: null }} />);
+  await renderWithQuery(
+    <TeacherUsername teacher={{ ...OMAR, profile_id: null, username: null }} />,
+  );
   expect(input().props.editable).toBe(false);
   expect(screen.getByText(U.needsLogin)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.common.save })).toBeNull();

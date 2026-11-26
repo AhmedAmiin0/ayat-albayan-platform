@@ -1,15 +1,18 @@
 import { localDateIn, wallToUtc } from '@ab/time';
-import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import { errorMessage } from '@ab/core';
+import { Injectable, Logger } from '@nestjs/common';
 import { loadEnv } from '@/config/env/env';
 import { GoogleItemsQueries } from './google-items.queries';
 import { GoogleSyncProcessor } from './google-sync.processor';
 import { BackgroundJob } from '@/config/role/background-job';
-import { beatTick } from '@/common/jobs/beats';
+import { Ticker, TickerJob } from '@/common/jobs';
 
 const POLL_MS = 60_000;
 /** Soon after boot, not at once: every API test boots AppModule (as HorizonJob notes). */
 const FIRST_RUN_MS = 45_000;
 const DAY_MS = 86_400_000;
+/** A pass that claimed a full batch may have left more: drain again at once. */
+const BATCH = 25;
 /** 05:00 Asia/Riyadh (UTC+3, no DST) = 02:00 UTC. */
 const RECONCILE_UTC_HOUR = 2;
 
@@ -28,31 +31,34 @@ export function msUntilReconcile(now: Date): number {
  */
 @BackgroundJob({ name: 'google-sync', kick: 'kick' })
 @Injectable()
-export class GoogleSyncJob implements OnApplicationBootstrap, OnModuleDestroy {
+export class GoogleSyncJob extends TickerJob {
   private readonly log = new Logger(GoogleSyncJob.name);
-  private readonly timers: NodeJS.Timeout[] = [];
-  private running: Promise<void> | null = null;
-  private again = false;
+  protected readonly ticker = new Ticker({
+    name: GoogleSyncJob.name,
+    firstMs: FIRST_RUN_MS,
+    everyMs: POLL_MS,
+    run: () => this.drain(),
+    timer: 'kick',
+  });
+  /** The daily reconcile: a wall-clock time, which a fixed interval cannot express. */
+  private daily: NodeJS.Timeout | null = null;
 
   constructor(
     private readonly processor: GoogleSyncProcessor,
     private readonly items: GoogleItemsQueries,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    const every = loadEnv().GOOGLE_SYNC_POLL_MS ?? POLL_MS;
-    const firstMs = Math.min(FIRST_RUN_MS, every);
-    const tick = beatTick({ name: GoogleSyncJob.name, firstMs, everyMs: every }, () => this.kick());
-    this.timers.push(setTimeout(tick, firstMs).unref(), setInterval(tick, every).unref());
-    const daily = () => {
-      void this.reconcile();
-      this.timers.push(setTimeout(daily, msUntilReconcile(new Date())).unref());
-    };
-    this.timers.push(setTimeout(daily, msUntilReconcile(new Date())).unref());
+  ) {
+    super();
   }
 
-  onModuleDestroy(): void {
-    this.timers.forEach(clearTimeout);
+  override onApplicationBootstrap(): void {
+    const everyMs = loadEnv().GOOGLE_SYNC_POLL_MS ?? POLL_MS;
+    this.ticker.start({ firstMs: Math.min(FIRST_RUN_MS, everyMs), everyMs });
+    this.planReconcile();
+  }
+
+  override beforeApplicationShutdown(): Promise<unknown> {
+    clearTimeout(this.daily ?? undefined);
+    return super.beforeApplicationShutdown();
   }
 
   /** Re-queue the window (idempotent: an unchanged item is a no-op), then drain. Never throws. */
@@ -62,31 +68,36 @@ export class GoogleSyncJob implements OnApplicationBootstrap, OnModuleDestroy {
       void this.kick();
       return n;
     } catch (e) {
-      this.log.warn(`google reconcile failed: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(`google reconcile failed: ${errorMessage(e)}`);
       return 0;
     }
   }
 
-  /** Run now; a kick during a run queues one more pass. Loops while a pass was full. */
+  /** Run now; a kick during a run queues one more pass. */
   kick(): Promise<void> {
-    if (this.running) {
-      this.again = true;
-      return this.running;
-    }
-    const loop = async () => {
-      do {
-        this.again = false;
-        try {
-          const s = await this.processor.runOnce();
-          if (s.claimed >= 25 && !s.stopped) this.again = true;
-        } catch (e) {
-          this.log.warn(`google sync pass failed: ${e instanceof Error ? e.message : String(e)}`);
-        }
-      } while (this.again);
+    return this.ticker.kick();
+  }
+
+  private planReconcile(): void {
+    const next = () => {
+      void this.reconcile();
+      this.planReconcile();
     };
-    this.running = loop().finally(() => {
-      this.running = null;
-    });
-    return this.running;
+    const wait = msUntilReconcile(new Date());
+    this.daily = this.ticker.stopping ? null : setTimeout(next, wait).unref();
+  }
+
+  /** Passes until one was not full or was stopped (a lost grant); a failed pass is logged. */
+  private async drain(): Promise<void> {
+    const full = (s: { claimed: number; stopped: boolean }) => s.claimed >= BATCH && !s.stopped;
+    let more = true;
+    while (more && !this.ticker.stopping) {
+      more = await this.processor.runOnce().then(full, (e: unknown) => this.passFailed(e));
+    }
+  }
+
+  private passFailed(e: unknown): boolean {
+    this.log.warn(`google sync pass failed: ${errorMessage(e)}`);
+    return false;
   }
 }

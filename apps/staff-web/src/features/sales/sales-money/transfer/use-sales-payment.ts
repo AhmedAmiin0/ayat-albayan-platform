@@ -15,7 +15,11 @@ export interface TransferForm {
   note: string;
 }
 
-export type TransferInput = { sub: SalesMoneySubscriptionView; form: TransferForm; attachments: ReceiptChoice[] };
+export type TransferInput = {
+  sub: SalesMoneySubscriptionView;
+  form: TransferForm;
+  attachments: ReceiptChoice[];
+};
 
 /** One clientRequestId per step, re-sent on retry; each upload sent once; package's currency. */
 export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void, bind: Bind = {}) {
@@ -23,7 +27,10 @@ export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void, bi
   const [requestId] = useState(() => crypto.randomUUID());
   const uploadOnce = useUploadOnce((input) => uploadSalesReceipt({ ...input, bind }));
 
-  async function attachmentPaths(sub: SalesMoneySubscriptionView, list: ReceiptChoice[]): Promise<string[]> {
+  async function attachmentPaths(
+    sub: SalesMoneySubscriptionView,
+    list: ReceiptChoice[],
+  ): Promise<string[]> {
     const paths: string[] = [];
     for (const c of list) paths.push(c.kind === 'chat' ? c.path : await uploadOnce(sub.id, c.file));
     return [...new Set(paths)];

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { dbError } from '@/common/http/http';
+import { done, pgError } from '@/common/db/errors';
 import { type OutboxRow, outboxRows } from './outbox.schemas';
 import type { ClaimRequest, OutboxStore, Settled } from './outbox.types';
 
@@ -15,13 +15,12 @@ export class DomainEventsRepo implements OutboxStore {
       p_token: req.token,
       p_stale_before: req.staleBefore.toISOString(),
     });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return outboxRows.parse(data);
   }
 
   async finish(token: string, results: readonly Settled[]): Promise<void> {
     const p_results = results.map((r) => ({ ...r, at: r.at?.toISOString() ?? null }));
-    const { error } = await this.db.rpc('finish_domain_events', { p_token: token, p_results });
-    if (error) throw dbError(error);
+    done(await this.db.rpc('finish_domain_events', { p_token: token, p_results }));
   }
 }

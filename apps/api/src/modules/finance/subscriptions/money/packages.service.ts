@@ -82,6 +82,16 @@ export class PackagesService {
   async studentBalance(studentId: string): Promise<StudentBalanceView> {
     return toStudentBalance(studentId, await this.views(await this.subs.forStudent(studentId)));
   }
+
+  /** studentBalance for each student, with one read of packages, balances and payments. */
+  async studentBalances<T extends { id: string }>(
+    students: readonly T[],
+  ): Promise<[T, StudentBalanceView][]> {
+    if (students.length === 0) return [];
+    const views = await this.views(await this.subs.withStudentFor(students.map((s) => s.id)));
+    const of = (id: string) => views.filter((v) => v.student.id === id);
+    return students.map((s) => [s, toStudentBalance(s.id, of(s.id))]);
+  }
 }
 
 const isActivation = (c: { to: string }): boolean => c.to === 'active';

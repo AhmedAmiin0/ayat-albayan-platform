@@ -14,7 +14,12 @@ export interface RenderGoogle {
 }
 
 /** GoogleSection with every GET answered from the fixture (extra routes first win). */
-export function renderGoogle({ apiFetch, status = googleStatus(), routes = [], onNote = () => undefined }: RenderGoogle) {
+export function renderGoogle({
+  apiFetch,
+  status = googleStatus(),
+  routes = [],
+  onNote = () => undefined,
+}: RenderGoogle) {
   routeFetch(apiFetch, [
     ...routes,
     ['/admin/google/status', status],

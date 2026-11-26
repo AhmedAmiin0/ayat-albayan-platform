@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { createAuthUser } from '@/common/auth/auth-users';
 import { DB, type Db } from '@/common/db/db.module';
 import { badRequest, conflict } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { done, pgError } from '@/common/db/errors';
 import { USERS_CONFIG, type AuthAdmin, type AuthPatch, type UsersConfig } from '@/modules/people/users/store/users.store';
 
 /** ~100 years: GoTrue has no "ban forever", and `none` lifts it. */
@@ -31,7 +31,7 @@ export class SupabaseAuthAdmin implements AuthAdmin {
 
   async findIdByEmail(email: string): Promise<string | null> {
     const { data, error } = await this.db.rpc('auth_user_id_by_email', { p_email: email });
-    if (error) throw dbError(error);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -66,7 +66,6 @@ export class SupabaseAuthAdmin implements AuthAdmin {
   }
 
   async revokeSessions(id: string): Promise<void> {
-    const { error } = await this.db.rpc('revoke_user_sessions', { p_user: id });
-    if (error) throw dbError(error);
+    done(await this.db.rpc('revoke_user_sessions', { p_user: id }));
   }
 }

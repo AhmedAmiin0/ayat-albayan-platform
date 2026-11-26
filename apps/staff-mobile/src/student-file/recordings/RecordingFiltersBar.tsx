@@ -5,7 +5,12 @@ import {
 } from './recording-filters';
 
 const F = t.mobileStudentFile.recordings.filters;
-const PRESET_LABEL: Record<DatePreset, string> = { all: F.dateAll, last7: F.last7, last30: F.last30, month: F.thisMonth };
+const PRESET_LABEL: Record<DatePreset, string> = {
+  all: F.dateAll,
+  last7: F.last7,
+  last30: F.last30,
+  month: F.thisMonth,
+};
 const S = t.studentRecordings;
 const STATUSES: { value: StatusFilter; label: string }[] = [
   { value: '', label: S.filters.statusAll },
@@ -30,7 +35,12 @@ export function RecordingFiltersBar({ value, onChange, teachers }: RecordingFilt
   const people = [{ value: '', label: F.teacherAll }, ...teachers.map((x) => ({ value: x.id, label: x.name }))];
   return (
     <>
-      <FilterPills items={presets} value={value.preset} onChange={(preset) => onChange({ ...value, preset })} accessibilityLabel={F.dateLabel} />
+      <FilterPills
+        items={presets}
+        value={value.preset}
+        onChange={(preset) => onChange({ ...value, preset })}
+        accessibilityLabel={F.dateLabel}
+      />
       <FilterPills
         items={STATUSES}
         value={value.status}
@@ -38,7 +48,12 @@ export function RecordingFiltersBar({ value, onChange, teachers }: RecordingFilt
         accessibilityLabel={S.filters.status}
       />
       {teachers.length > 1 ? (
-        <FilterPills items={people} value={value.teacherId} onChange={(teacherId) => onChange({ ...value, teacherId })} accessibilityLabel={F.teacherLabel} />
+        <FilterPills
+          items={people}
+          value={value.teacherId}
+          onChange={(teacherId) => onChange({ ...value, teacherId })}
+          accessibilityLabel={F.teacherLabel}
+        />
       ) : null}
     </>
   );

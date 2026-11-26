@@ -8,6 +8,8 @@ import { LessonFilesAccess } from './lesson-files.access';
 import { assetRecording, assetReport, lessonFileView } from './lesson-files.mapper';
 import { LessonFilesRepo } from './lesson-files.repo';
 
+const NONE: ReadonlyMap<string, string> = new Map();
+
 /** GET /lessons/:id/files: the lesson's recordings, reports and files on one staff page. */
 @Injectable()
 export class LessonAssetsService {
@@ -31,19 +33,19 @@ export class LessonAssetsService {
       starts_at: lesson.starts_at,
       ends_at: lesson.ends_at,
       students,
-      recordings: await Promise.all(recordings.map((r) => this.signed(r))),
+      recordings: await this.signed(recordings),
       reports: reports.filter((r) => r.status === 'submitted').map((r) => assetReport(r, students)),
       files: files.map(lessonFileView),
     };
   }
 
-  private async signed(row: AssetRecordingRow) {
-    const url = row.status === 'done' ? await this.sign(row.file_path) : null;
-    return assetRecording(row, url);
-  }
-
-  private async sign(path: string): Promise<string> {
-    const ref = { bucket: BUCKETS.recordings, path, seconds: SIGNED_URL_SECONDS.ui };
-    return (await this.storage.signedDownload(ref)).url;
+  /** A finished file that cannot be signed fails the page, as a single link did. */
+  private async signed(rows: readonly AssetRecordingRow[]) {
+    const done = rows.filter((r) => r.status === 'done');
+    const paths = done.map((r) => r.file_path);
+    const sign = { bucket: BUCKETS.recordings, paths, seconds: SIGNED_URL_SECONDS.ui };
+    const urls = done.length === 0 ? NONE : await this.storage.signedDownloads(sign);
+    if (done.some((r) => !urls.has(r.file_path))) throw new Error('lesson recording not signed');
+    return rows.map((r) => assetRecording(r, urls.get(r.file_path) ?? null));
   }
 }

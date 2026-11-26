@@ -12,7 +12,8 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const by = (col: string) => t.table.filterBy.replace('{col}', col);
-const show = (node: ReactNode) => render(<QueryClientProvider client={new QueryClient()}>{node}</QueryClientProvider>);
+const show = (node: ReactNode) =>
+  render(<QueryClientProvider client={new QueryClient()}>{node}</QueryClientProvider>);
 
 describe('teacher earnings tables: server sort + filters (R-NFR-08)', () => {
   beforeEach(() => apiFetch.mockReset());

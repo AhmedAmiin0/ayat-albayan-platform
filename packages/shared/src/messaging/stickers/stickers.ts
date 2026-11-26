@@ -1,3 +1,4 @@
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 import { waSendKind } from '../chat/chat-files';
 
@@ -48,7 +49,7 @@ export function stickerKey(m: { id: string; interactive_payload: unknown }): str
 }
 
 /** POST /threads/:phone/sticker: a sticker the chats already hold, sent again as it is stored. */
-export const threadStickerSendSchema = z.object({ messageId: z.uuid(), clientRequestId: z.uuid() });
+export const threadStickerSendSchema = z.object({ messageId: z.uuid(), clientRequestId });
 export type ThreadStickerSend = z.infer<typeof threadStickerSendSchema>;
 
 /** Adds a sticker bubble to favourites. */
@@ -58,7 +59,7 @@ export const stickerFavouriteSchema = z.object({ messageId: z.uuid() });
 export const giphyIdSchema = z.string().regex(/^[A-Za-z0-9]{1,64}$/);
 
 /** POST /threads/:phone/gif: a GIF from the panel, sent as a WhatsApp video. */
-export const threadGifSendSchema = z.object({ gifId: giphyIdSchema, clientRequestId: z.uuid() });
+export const threadGifSendSchema = z.object({ gifId: giphyIdSchema, clientRequestId });
 export type ThreadGifSend = z.infer<typeof threadGifSendSchema>;
 
 /** GET /threads/gifs?q=: a search, or GIPHY's trending GIFs without one. */

@@ -3,7 +3,7 @@ import { type HttpException, Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict, notFound } from '@/common/http/errors';
-import { dbError } from '@/common/http/http';
+import { maybe, one, pgError, rows } from '@/common/db/errors';
 
 export type StudentRow = Tables<'students'>;
 export type GuardianRow = Tables<'guardians'>;
@@ -25,7 +25,7 @@ const PHONE_ERRORS: Record<string, (() => HttpException) | undefined> = {
 };
 
 const phoneError = (e: PostgrestError): Error =>
-  PHONE_ERRORS[e.code === 'P0001' ? e.message : e.code]?.() ?? dbError(e);
+  PHONE_ERRORS[e.code === 'P0001' ? e.message : e.code]?.() ?? pgError(e);
 
 /** The student's own number: set or moved (a phone) or removed (null), by `actorId`. */
 interface StudentPhone {
@@ -70,8 +70,7 @@ export class PeopleEditRepo {
   async view(id: string): Promise<ViewRow | null> {
     const query = this.db.from('students').select(VIEW).eq('id', id);
     const family = query.is('guardian.phones.student_id', null);
-    const { data, error } = await family.maybeSingle<ViewRow>();
-    if (error) throw dbError(error);
+    const data = maybe(await family.maybeSingle<ViewRow>());
     return data;
   }
 
@@ -84,51 +83,45 @@ export class PeopleEditRepo {
   }
 
   async student(id: string): Promise<StudentRow | null> {
-    const { data, error } = await this.db.from('students').select('*').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('students').select('*').eq('id', id).maybeSingle());
     return data;
   }
 
   async guardian(id: string): Promise<GuardianRow | null> {
-    const { data, error } = await this.db.from('guardians').select('*').eq('id', id).maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await this.db.from('guardians').select('*').eq('id', id).maybeSingle());
     return data;
   }
 
   async children(guardianId: string): Promise<Child[]> {
-    const { data, error } = await this.db
+    const data = rows(await this.db
       .from('students')
       .select('id, code, name, contact_is_self, brought_by, profile_id')
       .eq('guardian_id', guardianId)
-      .order('created_at');
-    if (error) throw dbError(error);
+      .order('created_at'));
     return data;
   }
 
   /** contact_is_self is cleared. null = moved meanwhile (or gone): nothing written. */
   async move(row: MoveRow): Promise<StudentRow | null> {
-    const { data, error } = await this.db
+    const data = maybe(await this.db
       .from('students')
       .update({ guardian_id: row.to, contact_is_self: false })
       .eq('id', row.id)
       .eq('guardian_id', row.from)
       .select()
-      .maybeSingle();
-    if (error) throw dbError(error);
+      .maybeSingle());
     return data;
   }
 
   async setSelf(id: string, value: boolean): Promise<StudentRow | null> {
     const query = this.db.from('students').update({ contact_is_self: value }).eq('id', id);
-    const { data, error } = await query.select().maybeSingle();
-    if (error) throw dbError(error);
+    const data = maybe(await query.select().maybeSingle());
     return data;
   }
 
   async renameGuardian(id: string, name: string): Promise<GuardianRow> {
     const query = this.db.from('guardians').update({ name }).eq('id', id);
-    const { data, error } = await query.select().single();
-    if (error) throw dbError(error);
+    const data = one(await query.select().single());
     return data;
   }
 }

@@ -35,7 +35,11 @@ interface StudentsEmptyProps {
 function StudentsEmpty({ kind, loaded, failed, retry }: StudentsEmptyProps) {
   const s = t.teacherStudents;
   if (loaded) return <EmptyState title={kind === 'trial' ? s.emptyTrial : s.emptySubscribed} />;
-  return failed ? <ErrorState message={s.loadFailed} onRetry={retry} /> : <Note>{t.common.loading}</Note>;
+  return failed ? (
+    <ErrorState message={s.loadFailed} onRetry={retry} />
+  ) : (
+    <Note>{t.common.loading}</Note>
+  );
 }
 
 /** Subscribed and trial never mixed (R-TCH-03); no phone, guardian or money. */
@@ -49,12 +53,20 @@ export function TeacherStudentsScreen() {
   const pull = usePullRefresh(list.refetch);
   const tz = useViewerTz();
   const inset = useTabBarInset();
-  const renderRow = useCallback(({ item }: ListRenderItemInfo<TeacherStudentView>) => <StudentRow student={item} tz={tz} />, [tz]);
+  const renderRow = useCallback(
+    ({ item }: ListRenderItemInfo<TeacherStudentView>) => <StudentRow student={item} tz={tz} />,
+    [tz],
+  );
   const rows = useInsetRows(renderRow, shown?.length ?? 0);
   return (
     <Screen list>
       <ScreenHeader title={t.teacherStudents.title} size="h2" connecting count={shown?.length} />
-      <FilterPills items={kinds()} value={kind} onChange={setKind} accessibilityLabel={t.teacherStudents.kinds} />
+      <FilterPills
+        items={kinds()}
+        value={kind}
+        onChange={setKind}
+        accessibilityLabel={t.teacherStudents.kinds}
+      />
       <FlatList
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 24 + inset }}

@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { notFound } from '@/common/http/errors';
-import { dbError } from './http';
+import { peopleErrors } from './http';
+import { pgError } from '@/common/db/errors';
 
 type SecondNumber = { guardianId: string; phone: string; actorId: string };
 
@@ -22,6 +23,6 @@ export class GuardianPhonesService {
   async removeSecond({ guardianId, phone, actorId }: SecondNumber): Promise<void> {
     const { error } = await this.db.rpc('remove_family_phone', { p_guardian: guardianId, p_phone: phone, p_actor: actorId });
     if (error?.code === 'P0001' && error.message === 'phone_not_found') throw notFound('phone_not_found');
-    if (error) throw dbError(error);
+    if (error) throw pgError(error, peopleErrors());
   }
 }

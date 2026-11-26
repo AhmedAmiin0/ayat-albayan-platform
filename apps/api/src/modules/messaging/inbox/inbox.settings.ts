@@ -2,6 +2,7 @@ import { SETTING_DEFAULTS, type SettingKey } from '@ab/settings';
 import { Injectable } from '@nestjs/common';
 import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice';
 import { SettingsService } from '@/common/settings/settings.service';
+import { orFallback } from '@/common/infra/errors';
 
 /**
  * ThreadFileSender: the size limit of a file sent from the chat; the chat
@@ -25,6 +26,6 @@ export class InboxSettings {
  * the default: the chat list still answers, only a ring may be off by the admin's change.
  */
 export async function renewalThreshold(settings: InboxSettings | undefined): Promise<number> {
-  const read = await settings?.read().catch(() => null);
+  const read = settings && (await orFallback(settings.read(), null, 'renewal threshold read'));
   return read?.renewal_alert_remaining ?? SETTING_DEFAULTS.renewal_alert_remaining;
 }

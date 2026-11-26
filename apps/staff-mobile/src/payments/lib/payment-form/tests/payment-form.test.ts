@@ -10,8 +10,13 @@ const current = subscription();
 
 test('payable: the current package and older ones still owed money', () => {
   expect(payablePackages(balanceOf(paidOld, current)).map((p) => p.id)).toEqual([SUB_ID]);
-  expect(payablePackages(balanceOf(owedOld, current)).map((p) => p.id)).toEqual([OLD_SUB_ID, SUB_ID]);
-  expect(payablePackages(balanceOf(subscription({ paid: 145 }))).map((p) => p.id)).toEqual([SUB_ID]);
+  expect(payablePackages(balanceOf(owedOld, current)).map((p) => p.id)).toEqual([
+    OLD_SUB_ID,
+    SUB_ID,
+  ]);
+  expect(payablePackages(balanceOf(subscription({ paid: 145 }))).map((p) => p.id)).toEqual([
+    SUB_ID,
+  ]);
 });
 
 test('default: the oldest owed package, else the current one; no package → null', () => {
@@ -53,7 +58,9 @@ test('valid: the package currency, the picked day, Arabic digits read', () => {
       receipt: null,
     },
   });
-  expect(checkDraft({ ...draft, daysAgo: 0 }, { sub: current, now }).input?.paidAt).toBe(now.toISOString());
+  expect(checkDraft({ ...draft, daysAgo: 0 }, { sub: current, now }).input?.paidAt).toBe(
+    now.toISOString(),
+  );
 });
 
 const slip: Receipt = { uri: 'file:///s.jpg', mime: 'image/jpeg', bytes: new ArrayBuffer(1), size: 1 };

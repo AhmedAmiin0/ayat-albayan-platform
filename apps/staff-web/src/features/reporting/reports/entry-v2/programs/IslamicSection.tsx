@@ -10,7 +10,8 @@ const islamicOf = (c: ReportContent): IslamicContent => c.islamic ?? islamicCont
 export function IslamicSection({ s }: { s: ReportEntryV2State }) {
   const v2 = t.reports.v2;
   const i = islamicOf(s.values.content);
-  const change = (next: Partial<IslamicContent>) => s.setContent((c) => ({ ...c, islamic: { ...islamicOf(c), ...next } }));
+  const change = (next: Partial<IslamicContent>) =>
+    s.setContent((c) => ({ ...c, islamic: { ...islamicOf(c), ...next } }));
   const domains = ISLAMIC_DOMAINS.map((d) => ({ value: d, label: v2.domains[d] }));
   return (
     <section aria-label={t.enums.program.islamic_studies} className={CARD}>

@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { candidates, link, linkTarget, linkedOf, phoneTaken } from './users.links.repo';
+import {
+  candidates,
+  link,
+  linkTarget,
+  linkedOf,
+  phoneTaken,
+  syncTeacher,
+} from './users.links.repo';
 
 describe('link queries', () => {
   it('finds a student by name or AB code, only without a login, with wildcards neutralised', async () => {
@@ -81,5 +89,25 @@ describe('link queries', () => {
       teachers: [{ data: [{ profile_id: 'p1' }] }, { data: { id: 't1' } }],
     });
     expect(await phoneTaken(own.db, ctx)).toBe(false);
+  });
+});
+
+const SYNC = { profileId: 'p1', patch: { display_name_ar: 'أحمد' } };
+
+describe('link queries error paths: the answer a failed query gives today', () => {
+  it('a unique violation is 409 duplicate with the detail', async () => {
+    const { db } = fakeDb({ teachers: [{ error: PG_ERRORS.unique }] });
+    expect(await answerOfRejection(syncTeacher(db, SYNC))).toEqual({
+      status: 409,
+      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+    });
+  });
+
+  it('any other error is a 500 naming the code', async () => {
+    const { db } = fakeDb({ teachers: [{ error: PG_ERRORS.other }] });
+    expect(await answerOfRejection(syncTeacher(db, SYNC))).toEqual({
+      status: 500,
+      body: 'db error XX000: boom',
+    });
   });
 });

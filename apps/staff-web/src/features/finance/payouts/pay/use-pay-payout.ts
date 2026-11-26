@@ -7,7 +7,12 @@ import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { uploadTeacherReceipt } from '@/features/finance/teacher-earnings/api';
 import { payPayout, type PayoutView } from '@/features/finance/payouts/api';
 
-export type PayPayoutInput = { day: string; method: PaymentMethod; note: string; file: File | null };
+export type PayPayoutInput = {
+  day: string;
+  method: PaymentMethod;
+  note: string;
+  file: File | null;
+};
 
 /** The receipt is uploaded once per file, then the payout is paid. */
 export function usePayPayout(payout: PayoutView, onSaved: () => void) {
@@ -15,7 +20,9 @@ export function usePayPayout(payout: PayoutView, onSaved: () => void) {
   const [receiptOnce] = useState(() => uploadOnce<File>());
 
   const receiptPath = (file: File | null): Promise<string | null> =>
-    file ? receiptOnce(file, () => uploadTeacherReceipt({ teacherId: payout.teacher.id, file })) : Promise.resolve(null);
+    file
+      ? receiptOnce(file, () => uploadTeacherReceipt({ teacherId: payout.teacher.id, file }))
+      : Promise.resolve(null);
 
   return useMutation({
     mutationFn: async (input: PayPayoutInput) =>

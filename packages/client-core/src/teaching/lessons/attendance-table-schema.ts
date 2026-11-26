@@ -1,10 +1,9 @@
-import type { StudentAttendanceTable } from '@ab/shared';
+import { attendanceKindSchema, type StudentAttendanceTable } from '@ab/shared';
 import { ATTENDANCES, LESSON_STATUSES, REPORT_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
 
 // Parsed at the boundary (rule 12, docs/46 C5); docs/47 fields are nullish for an old API.
 
-const KINDS = ['present', 'absent', 'excused', 'cancelled', 'unmarked'] as const;
 const count = z.number().int().nonnegative();
 
 const rowReportSchema = z.object({
@@ -22,7 +21,7 @@ export const attendanceRowSchema = z.object({
   teacher_name: z.string().nullable(),
   status: z.enum(LESSON_STATUSES),
   attendance: z.enum(ATTENDANCES).nullable(),
-  kind: z.enum(KINDS).nullable(),
+  kind: attendanceKindSchema.nullable(),
   report_sent: z.boolean(),
   report_id: z.string().nullable(),
   cancel_reason: z.string().nullable(),

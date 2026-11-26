@@ -57,7 +57,11 @@ export function ageError(value: string): string | undefined {
 }
 
 /** The guardian is found or created by phone; `leadId` converts that lead and links it. */
-export function toCreateBody(v: CreateStudentValues, force: boolean, leadId?: string): CreateStudentBody {
+export function toCreateBody(
+  v: CreateStudentValues,
+  force: boolean,
+  leadId?: string,
+): CreateStudentBody {
   return {
     name: v.name.trim(),
     age: parseAge(v.age) ?? null,
@@ -66,7 +70,12 @@ export function toCreateBody(v: CreateStudentValues, force: boolean, leadId?: st
     program: v.program,
     ...(v.teacher_id ? { teacher_id: v.teacher_id } : {}),
     ...(v.contactIsSelf ? { contact_is_self: true } : {}),
-    guardian: { name: v.guardianName.trim(), phone_e164: v.guardianPhone, tz: v.tz, source: v.source || null },
+    guardian: {
+      name: v.guardianName.trim(),
+      phone_e164: v.guardianPhone,
+      tz: v.tz,
+      source: v.source || null,
+    },
     force,
     ...(leadId ? { lead_id: leadId } : {}),
   };

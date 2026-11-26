@@ -15,8 +15,14 @@ export function StatementLines({ lines }: { lines: readonly AssistantStatementLi
           style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 8, borderBottomWidth: 1, borderBottomColor: color.rule, paddingBottom: 6 }}
         >
           <View style={{ flexShrink: 1, gap: 2 }}>
-            <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink }}>{lineText(l)}</AppText>
-            {l.student ? <Ltr style={{ fontSize: type.size.xs, color: color.ink3, alignSelf: 'flex-start' }}>{l.student.code}</Ltr> : null}
+            <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink }}>
+              {lineText(l)}
+            </AppText>
+            {l.student ? (
+              <Ltr style={{ fontSize: type.size.xs, color: color.ink3, alignSelf: 'flex-start' }}>
+                {l.student.code}
+              </Ltr>
+            ) : null}
           </View>
           <AmountText amount={l.amount} currency={l.currency} />
         </View>

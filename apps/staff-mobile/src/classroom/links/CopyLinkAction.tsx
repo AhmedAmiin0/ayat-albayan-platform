@@ -28,7 +28,15 @@ export function CopyLinkAction({ lessonId }: { lessonId: string }) {
         onPress={() => copy.mutate(lessonId)}
       />
       {copy.isSuccess ? <Note>{t.classroom.linkWindow}</Note> : null}
-      {copy.isError && !(copy.error instanceof Dismissed) ? <ErrorLine message={copy.error instanceof ShareFailed ? t.mobileClassroom.linkShareFailed : linkError(copy.error)} /> : null}
+      {copy.isError && !(copy.error instanceof Dismissed) ? (
+        <ErrorLine
+          message={
+            copy.error instanceof ShareFailed
+              ? t.mobileClassroom.linkShareFailed
+              : linkError(copy.error)
+          }
+        />
+      ) : null}
     </View>
   );
 }
