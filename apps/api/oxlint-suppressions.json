@@ -315,12 +315,6 @@
   "src/common/db/list-sort/list-sort.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/common/db/list-sort/tests/list-sort.test.ts": {
