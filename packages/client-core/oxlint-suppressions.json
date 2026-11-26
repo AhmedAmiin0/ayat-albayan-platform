@@ -281,9 +281,6 @@
   },
   "src/people/users/create-form.ts": {
     "complexity": {
-      "count": 2
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },

@@ -5796,11 +5796,8 @@
     }
   },
   "src/users/create/CreateUserFields.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     }
   },
   "src/users/create/CreateUserForm.tsx": {
