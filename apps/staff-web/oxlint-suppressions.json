@@ -505,9 +505,6 @@
     }
   },
   "src/features/finance/payments/PaymentsPage.sort.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "typescript/no-confusing-void-expression": {
       "count": 1
     }
@@ -530,9 +527,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "typescript/no-unnecessary-condition": {
-      "count": 1
     }
   },
   "src/features/finance/payments/PeriodTotals.tsx": {
@@ -548,13 +542,13 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 6
+      "count": 1
     }
   },
   "src/features/finance/payments/attachments/AttachmentItems.tsx": {
@@ -565,11 +559,6 @@
   "src/features/finance/payments/attachments/AttachmentPicker.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
-    }
-  },
-  "src/features/finance/payments/attachments/AttachmentsDialog.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/features/finance/payments/attachments/AttachmentsDialog.tsx": {
@@ -653,11 +642,6 @@
     "typescript/consistent-type-definitions": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/finance/payments/record/RecordPaymentDialog.attachments.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -746,11 +730,8 @@
     "typescript/consistent-type-definitions": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
-      "count": 9
+      "count": 1
     }
   },
   "src/features/finance/payouts/list/PayoutActions.tsx": {
@@ -776,11 +757,6 @@
     },
     "ab/module-boundaries": {
       "count": 3
-    }
-  },
-  "src/features/finance/payouts/list/PayoutsPage/tests/PayoutsPage.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/features/finance/payouts/list/payout-columns.tsx": {
@@ -6227,11 +6203,6 @@
       "count": 1
     }
   },
-  "src/features/sales/sales/money/MyPayments/tests/MyPayments.test.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/features/sales/sales/money/MyWallet.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -7623,7 +7594,7 @@
   },
   "src/features/teaching/teacher/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/teaching/teacher/lessons/MyWeek/MyWeek.tsx": {

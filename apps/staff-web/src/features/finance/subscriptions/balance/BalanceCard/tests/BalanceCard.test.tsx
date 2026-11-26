@@ -1,3 +1,4 @@
+import { paymentViewSchema } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -7,7 +8,11 @@ import { balanceOf, WEEKLY } from '@/features/finance/subscriptions/money-fixtur
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const STUDENT = { id: 'stu-1', name: 'سهيلة', code: 'AB-0183' };
 
@@ -30,7 +35,11 @@ describe('BalanceCard (S6: the student package on the profile)', () => {
     renderCard();
     expect(await screen.findByText('بقيت حلقتان')).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/students/stu-1/balance');
-    expect(screen.getByText(new RegExp(t.subscriptions.usedOf.replace('{used}', '2').replace('{total}', '4')))).toBeTruthy();
+    expect(
+      screen.getByText(
+        new RegExp(t.subscriptions.usedOf.replace('{used}', '2').replace('{total}', '4')),
+      ),
+    ).toBeTruthy();
     expect(screen.getByText(t.enums.subscriptionStatus.unpaid)).toBeTruthy();
     expect(screen.getByText(/يُتوقع أن تنتهي يوم/)).toBeTruthy();
   });
@@ -54,13 +63,20 @@ describe('BalanceCard (S6: the student package on the profile)', () => {
     const dialog = await screen.findByRole('dialog');
     expect(dialog.textContent).toContain(t.payments.mobile.recordFor.replace('{student}', 'سهيلة'));
     apiSend.mockResolvedValue({ id: 'pay-1' });
-    fireEvent.click(screen.getAllByRole('button', { name: t.payments.record }).at(-1) as HTMLElement);
+    fireEvent.click(
+      screen.getAllByRole('button', { name: t.payments.record }).at(-1) as HTMLElement,
+    );
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith(
-        'POST',
-        '/payments',
-        expect.objectContaining({ subscriptionId: 'sub-1', amount: 145, currency: 'SAR', method: 'bank', receiptPath: null }),
-      ),
+      expect(apiSend).toHaveBeenCalledWith('POST', '/payments', {
+        body: expect.objectContaining({
+          subscriptionId: 'sub-1',
+          amount: 145,
+          currency: 'SAR',
+          method: 'bank',
+          receiptPath: null,
+        }),
+        schema: paymentViewSchema,
+      }),
     );
     expect(await screen.findByRole('status')).toBeTruthy();
   });

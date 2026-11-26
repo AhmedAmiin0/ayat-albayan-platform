@@ -1,6 +1,11 @@
-import type { SignedDownload } from '@ab/shared';
+import { signedDownloadSchema } from '@ab/shared';
 import type { PaymentMethod } from '@ab/catalog';
-import type { PayoutGenerateResult, PayoutView, TeacherEarningsSummaryView } from '@ab/money';
+import {
+  payoutGenerateResultSchema,
+  payoutListSchema,
+  payoutViewSchema,
+  type TeacherEarningsSummaryView,
+} from '@ab/money';
 import { riyadhToday } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -12,24 +17,33 @@ export type { PayoutGenerateResult, PayoutView } from '@ab/money';
 export const payoutsQuery = (month: string) =>
   queryOptions({
     queryKey: moneyKeys.payouts(month),
-    queryFn: () => apiFetch<PayoutView[]>(`/payouts?month=${month}`),
+    queryFn: () => apiFetch(`/payouts?month=${month}`, { schema: payoutListSchema }),
   });
 
 export const generatePayouts = (month: string) =>
-  apiSend<PayoutGenerateResult>('POST', `/payouts/${month}/generate`);
+  apiSend('POST', `/payouts/${month}/generate`, { schema: payoutGenerateResultSchema });
 
-export const approvePayout = (id: string) => apiSend<PayoutView>('POST', `/payouts/${id}/approve`);
+const payoutMove = (id: string, move: string, body?: unknown) =>
+  apiSend('POST', `/payouts/${id}/${move}`, { body, schema: payoutViewSchema });
 
-export type PayPayoutBody = { paidAt: string; method: PaymentMethod; note: string | null; receiptPath: string | null };
+export const approvePayout = (id: string) => payoutMove(id, 'approve');
+
+export type PayPayoutBody = {
+  paidAt: string;
+  method: PaymentMethod;
+  note: string | null;
+  receiptPath: string | null;
+};
 
 /** Settlement in the ledger + paid, one transaction (POST /payouts/:id/pay). */
-export const payPayout = (id: string, body: PayPayoutBody) => apiSend<PayoutView>('POST', `/payouts/${id}/pay`, body);
+export const payPayout = (id: string, body: PayPayoutBody) => payoutMove(id, 'pay', body);
 
-export const reopenPayout = (id: string) => apiSend<PayoutView>('POST', `/payouts/${id}/reopen`);
+export const reopenPayout = (id: string) => payoutMove(id, 'reopen');
 
-export const unpayPayout = (id: string, reason: string) => apiSend<PayoutView>('POST', `/payouts/${id}/unpay`, { reason });
+export const unpayPayout = (id: string, reason: string) => payoutMove(id, 'unpay', { reason });
 
-export const payoutReceiptUrl = (id: string) => apiFetch<SignedDownload>(`/payouts/${id}/receipt`);
+export const payoutReceiptUrl = (id: string) =>
+  apiFetch(`/payouts/${id}/receipt`, { schema: signedDownloadSchema });
 
 /** Earned, paid and owed per teacher from the ledger. */
 export const earningsSummaryQuery = () =>
@@ -44,7 +58,7 @@ export const earningsSummaryQuery = () =>
  * text decoding drops it and Excel needs it for Arabic.
  */
 export async function downloadPayoutsCsv(month: string): Promise<void> {
-  const text = await apiFetch<string>(`/exports/payouts.csv?month=${month}`);
+  const text: unknown = await apiFetch(`/exports/payouts.csv?month=${month}`);
   const csv = typeof text === 'string' ? text : JSON.stringify(text);
   const bom = String.fromCharCode(0xfeff);
   const body = bom + (csv.startsWith(bom) ? csv.slice(1) : csv);
