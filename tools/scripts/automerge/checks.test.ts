@@ -52,3 +52,19 @@ test('a cancelled run is superseded by a later success of the same check on the 
   const failedToo = [aRun('pr title', { conclusion: 'failure' }), aRun('pr title')];
   assert.match(verdict({ checks: [...base, ...failedToo] }) ?? '', /pr title failure/);
 });
+
+test('a failed run is superseded only by a newer success of the same check', () => {
+  const fixed = [aRun('pr title', { id: 1, conclusion: 'failure' }), aRun('pr title', { id: 2 })];
+  assert.equal(verdict({ checks: [...base, ...fixed] }), null);
+  const broken = [aRun('pr title', { id: 2, conclusion: 'failure' }), aRun('pr title', { id: 1 })];
+  assert.match(verdict({ checks: [...base, ...broken] }) ?? '', /not green: pr title failure/);
+  const other = [aRun('pr title', { id: 1, conclusion: 'failure' }), aRun('guards', { id: 2 })];
+  assert.match(verdict({ checks: [...base, ...other] }) ?? '', /not green: pr title failure/);
+  const timedOut = [aRun('e2e (2)', { id: 1, conclusion: 'timed_out' }), aRun('e2e (2)', { id: 2 })];
+  assert.equal(verdict({ checks: [...base, ...timedOut] }), null);
+});
+
+test('a run still in progress is never superseded', () => {
+  const stuck = aRun('e2e (2)', { id: 1, status: 'in_progress', conclusion: null });
+  assert.match(verdict({ checks: [...base, stuck, aRun('e2e (2)', { id: 2 })] }) ?? '', /pending/);
+});

@@ -66,6 +66,11 @@ test('lane-automerge: what develop gained since the merge base comes from git', 
   assert.ok(!script.includes('compare.json'), 'cli.ts reads behind.json, not the compare answer');
 });
 
+test('lane-automerge: each check run keeps its id, so a newer run is told from an older one', () => {
+  const kept = `jq '[.[] | {id, name, status, conclusion}]' "$d/runs.json" > "$d/checks.json"`;
+  assert.ok(script.includes(kept), kept);
+});
+
 /** deploy-staging's preflight `if`, evaluated for one ci run (GitHub `==` on these strings). */
 function preflight(run, eventName = 'workflow_run') {
   const github = { event_name: eventName, repository: 'o/r', event: { workflow_run: run } };
