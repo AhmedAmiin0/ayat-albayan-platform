@@ -87,6 +87,8 @@ export default {
       ignores: ['**/*.test.ts'],
       rules: { 'ab/no-typed-value-table': 'error' },
     },
+    // docs/62 §4: where a database client is allowed, its errors are answered through pgError.
+    { files: DB_CLIENT, rules: { 'ab/no-raw-db-error': 'error' } },
     forbiddenImports({
       files: ['src/**/*.ts'],
       ignores: DB_CLIENT,
