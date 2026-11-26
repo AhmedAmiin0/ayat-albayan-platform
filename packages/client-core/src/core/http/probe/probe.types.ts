@@ -1,6 +1,8 @@
 /** How one probe asks: `no-cors` for a host that sends no CORS headers (web only). */
 export interface ProbeOptions {
   mode?: RequestMode | undefined;
+  /** Default `no-store`; `no-cache` revalidates with the ETag. */
+  cache?: RequestCache | undefined;
   /** Default PROBE_TIMEOUT_MS. */
   timeoutMs?: number | undefined;
   /** Tests pass their own; default the global fetch. */
