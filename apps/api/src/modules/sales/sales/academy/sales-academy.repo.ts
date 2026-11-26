@@ -6,6 +6,12 @@ import { DB, type Db } from '@/common/db/db.module';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
 import { studentNameOrCodeFilter } from '@/modules/people/students/students.mapper';
 import { pgError } from '@/common/db/errors';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage } from '@/common/db/page';
+
+const SALES_STUDENT_SELECT =
+  'id, code, name, status, program, guardian:guardians(name, phone_e164), teacher:teachers(display_name_ar)';
+const STUDENT_ORDER: SortSpec<never> = { columns: {}, fallback: [{ column: 'name', ascending: true }] };
 
 type Student = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program'>;
 
@@ -56,16 +62,12 @@ export class SalesAcademyRepo {
   // One page by name, with the guardian's name and phone (the row opens that family's chat);
   // `search` is a name (Arabic-normalised) or a code, like the admin's list.
   async students(q: SalesStudentsQuery): Promise<{ rows: SalesStudentRow[]; total: number }> {
-    let query = this.db
-      .from('students')
-      .select('id, code, name, status, program, guardian:guardians(name, phone_e164), teacher:teachers(display_name_ar)', { count: 'exact' })
-      .order('name');
     const filter = q.search ? studentNameOrCodeFilter(q.search) : null;
-    if (filter) query = query.or(filter);
-    const from = (q.page - 1) * q.pageSize;
-    const { data, error, count } = await query.range(from, from + q.pageSize - 1);
-    if (error) throw pgError(error);
-    return { rows: data, total: count ?? 0 };
+    const read = () => {
+      const query = this.db.from('students').select(SALES_STUDENT_SELECT, { count: 'exact' });
+      return filter ? query.or(filter) : query;
+    };
+    return readPage(read, q, STUDENT_ORDER);
   }
 
   /**
