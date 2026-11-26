@@ -11,4 +11,4 @@ const blocks = libraryBlocks({
 });
 // docs/36 H-1: the web/mobile HTTP client is the only place that calls fetch.
 const fetchClient = syntaxExempt({ files: ['src/core/http/**'], http: true });
-export default { react: false, blocks: [...blocks, fetchClient] };
+export default { react: true, blocks: [...blocks, fetchClient] };

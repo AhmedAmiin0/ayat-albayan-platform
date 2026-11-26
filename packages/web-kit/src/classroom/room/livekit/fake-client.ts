@@ -34,7 +34,10 @@ export interface FakeClient extends RoomClient {
   startAudio: ReturnType<typeof vi.fn<RoomClient['startAudio']>>;
 }
 
-export function fakeClient(initial: Partial<RoomSnapshot> = {}, failures: MediaFailure[] = []): FakeClient {
+export function fakeClient(
+  initial: Partial<RoomSnapshot> = {},
+  failures: MediaFailure[] = [],
+): FakeClient {
   // Staff by default: may share the screen (a guest's test passes shareAllowed: false).
   let snap: RoomSnapshot = { ...EMPTY_SNAPSHOT, status: 'connected', shareAllowed: true, ...initial };
   const listeners = new Set<(s: RoomSnapshot) => void>();

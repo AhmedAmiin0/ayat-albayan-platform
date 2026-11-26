@@ -20,7 +20,8 @@ export function useChannelLive(ref: ChannelRef, { channelId, onLive }: Live): vo
   const { audience, studentId } = ref;
   useEffect(() => {
     if (!channelId) return;
-    const onMessage = () => void client.invalidateQueries({ queryKey: channelKey(audience, studentId) });
+    const onMessage = () =>
+      void client.invalidateQueries({ queryKey: channelKey(audience, studentId) });
     return subscribeChannelMessages(supabase, { channelId, onMessage, onLive });
   }, [channelId, audience, studentId, client, onLive]);
 }

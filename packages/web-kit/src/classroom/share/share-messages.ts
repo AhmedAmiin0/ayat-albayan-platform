@@ -19,7 +19,11 @@ const kindOf = (v: unknown): RequestKind | null => (v === undefined ? 'screen' :
 
 export function decodeShare(bytes: Uint8Array): ShareMessage | null {
   try {
-    const v = JSON.parse(new TextDecoder().decode(bytes)) as Partial<{ t: unknown; who: unknown; what: unknown }>;
+    const v = JSON.parse(new TextDecoder().decode(bytes)) as Partial<{
+      t: unknown;
+      who: unknown;
+      what: unknown;
+    }>;
     const what = kindOf(v.what);
     if (what === null) return null;
     if (v.t === 'request') return { t: 'request', what };
@@ -53,7 +57,8 @@ export type ShareInput =
   | { kind: 'dismissed' }
   | { kind: 'settled'; identity: string; what: RequestKind };
 
-const same = (a: PendingRequest, b: PendingRequest): boolean => a.identity === b.identity && a.what === b.what;
+const same = (a: PendingRequest, b: PendingRequest): boolean =>
+  a.identity === b.identity && a.what === b.what;
 const setMine = (state: ShareState, what: RequestKind, to: MineState): ShareState =>
   state.mine[what] === to ? state : { ...state, mine: { ...state.mine, [what]: to } };
 

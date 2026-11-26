@@ -1,6 +1,6 @@
 import { pendingRequestId, uploadOnce } from '@ab/client-core';
 import type { Page } from '@ab/core';
-import type { PaymentView, StudentBalanceView } from '@ab/money';
+import { paymentViewSchema, type PaymentView, type StudentBalanceView } from '@ab/money';
 import { useMutation, useQueryClient, type Query } from '@tanstack/react-query';
 import { useState } from 'react';
 import { apiSend } from '@ab/mobile-kit';
@@ -28,6 +28,27 @@ function studentLists(studentId: string) {
   };
 }
 
+interface SentFiles {
+  clientRequestId: string;
+  path: string | undefined;
+  attachments: string[];
+}
+
+/** POST /payments: a receipt path and attachments only when there are some. */
+function paymentBody(input: PaymentInput, sent: SentFiles) {
+  const { path, attachments } = sent;
+  return {
+    clientRequestId: sent.clientRequestId,
+    subscriptionId: input.subscriptionId,
+    amount: input.amount,
+    currency: input.currency,
+    method: input.method,
+    paidAt: input.paidAt,
+    ...(path === undefined ? {} : { receiptPath: path }),
+    ...(attachments.length ? { attachments } : {}),
+  };
+}
+
 /** R-MOB-03 optimistic; one upload and one clientRequestId per payment so retries never double. */
 export function useRecordPayment(studentId: string) {
   const client = useQueryClient();
@@ -38,7 +59,9 @@ export function useRecordPayment(studentId: string) {
   async function receiptPath(input: PaymentInput): Promise<string | undefined> {
     if (!input.receipt) return undefined;
     const { receipt } = input;
-    return receiptOnce(`${input.subscriptionId} ${receipt.uri}`, () => uploadReceipt(input.subscriptionId, receipt));
+    return receiptOnce(`${input.subscriptionId} ${receipt.uri}`, () =>
+      uploadReceipt(input.subscriptionId, receipt),
+    );
   }
 
   return useMutation({
@@ -46,16 +69,8 @@ export function useRecordPayment(studentId: string) {
     mutationFn: async (input: PaymentInput) => {
       const path = await receiptPath(input);
       const attachments = await attachmentPaths(input.subscriptionId, input.attachments ?? []);
-      return apiSend<PaymentView>('POST', '/payments', {
-        clientRequestId: request.current(),
-        subscriptionId: input.subscriptionId,
-        amount: input.amount,
-        currency: input.currency,
-        method: input.method,
-        paidAt: input.paidAt,
-        ...(path === undefined ? {} : { receiptPath: path }),
-        ...(attachments.length ? { attachments } : {}),
-      });
+      const body = paymentBody(input, { clientRequestId: request.current(), path, attachments });
+      return apiSend('POST', '/payments', { body, schema: paymentViewSchema });
     },
     onMutate: async (input) => {
       const lists = studentLists(studentId);

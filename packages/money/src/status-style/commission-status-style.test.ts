@@ -4,7 +4,9 @@ import { commissionStatusStyle, walletStateStyle } from './commission-status-sty
 
 describe('commissionStatusStyle', () => {
   it('every commission status is mapped: earned settled, voided struck in the danger tone', () => {
-    expect(Object.keys(commissionStatusStyle).sort()).toEqual([...ASSISTANT_COMMISSION_STATUSES].sort());
+    expect(Object.keys(commissionStatusStyle).sort()).toEqual(
+      [...ASSISTANT_COMMISSION_STATUSES].sort(),
+    );
     expect(commissionStatusStyle.earned).toEqual({ tone: 'ok', glyph: 'fill' });
     expect(commissionStatusStyle.voided).toEqual({ tone: 'bad', glyph: 'struck' });
   });

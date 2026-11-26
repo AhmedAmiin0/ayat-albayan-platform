@@ -17,7 +17,17 @@ interface Props {
   children?: ReactNode;
 }
 
-export function RequestStep({ label, hint, kind, value, onValue, onSubmit, busy, error, children }: Props) {
+export function RequestStep({
+  label,
+  hint,
+  kind,
+  value,
+  onValue,
+  onSubmit,
+  busy,
+  error,
+  children,
+}: Props) {
   return (
     <form
       noValidate

@@ -10,11 +10,28 @@ const B = t.classroom.boardRequest;
 const S = t.classroom.shareRequest;
 const TEACHER = { identity: 't', role: 'teacher' as const };
 const GUEST = { identity: 'guest-1', role: 'guest' as const };
-const guestRoom = () => fakeClient({ shareAllowed: false, tiles: [tile({ key: 'guest-1', isLocal: true, role: 'guest' }), tile({ key: 't', role: 'teacher' })] });
-const teacherRoom = () => fakeClient({ tiles: [tile({ key: 't', isLocal: true, role: 'teacher' }), tile({ key: 'guest-1', name: 'سهيلة', role: 'guest' })] });
-const sent = (c: FakeClient) => c.sendData.mock.calls.filter(([, o]) => o.topic === SHARE_TOPIC).map(([b]) => decodeShare(b));
-const deliver = (c: FakeClient, msg: ShareMessage, who: { identity: string; role: 'guest' | 'teacher' }) =>
-  act(() => c.receive({ bytes: encodeShare(msg), topic: SHARE_TOPIC, from: who }));
+const guestRoom = () =>
+  fakeClient({
+    shareAllowed: false,
+    tiles: [
+      tile({ key: 'guest-1', isLocal: true, role: 'guest' }),
+      tile({ key: 't', role: 'teacher' }),
+    ],
+  });
+const teacherRoom = () =>
+  fakeClient({
+    tiles: [
+      tile({ key: 't', isLocal: true, role: 'teacher' }),
+      tile({ key: 'guest-1', name: 'سهيلة', role: 'guest' }),
+    ],
+  });
+const sent = (c: FakeClient) =>
+  c.sendData.mock.calls.filter(([, o]) => o.topic === SHARE_TOPIC).map(([b]) => decodeShare(b));
+const deliver = (
+  c: FakeClient,
+  msg: ShareMessage,
+  who: { identity: string; role: 'guest' | 'teacher' },
+) => act(() => c.receive({ bytes: encodeShare(msg), topic: SHARE_TOPIC, from: who }));
 
 describe('«اطلب الكتابة على السبورة» / «اطلب فتح السبورة»', () => {
   it('a guest asks to open a closed board; once the teacher opens it the button goes', () => {

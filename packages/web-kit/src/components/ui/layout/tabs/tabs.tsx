@@ -58,7 +58,12 @@ function subscribe(onChange: () => void): () => void {
 const isWide = () => !hasMedia() || matchMedia(WIDE).matches;
 
 /** Next tab = inline-end: the LEFT arrow in RTL, the RIGHT arrow in LTR. */
-const STEP_RTL: Record<string, number> = { ArrowLeft: 1, ArrowDown: 1, ArrowRight: -1, ArrowUp: -1 };
+const STEP_RTL: Record<string, number> = {
+  ArrowLeft: 1,
+  ArrowDown: 1,
+  ArrowRight: -1,
+  ArrowUp: -1,
+};
 const STEP_LTR: Record<string, number> = { ...STEP_RTL, ArrowLeft: -1, ArrowRight: 1 };
 const isLtr = (el: Element) => el.closest('[dir]')?.getAttribute('dir') === 'ltr';
 
@@ -111,7 +116,11 @@ export function Tabs<V extends string>({
             ref={followSelected && tab.value === value ? keepInStrip : undefined}
             aria-label={tab.ariaLabel}
             id={idPrefix === undefined ? undefined : tabIds(idPrefix, tab.value).tab}
-            aria-controls={idPrefix === undefined || tab.value !== value ? undefined : tabIds(idPrefix, tab.value).panel}
+            aria-controls={
+              idPrefix === undefined || tab.value !== value
+                ? undefined
+                : tabIds(idPrefix, tab.value).panel
+            }
             aria-selected={tab.value === value}
             tabIndex={tab.value === value ? 0 : -1}
             onClick={() => onChange(tab.value)}

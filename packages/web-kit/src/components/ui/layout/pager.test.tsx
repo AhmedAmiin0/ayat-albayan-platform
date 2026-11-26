@@ -37,7 +37,9 @@ describe('Pager', () => {
   });
 
   it('one page: count only; empty list: nothing', () => {
-    const { container, rerender } = render(<Pager page={1} total={3} pageSize={25} onPage={() => undefined} />);
+    const { container, rerender } = render(
+      <Pager page={1} total={3} pageSize={25} onPage={() => undefined} />,
+    );
     expect(screen.queryByRole('button')).toBeNull();
     rerender(<Pager page={1} total={0} pageSize={25} onPage={() => undefined} />);
     expect(container.textContent).toBe('');
