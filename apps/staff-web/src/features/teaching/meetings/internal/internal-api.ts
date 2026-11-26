@@ -1,6 +1,6 @@
 import type { MeetingCreated, MeetingView, PublicMeetingView, RoomJoinResult } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend, env } from '@ab/web-kit';
+import { apiFetch, apiSend, publicApiFetch, publicApiSend } from '@ab/web-kit';
 import { meetingKeys } from './meeting.keys';
 
 // A standalone room with no lesson.
@@ -25,38 +25,23 @@ export const joinMeeting = (id: string) => apiSend<RoomJoinResult>('POST', `/mee
 
 export { removeMeetingParticipant } from '@ab/web-kit';
 
-function parseJson(text: string): unknown {
-  try {
-    return text ? JSON.parse(text) : null;
-  } catch {
-    return null;
-  }
-}
-
-/** Plain fetch for the public routes: never the staff session token. */
-async function publicCall<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${env.apiUrl}${path}`, init);
-  const body = parseJson(await res.text());
-  if (!res.ok) throw new ApiError(res.status, body);
-  return body as T;
-}
-
 /** GET /public/meetings/:token, polled so the page notices when the meeting ends. */
 export const publicMeetingQuery = (token: string) =>
   queryOptions({
     queryKey: meetingKeys.public(token),
-    queryFn: () => publicCall<PublicMeetingView>(`/public/meetings/${encodeURIComponent(token)}`),
+    queryFn: () =>
+      publicApiFetch<PublicMeetingView>(`/public/meetings/${encodeURIComponent(token)}`),
     retry: false,
     refetchInterval: 30_000,
   });
 
 /** POST /public/meetings/:token/join {name}: a guest token. */
 export const joinMeetingAsGuest = ({ linkToken, name }: { linkToken: string; name: string }) =>
-  publicCall<RoomJoinResult>(`/public/meetings/${encodeURIComponent(linkToken)}/join`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name }),
-  });
+  publicApiSend<RoomJoinResult>(
+    'POST',
+    `/public/meetings/${encodeURIComponent(linkToken)}/join`,
+    { name },
+  );
 
 /** Copies to the clipboard; false when the browser refuses (the URL stays on screen to copy by hand). */
 export async function copyText(text: string): Promise<boolean> {

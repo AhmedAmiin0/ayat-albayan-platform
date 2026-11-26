@@ -1,6 +1,6 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule';
-import { ApiError, apiFetch, apiSend, env, t } from '@ab/web-kit';
+import { ApiError, apiFetch, apiSend, publicApiFetch, publicApiSend, t } from '@ab/web-kit';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ServerListState } from '@/lib/list/server-list-search';
 import {
@@ -16,22 +16,7 @@ import { feedbackKeys } from '@/features/teaching/feedback/keys';
 export const FEEDBACK_KEY = feedbackKeys.all;
 export const FEEDBACK_PAGE_SIZE = 20;
 
-// ---- Public (the guardian's link, no login). Plain fetch: never the admin's session token. ----
-
-function parseBody(text: string): unknown {
-  try {
-    return text ? JSON.parse(text) : null;
-  } catch {
-    return null;
-  }
-}
-
-async function publicFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const res = await fetch(`${env.apiUrl}${path}`, init);
-  const body = parseBody(await res.text());
-  if (!res.ok) throw new ApiError(res.status, body);
-  return body as T;
-}
+// ---- Public (the guardian's link, no login): never the admin's session token. ----
 
 /** The one place that knows the public GET's shape (camelCase); a rename changes only this. */
 export function toFormView(raw: unknown): FeedbackFormView {
@@ -51,18 +36,14 @@ export const publicFeedbackQuery = (token: string) =>
   queryOptions({
     queryKey: feedbackKeys.public(token),
     queryFn: async () =>
-      toFormView(await publicFetch<unknown>(`/public/feedback/${encodeURIComponent(token)}`)),
+      toFormView(await publicApiFetch<unknown>(`/public/feedback/${encodeURIComponent(token)}`)),
     retry: (count, error) => !(error instanceof ApiError && error.status < 500) && count < 2,
     refetchOnWindowFocus: false,
   });
 
 /** POST /public/feedback/:token (the unique row is the hard guard: a second send is 409). */
 export const submitFeedback = ({ token, body }: { token: string; body: FeedbackSubmit }) =>
-  publicFetch<undefined>(`/public/feedback/${encodeURIComponent(token)}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+  publicApiSend<undefined>('POST', `/public/feedback/${encodeURIComponent(token)}`, body);
 
 /** What a failed public call means to the page. */
 export type PublicProblem = 'expired' | 'invalid' | 'already' | 'too_many' | 'failed';

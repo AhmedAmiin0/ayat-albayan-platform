@@ -8,8 +8,7 @@ import type {
 } from '@ab/schedule';
 import { addCalendarDays, localDateIn, wallToUtc } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { env } from '@ab/web-kit/lib/http/env';
+import { apiFetch, apiSend, publicApiSend } from '@ab/web-kit/lib/http/api';
 import { viewerZone } from '@ab/web-kit/lib/clock-text';
 
 export const CLASSROOM_KEY = ['classroom'] as const;
@@ -23,29 +22,12 @@ interface GuestJoinInput {
 /** POST /lessons/:id/room/join: staff, with their own login. A fresh identity per call. */
 export const joinRoom = (lessonId: string) => apiSend<RoomJoinResult>('POST', `/lessons/${lessonId}/room/join`);
 
-function parseBody(text: string): unknown {
-  try {
-    return text ? JSON.parse(text) : null;
-  } catch {
-    return null;
-  }
-}
-
 /**
- * POST /public/join/:linkToken: the guest's name, no login (plain fetch: never the staff session
- * token). No name for a link that names its student (the family app's): the API takes the student's.
+ * POST /public/join/:linkToken: the guest's name, never the staff session token. No name for a
+ * link that names its student (the family app's): the API takes the student's.
  */
-export async function joinAsGuest({ linkToken, name }: GuestJoinInput): Promise<RoomJoinResult> {
-  const res = await fetch(`${env.apiUrl}/public/join/${encodeURIComponent(linkToken)}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name }),
-  });
-  const text = await res.text();
-  const body = parseBody(text);
-  if (!res.ok) throw new ApiError(res.status, body);
-  return body as RoomJoinResult;
-}
+export const joinAsGuest = ({ linkToken, name }: GuestJoinInput): Promise<RoomJoinResult> =>
+  publicApiSend<RoomJoinResult>('POST', `/public/join/${encodeURIComponent(linkToken)}`, { name });
 
 /** POST /lessons/:id/join-link (admin): the family's one-lesson link, by WhatsApp. */
 export const sendJoinLink = ({ lessonId, studentId }: { lessonId: string; studentId: string }) =>
