@@ -435,9 +435,6 @@
     }
   },
   "src/people/users/users.schemas.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     },

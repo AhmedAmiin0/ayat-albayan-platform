@@ -5352,7 +5352,7 @@
   },
   "src/modules/people/users/lifecycle/users.create.service.ts": {
     "complexity": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/people/users/lifecycle/users.lifecycle.test.ts": {

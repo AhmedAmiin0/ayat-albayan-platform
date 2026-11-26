@@ -3445,7 +3445,7 @@
   },
   "src/features/people/users/create/CreateUserFields.tsx": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/people/users/create/CredentialPicker.tsx": {

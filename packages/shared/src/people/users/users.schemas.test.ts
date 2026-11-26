@@ -41,6 +41,43 @@ describe('userCreateSchema', () => {
   });
 });
 
+const teacher = { display_name_ar: 'أحمد', gender: 'male' as const };
+const ok = (r: { success: boolean }) => r.success;
+const message = (r: { error?: { issues: { message: string }[] } }) => r.error?.issues[0]?.message;
+
+describe('userCreateSchema: the linked record', () => {
+  it('refuses a new teacher on any other role', () => {
+    const r = userCreateSchema.safeParse({ ...base, role: 'student', linked_id: ID, new_teacher: teacher });
+    expect(message(r)).toBe('link_not_allowed');
+  });
+});
+
+describe('userUpdateSchema: the record of a new teacher, student or guardian role', () => {
+  it('accepts teacher with an existing or a new record, student and guardian with an existing one', () => {
+    expect(ok(userUpdateSchema.safeParse({ role: 'teacher', linked_id: ID }))).toBe(true);
+    expect(userUpdateSchema.parse({ role: 'teacher', new_teacher: teacher })).toEqual({ role: 'teacher', new_teacher: teacher });
+    expect(ok(userUpdateSchema.safeParse({ role: 'student', linked_id: ID }))).toBe(true);
+    expect(ok(userUpdateSchema.safeParse({ role: 'guardian', linked_id: ID }))).toBe(true);
+  });
+  it('needs the record: link_required', () => {
+    expect(message(userUpdateSchema.safeParse({ role: 'teacher' }))).toBe('link_required');
+    expect(message(userUpdateSchema.safeParse({ role: 'student' }))).toBe('link_required');
+    expect(message(userUpdateSchema.safeParse({ role: 'guardian', new_teacher: teacher }))).toBe('link_required');
+  });
+  it('a teacher is either existing or new, never both: link_or_new', () => {
+    expect(message(userUpdateSchema.safeParse({ role: 'teacher', linked_id: ID, new_teacher: teacher }))).toBe('link_or_new');
+  });
+  it('refuses a record without a record-backed role: link_not_allowed', () => {
+    expect(message(userUpdateSchema.safeParse({ linked_id: ID }))).toBe('link_not_allowed');
+    expect(message(userUpdateSchema.safeParse({ role: 'sales', new_teacher: teacher }))).toBe('link_not_allowed');
+    expect(message(userUpdateSchema.safeParse({ role_id: ID, linked_id: ID }))).toBe('link_not_allowed');
+    expect(message(userUpdateSchema.safeParse({ role: 'student', linked_id: ID, new_teacher: teacher }))).toBe('link_not_allowed');
+  });
+  it('refuses a malformed record id', () => {
+    expect(ok(userUpdateSchema.safeParse({ role: 'student', linked_id: 'nope' }))).toBe(false);
+  });
+});
+
 describe('userUpdateSchema / passwordResetSchema / usersListQuery', () => {
   it('refuses an empty update and keeps only what was sent', () => {
     expect(userUpdateSchema.safeParse({}).success).toBe(false);

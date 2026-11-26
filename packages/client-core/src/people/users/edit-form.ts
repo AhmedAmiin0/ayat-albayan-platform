@@ -1,9 +1,13 @@
-import type { UserDetail, UserRoleOption, UserUpdate } from '@ab/shared';
+import { isLinkedRole, type UserDetail, type UserRoleOption, type UserUpdate } from '@ab/shared';
 import type { UserRole } from '@ab/catalog';
 import { normalizePhone } from '@ab/core';
+import { initialCreateForm, linkFields, recordNamed, type CreateForm } from './create-form';
 
-/** What the edit panel edits. `role_id` '' = the base role's own (system) role. */
-export interface EditForm {
+/**
+ * What the edit panel edits. `role_id` '' = the base role's own (system) role; the record fields
+ * name the record of a new teacher / student / guardian role.
+ */
+export interface EditForm extends Pick<CreateForm, 'linked' | 'teacherMode' | 'newTeacher'> {
   email: string;
   full_name: string;
   phone: string;
@@ -19,8 +23,21 @@ function customRoleId(d: UserDetail, options: readonly UserRoleOption[]): string
   return held && !held.is_system ? held.id : '';
 }
 
+/** The role cannot change: the login has a record, or its role needs one (role_change_linked). */
+export const roleLocked = (d: UserDetail): boolean => Boolean(d.linked) || isLinkedRole(d.role);
+
+const opensRecord = (d: UserDetail, f: EditForm): boolean => !roleLocked(d) && isLinkedRole(f.role);
+
+/** Save waits until the record of the new teacher / student / guardian role is named. */
+export const recordMissing = (d: UserDetail, f: EditForm): boolean =>
+  opensRecord(d, f) && !recordNamed(f);
+
 export function initialEditForm(d: UserDetail, options: readonly UserRoleOption[]): EditForm {
+  const { linked, teacherMode, newTeacher } = initialCreateForm();
   return {
+    linked,
+    teacherMode,
+    newTeacher,
     email: d.email ?? '',
     full_name: d.full_name,
     phone: d.phone_e164 ?? '',
@@ -43,5 +60,6 @@ export function editBody(d: UserDetail, f: EditForm, options: readonly UserRoleO
   if (f.tz !== d.tz) body.tz = f.tz;
   if (f.role !== d.role) body.role = f.role;
   if (f.role !== d.role || f.role_id !== customRoleId(d, options)) body.role_id = f.role_id || null;
+  if (opensRecord(d, f)) Object.assign(body, linkFields(f));
   return Object.keys(body).length > 0 ? body : null;
 }
