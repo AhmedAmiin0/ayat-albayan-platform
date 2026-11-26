@@ -28,7 +28,7 @@ const PERMANENT = new Set([400, 404, 409, 413]);
 const copyable = (msg: MediaMessage, host: string): boolean =>
   msg.direction === 'inbound' && !msg.media_id && isCrmHistoryRow(msg) && msg.number?.provider === 'crm' && allowedCrmUrl(msg.body, host) !== null;
 
-/** The error as a short code for crm_media_copy_failures (never a URL: waHttpError codes or the message). */
+/** The error as a short code for crm_media_copy_failures (never a URL: httpError codes or the message). */
 function reason(e: unknown): string {
   if (e instanceof HttpException) {
     const body = e.getResponse();

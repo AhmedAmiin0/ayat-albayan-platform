@@ -1,5 +1,5 @@
 import type { RenderableTemplate, TemplateNumberApproval, TemplateView } from '@ab/shared';
-import { HttpException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { paramNames, templateButtons, templateDisplay } from '@/modules/messaging/whatsapp/messages/wa-json';
 import { CRM_AUTH, EVOLUTION_AUTH, KAPSO_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
 import type { ApprovalRow } from './types';
@@ -51,11 +51,6 @@ export function withNumbers(rows: readonly TemplateRow[], approvals: readonly Ap
 /** What renderTemplateBody / fallbackText need from a registry row. */
 export function renderable(row: TemplateRow): RenderableTemplate {
   return { body_ar: row.body_ar, footer_ar: row.footer_ar, buttons: templateButtons(row.buttons) };
-}
-
-/** `{ code, message: code, …details }`, the API's error shape (docs/12 §1). */
-export function waHttpError(code: string, status: number, details: Record<string, unknown> = {}): HttpException {
-  return new HttpException({ code, message: code, ...details }, status);
 }
 
 /** The 409 of a template action on a crm line: its templates live in the CRM (docs/19). */
