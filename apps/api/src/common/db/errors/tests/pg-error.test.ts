@@ -5,6 +5,7 @@ import { answerOf } from '@/common/db/testing/db-answer';
 import {
   isUniqueViolation,
   pgError,
+  uniqueViolationMentions,
   UNIQUE_VIOLATION,
   uniqueViolationOn,
 } from '@/common/db/errors';
@@ -94,5 +95,14 @@ describe('isUniqueViolation', () => {
     expect(isUniqueViolation(null)).toBe(false);
     expect(isUniqueViolation(undefined)).toBe(false);
     expect(isUniqueViolation({})).toBe(false);
+  });
+});
+
+describe('uniqueViolationMentions', () => {
+  it('is a unique violation whose message has the text', () => {
+    expect(uniqueViolationMentions(unique, 'phone_key')).toBe(true);
+    expect(uniqueViolationMentions(unique, 'client_request_id')).toBe(false);
+    expect(uniqueViolationMentions(pg('23503', unique.message), 'phone_key')).toBe(false);
+    expect(uniqueViolationMentions(null, 'phone_key')).toBe(false);
   });
 });
