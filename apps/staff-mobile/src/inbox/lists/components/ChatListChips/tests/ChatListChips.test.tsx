@@ -30,9 +30,17 @@ test('ONE row: «الكل» selected, «غير مقروءة», the lists oldest 
   const chips = await row();
   await chips.findByRole('tab', { name: PAID.name });
   const tabs = chips.getAllByRole('tab');
-  expect(tabs.map((c) => c.props.accessibilityState)).toEqual([{ selected: true }, ...Array(10).fill({ selected: false })]);
+  expect(tabs.map((c) => c.props.accessibilityState)).toEqual([
+    { selected: true },
+    ...Array(10).fill({ selected: false }),
+  ]);
   const words: unknown[] = tabs.map((c) => within(c).getByText(/./).props.children);
-  expect(words.slice(2, 6)).toEqual([PAID.name, TRIAL.name, t.inbox.filterWaiting, t.enums.leadStatus.new]);
+  expect(words.slice(2, 6)).toEqual([
+    PAID.name,
+    TRIAL.name,
+    t.inbox.filterWaiting,
+    t.enums.leadStatus.new,
+  ]);
   expect(chips.getByRole('tab', { name: t.inbox.filterAll, selected: true })).toBeTruthy();
   expect(chips.getByRole('tab', { name: t.inbox.filterUnread, selected: false })).toBeTruthy();
   expect(chips.getByRole('tab', { name: TRIAL.name, selected: false })).toBeTruthy();

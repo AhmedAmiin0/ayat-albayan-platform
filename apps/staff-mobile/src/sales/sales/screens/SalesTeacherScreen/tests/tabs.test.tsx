@@ -18,8 +18,21 @@ const overview: SalesTeacherOverview = {
   weekly: [{ rule_id: 'r1', weekday: 0, time: '20:00', duration_min: 45, students: [{ name: 'يوسف أحمد', code: 'AB-0183' }] }],
   attendance: {
     days: 30,
-    totals: { held: 2, student_absent: 1, cancelled_by_teacher: 0, cancelled_by_admin: 1, other: 0 },
-    latest: [{ lesson_id: 'l1', starts_at: '2026-10-25T17:00:00.000Z', status: 'no_show', students: [{ name: 'جنى علي', code: 'AB-0190' }] }],
+    totals: {
+      held: 2,
+      student_absent: 1,
+      cancelled_by_teacher: 0,
+      cancelled_by_admin: 1,
+      other: 0,
+    },
+    latest: [
+      {
+        lesson_id: 'l1',
+        starts_at: '2026-10-25T17:00:00.000Z',
+        status: 'no_show',
+        students: [{ name: 'جنى علي', code: 'AB-0190' }],
+      },
+    ],
   },
 };
 const api = (over: SalesTeacherOverview | Error = overview) => async (path: string) => {
@@ -56,7 +69,9 @@ test('«الحضور»: the 30 days\' totals and the latest lessons with their s
 });
 
 test('empty overview: «لا توجد مواعيد أسبوعية» and «لا توجد حلقات»; a failure shows the retry', async () => {
-  mockApiFetch.mockImplementation(api({ weekly: [], attendance: { ...overview.attendance, latest: [] } }));
+  mockApiFetch.mockImplementation(
+    api({ weekly: [], attendance: { ...overview.attendance, latest: [] } }),
+  );
   const view = await inSales(<SalesTeacherScreen />);
   await fireEvent.press(await screen.findByRole('tab', { name: t.sales.teachers.tabs.schedule }));
   expect(await screen.findByText(o.noWeekly)).toBeTruthy();

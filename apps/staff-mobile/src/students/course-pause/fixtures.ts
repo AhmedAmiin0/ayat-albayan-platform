@@ -17,7 +17,10 @@ export const pauseView = (over: Partial<CoursePauseView> = {}): CoursePauseView 
   ...over,
 });
 
-export const pauseState = (open: CoursePauseView | null = null): CoursePauseState => ({ open, history: [] });
+export const pauseState = (open: CoursePauseView | null = null): CoursePauseState => ({
+  open,
+  history: [],
+});
 
 export const pauseResult = (over: Partial<CoursePauseResult> = {}): CoursePauseResult => ({
   pause: pauseView(),

@@ -13,7 +13,9 @@ export function useSavedReplies(enabled = true) {
   return useQuery({ queryKey: SAVED_REPLIES_KEY, queryFn: () => apiFetch<SavedReply[]>('/saved-replies'), enabled });
 }
 
-export type ReplySave = { id: string; patch: SavedReplyUpdate } | { id: null; create: SavedReplyCreate };
+export type ReplySave =
+  | { id: string; patch: SavedReplyUpdate }
+  | { id: null; create: SavedReplyCreate };
 
 const save = (input: ReplySave) =>
   input.id === null
@@ -22,7 +24,10 @@ const save = (input: ReplySave) =>
 
 function useRefetching<V, R>(run: (v: V) => Promise<R>) {
   const client = useQueryClient();
-  return useMutation({ mutationFn: run, onSettled: () => client.invalidateQueries({ queryKey: SAVED_REPLIES_KEY }) });
+  return useMutation({
+    mutationFn: run,
+    onSettled: () => client.invalidateQueries({ queryKey: SAVED_REPLIES_KEY }),
+  });
 }
 
 /** Create (id null) or edit one reply. */

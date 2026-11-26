@@ -30,7 +30,11 @@ export function LineDriverRow({ line, items, canWrite, busy, onSave }: LineDrive
   // reopens it; a failed save keeps the confirm to retry.
   if (picked !== null && picked === current) setPicked(null);
   const lineName = t.enums.waLine[line];
-  const options = LINE_PROVIDERS.map((p) => ({ value: p, label: driverName(p), disabled: !canWrite || busy }));
+  const options = LINE_PROVIDERS.map((p) => ({
+    value: p,
+    label: driverName(p),
+    disabled: !canWrite || busy,
+  }));
   const missing = picked ? driverMissing({ provider: picked, line, items }) : [];
   const choose = (p: LineProvider) => setPicked(p === current ? null : p);
   const confirm = () => {

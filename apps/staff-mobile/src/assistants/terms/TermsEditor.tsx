@@ -13,7 +13,13 @@ import type { AssistantRow } from '@ab/client-core';
  * The admin's terms of one salesperson (web TermsEditor, R-ASST-02/03): monthly salary and the
  * commission on a student's first fully paid subscription, checked with the API's own schema first.
  */
-export function TermsEditor({ assistant, onNotice }: { assistant: AssistantRow; onNotice: (text: string) => void }) {
+export function TermsEditor({
+  assistant,
+  onNotice,
+}: {
+  assistant: AssistantRow;
+  onNotice: (text: string) => void;
+}) {
   const [form, setForm] = useState(() => formOf(assistant.terms));
   const [errors, setErrors] = useState<TermsErrors>({});
   const save = useSaveTerms();

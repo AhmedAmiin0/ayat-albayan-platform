@@ -28,7 +28,14 @@ const chat = (n: number, fields: Partial<ThreadView> = {}): ThreadView => ({
   display_name: `ولي أمر ${n}`,
   ...fields,
 });
-const chats = [chat(1), chat(2, { session_open: false }), chat(3), chat(4), chat(5), chat(6, { display_name: null })];
+const chats = [
+  chat(1),
+  chat(2, { session_open: false }),
+  chat(3),
+  chat(4),
+  chat(5),
+  chat(6, { display_name: null }),
+];
 
 async function openPicker() {
   const data = detail([link], { thread: { ...thread, last_inbound_at: minutesAgo(5) } });
@@ -106,7 +113,9 @@ test('a failed post keeps the picks and says so; sending again reuses the same c
   expect(row('ولي أمر 1').props.accessibilityState).toMatchObject({ checked: true });
   await fireEvent.press(sendButton());
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
-  const ids = mockApiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
+  const ids = mockApiSend.mock.calls.map(
+    (c) => (c[2] as { clientRequestId: string }).clientRequestId,
+  );
   expect(ids[1]).toBe(ids[0]);
   expect(await screen.findByText(t.inbox.forward.result.replace('{sent}', '1').replace('{skipped}', '0'))).toBeTruthy();
 });

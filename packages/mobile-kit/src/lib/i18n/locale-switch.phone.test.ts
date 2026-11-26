@@ -10,7 +10,9 @@ jest.mock('expo', () => ({ reloadAppAsync: jest.fn(async () => undefined) }));
 jest.mock('expo-localization', () => ({ getLocales: jest.fn() }));
 
 const phone = (textDirection: 'rtl' | 'ltr', languageTag: string) =>
-  jest.mocked(getLocales).mockReturnValue([{ languageTag, textDirection } as ReturnType<typeof getLocales>[number]]);
+  jest
+    .mocked(getLocales)
+    .mockReturnValue([{ languageTag, textDirection } as ReturnType<typeof getLocales>[number]]);
 
 let allow: jest.SpyInstance;
 let force: jest.SpyInstance;

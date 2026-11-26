@@ -40,7 +40,14 @@ export function SalesLessonRow(props: SalesLessonRowProps) {
   const status = !running || lesson.status !== 'confirmed';
   const words = [
     ...(running ? [{ word: t.lessons.sheet.live, tone: toneColors(color, 'ok').fg }] : []),
-    ...(status && !hideStatus ? [{ word: text.word(lesson.status), tone: toneColors(color, text.look(lesson.status).tone).fg }] : []),
+    ...(status && !hideStatus
+      ? [
+          {
+            word: text.word(lesson.status),
+            tone: toneColors(color, text.look(lesson.status).tone).fg,
+          },
+        ]
+      : []),
   ];
   const spoken = [...(running ? [t.lessons.sheet.live] : []), ...(status ? [text.label(lesson.status)] : [])].join(' · ');
   const lineStyle = { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 12, minHeight: 44 };
@@ -62,12 +69,20 @@ export function SalesLessonRow(props: SalesLessonRowProps) {
         {time}
       </AppText>
       <View style={{ flex: 1 }}>
-        <AppText numberOfLines={1} style={{ fontFamily: type.ui[600], fontSize: 15, lineHeight: 24, color: color.ink }}>
+        <AppText
+          numberOfLines={1}
+          style={{ fontFamily: type.ui[600], fontSize: 15, lineHeight: 24, color: color.ink }}
+        >
           {who}
         </AppText>
         <AppText
           numberOfLines={1}
-          style={{ fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink3 }}
+          style={{
+            fontFamily: type.ui[400],
+            fontSize: type.size.xs,
+            lineHeight: type.lineHeight(type.size.xs),
+            color: color.ink3,
+          }}
         >
           {subtitle}
         </AppText>
@@ -77,7 +92,17 @@ export function SalesLessonRow(props: SalesLessonRowProps) {
           {words.map(({ word, tone }) => (
             <View key={word} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <View style={{ width: 7, height: 7, borderRadius: 3.5, backgroundColor: tone }} />
-              <AppText style={{ flexShrink: 1, fontFamily: type.ui[500], fontSize: 12, lineHeight: 18, color: tone }}>{word}</AppText>
+              <AppText
+                style={{
+                  flexShrink: 1,
+                  fontFamily: type.ui[500],
+                  fontSize: 12,
+                  lineHeight: 18,
+                  color: tone,
+                }}
+              >
+                {word}
+              </AppText>
             </View>
           ))}
         </View>
@@ -85,7 +110,14 @@ export function SalesLessonRow(props: SalesLessonRowProps) {
     </>
   );
   return (
-    <View style={{ paddingVertical: 10, ...(inset ? { paddingHorizontal: 16 } : { borderBottomWidth: 1, borderBottomColor: color.rule }) }}>
+    <View
+      style={{
+        paddingVertical: 10,
+        ...(inset
+          ? { paddingHorizontal: 16 }
+          : { borderBottomWidth: 1, borderBottomColor: color.rule }),
+      }}
+    >
       {onOpen ? (
         <Pressable
           accessibilityRole="button"

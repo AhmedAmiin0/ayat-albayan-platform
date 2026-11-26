@@ -39,4 +39,9 @@ export const listItem = (over: Partial<StudentListItem> = {}): StudentListItem =
   ...over,
 });
 
-export const page = (items: StudentListItem[]) => ({ items, total: items.length, page: 1, pageSize: 25 });
+export const page = (items: StudentListItem[]) => ({
+  items,
+  total: items.length,
+  page: 1,
+  pageSize: 25,
+});

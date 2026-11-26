@@ -10,9 +10,18 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend, pathKey } from '@ab/mobile-kit';
 
 /** Any open, not-over lesson with a student and her key (docs/16 row 37); the API re-checks. */
-export function canChangeLesson(lesson: SalesScheduleLesson, input: { now: Date; can: (key: 'lessons.reschedule' | 'lessons.cancel') => boolean }) {
-  const ok = isOpenLesson(lesson.status) && Date.parse(lesson.ends_at) > input.now.getTime() && lesson.students.length > 0;
-  return { reschedule: ok && input.can('lessons.reschedule'), cancel: ok && input.can('lessons.cancel') };
+export function canChangeLesson(
+  lesson: SalesScheduleLesson,
+  input: { now: Date; can: (key: 'lessons.reschedule' | 'lessons.cancel') => boolean },
+) {
+  const ok =
+    isOpenLesson(lesson.status) &&
+    Date.parse(lesson.ends_at) > input.now.getTime() &&
+    lesson.students.length > 0;
+  return {
+    reschedule: ok && input.can('lessons.reschedule'),
+    cancel: ok && input.can('lessons.cancel'),
+  };
 }
 
 /** Schedule, today and student details share the day query, so refetch both after a change. */

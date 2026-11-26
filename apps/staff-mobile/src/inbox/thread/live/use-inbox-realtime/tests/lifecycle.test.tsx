@@ -70,14 +70,18 @@ test('mount → unmount 20 times: no channel, listener, timer or registry key le
     await hook.unmount();
     await settle();
   }
-  expect([mockRt.joins.length, mockSupabase.removeChannel.mock.calls.length, open()]).toEqual([20, 20, 0]);
+  expect([mockRt.joins.length, mockSupabase.removeChannel.mock.calls.length, open()]).toEqual([
+    20, 20, 0,
+  ]);
   expect(mockSupabase.realtime.disconnect).toHaveBeenCalledTimes(20);
   expect([listeners.size, await timers(), inboxLive.isLive()]).toEqual([0, 0, false]);
   const probe = { chat: jest.fn(), list: jest.fn(), badge: jest.fn() };
   const unbind = inboxLive.bind(probe);
   inboxLive.resync(); // registry empty: only the badge, no watched key
   unbind();
-  expect([probe.chat.mock.calls.length, probe.list.mock.calls.length, await timers()]).toEqual([0, 0, 0]);
+  expect([probe.chat.mock.calls.length, probe.list.mock.calls.length, await timers()]).toEqual([
+    0, 0, 0,
+  ]);
 });
 
 test('background leaves at once (polls back to the offline rate); foreground: one join, one resync', async () => {
@@ -88,7 +92,11 @@ test('background leaves at once (polls back to the offline rate); foreground: on
   expect(liveInterval(inboxLive.isLive(), OFFLINE)).not.toBe(OFFLINE);
   await flip('background');
   await settle();
-  expect([open(), liveInterval(inboxLive.isLive(), OFFLINE), await timers()]).toEqual([0, OFFLINE, 0]);
+  expect([open(), liveInterval(inboxLive.isLive(), OFFLINE), await timers()]).toEqual([
+    0,
+    OFFLINE,
+    0,
+  ]);
   const lists = jest.mocked(changeLists).mock.calls.length;
   await flip('active');
   await settle();

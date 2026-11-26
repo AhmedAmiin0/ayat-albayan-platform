@@ -26,4 +26,6 @@ export function lineDriver(items: readonly Pick<IntegrationConfigItem, 'key' | '
 export const driverName = (p: WaProvider): string => t.integrations.options[p];
 
 /** PUT /settings/integrations body: only this line's key (the API audits it like the web's save). */
-export const driverValues = (line: WaLine, provider: WaProvider) => ({ values: { [LINE_DRIVER_KEY[line]]: provider } });
+export const driverValues = (line: WaLine, provider: WaProvider) => ({
+  values: { [LINE_DRIVER_KEY[line]]: provider },
+});

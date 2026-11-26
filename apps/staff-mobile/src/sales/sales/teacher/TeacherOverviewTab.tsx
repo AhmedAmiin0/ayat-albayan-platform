@@ -15,7 +15,11 @@ export function TeacherOverviewTab({ teacherId, view }: { teacherId: string; vie
     return overview.isError ? (
       <ErrorState message={t.sales.loadFailed} onRetry={() => void overview.refetch()} />
     ) : (
-      <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+      <ActivityIndicator
+        accessibilityLabel={t.common.loading}
+        color={color.lapis}
+        style={{ paddingVertical: 32 }}
+      />
     );
   }
   return (

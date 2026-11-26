@@ -60,7 +60,9 @@ export function SavedRepliesSheet({ onClose, onPick, form }: SavedRepliesSheetPr
             keyboardShouldPersistTaps="handled"
             data={shown}
             keyExtractor={(r) => r.id}
-            renderItem={({ item }) => <QuickReplyRow reply={item} query={query} onPress={() => onPick(item)} />}
+            renderItem={({ item }) => (
+              <QuickReplyRow reply={item} query={query} onPress={() => onPick(item)} />
+            )}
             ListEmptyComponent={
               replies.isError ? (
                 <ErrorState onRetry={() => void replies.refetch()} />

@@ -14,10 +14,16 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 
 const serve = (file: () => Promise<unknown>) =>
-  mockApiFetch.mockImplementation((path: string) => (path === PATH ? file() : Promise.resolve(null)));
+  mockApiFetch.mockImplementation((path: string) =>
+    path === PATH ? file() : Promise.resolve(null),
+  );
 const fileCalls = () => mockApiFetch.mock.calls.filter(([path]) => path === PATH).length;
-const show = (m = photo(), client = createTestQueryClient()) => renderWithQuery(<MessageBubble message={m} phone={PHONE} />, client);
-const fail = (status: number, code?: string) => serve(async () => { throw new ApiError(status, code ? { code } : null); });
+const show = (m = photo(), client = createTestQueryClient()) =>
+  renderWithQuery(<MessageBubble message={m} phone={PHONE} />, client);
+const fail = (status: number, code?: string) =>
+  serve(async () => {
+    throw new ApiError(status, code ? { code } : null);
+  });
 
 beforeEach(() => mockApiFetch.mockReset());
 

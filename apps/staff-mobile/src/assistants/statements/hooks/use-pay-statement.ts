@@ -14,8 +14,16 @@ export function usePayStatement(statement: Pick<AssistantStatementView, 'id' | '
   return useMutation({
     mutationFn: async (draft: PayDraft) => {
       const { receipt } = draft;
-      const path = receipt ? await receiptOnce(receipt.uri, () => uploadStatementReceipt(statement.assistant.id, receipt)) : null;
-      return apiSend<AssistantStatementView>('POST', `/assistant-pay/statements/${statement.id}/pay`, payBody(draft, path, new Date()));
+      const path = receipt
+        ? await receiptOnce(receipt.uri, () =>
+            uploadStatementReceipt(statement.assistant.id, receipt),
+          )
+        : null;
+      return apiSend<AssistantStatementView>(
+        'POST',
+        `/assistant-pay/statements/${statement.id}/pay`,
+        payBody(draft, path, new Date()),
+      );
     },
     onSuccess: () => client.invalidateQueries({ queryKey: ASSISTANTS_KEY }),
   });

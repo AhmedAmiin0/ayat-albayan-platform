@@ -84,11 +84,16 @@ export function WhatIsSent({ onOpen }: { onOpen: (audience: NotificationAudience
           </InsetGroup>
         </View>
       ) : query.isError ? (
-        <ErrorState message={t.notificationCatalogue.loadError} onRetry={() => void query.refetch()} />
+        <ErrorState
+          message={t.notificationCatalogue.loadError}
+          onRetry={() => void query.refetch()}
+        />
       ) : (
         <Note>{t.common.loading}</Note>
       )}
-      {data && settings && settings.messaging_enabled !== true ? <Note>{h().inAppOnlyNote}</Note> : null}
+      {data && settings && settings.messaging_enabled !== true ? (
+        <Note>{h().inAppOnlyNote}</Note>
+      ) : null}
     </Section>
   );
 }

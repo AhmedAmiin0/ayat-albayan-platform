@@ -24,9 +24,16 @@ export function SalesLoadScreen({ title, query, notFound }: SalesLoadScreenProps
     <Screen>
       <ScreenHeader title={title} leading={<BackButton onPress={() => router.back()} />} />
       {query.isError ? (
-        <ErrorState message={missing ? notFound : t.sales.loadFailed} onRetry={() => void query.refetch()} />
+        <ErrorState
+          message={missing ? notFound : t.sales.loadFailed}
+          onRetry={() => void query.refetch()}
+        />
       ) : (
-        <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+        <ActivityIndicator
+          accessibilityLabel={t.common.loading}
+          color={color.lapis}
+          style={{ paddingVertical: 32 }}
+        />
       )}
     </Screen>
   );

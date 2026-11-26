@@ -46,7 +46,9 @@ export function LeadAssign({ lead }: { lead: LeadView }) {
   ];
   return (
     <View style={{ gap: 4 }}>
-      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}>{t.mobileLeads.assignTitle}</AppText>
+      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}>
+        {t.mobileLeads.assignTitle}
+      </AppText>
       {isError ? (
         <>
           <ErrorLine message={t.mobileLeads.peopleFailed} />

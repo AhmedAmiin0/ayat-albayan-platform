@@ -16,9 +16,23 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 type ThreadQuery = ReturnType<typeof useThread>;
 const OLD = message({ id: 'm0', direction: 'inbound', body: 'رسالة قديمة', created_at: '2026-09-29T10:00:00Z' });
 
-function stub(pages: MessageView[][], more: Partial<Record<'hasNextPage' | 'isFetchingNextPage', boolean>> & { fetchNextPage?: jest.Mock } = {}) {
-  const fields = { hasNextPage: true, isFetchingNextPage: false, refetch: jest.fn(), fetchNextPage: jest.fn(async () => undefined), ...more };
-  return { data: cachedThread(...pages.map((m) => detail(m))), ...fields } as unknown as ThreadQuery;
+function stub(
+  pages: MessageView[][],
+  more: Partial<Record<'hasNextPage' | 'isFetchingNextPage', boolean>> & {
+    fetchNextPage?: jest.Mock;
+  } = {},
+) {
+  const fields = {
+    hasNextPage: true,
+    isFetchingNextPage: false,
+    refetch: jest.fn(),
+    fetchNextPage: jest.fn(async () => undefined),
+    ...more,
+  };
+  return {
+    data: cachedThread(...pages.map((m) => detail(m))),
+    ...fields,
+  } as unknown as ThreadQuery;
 }
 const show = (query: ThreadQuery) => renderWithQuery(<MessageList phone={PHONE} query={query} />);
 const reachTop = () => fireEvent(screen.getByTestId('message-list'), 'endReached', { distanceFromEnd: 0 });
@@ -39,7 +53,9 @@ test('no button: reaching the top loads the next older page once', async () => {
 test('the oldest loaded row gets its day chip only once no older page can continue that day', async () => {
   const view = await show(stub([[inbound]]));
   expect(screen.queryByTestId(`day-${inbound.id}`)).toBeNull();
-  await view.rerender(<MessageList phone={PHONE} query={stub([[inbound]], { hasNextPage: false })} />);
+  await view.rerender(
+    <MessageList phone={PHONE} query={stub([[inbound]], { hasNextPage: false })} />,
+  );
   expect(screen.getByTestId(`day-${inbound.id}`)).toBeTruthy();
 });
 
@@ -59,7 +75,9 @@ test('never while a page is loading, nor when there is no older page', async () 
   const fetchNextPage = jest.fn(async () => undefined);
   const view = await show(stub([[inbound]], { fetchNextPage, isFetchingNextPage: true }));
   await reachTop();
-  await view.rerender(<MessageList phone={PHONE} query={stub([[inbound]], { fetchNextPage, hasNextPage: false })} />);
+  await view.rerender(
+    <MessageList phone={PHONE} query={stub([[inbound]], { fetchNextPage, hasNextPage: false })} />,
+  );
   await reachTop();
   expect(fetchNextPage).not.toHaveBeenCalled();
 });
@@ -80,7 +98,10 @@ test('older rows arrive without moving the bubbles on screen: appended at the to
   const list = screen.getByTestId('message-list');
   // Newest first: the older page lands after the rows on screen (index 0 stays the newest).
   expect(list.props.data.map((m: MessageView) => m.id)).toEqual([again.id, inbound.id, OLD.id]);
-  expect(list.props.maintainVisibleContentPosition).toEqual({ minIndexForVisible: 0, autoscrollToTopThreshold: AT_NEWEST });
+  expect(list.props.maintainVisibleContentPosition).toEqual({
+    minIndexForVisible: 0,
+    autoscrollToTopThreshold: AT_NEWEST,
+  });
   expect(toOffset).not.toHaveBeenCalled();
   expect(toIndex).not.toHaveBeenCalled();
 });

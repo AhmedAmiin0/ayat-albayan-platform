@@ -15,13 +15,23 @@ function statusOf(status: LessonStatus): ScheduleStatus | null {
   return isCancelledLesson(status) ? 'cancelled' : null;
 }
 
-export function byScheduleStatus<L extends { status: LessonStatus }>(lessons: readonly L[], filter: ScheduleStatus): L[] {
+export function byScheduleStatus<L extends { status: LessonStatus }>(
+  lessons: readonly L[],
+  filter: ScheduleStatus,
+): L[] {
   return filter === 'all' ? [...lessons] : lessons.filter((l) => statusOf(l.status) === filter);
 }
 
 /** Every pill's count, from the whole day (not a page). */
-export function scheduleStatusCounts(lessons: readonly { status: LessonStatus }[]): Record<ScheduleStatus, number> {
-  const counts: Record<ScheduleStatus, number> = { all: lessons.length, scheduled: 0, confirmed: 0, cancelled: 0 };
+export function scheduleStatusCounts(
+  lessons: readonly { status: LessonStatus }[],
+): Record<ScheduleStatus, number> {
+  const counts: Record<ScheduleStatus, number> = {
+    all: lessons.length,
+    scheduled: 0,
+    confirmed: 0,
+    cancelled: 0,
+  };
   for (const l of lessons) {
     const s = statusOf(l.status);
     if (s) counts[s] += 1;

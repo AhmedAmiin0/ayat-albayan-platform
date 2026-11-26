@@ -24,7 +24,13 @@ jest.mock('@/inbox/messages/components/MessageMeta/MessageMeta', () => {
 
 type ThreadQuery = ReturnType<typeof useThread>;
 const stub = (messages: MessageView[]) =>
-  ({ data: cachedThread(detail(messages)), hasNextPage: false, isFetchingNextPage: false, refetch: jest.fn(), fetchNextPage: jest.fn() }) as unknown as ThreadQuery;
+  ({
+    data: cachedThread(detail(messages)),
+    hasNextPage: false,
+    isFetchingNextPage: false,
+    refetch: jest.fn(),
+    fetchNextPage: jest.fn(),
+  }) as unknown as ThreadQuery;
 
 const a = message({ id: 'a', direction: 'inbound', body: 'السلام عليكم', created_at: '2026-10-02T08:00:00Z' });
 const b = message({ id: 'b', direction: 'outbound', body: 'وعليكم السلام', status: 'sent', created_at: '2026-10-02T08:01:00Z' });

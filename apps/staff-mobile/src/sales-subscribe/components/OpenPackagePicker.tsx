@@ -36,7 +36,9 @@ export function OpenPackagePicker({ packages, value, onChange }: OpenPackagePick
           onChange={onChange}
         />
       )}
-      {value ? <AppText style={line(500, color.ink2)}>{partPaidLine(value) ?? dueText(value)}</AppText> : null}
+      {value ? (
+        <AppText style={line(500, color.ink2)}>{partPaidLine(value) ?? dueText(value)}</AppText>
+      ) : null}
     </View>
   );
 }

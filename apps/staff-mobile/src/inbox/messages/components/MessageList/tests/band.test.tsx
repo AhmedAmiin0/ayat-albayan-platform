@@ -23,7 +23,13 @@ const ROWS = [C, B, A]; // the inverted list: newest first
 const FRAMES = { c: { y: 4, height: 200 }, b: { y: 204, height: 50 }, a: { y: 254, height: 200 } };
 const LENGTH = 220;
 const query = () =>
-  ({ data: cachedThread(detail([...ROWS].reverse())), hasNextPage: false, isFetchingNextPage: false, refetch: jest.fn(), fetchNextPage: jest.fn() }) as unknown as ThreadQuery;
+  ({
+    data: cachedThread(detail([...ROWS].reverse())),
+    hasNextPage: false,
+    isFetchingNextPage: false,
+    refetch: jest.fn(),
+    fetchNextPage: jest.fn(),
+  }) as unknown as ThreadQuery;
 const list = () => screen.getByTestId('message-list');
 const floating = () => screen.queryByTestId('floating-day');
 
@@ -37,9 +43,18 @@ async function open() {
 }
 /** Scrolls to `offset` with the rows `on` screen (by id). */
 async function scrollTo(offset: number, on: MessageView[]) {
-  const nativeEvent = { contentOffset: { x: 0, y: offset }, contentSize: { width: 360, height: 458 }, layoutMeasurement: { width: 360, height: LENGTH } };
+  const nativeEvent = {
+    contentOffset: { x: 0, y: offset },
+    contentSize: { width: 360, height: 458 },
+    layoutMeasurement: { width: 360, height: LENGTH },
+  };
   await fireEvent.scroll(list(), { nativeEvent });
-  const viewableItems = on.map((item) => ({ item, index: ROWS.indexOf(item), key: item.id, isViewable: true }));
+  const viewableItems = on.map((item) => ({
+    item,
+    index: ROWS.indexOf(item),
+    key: item.id,
+    isViewable: true,
+  }));
   await act(() => list().props.onViewableItemsChanged({ viewableItems, changed: [] }));
 }
 

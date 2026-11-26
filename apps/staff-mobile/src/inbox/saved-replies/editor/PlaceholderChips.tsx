@@ -4,7 +4,11 @@ import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 
 /** `text` with the placeholder put where the cursor is (or replacing the selection). Pure. */
-export function insertToken(input: { text: string; key: SavedReplyPlaceholder; selection: { start: number; end: number } }): string {
+export function insertToken(input: {
+  text: string;
+  key: SavedReplyPlaceholder;
+  selection: { start: number; end: number };
+}): string {
   const { text, key, selection } = input;
   const start = Math.min(selection.start, text.length);
   const end = Math.min(Math.max(selection.end, start), text.length);
@@ -16,7 +20,9 @@ export function PlaceholderChips({ onInsert }: { onInsert: (key: SavedReplyPlace
   const names: Record<SavedReplyPlaceholder, string> = t.savedReplies.placeholders;
   return (
     <View style={{ gap: 6 }}>
-      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, color: color.ink2 }}>{t.savedReplies.placeholdersLabel}</AppText>
+      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, color: color.ink2 }}>
+        {t.savedReplies.placeholdersLabel}
+      </AppText>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
         {SAVED_REPLY_PLACEHOLDERS.map((key) => (
           <PillButton key={key} label={names[key]} onPress={() => onInsert(key)} />

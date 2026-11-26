@@ -13,7 +13,12 @@ export const googleLive: GoogleStatusView = {
   settings: { enabled: true, mode: 'live', window_days: 30 },
   redirect_uri: 'http://localhost:3000/admin/google/callback',
   scopes: [],
-  drive: { root_folder_id: null, root_folder_name: null, summary_sheet_id: null, confirmed_at: null },
+  drive: {
+    root_folder_id: null,
+    root_folder_name: null,
+    summary_sheet_id: null,
+    confirmed_at: null,
+  },
   discovery: null,
   counts: { pending: 2, synced: 10, gone: 0, failed: 1, skipped: 0 },
   warnings: { teacher_unmapped: 0, student_unmapped: 0, drive_unconfirmed: 0 },

@@ -16,7 +16,9 @@ test('pops on the native driver and draws its white tick on the ok circle', asyn
   const pop = configs.filter((c) => c.useNativeDriver === true);
   expect(pop.map((c) => c.toValue)).toEqual([1.12, 1]);
   expect(pop.reduce((sum, c) => sum + (c.duration ?? 0), 0)).toBe(320);
-  expect(configs).toContainEqual(expect.objectContaining({ toValue: 0, duration: 360, delay: 120 }));
+  expect(configs).toContainEqual(
+    expect.objectContaining({ toValue: 0, duration: 360, delay: 120 }),
+  );
   expect(badge('check-badge-pop')).toHaveStyle({ transform: [{ scale: 0.6 }] });
   // onLapis (#ffffff, white in both schemes), as react-native-svg hands it to the native view.
   expect(palette.light.onLapis).toBe(palette.dark.onLapis);

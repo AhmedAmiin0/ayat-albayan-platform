@@ -21,7 +21,12 @@ interface ForwardRowProps {
  * see the composer) it says so but stays selectable: the server decides, and answers «skipped»
  * with the reason.
  */
-export const ForwardRow = memo(function ForwardRow({ thread: th, checked, disabled, onToggle }: ForwardRowProps) {
+export const ForwardRow = memo(function ForwardRow({
+  thread: th,
+  checked,
+  disabled,
+  onToggle,
+}: ForwardRowProps) {
   const { color } = useTheme();
   const name = chatName(th);
   const staff = useThreadMode().kind !== 'teacher';

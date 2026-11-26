@@ -21,7 +21,14 @@ export interface FieldProps extends Omit<TextInputProps, 'style'> {
  * and so is a password (its dots and Latin characters start at the left like the identifier's).
  * A `secureTextEntry` field gets the eye toggle at the inline-end (PasswordToggle).
  */
-export function Field({ label, ltr = false, required = false, onFocus, onBlur, ...input }: FieldProps) {
+export function Field({
+  label,
+  ltr = false,
+  required = false,
+  onFocus,
+  onBlur,
+  ...input
+}: FieldProps) {
   const { color } = useTheme();
   const [focused, setFocused] = useState(false);
   const secure = input.secureTextEntry === true;

@@ -4,7 +4,13 @@ import { AmountText } from '@/sales-money/components/AmountText';
 import { byCurrency } from '@/sales-money/lib/money-text';
 
 /** One amount per currency; never summed across currencies. */
-export function CurrencyTotalsLine({ label, totals }: { label: string; totals: Readonly<Record<string, number>> }) {
+export function CurrencyTotalsLine({
+  label,
+  totals,
+}: {
+  label: string;
+  totals: Readonly<Record<string, number>>;
+}) {
   const entries = byCurrency(totals);
   return (
     <View accessibilityLabel={label} style={{ gap: 4, paddingVertical: 8 }}>

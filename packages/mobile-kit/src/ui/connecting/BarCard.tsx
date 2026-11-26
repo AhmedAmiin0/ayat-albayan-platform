@@ -55,9 +55,20 @@ export function BarCard({ phase, still, gutter }: BarCardProps) {
         {phase === 'connected' ? <CheckBadge still={still} /> : <ConnectingDots color={look.dots} still={still} />}
       </View>
       <View style={{ flexShrink: 1 }}>
-        <AppText style={{ color: look.ink, fontFamily: type.ui[600], fontSize: TITLE, lineHeight: LINE }}>{title}</AppText>
+        <AppText
+          style={{ color: look.ink, fontFamily: type.ui[600], fontSize: TITLE, lineHeight: LINE }}
+        >
+          {title}
+        </AppText>
         {phase === 'check' ? (
-          <AppText style={{ color: color.act, fontFamily: type.ui[400], fontSize: HINT, lineHeight: type.lineHeight(HINT) }}>
+          <AppText
+            style={{
+              color: color.act,
+              fontFamily: type.ui[400],
+              fontSize: HINT,
+              lineHeight: type.lineHeight(HINT),
+            }}
+          >
             {c.checkInternet}
           </AppText>
         ) : null}

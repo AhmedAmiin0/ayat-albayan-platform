@@ -17,8 +17,12 @@ test('adding puts the list on the newest page only, once', () => {
 });
 
 test('removing takes it out; removing a non-member changes nothing', () => {
-  expect(withMembership(cache([trial, paid]), { list: paid, member: false })?.pages[0]?.lists).toEqual([trial]);
-  expect(withMembership(cache([trial]), { list: paid, member: false })?.pages[0]?.lists).toEqual([trial]);
+  expect(
+    withMembership(cache([trial, paid]), { list: paid, member: false })?.pages[0]?.lists,
+  ).toEqual([trial]);
+  expect(withMembership(cache([trial]), { list: paid, member: false })?.pages[0]?.lists).toEqual([
+    trial,
+  ]);
 });
 
 test('no cached thread: nothing to edit', () => {
@@ -26,7 +30,14 @@ test('no cached thread: nothing to edit', () => {
 });
 
 test('undoing a failed toggle keeps a later toggle of another list', () => {
-  const both = withMembership(withMembership(cache([]), { list: paid, member: true }), { list: trial, member: true });
-  expect(withMembership(both, undoChange({ list: paid, member: true }))?.pages[0]?.lists).toEqual([trial]);
-  expect(withMembership(cache([trial]), undoChange({ list: trial, member: false }))?.pages[0]?.lists).toEqual([trial]);
+  const both = withMembership(withMembership(cache([]), { list: paid, member: true }), {
+    list: trial,
+    member: true,
+  });
+  expect(withMembership(both, undoChange({ list: paid, member: true }))?.pages[0]?.lists).toEqual([
+    trial,
+  ]);
+  expect(
+    withMembership(cache([trial]), undoChange({ list: trial, member: false }))?.pages[0]?.lists,
+  ).toEqual([trial]);
 });

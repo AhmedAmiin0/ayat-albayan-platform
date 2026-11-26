@@ -23,7 +23,13 @@ interface CourseChangeFlowProps {
 }
 
 /** No paging, so a pending change's old days before startsOn cannot be picked; rule 8 id. */
-export function CourseChangeFlow({ student, course, onLeave, onDone, target }: CourseChangeFlowProps) {
+export function CourseChangeFlow({
+  student,
+  course,
+  onLeave,
+  onDone,
+  target,
+}: CourseChangeFlowProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const viewer = { tz, cycle };
@@ -46,7 +52,12 @@ export function CourseChangeFlow({ student, course, onLeave, onDone, target }: C
     if (change.isSuccess) return onDone();
     return step === 'slot' ? onLeave() : go('slot');
   };
-  const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
+  const note = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.ink2,
+  };
   const content = () => {
     const done = { onDone, lines: target?.lines };
     if (change.isSuccess) return <CourseChangeDone result={change.data} {...done} />;

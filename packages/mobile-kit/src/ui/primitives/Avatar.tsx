@@ -51,7 +51,15 @@ function Letters({ name, size, theme }: { name: string; size: AvatarSize; theme:
   const fontSize = Math.max(type.size['2xs'], Math.round(d * 0.4));
   const fontFamily = size === 'lg' || size === 'xl' ? type.display : type.ui[700];
   return (
-    <AppText numberOfLines={1} style={{ fontFamily, fontSize, lineHeight: Math.round(fontSize * 1.6), color: theme.color.ink }}>
+    <AppText
+      numberOfLines={1}
+      style={{
+        fontFamily,
+        fontSize,
+        lineHeight: Math.round(fontSize * 1.6),
+        color: theme.color.ink,
+      }}
+    >
       {letters}
     </AppText>
   );

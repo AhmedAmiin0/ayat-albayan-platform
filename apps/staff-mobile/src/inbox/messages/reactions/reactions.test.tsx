@@ -23,13 +23,23 @@ const text = message({ id: 'm1', direction: 'inbound', status: 'delivered', body
 
 /** The bubble as the chat screen draws it: from the thread cache, so an optimistic change shows. */
 function Cached({ id }: { id: string }) {
-  const { data } = useQuery<ThreadCache>({ queryKey: threadKey(PHONE), queryFn: () => new Promise(() => undefined), enabled: false });
+  const { data } = useQuery<ThreadCache>({
+    queryKey: threadKey(PHONE),
+    queryFn: () => new Promise(() => undefined),
+    enabled: false,
+  });
   const m = data?.pages[0]?.messages.find((x) => x.id === id);
   return m ? <MessageBubble message={m} phone={PHONE} /> : null;
 }
 
 async function chat(m: MessageView, th = open) {
-  const page: ThreadDetail = { thread: th, messages: [m], has_more: false, lessons: [], people: { guardian: null, lead: null, students: [] } };
+  const page: ThreadDetail = {
+    thread: th,
+    messages: [m],
+    has_more: false,
+    lessons: [],
+    people: { guardian: null, lead: null, students: [] },
+  };
   const client = createTestQueryClient();
   client.setQueryData<ThreadCache>(threadKey(PHONE), { pages: [page], pageParams: [null] });
   return renderWithQuery(
@@ -44,12 +54,14 @@ const hold = async (id = 'm1') => fireEvent(screen.getByTestId(`bubble-${id}`), 
 const bar = () => within(screen.getByTestId('reaction-bar'));
 
 beforeEach(() => {
-  mockApiSend.mockReset().mockImplementation(async (_m: string, _p: string, body: { emoji: string | null }) => ({
-    message: { ...text, reactions: { theirs: null, ours: body.emoji, ours_by: 'هبة' } },
-    status: 'sent',
-    error_code: null,
-    error_text: null,
-  }));
+  mockApiSend
+    .mockReset()
+    .mockImplementation(async (_m: string, _p: string, body: { emoji: string | null }) => ({
+      message: { ...text, reactions: { theirs: null, ours: body.emoji, ours_by: 'هبة' } },
+      status: 'sent',
+      error_code: null,
+      error_text: null,
+    }));
 });
 
 test('holding a bubble shows the six emoji and «+» (44pt, spoken names) over the message menu', async () => {

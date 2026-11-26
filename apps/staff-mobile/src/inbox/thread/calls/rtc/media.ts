@@ -31,6 +31,8 @@ export async function openMic(deps: RtcDeps | null): Promise<StreamLike> {
   }
 }
 
-export const rtcConfig = (iceServers: readonly CallIceServer[]): { iceServers: CallIceServer[] } => ({
+export const rtcConfig = (
+  iceServers: readonly CallIceServer[],
+): { iceServers: CallIceServer[] } => ({
   iceServers: iceServers.map((s) => ({ ...s, urls: [...s.urls] })),
 });

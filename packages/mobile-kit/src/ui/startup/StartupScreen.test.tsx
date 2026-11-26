@@ -26,23 +26,50 @@ beforeEach(() => {
 
 test('cover background, 32 pt sides; the title 22 / 33 in cover ink, 32 pt under the emblem', async () => {
   await open();
-  expect(screen.getByTestId('startup-screen')).toHaveStyle({ backgroundColor: palette.light.cover, paddingHorizontal: 32, justifyContent: 'center' });
-  expect(screen.getByText(t.app.name)).toHaveStyle({ marginTop: 32, fontSize: 22, lineHeight: 33, color: palette.light.coverInk });
+  expect(screen.getByTestId('startup-screen')).toHaveStyle({
+    backgroundColor: palette.light.cover,
+    paddingHorizontal: 32,
+    justifyContent: 'center',
+  });
+  expect(screen.getByText(t.app.name)).toHaveStyle({
+    marginTop: 32,
+    fontSize: 22,
+    lineHeight: 33,
+    color: palette.light.coverInk,
+  });
   expect(screen.getByLabelText(`${t.app.name} — ${c.loading}`)).toBeOnTheScreen();
 });
 
 test('«جارٍ الاتصال» (15 / 24 ink-3, polite) with the gold dots from the first frame; the hint and retry at 10 s', async () => {
   await open();
-  expect(screen.getByText(c.startupConnecting)).toHaveStyle({ fontSize: 15, lineHeight: 24, color: palette.light.ink3 });
-  expect(screen.getByLabelText(c.startupConnecting)).toHaveProp('accessibilityLiveRegion', 'polite');
-  expect(screen.getAllByTestId('connecting-dot', { includeHiddenElements: true })[0]).toHaveStyle({ backgroundColor: palette.light.gold });
+  expect(screen.getByText(c.startupConnecting)).toHaveStyle({
+    fontSize: 15,
+    lineHeight: 24,
+    color: palette.light.ink3,
+  });
+  expect(screen.getByLabelText(c.startupConnecting)).toHaveProp(
+    'accessibilityLiveRegion',
+    'polite',
+  );
+  expect(screen.getAllByTestId('connecting-dot', { includeHiddenElements: true })[0]).toHaveStyle({
+    backgroundColor: palette.light.gold,
+  });
   expect(screen.getByTestId('startup-retry-area')).toHaveStyle({ height: 112, paddingTop: 18 });
   await advance(9999);
   expect(retryButton()).toBeNull();
   expect(screen.queryByText(c.checkInternet)).toBeNull();
   await advance(1);
-  expect(screen.getByText(c.checkInternet)).toHaveStyle({ fontSize: 14, lineHeight: 22, color: palette.light.ink3 });
-  expect(retryButton()).toHaveStyle({ height: 48, paddingHorizontal: 28, borderRadius: 12, backgroundColor: palette.light.lapisFill });
+  expect(screen.getByText(c.checkInternet)).toHaveStyle({
+    fontSize: 14,
+    lineHeight: 22,
+    color: palette.light.ink3,
+  });
+  expect(retryButton()).toHaveStyle({
+    height: 48,
+    paddingHorizontal: 28,
+    borderRadius: 12,
+    backgroundColor: palette.light.lapisFill,
+  });
   expect(screen.getByText(c.retry)).toHaveStyle({ fontSize: 16, color: palette.light.onLapis });
 });
 

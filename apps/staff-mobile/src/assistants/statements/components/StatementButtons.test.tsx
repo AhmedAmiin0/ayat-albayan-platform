@@ -10,8 +10,14 @@ const styleOf = (name: string) => StyleSheet.flatten(screen.getByRole('button', 
 test('docs/07 «الأزرار»: a paid statement\'s actions as one ButtonRow, «إلغاء الدفع» the danger one', async () => {
   await render(<StatementButtons statement={statement({ status: 'paid', has_receipt: true })} can={CAN} linesOpen={false} onAction={jest.fn()} />);
   expect(screen.getAllByTestId('button-row-cell')).toHaveLength(3);
-  expect(styleOf(t.finance.unpay)).toMatchObject({ borderWidth: 1, borderColor: palette.light.bad });
-  expect(styleOf(t.assistants.statements.details)).toMatchObject({ borderWidth: 1, borderColor: palette.light.ruleInput });
+  expect(styleOf(t.finance.unpay)).toMatchObject({
+    borderWidth: 1,
+    borderColor: palette.light.bad,
+  });
+  expect(styleOf(t.assistants.statements.details)).toMatchObject({
+    borderWidth: 1,
+    borderColor: palette.light.ruleInput,
+  });
 });
 
 test('an approved one: pay | reopen | details, all outlined (no ghost beside them)', async () => {

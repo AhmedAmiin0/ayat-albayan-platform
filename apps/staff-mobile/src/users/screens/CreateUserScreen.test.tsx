@@ -11,14 +11,17 @@ const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: (mockMethod: string, mockPath: string, mockBody?: unknown) => mockApiSend(mockMethod, mockPath, mockBody),
+  apiSend: (mockMethod: string, mockPath: string, mockBody?: unknown) =>
+    mockApiSend(mockMethod, mockPath, mockBody),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn(), replace: jest.fn(), canDismiss: () => true } }));
 
 const F = t.users.form;
 const V = t.users.validation;
-const type = (label: string, text: string) => fireEvent.changeText(screen.getByLabelText(label), text);
-const submit = async () => fireEvent.press(screen.getByRole('button', { name: t.users.create.submit }));
+const type = (label: string, text: string) =>
+  fireEvent.changeText(screen.getByLabelText(label), text);
+const submit = async () =>
+  fireEvent.press(screen.getByRole('button', { name: t.users.create.submit }));
 
 async function open() {
   mockApiFetch.mockImplementation(usersGet());

@@ -32,7 +32,12 @@ export function useHeaderStudents(students: readonly ThreadStudentView[]) {
   const onPress = !first ? undefined : items.length === 1 ? first.onPress : () => setOpen(true);
   const sheet =
     items.length > 1 ? (
-      <ThreadMenu open={open} items={items} label={t.inbox.studentDetails} onClose={() => setOpen(false)} />
+      <ThreadMenu
+        open={open}
+        items={items}
+        label={t.inbox.studentDetails}
+        onClose={() => setOpen(false)}
+      />
     ) : null;
   return { onPress, sheet };
 }

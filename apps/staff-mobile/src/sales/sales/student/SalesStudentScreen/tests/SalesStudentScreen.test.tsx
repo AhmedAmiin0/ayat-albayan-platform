@@ -51,11 +51,17 @@ test('attendance: the totals and one chip per past lesson; reports as the teache
 });
 
 test('empty: no subscription, no past lesson, no report', async () => {
-  mockApiFetch.mockResolvedValue(details({
-    subscriptions: [], current_id: null,
-    attendance: { items: [], totals: { present: 0, absent: 0, excused: 0, cancelled: 0, unmarked: 0 } },
-    reports: { items: [], total: 0 },
-  }));
+  mockApiFetch.mockResolvedValue(
+    details({
+      subscriptions: [],
+      current_id: null,
+      attendance: {
+        items: [],
+        totals: { present: 0, absent: 0, excused: 0, cancelled: 0, unmarked: 0 },
+      },
+      reports: { items: [], total: 0 },
+    }),
+  );
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(s.noSubscription)).toBeTruthy();
   expect(screen.getByText(s.noAttendance)).toBeTruthy();

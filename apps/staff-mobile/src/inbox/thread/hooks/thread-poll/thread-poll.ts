@@ -15,7 +15,9 @@ export const threadDeltaKey = (phone: string) => ['thread-delta', phone];
  * row twice.
  */
 const busy = (client: QueryClient, phone: string) =>
-  client.isMutating({ mutationKey: sendKey(phone) }) + client.isFetching({ queryKey: threadKey(phone) }) > 0;
+  client.isMutating({ mutationKey: sendKey(phone) }) +
+    client.isFetching({ queryKey: threadKey(phone) }) >
+  0;
 
 /**
  * Polls that run on their own timer while on screen; no fetch on open (the thread query just read
@@ -61,7 +63,8 @@ export function useThreadPoll(phone: string, loaded: boolean) {
       const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`, { signal });
       noteDelta(phone, client.getQueryData<ThreadCache>(queryKey), delta);
       // The cache moved meanwhile (a full read, the page poll): this answer may be older than it.
-      if (busy(client, phone) || client.getQueryState(queryKey)?.dataUpdatedAt !== asked) return Date.now();
+      if (busy(client, phone) || client.getQueryState(queryKey)?.dataUpdatedAt !== asked)
+        return Date.now();
       if (needsFullRead(delta)) void client.invalidateQueries({ queryKey });
       else client.setQueryData<ThreadCache>(queryKey, (old) => mergeDelta(old, delta));
       return Date.now();
@@ -77,7 +80,8 @@ export function useThreadPoll(phone: string, loaded: boolean) {
       const fresh = await apiFetch<ThreadDetail>(threadPath(phone), { signal });
       if (busy(client, phone)) return Date.now();
       const fold = foldPage(fresh, movedSince(client, phone, asked));
-      if (leavesGap(client.getQueryData<ThreadCache>(queryKey), fresh)) void client.invalidateQueries({ queryKey });
+      if (leavesGap(client.getQueryData<ThreadCache>(queryKey), fresh))
+        void client.invalidateQueries({ queryKey });
       else client.setQueryData<ThreadCache>(queryKey, fold);
       return Date.now();
     },

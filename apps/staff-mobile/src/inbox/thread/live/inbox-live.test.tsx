@@ -22,7 +22,11 @@ test('20 chat screens mounted and unmounted leave no watched or seen key and no 
   const unsubscribe = inboxLive.subscribe(relisten);
   unbind(); // setLive(false): no change, no listener call
   unsubscribe();
-  expect([probe.chat.mock.calls.length, probe.list.mock.calls.length, relisten.mock.calls.length]).toEqual([0, 0, 0]);
+  expect([
+    probe.chat.mock.calls.length,
+    probe.list.mock.calls.length,
+    relisten.mock.calls.length,
+  ]).toEqual([0, 0, 0]);
 });
 
 test('a forgotten chat is not marked dirty: watching it again later fetches nothing extra', async () => {

@@ -16,7 +16,12 @@ export function useCycle({ duration, delay = 0, still }: CycleOptions): Animated
   useEffect(() => {
     value.setValue(0);
     if (still) return undefined;
-    const turn = Animated.timing(value, { toValue: 1, duration, easing: Easing.linear, useNativeDriver: true });
+    const turn = Animated.timing(value, {
+      toValue: 1,
+      duration,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    });
     const loop = Animated.loop(turn);
     const run = delay > 0 ? Animated.sequence([Animated.delay(delay), loop]) : loop;
     run.start();

@@ -90,7 +90,9 @@ test('«أرسلها بنفسك» tells the server first (it holds the row), the
   await fireEvent.press((await sheetOf()).getByRole('button', { name: t.messages.clickToChat }));
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/hand-off');
   await waitFor(() => expect(openUrl).toHaveBeenCalledWith(failed.click_to_chat));
-  expect(mockApiSend.mock.invocationCallOrder[0]).toBeLessThan(openUrl.mock.invocationCallOrder[0] ?? 0);
+  expect(mockApiSend.mock.invocationCallOrder[0]).toBeLessThan(
+    openUrl.mock.invocationCallOrder[0] ?? 0,
+  );
   expect(await screen.findByText(t.messages.handedOff)).toBeTruthy();
 });
 

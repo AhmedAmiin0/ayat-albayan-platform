@@ -16,7 +16,12 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 const mockParams = { token: '', r: 'done' };
-const mockRouter = { back: jest.fn(), replace: jest.fn(), push: jest.fn(), canDismiss: jest.fn(() => true) };
+const mockRouter = {
+  back: jest.fn(),
+  replace: jest.fn(),
+  push: jest.fn(),
+  canDismiss: jest.fn(() => true),
+};
 jest.mock('expo-router', () => ({
   router: {
     back: () => mockRouter.back(),

@@ -6,7 +6,9 @@ import { Avatar } from './Avatar';
 jest.mock('react-native/Libraries/Utilities/useColorScheme', () => ({ __esModule: true, default: jest.fn(() => 'light') }));
 const scheme = jest.mocked(useColorScheme);
 
-const bg = (testID: string): unknown => StyleSheet.flatten(screen.getByTestId(testID, { includeHiddenElements: true }).props.style).backgroundColor;
+const bg = (testID: string): unknown =>
+  StyleSheet.flatten(screen.getByTestId(testID, { includeHiddenElements: true }).props.style)
+    .backgroundColor;
 
 beforeEach(() => scheme.mockReturnValue('light'));
 
@@ -14,7 +16,11 @@ test('a photo: a round, fixed-size image named by the person', async () => {
   await render(<Avatar name="هدى سالم" id="t1" src="https://cdn/t1.jpg" size="lg" />);
   const photo = screen.getByRole('image', { name: 'هدى سالم' });
   expect(photo.props.source).toEqual({ uri: 'https://cdn/t1.jpg' });
-  expect(StyleSheet.flatten(photo.props.style)).toMatchObject({ width: 64, height: 64, borderRadius: 32 });
+  expect(StyleSheet.flatten(photo.props.style)).toMatchObject({
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+  });
 });
 
 test('no photo: the shared initials on the person’s light tone, still named by the person', async () => {
@@ -46,7 +52,9 @@ test('one person, one tone: the same id gives the same colour whatever the name'
     </>,
   );
   const [a, b] = screen.getAllByTestId('avatar-initials');
-  expect(StyleSheet.flatten(a?.props.style).backgroundColor).toBe(StyleSheet.flatten(b?.props.style).backgroundColor);
+  expect(StyleSheet.flatten(a?.props.style).backgroundColor).toBe(
+    StyleSheet.flatten(b?.props.style).backgroundColor,
+  );
 });
 
 test('no id: the name seeds the tone', async () => {
@@ -63,7 +71,10 @@ test('decorative (a row that reads the name): hidden from the screen reader', as
 test('a hairline around the circle: rule-strong in light (web: the inset 1px rule)', async () => {
   await render(<Avatar name="هدى" id="t1" />);
   const frame = StyleSheet.flatten(screen.getByTestId('avatar-initials').props.style);
-  expect(frame).toMatchObject({ borderWidth: StyleSheet.hairlineWidth, borderColor: palette.light.ruleStrong });
+  expect(frame).toMatchObject({
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: palette.light.ruleStrong,
+  });
 });
 
 test('dark mode: the more visible rule-input hairline, photo or not', async () => {

@@ -32,7 +32,9 @@ export function CourseOpening(props: CourseOpeningProps) {
   const repeats = step === 'continue' && previous?.subscriptionId === change?.course.subscriptionId;
   return (
     <View style={{ gap: 16 }}>
-      {change ? <CurrentCourse course={change.course} onChange={change.open} secondary hideDays={repeats} /> : null}
+      {change ? (
+        <CurrentCourse course={change.course} onChange={change.open} secondary hideDays={repeats} />
+      ) : null}
       {step === 'continue' && previous && opensOn ? (
         <CourseContinue
           previous={previous}

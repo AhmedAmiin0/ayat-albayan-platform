@@ -17,7 +17,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
-  supabase: { storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) } },
+  supabase: {
+    storage: { from: () => ({ uploadToSignedUrl: async () => ({ data: {}, error: null }) }) },
+  },
 }));
 jest.mock('expo-image-picker', () => ({
   launchCameraAsync: jest.fn(),
@@ -90,7 +92,11 @@ test('teacher: [emoji][text][قالب]; no paperclip, camera or microphone; «أ
   await show({ kind: 'teacher', teacherId: 't1' });
   expect(screen.getByRole('button', { name: t.inbox.composer.emoji })).toBeTruthy();
   expect(screen.getByRole('button', { name: t.inbox.composer.sendTemplate })).toBeTruthy();
-  for (const name of [t.inbox.composer.attach, t.inbox.composer.camera, t.inbox.composer.voice.record]) {
+  for (const name of [
+    t.inbox.composer.attach,
+    t.inbox.composer.camera,
+    t.inbox.composer.voice.record,
+  ]) {
     expect(screen.queryByRole('button', { name })).toBeNull();
   }
   const send = () => screen.getByRole('button', { name: t.inbox.composer.send });

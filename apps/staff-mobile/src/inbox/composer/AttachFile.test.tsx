@@ -16,7 +16,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
-  supabase: { storage: { from: () => ({ uploadToSignedUrl: (...a: unknown[]) => mockUpload(...a) }) } },
+  supabase: {
+    storage: { from: () => ({ uploadToSignedUrl: (...a: unknown[]) => mockUpload(...a) }) },
+  },
 }));
 jest.mock('expo-image-picker', () => ({ launchCameraAsync: jest.fn(), launchImageLibraryAsync: jest.fn() }));
 jest.mock('expo-document-picker', () => ({ getDocumentAsync: jest.fn() }));
@@ -45,7 +47,9 @@ beforeEach(() => {
   jest.clearAllMocks();
   mockApiFetch.mockResolvedValue({ open: true, reason: null, queued: 0 });
   mockUpload.mockResolvedValue({ data: {}, error: null });
-  jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValue({ canceled: false, assets: [photo] });
+  jest
+    .mocked(ImagePicker.launchImageLibraryAsync)
+    .mockResolvedValue({ canceled: false, assets: [photo] });
 });
 
 test('open window: the paperclip sends a photo, and its row joins the thread', async () => {
@@ -57,7 +61,9 @@ test('open window: the paperclip sends a photo, and its row joins the thread', a
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
   expect(mockApiSend.mock.calls[0]?.[1]).toBe('/threads/%2B966552147730/file-upload-url');
   expect(mockApiSend.mock.calls[1]?.[1]).toBe('/threads/%2B966552147730/file');
-  const sent = mockApiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
+  const sent = mockApiSend.mock.calls.map(
+    (c) => (c[2] as { clientRequestId: string }).clientRequestId,
+  );
   expect(sent[0]).toBe(sent[1]);
   await waitFor(() =>
     expect(threadMessages(client.getQueryData<ThreadCache>(threadKey(PHONE))).map((m) => m.id)).toContain('sent'),
