@@ -186,6 +186,10 @@ Each PR sets its rows: `fixed (#n)`, `not a bug: <why>`, `waits for the owner: <
 
 | Item | Status |
 |---|---|
-| UX-1 … UX-16, T-UX-1 … T-UX-9 | open |
+| UX-1 … UX-3 | open |
+| UX-4 | fixed (U1): the nav scrolls in its own box above a plain foot; the theme and time-format switches moved to the account page |
+| UX-5 | fixed (U1): the side panel sits beside the chat only when the thread is 48rem wide, else it folds under it |
+| UX-6 | fixed (U1): schedule chips wrap names and statuses, the week grid fits 1408px, the lead status column fits the longest chip, the students note wraps, the inbox search has its own row |
+| UX-7 … UX-16, T-UX-1 … T-UX-9 | open |
 | DATA-1 … DATA-11, T-DATA-1 … T-DATA-9 | open |
 | DATA-12 | in `fix/users-role-record` |
