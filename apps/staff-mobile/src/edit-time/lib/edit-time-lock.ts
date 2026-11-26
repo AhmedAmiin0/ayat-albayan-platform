@@ -15,7 +15,8 @@ const statuses: Record<string, string | undefined> = t.enums.payoutStatus;
 /** The lock a failed PATCH reports, else null. An older API sends no month: the general line then. */
 export function payoutLockOf(error: unknown): PayoutLock | null {
   if (failureCode(error) !== 'payout_locked') return null;
-  const body = error instanceof ApiError ? (error.body as { month?: unknown; status?: unknown }) : {};
+  const body =
+    error instanceof ApiError ? (error.body as { month?: unknown; status?: unknown }) : {};
   return {
     month: typeof body.month === 'string' ? body.month : null,
     status: typeof body.status === 'string' ? body.status : null,

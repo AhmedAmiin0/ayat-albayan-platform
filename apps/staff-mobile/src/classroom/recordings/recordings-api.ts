@@ -31,7 +31,11 @@ class RecordingUnavailable extends Error {}
  * Play = ask for a fresh list at the moment of the tap (a link seen minutes ago may have expired),
  * take this recording's URL and hand it to the system browser/player. The URL is never stored.
  */
-export async function playRecording(client: QueryClient, source: RecordingSource, id: string): Promise<void> {
+export async function playRecording(
+  client: QueryClient,
+  source: RecordingSource,
+  id: string,
+): Promise<void> {
   const list = await client.fetchQuery({ ...recordingsQuery(source), staleTime: 0 });
   const url = list.find((r) => r.id === id)?.url;
   if (!url) throw new RecordingUnavailable();

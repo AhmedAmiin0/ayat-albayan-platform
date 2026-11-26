@@ -48,7 +48,12 @@ export function EmailSection({ profile }: { profile: AccountProfile }) {
       notice={action.notice}
     >
       <AppText
-        style={{ fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 }}
+        style={{
+          fontFamily: type.ui[500],
+          fontSize: type.size.sm,
+          lineHeight: type.lineHeight(type.size.sm),
+          color: color.ink2,
+        }}
       >
         {profile.email ? t.account.email.current.replace('{email}', ltr(profile.email)) : t.account.mobile.emailNone}
       </AppText>

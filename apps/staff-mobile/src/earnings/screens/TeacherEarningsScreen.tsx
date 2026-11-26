@@ -56,7 +56,15 @@ export function TeacherEarningsScreen() {
       </Screen>
     );
   }
-  const header = <EarningsHeader balance={balance.data} tab={tab} onTab={setTab} filter={filter} onFilter={setFilter} />;
+  const header = (
+    <EarningsHeader
+      balance={balance.data}
+      tab={tab}
+      onTab={setTab}
+      filter={filter}
+      onFilter={setFilter}
+    />
+  );
   return (
     <Screen>
       <ScreenHeader title={title} leading={back} />
@@ -64,7 +72,13 @@ export function TeacherEarningsScreen() {
       {balance.isError && !balance.data ? (
         <ErrorState onRetry={() => void balance.refetch()} message={t.earnings.mobile.loadFailed} />
       ) : tab === 'sessions' ? (
-        <SessionsList scope={scope} header={header} filter={filter} selected={selected} onToggle={toggle} />
+        <SessionsList
+          scope={scope}
+          header={header}
+          filter={filter}
+          selected={selected}
+          onToggle={toggle}
+        />
       ) : (
         <PaymentsList scope={scope} header={header} />
       )}

@@ -22,7 +22,10 @@ beforeEach(() => {
 
 test('all three sections for a role that holds every permission; buttons open their screens', async () => {
   serve(['recordings.read', 'payments.read', 'invoices.read', 'classroom.links']);
-  await renderWithQuery(<StudentFileSections student={profile} />, createTestQueryClient({ meFromApi: true }));
+  await renderWithQuery(
+    <StudentFileSections student={profile} />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   await fireEvent.press(await screen.findByText(S.recordings.button));
   expect(mockPush).toHaveBeenCalledWith(`/students/recordings/${profile.id}`);
   await fireEvent.press(screen.getByText(S.money.button));
@@ -32,7 +35,10 @@ test('all three sections for a role that holds every permission; buttons open th
 
 test('controls the role lacks are hidden once /auth/me answers', async () => {
   serve(['payments.read']);
-  await renderWithQuery(<StudentFileSections student={profile} />, createTestQueryClient({ meFromApi: true }));
+  await renderWithQuery(
+    <StudentFileSections student={profile} />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   // D6: nothing shows while /auth/me loads, so wait for what the role holds, then check the rest.
   expect(await screen.findByText(S.money.button)).toBeTruthy();
   expect(screen.queryByText(S.recordings.button)).toBeNull();
@@ -42,20 +48,29 @@ test('controls the role lacks are hidden once /auth/me answers', async () => {
 
 test('«رقم الواتساب لـ» is offered with students.write (docs/30 §1)', async () => {
   serve(['students.write']);
-  await renderWithQuery(<StudentFileSections student={profile} />, createTestQueryClient({ meFromApi: true }));
+  await renderWithQuery(
+    <StudentFileSections student={profile} />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   expect(await screen.findByText(t.familyAuth.contactIsSelf.label)).toBeTruthy();
 });
 
 test('student_channels.monitor opens the read-only teacher–family channel (docs/31 §2); without it, no button', async () => {
   serve(['student_channels.monitor']);
-  await renderWithQuery(<StudentFileSections student={profile} />, createTestQueryClient({ meFromApi: true }));
+  await renderWithQuery(
+    <StudentFileSections student={profile} />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   await fireEvent.press(await screen.findByText(t.studentChannel.monitorTitle));
   expect(mockPush).toHaveBeenCalledWith(`/students/channel/${profile.id}`);
 });
 
 test('without student_channels.monitor the channel button is hidden', async () => {
   serve(['payments.read']);
-  await renderWithQuery(<StudentFileSections student={profile} />, createTestQueryClient({ meFromApi: true }));
+  await renderWithQuery(
+    <StudentFileSections student={profile} />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   expect(await screen.findByText(S.money.button)).toBeTruthy();
   expect(screen.queryByText(t.studentChannel.monitorTitle)).toBeNull();
 });

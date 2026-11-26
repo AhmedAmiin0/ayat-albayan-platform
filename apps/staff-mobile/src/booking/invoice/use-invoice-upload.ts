@@ -26,7 +26,9 @@ export function useInvoiceUpload(requestId: string, onUploaded: (invoice: Invoic
       onUploaded({ source: 'upload', path, mime: receipt.mime, uri: receipt.uri });
       setPending(null);
     } catch (e) {
-      setError(isOffline(e) ? t.booking.mobile.invoiceOffline : t.booking.mobile.invoiceUploadFailed);
+      setError(
+        isOffline(e) ? t.booking.mobile.invoiceOffline : t.booking.mobile.invoiceUploadFailed,
+      );
     } finally {
       setBusy(false);
     }

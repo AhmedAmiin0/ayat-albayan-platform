@@ -24,7 +24,12 @@ export function MyEarningsView() {
       </MoneyCard>
       <Section title={p.statements}>
         {d.statements.length === 0 ? (
-          <LoadState status={earnings} empty emptyTitle={p.statementsEmpty} emptyHint={p.statementsEmptyHint} />
+          <LoadState
+            status={earnings}
+            empty
+            emptyTitle={p.statementsEmpty}
+            emptyHint={p.statementsEmptyHint}
+          />
         ) : (
           d.statements.map((s) => <MyStatementCard key={s.id} statement={s} />)
         )}

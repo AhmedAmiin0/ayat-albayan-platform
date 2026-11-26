@@ -69,7 +69,11 @@ export function PaymentForm({ studentId, balance, offline, onRetry, onDone }: Pa
         currency={sub.currency}
         error={errors.amount}
       />
-      <ShortfallNote amountText={draft.amountText} due={dueOf(sub, sub.paid)} currency={sub.currency} />
+      <ShortfallNote
+        amountText={draft.amountText}
+        due={dueOf(sub, sub.paid)}
+        currency={sub.currency}
+      />
       <View style={{ gap: 6 }}>
         <FormLabel>{t.payments.method}</FormLabel>
         <FilterPills
@@ -83,7 +87,10 @@ export function PaymentForm({ studentId, balance, offline, onRetry, onDone }: Pa
       </View>
       <PaidDayPicker daysAgo={draft.daysAgo} onChange={(daysAgo) => set({ daysAgo })} now={now} />
       {draft.method === 'bank' ? (
-        <AttachmentsField value={draft.attachments} onChange={(attachments) => set({ attachments })} />
+        <AttachmentsField
+          value={draft.attachments}
+          onChange={(attachments) => set({ attachments })}
+        />
       ) : (
         <ReceiptPicker receipt={draft.receipt} onChange={(receipt) => set({ receipt })} />
       )}
@@ -91,7 +98,11 @@ export function PaymentForm({ studentId, balance, offline, onRetry, onDone }: Pa
       {offline ? (
         <Button variant="secondary" label={t.mobile.retry} onPress={onRetry} />
       ) : (
-        <Button label={submitLabel(record.isPending, draft)} onPress={submit} busy={record.isPending} />
+        <Button
+          label={submitLabel(record.isPending, draft)}
+          onPress={submit}
+          busy={record.isPending}
+        />
       )}
     </View>
   );

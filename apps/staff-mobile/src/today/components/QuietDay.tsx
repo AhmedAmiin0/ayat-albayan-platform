@@ -11,7 +11,13 @@ import type { TodayLesson } from '@/today/lib/today-lesson';
 import type { TodaySource } from '@/today/lib/today-source';
 
 /** Tomorrow's line shows only once its query answers (docs/29 §6), none while loading or failed. */
-export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; source: TodaySource<L> }) {
+export function QuietDay<L extends TodayLesson>({
+  now,
+  source,
+}: {
+  now: Date;
+  source: TodaySource<L>;
+}) {
   const { color } = useTheme();
   const cycle = useClockCycle();
   const tz = useViewerTz();
@@ -47,7 +53,11 @@ export function QuietDay<L extends TodayLesson>({ now, source }: { now: Date; so
           opacity: pressed ? 0.7 : 1,
         })}
       >
-        <AppText style={{ fontFamily: type.ui[600], fontSize: 15, lineHeight: 22, color: color.ink }}>{t.today.tomorrowSchedule}</AppText>
+        <AppText
+          style={{ fontFamily: type.ui[600], fontSize: 15, lineHeight: 22, color: color.ink }}
+        >
+          {t.today.tomorrowSchedule}
+        </AppText>
       </Pressable>
     </View>
   );

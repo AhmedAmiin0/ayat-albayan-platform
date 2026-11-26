@@ -7,7 +7,13 @@ import { playRecording } from './recordings-api';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
 /** A fresh link on every tap. */
-export function RecordingRow({ source, rec }: { source: RecordingSource; rec: LessonRecordingView }) {
+export function RecordingRow({
+  source,
+  rec,
+}: {
+  source: RecordingSource;
+  rec: LessonRecordingView;
+}) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const { color } = useTheme();

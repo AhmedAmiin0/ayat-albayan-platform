@@ -35,7 +35,10 @@ export function presetRange(preset: DatePreset, today: string): { from?: string;
 }
 
 /** GET /students/:id/recordings query: from / to / teacherId / status, only the ones set. */
-export function recordingParams(f: RecordingFilters, today: string): Record<string, string | undefined> {
+export function recordingParams(
+  f: RecordingFilters,
+  today: string,
+): Record<string, string | undefined> {
   const range = presetRange(f.preset, today);
   return { ...range, teacherId: f.teacherId || undefined, status: f.status || undefined };
 }

@@ -36,7 +36,13 @@ export function PaymentScreen() {
           keyboardDismissMode="on-drag"
           automaticallyAdjustKeyboardInsets
         >
-          <PaymentForm studentId={id} balance={data} offline={offline} onRetry={retry} onDone={back} />
+          <PaymentForm
+            studentId={id}
+            balance={data}
+            offline={offline}
+            onRetry={retry}
+            onDone={back}
+          />
         </ScrollView>
       ) : data ? (
         <EmptyState title={t.subscriptions.empty} />

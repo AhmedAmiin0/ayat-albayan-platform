@@ -24,7 +24,10 @@ test('the bank attachments\' camera | gallery are one ButtonRow too', async () =
 
 test('«احذف المرفق» is a danger button in its own cell (never a shrink-wrapped ghost)', async () => {
   const item: Attachment = { kind: 'chat', messageId: 'w1', path: 'a/b.jpg' };
-  const text = { attachmentN: t.payments.attachmentN, attachmentRemove: t.payments.attachmentRemove };
+  const text = {
+    attachmentN: t.payments.attachmentN,
+    attachmentRemove: t.payments.attachmentRemove,
+  };
   await render(<AttachmentRow item={item} n={1} text={text} onRemove={jest.fn()} />);
   const cell = screen.getByTestId('attachment-remove');
   expect(StyleSheet.flatten(cell.props.style)).toMatchObject({ flex: 1 });

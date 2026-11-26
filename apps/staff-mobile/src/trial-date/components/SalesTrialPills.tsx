@@ -21,8 +21,11 @@ export function SalesTrialPills({ thread }: { thread: ThreadView | null }) {
   const [open, setOpen] = useState(false);
   const phone = thread?.guardian_id ? thread.phone_e164 : '';
   const family = useSalesFamily(phone, money);
-  const students = ownStudents(family.data?.students ?? []).filter((s) => canPickTrialDate(s.status));
-  const go = (s: SalesFamilyStudent) => router.push(inTree(base, chatTrialHref({ studentId: s.id, name: s.name })));
+  const students = ownStudents(family.data?.students ?? []).filter((s) =>
+    canPickTrialDate(s.status),
+  );
+  const go = (s: SalesFamilyStudent) =>
+    router.push(inTree(base, chatTrialHref({ studentId: s.id, name: s.name })));
   const [only] = students;
   if (!only) return null;
   if (students.length === 1) {

@@ -11,7 +11,9 @@ const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 const mount = (tree: 'sales' | 'assistant') =>
-  renderHook(() => usePushRegistration(tree), { wrapper: queryWrapper(createTestQueryClient({ meFromApi: true })) });
+  renderHook(() => usePushRegistration(tree), {
+    wrapper: queryWrapper(createTestQueryClient({ meFromApi: true })),
+  });
 
 beforeEach(() => jest.clearAllMocks());
 

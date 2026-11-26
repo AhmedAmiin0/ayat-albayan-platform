@@ -22,14 +22,28 @@ const a = t.account.avatar;
 /** docs/07 §6: one ButtonRow with a preview, else camera and gallery plus a danger remove. */
 export function AvatarButtons(p: AvatarButtonsProps) {
   const { color } = useTheme();
-  const caption = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink3 };
+  const caption = {
+    fontFamily: type.ui[400],
+    fontSize: type.size.xs,
+    lineHeight: type.lineHeight(type.size.xs),
+    color: color.ink3,
+  };
   if (p.picked) {
     return (
       <View style={{ gap: 8 }}>
         <AppText style={[caption, { textAlign: 'center' }]}>{a.preview}</AppText>
         <ButtonRow>
-          <Button label={p.uploading ? a.uploading : a.upload} onPress={p.onUpload} busy={p.uploading} />
-          <Button variant="secondary" label={t.account.cancel} onPress={p.onCancel} disabled={p.busy} />
+          <Button
+            label={p.uploading ? a.uploading : a.upload}
+            onPress={p.onUpload}
+            busy={p.uploading}
+          />
+          <Button
+            variant="secondary"
+            label={t.account.cancel}
+            onPress={p.onCancel}
+            disabled={p.busy}
+          />
         </ButtonRow>
       </View>
     );

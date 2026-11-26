@@ -58,7 +58,13 @@ export function PayoutActionBar({ payout, onPay, onDone }: PayoutActionBarProps)
     const label = asking === 'approve' ? t.payouts.approve : t.finance.reopen;
     return (
       <View style={{ gap: 8 }}>
-        <InlineConfirm message={asks[asking]} confirmLabel={label} busy={move.isPending} onConfirm={() => run(asking)} onCancel={cancel} />
+        <InlineConfirm
+          message={asks[asking]}
+          confirmLabel={label}
+          busy={move.isPending}
+          onConfirm={() => run(asking)}
+          onCancel={cancel}
+        />
         {move.isError ? <ErrorLine message={financeErrorText(move.error)} /> : null}
       </View>
     );

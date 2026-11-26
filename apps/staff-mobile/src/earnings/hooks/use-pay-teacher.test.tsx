@@ -43,7 +43,9 @@ test('a failed POST then a retry: same clientRequestId, the receipt is not uploa
   await act(async () => result.current.mutate(withReceipt));
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
   expect(mockUpload).toHaveBeenCalledTimes(1);
-  const [first, second] = mockApiSend.mock.calls.map((c) => c[2] as { clientRequestId: string; receiptPath: string; earningIds?: string[] });
+  const [first, second] = mockApiSend.mock.calls.map(
+    (c) => c[2] as { clientRequestId: string; receiptPath: string; earningIds?: string[] },
+  );
   expect(second?.clientRequestId).toBe(first?.clientRequestId);
   expect(first?.receiptPath).toBe('t1/a.jpg');
   expect(first?.earningIds).toBeUndefined();
@@ -58,7 +60,9 @@ test('after success the next payment gets a new clientRequestId; the teacher’s
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
   await act(async () => result.current.mutate(input));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
-  const [a, b] = mockApiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
+  const [a, b] = mockApiSend.mock.calls.map(
+    (c) => (c[2] as { clientRequestId: string }).clientRequestId,
+  );
   expect(a).not.toBe(b);
   expect(spy).toHaveBeenCalledWith({ queryKey: ['teacher-earnings', 't1'] });
 });

@@ -43,7 +43,9 @@ export function SessionCard({ lesson, group }: { lesson: LessonView; group: Sess
         </AppText>
         <Chip lesson={lesson} group={group} />
       </View>
-      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.body, color: color.ink }}>{studentNames(lesson)}</AppText>
+      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.body, color: color.ink }}>
+        {studentNames(lesson)}
+      </AppText>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         <Avatar name={teacher} id={lesson.teacher.id} src={lesson.teacher.avatar_url} size="sm" decorative />
         <AppText style={small}>{`${t.classroom.admin.teacher} ${teacher}`}</AppText>

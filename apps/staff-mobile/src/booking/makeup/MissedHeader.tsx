@@ -19,8 +19,12 @@ export function MissedHeader({ source }: { source: MakeupSource }) {
         paddingStart: 10,
       }}
     >
-      <AppText style={line}>{t.booking.mobile.makeupFor.replace('{name}', source.studentName)}</AppText>
-      <AppText style={{ ...line, fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink2 }}>
+      <AppText style={line}>
+        {t.booking.mobile.makeupFor.replace('{name}', source.studentName)}
+      </AppText>
+      <AppText
+        style={{ ...line, fontFamily: type.ui[400], fontSize: type.size.sm, color: color.ink2 }}
+      >
         {`${t.booking.mobile.missedLesson}: ${whenText(source.missedAt, source.tz, viewer)}`}
       </AppText>
     </View>

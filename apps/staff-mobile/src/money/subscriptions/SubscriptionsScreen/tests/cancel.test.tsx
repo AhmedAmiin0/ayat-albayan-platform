@@ -17,8 +17,16 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }
 
 // A package made by mistake: nothing paid and no lesson used (the fixture has used 2).
 const unused = subscription({ id: 'a', status: 'unpaid', paid: 0 });
-const mistake = { ...unused, balance: { ...unused.balance, lessons_used: 0, remaining: unused.lessons_total } };
-const gone = subscription({ id: 'x', status: 'cancelled', paid: 0, student: { ...STUDENT, id: 's2', name: 'يوسف', code: 'AB-0201' } });
+const mistake = {
+  ...unused,
+  balance: { ...unused.balance, lessons_used: 0, remaining: unused.lessons_total },
+};
+const gone = subscription({
+  id: 'x',
+  status: 'cancelled',
+  paid: 0,
+  student: { ...STUDENT, id: 's2', name: 'يوسف', code: 'AB-0201' },
+});
 
 beforeEach(() => {
   mockApiFetch.mockReset().mockImplementation(async (path: string) => {
@@ -33,7 +41,9 @@ test('only the live unpaid row offers «إلغاء الباقة»; the cancelled
   await renderWithQuery(<SubscriptionsScreen />);
   expect(await screen.findByText('يوسف')).toBeTruthy();
   expect(screen.getAllByRole('button', { name: t.subscriptions.cancel.action })).toHaveLength(1);
-  expect(screen.getAllByText(t.enums.subscriptionStatus.cancelled).length).toBeGreaterThanOrEqual(2); // the filter chip and the row
+  expect(screen.getAllByText(t.enums.subscriptionStatus.cancelled).length).toBeGreaterThanOrEqual(
+    2,
+  ); // the filter chip and the row
 });
 
 test('confirm with a reason → POST /subscriptions/:id/cancel', async () => {

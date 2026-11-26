@@ -37,7 +37,9 @@ test('the slot is claimed while any header holds it; a release is counted once',
 test('outside a navigator a screen counts as focused; inside, it follows focus and blur', async () => {
   expect((await renderHook(() => useScreenFocused())).result.current).toBe(true);
   const { navigation, set } = fakeNavigation(false);
-  const wrapper = ({ children }: { children: ReactNode }) => <NavigationContext.Provider value={navigation}>{children}</NavigationContext.Provider>;
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <NavigationContext.Provider value={navigation}>{children}</NavigationContext.Provider>
+  );
   const { result } = await renderHook(() => useScreenFocused(), { wrapper });
   expect(result.current).toBe(false);
   await act(async () => set(true));

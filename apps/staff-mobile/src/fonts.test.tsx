@@ -28,8 +28,12 @@ beforeEach(() => {
 });
 
 // expo-router's root provides the safe area in the app (the reconnecting bar reads it).
-const metrics = { frame: { x: 0, y: 0, width: 390, height: 844 }, insets: { top: 47, left: 0, right: 0, bottom: 34 } };
-const render = (ui: ReactElement) => renderRaw(<SafeAreaProvider initialMetrics={metrics}>{ui}</SafeAreaProvider>);
+const metrics = {
+  frame: { x: 0, y: 0, width: 390, height: 844 },
+  insets: { top: 47, left: 0, right: 0, bottom: 34 },
+};
+const render = (ui: ReactElement) =>
+  renderRaw(<SafeAreaProvider initialMetrics={metrics}>{ui}</SafeAreaProvider>);
 
 test('loads the four Noto Sans Arabic weights named in the theme', async () => {
   mockUseFonts.mockReturnValue([true, null]);

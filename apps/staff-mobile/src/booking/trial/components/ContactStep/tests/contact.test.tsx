@@ -14,7 +14,9 @@ const REQ = '99999999-9999-4999-8999-999999999999';
 
 test('defaults to «ولي الأمر»; tapping «الطالب نفسه» patches contactIsSelf', async () => {
   const onChange = jest.fn();
-  await render(<ContactStep value={draftFromLead(huda)} withDuration onChange={onChange} onNext={jest.fn()} />);
+  await render(
+    <ContactStep value={draftFromLead(huda)} withDuration onChange={onChange} onNext={jest.fn()} />,
+  );
   expect(screen.getByText(C.label)).toBeTruthy();
   expect(screen.getByRole('radio', { name: C.guardian }).props.accessibilityState).toMatchObject({ checked: true });
   fireEvent.press(screen.getByRole('radio', { name: C.self }));

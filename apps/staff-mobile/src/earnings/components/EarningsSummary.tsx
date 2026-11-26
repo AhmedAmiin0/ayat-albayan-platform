@@ -17,8 +17,17 @@ function Card({ label, amount, strong }: { label: string; amount: number; strong
         backgroundColor: color.raised,
       }}
     >
-      <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink3 }}>{label}</AppText>
-      <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.sm, color: color.ink, fontVariant: ['tabular-nums'] }}>
+      <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink3 }}>
+        {label}
+      </AppText>
+      <AppText
+        style={{
+          fontFamily: type.ui[700],
+          fontSize: type.size.sm,
+          color: color.ink,
+          fontVariant: ['tabular-nums'],
+        }}
+      >
         {egp(amount)}
       </AppText>
     </View>

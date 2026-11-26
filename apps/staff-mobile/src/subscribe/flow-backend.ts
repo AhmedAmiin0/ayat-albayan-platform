@@ -26,7 +26,10 @@ export function subscribeBackend({ hold = false } = {}) {
     .on('GET /threads/:phone', ({ params }) => {
       const phone = params['phone'] ?? '';
       const row = rows.find((r) => r.phone_e164 === phone) ?? rows[0];
-      return detail(log[phone] ?? [], { thread: row ?? detail([]).thread, people: people(phone) ?? detail([]).people });
+      return detail(log[phone] ?? [], {
+        thread: row ?? detail([]).thread,
+        people: people(phone) ?? detail([]).people,
+      });
     })
     .on('GET /students/:id', () => profile)
     .on('GET /booking/teachers', ({ path }) => booking.fetch(path))

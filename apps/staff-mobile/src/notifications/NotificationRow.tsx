@@ -18,5 +18,7 @@ export function NotificationRow({ item, onPress }: NotificationRowProps) {
       {item.read_at ? null : <StatusChip tone="act" glyph="fill" size="sm" label={t.bell.mobile.unread} />}
     </>
   );
-  return <ListRow title={item.title} subtitle={item.body} tags={tags} onPress={() => onPress(item)} />;
+  return (
+    <ListRow title={item.title} subtitle={item.body} tags={tags} onPress={() => onPress(item)} />
+  );
 }

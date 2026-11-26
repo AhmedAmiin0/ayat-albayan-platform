@@ -23,7 +23,9 @@ export function MyPaymentsView() {
       {...cells}
       refreshing={list.isRefetching}
       onRefresh={() => void list.refetch()}
-      ListEmptyComponent={<LoadState status={list} empty emptyTitle={P.empty} emptyHint={P.emptyHint} />}
+      ListEmptyComponent={
+        <LoadState status={list} empty emptyTitle={P.empty} emptyHint={P.emptyHint} />
+      }
     />
   );
 }

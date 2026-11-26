@@ -5,11 +5,13 @@ import type { PickedAvatar } from '@/account/lib/avatar';
 
 // Admin write of a staff photo; same three steps as the own photo; answers StaffPhotoView.
 
-export const uploadStaffPhoto = (base: string, avatar: PickedAvatar) => uploadPhoto<StaffPhotoView>(base, avatar);
+export const uploadStaffPhoto = (base: string, avatar: PickedAvatar) =>
+  uploadPhoto<StaffPhotoView>(base, avatar);
 
 export const removeStaffPhoto = (base: string) => apiSend<StaffPhotoView>('DELETE', base);
 
-const isAccountCode = (code: unknown): code is (typeof ACCOUNT_ERRORS)[number] => ACCOUNT_ERRORS.some((c) => c === code);
+const isAccountCode = (code: unknown): code is (typeof ACCOUNT_ERRORS)[number] =>
+  ACCOUNT_ERRORS.some((c) => c === code);
 
 export function staffPhotoError(error: unknown): string {
   const body: unknown = error instanceof ApiError ? error.body : null;

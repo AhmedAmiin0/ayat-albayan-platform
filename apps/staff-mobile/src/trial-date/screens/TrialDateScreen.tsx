@@ -26,7 +26,13 @@ export function TrialDateScreen() {
   return (
     <Screen>
       <BookingModeProvider value={base === '/sales' ? 'sales' : 'admin'}>
-        <TrialDateFlow key={studentId} studentId={studentId} name={name} program={programOf(program)} fallback={fallback} />
+        <TrialDateFlow
+          key={studentId}
+          studentId={studentId}
+          name={name}
+          program={programOf(program)}
+          fallback={fallback}
+        />
       </BookingModeProvider>
     </Screen>
   );

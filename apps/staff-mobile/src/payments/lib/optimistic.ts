@@ -65,5 +65,9 @@ export function withPaid(
   if (!balance) return balance;
   const add = (s: SubscriptionView): SubscriptionView =>
     s.id === input.subscriptionId ? { ...s, paid: roundCents(s.paid + input.amount) } : s;
-  return { ...balance, current: balance.current && add(balance.current), packages: balance.packages.map(add) };
+  return {
+    ...balance,
+    current: balance.current && add(balance.current),
+    packages: balance.packages.map(add),
+  };
 }

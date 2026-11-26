@@ -57,7 +57,12 @@ export function AccountScreen({ home }: AccountScreenProps) {
       ) : (
         <AppText
           accessibilityLiveRegion="polite"
-          style={{ fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink2 }}
+          style={{
+            fontFamily: type.ui[500],
+            fontSize: type.size.body,
+            lineHeight: type.lineHeight(type.size.body),
+            color: color.ink2,
+          }}
         >
           {t.account.loading}
         </AppText>

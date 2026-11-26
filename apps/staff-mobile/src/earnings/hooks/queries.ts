@@ -10,7 +10,10 @@ import { earningsBase, type EarningsScope } from '@/earnings/lib/scope';
 
 export function useEarningsBalance(scope: EarningsScope) {
   const path = earningsBase(scope);
-  return useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<TeacherEarningsBalanceView>(path) });
+  return useQuery({
+    queryKey: pathKey(path),
+    queryFn: () => apiFetch<TeacherEarningsBalanceView>(path),
+  });
 }
 
 export function useEarningsSessions(scope: EarningsScope, status: SessionFilter) {

@@ -19,8 +19,18 @@ export function TrialDateDone({ result, teacherName, tz, onClose }: TrialDateDon
   const viewer = { tz: viewerZone, cycle };
   const { color } = useTheme();
   const at = whenLines(result.starts_at, tz, viewer);
-  const line = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
-  const small = { ...line, fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
+  const line = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.body,
+    lineHeight: type.lineHeight(type.size.body),
+    color: color.ink,
+  };
+  const small = {
+    ...line,
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.ink2,
+  };
   return (
     <View style={{ gap: 12 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -28,7 +38,13 @@ export function TrialDateDone({ result, teacherName, tz, onClose }: TrialDateDon
         <AppText
           accessibilityRole="alert"
           accessibilityLiveRegion="polite"
-          style={{ flexShrink: 1, fontFamily: type.display, fontSize: type.size.h2, lineHeight: type.lineHeight(type.size.h2, true), color: color.ink }}
+          style={{
+            flexShrink: 1,
+            fontFamily: type.display,
+            fontSize: type.size.h2,
+            lineHeight: type.lineHeight(type.size.h2, true),
+            color: color.ink,
+          }}
         >
           {result.moved_from_id ? t.trialDate.doneMoved : t.trialDate.done}
         </AppText>

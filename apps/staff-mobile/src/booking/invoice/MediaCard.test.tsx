@@ -40,7 +40,9 @@ test('a failed thumbnail says so, and a tap asks again instead of picking a blan
 });
 
 test('an expired card keeps full contrast: the short badge, no 50% opacity, no long sentence in the tile', async () => {
-  await renderWithQuery(<MediaCard phone={PHONE} item={{ ...photo, expired: true }} onPick={jest.fn()} />);
+  await renderWithQuery(
+    <MediaCard phone={PHONE} item={{ ...photo, expired: true }} onPick={jest.fn()} />,
+  );
   expect(screen.getByText(t.booking.invoice.expiredBadge)).toBeTruthy();
   expect(screen.queryByText(t.booking.invoice.expired)).toBeNull();
   expect(JSON.stringify(screen.getByRole('button').props.style)).not.toContain('"opacity"');

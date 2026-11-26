@@ -7,7 +7,8 @@ import { chosenStart, lengthOf, type EditState } from './edit-time-body';
 const lengths: Record<string, string | undefined> = t.enums.duration;
 
 /** A migrated odd length still reads as minutes, never a bare number. */
-export const lengthText = (min: number): string => durationText(min, lengths, t.editTime.durationOther);
+export const lengthText = (min: number): string =>
+  durationText(min, lengths, t.editTime.durationOther);
 
 function timeSummary(startsAt: string, durationMin: number, viewer: ViewerClock): string {
   const when = whenIn(new Date(startsAt), viewer.tz, viewer.cycle);

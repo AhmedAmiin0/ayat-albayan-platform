@@ -19,7 +19,15 @@ export function MyEarningsScreen() {
   const [tab, setTab] = useState<Tab>('sessions');
   const [filter, setFilter] = useState<SessionFilter>('all');
   const statements = teacherPageOn(usePublicConfig(), 'statements');
-  const header = <EarningsHeader balance={balance.data} tab={tab} onTab={setTab} filter={filter} onFilter={setFilter} />;
+  const header = (
+    <EarningsHeader
+      balance={balance.data}
+      tab={tab}
+      onTab={setTab}
+      filter={filter}
+      onFilter={setFilter}
+    />
+  );
   return (
     <Screen>
       <ScreenHeader

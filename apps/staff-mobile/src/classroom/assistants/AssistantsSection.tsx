@@ -17,8 +17,10 @@ import { AssistantPicker } from './AssistantPicker';
 const A = t.classroom.assistants;
 
 /** The assistants not yet on the student: what the picker offers. */
-export const freeAssistants = (all: readonly AssistantView[], mine: readonly AssistantView[]): AssistantView[] =>
-  all.filter((a) => !mine.some((m) => m.profile_id === a.profile_id));
+export const freeAssistants = (
+  all: readonly AssistantView[],
+  mine: readonly AssistantView[],
+): AssistantView[] => all.filter((a) => !mine.some((m) => m.profile_id === a.profile_id));
 
 /** A failed read with nothing cached leaves the section out so the profile stays quiet. */
 export function AssistantsSection({ studentId }: { studentId: string }) {
@@ -46,7 +48,10 @@ export function AssistantsSection({ studentId }: { studentId: string }) {
         ))}
       </InsetGroup>
       {write && all.isSuccess ? (
-        <AssistantPicker free={freeAssistants(all.data, list)} onPick={(profileId) => add.mutate({ studentId, profileId })} />
+        <AssistantPicker
+          free={freeAssistants(all.data, list)}
+          onPick={(profileId) => add.mutate({ studentId, profileId })}
+        />
       ) : null}
       {add.isError || remove.isError ? <ErrorLine message={t.common.error} /> : null}
     </Section>

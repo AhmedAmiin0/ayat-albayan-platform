@@ -97,7 +97,11 @@ export function SubscribeScreen() {
           value={startsOn}
           onChange={setPicked}
         />
-        <NoCommissionNote startsOn={startsOn} usedBefore={used.body.lessonsUsedBefore ?? 0} now={now} />
+        <NoCommissionNote
+          startsOn={startsOn}
+          usedBefore={used.body.lessonsUsedBefore ?? 0}
+          now={now}
+        />
         {used.field}
         {save.isError ? <ErrorLine message={subscribeErrorText(save.error, 'save')} /> : null}
         {save.isSuccess ? (
