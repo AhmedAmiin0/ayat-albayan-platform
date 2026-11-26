@@ -1,6 +1,5 @@
 import { stickerKey, type StickerList, type ThreadStickerSend } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { waHttpError } from '@/modules/messaging/whatsapp';
 import { ForwardFiles } from '@/modules/messaging/inbox/files/forward-files';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { chatLine, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
@@ -8,13 +7,14 @@ import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { favouriteItems, recentItems } from './sticker-rows';
 import { StickerRepo, type StickerRow } from './sticker.repo';
+import { httpError } from '@/common/http/errors';
 
 interface FavouriteInput {
   profileId: string;
   messageId: string;
 }
 
-const notFound = () => waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+const notFound = () => httpError(HttpStatus.NOT_FOUND, 'message_not_found');
 
 /**
  * The sticker panel: this staff member's favourites, then the newest stickers

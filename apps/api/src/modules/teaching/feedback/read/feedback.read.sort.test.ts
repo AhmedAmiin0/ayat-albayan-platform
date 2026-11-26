@@ -16,6 +16,7 @@ describe('FeedbackReadQueries.page sort and column filters (R-NFR-08)', () => {
     expect(argsOf(calls, T, 'order')).toEqual([
       ['teachers(display_name_ar)', { ascending: false }],
       ['requested_at', { ascending: false }],
+      ['id', { ascending: true }],
     ]);
   });
 

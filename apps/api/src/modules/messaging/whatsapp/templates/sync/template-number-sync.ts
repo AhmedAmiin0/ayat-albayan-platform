@@ -5,15 +5,14 @@ import type { WhatsappEnv } from '@/config/env/env';
 import { readError, requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { wabaSyncPatch } from '@/modules/messaging/whatsapp/templates/names/template-waba-match';
 import type { TemplatePatch } from './template-sync';
-import {
-  EVOLUTION_NO_TEMPLATES, waHttpError,
-} from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { EVOLUTION_NO_TEMPLATES } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import {
   syncByLine, syncCrmNumber, unread, type NumberLineDeps,
 } from '@/modules/messaging/whatsapp/templates/sync/number-line/template-number-line';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import type { ApprovalRow, ApprovalWrite } from '@/modules/messaging/whatsapp/templates/catalog/types';
 import { WaError, type MetaTemplate, type TemplateRow, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { httpError } from '@/common/http/errors';
 
 // One number's template sync (docs/23 phase 5, docs/23c decision 4): read THAT number's WABA list with a
 // client built from its own row + Vault secrets (the numbers overlay, module mode) and write the
@@ -96,7 +95,7 @@ export async function syncNumber(
   const all = deps.numbers();
   if (all === null) return syncByLine(deps, numberId, now);
   const n = all.find((x) => x.id === numberId);
-  if (!n) throw waHttpError('unknown_number', 404);
+  if (!n) throw httpError(404, 'unknown_number');
   const base = unread(n.id, now);
   if (!n.env) return { ...base, ok: false, error: 'not_configured' };
   const elsewhere = NOT_A_WABA_LIST[n.env.provider ?? 'meta'];

@@ -5,7 +5,7 @@ import { MessageViews } from './message.views';
 import { needsManualSend, type MessageRow } from './message.mapper';
 import { MessagesRepo } from './messages.repo';
 import { AUTO_OFF } from '@/modules/messaging/whatsapp/sender/send-stale';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { httpError } from '@/common/http/errors';
 
 /** A held text that failed (reopen_*): its 7-day hold starts again from this retry (11-06). */
 const restartOf = (code: string | null): Date | null => (isHoldFailure(code) ? new Date() : null);
@@ -35,10 +35,10 @@ export class MessagesService {
    */
   async retry(id: string, opts: { automaticOn: boolean }): Promise<MessageChange> {
     const before = await this.row(id);
-    const notRetryable = () => waHttpError('not_retryable', 409, { status: before.status });
+    const notRetryable = () => httpError(409, 'not_retryable', { status: before.status });
     if (closed(before)) throw notRetryable();
     if (before.error_code === AUTO_OFF.code && !opts.automaticOn)
-      throw waHttpError(AUTO_OFF.code, 409);
+      throw httpError(409, AUTO_OFF.code);
     const after = await this.queries.requeue(id, restartOf(before.error_code));
     if (!after) throw notRetryable();
     void this.sender.kick();
@@ -48,7 +48,7 @@ export class MessagesService {
   /** The admin sent it from their own WhatsApp (the wa.me link): never sent again. */
   async sentManually(id: string): Promise<MessageChange> {
     const before = await this.row(id);
-    const notManual = () => waHttpError('not_manual', 409, { status: before.status });
+    const notManual = () => httpError(409, 'not_manual', { status: before.status });
     if (!needsManualSend(before)) throw notManual();
     const after = await this.queries.markSentManually(id, new Date());
     if (!after) throw notManual();
@@ -61,9 +61,9 @@ export class MessagesService {
    */
   async handOff(id: string): Promise<MessageChange> {
     const before = await this.row(id);
-    const notManual = () => waHttpError('not_manual', 409, { status: before.status });
+    const notManual = () => httpError(409, 'not_manual', { status: before.status });
     if (!needsManualSend(before)) throw notManual();
-    if (before.media_path) throw waHttpError('media_handoff', 409);
+    if (before.media_path) throw httpError(409, 'media_handoff');
     const after = await this.queries.handOff(id);
     if (!after) throw notManual();
     return { before, view: await this.views.view(after) };

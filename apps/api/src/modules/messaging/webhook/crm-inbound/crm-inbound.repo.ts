@@ -2,14 +2,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { CrmReceived } from './crm-received.schema';
 import type { CrmQueueRow } from './crm-inbound.event';
+import { pgError } from '@/common/db/errors';
+import type { PostgrestError } from '@supabase/supabase-js';
 
 // The CRM inbound queue (migration 20261121000100, docs/19 «crm driver»): a message.received is
 // stored by its wamid (a re-sent delivery is a no-op), read when due, deleted once in the inbox.
 
 const TABLE = 'crm_inbound_queue';
 
-const check = (error: { message: string } | null, what: string): void => {
-  if (error) throw new Error(`crm inbound ${what} failed: ${error.message}`);
+const check = (error: PostgrestError | null): void => {
+  if (error) throw pgError(error);
 };
 
 /** A failed lookup: the row stays, tried again at nextAt. */
@@ -35,7 +37,7 @@ export class CrmInboundRepo {
     };
     const opts = { onConflict: 'wa_message_id', ignoreDuplicates: true };
     const { error } = await this.db.from(TABLE).upsert(row, opts);
-    check(error, 'enqueue');
+    check(error);
   }
 
   async due(now: Date, limit: number): Promise<CrmQueueRow[]> {
@@ -45,13 +47,13 @@ export class CrmInboundRepo {
       .lte('next_at', now.toISOString())
       .order('next_at', { ascending: true })
       .limit(limit);
-    check(error, 'due read');
+    check(error);
     return data ?? [];
   }
 
   async done(waMessageId: string): Promise<void> {
     const { error } = await this.db.from(TABLE).delete().eq('wa_message_id', waMessageId);
-    check(error, 'done');
+    check(error);
   }
 
   /** Teachers use the platform chat only: this E.164 is an active teacher's. */
@@ -62,13 +64,13 @@ export class CrmInboundRepo {
       .eq('status', 'active')
       .eq('phone_e164', phone)
       .limit(1);
-    check(error, 'teacher read');
+    check(error);
     return (data ?? []).length > 0;
   }
 
   async retry(w: RetryWrite): Promise<void> {
     const patch = { attempts: w.attempts, next_at: w.nextAt.toISOString(), last_error: w.error };
     const { error } = await this.db.from(TABLE).update(patch).eq('wa_message_id', w.waMessageId);
-    check(error, 'retry');
+    check(error);
   }
 }

@@ -1,6 +1,7 @@
 import { clipText } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 import type { HttpFailure } from '@/common/infra/http/failure';
 import { createHttp } from '@/common/infra/http/http';
 import { encryptPayload } from './web-push.crypto';
@@ -81,7 +82,7 @@ export class WebPushSender {
       const keys = this.keys();
       if (!keys) return 0;
       const { data, error } = await this.db.from('web_push_subscriptions').select('id, endpoint, p256dh, auth, session_id').eq('profile_id', profileId);
-      if (error) throw new Error(error.message);
+      if (error) throw pgError(error);
       // Only browsers bound to a live session of this profile (migration 700; null = not yet re-bound).
       const live = await liveSessions(this.db, data.map((s) => s.session_id));
       const subs = data.filter((s) => s.session_id !== null && live.has(s.session_id));

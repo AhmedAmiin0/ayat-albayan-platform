@@ -12,7 +12,6 @@ import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, chatOutPath, isChatOutPathOf } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { sniffMime, SNIFF_BYTES } from '@/modules/teaching/booking/invoice/invoice-sniff';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { InboxSettings } from '@/modules/messaging/inbox/inbox.settings';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
 import { ThreadQuotes } from '@/modules/messaging/inbox/threads/thread-quotes';
@@ -20,19 +19,20 @@ import { chatLine, dedupKey, outboundBase, replyOf, type ThreadSend } from '@/mo
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { toVoiceOgg } from './voice-ogg';
 import { voiceMedia } from './voice-send';
+import { httpError } from '@/common/http/errors';
 
 /** 400 file_type / 413 file_too_large, or nothing. The chat's own list: an image, a PDF or a recorded voice note. */
 function assertSendable(f: { mime: string; size: number; maxBytes: number }): void {
   const problem = chatFileProblem(f, CHAT_FILE_MIMES);
-  if (problem === 'file_type') throw waHttpError('file_type', HttpStatus.BAD_REQUEST);
-  if (problem) throw waHttpError(problem, HttpStatus.PAYLOAD_TOO_LARGE);
+  if (problem === 'file_type') throw httpError(HttpStatus.BAD_REQUEST, 'file_type');
+  if (problem) throw httpError(HttpStatus.PAYLOAD_TOO_LARGE, problem);
 }
 
 /** A PDF reaches the family named .pdf whatever the client called it (the bytes were sniffed as PDF). */
 export const sentFileName = (name: string, mime: string): string =>
   mime !== 'application/pdf' || /\.pdf$/i.test(name) ? name : `${name.slice(0, 196)}.pdf`;
 
-const filePath = () => waHttpError('file_path', HttpStatus.BAD_REQUEST);
+const filePath = () => httpError(HttpStatus.BAD_REQUEST, 'file_path');
 
 /**
  * Staff send a JPEG/PNG image or a PDF from the chat, inside the 24 h window
@@ -96,7 +96,7 @@ export class ThreadFileSender {
     assertSendable({ mime, size: info.size, maxBytes: await this.maxBytes() });
     const head = await this.storage.head(ref, SNIFF_BYTES);
     if (!head) throw filePath();
-    if (sniffMime(head) !== mime) throw waHttpError('file_type', HttpStatus.BAD_REQUEST);
+    if (sniffMime(head) !== mime) throw httpError(HttpStatus.BAD_REQUEST, 'file_type');
     const reply = await replyOf(this.quotes, s, line);
     const media = mime === CHAT_VOICE_MIME
       ? await voiceMedia(this.storage, ref, this.toOgg)

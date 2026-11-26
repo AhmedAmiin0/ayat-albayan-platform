@@ -38,6 +38,6 @@ describe('sendableTemplates', () => {
 
   it('a failed read throws (the pass sends nothing)', async () => {
     const { db } = fakeDb({ message_templates: [{ error: { message: 'down' } }] });
-    await expect(sendableTemplates(db)).rejects.toThrow('templates read failed: down');
+    await expect(sendableTemplates(db)).rejects.toThrow('db error undefined: down');
   });
 });

@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { conflict } from '@/common/http/errors';
 import { readAll } from '@/common/db/read-all';
-import { done, maybe, pgError } from '@/common/db/errors';
+import { done, isUniqueViolation, maybe, pgError } from '@/common/db/errors';
 
 /** `note`: the asker's reason, the move reason on approval (docs/47). `created_by`: who asked. */
 export interface ProposalRow {
@@ -43,7 +43,7 @@ export class LessonProposalRepo {
   /** 409 proposal_pending when the lesson already has one waiting (one pending per lesson). */
   async create(row: NewProposal): Promise<void> {
     const { error } = await this.db.from('lesson_proposals').insert(row);
-    if (error?.code === '23505') throw conflict('proposal_pending');
+    if (isUniqueViolation(error)) throw conflict('proposal_pending');
     if (error) throw pgError(error);
   }
 
@@ -78,7 +78,7 @@ export class LessonProposalRepo {
       .update({ status: 'pending', decided_by: null, decided_at: null })
       .eq('id', id)
       .eq('status', 'approved');
-    if (error && error.code !== '23505') throw pgError(error);
+    if (error && !isUniqueViolation(error)) throw pgError(error);
   }
 
   /** The approved proposal's moved lesson. */

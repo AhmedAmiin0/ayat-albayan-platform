@@ -14,7 +14,10 @@ describe('GET /invoices/recent sort + filters (R-NFR-08)', () => {
   it('no sort: newest first, then id', async () => {
     const { db, calls } = fakeDb({ invoices: [{ data: [], count: 0 }] });
     await new InvoicesRepo(db).recent(page);
-    expect(on(calls, 'invoices', 'order')).toEqual([['created_at', { ascending: false }], ['id']]);
+    expect(on(calls, 'invoices', 'order')).toEqual([
+      ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
   });
 
   it('kind filter and kind sort', async () => {

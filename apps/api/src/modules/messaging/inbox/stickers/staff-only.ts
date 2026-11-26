@@ -1,7 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { waHttpError } from '@/modules/messaging/whatsapp';
 import type { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
+import { httpError } from '@/common/http/errors';
 
 type SalesScopeOf = Awaited<ReturnType<ThreadReads['salesScope']>>;
 
@@ -12,6 +12,6 @@ type SalesScopeOf = Awaited<ReturnType<ThreadReads['salesScope']>>;
 export async function staffOnly(reads: ThreadReads, user: AuthUser): Promise<SalesScopeOf> {
   const sales = await reads.salesScope(user);
   const teacher = !sales && (await reads.scope(user)) !== null;
-  if (teacher) throw waHttpError('files_forbidden', HttpStatus.FORBIDDEN);
+  if (teacher) throw httpError(HttpStatus.FORBIDDEN, 'files_forbidden');
   return sales;
 }

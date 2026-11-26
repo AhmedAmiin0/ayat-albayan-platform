@@ -1,7 +1,6 @@
 import { feedbackEligible, type FeedbackRequest, type FeedbackRequestResult } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { conflict, notFound } from '@/common/http/errors';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { conflict, httpError, notFound } from '@/common/http/errors';
 import { FEEDBACK_CONFIG, type FeedbackConfig } from '@/modules/teaching/feedback/feedback.config';
 import { FeedbackRepo, type FeedbackRow, type RequestContext } from '@/modules/teaching/feedback/feedback.repo';
 import { FEEDBACK_TEMPLATE, FeedbackSender } from './feedback.sender';
@@ -22,7 +21,7 @@ export class FeedbackRequestService {
 
   async request(input: RequestInput, now = new Date()): Promise<FeedbackRequestResult> {
     const { lessonId, body } = input;
-    if (!this.config.secret) throw waHttpError('not_configured', 503);
+    if (!this.config.secret) throw httpError(503, 'not_configured');
     await this.sender.assertApproved();
     const ctx = await this.queries.requestContext(lessonId, body.studentId);
     if (!ctx) throw notFound('student_not_in_lesson');

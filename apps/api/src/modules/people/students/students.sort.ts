@@ -26,7 +26,7 @@ export const STUDENT_SORT: SortSpec<StudentSortKey> = {
     remaining: { column: 'package_remaining', nullsFirst: false },
     weekly: { column: 'has_weekly' },
   },
-  fallback: { column: 'created_at', ascending: false },
+  fallback: [{ column: 'created_at', ascending: false }],
 };
 
 interface IlikeQuery<Q> {

@@ -1,9 +1,9 @@
 import { canPickTrialDate, type BookingRequest } from '@ab/shared';
 import { bookingKindOf } from '@ab/schedule';
 import { HttpStatus } from '@nestjs/common';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { MovedTrial } from './trial-date.plan';
 import type { TrialStudent } from './trial-date.repo';
+import { httpError } from '@/common/http/errors';
 
 // A new trial date is for one existing student with no invoice and no running subscription.
 
@@ -13,14 +13,14 @@ export type TrialTarget = { req: BookingRequest & { studentIds: string[]; client
 /** 400 trial_date_invalid unless the body is one existing student's trial; returns that student's id. */
 export function trialStudentId(req: BookingRequest): string {
   const one = 'studentIds' in req && req.studentIds.length === 1 ? req.studentIds[0] : undefined;
-  if (!one || bookingKindOf(req) !== 'trial' || req.leadId || req.invoice) throw domainError(HttpStatus.BAD_REQUEST, 'trial_date_invalid');
+  if (!one || bookingKindOf(req) !== 'trial' || req.leadId || req.invoice) throw httpError(HttpStatus.BAD_REQUEST, 'trial_date_invalid');
   return one;
 }
 
 /** 404 student_not_found; 409 trial_date_subscribed for a running subscription (they change their course instead). */
 export function assertCanPick(student: TrialStudent | null): TrialStudent {
-  if (!student) throw domainError(HttpStatus.NOT_FOUND, 'student_not_found');
-  if (!canPickTrialDate(student.status)) throw domainError(HttpStatus.CONFLICT, 'trial_date_subscribed', { status: student.status });
+  if (!student) throw httpError(HttpStatus.NOT_FOUND, 'student_not_found');
+  if (!canPickTrialDate(student.status)) throw httpError(HttpStatus.CONFLICT, 'trial_date_subscribed', { status: student.status });
   return student;
 }
 

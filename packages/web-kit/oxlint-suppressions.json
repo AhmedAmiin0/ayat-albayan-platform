@@ -545,17 +545,6 @@
       "count": 6
     }
   },
-  "src/lib/i18n/i18n-overrides.ts": {
-    "no-restricted-globals": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
   "src/lib/i18n/locale-strings.ts": {
     "complexity": {
       "count": 1

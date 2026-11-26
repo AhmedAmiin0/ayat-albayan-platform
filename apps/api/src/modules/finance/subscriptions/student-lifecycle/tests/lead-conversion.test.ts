@@ -65,11 +65,11 @@ describe('LeadConversion (R-LEAD-01): a package from the chat converts the famil
 });
 
 describe('LeadConversion error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const t = setup([{ error: PG_ERRORS.unique }]);
     expect(await answerOfRejection(t.convert.afterPackage('s1', 'admin1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

@@ -5,11 +5,11 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { bookingRoot } from '@/modules/teaching/booking/booking-root.fakes';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { IDS } from '@/modules/teaching/booking/booking.fakes';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
 import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
+import { httpError } from '@/common/http/errors';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' },
@@ -87,7 +87,7 @@ describe('BookingController (docs/10 §5 #12–14)', () => {
 
   it('POST 409 carries { code, message, conflicts }', async () => {
     const conflicts = [{ kind: 'teacher_busy', startsAt: 'a', endsAt: 'b', lessonId: 'L1' }];
-    booking.book.mockRejectedValue(domainError(HttpStatus.CONFLICT, 'conflict', { conflicts }));
+    booking.book.mockRejectedValue(httpError(HttpStatus.CONFLICT, 'conflict', { conflicts }));
     const res = await call({ method: 'POST', url: '/booking', payload: BODY });
     expect(res.statusCode).toBe(409);
     expect(res.json()).toEqual({ code: 'conflict', message: 'conflict', conflicts });

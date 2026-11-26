@@ -1,9 +1,11 @@
 import type { UserRole } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
+import type { PostgrestError } from '@supabase/supabase-js';
 
-function check(error: { message: string } | null, what: string): asserts error is null {
-  if (error) throw new Error(`${what} failed: ${error.message}`);
+function check(error: PostgrestError | null): asserts error is null {
+  if (error) throw pgError(error);
 }
 
 /** Someone in a student channel: a current teacher, the guardian login, a self-contact student. */
@@ -29,7 +31,7 @@ export class PresenceRepo {
   async touch(profileIds: readonly string[]): Promise<void> {
     if (profileIds.length === 0) return;
     const { error } = await this.db.rpc('presence_touch', { p_profiles: [...profileIds] });
-    check(error, 'last seen write');
+    check(error);
   }
 
   async lastSeen(profileIds: readonly string[]): Promise<Map<string, string>> {
@@ -39,7 +41,7 @@ export class PresenceRepo {
       .from('profile_presence')
       .select('profile_id, last_seen_at')
       .in('profile_id', [...profileIds]);
-    check(error, 'last seen read');
+    check(error);
     for (const r of data) out.set(r.profile_id, r.last_seen_at);
     return out;
   }
@@ -61,20 +63,20 @@ export class PresenceRepo {
       .in('role', [...STAFF_ROLES])
       .is('disabled_at', null)
       .order('full_name');
-    check(error, 'staff read');
+    check(error);
     return data;
   }
 
   private async teacherPeople(studentId: string): Promise<ChannelPerson[]> {
     const ids = await this.db.rpc('channel_teacher_ids', { p_student_id: studentId });
-    check(ids.error, 'channel teachers read');
+    check(ids.error);
     const teacherIds = ids.data;
     if (teacherIds.length === 0) return [];
     const { data, error } = await this.db
       .from('teachers')
       .select('profile_id')
       .in('id', teacherIds);
-    check(error, 'channel teacher profiles read');
+    check(error);
     return data.flatMap((t) =>
       t.profile_id ? [{ profile_id: t.profile_id, role: 'teacher' as const }] : [],
     );
@@ -86,7 +88,7 @@ export class PresenceRepo {
       .select('guardian_id, profile_id')
       .eq('id', studentId)
       .maybeSingle();
-    check(error, 'channel student read');
+    check(error);
     if (!s) return [];
     // The student's own login chats too, a child's included.
     const self: ChannelPerson[] =
@@ -97,7 +99,7 @@ export class PresenceRepo {
       .select('profile_id')
       .eq('id', s.guardian_id)
       .maybeSingle();
-    check(g.error, 'channel guardian read');
+    check(g.error);
     const guardian = g.data?.profile_id;
     return guardian ? [{ profile_id: guardian, role: 'guardian' }, ...self] : self;
   }

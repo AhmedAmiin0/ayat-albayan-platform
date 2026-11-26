@@ -25,7 +25,7 @@ export const APPLICANT_SORT: SortSpec<ApplicantSortKey> = {
     notes: { column: 'notes', nullsFirst: false },
     created_at: { column: 'created_at' },
   },
-  fallback: { column: 'created_at', ascending: false },
+  fallback: [{ column: 'created_at', ascending: false }],
 };
 
 interface ApplicantFilterable<Q> {

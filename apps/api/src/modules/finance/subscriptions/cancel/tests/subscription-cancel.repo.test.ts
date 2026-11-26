@@ -4,7 +4,7 @@ import { SubscriptionCancelRepo } from '@/modules/finance/subscriptions/cancel/s
 
 function chain(result: unknown) {
   const q: Record<string, ReturnType<typeof vi.fn>> = {};
-  for (const k of ['select', 'eq', 'neq', 'not', 'update', 'gt', 'or', 'in']) q[k] = vi.fn(() => q);
+  for (const k of ['select', 'eq', 'neq', 'not', 'update', 'gt', 'gte', 'or', 'in', 'order']) q[k] = vi.fn(() => q);
   q.maybeSingle = vi.fn(async () => result);
   return Object.assign(q, {
     then: (ok: (v: unknown) => unknown) => Promise.resolve(result).then(ok),
@@ -31,7 +31,8 @@ describe('SubscriptionCancelQueries', () => {
     expect(later.eq).toHaveBeenCalledWith('student_id', 'st');
     expect(later.gt).toHaveBeenCalledWith('price', 0);
     expect(later.neq).toHaveBeenCalledWith('status', 'cancelled');
-    expect(later.or).toHaveBeenCalledWith('created_at.gt."2026-10-28T09:00:00Z",and(created_at.eq."2026-10-28T09:00:00Z",id.gt.a)');
+    expect(later.gte).toHaveBeenCalledWith('created_at', '2026-10-28T09:00:00Z');
+    expect(later.or).toHaveBeenCalledWith('created_at.gt."2026-10-28T09:00:00Z",id.gt.a');
     expect(commissions.in).toHaveBeenCalledWith('subscription_id', ['b']);
     const none = { from: vi.fn(() => chain({ data: [], error: null })) } as unknown as Db;
     expect(await new SubscriptionCancelRepo(none).laterCommission(a)).toBe(false);

@@ -6,12 +6,12 @@ import { readerOf } from '@/common/settings/settings.fakes';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
 import { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
 
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 const repo = (db: Db) => new StudentLinkRepo(db, readerOf(ClassroomSettings));
 
 describe('StudentLinkRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ students: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(repo(db).student('s1'))).toEqual(DUPLICATE);
   });

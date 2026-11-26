@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 
 /**
  * What a hide or show reads of the message: its chat, a template (sales' wall), its hidden state.
@@ -29,7 +30,7 @@ export class MessageHideRepo {
       .select('id, phone_e164, template_key, hidden_at')
       .eq('id', id)
       .maybeSingle();
-    if (error) throw new Error(`message read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -42,7 +43,7 @@ export class MessageHideRepo {
     const base = this.db.from('messages').update(patch).eq('id', change.id);
     const query = hide ? base.is('hidden_at', null) : base.not('hidden_at', 'is', null);
     const { data, error } = await query.select('id');
-    if (error) throw new Error(`message hide failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data.length > 0;
   }
 }

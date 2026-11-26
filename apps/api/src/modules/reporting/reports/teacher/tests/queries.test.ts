@@ -13,7 +13,10 @@ describe('TeacherReportsQueries.page (R-REP-02, R-NFR-08)', () => {
     const { db, calls } = fakeDb({ [T]: [{ data: [], count: 0 }] });
     await new TeacherReportsQueries(db).page({ teacherId: 't1', page: PAGE });
     expect(argsOf(calls, T, 'eq')).toEqual([['teacher_id', 't1'], ['status', 'submitted']]);
-    expect(argsOf(calls, T, 'order')).toEqual([['submitted_at', { ascending: false }], ['id']]);
+    expect(argsOf(calls, T, 'order')).toEqual([
+      ['submitted_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
     expect(argsOf(calls, T, 'range')).toEqual([[10, 19]]);
   });
 
@@ -24,11 +27,14 @@ describe('TeacherReportsQueries.page (R-REP-02, R-NFR-08)', () => {
       filter: { sort: 'grade', dir: 'desc', attendance: 'late', grade: 'good' },
       page: PAGE,
     });
-    expect(argsOf(calls, T, 'eq').slice(2)).toEqual([['attendance', 'late'], ['grade_overall', 'good']]);
+    expect(argsOf(calls, T, 'eq').slice(2)).toEqual([
+      ['attendance', 'late'],
+      ['grade_overall', 'good'],
+    ]);
     expect(argsOf(calls, T, 'order')).toEqual([
       ['grade_overall', { ascending: false, nullsFirst: false }],
       ['submitted_at', { ascending: false }],
-      ['id'],
+      ['id', { ascending: true }],
     ]);
   });
 

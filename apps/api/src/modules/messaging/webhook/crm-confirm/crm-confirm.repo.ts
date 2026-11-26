@@ -4,11 +4,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { stampDelivered } from '@/modules/messaging/whatsapp';
 import { UNCERTAIN_CODES, type TemplateNames, type UncertainRow } from './crm-match';
+import { isUniqueViolation } from '@/common/db/errors';
 
 // The crm confirm's compare-and-set write (docs/19), shaped like manual-echo.repo.ts.
 
 /** Postgres unique_violation: the wamid is already on another row (a concurrent store). */
-const UNIQUE = '23505';
 const COLUMNS =
   'id, phone_e164, body, template_key, created_at, line, number_id, lead_id, dedup_key';
 const fail = (what: string, message: string): Error => new Error(`${what} failed: ${message}`);
@@ -82,7 +82,7 @@ export class CrmConfirmRepo {
       .is('wa_message_id', null)
       .in('error_code', [...UNCERTAIN_CODES])
       .select('id');
-    if (error?.code === UNIQUE) return false;
+    if (isUniqueViolation(error)) return false;
     if (error) throw fail('crm confirm attach', error.message);
     if (data.length === 0) return false;
     const at = w.patch.sent_at ?? new Date().toISOString();

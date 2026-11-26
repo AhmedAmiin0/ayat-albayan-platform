@@ -11,12 +11,12 @@ import { LANE_ROWS, type Lane } from './drain';
 import { sendableTemplates } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
 import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import type { TemplateRow, WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { pgError } from '@/common/db/errors';
 
 export type { DueMessage } from './sender.due';
 
 /** Without a chat client, chat-stamped texts are never read (they would fill the batch forever). */
 const NOT_CHAT_TEXT = 'template_key.not.is.null,line.is.null,line.neq.chat';
-/** due(): the approved keys, now, the batch and (a lane's pass) its lane. */
 interface DueInput { keys: readonly string[]; now: Date; limit: number; lane?: Lane }
 
 /** The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set. */
@@ -80,7 +80,7 @@ export class SenderRepo {
     const scoped = allowed ? sendable.in('phone_e164', [...allowed]) : sendable;
     const ordered = scoped.order('scheduled_for', { ascending: true, nullsFirst: true }).order('created_at');
     const { data, error } = await ordered.limit(input.limit);
-    if (error) throw new Error(`outbound queue read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data.filter(onMessagingLine);
   }
 
@@ -107,7 +107,7 @@ export class SenderRepo {
       .eq('attempts', input.attempts)
       .or(NOT_APP_SENT) // never a row staff may have sent from the app (docs/19)
       .select('id');
-    if (error) throw new Error(`message claim failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data.length ? attempts : null;
   }
 
@@ -120,7 +120,7 @@ export class SenderRepo {
       .eq('id', input.row.id)
       .eq('status', 'queued')
       .select('id');
-    if (error) throw new Error(`message sent write failed: ${error.message}`);
+    if (error) throw pgError(error);
     if (data.length === 0) return false; // the admin's manual send already stamped the delivery
     await stampDelivered(this.db, { leadId: input.row.lead_id, dedupKey: input.row.dedup_key, at });
     return true;
@@ -131,7 +131,7 @@ export class SenderRepo {
     const base = this.db.from('messages').update(plan).eq('id', id).eq('status', 'queued');
     const at = unrecorded ? base.eq('error_code', SENDING).eq('attempts', unrecorded.attempts) : base;
     const { error } = await at;
-    if (error) throw new Error(`message failure write failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   /**
@@ -145,6 +145,6 @@ export class SenderRepo {
       .update({ status: 'failed', error_code: why.code, error_text: why.text, next_attempt_at: null })
       .eq('id', id)
       .eq('status', 'queued');
-    if (error) throw new Error(`message expiry write failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 }

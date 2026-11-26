@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { PAYMENT_HOLD_MAX_AGE_MS, WA_PAYMENT_HOLD } from './payment-hold';
+import { pgError } from '@/common/db/errors';
 
 /** The lane hold's error_code; absent = the 131042 hold. */
 interface Code {
@@ -28,7 +29,7 @@ export class PaymentHoldRepo {
       .eq('status', 'queued')
       .eq('attempts', input.attempts)
       .or(`error_code.is.null,error_code.neq.${SENDING}`);
-    if (error) throw new Error(`payment hold write failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   /** The rest of a pass's rows of a held line, in ONE compare-and-set write (no claimed row). */
@@ -40,7 +41,7 @@ export class PaymentHoldRepo {
       .in('id', [...input.ids])
       .eq('status', 'queued')
       .or(`error_code.is.null,error_code.neq.${SENDING}`);
-    if (error) throw new Error(`payment hold write failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   /**
@@ -58,6 +59,6 @@ export class PaymentHoldRepo {
       .eq('error_code', input.code ?? WA_PAYMENT_HOLD)
       .or(`expires_at.is.null,expires_at.gte.${input.to}`)
       .or(`scheduled_for.gte.${oldest},and(scheduled_for.is.null,created_at.gte.${oldest})`);
-    if (error) throw new Error(`payment hold move failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 }

@@ -10,7 +10,10 @@ describe('students list sort + column filters (R-NFR-08)', () => {
   it('no sort → newest first, as before', async () => {
     const { db, calls } = empty();
     await listStudents(db, page);
-    expect(orders(calls)).toEqual([['created_at', { ascending: false }]]);
+    expect(orders(calls)).toEqual([
+      ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
   });
 
   it('a key maps to its column, then newest first as the tiebreaker', async () => {
@@ -19,6 +22,7 @@ describe('students list sort + column filters (R-NFR-08)', () => {
     expect(orders(calls)).toEqual([
       ['name_normalized', { ascending: false }],
       ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
     ]);
   });
 

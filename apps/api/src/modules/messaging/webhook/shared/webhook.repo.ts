@@ -7,11 +7,12 @@ import { guardianOwnerIds } from '@/modules/sales/sales/sales-ownership';
 import { refillUnsupported } from '@/modules/messaging/webhook/inbound/inbound-refill';
 import { WebhookSettings } from './webhook.settings';
 import type { Contact, OutboundRow, ReplyWindow, StatusMove } from './webhook.types';
+import { pgError } from '@/common/db/errors';
 
 export type { Contact, OutboundRow, StatusMove } from './webhook.types';
 
 function check(error: PostgrestError | null): void {
-  if (error) throw new Error(`db: ${error.message}`);
+  if (error) throw pgError(error);
 }
 
 /** Thin supabase-js access for the WhatsApp webhook; the rules live in the services. */

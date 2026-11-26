@@ -5,6 +5,7 @@ import { wakeOn } from '@/common/jobs';
 import type { ReadyMessage } from './ready/report-ready-choice';
 import { renderCutoff } from './ready/render-cutoff';
 import { ReportPdfSettings } from './report-pdf.settings';
+import { pgError } from '@/common/db/errors';
 
 export type Finish =
   | { id: string; version: number; status: 'ready'; path: string }
@@ -32,7 +33,7 @@ export class ReportPdfQueries {
    */
   async hasWork(): Promise<boolean> {
     const { data, error } = await this.db.from('lesson_reports').select('id').in('pdf_status', ['pending', 'rendering']).limit(1);
-    if (error) throw new Error(`PDF queue probe failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data.length > 0;
   }
 
@@ -44,7 +45,7 @@ export class ReportPdfQueries {
       .eq('pdf_status', 'rendering')
       .lt('updated_at', before.toISOString())
       .select('id');
-    if (error) throw new Error(`stale PDF recovery failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data.length;
   }
 
@@ -63,7 +64,7 @@ export class ReportPdfQueries {
       .lte('submitted_at', renderCutoff(now, minutes).toISOString())
       .order('updated_at', { ascending: true })
       .limit(limit);
-    if (error) throw new Error(`pending PDFs read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data.map((r) => r.id);
   }
 
@@ -77,7 +78,7 @@ export class ReportPdfQueries {
       .eq('pdf_status', 'pending')
       .select('version')
       .maybeSingle();
-    if (error) throw new Error(`PDF claim failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data?.version ?? null;
   }
 
@@ -99,7 +100,7 @@ export class ReportPdfQueries {
       .eq('pdf_status', 'rendering')
       .eq('version', input.version)
       .select('id');
-    if (error) throw new Error(`PDF status write failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data.length > 0;
   }
 
@@ -117,14 +118,14 @@ export class ReportPdfQueries {
     const insert = await this.db
       .from('messages')
       .upsert(row, { onConflict: 'dedup_key', ignoreDuplicates: true });
-    if (insert.error) throw new Error(`${message.template_key} queue failed: ${insert.error.message}`);
+    if (insert.error) throw pgError(insert.error);
     const update = await this.db
       .from('messages')
       .update({ template_key: message.template_key, template_params: message.template_params })
       .eq('dedup_key', message.dedup_key)
       .eq('status', 'queued')
       .select('id');
-    if (update.error) throw new Error(`${message.template_key} update failed: ${update.error.message}`);
+    if (update.error) throw pgError(update.error);
     wakeOn(update.data.length); // still queued (new or earlier): wake the sender (docs/42 42-1)
   }
 }

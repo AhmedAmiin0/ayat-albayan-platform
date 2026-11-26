@@ -9,7 +9,7 @@ import type { ThreadWindow } from '@/modules/messaging/inbox/send/send-number';
 import { upcomingLessons, type LessonsOf } from './thread-lessons';
 import { familyTagsOf, threadPeople, type PeopleOf } from '@/modules/messaging/inbox/people/thread-people';
 import type { FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
-import { applySort } from '@/common/db/list-sort';
+import { readPage } from '@/common/db/page';
 import { THREAD_SORT, threadsSource, type ThreadListFilter } from './threads.list';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 import { markUnsupported, type ListedThreadRow } from './last-unsupported';
@@ -34,19 +34,17 @@ export class ThreadsRepo {
   async list(f: ThreadListFilter): Promise<{ items: ThreadRow[]; total: number }> {
     // The badge asks for `total` only: an indexed count, no page (threads-unread.queries.ts).
     if (isUnreadBadge(f)) return { items: [], total: await unreadThreadCount(this.db, f) };
+    const read = await readPage(() => this.listQuery(f), f, THREAD_SORT);
+    return { items: read.rows, total: read.total };
+  }
+
+  private listQuery(f: ThreadListFilter) {
     let query = threadsSource(this.db, f);
     if (f.unread) query = query.gt('unread_count', 0);
     if (f.phones) query = query.in('phone_e164', [...f.phones]);
     if (f.status) query = query.eq('lead_status', f.status);
     const search = f.search ? threadSearchFilter(f.search) : null;
-    if (search) query = query.or(search);
-    const from = (f.page - 1) * f.pageSize;
-    const { data, error, count } = await applySort(query, f, THREAD_SORT).range(
-      from,
-      from + f.pageSize - 1,
-    );
-    check(error, 'threads read');
-    return { items: data ?? [], total: count ?? 0 };
+    return search ? query.or(search) : query;
   }
 
   /** The page's rows whose last message is Meta's `unsupported` (last-unsupported.ts): one read at most. */

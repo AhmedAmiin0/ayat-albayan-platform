@@ -3,7 +3,7 @@ import { joinWindowConfig, OPEN_LESSON_STATUSES, type JoinWindowConfig } from '@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
-import { done, maybe, pgError, rows } from '@/common/db/errors';
+import { done, isUniqueViolation, maybe, pgError, rows } from '@/common/db/errors';
 import { hashLinkToken, linkExpiry, newLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 import type { LinkStudent } from './student-link.flags';
 
@@ -18,7 +18,6 @@ type LessonEmbed = Pick<Tables<'lessons'>, LessonTimes> & {
   teacher: { display_name_ar: string } | null;
 };
 
-const UNIQUE_VIOLATION = '23505';
 const AHEAD = 20;
 
 /** Reads and writes of the student's long-lived link (migration 191; service role, the services guard). */
@@ -93,7 +92,7 @@ export class StudentLinkRepo {
     const { data, error } = await this.db.from('lesson_join_links').insert(row).select('id').single();
     if (!error) return data.id;
     // Two joins at once: the other one created it.
-    const raced = error.code === UNIQUE_VIOLATION ? await this.findLessonLink(input.lesson.id, input.studentId) : null;
+    const raced = isUniqueViolation(error) ? await this.findLessonLink(input.lesson.id, input.studentId) : null;
     if (!raced) throw pgError(error);
     return raced;
   }

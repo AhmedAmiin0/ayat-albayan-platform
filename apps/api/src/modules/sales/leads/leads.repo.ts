@@ -4,10 +4,11 @@ import type { LeadSource, LeadStatus } from '@ab/catalog';
 import type { ListSort } from '@ab/core';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { applySort, type SortSpec } from '@/common/db/list-sort';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage } from '@/common/db/page';
 import { guardianSearchFilter } from '@/modules/people/guardians/guardians.mapper';
 import { OwnNumbers } from '@/modules/messaging/numbers';
-import { pageRange, throwIfDbError, type PageQuery } from './http';
+import { throwIfDbError, type PageQuery } from './http';
 
 export type LeadRow = Tables<'leads'>;
 
@@ -19,7 +20,7 @@ export type LeadListFilter = PageQuery &
     assignee?: string | undefined;
   };
 
-/** A requested sort (R-NFR-08), newest first as the tiebreaker. */
+/** Inbox order: latest inbound first (matches leads_status_idx), unless a sort is requested. */
 const LEAD_SORT: SortSpec<LeadSortKey> = {
   columns: {
     last_inbound: { column: 'last_inbound_at', nullsFirst: false },
@@ -28,7 +29,11 @@ const LEAD_SORT: SortSpec<LeadSortKey> = {
     status: { column: 'status' },
     source: { column: 'source' },
   },
-  fallback: { column: 'created_at', ascending: false },
+  fallback: [
+    { column: 'last_inbound_at', ascending: false, nullsFirst: false },
+    { column: 'created_at', ascending: false },
+  ],
+  tiebreak: [{ column: 'created_at', ascending: false }],
 };
 
 interface StatusMove {
@@ -97,22 +102,20 @@ export class LeadsRepo {
     throwIfDbError(error);
   }
 
-  /** Inbox order: latest inbound first (matches leads_status_idx), unless a sort is requested. */
   async list(f: LeadListFilter): Promise<{ items: LeadRow[]; total: number }> {
-    let query = this.listable(await this.ownNotIn());
-    if (f.status) query = query.eq('status', f.status);
-    if (f.source) query = query.eq('source', f.source);
-    if (f.assignee === NO_ASSIGNEE) query = query.is('assigned_to', null);
-    else if (f.assignee) query = query.eq('assigned_to', f.assignee);
+    const own = await this.ownNotIn();
     // A phone in any format («0552147730», «+966 55 214 7730») → its E.164 digits; else the name.
     const search = f.q ? guardianSearchFilter(f.q) : null;
-    if (search) query = query.or(search);
-    const ordered = f.sort
-      ? applySort(query, f, LEAD_SORT)
-      : query.order('last_inbound_at', { ascending: false, nullsFirst: false }).order('created_at', { ascending: false });
-    const { data, error, count } = await ordered.range(...pageRange(f));
-    throwIfDbError(error);
-    return { items: data ?? [], total: count ?? 0 };
+    const read = () => {
+      let query = this.listable(own);
+      if (f.status) query = query.eq('status', f.status);
+      if (f.source) query = query.eq('source', f.source);
+      if (f.assignee === NO_ASSIGNEE) query = query.is('assigned_to', null);
+      else if (f.assignee) query = query.eq('assigned_to', f.assignee);
+      return search ? query.or(search) : query;
+    };
+    const { rows, total } = await readPage(read, f, LEAD_SORT);
+    return { items: rows, total };
   }
 
   private async ownNotIn(): Promise<string | null> {

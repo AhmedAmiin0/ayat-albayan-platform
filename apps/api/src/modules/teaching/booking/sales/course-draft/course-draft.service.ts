@@ -3,10 +3,10 @@ import type { BookingResult } from '@ab/schedule';
 import { HttpException, HttpStatus, Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { PackageEvents } from '@/common/infra/events/lesson-events';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { CourseDraftEnv } from './course-draft.env';
 import { CourseDraftRepo } from './course-draft.repo';
 import { confirmRequest, type CourseDraft } from './course-draft.rules';
+import { httpError } from '@/common/http/errors';
 
 /** A confirm: nothing to book, still unpaid, booked (now or before), or a clash kept the draft. */
 type ConfirmOutcome = 'none' | 'held' | 'booked' | 'clash' | 'failed';
@@ -39,7 +39,7 @@ export class CourseDrafts implements OnModuleInit {
   private async draftOrBook(req: BookingRequest, user: AuthUser): Promise<CourseDraftSaved> {
     const { opts } = await this.env.sales.allowed(req, user);
     const subscriptionId = opts?.course?.subscriptionId;
-    if (!subscriptionId) throw domainError(HttpStatus.BAD_REQUEST, 'course_required');
+    if (!subscriptionId) throw httpError(HttpStatus.BAD_REQUEST, 'course_required');
     if (!(await this.repo.held(subscriptionId))) return this.bookNow(req, user);
     const mine = { subscriptionId, request: req, savedBy: user.id };
     const savedAt = await this.repo.save(mine);

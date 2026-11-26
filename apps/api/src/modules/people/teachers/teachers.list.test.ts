@@ -15,7 +15,10 @@ async function list(q: Parameters<TeachersRepo['list']>[0]) {
 describe('GET /teachers sort + column filters (R-TCH-01, R-NFR-08)', () => {
   it('default: Arabic name, then id', async () => {
     const of = await list(page);
-    expect(of('order')).toEqual([['display_name_ar', { ascending: true }], ['id']]);
+    expect(of('order')).toEqual([
+      ['display_name_ar', { ascending: true }],
+      ['id', { ascending: true }],
+    ]);
   });
 
   it('a sort key → its column, then the name and id as tiebreakers', async () => {
@@ -23,7 +26,7 @@ describe('GET /teachers sort + column filters (R-TCH-01, R-NFR-08)', () => {
     expect(of('order')).toEqual([
       ['max_students', { ascending: false }],
       ['display_name_ar', { ascending: true }],
-      ['id'],
+      ['id', { ascending: true }],
     ]);
   });
 

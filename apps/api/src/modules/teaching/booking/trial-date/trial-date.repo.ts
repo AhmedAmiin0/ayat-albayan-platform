@@ -5,9 +5,9 @@ import { z } from 'zod';
 import type { Json } from '@ab/db';
 import { DB, type Db } from '@/common/db/db.module';
 import { maybe, pgError, rows } from '@/common/db/errors';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { TrialPick } from './trial-date.plan';
 import type { TrialLessonRead } from './trial-date.history';
+import { httpError } from '@/common/http/errors';
 
 const LESSON =
   'id, rule_id, teacher_id, starts_at, ends_at, status, created_at, created_by, rescheduled_from_id, instant, makeup_of_id, teacher:teachers(id, display_name_ar, display_name_en)';
@@ -89,10 +89,10 @@ export class TrialDateRepo {
   /** One transaction: 409 trial_date_subscribed (a payment came in), conflict / stale on a lost race. */
   async pick(p: TrialPick): Promise<TrialDateResult> {
     const { data, error } = await this.db.rpc('pick_trial_date', { p: p as unknown as Json });
-    if (error?.code === 'P0001' && error.message === 'trial_date_subscribed') throw domainError(HttpStatus.CONFLICT, 'trial_date_subscribed');
+    if (error?.code === 'P0001' && error.message === 'trial_date_subscribed') throw httpError(HttpStatus.CONFLICT, 'trial_date_subscribed');
     // The upcoming trial changed meanwhile (moved or cancelled by someone else): pick again.
-    if (error?.code === 'P0001' && STALE.includes(error.message)) throw domainError(HttpStatus.CONFLICT, 'trial_changed');
-    if (error?.code === 'P0001' && error.message === 'trial_date_invalid') throw domainError(HttpStatus.BAD_REQUEST, 'trial_date_invalid');
+    if (error?.code === 'P0001' && STALE.includes(error.message)) throw httpError(HttpStatus.CONFLICT, 'trial_changed');
+    if (error?.code === 'P0001' && error.message === 'trial_date_invalid') throw httpError(HttpStatus.BAD_REQUEST, 'trial_date_invalid');
     if (error) throw pgError(error);
     return toTrialDateResult(data);
   }

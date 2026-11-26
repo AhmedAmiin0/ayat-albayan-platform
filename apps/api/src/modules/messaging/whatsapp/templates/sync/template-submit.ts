@@ -6,9 +6,10 @@ import { lineProvider, loadEnv } from '@/config/env/env';
 import { fromMeta, onCrm, requireLine, requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { SAMPLE_REPORT, templateProblem } from '@/modules/messaging/whatsapp/template-review';
 import { ourStatus } from './template-sync';
-import { CRM_MANAGED, REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { CRM_MANAGED, REGISTRY_ENTITY_ID, toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import type { TemplateRow, WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { httpError } from '@/common/http/errors';
 
 // Submitting a template (T3, docs/12 §3.4), out of template.registry.ts (150-line cap). It goes to the
 // template's OWN line's WABA, chat rows included, under that line's driver.
@@ -48,16 +49,16 @@ export async function submitTemplate(
   const row = await deps.queries.get(key);
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
   // A crm line submits through the CRM (docs/39); no PDF sample there, so a document is made there.
-  if (crmOnly(row)) throw waHttpError(CRM_MANAGED, 409, { line: row.line });
-  if (!SUBMITTABLE.has(row.status)) throw waHttpError('not_submittable', 409, { status: row.status });
+  if (crmOnly(row)) throw httpError(409, CRM_MANAGED, { line: row.line });
+  if (!SUBMITTABLE.has(row.status)) throw httpError(409, 'not_submittable', { status: row.status });
   const problem = templateProblem(row);
-  if (problem) throw waHttpError('invalid_template', 409, { reason: problem });
+  if (problem) throw httpError(409, 'invalid_template', { reason: problem });
   const client = deps.lines[row.line];
   requireLine(client, row.line);
   const document = row.header_format === 'document';
   // Kapso has no sample upload (docs/19): WA_APP_ID cannot help there, only switching the line to meta.
   const noSamples = lineProvider(loadEnv(), row.line) === 'kapso' ? 'needs_meta_driver' : 'needs_app_id';
-  if (document && !client.canUploadSamples()) throw waHttpError(noSamples, 409, { line: row.line });
+  if (document && !client.canUploadSamples()) throw httpError(409, noSamples, { line: row.line });
   const headerHandle = document
     ? await fromMeta(() => client.uploadSample(SAMPLE_REPORT))
     : undefined;

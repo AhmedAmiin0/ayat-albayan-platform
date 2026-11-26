@@ -48,6 +48,6 @@ describe('the unread badge fast path (GET /threads?unread=true&pageSize=1)', () 
 
   it('a failed count throws (never a silent 0)', async () => {
     const f = fakeDb({ thread_summaries: [{ error: { message: 'boom' } }] });
-    await expect(unreadThreadCount(f.db)).rejects.toThrow('unread threads count failed: boom');
+    await expect(unreadThreadCount(f.db)).rejects.toThrow('db error undefined: boom');
   });
 });

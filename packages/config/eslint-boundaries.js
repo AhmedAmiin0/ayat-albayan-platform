@@ -3,6 +3,7 @@
 // e.g. `src/modules/[^/]+/[^/]+` for the api. Imports inside the same module, and of shared folders
 // that match no module, are free.
 import { dirname, relative, resolve } from 'node:path';
+import { noHandPagingRule, noRawDbErrorRule } from './data-rules/index.js';
 import { forbiddenImportsRule } from './eslint-imports.js';
 import { maxParamsRule } from './eslint-params.js';
 import { noParentImportsRule } from './eslint-parent-imports.js';
@@ -87,6 +88,8 @@ export const boundariesPlugin = {
     'no-parent-imports': noParentImportsRule,
     'zod-inputs': zodInputsRule,
     'no-typed-value-table': noTypedValueTableRule,
+    'no-raw-db-error': noRawDbErrorRule,
+    'no-hand-paging': noHandPagingRule,
     ...syntaxRules,
   },
 };

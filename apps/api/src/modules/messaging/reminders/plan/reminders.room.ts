@@ -1,7 +1,7 @@
 import type { OutboundTemplate } from '@ab/shared';
 import type { Db } from '@/common/db/db.module';
 import { hashLinkToken, newLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
-import { maybe, pgError } from '@/common/db/errors';
+import { isUniqueViolation, maybe, pgError } from '@/common/db/errors';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import type { RoomCandidate } from './reminders.links';
 
@@ -9,7 +9,6 @@ import type { RoomCandidate } from './reminders.links';
 // the lesson_join_links row of (lesson, student), the same row a student-link join goes in by
 // (migration 191), so a removal from the room (classroom_blocks.join_link_id) holds either way.
 
-const UNIQUE_VIOLATION = '23505';
 
 /** dedup_keys among `keys` already in messages: those links were minted and queued on an earlier tick. */
 async function queuedKeys(db: Db, keys: readonly string[]): Promise<Set<string>> {
@@ -38,7 +37,7 @@ async function saveToken(db: Db, c: RoomCandidate, hash: string): Promise<void> 
     const { error } = await db.from('lesson_join_links').insert({ ...fields, lesson_id: c.lessonId, student_id: c.studentId });
     if (!error) return;
     // A student-link join created the row meanwhile (student-link.queries.ts): take it over.
-    id = error.code === UNIQUE_VIOLATION ? await findLink(db, c) : null;
+    id = isUniqueViolation(error) ? await findLink(db, c) : null;
     if (!id) throw pgError(error);
   }
   const { error } = await db.from('lesson_join_links').update(fields).eq('id', id);

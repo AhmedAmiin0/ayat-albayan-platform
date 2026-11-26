@@ -5,11 +5,11 @@ import type { OutsideSlotsResponse } from '@ab/shared';
 import type { Conflict, Occurrence, SlotsResponse, SlotView } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import type { OutsideSlotsQuery, SlotsQuery } from '@/modules/teaching/booking/booking.dto';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { ConflictContext } from './conflict-context';
 import { outsideGrid } from './outside-slots';
+import { httpError } from '@/common/http/errors';
 
 const MAX_SLOT_RANGE_DAYS = 14;
 const OUTSIDE_DAYS = 14;
@@ -46,10 +46,10 @@ export class SlotsService {
   async slots(q: SlotsQuery): Promise<SlotsResponse> {
     const [from, to] = [new Date(q.from), new Date(q.to)];
     if (to.getTime() - from.getTime() > MAX_SLOT_RANGE_DAYS * DAY_MS) {
-      throw domainError(HttpStatus.BAD_REQUEST, 'range_too_large', { maxDays: MAX_SLOT_RANGE_DAYS });
+      throw httpError(HttpStatus.BAD_REQUEST, 'range_too_large', { maxDays: MAX_SLOT_RANGE_DAYS });
     }
     const teacher = await this.queries.teacher(q.teacherId);
-    if (!teacher) throw domainError(HttpStatus.NOT_FOUND, 'teacher_not_found');
+    if (!teacher) throw httpError(HttpStatus.NOT_FOUND, 'teacher_not_found');
     const studentIds = q.studentIds ?? [];
     const exclude = { excludeLessonId: q.excludeLessonId, excludeCourse: q.excludeCourse };
     const rows = await this.context.load({ teacherId: teacher.id, studentIds, from, to, ...exclude });
@@ -67,7 +67,7 @@ export class SlotsService {
     const now = new Date();
     const range = { from: now, to: new Date(now.getTime() + OUTSIDE_DAYS * DAY_MS) };
     const teacher = await this.queries.teacher(q.teacherId);
-    if (!teacher) throw domainError(HttpStatus.NOT_FOUND, 'teacher_not_found');
+    if (!teacher) throw httpError(HttpStatus.NOT_FOUND, 'teacher_not_found');
     const exclude = { excludeLessonId: q.excludeLessonId, excludeCourse: q.excludeCourse };
     const studentIds = q.studentIds ?? [];
     const who = { teacherId: teacher.id, studentIds };

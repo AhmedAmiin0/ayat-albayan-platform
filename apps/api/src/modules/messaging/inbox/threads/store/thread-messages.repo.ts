@@ -1,11 +1,12 @@
 import type { TablesInsert } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { afterCursor, type AtId } from '@/common/db/page';
 import {
   MESSAGE_SELECT, NOT_A_REACTION, type ThreadMessageRow,
 } from '@/modules/messaging/whatsapp';
 import { check } from './check';
-import { aroundRows, PAGE_SELECT, quoted } from './thread-around.repo';
+import { aroundRows, PAGE_SELECT } from './thread-around.repo';
 
 /** The queued row; `replayed` = its dedup_key was already queued (nothing written). */
 type Queued = ThreadMessageRow & { replayed?: boolean };
@@ -22,9 +23,10 @@ interface PageInput {
   limit: number;
 }
 
-/** Strictly older than (before, before_id): an earlier time, or the same time and a lower id. */
-const keyset = (before: string, id: string): string =>
-  `created_at.lt.${quoted(before)},and(created_at.eq.${quoted(before)},id.lt.${id})`;
+const NEWEST_FIRST = { column: 'created_at', ascending: false } as const;
+
+const cursorOf = ({ before, before_id }: PageInput): AtId | undefined =>
+  before && before_id ? { at: before, id: before_id } : undefined;
 
 /** The page of one phone's messages, one message by id and the queue write (rule 8). */
 @Injectable()
@@ -38,17 +40,12 @@ export class ThreadMessagesRepo {
    */
   async messages(input: PageInput): Promise<ThreadMessageRow[]> {
     if (input.around) return aroundRows(this.db, { ...input, around: input.around });
-    let query = this.db.from('messages').select(PAGE_SELECT).eq('phone_e164', input.phone);
-    query = query.or(NOT_A_REACTION);
+    const base = this.db.from('messages').select(PAGE_SELECT).eq('phone_e164', input.phone);
+    const query = base.or(NOT_A_REACTION);
     // Old clients send `before` alone (lt); new ones the compound keyset (no tie ever skipped).
-    if (input.before) {
-      query = input.before_id
-        ? query.lte('created_at', input.before).or(keyset(input.before, input.before_id))
-        : query.lt('created_at', input.before);
-    }
-    const { data, error } = await query
-      .order('created_at', { ascending: false })
-      .order('id', { ascending: false })
+    const timeOnly = input.before_id ? undefined : input.before;
+    const older = timeOnly ? query.lt('created_at', timeOnly) : query;
+    const { data, error } = await afterCursor(older, NEWEST_FIRST, cursorOf(input))
       .limit(input.limit + 1);
     check(error, 'thread messages read');
     return data;

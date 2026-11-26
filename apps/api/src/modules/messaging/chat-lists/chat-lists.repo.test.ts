@@ -52,7 +52,7 @@ describe('ChatListsQueries', () => {
     const cap = { code: '23514', message: 'chat_lists: at most 30 lists' };
     expect(await fake({ error: cap }).q.create({ name: 'x', name_key: 'x', created_by: 'u' })).toBe('limit');
     const other = fake({ error: { code: '23514', message: 'chat_lists_name_check' } });
-    await expect(other.q.create({ name: 'x', name_key: 'x', created_by: 'u' })).rejects.toThrow(/chat list create/);
+    await expect(other.q.create({ name: 'x', name_key: 'x', created_by: 'u' })).rejects.toThrow(/chat_lists_name_check/);
     expect(await fake({ data: ROW }).q.create({ name: 'x', name_key: 'x', created_by: 'u' })).toEqual({ ...ROW, count: 0, auto_rule: null });
   });
 

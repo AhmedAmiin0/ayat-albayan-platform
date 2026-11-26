@@ -3,9 +3,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { SENDING, stampDelivered } from '@/modules/messaging/whatsapp';
 import type { AppSendRow } from './manual-echo';
+import { isUniqueViolation } from '@/common/db/errors';
 
 /** Postgres unique_violation: the wamid is already on another row (a concurrent store). */
-const UNIQUE = '23505';
 /** Not claimed by the sender (its claim writes SENDING): it may be sending that row right now. */
 const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
 /** Held, failed, or marked by hand meanwhile: never a row the platform sent (it has a wamid). */
@@ -65,7 +65,7 @@ export class ManualEchoRepo {
       .in('status', [...ATTACHABLE])
       .or(NOT_CLAIMED)
       .select('id');
-    if (error?.code === UNIQUE) return false;
+    if (isUniqueViolation(error)) return false;
     if (error) throw fail('app send attach', error.message);
     if (data.length === 0) return false;
     const at = w.patch.sent_at ?? now;

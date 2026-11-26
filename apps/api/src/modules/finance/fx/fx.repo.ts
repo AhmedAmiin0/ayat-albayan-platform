@@ -2,6 +2,7 @@ import type { Tables, TablesInsert } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { FxSnapshot } from './fx.fetcher';
+import { pgError } from '@/common/db/errors';
 
 export type FxRow = Tables<'fx_rates'>;
 
@@ -22,7 +23,7 @@ export class FxRepo {
       .order('fetched_at', { ascending: false })
       .limit(1)
       .maybeSingle();
-    if (error) throw new Error(`db: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -37,7 +38,7 @@ export class FxRepo {
       .order('provider_updated_at', { ascending: false })
       .limit(1)
       .maybeSingle();
-    if (error) throw new Error(`db: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -60,6 +61,6 @@ export class FxRepo {
     const { error } = await this.db
       .from('fx_rates')
       .upsert(rows, { onConflict: 'base,quote,provider_updated_at' });
-    if (error) throw new Error(`db: ${error.message}`);
+    if (error) throw pgError(error);
   }
 }

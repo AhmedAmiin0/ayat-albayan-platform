@@ -1,5 +1,6 @@
 import { notFound } from '@/common/http/errors';
 import type { Db } from '@/common/db/db.module';
+import { afterCursor } from '@/common/db/page';
 import { MESSAGE_SELECT, NOT_A_REACTION, type ThreadMessageRow } from '@/modules/messaging/whatsapp';
 import { check } from './check';
 
@@ -19,9 +20,6 @@ interface Hit {
   created_at: string;
 }
 
-/** PostgREST's quoted value: a timestamp holds `.` and `:` (reserved inside or=). */
-export const quoted = (at: string): string => `"${at}"`;
-
 async function hitOf(db: Db, input: AroundInput): Promise<Hit> {
   const { data, error } = await db
     .from('messages')
@@ -35,15 +33,15 @@ async function hitOf(db: Db, input: AroundInput): Promise<Hit> {
   return data;
 }
 
-/** One side of the window: a range scan of the phone's index from the hit's time (`gte`/`lte`). */
+/**
+ * One side of the window: a range scan of the phone's index from the hit's time; the older side
+ * starts at the hit itself.
+ */
 function side(db: Db, input: { phone: string; hit: Hit; newer: boolean }) {
   const { phone, hit, newer } = input;
-  const at = quoted(hit.created_at);
   const query = db.from('messages').select(PAGE_SELECT).eq('phone_e164', phone).or(NOT_A_REACTION);
-  const ranged = newer
-    ? query.gte('created_at', hit.created_at).or(`created_at.gt.${at},and(created_at.eq.${at},id.gt.${hit.id})`)
-    : query.lte('created_at', hit.created_at).or(`created_at.lt.${at},and(created_at.eq.${at},id.lte.${hit.id})`);
-  return ranged.order('created_at', { ascending: !newer }).order('id', { ascending: !newer });
+  const spec = { column: 'created_at', ascending: newer, inclusive: !newer };
+  return afterCursor(query, spec, { at: hit.created_at, id: hit.id });
 }
 
 /**

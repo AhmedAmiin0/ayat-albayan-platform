@@ -4,6 +4,7 @@ import { TtlCache } from '@/common/infra/cache/ttl-cache';
 import { loadEnv } from '@/config/env/env';
 import { templateRows, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { onCrm } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
+import { pgError } from '@/common/db/errors';
 
 /** How long the sender's copy of the sendable rows lives (docs/42 42-3). */
 const SENDABLE_COPY_MS = 60_000;
@@ -16,7 +17,7 @@ const sendableCopyMs = (): number =>
 async function sendableRows(db: Db): Promise<TemplateRow[]> {
   const gated = `status.eq.approved,key.in.(${CRM_GATED_KEYS.join(',')})`;
   const { data, error } = await db.from('message_templates').select('*').or(gated);
-  if (error) throw new Error(`templates read failed: ${error.message}`);
+  if (error) throw pgError(error);
   return templateRows(data);
 }
 

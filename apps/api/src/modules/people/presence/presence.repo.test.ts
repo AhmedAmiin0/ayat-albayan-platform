@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { PresenceRepo } from './presence.repo';
 
@@ -7,14 +8,14 @@ const SEEN = '2026-10-30T09:00:00.000Z';
 describe('PresenceRepo (migration 985)', () => {
   it('touches a batch through one RPC, none for an empty batch, loudly on an error', async () => {
     const { db, argsOf, trips } = fakeDb({
-      'rpc:presence_touch': [{}, { error: { message: 'x' } }],
+      'rpc:presence_touch': [{}, { error: PG_ERRORS.unique }],
     });
     const repo = new PresenceRepo(db);
     await repo.touch([]);
     expect(trips).toEqual([]);
     await repo.touch(['u1', 'u2']);
     expect(argsOf('rpc:presence_touch', 'rpc')).toEqual([{ p_profiles: ['u1', 'u2'] }]);
-    await expect(repo.touch(['u1'])).rejects.toThrow('last seen write failed');
+    expect((await answerOfRejection(repo.touch(['u1']))).status).toBe(409);
   });
 
   it('reads last seen by profile, with no round trip for none', async () => {

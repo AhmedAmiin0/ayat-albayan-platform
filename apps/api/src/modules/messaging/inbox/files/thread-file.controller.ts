@@ -5,11 +5,11 @@ import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
 import { PdfPreviewService } from './pdf/pdf-preview.service';
 import { ThreadMediaService } from './thread-media.service';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
+import { httpError } from '@/common/http/errors';
 
 const uuid = new ParseUUIDPipe();
 type Params = Record<string, string | undefined>;
@@ -59,6 +59,6 @@ export class ThreadFileController {
   /** Admin and sales (SalesScope: every chat) pass; a teacher, even of this family, is 403 media_forbidden. */
   private async allow(user: AuthUser): Promise<void> {
     const sales = await this.reads.salesScope(user);
-    if (!sales && (await this.reads.scope(user))) throw waHttpError('media_forbidden', HttpStatus.FORBIDDEN);
+    if (!sales && (await this.reads.scope(user))) throw httpError(HttpStatus.FORBIDDEN, 'media_forbidden');
   }
 }

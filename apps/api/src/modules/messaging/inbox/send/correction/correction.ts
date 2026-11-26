@@ -1,9 +1,9 @@
 import { isCorrectable, mayCorrect, type ThreadText, WA_TEXT_MAX } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
-import { waHttpError } from '@/modules/messaging/whatsapp';
 import { ownText } from './correction-checks';
 import type { CorrectionRepo, CorrectionTarget } from './correction.repo';
+import { httpError } from '@/common/http/errors';
 
 /** The send as the service needs it: its phone, input, author and base role. */
 interface CorrectionSend {
@@ -34,13 +34,13 @@ const asCorrectable = (row: CorrectionTarget) => ({
  */
 export function checkTarget(row: CorrectionTarget | null, s: CorrectionSend): CorrectionTarget {
   if (row?.phone_e164 !== s.phone) {
-    throw waHttpError('correction_not_in_thread', HttpStatus.BAD_REQUEST);
+    throw httpError(HttpStatus.BAD_REQUEST, 'correction_not_in_thread');
   }
   if (!isCorrectable(asCorrectable(row))) {
-    throw waHttpError('not_correctable', HttpStatus.BAD_REQUEST);
+    throw httpError(HttpStatus.BAD_REQUEST, 'not_correctable');
   }
   if (!mayCorrect(row.created_by, { id: s.actorId, role: s.role ?? null })) {
-    throw waHttpError('not_your_message', HttpStatus.FORBIDDEN);
+    throw httpError(HttpStatus.FORBIDDEN, 'not_your_message');
   }
   return row;
 }
@@ -50,7 +50,7 @@ function bodyOf(own: string): string {
   const prefix = ar.inbox.correction.prefix;
   const body = `${prefix}${own}`;
   const refusal = refusalOf(body, prefix);
-  if (refusal) throw waHttpError(refusal, HttpStatus.BAD_REQUEST);
+  if (refusal) throw httpError(HttpStatus.BAD_REQUEST, refusal);
   return body;
 }
 

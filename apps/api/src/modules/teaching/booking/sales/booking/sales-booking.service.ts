@@ -10,7 +10,6 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ar } from '@/common/infra/i18n/server-text';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { PrepareOptions } from '@/modules/teaching/booking/plan/booking.planner';
 import type { OutsideSlotsQuery, SlotsQuery, TeacherOptionsQuery } from '@/modules/teaching/booking/booking.dto';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
@@ -19,6 +18,7 @@ import { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-cours
 import { assertBookingScope, assertOwnStudents, scopeDuplicates, type BookingOwnership, type CourseGrant } from './sales-booking.scope';
 import { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
 import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
+import { httpError } from '@/common/http/errors';
 
 /**
  * The booking wizard for an assistant (R-ASST-01): the admin's planner, conflict check and
@@ -50,7 +50,7 @@ export class SalesBookingService {
   async book(req: BookingRequest, user: AuthUser): Promise<BookingResult> {
     const own = await this.ownership(req, user);
     const course = bookingKindOf(req) === 'package';
-    if (!course && req.startsAt && Date.parse(req.startsAt) < Date.now()) throw domainError(HttpStatus.BAD_REQUEST, 'date_in_past');
+    if (!course && req.startsAt && Date.parse(req.startsAt) < Date.now()) throw httpError(HttpStatus.BAD_REQUEST, 'date_in_past');
     // A booked course's retry gets that booking back (BookingService replays it), no course_exists.
     if (course && (await this.course.isReplay(req))) return this.scoped(own, () => this.booking.book(req, user.id));
     const opts = await this.courseOptions(req);
@@ -65,7 +65,7 @@ export class SalesBookingService {
   private async assertNotHeld(opts: PrepareOptions | undefined): Promise<void> {
     const id = opts?.course?.subscriptionId;
     if (!id || !(await this.course.held(id))) return;
-    throw domainError(HttpStatus.CONFLICT, 'course_held', { message: ar.booking.error.course_held });
+    throw httpError(HttpStatus.CONFLICT, 'course_held', { message: ar.booking.error.course_held });
   }
 
   /**
