@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { PgErrorMap } from '@/common/db/errors';
 import { pageQuery } from '@ab/core';
@@ -29,11 +24,10 @@ export const listQuerySchema = z.object({
 });
 export type ListQuery = z.infer<typeof listQuerySchema>;
 
-const internal = (e: PostgrestError) => new InternalServerErrorException(e.message);
 const badRequest = (e: PostgrestError) => new BadRequestException(e.message);
 const notFound = () => new NotFoundException();
 
-/** The people modules' answers: a conflict names its code, and every other error is a 500. */
+/** The people modules' codes on top of the default map: a conflict names its code. */
 export function peopleErrors(conflict = 'conflict'): PgErrorMap {
   const taken = () => new ConflictException(conflict);
   return {
@@ -44,8 +38,6 @@ export function peopleErrors(conflict = 'conflict'): PgErrorMap {
       PGRST116: notFound,
       '22023': badRequest,
       '23514': badRequest,
-      PGRST103: internal,
     },
-    otherwise: internal,
   };
 }
