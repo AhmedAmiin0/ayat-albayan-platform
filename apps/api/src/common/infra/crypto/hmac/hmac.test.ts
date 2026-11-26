@@ -1,6 +1,6 @@
 import { createHmac } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { hmacSha256Hex } from '@/common/crypto/hmac';
+import { hmacSha256Hex } from '@/common/infra/crypto/hmac';
 
 const reference = (secret: string, data: string) =>
   createHmac('sha256', secret).update(data).digest('hex');

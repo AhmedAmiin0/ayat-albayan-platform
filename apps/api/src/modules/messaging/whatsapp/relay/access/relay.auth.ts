@@ -1,4 +1,4 @@
-import { digestEqual } from '@/common/crypto/safe-equal';
+import { digestEqual } from '@/common/infra/crypto/safe-equal';
 
 // The script's Bearer is the notifications line's own CRM API key (the old key stays valid):
 // no new secret. Compared in constant time over both sides'

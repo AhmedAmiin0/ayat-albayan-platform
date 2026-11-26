@@ -1,5 +1,5 @@
 import { createHash, createHmac, randomBytes } from 'node:crypto';
-import { safeEqual } from '@/common/crypto/safe-equal';
+import { safeEqual } from '@/common/infra/crypto/safe-equal';
 
 // The OAuth `state` (CSRF): base64url({ u: admin id, n: nonce, e: expiry }) + '.' + HMAC-SHA256.
 // The HMAC key is derived from the server's service key (never sent anywhere); the nonce's sha256

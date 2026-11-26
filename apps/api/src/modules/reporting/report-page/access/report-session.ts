@@ -1,5 +1,5 @@
 import { createHmac } from 'node:crypto';
-import { safeEqual } from '@/common/crypto/safe-equal';
+import { safeEqual } from '@/common/infra/crypto/safe-equal';
 
 /** How long a verified viewer reads the report without a new code. */
 export const REPORT_SESSION_SECONDS = 30 * 60;

@@ -1,5 +1,5 @@
 import { createHmac } from 'node:crypto';
-import { safeEqual } from '@/common/crypto/safe-equal';
+import { safeEqual } from '@/common/infra/crypto/safe-equal';
 
 // A signed pair of uuids with an expiry: base64url(a | b | exp).signature. Binary body (16 + 16 + 4
 // bytes) and a 128-bit signature keep it at 71 characters: Fastify refuses a path parameter over

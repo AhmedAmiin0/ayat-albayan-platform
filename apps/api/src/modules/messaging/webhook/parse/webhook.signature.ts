@@ -1,5 +1,5 @@
-import { safeEqual } from '@/common/crypto/safe-equal';
-import { hmacSha256Hex } from '@/common/crypto/hmac';
+import { safeEqual } from '@/common/infra/crypto/safe-equal';
+import { hmacSha256Hex } from '@/common/infra/crypto/hmac';
 
 // Meta webhook authentication (R-MSG-04, docs/12 §3.5). Both checks fail closed: no secret or no
 // token configured → every request is refused.

@@ -5,7 +5,7 @@ import type { HttpFailure } from '@/common/infra/http/failure';
 import { loadEnv } from '@/config/env/env';
 import { appRole, peerUrls, workerUrl } from './app-role';
 import { kickQueryOf, type KickOptions } from './kick-options';
-import { safeEqual } from '@/common/crypto/safe-equal';
+import { safeEqual } from '@/common/infra/crypto/safe-equal';
 
 /** The longest a request waits: the kick's 202, or with `wait` (Outbox.send) the worker's pass. */
 const KICK_TIMEOUT_MS = 30_000;

@@ -1,4 +1,4 @@
-import { digestEqual } from '@/common/crypto/safe-equal';
+import { digestEqual } from '@/common/infra/crypto/safe-equal';
 
 // POST /webhooks/evolution/:instance is authenticated by the INSTANCE's own token (docs/19
 // «Evolution driver»). Evolution signs nothing itself; its per-instance webhook sends the headers

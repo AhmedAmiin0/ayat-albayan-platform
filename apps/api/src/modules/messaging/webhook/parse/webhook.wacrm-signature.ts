@@ -1,5 +1,5 @@
-import { safeEqual } from '@/common/crypto/safe-equal';
-import { hmacSha256Hex } from '@/common/crypto/hmac';
+import { safeEqual } from '@/common/infra/crypto/safe-equal';
+import { hmacSha256Hex } from '@/common/infra/crypto/hmac';
 
 
 // The academy CRM's webhook authentication (docs/19 «crm driver»). Fails closed: no WACRM_WEBHOOK_SECRET →

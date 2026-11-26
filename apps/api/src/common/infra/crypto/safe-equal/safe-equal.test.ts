@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { digestEqual, safeEqual } from '@/common/crypto/safe-equal';
+import { digestEqual, safeEqual } from '@/common/infra/crypto/safe-equal';
 
 describe('safeEqual', () => {
   it('is true for equal strings and equal buffers', () => {

@@ -1,5 +1,5 @@
-import { safeEqual } from '@/common/crypto/safe-equal';
-import { hmacSha256Hex } from '@/common/crypto/hmac';
+import { safeEqual } from '@/common/infra/crypto/safe-equal';
+import { hmacSha256Hex } from '@/common/infra/crypto/hmac';
 
 // Kapso webhook authentication (docs/19). Fails closed: no KAPSO_WEBHOOK_SECRET → every request is
 // refused. Only the Kapso secret is tried here; the Meta route never tries it (and vice versa).
