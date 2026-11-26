@@ -18,8 +18,10 @@ export interface SortOrder {
 
 export interface SortSpec<K extends string> {
   columns: Record<K, SortColumn>;
-  /** The default order, and the tiebreakers after a requested key. */
+  /** The default order, and the tiebreakers after a requested key unless `tiebreak` is set. */
   fallback: readonly SortOrder[];
+  /** The tiebreakers after a requested key, when they differ from the default order. */
+  tiebreak?: readonly SortOrder[];
   /** A unique column ordered last so ties never move between pages; `id` by default. */
   key?: string;
 }
@@ -48,10 +50,14 @@ function pickedOptions(picked: SortColumn, ascending: boolean): OrderOptions {
   return options;
 }
 
-/** The orders after a requested key: the fallback without that column, then the unique key. */
+function tiebreakers<K extends string>(spec: SortSpec<K>, picked: SortColumn | undefined) {
+  return picked ? (spec.tiebreak ?? spec.fallback) : spec.fallback;
+}
+
+/** The orders after a requested key: its tiebreakers without that column, then the unique key. */
 function tail<K extends string>(spec: SortSpec<K>, picked: SortColumn | undefined): SortOrder[] {
   const own = picked && !picked.referencedTable ? picked.column : undefined;
-  const rest = spec.fallback.filter((order) => order.column !== own);
+  const rest = tiebreakers(spec, picked).filter((order) => order.column !== own);
   const key = spec.key ?? 'id';
   const keyed = own === key || rest.some((order) => order.column === key);
   return keyed ? rest : [...rest, { column: key, ascending: true }];

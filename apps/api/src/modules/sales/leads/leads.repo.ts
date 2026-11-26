@@ -33,6 +33,7 @@ const LEAD_SORT: SortSpec<LeadSortKey> = {
     { column: 'last_inbound_at', ascending: false, nullsFirst: false },
     { column: 'created_at', ascending: false },
   ],
+  tiebreak: [{ column: 'created_at', ascending: false }],
 };
 
 interface StatusMove {
