@@ -26,7 +26,14 @@ export function RetryButton({ label, onPress, fontFamily }: RetryButtonProps) {
         transform: [{ scale: pressScale(pressed, false) }],
       })}
     >
-      <AppText style={{ color: color.onLapis, fontFamily, fontSize: type.size.base, lineHeight: type.lineHeight(type.size.base) }}>
+      <AppText
+        style={{
+          color: color.onLapis,
+          fontFamily,
+          fontSize: type.size.base,
+          lineHeight: type.lineHeight(type.size.base),
+        }}
+      >
         {label}
       </AppText>
     </Pressable>

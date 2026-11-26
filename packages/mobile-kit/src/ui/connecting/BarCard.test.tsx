@@ -30,8 +30,14 @@ test('connecting: 12 pt radius, 9 / 14 padding, a centred row, 14 / 22 semibold 
     alignItems: 'center',
     backgroundColor: palette.light.neutralSoft,
   });
-  expect(screen.getByText(c.connecting)).toHaveStyle({ fontSize: 14, lineHeight: 22, color: palette.light.ink2 });
-  expect(screen.getAllByTestId('connecting-dot', { includeHiddenElements: true })[0]).toHaveStyle({ backgroundColor: palette.light.gold });
+  expect(screen.getByText(c.connecting)).toHaveStyle({
+    fontSize: 14,
+    lineHeight: 22,
+    color: palette.light.ink2,
+  });
+  expect(screen.getAllByTestId('connecting-dot', { includeHiddenElements: true })[0]).toHaveStyle({
+    backgroundColor: palette.light.gold,
+  });
 });
 
 test('dark, after 10 s: the amber wash, act dots, a second 13 / 21 line in act, rows from the top', async () => {
@@ -39,8 +45,14 @@ test('dark, after 10 s: the amber wash, act dots, a second 13 / 21 line in act, 
   await render(<BarCard phase="check" still={false} gutter={0} />);
   expect(card()).toHaveStyle({ alignItems: 'flex-start', backgroundColor: palette.dark.actSoft });
   expect(card()).toHaveProp('accessibilityLabel', `${c.connecting} ${c.checkInternet}`);
-  expect(screen.getByText(c.checkInternet)).toHaveStyle({ fontSize: 13, lineHeight: 21, color: palette.dark.act });
-  expect(screen.getAllByTestId('connecting-dot', { includeHiddenElements: true })[0]).toHaveStyle({ backgroundColor: palette.dark.act });
+  expect(screen.getByText(c.checkInternet)).toHaveStyle({
+    fontSize: 13,
+    lineHeight: 21,
+    color: palette.dark.act,
+  });
+  expect(screen.getAllByTestId('connecting-dot', { includeHiddenElements: true })[0]).toHaveStyle({
+    backgroundColor: palette.dark.act,
+  });
   scheme.mockReturnValue('light');
 });
 
@@ -49,6 +61,10 @@ test('«تم الاتصال»: the ok wash, the check badge, 14 / 22 semibold co
   expect(card()).toHaveStyle({ backgroundColor: palette.light.okSoft });
   expect(screen.getByTestId('check-badge', { includeHiddenElements: true })).toBeOnTheScreen();
   expect(screen.queryByTestId('connecting-dot', { includeHiddenElements: true })).toBeNull();
-  expect(screen.getByText(c.connected)).toHaveStyle({ fontSize: 14, lineHeight: 22, color: palette.light.coverInk });
+  expect(screen.getByText(c.connected)).toHaveStyle({
+    fontSize: 14,
+    lineHeight: 22,
+    color: palette.light.coverInk,
+  });
   expect(card()).toHaveProp('accessibilityLiveRegion', 'polite');
 });

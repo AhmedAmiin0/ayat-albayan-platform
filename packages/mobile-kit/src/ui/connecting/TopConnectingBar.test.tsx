@@ -7,10 +7,16 @@ import { TopConnectingBar } from './TopConnectingBar';
 
 // A screen with no header: the bar sits under the top safe area, on the screen's own background.
 jest.useFakeTimers();
-const metrics = { frame: { x: 0, y: 0, width: 390, height: 844 }, insets: { top: 47, left: 0, right: 0, bottom: 34 } };
+const metrics = {
+  frame: { x: 0, y: 0, width: 390, height: 844 },
+  insets: { top: 47, left: 0, right: 0, bottom: 34 },
+};
 
 async function mountConnecting() {
-  const store = createConnectivity({ probe: () => new Promise(() => undefined), setOnline: jest.fn() });
+  const store = createConnectivity({
+    probe: () => new Promise(() => undefined),
+    setOnline: jest.fn(),
+  });
   store.reportFailure();
   jest.advanceTimersByTime(1000);
   await render(

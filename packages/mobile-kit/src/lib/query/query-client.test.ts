@@ -118,7 +118,10 @@ test('a query marked noPersist (a signed URL) never reaches the disk cache', () 
 
 test('a mutation refused with 401 or account_disabled signs out too (not only reads)', async () => {
   await expect(
-    queryClient.getMutationCache().build(queryClient, { mutationFn: async () => Promise.reject(new ApiError(401)) }).execute(undefined),
+    queryClient
+      .getMutationCache()
+      .build(queryClient, { mutationFn: async () => Promise.reject(new ApiError(401)) })
+      .execute(undefined),
   ).rejects.toBeInstanceOf(ApiError);
   expect(mockSignOut).toHaveBeenCalledTimes(1);
 });
