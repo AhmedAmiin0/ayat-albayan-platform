@@ -1,18 +1,13 @@
-import { familyChildren } from '@ab/client-core';
 import { View } from 'react-native';
 import { AppText, InsetGroup, t, type, useTheme } from '@ab/mobile-kit';
-import { useFamilyPick, usePortalMe } from '@/portal';
 import { ChildSwitchRow } from '@/switch/ChildSwitchRow';
-import { useSwitchChild } from '@/switch/use-switch-child';
+import { useChildSwitchList } from './use-child-switch-list';
 
 /** The guardian's own row first; a row switches to that child and closes the sheet. */
 export function ChildSwitchList() {
   const { color } = useTheme();
-  const me = usePortalMe().data;
-  const pick = useFamilyPick();
-  const switchTo = useSwitchChild(me?.kind ?? 'guardian');
-  if (!me) return null;
-  const currentId = pick.state === 'one' ? pick.student.id : null;
+  const { loaded, students, kind, currentId, switchTo } = useChildSwitchList();
+  if (!loaded) return null;
   return (
     <View style={{ gap: 12 }}>
       <AppText
@@ -22,11 +17,11 @@ export function ChildSwitchList() {
         {t.portal.app.pick.title}
       </AppText>
       <InsetGroup>
-        {familyChildren(me).map((student) => (
+        {students.map((student) => (
           <ChildSwitchRow
             key={student.id}
             student={student}
-            kind={me.kind}
+            kind={kind}
             current={student.id === currentId}
             onPress={() => switchTo(student)}
           />
