@@ -1,10 +1,12 @@
 // One verdict per changed path of a move: a pure rename, a file whose code differs only in its
-// path strings, an added export-only index.ts, or a baseline whose paths followed their files.
+// path strings, an added export-only index.ts, a kit `exports` entry for one, or a baseline whose
+// paths followed their files.
 import { compareFile } from '../../ci-checks/comment-only/compare.mjs';
 import { readAt } from '../../ci-checks/comment-only/git.mjs';
 import { CODE } from '../../ci-checks/comment-only/patterns.mjs';
 import { addedFailure } from './barrel.mjs';
 import { jsonFailure, PATH_JSON } from './json.mjs';
+import { KIT_PACKAGE, kitExportsFailure } from './kit-exports.mjs';
 import { pairRenames } from './pairs.mjs';
 import { maskSpecifiers } from './specifiers.mjs';
 
@@ -34,6 +36,15 @@ const baselineFailure = (e, ctx) =>
     renames: ctx.renames,
   });
 
+const kitFailure = (e, ctx) =>
+  kitExportsFailure({
+    file: e.path,
+    base: readAt(ctx.git, ctx.base, e.path),
+    head: readAt(ctx.git, 'HEAD', e.path),
+    added: ctx.added,
+    renames: ctx.renames,
+  });
+
 const isCode = (e) => CODE.test(e.path) && CODE.test(e.from ?? e.path);
 
 const TEST = /\.(?:test|spec)\.[mc]?[jt]sx?$/;
@@ -45,6 +56,7 @@ const RULES = [
   { when: (e) => e.status === 'R100', check: () => null },
   { when: (e) => /^[RM]/.test(e.status) && isCode(e), check: codeFailure },
   { when: (e) => e.status === 'M' && PATH_JSON.test(e.path), check: baselineFailure },
+  { when: (e) => e.status === 'M' && KIT_PACKAGE.test(e.path), check: kitFailure },
   {
     when: (e) => e.status === 'A',
     check: (e, ctx) => addedFailure(e.path, readAt(ctx.git, 'HEAD', e.path)),
@@ -66,6 +78,7 @@ export function moveFailures({ git, base, entries: listed }) {
     (path) => readAt(git, 'HEAD', path),
   );
   const renames = entries.filter((e) => e.from !== undefined).map((e) => [e.from, e.path]);
-  const ctx = { git, base, renames };
+  const added = new Set(entries.filter((e) => e.status === 'A').map((e) => e.path));
+  const ctx = { git, base, renames, added };
   return entries.map((e) => entryFailure(e, ctx)).filter((f) => f !== null);
 }
