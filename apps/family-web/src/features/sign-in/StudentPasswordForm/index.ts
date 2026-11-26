@@ -1,0 +1,1 @@
+export { StudentPasswordForm } from './StudentPasswordForm';

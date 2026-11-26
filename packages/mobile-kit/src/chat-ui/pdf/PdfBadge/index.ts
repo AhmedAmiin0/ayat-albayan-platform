@@ -1,0 +1,1 @@
+export { PdfBadge } from './PdfBadge';

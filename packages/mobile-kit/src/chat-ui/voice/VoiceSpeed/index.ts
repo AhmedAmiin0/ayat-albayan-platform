@@ -1,0 +1,1 @@
+export { VoiceSpeed } from './VoiceSpeed';

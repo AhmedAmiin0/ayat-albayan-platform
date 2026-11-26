@@ -3,7 +3,7 @@ import type { PortalHistoryStatus, PortalStudent } from '@ab/shared';
 import { dateText } from '@ab/time';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { portalHistoryQuery } from '@ab/web-kit/portal/api';

@@ -7,7 +7,7 @@
       "count": 1
     }
   },
-  "src/auth/code/CodeBoxes.tsx": {
+  "src/auth/code/CodeBoxes/CodeBoxes.tsx": {
     "typescript/prefer-nullish-coalescing": {
       "count": 1
     }
@@ -25,7 +25,7 @@
       "count": 2
     }
   },
-  "src/auth/login/PasswordForm.tsx": {
+  "src/auth/login/PasswordForm/PasswordForm.tsx": {
     "max-lines-per-function": {
       "count": 1
     }
@@ -49,7 +49,7 @@
       "count": 2
     }
   },
-  "src/auth/reset/ResetFlow.tsx": {
+  "src/auth/reset/ResetFlow/ResetFlow.tsx": {
     "max-lines-per-function": {
       "count": 1
     },
@@ -93,12 +93,12 @@
       "count": 2
     }
   },
-  "src/classroom/board/BoardToolbar.tsx": {
+  "src/classroom/board/BoardToolbar/BoardToolbar.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/classroom/board/Whiteboard.tsx": {
+  "src/classroom/board/Whiteboard/Whiteboard.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
     },
@@ -187,12 +187,12 @@
       "count": 1
     }
   },
-  "src/classroom/room/components/ParticipantGrid.tsx": {
+  "src/classroom/room/components/ParticipantGrid/ParticipantGrid.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/classroom/room/components/VideoTile.tsx": {
+  "src/classroom/room/components/VideoTile/VideoTile.tsx": {
     "complexity": {
       "count": 1
     },
@@ -298,7 +298,7 @@
       "count": 2
     }
   },
-  "src/classroom/stage/StageScreen.tsx": {
+  "src/classroom/stage/StageScreen/StageScreen.tsx": {
     "max-lines-per-function": {
       "count": 1
     },
@@ -367,7 +367,7 @@
       "count": 1
     }
   },
-  "src/components/ui/form/field.tsx": {
+  "src/components/ui/form/Field/Field.tsx": {
     "complexity": {
       "count": 1
     },
@@ -375,7 +375,7 @@
       "count": 1
     }
   },
-  "src/components/ui/form/radio-chips.tsx": {
+  "src/components/ui/form/RadioChips/RadioChips.tsx": {
     "stylistic/max-len": {
       "count": 2
     },
@@ -383,17 +383,17 @@
       "count": 1
     }
   },
-  "src/components/ui/form/search-input.test.tsx": {
+  "src/components/ui/form/SearchInput/SearchInput.test.tsx": {
     "typescript/restrict-template-expressions": {
       "count": 1
     }
   },
-  "src/components/ui/form/segmented-control.tsx": {
+  "src/components/ui/form/SegmentedControl/SegmentedControl.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/components/ui/form/select.tsx": {
+  "src/components/ui/form/Select/Select.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -598,7 +598,7 @@
       "count": 2
     }
   },
-  "src/push/WebPushToggle.tsx": {
+  "src/push/WebPushToggle/WebPushToggle.tsx": {
     "no-nested-ternary": {
       "count": 1
     }

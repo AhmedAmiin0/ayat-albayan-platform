@@ -1,0 +1,1 @@
+export { BiometricGate } from './BiometricGate';

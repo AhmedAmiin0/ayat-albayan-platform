@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { Card } from '@ab/web-kit/components/ui/surface/card';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';

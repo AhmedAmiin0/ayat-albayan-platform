@@ -1,0 +1,1 @@
+export { VoiceNote } from './VoiceNote';

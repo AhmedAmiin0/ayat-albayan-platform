@@ -1,0 +1,1 @@
+export { BubbleContent } from './BubbleContent';

@@ -1,0 +1,1 @@
+export { WrongApp } from './WrongApp';

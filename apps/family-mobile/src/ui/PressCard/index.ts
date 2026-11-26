@@ -1,0 +1,1 @@
+export { PressCard } from './PressCard';

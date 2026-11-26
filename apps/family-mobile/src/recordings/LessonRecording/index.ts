@@ -1,0 +1,1 @@
+export { LessonRecording } from './LessonRecording';

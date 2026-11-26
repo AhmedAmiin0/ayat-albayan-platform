@@ -1,5 +1,5 @@
 import { useBlocker } from '@tanstack/react-router';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import type { RouteLeaveGuardProps } from './RouteLeaveGuard.types';
 
