@@ -1,6 +1,13 @@
-import type { Attendance, Grade, LessonStatus, UserRole } from '@ab/catalog';
-import { isClosedLesson, type StatusRouteEvent } from '@ab/schedule';
+import {
+  attendanceSchema,
+  type Attendance,
+  type Grade,
+  type LessonStatus,
+  type UserRole,
+} from '@ab/catalog';
+import { isClosedLesson, statusRouteEventSchema } from '@ab/schedule';
 import { gradeStyle } from '@ab/money';
+import { z } from 'zod';
 
 const MINUTE = 60_000;
 
@@ -25,12 +32,12 @@ export const RUBRIC_COLUMN = {
 } as const satisfies Record<Rubric, `grade_${string}`>;
 
 /** Attendance in the report → the lesson outcome event (inverse of the API's outcomes.ts). */
-export const ATTENDANCE_EVENT: Record<Attendance, StatusRouteEvent> = {
+export const ATTENDANCE_EVENT = z.record(attendanceSchema, statusRouteEventSchema).readonly().decode({
   on_time: 'complete',
   late: 'mark_late',
   excused: 'excuse',
   absent: 'mark_no_show',
-};
+});
 
 /** The student was in the lesson, so the rubric grades and the overall grade are required. */
 export function attended(attendance: Attendance): boolean {
