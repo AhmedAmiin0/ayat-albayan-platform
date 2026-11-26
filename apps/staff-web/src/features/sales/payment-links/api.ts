@@ -3,8 +3,8 @@ import type {
   PaymentLinkQuoteView,
   PaymentLinkView,
   PublicPaymentLink,
-  StripeFeature,
 } from '@ab/shared';
+import { stripeFeatureCall } from '@ab/client-core';
 import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend, env } from '@ab/web-kit';
@@ -18,7 +18,7 @@ export const PAYMENT_LINKS_KEY = paymentLinkKeys.all;
 /** GET /stripe/feature (public): never retried, a 404 is an answer (OFF). */
 export const stripeFeatureQuery = queryOptions({
   queryKey: stripeKeys.feature(),
-  queryFn: () => apiFetch<StripeFeature>('/stripe/feature'),
+  queryFn: stripeFeatureCall({ apiFetch, apiSend }),
   retry: false,
   staleTime: 5 * 60_000,
 });
