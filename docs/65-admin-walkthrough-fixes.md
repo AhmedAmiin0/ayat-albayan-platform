@@ -15,7 +15,9 @@ This doc is the work list. Names, student codes, phone numbers and money figures
 
 ## Order
 
-Two lanes run side by side, one open PR each. A lane takes its PRs in this order.
+The contracts and schemas lane (docs/62) and the component folders lane (docs/63) go first (owner, 2026-11-26). This list is worked by one builder behind them: one open PR at a time, and it opens or pushes to a PR only while no PR of those two lanes has a check queued or running.
+
+The order is U1, U2, then D1 to D10 (numbers and rules before polish), then U3 to U11.
 
 ### U-lane: screens (staff-web)
 
