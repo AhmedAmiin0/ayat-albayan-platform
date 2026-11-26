@@ -4440,14 +4440,6 @@
       "count": 1
     }
   },
-  "src/sales-subscribe/payment-link/use-stripe.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 1
-    }
-  },
   "src/sales-subscribe/receipts/ChatReceiptList.tsx": {
     "stylistic/max-len": {
       "count": 1
