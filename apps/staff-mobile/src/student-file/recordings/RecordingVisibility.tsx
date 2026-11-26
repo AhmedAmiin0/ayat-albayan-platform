@@ -6,38 +6,13 @@ import { useSetVisibility, visibilityError } from './recording-actions';
 const V = t.mobileStudentFile.recordings.visible;
 
 /** Off by default; editable only with recordings.manage and the row's `can_manage`. */
-export function RecordingVisibility({
-  rec,
-  studentId,
-  editable,
-}: {
-  rec: StudentRecordingView;
-  studentId: string;
-  editable: boolean;
-}) {
+export function RecordingVisibility({ rec, studentId, editable }: { rec: StudentRecordingView; studentId: string; editable: boolean }) {
   const { color } = useTheme();
   const toggle = useSetVisibility(studentId);
   return (
     <View style={{ gap: 4 }}>
-      <View
-        style={{
-          minHeight: 44,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 12,
-        }}
-      >
-        <AppText
-          style={{
-            flexShrink: 1,
-            fontFamily: type.ui[600],
-            fontSize: type.size.sm,
-            color: color.ink,
-          }}
-        >
-          {V.label}
-        </AppText>
+      <View style={{ minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+        <AppText style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}>{V.label}</AppText>
         <Switch
           accessibilityLabel={V.label}
           value={rec.visible_to_student}

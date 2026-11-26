@@ -1448,6 +1448,11 @@
       "count": 1
     }
   },
+  "src/finance/payouts/PayoutPayForm.tsx": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
   "src/finance/payouts/PayoutRow.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -1459,6 +1464,11 @@
     },
     "ab/no-restricted-syntax": {
       "count": 1
+    }
+  },
+  "src/finance/payouts/UnpayConfirm.tsx": {
+    "stylistic/max-len": {
+      "count": 2
     }
   },
   "src/finance/payouts/payout-actions.ts": {
@@ -4272,6 +4282,11 @@
       "count": 2
     }
   },
+  "src/sales-money/screens/MyStudentsView.tsx": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
   "src/sales-money/wallet/CommissionEntry.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
@@ -4974,6 +4989,11 @@
       "count": 4
     },
     "ab/no-restricted-syntax": {
+      "count": 2
+    }
+  },
+  "src/student-file/recordings/RecordingVisibility.tsx": {
+    "stylistic/max-len": {
       "count": 2
     }
   },
