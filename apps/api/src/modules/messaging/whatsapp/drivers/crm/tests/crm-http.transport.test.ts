@@ -61,7 +61,7 @@ describe('crmJson: a failed call', () => {
   it('a refused connection never left: the line is down, not uncertain', async () => {
     const refused = new TypeError('fetch failed', { cause: { code: 'ECONNREFUSED' } });
     const e = await failed(crmJson(conn(scriptedFetch(refused).fetch), { path: 'me' }));
-    expect(e.message).toMatch(/^CRM request failed/);
+    expect(e.message).toBe('CRM request failed: fetch failed');
     expect(e.info).toMatchObject({ status: 0, uncertain: false, lineDown: true });
   });
 
@@ -73,6 +73,7 @@ describe('crmJson: a failed call', () => {
         });
       });
     const e = await failed(crmJson(conn(hangs, 20), { path: 'me' }));
+    expect(e.message).toBe('CRM request failed: The operation was aborted due to timeout');
     expect(e.info).toMatchObject({ status: 0, uncertain: true, timedOut: true });
   });
 });
