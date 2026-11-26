@@ -1,7 +1,8 @@
-import { cardClass, useCodesOpen, LanguageSwitch, ListSkeleton } from '@ab/web-kit';
+import { cardClass, LanguageSwitch, ListSkeleton } from '@ab/web-kit';
 import { LegalLinks } from '@/features/legal';
 import { SignInLockup } from '@/features/sign-in/SignInLockup';
 import { SignInWays } from '@/features/sign-in/SignInWays';
+import { useLoginPage } from './use-login-page';
 
 /**
  * The family sign-in (docs/51 §1), as the family app: the academy emblem and
@@ -10,7 +11,7 @@ import { SignInWays } from '@/features/sign-in/SignInWays';
  * the right way opens at once; a later change of it opens afresh (keyed).
  */
 export function LoginPage() {
-  const codes = useCodesOpen('family');
+  const { codes } = useLoginPage();
   return (
     <main className="grid min-h-dvh items-start justify-items-center px-4 py-10 sm:py-16">
       <div className="grid w-full max-w-[400px] gap-6">

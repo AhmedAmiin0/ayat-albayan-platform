@@ -1,13 +1,7 @@
-import type { WeekDay } from '@ab/client-core';
 import { SectionHeader, t } from '@ab/web-kit';
 import { dayId, longDay } from '@/features/schedule/day-text';
 import { AgendaLesson } from '@/features/schedule/agenda/AgendaLesson';
-
-interface AgendaDayProps {
-  day: WeekDay;
-  today: boolean;
-  guardian: boolean;
-}
+import type { AgendaDayProps } from './AgendaDay.types';
 
 /** The strip scrolls here under the sticky header and the ring flashes once. */
 export function AgendaDay({ day, today, guardian }: AgendaDayProps) {
