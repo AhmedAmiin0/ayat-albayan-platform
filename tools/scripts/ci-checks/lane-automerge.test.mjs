@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { parse } from 'yaml';
-import { SELF } from '../automerge/checks.ts';
+import { SELF, TITLE } from '../automerge/checks.ts';
 import { LABEL } from '../automerge/lanes.ts';
 
 const read = (f) => parse(readFileSync(new URL(`../../../.github/workflows/${f}`, import.meta.url), 'utf8'));
@@ -23,6 +23,10 @@ test('lane-automerge: triggers, one merge at a time, the token permissions it ne
   assert.deepEqual(job.permissions, perms);
   assert.equal(job.name, SELF, 'checks.ts ignores this job by its name');
   assert.ok(!JSON.stringify(lane).includes('secrets.'), 'no secret, only github.token');
+});
+
+test('lane-automerge: the title job keeps the name checks.ts leaves unread', () => {
+  assert.equal(read('pr-title.yml').jobs.title.name, TITLE);
 });
 
 test('lane-automerge: only PR ci runs, the label on a same-repo PR, or the schedule start it', () => {
