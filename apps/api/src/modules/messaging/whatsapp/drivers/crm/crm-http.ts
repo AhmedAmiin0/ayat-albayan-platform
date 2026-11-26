@@ -5,6 +5,7 @@ import type { FetchLike, HttpFailure } from '@/common/infra/http/failure';
 import { createHttp } from '@/common/infra/http/http';
 import { reachInfo, TIMEOUT_INFO } from '@/modules/messaging/whatsapp/drivers/transport-info';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { recordingFetch } from '@/modules/messaging/whatsapp/drivers/crm/crm-fetch';
 
 // One call to the academy CRM's public REST API (docs/19 «crm driver»): Bearer key, JSON, timeout, and the
 // CRM's envelope ({data} / {error:{code,message}}) → WaError. The CRM has no idempotency key, so an answer
@@ -112,12 +113,13 @@ function envelopeOf(res: Pick<CrmAnswer, 'status' | 'body'>): {
 const NO_STATUS: CrmAnswer = { status: 0, body: null, retryAfter: null };
 const answerOf = (f: HttpFailure): CrmAnswer => (f.kind === 'status' ? f : NO_STATUS);
 
-/** A network error is uncertain unless the call never connected; the deadline is uncertain too. */
-const CRM_ERRORS: ErrorTable<WaError> = {
-  network: (f) => new WaError('CRM request failed', reachInfo(f.kind === 'network' && f.reached)),
-  timeout: () => new WaError('CRM request failed: timed out', TIMEOUT_INFO),
+/** Uncertain unless never connected; each keeps the text it had before (AbortSignal.timeout's). */
+const crmErrors = (seen: { cause: string }): ErrorTable<WaError> => ({
+  network: (f) =>
+    new WaError(`CRM request failed: ${seen.cause}`, reachInfo(f.kind === 'network' && f.reached)),
+  timeout: () => new WaError('CRM request failed: The operation was aborted due to timeout', TIMEOUT_INFO),
   default: (f) => crmErrorOf(answerOf(f)),
-};
+});
 
 /** The envelope's `data`; any other 2xx body is null. */
 const dataSchema = z.union([
@@ -126,8 +128,9 @@ const dataSchema = z.union([
 ]);
 
 // The CRM never redirects: a 3xx (a wrong base) is a plain «not sent» failure, never a POST turned GET.
-const crmHttp = (conn: CrmConn) =>
-  createHttp({
+const crmHttp = (conn: CrmConn) => {
+  const transport = recordingFetch(conn.fetch);
+  return createHttp({
     name: 'crm',
     base: () => conn.env.base,
     headers: () =>
@@ -135,9 +138,10 @@ const crmHttp = (conn: CrmConn) =>
     timeoutMs: conn.timeoutMs,
     redirect: 'manual',
     errorBody: z.unknown(),
-    errors: CRM_ERRORS,
-    fetch: conn.fetch,
+    errors: crmErrors(transport.seen),
+    fetch: transport.fetch,
   });
+};
 
 /** The `data` of a 2xx answer; throws WaError otherwise. */
 export async function crmJson(conn: CrmConn, req: CrmRequest): Promise<unknown> {
