@@ -4,12 +4,13 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { REPLY_COLUMNS, type SavedReplyRow } from './saved-replies.mapper';
+import { pgError } from '@/common/db/errors';
 
 export type ReplyInsert = Database['public']['Tables']['saved_replies']['Insert'];
 export type ReplyPatch = Database['public']['Tables']['saved_replies']['Update'];
 
 function check(error: PostgrestError | null, what: string): void {
-  if (error) throw new Error(`${what} failed: ${error.message}`);
+  if (error) throw pgError(error);
 }
 
 /** One Storage object belongs to one reply (migration 672): a second row on the same path is a bad path. */

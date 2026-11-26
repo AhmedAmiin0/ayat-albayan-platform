@@ -2,6 +2,7 @@ import { type ChatList, type ChatListRef, isChatListAutoRule } from '@ab/shared'
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 
 /** What a write ran into: a taken name_key (23505) or the 30-list cap trigger (chat_lists_cap, 23514). */
 export type ListClash = 'taken' | 'limit';
@@ -21,7 +22,7 @@ type CountedRow = {
 const COUNTED = 'id, name, auto_rule, members:chat_list_threads(count)' as const;
 
 function check(error: PostgrestError | null, what: string): void {
-  if (error) throw new Error(`${what} failed: ${error.message}`);
+  if (error) throw pgError(error);
 }
 
 function clashOf(error: PostgrestError | null): ListClash | null {

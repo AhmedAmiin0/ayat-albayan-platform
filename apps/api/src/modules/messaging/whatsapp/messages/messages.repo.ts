@@ -4,6 +4,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { MESSAGE_SELECT, type ThreadMessageRow } from './message.mapper';
 import { stampDelivered } from './delivered';
 import { HANDED_OFF, SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { pgError } from '@/common/db/errors';
 
 /** Not while the sender holds the row (its claim): Meta may be sending it right now. */
 const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
@@ -27,7 +28,7 @@ export class MessagesRepo {
 
   async get(id: string): Promise<ThreadMessageRow | null> {
     const { data, error } = await this.db.from('messages').select(MESSAGE_SELECT).eq('id', id).maybeSingle();
-    if (error) throw new Error(`message read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -48,7 +49,7 @@ export class MessagesRepo {
       .or(NOT_APP_SEND_UNCONFIRMED)
       .select(MESSAGE_SELECT)
       .maybeSingle();
-    if (error) throw new Error(`message retry failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -67,7 +68,7 @@ export class MessagesRepo {
       .or(NOT_CLAIMED)
       .select(MESSAGE_SELECT)
       .maybeSingle();
-    if (error) throw new Error(`message manual send failed: ${error.message}`);
+    if (error) throw pgError(error);
     if (data)
       await stampDelivered(this.db, { leadId: data.lead_id, dedupKey: data.dedup_key, at: stamp });
     return data;
@@ -87,7 +88,7 @@ export class MessagesRepo {
       .or(NOT_CLAIMED)
       .select(MESSAGE_SELECT)
       .maybeSingle();
-    if (error) throw new Error(`message hand-off failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 }

@@ -2,6 +2,7 @@ import type { Json } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { ConfigConflictError, type ConfigChange, type ConfigRow, type ConfigSnapshot } from '@/common/configuration/config-store/config-store.types';
+import { pgError } from '@/common/db/errors';
 
 const COLUMNS = 'key, value, version, description, description_seed, description_edited, updated_at, updated_by, retired_at';
 
@@ -61,13 +62,13 @@ export class ConfigStoreRepo {
   /** settings_revision.rev (0 when the row is missing, e.g. right after a truncate). */
   async revision(): Promise<number> {
     const { data, error } = await this.db.from('settings_revision').select('rev').eq('id', true).maybeSingle();
-    if (error) throw new Error(`settings revision read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data?.rev ?? 0;
   }
 
   async rows(): Promise<ConfigRow[]> {
     const { data, error } = await this.db.from('settings').select(COLUMNS);
-    if (error) throw new Error(`settings read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return (data as DbRow[]).map(toConfigRow);
   }
 
@@ -108,7 +109,7 @@ export class ConfigStoreRepo {
     const out = new Map<string, string>();
     if (ids.length === 0) return out;
     const { data, error } = await this.db.from('profiles').select('id, full_name').in('id', [...new Set(ids)]);
-    if (error) throw new Error(`profiles read failed: ${error.message}`);
+    if (error) throw pgError(error);
     for (const p of data) out.set(p.id, p.full_name);
     return out;
   }

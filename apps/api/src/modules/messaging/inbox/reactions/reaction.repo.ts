@@ -4,6 +4,7 @@ import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { notFound } from '@/common/http/errors';
 import { SENDING, waHttpError } from '@/modules/messaging/whatsapp';
+import { pgError } from '@/common/db/errors';
 
 /** The message a reaction targets, as the guard and the payload read it. */
 export interface ReactionTarget {
@@ -58,14 +59,14 @@ export class ReactionRepo {
   /** The message, in THIS chat only (a reaction never crosses phones). */
   async target(phone: string, messageId: string): Promise<ReactionTarget | null> {
     const { data, error } = await this.db.from('messages').select(TARGET_SELECT).eq('id', messageId).eq('phone_e164', phone).maybeSingle();
-    if (error) throw new Error(`reaction target read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** A request id already queued (rule 8): the retry changes nothing and sends nothing. */
   async queued(dedupKey: string): Promise<boolean> {
     const { data, error } = await this.db.from('messages').select('id').eq('dedup_key', dedupKey).limit(1);
-    if (error) throw new Error(`reaction replay read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return (data ?? []).length > 0;
   }
 
@@ -83,7 +84,7 @@ export class ReactionRepo {
       .eq('interactive_payload->>type', 'reaction')
       .eq('interactive_payload->>target_id', input.targetId)
       .or(`error_code.is.null,error_code.neq.${SENDING}`);
-    if (error) throw new Error(`reaction supersede failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   /** Ours at once (optimistic); a failed send puts back `previous` (trigger messages_reaction_failed). */
@@ -99,6 +100,6 @@ export class ReactionRepo {
       .update(patch)
       .eq('id', input.targetId)
       .eq('phone_e164', input.phone);
-    if (error) throw new Error(`reaction write failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 }

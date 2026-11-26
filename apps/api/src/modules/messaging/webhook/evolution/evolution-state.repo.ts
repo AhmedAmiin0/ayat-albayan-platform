@@ -1,6 +1,7 @@
 import type { EvolutionState } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 
 /** wa_numbers.evolution_state (migration 20261106000700): the last state Evolution reported. */
 @Injectable()
@@ -16,6 +17,6 @@ export class EvolutionStateRepo {
       .eq('id', input.numberId)
       .eq('provider', 'evolution')
       .or(`evolution_state_at.is.null,evolution_state_at.lte.${at}`);
-    if (error) throw new Error(`evolution state write failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 }

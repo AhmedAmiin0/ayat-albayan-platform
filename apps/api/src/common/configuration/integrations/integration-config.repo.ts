@@ -6,6 +6,7 @@ import {
 } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 
 /** A plain row as the admin view needs it. */
 export interface PlainRow {
@@ -30,7 +31,7 @@ export class IntegrationConfigRepo {
   /** Every DB value of a registry key (plain from the table, secret from Vault), for the overlay. */
   async rawValues(): Promise<Record<string, string>> {
     const [plain, secrets] = await Promise.all([this.plainRows(), this.db.rpc('integration_secrets_read')]);
-    if (secrets.error) throw new Error(`integration secrets read failed: ${secrets.error.message}`);
+    if (secrets.error) throw pgError(secrets.error);
     const out: Record<string, string> = {};
     for (const r of plain) if (isIntegrationPlainKey(r.key)) out[r.key] = r.value;
     for (const r of secrets.data) if (isIntegrationSecretKey(r.key)) out[r.key] = r.value;
@@ -39,13 +40,13 @@ export class IntegrationConfigRepo {
 
   async plainRows(): Promise<PlainRow[]> {
     const { data, error } = await this.db.from('integration_config').select('key, value, updated_at');
-    if (error) throw new Error(`integration_config read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
   async secretStatus(): Promise<SecretStatus[]> {
     const { data, error } = await this.db.rpc('integration_secrets_status');
-    if (error) throw new Error(`integration secrets status failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -59,19 +60,19 @@ export class IntegrationConfigRepo {
         value === null || value === undefined
           ? await this.db.from('integration_config').delete().eq('key', key)
           : await this.db.from('integration_config').upsert({ key, value, updated_by: actorId });
-      if (error) throw new Error(`integration_config write failed for ${key}: ${error.message}`);
+      if (error) throw pgError(error);
     }
   }
 
   async setSecret(input: { key: IntegrationSecretKey; value: string }): Promise<void> {
     const { error } = await this.db.rpc('integration_secret_set', { p_key: input.key, p_value: input.value });
-    if (error) throw new Error(`integration secret write failed for ${input.key}: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   /** false when there was no such secret. */
   async clearSecret(key: IntegrationSecretKey): Promise<boolean> {
     const { data, error } = await this.db.rpc('integration_secret_clear', { p_key: key });
-    if (error) throw new Error(`integration secret clear failed for ${key}: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 }
