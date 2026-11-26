@@ -6,9 +6,13 @@ type BucketApi = ReturnType<Db['storage']['from']>;
 
 const PAGE = 1000;
 
+/** A Storage API failure: not a PostgrestError, so it stays a plain 500. */
+export const fail = (what: string, error: { message: string }): Error =>
+  new Error(`storage ${what} failed: ${error.message}`);
+
 async function page(api: BucketApi, input: { folder: string; offset: number }) {
   const { data, error } = await api.list(input.folder, { limit: PAGE, offset: input.offset });
-  if (error) throw new Error(`storage list failed: ${error.message}`);
+  if (error) throw fail('list', error);
   return data;
 }
 
