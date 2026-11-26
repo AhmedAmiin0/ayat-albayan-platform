@@ -20,12 +20,7 @@ export const ABRAR: BookingTeacherOption = {
   max_students: 10,
   has_availability: true,
 };
-export const NOOR: BookingTeacherOption = {
-  ...ABRAR,
-  id: 'n-1',
-  display_name_ar: 'نور',
-  has_availability: false,
-};
+export const NOOR: BookingTeacherOption = { ...ABRAR, id: 'n-1', display_name_ar: 'نور', has_availability: false };
 export const SLOT = '2026-10-04T14:00:00.000Z'; // Sunday 17:00 Riyadh
 export const WED_SLOT = '2026-10-07T16:30:00.000Z'; // Wednesday 19:30 Riyadh
 
@@ -47,19 +42,9 @@ const QUOTE = { ...quote(SAR), total: 1080, fx: null };
 
 export const RESPONSES: [string, unknown][] = [
   [`/students/${STUDENT_ID}`, PROFILE],
-  [
-    '/guardians/g-1',
-    { id: 'g-1', name: 'أم سهيلة', phone_e164: '+966501234567', country: 'SA', tz: 'Asia/Riyadh' },
-  ],
+  ['/guardians/g-1', { id: 'g-1', name: 'أم سهيلة', phone_e164: '+966501234567', country: 'SA', tz: 'Asia/Riyadh' }],
   ['/booking/teachers', [ABRAR, NOOR]],
-  [
-    '/booking/slots',
-    {
-      teacher_tz: 'Africa/Cairo',
-      step_min: 45,
-      slots: [SLOT, WED_SLOT].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] })),
-    },
-  ],
+  ['/booking/slots', { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [SLOT, WED_SLOT].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] })) }],
   ['/pricing/quote', QUOTE],
 ];
 
@@ -107,9 +92,7 @@ function pickGridSunday(): void {
  */
 export async function pickSlot(): Promise<void> {
   next();
-  await waitFor(() =>
-    expect(firstRow() ?? screen.queryByRole('region', { name: SUNDAY })).toBeTruthy(),
-  );
+  await waitFor(() => expect(firstRow() ?? screen.queryByRole('region', { name: SUNDAY })).toBeTruthy());
   const pick = firstRow() ? () => fillRow(1, '2026-10-04', '17:00') : pickGridSunday;
   pick();
 }
@@ -137,9 +120,7 @@ export async function addInvoice(uploadToSignedUrl: Mock): Promise<void> {
   URL.createObjectURL = vi.fn(() => 'blob:invoice');
   uploadToSignedUrl.mockResolvedValue({ error: null });
   const input = screen.getByLabelText(t.booking.invoice.upload);
-  fireEvent.change(input, {
-    target: { files: [new File(['x'], 'inv.png', { type: 'image/png' })] },
-  });
+  fireEvent.change(input, { target: { files: [new File(['x'], 'inv.png', { type: 'image/png' })] } });
   await screen.findByRole('button', { name: t.booking.invoice.remove });
 }
 
@@ -152,12 +133,7 @@ export function routeSend(apiSend: Mock, answers: unknown[]): void {
   apiSend.mockImplementation((_method: string, path: string) => {
     if (path === '/booking/check') return Promise.resolve({ conflicts: [] });
     if (path === '/booking/invoice-upload-url') {
-      return Promise.resolve({
-        bucket: 'invoices',
-        path: INVOICE_PATH,
-        token: 'tok',
-        signed_url: 'https://x',
-      });
+      return Promise.resolve({ bucket: 'invoices', path: INVOICE_PATH, token: 'tok', signed_url: 'https://x' });
     }
     const answer = answers.shift();
     return answer instanceof Error ? Promise.reject(answer) : Promise.resolve(answer);
@@ -166,6 +142,4 @@ export function routeSend(apiSend: Mock, answers: unknown[]): void {
 
 /** The bodies of every POST /booking, in order (series checks left out). */
 export const bookingBodies = (apiSend: Mock): Record<string, unknown>[] =>
-  apiSend.mock.calls
-    .filter(([, path]) => path === '/booking')
-    .map(([, , body]) => body as Record<string, unknown>);
+  apiSend.mock.calls.filter(([, path]) => path === '/booking').map(([, , body]) => body as Record<string, unknown>);
