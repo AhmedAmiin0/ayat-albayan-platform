@@ -21,7 +21,8 @@ export function PhoneSection({ profile, onDone }: SectionProps) {
     const found = phoneErrors({ phone, password });
     save.setErrors(found);
     const value = phoneValue(phone);
-    if (Object.keys(found).length === 0 && value !== undefined) save.submit({ phone_e164: value, current_password: password });
+    if (Object.keys(found).length === 0 && value !== undefined)
+      save.submit({ phone_e164: value, current_password: password });
   };
   return (
     <AccountSection title={P.title}>
@@ -38,7 +39,11 @@ export function PhoneSection({ profile, onDone }: SectionProps) {
             </div>
           )}
         </Field>
-        <PasswordField value={password} onValue={setPassword} error={save.errors.current_password} />
+        <PasswordField
+          value={password}
+          onValue={setPassword}
+          error={save.errors.current_password}
+        />
         {save.errors.form && <FormAlert>{save.errors.form}</FormAlert>}
         <SaveButton pending={save.pending} disabled={phone.trim() === saved} />
       </form>

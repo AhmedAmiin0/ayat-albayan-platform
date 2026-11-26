@@ -59,7 +59,11 @@ export function PayPayoutDialog({ payout, onClose, onSaved }: Props) {
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label={t.payments.method}>
             {(p) => (
-              <Select {...p} value={method} onChange={(e) => setMethod(e.target.value as PaymentMethod)}>
+              <Select
+                {...p}
+                value={method}
+                onChange={(e) => setMethod(e.target.value as PaymentMethod)}
+              >
                 {PAYMENT_METHODS.map((m) => (
                   <option key={m} value={m}>
                     {t.enums.paymentMethod[m]}
@@ -71,10 +75,16 @@ export function PayPayoutDialog({ payout, onClose, onSaved }: Props) {
           <Field label={t.payments.paidAt}>
             {(p) => <Input {...p} type="date" dir="ltr" max={paidAtDay()} value={day} onChange={(e) => setDay(e.target.value)} />}
           </Field>
-          <Field label={t.payments.note}>{(p) => <Input {...p} value={note} onChange={(e) => setNote(e.target.value)} />}</Field>
+          <Field label={t.payments.note}>
+            {(p) => <Input {...p} value={note} onChange={(e) => setNote(e.target.value)} />}
+          </Field>
         </div>
         <ReceiptField file={file} onChange={setFile} error={problem} />
-        {save.isError && <FormAlert>{apiErrorText(save.error, { ...t.payouts.error, ...t.earnings.error })}</FormAlert>}
+        {save.isError && (
+          <FormAlert>
+            {apiErrorText(save.error, { ...t.payouts.error, ...t.earnings.error })}
+          </FormAlert>
+        )}
       </form>
     </Dialog>
   );

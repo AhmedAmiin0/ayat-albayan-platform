@@ -287,7 +287,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 3
@@ -711,9 +711,6 @@
     },
     "max-lines-per-function": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     },
     "ab/module-boundaries": {
       "count": 2
@@ -2554,14 +2551,9 @@
       "count": 1
     }
   },
-  "src/features/people/account/sections/EmailSection.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/features/people/account/sections/PhoneSection.tsx": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/people/account/use-picked-file.ts": {
@@ -2664,9 +2656,6 @@
     "max-lines-per-function": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 3
-    },
     "ab/module-boundaries": {
       "count": 3
     }
@@ -2704,9 +2693,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 4
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -2763,9 +2749,6 @@
       "count": 1
     },
     "max-lines-per-function": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     },
     "ab/module-boundaries": {
@@ -4272,11 +4255,6 @@
       "count": 1
     }
   },
-  "src/features/reporting/activity/ActivityPage.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/features/reporting/activity/activity-format/activity-format.ts": {
     "complexity": {
       "count": 1
@@ -4528,11 +4506,6 @@
   "src/features/reporting/reports/view-v2/ReportV2View.test.tsx": {
     "typescript/no-unnecessary-condition": {
       "count": 1
-    }
-  },
-  "src/features/sales/leads/JobApplicantsList.tsx": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/features/sales/leads/LeadsInbox.tsx": {
@@ -5637,9 +5610,6 @@
     "no-nested-ternary": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -5768,7 +5738,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -5951,9 +5921,6 @@
   "src/features/teaching/meetings/scheduled/ScheduleFields.tsx": {
     "react/purity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/features/teaching/meetings/scheduled/ScheduledMeetingDialog.tsx": {
@@ -6295,9 +6262,6 @@
     },
     "max-lines-per-function": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     },
     "ab/module-boundaries": {
       "count": 1

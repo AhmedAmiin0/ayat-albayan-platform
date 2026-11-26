@@ -11,7 +11,12 @@ import { AddCategory } from './AddCategory';
 import { expenseBody, expenseForm, type ExpenseForm } from './expense-form';
 import { ExpenseFields } from './ExpenseFields';
 
-type Props = { month: string; expense: ExpenseView | null; onClose: () => void; onSaved: () => void };
+type Props = {
+  month: string;
+  expense: ExpenseView | null;
+  onClose: () => void;
+  onSaved: () => void;
+};
 
 /** Add or edit an expense (R-RPT-02): category, amount, currency, paid day, vendor, method, receipt, note, repeat. */
 export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
@@ -30,7 +35,10 @@ export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
       if (file) {
         receiptPath = await receiptOnce(file, () => uploadExpenseReceipt(file));
       }
-      return saveExpense({ id: expense?.id ?? null, body: { ...body, ...(receiptPath ? { receiptPath } : {}) } });
+      return saveExpense({
+        id: expense?.id ?? null,
+        body: { ...body, ...(receiptPath ? { receiptPath } : {}) },
+      });
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: MONEY_KEY });
@@ -62,10 +70,23 @@ export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
       }
     >
       <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
-        <ExpenseFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} categories={categories.data ?? []} amountError={amountError} />
+        <ExpenseFields
+          form={form}
+          set={(patch) => setForm((f) => ({ ...f, ...patch }))}
+          categories={categories.data ?? []}
+          amountError={amountError}
+        />
         <AddCategory onAdded={(key) => setForm((f) => ({ ...f, category: key }))} />
         <ReceiptField file={file} onChange={setFile} error={problem} />
-        {save.isError && <FormAlert>{apiErrorText(save.error, { ...t.expenses.error, ...t.finance.error, ...t.payments.error })}</FormAlert>}
+        {save.isError && (
+          <FormAlert>
+            {apiErrorText(save.error, {
+              ...t.expenses.error,
+              ...t.finance.error,
+              ...t.payments.error,
+            })}
+          </FormAlert>
+        )}
       </form>
     </Dialog>
   );

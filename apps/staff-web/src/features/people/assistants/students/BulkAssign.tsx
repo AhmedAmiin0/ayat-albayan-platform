@@ -34,7 +34,15 @@ export function BulkAssign({ pick, onDone }: Props) {
   );
 }
 
-function BulkDialog({ ids, onClose, onDone }: { ids: readonly string[]; onClose: () => void; onDone: (message: string) => void }) {
+function BulkDialog({
+  ids,
+  onClose,
+  onDone,
+}: {
+  ids: readonly string[];
+  onClose: () => void;
+  onDone: (message: string) => void;
+}) {
   const formId = useId();
   const queryClient = useQueryClient();
   const assistants = useQuery(assistantsQuery);

@@ -36,7 +36,11 @@ export function StatementsPanel({ assistants, assistantId = '', can }: Props) {
   const generate = useMutation({
     mutationFn: async () => {
       const ids = query.assistantId ? [query.assistantId] : assistants.map((a) => a.id);
-      const results = await Promise.allSettled(generateTargets(ids, rows).map((id) => generateStatement({ assistantId: id, month: filter.month })));
+      const results = await Promise.allSettled(
+        generateTargets(ids, rows).map((id) =>
+          generateStatement({ assistantId: id, month: filter.month }),
+        ),
+      );
       const failed = results.find((r): r is PromiseRejectedResult => r.status === 'rejected');
       if (failed) throw failed.reason;
     },
@@ -62,10 +66,24 @@ export function StatementsPanel({ assistants, assistantId = '', can }: Props) {
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <FilterBar label={t.assistants.statements.filters} value={filter} onChange={setFilter} statuses={STATUSES} assistants={assistantId ? undefined : assistants} />
+        <FilterBar
+          label={t.assistants.statements.filters}
+          value={filter}
+          onChange={setFilter}
+          statuses={STATUSES}
+          assistants={assistantId ? undefined : assistants}
+        />
         {can.write && (
-          <Button type="button" variant="secondary" className="mb-4" disabled={generate.isPending || assistants.length === 0} onClick={() => generate.mutate()}>
-            {rows.length > 0 ? t.assistants.statements.regenerate : t.assistants.statements.generate}
+          <Button
+            type="button"
+            variant="secondary"
+            className="mb-4"
+            disabled={generate.isPending || assistants.length === 0}
+            onClick={() => generate.mutate()}
+          >
+            {rows.length > 0
+              ? t.assistants.statements.regenerate
+              : t.assistants.statements.generate}
           </Button>
         )}
       </div>
@@ -77,7 +95,17 @@ export function StatementsPanel({ assistants, assistantId = '', can }: Props) {
           <EmptyState title={t.assistants.statements.empty} />
         </TableBox>
       )}
-      {rows.length > 0 && <DataTable fill stacked clientSort clientFilter columns={columns} data={rows} getRowId={(r) => r.id} />}
+      {rows.length > 0 && (
+        <DataTable
+          fill
+          stacked
+          clientSort
+          clientFilter
+          columns={columns}
+          data={rows}
+          getRowId={(r) => r.id}
+        />
+      )}
       {dialog && <StatementDialogs open={dialog} onClose={() => setDialog(null)} />}
     </>
   );

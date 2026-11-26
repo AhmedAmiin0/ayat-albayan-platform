@@ -21,7 +21,9 @@ export function PayStatementDialog({ statement, onClose }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
   const save = usePayStatement(statement.id, statement.assistant.id, onClose);
-  const amounts = Object.entries(statement.totals).map(([c, v]) => moneyText(v.total, c)).join(t.common.listSeparator);
+  const amounts = Object.entries(statement.totals)
+    .map(([c, v]) => moneyText(v.total, c))
+    .join(t.common.listSeparator);
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const bad = receiptProblem(file, maxBytes);
@@ -48,7 +50,11 @@ export function PayStatementDialog({ statement, onClose }: Props) {
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label={t.payments.method}>
             {(p) => (
-              <Select {...p} value={method} onChange={(e) => setMethod(e.target.value as PaymentMethod)}>
+              <Select
+                {...p}
+                value={method}
+                onChange={(e) => setMethod(e.target.value as PaymentMethod)}
+              >
                 {PAYMENT_METHODS.map((m) => (
                   <option key={m} value={m}>
                     {t.enums.paymentMethod[m]}
@@ -60,7 +66,9 @@ export function PayStatementDialog({ statement, onClose }: Props) {
           <Field label={t.payments.paidAt}>
             {(p) => <Input {...p} type="date" dir="ltr" max={paidAtDay()} value={day} onChange={(e) => setDay(e.target.value)} />}
           </Field>
-          <Field label={t.payments.note}>{(p) => <Input {...p} value={note} onChange={(e) => setNote(e.target.value)} />}</Field>
+          <Field label={t.payments.note}>
+            {(p) => <Input {...p} value={note} onChange={(e) => setNote(e.target.value)} />}
+          </Field>
         </div>
         <ReceiptField file={file} onChange={setFile} error={problem} />
         {save.isError && <FormAlert>{errorText(save.error)}</FormAlert>}
