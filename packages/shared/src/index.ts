@@ -50,6 +50,7 @@ export * from './people/account';
 export * from './people/presence';
 export * from './people/test-accounts';
 export * from './finance/invoices';
+export * from './finance/pricing';
 export * from './notifications';
 export * from './messaging/numbers';
 export * from './reports/stored-path';

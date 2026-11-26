@@ -31,3 +31,15 @@ export const quoteSchema = z.object({
   popular: z.boolean(),
   featured: z.boolean(),
 });
+
+/** GET /pricing/quote: the quote and the rate a USD price used (null for the site's currencies). */
+export const quoteResponseSchema = quoteSchema.extend({ fx: fxRateSchema.nullable() });
+
+/** GET /pricing/catalog: all six packages of one duration, one student, no discount. */
+export const catalogResponseSchema = z.object({
+  country: z.enum(SITE_COUNTRIES).nullable(),
+  currency: z.enum(CURRENCY_ISOS),
+  duration: z.number(),
+  packages: z.array(quoteSchema),
+  fx: fxRateSchema.nullable(),
+});

@@ -1049,6 +1049,217 @@
    ]
   }
  },
+ "GET /pricing/catalog": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "country": {
+     "type": "string",
+     "pattern": "^[A-Za-z]{2}$"
+    },
+    "duration": {
+     "default": 45,
+     "type": "number"
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "country": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "SA",
+        "AE",
+        "QA",
+        "KW",
+        "OM"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "currency": {
+     "type": "string",
+     "enum": [
+      "SAR",
+      "AED",
+      "QAR",
+      "KWD",
+      "OMR",
+      "USD"
+     ]
+    },
+    "duration": {
+     "type": "number"
+    },
+    "packages": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "package": {
+        "type": "string",
+        "enum": [
+         "starter",
+         "standard",
+         "premium",
+         "bulk",
+         "weekly",
+         "monthly",
+         "custom"
+        ]
+       },
+       "lessons": {
+        "type": "number"
+       },
+       "duration": {
+        "type": "number"
+       },
+       "country": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "SA",
+           "AE",
+           "QA",
+           "KW",
+           "OM"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "currency": {
+        "type": "string",
+        "enum": [
+         "SAR",
+         "AED",
+         "QAR",
+         "KWD",
+         "OMR",
+         "USD"
+        ]
+       },
+       "price": {
+        "type": "number"
+       },
+       "students": {
+        "type": "number"
+       },
+       "total": {
+        "type": "number"
+       },
+       "discount": {
+        "type": "number"
+       },
+       "afterDiscount": {
+        "type": "number"
+       },
+       "perLesson": {
+        "type": "number"
+       },
+       "insteadOf": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "savingsPct": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "popular": {
+        "type": "boolean"
+       },
+       "featured": {
+        "type": "boolean"
+       }
+      },
+      "required": [
+       "package",
+       "lessons",
+       "duration",
+       "country",
+       "currency",
+       "price",
+       "students",
+       "total",
+       "discount",
+       "afterDiscount",
+       "perLesson",
+       "insteadOf",
+       "savingsPct",
+       "popular",
+       "featured"
+      ]
+     }
+    },
+    "fx": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "quote": {
+         "type": "string"
+        },
+        "rate": {
+         "type": "number"
+        },
+        "date": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "provider": {
+         "type": "string"
+        },
+        "fallback": {
+         "type": "boolean"
+        },
+        "ageHours": {
+         "type": [
+          "number",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "quote",
+        "rate",
+        "date",
+        "provider",
+        "fallback",
+        "ageHours"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "country",
+    "currency",
+    "duration",
+    "packages",
+    "fx"
+   ]
+  }
+ },
  "GET /pricing/list": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1079,6 +1290,577 @@
      ]
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "country": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "SA",
+        "AE",
+        "QA",
+        "KW",
+        "OM"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "currency": {
+     "type": "string",
+     "enum": [
+      "SAR",
+      "AED",
+      "QAR",
+      "KWD",
+      "OMR",
+      "USD"
+     ]
+    },
+    "students": {
+     "type": "number"
+    },
+    "discount": {
+     "type": "number"
+    },
+    "groups": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "duration": {
+        "type": "number",
+        "enum": [
+         30,
+         45,
+         60
+        ]
+       },
+       "packages": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "package": {
+           "type": "string",
+           "enum": [
+            "starter",
+            "standard",
+            "premium",
+            "bulk",
+            "weekly",
+            "monthly",
+            "custom"
+           ]
+          },
+          "lessons": {
+           "type": "number"
+          },
+          "duration": {
+           "type": "number"
+          },
+          "country": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "SA",
+              "AE",
+              "QA",
+              "KW",
+              "OM"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "currency": {
+           "type": "string",
+           "enum": [
+            "SAR",
+            "AED",
+            "QAR",
+            "KWD",
+            "OMR",
+            "USD"
+           ]
+          },
+          "price": {
+           "type": "number"
+          },
+          "students": {
+           "type": "number"
+          },
+          "total": {
+           "type": "number"
+          },
+          "discount": {
+           "type": "number"
+          },
+          "afterDiscount": {
+           "type": "number"
+          },
+          "perLesson": {
+           "type": "number"
+          },
+          "insteadOf": {
+           "type": [
+            "number",
+            "null"
+           ]
+          },
+          "savingsPct": {
+           "type": [
+            "number",
+            "null"
+           ]
+          },
+          "popular": {
+           "type": "boolean"
+          },
+          "featured": {
+           "type": "boolean"
+          }
+         },
+         "required": [
+          "package",
+          "lessons",
+          "duration",
+          "country",
+          "currency",
+          "price",
+          "students",
+          "total",
+          "discount",
+          "afterDiscount",
+          "perLesson",
+          "insteadOf",
+          "savingsPct",
+          "popular",
+          "featured"
+         ]
+        }
+       }
+      },
+      "required": [
+       "duration",
+       "packages"
+      ]
+     }
+    },
+    "weekly": {
+     "type": "object",
+     "properties": {
+      "package": {
+       "type": "string",
+       "enum": [
+        "starter",
+        "standard",
+        "premium",
+        "bulk",
+        "weekly",
+        "monthly",
+        "custom"
+       ]
+      },
+      "lessons": {
+       "type": "number"
+      },
+      "duration": {
+       "type": "number"
+      },
+      "country": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "SA",
+          "AE",
+          "QA",
+          "KW",
+          "OM"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "currency": {
+       "type": "string",
+       "enum": [
+        "SAR",
+        "AED",
+        "QAR",
+        "KWD",
+        "OMR",
+        "USD"
+       ]
+      },
+      "price": {
+       "type": "number"
+      },
+      "students": {
+       "type": "number"
+      },
+      "total": {
+       "type": "number"
+      },
+      "discount": {
+       "type": "number"
+      },
+      "afterDiscount": {
+       "type": "number"
+      },
+      "perLesson": {
+       "type": "number"
+      },
+      "insteadOf": {
+       "type": [
+        "number",
+        "null"
+       ]
+      },
+      "savingsPct": {
+       "type": [
+        "number",
+        "null"
+       ]
+      },
+      "popular": {
+       "type": "boolean"
+      },
+      "featured": {
+       "type": "boolean"
+      }
+     },
+     "required": [
+      "package",
+      "lessons",
+      "duration",
+      "country",
+      "currency",
+      "price",
+      "students",
+      "total",
+      "discount",
+      "afterDiscount",
+      "perLesson",
+      "insteadOf",
+      "savingsPct",
+      "popular",
+      "featured"
+     ]
+    },
+    "fx": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "quote": {
+         "type": "string"
+        },
+        "rate": {
+         "type": "number"
+        },
+        "date": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "provider": {
+         "type": "string"
+        },
+        "fallback": {
+         "type": "boolean"
+        },
+        "ageHours": {
+         "type": [
+          "number",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "quote",
+        "rate",
+        "date",
+        "provider",
+        "fallback",
+        "ageHours"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "country",
+    "currency",
+    "students",
+    "discount",
+    "groups",
+    "weekly",
+    "fx"
+   ]
+  }
+ },
+ "GET /pricing/quote": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "anyOf": [
+    {
+     "type": "object",
+     "properties": {
+      "country": {
+       "type": "string",
+       "pattern": "^[A-Za-z]{2}$"
+      },
+      "duration": {
+       "default": 45,
+       "type": "number"
+      },
+      "students": {
+       "default": 1,
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 6
+      },
+      "discount": {
+       "default": 0,
+       "type": "number",
+       "minimum": 0,
+       "maximum": 100
+      },
+      "rounding": {
+       "type": "string",
+       "enum": [
+        "nearest",
+        "up",
+        "down"
+       ]
+      },
+      "tier": {
+       "type": "string",
+       "enum": [
+        "starter",
+        "standard",
+        "premium",
+        "bulk",
+        "weekly",
+        "monthly"
+       ]
+      },
+      "count": {}
+     },
+     "required": [
+      "tier"
+     ]
+    },
+    {
+     "type": "object",
+     "properties": {
+      "country": {
+       "type": "string",
+       "pattern": "^[A-Za-z]{2}$"
+      },
+      "duration": {
+       "default": 45,
+       "type": "number"
+      },
+      "students": {
+       "default": 1,
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 6
+      },
+      "discount": {
+       "default": 0,
+       "type": "number",
+       "minimum": 0,
+       "maximum": 100
+      },
+      "rounding": {
+       "type": "string",
+       "enum": [
+        "nearest",
+        "up",
+        "down"
+       ]
+      },
+      "tier": {},
+      "count": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 60
+      }
+     },
+     "required": [
+      "count"
+     ]
+    }
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "package": {
+     "type": "string",
+     "enum": [
+      "starter",
+      "standard",
+      "premium",
+      "bulk",
+      "weekly",
+      "monthly",
+      "custom"
+     ]
+    },
+    "lessons": {
+     "type": "number"
+    },
+    "duration": {
+     "type": "number"
+    },
+    "country": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "SA",
+        "AE",
+        "QA",
+        "KW",
+        "OM"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "currency": {
+     "type": "string",
+     "enum": [
+      "SAR",
+      "AED",
+      "QAR",
+      "KWD",
+      "OMR",
+      "USD"
+     ]
+    },
+    "price": {
+     "type": "number"
+    },
+    "students": {
+     "type": "number"
+    },
+    "total": {
+     "type": "number"
+    },
+    "discount": {
+     "type": "number"
+    },
+    "afterDiscount": {
+     "type": "number"
+    },
+    "perLesson": {
+     "type": "number"
+    },
+    "insteadOf": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "savingsPct": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "popular": {
+     "type": "boolean"
+    },
+    "featured": {
+     "type": "boolean"
+    },
+    "fx": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "quote": {
+         "type": "string"
+        },
+        "rate": {
+         "type": "number"
+        },
+        "date": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "provider": {
+         "type": "string"
+        },
+        "fallback": {
+         "type": "boolean"
+        },
+        "ageHours": {
+         "type": [
+          "number",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "quote",
+        "rate",
+        "date",
+        "provider",
+        "fallback",
+        "ageHours"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "package",
+    "lessons",
+    "duration",
+    "country",
+    "currency",
+    "price",
+    "students",
+    "total",
+    "discount",
+    "afterDiscount",
+    "perLesson",
+    "insteadOf",
+    "savingsPct",
+    "popular",
+    "featured",
+    "fx"
+   ]
   }
  },
  "GET /public/report-pages/:publicId": {

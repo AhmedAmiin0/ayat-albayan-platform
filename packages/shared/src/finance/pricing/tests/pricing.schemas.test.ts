@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { catalogQuerySchema, listQuerySchema, quoteQuerySchema } from '../pricing.schemas';
+import { catalogQuerySchema, priceListQuerySchema, quoteQuerySchema } from '../pricing.schemas';
 
 const issues = (r: { success: boolean; error?: { issues: { code: string }[] } }) =>
   r.error?.issues.map((i) => i.code) ?? [];
@@ -44,9 +44,9 @@ describe('quoteQuerySchema (GET /pricing/quote)', () => {
   });
 });
 
-describe('listQuerySchema (GET /pricing/list)', () => {
+describe('priceListQuerySchema (GET /pricing/list)', () => {
   it('has no duration and defaults the group and the discount', () => {
-    expect(listQuerySchema.parse({ country: 'ae' })).toEqual({
+    expect(priceListQuerySchema.parse({ country: 'ae' })).toEqual({
       country: 'AE',
       students: 1,
       discount: 0,
@@ -54,6 +54,6 @@ describe('listQuerySchema (GET /pricing/list)', () => {
   });
 
   it('refuses an unknown rounding', () => {
-    expect(listQuerySchema.safeParse({ rounding: 'half' }).success).toBe(false);
+    expect(priceListQuerySchema.safeParse({ rounding: 'half' }).success).toBe(false);
   });
 });

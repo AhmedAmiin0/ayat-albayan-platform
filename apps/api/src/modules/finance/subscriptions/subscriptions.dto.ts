@@ -7,7 +7,7 @@ import {
 } from '@ab/money';
 import { z } from 'zod';
 import { pageQuerySchema } from '@/common/http/http';
-import type { QuoteQuery } from '@/modules/finance/pricing/pricing.dto';
+import type { QuoteQuery } from '@ab/shared';
 
 /** S1 (R-NFR-08): paid=partial means unpaid packages with at least one payment. */
 export const subscriptionListQuery = pageQuerySchema.extend({
@@ -28,7 +28,10 @@ export type SubscriptionQuote = z.output<typeof subscriptionQuoteSchema>;
 
 /** GET /admin-tasks?open=true&page&pageSize (S7). */
 export const adminTaskListQuery = pageQuerySchema.extend({
-  open: z.enum(['true', 'false']).default('true').transform((v) => v === 'true'),
+  open: z
+    .enum(['true', 'false'])
+    .default('true')
+    .transform((v) => v === 'true'),
 });
 
 /** The calculator inputs → one student's quote (S2 step 2): `students: 1`, country resolved. */

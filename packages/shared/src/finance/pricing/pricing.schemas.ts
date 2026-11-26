@@ -11,7 +11,7 @@ import {
 } from '@ab/money';
 import { z } from 'zod';
 
-// Query strings for /pricing (docs/08 §3). Everything arrives as text, hence the coercion.
+// Query strings of GET /pricing/* (docs/08 §3): everything arrives as text, hence the coercion.
 /** ISO 3166 alpha-2; omitted or not a site country → quoted in USD. */
 const country = z
   .string()
@@ -35,11 +35,11 @@ const priced = {
 };
 const quoteShape = { ...shape, ...priced };
 
-export const catalogQuery = z.object(shape);
-export type CatalogQuery = z.output<typeof catalogQuery>;
+export const catalogQuerySchema = z.object(shape);
+export type CatalogQuery = z.output<typeof catalogQuerySchema>;
 
 /** Exactly one of `tier` (a package id) or `count` (custom lesson count). */
-export const quoteQuery = z.union([
+export const quoteQuerySchema = z.union([
   z.object({ ...quoteShape, tier: z.enum(PACKAGE_IDS), count: z.undefined().optional() }),
   z.object({
     ...quoteShape,
@@ -47,8 +47,8 @@ export const quoteQuery = z.union([
     count: z.coerce.number().int().min(CUSTOM_COUNT_MIN).max(CUSTOM_COUNT_MAX),
   }),
 ]);
-export type QuoteQuery = z.output<typeof quoteQuery>;
+export type QuoteQuery = z.output<typeof quoteQuerySchema>;
 
 /** The whole list has every duration and package, so only the country and the pricing choice. */
-export const listQuery = z.object({ country, ...priced });
-export type ListQuery = z.output<typeof listQuery>;
+export const priceListQuerySchema = z.object({ country, ...priced });
+export type PriceListQueryParams = z.output<typeof priceListQuerySchema>;
