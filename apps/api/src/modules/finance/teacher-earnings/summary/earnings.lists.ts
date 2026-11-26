@@ -7,8 +7,8 @@ import type {
 } from '@ab/money';
 import type { Db } from '@/common/db/db.module';
 import { ilikeContains } from '@/common/db/or-filter';
-import { applySort, type SortSpec } from '@/common/db/list-sort';
-import { pgError } from '@/common/db/errors';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage, toPage } from '@/common/db/page';
 import { lessonNames } from './earnings.names';
 import type {
   EarningRow,
@@ -47,17 +47,18 @@ const PAYMENT_SORT: SortSpec<(typeof TEACHER_PAYMENT_SORT_KEYS)[number]> = {
 
 type For<F> = { teacherId: string; filter: F };
 
-/** One page of the teacher's countable sessions, with the students of each lesson attached. */
-export async function sessionsPage(db: Db, q: For<EarningsListQuery>): Promise<Page<SessionRow>> {
+function sessionsQuery(db: Db, q: For<EarningsListQuery>) {
   const f = q.filter;
-  const from = (f.page - 1) * f.pageSize;
   let query = db.from(COUNTABLE).select('*', { count: 'exact' }).eq('teacher_id', q.teacherId);
   if (f.status === 'unpaid') query = query.in('status', [...UNPAID]);
   else if (f.status) query = query.eq('status', f.status);
-  const { data, count, error } = await applySort(query, f, SESSION_SORT)
-    .range(from, from + f.pageSize - 1)
-    .returns<EarningRow[]>();
-  if (error) throw pgError(error);
+  return query.returns<EarningRow[]>();
+}
+
+/** One page of the teacher's countable sessions, with the students of each lesson attached. */
+export async function sessionsPage(db: Db, q: For<EarningsListQuery>): Promise<Page<SessionRow>> {
+  const f = q.filter;
+  const { rows: data, total } = await readPage(() => sessionsQuery(db, q), f, SESSION_SORT);
   const names = await lessonNames(
     db,
     data.map((r) => r.lesson_id),
@@ -66,7 +67,7 @@ export async function sessionsPage(db: Db, q: For<EarningsListQuery>): Promise<P
     ...r,
     lesson: { lesson_students: names.get(r.lesson_id) ?? [] },
   }));
-  return { items, total: count ?? 0, page: f.page, pageSize: f.pageSize };
+  return toPage(items, total, f);
 }
 
 /** One page of the payments made to the teacher, voided ones included unless filtered. */
@@ -75,7 +76,12 @@ export async function paymentsPage(
   q: For<TeacherPaymentListQuery>,
 ): Promise<Page<PaymentRow>> {
   const f = q.filter;
-  const from = (f.page - 1) * f.pageSize;
+  const read = await readPage(() => paymentsQuery(db, q), f, PAYMENT_SORT);
+  return toPage(read.rows, read.total, f);
+}
+
+function paymentsQuery(db: Db, q: For<TeacherPaymentListQuery>) {
+  const f = q.filter;
   let query = db
     .from('teacher_payments')
     .select(PAYMENT, { count: 'exact' })
@@ -84,8 +90,5 @@ export async function paymentsPage(
   if (f.voided === 'true') query = query.not('voided_at', 'is', null);
   else if (f.voided === 'false') query = query.is('voided_at', null);
   if (f.note) query = query.ilike('note', ilikeContains(f.note));
-  const { data, count, error } = await applySort(query, f, PAYMENT_SORT)
-    .range(from, from + f.pageSize - 1);
-  if (error) throw pgError(error);
-  return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };
+  return query;
 }

@@ -2,7 +2,7 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
-import { applySort } from '@/common/db/list-sort';
+import { readPage, toPage } from '@/common/db/page';
 import { readAll } from '@/common/db/read-all';
 import { maybe, one, pgError } from '@/common/db/errors';
 import { CURRENT_STUDENT_STATUSES, NOT_SUBSCRIBED_STATUSES, type TeacherStudentCounts } from '@ab/shared';
@@ -40,14 +40,7 @@ export class TeachersRepo {
    * page).
    */
   async list(q: TeacherListQuery): Promise<Page<TeacherListRow>> {
-    const { page, pageSize, search } = q;
-    const from = (page - 1) * pageSize;
-    let query = applyTeacherFilters(this.db.from('teachers').select('*', { count: 'exact' }), q);
-    const filter = search ? teacherSearchFilter(search) : null;
-    if (filter) query = query.or(filter);
-    const { data, count, error } = await applySort(query, q, TEACHER_SORT)
-      .range(from, from + pageSize - 1);
-    if (error) throw pgError(error);
+    const { rows: data, total } = await readPage(() => this.listQuery(q), q, TEACHER_SORT);
     const ids = data.map((row) => row.id);
     const [counts, photos] = await Promise.all([
       this.studentCounts(ids),
@@ -59,7 +52,13 @@ export class TeachersRepo {
       ...(counts.get(row.id) ?? none),
       avatar_url: photos.get(row.id) ?? null,
     }));
-    return { items, total: count ?? 0, page, pageSize };
+    return toPage(items, total, q);
+  }
+
+  private listQuery(q: TeacherListQuery) {
+    const query = applyTeacherFilters(this.db.from('teachers').select('*', { count: 'exact' }), q);
+    const filter = q.search ? teacherSearchFilter(q.search) : null;
+    return filter ? query.or(filter) : query;
   }
 
   /** One page is at most 100 ids, so one `.in()`, past max_rows. */
