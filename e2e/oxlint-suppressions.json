@@ -46,12 +46,6 @@
     }
   },
   "support/durations-reporter.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     }
@@ -163,9 +157,6 @@
     }
   },
   "support/people/family-sign-in.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 4
     }
@@ -197,9 +188,6 @@
     }
   },
   "support/reporting/feedback.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 4
     }
@@ -211,11 +199,6 @@
   },
   "support/reporting/teacher-extra.ts": {
     "ab/no-unchecked-json": {
-      "count": 1
-    }
-  },
-  "support/reporting/teacher-templates.ts": {
-    "complexity": {
       "count": 1
     }
   },
