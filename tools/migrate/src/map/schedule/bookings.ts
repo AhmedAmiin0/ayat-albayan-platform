@@ -25,6 +25,21 @@ export type RuleResult = BookingRule | { ref: SourceRow['ref']; issues: RowIssue
 export const importFrom = (bundle: Pick<SourceBundle, 'from' | 'today'>): string =>
   bundle.from ?? bundle.today;
 
+function rowPackage(f: SourceRow['fields'], issue: (i: IssueInput) => RowIssue) {
+  const pkgText = text(f.package_text);
+  const pkg = packageSize(pkgText) ?? null;
+  const unmapped = pkgText && !pkg;
+  return {
+    pkg,
+    issues: unmapped
+      ? [issue({ code: 'unmapped_value', severity: 'warn', field: 'package_text' })]
+      : [],
+  };
+}
+
+const ruleStatus = (until: string | null, today: string): string =>
+  until && until < today ? 'ended' : 'active';
+
 function ruleOf(
   row: SourceRow,
   o: { ix: StudentIndex; today: string; from: string },
@@ -37,12 +52,7 @@ function ruleOf(
   if (slot.kind !== 'rule') return null;
   const who = bookingWho(row, o.ix);
   if (!('teacher' in who)) return fail(who);
-  const pkgText = text(f.package_text);
-  const pkg = packageSize(pkgText) ?? null;
-  const issues =
-    pkgText && !pkg
-      ? [issue({ code: 'unmapped_value', severity: 'warn', field: 'package_text' })]
-      : [];
+  const { pkg, issues } = rowPackage(f, issue);
   const { rec } = slot;
   return {
     ref: row.ref,
@@ -57,7 +67,7 @@ function ruleOf(
         byday: rec.byday,
         starts_on: slot.date, // clamped to --from on create only (delta/scope.ts)
         ends_on: rec.until,
-        status: rec.until && rec.until < o.today ? 'ended' : 'active',
+        status: ruleStatus(rec.until, o.today),
         package: pkg,
       },
       refs: { teacher_id: keys.teacher(who.teacher) },

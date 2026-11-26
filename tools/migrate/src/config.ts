@@ -39,56 +39,63 @@ function need(env: NodeJS.ProcessEnv, name: string): string {
   return v;
 }
 
+function localTarget({ env }: ResolveTargetInput): TargetConfig {
+  // '' (the .env.example shape) counts as unset; a shell DATABASE_URL wins over .env, so the
+  // host is checked: --target local never reaches a remote database.
+  const databaseUrl = env.DATABASE_URL || LOCAL_DATABASE_URL;
+  if (!LOCAL_HOSTS.includes(new URL(databaseUrl).hostname)) {
+    throw new Error('DATABASE_URL for --target local must point at 127.0.0.1 or localhost');
+  }
+  return {
+    name: 'local',
+    databaseUrl,
+    ssl: false,
+    storage: storageFrom(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY),
+  };
+}
+
+const isStagingPooler = (u: URL): boolean =>
+  u.hostname === STAGING_POOLER.host && decodeURIComponent(u.username) === STAGING_POOLER.user;
+
+function stagingTarget({ env }: ResolveTargetInput): TargetConfig {
+  const databaseUrl = need(env, 'STAGING_DATABASE_URL');
+  if (!isStagingPooler(new URL(databaseUrl))) {
+    throw new Error('STAGING_DATABASE_URL does not point at the staging session pooler');
+  }
+  return {
+    name: 'staging',
+    databaseUrl,
+    ssl: true,
+    storage: storageFrom(env.STAGING_SUPABASE_URL, env.STAGING_SUPABASE_SERVICE_ROLE_KEY),
+  };
+}
+
+function productionTarget({ env, confirmProduction }: ResolveTargetInput): TargetConfig {
+  if (!confirmProduction) {
+    throw new Error('Refusing production: pass --confirm-production once the owner has confirmed');
+  }
+  return {
+    name: 'production',
+    databaseUrl: need(env, 'PRODUCTION_DATABASE_URL'),
+    ssl: true,
+    storage: storageFrom(env.PRODUCTION_SUPABASE_URL, env.PRODUCTION_SUPABASE_SERVICE_ROLE_KEY),
+  };
+}
+
+const TARGETS: Record<TargetName, (input: ResolveTargetInput) => TargetConfig> = {
+  local: localTarget,
+  staging: stagingTarget,
+  production: productionTarget,
+};
+const TARGET_NAMES: readonly TargetName[] = ['local', 'staging', 'production'];
+
 /** Refuses production without --confirm-production, and a staging DSN that points anywhere else. */
 export function resolveTarget(input: ResolveTargetInput): TargetConfig {
-  const { env } = input;
-  switch (input.name) {
-    case 'local': {
-      // '' (the .env.example shape) counts as unset; a shell DATABASE_URL wins over .env, so the
-      // host is checked: --target local never reaches a remote database.
-      const databaseUrl = env.DATABASE_URL || LOCAL_DATABASE_URL;
-      if (!LOCAL_HOSTS.includes(new URL(databaseUrl).hostname)) {
-        throw new Error('DATABASE_URL for --target local must point at 127.0.0.1 or localhost');
-      }
-      return {
-        name: 'local',
-        databaseUrl,
-        ssl: false,
-        storage: storageFrom(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY),
-      };
-    }
-    case 'staging': {
-      const databaseUrl = need(env, 'STAGING_DATABASE_URL');
-      const u = new URL(databaseUrl);
-      if (
-        u.hostname !== STAGING_POOLER.host ||
-        decodeURIComponent(u.username) !== STAGING_POOLER.user
-      ) {
-        throw new Error('STAGING_DATABASE_URL does not point at the staging session pooler');
-      }
-      return {
-        name: 'staging',
-        databaseUrl,
-        ssl: true,
-        storage: storageFrom(env.STAGING_SUPABASE_URL, env.STAGING_SUPABASE_SERVICE_ROLE_KEY),
-      };
-    }
-    case 'production': {
-      if (!input.confirmProduction) {
-        throw new Error(
-          'Refusing production: pass --confirm-production once the owner has confirmed',
-        );
-      }
-      return {
-        name: 'production',
-        databaseUrl: need(env, 'PRODUCTION_DATABASE_URL'),
-        ssl: true,
-        storage: storageFrom(env.PRODUCTION_SUPABASE_URL, env.PRODUCTION_SUPABASE_SERVICE_ROLE_KEY),
-      };
-    }
-    default:
-      throw new Error(
-        `--target must be local, staging or production (got ${input.name ?? 'nothing'})`,
-      );
+  const name = TARGET_NAMES.find((n) => n === input.name);
+  if (name === undefined) {
+    throw new Error(
+      `--target must be local, staging or production (got ${input.name ?? 'nothing'})`,
+    );
   }
+  return TARGETS[name](input);
 }

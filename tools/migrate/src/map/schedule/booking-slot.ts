@@ -30,12 +30,15 @@ function whenOf(f: SourceRow['fields']): When | null {
   return { date, time, duration };
 }
 
+function placedOnce(when: When, from: string): BookingSlot {
+  return when.date < from
+    ? { kind: 'skip', reason: 'once_before_from' }
+    : { kind: 'once', ...when };
+}
+
 /** Where a well-formed row lands relative to `from`. */
 function placed(rec: Recurrence | null, when: When, from: string): BookingSlot {
-  if (rec === null)
-    return when.date < from
-      ? { kind: 'skip', reason: 'once_before_from' }
-      : { kind: 'once', ...when };
+  if (rec === null) return placedOnce(when, from);
   if (rec.until && rec.until < when.date)
     return { kind: 'issue', issue: { code: 'bad_date', severity: 'reject', field: 'recurrence' } };
   if (rec.until && rec.until < from) return { kind: 'skip', reason: 'ended_before_from' };

@@ -31,23 +31,29 @@ interface Booked {
   weekly: string[];
 }
 
+function rowStudents(r: SourceRow, o: { ix: StudentIndex; phone: string }): string[] {
+  return splitSiblings(text(r.fields.name) ?? '').flatMap((name) => {
+    const s = findStudent(o.ix, { phone: o.phone, name });
+    return s.ok ? [s.student.key.key] : [];
+  });
+}
+
+function weeklyOf(recurrence: string | null, o: { from: string; today: string }): string[] {
+  const rec = parseRecurrence(recurrence);
+  const to = rec?.until && rec.until < o.today ? rec.until : o.today;
+  return rec ? weeklyDates({ from: o.from, to, byday: rec.byday }) : [];
+}
+
 function booked(r: SourceRow, o: { ix: StudentIndex; today: string }): Booked | null {
   const phone = phoneCell(r.fields.phone);
   const date = ymd(r.fields.date);
   const time = hhmm(r.fields.start_time);
   if (!phone.ok || !date || !time) return null;
-  const students = splitSiblings(text(r.fields.name) ?? '').flatMap((name) => {
-    const s = findStudent(o.ix, { phone: phone.e164, name });
-    return s.ok ? [s.student.key.key] : [];
-  });
-  const rec = parseRecurrence(text(r.fields.recurrence));
-  const to = rec?.until && rec.until < o.today ? rec.until : o.today;
-  const weekly = rec ? weeklyDates({ from: date, to, byday: rec.byday }) : [];
   return {
-    students,
+    students: rowStudents(r, { ix: o.ix, phone: phone.e164 }),
     slot: { time, duration: num(r.fields.duration_min) ?? 45 },
     exact: date,
-    weekly,
+    weekly: weeklyOf(text(r.fields.recurrence), { from: date, today: o.today }),
   };
 }
 

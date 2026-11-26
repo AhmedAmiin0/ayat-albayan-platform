@@ -56,6 +56,21 @@ describe('students: SUBS register', () => {
       { severity: 'review', ref: { source: 'ATT' } },
     ]);
   });
+
+  it('one SUBS lesson is no register claim; a SUBS test row is skipped, never reported', () => {
+    const run = pipeline(
+      bundleOf({
+        hub_students: [studentRow({ teacher: 'hend' })],
+        subs_students: [
+          subs({ student_name: 'ليان', lessons_count: 1 }),
+          subs({ student_name: 'اختبار', lessons_count: 5 }),
+        ],
+      }),
+      MODULES,
+    );
+    expect(run.issues.filter((i) => i.code === 'missing_ref')).toEqual([]);
+    expect(run.issues.find((i) => i.code === 'status_downgrade')).toBeUndefined();
+  });
 });
 
 describe('students: what the lesson reports say', () => {

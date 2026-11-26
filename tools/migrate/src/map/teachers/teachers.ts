@@ -29,6 +29,24 @@ function calendars(bundle: SourceBundle): Map<string, string> {
   return out;
 }
 
+const teacherStatus = (raw: string | null): string =>
+  /نشط/.test(raw ?? '') ? 'active' : 'inactive';
+
+/** A bad phone only warns: the teacher is kept without one, on Cairo time. */
+function teacherContact(row: SourceRow, issue: ReturnType<typeof issuesFor>) {
+  const phone = phoneCell(row.fields.phone);
+  if (!phone.ok) {
+    const bad = issue({
+      code: 'bad_phone',
+      severity: 'warn',
+      field: 'phone',
+      detail: phone.reason,
+    });
+    return { phone: null, tz: 'Africa/Cairo', issues: [bad] };
+  }
+  return { phone: phone.e164, tz: tzForPhone(phone.e164), issues: [] };
+}
+
 function mapTeacher(row: SourceRow, cals: ReadonlyMap<string, string>): Mapped {
   const issue = issuesFor('teachers', row.ref);
   const nameEn = text(row.fields.name_en);
@@ -38,28 +56,25 @@ function mapTeacher(row: SourceRow, cals: ReadonlyMap<string, string>): Mapped {
     return rejected(row.ref, [
       issue({ code: 'unknown_teacher', severity: 'reject', field: 'name_en' }),
     ]);
-  const phone = phoneCell(row.fields.phone);
+  const contact = teacherContact(row, issue);
   const g = gender(text(row.fields.gender));
   if (!g)
     return rejected(row.ref, [
       issue({ code: 'unmapped_value', severity: 'reject', field: 'gender' }),
     ]);
-  const issues = phone.ok
-    ? []
-    : [issue({ code: 'bad_phone', severity: 'warn', field: 'phone', detail: phone.reason })];
   return accepted({
     key: keys.teacher(slug),
     ref: row.ref,
-    issues,
+    issues: contact.issues,
     columns: {
       display_name_ar: nameAr,
       display_name_en: nameEn,
       gender: g,
       programs: ['quran'], // memorization and tajweed for all 11
-      phone_e164: phone.ok ? phone.e164 : null,
+      phone_e164: contact.phone,
       meeting_link: meetingLink(text(row.fields.meeting_link)),
-      status: /نشط/.test(text(row.fields.status) ?? '') ? 'active' : 'inactive',
-      tz: phone.ok ? tzForPhone(phone.e164) : 'Africa/Cairo',
+      status: teacherStatus(text(row.fields.status)),
+      tz: contact.tz,
       google_calendar_id: cals.get(slug) ?? null,
     },
   });

@@ -22,11 +22,17 @@ export type PlanWithChanges = Plan & { changes: FieldChange[] };
 const TIME = /^\d{2}:\d{2}$/;
 const INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
 
+const isBlank = (v: unknown): boolean => v === undefined || v === '';
+
 /** Compare as Postgres stores it: '' = null, 'HH:mm' = 'HH:mm:00', instants by epoch, 5 = '5'. */
 function norm(v: unknown): unknown {
-  if (v === undefined || v === '') return null;
+  if (isBlank(v)) return null;
   if (typeof v === 'number') return String(v);
   if (typeof v !== 'string') return v;
+  return normText(v);
+}
+
+function normText(v: string): string | number {
   if (TIME.test(v)) return `${v}:00`;
   const t = INSTANT.test(v) ? Date.parse(v) : NaN;
   return Number.isNaN(t) ? v : t;

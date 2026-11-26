@@ -34,13 +34,17 @@ function otherNote(rows: readonly SourceRow[]): string {
   return ['other Expenses', ...descs].join(': ');
 }
 
+function noteFor(category: string, o: { label: string; rows: readonly SourceRow[] }): string {
+  return category === 'other' ? otherNote(o.rows) : o.label;
+}
+
 function sheetExpenses(rows: readonly SourceRow[], month: string): Mapped[] {
   return rows.flatMap((r) => {
     const label = text(r.fields.summary_label);
     const amount = num(r.fields.summary_value);
     const category = label ? CATEGORY[label] : undefined;
     if (!label || !category || amount === null || amount <= 0) return [];
-    const note = category === 'other' ? otherNote(rows) : label;
+    const note = noteFor(category, { label, rows });
     return [
       accepted({
         key: keys.expense({ month, category, note, amount }),

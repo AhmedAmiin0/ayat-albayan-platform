@@ -13,21 +13,36 @@ const tokens = (s: string): string[] =>
     .split(/[^a-z]+/)
     .filter(Boolean);
 
-export function finPrice(
-  bundle: SourceBundle,
-  q: { name: string; month: string },
-): { amount: number; fin: SourceRow['ref'] } | null {
-  const id = FIN_MONTHS[q.month];
-  const [first] = tokens(q.name);
-  if (!id || !first) return null;
-  const hits = (bundle.sheets[id] ?? []).filter((r) => {
+interface FinPrice {
+  amount: number;
+  fin: SourceRow['ref'];
+}
+
+const isShared = (desc: string): boolean => /[+&,]|\band\b/i.test(desc);
+
+function soleMention(rows: readonly SourceRow[], first: string): SourceRow | null {
+  const hits = rows.filter((r) => {
     const desc = text(r.fields.revenue_desc);
     return desc !== null && tokens(desc).includes(first);
   });
   const [hit] = hits;
-  if (hits.length !== 1 || !hit) return null;
+  return hits.length === 1 && hit ? hit : null;
+}
+
+function soloPrice(hit: SourceRow): FinPrice | null {
   const desc = text(hit.fields.revenue_desc) ?? '';
   const amount = num(hit.fields.revenue_amount);
-  if (/[+&,]|\band\b/i.test(desc) || amount === null || amount <= 0) return null;
+  if (isShared(desc) || amount === null || amount <= 0) return null;
   return { amount, fin: hit.ref };
+}
+
+export function finPrice(
+  bundle: SourceBundle,
+  q: { name: string; month: string },
+): FinPrice | null {
+  const id = FIN_MONTHS[q.month];
+  const [first] = tokens(q.name);
+  if (!id || !first) return null;
+  const hit = soleMention(bundle.sheets[id] ?? [], first);
+  return hit ? soloPrice(hit) : null;
 }

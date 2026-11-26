@@ -5,10 +5,10 @@
 import type { SourceBundle } from '../../entities/contract.ts';
 import { keys } from '../../keys.ts';
 import { hhmm, num, phoneCell, text, ymd } from '../../sources/sheets/cells.ts';
-import { type IssueInput, issuesFor } from '../../sources/sheets/issues.ts';
+import { issuesFor } from '../../sources/sheets/issues.ts';
 import { weekday } from '../../sources/values.schedule.ts';
 import { teacherFromText } from '../../sources/values.ts';
-import type { SourceRow } from '../../types.ts';
+import type { NaturalKey, SourceRow } from '../../types.ts';
 import { packageOf } from '../money/heart.ts';
 import { type StudentIndex, findStudent } from '../people/match.ts';
 import { type RuleResult, SHEET_TZ } from './bookings.ts';
@@ -35,41 +35,40 @@ interface Ctx {
   today: string;
 }
 
-function ruleRows(row: SourceRow, o: Ctx): RuleResult[] {
-  const issue = issuesFor('schedule_rules', row.ref);
-  const fail = (i: IssueInput): RuleResult[] => [{ ref: row.ref, issues: [issue(i)] }];
-  const name = text(row.fields.name);
-  const times = slots(row.fields);
-  if (!name || times.size === 0) return []; // no booked days: nothing to schedule
+type Matched = { ok: true; sub: SourceRow; student: NaturalKey } | { ok: false; detail: string };
+
+function matchStudent(name: string, o: Ctx): Matched {
   const sub = o.subs.find((s) => lower(text(s.fields.name)) === lower(name));
   const phone = phoneCell(sub?.fields.phone);
-  if (!sub || !phone.ok)
-    return fail({
-      code: 'missing_ref',
-      severity: 'review',
-      field: 'student',
-      detail: 'no HEART subscription row with a phone',
-    });
+  if (!sub || !phone.ok) return { ok: false, detail: 'no HEART subscription row with a phone' };
   const found = findStudent(o.ix, { phone: phone.e164, name });
-  if (!found.ok)
-    return fail({
-      code: 'missing_ref',
-      severity: 'review',
-      field: 'student',
-      detail: found.reason,
-    });
-  const students = [found.student.key];
-  const total = (num(sub.fields.lessons_used) ?? 0) + (num(sub.fields.lessons_remaining) ?? 0);
-  return [...times].map(([time, byday]) => ({
+  if (!found.ok) return { ok: false, detail: found.reason };
+  return { ok: true, sub, student: found.student.key };
+}
+
+const lessonTotal = (sub: SourceRow): number =>
+  (num(sub.fields.lessons_used) ?? 0) + (num(sub.fields.lessons_remaining) ?? 0);
+
+interface Slot {
+  time: string;
+  byday: number[];
+  severalTimes: boolean;
+}
+
+function heartRule(row: SourceRow, m: { sub: SourceRow; student: NaturalKey }, o: Ctx & Slot) {
+  return {
     ref: row.ref,
     key: keys.scheduleRule({
       teacher: o.teacher,
-      students: [found.student.key.key],
-      slot: times.size > 1 ? time : undefined,
+      students: [m.student.key],
+      slot: o.severalTimes ? o.time : undefined,
     }),
-    students,
+    students: [m.student],
     issues: [
-      issue({
+      issuesFor(
+        'schedule_rules',
+        row.ref,
+      )({
         code: 'missing_field',
         severity: 'warn',
         field: 'duration_min,tz',
@@ -79,17 +78,36 @@ function ruleRows(row: SourceRow, o: Ctx): RuleResult[] {
     record: {
       columns: {
         duration_min: 45,
-        start_time_local: time,
+        start_time_local: o.time,
         tz: SHEET_TZ,
-        byday,
-        starts_on: ymd(sub.fields.date) ?? o.today,
+        byday: o.byday,
+        starts_on: ymd(m.sub.fields.date) ?? o.today,
         ends_on: null,
         status: 'active',
-        package: packageOf(total),
+        package: packageOf(lessonTotal(m.sub)),
       },
       refs: { teacher_id: keys.teacher(o.teacher) },
     },
-  }));
+  };
+}
+
+function ruleRows(row: SourceRow, o: Ctx): RuleResult[] {
+  const name = text(row.fields.name);
+  const times = slots(row.fields);
+  if (!name || times.size === 0) return []; // no booked days: nothing to schedule
+  const m = matchStudent(name, o);
+  if (!m.ok) {
+    const detail = m.detail;
+    const issue = issuesFor('schedule_rules', row.ref);
+    return [
+      {
+        ref: row.ref,
+        issues: [issue({ code: 'missing_ref', severity: 'review', field: 'student', detail })],
+      },
+    ];
+  }
+  const severalTimes = times.size > 1;
+  return [...times].map(([time, byday]) => heartRule(row, m, { ...o, time, byday, severalTimes }));
 }
 
 /** Every timetable row of every teacher tab, after the bookings (prefer 'last': HEART wins). */

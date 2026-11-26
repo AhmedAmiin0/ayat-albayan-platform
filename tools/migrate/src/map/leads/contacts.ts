@@ -84,16 +84,24 @@ function contactOfConversation(crm: CrmTables): Map<string, string> {
   return contactOf;
 }
 
-export function crmIndex(crm: CrmTables): CrmIndex {
+function contactsById(crm: CrmTables): Map<string, CrmContact> {
   const tags = tagsByContact(crm);
   const contacts = new Map<string, CrmContact>();
   for (const row of crm.contacts ?? []) {
     const c = contactFrom(row, tags.get(text(row, 'id') ?? '') ?? []);
     if (c.id) contacts.set(c.id, c);
   }
-  const contactOf = contactOfConversation(crm);
+  return contacts;
+}
+
+function messagesByContact(crm: CrmTables, contactOf: Map<string, string>): Map<string, CrmRow[]> {
   const messages = new Map<string, CrmRow[]>();
   for (const m of rowsByAge(crm, 'messages'))
     push(messages, contactOf.get(text(m, 'conversation_id') ?? ''), m);
-  return { contacts, contactOf, messages };
+  return messages;
+}
+
+export function crmIndex(crm: CrmTables): CrmIndex {
+  const contactOf = contactOfConversation(crm);
+  return { contacts: contactsById(crm), contactOf, messages: messagesByContact(crm, contactOf) };
 }

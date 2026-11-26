@@ -25,43 +25,69 @@ function personOf(row: SourceRow, o: { name: string; phone: string }): Person {
   };
 }
 
+interface HeartRow {
+  row: SourceRow;
+  name: string;
+  phone: string;
+}
+
+function heartRow(row: SourceRow): HeartRow | null {
+  const name = text(row.fields.name);
+  const phone = phoneCell(row.fields.phone);
+  // Test rows, bad phones and empty names are reported by the subscriptions module (heart.ts).
+  if (!name || !phone.ok || testReason({ names: [name], phone: phone.e164 })) return null;
+  return { row, name, phone: phone.e164 };
+}
+
+function heartMatch(h: HeartRow, people: readonly Person[]) {
+  const cands = people.filter((p) => p.phone === h.phone);
+  const hits = cands.filter(
+    (p) => personName(p.name) === personName(h.name) || latinMatchesArabic(h.name, p.name),
+  );
+  const [only] = hits.length ? hits : cands;
+  const single = hits.length === 1 || cands.length === 1;
+  return { cands, hits, child: single ? only : undefined };
+}
+
+function createdIssue(h: HeartRow): RowIssue {
+  return issuesFor(
+    'students',
+    h.row.ref,
+  )({
+    code: 'missing_ref',
+    severity: 'review',
+    field: 'student',
+    detail: 'paying child not in the registry: student created from HEART (Latin name)',
+  });
+}
+
+function unclearIssue(h: HeartRow, m: { cands: Person[]; hits: Person[] }): RowIssue {
+  const among = (m.hits.length ? m.hits : m.cands).map((p) => `«${p.name}»`).join(', ');
+  return issuesFor(
+    'students',
+    h.row.ref,
+  )({
+    code: 'merge_candidate',
+    severity: 'review',
+    field: 'student',
+    detail: `HEART name fits ${m.hits.length || 'none'} of the phone's children (${among}); not merged`,
+  });
+}
+
+function placeHeartRow(h: HeartRow, people: Person[]): RowIssue[] {
+  const m = heartMatch(h, people);
+  if (m.child) return mergeInto(m.child, personOf(h.row, { name: m.child.name, phone: h.phone }));
+  if (m.cands.length > 0) return [unclearIssue(h, m)];
+  people.push(personOf(h.row, h));
+  return [createdIssue(h)];
+}
+
 /** Mutates `people`: merges HEART rows into their children or appends new ones. */
 export function addHeartPeople(rows: readonly SourceRow[], people: Person[]): RowIssue[] {
   const issues: RowIssue[] = [];
   for (const row of rows) {
-    const name = text(row.fields.name);
-    const phone = phoneCell(row.fields.phone);
-    // Test rows, bad phones and empty names are reported by the subscriptions module (heart.ts).
-    if (!name || !phone.ok || testReason({ names: [name], phone: phone.e164 })) continue;
-    const issue = issuesFor('students', row.ref);
-    const cands = people.filter((p) => p.phone === phone.e164);
-    const hits = cands.filter(
-      (p) => personName(p.name) === personName(name) || latinMatchesArabic(name, p.name),
-    );
-    const [only] = hits.length ? hits : cands;
-    if (only && (hits.length === 1 || cands.length === 1)) {
-      issues.push(...mergeInto(only, personOf(row, { name: only.name, phone: phone.e164 })));
-    } else if (cands.length === 0) {
-      people.push(personOf(row, { name, phone: phone.e164 }));
-      issues.push(
-        issue({
-          code: 'missing_ref',
-          severity: 'review',
-          field: 'student',
-          detail: 'paying child not in the registry: student created from HEART (Latin name)',
-        }),
-      );
-    } else {
-      const among = (hits.length ? hits : cands).map((p) => `«${p.name}»`).join(', ');
-      issues.push(
-        issue({
-          code: 'merge_candidate',
-          severity: 'review',
-          field: 'student',
-          detail: `HEART name fits ${hits.length || 'none'} of the phone's children (${among}); not merged`,
-        }),
-      );
-    }
+    const h = heartRow(row);
+    if (h) issues.push(...placeHeartRow(h, people));
   }
   return issues;
 }

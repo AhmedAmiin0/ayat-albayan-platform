@@ -33,13 +33,15 @@ export function cleanName(raw: string): string {
     .trim();
 }
 
+const keepsWaw = (second: string): boolean =>
+  second.slice(1).length < 2 || WAW_NAMES.has(normalizeArabic(second));
+
 function splitWaw(part: string): string[] {
   const tokens = part.split(' ');
   const [first, second] = tokens;
   if (tokens.length !== 2 || !first || !second?.startsWith('و')) return [part];
-  const rest = second.slice(1);
-  if (rest.length < 2 || WAW_NAMES.has(normalizeArabic(second))) return [part];
-  return [first, rest];
+  if (keepsWaw(second)) return [part];
+  return [first, second.slice(1)];
 }
 
 /** A mother's kunya stays one name; three-word names stay whole for merge review. */
