@@ -27,11 +27,15 @@ export interface AtId {
   id: string;
 }
 
-/** The keyset column, the unique column breaking its ties (`id` by default) and the direction. */
+/**
+ * The keyset column, the unique column breaking its ties (`id` by default), the direction and
+ * whether the cursor row itself belongs to the page.
+ */
 export interface KeysetSpec {
   column: string;
   key?: string;
   ascending: boolean;
+  inclusive?: boolean;
 }
 
 export interface Keyset<Q> extends Orderable<Q> {
