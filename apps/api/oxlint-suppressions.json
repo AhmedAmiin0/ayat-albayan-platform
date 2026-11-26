@@ -1331,9 +1331,6 @@
   "src/modules/finance/invoices/invoices.repo.ts": {
     "typescript/consistent-type-definitions": {
       "count": 2
-    },
-    "complexity": {
-      "count": 1
     }
   },
   "src/modules/finance/invoices/invoices.service.ts": {
@@ -1895,9 +1892,6 @@
   },
   "src/modules/finance/subscriptions/shared/subscriptions.repo.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "complexity": {
       "count": 1
     },
     "typescript/no-unnecessary-condition": {
