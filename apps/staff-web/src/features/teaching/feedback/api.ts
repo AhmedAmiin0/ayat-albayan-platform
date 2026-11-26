@@ -16,7 +16,7 @@ import { feedbackKeys } from '@/features/teaching/feedback/keys';
 export const FEEDBACK_KEY = feedbackKeys.all;
 export const FEEDBACK_PAGE_SIZE = 20;
 
-// ---- Public (the guardian's link, no login): never the admin's session token. ----
+// The guardian's link has no login: these calls never carry the admin's session token.
 
 /** The one place that knows the public GET's shape (camelCase); a rename changes only this. */
 export function toFormView(raw: unknown): FeedbackFormView {
