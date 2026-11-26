@@ -6,6 +6,17 @@ import { parseCounts } from './parse.mjs';
 const ONE_STATEMENT = { simple: false };
 // Set inside the transaction, so it also holds behind a pooler that drops session settings.
 const TIME_LIMIT = "set local statement_timeout = '30s'";
+// Notices can quote values, so they are dropped, and a type lookup's error would escape the
+// catch in main.
+const DRIVER_OPTIONS = {
+  max: 1,
+  connect_timeout: 15,
+  fetch_types: false,
+  onnotice: () => undefined,
+};
+
+// A throw inside the driver's own timers never reaches main, and Node would print it.
+export const exitQuietly = (proc) => proc.on('uncaughtException', () => proc.exit(1));
 
 // A database error can quote a row value, so every failure becomes a bare null.
 const countIn = (sql, statement) =>
@@ -32,7 +43,7 @@ const missingUrl = (warn) => {
 };
 
 const runAll = async (items, url, connect) => {
-  const sql = connect(url);
+  const sql = connect(url, DRIVER_OPTIONS);
   try {
     return await Promise.all(items.map((item) => countIn(sql, item.sql)));
   } finally {

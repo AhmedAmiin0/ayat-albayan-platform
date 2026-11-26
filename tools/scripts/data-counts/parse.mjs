@@ -4,16 +4,19 @@
 const NAME_LINE = /^--\s*count:\s*([a-z][a-z0-9_]*)\s*$/;
 const COUNT = /^select count\(\*\) from (?:public\.)?[a-z_][a-z0-9_]*(?: where (.+))?$/i;
 const LITERAL = /'(?:[^']|'')*'/g;
-// Postgres ends a string where LITERAL does only when it has no backslash and no prefix (E, U&,
-// B, X), and a quoted name can call a function: a count needs none of them. Each string becomes
-// a backtick, which is no SQL, so what is left is the statement's own code.
-const UNREADABLE = /[\\"`]/;
-const FORBIDDEN = /;|--|\/\*|\$|'|[a-z0-9_&]`|[^\x20-\x7e]|\b(?:select|table|values)\b/i;
+// Postgres ends a string where LITERAL does only when it has no backslash and no control
+// character, and a quoted name can call a function: a count needs none of them. Each string
+// becomes a backtick, which is no SQL, so what is left is the statement's own code.
+const UNREADABLE = /[\\"`]|[^\x20-￿]/;
+// A word before a string is a prefix (E, U&, B, X) or a type name, whose input function can
+// read the catalog (`regclass 'x'`): only an operator or a bracket comes before a string.
+const FORBIDDEN = /;|--|\/\*|\$|'|[a-z0-9_&]\s*`|[^\x20-\x7e]|\b(?:select|table|values)\b/i;
 // A dot before a name selects a field, which can also call a function of the row (`t.fn`), and
-// a cast to a reg type reads the catalog: one table's own columns need neither.
-const REACHES_OUT = /\.\s*[a-z_]|::\s*reg/i;
+// a cast to any type but text can read the catalog too: one table's own columns need neither.
+const REACHES_OUT = /\.\s*[a-z_]|::(?!\s*text\b)/i;
 const OPERATORS = new Set(['in', 'and', 'or', 'not']);
-const CALL = /\b([a-z_][a-z0-9_]*)\s*\(/gi;
+// No word boundary before the name: `1left(x)` is a call on servers that split it there.
+const CALL = /([a-z_][a-z0-9_]*)\s*\(/gi;
 // Standard SQL calls the first group without parentheses, so CALL cannot see them. The second
 // group starts a clause after the condition, and a count has none.
 const REFUSED_WORDS = new Set([
@@ -101,13 +104,14 @@ const closeStatement = (state) => {
   Object.assign(state, { name: null, parts: [] });
 };
 
-const endsStatement = (state, line) => state.parts.length > 0 && line.endsWith(';');
+// Only a statement's own line ends it: a comment that ends with `;` would cut it short.
+const endsStatement = (handle, line) => handle === addPart && line.endsWith(';');
 
 const readLine = (state, raw) => {
   const line = raw.trim();
   const [, handle] = LINE_KIND.find(([matches]) => matches(line)) ?? LINE_KIND[0];
   handle(line, state);
-  if (endsStatement(state, line)) closeStatement(state);
+  if (endsStatement(handle, line)) closeStatement(state);
 };
 
 export const parseCounts = (text) => {
