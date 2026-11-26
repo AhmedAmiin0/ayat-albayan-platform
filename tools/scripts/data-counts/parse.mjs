@@ -11,13 +11,36 @@ const UNREADABLE = /[\\"`]/;
 const FORBIDDEN = /;|--|\/\*|\$|'|[a-z0-9_&]`|[^\x20-\x7e]|\b(?:select|table|values)\b/i;
 const OPERATORS = new Set(['in', 'and', 'or', 'not']);
 const CALL = /\b([a-z_][a-z0-9_]*)\s*\(/gi;
+// Standard SQL calls these without parentheses, so CALL cannot see them.
+const KEYWORD_CALLS = new Set([
+  'current_catalog',
+  'current_date',
+  'current_role',
+  'current_schema',
+  'current_time',
+  'current_timestamp',
+  'current_user',
+  'localtime',
+  'localtimestamp',
+  'session_user',
+  'system_user',
+  'user',
+]);
+const WORD = /[a-z_][a-z0-9_]*/gi;
+// A bare name follows search_path, where pg_catalog comes first, so the schema is always sent.
+const FROM = /^(select count\(\*\) from )(?:public\.)?/i;
+const MAX_LENGTH = 65_536;
 
 const hasCall = (where) =>
   [...where.matchAll(CALL)].some(([, word]) => !OPERATORS.has(word.toLowerCase()));
 
+const hasKeywordCall = (where) =>
+  (where.match(WORD) ?? []).some((word) => KEYWORD_CALLS.has(word.toLowerCase()));
+
 const isPlainWhere = (where) => {
   const bare = where.replace(LITERAL, '`');
-  return !UNREADABLE.test(where) && !FORBIDDEN.test(bare) && !hasCall(bare);
+  const called = hasCall(bare) || hasKeywordCall(bare);
+  return !UNREADABLE.test(where) && !FORBIDDEN.test(bare) && !called;
 };
 
 const isPlainCount = (sql) => {
@@ -53,7 +76,7 @@ const closeStatement = (state) => {
     [!isPlainCount(sql), `statement ${index} is not a plain count`],
   ];
   assertNoProblem(checks);
-  state.items.push({ name: state.name, sql });
+  state.items.push({ name: state.name, sql: sql.replace(FROM, '$1public.') });
   Object.assign(state, { name: null, parts: [] });
 };
 
@@ -67,6 +90,7 @@ const readLine = (state, raw) => {
 };
 
 export const parseCounts = (text) => {
+  assertNoProblem([[text.length > MAX_LENGTH, 'counts file is too long']]);
   const state = { items: [], name: null, parts: [] };
   text.split('\n').forEach((line) => readLine(state, line));
   assertNoProblem([

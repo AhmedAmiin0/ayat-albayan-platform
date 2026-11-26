@@ -12,7 +12,9 @@ const write = (line) => {
 // Notices can quote values, so they are dropped instead of logged.
 const dropNotice = () => undefined;
 
-const connect = (url) => postgres(url, { max: 1, connect_timeout: 15, onnotice: dropNotice });
+// No type lookup either: its error would escape main's own handling.
+const connect = (url) =>
+  postgres(url, { max: 1, connect_timeout: 15, fetch_types: false, onnotice: dropNotice });
 
 process.exitCode = await main({
   file: process.argv[2] ?? '',

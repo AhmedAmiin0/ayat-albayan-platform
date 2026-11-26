@@ -38,7 +38,9 @@ const runAll = async (items, url, connect) => {
 export const main = async ({ file, url, connect, write, warn = console.error }) => {
   const items = url ? readItems(file, warn) : missingUrl(warn);
   if (items === null) return 1;
-  const lines = countLines(items, await runAll(items, url, connect));
+  // An error from the driver can quote the database url, so a failed connect prints nothing either.
+  const values = await runAll(items, url, connect).catch(() => [null]);
+  const lines = countLines(items, values);
   (lines ?? []).forEach((line) => write(line));
   return lines === null ? 1 : 0;
 };
