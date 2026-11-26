@@ -84,17 +84,6 @@
       "count": 2
     }
   },
-  "support/finance/exports-csv.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    },
-    "ab/no-if-chains": {
-      "count": 3
-    }
-  },
   "support/finance/invoice.ts": {
     "stylistic/max-len": {
       "count": 1
