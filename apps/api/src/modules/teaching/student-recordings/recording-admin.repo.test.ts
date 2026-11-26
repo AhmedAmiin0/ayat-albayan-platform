@@ -8,7 +8,7 @@ describe('RecordingAdminRepo error paths: the answer a failed query gives today'
     const { db } = fakeDb({ lesson_recordings: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new RecordingAdminRepo(db).byId('r1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

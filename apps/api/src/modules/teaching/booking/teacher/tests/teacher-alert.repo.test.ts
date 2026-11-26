@@ -6,7 +6,7 @@ import { readerOf } from '@/common/settings/settings.fakes';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { TeacherAlertRepo } from '@/modules/teaching/booking/teacher/teacher-alert.repo';
 
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 const repo = (db: Db) => new TeacherAlertRepo(db, readerOf(BookingSettings));
 

@@ -13,7 +13,7 @@ describe('AvailabilityRepo error paths: the answer a failed query gives today', 
     const { db } = fakeDb({ teacher_availability: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(repoOf(db).listSlots('t1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

@@ -39,7 +39,7 @@ describe('TeacherStudentsRepo error paths: the answer a failed query gives today
       await answerOfRejection(new TeacherStudentsRepo(db).lessons({ teacherId: 't1', since: 'x' })),
     ).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

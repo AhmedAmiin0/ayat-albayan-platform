@@ -8,7 +8,7 @@ describe('TeacherCancelRepo error paths: the answer a failed query gives today',
     const { db } = fakeDb({ students: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new TeacherCancelRepo(db).ownersOf(['s1']))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

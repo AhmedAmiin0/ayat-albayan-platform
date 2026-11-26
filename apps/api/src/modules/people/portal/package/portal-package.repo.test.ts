@@ -8,7 +8,7 @@ describe('PortalPackageRepo error paths: the answer a failed query gives today',
     const { db } = fakeDb({ payments: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new PortalPackageRepo(db).payments('s1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

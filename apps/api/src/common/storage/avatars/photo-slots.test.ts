@@ -8,7 +8,7 @@ describe('photo slots error paths: the answer a failed query gives today', () =>
     const { db } = fakeDb({ profiles: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(profileSlot(db, 'p1').read())).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

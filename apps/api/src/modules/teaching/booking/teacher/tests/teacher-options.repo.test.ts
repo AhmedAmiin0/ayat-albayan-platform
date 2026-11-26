@@ -10,7 +10,7 @@ import {
 
 const SETTINGS = readerOf(BookingSettings);
 const FILTER: TeacherFilter = { program: 'quran' };
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 const setup = (on: boolean) => {
   const f = fakeDb({

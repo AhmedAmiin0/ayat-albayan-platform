@@ -8,7 +8,7 @@ describe('PortalScopeRepo error paths: the answer a failed query gives today', (
     const { db } = fakeDb({ 'rpc:portal_students_of': [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new PortalScopeRepo(db).studentsOf('p1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

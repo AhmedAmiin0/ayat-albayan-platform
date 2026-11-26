@@ -10,7 +10,7 @@ describe('claimDevice error paths: the answer a failed query gives today', () =>
     const { db } = fakeDb({ 'rpc:claim_push_device': [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(claimDevice(db, CLAIM))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

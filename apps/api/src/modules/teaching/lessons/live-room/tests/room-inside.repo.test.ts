@@ -8,7 +8,7 @@ describe('RoomInsideRepo error paths: the answer a failed query gives today', ()
     const { db } = fakeDb({ classroom_participants: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new RoomInsideRepo(db).inside(['l1']))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

@@ -41,7 +41,7 @@ describe('sales lessons error paths: the answer a failed query gives today', () 
     const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(isSalesLesson(db, LESSON))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

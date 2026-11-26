@@ -12,7 +12,7 @@ describe('TeacherConfirmRepo error paths: the answer a failed query gives today'
       ),
     ).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

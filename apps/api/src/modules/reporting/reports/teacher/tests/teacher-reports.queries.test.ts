@@ -8,7 +8,7 @@ describe('TeacherReportsQueries error paths: the answer a failed query gives tod
     const { db } = fakeDb({ students: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new TeacherReportsQueries(db).students(['s1']))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

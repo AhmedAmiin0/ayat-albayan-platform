@@ -16,7 +16,7 @@ const RULE = {
 };
 const SPAN = { from: new Date('2026-10-04T14:00:00Z'), to: new Date('2026-10-04T14:45:00Z') };
 const QUERY = { teacherId: 't1', studentIds: [], span: SPAN, excludeRuleIds: [] };
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 
 describe('RuleProjectionQueries — generated dates are keyed on local_date (R-SCH-11, migration 174)', () => {

@@ -8,7 +8,7 @@ describe('ReportAttachmentsQueries error paths: the answer a failed query gives 
     const { db } = fakeDb({ report_attachments: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new ReportAttachmentsQueries(db).get('r1', 'a1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

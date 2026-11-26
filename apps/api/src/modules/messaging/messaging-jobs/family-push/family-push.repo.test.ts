@@ -13,7 +13,7 @@ describe('FamilyPushRepo error paths: the answer a failed query gives today', ()
     const repo = repoWith([{ error: PG_ERRORS.unique }]);
     expect(await answerOfRejection(repo.reportsSentSince(SINCE))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

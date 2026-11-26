@@ -94,7 +94,7 @@ describe('FeedbackReadRepo error paths: the answer a failed query gives today', 
     const { db } = fakeDb({ v_teacher_feedback_avg: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new FeedbackReadRepo(db).averages())).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

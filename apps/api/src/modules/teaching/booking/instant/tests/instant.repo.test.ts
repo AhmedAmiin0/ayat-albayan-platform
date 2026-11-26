@@ -5,7 +5,7 @@ import type { Db } from '@/common/db/db.module';
 import type { BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
 import { InstantRepo } from '@/modules/teaching/booking/instant/instant.repo';
 
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 const PAYLOAD = { rule: {} } as unknown as BookingPayload;
 const RPC = 'rpc:create_instant_lesson';

@@ -21,7 +21,7 @@ describe('PayoutsRepo error paths: the answer a failed query gives today', () =>
     const { db } = fakeDb({ teachers: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new PayoutsRepo(db).teachers())).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 
@@ -29,7 +29,7 @@ describe('PayoutsRepo error paths: the answer a failed query gives today', () =>
     const { db } = fakeDb({ teachers: [{ error: PG_ERRORS.foreignKey }] });
     expect(await answerOfRejection(new PayoutsRepo(db).teachers())).toEqual({
       status: 409,
-      body: { message: 'fk_violation', detail: PG_ERRORS.foreignKey.details },
+      body: { message: 'fk_violation' },
     });
   });
 

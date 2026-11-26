@@ -10,7 +10,7 @@ describe('ChannelBellRepo error paths: the answer a failed query gives today', (
       await answerOfRejection(new ChannelBellRepo(db).rewrite({ messageId: 'm1', body: '-' })),
     ).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

@@ -8,7 +8,7 @@ describe('MeZoneRepo error paths: the answer a failed query gives today', () => 
     const { db } = fakeDb({ profiles: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new MeZoneRepo(db).setLocale('p1', 'en'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

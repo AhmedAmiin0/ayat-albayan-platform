@@ -8,7 +8,7 @@ describe('ChannelReadsRepo error paths: the answer a failed query gives today', 
     const { db } = fakeDb({ channel_reads: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new ChannelReadsRepo(db).marks('c1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

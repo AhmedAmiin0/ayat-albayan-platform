@@ -10,7 +10,7 @@ describe('LinkExpiryRepo error paths: the answer a failed query gives today', ()
       await answerOfRejection(new LinkExpiryRepo(db).expire(new Date('2026-11-01T00:00:00Z'))),
     ).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

@@ -10,7 +10,7 @@ describe('ShortLinksRepo error paths: the answer a failed query gives today', ()
     const { db } = fakeDb({ short_links: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new ShortLinksRepo(db).byCode('c1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

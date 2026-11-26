@@ -4,7 +4,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 import { meetingTarget } from '@/modules/teaching/classroom/recordings/recording-target';
 
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 describe('RecordingQueries for meetings (migration 212)', () => {
   it('a meeting’s claim fills meeting_id, never lesson_id', async () => {

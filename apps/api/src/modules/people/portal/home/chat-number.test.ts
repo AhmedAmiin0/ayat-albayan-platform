@@ -54,7 +54,7 @@ describe('ChatNumber error paths: the answer a failed query gives today', () => 
     const { db } = fakeDb({ wa_numbers: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(withChatLine(db))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

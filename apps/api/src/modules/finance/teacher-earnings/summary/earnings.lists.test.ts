@@ -71,7 +71,7 @@ describe('earnings lists error paths: the answer a failed query gives today', ()
     expect(await answerOfRejection(paymentsPage(db, { teacherId: TEACHER, filter: page }))).toEqual(
       {
         status: 409,
-        body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+        body: { message: 'duplicate' },
       },
     );
   });

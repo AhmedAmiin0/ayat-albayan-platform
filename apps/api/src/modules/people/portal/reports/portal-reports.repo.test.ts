@@ -8,7 +8,7 @@ describe('PortalReportsRepo error paths: the answer a failed query gives today',
     const { db } = fakeDb({ lesson_reports: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new PortalReportsRepo(db).texts('r1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

@@ -3,7 +3,7 @@ import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { MeetingInviteeRepo } from '@/modules/teaching/classroom/meetings/invites/meeting-invitee.repo';
 
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 describe('MeetingInviteeQueries.teacherStudentIds (owner 2026-10-15)', () => {
   it('the teacher’s own students, never the not-subscribed ones (new, trial, pending_subscription)', async () => {

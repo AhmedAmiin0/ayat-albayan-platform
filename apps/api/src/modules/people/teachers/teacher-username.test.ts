@@ -21,7 +21,7 @@ describe('TeacherUsernames error paths: the answer a failed query gives today', 
     const { db } = fakeDb({ profiles: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new TeacherUsernames(db).of('p1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

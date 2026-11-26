@@ -9,7 +9,7 @@ import {
   type NewMeeting,
 } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 const ROW: NewMeeting = {
   title: 't',

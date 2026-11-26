@@ -69,7 +69,7 @@ describe('LeadConversion error paths: the answer a failed query gives today', ()
     const t = setup([{ error: PG_ERRORS.unique }]);
     expect(await answerOfRejection(t.convert.afterPackage('s1', 'admin1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

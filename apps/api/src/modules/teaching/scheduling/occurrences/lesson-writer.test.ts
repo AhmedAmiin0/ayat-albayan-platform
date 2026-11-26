@@ -6,7 +6,7 @@ import type { Db } from '@/common/db/db.module';
 import { fakePolicy } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import { LessonWriter } from './lesson-writer';
 
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 const AT = '2026-11-01T14:00:00.000Z';
 const END = '2026-11-01T14:45:00.000Z';

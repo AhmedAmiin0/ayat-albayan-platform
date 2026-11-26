@@ -3,7 +3,7 @@ import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { AssistantLessonsRepo } from './assistants.lessons';
 
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 const REFS = [{ lesson_id: 'l1', student_id: 's1' }];
 const RANGE = { from: '2026-11-01T00:00:00Z', to: '2026-11-08T00:00:00Z' };

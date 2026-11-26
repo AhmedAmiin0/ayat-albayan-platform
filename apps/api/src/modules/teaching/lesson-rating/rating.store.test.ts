@@ -17,7 +17,7 @@ describe('RatingStore error paths: the answer a failed query gives today', () =>
     const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new RatingStore(db).record(TAP))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

@@ -90,7 +90,7 @@ describe('StudentRecordingRepo error paths: the answer a failed query gives toda
     const { db } = fakeDb({ students: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new StudentRecordingRepo(db).student('s1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 
