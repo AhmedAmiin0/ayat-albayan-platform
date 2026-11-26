@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   CHANNEL_BODY_MAX,
+  CHANNEL_SENDER_ROLES,
+  channelSenderRoleSchema,
   channelClosedReason,
   channelEditSchema,
   channelPageQuerySchema,
@@ -58,5 +60,12 @@ describe('channelClosedReason', () => {
     );
     const on = { family: true, familyChatOn: true };
     expect(channelClosedReason({ status: 'new', teacher_id: 't1' }, on)).toBe('not_subscribed');
+  });
+});
+
+describe('channelSenderRoleSchema', () => {
+  it('accepts each chat sender role and nothing else', () => {
+    expect(channelSenderRoleSchema.options).toEqual([...CHANNEL_SENDER_ROLES]);
+    expect(channelSenderRoleSchema.validate('admin')).toBe(false);
   });
 });
