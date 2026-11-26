@@ -4,14 +4,19 @@ import { withCode } from './error-code';
 
 type Replies = Parameters<BaseExceptionFilter['handleUnknownError']>[2];
 
+function readKey(target: Replies, key: string | symbol, receiver: unknown): unknown {
+  return Reflect.get(target, key, receiver);
+}
+
 /** The adapter with every reply body given its code; every other call goes through as is. */
 const codedReplies = (adapter: Replies): Replies =>
   new Proxy(adapter, {
     get: (target, key, receiver) =>
       key === 'reply'
-        ? (res: unknown, body: unknown, status: number) =>
-            target.reply(res, withCode(body, status), status)
-        : Reflect.get(target, key, receiver),
+        ? (res: unknown, body: unknown, status: number): void => {
+            target.reply(res, withCode(body, status), status);
+          }
+        : readKey(target, key, receiver),
   });
 
 const recoded = (e: HttpException) =>
