@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { RateLimitRepo } from '@/common/http/rate-limit.repo';
-import { linkRouteSchema, type LinkRoute } from './lesson-links.schemas';
+
+/** Which public route: GET /join/:token or GET /report-link/legacy/*. */
+const linkRouteSchema = z.enum(['join', 'legacy']);
+type LinkRoute = z.infer<typeof linkRouteSchema>;
 
 /**
  * Per IP and minute. The legacy bridge is tighter: its old Apps Script shape is not signed (a
