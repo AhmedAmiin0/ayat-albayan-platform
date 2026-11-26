@@ -1,6 +1,7 @@
 import { isFamilyEmail, type UsersListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pageWindow } from '@/common/db/page';
 import { maybe, pgError } from '@/common/db/errors';
 import * as links from './users.links.repo';
 import { mapListRow } from './users.rows';
@@ -35,7 +36,7 @@ export class UsersRepo {
   async list(query: UsersListQuery): Promise<{ rows: UserRow[]; total: number }> {
     const { data, error } = await this.db.rpc(
       'admin_list_users',
-      listArgs(query, query.pageSize, (query.page - 1) * query.pageSize),
+      listArgs(query, query.pageSize, pageWindow(query).from),
     );
     if (error) throw pgError(error);
     const tests = await this.testLogins(data.map((r) => r.id));

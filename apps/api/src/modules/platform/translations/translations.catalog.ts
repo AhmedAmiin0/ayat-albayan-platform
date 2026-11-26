@@ -8,6 +8,7 @@ import {
   type TranslationKeysPage,
   type TranslationKeysQuery,
 } from '@ab/i18n';
+import { pageWindow, toPage } from '@/common/db/page';
 import { BUNDLES } from '@/common/infra/i18n/server-text';
 import { VALUES_HINT_KEYS } from './values-owned';
 
@@ -51,14 +52,8 @@ export function listKeys(
   const rows = KEYS.filter((k) => !query.section || sectionOf(k) === query.section)
     .map((k) => row(k, overrides))
     .filter((r) => !needle || matches(r, needle));
-  const start = (query.page - 1) * query.pageSize;
-  return {
-    items: rows.slice(start, start + query.pageSize),
-    total: rows.length,
-    page: query.page,
-    pageSize: query.pageSize,
-    sections: SECTIONS,
-  };
+  const { from, to } = pageWindow(query);
+  return { ...toPage(rows.slice(from, to + 1), rows.length, query), sections: SECTIONS };
 }
 
 type OverrideProblem = { kind: 'unknown_key' } | { kind: 'placeholders_missing'; missing: string[] };
