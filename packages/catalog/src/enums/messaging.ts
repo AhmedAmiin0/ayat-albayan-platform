@@ -79,15 +79,15 @@ export type FamilyPushKind = (typeof FAMILY_PUSH_KINDS)[number];
 /** Any push_notifications.kind (the DB enum push_kind). */
 export type AnyPushKind = (typeof ALL_PUSH_KINDS)[number];
 /** A messaging line (sends and reply windows); never `calls` (docs/28 §10). */
-export type WaLine = (typeof WA_LINES)[number];
+export const waLineSchema = z.enum(WA_LINES);
+export type WaLine = z.infer<typeof waLineSchema>;
 /**
  * A wa_numbers role: a messaging line, or `calls` (a number that only carries WhatsApp calls,
  * docs/28 §10).
  */
 export type NumberPurpose = (typeof NUMBER_PURPOSES)[number];
 /** A messaging line (not `calls`): what may send, open a reply window or own a template. */
-export const isWaLine = (v: string | null | undefined): v is WaLine =>
-  WA_LINES.some((l) => l === v);
+export const isWaLine = (v: string | null | undefined): v is WaLine => waLineSchema.validate(v);
 /**
  * A row received on / sent from a messaging line or none (history): never the calls number's
  * (docs/28 §10).
