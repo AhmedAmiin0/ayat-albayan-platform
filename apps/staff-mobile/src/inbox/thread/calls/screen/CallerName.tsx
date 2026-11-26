@@ -7,7 +7,12 @@ export function CallerName({ name }: { name: string }) {
     <AppText
       accessibilityRole="header"
       numberOfLines={1}
-      style={{ fontFamily: type.display, fontSize: type.size.h3, lineHeight: type.lineHeight(type.size.h3, true), color: color.coverInk }}
+      style={{
+        fontFamily: type.display,
+        fontSize: type.size.h3,
+        lineHeight: type.lineHeight(type.size.h3, true),
+        color: color.coverInk,
+      }}
     >
       {name}
     </AppText>

@@ -119,7 +119,12 @@ export const receiptUploadSchema = z.object({
 });
 
 /** POST /payouts/:id/pay. Approve takes no body. */
-export const payoutPaySchema = z.object({ paidAt: pastInstant.optional(), method: z.enum(PAYMENT_METHODS).optional(), note: optionalText, receiptPath: z.string().min(1).nullish() });
+export const payoutPaySchema = z.object({
+  paidAt: pastInstant.optional(),
+  method: z.enum(PAYMENT_METHODS).optional(),
+  note: optionalText,
+  receiptPath: z.string().min(1).nullish(),
+});
 
 /** `?from&to` local days (Asia/Riyadh), inclusive, at most a year (else range_too_large). */
 export const dateRangeQuery = z

@@ -27,7 +27,13 @@ export function VoiceNote({ message: m, phone, kind, onLongPress }: VoiceNotePro
   return (
     <View style={{ gap: 2 }}>
       {state.step === 'ready' ? (
-        <VoicePlayback id={m.id} url={state.file.url} kind={kind} onFail={fail} onLongPress={onLongPress} />
+        <VoicePlayback
+          id={m.id}
+          url={state.file.url}
+          kind={kind}
+          onFail={fail}
+          onLongPress={onLongPress}
+        />
       ) : (
         <VoiceRow id={m.id} kind={kind} playing={false} busy={state.step === 'fetching'} progress={0} clock="" onToggle={tap} onSeek={tap} onLongPress={onLongPress} />
       )}

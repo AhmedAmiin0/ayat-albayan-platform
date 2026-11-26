@@ -24,35 +24,41 @@ function studentOf(f: SourceRow['fields'], o: { ix: StudentIndex; teacher: strin
   return byPhone?.ok ? byPhone : findStudent(o.ix, { name, teacher: o.teacher });
 }
 
+type Found = ReturnType<typeof studentOf>;
+
+const ownTeacher = (found: Found): string | undefined =>
+  found.ok ? found.student.record.refs.teacher_id?.key : undefined;
+
+function unknownTeacher(named: string | null | undefined): IssueInput {
+  const detail = named === null ? 'not_a_teacher' : 'unknown_text';
+  return { code: 'unknown_teacher', severity: 'reject', field: 'teacher', detail };
+}
+
+function unmatchedStudent(f: SourceRow['fields'], reason: string): IssueInput {
+  const children = splitSiblings(reportNames(f)[0] ?? '').length;
+  if (children > 1)
+    return {
+      code: 'sibling_split',
+      severity: 'review',
+      field: 'student',
+      detail: `report names ${children} children: owner decides (one child or a group lesson)`,
+    };
+  return { code: 'missing_ref', severity: 'reject', field: 'student', detail: reason };
+}
+
+const REGISTRY_TEACHER_USED: IssueInput = {
+  code: 'unknown_teacher',
+  severity: 'warn',
+  field: 'teacher',
+  detail: 'registry_teacher_used',
+};
+
 export function reportWho(f: SourceRow['fields'], ix: StudentIndex): Who | IssueInput {
   const named = reportTeacher(f);
   const found = studentOf(f, { ix, teacher: named ?? null });
-  const own = found.ok ? found.student.record.refs.teacher_id?.key : undefined;
-  const teacher = named ?? own;
-  if (!teacher) {
-    const detail = named === null ? 'not_a_teacher' : 'unknown_text';
-    return { code: 'unknown_teacher', severity: 'reject', field: 'teacher', detail };
-  }
-  if (!found.ok) {
-    const children = splitSiblings(reportNames(f)[0] ?? '').length;
-    if (children > 1)
-      return {
-        code: 'sibling_split',
-        severity: 'review',
-        field: 'student',
-        detail: `report names ${children} children: owner decides (one child or a group lesson)`,
-      };
-    return { code: 'missing_ref', severity: 'reject', field: 'student', detail: found.reason };
-  }
-  const issues: IssueInput[] = named
-    ? []
-    : [
-        {
-          code: 'unknown_teacher',
-          severity: 'warn',
-          field: 'teacher',
-          detail: 'registry_teacher_used',
-        },
-      ];
+  const teacher = named ?? ownTeacher(found);
+  if (!teacher) return unknownTeacher(named);
+  if (!found.ok) return unmatchedStudent(f, found.reason);
+  const issues: IssueInput[] = named ? [] : [REGISTRY_TEACHER_USED];
   return { student: found.student, teacher, issues };
 }

@@ -23,7 +23,10 @@ interface LinkPayInput {
 /** The amount checked against the quote's price and the admin's cap; none before a price. */
 const checkOf = (text: string, priced: PaymentLinkQuoteView | undefined) =>
   priced &&
-  checkAmount(text, { reference: priced.quote.afterDiscount, maxDiscountPct: priced.max_discount_pct });
+  checkAmount(text, {
+    reference: priced.quote.afterDiscount,
+    maxDiscountPct: priced.max_discount_pct,
+  });
 
 /** Online payment (docs/30): a custom amount must be > 0 and not below the admin's minimum. */
 export function useLinkPay({ studentId, pricing, phone }: LinkPayInput) {

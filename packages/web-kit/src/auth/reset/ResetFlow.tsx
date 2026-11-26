@@ -63,7 +63,13 @@ export function ResetFlow({ mode, onDone }: Props) {
           </RequestStep>
         </>
       ) : (
-        <CodeStep flow={flow} submitLabel={F.savePassword} busyLabel={F.saving} onSubmit={() => void save()} backLabel={F.back}>
+        <CodeStep
+          flow={flow}
+          submitLabel={F.savePassword}
+          busyLabel={F.saving}
+          onSubmit={() => void save()}
+          backLabel={F.back}
+        >
           <Field label={F.newPassword} required>
             {(p) => <PasswordInput {...p} autoComplete="new-password" value={password} onValue={setPassword} />}
           </Field>

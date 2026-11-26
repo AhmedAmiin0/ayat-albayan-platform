@@ -28,9 +28,22 @@ test('the preset kind: the status param when the switch has it, else «مشتر�
 });
 
 test('the switch counts: «تجريبي» = new + trial + pending_subscription, «الكل» every status', () => {
-  const counts = { new: 1, trial: 2, pending_subscription: 3, active: 4, pending_renewal: 5, expired: 6, paused: 7, churned: 8 };
+  const counts = {
+    new: 1,
+    trial: 2,
+    pending_subscription: 3,
+    active: 4,
+    pending_renewal: 5,
+    expired: 6,
+    paused: 7,
+    churned: 8,
+  };
   expect(kindCounts(counts)).toEqual({ active: 4, trial: 6, all: 36 });
-  expect(kindCounts({ ...counts, new: undefined })).toEqual({ active: 4, trial: undefined, all: undefined });
+  expect(kindCounts({ ...counts, new: undefined })).toEqual({
+    active: 4,
+    trial: undefined,
+    all: undefined,
+  });
   expect(kindCounts(undefined)).toEqual({ active: undefined, trial: undefined, all: undefined });
 });
 

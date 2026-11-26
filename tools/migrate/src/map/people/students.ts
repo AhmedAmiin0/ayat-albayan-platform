@@ -18,16 +18,25 @@ interface Built {
   issues: RowIssue[];
 }
 
-function studentRecord(p: Person): Built {
+const ageOf = (age: number | null): number | null =>
+  age !== null && age >= 3 && age <= 99 ? Math.round(age) : null;
+
+function unmappedIssues(p: Person, o: { age: number | null; gender: string | null }): RowIssue[] {
   const issue = issuesFor('students', p.ref);
   const issues: RowIssue[] = [];
   const f = p.fields;
-  const age = f.age !== null && f.age >= 3 && f.age <= 99 ? Math.round(f.age) : null;
-  if (f.age !== null && age === null)
+  if (f.age !== null && o.age === null)
     issues.push(issue({ code: 'unmapped_value', severity: 'warn', field: 'age' }));
-  const g = gender(f.gender) ?? null;
-  if (f.gender && !g)
+  if (f.gender && !o.gender)
     issues.push(issue({ code: 'unmapped_value', severity: 'warn', field: 'gender' }));
+  return issues;
+}
+
+function studentRecord(p: Person): Built {
+  const f = p.fields;
+  const age = ageOf(f.age);
+  const g = gender(f.gender) ?? null;
+  const issues = unmappedIssues(p, { age, gender: g });
   const teacher = f.teacherText ? teacherFromText(f.teacherText) : null;
   const columns: Record<string, ColumnValue> = {
     name: p.name,

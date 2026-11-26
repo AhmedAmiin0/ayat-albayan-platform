@@ -19,7 +19,10 @@ test('the fresh row wins (a tick changed); the page keeps its own has_more while
   const next = mergeNewest(data, detail([delivered, failed], { has_more: true }));
   expect(next?.pages[0]?.messages.find((m) => m.id === 'm2')?.status).toBe('delivered');
   expect(next?.pages[0]?.has_more).toBe(false);
-  expect(mergeNewest(cachedThread(detail([inbound])), detail([inbound], { has_more: true }))?.pages[0]?.has_more).toBe(true);
+  expect(
+    mergeNewest(cachedThread(detail([inbound])), detail([inbound], { has_more: true }))?.pages[0]
+      ?.has_more,
+  ).toBe(true);
 });
 
 test('a provisional row still sending survives the poll, after the fresh rows', () => {
@@ -31,7 +34,10 @@ test('a provisional row still sending survives the poll, after the fresh rows', 
 
 test('nothing cached: nothing to merge into', () => {
   expect(mergeNewest(undefined, detail([inbound]))).toBeUndefined();
-  expect(mergeNewest({ pages: [], pageParams: [] }, detail([inbound]))).toEqual({ pages: [], pageParams: [] });
+  expect(mergeNewest({ pages: [], pageParams: [] }, detail([inbound]))).toEqual({
+    pages: [],
+    pageParams: [],
+  });
 });
 
 test('a gap: the fresh full page shares no row with the cached newest page', () => {

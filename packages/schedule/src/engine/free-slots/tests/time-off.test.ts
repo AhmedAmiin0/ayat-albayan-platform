@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { freeSlots, type FreeSlotsInput, type TimeRange } from '../free-slots';
 
 const starts = (input: FreeSlotsInput) => freeSlots(input).map((s) => s.start.toISOString());
-const range = (start: string, end: string): TimeRange => ({ start: new Date(start), end: new Date(end) });
+const range = (start: string, end: string): TimeRange => ({
+  start: new Date(start),
+  end: new Date(end),
+});
 // Wednesday 2026-07-15, Cairo summer (UTC+3): 16:00–20:00 local = 13:00Z–17:00Z.
 const base: FreeSlotsInput = {
   from: new Date('2026-07-15T00:00:00Z'),

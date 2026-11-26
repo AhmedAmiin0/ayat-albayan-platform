@@ -20,7 +20,9 @@ const field = (n: string) => screen.getByLabelText(t.inbox.composer.param.replac
 
 test('an imported starter: four fields, then the send carries its own key and every value', async () => {
   const onSend = jest.fn();
-  await render(<TemplateForm template={IMPORTED} lessons={[]} onBack={jest.fn()} onSend={onSend} />);
+  await render(
+    <TemplateForm template={IMPORTED} lessons={[]} onBack={jest.fn()} onSend={onSend} />,
+  );
   for (const n of ['1', '2', '3', '4']) await fireEvent.changeText(field(n), `v${n}`);
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   expect(onSend).toHaveBeenCalledWith({
@@ -33,7 +35,9 @@ test('an imported starter: four fields, then the send carries its own key and ev
 
 test('a missing fourth variable blocks the send', async () => {
   const onSend = jest.fn();
-  await render(<TemplateForm template={IMPORTED} lessons={[]} onBack={jest.fn()} onSend={onSend} />);
+  await render(
+    <TemplateForm template={IMPORTED} lessons={[]} onBack={jest.fn()} onSend={onSend} />,
+  );
   for (const n of ['1', '2', '3']) await fireEvent.changeText(field(n), `v${n}`);
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   expect(onSend).not.toHaveBeenCalled();

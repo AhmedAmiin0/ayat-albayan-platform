@@ -66,10 +66,9 @@ export const settingDef = (key: SettingKey): SettingDef => SETTINGS_REGISTRY[key
 export const SETTING_FIELD_OF = Object.fromEntries(SETTING_KEYS.map((k) => [k, camelKey(k)])) as {
   [K in SettingKey]: CamelKey<K>;
 };
-export const SETTING_KEY_OF = Object.fromEntries(SETTING_KEYS.map((k) => [camelKey(k), k])) as Record<
-  SettingField,
-  SettingKey
->;
+export const SETTING_KEY_OF = Object.fromEntries(
+  SETTING_KEYS.map((k) => [camelKey(k), k]),
+) as Record<SettingField, SettingKey>;
 
 /** A default safe to share: lists are copied, objects (academy_contact...) frozen so a caller never mutates the registry. */
 function defaultOf(key: SettingKey): AcademySettings[SettingKey] {
@@ -79,7 +78,10 @@ function defaultOf(key: SettingKey): AcademySettings[SettingKey] {
 }
 
 /** Used when a row is missing or malformed; the migrations seed the same values. */
-export const SETTING_DEFAULTS = Object.fromEntries(SETTING_KEYS.map((k) => [k, defaultOf(k)])) as AcademySettings;
+export const SETTING_DEFAULTS = Object.fromEntries(
+  SETTING_KEYS.map((k) => [k, defaultOf(k)]),
+) as AcademySettings;
 
 /** Is this row key one of the registry's settings? (A custom entry may not reuse one.) */
-export const isSettingKey = (key: string): key is SettingKey => Object.hasOwn(SETTINGS_REGISTRY, key);
+export const isSettingKey = (key: string): key is SettingKey =>
+  Object.hasOwn(SETTINGS_REGISTRY, key);

@@ -12,7 +12,9 @@ import { uploadSalesReceipt } from './upload-sales-receipt';
 export function useSalesPayment(phone: string, bind: { phone?: string } = {}) {
   const client = useQueryClient();
   const [clientRequestId] = useState(requestId);
-  const attachmentPaths = useAttachmentPaths((id, receipt) => uploadSalesReceipt(id, receipt, bind));
+  const attachmentPaths = useAttachmentPaths((id, receipt) =>
+    uploadSalesReceipt(id, receipt, bind),
+  );
 
   return useMutation({
     mutationKey: ['sales', 'payments', 'create'],

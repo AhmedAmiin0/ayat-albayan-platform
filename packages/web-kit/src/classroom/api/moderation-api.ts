@@ -9,12 +9,16 @@ const MEETING_PREFIX = 'meeting-';
 
 /** The lesson id behind a room name (`lesson-<id>`, shared lessonRoomName); null for any other room. */
 export function lessonIdOfRoom(room: string): string | null {
-  return room.startsWith(ROOM_PREFIX) && room.length > ROOM_PREFIX.length ? room.slice(ROOM_PREFIX.length) : null;
+  return room.startsWith(ROOM_PREFIX) && room.length > ROOM_PREFIX.length
+    ? room.slice(ROOM_PREFIX.length)
+    : null;
 }
 
 /** The internal meeting id behind a room name (`meeting-<id>`, shared meetingRoomName); null for any other room. */
 export function meetingIdOfRoom(room: string): string | null {
-  return room.startsWith(MEETING_PREFIX) && room.length > MEETING_PREFIX.length ? room.slice(MEETING_PREFIX.length) : null;
+  return room.startsWith(MEETING_PREFIX) && room.length > MEETING_PREFIX.length
+    ? room.slice(MEETING_PREFIX.length)
+    : null;
 }
 
 /** 403 cannot_remove, 404 participant_not_found; then joins fail with removed_from_room. */
@@ -26,11 +30,17 @@ export const removeMeetingParticipant = (who: { meetingId: string; identity: str
   apiSend('POST', `/meetings/${who.meetingId}/participants/${encodeURIComponent(who.identity)}/remove`);
 
 /** An internal meeting only disconnects, no lasting block; `lessonId` null means no removal. */
-export function kickScope(room: string): { lessonId: string | null; remove?: typeof removeParticipant } {
+export function kickScope(room: string): {
+  lessonId: string | null;
+  remove?: typeof removeParticipant;
+} {
   const meetingId = meetingIdOfRoom(room);
   // A lesson room keeps useKick's default (removeParticipant).
   if (meetingId === null) return { lessonId: lessonIdOfRoom(room) };
-  return { lessonId: meetingId, remove: ({ identity }) => removeMeetingParticipant({ meetingId, identity }) };
+  return {
+    lessonId: meetingId,
+    remove: ({ identity }) => removeMeetingParticipant({ meetingId, identity }),
+  };
 }
 
 export interface RecordingSource {

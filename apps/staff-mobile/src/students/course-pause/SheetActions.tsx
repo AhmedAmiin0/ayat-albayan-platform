@@ -9,7 +9,13 @@ interface SheetActionsProps {
   danger?: boolean;
 }
 
-export function SheetActions({ label, busy, onConfirm, onCancel, danger = false }: SheetActionsProps) {
+export function SheetActions({
+  label,
+  busy,
+  onConfirm,
+  onCancel,
+  danger = false,
+}: SheetActionsProps) {
   return (
     <View style={{ flexDirection: 'row', gap: 8 }}>
       <View style={{ flex: 1 }}>

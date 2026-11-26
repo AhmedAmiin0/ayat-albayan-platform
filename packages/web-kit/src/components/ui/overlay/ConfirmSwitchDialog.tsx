@@ -20,7 +20,16 @@ export interface ConfirmSwitchProps {
  * A dangerous switch asks first (docs/23a §E H4): cancel is the default focus, the consequence is
  * spelled out, and a failed save stays inside the dialog.
  */
-export function ConfirmSwitchDialog({ title, description, yes, onYes, onClose, pending, failed, children }: ConfirmSwitchProps) {
+export function ConfirmSwitchDialog({
+  title,
+  description,
+  yes,
+  onYes,
+  onClose,
+  pending,
+  failed,
+  children,
+}: ConfirmSwitchProps) {
   return (
     <Dialog
       title={title}

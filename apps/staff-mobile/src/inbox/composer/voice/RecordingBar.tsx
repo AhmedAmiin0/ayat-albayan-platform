@@ -31,7 +31,10 @@ function LevelBars({ level, ms }: { level: number | null; ms: number }) {
   return (
     <View testID="level-bars" style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 2, height: 24, overflow: 'hidden' }}>
       {bars.map((h, i) => (
-        <View key={i} style={{ width: 3, height: 4 + h * 20, borderRadius: 2, backgroundColor: color.ink3 }} />
+        <View
+          key={i}
+          style={{ width: 3, height: 4 + h * 20, borderRadius: 2, backgroundColor: color.ink3 }}
+        />
       ))}
     </View>
   );
@@ -54,7 +57,9 @@ export function RecordingBar({ voice }: { voice: Pick<VoiceUi, 'state' | 'ms' | 
         {time}
         <Animated.View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4, opacity: voice.hint }}>
           <Chevron to="prev" color={color.ink3} size={16} />
-          <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink3 }}>{t.inbox.composer.voice.slideCancel}</AppText>
+          <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink3 }}>
+            {t.inbox.composer.voice.slideCancel}
+          </AppText>
         </Animated.View>
       </View>
     );

@@ -39,8 +39,18 @@ test('state chips: enabled + default, or disabled alone', () => {
 test('health chip and last check', () => {
   expect(healthChip(main)?.label).toBe(n.health.ok);
   expect(healthChip(chat)).toBeNull();
-  expect(healthChip({ health: { ok: false, status: null, quality_rating: null, verified_name: null, gaps: [], errors: 1 } }))
-    .toEqual({ tone: 'bad', glyph: 'struck', label: n.health.failed });
+  expect(
+    healthChip({
+      health: {
+        ok: false,
+        status: null,
+        quality_rating: null,
+        verified_name: null,
+        gaps: [],
+        errors: 1,
+      },
+    }),
+  ).toEqual({ tone: 'bad', glyph: 'struck', label: n.health.failed });
   expect(checkedLine(main, '24', 'Asia/Riyadh')).toMatch(/2026/);
   expect(checkedLine(chat, '24', 'Asia/Riyadh')).toBeNull();
 });

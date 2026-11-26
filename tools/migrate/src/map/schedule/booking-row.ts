@@ -7,6 +7,20 @@ import { testReason } from '../../sources/sheets/test-rows.ts';
 import { teacherFromText } from '../../sources/values.ts';
 import { type StudentIndex, findStudent } from '../people/match.ts';
 
+function siblingKeys(
+  ix: StudentIndex,
+  q: { phone: string; raw: string },
+): NaturalKey[] | IssueInput {
+  const out: NaturalKey[] = [];
+  for (const name of splitSiblings(q.raw)) {
+    const r = findStudent(ix, { phone: q.phone, name });
+    if (!r.ok)
+      return { code: 'missing_ref', severity: 'reject', field: 'student', detail: r.reason };
+    out.push(r.student.key);
+  }
+  return out;
+}
+
 /** Students the row names, or the reject: test row, bad phone, no name, student not imported. */
 export function bookingStudents(row: SourceRow, ix: StudentIndex): NaturalKey[] | IssueInput {
   const phone = phoneCell(row.fields.phone);
@@ -19,14 +33,7 @@ export function bookingStudents(row: SourceRow, ix: StudentIndex): NaturalKey[] 
   if (!phone.ok)
     return { code: 'bad_phone', severity: 'reject', field: 'phone', detail: phone.reason };
   if (!raw) return { code: 'missing_field', severity: 'reject', field: 'name' };
-  const out: NaturalKey[] = [];
-  for (const name of splitSiblings(raw)) {
-    const r = findStudent(ix, { phone: phone.e164, name });
-    if (!r.ok)
-      return { code: 'missing_ref', severity: 'reject', field: 'student', detail: r.reason };
-    out.push(r.student.key);
-  }
-  return out;
+  return siblingKeys(ix, { phone: phone.e164, raw });
 }
 
 /** Teacher slug: the column when set (unknown text → unknown_teacher), else the student's. */

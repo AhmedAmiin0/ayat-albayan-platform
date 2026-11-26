@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter } from 'expo-router/testing-library';
 import type { AccessToken as Token, ReadWithin as Within } from '@ab/mobile-kit/testing';
 import { queryClient, pathKey } from '@ab/mobile-kit';
+import type { ZodType } from 'zod';
 import type { NavState } from '@/core/nav/chat-groups';
 import { currentBackend, type FakeBackend, setBackend } from './fake-backend';
 import type * as Backend from './fake-backend';
@@ -22,18 +23,19 @@ jest.mock('expo-image-picker', () => jest.requireActual('./native-mocks').imageP
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   // The real read deadline and token read around the fake answer (stuck reads).
-  apiFetch: (url: string, init?: RequestInit) => {
+  apiFetch: (url: string, init: RequestInit & { schema?: ZodType } = {}) => {
     const token = jest.requireActual<typeof Token>('@ab/mobile-kit/lib/http/access-token');
     const within = jest.requireActual<typeof Within>('@ab/mobile-kit/lib/http/read-within');
     const backend = () => jest.requireActual<typeof Backend>('./fake-backend');
+    const { schema, ...rest } = init;
     const read = async () => {
       await token.accessToken();
-      return backend().currentBackend().fetch(url);
+      return backend().currentBackend().fetch(url, schema);
     };
-    return within.withReadDeadline(read, init);
+    return within.withReadDeadline(read, rest);
   },
-  apiSend: (method: string, url: string, body?: unknown) =>
-    jest.requireActual('./fake-backend').currentBackend().send(method, url, body),
+  apiSend: (method: string, url: string, options?: unknown) =>
+    jest.requireActual('./fake-backend').currentBackend().send(method, url, options),
 }));
 jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
   supabase: {
@@ -93,7 +95,8 @@ export async function renderApp({ url, backend, gate = 'admin', storage = {} }: 
   const own = backend.handles('GET /auth/me');
   const me = fullAccessMe(gate === 'out' ? 'admin' : gate);
   setBackend(own ? backend : backend.fallback('GET /auth/me', () => me));
-  if (!own && gate !== 'out' && !queryClient.getQueryData(pathKey('/auth/me'))) queryClient.setQueryData(pathKey('/auth/me'), me);
+  if (!own && gate !== 'out' && !queryClient.getQueryData(pathKey('/auth/me')))
+    queryClient.setQueryData(pathKey('/auth/me'), me);
   mockGate.initial = gate;
   await AsyncStorage.multiSet(Object.entries(storage));
   const pending = renderRouter(routes, { initialUrl: url });

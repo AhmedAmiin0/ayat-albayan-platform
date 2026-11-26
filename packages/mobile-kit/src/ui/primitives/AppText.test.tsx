@@ -29,5 +29,7 @@ test('Android lays text out with the «simple» break strategy (no clipped last 
 test('Field: the label starts at the inline-start; the input leaves alignment to the typed text', async () => {
   await render(<Field label={t.auth.email} ltr value="" onChangeText={() => undefined} />);
   expect(StyleSheet.flatten(screen.getByText(t.auth.email).props.style).textAlign).toBe('left');
-  expect(StyleSheet.flatten(screen.getByLabelText(t.auth.email).props.style).textAlign).toBeUndefined();
+  expect(
+    StyleSheet.flatten(screen.getByLabelText(t.auth.email).props.style).textAlign,
+  ).toBeUndefined();
 });

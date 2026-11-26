@@ -42,7 +42,13 @@ beforeEach(() => jest.clearAllMocks());
 test('a salesperson on a lead: first in «⋮», it opens the sales wizard prefilled from the thread, under /sales', async () => {
   await openMenu({ me: salesMe, base: '/sales' });
   expect(t.inbox.registerNew).toBe('تسجيل طالب جديد');
-  expect(words()).toEqual([t.inbox.registerNew, t.inbox.chatSearch.open, t.inbox.copy.phone, t.registrationCheck.action, t.common.cancel]);
+  expect(words()).toEqual([
+    t.inbox.registerNew,
+    t.inbox.chatSearch.open,
+    t.inbox.copy.phone,
+    t.registrationCheck.action,
+    t.common.cancel,
+  ]);
   expect(screen.queryByTestId('sales-chat-actions')).toBeNull();
   await fireEvent.press(menu().getByRole('button', { name: t.inbox.registerNew }));
   expect(screen.queryByTestId('thread-menu')).toBeNull();

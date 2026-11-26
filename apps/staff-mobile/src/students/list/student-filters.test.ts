@@ -23,7 +23,16 @@ test('active count excludes the sort', () => {
 });
 
 test('counts: numbers only, the total needs every status', () => {
-  const counts = { new: 6, trial: 2, pending_subscription: 7, active: 5, pending_renewal: 4, expired: 8, paused: 1, churned: 3 };
+  const counts = {
+    new: 6,
+    trial: 2,
+    pending_subscription: 7,
+    active: 5,
+    pending_renewal: 4,
+    expired: 8,
+    paused: 1,
+    churned: 3,
+  };
   expect(countOf(counts, 'active')).toBe(5);
   expect(countOf(counts, 'pending_renewal')).toBe(4);
   expect(totalOf(counts)).toBe(36);

@@ -81,12 +81,16 @@ test('a refused text sent again keeps its clientRequestId; an edited one gets a 
   await screen.findByText(t.inbox.error.send_failed);
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
-  const ids = mockApiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
+  const ids = mockApiSend.mock.calls.map(
+    (c) => (c[2] as { clientRequestId: string }).clientRequestId,
+  );
   expect(ids[0]).toBe(ids[1]);
   await fireEvent.changeText(box(), 'تمام كده');
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(3));
-  expect((mockApiSend.mock.calls[2]?.[2] as { clientRequestId: string }).clientRequestId).not.toBe(ids[0]);
+  expect((mockApiSend.mock.calls[2]?.[2] as { clientRequestId: string }).clientRequestId).not.toBe(
+    ids[0],
+  );
 });
 
 test('sending switched off: the box says messages wait in the queue', async () => {

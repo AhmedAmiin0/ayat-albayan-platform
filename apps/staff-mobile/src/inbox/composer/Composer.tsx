@@ -82,9 +82,15 @@ export function Composer({
       />
       {may ? <QuoteStrip /> : null}
       {may ? <EditStrip /> : null}
-      {may && replies.staged ? <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} /> : null}
+      {may && replies.staged ? (
+        <SavedReplyChip file={replies.staged.file} onRemove={replies.clearStaged} />
+      ) : null}
       {may && replies.search !== null ? (
-        <SlashSuggestions search={replies.search} contact={{ thread, student }} onFill={replies.fill} />
+        <SlashSuggestions
+          search={replies.search}
+          contact={{ thread, student }}
+          onFill={replies.fill}
+        />
       ) : null}
       {may ? (
         <OpenRow
@@ -108,7 +114,12 @@ export function Composer({
         />
       ) : null}
       {!may ? (
-        <ClosedRow known={thread !== null} staff={staff} onTemplate={pick} onQuote={quote ? () => setQuoting(true) : undefined} />
+        <ClosedRow
+          known={thread !== null}
+          staff={staff}
+          onTemplate={pick}
+          onQuote={quote ? () => setQuoting(true) : undefined}
+        />
       ) : null}
       {replies.sheet ? (
         <SavedReplyPicker

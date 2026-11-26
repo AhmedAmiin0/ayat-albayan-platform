@@ -19,7 +19,8 @@ beforeEach(() => {
   mockApiFetch.mockResolvedValue(bulkSa);
 });
 
-const sheet = (phone: string) => renderWithQuery(<QuoteSheet phone={phone} open onClose={jest.fn()} />);
+const sheet = (phone: string) =>
+  renderWithQuery(<QuoteSheet phone={phone} open onClose={jest.fn()} />);
 
 test.each([
   ['+966501234567', 'SA'],

@@ -29,7 +29,12 @@ export function windowed(fetch: (path: string) => Promise<unknown>) {
     const q = new URLSearchParams(path.split('?')[1] ?? '');
     const [from, to] = [Date.parse(q.get('from') ?? ''), Date.parse(q.get('to') ?? '')];
     const res = answer as { slots: SlotView[] };
-    return { ...res, slots: res.slots.filter((s) => Date.parse(s.starts_at) >= from && Date.parse(s.starts_at) < to) };
+    return {
+      ...res,
+      slots: res.slots.filter(
+        (s) => Date.parse(s.starts_at) >= from && Date.parse(s.starts_at) < to,
+      ),
+    };
   };
 }
 

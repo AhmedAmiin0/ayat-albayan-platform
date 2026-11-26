@@ -32,7 +32,10 @@ function revealRun({ open, content, still, height, opacity }: Run): Animated.Com
     return fade(STILL_FADE_MS, Easing.linear);
   }
   const easing = open ? Easing.out(Easing.cubic) : Easing.in(Easing.cubic);
-  return Animated.parallel([Animated.timing(height, { toValue, duration: REVEAL_MS, easing, useNativeDriver: false }), fade(REVEAL_MS, easing)]);
+  return Animated.parallel([
+    Animated.timing(height, { toValue, duration: REVEAL_MS, easing, useNativeDriver: false }),
+    fade(REVEAL_MS, easing),
+  ]);
 }
 
 /**

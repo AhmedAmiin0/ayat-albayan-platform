@@ -47,6 +47,10 @@ export function parseRecurrence(raw: string | null): Recurrence | null | undefin
   const days = m[1].split(/[,،]/).map((d) => weekday(d.trim()));
   if (days.length === 0 || days.some((d) => d === undefined)) return undefined;
   const byday = [...new Set(days as number[])].sort((a, b) => a - b);
+  return { byday, until: untilDay(m) };
+}
+
+function untilDay(m: RegExpExecArray): string | null {
   const pad = (n: string | undefined) => (n ?? '').padStart(2, '0');
-  return { byday, until: m[2] ? `${m[2]}-${pad(m[3])}-${pad(m[4])}` : null };
+  return m[2] ? `${m[2]}-${pad(m[3])}-${pad(m[4])}` : null;
 }

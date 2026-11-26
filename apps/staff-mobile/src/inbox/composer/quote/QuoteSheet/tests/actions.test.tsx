@@ -43,8 +43,16 @@ test('«أرسل العرض» posts the offer once through the chat text route, 
   await waitFor(() => expect(mockApiSend).toHaveBeenCalled());
   expect(await screen.findByRole('button', { name: t.inbox.composer.sending })).toBeTruthy();
   expect(mockApiSend).toHaveBeenCalledTimes(1);
-  const [method, path, body] = mockApiSend.mock.calls[0] as [string, string, { text: string; clientRequestId: string }];
-  expect([method, path, body.text]).toEqual(['POST', `/threads/${encodeURIComponent(PHONE)}/text`, TEXT]);
+  const [method, path, body] = mockApiSend.mock.calls[0] as [
+    string,
+    string,
+    { text: string; clientRequestId: string },
+  ];
+  expect([method, path, body.text]).toEqual([
+    'POST',
+    `/threads/${encodeURIComponent(PHONE)}/text`,
+    TEXT,
+  ]);
   expect(body.clientRequestId).toMatch(/^[0-9a-f-]{36}$/);
 });
 
@@ -56,7 +64,9 @@ test('a sent offer closes the sheet; another tap later is a new request id', asy
   await fireEvent.press(await screen.findByRole('button', { name: q.send }));
   await waitFor(() => expect(onClose).toHaveBeenCalledTimes(2));
   expect(mockApiSend).toHaveBeenCalledTimes(2);
-  const ids = mockApiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
+  const ids = mockApiSend.mock.calls.map(
+    (c) => (c[2] as { clientRequestId: string }).clientRequestId,
+  );
   expect(new Set(ids).size).toBe(ids.length);
 });
 

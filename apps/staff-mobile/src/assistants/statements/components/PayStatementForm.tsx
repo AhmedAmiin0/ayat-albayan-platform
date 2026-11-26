@@ -22,7 +22,8 @@ import { ButtonRow } from '@/core/ui/actions';
 import { assistantsErrorText } from '@/assistants/api/errors';
 import { usePayStatement } from '@/assistants/statements/hooks/use-pay-statement';
 
-const methodPills = (): FilterPill<PaymentMethod>[] => PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
+const methodPills = (): FilterPill<PaymentMethod>[] =>
+  PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 
 interface PayStatementFormProps {
   statement: AssistantStatementView;
@@ -49,12 +50,26 @@ export function PayStatementForm({ statement, onDone, onCancel }: PayStatementFo
         <FilterPills role="radiogroup" accessibilityLabel={t.payments.method} items={methodPills()} value={draft.method} onChange={(method) => set({ method })} wrap />
       </View>
       <PaidDayPicker daysAgo={draft.daysAgo} onChange={(daysAgo) => set({ daysAgo })} now={now} />
-      <Field label={t.payments.note} value={draft.note} onChangeText={(note) => set({ note })} maxLength={500} />
+      <Field
+        label={t.payments.note}
+        value={draft.note}
+        onChangeText={(note) => set({ note })}
+        maxLength={500}
+      />
       <ReceiptPicker receipt={draft.receipt} onChange={(receipt) => set({ receipt })} />
       {pay.isError ? <ErrorLine message={assistantsErrorText(pay.error)} /> : null}
       <ButtonRow>
-        <Button label={pay.isPending ? t.earnings.saving : t.finance.confirmPaid} busy={pay.isPending} onPress={() => pay.mutate(draft, { onSuccess: onDone })} />
-        <Button variant="secondary" label={t.common.cancel} onPress={onCancel} disabled={pay.isPending} />
+        <Button
+          label={pay.isPending ? t.earnings.saving : t.finance.confirmPaid}
+          busy={pay.isPending}
+          onPress={() => pay.mutate(draft, { onSuccess: onDone })}
+        />
+        <Button
+          variant="secondary"
+          label={t.common.cancel}
+          onPress={onCancel}
+          disabled={pay.isPending}
+        />
       </ButtonRow>
     </View>
   );

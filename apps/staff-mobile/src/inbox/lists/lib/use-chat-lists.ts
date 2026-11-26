@@ -24,7 +24,8 @@ export function useChatLists(enabled: boolean) {
 }
 
 /** Keeps a list answer usable even if a mock or an older API answers something else. */
-export const listsOf = (data: unknown): ChatList[] => (Array.isArray(data) ? (data as ChatList[]) : []);
+export const listsOf = (data: unknown): ChatList[] =>
+  Array.isArray(data) ? (data as ChatList[]) : [];
 
 /** The new list enters the cache at once so the caller's active chip already exists. */
 export function useCreateList() {
@@ -49,7 +50,9 @@ export function useRenameList() {
   return useMutation({
     mutationFn: ({ id, name }: RenameInput) => apiSend<ChatList>('PATCH', listPath(id), { name }),
     onSuccess: (list) => {
-      client.setQueryData<ChatList[]>(listsKey, (old) => listsOf(old).map((l) => (l.id === list.id ? list : l)));
+      client.setQueryData<ChatList[]>(listsKey, (old) =>
+        listsOf(old).map((l) => (l.id === list.id ? list : l)),
+      );
       void client.invalidateQueries({ queryKey: listsKey });
     },
   });

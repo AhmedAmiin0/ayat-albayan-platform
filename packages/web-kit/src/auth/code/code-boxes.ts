@@ -29,7 +29,8 @@ const last = LOGIN_CODE_LENGTH - 1;
  */
 export function typeInto(boxes: readonly string[], at: number, raw: string): BoxesState {
   let digits = digitsOf(raw);
-  if (digits.length >= LOGIN_CODE_LENGTH) return { boxes: digits.slice(0, LOGIN_CODE_LENGTH), focus: last };
+  if (digits.length >= LOGIN_CODE_LENGTH)
+    return { boxes: digits.slice(0, LOGIN_CODE_LENGTH), focus: last };
   const next = [...boxes];
   if (digits.length === 0) {
     next[at] = '';
@@ -47,7 +48,10 @@ export function typeInto(boxes: readonly string[], at: number, raw: string): Box
  * Backspace on an empty box clears the one before and moves there. null = the browser's default.
  */
 export function keyStep(key: string, at: number, boxes: readonly string[]): BoxesState | null {
-  const move = (focus: number): BoxesState => ({ boxes: [...boxes], focus: Math.max(0, Math.min(focus, last)) });
+  const move = (focus: number): BoxesState => ({
+    boxes: [...boxes],
+    focus: Math.max(0, Math.min(focus, last)),
+  });
   if (key === 'ArrowLeft') return move(at - 1);
   if (key === 'ArrowRight') return move(at + 1);
   if (key === 'Home') return move(0);

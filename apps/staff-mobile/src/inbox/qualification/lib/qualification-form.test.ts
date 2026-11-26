@@ -30,7 +30,10 @@ test('sends only what changed: age as a number, an emptied field as null', () =>
 
 test('days and the time range are structured values, cleared with null', () => {
   const before = qualForm(STORED);
-  expect(qualPatch({ ...before, available_days: [] }, before)).toEqual({ ok: true, patch: { available_days: null } });
+  expect(qualPatch({ ...before, available_days: [] }, before)).toEqual({
+    ok: true,
+    patch: { available_days: null },
+  });
   expect(qualPatch({ ...before, available_days: [0, 4, 5] }, before)).toEqual({
     ok: true,
     patch: { available_days: [0, 4, 5] },

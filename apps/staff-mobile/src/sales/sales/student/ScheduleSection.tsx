@@ -14,14 +14,21 @@ export function ScheduleSection({ schedule }: { schedule: SalesStudentSchedule |
   if (!schedule) return null;
   const viewer = { tz, cycle };
   const s = t.sales.student.schedule;
-  const line = { fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink };
+  const line = {
+    fontFamily: type.ui[600],
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.ink,
+  };
   return (
     <View style={{ gap: 8 }}>
       <SectionLabel header>{s.title}</SectionLabel>
       {schedule.weekly.length === 0 ? <Note>{s.noWeekly}</Note> : null}
       {schedule.weekly.map((slot) => {
         // An old cache without the student's zone: the viewer's line alone until the refetch.
-        const lines = schedule.student_tz ? slotLines(slot, schedule.student_tz, viewer) : { main: weeklyLine(slot, viewer), student: null };
+        const lines = schedule.student_tz
+          ? slotLines(slot, schedule.student_tz, viewer)
+          : { main: weeklyLine(slot, viewer), student: null };
         return (
           <View key={slot.rule_id} style={{ gap: 2 }}>
             <AppText style={line}>{lines.main}</AppText>

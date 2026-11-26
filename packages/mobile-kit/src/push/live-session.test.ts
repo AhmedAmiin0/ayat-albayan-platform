@@ -4,7 +4,9 @@ import { hasLiveSession } from './live-session';
 const getSession = jest.mocked(supabase.auth.getSession);
 const NOW = Date.parse('2026-10-25T10:00:00Z');
 const session = (expiresAt: number | undefined) =>
-  ({ data: { session: { expires_at: expiresAt } }, error: null }) as unknown as Awaited<ReturnType<typeof supabase.auth.getSession>>;
+  ({ data: { session: { expires_at: expiresAt } }, error: null }) as unknown as Awaited<
+    ReturnType<typeof supabase.auth.getSession>
+  >;
 
 test('a session whose access token is still valid is live', async () => {
   getSession.mockResolvedValueOnce(session(NOW / 1000 + 600));

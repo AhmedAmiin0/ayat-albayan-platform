@@ -39,7 +39,8 @@ jest.mock('expo-video', () => {
 const KIND = t.inbox.media.video;
 const PATH = '/threads/%2B966552147730/messages/vd1/file';
 const SIGNED = 'https://storage.test/wa-media/vd1.mp4?token=x';
-const serve = (answer: () => Promise<unknown>) => mockApiFetch.mockImplementation((p: string) => (p === PATH ? answer() : Promise.resolve(null)));
+const serve = (answer: () => Promise<unknown>) =>
+  mockApiFetch.mockImplementation((p: string) => (p === PATH ? answer() : Promise.resolve(null)));
 const show = () =>
   renderWithQuery(<VideoTile message={message({ id: 'vd1', direction: 'inbound', media_mime: 'video/mp4', body: null })} phone={PHONE} kind={KIND} />);
 const tap = () => fireEvent.press(screen.getByRole('button', { name: t.inbox.playMedia.replace('{kind}', KIND) }));

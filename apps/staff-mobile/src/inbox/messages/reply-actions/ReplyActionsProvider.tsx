@@ -21,7 +21,13 @@ export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsP
   const can = usePermissions();
   const client = useQueryClient();
   const [move, setMove] = useState<ReplyMove | null>(null);
-  const moved = useQuery({ queryKey: replyMovedKey(phone), queryFn: () => [] as string[], initialData: [] as string[], staleTime: Infinity, gcTime: Infinity });
+  const moved = useQuery({
+    queryKey: replyMovedKey(phone),
+    queryFn: () => [] as string[],
+    initialData: [] as string[],
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
   const flow = teacher ? null : sales ? 'sales' : 'admin';
   const rights = replyRights(can, flow);
   const { reschedule } = rights;
@@ -45,7 +51,8 @@ export function ReplyActionsProvider({ phone, lessons, children }: ReplyActionsP
     void refreshChat(client, phone);
   };
   const done = () => {
-    if (move) client.setQueryData<string[]>(replyMovedKey(phone), (ids = []) => [...ids, move.messageId]);
+    if (move)
+      client.setQueryData<string[]>(replyMovedKey(phone), (ids = []) => [...ids, move.messageId]);
     close();
   };
   return (

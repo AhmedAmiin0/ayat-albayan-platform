@@ -34,8 +34,11 @@ export const TIME_EDIT_ERRORS = [
 export type TimeEditError = (typeof TIME_EDIT_ERRORS)[number];
 
 /** Named length from enums.duration, else `other`, so 40 minutes never shows as a bare number. */
-export const durationText = (min: number, named: Record<string, string | undefined>, other: string): string =>
-  named[String(min)] ?? other.replace('{n}', String(min));
+export const durationText = (
+  min: number,
+  named: Record<string, string | undefined>,
+  other: string,
+): string => named[String(min)] ?? other.replace('{n}', String(min));
 
 /** The `{ month: '2026-09', status: 'approved' }` of a 409 `payout_locked` body, else null. */
 export function payoutLockOf(body: unknown): { month: string; status: string } | null {

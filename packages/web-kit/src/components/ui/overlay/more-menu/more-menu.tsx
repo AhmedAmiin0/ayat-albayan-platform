@@ -5,7 +5,13 @@ import { iconButtonClass } from '@ab/web-kit/components/ui/form/icon-button';
 import { useDismiss } from '@ab/web-kit/components/ui/overlay/use-dismiss';
 
 /** Only a click inside the panel's DOM is a pick, since React clicks bubble through portals. */
-export function MoreMenu({ children, label = t.common.more }: { children: ReactNode; label?: string }) {
+export function MoreMenu({
+  children,
+  label = t.common.more,
+}: {
+  children: ReactNode;
+  label?: string;
+}) {
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);

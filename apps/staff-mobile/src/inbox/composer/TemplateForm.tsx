@@ -65,7 +65,8 @@ export function TemplateForm(props: TemplateFormProps) {
   };
 
   const send = () => {
-    const filled = positions.every((n) => params[n]?.trim()) && (!withButton || params.button?.trim());
+    const filled =
+      positions.every((n) => params[n]?.trim()) && (!withButton || params.button?.trim());
     const parsed = threadTemplateSchema.safeParse({ key: template.key, params: sendable });
     if (!filled || !parsed.success || (withLesson && !lessonId)) return setMissing(true);
     const { key, params: clean } = parsed.data;
@@ -75,13 +76,21 @@ export function TemplateForm(props: TemplateFormProps) {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ gap: 12, paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
-      {withLesson && lessons.length === 0 ? <ErrorLine message={t.inbox.composer.noLessons} /> : null}
+    <ScrollView
+      contentContainerStyle={{ gap: 12, paddingBottom: 24 }}
+      keyboardShouldPersistTaps="handled"
+    >
+      {withLesson && lessons.length === 0 ? (
+        <ErrorLine message={t.inbox.composer.noLessons} />
+      ) : null}
       {withLesson && lessons.length > 0 ? (
         <FilterPills
           role="radiogroup"
           accessibilityLabel={t.inbox.composer.pickLesson}
-          items={lessons.map((l) => ({ value: l.id, label: whenIn(new Date(l.starts_at), l.tz, cycle) }))}
+          items={lessons.map((l) => ({
+            value: l.id,
+            label: whenIn(new Date(l.starts_at), l.tz, cycle),
+          }))}
           value={lessonId}
           onChange={pick}
         />
@@ -91,7 +100,9 @@ export function TemplateForm(props: TemplateFormProps) {
         if (n === free) {
           const value = params[n] ?? '';
           const body = template.body_ar;
-          return <FreeTextField key={n} {...{ body, slot: n, value }} onChange={(v) => set(n, v)} />;
+          return (
+            <FreeTextField key={n} {...{ body, slot: n, value }} onChange={(v) => set(n, v)} />
+          );
         }
         return (
           <Field
@@ -113,7 +124,11 @@ export function TemplateForm(props: TemplateFormProps) {
         />
       ) : null}
       <TemplatePreview template={template} params={sendable} />
-      {missing ? <ErrorLine message={withLesson && !lessonId ? t.inbox.composer.pickLesson : t.common.required} /> : null}
+      {missing ? (
+        <ErrorLine
+          message={withLesson && !lessonId ? t.inbox.composer.pickLesson : t.common.required}
+        />
+      ) : null}
       <ButtonRow>
         <Button label={t.inbox.composer.send} onPress={send} />
         <Button variant="secondary" label={t.common.back} onPress={onBack} />

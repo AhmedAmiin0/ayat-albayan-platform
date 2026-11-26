@@ -77,7 +77,13 @@ export function VideoTile({ message: m, phone, kind, onLongPress }: VideoTilePro
       {state.step === 'problem' ? <RetryLine onPress={play} /> : null}
       <DownloadLink message={m} phone={phone} />
       {shown && state.step === 'ready' ? (
-        <VideoModal id={m.id} url={state.file.url} kind={kind} onClose={() => setShown(false)} onFail={failed} />
+        <VideoModal
+          id={m.id}
+          url={state.file.url}
+          kind={kind}
+          onClose={() => setShown(false)}
+          onFail={failed}
+        />
       ) : null}
     </View>
   );

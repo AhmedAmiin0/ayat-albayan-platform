@@ -16,11 +16,22 @@ interface ChangeInput {
 }
 
 /** POST /sales/booking/course/change (and …/check): the change point is the earliest pick; null without one. */
-export function changeRequest({ subscriptionId, picks, tz, requestId, prefilled }: ChangeInput): CourseChangeRequest | null {
+export function changeRequest({
+  subscriptionId,
+  picks,
+  tz,
+  requestId,
+  prefilled,
+}: ChangeInput): CourseChangeRequest | null {
   const picked = dayTimesKeeping(picks, tz, prefilled);
   if (!picked) return null;
   const { dayTimes, ...rule } = picked;
-  return { subscriptionId, ...rule, ...(dayTimes.length > 0 ? { dayTimes } : {}), clientRequestId: requestId };
+  return {
+    subscriptionId,
+    ...rule,
+    ...(dayTimes.length > 0 ? { dayTimes } : {}),
+    clientRequestId: requestId,
+  };
 }
 
 /** Admin targets may change the teacher and override clashes. */

@@ -36,7 +36,12 @@ export function NotificationCatalogue({ initialAudience }: { initialAudience?: A
             const n = numberLine(line, data.lines);
             return <Note key={line}>{`${n.label}: ${n.phone ? ltr(formatPhone(n.phone)) : c.notChecked}`}</Note>;
           })}
-          <CatalogueAudience data={data} canManage={manage} toggles={toggles} initialAudience={initialAudience} />
+          <CatalogueAudience
+            data={data}
+            canManage={manage}
+            toggles={toggles}
+            initialAudience={initialAudience}
+          />
         </>
       ) : query.isError ? (
         <ErrorState message={c.loadError} onRetry={() => void query.refetch()} />

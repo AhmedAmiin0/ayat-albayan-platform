@@ -16,7 +16,9 @@ describe('planStatement', () => {
   it('is the salary alone when nothing else is open', () => {
     const p = planStatement(base);
     expect(p.lines).toEqual([{ kind: 'salary', ref: null, amount: 1000, currency: 'EGP' }]);
-    expect(p.totals).toEqual({ EGP: { salary: 1000, commissions: 0, adjustments: 0, total: 1000 } });
+    expect(p.totals).toEqual({
+      EGP: { salary: 1000, commissions: 0, adjustments: 0, total: 1000 },
+    });
   });
 
   it('adds the commissions earned up to the month, per currency, never across them', () => {

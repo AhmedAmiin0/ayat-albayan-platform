@@ -42,7 +42,8 @@ export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
     onSent();
   };
   const [openFailed, setOpenFailed] = useState(false);
-  const open = () => void Linking.openURL(appOpenUrl(link.url, STRIPE_FEATURE)).catch(() => setOpenFailed(true));
+  const open = () =>
+    void Linking.openURL(appOpenUrl(link.url, STRIPE_FEATURE)).catch(() => setOpenFailed(true));
   return (
     <View style={{ gap: 12 }}>
       <Note>{fill(pl.created, { when: instantDay(link.expires_at, tz) })}</Note>
@@ -52,7 +53,10 @@ export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
       <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.base, color: color.ink }}>
         {agreedLine(link.amount, link.currency)}
       </AppText>
-      <AppText selectable style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.lapis }}>
+      <AppText
+        selectable
+        style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.lapis }}
+      >
         {ltr(link.url)}
       </AppText>
       {closed ? <ErrorLine message={t.inbox.sessionClosed} /> : null}

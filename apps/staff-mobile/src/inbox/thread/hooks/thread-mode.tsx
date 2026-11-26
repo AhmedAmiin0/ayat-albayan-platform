@@ -13,7 +13,13 @@ export type ThreadMode = { kind: 'admin' } | { kind: 'teacher'; teacherId: strin
 
 const ThreadModeContext = createContext<ThreadMode>({ kind: 'admin' });
 
-export function ThreadModeProvider({ value, children }: { value: ThreadMode; children: ReactNode }) {
+export function ThreadModeProvider({
+  value,
+  children,
+}: {
+  value: ThreadMode;
+  children: ReactNode;
+}) {
   return <ThreadModeContext.Provider value={value}>{children}</ThreadModeContext.Provider>;
 }
 

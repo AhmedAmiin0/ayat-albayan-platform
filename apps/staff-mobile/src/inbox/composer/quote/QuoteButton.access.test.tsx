@@ -21,7 +21,9 @@ jest.mock('expo-router', () => ({
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
 
 async function open(opts: { teacher?: boolean; permissions?: string[]; last?: string } = {}) {
-  const th = detail([inbound], { thread: { ...thread, last_inbound_at: opts.last ?? minutesAgo(5) } });
+  const th = detail([inbound], {
+    thread: { ...thread, last_inbound_at: opts.last ?? minutesAgo(5) },
+  });
   mockApiFetch.mockImplementation(async (p: string) =>
     p.startsWith('/pricing/quote') ? bulkSa : p === '/messages/gate' ? { open: true, reason: null, queued: 0 } : th,
   );

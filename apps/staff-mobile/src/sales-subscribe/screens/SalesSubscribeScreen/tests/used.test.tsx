@@ -35,10 +35,14 @@ beforeEach(() => {
     path === '/auth/me' ? { role: 'sales', permissions: ['self.sales_money', 'subscriptions.set_start_date'] } : familyOf(kid()),
   );
   // 12 lessons for the default package, 4 for the weekly one.
-  mockApiSend.mockImplementation(async (_m: string, path: string, body: { pricing?: { tier?: string } }) => {
-    if (path !== '/sales/subscriptions/quote') return openSub();
-    return body.pricing?.tier === 'weekly' ? { ...salesQuote, package: 'weekly', lessons: 4, afterDiscount: 60 } : salesQuote;
-  });
+  mockApiSend.mockImplementation(
+    async (_m: string, path: string, body: { pricing?: { tier?: string } }) => {
+      if (path !== '/sales/subscriptions/quote') return openSub();
+      return body.pricing?.tier === 'weekly'
+        ? { ...salesQuote, package: 'weekly', lessons: 4, afterDiscount: 60 }
+        : salesQuote;
+    },
+  );
 });
 afterEach(() => jest.useRealTimers());
 

@@ -22,6 +22,12 @@ function applicantRows(bundle: SourceBundle): SourceRow[] {
   ];
 }
 
+/** The first row of a phone wins; later rows only fill its empty name and notes. */
+function merged(prev: Applicant | undefined, next: Applicant): Applicant {
+  if (!prev) return next;
+  return { ...prev, name: prev.name ?? next.name, notes: prev.notes ?? next.notes };
+}
+
 export function mapJobApplicants(bundle: SourceBundle): Mapped[] {
   const byPhone = new Map<string, Applicant>();
   const issues: RowIssue[] = [];
@@ -39,13 +45,9 @@ export function mapJobApplicants(bundle: SourceBundle): Mapped[] {
       );
       continue;
     }
-    const prev = byPhone.get(phone.e164);
-    const notes = text(r.fields.summary);
     byPhone.set(
       phone.e164,
-      prev
-        ? { ...prev, name: prev.name ?? name, notes: prev.notes ?? notes }
-        : { ref: r.ref, name, notes },
+      merged(byPhone.get(phone.e164), { ref: r.ref, name, notes: text(r.fields.summary) }),
     );
   }
   const ok = [...byPhone].map(([phone, a]) =>

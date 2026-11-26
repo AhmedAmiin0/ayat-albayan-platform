@@ -17,7 +17,13 @@ const seeded = () => {
 
 const SALES: Permission[] = ['inbox.read', 'self.sales', 'self.sales_academy', 'self.sales_earnings', 'meetings.read'];
 const holds = (keys: Permission[]) => (p: Permission) => keys.includes(p);
-const rows = () => [t.sales.nav.teachers, t.sales.nav.live, t.sales.nav.subscriptions, t.assistantPortal.nav.earnings, t.mobileClassroom.meetingsRow];
+const rows = () => [
+  t.sales.nav.teachers,
+  t.sales.nav.live,
+  t.sales.nav.subscriptions,
+  t.assistantPortal.nav.earnings,
+  t.mobileClassroom.meetingsRow,
+];
 
 beforeEach(() => jest.clearAllMocks());
 
@@ -35,7 +41,12 @@ test('the full sales role: teachers, live lessons, subscriptions, earnings, meet
 test('without self.sales_earnings no «أرباحي»; without self.sales_academy no teachers or live lessons', async () => {
   await renderWithQuery(<SalesMoreScreen can={holds(['self.sales'])} />, seeded());
   expect(screen.getByRole('button', { name: t.sales.nav.subscriptions })).toBeTruthy();
-  for (const gone of [t.assistantPortal.nav.earnings, t.sales.nav.teachers, t.sales.nav.live, t.mobileClassroom.meetingsRow]) {
+  for (const gone of [
+    t.assistantPortal.nav.earnings,
+    t.sales.nav.teachers,
+    t.sales.nav.live,
+    t.mobileClassroom.meetingsRow,
+  ]) {
     expect(screen.queryByRole('button', { name: gone })).toBeNull();
   }
 });

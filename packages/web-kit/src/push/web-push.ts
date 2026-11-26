@@ -40,7 +40,11 @@ export async function subscribeWebPush(publicKey: string): Promise<SubscribeResu
   const registration = await navigator.serviceWorker.ready;
   const existing = await registration.pushManager.getSubscription();
   const subscription =
-    existing ?? (await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: base64UrlToBytes(publicKey) }));
+    existing ??
+    (await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: base64UrlToBytes(publicKey),
+    }));
   await saveWebPush(subscription.toJSON());
   return 'subscribed';
 }

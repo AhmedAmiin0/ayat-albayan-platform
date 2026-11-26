@@ -1,6 +1,12 @@
 // An in-memory stand-in for the Nest API behind @/lib/api, for the multi-screen flow tests.
 // Handlers match "METHOD /path/:param"; every call is recorded; an unknown route rejects loudly.
 
+import { parseResponse, sendParts } from '@ab/client-core';
+import type { z } from 'zod';
+
+const parsed = (answer: unknown, at: { schema?: z.ZodType | undefined; url: string }): unknown =>
+  at.schema === undefined ? answer : parseResponse(at.schema, answer, at.url);
+
 interface Req {
   method: string;
   path: string;
@@ -88,9 +94,14 @@ export class FakeBackend {
     throw new Error(`fake backend: unexpected ${method} ${url}`);
   }
 
-  fetch = (url: string): Promise<unknown> => this.handle('GET', url);
-  send = (method: string, url: string, body?: unknown): Promise<unknown> =>
-    this.handle(method, url, body);
+  /** Like the real client: a `schema` parses the answer, so fixtures must keep the contract. */
+  fetch = async (url: string, schema?: z.ZodType): Promise<unknown> =>
+    parsed(await this.handle('GET', url), { schema, url });
+
+  send = async (method: string, url: string, arg?: unknown): Promise<unknown> => {
+    const { body, schema } = sendParts(arg);
+    return parsed(await this.handle(method, url, body), { schema, url });
+  };
 }
 
 let active = new FakeBackend();

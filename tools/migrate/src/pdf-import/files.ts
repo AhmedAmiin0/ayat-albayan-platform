@@ -28,12 +28,31 @@ const FILE = /^(.*?)\s*[—–-]\s*(\d{4}-\d{2}-\d{2})\s*(?:\((\d+)\))?\.pdf$/i;
 
 export const isPdf = (path: string): boolean => path.startsWith(ROOT) && /\.pdf$/i.test(path);
 
+interface PdfLocation {
+  folder: string | null;
+  file: string;
+}
+
+const LOCATIONS: Partial<Record<number, (parts: readonly string[]) => PdfLocation>> = {
+  1: ([file = '']) => ({ folder: null, file }),
+  2: ([folder = '', file = '']) => ({ folder, file }),
+};
+
+function pdfLocation(path: string): PdfLocation | undefined {
+  if (!isPdf(path)) return undefined;
+  const parts = path.slice(ROOT.length).split('/');
+  return LOCATIONS[parts.length]?.(parts);
+}
+
+function fileFields(m: RegExpExecArray): Pick<PdfName, 'person' | 'date' | 'copy'> {
+  const [, person = '', date = '', copy = '0'] = m;
+  return { person: person.trim(), date, copy: Number(copy) };
+}
+
 /** undefined when the path is no report PDF, sits deeper than one folder, or has no date. */
 export function parsePdfName(path: string): PdfName | undefined {
-  const parts = isPdf(path) ? path.slice(ROOT.length).split('/') : [];
-  const [folder, file] = parts.length === 2 ? parts : [null, parts[0]];
-  const m = parts.length <= 2 ? FILE.exec(file ?? '') : null;
-  if (!m) return undefined;
-  const [, person = '', date = '', copy = '0'] = m;
-  return { path, folder: folder ?? null, person: person.trim(), date, copy: Number(copy) };
+  const loc = pdfLocation(path);
+  const m = loc && FILE.exec(loc.file);
+  if (!loc || !m) return undefined;
+  return { path, folder: loc.folder, ...fileFields(m) };
 }

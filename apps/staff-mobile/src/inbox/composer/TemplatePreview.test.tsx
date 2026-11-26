@@ -25,6 +25,8 @@ test('a synced header and call button come from display', async () => {
 });
 
 test('no buttons: no rows', async () => {
-  await renderWithQuery(<TemplatePreview template={{ ...plainReminder, buttons: [], display: null }} params={{}} />);
+  await renderWithQuery(
+    <TemplatePreview template={{ ...plainReminder, buttons: [], display: null }} params={{}} />,
+  );
   expect(screen.queryByTestId('template-buttons')).toBeNull();
 });

@@ -28,7 +28,9 @@ const VIEWS = (): { value: StudentsView; label: string }[] => [
 
 const keyOf = (s: SalesStudentView) => s.id;
 // Keyed by the student: «no phone» under a tapped row is its own state, never a recycled row's.
-const renderRow = ({ item }: { item: SalesStudentView }) => <AllStudentRow key={item.id} student={item} />;
+const renderRow = ({ item }: { item: SalesStudentView }) => (
+  <AllStudentRow key={item.id} student={item} />
+);
 
 /** Every student, paged and searched on the server, read-only. */
 export function AllStudentsScreen({ asTab = false }: { asTab?: boolean }) {
@@ -65,7 +67,11 @@ export function AllStudentsScreen({ asTab = false }: { asTab?: boolean }) {
             ) : list.isError ? (
               <ErrorState message={t.sales.loadFailed} onRetry={list.refresh} />
             ) : (
-              <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+              <ActivityIndicator
+                accessibilityLabel={t.common.loading}
+                color={color.lapis}
+                style={{ paddingVertical: 32 }}
+              />
             )
           }
         />

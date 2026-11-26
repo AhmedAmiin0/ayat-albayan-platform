@@ -37,7 +37,9 @@ export function useTopDay(rows: readonly DayRow[], more: boolean) {
       opacity.setValue(toValue);
       return done?.();
     }
-    Animated.timing(opacity, { toValue, duration: FADE_MS, useNativeDriver: true }).start(() => done?.());
+    Animated.timing(opacity, { toValue, duration: FADE_MS, useNativeDriver: true }).start(() =>
+      done?.(),
+    );
   };
   const show = () => {
     clearTimeout(timer.current);

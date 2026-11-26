@@ -33,7 +33,9 @@ test('the ring turns every 1.6 s linearly; glow and mark breathe in one 2.4 s ea
   expect(loop).toHaveBeenCalledTimes(2);
   const configs = timing.mock.calls.map(([, config]) => config);
   expect(configs.every((c) => c.useNativeDriver === true)).toBe(true);
-  expect(configs).toContainEqual(expect.objectContaining({ duration: 1600, easing: Easing.linear, toValue: 1 }));
+  expect(configs).toContainEqual(
+    expect.objectContaining({ duration: 1600, easing: Easing.linear, toValue: 1 }),
+  );
   const breath = configs.filter((c) => c.duration === 1200);
   expect(breath.map((c) => c.toValue)).toEqual([1, 0]);
   expect(screen.getByTestId('startup-glow', hidden)).toHaveStyle({ opacity: 0.35, transform: [{ scale: 0.96 }] });

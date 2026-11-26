@@ -4,13 +4,23 @@ import { t } from '@ab/mobile-kit';
 import { localDay } from '@/payments';
 
 /** A failed write: its `t.coursePause.errors` line (generic for anything unknown). */
-export const pauseErrorText = (error: unknown): string => t.coursePause.errors[coursePauseErrorCode(error)];
+export const pauseErrorText = (error: unknown): string =>
+  t.coursePause.errors[coursePauseErrorCode(error)];
 
-export const previewLine = (lessons: number): string => coursePausePreviewText(t.coursePause.preview, lessons);
+export const previewLine = (lessons: number): string =>
+  coursePausePreviewText(t.coursePause.preview, lessons);
 
 /** The banner's title, its start line while the pause has not begun, and the reason line. */
-export function bannerLines(pause: CoursePauseView, today: string): { title: string; starts: string | null; reason: string | null } {
-  const { title, starts } = coursePauseBanner({ pause, today, words: t.coursePause, formatDate: localDay });
+export function bannerLines(
+  pause: CoursePauseView,
+  today: string,
+): { title: string; starts: string | null; reason: string | null } {
+  const { title, starts } = coursePauseBanner({
+    pause,
+    today,
+    words: t.coursePause,
+    formatDate: localDay,
+  });
   const reason = pause.reason ? t.coursePause.bannerReason.replace('{reason}', pause.reason) : null;
   return { title, starts, reason };
 }

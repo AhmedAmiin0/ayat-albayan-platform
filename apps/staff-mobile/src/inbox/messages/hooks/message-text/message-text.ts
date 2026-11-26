@@ -45,7 +45,10 @@ export function mediaLine(m: LineOf): string | null {
   if (note) return note;
   if (m.media_mime) return t.inbox.media[mediaKind(m.media_mime)];
   if (m.body) return null;
-  const reacted = reactionText(m.interactive_payload, { reacted: t.inbox.reacted, removed: t.inbox.reactionRemoved });
+  const reacted = reactionText(m.interactive_payload, {
+    reacted: t.inbox.reacted,
+    removed: t.inbox.reactionRemoved,
+  });
   if (reacted) return reacted;
   if (isUnavailableMessage(m.interactive_payload)) return t.inbox.unavailable;
   return isUnsupportedMessage(m.interactive_payload) ? t.inbox.unsupported : t.inbox.media.other;
@@ -82,7 +85,10 @@ interface StampOptions {
 }
 
 /** Uses the device zone unless `tz` is given. */
-export function stamp(iso: string, { now = new Date(), tz = deviceTimeZone(), cycle }: StampOptions): string {
+export function stamp(
+  iso: string,
+  { now = new Date(), tz = deviceTimeZone(), cycle }: StampOptions,
+): string {
   const at = new Date(iso);
   const time = clockIn(at, tz, cycle);
   const { day, month, year } = dayParts(at, tz);

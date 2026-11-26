@@ -62,8 +62,14 @@ test('D4: the scrim is a hidden sibling; the editor and «احفظ» are reached
 test('docs/07 «الأزرار» (forms, supersedes D18): «احفظ» then «إلغاء» in one ButtonRow', async () => {
   const sheet = await openRow(HORIZON);
   const cells = within(sheet).getAllByTestId('button-row-cell');
-  expect(cells.map((cell) => within(cell).queryByText(t.config.custom.save) !== null)).toEqual([true, false]);
-  expect(cells.map((cell) => within(cell).queryByText(t.config.custom.cancel) !== null)).toEqual([false, true]);
+  expect(cells.map((cell) => within(cell).queryByText(t.config.custom.save) !== null)).toEqual([
+    true,
+    false,
+  ]);
+  expect(cells.map((cell) => within(cell).queryByText(t.config.custom.cancel) !== null)).toEqual([
+    false,
+    true,
+  ]);
 });
 
 test('D20: «أعد القيمة الافتراضية» puts the default in the draft; «احفظ» saves it', async () => {

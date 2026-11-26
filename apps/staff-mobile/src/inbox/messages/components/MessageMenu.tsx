@@ -31,7 +31,8 @@ interface MessageMenuProps {
 /** Reply stays visible but disabled where no text can go, with the reason under it. */
 export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: MessageMenuProps) {
   const { color } = useTheme();
-  const { enabled, canSend, setReply, openForward, showCopy, say, reactable, react } = useChatActions();
+  const { enabled, canSend, setReply, openForward, showCopy, say, reactable, react } =
+    useChatActions();
   const teacher = useThreadMode().kind === 'teacher';
   const rights = useHideRights();
   const me = useMeActor();
@@ -98,7 +99,9 @@ export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: Message
           accessibilityLabel={downloadLabel(m)}
           onPress={() => {
             onClose();
-            downloadFile({ phone, messageId: m.id }).catch((e: unknown) => say({ text: downloadProblem(e) }));
+            downloadFile({ phone, messageId: m.id }).catch((e: unknown) =>
+              say({ text: downloadProblem(e) }),
+            );
           }}
         />
       ) : null}

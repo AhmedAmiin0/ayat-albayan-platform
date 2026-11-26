@@ -21,7 +21,8 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => mockParams.current,
 }));
 
-const reads = (prefix: string) => mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith(prefix));
+const reads = (prefix: string) =>
+  mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith(prefix));
 
 // The picked lessons (from Sunday 4 Oct 2026) lie ahead: «now» is Friday 2 Oct.
 beforeEach(() => {

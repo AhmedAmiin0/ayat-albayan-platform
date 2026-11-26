@@ -14,7 +14,11 @@ export function TermsView({ terms }: { terms: AssistantTermsView }) {
     <MoneyCard>
       <CardTitle>{t.assistants.terms.title}</CardTitle>
       <Note>{t.assistants.salary}</Note>
-      {terms.salary ? <AmountText amount={terms.salary.amount} currency={terms.salary.currency} strong /> : <AppText>{salaryText(null)}</AppText>}
+      {terms.salary ? (
+        <AmountText amount={terms.salary.amount} currency={terms.salary.currency} strong />
+      ) : (
+        <AppText>{salaryText(null)}</AppText>
+      )}
       {salarySince ? <Note>{salarySince}</Note> : null}
       <Note>{t.assistants.commission}</Note>
       <AppText>{commissionText(terms.commission)}</AppText>

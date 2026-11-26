@@ -30,7 +30,12 @@ export function NewTeacherFields({ value, onChange, error }: NewTeacherFieldsPro
         value={value.display_name_en}
         onChangeText={(display_name_en) => onChange({ ...value, display_name_en })}
       />
-      <Choice label={N.gender} items={genders} value={value.gender} onChange={(gender) => onChange({ ...value, gender })} />
+      <Choice
+        label={N.gender}
+        items={genders}
+        value={value.gender}
+        onChange={(gender) => onChange({ ...value, gender })}
+      />
     </>
   );
 }

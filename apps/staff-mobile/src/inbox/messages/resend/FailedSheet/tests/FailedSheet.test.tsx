@@ -18,7 +18,9 @@ const onError = jest.fn();
 const why = (code: string) => t.messages.errorLine.replace('{reason}', (t.messages.errors as Record<string, string>)[code] ?? '');
 
 async function sheet(m: MessageView | null) {
-  await renderWithQuery(<FailedSheet phone={PHONE} message={m} onClose={onClose} onError={onError} />);
+  await renderWithQuery(
+    <FailedSheet phone={PHONE} message={m} onClose={onClose} onError={onError} />,
+  );
   return within(screen.getByTestId('failed-sheet'));
 }
 
@@ -75,7 +77,9 @@ test('a queued row with a wa.me link: no reason line, only sending it by hand; n
   expect(s.queryByText(new RegExp(t.messages.errorLine.replace(' {reason}', '')))).toBeNull();
   expect(s.queryByRole('button', { name: t.messages.retry })).toBeNull();
   expect(s.getByRole('button', { name: t.messages.clickToChat })).toBeTruthy();
-  await renderWithQuery(<FailedSheet phone={PHONE} message={null} onClose={onClose} onError={onError} />);
+  await renderWithQuery(
+    <FailedSheet phone={PHONE} message={null} onClose={onClose} onError={onError} />,
+  );
   expect(screen.queryByTestId('failed-sheet')).toBeNull();
 });
 

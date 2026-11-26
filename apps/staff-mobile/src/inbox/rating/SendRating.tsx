@@ -73,7 +73,9 @@ export function SendRating({ thread }: { thread: Pick<ThreadView, 'phone_e164' |
           }}
         />
       )}
-      {templates.isSuccess && !approved ? <AppText style={note}>{t.inbox.rating.notApproved}</AppText> : null}
+      {templates.isSuccess && !approved ? (
+        <AppText style={note}>{t.inbox.rating.notApproved}</AppText>
+      ) : null}
       {templates.isError ? <ErrorLine message={t.mobileLeads.ratingTemplatesFailed} /> : null}
       {approved && !done ? <AppText style={note}>{t.mobileLeads.ratingHint}</AppText> : null}
       {done && !done.error ? <AppText accessibilityLiveRegion="polite" style={note}>{done.text}</AppText> : null}

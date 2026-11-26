@@ -26,8 +26,19 @@ const resigned = new Set<string>();
 function RetryLine({ onPress }: { onPress: () => void }) {
   const { color } = useTheme();
   return (
-    <Pressable accessibilityRole="button" onPress={onPress} style={{ minHeight: shape.control.touch, justifyContent: 'center' }}>
-      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.lapis }}>
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={{ minHeight: shape.control.touch, justifyContent: 'center' }}
+    >
+      <AppText
+        style={{
+          fontFamily: type.ui[600],
+          fontSize: type.size.sm,
+          lineHeight: type.lineHeight(type.size.sm),
+          color: color.lapis,
+        }}
+      >
         {t.inbox.photoFailed}
       </AppText>
     </Pressable>
@@ -82,10 +93,18 @@ export function PhotoPreview({ message: m, phone, box, kind, onLongPress }: Phot
           justifyContent: 'center',
           overflow: 'hidden',
           borderRadius: shape.radius.md,
-          ...(box.border ? { borderWidth: StyleSheet.hairlineWidth, borderColor: color.rule, backgroundColor: color.sunk } : {}),
+          ...(box.border
+            ? {
+                borderWidth: StyleSheet.hairlineWidth,
+                borderColor: color.rule,
+                backgroundColor: color.sunk,
+              }
+            : {}),
         }}
       >
-        {loaded !== uri || !uri ? <ActivityIndicator accessibilityLabel={t.common.loading} color={color.ink3} /> : null}
+        {loaded !== uri || !uri ? (
+          <ActivityIndicator accessibilityLabel={t.common.loading} color={color.ink3} />
+        ) : null}
         {uri ? (
           <Image
             // A re-signed URL is a new image: mount it afresh so its own load or error is heard.

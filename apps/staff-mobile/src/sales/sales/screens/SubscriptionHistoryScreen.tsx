@@ -11,7 +11,10 @@ export function SubscriptionHistoryScreen() {
   const history = useSubscriptionHistory(id);
   const back = <BackButton onPress={() => router.back()} />;
   const data = history.data;
-  if (!data) return <SalesLoadScreen title={t.sales.history.open} query={history} notFound={t.common.notFound} />;
+  if (!data)
+    return (
+      <SalesLoadScreen title={t.sales.history.open} query={history} notFound={t.common.notFound} />
+    );
   return (
     <Screen>
       <ScreenHeader
@@ -22,7 +25,11 @@ export function SubscriptionHistoryScreen() {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 24 }}>
         <View style={{ gap: 12 }}>
           {data.subscriptions.map((entry) => (
-            <HistoryEntryCard key={entry.id} entry={entry} current={entry.id === data.subscription_id} />
+            <HistoryEntryCard
+              key={entry.id}
+              entry={entry}
+              current={entry.id === data.subscription_id}
+            />
           ))}
         </View>
       </ScrollView>

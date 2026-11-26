@@ -28,25 +28,82 @@ function aliasesOf(a: TargetRecord, b: TargetRecord): Pick<TargetRecord, 'aliase
 
 /** Union of two records when no field disagrees (blank never disagrees); undefined otherwise. */
 export function mergeRecords(a: TargetRecord, b: TargetRecord): TargetRecord | undefined {
-  const columns = { ...a.columns };
-  for (const [col, v] of Object.entries(b.columns)) {
-    const mine = columns[col];
-    if (isBlank(mine)) columns[col] = v;
-    else if (!isBlank(v) && stableJson(mine) !== stableJson(v)) return undefined;
-  }
-  const refs = { ...a.refs };
-  for (const [col, nk] of Object.entries(b.refs)) {
-    const mine = refs[col];
-    if (!mine) refs[col] = nk;
-    else if (keyId(mine) !== keyId(nk)) return undefined;
-  }
+  const columns = mergeColumns(a.columns, b.columns);
+  const refs = mergeRefs(a.refs, b.refs);
+  if (!columns || !refs) return undefined;
   return { columns, refs, ...aliasesOf(a, b) };
 }
 
-export function resolve(
-  mapped: readonly Mapped[],
-  opts: { prefer?: 'first' | 'last' } = {},
-): ResolveResult {
+const disagrees = (mine: unknown, v: unknown): boolean =>
+  !isBlank(mine) && !isBlank(v) && stableJson(mine) !== stableJson(v);
+
+function mergeColumns(
+  a: TargetRecord['columns'],
+  b: TargetRecord['columns'],
+): TargetRecord['columns'] | undefined {
+  const columns = { ...a };
+  for (const [col, v] of Object.entries(b)) {
+    const mine = columns[col];
+    if (disagrees(mine, v)) return undefined;
+    if (isBlank(mine)) columns[col] = v;
+  }
+  return columns;
+}
+
+function mergeRefs(
+  a: TargetRecord['refs'],
+  b: TargetRecord['refs'],
+): TargetRecord['refs'] | undefined {
+  const refs = { ...a };
+  for (const [col, nk] of Object.entries(b)) {
+    const mine = refs[col];
+    if (mine && keyId(mine) !== keyId(nk)) return undefined;
+    if (!mine) refs[col] = nk;
+  }
+  return refs;
+}
+
+type Prefer = 'first' | 'last';
+
+interface Collision {
+  kept: Desired;
+  issue: RowIssue;
+}
+
+function mergedDuplicate(prev: Desired, next: Desired, record: TargetRecord): Collision {
+  return {
+    kept: { ...prev, record, hash: recordHash(record) },
+    issue: {
+      code: 'duplicate',
+      severity: 'warn',
+      entity: next.key.entity,
+      ref: next.ref,
+      detail: `${prev.hash === next.hash ? 'same as' : 'merged into'} ${prev.ref.tab} row ${prev.ref.row}`,
+    },
+  };
+}
+
+function keptConflict(prev: Desired, next: Desired, prefer: Prefer | undefined): Collision {
+  const winner = prefer === 'last' ? next : prev;
+  const loser = winner === prev ? next : prev;
+  return {
+    kept: winner,
+    issue: {
+      code: 'conflict',
+      severity: 'review',
+      entity: next.key.entity,
+      ref: loser.ref,
+      detail: `same key as ${winner.ref.tab} row ${winner.ref.row}, different values`,
+    },
+  };
+}
+
+function collide(prev: Desired, next: Desired, prefer: Prefer | undefined): Collision {
+  const record = prev.hash === next.hash ? prev.record : mergeRecords(prev.record, next.record);
+  return record ? mergedDuplicate(prev, next, record) : keptConflict(prev, next, prefer);
+}
+
+export function resolve(mapped: readonly Mapped[], opts: { prefer?: Prefer } = {}): ResolveResult {
   const issues: RowIssue[] = [];
   const byKey = new Map<string, Desired>();
   for (const m of mapped) {
@@ -59,28 +116,9 @@ export function resolve(
       byKey.set(id, next);
       continue;
     }
-    const merged = prev.hash === next.hash ? prev.record : mergeRecords(prev.record, next.record);
-    if (merged) {
-      byKey.set(id, { ...prev, record: merged, hash: recordHash(merged) });
-      issues.push({
-        code: 'duplicate',
-        severity: 'warn',
-        entity: m.key.entity,
-        ref: next.ref,
-        detail: `${prev.hash === next.hash ? 'same as' : 'merged into'} ${prev.ref.tab} row ${prev.ref.row}`,
-      });
-      continue;
-    }
-    const winner = opts.prefer === 'last' ? next : prev;
-    const loser = winner === prev ? next : prev;
-    byKey.set(id, winner);
-    issues.push({
-      code: 'conflict',
-      severity: 'review',
-      entity: m.key.entity,
-      ref: loser.ref,
-      detail: `same key as ${winner.ref.tab} row ${winner.ref.row}, different values`,
-    });
+    const collision = collide(prev, next, opts.prefer);
+    byKey.set(id, collision.kept);
+    issues.push(collision.issue);
   }
   return { kept: [...byKey.values()], issues };
 }

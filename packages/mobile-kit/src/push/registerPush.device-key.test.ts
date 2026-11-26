@@ -71,7 +71,9 @@ test('any other failure does not silence the device', async () => {
 
 test('a sign-out unregister still running is awaited before the token is fetched', async () => {
   let finish = (): void => undefined;
-  mockSettled.mockReturnValueOnce(new Promise<undefined>((resolve) => (finish = () => resolve(undefined))));
+  mockSettled.mockReturnValueOnce(
+    new Promise<undefined>((resolve) => (finish = () => resolve(undefined))),
+  );
   mockApiSend.mockResolvedValueOnce({ deviceKey: KEY });
   const done = registerPush();
   await new Promise((resolve) => setTimeout(resolve, 0));

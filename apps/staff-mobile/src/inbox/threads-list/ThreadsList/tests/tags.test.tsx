@@ -50,7 +50,12 @@ const TAG_WORDS = () => [
 ];
 
 test('no row carries a tag: no status, source, role, package or money chip, no phone', async () => {
-  mockApiFetch.mockResolvedValue({ items: [noReply, guardian, converted], total: 3, page: 1, pageSize: 25 });
+  mockApiFetch.mockResolvedValue({
+    items: [noReply, guardian, converted],
+    total: 3,
+    page: 1,
+    pageSize: 25,
+  });
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('هدى سالم');
 

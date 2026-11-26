@@ -3,6 +3,7 @@ export { apiErrorCode, pdfPageRetryable } from './api-error-code';
 export {
   createApiClient,
   parseResponse,
+  sendParts,
   type ApiClient,
   type ApiClientOptions,
   type SchemaInit,

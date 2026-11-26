@@ -22,6 +22,8 @@ interface Folder {
   rows: number;
 }
 
+const rowTeacher = (r: SourceRow): string | null => teacherFromText(text(r.fields.teacher)) ?? null;
+
 /** ATT rows by student folder in the reports zip. */
 function attFolders(rows: readonly SourceRow[]): Map<string, Folder> {
   const out = new Map<string, Folder>();
@@ -29,10 +31,7 @@ function attFolders(rows: readonly SourceRow[]): Map<string, Folder> {
     const name = (r.ref.file ?? '').split('/').at(-2) ?? '';
     const f = out.get(personName(name));
     if (f) f.rows++;
-    else {
-      const teacher = teacherFromText(text(r.fields.teacher)) ?? null;
-      out.set(personName(name), { ref: r.ref, name, teacher, rows: 1 });
-    }
+    else out.set(personName(name), { ref: r.ref, name, teacher: rowTeacher(r), rows: 1 });
   }
   return out;
 }
@@ -46,20 +45,42 @@ interface Ctx {
   out: SubsFacts;
 }
 
-/** One SUBS row: active when known with more than one lesson, review when unknown. */
-function subsRow(r: SourceRow, c: Ctx): string | null {
+interface SubsEntry {
+  ref: SourceRow['ref'];
+  name: string;
+  teacher: string | null;
+  lessons: number;
+}
+
+function subsEntry(r: SourceRow): SubsEntry | null {
   const name = text(r.fields.student_name);
   if (!name || testReason({ names: [name] })) return null;
-  const teacher = teacherFromText(text(r.fields.teacher)) ?? null;
-  const found = findStudent(c.ix, { name, teacher });
-  const lessons = num(r.fields.lessons_count) ?? 0;
-  if (found.ok && lessons > 1) c.out.active.add(keyId(found.student.key));
-  if (!found.ok) {
-    const rows = c.att.get(personName(name))?.rows ?? 0;
-    const detail = `subscribed student missing from the registry (${found.reason}); teacher=${teacher ?? '?'}, lessons=${lessons}, attendance_rows=${rows}`;
-    c.out.issues.push(missing(r.ref, detail));
+  return { ref: r.ref, name, teacher: rowTeacher(r), lessons: num(r.fields.lessons_count) ?? 0 };
+}
+
+function subsMissing(e: SubsEntry, o: { att: Ctx['att']; reason: string }): RowIssue {
+  const rows = o.att.get(personName(e.name))?.rows ?? 0;
+  const detail = `subscribed student missing from the registry (${o.reason}); teacher=${e.teacher ?? '?'}, lessons=${e.lessons}, attendance_rows=${rows}`;
+  return missing(e.ref, detail);
+}
+
+/** One SUBS row: active when known with more than one lesson, review when unknown. */
+function subsRow(r: SourceRow, c: Ctx): string | null {
+  const e = subsEntry(r);
+  if (!e) return null;
+  const found = findStudent(c.ix, { name: e.name, teacher: e.teacher });
+  if (found.ok && e.lessons > 1) c.out.active.add(keyId(found.student.key));
+  if (!found.ok) c.out.issues.push(subsMissing(e, { att: c.att, reason: found.reason }));
+  return personName(e.name);
+}
+
+function attFolderIssues(c: Ctx, inSubs: ReadonlySet<string | null>): void {
+  for (const [key, f] of c.att) {
+    const found = inSubs.has(key) ? null : findStudent(c.ix, { name: f.name, teacher: f.teacher });
+    if (!found || found.ok) continue;
+    const detail = `attendance folder of a student missing from the registry (${found.reason}); teacher=${f.teacher ?? '?'}, attendance_rows=${f.rows}`;
+    c.out.issues.push(missing(f.ref, detail));
   }
-  return personName(name);
 }
 
 export function subsFacts(bundle: SourceBundle, students: readonly Desired[]): SubsFacts {
@@ -69,11 +90,6 @@ export function subsFacts(bundle: SourceBundle, students: readonly Desired[]): S
     out: { active: new Set(), issues: [] },
   };
   const inSubs = new Set((bundle.sheets.subs_students ?? []).map((r) => subsRow(r, c)));
-  for (const [key, f] of c.att) {
-    const found = inSubs.has(key) ? null : findStudent(c.ix, { name: f.name, teacher: f.teacher });
-    if (!found || found.ok) continue;
-    const detail = `attendance folder of a student missing from the registry (${found.reason}); teacher=${f.teacher ?? '?'}, attendance_rows=${f.rows}`;
-    c.out.issues.push(missing(f.ref, detail));
-  }
+  attFolderIssues(c, inSubs);
   return c.out;
 }

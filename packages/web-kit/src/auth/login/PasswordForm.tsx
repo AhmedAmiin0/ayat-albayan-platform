@@ -33,9 +33,10 @@ export function PasswordForm({ id, label, hint, children }: Props) {
     defaultValues: { identifier: '', password: '' },
     onSubmit: async ({ value }) => {
       setError(null);
-      const result = await signIn({ email: value.identifier, password: value.password }, queryClient).catch(
-        () => ({ ok: false, error: t.common.error }) as const,
-      );
+      const result = await signIn(
+        { email: value.identifier, password: value.password },
+        queryClient,
+      ).catch(() => ({ ok: false, error: t.common.error }) as const);
       if (result.ok) await land(result.home);
       else setError(result.error);
     },
@@ -54,8 +55,17 @@ export function PasswordForm({ id, label, hint, children }: Props) {
         {(field) => (
           <Field id={id} label={label} hint={hint} error={field.state.meta.errors[0]}>
             {(p) => (
-              <Input {...p} type="text" dir="ltr" autoComplete="username" autoCapitalize="none" spellCheck={false}
-                required value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
+              <Input
+                {...p}
+                type="text"
+                dir="ltr"
+                autoComplete="username"
+                autoCapitalize="none"
+                spellCheck={false}
+                required
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
             )}
           </Field>
         )}

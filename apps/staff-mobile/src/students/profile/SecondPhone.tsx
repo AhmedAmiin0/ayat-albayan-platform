@@ -38,7 +38,13 @@ const removeError = (error: unknown): string =>
   error instanceof ApiError && error.status === 404 ? t.guardians.phoneNotFound : t.common.error;
 
 /** Admin (guardians.write) may remove it; its chat becomes a lead chat again. */
-export function SecondPhone({ guardianId, phones }: { guardianId: string; phones: readonly FamilyPhone[] }) {
+export function SecondPhone({
+  guardianId,
+  phones,
+}: {
+  guardianId: string;
+  phones: readonly FamilyPhone[];
+}) {
   const { color } = useTheme();
   const canRemove = useHolds('guardians.write');
   const [asking, setAsking] = useState(false);

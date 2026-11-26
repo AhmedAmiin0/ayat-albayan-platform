@@ -87,7 +87,9 @@ test('the app in the background: no polling until it is active again', async () 
 test('a provisional row still sending survives a delta', async () => {
   const { client, hook } = await open();
   const temp = provisionalMessage({ id: 'tmp', phone: PHONE, body: 'جارٍ' });
-  await act(async () => void client.setQueryData(threadKey(PHONE), cachedThread(detail([inbound, temp]))));
+  await act(
+    async () => void client.setQueryData(threadKey(PHONE), cachedThread(detail([inbound, temp]))),
+  );
   serve({ pending: [{ ...delivered, id: 'other' }] });
   await tick();
   await waitFor(() => expect(deltas().length).toBeGreaterThan(0));

@@ -28,7 +28,8 @@ jest.mock('expo-router', () => ({
 
 const CHANGE = '/sales/booking/course/change';
 const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === path);
-const reads = (prefix: string) => mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith(prefix));
+const reads = (prefix: string) =>
+  mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith(prefix));
 
 beforeEach(() => {
   jest.clearAllMocks();

@@ -17,7 +17,9 @@ const L = t.inbox.lists;
 
 beforeEach(() => {
   mockApiFetch.mockReset();
-  mockApiFetch.mockImplementation(answer({ me: withLists, lists: [SUBSCRIBED, TEACHERS, PAID], threads: () => page([]) }));
+  mockApiFetch.mockImplementation(
+    answer({ me: withLists, lists: [SUBSCRIBED, TEACHERS, PAID], threads: () => page([]) }),
+  );
 });
 
 test('an automatic list chip, once shown, says «تُحدَّث تلقائيًا» and who is added; a hand list says nothing', async () => {

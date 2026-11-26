@@ -9,7 +9,8 @@ vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch: vi.fn(), apiSend }));
 
 const F = t.familyAuth;
 const click = (name: string) => fireEvent.click(screen.getByRole('button', { name }));
-const type = (label: string, value: string) => fireEvent.change(screen.getByLabelText(label), { target: { value } });
+const type = (label: string, value: string) =>
+  fireEvent.change(screen.getByLabelText(label), { target: { value } });
 
 async function toCodeStep(label: string, identifier: string) {
   type(label, identifier);

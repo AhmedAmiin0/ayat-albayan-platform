@@ -25,7 +25,13 @@ jest.mock('@/core/ui/lists/LazyList/LazyList', () => {
     LazyList: ({ paged, renderItem, ListEmptyComponent }: MockListProps) =>
       paged.items.length === 0
         ? ListEmptyComponent
-        : createElement(Fragment, null, ...paged.items.map((item) => createElement(Fragment, { key: item.phone_e164 }, renderItem({ item })))),
+        : createElement(
+            Fragment,
+            null,
+            ...paged.items.map((item) =>
+              createElement(Fragment, { key: item.phone_e164 }, renderItem({ item })),
+            ),
+          ),
   };
 });
 

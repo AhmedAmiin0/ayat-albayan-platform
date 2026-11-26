@@ -34,18 +34,29 @@ const str = (row: SourceRow, field: string): string | null => {
 
 const issue = (o: Omit<RowIssue, 'entity'>): RowIssue => ({ entity: 'leads', ...o });
 
+const firstSet = <T>(prev: T, next: T): T => prev ?? next;
+
 /** First non-empty value wins (HUB before BOOK). */
 function fold(prev: SheetLead, next: SheetLead): SheetLead {
   return {
     ref: prev.ref,
     phone: prev.phone,
-    name: prev.name ?? next.name,
-    status: prev.status ?? next.status,
-    source: prev.source ?? next.source,
-    summary: prev.summary ?? next.summary,
-    agreedSlot: prev.agreedSlot ?? next.agreedSlot,
-    date: prev.date ?? next.date,
+    name: firstSet(prev.name, next.name),
+    status: firstSet(prev.status, next.status),
+    source: firstSet(prev.source, next.source),
+    summary: firstSet(prev.summary, next.summary),
+    agreedSlot: firstSet(prev.agreedSlot, next.agreedSlot),
+    date: firstSet(prev.date, next.date),
   };
+}
+
+function reportBadPhone(
+  row: SourceRow,
+  o: { status: SheetLead['status']; issues: RowIssue[] },
+): void {
+  // A job row without a usable phone is the job_applicants import's to report.
+  if (o.status !== 'job_applicant')
+    o.issues.push(issue({ code: 'bad_phone', severity: 'reject', ref: row.ref, field: 'phone' }));
 }
 
 function readRow(row: SourceRow, issues: RowIssue[]): SheetLead | undefined {
@@ -56,9 +67,7 @@ function readRow(row: SourceRow, issues: RowIssue[]): SheetLead | undefined {
   if (status === 'skip' || source === 'skip') return undefined;
   const phone = toE164(str(row, 'phone'));
   if (!phone) {
-    // A job row without a usable phone is the job_applicants import's to report.
-    if (status !== 'job_applicant')
-      issues.push(issue({ code: 'bad_phone', severity: 'reject', ref: row.ref, field: 'phone' }));
+    reportBadPhone(row, { status, issues });
     return undefined;
   }
   if (statusText && !status)

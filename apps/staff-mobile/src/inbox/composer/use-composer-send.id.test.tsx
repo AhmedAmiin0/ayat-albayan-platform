@@ -11,14 +11,27 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 
 const PHONE = '+966501234567';
-const ids = () => mockApiSend.mock.calls.map((c: unknown[]) => (c[2] as { clientRequestId: string }).clientRequestId);
+const ids = () =>
+  mockApiSend.mock.calls.map(
+    (c: unknown[]) => (c[2] as { clientRequestId: string }).clientRequestId,
+  );
 
 async function setup() {
   return renderHook(
     () => {
       // The box's text lives in draft-store: a failed send puts it back there (hook-level).
       const [text, setText] = useComposerText(PHONE);
-      return { ...useComposerSend({ phone: PHONE, text, setText, staged: null, clearStaged: () => undefined }), text, setText };
+      return {
+        ...useComposerSend({
+          phone: PHONE,
+          text,
+          setText,
+          staged: null,
+          clearStaged: () => undefined,
+        }),
+        text,
+        setText,
+      };
     },
     { wrapper: queryWrapper(createTestQueryClient()) },
   );

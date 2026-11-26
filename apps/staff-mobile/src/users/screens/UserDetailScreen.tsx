@@ -32,9 +32,16 @@ export function UserDetailScreen({ can }: { can: Can }) {
         leading={<BackButton onPress={backToUsers} />}
       />
       {user.isError ? (
-        <ErrorState onRetry={() => void user.refetch()} message={missing ? t.common.notFound : t.common.error} />
+        <ErrorState
+          onRetry={() => void user.refetch()}
+          message={missing ? t.common.notFound : t.common.error}
+        />
       ) : (
-        <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+        <ActivityIndicator
+          accessibilityLabel={t.common.loading}
+          color={color.lapis}
+          style={{ paddingVertical: 32 }}
+        />
       )}
     </Screen>
   );

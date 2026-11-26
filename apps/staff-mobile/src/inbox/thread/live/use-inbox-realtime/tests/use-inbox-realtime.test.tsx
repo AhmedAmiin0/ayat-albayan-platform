@@ -17,7 +17,12 @@ const OPEN = '+966500000001';
 const OTHER = '+966500000002';
 const mockHooks: { status?: (s: string) => void; event?: (m: { payload: unknown }) => void } = {};
 const mockChannel: { on: jest.Mock; subscribe: jest.Mock } = {
-  on: jest.fn((_t: string, _f: unknown, cb: (m: { payload: unknown }) => void) => ((mockHooks.event = cb), mockChannel)),
+  on: jest.fn(
+    (_t: string, _f: unknown, cb: (m: { payload: unknown }) => void) => (
+      (mockHooks.event = cb),
+      mockChannel
+    ),
+  ),
   subscribe: jest.fn((cb: (s: string) => void) => ((mockHooks.status = cb), mockChannel)),
 };
 const mockSupabase = {

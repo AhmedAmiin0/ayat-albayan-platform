@@ -39,7 +39,11 @@ test('a list clears «غير مقروءة», «غير مقروءة» clears the 
   await fireEvent.press(row().getByRole('tab', { name: PAID.name }));
   await fireEvent.press(row().getByRole('tab', { name: t.inbox.filterAll }));
   await waitFor(() => expect(lastThreads()).toBe('/threads?page=1&pageSize=25'));
-  expect([t.inbox.filterAll, t.inbox.filterUnread, PAID.name].map(selected)).toEqual([true, false, false]);
+  expect([t.inbox.filterAll, t.inbox.filterUnread, PAID.name].map(selected)).toEqual([
+    true,
+    false,
+    false,
+  ]);
 });
 
 test('the chips are 32pt with the touch area stretched to 44pt; «＋» is a button that acts', async () => {
@@ -49,7 +53,9 @@ test('the chips are 32pt with the touch area stretched to 44pt; «＋» is a but
   expect(all).toHaveStyle({ minHeight: 32 });
   expect(all.props.hitSlop).toEqual({ top: 6, bottom: 6 });
   // The row is 6 + 32 + 6 = 44pt, so the slop is not clipped by the ScrollView.
-  expect(screen.getByLabelText(t.inbox.filterRow).props.contentContainerStyle).toMatchObject({ paddingVertical: 6 });
+  expect(screen.getByLabelText(t.inbox.filterRow).props.contentContainerStyle).toMatchObject({
+    paddingVertical: 6,
+  });
   await fireEvent.press(row().getByRole('button', { name: t.inbox.lists.new }));
   expect(await screen.findByLabelText(t.inbox.lists.name)).toBeTruthy();
 });

@@ -70,20 +70,34 @@ function claim(o: Claim, out: MatchResult): void {
 
 const str = (v: unknown): string => (typeof v === 'string' ? v : '');
 
+function teacherRowOf(
+  d: Desired,
+  rows: readonly TeacherRow[],
+): Pick<Claim, 'id' | 'by'> | undefined {
+  const phone = str(d.record.columns.phone_e164);
+  const name = personName(str(d.record.columns.display_name_ar));
+  const byPhone = phone ? rows.find((r) => r.phone_e164 === phone) : undefined;
+  if (byPhone) return { id: byPhone.id, by: 'phone' };
+  const byName = name ? rows.find((r) => personName(r.display_name_ar) === name) : undefined;
+  return byName && { id: byName.id, by: 'name' };
+}
+
 export function matchTeachers(input: MatchInput<TeacherRow>): MatchResult {
   const out: MatchResult = { adopt: new Map(), issues: [] };
   for (const d of input.fresh) {
     if (d.key.entity !== 'teachers') continue;
-    const phone = str(d.record.columns.phone_e164);
-    const name = personName(str(d.record.columns.display_name_ar));
-    const byPhone = phone ? input.rows.find((r) => r.phone_e164 === phone) : undefined;
-    const byName = name
-      ? input.rows.find((r) => personName(r.display_name_ar) === name)
-      : undefined;
-    const row = byPhone ?? byName;
-    if (row) claim({ d, id: row.id, claimed: input.claimed, by: byPhone ? 'phone' : 'name' }, out);
+    const row = teacherRowOf(d, input.rows);
+    if (row) claim({ d, ...row, claimed: input.claimed }, out);
   }
   return out;
+}
+
+function guardianTargetOf(
+  d: Desired,
+  guardianIds: ReadonlyMap<string, string>,
+): string | undefined {
+  const g = d.key.entity === 'students' ? d.record.refs.guardian_id : undefined;
+  return g && guardianIds.get(keyId(g));
 }
 
 interface StudentMatchInput extends MatchInput<StudentRow> {
@@ -94,8 +108,7 @@ interface StudentMatchInput extends MatchInput<StudentRow> {
 export function matchStudents(input: StudentMatchInput): MatchResult {
   const out: MatchResult = { adopt: new Map(), issues: [] };
   for (const d of input.fresh) {
-    const g = d.key.entity === 'students' ? d.record.refs.guardian_id : undefined;
-    const gid = g && input.guardianIds.get(keyId(g));
+    const gid = guardianTargetOf(d, input.guardianIds);
     if (!gid) continue;
     const [, name] = splitStudentKey(d.key.key);
     const siblings = input.rows.filter((r) => r.guardian_id === gid);

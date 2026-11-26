@@ -46,12 +46,24 @@ export function StudentFilterGroups({ value, teachers, onChange }: StudentFilter
     <View style={{ gap: 10 }}>
       <View style={{ gap: 4 }}>
         <SectionLabel>{L.sortLabel}</SectionLabel>
-        <FilterPills wrap items={sorts} value={value.sort} onChange={(sort) => onChange({ ...value, sort })} accessibilityLabel={L.sortLabel} />
+        <FilterPills
+          wrap
+          items={sorts}
+          value={value.sort}
+          onChange={(sort) => onChange({ ...value, sort })}
+          accessibilityLabel={L.sortLabel}
+        />
       </View>
       {(Object.keys(LABELS) as (keyof typeof LABELS)[]).map((key) => (
         <View key={key} style={{ gap: 4 }}>
           <SectionLabel>{LABELS[key]}</SectionLabel>
-          <FilterPills wrap items={options[key]} value={value[key]} onChange={(v) => onChange({ ...value, [key]: v })} accessibilityLabel={LABELS[key]} />
+          <FilterPills
+            wrap
+            items={options[key]}
+            value={value[key]}
+            onChange={(v) => onChange({ ...value, [key]: v })}
+            accessibilityLabel={LABELS[key]}
+          />
         </View>
       ))}
     </View>

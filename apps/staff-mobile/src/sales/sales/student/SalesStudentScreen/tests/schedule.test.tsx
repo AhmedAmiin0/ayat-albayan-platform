@@ -37,12 +37,17 @@ test('«الجدول» (RTL): an imported (Riyadh) rule in Riyadh with the Cairo
   expect(screen.getByText('عند الطالب: الأحد · الثلاثاء · الخميس الساعة 7:00 م بتوقيت القاهرة')).toBeTruthy();
 });
 
-test.each(['Asia/Riyadh', 'Asia/Kuwait'])('a student on Riyadh\'s clock (%s): no «عند الطالب» line, no zone label', async (tz) => {
-  mockApiFetch.mockResolvedValue(details({ schedule: { student_tz: tz, weekly: [weeklySlot], upcoming: [] } }));
-  await renderWithQuery(<SalesStudentScreen />, confirmingQueryClient());
-  expect(await screen.findByText('الأحد · الثلاثاء · الخميس الساعة 20:00')).toBeTruthy();
-  expect(screen.queryByText(/^عند الطالب/)).toBeNull();
-});
+test.each(['Asia/Riyadh', 'Asia/Kuwait'])(
+  "a student on Riyadh's clock (%s): no «عند الطالب» line, no zone label",
+  async (tz) => {
+    mockApiFetch.mockResolvedValue(
+      details({ schedule: { student_tz: tz, weekly: [weeklySlot], upcoming: [] } }),
+    );
+    await renderWithQuery(<SalesStudentScreen />, confirmingQueryClient());
+    expect(await screen.findByText('الأحد · الثلاثاء · الخميس الساعة 20:00')).toBeTruthy();
+    expect(screen.queryByText(/^عند الطالب/)).toBeNull();
+  },
+);
 
 test('upcoming: one row per lesson under its day with the status chip; the next 5, then «عرض الكل»', async () => {
   const lessons = ['01', '03', '05', '08', '10', '12', '15'].map((d, i) => upcoming(`u${i}`, `2026-11-${d}T17:00:00.000Z`));

@@ -31,11 +31,14 @@ export const OWNED_SETTING_KEYS = {
 
 export type OwnedSettingKey = keyof typeof OWNED_SETTING_KEYS;
 
-export const isOwnedSettingKey = (key: string): key is OwnedSettingKey => Object.hasOwn(OWNED_SETTING_KEYS, key);
+export const isOwnedSettingKey = (key: string): key is OwnedSettingKey =>
+  Object.hasOwn(OWNED_SETTING_KEYS, key);
 
 /** A PATCH body field (camelCase, or the snake_case key itself) → the owned key it names, if any. */
 export function ownedKeyOfField(field: string): OwnedSettingKey | null {
   if (isOwnedSettingKey(field)) return field;
-  const hit = (Object.keys(OWNED_SETTING_KEYS) as OwnedSettingKey[]).find((k) => camelKey(k) === field);
+  const hit = (Object.keys(OWNED_SETTING_KEYS) as OwnedSettingKey[]).find(
+    (k) => camelKey(k) === field,
+  );
   return hit ?? null;
 }

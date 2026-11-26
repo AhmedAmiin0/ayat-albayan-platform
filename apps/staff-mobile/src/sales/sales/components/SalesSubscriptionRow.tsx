@@ -9,7 +9,13 @@ import { studentDetailsHref, useTreeBase } from '@/core/nav/tree-base';
 import { MoneyActionButton } from '@/sales/sales/money-action';
 
 /** No price or payment; a pending row carries its student's one money action. */
-export function SalesSubscriptionRow({ sub, withHistory }: { sub: SalesSubscriptionView; withHistory: boolean }) {
+export function SalesSubscriptionRow({
+  sub,
+  withHistory,
+}: {
+  sub: SalesSubscriptionView;
+  withHistory: boolean;
+}) {
   const starts = startsLine(sub);
   const href = useSalesHrefs();
   const base = useTreeBase();

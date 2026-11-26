@@ -93,7 +93,12 @@ export function totalsOf(lines: readonly StatementLine[]): Record<string, Curren
   return Object.fromEntries(
     Object.entries(cents).map(([cur, t]) => [
       cur,
-      { salary: fromCents(t.salary), commissions: fromCents(t.commissions), adjustments: fromCents(t.adjustments), total: fromCents(t.total) },
+      {
+        salary: fromCents(t.salary),
+        commissions: fromCents(t.commissions),
+        adjustments: fromCents(t.adjustments),
+        total: fromCents(t.total),
+      },
     ]),
   );
 }
@@ -102,7 +107,11 @@ export function totalsOf(lines: readonly StatementLine[]): Record<string, Curren
  * The month a correction made now belongs to (assistant_next_open_month): this month in the
  * assistant's tz, or the month after their newest approved / paid statement, whichever is later.
  */
-export function nextOpenMonth(input: { now: string; tz: string; latestFrozenMonth: string | null }): string {
+export function nextOpenMonth(input: {
+  now: string;
+  tz: string;
+  latestFrozenMonth: string | null;
+}): string {
   const current = monthOf(input.now, input.tz);
   if (!input.latestFrozenMonth) return current;
   const after = addCalendarMonths(input.latestFrozenMonth, 1);
@@ -117,9 +126,19 @@ export function voidEffect(
   statement: 'draft' | 'approved' | 'paid' | null,
   commission: { amount: number; currency: string },
   month: string,
-): { adjustment: { amount: number; currency: string; effectiveMonth: string } | null; rebuildDraft: boolean } {
+): {
+  adjustment: { amount: number; currency: string; effectiveMonth: string } | null;
+  rebuildDraft: boolean;
+} {
   if (statement === 'approved' || statement === 'paid') {
-    return { adjustment: { amount: -commission.amount, currency: commission.currency, effectiveMonth: month }, rebuildDraft: false };
+    return {
+      adjustment: {
+        amount: -commission.amount,
+        currency: commission.currency,
+        effectiveMonth: month,
+      },
+      rebuildDraft: false,
+    };
   }
   return { adjustment: null, rebuildDraft: statement === 'draft' };
 }

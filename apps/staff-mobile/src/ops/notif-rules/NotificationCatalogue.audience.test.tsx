@@ -13,7 +13,8 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 
 const c = t.notificationCatalogue;
 const r = t.mobileNotificationRules;
-const shown = (keys: readonly (keyof typeof c.entries)[]) => keys.filter((k) => screen.queryByText(c.entries[k].name) !== null);
+const shown = (keys: readonly (keyof typeof c.entries)[]) =>
+  keys.filter((k) => screen.queryByText(c.entries[k].name) !== null);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -24,7 +25,13 @@ test('«الإشعارات» opens on ولي الأمر and shows only that audi
   await renderWithQuery(<NotificationCatalogue />);
   expect(await screen.findByText(r.title)).toBeTruthy();
   const pills = await screen.findAllByRole('tab');
-  expect(pills.map((p) => p.props.accessibilityState.selected)).toEqual([true, false, false, false, false]);
+  expect(pills.map((p) => p.props.accessibilityState.selected)).toEqual([
+    true,
+    false,
+    false,
+    false,
+    false,
+  ]);
   const guardian = rowsOf(catalogueV2.entries, 'guardian').map((e) => e.key);
   expect(shown(guardian)).toEqual(guardian);
   expect(shown(['teacher_lesson_reminder', 'follow_up_slots', 'reminder_failed', 'inbox_templates'])).toEqual([]);
@@ -33,7 +40,13 @@ test('«الإشعارات» opens on ولي الأمر and shows only that audi
 test('each pill swaps the rows for its audience, in the web order', async () => {
   await renderWithQuery(<NotificationCatalogue />);
   await screen.findByText(r.title);
-  const labels = [c.audience.guardian, c.audience.teacher, c.audience.lead, c.audience.staff, c.states.manual];
+  const labels = [
+    c.audience.guardian,
+    c.audience.teacher,
+    c.audience.lead,
+    c.audience.staff,
+    c.states.manual,
+  ];
   const pills = await screen.findAllByRole('tab');
   expect(labels.map((l) => pills.indexOf(screen.getByRole('tab', { name: new RegExp(`^${l}`) })))).toEqual([0, 1, 2, 3, 4]);
   await openAudience(c.audience.teacher);

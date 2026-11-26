@@ -2,13 +2,25 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createLivekitRoom } from '@ab/web-kit/classroom/room/livekit/livekit-room/livekit-room';
 
 type Handler = (...a: unknown[]) => void;
-const fake = vi.hoisted(() => ({ handlers: new Map<string, Handler>(), connect: vi.fn(), mic: vi.fn(), cam: vi.fn() }));
+const fake = vi.hoisted(() => ({
+  handlers: new Map<string, Handler>(),
+  connect: vi.fn(),
+  mic: vi.fn(),
+  cam: vi.fn(),
+}));
 
 vi.mock('livekit-client', () => {
   class Room {
     localParticipant = {
-      identity: 'me', isLocal: true, isSpeaking: false, isMicrophoneEnabled: false, isCameraEnabled: false,
-      isScreenShareEnabled: false, trackPublications: new Map(), setMicrophoneEnabled: fake.mic, setCameraEnabled: fake.cam,
+      identity: 'me',
+      isLocal: true,
+      isSpeaking: false,
+      isMicrophoneEnabled: false,
+      isCameraEnabled: false,
+      isScreenShareEnabled: false,
+      trackPublications: new Map(),
+      setMicrophoneEnabled: fake.mic,
+      setCameraEnabled: fake.cam,
     };
     remoteParticipants = new Map();
     canPlaybackAudio = true;

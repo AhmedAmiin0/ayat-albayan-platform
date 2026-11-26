@@ -1,5 +1,5 @@
 import type { PendingReportView } from '@ab/shared';
-import type { PayoutView } from '@ab/money';
+import { payoutListSchema } from '@ab/money';
 import type { LessonView, TeacherMe } from '@ab/schedule';
 import { TEACHER_REFRESH_MS } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
@@ -45,11 +45,18 @@ export function usePendingReports(live = false) {
 /** GET /teachers/me/payouts: my months, newest first (R-TCH-04). */
 export function useMyPayouts() {
   const path = `${ME}/payouts`;
-  return useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<PayoutView[]>(path) });
+  return useQuery({
+    queryKey: pathKey(path),
+    queryFn: () => apiFetch(path, { schema: payoutListSchema }),
+  });
 }
 
 /** GET /teachers/:id/availability for me (OwnTeacherGuard), once /teachers/me gave my id. */
 export function useMyAvailability(id: string | undefined) {
   const path = `/teachers/${id ?? ''}/availability`;
-  return useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<AvailabilityRow[]>(path), enabled: !!id });
+  return useQuery({
+    queryKey: pathKey(path),
+    queryFn: () => apiFetch<AvailabilityRow[]>(path),
+    enabled: !!id,
+  });
 }
