@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { canEndLesson } from './moderation';
-import { lessonEndResultSchema, lessonRoomStateSchema, roomEnded } from './room-state';
+import {
+  lessonEndResultSchema,
+  lessonRoomStateSchema,
+  ROOM_PRESENCE_ROLES,
+  roomEnded,
+  roomPresenceRoleSchema,
+} from './room-state';
 
 describe('lessonRoomStateSchema', () => {
   it('reads a live room with who is inside', () => {
@@ -37,5 +43,12 @@ describe('canEndLesson («إنهاء الحلقة للجميع»)', () => {
   it("is the teacher's or an admin's only", () => {
     const roles = ['teacher', 'admin', 'assistant', 'sales', 'guest', null] as const;
     expect(roles.map(canEndLesson)).toEqual([true, true, false, false, false, false]);
+  });
+});
+
+describe('roomPresenceRoleSchema', () => {
+  it('accepts each presence role and nothing else', () => {
+    expect(roomPresenceRoleSchema.options).toEqual([...ROOM_PRESENCE_ROLES]);
+    expect(roomPresenceRoleSchema.validate('admin')).toBe(false);
   });
 });
