@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { receivablesViewSchema } from '../receivables.schemas';
+import { receivablesViewSchema } from '../receivables';
 
 const row = {
   id: 's1',

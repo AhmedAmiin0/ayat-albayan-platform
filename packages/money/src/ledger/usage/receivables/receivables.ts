@@ -2,7 +2,7 @@ import { calendarDaysBetween } from '@ab/time';
 // Receivables: who still owes on a package, how much and for how long; pure.
 
 import { toCents } from '@ab/core';
-import { dueOf } from './owed';
+import { dueOf } from '../owed';
 import type {
   AgingBucket,
   ReceivableIn,
