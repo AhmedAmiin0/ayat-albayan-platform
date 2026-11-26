@@ -1,4 +1,4 @@
-import type { LinkKind, UserCreate, UserWithCredential } from '@ab/shared';
+import { linkKindSchema, type LinkKind, type UserCreate, type UserWithCredential } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { UserJournal } from '@/modules/people/users/audit/users.journal';
@@ -8,13 +8,6 @@ import { toUserDetail } from '@/modules/people/users/users.mapper';
 import { UserAccess } from '@/modules/people/users/users.access';
 import { assertMayAssign, type Actor } from '@/modules/people/users/users.rules';
 import { USER_STORE, type UserStore } from '@/modules/people/users/store/users.store';
-
-/** Roles whose login belongs to an existing teachers / students / guardians row. */
-const LINK_KIND: Partial<Record<UserCreate['role'], LinkKind>> = {
-  teacher: 'teacher',
-  student: 'student',
-  guardian: 'guardian',
-};
 
 const profileDefaults = (input: UserCreate) => ({
   full_name: input.full_name,
@@ -49,7 +42,7 @@ export class UsersCreateService {
     const chosen = chooseRole(state.roles, input);
     if (typeof chosen === 'string' || chosen === null) throw badRequest(chosen ?? 'unknown_role');
     assertMayAssign(actor, state, chosen.record);
-    const kind = LINK_KIND[input.role];
+    const kind = linkKindSchema.safeParse(input.role).data;
     if (kind && input.linked_id) await this.assertLinkable(kind, input.linked_id);
     const prepared = this.logins.prepare({ mode: input.credential, password: input.password });
     const { id, adopted } = await this.login(input, prepared.password);
