@@ -1,1 +1,1 @@
-export { templateParam } from './stub-template.ts';
+export { templateParam } from './stub-template';

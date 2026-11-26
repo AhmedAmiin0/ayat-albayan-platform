@@ -1,4 +1,4 @@
-import { templateBodySchema, type TemplateParam } from './stub-template.schemas.ts';
+import { templateBodySchema, type TemplateParam } from './stub-template.schemas';
 
 /** The first parameter of a sent template's component of `type` (header, body, button). */
 export function templateParam(body: unknown, type: string): TemplateParam | undefined {

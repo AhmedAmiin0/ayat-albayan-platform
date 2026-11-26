@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { BOM, parseCsv } from './exports-csv.ts';
+import { BOM, parseCsv } from './exports-csv';
 
 test('parseCsv splits quoted CRLF rows into cells and drops the BOM', () => {
   const text = `${BOM}"a","b"\r\n"1","2"\r\n`;

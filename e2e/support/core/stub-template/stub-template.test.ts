@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { templateParam } from './stub-template.ts';
+import { templateParam } from './stub-template';
 
 const sent = (components: unknown) => ({
   messaging_product: 'whatsapp',

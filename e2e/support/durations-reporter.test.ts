@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { groupsOf } from './durations-reporter.ts';
-import type { ProjectSuiteLike, TestLike } from './shard-groups/index.ts';
+import { groupsOf } from './durations-reporter';
+import type { ProjectSuiteLike, TestLike } from './shard-groups';
 
 const at = (file: string, hash?: string): TestLike => ({
   location: { file: join(process.cwd(), file) },

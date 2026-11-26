@@ -1,5 +1,5 @@
 import { relative } from 'node:path';
-import type { Group, ProjectSuiteLike, TestLike } from './shard-groups.types.ts';
+import type { Group, ProjectSuiteLike, TestLike } from './shard-groups.types';
 
 export const rel = (file: string): string => relative(process.cwd(), file).split('\\').join('/');
 
