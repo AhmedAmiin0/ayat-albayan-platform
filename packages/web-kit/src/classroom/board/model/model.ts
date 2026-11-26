@@ -30,7 +30,12 @@ export interface BoardState {
   allowed: string[];
 }
 
-export const EMPTY_BOARD: BoardState = { strokes: [], studentsCanDraw: false, open: false, allowed: [] };
+export const EMPTY_BOARD: BoardState = {
+  strokes: [],
+  studentsCanDraw: false,
+  open: false,
+  allowed: [],
+};
 
 /** The canvas' own pixel size (CSS scales it); also the size of the shared-board video. */
 export const BOARD_SIZE = { width: 1600, height: 900 } as const;

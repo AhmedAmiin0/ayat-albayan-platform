@@ -1,3 +1,4 @@
+import { paymentViewSchema } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -69,12 +70,21 @@ test('refused by the API: its reason, the form kept', async () => {
   mockApiSend.mockRejectedValue(new ApiError(400, { code: 'currency_mismatch', currency: 'SAR' }));
   await renderWithQuery(<PaymentScreen />);
   await fillAndSave();
-  expect(await screen.findByText(t.payments.error.currency_mismatch.replace('{currency}', 'SAR'))).toBeTruthy();
-  expect(screen.getByRole('radio', { name: t.enums.paymentMethod.wallet, checked: true })).toBeTruthy();
+  expect(
+    await screen.findByText(t.payments.error.currency_mismatch.replace('{currency}', 'SAR')),
+  ).toBeTruthy();
+  expect(
+    screen.getByRole('radio', { name: t.enums.paymentMethod.wallet, checked: true }),
+  ).toBeTruthy();
 });
 
 test('an older package still owed: both offered, the oldest picked; the paid line follows', async () => {
-  const old = subscription({ id: OLD_SUB_ID, starts_on: '2026-08-27', paid: 100, status: 'expired' });
+  const old = subscription({
+    id: OLD_SUB_ID,
+    starts_on: '2026-08-27',
+    paid: 100,
+    status: 'expired',
+  });
   mockApiFetch.mockResolvedValue(balanceOf(old, subscription()));
   mockApiSend.mockResolvedValue({});
   await renderWithQuery(<PaymentScreen />);
@@ -85,7 +95,10 @@ test('an older package still owed: both offered, the oldest picked; the paid lin
   expect(screen.getByText(/دُفع ⁦0⁩/)).toBeTruthy();
   await fillAndSave();
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', expect.objectContaining({ subscriptionId: subscription().id }));
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', {
+    body: expect.objectContaining({ subscriptionId: subscription().id }),
+    schema: paymentViewSchema,
+  });
 });
 
 test('no package yet: the empty state, no form', async () => {

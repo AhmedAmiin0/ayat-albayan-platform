@@ -25,5 +25,6 @@ export function sent(c: FakeClient): { msg: BoardMessage | null; to: string[] | 
 
 /** A board message from another participant. */
 export function from(c: FakeClient, who: { identity: string; role: JoinRole }) {
-  return (msg: BoardMessage) => c.receive({ bytes: encodeMessage(msg), topic: BOARD_TOPIC, from: who });
+  return (msg: BoardMessage) =>
+    c.receive({ bytes: encodeMessage(msg), topic: BOARD_TOPIC, from: who });
 }

@@ -58,13 +58,17 @@ function allowOne(state: BoardState, { who, allow }: { who: string; allow: boole
 export function boardReducer(state: BoardState, { msg, from }: BoardInput): BoardState {
   switch (msg.t) {
     case 'draw':
-      return msg.stroke.by === from.identity && canDraw(from, state) ? draw(state, msg.stroke) : state;
+      return msg.stroke.by === from.identity && canDraw(from, state)
+        ? draw(state, msg.stroke)
+        : state;
     case 'undo':
       return undo(state, { id: msg.id, by: from.identity });
     case 'clear':
       return canManageBoard(from.role) ? { ...state, strokes: [] } : state;
     case 'perm':
-      return canAllowStudents(from.role) ? { ...state, studentsCanDraw: msg.studentsCanDraw } : state;
+      return canAllowStudents(from.role)
+        ? { ...state, studentsCanDraw: msg.studentsCanDraw }
+        : state;
     case 'open':
       return canManageBoard(from.role) ? { ...state, open: msg.open } : state;
     case 'allow':
@@ -78,5 +82,8 @@ export function boardReducer(state: BoardState, { msg, from }: BoardInput): Boar
 
 /** Answer a late joiner's sync-request? Anyone holding strokes; the staff also for the flags alone. */
 export function shouldAnswerSync(state: BoardState, role: JoinRole | null): boolean {
-  return state.strokes.length > 0 || (canManageBoard(role) && (state.open || state.studentsCanDraw || state.allowed.length > 0));
+  return (
+    state.strokes.length > 0 ||
+    (canManageBoard(role) && (state.open || state.studentsCanDraw || state.allowed.length > 0))
+  );
 }

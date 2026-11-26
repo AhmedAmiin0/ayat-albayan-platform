@@ -1,3 +1,4 @@
+import { paymentViewSchema } from '@ab/money';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
@@ -20,7 +21,12 @@ jest.mock('@/core/lib/receipts/upload-receipt', () => ({
 const listKey = ['payments', 'list', { studentId: 's1', pageSize: 5 }];
 const otherKey = ['payments', 'list', { studentId: 's2', pageSize: 5 }];
 const balanceKey = ['students', 's1', 'balance'];
-const receipt: Receipt = { uri: 'file:///r.jpg', mime: 'image/jpeg', bytes: new ArrayBuffer(3), size: 3 };
+const receipt: Receipt = {
+  uri: 'file:///r.jpg',
+  mime: 'image/jpeg',
+  bytes: new ArrayBuffer(3),
+  size: 3,
+};
 const input: PaymentInput = {
   subscriptionId: SUB_ID,
   student: STUDENT,
@@ -38,7 +44,8 @@ function setup() {
   client.setQueryData(balanceKey, balanceOf(subscription()));
   return { client, wrapper: queryWrapper(client) };
 }
-const ids = (data: unknown) => (data as ReturnType<typeof page>).items.map((p) => (p as { id: string }).id);
+const ids = (data: unknown) =>
+  (data as ReturnType<typeof page>).items.map((p) => (p as { id: string }).id);
 
 beforeEach(() => {
   mockApiSend.mockReset();
@@ -56,12 +63,15 @@ test('row and paid show at once, only for this student; POST /payments without a
   expect(client.getQueryData(balanceKey)).toMatchObject({ current: { paid: 145 } });
   expect(mockUpload).not.toHaveBeenCalled();
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', {
-    clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
-    subscriptionId: SUB_ID,
-    amount: 145,
-    currency: 'SAR',
-    method: 'bank',
-    paidAt: input.paidAt,
+    body: {
+      clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
+      subscriptionId: SUB_ID,
+      amount: 145,
+      currency: 'SAR',
+      method: 'bank',
+      paidAt: input.paidAt,
+    },
+    schema: paymentViewSchema,
   });
   await act(async () => resolve(payment({ id: 'p2' })));
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -89,11 +99,10 @@ test('the receipt goes up first; a retry after a failed POST reuses its path', a
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
   expect(mockUpload).toHaveBeenCalledTimes(1);
   expect(mockUpload).toHaveBeenCalledWith(SUB_ID, receipt);
-  expect(mockApiSend).toHaveBeenLastCalledWith(
-    'POST',
-    '/payments',
-    expect.objectContaining({ receiptPath: `${SUB_ID}/a.jpg` }),
-  );
+  expect(mockApiSend).toHaveBeenLastCalledWith('POST', '/payments', {
+    body: expect.objectContaining({ receiptPath: `${SUB_ID}/a.jpg` }),
+    schema: paymentViewSchema,
+  });
 });
 
 test('a failed upload never records the payment', async () => {
@@ -117,7 +126,9 @@ test('a lost reply: the retry re-sends the same clientRequestId; the next paymen
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
   await act(async () => result.current.mutate({ ...input, amount: 50 }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(3));
-  const [lost, retry, next] = mockApiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
+  const [lost, retry, next] = mockApiSend.mock.calls.map(
+    (c) => (c[2] as { body: { clientRequestId: string } }).body.clientRequestId,
+  );
   expect(retry).toBe(lost);
   expect(next).not.toBe(lost);
 });

@@ -1,5 +1,12 @@
-import { reportEntryValues, sendChecked, withServerWindow } from '@ab/client-core';
 import {
+  reportEntryValues,
+  sendChecked,
+  useDraftSave,
+  withServerWindow,
+  type SaveState,
+} from '@ab/client-core';
+import {
+  draftBody,
   submitBody,
   submitProblem,
   type FormValues,
@@ -13,16 +20,43 @@ import { useState } from 'react';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
 import { REPORTS_KEY } from '@/features/reporting/reports/api';
 import { useReportApi } from '@/features/reporting/reports/report-api';
-import { useAutosave } from './use-autosave';
 import { useReportMode } from '@/features/reporting/reports/send/use-report-mode';
 
 /** The program is the report's own, else the student's prefill. */
 const entryValuesOf = reportEntryValues;
 
+/** Debounced draft save of the whole v1 form while it is a draft (R-REP-02). */
+function useEntryDraft(report: ReportView, values: FormValues, sending: boolean): SaveState {
+  const { id } = report;
+  const { saveDraft } = useReportApi();
+  return useDraftSave({
+    id,
+    body: draftBody(values),
+    enabled: report.status === 'draft' && !sending,
+    save: (body) => saveDraft({ id, body }),
+  }).state;
+}
+
+/** The send; then every read that shows this report or its lesson refetches. */
+function useSubmit(onSent: (view: ReportView) => void) {
+  const queryClient = useQueryClient();
+  const { submitReport } = useReportApi();
+  return useMutation({
+    mutationFn: submitReport,
+    onSuccess: async (view) => {
+      onSent(view);
+      // The lesson moved (completed …), the pending list shrank, and a reopened form must load the
+      // sent version (this entry keeps its own state: it is keyed by report id, seeded once).
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: LESSONS_KEY }),
+        queryClient.invalidateQueries({ queryKey: REPORTS_KEY }),
+      ]);
+    },
+  });
+}
+
 /** Submit uses the API's validation; `studentProgram` prefills until the report has its own. */
 export function useReportEntry(initial: ReportView, studentProgram: Program) {
-  const queryClient = useQueryClient();
-  const api = useReportApi();
   const [own, setReport] = useState(initial);
   // The refetched window (can_edit, sent_at, pdf_status) reaches this open card (review 11-11).
   const report = withServerWindow(own, initial);
@@ -32,27 +66,19 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const saved = initial.version >= own.version ? initial : own;
   const shown = report.can_edit ? values : entryValuesOf(saved, studentProgram);
   const mode = useReportMode(report);
-  const submit = useMutation({
-    mutationFn: api.submitReport,
-    onSuccess: async (view) => {
-      setReport(view);
-      mode.sent();
-      setValues(entryValuesOf(view, studentProgram));
-      // The lesson moved (completed …), the pending list shrank, and a reopened form must load the
-      // sent version (this entry keeps its own state: it is keyed by report id, seeded once).
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: LESSONS_KEY }),
-        queryClient.invalidateQueries({ queryKey: REPORTS_KEY }),
-      ]);
-    },
+  const submit = useSubmit((view) => {
+    setReport(view);
+    mode.sent();
+    setValues(entryValuesOf(view, studentProgram));
   });
-  const saveState = useAutosave({ id: report.id, values, enabled: report.status === 'draft' && !submit.isPending });
+  const saveState = useEntryDraft(report, values, submit.isPending);
 
   const set = <K extends keyof FormValues>(key: K, value: FormValues[K]) => {
     setProblem(null);
     setValues((v) => ({ ...v, [key]: value }));
   };
-  const setGrade = (rubric: Rubric, grade: Grade) => set('grades', { ...values.grades, [rubric]: grade });
+  const setGrade = (rubric: Rubric, grade: Grade) =>
+    set('grades', { ...values.grades, [rubric]: grade });
   // One request at a time: a second tap or Enter while pending does nothing (the guard).
   const send = () =>
     sendChecked(mode.guard, {
@@ -67,7 +93,16 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
     setReport((r) => ({ ...r, attachments: next(r.attachments) }));
 
   return {
-    report, values: shown, set, setGrade, send, problem, submit, saveState, setAttachments, mode,
+    report,
+    values: shown,
+    set,
+    setGrade,
+    send,
+    problem,
+    submit,
+    saveState,
+    setAttachments,
+    mode,
   };
 }
 

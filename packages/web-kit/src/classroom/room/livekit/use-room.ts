@@ -57,7 +57,13 @@ export function useRoom(
     const choice: [] | [MediaChoice] = chosen ? [{ mic, cam, micId, camId }] : [];
     c.connect(join.url, join.token, ...choice)
       .then((fails) => live && setNotes(fails.map((f) => mediaErrorText(f.device, f.error))))
-      .catch((error: unknown) => live && setFailure(connectFailureText({ url: join.url, error, pageProtocol: window.location.protocol })));
+      .catch(
+        (error: unknown) =>
+          live &&
+          setFailure(
+            connectFailureText({ url: join.url, error, pageProtocol: window.location.protocol }),
+          ),
+      );
     return () => {
       live = false;
       off();
@@ -75,7 +81,11 @@ export function useRoom(
     job(c).catch((error: unknown) => setNotes([mediaErrorText(device, error)]));
   }, []);
 
-  const attach = useCallback((key: string, el: HTMLVideoElement) => client.current?.attachVideo(key, el) ?? (() => undefined), []);
+  const attach = useCallback(
+    (key: string, el: HTMLVideoElement) =>
+      client.current?.attachVideo(key, el) ?? (() => undefined),
+    [],
+  );
 
   const sendData = useCallback(
     (bytes: Uint8Array, opts: DataSendOptions) => {

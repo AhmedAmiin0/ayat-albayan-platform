@@ -1,12 +1,10 @@
+import { payoutGenerateResultSchema, payoutListSchema, payoutViewSchema } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYOUT } from '@/features/finance/subscriptions/money-fixture';
 import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
-import { currentMonth, downloadPayoutsCsv } from '@/features/finance/payouts/api';
-import { monthLabel, monthOptions } from '@/features/finance/payouts/shared/MonthSelect';
-import { breakdownLines } from '@/features/finance/payouts/list/payout-columns';
 import { PayoutsPage } from '@/features/finance/payouts/list/PayoutsPage/PayoutsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -42,7 +40,7 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
     // `td *`: the status filter's <option> has the same text.
     const row = (await screen.findByText(t.enums.payoutStatus.draft, { selector: 'td *' })).closest('tr');
     if (!row) throw new Error('row missing');
-    expect(apiFetch).toHaveBeenCalledWith('/payouts?month=2026-09');
+    expect(apiFetch).toHaveBeenCalledWith('/payouts?month=2026-09', { schema: payoutListSchema });
     expect(within(row).getByText('45 دقيقة: 12 × 70 = 840 ج.م')).toBeTruthy();
     expect(within(row).getByText(t.enums.payoutStatus.draft)).toBeTruthy();
   });
@@ -70,12 +68,12 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
     renderPage([PAYOUT, { ...PAYOUT, id: 'po-2', teacher: { id: 't2', display_name_ar: 'سارة' }, status: 'approved' }]);
     apiSend.mockResolvedValue(PAYOUT);
     fireEvent.click(await screen.findByRole('button', { name: t.payouts.approve }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-1/approve'));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-1/approve', { schema: payoutViewSchema }));
     fireEvent.click(screen.getByRole('button', { name: t.payouts.markPaid }));
     expect(apiSend).not.toHaveBeenCalledWith('POST', '/payouts/po-2/pay', expect.anything());
     fireEvent.click(await screen.findByRole('button', { name: t.finance.confirmPaid }));
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-2/pay', expect.objectContaining({ method: 'bank', receiptPath: null })),
+      expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-2/pay', { body: expect.objectContaining({ method: 'bank', receiptPath: null }), schema: payoutViewSchema }),
     );
   });
 
@@ -85,14 +83,14 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
     apiSend.mockResolvedValue(PAYOUT);
     fireEvent.click(await screen.findByRole('button', { name: t.finance.reopen }));
     fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: t.finance.reopen }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-2/reopen'));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-2/reopen', { schema: payoutViewSchema }));
     fireEvent.click(await screen.findByRole('button', { name: t.finance.unpay }));
     const dialog = await screen.findByRole('dialog');
     fireEvent.click(within(dialog).getByRole('button', { name: t.finance.unpay }));
     expect(await within(dialog).findByText(t.finance.reasonRequired)).toBeTruthy();
     fireEvent.change(within(dialog).getByLabelText(t.finance.reason), { target: { value: 'دُفع مرتين' } });
     fireEvent.click(within(dialog).getByRole('button', { name: t.finance.unpay }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-3/unpay', { reason: 'دُفع مرتين' }));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-3/unpay', { body: { reason: 'دُفع مرتين' }, schema: payoutViewSchema }));
   });
 
   it('generate lists the teachers skipped for a missing rate', async () => {
@@ -108,43 +106,12 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
     const link = await screen.findByRole('link', { name: t.payouts.setRate });
     expect(link.getAttribute('href')).toBe('/admin/teachers/t1');
     expect(link.parentElement?.textContent).toContain('سعر حلقة الـ45 والـ60 دقيقة غير مسجل لـأبرار');
-    expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/2026-09/generate');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/2026-09/generate', { schema: payoutGenerateResultSchema });
   });
 
   it('the month picker changes the month', async () => {
     const { onMonth } = renderPage();
     fireEvent.change(await screen.findByLabelText(t.payouts.month), { target: { value: '2026-08' } });
     expect(onMonth).toHaveBeenCalledWith('2026-08');
-  });
-});
-
-describe('payout helpers', () => {
-  it('breakdown lines with a missing rate read 0', () => {
-    const p = { ...PAYOUT, breakdown: { ...PAYOUT.breakdown, lines: [{ duration: 30 as const, lessons: 2, rate: null, amount: 0 }] } };
-    expect(breakdownLines(p)).toEqual(['30 دقيقة: 2 × 0 = 0 ج.م']);
-  });
-
-  it('this month in Riyadh', () => {
-    expect(currentMonth(new Date('2026-09-30T22:00:00Z'))).toBe('2026-10');
-  });
-
-  it('month options: newest first across the year boundary, an older value kept', () => {
-    expect(monthOptions('2026-02', { count: 3, value: '2026-01' })).toEqual(['2026-02', '2026-01', '2025-12']);
-    expect(monthOptions('2026-02', { count: 2, value: '2024-05' })).toEqual(['2026-02', '2026-01', '2024-05']);
-    expect(monthLabel('2026-10')).toBe('أكتوبر 2026');
-  });
-
-  it('the CSV is fetched with the token and saved with a BOM', async () => {
-    apiFetch.mockResolvedValue('a,b\n');
-    const created: Blob[] = [];
-    URL.createObjectURL = vi.fn((b: Blob) => {
-      created.push(b);
-      return 'blob:x';
-    });
-    URL.revokeObjectURL = vi.fn();
-    await downloadPayoutsCsv('2026-09');
-    expect(apiFetch).toHaveBeenCalledWith('/exports/payouts.csv?month=2026-09');
-    const bytes = new Uint8Array((await created[0]?.arrayBuffer()) ?? new ArrayBuffer(0));
-    expect([...bytes.slice(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
   });
 });

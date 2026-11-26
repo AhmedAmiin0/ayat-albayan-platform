@@ -54,7 +54,9 @@ describe('tokens.css (docs/07 §3)', () => {
     ['dark', [LIGHT, DARK]],
   ] as const)('%s colours are exactly packages/shared theme.ts', (theme, selectors) => {
     // dark inherits what it does not override (the cover pair), so later blocks win
-    const decl = new Map(selectors.flatMap((s) => block(s).map((d) => [name(d), value(d)] as const)));
+    const decl = new Map(
+      selectors.flatMap((s) => block(s).map((d) => [name(d), value(d)] as const)),
+    );
     const colours = [...decl.keys()].filter((n) => !n.startsWith('--elev') && n !== 'color-scheme');
     expect(colours.sort()).toEqual(Object.keys(THEME_KEY).sort());
     for (const [cssName, key] of Object.entries(THEME_KEY)) {

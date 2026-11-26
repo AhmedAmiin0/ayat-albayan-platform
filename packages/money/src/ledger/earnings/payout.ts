@@ -8,7 +8,10 @@ import type { LessonStatus, PayoutStatus } from '@ab/catalog';
  * Lesson statuses that are paid. R-PAY-02 says `completed`; whether a `late` or `no_show` lesson
  * is paid is the owner's call (settings payout_count_late / payout_count_no_show, both OFF).
  */
-export function payoutStatuses(input: { countLate: boolean; countNoShow: boolean }): LessonStatus[] {
+export function payoutStatuses(input: {
+  countLate: boolean;
+  countNoShow: boolean;
+}): LessonStatus[] {
   return [
     'completed',
     ...(input.countLate ? (['late'] as const) : []),

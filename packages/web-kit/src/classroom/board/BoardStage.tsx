@@ -7,7 +7,15 @@ import type { BoardController } from './use-board';
 import { useBoardShare } from './use-board-share';
 import { Whiteboard } from './Whiteboard';
 
-export function BoardStage({ board, room, requests }: { board: BoardController; room: RoomController; requests: ShareRequests }) {
+export function BoardStage({
+  board,
+  room,
+  requests,
+}: {
+  board: BoardController;
+  room: RoomController;
+  requests: ShareRequests;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const share = useBoardShare(canvasRef, room);
   return (

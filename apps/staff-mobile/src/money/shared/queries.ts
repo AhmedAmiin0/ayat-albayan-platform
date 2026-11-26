@@ -1,8 +1,13 @@
-import type { SignedDownload } from '@ab/shared';
-import type { PaymentAttachmentView, ReceivablesView } from '@ab/money';
-import type { PeriodTotal } from '@ab/money';
+import { signedDownloadSchema } from '@ab/shared';
+import {
+  paymentAttachmentListSchema,
+  periodTotalSchema,
+  type PeriodTotal,
+  type ReceivablesView,
+} from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { z } from 'zod';
 
 const MINUTE = 60_000;
 
@@ -25,7 +30,7 @@ export function useReceivables() {
 export function useReceiptUrl(paymentId: string, enabled: boolean) {
   return useQuery({
     queryKey: [...pathKey('/payments'), paymentId, 'receipt'],
-    queryFn: () => apiFetch<SignedDownload>(`/payments/${paymentId}/receipt`),
+    queryFn: () => apiFetch(`/payments/${paymentId}/receipt`, { schema: signedDownloadSchema }),
     enabled,
     staleTime: 30 * MINUTE,
     meta,
@@ -36,18 +41,22 @@ export function useReceiptUrl(paymentId: string, enabled: boolean) {
 export function usePaymentAttachments(path: string, enabled: boolean) {
   return useQuery({
     queryKey: pathKey(path),
-    queryFn: () => apiFetch<PaymentAttachmentView[]>(path),
+    queryFn: () => apiFetch(path, { schema: paymentAttachmentListSchema }),
     enabled,
     staleTime: 30 * MINUTE,
     meta,
   });
 }
 
-const isTotal = (v: unknown): v is PeriodTotal =>
-  typeof v === 'object' && v !== null && 'currency' in v && 'net' in v;
+const withTotals = z.object({ totals: z.array(z.unknown()) });
+
+const asTotal = (value: unknown): PeriodTotal[] => {
+  const total = periodTotalSchema.safeParse(value);
+  return total.success ? [total.data] : [];
+};
 
 /** The totals ride on the first page of GET /payments; a page without them is an empty list. */
 export function periodTotals(first: unknown): PeriodTotal[] {
-  const totals = typeof first === 'object' && first !== null && 'totals' in first ? first.totals : null;
-  return Array.isArray(totals) ? totals.filter(isTotal) : [];
+  const page = withTotals.safeParse(first);
+  return page.success ? page.data.totals.flatMap(asTotal) : [];
 }

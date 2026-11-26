@@ -13,10 +13,12 @@ onSessionEnd(forgetMemories);
 function fakeAuth() {
   let listener: ((event: AuthChangeEvent, session: Session | null) => void) | undefined;
   const unsubscribe = vi.fn();
-  const onAuthStateChange = vi.fn((fn: (event: AuthChangeEvent, session: Session | null) => void) => {
-    listener = fn;
-    return { data: { subscription: { id: 'l1', callback: vi.fn(), unsubscribe } } };
-  });
+  const onAuthStateChange = vi.fn(
+    (fn: (event: AuthChangeEvent, session: Session | null) => void) => {
+      listener = fn;
+      return { data: { subscription: { id: 'l1', callback: vi.fn(), unsubscribe } } };
+    },
+  );
   const as = (user: string | null) => (user ? ({ user: { id: user } } as Session) : null);
   const emit = (e: AuthChangeEvent, user: string | null = e === 'SIGNED_OUT' ? null : 'u1') => listener?.(e, as(user));
   return { auth: { onAuthStateChange }, emit, unsubscribe };

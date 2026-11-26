@@ -13,7 +13,9 @@ describe('RecordingsPanel', () => {
     apiFetch.mockRejectedValue(new ApiError(500, null));
     const onClose = vi.fn();
     render(
-      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <QueryClientProvider
+        client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+      >
         <RecordingsPanel source={{ kind: 'lesson', id: 'L1' }} onClose={onClose} />
       </QueryClientProvider>,
     );

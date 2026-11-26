@@ -4,7 +4,9 @@ import type { SubscriptionStatus } from '@ab/catalog';
 // A package made by mistake is cancelled, never deleted, only when nothing is paid or booked on it.
 
 /** POST /subscriptions/:id/cancel and POST /sales/subscriptions/:id/cancel. */
-export const subscriptionCancelSchema = z.strictObject({ reason: z.string().trim().max(500).optional() });
+export const subscriptionCancelSchema = z.strictObject({
+  reason: z.string().trim().max(500).optional(),
+});
 export type SubscriptionCancel = z.infer<typeof subscriptionCancelSchema>;
 
 export type CancelBlock = 'already_cancelled' | 'has_payments' | 'has_lessons' | 'has_commission';
@@ -40,12 +42,16 @@ export const countsForMoney = (p: {
 export const COUNTS_FOR_MONEY = 'status.neq.cancelled,cancel_kind.eq.stopped';
 
 /** The packages that still count (owed, current, alerts, renewals): every one but a cancelled one. */
-export function livePackages<T extends { status: SubscriptionStatus }>(packages: readonly T[]): T[] {
+export function livePackages<T extends { status: SubscriptionStatus }>(
+  packages: readonly T[],
+): T[] {
   return packages.filter((p) => !isCancelled(p));
 }
 
 /** The newest active package, else the newest; never a cancelled one; input newest first. */
-export function currentPackage<T extends { status: SubscriptionStatus }>(newestFirst: readonly T[]): T | null {
+export function currentPackage<T extends { status: SubscriptionStatus }>(
+  newestFirst: readonly T[],
+): T | null {
   const live = livePackages(newestFirst);
   return live.find((p) => p.status === 'active') ?? live[0] ?? null;
 }
@@ -54,5 +60,7 @@ type CancelRow = { status: SubscriptionStatus; paid: number; balance?: { lessons
 
 /** Cancel needs nothing paid or used; the API checks booked lessons and commission (409). */
 export function cancelOffered(p: CancelRow): boolean {
-  return !isCancelled(p) && p.paid === 0 && (p.balance === undefined || p.balance.lessons_used === 0);
+  return (
+    !isCancelled(p) && p.paid === 0 && (p.balance === undefined || p.balance.lessons_used === 0)
+  );
 }

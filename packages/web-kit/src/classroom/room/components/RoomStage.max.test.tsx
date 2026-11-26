@@ -9,7 +9,15 @@ const shared = tile({ key: 't:screen', identity: 't', name: 'أبرار', kind: 
 const strip = [tile({ key: 'me', isLocal: true }), tile({ key: 't', name: 'أبرار' })];
 
 function open() {
-  render(<RoomStage stage={shared} board={null} strip={strip} attach={() => () => undefined} actionFor={() => null} />);
+  render(
+    <RoomStage
+      stage={shared}
+      board={null}
+      strip={strip}
+      attach={() => () => undefined}
+      actionFor={() => null}
+    />,
+  );
 }
 
 describe('RoomStage: the shared screen', () => {

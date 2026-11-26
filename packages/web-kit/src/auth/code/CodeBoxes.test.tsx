@@ -12,7 +12,8 @@ function Harness() {
 
 const box = (n: number) => screen.getByLabelText<HTMLInputElement>(t.familyAuth.codeDigit.replace('{n}', String(n)));
 const values = () => [1, 2, 3, 4, 5, 6].map((n) => box(n).value).join('');
-const paste = (n: number, text: string) => fireEvent.paste(box(n), { clipboardData: { getData: () => text } });
+const paste = (n: number, text: string) =>
+  fireEvent.paste(box(n), { clipboardData: { getData: () => text } });
 
 describe('CodeBoxes (docs/30 §7)', () => {
   it('six numeric boxes, left to right, the first one offering the code autofill', () => {

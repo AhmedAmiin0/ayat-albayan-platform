@@ -10,7 +10,9 @@ vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: { getSession
 function render(seed?: unknown) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   if (seed !== undefined) client.setQueryData(meQuery.queryKey, seed as never);
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
   return renderHook(() => usePermissions(), { wrapper }).result.current;
 }
 

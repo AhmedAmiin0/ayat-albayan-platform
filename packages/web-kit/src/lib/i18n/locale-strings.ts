@@ -10,7 +10,8 @@ type LoadBundle = () => Promise<object>;
 
 const importEnglish: LoadBundle = async () => (await import('@ab/shared/i18n/en.json')).default;
 
-const childOf = (node: object, key: string): unknown => (Object.hasOwn(node, key) ? Reflect.get(node, key) : undefined);
+const childOf = (node: object, key: string): unknown =>
+  Object.hasOwn(node, key) ? Reflect.get(node, key) : undefined;
 
 /**
  * Writes `source`'s string leaves over `target`'s IN PLACE (walking the trees, so a key that holds
@@ -38,7 +39,11 @@ function writeTree(target: object, source: object): number {
  * now shown. Arabic is bundled, so it loads nothing. A failed chunk leaves the Arabic texts, which
  * are always complete, and returns 'ar' so the page direction and the overrides follow them too.
  */
-export async function loadLocaleStrings(target: object, locale: Locale, load: LoadBundle = importEnglish): Promise<Locale> {
+export async function loadLocaleStrings(
+  target: object,
+  locale: Locale,
+  load: LoadBundle = importEnglish,
+): Promise<Locale> {
   if (locale !== 'en') return locale;
   try {
     writeTree(target, await load());
