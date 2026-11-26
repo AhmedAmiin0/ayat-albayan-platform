@@ -11,7 +11,8 @@ import {
   type StudentReportsResponse,
 } from '@ab/shared';
 import type { UserRole } from '@ab/catalog';
-import { pageWindow, toPage } from '@/common/db/page';
+import { pageWindow } from '@ab/core';
+import { toPage } from '@/common/db/page';
 import type { PageQuery } from '@/common/http/http';
 import type { HistoryLesson, HistoryRow, PendingRow } from './report-history.queries';
 import { iso } from '@/modules/reporting/reports/submit/report-form.mapper';

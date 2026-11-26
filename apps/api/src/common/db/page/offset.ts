@@ -1,13 +1,7 @@
-import type { ListSort, Page } from '@ab/core';
+import { pageWindow, type ListSort, type Page, type PageInput } from '@ab/core';
 import { applySort, type SortSpec } from '@/common/db/list-sort';
 import { done, rows } from '@/common/db/errors';
-import type { CountedResult, PageInput, PageRows, Pageable } from './page.types';
-
-/** The inclusive row window of a 1-based page, for `.range` or an RPC's limit and offset. */
-export function pageWindow(input: PageInput): { from: number; to: number } {
-  const from = (input.page - 1) * input.pageSize;
-  return { from, to: from + input.pageSize - 1 };
-}
+import type { CountedResult, PageRows, Pageable } from './page.types';
 
 /** Rows read by an RPC or in memory, in the `Page<T>` envelope. */
 export function toPage<T>(items: T[], total: number, input: PageInput): Page<T> {

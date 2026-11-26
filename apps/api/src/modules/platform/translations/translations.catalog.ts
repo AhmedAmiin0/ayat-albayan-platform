@@ -1,4 +1,4 @@
-import type { Locale } from '@ab/core';
+import { pageWindow, type Locale } from '@ab/core';
 import {
   flattenStrings,
   missingPlaceholders,
@@ -8,7 +8,7 @@ import {
   type TranslationKeysPage,
   type TranslationKeysQuery,
 } from '@ab/i18n';
-import { pageWindow, toPage } from '@/common/db/page';
+import { toPage } from '@/common/db/page';
 import { BUNDLES } from '@/common/infra/i18n/server-text';
 import { VALUES_HINT_KEYS } from './values-owned';
 

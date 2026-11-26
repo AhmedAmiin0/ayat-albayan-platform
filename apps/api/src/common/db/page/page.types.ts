@@ -1,12 +1,6 @@
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { Orderable } from '@/common/db/list-sort';
 
-/** A 1-based page request, as `pageQuery` parses it. */
-export interface PageInput {
-  page: number;
-  pageSize: number;
-}
-
 export interface PageRows<Row> {
   rows: Row[];
   total: number;

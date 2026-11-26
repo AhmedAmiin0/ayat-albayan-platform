@@ -1,11 +1,10 @@
 import type { StudentListFilters } from '@ab/shared';
 import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
-import { searchDigits } from '@ab/core';
+import { pageWindow, searchDigits } from '@ab/core';
 import type { TeacherOption } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { Db } from '@/common/db/db.module';
 import { peopleErrors, type ListQuery } from '@/modules/people/guardians/http';
-import { pageWindow } from '@/common/db/page';
 import { maybe, pgError, rows } from '@/common/db/errors';
 import { applySort } from '@/common/db/list-sort';
 import { applyStudentFilters } from './students.filters';

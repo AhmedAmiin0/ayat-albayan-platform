@@ -1,7 +1,7 @@
 import { isFamilyEmail, type UsersListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { pageWindow } from '@/common/db/page';
+import { pageWindow } from '@ab/core';
 import { maybe, pgError } from '@/common/db/errors';
 import * as links from './users.links.repo';
 import { mapListRow } from './users.rows';

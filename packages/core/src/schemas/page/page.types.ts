@@ -27,3 +27,15 @@ export type PageSchema<T extends z.ZodType> = z.ZodObject<{
   page: z.ZodNumber;
   pageSize: z.ZodNumber;
 }>;
+
+/** A 1-based page request, as `pageQuery` parses it. */
+export interface PageInput {
+  page: number;
+  pageSize: number;
+}
+
+/** The inclusive row window of one page. */
+export interface PageWindow {
+  from: number;
+  to: number;
+}
