@@ -10,6 +10,12 @@ export const UNIQUE_VIOLATION = '23505';
 export const isUniqueViolation = (error: { code?: string } | null | undefined): boolean =>
   error?.code === UNIQUE_VIOLATION;
 
+/** A unique violation whose message names `text`, such as part of a constraint name. */
+export const uniqueViolationMentions = (
+  error: { code?: string; message: string } | null | undefined,
+  text: string,
+): boolean => isUniqueViolation(error) && error?.message.includes(text) === true;
+
 /** A conflict answers its code only: the database's text can carry row values (docs/62 §3.2). */
 const conflict = (message: string): ToError => (e) => {
   log.warn(`${e.code} ${e.message}: ${e.details}`);
