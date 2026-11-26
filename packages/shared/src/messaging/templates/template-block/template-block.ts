@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import type { TemplateButton, TemplateParams } from '../templates';
 
 // A template as WhatsApp draws it, buttons included: the header over the body, the grey footer,
@@ -5,9 +6,11 @@ import type { TemplateButton, TemplateParams } from '../templates';
 // message_templates.buttons.
 
 export const TEMPLATE_HEADER_KINDS = ['text', 'image', 'video', 'document', 'location'] as const;
-export type TemplateHeaderKind = (typeof TEMPLATE_HEADER_KINDS)[number];
+export const templateHeaderKindSchema = z.enum(TEMPLATE_HEADER_KINDS);
+export type TemplateHeaderKind = z.infer<typeof templateHeaderKindSchema>;
 export const TEMPLATE_BUTTON_KINDS = ['quick_reply', 'url', 'phone_number', 'copy_code'] as const;
-export type TemplateButtonKind = (typeof TEMPLATE_BUTTON_KINDS)[number];
+export const templateButtonKindSchema = z.enum(TEMPLATE_BUTTON_KINDS);
+export type TemplateButtonKind = z.infer<typeof templateButtonKindSchema>;
 
 export interface TemplateHeader {
   type: TemplateHeaderKind;
