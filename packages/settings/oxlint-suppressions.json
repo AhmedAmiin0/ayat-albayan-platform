@@ -16,7 +16,7 @@
   },
   "src/custom-config/public.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/custom-config/schema.ts": {
@@ -74,11 +74,6 @@
       "count": 1
     }
   },
-  "src/domains/uploads.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/gate.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -106,17 +101,12 @@
   },
   "src/ownership.ts": {
     "stylistic/max-len": {
-      "count": 9
-    }
-  },
-  "src/public.ts": {
-    "stylistic/max-len": {
-      "count": 1
+      "count": 7
     }
   },
   "src/read-settings.messaging.test.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     }
   },
   "src/read-settings.test.ts": {
@@ -124,17 +114,12 @@
       "count": 1
     }
   },
-  "src/registry.nullable.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/registry.ts": {
     "no-nested-ternary": {
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -145,22 +130,12 @@
   },
   "src/seed/config-describe.migration.test.ts": {
     "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/seed/entries.test.ts": {
-    "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/seed/entries.ts": {
     "stylistic/max-len": {
-      "count": 7
-    }
-  },
-  "src/seed/seed-entries.metadata.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
+      "count": 6
     }
   },
   "src/seed/seed-entries.sql-keys.test.ts": {
@@ -178,12 +153,12 @@
   },
   "src/seed/seed-entries.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/seed/seed-payload.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -202,12 +177,12 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/validation/patch.test.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     }
   },
   "src/validation/patch.ts": {
@@ -218,7 +193,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 2
     }
   },
   "src/validation/schema/schema.ts": {
@@ -226,21 +201,6 @@
       "count": 1
     },
     "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "src/validation/schema/tests/schema.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/validation/validate.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/value-groups/tests/registry.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   }
