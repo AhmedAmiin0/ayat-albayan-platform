@@ -11,4 +11,4 @@ export interface LoadStateProps<T> {
   children: (data: T) => ReactNode;
 }
 
-export type Phase = 'data' | 'error' | 'loading';
+export type ReadState<T> = { phase: 'data'; data: T } | { phase: 'error' } | { phase: 'loading' };

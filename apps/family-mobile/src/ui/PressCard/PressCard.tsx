@@ -1,6 +1,7 @@
 import { Animated, Pressable } from 'react-native';
-import { raisedCard, useTheme } from '@ab/mobile-kit';
+import { useTheme } from '@ab/mobile-kit';
 import type { PressCardProps } from './PressCard.types';
+import { cardStyle } from './press-card.helpers';
 import { usePressCard } from './use-press-card';
 
 /**
@@ -21,13 +22,7 @@ export function PressCard({ label, onPress, hint, style, children }: PressCardPr
         onPress={onPress}
         onPressIn={press(true)}
         onPressOut={press(false)}
-        style={({ pressed }) => ({
-          ...raisedCard(color, 16),
-          backgroundColor: pressed ? color.lapisWash : color.raised,
-          padding: 16,
-          gap: 12,
-          ...style,
-        })}
+        style={cardStyle(color, style)}
       >
         {children}
       </Pressable>
