@@ -4,7 +4,6 @@ import type { PageGoldenCase, PageGoldenSpec, PageOutcome } from './page-golden.
 /** Every page query stops at page 10 000 unless it sets a lower last page (docs/62 §6). */
 const LAST_PAGE = 10_000;
 const PAST_CAP = LAST_PAGE + 1;
-const read = z.object({ page: z.number(), pageSize: z.number() });
 
 const issue = (code: string, key: string): PageOutcome => ({ issues: [{ code, path: [key] }] });
 
@@ -25,11 +24,14 @@ export function pageGoldenCases(spec: PageGoldenSpec): PageGoldenCase[] {
 }
 
 /** The page a query schema reads from `input`, or its issues' codes and paths. */
-export function pageOutcome(schema: z.ZodType, input: Record<string, string>): PageOutcome {
+export function pageOutcome(
+  schema: z.ZodType<{ page: number; pageSize: number }>,
+  input: Record<string, string>,
+): PageOutcome {
   const result = schema.safeParse(input);
   if (!result.success) {
     return { issues: result.error.issues.map(({ code, path }) => ({ code, path })) };
   }
-  const { page, pageSize } = read.parse(result.data);
+  const { page, pageSize } = result.data;
   return { page, pageSize };
 }
