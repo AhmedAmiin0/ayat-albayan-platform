@@ -2,7 +2,7 @@ import { QUOTE_BODY_MAX, UNAVAILABLE_QUOTE, type MessageQuote, type MessageView 
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { looksCrmHistory } from '@/modules/messaging/whatsapp';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { httpError } from '@/common/http/errors';
 
 /** A quoted row as read here: what the bubble shows, and who of staff sent it. */
 export interface QuotedRow {
@@ -93,7 +93,7 @@ export class ThreadQuotes {
       .eq('phone_e164', phone)
       .maybeSingle();
     if (error) throw new Error(`reply target read failed: ${error.message}`);
-    if (!data?.wa_message_id) throw waHttpError('reply_not_in_thread', HttpStatus.BAD_REQUEST);
+    if (!data?.wa_message_id) throw httpError(HttpStatus.BAD_REQUEST, 'reply_not_in_thread');
     // The bubble still quotes it; WhatsApp gets no context it would refuse or drop.
     return {
       reply_to_message_id: data.id,

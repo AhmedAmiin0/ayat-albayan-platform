@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { MediaRefusal } from '@/modules/messaging/whatsapp/messages/media-refusal/media-refusal.schemas';
 import { RECEIPT_FILTERS } from '@/modules/messaging/whatsapp/messages/receipts/receipt-candidates';
+import { pgError } from '@/common/db/errors';
 
 /** The number a message came in on (messages.number_id → wa_numbers): it decides who can fetch its media. */
 export type MediaNumber = { id: string; provider: string; purpose: NumberPurpose };
@@ -52,7 +53,7 @@ export class InboundMediaRepo {
 
   async message(id: string): Promise<MediaMessage | null> {
     const { data, error } = await this.db.from('messages').select(COLUMNS).eq('id', id).maybeSingle();
-    if (error) throw new Error(`message read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
@@ -73,21 +74,21 @@ export class InboundMediaRepo {
       .gte('created_at', input.since)
       .order('created_at', { ascending: false })
       .limit(input.limit);
-    if (error) throw new Error(`thread media read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
   /** Only where it is still empty: two admins opening the same file keep the first path. */
   async setPath(id: string, path: string): Promise<void> {
     const { error } = await this.db.from('messages').update({ media_path: path }).eq('id', id).is('media_path', null);
-    if (error) throw new Error(`message media_path update failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   /** Only while no copy exists: a file cached by another view is served, never refused. */
   async setRefusal(id: string, refusal: MediaRefusal): Promise<void> {
     const update = this.db.from('messages').update({ media_refusal: refusal });
     const { error } = await update.eq('id', id).is('media_path', null);
-    if (error) throw new Error(`message media_refusal update failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   /**
@@ -105,7 +106,7 @@ export class InboundMediaRepo {
       .lt('created_at', input.before)
       .order('created_at', { ascending: true })
       .limit(input.limit);
-    if (error) throw new Error(`cached media read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data.flatMap((r) => (r.media_path ? [{ id: r.id, media_path: r.media_path, media_mime: r.media_mime, media_id: r.media_id }] : []));
   }
 
@@ -113,7 +114,7 @@ export class InboundMediaRepo {
   async clearPaths(ids: readonly string[], echoes = false): Promise<void> {
     if (!ids.length) return;
     const { error } = await this.cached(this.db.from('messages').update({ media_path: null }).in('id', [...ids]), echoes);
-    if (error) throw new Error(`message media_path clear failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   /** Inbound rows with Meta's media id (never an old-CRM copy), or echoes: outbound with a media id and a cached copy that is not a sent file. */

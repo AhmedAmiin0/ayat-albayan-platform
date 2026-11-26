@@ -16,12 +16,12 @@ import {
 } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { baseMime, InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { SNIFF_BYTES, sniffMime } from './invoice-sniff';
 import type { InvoiceRow } from '@/modules/teaching/booking/core/booking.mapper';
 import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
+import { httpError } from '@/common/http/errors';
 
-const bad = (code: string) => domainError(HttpStatus.BAD_REQUEST, code);
+const bad = (code: string) => httpError(HttpStatus.BAD_REQUEST, code);
 type Kind = InvoiceRow['kind'];
 type Saved = Pick<InvoiceRow, 'path' | 'mime' | 'size_bytes'>;
 /**

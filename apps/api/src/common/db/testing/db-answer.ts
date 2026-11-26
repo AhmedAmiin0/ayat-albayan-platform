@@ -1,9 +1,10 @@
 import { HttpException } from '@nestjs/common';
+import { UNIQUE_VIOLATION } from '@/common/db/errors';
 
 /** PostgREST errors the error-path tests feed to a repo, one per answer the api gives today. */
 export const PG_ERRORS = {
   unique: {
-    code: '23505',
+    code: UNIQUE_VIOLATION,
     message: 'duplicate key value',
     details: 'Key (id)=(x) already exists.',
   },

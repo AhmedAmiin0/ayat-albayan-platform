@@ -1,6 +1,8 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
+import type { PostgrestError } from '@supabase/supabase-js';
 
 /** What the panel reads of a sticker message. */
 export type StickerRow = Pick<
@@ -18,8 +20,8 @@ const STICKER_MIME = 'image/webp';
 const RECENT_SCAN = 120;
 const FAVOURITES_MAX = 60;
 
-function rows<T>(r: { data: T[] | null; error: { message: string } | null }, what: string): T[] {
-  if (r.error) throw new Error(`${what} failed: ${r.error.message}`);
+function rows<T>(r: { data: T[] | null; error: PostgrestError | null }): T[] {
+  if (r.error) throw pgError(r.error);
   return r.data ?? [];
 }
 
@@ -37,7 +39,7 @@ export class StickerRepo {
       .is('hidden_at', null)
       .order('created_at', { ascending: false })
       .limit(RECENT_SCAN);
-    return rows(r, 'stickers read');
+    return rows(r);
   }
 
   /** These sticker messages (a favourite's, a send's source), not hidden. */
@@ -49,7 +51,7 @@ export class StickerRepo {
       .in('id', [...ids])
       .eq('media_mime', STICKER_MIME)
       .is('hidden_at', null);
-    return rows(r, 'sticker read');
+    return rows(r);
   }
 
   /** Newest first. */
@@ -60,7 +62,7 @@ export class StickerRepo {
       .eq('profile_id', profileId)
       .order('created_at', { ascending: false })
       .limit(FAVOURITES_MAX);
-    return rows(r, 'sticker favourites read');
+    return rows(r);
   }
 
   /** Saved again = the same row, pointing at this message now. */
@@ -68,7 +70,7 @@ export class StickerRepo {
     const { error } = await this.db
       .from('sticker_favourites')
       .upsert({ ...f, created_at: new Date().toISOString() }, { onConflict: 'profile_id,sticker_key' });
-    if (error) throw new Error(`sticker favourite save failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 
   async drop(f: Omit<Favourite, 'message_id'>): Promise<void> {
@@ -77,6 +79,6 @@ export class StickerRepo {
       .delete()
       .eq('profile_id', f.profile_id)
       .eq('sticker_key', f.sticker_key);
-    if (error) throw new Error(`sticker favourite drop failed: ${error.message}`);
+    if (error) throw pgError(error);
   }
 }

@@ -1,7 +1,7 @@
 import { managesTemplates } from '@ab/shared';
 import { Injectable, type CanActivate, type ExecutionContext } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { waHttpError } from './template.mapper';
+import { httpError } from '@/common/http/errors';
 
 /**
  * Every templates.manage route (sync, submit, move, the allow-list, the lines and their check):
@@ -13,7 +13,7 @@ import { waHttpError } from './template.mapper';
 export class TemplateManagerGuard implements CanActivate {
   canActivate(ctx: ExecutionContext): boolean {
     const user = ctx.switchToHttp().getRequest<{ user?: AuthUser }>().user;
-    if (!managesTemplates(user)) throw waHttpError('allow_list_only', 403);
+    if (!managesTemplates(user)) throw httpError(403, 'allow_list_only');
     return true;
   }
 }

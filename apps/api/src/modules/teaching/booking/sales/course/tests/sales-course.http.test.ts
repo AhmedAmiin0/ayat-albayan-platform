@@ -8,10 +8,10 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 import { SalesRepo } from '@/modules/sales/sales/shared';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { SalesCourseRepo } from '@/modules/teaching/booking/sales/course/sales-course.repo';
+import { httpError } from '@/common/http/errors';
 
 const NO_DRAFTS = { held: async () => false, get: async () => null };
 
@@ -132,7 +132,7 @@ describe('/sales/booking — the assistant books the course of her subscription'
   });
 
   it('a clash is a 409 conflict she cannot override', async () => {
-    booking.book.mockRejectedValue(domainError(409, 'conflict', { conflicts: [] }));
+    booking.book.mockRejectedValue(httpError(409, 'conflict', { conflicts: [] }));
     expect((await post('salesA', COURSE)).json().code).toBe('conflict');
     expect((await post('salesA', { ...COURSE, override: { reason: 'سبب' } })).json().code).toBe('override_not_allowed');
   });

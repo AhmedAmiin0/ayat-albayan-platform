@@ -40,8 +40,8 @@ describe('ThreadMessagesRepo.messages around a message (docs/37 NEW 3)', () => {
     expect(calls.filter((c) => c.method === 'gte').map((c) => c.args)).toEqual([['created_at', HIT.created_at]]);
     expect(calls.filter((c) => c.method === 'lte').map((c) => c.args)).toEqual([['created_at', HIT.created_at]]);
     const ors = calls.filter((c) => c.method === 'or').map((c) => c.args[0]);
-    expect(ors).toContain(`created_at.gt.${at},and(created_at.eq.${at},id.gt.${HIT.id})`);
-    expect(ors).toContain(`created_at.lt.${at},and(created_at.eq.${at},id.lte.${HIT.id})`);
+    expect(ors).toContain(`created_at.gt.${at},id.gt.${HIT.id}`);
+    expect(ors).toContain(`created_at.lt.${at},id.lte.${HIT.id}`);
     expect(calls.filter((c) => c.method === 'eq' && c.args[0] === 'phone_e164')).toHaveLength(3);
   });
 

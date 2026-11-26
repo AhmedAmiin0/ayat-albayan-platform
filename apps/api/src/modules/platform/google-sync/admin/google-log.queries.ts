@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
 import { localDate } from '@/modules/platform/google-sync/writers/sheets/sheet-dates';
 import { TZ } from '@/modules/platform/google-sync/google-format';
+import { pgError } from '@/common/db/errors';
 
 const planned = z.object({ method: z.string(), target: z.string(), summary: z.string() });
 type Raw = {
@@ -31,7 +32,7 @@ export class GoogleLogQueries {
       .select('id, kind, state, skip_reason, google_id, attempts, last_error, planned, updated_at, lesson_id, student_id')
       .order('updated_at', { ascending: false })
       .limit(limit);
-    if (error) throw new Error(`google log read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return this.view(data);
   }
 
@@ -41,7 +42,7 @@ export class GoogleLogQueries {
       .select('id, kind, state, skip_reason, google_id, attempts, last_error, planned, updated_at, lesson_id, student_id')
       .eq('id', id)
       .maybeSingle();
-    if (error) throw new Error(`google log read failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data ? ((await this.view([data]))[0] ?? null) : null;
   }
 
@@ -51,7 +52,7 @@ export class GoogleLogQueries {
       lessonIds.length ? this.db.from('lessons').select('id, starts_at, lesson_students(student_id)').in('id', lessonIds) : Promise.resolve({ data: [], error: null }),
       this.studentNames(rows, lessonIds),
     ]);
-    if (lessons.error) throw new Error(`google log lessons failed: ${lessons.error.message}`);
+    if (lessons.error) throw pgError(lessons.error);
     const lessonOf = new Map((lessons.data ?? []).map((l) => [l.id, l]));
     return rows.map((r) => {
       const l = r.lesson_id ? lessonOf.get(r.lesson_id) : undefined;
@@ -82,11 +83,11 @@ export class GoogleLogQueries {
   private async studentNames(rows: Raw[], lessonIds: string[]): Promise<Map<string, string>> {
     const direct = rows.map((r) => r.student_id).filter((x): x is string => !!x);
     const linked = lessonIds.length ? await this.db.from('lesson_students').select('student_id').in('lesson_id', lessonIds) : { data: [], error: null };
-    if (linked.error) throw new Error(`google log students failed: ${linked.error.message}`);
+    if (linked.error) throw pgError(linked.error);
     const ids = [...new Set([...direct, ...(linked.data ?? []).map((s) => s.student_id)])];
     if (!ids.length) return new Map();
     const { data, error } = await this.db.from('students').select('id, name').in('id', ids);
-    if (error) throw new Error(`google log students failed: ${error.message}`);
+    if (error) throw pgError(error);
     return new Map(data.map((s) => [s.id, s.name]));
   }
 }

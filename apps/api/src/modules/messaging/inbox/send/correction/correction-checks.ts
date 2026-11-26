@@ -1,7 +1,7 @@
 import { correctionBody, stripCorrectionPrefix, type ThreadText } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
 import { ar, BUNDLES } from '@/common/infra/i18n/server-text';
-import { waHttpError } from '@/modules/messaging/whatsapp';
+import { httpError } from '@/common/http/errors';
 
 /**
  * What a correction send's checks read of the STORED row (never its rendered view: a hidden row
@@ -67,5 +67,5 @@ interface ReplyContext {
 /** From another line WhatsApp has no reply context, so the family sees a bare correction. */
 export function assertRepliesToOriginal(correctsId: string | undefined, reply: ReplyContext): void {
   const bare = Boolean(correctsId) && !reply.reply_to_wa_id;
-  if (bare) throw waHttpError('correction_other_number', HttpStatus.CONFLICT);
+  if (bare) throw httpError(HttpStatus.CONFLICT, 'correction_other_number');
 }

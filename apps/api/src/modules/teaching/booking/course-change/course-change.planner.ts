@@ -2,13 +2,13 @@ import { courseDaysPerWeek, courseLessonCount, type CourseLessonFact } from '@ab
 import { DURATIONS } from '@ab/catalog';
 import { wallParts, type CourseChangeRequest, startOfLocalDay } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { CourseLessonRepo, type MovedLesson } from './course-change.lessons';
 import { assertChange, assertStart, planChange, type ChangePlan, type ChangeRole } from './course-change.plan';
 import { unmaterialised } from './course-change.projection';
 import { CourseChangeRepo, type ChangeRule, type CourseSub } from './course-change.repo';
 import { courseOverlaps } from '@/modules/teaching/booking/sales/course/sales-course.rules';
+import { httpError } from '@/common/http/errors';
 
 export interface Loaded { sub: CourseSub; active: ChangeRule[]; all: ChangeRule[] }
 export type Planned = Loaded & { plan: ChangePlan; counted: number; moved: MovedLesson[] };
@@ -55,7 +55,7 @@ export class CourseChangePlanner {
     const { sub, active, all } = loaded;
     const tz = active[0]?.tz ?? 'Asia/Riyadh';
     const now = new Date();
-    if (wallParts(req.startsAt, tz).date !== req.startsOn) throw domainError(HttpStatus.BAD_REQUEST, 'starts_at_mismatch');
+    if (wallParts(req.startsAt, tz).date !== req.startsOn) throw httpError(HttpStatus.BAD_REQUEST, 'starts_at_mismatch');
     const durationMin = DURATIONS.find((d) => d === sub.duration);
     if (durationMin === undefined) throw new Error(`subscription ${sub.id} has duration ${sub.duration}`);
     const facts = { role, perWeek: courseDaysPerWeek(sub), lessonsTotal: courseLessonCount(sub), durationMin, tz };
@@ -69,7 +69,7 @@ export class CourseChangePlanner {
     const plan = planChange({ req, facts: { ...facts, before }, now, horizonWeeks });
     const others = await this.queries.others(sub, all.map((r) => r.id));
     if (courseOverlaps(others, { from: req.startsOn, to: plan.endsOn })) {
-      throw domainError(HttpStatus.CONFLICT, 'course_exists');
+      throw httpError(HttpStatus.CONFLICT, 'course_exists');
     }
     return { ...loaded, plan, counted: facts.lessonsTotal - plan.remaining, moved };
   }

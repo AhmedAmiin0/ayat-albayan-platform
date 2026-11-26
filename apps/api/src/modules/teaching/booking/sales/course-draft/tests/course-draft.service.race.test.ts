@@ -1,8 +1,8 @@
 import { HttpStatus } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { BOOKING, REQ, setup, SUB, USER } from '@/modules/teaching/booking/sales/course-draft/tests/course-draft.fakes';
 import { draftRequestId } from '@/modules/teaching/booking/sales/course-draft/course-draft.rules';
+import { httpError } from '@/common/http/errors';
 
 // A draft racing the payment never books two courses; removed only as the booked version.
 const keyed = (savedAt: string) =>
@@ -35,7 +35,7 @@ describe('CourseDrafts — races with the payment', () => {
   it('create_booking refuses course_exists («احجز» won): booked, the draft goes, no alert', async () => {
     const t = setup({ held: [true, true] });
     await t.drafts.save(REQ, USER);
-    t.env.booking.book.mockRejectedValueOnce(domainError(HttpStatus.CONFLICT, 'course_exists'));
+    t.env.booking.book.mockRejectedValueOnce(httpError(HttpStatus.CONFLICT, 'course_exists'));
     t.env.course.isBooked.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
     expect(await t.drafts.confirm(SUB)).toBe('booked');
     expect(t.env.due.clash).not.toHaveBeenCalled();
@@ -45,7 +45,7 @@ describe('CourseDrafts — races with the payment', () => {
   it('an overlap with another course (course_exists, package unbooked): a clash, the draft kept', async () => {
     const t = setup({ held: [true, true] });
     await t.drafts.save(REQ, USER);
-    t.env.course.options.mockRejectedValueOnce(domainError(HttpStatus.CONFLICT, 'course_exists'));
+    t.env.course.options.mockRejectedValueOnce(httpError(HttpStatus.CONFLICT, 'course_exists'));
     expect(await t.drafts.confirm(SUB)).toBe('clash');
     expect(t.env.due.clash).toHaveBeenCalledWith(SUB, expect.objectContaining({ reason: 'clash' }));
     expect(t.rows.size).toBe(1);
@@ -53,7 +53,7 @@ describe('CourseDrafts — races with the payment', () => {
 
   it('saved while paid, another version booked first: the 409 comes back and the stale row goes', async () => {
     const t = setup({ held: [true, false] });
-    t.env.course.options.mockRejectedValueOnce(domainError(HttpStatus.CONFLICT, 'course_exists'));
+    t.env.course.options.mockRejectedValueOnce(httpError(HttpStatus.CONFLICT, 'course_exists'));
     t.env.course.isBooked.mockResolvedValueOnce(true);
     await expect(t.drafts.save(REQ, USER)).rejects.toThrow();
     expect(t.rows.size).toBe(0);

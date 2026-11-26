@@ -25,9 +25,12 @@ const IGNORES = [
 ];
 const JS = '**/*.{js,mjs,cjs}';
 
+// docs/62 §4: page queries and windows come from @ab/core's page unit in every workspace.
+const DATA_RULES = { 'ab/no-hand-paging': 'error' };
+
 /** The base rules (plain or React) before the package's own blocks. */
 const baseBlocks = (react) => [
-  { files: ['**/*'], rules: { ...ALL, ...TYPED } },
+  { files: ['**/*'], rules: { ...ALL, ...TYPED, ...DATA_RULES } },
   { files: ['**/*.ts'], rules: PLAIN_TS },
   // typescript-eslint's eslint-recommended turns these off for .ts/.tsx/.mts/.cts only.
   { files: ['**/*.{js,mjs,cjs,jsx}'], rules: JS_ONLY },

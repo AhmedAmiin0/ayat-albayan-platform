@@ -3,9 +3,12 @@ import type { PageQueryShape, PageSchema, PageSize } from './page.types';
 
 const count = (): z.ZodNumber => z.number().int();
 
+/** Past this page an offset read only costs the database; a query may set a lower last page. */
+export const MAX_PAGE = 10_000;
+
 /** Spread into a list query: `z.object({ ...pageQuery({ size: 25 }), ...listSortShape(KEYS) })`. */
 export function pageQuery(size: PageSize): PageQueryShape {
-  const { max = 100, lastPage = Number.MAX_SAFE_INTEGER } = size;
+  const { max = 100, lastPage = MAX_PAGE } = size;
   return {
     page: z.coerce.number().int().min(1).max(lastPage).default(1),
     pageSize: z.coerce.number().int().min(1).max(max).default(size.size),

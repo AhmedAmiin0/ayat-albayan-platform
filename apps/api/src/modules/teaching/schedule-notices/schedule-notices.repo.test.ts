@@ -4,11 +4,11 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { ScheduleNoticesRepo } from './schedule-notices.repo';
 
 describe('ScheduleNoticesRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new ScheduleNoticesRepo(db).lesson('l1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

@@ -3,8 +3,7 @@ import type { Conflict } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { badRequest } from '@/common/http/errors';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
+import { badRequest, httpError } from '@/common/http/errors';
 import { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 import { assertBookingScope, assertOwnStudents, type BookingOwnership } from '@/modules/teaching/booking/sales/booking/sales-booking.scope';
 import { TrialDates } from '@/modules/teaching/booking/trial-date/trial-date.service';
@@ -41,7 +40,7 @@ export class SalesTrialDates {
 
   async pick(req: BookingRequest, user: AuthUser): Promise<TrialDateResult> {
     const own = await this.allowed(req, user);
-    if (req.startsAt && Date.parse(req.startsAt) < Date.now()) throw domainError(HttpStatus.BAD_REQUEST, 'date_in_past');
+    if (req.startsAt && Date.parse(req.startsAt) < Date.now()) throw httpError(HttpStatus.BAD_REQUEST, 'date_in_past');
     const first = await this.dates.replay(req, user.id);
     if (first) return first;
     return this.dates.pick(await this.target(req, own), user.id);

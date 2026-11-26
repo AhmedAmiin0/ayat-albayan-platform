@@ -1,10 +1,11 @@
 import type { TemplateNumberSetView } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '@/common/audit/audit.service';
-import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { REGISTRY_ENTITY_ID, toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import type { ApprovalRow, NumberRef } from '@/modules/messaging/whatsapp/templates/catalog/types';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { httpError } from '@/common/http/errors';
 
 // docs/23 phase 5, docs/23c: null is the role's default; never blocked, only a warning.
 
@@ -39,7 +40,7 @@ export async function setTemplateNumber(
   if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
   const ref = input.number_id === null ? null : await deps.queries.numberRef(input.number_id);
   // A calls number never sends a template (docs/28 §10): it is not a number a template can pick.
-  if (input.number_id !== null && (!ref || ref.purpose === 'calls')) throw waHttpError('unknown_number', 404);
+  if (input.number_id !== null && (!ref || ref.purpose === 'calls')) throw httpError(404, 'unknown_number');
   let after = row;
   if (row.number_id !== input.number_id) {
     after = (await deps.queries.update(input.key, { number_id: input.number_id })) ?? {

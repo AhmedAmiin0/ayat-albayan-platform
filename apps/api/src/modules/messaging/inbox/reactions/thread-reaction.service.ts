@@ -1,6 +1,6 @@
 import type { ReactionResult, ThreadReaction } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { MessageViews, waHttpError } from '@/modules/messaging/whatsapp';
+import { MessageViews } from '@/modules/messaging/whatsapp';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
 import { visibleToSales, withoutLinks } from '@/modules/messaging/inbox/sales-threads/sales-threads';
 import { dedupKey, outboundBase, sendLine, type ThreadSend } from '@/modules/messaging/inbox/send/thread-send.service';
@@ -10,6 +10,7 @@ import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { sendsOnCrm } from './reaction-line';
 import { assertReactable, reactionPayload, ReactionRepo } from './reaction.repo';
+import { httpError } from '@/common/http/errors';
 
 /** PUT /threads/:phone/messages/:id/reaction: the text send's ThreadSend plus the reacted message. */
 export type ReactionRequest = ThreadSend<ThreadReaction> & { messageId: string };
@@ -46,15 +47,15 @@ export class ThreadReactionService {
     const target = await this.reactions.target(r.phone, r.messageId);
     assertReactable(target, now);
     // Sales never see a feedback request or a join link (migration 187, as forward): not found, nothing sent.
-    if (r.sales && !visibleToSales(target)) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+    if (r.sales && !visibleToSales(target)) throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
     const thread = await this.threads.thread(r.phone);
     const from = await sendLine(thread, {
       now,
       windows: () => this.threads.numberWindows(r.phone),
     });
-    if (sendsOnCrm(from)) throw waHttpError('reaction_unsupported', HttpStatus.CONFLICT);
+    if (sendsOnCrm(from)) throw httpError(HttpStatus.CONFLICT, 'reaction_unsupported');
     // Meta only knows a wamid on the number that sent or received it.
-    if (!sameNumber(target, from)) throw waHttpError('reaction_other_number', HttpStatus.CONFLICT);
+    if (!sameNumber(target, from)) throw httpError(HttpStatus.CONFLICT, 'reaction_other_number');
     const { emoji } = r.input;
     const where = { targetId: target.id, phone: r.phone };
     if (!(await this.reactions.queued(key))) {

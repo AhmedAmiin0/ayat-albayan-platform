@@ -12,7 +12,10 @@ describe('GET /subscriptions sort + filters (R-NFR-08)', () => {
   it('no sort: newest first, then id', async () => {
     const { db, calls } = fakeDb({ subscriptions: [{ data: [], count: 0 }] });
     await new SubscriptionsRepo(db).list(page);
-    expect(on(calls, 'order')).toEqual([['created_at', { ascending: false }], ['id']]);
+    expect(on(calls, 'order')).toEqual([
+      ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
   });
 
   it('package sort puts a custom count last; package and name filters', async () => {

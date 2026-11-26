@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
 import { components, type Component } from '@/modules/messaging/whatsapp/templates/sync/template-sync';
 import type { MetaTemplate } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { pgError } from '@/common/db/errors';
 
 /** How long find() trusts its copy (another API copy may have synced since). */
 const COPY_MS = 60_000;
@@ -52,7 +53,7 @@ export class CrmCopiesRepo {
     }));
     if (!rows.length) return 0;
     const { error } = await this.db.from(TABLE).upsert(rows, { onConflict: 'name,language' });
-    if (error) throw new Error(`crm template copies not saved: ${error.message}`);
+    if (error) throw pgError(error);
     this.copy = null;
     return rows.length;
   }
@@ -63,7 +64,7 @@ export class CrmCopiesRepo {
 
   private async all(): Promise<Copies> {
     const { data, error } = await this.db.from(TABLE).select('name, language, components');
-    if (error) throw new Error(error.message);
+    if (error) throw pgError(error);
     const rows = z.array(rowSchema).parse(data);
     return new Map(rows.map((r) => [keyOf(r.name, r.language), components(r.components)]));
   }

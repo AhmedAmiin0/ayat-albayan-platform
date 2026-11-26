@@ -2,7 +2,6 @@ import type { CourseChangeCheck, CourseChangeResult } from '@ab/shared';
 import { usesPlatform, type Conflict, type CourseChangeRequest } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { addedLessons, type CourseTold } from './notices/course-change.notice-plan';
 import { changePayload } from './course-change.payload';
 import type { ChangeRole } from './course-change.plan';
@@ -12,6 +11,7 @@ import { CourseChangeDeps } from './course-change.writer';
 import { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 import { assertOwnStudents } from '@/modules/teaching/booking/sales/booking/sales-booking.scope';
 import { isSales } from '@/common/auth/roles';
+import { httpError } from '@/common/http/errors';
 
 /** anyStudent: a key skips «her own students» (the profile's routes; sales.renew_any, docs/16 row 38). */
 export interface ChangeActor { user: AuthUser; role: ChangeRole; anyStudent?: boolean }
@@ -53,7 +53,7 @@ export class CourseChange {
     const planned = await this.deps.planner.planned(req, actor.role, await this.load(sub));
     const conflicts = await this.conflicts(planned, req.teacherId);
     if (conflicts.length > 0 && (isSales(actor) || !req.override)) {
-      throw domainError(HttpStatus.CONFLICT, 'conflict', { conflicts });
+      throw httpError(HttpStatus.CONFLICT, 'conflict', { conflicts });
     }
     const payload = changePayload({
       req,
@@ -88,14 +88,14 @@ export class CourseChange {
    * (no active rule) / course_unattributed.
    */
   private async load(sub: CourseSub): Promise<Loaded> {
-    if (sub.package === 'trial') throw domainError(HttpStatus.BAD_REQUEST, 'trial_not_course');
+    if (sub.package === 'trial') throw httpError(HttpStatus.BAD_REQUEST, 'trial_not_course');
     const all = await this.queries.rules(sub.id);
-    if (all.length === 0) throw domainError(HttpStatus.NOT_FOUND, 'course_not_found');
+    if (all.length === 0) throw httpError(HttpStatus.NOT_FOUND, 'course_not_found');
     const active = all.filter((r) => r.status === 'active');
-    if (active.length === 0) throw domainError(HttpStatus.CONFLICT, 'course_finished');
+    if (active.length === 0) throw httpError(HttpStatus.CONFLICT, 'course_finished');
     // A running rule without subscription_id it cannot own (a group, or one into the next package).
     if (active.some((r) => r.course?.clean === false))
-      throw domainError(HttpStatus.CONFLICT, 'course_unattributed');
+      throw httpError(HttpStatus.CONFLICT, 'course_unattributed');
     return { sub, active, all };
   }
 

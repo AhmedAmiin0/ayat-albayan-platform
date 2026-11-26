@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
+import { answerOfRejection, PG_ERRORS } from '@/common/db/testing/db-answer';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import type { LineHealthStore } from '@/modules/messaging/whatsapp/lines/line-health.store';
 import { RulesRepo } from './rules.repo';
@@ -9,11 +10,18 @@ const queries = (all: () => Promise<unknown>) =>
 
 describe('RulesQueries.lines: the kept numbers never fail the list', () => {
   it('a failed read (e.g. wa_line_health not migrated yet) reads as «not checked yet»', async () => {
-    await expect(queries(async () => Promise.reject(new Error('relation does not exist'))).lines()).resolves.toEqual([]);
+    await expect(
+      queries(async () => Promise.reject(new Error('relation does not exist'))).lines(),
+    ).resolves.toEqual([]);
   });
 
   it('a good read passes through', async () => {
-    const row = { line: 'notifications', display_phone_e164: '+966500000000', verified_name: null, checked_at: '2026-10-22T08:00:00Z' };
+    const row = {
+      line: 'notifications',
+      display_phone_e164: '+966500000000',
+      verified_name: null,
+      checked_at: '2026-10-22T08:00:00Z',
+    };
     await expect(queries(async () => [row]).lines()).resolves.toEqual([row]);
   });
 });
@@ -56,5 +64,14 @@ describe('RulesQueries.reach and classroom', () => {
     expect(q.classroom()).toBe(false);
     on = true;
     expect(q.classroom()).toBe(true);
+  });
+});
+
+describe('RulesQueries.templates', () => {
+  it('a failed read answers through the default db error map', async () => {
+    const health = { all: vi.fn(async () => []) } as unknown as LineHealthStore;
+    const f = fakeDb({ message_templates: [{ error: PG_ERRORS.unique }] });
+    const answer = await answerOfRejection(new RulesRepo(f.db, health, () => true).templates());
+    expect(answer.status).toBe(409);
   });
 });

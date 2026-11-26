@@ -7,7 +7,11 @@ const BAD_CODE = 'no';
 const NOT_FOUND = [404, { code: 'short_link_not_found', message: 'short_link_not_found' }];
 const invalid = (...issues: [path: string, message: string][]) => [
   400,
-  { message: 'validation_failed', issues: issues.map(([path, message]) => ({ path, message })) },
+  {
+    code: 'validation_failed',
+    message: 'validation_failed',
+    issues: issues.map(([path, message]) => ({ path, message })),
+  },
 ];
 const missing = 'Invalid input: expected string, received undefined';
 

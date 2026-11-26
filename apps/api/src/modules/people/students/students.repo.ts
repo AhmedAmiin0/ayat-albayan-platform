@@ -1,10 +1,10 @@
 import type { StudentListFilters } from '@ab/shared';
 import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
-import { searchDigits } from '@ab/core';
+import { pageWindow, searchDigits } from '@ab/core';
 import type { TeacherOption } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { Db } from '@/common/db/db.module';
-import { peopleErrors, pageRange, type ListQuery } from '@/modules/people/guardians/http';
+import { peopleErrors, type ListQuery } from '@/modules/people/guardians/http';
 import { maybe, pgError, rows } from '@/common/db/errors';
 import { applySort } from '@/common/db/list-sort';
 import { applyStudentFilters } from './students.filters';
@@ -45,7 +45,7 @@ export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<St
   );
   const filter = await searchFilter(db, q.search);
   if (filter) query = query.or(filter);
-  const [from, to] = pageRange(q);
+  const { from, to } = pageWindow(q);
   // The view's columns read as nullable; the base columns (and has_weekly's exists) never are.
   const { data, error, count } = await query
     .range(from, to)

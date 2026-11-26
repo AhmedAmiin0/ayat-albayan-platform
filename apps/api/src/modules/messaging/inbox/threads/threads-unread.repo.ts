@@ -1,6 +1,7 @@
 import type { Db } from '@/common/db/db.module';
 import { phoneList } from '@/modules/messaging/numbers';
 import type { ThreadListFilter } from './threads.list';
+import { pgError } from '@/common/db/errors';
 
 /**
  * The unread badge (web nav, sales tab title, mobile tab: GET /threads?unread=true&pageSize=1, `total`
@@ -21,6 +22,6 @@ export async function unreadThreadCount(db: Db, f: Pick<ThreadListFilter, 'phone
   if (f.phones) query = query.in('phone_e164', [...f.phones]);
   if (f.hide?.length) query = query.not('phone_e164', 'in', phoneList(f.hide));
   const { count, error } = await query;
-  if (error) throw new Error(`unread threads count failed: ${error.message}`);
+  if (error) throw pgError(error);
   return count ?? 0;
 }

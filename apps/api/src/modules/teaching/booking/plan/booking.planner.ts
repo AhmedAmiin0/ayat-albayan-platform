@@ -10,7 +10,6 @@ import {
 import { uploadMaxBytes } from '@ab/settings';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import { meetingLinkFor, type BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
 import { bookingPayload, type CourseLabel } from '@/modules/teaching/booking/core/booking.payload';
 import { BookingParties, type Resolved } from '@/modules/teaching/booking/core/booking.parties';
@@ -20,6 +19,7 @@ import type { Occurrence } from '@ab/schedule';
 import { planSeries } from './booking.series-plan';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { assertNotPast, bookableConflicts } from './outside-hours';
+import { httpError } from '@/common/http/errors';
 
 export type Prepared = {
   payload: BookingPayload;
@@ -54,7 +54,7 @@ type Series = { plan: Plan; siblings: Plan[]; first: Occurrence; conflicts: Conf
 
 /** Before the plan: a missing invoice is not a clash the admin can override away. */
 function assertInvoice(req: BookingRequest, invoiceWaived: boolean): void {
-  if (bookingKindOf(req) !== 'trial' && !req.invoice && !invoiceWaived) throw domainError(HttpStatus.BAD_REQUEST, 'invoice_required');
+  if (bookingKindOf(req) !== 'trial' && !req.invoice && !invoiceWaived) throw httpError(HttpStatus.BAD_REQUEST, 'invoice_required');
 }
 
 /**
@@ -92,7 +92,7 @@ export class BookingPlanner {
     const makeupOf = kind === 'makeup' ? await this.parties.missed(req) : null;
     const { plan, siblings, first, conflicts } = await this.series(req, { teacher, who, endsOn: opts.endsOn, exclude: opts.excludeLessonIds });
     if (conflicts.length > 0 && !req.override) {
-      throw domainError(HttpStatus.CONFLICT, 'conflict', { conflicts });
+      throw httpError(HttpStatus.CONFLICT, 'conflict', { conflicts });
     }
     const settings = await this.settings.read();
     const meetingLink = meetingLinkFor({
@@ -121,7 +121,7 @@ export class BookingPlanner {
     const plans = planSeries({ rule: { ...req, single }, now: new Date(), horizonWeeks, endsOn: ctx.endsOn });
     const [plan, ...siblings] = plans;
     const first = plan?.occurrences[0];
-    if (!plan || !first) throw domainError(HttpStatus.BAD_REQUEST, 'no_occurrences');
+    if (!plan || !first) throw httpError(HttpStatus.BAD_REQUEST, 'no_occurrences');
     assertNotPast(req, new Date());
     const tzs = [req.tz, ctx.teacher.tz];
     const probe = single ? [] : plans.flatMap((p) => probeAfter(p, tzs));

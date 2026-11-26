@@ -4,7 +4,7 @@ import type { Http } from '@/common/infra/http/http.types';
 import type { GraphEnv } from '@/config/env/env';
 import { graphDownload, graphHttp, providerOf, type GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 import { kapsoMediaSchema, mediaSchema } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { httpError } from '@/common/http/errors';
 
 // Where the two drivers differ (docs/19-messaging-drivers.md). Kapso's Meta proxy mirrors the Cloud
 // API (same paths, bodies, Meta-shaped errors) except the template list's paging, template edits
@@ -67,7 +67,7 @@ const LOCATE = { meta: metaMedia, kapso: kapsoMedia } satisfies Record<
   Locate
 >;
 
-const tooLarge = (): Error => waHttpError('invoice_too_large', HttpStatus.PAYLOAD_TOO_LARGE);
+const tooLarge = (): Error => httpError(HttpStatus.PAYLOAD_TOO_LARGE, 'invoice_too_large');
 
 /**
  * Inbound media bytes, as the line's driver serves them: never Kapso's `url` (Meta's lookaside,

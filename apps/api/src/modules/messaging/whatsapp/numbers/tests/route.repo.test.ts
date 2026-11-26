@@ -32,6 +32,6 @@ describe('RouteQueries', () => {
 
   it('a failed read throws (the pass sends nothing)', async () => {
     const { db } = fakeDb({ message_template_numbers: [{ error: { message: 'down' } }] });
-    await expect(new RouteRepo(db).approvals()).rejects.toThrow('template approvals read failed');
+    await expect(new RouteRepo(db).approvals()).rejects.toThrow('db error undefined: down');
   });
 });

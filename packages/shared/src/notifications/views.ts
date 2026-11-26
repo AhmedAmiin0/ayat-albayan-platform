@@ -40,7 +40,7 @@ export function newestOfKind(
 }
 
 export const notificationsQuerySchema = z.object({
-  ...pageQuery({ size: 20, max: NOTIFICATIONS_PAGE_MAX, lastPage: 10_000 }),
+  ...pageQuery({ size: 20, max: NOTIFICATIONS_PAGE_MAX }),
 });
 export type NotificationsQuery = z.infer<typeof notificationsQuerySchema>;
 

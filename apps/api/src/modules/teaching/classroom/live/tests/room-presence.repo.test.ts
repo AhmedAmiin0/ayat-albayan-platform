@@ -5,7 +5,7 @@ import { RoomPresenceRepo } from '@/modules/teaching/classroom/live/room-presenc
 
 const E = { lessonId: 'l1', identity: 'guest-1', at: '2026-11-16T10:00:00.000Z' };
 const ORDER = 'presence_at.is.null,presence_at.lt.2026-11-16T10:00:00.000Z';
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 
 describe("RoomPresenceRepo: LiveKit's order", () => {
@@ -37,7 +37,7 @@ describe("RoomPresenceRepo: LiveKit's order", () => {
 });
 
 describe('RoomPresenceRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ classroom_participants: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new RoomPresenceRepo(db).entered(E))).toEqual(DUPLICATE);
   });

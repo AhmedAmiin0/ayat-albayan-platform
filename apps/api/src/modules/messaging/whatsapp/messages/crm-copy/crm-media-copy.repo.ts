@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { pgError } from '@/common/db/errors';
 
 /**
  * The totals of a finished copy (its one audit row). `remaining`: CRM file links on ANY host still
@@ -24,7 +25,7 @@ export class CrmMediaCopyRepo {
       p_limit: input.limit,
       p_max_attempts: input.maxAttempts,
     });
-    if (error) throw new Error(`crm media copy batch failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data.map((r) => r.id);
   }
 
@@ -35,13 +36,13 @@ export class CrmMediaCopyRepo {
       p_error: input.error,
       p_skip: input.skip,
     });
-    if (error) throw new Error(`crm media copy mark failed: ${error.message}`);
+    if (error) throw pgError(error);
     return data;
   }
 
   async counts(host: string): Promise<CrmCopyCounts> {
     const { data, error } = await this.db.rpc('crm_media_copy_counts', { p_host: host });
-    if (error) throw new Error(`crm media copy counts failed: ${error.message}`);
+    if (error) throw pgError(error);
     const row = data && typeof data === 'object' && !Array.isArray(data) ? data : {};
     return {
       copied: count(row.copied),

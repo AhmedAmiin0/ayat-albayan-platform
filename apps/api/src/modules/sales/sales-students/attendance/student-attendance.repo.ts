@@ -2,6 +2,7 @@ import type { LessonStatus } from '@ab/catalog';
 import { COUNTS_FOR_MONEY } from '@ab/money';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import { readChunked } from '@/common/db/read-all';
 import { maybe, pgError, rows } from '@/common/db/errors';
 import type {
   AttendanceLessonRow,
@@ -78,13 +79,12 @@ export class StudentAttendanceRepo {
 
   /** The student's submitted reports of these lessons. */
   async reports(studentId: string, lessonIds: readonly string[]): Promise<AttendanceReportRow[]> {
-    if (lessonIds.length === 0) return [];
-    const data = rows(await this.db
+    const data = await readChunked(lessonIds, (chunk) => this.db
       .from('lesson_reports')
       .select('id, lesson_id, submitted_at, sent_at')
       .eq('student_id', studentId)
       .eq('status', 'submitted')
-      .in('lesson_id', [...lessonIds]));
+      .in('lesson_id', chunk));
     return data;
   }
 

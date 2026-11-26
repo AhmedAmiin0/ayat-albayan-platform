@@ -3,10 +3,10 @@ import type { Duration } from '@ab/catalog';
 import type { CourseChangeRequest } from '@ab/schedule';
 import { HttpStatus } from '@nestjs/common';
 import { plannedCourseEnd } from '@/modules/teaching/booking/core/booking.course-end';
-import { domainError } from '@/modules/teaching/booking/booking.errors';
 import type { Plan } from '@/modules/teaching/booking/plan/booking.plan';
 import { planSeries, type SeriesRule } from '@/modules/teaching/booking/plan/booking.series-plan';
 import { isSales } from '@/common/auth/roles';
+import { httpError } from '@/common/http/errors';
 
 // Pure plan of a course's remaining lessons on new days.
 
@@ -32,13 +32,13 @@ export type ChangeFacts = {
  */
 export function assertChange(req: CourseChangeRequest, facts: ChangeFacts, now: Date): void {
   if (Date.parse(req.startsAt) <= now.getTime())
-    throw domainError(HttpStatus.BAD_REQUEST, 'date_in_past');
+    throw httpError(HttpStatus.BAD_REQUEST, 'date_in_past');
   if (isSales(facts) && req.override)
-    throw domainError(HttpStatus.FORBIDDEN, 'override_not_allowed');
+    throw httpError(HttpStatus.FORBIDDEN, 'override_not_allowed');
   if (facts.perWeek === null && isSales(facts))
-    throw domainError(HttpStatus.CONFLICT, 'custom_count_admin');
+    throw httpError(HttpStatus.CONFLICT, 'custom_count_admin');
   if (facts.perWeek !== null && req.byday.length !== facts.perWeek)
-    throw domainError(HttpStatus.BAD_REQUEST, 'days_count_mismatch');
+    throw httpError(HttpStatus.BAD_REQUEST, 'days_count_mismatch');
 }
 
 /** What the change point is checked against (review fix 4, 7). */
@@ -57,13 +57,13 @@ type StartFacts = {
  * change point, for a client that did not stop it; a new teacher is a change on the same days).
  */
 export function assertStart(req: CourseChangeRequest, facts: StartFacts): void {
-  if (req.startsOn < facts.subStartsOn) throw domainError(HttpStatus.BAD_REQUEST, 'starts_before_subscription');
+  if (req.startsOn < facts.subStartsOn) throw httpError(HttpStatus.BAD_REQUEST, 'starts_before_subscription');
   const first = facts.rules.map((r) => r.starts_on).sort()[0];
-  if (first !== undefined && req.startsOn < first) throw domainError(HttpStatus.BAD_REQUEST, 'starts_before_course');
+  if (first !== undefined && req.startsOn < first) throw httpError(HttpStatus.BAD_REQUEST, 'starts_before_course');
   const days = facts.rules
     .filter((r) => r.status === 'active' && (r.ends_on === null || r.ends_on >= req.startsOn))
     .flatMap((r) => r.byday.map((weekday) => ({ weekday, startTimeLocal: r.start_time_local.slice(0, 5) })));
-  if (days.length > 0 && facts.teacherChanged !== true && sameDays(req, days)) throw domainError(HttpStatus.BAD_REQUEST, 'no_change');
+  if (days.length > 0 && facts.teacherChanged !== true && sameDays(req, days)) throw httpError(HttpStatus.BAD_REQUEST, 'no_change');
 }
 
 export type ChangePlan = {
@@ -89,7 +89,7 @@ type ChangePlanInput = {
  */
 export function planChange({ req, facts, now, horizonWeeks }: ChangePlanInput): ChangePlan {
   const remaining = courseRemaining(facts.lessonsTotal, facts.before);
-  if (remaining <= 0) throw domainError(HttpStatus.CONFLICT, 'course_finished');
+  if (remaining <= 0) throw httpError(HttpStatus.CONFLICT, 'course_finished');
   const rule: SeriesRule = {
     byday: req.byday,
     startTimeLocal: req.startTimeLocal,
@@ -101,6 +101,6 @@ export function planChange({ req, facts, now, horizonWeeks }: ChangePlanInput): 
     single: false,
   };
   const endsOn = plannedCourseEnd({ rule, now, lessonsTotal: remaining });
-  if (!endsOn) throw domainError(HttpStatus.BAD_REQUEST, 'no_occurrences');
+  if (!endsOn) throw httpError(HttpStatus.BAD_REQUEST, 'no_occurrences');
   return { plans: planSeries({ rule, now, horizonWeeks, endsOn }), remaining, endsOn };
 }

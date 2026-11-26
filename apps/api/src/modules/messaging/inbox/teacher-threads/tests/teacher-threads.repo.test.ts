@@ -8,11 +8,11 @@ const repoWith = (teachers: FakeResult[]) =>
   new TeacherThreadsRepo(fakeDb({ teachers }).db, {} as unknown as TeacherMeRepo);
 
 describe('TeacherThreadsRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const repo = repoWith([{ error: PG_ERRORS.unique }]);
     expect(await answerOfRejection(repo.teacher('p1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 

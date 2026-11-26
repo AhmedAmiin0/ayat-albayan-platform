@@ -1,6 +1,6 @@
 import { templateParamProblem, type TemplateView, type ThreadTemplate } from '@ab/shared';
-import { waHttpError } from '@/modules/messaging/whatsapp';
 import { missingParams } from '@/modules/messaging/inbox/threads/threads.mapper';
+import { httpError } from '@/common/http/errors';
 
 /**
  * H4's params check: every variable filled (400 missing_params), then Meta's rules (132018):
@@ -10,7 +10,7 @@ import { missingParams } from '@/modules/messaging/inbox/threads/threads.mapper'
  */
 export function assertSendableParams(template: TemplateView, params: ThreadTemplate['params']): void {
   const missing = missingParams(template, params);
-  if (missing.length) throw waHttpError('missing_params', 400, { missing });
+  if (missing.length) throw httpError(400, 'missing_params', { missing });
   const problem = templateParamProblem(template.body_ar, params);
-  if (problem) throw waHttpError(problem, 400);
+  if (problem) throw httpError(400, problem);
 }

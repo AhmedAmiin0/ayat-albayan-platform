@@ -1,6 +1,8 @@
 import { RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
+import type { SortSpec } from '@/common/db/list-sort';
+import { readPage } from '@/common/db/page';
 import type { PageQuery } from '@/common/http/http';
 import { maybe, pgError } from '@/common/db/errors';
 import { MY_COMMISSION_SELECT, type MyCommissionSource } from './my.commissions.mapper';
@@ -35,6 +37,15 @@ export const MY_PAYMENTS_LIMIT = 500;
  * profile id from the login, and every query filters on it: another assistant's rows, and any payment
  * recorded by someone else, never match (rule 9; RLS in migrations 271 and 274 is the second wall).
  */
+/** Index (assistant_id, earned_at); the id breaks ties in the same direction. */
+const COMMISSION_ORDER: SortSpec<never> = {
+  columns: {},
+  fallback: [
+    { column: 'earned_at', ascending: false },
+    { column: 'id', ascending: false },
+  ],
+};
+
 @Injectable()
 export class MyRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -97,22 +108,17 @@ export class MyRepo {
     return data;
   }
 
-  /** One page of my commissions, newest first; index (assistant_id, earned_at). */
+  /** One page of my commissions, newest first. */
   async commissionPage(
     assistantId: string,
     q: PageQuery,
   ): Promise<{ rows: MyCommissionSource[]; total: number }> {
-    const from = (q.page - 1) * q.pageSize;
-    const { data, count, error } = await this.db
-      .from('assistant_commissions')
-      .select(MY_COMMISSION_SELECT, { count: 'exact' })
-      .eq('assistant_id', assistantId)
-      .order('earned_at', { ascending: false })
-      .order('id', { ascending: false })
-      .range(from, from + q.pageSize - 1)
-      .overrideTypes<MyCommissionSource[], { merge: false }>();
-    if (error) throw pgError(error);
-    return { rows: data, total: count ?? 0 };
+    const read = () =>
+      this.db
+        .from('assistant_commissions')
+        .select(MY_COMMISSION_SELECT, { count: 'exact' })
+        .eq('assistant_id', assistantId);
+    return readPage(read, q, COMMISSION_ORDER);
   }
 
   async adjustments(assistantId: string): Promise<MyAdjustment[]> {

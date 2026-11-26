@@ -1,6 +1,6 @@
 import { baseMime } from '@ab/shared';
 import { HttpStatus } from '@nestjs/common';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
+import { httpError } from '@/common/http/errors';
 
 /** The old CRM's storage gets this long for the whole file (headers and body). */
 export const CRM_FETCH_TIMEOUT_MS = 10_000;
@@ -9,9 +9,9 @@ export const CRM_UNREACHABLE = 'crm_unreachable';
 
 type CrmFetchInput = { url: URL; mime: string; maxBytes: number };
 
-const gone = (): Error => waHttpError('media_expired', HttpStatus.GONE);
-const tooBig = (): Error => waHttpError('invoice_too_large', HttpStatus.PAYLOAD_TOO_LARGE);
-const unreachable = (): Error => waHttpError(CRM_UNREACHABLE, HttpStatus.BAD_GATEWAY);
+const gone = (): Error => httpError(HttpStatus.GONE, 'media_expired');
+const tooBig = (): Error => httpError(HttpStatus.PAYLOAD_TOO_LARGE, 'invoice_too_large');
+const unreachable = (): Error => httpError(HttpStatus.BAD_GATEWAY, CRM_UNREACHABLE);
 /** A busy or broken server, not an answer about this file. */
 const transient = (status: number): boolean => status >= 500 || status === 429;
 

@@ -2,7 +2,6 @@ import type { ReopenFields, ThreadView } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
 import { reopenChoiceOf } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import {
   DAY_MS,
   nextReopenKey,
@@ -10,6 +9,7 @@ import {
 } from '@/modules/messaging/whatsapp/sender/window/reopen-state';
 import { WindowSettings } from '@/modules/messaging/whatsapp/sender/window/window.settings';
 import { ReopenPickRepo, type ReopenBubble } from './reopen-pick.repo';
+import { httpError } from '@/common/http/errors';
 
 /** A staff-picked reopen send: its dedup key in the `reopen:` family, and its 24 h life. */
 export interface ReopenStamp {
@@ -35,7 +35,7 @@ const ownRetry = (r: ReopenBubble, by: PickAt['by']): boolean =>
  * the first row (replayed), so nothing new goes. Anyone else's: 409 reopen_live.
  */
 function retryKey(live: ReopenBubble, by: PickAt['by']): string {
-  if (!live.dedup_key || !ownRetry(live, by)) throw waHttpError('reopen_live', 409);
+  if (!live.dedup_key || !ownRetry(live, by)) throw httpError(409, 'reopen_live');
   return live.dedup_key;
 }
 
@@ -60,13 +60,13 @@ export class ReopenPick {
 
   /** The picked template's stamp; throws the reason it cannot reopen this chat now. */
   async stamp(at: PickAt): Promise<ReopenStamp> {
-    if (at.line !== 'chat') throw waHttpError('reopen_not_chat_line', 400);
+    if (at.line !== 'chat') throw httpError(400, 'reopen_not_chat_line');
     const rows = await this.repo.since(at.phone, dayBefore(at.now));
     const expiresAt = new Date(at.now.getTime() + DAY_MS).toISOString();
     const live = rows.find((r) => reopenLive(r, at.now));
     if (live) return { dedup: retryKey(live, at.by), expiresAt };
     const dedup = nextReopenKey(at.phone, rows, at.now);
-    if (!dedup) throw waHttpError('reopen_tries_used', 409);
+    if (!dedup) throw httpError(409, 'reopen_tries_used');
     return { dedup, expiresAt };
   }
 

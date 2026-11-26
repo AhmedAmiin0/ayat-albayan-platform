@@ -8,7 +8,7 @@ export interface Page<T> {
   pageSize: number;
 }
 
-/** An endpoint's page size: its default, its maximum, and its last page when it caps one. */
+/** An endpoint's page size: its default, its maximum, and a last page below MAX_PAGE. */
 export interface PageSize {
   size: number;
   max?: number;
@@ -27,3 +27,15 @@ export type PageSchema<T extends z.ZodType> = z.ZodObject<{
   page: z.ZodNumber;
   pageSize: z.ZodNumber;
 }>;
+
+/** A 1-based page request, as `pageQuery` parses it. */
+export interface PageInput {
+  page: number;
+  pageSize: number;
+}
+
+/** The inclusive row window of one page. */
+export interface PageWindow {
+  from: number;
+  to: number;
+}

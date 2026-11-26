@@ -16,7 +16,7 @@ const RULE = {
 };
 const SPAN = { from: new Date('2026-10-04T14:00:00Z'), to: new Date('2026-10-04T14:45:00Z') };
 const QUERY = { teacherId: 't1', studentIds: [], span: SPAN, excludeRuleIds: [] };
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 
 describe('RuleProjectionQueries — generated dates are keyed on local_date (R-SCH-11, migration 174)', () => {
@@ -63,7 +63,7 @@ describe('RuleProjectionQueries — generated dates are keyed on local_date (R-S
 });
 
 describe('RuleProjectionRepo error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ schedule_rules: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new RuleProjectionRepo(db).busy(QUERY))).toEqual(DUPLICATE);
   });

@@ -1,7 +1,6 @@
 import { ACCOUNT_CODE_TEMPLATE, restrictedMay, type ThreadTemplate, type ThreadText } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
-import { waHttpError } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { ReopenPick, templateStamp } from '@/modules/messaging/whatsapp';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
@@ -13,6 +12,7 @@ import { assertSendableParams } from './template-params';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { assertRepliesToOriginal, CorrectionRepo, correctionOf, withSameRequest } from './correction';
 import { reopenStamp } from './reopen-send';
+import { httpError } from '@/common/http/errors';
 
 export { chatLine, sendLine } from './text-line';
 
@@ -38,7 +38,7 @@ export interface ThreadSend<T> {
  * phone, or by another teacher, is a new send, never the first family's row.
  */
 export function dedupKey<T>(s: ThreadSend<T>): string {
-  if (!s.input.clientRequestId) throw waHttpError('missing_client_request_id', 400);
+  if (!s.input.clientRequestId) throw httpError(400, 'missing_client_request_id');
   const who = s.sales ? `sales:${s.sales.salesId}` : s.scope ? `teacher:${s.scope.teacherId}` : 'admin';
   return `${who}:${s.phone}:${s.input.clientRequestId}`;
 }
@@ -114,17 +114,17 @@ export class ThreadSendService {
     if (s.scope) await this.teacherMay(s.scope, s);
     const key = dedupKey(s);
     // Its link is signed per lesson and student by FeedbackModule; a hand-made one is dead.
-    if (s.input.key === 'lesson_feedback_request') throw waHttpError('use_feedback_request', 400);
+    if (s.input.key === 'lesson_feedback_request') throw httpError(400, 'use_feedback_request');
     // ClassroomModule mints the one-lesson token.
-    if (s.input.key === 'lesson_join_link') throw waHttpError('use_join_link', 400);
+    if (s.input.key === 'lesson_join_link') throw httpError(400, 'use_join_link');
     // The rating send picks the lesson and its date itself (rule 6) and sets the payloads.
-    if (s.input.key === 'lesson_rating') throw waHttpError('use_rating_button', 400);
+    if (s.input.key === 'lesson_rating') throw httpError(400, 'use_rating_button');
     // The sign-in code (docs/30) is only ever sent by the API itself, never typed by hand.
-    if (s.input.key === ACCOUNT_CODE_TEMPLATE) throw waHttpError('template_not_allowed', 403);
+    if (s.input.key === ACCOUNT_CODE_TEMPLATE) throw httpError(403, 'template_not_allowed');
     const template = await this.templates.approved(s.input.key);
-    if (!template) throw waHttpError('template_not_approved', 409);
-    if (s.restricted && !restrictedMay(template)) throw waHttpError('template_not_allowed', 403);
-    if (template.header_format === 'document') throw waHttpError('needs_document', 400);
+    if (!template) throw httpError(409, 'template_not_approved');
+    if (s.restricted && !restrictedMay(template)) throw httpError(403, 'template_not_allowed');
+    if (template.header_format === 'document') throw httpError(400, 'needs_document');
     assertSendableParams(template, s.input.params);
     const thread = await this.queries.thread(s.phone);
     const ask = { phone: s.phone, actorId: s.actorId, input: s.input, template, thread, now };
@@ -144,7 +144,7 @@ export class ThreadSendService {
   private async teacherMay(scope: TeacherScope, s: ThreadSend<ThreadTemplate>): Promise<void> {
     assertCanSend(scope, s.phone);
     if (s.input.lessonId && (await this.queries.lessonTeacher(s.input.lessonId)) !== scope.teacherId) {
-      throw waHttpError('not_your_lesson', 403);
+      throw httpError(403, 'not_your_lesson');
     }
   }
 }

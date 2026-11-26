@@ -45,8 +45,8 @@ describe('FxRepo reads: the single newest SAR→quote row', () => {
   it('a read error is thrown as «db: <message>»', async () => {
     const errors = [{ error: { message: 'boom' } }, { error: { message: 'x' } }];
     const { db } = fakeDb({ fx_rates: errors });
-    await expect(new FxRepo(db).newest('USD')).rejects.toThrow('db: boom');
-    await expect(new FxRepo(db).atOrBefore('USD', NOW)).rejects.toThrow('db: x');
+    await expect(new FxRepo(db).newest('USD')).rejects.toThrow('db error undefined: boom');
+    await expect(new FxRepo(db).atOrBefore('USD', NOW)).rejects.toThrow('db error undefined: x');
   });
 });
 
@@ -84,6 +84,6 @@ describe('FxRepo.save: one upsert of the valid rates', () => {
 
   it('an upsert error is thrown as «db: <message>»', async () => {
     const { db } = fakeDb({ fx_rates: [{ error: { message: 'boom' } }] });
-    await expect(new FxRepo(db).save(snapshot({ USD: 0.27 }))).rejects.toThrow('db: boom');
+    await expect(new FxRepo(db).save(snapshot({ USD: 0.27 }))).rejects.toThrow('db error undefined: boom');
   });
 });

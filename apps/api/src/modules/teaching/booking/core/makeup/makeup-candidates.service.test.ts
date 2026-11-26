@@ -7,7 +7,7 @@ import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { MakeupCandidates } from './makeup-candidates.service';
 
 const NOW = new Date('2026-10-03T10:00:00Z');
-const DUPLICATE = { status: 409, body: { message: 'duplicate', detail: PG_ERRORS.unique.details } };
+const DUPLICATE = { status: 409, body: { message: 'duplicate' } };
 const FAILED = { status: 500, body: 'db error XX000: boom' };
 const row = (id: string, over: Record<string, unknown> = {}) => ({
   id,
@@ -101,7 +101,7 @@ describe('MakeupCandidates.list (R-SCH-10)', () => {
 });
 
 describe('MakeupCandidates error paths: the answer a failed query gives today', () => {
-  it('a unique violation is 409 duplicate with the detail', async () => {
+  it('a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lessons: [{ error: PG_ERRORS.unique }] });
     expect(
       await answerOfRejection(new MakeupCandidates(db, readerOf(BookingSettings)).list(IDS.s1)),

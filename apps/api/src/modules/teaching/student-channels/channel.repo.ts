@@ -7,13 +7,12 @@ import {
 } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { done, maybe, pgError } from '@/common/db/errors';
+import { done, isUniqueViolation, maybe, pgError } from '@/common/db/errors';
 import type { ChannelMessageRow, ClientSend, NewChannelMessage } from './send/channel-row';
 
 export type { ChannelMessageRow } from './send/channel-row';
 
 /** A unique violation: here, the same client_id resent (channel_messages_client_idx). */
-const DUPLICATE = '23505';
 
 export interface ChannelSummaryRow {
   student_id: string;
@@ -64,7 +63,7 @@ export class ChannelRepo {
     const { data, error } = await insert.select(COLUMNS).single();
     if (!error) return { row: data, created: true };
     const send = { channelId: row.channel_id, profileId: row.sender_profile_id };
-    const resent = error.code === DUPLICATE && row.client_id;
+    const resent = isUniqueViolation(error) && row.client_id;
     const stored = resent ? await this.byClientId({ ...send, clientId: resent }) : null;
     if (!stored) throw pgError(error);
     return { row: stored, created: false };

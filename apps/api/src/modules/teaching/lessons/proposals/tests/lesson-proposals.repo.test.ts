@@ -28,11 +28,11 @@ describe('LessonProposalRepo error paths: the answer a failed query gives today'
     });
   });
 
-  it('get: a unique violation is 409 duplicate with the detail', async () => {
+  it('get: a unique violation is 409 duplicate', async () => {
     const { db } = fakeDb({ lesson_proposals: [{ error: PG_ERRORS.unique }] });
     expect(await answerOfRejection(new LessonProposalRepo(db).get('p1'))).toEqual({
       status: 409,
-      body: { message: 'duplicate', detail: PG_ERRORS.unique.details },
+      body: { message: 'duplicate' },
     });
   });
 });

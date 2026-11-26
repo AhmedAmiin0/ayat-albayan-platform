@@ -87,7 +87,6 @@ export {
   REGISTRY_ENTITY_ID,
   renderable,
   toTemplateView,
-  waHttpError,
   withNumbers,
 } from './templates/catalog/template.mapper';
 export { TemplateRegistry } from './templates/catalog/template.registry';
