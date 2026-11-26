@@ -1,6 +1,6 @@
 // guard:mappers: every `to*` mapper a branch adds in apps/api returns its package type through
 // asResponse (docs/62 part 2 §4). Diff-scoped, so it needs no baseline.
-import { baseCommit, changes, gitIn, readAt } from '../comment-only/git.mjs';
+import { baseCommit, changes, gitIn, readAt } from '../../comment-only/git.mjs';
 import { mapperFindings } from './check.mjs';
 import { addedLines, isMapperPath } from './hunks.mjs';
 
