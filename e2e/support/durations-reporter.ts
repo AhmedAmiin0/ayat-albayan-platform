@@ -1,8 +1,6 @@
 import type { Reporter, Suite, TestCase, TestResult } from '@playwright/test/reporter';
 import { writeFileSync } from 'node:fs';
-import { relative } from 'node:path';
-
-const rel = (file: string): string => relative(process.cwd(), file).split('\\').join('/');
+import { projectGroups, projectOf, rel, type Group, type ProjectSuiteLike } from './shard-groups';
 
 /**
  * CI only, for the shard sizes (tools/scripts/e2e-shards.mjs). Never fails the run.
@@ -44,26 +42,13 @@ export default class DurationsReporter implements Reporter {
   }
 }
 
-interface Group { project: string; file: string; tests: number }
-
 /** Mirrors Playwright 1.63 createTestGroups (fullyParallel off): Map by worker hash, then by file. */
-function groupsOf(root: Suite): Group[] | null {
+export function groupsOf(root: { suites: ProjectSuiteLike[] }): Group[] | null {
   const groups: Group[] = [];
-  for (const projectSuite of root.suites) {
-    const project = projectSuite.project()?.name ?? '';
-    if (project === 'setup') continue;
-    const byHash = new Map<string, Map<string, Group>>();
-    for (const test of projectSuite.allTests()) {
-      const hash = (test as unknown as { _workerHash?: string })._workerHash;
-      if (typeof hash !== 'string') return null; // internals changed: no sizes, equal split
-      const byFile = byHash.get(hash) ?? new Map<string, Group>();
-      byHash.set(hash, byFile);
-      const file = rel(test.location.file);
-      const group = byFile.get(file) ?? { project, file, tests: 0 };
-      byFile.set(file, group);
-      group.tests += 1;
-    }
-    for (const byFile of byHash.values()) groups.push(...byFile.values());
+  for (const projectSuite of root.suites.filter((s) => projectOf(s) !== 'setup')) {
+    const found = projectGroups(projectOf(projectSuite), projectSuite.allTests());
+    if (!found) return null; // internals changed: no sizes, equal split
+    groups.push(...found);
   }
   return groups;
 }

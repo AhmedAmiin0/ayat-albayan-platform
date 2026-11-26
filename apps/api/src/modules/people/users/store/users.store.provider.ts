@@ -23,6 +23,7 @@ export function userStoreOf({ directory, profiles, links }: StoreParts): UserSto
     setDisabled: (id, value) => profiles.setDisabled(id, value),
     forgetBrowsers: (id) => profiles.forgetBrowsers(id),
     phoneTaken: (phone, except) => links.phoneTaken(phone, except),
+    teacherPhoneHeld: (phone) => links.teacherPhoneHeld(phone),
     linkTarget: (kind, id) => links.linkTarget(kind, id),
     link: (kind, id, profileId) => links.link(kind, id, profileId),
     createTeacher: (row) => links.createTeacher(row),

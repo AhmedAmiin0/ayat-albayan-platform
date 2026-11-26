@@ -1,14 +1,12 @@
 import { isLinkedRole, type UserRoleOption } from '@ab/shared';
-import { Field, Input, RadioChips, t } from '@ab/web-kit';
+import { Field, Input, t } from '@ab/web-kit';
 import type { CreateForm } from './create-form';
 import { CredentialPicker } from './CredentialPicker';
-import { LinkPicker } from './LinkPicker';
-import { NewTeacherFields } from './NewTeacherFields';
+import { RecordFields } from './RecordFields';
 import { RolePicker } from './RolePicker';
 import type { FormErrors } from '@/features/people/users/validation';
 
 const F = t.users.form;
-const L = t.users.link;
 
 export interface CreateUserFieldsProps {
   form: CreateForm;
@@ -41,23 +39,7 @@ export function CreateUserFields({ form, onChange, errors, options, lockedLink }
         disabled={lockedLink}
         onChange={(next) => set({ role: next.role, role_id: next.roleId, linked: form.linked?.kind === next.role ? form.linked : null })}
       />
-      {linkRole === 'teacher' && (
-        <RadioChips
-          name="teacher-mode"
-          legend={L.label}
-          options={[
-            { value: 'existing', label: L.existingTeacher },
-            { value: 'new', label: L.newTeacher },
-          ]}
-          value={form.teacherMode}
-          onChange={(teacherMode) => set({ teacherMode })}
-        />
-      )}
-      {linkRole === 'teacher' && form.teacherMode === 'new' ? (
-        <NewTeacherFields value={form.newTeacher} onChange={(newTeacher) => set({ newTeacher })} error={errors.teacher_name} />
-      ) : (
-        linkRole && <LinkPicker kind={linkRole} value={form.linked} locked={lockedLink} error={errors.linked} onChange={(linked) => set({ linked })} />
-      )}
+      {linkRole && <RecordFields kind={linkRole} value={form} locked={lockedLink} errors={errors} onChange={set} />}
       <CredentialPicker
         name="create-credential"
         mode={form.credential}

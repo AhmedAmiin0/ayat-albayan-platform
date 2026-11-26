@@ -27,7 +27,7 @@ describe('userChecks (docs/27 E3: the checks of web and mobile)', () => {
   });
 
   it('editErrors: email, name and phone only', () => {
-    expect(checks.editErrors({ email: 'x', full_name: 'هدى', phone: '', locale: 'ar', tz: 'Asia/Riyadh', role: 'assistant', role_id: '' })).toEqual({ email: 'email' });
+    expect(checks.editErrors({ ...valid, email: 'x', locale: 'ar', tz: 'Asia/Riyadh' })).toEqual({ email: 'email' });
   });
 
   it('reads the messages on every call (a language switch applies)', () => {
