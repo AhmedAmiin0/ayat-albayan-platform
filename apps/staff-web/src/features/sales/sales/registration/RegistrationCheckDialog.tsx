@@ -93,7 +93,13 @@ export function RegistrationCheckDialog({ phone, onClose }: RegistrationCheckDia
           </Field>
         ) : (
           <Field label={R.query} hint={R.queryHint} error={error}>
-            {(p) => <Input {...p} value={value.name} onChange={(e) => setValue({ ...value, name: e.target.value })} />}
+            {(p) => (
+              <Input
+                {...p}
+                value={value.name}
+                onChange={(e) => setValue({ ...value, name: e.target.value })}
+              />
+            )}
           </Field>
         )}
       </form>

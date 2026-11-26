@@ -13,7 +13,12 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await i
 /** The teacher page switches answered `on` (they default off). */
 const renderPage = (on = true) =>
   render(
-    <QueryClientProvider client={setTeacherPages(new QueryClient({ defaultOptions: { queries: { retry: false } } }), on)}>
+    <QueryClientProvider
+      client={setTeacherPages(
+        new QueryClient({ defaultOptions: { queries: { retry: false } } }),
+        on,
+      )}
+    >
       <MyEarnings />
     </QueryClientProvider>,
   );

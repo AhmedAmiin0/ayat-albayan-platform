@@ -34,7 +34,10 @@ export const addCategory = (body: { key: string; labelAr: string }) => apiSend<E
  * The table's label in the UI language (English UI: label_en, else the seeded English word, else
  * the Arabic label); a key missing from the table: the seeded word, else the key itself.
  */
-export function categoryLabel(categories: readonly ExpenseCategoryView[] | undefined, key: string): string {
+export function categoryLabel(
+  categories: readonly ExpenseCategoryView[] | undefined,
+  key: string,
+): string {
   const seeded = (t.enums.expenseCategory as Record<string, string | undefined>)[key];
   const row = categories?.find((c) => c.key === key);
   if (!row) return seeded ?? key;
@@ -75,6 +78,7 @@ export async function uploadExpenseReceipt(file: File): Promise<string> {
 /** One total per currency (amounts are never mixed or converted here); drafts are not counted. */
 export function totalsByCurrency(rows: readonly Pick<ExpenseView, 'amount' | 'currency' | 'is_draft'>[]): [string, number][] {
   const sums = new Map<string, number>();
-  for (const r of rows) if (!r.is_draft) sums.set(r.currency, round2((sums.get(r.currency) ?? 0) + r.amount));
+  for (const r of rows)
+    if (!r.is_draft) sums.set(r.currency, round2((sums.get(r.currency) ?? 0) + r.amount));
   return [...sums.entries()].sort(([a], [b]) => a.localeCompare(b));
 }

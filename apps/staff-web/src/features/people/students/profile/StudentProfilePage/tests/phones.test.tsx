@@ -37,9 +37,20 @@ describe('StudentProfilePage: «الرقم الثاني»', () => {
   });
 
   it('shows the second number after the guardian’s phone', async () => {
-    renderPage(guardian([{ phone_e164: MAIN, is_primary: true }, { phone_e164: SECOND, is_primary: false }]));
+    renderPage(
+      guardian([
+        { phone_e164: MAIN, is_primary: true },
+        { phone_e164: SECOND, is_primary: false },
+      ]),
+    );
     expect(await screen.findByRole('link', { name: t.reports.history })).toBeTruthy();
-    expect(terms()).toEqual([t.students.code, t.students.guardian, t.students.guardianPhone, t.guardians.secondPhone, t.students.effectiveLink]);
+    expect(terms()).toEqual([
+      t.students.code,
+      t.students.guardian,
+      t.students.guardianPhone,
+      t.guardians.secondPhone,
+      t.students.effectiveLink,
+    ]);
     expect(meta()?.querySelectorAll('dd')[3]?.textContent).toBe(formatPhone(SECOND));
   });
 
@@ -55,6 +66,11 @@ describe('StudentProfilePage: «الرقم الثاني»', () => {
   ])('no row with %s', async (_, g) => {
     renderPage(g);
     expect(await screen.findByRole('link', { name: t.reports.history })).toBeTruthy();
-    expect(terms()).toEqual([t.students.code, t.students.guardian, t.students.guardianPhone, t.students.effectiveLink]);
+    expect(terms()).toEqual([
+      t.students.code,
+      t.students.guardian,
+      t.students.guardianPhone,
+      t.students.effectiveLink,
+    ]);
   });
 });

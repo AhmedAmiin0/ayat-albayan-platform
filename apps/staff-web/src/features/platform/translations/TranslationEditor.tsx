@@ -39,7 +39,9 @@ export function TranslationEditor({ row, onClose, onDone }: TranslationEditorPro
     change.mutate(changes, { onSuccess: done(t.translations.saved) });
   };
   const restore = (locale: Locale) => () =>
-    change.mutate([{ locale, key: row.key, value: null }], { onSuccess: done(t.translations.restored) });
+    change.mutate([{ locale, key: row.key, value: null }], {
+      onSuccess: done(t.translations.restored),
+    });
   return (
     <Dialog
       wide
@@ -76,7 +78,11 @@ export function TranslationEditor({ row, onClose, onDone }: TranslationEditorPro
             />
           ))}
         </div>
-        {change.isError && <FormAlert>{isEditOnValues(change.error) ? t.translations.arabicOnValues : t.common.error}</FormAlert>}
+        {change.isError && (
+          <FormAlert>
+            {isEditOnValues(change.error) ? t.translations.arabicOnValues : t.common.error}
+          </FormAlert>
+        )}
       </form>
     </Dialog>
   );

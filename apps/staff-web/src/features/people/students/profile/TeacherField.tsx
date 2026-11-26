@@ -2,7 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import { Field, Select, t, teacherLabel } from '@ab/web-kit';
 import { teacherOptionsQuery } from '@/features/people/students/api';
 
-export function TeacherField({ value, onChange }: { value: string; onChange: (id: string) => void }) {
+export function TeacherField({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (id: string) => void;
+}) {
   const { data: teachers = [] } = useQuery(teacherOptionsQuery);
   return (
     <Field label={t.students.teacher}>

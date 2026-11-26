@@ -32,7 +32,13 @@ const DUES = { currency: 'EGP', rows: [], totals: { earned: 0, paid: 0, owed: 0,
 const INVOICE = { id: 'inv-1', rule_id: 'r1', kind: 'package', mime: 'image/png', size_bytes: 10, source: 'upload', created_at: '2026-10-01T09:00:00Z', students: [{ id: 'stu-1', name: 'سهيلة', code: 'AB-0183' }], payment_id: null };
 
 function show(node: ReactNode) {
-  render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>{node}</QueryClientProvider>);
+  render(
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      {node}
+    </QueryClientProvider>,
+  );
 }
 
 describe('finance pages', () => {

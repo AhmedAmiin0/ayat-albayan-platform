@@ -28,7 +28,13 @@ const stacked = {
 };
 
 /** Photo (staff) or initials, then the name as a button to the panel. Memoised per row. */
-const NameCell = memo(function NameCell({ user, onOpen }: { user: UserView; onOpen: (userId: string) => void }) {
+const NameCell = memo(function NameCell({
+  user,
+  onOpen,
+}: {
+  user: UserView;
+  onOpen: (userId: string) => void;
+}) {
   return (
     <span className="flex items-center gap-2.5">
       <Avatar name={user.full_name} id={user.avatar_seed ?? user.id} src={user.avatar_url} size="sm" decorative />

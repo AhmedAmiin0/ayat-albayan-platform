@@ -25,7 +25,13 @@ export interface ValuesFixture {
 }
 
 /** The page with its search in local state (the route keeps it in the URL). */
-function Harness({ initial, onSearch }: { initial: ValuesSearch; onSearch: (s: ValuesSearch) => void }) {
+function Harness({
+  initial,
+  onSearch,
+}: {
+  initial: ValuesSearch;
+  onSearch: (s: ValuesSearch) => void;
+}) {
   const [search, setSearch] = useState(initial);
   return (
     <ValuesView
@@ -58,7 +64,9 @@ export function renderValues(apiFetch: Mock, fx: ValuesFixture = {}) {
     });
   }
   const searches: ValuesSearch[] = [];
-  const client = renderWithClient(<Harness initial={fx.search ?? {}} onSearch={(s) => searches.push(s)} />);
+  const client = renderWithClient(
+    <Harness initial={fx.search ?? {}} onSearch={(s) => searches.push(s)} />,
+  );
   return { client, searches, settings };
 }
 

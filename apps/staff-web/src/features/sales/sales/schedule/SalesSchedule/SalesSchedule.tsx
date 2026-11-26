@@ -29,7 +29,8 @@ export function SalesSchedule({ search, onSearch }: SalesScheduleProps) {
   const date = search.date ?? today;
   const day = useQuery(salesScheduleQuery({ date, teacherId: search.teacherId }));
   const teachers = useQuery(salesTeachersQuery);
-  const patch = (next: SalesScheduleSearch) => onSearch(Object.fromEntries(Object.entries({ ...search, ...next }).filter(([, v]) => v)));
+  const patch = (next: SalesScheduleSearch) =>
+    onSearch(Object.fromEntries(Object.entries({ ...search, ...next }).filter(([, v]) => v)));
   const lessons = day.data?.lessons ?? [];
   return (
     <>
@@ -51,7 +52,11 @@ export function SalesSchedule({ search, onSearch }: SalesScheduleProps) {
         </FormAlert>
       )}
       {day.isSuccess && lessons.length === 0 && (
-        <EmptyState title={search.teacherId ? t.sales.academySchedule.emptyTeacher : t.sales.academySchedule.empty} />
+        <EmptyState
+          title={
+            search.teacherId ? t.sales.academySchedule.emptyTeacher : t.sales.academySchedule.empty
+          }
+        />
       )}
       {lessons.length > 0 && (
         <div className={day.isPlaceholderData ? 'opacity-60' : undefined} aria-busy={day.isPlaceholderData || undefined}>

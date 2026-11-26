@@ -25,7 +25,12 @@ function answer(path: string): unknown {
 
 function renderPage(search: DashboardSearch = {}) {
   render(
-    <QueryClientProvider client={setConfirmationRequired(new QueryClient({ defaultOptions: { queries: { retry: false } } }), true)}>
+    <QueryClientProvider
+      client={setConfirmationRequired(
+        new QueryClient({ defaultOptions: { queries: { retry: false } } }),
+        true,
+      )}
+    >
       <DashboardPage search={search} onSearch={vi.fn()} />
     </QueryClientProvider>,
   );

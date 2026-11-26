@@ -18,9 +18,15 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 
 const P = t.paymentLinks;
 const TRIAL = '7a000000-0000-4000-8000-000000000001';
-const ref = P.referencePrice.replace('{amount}', String(SALES_QUOTE.afterDiscount)).replace('{currency}', 'ر.س');
-const amountBox = () => screen.getByRole<HTMLInputElement>('spinbutton', { name: P.agreedAmount.replace('{currency}', 'ر.س') });
-const posted = (path: string) => apiSend.mock.calls.filter(([, p]) => p === path).map((c) => c[2] as Record<string, unknown>);
+const ref = P.referencePrice
+  .replace('{amount}', String(SALES_QUOTE.afterDiscount))
+  .replace('{currency}', 'ر.س');
+const amountBox = () =>
+  screen.getByRole<HTMLInputElement>('spinbutton', {
+    name: P.agreedAmount.replace('{currency}', 'ر.س'),
+  });
+const posted = (path: string) =>
+  apiSend.mock.calls.filter(([, p]) => p === path).map((c) => c[2] as Record<string, unknown>);
 
 async function online(students: SalesFamilyStudent[] = [student({ teacher_id: TRIAL })]) {
   vi.stubEnv('VITE_FEATURE_STRIPE', '1');
@@ -84,7 +90,12 @@ describe('«اشتراك جديد» → «دفع إلكتروني» (owner 2026-
     expect(made.getByTestId('link-amount').textContent).toContain('270');
     expect(made.getByText('https://app.example.com/pay/tok_1')).toBeTruthy();
     const [body] = posted('/sales/payment-links');
-    expect(body).toMatchObject({ studentId: student().id, amount: 270, currency: SALES_QUOTE.currency, teacherId: TRIAL });
+    expect(body).toMatchObject({
+      studentId: student().id,
+      amount: 270,
+      currency: SALES_QUOTE.currency,
+      teacherId: TRIAL,
+    });
     expect(body?.['startsOn']).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(typeof body?.['clientRequestId']).toBe('string');
     expect(body).not.toHaveProperty('phone');

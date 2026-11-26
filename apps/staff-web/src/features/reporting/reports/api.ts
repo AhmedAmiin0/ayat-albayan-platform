@@ -70,7 +70,13 @@ export const removeAttachment = ({ id, attachmentId }: { id: string; attachmentI
   apiSend('DELETE', `/reports/${id}/attachments/${attachmentId}`);
 
 /** R7 → Storage signed upload → R8. The API checks the path is the report's and exists. */
-export async function uploadAttachment({ id, file }: { id: string; file: File }): Promise<ReportAttachmentView> {
+export async function uploadAttachment({
+  id,
+  file,
+}: {
+  id: string;
+  file: File;
+}): Promise<ReportAttachmentView> {
   const meta = { mime: file.type, size: file.size };
   const slot = await apiSend<SignedUpload>('POST', `/reports/${id}/attachments/upload-url`, meta);
   const { error } = await uploadSigned(slot, { body: file, contentType: file.type });

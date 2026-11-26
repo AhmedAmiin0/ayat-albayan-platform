@@ -27,36 +27,51 @@ export interface RowSaves {
 
 /** The row's version: the cached entry's, else the entries read now (a failed read fails the save). */
 async function versionOf(client: QueryClient, key: SettingKey): Promise<number> {
-  const hit = cachedEntry(client, key) ?? (await client.fetchQuery(configEntriesQuery)).entries.find((e) => e.key === key);
+  const hit =
+    cachedEntry(client, key) ??
+    (await client.fetchQuery(configEntriesQuery)).entries.find((e) => e.key === key);
   if (!hit) throw new Error(`no entry ${key}`);
   return hit.version;
 }
 
 export const refreshValues = (client: QueryClient) =>
   Promise.all(
-    [CONFIG_QUERY_KEYS.settings, CONFIG_QUERY_KEYS.settingsMeta, CONFIG_QUERY_KEYS.publicConfig, CONFIG_QUERY_KEYS.entries].map((queryKey) =>
-      client.invalidateQueries({ queryKey }),
-    ),
+    [
+      CONFIG_QUERY_KEYS.settings,
+      CONFIG_QUERY_KEYS.settingsMeta,
+      CONFIG_QUERY_KEYS.publicConfig,
+      CONFIG_QUERY_KEYS.entries,
+    ].map((queryKey) => client.invalidateQueries({ queryKey })),
   );
 
 /** Per-key status (docs/26b §2) outlives group switches; a 409 keeps the edit and refetches. */
 export function useRowSaves(): RowSaves {
   const queryClient = useQueryClient();
   const [statuses, setStatuses] = useState<Partial<Record<SettingKey, RowStatus>>>({});
-  const set = useCallback((key: SettingKey, s: RowStatus) => setStatuses((all) => ({ ...all, [key]: s })), []);
+  const set = useCallback(
+    (key: SettingKey, s: RowStatus) => setStatuses((all) => ({ ...all, [key]: s })),
+    [],
+  );
   const run = useCallback(
     async (key: SettingKey, input: SaveInput): Promise<SaveEnd> => {
       set(key, { state: 'saving' });
       try {
         const expectedVersion = input.version ?? (await versionOf(queryClient, key));
-        const body = { value: input.value, expectedVersion, ...(input.confirmText === undefined ? {} : { confirmText: input.confirmText }) };
+        const body = {
+          value: input.value,
+          expectedVersion,
+          ...(input.confirmText === undefined ? {} : { confirmText: input.confirmText }),
+        };
         const res = await patchConfigEntry(key, body);
         storeEntry(queryClient, res.entry);
         await refreshValues(queryClient);
         set(key, IDLE);
         return 'saved';
       } catch (error) {
-        const out = saveFailure(error, { mine: input.value, typed: input.confirmText !== undefined });
+        const out = saveFailure(error, {
+          mine: input.value,
+          typed: input.confirmText !== undefined,
+        });
         set(key, out.status);
         if (out.end === 'conflict') void refreshValues(queryClient);
         return out.end;

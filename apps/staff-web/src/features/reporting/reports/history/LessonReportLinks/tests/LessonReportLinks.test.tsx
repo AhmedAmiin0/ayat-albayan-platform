@@ -58,7 +58,9 @@ describe('PendingReports (R11, R-TCH-03)', () => {
   it('lists the missing reports with a count; a draft reads «أكمل التقرير»', async () => {
     apiFetch.mockResolvedValue([row({}), row({ lesson_id: 'l-2', report_id: 'r-2', student: { id: 's-2', code: 'AB-0184', name: 'آية' } })]);
     render(
-      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <QueryClientProvider
+        client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+      >
         <PendingReports tz="Africa/Cairo" />
       </QueryClientProvider>,
     );

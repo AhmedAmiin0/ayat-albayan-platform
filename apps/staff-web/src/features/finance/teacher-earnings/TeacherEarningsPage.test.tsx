@@ -94,7 +94,9 @@ describe('TeacherEarningsPage «مستحقات المعلم»', () => {
     expect(await within(dialog).findByText(t.payments.mobile.offline)).toBeTruthy();
     confirm(dialog);
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(2));
-    const [first, second] = apiSend.mock.calls.map((c) => c[2] as { clientRequestId: string; earningIds?: string[] });
+    const [first, second] = apiSend.mock.calls.map(
+      (c) => c[2] as { clientRequestId: string; earningIds?: string[] },
+    );
     expect(first?.earningIds).toBeUndefined();
     expect(second?.clientRequestId).toBe(first?.clientRequestId);
     expect(await screen.findByText(t.earnings.replayed)).toBeTruthy();

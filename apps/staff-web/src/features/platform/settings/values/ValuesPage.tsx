@@ -9,6 +9,13 @@ const FROM = '/admin/settings/values';
 export function ValuesPage() {
   const search = useSearch({ from: FROM });
   const navigate = useNavigate({ from: FROM });
-  const onSearch = (next: ValuesSearch) => void navigate({ search: next, replace: (next.q ?? '') !== (search.q ?? '') });
-  return <ValuesView search={search} onSearch={onSearch} renderGuard={(names) => <LeaveGuard names={names} />} />;
+  const onSearch = (next: ValuesSearch) =>
+    void navigate({ search: next, replace: (next.q ?? '') !== (search.q ?? '') });
+  return (
+    <ValuesView
+      search={search}
+      onSearch={onSearch}
+      renderGuard={(names) => <LeaveGuard names={names} />}
+    />
+  );
 }

@@ -27,7 +27,10 @@ function route(path: string) {
 /** The route: the URL search in state, each patch re-validated. */
 function Harness({ onChange }: { onChange: (patch: Record<string, unknown>) => void }) {
   const [search, setSearch] = useState<SubscriptionsUrlSearch>({ page: 2 });
-  const onSearch = (patch: Record<string, unknown>) => (onChange(patch), setSearch((s) => parseSubscriptionsSearch({ ...s, ...patch })));
+  const onSearch = (patch: Record<string, unknown>) => (
+    onChange(patch),
+    setSearch((s) => parseSubscriptionsSearch({ ...s, ...patch }))
+  );
   return <SubscriptionsPage search={search} onSearch={onSearch} onOpenStudent={vi.fn()} />;
 }
 

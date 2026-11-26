@@ -13,7 +13,9 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await i
 async function open(over: Parameters<typeof formResponse>[1] = {}) {
   apiFetch.mockImplementation((path: string) => Promise.resolve(path === '/lessons/l-1/report-form' ? formResponse({}, over) : []));
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <ReportFormPage lessonId="l-1" role="teacher" />
     </QueryClientProvider>,
   );

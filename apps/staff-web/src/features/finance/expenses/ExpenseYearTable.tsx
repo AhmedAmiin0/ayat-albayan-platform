@@ -12,7 +12,11 @@ type Month = ExpenseYearView['months'][number];
 const col = createColumnHelper<DataTableFeatures, Month>();
 
 /** Month, one column per category, the month's total: every column sorts (e.g. the dearest month first). */
-function yearColumns(input: { categories: string[]; label: (key: string) => string; currency: string }) {
+function yearColumns(input: {
+  categories: string[];
+  label: (key: string) => string;
+  currency: string;
+}) {
   const money = (v: number) => (v ? <Amount amount={v} currency={input.currency} /> : '—');
   return col.columns([
     col.accessor('month', {

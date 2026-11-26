@@ -44,7 +44,12 @@ function PhotoButtons({ kind, id, name, hasPhoto, className }: StaffPhotoControl
   return (
     <div className={cn('grid gap-2', className)}>
       {photo.confirming ? (
-        <RemoveConfirm name={name} pending={photo.pending} onRemove={photo.remove} onCancel={() => photo.setConfirming(false)} />
+        <RemoveConfirm
+          name={name}
+          pending={photo.pending}
+          onRemove={photo.remove}
+          onCancel={() => photo.setConfirming(false)}
+        />
       ) : (
         <div className="flex flex-wrap items-center gap-2">
           <PhotoPick

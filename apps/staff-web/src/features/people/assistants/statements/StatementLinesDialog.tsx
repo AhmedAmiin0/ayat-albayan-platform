@@ -7,7 +7,13 @@ import { StatementTotals } from './StatementTotals';
 const S = t.assistants.statements;
 
 /** What a statement is made of: the salary line, each commission (student) and each adjustment (reason). */
-export function StatementLinesDialog({ statement, onClose }: { statement: AssistantStatementView; onClose: () => void }) {
+export function StatementLinesDialog({
+  statement,
+  onClose,
+}: {
+  statement: AssistantStatementView;
+  onClose: () => void;
+}) {
   return (
     <Dialog
       title={S.detailsTitle.replace('{assistant}', statement.assistant.name).replace('{month}', monthLabel(statement.month.slice(0, 7)))}

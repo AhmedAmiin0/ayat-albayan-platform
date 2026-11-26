@@ -21,12 +21,20 @@ describe('leadFilterChips', () => {
       ['sort', t.leads.sortBy, t.leads.sort.newest],
     ]);
     chips.forEach((c) => c.onRemove());
-    expect(onFilter.mock.calls).toEqual([[{ source: undefined }], [{ assignee: undefined }], [{ sort: undefined, dir: undefined }]]);
+    expect(onFilter.mock.calls).toEqual([
+      [{ source: undefined }],
+      [{ assignee: undefined }],
+      [{ sort: undefined, dir: undefined }],
+    ]);
   });
 
   it('«بدون مسؤول» for the unassigned filter; «جارٍ التحميل» while the salespeople load; never the raw id', () => {
     expect(build({ page: 1, assignee: NO_ASSIGNEE })[0]?.value).toBe(t.sales.assign.none);
-    const loading = leadFilterChips({ search: { page: 1, assignee: people[0]?.id }, people: [], onFilter: vi.fn() })[0];
+    const loading = leadFilterChips({
+      search: { page: 1, assignee: people[0]?.id },
+      people: [],
+      onFilter: vi.fn(),
+    })[0];
     expect(loading?.value).toBe(t.common.loading);
     expect(loading?.value).not.toContain(people[0]?.id ?? '?');
   });

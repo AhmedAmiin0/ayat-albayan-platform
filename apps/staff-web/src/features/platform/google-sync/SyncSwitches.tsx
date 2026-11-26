@@ -48,7 +48,13 @@ export function SyncSwitches({ status, onNote }: Props) {
       <WindowDaysField value={status.settings.window_days} save={save} />
       {save.isError && !confirming && <FormAlert>{t.googleSync.common.saveError}</FormAlert>}
       {confirming && live && (
-        <LiveConfirmDialog status={status} pending={save.isPending} failed={save.isError} onCancel={() => setConfirming(false)} onConfirm={enable} />
+        <LiveConfirmDialog
+          status={status}
+          pending={save.isPending}
+          failed={save.isError}
+          onCancel={() => setConfirming(false)}
+          onConfirm={enable}
+        />
       )}
       {confirming && !live && (
         <Dialog

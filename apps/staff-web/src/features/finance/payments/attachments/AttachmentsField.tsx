@@ -26,7 +26,11 @@ export function AttachmentsField({ files, onChange, maxBytes }: Props) {
       <p className="text-xs text-ink-3">{t.payments.attachmentsHint}</p>
       <AttachmentItems items={files.map((f, i) => ({ key: `${i}-${f.name}`, name: f.name }))} texts={t.payments} onRemove={remove} />
       {files.length < PAYMENT_ATTACHMENTS_MAX ? (
-        <AttachmentPicker label={t.payments.attachmentsAdd} onPick={add} invalid={problem !== null} />
+        <AttachmentPicker
+          label={t.payments.attachmentsAdd}
+          onPick={add}
+          invalid={problem !== null}
+        />
       ) : (
         <p className="text-xs text-ink-3">{t.payments.error.too_many_attachments}</p>
       )}

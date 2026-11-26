@@ -19,7 +19,10 @@ export interface RenewSubscriptionButtonProps {
 const offered = (ended: boolean, balance: { current: unknown } | undefined): boolean =>
   ended || Boolean(balance?.current);
 
-export function RenewSubscriptionButton({ student, primary = false }: RenewSubscriptionButtonProps) {
+export function RenewSubscriptionButton({
+  student,
+  primary = false,
+}: RenewSubscriptionButtonProps) {
   const ended = isPackageEnded(student.status);
   const balance = useQuery(studentBalanceQuery(student.id));
   const [open, setOpen] = useState(false);

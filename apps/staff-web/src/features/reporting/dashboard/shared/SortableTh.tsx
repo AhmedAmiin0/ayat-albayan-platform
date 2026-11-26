@@ -13,7 +13,12 @@ export interface SortableThProps<K extends string> {
 }
 
 /** A column head of a hand-built table: `aria-sort` and a button (label + arrow) like DataTable's. */
-export function SortableTh<K extends string>({ label, sortKey, sorter, className }: SortableThProps<K>) {
+export function SortableTh<K extends string>({
+  label,
+  sortKey,
+  sorter,
+  className,
+}: SortableThProps<K>) {
   const now = sorter.sort?.key === sortKey ? sorter.sort.dir : 'none';
   return (
     <th scope="col" aria-sort={ARIA_SORT[now]} className={cn('py-2 pe-3 font-semibold', className)}>

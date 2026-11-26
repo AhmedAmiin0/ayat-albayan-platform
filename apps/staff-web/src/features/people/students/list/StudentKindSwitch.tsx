@@ -23,14 +23,23 @@ export interface StudentKindSwitchProps {
 const num = (n: unknown): number | undefined => (typeof n === 'number' ? n : undefined);
 
 /** The sum of these statuses' counts, or none while any is missing. */
-function sumOf(counts: StatusCounts | undefined, statuses: readonly StudentStatus[]): number | undefined {
+function sumOf(
+  counts: StatusCounts | undefined,
+  statuses: readonly StudentStatus[],
+): number | undefined {
   const each = statuses.map((s) => num(counts?.[s]));
-  return each.every((n) => n !== undefined) ? each.reduce<number>((sum, n) => sum + (n ?? 0), 0) : undefined;
+  return each.every((n) => n !== undefined)
+    ? each.reduce<number>((sum, n) => sum + (n ?? 0), 0)
+    : undefined;
 }
 
 /** Trial means not subscribed yet: new, trial and pending_subscription. */
 function kindCounts(counts: StatusCounts | undefined): Record<StudentListKind, number | undefined> {
-  return { all: sumOf(counts, STUDENT_STATUSES), active: num(counts?.active), trial: sumOf(counts, NOT_SUBSCRIBED_STATUSES) };
+  return {
+    all: sumOf(counts, STUDENT_STATUSES),
+    active: num(counts?.active),
+    trial: sumOf(counts, NOT_SUBSCRIBED_STATUSES),
+  };
 }
 
 /** Uses the same `status` filter as the chips; other status combinations press no segment. */

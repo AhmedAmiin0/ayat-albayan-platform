@@ -26,7 +26,9 @@ const askLabel = (row: LeadView) => t.leads.reclassifyRow.replace('{name}', row.
 async function openConfirm(row: LeadView = ROW) {
   apiFetch.mockResolvedValue({ items: [row], total: 1, page: 1, pageSize: 25 });
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <LeadsInbox search={{ page: 1 }} onSearch={vi.fn()} />
     </QueryClientProvider>,
   );

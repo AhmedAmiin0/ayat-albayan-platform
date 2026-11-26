@@ -23,7 +23,16 @@ const ROW = {
   package_remaining: 3,
   has_weekly: true,
 };
-const COUNTS = { new: 1, trial: 3, pending_subscription: 0, active: 12, pending_renewal: 2, expired: 1, paused: 0, churned: 5 };
+const COUNTS = {
+  new: 1,
+  trial: 3,
+  pending_subscription: 0,
+  active: 12,
+  pending_renewal: 2,
+  expired: 1,
+  paused: 0,
+  churned: 5,
+};
 const E = t.enums.studentStatus;
 
 function renderPanel() {

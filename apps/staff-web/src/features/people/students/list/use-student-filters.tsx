@@ -24,7 +24,9 @@ export function studentFilterChips(
     value: t.enums.studentStatus[st],
     onRemove: () => onChange(toggleStatus(value, st)),
   }));
-  const selects = (Object.keys(STUDENT_SELECT_LABELS) as (keyof typeof STUDENT_SELECT_LABELS)[]).flatMap((key) => {
+  const selects = (
+    Object.keys(STUDENT_SELECT_LABELS) as (keyof typeof STUDENT_SELECT_LABELS)[]
+  ).flatMap((key) => {
     const v = value[key];
     if (!v) return [];
     const text = options[key].find((o) => o.value === v)?.label ?? v;
@@ -34,7 +36,11 @@ export function studentFilterChips(
 }
 
 /** The students list filters (R-STU-01) as the table toolbar's extra filters. */
-export function useStudentFilters({ value, onChange, onClearAll }: StudentFiltersOptions): ExtraFilters {
+export function useStudentFilters({
+  value,
+  onChange,
+  onClearAll,
+}: StudentFiltersOptions): ExtraFilters {
   const teachers = useQuery(teacherOptionsQuery);
   const options = studentFilterOptions(teachers.data ?? [], value.tz);
   return {

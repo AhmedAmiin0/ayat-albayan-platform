@@ -31,7 +31,8 @@ function CourseBlocked({ view }: { view: SalesCourseView }) {
 
 
 /** The previous days prefilled when she continues (or adjusts them); else null (the empty picker). */
-const wizardStart = (plan: ContinuePlan | null, continuing: boolean): ContinuePlan | null => (continuing ? plan : null);
+const wizardStart = (plan: ContinuePlan | null, continuing: boolean): ContinuePlan | null =>
+  continuing ? plan : null;
 
 type BookingProps = { view: SalesCourseView; draft: BookingDraft; onClose: () => void };
 
@@ -48,8 +49,13 @@ function CourseBooking({ view, draft, onClose }: BookingProps) {
       <ContinueChoice view={view} draft={draft} now={now} onContinue={() => setChoice('continue')} onOther={() => setChoice('other')} />
     );
   }
-  const start = wizardStart(plan, choice === 'continue') ?? { draft: courseDraft(view, now) ?? draft, hint: courseHint(view) };
-  const exit = plan ? { label: t.booking.courseChange.backToChoice, onExit: () => setChoice(null) } : undefined;
+  const start = wizardStart(plan, choice === 'continue') ?? {
+    draft: courseDraft(view, now) ?? draft,
+    hint: courseHint(view),
+  };
+  const exit = plan
+    ? { label: t.booking.courseChange.backToChoice, onExit: () => setChoice(null) }
+    : undefined;
   return (
     <BookingModeContext.Provider value="sales">
       <ChatReturnContext.Provider value={onClose}>
@@ -72,7 +78,11 @@ function CourseBody({ view, onClose }: { view: SalesCourseView; onClose: () => v
   const draft = courseDraft(view);
   const current = view.current;
   const running = current && view.blocked === 'course_exists';
-  const body = draft ? <CourseBooking view={view} draft={draft} onClose={onClose} /> : running ? null : <CourseBlocked view={view} />;
+  const body = draft ? (
+    <CourseBooking view={view} draft={draft} onClose={onClose} />
+  ) : running ? null : (
+    <CourseBlocked view={view} />
+  );
   if (!current) return body;
   return (
     <SalesRunningCourse view={view} current={current}>

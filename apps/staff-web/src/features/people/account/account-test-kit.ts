@@ -17,14 +17,17 @@ export const PROFILE: AccountProfile = {
 };
 
 /** A domain error of /me: `{ code, message }`. */
-export const domainError = (status: number, code: string) => new ApiError(status, { code, message: code });
+export const domainError = (status: number, code: string) =>
+  new ApiError(status, { code, message: code });
 
 /** A 400 validation_failed with one issue. */
 export const invalid = (path: string, message: string) =>
   new ApiError(400, { message: 'validation_failed', issues: [{ path: [path], message }] });
 
 export function renderWithClient(ui: ReactElement) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
   const invalidate = vi.spyOn(client, 'invalidateQueries');
   return { ...render(createElement(QueryClientProvider, { client }, ui)), client, invalidate };
 }

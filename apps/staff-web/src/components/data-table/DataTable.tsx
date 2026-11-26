@@ -22,7 +22,10 @@ export * from './data-table-features';
 const hamishHeadClass = 'border-s border-s-rule ps-3.5 @max-[940px]:hidden';
 const hamishClass = `${hamishHeadClass} text-xs text-ink-2`;
 /** The hamish column's `meta`: the double rule sits on the head and on the cells. */
-export const hamishMeta: DataTableColumnMeta = { className: hamishClass, headClassName: hamishHeadClass };
+export const hamishMeta: DataTableColumnMeta = {
+  className: hamishClass,
+  headClassName: hamishHeadClass,
+};
 
 /**
  * Under 640px rows stack (docs/07 §6 Data table): CSS only, td's become flex items; order them with
@@ -99,7 +102,12 @@ export function DataTable<T extends RowData>({
     <>
       {(controls.length > 0 || toolbar) && (
         // A client-filtered table knows its own count; a server list brings `toolbar.total`.
-        <DataTableToolbar controls={controls} filters={filters} options={toolbar} resultCount={clientFilter && !filters ? rows.length : undefined} />
+        <DataTableToolbar
+          controls={controls}
+          filters={filters}
+          options={toolbar}
+          resultCount={clientFilter && !filters ? rows.length : undefined}
+        />
       )}
       {/* `relative` keeps absolutely positioned sr-only text inside the scroll clip (phone width). */}
       <div data-table-box={fill || undefined} className={cn('relative overflow-x-auto', fill && tableBoxClass, stacked && stackedClass)}>

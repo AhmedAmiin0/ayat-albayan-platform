@@ -15,10 +15,24 @@ export interface DescriptionDialogProps {
 }
 
 /** Full description (docs/26b §2): editor with settings.write or the owning module's right. */
-export function DescriptionDialog({ target, entry, rights, onClose, onDone }: DescriptionDialogProps) {
+export function DescriptionDialog({
+  target,
+  entry,
+  rights,
+  onClose,
+  onDone,
+}: DescriptionDialogProps) {
   const input = { entry, hintKey: target.hintKey, locale, bundle: t };
   if (entry && canEditDescription(entry, rights)) {
-    return <DescriptionEditor target={target} entry={entry} start={editorStart(input)} onClose={onClose} onDone={onDone} />;
+    return (
+      <DescriptionEditor
+        target={target}
+        entry={entry}
+        start={editorStart(input)}
+        onClose={onClose}
+        onDone={onDone}
+      />
+    );
   }
   const text = shownDescription(input);
   return (

@@ -14,6 +14,11 @@ export function audienceCounts(entries: readonly NotificationEntryView[]): Audie
   return NOTIFICATION_AUDIENCES.map((audience) => {
     const rows = rowsOf(entries, audience);
     const on = rows.filter((e) => e.state === 'on').length;
-    return { audience, label: t.notificationCatalogue.audience[audience], on, off: rows.length - on };
+    return {
+      audience,
+      label: t.notificationCatalogue.audience[audience],
+      on,
+      off: rows.length - on,
+    };
   });
 }

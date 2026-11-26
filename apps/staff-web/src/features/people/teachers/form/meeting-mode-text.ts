@@ -29,5 +29,7 @@ export function knownAcademyAuto(
 }
 
 /** usesPlatform with an unknown academy default: a set mode needs no setting; null follows `academy`. */
-export const effectivePlatform = (mode: TeacherMeetingMode | null, academy: boolean | null): boolean | null =>
-  mode === null ? academy : mode === 'platform';
+export const effectivePlatform = (
+  mode: TeacherMeetingMode | null,
+  academy: boolean | null,
+): boolean | null => (mode === null ? academy : mode === 'platform');

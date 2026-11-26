@@ -18,7 +18,13 @@ export interface OverallCardProps {
 export function OverallCard({ name, value, suggested, onChange, invalid }: OverallCardProps) {
   return (
     <section aria-label={t.reports.v2.overall} className={CARD}>
-      <GradeChips name={name} label={t.reports.v2.overall} value={value} onChange={onChange} invalid={invalid} />
+      <GradeChips
+        name={name}
+        label={t.reports.v2.overall}
+        value={value}
+        onChange={onChange}
+        invalid={invalid}
+      />
       {suggested && (
         <p className="text-xs text-ink-3">{fillSlots(t.reports.v2.suggested, { grade: t.enums.grade[suggested] })}</p>
       )}

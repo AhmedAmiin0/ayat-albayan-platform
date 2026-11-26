@@ -28,7 +28,14 @@ export interface ReviewStepProps {
 }
 
 /** A 409 lists conflicts with override and reason (R-SCH-04); sales has no link or override. */
-export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBooked, onPatch }: ReviewStepProps) {
+export function ReviewStep({
+  draft,
+  onMeetingLink,
+  onChangeSlot,
+  onInvoice,
+  onBooked,
+  onPatch,
+}: ReviewStepProps) {
   const queryClient = useQueryClient();
   const mode = useBookingMode();
   const held = useCourseHeld();
@@ -127,7 +134,9 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
           </FormAlert>
         )
       )}
-      {course && !conflicts && <CourseCheckNotice draft={draft} series={series} onChangeSlot={onChangeSlot} />}
+      {course && !conflicts && (
+        <CourseCheckNotice draft={draft} series={series} onChangeSlot={onChangeSlot} />
+      )}
       {!conflicts && !duplicates && !failed && (
         <div className="flex justify-end">
           <Button type="button" size="lg" disabled={book.isPending || (course && !clean)} onClick={() => book.mutate(undefined)}>

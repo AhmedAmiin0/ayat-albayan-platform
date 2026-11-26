@@ -23,7 +23,12 @@ export function AbsentCard({ attendance, notes, onNotes }: AbsentCardProps) {
       <span className={cn('justify-self-start rounded-full px-2.5 py-1 text-xs font-semibold', absent ? 'bg-act-soft text-act' : 'bg-ok-soft text-ok')}>
         {absent ? v2.charged : v2.notCharged}
       </span>
-      <ReportTextField label={v2.absentNote} value={notes} onChange={onNotes} placeholder={v2.absentNotePlaceholder} />
+      <ReportTextField
+        label={v2.absentNote}
+        value={notes}
+        onChange={onNotes}
+        placeholder={v2.absentNotePlaceholder}
+      />
     </section>
   );
 }

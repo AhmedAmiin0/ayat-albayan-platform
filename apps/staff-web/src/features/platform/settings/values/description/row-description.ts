@@ -14,8 +14,19 @@ export const settingTarget = (key: SettingKey): DescribeTarget => ({
 });
 
 /** The row's muted line: the shown description (docs/26 §3 order), else `fallback` (the code's hint). */
-export function rowDescription(api: ValuesApi, target: DescribeTarget, fallback?: string): string | undefined {
-  return shownDescription({ entry: api.entry(target.key), hintKey: target.hintKey, locale, bundle: t }) ?? fallback;
+export function rowDescription(
+  api: ValuesApi,
+  target: DescribeTarget,
+  fallback?: string,
+): string | undefined {
+  return (
+    shownDescription({
+      entry: api.entry(target.key),
+      hintKey: target.hintKey,
+      locale,
+      bundle: t,
+    }) ?? fallback
+  );
 }
 
 export const describeItem = (api: ValuesApi, target: DescribeTarget): RowMenuItem => ({

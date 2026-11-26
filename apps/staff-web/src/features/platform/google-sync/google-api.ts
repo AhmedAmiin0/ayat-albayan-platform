@@ -71,5 +71,10 @@ export const teacherCalendarQuery = (teacherId: string) =>
     queryFn: () => apiFetch<TeacherCalendarView>(`${BASE}/teachers/${teacherId}/calendar-owner`),
   });
 
-export const putTeacherCalendarOwner = (input: { teacherId: string; owner: TeacherCalendarOwner }) =>
-  apiSend<TeacherCalendarView>('PUT', `${BASE}/teachers/${input.teacherId}/calendar-owner`, { owner: input.owner });
+export const putTeacherCalendarOwner = (input: {
+  teacherId: string;
+  owner: TeacherCalendarOwner;
+}) =>
+  apiSend<TeacherCalendarView>('PUT', `${BASE}/teachers/${input.teacherId}/calendar-owner`, {
+    owner: input.owner,
+  });

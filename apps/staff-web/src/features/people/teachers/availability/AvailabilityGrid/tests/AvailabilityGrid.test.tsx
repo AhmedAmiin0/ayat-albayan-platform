@@ -35,9 +35,9 @@ describe('AvailabilityGrid (R-TCH-02)', () => {
     for (const day of Object.values(t.enums.weekday)) expect(screen.getByText(day)).toBeTruthy();
     expect(screen.getByLabelText<HTMLSelectElement>(`${SAT} ${t.availability.from}`).value).toBe('16:00');
     expect(note().textContent).toBe(hint); // the city, not the raw IANA id
-    expect(screen.getByLabelText<HTMLSelectElement>(t.availability.tz).selectedOptions[0]?.textContent).toContain(
-      t.tz[CAIRO],
-    );
+    expect(
+      screen.getByLabelText<HTMLSelectElement>(t.availability.tz).selectedOptions[0]?.textContent,
+    ).toContain(t.tz[CAIRO]);
   });
 
   it('warns about a clock change within 30 days in the same note (docs/07 §8)', () => {

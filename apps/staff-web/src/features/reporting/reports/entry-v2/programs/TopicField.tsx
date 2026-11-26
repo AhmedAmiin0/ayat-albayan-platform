@@ -13,8 +13,19 @@ export interface TopicFieldProps {
 export function TopicField({ label, value, onChange, invalid, required }: TopicFieldProps) {
   const blank = !value?.trim();
   return (
-    <Field label={label} required={required} error={invalid && blank ? t.common.required : undefined}>
-      {(control) => <Input {...control} maxLength={300} value={value ?? ''} onChange={(e) => onChange(e.target.value)} />}
+    <Field
+      label={label}
+      required={required}
+      error={invalid && blank ? t.common.required : undefined}
+    >
+      {(control) => (
+        <Input
+          {...control}
+          maxLength={300}
+          value={value ?? ''}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      )}
     </Field>
   );
 }

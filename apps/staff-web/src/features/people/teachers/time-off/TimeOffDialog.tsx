@@ -59,7 +59,13 @@ export function TimeOffDialog({ teacherId, onClose }: Props) {
         </Field>
         <div className="sm:col-span-2">
           <Field label={t.availability.reason}>
-            {(p) => <Input {...p} value={draft.reason} onChange={(e) => set({ reason: e.target.value })} />}
+            {(p) => (
+              <Input
+                {...p}
+                value={draft.reason}
+                onChange={(e) => set({ reason: e.target.value })}
+              />
+            )}
           </Field>
         </div>
         {error && <FormAlert className="sm:col-span-2">{error}</FormAlert>}

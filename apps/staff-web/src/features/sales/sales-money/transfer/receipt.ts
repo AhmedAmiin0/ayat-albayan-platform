@@ -11,7 +11,10 @@ export type ReceiptChoice =
   | { kind: 'file'; file: File };
 
 /** The attachments that count for the package being paid: a chat copy made for another package does not. */
-export function attachmentsFor(list: readonly ReceiptChoice[], subscriptionId: string): ReceiptChoice[] {
+export function attachmentsFor(
+  list: readonly ReceiptChoice[],
+  subscriptionId: string,
+): ReceiptChoice[] {
   return list.filter((c) => c.kind === 'file' || c.subscriptionId === subscriptionId);
 }
 
@@ -27,8 +30,15 @@ export function addChatChoice(
 }
 
 /** The chat messages already picked for this package: picking one again would only make another copy. */
-export function pickedMessages(list: readonly ReceiptChoice[], subscriptionId: string): ReadonlySet<string> {
-  return new Set(list.flatMap((c) => (c.kind === 'chat' && c.subscriptionId === subscriptionId ? [c.messageId] : [])));
+export function pickedMessages(
+  list: readonly ReceiptChoice[],
+  subscriptionId: string,
+): ReadonlySet<string> {
+  return new Set(
+    list.flatMap((c) =>
+      c.kind === 'chat' && c.subscriptionId === subscriptionId ? [c.messageId] : [],
+    ),
+  );
 }
 
 /** How a chosen attachment is listed: the chat file's label, or the picked file's name. */

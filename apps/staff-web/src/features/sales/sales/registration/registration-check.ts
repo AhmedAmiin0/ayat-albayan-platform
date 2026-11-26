@@ -5,7 +5,9 @@ import type { RegistrationCheckBy, RegistrationCheckCode } from '@ab/shared';
 
 const CODES: readonly RegistrationCheckCode[] = ['query_too_short', 'invalid_phone', 'one_of'];
 
-export type CheckRequest = { ok: true; by: RegistrationCheckBy; path: string } | { ok: false; code: RegistrationCheckCode };
+export type CheckRequest =
+  | { ok: true; by: RegistrationCheckBy; path: string }
+  | { ok: false; code: RegistrationCheckCode };
 
 /** The GET path for a phone (normalised to E.164) or a name / code, or why it cannot be asked. */
 export function checkRequest(by: RegistrationCheckBy, value: string): CheckRequest {

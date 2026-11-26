@@ -16,8 +16,14 @@ const L = t.studentLists;
  * as GET /settings/public answered it, which the section ignores.
  */
 function show(link: string | null, { platform = false, auto = false } = {}) {
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity } } });
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+  });
+  client.setQueryData(publicConfigQuery.queryKey, {
+    ...PUBLIC_SETTING_DEFAULTS,
+    custom: {},
+    meeting_link_auto: auto,
+  });
   render(
     <QueryClientProvider client={client}>
       <TeacherMeetingLink link={link} platform={platform} />

@@ -37,7 +37,9 @@ export function LiveConfirmDialog({ status, pending, failed, onCancel, onConfirm
       <ul className="grid list-disc gap-1.5 ps-5 text-sm text-ink">
         <li className="break-words">{fill(c.mainCalendar, { name: main })}</li>
         <li className="break-words">
-          {teachers.length > 0 ? fill(c.teacherCalendars, { names: listOf(teachers) }) : c.noTeacherCalendars}
+          {teachers.length > 0
+            ? fill(c.teacherCalendars, { names: listOf(teachers) })
+            : c.noTeacherCalendars}
         </li>
         <li className="break-words">{folder ? fill(c.rootFolder, { name: folder }) : c.noRootFolder}</li>
       </ul>

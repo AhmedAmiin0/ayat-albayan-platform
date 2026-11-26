@@ -47,7 +47,13 @@ export function CommunicationsBody({ tab, audience, settings, renderGuard }: Bod
   return (
     <>
       <div role="tabpanel" id={ids.panel} aria-labelledby={ids.tab} className="min-w-0">
-        <TabBody tab={tab} audience={audience} settings={settings} drafts={drafts} onNote={setNote} />
+        <TabBody
+          tab={tab}
+          audience={audience}
+          settings={settings}
+          drafts={drafts}
+          onNote={setNote}
+        />
       </div>
       {renderGuard?.(names)}
       {note && <Toast message={note} onDismiss={() => setNote(null)} />}

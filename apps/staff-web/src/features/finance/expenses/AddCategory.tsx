@@ -26,7 +26,9 @@ export function AddCategory({ onAdded }: { onAdded: (key: string) => void }) {
     );
   return (
     <div className="grid gap-3 rounded-md border border-rule p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
-      <Field label={t.finance.categoryName}>{(p) => <Input {...p} value={labelAr} onChange={(e) => setLabelAr(e.target.value)} />}</Field>
+      <Field label={t.finance.categoryName}>
+        {(p) => <Input {...p} value={labelAr} onChange={(e) => setLabelAr(e.target.value)} />}
+      </Field>
       <Field label={t.finance.categoryKey} hint={t.finance.categoryKeyHint}>
         {(p) => <Input {...p} dir="ltr" value={key} onChange={(e) => setKey(e.target.value.trim().toLowerCase())} />}
       </Field>

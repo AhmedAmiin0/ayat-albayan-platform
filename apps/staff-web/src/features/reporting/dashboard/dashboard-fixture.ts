@@ -4,7 +4,16 @@ import type { DashboardResponse, DashboardWork } from '@ab/money';
 
 export const SUMMARY: DashboardResponse = {
   range: { from: '2026-05-01', to: '2026-10-02' },
-  funnel: { new: 3, contacted: 1, interested_no_slot: 1, trial_booked: 1, trial_done: 1, converted: 1, no_reply: 1, lost: 1 },
+  funnel: {
+    new: 3,
+    contacted: 1,
+    interested_no_slot: 1,
+    trial_booked: 1,
+    trial_done: 1,
+    converted: 1,
+    no_reply: 1,
+    lost: 1,
+  },
   active_students: 6,
   lessons_by_status: {
     scheduled: 1,

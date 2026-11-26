@@ -16,8 +16,15 @@ function Probe() {
 async function renderAt(url: string) {
   window.history.replaceState(null, '', url);
   const root = createRootRoute({ component: Outlet });
-  const google = createRoute({ getParentRoute: () => root, path: '/admin/settings/google', component: Probe });
-  const router = createRouter({ routeTree: root.addChildren([google]), history: createBrowserHistory() });
+  const google = createRoute({
+    getParentRoute: () => root,
+    path: '/admin/settings/google',
+    component: Probe,
+  });
+  const router = createRouter({
+    routeTree: root.addChildren([google]),
+    history: createBrowserHistory(),
+  });
   render(<RouterProvider router={router} />);
   await screen.findByText(/:|none/);
 }

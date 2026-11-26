@@ -7,7 +7,13 @@ import { RedirectUri } from './RedirectUri';
 
 const s = t.googleSync.connection;
 
-export function ConnectionCard({ status, onNote }: { status: GoogleStatusView; onNote: (message: string) => void }) {
+export function ConnectionCard({
+  status,
+  onNote,
+}: {
+  status: GoogleStatusView;
+  onNote: (message: string) => void;
+}) {
   const clock = { ...useClock(), tz: useViewerTz() };
   const c = status.connection;
   const [before, after] = s.email.split('{email}');

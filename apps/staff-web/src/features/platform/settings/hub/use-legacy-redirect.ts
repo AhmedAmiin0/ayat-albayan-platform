@@ -9,7 +9,9 @@ import { legacySettingsTarget } from './legacy-target';
  */
 export function useLegacySettingsRedirect(): boolean {
   const router = useRouter({ warn: false });
-  const [target] = useState(() => legacySettingsTarget(window.location.hash, window.location.search));
+  const [target] = useState(() =>
+    legacySettingsTarget(window.location.hash, window.location.search),
+  );
   useEffect(() => {
     if (target && router) void router.navigate({ href: target, replace: true });
   }, [router, target]);

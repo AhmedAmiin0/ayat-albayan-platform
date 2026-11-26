@@ -21,7 +21,13 @@ function lessonNo(entry: ReportFormEntry): string {
 }
 
 /** Identity (R-REP-01) comes from the lesson, never typed; dates in the student's zone. */
-export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; entry: ReportFormEntry }) {
+export function IdentityBlock({
+  lesson,
+  entry,
+}: {
+  lesson: ReportFormLesson;
+  entry: ReportFormEntry;
+}) {
   const clock = useClock();
   const { student } = entry;
   const when = `${lessonWhenAt(new Date(lesson.starts_at), { tz: student.tz, ...clock })} (${tzCity(student.tz) ?? student.tz})`;

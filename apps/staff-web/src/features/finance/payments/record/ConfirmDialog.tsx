@@ -14,7 +14,16 @@ type Props = {
 };
 
 /** A money correction asks once more before it happens (delete a payment, void, un-pay, reopen). */
-export function ConfirmDialog({ title, children, confirmLabel, withReason, pending, error, onConfirm, onClose }: Props) {
+export function ConfirmDialog({
+  title,
+  children,
+  confirmLabel,
+  withReason,
+  pending,
+  error,
+  onConfirm,
+  onClose,
+}: Props) {
   const formId = useId();
   const [reason, setReason] = useState('');
   const [missing, setMissing] = useState(false);
@@ -44,7 +53,9 @@ export function ConfirmDialog({ title, children, confirmLabel, withReason, pendi
         {children}
         {withReason && (
           <Field label={t.finance.reason} error={missing ? t.finance.reasonRequired : undefined}>
-            {(p) => <Input {...p} value={reason} onChange={(e) => setReason(e.target.value)} required />}
+            {(p) => (
+              <Input {...p} value={reason} onChange={(e) => setReason(e.target.value)} required />
+            )}
           </Field>
         )}
         {error && <FormAlert>{error}</FormAlert>}

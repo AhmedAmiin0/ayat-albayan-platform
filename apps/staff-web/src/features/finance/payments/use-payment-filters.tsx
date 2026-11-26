@@ -15,7 +15,11 @@ export interface PaymentFiltersOptions {
 }
 
 /** Student, date range and kind (all in the URL) as the table toolbar's extra filters, with their chips. */
-export function usePaymentFilters({ value, studentName, onChange }: PaymentFiltersOptions): ExtraFilters {
+export function usePaymentFilters({
+  value,
+  studentName,
+  onChange,
+}: PaymentFiltersOptions): ExtraFilters {
   const [picked, setPicked] = useState<string | null>(null);
   const name = picked ?? studentName ?? '';
   const chips = [
@@ -31,11 +35,19 @@ export function usePaymentFilters({ value, studentName, onChange }: PaymentFilte
     }),
   ];
   return {
-    fields: <PaymentFilterFields value={value} onChange={onChange} name={name} setPicked={setPicked} />,
+    fields: (
+      <PaymentFilterFields value={value} onChange={onChange} name={name} setPicked={setPicked} />
+    ),
     chips,
     onClearAll: () => {
       setPicked(null);
-      onChange({ studentId: undefined, from: undefined, to: undefined, kind: undefined, f_method: undefined });
+      onChange({
+        studentId: undefined,
+        from: undefined,
+        to: undefined,
+        kind: undefined,
+        f_method: undefined,
+      });
     },
   };
 }

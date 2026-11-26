@@ -41,7 +41,9 @@ export function CalendarSelect({ row, calendars, value, onChange }: SelectProps)
           {s.pick}
         </option>
         <option value={NO_CALENDAR}>{s.none}</option>
-        {stale && row.calendar_id && <option value={row.calendar_id}>{row.calendar_name ?? row.calendar_id}</option>}
+        {stale && row.calendar_id && (
+          <option value={row.calendar_id}>{row.calendar_name ?? row.calendar_id}</option>
+        )}
         {calendars.map((c) => (
           <option key={c.id} value={c.id}>
             {c.name}

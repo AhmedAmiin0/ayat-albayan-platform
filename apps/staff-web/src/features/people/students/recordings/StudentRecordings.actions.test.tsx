@@ -15,7 +15,9 @@ function renderList(role: 'admin' | 'teacher', row = recordingView()) {
   apiFetch.mockImplementation(async (path: string) => (path.includes('/recordings') ? pageOf([row]) : []));
   apiSend.mockResolvedValue({});
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
       <StudentRecordings studentId="s-1" role={role} />
     </QueryClientProvider>,
   );

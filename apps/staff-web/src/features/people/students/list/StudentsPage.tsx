@@ -26,8 +26,18 @@ type StudentsPageProps = StudentsSearch & {
 };
 
 /** Any search, filter or sort change goes back to page 1 (R-STU-01..03, R-NFR-08). */
-export function StudentsPage({ search, page, filters = {}, sort, columns: colFilters, onChange, onOpen }: StudentsPageProps) {
-  const { data, isError } = useQuery(studentListQuery(search, page, { filters, sort, columns: colFilters }));
+export function StudentsPage({
+  search,
+  page,
+  filters = {},
+  sort,
+  columns: colFilters,
+  onChange,
+  onOpen,
+}: StudentsPageProps) {
+  const { data, isError } = useQuery(
+    studentListQuery(search, page, { filters, sort, columns: colFilters }),
+  );
   const counts = useQuery(studentStatusCountsQuery({ ...filters, status: undefined }));
   // The counts know the R-STU-01 filters only: under a search or a column filter they would not match the list.
   const narrowed = Boolean(search) || Object.values(colFilters ?? {}).some(Boolean);
@@ -45,7 +55,8 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
   const extra = useStudentFilters({
     value: filters,
     onChange: (next) => onChange({ ...view, filters: next }),
-    onClearAll: (keys) => onChange({ ...view, filters: {}, columns: withoutKeys(colFilters, keys) }),
+    onClearAll: (keys) =>
+      onChange({ ...view, filters: {}, columns: withoutKeys(colFilters, keys) }),
   });
 
   return (
@@ -85,11 +96,26 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
           emptyText={data ? t.common.notFound : t.common.loading}
           sort={controls.sort}
           filters={controls.filters}
-          toolbar={{ search: <StudentSearch initial={search} onSearch={(term) => onChange({ ...view, search: term })} />, extra, total: data?.total, end: kinds }}
+          toolbar={{
+            search: (
+              <StudentSearch
+                initial={search}
+                onSearch={(term) => onChange({ ...view, search: term })}
+              />
+            ),
+            extra,
+            total: data?.total,
+            end: kinds,
+          }}
         />
       )}
       {data && (
-        <Pager page={page} total={data.total} pageSize={data.pageSize} onPage={(p) => onChange({ ...view, page: p })} />
+        <Pager
+          page={page}
+          total={data.total}
+          pageSize={data.pageSize}
+          onPage={(p) => onChange({ ...view, page: p })}
+        />
       )}
       {adding && (
         <CreateStudentDialog

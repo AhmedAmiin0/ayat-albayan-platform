@@ -10,8 +10,25 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
-const ROW = { id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'active', program: 'quran', package_remaining: 3, has_weekly: true };
-const COUNTS = { new: 0, trial: 0, pending_subscription: 0, active: 1, pending_renewal: 0, expired: 0, paused: 0, churned: 0 };
+const ROW = {
+  id: 's1',
+  code: 'AB-0183',
+  name: 'سهيلة',
+  status: 'active',
+  program: 'quran',
+  package_remaining: 3,
+  has_weekly: true,
+};
+const COUNTS = {
+  new: 0,
+  trial: 0,
+  pending_subscription: 0,
+  active: 1,
+  pending_renewal: 0,
+  expired: 0,
+  paused: 0,
+  churned: 0,
+};
 
 function renderPanel() {
   apiFetch.mockImplementation((path: string) =>

@@ -3,8 +3,22 @@ import { Link } from '@tanstack/react-router';
 import { buttonVariants, t } from '@ab/web-kit';
 
 /** The teacher's file opens that lesson's row at #recording-<id> (docs/49). */
-export function RecordingLink({ studentId, lessonId, role, when }: { studentId: string; lessonId: string; role: UserRole; when: string }) {
-  const props = { hash: `recording-${lessonId}`, params: { studentId }, className: buttonVariants({ variant: 'secondary', size: 'sm' }) };
+export function RecordingLink({
+  studentId,
+  lessonId,
+  role,
+  when,
+}: {
+  studentId: string;
+  lessonId: string;
+  role: UserRole;
+  when: string;
+}) {
+  const props = {
+    hash: `recording-${lessonId}`,
+    params: { studentId },
+    className: buttonVariants({ variant: 'secondary', size: 'sm' }),
+  };
   const label = t.studentRecordings.reportLinkOf.replace('{when}', when);
   const body = (
     <>

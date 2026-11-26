@@ -75,7 +75,14 @@ export function UserEditor({ user, options, canWrite, onClose, onDone }: UserEdi
         <UserSummary user={user} />
         <TestFlagSwitch target="user" row={user} enabled={canWrite} />
         <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
-          <UserEditFields form={form} onChange={setForm} errors={errors} options={options} readOnly={!canWrite} roleLocked={!!user.linked} />
+          <UserEditFields
+            form={form}
+            onChange={setForm}
+            errors={errors}
+            options={options}
+            readOnly={!canWrite}
+            roleLocked={!!user.linked}
+          />
           {save.error && <FormAlert>{userErrorText(save.error)}</FormAlert>}
         </form>
         {canWrite && <UserActions user={user} onMode={setMode} onDone={onDone} />}

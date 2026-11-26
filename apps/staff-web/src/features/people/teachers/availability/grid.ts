@@ -51,7 +51,11 @@ export function addRange(ranges: readonly Range[]): Range[] {
   return [...ranges, { start: toTime(start), end: toTime(Math.min(start + 60, LAST_MINUTE)) }];
 }
 
-export function updateRange(ranges: readonly Range[], index: number, patch: Partial<Range>): Range[] {
+export function updateRange(
+  ranges: readonly Range[],
+  index: number,
+  patch: Partial<Range>,
+): Range[] {
   return ranges.map((r, i) => (i === index ? { ...r, ...patch } : r));
 }
 
@@ -80,7 +84,9 @@ export function timeOptions(current: string): string[] {
 export function problemIndex(ranges: readonly Range[]): number {
   const inverted = ranges.findIndex((r) => !r.start || !r.end || r.start >= r.end);
   if (inverted >= 0) return inverted;
-  const order = ranges.map((range, index) => ({ range, index })).sort((a, b) => byStart(a.range, b.range));
+  const order = ranges
+    .map((range, index) => ({ range, index }))
+    .sort((a, b) => byStart(a.range, b.range));
   const clash = order.find((o, k) => k > 0 && o.range.start < (order[k - 1]?.range.end ?? ''));
   return clash?.index ?? -1;
 }

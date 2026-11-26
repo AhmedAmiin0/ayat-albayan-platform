@@ -36,7 +36,14 @@ describe('«التواصل» (/admin/settings/communications)', () => {
     renderCommunications({ apiFetch });
     const tabs = within(screen.getByRole('tablist', { name: p.tabs })).getAllByRole('tab');
     const ct = p.communicationsTabs;
-    expect(tabs.map((x) => x.textContent)).toEqual([ct.overview, ct.numbers, t.notificationRules.tabLabel, ct.templates, ct.savedReplies, ct.safety]);
+    expect(tabs.map((x) => x.textContent)).toEqual([
+      ct.overview,
+      ct.numbers,
+      t.notificationRules.tabLabel,
+      ct.templates,
+      ct.savedReplies,
+      ct.safety,
+    ]);
     expect(tab(ct.overview).getAttribute('aria-selected')).toBe('true');
     expect(await screen.findByRole('button', { name: s.enableTitle })).toBeTruthy();
     expect(screen.getByText(s.autoMessages)).toBeTruthy();
@@ -88,7 +95,12 @@ describe('«التواصل» (/admin/settings/communications)', () => {
   it('no role=status at rest on any tab', async () => {
     renderCommunications({ apiFetch });
     await screen.findByRole('button', { name: s.enableTitle });
-    for (const name of [p.communicationsTabs.numbers, t.notificationRules.tabLabel, p.communicationsTabs.templates, p.communicationsTabs.safety]) {
+    for (const name of [
+      p.communicationsTabs.numbers,
+      t.notificationRules.tabLabel,
+      p.communicationsTabs.templates,
+      p.communicationsTabs.safety,
+    ]) {
       fireEvent.click(tab(name));
       expect(screen.queryAllByRole('status')).toHaveLength(0);
     }

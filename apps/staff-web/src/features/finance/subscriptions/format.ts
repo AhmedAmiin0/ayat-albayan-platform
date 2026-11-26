@@ -17,13 +17,20 @@ export { currencySymbol, moneyText };
 /** Package line (docs/07 §6), in the act tone at the R-SUB-02 threshold. */
 export function progressOf(b: Pick<BalanceView, 'lessons_used' | 'lessons_total'>, threshold?: number): PackageProgress {
   const opts = threshold === undefined ? {} : { threshold };
-  return packageProgress(b.lessons_used, b.lessons_total, { forms: t.subscriptions.progress, ...opts });
+  return packageProgress(b.lessons_used, b.lessons_total, {
+    forms: t.subscriptions.progress,
+    ...opts,
+  });
 }
 
 /** The student's line across every live package (FIFO; a cancelled one never counts): remaining = StudentBalanceView.remaining. */
 export function studentProgress(view: Pick<StudentBalanceView, 'packages'>): PackageProgress {
-  const sum = (pick: (b: BalanceView) => number) => livePackages(view.packages).reduce((n, p) => n + pick(p.balance), 0);
-  return progressOf({ lessons_used: sum((b) => b.lessons_used), lessons_total: sum((b) => b.lessons_total) });
+  const sum = (pick: (b: BalanceView) => number) =>
+    livePackages(view.packages).reduce((n, p) => n + pick(p.balance), 0);
+  return progressOf({
+    lessons_used: sum((b) => b.lessons_used),
+    lessons_total: sum((b) => b.lessons_total),
+  });
 }
 
 const [LRI, PDI] = [String.fromCodePoint(0x2066), String.fromCodePoint(0x2069)];
@@ -34,7 +41,9 @@ export function studentLabel(s: { name: string; code: string }): string {
 }
 
 export function packageName(s: Pick<SubscriptionView, 'package' | 'lessons_total'>): string {
-  return s.package === null ? counted(t.pricing.customSessions, s.lessons_total) : t.enums.packageSize[s.package];
+  return s.package === null
+    ? counted(t.pricing.customSessions, s.lessons_total)
+    : t.enums.packageSize[s.package];
 }
 
 /** The stored title is the balance at raise time, kept for the record only; never shown. */

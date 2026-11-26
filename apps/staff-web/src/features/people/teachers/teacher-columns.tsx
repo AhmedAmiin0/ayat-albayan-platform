@@ -15,7 +15,8 @@ type Handlers = { onEdit: (teacher: Teacher) => void; onOpen: (teacherId: string
 
 const text = { kind: 'text' } as const;
 const programOptions = () => PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
-const statusOptions = () => TEACHER_STATUSES.map((st) => ({ value: st, label: t.enums.teacherStatus[st] }));
+const statusOptions = () =>
+  TEACHER_STATUSES.map((st) => ({ value: st, label: t.enums.teacherStatus[st] }));
 
 const NameCell = memo(function NameCell({ teacher, onOpen }: { teacher: TeacherListRow; onOpen: Handlers['onOpen'] }) {
   return (
@@ -80,8 +81,17 @@ export function teacherColumns({ onEdit, onOpen }: Handlers) {
     }),
     col.accessor('status', {
       header: () => t.teachers.status,
-      cell: (c) => <StatusChip {...teacherStatusStyle[c.getValue()]} label={t.enums.teacherStatus[c.getValue()]} />,
-      meta: { className: 'max-sm:order-2', sortKey: 'status', filter: { kind: 'select', options: statusOptions() } },
+      cell: (c) => (
+        <StatusChip
+          {...teacherStatusStyle[c.getValue()]}
+          label={t.enums.teacherStatus[c.getValue()]}
+        />
+      ),
+      meta: {
+        className: 'max-sm:order-2',
+        sortKey: 'status',
+        filter: { kind: 'select', options: statusOptions() },
+      },
     }),
     col.display({
       id: 'actions',

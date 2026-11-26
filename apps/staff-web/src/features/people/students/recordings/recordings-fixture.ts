@@ -18,4 +18,9 @@ export const recordingView = (over: Partial<StudentRecordingView> = {}): Student
   ...over,
 });
 
-export const pageOf = (items: StudentRecordingView[], total = items.length) => ({ items, total, page: 1, pageSize: 10 });
+export const pageOf = (items: StudentRecordingView[], total = items.length) => ({
+  items,
+  total,
+  page: 1,
+  pageSize: 10,
+});

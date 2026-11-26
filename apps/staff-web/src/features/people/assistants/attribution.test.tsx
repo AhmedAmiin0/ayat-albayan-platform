@@ -80,7 +80,12 @@ describe('BroughtByField on the student profile (R-ASST-01)', () => {
 });
 
 describe('BulkAssign in the students head', () => {
-  const pick = (ids: string[], enabled = true): StudentPick => ({ enabled, ids, column: undefined, clear: vi.fn() });
+  const pick = (ids: string[], enabled = true): StudentPick => ({
+    enabled,
+    ids,
+    column: undefined,
+    clear: vi.fn(),
+  });
   const mount = (p: StudentPick, onDone = vi.fn()) =>
     render(
       <QueryClientProvider client={client()}>

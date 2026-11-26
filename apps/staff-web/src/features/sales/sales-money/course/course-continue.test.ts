@@ -20,7 +20,11 @@ describe('«تابِع بنفس الأيام»: a renewal’s plan (owner 2026-1
     const plan = continuePlan(RENEWAL_VIEW, NOW);
     const prefilled = prefillDays({ days: PREVIOUS.days, from: '2026-10-11', tz: 'Asia/Riyadh', now: NOW });
     expect(prefilled.map((p) => p.at)).toEqual([NEXT_SUN, NEXT_WED]);
-    expect(plan?.hint).toEqual({ teacherId: PREVIOUS.teacherId, startsAt: null, picks: [NEXT_SUN, NEXT_WED] });
+    expect(plan?.hint).toEqual({
+      teacherId: PREVIOUS.teacherId,
+      startsAt: null,
+      picks: [NEXT_SUN, NEXT_WED],
+    });
     // Each prefilled day keeps its own time for the body (dayTimesKeeping).
     expect(plan?.draft.course).toMatchObject({ startsOn: '2026-10-11', prefilled, perWeek: 2 });
     expect(prefilled[1]).toEqual({ at: NEXT_WED, weekday: 3, startTimeLocal: '19:30' });
@@ -84,8 +88,14 @@ describe('«تابِع بنفس الأيام»: a renewal’s plan (owner 2026-1
   it('1 → 3 and 3 → 1 days a week: the target count, never «add or remove one day»', () => {
     const sunday = PREVIOUS.days.slice(0, 1);
     const three = [...PREVIOUS.days, { weekday: 5, startTimeLocal: '17:00' }];
-    const up = adjustText({ ...RENEWAL_VIEW, previous: { ...PREVIOUS, days: sunday }, perWeek: 3 }, C24);
-    const down = adjustText({ ...RENEWAL_VIEW, previous: { ...PREVIOUS, days: three }, perWeek: 1 }, C24);
+    const up = adjustText(
+      { ...RENEWAL_VIEW, previous: { ...PREVIOUS, days: sunday }, perWeek: 3 },
+      C24,
+    );
+    const down = adjustText(
+      { ...RENEWAL_VIEW, previous: { ...PREVIOUS, days: three }, perWeek: 1 },
+      C24,
+    );
     expect(up).toMatch(/الباقة الجديدة 3 أيام في الأسبوع، فعدّل الأيام السابقة لتصبح 3 أيام$/);
     expect(down).toMatch(/الباقة الجديدة يوم واحد في الأسبوع، فعدّل الأيام السابقة لتصبح يومًا واحدًا$/);
     for (const text of [up, down]) expect(text).not.toContain('أضف');

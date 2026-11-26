@@ -8,7 +8,17 @@ const areas: Record<string, string> = t.permissions.areas;
 /** Only some keys explain themselves (what exactly the permission shows or allows). */
 const hints: Partial<Record<string, string>> = t.permissions.hints;
 
-function GroupBox({ state, label, onToggle, disabled }: { state: GroupState; label: string; onToggle: () => void; disabled: boolean }) {
+function GroupBox({
+  state,
+  label,
+  onToggle,
+  disabled,
+}: {
+  state: GroupState;
+  label: string;
+  onToggle: () => void;
+  disabled: boolean;
+}) {
   // `indeterminate` has no attribute: the ref callback sets it whenever `state` changes.
   const ref = (el: HTMLInputElement | null) => {
     if (el) el.indeterminate = state === 'some';
@@ -29,7 +39,12 @@ export interface PermissionMatrixProps {
   disabled?: boolean;
 }
 
-export function PermissionMatrix({ value, onToggle, onToggleGroup, disabled = false }: PermissionMatrixProps) {
+export function PermissionMatrix({
+  value,
+  onToggle,
+  onToggleGroup,
+  disabled = false,
+}: PermissionMatrixProps) {
   return (
     <div className="grid gap-4">
       {permissionGroups().map((group) => {

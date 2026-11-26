@@ -13,8 +13,20 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 function setup() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   seedEntries(client);
-  const wrapper = ({ children }: { children: ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>;
-  return renderHook(() => useValuesController({ settings: SETTINGS, meta: {}, canWrite: true, entries: [], describe: vi.fn() }), { wrapper });
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  );
+  return renderHook(
+    () =>
+      useValuesController({
+        settings: SETTINGS,
+        meta: {},
+        canWrite: true,
+        entries: [],
+        describe: vi.fn(),
+      }),
+    { wrapper },
+  );
 }
 
 afterEach(() => apiSend.mockReset());

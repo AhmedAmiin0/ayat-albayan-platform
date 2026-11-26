@@ -9,7 +9,10 @@ import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 const col = createColumnHelper<DataTableFeatures, TeacherPaymentView>();
 
 export type TeacherPaymentAction = 'receipt' | 'void';
-type Options = { admin: boolean; onAction: (p: TeacherPaymentView, action: TeacherPaymentAction) => void };
+type Options = {
+  admin: boolean;
+  onAction: (p: TeacherPaymentView, action: TeacherPaymentAction) => void;
+};
 
 const methodOptions = PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 const voidedOptions = [

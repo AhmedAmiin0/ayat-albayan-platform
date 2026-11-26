@@ -12,7 +12,15 @@ export interface ReportTextFieldProps {
 }
 
 /** A free-text report line that grows with the text, 4000 characters max. */
-export function ReportTextField({ label, value, onChange, disabled, required, error, placeholder }: ReportTextFieldProps) {
+export function ReportTextField({
+  label,
+  value,
+  onChange,
+  disabled,
+  required,
+  error,
+  placeholder,
+}: ReportTextFieldProps) {
   return (
     <Field label={label} error={error} required={required}>
       {(control) => (
