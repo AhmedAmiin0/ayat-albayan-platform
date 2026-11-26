@@ -21,11 +21,10 @@ describe('GET /leads sort + assignee filter (R-LEAD-01, R-LEAD-05, R-NFR-08)', (
     ]);
   });
 
-  it('a requested key → its column, then the default order as the tiebreaker', async () => {
+  it('a requested key → its column, then newest first, then id', async () => {
     const of = await list({ ...page, sort: 'name' });
     expect(of('order')).toEqual([
       ['name', { ascending: true, nullsFirst: false }],
-      ['last_inbound_at', { ascending: false, nullsFirst: false }],
       ['created_at', { ascending: false }],
       ['id', { ascending: true }],
     ]);
@@ -35,7 +34,15 @@ describe('GET /leads sort + assignee filter (R-LEAD-01, R-LEAD-05, R-NFR-08)', (
     const of = await list({ ...page, sort: 'created_at' });
     expect(of('order')).toEqual([
       ['created_at', { ascending: true }],
-      ['last_inbound_at', { ascending: false, nullsFirst: false }],
+      ['id', { ascending: true }],
+    ]);
+  });
+
+  it('a requested status keeps newest first within a status, not latest inbound', async () => {
+    const of = await list({ ...page, sort: 'status' });
+    expect(of('order')).toEqual([
+      ['status', { ascending: true }],
+      ['created_at', { ascending: false }],
       ['id', { ascending: true }],
     ]);
   });

@@ -38,6 +38,19 @@ describe('applySort stable order', () => {
     ]);
   });
 
+  it('a requested key uses its own tiebreakers when the spec names them', () => {
+    const own: SortSpec<Key> = {
+      ...leadsLike,
+      tiebreak: [{ column: 'created_at', ascending: false }],
+    };
+    expect(applySort(new FakeQuery(), { sort: 'name' }, own).calls).toEqual([
+      ['name', { ascending: true, nullsFirst: false }],
+      ['created_at', { ascending: false }],
+      ['id', { ascending: true }],
+    ]);
+    expect(applySort(new FakeQuery(), {}, own).calls).toHaveLength(3);
+  });
+
   it('a relation without an id names its own unique key', () => {
     const threads: SortSpec<Key> = { ...leadsLike, key: 'phone_e164' };
     expect(applySort(new FakeQuery(), { sort: 'name' }, threads).calls.at(-1)).toEqual([
