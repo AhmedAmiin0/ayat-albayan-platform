@@ -1,26 +1,9 @@
 import { partsByLesson, recordingMonths } from '@ab/client-core';
-import type { PortalRecordings, PortalStudent } from '@ab/shared';
-import { AppText, EmptyState, t, type, useTheme } from '@ab/mobile-kit';
+import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { MonthSection } from '@/ui';
 import { RecordingRow } from '@/recordings/RecordingRow';
-
-interface RecordingsListProps {
-  data: PortalRecordings;
-  student: PortalStudent;
-}
-
-/** Google Meet lessons are not recorded, so the empty state says so. */
-function Empty({ name }: { name: string }) {
-  const { color } = useTheme();
-  const note = { fontSize: type.size.sm, color: color.ink3, textAlign: 'center' as const };
-  return (
-    <>
-      <EmptyState title={t.lessonFiles.empty} />
-      <AppText style={note}>{t.lessonFiles.emptyMeet.replace('{name}', name)}</AppText>
-      <AppText style={note}>{t.lessonFiles.emptyRoom}</AppText>
-    </>
-  );
-}
+import type { RecordingsListProps } from './RecordingsList.types';
+import { Empty } from './Empty';
 
 /**
  * The recordings by month, newest first, under the hint; one row per lesson. With none yet, only
