@@ -16,7 +16,8 @@ interface ReactorsSheetProps {
 export function ReactorsSheet({ message: m, contact, onRemove, onClose }: ReactorsSheetProps) {
   const { color } = useTheme();
   const lines = m ? reactorLines(m.reactions, contact) : [];
-  const name = (l: (typeof lines)[number]) => l.name ?? (l.mine ? t.inbox.reactions.academy : t.inbox.reactions.contact);
+  const name = (l: (typeof lines)[number]) =>
+    l.name ?? (l.mine ? t.inbox.reactions.academy : t.inbox.reactions.contact);
   return (
     <Modal visible={m !== null} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable accessibilityRole="button" accessibilityLabel={t.common.cancel} onPress={onClose} style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: color.scrim }}>
@@ -24,9 +25,18 @@ export function ReactorsSheet({ message: m, contact, onRemove, onClose }: Reacto
           testID="reactors-sheet"
           accessibilityLabel={t.inbox.reactions.sheet}
           onStartShouldSetResponder={() => true}
-          style={{ gap: 8, padding: 16, paddingBottom: 32, borderTopStartRadius: shape.radius.lg, borderTopEndRadius: shape.radius.lg, backgroundColor: color.raised }}
+          style={{
+            gap: 8,
+            padding: 16,
+            paddingBottom: 32,
+            borderTopStartRadius: shape.radius.lg,
+            borderTopEndRadius: shape.radius.lg,
+            backgroundColor: color.raised,
+          }}
         >
-          <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.body }}>{t.inbox.reactions.sheet}</AppText>
+          <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.body }}>
+            {t.inbox.reactions.sheet}
+          </AppText>
           {lines.map((l) => (
             <View key={l.mine ? 'ours' : 'theirs'} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: shape.control.touch }}>
               <AppText style={{ fontSize: 24 }}>{l.emoji}</AppText>

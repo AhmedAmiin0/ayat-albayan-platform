@@ -14,7 +14,9 @@ interface ChangeUntilSheetProps {
 export function ChangeUntilSheet({ studentId, pause, onClose, onDone }: ChangeUntilSheetProps) {
   return (
     <PauseSheetFrame open={pause !== null} title={t.coursePause.changeUntilTitle} onClose={onClose}>
-      {pause ? <ChangeUntilForm studentId={studentId} pause={pause} onDone={onDone} onClose={onClose} /> : null}
+      {pause ? (
+        <ChangeUntilForm studentId={studentId} pause={pause} onDone={onDone} onClose={onClose} />
+      ) : null}
     </PauseSheetFrame>
   );
 }

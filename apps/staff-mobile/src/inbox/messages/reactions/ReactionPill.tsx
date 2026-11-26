@@ -36,7 +36,9 @@ export function ReactionPill({ message: m, side, onPress }: ReactionPillProps) {
         backgroundColor: color.raised,
       }}
     >
-      <AppText style={{ fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm) }}>{text}</AppText>
+      <AppText style={{ fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm) }}>
+        {text}
+      </AppText>
     </Pressable>
   );
 }

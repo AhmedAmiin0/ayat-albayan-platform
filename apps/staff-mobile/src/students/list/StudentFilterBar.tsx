@@ -43,7 +43,12 @@ export function StudentFilterBar({ value, onChange, searching = false }: Student
         />
         {n > 0 || value.sort !== 'newest' ? <PillButton label={L.clear} onPress={() => onChange(NO_FILTERS)} /> : null}
         <View style={{ flex: 1 }}>
-          <FilterPills items={pills} value={value.status} onChange={(status) => onChange({ ...value, status })} accessibilityLabel={L.statusLabel} />
+          <FilterPills
+            items={pills}
+            value={value.status}
+            onChange={(status) => onChange({ ...value, status })}
+            accessibilityLabel={L.statusLabel}
+          />
         </View>
       </View>
       {open ? (

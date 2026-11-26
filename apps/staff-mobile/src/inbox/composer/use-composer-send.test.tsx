@@ -37,7 +37,13 @@ function setup(initial: StagedFile | null, text = '') {
     () => {
       const [box, setText] = useState(text);
       const [staged, setStaged] = useState(initial);
-      const api = useComposerSend({ phone: PHONE, text: box, setText, staged, clearStaged: () => setStaged(null) });
+      const api = useComposerSend({
+        phone: PHONE,
+        text: box,
+        setText,
+        staged,
+        clearStaged: () => setStaged(null),
+      });
       return { ...api, staged, setStaged };
     },
     { wrapper: queryWrapper(createTestQueryClient()) },

@@ -9,6 +9,7 @@ export { CALLS_KEY } from '@ab/client-core';
 
 const client = { apiFetch, apiSend };
 
-export const { callConfigQuery, activeCallsQuery, callListQuery, callPermissionQuery } = callQueries(client);
+export const { callConfigQuery, activeCallsQuery, callListQuery, callPermissionQuery } =
+  callQueries(client);
 
 export const callApi = callSends({ client, requestId });

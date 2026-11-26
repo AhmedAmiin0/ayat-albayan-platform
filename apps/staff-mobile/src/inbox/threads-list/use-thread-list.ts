@@ -32,7 +32,13 @@ interface ThreadListParams {
  * first, by name / phone, unread, lead stage and chat list. A thread is keyed by its phone (one row per phone).
  * Live, the loaded pages refetch together (TanStack's infinite refetch), so the order stays whole.
  */
-export function useThreadList({ search, unread, list, status, live: liveTab = false }: ThreadListParams) {
+export function useThreadList({
+  search,
+  unread,
+  list,
+  status,
+  live: liveTab = false,
+}: ThreadListParams) {
   const focused = useScreenFocused();
   const live = useInboxLive();
   useLiveWatch(liveTab ? 'list' : null, focused);
@@ -57,7 +63,9 @@ export function useThreadList({ search, unread, list, status, live: liveTab = fa
   const pages = query.data?.pages;
   const items = useMemo(() => {
     const seen = new Set<string>();
-    return (pages ?? []).flatMap((p) => p.items).filter((th) => !seen.has(th.phone_e164) && seen.add(th.phone_e164));
+    return (pages ?? [])
+      .flatMap((p) => p.items)
+      .filter((th) => !seen.has(th.phone_e164) && seen.add(th.phone_e164));
   }, [pages]);
   const { loadMore, refresh, pulling } = usePagedActions(query);
   return withTracked(query, { items, total: pages?.[0]?.total ?? 0, loadMore, refresh, pulling });

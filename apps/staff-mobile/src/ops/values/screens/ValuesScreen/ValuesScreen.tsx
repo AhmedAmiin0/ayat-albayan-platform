@@ -33,14 +33,21 @@ function useChips(): { value: Chip; label: string; count: number }[] {
     label: groupLabel(id),
     count: groupKeys(id).length,
   }));
-  return google ? [...items, { value: GOOGLE_GROUP, label: t.mobileValues.groups.google, count: 3 }] : items;
+  return google
+    ? [...items, { value: GOOGLE_GROUP, label: t.mobileValues.groups.google, count: 3 }]
+    : items;
 }
 
 /** A busy region so the screen is never blank. */
 function Loading() {
   const { color } = useTheme();
   return (
-    <View accessible accessibilityLabel={t.common.loading} accessibilityState={{ busy: true }} style={{ paddingVertical: 32 }}>
+    <View
+      accessible
+      accessibilityLabel={t.common.loading}
+      accessibilityState={{ busy: true }}
+      style={{ paddingVertical: 32 }}
+    >
       <ActivityIndicator color={color.lapis} />
     </View>
   );
@@ -79,7 +86,12 @@ export function ValuesScreen() {
         <GoogleValuesTable />
       ) : settings ? (
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 32 }}>
-          <ValuesTable keys={groupKeys(group)} settings={settings} canWrite={canWrite} onOpen={setOpen} />
+          <ValuesTable
+            keys={groupKeys(group)}
+            settings={settings}
+            canWrite={canWrite}
+            onOpen={setOpen}
+          />
         </ScrollView>
       ) : query.isError ? (
         <ErrorState onRetry={() => void query.refetch()} />

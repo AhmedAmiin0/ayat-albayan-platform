@@ -20,7 +20,19 @@ test('students with their code; a missing code leaves the name alone', () => {
 });
 
 test('the totals in one line', () => {
-  const line = totalsLine({ held: 12, student_absent: 1, cancelled_by_teacher: 2, cancelled_by_admin: 0, other: 3 });
-  expect(line).toBe(t.sales.teachers.overview.totals.replace('{held}', '12').replace('{student_absent}', '1')
-    .replace('{cancelled_by_teacher}', '2').replace('{cancelled_by_admin}', '0').replace('{other}', '3'));
+  const line = totalsLine({
+    held: 12,
+    student_absent: 1,
+    cancelled_by_teacher: 2,
+    cancelled_by_admin: 0,
+    other: 3,
+  });
+  expect(line).toBe(
+    t.sales.teachers.overview.totals
+      .replace('{held}', '12')
+      .replace('{student_absent}', '1')
+      .replace('{cancelled_by_teacher}', '2')
+      .replace('{cancelled_by_admin}', '0')
+      .replace('{other}', '3'),
+  );
 });

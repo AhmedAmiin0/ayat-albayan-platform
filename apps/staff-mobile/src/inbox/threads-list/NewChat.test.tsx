@@ -21,8 +21,19 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ phone: '+966501234567' }),
 }));
 
-const OPENER = { ...plainReminder, key: 'follow_up_slots', params: ['student_name'], body_ar: 'السلام عليكم، موعد {{1}}' };
-const EMPTY = { thread: null, messages: [], has_more: false, lessons: [], people: { guardian: null, lead: null, students: [] } };
+const OPENER = {
+  ...plainReminder,
+  key: 'follow_up_slots',
+  params: ['student_name'],
+  body_ar: 'السلام عليكم، موعد {{1}}',
+};
+const EMPTY = {
+  thread: null,
+  messages: [],
+  has_more: false,
+  lessons: [],
+  people: { guardian: null, lead: null, students: [] },
+};
 
 beforeEach(() => {
   mockApiFetch.mockReset();

@@ -51,7 +51,10 @@ test('sales without notifications.push: no bell', async () => {
 
 test('assistant: the bell in the «حلقاتي» header opens the assistant notifications', async () => {
   answer(['self.assistant', 'notifications.push']);
-  await renderWithQuery(<AssistantHomeScreen can={() => true} />, createTestQueryClient({ meFromApi: true }));
+  await renderWithQuery(
+    <AssistantHomeScreen can={() => true} />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   fireEvent.press(await screen.findByRole('button', { name: unreadName }));
   expect(router.push).toHaveBeenCalledWith('/assistant/more/notifications');
 });

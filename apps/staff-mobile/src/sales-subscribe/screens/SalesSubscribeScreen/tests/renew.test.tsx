@@ -46,7 +46,12 @@ test('another child picked on a renewal: the form follows that child’s last pa
   mockParams.current = { phone: PHONE, studentId: KID, renew: '1' };
   await renderWithQuery(<SalesSubscribeScreen />);
   await fireEvent.press(await screen.findByRole('radio', { name: /سلمى/ }));
-  await waitFor(() => expect(lastQuote()).toEqual({ studentId: KID2, pricing: { count: 14, duration: 30, discount: 5 } }));
+  await waitFor(() =>
+    expect(lastQuote()).toEqual({
+      studentId: KID2,
+      pricing: { count: 14, duration: 30, discount: 5 },
+    }),
+  );
 });
 
 test('«اشتراك جديد» (no renew): the empty calculator, whatever her last package was', async () => {

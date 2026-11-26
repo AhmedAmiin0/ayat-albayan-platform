@@ -21,13 +21,26 @@ export function ChildLines({ student }: { student: ThreadStudentView }) {
   const chip = childChip(sub);
   const due = dueLine(sub);
   return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 8, rowGap: 2, flexShrink: 1 }}>
-      <AppText style={{ ...LINE, fontFamily: type.ui[600], color: color.ink }}>{student.name}</AppText>
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        columnGap: 8,
+        rowGap: 2,
+        flexShrink: 1,
+      }}
+    >
+      <AppText style={{ ...LINE, fontFamily: type.ui[600], color: color.ink }}>
+        {student.name}
+      </AppText>
       {chip ? <StatusChip {...chip} size="sm" /> : null}
       <AppText numberOfLines={2} style={{ ...LINE, flexShrink: 1, color: color.ink2 }}>
         {packageText(sub)}
       </AppText>
-      {due ? <AppText style={{ ...LINE, fontFamily: type.ui[600], color: color.act }}>{due}</AppText> : null}
+      {due ? (
+        <AppText style={{ ...LINE, fontFamily: type.ui[600], color: color.act }}>{due}</AppText>
+      ) : null}
     </View>
   );
 }

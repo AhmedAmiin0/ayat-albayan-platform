@@ -5,8 +5,13 @@ import { matchesQuery } from '@ab/core';
  * One tab's replies whose title or body holds the search (Arabic letter variants and case ignored),
  * in the served order.
  */
-export function filterReplies(list: readonly SavedReply[], input: { scope: SavedReplyScope; query: string }): SavedReply[] {
-  return list.filter((r) => r.scope === input.scope && matchesQuery(`${r.title} ${r.body}`, input.query));
+export function filterReplies(
+  list: readonly SavedReply[],
+  input: { scope: SavedReplyScope; query: string },
+): SavedReply[] {
+  return list.filter(
+    (r) => r.scope === input.scope && matchesQuery(`${r.title} ${r.body}`, input.query),
+  );
 }
 
 /**

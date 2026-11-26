@@ -29,7 +29,9 @@ test('the switch on: the picked past day down to a year back, with alreadyStarte
 });
 
 test('the switch on with today still picked: today, with alreadyStarted', () => {
-  expect(checkStart({ ...draft, alreadyStarted: true }, { canSet: true, today, lessonsTotal: 8 })).toEqual({
+  expect(
+    checkStart({ ...draft, alreadyStarted: true }, { canSet: true, today, lessonsTotal: 8 }),
+  ).toEqual({
     ok: true,
     body: { startsOn: today, alreadyStarted: true },
   });
@@ -51,7 +53,10 @@ describe('«حلقات مستخدمة من الباقة» (owner 2026-10-28)', (
     expect(usedBeforeOf({ ...on, usedBefore: 7 }, 4)).toBe(3);
     expect(usedBeforeOf({ ...on, usedBefore: 9 }, 8)).toBe(7);
     expect(usedBeforeOf({ ...on, usedBefore: 7, alreadyStarted: false }, 8)).toBe(0);
-    expect(checkStart({ ...on, usedBefore: 7, alreadyStarted: false, day: today }, ctx)).toEqual({ ok: true, body: { startsOn: today } });
+    expect(checkStart({ ...on, usedBefore: 7, alreadyStarted: false, day: today }, ctx)).toEqual({
+      ok: true,
+      body: { startsOn: today },
+    });
   });
 
   test('today still picked: refused before posting, as the API would', () => {

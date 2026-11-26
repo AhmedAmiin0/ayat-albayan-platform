@@ -2,7 +2,15 @@ import type { SavedReply } from '@ab/shared';
 import { t, useTheme, IconButton } from '@ab/mobile-kit';
 import { EditIcon, TrashIcon } from '@/inbox/shared/chat-icons';
 
-export function EditDelete({ reply, onEdit, onDelete }: { reply: SavedReply; onEdit: () => void; onDelete: () => void }) {
+export function EditDelete({
+  reply,
+  onEdit,
+  onDelete,
+}: {
+  reply: SavedReply;
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
   const { color } = useTheme();
   return (
     <>

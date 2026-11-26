@@ -28,6 +28,9 @@ export function profileFacts(s: StudentProfile): Fact[] {
     { label: t.students.program, value: t.enums.program[s.program] },
     ...text.flatMap(([label, value]) => (filled(value) ? [{ label, value: value.trim() }] : [])),
     ...(filled(s.tz) ? [{ label: t.students.tz, value: s.tz, ltr: true }] : []),
-    { label: t.students.teacher, value: s.teacher ? teacherName(s.teacher, locale) : t.students.noTeacher },
+    {
+      label: t.students.teacher,
+      value: s.teacher ? teacherName(s.teacher, locale) : t.students.noTeacher,
+    },
   ];
 }

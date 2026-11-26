@@ -24,7 +24,9 @@ const check = { conflicts: [], remaining: 5, endsOn: '2026-10-21' };
 test('the check is dropped once unmounted, so the same picks after a save ask the server again', async () => {
   mockApiSend.mockResolvedValue(check);
   const client = createTestQueryClient();
-  const { result, unmount } = await renderHook(() => useCourseChangeCheck(body), { wrapper: queryWrapper(client) });
+  const { result, unmount } = await renderHook(() => useCourseChangeCheck(body), {
+    wrapper: queryWrapper(client),
+  });
   await waitFor(() => expect(result.current.data).toEqual(check));
   await unmount();
   await waitFor(() => expect(client.getQueryCache().findAll({ queryKey: ['sales', 'booking', 'course-change'] })).toHaveLength(0));

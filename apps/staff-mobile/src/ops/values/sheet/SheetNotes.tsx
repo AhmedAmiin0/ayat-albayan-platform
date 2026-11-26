@@ -45,7 +45,14 @@ function tagOf(key: SettingKey): string | undefined {
 }
 
 /** The small lines under the editor: why read-only, bounds, default (+ reset), last change, tag, key. */
-export function SheetNotes({ valueKey, saved, editable, canWrite, meta, onReset }: SheetNotesProps) {
+export function SheetNotes({
+  valueKey,
+  saved,
+  editable,
+  canWrite,
+  meta,
+  onReset,
+}: SheetNotesProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const why = editable ? undefined : readOnlyWhy(valueKey, canWrite);

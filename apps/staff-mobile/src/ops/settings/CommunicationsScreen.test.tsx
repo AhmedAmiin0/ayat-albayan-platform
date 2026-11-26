@@ -48,7 +48,9 @@ test('«التواصل» is three tabs (نظرة عامة · الإشعارات 
   expect(await screen.findByText(WEB_NOTE)).toBeTruthy();
   expect(screen.queryByText(t.notificationCatalogue.entries.report_ready.name)).toBeNull();
   await fireEvent.press(tab(t.settingsValues.groups.notifications));
-  expect(tab(t.settingsValues.groups.notifications).props.accessibilityState).toEqual({ selected: true });
+  expect(tab(t.settingsValues.groups.notifications).props.accessibilityState).toEqual({
+    selected: true,
+  });
   expect(await screen.findByText(t.notificationCatalogue.entries.report_ready.name)).toBeTruthy();
   expect(screen.queryByText(WEB_NOTE)).toBeNull();
   await fireEvent.press(tab(tabs.numbers));
@@ -70,17 +72,29 @@ test('a «ماذا يُرسل الآن» row opens «الإشعارات» on tha
   const audience = t.notificationCatalogue.audience;
   const teacher = t.communicationsHub.openAudience.replace('{audience}', audience.teacher);
   await fireEvent.press(await screen.findByRole('button', { name: new RegExp(`^${teacher}`) }));
-  expect(tab(t.settingsValues.groups.notifications).props.accessibilityState).toEqual({ selected: true });
-  expect((await audiencePill(audience.teacher)).props.accessibilityState).toEqual({ selected: true });
-  expect((await audiencePill(audience.guardian)).props.accessibilityState).toEqual({ selected: false });
+  expect(tab(t.settingsValues.groups.notifications).props.accessibilityState).toEqual({
+    selected: true,
+  });
+  expect((await audiencePill(audience.teacher)).props.accessibilityState).toEqual({
+    selected: true,
+  });
+  expect((await audiencePill(audience.guardian)).props.accessibilityState).toEqual({
+    selected: false,
+  });
   await fireEvent.press(tab(t.settingsPages.communicationsTabs.overview));
   await fireEvent.press(tab(t.settingsValues.groups.notifications));
-  expect((await audiencePill(audience.guardian)).props.accessibilityState).toEqual({ selected: true });
+  expect((await audiencePill(audience.guardian)).props.accessibilityState).toEqual({
+    selected: true,
+  });
 });
 
 test('«افتح «الأرقام»» on the overview switches to the numbers tab', async () => {
   await renderWithQuery(<CommunicationsScreen />);
-  await fireEvent.press(await screen.findByRole('button', { name: t.communicationsHub.numbersOpen }));
-  expect(tab(t.settingsPages.communicationsTabs.numbers).props.accessibilityState).toEqual({ selected: true });
+  await fireEvent.press(
+    await screen.findByRole('button', { name: t.communicationsHub.numbersOpen }),
+  );
+  expect(tab(t.settingsPages.communicationsTabs.numbers).props.accessibilityState).toEqual({
+    selected: true,
+  });
   expect(await screen.findByRole('header', { name: t.numbers.title })).toBeTruthy();
 });

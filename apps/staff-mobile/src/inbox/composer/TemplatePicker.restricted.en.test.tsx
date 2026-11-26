@@ -17,7 +17,12 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 
 test('an English run: a restricted role with no allowed template reads the English empty note', async () => {
   expect(t).toEqual(en);
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { id: 'u1', role: 'sales', permissions: ['messages.read'] } : []));
-  await renderWithQuery(<TemplatePicker visible lessons={[]} teacher={false} onClose={jest.fn()} onSend={jest.fn()} />, createTestQueryClient({ meFromApi: true }));
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/auth/me' ? { id: 'u1', role: 'sales', permissions: ['messages.read'] } : [],
+  );
+  await renderWithQuery(
+    <TemplatePicker visible lessons={[]} teacher={false} onClose={jest.fn()} onSend={jest.fn()} />,
+    createTestQueryClient({ meFromApi: true }),
+  );
   expect(await screen.findByText('No templates are available to you yet')).toBeTruthy();
 });

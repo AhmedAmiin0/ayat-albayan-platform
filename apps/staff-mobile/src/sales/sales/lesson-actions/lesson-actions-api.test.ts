@@ -28,7 +28,16 @@ test('an ended, a closed or a student-less lesson: nothing', () => {
 
 test('each action follows its own key (the admin may switch one off); no key, nothing', () => {
   const only = (key: Permission) => (p: Permission) => p === key;
-  expect(canChangeLesson(mine, { now: NOW, can: only('lessons.cancel') })).toEqual({ reschedule: false, cancel: true });
-  expect(canChangeLesson(mine, { now: NOW, can: only('lessons.reschedule') })).toEqual({ reschedule: true, cancel: false });
-  expect(canChangeLesson(scheduleLesson(), { now: NOW, can: () => false })).toEqual({ reschedule: false, cancel: false });
+  expect(canChangeLesson(mine, { now: NOW, can: only('lessons.cancel') })).toEqual({
+    reschedule: false,
+    cancel: true,
+  });
+  expect(canChangeLesson(mine, { now: NOW, can: only('lessons.reschedule') })).toEqual({
+    reschedule: true,
+    cancel: false,
+  });
+  expect(canChangeLesson(scheduleLesson(), { now: NOW, can: () => false })).toEqual({
+    reschedule: false,
+    cancel: false,
+  });
 });

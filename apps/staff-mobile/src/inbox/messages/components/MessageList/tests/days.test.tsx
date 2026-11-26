@@ -22,9 +22,22 @@ const A = at('a', '2026-09-29T10:00:00Z');
 const B = at('b', '2026-09-29T16:39:00Z');
 const C = at('c', '2026-10-02T08:00:00Z');
 const query = (rows: MessageView[]) =>
-  ({ data: cachedThread(detail(rows)), hasNextPage: false, isFetchingNextPage: false, refetch: jest.fn(), fetchNextPage: jest.fn() }) as unknown as ThreadQuery;
+  ({
+    data: cachedThread(detail(rows)),
+    hasNextPage: false,
+    isFetchingNextPage: false,
+    refetch: jest.fn(),
+    fetchNextPage: jest.fn(),
+  }) as unknown as ThreadQuery;
 const show = () => renderWithQuery(<MessageList phone={PHONE} query={query([A, B, C])} />);
-const still = { nativeEvent: { contentOffset: { x: 0, y: 0 }, contentSize: { width: 1, height: 1 }, layoutMeasurement: { width: 1, height: 1 }, velocity: { x: 0, y: 0 } } };
+const still = {
+  nativeEvent: {
+    contentOffset: { x: 0, y: 0 },
+    contentSize: { width: 1, height: 1 },
+    layoutMeasurement: { width: 1, height: 1 },
+    velocity: { x: 0, y: 0 },
+  },
+};
 const viewable = (rows: MessageView[]) =>
   act(() => screen.getByTestId('message-list').props.onViewableItemsChanged({ viewableItems: rows.map((item, i) => ({ item, index: i, key: item.id, isViewable: true })), changed: [] }));
 

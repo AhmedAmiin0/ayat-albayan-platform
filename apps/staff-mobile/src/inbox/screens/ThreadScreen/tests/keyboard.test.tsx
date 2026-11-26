@@ -19,7 +19,10 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));
 
-const metrics = { frame: { x: 0, y: 0, width: 400, height: 800 }, insets: { top: 32, bottom: 48, left: 0, right: 0 } };
+const metrics = {
+  frame: { x: 0, y: 0, width: 400, height: 800 },
+  insets: { top: 32, bottom: 48, left: 0, right: 0 },
+};
 const KEYBOARD = 280;
 const os = Platform.OS;
 afterEach(() => {

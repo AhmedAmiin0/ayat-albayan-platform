@@ -48,9 +48,19 @@ export function TransferForm({ sub, phone, bind = {}, onDone }: TransferFormProp
       />
       <ShortfallNote amountText={draft.amountText} due={sub.due} currency={sub.currency} />
       <PaidDayPicker daysAgo={draft.daysAgo} onChange={(daysAgo) => set({ daysAgo })} now={now} />
-      <Field label={m.note} value={draft.note} onChangeText={(note) => set({ note })} maxLength={500} multiline />
+      <Field
+        label={m.note}
+        value={draft.note}
+        onChangeText={(note) => set({ note })}
+        maxLength={500}
+        multiline
+      />
       {pay.isError ? <ErrorLine message={salesErrorText(pay.error)} /> : null}
-      <Button label={pay.isPending ? m.saving : m.saveTransfer} busy={pay.isPending} onPress={submit} />
+      <Button
+        label={pay.isPending ? m.saving : m.saveTransfer}
+        busy={pay.isPending}
+        onPress={submit}
+      />
     </View>
   );
 }

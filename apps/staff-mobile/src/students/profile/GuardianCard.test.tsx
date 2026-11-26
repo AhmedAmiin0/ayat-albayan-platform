@@ -18,7 +18,10 @@ test('docs/07 «الأزرار»: «اتصال» outlined | «واتساب» fil
   const holds = (label: string) => cells.map((cell) => within(cell).queryByText(label) !== null);
   expect(holds(t.mobile.call)).toEqual([true, false]);
   expect(holds(t.mobile.whatsapp)).toEqual([false, true]);
-  expect(styleOf(t.mobile.call)).toMatchObject({ borderWidth: 1, borderColor: palette.light.ruleInput });
+  expect(styleOf(t.mobile.call)).toMatchObject({
+    borderWidth: 1,
+    borderColor: palette.light.ruleInput,
+  });
   expect(styleOf(t.mobile.whatsapp)).toMatchObject({ backgroundColor: palette.light.lapisFill });
 });
 

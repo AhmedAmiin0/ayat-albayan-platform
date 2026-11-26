@@ -14,7 +14,12 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
-const page = (items: unknown[], total = items.length, n = 1) => ({ items, total, page: n, pageSize: 25 });
+const page = (items: unknown[], total = items.length, n = 1) => ({
+  items,
+  total,
+  page: n,
+  pageSize: 25,
+});
 
 beforeEach(() => mockApiFetch.mockReset());
 

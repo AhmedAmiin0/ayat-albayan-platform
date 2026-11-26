@@ -16,7 +16,10 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('@/inbox/thread/calls/rtc/audio-route', () => ({ routeCallAudio: jest.fn(async () => undefined), restorePlayback: jest.fn(async () => undefined) }));
 
-const metrics = { frame: { x: 0, y: 0, width: 390, height: 844 }, insets: { top: 47, left: 0, right: 0, bottom: 34 } };
+const metrics = {
+  frame: { x: 0, y: 0, width: 390, height: 844 },
+  insets: { top: 47, left: 0, right: 0, bottom: 34 },
+};
 const ui = () => (
   <SafeAreaProvider initialMetrics={metrics}>
     <CallProvider rtc={fakeRtc().deps}>

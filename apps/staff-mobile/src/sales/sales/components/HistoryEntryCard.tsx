@@ -40,7 +40,11 @@ export function HistoryEntryCard({ entry, current, brief = false }: HistoryEntry
       <AppText accessibilityRole="header" style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>
         {lines.heading}
       </AppText>
-      {current ? <AppText style={{ fontSize: type.size.xs, color: color.lapis }}>{brief ? t.sales.student.current : h.current}</AppText> : null}
+      {current ? (
+        <AppText style={{ fontSize: type.size.xs, color: color.lapis }}>
+          {brief ? t.sales.student.current : h.current}
+        </AppText>
+      ) : null}
       {lines.dates.map((line) => (
         <Note key={line}>{line}</Note>
       ))}

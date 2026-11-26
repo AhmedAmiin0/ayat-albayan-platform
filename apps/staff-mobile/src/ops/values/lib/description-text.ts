@@ -36,7 +36,9 @@ export function canDescribe({ entry, can, admin }: DescribeAccess): boolean {
 }
 
 /** The editor's check before sending: the trimmed text, or the line to show. */
-export function checkDescription(text: string): { ok: true; text: string } | { ok: false; error: string } {
+export function checkDescription(
+  text: string,
+): { ok: true; text: string } | { ok: false; error: string } {
   const trimmed = text.trim();
   const d = t.mobileValues.description;
   if (trimmed === '') return { ok: false, error: d.required };

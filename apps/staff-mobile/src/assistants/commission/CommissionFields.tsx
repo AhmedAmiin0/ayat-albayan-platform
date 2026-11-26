@@ -29,10 +29,21 @@ export function CommissionFields({ form, errors, set, min }: TermsFieldsProps) {
         </View>
       ) : null}
       {fixed ? (
-        <CurrencyPills label={T.commissionCurrency} value={form.commCurrency} onChange={(commCurrency) => set({ commCurrency })} error={fieldError(errors.commCurrency)} />
+        <CurrencyPills
+          label={T.commissionCurrency}
+          value={form.commCurrency}
+          onChange={(commCurrency) => set({ commCurrency })}
+          error={fieldError(errors.commCurrency)}
+        />
       ) : null}
       {form.commType !== '' ? (
-        <StartDayPicker label={T.commissionStartsOn} day={form.commStartsOn} min={min} onChange={(commStartsOn) => set({ commStartsOn })} error={fieldError(errors.commStartsOn)} />
+        <StartDayPicker
+          label={T.commissionStartsOn}
+          day={form.commStartsOn}
+          min={min}
+          onChange={(commStartsOn) => set({ commStartsOn })}
+          error={fieldError(errors.commStartsOn)}
+        />
       ) : null}
     </Section>
   );

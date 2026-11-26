@@ -20,7 +20,11 @@ export function SalesTeacherHeader({ teacher, kind, onKind }: SalesTeacherHeader
   const href = useSalesHrefs();
   const tz = useViewerTz();
   const platform = usePlatformClassroom(teacher.platform_classroom);
-  const counts = { active: teacher.active_count, trial: teacher.trial_count, all: teacher.students.length };
+  const counts = {
+    active: teacher.active_count,
+    trial: teacher.trial_count,
+    all: teacher.students.length,
+  };
   return (
     <View style={{ gap: 8, paddingBottom: 12, alignItems: 'flex-start' }}>
       <Note>{teacherCounts(teacher)}</Note>

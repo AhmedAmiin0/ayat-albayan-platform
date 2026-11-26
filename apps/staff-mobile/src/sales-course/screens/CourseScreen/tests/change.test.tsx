@@ -26,8 +26,11 @@ jest.mock('expo-router', () => ({
 const current = t.booking.courseChange.currentDays.replace('{days}', daysText(runningCourse.days, TZ, R24));
 /** The filled (primary) buttons on screen: no input edge. */
 const primaries = () =>
-  screen.getAllByRole('button').filter((b) => StyleSheet.flatten(b.props.style).borderColor === 'transparent');
-const serve = (patch: Parameters<typeof courseView>[0]) => mockApiFetch.mockImplementation(changeApi(courseView(patch)).fetch);
+  screen
+    .getAllByRole('button')
+    .filter((b) => StyleSheet.flatten(b.props.style).borderColor === 'transparent');
+const serve = (patch: Parameters<typeof courseView>[0]) =>
+  mockApiFetch.mockImplementation(changeApi(courseView(patch)).fetch);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -43,7 +46,9 @@ test('a renewal with the course still running: «تغيير أيام الحلق�
   expect(screen.getByText(t.booking.courseChange.running)).toBeTruthy();
   expect(screen.queryByText(current)).toBeNull();
   expect(screen.getByText(new RegExp(daysText(runningCourse.days, TZ, R24)))).toBeTruthy();
-  await waitFor(() => expect(primaries().map((b) => b.props.accessibilityState?.disabled)).toEqual([false]));
+  await waitFor(() =>
+    expect(primaries().map((b) => b.props.accessibilityState?.disabled)).toEqual([false]),
+  );
   expect(primaries()).toHaveLength(1);
   await press('button', t.booking.courseChange.changeDays);
   expect(await screen.findByText(t.booking.courseChange.changeHint)).toBeTruthy(); // the change flow

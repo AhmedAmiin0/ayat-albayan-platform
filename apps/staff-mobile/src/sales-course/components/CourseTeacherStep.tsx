@@ -13,7 +13,10 @@ interface CourseTeacherStepProps {
 
 /** The course's teacher: filtered by the student's program and teacher-gender preference first. */
 export function CourseTeacherStep({ student, onPick, transfer }: CourseTeacherStepProps) {
-  const [filter, setFilter] = useState({ program: student.program, gender: student.teacher_gender_pref });
+  const [filter, setFilter] = useState({
+    program: student.program,
+    gender: student.teacher_gender_pref,
+  });
   return (
     <View style={{ gap: 12 }}>
       {transfer ? <Button variant="secondary" label={t.salesMoney.stepTransfer} onPress={transfer} /> : null}

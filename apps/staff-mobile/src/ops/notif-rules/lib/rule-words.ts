@@ -79,4 +79,5 @@ export function ruleErrorText(error: unknown): string {
 }
 
 /** True when the API asked for the typed word (428 confirmation_required). */
-export const needsTypedWord = (error: unknown): boolean => error instanceof ApiError && error.status === 428;
+export const needsTypedWord = (error: unknown): boolean =>
+  error instanceof ApiError && error.status === 428;

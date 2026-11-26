@@ -88,20 +88,20 @@ test('send: the signed upload, then the file under the same clientRequestId, no 
 
 test('refused before any request: too large (an image over Meta’s 5 MB) or the wrong type', async () => {
   const big = { ...pdf, mime: 'image/jpeg', size: 6 * MB };
-  await expect(sendChatFile({ phone: PHONE, file: big, id: ID, maxBytes: 10 * MB })).rejects.toEqual(
-    new ChatFileError('file_too_large'),
-  );
+  await expect(
+    sendChatFile({ phone: PHONE, file: big, id: ID, maxBytes: 10 * MB }),
+  ).rejects.toEqual(new ChatFileError('file_too_large'));
   const webp = { ...pdf, mime: 'image/webp' };
-  await expect(sendChatFile({ phone: PHONE, file: webp, id: ID, maxBytes: 10 * MB })).rejects.toEqual(
-    new ChatFileError('file_type'),
-  );
+  await expect(
+    sendChatFile({ phone: PHONE, file: webp, id: ID, maxBytes: 10 * MB }),
+  ).rejects.toEqual(new ChatFileError('file_type'));
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 
 test('a PDF follows the academy’s own limit', async () => {
-  await expect(sendChatFile({ phone: PHONE, file: { ...pdf, size: 3 * MB }, id: ID, maxBytes: 2 * MB })).rejects.toEqual(
-    new ChatFileError('file_too_large'),
-  );
+  await expect(
+    sendChatFile({ phone: PHONE, file: { ...pdf, size: 3 * MB }, id: ID, maxBytes: 2 * MB }),
+  ).rejects.toEqual(new ChatFileError('file_too_large'));
 });
 
 test('Storage refusing the bytes is file_upload, and the file is never sent', async () => {

@@ -99,13 +99,18 @@ export function historyLines(entry: SalesHistoryEntry, tz: string): HistoryLines
   const dates = [fill(h.starts, { date: ltr(entry.starts_on) })];
   if (entry.renews_on) dates.push(fill(h.renews, { date: ltr(entry.renews_on) }));
   if (entry.ended_at) dates.push(fill(h.ended, { date: ltr(viewerDate(entry.ended_at, tz)) }));
-  const used = fill(h.used, { used: String(entry.lessons_used), total: String(entry.lessons_total) });
+  const used = fill(h.used, {
+    used: String(entry.lessons_used),
+    total: String(entry.lessons_total),
+  });
   return {
     heading: `${packageLabel(entry.package)} · ${statusLabel(entry.status)}`,
     dates,
     lessons: `${used} · ${fill(h.remaining, { n: String(entry.lessons_remaining) })}`,
     changes: entry.status_changes.map((c) => {
-      const what = c.from ? fill(h.changed, { from: statusLabel(c.from), to: statusLabel(c.to) }) : fill(h.created, { to: statusLabel(c.to) });
+      const what = c.from
+        ? fill(h.changed, { from: statusLabel(c.from), to: statusLabel(c.to) })
+        : fill(h.created, { to: statusLabel(c.to) });
       return `${ltr(viewerDate(c.at, tz))} — ${what}`;
     }),
     payments: entry.payments.map((p) => `${ltr(viewerDate(p.paid_at, tz))} — ${t.enums.paymentKind[p.kind]} — ${money(p.amount, p.currency)}`),

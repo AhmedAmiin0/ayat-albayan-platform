@@ -41,7 +41,12 @@ const teacher: ThreadView = {
 };
 const failedSend: ThreadView = { ...thread, phone_e164: '+966552147732', display_name: 'أم نور', last_status: 'failed' };
 
-const threadsPage = (items: ThreadView[]) => ({ items, total: items.length, page: 1, pageSize: 25 });
+const threadsPage = (items: ThreadView[]) => ({
+  items,
+  total: items.length,
+  page: 1,
+  pageSize: 25,
+});
 
 beforeEach(() => {
   mockApiFetch.mockReset();

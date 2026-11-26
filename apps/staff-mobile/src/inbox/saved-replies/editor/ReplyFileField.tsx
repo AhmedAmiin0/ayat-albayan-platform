@@ -44,11 +44,15 @@ export function ReplyFileField({ file, onChange, onBusy }: ReplyFileFieldProps) 
   };
   return (
     <View style={{ gap: 6 }}>
-      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, color: color.ink2 }}>{t.savedReplies.attachment}</AppText>
+      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, color: color.ink2 }}>
+        {t.savedReplies.attachment}
+      </AppText>
       {file ? (
         <SavedReplyChip file={file} onRemove={() => onChange(null)} />
       ) : busy ? (
-        <AppText style={{ fontSize: type.size.sm, color: color.ink2 }}>{t.savedReplies.attachUploading}</AppText>
+        <AppText style={{ fontSize: type.size.sm, color: color.ink2 }}>
+          {t.savedReplies.attachUploading}
+        </AppText>
       ) : (
         <ButtonRow>
           <Button variant="secondary" label={t.inbox.composer.attachImage} onPress={() => void pick('image')} />

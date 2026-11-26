@@ -15,7 +15,8 @@ export const GROUP_IDS: readonly GroupId[] = [
   ...(Object.keys(OWNED_VALUE_GROUPS) as (keyof typeof OWNED_VALUE_GROUPS)[]),
 ];
 
-const isOwnedGroup = (id: GroupId): id is keyof typeof OWNED_VALUE_GROUPS => Object.hasOwn(OWNED_VALUE_GROUPS, id);
+const isOwnedGroup = (id: GroupId): id is keyof typeof OWNED_VALUE_GROUPS =>
+  Object.hasOwn(OWNED_VALUE_GROUPS, id);
 
 /** The keys one group's table shows, in list order. */
 export function groupKeys(id: GroupId): readonly SettingKey[] {

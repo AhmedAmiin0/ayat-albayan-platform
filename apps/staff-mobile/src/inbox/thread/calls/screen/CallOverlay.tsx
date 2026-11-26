@@ -35,12 +35,22 @@ function hostContent(p: CallOverlayProps): { body: ReactNode; back: () => void }
       toggleSpeaker: () => store.toggleSpeaker(),
       minimise: () => store.setMinimised(true),
     };
-    return { body: <CallScreen session={session} row={p.s.row} phase={phase} actions={actions} />, back: actions.minimise };
+    return {
+      body: <CallScreen session={session} row={p.s.row} phase={phase} actions={actions} />,
+      back: actions.minimise,
+    };
   }
   if (!incoming || session) return null;
   const caller = callerOf(incoming, p.showsPhone);
   const accept = () => store.accept(incoming, caller);
-  const body = <IncomingCall name={caller} phone={incoming.phone_e164} onAccept={accept} onDecline={() => store.reject(incoming)} />;
+  const body = (
+    <IncomingCall
+      name={caller}
+      phone={incoming.phone_e164}
+      onAccept={accept}
+      onDecline={() => store.reject(incoming)}
+    />
+  );
   return { body, back: () => p.onSilence(incoming.id) };
 }
 
@@ -58,8 +68,21 @@ export function CallOverlay(p: CallOverlayProps) {
         {host?.body}
         {host ? p.notice : null}
       </Modal>
-      {session?.minimised && phase ? <CallBar session={session} row={p.s.row} phase={phase} onExpand={() => store.setMinimised(false)} /> : null}
-      {p.ask && !host ? <PermissionDialog ask={p.ask} onClose={() => p.onAsk('closed')} onSent={() => p.onAsk('sent')} /> : null}
+      {session?.minimised && phase ? (
+        <CallBar
+          session={session}
+          row={p.s.row}
+          phase={phase}
+          onExpand={() => store.setMinimised(false)}
+        />
+      ) : null}
+      {p.ask && !host ? (
+        <PermissionDialog
+          ask={p.ask}
+          onClose={() => p.onAsk('closed')}
+          onSent={() => p.onAsk('sent')}
+        />
+      ) : null}
       {host ? null : p.notice}
     </>
   );

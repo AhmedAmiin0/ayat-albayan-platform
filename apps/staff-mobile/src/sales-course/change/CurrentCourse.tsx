@@ -22,7 +22,12 @@ export function CurrentCourse({ course, onChange, secondary, hideDays }: Current
   const tz = useViewerTz();
   const viewer = { tz, cycle };
   const { color } = useTheme();
-  const text = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
+  const text = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.body,
+    lineHeight: type.lineHeight(type.size.body),
+    color: color.ink,
+  };
   const texts = t.booking.courseChange;
   return (
     <View style={{ gap: 12 }}>

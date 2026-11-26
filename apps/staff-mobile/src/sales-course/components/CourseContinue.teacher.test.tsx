@@ -66,7 +66,13 @@ test('the teacher list failed: the error with a retry, never «unavailable»; th
   expect(screen.queryByText(t.common.error)).toBeNull();
 });
 
-const teacher = { bookable: true, pending: false, failed: false, unavailable: false, refetch: jest.fn() };
+const teacher = {
+  bookable: true,
+  pending: false,
+  failed: false,
+  unavailable: false,
+  refetch: jest.fn(),
+};
 const adjustHint = async (days: BookedCourse['days'], adjustTo: number) => {
   const previous = bookedCourse({ days, perWeek: days.length });
   const props = { previous, opensOn: '2026-10-11', teacher, adjustTo, onSame: jest.fn(), onOther: jest.fn() };

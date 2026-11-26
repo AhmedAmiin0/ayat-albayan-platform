@@ -24,7 +24,9 @@ const box = (name: string) => screen.getByRole('checkbox', { name });
 
 async function openSheet() {
   const threads = () => detail([inbound], { lists: [{ id: PAID.id, name: PAID.name }] });
-  mockApiFetch.mockImplementation((p: string) => answer({ me: withLists, lists: mockLists, threads })(p));
+  mockApiFetch.mockImplementation((p: string) =>
+    answer({ me: withLists, lists: mockLists, threads })(p),
+  );
   await renderWithQuery(<ThreadScreen />);
   await screen.findByText(inbound.body ?? '');
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.chatMenu }));

@@ -35,15 +35,21 @@ export function childChip(sub: ThreadSubscriptionView | null): Chip | null {
 /** An expired package shows only its name. */
 export function packageText(sub: ThreadSubscriptionView | null): string {
   if (!sub) return t.subscriptions.empty;
-  const name = sub.package_size ? t.enums.packageSize[sub.package_size] : t.pricing.packages.custom.name;
+  const name = sub.package_size
+    ? t.enums.packageSize[sub.package_size]
+    : t.pricing.packages.custom.name;
   if (sub.status === 'expired') return name;
-  const { remainingLabel } = packageProgress(sub.lessons_used, sub.lessons_total, { forms: t.subscriptions.progress });
+  const { remainingLabel } = packageProgress(sub.lessons_used, sub.lessons_total, {
+    forms: t.subscriptions.progress,
+  });
   return [name, remainingLabel].filter(Boolean).join(' · ');
 }
 
 /** Null unless the newest package owes money; a partial payment says how much came. */
 export function dueLine(sub: ThreadSubscriptionView | null): string | null {
-  const part = sub ? partPaidLine({ paid: sub.paid_amount, price: sub.price, currency: sub.currency }) : null;
+  const part = sub
+    ? partPaidLine({ paid: sub.paid_amount, price: sub.price, currency: sub.currency })
+    : null;
   if (part) return part;
   return sub && sub.due_amount > 0 ? s().due.replace('{amount}', money(sub.due_amount, sub.currency)) : null;
 }
@@ -85,7 +91,10 @@ export function subscribeAction({ people, phone, thread }: ActionInput): Subscri
   return { label: s().subscribe, href: { pathname: '/inbox/book', params } };
 }
 
-function guardianAction(students: readonly ThreadStudentView[], phone: string): SubscribeAction | null {
+function guardianAction(
+  students: readonly ThreadStudentView[],
+  phone: string,
+): SubscribeAction | null {
   const open = students.filter((st) => !running(st));
   const kinds = (open.length > 0 ? open : students).map((child) => {
     const renew = subscribeKind(child.subscription) === 'renew';
