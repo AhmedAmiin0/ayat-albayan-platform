@@ -8,6 +8,7 @@ export * from './core/auth';
 export * from './people/users';
 export * from './people/family-auth';
 export * from './people/phone-countries';
+export * from './finance/invoices';
 export * from './finance/payments';
 export * from './finance/quote-custom';
 export * from './finance/price-list';

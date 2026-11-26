@@ -1,12 +1,9 @@
-import type { SignedDownload, SignedUpload } from '@ab/shared';
+import { invoiceCalls } from '@ab/client-core';
+import type { SignedUpload } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import type {
-  InvoiceView,
-  MakeupCandidate,
-  ThreadMediaItem,
-} from '@/features/teaching/booking/draft/contract';
+import type { MakeupCandidate, ThreadMediaItem } from '@/features/teaching/booking/draft/contract';
 import { invoiceMime } from './invoice-file';
 import {
   bookingKeys,
@@ -68,15 +65,15 @@ export const makeupCandidatesQuery = (studentId: string) =>
       ),
   });
 
+const invoices = invoiceCalls({ apiFetch, apiSend });
+
 /** GET /invoices?ruleId= | ?studentId= (admin only). */
-export const invoicesQuery = (f: { ruleId: string } | { studentId: string }) => {
-  const params = new URLSearchParams(f);
-  return queryOptions({
-    queryKey: invoiceKeys.list(params.toString()),
-    queryFn: () => apiFetch<InvoiceView[]>(`/invoices?${params}`),
+export const invoicesQuery = (f: { ruleId: string } | { studentId: string }) =>
+  queryOptions({
+    queryKey: invoiceKeys.list(new URLSearchParams(f).toString()),
+    queryFn: () => invoices.list(f),
     retry: false,
   });
-};
 
 /** GET /invoices/:id/download — a 1-hour signed URL. */
-export const invoiceDownload = (id: string) => apiFetch<SignedDownload>(`/invoices/${id}/download`);
+export const invoiceDownload = invoices.download;

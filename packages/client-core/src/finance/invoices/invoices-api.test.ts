@@ -50,6 +50,6 @@ describe('invoice calls (R-PAY-03)', () => {
     const { client } = clientAnswering([{ ...invoice, kind: 'trial' }]);
     const error = await invoiceCalls(client).list({ ruleId: RULE }).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(ApiError);
-    expect(error).toMatchObject({ code: 'bad_response' });
+    expect(error).toMatchObject({ body: { code: 'bad_response', path: '/invoices' } });
   });
 });

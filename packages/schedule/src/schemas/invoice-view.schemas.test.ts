@@ -15,7 +15,8 @@ const view = {
 describe('invoiceViewSchema (GET /invoices, R-PAY-03)', () => {
   it('reads a booking invoice, with or without its payment', () => {
     expect(invoiceViewSchema.parse(view)).toEqual(view);
-    expect(invoiceViewSchema.parse({ ...view, payment_id: null })).toEqual({ ...view, payment_id: null });
+    const paid = { ...view, payment_id: null };
+    expect(invoiceViewSchema.parse(paid)).toEqual(paid);
   });
 
   it('drops the storage path, which never goes to a client', () => {

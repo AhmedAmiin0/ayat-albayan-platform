@@ -1312,18 +1312,7 @@
       "count": 1
     }
   },
-  "src/modules/finance/invoices/invoices.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 3
-    }
-  },
   "src/modules/finance/invoices/invoices.dto.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     }

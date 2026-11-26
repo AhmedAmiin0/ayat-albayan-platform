@@ -49,6 +49,7 @@ export * from './people/users';
 export * from './people/account';
 export * from './people/presence';
 export * from './people/test-accounts';
+export * from './finance/invoices';
 export * from './notifications';
 export * from './messaging/numbers';
 export * from './reports/stored-path';
