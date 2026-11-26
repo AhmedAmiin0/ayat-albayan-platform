@@ -1,6 +1,8 @@
 // docs/62 §4: page queries come from pageQuery and page windows from pageWindow, both in core's
 // page unit; nowhere else writes the page math by hand.
-const PAGE_UNIT = '/packages/core/src/schemas/page/';
+// Matched below the workspace folder: the rule compares a linted file's name and never reads
+// core's files, so it adds no package edge.
+const PAGE_UNIT = '/core/src/schemas/page/';
 const READS_PAGE_SIZE = /\bpageSize\b/;
 
 const propName = (node) => node?.name ?? node?.value;
