@@ -1,5 +1,6 @@
 import type { RouteMethod, RouteSpec } from '@ab/core';
 import { applyDecorators, Delete, Get, Patch, Post, Put } from '@nestjs/common';
+import { declareReturns } from '@/common/http/returns';
 
 const METHODS: Record<RouteMethod, (path: string) => MethodDecorator> = {
   GET: Get,
@@ -18,11 +19,13 @@ export function routeOf(handler: unknown): RouteSpec | undefined {
 
 /**
  * Serves a shared route object (docs/62 part 3 §2): its method and full path, under a
- * `@Controller()` without a prefix. Permissions, guards and @HttpCode stay on the handler.
+ * `@Controller()` without a prefix, and its JSON answer as @Returns does. Permissions, guards and
+ * @HttpCode stay on the handler.
  */
 export function Route(route: RouteSpec): MethodDecorator {
   const remember: MethodDecorator = (_target, _key, descriptor) => {
     ROUTES.set(descriptor.value, route);
+    declareReturns(descriptor.value, route.response);
   };
   return applyDecorators(METHODS[route.method](route.path), remember);
 }

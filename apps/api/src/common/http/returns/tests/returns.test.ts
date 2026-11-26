@@ -41,7 +41,9 @@ class ReturnsProbeController {
 
   @Get('none')
   @HttpCode(204)
-  none(): void {}
+  none(): undefined {
+    return undefined;
+  }
 }
 
 @Module({

@@ -9,7 +9,7 @@ const view = z.object({
   status: z.enum(['held', 'missed']),
 });
 /** The same schema, open to any input, so a test can hand it a row that does not fit. */
-const anyRow: z.ZodType<z.output<typeof view>, unknown> = view;
+const anyRow: z.ZodType<z.output<typeof view>> = view;
 
 const thrown = (run: () => unknown): unknown => {
   try {
