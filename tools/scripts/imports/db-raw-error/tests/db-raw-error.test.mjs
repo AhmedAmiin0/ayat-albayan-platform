@@ -54,3 +54,9 @@ test('a second run finds nothing', () => {
   assert.equal(twice.text, once.text);
   assert.equal(twice.sites, 0);
 });
+
+test('the new import goes after a multi-line import, never inside it', () => {
+  const head = `${DB}import {\n  MESSAGE_SELECT,\n  type Row,\n} from '@/modules/x';\n`;
+  const out = rewriteText(file(head, ['  if (error) throw new Error(`r failed: ${error.message}`);']));
+  assert.match(out.text, /\} from '@\/modules\/x';\nimport \{ pgError \} from '@\/common\/db\/errors';\n/);
+});
