@@ -23,25 +23,14 @@ export function ResetPasswordDialog({ user, onBack, onClose }: ResetPasswordDial
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | undefined>();
   const [issued, setIssued] = useState<{ credential: IssuedCredential | null } | null>(null);
-  const reset = useMutation({
-    mutationFn: resetPassword,
-    gcTime: 0,
-    onSuccess: (r) => setIssued({ credential: r.credential }),
-  });
+  const reset = useMutation({ mutationFn: resetPassword, gcTime: 0, onSuccess: (r) => setIssued({ credential: r.credential }) });
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const problem = mode === 'set' ? passwordError(password) : undefined;
     setError(problem);
     if (!problem) reset.mutate({ id: user.id, body: mode === 'set' ? { credential: mode, password } : { credential: mode } });
   };
-  if (issued)
-    return (
-      <CredentialResult
-        title={t.users.result.resetTitle}
-        credential={issued.credential}
-        onClose={onClose}
-      />
-    );
+  if (issued) return <CredentialResult title={t.users.result.resetTitle} credential={issued.credential} onClose={onClose} />;
   return (
     <Dialog
       title={R.title}

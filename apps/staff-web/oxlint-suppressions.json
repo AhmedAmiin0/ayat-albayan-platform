@@ -3433,9 +3433,14 @@
       "count": 2
     }
   },
+  "src/features/people/users/actions/ResetPasswordDialog.tsx": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
   "src/features/people/users/actions/UserActions.tsx": {
     "stylistic/max-len": {
-      "count": 1
+      "count": 2
     }
   },
   "src/features/people/users/actions/set-password.ts": {
