@@ -1,6 +1,6 @@
 import { quote } from '@ab/money';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../core/http';
+import { ApiError, type ApiClient } from '../../../core/http';
 import { pricingCalls } from './pricing-api';
 
 const sar = quote({ tier: 'standard', duration: 45, country: 'SA', students: 1, discount: 0 });
