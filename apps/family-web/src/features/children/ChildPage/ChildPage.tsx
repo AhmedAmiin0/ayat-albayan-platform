@@ -1,16 +1,8 @@
-import type { ChildTab } from '@ab/client-core';
-import type { PortalHome } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { EmptyState, buttonVariants, t } from '@ab/web-kit';
 import { ChildBody } from '@/features/children/ChildBody';
 import { ChildHead } from '@/features/children/ChildHead';
-
-interface Props {
-  home: PortalHome;
-  studentId: string;
-  tab?: ChildTab;
-  onTab: (tab: ChildTab) => void;
-}
+import type { Props } from './ChildPage.types';
 
 /** A guardian's child (/children/<id>): back to every child, the name, then the tabs. */
 export function ChildPage({ home, studentId, tab, onTab }: Props) {

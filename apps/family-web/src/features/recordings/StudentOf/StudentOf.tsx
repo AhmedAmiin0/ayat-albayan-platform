@@ -1,13 +1,7 @@
-import type { PortalStudent } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import type { ReactNode } from 'react';
 import { EmptyState, buttonVariants, t } from '@ab/web-kit';
 import { WithHome } from '@/features/shell';
-
-interface Props {
-  studentId: string;
-  children: (student: PortalStudent) => ReactNode;
-}
+import type { Props } from './StudentOf.types';
 
 /** Another family's student shows not-found; the API would refuse it anyway (404). */
 export function StudentOf({ studentId, children }: Props) {
