@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { z } from 'zod';
 import { RateLimitRepo } from '@/common/http/rate-limit.repo';
-
-/** Which public route: GET /join/:token or GET /report-link/legacy/*. */
-type LinkRoute = 'join' | 'legacy';
+import { linkRouteSchema, type LinkRoute } from './lesson-links.schemas';
 
 /**
  * Per IP and minute. The legacy bridge is tighter: its old Apps Script shape is not signed (a
  * student code and a teacher's name), so guessing is slowed; a teacher opens it once or twice.
  */
-const PER_IP: Readonly<Record<LinkRoute, number>> = { join: 60, legacy: 10 };
+const PER_IP = z.record(linkRouteSchema, z.number()).readonly().decode({ join: 60, legacy: 10 });
 
 /**
  * The limit of the teacher's public link routes (like GET /r/:code): PER_IP a minute per IP and

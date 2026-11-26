@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import type { ErrorTable } from '@/common/infra/http/errors';
 import type { FetchLike, HttpFailure } from '@/common/infra/http/failure';
 import { createHttp } from '@/common/infra/http/http';
@@ -37,7 +38,10 @@ type Redirect = NonNullable<RequestInit['redirect']>;
  * docs/36 h8b (2): a keyed Kapso call never follows a redirect (undici strips `Authorization` on
  * a cross-origin redirect but keeps `x-api-key`); a 3xx fails as a network error. Meta follows.
  */
-const KEYED_REDIRECT = { kapso: 'error', meta: 'follow' } satisfies Record<Provider, Redirect>;
+const KEYED_REDIRECT = z
+  .record(z.enum(['kapso', 'meta']), z.enum(['error', 'follow']))
+  .readonly()
+  .decode({ kapso: 'error', meta: 'follow' });
 
 type KeyEntries = (env: GraphEnv) => Partial<ErrorTable<WaError>>;
 

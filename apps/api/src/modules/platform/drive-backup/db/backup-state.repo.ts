@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
-import { SKIP_WHYS } from '@/modules/platform/drive-backup/run/summary';
+import { skipWhySchema } from '@/modules/platform/drive-backup/run/skip.schemas';
 import { fail, RECENT_COLUMNS, recentRowSchema, type RecentRow } from './archive-row.schema';
 
-const skippedSchema = z.object({ id: z.string(), size: z.number(), reason: z.enum(SKIP_WHYS) });
+const skippedSchema = z.object({ id: z.string(), size: z.number(), reason: skipWhySchema });
 
 const stateSchema = z.object({
   folder_id: z.string().nullable(),

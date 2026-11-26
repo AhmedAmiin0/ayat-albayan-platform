@@ -1,11 +1,9 @@
 import { objectId } from '@/modules/platform/drive-backup/plan/parts';
 import type { ListedObject } from '@/modules/platform/drive-backup/source/backup-source.port';
 import type { PartDone } from './one-part';
-import type { SkipReason } from './part-stream';
+import { z } from 'zod';
+import { skipReasonSchema, skipWhySchema, type SkipWhy } from './skip.schemas';
 
-/** Why an object was not backed up tonight (it is tried again every night). */
-export const SKIP_WHYS = ['too_large', 'read_failed', 'changed', 'upload_failed'] as const;
-export type SkipWhy = (typeof SKIP_WHYS)[number];
 
 /** A skipped object, named in the admin status and the alert. */
 export interface SkippedItem {
@@ -46,11 +44,11 @@ export const tooLargeItems = (list: readonly ListedObject[]): SkippedItem[] =>
   list.map((o) => item(o, 'too_large'));
 
 /** What a skip inside a part means for the admins: a vanished object is not named (it is gone). */
-const NAMED: Record<SkipReason, SkipWhy | null> = {
+const NAMED = z.record(skipReasonSchema, skipWhySchema.nullable()).readonly().decode({
   missing: null,
   read_failed: 'read_failed',
   changed: 'changed',
-};
+});
 
 export const added = (sum: RunSummary, r: PartDone): RunSummary => ({
   ...sum,

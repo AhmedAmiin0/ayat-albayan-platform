@@ -1,4 +1,6 @@
-import type { ShortLinkOutcome } from '@ab/shared';
+import { shortLinkOutcomeSchema, type ShortLinkOutcome } from '@ab/shared';
+import { z } from 'zod';
+import { own } from '@/common/infra/own-value';
 
 /** What the gate knows about one visitor of one managed link (docs/19 «Decision table»). */
 export interface GateFacts {
@@ -25,9 +27,10 @@ export const decide = (facts: GateFacts): ShortLinkOutcome =>
   GATE_RULES.find(([, hit]) => hit(facts))?.[0] ?? 'open';
 
 /** short_link_record_visit's answer → the outcome (a race the read missed: gone or full). */
-const RECORDED: Record<string, ShortLinkOutcome> = {
+const RECORDED = z.record(z.string(), shortLinkOutcomeSchema).readonly().decode({
   recorded: 'open',
   limit_reached: 'limit_reached',
   gone: 'gone',
-};
-export const outcomeOfRecord = (answer: string): ShortLinkOutcome => RECORDED[answer] ?? 'gone';
+});
+export const outcomeOfRecord = (answer: string): ShortLinkOutcome =>
+  own(RECORDED, answer) ?? 'gone';

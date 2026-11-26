@@ -4,7 +4,9 @@ import {
   HttpException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { z } from 'zod';
 import { WaError } from '@/modules/messaging/whatsapp';
+import { own } from '@/common/infra/own-value';
 
 // The refusals of POST /settings/integrations/crm-webhook: a code each (the web words them), never
 // a CRM body or a secret. 409 = this server is not set up for it; 502 = the CRM refused or
@@ -31,16 +33,16 @@ export const CRM_WEBHOOK_ERRORS = {
 
 type CrmWebhookErrorCode = keyof typeof CRM_WEBHOOK_ERRORS;
 
-const BY_STATUS: Partial<Record<number, CrmWebhookErrorCode>> = {
-  401: 'crm_key_refused',
-  403: 'crm_scope_missing',
-};
+const BY_STATUS = z
+  .record(z.string(), z.enum(['crm_key_refused', 'crm_scope_missing']))
+  .readonly()
+  .decode({ 401: 'crm_key_refused', 403: 'crm_scope_missing' });
 
 /** A CRM call's failure → our refusal; one of ours passes through as it is. */
 function crmRefusal(e: unknown): HttpException {
   if (e instanceof HttpException) return e;
   const status = e instanceof WaError ? e.info.status : 0;
-  return CRM_WEBHOOK_ERRORS[BY_STATUS[status] ?? 'crm_failed']();
+  return CRM_WEBHOOK_ERRORS[own(BY_STATUS, String(status)) ?? 'crm_failed']();
 }
 
 /** Runs one CRM step; its failure becomes a refusal (crmRefusal). */
