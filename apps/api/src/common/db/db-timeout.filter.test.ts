@@ -66,10 +66,14 @@ describe('DbTimeoutFilter (a stalled database call → 503, everything else as b
     expect(res.headers['retry-after']).toBe('5');
   });
 
-  it('any other error is Nest’s usual 500', async () => {
+  it('any other error is Nest’s usual 500 with its code', async () => {
     const res = await app.inject({ method: 'GET', url: '/t/other' });
     expect(res.statusCode).toBe(500);
-    expect(res.json()).toEqual({ statusCode: 500, message: 'Internal server error' });
+    expect(res.json()).toEqual({
+      statusCode: 500,
+      message: 'Internal server error',
+      code: 'internal_server_error',
+    });
   });
 
   it('an HttpException keeps its status and body', async () => {
