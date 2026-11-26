@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import type { UserRole } from './roles';
 import { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data';
 import { PORTAL_FIXED_GRANTS } from './catalog.portal';
@@ -11,12 +12,13 @@ const ROWS: readonly Row[] = PERMISSION_ROWS;
 
 /** Every permission key, catalog order. */
 export const PERMISSIONS: readonly Permission[] = ROWS.map((r) => r.key);
+export const permissionSchema = z.enum(PERMISSIONS);
 
 /** What a role may be granted in the matrix: everything but the `self.*` scope keys. */
 export const GRANTABLE_PERMISSIONS: readonly Permission[] = ROWS.filter((r) => r.area !== 'self').map((r) => r.key);
 
 export function isPermission(value: unknown): value is Permission {
-  return PERMISSIONS.some((p) => p === value);
+  return permissionSchema.validate(value);
 }
 
 export function isGrantable(value: unknown): value is Permission {
