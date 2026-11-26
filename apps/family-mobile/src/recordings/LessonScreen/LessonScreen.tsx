@@ -5,16 +5,10 @@ import { useLessonScreen } from './use-lesson-screen';
 
 /** Recording, report and staff files show only once the report was sent. */
 export function LessonScreen() {
-  const { params, page, student, title, range } = useLessonScreen();
+  const { params, page, title, subtitle } = useLessonScreen();
   return (
     <FamilyPage
-      header={
-        <FamilyHeader
-          title={title}
-          subtitle={range && [student?.name, range].filter(Boolean).join(' · ')}
-          back
-        />
-      }
+      header={<FamilyHeader title={title} subtitle={subtitle} back />}
       onRefresh={() => page.refetch()}
     >
       <LoadState query={page}>

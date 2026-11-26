@@ -4,6 +4,7 @@ import { MonthSection } from '@/ui';
 import { RecordingRow } from '@/recordings/RecordingRow';
 import type { RecordingsListProps } from './RecordingsList.types';
 import { Empty } from './Empty';
+import { firstPerLesson } from './recordings-list.helpers';
 
 /**
  * The recordings by month, newest first, under the hint; one row per lesson. With none yet, only
@@ -12,9 +13,7 @@ import { Empty } from './Empty';
 export function RecordingsList({ data, student }: RecordingsListProps) {
   const { color } = useTheme();
   const parts = partsByLesson(data.items);
-  const firsts = data.items.filter(
-    (r, i, all) => all.findIndex((x) => x.lesson_id === r.lesson_id) === i,
-  );
+  const firsts = firstPerLesson(data.items);
   if (firsts.length === 0) return <Empty name={student.name} />;
   return (
     <>

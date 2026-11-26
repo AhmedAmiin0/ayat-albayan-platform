@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { lessonPage, SARA } from '@/recordings/recordings.fixtures';
-import { LessonScreen } from './LessonScreen';
+import { LessonScreen } from '@/recordings/LessonScreen';
 
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), push: jest.fn() },
@@ -37,6 +37,7 @@ test('the recording plays in the app; the report PDF and the files are listed', 
   expect(screen.getByText(F.reportPdf)).toBeTruthy();
   expect(screen.getByText(F.header.replace('{n}', '3'))).toBeTruthy();
   expect(screen.getByText(/^حلقة الأحد،? 15 نوفمبر$/)).toBeTruthy();
+  expect(screen.getByText(/^سارة · .+$/)).toBeTruthy();
   expect(screen.getByText(F.kinds.voice_note)).toBeTruthy();
   expect(await screen.findByRole('button', { name: t.audioPlayer.play })).toBeTruthy();
   expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/recordings/A/url');
@@ -54,6 +55,7 @@ test('a picture opens in the phone’s viewer from a fresh link', async () => {
   await renderWithQuery(<LessonScreen />, freshQueryClient());
   await fireEvent.press(await screen.findByText('صفحة الواجب'));
   await waitFor(() =>
-    expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lesson-files/f1/url'));
+    expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lesson-files/f1/url'),
+  );
   expect(Linking.openURL).toHaveBeenCalledWith('https://files.example/x');
 });
