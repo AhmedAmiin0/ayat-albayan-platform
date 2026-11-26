@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { meQuery } from '@ab/web-kit/auth/me';
+import { meQuery } from '@ab/web-kit';
 import { PROFILE_KEY } from './api';
 import { accountErrors, type AccountErrors } from './errors';
 

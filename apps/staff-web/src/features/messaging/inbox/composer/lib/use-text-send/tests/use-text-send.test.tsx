@@ -4,7 +4,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SEND_UNCONFIRMED } from '@ab/client-core';
-import { ApiError } from '@ab/web-kit/lib/http/api';
+import { ApiError } from '@ab/web-kit';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { detail, message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';

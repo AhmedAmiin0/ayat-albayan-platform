@@ -4,12 +4,10 @@ import { tzChoices, tzOptionLabel } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
 import type { FilterOption } from '@/components/data-table/data-table-features';
 import { SelectFilterField } from '@/components/table-toolbar/fields';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { tzCity, t, teacherLabel } from '@ab/web-kit';
 import { teacherOptionsQuery } from '@/features/people/students/api';
 import { selectedStatuses, setFilter, toggleStatus, type StudentsFilters } from './filters';
 import { StatusChips } from './StatusChips';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
 
 export interface StudentFiltersProps {
   value: StudentsFilters;

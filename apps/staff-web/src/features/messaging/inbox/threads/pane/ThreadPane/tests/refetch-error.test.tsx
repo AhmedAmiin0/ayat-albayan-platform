@@ -1,7 +1,6 @@
 import { screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 import { detail, message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';

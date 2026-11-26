@@ -40,8 +40,14 @@ export function skipOf(e: unknown): ForwardSkip {
 }
 
 /** 404 for a message the actor cannot read (never reveal another chat), 400 for a template or an empty row. */
-function assertForwardable(row: ThreadMessageRow | null, who: Omit<ForwardInput, 'input' | 'actorId'>): ThreadMessageRow {
-  const hidden = !row || (who.scope && !who.scope.phones.has(row.phone_e164)) || (who.sales && !visibleToSales(row));
+function assertForwardable(
+  row: ThreadMessageRow | null,
+  who: Omit<ForwardInput, 'input' | 'actorId'>,
+): ThreadMessageRow {
+  const hidden =
+    !row ||
+    (who.scope && !who.scope.phones.has(row.phone_e164)) ||
+    (who.sales && !visibleToSales(row));
   if (hidden) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
   if (nothingToCopy(row)) throw waHttpError('not_forwardable', HttpStatus.BAD_REQUEST);
   return row;
@@ -65,16 +71,33 @@ export class ThreadForwardService {
     const source = assertForwardable(await this.queries.get(f.input.messageId), f);
     const media = source.media_mime;
     // A teacher never sends files: every target is skipped, nothing is copied.
-    const file = media && !f.scope ? await this.files.copy(source, { actorId: f.actorId, requestId: f.input.clientRequestId }) : null;
+    const file =
+      media && !f.scope
+        ? await this.files.copy(source, { actorId: f.actorId, requestId: f.input.clientRequestId })
+        : null;
     const results: ForwardOutcome[] = [];
     for (const phone of f.input.targets) results.push(await this.one({ f, source, phone, file }));
     return { source, results };
   }
 
-  private async one(t: { f: ForwardInput; source: ThreadMessageRow; phone: string; file: ForwardFile | null }): Promise<ForwardOutcome> {
+  private async one(t: {
+    f: ForwardInput;
+    source: ThreadMessageRow;
+    phone: string;
+    file: ForwardFile | null;
+  }): Promise<ForwardOutcome> {
     const { f, source, phone } = t;
     try {
-      const sent = await this.sendTo({ ...t, base: { phone, actorId: f.actorId, scope: f.scope, sales: f.sales, forwardedFrom: source.id } });
+      const sent = await this.sendTo({
+        ...t,
+        base: {
+          phone,
+          actorId: f.actorId,
+          scope: f.scope,
+          sales: f.sales,
+          forwardedFrom: source.id,
+        },
+      });
       // The outbox answers a driver refusal as a `failed` row: that family never got the copy.
       if (sent.view.status === 'failed') return { phone, sent: false, reason: 'send_failed' };
       return { phone, sent: true, message_id: sent.view.id, replayed: sent.replayed };
@@ -84,7 +107,12 @@ export class ThreadForwardService {
     }
   }
 
-  private sendTo(t: { f: ForwardInput; source: ThreadMessageRow; file: ForwardFile | null; base: SendBase }): Promise<Sent> {
+  private sendTo(t: {
+    f: ForwardInput;
+    source: ThreadMessageRow;
+    file: ForwardFile | null;
+    base: SendBase;
+  }): Promise<Sent> {
     const clientRequestId = t.f.input.clientRequestId;
     if (t.source.media_mime) {
       if (!t.file) throw waHttpError('files_forbidden', HttpStatus.FORBIDDEN);
@@ -94,4 +122,10 @@ export class ThreadForwardService {
   }
 }
 
-type SendBase = { phone: string; actorId: string; scope: TeacherScope | null; sales: SalesScope | null; forwardedFrom: string };
+type SendBase = {
+  phone: string;
+  actorId: string;
+  scope: TeacherScope | null;
+  sales: SalesScope | null;
+  forwardedFrom: string;
+};

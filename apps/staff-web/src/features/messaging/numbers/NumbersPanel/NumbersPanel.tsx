@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Section } from '@/components/settings/Section';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { Button, t, usePermissions } from '@ab/web-kit';
 import { ImportButton } from '@/features/messaging/numbers/import/ImportButton';
 import { NumberFormDialog } from '@/features/messaging/numbers/form/NumberFormDialog';
 import { numbersQuery, parityQuery } from '@/features/messaging/numbers/numbers-api';

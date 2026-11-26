@@ -8,7 +8,11 @@ import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 // docs/19 «crm driver»: the CRM's answers that are about the line, not the message. No network.
 
 const NOW = new Date('2026-10-25T09:00:00Z');
-const answer = (status: number, body: unknown) => ({ status, text: JSON.stringify(body), retryAfter: null });
+const answer = (status: number, body: unknown) => ({
+  status,
+  text: JSON.stringify(body),
+  retryAfter: null,
+});
 
 describe('crmErrorFrom: a line-level fault', () => {
   it('400 whatsapp_not_configured (the CRM lost its WhatsApp): held like a refused key, rows stay queued', () => {

@@ -7,7 +7,9 @@ const PUBLIC = [{ key: 'promo', value: { text: 'hi' }, is_public: true }];
 
 /** A db whose every chain answers `data` (custom_config reads and writes). */
 function db(data: () => unknown) {
-  const chain: Record<string, unknown> = { then: (resolve: (r: unknown) => unknown) => resolve({ data: data(), error: null }) };
+  const chain: Record<string, unknown> = {
+    then: (resolve: (r: unknown) => unknown) => resolve({ data: data(), error: null }),
+  };
   for (const m of ['select', 'eq', 'upsert', 'single', 'delete']) chain[m] = vi.fn(() => chain);
   const from = vi.fn(() => chain);
   return { db: { from } as unknown as Db, from };

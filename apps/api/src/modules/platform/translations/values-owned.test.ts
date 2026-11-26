@@ -9,7 +9,11 @@ import { assertNotValuesOwned, VALUES_HINT_KEYS } from './values-owned';
 const HINT = 'settings.hints.uploadMaxMb';
 
 function service() {
-  const q = { all: vi.fn(async () => []), upsert: vi.fn(async () => undefined), remove: vi.fn(async () => undefined) };
+  const q = {
+    all: vi.fn(async () => []),
+    upsert: vi.fn(async () => undefined),
+    remove: vi.fn(async () => undefined),
+  };
   return { q, s: new TranslationsService(q as unknown as TranslationsQueries) };
 }
 

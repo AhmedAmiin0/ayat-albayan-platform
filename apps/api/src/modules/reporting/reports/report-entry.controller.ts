@@ -36,7 +36,11 @@ export class ReportEntryController {
     @Query() query: unknown,
     @CurrentUser() user: AuthUser,
   ): Promise<StudentReportsResponse> {
-    return this.history.student({ studentId: id, page: parseOrThrow(pageQuerySchema, query), user });
+    return this.history.student({
+      studentId: id,
+      page: parseOrThrow(pageQuerySchema, query),
+      user,
+    });
   }
 
   /** R11 (R-TCH-03): started lessons still missing a submitted report. */
@@ -48,6 +52,9 @@ export class ReportEntryController {
   /** R-REP-02: newest first, with the edit window. */
   @Get('teachers/me/reports')
   mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<TeacherReportView>> {
-    return this.mineService.mine(user, { filter: parseOrThrow(teacherReportsQuerySchema, query), page: parseOrThrow(pageQuerySchema, query) });
+    return this.mineService.mine(user, {
+      filter: parseOrThrow(teacherReportsQuerySchema, query),
+      page: parseOrThrow(pageQuerySchema, query),
+    });
   }
 }

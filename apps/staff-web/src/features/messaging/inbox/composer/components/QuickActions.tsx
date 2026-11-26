@@ -1,13 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Button, buttonVariants, Icon, t } from '@ab/web-kit';
 import { usePermissions } from '@/features/people/auth';
 import { reclassifyLead } from '@/features/sales/leads/leads.api';
 import { applicantKeys, leadKeys } from '@/features/sales/keys';
 import { ReclassifyConfirm } from '@/features/sales/leads/list/ReclassifyConfirm';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { LeadStatusChange } from '@/features/messaging/inbox/lead/LeadStatusChange';

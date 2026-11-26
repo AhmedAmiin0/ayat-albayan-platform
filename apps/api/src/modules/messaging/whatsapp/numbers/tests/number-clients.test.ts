@@ -6,7 +6,8 @@ import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // docs/23c: one client per number, from that number's own config only; nothing here reaches a network.
 
-const install = (numbers = [overlayNum()]) => setNumbersOverlay({ values: {}, numberIds: {}, numbers });
+const install = (numbers = [overlayNum()]) =>
+  setNumbersOverlay({ values: {}, numberIds: {}, numbers });
 
 afterEach(() => {
   setNumbersOverlay(null);

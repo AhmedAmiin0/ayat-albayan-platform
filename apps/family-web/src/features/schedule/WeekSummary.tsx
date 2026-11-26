@@ -1,10 +1,6 @@
 import type { WeekSummary as Summary } from '@ab/client-core';
 import type { ReactNode } from 'react';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { Pill } from '@ab/web-kit/components/ui/surface/pill';
-import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Card, Pill, SectionHeader, teacherLabel, t } from '@ab/web-kit';
 
 const S = t.portal.app.schedule;
 

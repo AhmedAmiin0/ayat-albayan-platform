@@ -36,7 +36,10 @@ export function utcWindow(
   };
 }
 
-export function paymentFilter(q: z.output<typeof paymentListQuery>, tz: string = DEFAULT_TZ): PaymentFilter {
+export function paymentFilter(
+  q: z.output<typeof paymentListQuery>,
+  tz: string = DEFAULT_TZ,
+): PaymentFilter {
   const { from, to, ...rest } = q;
   return { ...rest, ...utcWindow({ from, to }, tz) };
 }

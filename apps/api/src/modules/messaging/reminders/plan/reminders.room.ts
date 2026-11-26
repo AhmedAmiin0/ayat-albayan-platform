@@ -53,7 +53,11 @@ async function saveToken(db: Db, c: RoomCandidate, hash: string): Promise<void> 
  * check-then-queue relies on the job's single flight; two API instances could each mint
  * one, and the later save would kill the link the first one queued. One instance runs today.
  */
-export async function roomLinkRows(db: Db, candidates: readonly RoomCandidate[], now: Date): Promise<QueuedMessage[]> {
+export async function roomLinkRows(
+  db: Db,
+  candidates: readonly RoomCandidate[],
+  now: Date,
+): Promise<QueuedMessage[]> {
   if (candidates.length === 0) return [];
   const done = await queuedKeys(db, candidates.map((c) => c.dedupKey));
   const rows: QueuedMessage[] = [];
@@ -62,7 +66,9 @@ export async function roomLinkRows(db: Db, candidates: readonly RoomCandidate[],
     await saveToken(db, c, hashLinkToken(token));
     const template: OutboundTemplate = { key: 'lesson_join_link', params: { '1': c.name, button: token } };
     const to = { phone: c.phone, guardianId: c.guardianId, lessonId: c.lessonId };
-    rows.push(queuedRow({ ...to, template, dedupKey: c.dedupKey, now, expiresAt: new Date(c.expiresAt) }));
+    rows.push(
+      queuedRow({ ...to, template, dedupKey: c.dedupKey, now, expiresAt: new Date(c.expiresAt) }),
+    );
   }
   return rows;
 }

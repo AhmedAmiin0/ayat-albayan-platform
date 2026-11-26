@@ -1,6 +1,6 @@
 import type { ConfigEntryConflict, SettingKey } from '@ab/settings';
 import { formatAge } from '@/features/sales/leads';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { valueText } from '@/features/platform/settings/values/lib/value-format';
 
 const c = t.settingsValues.conflict;

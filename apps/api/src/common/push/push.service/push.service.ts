@@ -119,7 +119,8 @@ export class PushService {
         url: webNotificationPath(data, profile.role),
         tag: `${target.kind}:${target.subject}`,
       };
-      if (!target.bellOnly) void this.channels.send({ profile, rowId: row.id, text: device, data, web });
+      if (!target.bellOnly)
+        void this.channels.send({ profile, rowId: row.id, text: device, data, web });
     } catch (e) {
       this.warn(`${target.kind}:${target.subject} → ${profile.id}`, e);
     }

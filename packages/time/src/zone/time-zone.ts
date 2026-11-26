@@ -1,4 +1,4 @@
-import { addHours } from 'date-fns';
+import { addHours } from 'date-fns/addHours';
 import { offsetMinutesIn } from './zoned';
 
 // Time-zone choices and DST look-ahead (rule 6: every person has a tz, picked, never typed).

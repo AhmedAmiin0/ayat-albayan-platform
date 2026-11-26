@@ -26,7 +26,10 @@ const commissionTerms = z
 const salaryTerms = z.object({ amount: moneyAmount, currency: currencyIso, startsOn: localDate });
 
 /** PUT /assistant-pay/terms/:assistantId: both parts are replaced; null clears one. */
-export const assistantTermsSchema = z.object({ commission: commissionTerms.nullable(), salary: salaryTerms.nullable() });
+export const assistantTermsSchema = z.object({
+  commission: commissionTerms.nullable(),
+  salary: salaryTerms.nullable(),
+});
 
 /** POST /assistant-pay/brought-by: one student or many (bulk), assistantId null clears it. */
 export const broughtBySchema = z.object({
@@ -37,7 +40,10 @@ export const broughtBySchema = z.object({
 });
 
 /** POST /assistant-pay/statements: builds or rebuilds the DRAFT of that month. */
-export const assistantStatementGenerateSchema = z.object({ assistantId: z.uuid(), month: monthParam });
+export const assistantStatementGenerateSchema = z.object({
+  assistantId: z.uuid(),
+  month: monthParam,
+});
 
 /** GET /assistant-pay/statements. */
 export const assistantStatementsQuery = z.object({

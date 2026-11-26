@@ -22,8 +22,14 @@ export function toCallView(row: CallRow, names: ReadonlyMap<string, string>): Ca
  * A live call for the device that runs its WebRTC: the family's offer of a ringing inbound call, or
  * WhatsApp's answer to the caller's own outbound offer. Nobody else gets either SDP.
  */
-export function toActiveView(row: CallRow, input: { names: ReadonlyMap<string, string>; userId: string }): ActiveCallView {
-  const own = row.direction === 'outbound' ? row.created_by === input.userId : row.accepted_by === input.userId || row.status === 'ringing';
+export function toActiveView(
+  row: CallRow,
+  input: { names: ReadonlyMap<string, string>; userId: string },
+): ActiveCallView {
+  const own =
+    row.direction === 'outbound'
+      ? row.created_by === input.userId
+      : row.accepted_by === input.userId || row.status === 'ringing';
   return {
     ...toCallView(row, input.names),
     offer_sdp: own && row.direction === 'inbound' ? row.offer_sdp : null,

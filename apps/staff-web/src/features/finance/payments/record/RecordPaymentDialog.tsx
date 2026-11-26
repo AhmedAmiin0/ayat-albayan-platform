@@ -1,16 +1,10 @@
 import type { PaymentKind } from '@ab/catalog';
 import { CURRENCY_ISOS, dueOf, owedFor, parseAmount } from '@ab/money';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Select } from '@ab/web-kit/components/ui/form/select';
+import { Button, Dialog, Field, FormAlert, Select, t, useUploadMaxBytes } from '@ab/web-kit';
 import type { SubscriptionView } from '@/features/finance/subscriptions/api';
 import { apiErrorText, currencySymbol, moneyText, packageName, studentLabel } from '@/features/finance/subscriptions';
 import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useUploadMaxBytes } from '@ab/web-kit/lib/settings/public-config';
 import { AttachmentsField } from '@/features/finance/payments/attachments/AttachmentsField';
 import { paidAtDay } from './pay-day';
 import { PaymentFields, type PaymentForm } from './PaymentFields';

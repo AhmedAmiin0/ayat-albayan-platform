@@ -21,8 +21,13 @@ export function calendarTeacher(summary: string): string | null {
 }
 
 /** The imported calendar id first (when discovery saw it), then an exact name match on either name. */
-export function suggestCalendar(t: TeacherNames, calendars: readonly GoogleFound[]): GoogleFound | null {
-  const byId = t.google_calendar_id ? calendars.find((c) => c.id === t.google_calendar_id) : undefined;
+export function suggestCalendar(
+  t: TeacherNames,
+  calendars: readonly GoogleFound[],
+): GoogleFound | null {
+  const byId = t.google_calendar_id
+    ? calendars.find((c) => c.id === t.google_calendar_id)
+    : undefined;
   if (byId) return byId;
   const names = [t.display_name_ar, t.display_name_en ?? ''].map(normalizeArabic).filter(Boolean);
   return calendars.find((c) => {

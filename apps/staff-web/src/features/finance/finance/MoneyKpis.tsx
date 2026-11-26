@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { earningsSummaryQuery } from '@/features/finance/payouts/api';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { receivablesQuery } from './api';
 import { KpiTile } from './kpi-tile';
 

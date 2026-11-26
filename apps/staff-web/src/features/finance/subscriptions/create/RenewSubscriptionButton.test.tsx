@@ -3,7 +3,7 @@ import { quote } from '@ab/money';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { balanceOf, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 import { RenewSubscriptionButton } from './RenewSubscriptionButton';
 

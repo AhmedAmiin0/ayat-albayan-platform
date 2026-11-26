@@ -37,11 +37,28 @@ export class SubscriptionCancel {
   async cancel(before: SubscriptionView, input: CancelInput): Promise<SubscriptionView> {
     const block = await this.block(before);
     if (block) throw conflict(block);
-    const write = { id: before.id, actorId: input.actorId, reason: input.reason ?? null, now: input.now ?? new Date() };
+    const write = {
+      id: before.id,
+      actorId: input.actorId,
+      reason: input.reason ?? null,
+      now: input.now ?? new Date(),
+    };
     const result = await this.queries.cancel(write);
     if (!result.row) throw conflict(result.block);
-    const was = { status: before.status, price: before.price, paid: before.paid, lessons_total: before.lessons_total };
-    const audit = { actorId: input.actorId, entity: 'subscriptions', entityId: before.id, action: 'cancel', before: was, after: result.row };
+    const was = {
+      status: before.status,
+      price: before.price,
+      paid: before.paid,
+      lessons_total: before.lessons_total,
+    };
+    const audit = {
+      actorId: input.actorId,
+      entity: 'subscriptions',
+      entityId: before.id,
+      action: 'cancel',
+      before: was,
+      after: result.row,
+    };
     await this.writes.done(audit, before.student.id);
     return this.subs.get(before.id);
   }

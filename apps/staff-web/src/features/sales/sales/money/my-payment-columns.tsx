@@ -4,7 +4,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { MyPaymentActions, type MyPaymentHandlers } from './MyPaymentActions';
 import { StudentCell } from './StudentCell';
 

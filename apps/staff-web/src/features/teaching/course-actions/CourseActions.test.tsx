@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { CourseActions } from './CourseActions';
 
 const perms = vi.hoisted(() => ({ list: [] as string[] }));

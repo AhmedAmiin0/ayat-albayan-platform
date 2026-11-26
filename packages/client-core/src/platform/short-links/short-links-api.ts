@@ -8,7 +8,7 @@ import {
   type ShortLinkPage,
   type ShortLinkPerson,
 } from '@ab/shared';
-import { ApiError, call, type ApiClient } from '../../core/http';
+import { ApiError, callWith, type ApiClient } from '../../core/http';
 import { listKey, pathKey } from '../../core/keys';
 
 // docs/19: staff routes are shortLinkRoutes; the web gate /l/<code> reads the public view.
@@ -69,19 +69,20 @@ async function readGate(client: ApiClient, code: string): Promise<GateViewResult
 }
 
 export function shortLinkQueries(client: ApiClient): ShortLinkQueries {
+  const call = callWith(client);
   return {
     listQuery: (filter) => ({
       queryKey: listKey(routes.list.path, filter),
-      queryFn: () => call(client, routes.list, { query: filter }),
+      queryFn: () => call({ route: routes.list, query: filter }),
     }),
     detailQuery: (code) => ({
       queryKey: [...SHORT_LINKS_KEY, code],
-      queryFn: () => call(client, routes.detail, { params: { code } }),
+      queryFn: () => call({ route: routes.detail, params: { code } }),
     }),
     peopleQuery: (search) => ({
       queryKey: [...SHORT_LINKS_KEY, 'people', searchTerm(search)],
       enabled: searchTerm(search).length >= PEOPLE_SEARCH_MIN,
-      queryFn: () => call(client, routes.people, { query: { search: searchTerm(search) } }),
+      queryFn: () => call({ route: routes.people, query: { search: searchTerm(search) } }),
     }),
     gateViewQuery: (code) => ({
       queryKey: [...SHORT_LINK_GATE_KEY, code],

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { courseLines } from './course-text';
 import { COURSE } from './file-data';
 

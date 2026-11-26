@@ -4,8 +4,8 @@ import { Injectable } from '@nestjs/common';
 import { sourceRows } from '@/modules/reporting/dashboard/dashboard.mapper';
 import { DashboardSettings } from '@/modules/reporting/dashboard/dashboard.settings';
 import { financeTotals } from './finance';
-import { costFacts, currenciesOf, expenseFacts, paymentFacts } from './finance.mapper';
-import { FinanceQueries } from './finance.queries';
+import { cardFacts, currenciesOf } from './finance.mapper';
+import { FinanceRepo } from './finance.repo';
 import { FxConverter } from './fx-converter';
 import { monthsOf, rangeWindow } from '@/modules/reporting/dashboard/range';
 import type { DashboardResponse } from '@ab/money';
@@ -20,30 +20,32 @@ interface FinanceInput {
 @Injectable()
 export class FinanceService {
   constructor(
-    private readonly money: FinanceQueries,
+    private readonly money: FinanceRepo,
     private readonly fx: FxConverter,
     private readonly settings: DashboardSettings,
   ) {}
 
   async finance({ range, leads }: FinanceInput): Promise<DashboardResponse['finance']> {
-    const w = rangeWindow(range);
     const months = monthsOf(range);
     const settings = await this.settings.read();
-    const [first, last] = [months[0] ?? range.from.slice(0, 7), months.at(-1) ?? range.to.slice(0, 7)];
-    const [paymentRows, lessonRows, expenseRows] = await Promise.all([
-      this.money.payments(w),
-      this.money.payableLessons(w),
-      this.money.expenses(first, last),
-    ]);
-    const students = await this.money.lessonSources(lessonRows.flatMap((l) => (l.amount === null ? [] : [l.lesson_id])));
-    const payments = paymentFacts(paymentRows);
-    const costs = costFacts(lessonRows, students);
-    const expenses = expenseFacts(expenseRows);
+    const [first, last] = [
+      months[0] ?? range.from.slice(0, 7),
+      months.at(-1) ?? range.to.slice(0, 7),
+    ];
+    const { payments, costs, expenses, unrated } = cardFacts(
+      await this.money.totals({ window: rangeWindow(range), first, last }),
+    );
     const conversion = await this.fx.conversion(
       settings.reporting_currency,
-      currenciesOf(payments, costs.facts, expenses),
+      currenciesOf(payments, costs, expenses),
     );
-    const { by_source, ...totals } = financeTotals({ conversion, months, payments, costs: costs.facts, expenses });
+    const { by_source, ...totals } = financeTotals({
+      conversion,
+      months,
+      payments,
+      costs,
+      expenses,
+    });
     return {
       currency: conversion.currency,
       ...totals,
@@ -51,7 +53,7 @@ export class FinanceService {
       fx_date: conversion.date,
       fx_missing: conversion.missing,
       fx_rates: conversion.rates,
-      unrated_lessons: costs.unrated,
+      unrated_lessons: unrated,
     };
   }
 }

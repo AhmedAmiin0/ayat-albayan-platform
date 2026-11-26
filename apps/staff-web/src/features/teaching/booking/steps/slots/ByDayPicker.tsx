@@ -1,8 +1,7 @@
 import type { PackageSize } from '@ab/catalog';
 import { counted } from '@ab/core';
-import { RequiredMark } from '@ab/web-kit/components/ui/form/label';
+import { RequiredMark, t } from '@ab/web-kit';
 import { WEEK_ORDER } from '@/features/people/teachers/availability/grid';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { PACKAGE_NOTE_CLASS, packageDaysNote } from '@/features/teaching/booking/steps/package/package-days';
 
 export interface ByDayPickerProps {

@@ -3,7 +3,7 @@ import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { LinesCard } from '@/features/messaging/messaging/lines/LinesCard/LinesCard';
 
 const apiSend = vi.hoisted(() => vi.fn());

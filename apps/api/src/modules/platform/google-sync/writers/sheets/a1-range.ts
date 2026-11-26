@@ -8,7 +8,8 @@ export interface A1 {
   endRow: number | null;
 }
 
-const colIndex = (letters: string): number => [...letters].reduce((n, c) => n * 26 + c.charCodeAt(0) - 64, 0) - 1;
+const colIndex = (letters: string): number =>
+  [...letters].reduce((n, c) => n * 26 + c.charCodeAt(0) - 64, 0) - 1;
 export const colLetter = (index: number): string => {
   let n = index + 1;
   let s = '';
@@ -27,7 +28,12 @@ export function parseA1(range: string): A1 {
   if (!start?.[1]) throw new Error(`bad range ${range}`);
   const end = b ? /^([A-Z]+)(\d+)?$/.exec(b) : start;
   if (!end?.[1]) throw new Error(`bad range ${range}`);
-  return { col: colIndex(start[1]), row: start[2] ? Number(start[2]) : null, endCol: colIndex(end[1]), endRow: end[2] ? Number(end[2]) : null };
+  return {
+    col: colIndex(start[1]),
+    row: start[2] ? Number(start[2]) : null,
+    endCol: colIndex(end[1]),
+    endRow: end[2] ? Number(end[2]) : null,
+  };
 }
 
 /** The first row number of an append's updatedRange ('Sheet1!A7:M7' → 7). */

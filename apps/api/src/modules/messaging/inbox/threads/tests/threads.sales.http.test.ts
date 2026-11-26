@@ -41,7 +41,9 @@ describe('sales mode H1-H4: every chat, with the sales redactions (docs/16)', ()
   it('H1 lists every chat (no phone filter, ownership not read); the lead stays, the money flag does not', async () => {
     const res = await t.call({ method: 'GET', url: '/threads', token: 'sales' });
     expect(res.statusCode).toBe(200);
-    expect(t.queries.list).toHaveBeenCalledWith(expect.not.objectContaining({ phones: expect.anything() }));
+    expect(t.queries.list).toHaveBeenCalledWith(
+      expect.not.objectContaining({ phones: expect.anything() }),
+    );
     expect(t.sales.ownership).not.toHaveBeenCalled();
     const [item] = res.json().items;
     expect(item).toMatchObject({ lead_id: expect.any(String), lead_status: 'new', badge: 'subscribed', unpaid: false, ring: 'renewal' });
@@ -70,7 +72,10 @@ describe('sales mode H1-H4: every chat, with the sales redactions (docs/16)', ()
     expect(body.thread).toMatchObject({ unpaid: false, lead_id: expect.any(String) });
     expect(body.people.lead).toEqual({ id: 'l1', status: 'converted' });
     expect(body.people.students.map((s: { id: string }) => s.id)).toEqual(['s1', 'other-kid']);
-    expect(body.people.students.map((s: { subscription: unknown }) => s.subscription)).toEqual([null, null]);
+    expect(body.people.students.map((s: { subscription: unknown }) => s.subscription)).toEqual([
+      null,
+      null,
+    ]);
     expect(JSON.stringify(body)).not.toMatch(/price|due_amount|paid_amount/);
   });
 

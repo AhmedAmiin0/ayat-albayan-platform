@@ -1,7 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
-import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { QueryState, Skeleton, t } from '@ab/web-kit';
 import type { KpiTileProps } from './KpiTile.types';
 
 const box = 'grid gap-1 rounded-xs px-3 py-3';

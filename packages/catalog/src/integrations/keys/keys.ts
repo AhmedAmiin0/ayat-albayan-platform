@@ -79,10 +79,13 @@ const PLAIN_SET: ReadonlySet<string> = new Set(INTEGRATION_PLAIN_KEYS);
 
 export const isIntegrationSecretKey = (k: string): k is IntegrationSecretKey => SECRET_SET.has(k);
 export const isIntegrationPlainKey = (k: string): k is IntegrationPlainKey => PLAIN_SET.has(k);
-export const isIntegrationKey = (k: string): k is IntegrationKey => SECRET_SET.has(k) || PLAIN_SET.has(k);
+export const isIntegrationKey = (k: string): k is IntegrationKey =>
+  SECRET_SET.has(k) || PLAIN_SET.has(k);
 
 /** Every key in form order: group by group, as GROUP_OF lists them. */
-export const INTEGRATION_KEYS: readonly IntegrationKeyDef[] = (Object.keys(GROUP_OF) as IntegrationKey[])
+export const INTEGRATION_KEYS: readonly IntegrationKeyDef[] = (
+  Object.keys(GROUP_OF) as IntegrationKey[]
+)
   .map((key) => ({ key, group: GROUP_OF[key], secret: SECRET_SET.has(key), i18n: `integrations.keys.${key}` as const }))
   .sort((a, b) => INTEGRATION_GROUPS.indexOf(a.group) - INTEGRATION_GROUPS.indexOf(b.group));
 

@@ -1,8 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { BalanceCard } from '@/features/finance/subscriptions/balance/BalanceCard';
 import { balanceOf, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 

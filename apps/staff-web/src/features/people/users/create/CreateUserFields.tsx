@@ -1,8 +1,5 @@
 import { isLinkedRole, type UserRoleOption } from '@ab/shared';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Input, RadioChips, t } from '@ab/web-kit';
 import type { CreateForm } from './create-form';
 import { CredentialPicker } from './CredentialPicker';
 import { LinkPicker } from './LinkPicker';

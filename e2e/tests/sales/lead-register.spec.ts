@@ -9,7 +9,7 @@ import { sidePanel } from '../../support/messaging/thread-panel';
 
 const exact = { exact: true } as const;
 
-type Row = { status: string; linked: boolean; students: string[] };
+interface Row { status: string; linked: boolean; students: string[] }
 const stateOf = (phone: string) => withSql((sql) => sql<Row[]>`
   select l.status::text as status, l.converted_guardian_id = g.id as linked,
     coalesce((select array_agg(s.name) from public.students s where s.guardian_id = g.id), '{}') as students

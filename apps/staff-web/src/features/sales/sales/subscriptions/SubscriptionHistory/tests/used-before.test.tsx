@@ -1,6 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { history, HISTORY_ID } from '@/features/sales/sales/academy.fixtures';
 import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SubscriptionHistory } from '@/features/sales/sales/subscriptions/SubscriptionHistory/SubscriptionHistory';

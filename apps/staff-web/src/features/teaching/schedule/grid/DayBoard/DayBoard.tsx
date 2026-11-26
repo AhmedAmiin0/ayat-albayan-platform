@@ -1,16 +1,11 @@
 import type { LessonView, Span } from '@ab/schedule';
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { buttonVariants, t, teacherLabel, cn, useClock, useViewerTz } from '@ab/web-kit';
 import { AXIS_HOURS } from '@/features/people/teachers/availability/track';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { cn } from '@ab/web-kit/lib/utils';
 import { LessonChip } from '@/features/teaching/schedule/lesson/LessonChip';
 import { freeText, spanRange, teacherDay, type BoardRow } from '@/features/teaching/schedule/overview';
 import { ScheduleTrack } from '@/features/teaching/schedule/grid/ScheduleTrack';
 import { TeacherCell } from '@/features/teaching/schedule/grid/TeacherCell';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface DayBoardProps {
   /** Riyadh day, "YYYY-MM-DD". */

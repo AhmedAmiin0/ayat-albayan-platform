@@ -1,14 +1,12 @@
 import type { AuthorTemplate } from '@ab/client-core';
 import { templateAuthorSchema } from '@ab/shared';
 import { useId, useState, type SubmitEvent } from 'react';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { FormAlert, Dialog, t } from '@ab/web-kit';
 import { editErrorText } from '@/features/messaging/templates/edit/edit-api';
 import { previewBlock } from '@/features/messaging/templates/preview/edit-preview';
 import { SaveActions } from '@/features/messaging/templates/create/SaveActions';
 import { TemplatePreview } from '@/features/messaging/templates/preview/TemplatePreview';
 import { WordsFields } from '@/features/messaging/templates/edit/WordsFields';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { emptyAuthorDraft, toAuthorInput, type AuthorDraft } from './author-draft';
 import { AuthorFields } from './AuthorFields';
 import { useCreateAuthored } from './use-author-templates';

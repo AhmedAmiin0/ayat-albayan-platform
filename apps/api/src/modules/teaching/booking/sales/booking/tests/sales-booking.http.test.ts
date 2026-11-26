@@ -2,7 +2,7 @@ import { SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { bookingRoot } from '@/modules/teaching/booking/booking-root.fakes';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
@@ -48,7 +48,7 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
     app.inject({ method: o.method ?? 'GET', url: o.url, payload: o.body, headers: { authorization: `Bearer ${o.token}` } });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({ imports: [bookingRoot()] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(SalesRepo).useValue(sales)
       .overrideProvider(SettingsService).useValue(settings)

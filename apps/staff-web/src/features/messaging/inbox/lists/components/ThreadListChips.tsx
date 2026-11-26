@@ -1,6 +1,6 @@
 import type { ChatListRef } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { inboxBase, useInboxMode } from '@/features/messaging/inbox/shared/mode';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 

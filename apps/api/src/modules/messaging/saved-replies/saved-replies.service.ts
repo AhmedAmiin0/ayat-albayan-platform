@@ -37,7 +37,10 @@ export class SavedRepliesService {
     const owner = input.scope === 'shared' ? null : user.id;
     if (owner === null && !managesShared(user)) throw forbidden('saved_replies_forbidden');
     const file = await this.verified(input.attachment, user.id);
-    const last = (await this.queries.listOf(owner)).reduce((max, r) => Math.max(max, r.position), -1);
+    const last = (await this.queries.listOf(owner)).reduce(
+      (max, r) => Math.max(max, r.position),
+      -1,
+    );
     const row = await this.queries.insert({
       owner_profile_id: owner,
       title: input.title,
@@ -60,7 +63,10 @@ export class SavedRepliesService {
     // A path sent back for the reply's own moved file (docs/45 §6) is no replacement.
     const changed = sentPath !== oldPath && !sameStoredObject(sentPath, oldPath);
     const replaced = input.attachment !== undefined && changed;
-    Object.assign(patch, await this.attachmentPatch({ attachment: input.attachment, replaced, actorId: user.id }));
+    Object.assign(
+      patch,
+      await this.attachmentPatch({ attachment: input.attachment, replaced, actorId: user.id }),
+    );
     const next = await this.queries.update(id, patch);
     if (!next) throw gone();
     if (replaced) await this.files.remove(oldPath);
@@ -92,7 +98,12 @@ export class SavedRepliesService {
   /** The reply's attachment as this sender's chat file (out/{sender}/{request}/…); 404 when it has none. */
   async stage(user: AuthUser, id: string, requestId: string): Promise<SavedReplyStaged> {
     const row = await this.visible(user, id);
-    const { attachment_path: path, attachment_mime: mime, attachment_size: size, attachment_name: name } = row;
+    const {
+      attachment_path: path,
+      attachment_mime: mime,
+      attachment_size: size,
+      attachment_name: name,
+    } = row;
     if (!path || !mime || !size || !name) throw gone();
     return this.files.stage({ file: { path, mime, size }, name, actorId: user.id, requestId });
   }
@@ -115,7 +126,11 @@ export class SavedRepliesService {
   }
 
   /** undefined keeps the file; null removes it; the same path only renames it; a new path is checked. */
-  private async attachmentPatch(input: { attachment: Attachment; replaced: boolean; actorId: string }): Promise<ReplyPatch> {
+  private async attachmentPatch(input: {
+    attachment: Attachment;
+    replaced: boolean;
+    actorId: string;
+  }): Promise<ReplyPatch> {
     const { attachment, replaced, actorId } = input;
     if (attachment === undefined) return {};
     if (attachment === null) return attachmentColumns(null, null);

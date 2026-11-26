@@ -1,12 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, Pager, SearchInput, ListSkeleton, t } from '@ab/web-kit';
 import { ALL_STUDENTS_PAGE_SIZE, salesAllStudentsQuery } from '@/features/sales/sales/academy-api';
 import { usePermissions } from '@/features/people/auth';
 import { allStudentColumns, peopleEditColumn } from '@/features/sales/sales/students/all-student-columns';

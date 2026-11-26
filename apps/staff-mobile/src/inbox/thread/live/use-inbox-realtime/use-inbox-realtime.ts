@@ -12,6 +12,7 @@ import { nudgeInboxStore, patchInboxStore } from '@/inbox/thread/local/store-ses
 import { refreshOpenChat } from '@/inbox/thread/live/live-refresh';
 import { inboxLive } from '@/inbox/thread/live/inbox-live';
 import { changeLists } from '@/inbox/thread/live/list-marks';
+import { threadKeys } from '@/core/lib/keys';
 
 const active = () => AppState.currentState === 'active';
 
@@ -33,10 +34,7 @@ const targets: LiveTargets = {
   badge: () => {
     nudgeInboxStore();
     if (active())
-      void client.invalidateQueries(
-        { queryKey: ['threads', 'nav-count'] },
-        { cancelRefetch: false },
-      );
+      void client.invalidateQueries({ queryKey: threadKeys.navCount }, { cancelRefetch: false });
   },
   // docs/44 K1: the event's ticks into the phone store at once (the screens read it); the re-reads
   // above still run; the sync lands as the server sent it (no fold).

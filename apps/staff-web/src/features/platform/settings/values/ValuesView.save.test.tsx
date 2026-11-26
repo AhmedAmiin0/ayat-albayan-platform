@@ -1,7 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { answerPatch, entryOf } from '@/test/entries-fixture';
 import { findRow, renderValues } from './values-test-utils';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';

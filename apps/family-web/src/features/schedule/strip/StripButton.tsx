@@ -1,8 +1,6 @@
 import { dayTile, type StripDay } from '@ab/client-core';
 import { counted } from '@ab/core';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { followSelected } from '@ab/web-kit/lib/motion/slide-indicator';
-import { cn } from '@ab/web-kit/lib/utils';
+import { t, followSelected, cn } from '@ab/web-kit';
 import { dayClock, dayDate, longDay } from '@/features/schedule/day-text';
 
 const S = t.portal.app.schedule;

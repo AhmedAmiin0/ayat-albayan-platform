@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { CLEAR_THREAD_FILTERS, threadFilterChips } from './thread-filters';
 
 const search = { page: 1, sort: 'unread', f_status: 'new' } as const;

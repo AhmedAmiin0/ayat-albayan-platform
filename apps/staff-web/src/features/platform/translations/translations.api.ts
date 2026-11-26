@@ -1,7 +1,7 @@
 import type { Locale } from '@ab/core';
 import type { TranslationKeysPage } from '@ab/i18n';
 import { keepPreviousData, queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { translationKeys } from '@/features/platform/keys';
 
 export const TRANSLATIONS_PAGE_SIZE = 50;

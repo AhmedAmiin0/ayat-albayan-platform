@@ -3,7 +3,7 @@ import type { Page } from '@ab/core';
 import type { ReceivablesView } from '@ab/money';
 import type { InvoiceView } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 import { moneyKeys } from '@/features/finance/keys';
 

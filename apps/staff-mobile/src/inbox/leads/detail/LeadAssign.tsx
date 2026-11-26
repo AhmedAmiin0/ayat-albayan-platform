@@ -15,6 +15,7 @@ import {
 } from '@ab/mobile-kit';
 import { useSalesPeople } from './use-sales-people';
 import type { LeadView } from '@ab/shared';
+import { leadKeys } from '@/core/lib/keys';
 
 const NONE = '';
 
@@ -28,8 +29,9 @@ export function LeadAssign({ lead }: { lead: LeadView }) {
     mutationFn: (profileId: string | null) => apiSend<unknown>('POST', `/leads/${lead.id}/assign`, { profileId }),
     onSuccess: (_done, profileId) => {
       const name = people.find((p) => p.id === profileId)?.name ?? null;
-      client.setQueryData<LeadView>(pathKey(`/leads/${lead.id}`), { ...lead, assigned_to: profileId, assigned_to_name: name });
-      void client.invalidateQueries({ queryKey: ['leads', 'list'] });
+      const next = { ...lead, assigned_to: profileId, assigned_to_name: name };
+      client.setQueryData<LeadView>(leadKeys.one(lead.id), next);
+      void client.invalidateQueries({ queryKey: leadKeys.lists });
       void client.invalidateQueries({ queryKey: pathKey('/sales/people') });
     },
   });

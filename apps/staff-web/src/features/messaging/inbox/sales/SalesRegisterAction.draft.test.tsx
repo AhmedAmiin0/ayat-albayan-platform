@@ -2,7 +2,7 @@ import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/re
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { draftFromLead } from '@/features/teaching/booking/booking-entries';
 import { ABRAR, next, pickSlot, pickTeacher, SLOT } from '@/features/teaching/booking/wizard-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { registerDrafts } from './register-drafts';

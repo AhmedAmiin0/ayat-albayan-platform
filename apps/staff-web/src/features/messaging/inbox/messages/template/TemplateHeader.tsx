@@ -1,6 +1,5 @@
 import type { TemplateHeader as Header } from '@ab/shared';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, t } from '@ab/web-kit';
 
 export function TemplateHeader({ header, hasMedia }: { header: Header | null; hasMedia: boolean }) {
   if (!header) return null;

@@ -10,11 +10,9 @@ import type {
   ScheduleOverview,
 } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
-import { errorCode } from '@ab/web-kit/lib/http/error-code';
+import { ApiError, apiFetch, apiSend, errorCode, t } from '@ab/web-kit';
 import { bookingBase } from '@/features/teaching/booking/mode';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { Window } from '@ab/web-kit/schedule/slots';
+import type { Window } from '@ab/web-kit';
 import { lessonKeys } from './lesson.keys';
 
 // Phase 2 lesson routes (docs/10 §5). Commands camelCase, responses LessonView rows.

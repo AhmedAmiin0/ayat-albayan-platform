@@ -1,8 +1,6 @@
 import { chatListNameSchema, CHAT_LIST_NAME_MAX } from '@ab/shared';
 import { useState, type SubmitEvent } from 'react';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Input, t } from '@ab/web-kit';
 
 export interface ListNameFormProps {
   /** The form's id: the dialog's submit button sits in its footer (`form={id}`). */

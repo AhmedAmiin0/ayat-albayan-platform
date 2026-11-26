@@ -86,3 +86,14 @@ test('a failed read with nothing cached says so and retries', async () => {
   fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByText('رسالة جديدة')).toBeTruthy();
 });
+
+test('the rows sit in the recycling LazyList, each recycled cell matched by its id', async () => {
+  serve(page([lead, student], 1));
+  await renderWithQuery(<NotificationsScreen tree="admin" />, createTestQueryClient({ meFromApi: true }));
+  expect(await screen.findByText('طالب جديد')).toBeTruthy();
+  const list = screen.getByTestId('notifications-list');
+  // FlatList's VirtualizedList hands its scroll view getItemCount; FlashList does not.
+  expect(list.props.getItemCount).toBeUndefined();
+  const keyOf = list.props.keyExtractor as (row: { id: string }, i: number) => string;
+  expect([lead, student].map((row, i) => keyOf(row, i))).toEqual(['n1', 'n2']);
+});

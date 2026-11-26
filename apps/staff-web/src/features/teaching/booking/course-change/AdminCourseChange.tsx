@@ -1,8 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, FormAlert, t } from '@ab/web-kit';
 import { lessonErrorText } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { courseChangeViewQuery } from './api';
 import { CourseChangeForm } from './CourseChangeForm';
 

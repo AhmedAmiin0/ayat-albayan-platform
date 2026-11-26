@@ -2,7 +2,7 @@ import type { TemplateLineSync } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { catalogueKeys } from '@/features/messaging/keys';
 import {
   checkTemplateHealth,

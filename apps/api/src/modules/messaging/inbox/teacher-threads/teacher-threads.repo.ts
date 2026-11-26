@@ -49,8 +49,14 @@ export class TeacherThreadsRepo {
 
   /** Opening a thread marks it read for this teacher only (the admin's unread stays). */
   async stampRead(input: { teacherId: string; phone: string; at: Date }): Promise<void> {
-    const row = { teacher_id: input.teacherId, phone_e164: input.phone, read_at: input.at.toISOString() };
-    const { error } = await this.db.from('teacher_thread_reads').upsert(row, { onConflict: 'teacher_id,phone_e164' });
+    const row = {
+      teacher_id: input.teacherId,
+      phone_e164: input.phone,
+      read_at: input.at.toISOString(),
+    };
+    const { error } = await this.db
+      .from('teacher_thread_reads')
+      .upsert(row, { onConflict: 'teacher_id,phone_e164' });
     if (error) throw dbError(error);
   }
 

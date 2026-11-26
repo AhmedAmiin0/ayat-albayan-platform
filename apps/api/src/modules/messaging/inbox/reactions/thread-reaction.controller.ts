@@ -28,12 +28,23 @@ export class ThreadReactionController {
   @Put(':phone/messages/:id/reaction')
   @HttpCode(200)
   @Permissions('inbox.send')
-  async react(@Param() raw: unknown, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<ReactionResult> {
+  async react(
+    @Param() raw: unknown,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ReactionResult> {
     const { phone, id } = parseOrThrow(params, raw);
     const input = parseOrThrow(threadReactionSchema, body);
     const sales = await this.reads.salesScope(user);
     const scope = sales ? null : await this.reads.scope(user);
-    const request = { phone: phoneParam(phone), messageId: id, input, actorId: user.id, scope, sales };
+    const request = {
+      phone: phoneParam(phone),
+      messageId: id,
+      input,
+      actorId: user.id,
+      scope,
+      sales,
+    };
     const { result, sent } = await this.reactions.react(request);
     await recordSend(this.audit, { sent, action: 'thread_reaction', user, scope, sales });
     return result;

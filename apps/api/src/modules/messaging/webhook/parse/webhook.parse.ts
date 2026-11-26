@@ -33,7 +33,8 @@ export function field(value: unknown, path: string): string | null {
 }
 
 const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
-const first = (...values: (string | null)[]): string | null => values.find((v) => v !== null) ?? null;
+const first = (...values: (string | null)[]): string | null =>
+  values.find((v) => v !== null) ?? null;
 
 /** Unix-seconds string → Date; a missing or bad timestamp is "now". */
 export function metaTime(ts: string | null | undefined, now: Date): Date {
@@ -45,7 +46,11 @@ export function metaTime(ts: string | null | undefined, now: Date): Date {
 function payloadOf(m: unknown, type: string): Json | null {
   if (type === 'text') return null;
   const errors = get(m, 'errors');
-  return { type, [type]: get(m, type) ?? null, ...(errors === undefined ? {} : { errors }) } as Json;
+  return {
+    type,
+    [type]: get(m, type) ?? null,
+    ...(errors === undefined ? {} : { errors }),
+  } as Json;
 }
 
 interface MessageContext {
@@ -114,7 +119,10 @@ function readChange(change: unknown, ctx: ParseOptions & { batch: WebhookBatch }
 }
 
 /** A `messages` change's inbound messages and delivery statuses. */
-function readMessages(value: unknown, ctx: ParseOptions & { batch: WebhookBatch; at: Receiving }): void {
+function readMessages(
+  value: unknown,
+  ctx: ParseOptions & { batch: WebhookBatch; at: Receiving },
+): void {
   const contacts = list(get(value, 'contacts'));
   const names = new Map(contacts.map((c) => [field(c, 'wa_id') ?? '', field(c, 'profile.name')?.trim() ?? '']));
   for (const m of list(get(value, 'messages'))) {
@@ -125,7 +133,12 @@ function readMessages(value: unknown, ctx: ParseOptions & { batch: WebhookBatch;
     const event = toStatus(s, { now: ctx.now, at: ctx.at });
     if (event) ctx.batch.statuses.push(event);
   }
-  if (ctx.at.phoneNumberId) readPermissionReplies(value, { now: ctx.now, phoneNumberId: ctx.at.phoneNumberId, batch: ctx.batch });
+  if (ctx.at.phoneNumberId)
+    readPermissionReplies(value, {
+      now: ctx.now,
+      phoneNumberId: ctx.at.phoneNumberId,
+      batch: ctx.batch,
+    });
 }
 
 export function parseWebhook(body: unknown, opts: ParseOptions): WebhookBatch {

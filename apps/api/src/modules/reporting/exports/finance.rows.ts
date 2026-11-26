@@ -25,7 +25,18 @@ interface ExpenseIn {
 }
 
 export function expenseCsv(rows: readonly ExpenseIn[]): Cell[][] {
-  const head: Cell[] = [E.month, F.paidOn, E.category, E.amount, E.currency, F.vendor, P.method, F.recurring, F.draft, E.note];
+  const head: Cell[] = [
+    E.month,
+    F.paidOn,
+    E.category,
+    E.amount,
+    E.currency,
+    F.vendor,
+    P.method,
+    F.recurring,
+    F.draft,
+    E.note,
+  ];
   return [
     head,
     ...rows.map((e): Cell[] => [
@@ -44,7 +55,13 @@ export function expenseCsv(rows: readonly ExpenseIn[]): Cell[][] {
 }
 
 type Named = { teacher: { display_name_ar: string } | null };
-export type SessionIn = Named & { starts_at: string; minutes: number; amount: number; paid_amount: number; status: string };
+export type SessionIn = Named & {
+  starts_at: string;
+  minutes: number;
+  amount: number;
+  paid_amount: number;
+  status: string;
+};
 type TeacherPayIn = Named & {
   paid_at: string;
   amount: number;
@@ -56,7 +73,10 @@ type TeacherPayIn = Named & {
 };
 
 /** Two blocks in one file: the month's sessions, then the payments made to the teacher(s). */
-export function ledgerCsv(input: { sessions: readonly SessionIn[]; payments: readonly TeacherPayIn[] }): Cell[][] {
+export function ledgerCsv(input: {
+  sessions: readonly SessionIn[];
+  payments: readonly TeacherPayIn[];
+}): Cell[][] {
   const status = L.statusName as Record<string, string>;
   return [
     [F.ledgerSessions],
@@ -88,7 +108,19 @@ export function ledgerCsv(input: { sessions: readonly SessionIn[]; payments: rea
 export function receivablesCsv(rows: readonly ReceivableRow[]): Cell[][] {
   const bucket = F.aging as Record<string, string>;
   return [
-    [S.code, S.name, F.guardian, F.phone, F.packageFrom, F.price, F.paid, F.owed, P.currency, F.daysOverdue, F.agingBucket],
+    [
+      S.code,
+      S.name,
+      F.guardian,
+      F.phone,
+      F.packageFrom,
+      F.price,
+      F.paid,
+      F.owed,
+      P.currency,
+      F.daysOverdue,
+      F.agingBucket,
+    ],
     ...rows.map((r): Cell[] => [
       r.student.code,
       safeText(r.student.name),

@@ -2,7 +2,7 @@ import { ownerChoices } from '@ab/client-core';
 import type { ShortLinkPage } from '@ab/shared';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { usePermissions } from '@ab/web-kit';
 import { useLinkList, useStatusCounts } from '@/features/platform/short-links/api/use-short-links';
 import { CreateLinkDialog } from '@/features/platform/short-links/create/CreateLinkDialog';
 import {

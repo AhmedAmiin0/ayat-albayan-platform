@@ -67,8 +67,17 @@ export class InboundService {
     const intent = intentOf(m);
     const rating = ratingOf(m);
     const asks = rating !== null || intent === 'confirm' || intent === 'reschedule';
-    const lessonId = asks ? await this.replies.lessonFor({ m, phone, who, rating: rating !== null }) : null;
-    const stored = await this.store.save({ m, phone, who, leadId: lead.id, lessonId, stage: lead.stage });
+    const lessonId = asks
+      ? await this.replies.lessonFor({ m, phone, who, rating: rating !== null })
+      : null;
+    const stored = await this.store.save({
+      m,
+      phone,
+      who,
+      leadId: lead.id,
+      lessonId,
+      stage: lead.stage,
+    });
     if (!stored) return false; // replay of a wamid we already handled
     try {
       await this.replies.act({ intent, m, lessonId, leadId: lead.id });
@@ -109,10 +118,21 @@ export class InboundService {
   }
 
   /** A lesson_rating tap of a guardian on a lesson of theirs → lesson_feedback (migration 195). */
-  private async rate(input: { m: InboundEvent; who: Contact; rating: LessonRating | null; lessonId: string | null }): Promise<void> {
+  private async rate(input: {
+    m: InboundEvent;
+    who: Contact;
+    rating: LessonRating | null;
+    lessonId: string | null;
+  }): Promise<void> {
     const { m, who, rating, lessonId } = input;
     if (!rating || !lessonId || !who.guardian) return;
-    await this.store.rate({ lessonId, guardianId: who.guardian.id, rating, waMessageId: m.waMessageId, at: m.at });
+    await this.store.rate({
+      lessonId,
+      guardianId: who.guardian.id,
+      rating,
+      waMessageId: m.waMessageId,
+      at: m.at,
+    });
   }
 
   /** Unstores the row so Meta's re-send runs the reply again, only while Meta still waits. */

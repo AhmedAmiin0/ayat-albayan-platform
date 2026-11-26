@@ -1,10 +1,8 @@
 import { LEAD_STATUSES, type LeadStatus } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Select } from '@ab/web-kit/components/ui/form/select';
+import { Button, Select, t } from '@ab/web-kit';
 import { errorCode } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { changeLeadStatus, type InboxLead } from '@/features/messaging/inbox/api/api';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { leadKeys } from '@/features/sales/keys';

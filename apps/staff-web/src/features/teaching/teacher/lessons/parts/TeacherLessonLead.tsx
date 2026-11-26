@@ -1,10 +1,9 @@
 import type { PlanAction, WayIn } from '@ab/client-core';
 import type { LessonView } from '@ab/schedule';
 import type { ReactNode } from 'react';
-import { buttonVariants } from '@ab/web-kit/components/ui/form/button';
+import { buttonVariants, t } from '@ab/web-kit';
 import { StaffJoinButton } from '@/features/teaching/classroom';
 import { REPORT_STAGE_LABEL, ReportLink, reportFormHref } from '@/features/reporting/reports';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TeacherConfirm } from '@/features/teaching/teacher/lessons/TeacherConfirm';
 import type { TeacherPlan } from './use-teacher-plan';
 

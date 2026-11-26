@@ -26,7 +26,11 @@ export type HistoryRow = {
   submitted_at: string | null;
 };
 
-export type HistoryLesson = { id: string; starts_at: string; teacher: { id: string; display_name_ar: string } | null };
+export type HistoryLesson = {
+  id: string;
+  starts_at: string;
+  teacher: { id: string; display_name_ar: string } | null;
+};
 
 /** Lessons a report is still owed for: started, not cancelled or moved (docs/11 §4 R11). */
 export const REPORTABLE_STATUSES = ['scheduled', 'confirmed', 'completed', 'late', 'no_show', 'excused'] as const;
@@ -76,7 +80,9 @@ export class ReportHistoryQueries {
     const rows = await readAll((from, to) =>
       this.db.from('v_lesson_sequence').select('lesson_id, seq').eq('student_id', studentId).order('seq').range(from, to),
     );
-    return new Map(rows.flatMap((r) => (r.lesson_id && r.seq !== null ? [[r.lesson_id, r.seq] as const] : [])));
+    return new Map(
+      rows.flatMap((r) => (r.lesson_id && r.seq !== null ? [[r.lesson_id, r.seq] as const] : [])),
+    );
   }
 
   /** The student's assigned teacher; null when the student does not exist. */

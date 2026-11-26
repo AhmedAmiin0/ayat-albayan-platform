@@ -1,5 +1,5 @@
 import { SETTING_FIELD_OF, type SettingKey } from '@ab/settings';
-import { ApiError } from '@ab/web-kit/lib/http/api';
+import { ApiError } from '@ab/web-kit';
 
 // PATCH /settings answers today with the whole AcademySettings; from docs/26 26-P0 it answers
 // `{saved, moved}` (per key; a key a module owns is `moved`, never written). Both are read here.

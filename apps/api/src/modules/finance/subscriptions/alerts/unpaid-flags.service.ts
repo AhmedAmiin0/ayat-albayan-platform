@@ -22,10 +22,15 @@ export class UnpaidFlags {
     const ids = [...new Set(studentIds)];
     if (ids.length === 0) return new Set();
     if (!(await this.settings.read()).flag_future_lessons_when_unpaid) return new Set();
-    const [rows, balances] = await Promise.all([this.subs.forStudents(ids), this.balances.forStudents(ids)]);
+    const [rows, balances] = await Promise.all([
+      this.subs.forStudents(ids),
+      this.balances.forStudents(ids),
+    ]);
     const byId = new Map(balances.map((b) => [b.subscription_id, b]));
     return new Set(
-      ids.filter((id) => unpaidFlagged({ subs: rows.filter((r) => r.student_id === id), balances: byId })),
+      ids.filter((id) =>
+        unpaidFlagged({ subs: rows.filter((r) => r.student_id === id), balances: byId }),
+      ),
     );
   }
 }

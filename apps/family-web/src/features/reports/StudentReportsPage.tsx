@@ -2,11 +2,7 @@ import { portalViewer, readsOwn, reportMonths } from '@ab/client-core';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { dateText } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { portalReportsQuery } from '@ab/web-kit/portal/api';
-import { QueryState } from '@ab/web-kit/components/ui/display/query-state';
+import { EmptyState, t, locale, portalReportsQuery, QueryState } from '@ab/web-kit';
 import { ReportRow } from './ReportRow';
 
 const MONTH = { month: 'long', year: 'numeric' } as const;

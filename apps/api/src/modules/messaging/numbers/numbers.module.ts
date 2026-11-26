@@ -21,7 +21,19 @@ import { EvolutionNumbersRepo } from './evolution/evolution-numbers.repo';
  */
 @Module({
   controllers: [NumbersController, CommunicationsController],
-  providers: [NumbersSettings, NumbersRepo, NumbersSecrets, NumbersConfig, NumbersEffects, NumbersService, NumbersImport, CommunicationsService, NumbersHealth, NumbersEvolution, EvolutionNumbersRepo],
+  providers: [
+    NumbersSettings,
+    NumbersRepo,
+    NumbersSecrets,
+    NumbersConfig,
+    NumbersEffects,
+    NumbersService,
+    NumbersImport,
+    CommunicationsService,
+    NumbersHealth,
+    NumbersEvolution,
+    EvolutionNumbersRepo,
+  ],
   exports: [NumbersConfig, NumbersHealth, NumbersEvolution],
 })
 export class NumbersModule {}

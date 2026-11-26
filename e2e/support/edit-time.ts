@@ -25,12 +25,26 @@ export const iso = (ms: number) => new Date(ms).toISOString();
 /** A day in the future at 14:00Z, whole days only so the generated key is stable. */
 export const BASE = Math.floor((Date.now() + 10 * 24 * HOUR) / (24 * HOUR)) * 24 * HOUR + 14 * HOUR;
 
+/**
+ * Other specs commit lessons for the shared e2e teacher, so a booking or a move at BASE or later
+ * could hit teacher_clash depending on the weekday and the run order; inside a rolled-back
+ * transaction her lessons from BASE on are cancelled first. The statuses are every one
+ * teacher_clash counts (OCCUPYING_LESSON_STATUSES in @ab/schedule).
+ */
+export async function freeTeacher(tx: Tx, teacher: string): Promise<void> {
+  await tx`update public.lessons set status = 'cancelled_by_admin'
+    where teacher_id = ${teacher}
+      and status in ('scheduled', 'confirmed', 'completed', 'late', 'no_show')
+      and ends_at > ${iso(BASE)}`;
+}
+
 /** A daily 45-minute rule with one generated lesson at BASE, one student, one guardian. */
 export async function seed(tx: Tx) {
   const [teacher] = await tx<{ id: string; profile_id: string }[]>`
     select t.id, t.profile_id from public.teachers t join auth.users u on u.id = t.profile_id
     where u.email = ${USERS.teacher.email}`;
   if (!teacher) throw new Error('e2e teacher missing (global setup)');
+  await freeTeacher(tx, teacher.id);
   const [g] = await tx<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
     values ('ولي أمر SQL', '+966500000997', 'SA', 'Asia/Riyadh') returning id`;
   const [s] = await tx<{ id: string }[]>`insert into public.students (guardian_id, name, name_normalized, tz)
@@ -49,7 +63,7 @@ export async function seed(tx: Tx) {
 }
 type Seeded = Awaited<ReturnType<typeof seed>>;
 
-export type Edit = {
+export interface Edit {
   s: Seeded;
   status: string;
   from: number;
@@ -57,7 +71,7 @@ export type Edit = {
   durationMin?: number;
   flags?: { retime_open?: boolean; refresh_pdf?: boolean };
   messages?: Record<string, string | Record<string, string>>[];
-};
+}
 
 /** edit_lesson_time as the API calls it (`from` is what the admin saw, 45 minutes long). */
 export async function edit(tx: Tx, e: Edit) {

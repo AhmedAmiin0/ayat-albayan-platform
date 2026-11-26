@@ -9,7 +9,15 @@ import type { WriteCtx } from './write-context';
 /** ponytail: 25 a pass is far above a few dozen lessons and reports a day; the pass loops while full. */
 const BATCH = 25;
 
-type PassSummary = { claimed: number; synced: number; skipped: number; gone: number; failed: number; retried: number; stopped: boolean };
+type PassSummary = {
+  claimed: number;
+  synced: number;
+  skipped: number;
+  gone: number;
+  failed: number;
+  retried: number;
+  stopped: boolean;
+};
 
 /**
  * One outbox pass (docs/24 §3): nothing while sync is OFF; dry_run plans every item with NO Google
@@ -28,7 +36,15 @@ export class GoogleSyncProcessor {
   ) {}
 
   async runOnce(): Promise<PassSummary> {
-    const out: PassSummary = { claimed: 0, synced: 0, skipped: 0, gone: 0, failed: 0, retried: 0, stopped: false };
+    const out: PassSummary = {
+      claimed: 0,
+      synced: 0,
+      skipped: 0,
+      gone: 0,
+      failed: 0,
+      retried: 0,
+      stopped: false,
+    };
     const s = await this.data.settings.read();
     if (!s.enabled) return out;
     let ctx: WriteCtx = { live: false };
@@ -53,7 +69,10 @@ export class GoogleSyncProcessor {
       out[result.state === 'retry' ? 'retried' : result.state] += 1;
     }
     const ok = ctx.live && !out.stopped && out.claimed > 0;
-    await this.data.account.update({ last_run_at: new Date().toISOString(), ...(ok ? { last_error: null } : {}) });
+    await this.data.account.update({
+      last_run_at: new Date().toISOString(),
+      ...(ok ? { last_error: null } : {}),
+    });
     if (out.claimed) this.log.log(`google sync pass: ${JSON.stringify(out)}`);
     return out;
   }

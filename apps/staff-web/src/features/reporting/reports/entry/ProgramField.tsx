@@ -1,6 +1,5 @@
 import { PROGRAMS, type Program } from '@ab/catalog';
-import { RadioChips } from '@ab/web-kit/components/ui/form/radio-chips';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { RadioChips, t } from '@ab/web-kit';
 
 export interface ProgramFieldProps {
   name: string;

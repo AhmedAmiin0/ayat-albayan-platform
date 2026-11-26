@@ -7,7 +7,11 @@ import { WebPushToggle } from './WebPushToggle';
 
 const READY: PushEnv = { hasServiceWorker: true, hasPushManager: true, hasNotification: true, permission: 'default', isIos: false, isStandalone: false };
 const env = vi.hoisted(() => ({ current: {} as PushEnv }));
-const push = vi.hoisted(() => ({ rebindWebPush: vi.fn(), subscribeWebPush: vi.fn(), unsubscribeWebPush: vi.fn() }));
+const push = vi.hoisted(() => ({
+  rebindWebPush: vi.fn(),
+  subscribeWebPush: vi.fn(),
+  unsubscribeWebPush: vi.fn(),
+}));
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('./web-push-support', async (orig) => ({ ...(await orig<object>()), readPushEnv: () => env.current }));
 vi.mock('./web-push', () => push);

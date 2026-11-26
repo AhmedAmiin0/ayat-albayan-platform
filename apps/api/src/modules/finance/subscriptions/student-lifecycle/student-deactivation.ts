@@ -9,7 +9,11 @@ import { NO_TRIAL, trialFactsOf } from '@/modules/finance/subscriptions/trial/st
 import { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
 
 export type DeletedPayment = { id: string; kind: string; amount: number | string };
-type Ctx = { payment: DeletedPayment; ids: { studentId: string; actorId: string }; current: StudentStatus };
+type Ctx = {
+  payment: DeletedPayment;
+  ids: { studentId: string; actorId: string };
+  current: StudentStatus;
+};
 
 /**
  * A deleted payment reverts the automatic flip it caused (docs/11 §7): only when the
@@ -28,7 +32,10 @@ export class StudentDeactivation {
     private readonly trials: StudentTrialRepo,
   ) {}
 
-  async afterDelete(payment: DeletedPayment, ids: { studentId: string; actorId: string }): Promise<boolean> {
+  async afterDelete(
+    payment: DeletedPayment,
+    ids: { studentId: string; actorId: string },
+  ): Promise<boolean> {
     if (!activatesStudent(payment)) return false;
     const last = await this.statuses.lastStatusChange(ids.studentId);
     if (!isFlipBy(last, payment.id)) return false;
@@ -54,7 +61,15 @@ export class StudentDeactivation {
   private async revertTo(from: StudentStatus, o: Ctx): Promise<boolean> {
     const plan = revertMove(o.current, from);
     if (!plan) return false;
-    const after = { via: 'payment_deleted', payment_id: o.payment.id, from: plan.from, reason: plan.reason };
-    return this.statuses.move({ studentId: o.ids.studentId, from: plan.from, to: plan.to }, { actorId: o.ids.actorId, after });
+    const after = {
+      via: 'payment_deleted',
+      payment_id: o.payment.id,
+      from: plan.from,
+      reason: plan.reason,
+    };
+    return this.statuses.move(
+      { studentId: o.ids.studentId, from: plan.from, to: plan.to },
+      { actorId: o.ids.actorId, after },
+    );
   }
 }

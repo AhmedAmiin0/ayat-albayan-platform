@@ -1,7 +1,5 @@
 import { SECRET_PARITY_FIELDS, type ParityCell, type ParityView } from '@ab/shared';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, NuqtaGlyph, t } from '@ab/web-kit';
 
 const p = t.numbers.parity;
 

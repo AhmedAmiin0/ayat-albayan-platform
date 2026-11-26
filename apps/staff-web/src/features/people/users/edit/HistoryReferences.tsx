@@ -1,5 +1,5 @@
 import type { UserReference } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { tableLabel } from '@/features/people/users/errors';
 
 /** The tables that keep a user from being deleted, with how many rows each holds. */

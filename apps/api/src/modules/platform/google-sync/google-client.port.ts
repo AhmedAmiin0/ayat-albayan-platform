@@ -50,20 +50,37 @@ export interface GoogleClient {
   /** null when the event does not exist (404 / 410). A deleted event may come back with status 'cancelled'. */
   getEvent(ref: EventRef): Promise<GoogleEvent | null>;
   /** events.list, singleEvents: the events overlapping [timeMin, timeMax) (ISO instants). */
-  listEvents(input: { calendarId: string; timeMin: string; timeMax: string }): Promise<GoogleListedEvent[]>;
+  listEvents(input: {
+    calendarId: string;
+    timeMin: string;
+    timeMax: string;
+  }): Promise<GoogleListedEvent[]>;
   insertEvent(input: { calendarId: string; event: GoogleEventBody }): Promise<{ id: string }>;
   updateEvent(input: EventRef & { event: GoogleEventBody }): Promise<void>;
   deleteEvent(ref: EventRef): Promise<void>;
   /** Not trashed, by exact name; optionally inside one folder and of one mime type. */
-  findFiles(input: { name: string; parentId?: string; mimeType?: string }): Promise<GoogleFileMeta[]>;
+  findFiles(input: {
+    name: string;
+    parentId?: string;
+    mimeType?: string;
+  }): Promise<GoogleFileMeta[]>;
   getFile(fileId: string): Promise<GoogleFileMeta | null>;
   createFolder(input: { name: string; parentId: string }): Promise<{ id: string }>;
   createSpreadsheet(input: { name: string; parentId: string }): Promise<{ id: string }>;
-  uploadPdf(input: { name: string; parentId: string; bytes: Uint8Array; appProperties: Record<string, string> }): Promise<{ id: string }>;
+  uploadPdf(input: {
+    name: string;
+    parentId: string;
+    bytes: Uint8Array;
+    appProperties: Record<string, string>;
+  }): Promise<{ id: string }>;
   updatePdf(input: { fileId: string; name: string; bytes: Uint8Array }): Promise<void>;
   readValues(input: { spreadsheetId: string; range: string; render: ValueRender }): Promise<Rows>;
   /** USER_ENTERED (dates become dates); returns the A1 range the row landed in. */
-  appendRow(input: { spreadsheetId: string; range: string; values: CellValue[] }): Promise<{ updatedRange: string }>;
+  appendRow(input: {
+    spreadsheetId: string;
+    range: string;
+    values: CellValue[];
+  }): Promise<{ updatedRange: string }>;
   updateValues(input: { spreadsheetId: string; range: string; values: Rows }): Promise<void>;
   batchUpdate(input: { spreadsheetId: string; requests: readonly object[] }): Promise<void>;
 }
@@ -71,7 +88,9 @@ export interface GoogleClient {
 /** The OAuth half: the consent URL, the code exchange, the account's email, the revoke. */
 export interface GoogleOAuth {
   authUrl(input: { state: string; scopes: readonly string[] }): string;
-  exchange(code: string): Promise<{ refreshToken: string | null; scopes: string[]; accessToken: string }>;
+  exchange(
+    code: string,
+  ): Promise<{ refreshToken: string | null; scopes: string[]; accessToken: string }>;
   email(accessToken: string): Promise<string | null>;
   revoke(refreshToken: string): Promise<void>;
 }

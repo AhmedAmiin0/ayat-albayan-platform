@@ -20,7 +20,9 @@ describe('GuardiansController is admin-only (R-STU-02, R-NFR-02)', () => {
     const mod = await Test.createTestingModule({ imports: [DbModule, AuthModule, GuardiansModule] })
       .overrideProvider(DB)
       .useValue(fake.db)
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

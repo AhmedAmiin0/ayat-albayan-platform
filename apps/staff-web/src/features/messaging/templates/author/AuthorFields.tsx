@@ -1,8 +1,6 @@
 import { AUTHOR_CATEGORIES } from '@ab/shared';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Select } from '@ab/web-kit/components/ui/form/select';
+import { Field, Select, t } from '@ab/web-kit';
 import { KeyField } from '@/features/messaging/templates/create/KeyField';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { categoryOf, type AuthorDraft } from './author-draft';
 
 const S = t.templates.author;

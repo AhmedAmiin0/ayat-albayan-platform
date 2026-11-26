@@ -39,7 +39,14 @@ export function usePen({ me, send, dispatch, tool, color }: PenOptions): Pen {
     (x: number, y: number) => {
       seq.current += 1;
       const erase = tool === 'eraser';
-      const stroke: Stroke = { id: strokeId(me.identity, seq.current), by: me.identity, color, width: erase ? ERASER_WIDTH : PEN_WIDTH, erase, pts: [x, y] };
+      const stroke: Stroke = {
+        id: strokeId(me.identity, seq.current),
+        by: me.identity,
+        color,
+        width: erase ? ERASER_WIDTH : PEN_WIDTH,
+        erase,
+        pts: [x, y],
+      };
       current.current = { ...stroke, pts: [] };
       pending.current = [x, y];
       dispatch({ msg: { t: 'draw', stroke }, from: me });

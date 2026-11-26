@@ -105,7 +105,10 @@ test('app.config.ts is compared as the normal app EAS builds: a side variant onl
   const [before, after] = [await configOut(CONFIG, appJson), await configOut(VARIANT, appJson)];
   assert.equal(typeof before, 'string');
   assert.equal(before, after);
-  assert.deepEqual(nativeChanges({ ...snap(base, {}, CONFIG), configOut: before }, { ...snap(base, {}, VARIANT), configOut: after }), []);
+  assert.deepEqual(nativeChanges(
+    { ...snap(base, {}, CONFIG), configOut: before },
+    { ...snap(base, {}, VARIANT), configOut: after },
+  ), []);
 });
 
 test('app.config.ts: a change to the normal app counts; one that cannot be evaluated falls back to the text', async () => {
@@ -138,7 +141,10 @@ test('app.config.ts per app: a side-variant-only change is native for the side a
   const side = [await configOut(VARIANT, appJson, 'stripetest'), await configOut(NO_FCM, appJson, 'stripetest')];
   assert.notEqual(side[0], side[1]);
   assert.match(side[1], /"name":"side"/);
-  const snaps = [{ ...snap(base, {}, VARIANT), configOut: side[0] }, { ...snap(base, {}, NO_FCM), configOut: side[1] }];
+  const snaps = [
+    { ...snap(base, {}, VARIANT), configOut: side[0] },
+    { ...snap(base, {}, NO_FCM), configOut: side[1] },
+  ];
   assert.deepEqual(nativeChanges(...snaps, { profile: 'stripe-test' }), ['app.config.ts changed (dynamic config)']);
   assert.equal(process.env.APP_VARIANT, undefined);
 });

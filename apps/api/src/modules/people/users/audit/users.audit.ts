@@ -35,6 +35,7 @@ export async function recordUser(audit: Pick<AuditService, 'record'>, e: UserAud
     entityId: e.userId,
     action: e.action,
     before: e.before ? redact(snapshot(e.before)) : null,
-    after: e.after || e.extra ? redact({ ...(e.after ? snapshot(e.after) : {}), ...e.extra }) : null,
+    after:
+      e.after || e.extra ? redact({ ...(e.after ? snapshot(e.after) : {}), ...e.extra }) : null,
   });
 }

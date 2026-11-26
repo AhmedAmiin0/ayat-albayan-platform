@@ -1,7 +1,7 @@
 // HTTP test harness for the leads + job-applicants controllers (test-only).
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -28,10 +28,11 @@ export interface InjectArgs {
   body?: Record<string, unknown>;
 }
 
-/** Boots AppModule + both modules with fake queries/audit; `call` defaults to the admin token. */
+/** Boots both modules with fake queries/audit; `call` defaults to the admin token. */
 export async function testApp() {
   const deps = fakeDeps();
-  const mod = await Test.createTestingModule({ imports: [AppModule, LeadsModule, JobApplicantsModule] })
+  const root = featureRoot(LeadsModule, JobApplicantsModule);
+  const mod = await Test.createTestingModule({ imports: [root] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
     .useValue(verify)
     .overrideProvider(LeadsRepo)

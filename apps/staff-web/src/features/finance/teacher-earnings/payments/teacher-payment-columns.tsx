@@ -2,10 +2,9 @@ import { PAYMENT_METHODS } from '@ab/catalog';
 import type { TeacherPaymentView } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { Button } from '@ab/web-kit/components/ui/form/button';
+import { Button, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 const col = createColumnHelper<DataTableFeatures, TeacherPaymentView>();
 

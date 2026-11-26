@@ -2,12 +2,8 @@ import { counted } from '@ab/core';
 import { westernDigits } from '@ab/money';
 import type { SettingKey } from '@ab/settings';
 import { useId, useState } from 'react';
-import { ConfirmSwitchDialog } from '@ab/web-kit/components/ui/overlay/ConfirmSwitchDialog';
+import { ConfirmSwitchDialog, Button, Dialog, Input, t } from '@ab/web-kit';
 import { settingText } from '@/components/settings/search/setting-text';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { PendingConfirm } from '@/features/platform/settings/values/hooks/use-values-controller.types';
 
 const v = t.settingsValues;

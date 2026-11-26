@@ -1,7 +1,7 @@
 import type { LineHealthView, NotificationEntryView } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
 import type { Glyph, Tone } from '@ab/money';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const c = () => t.notificationCatalogue;
 

@@ -1,7 +1,5 @@
 import { GENDERS, type Gender, type Program } from '@ab/catalog';
-import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { SearchInput, Select, t } from '@ab/web-kit';
 import type { TeacherFilter } from './teacher-view';
 
 export interface TeacherFiltersProps {

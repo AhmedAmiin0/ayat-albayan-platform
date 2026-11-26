@@ -1,6 +1,6 @@
 import { apiErrorText } from '@/features/finance/subscriptions';
 import { paymentLinkErrorText } from '@/features/sales/payment-links';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** Domain codes go through salesMoney.error; anything unknown gets the generic save-failed line. */
 /** A custom amount below the admin's cap gets the payment link's own line. */

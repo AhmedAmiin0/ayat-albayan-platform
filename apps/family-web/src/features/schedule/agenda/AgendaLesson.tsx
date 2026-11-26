@@ -2,17 +2,19 @@ import { lessonMinutes, lessonWait, type WeekLesson } from '@ab/client-core';
 import type { RoomJoinResult } from '@ab/schedule';
 import { clockOf } from '@ab/time';
 import { useState } from 'react';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { Dot } from '@ab/web-kit/components/ui/surface/pill';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { LessonAction } from '@ab/web-kit/portal/lessons/LessonAction';
-import { LessonOptionsBar } from '@ab/web-kit/portal/lessons/options/LessonOptionsBar';
-import { RoomOverlay } from '@ab/web-kit/portal/lessons/RoomOverlay';
-import { FamilyChip } from '@ab/web-kit/portal/lessons/options/FamilyChip';
+import {
+  Card,
+  Dot,
+  useClock,
+  teacherLabel,
+  t,
+  useNow,
+  useViewerTz,
+  LessonAction,
+  LessonOptionsBar,
+  FamilyChip,
+} from '@ab/web-kit';
+import { RoomOverlay } from '@ab/web-kit/room';
 
 /** The join button lights up by itself when the window opens. */
 const TICK_MS = 1_000;

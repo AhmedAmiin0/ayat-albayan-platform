@@ -33,7 +33,8 @@ export class MemoryCacheStore implements CacheStore {
   }
 
   delByPrefix(prefix: string): Promise<void> {
-    for (const key of [...this.entries.keys()]) if (key.startsWith(prefix)) this.entries.delete(key);
+    for (const key of [...this.entries.keys()])
+      if (key.startsWith(prefix)) this.entries.delete(key);
     return Promise.resolve();
   }
 

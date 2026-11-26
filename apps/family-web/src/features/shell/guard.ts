@@ -1,10 +1,7 @@
 import { isAccountDisabled, picksChild } from '@ab/client-core';
 import type { QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
-import { meQuery } from '@ab/web-kit/auth/me';
-import { returnSearchOf } from '@ab/web-kit/auth/return-to';
-import { signOut } from '@ab/web-kit/auth/sign-in';
-import { portalHomeQuery } from '@ab/web-kit/portal/api';
+import { meQuery, returnSearchOf, signOut, portalHomeQuery } from '@ab/web-kit';
 
 /** Who opened a family page: a guardian or a student, or a staff login (the «wrongApp» notice). */
 export type Visitor = 'family' | 'staff';

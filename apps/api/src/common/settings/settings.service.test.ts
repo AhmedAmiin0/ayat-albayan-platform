@@ -8,7 +8,9 @@ type Rows = { key: string; value: unknown }[];
 
 /** A db whose select('key, value') answers `rows` (or an error), counting the reads. */
 function service(rows: Rows | { error: string }, ttlMs = 30_000) {
-  const result = Array.isArray(rows) ? { data: rows, error: null } : { data: null, error: { message: rows.error } };
+  const result = Array.isArray(rows)
+    ? { data: rows, error: null }
+    : { data: null, error: { message: rows.error } };
   const select = vi.fn().mockResolvedValue(result);
   const from = vi.fn().mockReturnValue({ select });
   const store = fakeConfigStore([configRow('booking_horizon_weeks', 5, { version: 7 })]);
@@ -22,8 +24,15 @@ describe('SettingsService.all (R-SCH-07, R-SCH-02)', () => {
   });
 
   it('reads the stored values', async () => {
-    const { svc } = service([{ key: 'late_cancel_hours', value: 12 }, { key: 'booking_horizon_weeks', value: 8 }]);
-    expect(await svc.all()).toMatchObject({ late_cancel_hours: 12, booking_horizon_weeks: 8, join_opens_before_min: 15 });
+    const { svc } = service([
+      { key: 'late_cancel_hours', value: 12 },
+      { key: 'booking_horizon_weeks', value: 8 },
+    ]);
+    expect(await svc.all()).toMatchObject({
+      late_cancel_hours: 12,
+      booking_horizon_weeks: 8,
+      join_opens_before_min: 15,
+    });
   });
 
   it.each([

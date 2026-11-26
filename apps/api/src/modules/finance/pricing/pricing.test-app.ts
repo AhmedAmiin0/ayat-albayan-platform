@@ -1,7 +1,8 @@
-// HTTP test harness for /pricing (test-only): real AppModule, fake auth, fake FX source and DB.
+// HTTP test harness for /pricing (test-only): the pricing test root, fake auth, FX source and DB.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { PricingModule } from './pricing.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeFx } from '@/modules/finance/fx/fx.fakes';
@@ -22,7 +23,7 @@ const verify: TokenVerifier = async (token) => {
 
 export async function pricingApp() {
   const fx = fakeFx();
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const mod = await Test.createTestingModule({ imports: [featureRoot(PricingModule)] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
     .useValue(verify)
     .overrideProvider(FX_FETCHER)

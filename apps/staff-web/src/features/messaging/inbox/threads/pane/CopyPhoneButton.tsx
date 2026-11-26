@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, IconButton, Toast, t } from '@ab/web-kit';
 import { copyText } from '@/features/messaging/inbox/messages/lib/save-file';
 
 export function CopyPhoneButton({ phone }: { phone: string }) {

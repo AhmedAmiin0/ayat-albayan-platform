@@ -2,7 +2,7 @@ import { attachModel, emptyFamily, type AttachModel, type MoveChoice } from '@ab
 import type { PeopleEditView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { familySearchQuery, moveFamily } from '@/features/people/students/people-edit/api';
 import { usePeopleWrite } from '@/features/people/students/people-edit/use-people-write';
 

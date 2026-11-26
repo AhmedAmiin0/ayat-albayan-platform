@@ -37,7 +37,9 @@ describe('StudentsService.create (R-STU-02, R-STU-03, R-STU-04)', () => {
   });
 
   it('same phone + similar name → 409 duplicate_student with candidates, nothing inserted', async () => {
-    const { svc, calls } = setup({ guardians: [{ data: G }, { data: { ...G, students: [SUHAILA] } }] });
+    const { svc, calls } = setup({
+      guardians: [{ data: G }, { data: { ...G, students: [SUHAILA] } }],
+    });
     const e = await err(svc.create(WITH_PHONE, 'u1'));
     expect(e).toBeInstanceOf(ConflictException);
     expect((e as ConflictException).getResponse()).toEqual({

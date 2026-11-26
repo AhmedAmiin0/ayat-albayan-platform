@@ -1,10 +1,6 @@
 import type { TeacherStudentHead } from '@ab/shared';
 import { studentStatusStyle } from '@ab/money';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Cartouche, Ltr, StatusChip, PageHead, t } from '@ab/web-kit';
 
 /** Nothing about money. */
 export function FileHead({ head }: { head: Pick<TeacherStudentHead, 'name' | 'code' | 'status'> }) {

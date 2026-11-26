@@ -3,8 +3,7 @@ import {
 } from '@ab/client-core';
 import type { ShortLinkDetail } from '@ab/shared';
 import { useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
+import { t, useViewerTz } from '@ab/web-kit';
 import {
   useResendLink, useRevokeLink, useUpdateLink,
 } from '@/features/platform/short-links/api/use-short-links';

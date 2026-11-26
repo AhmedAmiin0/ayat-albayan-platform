@@ -96,7 +96,11 @@ export interface ConfigParityResponse {
  * deleting starts (from OFF = null) or gets earlier (a shorter period); the server then wants the number of
  * days typed. Lengthening or turning it off deletes nothing more.
  */
-export function needsTypedConfirm(confirm: SettingConfirm | null, value: unknown, prev: unknown): boolean {
+export function needsTypedConfirm(
+  confirm: SettingConfirm | null,
+  value: unknown,
+  prev: unknown,
+): boolean {
   if (confirm !== 'typed' || typeof value !== 'number') return false;
   return !(typeof prev === 'number' && value >= prev);
 }

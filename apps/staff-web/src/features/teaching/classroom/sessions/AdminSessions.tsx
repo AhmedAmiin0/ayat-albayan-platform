@@ -4,23 +4,26 @@ import { SESSION_GROUPS, type SessionGroup } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { TableBox } from '@/components/data-table/TableBox';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import {
+  Button,
+  Cartouche,
+  EmptyState,
+  FormAlert,
+  Icon,
+  PageHead,
+  ListSkeleton,
+  t,
+  locale,
+  useJoinWindow,
+  adminDayQuery,
+  dayAround,
+  useNow,
+  viewerZone,
+} from '@ab/web-kit';
 import { InternalMeetingsList } from '@/features/teaching/meetings/internal/InternalMeetingsList';
 import { NewMeetingMenu } from '@/features/teaching/meetings/NewMeetingMenu';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { useJoinWindow } from '@ab/web-kit/lib/settings/public-config';
-import { adminDayQuery, dayAround } from '@ab/web-kit/classroom/api/api';
 import { SessionCard } from './SessionCard';
 import { groupSessions } from './sessions';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { viewerZone } from '@ab/web-kit/lib/clock-text';
 
 // The day in the UI language with Western digits, not English.
 const DAY = { weekday: 'long', day: 'numeric', month: 'long' } as const;

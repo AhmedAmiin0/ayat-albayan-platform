@@ -3,6 +3,7 @@ import { callsNumber } from '@/common/configuration/integrations/calls-number';
 import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import { allowedRecipients, loadEnv } from '@/config/env/env';
 import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
+import { driverOf } from '@/modules/messaging/whatsapp/drivers/driver-record';
 import type { MediaMessage, MediaNumber } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
 import type { WhatsappClient, WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { NumberClients } from './number-clients';
@@ -36,9 +37,12 @@ function callsSource(): MediaSource {
  *   single-line row).
  */
 export function mediaSource(msg: MediaOf, from: MediaFrom): MediaSource {
-  const calls = msg.number?.provider !== 'crm' && (msg.line ?? msg.number?.purpose) === 'calls';
+  const calls = fetches(msg.number) && (msg.line ?? msg.number?.purpose) === 'calls';
   return calls ? callsSource() : lineSource(msg, from);
 }
+
+const fetches = (number: MediaNumber | null | undefined): boolean =>
+  driverOf(number?.provider).fetchesMedia;
 
 type MediaOf = Pick<MediaMessage, 'line'> & { number?: MediaNumber | null };
 interface MediaFrom {
@@ -58,7 +62,7 @@ const messagingLine = (msg: MediaOf): WaLine => {
 /** Every number but the calls number: its own client, else its line's (as before docs/28 §10). */
 function lineSource(msg: MediaOf, from: MediaFrom): MediaSource {
   const number = msg.number ?? null;
-  if (number?.provider === 'crm') return { kind: 'crm' };
+  if (!fetches(number)) return { kind: 'crm' };
   const line = messagingLine(msg);
   const own = number ? from.numbers.client(number.id) : null;
   if (own) return { kind: 'client', client: own, line: null };

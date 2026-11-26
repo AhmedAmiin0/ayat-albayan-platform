@@ -8,7 +8,10 @@ export interface DismissOptions {
 }
 
 /** Non-modal: no focus trap; the latest `onDismiss` is called, so callers need not memoise it. */
-export function useDismiss(ref: RefObject<HTMLElement | null>, { open, onDismiss }: DismissOptions): void {
+export function useDismiss(
+  ref: RefObject<HTMLElement | null>,
+  { open, onDismiss }: DismissOptions,
+): void {
   const latest = useRef(onDismiss);
   useEffect(() => {
     latest.current = onDismiss;

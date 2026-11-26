@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { packageSlot, type SlotPackage } from './pdf-model';
 
-const pkg = (id: string, lessonsTotal: number, at: { startsOn: string; createdAt?: string }): SlotPackage => ({
+const pkg = (
+  id: string,
+  lessonsTotal: number,
+  at: { startsOn: string; createdAt?: string },
+): SlotPackage => ({
   id,
   lessonsTotal,
   startsOn: at.startsOn,

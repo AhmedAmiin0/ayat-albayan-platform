@@ -1,5 +1,5 @@
 import type { SalesStudentRef } from '@ab/shared';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { Ltr } from '@ab/web-kit';
 
 /** The code is rendered as an LTR island. */
 export function StudentCell({ student }: { student: Pick<SalesStudentRef, 'name' | 'code'> }) {

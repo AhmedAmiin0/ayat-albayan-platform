@@ -28,7 +28,11 @@ export class CorrectionsService {
   }
 
   /** A voided commission stays voided (an admin void is terminal); a paid statement gets a negative adjustment in the next open month. */
-  async voidCommission(input: { commissionId: string; reason: string; actorId: string }): Promise<{ id: string }> {
+  async voidCommission(input: {
+    commissionId: string;
+    reason: string;
+    actorId: string;
+  }): Promise<{ id: string }> {
     await this.rpc.voidCommission(input);
     return { id: input.commissionId };
   }

@@ -1,4 +1,4 @@
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '@ab/web-kit';
 
 // Every row is about 52px with two lines at most (docs/26b §2).
 

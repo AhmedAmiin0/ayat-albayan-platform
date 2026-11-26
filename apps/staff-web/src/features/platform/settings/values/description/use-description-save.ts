@@ -1,8 +1,7 @@
 import { applyStrings } from '@ab/i18n';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { putConfigDescription, storeEntry } from '@/lib/settings/config-entries-api';
-import { BUNDLES, t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { BUNDLES, t, locale } from '@ab/web-kit';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 import type { DescribeTarget } from './describe-target';
 import { textIn } from './description';

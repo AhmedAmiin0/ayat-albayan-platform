@@ -17,7 +17,10 @@ describe('PATCH /messaging/templates/:key/starter', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     t.templates.get.mockResolvedValue(welcome);
-    t.templates.update.mockImplementation(async (_key: string, patch: object) => ({ ...welcome, ...patch }));
+    t.templates.update.mockImplementation(async (_key: string, patch: object) => ({
+      ...welcome,
+      ...patch,
+    }));
   });
 
   it('the admin unticks a starter: 200 with the view (line + flag), audited', async () => {

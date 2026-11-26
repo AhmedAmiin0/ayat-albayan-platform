@@ -1,6 +1,5 @@
 import type { NumberView } from '@ab/shared';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, t } from '@ab/web-kit';
 
 const IDS = ['phone_number_id', 'waba_id', 'app_id'] as const;
 type Id = (typeof IDS)[number];

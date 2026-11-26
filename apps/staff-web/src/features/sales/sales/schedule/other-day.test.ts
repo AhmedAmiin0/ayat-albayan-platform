@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { otherDayNote } from './other-day';
 
 // Sunday 1 Nov 2026 00:30 in Riyadh = Saturday 31 Oct 23:30 in Cairo (UTC+2 after its DST ended).

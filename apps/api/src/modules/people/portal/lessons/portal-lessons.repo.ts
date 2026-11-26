@@ -16,7 +16,11 @@ export interface PortalLessonRow {
   /** Migration 20261117100100; optional in test fakes. */
   room_ended_at?: string | null;
   meeting_link: string | null;
-  teacher: { display_name_ar: string; display_name_en: string | null; meeting_mode: string | null } | null;
+  teacher: {
+    display_name_ar: string;
+    display_name_en: string | null;
+    meeting_mode: string | null;
+  } | null;
   /** Every attendee id: one = the student's override link may apply, more = a group lesson. */
   lesson_students: { student_id: string; chargeable?: boolean }[];
 }
@@ -64,7 +68,11 @@ export class PortalLessonsRepo {
    * The student's lessons whose room is not closed yet (ends after `since`) and starting before
    * `until`.
    */
-  async ahead(input: { studentId: string; since: string; until: string }): Promise<PortalLessonRow[]> {
+  async ahead(input: {
+    studentId: string;
+    since: string;
+    until: string;
+  }): Promise<PortalLessonRow[]> {
     const { data, error } = await this.db
       .from('lesson_students')
       .select(`lesson:lessons!inner(${LESSON})`)
@@ -75,7 +83,9 @@ export class PortalLessonsRepo {
       .limit(100)
       .overrideTypes<Embed[], { merge: false }>();
     if (error) throw dbError(error);
-    return data.flatMap((r) => (r.lesson ? [r.lesson] : [])).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+    return data
+      .flatMap((r) => (r.lesson ? [r.lesson] : []))
+      .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
   }
 
   /** One lesson of the student, or null when the student is not on it. */

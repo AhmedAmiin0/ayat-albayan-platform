@@ -1,9 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { channelPage } from '@ab/web-kit/components/channel/channel.fixtures';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { portalApi, type Answers } from '@ab/web-kit/portal/portal.api-fixture';
-import { kid } from '@ab/web-kit/portal/portal.fixtures';
+import { channelPage, portalApi, type Answers, kid } from '@ab/web-kit/testing';
+import { t } from '@ab/web-kit';
 import { renderAt } from '@/test/render-at';
 import { ChildBody } from './ChildBody';
 

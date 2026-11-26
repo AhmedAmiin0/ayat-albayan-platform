@@ -1,4 +1,4 @@
-import { CLASSROOM_KEY } from '@ab/web-kit/classroom/api/api';
+import { CLASSROOM_KEY } from '@ab/web-kit';
 import type { QueryKey } from '@tanstack/react-query';
 
 // One join token per attempt; a retry removes every attempt of the lesson through `joins`.

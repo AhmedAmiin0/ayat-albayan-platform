@@ -1,9 +1,5 @@
 import { GENDERS, PROGRAMS } from '@ab/catalog';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { PhonePreview } from '@ab/web-kit/components/ui/form/phone-preview';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Input, PhonePreview, Select, t } from '@ab/web-kit';
 import type { SetField, TeacherForm } from './teacher-form';
 import { TeacherMeetingModeField } from './TeacherMeetingModeField';
 import type { Teacher } from '@ab/shared';

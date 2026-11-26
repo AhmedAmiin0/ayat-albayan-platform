@@ -30,12 +30,20 @@ export class FxService {
   async rateSarTo(quote: string): Promise<FxRate> {
     const stored = await this.queries.newest(quote);
     const freshMs = (await this.settings.read()).fx_fresh_hours * HOUR_MS;
-    if (stored && Date.now() - Date.parse(stored.fetched_at) < freshMs) return fromRow(stored, false);
+    if (stored && Date.now() - Date.parse(stored.fetched_at) < freshMs)
+      return fromRow(stored, false);
     try {
       const snap = await this.refresh();
       const rate = snap.rates[quote];
       if (!rate || rate <= 0) throw new Error(`fx: provider has no SAR→${quote} rate`);
-      return { quote, rate, date: snap.updatedAt, provider: snap.provider, fallback: false, ageHours: null };
+      return {
+        quote,
+        rate,
+        date: snap.updatedAt,
+        provider: snap.provider,
+        fallback: false,
+        ageHours: null,
+      };
     } catch (err) {
       this.log.warn(`fx refresh failed: ${err instanceof Error ? err.message : String(err)}`);
       if (stored) return fromRow(stored, true);

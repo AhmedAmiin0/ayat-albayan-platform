@@ -1,12 +1,6 @@
 import { tzChoices, tzOptionLabel } from '@ab/time';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Select } from '@ab/web-kit/components/ui/form/select';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
+import { Field, Select, tzCity, useClock, clockDir, ClockOptions, t } from '@ab/web-kit';
 import { timeOptions, WEEK_ORDER } from '@/features/people/teachers/availability/grid';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { clockDir } from '@ab/web-kit/lib/clock-text';
-import { ClockOptions } from '@ab/web-kit/lib/clock-options';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { QualFieldsProps } from './QualificationFields';
 
 const weekday: Record<string, string> = t.enums.weekday;

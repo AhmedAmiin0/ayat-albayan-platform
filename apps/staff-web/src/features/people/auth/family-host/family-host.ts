@@ -1,8 +1,6 @@
 import type { UserRole } from '@ab/catalog';
 import type { QueryClient } from '@tanstack/react-query';
-import { meQuery } from '@ab/web-kit/auth/me';
-import { signOut } from '@ab/web-kit/auth/sign-in';
-import { env } from '@ab/web-kit/lib/http/env';
+import { meQuery, signOut, env } from '@ab/web-kit';
 
 // Families on the family host (docs/51 §3): once VITE_FAMILY_ORIGIN is set on the staff build, a
 // guardian or student reaching /portal or /account here is signed out of app. and sent there.

@@ -1,13 +1,9 @@
 import type { AuthorTemplate } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
+import { Cartouche, Button, PageHead, Toast, t } from '@ab/web-kit';
 import { meQuery } from '@/features/people/auth';
 import { EditTemplateDialog } from '@/features/messaging/templates/edit/EditTemplateDialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { AuthorTemplateCard } from './AuthorTemplateCard';
 import { NewAuthorTemplateDialog } from './NewAuthorTemplateDialog';
 import { useAuthoredTemplates } from './use-author-templates';

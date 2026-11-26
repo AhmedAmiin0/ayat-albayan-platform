@@ -20,7 +20,9 @@ function setup(results: Parameters<typeof fakeDb>[0]) {
   const fake = fakeDb(results);
   const account = new GoogleAccountQueries(fake.db);
   const settings = new GoogleSettings(fake.db, 30_000);
-  const connection = new GoogleConnection(account, factory, { disconnected: vi.fn() } as unknown as GoogleAlerts);
+  const connection = new GoogleConnection(account, factory, {
+    disconnected: vi.fn(),
+  } as unknown as GoogleAlerts);
   const data = new GoogleData(account, settings, new GoogleItemsQueries(fake.db));
   const writers = { of: () => ({ write: vi.fn() }) } as unknown as GoogleWriters;
   return { ...fake, settings, connection, p: new GoogleSyncProcessor(data, connection, writers) };

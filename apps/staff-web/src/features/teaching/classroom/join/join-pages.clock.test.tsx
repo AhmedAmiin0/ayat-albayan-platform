@@ -2,10 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { setClockPref } from '@ab/web-kit/lib/clock';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { opensAtText } from '@ab/web-kit/classroom/room/livekit/window-hint';
+import { setClockPref, ApiError, t, opensAtText } from '@ab/web-kit';
 import { GuestJoinPage } from './GuestJoinPage';
 import { StaffClassroomPage } from './StaffClassroomPage';
 

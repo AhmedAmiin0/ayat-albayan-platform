@@ -1,6 +1,6 @@
 import { SEND_REPLAYED } from '@ab/client-core';
 import { afterEach, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { clearAllDrafts, draftGeneration, getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { settleTextSend, type Sent } from '@/features/messaging/inbox/composer/lib/use-text-send/use-text-send';
 

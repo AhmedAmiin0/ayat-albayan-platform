@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
 import { salesPeopleQuery } from '@/features/sales/sales/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { LeadFilterFields } from './LeadFilterFields';
 import { CLEAR_LEAD_FILTERS, leadFilterChips } from './lead-filters';
 import type { LeadSearch } from '@/features/sales/leads/types';

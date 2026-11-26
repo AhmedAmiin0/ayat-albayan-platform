@@ -15,7 +15,10 @@ describe('ReportsSettings', () => {
 
   it('answers the stored edit window, late-cancel policy and v2 flag', async () => {
     const stored = {
-      report_teacher_edit_minutes: 45, report_teacher_edit_hours: 6, late_cancel_hours: 12, report_form_v2: true,
+      report_teacher_edit_minutes: 45,
+      report_teacher_edit_hours: 6,
+      late_cancel_hours: 12,
+      report_form_v2: true,
     };
     expect(await readerOf(ReportsSettings, stored).read()).toEqual(stored);
   });

@@ -3,7 +3,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { NumbersModule } from './numbers.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { CommunicationsService } from './communications/communications.service';
@@ -23,15 +24,28 @@ const verify: TokenVerifier = async (token) => {
 
 export async function numbersApp() {
   const m = {
-    numbers: { list: vi.fn(async () => []), create: vi.fn(async () => ({})), update: vi.fn(async () => ({})), remove: vi.fn(async () => undefined), setSecret: vi.fn(async () => ({})), clearSecret: vi.fn(async () => ({})) },
+    numbers: {
+      list: vi.fn(async () => []),
+      create: vi.fn(async () => ({})),
+      update: vi.fn(async () => ({})),
+      remove: vi.fn(async () => undefined),
+      setSecret: vi.fn(async () => ({})),
+      clearSecret: vi.fn(async () => ({})),
+    },
     importer: { run: vi.fn(async () => ({ dry_run: true, changed: false, roles: [] })) },
     comms: { parity: vi.fn(async () => ({ source: 'legacy', roles: [], differences: [] })), setSource: vi.fn(async () => ({ source: 'legacy' })) },
   };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(NumbersService).useValue(m.numbers)
-    .overrideProvider(NumbersImport).useValue(m.importer)
-    .overrideProvider(CommunicationsService).useValue(m.comms)
+  const mod = await Test.createTestingModule({ imports: [messagingRoot(NumbersModule)] })
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(systemResolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(NumbersService)
+    .useValue(m.numbers)
+    .overrideProvider(NumbersImport)
+    .useValue(m.importer)
+    .overrideProvider(CommunicationsService)
+    .useValue(m.comms)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

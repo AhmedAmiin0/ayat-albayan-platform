@@ -39,7 +39,9 @@ describe('InboundService: a re-sent wamid', () => {
     const s = services();
     await s.inbound.handle(unavailable());
     await s.inbound.handle(unavailable());
-    expect(s.queries.stored).toEqual([expect.objectContaining({ body: null, interactive_payload: UNAVAILABLE })]);
+    expect(s.queries.stored).toEqual([
+      expect.objectContaining({ body: null, interactive_payload: UNAVAILABLE }),
+    ]);
     expect(s.push.notifyAdmins).toHaveBeenCalledTimes(1);
   });
 });
@@ -58,8 +60,15 @@ describe('refillPatch / WebhookQueries.insertInbound', () => {
 
   it('a replay updates only the inbound row of that wamid whose payload is still unsupported', async () => {
     const { db, log } = chainDb({ messages: [{ data: [] }, { data: [{ id: 'm1' }] }] });
-    const row = { phone_e164: '+966501234567', direction: 'inbound' as const, wa_message_id: 'wamid.IN1', body: 'نعم' };
-    await expect(new WebhookRepo(db, readerOf(WebhookSettings)).insertInbound(row)).resolves.toBe(false);
+    const row = {
+      phone_e164: '+966501234567',
+      direction: 'inbound' as const,
+      wa_message_id: 'wamid.IN1',
+      body: 'نعم',
+    };
+    await expect(new WebhookRepo(db, readerOf(WebhookSettings)).insertInbound(row)).resolves.toBe(
+      false,
+    );
     expect(callsOf(log, 'messages', 1)).toEqual([
       ['update', [expect.objectContaining({ body: 'نعم' })]],
       ['eq', ['wa_message_id', 'wamid.IN1']],

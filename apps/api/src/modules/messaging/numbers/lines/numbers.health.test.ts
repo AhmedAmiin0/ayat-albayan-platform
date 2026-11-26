@@ -24,6 +24,8 @@ describe('NumbersHealth (#134 item 9)', () => {
 
   it('a failed write never fails the check', async () => {
     const saveHealth = vi.fn(async () => Promise.reject(new Error('down')));
-    await expect(new NumbersHealth({ saveHealth } as unknown as NumbersRepo).save([view({})])).resolves.toBeUndefined();
+    await expect(
+      new NumbersHealth({ saveHealth } as unknown as NumbersRepo).save([view({})]),
+    ).resolves.toBeUndefined();
   });
 });

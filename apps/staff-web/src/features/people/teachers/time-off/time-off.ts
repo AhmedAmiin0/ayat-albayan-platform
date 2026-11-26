@@ -7,10 +7,8 @@ import {
   wallInstant,
   wallToUtc,
 } from '@ab/time';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { dateAndClock, viewerZone } from '@ab/web-kit/lib/clock-text';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import type { Clock } from '@ab/web-kit';
+import { dateAndClock, viewerZone, t, locale } from '@ab/web-kit';
 
 /** Whole days with the end day included, as typed. */
 export type TimeOffDraft = { from: string; to: string; reason: string };

@@ -1,7 +1,7 @@
 import { counted } from '@ab/core';
 import { useId } from 'react';
 import { switchInputClass, SwitchTrack } from '@/components/settings/fields/SwitchTrack';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const F = t.shortLinks.form;
 

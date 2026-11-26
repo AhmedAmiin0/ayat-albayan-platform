@@ -60,7 +60,8 @@ export class ThreadsService {
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
     const first = isFirstPage(q);
     const [at, threshold] = await Promise.all([
-      pageRows({ threads: this.queries, messages: this.messages }, q), renewalThreshold(this.settings),
+      pageRows({ threads: this.queries, messages: this.messages }, q),
+      renewalThreshold(this.settings),
     ]);
     const page = at.rows.slice(0, q.limit).reverse();
     const [people, lessons, messages, tag, read, reopenUsable] = await Promise.all([
@@ -74,7 +75,13 @@ export class ThreadsService {
     const opts = { tag: first ? familyTag(people.students, threshold) : tag, reopenUsable };
     const view = at.found ? toThreadView(at.found, now, opts) : null;
     const thread = view && this.pick ? await this.pick.thread(view, now) : view;
-    const detail: ThreadDetail = { thread, messages, has_more: at.rows.length > q.limit, lessons, people };
+    const detail: ThreadDetail = {
+      thread,
+      messages,
+      has_more: at.rows.length > q.limit,
+      lessons,
+      people,
+    };
     return read ? asRead(detail, now) : detail;
   }
 
@@ -92,4 +99,5 @@ export class ThreadsService {
 }
 
 const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
-const guardiansOf = (rows: readonly ThreadRow[]): string[] => rows.flatMap((r) => (r.guardian_id ? [r.guardian_id] : []));
+const guardiansOf = (rows: readonly ThreadRow[]): string[] =>
+  rows.flatMap((r) => (r.guardian_id ? [r.guardian_id] : []));

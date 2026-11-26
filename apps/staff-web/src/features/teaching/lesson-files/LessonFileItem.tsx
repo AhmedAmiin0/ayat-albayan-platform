@@ -1,10 +1,7 @@
 import type { LessonFileView } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, FormAlert, t, fileLine, fileTitle } from '@ab/web-kit';
 import { ConfirmDialog } from '@/features/finance/payments';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { fileLine, fileTitle } from '@ab/web-kit/lesson-files/file-words';
 import { useFileVisibility, useOpenFile, useRemoveFile } from './use-lesson-files';
 import { VisibleBox } from './VisibleBox';
 

@@ -100,7 +100,11 @@ function allocationError(error: AllocationError): Error {
   return conflict(error);
 }
 
-function payload(ctx: Pay, input: TeacherPaymentCreate, items: { earning_id: string; amount: number }[]): Json {
+function payload(
+  ctx: Pay,
+  input: TeacherPaymentCreate,
+  items: { earning_id: string; amount: number }[],
+): Json {
   return {
     actor: ctx.actorId,
     teacher_id: ctx.teacherId,

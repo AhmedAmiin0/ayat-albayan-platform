@@ -1,6 +1,6 @@
 import { intlLocale } from '@ab/core';
 import { describe, expect, it } from 'vitest';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { locale } from '@ab/web-kit';
 import { notificationStamp, notificationTime } from '@/features/messaging/notifications/format/format';
 
 // The date-fns facade swap (docs/34 §7) keeps the exact Intl strings the bell showed before.

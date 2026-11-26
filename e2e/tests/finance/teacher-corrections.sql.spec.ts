@@ -3,20 +3,21 @@ import { earningId, earningOf, pastLesson, pay, teacherWithRates } from '../../s
 import { approvedPayout } from '../../support/finance/pay-rule';
 import { rolledBack } from '../../support/core/rls';
 import { resetAbrar } from '../../support/core/schedule';
+import { errorMessage } from '../../support/core/db-error';
 
 // Correcting money out to a teacher (migration 20261005000201), each case rolled back.
 
 const refused = (p: Promise<unknown>) =>
   p.then(
     () => 'allowed',
-    (e: { message?: string }) => e.message,
+    errorMessage,
   );
-type PayoutState = {
+interface PayoutState {
   status: string;
   paid_at: string | null;
   method: string | null;
   receipt_path: string | null;
-};
+}
 const payoutOf = async (tx: Parameters<Parameters<typeof rolledBack>[0]>[0], id: string) =>
   (await tx<PayoutState[]>`select status, paid_at, method, receipt_path from public.teacher_payouts where id = ${id}`)[0];
 

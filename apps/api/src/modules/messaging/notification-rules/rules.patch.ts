@@ -34,9 +34,15 @@ export interface PatchPlan {
 }
 
 /** A subset of the entry's channels that keeps its first one, in the entry's order; else 422 invalid. */
-function channelsOf(entry: NotificationEntry, wanted: readonly NotificationChannel[]): NotificationChannel[] {
+function channelsOf(
+  entry: NotificationEntry,
+  wanted: readonly NotificationChannel[],
+): NotificationChannel[] {
   const first = entry.channels[0];
-  if (!wanted.every((c) => entry.channels.includes(c)) || (first !== undefined && !wanted.includes(first))) {
+  if (
+    !wanted.every((c) => entry.channels.includes(c)) ||
+    (first !== undefined && !wanted.includes(first))
+  ) {
     throw ruleError('invalid', 'channels');
   }
   return entry.channels.filter((c) => wanted.includes(c));
@@ -58,7 +64,11 @@ function numberOf(entry: NotificationEntry, wanted: string | null): string | nul
 }
 
 /** The patch over the current effective rule (each given field checked against the entry). */
-function nextRow(input: { entry: NotificationEntry<NotificationKey>; before: EffectiveRule; patch: RulePatchInput }): RuleRowWrite {
+function nextRow(input: {
+  entry: NotificationEntry<NotificationKey>;
+  before: EffectiveRule;
+  patch: RulePatchInput;
+}): RuleRowWrite {
   const { entry, before, patch } = input;
   return {
     key: entry.key,
@@ -81,12 +91,21 @@ export function planPatch(input: PlanInput): PatchPlan {
   const { entry, snapshot, patch } = input;
   if (entry.manual) throw ruleError('not_editable');
   if (entry.locked && patch.enabled === false) throw ruleError('locked');
-  const before = resolveRule(entry, { mode: snapshot.mode, row: snapshot.rows.get(entry.key) ?? null, settings: snapshot.settings });
+  const before = resolveRule(entry, {
+    mode: snapshot.mode,
+    row: snapshot.rows.get(entry.key) ?? null,
+    settings: snapshot.settings,
+  });
   const row = nextRow({ entry, before, patch });
   const essentialOff = entry.essential && before.enabled && !row.enabled;
   if (essentialOff && !confirmed(patch.confirmText)) throw ruleConfirmationRequired();
   const timing = row.timing as AnyRuleTiming | null;
-  const legacy = snapshot.mode === 'legacy' ? legacyValues(entry.key, { enabled: row.enabled, timing }) : {};
-  const after = resolveRule(entry, { mode: snapshot.mode, row, settings: { ...snapshot.settings, ...legacy } });
+  const legacy =
+    snapshot.mode === 'legacy' ? legacyValues(entry.key, { enabled: row.enabled, timing }) : {};
+  const after = resolveRule(entry, {
+    mode: snapshot.mode,
+    row,
+    settings: { ...snapshot.settings, ...legacy },
+  });
   return { row, before, after, legacy, essentialOff };
 }

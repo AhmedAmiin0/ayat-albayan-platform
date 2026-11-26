@@ -10,7 +10,11 @@ const root = makeRepo({
   'apps/api/src/env.ts': '',
   'apps/api/src/x.js': '',
 });
-const r = (renamed: [string, string][] = []): Resolver => ({ root, aliases: loadAliases(root), renamed: new Map(renamed) });
+const r = (renamed: [string, string][] = []): Resolver => ({
+  root,
+  aliases: loadAliases(root),
+  renamed: new Map(renamed),
+});
 
 test('loads the @/ alias of an app tsconfig with comments', () => {
   assert.deepEqual(loadAliases(root), [{ prefix: '@/', dir: 'apps/staff-web/src', scope: 'apps/staff-web' }]);

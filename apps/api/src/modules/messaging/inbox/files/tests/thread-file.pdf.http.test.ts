@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { InboxModule } from '@/modules/messaging/inbox/inbox.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import { StorageService } from '@/common/storage/storage.service';
 import { InboundMediaRepo, type MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
@@ -54,14 +55,23 @@ describe('GET /threads/:phone/messages/:id/pdf/:page: a PDF page under the file 
   const call = (token: string, url = `${BASE}/pdf/1`) => app.inject({ method: 'GET', url, headers: { authorization: `Bearer ${token}` } });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(InboundMediaRepo).useValue(queries)
-      .overrideProvider(PdfPreviewRepo).useValue(pdfs)
-      .overrideProvider(TeacherThreadsRepo).useValue(teachers)
-      .overrideProvider(WHATSAPP_CLIENT).useValue(client)
-      .overrideProvider(WHATSAPP_LINES).useValue({ notifications: client, chat: client })
-      .overrideProvider(StorageService).useValue(storage)
+    const mod = await Test.createTestingModule({ imports: [messagingRoot(InboxModule)] })
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(InboundMediaRepo)
+      .useValue(queries)
+      .overrideProvider(PdfPreviewRepo)
+      .useValue(pdfs)
+      .overrideProvider(TeacherThreadsRepo)
+      .useValue(teachers)
+      .overrideProvider(WHATSAPP_CLIENT)
+      .useValue(client)
+      .overrideProvider(WHATSAPP_LINES)
+      .useValue({ notifications: client, chat: client })
+      .overrideProvider(StorageService)
+      .useValue(storage)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

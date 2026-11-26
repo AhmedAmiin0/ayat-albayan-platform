@@ -25,8 +25,15 @@ export const REMINDER_KEYS = [
 ] as const satisfies readonly TemplateKey[];
 
 /** Registry keys among `keys` that Meta approved (message_templates.status). */
-export async function approvedTemplates(db: Db, keys: readonly TemplateKey[]): Promise<Set<string>> {
-  const { data, error } = await db.from('message_templates').select('key').in('key', [...keys]).eq('status', 'approved');
+export async function approvedTemplates(
+  db: Db,
+  keys: readonly TemplateKey[],
+): Promise<Set<string>> {
+  const { data, error } = await db
+    .from('message_templates')
+    .select('key')
+    .in('key', [...keys])
+    .eq('status', 'approved');
   if (error) throw dbError(error);
   return new Set(data.map((r) => r.key));
 }

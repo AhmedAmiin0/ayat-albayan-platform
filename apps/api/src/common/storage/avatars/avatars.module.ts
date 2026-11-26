@@ -7,7 +7,12 @@ import { StaffPhotos } from './staff-photos';
 /** Global: the account page, the admin's teacher / user photo and every list that shows a staff member. */
 @Global()
 @Module({
-  providers: [{ provide: AVATAR_FILES, useClass: StorageAvatarFiles }, AvatarWriter, StaffPhotos, StaffPhotoAdmin],
+  providers: [
+    { provide: AVATAR_FILES, useClass: StorageAvatarFiles },
+    AvatarWriter,
+    StaffPhotos,
+    StaffPhotoAdmin,
+  ],
   exports: [AVATAR_FILES, AvatarWriter, StaffPhotos, StaffPhotoAdmin],
 })
 export class AvatarsModule {}

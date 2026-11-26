@@ -2,12 +2,8 @@ import type { NumberView } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { Skeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import { Ltr, NuqtaGlyph, Skeleton, t, cn } from '@ab/web-kit';
 import { numbersQuery } from '@/features/messaging/numbers/numbers-api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
 import { CELL, LINK, TH } from './overview-table';
 
 const h = t.communicationsHub;

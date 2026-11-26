@@ -1,10 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, locale } from '@ab/web-kit';
 import { ChatMediaPicker, mediaCardLabel } from './ChatMediaPicker';
 import type { ThreadMediaItem } from '@/features/teaching/booking/draft/contract';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;

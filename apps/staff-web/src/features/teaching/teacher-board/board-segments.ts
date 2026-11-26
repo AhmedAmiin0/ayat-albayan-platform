@@ -1,5 +1,5 @@
 import type { StudentListKind } from '@ab/shared';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // Board segments (docs/46 D4, docs/48); docs/47 PR2 adds a paused segment here.
 

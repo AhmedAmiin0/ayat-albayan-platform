@@ -11,24 +11,49 @@ import { scriptedFetch, templateRow } from '@/modules/messaging/whatsapp/whatsap
 // status from the CRM (nothing imported, nothing marked missing), its submit goes through the
 // CRM; the admin can still set the status by hand (audited), only while the line is on crm.
 
-const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), upsertApprovals: vi.fn(), saveLineSync: vi.fn(async () => undefined), lineSyncs: vi.fn(async () => new Map()) };
+const queries = {
+  all: vi.fn(),
+  get: vi.fn(),
+  update: vi.fn(),
+  insert: vi.fn(),
+  approvals: vi.fn(async () => []),
+  upsertApprovals: vi.fn(),
+  saveLineSync: vi.fn(async () => undefined),
+  lineSyncs: vi.fn(async () => new Map()),
+};
 const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-25T08:00:00Z');
 const f = scriptedFetch(CRM_SENT);
-const lines = { notifications: new CrmWhatsappClient(CRM_ENV, { fetch: f.fetch }), chat: new CrmWhatsappClient(null) };
+const lines = {
+  notifications: new CrmWhatsappClient(CRM_ENV, { fetch: f.fetch }),
+  chat: new CrmWhatsappClient(null),
+};
 const registry = () => templateServices(queries, lines, audit);
-const onCrm = (g: ReturnType<typeof scriptedFetch>) => new CrmWhatsappClient(CRM_ENV, { fetch: g.fetch });
+const onCrm = (g: ReturnType<typeof scriptedFetch>) =>
+  new CrmWhatsappClient(CRM_ENV, { fetch: g.fetch });
 const services = (g: ReturnType<typeof scriptedFetch>) =>
   templateServices(queries, { ...lines, notifications: onCrm(g) }, audit);
 const crmStatus = () => ({ set: (input: Parameters<TemplateAdmin['setCrmStatus']>[0], actor: string) => registry().admin.setCrmStatus(input, actor) });
 const rejected = (p: Promise<unknown>) =>
-  p.then(() => null, (e: { getStatus: () => number; getResponse: () => unknown }) => [e.getStatus(), e.getResponse()]);
+  p.then(
+    () => null,
+    (e: { getStatus: () => number; getResponse: () => unknown }) => [
+      e.getStatus(),
+      e.getResponse(),
+    ],
+  );
 
 beforeEach(() => {
   vi.resetAllMocks();
   vi.stubEnv('WA_PROVIDER', 'crm');
-  queries.all.mockResolvedValue([templateRow({ status: 'approved' }), templateRow({ key: 'gone', meta_name: 'gone', status: 'missing' })]);
-  queries.update.mockImplementation(async (key: string, patch: object) => ({ ...templateRow({ key }), ...patch }));
+  queries.all.mockResolvedValue([
+    templateRow({ status: 'approved' }),
+    templateRow({ key: 'gone', meta_name: 'gone', status: 'missing' }),
+  ]);
+  queries.update.mockImplementation(async (key: string, patch: object) => ({
+    ...templateRow({ key }),
+    ...patch,
+  }));
 });
 afterEach(() => vi.unstubAllEnvs());
 

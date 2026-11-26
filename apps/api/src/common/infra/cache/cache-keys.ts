@@ -19,3 +19,7 @@ export const CACHE_KEYS = {
 /** One user's permission set (ids and permission names only), TTL PERMISSION_TTL_MS. */
 export const PERMISSION_PREFIX = 'perm:';
 export const permissionKey = (userId: string): string => `${PERMISSION_PREFIX}${userId}`;
+
+/** The dashboard finance card's grouped rows of one window, TTL 60 s (FinanceRepo). */
+export const financeCardKey = (w: { from: Date; to: Date }): string =>
+  `finance-card:${w.from.toISOString()}:${w.to.toISOString()}`;

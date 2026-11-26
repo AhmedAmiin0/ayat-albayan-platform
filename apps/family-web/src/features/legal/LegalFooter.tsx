@@ -1,7 +1,6 @@
 import { LEGAL_PAGES, LEGAL_PATHS } from '@ab/client-core';
 import { Link } from '@tanstack/react-router';
-import { LanguageSwitch } from '@ab/web-kit/components/shell/LanguageSwitch';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { LanguageSwitch, t } from '@ab/web-kit';
 import type { LegalFooterProps } from './LegalFooter.types';
 import { FOOTER_LINK_CLASS } from './legal-content';
 

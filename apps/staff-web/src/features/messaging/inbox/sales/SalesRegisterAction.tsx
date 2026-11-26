@@ -1,14 +1,9 @@
 import type { ThreadView } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
+import { Button, Dialog, FormAlert, Icon, IconButton, t } from '@ab/web-kit';
 import { BookingWizard, type BookingWizardProps } from '@/features/teaching/booking/BookingWizard';
 import { BookingModeContext, ChatReturnContext } from '@/features/teaching/booking/mode';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { leadKeys } from '@/features/sales/keys';
 import { registerDrafts, resumable } from './register-drafts';

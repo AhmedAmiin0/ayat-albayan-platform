@@ -1,4 +1,4 @@
-import { BASE, iso, MIN, type Tx } from '../edit-time';
+import { BASE, freeTeacher, iso, MIN, type Tx } from '../edit-time';
 import { USERS } from '../core/users';
 
 // Helpers for create_booking with `siblings` (migration 465), payloads as bookingPayload builds.
@@ -19,6 +19,7 @@ export async function seedSiblings(tx: Tx): Promise<DaySeed> {
     select t.id, t.profile_id from public.teachers t join auth.users u on u.id = t.profile_id
     where u.email = ${USERS.teacher.email}`;
   if (!t) throw new Error('e2e teacher missing (global setup)');
+  await freeTeacher(tx, t.id);
   const [g] = await tx<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
     values ('ولي أمر أيام', ${PHONE}, 'SA', 'Asia/Riyadh') returning id`;
   if (!g) throw new Error('guardian not written');
@@ -48,7 +49,7 @@ const timing = (at: number, time: string) => ({
   starts_on: iso(BASE).slice(0, 10), ends_on: null, meeting_link: null, package: '8',
 });
 
-type PayloadOptions = { requestId: string | null; siblings: boolean; invoice: boolean };
+interface PayloadOptions { requestId: string | null; siblings: boolean; invoice: boolean }
 
 /** A package booking of both children: a weekly 17:00 first rule, optionally a 19:30 sibling two days later. */
 export function dayTimesPayload(s: DaySeed, o: PayloadOptions) {
@@ -69,12 +70,12 @@ export function dayTimesPayload(s: DaySeed, o: PayloadOptions) {
   };
 }
 
-type BookingRow = {
+interface BookingRow {
   rule_id: string;
   lessons: { id: string }[];
   message_ids: string[];
   invoice_id: string | null;
-};
+}
 
 export async function book(
   tx: Tx,
@@ -104,12 +105,12 @@ export async function bookInstant(tx: Tx, s: DaySeed): Promise<BookingRow> {
   return row.r;
 }
 
-type RuleFacts = {
+interface RuleFacts {
   id: string;
   first_rule_id: string | null;
   client_request_id: string | null;
   start_time_local: string;
-};
+}
 
 /** The rules of the seeded teacher written in this transaction, first rule first. */
 export async function rulesOf(tx: Tx, s: DaySeed): Promise<RuleFacts[]> {

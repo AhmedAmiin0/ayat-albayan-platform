@@ -2,7 +2,8 @@ import { SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { SettingsModule } from './settings.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
@@ -27,10 +28,15 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     app.inject({ method, url: '/settings', payload, headers: { authorization: `Bearer ${token}` } });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(SettingsService).useValue(settings)
-      .overrideProvider(AuditService).useValue(audit)
+    const mod = await Test.createTestingModule({ imports: [featureRoot(SettingsModule)] })
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(SettingsService)
+      .useValue(settings)
+      .overrideProvider(AuditService)
+      .useValue(audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

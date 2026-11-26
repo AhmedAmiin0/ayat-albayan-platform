@@ -29,7 +29,13 @@ describe('FollowUpsJob and the follow_up_slots rule', () => {
   });
 
   it('legacy mode: the settings keys still decide the hours and the window', async () => {
-    const rules = { settings: { follow_up_hours: [6, 48], follow_up_slots_from_hours: 24, follow_up_slots_to_days: 3 } };
+    const rules = {
+      settings: {
+        follow_up_hours: [6, 48],
+        follow_up_slots_from_hours: 24,
+        follow_up_slots_to_days: 3,
+      },
+    };
     const { job, queries, slots } = setup({ rules });
     expect(await job.runOnce(d('2026-10-01T16:00:00Z'))).toMatchObject({ queued: 1 });
     expect(queries.candidates).toHaveBeenCalledWith(2);

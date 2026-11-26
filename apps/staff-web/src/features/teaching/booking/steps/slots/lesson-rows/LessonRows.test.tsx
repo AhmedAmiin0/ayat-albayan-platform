@@ -3,7 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { ABRAR } from '@/features/teaching/booking/wizard-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { LessonRows } from './LessonRows';
 
 const apiFetch = vi.hoisted(() => vi.fn());

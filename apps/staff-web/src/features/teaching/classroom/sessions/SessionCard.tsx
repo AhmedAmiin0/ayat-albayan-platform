@@ -2,19 +2,22 @@ import type { LessonView } from '@ab/schedule';
 import { clockOf } from '@ab/time';
 import type { SessionGroup } from '@ab/client-core';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import {
+  Button,
+  Icon,
+  StatusChip,
+  t,
+  cn,
+  teacherLabel,
+  useClock,
+  clockDir,
+  viewerZone,
+  useLessonStatusText,
+} from '@ab/web-kit';
 import { CopyLinkButton } from '@/features/teaching/classroom/join/CopyLinkButton';
 import { SendLinkButton } from '@/features/teaching/classroom/join/SendLinkButton';
 import { sessionChip } from './sessions';
 import { StaffJoinButton } from '@/features/teaching/classroom/join/StaffJoinButton';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { clockDir, viewerZone } from '@ab/web-kit/lib/clock-text';
-import { useLessonStatusText } from '@ab/web-kit/lib/settings/lesson-status-text';
 
 /** Join first and dominant; on phones link actions fold behind a menu, from 640px always shown. */
 export function SessionCard({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {

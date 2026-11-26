@@ -93,7 +93,10 @@ export async function seedPackageStudent(input: {
     if (input.paid)
       await sql`insert into public.payments (subscription_id, amount, currency, method, paid_at, note)
         values (${sub.id}, ${offer.afterDiscount}, ${offer.currency}, 'bank', ${new Date(now.getTime() - DAY)}, 'e2e seed')`;
-    return { ...family, studentId, subscriptionId: sub.id, pastLessonId, todayLessonId, price: offer.afterDiscount };
+    return {
+      ...family, studentId, subscriptionId: sub.id, pastLessonId, todayLessonId,
+      price: offer.afterDiscount,
+    };
   });
 }
 
@@ -122,7 +125,9 @@ export async function subscriptionStatus(subscriptionId: string): Promise<string
 }
 
 /** Admin tasks raised for a package (journey 3: renewal_due at 2 left). */
-export async function tasksFor(subscriptionId: string): Promise<{ kind: string; dedup_key: string }[]> {
+export async function tasksFor(
+  subscriptionId: string,
+): Promise<{ kind: string; dedup_key: string }[]> {
   return withSql((sql) => sql<{ kind: string; dedup_key: string }[]>`
     select kind, dedup_key from public.admin_tasks
     where subject_type = 'subscription' and subject_id = ${subscriptionId} order by created_at`);
@@ -130,7 +135,8 @@ export async function tasksFor(subscriptionId: string): Promise<{ kind: string; 
 
 /** The student's report on a lesson (journey 2: submitted, version 1, PDF state). */
 export async function reportOf(lessonId: string): Promise<
-  { status: string; version: number; pdf_status: string | null; pdf_path: string | null } | undefined
+  | { status: string; version: number; pdf_status: string | null; pdf_path: string | null }
+  | undefined
 > {
   return withSql(async (sql) => {
     const [row] = await sql<{ status: string; version: number; pdf_status: string | null; pdf_path: string | null }[]>`

@@ -14,7 +14,8 @@ const BELL_ONLY: ReadonlySet<string> = new Set(['google_sync_alert', 'commission
 describe('pushRoute', () => {
   it('legacy, no rows: every kind as before (bell + push; the bell-only kinds have no push channel)', async () => {
     const s = await snap();
-    for (const kind of PUSH_KINDS) expect(pushRoute(s, kind), kind).toEqual({ bell: true, push: !BELL_ONLY.has(kind) });
+    for (const kind of PUSH_KINDS)
+      expect(pushRoute(s, kind), kind).toEqual({ bell: true, push: !BELL_ONLY.has(kind) });
   });
 
   it('commission_earned («محفظتي») goes to the bell only', async () => {

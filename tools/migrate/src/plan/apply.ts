@@ -6,7 +6,7 @@ import type { TargetStorage } from '../db/storage.ts';
 import type { TargetDb } from '../db/target.ts';
 import { keyId } from '../keys.ts';
 import { APPLY_ORDER } from '../types.ts';
-import type { ColumnValue, Existing, Plan, PlanItem } from '../types.ts';
+import type { ColumnValue, EntityName, Existing, Plan, PlanItem } from '../types.ts';
 
 interface ApplyInput {
   db: TargetDb;
@@ -80,6 +80,30 @@ function assertStorage(input: ApplyInput): void {
   }
 }
 
+interface EntityRun {
+  input: ApplyInput;
+  ids: Map<string, string | null>;
+  runId: string;
+}
+
+async function applyEntity(entity: EntityName, run: EntityRun): Promise<void> {
+  const { input, ids, runId } = run;
+  const todo = input.plan.items.filter((i) => i.key.entity === entity && i.action !== 'skip');
+  if (todo.length === 0) return;
+  const mod = input.modules.find((m) => m.entity === entity);
+  if (!mod) throw new Error(`No entity module for ${entity}`);
+  for (const batch of batches(todo, input.batchSize ?? BATCH_SIZE)) {
+    await input.db.transaction(async (tx) => {
+      for (const item of batch) {
+        const { storage, readZipEntry } = input;
+        const columns = resolveRefs(item, ids);
+        const ctx: WriteContext = { tx, item, columns, storage, readZipEntry };
+        ids.set(keyId(item.key), await applyItem({ mod, ctx, runId }));
+      }
+    });
+  }
+}
+
 export async function applyPlan(input: ApplyInput): Promise<string> {
   const { db, plan } = input;
   assertStorage(input);
@@ -87,22 +111,7 @@ export async function applyPlan(input: ApplyInput): Promise<string> {
   for (const i of plan.items) ids.set(keyId(i.key), i.targetId);
   const runId = await db.startRun({ sources: input.sources, gitSha: input.gitSha });
   try {
-    for (const entity of APPLY_ORDER) {
-      const todo = plan.items.filter((i) => i.key.entity === entity && i.action !== 'skip');
-      if (todo.length === 0) continue;
-      const mod = input.modules.find((m) => m.entity === entity);
-      if (!mod) throw new Error(`No entity module for ${entity}`);
-      for (const batch of batches(todo, input.batchSize ?? BATCH_SIZE)) {
-        await db.transaction(async (tx) => {
-          for (const item of batch) {
-            const { storage, readZipEntry } = input;
-            const columns = resolveRefs(item, ids);
-            const ctx: WriteContext = { tx, item, columns, storage, readZipEntry };
-            ids.set(keyId(item.key), await applyItem({ mod, ctx, runId }));
-          }
-        });
-      }
-    }
+    for (const entity of APPLY_ORDER) await applyEntity(entity, { input, ids, runId });
     await db.finishRun({ runId, ok: true, counts: plan.counts });
     return runId;
   } catch (err) {

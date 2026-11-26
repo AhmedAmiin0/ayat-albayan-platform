@@ -1,14 +1,8 @@
 import type { GoogleSyncItemView } from '@ab/catalog';
 import { useMutation } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, Ltr, StatusChip, t, useClock, useViewerTz } from '@ab/web-kit';
 import { retryGoogleItem } from '@/features/platform/google-sync/google-api';
 import { errorText, fill, formatAt, RETRYABLE, skipLabel, stateStyle } from '@/features/platform/google-sync/google-format';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 const s = t.googleSync.log;
 const PLANNED_LEAD = s.planned.split('{method}')[0] ?? '';

@@ -1,6 +1,5 @@
 import { useId, type ReactNode } from 'react';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { StatusChip, t } from '@ab/web-kit';
 import type { QuoteResponse } from '@/features/finance/pricing/api';
 import { durationLabel, packageCopy, sessionsOf } from '@/features/finance/pricing/format';
 import { FxNote } from './FxNote';

@@ -1,10 +1,9 @@
 import { payoutStatusStyle } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
+import { StatusChip, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { AssistantStatementView } from '@/features/people/assistants/api';
 import { StatementActions, type StatementAction, type StatementCan } from './StatementActions';
 import { StatementTotals } from './StatementTotals';

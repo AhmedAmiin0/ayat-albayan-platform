@@ -1,6 +1,6 @@
 import { TEMPLATE_CATEGORIES, TEMPLATE_STATUSES, WA_LINES } from '@ab/catalog';
 import type { FilterOption } from '@/components/data-table/DataTable';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // The select filters of the template health table (values are the row's raw values).
 

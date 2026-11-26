@@ -65,7 +65,11 @@ export class GoogleMapController {
   @Put('students/:id')
   setStudent(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<GoogleStudentMapRow> {
     requireAdmin(user);
-    return this.map.setStudent({ studentId: id, files: parseOrThrow(googleStudentMapSchema, body), actorId: user.id });
+    return this.map.setStudent({
+      studentId: id,
+      files: parseOrThrow(googleStudentMapSchema, body),
+      actorId: user.id,
+    });
   }
 
   @Delete('students/:id')

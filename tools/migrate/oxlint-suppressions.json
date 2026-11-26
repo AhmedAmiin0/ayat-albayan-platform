@@ -57,20 +57,9 @@
       "count": 2
     }
   },
-  "src/delta/only.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    }
-  },
   "src/delta/orphans.ts": {
     "complexity": {
       "count": 2
-    },
-    "max-depth": {
-      "count": 1
     }
   },
   "src/delta/scope.ts": {
@@ -89,9 +78,6 @@
     }
   },
   "src/hash.ts": {
-    "no-nested-ternary": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -139,9 +125,6 @@
   "src/map/leads/sheet-leads.ts": {
     "complexity": {
       "count": 2
-    },
-    "max-depth": {
-      "count": 1
     }
   },
   "src/map/lessons/lessons.ts": {
@@ -190,7 +173,7 @@
   },
   "src/map/people/collect.merge.ts": {
     "complexity": {
-      "count": 2
+      "count": 1
     }
   },
   "src/map/people/collect.ts": {
@@ -309,9 +292,6 @@
   "src/map/reports/times.ts": {
     "complexity": {
       "count": 1
-    },
-    "max-depth": {
-      "count": 1
     }
   },
   "src/map/schedule/booking-row.ts": {
@@ -388,12 +368,6 @@
     }
   },
   "src/plan/apply.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 3
-    },
     "typescript/unbound-method": {
       "count": 1
     }
@@ -405,9 +379,6 @@
   },
   "src/plan/changes.ts": {
     "complexity": {
-      "count": 2
-    },
-    "max-depth": {
       "count": 1
     }
   },
@@ -417,11 +388,6 @@
     },
     "typescript/no-unnecessary-type-conversion": {
       "count": 1
-    }
-  },
-  "src/plan/fake-db.ts": {
-    "typescript/require-await": {
-      "count": 11
     }
   },
   "src/plan/match/match.target.ts": {
@@ -435,12 +401,6 @@
     }
   },
   "src/plan/match/templates.target.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    },
     "typescript/no-base-to-string": {
       "count": 1
     }
@@ -458,9 +418,6 @@
   "src/plan/stale-refs.ts": {
     "complexity": {
       "count": 1
-    },
-    "max-depth": {
-      "count": 2
     },
     "stylistic/max-len": {
       "count": 1
@@ -539,20 +496,14 @@
     }
   },
   "src/sources/rows.ts": {
-    "complexity": {
-      "count": 1
-    },
     "typescript/no-base-to-string": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-misused-spread": {
       "count": 1
     }
   },
   "src/sources/sheets/cells.ts": {
-    "complexity": {
-      "count": 1
-    },
     "typescript/restrict-template-expressions": {
       "count": 2
     }

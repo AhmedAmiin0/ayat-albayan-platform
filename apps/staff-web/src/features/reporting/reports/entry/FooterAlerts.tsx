@@ -1,6 +1,5 @@
 import type { ReportFormResponse, ReportView } from '@ab/shared';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { FormAlert, t } from '@ab/web-kit';
 import { useReportApi } from '@/features/reporting/reports/report-api';
 import { SubmittedNote } from '@/features/reporting/reports/history/ReportStatusLine';
 

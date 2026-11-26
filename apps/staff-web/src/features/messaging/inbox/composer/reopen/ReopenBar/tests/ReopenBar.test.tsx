@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ReopenBar } from '@/features/messaging/inbox/composer/reopen/ReopenBar/ReopenBar';

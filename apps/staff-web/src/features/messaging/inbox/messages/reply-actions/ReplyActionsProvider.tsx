@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { usePermissions } from '@/features/people/auth';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
-import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
+import { usePublicConfig } from '@ab/web-kit';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 import { movedKey, ReplyActionsContext, type ReplyActions } from './reply-actions-context';

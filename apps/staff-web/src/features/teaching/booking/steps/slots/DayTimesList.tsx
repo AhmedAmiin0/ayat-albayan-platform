@@ -1,10 +1,5 @@
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, IconButton, tzCity, t, type Clock, useClock, useViewerTz } from '@ab/web-kit';
 import type { DayPick } from '@/features/teaching/booking/draft/draft.days';
-import { type Clock, useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 import { clockOfHhmm } from '@ab/time';
 
 export interface DayTimesListProps {

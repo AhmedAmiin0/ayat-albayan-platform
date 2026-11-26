@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { authApi } from '@ab/web-kit/auth/login/auth-api';
-import { CodesGate } from '@ab/web-kit/auth/login/CodesGate';
-import { LinkRow } from '@ab/web-kit/auth/login/LinkRow';
-import { PasswordForm } from '@ab/web-kit/auth/login/PasswordForm';
-import { StatusNote } from '@ab/web-kit/auth/login/StatusNote';
-import { ResetFlow } from '@ab/web-kit/auth/reset/ResetFlow';
-import { PhoneSignIn } from '@ab/web-kit/auth/login/PhoneSignIn';
+import {
+  t,
+  authApi,
+  CodesGate,
+  LinkRow,
+  PasswordForm,
+  StatusNote,
+  ResetFlow,
+  PhoneSignIn,
+} from '@ab/web-kit';
 
 const F = t.familyAuth;
 type View = 'phone' | 'username' | 'forgot' | 'firstTime';

@@ -5466,12 +5466,6 @@
   "src/features/reporting/reports/entry-v2/use-report-entry-v2.ts": {
     "max-lines-per-function": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
     }
   },
   "src/features/reporting/reports/entry-v2/v2-test-kit.tsx": {
@@ -5531,17 +5525,6 @@
   },
   "src/features/reporting/reports/entry/ReportTextField.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/reporting/reports/entry/use-autosave.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
       "count": 1
     }
   },
@@ -7831,9 +7814,6 @@
   "src/routes/admin/(ops)/book.tsx": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 3
     }
   },
   "src/routes/admin/(ops)/classrooms.tsx": {

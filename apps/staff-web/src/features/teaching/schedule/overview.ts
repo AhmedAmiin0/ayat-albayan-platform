@@ -7,10 +7,9 @@ import type {
 } from '@ab/schedule';
 import { addDays, clockTime, wallInstant } from '@ab/time';
 import type { Range } from '@/features/people/teachers/availability/grid';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, hhmmText } from '@ab/web-kit';
 import { teacherRows } from './lesson/lessons';
-import type { Clock } from '@ab/web-kit/lib/clock';
-import { hhmmText } from '@ab/web-kit/lib/clock-text';
+import type { Clock } from '@ab/web-kit';
 
 // All-teachers calendar view logic (R-SCH-01): filters on the one cached overview, and a teacher's
 // spans cut to a day of the viewer's zone (docs/34) as "HH:MM" ranges for the 08–24 track.

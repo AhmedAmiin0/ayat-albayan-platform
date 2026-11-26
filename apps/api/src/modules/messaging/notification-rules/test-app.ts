@@ -7,7 +7,8 @@ import { publicSettings, SETTING_DEFAULTS, type AcademySettings } from '@ab/sett
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { NotificationRulesModule } from './rules.module';
 import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
@@ -42,7 +43,12 @@ function statefulSettings(state: Partial<AcademySettings>) {
   const write = vi.fn(async (values: Partial<AcademySettings>) => {
     Object.assign(state, values);
   });
-  return { all, write, invalidate: vi.fn(), publicView: vi.fn(async () => publicSettings(await all())) };
+  return {
+    all,
+    write,
+    invalidate: vi.fn(),
+    publicView: vi.fn(async () => publicSettings(await all())),
+  };
 }
 
 /** RulesTable over a map; `fail` makes every read throw (fail-closed paths). */
@@ -60,7 +66,11 @@ function memoryTable() {
       rows.set(row.key, { ...row, updated_at: '2026-10-24T00:00:00Z', updated_by: actorId });
     }),
   };
-  const fake = { rows: t.read, upsert: t.upsert, numberExists: vi.fn(async (id: string) => t.numbers.has(id)) };
+  const fake = {
+    rows: t.read,
+    upsert: t.upsert,
+    numberExists: vi.fn(async (id: string) => t.numbers.has(id)),
+  };
   return { t, fake };
 }
 
@@ -81,17 +91,31 @@ export async function rulesApp(initial: Partial<AcademySettings> = {}) {
       classroom: vi.fn(() => true),
     },
     audit: { record: vi.fn(async () => undefined) },
-    activity: { push: vi.fn(), flush: vi.fn(async () => undefined), onModuleDestroy: vi.fn(async () => undefined) },
+    activity: {
+      push: vi.fn(),
+      flush: vi.fn(async () => undefined),
+      onModuleDestroy: vi.fn(async () => undefined),
+    },
   };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(SettingsService).useValue(m.settings)
-    .overrideProvider(SETTINGS_CACHE_MS).useValue(0)
-    .overrideProvider(SendGate).useValue(m.gate)
-    .overrideProvider(RulesRepo).useValue(m.queries)
-    .overrideProvider(RulesTable).useValue(table.fake)
-    .overrideProvider(AuditService).useValue(m.audit)
-    .overrideProvider(ActivityWriter).useValue(m.activity)
+  const mod = await Test.createTestingModule({ imports: [messagingRoot(NotificationRulesModule)] })
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(resolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(SettingsService)
+    .useValue(m.settings)
+    .overrideProvider(SETTINGS_CACHE_MS)
+    .useValue(0)
+    .overrideProvider(SendGate)
+    .useValue(m.gate)
+    .overrideProvider(RulesRepo)
+    .useValue(m.queries)
+    .overrideProvider(RulesTable)
+    .useValue(table.fake)
+    .overrideProvider(AuditService)
+    .useValue(m.audit)
+    .overrideProvider(ActivityWriter)
+    .useValue(m.activity)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

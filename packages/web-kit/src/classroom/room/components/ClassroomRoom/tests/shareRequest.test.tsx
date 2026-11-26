@@ -11,10 +11,20 @@ const apiSend = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<typeof ApiModule>()), apiSend }));
 
 const S = t.classroom.shareRequest;
-const guestRoom = () => fakeClient({ shareAllowed: false, tiles: [tile({ key: 'me', isLocal: true, role: 'guest' }), tile({ key: 't', role: 'teacher' })] });
-const sent = (c: FakeClient) => c.sendData.mock.calls.filter(([, o]) => o.topic === SHARE_TOPIC).map(([b, o]) => ({ msg: decodeShare(b), to: o.to }));
-const deliver = (c: FakeClient, msg: ShareMessage, from: { identity: string; role: 'guest' | 'teacher' }) =>
-  act(() => c.receive({ bytes: encodeShare(msg), topic: SHARE_TOPIC, from }));
+const guestRoom = () =>
+  fakeClient({
+    shareAllowed: false,
+    tiles: [tile({ key: 'me', isLocal: true, role: 'guest' }), tile({ key: 't', role: 'teacher' })],
+  });
+const sent = (c: FakeClient) =>
+  c.sendData.mock.calls
+    .filter(([, o]) => o.topic === SHARE_TOPIC)
+    .map(([b, o]) => ({ msg: decodeShare(b), to: o.to }));
+const deliver = (
+  c: FakeClient,
+  msg: ShareMessage,
+  from: { identity: string; role: 'guest' | 'teacher' },
+) => act(() => c.receive({ bytes: encodeShare(msg), topic: SHARE_TOPIC, from }));
 
 describe('«اطلب مشاركة الشاشة»', () => {
   afterEach(() => apiSend.mockClear());

@@ -1,9 +1,6 @@
 import type { ChannelAudience } from '@ab/client-core';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { ChannelThread } from '@ab/web-kit/components/channel/ChannelThread';
+import { Button, t, useViewerTz, ChannelThread } from '@ab/web-kit';
 
 /** Closed until asked for, then read-only. */
 export function MonitorChannel({ studentId, audience }: { studentId: string; audience: Extract<ChannelAudience, 'admin' | 'sales'> }) {

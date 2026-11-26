@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { CourseStopModule } from './course-stop.module';
 import { bootWith, ROLE_ADMIN, ROLE_SALES, ROLE_USERS } from '@/common/auth/auth.fakes';
 import { notFound } from '@/common/http/errors';
 import { fakeSettings } from '@/common/settings/settings.fakes';
@@ -111,7 +112,7 @@ function reset(m: ReturnType<typeof mocks>): void {
 
 export async function stopApp() {
   const m = mocks();
-  const builder = Test.createTestingModule({ imports: [AppModule] })
+  const builder = Test.createTestingModule({ imports: [featureRoot(CourseStopModule)] })
     .overrideProvider(SettingsService)
     .useValue(fakeSettings({}))
     .overrideProvider(CourseStopRepo)

@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import type { PortalKind, PortalStudent } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { lesson, student } from '@/portal/portal.fixtures';
 import { ChildSummaryCard } from './ChildSummaryCard';
 

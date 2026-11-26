@@ -68,7 +68,8 @@ export class MessagesRepo {
       .select(MESSAGE_SELECT)
       .maybeSingle();
     if (error) throw new Error(`message manual send failed: ${error.message}`);
-    if (data) await stampDelivered(this.db, { leadId: data.lead_id, dedupKey: data.dedup_key, at: stamp });
+    if (data)
+      await stampDelivered(this.db, { leadId: data.lead_id, dedupKey: data.dedup_key, at: stamp });
     return data;
   }
 

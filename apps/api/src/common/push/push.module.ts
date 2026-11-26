@@ -23,7 +23,11 @@ import { fetchTransport, WEB_PUSH_KEYS, WEB_PUSH_TRANSPORT, WebPushSender, type 
     WebPushSender,
     { provide: WEB_PUSH_TRANSPORT, useValue: fetchTransport },
     // WEB_PUSH_* read per send, like EXPO_*: all three unset (local, e2e) = browser push off.
-    { provide: WEB_PUSH_KEYS, useValue: ((): ReturnType<WebPushKeysSource> => webPushEnv(loadEnv())) satisfies WebPushKeysSource },
+    {
+      provide: WEB_PUSH_KEYS,
+      useValue: ((): ReturnType<WebPushKeysSource> =>
+        webPushEnv(loadEnv())) satisfies WebPushKeysSource,
+    },
     {
       provide: PUSH_TRANSPORT,
       // Read per call so the admin can change it in integrations without a restart.

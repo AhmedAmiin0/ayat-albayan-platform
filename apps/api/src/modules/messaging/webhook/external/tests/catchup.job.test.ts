@@ -12,7 +12,11 @@ const NOW = new Date('2026-10-26T12:00:00Z');
 function job() {
   const queries = fakeQueries();
   const x = externalServices(queries);
-  const j = new ExternalCatchUpJob(x.ext as unknown as ExternalRepo, x.store, x.kapso as unknown as KapsoHistory);
+  const j = new ExternalCatchUpJob(
+    x.ext as unknown as ExternalRepo,
+    x.store,
+    x.kapso as unknown as KapsoHistory,
+  );
   return { ...x, queries, job: j };
 }
 const page = (messages: unknown[], after?: string) => ({ messages, after });
@@ -32,7 +36,9 @@ describe('catchUpSince', () => {
   });
 
   it('a recent newest one still re-reads the last day (a missed fetch is older than it)', () => {
-    expect(catchUpSince(new Date(NOW.getTime() - 60_000), NOW)).toEqual(new Date(NOW.getTime() - LOOKBACK_MS));
+    expect(catchUpSince(new Date(NOW.getTime() - 60_000), NOW)).toEqual(
+      new Date(NOW.getTime() - LOOKBACK_MS),
+    );
   });
 });
 
@@ -80,7 +86,9 @@ describe('ExternalCatchUpJob', () => {
     const error = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
     const x = job();
     x.kapso.outbound.mockRejectedValue(new Error('WhatsApp HTTP 502'));
-    await expect(x.job.runOnce(NOW)).resolves.toEqual([{ listed: 0, stored: 0, known: 0, skipped: 0 }]);
+    await expect(x.job.runOnce(NOW)).resolves.toEqual([
+      { listed: 0, stored: 0, known: 0, skipped: 0 },
+    ]);
     expect(error).toHaveBeenCalledWith(expect.stringContaining('stopped: WhatsApp HTTP 502'));
   });
 

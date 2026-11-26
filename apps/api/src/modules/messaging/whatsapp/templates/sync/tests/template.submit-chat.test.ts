@@ -11,9 +11,21 @@ import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 const queries = { get: vi.fn(), update: vi.fn() };
 const audit = { record: vi.fn() };
-const mock = () => ({ configured: vi.fn(() => true), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() });
+const mock = () => ({
+  configured: vi.fn(() => true),
+  submitTemplate: vi.fn(),
+  canUploadSamples: vi.fn(),
+  uploadSample: vi.fn(),
+});
 const registry = (lines: object) => templateServices(queries, lines, audit);
-const failure = (p: Promise<unknown>) => p.then(() => null, (e: { getStatus: () => number; getResponse: () => unknown }) => [e.getStatus(), e.getResponse()]);
+const failure = (p: Promise<unknown>) =>
+  p.then(
+    () => null,
+    (e: { getStatus: () => number; getResponse: () => unknown }) => [
+      e.getStatus(),
+      e.getResponse(),
+    ],
+  );
 /** The chat line on Meta with its own ids (and whatever else `over` sets). */
 function stubChat(over: Record<string, string>): void {
   const all = { WA_CHAT_PROVIDER: 'meta', WA_API_BASE: 'http://127.0.0.1:4010', WA_API_VERSION: 'v21.0', WA_CHAT_PHONE_NUMBER_ID: 'chat-phone', WA_CHAT_WABA_ID: 'chat-waba', WA_CHAT_ACCESS_TOKEN: 'chat-token', WA_CHAT_APP_ID: '', ...over };
@@ -23,7 +35,10 @@ const CHAT_ROW = { ...RENEWAL_DUE_SEED, key: 'trial_reschedule', line: 'chat' as
 
 beforeEach(() => {
   vi.resetAllMocks();
-  queries.update.mockImplementation(async (_k: string, patch: object) => ({ ...CHAT_ROW, ...patch }));
+  queries.update.mockImplementation(async (_k: string, patch: object) => ({
+    ...CHAT_ROW,
+    ...patch,
+  }));
 });
 afterEach(() => vi.unstubAllEnvs());
 
@@ -81,7 +96,11 @@ describe('submit to the template’s own number', () => {
     stubChat({ WA_CHAT_APP_ID: 'chat-app' });
     const env = lineEnvs(loadEnv()).chat;
     expect(env).toMatchObject({ appId: 'chat-app', wabaId: 'chat-waba' });
-    const f = scriptedFetch(RECORDED_UPLOAD.session, RECORDED_UPLOAD.handle, RECORDED_UPLOAD.createDoc);
+    const f = scriptedFetch(
+      RECORDED_UPLOAD.session,
+      RECORDED_UPLOAD.handle,
+      RECORDED_UPLOAD.createDoc,
+    );
     queries.get.mockResolvedValue({ ...REPORT_READY_SEED, line: 'chat' });
     const notifications = mock();
     await registry({ notifications, chat: whatsappClient(env, { fetch: f.fetch }) }).admin.submit('report_ready', 'a');
@@ -95,8 +114,14 @@ describe('submit to the template’s own number', () => {
     stubChat({});
     const f = scriptedFetch();
     queries.get.mockResolvedValue({ ...REPORT_READY_SEED, line: 'chat' });
-    const lines = { notifications: mock(), chat: whatsappClient(lineEnvs(loadEnv()).chat, { fetch: f.fetch }) };
-    expect(await failure(registry(lines).admin.submit('report_ready', 'a'))).toEqual([409, { code: 'needs_app_id', message: 'needs_app_id', line: 'chat' }]);
+    const lines = {
+      notifications: mock(),
+      chat: whatsappClient(lineEnvs(loadEnv()).chat, { fetch: f.fetch }),
+    };
+    expect(await failure(registry(lines).admin.submit('report_ready', 'a'))).toEqual([
+      409,
+      { code: 'needs_app_id', message: 'needs_app_id', line: 'chat' },
+    ]);
     expect(f.requests).toHaveLength(0);
   });
 });

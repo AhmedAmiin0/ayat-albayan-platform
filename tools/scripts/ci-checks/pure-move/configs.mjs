@@ -59,7 +59,8 @@ export function knipConfigMoved(texts, renames) {
 export function countsNotRaised(base, head) {
   if (typeof base === 'number') return typeof head === 'number' && head <= base;
   if (!isRecord(base) || !isRecord(head)) return false;
-  return Object.entries(head).every(([k, v]) => Object.hasOwn(base, k) && countsNotRaised(base[k], v));
+  return Object.entries(head)
+    .every(([k, v]) => Object.hasOwn(base, k) && countsNotRaised(base[k], v));
 }
 
 const COUNTS = /^refactor\/guards\/(jscpd|lint|cycles)\.json$/;

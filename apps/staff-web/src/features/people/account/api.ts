@@ -1,6 +1,6 @@
 import type { AccountProfile, EmailChange, PasswordChange, ProfileUpdate, SignedUpload } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 
 /** Every /me call acts on the signed-in caller only (R-ACC-01..05). */

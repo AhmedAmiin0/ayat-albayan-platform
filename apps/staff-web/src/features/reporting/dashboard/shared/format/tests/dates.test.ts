@@ -1,6 +1,6 @@
 import { intlLocale } from '@ab/core';
 import { describe, expect, it } from 'vitest';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { locale } from '@ab/web-kit';
 import { monthLabel, rateDate, whenViewer } from '@/features/reporting/dashboard/shared/format/format';
 
 // The date-fns facade swap (docs/34 §7) keeps the exact Intl strings shown before.

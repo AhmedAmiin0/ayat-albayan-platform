@@ -70,9 +70,20 @@ describe('pdf-client: the two calls over the socket', () => {
   });
 
   it('render: POST /render?first=&last=, the JPEGs back by page; a page outside the range is dropped', async () => {
-    const seen = await sandbox(json(200, { images: [{ page: 2, jpg: jpg(2) }, { page: 3, jpg: jpg(3) }, { page: 99, jpg: jpg(9) }] }));
+    const seen = await sandbox(
+      json(200, {
+        images: [
+          { page: 2, jpg: jpg(2) },
+          { page: 3, jpg: jpg(3) },
+          { page: 99, jpg: jpg(9) },
+        ],
+      }),
+    );
     const pages = await renderPdfPages(PDF, { first: 2, last: 6 }, { socket: sock() });
-    expect(pages.map((p) => [p.page, [...p.jpg]])).toEqual([[2, [0xff, 0xd8, 2]], [3, [0xff, 0xd8, 3]]]);
+    expect(pages.map((p) => [p.page, [...p.jpg]])).toEqual([
+      [2, [0xff, 0xd8, 2]],
+      [3, [0xff, 0xd8, 3]],
+    ]);
     expect(seen.map((r) => r.url)).toEqual(['/render?first=2&last=6']);
   });
 

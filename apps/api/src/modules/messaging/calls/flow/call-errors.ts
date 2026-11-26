@@ -25,7 +25,10 @@ export const requestFailed = (code: string) =>
   );
 
 /** Logs a failed Kapso step by the call's own id and the code only (no phone, no SDP). */
-export function logCallError(log: Logger, input: { what: string; callId: string; error: unknown }): string {
+export function logCallError(
+  log: Logger,
+  input: { what: string; callId: string; error: unknown },
+): string {
   const code = callErrorCode(input.error);
   log.warn(`call ${input.callId}: ${input.what} failed (${code})`);
   return code;

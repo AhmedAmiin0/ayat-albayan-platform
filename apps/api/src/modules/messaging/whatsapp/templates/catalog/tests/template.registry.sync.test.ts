@@ -4,8 +4,22 @@ import { RENEWAL_DUE_SEED } from '@/modules/messaging/whatsapp/templates/catalog
 import { ADMIN, whatsappApp } from '@/modules/messaging/whatsapp/test-app';
 import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), approvals: vi.fn(async () => []), saveLineSync: vi.fn(async () => undefined), lineSyncs: vi.fn(async () => new Map()) };
-const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() };
+const queries = {
+  all: vi.fn(),
+  get: vi.fn(),
+  update: vi.fn(),
+  insert: vi.fn(),
+  approvals: vi.fn(async () => []),
+  saveLineSync: vi.fn(async () => undefined),
+  lineSyncs: vi.fn(async () => new Map()),
+};
+const client = {
+  configured: vi.fn(),
+  getTemplates: vi.fn(),
+  submitTemplate: vi.fn(),
+  canUploadSamples: vi.fn(),
+  uploadSample: vi.fn(),
+};
 const chatClient = { configured: vi.fn(), getTemplates: vi.fn() };
 const audit = { record: vi.fn() };
 const lines = { notifications: client, chat: chatClient } as unknown as WhatsappLines;

@@ -1,6 +1,6 @@
 import { quoteCustom, type QuotedTotal } from '@ab/client-core';
 import { useCustomPrice } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** Any positive custom amount is allowed for every role. */
 export function useQuoteCustom(quote: QuotedTotal | undefined) {

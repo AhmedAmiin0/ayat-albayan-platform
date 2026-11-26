@@ -1,9 +1,5 @@
 import type { BookingTeacherOption } from '@ab/schedule';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { tzCity } from '@ab/web-kit/components/ui/form/time-zone-select';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { cn } from '@ab/web-kit/lib/utils';
+import { NuqtaGlyph, tzCity, t, teacherLabel, cn } from '@ab/web-kit';
 
 export interface TeacherOptionProps {
   option: BookingTeacherOption;

@@ -52,7 +52,8 @@ export function fakeRedis() {
   const subscriber = (): RedisSubscriber => {
     const mine: Listener[] = [];
     return {
-      subscribe: async (channel) => mine.forEach((listener) => listeners.push({ channel, listener })),
+      subscribe: async (channel) =>
+        mine.forEach((listener) => listeners.push({ channel, listener })),
       onMessage: (listener) => void mine.push(listener),
       close: () => undefined,
     };
@@ -61,7 +62,10 @@ export function fakeRedis() {
   const copy = () => {
     const log = { warn: vi.fn() };
     const guard = new CacheGuard(log, () => server.now);
-    const cache = new SharedCache(new RedisCacheStore({ commands: commands(), subscriber: subscriber() }), guard);
+    const cache = new SharedCache(
+      new RedisCacheStore({ commands: commands(), subscriber: subscriber() }),
+      guard,
+    );
     cache.onModuleInit();
     return { cache, guard, log };
   };

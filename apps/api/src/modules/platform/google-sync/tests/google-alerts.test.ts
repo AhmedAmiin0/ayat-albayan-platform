@@ -5,7 +5,8 @@ import { TEACHER_ID } from '@/modules/platform/google-sync/google-sync.fakes';
 
 describe('GoogleAlerts.scriptStillRunning', () => {
   const SINCE = '2026-10-28T08:00:00.000Z';
-  const subjects = (push: { notifyAdmins: { mock: { calls: unknown[][] } } }) => push.notifyAdmins.mock.calls.map((c) => (c[1] as { subject: string }).subject);
+  const subjects = (push: { notifyAdmins: { mock: { calls: unknown[][] } } }) =>
+    push.notifyAdmins.mock.calls.map((c) => (c[1] as { subject: string }).subject);
 
   it('one bell row per teacher and handover: the same subject on every pass (PushService dedups it), never WhatsApp or a push', async () => {
     const push = { notifyAdmins: vi.fn().mockResolvedValue(undefined) };

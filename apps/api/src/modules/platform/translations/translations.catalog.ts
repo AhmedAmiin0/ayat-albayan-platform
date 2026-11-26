@@ -43,7 +43,10 @@ function matches(r: TranslationKeyRow, needle: string): boolean {
 }
 
 /** GET /i18n/keys: sorted by key, filtered by section and a case-insensitive search, one page. */
-export function listKeys(query: TranslationKeysQuery, overrides: OverrideMaps): TranslationKeysPage {
+export function listKeys(
+  query: TranslationKeysQuery,
+  overrides: OverrideMaps,
+): TranslationKeysPage {
   const needle = query.search?.toLowerCase() ?? '';
   const rows = KEYS.filter((k) => !query.section || sectionOf(k) === query.section)
     .map((k) => row(k, overrides))
@@ -61,7 +64,11 @@ export function listKeys(query: TranslationKeysQuery, overrides: OverrideMaps): 
 type OverrideProblem = { kind: 'unknown_key' } | { kind: 'placeholders_missing'; missing: string[] };
 
 /** Why `value` cannot override `key` in `locale`, or null: the key must exist, slots must stay. */
-export function overrideProblem(locale: Locale, key: string, value: string): OverrideProblem | null {
+export function overrideProblem(
+  locale: Locale,
+  key: string,
+  value: string,
+): OverrideProblem | null {
   if (!Object.hasOwn(DEFAULTS[locale], key)) return { kind: 'unknown_key' };
   const missing = missingPlaceholders(DEFAULTS[locale][key] ?? '', value);
   return missing.length > 0 ? { kind: 'placeholders_missing', missing } : null;

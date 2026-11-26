@@ -2,8 +2,7 @@ import type { PublicPaymentLink } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { PayPage } from './PayPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());

@@ -42,6 +42,11 @@ export class TeacherScopes {
     const teacher = await this.queries.teacher(user.id);
     if (!teacher) throw notFound('teacher_not_linked');
     const phones = await this.queries.phones(teacher.id);
-    return { teacherId: teacher.id, teacherName: teacher.display_name_ar, phones: new Set(phones), ownPhone: teacher.phone_e164 };
+    return {
+      teacherId: teacher.id,
+      teacherName: teacher.display_name_ar,
+      phones: new Set(phones),
+      ownPhone: teacher.phone_e164,
+    };
   }
 }

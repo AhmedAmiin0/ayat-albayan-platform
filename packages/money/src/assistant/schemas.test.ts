@@ -32,7 +32,9 @@ describe('assistantTermsSchema', () => {
   });
 
   it('refuses a salary without a currency or a start', () => {
-    expect(assistantTermsSchema.safeParse({ commission: null, salary: { amount: 5 } }).success).toBe(false);
+    expect(
+      assistantTermsSchema.safeParse({ commission: null, salary: { amount: 5 } }).success,
+    ).toBe(false);
   });
 });
 

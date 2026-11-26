@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { kid } from '@ab/web-kit/portal/portal.fixtures';
+import { t } from '@ab/web-kit';
+import { kid } from '@ab/web-kit/testing';
 import { parseChildSearch, shownTab, tabOptions } from './child-tabs';
 
 describe('a child page’s tabs', () => {

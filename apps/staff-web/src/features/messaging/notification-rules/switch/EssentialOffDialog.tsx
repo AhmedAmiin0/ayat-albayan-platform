@@ -1,10 +1,6 @@
 import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
 import { useId, useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Dialog, FormAlert, Input, t } from '@ab/web-kit';
 import { fillText } from '@/features/messaging/notification-rules/rule-text';
 
 const e = t.notificationRules.essentialOff;

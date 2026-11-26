@@ -2,7 +2,7 @@ import { extendOffered, type CardTree } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CoursePauseAction, CoursePausePanel } from '@/features/teaching/course-pause';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { CourseActions } from '@/features/teaching/course-actions/CourseActions';
 import { courseCardQuery } from './api';
 import { CardBody } from './CardBody';

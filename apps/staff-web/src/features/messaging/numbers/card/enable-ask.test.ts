@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { evolutionPart, evolutionView, numberView } from '@/features/messaging/numbers/numbers.fixture';
 import { syncView } from '@/features/messaging/numbers/evolution/sync/sync.fixture';
 import { toggleAsk } from './enable-ask';

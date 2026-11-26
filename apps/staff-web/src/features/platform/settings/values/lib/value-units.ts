@@ -1,6 +1,6 @@
 import { counted, pluralForm } from '@ab/core';
 import type { SettingKey } from '@ab/settings';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 // The unit of each counted setting (rule 6: counts of hours, days…, never times of day). The
 // registry has no units yet (docs/26 26-P1 adds them); until then they are listed here.

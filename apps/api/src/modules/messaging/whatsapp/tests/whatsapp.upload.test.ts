@@ -9,7 +9,10 @@ const HANDLE = RECORDED_UPLOAD.handle.body.h;
 
 function client(env: typeof STUB_ENV, ...replies: Parameters<typeof scriptedFetch>) {
   const f = scriptedFetch(...replies);
-  return { c: new HttpWhatsappClient(env, { fetch: f.fetch, timeoutMs: 1_000 }), requests: f.requests };
+  return {
+    c: new HttpWhatsappClient(env, { fetch: f.fetch, timeoutMs: 1_000 }),
+    requests: f.requests,
+  };
 }
 
 describe('HttpWhatsappClient.uploadSample: Resumable Upload API against recorded wa-stub answers', () => {
@@ -31,16 +34,25 @@ describe('HttpWhatsappClient.uploadSample: Resumable Upload API against recorded
   it('without WA_APP_ID: canUploadSamples is false and uploadSample throws before any request', async () => {
     const { c, requests } = client(STUB_ENV);
     expect(c.canUploadSamples()).toBe(false);
-    await expect(c.uploadSample(SAMPLE_REPORT)).rejects.toMatchObject({ info: { code: null, status: 0 } });
+    await expect(c.uploadSample(SAMPLE_REPORT)).rejects.toMatchObject({
+      info: { code: null, status: 0 },
+    });
     expect(requests).toHaveLength(0);
     expect(new HttpWhatsappClient(null).canUploadSamples()).toBe(false);
   });
 
   it('a Meta error on either step is a WaError with Meta’s code; an answer without a handle is too', async () => {
-    const denied = { status: 400, body: { error: { message: '(#100) Invalid parameter', code: 100 } } };
-    await expect(client(APP_ENV, denied).c.uploadSample(SAMPLE_REPORT)).rejects.toMatchObject({ info: { code: 100, status: 400 } });
+    const denied = {
+      status: 400,
+      body: { error: { message: '(#100) Invalid parameter', code: 100 } },
+    };
+    await expect(client(APP_ENV, denied).c.uploadSample(SAMPLE_REPORT)).rejects.toMatchObject({
+      info: { code: 100, status: 400 },
+    });
     const second = client(APP_ENV, RECORDED_UPLOAD.session, denied);
-    await expect(second.c.uploadSample(SAMPLE_REPORT)).rejects.toMatchObject({ info: { code: 100 } });
+    await expect(second.c.uploadSample(SAMPLE_REPORT)).rejects.toMatchObject({
+      info: { code: 100 },
+    });
     const empty = client(APP_ENV, RECORDED_UPLOAD.session, { status: 200, body: {} });
     await expect(empty.c.uploadSample(SAMPLE_REPORT)).rejects.toBeInstanceOf(WaError);
     const odd = client(APP_ENV, { status: 200, body: { id: '../messages' } });

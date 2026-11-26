@@ -1,7 +1,7 @@
 import type { LessonStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { lessonAt } from '@/features/reporting/dashboard/today/today-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { groupOf, groupSessions, sessionChip } from './sessions';
 
 const NOW = new Date('2026-10-05T10:00:00.000Z');

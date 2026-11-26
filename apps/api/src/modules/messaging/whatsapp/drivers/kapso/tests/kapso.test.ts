@@ -27,7 +27,11 @@ describe('authHeaders per driver', () => {
 });
 
 describe('nextTemplateCursor', () => {
-  const page = (count: number, paging?: { next?: string; cursors?: { after?: string } }) => ({ count, limit: 100, ...(paging ? { paging } : {}) });
+  const page = (count: number, paging?: { next?: string; cursors?: { after?: string } }) => ({
+    count,
+    limit: 100,
+    ...(paging ? { paging } : {}),
+  });
 
   it('meta follows `after` only while paging.next says there is more', () => {
     expect(nextTemplateCursor(STUB_ENV, page(100, { next: 'https://x/next', cursors: { after: 'c1' } }))).toBe('c1');
@@ -71,11 +75,22 @@ describe('byDriver: Kapso refusing its key is the credential class', () => {
   it('Meta lines, other statuses and real Meta codes pass through unchanged', () => {
     const meta401 = err(401, null);
     expect(byDriver(STUB_ENV, meta401)).toBe(meta401);
-    for (const e of [err(400, 131047), err(404, null), err(403, 10), err(401, 190), err(403, 131031)]) expect(byDriver(KAPSO_ENV, e)).toBe(e);
+    for (const e of [
+      err(400, 131047),
+      err(404, null),
+      err(403, 10),
+      err(401, 190),
+      err(403, 131031),
+    ])
+      expect(byDriver(KAPSO_ENV, e)).toBe(e);
   });
 
   it('graphHttp applies it to a keyed Kapso 401, graphDownload never (the credential-free download_url)', async () => {
-    const conn = (f: ReturnType<typeof kapsoFetch>) => ({ env: KAPSO_ENV, fetch: f.fetch, timeoutMs: 1_000 });
+    const conn = (f: ReturnType<typeof kapsoFetch>) => ({
+      env: KAPSO_ENV,
+      fetch: f.fetch,
+      timeoutMs: 1_000,
+    });
     const keyed = kapsoFetch({ status: 401, body: { error: 'Unauthorized' } });
     const e = await graphHttp(conn(keyed)).json({ path: 'x', schema: z.unknown() }).catch((x: unknown) => x);
     expect(e).toBeInstanceOf(WaError);

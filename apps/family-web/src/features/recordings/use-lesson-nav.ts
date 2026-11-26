@@ -1,5 +1,5 @@
 import { useNavigate, useRouter } from '@tanstack/react-router';
-import type { OpenReport } from '@ab/web-kit/portal/report/ReportView';
+import type { OpenReport } from '@ab/web-kit';
 
 /** Back goes home when the page was the first one, never out of the app. */
 export function useLessonNav(studentId: string) {

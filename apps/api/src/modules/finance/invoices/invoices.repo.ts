@@ -97,7 +97,9 @@ type Fetched = {
   size_bytes: number;
   source: string;
   created_at: string;
-  rule: { schedule_rule_students: { student: { id: string; name: string; code: string | null } | null }[] } | null;
+  rule: {
+    schedule_rule_students: { student: { id: string; name: string; code: string | null } | null }[];
+  } | null;
 };
 
 /** A trial never has an invoice (check constraint), so a trial row cannot occur and is skipped. */

@@ -15,8 +15,7 @@ import {
 } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { meQuery } from '@/features/people/auth';
-import { apiFetch, apiSend, type SendMethod } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { apiFetch, apiSend, type SendMethod, t } from '@ab/web-kit';
 
 // Needs people.edit, students.attach_guardian or people.switch_role.
 

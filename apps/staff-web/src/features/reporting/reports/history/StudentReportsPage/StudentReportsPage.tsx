@@ -1,8 +1,6 @@
 import type { UserRole } from '@ab/catalog';
 import type { ReactNode } from 'react';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Cartouche, PageHead, t } from '@ab/web-kit';
 import { StudentReportsBody } from '@/features/reporting/reports/history/StudentReportsBody';
 
 export interface StudentReportsPageProps {

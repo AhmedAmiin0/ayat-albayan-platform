@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
-import { ApiError } from '@ab/web-kit/lib/http/api';
+import { ApiError } from '@ab/web-kit';
 import { editUsedBefore, MONEY_KEY, usedBeforeStateQuery } from '@/features/finance/subscriptions/api';
 
 export interface EditUsedBeforeOptions {

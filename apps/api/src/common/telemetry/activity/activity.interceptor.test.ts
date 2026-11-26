@@ -84,9 +84,13 @@ describe('ActivityInterceptor', () => {
   it('captures the status of a thrown error and rethrows it unchanged', async () => {
     const { writer, interceptor } = setup();
     const err = new NotFoundException();
-    const run = interceptor.intercept(ctxFor({ user: ADMIN }), { handle: () => throwError(() => err) });
+    const run = interceptor.intercept(ctxFor({ user: ADMIN }), {
+      handle: () => throwError(() => err),
+    });
     await expect(firstValueFrom(run)).rejects.toBe(err);
-    expect(writer.push).toHaveBeenCalledWith(expect.objectContaining({ status: 404, entity_id: null }));
+    expect(writer.push).toHaveBeenCalledWith(
+      expect.objectContaining({ status: 404, entity_id: null }),
+    );
 
     const boom = interceptor.intercept(ctxFor({ user: ADMIN }), { handle: () => throwError(() => new Error('x')) });
     await expect(firstValueFrom(boom)).rejects.toThrow('x');
@@ -97,7 +101,9 @@ describe('ActivityInterceptor', () => {
     const { interceptor } = setup(() => {
       throw new Error('queue broken');
     });
-    const out = await firstValueFrom(interceptor.intercept(ctxFor({ user: ADMIN }), { handle: () => of({ ok: 1 }) }));
+    const out = await firstValueFrom(
+      interceptor.intercept(ctxFor({ user: ADMIN }), { handle: () => of({ ok: 1 }) }),
+    );
     expect(out).toEqual({ ok: 1 });
   });
 

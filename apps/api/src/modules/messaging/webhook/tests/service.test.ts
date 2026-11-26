@@ -10,7 +10,11 @@ function service(phoneNumberId: string | undefined = PHONE_NUMBER_ID, chat?: str
   const statuses = { handle: vi.fn().mockResolvedValue(undefined) };
   const config = { appSecrets: ['s'], verifyToken: 't', numbers: phoneNumberId ? { notifications: phoneNumberId } : {} };
   const lines = chat ? { ...config, numbers: { ...config.numbers, chat } } : config;
-  const svc = new WebhookService(lines, inbound as unknown as InboundService, statuses as unknown as StatusService);
+  const svc = new WebhookService(
+    lines,
+    inbound as unknown as InboundService,
+    statuses as unknown as StatusService,
+  );
   return { svc, inbound, statuses };
 }
 
@@ -96,7 +100,9 @@ describe('within', () => {
   it('false once the budget passes; the work keeps running', async () => {
     vi.useFakeTimers();
     let done = false;
-    const work = new Promise<void>((resolve) => setTimeout(() => resolve(void (done = true)), 1_000));
+    const work = new Promise<void>((resolve) =>
+      setTimeout(() => resolve(void (done = true)), 1_000),
+    );
     const result = within(work, 100);
     await vi.advanceTimersByTimeAsync(100);
     await expect(result).resolves.toBe(false);

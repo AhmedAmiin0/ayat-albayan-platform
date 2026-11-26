@@ -31,9 +31,18 @@ describe('MessageDispatch — a voice note', () => {
   });
 
   it('an image or a PDF never carries voice', async () => {
-    await dispatch().send(file({ media_path: 'out/u1/r1/a.jpg', media_mime: 'image/jpeg' }), null, 'chat');
-    await dispatch().send(file({ media_path: 'out/u1/r1/a.pdf', media_mime: 'application/pdf' }), null, 'chat');
-    for (const [input] of client.sendDocument.mock.calls as [{ voice: boolean }][]) expect(input.voice).toBe(false);
+    await dispatch().send(
+      file({ media_path: 'out/u1/r1/a.jpg', media_mime: 'image/jpeg' }),
+      null,
+      'chat',
+    );
+    await dispatch().send(
+      file({ media_path: 'out/u1/r1/a.pdf', media_mime: 'application/pdf' }),
+      null,
+      'chat',
+    );
+    for (const [input] of client.sendDocument.mock.calls as [{ voice: boolean }][])
+      expect(input.voice).toBe(false);
   });
 });
 

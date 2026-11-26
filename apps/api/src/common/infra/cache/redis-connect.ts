@@ -10,7 +10,12 @@ const COMMON: RedisOptions = {
 };
 
 /** Commands fail at once while disconnected (no offline queue) and after 250 ms when Redis is slow. */
-const COMMANDS: RedisOptions = { ...COMMON, enableOfflineQueue: false, commandTimeout: 250, maxRetriesPerRequest: 1 };
+const COMMANDS: RedisOptions = {
+  ...COMMON,
+  enableOfflineQueue: false,
+  commandTimeout: 250,
+  maxRetriesPerRequest: 1,
+};
 
 /** The listener queues its SUBSCRIBE until Redis is up and re-subscribes after every reconnect. */
 const SUBSCRIBER: RedisOptions = { ...COMMON, maxRetriesPerRequest: null, autoResubscribe: true };
@@ -19,7 +24,10 @@ const SUBSCRIBER: RedisOptions = { ...COMMON, maxRetriesPerRequest: null, autoRe
  * The two ioredis connections behind RedisCacheStore. `onError` gets every connection error (ioredis
  * emits one per failed reconnect); the URL (it may carry a password) is never logged.
  */
-export function connectRedis(url: string, onError: (e: unknown) => void): { commands: RedisCommands; subscriber: RedisSubscriber } {
+export function connectRedis(
+  url: string,
+  onError: (e: unknown) => void,
+): { commands: RedisCommands; subscriber: RedisSubscriber } {
   const cmd = new Redis(url, COMMANDS);
   const sub = new Redis(url, SUBSCRIBER);
   cmd.on('error', onError);

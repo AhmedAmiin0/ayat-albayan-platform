@@ -1,6 +1,6 @@
 import type { StudentRecordingFilters, StudentRecordingsPage } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { recordingKeys } from '@/features/people/keys';
 
 export const RECORDINGS_KEY = recordingKeys.all;

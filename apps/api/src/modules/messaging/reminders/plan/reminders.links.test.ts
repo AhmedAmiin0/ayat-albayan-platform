@@ -14,7 +14,8 @@ const DUE = { now: at('2026-10-04T13:10:00Z'), minutesBefore: 60, win: DEFAULT_J
 const noLink = sampleLesson({ meeting_link: null });
 
 const linkOf = (lesson = sampleLesson(), ctx = STATIC) => sentLinks([lesson], ctx)[0]?.meeting_link;
-const keysOf = (lesson = sampleLesson(), ctx = STATIC, timing = DUE) => joinCandidates([lesson], ctx, timing).map((c) => c.dedupKey);
+const keysOf = (lesson = sampleLesson(), ctx = STATIC, timing = DUE) =>
+  joinCandidates([lesson], ctx, timing).map((c) => c.dedupKey);
 
 describe('static mode (the default)', () => {
   it('a lesson with its fixed link keeps it, and no family link is minted', () => {

@@ -1,8 +1,6 @@
 import { GOOGLE_SYNC_STATES, type GoogleStatusView } from '@ab/catalog';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, FormAlert, t } from '@ab/web-kit';
 import { BlockSkeleton, GoogleBlock, LoadError } from '@/features/platform/google-sync/GoogleBlock';
 import { googleItemsQuery, googleStatusQuery, reconcileGoogle } from '@/features/platform/google-sync/google-api';
 import { fill } from '@/features/platform/google-sync/google-format';

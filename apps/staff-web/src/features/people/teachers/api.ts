@@ -1,7 +1,7 @@
 import type { AvailabilityRow, Teacher, TeacherListRow, TimeOff } from '@ab/shared';
 import type { Page } from '@ab/core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 import { sortFilterParams } from '@/lib/list/list-search';
 import { teacherKeys } from '@/features/people/keys';
 import type { ListUrlState } from '@/lib/list/list-url';

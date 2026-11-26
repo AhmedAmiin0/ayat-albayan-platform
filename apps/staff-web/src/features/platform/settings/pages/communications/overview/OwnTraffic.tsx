@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ownTrafficQuery } from '@/features/messaging/numbers';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const h = t.communicationsHub;
 

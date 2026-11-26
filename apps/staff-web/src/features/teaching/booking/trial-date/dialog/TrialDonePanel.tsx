@@ -1,11 +1,7 @@
 import type { TrialDateResult } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, NuqtaGlyph, t, useClock, useViewerTz } from '@ab/web-kit';
 import { useChatReturn } from '@/features/teaching/booking/mode';
 import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 export interface TrialDonePanelProps {
   result: TrialDateResult;

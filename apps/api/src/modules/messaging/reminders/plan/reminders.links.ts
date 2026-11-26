@@ -78,12 +78,28 @@ function lessonCandidates(lesson: ReminderLesson, at: CandidateTiming): RoomCand
     // the key reuses the `lesson_reminder:` prefix on purpose, so edit_lesson_time (migration
     // 175's regex) expires and frees it when the time moves; renaming it means changing that regex too.
     const dedupKey = `lesson_reminder:${lesson.id}:${s.id}:room`;
-    return [{ lessonId: lesson.id, studentId: s.id, name: s.name, phone: g.phone_e164, guardianId: g.id, dedupKey, expiresAt }];
+    return [
+      {
+        lessonId: lesson.id,
+        studentId: s.id,
+        name: s.name,
+        phone: g.phone_e164,
+        guardianId: g.id,
+        dedupKey,
+        expiresAt,
+      },
+    ];
   });
 }
 
 /** One per student once the same-day reminder is due, only while the template is approved. */
-export function joinCandidates(lessons: readonly ReminderLesson[], ctx: RoomContext, at: CandidateTiming): RoomCandidate[] {
+export function joinCandidates(
+  lessons: readonly ReminderLesson[],
+  ctx: RoomContext,
+  at: CandidateTiming,
+): RoomCandidate[] {
   if (!ctx.joinOk) return [];
-  return lessons.filter((l) => isOpen(l.status) && roomFor(l, ctx)).flatMap((l) => lessonCandidates(l, at));
+  return lessons
+    .filter((l) => isOpen(l.status) && roomFor(l, ctx))
+    .flatMap((l) => lessonCandidates(l, at));
 }

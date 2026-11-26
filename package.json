@@ -42,7 +42,8 @@
     "guard:move-only": "node tools/scripts/units/move-only/gate.mjs",
     "units:fold": "node tools/scripts/units/fold.ts",
     "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs",
-    "imports:extensionless": "node tools/scripts/imports/extensionless.mjs"
+    "imports:extensionless": "node tools/scripts/imports/extensionless.mjs",
+    "imports:kit-entries": "node tools/scripts/imports/kit-entries.mjs"
   },
   "devDependencies": {
     "@ab/config": "workspace:*",

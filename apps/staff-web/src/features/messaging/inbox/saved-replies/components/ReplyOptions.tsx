@@ -1,7 +1,5 @@
 import type { SavedReply } from '@ab/shared';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Icon, t, cn } from '@ab/web-kit';
 import { Marked } from '@/features/messaging/inbox/saved-replies/panel/Marked';
 import { RowActions } from './MineActions';
 

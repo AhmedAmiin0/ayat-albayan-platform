@@ -1,11 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { DataTable } from '@/components/data-table/DataTable';
 import { TableBox } from '@/components/data-table/TableBox';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Cartouche, EmptyState, PageHead, Pager, t } from '@ab/web-kit';
 import { withFilter, withoutFilters, withSort, type ListUrlState } from '@/lib/list/list-url';
 import { activityQuery } from './activity.api';
 import { activityColumns } from './activityColumns';

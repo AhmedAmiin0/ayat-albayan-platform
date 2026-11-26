@@ -1,10 +1,10 @@
-// HTTP test harness for the webhook (test-only): AppModule + WebhookModule with the real webhook
+// HTTP test harness for the webhook (test-only): the WebhookModule test root with the real webhook
 // services over fake queries / leads / lessons / push / audit, and rawBody on like main.ts.
 import { createHmac } from 'node:crypto';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '@/common/auth/auth.guard';
 import { PushService } from '@/common/push/push.service';
@@ -46,13 +46,20 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
   const kapso = fakeKapso();
   /** The CRM inbound queue (no db): nothing due, so a kick finds no CRM call to make. */
   const crmQueue = { enqueue: vi.fn(async () => undefined), due: vi.fn(async () => []) };
-  const mod = await Test.createTestingModule({ imports: [AppModule, WebhookModule] })
+  const mod = await Test.createTestingModule({ imports: [messagingRoot(WebhookModule)] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
     .useValue(async () => {
       throw new Error('no users in webhook tests');
     })
     .overrideProvider(WEBHOOK_CONFIG)
-    .useValue({ appSecrets: [SECRET], verifyToken: VERIFY, numbers: { notifications: PHONE_NUMBER_ID }, kapsoSecret: KAPSO_SECRET, wacrmSecret: WACRM_SECRET, ...config })
+    .useValue({
+      appSecrets: [SECRET],
+      verifyToken: VERIFY,
+      numbers: { notifications: PHONE_NUMBER_ID },
+      kapsoSecret: KAPSO_SECRET,
+      wacrmSecret: WACRM_SECRET,
+      ...config,
+    })
     .overrideProvider(WebhookRepo)
     .useValue(deps.queries)
     .overrideProvider(LeadsService)
@@ -73,7 +80,9 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
     .overrideProvider(CrmInboundRepo)
     .useValue(crmQueue)
     .compile();
-  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
+  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), {
+    rawBody: true,
+  });
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   /** POSTs `body` exactly as given (a string), signed unless `signature` is passed. */

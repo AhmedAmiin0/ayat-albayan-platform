@@ -1,15 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Pager } from '@ab/web-kit/components/ui/layout/pager';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { Button, Cartouche, Icon, PageHead, Pager, Toast, usePermissions, t } from '@ab/web-kit';
 import { StaffPresencePanel } from '@/features/platform/presence';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { userListQuery, type UsersPageView } from '@/features/people/users/api';
 import { CreateUserDialog } from '@/features/people/users/create/CreateUserDialog';
 import { UserDetailDialog } from '@/features/people/users/edit/UserDetailDialog';

@@ -1,7 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Dialog, FormAlert, t } from '@ab/web-kit';
 import { roleOptionsQuery, userQuery } from '@/features/people/users/api';
 import { UserEditor } from './UserEditor';
 

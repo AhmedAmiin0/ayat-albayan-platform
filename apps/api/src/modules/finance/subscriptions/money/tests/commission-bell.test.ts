@@ -12,8 +12,15 @@ const signed = (n: string, currency: string) => `⁦+${n}⁩ ${currency}`;
 function setup(audit: FakeResult[], commissions: FakeResult[] = []) {
   const { db, calls, trips } = fakeDb({ audit_log: audit, assistant_commissions: commissions });
   const push = { notifyProfiles: vi.fn().mockResolvedValue(undefined) };
-  const subjects = () => push.notifyProfiles.mock.calls.map((c) => (c[0] as { subject: string }).subject);
-  return { bell: new CommissionBell(db, push as unknown as PushService), push, calls, trips, subjects };
+  const subjects = () =>
+    push.notifyProfiles.mock.calls.map((c) => (c[0] as { subject: string }).subject);
+  return {
+    bell: new CommissionBell(db, push as unknown as PushService),
+    push,
+    calls,
+    trips,
+    subjects,
+  };
 }
 
 describe('CommissionBell («عمولة جديدة», owner 2026-10-29)', () => {
@@ -34,7 +41,8 @@ describe('CommissionBell («عمولة جديدة», owner 2026-10-29)', () => {
   it('asks for the earn and reinstate audit rows of the last 5 minutes, then those commissions still earned; a voided one rings nothing', async () => {
     const t = setup([{ data: [EARN] }], [{ data: [] }]);
     await t.bell.notify(NOW);
-    const of = (table: string, m: string) => t.calls.filter((c) => c.table === table && c.method === m).map((c) => c.args);
+    const of = (table: string, m: string) =>
+      t.calls.filter((c) => c.table === table && c.method === m).map((c) => c.args);
     expect(of('audit_log', 'eq')).toEqual([['entity', 'assistant_commissions']]);
     expect(of('audit_log', 'in')).toEqual([['action', ['earn', 'reinstate']]]);
     expect(of('audit_log', 'gte')).toEqual([['at', '2026-10-29T16:37:20.000Z']]);
@@ -52,7 +60,10 @@ describe('CommissionBell («عمولة جديدة», owner 2026-10-29)', () => {
 
   it('paid, refunded, paid again: the re-earn (an UPDATE of the same row, old created_at) rings on its own reinstate row; a replay keeps that subject', async () => {
     const reinstate = { id: 'audit-2', entity_id: 'ca03d8c8' };
-    const t = setup([{ data: [reinstate] }, { data: [reinstate] }], [{ data: [ROW] }, { data: [ROW] }]);
+    const t = setup(
+      [{ data: [reinstate] }, { data: [reinstate] }],
+      [{ data: [ROW] }, { data: [ROW] }],
+    );
     await t.bell.notify(NOW);
     await t.bell.notify(NOW);
     // The same subject twice: PushService's dedup key keeps one row, so the replay tells no one again.
@@ -63,7 +74,9 @@ describe('CommissionBell («عمولة جديدة», owner 2026-10-29)', () => {
     const events = [{ data: [EARN, { id: 'audit-2', entity_id: 'c2' }] }];
     const t = setup(events, [{ data: [{ ...ROW, amount: 12.5, currency: 'SAR' }, { ...ROW, id: 'c2', currency: 'GBP' }] }]);
     await t.bell.notify(NOW);
-    const amounts = t.push.notifyProfiles.mock.calls.map((c) => (c[0] as { vars: { amount: string } }).vars.amount);
+    const amounts = t.push.notifyProfiles.mock.calls.map(
+      (c) => (c[0] as { vars: { amount: string } }).vars.amount,
+    );
     expect(amounts).toEqual([signed('12.5', 'ر.س'), signed('50', 'GBP')]);
   });
 

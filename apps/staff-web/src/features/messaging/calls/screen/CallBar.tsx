@@ -1,8 +1,7 @@
 import { callClock, callStatusText, type CallPhase, type CallSession } from '@ab/client-core';
 import type { ActiveCallView } from '@ab/shared';
 import { useSyncExternalStore } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, t } from '@ab/web-kit';
 
 export interface CallBarProps {
   session: CallSession;

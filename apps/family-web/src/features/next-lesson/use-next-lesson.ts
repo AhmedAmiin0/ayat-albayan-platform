@@ -1,7 +1,6 @@
 import { lessonWait, nextLesson } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
-import { portalLessonsQuery } from '@ab/web-kit/portal/api';
+import { useNow, portalLessonsQuery } from '@ab/web-kit';
 
 /** The countdown ticks every second; the join button turns on by itself at the window. */
 const TICK_MS = 1_000;

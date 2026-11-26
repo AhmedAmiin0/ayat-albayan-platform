@@ -30,6 +30,8 @@ describe('MergeService (R-STU-03, R-NFR-03)', () => {
 
   it('no id back is a 500, never a silent success', async () => {
     const { db } = fakeDb({ 'rpc:merge_students': [{ data: null }] });
-    await expect(new MergeService(db).merge(OPTS)).rejects.toBeInstanceOf(InternalServerErrorException);
+    await expect(new MergeService(db).merge(OPTS)).rejects.toBeInstanceOf(
+      InternalServerErrorException,
+    );
   });
 });

@@ -51,7 +51,10 @@ export function attendanceRow(r: AttendanceInput): CellValue[] {
 type DateMatch = { kind: 'ours'; row: number } | { kind: 'script' } | { kind: 'none' };
 
 /** rows = A2:M (data rows, sheet row = index + 2). */
-export function matchDate(rows: Rows, input: { date: string; pdfFileId: string | null }): DateMatch {
+export function matchDate(
+  rows: Rows,
+  input: { date: string; pdfFileId: string | null },
+): DateMatch {
   let script = false;
   for (const [i, row] of rows.entries()) {
     if (sheetDate(row[0] ?? null) !== input.date) continue;
@@ -62,8 +65,15 @@ export function matchDate(rows: Rows, input: { date: string; pdfFileId: string |
 }
 
 /** First/last lesson date and the data-row count, recomputed from the attendance sheet (§2.6). */
-export function attendanceStats(rows: Rows): { first: string | null; last: string | null; count: number } {
-  const dates = rows.map((r) => sheetDate(r[0] ?? null)).filter((d): d is string => d !== null).sort();
+export function attendanceStats(rows: Rows): {
+  first: string | null;
+  last: string | null;
+  count: number;
+} {
+  const dates = rows
+    .map((r) => sheetDate(r[0] ?? null))
+    .filter((d): d is string => d !== null)
+    .sort();
   const count = rows.filter((r) => r.some((c) => c !== null && c !== '')).length;
   return { first: dates[0] ?? null, last: dates.at(-1) ?? null, count };
 }

@@ -1,7 +1,6 @@
 import type { PortalHome, PortalKind } from '@ab/shared';
 import type { ReactElement } from 'react';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Ltr, t } from '@ab/web-kit';
 import { PersonHead } from './PersonHead';
 
 const A = t.portal.app.account;

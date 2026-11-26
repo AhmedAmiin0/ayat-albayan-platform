@@ -1,7 +1,5 @@
 import { tidyUsername } from '@ab/client-core';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Field, Input, t } from '@ab/web-kit';
 import type { Teacher } from '@ab/shared';
 
 type Props = { teacher: Teacher; value: string; onChange: (value: string) => void };

@@ -13,11 +13,16 @@ const batch = (size: number, from = 0) => Array.from({ length: size }, (_, i) =>
 function setup(...pages: CachedMedia[][]) {
   const echoPages: CachedMedia[][] = [];
   const queries = {
-    cachedBefore: vi.fn(async (q: { echoes?: boolean }) => (q.echoes ? echoPages : pages).shift() ?? []),
+    cachedBefore: vi.fn(
+      async (q: { echoes?: boolean }) => (q.echoes ? echoPages : pages).shift() ?? [],
+    ),
     clearPaths: vi.fn().mockResolvedValue(undefined),
   };
   const storage = { removeMany: vi.fn().mockResolvedValue(undefined) };
-  const job = new WaMediaRetentionJob(queries as unknown as InboundMediaRepo, storage as unknown as StorageService);
+  const job = new WaMediaRetentionJob(
+    queries as unknown as InboundMediaRepo,
+    storage as unknown as StorageService,
+  );
   return { job, queries, storage, echoPages };
 }
 
@@ -30,7 +35,9 @@ describe('WaMediaRetentionJob (inbound audio / video, 30 days)', () => {
     expect(queries.cachedBefore).toHaveBeenCalledWith({ before: '2026-09-19T03:00:00.000Z', limit: 100, echoes: false });
     expect(storage.removeMany).toHaveBeenCalledWith({ bucket: 'wa-media', paths: ['m1.ogg', 'm2.ogg'] });
     expect(queries.clearPaths).toHaveBeenCalledWith(['m1', 'm2'], false);
-    expect(storage.removeMany.mock.invocationCallOrder[0]).toBeLessThan(queries.clearPaths.mock.invocationCallOrder[0] ?? 0);
+    expect(storage.removeMany.mock.invocationCallOrder[0]).toBeLessThan(
+      queries.clearPaths.mock.invocationCallOrder[0] ?? 0,
+    );
   });
 
   it('never removes a cached photo or PDF, even if the query returned one', async () => {
@@ -50,7 +57,9 @@ describe('WaMediaRetentionJob (inbound audio / video, 30 days)', () => {
   it('only photos / PDFs → nothing removed or cleared', async () => {
     const { job, queries, storage } = setup([cached(1, 'image/png')]);
     expect(await job.runOnce(NOW)).toBe(0);
-    expect([storage.removeMany, queries.clearPaths].map((f) => f.mock.calls.length)).toEqual([0, 0]);
+    expect([storage.removeMany, queries.clearPaths].map((f) => f.mock.calls.length)).toEqual([
+      0, 0,
+    ]);
   });
 
   it('a removeMany failure leaves media_path in place for the next day, and does not throw', async () => {
@@ -63,7 +72,9 @@ describe('WaMediaRetentionJob (inbound audio / video, 30 days)', () => {
   it('an empty run makes no update', async () => {
     const { job, queries, storage } = setup();
     expect(await job.runOnce(NOW)).toBe(0);
-    expect([storage.removeMany, queries.clearPaths].map((f) => f.mock.calls.length)).toEqual([0, 0]);
+    expect([storage.removeMany, queries.clearPaths].map((f) => f.mock.calls.length)).toEqual([
+      0, 0,
+    ]);
   });
 
   it('loops full batches until a short or empty one', async () => {

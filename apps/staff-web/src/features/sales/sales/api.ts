@@ -2,7 +2,7 @@ import type { Page } from '@ab/core';
 import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
 import type { SalesPersonView, SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { myMoneyKeys, salesKeys, salesSubscriptionKeys } from '@/features/sales/keys';
 
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */

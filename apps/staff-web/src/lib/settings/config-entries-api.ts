@@ -5,7 +5,7 @@ import type {
   ConfigEntryResult,
 } from '@ab/settings';
 import { queryOptions, useQuery, type QueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { CONFIG_QUERY_KEYS } from './query-keys';
 
 /** GET /config/entries (settings.read): every key with value, version, description and owner. */

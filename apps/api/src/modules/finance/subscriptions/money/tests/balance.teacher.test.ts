@@ -10,7 +10,14 @@ const pkg = (id: string, remaining: number) =>
     currency: 'USD',
     fx_rate: 50,
     price_source: { total: 145 },
-    balance: { subscription_id: id, lessons_total: 8, lessons_used: 8 - remaining, remaining, ended_at: null, projected_end_at: null },
+    balance: {
+      subscription_id: id,
+      lessons_total: 8,
+      lessons_used: 8 - remaining,
+      remaining,
+      ended_at: null,
+      projected_end_at: null,
+    },
   }) as unknown as SubscriptionView;
 
 describe('toTeacherBalance (verifier: teachers never see money)', () => {

@@ -46,8 +46,16 @@ export class AssistantPayController {
 
   /** Replaces both parts (null clears one). 404 assistant_not_found. */
   @Put('terms/:assistantId')
-  set(@Param('assistantId', ParseUUIDPipe) assistantId: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AssistantTermsView> {
-    return this.terms.set({ assistantId, terms: parseOrThrow(assistantTermsSchema, body), actorId: user.id });
+  set(
+    @Param('assistantId', ParseUUIDPipe) assistantId: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<AssistantTermsView> {
+    return this.terms.set({
+      assistantId,
+      terms: parseOrThrow(assistantTermsSchema, body),
+      actorId: user.id,
+    });
   }
 
   @Get('brought-by/:studentId')
@@ -73,7 +81,10 @@ export class AssistantPayController {
   /** A signed amount carried into the next open statement; 404 assistant_not_found. */
   @Post('adjustments')
   adjust(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<{ id: string }> {
-    return this.corrections.adjust({ ...parseOrThrow(assistantAdjustmentSchema, body), actorId: user.id });
+    return this.corrections.adjust({
+      ...parseOrThrow(assistantAdjustmentSchema, body),
+      actorId: user.id,
+    });
   }
 
   /** One student or many (at most 500); assistantId null clears it. 404 student_not_found, 400 invalid_assistant, 409 commission_exists. */

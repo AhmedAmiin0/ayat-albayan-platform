@@ -1,11 +1,6 @@
 import type { PortalStudent } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { Card } from '@ab/web-kit/components/ui/surface/card';
-import { SectionHeader } from '@ab/web-kit/components/ui/surface/section-header';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Avatar, Icon, Ltr, Card, SectionHeader, t } from '@ab/web-kit';
 
 export function ChildrenLinks({ students }: { students: readonly PortalStudent[] }) {
   if (students.length === 0) return null;

@@ -1,4 +1,4 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { Bar } from '@/features/reporting/dashboard/shared/Bar';
 import { amount } from '@/features/reporting/dashboard/shared/format';
 

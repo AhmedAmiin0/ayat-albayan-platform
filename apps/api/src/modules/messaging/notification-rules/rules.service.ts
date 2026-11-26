@@ -30,7 +30,10 @@ export class RulesService {
   ) {}
 
   async overview(opts: { v2: boolean }): Promise<NotificationsOverview> {
-    const [facts, { snapshot, rules }] = await Promise.all([this.facts.read({ reach: opts.v2 }), this.policy.all()]);
+    const [facts, { snapshot, rules }] = await Promise.all([
+      this.facts.read({ reach: opts.v2 }),
+      this.policy.all(),
+    ]);
     const views = catalogueViews({ ...facts.inputs, rules });
     if (!opts.v2) return { entries: views.map(v1Entry), lines: facts.lines };
     const entries = views.map((v) => this.v2(v, { rules, rows: snapshot?.rows }));
@@ -39,7 +42,10 @@ export class RulesService {
 
   /** One row in the v2 shape (the PATCH answer). */
   async entry(key: NotificationKey): Promise<NotificationEntryView> {
-    const [facts, { snapshot, rules }] = await Promise.all([this.facts.read({ reach: false }), this.policy.all()]);
+    const [facts, { snapshot, rules }] = await Promise.all([
+      this.facts.read({ reach: false }),
+      this.policy.all(),
+    ]);
     const view = catalogueViews({ ...facts.inputs, rules }).find((v) => v.key === key);
     if (!view) throw new Error(`unknown notification ${key}`);
     return this.v2(view, { rules, rows: snapshot?.rows });

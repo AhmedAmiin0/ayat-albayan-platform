@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FILTER_DEBOUNCE_MS } from '@/components/data-table/ColumnFilterText';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { FACTS, renderBoard } from '@/features/teaching/teacher-board/board-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());

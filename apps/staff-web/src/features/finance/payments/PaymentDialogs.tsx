@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { apiErrorText, moneyText, studentLabel } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { deletePayment, type PaymentView } from './api';
 import { EditAmountDialog } from './amount/EditAmountDialog';
 import { useAdminAmountEdit } from './amount/use-admin-amount-edit';

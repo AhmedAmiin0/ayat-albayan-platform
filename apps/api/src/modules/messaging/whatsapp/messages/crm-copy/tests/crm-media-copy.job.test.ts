@@ -14,7 +14,9 @@ describe('CrmMediaCopyJob: the switch and the host', () => {
     const fetch = stubFetch(async () => ogg());
     const w = copyWorld(crmRows(3), { crm_media_copy_all: false });
     expect(await w.job.runOnce()).toEqual({ state: 'off' });
-    expect([fetch, w.queries.batch, w.storage.upload, w.audit.record].map((f) => f.mock.calls.length)).toEqual([0, 0, 0, 0]);
+    expect(
+      [fetch, w.queries.batch, w.storage.upload, w.audit.record].map((f) => f.mock.calls.length),
+    ).toEqual([0, 0, 0, 0]);
   });
 
   it('does nothing while the host is empty or not a DNS name, and never switches itself off then', async () => {
@@ -22,7 +24,9 @@ describe('CrmMediaCopyJob: the switch and the host', () => {
     for (const host of ['', '   ', '127.0.0.1', 'localhost', 'https://x.example/']) {
       const w = copyWorld(crmRows(3), { crm_media_host: host });
       expect(await w.job.runOnce()).toEqual({ state: 'off' });
-      expect([w.queries.batch, w.settings.writeSwitch, w.audit.record].map((f) => f.mock.calls.length)).toEqual([0, 0, 0]);
+      expect(
+        [w.queries.batch, w.settings.writeSwitch, w.audit.record].map((f) => f.mock.calls.length),
+      ).toEqual([0, 0, 0]);
     }
     expect(fetch).not.toHaveBeenCalled();
     expect(copyHost(' Files.CRM.example ')).toBe('files.crm.example');
@@ -67,7 +71,9 @@ describe('CrmMediaCopyJob: a run', () => {
     await w.job.runOnce();
     w.settings.state.crm_media_copy_all = true;
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
-    expect([fetch.mock.calls.length, w.storage.upload.mock.calls.length, w.objects.size]).toEqual([4, 4, 4]);
+    expect([fetch.mock.calls.length, w.storage.upload.mock.calls.length, w.objects.size]).toEqual([
+      4, 4, 4,
+    ]);
     expect(w.inbound.setPath).toHaveBeenCalledTimes(4);
     expect(w.audit.record).toHaveBeenCalledTimes(2);
   });
@@ -105,7 +111,9 @@ describe('CrmMediaCopyJob: a run', () => {
     const w = copyWorld([]);
     w.audit.record.mockRejectedValueOnce(new Error('denied'));
     expect(await w.job.runOnce()).toEqual({ state: 'error' });
-    expect([w.settings.writeSwitch.mock.calls.length, w.settings.state.crm_media_copy_all]).toEqual([0, true]);
+    expect([w.settings.writeSwitch.mock.calls.length, w.settings.state.crm_media_copy_all]).toEqual(
+      [0, true],
+    );
     expect(await w.job.runOnce()).toEqual({ state: 'done' });
     expect(w.audit.record).toHaveBeenCalledTimes(2);
     expect(w.settings.state.crm_media_copy_all).toBe(false);

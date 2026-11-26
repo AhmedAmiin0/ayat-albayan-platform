@@ -10,7 +10,10 @@ export function allowedRecipients(env: Env): readonly string[] | null {
 }
 
 /** null / undefined → true; [] → false; else the list holds `+` and the digits of `to`. */
-export function recipientAllowed(allowed: readonly string[] | null | undefined, to: string): boolean {
+export function recipientAllowed(
+  allowed: readonly string[] | null | undefined,
+  to: string,
+): boolean {
   if (allowed === null || allowed === undefined) return true;
   return allowed.includes(`+${to.replace(/\D/g, '')}`);
 }

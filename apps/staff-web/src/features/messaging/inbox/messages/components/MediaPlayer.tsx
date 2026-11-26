@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { ThreadFile } from '@ab/shared';
 
 const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4';

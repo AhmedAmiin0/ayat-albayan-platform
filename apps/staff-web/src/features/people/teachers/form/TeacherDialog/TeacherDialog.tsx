@@ -2,11 +2,7 @@ import { tidyUsername, usernameApiError, usernameChange } from '@ab/client-core'
 import type { TeacherCreate, Teacher } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { apiSend } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, Dialog, apiSend, t, FormAlert } from '@ab/web-kit';
 import { teacherKeys, userKeys } from '@/features/people/keys';
 import {
   apiErrorMessage,

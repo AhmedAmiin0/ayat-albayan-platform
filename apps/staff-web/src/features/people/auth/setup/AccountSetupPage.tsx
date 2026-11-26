@@ -1,10 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { PasswordInput } from '@ab/web-kit/auth/PasswordInput';
+import { Button, Cartouche, Field, FormAlert, Input, t, PasswordInput } from '@ab/web-kit';
 import { LeaveSetup } from './LeaveSetup';
 import { useAccountSetup } from './use-account-setup';
 

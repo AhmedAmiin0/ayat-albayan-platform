@@ -15,6 +15,12 @@ export class PortalScopeRepo {
   async studentsOf(profileId: string): Promise<PortalStudent[]> {
     const { data, error } = await this.db.rpc('portal_students_of', { p_profile: profileId });
     if (error) throw dbError(error);
-    return data.map((s) => ({ id: s.id, code: s.code, name: s.name, tz: s.tz, contact_is_self: s.contact_is_self }));
+    return data.map((s) => ({
+      id: s.id,
+      code: s.code,
+      name: s.name,
+      tz: s.tz,
+      contact_is_self: s.contact_is_self,
+    }));
   }
 }

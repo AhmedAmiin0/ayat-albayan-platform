@@ -56,9 +56,17 @@ export class PaymentLinksRepo {
   }
 
   /** Compare-and-set of the Checkout Session (null clears it): false when another request changed it first. */
-  async setSession(input: { id: string; prev: string | null; session: string | null }): Promise<boolean> {
-    let q = this.db.from('payment_links').update({ stripe_session_id: input.session, updated_at: now() }).eq('id', input.id);
-    q = input.prev === null ? q.is('stripe_session_id', null) : q.eq('stripe_session_id', input.prev);
+  async setSession(input: {
+    id: string;
+    prev: string | null;
+    session: string | null;
+  }): Promise<boolean> {
+    let q = this.db
+      .from('payment_links')
+      .update({ stripe_session_id: input.session, updated_at: now() })
+      .eq('id', input.id);
+    q =
+      input.prev === null ? q.is('stripe_session_id', null) : q.eq('stripe_session_id', input.prev);
     const { data, error } = await q.select('id');
     if (error) throw fail('session', error.message);
     return data.length > 0;
@@ -69,9 +77,20 @@ export class PaymentLinksRepo {
   }
 
   /** The paid link (whatever its status was: the money is real, a late payment of an expired link included). */
-  async markPaid(id: string, paid: { paymentId: string; paidAt: string; paymentIntent: string | null }): Promise<void> {
-    const patch = { status: 'paid', processing: false, paid_payment_id: paid.paymentId, paid_at: paid.paidAt };
-    await this.change(id, paid.paymentIntent ? { ...patch, stripe_payment_intent: paid.paymentIntent } : patch);
+  async markPaid(
+    id: string,
+    paid: { paymentId: string; paidAt: string; paymentIntent: string | null },
+  ): Promise<void> {
+    const patch = {
+      status: 'paid',
+      processing: false,
+      paid_payment_id: paid.paymentId,
+      paid_at: paid.paidAt,
+    };
+    await this.change(
+      id,
+      paid.paymentIntent ? { ...patch, stripe_payment_intent: paid.paymentIntent } : patch,
+    );
   }
 
   /** The student's brought_by and their priced, not cancelled packages (a renewal needs one). */
@@ -83,8 +102,17 @@ export class PaymentLinksRepo {
   }
 
   /** set_student_brought_by (migration 751): the attribution the first-package commission needs. */
-  async attribute(input: { studentId: string; assistantId: string; broughtAt: string }): Promise<void> {
-    const args = { p_student: input.studentId, p_assistant: input.assistantId, p_actor: input.assistantId, p_brought_at: input.broughtAt };
+  async attribute(input: {
+    studentId: string;
+    assistantId: string;
+    broughtAt: string;
+  }): Promise<void> {
+    const args = {
+      p_student: input.studentId,
+      p_assistant: input.assistantId,
+      p_actor: input.assistantId,
+      p_brought_at: input.broughtAt,
+    };
     const { error } = await this.db.rpc('set_student_brought_by', args);
     if (error) throw fail('attribute', error.message);
   }

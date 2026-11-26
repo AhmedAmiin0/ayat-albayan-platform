@@ -2,18 +2,20 @@ import { payoutStatusStyle, type PayoutView } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable, type DataTableFeatures } from '@/components/data-table/DataTable';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
+import {
+  Cartouche,
+  EmptyState,
+  FormAlert,
+  PageHead,
+  StatusChip,
+  ListSkeleton,
+  t,
+} from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
 import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
 import { breakdownLines, payoutStatusOptions } from '@/features/finance/payouts/list/payout-columns';
 import { LedgerPaid } from '@/features/finance/payouts/shared/LedgerPaid';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { myPayoutsQuery } from './api';
 
 const col = createColumnHelper<DataTableFeatures, PayoutView>();

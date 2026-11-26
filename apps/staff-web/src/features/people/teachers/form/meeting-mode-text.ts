@@ -1,5 +1,5 @@
 import type { TeacherMeetingMode } from '@ab/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 /** Null maps to the academy default because radios need a string. */
 export type MeetingModeChoice = TeacherMeetingMode | 'academy';

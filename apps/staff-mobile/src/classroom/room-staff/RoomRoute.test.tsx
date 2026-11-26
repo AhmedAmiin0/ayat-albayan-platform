@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import type { ReactElement } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { RoomRoute } from './RoomRoute';
 
 let mockParams: Record<string, string> = {};

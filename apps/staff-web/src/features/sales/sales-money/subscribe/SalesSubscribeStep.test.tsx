@@ -1,7 +1,7 @@
 import { formatAmount } from '@ab/money';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { SALES_QUOTE, OPEN_SUB, student } from '@/features/sales/sales-money/sales-money-fixture';
 import { SalesMoneyFlow } from '@/features/sales/sales-money/SalesMoneyFlow';

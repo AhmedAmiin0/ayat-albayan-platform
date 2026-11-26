@@ -37,12 +37,18 @@ type StudentListQuery = ListQuery & StudentListFilters & StudentColumnFilters & 
  */
 export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<StudentListItem>> {
   const base = db.from('v_student_list').select(LIST_COLUMNS, { count: 'exact' });
-  let query = applySort(applyStudentColumnFilters(applyStudentFilters(base, q), q), q, STUDENT_SORT);
+  let query = applySort(
+    applyStudentColumnFilters(applyStudentFilters(base, q), q),
+    q,
+    STUDENT_SORT,
+  );
   const filter = await searchFilter(db, q.search);
   if (filter) query = query.or(filter);
   const [from, to] = pageRange(q);
   // The view's columns read as nullable; the base columns (and has_weekly's exists) never are.
-  const { data, error, count } = await query.range(from, to).overrideTypes<StudentListRow[], { merge: false }>();
+  const { data, error, count } = await query
+    .range(from, to)
+    .overrideTypes<StudentListRow[], { merge: false }>();
   if (error) throw dbError(error);
   const tests = await testStudents(db, data.map((r) => r.id));
   const items = data.map((r) => ({ ...toListItem(r), is_test: tests.has(r.id) }));

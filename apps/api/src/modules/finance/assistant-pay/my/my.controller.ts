@@ -44,7 +44,10 @@ export class MyController {
   /** My commissions, newest first (pageSize <= 100); always the caller's own, whatever the query */
   @Get('commissions')
   @Permissions('self.sales_earnings')
-  commissions(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<MyCommissionRow>> {
+  commissions(
+    @Query() query: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<Page<MyCommissionRow>> {
     return this.my.commissions(user, parseOrThrow(pageQuerySchema, query));
   }
 

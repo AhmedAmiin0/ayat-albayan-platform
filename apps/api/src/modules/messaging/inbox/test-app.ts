@@ -1,7 +1,6 @@
-// HTTP test harness for the inbox routes (test-only, excluded from the build). Real controllers,
-// guards, services, registry and MessageViews; the DB-facing queries, the line clients, the gate and
-// the sender are mocks. `client` = notifications, `chatClient` = chat (docs/12 §13.16): both
-// configured by default; files that reset all mocks re-prime `configured` in beforeEach.
+// HTTP test harness for the inbox routes (test-only): real controllers, guards, services, registry
+// and MessageViews; the queries, line clients, gate and sender are mocks. `client` = notifications,
+// `chatClient` = chat (docs/12 §13.16), both configured; resetting files re-prime `configured`.
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { ThreadWindow } from './send/send-number';
 import type { ChatListRef, ThreadLesson, ThreadPeople } from '@ab/shared';
@@ -9,7 +8,9 @@ import { SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { InboxModule } from './inbox.module';
+import { LessonRatingModule } from '@/modules/teaching/lesson-rating';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
@@ -110,7 +111,8 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
   const m = mocks();
   // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between tests.
   const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const root = messagingRoot(InboxModule, LessonRatingModule);
+  const mod = await Test.createTestingModule({ imports: [root] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(resolve).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(ThreadsRepo).useValue(m.queries)
     .overrideProvider(ThreadMessagesRepo).useValue(m.queries)

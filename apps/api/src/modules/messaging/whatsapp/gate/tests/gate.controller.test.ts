@@ -17,7 +17,8 @@ describe('PUT /messages/gate/sending | auto', () => {
           expect(res.json()).toEqual(SETTING_DEFAULTS);
         }
         expect(t.settings.writeSwitch).toHaveBeenCalledTimes(3);
-        for (const call of t.settings.writeSwitch.mock.calls) expect(call).toEqual([key, false, ADMIN_ID]);
+        for (const call of t.settings.writeSwitch.mock.calls)
+          expect(call).toEqual([key, false, ADMIN_ID]);
       });
 
       it('ON without or with the wrong text → 428 confirmation_required, nothing written or audited', async () => {

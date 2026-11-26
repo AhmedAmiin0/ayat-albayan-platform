@@ -4,7 +4,10 @@ import { Track, type Room } from 'livekit-client';
 export function trackOfTile(room: Room, tileKey: string): Track | undefined {
   const screen = tileKey.endsWith(':screen');
   const identity = screen ? tileKey.slice(0, -':screen'.length) : tileKey;
-  const p = room.localParticipant.identity === identity ? room.localParticipant : room.remoteParticipants.get(identity);
+  const p =
+    room.localParticipant.identity === identity
+      ? room.localParticipant
+      : room.remoteParticipants.get(identity);
   return p?.getTrackPublication(screen ? Track.Source.ScreenShare : Track.Source.Camera)?.track;
 }
 

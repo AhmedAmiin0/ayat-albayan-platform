@@ -1,7 +1,7 @@
 import type { AssistantTermsView } from '@ab/money';
 import { formatDate } from '@/features/sales/leads';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 
 const p = t.assistantPortal.earnings;
 

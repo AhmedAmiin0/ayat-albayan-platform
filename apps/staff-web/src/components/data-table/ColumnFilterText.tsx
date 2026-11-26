@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
+import { t, SearchInput } from '@ab/web-kit';
 
 export const FILTER_DEBOUNCE_MS = 300;
 

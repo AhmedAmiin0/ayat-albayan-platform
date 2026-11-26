@@ -14,7 +14,8 @@ const SKIP = new Set(['node_modules', 'dist', 'build', 'coverage', '.turbo', '.e
 
 const dirs = (root, rel) =>
   existsSync(join(root, rel))
-    ? readdirSync(join(root, rel), { withFileTypes: true }).filter((d) => d.isDirectory() && !SKIP.has(d.name))
+    ? readdirSync(join(root, rel), { withFileTypes: true })
+      .filter((d) => d.isDirectory() && !SKIP.has(d.name))
     : [];
 
 /** The scanned roots of each app; packages and tools are lane D. */
@@ -41,7 +42,11 @@ export function measure(root, rel) {
 }
 
 export const crowded = (counts) =>
-  Object.fromEntries(Object.entries(counts).filter(([, c]) => c.files > MAX || c.dirs > MAX).sort(([a], [b]) => a.localeCompare(b)));
+  Object.fromEntries(
+    Object.entries(counts)
+      .filter(([, c]) => c.files > MAX || c.dirs > MAX)
+      .sort(([a], [b]) => a.localeCompare(b)),
+  );
 
 /** New crowded folders, allow-listed folders that grew, and allow-list entries that are no longer needed. */
 export function check(counts, allow) {

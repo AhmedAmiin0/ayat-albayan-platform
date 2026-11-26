@@ -14,7 +14,10 @@ const moved = { ...SUPP };
 delete moved['src/features/payouts/PayoutsPage.tsx'];
 delete moved['src/features/payouts/use-pay.ts'];
 Object.assign(moved, { 'src/features/payouts/list/PayoutsPage.tsx': entry(4), 'src/features/payouts/pay/use-pay.ts': entry(3) });
-const texts = (base, head) => ({ base: JSON.stringify(base, null, 2), head: JSON.stringify(head, null, 2) });
+const texts = (base, head) => ({
+  base: JSON.stringify(base, null, 2),
+  head: JSON.stringify(head, null, 2),
+});
 const FILE = 'apps/staff-web/oxlint-suppressions.json';
 
 test('relative pairs: only moves inside the package, without its prefix', () => {

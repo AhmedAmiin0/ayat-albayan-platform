@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Migrations 530–531 (docs/24 §2.2, §3) against the real database, rolled back: the platform-origin
 // predicate, the producers, the reconcile's idempotency, gone-handling and RLS.
 
-const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', (e: { code?: string }) => e.code);
+const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
 
 async function seed(tx: Tx) {
   const [t] = await tx<{ id: string }[]>`select t.id from public.teachers t join auth.users u on u.id = t.profile_id where u.email = ${USERS.teacher.email}`;

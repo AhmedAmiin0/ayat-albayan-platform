@@ -1,7 +1,7 @@
 import { useRouter } from '@tanstack/react-router';
 import type { MouseEvent } from 'react';
 import { isPlainClick } from '@/features/reporting/reports/history/ReportLink';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import type { RegistryHint } from './registry-hints';
 import { valuesHref } from './registry-hints';
 

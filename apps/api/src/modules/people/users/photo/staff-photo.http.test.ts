@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { UsersModule } from '@/modules/people/users/users.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { StaffPhotoAdmin } from '@/common/storage/avatars/staff-photo-admin';
@@ -32,7 +33,7 @@ describe('staff photo routes', () => {
     app.inject({ method, url, headers: { authorization: `Bearer ${opts.token ?? 'admin'}` }, ...(opts.payload && { payload: opts.payload }) });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({ imports: [featureRoot(UsersModule)] })
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
       .overrideProvider(USER_STORE).useValue(new FakeUserStore([row('admin1', 'admin'), row(USER, 'sales')]))

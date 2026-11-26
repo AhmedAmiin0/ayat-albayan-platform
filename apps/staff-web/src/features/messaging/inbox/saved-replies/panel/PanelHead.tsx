@@ -1,10 +1,5 @@
 import type { SavedReplyScope } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { SearchInput } from '@ab/web-kit/components/ui/form/search-input';
-import { Tabs } from '@ab/web-kit/components/ui/layout/tabs';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Icon, IconButton, SearchInput, Tabs, t } from '@ab/web-kit';
 import { optionId } from '@/features/messaging/inbox/saved-replies/components/ReplyOptions';
 import type { RepliesPicker } from '@/features/messaging/inbox/saved-replies/hooks/use-replies-picker';
 

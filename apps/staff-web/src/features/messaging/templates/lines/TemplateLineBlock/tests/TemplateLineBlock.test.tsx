@@ -2,10 +2,9 @@ import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { fullTime } from '@/features/messaging/inbox/format';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t, locale } from '@ab/web-kit';
 import { lineSync, lineView } from '@/features/messaging/templates/lines/template-lines-fixture';
 import { newerSync, TemplateLineBlock } from '@/features/messaging/templates/lines/TemplateLineBlock/TemplateLineBlock';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;

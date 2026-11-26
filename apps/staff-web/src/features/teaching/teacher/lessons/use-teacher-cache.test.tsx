@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { teacherKeys } from '@/features/people/keys';
 import { lessonKeys } from '@/features/teaching/schedule';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
-import { ApiError } from '@ab/web-kit/lib/http/api';
+import { ApiError } from '@ab/web-kit';
 import { useTeacherCancel } from './use-teacher-cancel';
 import { useTeacherConfirm } from './use-teacher-confirm';
 

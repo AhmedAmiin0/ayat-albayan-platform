@@ -2,7 +2,8 @@ import { SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
+import { WhatsappGateModule } from '@/modules/messaging/whatsapp/gate/whatsapp-gate.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -19,16 +20,21 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 
-/** Tests only: AppModule over fake auth, a mocked SettingsService and AuditService (gate routes). */
+/** Tests only: the gate routes over fake auth, a mocked SettingsService and AuditService. */
 export function gateApp() {
   const settings = { all: vi.fn(), write: vi.fn(), writeSwitch: vi.fn() };
   const audit = { record: vi.fn() };
   let app: NestFastifyApplication | undefined;
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(SettingsService).useValue(settings)
-      .overrideProvider(AuditService).useValue(audit)
+    const mod = await Test.createTestingModule({ imports: [featureRoot(WhatsappGateModule)] })
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(SettingsService)
+      .useValue(settings)
+      .overrideProvider(AuditService)
+      .useValue(audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

@@ -1,7 +1,7 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { bookingRoot } from '@/modules/teaching/booking/booking-root.fakes';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { IDS } from '@/modules/teaching/booking/booking.fakes';
@@ -37,7 +37,7 @@ describe('booking routes for the invoice and the makeup (R-PAY-03, R-SCH-10)', (
     });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
+    const mod = await Test.createTestingModule({ imports: [bookingRoot()] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(BookingInvoices).useValue(invoices)

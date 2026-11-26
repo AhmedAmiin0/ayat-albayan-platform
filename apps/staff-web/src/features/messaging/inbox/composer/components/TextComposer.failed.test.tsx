@@ -1,8 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { clearAllDrafts, getDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { clearOwnSends, lastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';

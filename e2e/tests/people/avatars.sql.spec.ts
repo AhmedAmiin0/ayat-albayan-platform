@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
+import { errorCode } from '../../support/core/db-error';
 
 // Migration 20261012000370 (R-ACC-05, rule 9): the private 'avatars' bucket. A signed-in user
 // writes and reads only under their own folder `<uid>/…`; an admin reads every avatar; anon reads
@@ -8,7 +9,7 @@ import { USERS } from '../../support/core/users';
 
 /** Runs `q` in a savepoint: 'ok' or the Postgres error code. */
 const code = (tx: Tx, q: () => Promise<unknown>) =>
-  tx.savepoint(() => q()).then(() => 'ok', (e: { code?: string }) => e.code);
+  tx.savepoint(() => q()).then(() => 'ok', errorCode);
 
 async function avatar(tx: Tx, name: string): Promise<void> {
   await tx`insert into storage.objects (bucket_id, name) values ('avatars', ${name})`;
@@ -56,7 +57,7 @@ test.describe('avatars storage + profiles self-write (migration 370)', () => {
       const anon = await tx.savepoint(async (sp) => {
         await sp`set local role anon`;
         return names(sp);
-      }).catch((e: { code?: string }) => e.code);
+      }).catch(errorCode);
       expect([[], '42501']).toContainEqual(anon);
     });
   });
@@ -83,7 +84,7 @@ test.describe('avatars storage + profiles self-write (migration 370)', () => {
           .savepoint(() => as(tx, teacher, q))
           .then(
             (r) => r.count,
-            (e: { code?: string }) => e.code,
+            errorCode,
           );
       expect([0, '42501']).toContain(
         await own(() => tx`update public.profiles set role = 'admin' where id = ${teacher}`),

@@ -15,7 +15,11 @@ export class FxConverter {
     const others = [...new Set(currencies)].filter((c) => c !== reporting).sort();
     if (others.length === 0) return conversionFrom({ reporting, base: SAR_SELF, quotes: [] });
     const [base, ...rates] = await Promise.all([reporting, ...others].map((c) => this.sarTo(c)));
-    return conversionFrom({ reporting, base: base ?? null, quotes: others.map((c, i) => [c, rates[i] ?? null]) });
+    return conversionFrom({
+      reporting,
+      base: base ?? null,
+      quotes: others.map((c, i) => [c, rates[i] ?? null]),
+    });
   }
 
   /** null when no rate is stored and the provider is down (fx_unavailable); other errors throw. */

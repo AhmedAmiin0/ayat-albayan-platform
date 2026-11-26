@@ -2,9 +2,7 @@ import type { ReportSummaryView } from '@ab/shared';
 import type { UserRole } from '@ab/catalog';
 import { pdfStatusStyle } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, StatusChip, t } from '@ab/web-kit';
 import { pdfUrl, reportErrorText, retryPdf } from '@/features/reporting/reports/api';
 import { reportKeys } from '@/features/reporting/keys';
 

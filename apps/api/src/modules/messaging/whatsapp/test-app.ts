@@ -4,7 +4,8 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { WhatsappModule } from './whatsapp.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
@@ -26,7 +27,13 @@ const SALES: AuthUser = { id: 's0000000-0000-4000-8000-000000000003', email: nul
 const ASSISTANT: AuthUser = { id: 's0000000-0000-4000-8000-000000000004', email: null, role: 'assistant' };
 /** A custom role (base sales) for the dynamic-roles cases; its grants come from the test's resolver. */
 const CUSTOM: AuthUser = { id: 's0000000-0000-4000-8000-000000000005', email: null, role: 'sales' };
-const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, sales: SALES, assistant: ASSISTANT, custom: CUSTOM };
+const USERS: Record<string, AuthUser> = {
+  admin: ADMIN,
+  teacher: TEACHER,
+  sales: SALES,
+  assistant: ASSISTANT,
+  custom: CUSTOM,
+};
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
@@ -45,8 +52,19 @@ const clientMock = () => ({
 function mocks() {
   const synced = new Map<string, unknown>();
   return {
-    templates: { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn(), create: vi.fn(), approvals: vi.fn(async (): Promise<ApprovalRow[]> => []), upsertApprovals: vi.fn(), numberRef: vi.fn(),
-      saveLineSync: vi.fn(async (s: { line: string }) => void synced.set(s.line, s)), lineSyncs: vi.fn(async () => new Map(synced)), relaneQueued: vi.fn(async () => 0) },
+    templates: {
+      all: vi.fn(),
+      get: vi.fn(),
+      update: vi.fn(),
+      insert: vi.fn(),
+      create: vi.fn(),
+      approvals: vi.fn(async (): Promise<ApprovalRow[]> => []),
+      upsertApprovals: vi.fn(),
+      numberRef: vi.fn(),
+      saveLineSync: vi.fn(async (s: { line: string }) => void synced.set(s.line, s)),
+      lineSyncs: vi.fn(async () => new Map(synced)),
+      relaneQueued: vi.fn(async () => 0),
+    },
     messages: { get: vi.fn(), requeue: vi.fn(), markSentManually: vi.fn(), handOff: vi.fn() },
     appSend: { get: vi.fn(), start: vi.fn() },
     gate: { view: vi.fn(), open: vi.fn(), automaticOn: vi.fn(async () => true) },
@@ -66,22 +84,39 @@ export async function whatsappApp(resolver: PermissionResolver = systemResolver)
   const m = mocks();
   // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between tests.
   const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(TemplatesRepo).useValue(templates)
-    .overrideProvider(MessagesRepo).useValue(m.messages)
-    .overrideProvider(AppSendRepo).useValue(m.appSend)
-    .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
-    .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })
-    .overrideProvider(LinesCheck).useValue(m.lines)
-    .overrideProvider(LineHealthStore).useValue(m.health)
-    .overrideProvider(StorageService).useValue(m.storage)
-    .overrideProvider(MessageSender).useValue(m.sender)
-    .overrideProvider(SendGate).useValue(m.gate)
-    .overrideProvider(AuditService).useValue(m.audit)
-    .overrideProvider(TemplateAuthorRepo).useValue(m.authored)
+  const mod = await Test.createTestingModule({ imports: [messagingRoot(WhatsappModule)] })
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(resolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(TemplatesRepo)
+    .useValue(templates)
+    .overrideProvider(MessagesRepo)
+    .useValue(m.messages)
+    .overrideProvider(AppSendRepo)
+    .useValue(m.appSend)
+    .overrideProvider(WHATSAPP_CLIENT)
+    .useValue(m.client)
+    .overrideProvider(WHATSAPP_LINES)
+    .useValue({ notifications: m.client, chat: m.chatClient })
+    .overrideProvider(LinesCheck)
+    .useValue(m.lines)
+    .overrideProvider(LineHealthStore)
+    .useValue(m.health)
+    .overrideProvider(StorageService)
+    .useValue(m.storage)
+    .overrideProvider(MessageSender)
+    .useValue(m.sender)
+    .overrideProvider(SendGate)
+    .useValue(m.gate)
+    .overrideProvider(AuditService)
+    .useValue(m.audit)
+    .overrideProvider(TemplateAuthorRepo)
+    .useValue(m.authored)
     .compile();
-  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
+  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), {
+    rawBody: true,
+  });
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   const call = (input: { method: 'GET' | 'POST' | 'PATCH' | 'PUT'; url: string; token?: string; body?: object }) =>

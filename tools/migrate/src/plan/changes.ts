@@ -83,10 +83,11 @@ export async function loadChanges(input: LoadChangesInput): Promise<FieldChange[
       params: [updates.map((i) => i.targetId)],
     });
     const byId = new Map(rows.map((r) => [r.id, r.row]));
-    for (const item of updates) {
+    const changes = updates.flatMap((item) => {
       const row = byId.get(item.targetId ?? '');
-      if (row) out.push(...fieldChanges({ item, row, ids: input.existing }));
-    }
+      return row ? fieldChanges({ item, row, ids: input.existing }) : [];
+    });
+    out.push(...changes);
   }
   return out;
 }

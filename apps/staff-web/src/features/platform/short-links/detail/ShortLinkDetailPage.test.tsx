@@ -1,9 +1,7 @@
 import { fillSlots } from '@ab/client-core';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { renderWithClient } from '@ab/web-kit/testing/query-render';
+import { ApiError, t, renderWithClient } from '@ab/web-kit';
 import { linkDetail } from '@/features/platform/short-links/shared/short-links.fixtures';
 import { ShortLinkDetailPage } from './ShortLinkDetailPage';
 

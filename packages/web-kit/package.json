@@ -3,33 +3,18 @@
   "private": true,
   "type": "module",
   "description": "Shared React DOM code of the staff web app (apps/staff-web) and the family web app (apps/family-web), docs/51 §2: SOURCE, built by each app's Vite and resolved through `exports`.",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
-    "./index.css": "./src/index.css",
-    "./auth/me": "./src/auth/me/index.ts",
-    "./auth/sign-in": "./src/auth/sign-in/index.ts",
-    "./boot/maintenance": "./src/boot/maintenance/index.ts",
-    "./boot/route-states": "./src/boot/route-states/index.ts",
-    "./classroom/recordings/recording-format": "./src/classroom/recordings/recording-format/index.ts",
-    "./classroom/room/components/ClassroomRoom": "./src/classroom/room/components/ClassroomRoom/index.ts",
-    "./classroom/room/livekit/livekit-room": "./src/classroom/room/livekit/livekit-room/index.ts",
-    "./classroom/room/livekit/snapshot": "./src/classroom/room/livekit/snapshot/index.ts",
-    "./components/channel/ChannelThread": "./src/components/channel/ChannelThread/index.ts",
-    "./components/legal": "./src/components/legal/index.ts",
-    "./components/shell": "./src/components/shell/index.ts",
-    "./components/ui/display/query-state": "./src/components/ui/display/query-state/index.ts",
-    "./components/ui/layout/tabs": "./src/components/ui/layout/tabs/index.ts",
-    "./components/ui/overlay/more-menu": "./src/components/ui/overlay/more-menu/index.ts",
-    "./components/ui/surface/warn-line": "./src/components/ui/surface/warn-line/index.ts",
-    "./lib/http/api": "./src/lib/http/api/index.ts",
-    "./lib/http/env": "./src/lib/http/env/index.ts",
-    "./portal/history/HistoryPanel": "./src/portal/history/HistoryPanel/index.ts",
-    "./portal/recordings/RecordingsPanel": "./src/portal/recordings/RecordingsPanel/index.ts",
-    "./report": "./src/report/index.ts",
-    "./schedule/tz": "./src/schedule/tz/index.ts",
+    ".": "./src/index.ts",
+    "./room": "./src/room.ts",
+    "./testing": "./src/testing/index.ts",
     "./*": {
       "types": [
         "./src/*.ts",
-        "./src/*.tsx"
+        "./src/*.tsx",
+        "./src/*/index.ts"
       ],
       "default": "./src/*"
     }

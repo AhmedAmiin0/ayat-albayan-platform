@@ -20,7 +20,10 @@ export type HintText = (hintKey: string) => string | null;
  * entry (its `hintKey` in ar.json, the canonical MSA text), or null without one. The code-side fields
  * (group, ownedBy, confirm …) stay in code. Used by the API boot seeder, migrate:apply and e2e.
  */
-export function seedPayload(hint: HintText, entries: readonly SeedEntry[] = SEED_ENTRIES): ConfigSeedRow[] {
+export function seedPayload(
+  hint: HintText,
+  entries: readonly SeedEntry[] = SEED_ENTRIES,
+): ConfigSeedRow[] {
   return entries.map((e) => ({
     key: e.key,
     module: e.module,

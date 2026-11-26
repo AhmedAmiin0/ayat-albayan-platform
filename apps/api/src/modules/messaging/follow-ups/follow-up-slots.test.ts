@@ -19,7 +19,10 @@ const byTeacher: Record<string, string[]> = {
 function setup() {
   const queries = { activeTeacherIds: async () => ['t-1', 't-2'] };
   const freeSlots = vi.fn(async (q: FreeSlotsQuery) =>
-    (byTeacher[q.teacherId] ?? []).map((s) => ({ start: new Date(s), end: new Date(Date.parse(s) + 45 * 60_000) })),
+    (byTeacher[q.teacherId] ?? []).map((s) => ({
+      start: new Date(s),
+      end: new Date(Date.parse(s) + 45 * 60_000),
+    })),
   );
   const slots = new FollowUpSlots(
     queries as unknown as FollowUpsRepo,

@@ -1,7 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { ApiError, t } from '@ab/web-kit';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 import { catalogueKeys } from '@/features/messaging/keys';
 import { fetchCount, renderPanel } from '@/features/messaging/numbers/numbers-test-kit';

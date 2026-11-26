@@ -59,14 +59,19 @@ describe('toTemplateView', () => {
 
   it('carries the lesson as it is now (thread rows embed it), else null', () => {
     const lesson = { starts_at: '2026-10-04T14:00:00+00:00', status: 'confirmed' as const };
-    expect(toMessageView({ row: { ...messageRow(), lesson }, template: booking }).lesson).toEqual(lesson);
+    expect(toMessageView({ row: { ...messageRow(), lesson }, template: booking }).lesson).toEqual(
+      lesson,
+    );
     expect(toMessageView({ row: messageRow(), template: booking }).lesson).toBeNull();
   });
 
   it('names the teacher who sent it from their inbox (teacher mode «بعتها»); null for the academy', () => {
     const row = { ...messageRow({ sent_by_teacher_id: 't1' }), sent_by_teacher: { display_name_ar: 'أبرار' } };
     expect(toMessageView({ row, template: booking }).sent_by_teacher_name).toBe('أبرار');
-    expect(toMessageView({ row: { ...messageRow(), sent_by_teacher: null }, template: booking }).sent_by_teacher_name).toBeNull();
+    expect(
+      toMessageView({ row: { ...messageRow(), sent_by_teacher: null }, template: booking })
+        .sent_by_teacher_name,
+    ).toBeNull();
     expect(toMessageView({ row: messageRow(), template: booking }).sent_by_teacher_name).toBeNull();
   });
 

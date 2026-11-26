@@ -19,9 +19,19 @@ class ProbeSettings {
 
 /** A real SettingsService over `rows` (or a read error), counting the database reads. */
 function storeOver(rows: { key: string; value: unknown }[] | Error) {
-  const result = rows instanceof Error ? { data: null, error: { message: rows.message } } : { data: rows, error: null };
+  const result =
+    rows instanceof Error
+      ? { data: null, error: { message: rows.message } }
+      : { data: rows, error: null };
   const select = vi.fn().mockResolvedValue(result);
-  return { store: new SettingsService({ from: () => ({ select }) } as unknown as Db, 30_000, fakeConfigStore()), select };
+  return {
+    store: new SettingsService(
+      { from: () => ({ select }) } as unknown as Db,
+      30_000,
+      fakeConfigStore(),
+    ),
+    select,
+  };
 }
 
 describe('readSlice (the settings reader kernel)', () => {
@@ -33,7 +43,10 @@ describe('readSlice (the settings reader kernel)', () => {
 
   it('fills the registry defaults for missing or malformed rows', async () => {
     const { store } = storeOver([{ key: 'upload_max_mb', value: 'four' }]);
-    expect(await readSlice(store, KEYS)).toEqual({ late_cancel_hours: SETTING_DEFAULTS.late_cancel_hours, upload_max_mb: SETTING_DEFAULTS.upload_max_mb });
+    expect(await readSlice(store, KEYS)).toEqual({
+      late_cancel_hours: SETTING_DEFAULTS.late_cancel_hours,
+      upload_max_mb: SETTING_DEFAULTS.upload_max_mb,
+    });
   });
 
   it('propagates a failed read instead of guessing', async () => {
@@ -59,7 +72,13 @@ describe('readSlice (the settings reader kernel)', () => {
 
 describe('readerOf (tests only)', () => {
   it('builds a reader over fakeSettings, with the overrides on top of the defaults', async () => {
-    expect(await readerOf(ProbeSettings, { late_cancel_hours: 24 }).read()).toEqual({ late_cancel_hours: 24, upload_max_mb: SETTING_DEFAULTS.upload_max_mb });
-    expect(await readerOf(ProbeSettings).read()).toEqual({ late_cancel_hours: null, upload_max_mb: SETTING_DEFAULTS.upload_max_mb });
+    expect(await readerOf(ProbeSettings, { late_cancel_hours: 24 }).read()).toEqual({
+      late_cancel_hours: 24,
+      upload_max_mb: SETTING_DEFAULTS.upload_max_mb,
+    });
+    expect(await readerOf(ProbeSettings).read()).toEqual({
+      late_cancel_hours: null,
+      upload_max_mb: SETTING_DEFAULTS.upload_max_mb,
+    });
   });
 });

@@ -20,8 +20,15 @@ describe('settings.teacher_whatsapp_lesson_reminder', () => {
   });
 
   it('planReminders: teacherReminders false drops only the teacher row', () => {
-    const input = { lessons: [sampleLesson()], minutesBefore: 60, dayBefore: false, origin: '', now: at('2026-10-04T13:10:00Z') };
-    const keys = (teacherReminders?: boolean) => planReminders({ ...input, teacherReminders }).map((r) => r.template_key);
+    const input = {
+      lessons: [sampleLesson()],
+      minutesBefore: 60,
+      dayBefore: false,
+      origin: '',
+      now: at('2026-10-04T13:10:00Z'),
+    };
+    const keys = (teacherReminders?: boolean) =>
+      planReminders({ ...input, teacherReminders }).map((r) => r.template_key);
     expect(keys()).toEqual(['lesson_reminder', 'lesson_reminder', 'teacher_lesson_reminder']);
     expect(keys(true)).toEqual(keys());
     expect(keys(false)).toEqual(['lesson_reminder', 'lesson_reminder']);

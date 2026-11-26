@@ -15,7 +15,11 @@ function kit(results: Record<string, FakeResult[]>) {
   const f = fakeDb(results);
   const files = new FakeAvatarFiles();
   const audit = { record: vi.fn().mockResolvedValue(undefined) };
-  const admin = new StaffPhotoAdmin(f.db, new AvatarWriter(files), audit as unknown as AuditService);
+  const admin = new StaffPhotoAdmin(
+    f.db,
+    new AvatarWriter(files),
+    audit as unknown as AuditService,
+  );
   return { f, files, audit, admin };
 }
 
@@ -28,7 +32,9 @@ describe('StaffPhotoAdmin', () => {
 
   it('registers the photo on the teacher record, audits it and signs its URL', async () => {
     const path = `teachers/${T}/avatar-1.png`;
-    const { f, files, audit, admin } = kit({ teachers: [{ data: { profile_id: null } }, { data: { avatar_path: null } }, {}] });
+    const { f, files, audit, admin } = kit({
+      teachers: [{ data: { profile_id: null } }, { data: { avatar_path: null } }, {}],
+    });
     files.objects.set(path, { size: 900, contentType: 'image/png', bytes: PNG });
     const view = await admin.set({ kind: 'teacher', id: T }, { path, actorId: 'admin1' });
     expect(view.avatar_url).toBe(`https://storage.test/signed/${path}`);

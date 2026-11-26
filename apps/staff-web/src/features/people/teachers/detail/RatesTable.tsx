@@ -1,4 +1,4 @@
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { RATE_FIELDS } from '@/features/people/teachers/form/teacher-form';
 import type { Teacher } from '@ab/shared';
 

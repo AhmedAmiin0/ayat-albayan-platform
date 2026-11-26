@@ -24,7 +24,8 @@ describe('/portal scope over HTTP', () => {
     expect((await t.call('GET', '/portal/me', 'student1')).statusCode).toBe(200);
     for (const who of ['admin', 'teacher', 'sales', 'assistant'] as Who[]) {
       expect([who, (await t.call('GET', '/portal/me', who)).statusCode]).toEqual([who, 403]);
-      for (const [method, url] of ROUTES) expect([who, url, (await t.call(method, url, who)).statusCode]).toEqual([who, url, 403]);
+      for (const [method, url] of ROUTES)
+        expect([who, url, (await t.call(method, url, who)).statusCode]).toEqual([who, url, 403]);
     }
     expect((await t.call('GET', '/portal/me')).statusCode).toBe(401);
   });

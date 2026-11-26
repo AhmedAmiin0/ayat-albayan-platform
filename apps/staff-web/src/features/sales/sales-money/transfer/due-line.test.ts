@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { moneyText } from '@/features/finance/subscriptions';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { dueLine } from './due-line';
 
 describe('dueLine: what an open package still owes', () => {

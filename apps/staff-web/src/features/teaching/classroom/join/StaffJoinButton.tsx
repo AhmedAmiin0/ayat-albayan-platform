@@ -2,15 +2,10 @@ import type { LessonStatus } from '@ab/catalog';
 import { isOpenLesson, joinWindow } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
+import { Button, FormAlert, t, useJoinWindow, classroomErrorText, useNow } from '@ab/web-kit';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { useJoinWindow } from '@ab/web-kit/lib/settings/public-config';
-import { classroomErrorText } from '@ab/web-kit/classroom/room/livekit/errors';
 import { EnterButton, type JoinableLesson } from './JoinButton';
 import { openRoom } from '@/features/teaching/classroom/api/meetings-api';
-import { useNow } from '@ab/web-kit/lib/time/use-now';
 
 interface Props {
   lesson: JoinableLesson & { status: LessonStatus };

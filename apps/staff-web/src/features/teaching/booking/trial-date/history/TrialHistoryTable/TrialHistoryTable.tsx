@@ -1,13 +1,8 @@
 import type { TrialHistory } from '@ab/shared';
 import { useState } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { ScrollX } from '@ab/web-kit/components/ui/layout/scroll-x';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, ScrollX, StatusChip, t, useClock, useViewerTz } from '@ab/web-kit';
 import { rowTexts } from '@/features/teaching/booking/trial-date/history/history-text';
 import { trialOutcomeStyle } from '@/features/teaching/booking/trial-date/history/outcome-style';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
 
 /** Keeps the history a compact block. */
 export const TRIAL_ROWS_SHOWN = 5;

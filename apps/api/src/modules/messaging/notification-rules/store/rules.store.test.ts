@@ -11,7 +11,11 @@ function reader(opts: { ttl?: number; source?: unknown } = {}) {
   const store = fakeSettings({ comms_source: opts.source as 'legacy' | undefined, reminder_minutes_before: 45 });
   const rows = vi.fn(async () => [ROW]);
   const table = { rows } as unknown as RulesTable;
-  return { r: new DbRulesReader(table, new RulesSourceSettings(store, opts.ttl ?? 30_000)), rows, store };
+  return {
+    r: new DbRulesReader(table, new RulesSourceSettings(store, opts.ttl ?? 30_000)),
+    rows,
+    store,
+  };
 }
 
 describe('DbRulesReader (rules.store.ts)', () => {
@@ -53,7 +57,9 @@ describe('DbRulesReader (rules.store.ts)', () => {
     expect(t.store.invalidate).not.toHaveBeenCalled();
     await t.r.fresh();
     expect(t.store.invalidate).toHaveBeenCalledTimes(1);
-    const order = [vi.mocked(t.store.invalidate), vi.mocked(t.store.all)].map((f) => f.mock.invocationCallOrder.at(-1) ?? 0);
+    const order = [vi.mocked(t.store.invalidate), vi.mocked(t.store.all)].map(
+      (f) => f.mock.invocationCallOrder.at(-1) ?? 0,
+    );
     expect(order[0]).toBeLessThan(order[1] ?? 0);
   });
 

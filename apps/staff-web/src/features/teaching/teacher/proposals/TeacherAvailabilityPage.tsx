@@ -1,10 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
+import { Cartouche, ListSkeleton, PageHead, t } from '@ab/web-kit';
 import { teacherMeQuery } from '@/features/teaching/teacher/api';
 import { LoadRetry } from '@/features/teaching/teacher/LoadRetry';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { TeacherAvailability } from './TeacherAvailability';
 
 export function TeacherAvailabilityPage() {

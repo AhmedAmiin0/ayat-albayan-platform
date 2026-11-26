@@ -10,7 +10,11 @@ function job() {
     recoverStale: vi.fn(async () => 0),
     pendingIds: vi.fn(async () => [] as string[]),
   };
-  const j = new ReportPdfJob(queries as unknown as ReportPdfQueries, {} as ReportPdfPublisher, fakePolicy());
+  const j = new ReportPdfJob(
+    queries as unknown as ReportPdfQueries,
+    {} as ReportPdfPublisher,
+    fakePolicy(),
+  );
   return { j, queries };
 }
 

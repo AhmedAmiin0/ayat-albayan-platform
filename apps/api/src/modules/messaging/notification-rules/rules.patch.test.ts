@@ -13,7 +13,9 @@ import { describe, expect, it } from 'vitest';
 import { planPatch } from './rules.patch';
 import type { RulesSnapshot } from './store/rules.reader';
 
-const SETTINGS = Object.fromEntries(RULE_SETTING_KEYS.map((k) => [k, SETTING_DEFAULTS[k]])) as RuleSettings;
+const SETTINGS = Object.fromEntries(
+  RULE_SETTING_KEYS.map((k) => [k, SETTING_DEFAULTS[k]]),
+) as RuleSettings;
 
 function snap(mode: RulesMode = 'legacy', rows: Partial<NotificationRuleRow>[] = [], settings: Partial<RuleSettings> = {}): RulesSnapshot {
   const map = new Map<string, NotificationRuleRow>();
@@ -24,13 +26,15 @@ function snap(mode: RulesMode = 'legacy', rows: Partial<NotificationRuleRow>[] =
   return { mode, rows: map, settings: { ...SETTINGS, ...settings } };
 }
 
-const plan = (key: NotificationKey, patch: RulePatchInput, snapshot = snap()) => planPatch({ entry: notificationEntry(key), snapshot, patch });
+const plan = (key: NotificationKey, patch: RulePatchInput, snapshot = snap()) =>
+  planPatch({ entry: notificationEntry(key), snapshot, patch });
 const code = (fn: () => unknown): unknown => {
   try {
     fn();
     return null;
   } catch (e) {
-    return (e as { getStatus: () => number; getResponse: () => { code: string } }).getResponse().code;
+    return (e as { getStatus: () => number; getResponse: () => { code: string } }).getResponse()
+      .code;
   }
 };
 

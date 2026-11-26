@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
-import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing/query';
+import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { FamilySignInScreen } from '@/sign-in/FamilySignInScreen/FamilySignInScreen';
 
 // docs/50 §4: student code and password one tap from WhatsApp; while codes are off it opens there.

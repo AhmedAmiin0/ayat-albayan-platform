@@ -1,8 +1,8 @@
 import { inWeekOrder } from '@ab/shared';
 import type { CourseChangeRequest, DayTime } from '@ab/schedule';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { dayAtText } from '@/features/teaching/booking/steps/slots/DayTimesList';
-import type { Clock } from '@ab/web-kit/lib/clock';
+import type { Clock } from '@ab/web-kit';
 
 /** The viewer's cycle, language and zone (useViewerTz()). */
 type ZonedClock = Clock & { tz: string };

@@ -1,6 +1,6 @@
 import { GOLDEN_ZONES, digest, goldenDates } from '@ab/shared/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
+import { locale } from '@ab/web-kit';
 import { formatTimeOff, toTimeOffBody } from '@/features/people/teachers/time-off/time-off';
 
 // Regression golden (docs/34 §7). Before the date-fns facade replaced `new Date('…T00:00')` +

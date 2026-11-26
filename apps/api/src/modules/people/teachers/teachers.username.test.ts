@@ -1,7 +1,7 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { featureRoot } from '@/common/infra/test-root';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import { DB } from '@/common/db/db.module';
 import { fakeSettings } from '@/common/settings/settings.fakes';
@@ -17,14 +17,36 @@ const verify: TokenVerifier = async (token) => {
   return { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 };
 const ID = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
-const teachers = { list: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn(), idByProfile: vi.fn(), photo: async () => null };
-const row = (profile_id: string | null) => ({ id: ID, display_name_ar: 'أ. عمر', meeting_link: null, meeting_mode: null, profile_id });
+const teachers = {
+  list: vi.fn(),
+  get: vi.fn(),
+  insert: vi.fn(),
+  update: vi.fn(),
+  remove: vi.fn(),
+  idByProfile: vi.fn(),
+  photo: async () => null,
+};
+const row = (profile_id: string | null) => ({
+  id: ID,
+  display_name_ar: 'أ. عمر',
+  meeting_link: null,
+  meeting_mode: null,
+  profile_id,
+});
 
 /** profiles: `select … maybeSingle()` reads `stored`; `update(patch).eq()` resolves to `updateError`. */
-const profiles = { stored: null as string | null, updateError: null as { code: string; message: string } | null, update: vi.fn() };
+const profiles = {
+  stored: null as string | null,
+  updateError: null as { code: string; message: string } | null,
+  update: vi.fn(),
+};
 const db = {
   from: () => ({
-    select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { username: profiles.stored }, error: null }) }) }),
+    select: () => ({
+      eq: () => ({
+        maybeSingle: async () => ({ data: { username: profiles.stored }, error: null }),
+      }),
+    }),
     update: (patch: { username: string | null }) => {
       profiles.update(patch);
       return { eq: async () => ({ error: profiles.updateError }) };
@@ -38,7 +60,7 @@ describe('TeachersController — username (docs/30)', () => {
     app.inject({ method: 'PATCH', url: `/teachers/${ID}`, payload: body, headers: { authorization: 'Bearer admin' } });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule, TeachersModule] })
+    const mod = await Test.createTestingModule({ imports: [featureRoot(TeachersModule)] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(TeachersRepo).useValue(teachers)

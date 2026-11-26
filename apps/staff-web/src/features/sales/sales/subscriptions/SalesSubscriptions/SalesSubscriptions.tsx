@@ -1,13 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Cartouche } from '@ab/web-kit/components/ui/display/cartouche';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { PageHead } from '@ab/web-kit/components/ui/layout/page';
-import { Tabs } from '@ab/web-kit/components/ui/layout/tabs';
-import { ListSkeleton } from '@ab/web-kit/components/ui/display/skeleton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Cartouche, FormAlert, PageHead, Tabs, ListSkeleton, t } from '@ab/web-kit';
 import type { SalesSubscriptionKind } from '@ab/shared';
 import { salesSubscriptionsQuery } from '@/features/sales/sales/api';
 import { historyColumn } from '@/features/sales/sales/subscriptions/history-column';

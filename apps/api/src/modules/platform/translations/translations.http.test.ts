@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { TranslationsModule } from './translations.module';
 import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -22,7 +23,11 @@ const activity = { push: vi.fn(), flush: vi.fn(async () => undefined) };
 describe('/i18n — dynamic translations', () => {
   let app: NestFastifyApplication;
   type Method = 'GET' | 'PUT' | 'DELETE';
-  const call = (method: Method, url: string, opts: { token?: string; payload?: object; etag?: string } = {}) =>
+  const call = (
+    method: Method,
+    url: string,
+    opts: { token?: string; payload?: object; etag?: string } = {},
+  ) =>
     app.inject({
       method,
       url,
@@ -35,10 +40,15 @@ describe('/i18n — dynamic translations', () => {
 
   beforeAll(async () => {
     queries.all.mockResolvedValue([]);
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(TranslationsQueries).useValue(queries)
-      .overrideProvider(ActivityWriter).useValue(activity)
+    const mod = await Test.createTestingModule({ imports: [messagingRoot(TranslationsModule)] })
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(TranslationsQueries)
+      .useValue(queries)
+      .overrideProvider(ActivityWriter)
+      .useValue(activity)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

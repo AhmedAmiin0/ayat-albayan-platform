@@ -5,15 +5,15 @@ import {
   type QueryClient,
 } from '@tanstack/react-query';
 import { flattenPages } from '@ab/client-core';
-import { pathKey } from '@ab/mobile-kit';
 import type { LeadView } from '@ab/shared';
 import type { Page } from '@ab/core';
+import { leadKeys } from '@/core/lib/keys';
 
 /** The lead with this id in any cached inbox list, freshest list first; undefined if none has it. */
 export function findCachedLead(client: QueryClient, id: string): LeadView | undefined {
   const lists = client
     .getQueryCache()
-    .findAll({ queryKey: ['leads', 'list'] })
+    .findAll({ queryKey: leadKeys.lists })
     .sort((a, b) => b.state.dataUpdatedAt - a.state.dataUpdatedAt);
   for (const list of lists) {
     const data = list.state.data as InfiniteData<Page<LeadView>> | undefined;
@@ -31,7 +31,7 @@ export function findCachedLead(client: QueryClient, id: string): LeadView | unde
 export function useCachedLead(id: string) {
   const client = useQueryClient();
   return useQuery({
-    queryKey: pathKey(`/leads/${id}`),
+    queryKey: leadKeys.one(id),
     queryFn: () => {
       const lead = findCachedLead(client, id);
       if (!lead) throw new Error('lead_not_cached');

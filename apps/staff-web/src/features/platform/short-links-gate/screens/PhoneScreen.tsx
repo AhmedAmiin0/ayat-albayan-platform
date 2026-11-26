@@ -1,8 +1,5 @@
 import { defaultStringifySearch } from '@tanstack/react-router';
-import { PhoneNumberField } from '@ab/web-kit/auth/phone/PhoneNumberField';
-import { Button, buttonVariants } from '@ab/web-kit/components/ui/form/button';
-import { FormAlert } from '@ab/web-kit/components/ui/form/form-alert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { PhoneNumberField, Button, buttonVariants, FormAlert, t } from '@ab/web-kit';
 import { LinkCard } from '@/features/platform/short-links-gate/parts/LinkCard';
 import type { Gate } from '@/features/platform/short-links-gate/use-gate';
 import { GATE_ACTION } from './gate-action';

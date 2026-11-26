@@ -1,8 +1,5 @@
 import { TEMPLATE_LIMITS } from '@ab/shared';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Input } from '@ab/web-kit/components/ui/form/input';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Button, Field, Input, t } from '@ab/web-kit';
 import type { EditButton } from './edit-draft';
 import { EditButtonTarget } from './EditButtonTarget';
 

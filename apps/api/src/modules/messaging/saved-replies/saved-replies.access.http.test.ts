@@ -23,8 +23,14 @@ describe('an assistant without saved_replies.manage', () => {
       t.call({ method: 'DELETE', url: `/saved-replies/${SHARED}`, token: 'sales' }),
     ];
     const res = await Promise.all(calls);
-    expect(res.map((r) => [r.statusCode, r.json<{ code: string }>().code])).toEqual(res.map(() => [403, 'saved_replies_forbidden']));
-    expect([t.replies.insert, t.replies.update, t.replies.remove, t.replies.setPositions].map((f) => f.mock.calls.length)).toEqual([0, 0, 0, 0]);
+    expect(res.map((r) => [r.statusCode, r.json<{ code: string }>().code])).toEqual(
+      res.map(() => [403, 'saved_replies_forbidden']),
+    );
+    expect(
+      [t.replies.insert, t.replies.update, t.replies.remove, t.replies.setPositions].map(
+        (f) => f.mock.calls.length,
+      ),
+    ).toEqual([0, 0, 0, 0]);
   });
 
   it('cannot see, edit, delete or stage another assistant\'s personal reply (404)', async () => {

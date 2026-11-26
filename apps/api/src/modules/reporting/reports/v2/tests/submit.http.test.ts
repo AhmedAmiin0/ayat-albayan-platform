@@ -16,7 +16,9 @@ describe('POST /reports/:id/v2/submit (the new form)', () => {
   afterAll(() => h.app.close());
   beforeEach(() => {
     h.reset();
-    h.reports.get.mockResolvedValueOnce(v2Draft()).mockResolvedValue(submittedRow({ form_version: 2 }));
+    h.reports.get
+      .mockResolvedValueOnce(v2Draft())
+      .mockResolvedValue(submittedRow({ form_version: 2 }));
     vi.useFakeTimers({ now: AFTER, toFake: ['Date'] });
   });
   afterEach(() => vi.useRealTimers());

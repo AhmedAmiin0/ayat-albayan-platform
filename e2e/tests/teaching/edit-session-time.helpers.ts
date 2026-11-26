@@ -49,13 +49,13 @@ export async function fillForm(d: Locator, f: Pick) {
 
 export const save = (d: Locator) => d.getByRole('button', { name: L.submit }).click();
 
-export type LessonRow = {
+export interface LessonRow {
   id: string;
   status: string;
   starts_at: Date;
   ends_at: Date;
   override_reason: string | null;
-};
+}
 
 export const lessonRows = (teacherId: string) =>
   withSql((sql) => sql<LessonRow[]>`

@@ -1,7 +1,8 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppModule } from '@/app.module';
+import { messagingRoot } from '@/common/infra/test-root';
+import { InboxModule } from '@/modules/messaging/inbox/inbox.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import { StorageService } from '@/common/storage/storage.service';
 import { InboundMediaRepo, type MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
@@ -41,12 +42,19 @@ describe('thread media routes (R-MSG-06): admin only', () => {
     app.inject({ method: 'GET', url, headers: { authorization: `Bearer ${token}` } });
 
   beforeAll(async () => {
-    const mod = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(InboundMediaRepo).useValue(queries)
-      .overrideProvider(WHATSAPP_CLIENT).useValue(client)
-      .overrideProvider(WHATSAPP_LINES).useValue({ notifications: client, chat: chatClient })
-      .overrideProvider(StorageService).useValue(storage)
+    const mod = await Test.createTestingModule({ imports: [messagingRoot(InboxModule)] })
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(InboundMediaRepo)
+      .useValue(queries)
+      .overrideProvider(WHATSAPP_CLIENT)
+      .useValue(client)
+      .overrideProvider(WHATSAPP_LINES)
+      .useValue({ notifications: client, chat: chatClient })
+      .overrideProvider(StorageService)
+      .useValue(storage)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -75,7 +83,9 @@ describe('thread media routes (R-MSG-06): admin only', () => {
     expect(items).toHaveLength(2);
     expect(items[0]).toMatchObject({ message_id: M1, mime: 'image/jpeg', caption: 'الفاتورة', expired: false });
     expect(items[1]).toMatchObject({ mime: 'application/pdf', caption: null, expired: true });
-    expect(queries.receipts).toHaveBeenCalledWith(expect.objectContaining({ phone: PHONE, limit: 12 }));
+    expect(queries.receipts).toHaveBeenCalledWith(
+      expect.objectContaining({ phone: PHONE, limit: 12 }),
+    );
     expect(client.getMedia).not.toHaveBeenCalled();
   });
 
@@ -122,7 +132,9 @@ describe('thread media routes (R-MSG-06): admin only', () => {
   });
 
   it('an expired file is 410 media_expired', async () => {
-    queries.message.mockResolvedValue(row({ created_at: new Date(Date.now() - 40 * 86_400_000).toISOString() }));
+    queries.message.mockResolvedValue(
+      row({ created_at: new Date(Date.now() - 40 * 86_400_000).toISOString() }),
+    );
     const res = await call(`/threads/${URL_PHONE}/media/${M1}`);
     expect(res.statusCode).toBe(410);
     expect(res.json()).toMatchObject({ code: 'media_expired' });

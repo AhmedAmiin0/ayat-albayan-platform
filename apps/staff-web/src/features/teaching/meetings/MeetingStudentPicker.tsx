@@ -1,11 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { IconButton } from '@ab/web-kit/components/ui/form/icon-button';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
+import { IconButton, Icon, Ltr, t } from '@ab/web-kit';
 import { studentListQuery } from '@/features/people/students/api';
 import { StudentSearch } from '@/features/people/students/list/StudentSearch';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { toggleStudent, type MeetingStudent } from './instant/instant-form';
 
 interface Props {

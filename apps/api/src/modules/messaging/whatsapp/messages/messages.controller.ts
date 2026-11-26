@@ -36,8 +36,13 @@ export class MessagesController {
   /** failed → queued, attempts 0 (409 not_retryable otherwise; 409 auto_off for a held row while OFF). */
   @Post(':id/retry')
   @HttpCode(200)
-  async retry(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
-    const change = await this.messages.retry(id, { automaticOn: await this.sendGate.automaticOn() });
+  async retry(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MessageView> {
+    const change = await this.messages.retry(id, {
+      automaticOn: await this.sendGate.automaticOn(),
+    });
     return this.audited({ change, action: 'message_retry', user });
   }
 
@@ -62,7 +67,11 @@ export class MessagesController {
     return this.audited({ change: await this.messages.handOff(id), action: 'message_handed_off', user });
   }
 
-  private async audited(input: { change: MessageChange; action: string; user: AuthUser }): Promise<MessageView> {
+  private async audited(input: {
+    change: MessageChange;
+    action: string;
+    user: AuthUser;
+  }): Promise<MessageView> {
     const { before, view } = input.change;
     await this.audit.record({
       actorId: input.user.id,
@@ -70,7 +79,11 @@ export class MessagesController {
       entityId: view.id,
       action: input.action,
       before: { status: before.status, attempts: before.attempts, error_code: before.error_code },
-      after: { status: view.status, attempts: view.attempts, sent_manually_at: view.sent_manually_at },
+      after: {
+        status: view.status,
+        attempts: view.attempts,
+        sent_manually_at: view.sent_manually_at,
+      },
     });
     return view;
   }

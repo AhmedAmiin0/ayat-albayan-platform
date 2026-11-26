@@ -43,13 +43,19 @@ const pushOnce = <T>(list: T[], item: T): void => {
   if (!list.includes(item)) list.push(item);
 };
 
-export type ParsedSettingField = { ok: true; value: unknown } | { ok: false; issues: SettingsPatchIssue[] };
+export type ParsedSettingField =
+  | { ok: true; value: unknown }
+  | { ok: false; issues: SettingsPatchIssue[] };
 
 /**
  * One PATCH field validated by its registry def (issue paths = the field, then the inner path). Also
  * used by the API for the owned followUpHours alias (docs/26 §2f: it writes the follow-up rule).
  */
-export function parseSettingField(input: { field: string; key: SettingKey; value: unknown }): ParsedSettingField {
+export function parseSettingField(input: {
+  field: string;
+  key: SettingKey;
+  value: unknown;
+}): ParsedSettingField {
   const parsed = settingZod(SETTINGS_REGISTRY[input.key]).safeParse(input.value);
   if (parsed.success) return { ok: true, value: parsed.data };
   return { ok: false, issues: parsed.error.issues.map((i) => ({ path: [input.field, ...i.path.map(String)].join('.'), message: i.message })) };

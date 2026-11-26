@@ -27,7 +27,11 @@ function decodeCommsSource(v: unknown): Decoded {
  * value that fails the entry's schema (or that the schema would change, e.g. untrimmed text) reads
  * as the default and is reported malformed.
  */
-export function decodeValue(key: string, def: SettingDef, row: { value: unknown } | undefined): Decoded {
+export function decodeValue(
+  key: string,
+  def: SettingDef,
+  row: { value: unknown } | undefined,
+): Decoded {
   const v = row?.value ?? null;
   if (v === null) return ok(defaultOf(def));
   if (GATE_KEYS.has(key)) return { value: v === true, malformed: typeof v !== 'boolean' };

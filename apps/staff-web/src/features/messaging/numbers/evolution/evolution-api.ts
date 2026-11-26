@@ -1,7 +1,7 @@
 import { EVOLUTION_STATES, QR_DATA_URL_RE, type EvolutionState } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { apiFetch } from '@ab/web-kit';
 import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';
 
 // An Evolution number's live checks (numbers.manage, docs/19 «Evolution driver»): both answers

@@ -1,11 +1,7 @@
 import { weekdayOf } from '@ab/time';
 import type { LessonView } from '@ab/schedule';
-import { Avatar } from '@ab/web-kit/components/ui/display/avatar';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { teacherLabel } from '@ab/web-kit/lib/i18n/teacher-label';
-import { cn } from '@ab/web-kit/lib/utils';
+import { Avatar, t, teacherLabel, cn, dayMonthLabel } from '@ab/web-kit';
 import { LessonChipList } from '@/features/teaching/schedule/lesson/LessonChip';
-import { dayMonthLabel } from '@ab/web-kit/schedule/tz';
 
 interface AgendaRow {
   id: string;

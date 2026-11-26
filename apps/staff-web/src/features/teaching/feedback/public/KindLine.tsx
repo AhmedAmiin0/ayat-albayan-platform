@@ -1,5 +1,4 @@
-import { RequiredMark } from '@ab/web-kit/components/ui/form/label';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { RequiredMark, t } from '@ab/web-kit';
 import type { FeedbackKind } from '@/features/teaching/feedback/types';
 
 /** The server derives the kind, so the family sees it as fixed, not a choice. */

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '@ab/web-kit';
 
 /**
  * The fixed-height box a list screen's table lives in: it takes the rest of the page frame (a flex

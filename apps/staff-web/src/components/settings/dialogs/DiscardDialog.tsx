@@ -1,5 +1,4 @@
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
+import { Button, Dialog } from '@ab/web-kit';
 
 export interface DiscardWords {
   title: string;

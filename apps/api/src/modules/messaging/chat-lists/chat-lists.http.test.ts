@@ -91,7 +91,9 @@ describe('/chat-lists (docs/22 §3): the academy\'s shared lists, admin and sale
       expect((await t.call({ method: 'PUT', url: `/chat-lists/${ID}/threads/${PHONE}`, token })).statusCode).toBe(403);
       expect((await t.call({ method: 'DELETE', url: `/chat-lists/${ID}`, token })).statusCode).toBe(403);
     }
-    expect([t.lists.all, t.lists.create, t.lists.add, t.lists.remove].map((f) => f.mock.calls.length)).toEqual([0, 0, 0, 0]);
+    expect(
+      [t.lists.all, t.lists.create, t.lists.add, t.lists.remove].map((f) => f.mock.calls.length),
+    ).toEqual([0, 0, 0, 0]);
   });
 });
 

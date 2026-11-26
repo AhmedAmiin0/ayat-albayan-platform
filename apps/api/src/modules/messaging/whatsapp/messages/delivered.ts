@@ -5,7 +5,10 @@ import { reportIdOf } from '@/modules/messaging/whatsapp/sender/send-plan';
  * The delivery side effects, for a send and for the admin's manual send (R-MSG-03): the lead's
  * last_outbound_at, and lesson_reports.sent_at for a report_ready row (id = dedup key suffix).
  */
-export async function stampDelivered(db: Db, input: { leadId: string | null; dedupKey: string | null; at: string }): Promise<void> {
+export async function stampDelivered(
+  db: Db,
+  input: { leadId: string | null; dedupKey: string | null; at: string },
+): Promise<void> {
   if (input.leadId) {
     const { error } = await db.from('leads').update({ last_outbound_at: input.at }).eq('id', input.leadId);
     if (error) throw new Error(`lead last_outbound_at failed: ${error.message}`);

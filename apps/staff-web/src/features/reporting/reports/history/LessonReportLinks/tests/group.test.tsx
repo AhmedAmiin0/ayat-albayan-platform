@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/schedule';
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { LessonReportLinks } from '@/features/reporting/reports/history/LessonReportLinks/LessonReportLinks';
 
 const STARTED = '2026-10-03T13:00:00.000Z';

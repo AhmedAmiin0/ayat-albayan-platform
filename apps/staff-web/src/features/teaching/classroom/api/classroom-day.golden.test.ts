@@ -1,6 +1,6 @@
 import { GOLDEN_ZONES, digest, goldenInstants } from '@ab/shared/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { dayAround, localDay } from '@ab/web-kit/classroom/api/api';
+import { dayAround, localDay } from '@ab/web-kit';
 
 // Regression golden (docs/34 §7). The classroom's ?from&to day (today and the day switcher) moved
 // from `new Date(y, m, d)` in the browser's zone to the date-fns facade. Both ran side by side here

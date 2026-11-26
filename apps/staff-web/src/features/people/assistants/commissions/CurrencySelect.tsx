@@ -1,6 +1,5 @@
 import { CURRENCY_ISOS } from '@ab/money';
-import { Field } from '@ab/web-kit/components/ui/form/field';
-import { Select } from '@ab/web-kit/components/ui/form/select';
+import { Field, Select } from '@ab/web-kit';
 import { currencySymbol } from '@/features/finance/subscriptions';
 
 /** The academy pays in EGP; the site currencies follow (a commission keeps the package's own). */

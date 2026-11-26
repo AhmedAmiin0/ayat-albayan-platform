@@ -1,10 +1,8 @@
 import type { ReportView } from '@ab/shared';
 import { pdfStatusStyle, reportStatusStyle } from '@ab/money';
 import { clockOf } from '@ab/time';
-import { StatusChip } from '@ab/web-kit/components/ui/display/status-chip';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { SaveState } from '@/features/reporting/reports/entry/use-autosave';
-import { useClock } from '@ab/web-kit/lib/clock';
+import { StatusChip, t, useClock } from '@ab/web-kit';
+import type { SaveState } from '@ab/client-core';
 import { WindowLines } from '@/features/reporting/reports/send/WindowLines';
 import { useWindowClose } from '@/features/reporting/reports/send/use-window-close';
 

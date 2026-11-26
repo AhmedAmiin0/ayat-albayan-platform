@@ -1,8 +1,7 @@
 import type { SettingKey } from '@ab/settings';
 import { useState } from 'react';
-import { useBelowShell, usePhone } from '@ab/web-kit/components/ui/layout/use-narrow';
+import { useBelowShell, usePhone, t } from '@ab/web-kit';
 import type { CustomValues } from '@/features/platform/custom-config/use-custom-values';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { GroupNav } from './GroupNav';
 import type { RowEnv } from './rows/ValueRowView';
 import { valueCounts } from './lib/value-rows';

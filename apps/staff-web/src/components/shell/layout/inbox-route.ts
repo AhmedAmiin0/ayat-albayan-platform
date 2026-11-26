@@ -1,4 +1,4 @@
-import { cn } from '@ab/web-kit/lib/utils';
+import { cn } from '@ab/web-kit';
 
 // The chat inbox routes (/admin/inbox, /sales/inbox, /teacher/inbox): on phones (< 640px) their
 // frame is tighter.

@@ -7,9 +7,7 @@ import {
   type PackageProgress,
   type StudentBalanceView,
 } from '@ab/money';
-import { ApiError } from '@ab/web-kit/lib/http/api';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { currencySymbol, moneyText } from '@ab/web-kit/lib/money-text';
+import { ApiError, t, currencySymbol, moneyText } from '@ab/web-kit';
 import type { SubscriptionView } from './api';
 
 // Display text for the money screens. Wording from ar.json, Western digits (docs/07 §2).

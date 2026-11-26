@@ -21,13 +21,24 @@ export class NumberRoutes {
   ) {}
 
   /** Throws when the approvals, templates or rules are unreadable: the pass sends nothing (fail closed). */
-  async pass(numbers: readonly OverlayNumber[]): Promise<{ pass: RoutePass; templates: TemplateRow[] }> {
+  async pass(
+    numbers: readonly OverlayNumber[],
+  ): Promise<{ pass: RoutePass; templates: TemplateRow[] }> {
     const approvals = await this.queries.approvals();
-    const [rows, rules] = await Promise.all([this.queries.templates(approvals), this.ruleNumbers()]);
+    const [rows, rules] = await Promise.all([
+      this.queries.templates(approvals),
+      this.ruleNumbers(),
+    ]);
     const crm = new Set(numbers.filter((n) => n.env?.provider === 'crm').map((n) => n.id));
     // A crm number reads a gated key by its CRM template (docs/19); with none, nothing does.
     const crmApproved = crm.size ? gateApprovedKeys(rows, () => true) : new Set<string>();
-    const routes = { numbers: messagingNumbers(numbers).map(routable), ruleNumbers: rules, approvals, crm, crmApproved };
+    const routes = {
+      numbers: messagingNumbers(numbers).map(routable),
+      ruleNumbers: rules,
+      approvals,
+      crm,
+      crmApproved,
+    };
     return { pass: routes, templates: rows.filter((t) => sendableSomewhere(routes, t)) };
   }
 

@@ -36,14 +36,22 @@ export type SyncAction =
   | { kind: 'cap'; amount: number };
 
 function counts(i: SyncInput): boolean {
-  const settings = { countLate: i.countLate, countNoShow: i.countNoShow, countTrials: i.countTrials ?? false };
-  return lessonCountsForPay({ status: i.lesson.status, isTrial: i.lesson.isTrial ?? false }, settings);
+  const settings = {
+    countLate: i.countLate,
+    countNoShow: i.countNoShow,
+    countTrials: i.countTrials ?? false,
+  };
+  return lessonCountsForPay(
+    { status: i.lesson.status, isTrial: i.lesson.isTrial ?? false },
+    settings,
+  );
 }
 
 /** The rate the earning carries: frozen while the length and teacher are unchanged, else the teacher's now. */
 function rateFor(i: SyncInput): number | null {
   const { earning, lesson } = i;
-  if (earning?.minutes === lesson.minutes && earning.teacherId === lesson.teacherId) return earning.rate;
+  if (earning?.minutes === lesson.minutes && earning.teacherId === lesson.teacherId)
+    return earning.rate;
   return teacherRateFor(lesson.minutes, i.rates);
 }
 

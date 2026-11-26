@@ -29,7 +29,15 @@ export function useMinuteClock(): Date {
  * keeps a single role=status). `end` (the bell) sits after the clocks, at the inline end.
  * `className`: the inline copy inside the wide header (the top-bar inbox) drops the 54px row height.
  */
-export function RunningHead({ crumbs, end, className }: { crumbs?: ReactNode; end?: ReactNode; className?: string }) {
+export function RunningHead({
+  crumbs,
+  end,
+  className,
+}: {
+  crumbs?: ReactNode;
+  end?: ReactNode;
+  className?: string;
+}) {
   const head = formatRunningHead(useMinuteClock(), locale, useClock().cycle);
   return (
     <div

@@ -41,7 +41,8 @@ export type SubmitPlanInput = {
  * anchors the edit window, later ones mark the edit) and the lesson outcome.
  */
 export function submitPayload(input: SubmitPlanInput): SubmitPayload {
-  const submittedAt = input.report.submitted_at === null ? null : new Date(input.report.submitted_at);
+  const submittedAt =
+    input.report.submitted_at === null ? null : new Date(input.report.submitted_at);
   const next = nextVersion({ version: input.report.version, submittedAt }, input.now);
   return {
     report_id: input.report.id,
@@ -85,7 +86,13 @@ export function lessonOutcome(input: SubmitPlanInput): Pick<SubmitPayload, 'less
     return { lesson_change: { actor: input.actor, changes: [change], audit } };
   }
   const startsAt = new Date(lesson.starts_at);
-  const chargeable = isChargeable({ status: LESSON_EVENT_TARGET[event], startsAt, at: now, lateCancelHours });
-  const same = input.current?.attendance === input.attendance && input.current.chargeable === chargeable;
+  const chargeable = isChargeable({
+    status: LESSON_EVENT_TARGET[event],
+    startsAt,
+    at: now,
+    lateCancelHours,
+  });
+  const same =
+    input.current?.attendance === input.attendance && input.current.chargeable === chargeable;
   return same ? {} : { student: { attendance: input.attendance, chargeable } };
 }

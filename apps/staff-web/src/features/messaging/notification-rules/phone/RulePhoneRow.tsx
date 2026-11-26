@@ -1,6 +1,5 @@
 import type { NotificationEntryView } from '@ab/shared';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { Icon, t } from '@ab/web-kit';
 import { stateChip } from '@/features/messaging/notification-catalogue/catalogue-text';
 import { NamePart } from '@/features/messaging/notification-rules/cells/NamePart';
 import { editableRule } from '@/features/messaging/notification-rules/table/RuleRow';

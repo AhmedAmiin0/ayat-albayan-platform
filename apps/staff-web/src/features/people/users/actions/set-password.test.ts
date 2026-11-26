@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
+import { t } from '@ab/web-kit';
 import { hasRecoverySession, savePassword, setPasswordError } from './set-password';
 
 const auth = vi.hoisted(() => ({ getSession: vi.fn(), updateUser: vi.fn() }));

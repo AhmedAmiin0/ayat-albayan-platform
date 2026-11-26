@@ -9,5 +9,13 @@ export function notificationItem(row: Row): NotificationItem {
   if (row.data !== null && typeof row.data === 'object' && !Array.isArray(row.data)) {
     for (const [k, v] of Object.entries(row.data)) if (typeof v === 'string') data[k] = v;
   }
-  return { id: row.id, kind: row.kind, title: row.title, body: row.body, data, created_at: row.created_at, read_at: row.read_at };
+  return {
+    id: row.id,
+    kind: row.kind,
+    title: row.title,
+    body: row.body,
+    data,
+    created_at: row.created_at,
+    read_at: row.read_at,
+  };
 }

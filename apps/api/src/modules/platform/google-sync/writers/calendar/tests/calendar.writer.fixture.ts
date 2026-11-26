@@ -17,11 +17,23 @@ export function setup(src: LessonSource | null) {
   const source = { lesson: vi.fn().mockResolvedValue(src) };
   const map = { teacherCalendar: vi.fn().mockResolvedValue(CAL) };
   const alerts = { teacherUnmapped: vi.fn(), scriptStillRunning: vi.fn() };
-  const writer = new CalendarWriter(source as unknown as GoogleSyncSource, map as unknown as GoogleMapQueries, alerts as unknown as GoogleAlerts);
+  const writer = new CalendarWriter(
+    source as unknown as GoogleSyncSource,
+    map as unknown as GoogleMapQueries,
+    alerts as unknown as GoogleAlerts,
+  );
   return { google, writer, map, alerts, source, live: { live: true as const, google } };
 }
 
 /** A platform-origin lesson by default; `{ origin: false }` = imported (managed = its teacher's owner). */
-export const lessonSource = (over: Partial<Omit<LessonSource, 'lesson'>> = {}, lesson: Partial<EventLesson> = {}): LessonSource => ({
-  origin: true, managed: true, teacherId: TEACHER_ID, ownerChangedAt: null, lesson: eventLesson(lesson), ...over,
+export const lessonSource = (
+  over: Partial<Omit<LessonSource, 'lesson'>> = {},
+  lesson: Partial<EventLesson> = {},
+): LessonSource => ({
+  origin: true,
+  managed: true,
+  teacherId: TEACHER_ID,
+  ownerChangedAt: null,
+  lesson: eventLesson(lesson),
+  ...over,
 });

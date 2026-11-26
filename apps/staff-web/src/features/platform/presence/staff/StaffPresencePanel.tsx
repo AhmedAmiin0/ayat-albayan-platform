@@ -1,13 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState } from 'react';
-import { Icon } from '@ab/web-kit/components/ui/display/icon';
+import { Icon, presenceOrder, withOnline, usePresenceWatch, t, cn } from '@ab/web-kit';
 import { meQuery } from '@/features/people/auth';
 import { staffPresenceQuery } from '@/features/platform/presence/api';
-import { presenceOrder, withOnline } from '@ab/web-kit/components/channel/presence/presence-pick';
 import { usePresenceClock } from '@/features/platform/presence/use-presence-clock';
-import { usePresenceWatch } from '@ab/web-kit/components/channel/presence/use-presence-watch';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
 import { StaffPresenceBody } from './StaffPresenceBody';
 
 /** Only a base-role admin is shown the staff (docs/33 §2). */

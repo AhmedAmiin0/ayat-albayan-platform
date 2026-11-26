@@ -1,13 +1,10 @@
 import { canLinkFamily, canPickTrialDate, type SalesFamilyStudent, type SalesStudentRef, type ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
-import { Button } from '@ab/web-kit/components/ui/form/button';
-import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
-import { usePermissions } from '@ab/web-kit/auth/use-permissions';
+import { Button, Toast, usePermissions, t } from '@ab/web-kit';
 import { RegistrationCheckTrigger } from '@/features/sales/sales/registration/RegistrationCheckButton';
 import { RegistrationCheckDialog } from '@/features/sales/sales/registration/RegistrationCheckDialog';
 import { TrialDateDialog } from '@/features/teaching/booking/trial-date/dialog/TrialDateDialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LinkFamilyDialog } from '@/features/messaging/inbox';
 import { useInboxMode } from '@/features/messaging/inbox';
 import { SalesRegisterButton, SalesRegisterDialog } from '@/features/messaging/inbox';

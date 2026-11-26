@@ -11,7 +11,8 @@ import { WebhookDeps } from './webhook-deps';
 
 export const idOf = (v: string | { id: string } | null): string | null => (typeof v === 'string' ? v : (v?.id ?? null));
 /** paid_at: when Stripe says it happened, never in the future. */
-export const pastIso = (unixSeconds: number, now = new Date()): string => new Date(Math.min(unixSeconds * 1000, now.getTime())).toISOString();
+export const pastIso = (unixSeconds: number, now = new Date()): string =>
+  new Date(Math.min(unixSeconds * 1000, now.getTime())).toISOString();
 
 /**
  * A paid Checkout Session → ONE payment on the link's package through the normal PaymentsService
@@ -58,7 +59,11 @@ export class LinkFulfilment {
       await this.deps.alerts.admins({ subject: `payment_link_refused:${session.id}`, title, text: `${amount} ${currency} (${errorCode(e) ?? 'refused'})`, link });
       return `refused:${errorCode(e) ?? e.getStatus()}`;
     }
-    await this.deps.links.markPaid(link.id, { paymentId: payment.id, paidAt: payment.paid_at, paymentIntent: idOf(session.payment_intent) });
+    await this.deps.links.markPaid(link.id, {
+      paymentId: payment.id,
+      paidAt: payment.paid_at,
+      paymentIntent: idOf(session.payment_intent),
+    });
     // The weekly days picked before the payment: re-read and booked now, after
     // markPaid (a draft saved meanwhile books at once). A retry replays the same booking.
     await this.deps.packages.paid(link.subscription_id);
@@ -111,8 +116,15 @@ export class LinkFulfilment {
     if (link.kind !== 'new') return;
     try {
       const student = await this.deps.links.student(link.student_id);
-      if (student?.broughtBy === null && student.priced.every((id) => id === link.subscription_id)) {
-        await this.deps.links.attribute({ studentId: link.student_id, assistantId: link.created_by, broughtAt: link.created_at });
+      if (
+        student?.broughtBy === null &&
+        student.priced.every((id) => id === link.subscription_id)
+      ) {
+        await this.deps.links.attribute({
+          studentId: link.student_id,
+          assistantId: link.created_by,
+          broughtAt: link.created_at,
+        });
       }
     } catch (e) {
       this.log.warn(`payment link attribution skipped: ${e instanceof Error ? e.message : String(e)}`);

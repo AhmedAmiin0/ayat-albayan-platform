@@ -27,9 +27,14 @@ export interface PeopleStudentRow {
 }
 
 /** The newest package with the BalanceCard numbers: lessons across every live package (never a cancelled one), money of this one. */
-function subscriptionOf({ current, packages, remaining }: StudentBalanceView): ThreadSubscriptionView | null {
+function subscriptionOf({
+  current,
+  packages,
+  remaining,
+}: StudentBalanceView): ThreadSubscriptionView | null {
   if (!current) return null;
-  const sum = (pick: (b: BalanceView) => number) => livePackages(packages).reduce((n, p) => n + pick(p.balance), 0);
+  const sum = (pick: (b: BalanceView) => number) =>
+    livePackages(packages).reduce((n, p) => n + pick(p.balance), 0);
   return {
     id: current.id,
     status: current.status,
@@ -47,7 +52,10 @@ function subscriptionOf({ current, packages, remaining }: StudentBalanceView): T
 }
 
 /** A guardian's student + GET /students/:id/balance (S6) → the chat's student card. */
-export function toThreadStudent(row: PeopleStudentRow, balance: StudentBalanceView): ThreadStudentView {
+export function toThreadStudent(
+  row: PeopleStudentRow,
+  balance: StudentBalanceView,
+): ThreadStudentView {
   return {
     id: row.id,
     name: row.name,
@@ -91,7 +99,11 @@ export function familyTags(
     const own = balances.filter((b) => b.student_id === s.id);
     const newestId = own.find((b) => b.is_last)?.subscription_id;
     const newest = s.subscriptions.find((x) => x.id === newestId);
-    const kid = { subscription: newest ? { status: newest.status, lessons_remaining: studentRemaining(own) } : null };
+    const kid = {
+      subscription: newest
+        ? { status: newest.status, lessons_remaining: studentRemaining(own) }
+        : null,
+    };
     families.set(s.guardian_id, [...(families.get(s.guardian_id) ?? []), kid]);
   }
   return new Map([...families].map(([id, kids]) => [id, familyTag(kids, threshold)]));

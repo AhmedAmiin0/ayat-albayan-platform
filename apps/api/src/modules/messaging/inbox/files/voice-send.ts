@@ -30,7 +30,11 @@ async function transcoded(m4a: Uint8Array | null, transcode: typeof toVoiceOgg) 
  * missing or failing → the m4a itself, sent as plain audio (the family still hears it). A copy of
  * the m4a under the fixed voice.m4a (voiceM4aPath) is the sender's fallback if the ogg is refused.
  */
-export async function voiceMedia(storage: StorageService, m4a: ObjectRef, transcode = toVoiceOgg): Promise<SentMedia> {
+export async function voiceMedia(
+  storage: StorageService,
+  m4a: ObjectRef,
+  transcode = toVoiceOgg,
+): Promise<SentMedia> {
   const plain = { media_path: m4a.path, media_mime: 'audio/mp4', media_name: 'voice.m4a' };
   const pair = await transcoded(await storage.download(m4a), transcode);
   if (!pair) {
