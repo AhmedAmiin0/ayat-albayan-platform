@@ -9,10 +9,10 @@ let next = 2;
 
 export function row(
   fields: Record<string, Cell>,
-  at?: { source?: SourceAlias; tab?: string; row?: number },
+  at: { source?: SourceAlias; tab?: string; row?: number } = {},
 ): SourceRow {
   return {
-    ref: { source: at?.source ?? 'HUB', tab: at?.tab ?? 't', row: at?.row ?? next++ },
+    ref: { source: at.source ?? 'HUB', tab: at.tab ?? 't', row: at.row ?? next++ },
     fields,
   };
 }
