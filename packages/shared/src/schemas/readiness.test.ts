@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { jobBeatsSchema, jobStatusListSchema, readinessSchema } from './readiness';
+import {
+  CHECK_STATES,
+  checkStateSchema,
+  jobBeatsSchema,
+  jobStatusListSchema,
+  READY_STATES,
+  readinessSchema,
+  readyStateSchema,
+} from './readiness';
 
 const checks = {
   database: { status: 'ok', ms: 4 },
@@ -51,5 +59,13 @@ describe('jobStatusListSchema (GET /admin/jobs)', () => {
     };
     expect(jobStatusListSchema.parse({ data: [row] })).toEqual({ data: [row] });
     expect(jobStatusListSchema.safeParse({ data: [{ ...row, last_ok_at: 'today' }] }).success).toBe(false);
+  });
+});
+
+describe('check and ready state schemas', () => {
+  it('accept each state and nothing else', () => {
+    expect(checkStateSchema.options).toEqual([...CHECK_STATES]);
+    expect(readyStateSchema.options).toEqual([...READY_STATES]);
+    expect(readyStateSchema.validate('off')).toBe(false);
   });
 });
