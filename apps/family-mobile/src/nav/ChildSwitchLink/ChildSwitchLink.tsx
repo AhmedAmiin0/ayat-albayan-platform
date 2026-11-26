@@ -1,13 +1,13 @@
-import type { PortalStudent } from '@ab/shared';
 import { Pressable } from 'react-native';
 import { AppText, Avatar, Chevron, t, type, useTheme } from '@ab/mobile-kit';
 import { openChildSwitch } from '@/nav/switch-store';
+import type { ChildSwitchLinkProps } from './ChildSwitchLink.types';
 
 /**
  * Under a tab's title (canvas SwitchReports): the child in view, its avatar, name and a chevron as
  * one button that opens the children sheet. Only for a guardian of several children.
  */
-export function ChildSwitchLink({ student }: { student: PortalStudent }) {
+export function ChildSwitchLink({ student }: ChildSwitchLinkProps) {
   const { color } = useTheme();
   return (
     <Pressable

@@ -1,13 +1,7 @@
-import type { NotificationItem } from '@ab/shared';
-import { clockOf, type ClockOptions } from '@ab/time';
+import { clockOf } from '@ab/time';
 import { Pressable, View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
-
-interface AlertRowProps {
-  item: NotificationItem;
-  clock: ClockOptions;
-  onPress: (item: NotificationItem) => void;
-}
+import type { AlertRowProps } from './AlertRow.types';
 
 /** One bell row (canvas Alerts): title, body, time; unread = a dot and the word, not colour. */
 export function AlertRow({ item, clock, onPress }: AlertRowProps) {
