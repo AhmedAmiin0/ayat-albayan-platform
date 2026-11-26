@@ -1,4 +1,5 @@
 import {
+  type ApiBlob,
   createApiClient,
   parseResponse,
   readTimeoutFor,
@@ -41,6 +42,11 @@ export function apiFetch(path: string, init: ReadInit = {}): Promise<unknown> {
 
 /** JSON mutation helper for TanStack Query `mutationFn`s. Resolves undefined on 204. */
 export const apiSend = client.apiSend;
+
+/** A file from the API with the session's token (CSV exports): its bytes and headers. */
+export function apiBlob(path: string, init?: RequestInit): Promise<ApiBlob> {
+  return client.apiBlob(path, init);
+}
 
 // The signed-link pages (no login): the same client that never sends the session's token.
 const publicClient = createApiClient({
