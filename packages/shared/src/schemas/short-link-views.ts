@@ -83,7 +83,8 @@ export const shortLinkGateViewSchema = z.object({
 export type ShortLinkGateView = z.infer<typeof shortLinkGateViewSchema>;
 
 export const SHORT_LINK_OUTCOMES = ['open', 'gone', 'not_allowed', 'limit_reached'] as const;
-export type ShortLinkOutcome = (typeof SHORT_LINK_OUTCOMES)[number];
+export const shortLinkOutcomeSchema = z.enum(SHORT_LINK_OUTCOMES);
+export type ShortLinkOutcome = z.infer<typeof shortLinkOutcomeSchema>;
 
 /** POST …/open and …/otp/verify: the target only with outcome open. */
 export const shortLinkOpenResultSchema = z.discriminatedUnion('outcome', [
