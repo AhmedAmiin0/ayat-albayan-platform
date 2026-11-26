@@ -7182,11 +7182,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/booking/instant/instant.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/booking/instant/instant.plan.ts": {
     "typescript/consistent-type-definitions": {
       "count": 2

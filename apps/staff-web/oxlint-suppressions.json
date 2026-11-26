@@ -5561,7 +5561,7 @@
   },
   "src/features/teaching/classroom/api/meetings-api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/teaching/classroom/join/GuestJoinPage.tsx": {
