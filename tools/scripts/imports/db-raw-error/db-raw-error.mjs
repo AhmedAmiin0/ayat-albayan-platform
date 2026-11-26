@@ -12,6 +12,7 @@ const GUARD = /^(\s*)if \(([\w.]+)\) throw new Error\((.*)\);\s*$/;
 const RAW = /new Error\(.*\.message/;
 const ERRORS_IMPORT = /^import \{ ([^}]*) \} from '@\/common\/db\/errors';$/m;
 const FILES = /\.(repo|queries)\.ts$/;
+const IMPORT_END = /^(import .*|\}) from '[^']+';$/;
 const TEST = /\.test\.ts$/;
 
 const namesError = (arg, err) =>
@@ -32,7 +33,7 @@ function withImport(text) {
     return text.replace(ERRORS_IMPORT, `import { ${sorted.join(', ')} } from '${ERRORS_SOURCE}';`);
   }
   const lines = text.split('\n');
-  const last = lines.findLastIndex((l) => l.startsWith('import '));
+  const last = lines.findLastIndex((l) => IMPORT_END.test(l));
   lines.splice(last + 1, 0, `import { pgError } from '${ERRORS_SOURCE}';`);
   return lines.join('\n');
 }
