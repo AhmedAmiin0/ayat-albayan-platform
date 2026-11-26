@@ -2106,9 +2106,6 @@
     "typescript/consistent-type-definitions": {
       "count": 1
     },
-    "complexity": {
-      "count": 1
-    },
     "ab/forbidden-imports": {
       "count": 1
     },
@@ -3023,9 +3020,6 @@
     }
   },
   "src/modules/messaging/inbox/threads/threads.repo.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     },
@@ -3033,7 +3027,7 @@
       "count": 2
     },
     "typescript/no-unnecessary-condition": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/threads/threads.service.ts": {
