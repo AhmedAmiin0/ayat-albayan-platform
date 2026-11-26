@@ -6347,9 +6347,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    },
-    "typescript/no-unnecessary-condition": {
-      "count": 1
     }
   },
   "src/modules/sales/leads/lead-family.controller.ts": {
@@ -6413,16 +6410,10 @@
     }
   },
   "src/modules/sales/leads/leads.repo.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-condition": {
       "count": 1
     }
   },
