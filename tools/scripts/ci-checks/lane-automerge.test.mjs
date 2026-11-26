@@ -1,5 +1,6 @@
 // lane-automerge.yml merges low-risk lane PRs (tools/scripts/automerge/). A merge made with the
-// built-in token starts no push workflow, so it dispatches ci on develop and staging still deploys.
+// built-in token starts no push workflow, so it dispatches ci on develop; that run starts the deploy
+// itself (deploy/after-automerge.test.mjs).
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
@@ -82,7 +83,7 @@ const ciRun = (over) => ({
   head_repository: { full_name: 'o/r' }, ...over,
 });
 
-test('deploy-staging deploys a green ci on develop pushed or dispatched by lane-automerge', () => {
+test('deploy-staging deploys a green ci on develop, pushed or started by hand', () => {
   assert.equal(preflight(ciRun({})), true);
   assert.equal(preflight(ciRun({ event: 'workflow_dispatch' })), true);
   assert.equal(preflight({}, 'workflow_dispatch'), true);
