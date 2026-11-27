@@ -4450,10 +4450,7 @@
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.controller.ts": {
     "stylistic/max-len": {
-      "count": 4
-    },
-    "ab/zod-inputs": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.repo.ts": {

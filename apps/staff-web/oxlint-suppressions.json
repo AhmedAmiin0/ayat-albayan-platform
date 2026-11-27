@@ -2338,7 +2338,7 @@
       "count": 4
     },
     "ab/no-untyped-api-calls": {
-      "count": 11
+      "count": 6
     }
   },
   "src/features/messaging/templates/crm/CrmNameButton.tsx": {
