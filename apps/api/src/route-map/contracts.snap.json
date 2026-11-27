@@ -382,6 +382,23 @@
   },
   "response": "empty"
  },
+ "DELETE /threads/stickers/favourites/:messageId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "messageId"
+   ]
+  },
+  "response": "empty"
+ },
  "GET /admin-tasks": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -7777,6 +7794,65 @@
    ]
   }
  },
+ "GET /threads/gifs": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "q": {
+     "type": "string",
+     "maxLength": 50
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "configured": {
+     "type": "boolean"
+    },
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9]{1,64}$"
+       },
+       "title": {
+        "type": "string"
+       },
+       "preview": {
+        "type": "string",
+        "format": "uri"
+       },
+       "width": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "height": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       }
+      },
+      "required": [
+       "id",
+       "title",
+       "preview",
+       "width",
+       "height"
+      ]
+     }
+    }
+   },
+   "required": [
+    "configured",
+    "items"
+   ]
+  }
+ },
  "GET /threads/search": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -7844,6 +7920,68 @@
    "required": [
     "items",
     "next_cursor"
+   ]
+  }
+ },
+ "GET /threads/stickers": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "favourites": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "message_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "phone": {
+        "type": "string",
+        "minLength": 1
+       },
+       "key": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "required": [
+       "message_id",
+       "phone",
+       "key"
+      ]
+     }
+    },
+    "recent": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "message_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "phone": {
+        "type": "string",
+        "minLength": 1
+       },
+       "key": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "required": [
+       "message_id",
+       "phone",
+       "key"
+      ]
+     }
+    }
+   },
+   "required": [
+    "favourites",
+    "recent"
    ]
   }
  },
@@ -24432,6 +24570,23 @@
     "ends_at"
    ]
   }
+ },
+ "PUT /threads/stickers/favourites": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "messageId"
+   ]
+  },
+  "response": "empty"
  },
  "PUT /users/:id/avatar": {
   "body": {

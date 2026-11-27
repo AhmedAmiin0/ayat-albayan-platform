@@ -2806,7 +2806,7 @@
   },
   "src/modules/messaging/inbox/stickers/stickers.controller.ts": {
     "ab/zod-inputs": {
-      "count": 7
+      "count": 4
     }
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.ts": {
