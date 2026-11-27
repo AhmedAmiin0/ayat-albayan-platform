@@ -21,7 +21,7 @@ export const meNotificationRoutes = {
     ...ACCESS,
     method: 'POST',
     path: '/me/notifications/read',
-    body: notificationsReadSchema,
+    body: notificationsReadSchema.optional(),
     response: 'empty',
   }),
 };
