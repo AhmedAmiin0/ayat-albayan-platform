@@ -49,3 +49,12 @@ test('the bottom safe area: off in a tab screen (the tab bar owns it), on for a 
   expect(bottom()).toBe('additive');
   expect(screen.toJSON()?.props.edges?.top).toBe('additive');
 });
+
+test('blocks sit 16pt apart; a chat and a list keep the tight 8pt rhythm', async () => {
+  await render(<Screen>{<Text>row</Text>}</Screen>);
+  expect(screen.getByTestId('screen-body')).toHaveStyle({ gap: 16, paddingHorizontal: 16 });
+  await render(<Screen list>{<Text>row</Text>}</Screen>);
+  expect(screen.getByTestId('screen-body')).toHaveStyle({ gap: 8 });
+  await render(<Screen chat>{<Text>row</Text>}</Screen>);
+  expect(screen.getByTestId('screen-body')).toHaveStyle({ gap: 8 });
+});

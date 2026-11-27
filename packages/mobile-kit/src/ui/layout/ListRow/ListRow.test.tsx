@@ -4,6 +4,7 @@ import { t } from '../../../lib/i18n/i18n';
 import { ListRow } from './ListRow';
 import { ltr } from '../../primitives/Ltr';
 import { StatusChip } from '../../feedback/StatusChip';
+import { InsetGroup } from '../../surface/Inset';
 
 test('title, isolated LTR code, subtitle and trailing chip', async () => {
   await render(
@@ -34,11 +35,21 @@ test('a tags line wraps under the subtitle; the trailing slot is capped so the n
     <ListRow
       title="هدى سالم"
       subtitle="أهلًا بيكي"
-      tags={<StatusChip tone="neutral" glyph="hollow" label="a status word long enough to need two lines" size="sm" />}
+      tags={
+        <StatusChip
+          tone="neutral"
+          glyph="hollow"
+          label="a status word long enough to need two lines"
+          size="sm"
+        />
+      }
       trailing={<StatusChip tone="act" glyph="fill" label={t.inbox.unread.one} size="sm" />}
     />,
   );
-  expect(screen.getByTestId('list-row-tags')).toHaveStyle({ flexDirection: 'row', flexWrap: 'wrap' });
+  expect(screen.getByTestId('list-row-tags')).toHaveStyle({
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  });
   expect(screen.getByTestId('list-row-trailing')).toHaveStyle({ flexShrink: 1, maxWidth: '45%' });
   expect(screen.getByText(t.inbox.unread.one)).toHaveStyle({ flexShrink: 1 });
 });
@@ -52,4 +63,15 @@ test('no trailing, no empty slot (no stray gap at the row end)', async () => {
 test('without onPress there is no dead button', async () => {
   await render(<ListRow title="جنى وليد" />);
   expect(screen.queryByRole('button')).toBeNull();
+});
+
+test('alone the row keeps its own fill and hairline; in an inset group the group draws them', async () => {
+  await render(<ListRow title="مريم علي" onPress={jest.fn()} />);
+  expect(screen.getByRole('button')).toHaveStyle({ borderBottomWidth: 1 });
+  await render(
+    <InsetGroup>
+      <ListRow title="مريم علي" onPress={jest.fn()} />
+    </InsetGroup>,
+  );
+  expect(screen.getByRole('button')).not.toHaveStyle({ borderBottomWidth: 1 });
 });

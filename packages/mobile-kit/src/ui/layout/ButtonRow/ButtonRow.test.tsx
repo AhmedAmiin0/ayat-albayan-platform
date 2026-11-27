@@ -60,3 +60,13 @@ test('nothing to show renders nothing', async () => {
   await render(<ButtonRow testID="row">{null}</ButtonRow>);
   expect(screen.queryByTestId('row')).toBeNull();
 });
+
+test('a lone button fills the row', async () => {
+  await render(
+    <ButtonRow testID="row">
+      <Button variant="primary" label="حفظ" onPress={jest.fn()} />
+    </ButtonRow>,
+  );
+  await fireEvent(screen.getByTestId('row'), 'layout', layout(328));
+  expect(cells()).toEqual([{ flex: 1, minWidth: 0 }]);
+});
