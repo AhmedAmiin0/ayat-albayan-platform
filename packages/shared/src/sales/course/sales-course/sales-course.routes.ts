@@ -1,6 +1,6 @@
 import { defineRoute } from '@ab/core';
 import { courseChangeCheckSchema, courseChangeSchema } from '@ab/schedule';
-import { bookingBodySchema } from '../../../schemas/booking-request';
+import { bookingBodySchema } from '../../../schemas';
 import { courseChangeCheckResultSchema, courseChangeResultSchema } from '../course-change';
 import { courseDraftSavedSchema } from '../course-draft';
 import { salesCourseQuerySchema, salesCourseViewSchema } from './sales-course.schemas';

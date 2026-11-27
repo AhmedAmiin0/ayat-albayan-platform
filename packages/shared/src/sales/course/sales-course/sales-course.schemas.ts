@@ -48,12 +48,12 @@ export const salesCourseViewSchema = z.object({
   student: salesCourseStudentSchema,
   /** The newest unpaid or active subscription; null = subscription_required. */
   subscription: courseSubscriptionSchema.nullable(),
-  /** Days a week to pick; null when unknown (no subscription, or a custom count the admin books). */
+  /** Days a week to pick; null = unknown (no subscription, or a custom count the admin books). */
   perWeek: z.int().nullable(),
   blocked: courseBlockSchema.nullable(),
   /** The latest earlier course while the newest subscription has none. */
   previous: bookedCourseSchema.nullish(),
-  /** The course whose active rules cover today, else the earliest upcoming one; null means none. */
+  /** The course whose active rules cover today, else the earliest upcoming one; null = none. */
   current: bookedCourseSchema.nullish(),
   /** Unpaid with an open payment link: booking saves a draft booked on payment. */
   hold: z.boolean().optional(),
