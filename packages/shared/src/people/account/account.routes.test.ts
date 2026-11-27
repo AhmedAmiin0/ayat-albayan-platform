@@ -34,7 +34,10 @@ describe('accountRoutes (R-ACC-01..05)', () => {
   });
 
   it('strips a role from a profile change', () => {
-    const body = accountRoutes.updateProfile.body.parse({ full_name: 'Teacher One', role: 'admin' });
+    const body = accountRoutes.updateProfile.body.parse({
+      full_name: 'Teacher One',
+      role: 'admin',
+    });
     expect(body).toEqual({ full_name: 'Teacher One' });
   });
 

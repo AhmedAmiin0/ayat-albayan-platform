@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { MeZoneRepo } from '@/common/auth/me-zone.repo';
-import { bodyPipeOf } from '@/common/http/zod-inputs.test-util';
+import { accountRoutes } from '@ab/shared';
+import { ZodPipe } from '@/common/http/zod-inputs';
 import { AccountController } from './account.controller';
 import { accountKit, ME } from './account.fakes';
 
@@ -19,14 +20,18 @@ const setup = () => {
 describe('PATCH /me/locale', () => {
   it('writes the caller’s own language and answers it', async () => {
     const { controller, me } = setup();
-    await expect(controller.setLocale({ locale: 'en' }, ME)).resolves.toEqual({ locale: 'en' });
+    await expect(
+      controller.setLocale({ params: undefined, query: undefined, body: { locale: 'en' } }, ME),
+    ).resolves.toEqual({
+      locale: 'en',
+    });
     expect(me.setLocale).toHaveBeenCalledWith(ME.id, 'en');
   });
 
   it('400 validation_failed for another language or an extra key, before any write', async () => {
-    const pipe = bodyPipeOf(AccountController, 'setLocale');
+    const pipe = (raw: object) => new ZodPipe(accountRoutes.locale.body).transform(raw);
     await expect(pipe({ locale: 'fr' })).rejects.toThrow('validation_failed');
-    await expect(pipe({ locale: 'ar', id: 'user-2' })).rejects.toThrow('validation_failed');
+    await expect(pipe({ locale: 'ar', id: 'x' })).rejects.toThrow('validation_failed');
     await expect(pipe({ locale: 'ar' })).resolves.toEqual({ locale: 'ar' });
   });
 });
