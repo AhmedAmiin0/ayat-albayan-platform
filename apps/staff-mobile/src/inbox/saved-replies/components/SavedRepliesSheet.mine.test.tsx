@@ -66,7 +66,7 @@ test('delete asks first, then removes her reply', async () => {
   await openMine();
   await fireEvent.press(screen.getByRole('button', { name: t.savedReplies.deleteReply.replace('{title}', MINE.title) }));
   await fireEvent.press(screen.getByRole('button', { name: t.savedReplies.deleteYes }));
-  expect(mockApiSend).toHaveBeenCalledWith('DELETE', `/saved-replies/${MINE.id}`);
+  expect(mockApiSend).toHaveBeenCalledWith('DELETE', `/saved-replies/${MINE.id}`, undefined);
 });
 
 test('the pick list is clean: add / edit / delete only behind «إدارة», and only for her own', async () => {

@@ -73,7 +73,8 @@ describe('«التواصل» → «الردود السريعة»', () => {
     const dialog = await screen.findByRole('dialog', { name: S.deleteTitle.replace('{title}', 'الأسعار') });
     expect(apiSend).not.toHaveBeenCalled();
     fireEvent.click(within(dialog).getByRole('button', { name: S.deleteYes }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', `/saved-replies/${PRICES.id}`));
+    const path = `/saved-replies/${PRICES.id}`;
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', path, undefined));
   });
 
   it('without saved_replies.manage: read-only (no add, reorder, edit or delete)', async () => {

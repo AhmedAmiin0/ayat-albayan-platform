@@ -3502,11 +3502,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/saved-replies/saved-replies.guard.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/saved-replies/saved-replies.paths.ts": {
     "complexity": {
       "count": 1

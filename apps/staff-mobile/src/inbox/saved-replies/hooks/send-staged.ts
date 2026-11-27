@@ -1,7 +1,8 @@
-import type { MessageView, SavedReplyStaged } from '@ab/shared';
+import type { MessageView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@ab/mobile-kit';
 import { fileSendSteps } from '@/inbox/composer/send-file';
+import { savedReplies } from './api';
 import { threadPath } from '@/inbox/thread/hooks/thread-cache';
 import type { StagedFile } from './use-saved-reply';
 
@@ -16,9 +17,7 @@ async function sendStagedFile(input: {
   replyId: string;
   id: string;
 }): Promise<MessageView> {
-  const staged = await apiSend<SavedReplyStaged>('POST', `/saved-replies/${input.replyId}/stage`, {
-    clientRequestId: input.id,
-  });
+  const staged = await savedReplies.stage({ id: input.replyId, clientRequestId: input.id });
   return apiSend<MessageView>('POST', `${threadPath(input.phone)}/file`, {
     clientRequestId: input.id,
     path: staged.path,

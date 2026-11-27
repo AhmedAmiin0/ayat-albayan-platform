@@ -1,13 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'vitest';
+import type { z } from 'zod';
+import type { ChatSendMime } from '../../../chat/chat-files';
 import {
-  isSavedReplyError,
   SAVED_REPLY_TITLE_MAX,
+  savedReplyErrorSchema,
+  savedReplyMimeSchema,
   savedReplyCreateSchema,
   savedReplyMoveSchema,
   savedReplyStageSchema,
   savedReplyUpdateSchema,
   savedReplyUploadSchema,
-} from './saved-replies';
+} from '..';
 
 describe('savedReplyCreateSchema', () => {
   it('trims title and body and takes an optional attachment', () => {
@@ -58,9 +61,14 @@ describe('the other bodies', () => {
   });
 
   it('knows its error codes', () => {
-    expect([isSavedReplyError('saved_reply_not_found'), isSavedReplyError('other')]).toEqual([
-      true,
-      false,
-    ]);
+    const known = (code: string) => savedReplyErrorSchema.safeParse(code).success;
+    expect([known('saved_reply_not_found'), known('other')]).toEqual([true, false]);
+  });
+});
+
+describe('savedReplyMimeSchema', () => {
+  it('takes exactly the chat send types', () => {
+    expectTypeOf<z.infer<typeof savedReplyMimeSchema>>().toEqualTypeOf<ChatSendMime>();
+    expect(savedReplyMimeSchema.safeParse('audio/mp4').success).toBe(false);
   });
 });
