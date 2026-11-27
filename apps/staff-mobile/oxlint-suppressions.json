@@ -4189,11 +4189,6 @@
       "count": 1
     }
   },
-  "src/sales-money/lib/my-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 3
-    }
-  },
   "src/sales-money/screens/MyMoneyScreen/MyMoneyScreen.tsx": {
     "no-nested-ternary": {
       "count": 2
