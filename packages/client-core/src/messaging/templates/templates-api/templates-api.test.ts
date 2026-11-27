@@ -87,3 +87,41 @@ describe('template catalog', () => {
     expect(client.apiSend).toHaveBeenLastCalledWith('POST', path, {});
   });
 });
+
+describe('template edits', () => {
+  const at = (end: string) => `/messaging/templates/a%20b/${end}`;
+
+  it('submits, moves and sets the number of one template', async () => {
+    const client = clientOf();
+    const admin = adminTemplateCalls(client);
+    await expect(admin.submit('a b')).resolves.toEqual(view);
+    expect(client.apiSend).toHaveBeenLastCalledWith('POST', at('submit'), undefined);
+    client.apiSend.mockResolvedValue({ template: view, sync: null });
+    await expect(admin.moveLine({ key: 'a b', line: 'chat' }))
+      .resolves.toEqual({ template: view, sync: null });
+    expect(client.apiSend).toHaveBeenLastCalledWith('PATCH', at('line'), { line: 'chat' });
+    client.apiSend.mockResolvedValue({ template: view, not_approved_on_number: false });
+    await admin.setNumber({ key: 'a b', number_id: null });
+    expect(client.apiSend).toHaveBeenLastCalledWith('PUT', at('number'), { number_id: null });
+  });
+
+  it('sets the crm status, the crm name and the allow-list', async () => {
+    const client = clientOf();
+    const admin = adminTemplateCalls(client);
+    await admin.setCrmStatus({ key: 'a b', status: 'approved' });
+    expect(client.apiSend).toHaveBeenLastCalledWith('PUT', at('crm-status'), { status: 'approved' });
+    const name = { crm_name: null, crm_language: null };
+    await admin.setCrmName({ key: 'a b', ...name });
+    expect(client.apiSend).toHaveBeenLastCalledWith('PUT', at('crm-name'), name);
+    await admin.setStarter({ key: 'a b', on: true });
+    expect(client.apiSend)
+      .toHaveBeenLastCalledWith('PATCH', at('starter'), { sales_starter: true });
+  });
+
+  it('refuses a number answer without its warning', async () => {
+    const client = clientOf();
+    client.apiSend.mockResolvedValue({ template: view });
+    await expect(adminTemplateCalls(client).setNumber({ key: 'k', number_id: null })).rejects
+      .toThrow();
+  });
+});

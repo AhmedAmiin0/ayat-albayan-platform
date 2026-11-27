@@ -2333,9 +2333,6 @@
     },
     "stylistic/max-len": {
       "count": 4
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 6
     }
   },
   "src/features/messaging/templates/crm/CrmNameButton.tsx": {
