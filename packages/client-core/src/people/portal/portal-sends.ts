@@ -1,4 +1,4 @@
-import { portalRoutes as routes, type PortalFileUrl, type PortalRoomLink } from '@ab/shared';
+import { portalRoutes, type PortalFileUrl, type PortalRoomLink } from '@ab/shared';
 import { JOIN_ROLES, type RoomJoinResult } from '@ab/schedule';
 import { z } from 'zod';
 import { callWith, type ApiClient } from '../../core/http';
@@ -44,9 +44,10 @@ const studentPath = (id: string) => `/portal/students/${enc(id)}`;
 export function portalSends(client: ApiClient): PortalSends {
   const call = callWith(client);
   const fileUrls: Record<PortalFileKind, (i: PortalFileInput) => Promise<PortalFileUrl>> = {
-    reports: (i) => call({ route: routes.reportUrl, params: { id: i.studentId, reportId: i.id } }),
+    reports: (i) =>
+      call({ route: portalRoutes.reportUrl, params: { id: i.studentId, reportId: i.id } }),
     recordings: (i) =>
-      call({ route: routes.recordingUrl, params: { id: i.studentId, recordingId: i.id } }),
+      call({ route: portalRoutes.recordingUrl, params: { id: i.studentId, recordingId: i.id } }),
   };
   return {
     join: ({ studentId, lessonId }) =>
@@ -56,7 +57,7 @@ export function portalSends(client: ApiClient): PortalSends {
         schema: roomJoinResultSchema,
       }),
     roomLink: ({ studentId, lessonId }) =>
-      call({ route: routes.roomLink, params: { id: studentId, lessonId } }),
+      call({ route: portalRoutes.roomLink, params: { id: studentId, lessonId } }),
     fileUrl: (input) => fileUrls[input.kind](input),
   };
 }
