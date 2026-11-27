@@ -4198,17 +4198,6 @@
   "src/sales-subscribe/hooks/use-sales-subscribe.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
-  "src/sales-subscribe/hooks/use-sales-teachers.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/sales-subscribe/lib/family.test.ts": {
@@ -4364,9 +4353,6 @@
     },
     "stylistic/max-len": {
       "count": 3
-    },
-    "ab/forbidden-imports": {
-      "count": 1
     }
   },
   "src/sales/app/screens/SalesMoreScreen/SalesMoreScreen.tsx": {
