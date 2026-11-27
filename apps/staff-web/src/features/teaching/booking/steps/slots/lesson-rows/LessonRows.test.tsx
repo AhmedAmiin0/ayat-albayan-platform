@@ -13,7 +13,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await i
 const slot = (at: string, busy = false) => ({
   starts_at: at,
   ends_at: at,
-  conflicts: busy ? [{ kind: 'teacher_busy', startsAt: at, endsAt: at, lessonId: 'l1' }] : [],
+  conflicts: busy ? [{ kind: 'teacher_busy', startsAt: at, endsAt: at, lessonId: 'e7777777-7777-4777-8777-777777777773' }] : [],
 });
 const SLOTS = {
   teacher_tz: 'Asia/Riyadh',

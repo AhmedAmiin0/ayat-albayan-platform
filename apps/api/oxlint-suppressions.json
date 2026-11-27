@@ -63,9 +63,6 @@
     },
     "typescript/no-unsafe-assignment": {
       "count": 1
-    },
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 2
     }
   },
   "src/common/auth/permission.cache.revoke.test.ts": {
@@ -1030,9 +1027,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/finance/assistant-pay/my/my.earnings.test.ts": {
@@ -7315,11 +7309,6 @@
   "src/modules/teaching/booking/profile/profile-course.controller.ts": {
     "ab/zod-inputs": {
       "count": 1
-    }
-  },
-  "src/modules/teaching/booking/sales/booking/sales-booking.controller.ts": {
-    "stylistic/max-len": {
-      "count": 5
     }
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.ownership.ts": {

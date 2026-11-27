@@ -1,32 +1,14 @@
-import { familyChildren } from '@ab/client-core';
-import type { PortalStudent } from '@ab/shared';
-import { router } from 'expo-router';
-import { useState } from 'react';
-import { AppText, t, type, useA11yPref, useTheme } from '@ab/mobile-kit';
+import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { FamilyHeader, FamilyPage } from '@/nav';
-import { useFamilyPick, usePickChild, usePortalMe, useRefreshPortal } from '@/portal';
 import { Rise } from '@/ui';
 import { ChildSummaryCard } from '@/home/ChildSummaryCard';
 import { StudentsBody } from '@/home/StudentsBody';
+import { usePickChildScreen } from './use-pick-child-screen';
 
 /** Forced after sign-in for a guardian of several with no pick; pushed from account to switch. */
 export function PickChildScreen() {
   const { color } = useTheme();
-  const me = usePortalMe();
-  const pick = useFamilyPick();
-  // Read once: the pick a press makes must not swap the header while the screen slides away.
-  const [switching] = useState(() => pick.state === 'one');
-  const pickChild = usePickChild();
-  const refresh = useRefreshPortal();
-  const still = useA11yPref('reduceMotion');
-  // A guardian who also studies sees their own row first.
-  const data = me.data && { ...me.data, students: familyChildren(me.data) };
-  const students = data?.students ?? [];
-  const kind = me.data?.kind ?? 'guardian';
-  const choose = (student: PortalStudent) => () => {
-    pickChild(student.id);
-    router.dismissTo('/');
-  };
+  const { me, switching, refresh, still, data, students, kind, choose } = usePickChildScreen();
   return (
     <FamilyPage
       header={<FamilyHeader title={t.portal.app.pick.title} back={switching} />}

@@ -16,6 +16,13 @@ describe('shortLinkRoutes', () => {
     ]);
   });
 
+  it('lets short_links.manage in on every route and tags each short-links', () => {
+    const access = Object.values(shortLinkRoutes).map((r) => [r.permissions, r.tags]);
+    expect(new Set(access.map((a) => JSON.stringify(a)))).toEqual(
+      new Set([JSON.stringify([['short_links.manage'], ['short-links']])]),
+    );
+  });
+
   it('fills a code into the detail path', () => {
     expect(routePath(shortLinkRoutes.detail, { code: 'K7q2M9xT' })).toBe('/short-links/K7q2M9xT');
   });

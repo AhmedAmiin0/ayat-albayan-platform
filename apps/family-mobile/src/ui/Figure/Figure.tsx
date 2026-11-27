@@ -1,13 +1,6 @@
 import { View } from 'react-native';
 import { AppText, type, useTheme } from '@ab/mobile-kit';
-
-type FigureTone = 'ok' | 'bad' | 'act' | 'ink';
-
-interface FigureProps {
-  value: string;
-  label: string;
-  tone: FigureTone;
-}
+import type { FigureTone, FigureProps } from './Figure.types';
 
 /** One number over its word in a sunk tile (this month's attended / absent, what is due). */
 export function Figure({ value, label, tone }: FigureProps) {

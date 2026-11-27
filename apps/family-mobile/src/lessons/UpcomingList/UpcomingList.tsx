@@ -1,26 +1,18 @@
-import { dayTile, isAhead } from '@ab/client-core';
-import type { PortalLesson, PortalStudent } from '@ab/shared';
+import { dayTile } from '@ab/client-core';
 import { firstName } from '@ab/schedule';
 import { View } from 'react-native';
 import { AppText, InsetGroup, t, type, useTheme } from '@ab/mobile-kit';
 import { DateTile } from '@/ui';
-import { useFamilyClock } from '@/portal';
 import { rangeText, teacherText } from '@/lessons/lesson-text';
 import { LessonChip } from '@/lessons/options/LessonChip';
 import { RequestLine } from '@/lessons/options/RequestLine';
 import { OptionsRow } from '@/lessons/OptionsRow';
-
-interface UpcomingListProps {
-  lessons: readonly PortalLesson[];
-  student: PortalStudent;
-  now: Date;
-  own?: boolean;
-}
+import type { UpcomingListProps } from './UpcomingList.types';
+import { useUpcomingList } from './use-upcoming-list';
 
 export function UpcomingList({ lessons, student, now, own = false }: UpcomingListProps) {
   const { color } = useTheme();
-  const clock = { ...useFamilyClock(), tz: student.tz };
-  const later = lessons.filter((l) => isAhead(l, now)).slice(1);
+  const { clock, later } = useUpcomingList({ lessons, student, now });
   if (later.length === 0) return null;
   return (
     <View style={{ gap: 8 }}>

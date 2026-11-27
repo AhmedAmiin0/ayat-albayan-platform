@@ -1,13 +1,8 @@
-import type { NotificationItem } from '@ab/shared';
-import { clockOf, type ClockOptions } from '@ab/time';
+import { clockOf } from '@ab/time';
 import { Pressable, View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
-
-interface AlertRowProps {
-  item: NotificationItem;
-  clock: ClockOptions;
-  onPress: (item: NotificationItem) => void;
-}
+import { rowStyle } from './alert-row.helpers';
+import type { AlertRowProps } from './AlertRow.types';
 
 /** One bell row (canvas Alerts): title, body, time; unread = a dot and the word, not colour. */
 export function AlertRow({ item, clock, onPress }: AlertRowProps) {
@@ -20,13 +15,7 @@ export function AlertRow({ item, clock, onPress }: AlertRowProps) {
       accessibilityRole="button"
       accessibilityLabel={unread ? `${item.title}، ${t.bell.unread}` : item.title}
       onPress={() => onPress(item)}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-        padding: 12,
-        backgroundColor: pressed ? color.lapisWash : rest,
-      })}
+      style={rowStyle(color.lapisWash, rest)}
     >
       <View style={{ flex: 1, gap: 2 }}>
         <AppText style={{ fontFamily: type.ui[unread ? 700 : 500], color: color.ink }}>

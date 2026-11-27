@@ -4872,7 +4872,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 8
+      "count": 4
     }
   },
   "src/features/sales/sales/live/SalesLive.tsx": {
@@ -5148,9 +5148,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 3
     },
     "typescript/dot-notation": {
       "count": 9
@@ -5859,13 +5856,13 @@
   },
   "src/features/teaching/schedule/api.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 10
+      "count": 9
     }
   },
   "src/features/teaching/schedule/edit-time/EditTime.captions.test.tsx": {

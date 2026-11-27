@@ -11,7 +11,7 @@ export const WORKSPACES = [
 ];
 
 /** Finished workspaces (docs/63 §3 phase C): any offender in them fails. Only ever grows. */
-export const STRICT = [];
+export const STRICT = ['apps/family-web', 'apps/family-mobile'];
 
 const TESTS =
   /\.(?:test|spec)\.[cm]?[jt]sx?$|\/(?:tests?|testing|__tests__|__fixtures__|fixtures)\//;

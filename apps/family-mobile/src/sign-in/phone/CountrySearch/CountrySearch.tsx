@@ -1,10 +1,6 @@
 import { TextInput } from 'react-native';
 import { shape, t, type, useTheme } from '@ab/mobile-kit';
-
-interface CountrySearchProps {
-  query: string;
-  onQuery: (query: string) => void;
-}
+import type { CountrySearchProps } from './CountrySearch.types';
 
 /** Filters by Arabic or English name or calling code. */
 export function CountrySearch({ query, onQuery }: CountrySearchProps) {

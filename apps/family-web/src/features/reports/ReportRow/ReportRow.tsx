@@ -1,22 +1,15 @@
-import { isNewReport, reportAt } from '@ab/client-core';
-import type { PortalReport, PortalStudent } from '@ab/shared';
-import { useNavigate } from '@tanstack/react-router';
-import { Button, t, teacherLabel, LessonWhen, markReportSeen, useSeenReports } from '@ab/web-kit';
+import { reportAt } from '@ab/client-core';
+import { Button, t, teacherLabel, LessonWhen } from '@ab/web-kit';
+import type { ReportRowProps } from './ReportRow.types';
+import { useReportRow } from './use-report-row';
 
-export function ReportRow({ report, student }: { report: PortalReport; student: PortalStudent }) {
-  const navigate = useNavigate();
-  const fresh = isNewReport(report.id, useSeenReports());
-  const open = () => {
-    markReportSeen(report.id);
-    void navigate({
-      to: '/report/$reportId',
-      params: { reportId: report.id },
-      search: { studentId: student.id, recording: report.recording_id ?? undefined },
-    });
-  };
+export function ReportRow({ report, student }: ReportRowProps) {
+  const { fresh, open } = useReportRow({ report, student });
   return (
-    <li className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-rule
-      bg-raised p-3">
+    <li
+      className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-rule
+        bg-raised p-3"
+    >
       <div className="grid gap-0.5">
         <LessonWhen startsAt={reportAt(report)} tz={student.tz} />
         {report.teacher && <p className="text-sm text-ink-2">{teacherLabel(report.teacher)}</p>}

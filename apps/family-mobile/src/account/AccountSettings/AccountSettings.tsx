@@ -10,8 +10,9 @@ import {
   useTheme,
 } from '@ab/mobile-kit';
 import { PushSwitchRow } from '@/account/PushSwitchRow';
+import type { AccountSettingsProps } from './AccountSettings.types';
 
-export function AccountSettings({ student }: { student: boolean }) {
+export function AccountSettings({ student }: AccountSettingsProps) {
   const { color } = useTheme();
   const A = t.portal.app.account;
   return (

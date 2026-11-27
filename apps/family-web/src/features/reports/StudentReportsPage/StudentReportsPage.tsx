@@ -1,45 +1,10 @@
-import { portalViewer, readsOwn, reportMonths } from '@ab/client-core';
-import type { PortalKind, PortalStudent } from '@ab/shared';
-import { dateText } from '@ab/time';
-import { useQuery } from '@tanstack/react-query';
-import { EmptyState, t, locale, portalReportsQuery, QueryState } from '@ab/web-kit';
-import { ReportRow } from '@/features/reports/ReportRow';
-
-const MONTH = { month: 'long', year: 'numeric' } as const;
-const monthTitle = (month: string) =>
-  dateText(new Date(`${month}-15T12:00:00Z`), { tz: 'UTC', locale }, MONTH);
-
-function Reports({ student }: { student: PortalStudent }) {
-  const query = useQuery(portalReportsQuery(student.id));
-  return (
-    <QueryState query={query}>
-      {({ reports }) =>
-        reports.length === 0 ? (
-          <EmptyState title={t.portal.app.reports.empty} />
-        ) : (
-          reportMonths(reports, student.tz).map(({ month, rows }) => (
-            <section key={month} aria-label={monthTitle(month)} className="grid gap-2">
-              <h2 className="text-sm font-semibold text-ink-2">{monthTitle(month)}</h2>
-              <ul className="grid gap-2">
-                {rows.map((report) => (
-                  <ReportRow key={report.id} report={report} student={student} />
-                ))}
-              </ul>
-            </section>
-          ))
-        )
-      }
-    </QueryState>
-  );
-}
-
-interface Props {
-  student: PortalStudent;
-  kind: PortalKind;
-}
+import { portalViewer, readsOwn } from '@ab/client-core';
+import { t } from '@ab/web-kit';
+import { Reports } from './Reports';
+import type { StudentReportsPageProps } from './StudentReportsPage.types';
 
 /** Sent reports only, newest first, grouped by month. */
-export function StudentReportsPage({ student, kind }: Props) {
+export function StudentReportsPage({ student, kind }: StudentReportsPageProps) {
   const own = readsOwn(portalViewer(kind, student));
   return (
     <section aria-labelledby="reports-title" className="grid gap-4">

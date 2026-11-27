@@ -1,20 +1,7 @@
 import { View } from 'react-native';
 import { AppText, Chevron, IconButton, t, type, useTheme } from '@ab/mobile-kit';
-
-/** The weeks the API covers (the next 14 days reach into the third week). */
-const LAST_WEEK = 2;
-
-const TITLE: readonly (() => string)[] = [
-  () => t.portal.app.schedule.thisWeek,
-  () => t.portal.app.schedule.nextWeek,
-  () => t.portal.app.schedule.laterWeek,
-];
-
-interface WeekNavProps {
-  offset: number;
-  range: string;
-  onChange: (offset: number) => void;
-}
+import type { WeekNavProps } from './WeekNav.types';
+import { LAST_WEEK, TITLE } from './week-nav.helpers';
 
 export function WeekNav({ offset, range, onChange }: WeekNavProps) {
   const { color } = useTheme();

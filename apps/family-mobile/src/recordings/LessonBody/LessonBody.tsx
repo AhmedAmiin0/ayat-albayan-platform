@@ -1,20 +1,15 @@
-import type { PortalLessonAssets } from '@ab/shared';
 import { Section, t } from '@ab/mobile-kit';
-import { useReportPage } from '@/portal';
 import { ReportBody } from '@/report';
 import { LoadState } from '@/ui';
 import { LessonFiles } from '@/recordings/LessonFiles';
 import { LessonRecording } from '@/recordings/LessonRecording';
-
-const partTitle = (i: number, total: number): string =>
-  total > 1 ? t.lessonFiles.part.replace('{n}', String(i + 1)) : t.lessonFiles.recording;
+import type { LessonBodyProps } from './LessonBody.types';
+import { partTitle } from './lesson-body.helpers';
+import { useLessonBody } from './use-lesson-body';
 
 /** The lesson page's body: the recording(s), the report, then its files. */
-export function LessonBody({ view, studentId }: { view: PortalLessonAssets; studentId: string }) {
-  const reportId = view.report_id ?? '';
-  const report = useReportPage(reportId);
-  // Oldest part first, so the parts play in order.
-  const parts = [...view.recordings].reverse();
+export function LessonBody({ view, studentId }: LessonBodyProps) {
+  const { reportId, report, parts } = useLessonBody({ view });
   return (
     <>
       {parts.map((rec, i) => (

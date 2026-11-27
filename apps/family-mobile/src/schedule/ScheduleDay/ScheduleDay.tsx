@@ -1,14 +1,9 @@
-import { dayWord, type WeekDay } from '@ab/client-core';
-import { dateText, type ClockOptions } from '@ab/time';
+import { dayWord } from '@ab/client-core';
+import { dateText } from '@ab/time';
 import { View } from 'react-native';
 import { AppText, InsetGroup, InsetSeparator, t, type, useTheme } from '@ab/mobile-kit';
 import { ScheduleRow } from '@/schedule/ScheduleRow';
-
-interface ScheduleDayProps {
-  day: WeekDay;
-  clock: ClockOptions;
-  now: Date;
-}
+import type { ScheduleDayProps } from './ScheduleDay.types';
 
 export function ScheduleDay({ day, clock, now }: ScheduleDayProps) {
   const { color } = useTheme();

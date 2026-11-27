@@ -1,10 +1,10 @@
 import { formatPhone } from '@ab/core';
-import { Ltr, t } from '@ab/web-kit';
-
-const S = t.familyApp.signIn;
+import { Ltr } from '@ab/web-kit';
+import type { CodeNoteProps } from './CodeNote.types';
+import { S } from './code-note.helpers';
 
 /** The number is an LTR island; a spaced number is more than isolateLtr handles. */
-export function CodeNote({ phone }: { phone: string }) {
+export function CodeNote({ phone }: CodeNoteProps) {
   const [before = '', after = ''] = S.codeSentTo.split('{phone}');
   return (
     <div className="grid gap-1.5">

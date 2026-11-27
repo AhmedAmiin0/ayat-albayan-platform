@@ -9,5 +9,6 @@ export const Route = createFileRoute('/_family/report/$reportId')({
 
 function Report() {
   const { reportId } = Route.useParams();
-  return <FamilyReportPage reportId={reportId} search={Route.useSearch()} />;
+  const search = Route.useSearch();
+  return <FamilyReportPage reportId={reportId} search={search} />;
 }

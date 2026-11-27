@@ -1,8 +1,8 @@
-import type { PortalStudent } from '@ab/shared';
 import { t } from '@ab/web-kit';
+import type { ChildHeadProps } from './ChildHead.types';
 
 /** The child's name (the page's heading) and code; `over`: a greeting on a student's home. */
-export function ChildHead({ student, over }: { student: PortalStudent; over?: string }) {
+export function ChildHead({ student, over }: ChildHeadProps) {
   return (
     <header className="grid gap-0.5">
       {over && <p className="text-sm text-ink-2">{over}</p>}

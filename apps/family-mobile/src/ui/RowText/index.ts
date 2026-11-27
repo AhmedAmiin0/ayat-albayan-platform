@@ -1,1 +1,2 @@
-export { type RowNote, RowText } from './RowText';
+export { RowText } from './RowText';
+export type { RowNote } from './RowText.types';

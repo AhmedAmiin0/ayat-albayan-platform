@@ -24,11 +24,12 @@ export const COURSE_VIEW: SalesCourseView = {
 };
 
 export const BOOKED = {
-  rule_id: 'r1',
+  rule_id: 'e7777777-7777-4777-8777-777777777771',
   student_ids: [COURSE_STUDENT_ID],
-  guardian_ids: ['g1'],
-  lessons: [{ id: 'l1', starts_at: SLOT, ends_at: SLOT }],
+  guardian_ids: ['e7777777-7777-4777-8777-777777777772'],
+  lessons: [{ id: 'e7777777-7777-4777-8777-777777777773', starts_at: SLOT, ends_at: SLOT }],
   message_ids: [],
+  invoice_id: null,
 };
 
 /** apiFetch for the course dialog: the view, her teachers (ABRAR) and two free slots (Sun 17:00, Wed 19:30). */

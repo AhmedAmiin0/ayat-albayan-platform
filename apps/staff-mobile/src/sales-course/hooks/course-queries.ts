@@ -1,9 +1,10 @@
 import { courseDraftSavedSchema } from '@ab/shared';
 import type { BookingRequest, SalesCourseView } from '@ab/shared';
-import type { BookingResult, Conflict } from '@ab/schedule';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { BookingResult } from '@ab/schedule';
+import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 import { salesCourseKeys } from '@/core/lib/keys';
+import { bookingCallsOf } from '@/booking';
 
 const COURSE = '/sales/booking/course';
 
@@ -22,8 +23,7 @@ export function useCourseCheck(body: BookingRequest | null) {
   delete key.clientRequestId;
   return useQuery({
     queryKey: salesCourseKeys.check(JSON.stringify(key)),
-    queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', '/sales/booking/check', body),
-    enabled: body !== null,
+    queryFn: body ? () => bookingCallsOf.sales.check(body) : skipToken,
     retry: false,
   });
 }
@@ -43,7 +43,7 @@ export function useBookCourse(hold = false) {
   return useMutation({
     mutationKey: ['sales', 'booking', 'course'],
     mutationFn: (body: BookingRequest): Promise<BookingResult | null> =>
-      hold ? saveDraft(body) : apiSend<BookingResult>('POST', '/sales/booking', body),
+      hold ? saveDraft(body) : bookingCallsOf.sales.book(body),
     onSuccess: () => {
       void client.invalidateQueries({ queryKey: pathKey('/lessons') });
       void client.invalidateQueries({ queryKey: pathKey(COURSE) });
