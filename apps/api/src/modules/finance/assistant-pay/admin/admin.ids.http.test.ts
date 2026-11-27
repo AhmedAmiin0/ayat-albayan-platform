@@ -8,6 +8,12 @@ const BAD_IDS = [
   ['PUT', '/assistant-pay/terms/not-a-uuid', { commission: null, salary: null }],
   ['GET', '/assistant-pay/brought-by/not-a-uuid', undefined],
   ['POST', '/assistant-pay/commissions/not-a-uuid/void', { reason: 'counted twice' }],
+  ['GET', '/assistant-pay/statements/not-a-uuid', undefined],
+  ['GET', '/assistant-pay/statements/not-a-uuid/receipt', undefined],
+  ['POST', '/assistant-pay/statements/not-a-uuid/approve', undefined],
+  ['POST', '/assistant-pay/statements/not-a-uuid/reopen', undefined],
+  ['POST', '/assistant-pay/statements/not-a-uuid/pay', {}],
+  ['POST', '/assistant-pay/statements/not-a-uuid/unpay', { reason: 'paid twice' }],
 ] as const;
 
 describe('assistant pay admin routes: an id that is not a uuid', () => {
@@ -23,5 +29,6 @@ describe('assistant pay admin routes: an id that is not a uuid', () => {
     expect(res.statusCode).toBe(400);
     expect(res.json().code).toBe('validation_failed');
     expect(t.terms.get).not.toHaveBeenCalled();
+    expect(t.statements.get).not.toHaveBeenCalled();
   });
 });
