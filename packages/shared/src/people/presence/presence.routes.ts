@@ -3,6 +3,17 @@ import { presenceSelfSchema, staffPresenceSchema } from './presence.schemas';
 
 /** Online now (docs/33), written once for the api and its clients. */
 export const presenceRoutes = {
-  self: defineRoute({ method: 'GET', path: '/presence/me', response: presenceSelfSchema }),
-  staff: defineRoute({ method: 'GET', path: '/presence/staff', response: staffPresenceSchema }),
+  self: defineRoute({
+    method: 'GET',
+    path: '/presence/me',
+    response: presenceSelfSchema,
+    tags: ['presence'],
+  }),
+  staff: defineRoute({
+    method: 'GET',
+    path: '/presence/staff',
+    response: staffPresenceSchema,
+    permissions: ['users.read'],
+    tags: ['presence'],
+  }),
 };

@@ -8,5 +8,6 @@ export const accountSetupRoutes = {
     path: '/me/setup',
     body: accountSetupSchema,
     response: 'empty',
+    tags: ['me'],
   }),
 };
