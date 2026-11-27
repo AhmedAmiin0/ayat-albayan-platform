@@ -1,21 +1,25 @@
-import { expenseCalls, expenseCategoryCalls, teacherEarningCalls } from '@ab/client-core';
 import {
-  type DashboardResponse,
-  payoutListSchema,
-} from '@ab/money';
+  expenseCalls,
+  expenseCategoryCalls,
+  payoutCalls,
+  teacherEarningCalls,
+} from '@ab/client-core';
+import type { DashboardResponse } from '@ab/money';
 import type { InvoiceView } from '@ab/schedule';
 import { routePath } from '@ab/core';
-import { teacherEarningRoutes } from '@ab/shared';
+import { payoutRoutes, teacherEarningRoutes } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend, listKey, pathKey } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 
 // Admin finance reads. Keys are the API path's segments, so invalidating ['payouts'] reaches a month.
 
+const payouts = payoutCalls({ apiFetch, apiSend });
+
 export const usePayouts = (month: string) =>
   useQuery({
-    queryKey: listKey('/payouts', { month }),
-    queryFn: () => apiFetch(`/payouts?month=${month}`, { schema: payoutListSchema }),
+    queryKey: listKey(routePath(payoutRoutes.month), { month }),
+    queryFn: () => payouts.month(month),
   });
 
 const calls = expenseCalls({ apiFetch, apiSend });

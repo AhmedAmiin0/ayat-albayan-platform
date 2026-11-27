@@ -14,10 +14,9 @@ import {
 } from '@ab/money';
 import { z } from 'zod';
 import { signedDownloadSchema, signedUploadSchema } from '../../reports';
+import { emptyWhenMissing } from '../empty-when-missing';
 
 const byId = z.object({ id: id() });
-/** A POST sent without a body reads as `{}`, as the handlers took it before the routes moved. */
-const emptyWhenMissing = <S extends z.ZodType>(schema: S) => z.preprocess((v) => v ?? {}, schema);
 const byTeacher = z.object({ teacherId: id() });
 const sessionsPage = pageOf(teacherEarningViewSchema);
 const paymentsPage = pageOf(teacherPaymentViewSchema);

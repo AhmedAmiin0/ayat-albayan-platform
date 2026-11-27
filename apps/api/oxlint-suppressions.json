@@ -1461,11 +1461,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/payouts/payouts.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 9
-    }
-  },
   "src/modules/finance/payouts/payouts.generate.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1

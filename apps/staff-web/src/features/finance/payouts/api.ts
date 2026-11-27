@@ -1,11 +1,4 @@
-import { signedDownloadSchema } from '@ab/shared';
-import type { PaymentMethod } from '@ab/catalog';
-import {
-  payoutGenerateResultSchema,
-  payoutListSchema,
-  payoutViewSchema,
-} from '@ab/money';
-import { teacherEarningCalls } from '@ab/client-core';
+import { payoutCalls, teacherEarningCalls } from '@ab/client-core';
 import { riyadhToday } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -15,37 +8,26 @@ import { moneyKeys } from '@/features/finance/keys';
 export type { PayoutGenerateResult, PayoutView } from '@ab/money';
 
 const earnings = teacherEarningCalls({ apiFetch, apiSend });
+const payouts = payoutCalls({ apiFetch, apiSend });
 
 export const payoutsQuery = (month: string) =>
   queryOptions({
     queryKey: moneyKeys.payouts(month),
-    queryFn: () => apiFetch(`/payouts?month=${month}`, { schema: payoutListSchema }),
+    queryFn: () => payouts.month(month),
   });
 
-export const generatePayouts = (month: string) =>
-  apiSend('POST', `/payouts/${month}/generate`, { schema: payoutGenerateResultSchema });
+export const generatePayouts = payouts.generate;
 
-const payoutMove = (id: string, move: string, body?: unknown) =>
-  apiSend('POST', `/payouts/${id}/${move}`, { body, schema: payoutViewSchema });
-
-export const approvePayout = (id: string) => payoutMove(id, 'approve');
-
-export type PayPayoutBody = {
-  paidAt: string;
-  method: PaymentMethod;
-  note: string | null;
-  receiptPath: string | null;
-};
+export const approvePayout = payouts.approve;
 
 /** Settlement in the ledger + paid, one transaction (POST /payouts/:id/pay). */
-export const payPayout = (id: string, body: PayPayoutBody) => payoutMove(id, 'pay', body);
+export const payPayout = payouts.pay;
 
-export const reopenPayout = (id: string) => payoutMove(id, 'reopen');
+export const reopenPayout = payouts.reopen;
 
-export const unpayPayout = (id: string, reason: string) => payoutMove(id, 'unpay', { reason });
+export const unpayPayout = payouts.unpay;
 
-export const payoutReceiptUrl = (id: string) =>
-  apiFetch(`/payouts/${id}/receipt`, { schema: signedDownloadSchema });
+export const payoutReceiptUrl = payouts.receipt;
 
 /** Earned, paid and owed per teacher from the ledger. */
 export const earningsSummaryQuery = () =>
