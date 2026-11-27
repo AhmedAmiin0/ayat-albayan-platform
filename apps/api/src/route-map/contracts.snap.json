@@ -327,6 +327,29 @@
   },
   "response": "empty"
  },
+ "DELETE /teachers/:id/time-off/:timeOffId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "timeOffId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id",
+    "timeOffId"
+   ]
+  },
+  "response": "empty"
+ },
  "GET /admin-tasks": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -6601,6 +6624,120 @@
     "created_by",
     "updated_at"
    ]
+  }
+ },
+ "GET /teachers/:id/availability": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "weekday": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 6
+     },
+     "start_time": {
+      "type": "string"
+     },
+     "end_time": {
+      "type": "string"
+     },
+     "tz": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "weekday",
+     "start_time",
+     "end_time",
+     "tz"
+    ]
+   }
+  }
+ },
+ "GET /teachers/:id/time-off": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "teacher_id": {
+      "type": "string"
+     },
+     "starts_at": {
+      "type": "string"
+     },
+     "ends_at": {
+      "type": "string"
+     },
+     "reason": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "created_by": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "updated_at": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "teacher_id",
+     "starts_at",
+     "ends_at",
+     "reason",
+     "created_at",
+     "created_by",
+     "updated_at"
+    ]
+   }
   }
  },
  "GET /teachers/me/channels/:studentId/messages/:messageId/reads": {
@@ -22764,6 +22901,20 @@
   }
  },
  "POST /teachers/:id/time-off": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -22793,6 +22944,52 @@
    "required": [
     "starts_at",
     "ends_at"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "teacher_id": {
+     "type": "string"
+    },
+    "starts_at": {
+     "type": "string"
+    },
+    "ends_at": {
+     "type": "string"
+    },
+    "reason": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "teacher_id",
+    "starts_at",
+    "ends_at",
+    "reason",
+    "created_at",
+    "created_by",
+    "updated_at"
    ]
   }
  },
@@ -25196,6 +25393,20 @@
   }
  },
  "PUT /teachers/:id/availability": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -25234,6 +25445,39 @@
    "required": [
     "slots"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "weekday": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 6
+     },
+     "start_time": {
+      "type": "string"
+     },
+     "end_time": {
+      "type": "string"
+     },
+     "tz": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "weekday",
+     "start_time",
+     "end_time",
+     "tz"
+    ]
+   }
   }
  },
  "PUT /teachers/:id/avatar": {
@@ -25253,6 +25497,26 @@
   }
  },
  "PUT /teachers/:id/time-off/:timeOffId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "timeOffId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id",
+    "timeOffId"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -25282,6 +25546,52 @@
    "required": [
     "starts_at",
     "ends_at"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "teacher_id": {
+     "type": "string"
+    },
+    "starts_at": {
+     "type": "string"
+    },
+    "ends_at": {
+     "type": "string"
+    },
+    "reason": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "teacher_id",
+    "starts_at",
+    "ends_at",
+    "reason",
+    "created_at",
+    "created_by",
+    "updated_at"
    ]
   }
  },

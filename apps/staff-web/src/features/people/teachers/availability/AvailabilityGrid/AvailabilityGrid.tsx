@@ -1,9 +1,8 @@
-import type { AvailabilityRow } from '@ab/shared';
 import type { AvailabilitySlot } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Toast, apiSend, t } from '@ab/web-kit';
-import { availabilityQuery } from '@/features/people/teachers/api';
+import { Toast, t } from '@ab/web-kit';
+import { availabilityQuery, saveAvailability } from '@/features/people/teachers/api';
 import { AvailabilityFoot } from '@/features/people/teachers/availability/AvailabilityFoot';
 import { AvailabilityHead } from '@/features/people/teachers/availability/AvailabilityHead';
 import { AvailabilityWeek } from '@/features/people/teachers/availability/AvailabilityWeek';
@@ -21,10 +20,7 @@ export function AvailabilityGrid({ teacherId, tz: savedTz, rows }: Props) {
   const [saved, setSaved] = useState(false);
 
   const save = useMutation({
-    mutationFn: () =>
-      apiSend<AvailabilityRow[]>('PUT', `/teachers/${teacherId}/availability`, {
-        slots: gridToSlots(grid, tz),
-      }),
+    mutationFn: () => saveAvailability(teacherId, gridToSlots(grid, tz)),
     onSuccess: (data) => {
       queryClient.setQueryData(availabilityQuery(teacherId).queryKey, data);
       setSaved(true);

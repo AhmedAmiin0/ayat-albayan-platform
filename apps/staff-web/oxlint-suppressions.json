@@ -3132,7 +3132,7 @@
   },
   "src/features/people/teachers/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/people/teachers/availability/AvailabilityDay.tsx": {
@@ -3155,16 +3155,7 @@
     "typescript/consistent-type-definitions": {
       "count": 1
     },
-    "max-lines-per-function": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -3337,14 +3328,6 @@
       "count": 1
     },
     "max-lines-per-function": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    }
-  },
-  "src/features/people/teachers/time-off/TimeOffList.tsx": {
-    "ab/forbidden-imports": {
       "count": 1
     }
   },
