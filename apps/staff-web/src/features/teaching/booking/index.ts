@@ -65,7 +65,6 @@ export {
 } from './invoice/api.invoice';
 export { forgetAllKept } from './kept';
 export {
-  bookingBase,
   BookingModeContext,
   ChatReturnContext,
   useBookingMode,

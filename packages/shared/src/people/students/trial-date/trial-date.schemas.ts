@@ -1,6 +1,6 @@
 import { GENDERS, PROGRAMS, STUDENT_STATUSES } from '@ab/catalog';
 import { id, instant } from '@ab/core';
-import { conflictSchema } from '@ab/schedule';
+import { bookingConflictsSchema } from '@ab/schedule';
 import { z } from 'zod';
 
 /** moved: a newer date replaced it; awaiting: its time passed, nothing recorded yet. */
@@ -52,7 +52,7 @@ export const trialHistorySchema = z.object({
 });
 export type TrialHistory = z.infer<typeof trialHistorySchema>;
 
-export const trialDateConflictsSchema = z.object({ conflicts: z.array(conflictSchema) });
+export const trialDateConflictsSchema = bookingConflictsSchema;
 export type TrialDateConflicts = z.infer<typeof trialDateConflictsSchema>;
 
 /** The new trial lesson, and the one it moved (null = none was ahead). */

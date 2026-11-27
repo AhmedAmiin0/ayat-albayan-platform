@@ -5,7 +5,7 @@ import { runningCourse } from '@/sales-course/change/change-test-setup';
 
 // The student profile's course actions as the API answers them (tests only).
 
-const STUDENT = 's1';
+const STUDENT = '1b000000-0000-4000-8000-000000000001';
 export const SUB = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
 export const BASE = '/students/s1';
 

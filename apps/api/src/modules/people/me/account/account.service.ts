@@ -1,7 +1,15 @@
-import { passwordProblem, type AccountProfile, type EmailChange, type PasswordChange, type ProfileUpdate } from '@ab/shared';
+import {
+  accountProfileSchema,
+  passwordProblem,
+  type AccountProfile,
+  type EmailChange,
+  type PasswordChange,
+  type ProfileUpdate,
+} from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 import { AVATAR_FILES } from '@/common/storage/avatars/avatar-files';
 import {
   ACCOUNT_AUTH,
@@ -31,7 +39,7 @@ export class AccountService {
     const email = (await this.auth.emailOf(user.id)) ?? user.email;
     const avatar_url = row.avatar_path ? await this.files.url(row.avatar_path) : null;
     const avatar_seed = row.teacher_id ?? row.id;
-    return {
+    return asResponse(accountProfileSchema, {
       id: row.id,
       full_name: row.full_name,
       email,
@@ -39,7 +47,7 @@ export class AccountService {
       avatar_url,
       avatar_seed,
       role: row.role,
-    };
+    });
   }
 
   /** R-ACC-02: name and/or phone; 409 phone_taken. */
@@ -47,7 +55,8 @@ export class AccountService {
     const patch = selfWritable({ full_name: input.full_name, phone_e164: input.phone_e164 });
     if (patch.phone_e164 !== undefined) {
       await this.checkPassword(user, { password: input.current_password ?? '' });
-      if (patch.phone_e164 !== null && (await this.store.phoneTaken(patch.phone_e164, user.id))) throw conflict('phone_taken');
+      if (patch.phone_e164 !== null && (await this.store.phoneTaken(patch.phone_e164, user.id)))
+        throw conflict('phone_taken');
     }
     await this.store.update(user.id, patch);
     return this.profile(user);
@@ -66,7 +75,8 @@ export class AccountService {
    */
   async changePassword(user: AuthUser, input: PasswordChange): Promise<void> {
     const problem = passwordProblem(input.new_password, this.config.passwordMinLength);
-    if (problem) throw badRequest(problem === 'too_long' ? 'password_too_long' : 'password_too_short');
+    if (problem)
+      throw badRequest(problem === 'too_long' ? 'password_too_long' : 'password_too_short');
     if (input.new_password === input.current_password) throw badRequest('password_same');
     await this.checkPassword(user, { password: input.current_password });
     await this.auth.update(user.id, { password: input.new_password });
@@ -81,5 +91,4 @@ export class AccountService {
       email !== null && (await this.auth.passwordMatches({ email, password: input.password }));
     if (!ok) throw badRequest('wrong_password');
   }
-
 }

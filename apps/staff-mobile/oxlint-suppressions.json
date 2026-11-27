@@ -390,11 +390,6 @@
       "count": 1
     }
   },
-  "src/booking/makeup/use-book-makeup.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/booking/screens/BookTrial.duplicate.test.tsx": {
     "typescript/dot-notation": {
       "count": 2
@@ -465,9 +460,6 @@
   },
   "src/booking/shared/queries.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/no-untyped-api-calls": {
       "count": 2
     }
   },
@@ -565,11 +557,6 @@
   },
   "src/booking/trial/lib/package-choice.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/booking/trial/lib/use-book-trial.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -4079,7 +4066,7 @@
   },
   "src/sales-course/hooks/course-queries.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 1
     }
   },
   "src/sales-course/hooks/use-course-view.ts": {
@@ -4982,7 +4969,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 1
     }
   },
   "src/students/course-pause/CoursePauseBanner.tsx": {

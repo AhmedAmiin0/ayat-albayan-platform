@@ -47,9 +47,9 @@ describe('parseBookSearch (/admin/book)', () => {
 
 describe('bookingTeachersQuery', () => {
   it('filters by program, and by gender only when one is chosen', () => {
-    expect(bookingTeachersQuery({ program: 'quran', gender: null }).queryKey.at(-1)).toBe('program=quran');
+    expect(bookingTeachersQuery({ program: 'quran', gender: null }).queryKey.at(-1)).toBe('{"program":"quran"}');
     expect(bookingTeachersQuery({ program: 'arabic', gender: 'female' }).queryKey.at(-1)).toBe(
-      'program=arabic&gender=female',
+      '{"program":"arabic","gender":"female"}',
     );
   });
 });
