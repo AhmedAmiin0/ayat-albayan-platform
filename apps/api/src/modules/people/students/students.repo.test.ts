@@ -1,15 +1,10 @@
 import { NotFoundException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
+import { family, listRow, siblingRef, studentRow } from '@/modules/people/students/testing/students.rows';
 import { countStudentsByStatus, getStudentProfile, listStudents, listTeacherOptions } from './students.repo';
 
-const ROW = {
-  id: 's1',
-  code: 'AB-0183',
-  name: 'سهيلة',
-  guardian: { name: 'ام جود', phone_e164: '+966501234567' },
-  teacher: { display_name_ar: 'أبرار' },
-};
+const ROW = { ...listRow('s1'), teacher: { display_name_ar: 'أبرار' } };
 
 describe('students queries (R-STU-01, R-NFR-08)', () => {
   it('phone search finds the family’s students by any of its numbers (main or second), in any format', async () => {
@@ -75,18 +70,18 @@ describe('students queries (R-STU-01, R-NFR-08)', () => {
   });
 
   it('profile: adds the effective meeting link and siblings (R-STU-05)', async () => {
-    const guardian = { id: 'g1', name: 'ام جود', phone_e164: '+966501234567', students: [{ id: 's1' }, { id: 's2' }] };
-    const teacher = { id: 't1', display_name_ar: 'أبرار', meeting_link: 'https://meet.google.com/x' };
-    const { db } = fakeDb({ students: [{ data: { id: 's1', meeting_link_override: null, guardian, teacher } }] });
+    const guardian = { ...family, students: [siblingRef('s1'), siblingRef('s2')] };
+    const teacher = { id: 't1', display_name_ar: 'أبرار', display_name_en: null, meeting_link: 'https://meet.google.com/x' };
+    const { db } = fakeDb({ students: [{ data: { ...studentRow('s1'), guardian, teacher } }] });
     const p = await getStudentProfile(db, 's1');
     expect(p.meeting_link).toBe('https://meet.google.com/x');
-    expect(p.siblings).toEqual([{ id: 's2' }]);
+    expect(p.siblings.map((s) => s.id)).toEqual(['s2']);
   });
 
   it('profile: the family numbers ride on the guardian (main and second, for the admin page)', async () => {
     const phones = [{ phone_e164: '+966501234567', is_primary: true }, { phone_e164: '+966552220000', is_primary: false }];
-    const guardian = { id: 'g1', name: 'ام جود', phone_e164: '+966501234567', students: [{ id: 's1' }], phones };
-    const { db, argsOf } = fakeDb({ students: [{ data: { id: 's1', meeting_link_override: null, guardian, teacher: null } }] });
+    const guardian = { ...family, students: [siblingRef('s1')], phones };
+    const { db, argsOf } = fakeDb({ students: [{ data: { ...studentRow('s1'), guardian, teacher: null } }] });
     expect((await getStudentProfile(db, 's1')).guardian.phones).toEqual(phones);
     expect(String(argsOf('students', 'select')?.[0])).toContain('phones:guardian_phones(phone_e164, is_primary)');
     // A student's own number is not one of the family's numbers.
