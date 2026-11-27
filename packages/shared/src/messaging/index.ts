@@ -48,7 +48,7 @@ export * from './sync-cursor';
 export * from './thread-sync';
 export type * from './chat/views';
 export type * from './templates/template-views';
-export type * from './chat/line-views';
+export * from './chat/line-check';
 export type * from './templates/template-sync-views';
 export * from './replies/saved-replies';
 export * from './replies/saved-reply-text/saved-reply-text';
