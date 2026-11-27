@@ -1,9 +1,9 @@
-import type { PendingReportView } from '@ab/shared';
-import { payoutListSchema } from '@ab/money';
+import { myPayoutRoutes, type PendingReportView } from '@ab/shared';
+import { routePath } from '@ab/core';
 import type { LessonView, TeacherMe } from '@ab/schedule';
-import { TEACHER_REFRESH_MS } from '@ab/client-core';
+import { payoutCalls, TEACHER_REFRESH_MS } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { ApiError, apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
+import { ApiError, apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 import type { AvailabilityRow } from '@ab/shared';
 
 // The signed-in teacher's own reads (R-TCH-03, R-TCH-04). Every route is scoped by the session on
@@ -44,10 +44,9 @@ export function usePendingReports(live = false) {
 
 /** GET /teachers/me/payouts: my months, newest first (R-TCH-04). */
 export function useMyPayouts() {
-  const path = `${ME}/payouts`;
   return useQuery({
-    queryKey: pathKey(path),
-    queryFn: () => apiFetch(path, { schema: payoutListSchema }),
+    queryKey: pathKey(routePath(myPayoutRoutes.mine)),
+    queryFn: payoutCalls({ apiFetch, apiSend }).mine,
   });
 }
 

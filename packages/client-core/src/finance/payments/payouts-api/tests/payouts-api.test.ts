@@ -43,7 +43,7 @@ describe('payoutCalls: reads', () => {
     const { client } = clientAnswering([{ ...payout, currency: 'USD' }]);
     const error: unknown = await payoutCalls(client).month('2026-09').catch((e: unknown) => e);
     expect(error).toBeInstanceOf(ApiError);
-    expect(error).toMatchObject({ code: 'bad_response' });
+    expect(error).toMatchObject({ body: { code: 'bad_response' } });
   });
 });
 
