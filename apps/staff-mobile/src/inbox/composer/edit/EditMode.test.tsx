@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, message, sentText, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { setComposerText } from '@/inbox/composer/draft-store';
 
@@ -22,8 +22,9 @@ jest.mock('expo-router', () => ({
 const PATH = '/threads/%2B966552147730/text';
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
 const ME = { id: 'u1', role: 'sales', permissions: ['inbox.read', 'inbox.send'] };
+const OWN_ID = uid('o1');
 const own = message({
-  id: 'o1',
+  id: OWN_ID,
   status: 'delivered',
   body: 'الحلقة غدًا الساعة 5',
   replyable: true,
@@ -32,7 +33,7 @@ const own = message({
 });
 const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
 const menuButton = async (name: string) => {
-  await fireEvent(await screen.findByTestId('bubble-o1'), 'longPress');
+  await fireEvent(await screen.findByTestId(`bubble-${OWN_ID}`), 'longPress');
   await fireEvent.press(within(screen.getByTestId('message-menu')).getByRole('button', { name }));
 };
 
@@ -63,14 +64,14 @@ test('the box takes the old text under the edit bar and its note', async () => {
 });
 
 test('«أرسل» sends correctsId without a reply nor a prefix; its answer ends edit mode', async () => {
-  mockApiSend.mockResolvedValue(message({ id: 'c1', body: 'تصحيح: الحلقة بعد غد', corrects_id: 'o1' }));
+  mockApiSend.mockResolvedValue(sentText({ id: uid('c1'), body: 'تصحيح: الحلقة بعد غد', corrects_id: OWN_ID }));
   await editOwn();
   await fireEvent.changeText(box(), 'الحلقة بعد غد');
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalled());
   const [method, path, body] = mockApiSend.mock.calls[0] as [string, string, object];
   expect([method, path]).toEqual(['POST', PATH]);
-  expect(body).toMatchObject({ text: 'الحلقة بعد غد', correctsId: 'o1' });
+  expect(body).toMatchObject({ text: 'الحلقة بعد غد', correctsId: OWN_ID });
   expect(body).not.toHaveProperty('replyToMessageId');
   await waitFor(() => expect(screen.queryByTestId('edit-strip')).toBeNull());
 });

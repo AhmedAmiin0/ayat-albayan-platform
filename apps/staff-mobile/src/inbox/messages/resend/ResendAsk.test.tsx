@@ -5,7 +5,7 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
 import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
-import { message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import { message, PHONE, sentText, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { type ThreadMode, ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ApiError } from '@ab/client-core';
 
@@ -80,7 +80,7 @@ test('the sheet shows the exact Arabic text; «أرسل» sends it once through 
     ar.inbox.resend.text,
   ]);
   expect(body.clientRequestId).toEqual(expect.any(String));
-  await act(async () => answer(message({ id: 'srv', status: 'queued', body: ar.inbox.resend.text })));
+  await act(async () => answer(sentText({ id: uid('srv'), status: 'queued', body: ar.inbox.resend.text })));
   await waitFor(() => expect(screen.queryByTestId('resend-sheet')).toBeNull());
 });
 

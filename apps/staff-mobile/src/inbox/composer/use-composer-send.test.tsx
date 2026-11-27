@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { PRICES } from '@/inbox/saved-replies/testing/fixtures';
 import type { StagedFile } from '@/inbox/saved-replies/hooks/use-saved-reply';
-import { message } from '@/inbox/shared/thread-fixtures';
+import { message, sentText, uid } from '@/inbox/shared/thread-fixtures';
 import { useComposerSend } from './use-composer-send';
 
 const mockApiSend = jest.fn();
@@ -26,7 +26,7 @@ function holdText() {
   mockApiSend.mockImplementation((_m: string, path: string, sent?: { text?: string }) => {
     if (path.endsWith('/stage')) return Promise.resolve({ path: 'out/x.pdf', filename: 'الأسعار.pdf' });
     if (path.endsWith('/file')) return Promise.resolve(message({ id: 'c3333333-3333-4333-8333-333333333333', status: 'queued' }));
-    const row = message({ id: 't1', status: 'queued', body: sent?.text ?? null });
+    const row = sentText({ id: uid('t1'), status: 'queued', body: sent?.text ?? null });
     return new Promise((resolve) => (release = () => resolve(row)));
   });
   return () => release();

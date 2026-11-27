@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
-import { message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { PHONE, sentText, uid } from '@/inbox/shared/thread-fixtures';
 import { clearChatMemory } from '@/inbox/thread/anchor';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { useQuoteSend } from './use-quote-sheet';
@@ -41,7 +41,7 @@ test('no answer, the sheet closed and opened again: the same id; an answer: a ne
   const first = await open();
   await first.send('العرض');
   await first.hook.unmount();
-  mockApiSend.mockResolvedValue(message({ id: 'srv', body: 'العرض', status: 'sent' }));
+  mockApiSend.mockResolvedValue(sentText({ id: uid('srv'), body: 'العرض', status: 'sent' }));
   const again = await open();
   await again.send('العرض');
   expect(again.onSent).toHaveBeenCalled();
@@ -54,7 +54,7 @@ test('a retry answered with the FIRST offer keeps the sheet open with the note',
   mockApiSend.mockRejectedValueOnce(new TypeError('Network request failed'));
   const sheet = await open();
   await sheet.send('العرض');
-  mockApiSend.mockResolvedValue(message({ id: 'srv', body: 'العرض', status: 'sent' }));
+  mockApiSend.mockResolvedValue(sentText({ id: uid('srv'), body: 'العرض', status: 'sent' }));
   await sheet.send('عرض آخر');
   expect(sheet.onSent).not.toHaveBeenCalled();
   expect(sheet.hook.result.current.error).toBe(t.inbox.error.send_replayed);

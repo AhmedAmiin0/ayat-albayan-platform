@@ -15,7 +15,9 @@ import {
   meetReminder,
   plainReminder,
   PHONE,
+  sentText,
   thread as leadRow,
+  uid,
 } from './thread-fixtures';
 
 // An in-memory chats API for the inbox flows: GET /threads (search, unread), GET /threads/:phone,
@@ -23,6 +25,8 @@ import {
 // POST /threads/forward (a copy into each open chat; a closed one is skipped, as the API does).
 
 export const GUARDIAN_PHONE = '+966501112223';
+/** The id of the lead's first message, a uuid as the API writes it. */
+export const LEAD_FIRST_ID = uid('m1');
 const LESSON: ThreadLesson = {
   id: 'l-1',
   starts_at: '2026-10-04T14:00:00Z',
@@ -50,7 +54,7 @@ const guardianThread: ThreadView = {
   ...leadRow,
   phone_e164: GUARDIAN_PHONE,
   display_name: 'أم يوسف',
-  last_message_id: 'g1',
+  last_message_id: uid('g1'),
   last_direction: 'inbound',
   last_body: 'هل الحلقة بكرة؟',
   last_message_at: ago(48 * HOUR),
@@ -70,9 +74,9 @@ const guardianThread: ThreadView = {
 export function inboxBackend() {
   const rows = [leadThread, guardianThread];
   const log: Record<string, MessageView[]> = {
-    [PHONE]: [message({ ...inbound, created_at: ago(HOUR) })],
+    [PHONE]: [message({ ...inbound, id: LEAD_FIRST_ID, created_at: ago(HOUR) })],
     [GUARDIAN_PHONE]: [
-      message({ id: 'g1', phone_e164: GUARDIAN_PHONE, direction: 'inbound', status: 'delivered', body: 'هل الحلقة بكرة؟', created_at: ago(48 * HOUR) }),
+      message({ id: uid('g1'), phone_e164: GUARDIAN_PHONE, direction: 'inbound', status: 'delivered', body: 'هل الحلقة بكرة؟', created_at: ago(48 * HOUR) }),
     ],
   };
   const byPhone = (phone: string) => rows.find((r) => r.phone_e164 === phone);
@@ -115,8 +119,9 @@ export function inboxBackend() {
     })
     .on('POST /threads/:phone/text', ({ params, body }) => {
       const { text, replyToMessageId } = body as { text: string; replyToMessageId?: string };
-      const id = `srv-${log[params.phone ?? '']?.length ?? 0}`;
-      return record(params.phone ?? '', message({ id, body: text, reply_to_message_id: replyToMessageId ?? null }));
+      const id = uid(`s${log[params.phone ?? '']?.length ?? 0}`);
+      const row = message({ id, body: text, reply_to_message_id: replyToMessageId ?? null });
+      return sentText(record(params.phone ?? '', row));
     })
     .on('POST /threads/forward', ({ body }) => {
       const { messageId, targets } = body as ThreadForward;
@@ -130,7 +135,7 @@ export function inboxBackend() {
       return { results };
     })
     .on('POST /threads/:phone/template', ({ params }) =>
-      record(params.phone ?? '', message({ id: 'srv-tpl', body: 'حلقة سهيلة النهاردة — 17:00', template_key: 'lesson_reminder_plain' })),
+      record(params.phone ?? '', message({ id: uid('tpl'), body: 'حلقة سهيلة النهاردة — 17:00', template_key: 'lesson_reminder_plain' })),
     )
     .on('GET /messages/gate', () => ({ open: true, reason: null, queued: 0 }))
     .on('GET /messaging/templates', () => [plainReminder, meetReminder])

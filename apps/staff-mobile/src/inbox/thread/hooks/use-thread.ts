@@ -1,5 +1,5 @@
 import type { MessageView, ThreadDetail } from '@ab/shared';
-import { refreshNewest, type TextAnswer, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
+import { refreshNewest, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
 import {
   infiniteQueryOptions,
   type QueryClient,

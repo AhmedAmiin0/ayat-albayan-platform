@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { cachedThread, detail, message, PHONE, sentText, uid } from '@/inbox/shared/thread-fixtures';
 import { threadKey, threadMessages, threadPath, type ThreadCache } from './thread-cache';
 import { threadQuery, useSendMessage } from './use-thread';
 
@@ -35,10 +35,12 @@ function useOpenSend() {
   return useSendMessage(PHONE);
 }
 
+const S1 = uid('s1');
+
 beforeEach(() => jest.clearAllMocks());
 
 test('with five pages loaded a send reads only the newest page, then folds it in', async () => {
-  const server = message({ id: 's1', body: 'وصلت', status: 'sent', created_at: at(50) });
+  const server = sentText({ id: S1, body: 'وصلت', status: 'sent', created_at: at(50) });
   mockApiSend.mockResolvedValue(server);
   mockApiFetch.mockResolvedValue(detail([row('m40', 40), { ...server, status: 'delivered' }]));
   const client = createTestQueryClient();
@@ -52,14 +54,14 @@ test('with five pages loaded a send reads only the newest page, then folds it in
   const data = client.getQueryData<ThreadCache>(threadKey(PHONE));
   expect(data?.pages).toHaveLength(5);
   const shown = threadMessages(data);
-  expect(shown.map((m) => m.id)).toEqual(['m01', 'm10', 'm20', 'm30', 'm40', 's1']);
+  expect(shown.map((m) => m.id)).toEqual(['m01', 'm10', 'm20', 'm30', 'm40', S1]);
   expect(shown.at(-1)?.status).toBe('delivered');
 });
 
 test('the provisional row shows at once and leaves no double when the server row arrives', async () => {
   let answer: (value: unknown) => void = () => undefined;
   mockApiSend.mockReturnValue(new Promise((resolve) => (answer = resolve)));
-  const server = message({ id: 's1', body: 'وصلت', status: 'sent', created_at: at(50) });
+  const server = sentText({ id: S1, body: 'وصلت', status: 'sent', created_at: at(50) });
   mockApiFetch.mockResolvedValue(detail([row('m40', 40), server]));
   const client = createTestQueryClient();
   client.setQueryData(threadKey(PHONE), fivePages());
@@ -70,7 +72,7 @@ test('the provisional row shows at once and leaves no double when the server row
   await waitFor(() => expect(ids().at(-1)).toBe('p1'));
   await act(async () => answer(server));
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
-  expect(ids().filter((id) => id === 's1' || id === 'p1')).toEqual(['s1']);
+  expect(ids().filter((id) => id === S1 || id === 'p1')).toEqual([S1]);
 });
 
 /** The open chat's query too, to page back while the send is in flight. */
@@ -82,7 +84,7 @@ function useScrollingSend() {
 test('an older page read in flight never brings the queued row back: the chat reads again', async () => {
   let answer: (value: unknown) => void = () => undefined;
   mockApiSend.mockReturnValue(new Promise((resolve) => (answer = resolve)));
-  const server = message({ id: 's1', body: 'وصلت', status: 'sent', created_at: at(50) });
+  const server = sentText({ id: S1, body: 'وصلت', status: 'sent', created_at: at(50) });
   let older: (value: unknown) => void = () => undefined;
   const page = (path: string) => (path.includes('before=') ? detail([row('m00', 0)]) : detail([server]));
   const held = () => new Promise((resolve) => (older = resolve));
@@ -103,5 +105,5 @@ test('an older page read in flight never brings the queued row back: the chat re
   await waitFor(() => expect(client.isFetching({ queryKey: threadKey(PHONE) })).toBe(0));
   const shown = threadMessages(client.getQueryData<ThreadCache>(threadKey(PHONE)));
   expect(shown.map((m) => m.id)).not.toContain('p1');
-  expect(shown.filter((m) => m.id === 's1')).toHaveLength(1);
+  expect(shown.filter((m) => m.id === S1)).toHaveLength(1);
 });

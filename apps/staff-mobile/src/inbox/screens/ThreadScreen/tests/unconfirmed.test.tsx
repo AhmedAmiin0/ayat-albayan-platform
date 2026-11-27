@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, inbound, message, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, inbound, sentText, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { clearHeldSends } from '@/inbox/thread/send/pinned-send';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 
@@ -29,7 +29,7 @@ const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
 const send = () => fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
 const ids = () =>
   mockApiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
-const first = message({ id: 'srv', body: 'تمام', status: 'sent', created_at: new Date().toISOString() });
+const first = sentText({ id: uid('srv'), body: 'تمام', status: 'sent', created_at: new Date().toISOString() });
 
 async function timedOut() {
   mockApiFetch.mockImplementation(async (path: string) =>
@@ -51,7 +51,7 @@ beforeEach(() => {
 
 test('no answer: «unconfirmed» bubble, the text back, an edited retry is the same send', async () => {
   await timedOut();
-  mockApiSend.mockResolvedValue(message({ id: 'srv2', body: 'تمام، شكرًا', status: 'sent' }));
+  mockApiSend.mockResolvedValue(sentText({ id: uid('srv2'), body: 'تمام، شكرًا', status: 'sent' }));
   await fireEvent.changeText(box(), 'تمام، شكرًا');
   await send();
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
