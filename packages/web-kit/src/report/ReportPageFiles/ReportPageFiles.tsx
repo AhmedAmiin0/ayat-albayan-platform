@@ -1,9 +1,9 @@
-import type { ReportPageView } from '@ab/shared';
 import { buttonVariants } from '@ab/web-kit/components/ui/form/Button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { ReportPageFilesProps } from './ReportPageFiles.types';
 
 /** The teacher's attachments, each opening through its signed URL, then the PDF (or its wait). */
-export function ReportPageFiles({ view }: { view: ReportPageView }) {
+export function ReportPageFiles({ view }: ReportPageFilesProps) {
   const s = t.reportPage;
   return (
     <section className="grid gap-2" aria-label={s.files}>
