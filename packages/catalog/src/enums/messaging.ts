@@ -78,7 +78,8 @@ export type TemplateCategory = (typeof TEMPLATE_CATEGORIES)[number];
 export type PushKind = (typeof PUSH_KINDS)[number];
 export type FamilyPushKind = (typeof FAMILY_PUSH_KINDS)[number];
 /** Any push_notifications.kind (the DB enum push_kind). */
-export type AnyPushKind = (typeof ALL_PUSH_KINDS)[number];
+export const anyPushKindSchema = z.enum(ALL_PUSH_KINDS);
+export type AnyPushKind = z.infer<typeof anyPushKindSchema>;
 /** A messaging line (sends and reply windows); never `calls` (docs/28 §10). */
 export const waLineSchema = z.enum(WA_LINES);
 export type WaLine = z.infer<typeof waLineSchema>;
