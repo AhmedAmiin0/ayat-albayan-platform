@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PAYMENT_METHODS } from '@ab/catalog';
+import { ALL_PAYMENT_METHODS, PAYMENT_METHODS } from '@ab/catalog';
 import { id, localDate, optionalText, partialOf } from '@ab/core';
 import { currencyIso, monthParam, moneyAmount, RECEIPT_MAX_BYTES, RECEIPT_MIMES } from './schemas';
 
@@ -67,10 +67,7 @@ export const expenseYearQuery = z.object({ year: z.string().regex(/^\d{4}$/, 'in
 /** GET /expenses?month= or ?year=. */
 export const expenseListQuery = z.union([z.object({ month: monthParam }), expenseYearQuery]);
 
-/**
- * One expense as the api answers it; `category` is any key of expense_categories. An expense is
- * entered by hand, so its method is never the platform's card.
- */
+/** One expense as the api answers it; `category` is any key of expense_categories. */
 export const expenseViewSchema = z.object({
   id: id(),
   month: monthParam,
@@ -81,7 +78,7 @@ export const expenseViewSchema = z.object({
   created_at: z.string(),
   paid_on: z.string().nullable(),
   vendor: z.string().nullable(),
-  method: z.enum(PAYMENT_METHODS).nullable(),
+  method: z.enum(ALL_PAYMENT_METHODS).nullable(),
   has_receipt: z.boolean(),
   recurring: z.boolean(),
   /** A recurring copy pre-created for the month, not counted until confirmed. */
