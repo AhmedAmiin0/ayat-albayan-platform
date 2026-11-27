@@ -21,3 +21,8 @@ export type {
   MaintenanceViewer,
 } from './maintenance';
 export { settingsMetaCalls, type SettingsMetaCalls } from './meta';
+export {
+  integrationCalls,
+  type IntegrationCalls,
+  type IntegrationSecretSave,
+} from './integrations';

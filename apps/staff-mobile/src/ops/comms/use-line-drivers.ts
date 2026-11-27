@@ -1,18 +1,20 @@
-import type { IntegrationConfigItem } from '@ab/catalog';
+import { integrationRoutes, type IntegrationValuesInput } from '@ab/catalog';
+import { integrationCalls } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { STRIPE_FEATURE_KEY } from '@/core/lib/stripe-flag';
 
-const PATH = '/settings/integrations';
+const calls = integrationCalls({ apiFetch, apiSend });
+const LIST_KEY = pathKey(integrationRoutes.list.path);
 
 /**
- * GET /settings/integrations (settings.read): key names, set flags, plain values (never a
- * secret's). `enabled` false asks nothing (the Stripe row outside a Stripe build).
+ * Key names, set flags, plain values (never a secret's). `enabled` false asks nothing (the
+ * Stripe row outside a Stripe build).
  */
 export function useIntegrations(enabled = true) {
   return useQuery({
-    queryKey: pathKey(PATH),
-    queryFn: () => apiFetch<IntegrationConfigItem[]>(PATH),
+    queryKey: LIST_KEY,
+    queryFn: calls.list,
     retry: false,
     enabled,
   });
@@ -22,10 +24,9 @@ export function useIntegrations(enabled = true) {
 export function useSaveIntegrationValues() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (body: { values: Record<string, string> }) =>
-      apiSend<IntegrationConfigItem[]>('PUT', PATH, body),
+    mutationFn: (body: IntegrationValuesInput) => calls.saveValues(body),
     onSuccess: (items) => {
-      qc.setQueryData(pathKey(PATH), items);
+      qc.setQueryData(LIST_KEY, items);
       // Invalidated now so payment buttons update without waiting for use-stripe's 5 min.
       void qc.invalidateQueries({ queryKey: STRIPE_FEATURE_KEY });
     },

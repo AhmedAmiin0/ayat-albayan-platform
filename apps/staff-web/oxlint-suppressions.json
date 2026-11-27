@@ -3587,11 +3587,6 @@
       "count": 1
     }
   },
-  "src/features/platform/integrations/integrations-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 4
-    }
-  },
   "src/features/platform/integrations/integrations-form.ts": {
     "complexity": {
       "count": 1

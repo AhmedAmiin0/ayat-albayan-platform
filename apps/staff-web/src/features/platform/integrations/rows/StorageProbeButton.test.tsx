@@ -24,7 +24,7 @@ describe('«اختبار الاتصال» (MinIO, docs/45)', () => {
     expect(screen.getByText(s.hint)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: s.button }));
     await waitFor(() => expect(onNote).toHaveBeenCalledExactlyOnceWith(s.done));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/settings/integrations/storage-probe');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/settings/integrations/storage-probe', undefined);
   });
 
   it.each(['storage_not_configured', 'storage_probe_failed', 'storage_public_failed'] as const)('%s has its own words', async (code) => {
