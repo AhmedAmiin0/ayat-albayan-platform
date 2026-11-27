@@ -705,9 +705,6 @@
     }
   },
   "src/schemas/feedback.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    },
     "ab/module-boundaries": {
       "count": 1
     }
