@@ -9,7 +9,7 @@ const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
 
 const LESSON = {
-  id: 'l-1',
+  id: '00000000-0000-4000-8000-0000000000a1',
   starts_at: '2026-10-05T16:00:00.000Z',
   ends_at: '2026-10-05T17:00:00.000Z',
   teacher_name: 'أبرار',
