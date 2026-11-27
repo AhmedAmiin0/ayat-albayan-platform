@@ -16,7 +16,7 @@ describe('authMeRoutes (docs/34 §2)', () => {
   it('keeps GET /auth/me under the auth tag, open to any signed-in login', () => {
     const { me: route } = authMeRoutes;
     expect([route.method, route.path, route.tags]).toEqual(['GET', '/auth/me', ['auth']]);
-    expect(route.permissions).toBeUndefined();
+    expect(route).not.toHaveProperty('permissions');
   });
 
   it('answers the session as the api sends it today', () => {
