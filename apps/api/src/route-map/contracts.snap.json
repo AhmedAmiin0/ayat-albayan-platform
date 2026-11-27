@@ -2926,6 +2926,190 @@
    "required": [
     "id"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "package": {
+     "default": null,
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "status": {
+         "type": "string",
+         "enum": [
+          "trial",
+          "active",
+          "paused",
+          "expired",
+          "unpaid",
+          "cancelled"
+         ]
+        },
+        "lessonsTotal": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        },
+        "used": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        },
+        "left": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        },
+        "paid": {
+         "type": "number"
+        },
+        "owed": {
+         "type": "number"
+        },
+        "currency": {
+         "type": "string"
+        },
+        "projectedEndAt": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "status",
+        "lessonsTotal",
+        "used",
+        "left",
+        "paid",
+        "owed",
+        "currency",
+        "projectedEndAt"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "course": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "teacherName": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "days": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "weekday": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+           },
+           "startTimeLocal": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "weekday",
+           "startTimeLocal"
+          ]
+         }
+        },
+        "tz": {
+         "type": "string"
+        },
+        "endsOn": {
+         "type": "string",
+         "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "lastAt": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "lessonsTotal": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        },
+        "unbooked": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        }
+       },
+       "required": [
+        "teacherName",
+        "days",
+        "tz",
+        "endsOn",
+        "lastAt",
+        "lessonsTotal",
+        "unbooked"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "upcoming": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "startsAt": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "scheduled",
+         "confirmed",
+         "completed",
+         "late",
+         "excused",
+         "no_show",
+         "cancelled_by_teacher",
+         "cancelled_by_admin",
+         "rescheduled"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "startsAt",
+       "status"
+      ]
+     }
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "course",
+    "upcoming"
+   ]
   }
  },
  "GET /short-links": {
@@ -3557,6 +3741,190 @@
    "required": [
     "id"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "package": {
+     "default": null,
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "status": {
+         "type": "string",
+         "enum": [
+          "trial",
+          "active",
+          "paused",
+          "expired",
+          "unpaid",
+          "cancelled"
+         ]
+        },
+        "lessonsTotal": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        },
+        "used": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        },
+        "left": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        },
+        "paid": {
+         "type": "number"
+        },
+        "owed": {
+         "type": "number"
+        },
+        "currency": {
+         "type": "string"
+        },
+        "projectedEndAt": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "status",
+        "lessonsTotal",
+        "used",
+        "left",
+        "paid",
+        "owed",
+        "currency",
+        "projectedEndAt"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "course": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "teacherName": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "days": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "weekday": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+           },
+           "startTimeLocal": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "weekday",
+           "startTimeLocal"
+          ]
+         }
+        },
+        "tz": {
+         "type": "string"
+        },
+        "endsOn": {
+         "type": "string",
+         "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "lastAt": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "lessonsTotal": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        },
+        "unbooked": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        }
+       },
+       "required": [
+        "teacherName",
+        "days",
+        "tz",
+        "endsOn",
+        "lastAt",
+        "lessonsTotal",
+        "unbooked"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "upcoming": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "startsAt": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "scheduled",
+         "confirmed",
+         "completed",
+         "late",
+         "excused",
+         "no_show",
+         "cancelled_by_teacher",
+         "cancelled_by_admin",
+         "rescheduled"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "startsAt",
+       "status"
+      ]
+     }
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "course",
+    "upcoming"
+   ]
   }
  },
  "GET /students/:id/course-extend": {
@@ -3584,6 +3952,52 @@
      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": "string"
+    },
+    "starts": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "tz": {
+     "type": "string"
+    },
+    "endsOn": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "notified": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "family",
+       "teacher"
+      ]
+     }
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "starts",
+    "tz",
+    "endsOn",
+    "notified"
+   ]
   }
  },
  "GET /students/:id/course-pause/preview": {
@@ -15752,6 +16166,42 @@
     "subscriptionId"
    ],
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": "string"
+    },
+    "inserted": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "endsOn": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "conflicts": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "inserted",
+    "endsOn",
+    "conflicts"
+   ]
   }
  },
  "POST /students/:id/course-pause": {

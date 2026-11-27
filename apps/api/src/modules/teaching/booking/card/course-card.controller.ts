@@ -1,22 +1,21 @@
-import type { CourseCardView } from '@ab/shared';
-import { Controller, Get, Inject } from '@nestjs/common';
+import { courseCardRoutes as routes } from '@ab/shared';
+import { Controller, Inject } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
 import { Permissions } from '@/common/auth/decorators';
-import { ZodParam } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CourseCards } from './course-card.service';
 
 /** students.read. */
 @ApiTags('course-actions')
 @ApiBearerAuth()
 @Permissions('students.read')
-@Controller('students/:id/course-card')
+@Controller()
 export class CourseCardController {
   constructor(@Inject(CourseCards) private readonly cards: CourseCards) {}
 
-  @Get()
-  card(@ZodParam('id', z.uuid()) id: string): Promise<CourseCardView> {
-    return this.cards.card(id);
+  @Route(routes.card)
+  card(@RouteInput() { params }: RouteInputOf<typeof routes.card>) {
+    return this.cards.card(params.id);
   }
 }
 
@@ -24,12 +23,12 @@ export class CourseCardController {
 @ApiTags('course-actions')
 @ApiBearerAuth()
 @Permissions('self.sales_academy')
-@Controller('sales/students/:id/course-card')
+@Controller()
 export class SalesCourseCardController {
   constructor(@Inject(CourseCards) private readonly cards: CourseCards) {}
 
-  @Get()
-  card(@ZodParam('id', z.uuid()) id: string): Promise<CourseCardView> {
-    return this.cards.card(id);
+  @Route(routes.salesCard)
+  card(@RouteInput() { params }: RouteInputOf<typeof routes.salesCard>) {
+    return this.cards.card(params.id);
   }
 }

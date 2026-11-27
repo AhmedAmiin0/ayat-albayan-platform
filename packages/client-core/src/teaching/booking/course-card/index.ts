@@ -1,16 +1,15 @@
 export {
   type CardTree,
+  courseCardCalls,
+  type CourseCardCalls,
+  type StudentPackage,
+} from './course-card-api';
+export {
   courseCardKey,
-  courseCardPath,
   type CourseExtendErrorCode,
   courseExtendErrorCode,
-  courseExtendPath,
-  courseExtendPreviewPath,
   courseResumePreviewPath,
   extendOffered,
-  parseCourseCard,
-  parseExtendPreview,
-  postCourseExtend,
   readLessonAt,
   parseResumePreview,
   statusRoute,

@@ -1,12 +1,10 @@
+import { courseCardSchema } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiError } from '../../../core/http';
 import {
-  courseCardPath,
   courseExtendErrorCode,
-  courseExtendPreviewPath,
   courseResumePreviewPath,
   extendOffered,
-  parseCourseCard,
   readLessonAt,
   statusRoute,
 } from './course-card';
@@ -21,21 +19,15 @@ const CARD = {
 };
 
 describe('«الدورة والباقة» paths and rules (owner 2026-11-17)', () => {
-  it('the admin and the assistant read the card on their own routes', () => {
-    expect(courseCardPath({ studentId: 's1', tree: 'admin' })).toBe('/students/s1/course-card');
-    expect(courseCardPath({ studentId: 's1', tree: 'sales' })).toBe('/sales/students/s1/course-card');
-    expect(courseExtendPreviewPath({ studentId: 's1', subscriptionId: 'a b' })).toBe(
-      '/students/s1/course-extend?subscriptionId=a%20b',
-    );
+  it('reads the resume preview under the course pause', () => {
     expect(courseResumePreviewPath('s1')).toBe('/students/s1/course-pause/resume-preview');
   });
 
   it('parses the card; «مدّ الجدول» only with lessons left without a date', () => {
-    const card = parseCourseCard(CARD);
+    const card = courseCardSchema.parse(CARD);
     expect(extendOffered(card)).toBe(true);
     expect(extendOffered({ ...card, course: { ...CARD.course, unbooked: 0 } })).toBe(false);
     expect(extendOffered(undefined)).toBe(false);
-    expect(() => parseCourseCard({ ...CARD, upcoming: [{ id: 1 }] })).toThrow();
   });
 
   it('«موقوف مؤقتًا» opens the pause, «متوقف» the stop, the rest are set at once', () => {
