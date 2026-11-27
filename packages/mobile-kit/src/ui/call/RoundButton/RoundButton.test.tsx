@@ -1,7 +1,8 @@
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, renderHook, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { palette } from '../../../theme';
 import { RoundButton } from './RoundButton';
+import { useRoundButton } from './use-round-button';
 
 const color = palette.light;
 const icon = (ink: string) => <Text testID="icon">{ink}</Text>;
@@ -59,4 +60,10 @@ test('the spoken name may say more than the word under the circle', async () => 
   const props = { label: 'x', tone: 'end', onPress: jest.fn(), icon } as const;
   await render(<RoundButton {...props} accessibilityLabel="إنهاء المكالمة" />);
   expect(screen.getByRole('button', { name: 'إنهاء المكالمة' })).toBeOnTheScreen();
+});
+
+test('the circle dims while a finger is down', async () => {
+  const { result } = await renderHook(() => useRoundButton({ tone: 'end' }));
+  expect(result.current.pressStyle({ pressed: true })).toMatchObject({ opacity: 0.85 });
+  expect(result.current.pressStyle({ pressed: false })).toMatchObject({ opacity: 1 });
 });
