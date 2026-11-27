@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { t } from '@ab/web-kit';
-import { WeekSummary } from './WeekSummary';
+import { WeekSummary } from '@/features/schedule/WeekSummary';
 
 const S = t.portal.app.schedule;
 const teacher = (name: string) => ({ id: name, display_name_ar: name, display_name_en: null });

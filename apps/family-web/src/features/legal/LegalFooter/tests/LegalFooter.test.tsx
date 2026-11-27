@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { t } from '@ab/web-kit';
 import { renderAt } from '@/test/render-at';
-import { LegalFooter } from './LegalFooter';
+import { LegalFooter } from '@/features/legal/LegalFooter';
 
 describe('the footer under a legal page', () => {
   it('links the other legal page and sign-in, never the page on screen', async () => {
