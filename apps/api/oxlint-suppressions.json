@@ -5363,22 +5363,12 @@
       "count": 1
     }
   },
-  "src/modules/platform/google-sync/admin/google-admin.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/platform/google-sync/admin/google-admin.service.ts": {
     "complexity": {
       "count": 2
     },
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/modules/platform/google-sync/admin/google-items.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/modules/platform/google-sync/admin/google-log.queries.ts": {
@@ -6242,11 +6232,6 @@
       "count": 2
     }
   },
-  "src/modules/sales/leads/lead-family.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/sales/leads/lead-family.service.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -6505,7 +6490,7 @@
   },
   "src/modules/sales/sales-students/details/sales-student.controller.ts": {
     "ab/zod-inputs": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/details/sales-student.mapper.ts": {
@@ -7788,11 +7773,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/join/room-open.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/classroom/join/room-open.service.ts": {
     "complexity": {
       "count": 1
@@ -8246,7 +8226,7 @@
   },
   "src/modules/teaching/classroom/student-link/student-link.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/student-link/student-link.fakes.ts": {
@@ -9283,11 +9263,6 @@
   "src/modules/teaching/student-channels/controllers/channel.portal.controller.ts": {
     "ab/zod-inputs": {
       "count": 5
-    }
-  },
-  "src/modules/teaching/student-channels/controllers/channel.presence.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/teaching/student-channels/controllers/channel.teacher.controller.ts": {

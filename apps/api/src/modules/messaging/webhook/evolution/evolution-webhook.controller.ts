@@ -2,7 +2,6 @@ import {
   Controller, HttpCode, HttpException, HttpStatus, Logger, NotFoundException, Req,
   ServiceUnavailableException, UnauthorizedException,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { Public } from '@/common/auth/decorators';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -29,7 +28,6 @@ const notLoaded = () => new ServiceUnavailableException();
  * header the instance's webhook sends; constant time). Idempotent: a replayed message id
  * stores nothing new.
  */
-@ApiTags('webhooks')
 @Public()
 @Controller()
 export class EvolutionWebhookController {

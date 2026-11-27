@@ -9,7 +9,6 @@ import {
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
 import { Route } from '@/common/http/route';
 import { verifyChallenge, verifySignature } from './parse/webhook.signature';
@@ -33,7 +32,6 @@ type HubQuery = Partial<Record<'hub.mode' | 'hub.verify_token' | 'hub.challenge'
  * Meta WhatsApp Cloud API webhook (R-MSG-04, R-MSG-05, R-LEAD-01, R-SCH-03; docs/12 §3.5).
  * Public: authenticated by the verify token (GET) and the X-Hub-Signature-256 HMAC (POST).
  */
-@ApiTags('webhooks')
 @Public()
 @Controller()
 export class WebhookController {

@@ -1,20 +1,18 @@
-import type { ChannelPresence } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { channelPresenceRoutes as routes, type ChannelPresence } from '@ab/shared';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
+import { isAdmin } from '@/common/auth/roles';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden } from '@/common/http/errors';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { PresenceService } from '@/modules/people/presence';
 import {
   ChannelAccess,
   type ChannelActor,
 } from '@/modules/teaching/student-channels/channel-access';
-import { isAdmin } from '@/common/auth/roles';
-
-const UUID = new ParseUUIDPipe();
 
 /** Presence (docs/33 §2): same access check as messages; a custom monitor role sees no presence. */
-@ApiTags('student-channels')
 @ApiBearerAuth()
 @Controller()
 export class ChannelPresenceController {
@@ -23,42 +21,38 @@ export class ChannelPresenceController {
     private readonly presence: PresenceService,
   ) {}
 
-  @Get('teachers/me/channels/:id/presence')
-  @Permissions('self.teacher')
+  @Route(routes.teacher)
   async teacher(
-    @Param('id', UUID) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.teacher>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
-    return this.of(user, await this.access.teacher(user, id));
+    return this.of(user, await this.access.teacher(user, params.id));
   }
 
-  @Get('portal/students/:id/channel/presence')
-  @Permissions('self.portal')
+  @Route(routes.portal)
   async portal(
-    @Param('id', UUID) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.portal>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
-    return this.of(user, await this.access.family(user, id));
+    return this.of(user, await this.access.family(user, params.id));
   }
 
-  @Get('students/:id/channel/presence')
-  @Permissions('student_channels.monitor')
+  @Route(routes.monitor)
   async monitor(
-    @Param('id', UUID) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.monitor>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
-    const actor = await this.access.monitor(user, id);
+    const actor = await this.access.monitor(user, params.id);
     if (!isAdmin(user)) throw forbidden('presence_admin_only');
     return this.of(user, actor);
   }
 
-  @Get('sales/students/:id/channel/presence')
-  @Permissions('self.sales')
+  @Route(routes.sales)
   async sales(
-    @Param('id', UUID) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.sales>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
-    return this.of(user, await this.access.assistant(user, id));
+    return this.of(user, await this.access.assistant(user, params.id));
   }
 
   private of(viewer: AuthUser, actor: ChannelActor): Promise<ChannelPresence> {

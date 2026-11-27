@@ -113,3 +113,18 @@ describe('feedbackPublicRoutes (R-FBK, no login)', () => {
     });
   });
 });
+
+describe('feedback access (permissions and tags)', () => {
+  it('carries each staff route its own permission under the feedback tag', () => {
+    const access = Object.values(feedbackRoutes).map((r) => [r.permissions, r.tags]);
+    const tag = ['feedback'];
+    const read = [['feedback.read'], tag];
+    expect(access).toEqual([[['feedback.write'], tag], read, read, [['self.teacher'], tag]]);
+  });
+
+  it('tags the public page without a permission: the token is the credential', () => {
+    const routes = Object.values(feedbackPublicRoutes);
+    expect(routes.map((r) => r.tags)).toEqual([['feedback'], ['feedback']]);
+    expect(routes.flatMap(Object.keys)).not.toContain('permissions');
+  });
+});

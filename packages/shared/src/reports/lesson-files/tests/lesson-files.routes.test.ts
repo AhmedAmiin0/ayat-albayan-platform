@@ -104,3 +104,17 @@ describe('portalAssetsRoutes (R-PRT)', () => {
     expect(portalAssetsRoutes.fileUrl.response.safeParse({ url: 'u' }).success).toBe(false);
   });
 });
+
+describe('lesson files access (permissions and tags)', () => {
+  it('lets staff read with recordings.read and change with recordings.manage', () => {
+    const access = Object.values(lessonFilesRoutes).map((r) => [r.permissions, r.tags]);
+    const read = [['recordings.read'], ['classroom']];
+    const manage = [['recordings.manage'], ['classroom']];
+    expect(access).toEqual([read, manage, manage, manage, manage, read]);
+  });
+
+  it('lets the family portal in with self.portal under the portal tag', () => {
+    const access = Object.values(portalAssetsRoutes).map((r) => [r.permissions, r.tags]);
+    expect(access).toEqual(Array(3).fill([['self.portal'], ['portal']]));
+  });
+});

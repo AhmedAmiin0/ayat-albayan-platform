@@ -37,15 +37,6 @@ const crmSecretSchema = integrationSecretSchema.shape.value.pipe(
 export const crmCreatedSchema = crmEndpointSchema.extend({ secret: crmSecretSchema });
 export type CrmCreated = z.infer<typeof crmCreatedSchema>;
 
-/** POST /settings/integrations/crm-webhook's answer: never the secret. */
-export interface CrmWebhookResult {
-  id: string;
-  url: string;
-  events: string[];
-  /** How many older endpoints aimed at the same url were removed after the new one was stored. */
-  replaced: number;
-}
-
 /** The API's public origin (API_PUBLIC_URL): https on a domain, no path, nothing else. */
 export const publicOriginSchema = z
   .string()

@@ -8,6 +8,8 @@ import {
 } from './student-recordings';
 
 const byId = z.object({ id: z.uuid() });
+const read = { permissions: ['recordings.read'], tags: ['classroom'] } as const;
+const manage = { permissions: ['recordings.manage'], tags: ['classroom'] } as const;
 
 /** A student's recordings for staff; the services decide per student, DELETE stays admin-only. */
 export const studentRecordingsRoutes = {
@@ -17,6 +19,7 @@ export const studentRecordingsRoutes = {
     params: byId,
     query: studentRecordingsQuerySchema,
     response: studentRecordingsPageSchema,
+    ...read,
   }),
   /** For the report history's links: no signed URLs. */
   recordedLessonIds: defineRoute({
@@ -24,6 +27,7 @@ export const studentRecordingsRoutes = {
     path: '/students/:id/recorded-lesson-ids',
     params: byId,
     response: z.array(z.string()),
+    ...read,
   }),
   visibility: defineRoute({
     method: 'PATCH',
@@ -31,11 +35,13 @@ export const studentRecordingsRoutes = {
     params: byId,
     body: recordingVisibilitySchema,
     response: recordingVisibilityResultSchema,
+    ...manage,
   }),
   remove: defineRoute({
     method: 'DELETE',
     path: '/recordings/:id',
     params: byId,
     response: 'empty',
+    ...manage,
   }),
 };

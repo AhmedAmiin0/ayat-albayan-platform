@@ -13,3 +13,9 @@ export async function openSigned(path: string): Promise<void> {
   const { url } = signedUrl.parse(await apiFetch(path));
   await Linking.openURL(url);
 }
+
+/** Opens the signed URL a typed call answered. */
+export async function openDownload(answer: Promise<{ url: string }>): Promise<void> {
+  const { url } = await answer;
+  await Linking.openURL(url);
+}

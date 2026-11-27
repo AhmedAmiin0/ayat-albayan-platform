@@ -15,6 +15,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
 
 const s = t.sales.student;
+const SIGNED = { url: 'https://storage/x.pdf', expires_at: '2026-10-27T16:00:00.000Z' };
 beforeEach(() => mockApiFetch.mockReset());
 
 test('her student: the current subscription with its dates and lessons, the past one folded', async () => {
@@ -36,7 +37,7 @@ test('her student: the current subscription with its dates and lessons, the past
 });
 
 test('attendance: the totals and one chip per past lesson; reports as the teacher\'s rows with the PDF', async () => {
-  mockApiFetch.mockImplementation(async (path: string) => (path.endsWith('/pdf') ? { url: 'https://storage/x.pdf' } : details()));
+  mockApiFetch.mockImplementation(async (path: string) => (path.endsWith('/pdf') ? SIGNED : details()));
   const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
   await renderWithQuery(<SalesStudentScreen />);
   await screen.findByRole('header', { name: 'يوسف أحمد' });

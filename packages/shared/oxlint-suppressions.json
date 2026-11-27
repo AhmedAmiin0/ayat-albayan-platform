@@ -521,14 +521,6 @@
       "count": 4
     }
   },
-  "src/sales/family-link.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/sales/money-views.ts": {
     "stylistic/max-len": {
       "count": 6

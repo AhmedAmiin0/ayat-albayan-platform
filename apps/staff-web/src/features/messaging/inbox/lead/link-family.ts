@@ -1,11 +1,11 @@
+import { leadFamilyCalls } from '@ab/client-core';
 import type { LeadFamilyLinked } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { apiErrorText } from '@/features/finance/subscriptions';
-import { apiSend, t } from '@ab/web-kit';
+import { apiFetch, apiSend, t } from '@ab/web-kit';
 import { SALES_MONEY_KEY } from '@/features/sales/sales-money';
 
-export const linkFamily = ({ leadId, code }: { leadId: string; code: string }) =>
-  apiSend<LeadFamilyLinked>('POST', `/leads/${leadId}/link-family`, { code });
+export const linkFamily = leadFamilyCalls({ apiFetch, apiSend }).link;
 
 /** The 404 / 409 codes in Arabic; a 400, a 403 or anything else is the generic error. */
 export const linkFamilyErrorText = (e: unknown): string =>

@@ -8,9 +8,11 @@ import { SalesStudentScreen } from '@/sales/sales/student/SalesStudentScreen/Sal
 // Package cancel only while the server says the package is unused.
 
 const mockApiFetch = jest.fn();
+const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (...mockArgs: unknown[]) => mockApiFetch(...mockArgs),
+  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn() },
@@ -20,14 +22,14 @@ jest.mock('expo-router', () => ({
 const c = t.subscriptions.cancel;
 const CHECK = '/sales/packages/sub2/cancel';
 const CANCELLED = { id: 'sub2', status: 'cancelled' };
-const sent = (init?: RequestInit) => init?.method === 'POST';
-const serve = (block: string | null, post: () => unknown = () => CANCELLED) =>
-  mockApiFetch.mockImplementation(async (path: string, init?: RequestInit) => {
-    if (sent(init)) return post();
+const serve = (block: string | null, post: () => unknown = () => CANCELLED) => {
+  mockApiSend.mockImplementation(async () => post());
+  mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/sales/students/st1') return details({ mine: false });
     if (path === CHECK) return { subscriptionId: 'sub2', block };
     throw new ApiError(404);
   });
+};
 const asSales = (permissions: readonly string[]) => {
   const client = createTestQueryClient();
   client.setQueryData(pathKey('/auth/me'), {
@@ -40,6 +42,7 @@ const SALES = GRANTABLE_PERMISSIONS.filter((p) => p !== 'subscriptions.write');
 
 beforeEach(() => {
   mockApiFetch.mockReset();
+  mockApiSend.mockReset();
 });
 
 test('an unused package of another family’s student: confirm with a reason → POST', async () => {
@@ -51,10 +54,8 @@ test('an unused package of another family’s student: confirm with a reason →
   expect(screen.getByText(c.body)).toBeTruthy();
   await fireEvent.changeText(screen.getByLabelText(c.reason), ' أُنشئت بالخطأ ');
   await fireEvent.press(screen.getByRole('button', { name: c.confirm }));
-  const body = JSON.stringify({ reason: 'أُنشئت بالخطأ' });
-  await waitFor(() =>
-    expect(mockApiFetch).toHaveBeenCalledWith(CHECK, expect.objectContaining({ body })),
-  );
+  const body = { reason: 'أُنشئت بالخطأ' };
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', CHECK, body));
   expect(await screen.findByText(c.done)).toBeTruthy();
   for (const queryKey of [['course-actions', 'st1'], ['students'], ['sales'], ['lessons']])
     expect(invalidate).toHaveBeenCalledWith({ queryKey });

@@ -14,3 +14,9 @@ export {
   type MeetingParticipant,
   type PublicMeetingCalls,
 } from './meeting-calls';
+export {
+  lessonRoomCalls,
+  studentLinkCalls,
+  type LessonRoomCalls,
+  type StudentLinkCalls,
+} from './room-calls';
