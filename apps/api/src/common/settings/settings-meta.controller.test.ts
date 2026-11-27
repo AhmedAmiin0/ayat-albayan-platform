@@ -17,6 +17,11 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 const queries = { meta: vi.fn() };
+const ENTRY = {
+  updatedAt: '2026-11-27T10:00:00+00:00',
+  updatedBy: 'a0000000-0000-4000-8000-000000000001',
+  updatedByName: 'Mona',
+};
 
 describe('GET /config/meta', () => {
   let app: NestFastifyApplication;
@@ -37,10 +42,17 @@ describe('GET /config/meta', () => {
   beforeEach(() => vi.resetAllMocks());
 
   it('is admin only and returns who changed what', async () => {
-    const meta = { activity_retention_days: { updatedAt: 'T', updatedBy: 'u', updatedByName: 'منى' } };
+    const meta = { activity_retention_days: ENTRY };
     queries.meta.mockResolvedValue(meta);
     expect((await get('teacher')).statusCode).toBe(403);
     expect((await get('admin')).json()).toEqual({ meta });
+  });
+
+  it('answers 500 response_invalid when a row falls outside the shared schema', async () => {
+    queries.meta.mockResolvedValue({ a: { ...ENTRY, updatedAt: 'T' } });
+    const res = await get('admin');
+    expect(res.statusCode).toBe(500);
+    expect(res.json()).toMatchObject({ code: 'response_invalid' });
   });
 
   it('needs a login', async () => {
