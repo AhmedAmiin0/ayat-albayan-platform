@@ -3131,11 +3131,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/numbers/communications/communications.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/numbers/communications/communications.service.test.ts": {
     "stylistic/max-len": {
       "count": 2
