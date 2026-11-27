@@ -3,6 +3,7 @@ import { LESSON_ID, lessonRow, STUDENT_ID } from '@/modules/teaching/lessons/les
 import { lessonsApp } from '@/modules/teaching/lessons/test-app';
 
 type Harness = Awaited<ReturnType<typeof lessonsApp>>;
+const DONE = '00000000-0000-4000-8000-000000000e31';
 const WEEK = 'from=2026-10-04T00:00:00%2B03:00&to=2026-10-11T00:00:00%2B03:00';
 
 describe('GET /lessons, /lessons/day, /students/:id/lessons (docs/10 routes 1, 2, 5)', () => {
@@ -40,10 +41,10 @@ describe('GET /lessons, /lessons/day, /students/:id/lessons (docs/10 routes 1, 2
   });
 
   it('lesson numbers are read only for completed lessons (R-LES-03)', async () => {
-    h.lessons.window.mockResolvedValue([lessonRow(), lessonRow({ id: 'done', status: 'completed' })]);
-    h.lessons.seq.mockResolvedValue(new Map([[`done:${STUDENT_ID}`, 12]]));
+    h.lessons.window.mockResolvedValue([lessonRow(), lessonRow({ id: DONE, status: 'completed' })]);
+    h.lessons.seq.mockResolvedValue(new Map([[`${DONE}:${STUDENT_ID}`, 12]]));
     const res = await h.call({ method: 'GET', url: `/lessons?${WEEK}` });
-    expect(h.lessons.seq).toHaveBeenCalledWith(['done']);
+    expect(h.lessons.seq).toHaveBeenCalledWith([DONE]);
     expect(res.json().map((l: { students: { seq: number | null }[] }) => l.students[0]?.seq)).toEqual([null, 12]);
   });
 

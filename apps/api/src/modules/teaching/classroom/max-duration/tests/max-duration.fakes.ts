@@ -5,7 +5,7 @@ import { CONFIG } from '@/modules/teaching/classroom/classroom.fakes';
 import type { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 import type { MaxDurationRepo, OverdueMeeting } from '@/modules/teaching/classroom/max-duration/max-duration.repo';
 import type { MaxDurationSettings } from '@/modules/teaching/classroom/max-duration/max-duration.settings';

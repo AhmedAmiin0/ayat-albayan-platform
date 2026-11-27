@@ -1,11 +1,6 @@
 import type { ChannelMessageView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import {
-  channelBubbleActions,
-  channelEditError,
-  channelMessagePath,
-  channelReadsPath,
-} from '../channel-edits';
+import { channelBubbleActions, channelEditError } from '../channel-edits';
 
 const at = '2026-10-30T10:00:00.000Z';
 const msg = (over: Partial<ChannelMessageView> = {}): ChannelMessageView => ({
@@ -23,27 +18,6 @@ const msg = (over: Partial<ChannelMessageView> = {}): ChannelMessageView => ({
 const now = (min: number) => new Date(Date.parse(at) + min * 60_000);
 
 describe('channel edit / delete for the clients', () => {
-  it('paths per audience, the owning assistant’s too (owner 2026-11-16)', () => {
-    expect(channelMessagePath({ audience: 'teacher', studentId: 's', messageId: 'm' })).toBe(
-      '/teachers/me/channels/s/messages/m',
-    );
-    expect(channelMessagePath({ audience: 'portal', studentId: 's', messageId: 'm' })).toBe(
-      '/portal/students/s/channel/messages/m',
-    );
-    expect(channelMessagePath({ audience: 'admin', studentId: 's', messageId: 'm' })).toBe(
-      '/students/s/channel/messages/m',
-    );
-    expect(channelMessagePath({ audience: 'sales', studentId: 's', messageId: 'm' })).toBe(
-      '/sales/students/s/channel/messages/m',
-    );
-    expect(channelReadsPath({ audience: 'portal', studentId: 's', messageId: 'm' })).toBe(
-      '/portal/students/s/channel/messages/m/reads',
-    );
-    expect(channelReadsPath({ audience: 'admin', studentId: 's', messageId: 'm' })).toBe(
-      '/students/s/channel/messages/m/reads',
-    );
-  });
-
   it("the sender's windows (sales too); the admin deletes any; a deleted bubble nothing", () => {
     expect(
       channelBubbleActions({ audience: 'portal', mode: 'write', message: msg(), now: now(10) }),

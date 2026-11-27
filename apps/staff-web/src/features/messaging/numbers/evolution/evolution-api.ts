@@ -1,38 +1,26 @@
-import { EVOLUTION_STATES, QR_DATA_URL_RE, type EvolutionState } from '@ab/shared';
+import { evolutionCalls } from '@ab/client-core';
+import { QR_DATA_URL_RE, type EvolutionState } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { z } from 'zod';
-import { apiFetch } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';
 
-// An Evolution number's live checks (numbers.manage, docs/19 «Evolution driver»): both answers
-// are parsed, and any state word Evolution adds later reads as unknown (null).
+// An Evolution number's live checks (numbers.manage, docs/19 «Evolution driver»); the server
+// turns any state word Evolution adds later into null.
 
-const stateSchema = z.enum(EVOLUTION_STATES).nullable().catch(null);
+const evolution = evolutionCalls({ apiFetch, apiSend });
 
-export const evolutionStateSchema = z.object({ state: stateSchema, checked_at: z.string() });
-export type EvolutionStateAnswer = z.infer<typeof evolutionStateSchema>;
-
-export const evolutionQrSchema = z.object({
-  state: stateSchema,
-  qr: z.string().nullable(),
-  pairing_code: z.string().nullable(),
-});
-export type EvolutionQrAnswer = z.infer<typeof evolutionQrSchema>;
-
-const base = (id: string) => `/admin/numbers/${encodeURIComponent(id)}/evolution`;
-const key = (id: string, what: 'state' | 'qr') => [...NUMBERS_QUERY_KEYS.numbers, id, 'evolution', what];
+const key = (id: string, what: 'state' | 'qr') => [
+  ...NUMBERS_QUERY_KEYS.numbers, id, 'evolution', what,
+];
 
 export const evolutionStateQuery = (id: string) =>
-  queryOptions({
-    queryKey: key(id, 'state'),
-    queryFn: async () => evolutionStateSchema.parse(await apiFetch(`${base(id)}/state`)),
-  });
+  queryOptions({ queryKey: key(id, 'state'), queryFn: () => evolution.state(id) });
 
-/** GET …/evolution/qr: a fresh QR each time (never cached once the dialog closes). */
+/** A fresh QR each time (never cached once the dialog closes). */
 export const evolutionQrQuery = (id: string) =>
   queryOptions({
     queryKey: key(id, 'qr'),
-    queryFn: async () => evolutionQrSchema.parse(await apiFetch(`${base(id)}/qr`)),
+    queryFn: () => evolution.qr(id),
     staleTime: 0,
     gcTime: 0,
   });

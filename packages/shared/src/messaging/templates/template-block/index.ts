@@ -1,1 +1,1 @@
-export { type TemplateDisplay, type TemplatedMessage } from './template-block';
+export { type TemplateDisplay } from './template-block';

@@ -20,6 +20,16 @@ describe('exports api (R-RPT-03)', () => {
     );
   });
 
+  it("builds every kind's path from its route object", () => {
+    expect(exportPath({ kind: 'teacher-ledger', params: { month: '2026-09' } })).toBe(
+      '/exports/teacher-ledger.csv?month=2026-09',
+    );
+    expect(exportPath({ kind: 'receivables' })).toBe('/exports/receivables.csv');
+    expect(exportPath({ kind: 'expenses', params: { year: '2026' } })).toBe(
+      '/exports/expenses.csv?year=2026',
+    );
+  });
+
   it('takes the server file name, else <kind>.csv', () => {
     expect(filenameFrom('attachment; filename="payouts-2026-09.csv"', 'payouts')).toBe(
       'payouts-2026-09.csv',

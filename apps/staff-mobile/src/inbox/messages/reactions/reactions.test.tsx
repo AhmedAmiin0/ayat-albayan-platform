@@ -16,10 +16,11 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...a: unknown[]) => mockApiSend(...a),
 }));
 
-const PATH = `/threads/${encodeURIComponent(PHONE)}/messages/m1/reaction`;
+const ID = 'b1111111-1111-4111-8111-111111111111';
+const PATH = `/threads/${encodeURIComponent(PHONE)}/messages/${ID}/reaction`;
 const now = new Date().toISOString();
 const open = { ...thread, reactable: true, session_open: true, last_inbound_at: now };
-const text = message({ id: 'm1', direction: 'inbound', status: 'delivered', body: 'السلام عليكم', replyable: true, created_at: now });
+const text = message({ id: ID, lead_id: null, direction: 'inbound', status: 'delivered', body: 'السلام عليكم', replyable: true, created_at: now });
 
 /** The bubble as the chat screen draws it: from the thread cache, so an optimistic change shows. */
 function Cached({ id }: { id: string }) {
@@ -50,7 +51,7 @@ async function chat(m: MessageView, th = open) {
     client,
   );
 }
-const hold = async (id = 'm1') => fireEvent(screen.getByTestId(`bubble-${id}`), 'longPress');
+const hold = async (id = ID) => fireEvent(screen.getByTestId(`bubble-${id}`), 'longPress');
 const bar = () => within(screen.getByTestId('reaction-bar'));
 
 beforeEach(() => {
@@ -79,7 +80,7 @@ test('a tap reacts once (optimistic pill), a tap on ours removes it', async () =
   await fireEvent.press(bar().getByRole('button', { name: emojiLabel('👍') }));
   expect(mockApiSend).toHaveBeenCalledTimes(1);
   expect(mockApiSend).toHaveBeenCalledWith('PUT', PATH, { emoji: '👍', clientRequestId: expect.any(String) });
-  expect(await screen.findByTestId('reaction-pill-m1')).toBeTruthy();
+  expect(await screen.findByTestId(`reaction-pill-${ID}`)).toBeTruthy();
   expect(screen.queryByTestId('reaction-bar')).toBeNull();
   await hold();
   expect(bar().getByRole('button', { name: emojiLabel('👍') }).props.accessibilityState).toMatchObject({ selected: true });
@@ -113,12 +114,12 @@ test('a refused reaction puts the bubble back and says why', async () => {
   await hold();
   await fireEvent.press(bar().getByRole('button', { name: emojiLabel('❤️') }));
   expect(await screen.findByText(t.inbox.reactions.failed)).toBeTruthy();
-  expect(screen.queryByTestId('reaction-pill-m1')).toBeNull();
+  expect(screen.queryByTestId(`reaction-pill-${ID}`)).toBeNull();
 });
 
 test('the pill: who reacted, «إزالة» on ours', async () => {
   await chat({ ...text, reactions: { theirs: '❤️', ours: '👍', ours_by: 'هبة' } });
-  const pill = screen.getByTestId('reaction-pill-m1');
+  const pill = screen.getByTestId(`reaction-pill-${ID}`);
   expect(pill.props.accessibilityLabel).toBe(t.inbox.reactions.pill.replace('{list}', '❤️ 👍'));
   await fireEvent.press(pill);
   const sheet = within(screen.getByTestId('reactors-sheet'));
@@ -134,6 +135,6 @@ test.each([
   ['WhatsApp does not know the message', { ...text, replyable: false }, open],
 ] as const)('no row when %s', async (_why, m, th) => {
   await chat(m, th);
-  if (screen.queryByTestId('bubble-m1')) await hold();
+  if (screen.queryByTestId(`bubble-${ID}`)) await hold();
   expect(screen.queryByTestId('reaction-bar')).toBeNull();
 });

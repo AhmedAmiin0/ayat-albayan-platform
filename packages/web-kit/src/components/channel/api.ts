@@ -1,26 +1,30 @@
 import {
+  channelCallsByAudience,
   channelKey,
   channelPollMs,
-  channelMessagesPath,
-  channelReadPath,
+  channelWriterOf,
+  channelWritesByAudience,
   olderCursor,
   pathKey,
   portalUnreadPath,
-  TEACHER_CHANNELS_PATH,
+  teacherChannelCalls,
   type ChannelAudience,
 } from '@ab/client-core';
-import {
-  channelMessageViewSchema,
-  channelPageSchema,
-  type ChannelAttachmentInput,
-  type TeacherChannelRow,
-} from '@ab/shared';
+import type { ChannelAttachmentInput } from '@ab/shared';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
 
 // The student channel (docs/31 §2). Lists and badges poll while the window has focus; the thread
 // has its socket (use-channel-live) and polls only as the fallback.
+const client = { apiFetch, apiSend };
+
+/** Each audience's reads of a chat on its own route table. */
+export const channelCalls = channelCallsByAudience(client);
+/** Each writer's send, read mark, file slot and edit (the monitor has none). */
+export const channelWrites = channelWritesByAudience(client);
+const teacherChannels = teacherChannelCalls(client);
+
 const poll = () => (document.hasFocus() ? env.inboxRefreshMs : false);
 
 export interface ChannelRef {
@@ -32,12 +36,7 @@ export interface ChannelRef {
 export const channelQuery = ({ audience, studentId }: ChannelRef, live = false) =>
   infiniteQueryOptions({
     queryKey: channelKey(audience, studentId),
-    queryFn: async ({ pageParam }) => {
-      const before = pageParam || undefined;
-      return channelPageSchema.parse(
-        await apiFetch(channelMessagesPath({ audience, studentId, before })),
-      );
-    },
+    queryFn: ({ pageParam }) => channelCalls[audience].page({ studentId, before: pageParam }),
     initialPageParam: '',
     getNextPageParam: olderCursor,
     refetchInterval: () => (document.hasFocus() ? channelPollMs(live) : false),
@@ -52,20 +51,21 @@ export interface ChannelSend {
   attachment?: ChannelAttachmentInput | undefined;
 }
 
-const storedMessage = (r: unknown) => channelMessageViewSchema.parse(r);
-
-/** POST …/messages (channelPostSchema): the optional fields only when set; the stored message. */
-export const sendChannelMessage = (ref: ChannelRef, send: ChannelSend) =>
-  apiSend('POST', channelMessagesPath(ref), {
-    body: send.body,
-    client_id: send.clientId,
-    ...(send.replyToId ? { reply_to_id: send.replyToId } : {}),
-    ...(send.attachment ? { attachment: send.attachment } : {}),
-  }).then(storedMessage);
+/** The optional fields only when set; the stored message. */
+export const sendChannelMessage = ({ audience, studentId }: ChannelRef, send: ChannelSend) =>
+  channelWrites[channelWriterOf(audience)].post({
+    studentId,
+    post: {
+      body: send.body,
+      client_id: send.clientId,
+      ...(send.replyToId ? { reply_to_id: send.replyToId } : {}),
+      ...(send.attachment ? { attachment: send.attachment } : {}),
+    },
+  });
 
 /** Read up to the newest message shown (the API never moves the mark past now). */
 export const markChannelRead = ({ audience, studentId, at }: ChannelRef & { at: string }) =>
-  apiSend<unknown>('POST', channelReadPath(audience, studentId), { at });
+  channelWrites[channelWriterOf(audience)].read({ studentId, at });
 
 /** A read or send changes the list and badge keys, never the open thread itself. */
 export const channelCountKeys = (studentId: string): readonly (readonly string[])[] => [
@@ -75,6 +75,6 @@ export const channelCountKeys = (studentId: string): readonly (readonly string[]
 
 export const teacherChannelsQuery = queryOptions({
   queryKey: ['channel', 'teacher', 'list'],
-  queryFn: () => apiFetch<TeacherChannelRow[]>(TEACHER_CHANNELS_PATH),
+  queryFn: teacherChannels.list,
   refetchInterval: poll,
 });

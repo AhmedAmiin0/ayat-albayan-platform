@@ -1,20 +1,8 @@
 import { channelActions, type ChannelActions, type ChannelMessageView } from '@ab/shared';
 import type { ChannelMode } from '../channel-live';
-import { channelMessagesPath, type ChannelAudience } from '../channels';
+import type { ChannelAudience } from '../channels';
 
 // The API enforces the same rule; the menu only offers what it would accept now.
-
-/**
- * PATCH (edit) / DELETE (delete for everyone) …/messages/:id, on every audience's route (the
- * owning assistant's too).
- */
-export function channelMessagePath(input: {
-  audience: ChannelAudience;
-  studentId: string;
-  messageId: string;
-}): string {
-  return `${channelMessagesPath(input)}/${input.messageId}`;
-}
 
 const NONE: ChannelActions = { edit: false, delete: false };
 
@@ -42,12 +30,6 @@ export function channelBubbleActions(input: {
   });
   return mayChange(input.audience, input.mode) ? actions : NONE;
 }
-
-export const channelReadsPath = (input: {
-  audience: ChannelAudience;
-  studentId: string;
-  messageId: string;
-}): string => `${channelMessagePath(input)}/reads`;
 
 /** The API's refusal codes the menus explain in words; anything else is a generic failure. */
 export const CHANNEL_EDIT_ERRORS = [

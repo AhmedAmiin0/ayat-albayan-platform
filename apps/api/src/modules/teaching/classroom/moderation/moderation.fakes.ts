@@ -8,7 +8,7 @@ import { CONFIG, LESSON_ID, OTHER_TEACHER, TEACHER, TEACHER_ID, type queries } f
 import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
 import { signJwt } from '@/modules/teaching/classroom/livekit/livekit-token';
 import type { FetchLike } from '@/common/infra/http/failure';
-import { twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { twirpAnswer } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import type { ModerationRepo, ParticipantRow, Principal } from './moderation.repo';
 import type { RecordingRow } from '@/modules/teaching/classroom/recordings/recording.repo';
 import type { RecordingStarter } from '@/modules/teaching/classroom/recordings/recording.starter';

@@ -8,7 +8,7 @@ import {
   reactionTooOld,
   REACTION_EMOJIS,
   threadReactionSchema,
-} from './reactions';
+} from '../reactions';
 
 const NOW = new Date('2026-10-27T12:00:00Z');
 const daysAgo = (d: number) => new Date(NOW.getTime() - d * 86_400_000).toISOString();

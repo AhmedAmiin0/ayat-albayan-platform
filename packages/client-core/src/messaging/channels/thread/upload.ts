@@ -3,16 +3,16 @@ import {
   CHANNEL_MEDIA_RULES,
   channelAttachmentInputSchema,
   channelUploadSchema,
-  signedUploadSchema,
   type ChannelAttachmentInput,
   type SignedUpload,
 } from '@ab/shared';
 import type { SlotUploadResult, UploadFile } from '../../../core/http';
-import { channelUploadPath, type ChannelAudience } from '../channels';
+import type { ChannelSlotAsk } from '../channel-calls';
+import type { z } from 'zod';
 
 // A photo, PDF or voice note in the student chat (docs/31 §2), web and phone alike: checked here
-// as the API checks it, a signed slot (POST …/attachments/upload-url), the upload, then the
-// message's `attachment`. Each app passes its own HTTP call and its own slot upload.
+// as the API checks it, a signed slot (the writer's upload route), the upload, then the
+// message's `attachment`. Each app passes its own slot call and its own slot upload.
 
 export type ChannelFileProblem = 'tooLarge' | 'badType' | 'failed';
 
@@ -41,8 +41,8 @@ export interface ChannelFileToSend extends ChannelFileFields {
 }
 
 export interface ChannelUploadDeps {
-  /** POST `path` with the file's fields; the answer is parsed here (signedUploadSchema). */
-  askSlot: (path: string, fields: ChannelFileFields) => Promise<unknown>;
+  /** The chat's upload route with the file's fields (ChannelWriteCalls.upload). */
+  askSlot: (fields: ChannelSlotAsk['file']) => Promise<SignedUpload>;
   /** The app's slot upload (slotUploader over its supabase-js client). */
   upload: (signed: SignedUpload, file: UploadFile) => Promise<SlotUploadResult>;
 }
@@ -59,11 +59,22 @@ const fieldsOf = (f: ChannelFileFields): ChannelFileFields => ({
   name: f.name,
 });
 
+const problemOf = (error: z.ZodError): ChannelFileProblem =>
+  PROBLEMS[error.issues[0]?.message ?? ''] ?? 'failed';
+
+const checked = (file: ChannelFileFields) => channelUploadSchema.safeParse(fieldsOf(file));
+
 /** Checked here first, as the API does: its type and its size cap. */
 export function channelFileProblem(file: ChannelFileFields): ChannelFileProblem | null {
-  const parsed = channelUploadSchema.safeParse(fieldsOf(file));
-  if (parsed.success) return null;
-  return PROBLEMS[parsed.error.issues[0]?.message ?? ''] ?? 'failed';
+  const parsed = checked(file);
+  return parsed.success ? null : problemOf(parsed.error);
+}
+
+/** The upload route's fields, the name as picked (the API cleans it), or the refusal. */
+function slotFields(file: ChannelFileFields): ChannelSlotAsk['file'] {
+  const parsed = checked(file);
+  if (!parsed.success) throw new ChannelFileError(problemOf(parsed.error));
+  return { ...parsed.data, name: file.name };
 }
 
 const MiB = 1024 * 1024;
@@ -73,22 +84,12 @@ export const channelFileCapMb = (mime: string): number =>
   (Object.entries(CHANNEL_MEDIA_RULES).find(([m]) => m === mime)?.[1].maxBytes ??
     CHANNEL_MEDIA_MAX_BYTES) / MiB;
 
-/** Whose chat the file goes to. */
-interface ChatRef {
-  audience: ChannelAudience;
-  studentId: string;
-}
-
 /** The slot, then the upload; resolves the message's attachment or throws ChannelFileError. */
 export async function uploadChannelFile(
-  ref: ChatRef,
   file: ChannelFileToSend,
   deps: ChannelUploadDeps,
 ): Promise<ChannelAttachmentInput> {
-  const problem = channelFileProblem(file);
-  if (problem) throw new ChannelFileError(problem);
-  const path = channelUploadPath(ref.audience, ref.studentId);
-  const signed = signedUploadSchema.parse(await deps.askSlot(path, fieldsOf(file)));
+  const signed = await deps.askSlot(slotFields(file));
   const { error } = await deps.upload(signed, { body: file.bytes, contentType: file.mime });
   if (error) throw new ChannelFileError('failed');
   const ms = file.durationMs;

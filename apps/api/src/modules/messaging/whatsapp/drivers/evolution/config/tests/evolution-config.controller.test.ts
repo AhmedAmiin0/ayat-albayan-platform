@@ -34,7 +34,8 @@ const caught = (p: Promise<unknown>) => p.then(() => null, (e: unknown) => e);
 describe('EvolutionConfigController', () => {
   it('Evolution unreachable on save: stores synced false, answers 502 saved', async () => {
     const { c, saved } = setup();
-    const e = await caught(c.config(ID, evolutionConfigSchema.parse({}), USER));
+    const body = evolutionConfigSchema.parse({});
+    const e = await caught(c.config({ params: { id: ID }, query: undefined, body }, USER));
     expect(e).toBeInstanceOf(HttpException);
     expect((e as HttpException).getStatus()).toBe(502);
     expect((e as HttpException).getResponse()).toMatchObject({ code: 'evolution_unreachable', saved: true });
@@ -46,7 +47,7 @@ describe('EvolutionConfigController', () => {
     const { c, numbers, saved } = setup();
     const conflict = new HttpException({ code: 'evolution_not_configured' }, 409);
     numbers.pushInput.mockRejectedValueOnce(conflict);
-    const e = await caught(c.push(ID));
+    const e = await caught(c.push({ params: { id: ID }, query: undefined, body: undefined }));
     expect(e).toBe(conflict);
     expect(saved[0]?.synced).toBe(false);
   });

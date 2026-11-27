@@ -112,11 +112,6 @@
       "count": 1
     }
   },
-  "src/lessons/overview.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/lessons/series/time-edit.ts": {
     "ab/no-shape-checks": {
       "count": 1
@@ -134,7 +129,7 @@
   },
   "src/lessons/views.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1

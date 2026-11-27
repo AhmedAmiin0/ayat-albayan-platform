@@ -47,7 +47,6 @@ export {
   type PillItem,
   type ReactionName,
   reactionName,
-  reactionPath,
   reactionPill,
   type ReactorLine,
   reactorLines,
@@ -78,3 +77,8 @@ export { threadForwardCalls, type ThreadForwardCalls } from './thread-forward';
 export { inboxSearchCalls, type InboxSearchCalls } from './inbox-search';
 export { stickerPanelCalls, type StickerPanelCalls } from './sticker-panel';
 export { chatFileCalls, type ChatFileCalls } from './chat-files';
+export {
+  messageReactionCalls,
+  type MessageReactionCalls,
+  type ReactionInput,
+} from './reaction-calls';

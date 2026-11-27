@@ -35,10 +35,10 @@ describe('toOverview (R-SCH-09)', () => {
   });
 
   it('a cancelled lesson frees its time; time off is listed and blocks', () => {
-    const off = { id: 'off1', teacher_id: TEACHER_ID, starts_at: '2026-10-04 13:00:00+00', ends_at: '2026-10-04 13:30:00+00', reason: 'مشوار' };
+    const off = { id: '00000000-0000-4000-8000-000000000e01', teacher_id: TEACHER_ID, starts_at: '2026-10-04 13:00:00+00', ends_at: '2026-10-04 13:30:00+00', reason: 'مشوار' };
     const [abrar] = toOverview(parts({ lessons: [lesson({ status: 'cancelled_by_admin' })], timeOff: [off] })).teachers;
     expect(abrar?.time_off).toEqual([
-      { id: 'off1', reason: 'مشوار', starts_at: '2026-10-04T13:00:00.000Z', ends_at: '2026-10-04T13:30:00.000Z' },
+      { id: '00000000-0000-4000-8000-000000000e01', reason: 'مشوار', starts_at: '2026-10-04T13:00:00.000Z', ends_at: '2026-10-04T13:30:00.000Z' },
     ]);
     expect(abrar?.free).toEqual([{ starts_at: '2026-10-04T13:30:00.000Z', ends_at: '2026-10-04T15:00:00.000Z' }]);
   });
@@ -47,10 +47,10 @@ describe('toOverview (R-SCH-09)', () => {
     const teachers = [
       teacher({}),
       teacher({ id: OTHER_TEACHER_ID, display_name_ar: 'سارة', status: 'active' }),
-      teacher({ id: 'gone', display_name_ar: 'بسمة', status: 'inactive' }),
-      teacher({ id: 'left', display_name_ar: 'تقى', status: 'inactive' }),
+      teacher({ id: '00000000-0000-4000-8000-000000000e02', display_name_ar: 'بسمة', status: 'inactive' }),
+      teacher({ id: '00000000-0000-4000-8000-000000000e03', display_name_ar: 'تقى', status: 'inactive' }),
     ];
-    const leftover = lesson({ id: 'l2', teacher_id: 'left', teacher: { id: 'left', display_name_ar: 'تقى', display_name_en: null, tz: 'Africa/Cairo' } });
+    const leftover = lesson({ id: '00000000-0000-4000-8000-000000000e04', teacher_id: '00000000-0000-4000-8000-000000000e03', teacher: { id: '00000000-0000-4000-8000-000000000e03', display_name_ar: 'تقى', display_name_en: null, tz: 'Africa/Cairo' } });
     const out = toOverview(parts({ teachers, lessons: [leftover, lesson()] }));
     expect(out.teachers.map((t) => t.display_name_ar)).toEqual(['أبرار', 'تقى', 'سارة']);
     expect(out.teachers[2]).toMatchObject({ students_count: 0, windows: [], free: [], time_off: [] });
@@ -58,9 +58,9 @@ describe('toOverview (R-SCH-09)', () => {
   });
 
   it('lessons by starts_at; the window echoes back as ISO', () => {
-    const late = lesson({ id: 'late', starts_at: '2026-10-04T18:00:00+00:00', ends_at: '2026-10-04T18:45:00+00:00' });
+    const late = lesson({ id: '00000000-0000-4000-8000-000000000e05', starts_at: '2026-10-04T18:00:00+00:00', ends_at: '2026-10-04T18:45:00+00:00' });
     const out = toOverview(parts({ lessons: [late, lesson()] }));
-    expect(out.lessons.map((l) => l.id)).toEqual([lesson().id, 'late']);
+    expect(out.lessons.map((l) => l.id)).toEqual([lesson().id, '00000000-0000-4000-8000-000000000e05']);
     expect([out.from, out.to]).toEqual(['2026-10-03T21:00:00.000Z', '2026-10-04T21:00:00.000Z']);
   });
 });

@@ -6,14 +6,9 @@ export {
   THREAD_FULL_MS,
   type ChannelAudience,
   channelKey,
-  channelMessagesPath,
-  channelPresencePath,
-  channelReadPath,
-  channelUploadPath,
   channelTimeText,
   olderCursor,
   portalUnreadPath,
-  TEACHER_CHANNELS_PATH,
   threadMessages,
 } from './channels';
 export {
@@ -38,8 +33,6 @@ export {
   type ChannelEditError,
   channelBubbleActions,
   channelEditError,
-  channelMessagePath,
-  channelReadsPath,
 } from './channel-edits';
 export {
   channelPresenceKey,
@@ -72,3 +65,25 @@ export {
   channelFileProblem,
   uploadChannelFile,
 } from './thread/upload';
+export {
+  type ChannelCalls,
+  channelCallsByAudience,
+  type ChannelEditAsk,
+  type ChannelMessageAsk,
+  type ChannelPageAsk,
+  type ChannelPostAsk,
+  type ChannelReadAsk,
+  type ChannelSlotAsk,
+  type ChannelWriteCalls,
+  type ChannelWriter,
+  channelWriterOf,
+  channelWritesByAudience,
+  monitorChannelCalls,
+  portalChannelCalls,
+  portalChannelWrites,
+  salesChannelCalls,
+  salesChannelWrites,
+  type TeacherChannelCalls,
+  teacherChannelCalls,
+  teacherChannelWrites,
+} from './channel-calls';

@@ -1,11 +1,8 @@
 import type { LeadSource, LeadStatus, LessonStatus, MessageDirection, MessageStatus, NumberPurpose, WaLine } from '@ab/catalog';
 import type { ChatListRef } from './chat-lists';
-import type { ReplyQuote } from '../replies/reply-forward';
-import type { MessageReactions } from '../reactions/reactions';
-import type { MessageMarks, ThreadNote } from '../markers/marker-notes';
-import type { TemplatedMessage } from '../templates/template-block';
+import type { ThreadNote } from '../markers/marker-notes';
 import type { ReopenFields } from './thread-reopen';
-import type { TemplateParams } from '../templates/templates';
+import type { MessageView } from './message-view';
 import type { FamilyRingField, SubscriptionBadge, ThreadPeople } from './thread-people';
 
 // Phase 4 responses (docs/12 §4): snake_case rows like every API response; instants ISO-8601 UTC.
@@ -53,70 +50,6 @@ export interface ThreadView extends ThreadNote, FamilyRingField, ReopenFields {
   reply_line?: WaLine | null;
   /** Thread page only: its send line can react (false on the CRM line or a closed window). Absent = no. */
   reactable?: boolean;
-}
-
-/** One messages row in a thread (R-MSG-05). */
-export interface MessageView extends TemplatedMessage, MessageMarks {
-  id: string;
-  direction: MessageDirection;
-  status: MessageStatus;
-  phone_e164: string;
-  lead_id: string | null;
-  guardian_id: string | null;
-  lesson_id: string | null;
-  template_key: string | null;
-  template_params: TemplateParams | null;
-  /** Inbound or session text as stored; for a template row, the rendered template text. */
-  body: string | null;
-  media_mime: string | null;
-  /** Signed Storage URL (1 h) of a downloaded inbound or outbound file; null until downloaded. */
-  media_url: string | null;
-  reply_to_wa_id: string | null;
-  /** Our row of the message this one answers (same chat); null when none or not ours. Absent in an old cache. */
-  reply_to_message_id?: string | null;
-  /** The message this one answers (same chat), or «unavailable» when we lack it (10-31). Absent in an old cache. */
-  reply_to?: ReplyQuote | null;
-  /** WhatsApp knows it (it has a wamid), so a reply may quote it; absent in an old cache. */
-  replyable?: boolean;
-  /** A text or a file we can copy, so it can be forwarded; absent in an old cache. */
-  forwardable?: boolean;
-  /** Staff forwarded it from another message (our inbox only: WhatsApp shows no flag). */
-  forwarded?: boolean;
-  /** Theirs and ours (WhatsApp: one each). Absent in an old cache. */
-  reactions?: MessageReactions;
-  interactive_payload: unknown;
-  error_code: string | null;
-  error_text: string | null;
-  attempts: number;
-  next_attempt_at: string | null;
-  scheduled_for: string | null;
-  sent_at: string | null;
-  delivered_at: string | null;
-  read_at: string | null;
-  sent_manually_at: string | null;
-  /** The WhatsApp-app send is pending until then (appSendPending); absent in an old cache. */
-  app_send_until?: string | null;
-  /** @deprecated Read sender_name (D4); still filled for old mobile builds and cached rows. */
-  sent_by_teacher_name?: string | null;
-  media_name?: string | null; // a sent file's name (D2); null for inbound, text and templates
-  /** Staff who sent it: the teacher's display_name_ar, else profiles.full_name; null = automatic, history or inbound (D4). */
-  sender_name?: string | null;
-  /** Outbound queued by the platform with no staff behind it (created_by null, dedup_key set). Not send-stale's isAutomatic. */
-  automatic?: boolean;
-  /** Line received on / sent from (docs/12 §13; `calls` = the calls number, docs/28 §10); null = history or a single line. Absent in an old cache. */
-  line?: NumberPurpose | null;
-  created_at: string;
-  /** R-MSG-03 wa.me link with the fallback text; only on outbound queued / failed rows. */
-  click_to_chat: string | null;
-  /** The lesson of lesson_id as it is now (thread pages only; null elsewhere): the reply note's lesson. */
-  lesson: MessageLesson | null;
-}
-
-export interface MessageLesson {
-  starts_at: string;
-  /** Absent in an old cache: the chat's actions then go by its start. */
-  ends_at?: string;
-  status: LessonStatus;
 }
 
 /** GET /threads/:phone: the thread (null if the phone has no messages) and a page of messages. */

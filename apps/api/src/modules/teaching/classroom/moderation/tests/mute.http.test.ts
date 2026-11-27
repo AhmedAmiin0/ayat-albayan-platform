@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { LESSON_ID, OTHER_TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { MEETING_ID } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
 import type { FetchLike } from '@/common/infra/http/failure';
-import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import { http, participantRow } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { MuteLimit, MUTES_PER_WINDOW } from '@/modules/teaching/classroom/moderation/mute-limit';
 import { classroomApp } from '@/modules/teaching/classroom/test-app';

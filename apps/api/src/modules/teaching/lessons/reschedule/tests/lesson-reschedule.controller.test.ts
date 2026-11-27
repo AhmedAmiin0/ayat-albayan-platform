@@ -58,11 +58,11 @@ describe('POST /lessons/:id/reschedule and /schedule-rules/:id/cancel (R-SCH-07)
   });
 
   it('rule cancel → { rule_id, cancelled: LessonView[] }; admin only; 409 for an ended rule', async () => {
-    h.lessons.openOfRule.mockResolvedValue([{ id: 'l2', status: 'scheduled', starts_at: '2026-10-06T14:00:00Z' }]);
+    h.lessons.openOfRule.mockResolvedValue([{ id: '00000000-0000-4000-8000-000000000e21', status: 'scheduled', starts_at: '2026-10-06T14:00:00Z' }]);
     const body = { by: 'admin', reason: 'انسحب', from: '2026-10-05' };
     const res = await h.call({ method: 'POST', url: `/schedule-rules/${RULE_ID}/cancel`, body });
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toMatchObject({ rule_id: RULE_ID, cancelled: [{ id: 'l2' }] });
+    expect(res.json()).toMatchObject({ rule_id: RULE_ID, cancelled: [{ id: '00000000-0000-4000-8000-000000000e21' }] });
     expect((await h.call({ method: 'POST', url: `/schedule-rules/${RULE_ID}/cancel`, token: 'teacher', body })).statusCode).toBe(403);
     h.rules.rule.mockResolvedValue(null);
     expect((await h.call({ method: 'POST', url: `/schedule-rules/${RULE_ID}/cancel`, body })).statusCode).toBe(404);

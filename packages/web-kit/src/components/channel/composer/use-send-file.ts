@@ -2,9 +2,11 @@ import {
   ChannelFileError,
   channelFileCapMb,
   channelKey,
+  channelWriterOf,
   newClientId,
   slotUploader,
   uploadChannelFile,
+  type ChannelSlotAsk,
   type ChannelFileToSend,
 } from '@ab/client-core';
 import type { ChannelAttachmentInput } from '@ab/shared';
@@ -12,10 +14,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import {
   channelCountKeys,
+  channelWrites,
   sendChannelMessage,
   type ChannelRef,
 } from '@ab/web-kit/components/channel/api';
-import { apiSend } from '@ab/web-kit/lib/http/api';
 import { errorCode } from '@ab/web-kit/lib/http/error-code';
 import { supabase } from '@ab/web-kit/lib/http/supabase';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -26,11 +28,13 @@ import { t } from '@ab/web-kit/lib/i18n/i18n';
 /** The slot upload: «minio:» → a PUT to its signed URL, else Supabase Storage. Never rejects. */
 const uploadSigned = slotUploader((bucket) => supabase.storage.from(bucket));
 
-const askSlot = (path: string, fields: object): Promise<unknown> => apiSend('POST', path, fields);
-
-/** POST …/attachments/upload-url, then the upload: the message's `attachment`. */
-const uploadWebFile = (ref: ChannelRef, file: ChannelFileToSend): Promise<ChannelAttachmentInput> =>
-  uploadChannelFile(ref, file, { askSlot, upload: uploadSigned });
+/** The writer's upload slot, then the upload: the message's `attachment`. */
+function uploadWebFile(ref: ChannelRef, file: ChannelFileToSend): Promise<ChannelAttachmentInput> {
+  const writes = channelWrites[channelWriterOf(ref.audience)];
+  const askSlot = (fields: ChannelSlotAsk['file']) =>
+    writes.upload({ studentId: ref.studentId, file: fields });
+  return uploadChannelFile(file, { askSlot, upload: uploadSigned });
+}
 
 /** A picked browser file as the chat sends it (its own name and type). */
 export const pickedFile = (file: File): ChannelFileToSend => ({

@@ -1,12 +1,12 @@
 import {
   anchoredThreadPrefix,
+  messageReactionCalls,
   reactionMutation,
-  reactionPath,
   withReactions,
 } from '@ab/client-core';
-import type { ReactionResult, ThreadDetail } from '@ab/shared';
+import type { ThreadDetail } from '@ab/shared';
 import { useMutation, useQueryClient, type InfiniteData } from '@tanstack/react-query';
-import { ApiError, apiSend, t } from '@ab/web-kit';
+import { ApiError, apiFetch, apiSend, t } from '@ab/web-kit';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 
 /** The 409 of a chat on the CRM line (no reaction call there) in words; anything else: try again. */
@@ -16,12 +16,18 @@ export function reactionProblem(e: unknown): string {
   return code === 'reaction_unsupported' ? t.inbox.reactions.unsupported : t.inbox.reactions.failed;
 }
 
+const reactions = messageReactionCalls({ apiFetch, apiSend });
+
 export function useReact(phone: string, onFail: (text: string) => void) {
   const client = useQueryClient();
   const { queryKey } = threadQuery(phone);
   return useMutation(
     reactionMutation({
-      send: ({ message, emoji }) => apiSend<ReactionResult>('PUT', reactionPath(phone, message.id), { emoji, clientRequestId: crypto.randomUUID() }),
+      send: ({ message, emoji }) =>
+        reactions.react({
+          params: { phone, id: message.id },
+          body: { emoji, clientRequestId: crypto.randomUUID() },
+        }),
       cancel: () => client.cancelQueries({ queryKey }),
       // The live chat and any anchored window of it (docs/37 review 1) show the same reactions.
       patch: (id, reactions) => {

@@ -1,8 +1,7 @@
-import { apiErrorCode, channelMessagesPath } from '@ab/client-core';
-import type { ChannelAttachmentInput, ChannelPost } from '@ab/shared';
-import { apiSend } from '../../lib/http/api';
+import { apiErrorCode, channelWriterOf, type ChannelPostAsk } from '@ab/client-core';
+import type { ChannelAttachmentInput, ChannelMessageView } from '@ab/shared';
 import { t } from '../../lib/i18n/i18n';
-import type { ChannelRef } from '../channel-api';
+import { channelWrites, type ChannelRef } from '../channel-api';
 
 export interface ChannelSendInput {
   /** Trimmed; '' for a file without a caption. */
@@ -13,8 +12,8 @@ export interface ChannelSendInput {
   attachment?: ChannelAttachmentInput;
 }
 
-/** POST …/messages's body (channelPostSchema): optional fields only when set. */
-function postBody(input: ChannelSendInput): Partial<ChannelPost> {
+/** The send's body (channelPostSchema): optional fields only when set. */
+function postBody(input: ChannelSendInput): ChannelPostAsk['post'] {
   return {
     body: input.body,
     client_id: input.clientId,
@@ -23,8 +22,11 @@ function postBody(input: ChannelSendInput): Partial<ChannelPost> {
   };
 }
 
-export const postChannelMessage = (ref: ChannelRef, input: ChannelSendInput): Promise<unknown> =>
-  apiSend('POST', channelMessagesPath(ref), postBody(input));
+export const postChannelMessage = (
+  { audience, studentId }: ChannelRef,
+  input: ChannelSendInput,
+): Promise<ChannelMessageView> =>
+  channelWrites[channelWriterOf(audience)].post({ studentId, post: postBody(input) });
 
 /** The API's refusal in words, else a generic send failure. */
 export function sendErrorText(e: unknown): string {

@@ -1,7 +1,8 @@
-import { Controller, Headers, HttpCode, Post, Req } from '@nestjs/common';
+import { Controller, Headers, HttpCode, Req } from '@nestjs/common';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
-import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
+import { Route } from '@/common/http/route';
+import { livekitWebhookRoutes as routes } from './livekit-webhook.routes';
 import { LivekitWebhookService } from './livekit-webhook.service';
 
 /** LiveKit posts `application/webhook+json`, which Fastify does not parse: kept as the raw bytes. */
@@ -22,13 +23,12 @@ interface RawRequest {
 }
 
 /** Public: authenticated by LiveKit's signed Authorization JWT (LivekitWebhookService). */
-@ApiTags('classroom')
 @Public()
-@Controller('livekit/webhook')
+@Controller()
 export class LivekitWebhookController {
   constructor(private readonly webhook: LivekitWebhookService) {}
 
-  @Post()
+  @Route(routes.receive)
   @HttpCode(200)
   async receive(@Req() req: RawRequest, @Headers('authorization') authorization?: string): Promise<void> {
     const rawBody = Buffer.isBuffer(req.body) ? req.body : req.rawBody;
