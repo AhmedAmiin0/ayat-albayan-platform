@@ -293,6 +293,23 @@
    ]
   }
  },
+ "DELETE /teachers/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
+ },
  "GET /admin-tasks": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4562,6 +4579,433 @@
      ]
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "display_name_ar": {
+        "type": "string"
+       },
+       "display_name_en": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "gender": {
+        "type": "string",
+        "enum": [
+         "male",
+         "female"
+        ]
+       },
+       "programs": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "enum": [
+          "quran",
+          "arabic",
+          "islamic_studies"
+         ]
+        }
+       },
+       "phone_e164": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "meeting_link": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "meeting_mode": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "static",
+           "platform"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "platform_classroom": {
+        "type": "boolean"
+       },
+       "rate_30": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "rate_45": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "rate_60": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "rate_90": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "max_students": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "active",
+         "inactive"
+        ]
+       },
+       "tz": {
+        "type": "string"
+       },
+       "calendar_owner": {
+        "type": "string"
+       },
+       "calendar_owner_changed_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "calendar_owner_changed_by": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "google_calendar_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "mirror_enabled": {
+        "type": "boolean"
+       },
+       "profile_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "username": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "avatar_url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_at": {
+        "type": "string"
+       },
+       "created_by": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "updated_at": {
+        "type": "string"
+       },
+       "active_count": {
+        "type": "number"
+       },
+       "trial_count": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "id",
+       "display_name_ar",
+       "display_name_en",
+       "gender",
+       "programs",
+       "phone_e164",
+       "meeting_link",
+       "meeting_mode",
+       "platform_classroom",
+       "rate_30",
+       "rate_45",
+       "rate_60",
+       "rate_90",
+       "max_students",
+       "status",
+       "tz",
+       "calendar_owner",
+       "calendar_owner_changed_at",
+       "calendar_owner_changed_by",
+       "google_calendar_id",
+       "mirror_enabled",
+       "profile_id",
+       "avatar_url",
+       "created_at",
+       "created_by",
+       "updated_at",
+       "active_count",
+       "trial_count"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
+  }
+ },
+ "GET /teachers/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "display_name_ar": {
+     "type": "string"
+    },
+    "display_name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "gender": {
+     "type": "string",
+     "enum": [
+      "male",
+      "female"
+     ]
+    },
+    "programs": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "quran",
+       "arabic",
+       "islamic_studies"
+      ]
+     }
+    },
+    "phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_link": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_mode": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "static",
+        "platform"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "platform_classroom": {
+     "type": "boolean"
+    },
+    "rate_30": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_45": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_60": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_90": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "max_students": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "inactive"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "calendar_owner": {
+     "type": "string"
+    },
+    "calendar_owner_changed_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "calendar_owner_changed_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "google_calendar_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "mirror_enabled": {
+     "type": "boolean"
+    },
+    "profile_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "username": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "display_name_ar",
+    "display_name_en",
+    "gender",
+    "programs",
+    "phone_e164",
+    "meeting_link",
+    "meeting_mode",
+    "platform_classroom",
+    "rate_30",
+    "rate_45",
+    "rate_60",
+    "rate_90",
+    "max_students",
+    "status",
+    "tz",
+    "calendar_owner",
+    "calendar_owner_changed_at",
+    "calendar_owner_changed_by",
+    "google_calendar_id",
+    "mirror_enabled",
+    "profile_id",
+    "avatar_url",
+    "created_at",
+    "created_by",
+    "updated_at"
+   ]
   }
  },
  "GET /teachers/me/channels/:studentId/messages/:messageId/reads": {
@@ -6922,6 +7366,20 @@
   }
  },
  "PATCH /teachers/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -7052,7 +7510,6 @@
      ]
     },
     "status": {
-     "default": "active",
      "type": "string",
      "enum": [
       "active",
@@ -7074,6 +7531,193 @@
      ]
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "display_name_ar": {
+     "type": "string"
+    },
+    "display_name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "gender": {
+     "type": "string",
+     "enum": [
+      "male",
+      "female"
+     ]
+    },
+    "programs": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "quran",
+       "arabic",
+       "islamic_studies"
+      ]
+     }
+    },
+    "phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_link": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_mode": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "static",
+        "platform"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "platform_classroom": {
+     "type": "boolean"
+    },
+    "rate_30": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_45": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_60": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_90": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "max_students": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "inactive"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "calendar_owner": {
+     "type": "string"
+    },
+    "calendar_owner_changed_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "calendar_owner_changed_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "google_calendar_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "mirror_enabled": {
+     "type": "boolean"
+    },
+    "profile_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "username": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "display_name_ar",
+    "display_name_en",
+    "gender",
+    "programs",
+    "phone_e164",
+    "meeting_link",
+    "meeting_mode",
+    "platform_classroom",
+    "rate_30",
+    "rate_45",
+    "rate_60",
+    "rate_90",
+    "max_students",
+    "status",
+    "tz",
+    "calendar_owner",
+    "calendar_owner_changed_at",
+    "calendar_owner_changed_by",
+    "google_calendar_id",
+    "mirror_enabled",
+    "profile_id",
+    "avatar_url",
+    "created_at",
+    "created_by",
+    "updated_at"
+   ]
   }
  },
  "PATCH /users/:id": {
@@ -17263,6 +17907,193 @@
     "gender",
     "programs",
     "tz"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "display_name_ar": {
+     "type": "string"
+    },
+    "display_name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "gender": {
+     "type": "string",
+     "enum": [
+      "male",
+      "female"
+     ]
+    },
+    "programs": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "quran",
+       "arabic",
+       "islamic_studies"
+      ]
+     }
+    },
+    "phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_link": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_mode": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "static",
+        "platform"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "platform_classroom": {
+     "type": "boolean"
+    },
+    "rate_30": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_45": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_60": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_90": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "max_students": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "inactive"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "calendar_owner": {
+     "type": "string"
+    },
+    "calendar_owner_changed_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "calendar_owner_changed_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "google_calendar_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "mirror_enabled": {
+     "type": "boolean"
+    },
+    "profile_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "username": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "display_name_ar",
+    "display_name_en",
+    "gender",
+    "programs",
+    "phone_e164",
+    "meeting_link",
+    "meeting_mode",
+    "platform_classroom",
+    "rate_30",
+    "rate_45",
+    "rate_60",
+    "rate_90",
+    "max_students",
+    "status",
+    "tz",
+    "calendar_owner",
+    "calendar_owner_changed_at",
+    "calendar_owner_changed_by",
+    "google_calendar_id",
+    "mirror_enabled",
+    "profile_id",
+    "avatar_url",
+    "created_at",
+    "created_by",
+    "updated_at"
    ]
   }
  },

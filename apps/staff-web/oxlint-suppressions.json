@@ -3145,7 +3145,7 @@
   },
   "src/features/people/teachers/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 4
+      "count": 3
     }
   },
   "src/features/people/teachers/availability/AvailabilityDay.tsx": {
@@ -3267,12 +3267,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
     },
     "typescript/no-confusing-void-expression": {
       "count": 2

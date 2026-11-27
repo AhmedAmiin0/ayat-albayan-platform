@@ -1,39 +1,20 @@
-import { teacherColumnQueryShape, teacherCreateSchema, teacherUpdateSchema } from '@ab/shared';
-import {
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  NotFoundException,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { teacherRoutes as routes, type Teacher as TeacherView } from '@ab/shared';
+import { Controller, HttpCode, NotFoundException } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { orNotFound, pageQuerySchema } from '@/common/http/http';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { orNotFound } from '@/common/http/http';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { withMeeting } from './meeting-view';
 import { TeachersRepo, withoutPath, type Teacher } from './teachers.repo';
 import { TeachersSettings } from './teachers.settings';
 import { TeacherUsernames } from './teacher-username';
-import type { Teacher as TeacherView, TeacherListRow as TeacherListView } from '@ab/shared';
-import type { Page } from '@ab/core';
-
-/** `?search=` name or phone in any format (teacherSearchFilter); column filters + `sort`/`dir` (R-NFR-08). */
-const listQuery = pageQuerySchema.extend({
-  search: z.string().trim().max(100).optional(),
-  ...teacherColumnQueryShape,
-});
 
 /** Admin-only teacher CRUD (R-TCH-01); meeting_mode is written only here (teachers.write: admin). */
 @ApiTags('teachers')
 @ApiBearerAuth()
 @Permissions('teachers.write')
-@Controller('teachers')
+@Controller()
 export class TeachersController {
   constructor(
     private readonly teachers: TeachersRepo,
@@ -41,36 +22,33 @@ export class TeachersController {
     private readonly usernames: TeacherUsernames,
   ) {}
 
-  @Get()
+  @Route(routes.list)
   @Permissions('teachers.read')
-  async list(
-    @ZodQuery(listQuery) query: z.output<typeof listQuery>,
-  ): Promise<Page<TeacherListView>> {
+  async list(@RouteInput() { query }: RouteInputOf<typeof routes.list>) {
     const page = await this.teachers.list(query);
     const auto = await this.academyAuto();
     return { ...page, items: page.items.map((row) => withMeeting(row, auto)) };
   }
 
-  @Get(':id')
+  @Route(routes.get)
   @Permissions('teachers.read')
-  async get(@Param('id', ParseUUIDPipe) id: string): Promise<TeacherView> {
-    return this.view(orNotFound(await this.teachers.get(id)));
+  async get(@RouteInput() { params }: RouteInputOf<typeof routes.get>): Promise<TeacherView> {
+    return this.view(orNotFound(await this.teachers.get(params.id)));
   }
 
-  @Post()
+  @Route(routes.create)
   async create(
-    @ZodBody(teacherCreateSchema) row: z.output<typeof teacherCreateSchema>,
+    @RouteInput() { body }: RouteInputOf<typeof routes.create>,
     @CurrentUser() user: AuthUser,
   ): Promise<TeacherView> {
-    return this.view(await this.teachers.insert({ ...row, created_by: user.id }));
+    return this.view(await this.teachers.insert({ ...body, created_by: user.id }));
   }
 
-  @Patch(':id')
+  @Route(routes.update)
   async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodBody(teacherUpdateSchema, { sentOnly: true })
-    body: Partial<z.output<typeof teacherUpdateSchema>>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.update>,
   ): Promise<TeacherView> {
+    const { id } = params;
     const { username, ...patch } = body;
     if (username !== undefined)
       await this.usernames.set(
@@ -83,10 +61,10 @@ export class TeachersController {
     return this.view(orNotFound(row));
   }
 
-  @Delete(':id')
+  @Route(routes.remove)
   @HttpCode(204)
-  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    if (!(await this.teachers.remove(id))) throw new NotFoundException();
+  async remove(@RouteInput() { params }: RouteInputOf<typeof routes.remove>): Promise<void> {
+    if (!(await this.teachers.remove(params.id))) throw new NotFoundException();
   }
 
   /** settings.meeting_link_auto: the default of a teacher whose meeting_mode is null. */
