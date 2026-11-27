@@ -8,7 +8,7 @@ import { useWebPushToggle } from './use-web-push-toggle';
  * permission prompt; the other states only explain (iPhone: add to the Home Screen first).
  */
 export function WebPushToggle() {
-  const { push, titleId, toggles } = useWebPushToggle();
+  const { push, titleId, toggles, toggle, label } = useWebPushToggle();
   return (
     <section aria-labelledby={titleId} className="grid gap-2 border-t border-rule px-4 py-3">
       <h3 id={titleId} className="text-xs font-semibold text-ink-2">
@@ -26,14 +26,10 @@ export function WebPushToggle() {
           size="sm"
           variant="secondary"
           disabled={push.busy}
-          onClick={push.view === 'on' ? push.disable : push.enable}
+          onClick={toggle}
           className="justify-self-start"
         >
-          {push.busy
-            ? t.bell.push.working
-            : push.view === 'on'
-              ? t.bell.push.disable
-              : t.bell.push.enable}
+          {label}
         </Button>
       )}
     </section>
