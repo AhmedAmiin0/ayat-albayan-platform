@@ -2900,15 +2900,9 @@
   },
   "src/modules/messaging/inbox/threads/threads.controller.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/module-boundaries": {
       "count": 1
     },
-    "ab/zod-inputs": {
-      "count": 3
-    },
-    "typescript/dot-notation": {
+    "ab/module-boundaries": {
       "count": 1
     }
   },

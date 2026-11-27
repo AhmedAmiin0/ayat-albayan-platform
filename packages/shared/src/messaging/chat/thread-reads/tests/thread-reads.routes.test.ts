@@ -20,7 +20,7 @@ const ANSWER = {
 describe('threadReadRoutes', () => {
   it('keeps the path of today', () => {
     const lines = Object.values(routes).map((r) => `${r.method} ${r.path}`);
-    expect(lines).toEqual(['GET /threads/sync', 'GET /threads']);
+    expect(lines).toEqual(['GET /threads/sync', 'GET /threads', 'GET /threads/:phone']);
   });
 
   it('asks from the first row with the default page, or from a cursor read apart', () => {
