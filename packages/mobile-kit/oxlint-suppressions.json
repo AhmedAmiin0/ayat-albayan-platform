@@ -255,14 +255,6 @@
       "count": 1
     }
   },
-  "src/ui/call/RoundButton/RoundButton.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 4
-    }
-  },
   "src/ui/connecting/CheckBadge/CheckBadge.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -417,11 +409,6 @@
   },
   "src/ui/layout/tab-bar-inset.ts": {
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/ui/lists/ListRowTitle/ListRowTitle.tsx": {
-    "complexity": {
       "count": 1
     }
   },
