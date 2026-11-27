@@ -1,4 +1,4 @@
-import { lessonActionCalls, type BookingMode } from '@ab/client-core';
+import { lessonActionCalls, proposalDecisionCalls, type BookingMode } from '@ab/client-core';
 import type { LessonTimeEdit, TimeEditResult } from '@ab/schedule';
 import type {
   CancelRequest,
@@ -93,23 +93,21 @@ export const rescheduleLesson = ({ id, body }: { id: string; body: RescheduleReq
 export const editLessonTime = ({ id, body }: { id: string; body: LessonTimeEdit }) =>
   apiSend<TimeEditResult>('PATCH', `/lessons/${id}/time`, body);
 
+const proposals = proposalDecisionCalls({ apiFetch, apiSend });
+
 /** Pending alternative-time proposals of a teacher or family (R-SCH-08). */
 export const proposalsQuery = queryOptions({
   queryKey: lessonKeys.proposals(),
-  queryFn: () => apiFetch<LessonView[]>('/lesson-proposals'),
+  queryFn: () => proposals.pending(),
 });
 
 /** Approving moves the lesson (a reschedule): 409 conflict unless `override` is given. */
 export const approveProposal = ({ id, override }: { id: string; override?: string }) =>
-  apiSend<LessonView>(
-    'POST',
-    `/lesson-proposals/${id}/approve`,
-    override ? { override: { reason: override } } : {},
-  );
+  proposals.approve({ id }, override ? { override: { reason: override } } : {});
 
 /** `note` is the answer the family reads with a declined request. */
 export const rejectProposal = ({ id, note }: { id: string; note?: string }) =>
-  apiSend<LessonView>('POST', `/lesson-proposals/${id}/reject`, note ? { note } : {});
+  proposals.reject({ id }, note ? { note } : {});
 
 export { errorCode };
 

@@ -1,6 +1,6 @@
 import { payoutListSchema } from '@ab/money';
 import type { LessonProposalRequest, LessonView, TeacherMe } from '@ab/schedule';
-import { TEACHER_REFRESH_MS } from '@ab/client-core';
+import { TEACHER_REFRESH_MS, teacherProposalCalls } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { lessonKeys, type Window } from '@/features/teaching/schedule';
 import { moneyKeys } from '@/features/finance/keys';
@@ -31,8 +31,10 @@ export const myLessonsQuery = (w: Window) => {
 };
 
 /** POST /lessons/:id/propose: a new time for the admin to approve (R-SCH-08). */
+const proposals = teacherProposalCalls({ apiFetch, apiSend });
+
 export const proposeLesson = ({ id, body }: { id: string; body: LessonProposalRequest }) =>
-  apiSend<LessonView>('POST', `/lessons/${id}/propose`, body);
+  proposals.propose({ id }, body);
 
 /** GET /teachers/me/payouts — every month of mine, newest first (R-TCH-04). */
 export const myPayoutsQuery = queryOptions({

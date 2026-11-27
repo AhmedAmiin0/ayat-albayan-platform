@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { ProposalsPanel } from '@/features/teaching/schedule/reschedule/proposals/ProposalsPanel';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/LessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());
@@ -34,14 +34,16 @@ describe('a family «اطلب موعدًا آخر» on the staff web (owner 2026
 
   it('the panel tells a family request from a teacher proposal', async () => {
     const teacher = { ...ASKED, id: 'p2', requested_by: 'teacher' as const };
-    apiFetch.mockResolvedValue([lesson({ pending_proposal: ASKED }), lesson({ id: 'l2', pending_proposal: teacher })]);
+    apiFetch.mockResolvedValue(
+      [lesson({ pending_proposal: ASKED }), lesson({ id: 'l2', pending_proposal: teacher })].map(answered),
+    );
     wrap(<ProposalsPanel onOpen={vi.fn()} />);
     expect(await screen.findByText(P.fromFamily)).toBeTruthy();
     expect(screen.getByText(P.fromTeacher)).toBeTruthy();
   });
 
   it("the drawer says the family's ask and note; «ارفض الطلب» sends the note they read", async () => {
-    apiSend.mockResolvedValue(lesson());
+    apiSend.mockResolvedValue(answered(lesson()));
     const onDone = vi.fn();
     const asked = lesson({ pending_proposal: ASKED });
     wrap(<LessonDrawer lesson={asked} onClose={vi.fn()} onDone={onDone} />);
