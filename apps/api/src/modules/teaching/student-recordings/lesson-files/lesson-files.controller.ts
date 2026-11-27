@@ -1,16 +1,14 @@
 import { lessonFilesRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode, Inject } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { LessonAssetsService } from './lesson-assets.service';
 import { LessonFilesService } from './lesson-files.service';
 
 /** recordings.read to look, recordings.manage to change; services keep a teacher to own lessons. */
-@ApiTags('classroom')
 @ApiBearerAuth()
-@Permissions('recordings.read')
 @Controller()
 export class LessonFilesController {
   constructor(
@@ -24,7 +22,6 @@ export class LessonFilesController {
   }
 
   @Route(routes.uploadUrl)
-  @Permissions('recordings.manage')
   @HttpCode(200)
   uploadUrl(
     @RouteInput() { params, body }: RouteInputOf<typeof routes.uploadUrl>,
@@ -34,7 +31,6 @@ export class LessonFilesController {
   }
 
   @Route(routes.register)
-  @Permissions('recordings.manage')
   register(
     @RouteInput() { params, body }: RouteInputOf<typeof routes.register>,
     @CurrentUser() user: AuthUser,
@@ -43,7 +39,6 @@ export class LessonFilesController {
   }
 
   @Route(routes.visibility)
-  @Permissions('recordings.manage')
   visibility(
     @RouteInput() { params, body }: RouteInputOf<typeof routes.visibility>,
     @CurrentUser() user: AuthUser,
@@ -52,7 +47,6 @@ export class LessonFilesController {
   }
 
   @Route(routes.remove)
-  @Permissions('recordings.manage')
   @HttpCode(204)
   async remove(
     @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
