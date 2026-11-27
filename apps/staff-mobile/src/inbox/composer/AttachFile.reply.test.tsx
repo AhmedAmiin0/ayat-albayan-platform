@@ -50,7 +50,7 @@ beforeEach(() => {
 });
 
 test('the file goes with replyToMessageId, and the strip clears once it is sent', async () => {
-  mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce(message({ id: 'sent', media_mime: 'image/jpeg', body: null }));
+  mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce(message({ id: 'c3333333-3333-4333-8333-333333333333', media_mime: 'image/jpeg', body: null }));
   await answerWithPhoto();
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
   expect(mockApiSend.mock.calls[1]?.[2]).toMatchObject({ path: signed.path, replyToMessageId: 'm1' });
