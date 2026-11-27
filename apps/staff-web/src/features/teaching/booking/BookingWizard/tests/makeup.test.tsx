@@ -40,12 +40,12 @@ const MISSED: MakeupCandidate = {
 };
 const PHOTO = { message_id: 'm-photo', created_at: '2026-10-02T10:00:00.000Z', mime: 'image/jpeg', caption: null, expired: false };
 const RESULT = {
-  rule_id: 'r1',
+  rule_id: 'e7777777-7777-4777-8777-777777777771',
   student_ids: [STUDENT_ID],
-  guardian_ids: ['g-1'],
-  lessons: [{ id: 'l1', starts_at: SLOT, ends_at: SLOT }],
-  message_ids: ['m1'],
-  invoice_id: 'inv-1',
+  guardian_ids: ['e7777777-7777-4777-8777-777777777772'],
+  lessons: [{ id: 'e7777777-7777-4777-8777-777777777773', starts_at: SLOT, ends_at: SLOT }],
+  message_ids: ['e7777777-7777-4777-8777-777777777774'],
+  invoice_id: 'e7777777-7777-4777-8777-777777777775',
 };
 
 function renderBooking(search: BookSearch) {

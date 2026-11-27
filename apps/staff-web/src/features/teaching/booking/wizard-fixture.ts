@@ -20,7 +20,8 @@ export const ABRAR: BookingTeacherOption = {
   max_students: 10,
   has_availability: true,
 };
-export const NOOR: BookingTeacherOption = { ...ABRAR, id: 'n-1', display_name_ar: 'نور', has_availability: false };
+const NOOR_ID = '7a2d3b4f-2c3d-4e5f-9a01-23456789abcd';
+export const NOOR: BookingTeacherOption = { ...ABRAR, id: NOOR_ID, display_name_ar: 'نور', has_availability: false };
 export const SLOT = '2026-10-04T14:00:00.000Z'; // Sunday 17:00 Riyadh
 export const WED_SLOT = '2026-10-07T16:30:00.000Z'; // Wednesday 19:30 Riyadh
 
@@ -130,9 +131,8 @@ export async function addInvoice(uploadToSignedUrl: Mock): Promise<void> {
 }
 
 /**
- * apiSend by path: POST /booking/check (the slot step's series check) answers «no clash»,
- * POST /booking/invoice-upload-url a signed upload; each POST /booking takes the next answer (an
- * Error rejects).
+ * apiSend by path: POST /booking/check answers «no clash», POST /booking/invoice-upload-url a
+ * signed upload; each POST /booking takes the next answer (an Error rejects).
  */
 export function routeSend(apiSend: Mock, answers: unknown[]): void {
   apiSend.mockImplementation((_method: string, path: string) => {

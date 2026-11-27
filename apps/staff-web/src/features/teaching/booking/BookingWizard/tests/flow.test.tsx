@@ -64,11 +64,12 @@ describe('BookingWizard from a student profile (R-SCH-06)', () => {
   it('student + sister → teacher → length + package → slot + repeat → review → booked', async () => {
     routeSend(apiSend, [
       {
-        rule_id: 'r1',
+        rule_id: 'e7777777-7777-4777-8777-777777777771',
         student_ids: [STUDENT_ID, SISTER_ID],
-        guardian_ids: ['g-1'],
-        lessons: [{ id: 'l1', starts_at: SLOT, ends_at: SLOT }],
-        message_ids: ['m1'],
+        guardian_ids: ['e7777777-7777-4777-8777-777777777772'],
+        lessons: [{ id: 'e7777777-7777-4777-8777-777777777773', starts_at: SLOT, ends_at: SLOT }],
+        message_ids: ['e7777777-7777-4777-8777-777777777774'],
+        invoice_id: null,
       },
     ]);
     renderBooking();
