@@ -24,3 +24,7 @@ export const accountProfileSchema = z.object({
   role: accountRoleSchema,
 });
 export type AccountProfile = z.infer<typeof accountProfileSchema>;
+
+/** The answer of an admin's PUT / DELETE /teachers/:id/avatar and /users/:id/avatar. */
+export const staffPhotoViewSchema = z.object({ avatar_url: z.string().nullable() });
+export type StaffPhotoView = z.infer<typeof staffPhotoViewSchema>;
