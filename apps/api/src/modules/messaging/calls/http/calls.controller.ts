@@ -1,32 +1,21 @@
-import {
-  acceptCallSchema,
-  callListQuerySchema,
-  startCallSchema,
-  type ActiveCallView,
-} from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import type { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { callsRoutes as routes, type ActiveCallView } from '@ab/shared';
+import { Controller, HttpCode, Query } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CallAccess } from '@/modules/messaging/calls/access/call-access';
 import { CallReads } from '@/modules/messaging/calls/flow/call-reads.service';
 import { CallFlows } from '@/modules/messaging/calls/flow/call-flows';
-
-type StartBody = z.output<typeof startCallSchema>;
-type AcceptBody = z.output<typeof acceptCallSchema>;
 
 /**
  * WhatsApp voice calls (docs/28 §4). Reads need inbox.read, every action inbox.send (the same guard
  * as a send from the thread, and the same scopes: CallAccess). Off (whatsapp_calls_enabled false):
  * every route but /calls/config answers 404 calls_disabled.
  */
-@ApiTags('calls')
 @ApiBearerAuth()
-@Permissions('inbox.read')
-@Controller('calls')
+@Controller()
 export class CallsController {
   constructor(
     private readonly reads: CallReads,
@@ -34,55 +23,61 @@ export class CallsController {
     private readonly access: CallAccess,
   ) {}
 
-  @Get('config')
+  @Route(routes.config)
   config(@CurrentUser() user: AuthUser) {
     return this.reads.config(user);
   }
 
-  @Get('active')
+  @Route(routes.active)
   async active(@CurrentUser() user: AuthUser) {
     return this.reads.active(await this.access.actor(user));
   }
 
-  @Get()
+  // The actor's 403/404 (TeacherScopes) still win over a bad query, so the query is parsed in the
+  // handler after it; @RouteInput() would parse it first.
+  @Route(routes.list)
   async list(@Query() query: unknown, @CurrentUser() user: AuthUser) {
-    // The actor's 403/404 (TeacherScopes) still win over a bad query: parsed after it.
     const actor = await this.access.actor(user);
-    return this.reads.list(actor, parseOrThrow(callListQuerySchema, query));
+    return this.reads.list(actor, parseOrThrow(routes.list.query, query));
   }
 
-  @Post()
+  @Route(routes.start)
   @HttpCode(201)
-  @Permissions('inbox.send')
-  async start(@ZodBody(startCallSchema) input: StartBody, @CurrentUser() user: AuthUser) {
-    const call = await this.flows.outbound.start(await this.access.actor(user), input);
+  async start(
+    @RouteInput() { body }: RouteInputOf<typeof routes.start>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const call = await this.flows.outbound.start(await this.access.actor(user), body);
     return this.audited(call, { user, action: 'wa_call_started' });
   }
 
-  @Post(':id/accept')
+  @Route(routes.accept)
   @HttpCode(200)
-  @Permissions('inbox.send')
   async accept(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodBody(acceptCallSchema) { sdp }: AcceptBody,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.accept>,
     @CurrentUser() user: AuthUser,
   ) {
-    const call = await this.flows.inbound.accept(await this.access.actor(user), { id, sdp });
+    const actor = await this.access.actor(user);
+    const call = await this.flows.inbound.accept(actor, { id: params.id, sdp: body.sdp });
     return this.audited(call, { user, action: 'wa_call_accepted' });
   }
 
-  @Post(':id/reject')
+  @Route(routes.reject)
   @HttpCode(200)
-  @Permissions('inbox.send')
-  async reject(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser) {
-    return this.flows.inbound.reject(await this.access.actor(user), id);
+  async reject(
+    @RouteInput() { params }: RouteInputOf<typeof routes.reject>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.flows.inbound.reject(await this.access.actor(user), params.id);
   }
 
-  @Post(':id/end')
+  @Route(routes.end)
   @HttpCode(200)
-  @Permissions('inbox.send')
-  async end(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser) {
-    return this.flows.outbound.end(await this.access.actor(user), id);
+  async end(
+    @RouteInput() { params }: RouteInputOf<typeof routes.end>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.flows.outbound.end(await this.access.actor(user), params.id);
   }
 
   /** Who placed or took a call is logged by the call id and direction only (no phone, no SDP). */

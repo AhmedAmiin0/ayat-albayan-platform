@@ -5,20 +5,24 @@ import { t } from '@ab/web-kit';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { CallsLog } from '@/features/messaging/calls/log/CallsLog/CallsLog';
 
+const ID1 = 'c0000000-0000-4000-8000-000000000001';
+const ID2 = 'c0000000-0000-4000-8000-000000000002';
+const STAFF = 'a0000000-0000-4000-8000-000000000001';
+
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const call = (patch: Partial<CallView>): CallView => ({
-  id: 'c1', phone_e164: '+966501234567', direction: 'outbound', status: 'ended', end_reason: 'completed', display_name: 'أم سهيلة',
-  staff_id: 'u1', started_at: '2026-10-26T10:00:00Z', answered_at: null, ended_at: null, duration_seconds: 134, ...patch,
+  id: ID1, phone_e164: '+966501234567', direction: 'outbound', status: 'ended', end_reason: 'completed', display_name: 'أم سهيلة',
+  staff_id: STAFF, started_at: '2026-10-26T10:00:00Z', answered_at: null, ended_at: null, duration_seconds: 134, ...patch,
 });
 
 afterEach(() => apiFetch.mockReset());
 
 describe('«المكالمات»', () => {
   it('lists the calls newest first with name, kind and talk time; a row opens the chat', async () => {
-    routeFetch(apiFetch, [['/calls?limit=100', [call({}), call({ id: 'c2', direction: 'inbound', end_reason: 'missed', duration_seconds: null, display_name: null })]]]);
+    routeFetch(apiFetch, [['/calls?limit=100', [call({}), call({ id: ID2, direction: 'inbound', end_reason: 'missed', duration_seconds: null, display_name: null })]]]);
     renderWithClient(<CallsLog />);
     const list = await screen.findByRole('list', { name: t.calls.log.title });
     const rows = list.querySelectorAll('li');

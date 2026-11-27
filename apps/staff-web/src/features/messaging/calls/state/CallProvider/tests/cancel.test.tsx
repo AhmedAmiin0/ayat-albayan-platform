@@ -19,7 +19,8 @@ afterEach(() => {
   apiSend.mockReset().mockResolvedValue(undefined);
 });
 
-const placed = activeRow({ id: 'c9', direction: 'outbound', status: 'ringing', offer_sdp: null });
+const PLACED_ID = 'c0000000-0000-4000-8000-000000000009';
+const placed = activeRow({ id: PLACED_ID, direction: 'outbound', status: 'ringing', offer_sdp: null });
 
 /** /calls/active lists our call once POST /calls answered (`live.value`). */
 function mount(rtc = fakeRtc(), live = { value: false }) {
@@ -44,8 +45,8 @@ describe('ending a call that is still starting', () => {
     fireEvent.click(screen.getByRole('button', { name: t.calls.controls.end }));
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(rtc.track.stop).toHaveBeenCalled();
-    answer(activeRow({ id: 'c9', direction: 'outbound', status: 'connecting', offer_sdp: null }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/calls/c9/end'));
+    answer(activeRow({ id: PLACED_ID, direction: 'outbound', status: 'connecting', offer_sdp: null }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `/calls/${PLACED_ID}/end`, undefined));
   });
 
   it('lost media: says so and ends the call', async () => {
@@ -62,7 +63,7 @@ describe('ending a call that is still starting', () => {
     rtc.pc.connectionState = 'failed';
     rtc.pc.dispatchEvent(new Event('connectionstatechange'));
     expect(await screen.findByText(t.calls.errors.media_failed)).toBeTruthy();
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/calls/c9/end'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `/calls/${PLACED_ID}/end`, undefined));
   });
 });
 

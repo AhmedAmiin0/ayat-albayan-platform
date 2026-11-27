@@ -2215,7 +2215,7 @@
   },
   "src/modules/messaging/calls/http/calls.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/messaging/calls/kapso/calling-line.ts": {
@@ -6105,14 +6105,6 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/reports.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 7
-    }
-  },
   "src/modules/reporting/reports/shared/report-access.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -6227,11 +6219,6 @@
     },
     "stylistic/max-len": {
       "count": 5
-    }
-  },
-  "src/modules/reporting/reports/v2/report-v2.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/reporting/reports/v2/report-v2.mapper.ts": {
@@ -7806,11 +7793,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/join/room-open.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/classroom/join/room-open.service.ts": {
     "complexity": {
       "count": 1
@@ -8264,7 +8246,7 @@
   },
   "src/modules/teaching/classroom/student-link/student-link.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/student-link/student-link.fakes.ts": {

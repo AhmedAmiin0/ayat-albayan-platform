@@ -1,5 +1,5 @@
 import type { Attendance, Grade, Program } from '@ab/catalog';
-import type { ReportView } from '../views';
+import type { ReportView } from '../report-routes';
 import {
   emptyContent,
   MAX_SEGMENTS,
