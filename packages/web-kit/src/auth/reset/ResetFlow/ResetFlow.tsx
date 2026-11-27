@@ -1,44 +1,26 @@
-import { useId, useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { Field } from '@ab/web-kit/components/ui/form/Field';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { PasswordInput } from '@ab/web-kit/auth/PasswordInput';
-import { codeOf } from '@ab/web-kit/auth/code/code-boxes';
 import { CodeStep } from '@ab/web-kit/auth/code/CodeStep';
 import { RequestStep } from '@ab/web-kit/auth/code/RequestStep';
-import { useCodeFlow } from '@ab/web-kit/auth/code/use-code-flow';
-import { authApi } from '@ab/web-kit/auth/login/auth-api';
-import { newPasswordProblem } from '@ab/web-kit/auth/reset/reset-checks';
-
-const F = t.familyAuth;
-
-interface Props {
-  /** forgot takes any identifier; firstTime takes a child's student code. */
-  mode: 'forgot' | 'firstTime';
-  /** `saved`: the password was saved (the caller says so and shows the sign-in form). */
-  onDone: (saved: boolean) => void;
-}
+import type { Props } from './ResetFlow.types';
+import { F } from './reset-flow.helpers';
+import { useResetFlow } from './use-reset-flow';
 
 /** One flow for both (docs/30 §6): identifier → code on the registered WhatsApp → new password twice. */
 export function ResetFlow({ mode, onDone }: Props) {
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
-  const flow = useCodeFlow((value) => authApi.forgot({ identifier: value }));
-  const forgot = mode === 'forgot';
-  const titleId = useId();
-
-  const save = () =>
-    flow.guard(async () => {
-      const code = codeOf(flow.digits);
-      if (code === null || flow.target === null) return F.errors.code_incomplete;
-      const problem = newPasswordProblem(password, confirm);
-      if (problem) return problem;
-      await authApi.reset({ identifier: flow.target, code, password });
-      onDone(true);
-      return undefined;
-    });
-
+  const {
+    identifier,
+    setIdentifier,
+    password,
+    setPassword,
+    confirm,
+    setConfirm,
+    flow,
+    forgot,
+    titleId,
+    save,
+  } = useResetFlow({ mode, onDone });
   return (
     <section aria-labelledby={titleId} className="grid gap-[22px]">
       <h2 id={titleId} className="font-display text-h3 font-bold text-ink">
@@ -46,7 +28,9 @@ export function ResetFlow({ mode, onDone }: Props) {
       </h2>
       {flow.target === null ? (
         <>
-          <p className="text-body text-pretty text-ink-2">{forgot ? F.forgotIntro : F.firstTimeIntro}</p>
+          <p className="text-body text-pretty text-ink-2">
+            {forgot ? F.forgotIntro : F.firstTimeIntro}
+          </p>
           <RequestStep
             label={forgot ? F.identifier : F.username}
             hint={forgot ? undefined : F.studentUsernameHint}
@@ -57,7 +41,13 @@ export function ResetFlow({ mode, onDone }: Props) {
             busy={flow.busy}
             error={flow.error}
           >
-            <Button type="button" variant="ghost" size="sm" className="justify-self-start" onClick={() => onDone(false)}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="justify-self-start"
+              onClick={() => onDone(false)}
+            >
               {F.backToLogin}
             </Button>
           </RequestStep>
@@ -71,10 +61,24 @@ export function ResetFlow({ mode, onDone }: Props) {
           backLabel={F.back}
         >
           <Field label={F.newPassword} required>
-            {(p) => <PasswordInput {...p} autoComplete="new-password" value={password} onValue={setPassword} />}
+            {(p) => (
+              <PasswordInput
+                {...p}
+                autoComplete="new-password"
+                value={password}
+                onValue={setPassword}
+              />
+            )}
           </Field>
           <Field label={F.confirmPassword} required>
-            {(p) => <PasswordInput {...p} autoComplete="new-password" value={confirm} onValue={setConfirm} />}
+            {(p) => (
+              <PasswordInput
+                {...p}
+                autoComplete="new-password"
+                value={confirm}
+                onValue={setConfirm}
+              />
+            )}
           </Field>
         </CodeStep>
       )}

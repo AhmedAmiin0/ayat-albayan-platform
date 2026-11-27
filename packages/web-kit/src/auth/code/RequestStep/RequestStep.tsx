@@ -1,21 +1,9 @@
-import type { ReactNode } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { Field } from '@ab/web-kit/components/ui/form/Field';
 import { Input } from '@ab/web-kit/components/ui/form/Input';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-
-interface Props {
-  label: string;
-  hint?: string;
-  /** tel = the WhatsApp number; username = email / username / student code. */
-  kind: 'tel' | 'username';
-  value: string;
-  onValue: (value: string) => void;
-  onSubmit: () => void;
-  busy: boolean;
-  error?: string;
-  children?: ReactNode;
-}
+import type { Props } from './RequestStep.types';
+import { submitWhenFilled } from './request-step.helpers';
 
 export function RequestStep({
   label,
@@ -29,18 +17,19 @@ export function RequestStep({
   children,
 }: Props) {
   return (
-    <form
-      noValidate
-      className="grid gap-[22px]"
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (value.trim()) onSubmit();
-      }}
-    >
+    <form noValidate className="grid gap-[22px]" onSubmit={submitWhenFilled(value, onSubmit)}>
       <Field label={label} hint={hint} error={error}>
         {(p) => (
-          <Input {...p} type={kind === 'tel' ? 'tel' : 'text'} dir="ltr" autoComplete={kind} autoCapitalize="none"
-            required value={value} onChange={(e) => onValue(e.target.value)} />
+          <Input
+            {...p}
+            type={kind === 'tel' ? 'tel' : 'text'}
+            dir="ltr"
+            autoComplete={kind}
+            autoCapitalize="none"
+            required
+            value={value}
+            onChange={(e) => onValue(e.target.value)}
+          />
         )}
       </Field>
       <Button type="submit" disabled={busy || !value.trim()} className="min-h-11 w-full">

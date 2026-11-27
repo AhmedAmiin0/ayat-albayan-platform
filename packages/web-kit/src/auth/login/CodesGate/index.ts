@@ -1,1 +1,1 @@
-export { CodesGate, useCodesOpen } from './CodesGate';
+export { CodesGate } from './CodesGate';

@@ -1,28 +1,16 @@
-import { type Country, nameOf, orderCountries, searchCountries } from '@ab/client-core';
-import { useState } from 'react';
+import { nameOf } from '@ab/client-core';
 import { EmptyState } from '@ab/web-kit/components/ui/display/empty-state';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { SearchInput } from '@ab/web-kit/components/ui/form/SearchInput';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
-import { browserRegion } from '@ab/web-kit/auth/phone/browser-country';
-
-interface Props {
-  current: Country;
-  onPick: (country: Country) => void;
-  onClose: () => void;
-}
-
-const S = t.familyApp.signIn;
-const ROW =
-  'flex min-h-12 w-full items-center gap-3 rounded-md px-2 text-start hover:bg-sunk aria-[current=true]:font-semibold';
+import type { Props } from './CountryPicker.types';
+import { S, ROW } from './country-picker.helpers';
+import { useCountryPicker } from './use-country-picker';
 
 /** Render it conditionally: closing drops the search. */
 export function CountryPicker({ current, onPick, onClose }: Props) {
-  const [query, setQuery] = useState('');
-  const all = orderCountries(browserRegion(navigator.language), locale);
-  const shown = searchCountries(all, query);
+  const { query, setQuery, shown } = useCountryPicker();
   return (
     <Dialog title={S.countryTitle} onClose={onClose} layout="sheet" className="sm:max-w-[440px]">
       <div className="grid gap-3">

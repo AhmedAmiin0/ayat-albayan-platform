@@ -1,13 +1,9 @@
-import { type Country, nameOf } from '@ab/client-core';
+import { nameOf } from '@ab/client-core';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { locale } from '@ab/web-kit/lib/i18n/locale';
-
-interface Props {
-  country: Country;
-  onClick: () => void;
-}
+import type { Props } from './CountryButton.types';
 
 /** Flag and calling code at the field's start (#752); opens the country picker. */
 export function CountryButton({ country, onClick }: Props) {

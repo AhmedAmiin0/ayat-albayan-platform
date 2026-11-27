@@ -1,1 +1,2 @@
-export { type LinkItem, LinkRow } from './LinkRow';
+export { LinkRow } from './LinkRow';
+export type { LinkItem } from './LinkRow.types';

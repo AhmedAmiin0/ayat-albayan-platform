@@ -25,11 +25,6 @@
       "count": 2
     }
   },
-  "src/auth/login/PasswordForm/PasswordForm.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
   "src/auth/login/auth-api.ts": {
     "stylistic/max-len": {
       "count": 2
