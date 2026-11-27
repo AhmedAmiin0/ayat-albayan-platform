@@ -1,18 +1,15 @@
 import { LOGIN_CODE_LENGTH } from '@ab/shared';
-import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/FormAlert';
 import { Input } from '@ab/web-kit/components/ui/form/Input';
 import { Label } from '@ab/web-kit/components/ui/form/Label';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { gateProblem, verifyCode } from '@ab/web-kit/report/public-api';
+import { gateProblem } from '@ab/web-kit/report/public-api';
+import type { CodeEntryProps } from './CodeEntry.types';
+import { useCodeEntry } from './use-code-entry';
 
 /** The six digits from WhatsApp; a right code calls onVerified, a wrong one says so. */
-export function CodeEntry({ publicId, onVerified }: { publicId: string; onVerified: () => void }) {
-  const g = t.reportPage.gate;
-  const [code, setCode] = useState('');
-  const verify = useMutation({ mutationFn: verifyCode, onSuccess: onVerified });
+export function CodeEntry({ publicId, onVerified }: CodeEntryProps) {
+  const { g, code, setCode, verify } = useCodeEntry({ onVerified });
   return (
     <form
       className="grid gap-2"

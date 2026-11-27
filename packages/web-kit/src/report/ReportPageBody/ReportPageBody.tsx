@@ -1,21 +1,11 @@
-import { lessonWhenAt, type ReportPageView } from '@ab/shared';
-import { useClock } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { reportLines } from '@ab/web-kit/report/lines';
 import { ReportPageFiles } from '@ab/web-kit/report/ReportPageFiles';
-
-export interface ReportPageBodyProps {
-  view: ReportPageView;
-  /** false inside a lesson row (docs/49): the row already says who and when. */
-  head?: boolean;
-}
+import type { ReportPageBodyProps } from './ReportPageBody.types';
+import { useReportPageBody } from './use-report-page-body';
 
 /** The saved report, read-only: who and when, its lines, the teacher's files and the PDF. */
 export function ReportPageBody({ view, head = true }: ReportPageBodyProps) {
-  const clock = useClock();
-  const s = t.reportPage;
-  const when = lessonWhenAt(new Date(view.lesson.starts_at), { tz: view.tz, ...clock });
-  const lines = reportLines(view.report);
+  const { s, when, lines } = useReportPageBody({ view });
   return (
     <article className="grid gap-4" aria-label={s.title}>
       {head && (
