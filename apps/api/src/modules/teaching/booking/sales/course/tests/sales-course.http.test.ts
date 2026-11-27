@@ -20,6 +20,7 @@ const A = 'a1000000-0000-4000-8000-00000000000a';
 const B = 'b1000000-0000-4000-8000-00000000000b';
 const C = 'c1000000-0000-4000-8000-00000000000c';
 const S1 = 'c0000000-0000-4000-8000-000000000001';
+const SUB1 = 'e1000000-0000-4000-8000-000000000001';
 const USERS: Record<string, AuthUser> = {
   salesA: { id: A, email: null, role: 'sales' },
   salesB: { id: B, email: null, role: 'sales' },
@@ -35,7 +36,7 @@ const verify: TokenVerifier = async (token) => {
 const resolver: PermissionResolver = async (user) => (user.id === C ? ['self.sales'] : systemResolver(user));
 const OWN_A = { leadIds: [], guardianIds: [], studentIds: [S1], phones: [] };
 const NONE = { leadIds: [], guardianIds: [], studentIds: [], phones: [] };
-const SUB = { id: 'sub1', package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-10' };
+const SUB = { id: SUB1, package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-10' };
 const COURSE = {
   teacherId: 'a0000000-0000-4000-8000-000000000001', byday: [0, 2], startTimeLocal: '17:00', tz: 'Asia/Riyadh',
   durationMin: 45, startsOn: '2026-10-18', package: '8', studentIds: [S1], dayTimes: [{ weekday: 2, startTimeLocal: '19:30' }],
@@ -47,7 +48,7 @@ describe('/sales/booking — the assistant books the course of her subscription'
   const sales = { ownership: vi.fn() };
   const booking = { book: vi.fn(), check: vi.fn() };
   const course = { student: vi.fn(), subscription: vi.fn(), rules: vi.fn(), courseRules: vi.fn(), subscriptionBooked: vi.fn(), requested: vi.fn() };
-  const OPTS = { invoiceWaived: true, endsOn: '2026-11-10', course: { package: '8', subscriptionId: 'sub1', follows: null } };
+  const OPTS = { invoiceWaived: true, endsOn: '2026-11-10', course: { package: '8', subscriptionId: SUB1, follows: null } };
   const call = (o: { method?: 'GET' | 'POST'; url: string; token: string; body?: object }) =>
     app.inject({ method: o.method ?? 'GET', url: o.url, payload: o.body, headers: { authorization: `Bearer ${o.token}` } });
   const post = (token: string, body: object, url = '/sales/booking') => call({ method: 'POST', url, token, body });
@@ -104,7 +105,7 @@ describe('/sales/booking — the assistant books the course of her subscription'
     course.subscription.mockResolvedValue({ ...SUB, package: null, lessons_total: 24 });
     const six = { ...COURSE, byday: [0, 1, 2, 3, 4, 5], package: '8' };
     expect((await post('salesA', six)).statusCode).toBe(201);
-    expect(booking.book).toHaveBeenLastCalledWith(expect.anything(), A, expect.objectContaining({ course: { package: null, subscriptionId: 'sub1', follows: null } }));
+    expect(booking.book).toHaveBeenLastCalledWith(expect.anything(), A, expect.objectContaining({ course: { package: null, subscriptionId: SUB1, follows: null } }));
   });
 
   it('check: the same guard, then the conflicts of the capped series', async () => {
