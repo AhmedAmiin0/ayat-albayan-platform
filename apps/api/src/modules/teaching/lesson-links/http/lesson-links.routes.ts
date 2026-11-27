@@ -16,7 +16,7 @@ export const lessonLinkRoutes = {
     response: 'redirect',
     tags,
   }),
-  /** The old report redirector forwards every /r/<path> here; the raw path is read by the handler. */
+  /** The old report redirector forwards every /r/<path> here; the handler reads the raw path. */
   legacyReport: defineRoute({
     method: 'GET',
     path: '/report-link/legacy/*',

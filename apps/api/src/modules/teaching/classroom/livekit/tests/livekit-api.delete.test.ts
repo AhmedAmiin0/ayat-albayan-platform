@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CONFIG, decode } from '@/modules/teaching/classroom/classroom.fakes';
 import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { sentBody, sentHeader } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody, sentHeader } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 
 const NOW = new Date('2026-10-30T12:00:00.000Z');
 

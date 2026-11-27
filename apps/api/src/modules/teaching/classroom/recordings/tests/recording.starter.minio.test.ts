@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CONFIG, LESSON_ID, OPEN } from '@/modules/teaching/classroom/classroom.fakes';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import { http, recordingQueries } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import type { StorageService } from '@/common/storage/storage.service';
 import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';

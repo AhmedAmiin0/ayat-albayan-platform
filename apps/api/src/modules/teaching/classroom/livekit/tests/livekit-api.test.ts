@@ -3,7 +3,7 @@ import { CONFIG, decode } from '@/modules/teaching/classroom/classroom.fakes';
 import { LivekitApi, LivekitError, twirpBase } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { egressAnswer, ignoredAnswer } from '@/modules/teaching/classroom/livekit/livekit-twirp';
 import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
-import { sentBody, sentHeader, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody, sentHeader, twirpAnswer } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 
 const api = (h = http(), config: typeof CONFIG | null = CONFIG) => new LivekitApi(config, h);
 const sent = (h: ReturnType<typeof http>, i = 0) => {

@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN, ASSISTANT, CONFIG, LESSON_ID, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { KickService } from '@/modules/teaching/classroom/moderation/kick.service';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import { http, moderation, participantRow, roomPersons, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import type { ModerationRepo } from '@/modules/teaching/classroom/moderation/moderation.repo';
 import type { RoomPersonRepo } from '@/modules/teaching/classroom/moderation/room-person.repo';

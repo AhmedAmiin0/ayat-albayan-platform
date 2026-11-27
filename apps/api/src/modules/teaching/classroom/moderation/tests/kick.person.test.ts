@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN, CONFIG, LESSON_ID, queries } from '@/modules/teaching/classroom/classroom.fakes';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import { KickService } from '@/modules/teaching/classroom/moderation/kick.service';
 import { http, moderation, participantRow, roomPersons, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import type { ModerationRepo } from '@/modules/teaching/classroom/moderation/moderation.repo';

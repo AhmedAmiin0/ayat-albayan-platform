@@ -3,7 +3,7 @@ import type { RecordingConfig } from '@/modules/teaching/classroom/classroom.con
 import { CONFIG, LESSON_ID, OPEN } from '@/modules/teaching/classroom/classroom.fakes';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { http, recordingQueries, S3 } from '@/modules/teaching/classroom/moderation/moderation.fakes';
-import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 import { RecordingStarter } from '@/modules/teaching/classroom/recordings/recording.starter';
 import { SUPABASE_STORAGE } from './recording.storage.fakes';
