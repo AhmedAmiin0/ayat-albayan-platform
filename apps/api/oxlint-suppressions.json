@@ -6247,11 +6247,6 @@
       "count": 2
     }
   },
-  "src/modules/sales/leads/lead-family.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/sales/leads/lead-family.service.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -6510,7 +6505,7 @@
   },
   "src/modules/sales/sales-students/details/sales-student.controller.ts": {
     "ab/zod-inputs": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/details/sales-student.mapper.ts": {

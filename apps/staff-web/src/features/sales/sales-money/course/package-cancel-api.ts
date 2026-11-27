@@ -1,28 +1,23 @@
-import {
-  courseActionsKey,
-  parsePackageCancelCheck,
-  postPackageCancel,
-  salesPackageCancelKey,
-  salesPackageCancelPath,
-} from '@ab/client-core';
+import { courseActionsKey, salesPackageCancelCalls, salesPackageCancelKey } from '@ab/client-core';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import type { CancelBody } from '@/features/finance/subscriptions';
-import { apiFetch } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 
 // The assistant may cancel any student's package with subscriptions.stop.
+
+const packageCancel = salesPackageCancelCalls({ apiFetch, apiSend });
 
 /** GET: whether the cancel may run (block null); a 404 / 403 hides the button. */
 export const salesPackageCancelQuery = (subscriptionId: string) =>
   queryOptions({
     queryKey: salesPackageCancelKey(subscriptionId),
-    queryFn: async () =>
-      parsePackageCancelCheck(await apiFetch(salesPackageCancelPath(subscriptionId))),
+    queryFn: () => packageCancel.check(subscriptionId),
     retry: false,
   });
 
 /** POST: the 409s are said by the dialog. */
 export const cancelAnyPackage = (subscriptionId: string, body: CancelBody) =>
-  postPackageCancel(apiFetch, subscriptionId, body);
+  packageCancel.cancel({ subscriptionId, body });
 
 export function useRefreshAfterPackageCancel(studentId: string): () => Promise<void> {
   const client = useQueryClient();

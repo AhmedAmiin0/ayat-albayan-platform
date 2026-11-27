@@ -6,7 +6,12 @@ import { ApiError, t } from '@ab/web-kit';
 import { SalesPackageCancel } from './SalesPackageCancel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const words = t.subscriptions.cancel;
 const URL = '/sales/packages/sub1/cancel';
@@ -31,6 +36,7 @@ const action = () => screen.findByRole('button', { name: words.action });
 describe('SalesPackageCancel «إلغاء الباقة» of the assistant (owner 2026-11-02)', () => {
   beforeEach(() => {
     apiFetch.mockReset();
+    apiSend.mockReset();
   });
 
   it('an unused package: confirm, POST with the reason, the «done» line, a refresh', async () => {
@@ -39,14 +45,11 @@ describe('SalesPackageCancel «إلغاء الباقة» of the assistant (owner
     fireEvent.click(await action());
     const dialog = within(screen.getByRole('dialog', { name: words.title }));
     fireEvent.change(dialog.getByLabelText(words.reason), { target: { value: ' خطأ ' } });
-    apiFetch.mockResolvedValueOnce({ id: 'sub1', status: 'cancelled' });
+    apiSend.mockResolvedValueOnce({ id: 'sub1', status: 'cancelled' });
     fireEvent.click(dialog.getByRole('button', { name: words.confirm }));
     await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(words.done));
     expect(apiFetch).toHaveBeenCalledWith(URL);
-    expect(apiFetch).toHaveBeenCalledWith(
-      URL,
-      expect.objectContaining({ method: 'POST', body: '{"reason":"خطأ"}' }),
-    );
+    expect(apiSend).toHaveBeenCalledWith('POST', URL, { reason: 'خطأ' });
     for (const queryKey of [['course-actions', 's1'], ['students'], ['money'], ['sales']])
       expect(invalidate).toHaveBeenCalledWith({ queryKey });
   });
@@ -65,7 +68,7 @@ describe('SalesPackageCancel «إلغاء الباقة» of the assistant (owner
     show(null);
     fireEvent.click(await action());
     const dialog = within(screen.getByRole('dialog', { name: words.title }));
-    apiFetch.mockRejectedValueOnce(new ApiError(409, { code: 'has_payments' }));
+    apiSend.mockRejectedValueOnce(new ApiError(409, { code: 'has_payments' }));
     fireEvent.click(dialog.getByRole('button', { name: words.confirm }));
     expect(await dialog.findByText(words.errors.has_payments)).toBeTruthy();
   });
