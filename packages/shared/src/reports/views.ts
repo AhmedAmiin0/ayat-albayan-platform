@@ -1,7 +1,7 @@
 import type { Attendance, Grade, LessonStatus, PdfStatus, Program, ReportStatus } from '@ab/catalog';
 import type { BalanceView } from '@ab/money';
 import type { Rubric } from './rules';
-import type { ReportContent } from './v2/content';
+import type { ReportView } from './report-routes';
 import type { MemoryView } from './v2/rules';
 
 // Phase 3 report responses (docs/11 §4). snake_case rows like every API response; instants are
@@ -13,42 +13,6 @@ export interface ReportAttachmentView {
   mime: string;
   size: number;
   created_at: string;
-}
-
-/** One lesson_reports row as the form and the history read it. */
-export interface ReportView {
-  id: string;
-  lesson_id: string;
-  student_id: string;
-  teacher_id: string;
-  attendance: Attendance | null;
-  /** null only on a row older than migration 167. */
-  program: Program | null;
-  recited: string | null;
-  new_memorization: string | null;
-  revision: string | null;
-  theory: string | null;
-  grades: Record<Rubric, Grade | null>;
-  grade_overall: Grade | null;
-  notes: string | null;
-  homework: string | null;
-  next_plan: string | null;
-  status: ReportStatus;
-  version: number;
-  submitted_at: string | null;
-  edited_at: string | null;
-  pdf_status: PdfStatus | null;
-  pdf_error: string | null;
-  sent_at: string | null;
-  attachments: ReportAttachmentView[];
-  /** canEditReport for the caller, now. */
-  can_edit: boolean;
-  /** End of the teacher's edit window (editUntil); null while a draft. */
-  edit_until: string | null;
-  /** 1 = the original form (every report before the new form); 2 = the new form (docs/design/report-form). */
-  form_version: 1 | 2;
-  /** The v2 form's structured content; null on a v1 report. */
-  content: ReportContent | null;
 }
 
 /** Read-only identity the form shows (R-REP-01): never typed, taken from the lesson. */

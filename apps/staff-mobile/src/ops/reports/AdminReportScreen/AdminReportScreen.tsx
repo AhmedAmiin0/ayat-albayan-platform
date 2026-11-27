@@ -1,13 +1,8 @@
-import type { ReportView } from '@ab/shared';
-import { useQuery } from '@tanstack/react-query';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
-import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import {
-  apiFetch,
   t,
-  pathKey,
   Button,
   BackButton,
   ErrorState,
@@ -17,19 +12,15 @@ import {
   ErrorLine,
 } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { openSigned } from '@/core/lib/http/open-signed';
 import { ReportFieldRow } from '@/ops/reports/ReportFieldRow';
 import { adminReportFields } from '@/ops/reports/report-v2-fields';
+import { useAdminReportScreen } from './use-admin-report-screen';
 
 const back = () => backWithin('/students');
 
 /** One lesson report, read-only, from GET /reports/:id (admin may read any); its PDF opens when ready. */
 export function AdminReportScreen() {
-  const { reportId = '' } = useLocalSearchParams<{ reportId: string }>();
-  const path = `/reports/${reportId}`;
-  const query = useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<ReportView>(path) });
-  const [pdfFailed, setPdfFailed] = useState(false);
-  const report = query.data;
+  const { report, failed, retry, pdfFailed, openPdf } = useAdminReportScreen();
   return (
     <Screen>
       <ScreenHeader
@@ -37,7 +28,7 @@ export function AdminReportScreen() {
         subtitle={report ? t.reports.version.replace('{n}', String(report.version)) : undefined}
         leading={<BackButton onPress={back} />}
       />
-      {!report && query.isError ? <ErrorState onRetry={() => void query.refetch()} /> : null}
+      {failed ? <ErrorState onRetry={retry} /> : null}
       {report ? (
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 14, paddingBottom: 32 }}>
           {report.form_version === 2 ? (
@@ -58,9 +49,7 @@ export function AdminReportScreen() {
               <Button
                 variant="secondary"
                 label={t.reports.downloadPdf}
-                onPress={() =>
-                  void openSigned(`/reports/${report.id}/pdf`).catch(() => setPdfFailed(true))
-                }
+                onPress={() => openPdf(report.id)}
               />
               {pdfFailed ? <ErrorLine message={t.reports.error.pdf_not_ready} /> : null}
             </View>

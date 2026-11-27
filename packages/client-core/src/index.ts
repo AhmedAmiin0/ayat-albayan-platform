@@ -28,6 +28,7 @@ export * from './sales/teacher-overview';
 export * from './people/assistants';
 export * from './reporting/dashboard';
 export * from './reporting/report-page';
+export * from './reporting/reports';
 export * from './teaching/reports';
 export * from './teaching/report-draft';
 export * from './teaching/booking';
