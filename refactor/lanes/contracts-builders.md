@@ -56,6 +56,19 @@ Merges into a base are verified in the session, not by a CI run, so the keeper c
 
 docs/62 is the spec and the base's own history is the example: a test that pins the routes and the client calls before they exist; then the routes and schemas moved into packages, the controller on `@Route` and `@RouteInput()`, read-route mappers through `asResponse`, the client on `call({ route, … })`; then the lint entries the move freed, pruned. Wire changes are only the rows of docs/62 part 1 §6 marked for the PR the base lands as; anything else is left out and listed in the sub-PR body under «Needs a new go». No new code uses `apiFetch`, `apiSend`, `publicApiFetch` or `publicApiSend` (docs/62 part 3 §3b).
 
+## Call files stay plain
+
+A call file (`x-api.ts` in client-core) is read by people who did not write it. Keep it a flat list.
+
+- One line per route: `name: (args) => call({ route, params, query, body })`. No helper that takes `call` as an argument, no type guard, no ternary that picks between two route tables.
+- One call file serves one audience. When the API has two route tables for the same data (a person's own, and a staff view of someone else's), write two small factories, one per table (for example `myEarningCalls(client)` and `teacherEarningCalls(client)`). The hook that knows who is looking picks one.
+- No argument whose `undefined` means «me».
+- Route tables are imported under their own names, not renamed to `mine`, `admin` or the like.
+- `call` is typed with the exported `Call` type, never `ReturnType<typeof callWith>`.
+- When a lint limit (function length, complexity) pushes toward a helper, split the file by audience or by route table instead.
+
+A call file already on a base that breaks these lines is put right by the builder of its area in its next part, with its tests; `teacher-earnings-api` (finance) is the first.
+
 ## Who opens what
 
 Only the keeper named for it opens a base's PR into develop, and only when no handler of the base's areas is left on plain decorators and no sub-PR into the base is open. No other builder opens a PR into develop, labels a PR or runs `gh pr merge`. When a base's PR into develop is open, its builders stop adding to it.
