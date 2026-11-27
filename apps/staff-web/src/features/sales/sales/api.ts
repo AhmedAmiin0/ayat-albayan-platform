@@ -61,8 +61,7 @@ export const salesPeopleQuery = queryOptions({
 });
 
 /** POST /leads/:id/assign (admin): hand a lead to a salesperson, or null to take it back. */
-export const assignLead = ({ leadId, profileId }: { leadId: string; profileId: string | null }) =>
-  apiSend<unknown>('POST', `/leads/${leadId}/assign`, { profileId });
+export const assignLead = salesAssign.assign;
 
 /** POST /leads/assign-unassigned (admin): spread every ownerless lead over the salespeople. */
 export const assignUnassigned = () => salesAssign.assignUnassigned();

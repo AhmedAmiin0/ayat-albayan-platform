@@ -3,7 +3,7 @@ import { t, listKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { cachedList, huda } from '@/inbox/shared/fixtures';
 import { findCachedLead } from '@/inbox/leads/detail/use-cached-lead';
-import { answer, hudaProfile, QUALIFICATION } from '@/inbox/qualification/lib/fixtures';
+import { answer, hudaProfile, QUALIFICATION, hudaRow } from '@/inbox/qualification/lib/fixtures';
 import { LeadProfileSection } from '@/inbox/qualification/components/LeadProfileSection/LeadProfileSection';
 
 const mockApiFetch = jest.fn();
@@ -50,7 +50,7 @@ test('the stored answers, picked not typed: age, gender, zone, days, time range'
 test('«حفظ» sends only what changed, then the saved row is the lead in every cached list', async () => {
   const client = await open();
   const saved = { ...QUALIFICATION, goal: 'ختم جزء عم', available_days: [0, 1, 4] };
-  mockApiSend.mockResolvedValue({ ...hudaProfile, qualification: saved });
+  mockApiSend.mockResolvedValue(hudaRow({ qualification: saved }));
   await fireEvent.changeText(screen.getByLabelText(t.leads.goal), ' ختم جزء عم ');
   await fireEvent.press(group(t.leads.availableDays).getByRole('checkbox', { name: t.enums.weekday['1'] }));
   await save();
@@ -64,7 +64,7 @@ test('«حفظ» sends only what changed, then the saved row is the lead in ever
 
 test('the saved values become the baseline: the next save sends only the newer change', async () => {
   await open();
-  mockApiSend.mockResolvedValue(hudaProfile);
+  mockApiSend.mockResolvedValue(hudaRow());
   await fireEvent.changeText(screen.getByLabelText(t.leads.riwaya), 'حفص');
   await save();
   await screen.findByText(t.inbox.qualificationSaved);
@@ -78,7 +78,7 @@ test('«—» clears a choice (sent as null); with nothing changed nothing is se
   await open();
   await save();
   expect(mockApiSend).not.toHaveBeenCalled();
-  mockApiSend.mockResolvedValue(hudaProfile);
+  mockApiSend.mockResolvedValue(hudaRow());
   await fireEvent.press(group(t.leads.gender).getByRole('radio', { name: t.common.unset }));
   await fireEvent.press(group(t.availability.from).getByRole('radio', { name: t.common.unset }));
   await save();

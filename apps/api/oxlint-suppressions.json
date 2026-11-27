@@ -6164,7 +6164,7 @@
   },
   "src/modules/sales/leads/leads.controller.ts": {
     "ab/zod-inputs": {
-      "count": 8
+      "count": 1
     }
   },
   "src/modules/sales/leads/leads.module.ts": {
@@ -6556,11 +6556,6 @@
   "src/modules/sales/sales/history/tests/sales-history.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/modules/sales/sales/sales-admin.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/sales/sales/sales-ownership.ts": {

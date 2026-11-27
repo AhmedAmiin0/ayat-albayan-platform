@@ -20,7 +20,7 @@ export * from './finance/expense-categories';
 export * from './finance/admin-tasks';
 export * from './finance/quote-sheet';
 export type * from './finance/list-filters';
-export * from './sales/lead-sort';
+export * from './sales/leads';
 export * from './sales/job-applicants';
 export * from './sales/registration-check';
 export * from './sales/used-before';

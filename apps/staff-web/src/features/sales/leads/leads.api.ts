@@ -3,14 +3,15 @@ import { apiFetch, apiSend } from '@ab/web-kit';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ListUrlState } from '@/lib/list/list-url';
 import type { LeadSearch } from './types';
-import { jobApplicantCalls } from '@ab/client-core';
-import { jobApplicantListQuerySchema, type JobApplicantView, type LeadView } from '@ab/shared';
+import { jobApplicantCalls, leadWriteCalls } from '@ab/client-core';
+import { jobApplicantListQuerySchema, type LeadView } from '@ab/shared';
 import type { Page } from '@ab/core';
 import { applicantKeys, leadKeys } from '@/features/sales/keys';
 
 export const PAGE_SIZE = 25;
 
 const applicants = jobApplicantCalls({ apiFetch, apiSend });
+const leadWrites = leadWriteCalls({ apiFetch, apiSend });
 
 export const leadsQuery = (s: LeadSearch) =>
   queryOptions({
@@ -42,5 +43,4 @@ export const jobApplicantsQuery = (s: ListUrlState) =>
   });
 
 /** R-LEAD-04: one-click move of a lead into job applicants. */
-export const reclassifyLead = (id: string) =>
-  apiSend<JobApplicantView>('POST', `/leads/${id}/reclassify`);
+export const reclassifyLead = leadWrites.reclassify;

@@ -1,3 +1,5 @@
+import type { LeadRowView } from '@ab/shared';
+import { leadRow } from '@ab/shared/testing';
 import { ApiError } from '@ab/mobile-kit';
 import { huda, page } from '@/inbox/shared/fixtures';
 import type { LeadProfile } from './queries';
@@ -24,6 +26,20 @@ export const hudaProfile: LeadProfile = {
   next_follow_up_at: '2026-10-04T14:00:00Z',
   follow_up_note: null,
 };
+
+/** hudaProfile as the lead writes answer it: the whole leads row. */
+export const hudaRow = (patch: Partial<LeadRowView> = {}): LeadRowView =>
+  leadRow({
+    id: huda.id,
+    phone_e164: huda.phone_e164,
+    name: huda.name,
+    source: huda.source,
+    status: 'no_reply',
+    qualification: QUALIFICATION,
+    follow_up_stage: 1,
+    next_follow_up_at: '2026-10-04T14:00:00Z',
+    ...patch,
+  });
 
 /** settings.follow_up_hours: three follow-ups. */
 const FOLLOW_UP_HOURS = [24, 72, 168];

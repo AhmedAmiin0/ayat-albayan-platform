@@ -1,3 +1,4 @@
+import { jobApplicant } from '@ab/shared/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -52,11 +53,11 @@ describe('LeadsInbox reclassify to job applicants (R-LEAD-04)', () => {
   });
 
   it('moving POSTs, closes the strip and confirms in Arabic', async () => {
-    apiSend.mockResolvedValue({ id: 'a1' });
+    apiSend.mockResolvedValue(jobApplicant({ id: 'a1' }));
     const { strip } = await openConfirm();
     fireEvent.click(within(strip).getByRole('button', { name: t.leads.reclassifyAsApplicant }));
     await waitFor(() => expect(screen.getByRole('status').textContent).toBe(t.leads.reclassified));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/reclassify');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/reclassify', undefined);
     expect(screen.queryByRole('group', { name: t.leads.reclassifyAsApplicant })).toBeNull();
   });
 

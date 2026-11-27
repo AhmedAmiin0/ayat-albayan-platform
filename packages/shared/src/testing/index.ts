@@ -7,3 +7,4 @@ export * from './golden-sweep';
 export * from './teachers';
 export * from './messages';
 export * from './templates';
+export * from './leads';
