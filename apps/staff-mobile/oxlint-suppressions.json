@@ -22,11 +22,6 @@
       "count": 1
     }
   },
-  "src/account/hooks/account-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/account/lib/avatar.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -77,17 +72,6 @@
   "src/account/staff-photo/StaffPhotoControl/tests/focus.test.tsx": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/account/staff-photo/staff-photo-api.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 2
     }
   },
   "src/account/staff-photo/use-staff-photo.ts": {

@@ -1,22 +1,34 @@
-import { ACCOUNT_ERRORS, type StaffPhotoView } from '@ab/shared';
-import { ApiError, apiSend, t } from '@ab/mobile-kit';
-import { staffPhotoSteps, uploadPhoto } from '@/account/hooks/account-api';
+import { apiErrorCode, teacherPhotoCalls, userPhotoCalls } from '@ab/client-core';
+import { apiFetch, apiSend, t } from '@ab/mobile-kit';
+import { z } from 'zod';
+import { uploadPhoto } from '@/account/hooks/account-api';
 import type { PickedAvatar } from '@/account/lib/avatar';
+import { staffPhotoErrorSchema } from './staff-photo-errors.schemas';
+import type { StaffPhotoTarget } from './staff-photo.types';
 
-// Admin write of a staff photo; same three steps as the own photo; answers StaffPhotoView.
+const client = { apiFetch, apiSend };
 
-export const uploadStaffPhoto = (base: string, avatar: PickedAvatar) =>
-  uploadPhoto(staffPhotoSteps(base), avatar);
+export const teacherPhotos = teacherPhotoCalls(client);
 
-export const removeStaffPhoto = (base: string) => apiSend<StaffPhotoView>('DELETE', base);
+export const userPhotos = userPhotoCalls(client);
 
-const isAccountCode = (code: unknown): code is (typeof ACCOUNT_ERRORS)[number] =>
-  ACCOUNT_ERRORS.some((c) => c === code);
+/** Same three steps as the own photo; answers StaffPhotoView. */
+export const uploadStaffPhoto = ({ calls, id }: StaffPhotoTarget, avatar: PickedAvatar) =>
+  uploadPhoto(
+    { uploadUrl: (body) => calls.uploadUrl(id, body), set: (body) => calls.set(id, body) },
+    avatar,
+  );
+
+export const removeStaffPhoto = ({ calls, id }: StaffPhotoTarget) => calls.remove(id);
+
+const MESSAGES = z.record(staffPhotoErrorSchema, z.string()).readonly().decode({
+  avatar_not_staff: t.staffPhoto.errors.avatar_not_staff,
+  avatar_type: t.account.errors.avatar_type,
+  avatar_too_large: t.account.errors.avatar_too_large,
+  avatar_path: t.account.errors.avatar_path,
+});
 
 export function staffPhotoError(error: unknown): string {
-  const body: unknown = error instanceof ApiError ? error.body : null;
-  const code: unknown = body && typeof body === 'object' ? Reflect.get(body, 'code') : null;
-  if (code === 'avatar_not_staff') return t.staffPhoto.errors.avatar_not_staff;
-  if (isAccountCode(code) && code.startsWith('avatar_')) return t.account.errors[code];
-  return t.staffPhoto.errors.generic;
+  const code = staffPhotoErrorSchema.safeParse(apiErrorCode(error));
+  return code.success ? MESSAGES[code.data] : t.staffPhoto.errors.generic;
 }

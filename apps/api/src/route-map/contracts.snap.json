@@ -1635,6 +1635,191 @@
    ]
   }
  },
+ "GET /auth/me": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "email": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "role": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "admin",
+        "teacher",
+        "guardian",
+        "assistant",
+        "sales",
+        "student"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sessionId": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "permissions": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "leads.read",
+       "leads.write",
+       "leads.assign",
+       "leads.link_family",
+       "applicants.read",
+       "applicants.write",
+       "students.read",
+       "students.write",
+       "students.balance",
+       "students.check_registration",
+       "guardians.read",
+       "guardians.write",
+       "people.edit",
+       "students.attach_guardian",
+       "people.switch_role",
+       "assistants.read",
+       "assistants.write",
+       "teachers.read",
+       "teachers.write",
+       "availability.read",
+       "availability.write",
+       "dashboard.read",
+       "lessons.read",
+       "lessons.status",
+       "lessons.write",
+       "booking.write",
+       "lessons.reschedule",
+       "lessons.cancel",
+       "lessons.confirm",
+       "courses.pause",
+       "subscriptions.stop",
+       "subscriptions.refund",
+       "students.change_teacher",
+       "courses.reschedule",
+       "pricing.read",
+       "tasks.manage",
+       "classroom.join",
+       "classroom.kick",
+       "classroom.moderate",
+       "classroom.host",
+       "classroom.links",
+       "recordings.read",
+       "recordings.manage",
+       "meetings.read",
+       "meetings.write",
+       "reports.read",
+       "reports.write",
+       "reports.resend",
+       "feedback.read",
+       "feedback.write",
+       "inbox.read",
+       "inbox.send",
+       "inbox.media",
+       "inbox.lists",
+       "saved_replies.manage",
+       "messages.read",
+       "messages.manage",
+       "templates.manage",
+       "templates.send_all",
+       "templates.author",
+       "short_links.manage",
+       "short_links.all",
+       "student_channels.monitor",
+       "payments.read",
+       "payments.write",
+       "subscriptions.read",
+       "subscriptions.write",
+       "subscriptions.set_start_date",
+       "subscriptions.edit_terms",
+       "sales.renew_any",
+       "invoices.read",
+       "receivables.read",
+       "payouts.read",
+       "payouts.write",
+       "payouts.approve",
+       "assistantpay.read",
+       "assistantpay.write",
+       "assistantpay.approve",
+       "earnings.read",
+       "earnings.write",
+       "expenses.read",
+       "expenses.write",
+       "exports.read",
+       "settings.read",
+       "settings.write",
+       "numbers.manage",
+       "notifications.manage",
+       "activity.read",
+       "roles.manage",
+       "notifications.push",
+       "translations.manage",
+       "users.read",
+       "users.write",
+       "self.teacher",
+       "self.sales",
+       "self.sales_students",
+       "self.sales_payments",
+       "self.sales_earnings",
+       "self.sales_academy",
+       "self.sales_money",
+       "self.assistant",
+       "self.portal"
+      ]
+     }
+    },
+    "tz": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "locale": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "ar",
+        "en"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "is_test": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "email",
+    "role",
+    "permissions",
+    "tz",
+    "locale",
+    "is_test"
+   ]
+  }
+ },
  "GET /booking/course/change": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
