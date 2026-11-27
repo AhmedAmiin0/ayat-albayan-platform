@@ -1,15 +1,14 @@
 import { View } from 'react-native';
-import { Button, t, useMarkRead, useNotifications } from '@ab/mobile-kit';
+import { Button, t } from '@ab/mobile-kit';
 import { LoadState } from '@/ui';
 import { AlertSections } from '@/nav/AlertSections';
 import { FamilyHeader } from '@/nav/FamilyHeader';
 import { FamilyPage } from '@/nav/FamilyPage';
+import { useAlertsScreen } from './use-alerts-screen';
 
 /** A tap marks the row read and opens its target (@ab/client-core alertTarget). */
 export function AlertsScreen() {
-  const list = useNotifications();
-  const markRead = useMarkRead();
-  const unread = (list.data?.unread ?? 0) > 0;
+  const { list, markRead, unread } = useAlertsScreen();
   return (
     <FamilyPage
       header={<FamilyHeader title={t.bell.title} back />}

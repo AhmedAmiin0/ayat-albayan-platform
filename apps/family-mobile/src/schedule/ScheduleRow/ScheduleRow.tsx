@@ -1,19 +1,18 @@
-import { lessonMinutes, liveRoom, type WeekLesson } from '@ab/client-core';
+import { lessonMinutes, liveRoom } from '@ab/client-core';
 import { firstName } from '@ab/schedule';
-import type { ClockOptions } from '@ab/time';
 import { View } from 'react-native';
 import { t, useTheme } from '@ab/mobile-kit';
 import { RowText } from '@/ui';
 import {
-  JoinAction, LessonChip, LiveLine, OptionsRow, rangeText, RequestLine, teacherText,
+  JoinAction,
+  LessonChip,
+  LiveLine,
+  OptionsRow,
+  rangeText,
+  RequestLine,
+  teacherText,
 } from '@/lessons';
-
-interface ScheduleRowProps {
-  entry: WeekLesson;
-  /** The viewer's clock (the week is on the phone's zone). */
-  clock: ClockOptions;
-  now: Date;
-}
+import type { ScheduleRowProps } from './ScheduleRow.types';
 
 export function ScheduleRow({ entry, clock, now }: ScheduleRowProps) {
   const { student, lesson } = entry;

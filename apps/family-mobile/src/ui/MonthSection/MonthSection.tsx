@@ -1,9 +1,9 @@
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { monthText } from '@ab/time';
 import { AppText, locale, type, useTheme } from '@ab/mobile-kit';
+import type { MonthSectionProps } from './MonthSection.types';
 
-export function MonthSection({ month, children }: { month: string; children: ReactNode }) {
+export function MonthSection({ month, children }: MonthSectionProps) {
   const { color } = useTheme();
   return (
     <View style={{ gap: 8 }}>

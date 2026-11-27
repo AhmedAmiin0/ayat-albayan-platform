@@ -1,7 +1,10 @@
-import { screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import type * as Room from '@ab/mobile-kit/room';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Linking } from 'react-native';
+import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
+import { portalSend } from '@/portal';
 import { FamilyRoomRoute } from './FamilyRoomRoute';
 
 // app/room/[id]: never a crash where the room cannot start (jest has no LiveKit module).
@@ -44,4 +47,17 @@ test('while LiveKit loads: the connecting state, never «not supported»', async
   await renderWithQuery(<FamilyRoomRoute />, freshQueryClient());
   expect(screen.getByTestId('room-loading')).toBeTruthy();
   expect(screen.queryByTestId('room-sdk-failed')).toBeNull();
+});
+
+test('no LiveKit: «open in the browser» opens the signed link, then leaves the room', async () => {
+  params.mockReturnValue({ id: L, student: S });
+  const url = 'https://join.example/room';
+  const roomLink = jest.spyOn(portalSend, 'roomLink').mockResolvedValue({ url, expires_at: '' });
+  const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+  await renderWithQuery(<FamilyRoomRoute />, freshQueryClient());
+  await screen.findByTestId('room-sdk-failed');
+  await fireEvent.press(screen.getByRole('button', { name: t.mobileRoom.openInBrowser }));
+  expect(roomLink).toHaveBeenCalledWith(expect.objectContaining({ studentId: S, lessonId: L }));
+  await waitFor(() => expect(router.back).toHaveBeenCalled());
+  expect(openURL).toHaveBeenCalledWith(url);
 });

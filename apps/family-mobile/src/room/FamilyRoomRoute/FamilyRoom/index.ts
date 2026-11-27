@@ -1,0 +1,1 @@
+export { FamilyRoom } from './FamilyRoom';

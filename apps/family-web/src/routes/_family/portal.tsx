@@ -1,4 +1,3 @@
-import type { ChildTab } from '@ab/client-core';
 import { createFileRoute } from '@tanstack/react-router';
 import { parseChildSearch, WithPick } from '@/features/children';
 import { HomePage } from '@/features/home';
@@ -12,10 +11,16 @@ export const Route = createFileRoute('/_family/portal')({
 function Portal() {
   const { tab } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const onTab = (next: ChildTab) => void navigate({ search: { tab: next } });
   return (
     <WithPick>
-      {(student, home) => <HomePage student={student} kind={home.kind} tab={tab} onTab={onTab} />}
+      {(student, home) => (
+        <HomePage
+          student={student}
+          kind={home.kind}
+          tab={tab}
+          onTab={(next) => void navigate({ search: { tab: next } })}
+        />
+      )}
     </WithPick>
   );
 }

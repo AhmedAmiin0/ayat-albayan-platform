@@ -1,34 +1,17 @@
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { AuthHint, Button, StepStage, t, useA11yPref, useStepMotion } from '@ab/mobile-kit';
-import { StudentSignIn } from '@/sign-in/password';
-import { WhatsAppSignIn } from '@/sign-in/whatsapp';
-import { firstWay, OTHER_WAY, type SignInWay, WAY_DIRECTION } from '@ab/client-core';
-
-const WAYS: Record<SignInWay, (codes: boolean) => ReactNode> = {
-  whatsapp: () => <WhatsAppSignIn />,
-  password: (codes) => <StudentSignIn codes={codes} />,
-};
-
-const SWITCH: Record<SignInWay, () => string> = {
-  whatsapp: () => t.familyApp.signIn.withWhatsApp,
-  password: () => t.familyApp.signIn.withPassword,
-};
+import { AuthHint, Button, StepStage, t } from '@ab/mobile-kit';
+import { WAYS } from './sign-in-ways.panels';
+import type { SignInWaysProps } from './SignInWays.types';
+import { useSignInWays } from './use-sign-in-ways';
 
 /** docs/50 §4: one sign-in for guardians and students; WhatsApp first, password one tap away. */
-export function SignInWays({ codes }: { codes: boolean }) {
-  const still = useA11yPref('reduceMotion');
-  const motion = useStepMotion<SignInWay>(firstWay(codes), still);
-  const other = OTHER_WAY[motion.current];
+export function SignInWays({ codes }: SignInWaysProps) {
+  const { still, motion, switchLabel, switchWay } = useSignInWays({ codes });
   return (
     <View style={{ gap: 8 }}>
       <StepStage motion={motion} still={still} render={(way) => WAYS[way](codes)} />
       {codes ? (
-        <Button
-          variant="ghost"
-          label={SWITCH[other]()}
-          onPress={() => motion.go(other, WAY_DIRECTION[other])}
-        />
+        <Button variant="ghost" label={switchLabel} onPress={switchWay} />
       ) : (
         <View style={{ alignItems: 'center', paddingTop: 8 }}>
           <AuthHint text={t.familyApp.signIn.whatsappOff} />

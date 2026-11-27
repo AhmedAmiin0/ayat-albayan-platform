@@ -1,8 +1,8 @@
-import type { PortalStudent } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Avatar, Icon, Ltr, Card, SectionHeader, t } from '@ab/web-kit';
+import type { ChildrenLinksProps } from './ChildrenLinks.types';
 
-export function ChildrenLinks({ students }: { students: readonly PortalStudent[] }) {
+export function ChildrenLinks({ students }: ChildrenLinksProps) {
   if (students.length === 0) return null;
   return (
     <section aria-labelledby="profile-children" className="grid content-start gap-2">

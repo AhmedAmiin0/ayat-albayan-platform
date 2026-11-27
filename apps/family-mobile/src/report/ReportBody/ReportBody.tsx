@@ -1,16 +1,14 @@
 import { pageLines } from '@ab/client-core';
-import type { ReportPageView } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, InsetGroup, locale, raisedCard, t, type, useTheme } from '@ab/mobile-kit';
-
-/** Lines that are the family's to-do: drawn on the gold wash (canvas Report). */
-const TODO = new Set(['homework', 'nextPlan']);
+import type { ReportBodyProps } from './ReportBody.types';
+import { TODO } from './report-body.helpers';
 
 /**
  * The report's content (docs/50 §6: the same as the parents' PDF): the overall grade and the
  * teacher, then every line of the form in its order (@ab/client-core pageLines).
  */
-export function ReportBody({ view }: { view: ReportPageView }) {
+export function ReportBody({ view }: ReportBodyProps) {
   const { color } = useTheme();
   const text = { v2: t.reports.v2, grade: t.enums.grade, program: t.enums.program, lang: locale };
   const lines = pageLines(view.report, { text, v1: t.reports });

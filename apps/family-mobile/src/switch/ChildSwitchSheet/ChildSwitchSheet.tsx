@@ -1,7 +1,8 @@
 import { BottomSheet } from '@expo/ui';
 import { useTheme } from '@ab/mobile-kit';
-import { closeChildSwitch, useChildSwitch } from '@/nav';
+import { closeChildSwitch } from '@/nav';
 import { ChildSwitchList } from '@/switch/ChildSwitchList';
+import { useChildSwitchSheet } from './use-child-switch-sheet';
 
 /**
  * The children sheet over every tab (canvas SwitchSheet), opened from a tab
@@ -10,7 +11,7 @@ import { ChildSwitchList } from '@/switch/ChildSwitchList';
  */
 export function ChildSwitchSheet() {
   const { color } = useTheme();
-  const { open } = useChildSwitch();
+  const { open } = useChildSwitchSheet();
   return (
     <BottomSheet
       isPresented={open}

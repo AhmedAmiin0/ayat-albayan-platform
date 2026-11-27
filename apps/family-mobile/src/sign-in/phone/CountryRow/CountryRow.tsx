@@ -1,12 +1,8 @@
 import { Pressable, View } from 'react-native';
 import { AppText, locale, Ltr, type, useTheme } from '@ab/mobile-kit';
-import { type Country, nameOf } from '@ab/client-core';
-
-interface CountryRowProps {
-  country: Country;
-  picked: boolean;
-  onPick: (country: Country) => void;
-}
+import { nameOf } from '@ab/client-core';
+import { rowStyle } from './country-row.helpers';
+import type { CountryRowProps } from './CountryRow.types';
 
 /** One country in the picker: flag, name, calling code; the picked one ticked and announced. */
 export function CountryRow({ country, picked, onPick }: CountryRowProps) {
@@ -18,14 +14,7 @@ export function CountryRow({ country, picked, onPick }: CountryRowProps) {
       accessibilityState={{ checked: picked }}
       accessibilityLabel={`${name} ${country.dial}`}
       onPress={() => onPick(country)}
-      style={({ pressed }) => ({
-        minHeight: 52,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-        paddingHorizontal: 20,
-        backgroundColor: pressed ? color.sunk : 'transparent',
-      })}
+      style={rowStyle(color.sunk)}
     >
       <AppText style={{ fontSize: 22, lineHeight: 30 }}>{country.flag}</AppText>
       <View style={{ flex: 1 }}>

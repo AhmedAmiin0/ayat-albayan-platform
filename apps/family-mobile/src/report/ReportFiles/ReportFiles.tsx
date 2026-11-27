@@ -1,25 +1,12 @@
 import { View } from 'react-native';
 import { AppText, Button, t, type, useTheme } from '@ab/mobile-kit';
-import { useOpenFile, useOpenUrl } from '@/report/use-open-file';
-
-interface ReportFilesProps {
-  studentId: string;
-  reportId: string;
-  /** The page's own signed PDF link; null while it is generated or when the page did not load. */
-  pdfUrl: string | null;
-  recordingId: string | null;
-}
+import type { ReportFilesProps } from './ReportFiles.types';
+import { useReportFiles } from './use-report-files';
 
 /** Each opens outside the app; without the page's link the PDF uses the portal's signed link. */
 export function ReportFiles({ studentId, reportId, pdfUrl, recordingId }: ReportFilesProps) {
   const { color } = useTheme();
-  const file = useOpenFile();
-  const recording = useOpenFile();
-  const url = useOpenUrl();
-  const R = t.portal.app.report;
-  const pdf = (): void =>
-    pdfUrl ? url.mutate(pdfUrl) : file.mutate({ studentId, kind: 'reports', id: reportId });
-  const failed = file.isError || url.isError || recording.isError;
+  const { file, recording, url, R, pdf, failed } = useReportFiles({ studentId, reportId, pdfUrl });
   return (
     <View style={{ gap: 10 }}>
       {recordingId ? (

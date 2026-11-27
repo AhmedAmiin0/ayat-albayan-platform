@@ -1,13 +1,11 @@
-import type { LiveRoom } from '@ab/client-core';
 import { View } from 'react-native';
 import { AppText, Avatar, type, useTheme } from '@ab/mobile-kit';
 import { liveText } from '@/lessons/live/live-text';
-
-/** Faces shown before the names; the rest are only named. */
-const FACES = 3;
+import type { LiveStripProps } from './LiveStrip.types';
+import { FACES } from './live-strip.helpers';
 
 /** Names the portal does not reveal get a role word instead. */
-export function LiveStrip({ live }: { live: LiveRoom }) {
+export function LiveStrip({ live }: LiveStripProps) {
   const { color } = useTheme();
   const text = liveText(live);
   const ink = { color: color.onLapis };

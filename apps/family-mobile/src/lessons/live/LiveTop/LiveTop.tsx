@@ -1,9 +1,9 @@
-import type { LiveRoom } from '@ab/client-core';
 import { View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { liveText } from '@/lessons/live/live-text';
+import type { LiveTopProps } from './LiveTop.types';
 
-export function LiveTop({ live }: { live: LiveRoom }) {
+export function LiveTop({ live }: LiveTopProps) {
   const { color } = useTheme();
   const words = { color: color.onLapis, fontSize: type.size.xs };
   return (

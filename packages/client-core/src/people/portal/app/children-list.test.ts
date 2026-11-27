@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { familyChildren, isSelfChild } from './children-list';
+import { familyChildren, isSelfChild, studentOf } from './children-list';
 
 const kid = (id: string, self = false) => ({
   id,
@@ -20,5 +20,18 @@ describe('a guardian who also studies (canvas Adult)', () => {
     expect(isSelfChild('guardian', kid('1', true))).toBe(true);
     expect(isSelfChild('guardian', kid('1'))).toBe(false);
     expect(isSelfChild('student', kid('1', true))).toBe(false);
+  });
+});
+
+describe("one of the login's students by id (a route param)", () => {
+  const me = { students: [kid('1'), kid('2')] };
+
+  it('finds the student the id names', () => {
+    expect(studentOf(me, '2')?.id).toBe('2');
+  });
+
+  it('null for an id the login does not have, or before the home is read', () => {
+    expect(studentOf(me, 'nobody')).toBeNull();
+    expect(studentOf(undefined, '1')).toBeNull();
   });
 });
