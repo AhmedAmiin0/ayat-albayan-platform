@@ -4163,6 +4163,41 @@
     "from",
     "to"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "tz": {
+     "type": "string"
+    },
+    "step_min": {
+     "type": "number"
+    },
+    "slots": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "starts_at": {
+        "type": "string"
+       },
+       "ends_at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "starts_at",
+       "ends_at"
+      ]
+     }
+    }
+   },
+   "required": [
+    "tz",
+    "step_min",
+    "slots"
+   ]
   }
  },
  "GET /portal/students/:id/recordings": {
@@ -20119,6 +20154,37 @@
      "maxLength": 500
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "lesson_id": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    },
+    "counts": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "lesson_id",
+    "status",
+    "counts"
+   ]
   }
  },
  "POST /portal/students/:id/lessons/:lessonId/confirm": {
@@ -20140,6 +20206,37 @@
    "required": [
     "id",
     "lessonId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "lesson_id": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    },
+    "counts": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "lesson_id",
+    "status",
+    "counts"
    ]
   }
  },
@@ -20180,6 +20277,37 @@
    },
    "required": [
     "startsAt"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "lesson_id": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    },
+    "counts": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "lesson_id",
+    "status",
+    "counts"
    ]
   }
  },
@@ -20224,6 +20352,37 @@
    "required": [
     "id",
     "lessonId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "lesson_id": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    },
+    "counts": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "lesson_id",
+    "status",
+    "counts"
    ]
   }
  },

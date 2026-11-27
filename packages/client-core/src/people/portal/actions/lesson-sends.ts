@@ -1,59 +1,40 @@
-import {
-  portalActionResultSchema,
-  portalSlotsSchema,
-  type PortalActionResult,
-  type PortalCancel,
-  type PortalRequest,
-  type PortalSlots,
-} from '@ab/shared';
-import type { ApiClient } from '../../../core/http';
+import { routePath } from '@ab/core';
+import { portalLessonRoutes as routes, type PortalSlots } from '@ab/shared';
+import { callWith, type ApiClient } from '../../../core/http';
 import { pathKey } from '../../../core/keys';
 import type { PortalRead } from '../portal-api';
+import type { FamilyLessonInput, FamilySlotsInput, PortalLessonSends } from './lesson-sends.types';
 
 // Shared by family app and web portal; answers are parsed (rule 12), then PORTAL_KEY refreshes.
 
-export interface FamilyLessonInput {
-  studentId: string;
-  lessonId: string;
-}
+const lesson = (i: FamilyLessonInput) => ({ id: i.studentId, lessonId: i.lessonId });
 
-export interface FamilySlotsInput extends FamilyLessonInput {
-  from: string;
-  to: string;
-}
-
-export interface PortalLessonSends {
-  confirm: (input: FamilyLessonInput) => Promise<PortalActionResult>;
-  cancel: (input: FamilyLessonInput & PortalCancel) => Promise<PortalActionResult>;
-  request: (input: FamilyLessonInput & PortalRequest) => Promise<PortalActionResult>;
-  withdraw: (input: FamilyLessonInput) => Promise<PortalActionResult>;
-}
-
-const enc = encodeURIComponent;
-const lessonPath = (i: FamilyLessonInput) =>
-  `/portal/students/${enc(i.studentId)}/lessons/${enc(i.lessonId)}`;
-
+/** An empty reason or note is not sent at all, as the family never typed one. */
 export function portalLessonSends(client: ApiClient): PortalLessonSends {
-  const post = (i: FamilyLessonInput, verb: string, body?: object): Promise<PortalActionResult> =>
-    client
-      .apiSend('POST', `${lessonPath(i)}/${verb}`, body)
-      .then((r: unknown) => portalActionResultSchema.parse(r));
+  const call = callWith(client);
   return {
-    confirm: (i) => post(i, 'confirm'),
-    cancel: ({ reason, ...i }) => post(i, 'cancel', reason ? { reason } : {}),
-    request: ({ startsAt, note, ...i }) => post(i, 'request', { startsAt, ...(note ? { note } : {}) }),
-    withdraw: (i) => post(i, 'withdraw'),
+    confirm: (i) => call({ route: routes.confirm, params: lesson(i) }),
+    cancel: (i) =>
+      call({ route: routes.cancel, params: lesson(i), body: { reason: i.reason || undefined } }),
+    request: (i) =>
+      call({
+        route: routes.request,
+        params: lesson(i),
+        body: { startsAt: i.startsAt, note: i.note || undefined },
+      }),
+    withdraw: (i) => call({ route: routes.withdraw, params: lesson(i) }),
   };
 }
 
 /** GET …/slots for one week: the free starts, on the student's clock (`tz`). */
 export function portalSlotsQuery(client: ApiClient) {
+  const call = callWith(client);
   return (input: FamilySlotsInput): PortalRead<PortalSlots> => {
-    const query = new URLSearchParams({ from: input.from, to: input.to }).toString();
-    const path = `${lessonPath(input)}/slots`;
+    const params = lesson(input);
+    const query = { from: input.from, to: input.to };
     return {
-      queryKey: [...pathKey(path), input.from],
-      queryFn: async () => portalSlotsSchema.parse(await client.apiFetch(`${path}?${query}`)),
+      queryKey: [...pathKey(routePath(routes.slots, params)), input.from],
+      queryFn: () => call({ route: routes.slots, params, query }),
       refetchOnWindowFocus: true,
     };
   };
