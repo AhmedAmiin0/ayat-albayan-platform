@@ -4082,11 +4082,6 @@
       "count": 1
     }
   },
-  "src/sales-course/hooks/course-queries.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/sales-course/hooks/use-course-view.ts": {
     "complexity": {
       "count": 1

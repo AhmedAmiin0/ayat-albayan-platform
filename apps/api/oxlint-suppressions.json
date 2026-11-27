@@ -7336,14 +7336,6 @@
       "count": 4
     }
   },
-  "src/modules/teaching/booking/sales/course/sales-course.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 3
-    }
-  },
   "src/modules/teaching/booking/sales/course/sales-course.repo.ts": {
     "stylistic/max-len": {
       "count": 3
