@@ -1,7 +1,7 @@
 import { DURATIONS, PACKAGE_SIZES } from '@ab/catalog';
 import { quoteSchema } from '@ab/money';
 import { z } from 'zod';
-import { paymentLinkKindSchema, paymentLinkStatusSchema } from './schemas';
+import { PAYMENT_LINK_STATUSES, paymentLinkKindSchema, paymentLinkStatusSchema } from './schemas';
 
 /** One payment link as its assistant (or an admin) sees it; the token appears only in `url`. */
 export const paymentLinkViewSchema = z.object({
@@ -46,3 +46,20 @@ export const paymentLinkQuoteViewSchema = z.object({
   min_amount: z.number().nullable(),
 });
 export type PaymentLinkQuoteView = z.infer<typeof paymentLinkQuoteViewSchema>;
+
+/** A link's status on its public page: `processing` is an async payment still pending. */
+export const publicLinkStatusSchema = z.enum([...PAYMENT_LINK_STATUSES, 'processing']);
+export type PublicLinkStatus = z.infer<typeof publicLinkStatusSchema>;
+
+/** GET /pay/:token (public): no personal data beyond the first name. */
+export const publicPaymentLinkSchema = z.object({
+  status: publicLinkStatusSchema,
+  first_name: z.string(),
+  amount: z.number(),
+  currency: z.string(),
+  package: z.enum(PACKAGE_SIZES).nullable(),
+  lessons: z.number(),
+  /** The server's Stripe key is a sandbox one: the page says it is a test (live: no notice). */
+  sandbox: z.boolean(),
+});
+export type PublicPaymentLink = z.infer<typeof publicPaymentLinkSchema>;
