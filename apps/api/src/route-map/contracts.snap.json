@@ -4088,6 +4088,68 @@
    ]
   }
  },
+ "GET /portal/students/:id/channel/presence": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "enabled": {
+     "type": "boolean"
+    },
+    "peers": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "profile_id": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string",
+        "enum": [
+         "admin",
+         "teacher",
+         "guardian",
+         "assistant",
+         "sales",
+         "student"
+        ]
+       },
+       "last_seen_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "profile_id",
+       "role",
+       "last_seen_at"
+      ]
+     }
+    }
+   },
+   "required": [
+    "enabled",
+    "peers"
+   ]
+  }
+ },
  "GET /portal/students/:id/history": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -8138,6 +8200,68 @@
    ]
   }
  },
+ "GET /sales/students/:id/channel/presence": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "enabled": {
+     "type": "boolean"
+    },
+    "peers": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "profile_id": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string",
+        "enum": [
+         "admin",
+         "teacher",
+         "guardian",
+         "assistant",
+         "sales",
+         "student"
+        ]
+       },
+       "last_seen_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "profile_id",
+       "role",
+       "last_seen_at"
+      ]
+     }
+    }
+   },
+   "required": [
+    "enabled",
+    "peers"
+   ]
+  }
+ },
  "GET /sales/students/:id/channel/seat": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -9320,6 +9444,68 @@
    ]
   }
  },
+ "GET /students/:id/channel/presence": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "enabled": {
+     "type": "boolean"
+    },
+    "peers": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "profile_id": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string",
+        "enum": [
+         "admin",
+         "teacher",
+         "guardian",
+         "assistant",
+         "sales",
+         "student"
+        ]
+       },
+       "last_seen_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "profile_id",
+       "role",
+       "last_seen_at"
+      ]
+     }
+    }
+   },
+   "required": [
+    "enabled",
+    "peers"
+   ]
+  }
+ },
  "GET /students/:id/course-card": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -10052,6 +10238,68 @@
      ]
     }
    }
+  }
+ },
+ "GET /teachers/me/channels/:id/presence": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "enabled": {
+     "type": "boolean"
+    },
+    "peers": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "profile_id": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string",
+        "enum": [
+         "admin",
+         "teacher",
+         "guardian",
+         "assistant",
+         "sales",
+         "student"
+        ]
+       },
+       "last_seen_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "profile_id",
+       "role",
+       "last_seen_at"
+      ]
+     }
+    }
+   },
+   "required": [
+    "enabled",
+    "peers"
+   ]
   }
  },
  "GET /teachers/me/channels/:studentId/messages/:messageId/reads": {

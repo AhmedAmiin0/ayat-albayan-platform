@@ -9285,11 +9285,6 @@
       "count": 5
     }
   },
-  "src/modules/teaching/student-channels/controllers/channel.presence.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/teaching/student-channels/controllers/channel.teacher.controller.ts": {
     "ab/zod-inputs": {
       "count": 4
