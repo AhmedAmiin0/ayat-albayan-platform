@@ -94,7 +94,7 @@ describe('feedbackPublicRoutes (R-FBK, no login)', () => {
     expect(`${route.method} ${route.path}`).toBe(wire);
   });
 
-  it('takes any token text: a wrong one is the service\'s 404, never a 400', () => {
+  it("takes any token text: a wrong one is the service's 404, never a 400", () => {
     expect(feedbackPublicRoutes.form.params.parse({ token: 'a.b.c' })).toEqual({ token: 'a.b.c' });
   });
 

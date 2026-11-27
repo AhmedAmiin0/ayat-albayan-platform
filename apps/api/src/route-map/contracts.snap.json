@@ -3291,6 +3291,48 @@
    ]
   }
  },
+ "GET /public/feedback/:token": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "token"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "teacherName": {
+     "type": "string"
+    },
+    "kind": {
+     "type": "string",
+     "enum": [
+      "trial",
+      "subscription"
+     ]
+    },
+    "contactPhone": {
+     "type": "string"
+    },
+    "alreadySubmitted": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "teacherName",
+    "kind",
+    "contactPhone",
+    "alreadySubmitted"
+   ]
+  }
+ },
  "GET /public/report-pages/:publicId": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -12878,6 +12920,63 @@
    "required": [
     "id",
     "lessonId"
+   ]
+  }
+ },
+ "POST /public/feedback/:token": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "token"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "rating": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "recommend": {
+     "type": "string",
+     "enum": [
+      "yes",
+      "maybe",
+      "no"
+     ]
+    },
+    "note": {
+     "type": "string",
+     "maxLength": 2000
+    },
+    "contactPhone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "rating",
+    "recommend"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "submitted": {
+     "type": "boolean",
+     "const": true
+    }
+   },
+   "required": [
+    "submitted"
    ]
   }
  },

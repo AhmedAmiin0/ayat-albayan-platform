@@ -13,7 +13,6 @@ export {
   requestErrorText,
   requestFeedback,
   submitFeedback,
-  toFormView,
 } from './api';
 export { FEEDBACK_LIST_KEYS, MY_FEEDBACK_LIST_KEYS } from './search';
 export {
