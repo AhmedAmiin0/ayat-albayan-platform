@@ -15,9 +15,7 @@ import { TeacherMeRepo } from './teacher-me.repo';
  * signed-in profile — no `:id` to tamper with; a profile without a teachers row → 404.
  * The static `me` segment wins over TeachersController's `teachers/:id` in Fastify's router.
  */
-@ApiTags('teachers')
 @ApiBearerAuth()
-@Permissions('self.teacher')
 @Controller()
 export class TeacherMeController {
   constructor(
@@ -27,6 +25,8 @@ export class TeacherMeController {
   ) {}
 
   @Get('teachers/me')
+  @ApiTags('teachers')
+  @Permissions('self.teacher')
   async me(@CurrentUser() user: AuthUser): Promise<TeacherMe> {
     const me = await this.queries.me(user.id);
     if (!me) throw notFound('teacher_not_linked');
