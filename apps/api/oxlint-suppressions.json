@@ -4907,14 +4907,6 @@
       "count": 1
     }
   },
-  "src/modules/people/roles/roles.controller.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/people/roles/roles.fakes.ts": {
     "stylistic/max-len": {
       "count": 4
@@ -5190,10 +5182,7 @@
   },
   "src/modules/people/teachers/teachers.controller.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/people/teachers/teachers.list.ts": {
@@ -8464,11 +8453,6 @@
     },
     "stylistic/max-len": {
       "count": 8
-    }
-  },
-  "src/modules/teaching/course-stop/course-stop.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/teaching/feedback/feedback.controller.ts": {

@@ -3,23 +3,20 @@ import {
   courseKeys,
   courseMoveBase,
   courseMoveViewPath,
+  courseStopCalls,
   courseStopPath,
-  courseStopPreviewPath,
   courseTeacherOptionsPath,
   type CourseMoveKind,
 } from '@ab/client-core';
-import type {
-  CourseStopPreview,
-  CourseStopRequest,
-  CourseStopResult,
-  ProfileCourseView,
-} from '@ab/shared';
+import type { CourseStopPreview, CourseStopRequest, ProfileCourseView } from '@ab/shared';
 import type { BookingTeacherOption } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ApiError, apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 // The same routes in the admin and sales trees, each with its own key; shared with web.
+
+const stops = courseStopCalls({ apiFetch, apiSend });
 
 export interface SubRef {
   studentId: string;
@@ -99,7 +96,7 @@ export function useHeldPackage(current: string | null, keep: boolean): string | 
 export const useStopPreview = (sub: SubRef) =>
   useQuery({
     queryKey: courseKeys.stopPreview(sub),
-    queryFn: () => apiFetch<CourseStopPreview>(courseStopPreviewPath(sub)),
+    queryFn: () => stops.preview(sub),
   });
 
 /** GET …/course-teacher|course-times/change?subscriptionId=: the course and its next lesson. */
@@ -131,8 +128,7 @@ function useRefresh(studentId: string) {
 export function useStopCourse(studentId: string) {
   const refresh = useRefresh(studentId);
   return useMutation({
-    mutationFn: (body: CourseStopRequest) =>
-      apiSend<CourseStopResult>('POST', courseStopPath(studentId), body),
+    mutationFn: (body: CourseStopRequest) => stops.stop(studentId, body),
     onSuccess: refresh,
   });
 }

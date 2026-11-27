@@ -1,1 +1,2 @@
-export { type StopOwe, stopOweAskSchema, stopRefundAskSchema } from './stop-choices';
+export { stopOweAskSchema, stopRefundAskSchema } from './stop-choices';
+export { stopOweSchema } from './stop-choices.schemas';

@@ -7,18 +7,12 @@ import {
   courseMoveBase,
   courseMoveErrorCode,
   courseMoveViewPath,
-  courseStopPath,
-  courseStopPreviewPath,
+  courseStopCalls,
   courseTeacherOptionsPath,
   type CourseMoveKind,
   type StopMoneyAsk,
 } from '@ab/client-core';
-import type {
-  CourseStopPreview,
-  CourseStopRequest,
-  CourseStopResult,
-  ProfileCourseView,
-} from '@ab/shared';
+import type { CourseStopRequest, CourseStopResult, ProfileCourseView } from '@ab/shared';
 import type { BookingTeacherOption } from '@ab/schedule';
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 import { moneyText } from '@/features/finance/subscriptions';
@@ -33,14 +27,16 @@ interface Course {
   subscriptionId: string;
 }
 
+const stops = courseStopCalls({ apiFetch, apiSend });
+
 export const courseStopPreviewQuery = (input: Course) =>
   queryOptions({
     queryKey: courseKeys.stopPreview(input),
-    queryFn: () => apiFetch<CourseStopPreview>(courseStopPreviewPath(input)),
+    queryFn: () => stops.preview(input),
   });
 
 export const stopCourse = (studentId: string, body: CourseStopRequest) =>
-  apiSend<CourseStopResult>('POST', courseStopPath(studentId), body);
+  stops.stop(studentId, body);
 
 export const profileCourseQuery = (input: Course & { kind: CourseMoveKind }) =>
   queryOptions({

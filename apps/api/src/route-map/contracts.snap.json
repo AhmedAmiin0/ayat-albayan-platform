@@ -203,6 +203,23 @@
    ]
   }
  },
+ "DELETE /roles/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
+ },
  "DELETE /sales/students/:id/channel/messages/:messageId": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -292,6 +309,23 @@
     "key"
    ]
   }
+ },
+ "DELETE /teachers/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
  },
  "GET /admin-tasks": {
   "query": {
@@ -1890,6 +1924,146 @@
    ]
   }
  },
+ "GET /permissions": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "area": {
+      "type": "string",
+      "enum": [
+       "people",
+       "students",
+       "teachers",
+       "schedule",
+       "classroom",
+       "reports",
+       "messaging",
+       "finance",
+       "system",
+       "self"
+      ]
+     },
+     "keys": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "enum": [
+        "leads.read",
+        "leads.write",
+        "leads.assign",
+        "leads.link_family",
+        "applicants.read",
+        "applicants.write",
+        "students.read",
+        "students.write",
+        "students.balance",
+        "students.check_registration",
+        "guardians.read",
+        "guardians.write",
+        "people.edit",
+        "students.attach_guardian",
+        "people.switch_role",
+        "assistants.read",
+        "assistants.write",
+        "teachers.read",
+        "teachers.write",
+        "availability.read",
+        "availability.write",
+        "dashboard.read",
+        "lessons.read",
+        "lessons.status",
+        "lessons.write",
+        "booking.write",
+        "lessons.reschedule",
+        "lessons.cancel",
+        "lessons.confirm",
+        "courses.pause",
+        "subscriptions.stop",
+        "subscriptions.refund",
+        "students.change_teacher",
+        "courses.reschedule",
+        "pricing.read",
+        "tasks.manage",
+        "classroom.join",
+        "classroom.kick",
+        "classroom.moderate",
+        "classroom.host",
+        "classroom.links",
+        "recordings.read",
+        "recordings.manage",
+        "meetings.read",
+        "meetings.write",
+        "reports.read",
+        "reports.write",
+        "reports.resend",
+        "feedback.read",
+        "feedback.write",
+        "inbox.read",
+        "inbox.send",
+        "inbox.media",
+        "inbox.lists",
+        "saved_replies.manage",
+        "messages.read",
+        "messages.manage",
+        "templates.manage",
+        "templates.send_all",
+        "templates.author",
+        "short_links.manage",
+        "short_links.all",
+        "student_channels.monitor",
+        "payments.read",
+        "payments.write",
+        "subscriptions.read",
+        "subscriptions.write",
+        "subscriptions.set_start_date",
+        "subscriptions.edit_terms",
+        "sales.renew_any",
+        "invoices.read",
+        "receivables.read",
+        "payouts.read",
+        "payouts.write",
+        "payouts.approve",
+        "assistantpay.read",
+        "assistantpay.write",
+        "assistantpay.approve",
+        "earnings.read",
+        "earnings.write",
+        "expenses.read",
+        "expenses.write",
+        "exports.read",
+        "settings.read",
+        "settings.write",
+        "numbers.manage",
+        "notifications.manage",
+        "activity.read",
+        "roles.manage",
+        "notifications.push",
+        "translations.manage",
+        "users.read",
+        "users.write",
+        "self.teacher",
+        "self.sales",
+        "self.sales_students",
+        "self.sales_payments",
+        "self.sales_earnings",
+        "self.sales_academy",
+        "self.sales_money",
+        "self.assistant",
+        "self.portal"
+       ]
+      }
+     }
+    },
+    "required": [
+     "area",
+     "keys"
+    ]
+   }
+  }
+ },
  "GET /portal/students/:id/channel/messages/:messageId/reads": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3220,6 +3394,208 @@
    "required": [
     "id"
    ]
+  }
+ },
+ "GET /roles": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "key": {
+      "type": "string"
+     },
+     "name_ar": {
+      "type": "string"
+     },
+     "name_en": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "base_role": {
+      "type": "string",
+      "enum": [
+       "admin",
+       "teacher",
+       "guardian",
+       "assistant",
+       "sales",
+       "student"
+      ]
+     },
+     "is_system": {
+      "type": "boolean"
+     },
+     "permissions": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "enum": [
+        "leads.read",
+        "leads.write",
+        "leads.assign",
+        "leads.link_family",
+        "applicants.read",
+        "applicants.write",
+        "students.read",
+        "students.write",
+        "students.balance",
+        "students.check_registration",
+        "guardians.read",
+        "guardians.write",
+        "people.edit",
+        "students.attach_guardian",
+        "people.switch_role",
+        "assistants.read",
+        "assistants.write",
+        "teachers.read",
+        "teachers.write",
+        "availability.read",
+        "availability.write",
+        "dashboard.read",
+        "lessons.read",
+        "lessons.status",
+        "lessons.write",
+        "booking.write",
+        "lessons.reschedule",
+        "lessons.cancel",
+        "lessons.confirm",
+        "courses.pause",
+        "subscriptions.stop",
+        "subscriptions.refund",
+        "students.change_teacher",
+        "courses.reschedule",
+        "pricing.read",
+        "tasks.manage",
+        "classroom.join",
+        "classroom.kick",
+        "classroom.moderate",
+        "classroom.host",
+        "classroom.links",
+        "recordings.read",
+        "recordings.manage",
+        "meetings.read",
+        "meetings.write",
+        "reports.read",
+        "reports.write",
+        "reports.resend",
+        "feedback.read",
+        "feedback.write",
+        "inbox.read",
+        "inbox.send",
+        "inbox.media",
+        "inbox.lists",
+        "saved_replies.manage",
+        "messages.read",
+        "messages.manage",
+        "templates.manage",
+        "templates.send_all",
+        "templates.author",
+        "short_links.manage",
+        "short_links.all",
+        "student_channels.monitor",
+        "payments.read",
+        "payments.write",
+        "subscriptions.read",
+        "subscriptions.write",
+        "subscriptions.set_start_date",
+        "subscriptions.edit_terms",
+        "sales.renew_any",
+        "invoices.read",
+        "receivables.read",
+        "payouts.read",
+        "payouts.write",
+        "payouts.approve",
+        "assistantpay.read",
+        "assistantpay.write",
+        "assistantpay.approve",
+        "earnings.read",
+        "earnings.write",
+        "expenses.read",
+        "expenses.write",
+        "exports.read",
+        "settings.read",
+        "settings.write",
+        "numbers.manage",
+        "notifications.manage",
+        "activity.read",
+        "roles.manage",
+        "notifications.push",
+        "translations.manage",
+        "users.read",
+        "users.write",
+        "self.teacher",
+        "self.sales",
+        "self.sales_students",
+        "self.sales_payments",
+        "self.sales_earnings",
+        "self.sales_academy",
+        "self.sales_money",
+        "self.assistant",
+        "self.portal"
+       ]
+      }
+     },
+     "users": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     }
+    },
+    "required": [
+     "id",
+     "key",
+     "name_ar",
+     "name_en",
+     "base_role",
+     "is_system",
+     "permissions",
+     "users"
+    ]
+   }
+  }
+ },
+ "GET /roles/staff-users": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "full_name": {
+      "type": "string"
+     },
+     "role": {
+      "type": "string",
+      "enum": [
+       "admin",
+       "teacher",
+       "guardian",
+       "assistant",
+       "sales",
+       "student"
+      ]
+     },
+     "role_id": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "full_name",
+     "role",
+     "role_id"
+    ]
+   }
   }
  },
  "GET /sales/booking/outside-slots": {
@@ -4557,6 +4933,20 @@
   }
  },
  "GET /students/:id/course-stop": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -4567,6 +4957,132 @@
      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": "string"
+    },
+    "futureLessons": {
+     "type": "number"
+    },
+    "futureStarts": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "activeRules": {
+     "type": "number"
+    },
+    "paid": {
+     "type": "number"
+    },
+    "currency": {
+     "type": "string"
+    },
+    "refund": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "paid": {
+         "type": "number"
+        },
+        "perLesson": {
+         "type": "number"
+        },
+        "attended": {
+         "type": "number"
+        },
+        "ratePercent": {
+         "type": "number"
+        },
+        "charged": {
+         "type": "number"
+        },
+        "refund": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "paid",
+        "perLesson",
+        "attended",
+        "ratePercent",
+        "charged",
+        "refund"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "refundUnavailable": {
+     "type": "boolean"
+    },
+    "owe": {
+     "type": "object",
+     "properties": {
+      "charged": {
+       "type": "number"
+      },
+      "price": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "charged",
+      "price"
+     ]
+    },
+    "stopped": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "at": {
+         "type": "string"
+        },
+        "by": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "reason": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "at",
+        "by",
+        "reason"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "futureLessons",
+    "activeRules",
+    "paid",
+    "currency",
+    "refund",
+    "refundUnavailable",
+    "owe",
+    "stopped"
+   ]
   }
  },
  "GET /students/:id/lessons": {
@@ -5309,6 +5825,433 @@
      ]
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "display_name_ar": {
+        "type": "string"
+       },
+       "display_name_en": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "gender": {
+        "type": "string",
+        "enum": [
+         "male",
+         "female"
+        ]
+       },
+       "programs": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "enum": [
+          "quran",
+          "arabic",
+          "islamic_studies"
+         ]
+        }
+       },
+       "phone_e164": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "meeting_link": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "meeting_mode": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "static",
+           "platform"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "platform_classroom": {
+        "type": "boolean"
+       },
+       "rate_30": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "rate_45": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "rate_60": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "rate_90": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "max_students": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "active",
+         "inactive"
+        ]
+       },
+       "tz": {
+        "type": "string"
+       },
+       "calendar_owner": {
+        "type": "string"
+       },
+       "calendar_owner_changed_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "calendar_owner_changed_by": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "google_calendar_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "mirror_enabled": {
+        "type": "boolean"
+       },
+       "profile_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "username": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "avatar_url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_at": {
+        "type": "string"
+       },
+       "created_by": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "updated_at": {
+        "type": "string"
+       },
+       "active_count": {
+        "type": "number"
+       },
+       "trial_count": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "id",
+       "display_name_ar",
+       "display_name_en",
+       "gender",
+       "programs",
+       "phone_e164",
+       "meeting_link",
+       "meeting_mode",
+       "platform_classroom",
+       "rate_30",
+       "rate_45",
+       "rate_60",
+       "rate_90",
+       "max_students",
+       "status",
+       "tz",
+       "calendar_owner",
+       "calendar_owner_changed_at",
+       "calendar_owner_changed_by",
+       "google_calendar_id",
+       "mirror_enabled",
+       "profile_id",
+       "avatar_url",
+       "created_at",
+       "created_by",
+       "updated_at",
+       "active_count",
+       "trial_count"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
+  }
+ },
+ "GET /teachers/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "display_name_ar": {
+     "type": "string"
+    },
+    "display_name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "gender": {
+     "type": "string",
+     "enum": [
+      "male",
+      "female"
+     ]
+    },
+    "programs": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "quran",
+       "arabic",
+       "islamic_studies"
+      ]
+     }
+    },
+    "phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_link": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_mode": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "static",
+        "platform"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "platform_classroom": {
+     "type": "boolean"
+    },
+    "rate_30": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_45": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_60": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_90": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "max_students": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "inactive"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "calendar_owner": {
+     "type": "string"
+    },
+    "calendar_owner_changed_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "calendar_owner_changed_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "google_calendar_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "mirror_enabled": {
+     "type": "boolean"
+    },
+    "profile_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "username": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "display_name_ar",
+    "display_name_en",
+    "gender",
+    "programs",
+    "phone_e164",
+    "meeting_link",
+    "meeting_mode",
+    "platform_classroom",
+    "rate_30",
+    "rate_45",
+    "rate_60",
+    "rate_90",
+    "max_students",
+    "status",
+    "tz",
+    "calendar_owner",
+    "calendar_owner_changed_at",
+    "calendar_owner_changed_by",
+    "google_calendar_id",
+    "mirror_enabled",
+    "profile_id",
+    "avatar_url",
+    "created_at",
+    "created_by",
+    "updated_at"
+   ]
   }
  },
  "GET /teachers/me/channels/:studentId/messages/:messageId/reads": {
@@ -7377,6 +8320,20 @@
   }
  },
  "PATCH /roles/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -7500,6 +8457,166 @@
      }
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "key": {
+     "type": "string"
+    },
+    "name_ar": {
+     "type": "string"
+    },
+    "name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "base_role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "is_system": {
+     "type": "boolean"
+    },
+    "permissions": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "leads.read",
+       "leads.write",
+       "leads.assign",
+       "leads.link_family",
+       "applicants.read",
+       "applicants.write",
+       "students.read",
+       "students.write",
+       "students.balance",
+       "students.check_registration",
+       "guardians.read",
+       "guardians.write",
+       "people.edit",
+       "students.attach_guardian",
+       "people.switch_role",
+       "assistants.read",
+       "assistants.write",
+       "teachers.read",
+       "teachers.write",
+       "availability.read",
+       "availability.write",
+       "dashboard.read",
+       "lessons.read",
+       "lessons.status",
+       "lessons.write",
+       "booking.write",
+       "lessons.reschedule",
+       "lessons.cancel",
+       "lessons.confirm",
+       "courses.pause",
+       "subscriptions.stop",
+       "subscriptions.refund",
+       "students.change_teacher",
+       "courses.reschedule",
+       "pricing.read",
+       "tasks.manage",
+       "classroom.join",
+       "classroom.kick",
+       "classroom.moderate",
+       "classroom.host",
+       "classroom.links",
+       "recordings.read",
+       "recordings.manage",
+       "meetings.read",
+       "meetings.write",
+       "reports.read",
+       "reports.write",
+       "reports.resend",
+       "feedback.read",
+       "feedback.write",
+       "inbox.read",
+       "inbox.send",
+       "inbox.media",
+       "inbox.lists",
+       "saved_replies.manage",
+       "messages.read",
+       "messages.manage",
+       "templates.manage",
+       "templates.send_all",
+       "templates.author",
+       "short_links.manage",
+       "short_links.all",
+       "student_channels.monitor",
+       "payments.read",
+       "payments.write",
+       "subscriptions.read",
+       "subscriptions.write",
+       "subscriptions.set_start_date",
+       "subscriptions.edit_terms",
+       "sales.renew_any",
+       "invoices.read",
+       "receivables.read",
+       "payouts.read",
+       "payouts.write",
+       "payouts.approve",
+       "assistantpay.read",
+       "assistantpay.write",
+       "assistantpay.approve",
+       "earnings.read",
+       "earnings.write",
+       "expenses.read",
+       "expenses.write",
+       "exports.read",
+       "settings.read",
+       "settings.write",
+       "numbers.manage",
+       "notifications.manage",
+       "activity.read",
+       "roles.manage",
+       "notifications.push",
+       "translations.manage",
+       "users.read",
+       "users.write",
+       "self.teacher",
+       "self.sales",
+       "self.sales_students",
+       "self.sales_payments",
+       "self.sales_earnings",
+       "self.sales_academy",
+       "self.sales_money",
+       "self.assistant",
+       "self.portal"
+      ]
+     }
+    },
+    "users": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "id",
+    "key",
+    "name_ar",
+    "name_en",
+    "base_role",
+    "is_system",
+    "permissions",
+    "users"
+   ]
   }
  },
  "PATCH /sales/payments/:id/amount": {
@@ -8239,6 +9356,20 @@
   }
  },
  "PATCH /teachers/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -8369,7 +9500,6 @@
      ]
     },
     "status": {
-     "default": "active",
      "type": "string",
      "enum": [
       "active",
@@ -8391,6 +9521,193 @@
      ]
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "display_name_ar": {
+     "type": "string"
+    },
+    "display_name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "gender": {
+     "type": "string",
+     "enum": [
+      "male",
+      "female"
+     ]
+    },
+    "programs": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "quran",
+       "arabic",
+       "islamic_studies"
+      ]
+     }
+    },
+    "phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_link": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_mode": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "static",
+        "platform"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "platform_classroom": {
+     "type": "boolean"
+    },
+    "rate_30": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_45": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_60": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_90": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "max_students": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "inactive"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "calendar_owner": {
+     "type": "string"
+    },
+    "calendar_owner_changed_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "calendar_owner_changed_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "google_calendar_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "mirror_enabled": {
+     "type": "boolean"
+    },
+    "profile_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "username": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "display_name_ar",
+    "display_name_en",
+    "gender",
+    "programs",
+    "phone_e164",
+    "meeting_link",
+    "meeting_mode",
+    "platform_classroom",
+    "rate_30",
+    "rate_45",
+    "rate_60",
+    "rate_90",
+    "max_students",
+    "status",
+    "tz",
+    "calendar_owner",
+    "calendar_owner_changed_at",
+    "calendar_owner_changed_by",
+    "google_calendar_id",
+    "mirror_enabled",
+    "profile_id",
+    "avatar_url",
+    "created_at",
+    "created_by",
+    "updated_at"
+   ]
   }
  },
  "PATCH /users/:id": {
@@ -8479,6 +9796,20 @@
   }
  },
  "PATCH /users/:id/role": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -8490,6 +9821,38 @@
     }
    },
    "required": [
+    "role_id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "full_name": {
+     "type": "string"
+    },
+    "role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "role_id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "full_name",
+    "role",
     "role_id"
    ]
   }
@@ -15280,6 +16643,342 @@
     "base_role",
     "permissions"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "key": {
+     "type": "string"
+    },
+    "name_ar": {
+     "type": "string"
+    },
+    "name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "base_role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "is_system": {
+     "type": "boolean"
+    },
+    "permissions": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "leads.read",
+       "leads.write",
+       "leads.assign",
+       "leads.link_family",
+       "applicants.read",
+       "applicants.write",
+       "students.read",
+       "students.write",
+       "students.balance",
+       "students.check_registration",
+       "guardians.read",
+       "guardians.write",
+       "people.edit",
+       "students.attach_guardian",
+       "people.switch_role",
+       "assistants.read",
+       "assistants.write",
+       "teachers.read",
+       "teachers.write",
+       "availability.read",
+       "availability.write",
+       "dashboard.read",
+       "lessons.read",
+       "lessons.status",
+       "lessons.write",
+       "booking.write",
+       "lessons.reschedule",
+       "lessons.cancel",
+       "lessons.confirm",
+       "courses.pause",
+       "subscriptions.stop",
+       "subscriptions.refund",
+       "students.change_teacher",
+       "courses.reschedule",
+       "pricing.read",
+       "tasks.manage",
+       "classroom.join",
+       "classroom.kick",
+       "classroom.moderate",
+       "classroom.host",
+       "classroom.links",
+       "recordings.read",
+       "recordings.manage",
+       "meetings.read",
+       "meetings.write",
+       "reports.read",
+       "reports.write",
+       "reports.resend",
+       "feedback.read",
+       "feedback.write",
+       "inbox.read",
+       "inbox.send",
+       "inbox.media",
+       "inbox.lists",
+       "saved_replies.manage",
+       "messages.read",
+       "messages.manage",
+       "templates.manage",
+       "templates.send_all",
+       "templates.author",
+       "short_links.manage",
+       "short_links.all",
+       "student_channels.monitor",
+       "payments.read",
+       "payments.write",
+       "subscriptions.read",
+       "subscriptions.write",
+       "subscriptions.set_start_date",
+       "subscriptions.edit_terms",
+       "sales.renew_any",
+       "invoices.read",
+       "receivables.read",
+       "payouts.read",
+       "payouts.write",
+       "payouts.approve",
+       "assistantpay.read",
+       "assistantpay.write",
+       "assistantpay.approve",
+       "earnings.read",
+       "earnings.write",
+       "expenses.read",
+       "expenses.write",
+       "exports.read",
+       "settings.read",
+       "settings.write",
+       "numbers.manage",
+       "notifications.manage",
+       "activity.read",
+       "roles.manage",
+       "notifications.push",
+       "translations.manage",
+       "users.read",
+       "users.write",
+       "self.teacher",
+       "self.sales",
+       "self.sales_students",
+       "self.sales_payments",
+       "self.sales_earnings",
+       "self.sales_academy",
+       "self.sales_money",
+       "self.assistant",
+       "self.portal"
+      ]
+     }
+    },
+    "users": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "id",
+    "key",
+    "name_ar",
+    "name_en",
+    "base_role",
+    "is_system",
+    "permissions",
+    "users"
+   ]
+  }
+ },
+ "POST /roles/:id/reset": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "key": {
+     "type": "string"
+    },
+    "name_ar": {
+     "type": "string"
+    },
+    "name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "base_role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "is_system": {
+     "type": "boolean"
+    },
+    "permissions": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "leads.read",
+       "leads.write",
+       "leads.assign",
+       "leads.link_family",
+       "applicants.read",
+       "applicants.write",
+       "students.read",
+       "students.write",
+       "students.balance",
+       "students.check_registration",
+       "guardians.read",
+       "guardians.write",
+       "people.edit",
+       "students.attach_guardian",
+       "people.switch_role",
+       "assistants.read",
+       "assistants.write",
+       "teachers.read",
+       "teachers.write",
+       "availability.read",
+       "availability.write",
+       "dashboard.read",
+       "lessons.read",
+       "lessons.status",
+       "lessons.write",
+       "booking.write",
+       "lessons.reschedule",
+       "lessons.cancel",
+       "lessons.confirm",
+       "courses.pause",
+       "subscriptions.stop",
+       "subscriptions.refund",
+       "students.change_teacher",
+       "courses.reschedule",
+       "pricing.read",
+       "tasks.manage",
+       "classroom.join",
+       "classroom.kick",
+       "classroom.moderate",
+       "classroom.host",
+       "classroom.links",
+       "recordings.read",
+       "recordings.manage",
+       "meetings.read",
+       "meetings.write",
+       "reports.read",
+       "reports.write",
+       "reports.resend",
+       "feedback.read",
+       "feedback.write",
+       "inbox.read",
+       "inbox.send",
+       "inbox.media",
+       "inbox.lists",
+       "saved_replies.manage",
+       "messages.read",
+       "messages.manage",
+       "templates.manage",
+       "templates.send_all",
+       "templates.author",
+       "short_links.manage",
+       "short_links.all",
+       "student_channels.monitor",
+       "payments.read",
+       "payments.write",
+       "subscriptions.read",
+       "subscriptions.write",
+       "subscriptions.set_start_date",
+       "subscriptions.edit_terms",
+       "sales.renew_any",
+       "invoices.read",
+       "receivables.read",
+       "payouts.read",
+       "payouts.write",
+       "payouts.approve",
+       "assistantpay.read",
+       "assistantpay.write",
+       "assistantpay.approve",
+       "earnings.read",
+       "earnings.write",
+       "expenses.read",
+       "expenses.write",
+       "exports.read",
+       "settings.read",
+       "settings.write",
+       "numbers.manage",
+       "notifications.manage",
+       "activity.read",
+       "roles.manage",
+       "notifications.push",
+       "translations.manage",
+       "users.read",
+       "users.write",
+       "self.teacher",
+       "self.sales",
+       "self.sales_students",
+       "self.sales_payments",
+       "self.sales_earnings",
+       "self.sales_academy",
+       "self.sales_money",
+       "self.assistant",
+       "self.portal"
+      ]
+     }
+    },
+    "users": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "id",
+    "key",
+    "name_ar",
+    "name_en",
+    "base_role",
+    "is_system",
+    "permissions",
+    "users"
+   ]
   }
  },
  "POST /sales/booking": {
@@ -19301,6 +21000,20 @@
   }
  },
  "POST /students/:id/course-stop": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -19386,6 +21099,71 @@
     "clientRequestId"
    ],
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": "string"
+    },
+    "cancelledLessons": {
+     "type": "number"
+    },
+    "endedRules": {
+     "type": "number"
+    },
+    "studentStatus": {
+     "type": "string",
+     "enum": [
+      "new",
+      "trial",
+      "pending_subscription",
+      "active",
+      "pending_renewal",
+      "expired",
+      "paused",
+      "churned"
+     ]
+    },
+    "stoppedAt": {
+     "type": "string"
+    },
+    "refund": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "amount": {
+         "type": "number"
+        },
+        "card": {
+         "type": "number"
+        },
+        "manual": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "amount",
+        "card",
+        "manual"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "cancelledLessons",
+    "endedRules",
+    "studentStatus",
+    "stoppedAt",
+    "refund"
+   ]
   }
  },
  "POST /students/:id/merge": {
@@ -19925,6 +21703,193 @@
     "gender",
     "programs",
     "tz"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "display_name_ar": {
+     "type": "string"
+    },
+    "display_name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "gender": {
+     "type": "string",
+     "enum": [
+      "male",
+      "female"
+     ]
+    },
+    "programs": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "quran",
+       "arabic",
+       "islamic_studies"
+      ]
+     }
+    },
+    "phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_link": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meeting_mode": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "static",
+        "platform"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "platform_classroom": {
+     "type": "boolean"
+    },
+    "rate_30": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_45": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_60": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "rate_90": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "max_students": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "inactive"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "calendar_owner": {
+     "type": "string"
+    },
+    "calendar_owner_changed_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "calendar_owner_changed_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "google_calendar_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "mirror_enabled": {
+     "type": "boolean"
+    },
+    "profile_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "username": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "display_name_ar",
+    "display_name_en",
+    "gender",
+    "programs",
+    "phone_e164",
+    "meeting_link",
+    "meeting_mode",
+    "platform_classroom",
+    "rate_30",
+    "rate_45",
+    "rate_60",
+    "rate_90",
+    "max_students",
+    "status",
+    "tz",
+    "calendar_owner",
+    "calendar_owner_changed_at",
+    "calendar_owner_changed_by",
+    "google_calendar_id",
+    "mirror_enabled",
+    "profile_id",
+    "avatar_url",
+    "created_at",
+    "created_by",
+    "updated_at"
    ]
   }
  },
