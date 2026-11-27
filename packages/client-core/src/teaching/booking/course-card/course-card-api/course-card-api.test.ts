@@ -31,7 +31,9 @@ describe('course card calls', () => {
     const { client, apiFetch } = clientAnswering(PREVIEW);
     const input = { studentId: STUDENT, subscriptionId: SUB };
     await expect(courseCardCalls(client).extendPreview(input)).resolves.toEqual(PREVIEW);
-    expect(apiFetch).toHaveBeenCalledWith(`/students/${STUDENT}/course-extend?subscriptionId=${SUB}`);
+    expect(apiFetch).toHaveBeenCalledWith(
+      `/students/${STUDENT}/course-extend?subscriptionId=${SUB}`,
+    );
   });
 
   it('POSTs the package to extend and answers what was booked', async () => {
