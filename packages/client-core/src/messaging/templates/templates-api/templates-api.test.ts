@@ -58,3 +58,32 @@ describe('template writes', () => {
     expect(client.apiSend).toHaveBeenCalledWith('PATCH', path, input);
   });
 });
+
+describe('template catalog', () => {
+  const line = {
+    line: 'chat', configured: true, provider: 'meta', waba_id: '1', phone_number_id: '2',
+    last_checked_at: null, last_sync: null,
+  };
+
+  it('creates on the registry and reads each line\'s facts', async () => {
+    const client = clientOf();
+    const admin = adminTemplateCalls(client);
+    const body = { key: 'offer_x', line: 'chat', category: 'utility', body: 'نص' } as const;
+    await expect(admin.create(body)).resolves.toEqual(view);
+    expect(client.apiSend).toHaveBeenCalledWith('POST', '/messaging/templates', body);
+    client.apiFetch.mockResolvedValue([line]);
+    await expect(admin.lines()).resolves.toEqual([line]);
+    expect(client.apiFetch).toHaveBeenLastCalledWith('/messaging/templates/lines');
+  });
+
+  it('checks one line or every line', async () => {
+    const client = clientOf();
+    client.apiSend.mockResolvedValue({ lines: [], templates: [view] });
+    const admin = adminTemplateCalls(client);
+    await expect(admin.health({ line: 'chat' })).resolves.toEqual({ lines: [], templates: [view] });
+    const path = '/messaging/templates/health';
+    expect(client.apiSend).toHaveBeenCalledWith('POST', path, { line: 'chat' });
+    await admin.health({});
+    expect(client.apiSend).toHaveBeenLastCalledWith('POST', path, {});
+  });
+});

@@ -1,16 +1,17 @@
-import { templateViewSchema } from '@ab/shared';
-import { z } from 'zod';
+import { templateCatalogRoutes, templateViewSchema } from '@ab/shared';
 import { callWith, type ApiClient } from '../../core/http';
 import type { AdminTemplateCalls } from './templates-api';
 
 const ALL = '/messaging/templates';
-const listSchema = z.array(templateViewSchema);
 
-/** The template registry for any reader, and a template manager's edit of its words. */
+/** The template registry for any reader, and a template manager's catalog and edits. */
 export function adminTemplateCalls(client: ApiClient): AdminTemplateCalls {
   const call = callWith(client);
   return {
-    list: () => call({ path: ALL, schema: listSchema }),
+    list: () => call({ route: templateCatalogRoutes.list }),
+    create: (body) => call({ route: templateCatalogRoutes.create, body }),
+    lines: () => call({ route: templateCatalogRoutes.lines }),
+    health: (body) => call({ route: templateCatalogRoutes.health, body, query: {} }),
     editContent: ({ key, input }) => call({
       method: 'PATCH', path: `${ALL}/${encodeURIComponent(key)}/content`, body: input,
       schema: templateViewSchema,
