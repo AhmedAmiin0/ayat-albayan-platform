@@ -19,25 +19,37 @@ interface Access {
 const accessOf = (routes: Record<string, Access>) =>
   Object.values(routes).map(({ permissions, tags }) => ({ permissions, tags }));
 
-const each = (routes: Record<string, Access>, permission: string, tag: string) =>
-  Object.keys(routes).map(() => ({ permissions: [permission], tags: [tag] }));
+interface Table {
+  name: string;
+  routes: Record<string, Access>;
+  permission: string;
+  tag: string;
+}
 
-const tables: [string, Record<string, Access>, string, string][] = [
-  ['booking', bookingRoutes, 'booking.write', 'booking'],
-  ['sales booking', salesBookingRoutes, 'self.sales', 'booking'],
-  ['booking extras', bookingExtraRoutes, 'booking.write', 'booking'],
-  ['trial date', trialDateRoutes, 'booking.write', 'booking'],
-  ['sales trial date', salesTrialDateRoutes, 'self.sales', 'booking'],
-  ['course change', courseChangeRoutes, 'lessons.write', 'booking'],
-  ['course times', courseTimesRoutes, 'courses.reschedule', 'course-actions'],
-  ['course teacher', courseTeacherRoutes, 'students.change_teacher', 'course-actions'],
-  ['course stop', courseStopRoutes, 'subscriptions.stop', 'course-actions'],
-  ['course pause', coursePauseRoutes, 'courses.pause', 'course-pause'],
+const table = (name: string, routes: Record<string, Access>, access: [string, string]): Table => ({
+  name,
+  routes,
+  permission: access[0],
+  tag: access[1],
+});
+
+const tables = [
+  table('booking', bookingRoutes, ['booking.write', 'booking']),
+  table('sales booking', salesBookingRoutes, ['self.sales', 'booking']),
+  table('booking extras', bookingExtraRoutes, ['booking.write', 'booking']),
+  table('trial date', trialDateRoutes, ['booking.write', 'booking']),
+  table('sales trial date', salesTrialDateRoutes, ['self.sales', 'booking']),
+  table('course change', courseChangeRoutes, ['lessons.write', 'booking']),
+  table('course times', courseTimesRoutes, ['courses.reschedule', 'course-actions']),
+  table('course teacher', courseTeacherRoutes, ['students.change_teacher', 'course-actions']),
+  table('course stop', courseStopRoutes, ['subscriptions.stop', 'course-actions']),
+  table('course pause', coursePauseRoutes, ['courses.pause', 'course-pause']),
 ];
 
 describe('booking route access (docs/62 part 3 §1)', () => {
-  it.each(tables)('lets the %s routes in by one permission, under one tag', (_, routes, p, t) => {
-    expect(accessOf(routes)).toEqual(each(routes, p, t));
+  it.each(tables)('lets the $name routes in by one permission, under one tag', (t) => {
+    const one = { permissions: [t.permission], tags: [t.tag] };
+    expect(accessOf(t.routes)).toEqual(Object.keys(t.routes).map(() => one));
   });
 
   it('gives each course card route the permission its screen needs', () => {
