@@ -10,7 +10,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 const show = () =>
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <StudentJoinLink studentId="s-1" />
+      <StudentJoinLink studentId="00000000-0000-4000-8000-0000000000b1" />
     </QueryClientProvider>,
   );
 
@@ -31,7 +31,7 @@ describe('StudentJoinLink «رابط دخول الطالب»', () => {
     show();
     fireEvent.click(screen.getByRole('button', { name: t.studentLink.create }));
     expect(await screen.findByText(t.studentLink.copied)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/students/s-1/join-link');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/students/00000000-0000-4000-8000-0000000000b1/join-link', undefined);
     expect(writeText).toHaveBeenCalledWith('https://app.example.test/s/abc');
     expect((screen.getByLabelText<HTMLInputElement>(t.studentLink.shown)).value).toBe('https://app.example.test/s/abc');
   });
