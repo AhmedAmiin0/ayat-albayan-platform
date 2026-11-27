@@ -39,7 +39,7 @@ describe('Drive card', () => {
     expect(await screen.findByText(s.never)).toBeTruthy();
     apiSend.mockResolvedValue(googleStatus());
     fireEvent.click(screen.getByRole('button', { name: s.discover }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin/google/discover'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin/google/discover', undefined));
     expect(await screen.findByText('Root Reports Folder')).toBeTruthy();
   });
 

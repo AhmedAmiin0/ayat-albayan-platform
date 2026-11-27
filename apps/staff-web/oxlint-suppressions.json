@@ -1370,9 +1370,6 @@
   "src/features/messaging/inbox/lead/link-family.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/lead/qualification/PreferenceFields.tsx": {
@@ -3543,7 +3540,7 @@
   },
   "src/features/platform/google-sync/google-api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 16
+      "count": 7
     }
   },
   "src/features/platform/google-sync/google-format.ts": {
@@ -4340,7 +4337,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 6
+      "count": 3
     }
   },
   "src/features/reporting/reports/chart/ChartPoints.tsx": {

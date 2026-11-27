@@ -5,6 +5,7 @@ import type { ChannelAccess } from '@/modules/teaching/student-channels/channel-
 import { ChannelPresenceController } from './channel.presence.controller';
 
 const ST = '52000000-0000-4000-8000-000000000001';
+const input = { params: { id: ST }, query: undefined, body: undefined };
 const user = (role: AuthUser['role']): AuthUser => ({ id: 'p-1', email: null, role });
 
 function controller() {
@@ -22,13 +23,13 @@ function controller() {
 describe('ChannelPresenceController.monitor', () => {
   it('the admin passes the chat check and gets the chat people', async () => {
     const { ctl, presence } = controller();
-    await expect(ctl.monitor(ST, user('admin'))).resolves.toEqual({ enabled: true, peers: [] });
+    await expect(ctl.monitor(input, user('admin'))).resolves.toEqual({ enabled: true, peers: [] });
     expect(presence.channel).toHaveBeenCalledWith(expect.objectContaining({ participant: false }));
   });
 
   it('a custom monitor (any other base role) sees nobody: 403, nothing read', async () => {
     const { ctl, access, presence } = controller();
-    await expect(ctl.monitor(ST, user('assistant'))).rejects.toMatchObject({ status: 403 });
+    await expect(ctl.monitor(input, user('assistant'))).rejects.toMatchObject({ status: 403 });
     expect(access.monitor).toHaveBeenCalled();
     expect(presence.channel).not.toHaveBeenCalled();
   });
