@@ -7328,11 +7328,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/booking/sales/booking/sales-booking.controller.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    }
-  },
   "src/modules/teaching/booking/sales/booking/sales-booking.ownership.ts": {
     "stylistic/max-len": {
       "count": 1

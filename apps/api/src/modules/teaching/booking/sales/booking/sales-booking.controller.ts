@@ -1,81 +1,62 @@
-import { bookingBodySchema, type BookingRequest } from '@ab/shared';
-import type { BookingResult, BookingTeacherOption, Conflict, SlotsResponse } from '@ab/schedule';
-import { Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { salesBookingRoutes } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
-import {
-  outsideSlotsQuerySchema,
-  slotsQuerySchema,
-  teacherOptionsQuerySchema,
-} from '@ab/schedule';
 import { SalesBookingOptions, SalesBookingService } from './sales-booking.service';
 
+type Input<K extends keyof typeof salesBookingRoutes> = RouteInputOf<
+  (typeof salesBookingRoutes)[K]
+>;
+
 /**
- * Registration by the assistant (R-ASST-01): the booking wizard's check and book, scoped to their own leads
- * and students while SalesOwnershipRule enforces it (any lead otherwise: sales-booking.ownership.ts),
- * with them as the actor so they are recorded as the one who brought the student. Trials only: no price, no
- * invoice, no custom meeting link (assertBookingScope), whatever the switch.
+ * Registration by the assistant (R-ASST-01): the booking wizard's check and book, scoped to their
+ * own leads and students while SalesOwnershipRule enforces it (sales-booking.ownership.ts), with
+ * them as the actor so they are recorded as the one who brought the student. Trials only: no
+ * price, no invoice, no custom meeting link (assertBookingScope), whatever the switch.
  */
 @ApiTags('booking')
 @ApiBearerAuth()
 @Permissions('self.sales')
-@Controller('sales/booking')
+@Controller()
 export class SalesBookingController {
   constructor(private readonly booking: SalesBookingService) {}
 
-  /** 200 { conflicts } of the whole series, nothing written. */
-  @Post('check')
+  @Route(salesBookingRoutes.check)
   @HttpCode(200)
-  async check(
-    @ZodBody(bookingBodySchema) req: BookingRequest,
-    @CurrentUser() user: AuthUser,
-  ): Promise<{ conflicts: Conflict[] }> {
-    return { conflicts: await this.booking.check(req, user) };
+  async check(@RouteInput() { body }: Input<'check'>, @CurrentUser() user: AuthUser) {
+    return { conflicts: await this.booking.check(body, user) };
   }
 
-  /** 201 BookingResult; 403 override_not_allowed | kind_not_allowed | meeting_link_not_allowed | invoice_not_allowed, and (rule enforced only) not_your_lead | not_your_student | not_your_family. */
-  @Post()
-  book(
-    @ZodBody(bookingBodySchema) req: BookingRequest,
-    @CurrentUser() user: AuthUser,
-  ): Promise<BookingResult> {
-    return this.booking.book(clientRequest(req, user.role), user);
+  /** Rule enforced only: 403 not_your_lead | not_your_student | not_your_family. */
+  @Route(salesBookingRoutes.book)
+  book(@RouteInput() { body }: Input<'book'>, @CurrentUser() user: AuthUser) {
+    return this.booking.book(clientRequest(body, user.role), user);
   }
 }
 
-/** The teachers and the slot grid of the assistant's wizard (the admin's GET /booking/teachers and /booking/slots, scoped). */
+/** The teachers and the slot grid of the assistant's wizard: the admin's, scoped. */
 @ApiTags('booking')
 @ApiBearerAuth()
 @Permissions('self.sales')
-@Controller('sales/booking')
+@Controller()
 export class SalesBookingOptionsController {
   constructor(private readonly options: SalesBookingOptions) {}
 
-  @Get('teachers')
-  teacherOptions(
-    @ZodQuery(teacherOptionsQuerySchema) query: z.output<typeof teacherOptionsQuerySchema>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<BookingTeacherOption[]> {
+  @Route(salesBookingRoutes.teachers)
+  teacherOptions(@RouteInput() { query }: Input<'teachers'>, @CurrentUser() user: AuthUser) {
     return this.options.teacherOptions(query, user);
   }
 
-  @Get('slots')
-  slots(
-    @ZodQuery(slotsQuerySchema) query: z.output<typeof slotsQuerySchema>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<SlotsResponse> {
+  @Route(salesBookingRoutes.slots)
+  slots(@RouteInput() { query }: Input<'slots'>, @CurrentUser() user: AuthUser) {
     return this.options.slots(query, user);
   }
-  /** Same scope as her slots, over the server's next 14 days. */
-  @Get('outside-slots')
-  outsideSlots(
-    @ZodQuery(outsideSlotsQuerySchema) query: z.output<typeof outsideSlotsQuerySchema>,
-    @CurrentUser() user: AuthUser,
-  ): ReturnType<SalesBookingOptions['outsideSlots']> {
+
+  @Route(salesBookingRoutes.outsideSlots)
+  outsideSlots(@RouteInput() { query }: Input<'outsideSlots'>, @CurrentUser() user: AuthUser) {
     return this.options.outsideSlots(query, user);
   }
 }

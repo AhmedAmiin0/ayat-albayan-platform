@@ -63,6 +63,7 @@ export * from './schedule-rules-api';
 export * from './course-pause-api';
 export * from './course-change-api';
 export * from './trial-date-api';
+export * from './booking-api';
 export * from './lesson-times';
 export {
   type CourseKey,

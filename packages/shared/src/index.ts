@@ -46,6 +46,7 @@ export * from './sales/course/course-change';
 export * from './sales/course/course-draft';
 export * from './sales/course/course-picks';
 export * from './sales/course/course-card';
+export * from './schedule/booking';
 export * from './schedule/booking-extras';
 export * from './people/users';
 export * from './people/account';

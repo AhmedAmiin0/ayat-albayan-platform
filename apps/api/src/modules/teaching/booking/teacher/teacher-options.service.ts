@@ -1,10 +1,16 @@
-import { meetingModeOf, usesPlatform, type BookingTeacherOption } from '@ab/schedule';
+import {
+  bookingTeacherOptionSchema,
+  meetingModeOf,
+  usesPlatform,
+  type BookingTeacherOption,
+} from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import type { TeacherOptionsQuery } from '@ab/schedule';
 import { TeacherOptionsRepo, type TeacherFilter } from './teacher-options.repo';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { httpError } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 
 /**
  * GET /booking/teachers (R-SCH-06): active teachers of the program, filtered by gender — the
@@ -28,12 +34,13 @@ export class TeacherOptionsService {
       this.options.withAvailability(ids),
       this.options.academyAuto(),
     ]);
-    return teachers.map(({ meeting_mode, ...t }) => ({
+    const options = teachers.map(({ meeting_mode, ...t }) => ({
       ...t,
       platform_classroom: usesPlatform(meetingModeOf(meeting_mode), auto),
       students_count: loads.get(t.id) ?? 0,
       has_availability: available.has(t.id),
     }));
+    return asResponse(bookingTeacherOptionSchema.array(), options);
   }
 
   private async filter(q: TeacherOptionsQuery): Promise<TeacherFilter> {

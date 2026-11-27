@@ -1,22 +1,21 @@
-import { bookingBodySchema, type BookingRequest, type OutsideSlotsResponse } from '@ab/shared';
-import type { BookingResult, BookingTeacherOption, Conflict, SlotsResponse } from '@ab/schedule';
-import { Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { bookingRoutes } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { clientRequest } from './core/booking.payload';
-import { outsideSlotsQuerySchema, slotsQuerySchema, teacherOptionsQuerySchema } from '@ab/schedule';
 import { BookingService } from './core/booking.service';
 import { SlotsService } from './plan/slots.service';
 import { TeacherOptionsService } from './teacher/teacher-options.service';
+
+type Input<K extends keyof typeof bookingRoutes> = RouteInputOf<(typeof bookingRoutes)[K]>;
 
 /** Booking wizard API (R-SCH-06, R-SCH-04, R-LEAD-06; docs/10 §5 #12–14). Admin only. */
 @ApiTags('booking')
 @ApiBearerAuth()
 @Permissions('booking.write')
-@Controller('booking')
+@Controller()
 export class BookingController {
   constructor(
     private readonly teachers: TeacherOptionsService,
@@ -24,44 +23,29 @@ export class BookingController {
     private readonly booking: BookingService,
   ) {}
 
-  @Get('teachers')
-  teacherOptions(
-    @ZodQuery(teacherOptionsQuerySchema) query: z.output<typeof teacherOptionsQuerySchema>,
-  ): Promise<BookingTeacherOption[]> {
+  @Route(bookingRoutes.teachers)
+  teacherOptions(@RouteInput() { query }: Input<'teachers'>) {
     return this.teachers.list(query);
   }
 
-  @Get('slots')
-  slots(
-    @ZodQuery(slotsQuerySchema) query: z.output<typeof slotsQuerySchema>,
-  ): Promise<SlotsResponse> {
+  @Route(bookingRoutes.slots)
+  slots(@RouteInput() { query }: Input<'slots'>) {
     return this.slotsService.slots(query);
   }
 
-  /** The next 14 days of the server clock, inside the teacher hours or not. */
-  @Get('outside-slots')
-  outsideSlots(
-    @ZodQuery(outsideSlotsQuerySchema) query: z.output<typeof outsideSlotsQuerySchema>,
-  ): Promise<OutsideSlotsResponse> {
+  @Route(bookingRoutes.outsideSlots)
+  outsideSlots(@RouteInput() { query }: Input<'outsideSlots'>) {
     return this.slotsService.outside(query);
   }
 
-  /** The same body as POST /booking; 200 { conflicts } of the whole series, nothing written. */
-  @Post('check')
+  @Route(bookingRoutes.check)
   @HttpCode(200)
-  async check(@ZodBody(bookingBodySchema) req: BookingRequest): Promise<{ conflicts: Conflict[] }> {
-    return { conflicts: await this.booking.check(req) };
+  async check(@RouteInput() { body }: Input<'check'>) {
+    return { conflicts: await this.booking.check(body) };
   }
 
-  /**
-   * 201 BookingResult; 409 { code: 'conflict', conflicts } unless override.reason is given; 400
-   * invoice_required for any kind but trial without `invoice` (R-PAY-03).
-   */
-  @Post()
-  book(
-    @ZodBody(bookingBodySchema) req: BookingRequest,
-    @CurrentUser() user: AuthUser,
-  ): Promise<BookingResult> {
-    return this.booking.book(clientRequest(req, user.role), user.id);
+  @Route(bookingRoutes.book)
+  book(@RouteInput() { body }: Input<'book'>, @CurrentUser() user: AuthUser) {
+    return this.booking.book(clientRequest(body, user.role), user.id);
   }
 }
