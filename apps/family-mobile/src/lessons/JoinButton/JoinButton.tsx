@@ -1,18 +1,8 @@
 import { Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { AppText, pressScale, shape, t, type, useTheme } from '@ab/mobile-kit';
-
-interface JoinButtonProps {
-  onPress: () => void;
-  busy: boolean;
-  short?: boolean;
-  live?: boolean;
-}
-
-const idleWord = (short: boolean, live: boolean): string => {
-  const card = live ? t.portal.app.live.join : t.portal.join;
-  return short ? t.portal.app.lesson.joinShort : card;
-};
+import type { JoinButtonProps } from './JoinButton.types';
+import { idleWord } from './join-button.helpers';
 
 /** Busy while the room link is fetched. */
 export function JoinButton({ onPress, busy, short = false, live = false }: JoinButtonProps) {
