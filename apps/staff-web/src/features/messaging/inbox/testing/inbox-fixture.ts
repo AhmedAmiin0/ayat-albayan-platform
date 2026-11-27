@@ -12,12 +12,15 @@ import type { InboxLead } from '@/features/messaging/inbox/api/api';
 // Test rows shaped like the Phase 4 API (docs/12 §4). Not imported by app code.
 
 export const PHONE = '+966501234567';
+/** A chat row's ids are uuids, as the shared chat view reads them. */
+export const THREAD_LAST_ID = 'd0000000-0000-4000-8000-000000000001';
+export const THREAD_LEAD_ID = 'd0000000-0000-4000-8000-000000000002';
 
 export function thread(patch: Partial<ThreadView> = {}): ThreadView {
   return {
     phone_e164: PHONE,
     display_name: 'أم سهيلة',
-    last_message_id: 'm-in',
+    last_message_id: THREAD_LAST_ID,
     last_direction: 'inbound',
     last_body: 'السلام عليكم',
     last_template_key: null,
@@ -26,7 +29,7 @@ export function thread(patch: Partial<ThreadView> = {}): ThreadView {
     last_message_at: '2026-10-01T10:00:00Z',
     last_inbound_at: '2026-10-01T10:00:00Z',
     unread_count: 0,
-    lead_id: 'lead-1',
+    lead_id: THREAD_LEAD_ID,
     lead_name: 'أم سهيلة',
     lead_status: 'new',
     lead_source: 'facebook_ad',
