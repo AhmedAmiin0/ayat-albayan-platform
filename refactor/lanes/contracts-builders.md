@@ -18,8 +18,10 @@ A base is a branch that collects the work of several builders and lands on devel
 | 3 | booking | `teaching/booking`, `teaching/scheduling`, `teaching/schedule-notices`, `teaching/course-pause`, `teaching/course-stop` | C1 | `lane/contracts-booking` |
 | 4 | messaging | `messaging/*` | C2 | `lane/contracts-messaging` |
 | 5 | teaching | `teaching/*` except builder 3's five modules | C2 | `lane/contracts-teaching` |
+| 6 | sales | `sales/*` | C2 | `lane/contracts-sales` |
+| 7 | reporting and platform | `reporting/*`, `platform/*` | C2 | `lane/contracts-reporting` |
 
-Not assigned yet: `sales/*`, `reporting/*`, `platform/*` (C2). A builder whose own area has no handler left on plain decorators takes the first of these that no open sub-PR and no sub-branch of another builder touches, on a new sub-branch `lane/contracts-<area>` of the C2 base, and says so in its summary.
+Every API module has a builder. A builder whose own area has no handler left on plain decorators takes the area with the most handlers still on plain decorators that no other builder is working on (no open sub-PR and no sub-branch of another builder touches it), on a new sub-branch `lane/contracts-<area>` of the C2 base, and says so in its summary.
 
 An area is its API modules, their schemas and routes in packages, and the client-core endpoint files and app hooks that call them. A builder never changes a route, schema, controller, endpoint file or hook of another area. In a file two areas share (a package index, a snapshot, a suppressions file) it changes only its own lines. When a route group needs a schema another area owns, it imports it; if that schema does not exist yet, the group waits and the builder names it in its summary.
 
