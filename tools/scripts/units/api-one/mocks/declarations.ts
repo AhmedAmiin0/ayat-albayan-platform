@@ -17,16 +17,22 @@ function unhoisted(e: ts.Expression | undefined): ts.Node | undefined {
   return unwrap(body === undefined || ts.isBlock(body) ? e : body);
 }
 
-const declared = (statement: ts.VariableStatement, fn: ts.CallExpression): Declared => ({
-  statement,
-  impl: fn.arguments[0],
-});
+interface Made {
+  name: string;
+  statement: ts.VariableStatement;
+  fn: ts.CallExpression;
+}
+
+const declared = ({ name, statement, fn }: Made): [string, Declared] => [
+  name,
+  { name, statement, impl: fn.arguments[0] },
+];
 
 /** `const x = vi.hoisted(() => vi.fn(impl))`, `const x = jest.fn(impl)`. */
 function single(s: ts.VariableStatement, d: ts.VariableDeclaration): [string, Declared][] {
   const value = unhoisted(d.initializer);
   const name = narrow(d.name, ts.isIdentifier)?.text;
-  return name !== undefined && isMockFn(value) ? [[name, declared(s, value)]] : [];
+  return name !== undefined && isMockFn(value) ? [declared({ name, statement: s, fn: value })] : [];
 }
 
 /** `const { a, b } = vi.hoisted(() => ({ a: vi.fn(), b: vi.fn(impl) }))`. */
@@ -35,7 +41,9 @@ function destructured(s: ts.VariableStatement, d: ts.VariableDeclaration): [stri
   return (object?.properties ?? []).flatMap((p): [string, Declared][] => {
     const value = narrow(p, ts.isPropertyAssignment)?.initializer;
     const name = narrow(p.name, ts.isIdentifier)?.text;
-    return name !== undefined && isMockFn(value) ? [[name, declared(s, value)]] : [];
+    return name !== undefined && isMockFn(value)
+      ? [declared({ name, statement: s, fn: value })]
+      : [];
   });
 }
 

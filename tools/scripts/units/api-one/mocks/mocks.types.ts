@@ -29,6 +29,7 @@ export type Plan = { ok: true; edits: TextEdit[] } | { ok: false; refused: strin
 
 /** Where a mock is declared, and the implementation its mock function was made with. */
 export interface Declared {
+  name: string;
   statement: ts.VariableStatement;
   impl: ts.Expression | undefined;
 }

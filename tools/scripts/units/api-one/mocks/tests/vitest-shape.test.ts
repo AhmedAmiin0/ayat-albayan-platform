@@ -66,3 +66,17 @@ it('x', () => expect(apiFetch).toHaveBeenLastCalledWith('/a', expect.anything())
     /expect\(mockApi\.reads\(\)\.at\(-1\)\)\.toEqual\(\{ method: 'GET', path: '\/a' \}\)/,
   );
 });
+
+test('each implemented mock of one hoisted statement keeps its own kind', () => {
+  const text = `const { apiFetch, apiSend } = vi.hoisted(() => ({
+  apiFetch: vi.fn(async () => 'rows'),
+  apiSend: vi.fn(async () => 'saved'),
+}));
+vi.mock('@ab/web-kit', async (o) => ({ ...(await o<object>()), apiFetch, apiSend }));
+`;
+  const out = rewriteMocks('a.test.ts', text).text;
+  assert.match(
+    out,
+    /mockApi\.onRead\(async \(\) => 'rows'\);\nmockApi\.onWrite\(async \(\) => 'saved'\);/,
+  );
+});

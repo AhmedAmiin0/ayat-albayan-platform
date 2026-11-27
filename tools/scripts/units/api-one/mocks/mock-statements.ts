@@ -1,7 +1,6 @@
 import ts from 'typescript';
 import { lineEnd } from '../ast.ts';
 import type { TextEdit } from '../../components/model/model.types.ts';
-import { namesOf } from './declarations.ts';
 import { handlerText } from './handler.ts';
 import type { Binding, Declared, Handler, Inline, KitMock, MockKind } from './mocks.types.ts';
 import { MOCK } from './uses.ts';
@@ -18,7 +17,7 @@ export function objectEdit({ object, pair }: KitMock): TextEdit {
 }
 
 function handlerOf(d: Declared, kindOf: ReadonlyMap<string, MockKind>): Handler[] {
-  const kind = kindOf.get(namesOf(d.statement).find((n) => kindOf.has(n)) ?? '') ?? 'read';
+  const kind = kindOf.get(d.name) ?? 'read';
   return d.impl === undefined ? [] : [{ kind, handler: handlerText(d.impl, kind) ?? null }];
 }
 
