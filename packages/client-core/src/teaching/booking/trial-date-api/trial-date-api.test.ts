@@ -12,7 +12,7 @@ const BODY = {
   byday: [2],
   startTimeLocal: '15:00',
   tz: 'Europe/London',
-  durationMin: 45,
+  durationMin: 45 as const,
   startsOn: '2026-12-01',
   startsAt: '2026-12-01T15:00:00Z',
 };

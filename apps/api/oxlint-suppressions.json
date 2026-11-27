@@ -7266,14 +7266,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/booking/plan/package-size.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 3
-    }
-  },
   "src/modules/teaching/booking/plan/slots.service.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -7558,11 +7550,6 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/booking/trial-date/trial-date.controller.ts": {
     "stylistic/max-len": {
       "count": 1
     }

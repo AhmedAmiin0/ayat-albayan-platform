@@ -1,14 +1,15 @@
-import type { BookingMode } from '@ab/client-core';
-import type { BookingRequest, TrialDateResult, TrialHistory } from '@ab/shared';
-import type { Conflict } from '@ab/schedule';
+import { salesTrialDateCalls, trialDateCalls, type BookingMode } from '@ab/client-core';
+import type { BookingRequest } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { lessonKeys, LESSONS_KEY } from '@/features/teaching/schedule';
 import { STUDENTS_KEY } from '@/features/people/students/api';
 import { apiFetch, apiSend } from '@ab/web-kit';
-import { bookingBase } from '@/features/teaching/booking/mode';
 import { bookingKeys } from '@/features/teaching/booking/booking.keys';
 
-// Admin or sales base routes (R-SCH-06, R-ASST-01); sales covers her students only.
+// Admin or sales routes (R-SCH-06, R-ASST-01); sales covers her students only.
+
+const client = { apiFetch, apiSend };
+const trialCalls = { admin: trialDateCalls(client), sales: salesTrialDateCalls(client) };
 
 /** Under LESSONS_KEY: every lesson write (a booking, a move, a cancel) refreshes the history too. */
 export const TRIAL_DATES_KEY = lessonKeys.trialDates;
@@ -17,10 +18,7 @@ export const TRIAL_DATES_KEY = lessonKeys.trialDates;
 export const trialHistoryQuery = (studentId: string, mode: BookingMode = 'admin') =>
   queryOptions({
     queryKey: lessonKeys.trialHistory(mode, studentId),
-    queryFn: () =>
-      apiFetch<TrialHistory>(
-        `${bookingBase(mode)}/trial-dates?studentId=${encodeURIComponent(studentId)}`,
-      ),
+    queryFn: () => trialCalls[mode].history(studentId),
   });
 
 /**
@@ -28,14 +26,12 @@ export const trialHistoryQuery = (studentId: string, mode: BookingMode = 'admin'
  * same body as the booking check; keyed without its idempotency key and meeting link.
  */
 export const trialDateCheckQuery = (body: BookingRequest, mode: BookingMode = 'admin') => {
-  const probe: Partial<BookingRequest> = { ...body };
-  delete probe.meetingLink; // never sent: the link is validated on the booking itself
-  const key = { ...probe };
-  delete key.clientRequestId;
+  // The link is never sent: it is validated on the booking itself.
+  const probe = { ...body, meetingLink: undefined };
+  const key = { ...probe, clientRequestId: undefined };
   return queryOptions({
     queryKey: bookingKeys.trialDateCheck(mode, JSON.stringify(key)),
-    queryFn: () =>
-      apiSend<{ conflicts: Conflict[] }>('POST', `${bookingBase(mode)}/trial-date/check`, probe),
+    queryFn: () => trialCalls[mode].check(probe),
     retry: false,
   });
 };
@@ -46,7 +42,7 @@ export const trialDateCheckQuery = (body: BookingRequest, mode: BookingMode = 'a
  * body's clientRequestId makes a retry book once.
  */
 export const createTrialDate = (body: BookingRequest, mode: BookingMode = 'admin') =>
-  apiSend<TrialDateResult>('POST', `${bookingBase(mode)}/trial-date`, body);
+  trialCalls[mode].pick(body);
 
 /** After a new trial date: lessons (the history and calendars are under it), students, chats and sales views. */
 export async function refreshAfterTrialDate(queryClient: QueryClient): Promise<void> {
