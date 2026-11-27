@@ -42,9 +42,7 @@ interface PanelSend {
  * /threads/gifs?q= (GIPHY; `configured: false` until an admin adds the key), and POST
  * /threads/:phone/sticker | gif, audited as `thread_sticker` / `thread_gif`.
  */
-@ApiTags('inbox')
 @ApiBearerAuth()
-@Permissions('inbox.read')
 @Controller()
 export class StickersController {
   constructor(
@@ -92,6 +90,7 @@ export class StickersController {
   @Post('threads/:phone/sticker')
   @HttpCode(201)
   @Permissions('inbox.send')
+  @ApiTags('inbox')
   sticker(
     @Param('phone') raw: string,
     @Body() body: unknown,
@@ -105,6 +104,7 @@ export class StickersController {
   @Post('threads/:phone/gif')
   @HttpCode(201)
   @Permissions('inbox.send')
+  @ApiTags('inbox')
   gif(
     @Param('phone') raw: string,
     @Body() body: unknown,
