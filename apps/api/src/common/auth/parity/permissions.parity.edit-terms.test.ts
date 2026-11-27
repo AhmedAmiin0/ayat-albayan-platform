@@ -1,6 +1,6 @@
 import { systemPermissionsOf, USER_ROLES } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { walkRoutes, type RouteAccess } from './route-walk.test-util';
+import { permissionKeys, walkRoutes, type RouteAccess } from './route-walk.test-util';
 
 // edit_terms gates every change to an existing package; set_start_date is an inline check only.
 describe('subscriptions.edit_terms', () => {
@@ -10,8 +10,9 @@ describe('subscriptions.edit_terms', () => {
   }, 60_000);
 
   it('gates the used-before, start-date and assistant amount editors only', () => {
-    expect(routes.filter((r) => r.permission === 'subscriptions.set_start_date')).toEqual([]);
-    const gated = routes.filter((r) => r.permission === 'subscriptions.edit_terms');
+    const startDate = 'subscriptions.set_start_date';
+    expect(routes.filter((r) => permissionKeys(r).includes(startDate))).toEqual([]);
+    const gated = routes.filter((r) => permissionKeys(r).includes('subscriptions.edit_terms'));
     expect(gated.map((r) => r.key).sort()).toEqual([
       'SalesPaymentsController.editAmount',
       'StartDateEditController.edit',

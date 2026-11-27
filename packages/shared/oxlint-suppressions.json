@@ -657,9 +657,6 @@
   "src/sales/teacher/teacher-overview.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/sales/views.ts": {
