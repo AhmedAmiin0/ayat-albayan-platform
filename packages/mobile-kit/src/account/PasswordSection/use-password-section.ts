@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { t } from '../lib/i18n/i18n';
-import { changePassword } from './account-api';
-import { passwordChecks } from './password-checks';
-import { useAccountAction } from './use-account-action';
+import { t } from '../../lib/i18n/i18n';
+import { changePassword } from '../account-api';
+import { passwordChecks } from '../password-checks';
+import { useAccountAction } from '../use-account-action';
 
 /** R-ACC-04: checked here, then PUT /me/password. */
-export function usePasswordForm() {
+export function usePasswordSection() {
   const [current, setCurrent] = useState('');
   const [next, setNext] = useState('');
   const [confirm, setConfirm] = useState('');

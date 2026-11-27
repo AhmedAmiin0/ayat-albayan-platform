@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t } from '../../lib/i18n/i18n';
 import { shape, type, useTheme } from '../../theme';
@@ -6,19 +5,7 @@ import { ErrorLine } from '../../ui/feedback/ErrorLine';
 import { Notice } from '../../ui/feedback/Notice';
 import { AppText } from '../../ui/primitives/AppText';
 import { Button } from '../../ui/primitives/Button';
-
-interface AccountCardProps {
-  title: string;
-  children: ReactNode;
-  /** The section's save; omitted for a card without one (the photo has its own buttons). */
-  onSave?: () => void;
-  pending?: boolean;
-  /** Nothing to save yet (unchanged): the button is off. */
-  disabled?: boolean;
-  /** Under the button: a failure no field owns, then the success note. */
-  error?: string;
-  notice?: string;
-}
+import type { AccountCardProps } from './AccountCard.types';
 
 /** docs/07 §4: raised, 1px rule, radius 12, no shadow. */
 export function AccountCard({ title, children, onSave, pending = false, ...p }: AccountCardProps) {
