@@ -7,11 +7,10 @@ import {
   type ThreadRating,
   type ThreadTemplate,
   type ThreadText,
-  type ThreadFile,
   type ThreadView,
 } from '@ab/shared';
 import type { LeadStatus } from '@ab/catalog';
-import { liveInterval, offPathKeys, type TextAnswer } from '@ab/client-core';
+import { chatFileCalls, liveInterval, offPathKeys, type TextAnswer } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend, env } from '@ab/web-kit';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
@@ -21,6 +20,8 @@ import type { Page } from '@ab/core';
 import { inboxLeadKeys, threadKeys } from '@/features/messaging/inbox/api/keys';
 
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
+
+const chatFiles = chatFileCalls({ apiFetch, apiSend });
 
 export const THREADS_PAGE_SIZE = 30;
 /** New WhatsApp messages arrive by webhook; the open chat polls for them with a delta (10 s; e2e 1 s). */
@@ -58,17 +59,14 @@ export const threadPage = (path: string, init?: RequestInit) => apiFetch<ThreadD
 export const threadFileQuery = (phone: string, messageId: string) =>
   queryOptions({
     queryKey: offPathKeys.threadFile(phone, messageId),
-    queryFn: () =>
-      apiFetch<ThreadFile>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file`),
+    queryFn: () => chatFiles.file({ phone, messageId }),
     staleTime: 30 * 60_000,
     retry: false,
   });
 
 /** Never cached: each click gets a fresh URL signed to save under the file's name. */
 export const threadFileDownload = (phone: string, messageId: string) =>
-  apiFetch<ThreadFile>(
-    `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file?download=1`,
-  );
+  chatFiles.download({ phone, messageId });
 
 /** H3; `replyToMessageId`: the message of this chat it answers (else 400 reply_not_in_thread). */
 /** The row, and whether its request id replayed the FIRST one (TextAnswer). */

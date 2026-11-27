@@ -112,11 +112,6 @@
       "count": 1
     }
   },
-  "src/lessons/makeup-views.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/lessons/series/time-edit.ts": {
     "ab/no-shape-checks": {
       "count": 1

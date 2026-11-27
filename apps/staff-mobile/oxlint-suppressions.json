@@ -359,9 +359,6 @@
   "src/booking/invoice/invoice-queries.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/booking/invoice/invoice-upload.ts": {
@@ -2058,9 +2055,6 @@
   "src/inbox/messages/hooks/thread-file.ts": {
     "ab/no-restricted-syntax": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 3
     },
     "typescript/no-deprecated": {
       "count": 1
@@ -5208,7 +5202,7 @@
   },
   "src/teacher/lib/queries.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 4
+      "count": 3
     }
   },
   "src/teacher/report/components/AttachmentsField.tsx": {

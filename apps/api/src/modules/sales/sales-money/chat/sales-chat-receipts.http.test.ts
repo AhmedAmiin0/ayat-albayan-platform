@@ -7,6 +7,7 @@ import { FAMILY_PHONE, MSG, salesDefaults } from '@/modules/sales/sales-money/te
 
 const now = new Date().toISOString();
 const row = (id: string, mime: string, type = 'image') => ({ id, phone_e164: FAMILY_PHONE, direction: 'inbound', media_id: 'm', media_mime: mime, media_path: null, body: null, created_at: now, line: 'chat', interactive_payload: { type } });
+const PDF = 'b3333333-3333-4333-8333-333333333333';
 const COPY = { subscriptionId: SUB_ID, messageId: MSG };
 
 describe('«اختر صورة الإيصال من المحادثة»: only her student’s family chat, photos and PDFs only', () => {
@@ -25,13 +26,13 @@ describe('«اختر صورة الإيصال من المحادثة»: only her s
   });
 
   it('lists the inbound photos / PDFs of HER student’s family phone only (no voice note or sticker), metadata only', async () => {
-    const files = [row(MSG, 'image/jpeg'), row('a', 'audio/ogg', 'audio'), row('s', 'image/webp', 'sticker'), row('p', 'application/pdf', 'document')];
+    const files = [row(MSG, 'image/jpeg'), row('a', 'audio/ogg', 'audio'), row('s', 'image/webp', 'sticker'), row(PDF, 'application/pdf', 'document')];
     m.mediaQueries.receipts.mockResolvedValue(files);
     const res = await call({ method: 'GET', url: `/sales/money/chat-receipts?studentId=${STUDENT_ID}`, token: 'salesA' });
     expect(res.statusCode).toBe(200);
     expect(m.family.familyPhone).toHaveBeenCalledWith(STUDENT_ID);
     expect(m.mediaQueries.receipts).toHaveBeenCalledWith(expect.objectContaining({ phone: FAMILY_PHONE }));
-    expect(res.json().map((r: { message_id: string }) => r.message_id)).toEqual([MSG, 'p']);
+    expect(res.json().map((r: { message_id: string }) => r.message_id)).toEqual([MSG, PDF]);
     expect(Object.keys(res.json()[0]).sort()).toEqual(['caption', 'created_at', 'expired', 'message_id', 'mime']);
     expect(m.media.cache).not.toHaveBeenCalled();
   });

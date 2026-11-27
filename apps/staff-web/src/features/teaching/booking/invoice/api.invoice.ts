@@ -1,9 +1,8 @@
-import { bookingExtraCalls, invoiceCalls } from '@ab/client-core';
+import { bookingExtraCalls, chatFileCalls, invoiceCalls } from '@ab/client-core';
 import { invoiceUploadSchema, type InvoiceUpload } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import type { ThreadMediaItem } from '@/features/teaching/booking/draft/contract';
 import { invoiceMime } from './invoice-file';
 import {
   bookingKeys,
@@ -35,23 +34,20 @@ export async function uploadInvoiceFile(input: { requestId: string; file: File }
   return signed.path;
 }
 
-const mediaPath = (phone: string) => `/threads/${encodeURIComponent(phone)}/media`;
+const chatFiles = chatFileCalls({ apiFetch, apiSend });
 
 /** GET /threads/:phone/media — metadata of the family's recent inbound images and PDFs. */
 export const threadMediaQuery = (phone: string) =>
   queryOptions({
     queryKey: threadMediaKeys.list(phone),
-    queryFn: () => apiFetch<ThreadMediaItem[]>(mediaPath(phone)),
+    queryFn: () => chatFiles.media({ phone }),
   });
 
 /** GET /threads/:phone/media/:messageId — fetches (and caches) the file; a signed URL for the thumbnail. */
 export const threadMediaUrl = (phone: string, messageId: string) =>
   queryOptions({
     queryKey: threadMediaKeys.url(phone, messageId),
-    queryFn: () =>
-      apiFetch<{ url: string; mime: string; expires_at: string }>(
-        `${mediaPath(phone)}/${messageId}`,
-      ),
+    queryFn: () => chatFiles.mediaFile({ phone, messageId }),
     staleTime: 4 * 60_000,
     retry: false,
   });

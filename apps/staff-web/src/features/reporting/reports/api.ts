@@ -1,9 +1,7 @@
 import {
   attachmentUploadSchema,
-  type PendingReportView,
   type ReportAttachmentView,
   type ReportFormResponse,
-  type StudentReportsResponse,
   type DraftBody,
   type ReportV2DraftBody,
   type ReportV2SubmitBody,
@@ -13,6 +11,7 @@ import {
   reportAttachmentCalls,
   reportCalls,
   reportErrorWords,
+  reportHistoryCalls,
   TEACHER_REFRESH_MS,
 } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
@@ -23,6 +22,8 @@ import { reportKeys } from '@/features/reporting/keys';
 // Report routes (docs/11 §4 R1–R12). Commands camelCase, responses snake_case.
 
 export const REPORTS_KEY = reportKeys.all;
+
+const history = reportHistoryCalls({ apiFetch, apiSend });
 
 /** R1: GET /lessons/:id/report-form — creates the drafts on first open. */
 export const reportFormQuery = (lessonId: string) =>
@@ -38,13 +39,13 @@ export const reportFormQuery = (lessonId: string) =>
 export const studentReportsQuery = (studentId: string, page: number) =>
   queryOptions({
     queryKey: reportKeys.student(studentId, page),
-    queryFn: () => apiFetch<StudentReportsResponse>(`/students/${studentId}/reports?page=${page}&pageSize=10`),
+    queryFn: () => history.student({ id: studentId }, { page, pageSize: 10 }),
   });
 
-/** R11: polled every 30 s with her lessons (docs/48). */
+/** R11: polled every 30 s with the teacher's lessons (docs/48). */
 export const pendingReportsQuery = queryOptions({
   queryKey: reportKeys.pending(),
-  queryFn: () => apiFetch<PendingReportView[]>('/teachers/me/pending-reports'),
+  queryFn: () => history.pending(),
   refetchInterval: TEACHER_REFRESH_MS,
 });
 

@@ -1,6 +1,5 @@
-import type { Attendance, Grade, LessonStatus, PdfStatus, Program, ReportStatus } from '@ab/catalog';
+import type { LessonStatus, Program } from '@ab/catalog';
 import type { BalanceView } from '@ab/money';
-import type { Rubric } from './rules';
 import type { ReportView } from './report-routes';
 import type { MemoryView } from './v2/rules';
 
@@ -42,56 +41,6 @@ export interface ReportFormResponse {
   entries: ReportFormEntry[];
   /** reportBlock(...) for a submit now; drafts can always be saved. */
   submit_block: 'lesson_cancelled' | 'not_started' | null;
-}
-
-/** One progress-chart point (R-REP-05): gradeScore per rubric, 5 = excellent ... 1. */
-export interface GradePoint {
-  report_id: string;
-  lesson_id: string;
-  starts_at: string;
-  overall: number | null;
-  rubrics: Record<Rubric, number | null>;
-}
-
-/** History row: the report plus its lesson's time and number. */
-export interface ReportSummaryView {
-  id: string;
-  lesson_id: string;
-  starts_at: string;
-  lesson_no: number | null;
-  teacher: { id: string; display_name_ar: string };
-  attendance: Attendance | null;
-  grade_overall: Grade | null;
-  status: ReportStatus;
-  version: number;
-  pdf_status: PdfStatus | null;
-  sent_at: string | null;
-  /**
-   * docs/46 B7, absent in an old cache: the first submit, and for the reader now can_edit
-   * (canEditReport) and edit_until (first submit + report_teacher_edit_minutes). Sales get none.
-   */
-  submitted_at?: string | null;
-  can_edit?: boolean;
-  edit_until?: string | null;
-}
-
-/** GET /students/:id/reports (R-REP-05, issue D2): submitted reports, newest first + the series. */
-export interface StudentReportsResponse {
-  items: ReportSummaryView[];
-  total: number;
-  page: number;
-  pageSize: number;
-  /** Oldest first, every submitted report of the student (not only this page). */
-  series: GradePoint[];
-}
-
-/** GET /teachers/me/pending-reports (R-TCH-03): started lessons still missing a submitted report. */
-export interface PendingReportView {
-  lesson_id: string;
-  starts_at: string;
-  status: LessonStatus;
-  student: { id: string; code: string; name: string };
-  report_id: string | null;
 }
 
 /** A signed URL to PUT a file to (Storage createSignedUploadUrl). */
