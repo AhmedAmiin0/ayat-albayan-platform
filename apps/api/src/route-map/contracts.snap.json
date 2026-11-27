@@ -8844,6 +8844,51 @@
    }
   }
  },
+ "GET /script-relay/api/v1/me": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "data": {
+     "type": "object",
+     "properties": {
+      "account": {
+       "type": "object",
+       "properties": {
+        "name": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "name"
+       ]
+      },
+      "key": {
+       "type": "object",
+       "properties": {
+        "scopes": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        }
+       },
+       "required": [
+        "scopes"
+       ]
+      }
+     },
+     "required": [
+      "account",
+      "key"
+     ]
+    }
+   },
+   "required": [
+    "data"
+   ]
+  }
+ },
  "GET /short-links": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -27006,6 +27051,35 @@
      "maximum": 12
     }
    }
+  }
+ },
+ "POST /script-relay/api/v1/messages": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "data": {
+     "type": "object",
+     "properties": {
+      "message_id": {
+       "type": "string"
+      },
+      "whatsapp_message_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "message_id",
+      "whatsapp_message_id"
+     ]
+    }
+   },
+   "required": [
+    "data"
+   ]
   }
  },
  "POST /settings/integrations/crm-webhook": {
