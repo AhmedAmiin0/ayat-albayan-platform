@@ -42,7 +42,7 @@ function renderPanel() {
 }
 
 const label = (col: string) => t.table.filterBy.replace('{col}', col);
-const BASE = '/students?search=&page=1&pageSize=20&status=new%2Ctrial%2Cpending_subscription%2Cactive%2Cpending_renewal%2Cexpired&teacher=t1';
+const BASE = '/students?page=1&pageSize=20&status=new%2Ctrial%2Cpending_subscription%2Cactive%2Cpending_renewal%2Cexpired&teacher=t1';
 
 describe('TeacherStudentsPanel sort + column filters (R-TCH-03, R-NFR-08)', () => {
   it('every column sorts server-side', async () => {

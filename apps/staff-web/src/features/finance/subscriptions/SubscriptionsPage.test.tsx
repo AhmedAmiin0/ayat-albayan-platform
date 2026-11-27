@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { useState } from 'react';
+import { studentListItemFixture } from '@ab/shared/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
@@ -20,7 +21,7 @@ const page = <T,>(items: T[]) => ({ items, total: items.length, page: 1, pageSiz
 
 function route(path: string) {
   if (path.startsWith('/admin-tasks')) return page([TASK]);
-  if (path.startsWith('/students?')) return page([{ ...WEEKLY.student, guardian_name: 'أم سهيلة', status: 'active' }]);
+  if (path.startsWith('/students?')) return page([studentListItemFixture({ ...WEEKLY.student, guardian_name: 'أم سهيلة', status: 'active' })]);
   return page([WEEKLY]);
 }
 

@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { studentListItemFixture } from '@ab/shared/testing';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
@@ -9,18 +10,11 @@ import { StudentsPage } from './StudentsPage';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
-const ROW = {
+const ROW = studentListItemFixture({
   id: 's1',
-  code: 'AB-0183',
-  name: 'سهيلة',
-  status: 'active',
-  program: 'quran',
-  tz: 'Asia/Riyadh',
-  created_at: '2026-10-01T00:00:00Z',
   guardian_name: 'أم جود',
-  guardian_phone: '+966501234567',
   teacher_name: 'أبرار',
-};
+});
 
 function renderPage(state: Partial<StudentsSearch>, total = 1) {
   apiFetch.mockImplementation((path: string) =>
@@ -40,7 +34,7 @@ const filterLabel = (col: string) => t.table.filterBy.replace('{col}', col);
 describe('StudentsPage sort + column filters (R-NFR-08)', () => {
   it('sends sort, dir and the column filters to GET /students', () => {
     renderPage({ sort: { sort: 'guardian', dir: 'desc' }, columns: { code: '018' } });
-    const qs = new URLSearchParams([['search', ''], ['page', '2'], ['pageSize', '20'], ['sort', 'guardian'], ['dir', 'desc'], ['code', '018']]);
+    const qs = new URLSearchParams([['page', '2'], ['pageSize', '20'], ['sort', 'guardian'], ['dir', 'desc'], ['code', '018']]);
     expect(apiFetch).toHaveBeenCalledWith(`/students?${qs}`);
   });
 
