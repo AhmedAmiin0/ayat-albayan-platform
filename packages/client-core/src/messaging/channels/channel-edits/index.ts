@@ -3,5 +3,4 @@ export {
   channelBubbleActions,
   channelEditError,
   type ChannelEditError,
-  channelMessagePath,
 } from './channel-edits';
