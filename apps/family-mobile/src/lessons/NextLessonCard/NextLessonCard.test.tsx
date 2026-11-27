@@ -72,3 +72,13 @@ test('a person the portal names by role only: the role word, and their face too'
   expect(screen.getByText(`فاطمة · ${L.unnamed.guest}`)).toBeTruthy();
   expect(screen.getAllByTestId('avatar-initials', { includeHiddenElements: true })).toHaveLength(2);
 });
+
+test('the short card: no teacher line, no room note and no options', async () => {
+  await renderWithQuery(
+    <NextLessonCard lesson={lesson(new Date(), 120)} student={student()} />,
+    freshQueryClient(),
+  );
+  expect(screen.queryByText(t.portal.app.lesson.roomNote)).toBeNull();
+  expect(screen.queryByText(/فاطمة/)).toBeNull();
+  expect(screen.queryByRole('button', { name: t.portal.actions.menuTitle })).toBeNull();
+});

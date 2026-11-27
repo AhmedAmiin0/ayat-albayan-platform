@@ -1,5 +1,7 @@
 import {
   type ApiBlob,
+  boundReads,
+  callWith,
   createApiClient,
   parseResponse,
   readTimeoutFor,
@@ -23,6 +25,27 @@ const client = createApiClient({
   clientTag: () => WEB_CLIENT_TAG,
 });
 
+// The signed-link pages (no login): the same client that never sends the session's token.
+const publicClient = createApiClient({
+  baseUrl: () => env.apiUrl,
+  accessToken: () => Promise.resolve(null),
+  clientTag: () => WEB_CLIENT_TAG,
+});
+
+/**
+ * One request to the API with the session's token (docs/62 part 3 §3b). A read with no answer
+ * within readTimeoutFor(path) rejects as no answer and frees its request (docs/43 AU9).
+ */
+export const call = callWith(
+  boundReads(client, (send, init, path) =>
+    withReadDeadline(send, init, { timeoutMs: readTimeoutFor(path) }),
+  ),
+);
+
+/** call() for a signed-link page: no Authorization header, whoever is signed in. */
+export const publicCall = callWith(publicClient);
+
+// docs/62 part 3 §3b F deletes the pair and its public twins below.
 /**
  * fetch against the Nest API with the current Supabase access token and the client tag
  * (`X-AB-Client`). A read with no answer within readTimeoutFor(path) (20 s; a chat file 120 s)
@@ -47,13 +70,6 @@ export const apiSend = client.apiSend;
 export function apiBlob(path: string, init?: RequestInit): Promise<ApiBlob> {
   return client.apiBlob(path, init);
 }
-
-// The signed-link pages (no login): the same client that never sends the session's token.
-const publicClient = createApiClient({
-  baseUrl: () => env.apiUrl,
-  accessToken: () => Promise.resolve(null),
-  clientTag: () => WEB_CLIENT_TAG,
-});
 
 /** GET for a signed-link page: no Authorization header, whoever is signed in on this browser. */
 export function publicApiFetch<T>(path: string, init?: RequestInit): Promise<T> {

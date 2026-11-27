@@ -1,7 +1,13 @@
 import { defineRoute } from '@ab/core';
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { apiErrorCode, callWith, parseResponse, type ApiClient } from '../../../..';
+import {
+  apiErrorCode,
+  callWith,
+  parseResponse,
+  type ApiRequest,
+  type Requester,
+} from '../../../..';
 
 const link = z.object({ code: z.string(), title: z.string() });
 const routes = {
@@ -46,72 +52,76 @@ const routes = {
 };
 
 function fakeApi(answer: unknown) {
-  const parsed = (path: string, schema?: z.ZodType) =>
-    schema ? parseResponse(schema, answer, path) : answer;
-  const apiFetch = vi.fn(async (path: string, init?: RequestInit & { schema?: z.ZodType }) =>
-    parsed(path, init?.schema),
+  const request = vi.fn(async (sent: ApiRequest) =>
+    sent.schema ? parseResponse(sent.schema, answer, sent.path) : answer,
   );
-  const apiSend = vi.fn(async (_m: string, path: string, opts?: { schema?: z.ZodType }) =>
-    parsed(path, opts?.schema),
-  );
-  const api: ApiClient = { apiFetch, apiSend };
-  return { call: callWith(api), apiFetch, apiSend };
+  const api: Requester = { request };
+  return { call: callWith(api), request };
 }
 
 describe('callWith', () => {
   it('reads a GET route with its query string and parses the answer', async () => {
-    const { call, apiFetch } = fakeApi({ rows: [{ code: 'a', title: 'x', extra: 1 }], total: 1 });
+    const { call, request } = fakeApi({ rows: [{ code: 'a', title: 'x', extra: 1 }], total: 1 });
     const page = await call({ route: routes.list, query: { search: 'نور', page: 2 } });
     expect(page).toEqual({ rows: [{ code: 'a', title: 'x' }], total: 1 });
-    expect(apiFetch.mock.calls[0]?.[0]).toBe('/links?search=%D9%86%D9%88%D8%B1&page=2');
+    expect(request.mock.calls[0]?.[0].path).toBe('/links?search=%D9%86%D9%88%D8%B1&page=2');
   });
 
-  it('reads with the plain call a hand-written client made, and parses the answer itself', async () => {
-    const { call, apiFetch } = fakeApi({ rows: [], total: 0 });
+  it('asks the client for a GET with no schema, and parses the answer itself', async () => {
+    const { call, request } = fakeApi({ rows: [], total: 0 });
     await call({ route: routes.list, query: {} });
-    expect(apiFetch.mock.calls[0]).toEqual(['/links']);
+    expect(request.mock.calls[0]).toEqual([{ method: 'GET', path: '/links' }]);
   });
 
   it('leaves empty query values out', async () => {
-    const { call, apiFetch } = fakeApi({ rows: [], total: 0 });
+    const { call, request } = fakeApi({ rows: [], total: 0 });
     await call({ route: routes.list, query: { search: '' } });
-    expect(apiFetch.mock.calls[0]?.[0]).toBe('/links');
+    expect(request.mock.calls[0]?.[0].path).toBe('/links');
   });
 
   it('drops a null query value and sends a boolean as text', async () => {
-    const { call, apiFetch } = fakeApi({});
+    const { call, request } = fakeApi({});
     await call({ route: routes.flags, query: { active: true, note: null } });
-    expect(apiFetch.mock.calls[0]?.[0]).toBe('/flags?active=true');
+    expect(request.mock.calls[0]?.[0].path).toBe('/flags?active=true');
   });
 
-  it('sends a write through apiSend with its own method, never through apiFetch', async () => {
-    const { call, apiFetch, apiSend } = fakeApi({ code: 'n', title: 'new' });
+  it('sends a write with its own method and body', async () => {
+    const { call, request } = fakeApi({ code: 'n', title: 'new' });
     await expect(call({ route: routes.create, body: { title: 'new' } })).resolves.toEqual({
       code: 'n',
       title: 'new',
     });
-    expect(apiSend.mock.calls[0]).toEqual(['POST', '/links', { title: 'new' }]);
-    expect(apiFetch).not.toHaveBeenCalled();
+    expect(request.mock.calls[0]).toEqual([
+      { method: 'POST', path: '/links', body: { title: 'new' } },
+    ]);
   });
 
   it('sends a write with its filled path and body', async () => {
-    const { call, apiSend } = fakeApi({ code: 'a/b', title: 'new' });
+    const { call, request } = fakeApi({ code: 'a/b', title: 'new' });
     await expect(
       call({ route: routes.update, params: { code: 'a/b' }, body: { title: 'new' } }),
     ).resolves.toEqual({ code: 'a/b', title: 'new' });
-    expect(apiSend.mock.calls[0]).toEqual(['PATCH', '/links/a%2Fb', { title: 'new' }]);
+    expect(request.mock.calls[0]?.[0]).toEqual({
+      method: 'PATCH',
+      path: '/links/a%2Fb',
+      body: { title: 'new' },
+    });
   });
 
   it('sends PUT with its own method', async () => {
-    const { call, apiSend } = fakeApi({ code: 'a', title: 'x' });
+    const { call, request } = fakeApi({ code: 'a', title: 'x' });
     await call({ route: routes.replace, params: { code: 'a' }, body: { title: 'x' } });
-    expect(apiSend.mock.calls[0]).toEqual(['PUT', '/links/a', { title: 'x' }]);
+    expect(request.mock.calls[0]?.[0]).toEqual({
+      method: 'PUT',
+      path: '/links/a',
+      body: { title: 'x' },
+    });
   });
 
   it('resolves undefined for an empty answer, sent as DELETE', async () => {
-    const { call, apiSend } = fakeApi(undefined);
+    const { call, request } = fakeApi(undefined);
     await expect(call({ route: routes.remove, params: { code: 'a' } })).resolves.toBeUndefined();
-    expect(apiSend.mock.calls[0]).toEqual(['DELETE', '/links/a', undefined]);
+    expect(request.mock.calls[0]?.[0]).toEqual({ method: 'DELETE', path: '/links/a' });
   });
 
   it('turns a body for an empty answer into bad_response', async () => {

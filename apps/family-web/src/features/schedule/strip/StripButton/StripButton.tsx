@@ -1,27 +1,8 @@
-import { dayTile, type StripDay } from '@ab/client-core';
-import { counted } from '@ab/core';
-import { t, followSelected, cn } from '@ab/web-kit';
-import { dayClock, dayDate, longDay } from '@/features/schedule/day-text';
-
-const S = t.portal.app.schedule;
-
-const BUTTON = cn(
-  'ab-press relative z-10 flex min-h-14 min-w-11 flex-1 flex-col items-center justify-center',
-  'gap-0.5 rounded-md text-ink-2 transition-[color,transform] duration-(--duration-press) ease-ink',
-  'hover:not-disabled:text-ink disabled:cursor-default disabled:text-ink-3',
-  'aria-[current=date]:font-bold aria-[current=date]:text-lapis',
-);
-
-const labelOf = (d: StripDay): string =>
-  S.dayLabel
-    .replace('{date}', longDay(d.day))
-    .replace('{count}', d.count === 0 ? S.noLessons : counted(S.lessonCount, d.count));
-
-interface StripButtonProps {
-  day: StripDay;
-  selected: boolean;
-  onJump: (day: string) => void;
-}
+import { dayTile } from '@ab/client-core';
+import { followSelected, cn } from '@ab/web-kit';
+import { dayClock, dayDate } from '@/features/schedule/day-text';
+import type { StripButtonProps } from './StripButton.types';
+import { BUTTON, labelOf } from './strip-button.helpers';
 
 /** One day of the strip: short weekday over the day number, a dot when it has lessons. */
 export function StripButton({ day, selected, onJump }: StripButtonProps) {

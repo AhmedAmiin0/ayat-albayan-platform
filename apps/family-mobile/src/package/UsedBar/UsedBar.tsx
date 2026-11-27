@@ -1,9 +1,9 @@
-import type { PackageSummary } from '@ab/client-core';
 import { View } from 'react-native';
 import { AppText, type, useTheme } from '@ab/mobile-kit';
 import { usedText } from '@/package/package-text';
+import type { UsedBarProps } from './UsedBar.types';
 
-export function UsedBar({ summary }: { summary: PackageSummary }) {
+export function UsedBar({ summary }: UsedBarProps) {
   const { color } = useTheme();
   const ratio = summary.total > 0 ? Math.min(1, summary.used / summary.total) : 0;
   return (

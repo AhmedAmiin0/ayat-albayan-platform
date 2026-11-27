@@ -45,4 +45,12 @@ describe('«اختر الطالب» (owner 2026-11-16)', () => {
     fireEvent.click(within(card).getByRole('button', { name: openName('Yusuf') }));
     expect(await screen.findByRole('heading', { name: 'page s2' })).toBeTruthy();
   });
+
+  it('a login with no student yet: the empty note and its hint, no picker', async () => {
+    meIs(home({ students: [] }));
+    renderAt(<WithPick>{page}</WithPick>, '/portal');
+    expect(await screen.findByText(t.portal.noStudents)).toBeTruthy();
+    expect(screen.getByText(t.portal.noStudentsHint)).toBeTruthy();
+    expect(screen.queryByRole('heading', { name: P.title })).toBeNull();
+  });
 });

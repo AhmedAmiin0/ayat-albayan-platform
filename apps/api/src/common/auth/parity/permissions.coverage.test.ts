@@ -1,9 +1,9 @@
-import { isPermission } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { accessProblems } from './access-problems.test-util';
 import { walkRoutes, type RouteAccess } from './route-walk.test-util';
 
-// Every non-public endpoint maps to exactly one catalog permission (dynamic roles).
-// A new controller handler without @Permissions (or a typo'd key) fails here, before review.
+// Every non-public endpoint has catalog permissions from one source: its handler, its class or its
+// route object (dynamic roles). A missing or misspelt key fails here, before review.
 
 /** Signed-in only, on purpose: the client reads its permissions from /auth/me. */
 const SESSION = [
@@ -41,9 +41,8 @@ describe('permission coverage', () => {
     expect(routes.length).toBeGreaterThan(190);
   });
 
-  it('gives every non-public, non-signed-in handler one catalog permission', () => {
-    const missing = routes.filter((r) => !r.isPublic && !r.signedIn && !isPermission(r.permission));
-    expect(missing.map((r) => `${r.key} → ${String(r.permission)}`)).toEqual([]);
+  it('gives every handler catalog permissions from one source and a Swagger tag', () => {
+    expect(routes.flatMap(accessProblems)).toEqual([]);
   });
 
   it('keeps @SignedIn to the session and own-account routes', () => {

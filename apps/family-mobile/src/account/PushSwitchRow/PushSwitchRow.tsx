@@ -1,10 +1,11 @@
 import { t, SwitchRow, AppText, type, useTheme } from '@ab/mobile-kit';
-import { useDevicePush } from '@/account/use-device-push';
+import type { PushSwitchRowProps } from './PushSwitchRow.types';
+import { usePushSwitchRow } from './use-push-switch-row';
 
 /** On/off for this phone only (docs/50 §6). */
-export function PushSwitchRow({ hint }: { hint: string }) {
+export function PushSwitchRow({ hint }: PushSwitchRowProps) {
   const { color } = useTheme();
-  const push = useDevicePush();
+  const { push } = usePushSwitchRow();
   return (
     <SwitchRow
       label={t.familyApp.settings.notifications}

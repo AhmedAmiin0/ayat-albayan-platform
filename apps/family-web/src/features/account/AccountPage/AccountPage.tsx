@@ -1,13 +1,13 @@
-import type { PortalHome } from '@ab/shared';
 import { Button, t } from '@ab/web-kit';
 import { LegalLinks } from '@/features/legal';
 import { ChildRows } from '@/features/account/ChildRows';
 import { SettingsCard } from '@/features/account/SettingsCard';
-import { useSignOut } from '@/features/account/use-sign-out';
 import { Who } from '@/features/account/Who';
+import type { AccountPageProps } from './AccountPage.types';
+import { useAccountPage } from './use-account-page';
 
-export function AccountPage({ home }: { home: PortalHome }) {
-  const out = useSignOut();
+export function AccountPage({ home }: AccountPageProps) {
+  const { out } = useAccountPage();
   return (
     <section aria-labelledby="account-title" className="grid gap-5">
       <h1 id="account-title" className="font-display text-h2 font-bold">

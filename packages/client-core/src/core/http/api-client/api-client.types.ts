@@ -3,6 +3,34 @@ import type { StallStage } from '../deadline';
 
 export type SendMethod = 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
+export type RequestMethod = 'GET' | SendMethod;
+
+/** One request to the API (docs/62 part 3 §3b); `body` is sent as JSON when given. */
+export interface ApiRequest {
+  method?: RequestMethod | undefined;
+  path: string;
+  body?: unknown;
+  schema?: z.ZodType | undefined;
+  signal?: AbortSignal | null | undefined;
+  headers?: HeadersInit | undefined;
+}
+
+/** A kit's read deadline around one send; `init` carries the method and the caller signal. */
+export type ReadBound = (
+  send: (init: RequestInit) => Promise<unknown>,
+  init: RequestInit,
+  path: string,
+) => Promise<unknown>;
+
+/** A request whose answer is parsed with `schema`. */
+export type SchemaRequest<S extends z.ZodType> = ApiRequest & { schema: S };
+
+/** What call() needs from an api client: its one request. */
+export interface Requester {
+  request<S extends z.ZodType>(request: SchemaRequest<S>): Promise<z.output<S>>;
+  request<T = unknown>(request: ApiRequest): Promise<T>;
+}
+
 /** What an app injects: where the API lives, the session token and its client tag (docs/26 §2f). */
 export interface ApiClientOptions {
   /** The API origin, read on every call (tests and env switches). */

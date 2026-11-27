@@ -3535,9 +3535,6 @@
   "src/ops/dashboard/dashboard-queries.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/ops/google-sync/GoogleSyncCard.tsx": {

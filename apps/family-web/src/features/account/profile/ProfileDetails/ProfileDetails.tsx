@@ -1,13 +1,9 @@
-import type { ProfileFact } from '@ab/client-core';
-import { Ltr, Card, SectionHeader, t } from '@ab/web-kit';
-
-/** A phone, email or code reads left to right in an isolate; a name in the page's direction. */
-function FactValue({ fact }: { fact: ProfileFact }) {
-  return fact.ltr ? <Ltr>{fact.value}</Ltr> : <>{fact.value}</>;
-}
+import { Card, SectionHeader, t } from '@ab/web-kit';
+import type { ProfileDetailsProps } from './ProfileDetails.types';
+import { FactValue } from './FactValue';
 
 /** Read-only: the phone is the WhatsApp sign-in and the academy keeps the names. */
-export function ProfileDetails({ facts }: { facts: readonly ProfileFact[] }) {
+export function ProfileDetails({ facts }: ProfileDetailsProps) {
   const P = t.portal.app.profile;
   return (
     <Card asChild>

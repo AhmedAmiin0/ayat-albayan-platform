@@ -1,10 +1,18 @@
-import { fillRoutePath, type RouteMethod, type RouteResult } from '@ab/core';
+import { fillRoutePath, type RouteResult } from '@ab/core';
 import { z } from 'zod';
-import { parseResponse, type ApiClient, type SendMethod } from '../api-client';
+import {
+  parseResponse,
+  type ApiClient,
+  type ApiRequest,
+  type Requester,
+  type SchemaRequest,
+} from '../api-client';
 import { toQueryString } from '../query-string';
-import type { AnyCallRequest, Call, CallableRoute, CallRequest } from './call.types';
+import { askVia } from './ask';
+import type { AnyCallRequest, Ask, Call, CallableRoute, CallRequest } from './call.types';
 
 const NO_BODY = z.undefined();
+const ANY_BODY = z.unknown();
 
 /** The schema an answer is parsed with: the route's own, or nothing for an empty answer. */
 const answerSchema = z.union([
@@ -21,43 +29,38 @@ const queryValue = z.union([
 ]);
 const querySchema = z.record(z.string(), queryValue).default({});
 
-const read = (api: ApiClient, url: string): Promise<unknown> => api.apiFetch(url);
-const send =
-  (method: SendMethod) =>
-  (api: ApiClient, url: string, body: unknown): Promise<unknown> =>
-    api.apiSend(method, url, body);
+const routeShape = z.object({ route: z.object({ method: z.string(), path: z.string() }) });
 
-/** Reads go through apiFetch; writes through apiSend, which adds the send deadline. */
-const ASK = {
-  GET: read,
-  POST: send('POST'),
-  PUT: send('PUT'),
-  PATCH: send('PATCH'),
-  DELETE: send('DELETE'),
-} satisfies Record<RouteMethod, unknown>;
+const isRouteRequest = (request: AnyCallRequest | ApiRequest): request is AnyCallRequest =>
+  routeShape.safeParse(request).success;
 
 function urlOf({ route, params, query }: AnyCallRequest): string {
   const search = toQueryString(querySchema.parse(query));
   return `${fillRoutePath(route.path, params)}${search}`;
 }
 
-function ask<R extends CallableRoute>(
-  api: ApiClient,
-  request: CallRequest<R>,
-): Promise<RouteResult<R>>;
-function ask(api: ApiClient, request: AnyCallRequest): Promise<unknown> {
-  const url = urlOf(request);
-  return ASK[request.route.method](api, url, request.body).then((body: unknown) =>
-    parseResponse(answerSchema.parse(request.route.response), body, url),
-  );
+async function askRoute(ask: Ask, { route, body, ...rest }: AnyCallRequest): Promise<unknown> {
+  const path = urlOf({ route, ...rest });
+  const answer = await ask({ method: route.method, path, body });
+  return parseResponse(answerSchema.parse(route.response), answer, path);
+}
+
+async function askPath(ask: Ask, { schema = ANY_BODY, ...request }: ApiRequest): Promise<unknown> {
+  return parseResponse(schema, await ask(request), request.path);
 }
 
 /**
- * The call() of one api client (docs/62 part 3 §3), bound once where the client is in scope: each
- * call takes one request, the route object and its inputs. The path comes from the route, the
- * answer is parsed strictly with the route's own schema, and the client sees the same
- * apiFetch(path) / apiSend(method, path, body) a hand-written call made.
+ * The call() of one api client (docs/62 part 3 §3, §3b), bound once where the client is in scope:
+ * each call takes one request object. The route form takes its path from the route and parses
+ * the answer strictly with the route's own schema; the path form parses with `schema` when given.
  */
-export function callWith(api: ApiClient): Call {
-  return (request) => ask(api, request);
+export function callWith(api: ApiClient | Requester): Call {
+  const ask = askVia(api);
+  function call<R extends CallableRoute>(request: CallRequest<R>): Promise<RouteResult<R>>;
+  function call<S extends z.ZodType>(request: SchemaRequest<S>): Promise<z.output<S>>;
+  function call<T = unknown>(request: ApiRequest): Promise<T>;
+  function call(request: AnyCallRequest | ApiRequest): Promise<unknown> {
+    return isRouteRequest(request) ? askRoute(ask, request) : askPath(ask, request);
+  }
+  return call;
 }

@@ -1,10 +1,10 @@
-import type { PortalAmount } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import { amountText } from '@/package/package-text';
+import type { DueBoxProps } from './DueBox.types';
 
 /** Shown only when something is owed. */
-export function DueBox({ due }: { due: PortalAmount }) {
+export function DueBox({ due }: DueBoxProps) {
   const { color } = useTheme();
   return (
     <View

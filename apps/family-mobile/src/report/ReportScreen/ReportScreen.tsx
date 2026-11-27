@@ -1,31 +1,14 @@
-import { lessonWhenAt, type ReportPageView } from '@ab/shared';
-import type { ClockOptions } from '@ab/time';
-import { useLocalSearchParams } from 'expo-router';
-import { z } from 'zod';
 import { t } from '@ab/mobile-kit';
 import { LoadState } from '@/ui';
 import { FamilyHeader, FamilyPage } from '@/nav';
-import { useFamilyClock, useReportPage } from '@/portal';
 import { ReportBody } from '@/report/ReportBody';
 import { ReportFiles } from '@/report/ReportFiles';
-
-/** report/[id]?student=&rec= (rule 12: route params are parsed, never trusted). */
-const paramsSchema = z.object({
-  id: z.string().min(1),
-  student: z.string().min(1),
-  rec: z.string().min(1).optional(),
-});
-
-/** Formatted on the student's clock. */
-const whoWhen = (view: ReportPageView, clock: ClockOptions): string =>
-  `${view.student.name} · ${lessonWhenAt(new Date(view.lesson.starts_at), { ...clock, tz: view.tz })}`;
+import { whoWhen } from './report-screen.helpers';
+import { useReportScreen } from './use-report-screen';
 
 /** Opening it marks it seen (docs/50 §6); unreadable content still opens the PDF by signed link. */
 export function ReportScreen() {
-  const params = paramsSchema.parse(useLocalSearchParams());
-  const page = useReportPage(params.id);
-  const clock = useFamilyClock();
-  const view = page.data;
+  const { params, page, clock, view } = useReportScreen();
   return (
     <FamilyPage
       header={

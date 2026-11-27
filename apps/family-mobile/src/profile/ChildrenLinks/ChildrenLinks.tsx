@@ -1,9 +1,9 @@
-import type { PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { Avatar, InsetGroup, ListRow, Section, t } from '@ab/mobile-kit';
 import { childHref } from '@/nav';
+import type { ChildrenLinksProps } from './ChildrenLinks.types';
 
-export function ChildrenLinks({ students }: { students: readonly PortalStudent[] }) {
+export function ChildrenLinks({ students }: ChildrenLinksProps) {
   if (students.length === 0) return null;
   return (
     <Section title={t.portal.app.account.children}>
