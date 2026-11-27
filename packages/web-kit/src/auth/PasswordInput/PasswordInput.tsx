@@ -1,19 +1,17 @@
-import { useState } from 'react';
-import type { FieldControlProps } from '@ab/web-kit/components/ui/form/Field';
 import { Icon } from '@ab/web-kit/components/ui/display/icon';
 import { Input } from '@ab/web-kit/components/ui/form/Input';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-
-type Props = FieldControlProps & {
-  value: string;
-  onValue: (value: string) => void;
-  /** `new-password` for a new one (password managers offer to generate and save it). */
-  autoComplete?: 'current-password' | 'new-password';
-};
+import type { Props } from './PasswordInput.types';
+import { usePasswordInput } from './use-password-input';
 
 /** The label must not contain the password label e2e uses; the wrapper is the LTR island. */
-export function PasswordInput({ value, onValue, autoComplete = 'current-password', ...field }: Props) {
-  const [shown, setShown] = useState(false);
+export function PasswordInput({
+  value,
+  onValue,
+  autoComplete = 'current-password',
+  ...field
+}: Props) {
+  const { shown, setShown } = usePasswordInput();
   return (
     <div dir="ltr" className="relative">
       <Input

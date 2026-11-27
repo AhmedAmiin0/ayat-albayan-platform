@@ -1,47 +1,19 @@
-import { useForm } from '@tanstack/react-form';
-import { useQueryClient } from '@tanstack/react-query';
-import { useState, type ReactNode } from 'react';
 import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { Field } from '@ab/web-kit/components/ui/form/Field';
 import { FormAlert } from '@ab/web-kit/components/ui/form/FormAlert';
 import { Input } from '@ab/web-kit/components/ui/form/Input';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { PasswordInput } from '@ab/web-kit/auth/PasswordInput';
-import { signIn } from '@ab/web-kit/auth/sign-in';
-import { useLandAfterSignIn } from '@ab/web-kit/auth/use-return-to';
-
-const required = ({ value }: { value: string }) => (value.trim() ? undefined : t.common.required);
-
-interface Props {
-  /** The identifier control's id: `email` on the staff tab (e2e), `username` on the family tab. */
-  id: 'email' | 'username';
-  label: string;
-  hint?: string;
-  children?: ReactNode;
-}
+import type { Props } from './PasswordForm.types';
+import { required } from './password-form.helpers';
+import { usePasswordForm } from './use-password-form';
 
 /**
  * Identifier + password (docs/30 §5): an email signs in with GoTrue, a username or student code
  * through POST /auth/login. `noValidate`: blank fields get the Arabic field error (docs/07 §10).
  */
 export function PasswordForm({ id, label, hint, children }: Props) {
-  const queryClient = useQueryClient();
-  const land = useLandAfterSignIn();
-  const [error, setError] = useState<string | null>(null);
-
-  const form = useForm({
-    defaultValues: { identifier: '', password: '' },
-    onSubmit: async ({ value }) => {
-      setError(null);
-      const result = await signIn(
-        { email: value.identifier, password: value.password },
-        queryClient,
-      ).catch(() => ({ ok: false, error: t.common.error }) as const);
-      if (result.ok) await land(result.home);
-      else setError(result.error);
-    },
-  });
-
+  const { error, form } = usePasswordForm();
   return (
     <form
       noValidate
