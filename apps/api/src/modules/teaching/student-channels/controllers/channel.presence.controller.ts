@@ -2,13 +2,12 @@ import { channelPresenceRoutes as routes, type ChannelPresence } from '@ab/share
 import { Controller } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/auth/decorators';
-import { isAdmin } from '@/common/auth/roles';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { forbidden } from '@/common/http/errors';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { PresenceService } from '@/modules/people/presence';
 import {
   ChannelAccess,
+  requireAdmin,
   type ChannelActor,
 } from '@/modules/teaching/student-channels/channel-access';
 
@@ -43,7 +42,7 @@ export class ChannelPresenceController {
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelPresence> {
     const actor = await this.access.monitor(user, params.id);
-    if (!isAdmin(user)) throw forbidden('presence_admin_only');
+    requireAdmin(user, 'presence_admin_only');
     return this.of(user, actor);
   }
 

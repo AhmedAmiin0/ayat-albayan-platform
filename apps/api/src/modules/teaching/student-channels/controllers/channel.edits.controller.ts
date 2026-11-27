@@ -8,11 +8,9 @@ import {
 import { Controller } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/auth/decorators';
-import { isAdmin } from '@/common/auth/roles';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { forbidden } from '@/common/http/errors';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { ChannelAccess } from '@/modules/teaching/student-channels/channel-access';
+import { ChannelAccess, requireAdmin } from '@/modules/teaching/student-channels/channel-access';
 import { ChannelEdits } from '@/modules/teaching/student-channels/channel-edits.service';
 
 type Teacher<K extends keyof typeof channelTeacherMessageRoutes> = RouteInputOf<
@@ -90,7 +88,7 @@ export class ChannelEditsController {
     @RouteInput() { params }: Remove,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelMessageView> {
-    if (!isAdmin(user)) throw forbidden('moderation_admin_only');
+    requireAdmin(user, 'moderation_admin_only');
     const actor = await this.access.monitor(user, params.id);
     return this.edits.remove({ actor, messageId: params.messageId, moderator: true });
   }
