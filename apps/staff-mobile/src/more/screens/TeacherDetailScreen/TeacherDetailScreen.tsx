@@ -24,7 +24,7 @@ import { teachers } from '@/more/teachers/teacher-calls';
 import { TeacherStudentsSection } from '@/more/sections/TeacherStudentsSection';
 import { UpcomingTimeOff } from '@/more/availability/UpcomingTimeOff';
 import { WeeklyAvailability } from '@/more/availability/WeeklyAvailability';
-import { StaffPhotoControl } from '@/account';
+import { StaffPhotoControl, teacherPhotos } from '@/account';
 
 /** Every query where a new teacher photo must show. */
 const TEACHER_KEYS = [pathKey('/teachers'), pathKey('/sales/teachers')];
@@ -67,7 +67,7 @@ export function TeacherDetailScreen() {
           <StaffPhotoControl
             name={teacherName(data, locale)}
             id={data.id}
-            base={`${path}/avatar`}
+            calls={teacherPhotos}
             photo={data.avatar_url ?? null}
             invalidate={TEACHER_KEYS}
           />

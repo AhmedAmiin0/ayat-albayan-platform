@@ -1,20 +1,13 @@
 import { AVATAR_MAX_BYTES, type StaffPhotoView } from '@ab/shared';
-import { type QueryKey, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { t } from '@ab/mobile-kit';
 import { pickAvatar } from '@/account/lib/avatar';
 import { removeStaffPhoto, staffPhotoError, uploadStaffPhoto } from './staff-photo-api';
+import type { StaffPhotoOptions } from './staff-photo.types';
 
-export interface StaffPhotoOptions {
-  /** `/teachers/:id/avatar` or `/users/:id/avatar`. */
-  base: string;
-  /** The photo the page loaded (null = initials). */
-  photo: string | null;
-  /** Refetched after a change (the person's page and the lists that show the photo). */
-  invalidate: readonly QueryKey[];
-}
-
-export function useStaffPhoto({ base, photo, invalidate }: StaffPhotoOptions) {
+export function useStaffPhoto({ id, calls, photo, invalidate }: StaffPhotoOptions) {
+  const target = { id, calls };
   const client = useQueryClient();
   // What the last write answered, until the page reloads; undefined = nothing written here yet.
   const [written, setWritten] = useState<string | null | undefined>(undefined);
@@ -31,13 +24,13 @@ export function useStaffPhoto({ base, photo, invalidate }: StaffPhotoOptions) {
   };
   const failed = (e: unknown) => setError(staffPhotoError(e));
   const upload = useMutation({
-    mutationFn: uploadStaffPhoto.bind(null, base),
+    mutationFn: uploadStaffPhoto.bind(null, target),
     onMutate: before,
     onSuccess: done(t.staffPhoto.saved),
     onError: failed,
   });
   const remove = useMutation({
-    mutationFn: () => removeStaffPhoto(base),
+    mutationFn: () => removeStaffPhoto(target),
     onMutate: before,
     onSuccess: done(t.staffPhoto.removed),
     onError: failed,
