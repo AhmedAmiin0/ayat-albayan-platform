@@ -1,7 +1,9 @@
-import { studentCalls } from '@ab/client-core';
+import { studentCalls, type ListParams } from '@ab/client-core';
+import type { StudentListItem } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { studentKeys } from '@/core/lib/keys';
+import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { countParams, type StudentFilters } from './student-filters';
 
 const students = studentCalls({ apiFetch, apiSend });
@@ -20,4 +22,13 @@ export const useTeacherOptions = (enabled: boolean) =>
     queryFn: () => students.teacherOptions(),
     enabled,
     staleTime: 10 * 60_000,
+  });
+
+/** GET /students page by page through its route, so each answer is parsed (R-STU-01, R-MOB-02). */
+export const useStudentList = (params: ListParams, pageSize = 25) =>
+  usePagedList<StudentListItem>({
+    path: '/students',
+    params,
+    pageSize,
+    read: (at, signal) => students.list({ ...params, ...at }, signal),
   });

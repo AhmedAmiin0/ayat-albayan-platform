@@ -1,13 +1,11 @@
 import { statusParamOfKind, type StudentListKind } from '@ab/shared';
 import { useState } from 'react';
 import { t, Button, ErrorState, FilterPills, InsetGroup, Section } from '@ab/mobile-kit';
-import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { NO_FILTERS } from '@/students/list/student-filters';
 import { KIND_EMPTY, kindCounts, kindPills, presetKind } from '@/students/list/student-kinds';
 import { StudentRow } from '@/students/list/StudentRow';
-import { useStatusCounts } from '@/students/list/use-student-list-data';
+import { useStatusCounts, useStudentList } from '@/students/list/use-student-list-data';
 import { Note } from '@/core/ui/feedback/Note';
-import type { StudentListItem } from '@ab/shared';
 
 const L = t.studentLists;
 
@@ -21,11 +19,7 @@ interface TeacherStudentsSectionProps {
 export function TeacherStudentsSection({ teacherId, status }: TeacherStudentsSectionProps) {
   const [kind, setKind] = useState<StudentListKind>(() => presetKind(status));
   const counts = useStatusCounts({ ...NO_FILTERS, teacher: teacherId });
-  const list = usePagedList<StudentListItem>({
-    path: '/students',
-    params: { teacher: teacherId, status: statusParamOfKind(kind) },
-    pageSize: 50,
-  });
+  const list = useStudentList({ teacher: teacherId, status: statusParamOfKind(kind) }, 50);
   return (
     <Section title={L.section}>
       <FilterPills
