@@ -1,8 +1,8 @@
 import { routePath } from '@ab/core';
 import { portalLessonRoutes as routes, type PortalSlots } from '@ab/shared';
-import { callWith, type ApiClient } from '../../../core/http';
-import { pathKey } from '../../../core/keys';
-import type { PortalRead } from '../portal-api';
+import { callWith, type ApiClient } from '../../../../core/http';
+import { pathKey } from '../../../../core/keys';
+import type { PortalRead } from '../../portal-api';
 import type { FamilyLessonInput, FamilySlotsInput, PortalLessonSends } from './lesson-sends.types';
 
 // Shared by family app and web portal; answers are parsed (rule 12), then PORTAL_KEY refreshes.
