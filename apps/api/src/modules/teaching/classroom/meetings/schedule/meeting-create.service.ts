@@ -1,7 +1,6 @@
-import { createMeetingSchema, mayInvitePhones, type MeetingCreateResult } from '@ab/schedule';
+import { mayInvitePhones, type CreateMeeting, type MeetingCreateResult } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
 import { InternalMeetingsRepo, type MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { hashMeetingToken, newMeetingToken } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 import { chatCount, MeetingInviteFlow } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.flow';
@@ -34,9 +33,8 @@ export class MeetingCreateService {
     private readonly deps: MeetingCreateDeps,
   ) {}
 
-  async create(input: { user: AuthUser; body: unknown }, now = new Date()): Promise<MeetingCreateResult> {
-    const { user } = input;
-    const body = parseOrThrow(createMeetingSchema, input.body ?? {});
+  async create(input: { user: AuthUser; body: CreateMeeting }, now = new Date()): Promise<MeetingCreateResult> {
+    const { user, body } = input;
     const times = scheduleTimes(body, now);
     const requestId = body.clientRequestId ?? null;
     const prior = requestId ? await this.queries.byRequest(user.id, requestId) : null;

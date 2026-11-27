@@ -1,4 +1,5 @@
 export * from './join-window/join-window';
+export * from './join-window/join-window.schemas';
 export * from './room';
 export * from './schemas';
 export * from './moderation';
@@ -11,3 +12,4 @@ export * from './student-recordings';
 export * from './assistants';
 export * from './meeting-mode';
 export * from './room-state';
+export * from './meeting-rooms';

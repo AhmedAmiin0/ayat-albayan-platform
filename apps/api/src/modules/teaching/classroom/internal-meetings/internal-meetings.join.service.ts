@@ -3,6 +3,7 @@ import {
   meetingRoomName,
   meetingState,
   meetingWindow,
+  publicMeetingViewSchema,
   type JoinRole,
   type PublicMeetingView,
   type RoomJoinResult,
@@ -10,6 +11,7 @@ import {
 import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 import { parseOrThrow } from '@/common/http/http';
 import { assertWindowOpen } from '@/modules/teaching/classroom/join/join-gate';
 import { InternalMeetingsRepo, type MeetingRow } from './internal-meetings.repo';
@@ -60,7 +62,9 @@ export class InternalMeetingJoinService {
     const meeting = await this.byToken(input.token);
     const win = await this.queries.joinWindow();
     const opens = meetingWindow(meeting, now, win)?.opens_at ?? null;
-    return { title: meeting.title, state: meetingState(meeting, now, win), starts_at: meeting.starts_at, opens_at: opens };
+    const state = meetingState(meeting, now, win);
+    const view = { title: meeting.title, state, starts_at: meeting.starts_at, opens_at: opens };
+    return asResponse(publicMeetingViewSchema, view);
   }
 
   /** 429, 503 classroom_not_configured, 400 name, 404 link_invalid, 410 meeting_ended. */

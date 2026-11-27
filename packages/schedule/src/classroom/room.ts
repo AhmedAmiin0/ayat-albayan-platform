@@ -12,23 +12,11 @@ export const meetingRoomName = (meetingId: string): string => `${MEETING_PREFIX}
 export const JOIN_ROLES = ['teacher', 'admin', 'assistant', 'sales', 'guest'] as const;
 export type JoinRole = (typeof JOIN_ROLES)[number];
 
-/** POST /lessons/:id/room/join and POST /public/join/:linkToken: all the web room needs. */
-export interface RoomJoinResult {
-  url: string;
-  token: string;
-  room: string;
-  role: JoinRole;
-  /** 'off': RECORDING_S3_* or LiveKit Egress are not set up, so this room is not recorded (the admin is warned). */
-  recording?: 'on' | 'off';
-  /** false: a trial lesson: no text chat between the family and the teacher. */
-  chat?: boolean;
-}
-
 /** The data topic of the in-room text chat: never sent, and dropped on arrival, while chat is off. */
 export const CHAT_TOPIC = 'chat';
 
 /** Text chat is open unless the join says it is not (an older API, or a meeting, sends nothing). */
-export const chatOpen = (join: Pick<RoomJoinResult, 'chat'>): boolean => join.chat !== false;
+export const chatOpen = (join: { chat?: boolean | undefined }): boolean => join.chat !== false;
 
 /** A data packet on the chat topic while chat is off: not sent, not delivered (the board and requests pass). */
 export const dropsChat = (chatOn: boolean, topic: string | undefined): boolean =>
