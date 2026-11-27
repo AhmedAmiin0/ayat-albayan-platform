@@ -1,7 +1,7 @@
 import { routePath } from '@ab/core';
 import {
   channelUnreadSchema,
-  portalRoutes as routes,
+  portalRoutes,
   reportPageViewSchema,
   type ChannelUnread,
   type PortalHistory,
@@ -85,22 +85,22 @@ export function portalQueries(client: ApiClient): PortalQueries {
   const of = (studentId: string) => ({ id: studentId });
   return {
     /** GET /portal/me: the login's kind and students. */
-    portalHomeQuery: keyed(routes.home.path, () => call({ route: routes.home })),
+    portalHomeQuery: keyed(portalRoutes.home.path, () => call({ route: portalRoutes.home })),
     /** The next 14 days plus prep and this month's counts, re-read every 30 seconds. */
     portalLessonsQuery: (studentId: string) => ({
-      ...keyed(routePath(routes.lessons, of(studentId)), () =>
-        call({ route: routes.lessons, params: of(studentId) }),
+      ...keyed(routePath(portalRoutes.lessons, of(studentId)), () =>
+        call({ route: portalRoutes.lessons, params: of(studentId) }),
       ),
       refetchInterval: PORTAL_REFRESH_MS,
     }),
     portalReportsQuery: (studentId: string) =>
-      keyed(routePath(routes.reports, of(studentId)), () =>
-        call({ route: routes.reports, params: of(studentId) }),
+      keyed(routePath(portalRoutes.reports, of(studentId)), () =>
+        call({ route: portalRoutes.reports, params: of(studentId) }),
       ),
     /** A guardian's or an adult's only: a child's login never asks (403 package_guardian_only). */
     portalPackageQuery: (studentId: string) =>
-      keyed(routePath(routes.package, of(studentId)), () =>
-        call({ route: routes.package, params: of(studentId) }),
+      keyed(routePath(portalRoutes.package, of(studentId)), () =>
+        call({ route: portalRoutes.package, params: of(studentId) }),
       ),
     /** The report's content (GET /report-pages/by-report/:id): a family reads sent ones only. */
     reportPageByIdQuery: (reportId: string) => ({
@@ -113,10 +113,12 @@ export function portalQueries(client: ApiClient): PortalQueries {
       refetchInterval: PORTAL_REFRESH_MS,
     }),
     portalHistoryQuery: (input: PortalHistoryInput): PortalHistoryPages => ({
-      queryKey: listKey(routePath(routes.history, of(input.studentId)), { status: input.status }),
+      queryKey: listKey(routePath(portalRoutes.history, of(input.studentId)), {
+        status: input.status,
+      }),
       queryFn: ({ pageParam }) =>
         call({
-          route: routes.history,
+          route: portalRoutes.history,
           params: of(input.studentId),
           query: { status: input.status, cursor: pageParam },
         }),

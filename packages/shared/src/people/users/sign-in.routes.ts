@@ -10,7 +10,7 @@ import {
   resetSchema,
 } from './sign-in';
 
-const access = { tags: ['auth'] } as const;
+const access = { tags: ['auth'], isPublic: true } as const;
 
 /**
  * The public sign-in routes (docs/30 §6): the family's and the teacher's WhatsApp codes (docs/46

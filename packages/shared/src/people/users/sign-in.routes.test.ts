@@ -24,6 +24,15 @@ describe('signInRoutes (docs/30 §6, docs/46 A1-A2)', () => {
     ]);
   });
 
+  it('marks every sign-in route public with its auth tag and no permission', () => {
+    const access = Object.values(signInRoutes).map((r) => ({
+      isPublic: r.isPublic,
+      tags: r.tags,
+      permissions: Object.hasOwn(r, 'permissions'),
+    }));
+    expect(access).toEqual(Array(8).fill({ isPublic: true, tags: ['auth'], permissions: false }));
+  });
+
   it('answers nothing to a code request, a forgot and a reset', () => {
     const { request, staffRequest, forgot, reset } = signInRoutes;
     expect([request, staffRequest, forgot, reset].map((r) => r.response)).toEqual(
