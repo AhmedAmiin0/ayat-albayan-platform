@@ -1,5 +1,5 @@
 import {
-  accountSetupSchema,
+  accountSetupRoutes,
   avatarSetSchema,
   avatarUploadSchema,
   emailChangeSchema,
@@ -16,6 +16,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, SignedIn } from '@/common/auth/decorators';
 import { MeZoneRepo } from '@/common/auth/me-zone.repo';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { AccountAvatarService } from './account.avatar.service';
 import { AccountService } from './account.service';
@@ -25,7 +26,7 @@ import { AccountSetupService } from './account.setup.service';
 @ApiTags('me')
 @ApiBearerAuth()
 @SignedIn()
-@Controller('me')
+@Controller()
 export class AccountController {
   constructor(
     private readonly account: AccountService,
@@ -35,7 +36,7 @@ export class AccountController {
   ) {}
 
   /** Read back by /auth/me and /portal/me. */
-  @Patch('locale')
+  @Patch('me/locale')
   async setLocale(
     @ZodBody(localeUpdateSchema) body: LocaleUpdate,
     @CurrentUser() user: AuthUser,
@@ -45,21 +46,21 @@ export class AccountController {
   }
 
   /** A code-made teacher login's email + password, once (docs/46 A4); 409 setup_done after. */
-  @Put('setup')
+  @Route(accountSetupRoutes.setup)
   @HttpCode(204)
   setup(
-    @ZodBody(accountSetupSchema) body: z.output<typeof accountSetupSchema>,
+    @RouteInput() { body }: RouteInputOf<typeof accountSetupRoutes.setup>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
     return this.firstSetup.setup(user, body);
   }
 
-  @Get('profile')
+  @Get('me/profile')
   profile(@CurrentUser() user: AuthUser): Promise<AccountProfile> {
     return this.account.profile(user);
   }
 
-  @Patch('profile')
+  @Patch('me/profile')
   updateProfile(
     @ZodBody(profileUpdateSchema) body: z.output<typeof profileUpdateSchema>,
     @CurrentUser() user: AuthUser,
@@ -67,7 +68,7 @@ export class AccountController {
     return this.account.updateProfile(user, body);
   }
 
-  @Put('email')
+  @Put('me/email')
   changeEmail(
     @ZodBody(emailChangeSchema) body: z.output<typeof emailChangeSchema>,
     @CurrentUser() user: AuthUser,
@@ -75,7 +76,7 @@ export class AccountController {
     return this.account.changeEmail(user, body);
   }
 
-  @Put('password')
+  @Put('me/password')
   @HttpCode(204)
   changePassword(
     @ZodBody(passwordChangeSchema) body: z.output<typeof passwordChangeSchema>,
@@ -84,7 +85,7 @@ export class AccountController {
     return this.account.changePassword(user, body);
   }
 
-  @Post('avatar/upload-url')
+  @Post('me/avatar/upload-url')
   avatarUploadUrl(
     @ZodBody(avatarUploadSchema) body: z.output<typeof avatarUploadSchema>,
     @CurrentUser() user: AuthUser,
@@ -92,7 +93,7 @@ export class AccountController {
     return this.avatar.uploadUrl(user, body);
   }
 
-  @Put('avatar')
+  @Put('me/avatar')
   setAvatar(
     @ZodBody(avatarSetSchema) body: z.output<typeof avatarSetSchema>,
     @CurrentUser() user: AuthUser,
@@ -100,7 +101,7 @@ export class AccountController {
     return this.avatar.set(user, body.path);
   }
 
-  @Delete('avatar')
+  @Delete('me/avatar')
   removeAvatar(@CurrentUser() user: AuthUser): Promise<AccountProfile> {
     return this.avatar.remove(user);
   }

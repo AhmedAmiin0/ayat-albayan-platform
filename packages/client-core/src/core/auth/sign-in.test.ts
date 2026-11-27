@@ -5,18 +5,20 @@ import { isEmailIdentifier, signInApi, signInError } from './sign-in';
 describe('signInApi (docs/30 §6)', () => {
   it('calls the public routes with their bodies', async () => {
     const apiFetch = vi.fn().mockResolvedValue({ available: true });
-    const session = { token_hash: 'h', type: 'magiclink' };
-    const apiSend = vi
-      .fn()
-      .mockImplementation(async (_m: string, path: string) =>
-        path.endsWith('/verify') ? session : undefined,
-      );
+    const answers: Record<string, unknown> = {
+      '/auth/code/verify': { token_hash: 'h', type: 'magiclink' },
+      '/auth/staff-code/verify': { token_hash: 'h', type: 'magiclink' },
+      '/auth/login': { access_token: 'a', refresh_token: 'r', expires_in: 60, expires_at: null },
+    };
+    const apiSend = vi.fn().mockImplementation(async (_m: string, path: string) => answers[path]);
     const api = signInApi({ apiFetch, apiSend });
     // An API without `staff` yet reads as «no staff codes».
     await expect(api.codeStatus()).resolves.toEqual({ available: true, staff: false });
     await api.requestCode('+966500000001');
     await api.verifyCode({ phone: '+966500000001', code: '123456' });
-    await api.login({ username: 'AB-1234', password: 'secret-1' });
+    await expect(api.login({ username: 'AB-1234', password: 'secret-1' })).resolves.toMatchObject({
+      refresh_token: 'r',
+    });
     await api.forgot({ identifier: 'omar' });
     await api.reset({ identifier: 'omar', code: '123456', password: 'secret-2' });
     await api.staffCodes.request('+966500000002');
@@ -63,5 +65,12 @@ describe('verify answers are parsed (rule 12)', () => {
     await expect(
       api.staffCodes.verify({ phone: '+966500000002', code: '123456' }),
     ).rejects.toThrow();
+  });
+
+  it('refuses a login answer without its refresh token', async () => {
+    const apiSend = vi.fn().mockResolvedValue({ access_token: 'a', expires_in: 60 });
+    const api = signInApi({ apiFetch: vi.fn(), apiSend });
+    const login = api.login({ username: 'omar', password: 'secret-1' });
+    await expect(login).rejects.toMatchObject({ body: { code: 'bad_response' } });
   });
 });

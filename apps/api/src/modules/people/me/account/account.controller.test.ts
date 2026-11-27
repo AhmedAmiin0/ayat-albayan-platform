@@ -27,7 +27,10 @@ describe('AccountController', () => {
   it('is @SignedIn on /me with no permission: custom roles, students and guardians may use it', () => {
     expect(Reflect.getMetadata(SIGNED_IN, AccountController)).toBe(true);
     expect(Reflect.getMetadata(PERMISSION, AccountController)).toBeUndefined();
-    expect(Reflect.getMetadata(PATH_METADATA, AccountController)).toBe('me');
+    for (const name of HANDLERS) {
+      const path: unknown = Reflect.getMetadata(PATH_METADATA, AccountController.prototype[name]);
+      expect(String(path)).toMatch(/^\/?me\//);
+    }
   });
 
   it('has no path parameter on any handler: always the caller’s own profile', () => {
