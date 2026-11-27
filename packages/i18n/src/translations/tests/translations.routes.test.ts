@@ -13,7 +13,11 @@ const ROW = {
 describe('translationRoutes', () => {
   it('keeps the paths of today', () => {
     const lines = Object.values(routes).map((r) => `${r.method} ${r.path}`);
-    expect(lines).toEqual(['GET /i18n/keys', 'PUT /i18n/:locale/:key', 'DELETE /i18n/:locale/:key']);
+    expect(lines).toEqual([
+      'GET /i18n/keys',
+      'PUT /i18n/:locale/:key',
+      'DELETE /i18n/:locale/:key',
+    ]);
   });
 
   it('takes a known locale and any key, and refuses another locale', () => {
@@ -35,7 +39,10 @@ describe('translationRoutes', () => {
   });
 
   it('refuses a row without its defaults or with an override that is not text', () => {
-    const bad = [{ ...ROW, en: undefined }, { ...ROW, arOverride: 3 }];
+    const bad = [
+      { ...ROW, en: undefined },
+      { ...ROW, arOverride: 3 },
+    ];
     for (const row of bad) {
       const page = { items: [row], total: 1, page: 1, pageSize: 50, sections: [] };
       expect(routes.keys.response.safeParse(page).success).toBe(false);
