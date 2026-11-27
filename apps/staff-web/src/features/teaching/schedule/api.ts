@@ -1,4 +1,4 @@
-import type { BookingMode } from '@ab/client-core';
+import { scheduleRuleCalls, type BookingMode } from '@ab/client-core';
 import type { LessonTimeEdit, TimeEditResult } from '@ab/schedule';
 import type {
   CancelRequest,
@@ -70,11 +70,7 @@ export const slotsQuery = (p: SlotsParams, mode: BookingMode = 'admin') => {
 };
 
 /** POST /schedule-rules/refresh (admin): generate every lesson the weekly rules owe, now. */
-export const syncSchedule = () =>
-  apiSend<{ rules: number; inserted: number; failed: number; ended: number }>(
-    'POST',
-    '/schedule-rules/refresh',
-  );
+export const syncSchedule = () => scheduleRuleCalls({ apiFetch, apiSend }).refresh();
 
 export const confirmLesson = (id: string) => apiSend<LessonView>('POST', `/lessons/${id}/confirm`);
 

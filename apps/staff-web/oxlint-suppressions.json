@@ -5899,7 +5899,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 11
+      "count": 10
     }
   },
   "src/features/teaching/schedule/edit-time/EditTime.captions.test.tsx": {
