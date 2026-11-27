@@ -9,7 +9,7 @@ import {
   textRequired,
   valuesOf,
 } from './form-values';
-import type { ReportView } from './views';
+import type { ReportView } from './report-routes';
 
 const FULL_GRADES = {
   recitation: 'excellent',

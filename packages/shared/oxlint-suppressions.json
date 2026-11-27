@@ -500,7 +500,7 @@
   },
   "src/reports/views.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/sales/academy.ts": {
