@@ -15,4 +15,9 @@ describe('GET /admin/jobs', () => {
   it('nothing visible here (no Redis): an empty list, never an error', async () => {
     expect(await new JobsStatusController(reader(null)).list()).toEqual({ data: [] });
   });
+
+  it('a job row outside the shared view is a 500 response_invalid', async () => {
+    const odd = new JobsStatusController(reader([{ ...beat, everyMs: 0 }]));
+    await expect(odd.list()).rejects.toMatchObject({ response: { code: 'response_invalid' } });
+  });
 });

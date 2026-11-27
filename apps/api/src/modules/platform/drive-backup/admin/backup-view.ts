@@ -1,30 +1,7 @@
+import type { BackupStatusView } from '@ab/shared';
 import type { BackupState } from '@/modules/platform/drive-backup/db/backup-state.repo';
 import type { RecentRow } from '@/modules/platform/drive-backup/db/archive-row.schema';
 import { freeOf, isLow } from '@/modules/platform/drive-backup/run/quota';
-import type { SkippedItem } from '@/modules/platform/drive-backup/run/summary';
-
-/** docs/45 §5. */
-export interface BackupStatusView {
-  enabled: boolean;
-  ready: { minio: boolean; google: boolean };
-  /** The latest night that uploaded (all its parts): objects, bytes raw → compressed. */
-  last: {
-    label: string;
-    finished_at: string | null;
-    objects: number;
-    skipped: number;
-    bytes_raw: number;
-    bytes_compressed: number;
-  } | null;
-  last_run_at: string | null;
-  last_error: string | null;
-  quota: { limit: number | null; usage: number; free: number | null; at: string } | null;
-  low_quota: boolean;
-  /** The last night's skipped objects: how many, and the first ones named (retried nightly). */
-  skipped: { count: number; items: SkippedItem[] };
-  /** Objects the last night could not send: Drive's free space under the 2 GB reserve. */
-  waiting: number;
-}
 
 /** The newest night with a done part, its parts summed. */
 export function lastArchive(rows: readonly RecentRow[]): BackupStatusView['last'] {

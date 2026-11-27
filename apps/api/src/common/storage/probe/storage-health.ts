@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { StorageService } from '@/common/storage/storage.service';
 
 /** What /health says of the store new files go to (docs/45). */
-export interface StorageHealthView {
+interface StorageHealthView {
   driver: StorageDriver;
   status: 'ok' | 'down';
 }
