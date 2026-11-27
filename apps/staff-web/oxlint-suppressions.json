@@ -2872,10 +2872,10 @@
   },
   "src/features/people/students/api.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 7
+      "count": 3
     }
   },
   "src/features/people/students/create/CreateStudentDialog/CreateStudentDialog.tsx": {
