@@ -1,31 +1,30 @@
-import { threadRatingSchema, type MessageView } from '@ab/shared';
-import { phoneE164 } from '@ab/core';
-import { Controller, HttpCode, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
+import { lessonRatingRoutes as routes, type MessageView } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route, type RouteInputOf } from '@/common/http/route';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { RatingSendService } from './rating.send.service';
 
-/** 201 the queued row; 404 not_a_guardian or no_completed_lesson; 409 template_not_approved. */
-@ApiTags('inbox')
+type Body = RouteInputOf<typeof routes.send>['body'];
+
+/** A bad body is 400 validation_failed before a bad phone's 400 invalid_phone. */
 @ApiBearerAuth()
-@Permissions('feedback.write')
-@Controller('threads')
+@Controller()
 export class RatingController {
   constructor(
     private readonly sends: RatingSendService,
     private readonly audit: AuditService,
   ) {}
 
-  @Post(':phone/rating')
+  @Route(routes.send)
   @HttpCode(201)
   async send(
-    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
-    @ZodBody(threadRatingSchema) body: z.output<typeof threadRatingSchema>,
+    @ZodParam('phone', routes.send.params.shape.phone, invalidPhone) phone: string,
+    @ZodBody(routes.send.body) body: Body,
     @CurrentUser() user: AuthUser,
   ): Promise<MessageView> {
     const { clientRequestId } = body;

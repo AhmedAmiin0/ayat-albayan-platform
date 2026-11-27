@@ -1,8 +1,9 @@
-import type { TemplateView } from '@ab/shared';
+import type { MessageView, TemplateView } from '@ab/shared';
+import { aMessageView } from '@ab/shared/testing';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { meetReminder, message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { meetReminder, PHONE } from '@/inbox/shared/thread-fixtures';
 import * as ownSend from '@/inbox/thread/anchor/own-send';
 import { SendRating } from './SendRating';
 import { threadKeys } from '@/core/lib/keys';
@@ -15,6 +16,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 
+const rated = (status: MessageView['status']) =>
+  aMessageView({ phone_e164: PHONE, status, template_key: 'lesson_rating' });
+const sentRow = rated('sent');
 const guardian = { phone_e164: PHONE, guardian_id: 'g1', display_name: 'أم يوسف' };
 const rating = (status: TemplateView['status']): TemplateView => ({ ...meetReminder, key: 'lesson_rating', status });
 const send = () => screen.findByRole('button', { name: t.inbox.rating.send });
@@ -44,7 +48,7 @@ test('nothing is sent until the confirm, which names the guardian; Cancel closes
 });
 
 test('POSTs /threads/:phone/rating with one request id, kept across a failed retry', async () => {
-  mockApiSend.mockRejectedValueOnce(new ApiError(500)).mockResolvedValue(message({ id: 'm9', status: 'sent' }));
+  mockApiSend.mockRejectedValueOnce(new ApiError(500)).mockResolvedValue(sentRow);
   await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
   await ask();
   await confirm();
@@ -58,7 +62,7 @@ test('POSTs /threads/:phone/rating with one request id, kept across a failed ret
 });
 
 test('once it went out the button is off: no second tap, no second request', async () => {
-  mockApiSend.mockResolvedValue(message({ id: 'm9', status: 'sent' }));
+  mockApiSend.mockResolvedValue(sentRow);
   await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
   await ask();
   await confirm();
@@ -70,7 +74,7 @@ test('once it went out the button is off: no second tap, no second request', asy
 
 test('a rating ask is a send from this device: an anchored chat goes live (docs/37)', async () => {
   const sends = jest.spyOn(ownSend, 'markOwnSend');
-  mockApiSend.mockResolvedValue(message({ id: 'm9', status: 'sent' }));
+  mockApiSend.mockResolvedValue(sentRow);
   const client = createTestQueryClient({ meFromApi: true });
   await renderWithQuery(<SendRating thread={guardian} />, client);
   await ask();
@@ -80,7 +84,7 @@ test('a rating ask is a send from this device: an anchored chat goes live (docs/
 });
 
 test('a queued send says it waits for the send gate and refetches the threads', async () => {
-  mockApiSend.mockResolvedValue(message({ id: 'm9', status: 'queued' }));
+  mockApiSend.mockResolvedValue(rated('queued'));
   const client = createTestQueryClient({ meFromApi: true });
   const invalidate = jest.spyOn(client, 'invalidateQueries');
   await renderWithQuery(<SendRating thread={guardian} />, client);
@@ -93,7 +97,7 @@ test('a queued send says it waits for the send gate and refetches the threads', 
 });
 
 test('a row Meta refused (201, failed) is shown as an error and may be asked again with a new id', async () => {
-  mockApiSend.mockResolvedValueOnce(message({ id: 'm9', status: 'failed' })).mockResolvedValue(message({ id: 'm10', status: 'sent' }));
+  mockApiSend.mockResolvedValueOnce(rated('failed')).mockResolvedValue(sentRow);
   await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
   await ask();
   await confirm();
