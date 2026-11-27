@@ -1,108 +1,19 @@
-import type { SlotView } from '@ab/schedule';
-import { clockOf, weekDates, weekdayOf } from '@ab/time';
-import { NuqtaGlyph } from '@ab/web-kit/components/ui/display/nuqta-glyph';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { cn } from '@ab/web-kit/lib/utils';
-import { byLocalDay, zoneLabel } from '@ab/web-kit/schedule/slots';
-import { dayMonthLabel } from '@ab/web-kit/schedule/tz';
-import { useClock } from '@ab/web-kit/lib/clock';
-import { useViewerTz } from '@ab/web-kit/lib/viewer-tz';
-import { clockDir } from '@ab/web-kit/lib/clock-text';
-
-export interface SlotGridProps {
-  /** Saturday of the week shown (the viewer's zone). */
-  week: string;
-  slots: readonly SlotView[];
-  /** Zone of the small times under each slot (the student's). */
-  studentTz: string;
-  /** starts_at of the picked slot. */
-  value: string | null;
-  /** A package's other picked starts (one per weekday): shown picked too. */
-  also?: readonly string[] | undefined;
-  onPick: (slot: SlotView) => void;
-}
-
-const weekday: Record<string, string> = t.enums.weekday;
+import type { SlotGridProps } from './SlotGrid.types';
+import { SlotDay } from './SlotDay';
+import { useSlotGrid } from './use-slot-grid';
 
 /** R-SCH-06, rule 6: a start with conflicts stays pickable but reads busy (R-SCH-04). */
-export function SlotGrid({ week, slots, studentTz, value, also = [], onPick }: SlotGridProps) {
-  const days = byLocalDay(slots, useViewerTz());
+export function SlotGrid({ week, slots, studentTz, value, also, onPick }: SlotGridProps) {
+  const { grid } = useSlotGrid({ week, slots, value, also });
   // Container query: 7 columns on a wide page, stacked days inside the narrow lesson drawer.
   return (
     <div role="group" aria-label={t.booking.freeSlots} className="@container">
       <div className="grid gap-x-2 gap-y-3 border-t border-rule pt-3 @[640px]:grid-cols-7">
-        {weekDates(week).map((day) => {
-          const daySlots = days.get(day) ?? [];
-          const label = `${weekday[String(weekdayOf(day))] ?? ''} ${dayMonthLabel(day)}`;
-          return (
-            <section key={day} aria-label={label} className="min-w-0">
-              <h4 className="mb-1.5 text-xs font-semibold text-ink-2">{label}</h4>
-              {daySlots.length === 0 ? (
-                <p aria-hidden="true" className="text-xs text-ink-3">—</p>
-              ) : (
-                // Wide: each day column scrolls past ~9 starts (48 a day while teachers are 24/7);
-                // the padding keeps the picked ring and focus outline inside the scroll box.
-                <ul className="flex flex-wrap gap-1.5 @[640px]:grid @[640px]:max-h-[26rem] @[640px]:overflow-y-auto @[640px]:p-0.5">
-                  {daySlots.map((slot) => (
-                    <li key={slot.starts_at}>
-                      <SlotButton
-                        slot={slot}
-                        studentTz={studentTz}
-                        picked={slot.starts_at === value || also.includes(slot.starts_at)}
-                        onPick={onPick}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
-          );
-        })}
+        {grid.map((day) => (
+          <SlotDay key={day.day} day={day} studentTz={studentTz} onPick={onPick} />
+        ))}
       </div>
     </div>
-  );
-}
-
-interface SlotButtonProps {
-  slot: SlotView;
-  studentTz: string;
-  picked: boolean;
-  onPick: (slot: SlotView) => void;
-}
-
-const SLOT_LOOK = {
-  picked: 'border-lapis bg-accent font-semibold text-ink shadow-[0_0_0_2px_color-mix(in_oklab,var(--lapis)_22%,transparent)]',
-  busy: 'border-dashed border-rule-strong text-ink-3 hover:bg-sunk',
-  free: 'border-input bg-raised text-ink hover:bg-sunk',
-} as const;
-
-/** Picked wins; else a start with conflicts reads busy (dashed), else free. */
-function slotLook(picked: boolean, busy: boolean): string {
-  if (picked) return SLOT_LOOK.picked;
-  return busy ? SLOT_LOOK.busy : SLOT_LOOK.free;
-}
-
-function SlotButton({ slot, studentTz, picked, onPick }: SlotButtonProps) {
-  const busy = slot.conflicts.length > 0;
-  const clock = useClock();
-  const tz = useViewerTz();
-  const small = zoneLabel(slot.starts_at, { tz: studentTz, base: tz }, clock);
-  return (
-    <button
-      type="button"
-      aria-pressed={picked}
-      onClick={() => onPick(slot)}
-      className={cn(
-        'grid min-h-11 w-full min-w-[76px] content-center justify-items-center rounded-md border px-2 py-1 text-sm tabular-nums transition-colors duration-(--duration-press) sm:min-h-10',
-        slotLook(picked, busy),
-      )}
-    >
-      <span className="flex items-center gap-1">
-        {busy && <NuqtaGlyph shape="struck" />}
-        <span dir={clockDir(clock)}>{clockOf(new Date(slot.starts_at), { ...clock, tz })}</span>
-      </span>
-      {small && <span className="text-2xs text-ink-3">{small}</span>}
-      {busy && <span className="text-2xs text-ink-3">{t.booking.slotBusy}</span>}
-    </button>
   );
 }
