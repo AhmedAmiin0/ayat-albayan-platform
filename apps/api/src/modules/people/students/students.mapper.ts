@@ -2,7 +2,7 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import type { StudentUpdate } from '@ab/shared';
 import { normalizeArabic } from '@ab/core';
 import { orFilterTerm } from '@/common/db/or-filter';
-import type { StudentCreateRequest } from './students.dto';
+import type { StudentCreateRequest } from '@ab/shared';
 
 type Student = Tables<'students'>;
 type Sibling = Pick<Student, 'id' | 'code' | 'name' | 'status'>;
