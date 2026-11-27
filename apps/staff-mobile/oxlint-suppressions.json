@@ -4481,9 +4481,6 @@
   "src/sales/sales/lib/sales-api.ts": {
     "stylistic/max-len": {
       "count": 3
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/sales/sales/lib/sales-href.ts": {

@@ -4822,7 +4822,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/sales/sales/api.ts": {

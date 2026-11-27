@@ -1,11 +1,10 @@
 import {
   salesAcademyDayRoutes,
+  salesAcademyListRoutes as lists,
   salesStudentsQuerySchema,
   type SalesStudentView,
-  type SalesSubscriptionHistory,
-  type SalesTeacherView,
 } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -27,16 +26,14 @@ export class SalesAcademyController {
     private readonly schedule: SalesScheduleService,
   ) {}
 
-  @Get('sales/subscriptions/:id/history')
-  @Permissions('self.sales')
-  history(@Param('id', ParseUUIDPipe) id: string): Promise<SalesSubscriptionHistory> {
-    return this.academy.history(id);
+  @Route(lists.history)
+  async history(@RouteInput() { params }: RouteInputOf<typeof lists.history>) {
+    return asResponse(lists.history.response, await this.academy.history(params.id));
   }
 
-  @Get('sales/teachers')
-  @Permissions('self.sales_academy')
-  teachers(): Promise<SalesTeacherView[]> {
-    return this.schedule.teachers();
+  @Route(lists.teachers)
+  async teachers() {
+    return asResponse(lists.teachers.response, await this.schedule.teachers());
   }
 
   /**

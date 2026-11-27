@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { Attendance, LessonStatus, Program, StudentStatus } from '@ab/catalog';
 import type { ReportSummaryView } from '../../reports';
 import { isCancelledLesson } from '@ab/schedule';
-import type { SalesHistoryEntry } from '../academy';
+import type { SalesHistoryEntry } from '../teacher/academy-lists.schemas';
 import type { SalesPackageSummary } from './student-package';
 import type { SalesStudentSchedule } from './student-schedule';
 import type { SalesStudentFamily } from './student-family';

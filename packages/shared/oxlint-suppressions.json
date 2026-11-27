@@ -463,14 +463,6 @@
       "count": 1
     }
   },
-  "src/sales/academy.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/sales/course/course-change.ts": {
     "stylistic/max-len": {
       "count": 2

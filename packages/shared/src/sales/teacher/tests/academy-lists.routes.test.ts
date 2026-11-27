@@ -67,7 +67,9 @@ describe('salesAcademyListRoutes', () => {
       { ...TEACHER, programs: ['chess'] },
       { ...TEACHER, students: [{ ...PUPIL, status: 'lost' }] },
     ];
-    for (const teacher of bad) expect(routes.teachers.response.safeParse([teacher]).success).toBe(false);
+    for (const teacher of bad) {
+      expect(routes.teachers.response.safeParse([teacher]).success).toBe(false);
+    }
   });
 
   it('takes a uuid subscription id and refuses another', () => {
