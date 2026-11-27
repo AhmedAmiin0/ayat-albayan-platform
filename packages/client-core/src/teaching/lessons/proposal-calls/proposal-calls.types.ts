@@ -1,5 +1,5 @@
 import type { RouteBody, RouteParams, RouteResult } from '@ab/core';
-import type { lessonProposalRoutes, lessonProposeRoutes } from '@ab/schedule';
+import type { familyRequestRoutes, lessonProposalRoutes, lessonProposeRoutes } from '@ab/schedule';
 
 type Routes = typeof lessonProposalRoutes;
 type Answer<K extends keyof Routes> = Promise<RouteResult<Routes[K]>>;
@@ -17,4 +17,15 @@ export interface ProposalDecisionCalls {
 /** The teacher's own request for another time. */
 export interface TeacherProposalCalls {
   propose: (lesson: RouteParams<Propose>, body: RouteBody<Propose>) => ProposeAnswer;
+}
+
+type Family = typeof familyRequestRoutes;
+type FamilyAnswer<K extends keyof Family> = Promise<RouteResult<Family[K]>>;
+type FamilyRequest = RouteParams<Family['approve']>;
+
+/** Staff answers to a family's move request; approve is a reschedule. */
+export interface FamilyRequestCalls {
+  pending: () => FamilyAnswer<'pending'>;
+  approve: (request: FamilyRequest, body: RouteBody<Family['approve']>) => FamilyAnswer<'approve'>;
+  reject: (request: FamilyRequest, body: RouteBody<Family['reject']>) => FamilyAnswer<'reject'>;
 }

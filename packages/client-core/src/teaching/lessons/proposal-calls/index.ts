@@ -1,3 +1,8 @@
 export { proposalDecisionCalls } from './decision-calls';
+export { familyRequestCalls } from './family-calls';
 export { teacherProposalCalls } from './propose-calls';
-export type { ProposalDecisionCalls, TeacherProposalCalls } from './proposal-calls.types';
+export type {
+  FamilyRequestCalls,
+  ProposalDecisionCalls,
+  TeacherProposalCalls,
+} from './proposal-calls.types';

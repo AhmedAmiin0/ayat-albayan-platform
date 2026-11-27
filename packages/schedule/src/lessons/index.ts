@@ -9,6 +9,7 @@ export * from './series/series-days';
 export * from './lesson-lists';
 export * from './lesson-actions';
 export * from './lesson-proposals';
+export * from './family-requests';
 export * from './lesson-moves';
 export * from './teacher-name';
 export * from './makeup-offer';
