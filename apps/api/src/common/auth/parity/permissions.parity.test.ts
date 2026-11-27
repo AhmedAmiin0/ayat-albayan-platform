@@ -82,7 +82,7 @@ describe('system-role parity with the old @Roles table', () => {
 
   // The chat lists are their own route permission, admin and sales only (docs/22).
   it('inbox.lists gates the chat-lists routes only, for admin and sales (never a teacher)', () => {
-    const gated = routes.filter((r) => r.permission === 'inbox.lists').map((r) => r.key);
+    const gated = routes.filter((r) => [r.permission].flat().includes('inbox.lists')).map((r) => r.key);
     expect(gated.length).toBe(6);
     expect(gated.every((k) => k.startsWith('ChatListsController.'))).toBe(true);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('inbox.lists'))).toEqual(['admin', 'sales']);

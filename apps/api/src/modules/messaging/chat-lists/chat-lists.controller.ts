@@ -1,7 +1,7 @@
 import { chatListIdParam, chatListPhoneParam, chatListRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ZodParam } from '@/common/http/zod-inputs';
@@ -11,9 +11,7 @@ import { ChatListsService } from './chat-lists.service';
 const byId = { badParam: listNotFound };
 
 /** Shared chat lists (docs/22 §3); teachers get 403; nothing here sends. */
-@ApiTags('inbox')
 @ApiBearerAuth()
-@Permissions('inbox.lists')
 @UseGuards(ListsUserGuard)
 @Controller()
 export class ChatListsController {

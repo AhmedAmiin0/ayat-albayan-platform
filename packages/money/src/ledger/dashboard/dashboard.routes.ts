@@ -11,7 +11,15 @@ export const dashboardRoutes = {
     path: '/dashboard/summary',
     query: dateRangeQuery,
     response: dashboardResponseSchema,
+    permissions: ['dashboard.read'],
+    tags: ['dashboard'],
   }),
   /** Pending reports, unpaid packages and open admin tasks. */
-  work: defineRoute({ method: 'GET', path: '/dashboard/work', response: dashboardWorkSchema }),
+  work: defineRoute({
+    method: 'GET',
+    path: '/dashboard/work',
+    response: dashboardWorkSchema,
+    permissions: ['dashboard.read'],
+    tags: ['dashboard'],
+  }),
 };

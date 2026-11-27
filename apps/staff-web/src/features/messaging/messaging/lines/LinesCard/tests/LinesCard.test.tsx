@@ -76,7 +76,7 @@ describe('LinesCard (docs/12 §13.9–13.10, R-MSG-05)', () => {
 
   it('a check posts once and shows the facts: number in an LTR island, raw Graph words with tones', async () => {
     await checkWith([view(), view({ line: 'chat', configured: false, ...NULLS })]);
-    expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/lines/check');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/lines/check', undefined);
     const n = row('notifications');
     expect(n.getByText('+1 555-000-1111').closest('bdi')?.getAttribute('dir')).toBe('ltr');
     expect(n.getByText('2222').closest('bdi')?.getAttribute('dir')).toBe('ltr');

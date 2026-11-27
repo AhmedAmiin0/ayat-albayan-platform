@@ -101,12 +101,17 @@
       "ar",
       "en"
      ]
+    },
+    "key": {
+     "type": "string"
     }
    },
    "required": [
-    "locale"
+    "locale",
+    "key"
    ]
-  }
+  },
+  "response": "empty"
  },
  "DELETE /job-applicants/:id": {
   "params": {
@@ -253,13 +258,14 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id"
    ]
-  }
+  },
+  "response": "empty"
  },
  "DELETE /saved-replies/:id": {
   "params": {
@@ -371,6 +377,23 @@
    },
    "required": [
     "phone",
+    "messageId"
+   ]
+  },
+  "response": "empty"
+ },
+ "DELETE /threads/stickers/favourites/:messageId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
     "messageId"
    ]
   },
@@ -2189,6 +2212,111 @@
    ]
   }
  },
+ "GET /i18n/keys": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "search": {
+     "type": "string",
+     "maxLength": 200
+    },
+    "section": {
+     "type": "string",
+     "maxLength": 60
+    },
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10000
+    },
+    "pageSize": {
+     "default": 50,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 100
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "key": {
+        "type": "string"
+       },
+       "section": {
+        "type": "string"
+       },
+       "ar": {
+        "type": "string"
+       },
+       "en": {
+        "type": "string"
+       },
+       "arOverride": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "enOverride": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "valuesKey": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "key",
+       "section",
+       "ar",
+       "en",
+       "arOverride",
+       "enOverride"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "sections": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize",
+    "sections"
+   ]
+  }
+ },
  "GET /invoices": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3100,6 +3228,155 @@
    }
   }
  },
+ "GET /meetings": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "title": {
+      "type": "string"
+     },
+     "created_by": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "ends_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "starts_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "planned_end_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "cancelled_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "state": {
+      "type": "string",
+      "enum": [
+       "open",
+       "ended"
+      ]
+     },
+     "window": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "state": {
+          "type": "string",
+          "enum": [
+           "early",
+           "open",
+           "closed"
+          ]
+         },
+         "opens_at": {
+          "type": "string"
+         },
+         "closes_at": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "state",
+         "opens_at",
+         "closes_at"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "can_join": {
+      "type": "boolean"
+     },
+     "invitees_count": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+     },
+     "my_invite": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "status": {
+          "type": "string",
+          "enum": [
+           "pending",
+           "sent",
+           "window_closed",
+           "failed",
+           "cancelled"
+          ]
+         },
+         "channel": {
+          "type": "string",
+          "enum": [
+           "in_app",
+           "whatsapp",
+           "link"
+          ]
+         }
+        },
+        "required": [
+         "status",
+         "channel"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "can_manage": {
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "id",
+     "title",
+     "created_by",
+     "created_at",
+     "ends_at",
+     "starts_at",
+     "planned_end_at",
+     "cancelled_at",
+     "state",
+     "window",
+     "can_join",
+     "invitees_count",
+     "my_invite",
+     "can_manage"
+    ]
+   }
+  }
+ },
  "GET /meetings/:id/recordings": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3156,6 +3433,32 @@
      "url"
     ]
    }
+  }
+ },
+ "GET /meetings/by-link/:token": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "token"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
   }
  },
  "GET /people/guardians": {
@@ -4525,6 +4828,54 @@
    ]
   }
  },
+ "GET /public/meetings/:token": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "token"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "title": {
+     "type": "string"
+    },
+    "state": {
+     "type": "string",
+     "enum": [
+      "open",
+      "ended"
+     ]
+    },
+    "starts_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "opens_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "title",
+    "state",
+    "starts_at",
+    "opens_at"
+   ]
+  }
+ },
  "GET /public/report-pages/:publicId": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4834,6 +5185,668 @@
    "required": [
     "publicId"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "public_id": {
+     "type": "string",
+     "pattern": "^[0-9a-f]{32}$"
+    },
+    "student": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "teacher": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "lesson": {
+     "type": "object",
+     "properties": {
+      "starts_at": {
+       "type": "string"
+      },
+      "ends_at": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "starts_at",
+      "ends_at"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "report": {
+     "type": "object",
+     "properties": {
+      "form_version": {
+       "anyOf": [
+        {
+         "type": "number",
+         "const": 1
+        },
+        {
+         "type": "number",
+         "const": 2
+        }
+       ]
+      },
+      "attendance": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "on_time",
+          "late",
+          "excused",
+          "absent"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "program": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "quran",
+          "arabic",
+          "islamic_studies"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "recited": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "new_memorization": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "revision": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "theory": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "grades": {
+       "type": "object",
+       "properties": {
+        "recitation": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "memorization": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "revision": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "tajweed": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "engagement": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "commitment": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        }
+       },
+       "required": [
+        "recitation",
+        "memorization",
+        "revision",
+        "tajweed",
+        "engagement",
+        "commitment"
+       ]
+      },
+      "grade_overall": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "excellent",
+          "very_good",
+          "good",
+          "acceptable",
+          "needs_review"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "notes": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "homework": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "next_plan": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "content": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "segments": {
+           "default": [],
+           "maxItems": 9,
+           "type": "array",
+           "items": {
+            "type": "object",
+            "properties": {
+             "kind": {
+              "type": "string",
+              "enum": [
+               "recited",
+               "new",
+               "revision"
+              ]
+             },
+             "surah": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 114
+             },
+             "from": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 286
+             },
+             "to": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 286
+             },
+             "grade": {
+              "default": null,
+              "anyOf": [
+               {
+                "type": "string",
+                "enum": [
+                 "excellent",
+                 "very_good",
+                 "good",
+                 "acceptable",
+                 "needs_review"
+                ]
+               },
+               {
+                "type": "null"
+               }
+              ]
+             }
+            },
+            "required": [
+             "kind",
+             "surah",
+             "from",
+             "to"
+            ]
+           }
+          },
+          "tajweed": {
+           "default": null,
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "noon_sakin",
+              "meem_sakin",
+              "madd",
+              "qalqala",
+              "makharij"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "arabic": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "topic": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "skills": {
+               "default": {},
+               "type": "object",
+               "properties": {
+                "reading": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "writing": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "listening": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "grammar": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                }
+               }
+              }
+             }
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "islamic": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "domain": {
+               "default": null,
+               "anyOf": [
+                {
+                 "type": "string",
+                 "enum": [
+                  "aqeedah",
+                  "fiqh",
+                  "seerah",
+                  "hadith",
+                  "adab"
+                 ]
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "topic": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "memorized": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "rates": {
+               "default": {},
+               "type": "object",
+               "properties": {
+                "comprehension": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "participation": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                }
+               }
+              }
+             }
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "quick": {
+           "default": [],
+           "maxItems": 3,
+           "type": "array",
+           "items": {
+            "type": "string",
+            "enum": [
+             "keep_going",
+             "daily_revision",
+             "tajweed_focus"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "version": {
+       "type": "integer",
+       "minimum": -9007199254740991,
+       "maximum": 9007199254740991
+      },
+      "submitted_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "edited_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "form_version",
+      "attendance",
+      "program",
+      "recited",
+      "new_memorization",
+      "revision",
+      "theory",
+      "grades",
+      "grade_overall",
+      "notes",
+      "homework",
+      "next_plan",
+      "content",
+      "version",
+      "submitted_at",
+      "edited_at"
+     ]
+    },
+    "attachments": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+       },
+       "mime": {
+        "type": "string"
+       },
+       "size": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "url": {
+        "type": "string",
+        "format": "uri"
+       }
+      },
+      "required": [
+       "id",
+       "mime",
+       "size",
+       "url"
+      ]
+     }
+    },
+    "pdf": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "url": {
+         "type": "string",
+         "format": "uri"
+        }
+       },
+       "required": [
+        "url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "public_id",
+    "student",
+    "teacher",
+    "lesson",
+    "tz",
+    "report",
+    "attachments",
+    "pdf"
+   ]
   }
  },
  "GET /report-pages/by-report/:id": {
@@ -4849,6 +5862,668 @@
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "public_id": {
+     "type": "string",
+     "pattern": "^[0-9a-f]{32}$"
+    },
+    "student": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "teacher": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "lesson": {
+     "type": "object",
+     "properties": {
+      "starts_at": {
+       "type": "string"
+      },
+      "ends_at": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "starts_at",
+      "ends_at"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "report": {
+     "type": "object",
+     "properties": {
+      "form_version": {
+       "anyOf": [
+        {
+         "type": "number",
+         "const": 1
+        },
+        {
+         "type": "number",
+         "const": 2
+        }
+       ]
+      },
+      "attendance": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "on_time",
+          "late",
+          "excused",
+          "absent"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "program": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "quran",
+          "arabic",
+          "islamic_studies"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "recited": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "new_memorization": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "revision": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "theory": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "grades": {
+       "type": "object",
+       "properties": {
+        "recitation": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "memorization": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "revision": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "tajweed": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "engagement": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "commitment": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        }
+       },
+       "required": [
+        "recitation",
+        "memorization",
+        "revision",
+        "tajweed",
+        "engagement",
+        "commitment"
+       ]
+      },
+      "grade_overall": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "excellent",
+          "very_good",
+          "good",
+          "acceptable",
+          "needs_review"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "notes": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "homework": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "next_plan": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "content": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "segments": {
+           "default": [],
+           "maxItems": 9,
+           "type": "array",
+           "items": {
+            "type": "object",
+            "properties": {
+             "kind": {
+              "type": "string",
+              "enum": [
+               "recited",
+               "new",
+               "revision"
+              ]
+             },
+             "surah": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 114
+             },
+             "from": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 286
+             },
+             "to": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 286
+             },
+             "grade": {
+              "default": null,
+              "anyOf": [
+               {
+                "type": "string",
+                "enum": [
+                 "excellent",
+                 "very_good",
+                 "good",
+                 "acceptable",
+                 "needs_review"
+                ]
+               },
+               {
+                "type": "null"
+               }
+              ]
+             }
+            },
+            "required": [
+             "kind",
+             "surah",
+             "from",
+             "to"
+            ]
+           }
+          },
+          "tajweed": {
+           "default": null,
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "noon_sakin",
+              "meem_sakin",
+              "madd",
+              "qalqala",
+              "makharij"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "arabic": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "topic": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "skills": {
+               "default": {},
+               "type": "object",
+               "properties": {
+                "reading": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "writing": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "listening": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "grammar": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                }
+               }
+              }
+             }
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "islamic": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "domain": {
+               "default": null,
+               "anyOf": [
+                {
+                 "type": "string",
+                 "enum": [
+                  "aqeedah",
+                  "fiqh",
+                  "seerah",
+                  "hadith",
+                  "adab"
+                 ]
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "topic": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "memorized": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "rates": {
+               "default": {},
+               "type": "object",
+               "properties": {
+                "comprehension": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "participation": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                }
+               }
+              }
+             }
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "quick": {
+           "default": [],
+           "maxItems": 3,
+           "type": "array",
+           "items": {
+            "type": "string",
+            "enum": [
+             "keep_going",
+             "daily_revision",
+             "tajweed_focus"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "version": {
+       "type": "integer",
+       "minimum": -9007199254740991,
+       "maximum": 9007199254740991
+      },
+      "submitted_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "edited_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "form_version",
+      "attendance",
+      "program",
+      "recited",
+      "new_memorization",
+      "revision",
+      "theory",
+      "grades",
+      "grade_overall",
+      "notes",
+      "homework",
+      "next_plan",
+      "content",
+      "version",
+      "submitted_at",
+      "edited_at"
+     ]
+    },
+    "attachments": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+       },
+       "mime": {
+        "type": "string"
+       },
+       "size": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "url": {
+        "type": "string",
+        "format": "uri"
+       }
+      },
+      "required": [
+       "id",
+       "mime",
+       "size",
+       "url"
+      ]
+     }
+    },
+    "pdf": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "url": {
+         "type": "string",
+         "format": "uri"
+        }
+       },
+       "required": [
+        "url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "public_id",
+    "student",
+    "teacher",
+    "lesson",
+    "tz",
+    "report",
+    "attachments",
+    "pdf"
    ]
   }
  },
@@ -5144,11 +6819,54 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "holder": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "id",
+        "name"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "mine": {
+     "type": "boolean"
+    },
+    "bringer": {
+     "type": "boolean"
+    },
+    "canTake": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "holder",
+    "mine",
+    "bringer",
+    "canTake"
    ]
   }
  },
@@ -7638,6 +9356,65 @@
    ]
   }
  },
+ "GET /threads/gifs": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "q": {
+     "type": "string",
+     "maxLength": 50
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "configured": {
+     "type": "boolean"
+    },
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9]{1,64}$"
+       },
+       "title": {
+        "type": "string"
+       },
+       "preview": {
+        "type": "string",
+        "format": "uri"
+       },
+       "width": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "height": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       }
+      },
+      "required": [
+       "id",
+       "title",
+       "preview",
+       "width",
+       "height"
+      ]
+     }
+    }
+   },
+   "required": [
+    "configured",
+    "items"
+   ]
+  }
+ },
  "GET /threads/search": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -7705,6 +9482,68 @@
    "required": [
     "items",
     "next_cursor"
+   ]
+  }
+ },
+ "GET /threads/stickers": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "favourites": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "message_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "phone": {
+        "type": "string",
+        "minLength": 1
+       },
+       "key": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "required": [
+       "message_id",
+       "phone",
+       "key"
+      ]
+     }
+    },
+    "recent": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "message_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "phone": {
+        "type": "string",
+        "minLength": 1
+       },
+       "key": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "required": [
+       "message_id",
+       "phone",
+       "key"
+      ]
+     }
+    }
+   },
+   "required": [
+    "favourites",
+    "recent"
    ]
   }
  },
@@ -7789,6 +9628,12 @@
    "required": [
     "kind"
    ]
+  }
+ },
+ "GET /webhooks/whatsapp": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "string"
   }
  },
  "PATCH /admin/numbers/:id": {
@@ -14658,6 +16503,299 @@
    ]
   }
  },
+ "POST /meetings": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "default": {},
+   "type": "object",
+   "properties": {
+    "title": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 60
+    },
+    "startsAt": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "durationMin": {
+     "type": "integer",
+     "minimum": 15,
+     "maximum": 240
+    },
+    "invitees": {
+     "maxItems": 30,
+     "type": "array",
+     "items": {
+      "oneOf": [
+       {
+        "type": "object",
+        "properties": {
+         "kind": {
+          "type": "string",
+          "const": "staff"
+         },
+         "profileId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+         }
+        },
+        "required": [
+         "kind",
+         "profileId"
+        ]
+       },
+       {
+        "type": "object",
+        "properties": {
+         "kind": {
+          "type": "string",
+          "const": "student"
+         },
+         "studentId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+         }
+        },
+        "required": [
+         "kind",
+         "studentId"
+        ]
+       },
+       {
+        "type": "object",
+        "properties": {
+         "kind": {
+          "type": "string",
+          "const": "phone"
+         },
+         "phone": {
+          "type": "string",
+          "minLength": 6,
+          "maxLength": 32
+         }
+        },
+        "required": [
+         "kind",
+         "phone"
+        ]
+       }
+      ]
+     }
+    },
+    "clientRequestId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "url": {
+     "type": "string"
+    },
+    "invitees": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "kind": {
+        "type": "string",
+        "enum": [
+         "staff",
+         "student",
+         "phone"
+        ]
+       },
+       "display_name": {
+        "type": "string"
+       },
+       "channel": {
+        "type": "string",
+        "enum": [
+         "in_app",
+         "whatsapp",
+         "link"
+        ]
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "pending",
+         "sent",
+         "window_closed",
+         "failed",
+         "cancelled"
+        ]
+       },
+       "error_code": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sent_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "link": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "invitation_text": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "kind",
+       "display_name",
+       "channel",
+       "status",
+       "error_code",
+       "sent_at",
+       "link",
+       "invitation_text"
+      ]
+     }
+    },
+    "replayed": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "url",
+    "invitees",
+    "replayed"
+   ]
+  }
+ },
+ "POST /meetings/:id/end": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
+ },
+ "POST /meetings/:id/join": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "url": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "room": {
+     "type": "string"
+    },
+    "role": {
+     "type": "string",
+     "enum": [
+      "teacher",
+      "admin",
+      "assistant",
+      "sales",
+      "guest"
+     ]
+    },
+    "recording": {
+     "type": "string",
+     "enum": [
+      "on",
+      "off"
+     ]
+    },
+    "chat": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "url",
+    "token",
+    "room",
+    "role"
+   ]
+  }
+ },
+ "POST /meetings/:id/link": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "url"
+   ]
+  }
+ },
  "POST /meetings/:id/participants/:identity/mute": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -14700,15 +16838,21 @@
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
    "properties": {
-    "identity": {
+    "id": {
      "type": "string",
-     "pattern": "^[a-z]+-[0-9a-f]{12}$"
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "identity": {
+     "type": "string"
     }
    },
    "required": [
+    "id",
     "identity"
    ]
-  }
+  },
+  "response": "empty"
  },
  "POST /meetings/:id/participants/:identity/share": {
   "params": {
@@ -14757,6 +16901,259 @@
    "required": [
     "id"
    ]
+  }
+ },
+ "POST /messaging/lines/check": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "line": {
+      "type": "string",
+      "enum": [
+       "notifications",
+       "chat"
+      ]
+     },
+     "configured": {
+      "type": "boolean"
+     },
+     "provider": {
+      "type": "string",
+      "enum": [
+       "meta",
+       "kapso",
+       "crm",
+       "evolution"
+      ]
+     },
+     "gaps": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "duplicate_chat_phone": {
+      "type": "boolean"
+     },
+     "kapso_webhook_secret": {
+      "type": "boolean"
+     },
+     "crm_webhook_secret": {
+      "type": "boolean"
+     },
+     "crm_send_scope": {
+      "type": [
+       "boolean",
+       "null"
+      ]
+     },
+     "crm_template_scopes_missing": {
+      "anyOf": [
+       {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "crm_read_scopes_missing": {
+      "anyOf": [
+       {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "meta_ready": {
+      "type": "object",
+      "properties": {
+       "app_secret": {
+        "type": "boolean"
+       },
+       "verify_token": {
+        "type": "boolean"
+       },
+       "app_subscribed": {
+        "type": [
+         "boolean",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "app_secret",
+       "verify_token",
+       "app_subscribed"
+      ]
+     },
+     "phone_number_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "waba_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "app_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "display_phone_number": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "verified_name": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "quality_rating": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "status": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "name_status": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "code_verification_status": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "subscribed_apps": {
+      "anyOf": [
+       {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "name": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "override_callback_uri": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "id",
+          "name",
+          "override_callback_uri"
+         ]
+        }
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "errors": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "step": {
+         "type": "string",
+         "enum": [
+          "phone",
+          "subscribed_apps",
+          "crm_me"
+         ]
+        },
+        "code": {
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "message": {
+         "type": "string"
+        },
+        "credential": {
+         "type": "string",
+         "enum": [
+          "kapso",
+          "crm",
+          "evolution"
+         ]
+        }
+       },
+       "required": [
+        "step",
+        "code",
+        "message"
+       ]
+      }
+     },
+     "checked_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+     }
+    },
+    "required": [
+     "line",
+     "configured",
+     "provider",
+     "gaps",
+     "duplicate_chat_phone",
+     "phone_number_id",
+     "waba_id",
+     "app_id",
+     "display_phone_number",
+     "verified_name",
+     "quality_rating",
+     "status",
+     "name_status",
+     "code_verification_status",
+     "subscribed_apps",
+     "errors",
+     "checked_at"
+    ]
+   }
   }
  },
  "POST /messaging/templates": {
@@ -21812,7 +24209,17 @@
    "required": [
     "instance"
    ]
-  }
+  },
+  "response": "empty"
+ },
+ "POST /webhooks/kapso": {
+  "response": "empty"
+ },
+ "POST /webhooks/wacrm": {
+  "response": "empty"
+ },
+ "POST /webhooks/whatsapp": {
+  "response": "empty"
  },
  "PUT /admin/numbers/:id/evolution/config": {
   "params": {
@@ -22113,6 +24520,43 @@
     "key"
    ]
   }
+ },
+ "PUT /i18n/:locale/:key": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "locale": {
+     "type": "string",
+     "enum": [
+      "ar",
+      "en"
+     ]
+    },
+    "key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "locale",
+    "key"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "value": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 2000
+    }
+   },
+   "required": [
+    "value"
+   ]
+  },
+  "response": "empty"
  },
  "PUT /me/avatar": {
   "body": {
@@ -23572,11 +26016,54 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "holder": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "id",
+        "name"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "mine": {
+     "type": "boolean"
+    },
+    "bringer": {
+     "type": "boolean"
+    },
+    "canTake": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "holder",
+    "mine",
+    "bringer",
+    "canTake"
    ]
   }
  },
@@ -23705,6 +26192,23 @@
     "ends_at"
    ]
   }
+ },
+ "PUT /threads/stickers/favourites": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "messageId"
+   ]
+  },
+  "response": "empty"
  },
  "PUT /users/:id/avatar": {
   "body": {

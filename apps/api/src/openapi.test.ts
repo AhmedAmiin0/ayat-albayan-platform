@@ -1,4 +1,13 @@
-import { shortLinkRoutes } from '@ab/shared';
+import {
+  chatListRoutes,
+  inboxSearchRoutes,
+  messageHideRoutes,
+  savedReplyRoutes,
+  shortLinkRoutes,
+  stickerPanelRoutes,
+  threadForwardRoutes,
+  threadReopenRoutes,
+} from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import type { OpenAPIObject } from '@nestjs/swagger';
@@ -11,6 +20,16 @@ const operationSchema = z.object({ tags: z.array(z.string()).default([]) });
 const pathItemSchema = z.record(z.string(), operationSchema.optional());
 
 const openApiPath = (path: string): string => path.replace(/:(\w+)/g, '{$1}');
+
+const INBOX_ROUTES = [
+  chatListRoutes,
+  inboxSearchRoutes,
+  messageHideRoutes,
+  savedReplyRoutes,
+  stickerPanelRoutes,
+  threadForwardRoutes,
+  threadReopenRoutes,
+].flatMap((routes) => Object.values(routes));
 
 describe('OpenAPI document', () => {
   let doc: OpenAPIObject;
@@ -43,5 +62,13 @@ describe('OpenAPI document', () => {
       'POST /short-links/:code/resend short-links',
       'POST /short-links/:code/revoke short-links',
     ]);
+  });
+
+  it('tags every inbox route object operation inbox once', () => {
+    const tags = INBOX_ROUTES.map(({ method, path }) => {
+      const item = pathItemSchema.parse(doc.paths[openApiPath(path)] ?? {});
+      return item[method.toLowerCase()]?.tags.join(',') ?? 'missing';
+    });
+    expect(new Set(tags)).toEqual(new Set(['inbox']));
   });
 });

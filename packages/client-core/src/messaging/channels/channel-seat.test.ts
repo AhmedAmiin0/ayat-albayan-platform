@@ -27,16 +27,19 @@ describe('channelSeats', () => {
     await expect(q.queryFn()).resolves.toEqual(HELD);
     expect(apiFetch).toHaveBeenCalledWith('/sales/students/s1/channel/seat');
     apiFetch.mockResolvedValueOnce({ holder: 'nope' });
-    await expect(q.queryFn()).rejects.toThrow();
+    const failure = await q.queryFn().catch((e: unknown) => e);
+    expect(failure).toBeInstanceOf(ApiError);
+    expect(failure).toMatchObject({ body: { code: 'bad_response' } });
   });
 
   it('take is a PUT, leave a DELETE; both re-read the seat when settled', async () => {
     const done = vi.fn(async () => undefined);
     const { take, leave } = seats.seatMutations('s1', done);
     await expect(take.mutationFn()).resolves.toMatchObject({ mine: true });
-    expect(apiSend).toHaveBeenCalledWith('PUT', '/sales/students/s1/channel/seat');
-    await leave.mutationFn();
-    expect(apiSend).toHaveBeenLastCalledWith('DELETE', '/sales/students/s1/channel/seat');
+    expect(apiSend).toHaveBeenCalledWith('PUT', '/sales/students/s1/channel/seat', undefined);
+    apiSend.mockResolvedValueOnce(undefined);
+    await expect(leave.mutationFn()).resolves.toBeUndefined();
+    expect(apiSend).toHaveBeenLastCalledWith('DELETE', '/sales/students/s1/channel/seat', undefined);
     expect([take.onSettled, leave.onSettled]).toEqual([done, done]);
   });
 });
