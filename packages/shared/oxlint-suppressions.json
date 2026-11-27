@@ -354,11 +354,6 @@
       "count": 1
     }
   },
-  "src/people/account/account.views.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/people/presence/presence-rules.ts": {
     "complexity": {
       "count": 1

@@ -139,6 +139,103 @@
    ]
   }
  },
+ "DELETE /me/avatar": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "full_name": {
+     "type": "string"
+    },
+    "email": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "phone_e164": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^\\+[1-9][0-9]{7,14}$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_seed": {
+     "type": "string"
+    },
+    "role": {
+     "type": "object",
+     "properties": {
+      "base": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "admin",
+          "teacher",
+          "guardian",
+          "assistant",
+          "sales",
+          "student"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "key": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name_ar": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name_en": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "base",
+      "key",
+      "name_ar",
+      "name_en"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "full_name",
+    "email",
+    "phone_e164",
+    "avatar_url",
+    "role"
+   ]
+  }
+ },
  "DELETE /me/push-tokens/:token": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3111,6 +3208,103 @@
    },
    "required": [
     "id"
+   ]
+  }
+ },
+ "GET /me/profile": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "full_name": {
+     "type": "string"
+    },
+    "email": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "phone_e164": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^\\+[1-9][0-9]{7,14}$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_seed": {
+     "type": "string"
+    },
+    "role": {
+     "type": "object",
+     "properties": {
+      "base": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "admin",
+          "teacher",
+          "guardian",
+          "assistant",
+          "sales",
+          "student"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "key": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name_ar": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name_en": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "base",
+      "key",
+      "name_ar",
+      "name_en"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "full_name",
+    "email",
+    "phone_e164",
+    "avatar_url",
+    "role"
    ]
   }
  },
@@ -11966,6 +12160,23 @@
     "locale"
    ],
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "locale": {
+     "type": "string",
+     "enum": [
+      "ar",
+      "en"
+     ]
+    }
+   },
+   "required": [
+    "locale"
+   ],
+   "additionalProperties": false
   }
  },
  "PATCH /me/profile": {
@@ -11990,6 +12201,101 @@
      "maxLength": 72
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "full_name": {
+     "type": "string"
+    },
+    "email": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "phone_e164": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^\\+[1-9][0-9]{7,14}$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_seed": {
+     "type": "string"
+    },
+    "role": {
+     "type": "object",
+     "properties": {
+      "base": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "admin",
+          "teacher",
+          "guardian",
+          "assistant",
+          "sales",
+          "student"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "key": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name_ar": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name_en": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "base",
+      "key",
+      "name_ar",
+      "name_en"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "full_name",
+    "email",
+    "phone_e164",
+    "avatar_url",
+    "role"
+   ]
   }
  },
  "PATCH /messaging/templates/:key/content": {
@@ -20098,6 +20404,30 @@
    "required": [
     "mime",
     "size"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
    ]
   }
  },
@@ -30860,6 +31190,101 @@
    "required": [
     "path"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "full_name": {
+     "type": "string"
+    },
+    "email": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "phone_e164": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^\\+[1-9][0-9]{7,14}$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_seed": {
+     "type": "string"
+    },
+    "role": {
+     "type": "object",
+     "properties": {
+      "base": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "admin",
+          "teacher",
+          "guardian",
+          "assistant",
+          "sales",
+          "student"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "key": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name_ar": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name_en": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "base",
+      "key",
+      "name_ar",
+      "name_en"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "full_name",
+    "email",
+    "phone_e164",
+    "avatar_url",
+    "role"
+   ]
   }
  },
  "PUT /me/email": {
@@ -30879,6 +31304,101 @@
    "required": [
     "email",
     "current_password"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "full_name": {
+     "type": "string"
+    },
+    "email": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "phone_e164": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^\\+[1-9][0-9]{7,14}$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_seed": {
+     "type": "string"
+    },
+    "role": {
+     "type": "object",
+     "properties": {
+      "base": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "admin",
+          "teacher",
+          "guardian",
+          "assistant",
+          "sales",
+          "student"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "key": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name_ar": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name_en": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "base",
+      "key",
+      "name_ar",
+      "name_en"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "full_name",
+    "email",
+    "phone_e164",
+    "avatar_url",
+    "role"
    ]
   }
  },
@@ -30901,7 +31421,8 @@
     "current_password",
     "new_password"
    ]
-  }
+  },
+  "response": "empty"
  },
  "PUT /me/push-tokens": {
   "body": {
