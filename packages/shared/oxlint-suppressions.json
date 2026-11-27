@@ -211,7 +211,7 @@
   },
   "src/messaging/thread-delta.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 2
     }
   },
   "src/messaging/wa.ts": {
