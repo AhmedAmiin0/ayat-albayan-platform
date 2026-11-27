@@ -527,11 +527,6 @@
       "count": 1
     }
   },
-  "src/sales/course/course-change.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/sales/course/course-follow.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -539,7 +534,7 @@
   },
   "src/sales/course/course-follow.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/sales/course/course-picks.test.ts": {

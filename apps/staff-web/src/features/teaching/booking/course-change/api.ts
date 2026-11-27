@@ -1,5 +1,5 @@
-import type { BookingMode } from '@ab/client-core';
-import type { CourseChangeCheck, CourseChangeResult, CourseChangeView } from '@ab/shared';
+import { courseChangeCalls, type BookingMode } from '@ab/client-core';
+import type { CourseChangeCheck, CourseChangeResult } from '@ab/shared';
 import type { CourseChangeRequest } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { createContext, useContext } from 'react';
@@ -35,14 +35,13 @@ const withTeacher = <T extends object>(body: T, target: CourseChangeTarget | nul
 /** The POST /…/change body: the check's plus its idempotency key (one per dialog, rule 8). */
 export type CourseChangeBody = CourseChangeRequest & { clientRequestId: string };
 
-/** GET /booking/course/change?subscriptionId= (admin): the course to change, from a lesson's drawer. */
+const adminCourse = courseChangeCalls({ apiFetch, apiSend });
+
+/** The admin's read of the course to change, from a lesson's drawer. */
 export const courseChangeViewQuery = (subscriptionId: string) =>
   queryOptions({
     queryKey: bookingKeys.courseChange(subscriptionId),
-    queryFn: () =>
-      apiFetch<CourseChangeView>(
-        `/booking/course/change?subscriptionId=${encodeURIComponent(subscriptionId)}`,
-      ),
+    queryFn: () => adminCourse.view(subscriptionId),
   });
 
 /** The check's key segment (left out of the refresh after a save). */

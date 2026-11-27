@@ -1,45 +1,8 @@
-import type { Duration } from '@ab/catalog';
 import type { DayTime } from '@ab/schedule';
 import { addLocalDays, weekdayOfDate, zonedInstant } from '@ab/time';
+import type { BookedCourse } from './booked-course.schemas';
 
 // A booked course's weekdays and times, so renewal can continue them or a change edit them; pure.
-
-/**
- * One assistant course (the rules sharing a subscription_id, migration 470): its latest set of
- * rules (those ending on the course's last day), each weekday with its time in the rules' zone.
- */
-export interface BookedCourse {
-  subscriptionId: string;
-  teacherId: string;
-  /** The course teacher's zone (a clash is also shown in it). */
-  teacherTz: string;
-  durationMin: Duration;
-  /** The rules' zone (the family's when booked). */
-  tz: string;
-  /**
-   * The first local day of its latest set of rules (`days`): before it only the old rules of a pending
-   * change hold lessons, so the change form's prefill starts on it at the earliest (changePicks).
-   */
-  startsOn: string;
-  /** The course's last local day (its rules' ends_on). */
-  endsOn: string;
-  /**
-   * Some active rule of it covers today in its zone (server-computed): it runs this week, even when a
-   * change saved earlier starts its latest set (startsOn) later. false = booked to start later.
-   */
-  running: boolean;
-  /**
-   * The first local day ≥ today any active rule of it may still hold a lesson on (server-computed): a
-   * course booked ahead whose pending change starts later keeps its old days before startsOn.
-   */
-  opensOn: string;
-  /** Each weekday (0 = Sunday) with its "HH:MM", in weekday order. */
-  days: DayTime[];
-  /** The lessons the course books: lessons_total − lessons_used_before (courseLessonCount). */
-  lessonsTotal: number;
-  /** Days a week the plan needs (courseDaysPerWeek); null = a custom count the admin books. */
-  perWeek: number | null;
-}
 
 /** The first day a renewal's course may start: after the previous one's last day, never before its subscription. */
 export function continueFrom(previous: Pick<BookedCourse, 'endsOn'>, startsOn: string): string {

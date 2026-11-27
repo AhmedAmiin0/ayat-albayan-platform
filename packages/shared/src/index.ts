@@ -41,6 +41,7 @@ export * from './sales/student/package-cancel';
 export * from './sales/teacher/teacher-overview';
 export * from './sales/course/course';
 export * from './sales/course/course-follow';
+export * from './sales/course/booked-course.schemas';
 export * from './sales/course/course-change';
 export * from './sales/course/course-draft';
 export * from './sales/course/course-picks';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { countsTowardCourse, courseRemaining, type CourseLessonFact } from './course-change';
+import { countsTowardCourse, courseRemaining, type CourseLessonFact } from '../course-change';
 
 const lesson = (o: Partial<CourseLessonFact> = {}): CourseLessonFact => ({
   status: 'completed',

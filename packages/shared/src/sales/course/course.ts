@@ -2,7 +2,8 @@ import type { Duration, Gender, PackageSize, Program } from '@ab/catalog';
 import { packagePerWeek } from '@ab/money';
 import { wallParts } from '@ab/schedule';
 import type { CourseDraftInfo } from './course-draft';
-import { continueFrom, type BookedCourse } from './course-follow';
+import type { BookedCourse } from './booked-course.schemas';
+import { continueFrom } from './course-follow';
 
 // The assistant books the weekly course of a subscription she sold (R-ASST-01):
 // exactly the plan's lesson count, the plan's days a week, each day with its own time.
