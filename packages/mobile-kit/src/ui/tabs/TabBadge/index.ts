@@ -1,0 +1,1 @@
+export { TabBadge } from './TabBadge';

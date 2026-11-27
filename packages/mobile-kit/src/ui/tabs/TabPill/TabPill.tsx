@@ -1,8 +1,9 @@
 import { Animated } from 'react-native';
-import { useTheme } from '../../theme';
+import { useTheme } from '../../../theme';
+import type { TabPillProps } from './TabPill.types';
 
 /** The grey capsule under the focused tab; `x` moves it there (usePillOffset). */
-export function TabPill({ x, width }: { x: Animated.Value; width: number }) {
+export function TabPill({ x, width }: TabPillProps) {
   const { glass } = useTheme();
   return (
     <Animated.View

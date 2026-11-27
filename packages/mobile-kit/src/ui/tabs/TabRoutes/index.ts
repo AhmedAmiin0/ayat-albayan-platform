@@ -1,0 +1,1 @@
+export { TabRoutes } from './TabRoutes';

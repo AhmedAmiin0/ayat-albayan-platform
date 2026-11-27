@@ -1,0 +1,1 @@
+export { TabPill } from './TabPill';

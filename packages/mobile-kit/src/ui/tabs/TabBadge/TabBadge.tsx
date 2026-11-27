@@ -1,6 +1,7 @@
 import { View } from 'react-native';
-import { type, useTheme } from '../../theme';
-import { AppText } from '../primitives/AppText';
+import { type, useTheme } from '../../../theme';
+import { AppText } from '../../primitives/AppText';
+import type { TabBadgeProps } from './TabBadge.types';
 
 /**
  * The count at the icon's top end (the left in Arabic), ringed in the capsule's colour (on the
@@ -8,7 +9,7 @@ import { AppText } from '../primitives/AppText';
  * label says the count.
  * Its text does not scale: the 18pt pill would clip it.
  */
-export function TabBadge({ text }: { text: string }) {
+export function TabBadge({ text }: TabBadgeProps) {
   const { color } = useTheme();
   return (
     <View
@@ -28,7 +29,13 @@ export function TabBadge({ text }: { text: string }) {
     >
       <AppText
         allowFontScaling={false}
-        style={{ fontSize: type.size['2xs'], lineHeight: 18, fontWeight: '600', color: color.onLapis, textAlign: 'center' }}
+        style={{
+          fontSize: type.size['2xs'],
+          lineHeight: 18,
+          fontWeight: '600',
+          color: color.onLapis,
+          textAlign: 'center',
+        }}
       >
         {text}
       </AppText>

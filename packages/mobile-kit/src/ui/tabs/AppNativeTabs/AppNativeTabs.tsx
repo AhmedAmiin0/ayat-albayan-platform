@@ -1,18 +1,7 @@
 import { Tabs } from 'expo-router/js-tabs';
-import { useTheme } from '../../theme';
-import { GlassTabBar } from './GlassTabBar';
-import type { TabIconName } from './tab-icons';
-
-export interface TabItem {
-  /** The route segment of the tab (folder or file under the layout). */
-  name: string;
-  title: string;
-  icon: TabIconName;
-  /** The held role lacks the permission: the tab leaves the bar (permission-aware nav). */
-  hidden?: boolean;
-  /** Count text on the tab (already formatted); none, no badge. */
-  badge?: string;
-}
+import { useTheme } from '../../../theme';
+import { GlassTabBar } from '../GlassTabBar';
+import type { AppNativeTabsProps } from './AppNativeTabs.types';
 
 /**
  * The bottom tabs: expo-router's JS tabs with our own floating glass bar (GlassTabBar, owner
@@ -21,7 +10,7 @@ export interface TabItem {
  * nowhere. Back returns to the first tab, as the native tabs did. The bar is never hidden: a chat
  * is a full screen above the tabs (its chat group, app/_layout.tsx).
  */
-export function AppNativeTabs({ tabs }: { tabs: readonly TabItem[] }) {
+export function AppNativeTabs({ tabs }: AppNativeTabsProps) {
   const { color } = useTheme();
   return (
     <Tabs
