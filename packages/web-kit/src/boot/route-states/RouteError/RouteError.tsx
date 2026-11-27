@@ -1,7 +1,7 @@
-import { useRouter } from '@tanstack/react-router';
 import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { Card } from '@ab/web-kit/components/ui/surface/card';
 import type { RouteErrorProps } from './RouteError.types';
+import { useRouteError } from './use-route-error';
 
 /**
  * A route that failed (a guard's read, a lost chunk, a render error): what happened in the app's
@@ -9,17 +9,17 @@ import type { RouteErrorProps } from './RouteError.types';
  * shown; it goes to the error tracker.
  */
 export function RouteError({ words, home }: RouteErrorProps) {
-  const router = useRouter();
+  const { retry, goHome } = useRouteError({ home });
   return (
     <div className="grid place-items-center px-4 py-16">
       <Card role="alert" className="grid w-full max-w-md gap-4 p-6 text-center">
         <h1 className="font-display text-h3 font-bold">{words.title}</h1>
         <p className="text-sm text-pretty text-ink-2">{words.body}</p>
         <div className="flex flex-wrap justify-center gap-2">
-          <Button type="button" onClick={() => void router.invalidate()}>
+          <Button type="button" onClick={retry}>
             {words.retry}
           </Button>
-          <Button type="button" variant="secondary" onClick={() => void router.navigate({ href: home })}>
+          <Button type="button" variant="secondary" onClick={goHome}>
             {words.home}
           </Button>
         </div>
