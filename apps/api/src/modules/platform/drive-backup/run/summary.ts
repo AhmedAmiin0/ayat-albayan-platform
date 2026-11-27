@@ -26,7 +26,10 @@ export const emptySummary = (label: string): RunSummary => ({
   waiting: 0,
 });
 
-const item = (o: { bucket: string; key: string; size: number }, reason: SkipWhy): BackupSkippedItem => ({
+const item = (
+  o: { bucket: string; key: string; size: number },
+  reason: SkipWhy,
+): BackupSkippedItem => ({
   id: objectId(o),
   size: o.size,
   reason,
