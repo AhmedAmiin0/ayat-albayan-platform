@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { draftBody, submitProblem, valuesOf, type FormValues } from './form-values';
 import { reportDraftSchema, reportSubmitSchema } from './schema';
-import type { ReportView } from './views';
+import type { ReportView } from './report-routes';
 
 // The program field on the lesson report (docs/13-forms-spec.md form 2).
 const GRADES = {

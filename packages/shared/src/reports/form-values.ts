@@ -1,7 +1,7 @@
 import type { Attendance, Grade, Program } from '@ab/catalog';
 import { attended, REPORT_RUBRICS, type Rubric } from './rules';
 import { REPORT_REQUIRED_TEXT, reportSubmitSchema, type ReportDraft } from './schema';
-import type { ReportView } from './views';
+import type { ReportView } from './report-routes';
 
 // Lesson report form state shared by web and mobile (R-REP-01, R-REP-02, docs/01 T7).
 

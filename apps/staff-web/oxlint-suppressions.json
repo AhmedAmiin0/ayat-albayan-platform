@@ -4340,7 +4340,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 12
+      "count": 6
     }
   },
   "src/features/reporting/reports/chart/ChartPoints.tsx": {

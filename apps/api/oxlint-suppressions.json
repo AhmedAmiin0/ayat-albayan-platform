@@ -6105,14 +6105,6 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/reports.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 7
-    }
-  },
   "src/modules/reporting/reports/shared/report-access.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -6227,11 +6219,6 @@
     },
     "stylistic/max-len": {
       "count": 5
-    }
-  },
-  "src/modules/reporting/reports/v2/report-v2.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/reporting/reports/v2/report-v2.mapper.ts": {
