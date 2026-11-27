@@ -6612,14 +6612,6 @@
       "count": 4
     }
   },
-  "src/modules/sales/sales-students/teachers/sales-teacher-overview.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/sales/sales-students/teachers/sales-teacher-overview.fakes.ts": {
     "stylistic/max-len": {
       "count": 2
