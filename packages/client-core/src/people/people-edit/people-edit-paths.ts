@@ -1,4 +1,4 @@
-// One query key so web and mobile never drift.
+// The query keys web and phone share, so their caches never drift.
 
 export const PEOPLE_EDIT_KEY = ['people-edit'] as const;
 
