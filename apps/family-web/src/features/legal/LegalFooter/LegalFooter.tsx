@@ -1,12 +1,13 @@
-import { LEGAL_PAGES, LEGAL_PATHS } from '@ab/client-core';
+import { LEGAL_PATHS } from '@ab/client-core';
 import { Link } from '@tanstack/react-router';
 import { LanguageSwitch, t } from '@ab/web-kit';
 import type { LegalFooterProps } from './LegalFooter.types';
 import { FOOTER_LINK_CLASS } from '@/features/legal/legal-content';
+import { otherLegalPages } from './legal-footer.helpers';
 
 /** Under a legal page: the other legal page, sign-in, then the other language. */
 export function LegalFooter({ current }: LegalFooterProps) {
-  const others = LEGAL_PAGES.filter((page) => page !== current);
+  const others = otherLegalPages(current);
   return (
     <>
       {others.map((page) => (
