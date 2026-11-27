@@ -1,6 +1,6 @@
 import { WA_ERROR as E } from '@ab/catalog';
 import { z } from 'zod';
-import type { MessageView } from '../../chat/views';
+import type { MessageView } from '../../chat/message-view';
 import {
   APP_SEND_UNCONFIRMED,
   AWAITING_REPLY,

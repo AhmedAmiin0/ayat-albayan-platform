@@ -1,4 +1,4 @@
-import type { MessageView } from './views';
+import type { MessageView } from './message-view';
 
 // Who sent an outgoing bubble: a staff name, an automatic message, or nothing.
 

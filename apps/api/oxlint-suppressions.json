@@ -2663,11 +2663,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/reactions/thread-reaction.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/inbox/reactions/thread-reaction.service.ts": {
     "complexity": {
       "count": 1
@@ -2787,7 +2782,7 @@
   },
   "src/modules/messaging/inbox/stickers/stickers.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.ts": {
@@ -4152,9 +4147,6 @@
     },
     "stylistic/max-len": {
       "count": 7
-    },
-    "typescript/no-deprecated": {
-      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/messages/message.views.ts": {
@@ -4183,11 +4175,6 @@
   "src/modules/messaging/whatsapp/messages/receipts/receipt-candidates.ts": {
     "complexity": {
       "count": 1
-    }
-  },
-  "src/modules/messaging/whatsapp/messages/tests/message.mapper.test.ts": {
-    "typescript/no-deprecated": {
-      "count": 3
     }
   },
   "src/modules/messaging/whatsapp/messages/tests/wa-components.media.test.ts": {
@@ -6470,20 +6457,12 @@
       "count": 2
     }
   },
-  "src/modules/sales/sales-students/lessons/sales-lesson-actions.controller.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/zod-inputs": {
-      "count": 5
-    }
-  },
   "src/modules/sales/sales-students/lessons/sales-lesson-actions.service.ts": {
     "typescript/consistent-type-definitions": {
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/sales/sales-students/lessons/tests/sales-lesson-actions.http.test.ts": {

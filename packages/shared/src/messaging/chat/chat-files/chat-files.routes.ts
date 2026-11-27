@@ -8,9 +8,14 @@ import {
   threadMediaItemSchema,
   threadPdfPageSchema,
 } from './chat-files.schemas';
+import { signedUploadSchema } from '../../../reports';
+import { threadFileSendSchema, threadFileUploadSchema } from '../../schemas';
+import { messageViewSchema } from '../message-view';
 
 const bubble = { permissions: ['inbox.read'], tags: ['inbox'] } as const;
 const picker = { permissions: ['inbox.media'], tags: ['inbox'] } as const;
+const sender = { permissions: ['inbox.send'], tags: ['inbox'] } as const;
+const byPhone = z.object({ phone: phoneE164 });
 
 /**
  * A chat bubble's file: admin and sales; a teacher, even of that family, is 403 media_forbidden.
@@ -42,7 +47,7 @@ export const chatMediaRoutes = {
   list: defineRoute({
     method: 'GET',
     path: '/threads/:phone/media',
-    params: z.object({ phone: phoneE164 }),
+    params: byPhone,
     response: z.array(threadMediaItemSchema),
     ...picker,
   }),
@@ -53,5 +58,30 @@ export const chatMediaRoutes = {
     params: chatFileParamsSchema,
     response: threadFileSchema,
     ...picker,
+  }),
+};
+
+/**
+ * A staff file sent from the chat (R-MSG-05): admin and sales; a teacher is 403 files_forbidden,
+ * and that 403 wins over a bad phone.
+ */
+export const chatFileSendRoutes = {
+  /** 201; a one-off signed upload into wa-media for this request id. */
+  uploadUrl: defineRoute({
+    method: 'POST',
+    path: '/threads/:phone/file-upload-url',
+    params: byPhone,
+    body: threadFileUploadSchema,
+    response: signedUploadSchema,
+    ...sender,
+  }),
+  /** 201; the uploaded file goes out; a repeated clientRequestId answers the first row. */
+  send: defineRoute({
+    method: 'POST',
+    path: '/threads/:phone/file',
+    params: byPhone,
+    body: threadFileSendSchema,
+    response: messageViewSchema,
+    ...sender,
   }),
 };

@@ -1,4 +1,4 @@
-import { stickerPanelRoutes as routes } from '@ab/shared';
+import { stickerPanelRoutes, stickerSendRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../../core/http';
 import type { StickerPanelCalls } from './sticker-panel-api.types';
 
@@ -6,9 +6,11 @@ import type { StickerPanelCalls } from './sticker-panel-api.types';
 export function stickerPanelCalls(client: ApiClient): StickerPanelCalls {
   const call = callWith(client);
   return {
-    list: () => call({ route: routes.list }),
-    favourite: (body) => call({ route: routes.favourite, body }),
-    unfavourite: (params) => call({ route: routes.unfavourite, params }),
-    gifs: (query) => call({ route: routes.gifs, query }),
+    list: () => call({ route: stickerPanelRoutes.list }),
+    favourite: (body) => call({ route: stickerPanelRoutes.favourite, body }),
+    unfavourite: (params) => call({ route: stickerPanelRoutes.unfavourite, params }),
+    gifs: (query) => call({ route: stickerPanelRoutes.gifs, query }),
+    sticker: ({ params, body }) => call({ route: stickerSendRoutes.sticker, params, body }),
+    gif: ({ params, body }) => call({ route: stickerSendRoutes.gif, params, body }),
   };
 }

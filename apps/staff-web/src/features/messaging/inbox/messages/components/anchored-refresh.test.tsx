@@ -30,7 +30,7 @@ vi.mock('@/features/messaging/inbox/messages/reply-actions/RescheduleLessonDrawe
 }));
 
 const WINDOW = ['thread-at', PHONE, 'b0000000-0000-4000-8000-000000000001'];
-const M = message({ id: 'm1', body: 'السلام عليكم' });
+const M = message({ id: 'b1111111-1111-4111-8111-111111111111', lead_id: null, body: 'السلام عليكم' });
 const windowed = (): InfiniteData<ThreadDetail> => ({ pages: [detail([M])], pageParams: [null] });
 
 /** The window's query as stale-marked by an invalidation. */
@@ -71,7 +71,8 @@ describe('bubble actions refresh an anchored window', () => {
 
   it('«تفاعل» (useReact) patches the window at once', async () => {
     const reactions = { theirs: null, ours: '👍', ours_by: 'هبة' };
-    apiSend.mockResolvedValue({ message: { ...M, reactions }, status: 'sent' });
+    const answer = { message: { ...M, reactions }, status: 'sent', error_code: null, error_text: null };
+    apiSend.mockResolvedValue(answer);
     const client = mount(<ReactButton />);
     fireEvent.click(screen.getByRole('button', { name: 'react' }));
     await waitFor(() => {

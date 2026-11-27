@@ -67,4 +67,14 @@ describe('stickers and GIFs routes', () => {
     const res = await t.call({ method: 'GET', url: '/threads/gifs?q=hello' });
     expect([res.statusCode, res.json()]).toEqual([200, { configured: false, items: [] }]);
   });
+
+  it('POST …/sticker | gif: a bad body is 400 first, then a teacher is 403 on a bad phone', async () => {
+    const req = 'c0000000-0000-4000-8000-000000000001';
+    const send = (url: string, body: object) =>
+      t.call({ method: 'POST', url: `/threads/abc/${url}`, token: 'teacher', body });
+    const badBody = await send('sticker', { messageId: 'x', clientRequestId: req });
+    expect(badBody.statusCode).toBe(400);
+    const res = await send('gif', { gifId: 'abc1', clientRequestId: req });
+    expect([res.statusCode, res.json().code]).toEqual([403, 'files_forbidden']);
+  });
 });

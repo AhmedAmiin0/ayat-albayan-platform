@@ -153,9 +153,6 @@
     },
     "stylistic/max-len": {
       "count": 6
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/messaging/calls/calls-realtime.ts": {
@@ -174,11 +171,6 @@
   "src/messaging/channels/channel-live.test.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/messaging/channels/channels.ts": {
-    "stylistic/max-len": {
-      "count": 4
     }
   },
   "src/messaging/channels/teacher-pick.ts": {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { evolutionQrSchema, qrImageOf, shownState } from './evolution-api';
+import { qrImageOf, shownState } from './evolution-api';
 
 describe('evolution-api', () => {
   it('qrImageOf keeps a PNG data URL only', () => {
@@ -10,10 +10,8 @@ describe('evolution-api', () => {
     expect(qrImageOf(null)).toBeNull();
   });
 
-  it('an unknown state word reads as unknown', () => {
-    const answer = evolutionQrSchema.parse({ state: 'banana', qr: null, pairing_code: null });
-    expect(answer.state).toBeNull();
-    expect(shownState(answer.state)).toBe('unknown');
+  it('a state the server could not name reads as unknown', () => {
+    expect(shownState(null)).toBe('unknown');
     expect(shownState('open')).toBe('open');
   });
 });

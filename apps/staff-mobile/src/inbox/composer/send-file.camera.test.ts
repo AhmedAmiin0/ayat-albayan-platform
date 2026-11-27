@@ -2,7 +2,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { ChatFileError, pickChatFile, sendChatFile } from './send-file';
-import { PHONE } from '@/inbox/shared/thread-fixtures';
+import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 
 // The pill's camera and a recorded voice note.
 const mockApiSend = jest.fn();
@@ -55,7 +55,7 @@ test('the camera, never asked: the chat’s own reason (not the receipt’s); re
 });
 
 test('a voice note (audio/mp4) passes the chat check and asks for its upload as audio/mp4', async () => {
-  mockApiSend.mockResolvedValueOnce({ bucket: 'wa-media', path: `out/u1/${ID}/a.m4a`, token: 't', signed_url: 'u' }).mockResolvedValueOnce({ id: 'v' });
+  mockApiSend.mockResolvedValueOnce({ bucket: 'wa-media', path: `out/u1/${ID}/a.m4a`, token: 't', signed_url: 'u' }).mockResolvedValueOnce(message({ id: ID }));
   const file = { mime: 'audio/mp4', bytes: new ArrayBuffer(10), size: 10, filename: 'voice.m4a' };
   await sendChatFile({ phone: PHONE, file, id: ID, maxBytes: 10 * MB });
   expect(mockApiSend.mock.calls[0]?.[2]).toEqual({ clientRequestId: ID, mime: 'audio/mp4', size: 10 });

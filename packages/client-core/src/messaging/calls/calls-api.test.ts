@@ -23,10 +23,7 @@ describe('activeCallsQuery (mobile: foreground only, docs/28 §9)', () => {
 });
 
 describe('the call routes', () => {
-  it('encodes the number and sends one idempotency id', async () => {
-    const sends = callSends({ client, requestId: () => 'r1' });
-    await sends.requestCallPermission('+966501234567');
-    expect(client.apiSend).toHaveBeenCalledWith('POST', '/calls/permission/%2B966501234567/request', { clientRequestId: 'r1' });
+  it('reads one chat of the log by its encoded number', async () => {
     await callQueries(client).callListQuery({ enabled: true, phone: '+1' }).queryFn();
     expect(client.apiFetch).toHaveBeenCalledWith('/calls?phone=%2B1&limit=50');
   });
@@ -48,6 +45,34 @@ const CALL = {
   duration_seconds: null,
 };
 const ACTIVE = { ...CALL, offer_sdp: null, answer_sdp: null };
+const MESSAGE = {
+  id: ID,
+  direction: 'outbound',
+  status: 'queued',
+  phone_e164: '+966501234567',
+  lead_id: null,
+  guardian_id: null,
+  lesson_id: null,
+  template_key: 'call_permission',
+  template_params: null,
+  body: null,
+  media_mime: null,
+  media_url: null,
+  reply_to_wa_id: null,
+  interactive_payload: null,
+  error_code: null,
+  error_text: null,
+  attempts: 0,
+  next_attempt_at: null,
+  scheduled_for: null,
+  sent_at: null,
+  delivered_at: null,
+  read_at: null,
+  sent_manually_at: null,
+  created_at: AT,
+  click_to_chat: null,
+  lesson: null,
+};
 
 const answering = (answer: unknown) => {
   const apiFetch = vi.fn(async () => answer);
@@ -70,6 +95,15 @@ describe('the call routes through their route objects', () => {
       ['POST', `/calls/${ID}/accept`, { sdp: 'v=0' }],
       ['POST', `/calls/${ID}/reject`, undefined],
       ['POST', `/calls/${ID}/end`, undefined],
+    ]);
+  });
+
+  it('asks a number for permission with one idempotency id and reads the sent message', async () => {
+    const { api, apiSend } = answering(MESSAGE);
+    const sends = callSends({ client: api, requestId: () => 'r1' });
+    await expect(sends.requestCallPermission('+966501234567')).resolves.toEqual(MESSAGE);
+    expect(apiSend.mock.calls).toEqual([
+      ['POST', '/calls/permission/%2B966501234567/request', { clientRequestId: 'r1' }],
     ]);
   });
 
@@ -97,6 +131,7 @@ describe('the call routes through their route objects', () => {
   it('refuses an answer that is not a call instead of handing it on', async () => {
     const sends = callSends({ client: answering({ id: ID }).api, requestId: () => 'r1' });
     await expect(sends.endCall(ID)).rejects.toBeInstanceOf(ApiError);
+    await expect(sends.requestCallPermission('+966501234567')).rejects.toBeInstanceOf(ApiError);
     const polls = callQueries(answering([{ ...ACTIVE, status: 'held' }]).api);
     const poll = polls.activeCallsQuery({ enabled: true, live: false });
     await expect(poll.queryFn()).rejects.toBeInstanceOf(ApiError);

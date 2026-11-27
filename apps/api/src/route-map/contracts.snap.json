@@ -1030,28 +1030,29 @@
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
    "properties": {
-    "attachmentId": {
+    "token": {
      "type": "string",
-     "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "minLength": 1,
+     "maxLength": 100
     },
     "id": {
      "type": "string",
      "format": "uuid",
      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     },
-    "token": {
+    "attachmentId": {
      "type": "string",
-     "minLength": 1,
-     "maxLength": 100
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     }
    },
    "required": [
-    "attachmentId",
+    "token",
     "id",
-    "token"
+    "attachmentId"
    ]
-  }
+  },
+  "response": "empty"
  },
  "DELETE /recordings/:id": {
   "params": {
@@ -3345,11 +3346,50 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "state": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "open",
+        "connecting",
+        "close",
+        "refused"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "qr": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "pairing_code": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "state",
+    "qr",
+    "pairing_code"
    ]
   }
  },
@@ -3361,11 +3401,40 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "state": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "open",
+        "connecting",
+        "close",
+        "refused"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "checked_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "state",
+    "checked_at"
    ]
   }
  },
@@ -3377,11 +3446,56 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "synced": {
+     "type": "boolean"
+    },
+    "checked_at": {
+     "type": "string"
+    },
+    "parts": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "instance",
+       "settings",
+       "webhook",
+       "proxy"
+      ]
+     },
+     "additionalProperties": {
+      "type": "string",
+      "enum": [
+       "synced",
+       "drift",
+       "failed",
+       "skipped",
+       "disabled"
+      ]
+     },
+     "required": [
+      "instance",
+      "settings",
+      "webhook",
+      "proxy"
+     ]
+    }
+   },
+   "required": [
+    "synced",
+    "checked_at",
+    "parts"
    ]
   }
  },
@@ -10825,6 +10939,53 @@
    "required": [
     "code"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "title": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "state": {
+     "type": "string",
+     "enum": [
+      "open",
+      "gone"
+     ]
+    },
+    "goneReason": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "expired",
+        "revoked"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "needs": {
+     "type": "string",
+     "const": "sign_in_or_code"
+    },
+    "codesAvailable": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "title",
+    "state",
+    "goneReason",
+    "needs",
+    "codesAvailable"
+   ]
   }
  },
  "GET /public/student/:token": {
@@ -10932,26 +11093,43 @@
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
    "properties": {
-    "attachmentId": {
+    "token": {
      "type": "string",
-     "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "minLength": 1,
+     "maxLength": 100
     },
     "id": {
      "type": "string",
      "format": "uuid",
      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     },
-    "token": {
+    "attachmentId": {
      "type": "string",
-     "minLength": 1,
-     "maxLength": 100
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     }
    },
    "required": [
-    "attachmentId",
+    "token",
     "id",
-    "token"
+    "attachmentId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "url": {
+     "type": "string",
+     "format": "uri"
+    },
+    "expires_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "url",
+    "expires_at"
    ]
   }
  },
@@ -10967,7 +11145,8 @@
    "required": [
     "code"
    ]
-  }
+  },
+  "response": "redirect"
  },
  "GET /ready": {
   "response": {
@@ -25210,11 +25389,56 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "synced": {
+     "type": "boolean"
+    },
+    "checked_at": {
+     "type": "string"
+    },
+    "parts": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "instance",
+       "settings",
+       "webhook",
+       "proxy"
+      ]
+     },
+     "additionalProperties": {
+      "type": "string",
+      "enum": [
+       "synced",
+       "drift",
+       "failed",
+       "skipped",
+       "disabled"
+      ]
+     },
+     "required": [
+      "instance",
+      "settings",
+      "webhook",
+      "proxy"
+     ]
+    }
+   },
+   "required": [
+    "synced",
+    "checked_at",
+    "parts"
    ]
   }
  },
@@ -28677,6 +28901,18 @@
   }
  },
  "POST /calls/permission/:phone/request": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "phone"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -28689,6 +28925,677 @@
    },
    "required": [
     "clientRequestId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "hidden": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "by_name": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        }
+       },
+       "required": [
+        "by_name",
+        "at"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "corrects_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_by_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "edited": {
+     "type": "boolean"
+    },
+    "deleted": {
+     "type": "boolean"
+    },
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "direction": {
+     "type": "string",
+     "enum": [
+      "inbound",
+      "outbound"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "queued",
+      "sent",
+      "delivered",
+      "read",
+      "failed",
+      "sent_manually"
+     ]
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "lead_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "guardian_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "lesson_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "template_key": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "template_params": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "1": {
+         "type": "string"
+        },
+        "2": {
+         "type": "string"
+        },
+        "3": {
+         "type": "string"
+        },
+        "4": {
+         "type": "string"
+        },
+        "5": {
+         "type": "string"
+        },
+        "6": {
+         "type": "string"
+        },
+        "7": {
+         "type": "string"
+        },
+        "8": {
+         "type": "string"
+        },
+        "9": {
+         "type": "string"
+        },
+        "button": {
+         "type": "string"
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "payloads": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "document": {
+         "type": "object",
+         "properties": {
+          "bucket": {
+           "type": "string"
+          },
+          "path": {
+           "type": "string"
+          },
+          "filename": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "bucket",
+          "path",
+          "filename"
+         ]
+        },
+        "crm": {
+         "type": "object",
+         "properties": {
+          "body": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "buttons": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "report": {
+           "type": "string",
+           "enum": [
+            "trial",
+            "regular"
+           ]
+          }
+         }
+        }
+       }
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "template": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "header": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "type": {
+             "type": "string",
+             "enum": [
+              "text",
+              "image",
+              "video",
+              "document",
+              "location"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "type"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "footer": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "enum": [
+             "quick_reply",
+             "url",
+             "phone_number",
+             "copy_code"
+            ]
+           },
+           "text": {
+            "type": "string"
+           },
+           "url": {
+            "type": "string"
+           },
+           "phone": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "type",
+           "text"
+          ]
+         }
+        }
+       },
+       "required": [
+        "header",
+        "footer",
+        "buttons"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "body": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_mime": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "reply_to_wa_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "reply_to_message_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "reply_to": {
+     "anyOf": [
+      {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "unavailable": {
+           "type": "boolean",
+           "const": true
+          }
+         },
+         "required": [
+          "unavailable"
+         ]
+        },
+        {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": "string",
+           "format": "uuid",
+           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+          },
+          "direction": {
+           "type": "string",
+           "enum": [
+            "inbound",
+            "outbound"
+           ]
+          },
+          "body": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "media_mime": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "template_key": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "sender_name": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "id",
+          "direction",
+          "body",
+          "media_mime",
+          "template_key",
+          "sender_name"
+         ]
+        }
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "replyable": {
+     "type": "boolean"
+    },
+    "forwardable": {
+     "type": "boolean"
+    },
+    "forwarded": {
+     "type": "boolean"
+    },
+    "reactions": {
+     "type": "object",
+     "properties": {
+      "theirs": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "ours": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "ours_by": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "theirs",
+      "ours",
+      "ours_by"
+     ]
+    },
+    "interactive_payload": {},
+    "error_code": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "error_text": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "attempts": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    },
+    "next_attempt_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "scheduled_for": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "delivered_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "read_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_manually_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "app_send_until": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_by_teacher_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "sender_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "automatic": {
+     "type": "boolean"
+    },
+    "line": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "notifications",
+        "chat",
+        "calls"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "click_to_chat": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "lesson": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "starts_at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "ends_at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "status": {
+         "type": "string",
+         "enum": [
+          "scheduled",
+          "confirmed",
+          "completed",
+          "late",
+          "excused",
+          "no_show",
+          "cancelled_by_teacher",
+          "cancelled_by_admin",
+          "rescheduled"
+         ]
+        }
+       },
+       "required": [
+        "starts_at",
+        "status"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "direction",
+    "status",
+    "phone_e164",
+    "lead_id",
+    "guardian_id",
+    "lesson_id",
+    "template_key",
+    "template_params",
+    "body",
+    "media_mime",
+    "media_url",
+    "reply_to_wa_id",
+    "interactive_payload",
+    "error_code",
+    "error_text",
+    "attempts",
+    "next_attempt_at",
+    "scheduled_for",
+    "sent_at",
+    "delivered_at",
+    "read_at",
+    "sent_manually_at",
+    "created_at",
+    "click_to_chat",
+    "lesson"
    ]
   }
  },
@@ -34415,6 +35322,43 @@
    "required": [
     "code"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "oneOf": [
+    {
+     "type": "object",
+     "properties": {
+      "outcome": {
+       "type": "string",
+       "const": "open"
+      },
+      "target": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "outcome",
+      "target"
+     ]
+    },
+    {
+     "type": "object",
+     "properties": {
+      "outcome": {
+       "type": "string",
+       "enum": [
+        "gone",
+        "not_allowed",
+        "limit_reached"
+       ]
+      }
+     },
+     "required": [
+      "outcome"
+     ]
+    }
+   ]
   }
  },
  "POST /public/short-links/:code/otp/start": {
@@ -34442,7 +35386,8 @@
    "required": [
     "phone"
    ]
-  }
+  },
+  "response": "empty"
  },
  "POST /public/short-links/:code/otp/verify": {
   "params": {
@@ -34473,6 +35418,43 @@
     "phone",
     "code"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "oneOf": [
+    {
+     "type": "object",
+     "properties": {
+      "outcome": {
+       "type": "string",
+       "const": "open"
+      },
+      "target": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "outcome",
+      "target"
+     ]
+    },
+    {
+     "type": "object",
+     "properties": {
+      "outcome": {
+       "type": "string",
+       "enum": [
+        "gone",
+        "not_allowed",
+        "limit_reached"
+       ]
+      }
+     },
+     "required": [
+      "outcome"
+     ]
+    }
+   ]
   }
  },
  "POST /public/teacher-report/:token/reports/:id/attachments": {
@@ -34480,20 +35462,20 @@
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
    "properties": {
-    "id": {
-     "type": "string",
-     "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-    },
     "token": {
      "type": "string",
      "minLength": 1,
      "maxLength": 100
+    },
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     }
    },
    "required": [
-    "id",
-    "token"
+    "token",
+    "id"
    ]
   },
   "body": {
@@ -34531,6 +35513,34 @@
     "size",
     "path"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "storage_path": {
+     "type": "string"
+    },
+    "mime": {
+     "type": "string"
+    },
+    "size": {
+     "type": "number"
+    },
+    "created_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "storage_path",
+    "mime",
+    "size",
+    "created_at"
+   ]
   }
  },
  "POST /public/teacher-report/:token/reports/:id/attachments/upload-url": {
@@ -34538,20 +35548,20 @@
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
    "properties": {
-    "id": {
-     "type": "string",
-     "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-    },
     "token": {
      "type": "string",
      "minLength": 1,
      "maxLength": 100
+    },
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     }
    },
    "required": [
-    "id",
-    "token"
+    "token",
+    "id"
    ]
   },
   "body": {
@@ -34583,6 +35593,30 @@
    "required": [
     "mime",
     "size"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
    ]
   }
  },
@@ -40473,6 +41507,123 @@
    ]
   }
  },
+ "POST /sales/lessons/:id/cancel": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "reason": {
+     "type": "string",
+     "maxLength": 500
+    },
+    "by": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "student"
+     ]
+    }
+   },
+   "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "status"
+   ],
+   "additionalProperties": false
+  }
+ },
+ "POST /sales/lessons/:id/confirm": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "starts_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "starts_at",
+    "status"
+   ],
+   "additionalProperties": false
+  }
+ },
  "POST /sales/lessons/:id/correct": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -40481,7 +41632,7 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
@@ -40504,6 +41655,108 @@
    },
    "required": [
     "to"
+   ],
+   "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "status"
+   ],
+   "additionalProperties": false
+  }
+ },
+ "POST /sales/lessons/:id/reschedule": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "startsAt": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "reason": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 500
+    }
+   },
+   "required": [
+    "startsAt"
+   ],
+   "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "starts_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "starts_at",
+    "status"
    ],
    "additionalProperties": false
   }
@@ -43365,6 +44618,18 @@
   }
  },
  "POST /threads/:phone/file": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "phone"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -43399,9 +44664,692 @@
     "path",
     "filename"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "hidden": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "by_name": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        }
+       },
+       "required": [
+        "by_name",
+        "at"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "corrects_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_by_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "edited": {
+     "type": "boolean"
+    },
+    "deleted": {
+     "type": "boolean"
+    },
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "direction": {
+     "type": "string",
+     "enum": [
+      "inbound",
+      "outbound"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "queued",
+      "sent",
+      "delivered",
+      "read",
+      "failed",
+      "sent_manually"
+     ]
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "lead_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "guardian_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "lesson_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "template_key": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "template_params": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "1": {
+         "type": "string"
+        },
+        "2": {
+         "type": "string"
+        },
+        "3": {
+         "type": "string"
+        },
+        "4": {
+         "type": "string"
+        },
+        "5": {
+         "type": "string"
+        },
+        "6": {
+         "type": "string"
+        },
+        "7": {
+         "type": "string"
+        },
+        "8": {
+         "type": "string"
+        },
+        "9": {
+         "type": "string"
+        },
+        "button": {
+         "type": "string"
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "payloads": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "document": {
+         "type": "object",
+         "properties": {
+          "bucket": {
+           "type": "string"
+          },
+          "path": {
+           "type": "string"
+          },
+          "filename": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "bucket",
+          "path",
+          "filename"
+         ]
+        },
+        "crm": {
+         "type": "object",
+         "properties": {
+          "body": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "buttons": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "report": {
+           "type": "string",
+           "enum": [
+            "trial",
+            "regular"
+           ]
+          }
+         }
+        }
+       }
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "template": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "header": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "type": {
+             "type": "string",
+             "enum": [
+              "text",
+              "image",
+              "video",
+              "document",
+              "location"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "type"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "footer": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "enum": [
+             "quick_reply",
+             "url",
+             "phone_number",
+             "copy_code"
+            ]
+           },
+           "text": {
+            "type": "string"
+           },
+           "url": {
+            "type": "string"
+           },
+           "phone": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "type",
+           "text"
+          ]
+         }
+        }
+       },
+       "required": [
+        "header",
+        "footer",
+        "buttons"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "body": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_mime": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "reply_to_wa_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "reply_to_message_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "reply_to": {
+     "anyOf": [
+      {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "unavailable": {
+           "type": "boolean",
+           "const": true
+          }
+         },
+         "required": [
+          "unavailable"
+         ]
+        },
+        {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": "string",
+           "format": "uuid",
+           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+          },
+          "direction": {
+           "type": "string",
+           "enum": [
+            "inbound",
+            "outbound"
+           ]
+          },
+          "body": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "media_mime": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "template_key": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "sender_name": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "id",
+          "direction",
+          "body",
+          "media_mime",
+          "template_key",
+          "sender_name"
+         ]
+        }
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "replyable": {
+     "type": "boolean"
+    },
+    "forwardable": {
+     "type": "boolean"
+    },
+    "forwarded": {
+     "type": "boolean"
+    },
+    "reactions": {
+     "type": "object",
+     "properties": {
+      "theirs": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "ours": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "ours_by": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "theirs",
+      "ours",
+      "ours_by"
+     ]
+    },
+    "interactive_payload": {},
+    "error_code": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "error_text": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "attempts": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    },
+    "next_attempt_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "scheduled_for": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "delivered_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "read_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_manually_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "app_send_until": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_by_teacher_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "sender_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "automatic": {
+     "type": "boolean"
+    },
+    "line": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "notifications",
+        "chat",
+        "calls"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "click_to_chat": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "lesson": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "starts_at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "ends_at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "status": {
+         "type": "string",
+         "enum": [
+          "scheduled",
+          "confirmed",
+          "completed",
+          "late",
+          "excused",
+          "no_show",
+          "cancelled_by_teacher",
+          "cancelled_by_admin",
+          "rescheduled"
+         ]
+        }
+       },
+       "required": [
+        "starts_at",
+        "status"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "direction",
+    "status",
+    "phone_e164",
+    "lead_id",
+    "guardian_id",
+    "lesson_id",
+    "template_key",
+    "template_params",
+    "body",
+    "media_mime",
+    "media_url",
+    "reply_to_wa_id",
+    "interactive_payload",
+    "error_code",
+    "error_text",
+    "attempts",
+    "next_attempt_at",
+    "scheduled_for",
+    "sent_at",
+    "delivered_at",
+    "read_at",
+    "sent_manually_at",
+    "created_at",
+    "click_to_chat",
+    "lesson"
+   ]
   }
  },
  "POST /threads/:phone/file-upload-url": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "phone"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -43430,6 +45378,734 @@
     "clientRequestId",
     "mime",
     "size"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
+   ]
+  }
+ },
+ "POST /threads/:phone/gif": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "phone"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "gifId": {
+     "type": "string",
+     "pattern": "^[A-Za-z0-9]{1,64}$"
+    },
+    "clientRequestId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "gifId",
+    "clientRequestId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "hidden": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "by_name": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        }
+       },
+       "required": [
+        "by_name",
+        "at"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "corrects_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_by_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "edited": {
+     "type": "boolean"
+    },
+    "deleted": {
+     "type": "boolean"
+    },
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "direction": {
+     "type": "string",
+     "enum": [
+      "inbound",
+      "outbound"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "queued",
+      "sent",
+      "delivered",
+      "read",
+      "failed",
+      "sent_manually"
+     ]
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "lead_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "guardian_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "lesson_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "template_key": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "template_params": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "1": {
+         "type": "string"
+        },
+        "2": {
+         "type": "string"
+        },
+        "3": {
+         "type": "string"
+        },
+        "4": {
+         "type": "string"
+        },
+        "5": {
+         "type": "string"
+        },
+        "6": {
+         "type": "string"
+        },
+        "7": {
+         "type": "string"
+        },
+        "8": {
+         "type": "string"
+        },
+        "9": {
+         "type": "string"
+        },
+        "button": {
+         "type": "string"
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "payloads": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "document": {
+         "type": "object",
+         "properties": {
+          "bucket": {
+           "type": "string"
+          },
+          "path": {
+           "type": "string"
+          },
+          "filename": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "bucket",
+          "path",
+          "filename"
+         ]
+        },
+        "crm": {
+         "type": "object",
+         "properties": {
+          "body": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "buttons": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "report": {
+           "type": "string",
+           "enum": [
+            "trial",
+            "regular"
+           ]
+          }
+         }
+        }
+       }
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "template": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "header": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "type": {
+             "type": "string",
+             "enum": [
+              "text",
+              "image",
+              "video",
+              "document",
+              "location"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "type"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "footer": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "enum": [
+             "quick_reply",
+             "url",
+             "phone_number",
+             "copy_code"
+            ]
+           },
+           "text": {
+            "type": "string"
+           },
+           "url": {
+            "type": "string"
+           },
+           "phone": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "type",
+           "text"
+          ]
+         }
+        }
+       },
+       "required": [
+        "header",
+        "footer",
+        "buttons"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "body": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_mime": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "reply_to_wa_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "reply_to_message_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "reply_to": {
+     "anyOf": [
+      {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "unavailable": {
+           "type": "boolean",
+           "const": true
+          }
+         },
+         "required": [
+          "unavailable"
+         ]
+        },
+        {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": "string",
+           "format": "uuid",
+           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+          },
+          "direction": {
+           "type": "string",
+           "enum": [
+            "inbound",
+            "outbound"
+           ]
+          },
+          "body": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "media_mime": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "template_key": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "sender_name": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "id",
+          "direction",
+          "body",
+          "media_mime",
+          "template_key",
+          "sender_name"
+         ]
+        }
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "replyable": {
+     "type": "boolean"
+    },
+    "forwardable": {
+     "type": "boolean"
+    },
+    "forwarded": {
+     "type": "boolean"
+    },
+    "reactions": {
+     "type": "object",
+     "properties": {
+      "theirs": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "ours": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "ours_by": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "theirs",
+      "ours",
+      "ours_by"
+     ]
+    },
+    "interactive_payload": {},
+    "error_code": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "error_text": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "attempts": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    },
+    "next_attempt_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "scheduled_for": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "delivered_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "read_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_manually_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "app_send_until": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_by_teacher_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "sender_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "automatic": {
+     "type": "boolean"
+    },
+    "line": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "notifications",
+        "chat",
+        "calls"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "click_to_chat": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "lesson": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "starts_at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "ends_at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "status": {
+         "type": "string",
+         "enum": [
+          "scheduled",
+          "confirmed",
+          "completed",
+          "late",
+          "excused",
+          "no_show",
+          "cancelled_by_teacher",
+          "cancelled_by_admin",
+          "rescheduled"
+         ]
+        }
+       },
+       "required": [
+        "starts_at",
+        "status"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "direction",
+    "status",
+    "phone_e164",
+    "lead_id",
+    "guardian_id",
+    "lesson_id",
+    "template_key",
+    "template_params",
+    "body",
+    "media_mime",
+    "media_url",
+    "reply_to_wa_id",
+    "interactive_payload",
+    "error_code",
+    "error_text",
+    "attempts",
+    "next_attempt_at",
+    "scheduled_for",
+    "sent_at",
+    "delivered_at",
+    "read_at",
+    "sent_manually_at",
+    "created_at",
+    "click_to_chat",
+    "lesson"
    ]
   }
  },
@@ -43513,6 +46189,711 @@
    "required": [
     "kapso_reopened",
     "template"
+   ]
+  }
+ },
+ "POST /threads/:phone/sticker": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "phone"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "clientRequestId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "messageId",
+    "clientRequestId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "hidden": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "by_name": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        }
+       },
+       "required": [
+        "by_name",
+        "at"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "corrects_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_by_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "edited": {
+     "type": "boolean"
+    },
+    "deleted": {
+     "type": "boolean"
+    },
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "direction": {
+     "type": "string",
+     "enum": [
+      "inbound",
+      "outbound"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "queued",
+      "sent",
+      "delivered",
+      "read",
+      "failed",
+      "sent_manually"
+     ]
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "lead_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "guardian_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "lesson_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "template_key": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "template_params": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "1": {
+         "type": "string"
+        },
+        "2": {
+         "type": "string"
+        },
+        "3": {
+         "type": "string"
+        },
+        "4": {
+         "type": "string"
+        },
+        "5": {
+         "type": "string"
+        },
+        "6": {
+         "type": "string"
+        },
+        "7": {
+         "type": "string"
+        },
+        "8": {
+         "type": "string"
+        },
+        "9": {
+         "type": "string"
+        },
+        "button": {
+         "type": "string"
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "payloads": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "document": {
+         "type": "object",
+         "properties": {
+          "bucket": {
+           "type": "string"
+          },
+          "path": {
+           "type": "string"
+          },
+          "filename": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "bucket",
+          "path",
+          "filename"
+         ]
+        },
+        "crm": {
+         "type": "object",
+         "properties": {
+          "body": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "buttons": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "report": {
+           "type": "string",
+           "enum": [
+            "trial",
+            "regular"
+           ]
+          }
+         }
+        }
+       }
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "template": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "header": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "type": {
+             "type": "string",
+             "enum": [
+              "text",
+              "image",
+              "video",
+              "document",
+              "location"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "type"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "footer": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "enum": [
+             "quick_reply",
+             "url",
+             "phone_number",
+             "copy_code"
+            ]
+           },
+           "text": {
+            "type": "string"
+           },
+           "url": {
+            "type": "string"
+           },
+           "phone": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "type",
+           "text"
+          ]
+         }
+        }
+       },
+       "required": [
+        "header",
+        "footer",
+        "buttons"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "body": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_mime": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "media_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "reply_to_wa_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "reply_to_message_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "reply_to": {
+     "anyOf": [
+      {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "unavailable": {
+           "type": "boolean",
+           "const": true
+          }
+         },
+         "required": [
+          "unavailable"
+         ]
+        },
+        {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": "string",
+           "format": "uuid",
+           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+          },
+          "direction": {
+           "type": "string",
+           "enum": [
+            "inbound",
+            "outbound"
+           ]
+          },
+          "body": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "media_mime": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "template_key": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "sender_name": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "id",
+          "direction",
+          "body",
+          "media_mime",
+          "template_key",
+          "sender_name"
+         ]
+        }
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "replyable": {
+     "type": "boolean"
+    },
+    "forwardable": {
+     "type": "boolean"
+    },
+    "forwarded": {
+     "type": "boolean"
+    },
+    "reactions": {
+     "type": "object",
+     "properties": {
+      "theirs": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "ours": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "ours_by": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "theirs",
+      "ours",
+      "ours_by"
+     ]
+    },
+    "interactive_payload": {},
+    "error_code": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "error_text": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "attempts": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    },
+    "next_attempt_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "scheduled_for": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "delivered_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "read_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_manually_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "app_send_until": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "sent_by_teacher_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "sender_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "automatic": {
+     "type": "boolean"
+    },
+    "line": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "notifications",
+        "chat",
+        "calls"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "click_to_chat": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "lesson": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "starts_at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "ends_at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "status": {
+         "type": "string",
+         "enum": [
+          "scheduled",
+          "confirmed",
+          "completed",
+          "late",
+          "excused",
+          "no_show",
+          "cancelled_by_teacher",
+          "cancelled_by_admin",
+          "rescheduled"
+         ]
+        }
+       },
+       "required": [
+        "starts_at",
+        "status"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "direction",
+    "status",
+    "phone_e164",
+    "lead_id",
+    "guardian_id",
+    "lesson_id",
+    "template_key",
+    "template_params",
+    "body",
+    "media_mime",
+    "media_url",
+    "reply_to_wa_id",
+    "interactive_payload",
+    "error_code",
+    "error_text",
+    "attempts",
+    "next_attempt_at",
+    "scheduled_for",
+    "sent_at",
+    "delivered_at",
+    "read_at",
+    "sent_manually_at",
+    "created_at",
+    "click_to_chat",
+    "lesson"
    ]
   }
  },
@@ -44919,7 +48300,7 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
@@ -45173,6 +48554,51 @@
      }
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "synced": {
+     "type": "boolean"
+    },
+    "checked_at": {
+     "type": "string"
+    },
+    "parts": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "instance",
+       "settings",
+       "webhook",
+       "proxy"
+      ]
+     },
+     "additionalProperties": {
+      "type": "string",
+      "enum": [
+       "synced",
+       "drift",
+       "failed",
+       "skipped",
+       "disabled"
+      ]
+     },
+     "required": [
+      "instance",
+      "settings",
+      "webhook",
+      "proxy"
+     ]
+    }
+   },
+   "required": [
+    "synced",
+    "checked_at",
+    "parts"
+   ]
   }
  },
  "PUT /admin/numbers/:id/secrets/:name": {
@@ -49385,6 +52811,752 @@
    "required": [
     "starts_at",
     "ends_at"
+   ]
+  }
+ },
+ "PUT /threads/:phone/messages/:id/reaction": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "phone",
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "emoji": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "clientRequestId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "emoji",
+    "clientRequestId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "message": {
+     "type": "object",
+     "properties": {
+      "hidden": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "by_name": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "at": {
+           "type": "string",
+           "format": "date-time",
+           "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          }
+         },
+         "required": [
+          "by_name",
+          "at"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "corrects_id": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "sent_by_id": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "edited": {
+       "type": "boolean"
+      },
+      "deleted": {
+       "type": "boolean"
+      },
+      "id": {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      "direction": {
+       "type": "string",
+       "enum": [
+        "inbound",
+        "outbound"
+       ]
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "queued",
+        "sent",
+        "delivered",
+        "read",
+        "failed",
+        "sent_manually"
+       ]
+      },
+      "phone_e164": {
+       "type": "string"
+      },
+      "lead_id": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "guardian_id": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "lesson_id": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "template_key": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "template_params": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "1": {
+           "type": "string"
+          },
+          "2": {
+           "type": "string"
+          },
+          "3": {
+           "type": "string"
+          },
+          "4": {
+           "type": "string"
+          },
+          "5": {
+           "type": "string"
+          },
+          "6": {
+           "type": "string"
+          },
+          "7": {
+           "type": "string"
+          },
+          "8": {
+           "type": "string"
+          },
+          "9": {
+           "type": "string"
+          },
+          "button": {
+           "type": "string"
+          },
+          "buttons": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "payloads": {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          "document": {
+           "type": "object",
+           "properties": {
+            "bucket": {
+             "type": "string"
+            },
+            "path": {
+             "type": "string"
+            },
+            "filename": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "bucket",
+            "path",
+            "filename"
+           ]
+          },
+          "crm": {
+           "type": "object",
+           "properties": {
+            "body": {
+             "type": "array",
+             "items": {
+              "type": "string"
+             }
+            },
+            "buttons": {
+             "type": "array",
+             "items": {
+              "type": "string"
+             }
+            },
+            "report": {
+             "type": "string",
+             "enum": [
+              "trial",
+              "regular"
+             ]
+            }
+           }
+          }
+         }
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "template": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "header": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "type": {
+               "type": "string",
+               "enum": [
+                "text",
+                "image",
+                "video",
+                "document",
+                "location"
+               ]
+              },
+              "text": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "type"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "footer": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "buttons": {
+           "type": "array",
+           "items": {
+            "type": "object",
+            "properties": {
+             "type": {
+              "type": "string",
+              "enum": [
+               "quick_reply",
+               "url",
+               "phone_number",
+               "copy_code"
+              ]
+             },
+             "text": {
+              "type": "string"
+             },
+             "url": {
+              "type": "string"
+             },
+             "phone": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "type",
+             "text"
+            ]
+           }
+          }
+         },
+         "required": [
+          "header",
+          "footer",
+          "buttons"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "body": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "media_mime": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "media_url": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "media_name": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "reply_to_wa_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "reply_to_message_id": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "reply_to": {
+       "anyOf": [
+        {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "unavailable": {
+             "type": "boolean",
+             "const": true
+            }
+           },
+           "required": [
+            "unavailable"
+           ]
+          },
+          {
+           "type": "object",
+           "properties": {
+            "id": {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            "direction": {
+             "type": "string",
+             "enum": [
+              "inbound",
+              "outbound"
+             ]
+            },
+            "body": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "media_mime": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "template_key": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "sender_name": {
+             "type": [
+              "string",
+              "null"
+             ]
+            }
+           },
+           "required": [
+            "id",
+            "direction",
+            "body",
+            "media_mime",
+            "template_key",
+            "sender_name"
+           ]
+          }
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "replyable": {
+       "type": "boolean"
+      },
+      "forwardable": {
+       "type": "boolean"
+      },
+      "forwarded": {
+       "type": "boolean"
+      },
+      "reactions": {
+       "type": "object",
+       "properties": {
+        "theirs": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "ours": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "ours_by": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "theirs",
+        "ours",
+        "ours_by"
+       ]
+      },
+      "interactive_payload": {},
+      "error_code": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "error_text": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "attempts": {
+       "type": "integer",
+       "minimum": 0,
+       "maximum": 9007199254740991
+      },
+      "next_attempt_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "scheduled_for": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "sent_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "delivered_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "read_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "sent_manually_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "app_send_until": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "sent_by_teacher_name": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "sender_name": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "automatic": {
+       "type": "boolean"
+      },
+      "line": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "notifications",
+          "chat",
+          "calls"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "created_at": {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      "click_to_chat": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "lesson": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "starts_at": {
+           "type": "string",
+           "format": "date-time",
+           "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "ends_at": {
+           "type": "string",
+           "format": "date-time",
+           "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "status": {
+           "type": "string",
+           "enum": [
+            "scheduled",
+            "confirmed",
+            "completed",
+            "late",
+            "excused",
+            "no_show",
+            "cancelled_by_teacher",
+            "cancelled_by_admin",
+            "rescheduled"
+           ]
+          }
+         },
+         "required": [
+          "starts_at",
+          "status"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      }
+     },
+     "required": [
+      "id",
+      "direction",
+      "status",
+      "phone_e164",
+      "lead_id",
+      "guardian_id",
+      "lesson_id",
+      "template_key",
+      "template_params",
+      "body",
+      "media_mime",
+      "media_url",
+      "reply_to_wa_id",
+      "interactive_payload",
+      "error_code",
+      "error_text",
+      "attempts",
+      "next_attempt_at",
+      "scheduled_for",
+      "sent_at",
+      "delivered_at",
+      "read_at",
+      "sent_manually_at",
+      "created_at",
+      "click_to_chat",
+      "lesson"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "queued",
+      "sent",
+      "delivered",
+      "read",
+      "failed",
+      "sent_manually"
+     ]
+    },
+    "error_code": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "error_text": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "message",
+    "status",
+    "error_code",
+    "error_text"
    ]
   }
  },

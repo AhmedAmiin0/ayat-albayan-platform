@@ -19,14 +19,16 @@ const base = {
   waitingKeys: new Set<string>(),
 };
 const now = new Date().toISOString();
+const ID = 'b1111111-1111-4111-8111-111111111111';
 const TEXT = message({
-  id: 'm1',
+  id: ID,
+  lead_id: null,
   direction: 'inbound',
   body: 'السلام عليكم',
   replyable: true,
   created_at: now,
 });
-const PATH = `/threads/${encodeURIComponent(PHONE)}/messages/m1/reaction`;
+const PATH = `/threads/${encodeURIComponent(PHONE)}/messages/${ID}/reaction`;
 
 function chat(m: typeof TEXT, reactable = true) {
   renderWithClient(
@@ -87,13 +89,13 @@ describe('the bubble menu’s emoji row', () => {
 describe('the pill', () => {
   it('shows theirs and ours and names who reacted', () => {
     chat({ ...TEXT, reactions: { theirs: '❤️', ours: '❤️', ours_by: 'هبة' } });
-    const pill = screen.getByTestId('reaction-pill-m1');
+    const pill = screen.getByTestId(`reaction-pill-${ID}`);
     expect(pill.textContent).toBe('❤️ 2');
     expect(pill.getAttribute('title')).toContain('هبة');
   });
 
   it('is absent without a reaction', () => {
     chat(TEXT);
-    expect(screen.queryByTestId('reaction-pill-m1')).toBeNull();
+    expect(screen.queryByTestId(`reaction-pill-${ID}`)).toBeNull();
   });
 });

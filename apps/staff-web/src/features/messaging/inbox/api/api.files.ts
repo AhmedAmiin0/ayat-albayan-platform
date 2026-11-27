@@ -2,8 +2,6 @@ import {
   baseMime,
   CHAT_SEND_MIMES,
   type ChatSendMime,
-  type MessageView,
-  type SignedUpload,
   type ThreadFileSendInput,
   type ThreadFileUpload,
 } from '@ab/shared';
@@ -16,7 +14,6 @@ import { threadKeys } from '@/features/messaging/inbox/api/keys';
 // D2: staff send an image or PDF inside the 24 h window. The file goes to
 // wa-media through a one-off signed URL, then POST /file sends that path (the API re-checks it).
 
-const threadPath = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
 const chatFiles = chatFileCalls({ apiFetch, apiSend });
 
 /** The file's type as the API takes it; null for anything else (WebP, HEIC, …). */
@@ -29,7 +26,7 @@ export class ChatUploadError extends Error {
 }
 
 export const fileUploadUrl = ({ phone, ...body }: ThreadFileUpload & { phone: string }) =>
-  apiSend<SignedUpload>('POST', `${threadPath(phone)}/file-upload-url`, body);
+  chatFiles.uploadUrl({ params: { phone }, body });
 
 /** Uploads the picked file under this request's id; resolves to its storage path. */
 export async function uploadChatFile(input: {
@@ -52,7 +49,7 @@ export async function uploadChatFile(input: {
 }
 
 export const sendFile = ({ phone, ...body }: ThreadFileSendInput & { phone: string }) =>
-  apiSend<MessageView>('POST', `${threadPath(phone)}/file`, body);
+  chatFiles.send({ params: { phone }, body });
 
 /** Page 1 is the bubble's thumb; a 503 (one render at a time per API copy) is retried twice. */
 /** A query that has not failed: one that has keeps its answer (no ask on focus or reconnect). */

@@ -1140,11 +1140,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/api/api.files.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/features/messaging/inbox/api/api.ts": {
     "complexity": {
       "count": 1
@@ -1478,11 +1473,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/messages/components/MessageBubble/tests/sender.test.tsx": {
-    "typescript/no-deprecated": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/messages/components/MessageContent.tsx": {
     "complexity": {
       "count": 1
@@ -1593,9 +1583,6 @@
       "count": 1
     },
     "ab/no-shape-checks": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     },
     "typescript/no-unsafe-assignment": {
@@ -4961,12 +4948,6 @@
   },
   "src/features/sales/sales/schedule/SalesConfirmLesson.tsx": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

@@ -16,7 +16,15 @@ vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: (
 
 const SIGNED = { bucket: 'wa-media', path: 'out/u-1/r/abc.pdf', token: 'tok', signed_url: 'https://x' };
 const PDF = new File([new Uint8Array(20)], 'جدول.pdf', { type: 'application/pdf' });
-const SENT = message({ id: 'm-file', direction: 'outbound', status: 'sent', body: null, media_mime: 'application/pdf' });
+const SENT_ID = 'c3333333-3333-4333-8333-333333333333';
+const SENT = message({
+  id: SENT_ID,
+  lead_id: null,
+  direction: 'outbound',
+  status: 'sent',
+  body: null,
+  media_mime: 'application/pdf',
+});
 let client: QueryClient;
 
 /** The upload URL answers at once; POST /file answers with `send` (a promise or a row). */
@@ -64,7 +72,7 @@ describe('FileComposer (D2)', () => {
     expect(path).toBe('/threads/%2B966501234567/file');
     expect(body).toMatchObject({ path: SIGNED.path, filename: 'جدول.pdf', caption: 'الجدول' });
     expect(uploadToSignedUrl).toHaveBeenCalledWith(SIGNED.path, 'tok', PDF, { contentType: 'application/pdf' });
-    expect(lastOwnSend(PHONE)).toBe('m-file');
+    expect(lastOwnSend(PHONE)).toBe(SENT_ID);
   });
 
   it('a failed send says why and the resend reuses its clientRequestId (rule 8)', async () => {

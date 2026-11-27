@@ -97,7 +97,7 @@ describe('system-role parity with the old @Roles table', () => {
   // Sales has its own confirm route; the teacher and admin route keeps lessons.status.
   it('lessons.confirm gates the sales confirm route only, for admin and sales (never a teacher)', () => {
     expect(routes.filter((r) => permissionKeys(r).includes('lessons.confirm')).map((r) => r.key)).toEqual(['SalesLessonActionsController.confirm']);
-    expect(routes.filter((r) => r.key === 'LessonActionsController.confirm').flatMap(permissionKeys)).toEqual(['lessons.status']);
+    expect(routes.filter((r) => r.key === 'LessonActionsController.confirm').map(permissionKeys)).toEqual([['lessons.status']]);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('lessons.confirm'))).toEqual(['admin', 'sales']);
   });
 
