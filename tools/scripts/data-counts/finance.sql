@@ -8,3 +8,10 @@ select count(*) from expense_categories where key is null or label_ar is null or
 -- Rows the teacher earnings answer schemas would refuse (docs/62 C1).
 -- count: teacher_payments_method_out_of_enum
 select count(*) from teacher_payments where method::text not in ('bank', 'wallet', 'cash', 'other', 'card');
+-- Rows the teacher payout answer schema would refuse (docs/62 C1).
+-- count: teacher_payouts_required_null
+select count(*) from teacher_payouts where month is null or lessons_count is null or amount is null or status is null;
+-- count: teacher_payouts_status_out_of_enum
+select count(*) from teacher_payouts where status::text not in ('draft', 'approved', 'paid');
+-- count: teacher_payouts_method_out_of_enum
+select count(*) from teacher_payouts where method is not null and method::text not in ('bank', 'wallet', 'cash', 'other', 'card');
