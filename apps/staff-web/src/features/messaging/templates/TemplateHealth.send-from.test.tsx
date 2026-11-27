@@ -16,7 +16,10 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ pe
 
 const s = t.templates.sendFrom;
 const NAME = t.templates.names.booking_confirmation_plain;
-const SPARE = numberView({ id: 'num-2', label: 'Spare line', is_default: false, fallback_rank: 5 });
+const SPARE_ID = '00000000-0000-4000-8000-0000000000f2';
+const SPARE = numberView({
+  id: SPARE_ID, label: 'Spare line', is_default: false, fallback_rank: 5,
+});
 const BOOKING = template({ number_id: null, numbers: [] });
 
 async function renderPick() {
@@ -49,14 +52,15 @@ describe('template health — «يُرسل من»', () => {
 
   it('a pick asks first (approval on that WABA or the next number), then PUTs; not approved there warns', async () => {
     const select = await renderPick();
-    fireEvent.change(select, { target: { value: 'num-2' } });
+    fireEvent.change(select, { target: { value: SPARE_ID } });
     const dialog = screen.getByRole('dialog', { name: s.confirmTitle });
     expect(dialog.textContent).toContain(s.confirmText.replace('{name}', NAME).replace('{number}', 'Spare line'));
     expect(apiSend).not.toHaveBeenCalled();
-    apiSend.mockResolvedValue({ template: { ...BOOKING, number_id: 'num-2' }, not_approved_on_number: true });
+    const saved = { ...BOOKING, number_id: SPARE_ID };
+    apiSend.mockResolvedValue({ template: saved, not_approved_on_number: true });
     fireEvent.click(within(dialog).getByRole('button', { name: s.confirmYes }));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('PUT', '/messaging/templates/booking_confirmation_plain/number', { number_id: 'num-2' }),
+      expect(apiSend).toHaveBeenCalledWith('PUT', '/messaging/templates/booking_confirmation_plain/number', { number_id: SPARE_ID }),
     );
     expect(await screen.findByText(s.notApproved)).toBeTruthy();
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
@@ -64,7 +68,7 @@ describe('template health — «يُرسل من»', () => {
 
   it('cancel sends nothing; back to the default PUTs null; a 404 is said in words', async () => {
     const select = await renderPick();
-    fireEvent.change(select, { target: { value: 'num-2' } });
+    fireEvent.change(select, { target: { value: SPARE_ID } });
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: t.common.cancel }));
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
     expect(apiSend).not.toHaveBeenCalled();
