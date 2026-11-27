@@ -4923,14 +4923,6 @@
       "count": 1
     }
   },
-  "src/modules/people/roles/roles.controller.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/people/roles/roles.fakes.ts": {
     "stylistic/max-len": {
       "count": 4
