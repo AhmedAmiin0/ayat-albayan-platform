@@ -62,7 +62,7 @@
   },
   "src/assistant/wallet.ts": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "src/ledger/alerts.ts": {
