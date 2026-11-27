@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
-import { AccountField, passwordInput } from './AccountField';
+import { AccountField } from './AccountField';
+import { passwordInput } from './account-field.helpers';
 
 test('the hint shows under the input and is its accessibility hint', async () => {
   await render(<AccountField label="الهاتف" value="" hint="بالصيغة الدولية" />);
