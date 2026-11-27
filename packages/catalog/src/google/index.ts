@@ -2,5 +2,8 @@ export * from './enums';
 export * from './links';
 export * from './schemas';
 export * from './views';
+export * from './status.schemas';
+export * from './sync-item.schemas';
+export * from './google-admin.routes';
 export * from './errors';
 export * from './settings-keys';

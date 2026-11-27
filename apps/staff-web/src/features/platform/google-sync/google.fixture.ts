@@ -9,6 +9,7 @@ import {
 // Test fixture (not app code): obviously fake ids and names, never a real Google id or person.
 
 const AT = '2026-10-22T08:00:00Z';
+export const FAILING_ITEM_ID = '0b9f4a52-3c1e-4d7a-9a7e-2f1c3b4d5e61';
 export const FAKE_FOLDER = 'fake-folder-id-0001';
 export const FAKE_SHEET = 'fake-sheet-id-00001';
 
@@ -91,16 +92,16 @@ export function googleItems(): GoogleSyncItemView[] {
     skip_reason: null,
   } as const;
   return [
-    { ...base, id: 'item-1', kind: 'teacher_event', state: 'failed', subject: 'Student One 2026-10-22', last_error: 'HTTP 500' },
+    { ...base, id: FAILING_ITEM_ID, kind: 'teacher_event', state: 'failed', subject: 'Student One 2026-10-22', last_error: 'HTTP 500' },
     {
       ...base,
-      id: 'item-2',
+      id: '0b9f4a52-3c1e-4d7a-9a7e-2f1c3b4d5e62',
       kind: 'main_event',
       state: 'skipped',
       skip_reason: 'dry_run',
       subject: 'Student Two 2026-10-23',
       planned: { method: 'POST', target: 'calendar/main', summary: 'insert event' },
     },
-    { ...base, id: 'item-3', kind: 'report_pdf', state: 'synced', subject: 'Student One 2026-10-21' },
+    { ...base, id: '0b9f4a52-3c1e-4d7a-9a7e-2f1c3b4d5e63', kind: 'report_pdf', state: 'synced', subject: 'Student One 2026-10-21' },
   ];
 }

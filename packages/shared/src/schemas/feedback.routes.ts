@@ -9,6 +9,9 @@ import {
   teacherFeedbackViewSchema,
 } from './feedback-views';
 
+const tags = ['feedback'] as const;
+const read = { permissions: ['feedback.read'], tags } as const;
+
 /** Lesson feedback (docs/13 form 3), written once for the api and its clients. */
 export const feedbackRoutes = {
   request: defineRoute({
@@ -17,23 +20,29 @@ export const feedbackRoutes = {
     params: z.object({ id: id() }),
     body: feedbackRequestSchema,
     response: feedbackRequestResultSchema,
+    permissions: ['feedback.write'],
+    tags,
   }),
   list: defineRoute({
     method: 'GET',
     path: '/feedback',
     query: feedbackListQuerySchema,
     response: pageOf(feedbackRowViewSchema),
+    ...read,
   }),
   summary: defineRoute({
     method: 'GET',
     path: '/feedback/summary',
     response: z.array(teacherFeedbackSummarySchema),
+    ...read,
   }),
   mine: defineRoute({
     method: 'GET',
     path: '/teachers/me/feedback',
     query: feedbackListQuerySchema,
     response: teacherFeedbackViewSchema,
+    permissions: ['self.teacher'],
+    tags,
   }),
 };
 
@@ -47,6 +56,7 @@ export const feedbackPublicRoutes = {
     path: '/public/feedback/:token',
     params: tokenParams,
     response: feedbackFormViewSchema,
+    tags,
   }),
   /** The body is parsed after the rate limit and the token checks, so those answer first. */
   submit: defineRoute({
@@ -55,5 +65,6 @@ export const feedbackPublicRoutes = {
     params: tokenParams,
     body: feedbackSubmitSchema,
     response: z.object({ submitted: z.literal(true) }),
+    tags,
   }),
 };
