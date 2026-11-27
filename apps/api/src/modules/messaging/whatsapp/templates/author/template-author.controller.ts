@@ -1,45 +1,40 @@
-import {
-  templateAuthorEditSchema, templateAuthorSchema, templateKeyParam, type TemplateView,
-} from '@ab/shared';
-import { Controller, Get, HttpCode, Inject, Patch, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import type { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { authoredTemplateRoutes as routes, type TemplateView } from '@ab/shared';
+import { Controller, HttpCode, Inject } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { asResponse } from '@/common/http/returns';
 import { TemplateAuthor } from './template-author';
 
 /** templates.author never reaches templates.manage routes nor lifts the allow-list. */
-@ApiTags('messaging')
 @ApiBearerAuth()
-@Permissions('templates.author')
-@Controller('messaging/templates/authored')
+@Controller()
 export class TemplateAuthorController {
   constructor(@Inject(TemplateAuthor) private readonly author: TemplateAuthor) {}
 
   /** Every status with Meta's reason (last_error). */
-  @Get()
-  list(@CurrentUser() user: AuthUser): Promise<TemplateView[]> {
-    return this.author.list(user.id);
+  @Route(routes.list)
+  async list(@CurrentUser() user: AuthUser): Promise<TemplateView[]> {
+    return asResponse(routes.list.response, await this.author.list(user.id));
   }
 
   /** A new template, straight to Meta on the chat line, on the allow-list once approved. */
-  @Post()
+  @Route(routes.create)
   create(
-    @ZodBody(templateAuthorSchema) body: z.output<typeof templateAuthorSchema>,
+    @RouteInput() { body }: RouteInputOf<typeof routes.create>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateView> {
     return this.author.create(body, user.id);
   }
 
   /** 403 not_author_editable (off the allow-list, code-bound, PDF…); Meta's edit rules (409). */
-  @Patch(':key')
+  @Route(routes.edit)
   @HttpCode(200)
   edit(
-    @ZodParam('key', templateKeyParam) key: string,
-    @ZodBody(templateAuthorEditSchema) body: z.output<typeof templateAuthorEditSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.edit>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateView> {
-    return this.author.edit(key, body, user.id);
+    return this.author.edit(params.key, body, user.id);
   }
 }

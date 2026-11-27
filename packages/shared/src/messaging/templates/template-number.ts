@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { TemplateView } from './template-views';
+import type { TemplateView } from './catalog/template-view.schemas';
 
 // Routing per number (docs/23 phase 5, docs/23c decision 9): a template's own number and the per-number
 // template sync. Ids only, never a token.

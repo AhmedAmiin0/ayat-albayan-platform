@@ -1,4 +1,4 @@
-import { draftParams, type AuthorTemplate } from '@ab/client-core';
+import { draftParams } from '@ab/client-core';
 import {
   templateAuthorSchema, templateEditSchema, type AuthorCategory, type TemplateDisplayButton,
   type TemplateEditButton, type TemplateView,
@@ -18,7 +18,7 @@ export interface Draft {
 export const EMPTY_DRAFT: Draft = { body: '', footer: '', samples: [], buttons: [] };
 
 type Shown = TemplateDisplayButton;
-type Registry = AuthorTemplate['buttons'][number] | undefined;
+type Registry = TemplateView['buttons'][number] | undefined;
 
 /** A shown button as an edit carries it: a link keeps its url, a reply its intent. */
 const AS_EDIT: Partial<Record<Shown['type'], (b: Shown, reg: Registry) => TemplateEditButton[]>> = {
@@ -31,18 +31,18 @@ const AS_EDIT: Partial<Record<Shown['type'], (b: Shown, reg: Registry) => Templa
   ],
 };
 
-const fromRegistry = (b: AuthorTemplate['buttons'][number]): Shown =>
+const fromRegistry = (b: TemplateView['buttons'][number]): Shown =>
   (b.type === 'url' ? { type: 'url', text: b.text ?? '', url: b.url } : { type: b.type, text: b.text });
 
 /** What WhatsApp shows (display), else the registry's buttons, as edit buttons. */
-function editButtonsOf(tpl: AuthorTemplate): TemplateEditButton[] {
+function editButtonsOf(tpl: TemplateView): TemplateEditButton[] {
   const display = tpl.display?.buttons ?? [];
   const shown = display.length ? display : tpl.buttons.map(fromRegistry);
   return shown.flatMap((b, i) => AS_EDIT[b.type]?.(b, tpl.buttons[i]) ?? []);
 }
 
 /** The edit form's start: the template's words, its variable names as samples. */
-export const draftOf = (tpl: AuthorTemplate): Draft => ({
+export const draftOf = (tpl: TemplateView): Draft => ({
   body: tpl.body_ar,
   footer: tpl.footer_ar ?? '',
   samples: [...tpl.params],
@@ -68,7 +68,7 @@ export const authorPayload = (d: Draft, meta: { key: string; category: AuthorCat
     buttons: d.buttons.map((b) => ({ type: 'quick_reply', text: b.text })),
   });
 
-const NEW: Pick<AuthorTemplate, 'key' | 'meta_name' | 'category' | 'header_format' | 'line' | 'display'> = {
+const NEW: Pick<TemplateView, 'key' | 'meta_name' | 'category' | 'header_format' | 'line' | 'display'> = {
   key: 'draft', meta_name: '', category: 'utility', header_format: null, line: 'chat', display: null,
 };
 
@@ -76,7 +76,7 @@ const shownOf = (b: TemplateEditButton): Shown =>
   (b.type === 'url' ? { type: 'url', text: b.text, url: b.url } : { type: b.type, text: b.text });
 
 /** The template the live preview draws: the draft's words over the template's header. */
-export function previewView(d: Draft, src: AuthorTemplate | null): TemplateView {
+export function previewView(d: Draft, src: TemplateView | null): TemplateView {
   const from = src ?? NEW;
   return {
     key: from.key, meta_name: from.meta_name, language: 'ar', category: from.category,

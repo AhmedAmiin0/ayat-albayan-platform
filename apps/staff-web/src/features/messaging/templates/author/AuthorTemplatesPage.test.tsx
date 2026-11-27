@@ -11,13 +11,15 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const S = t.templates.author;
+const ME = 'a0000000-0000-4000-8000-000000000001';
+const OTHER = 'a0000000-0000-4000-8000-000000000002';
 const chat = { line: 'chat' as const, sales_starter: true };
 const ROWS = [
-  template({ ...chat, key: 'offer_a', status: 'pending', created_by: 'me' }),
-  template({ ...chat, key: 'offer_b', status: 'rejected', last_error: 'INVALID_FORMAT', created_by: 'me' }),
-  template({ ...chat, key: 'lesson_reminder', status: 'approved', created_by: 'me' }),
-  template({ ...chat, key: 'offer_c', status: 'approved', created_by: 'me' }),
-  template({ ...chat, key: 'offer_theirs', status: 'approved', created_by: 'someone-else' }),
+  template({ ...chat, key: 'offer_a', status: 'pending', created_by: ME }),
+  template({ ...chat, key: 'offer_b', status: 'rejected', last_error: 'INVALID_FORMAT', created_by: ME }),
+  template({ ...chat, key: 'lesson_reminder', status: 'approved', created_by: ME }),
+  template({ ...chat, key: 'offer_c', status: 'approved', created_by: ME }),
+  template({ ...chat, key: 'offer_theirs', status: 'approved', created_by: OTHER }),
   template({ ...chat, key: 'offer_seeded', status: 'approved', created_by: null }),
 ];
 const editFor = (key: string) => screen.queryByRole('button', { name: t.templates.edit.openFor.replace('{name}', key) });
@@ -25,7 +27,7 @@ const editFor = (key: string) => screen.queryByRole('button', { name: t.template
 /** Signed in as `me` (the author of the offer_* rows but offer_theirs). */
 function renderSignedIn() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  const me: Me = { id: 'me', email: null, role: 'sales', permissions: ['templates.author'] };
+  const me: Me = { id: ME, email: null, role: 'sales', permissions: ['templates.author'] };
   client.setQueryData(meQuery.queryKey, me);
   render(<QueryClientProvider client={client}><AuthorTemplatesPage /></QueryClientProvider>);
 }

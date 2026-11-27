@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import type { AuthorTemplate } from '@ab/client-core';
 import type { TemplateView } from '@ab/shared';
 import { usePermissions, Toast, t } from '@ab/web-kit';
 import { numbersQuery } from '@/features/messaging/numbers/numbers-api';
@@ -52,7 +51,7 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
     [setSubmitting, setMoving, setEditing, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking, pickBusy, crmBusy, onCrmSet, onEditName],
   );
   const rows = templates.data ?? [];
-  const onEdited = (saved: AuthorTemplate) => {
+  const onEdited = (saved: TemplateView) => {
     setEditing(null);
     const text = saved.status === 'pending' ? t.templates.edit.saved : t.templates.edit.savedLocal;
     a.setNotice({ message: text.replace('{name}', saved.key) });

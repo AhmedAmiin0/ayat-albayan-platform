@@ -1,6 +1,5 @@
-import type { AuthorTemplate } from '@ab/client-core';
 import {
-  QUICK_REPLY_INTENTS, type QuickReplyIntent, type TemplateDisplayButton,
+  QUICK_REPLY_INTENTS, type QuickReplyIntent, type TemplateDisplayButton, type TemplateView,
 } from '@ab/shared';
 import { varsOf, type DraftVar } from '@/features/messaging/templates/create/template-draft';
 import { t } from '@ab/web-kit';
@@ -20,12 +19,12 @@ export interface EditDraft {
 
 const SAMPLES: Record<string, string | undefined> = t.templates.reviewSamples;
 
-const intentAt = (tpl: AuthorTemplate, i: number): QuickReplyIntent | '' => {
+const intentAt = (tpl: TemplateView, i: number): QuickReplyIntent | '' => {
   const b = tpl.buttons[i];
   return b?.type === 'quick_reply' ? b.intent : '';
 };
 
-type ToRow = (b: TemplateDisplayButton, tpl: AuthorTemplate, i: number) => EditButton;
+type ToRow = (b: TemplateDisplayButton, tpl: TemplateView, i: number) => EditButton;
 
 const SHOWN: Partial<Record<string, ToRow>> = {
   url: (b) => ({ type: 'url', text: b.text, url: b.url ?? '' }),
@@ -33,7 +32,7 @@ const SHOWN: Partial<Record<string, ToRow>> = {
 };
 
 /** What WhatsApp shows under the bubble today, as rows of the form. */
-function buttonsOf(tpl: AuthorTemplate): EditButton[] {
+function buttonsOf(tpl: TemplateView): EditButton[] {
   const shown = tpl.display?.buttons.length ? tpl.display.buttons : null;
   const own: TemplateDisplayButton[] = tpl.buttons.map((b) =>
     b.type === 'url' ? { type: 'url', text: b.text ?? '', url: b.url } : { type: b.type, text: b.text });
@@ -41,7 +40,7 @@ function buttonsOf(tpl: AuthorTemplate): EditButton[] {
 }
 
 /** The row as the form opens it: its words, its variables' names, its buttons. */
-export function draftOf(tpl: AuthorTemplate): EditDraft {
+export function draftOf(tpl: TemplateView): EditDraft {
   const vars = tpl.params.map((name) => ({ name, sample: SAMPLES[name] ?? '' }));
   return { body: tpl.body_ar, footer: tpl.footer_ar ?? '', vars, buttons: buttonsOf(tpl) };
 }
