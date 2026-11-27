@@ -27504,7 +27504,7 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
@@ -27525,6 +27525,98 @@
     "amount"
    ],
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "subscription_id": {
+     "type": "string"
+    },
+    "student": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "code": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "new",
+        "trial",
+        "pending_subscription",
+        "active",
+        "pending_renewal",
+        "expired",
+        "paused",
+        "churned"
+       ]
+      }
+     },
+     "required": [
+      "id",
+      "code",
+      "name",
+      "status"
+     ]
+    },
+    "amount": {
+     "type": "number"
+    },
+    "currency": {
+     "type": "string"
+    },
+    "method": {
+     "type": "string",
+     "enum": [
+      "bank",
+      "wallet",
+      "cash",
+      "other",
+      "card"
+     ]
+    },
+    "kind": {
+     "type": "string",
+     "enum": [
+      "payment",
+      "refund"
+     ]
+    },
+    "paid_at": {
+     "type": "string"
+    },
+    "note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "subscription_id",
+    "student",
+    "amount",
+    "currency",
+    "method",
+    "kind",
+    "paid_at",
+    "note",
+    "created_at"
+   ]
   }
  },
  "PATCH /sales/students/:id/channel/messages/:messageId": {
@@ -55595,6 +55687,270 @@
    "required": [
     "id",
     "status"
+   ]
+  }
+ },
+ "POST /sales/payments": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "amount": {
+     "type": "number",
+     "exclusiveMinimum": 0,
+     "maximum": 9999999999
+    },
+    "currency": {
+     "type": "string",
+     "pattern": "^[A-Z]{3}$"
+    },
+    "paidAt": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "receiptPath": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "attachments": {
+     "maxItems": 5,
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+     }
+    },
+    "note": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "clientRequestId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "phone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "amount",
+    "currency",
+    "paidAt",
+    "clientRequestId"
+   ],
+   "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "subscription_id": {
+     "type": "string"
+    },
+    "student": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "code": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "new",
+        "trial",
+        "pending_subscription",
+        "active",
+        "pending_renewal",
+        "expired",
+        "paused",
+        "churned"
+       ]
+      }
+     },
+     "required": [
+      "id",
+      "code",
+      "name",
+      "status"
+     ]
+    },
+    "amount": {
+     "type": "number"
+    },
+    "currency": {
+     "type": "string"
+    },
+    "method": {
+     "type": "string",
+     "enum": [
+      "bank",
+      "wallet",
+      "cash",
+      "other",
+      "card"
+     ]
+    },
+    "kind": {
+     "type": "string",
+     "enum": [
+      "payment",
+      "refund"
+     ]
+    },
+    "paid_at": {
+     "type": "string"
+    },
+    "note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "subscription_id",
+    "student",
+    "amount",
+    "currency",
+    "method",
+    "kind",
+    "paid_at",
+    "note",
+    "created_at"
+   ]
+  }
+ },
+ "POST /sales/payments/receipt-from-chat": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "phone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "messageId"
+   ],
+   "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "receipt_path": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "receipt_path"
+   ]
+  }
+ },
+ "POST /sales/payments/receipt-upload-url": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "mime": {
+     "type": "string",
+     "enum": [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/heic",
+      "application/pdf"
+     ]
+    },
+    "size": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10485760
+    },
+    "phone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "mime",
+    "size"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
    ]
   }
  },

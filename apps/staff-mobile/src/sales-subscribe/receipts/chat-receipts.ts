@@ -1,5 +1,5 @@
-import { salesChatReceiptCalls } from '@ab/client-core';
-import type { SalesChatReceipt, SalesReceiptCopied } from '@ab/shared';
+import { salesChatReceiptCalls, salesPaymentCalls } from '@ab/client-core';
+import type { SalesChatReceipt } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { salesKeys } from '@/core/lib/keys';
@@ -10,6 +10,7 @@ import { salesKeys } from '@/core/lib/keys';
 type Bind = { phone?: string };
 
 const chatReceipts = salesChatReceiptCalls({ apiFetch, apiSend });
+const payments = salesPaymentCalls({ apiFetch, apiSend });
 
 export function useChatReceipts(studentId: string, enabled: boolean, bind: Bind = {}) {
   return useQuery({
@@ -39,7 +40,6 @@ interface ChatCopyInput extends Bind {
 export function useCopyChatReceipt() {
   return useMutation({
     mutationKey: ['sales', 'payments', 'receipt-from-chat'],
-    mutationFn: (input: ChatCopyInput) =>
-      apiSend<SalesReceiptCopied>('POST', '/sales/payments/receipt-from-chat', input),
+    mutationFn: (input: ChatCopyInput) => payments.receiptFromChat(input),
   });
 }

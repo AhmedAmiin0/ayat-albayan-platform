@@ -1,8 +1,10 @@
-import type { SignedUpload } from '@ab/shared';
-import { apiSend } from '@ab/mobile-kit';
+import { salesPaymentCalls } from '@ab/client-core';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
+
+const payments = salesPaymentCalls({ apiFetch, apiSend });
 
 /**
  * The admin's upload (payments/upload-receipt) through the salesperson's endpoint: POST
@@ -14,7 +16,7 @@ export async function uploadSalesReceipt(
   receipt: Receipt,
   bind: { phone?: string } = {},
 ): Promise<string> {
-  const signed = await apiSend<SignedUpload>('POST', '/sales/payments/receipt-upload-url', {
+  const signed = await payments.receiptUploadUrl({
     subscriptionId,
     mime: receipt.mime,
     size: receipt.size,

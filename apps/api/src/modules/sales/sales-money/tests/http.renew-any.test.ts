@@ -29,7 +29,7 @@ function suite(resolver: PermissionResolver) {
   beforeEach(() => {
     resetMocks(ctx.m);
     salesDefaults(ctx.m);
-    ctx.m.storage.signedUpload.mockResolvedValue({ bucket: 'receipts', path: `${SUB_ID}/x.jpg`, token: 't' });
+    ctx.m.storage.signedUpload.mockResolvedValue({ bucket: 'receipts', path: `${SUB_ID}/x.jpg`, token: 't', signed_url: 'u' });
     ctx.m.mediaQueries.message.mockResolvedValue(chatPhoto);
     ctx.m.media.cache.mockResolvedValue({ bucket: 'wa-media', path: `${MSG}.jpg`, mime: 'image/jpeg' });
     ctx.m.storage.info.mockResolvedValue({ size: 2000, contentType: 'image/jpeg' });
