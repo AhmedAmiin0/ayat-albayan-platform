@@ -6,6 +6,7 @@ import { LeadAssign } from './LeadAssign';
 import { free, leadsBackend, owned } from '@/inbox/leads/list/leads-fixtures';
 import { leadKeys } from '@/core/lib/keys';
 
+const OMAR = '5a1a0000-0000-4000-8000-000000000002';
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -33,10 +34,10 @@ test('picking a person POSTs profileId, patches the detail and refetches the lis
   const invalidate = jest.spyOn(client, 'invalidateQueries');
   await renderWithQuery(<LeadAssign lead={free} />, client);
   await fireEvent.press(await screen.findByRole('radio', { name: 'عمر' }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', `/leads/${free.id}/assign`, { profileId: 'p2' });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/leads/${free.id}/assign`, { profileId: OMAR });
   await waitFor(() =>
     expect(client.getQueryData(['leads', free.id])).toMatchObject({
-      assigned_to: 'p2',
+      assigned_to: OMAR,
       assigned_to_name: 'عمر',
     }),
   );

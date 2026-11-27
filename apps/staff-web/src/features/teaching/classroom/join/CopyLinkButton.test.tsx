@@ -30,7 +30,7 @@ describe('CopyLinkButton («انسخ رابط الطالب»)', () => {
     show();
     fireEvent.click(screen.getByRole('button', { name: t.classroom.copyLink }));
     expect(await screen.findByText(t.classroom.copied)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/join-link/url');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/join-link/url', undefined);
     expect(writeText).toHaveBeenCalledWith('https://app.example.test/join/abc');
     expect((screen.getByLabelText<HTMLInputElement>(t.classroom.linkShown)).value).toBe('https://app.example.test/join/abc');
   });

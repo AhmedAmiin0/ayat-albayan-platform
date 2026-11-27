@@ -1,8 +1,9 @@
 import type { UserRole } from '@ab/catalog';
-import { meetingCalls } from '@ab/client-core';
+import { lessonJoinCalls, meetingCalls } from '@ab/client-core';
 import { apiFetch, apiSend } from '@ab/web-kit';
 
 const meetings = meetingCalls({ apiFetch, apiSend });
+const joins = lessonJoinCalls({ apiFetch, apiSend });
 
 const STAFF: ReadonlySet<UserRole> = new Set<UserRole>(['admin', 'teacher', 'assistant', 'sales']);
 
@@ -18,6 +19,6 @@ export const meetingPathOfLink = async (token: string): Promise<string> => {
 
 /** /join/<token> opened by the lesson's staff → /classroom/<lesson> (GET /join-links/:token/lesson). */
 export const lessonPathOfLink = async (token: string): Promise<string> => {
-  const { lessonId } = await apiFetch<{ lessonId: string }>(`/join-links/${encodeURIComponent(token)}/lesson`);
+  const { lessonId } = await joins.staffLessonOf(token);
   return `/classroom/${lessonId}`;
 };

@@ -2547,17 +2547,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/thread-file.controller.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 3
-    },
-    "typescript/dot-notation": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/inbox/files/thread-forward.controller.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -2583,14 +2572,6 @@
       "count": 1
     },
     "typescript/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/files/thread-media.controller.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
       "count": 1
     }
   },
@@ -3128,11 +3109,6 @@
   },
   "src/modules/messaging/notification-rules/test-app.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/numbers/communications/communications.controller.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -5444,11 +5420,6 @@
       "count": 1
     }
   },
-  "src/modules/platform/google-sync/map/google-map.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 9
-    }
-  },
   "src/modules/platform/google-sync/map/google-map.queries.ts": {
     "typescript/consistent-type-definitions": {
       "count": 2
@@ -6058,14 +6029,9 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/history/report-history.service.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "src/modules/reporting/reports/report-entry.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/reporting/reports/report-row.ts": {
@@ -6703,14 +6669,6 @@
     },
     "ab/forbidden-imports": {
       "count": 1
-    }
-  },
-  "src/modules/sales/sales/sales.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/sales/sales/sales.fakes.ts": {
@@ -7619,9 +7577,6 @@
   "src/modules/teaching/classroom/classroom.controller.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/teaching/classroom/classroom.fakes.ts": {

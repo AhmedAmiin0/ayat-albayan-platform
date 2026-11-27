@@ -62,4 +62,21 @@ describe('GET /teachers/me/reports (teacher mode «التقارير», R-REP-02,
     expect((await h.call({ method: 'GET', url: '/teachers/me/reports', token: 'guardian' })).statusCode).toBe(403);
     expect((await h.call({ method: 'GET', url: '/teachers/me/reports?pageSize=500' })).statusCode).toBe(400);
   });
+
+  it('splits the filter from the page and passes only the filter on', async () => {
+    await h.call({ method: 'GET', url: '/teachers/me/reports?attendance=late&sort=grade&page=3' });
+    expect(h.mine.page).toHaveBeenCalledWith({
+      teacherId: TEACHER_ID,
+      filter: { attendance: 'late', sort: 'grade' },
+      page: { page: 3, pageSize: 25 },
+    });
+  });
+
+  it('a stored status the schema refuses is a 500 response_invalid, never the row', async () => {
+    h.mine.page.mockResolvedValue({ rows: [Object.assign(row({}), { status: 'sent' })], total: 1 });
+    const res = await h.call({ method: 'GET', url: '/teachers/me/reports' });
+    expect(res.statusCode).toBe(500);
+    expect(res.json().code).toBe('response_invalid');
+    expect(res.body).not.toContain('سهيلة');
+  });
 });

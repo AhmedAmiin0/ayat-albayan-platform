@@ -1,12 +1,6 @@
 import { ApiError } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
-import {
-  pdfPagePath,
-  pdfPageQuery,
-  signedStaleTime,
-  threadFilePath,
-  threadFileQuery,
-} from './thread-file';
+import { fetchDownload, pdfPageQuery, signedStaleTime, threadFileQuery } from './thread-file';
 import { PHONE } from '@/inbox/shared/thread-fixtures';
 import { threadKeys } from '@/core/lib/keys';
 
@@ -20,8 +14,18 @@ const FILE = { url: 'https://s.test/f', mime: 'audio/ogg', expires_at: '2026-10-
 
 beforeEach(() => mockApiFetch.mockReset().mockResolvedValue(FILE));
 
-test('the W6 path, the phone encoded', () => {
-  expect(threadFilePath(PHONE, 'm1')).toBe('/threads/%2B966552147730/messages/m1/file');
+test('the W6 path, the phone encoded, and the download signed under its name', async () => {
+  await createTestQueryClient().query(threadFileQuery(PHONE, 'm1'));
+  await fetchDownload(PHONE, 'm1');
+  expect(mockApiFetch.mock.calls).toEqual([
+    ['/threads/%2B966552147730/messages/m1/file'],
+    ['/threads/%2B966552147730/messages/m1/file?download=1'],
+  ]);
+});
+
+test('a file with no type is refused, never shown', async () => {
+  mockApiFetch.mockResolvedValue({ url: FILE.url, expires_at: FILE.expires_at });
+  await expect(fetchDownload(PHONE, 'm1')).rejects.toBeInstanceOf(ApiError);
 });
 
 test('kept off the disk cache, outside ["threads"], never retried', () => {
@@ -84,10 +88,12 @@ test('a failure is not asked again on mount, focus or reconnect; a success follo
 });
 
 // A chat PDF's pages.
-test('a PDF page: its own key and path, off the disk cache, an hour of cache', () => {
+test('a PDF page: its own key and path, off the disk cache, an hour of cache', async () => {
   const q = pdfPageQuery(PHONE, 'm1', 3);
   expect(q.queryKey).toEqual(['thread-pdf', PHONE, 'm1', 3]);
-  expect(pdfPagePath(PHONE, 'm1', 3)).toBe('/threads/%2B966552147730/messages/m1/pdf/3');
+  mockApiFetch.mockResolvedValue({ ...FILE, page: 3, pages: 4, bytes: 100 });
+  await createTestQueryClient().query(q);
+  expect(mockApiFetch).toHaveBeenCalledWith('/threads/%2B966552147730/messages/m1/pdf/3');
   expect(q.meta).toEqual({ noPersist: true });
   expect(q.gcTime).toBe(60 * 60_000);
 });

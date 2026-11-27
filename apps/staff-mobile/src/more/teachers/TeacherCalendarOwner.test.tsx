@@ -16,8 +16,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 
 const T = t.googleSync.teacherCalendar;
-const PATH = '/admin/google/teachers/t1/calendar-owner';
-const VIEW = { teacher_id: 't1', owner: 'script', changed_at: null, managed: 4, script_event_present: 2 };
+const TEACHER = '7f3a4b5c-6d7e-4f80-9a12-b3c4d5e6f701';
+const PATH = `/admin/google/teachers/${TEACHER}/calendar-owner`;
+const VIEW = { teacher_id: TEACHER, owner: 'script', changed_at: null, managed: 4, script_event_present: 2 };
 
 beforeEach(() => {
   mockApiFetch.mockReset();
@@ -26,7 +27,7 @@ beforeEach(() => {
 });
 
 test('an admin sees the two sources, the warning and the sync status', async () => {
-  await renderWithQuery(<TeacherCalendarOwner teacherId="t1" />);
+  await renderWithQuery(<TeacherCalendarOwner teacherId={TEACHER} />);
   const script = await screen.findByRole('radio', { name: T.script });
   expect(script.props.accessibilityState).toMatchObject({ checked: true });
   expect(screen.getByRole('radio', { name: T.platform }).props.accessibilityState).toMatchObject({ checked: false });
@@ -38,7 +39,7 @@ test('an admin sees the two sources, the warning and the sync status', async () 
 
 test('«من المنصة» sends the owner and shows the saved note', async () => {
   mockApiSend.mockResolvedValue({ ...VIEW, owner: 'platform' });
-  await renderWithQuery(<TeacherCalendarOwner teacherId="t1" />);
+  await renderWithQuery(<TeacherCalendarOwner teacherId={TEACHER} />);
   await fireEvent.press(await screen.findByRole('radio', { name: T.platform }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PUT', PATH, { owner: 'platform' }));
   expect(await screen.findByText(T.saved)).toBeTruthy();
@@ -48,7 +49,7 @@ test('«من المنصة» sends the owner and shows the saved note', async () 
 test('hidden for anyone but a base-role admin, with no request', async () => {
   const client = createTestQueryClient({ meFromApi: true });
   seedFullAccess(client, 'assistant');
-  await renderWithQuery(<TeacherCalendarOwner teacherId="t1" />, client);
+  await renderWithQuery(<TeacherCalendarOwner teacherId={TEACHER} />, client);
   expect(screen.queryByText(T.title)).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalled();
 });
