@@ -19,7 +19,7 @@ describe('googleAdminRoutes', () => {
   });
 
   it('lets settings readers see the status and the log, and writers change the rest', () => {
-    const reads = [routes.status, routes.items];
+    const reads: unknown[] = [routes.status, routes.items];
     for (const route of Object.values(routes)) {
       const key = reads.includes(route) ? 'settings.read' : 'settings.write';
       expect(route.permissions).toEqual([key]);
