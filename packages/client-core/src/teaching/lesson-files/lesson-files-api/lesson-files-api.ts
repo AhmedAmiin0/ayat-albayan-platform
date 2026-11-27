@@ -10,7 +10,7 @@ import {
   type SignedDownload,
   type SignedUpload,
 } from '@ab/shared';
-import type { ApiClient } from '../../core/http';
+import type { ApiClient } from '../../../core/http';
 
 // Every answer parsed with the shared schema (rule 12).
 
