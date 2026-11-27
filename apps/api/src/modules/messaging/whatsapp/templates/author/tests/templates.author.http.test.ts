@@ -15,8 +15,8 @@ const body = {
   params: [{ name: 'var_1', sample: 'أحمد' }],
   buttons: [{ type: 'quick_reply', text: 'أريد التفاصيل' }],
 };
-const SALES = 's0000000-0000-4000-8000-000000000003';
-const OTHER_AUTHOR = 's0000000-0000-4000-8000-000000000099';
+const SALES = '50000000-0000-4000-8000-000000000003';
+const OTHER_AUTHOR = '50000000-0000-4000-8000-000000000099';
 /** A free allow-list template of the chat line (no code sends it). */
 const FREE = { line: 'chat' as const, sales_starter: true, meta_id: '9', buttons: [] };
 const edit = { body: 'عرض جديد يا {{1}} هذا الأسبوع', params: [{ name: 'var_1', sample: 'أحمد' }] };
