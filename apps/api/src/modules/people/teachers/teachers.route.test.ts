@@ -75,7 +75,7 @@ describe('teacher routes (R-TCH-01)', () => {
   });
 
   it('GET /teachers answers rows with their counts as declared', async () => {
-    const row = { ...teacherRowFixture({ id: ID, active_count: 12 }), avatar_path: null };
+    const row = teacherRowFixture({ id: ID, active_count: 12 });
     teachers.list.mockResolvedValue({ items: [row], total: 1, page: 1, pageSize: 25 });
     const res = await call('GET', '/teachers');
     expect(res.statusCode).toBe(200);
