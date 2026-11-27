@@ -183,6 +183,172 @@
    ]
   }
  },
+ "DELETE /portal/students/:id/channel/messages/:messageId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id",
+    "messageId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "body": {
+     "type": "string"
+    },
+    "sender_role": {
+     "type": "string"
+    },
+    "sender_name": {
+     "type": "string"
+    },
+    "mine": {
+     "type": "boolean"
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "edited": {
+     "type": "boolean"
+    },
+    "deleted": {
+     "type": "boolean"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "attachment": {
+     "default": null,
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mime": {
+         "type": "string"
+        },
+        "size": {
+         "type": "number"
+        },
+        "name": {
+         "default": "",
+         "type": "string"
+        },
+        "duration_ms": {
+         "default": null,
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "url": {
+         "default": null,
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mime",
+        "size",
+        "name",
+        "duration_ms",
+        "url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "reply_to": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "sender_name": {
+         "default": "",
+         "type": "string"
+        },
+        "sender_role": {
+         "type": "string"
+        },
+        "body": {
+         "default": "",
+         "type": "string"
+        },
+        "kind": {
+         "type": "string"
+        },
+        "deleted": {
+         "default": false,
+         "type": "boolean"
+        }
+       },
+       "required": [
+        "id",
+        "sender_name",
+        "sender_role",
+        "body",
+        "kind",
+        "deleted"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "read_by_all": {
+     "default": false,
+     "type": "boolean"
+    },
+    "client_id": {
+     "default": null,
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "body",
+    "sender_role",
+    "sender_name",
+    "mine",
+    "created_at",
+    "edited",
+    "deleted",
+    "kind",
+    "attachment",
+    "reply_to",
+    "read_by_all",
+    "client_id"
+   ]
+  }
+ },
  "DELETE /public/teacher-report/:token/reports/:id/attachments/:attachmentId": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -236,17 +402,161 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     },
     "messageId": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id",
     "messageId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "body": {
+     "type": "string"
+    },
+    "sender_role": {
+     "type": "string"
+    },
+    "sender_name": {
+     "type": "string"
+    },
+    "mine": {
+     "type": "boolean"
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "edited": {
+     "type": "boolean"
+    },
+    "deleted": {
+     "type": "boolean"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "attachment": {
+     "default": null,
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mime": {
+         "type": "string"
+        },
+        "size": {
+         "type": "number"
+        },
+        "name": {
+         "default": "",
+         "type": "string"
+        },
+        "duration_ms": {
+         "default": null,
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "url": {
+         "default": null,
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mime",
+        "size",
+        "name",
+        "duration_ms",
+        "url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "reply_to": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "sender_name": {
+         "default": "",
+         "type": "string"
+        },
+        "sender_role": {
+         "type": "string"
+        },
+        "body": {
+         "default": "",
+         "type": "string"
+        },
+        "kind": {
+         "type": "string"
+        },
+        "deleted": {
+         "default": false,
+         "type": "boolean"
+        }
+       },
+       "required": [
+        "id",
+        "sender_name",
+        "sender_role",
+        "body",
+        "kind",
+        "deleted"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "read_by_all": {
+     "default": false,
+     "type": "boolean"
+    },
+    "client_id": {
+     "default": null,
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "body",
+    "sender_role",
+    "sender_name",
+    "mine",
+    "created_at",
+    "edited",
+    "deleted",
+    "kind",
+    "attachment",
+    "reply_to",
+    "read_by_all",
+    "client_id"
    ]
   }
  },
@@ -359,6 +669,338 @@
      "full_name"
     ]
    }
+  }
+ },
+ "DELETE /students/:id/channel/messages/:messageId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id",
+    "messageId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "body": {
+     "type": "string"
+    },
+    "sender_role": {
+     "type": "string"
+    },
+    "sender_name": {
+     "type": "string"
+    },
+    "mine": {
+     "type": "boolean"
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "edited": {
+     "type": "boolean"
+    },
+    "deleted": {
+     "type": "boolean"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "attachment": {
+     "default": null,
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mime": {
+         "type": "string"
+        },
+        "size": {
+         "type": "number"
+        },
+        "name": {
+         "default": "",
+         "type": "string"
+        },
+        "duration_ms": {
+         "default": null,
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "url": {
+         "default": null,
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mime",
+        "size",
+        "name",
+        "duration_ms",
+        "url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "reply_to": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "sender_name": {
+         "default": "",
+         "type": "string"
+        },
+        "sender_role": {
+         "type": "string"
+        },
+        "body": {
+         "default": "",
+         "type": "string"
+        },
+        "kind": {
+         "type": "string"
+        },
+        "deleted": {
+         "default": false,
+         "type": "boolean"
+        }
+       },
+       "required": [
+        "id",
+        "sender_name",
+        "sender_role",
+        "body",
+        "kind",
+        "deleted"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "read_by_all": {
+     "default": false,
+     "type": "boolean"
+    },
+    "client_id": {
+     "default": null,
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "body",
+    "sender_role",
+    "sender_name",
+    "mine",
+    "created_at",
+    "edited",
+    "deleted",
+    "kind",
+    "attachment",
+    "reply_to",
+    "read_by_all",
+    "client_id"
+   ]
+  }
+ },
+ "DELETE /teachers/me/channels/:studentId/messages/:messageId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "studentId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "studentId",
+    "messageId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "body": {
+     "type": "string"
+    },
+    "sender_role": {
+     "type": "string"
+    },
+    "sender_name": {
+     "type": "string"
+    },
+    "mine": {
+     "type": "boolean"
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "edited": {
+     "type": "boolean"
+    },
+    "deleted": {
+     "type": "boolean"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "attachment": {
+     "default": null,
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mime": {
+         "type": "string"
+        },
+        "size": {
+         "type": "number"
+        },
+        "name": {
+         "default": "",
+         "type": "string"
+        },
+        "duration_ms": {
+         "default": null,
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "url": {
+         "default": null,
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mime",
+        "size",
+        "name",
+        "duration_ms",
+        "url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "reply_to": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "sender_name": {
+         "default": "",
+         "type": "string"
+        },
+        "sender_role": {
+         "type": "string"
+        },
+        "body": {
+         "default": "",
+         "type": "string"
+        },
+        "kind": {
+         "type": "string"
+        },
+        "deleted": {
+         "default": false,
+         "type": "boolean"
+        }
+       },
+       "required": [
+        "id",
+        "sender_name",
+        "sender_role",
+        "body",
+        "kind",
+        "deleted"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "read_by_all": {
+     "default": false,
+     "type": "boolean"
+    },
+    "client_id": {
+     "default": null,
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "body",
+    "sender_role",
+    "sender_name",
+    "mine",
+    "created_at",
+    "edited",
+    "deleted",
+    "kind",
+    "attachment",
+    "reply_to",
+    "read_by_all",
+    "client_id"
+   ]
   }
  },
  "DELETE /threads/:phone/messages/:messageId/hide": {
@@ -4326,17 +4968,67 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     },
     "messageId": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id",
     "messageId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "read": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string"
+       },
+       "at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "name",
+       "role",
+       "at"
+      ]
+     }
+    },
+    "unread": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "name",
+       "role"
+      ]
+     }
+    }
+   },
+   "required": [
+    "read",
+    "unread"
    ]
   }
  },
@@ -8720,17 +9412,67 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     },
     "messageId": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id",
     "messageId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "read": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string"
+       },
+       "at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "name",
+       "role",
+       "at"
+      ]
+     }
+    },
+    "unread": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "name",
+       "role"
+      ]
+     }
+    }
+   },
+   "required": [
+    "read",
+    "unread"
    ]
   }
  },
@@ -10216,17 +10958,67 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     },
     "messageId": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id",
     "messageId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "read": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string"
+       },
+       "at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "name",
+       "role",
+       "at"
+      ]
+     }
+    },
+    "unread": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "name",
+       "role"
+      ]
+     }
+    }
+   },
+   "required": [
+    "read",
+    "unread"
    ]
   }
  },
@@ -11408,17 +12200,67 @@
     "studentId": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     },
     "messageId": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "studentId",
     "messageId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "read": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string"
+       },
+       "at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "name",
+       "role",
+       "at"
+      ]
+     }
+    },
+    "unread": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "role": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "name",
+       "role"
+      ]
+     }
+    }
+   },
+   "required": [
+    "read",
+    "unread"
    ]
   }
  },
@@ -13579,6 +14421,186 @@
    "additionalProperties": false
   }
  },
+ "PATCH /portal/students/:id/channel/messages/:messageId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id",
+    "messageId"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "body": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 2000
+    }
+   },
+   "required": [
+    "body"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "body": {
+     "type": "string"
+    },
+    "sender_role": {
+     "type": "string"
+    },
+    "sender_name": {
+     "type": "string"
+    },
+    "mine": {
+     "type": "boolean"
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "edited": {
+     "type": "boolean"
+    },
+    "deleted": {
+     "type": "boolean"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "attachment": {
+     "default": null,
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mime": {
+         "type": "string"
+        },
+        "size": {
+         "type": "number"
+        },
+        "name": {
+         "default": "",
+         "type": "string"
+        },
+        "duration_ms": {
+         "default": null,
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "url": {
+         "default": null,
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mime",
+        "size",
+        "name",
+        "duration_ms",
+        "url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "reply_to": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "sender_name": {
+         "default": "",
+         "type": "string"
+        },
+        "sender_role": {
+         "type": "string"
+        },
+        "body": {
+         "default": "",
+         "type": "string"
+        },
+        "kind": {
+         "type": "string"
+        },
+        "deleted": {
+         "default": false,
+         "type": "boolean"
+        }
+       },
+       "required": [
+        "id",
+        "sender_name",
+        "sender_role",
+        "body",
+        "kind",
+        "deleted"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "read_by_all": {
+     "default": false,
+     "type": "boolean"
+    },
+    "client_id": {
+     "default": null,
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "body",
+    "sender_role",
+    "sender_name",
+    "mine",
+    "created_at",
+    "edited",
+    "deleted",
+    "kind",
+    "attachment",
+    "reply_to",
+    "read_by_all",
+    "client_id"
+   ]
+  }
+ },
  "PATCH /recordings/:id/visibility": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -13788,12 +14810,12 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     },
     "messageId": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
@@ -13813,6 +14835,150 @@
    },
    "required": [
     "body"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "body": {
+     "type": "string"
+    },
+    "sender_role": {
+     "type": "string"
+    },
+    "sender_name": {
+     "type": "string"
+    },
+    "mine": {
+     "type": "boolean"
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "edited": {
+     "type": "boolean"
+    },
+    "deleted": {
+     "type": "boolean"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "attachment": {
+     "default": null,
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mime": {
+         "type": "string"
+        },
+        "size": {
+         "type": "number"
+        },
+        "name": {
+         "default": "",
+         "type": "string"
+        },
+        "duration_ms": {
+         "default": null,
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "url": {
+         "default": null,
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mime",
+        "size",
+        "name",
+        "duration_ms",
+        "url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "reply_to": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "sender_name": {
+         "default": "",
+         "type": "string"
+        },
+        "sender_role": {
+         "type": "string"
+        },
+        "body": {
+         "default": "",
+         "type": "string"
+        },
+        "kind": {
+         "type": "string"
+        },
+        "deleted": {
+         "default": false,
+         "type": "boolean"
+        }
+       },
+       "required": [
+        "id",
+        "sender_name",
+        "sender_role",
+        "body",
+        "kind",
+        "deleted"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "read_by_all": {
+     "default": false,
+     "type": "boolean"
+    },
+    "client_id": {
+     "default": null,
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "body",
+    "sender_role",
+    "sender_name",
+    "mine",
+    "created_at",
+    "edited",
+    "deleted",
+    "kind",
+    "attachment",
+    "reply_to",
+    "read_by_all",
+    "client_id"
    ]
   }
  },
@@ -14785,6 +15951,186 @@
      ]
     }
    }
+  }
+ },
+ "PATCH /teachers/me/channels/:studentId/messages/:messageId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "studentId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "studentId",
+    "messageId"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "body": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 2000
+    }
+   },
+   "required": [
+    "body"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "body": {
+     "type": "string"
+    },
+    "sender_role": {
+     "type": "string"
+    },
+    "sender_name": {
+     "type": "string"
+    },
+    "mine": {
+     "type": "boolean"
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "edited": {
+     "type": "boolean"
+    },
+    "deleted": {
+     "type": "boolean"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "attachment": {
+     "default": null,
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mime": {
+         "type": "string"
+        },
+        "size": {
+         "type": "number"
+        },
+        "name": {
+         "default": "",
+         "type": "string"
+        },
+        "duration_ms": {
+         "default": null,
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "url": {
+         "default": null,
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mime",
+        "size",
+        "name",
+        "duration_ms",
+        "url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "reply_to": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "sender_name": {
+         "default": "",
+         "type": "string"
+        },
+        "sender_role": {
+         "type": "string"
+        },
+        "body": {
+         "default": "",
+         "type": "string"
+        },
+        "kind": {
+         "type": "string"
+        },
+        "deleted": {
+         "default": false,
+         "type": "boolean"
+        }
+       },
+       "required": [
+        "id",
+        "sender_name",
+        "sender_role",
+        "body",
+        "kind",
+        "deleted"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "read_by_all": {
+     "default": false,
+     "type": "boolean"
+    },
+    "client_id": {
+     "default": null,
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "body",
+    "sender_role",
+    "sender_name",
+    "mine",
+    "created_at",
+    "edited",
+    "deleted",
+    "kind",
+    "attachment",
+    "reply_to",
+    "read_by_all",
+    "client_id"
+   ]
   }
  },
  "PATCH /users/:id": {
@@ -21094,7 +22440,7 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
@@ -21132,6 +22478,30 @@
     "mime",
     "size",
     "name"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
    ]
   }
  },
@@ -27679,7 +29049,7 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
@@ -27717,6 +29087,30 @@
     "mime",
     "size",
     "name"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
    ]
   }
  },
@@ -30067,7 +31461,7 @@
     "studentId": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
@@ -30105,6 +31499,30 @@
     "mime",
     "size",
     "name"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
    ]
   }
  },
