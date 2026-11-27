@@ -4964,9 +4964,6 @@
     },
     "ab/no-restricted-syntax": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/student-file/recordings/teacher-choices.ts": {

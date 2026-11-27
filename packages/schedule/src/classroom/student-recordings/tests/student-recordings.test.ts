@@ -4,7 +4,7 @@ import {
   mediaOfPath,
   recordingVisibilitySchema,
   studentRecordingsQuerySchema,
-} from './student-recordings';
+} from '../student-recordings';
 
 describe('studentRecordingsQuerySchema', () => {
   it('defaults to page 1 of 10 and accepts the filters', () => {

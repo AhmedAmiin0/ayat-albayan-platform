@@ -45,9 +45,9 @@
       "count": 1
     }
   },
-  "src/classroom/student-recordings.ts": {
+  "src/classroom/student-recordings/student-recordings.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-deprecated": {
       "count": 1

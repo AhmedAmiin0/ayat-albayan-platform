@@ -10,10 +10,11 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 const R = t.studentRecordings;
+const ANSWERS: Record<string, unknown> = { PATCH: { id: 'rec-1', visible_to_student: true } };
 
 function renderList(role: 'admin' | 'teacher', row = recordingView()) {
   apiFetch.mockImplementation(async (path: string) => (path.includes('/recordings') ? pageOf([row]) : []));
-  apiSend.mockResolvedValue({});
+  apiSend.mockImplementation(async (method: string) => ANSWERS[method]);
   render(
     <QueryClientProvider
       client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
@@ -67,7 +68,7 @@ describe('admin-only delete', () => {
     expect(await screen.findByText(R.delete.body)).toBeTruthy();
     expect(apiSend).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: R.delete.confirm }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/recordings/rec-1'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/recordings/rec-1', undefined));
   });
 
   it('cancel sends nothing; a deleted or running row has no delete button', async () => {

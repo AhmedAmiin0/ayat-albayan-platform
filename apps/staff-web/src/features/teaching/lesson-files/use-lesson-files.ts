@@ -1,9 +1,9 @@
 import { LESSON_FILES_KEY, uploadLessonFile, type UploadInput } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiSend, openAfter } from '@ab/web-kit';
+import { openAfter } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import { pdfUrl } from '@/features/reporting/reports';
-import { lessonFiles } from './api';
+import { lessonFiles, recordings } from './api';
 
 /** GET /lessons/:id/files: the lesson's recordings, reports and files (admin, its teacher). */
 export const useLessonAssets = (lessonId: string) =>
@@ -25,8 +25,7 @@ export function useRemoveFile() {
 
 export function useRecordingVisibility() {
   return useMutation({
-    mutationFn: ({ id, visible }: { id: string; visible: boolean }) =>
-      apiSend('PATCH', `/recordings/${encodeURIComponent(id)}/visibility`, { visible }),
+    mutationFn: recordings.setVisible,
     onSuccess: useRefresh(),
   });
 }

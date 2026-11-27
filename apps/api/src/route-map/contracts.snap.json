@@ -189,6 +189,23 @@
    ]
   }
  },
+ "DELETE /recordings/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
+ },
  "DELETE /sales/students/:id/channel/messages/:messageId": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -5028,7 +5045,44 @@
    }
   }
  },
+ "GET /students/:id/recorded-lesson-ids": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  }
+ },
  "GET /students/:id/recordings": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -5068,6 +5122,136 @@
      ]
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "lesson_id": {
+        "type": "string"
+       },
+       "lesson_starts_at": {
+        "type": "string"
+       },
+       "started_at": {
+        "type": "string"
+       },
+       "teacher": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string"
+           },
+           "display_name_ar": {
+            "type": "string"
+           },
+           "display_name_en": {
+            "type": [
+             "string",
+             "null"
+            ]
+           }
+          },
+          "required": [
+           "id",
+           "display_name_ar",
+           "display_name_en"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "recording",
+         "done",
+         "failed",
+         "deleted"
+        ]
+       },
+       "duration_seconds": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "size_bytes": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "media": {
+        "type": "string",
+        "enum": [
+         "video",
+         "audio"
+        ]
+       },
+       "visible_to_student": {
+        "type": "boolean"
+       },
+       "can_manage": {
+        "type": "boolean"
+       },
+       "url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "lesson_id",
+       "lesson_starts_at",
+       "started_at",
+       "teacher",
+       "status",
+       "duration_seconds",
+       "size_bytes",
+       "media",
+       "visible_to_student",
+       "can_manage",
+       "url"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
   }
  },
  "GET /students/status-counts": {
@@ -6871,6 +7055,20 @@
   }
  },
  "PATCH /recordings/:id/visibility": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -6881,6 +7079,22 @@
    },
    "required": [
     "visible"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "visible_to_student": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "visible_to_student"
    ]
   }
  },

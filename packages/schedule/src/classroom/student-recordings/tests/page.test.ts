@@ -1,6 +1,6 @@
 import { pageGoldenCases, pageOutcome } from '@ab/testing/page-golden';
 import { describe, expect, it } from 'vitest';
-import { studentRecordingsQuerySchema } from './student-recordings';
+import { studentRecordingsQuerySchema } from '../student-recordings';
 
 describe('The student recordings page query, pinned before it spreads pageQuery', () => {
   it.each(pageGoldenCases({ size: 10, max: 100 }))(
