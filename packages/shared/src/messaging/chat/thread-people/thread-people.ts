@@ -1,10 +1,6 @@
 import type { LeadStatus, PackageSize, StudentStatus, SubscriptionStatus } from '@ab/catalog';
 import type { z } from 'zod';
-import type {
-  familyRingSchema,
-  subscriptionBadgeSchema,
-  ThreadView,
-} from '../thread-reads/thread-view.schemas';
+import type { familyRingSchema, subscriptionBadgeSchema } from '../thread-reads/thread-view.schemas';
 
 // GET /threads/:phone `people` (R-SUB-01, R-LEAD-02): who the chat is with and whether the family
 // is subscribed, so the admin can renew or subscribe from the chat.
@@ -104,9 +100,6 @@ const RING: Record<SubscriptionBadge, (low: boolean) => FamilyRing | null> = {
   expired: () => 'renewal',
   none: () => null,
 };
-
-/** ThreadView.ring: familyRing on the API; null/absent (a lead, a teacher, an old cache) = none. */
-export type FamilyRingField = Pick<ThreadView, 'ring'>;
 
 /**
  * The family's ring from subscriptionBadge and the renewal_due threshold
