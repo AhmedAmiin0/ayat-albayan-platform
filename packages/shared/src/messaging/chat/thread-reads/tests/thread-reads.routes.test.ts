@@ -20,7 +20,7 @@ const ANSWER = {
 describe('threadReadRoutes', () => {
   it('keeps the path of today', () => {
     const lines = Object.values(routes).map((r) => `${r.method} ${r.path}`);
-    expect(lines).toEqual(['GET /threads/sync']);
+    expect(lines).toEqual(['GET /threads/sync', 'GET /threads']);
   });
 
   it('asks from the first row with the default page, or from a cursor read apart', () => {
@@ -48,7 +48,8 @@ describe('threadReadRoutes', () => {
     expect(routes.sync.response.safeParse(noMore).success).toBe(false);
   });
 
-  it('lets inbox.read in and tags the route inbox', () => {
-    expect([routes.sync.permissions, routes.sync.tags]).toEqual([['inbox.read'], ['inbox']]);
+  it('lets inbox.read in on every route and tags each inbox', () => {
+    const access = Object.values(routes).map((r) => [r.permissions, r.tags]);
+    expect(access).toEqual(Object.values(routes).map(() => [['inbox.read'], ['inbox']]));
   });
 });
