@@ -14,5 +14,5 @@ export interface InvoiceKeys {
 export interface SalesCourseKeys {
   course: (studentId: string) => StaffKey;
   check: (body: string) => StaffKey;
-  changeCheck: (path: string, body: string) => StaffKey;
+  changeCheck: (scope: string, body: string) => StaffKey;
 }

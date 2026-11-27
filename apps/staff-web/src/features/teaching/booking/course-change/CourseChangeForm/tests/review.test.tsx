@@ -61,7 +61,7 @@ describe('«تغيير أيام الحلقات»: pick, review, save (owner 2026
   it('after the save the still-mounted check is not asked again (it would answer no_change)', async () => {
     let checks = 0;
     apiSend.mockImplementation((_m: string, path: string) => {
-      if (!path.endsWith('/change/check')) return Promise.resolve({ subscriptionId: COURSE.subscriptionId, ruleIds: ['r-9'], endsOn: CHECK.endsOn });
+      if (!path.endsWith('/change/check')) return Promise.resolve({ subscriptionId: COURSE.subscriptionId, ruleIds: ['9a1b2c3d-0000-4000-8000-000000000009'], endsOn: CHECK.endsOn });
       checks += 1;
       return checks === 1 ? Promise.resolve(CHECK) : Promise.reject(new ApiError(400, { code: 'no_change' }));
     });

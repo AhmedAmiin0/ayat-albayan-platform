@@ -2,8 +2,9 @@ import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-quer
 import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { courseChangeCheckQuery, type CourseChangeBody } from './api';
-import { CHECK, COURSE, MON } from './change-fixture';
+import { changeCourse, courseChangeCheckQuery } from './api';
+import type { CourseChangeBody } from './api.types';
+import { CHECK, COURSE, MON } from '@/features/teaching/booking/course-change/change-fixture';
 import { bookingKeys } from '@/features/teaching/booking/booking.keys';
 
 const apiSend = vi.hoisted(() => vi.fn());
@@ -39,5 +40,41 @@ describe('courseChangeCheckQuery', () => {
         0,
       ),
     );
+  });
+});
+
+const RESULT = {
+  subscriptionId: COURSE.subscriptionId,
+  ruleIds: ['9a1b2c3d-0000-4000-8000-000000000009'],
+  endsOn: CHECK.endsOn,
+};
+
+const CHECKED = {
+  subscriptionId: body.subscriptionId,
+  byday: body.byday,
+  startTimeLocal: body.startTimeLocal,
+  startsOn: body.startsOn,
+  startsAt: body.startsAt,
+};
+
+describe('the booking mode picks the route table', () => {
+  afterEach(() => apiSend.mockReset());
+
+  it.each([
+    ['admin', '/booking/course/change'],
+    ['sales', '/sales/booking/course/change'],
+  ] as const)('%s checks without the idempotency key and saves on %s', async (mode, path) => {
+    apiSend.mockResolvedValueOnce(CHECK).mockResolvedValueOnce(RESULT);
+    const check = courseChangeCheckQuery(body, mode).queryFn;
+    await expect(check?.({} as never)).resolves.toEqual(CHECK);
+    expect(apiSend).toHaveBeenLastCalledWith('POST', `${path}/check`, CHECKED);
+    await expect(changeCourse(body, mode)).resolves.toEqual(RESULT);
+    expect(apiSend).toHaveBeenLastCalledWith('POST', path, body);
+  });
+
+  it('refuses a saved change the route does not describe', async () => {
+    apiSend.mockResolvedValue({ ...RESULT, ruleIds: ['r-9'] });
+    const failure = await changeCourse(body, 'admin').catch((e: unknown) => e);
+    expect(failure).toMatchObject({ body: { code: 'bad_response' } });
   });
 });

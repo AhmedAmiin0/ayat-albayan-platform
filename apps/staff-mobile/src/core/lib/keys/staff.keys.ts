@@ -21,5 +21,5 @@ export const invoiceKeys: InvoiceKeys = {
 export const salesCourseKeys: SalesCourseKeys = {
   course: (studentId) => [...course, { studentId }],
   check: (body) => [...booking, 'check', body],
-  changeCheck: (path, body) => [...booking, 'course-change', 'check', path, body],
+  changeCheck: (scope, body) => [...booking, 'course-change', 'check', scope, body],
 };
