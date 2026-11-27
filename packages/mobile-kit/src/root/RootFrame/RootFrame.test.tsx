@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AppText } from '../ui/primitives/AppText';
+import { AppText } from '../../ui/primitives/AppText';
 import { RootFrame } from './RootFrame';
 
 const cover: { view: 'open' | 'maintenance' } = { view: 'open' };
-jest.mock('./use-maintenance', () => ({
+jest.mock('../use-maintenance', () => ({
   useMaintenance: () => ({ view: cover.view, checking: false, retry: jest.fn() }),
 }));
 
