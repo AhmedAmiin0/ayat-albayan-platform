@@ -37,7 +37,7 @@ describe('the ownership rule off: any student’s money, as her, commission unto
     resetMocks(m);
     salesDefaults(m);
     m.settings.all.mockResolvedValue(REQUIRE_OFF);
-    const upload = { bucket: 'receipts', path: `${SUB_ID}/x.jpg`, token: 't' };
+    const upload = { bucket: 'receipts', path: `${SUB_ID}/x.jpg`, token: 't', signed_url: 'u' };
     m.storage.signedUpload.mockResolvedValue(upload);
     m.mediaQueries.receipts.mockResolvedValue([]);
   });

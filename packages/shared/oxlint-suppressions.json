@@ -498,7 +498,7 @@
   },
   "src/sales/money-views.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/sales/money.ts": {

@@ -1,6 +1,6 @@
 import type { Page } from '@ab/core';
 import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
-import { salesAssignCalls, salesPortalCalls } from '@ab/client-core';
+import { salesAssignCalls, salesPaymentCalls, salesPortalCalls } from '@ab/client-core';
 import type { SalesSubscriptionKind } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -8,6 +8,7 @@ import { myMoneyKeys, salesKeys, salesSubscriptionKeys } from '@/features/sales/
 
 const salesPortal = salesPortalCalls({ apiFetch, apiSend });
 const salesAssign = salesAssignCalls({ apiFetch, apiSend });
+const salesPayments = salesPaymentCalls({ apiFetch, apiSend });
 
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
 export const salesSubscriptionsQuery = (kind: SalesSubscriptionKind) =>
@@ -51,7 +52,7 @@ export const myPaymentsQuery = queryOptions({
 
 /** PATCH /sales/payments/:id/amount (subscriptions.edit_terms): a payment, never card. */
 export const updateMyPaymentAmount = (id: string, amount: number) =>
-  apiSend('PATCH', `/sales/payments/${id}/amount`, { amount });
+  salesPayments.editAmount({ paymentId: id, amount });
 
 /** GET /sales/people (admin):the salespeople with their open-lead counts. */
 export const salesPeopleQuery = queryOptions({
