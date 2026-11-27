@@ -821,8 +821,7 @@
          "bank",
          "wallet",
          "cash",
-         "other",
-         "card"
+         "other"
         ]
        },
        {
@@ -5269,8 +5268,7 @@
         "bank",
         "wallet",
         "cash",
-        "other",
-        "card"
+        "other"
        ]
       },
       {
@@ -10358,8 +10356,7 @@
         "bank",
         "wallet",
         "cash",
-        "other",
-        "card"
+        "other"
        ]
       },
       {
