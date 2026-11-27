@@ -30,7 +30,7 @@ describe('StudentProfilePage: «مواعيد الحلقة التجريبية» (
     routeFetch(apiFetch, [
       ['/students/s1/', []], // the cards below the head (assistants, recordings…): empty
       ['/students/s1', STUDENT],
-      ['/booking/trial-dates?studentId=s1', history({ student_id: 's1' })],
+      ['/booking/trial-dates?studentId=s1', history()],
     ]);
     renderWithClient(<StudentProfilePage studentId="s1" />);
     expect(await screen.findByTestId('trial-date-history')).toBeTruthy();
