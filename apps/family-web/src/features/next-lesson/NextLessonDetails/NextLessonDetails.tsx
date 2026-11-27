@@ -1,55 +1,26 @@
-import { cardRoom, type CardRoom } from '@ab/client-core';
-import type { PortalLesson, PortalStudent } from '@ab/shared';
-import type { RoomJoinResult } from '@ab/schedule';
-import { useState } from 'react';
 import { RoomOverlay } from '@ab/web-kit/room';
-import {
-  Dot,
-  StatusMark,
-  t,
-  teacherLabel,
-  useLessonStatusText,
-  LessonAction,
-  LessonCountdown,
-  LessonWhen,
-  CardRoomLine,
-} from '@ab/web-kit';
-
-interface Props {
-  lesson: PortalLesson;
-  student: PortalStudent;
-  now: Date;
-  open: boolean;
-  full?: boolean;
-}
-
-type Shown = Pick<Props, 'lesson' | 'now' | 'open'> & { full: boolean };
-
-function ClockLines({ lesson, now, open, full }: Shown) {
-  return (
-    <>
-      {full && <LessonCountdown lesson={lesson} now={now} />}
-      {open && (
-        <Dot tone="ok" live>
-          {t.portal.app.lesson.openNow}
-        </Dot>
-      )}
-    </>
-  );
-}
-
-const joinLabel = (kind: CardRoom['kind']): string | undefined =>
-  kind === 'live' ? t.portal.app.live.join : undefined;
+import { StatusMark, t, teacherLabel, LessonAction, LessonWhen, CardRoomLine } from '@ab/web-kit';
+import { ClockLines } from './ClockLines';
+import { joinLabel } from './next-lesson-details.helpers';
+import type { NextLessonDetailsProps } from './NextLessonDetails.types';
+import { useNextLessonDetails } from './use-next-lesson-details';
 
 /** The countdown digits change in place and never animate; once admitted, the room covers it. */
-export function NextLessonDetails({ lesson, student, now, open, full = false }: Props) {
-  const [room, setRoom] = useState<RoomJoinResult | null>(null);
-  const chip = useLessonStatusText().chip(lesson.status);
-  const state = cardRoom(lesson, now);
-  const joinable = (full || open) && state.kind !== 'ended';
-  const shown = { lesson, now, open, full };
+export function NextLessonDetails({
+  lesson,
+  student,
+  now,
+  open,
+  full = false,
+}: NextLessonDetailsProps) {
+  const { room, setRoom, leaveRoom, chip, state, joinable, shown } = useNextLessonDetails({
+    lesson,
+    now,
+    open,
+    full,
+  });
   if (room) {
-    return <RoomOverlay join={room} onRejoin={() => setRoom(null)} about={{ lesson, student }} />;
+    return <RoomOverlay join={room} onRejoin={leaveRoom} about={{ lesson, student }} />;
   }
   return (
     <div className="grid gap-3">
