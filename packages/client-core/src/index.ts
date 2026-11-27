@@ -70,3 +70,4 @@ export * from './teaching/lesson-room';
 export * from './teaching/feedback';
 export * from './platform/legal';
 export * from './platform/google-sync';
+export * from './platform/drive-backup';
