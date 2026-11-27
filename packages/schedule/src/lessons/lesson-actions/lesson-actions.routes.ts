@@ -1,7 +1,7 @@
 import { defineRoute, pageOf, pageQuery } from '@ab/core';
 import { z } from 'zod';
-import { lessonCorrectSchema } from '../../schemas/lesson-correct';
-import { cancelRequestSchema, lessonStatusRequestSchema } from '../../schemas/scheduling/scheduling';
+import { cancelRequestSchema, lessonStatusRequestSchema } from '../../schemas';
+import { lessonCorrectSchema } from '../lesson-outcome';
 import { lessonViewListSchema, lessonViewSchema } from '../lesson-view';
 
 const byId = z.object({ id: z.uuid() });

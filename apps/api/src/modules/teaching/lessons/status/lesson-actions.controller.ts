@@ -51,7 +51,8 @@ export class LessonActionsController {
   @Route(routes.correct)
   @HttpCode(200)
   async correct(@RouteInput() { params, body }: In<'correct'>, @CurrentUser() user: AuthUser) {
-    const lessonId = await this.corrections.correct({ lessonId: params.id, to: body.to, actor: user });
+    const input = { lessonId: params.id, to: body.to, actor: user };
+    const lessonId = await this.corrections.correct(input);
     return this.views.one(lessonId, 'admin');
   }
 }

@@ -13,4 +13,4 @@ export * from './makeup-offer';
 export * from './series/day-times';
 export * from './pick-progress';
 export * from './auto-held';
-export * from './lesson-outcome/lesson-outcome';
+export * from './lesson-outcome';
