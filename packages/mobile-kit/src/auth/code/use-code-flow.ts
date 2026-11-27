@@ -9,7 +9,7 @@ import { signInWithCode } from '../sign-in';
 import { t } from '../../lib/i18n/i18n';
 
 /** The phone is only a lookup key; the code goes to the number on file (docs/46 A8, docs/50 §6). */
-export function useCodeSignIn(codes: CodeRoutes = authApi.staffCodes) {
+export function useCodeFlow(codes: CodeRoutes = authApi.staffCodes) {
   const [phone, setPhone] = useState('');
   const [target, setTarget] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -54,4 +54,4 @@ export function useCodeSignIn(codes: CodeRoutes = authApi.staffCodes) {
   return { phone, setPhone, target, error, busy, resendIn: timer.left, send, verify, changePhone };
 }
 
-export type CodeSignIn = ReturnType<typeof useCodeSignIn>;
+export type CodeFlow = ReturnType<typeof useCodeFlow>;
