@@ -4532,7 +4532,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 1
     }
   },
   "src/features/sales/payment-links/errors.ts": {
