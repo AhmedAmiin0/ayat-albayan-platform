@@ -2,20 +2,7 @@ import { Pressable, View } from 'react-native';
 import { shape, type, useTheme } from '../../../theme';
 import { AppText } from '../../primitives/AppText';
 import { Ltr } from '../../primitives/Ltr';
-
-/** A row's header turned into a link: what a tap opens, and what the reader says for it. */
-export interface TitleLink {
-  onPress: () => void;
-  label: string;
-}
-
-interface ListRowTitleProps {
-  title: string;
-  meta?: string;
-  metaStrong?: boolean;
-  /** The title becomes the row's header (lg, bold) and a link of its own, 44pt with its slop. */
-  link?: TitleLink;
-}
+import type { ListRowTitleProps } from './ListRowTitle.types';
 
 /**
  * ListRow's first line: the name (one line, «…» when long) and the LTR meta beside it. With

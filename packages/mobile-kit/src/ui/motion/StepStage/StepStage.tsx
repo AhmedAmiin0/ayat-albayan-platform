@@ -1,15 +1,6 @@
-import type { ReactNode } from 'react';
 import { Animated, I18nManager } from 'react-native';
-import type { StepMotion } from '../use-step-motion';
-
-/** How far a step slides on its way in or out (pt); 0 under Reduce Motion (a cross-fade). */
-const SLIDE = 28;
-
-interface StepStageProps<K extends string> {
-  motion: StepMotion<K>;
-  render: (step: K) => ReactNode;
-  still: boolean;
-}
+import type { StepStageProps } from './StepStage.types';
+import { SLIDE } from './step-stage.helpers';
 
 /**
  * A form in steps (number → code; WhatsApp ↔ password): the next step slides in from the
