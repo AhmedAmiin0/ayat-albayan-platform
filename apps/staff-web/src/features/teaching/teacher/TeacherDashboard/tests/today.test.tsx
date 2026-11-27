@@ -3,7 +3,7 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@ab/web-kit';
 import { TeacherDashboard } from '@/features/teaching/teacher/TeacherDashboard/TeacherDashboard';
 
@@ -83,7 +83,7 @@ describe('TeacherDashboard — the hero and today\'s list (owner 2026-11-14)', (
   });
 
   it('opening a drawer clears the last notice (review: no stale message in the next lesson)', async () => {
-    apiSend.mockResolvedValue(HERO);
+    apiSend.mockResolvedValue(answered(HERO));
     renderDash();
     const hero = await screen.findByRole('region', { name: new RegExp(t.today.next) });
     fireEvent.click(within(hero).getByRole('button', { name: t.teacherBoard.confirm }));
@@ -101,7 +101,7 @@ describe('TeacherDashboard — the hero and today\'s list (owner 2026-11-14)', (
   });
 
   it('«سأحضر» never refetches /teachers/me', async () => {
-    apiSend.mockResolvedValue(HERO);
+    apiSend.mockResolvedValue(answered(HERO));
     renderDash();
     const hero = await screen.findByRole('region', { name: new RegExp(t.today.next) });
     const meCalls = () => apiFetch.mock.calls.filter(([p]) => p === '/teachers/me').length;

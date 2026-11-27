@@ -34,6 +34,13 @@ describe('POST /teachers/me/lessons/:id/confirm-attendance — «سأحضر» (d
     if (code) expect(res.json().code).toBe(code);
   });
 
+  it('a lesson id that is no uuid is 400 validation_failed; nothing written', async () => {
+    const bad = '/teachers/me/lessons/l1/confirm-attendance';
+    const res = await h.call({ method: 'POST', url: bad, token: 'teacher' });
+    expect([res.statusCode, res.json().code]).toEqual([400, 'validation_failed']);
+    expect(h.confirms.confirm).not.toHaveBeenCalled();
+  });
+
   it('a guardian is 403; an unlinked teacher 404 teacher_not_linked; nothing written', async () => {
     expect((await h.call({ method: 'POST', url, token: 'guardian' })).statusCode).toBe(403);
     const res = await h.call({ method: 'POST', url, token: 'unlinked' });

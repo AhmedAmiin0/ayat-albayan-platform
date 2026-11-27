@@ -3,7 +3,7 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { ApiError, t } from '@ab/web-kit';
 import { TeacherDashboard } from '@/features/teaching/teacher/TeacherDashboard/TeacherDashboard';
 
@@ -93,12 +93,12 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
   });
 
   it('«سأحضر» on the hero posts her own confirm and says so', async () => {
-    apiSend.mockResolvedValue(TODAY);
+    apiSend.mockResolvedValue(answered(TODAY));
     renderDash();
     const hero = await screen.findByRole('region', { name: new RegExp(t.today.next) });
     fireEvent.click(within(hero).getByRole('button', { name: t.teacherBoard.confirm }));
     await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.teacherBoard.confirmedOk));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/a/confirm-attendance');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/a/confirm-attendance', undefined);
   });
 
   it('today only (owner 2026-11-14): no tabs, no students board, no pending reports, no week', async () => {

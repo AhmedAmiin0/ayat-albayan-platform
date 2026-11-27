@@ -1,43 +1,40 @@
-import { teacherCancelSchema, type LessonView } from '@ab/schedule';
-import { Controller, HttpCode, Inject, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { teacherLessonRoutes as routes, type LessonView } from '@ab/schedule';
+import { Controller, HttpCode, Inject } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 import { TeacherLessonService } from './teacher-lesson.service';
 
-/** docs/46 C3/C4: under self.teacher, never the admin cancel route; 403 on another's lesson. */
-@ApiTags('teachers')
+type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
+
+/** 403 on another teacher's lesson; an unlinked teacher is 404 teacher_not_linked. */
 @ApiBearerAuth()
-@Permissions('self.teacher')
-@Controller('teachers/me/lessons')
+@Controller()
 export class TeacherLessonController {
   constructor(
     @Inject(TeacherLessonService) private readonly lessons: TeacherLessonService,
     @Inject(LessonViews) private readonly views: LessonViews,
   ) {}
 
-  /** 409 lesson_started / invalid_transition; the reason is required. */
-  @Post(':id/cancel')
+  @Route(routes.cancel)
   @HttpCode(200)
   async cancel(
-    @ZodParam('id', z.uuid()) id: string,
-    @ZodBody(teacherCancelSchema) req: z.output<typeof teacherCancelSchema>,
+    @RouteInput() { params, body }: In<'cancel'>,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {
-    const lessonId = await this.lessons.cancel({ lessonId: id, reason: req.reason, actor: user });
+    const { reason } = body;
+    const lessonId = await this.lessons.cancel({ lessonId: params.id, reason, actor: user });
     return this.views.one(lessonId, user.role);
   }
 
-  /** 409 lesson_started / lesson_closed; already confirmed → unchanged. */
-  @Post(':id/confirm-attendance')
+  @Route(routes.confirm)
   @HttpCode(200)
   async confirm(
-    @ZodParam('id', z.uuid()) id: string,
+    @RouteInput() { params }: In<'confirm'>,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {
-    return this.views.one(await this.lessons.confirm(id, user), user.role);
+    return this.views.one(await this.lessons.confirm(params.id, user), user.role);
   }
 }

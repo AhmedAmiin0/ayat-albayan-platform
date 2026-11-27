@@ -1,6 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
+import { answered } from '@/today/testing/answered';
+import { lesson } from '@/today/testing/fixtures';
 import { TeacherCancelForm } from './TeacherCancelForm';
 
 const mockApiSend = jest.fn();
@@ -29,7 +31,7 @@ test('the hint and the reason; «تأكيد الإلغاء» without a reason sa
 });
 
 test('a reason: POST /teachers/me/lessons/:id/cancel {reason}, then «أُلغيت الحلقة…»', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l1', status: 'cancelled_by_teacher' });
+  mockApiSend.mockResolvedValue(answered(lesson({ id: 'l1', status: 'cancelled_by_teacher' })));
   await show();
   await fireEvent.changeText(screen.getByLabelText(new RegExp(w.reason)), ' مرض ');
   await fireEvent.press(screen.getByRole('button', { name: w.cancelSubmit }));

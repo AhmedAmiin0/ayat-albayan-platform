@@ -5,8 +5,6 @@ export {
   UPCOMING_LESSON_STYLE,
 } from './lesson-status';
 export {
-  cancelAnswerSchema,
-  confirmAnswerSchema,
   confirmedChipShown,
   confirmedNow,
   teacherCanAct,
@@ -35,6 +33,7 @@ export { SESSION_GROUPS, type SessionGroup } from './session-groups';
 export { lessonListCalls, type LessonListCalls } from './list-calls';
 export { lessonActionCalls, type LessonActionCalls } from './action-calls';
 export { lessonMoveCalls, type LessonMoveCalls } from './move-calls';
+export { teacherLessonCalls, type TeacherLessonCalls } from './teacher-calls';
 export {
   familyRequestCalls,
   proposalDecisionCalls,
