@@ -5,6 +5,7 @@ import { callWith, type ApiClient } from '../../../..';
 
 const link = z.object({ code: z.string() });
 const create = defineRoute({ method: 'POST', path: '/links', body: link, response: link });
+const read = defineRoute({ method: 'GET', path: '/links/:code', params: link, response: link });
 
 function pairApi(answer: unknown) {
   const apiFetch = vi.fn(async (_path: string, _init?: RequestInit): Promise<unknown> => answer);
@@ -21,6 +22,19 @@ describe('callWith over a client that has only the pair', () => {
     await call({ path: '/links/a', signal: abort.signal, headers });
     expect(apiFetch.mock.calls[0]).toEqual(['/links/a', { signal: abort.signal, headers }]);
     expect(apiSend).not.toHaveBeenCalled();
+  });
+
+  it('reads a route through apiFetch with the caller signal, so a dropped read stops', async () => {
+    const { call, apiFetch } = pairApi({ code: 'a' });
+    const abort = new AbortController();
+    await call({ route: read, params: { code: 'a' }, signal: abort.signal });
+    expect(apiFetch.mock.calls[0]).toEqual(['/links/a', { signal: abort.signal }]);
+  });
+
+  it('reads a route with no signal as a plain apiFetch', async () => {
+    const { call, apiFetch } = pairApi({ code: 'a' });
+    await call({ route: read, params: { code: 'a' } });
+    expect(apiFetch.mock.calls[0]).toEqual(['/links/a']);
   });
 
   it('sends a route write through apiSend as a hand-written call did', async () => {
