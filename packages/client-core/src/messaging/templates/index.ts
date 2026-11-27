@@ -1,10 +1,11 @@
-export {
-  TEMPLATES_KEY, templateQueries, templateSends, type TemplateEditCall, type TemplateListMode,
-  type TemplateListQuery, type TemplateQueries,
-  type TemplateSends,
-} from './templates-api';
+export { TEMPLATES_KEY, templateQueries } from './templates-api';
+export { adminTemplateCalls } from './admin-templates-api';
+export { authoredTemplateCalls } from './authored-templates-api';
+export type {
+  AdminTemplateCalls, AuthoredTemplateCalls, TemplateEditCall, TemplateListMode,
+  TemplateListQuery, TemplateQueries,
+} from './templates-api.types';
 export { templateErrorWords } from './template-errors';
-export { templateViewSchema, type AuthorTemplate } from './template-view';
 export { bodyVarCount, draftParams, previewParams, retexted } from './template-draft';
 export { lineCheckCalls, type LineCheckCalls } from './line-check';
 export { crmWebhookCalls, type CrmWebhookCalls } from './crm-webhook';
