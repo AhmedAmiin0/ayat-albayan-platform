@@ -1,15 +1,16 @@
-import { monthParam } from '@ab/money';
+import { exportRoutes as routes, expenseExportQuerySchema } from '@ab/shared';
 import { addCalendarDays, addCalendarMonths } from '@ab/time';
-import { Controller, Get, Query, Res } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Controller, Res } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { z } from 'zod';
-import { Permissions } from '@/common/auth/decorators';
 import { rangeWindow, riyadhDate } from '@/modules/reporting/dashboard/range';
 import { ReceivablesService } from '@/modules/finance/receivables/receivables.service';
-import { parseOrThrow } from '@/common/http/http';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { attachment, toCsv } from './csv';
 import { FinanceExportsQueries } from './finance-exports.queries';
 import { expenseCsv, ledgerCsv, receivablesCsv } from './finance.rows';
+
+type Input<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
 interface HeaderReply {
   header(name: string, value: string): unknown;
@@ -25,8 +26,13 @@ function send(
   return toCsv(input.rows);
 }
 
-const yearOrMonth = z.union([z.object({ month: monthParam }), z.object({ year: z.string().regex(/^\d{4}$/, 'invalid_year') })]);
-const ledgerQuery = z.object({ month: monthParam, teacherId: z.uuid().optional() });
+const [byMonth, byYear] = expenseExportQuerySchema.options;
+
+/** The expense months a request covers (first and last «YYYY-MM-01») and its file name part. */
+const expenseSpan = z.union([
+  byMonth.transform(({ month }) => ({ first: `${month}-01`, last: `${month}-01`, span: month })),
+  byYear.transform(({ year }) => ({ first: `${year}-01-01`, last: `${year}-12-01`, span: year })),
+]);
 
 /** «YYYY-MM» → the Riyadh month as a window (the dashboard's months). */
 function monthWindow(month: string) {
@@ -35,28 +41,31 @@ function monthWindow(month: string) {
 }
 
 /** Finance CSVs: expenses, the teacher ledger, receivables. Admin only. */
-@ApiTags('exports')
 @ApiBearerAuth()
-@Permissions('exports.read')
-@Controller('exports')
+@Controller()
 export class FinanceExportsController {
   constructor(
     private readonly queries: FinanceExportsQueries,
     private readonly receivables: ReceivablesService,
   ) {}
 
-  /** `?month=YYYY-MM` or `?year=YYYY`. */
-  @Get('expenses.csv')
-  async expenses(@Query() query: unknown, @Res({ passthrough: true }) reply: HeaderReply) {
-    const q = parseOrThrow(yearOrMonth, query);
-    const [first, last, span] = 'month' in q ? [`${q.month}-01`, `${q.month}-01`, q.month] : [`${q.year}-01-01`, `${q.year}-12-01`, q.year];
-    return send(reply, { filename: `expenses-${span}.csv`, rows: expenseCsv(await this.queries.expenses(first, last)) });
+  @Route(routes.expenses)
+  async expenses(
+    @RouteInput() { query }: Input<'expenses'>,
+    @Res({ passthrough: true }) reply: HeaderReply,
+  ) {
+    const { first, last, span } = expenseSpan.parse(query);
+    const rows = expenseCsv(await this.queries.expenses(first, last));
+    return send(reply, { filename: `expenses-${span}.csv`, rows });
   }
 
-  /** `?month=YYYY-MM&teacherId?`: the month's ledger sessions, then the payments made in it. */
-  @Get('teacher-ledger.csv')
-  async ledger(@Query() query: unknown, @Res({ passthrough: true }) reply: HeaderReply) {
-    const { month, teacherId } = parseOrThrow(ledgerQuery, query);
+  /** The month's ledger sessions, then the payments made in it. */
+  @Route(routes['teacher-ledger'])
+  async ledger(
+    @RouteInput() { query }: Input<'teacher-ledger'>,
+    @Res({ passthrough: true }) reply: HeaderReply,
+  ) {
+    const { month, teacherId } = query;
     const w = monthWindow(month);
     const [sessions, payments] = await Promise.all([
       this.queries.sessions(w, teacherId),
@@ -69,9 +78,10 @@ export class FinanceExportsController {
   }
 
   /** Who owes, how much, days since the package started, aging bucket. */
-  @Get('receivables.csv')
+  @Route(routes.receivables)
   async receivablesFile(@Res({ passthrough: true }) reply: HeaderReply) {
     const view = await this.receivables.list();
-    return send(reply, { filename: `receivables-${riyadhDate(new Date().toISOString())}.csv`, rows: receivablesCsv(view.rows) });
+    const filename = `receivables-${riyadhDate(new Date().toISOString())}.csv`;
+    return send(reply, { filename, rows: receivablesCsv(view.rows) });
   }
 }
