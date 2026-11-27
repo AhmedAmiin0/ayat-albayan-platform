@@ -1,12 +1,13 @@
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { AppText, t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { lesson, student } from '@/portal/portal.fixtures';
 import { OptionsRow } from './OptionsRow';
 
+const mockSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiSend: jest.fn(),
+  apiSend: (...args: unknown[]) => mockSend(...args),
   apiFetch: jest.fn(),
 }));
 
@@ -16,7 +17,10 @@ const A = t.portal.actions;
 const show = (group: boolean) =>
   renderWithQuery(
     <OptionsRow
-      lesson={lesson(now, 24 * 60, { status: 'scheduled', family: { group, counts: false, request: null } })}
+      lesson={lesson(now, 24 * 60, {
+        status: 'scheduled',
+        family: { group, counts: false, request: null },
+      })}
       student={student()}
       clock={clock}
       now={now}
@@ -28,7 +32,9 @@ const show = (group: boolean) =>
 
 test('a row opens «خيارات الحلقة» with its time in the label, and the excuse title says the day', async () => {
   await show(false);
-  await fireEvent.press(screen.getByRole('button', { name: new RegExp(`^${A.optionsFor.replace('{when}', '')}`) }));
+  await fireEvent.press(
+    screen.getByRole('button', { name: new RegExp(`^${A.optionsFor.replace('{when}', '')}`) }),
+  );
   expect(screen.getByText(new RegExp(`^${A.lessonTomorrow}`))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: A.decline }));
   expect(screen.getByText(A.declineTitleOf.replace('{lesson}', A.lessonTomorrow))).toBeTruthy();
@@ -38,4 +44,15 @@ test('a group lesson row is plain text: no options', async () => {
   await show(true);
   expect(screen.getByText('6:30 م')).toBeTruthy();
   expect(screen.queryByRole('button')).toBeNull();
+});
+
+test('once «سأحضر» lands, the row says so', async () => {
+  mockSend.mockResolvedValue({ lesson_id: 'l', status: 'confirmed', counts: false });
+  await show(false);
+  expect(screen.queryByText(A.confirmedNotice)).toBeNull();
+  await fireEvent.press(
+    screen.getByRole('button', { name: new RegExp(`^${A.optionsFor.replace('{when}', '')}`) }),
+  );
+  await fireEvent.press(screen.getByRole('button', { name: A.confirm }));
+  await waitFor(() => expect(screen.getByText(A.confirmedNotice)).toBeTruthy());
 });
