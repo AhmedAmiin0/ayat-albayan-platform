@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import {
-  newestOfKind,
-  notificationsQuerySchema,
-  notificationsReadSchema,
-  type NotificationItem,
-} from './views';
+import type { NotificationItem } from './me';
+import { newestOfKind, notificationsQuerySchema, notificationsReadSchema } from './views';
 
 const ID = '3f1c2a5e-8b7d-4c1e-9a2b-1d2e3f4a5b6c';
 

@@ -1,5 +1,6 @@
-import type { NotificationItem } from '@ab/shared';
+import { notificationItemSchema, type NotificationItem } from '@ab/shared';
 import type { Tables } from '@ab/db';
+import { asResponse } from '@/common/http/returns';
 
 type Row = Pick<Tables<'push_notifications'>, 'id' | 'kind' | 'title' | 'body' | 'data' | 'created_at' | 'read_at'>;
 
@@ -9,7 +10,7 @@ export function notificationItem(row: Row): NotificationItem {
   if (row.data !== null && typeof row.data === 'object' && !Array.isArray(row.data)) {
     for (const [k, v] of Object.entries(row.data)) if (typeof v === 'string') data[k] = v;
   }
-  return {
+  return asResponse(notificationItemSchema, {
     id: row.id,
     kind: row.kind,
     title: row.title,
@@ -17,5 +18,5 @@ export function notificationItem(row: Row): NotificationItem {
     data,
     created_at: row.created_at,
     read_at: row.read_at,
-  };
+  });
 }
