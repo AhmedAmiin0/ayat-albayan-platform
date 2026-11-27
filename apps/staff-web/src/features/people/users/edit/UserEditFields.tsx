@@ -1,7 +1,7 @@
 import type { UserRoleOption } from '@ab/shared';
 import { Field, Input, Select, TimeZoneSelect, t } from '@ab/web-kit';
 import type { EditForm } from './edit-form';
-import { RolePicker } from '@/features/people/users/create/RolePicker';
+import { RoleFields } from './RoleFields';
 import type { FormErrors } from '@/features/people/users/validation';
 
 const F = t.users.form;
@@ -12,7 +12,7 @@ export interface UserEditFieldsProps {
   errors: FormErrors;
   options: readonly UserRoleOption[];
   readOnly: boolean;
-  /** A login linked to a record keeps its role (API: role_change_linked). */
+  /** A linked login, or one of a record-backed role, keeps its role (API: role_change_linked). */
   roleLocked: boolean;
 }
 
@@ -41,13 +41,13 @@ export function UserEditFields({ form, onChange, errors, options, readOnly, role
         </Field>
         <Field label={F.tz}>{(p) => <TimeZoneSelect {...p} disabled={readOnly} value={form.tz} onValue={(tz) => set({ tz })} />}</Field>
       </div>
-      <RolePicker
-        role={form.role}
-        roleId={form.role_id}
+      <RoleFields
+        form={form}
+        onChange={set}
+        errors={errors}
         options={options}
-        disabled={readOnly || roleLocked}
-        hint={roleLocked ? F.roleLocked : undefined}
-        onChange={(next) => set({ role: next.role, role_id: next.roleId })}
+        readOnly={readOnly}
+        roleLocked={roleLocked}
       />
     </>
   );

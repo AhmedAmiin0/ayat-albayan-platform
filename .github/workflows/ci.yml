@@ -383,6 +383,9 @@ jobs:
       # Rule 16: one folder per component with its local hook; new and regressed components fail, and
       # every offender in a finished (STRICT) workspace (docs/63 §3).
       - run: pnpm guard:components
+      # A response mapper this branch adds returns its package type through asResponse, never a
+      # hand copy of the fields (docs/62 part 2 §4, guard B). Diff-scoped: no baseline.
+      - run: pnpm guard:mappers
       # On a PR: every suppressions file per file and per rule against the base branch's (docs/59), and the
       # refactor/guards and refactor/folder-cap baselines: only shrink, never a new entry or file.
       - run: pnpm guard:lint
@@ -795,3 +798,23 @@ jobs:
             e2e/test-results/**/journey-7-*/**/*.webm
           if-no-files-found: ignore
           retention-days: 7
+
+  # A merge by lane-automerge fires no push, and the run it starts here with the built-in token sends
+  # deploy-staging no workflow_run. That run, once green, starts the deploy itself for its own commit.
+  # A run a person starts reaches deploy-staging through workflow_run already, so it is left alone.
+  # github.actor, not triggering_actor: a re-run by a person keeps the first actor and its rights.
+  start-deploy:
+    needs: [check, e2e]
+    if: >-
+      ${{ !cancelled() && needs.check.result == 'success'
+      && (needs.e2e.result == 'success' || needs.e2e.result == 'skipped')
+      && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/develop'
+      && github.actor == 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy-staging.yml --repo "$GITHUB_REPOSITORY" --ref develop -f sha="$GITHUB_SHA"

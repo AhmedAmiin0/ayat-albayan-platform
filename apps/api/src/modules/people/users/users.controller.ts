@@ -86,7 +86,7 @@ export class UsersController {
     return this.creator.create(body, actorOf(user));
   }
 
-  /** 403 permission_not_held / system_admin_only / admin_role_only, 409 role_change_linked / last_admin / self_lockout / email_taken / phone_taken. */
+  /** 403 permission_not_held / system_admin_only / admin_role_only, 409 role_change_linked / last_admin / self_lockout / email_taken / phone_taken / link_taken, 400 link_not_allowed / link_target_not_found. */
   @Patch(':id')
   @Permissions('users.write')
   update(

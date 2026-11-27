@@ -1,10 +1,10 @@
 import { cloneBundle } from '@ab/i18n';
 import ar from '@ab/shared/i18n/ar.json';
+import { OVERRIDES_TIMEOUT_MS } from '@ab/client-core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   cacheKey,
   fetchOverrides,
-  OVERRIDES_TIMEOUT_MS,
   refreshOverrides,
   restoreCachedOverrides,
 } from './i18n-overrides';
@@ -16,7 +16,7 @@ jest.unmock('./i18n-overrides');
 const json = (body: unknown, status = 200) => ({
   ok: status < 300,
   status,
-  json: async () => body,
+  text: async () => JSON.stringify(body),
 });
 const fetchMock = jest.fn();
 
@@ -50,13 +50,19 @@ describe('translation overrides on the phone', () => {
     expect(await refreshOverrides(target, 'ar')).toBe(true);
     expect(fetchMock).toHaveBeenCalledWith('http://api/i18n/ar/overrides', expect.anything());
     expect(target.nav.inbox).toBe('الرسائل');
-    expect(JSON.parse((await AsyncStorage.getItem(cacheKey('ar'))) ?? '{}')).toEqual({ 'nav.inbox': 'الرسائل' });
+    expect(JSON.parse((await AsyncStorage.getItem(cacheKey('ar'))) ?? '{}')).toEqual({
+      'nav.inbox': 'الرسائل',
+    });
   });
 
   it('a failed or malformed response keeps the saved map', async () => {
     await AsyncStorage.setItem(cacheKey('en'), '{"nav.leads":"Prospects"}');
-    fetchMock.mockRejectedValueOnce(new TypeError('offline')).mockResolvedValueOnce(json({}, 503)).mockResolvedValueOnce(json([1]));
-    for (let i = 0; i < 3; i += 1) expect(await refreshOverrides(cloneBundle(ar), 'en')).toBe(false);
+    fetchMock
+      .mockRejectedValueOnce(new TypeError('offline'))
+      .mockResolvedValueOnce(json({}, 503))
+      .mockResolvedValueOnce(json([1]));
+    for (let i = 0; i < 3; i += 1)
+      expect(await refreshOverrides(cloneBundle(ar), 'en')).toBe(false);
     expect(await AsyncStorage.getItem(cacheKey('en'))).toBe('{"nav.leads":"Prospects"}');
   });
 
@@ -64,7 +70,9 @@ describe('translation overrides on the phone', () => {
     jest.useFakeTimers();
     fetchMock.mockImplementation(
       (_url: string, init: { signal: AbortSignal }) =>
-        new Promise((_resolve, reject) => init.signal.addEventListener('abort', () => reject(new Error('aborted')))),
+        new Promise((_resolve, reject) =>
+          init.signal.addEventListener('abort', () => reject(new Error('aborted'))),
+        ),
     );
     const pending = fetchOverrides('http://api', 'ar');
     jest.advanceTimersByTime(OVERRIDES_TIMEOUT_MS);

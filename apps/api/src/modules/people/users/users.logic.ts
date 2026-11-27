@@ -126,6 +126,20 @@ export function sentOnly<T extends object, K extends keyof T>(
 export const profilePatch = (input: { [K in ProfileKey]?: ProfilePatch[K] | undefined }): ProfilePatch =>
   sentOnly(input, PROFILE_KEYS);
 
-/** A base role change is refused when a teacher / student / guardian record is (or would be) involved. */
-export const roleChangeBlocked = (ctx: { from: UserRole; to: UserRole; linked: boolean }): boolean =>
-  ctx.from !== ctx.to && (ctx.linked || isLinkedRole(ctx.from) || isLinkedRole(ctx.to));
+interface RoleMove {
+  from: UserRole;
+  to: UserRole;
+  linked: boolean;
+  /** The request names the record (linked_id or new_teacher). */
+  named: boolean;
+}
+
+const touchesRecord = (m: RoleMove): boolean => m.linked || isLinkedRole(m.from) || isLinkedRole(m.to);
+
+/** An unlinked login of a staff role may take a record-backed role when it names the record. */
+export const opensRecord = (m: RoleMove): boolean =>
+  m.named && !touchesRecord({ ...m, to: m.from }) && isLinkedRole(m.to);
+
+/** A base role change that involves a teacher / student / guardian record, unless it opens one. */
+export const roleChangeBlocked = (m: RoleMove): boolean =>
+  m.from !== m.to && touchesRecord(m) && !opensRecord(m);

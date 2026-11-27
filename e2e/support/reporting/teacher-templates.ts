@@ -2,6 +2,7 @@ import { expect, type Page } from '@playwright/test';
 import { API, bearer } from '../core/messages';
 import { withSql } from '../core/schedule';
 import { stubSent, stubTemplateStatus, type StubSent } from '../core/wa-stub';
+import { templateParam } from '../core/stub-template';
 
 // report_ready and renewal_due start «not_submitted» (migration 141) and the stub starts without
 // them (tools/wa-stub defaultTemplates), so nothing can be sent. approveTemplates walks the real
@@ -56,13 +57,5 @@ export async function sentToDigits(digits: string): Promise<StubSent[]> {
 export function documentOf(
   message: StubSent | undefined,
 ): { link: string; filename: string } | undefined {
-  const body = (message?.body ?? {}) as {
-    template?: {
-      components?: {
-        type: string;
-        parameters?: { document?: { link: string; filename: string } }[];
-      }[];
-    };
-  };
-  return body.template?.components?.find((c) => c.type === 'header')?.parameters?.[0]?.document;
+  return templateParam(message?.body, 'header')?.document;
 }

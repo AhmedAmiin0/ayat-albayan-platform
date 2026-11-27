@@ -1,4 +1,4 @@
-import type { CredentialMode, LinkCandidate, UserCreate } from '@ab/shared';
+import { isLinkedRole, type CredentialMode, type LinkCandidate, type UserCreate } from '@ab/shared';
 import type { UserRole } from '@ab/catalog';
 import { normalizePhone } from '@ab/core';
 
@@ -43,13 +43,25 @@ export function initialCreateForm(prefill?: Prefill): CreateForm {
   };
 }
 
-const isLinkRole = (f: CreateForm) => f.role === 'teacher' || f.role === 'student' || f.role === 'guardian';
+type LinkForm = Pick<CreateForm, 'role' | 'linked' | 'teacherMode' | 'newTeacher'>;
+const wantsNewTeacher = (f: LinkForm): boolean => f.role === 'teacher' && f.teacherMode === 'new';
+
+/** The record part of a POST /users or PATCH /users/:id body: an existing row or a new teacher. */
+export function linkFields(f: LinkForm): Pick<UserCreate, 'linked_id' | 'new_teacher'> {
+  const { display_name_ar: ar, display_name_en: en, gender } = f.newTeacher;
+  const english = en.trim() ? { display_name_en: en.trim() } : {};
+  const teacher = { display_name_ar: ar.trim(), gender, ...english };
+  if (wantsNewTeacher(f)) return { new_teacher: teacher };
+  return isLinkedRole(f.role) && f.linked ? { linked_id: f.linked.id } : {};
+}
+
+/** The record of a record-backed role is named: a picked row of that kind, or a new teacher. */
+export const recordNamed = (f: LinkForm): boolean =>
+  wantsNewTeacher(f) ? f.newTeacher.display_name_ar.trim().length >= 2 : f.linked?.kind === f.role;
 
 /** The POST /users body for a valid form (call after createErrors came back empty). */
 export function createBody(f: CreateForm): UserCreate {
   const phone = f.phone.trim() ? normalizePhone(f.phone) : null;
-  const newTeacher = f.role === 'teacher' && f.teacherMode === 'new';
-  const en = f.newTeacher.display_name_en.trim();
   return {
     email: f.email.trim().toLowerCase(),
     full_name: f.full_name.trim(),
@@ -58,9 +70,6 @@ export function createBody(f: CreateForm): UserCreate {
     ...(phone?.ok ? { phone_e164: phone.e164 } : {}),
     ...(f.role_id ? { role_id: f.role_id } : {}),
     ...(f.credential === 'set' ? { password: f.password } : {}),
-    ...(isLinkRole(f) && !newTeacher && f.linked ? { linked_id: f.linked.id } : {}),
-    ...(newTeacher
-      ? { new_teacher: { display_name_ar: f.newTeacher.display_name_ar.trim(), gender: f.newTeacher.gender, ...(en ? { display_name_en: en } : {}) } }
-      : {}),
+    ...linkFields(f),
   };
 }

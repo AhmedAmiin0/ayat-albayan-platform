@@ -58,6 +58,12 @@ describe('userStoreOf', () => {
     expect(await s.phoneTaken('+966501234567', 'u1')).toBe(true);
     expect(argsOf('profiles', 'eq')).toEqual(['phone_e164', '+966501234567']);
   });
+
+  it('asks the teachers table whether a new teacher phone is held', async () => {
+    const { store: s, argsOf } = store({ teachers: [{ count: 1 }] });
+    expect(await s.teacherPhoneHeld('+966501234567')).toBe(true);
+    expect(argsOf('teachers', 'eq')).toEqual(['phone_e164', '+966501234567']);
+  });
 });
 
 describe('USER_STORE_PROVIDERS', () => {

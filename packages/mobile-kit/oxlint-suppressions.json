@@ -160,11 +160,8 @@
     }
   },
   "src/lib/i18n/i18n-overrides.ts": {
-    "no-restricted-globals": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unsafe-argument": {
       "count": 1

@@ -1,6 +1,7 @@
 import { expect } from '../core/fixtures';
 import { addDays, nextWeekSaturday, riyadh, seedFamily, seedLesson, withSql } from '../core/schedule';
 import { STUB_URL, stubSent, stubTemplateStatus } from '../core/wa-stub';
+import { templateParam } from '../core/stub-template';
 
 export const TEMPLATE = 'lesson_feedback_request';
 
@@ -62,11 +63,7 @@ export async function tokenSentTo(guardianId: string): Promise<string> {
         const sent = (await stubSent()).filter(
           (m) => m.template === TEMPLATE && m.to.replace(/\D/g, '') === phone,
         );
-        const body = sent[0]?.body as
-          | { template?: { components?: { type: string; parameters?: { text?: string }[] }[] } }
-          | undefined;
-        token =
-          body?.template?.components?.find((c) => c.type === 'button')?.parameters?.[0]?.text ?? '';
+        token = templateParam(sent[0]?.body, 'button')?.text ?? '';
         return token;
       },
       { timeout: 60_000 },

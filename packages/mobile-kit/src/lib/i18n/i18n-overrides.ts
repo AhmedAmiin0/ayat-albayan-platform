@@ -1,4 +1,5 @@
 import type { Locale } from '@ab/core';
+import { overridesSchema, readOverrides } from '@ab/client-core';
 import { applyStrings, type FlatStrings } from '@ab/i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
@@ -11,35 +12,23 @@ import { locale } from './locale';
 // GET /i18n/:locale/overrides runs in the background (≤ 1.5 s) and saves the fresh map for the
 // next start. Strings already copied into module constants pick up an edit on the next start.
 
-export const OVERRIDES_TIMEOUT_MS = 1500;
 export const cacheKey = (l: Locale): string => `ab.i18n.overrides.${l}`;
-
-function asStrings(body: unknown): FlatStrings | null {
-  if (body === null || typeof body !== 'object' || Array.isArray(body)) return null;
-  return Object.fromEntries(Object.entries(body).filter((e): e is [string, string] => typeof e[1] === 'string'));
-}
 
 /** The saved map of the last run; {} when nothing (or nothing readable) is saved. */
 export async function restoreCachedOverrides(target: object, l: Locale): Promise<number> {
   try {
-    return applyStrings(target, asStrings(JSON.parse((await AsyncStorage.getItem(cacheKey(l))) ?? '{}')) ?? {});
+    const saved = overridesSchema.safeParse(
+      JSON.parse((await AsyncStorage.getItem(cacheKey(l))) ?? '{}'),
+    );
+    return applyStrings(target, saved.success ? saved.data : {});
   } catch {
     return 0;
   }
 }
 
 /** The server's map, or null on timeout, network error, non-2xx or a malformed body. */
-export async function fetchOverrides(apiUrl: string, l: Locale): Promise<FlatStrings | null> {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), OVERRIDES_TIMEOUT_MS);
-  try {
-    const res = await fetch(`${apiUrl}/i18n/${l}/overrides`, { signal: ctrl.signal });
-    return res.ok ? asStrings(await res.json()) : null;
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(timer);
-  }
+export function fetchOverrides(apiUrl: string, l: Locale): Promise<FlatStrings | null> {
+  return readOverrides({ apiUrl, locale: l });
 }
 
 /** Fetches, applies and saves the map for the next start; false when the server was not reached. */

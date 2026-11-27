@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { errorCode } from '@/common/http/errors';
 import { FakeAuthAdmin } from '@/modules/people/users/auth/users.fakes.auth';
 import { FakeUserStore, row } from '@/modules/people/users/store/users.fakes.store';
-import { UserProfileWriter } from './users.profile-writer';
+import { undoOf, UserProfileWriter } from './users.profile-writer';
 
 const setup = () => {
   const u2 = row('u2', 'sales', { phone_e164: '+966500000002' });
@@ -28,7 +28,7 @@ describe('UserProfileWriter', () => {
   it('write patches the profile and syncs the linked teacher name and phone', async () => {
     const { store, writer } = setup();
     const input = { full_name: 'خالد', phone_e164: '+966500000009' };
-    await writer.write('u1', { patch: input, input });
+    await writer.write('u1', { patch: input, input, before: row('u1', 'sales') });
     expect((await store.get('u1'))?.full_name).toBe('خالد');
     const patch = { display_name_ar: 'خالد', phone_e164: '+966500000009' };
     expect(store.synced).toEqual([{ profileId: 'u1', patch }]);
@@ -36,7 +36,7 @@ describe('UserProfileWriter', () => {
 
   it('write without profile fields touches nothing', async () => {
     const { store, writer } = setup();
-    await writer.write('u1', { patch: {}, input: { locale: 'en' } });
+    await writer.write('u1', { patch: {}, input: { locale: 'en' }, before: row('u1', 'sales') });
     expect(store.synced).toEqual([]);
   });
 
@@ -46,5 +46,11 @@ describe('UserProfileWriter', () => {
     expect(auth.patches).toEqual([]);
     await writer.setEmail('u1', 'new@example.com');
     expect(auth.patches).toEqual([{ id: 'u1', patch: { email: 'new@example.com' } }]);
+  });
+
+  it('undoOf keeps only the old values of the columns the patch wrote', () => {
+    const before = row('u1', 'sales', { phone_e164: '+966500000001', tz: 'Asia/Riyadh' });
+    const patch = { role: 'teacher' as const, role_id: 'r1', tz: 'Africa/Cairo' };
+    expect(undoOf(patch, before)).toEqual({ role: 'sales', role_id: null, tz: 'Asia/Riyadh' });
   });
 });

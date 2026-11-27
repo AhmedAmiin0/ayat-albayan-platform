@@ -96,12 +96,16 @@ const report = (label, found) => {
   return found.length;
 };
 
+/** Tracked and untracked, unignored files; the list is past execFileSync's 1 MiB default. */
+export function repoFiles(root) {
+  const args = ['ls-files', '--cached', '--others', '--exclude-standard'];
+  const listed = execFileSync('git', args, { cwd: root, encoding: 'utf8', maxBuffer: 1 << 28 });
+  return [...new Set(listed.split('\n'))].filter((path) => path !== '');
+}
+
 function main() {
   const root = fileURLToPath(new URL('../../../../..', import.meta.url));
-  const args = ['ls-files', '--cached', '--others', '--exclude-standard'];
-  const files = [
-    ...new Set(execFileSync('git', args, { cwd: root, encoding: 'utf8' }).split('\n')),
-  ];
+  const files = repoFiles(root);
   const read = (path) => readFileSync(join(root, path), 'utf8');
   const lines = (check) => (path) => check(path, read(path)).map((v) => `  ${path}: ${v}`);
   const configs = files.filter(isTsconfig).sort().flatMap(lines(violations));
