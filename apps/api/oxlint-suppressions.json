@@ -8479,11 +8479,6 @@
       "count": 8
     }
   },
-  "src/modules/teaching/course-stop/course-stop.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/teaching/feedback/feedback.controller.ts": {
     "ab/zod-inputs": {
       "count": 3

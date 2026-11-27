@@ -4361,6 +4361,20 @@
   }
  },
  "GET /students/:id/course-stop": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -4371,6 +4385,132 @@
      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": "string"
+    },
+    "futureLessons": {
+     "type": "number"
+    },
+    "futureStarts": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "activeRules": {
+     "type": "number"
+    },
+    "paid": {
+     "type": "number"
+    },
+    "currency": {
+     "type": "string"
+    },
+    "refund": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "paid": {
+         "type": "number"
+        },
+        "perLesson": {
+         "type": "number"
+        },
+        "attended": {
+         "type": "number"
+        },
+        "ratePercent": {
+         "type": "number"
+        },
+        "charged": {
+         "type": "number"
+        },
+        "refund": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "paid",
+        "perLesson",
+        "attended",
+        "ratePercent",
+        "charged",
+        "refund"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "refundUnavailable": {
+     "type": "boolean"
+    },
+    "owe": {
+     "type": "object",
+     "properties": {
+      "charged": {
+       "type": "number"
+      },
+      "price": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "charged",
+      "price"
+     ]
+    },
+    "stopped": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "at": {
+         "type": "string"
+        },
+        "by": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "reason": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "at",
+        "by",
+        "reason"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "futureLessons",
+    "activeRules",
+    "paid",
+    "currency",
+    "refund",
+    "refundUnavailable",
+    "owe",
+    "stopped"
+   ]
   }
  },
  "GET /students/:id/lessons": {
@@ -17657,6 +17797,20 @@
   }
  },
  "POST /students/:id/course-stop": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -17742,6 +17896,71 @@
     "clientRequestId"
    ],
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": "string"
+    },
+    "cancelledLessons": {
+     "type": "number"
+    },
+    "endedRules": {
+     "type": "number"
+    },
+    "studentStatus": {
+     "type": "string",
+     "enum": [
+      "new",
+      "trial",
+      "pending_subscription",
+      "active",
+      "pending_renewal",
+      "expired",
+      "paused",
+      "churned"
+     ]
+    },
+    "stoppedAt": {
+     "type": "string"
+    },
+    "refund": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "amount": {
+         "type": "number"
+        },
+        "card": {
+         "type": "number"
+        },
+        "manual": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "amount",
+        "card",
+        "manual"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "cancelledLessons",
+    "endedRules",
+    "studentStatus",
+    "stoppedAt",
+    "refund"
+   ]
   }
  },
  "POST /students/:id/merge": {

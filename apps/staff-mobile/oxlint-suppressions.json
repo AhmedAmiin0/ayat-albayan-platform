@@ -5028,7 +5028,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 3
     }
   },
   "src/students/course-pause/CoursePauseBanner.tsx": {

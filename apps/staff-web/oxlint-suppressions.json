@@ -5664,7 +5664,7 @@
   },
   "src/features/teaching/course-actions/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 4
+      "count": 2
     }
   },
   "src/features/teaching/course-pause/ChangeUntilDialog.tsx": {
