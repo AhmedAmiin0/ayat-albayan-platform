@@ -1,21 +1,21 @@
-import { paymentLinkCreateSchema, paymentLinkListSchema, paymentLinkQuoteSchema, type PaymentLinkQuoteView, type PaymentLinkView } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { paymentLinkRoutes as routes, type PaymentLinkQuoteView, type PaymentLinkView } from '@ab/shared';
+import { Controller, HttpCode, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
+import { isAdmin } from '@/common/auth/roles';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { StripeEnabledGuard } from '@/modules/finance/stripe/gate/stripe-gate';
 import { LinkCancel } from './link-cancel';
 import { LinkCreate } from './link-create';
 import { LinkDeps } from './link-deps';
-import { isAdmin } from '@/common/auth/roles';
+
+type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
 /** Needs FEATURE_STRIPE and STRIPE_ENABLED (docs/30); her links only, admins see all. */
-@ApiTags('sales')
 @ApiBearerAuth()
-@Permissions('self.sales_money')
 @UseGuards(StripeEnabledGuard)
-@Controller('sales/payment-links')
+@Controller()
 export class PaymentLinksController {
   constructor(
     private readonly creates: LinkCreate,
@@ -23,31 +23,26 @@ export class PaymentLinksController {
     private readonly deps: LinkDeps,
   ) {}
 
-  @Post('quote')
+  @Route(routes.quote)
   @HttpCode(200)
-  quote(@Body() body: unknown): Promise<PaymentLinkQuoteView> {
-    return this.creates.quote(parseOrThrow(paymentLinkQuoteSchema, body));
+  quote(@RouteInput() { body }: In<'quote'>): Promise<PaymentLinkQuoteView> {
+    return this.creates.quote(body);
   }
 
-  @Post()
-  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<PaymentLinkView> {
-    return this.creates.create(parseOrThrow(paymentLinkCreateSchema, body), user);
+  @Route(routes.create)
+  create(@RouteInput() { body }: In<'create'>, @CurrentUser() user: AuthUser): Promise<PaymentLinkView> {
+    return this.creates.create(body, user);
   }
 
-  @Get()
-  async list(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<PaymentLinkView[]> {
-    const { status } = parseOrThrow(paymentLinkListSchema, query);
+  @Route(routes.list)
+  async list(@RouteInput() { query }: In<'list'>, @CurrentUser() user: AuthUser): Promise<PaymentLinkView[]> {
     const rows = await this.deps.links.list({ createdBy: isAdmin(user) ? null : user.id });
-    const now = new Date();
-    // By the status it reads as now: an open link past its expiry is listed as expired.
-    return rows
-      .map((r) => this.deps.views.one(r, now))
-      .filter((v) => !status || v.status === status);
+    return this.deps.views.listed(rows, { status: query.status, now: new Date() });
   }
 
-  @Post(':id/cancel')
+  @Route(routes.cancel)
   @HttpCode(200)
-  cancel(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<PaymentLinkView> {
-    return this.cancels.cancel(id, user);
+  cancel(@RouteInput() { params }: In<'cancel'>, @CurrentUser() user: AuthUser): Promise<PaymentLinkView> {
+    return this.cancels.cancel(params.id, user);
   }
 }

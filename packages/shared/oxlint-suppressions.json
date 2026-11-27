@@ -555,11 +555,6 @@
       "count": 13
     }
   },
-  "src/sales/payment-link/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
-    }
-  },
   "src/sales/payment-link/rules.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -577,7 +572,7 @@
   },
   "src/sales/payment-link/views.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/sales/pick-sales.ts": {
