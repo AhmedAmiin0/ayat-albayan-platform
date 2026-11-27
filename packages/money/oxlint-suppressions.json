@@ -93,11 +93,6 @@
       "count": 1
     }
   },
-  "src/ledger/earnings/earnings-views.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/ledger/earnings/earnings.ts": {
     "complexity": {
       "count": 1
