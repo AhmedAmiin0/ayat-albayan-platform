@@ -1,7 +1,7 @@
 import { myPayoutRoutes, type PendingReportView } from '@ab/shared';
 import { routePath } from '@ab/core';
 import type { LessonView, TeacherMe } from '@ab/schedule';
-import { payoutCalls, TEACHER_REFRESH_MS } from '@ab/client-core';
+import { myPayoutCalls, TEACHER_REFRESH_MS } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 import type { AvailabilityRow } from '@ab/shared';
@@ -46,7 +46,7 @@ export function usePendingReports(live = false) {
 export function useMyPayouts() {
   return useQuery({
     queryKey: pathKey(routePath(myPayoutRoutes.mine)),
-    queryFn: payoutCalls({ apiFetch, apiSend }).mine,
+    queryFn: myPayoutCalls({ apiFetch, apiSend }).list,
   });
 }
 
