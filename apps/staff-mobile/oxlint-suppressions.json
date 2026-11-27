@@ -4818,11 +4818,6 @@
       "count": 1
     }
   },
-  "src/sales/sales/teacher/teacher-overview-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/sales/sales/testing/fixtures.ts": {
     "stylistic/max-len": {
       "count": 1
