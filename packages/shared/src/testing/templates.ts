@@ -1,4 +1,4 @@
-import type { TemplateView } from '../template-view.schemas';
+import type { TemplateView } from '../messaging/templates/catalog/template-view.schemas';
 
 const ID = '6f1c2a40-0b7e-4c2f-9d1a-3e5b7c9d1f20';
 

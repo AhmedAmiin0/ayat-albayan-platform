@@ -4164,16 +4164,8 @@
       "count": 1
     }
   },
-  "src/sales-subscribe/hooks/upload-sales-receipt.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/sales-subscribe/hooks/use-sales-payment.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -4279,9 +4271,6 @@
     },
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/sales-subscribe/sales-money.flow.test.tsx": {
@@ -4486,7 +4475,7 @@
       "count": 3
     },
     "ab/no-untyped-api-calls": {
-      "count": 4
+      "count": 2
     }
   },
   "src/sales/sales/lib/sales-href.ts": {

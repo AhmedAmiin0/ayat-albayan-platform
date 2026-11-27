@@ -7,4 +7,5 @@ export * from './lesson-actions.routes';
 export * from './lesson-actions.schemas';
 export * from './chat-receipts.routes';
 export * from './subscribe.routes';
+export * from './payments.routes';
 export * from './subscribe.schemas';

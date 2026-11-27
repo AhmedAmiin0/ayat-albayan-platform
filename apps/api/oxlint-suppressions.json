@@ -4437,10 +4437,7 @@
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.controller.ts": {
     "stylistic/max-len": {
-      "count": 4
-    },
-    "ab/zod-inputs": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.repo.ts": {
@@ -6250,14 +6247,6 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales-money/sales-money.controller.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    },
-    "ab/zod-inputs": {
-      "count": 3
-    }
-  },
   "src/modules/sales/sales-money/sales-money.service.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -6492,7 +6481,7 @@
       "count": 2
     },
     "ab/zod-inputs": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/sales/sales/academy/sales-academy.fakes.ts": {

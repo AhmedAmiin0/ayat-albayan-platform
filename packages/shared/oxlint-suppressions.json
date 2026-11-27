@@ -206,11 +206,6 @@
       "count": 2
     }
   },
-  "src/messaging/templates/template-sync-views.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/messaging/templates/templates.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -503,7 +498,7 @@
   },
   "src/sales/money-views.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/sales/money.ts": {
@@ -564,11 +559,6 @@
   "src/sales/renewal-due.ts": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/sales/schedule.ts": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/sales/start-date.ts": {

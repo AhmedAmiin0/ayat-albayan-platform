@@ -53,7 +53,6 @@ export type * from './chat/views';
 export * from './chat/message-view';
 export * from './templates/catalog';
 export * from './chat/line-check';
-export type * from './templates/template-sync-views';
 export * from './replies/saved-replies';
 export * from './replies/saved-reply-text/saved-reply-text';
 export * from './replies/reply-slots';

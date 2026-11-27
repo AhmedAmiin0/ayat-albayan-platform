@@ -1,7 +1,7 @@
 import { matchesQuery } from '@ab/core';
 import type { Gender, Program } from '@ab/catalog';
 import type { SalesTeacherView } from '../academy';
-import type { SalesScheduleLesson } from '../schedule';
+import type { SalesScheduleLesson } from '../teacher/academy-day.schemas';
 import { isOpenLesson } from '@ab/schedule';
 
 // The salesperson's teachers and schedule, same rules on web and mobile.

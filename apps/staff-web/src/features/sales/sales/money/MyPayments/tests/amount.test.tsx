@@ -31,6 +31,14 @@ const pay = (over: Partial<MyPaymentRow>): MyPaymentRow => ({
   ...over,
 });
 
+/** The payment view the api answers after the edit. */
+const EDITED = {
+  ...pay({ amount: 1000 }),
+  subscription_id: 'sub-1',
+  student: { id: 's1', code: 'AB-1000', name: 'سهيلة', status: 'active' },
+  created_at: '2026-10-02T09:00:01.000Z',
+};
+
 const ROWS = [
   pay({}),
   pay({ id: 'p2', student: { id: 's2', code: 'AB-1001', name: 'يوسف' }, method: 'card' }),
@@ -76,7 +84,7 @@ describe('«تعديل المبلغ» in «مدفوعاتي» (subscriptions.edi
   });
 
   it('old → new, then PATCH /sales/payments/:id/amount, and «مدفوعاتي» is read again', async () => {
-    apiSend.mockResolvedValue(undefined);
+    apiSend.mockResolvedValue(EDITED);
     await open();
     editTo('1000');
     const body = T.confirmBody.replace('{old}', '1,080 ر.س').replace('{new}', '1,000 ر.س');

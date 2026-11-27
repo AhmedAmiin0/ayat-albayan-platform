@@ -1,4 +1,7 @@
-import type { TemplateAuthorInput, TemplateEditInput, TemplateView } from '@ab/shared';
+import type {
+  TemplateAuthorInput, TemplateCreateBody, TemplateEditInput, TemplateHealthInput,
+  TemplateHealthView, TemplateLineView, TemplateView,
+} from '@ab/shared';
 
 export type TemplateListMode = 'admin' | 'author';
 
@@ -27,5 +30,11 @@ export interface AuthoredTemplateCalls {
 
 export interface AdminTemplateCalls {
   list: () => Promise<TemplateView[]>;
+  /** A new unsubmitted row; 409 template_exists when the key is taken. */
+  create: (body: TemplateCreateBody) => Promise<TemplateView>;
+  /** Both numbers as the server's env knows them: no Meta call, safe on mount. */
+  lines: () => Promise<TemplateLineView[]>;
+  /** One line's rows against its own WABA, or every line when none is named. */
+  health: (body: TemplateHealthInput) => Promise<TemplateHealthView>;
   editContent: (call: TemplateEditCall) => Promise<TemplateView>;
 }

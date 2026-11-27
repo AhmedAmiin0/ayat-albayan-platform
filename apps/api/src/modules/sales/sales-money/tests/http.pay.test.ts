@@ -65,7 +65,7 @@ describe('POST /sales/payments: her bank transfer through the admin’s Payments
   });
 
   it('receipt-upload-url: a signed PUT under receipts/{her subscription}/; 404 for an unknown package', async () => {
-    m.storage.signedUpload.mockImplementation(async (ref: { bucket: string; path: string }) => ({ ...ref, token: 't', signed_url: 'u' }));
+    m.storage.signedUpload.mockImplementation(async ({ bucket, path }: { bucket: string; path: string }) => ({ bucket, path, token: 't', signed_url: 'u' }));
     const res = await call({ method: 'POST', url: '/sales/payments/receipt-upload-url', token: 'salesA', body: { subscriptionId: SUB_ID, mime: 'image/png', size: 1000 } });
     expect(res.statusCode).toBe(200);
     expect(res.json().path).toMatch(new RegExp(`^${SUB_ID}/[0-9a-f-]+\\.png$`));

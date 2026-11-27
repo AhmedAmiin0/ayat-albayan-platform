@@ -18,3 +18,11 @@ export type {
   SalesSubscriptionBody,
   SalesSubscriptionCancel,
 } from './subscribe-api.types';
+export { salesPaymentCalls } from './payments-api';
+export type {
+  SalesPaymentAmountEdit,
+  SalesPaymentBody,
+  SalesPaymentCalls,
+  SalesReceiptCopyBody,
+  SalesReceiptUploadBody,
+} from './payments-api.types';

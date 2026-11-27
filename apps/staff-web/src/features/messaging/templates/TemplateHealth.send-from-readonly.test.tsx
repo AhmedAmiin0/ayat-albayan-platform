@@ -16,18 +16,20 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
 const s = t.templates.sendFrom;
 const st = t.enums.templateStatus;
 const NAME = t.templates.names.booking_confirmation_plain;
+const uuid = (end: string) => `00000000-0000-4000-8000-00000000000${end}`;
+const ID = { a: uuid('a'), b: uuid('b'), c: uuid('c'), d: uuid('d') };
 const NUMBERS = [
-  numberView({ id: 'n-a', label: 'Line A' }),
-  numberView({ id: 'n-b', label: 'Line B', is_default: false, fallback_rank: 1 }),
-  numberView({ id: 'n-c', label: 'Line C', is_default: false, fallback_rank: 2 }),
-  numberView({ id: 'n-d', label: 'Line D', is_default: false, fallback_rank: 3 }),
+  numberView({ id: ID.a, label: 'Line A' }),
+  numberView({ id: ID.b, label: 'Line B', is_default: false, fallback_rank: 1 }),
+  numberView({ id: ID.c, label: 'Line C', is_default: false, fallback_rank: 2 }),
+  numberView({ id: ID.d, label: 'Line D', is_default: false, fallback_rank: 3 }),
 ];
 const at = { last_checked_at: null, last_error: null };
 const BOOKING = template({
-  number_id: 'n-b',
+  number_id: ID.b,
   numbers: [
-    { number_id: 'n-b', status: 'pending', ...at },
-    { number_id: 'n-c', status: 'rejected', ...at },
+    { number_id: ID.b, status: 'pending', ...at },
+    { number_id: ID.c, status: 'rejected', ...at },
   ],
 });
 const chip = (label: string, status: string) => s.approvalChip.replace('{label}', label).replace('{status}', status);
