@@ -1,6 +1,6 @@
 import {
   shortCodeSchema,
-  shortLinkGateViewSchema,
+  shortLinkGateRoutes,
   shortLinkRoutes as routes,
   type ShortLinkDetail,
   type ShortLinkGateView,
@@ -13,8 +13,7 @@ import { listKey, pathKey } from '../../core/keys';
 
 // docs/19: staff routes are shortLinkRoutes; the web gate /l/<code> reads the public view.
 
-export const SHORT_LINKS_PUBLIC_PATH = '/public/short-links';
-export const enc = encodeURIComponent;
+const SHORT_LINKS_PUBLIC_PATH = '/public/short-links';
 
 /** Every admin query sits under this key: one invalidation refreshes lists and details. */
 export const SHORT_LINKS_KEY = pathKey(routes.list.path);
@@ -62,14 +61,16 @@ function notFoundOr(e: unknown): GateViewResult {
 
 const searchTerm = (search: string): string => search.trim();
 
-async function readGate(client: ApiClient, code: string): Promise<GateViewResult> {
+type ReadView = (code: string) => Promise<ShortLinkGateView>;
+
+async function readGate(read: ReadView, code: string): Promise<GateViewResult> {
   if (!shortCodeSchema.safeParse(code).success) return GATE_NOT_FOUND;
-  const body = await client.apiFetch(`${SHORT_LINKS_PUBLIC_PATH}/${enc(code)}`);
-  return { kind: 'view', view: shortLinkGateViewSchema.parse(body) };
+  return { kind: 'view', view: await read(code) };
 }
 
 export function shortLinkQueries(client: ApiClient): ShortLinkQueries {
   const call = callWith(client);
+  const readView: ReadView = (code) => call({ route: shortLinkGateRoutes.view, params: { code } });
   return {
     listQuery: (filter) => ({
       queryKey: listKey(routes.list.path, filter),
@@ -86,7 +87,7 @@ export function shortLinkQueries(client: ApiClient): ShortLinkQueries {
     }),
     gateViewQuery: (code) => ({
       queryKey: [...SHORT_LINK_GATE_KEY, code],
-      queryFn: () => readGate(client, code).catch(notFoundOr),
+      queryFn: () => readGate(readView, code).catch(notFoundOr),
     }),
   };
 }

@@ -1,5 +1,5 @@
 import {
-  shortLinkOpenResultSchema,
+  shortLinkGateRoutes,
   shortLinkRoutes as routes,
   type ShortLinkCreate,
   type ShortLinkDetail,
@@ -8,7 +8,6 @@ import {
   type ShortLinkUpdate,
 } from '@ab/shared';
 import { callWith, type ApiClient } from '../../core/http';
-import { enc, SHORT_LINKS_PUBLIC_PATH } from './short-links-api';
 
 // Each write takes a single input, ready for a TanStack `mutationFn` (docs/19).
 
@@ -44,22 +43,17 @@ export interface ShortLinkSends {
   otpVerify: (call: GateVerifyCall) => Promise<ShortLinkOpenResult>;
 }
 
-const gate = (code: string, tail: string): string =>
-  `${SHORT_LINKS_PUBLIC_PATH}/${enc(code)}${tail}`;
-
 export function shortLinkSends(client: ApiClient): ShortLinkSends {
   const call = callWith(client);
-  const post = (path: string, body?: unknown): Promise<unknown> =>
-    client.apiSend('POST', path, body);
-  const outcome = (r: unknown): ShortLinkOpenResult => shortLinkOpenResultSchema.parse(r);
   return {
     create: (body) => call({ route: routes.create, body }),
     update: ({ code, body }) => call({ route: routes.update, params: { code }, body }),
     revoke: (code) => call({ route: routes.revoke, params: { code } }),
     resend: (code) => call({ route: routes.resend, params: { code } }),
-    open: (code) => post(gate(code, '/open')).then(outcome),
-    otpStart: ({ code, phone }) => client.apiSend('POST', gate(code, '/otp/start'), { phone }),
+    open: (code) => call({ route: shortLinkGateRoutes.open, params: { code } }),
+    otpStart: ({ code, phone }) =>
+      call({ route: shortLinkGateRoutes.start, params: { code }, body: { phone } }),
     otpVerify: ({ code, phone, otp }) =>
-      post(gate(code, '/otp/verify'), { phone, code: otp }).then(outcome),
+      call({ route: shortLinkGateRoutes.verify, params: { code }, body: { phone, code: otp } }),
   };
 }
