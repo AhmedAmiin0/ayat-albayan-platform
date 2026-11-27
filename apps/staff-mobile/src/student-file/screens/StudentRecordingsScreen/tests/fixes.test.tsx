@@ -1,3 +1,4 @@
+import { studentProfileFixture } from '@ab/shared/testing';
 import { teacherOptionFixture } from '@ab/shared/testing';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
@@ -23,7 +24,7 @@ let permissions: string[] = ['recordings.read', 'recordings.manage'];
 function serve(items = [recording(), recording({ id: 'r2', status: 'deleted', url: null, teacher: null, duration_seconds: null, size_bytes: null })]) {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/auth/me') return { permissions };
-    if (path === '/students/s1') return { name: 'هدى' };
+    if (path === '/students/s1') return studentProfileFixture({ id: 's1', name: 'هدى' });
     if (path === '/students/teacher-options') return [
         teacherOptionFixture({ id: 't1', display_name_ar: 'أبرار' }),
         teacherOptionFixture({ id: 't2', display_name_ar: 'منى' }),
