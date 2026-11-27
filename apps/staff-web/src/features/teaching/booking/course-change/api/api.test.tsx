@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { changeCourse, courseChangeCheckQuery } from './api';
 import type { CourseChangeBody } from './api.types';
-import { CHECK, COURSE, MON } from './change-fixture';
+import { CHECK, COURSE, MON } from '@/features/teaching/booking/course-change/change-fixture';
 import { bookingKeys } from '@/features/teaching/booking/booking.keys';
 
 const apiSend = vi.hoisted(() => vi.fn());

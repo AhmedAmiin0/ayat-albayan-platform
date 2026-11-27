@@ -7,8 +7,12 @@ import { ConflictNotice } from '@/features/teaching/schedule/reschedule/Conflict
 import { dateLabel } from '@/features/teaching/schedule';
 import { useBookingMode } from '@/features/teaching/booking/mode';
 import { pickedText } from '@/features/teaching/booking/steps/slots/SlotStep';
-import { changeCourse, courseChangeCheckQuery, useCourseChangeTarget } from './api';
-import type { CourseChangeBody } from './api.types';
+import {
+  changeCourse,
+  courseChangeCheckQuery,
+  useCourseChangeTarget,
+  type CourseChangeBody,
+} from './api';
 import { currentDaysText, newDaysText } from './change-text';
 import { refreshAfterCourseChange } from './refresh';
 

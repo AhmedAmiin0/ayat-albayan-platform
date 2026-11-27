@@ -1,5 +1,5 @@
 import { changePicks, dayTimesKeeping, type BookedCourse, type PrefilledPick } from '@ab/shared';
-import type { CourseChangeBody } from './api.types';
+import type { CourseChangeBody } from './api';
 
 // One slot per weekday, each at its own time in the course's zone; pure.
 
