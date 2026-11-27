@@ -1,12 +1,5 @@
-import { meetingCalls } from '@ab/client-core';
-import type {
-  CreateMeeting,
-  MeetingInviteeInput,
-  MeetingInviteeOption,
-  MeetingInviteeView,
-  MeetingInviteResult,
-  UpdateMeeting,
-} from '@ab/schedule';
+import { meetingCalls, meetingInviteCalls, type MeetingInviteResend } from '@ab/client-core';
+import type { CreateMeeting, MeetingInviteeInput, UpdateMeeting } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule';
 import { apiFetch, apiSend, t } from '@ab/web-kit';
@@ -14,55 +7,41 @@ import { meetingKeys } from '@/features/teaching/meetings/internal/meeting.keys'
 
 // Scheduled meetings and invitations (R-MEET-01..03).
 
+const invites = meetingInviteCalls({ apiFetch, apiSend });
+
 /** POST /meetings: instant (no startsAt) or scheduled; one result per invitee. */
 export const createMeetingWith = (body: CreateMeeting) =>
   meetingCalls({ apiFetch, apiSend }).create(body);
 
-/** PATCH /meetings/:id (creator or admin): a new time and/or duration. */
-export const updateMeeting = ({ id, body }: { id: string; body: UpdateMeeting }) =>
-  apiSend('PATCH', `/meetings/${id}`, body);
+/** Creator or admin: a new time and/or duration. */
+export const updateMeeting = (input: { id: string; body: UpdateMeeting }) => invites.update(input);
 
-/** POST /meetings/:id/cancel (creator or admin): 204; the invitees' links stop working. */
-export const cancelMeeting = (id: string) => apiSend('POST', `/meetings/${id}/cancel`);
+/** Creator or admin: 204; the invitees' links stop working. */
+export const cancelMeeting = (id: string) => invites.cancel(id);
 
-/** GET /meetings/:id/invitees (creator or admin): never a phone. */
+/** Creator or admin: never a phone. */
 export const meetingInviteesQuery = (id: string) =>
   queryOptions({
     queryKey: meetingKeys.invitees(id),
-    queryFn: () => apiFetch<MeetingInviteeView[]>(`/meetings/${id}/invitees`),
+    queryFn: () => invites.invitees(id),
   });
 
-/** POST /meetings/:id/invitees: more invitees on an existing meeting. */
-export const addMeetingInvitees = ({
-  id,
-  invitees,
-}: {
-  id: string;
-  invitees: MeetingInviteeInput[];
-}) => apiSend<MeetingInviteResult[]>('POST', `/meetings/${id}/invitees`, { invitees });
+/** More invitees on an existing meeting. */
+export const addMeetingInvitees = (input: { id: string; invitees: MeetingInviteeInput[] }) =>
+  invites.add(input);
 
 /**
- * POST /meetings/:id/invitees/:inviteeId/resend: a new personal link and invitation text. The caller
- * keeps one clientRequestId per click (a retry reuses it, rule 8): a retried id whose text was
- * already queued sends nothing again; one that queued nothing returns a fresh link.
+ * A new personal link and invitation text. The caller keeps one clientRequestId per click (a
+ * retry reuses it, rule 8): a retried id whose text was already queued sends nothing again; one
+ * that queued nothing returns a fresh link.
  */
-export const resendInvite = (v: {
-  meetingId: string;
-  inviteeId: string;
-  clientRequestId: string;
-}) =>
-  apiSend<MeetingInviteResult>('POST', `/meetings/${v.meetingId}/invitees/${v.inviteeId}/resend`, {
-    clientRequestId: v.clientRequestId,
-  });
+export const resendInvite = (v: MeetingInviteResend) => invites.resend(v);
 
-/** GET /meetings/invitee-options?q=: staff by name and role, students by name and code. */
+/** Staff by name and role, students by name and code. */
 export const inviteeOptionsQuery = (q: string) =>
   queryOptions({
     queryKey: meetingKeys.inviteeOptions(q),
-    queryFn: () =>
-      apiFetch<MeetingInviteeOption[]>(
-        `/meetings/invitee-options${q ? `?q=${encodeURIComponent(q)}` : ''}`,
-      ),
+    queryFn: () => invites.options(q),
     staleTime: 30_000,
   });
 

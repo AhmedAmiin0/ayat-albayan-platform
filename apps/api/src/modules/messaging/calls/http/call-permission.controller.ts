@@ -1,10 +1,11 @@
-import { callPermissionRequestSchema } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { callPermissionRequestSchema, callsRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import type { z } from 'zod';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route } from '@/common/http/route';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
 import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
@@ -14,10 +15,8 @@ import { CallPermissions } from '@/modules/messaging/calls/flow/call-permission.
 type RequestBody = z.output<typeof callPermissionRequestSchema>;
 
 /** The request is a staff send through the outbox, audited (docs/28 §3.1). */
-@ApiTags('calls')
 @ApiBearerAuth()
-@Permissions('inbox.send')
-@Controller('calls/permission')
+@Controller()
 export class CallPermissionController {
   constructor(
     private readonly permissions: CallPermissions,
@@ -25,13 +24,16 @@ export class CallPermissionController {
     private readonly audit: AuditService,
   ) {}
 
-  @Get(':phone')
+  // The actor's 403/404 still win over a bad phone, so the phone is read after it.
+  @Route(routes.permission)
   async state(@Param('phone') raw: string, @CurrentUser() user: AuthUser) {
     return this.permissions.state(await this.access.actor(user), phoneParam(raw));
   }
 
-  @Post(':phone/request')
+  @Post('calls/permission/:phone/request')
   @HttpCode(201)
+  @Permissions('inbox.send')
+  @ApiTags('calls')
   async request(
     @Param('phone') raw: string,
     @ZodBody(callPermissionRequestSchema) { clientRequestId }: RequestBody,

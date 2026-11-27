@@ -1,22 +1,21 @@
-import type { RoomOpenResult } from '@ab/schedule';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { lessonRoomRoutes as routes } from '@ab/schedule';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { RoomOpenService } from './room-open.service';
 
 /** The admin or the lesson's teacher opens the room before the usual 15 minutes. */
-@ApiTags('classroom')
 @ApiBearerAuth()
-@Permissions('classroom.host')
-@Controller('lessons/:id/room')
+@Controller()
 export class RoomOpenController {
   constructor(private readonly opener: RoomOpenService) {}
 
   /** 200 the new window; 403 not yours, 409 lesson_not_open, 410 join_closed. */
-  @Post('open')
+  @Route(routes.open)
   @HttpCode(200)
-  open(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<RoomOpenResult> {
-    return this.opener.open({ user, lessonId: id });
+  open(@RouteInput() { params }: RouteInputOf<typeof routes.open>, @CurrentUser() user: AuthUser) {
+    return this.opener.open({ user, lessonId: params.id });
   }
 }

@@ -1,29 +1,18 @@
 import {
-  gifQuerySchema,
-  stickerFavouriteSchema,
+  stickerPanelRoutes as routes,
   threadGifSendSchema,
   threadStickerSendSchema,
   type GifList,
   type MessageView,
   type StickerList,
 } from '@ab/shared';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
@@ -53,10 +42,8 @@ interface PanelSend {
  * /threads/gifs?q= (GIPHY; `configured: false` until an admin adds the key), and POST
  * /threads/:phone/sticker | gif, audited as `thread_sticker` / `thread_gif`.
  */
-@ApiTags('inbox')
 @ApiBearerAuth()
-@Permissions('inbox.read')
-@Controller('threads')
+@Controller()
 export class StickersController {
   constructor(
     private readonly reads: ThreadReads,
@@ -65,40 +52,45 @@ export class StickersController {
     private readonly audit: AuditService,
   ) {}
 
-  @Get('stickers')
+  @Route(routes.list)
   async list(@CurrentUser() user: AuthUser): Promise<StickerList> {
     await staffOnly(this.reads, user);
     return this.stickers.list(user.id);
   }
 
-  @Put('stickers/favourites')
+  @Route(routes.favourite)
   @HttpCode(204)
-  async favourite(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    const { messageId } = parseOrThrow(stickerFavouriteSchema, body);
-    await staffOnly(this.reads, user);
-    await this.stickers.favourite({ profileId: user.id, messageId });
-  }
-
-  @Delete('stickers/favourites/:messageId')
-  @HttpCode(204)
-  async unfavourite(
-    @Param('messageId', new ParseUUIDPipe()) messageId: string,
+  async favourite(
+    @RouteInput() { body }: RouteInputOf<typeof routes.favourite>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
     await staffOnly(this.reads, user);
-    await this.stickers.unfavourite({ profileId: user.id, messageId });
+    await this.stickers.favourite({ profileId: user.id, messageId: body.messageId });
   }
 
-  @Get('gifs')
-  async gifList(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<GifList> {
-    const { q } = parseOrThrow(gifQuerySchema, query);
+  @Route(routes.unfavourite)
+  @HttpCode(204)
+  async unfavourite(
+    @RouteInput() { params }: RouteInputOf<typeof routes.unfavourite>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
     await staffOnly(this.reads, user);
-    return this.gifs.list(q);
+    await this.stickers.unfavourite({ profileId: user.id, messageId: params.messageId });
   }
 
-  @Post(':phone/sticker')
+  @Route(routes.gifs)
+  async gifList(
+    @RouteInput() { query }: RouteInputOf<typeof routes.gifs>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<GifList> {
+    await staffOnly(this.reads, user);
+    return this.gifs.list(query.q);
+  }
+
+  @Post('threads/:phone/sticker')
   @HttpCode(201)
   @Permissions('inbox.send')
+  @ApiTags('inbox')
   sticker(
     @Param('phone') raw: string,
     @Body() body: unknown,
@@ -109,9 +101,10 @@ export class StickersController {
     return this.send({ user, raw }, { action: 'thread_sticker', name: 'sticker.webp', run });
   }
 
-  @Post(':phone/gif')
+  @Post('threads/:phone/gif')
   @HttpCode(201)
   @Permissions('inbox.send')
+  @ApiTags('inbox')
   gif(
     @Param('phone') raw: string,
     @Body() body: unknown,

@@ -70,6 +70,8 @@ export const meetingInviteeOptionsQuerySchema = z.object({
 });
 
 /** GET /meetings/invitee-options: staff by name and role, students by name and code. Never a phone. */
-export type MeetingInviteeOption =
-  | { kind: 'staff'; id: string; name: string; role: string }
-  | { kind: 'student'; id: string; name: string; code: string };
+export const meetingInviteeOptionSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('staff'), id: z.uuid(), name: z.string(), role: z.string() }),
+  z.object({ kind: z.literal('student'), id: z.uuid(), name: z.string(), code: z.string() }),
+]);
+export type MeetingInviteeOption = z.infer<typeof meetingInviteeOptionSchema>;

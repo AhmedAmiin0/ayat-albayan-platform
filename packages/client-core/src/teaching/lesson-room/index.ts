@@ -5,9 +5,18 @@ export { assistantsApi, type AssistantPick, type AssistantsApi } from './assista
 export { roomModerationApi, type MeetingMute, type RoomModerationApi } from './room-moderation-api';
 export {
   meetingCalls,
+  meetingInviteCalls,
   publicMeetingCalls,
   type GuestMeetingJoin,
   type MeetingCalls,
+  type MeetingInviteCalls,
+  type MeetingInviteResend,
   type MeetingParticipant,
   type PublicMeetingCalls,
 } from './meeting-calls';
+export {
+  lessonRoomCalls,
+  studentLinkCalls,
+  type LessonRoomCalls,
+  type StudentLinkCalls,
+} from './room-calls';

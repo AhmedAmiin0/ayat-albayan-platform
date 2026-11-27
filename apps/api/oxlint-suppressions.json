@@ -2215,7 +2215,7 @@
   },
   "src/modules/messaging/calls/http/calls.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/messaging/calls/kapso/calling-line.ts": {
@@ -2806,7 +2806,7 @@
   },
   "src/modules/messaging/inbox/stickers/stickers.controller.ts": {
     "ab/zod-inputs": {
-      "count": 7
+      "count": 4
     }
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.ts": {
@@ -5766,10 +5766,7 @@
   },
   "src/modules/platform/translations/translations.controller.ts": {
     "ab/zod-inputs": {
-      "count": 5
-    },
-    "typescript/dot-notation": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/platform/translations/translations.http.test.ts": {
@@ -6103,14 +6100,6 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/reports.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 7
-    }
-  },
   "src/modules/reporting/reports/shared/report-access.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -6225,11 +6214,6 @@
     },
     "stylistic/max-len": {
       "count": 5
-    }
-  },
-  "src/modules/reporting/reports/v2/report-v2.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/reporting/reports/v2/report-v2.mapper.ts": {
@@ -6605,14 +6589,6 @@
   "src/modules/sales/sales-students/shared/sales-student.repo.ts": {
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/modules/sales/sales-students/teachers/sales-teacher-overview.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/modules/sales/sales-students/teachers/sales-teacher-overview.fakes.ts": {
@@ -7812,11 +7788,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/join/room-open.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/classroom/join/room-open.service.ts": {
     "complexity": {
       "count": 1
@@ -8048,14 +8019,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/meetings/invites/meeting-invites.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 9
-    }
-  },
   "src/modules/teaching/classroom/meetings/invites/meeting-invites.fakes.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -8074,7 +8037,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/teaching/classroom/meetings/invites/tests/meeting-invite.numbers.test.ts": {
@@ -8160,7 +8123,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 13
+      "count": 12
     }
   },
   "src/modules/teaching/classroom/meetings/schedule/meeting-services.fakes.ts": {
@@ -8278,7 +8241,7 @@
   },
   "src/modules/teaching/classroom/student-link/student-link.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/student-link/student-link.fakes.ts": {

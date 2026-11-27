@@ -2,7 +2,7 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { AppState, type AppStateStatus, Vibration } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { callConfigQuery } from '@/inbox/thread/calls/api/calls-api';
-import { ON, routes } from './call-test-kit';
+import { ON, OUT_ID, routes } from './call-test-kit';
 import { mountCalls as mount, placed } from './call-test-mount';
 
 const mockFetch = jest.fn();
@@ -31,7 +31,7 @@ describe('the app and the setting around a live call', () => {
     await act(async () => {
       await client.refetchQueries({ queryKey: callConfigQuery.queryKey });
     });
-    await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', '/calls/out1/end'));
+    await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', `/calls/${OUT_ID}/end`, undefined));
   });
 
   it('back from the background during a call: a calm notice that the call may have been silent', async () => {

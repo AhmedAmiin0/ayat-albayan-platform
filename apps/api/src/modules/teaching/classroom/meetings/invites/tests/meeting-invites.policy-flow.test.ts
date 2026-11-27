@@ -8,7 +8,7 @@ import { meetingServices, type MeetingServices } from '@/modules/teaching/classr
 let s: MeetingServices;
 const OTHER = '+201000000109';
 const pick = (phone: string) => ({ id: STUDENT_A, name: 'سهيلة', code: 'AB-0001', guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: phone, tz: 'Asia/Riyadh' } });
-const addStudent = (user = TEACHER) => s.invites.add({ user, id: MEETING_ID, body: { invitees: [{ kind: 'student', studentId: STUDENT_A }] } }, NOW);
+const addStudent = (user = TEACHER) => s.invites.add({ user, id: MEETING_ID, invitees: [{ kind: 'student', studentId: STUDENT_A }] }, NOW);
 const REQ = '00000000-0000-4000-8000-0000000000bb';
 
 beforeEach(() => {
@@ -49,7 +49,7 @@ describe('invitations: who may queue WhatsApp (R-MEET-02)', () => {
     s.mq.byId.mockResolvedValue(scheduledRow({ created_by: ASSISTANT.id }));
     const fam = stored({ meeting_id: MEETING_ID, kind: 'student', student_id: STUDENT_A, phone_e164: OPEN_PHONE, display_name: 'سهيلة', channel: 'link', status: 'window_closed' });
     s.m.invitees.byId.mockResolvedValue(fam);
-    const r = await s.invites.resend({ user: ASSISTANT, id: MEETING_ID, inviteeId: fam.id, body: { clientRequestId: REQ } }, NOW);
+    const r = await s.invites.resend({ user: ASSISTANT, id: MEETING_ID, inviteeId: fam.id, clientRequestId: REQ }, NOW);
     expect(r).toMatchObject({ error_code: 'chat_not_allowed' });
     expect(r.link).not.toBeNull();
     expect(s.m.invitees.queued).not.toHaveBeenCalled();
@@ -61,7 +61,7 @@ describe('invitations: who may queue WhatsApp (R-MEET-02)', () => {
     const [t] = await addStudent();
     expect(t?.error_code).toBe('session_closed');
     s.m.invitees.forMeeting.mockResolvedValue([]);
-    const [a] = await s.invites.add({ user: ADMIN, id: MEETING_ID, body: { invitees: [{ kind: 'phone', phone: CLOSED_PHONE }] } }, NOW);
+    const [a] = await s.invites.add({ user: ADMIN, id: MEETING_ID, invitees: [{ kind: 'phone', phone: CLOSED_PHONE }] }, NOW);
     expect(a?.error_code).toBe('no_thread');
   });
 
@@ -69,7 +69,7 @@ describe('invitations: who may queue WhatsApp (R-MEET-02)', () => {
     await addStudent();
     expect(s.m.threads.enqueue.mock.calls[0]?.[0]).toMatchObject({ sent_by_teacher_id: 't1' });
     s.m.invitees.forMeeting.mockResolvedValue([]);
-    await s.invites.add({ user: ADMIN, id: MEETING_ID, body: { invitees: [{ kind: 'phone', phone: OTHER }] } }, NOW);
+    await s.invites.add({ user: ADMIN, id: MEETING_ID, invitees: [{ kind: 'phone', phone: OTHER }] }, NOW);
     expect(s.m.threads.enqueue.mock.calls[1]?.[0]).toMatchObject({ sent_by_teacher_id: null });
   });
 });

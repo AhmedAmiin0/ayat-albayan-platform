@@ -4,7 +4,7 @@ import { Vibration } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { PLAYBACK } from '@/inbox/thread/calls/rtc/audio-route';
 import type { MicAnswer } from '@/inbox/thread/calls/rtc/media';
-import { deferred, fakeRtc, ON, ringing, routes } from './call-test-kit';
+import { deferred, fakeRtc, IN_ID, ON, OUT_ID, ringing, routes } from './call-test-kit';
 import { mountCalls as mount, placed } from './call-test-mount';
 
 const mockFetch = jest.fn();
@@ -49,7 +49,7 @@ describe('ending a call that is still starting', () => {
     expect(rtc.track.stop).toHaveBeenCalled();
     expect(rtc.release).toHaveBeenCalled();
     await act(async () => post.resolve(placed));
-    await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', '/calls/out1/end'));
+    await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', `/calls/${OUT_ID}/end`, undefined));
   });
 
   it('during the accept: the call taken is ended on WhatsApp', async () => {
@@ -58,10 +58,10 @@ describe('ending a call that is still starting', () => {
     mockSend.mockImplementation((_m: string, path: string) => (path.endsWith('/accept') ? accept.promise : Promise.resolve(placed)));
     await mount();
     await fireEvent.press(await screen.findByLabelText(t.calls.controls.accept));
-    await waitFor(() => expect(sentTo('/calls/in1/accept')).toBe(true));
+    await waitFor(() => expect(sentTo(`/calls/${IN_ID}/accept`)).toBe(true));
     await fireEvent.press(await screen.findByLabelText(t.calls.controls.end));
     await act(async () => accept.resolve(ringing({ status: 'active' })));
-    await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', '/calls/in1/end'));
+    await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', `/calls/${IN_ID}/end`, undefined));
   });
 });
 
@@ -113,6 +113,6 @@ describe('the server rows', () => {
     await waitFor(() => expect(sentTo('/calls')).toBe(true));
     await act(async () => slow.resolve([]));
     expect(screen.getByTestId('call-screen')).toBeTruthy();
-    expect(sentTo('/calls/out1/end')).toBe(false);
+    expect(sentTo(`/calls/${OUT_ID}/end`)).toBe(false);
   });
 });

@@ -1,6 +1,6 @@
 import { isPermission, systemPermissionsOf, USER_ROLES, type UserRole } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { accessBefore, walkRoutes, type BeforeAccess, type RouteAccess } from './route-walk.test-util';
+import { accessBefore, permissionKeys, walkRoutes, type BeforeAccess, type RouteAccess } from './route-walk.test-util';
 
 // THE safety net of dynamic roles: for every endpoint, each of the five system roles (and a user
 // with no role) is admitted or refused exactly as under the old @Roles metadata, frozen in
@@ -76,13 +76,13 @@ describe('system-role parity with the old @Roles table', () => {
   });
 
   it('students.check_registration gates the registration check only, for admin and sales', () => {
-    expect(routes.filter((r) => r.permission === 'students.check_registration').map((r) => r.key)).toEqual(['SalesRegistrationController.check']);
+    expect(routes.filter((r) => permissionKeys(r).includes('students.check_registration')).map((r) => r.key)).toEqual(['SalesRegistrationController.check']);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('students.check_registration'))).toEqual(['admin', 'sales']);
   });
 
   // The chat lists are their own route permission, admin and sales only (docs/22).
   it('inbox.lists gates the chat-lists routes only, for admin and sales (never a teacher)', () => {
-    const gated = routes.filter((r) => r.permission === 'inbox.lists').map((r) => r.key);
+    const gated = routes.filter((r) => [r.permission].flat().includes('inbox.lists')).map((r) => r.key);
     expect(gated.length).toBe(6);
     expect(gated.every((k) => k.startsWith('ChatListsController.'))).toBe(true);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('inbox.lists'))).toEqual(['admin', 'sales']);

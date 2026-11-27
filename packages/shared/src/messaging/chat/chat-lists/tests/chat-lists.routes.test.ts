@@ -45,4 +45,9 @@ describe('chatListRoutes (docs/22 §3)', () => {
     const empty = [routes.remove, routes.addThread, routes.dropThread].map((r) => r.response);
     expect(empty).toEqual(['empty', 'empty', 'empty']);
   });
+
+  it('lets inbox.lists in on every route and tags each inbox', () => {
+    const access = Object.values(routes).map((r) => [r.permissions, r.tags]);
+    expect(access).toEqual(Object.values(routes).map(() => [['inbox.lists'], ['inbox']]));
+  });
 });

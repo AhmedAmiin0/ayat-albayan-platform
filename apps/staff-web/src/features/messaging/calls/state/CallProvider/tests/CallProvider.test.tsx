@@ -2,7 +2,14 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
-import { activeRow, CallProbe, CONFIG, fakeRtc } from '@/features/messaging/calls/state/call-test-kit';
+import {
+  activeRow,
+  CALL_ID,
+  CallProbe,
+  CONFIG,
+  fakeRtc,
+  STAFF_ID,
+} from '@/features/messaging/calls/state/call-test-kit';
 import { CallProvider } from '@/features/messaging/calls/state/CallProvider/CallProvider';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -46,9 +53,9 @@ describe('an incoming call', () => {
     mount([['/calls/config', CONFIG], ['/calls/active', [activeRow()]]]);
     const dialog = await screen.findByRole('alertdialog', { name: 'أم سهيلة' });
     expect(dialog.textContent).toContain(t.calls.status.incoming);
-    apiSend.mockResolvedValue(activeRow({ status: 'active', staff_id: 'u1' }));
+    apiSend.mockResolvedValue(activeRow({ status: 'active', staff_id: STAFF_ID }));
     fireEvent.click(screen.getByRole('button', { name: t.calls.controls.accept }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/calls/c1/accept', { sdp: 'v=0 answer' }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `/calls/${CALL_ID}/accept`, { sdp: 'v=0 answer' }));
     expect(await screen.findByRole('dialog', { name: 'أم سهيلة' })).toBeTruthy();
   });
 
@@ -58,7 +65,7 @@ describe('an incoming call', () => {
     apiSend.mockResolvedValue(activeRow({ status: 'ended', end_reason: 'declined' }));
     fireEvent.click(screen.getByRole('button', { name: t.calls.controls.decline }));
     expect(screen.queryByRole('alertdialog')).toBeNull();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/calls/c1/reject');
+    expect(apiSend).toHaveBeenCalledWith('POST', `/calls/${CALL_ID}/reject`, undefined);
   });
 });
 

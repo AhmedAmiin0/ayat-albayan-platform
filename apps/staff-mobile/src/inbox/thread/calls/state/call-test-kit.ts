@@ -3,6 +3,10 @@
 import type { ActiveCallView, CallConfigView } from '@ab/shared';
 import type { MicAnswer, NativePeer, RtcDeps } from '@/inbox/thread/calls/rtc/media';
 
+/** The inbound call that rings, and the outbound one this phone places. */
+export const IN_ID = 'c0000000-0000-4000-8000-000000000011';
+export const OUT_ID = 'c0000000-0000-4000-8000-000000000012';
+
 export const ON: CallConfigView = {
   enabled: true,
   available: true,
@@ -18,7 +22,7 @@ export const OFF: CallConfigView = {
 
 export function ringing(over: Partial<ActiveCallView> = {}): ActiveCallView {
   return {
-    ...{ id: 'in1', phone_e164: '+966501234567', direction: 'inbound', status: 'ringing', end_reason: null, display_name: 'أم سهيلة' },
+    ...{ id: IN_ID, phone_e164: '+966501234567', direction: 'inbound', status: 'ringing', end_reason: null, display_name: 'أم سهيلة' },
     ...{ staff_id: null, started_at: '2026-10-26T10:00:00Z', answered_at: null, ended_at: null, duration_seconds: null },
     ...{ offer_sdp: 'v=0 their offer', answer_sdp: null },
     ...over,

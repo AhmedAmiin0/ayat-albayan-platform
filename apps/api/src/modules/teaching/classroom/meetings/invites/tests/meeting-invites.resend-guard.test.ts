@@ -11,7 +11,7 @@ const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) =>
 const REQ = '00000000-0000-4000-8000-0000000000dd';
 const phoneRow = stored({ meeting_id: MEETING_ID, kind: 'phone', phone_e164: OPEN_PHONE, display_name: 'أم سهيلة', channel: 'whatsapp', status: 'sent', created_by: ADMIN.id });
 const studentRow = (id: string) => stored({ meeting_id: MEETING_ID, kind: 'student', student_id: id, phone_e164: OPEN_PHONE, display_name: 'سهيلة', channel: 'link', status: 'window_closed' });
-const resend = (user = TEACHER, inviteeId = phoneRow.id) => s.invites.resend({ user, id: MEETING_ID, inviteeId, body: { clientRequestId: REQ } }, NOW);
+const resend = (user = TEACHER, inviteeId = phoneRow.id) => s.invites.resend({ user, id: MEETING_ID, inviteeId, clientRequestId: REQ }, NOW);
 
 beforeEach(() => {
   s = meetingServices();

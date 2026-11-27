@@ -29,7 +29,9 @@ describe('inboxSearchRoutes', () => {
   });
 
   it('asks one chat by its E.164 number with the words trimmed', () => {
-    expect(routes.chat.params.parse({ phone: '+966500000001' })).toEqual({ phone: '+966500000001' });
+    expect(routes.chat.params.parse({ phone: '+966500000001' })).toEqual({
+      phone: '+966500000001',
+    });
     expect(routes.chat.params.safeParse({ phone: 'abc' }).success).toBe(false);
     expect(routes.chat.query.parse({ q: '  درس ' })).toEqual({ q: 'درس' });
     expect(routes.chat.query.safeParse({ q: '  ' }).success).toBe(false);
@@ -39,5 +41,10 @@ describe('inboxSearchRoutes', () => {
     const page = { items: [HIT], total: 1, next_cursor: CURSOR };
     expect(routes.chat.response.parse(page)).toEqual(page);
     expect(routes.chat.response.safeParse({ items: [HIT], next_cursor: null }).success).toBe(false);
+  });
+
+  it('lets inbox.read in on every route and tags each inbox', () => {
+    const access = Object.values(routes).map((r) => [r.permissions, r.tags]);
+    expect(access).toEqual(Object.values(routes).map(() => [['inbox.read'], ['inbox']]));
   });
 });

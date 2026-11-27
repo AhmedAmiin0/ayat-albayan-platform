@@ -1,7 +1,7 @@
 import { savedReplyIdParam, savedReplyRoutes as routes } from '@ab/shared';
 import { Body, Controller, HttpCode, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -12,9 +12,7 @@ import { SavedRepliesService } from './saved-replies.service';
 const byId = { badParam: replyNotFound };
 
 /** Shared list writes need saved_replies.manage; /stage only copies, sends keep their gates. */
-@ApiTags('inbox')
 @ApiBearerAuth()
-@Permissions('inbox.read')
 @UseGuards(RepliesUserGuard)
 @Controller()
 export class SavedRepliesController {
@@ -74,7 +72,6 @@ export class SavedRepliesController {
 
   @Route(routes.stage)
   @HttpCode(201)
-  @Permissions('inbox.send')
   stage(
     @RouteInput(byId) { params, body }: RouteInputOf<typeof routes.stage>,
     @CurrentUser() user: AuthUser,

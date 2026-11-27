@@ -19,8 +19,8 @@ import { CallsRepo } from './store/calls.repo';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' },
-  sales: { id: 's1', email: null, role: 'sales' },
-  teacher: { id: 't1', email: null, role: 'teacher' },
+  sales: { id: 'e0000000-0000-4000-8000-000000000051', email: null, role: 'sales' },
+  teacher: { id: 'e0000000-0000-4000-8000-000000000071', email: null, role: 'teacher' },
   guardian: { id: 'g9', email: null, role: 'guardian' },
   assistant: { id: 'as1', email: null, role: 'assistant' },
 };
