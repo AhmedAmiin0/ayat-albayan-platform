@@ -16,7 +16,8 @@ export {
 } from './booking-entries';
 export { AdminCourseChange, type AdminCourseChangeProps } from './course-change/AdminCourseChange';
 export { CourseChangeForm, type CourseChangeFormProps } from './course-change/CourseChangeForm';
-export { type CourseChangeTarget, CourseChangeTargetContext } from './course-change/api';
+export { CourseChangeTargetContext } from './course-change/api';
+export type { CourseChangeTarget } from './course-change/api.types';
 export { changeBody, currentPicks } from './course-change/change-body';
 export { daysText as courseDaysText } from './course-change/change-text';
 export { ChangeReview, type ChangeReviewProps } from './course-change/ChangeReview';

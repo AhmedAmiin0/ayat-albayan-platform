@@ -5183,11 +5183,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/booking/course-change/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/features/teaching/booking/course-change/change-body.ts": {
     "stylistic/max-len": {
       "count": 1

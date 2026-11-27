@@ -1,24 +1,19 @@
-import { courseChangeCalls, type BookingMode } from '@ab/client-core';
-import type { CourseChangeCheck, CourseChangeResult } from '@ab/shared';
-import type { CourseChangeRequest } from '@ab/schedule';
+import { courseChangeCalls, salesCourseCalls, type BookingMode } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { createContext, useContext } from 'react';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { bookingKeys, COURSE_CHANGE_CHECK } from '@/features/teaching/booking/booking.keys';
+import type { CourseChangeBody, CourseChangeTarget } from './api.types';
 
 // The assistant's mirror routes cover her own students only, never over a clash.
 
-/** The routes' base of each mode. */
-export const courseChangeBase = (mode: BookingMode): string =>
-  mode === 'sales' ? '/sales/booking/course' : '/booking/course';
+const adminCourse = courseChangeCalls({ apiFetch, apiSend });
+const salesCourse = salesCourseCalls({ apiFetch, apiSend });
 
-/** Another route set for the same form, from the student profile, plus the new teacher. */
-export interface CourseChangeTarget {
-  base: string;
-  teacherId?: string | undefined;
-  /** The target's own refusal codes' text; null = the booking's (lessonErrorText). */
-  errorText?: ((error: unknown) => string | null) | undefined;
-}
+const modeTargets = {
+  admin: { key: 'admin', check: adminCourse.check, change: adminCourse.change },
+  sales: { key: 'sales', check: salesCourse.check, change: salesCourse.change },
+};
 
 /** Set by the profile's dialogs; absent = the booking mode's routes. */
 export const CourseChangeTargetContext = createContext<CourseChangeTarget | null>(null);
@@ -26,16 +21,8 @@ export const CourseChangeTargetContext = createContext<CourseChangeTarget | null
 export const useCourseChangeTarget = (): CourseChangeTarget | null =>
   useContext(CourseChangeTargetContext);
 
-const baseOf = (mode: BookingMode, target: CourseChangeTarget | null): string =>
-  target?.base ?? courseChangeBase(mode);
-
-const withTeacher = <T extends object>(body: T, target: CourseChangeTarget | null): T =>
-  target?.teacherId ? { ...body, teacherId: target.teacherId } : body;
-
-/** The POST /…/change body: the check's plus its idempotency key (one per dialog, rule 8). */
-export type CourseChangeBody = CourseChangeRequest & { clientRequestId: string };
-
-const adminCourse = courseChangeCalls({ apiFetch, apiSend });
+const targetOf = (mode: BookingMode, target: CourseChangeTarget | null): CourseChangeTarget =>
+  target ?? modeTargets[mode];
 
 /** The admin's read of the course to change, from a lesson's drawer. */
 export const courseChangeViewQuery = (subscriptionId: string) =>
@@ -53,13 +40,11 @@ export const courseChangeCheckQuery = (
   mode: BookingMode,
   target: CourseChangeTarget | null = null,
 ) => {
-  const key: Partial<CourseChangeBody> = withTeacher({ ...body }, target);
-  delete key.clientRequestId;
-  delete key.override;
-  const base = baseOf(mode, target);
+  const key = { ...body, clientRequestId: undefined, override: undefined };
+  const { check, key: scope } = targetOf(mode, target);
   return queryOptions({
-    queryKey: bookingKeys.courseChangeCheck(mode, base, JSON.stringify(key)),
-    queryFn: () => apiSend<CourseChangeCheck>('POST', `${base}/change/check`, key),
+    queryKey: bookingKeys.courseChangeCheck(mode, scope, JSON.stringify(key)),
+    queryFn: () => check(key),
     retry: false,
     gcTime: 0,
   });
@@ -70,5 +55,4 @@ export const changeCourse = (
   body: CourseChangeBody,
   mode: BookingMode,
   target: CourseChangeTarget | null = null,
-) =>
-  apiSend<CourseChangeResult>('POST', `${baseOf(mode, target)}/change`, withTeacher(body, target));
+) => targetOf(mode, target).change(body);

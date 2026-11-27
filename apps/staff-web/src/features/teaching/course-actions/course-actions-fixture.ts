@@ -89,7 +89,7 @@ export function routeSend(apiSend: Mock, answers: unknown[] = []): void {
     if (path.endsWith('/change/check')) return Promise.resolve(CHECK);
     const answer = answers.shift() ?? {
       subscriptionId: SUB,
-      ruleIds: ['r-9'],
+      ruleIds: ['9a1b2c3d-0000-4000-8000-000000000009'],
       endsOn: CHECK.endsOn,
     };
     return answer instanceof Error ? Promise.reject(answer) : Promise.resolve(answer);
