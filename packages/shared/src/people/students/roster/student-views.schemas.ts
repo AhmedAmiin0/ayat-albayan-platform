@@ -50,6 +50,7 @@ export const studentRowSchema = studentRefSchema.extend({
   tz: z.string(),
   updated_at: z.string(),
 });
+export type StudentRowView = z.infer<typeof studentRowSchema>;
 
 /** GET /students/teacher-options: the active teachers. */
 export const teacherOptionSchema = z.object({
@@ -57,6 +58,7 @@ export const teacherOptionSchema = z.object({
   display_name_ar: z.string(),
   meeting_link: z.string().nullable(),
 });
+export type TeacherOptionView = z.infer<typeof teacherOptionSchema>;
 
 /** GET /students/:id: the row, its family with every number, its teacher and siblings. */
 export const studentProfileSchema = studentRowSchema.extend({
@@ -75,5 +77,6 @@ export const studentProfileSchema = studentRowSchema.extend({
 export type StudentProfileView = z.infer<typeof studentProfileSchema>;
 
 export const studentStatusCountsSchema = z.record(z.enum(STUDENT_STATUSES), z.number());
+export type StudentStatusCountsView = z.infer<typeof studentStatusCountsSchema>;
 
 export const mergeAnswerSchema = z.object({ merge_id: z.string() });
