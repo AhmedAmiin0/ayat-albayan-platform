@@ -76,11 +76,11 @@ export class SubscriptionsController {
 
   @Route(routes.remove)
   @HttpCode(204)
-  async remove(
-    @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
+  remove(
     @CurrentUser() user: AuthUser,
+    @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
   ): Promise<void> {
-    await this.subs.remove(params.id, user.id);
+    return this.subs.remove(params.id, user.id);
   }
 }
 
