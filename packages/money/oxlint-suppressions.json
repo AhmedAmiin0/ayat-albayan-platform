@@ -150,11 +150,6 @@
       "count": 2
     }
   },
-  "src/ledger/views.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/pricing/currency.ts": {
     "stylistic/max-len": {
       "count": 1

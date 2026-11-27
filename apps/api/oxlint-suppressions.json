@@ -1908,11 +1908,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/subscriptions/subscriptions.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 10
-    }
-  },
   "src/modules/finance/subscriptions/subscriptions.dto.ts": {
     "ab/no-shape-checks": {
       "count": 1
