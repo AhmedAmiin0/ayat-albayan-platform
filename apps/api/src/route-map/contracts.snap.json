@@ -3626,6 +3626,24 @@
    ]
   }
  },
+ "GET /integrations/google/callback": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "code": {
+     "type": "string"
+    },
+    "state": {
+     "type": "string"
+    },
+    "error": {
+     "type": "string"
+    }
+   }
+  },
+  "response": "redirect"
+ },
  "GET /invoices": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19697,6 +19715,18 @@
   }
  },
  "POST /internal/jobs/:name/kick": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "name"
+   ]
+  },
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -19713,7 +19743,11 @@
      ]
     }
    }
-  }
+  },
+  "response": "empty"
+ },
+ "POST /internal/jobs/config-reload/here": {
+  "response": "empty"
  },
  "POST /job-applicants": {
   "body": {
