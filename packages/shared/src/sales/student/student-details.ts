@@ -3,7 +3,7 @@ import type { Attendance, LessonStatus, Program, StudentStatus } from '@ab/catal
 import type { ReportSummaryView } from '../../reports';
 import { isCancelledLesson } from '@ab/schedule';
 import type { SalesHistoryEntry } from '../teacher/academy-lists.schemas';
-import type { SalesPackageSummary } from './student-package';
+import type { SalesPackageSummary } from './student-views.schemas';
 import type { SalesStudentSchedule } from './student-schedule';
 import type { SalesStudentFamily } from './student-family';
 import type { TrialOutcome } from '../../people/students';

@@ -5,8 +5,8 @@ import {
   rosterScheduleText,
   scheduleGroups,
   scheduleLine,
-  type RosterSlot,
 } from './student-roster';
+import type { RosterSlot } from './student-views.schemas';
 
 const DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 const asma = { display_name_ar: 'أسماء حسين', display_name_en: 'Asma Hussein' };
