@@ -155,7 +155,7 @@
       "count": 6
     },
     "ab/no-untyped-api-calls": {
-      "count": 9
+      "count": 1
     }
   },
   "src/messaging/calls/calls-realtime.ts": {

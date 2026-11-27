@@ -1,3 +1,4 @@
+import { crmWebhookCalls } from '@ab/client-core';
 import type { IntegrationConfigItem, IntegrationPlainKey, IntegrationSecretKey } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -20,9 +21,8 @@ export const putIntegrationSecret = (input: { key: IntegrationSecretKey; value: 
 export const clearIntegrationSecret = (key: IntegrationSecretKey) =>
   apiSend<IntegrationConfigItem[]>('DELETE', `/settings/integrations/secrets/${key}`);
 
-/** POST /settings/integrations/crm-webhook: the CRM's delivery-ticks webhook (never its secret). */
-export const registerCrmWebhook = (): Promise<unknown> =>
-  apiSend('POST', '/settings/integrations/crm-webhook');
+/** The CRM's delivery-ticks webhook (never its secret). */
+export const registerCrmWebhook = crmWebhookCalls({ apiFetch, apiSend }).register;
 
 /** POST /settings/integrations/storage-probe: put, read, delete a probe object (docs/45). */
 export const probeStorage = (): Promise<unknown> =>

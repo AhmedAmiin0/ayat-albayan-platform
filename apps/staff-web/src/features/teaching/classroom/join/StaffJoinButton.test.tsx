@@ -8,7 +8,7 @@ import { StaffJoinButton } from './StaffJoinButton';
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
-const L = lesson({ id: 'l-7', status: 'scheduled', starts_at: '2026-10-03T16:00:00.000Z', minutes: 60 });
+const L = lesson({ id: '00000000-0000-4000-8000-0000000000a7', status: 'scheduled', starts_at: '2026-10-03T16:00:00.000Z', minutes: 60 });
 const show = (l = L) =>
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -38,8 +38,8 @@ describe('StaffJoinButton «افتح الحلقة الآن»', () => {
     show();
     fireEvent.click(screen.getByRole('button', { name: t.classroom.openNow }));
     const link = await screen.findByRole('link', { name: t.classroom.enter });
-    expect(link.getAttribute('href')).toBe('/classroom/l-7');
-    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-7/room/open');
+    expect(link.getAttribute('href')).toBe('/classroom/00000000-0000-4000-8000-0000000000a7');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/00000000-0000-4000-8000-0000000000a7/room/open', undefined);
     expect(screen.queryByRole('button', { name: t.classroom.openNow })).toBeNull();
     expect(screen.getByText(t.classroom.openedHint)).toBeTruthy();
   });

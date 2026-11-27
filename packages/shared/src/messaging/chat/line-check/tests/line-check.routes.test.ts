@@ -32,6 +32,11 @@ describe('lineCheckRoutes', () => {
     expect(lines).toEqual(['POST /messaging/lines/check']);
   });
 
+  it('carries the template managers permission and the messaging tag', () => {
+    expect(routes.check.permissions).toEqual(['templates.manage']);
+    expect(routes.check.tags).toEqual(['messaging']);
+  });
+
   it('takes no input and answers one view per line', () => {
     expect(routes.check).not.toHaveProperty('body');
     expect(routes.check.response.parse([VIEW])).toEqual([VIEW]);

@@ -1,5 +1,4 @@
 import {
-  firstName,
   joinWindow,
   pickStudentLesson,
   roomNameOfStudent,
@@ -23,6 +22,7 @@ import {
   looksLikeLinkToken,
 } from '@/modules/teaching/classroom/join/join-link.token';
 import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
+import { toStudentLinkView } from './student-link.mapper';
 import { flagsOf, type LinkStudent, type PortalLessonInput } from './student-link.flags';
 import { StudentLinkRepo, type StudentLesson } from './student-link.repo';
 
@@ -45,14 +45,7 @@ export class StudentLinkService {
   /** GET /public/student/:token. 404 link_invalid, 429. */
   async view(call: PublicCall, now = new Date()): Promise<StudentLinkView> {
     const { student, lesson, win } = await this.resolve(call, now);
-    const view = lesson && {
-      id: lesson.id,
-      starts_at: lesson.starts_at,
-      ends_at: lesson.ends_at,
-      teacher_name: lesson.teacher_name,
-      window: joinWindow(lesson, now, win),
-    };
-    return { first_name: firstName(student.name), lesson: view };
+    return toStudentLinkView({ name: student.name, lesson, win, now });
   }
 
   /** POST /public/student/:token/join. 404 link_invalid / no_lesson, 403 join_not_open_yet (opens_at) / removed_from_room, 410, 429, 503. */

@@ -58,4 +58,11 @@ describe('studentRecordingsRoutes (R-REC)', () => {
   it('answers nothing on delete', () => {
     expect(routes.remove.response).toBe('empty');
   });
+
+  it('lets staff read with recordings.read and change with recordings.manage', () => {
+    const access = Object.values(routes).map((r) => [r.permissions, r.tags]);
+    const read = [['recordings.read'], ['classroom']];
+    const manage = [['recordings.manage'], ['classroom']];
+    expect(access).toEqual([read, read, manage, manage]);
+  });
 });

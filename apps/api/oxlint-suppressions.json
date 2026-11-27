@@ -2215,7 +2215,7 @@
   },
   "src/modules/messaging/calls/http/calls.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/messaging/calls/kapso/calling-line.ts": {
@@ -6090,14 +6090,6 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/reports.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 7
-    }
-  },
   "src/modules/reporting/reports/shared/report-access.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -6214,11 +6206,6 @@
       "count": 5
     }
   },
-  "src/modules/reporting/reports/v2/report-v2.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/reporting/reports/v2/report-v2.mapper.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -6242,11 +6229,6 @@
   },
   "src/modules/sales/job-applicants/job-applicants.repo.ts": {
     "ab/module-boundaries": {
-      "count": 2
-    }
-  },
-  "src/modules/sales/leads/lead-family.controller.ts": {
-    "ab/zod-inputs": {
       "count": 2
     }
   },
@@ -6508,7 +6490,7 @@
   },
   "src/modules/sales/sales-students/details/sales-student.controller.ts": {
     "ab/zod-inputs": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/details/sales-student.mapper.ts": {
@@ -7791,11 +7773,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/join/room-open.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/classroom/join/room-open.service.ts": {
     "complexity": {
       "count": 1
@@ -8249,7 +8226,7 @@
   },
   "src/modules/teaching/classroom/student-link/student-link.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/student-link/student-link.fakes.ts": {
@@ -9286,11 +9263,6 @@
   "src/modules/teaching/student-channels/controllers/channel.portal.controller.ts": {
     "ab/zod-inputs": {
       "count": 5
-    }
-  },
-  "src/modules/teaching/student-channels/controllers/channel.presence.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/teaching/student-channels/controllers/channel.teacher.controller.ts": {

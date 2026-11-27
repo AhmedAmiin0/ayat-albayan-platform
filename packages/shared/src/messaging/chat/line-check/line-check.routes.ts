@@ -8,5 +8,7 @@ export const lineCheckRoutes = {
     method: 'POST',
     path: '/messaging/lines/check',
     response: lineCheckResponseSchema,
+    permissions: ['templates.manage'],
+    tags: ['messaging'],
   }),
 };

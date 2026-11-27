@@ -1,15 +1,13 @@
 import { portalAssetsRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode, Inject } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { PortalAssetsService } from './portal-assets.service';
 
 /** Family portal recordings and lesson files: same scope key as PortalController. */
-@ApiTags('portal')
 @ApiBearerAuth()
-@Permissions('self.portal')
 @Controller()
 export class PortalAssetsController {
   constructor(@Inject(PortalAssetsService) private readonly assets: PortalAssetsService) {}

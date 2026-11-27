@@ -1,26 +1,21 @@
-import {
-  reportDraftSchema,
-  reportSubmitSchema,
-  type ReportView,
-  type SignedDownload,
-} from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { reportRoutes as routes, type ReportView, type SignedDownload } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow, sentOnly } from '@/common/http/http';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ReportFilesService } from './files/report-files.service';
 import { ReportSubmitService } from './submit/report-submit.service';
 import { ReportsService } from './shared/reports.service';
+
+type Input<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
 /**
  * One report (docs/11 §4 R2, R3, R4, R6, R12): read, autosave, submit / edit, the PDF.
  * A teacher touches only their own reports (ReportAccess → 403).
  */
-@ApiTags('reports')
 @ApiBearerAuth()
-@Permissions('reports.read')
-@Controller('reports')
+@Controller()
 export class ReportsController {
   constructor(
     private readonly reports: ReportsService,
@@ -28,46 +23,42 @@ export class ReportsController {
     private readonly files: ReportFilesService,
   ) {}
 
-  @Get(':id')
-  get(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<ReportView> {
-    return this.reports.get(id, user);
+  @Route(routes.get)
+  get(@RouteInput() { params }: Input<'get'>, @CurrentUser() user: AuthUser): Promise<ReportView> {
+    return this.reports.get(params.id, user);
   }
 
-  /** R2 autosave: only the fields sent are written; 409 already_submitted after a submit. */
-  @Put(':id/draft')
-  @Permissions('reports.write')
+  @Route(routes.draft)
   draft(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @RouteInput() { params, body }: Input<'draft'>,
     @CurrentUser() user: AuthUser,
   ): Promise<ReportView> {
-    const form = sentOnly(parseOrThrow(reportDraftSchema, body), body);
-    return this.reports.draft({ id, form, user });
+    return this.reports.draft({ id: params.id, form: body, user });
   }
 
-  /** R3: 400 validation_failed (missing_attendance / missing_grades), 409 version / window / lesson. */
-  @Post(':id/submit')
+  @Route(routes.submit)
   @HttpCode(200)
-  @Permissions('reports.write')
   submit(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @RouteInput() { params, body }: Input<'submit'>,
     @CurrentUser() user: AuthUser,
   ): Promise<ReportView> {
-    return this.submits.submit({ id, form: parseOrThrow(reportSubmitSchema, body), user });
+    return this.submits.submit({ id: params.id, form: body, user });
   }
 
-  /** R6: 1 h signed URL; 409 pdf_not_ready. */
-  @Get(':id/pdf')
-  pdf(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<SignedDownload> {
-    return this.files.pdfUrl({ id, user });
+  @Route(routes.pdf)
+  pdf(
+    @RouteInput() { params }: Input<'pdf'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SignedDownload> {
+    return this.files.pdfUrl({ id: params.id, user });
   }
 
-  /** R12: failed → pending; 409 pdf_not_failed. */
-  @Post(':id/pdf/retry')
+  @Route(routes.retryPdf)
   @HttpCode(200)
-  @Permissions('reports.resend')
-  retry(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<ReportView> {
-    return this.submits.retryPdf({ id, user });
+  retry(
+    @RouteInput() { params }: Input<'retryPdf'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ReportView> {
+    return this.submits.retryPdf({ id: params.id, user });
   }
 }

@@ -42,7 +42,7 @@ describe('«ربط علامات التسليم من نظام CRM تلقائيً�
     expect(await screen.findByRole('button', { name: s.pending })).toHaveProperty('disabled', true);
     answer(ANSWER);
     await waitFor(() => expect(onNote).toHaveBeenCalledExactlyOnceWith(s.done));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/settings/integrations/crm-webhook');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/settings/integrations/crm-webhook', undefined);
     expect(screen.queryByText(s.done)).toBeNull();
     expect(invalidate).toHaveBeenCalledWith({ queryKey: integrationsQuery.queryKey });
   });

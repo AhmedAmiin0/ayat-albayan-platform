@@ -1370,9 +1370,6 @@
   "src/features/messaging/inbox/lead/link-family.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/lead/qualification/PreferenceFields.tsx": {
@@ -4335,7 +4332,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 12
+      "count": 6
     }
   },
   "src/features/reporting/reports/chart/ChartPoints.tsx": {
@@ -5518,11 +5515,6 @@
   "src/features/teaching/booking/trial-date/trial-fixture.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/features/teaching/classroom/api/meetings-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/features/teaching/classroom/join/GuestJoinPage.tsx": {

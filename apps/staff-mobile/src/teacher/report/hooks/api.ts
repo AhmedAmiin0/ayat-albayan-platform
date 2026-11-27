@@ -6,7 +6,7 @@ import type {
   SignedUpload,
   SubmitBody,
 } from '@ab/shared';
-import { reportErrorWords } from '@ab/client-core';
+import { reportCalls, reportErrorWords } from '@ab/client-core';
 import { useQuery, type QueryClient } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend, t, pathKey } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
@@ -53,9 +53,11 @@ export async function refreshAfterSubmit(client: QueryClient): Promise<void> {
   ]);
 }
 
-export const saveDraft = (id: string, body: DraftBody) => apiSend<ReportView>('PUT', `/reports/${id}/draft`, body);
+const reports = reportCalls({ apiFetch, apiSend });
 
-export const submitReport = (id: string, body: SubmitBody) => apiSend<ReportView>('POST', `/reports/${id}/submit`, body);
+export const saveDraft = (id: string, body: DraftBody) => reports.draft({ id }, body);
+
+export const submitReport = (id: string, body: SubmitBody) => reports.submit({ id }, body);
 
 /** R7 → Storage signed upload (the bytes, as the receipts do) → R8 register. */
 export async function uploadAttachment(id: string, file: Receipt): Promise<ReportAttachmentView> {
