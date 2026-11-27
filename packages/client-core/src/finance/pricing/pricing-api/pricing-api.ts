@@ -1,4 +1,4 @@
-import { pricingRoutes as routes } from '@ab/shared';
+import { pricingRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../../core/http';
 import type { PricingCalls } from './pricing-api.types';
 
@@ -6,7 +6,7 @@ import type { PricingCalls } from './pricing-api.types';
 export function pricingCalls(client: ApiClient): PricingCalls {
   const call = callWith(client);
   return {
-    catalog: (query) => call({ route: routes.catalog, query }),
-    quote: (query) => call({ route: routes.quote, query }),
+    catalog: (query) => call({ route: pricingRoutes.catalog, query }),
+    quote: (query) => call({ route: pricingRoutes.quote, query }),
   };
 }
