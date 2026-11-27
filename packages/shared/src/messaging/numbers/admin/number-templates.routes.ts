@@ -1,6 +1,6 @@
 import { defineRoute, id } from '@ab/core';
 import { z } from 'zod';
-import { templateNumberSyncViewSchema } from '../../templates/template-number';
+import { templateNumberSyncViewSchema } from './number-templates.schemas';
 
 /** Template managers only, never a sales, assistant or teacher role (docs/23c decision 9). */
 export const numberTemplatesRoutes = {
