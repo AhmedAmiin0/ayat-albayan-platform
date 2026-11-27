@@ -1,5 +1,5 @@
 import { LOCALE_STORAGE_KEY } from '@ab/core';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { LanguageSwitch } from './LanguageSwitch';
@@ -18,7 +18,8 @@ afterEach(() => {
   session.current = null;
 });
 
-const press = () => fireEvent.click(screen.getByRole('button', { name: new RegExp(t.language.label) }));
+const press = () =>
+  fireEvent.click(screen.getByRole('button', { name: new RegExp(t.language.label) }));
 const stubReload = () => {
   const reload = vi.fn();
   vi.stubGlobal('location', { reload });
@@ -60,5 +61,27 @@ describe('LanguageSwitch (no saved choice: Arabic UI)', () => {
     expect(await screen.findByText(t.common.error)).toBeTruthy();
     expect(reload).not.toHaveBeenCalled();
     expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBeNull();
+  });
+
+  it('waits while the choice is written and keeps the language on the way', async () => {
+    session.current = { access_token: 'tok' };
+    apiSend.mockReturnValue(new Promise(() => undefined));
+    render(<LanguageSwitch />);
+    press();
+    const button = screen.getByRole('button', { name: new RegExp(t.language.label) });
+    await waitFor(() => expect(button.hasAttribute('disabled')).toBe(true));
+    expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBeNull();
+  });
+
+  it('the failure notice goes away on its own', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    session.current = { access_token: 'tok' };
+    apiSend.mockRejectedValue(new Error('down'));
+    render(<LanguageSwitch />);
+    press();
+    await screen.findByText(t.common.error);
+    await act(async () => void (await vi.advanceTimersByTimeAsync(5000)));
+    expect(screen.queryByText(t.common.error)).toBeNull();
+    vi.useRealTimers();
   });
 });
