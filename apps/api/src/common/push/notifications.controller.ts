@@ -43,9 +43,7 @@ export class NotificationsController {
 }
 
 /** Browser push registration (R-NOT-02): the caller's own browsers. */
-@ApiTags('me')
 @ApiBearerAuth()
-@Permissions('notifications.push')
 @Controller()
 export class WebPushController {
   constructor(private readonly queries: NotificationsRepo) {}
@@ -62,6 +60,8 @@ export class WebPushController {
    * No route object yet: the allow-list needs the URL global, which the shared package avoids.
    */
   @Put('me/web-push')
+  @ApiTags('me')
+  @Permissions('notifications.push')
   @HttpCode(204)
   async subscribe(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
     const sub = parseOrThrow(webPushSubscriptionSchema, body);
