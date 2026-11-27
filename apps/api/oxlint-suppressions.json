@@ -91,11 +91,6 @@
       "count": 5
     }
   },
-  "src/common/config-store.boundaries.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/common/configuration/config-store/boundaries/config-parity.test.ts": {
     "typescript/dot-notation": {
       "count": 1
@@ -136,14 +131,6 @@
   "src/common/configuration/config-store/config-store.types.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/common/configuration/config-store/io/config-entries.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/common/configuration/config-store/io/config-entries.mapper.ts": {

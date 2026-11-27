@@ -125,7 +125,7 @@
   },
   "src/seed/entries.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/seed/seed-entries.sql-keys.test.ts": {

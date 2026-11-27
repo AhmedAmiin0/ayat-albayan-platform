@@ -1,26 +1,11 @@
 import { defineRoute } from '@ab/core';
 import { z } from 'zod';
-import {
-  lessonProposalRequestSchema,
-  proposalApproveSchema,
-  proposalRejectSchema,
-  type ProposalApprove,
-  type ProposalReject,
-} from '../../schemas';
+import { lessonProposalRequestSchema } from '../../schemas';
 import { lessonViewListSchema, lessonViewSchema } from '../lesson-view';
+import { approveDecisionSchema, rejectDecisionSchema } from './lesson-proposals.schemas';
 
 const byId = z.object({ id: z.uuid() });
 const decisions = { permissions: ['lessons.write'], tags: ['lessons'] } as const;
-
-/** A decision sent without a JSON body is the empty one. */
-const approveBody = z.preprocess(
-  (value: ProposalApprove | null | undefined) => value ?? {},
-  proposalApproveSchema,
-);
-const rejectBody = z.preprocess(
-  (value: ProposalReject | null | undefined) => value ?? {},
-  proposalRejectSchema,
-);
 
 /** Staff answers to teacher proposals and family requests (R-SCH-08). */
 export const lessonProposalRoutes = {
@@ -36,7 +21,7 @@ export const lessonProposalRoutes = {
     method: 'POST',
     path: '/lesson-proposals/:id/approve',
     params: byId,
-    body: approveBody,
+    body: approveDecisionSchema,
     response: lessonViewSchema,
     ...decisions,
   }),
@@ -45,7 +30,7 @@ export const lessonProposalRoutes = {
     method: 'POST',
     path: '/lesson-proposals/:id/reject',
     params: byId,
-    body: rejectBody,
+    body: rejectDecisionSchema,
     response: lessonViewSchema,
     ...decisions,
   }),

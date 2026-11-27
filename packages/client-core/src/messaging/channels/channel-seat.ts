@@ -1,4 +1,4 @@
-import { CHANNEL_SEAT_TAKEN, channelSeatRoutes as seatRoutes, type ChannelSeat } from '@ab/shared';
+import { CHANNEL_SEAT_TAKEN, channelSeatRoutes, type ChannelSeat } from '@ab/shared';
 import { apiErrorCode, callWith, type ApiClient } from '../../core/http';
 
 // One assistant seat per student chat (any assistant may take it, one at a time; the one who
@@ -73,12 +73,12 @@ export const seatErrorText = (e: unknown, words: SeatErrorWords): string =>
 /** `done` re-reads the seat after a take-over or leave. */
 export function channelSeats(client: ApiClient): ChannelSeats {
   const call = callWith(client);
-  const take = (id: string) => call({ route: seatRoutes.take, params: { id } });
-  const leave = (id: string) => call({ route: seatRoutes.leave, params: { id } });
+  const take = (id: string) => call({ route: channelSeatRoutes.take, params: { id } });
+  const leave = (id: string) => call({ route: channelSeatRoutes.leave, params: { id } });
   return {
     seatQuery: (studentId: string) => ({
       queryKey: channelSeatKey(studentId),
-      queryFn: () => call({ route: seatRoutes.view, params: { id: studentId } }),
+      queryFn: () => call({ route: channelSeatRoutes.view, params: { id: studentId } }),
       staleTime: SEAT_STALE_MS,
       // A refusal or an odd answer is shown as no cell at once, never asked again per row.
       retry: false as const,

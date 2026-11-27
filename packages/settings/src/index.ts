@@ -15,6 +15,7 @@ export * from './google-defs';
 export * from './seed/seed-entries';
 export * from './seed/seed-payload';
 export * from './seed/entries';
+export * from './config-entries';
 export * from './value-groups/value-groups';
 export * from './custom-config';
 export * from './custom-config/public-config';

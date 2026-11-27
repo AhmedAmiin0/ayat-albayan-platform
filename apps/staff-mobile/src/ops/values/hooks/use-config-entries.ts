@@ -1,19 +1,16 @@
-import type {
-  ConfigEntriesResponse,
-  ConfigEntry,
-  ConfigEntryResult,
-  SettingKey,
-} from '@ab/settings';
+import { configEntryCalls } from '@ab/client-core';
+import type { ConfigEntry, SettingKey } from '@ab/settings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, t, refreshOverrides, locale, pathKey } from '@ab/mobile-kit';
 
 const ENTRIES = '/config/entries';
+const calls = configEntryCalls({ apiFetch, apiSend });
 
 /** docs/26 §2f: no retry since an older API lacks the route; the sheet then hides editing. */
 function useConfigEntries() {
   return useQuery({
     queryKey: pathKey(ENTRIES),
-    queryFn: () => apiFetch<ConfigEntriesResponse>(ENTRIES),
+    queryFn: calls.list,
     retry: false,
   });
 }
@@ -38,8 +35,7 @@ interface DescriptionSave {
 export function useSaveDescription() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ key, text }: DescriptionSave) =>
-      apiSend<ConfigEntryResult>('PUT', `${ENTRIES}/${encodeURIComponent(key)}/description`, { text }),
+    mutationFn: (save: DescriptionSave) => calls.describe(save),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: pathKey(ENTRIES) });
       void refreshOverrides(t, locale).catch(() => undefined);

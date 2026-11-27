@@ -22,8 +22,16 @@ const relImports = (file: string): string[] =>
     relative(SRC, target(file, m[1] ?? '')).split(sep).join('/'),
   );
 
-/** What config-store may import outside itself: infrastructure (incl. the process-role gate of its seeder and the config-reload kick) and the one parse helper. */
-const STORE_MAY_IMPORT = [/^common\/(db|auth|audit|infra\/cache)\//, /^config\/env\/env$/, /^config\/role\/(background-job|worker-kick)$/, /^common\/http\/http$/];
+/**
+ * What config-store may import outside itself: infrastructure (incl. the process-role gate of its
+ * seeder and the config-reload kick) and the HTTP contract helpers (parse, route objects, answers).
+ */
+const STORE_MAY_IMPORT = [
+  /^common\/(db|auth|audit|infra\/cache)\//,
+  /^config\/env\/env$/,
+  /^config\/role\/(background-job|worker-kick)$/,
+  /^common\/http\/(http|route|returns)$/,
+];
 
 /**
  * Raw `settings` / `custom_config` table access allowed TODAY. common/config-store is the target;

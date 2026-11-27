@@ -1,6 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
+import { answered } from '@/today/testing/answered';
+import { lesson } from '@/today/testing/fixtures';
 import { FamilyRequests } from './FamilyRequests';
 
 const mockApiFetch = jest.fn();
@@ -11,25 +13,28 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 
+const uuid = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 const REQUEST = {
-  id: 'p1',
-  lesson_id: 'l1',
+  id: uuid(1),
+  lesson_id: uuid(2),
   starts_at: '2026-11-17T16:30:00.000Z',
   ends_at: '2026-11-17T17:15:00.000Z',
   status: 'scheduled',
   proposed_starts_at: '2026-11-18T15:30:00.000Z',
   note: 'لدى يوسف اختبار مساء الإثنين',
   created_at: '2026-11-16T10:00:00.000Z',
-  teacher: { id: 't1', display_name_ar: 'فاطمة', display_name_en: null, tz: 'Africa/Cairo' },
-  students: [{ id: 's1', code: 'AB-0147', name: 'يوسف أحمد', tz: 'Africa/Cairo' }],
+  teacher: { id: uuid(3), display_name_ar: 'فاطمة', display_name_en: null, tz: 'Africa/Cairo' },
+  students: [{ id: uuid(4), code: 'AB-0147', name: 'يوسف أحمد', tz: 'Africa/Cairo' }],
 };
-const MOVED = { id: 'l2', starts_at: REQUEST.proposed_starts_at, status: 'scheduled' };
+const MOVED = answered(lesson({ id: 'l2', starts_at: REQUEST.proposed_starts_at }));
 const P = t.lessons.proposal;
 
 beforeEach(() => {
   mockApiFetch.mockReset();
   mockApiSend.mockReset();
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/family-requests' ? [REQUEST] : []));
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/family-requests' ? [REQUEST] : [],
+  );
   mockApiSend.mockResolvedValue(MOVED);
 });
 
@@ -48,7 +53,9 @@ test('«طلبات الأسر · 1»: the row opens the answer with the family�
 test('«وافق على الموعد» approves the asked time', async () => {
   await openRequest();
   await fireEvent.press(screen.getByRole('button', { name: P.approve }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/family-requests/p1/approve', {}));
+  await waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('POST', `/family-requests/${REQUEST.id}/approve`, {}),
+  );
 });
 
 test('«ارفض الطلب» asks for the note the family reads, then declines with it', async () => {
@@ -58,7 +65,9 @@ test('«ارفض الطلب» asks for the note the family reads, then declines 
   await fireEvent.changeText(screen.getByLabelText(P.decisionNote), 'لا يتوفر وقت آخر');
   await fireEvent.press(screen.getByRole('button', { name: P.rejectRequest }));
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', '/family-requests/p1/reject', { note: 'لا يتوفر وقت آخر' }),
+    expect(mockApiSend).toHaveBeenCalledWith('POST', `/family-requests/${REQUEST.id}/reject`, {
+      note: 'لا يتوفر وقت آخر',
+    }),
   );
 });
 
