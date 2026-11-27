@@ -15,8 +15,3 @@ export const ACCOUNT_ERRORS = [
   'name_too_long',
 ] as const;
 export type AccountError = (typeof ACCOUNT_ERRORS)[number];
-
-/** The answer of an admin's PUT / DELETE /teachers/:id/avatar and /users/:id/avatar. */
-export interface StaffPhotoView {
-  avatar_url: string | null;
-}

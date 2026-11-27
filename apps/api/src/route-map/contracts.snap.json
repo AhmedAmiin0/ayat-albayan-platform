@@ -476,6 +476,37 @@
   },
   "response": "empty"
  },
+ "DELETE /teachers/:id/avatar": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "avatar_url"
+   ]
+  }
+ },
  "DELETE /teachers/:id/time-off/:timeOffId": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -498,6 +529,54 @@
    ]
   },
   "response": "empty"
+ },
+ "DELETE /users/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
+ },
+ "DELETE /users/:id/avatar": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "avatar_url"
+   ]
+  }
  },
  "GET /admin-tasks": {
   "query": {
@@ -14214,6 +14293,344 @@
      ]
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "email": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "full_name": {
+        "type": "string"
+       },
+       "phone_e164": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "role": {
+        "type": "string",
+        "enum": [
+         "admin",
+         "teacher",
+         "guardian",
+         "assistant",
+         "sales",
+         "student"
+        ]
+       },
+       "role_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "role_key": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "active",
+         "disabled"
+        ]
+       },
+       "disabled_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "last_sign_in_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_at": {
+        "type": "string"
+       },
+       "linked": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "kind": {
+            "type": "string",
+            "enum": [
+             "teacher",
+             "student",
+             "guardian"
+            ]
+           },
+           "id": {
+            "type": "string"
+           },
+           "name": {
+            "type": "string"
+           },
+           "code": {
+            "type": [
+             "string",
+             "null"
+            ]
+           }
+          },
+          "required": [
+           "kind",
+           "id",
+           "name",
+           "code"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "username": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "is_test": {
+        "type": "boolean"
+       },
+       "avatar_url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "avatar_seed": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "email",
+       "full_name",
+       "phone_e164",
+       "role",
+       "role_id",
+       "role_key",
+       "status",
+       "disabled_at",
+       "last_sign_in_at",
+       "created_at",
+       "linked"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
+  }
+ },
+ "GET /users/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "email": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "full_name": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "role_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "role_key": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "disabled"
+     ]
+    },
+    "disabled_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "last_sign_in_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "linked": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "kind": {
+         "type": "string",
+         "enum": [
+          "teacher",
+          "student",
+          "guardian"
+         ]
+        },
+        "id": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "code": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "kind",
+        "id",
+        "name",
+        "code"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "username": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "is_test": {
+     "type": "boolean"
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_seed": {
+     "type": "string"
+    },
+    "locale": {
+     "type": "string"
+    },
+    "tz": {
+     "type": "string"
+    },
+    "disabled_reason": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "email",
+    "full_name",
+    "phone_e164",
+    "role",
+    "role_id",
+    "role_key",
+    "status",
+    "disabled_at",
+    "last_sign_in_at",
+    "created_at",
+    "linked",
+    "locale",
+    "tz",
+    "disabled_reason"
+   ]
   }
  },
  "GET /users/link-candidates": {
@@ -14237,6 +14654,93 @@
    "required": [
     "kind"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "kind": {
+      "type": "string",
+      "enum": [
+       "teacher",
+       "student",
+       "guardian"
+      ]
+     },
+     "id": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "code": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "kind",
+     "id",
+     "name",
+     "code"
+    ]
+   }
+  }
+ },
+ "GET /users/role-options": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "key": {
+      "type": "string"
+     },
+     "name_ar": {
+      "type": "string"
+     },
+     "name_en": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "base_role": {
+      "type": "string",
+      "enum": [
+       "admin",
+       "teacher",
+       "guardian",
+       "assistant",
+       "sales",
+       "student"
+      ]
+     },
+     "is_system": {
+      "type": "boolean"
+     },
+     "assignable": {
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "id",
+     "key",
+     "name_ar",
+     "name_en",
+     "base_role",
+     "is_system",
+     "assignable"
+    ]
+   }
   }
  },
  "PATCH /admin/numbers/:id": {
@@ -17628,6 +18132,20 @@
   }
  },
  "PATCH /users/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -17710,6 +18228,160 @@
      ]
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "email": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "full_name": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "role_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "role_key": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "disabled"
+     ]
+    },
+    "disabled_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "last_sign_in_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "linked": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "kind": {
+         "type": "string",
+         "enum": [
+          "teacher",
+          "student",
+          "guardian"
+         ]
+        },
+        "id": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "code": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "kind",
+        "id",
+        "name",
+        "code"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "username": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "is_test": {
+     "type": "boolean"
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_seed": {
+     "type": "string"
+    },
+    "locale": {
+     "type": "string"
+    },
+    "tz": {
+     "type": "string"
+    },
+    "disabled_reason": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "email",
+    "full_name",
+    "phone_e164",
+    "role",
+    "role_id",
+    "role_key",
+    "status",
+    "disabled_at",
+    "last_sign_in_at",
+    "created_at",
+    "linked",
+    "locale",
+    "tz",
+    "disabled_reason"
+   ]
   }
  },
  "PATCH /users/:id/role": {
@@ -34452,6 +35124,20 @@
   }
  },
  "POST /teachers/:id/avatar/upload-url": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -34473,6 +35159,30 @@
    "required": [
     "mime",
     "size"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
    ]
   }
  },
@@ -35092,9 +35802,212 @@
     "full_name",
     "role"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "user": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "email": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "full_name": {
+       "type": "string"
+      },
+      "phone_e164": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "teacher",
+        "guardian",
+        "assistant",
+        "sales",
+        "student"
+       ]
+      },
+      "role_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "role_key": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "active",
+        "disabled"
+       ]
+      },
+      "disabled_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "last_sign_in_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "created_at": {
+       "type": "string"
+      },
+      "linked": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "kind": {
+           "type": "string",
+           "enum": [
+            "teacher",
+            "student",
+            "guardian"
+           ]
+          },
+          "id": {
+           "type": "string"
+          },
+          "name": {
+           "type": "string"
+          },
+          "code": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "kind",
+          "id",
+          "name",
+          "code"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "username": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "is_test": {
+       "type": "boolean"
+      },
+      "avatar_url": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "avatar_seed": {
+       "type": "string"
+      },
+      "locale": {
+       "type": "string"
+      },
+      "tz": {
+       "type": "string"
+      },
+      "disabled_reason": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "id",
+      "email",
+      "full_name",
+      "phone_e164",
+      "role",
+      "role_id",
+      "role_key",
+      "status",
+      "disabled_at",
+      "last_sign_in_at",
+      "created_at",
+      "linked",
+      "locale",
+      "tz",
+      "disabled_reason"
+     ]
+    },
+    "credential": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "kind": {
+         "type": "string",
+         "enum": [
+          "password",
+          "link"
+         ]
+        },
+        "value": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "kind",
+        "value"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "user",
+    "credential"
+   ]
   }
  },
  "POST /users/:id/avatar/upload-url": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -35117,9 +36030,47 @@
     "mime",
     "size"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
+   ]
   }
  },
  "POST /users/:id/disable": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -35129,9 +36080,347 @@
      "maxLength": 500
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "email": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "full_name": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "role_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "role_key": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "disabled"
+     ]
+    },
+    "disabled_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "last_sign_in_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "linked": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "kind": {
+         "type": "string",
+         "enum": [
+          "teacher",
+          "student",
+          "guardian"
+         ]
+        },
+        "id": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "code": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "kind",
+        "id",
+        "name",
+        "code"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "username": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "is_test": {
+     "type": "boolean"
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_seed": {
+     "type": "string"
+    },
+    "locale": {
+     "type": "string"
+    },
+    "tz": {
+     "type": "string"
+    },
+    "disabled_reason": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "email",
+    "full_name",
+    "phone_e164",
+    "role",
+    "role_id",
+    "role_key",
+    "status",
+    "disabled_at",
+    "last_sign_in_at",
+    "created_at",
+    "linked",
+    "locale",
+    "tz",
+    "disabled_reason"
+   ]
+  }
+ },
+ "POST /users/:id/enable": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "email": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "full_name": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "role_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "role_key": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "active",
+      "disabled"
+     ]
+    },
+    "disabled_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "last_sign_in_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string"
+    },
+    "linked": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "kind": {
+         "type": "string",
+         "enum": [
+          "teacher",
+          "student",
+          "guardian"
+         ]
+        },
+        "id": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "code": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "kind",
+        "id",
+        "name",
+        "code"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "username": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "is_test": {
+     "type": "boolean"
+    },
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "avatar_seed": {
+     "type": "string"
+    },
+    "locale": {
+     "type": "string"
+    },
+    "tz": {
+     "type": "string"
+    },
+    "disabled_reason": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "email",
+    "full_name",
+    "phone_e164",
+    "role",
+    "role_id",
+    "role_key",
+    "status",
+    "disabled_at",
+    "last_sign_in_at",
+    "created_at",
+    "linked",
+    "locale",
+    "tz",
+    "disabled_reason"
+   ]
   }
  },
  "POST /users/:id/reset-password": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -35150,7 +36439,213 @@
      "maxLength": 72
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "user": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "email": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "full_name": {
+       "type": "string"
+      },
+      "phone_e164": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "role": {
+       "type": "string",
+       "enum": [
+        "admin",
+        "teacher",
+        "guardian",
+        "assistant",
+        "sales",
+        "student"
+       ]
+      },
+      "role_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "role_key": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "active",
+        "disabled"
+       ]
+      },
+      "disabled_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "last_sign_in_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "created_at": {
+       "type": "string"
+      },
+      "linked": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "kind": {
+           "type": "string",
+           "enum": [
+            "teacher",
+            "student",
+            "guardian"
+           ]
+          },
+          "id": {
+           "type": "string"
+          },
+          "name": {
+           "type": "string"
+          },
+          "code": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "kind",
+          "id",
+          "name",
+          "code"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "username": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "is_test": {
+       "type": "boolean"
+      },
+      "avatar_url": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "avatar_seed": {
+       "type": "string"
+      },
+      "locale": {
+       "type": "string"
+      },
+      "tz": {
+       "type": "string"
+      },
+      "disabled_reason": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "id",
+      "email",
+      "full_name",
+      "phone_e164",
+      "role",
+      "role_id",
+      "role_key",
+      "status",
+      "disabled_at",
+      "last_sign_in_at",
+      "created_at",
+      "linked",
+      "locale",
+      "tz",
+      "disabled_reason"
+     ]
+    },
+    "credential": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "kind": {
+         "type": "string",
+         "enum": [
+          "password",
+          "link"
+         ]
+        },
+        "value": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "kind",
+        "value"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "user",
+    "credential"
+   ]
   }
+ },
+ "POST /users/:id/sign-out": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
  },
  "POST /webhooks/evolution/:instance": {
   "params": {
@@ -37528,6 +39023,20 @@
   }
  },
  "PUT /teachers/:id/avatar": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -37540,6 +39049,21 @@
    },
    "required": [
     "path"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "avatar_url"
    ]
   }
  },
@@ -37643,6 +39167,20 @@
   }
  },
  "PUT /users/:id/avatar": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -37655,6 +39193,21 @@
    },
    "required": [
     "path"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "avatar_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "avatar_url"
    ]
   }
  }

@@ -19,3 +19,4 @@ export type * from './users-view';
 export { recordView, roleSection, teacherModes, withRole } from './form-sections';
 export { accountCalls, type AccountCalls } from './account-api';
 export { roleCalls, type RoleCalls } from './roles-api';
+export { userCalls, type UserCalls } from './users-api';

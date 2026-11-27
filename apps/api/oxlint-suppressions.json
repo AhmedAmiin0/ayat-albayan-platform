@@ -5199,11 +5199,6 @@
       "count": 2
     }
   },
-  "src/modules/people/users/photo/staff-photo.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 6
-    }
-  },
   "src/modules/people/users/store/users.fakes.store.ts": {
     "stylistic/max-len": {
       "count": 4
@@ -5243,14 +5238,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    }
-  },
-  "src/modules/people/users/users.controller.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/zod-inputs": {
-      "count": 7
     }
   },
   "src/modules/people/users/users.fakes.ts": {
