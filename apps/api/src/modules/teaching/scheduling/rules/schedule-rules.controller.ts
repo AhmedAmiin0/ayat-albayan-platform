@@ -1,9 +1,10 @@
-import { ruleExtendRequestSchema } from '@ab/schedule';
+import { ruleExtendRequestSchema, scheduleRuleRoutes as routes } from '@ab/schedule';
 import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route } from '@/common/http/route';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { HorizonJob, type RunSummary } from '@/modules/teaching/scheduling/occurrences/horizon.job';
 import { RuleExtendService, type ExtendResult } from './rule-extend.service';
@@ -12,7 +13,7 @@ import { RuleExtendService, type ExtendResult } from './rule-extend.service';
 @ApiTags('schedule-rules')
 @ApiBearerAuth()
 @Permissions('lessons.write')
-@Controller('schedule-rules')
+@Controller()
 export class ScheduleRulesController {
   constructor(
     private readonly extender: RuleExtendService,
@@ -20,13 +21,13 @@ export class ScheduleRulesController {
   ) {}
 
   /** The daily horizon pass now (R-SCH-02), so rule changes show without waiting; idempotent. */
-  @Post('refresh')
+  @Route(routes.refresh)
   @HttpCode(200)
   refresh(): Promise<RunSummary> {
     return this.horizon.runOnce();
   }
 
-  @Post(':id/extend')
+  @Post('schedule-rules/:id/extend')
   @HttpCode(200)
   extend(
     @Param('id', ParseUUIDPipe) id: string,
