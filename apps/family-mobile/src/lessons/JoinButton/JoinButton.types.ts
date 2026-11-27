@@ -4,3 +4,10 @@ export interface JoinButtonProps {
   short?: boolean;
   live?: boolean;
 }
+
+export interface JoinLook {
+  short: boolean;
+  busy: boolean;
+  /** The pill's fill colour. */
+  fill: string;
+}

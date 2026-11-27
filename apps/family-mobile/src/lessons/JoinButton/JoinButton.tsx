@@ -1,14 +1,15 @@
 import { Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { AppText, pressScale, shape, t, type, useTheme } from '@ab/mobile-kit';
+import { AppText, t, type, useTheme } from '@ab/mobile-kit';
 import type { JoinButtonProps } from './JoinButton.types';
-import { idleWord } from './join-button.helpers';
+import { idleWord, pressStyle } from './join-button.helpers';
 
 /** Busy while the room link is fetched. */
 export function JoinButton({ onPress, busy, short = false, live = false }: JoinButtonProps) {
   const { color } = useTheme();
   const label = busy ? t.portal.joining : idleWord(short, live);
   const ink = short ? color.onLapis : color.lapisHover;
+  const fill = short ? color.lapisFill : color.onLapis;
   return (
     <Pressable
       accessibilityRole="button"
@@ -16,18 +17,7 @@ export function JoinButton({ onPress, busy, short = false, live = false }: JoinB
       accessibilityState={{ busy, disabled: busy }}
       disabled={busy}
       onPress={onPress}
-      style={({ pressed }) => ({
-        minHeight: short ? 44 : 48,
-        paddingHorizontal: 14,
-        borderRadius: shape.radius.md,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 8,
-        backgroundColor: short ? color.lapisFill : color.onLapis,
-        opacity: busy ? 0.7 : 1,
-        transform: [{ scale: pressScale(pressed, busy) }],
-      })}
+      style={pressStyle({ short, busy, fill })}
     >
       <Svg
         width={20}
