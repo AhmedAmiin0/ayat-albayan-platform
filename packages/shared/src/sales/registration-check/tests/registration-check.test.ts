@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { REGISTRATION_CHECK_MAX, registrationCheckQuerySchema, registrationView, type RegistrationMatch } from './registration';
+import { REGISTRATION_CHECK_MAX, registrationCheckQuerySchema, registrationView } from '../registration-check';
+import type { RegistrationMatch } from '../registration-check.schemas';
 
 const parse = (q: Record<string, string>) => registrationCheckQuerySchema.safeParse(q);
 const issue = (q: Record<string, string>) => {

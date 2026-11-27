@@ -3910,9 +3910,6 @@
     "ab/no-shape-checks": {
       "count": 3
     },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
     "typescript/no-unsafe-return": {
       "count": 1
     }

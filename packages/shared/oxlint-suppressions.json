@@ -604,14 +604,6 @@
       "count": 9
     }
   },
-  "src/sales/registration.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/sales/renewal-due.ts": {
     "stylistic/max-len": {
       "count": 2
