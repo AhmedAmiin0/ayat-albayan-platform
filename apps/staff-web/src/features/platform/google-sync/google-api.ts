@@ -1,10 +1,7 @@
+import { googleAdminCalls } from '@ab/client-core';
 import type {
-  GoogleDriveInput,
-  GoogleSettingsInput,
-  GoogleStatusView,
   GoogleStudentMapInput,
   GoogleStudentMapRow,
-  GoogleSyncItemView,
   GoogleTeacherMapRow,
   TeacherCalendarOwner,
   TeacherCalendarView,
@@ -17,10 +14,12 @@ import { googleKeys } from '@/features/platform/keys';
 
 const BASE = '/admin/google';
 
+const google = googleAdminCalls({ apiFetch, apiSend });
+
 /** GET /admin/google/status: connection, settings, drive, discovery, counts. */
 export const googleStatusQuery = queryOptions({
   queryKey: googleKeys.status(),
-  queryFn: () => apiFetch<GoogleStatusView>(`${BASE}/status`),
+  queryFn: () => google.status(),
 });
 
 /** GET /admin/google/teachers: one row per active teacher. */
@@ -39,19 +38,19 @@ export const googleStudentsQuery = (q: string) =>
 /** GET /admin/google/items: the last 100 sync items, newest first. */
 export const googleItemsQuery = queryOptions({
   queryKey: googleKeys.items(),
-  queryFn: () => apiFetch<GoogleSyncItemView[]>(`${BASE}/items`),
+  queryFn: () => google.items(),
 });
 
 /** GET /admin/google/connect: the consent URL the browser goes to. */
-export const getConnectUrl = () => apiFetch<{ url: string }>(`${BASE}/connect`);
+export const getConnectUrl = google.connect;
 
-export const disconnectGoogle = () => apiSend<GoogleStatusView>('POST', `${BASE}/disconnect`);
+export const disconnectGoogle = google.disconnect;
 
-export const putGoogleSettings = (input: GoogleSettingsInput) => apiSend<GoogleStatusView>('PUT', `${BASE}/settings`, input);
+export const putGoogleSettings = google.settings;
 
-export const discoverGoogle = () => apiSend<GoogleStatusView>('POST', `${BASE}/discover`);
+export const discoverGoogle = google.discover;
 
-export const putGoogleDrive = (input: GoogleDriveInput) => apiSend<GoogleStatusView>('PUT', `${BASE}/drive`, input);
+export const putGoogleDrive = google.drive;
 
 export const putTeacherCalendar = (input: { teacherId: string; calendarId: string | null }) =>
   apiSend<GoogleTeacherMapRow[]>('PUT', `${BASE}/teachers/${input.teacherId}`, { calendar_id: input.calendarId });
@@ -61,9 +60,9 @@ export const putStudentFolder = (input: { studentId: string; body: GoogleStudent
 
 export const deleteStudentFolder = (studentId: string) => apiSend<GoogleStudentMapRow>('DELETE', `${BASE}/students/${studentId}`);
 
-export const retryGoogleItem = (id: string) => apiSend<GoogleSyncItemView>('POST', `${BASE}/items/${id}/retry`);
+export const retryGoogleItem = (id: string) => google.retry({ id });
 
-export const reconcileGoogle = () => apiSend<{ queued: number }>('POST', `${BASE}/reconcile`);
+export const reconcileGoogle = google.reconcile;
 
 export const teacherCalendarQuery = (teacherId: string) =>
   queryOptions({

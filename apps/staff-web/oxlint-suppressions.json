@@ -3543,7 +3543,7 @@
   },
   "src/features/platform/google-sync/google-api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 16
+      "count": 7
     }
   },
   "src/features/platform/google-sync/google-format.ts": {

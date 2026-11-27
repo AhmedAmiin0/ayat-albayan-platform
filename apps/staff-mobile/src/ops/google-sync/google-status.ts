@@ -1,15 +1,18 @@
 import { googleErrorKey, type GoogleAccountStatus, type GoogleStatusView } from '@ab/catalog';
 import type { Glyph, Tone } from '@ab/money';
+import { googleAdminCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, t, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, t, pathKey } from '@ab/mobile-kit';
 
 const GOOGLE_STATUS_PATH = '/admin/google/status';
+
+const google = googleAdminCalls({ apiFetch, apiSend });
 
 /** GET /admin/google/status (admin, read-only here: docs/24 §3, no OAuth on mobile). */
 export function useGoogleStatus() {
   return useQuery({
     queryKey: pathKey(GOOGLE_STATUS_PATH),
-    queryFn: () => apiFetch<GoogleStatusView>(GOOGLE_STATUS_PATH),
+    queryFn: () => google.status(),
   });
 }
 
