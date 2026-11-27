@@ -6,11 +6,11 @@ import {
 } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { AuditService } from '@/common/audit/audit.service';
-import { CurrentUser } from '@/common/auth/decorators';
-import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { asResponse } from '@/common/http/returns';
+import { CurrentUser } from '@/common/auth/decorators';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { AuditService } from '@/common/audit/audit.service';
 import { MessagesService, type MessageChange } from './messages.service';
 import { AppSend } from './app-send';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
