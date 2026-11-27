@@ -4584,14 +4584,6 @@
       "count": 1
     }
   },
-  "src/sales/sales/lesson-actions/lesson-actions-api.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 3
-    }
-  },
   "src/sales/sales/lib/sales-api.ts": {
     "stylistic/max-len": {
       "count": 3
