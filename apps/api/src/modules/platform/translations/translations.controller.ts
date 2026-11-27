@@ -1,27 +1,17 @@
 import type { Locale } from '@ab/core';
 import {
-  translationKeysQuerySchema,
+  translationKeysPageSchema,
   translationLocaleSchema,
-  translationValueSchema,
+  translationRoutes as routes,
   type TranslationKeysPage,
   type TranslationOverrides,
 } from '@ab/i18n';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Headers,
-  HttpCode,
-  Param,
-  Put,
-  Query,
-  Res,
-} from '@nestjs/common';
+import { Controller, Get, Headers, HttpCode, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions, Public } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ZodParam } from '@/common/http/zod-inputs';
 import { TranslationsService } from './translations.service';
 
@@ -37,12 +27,12 @@ interface CacheReply {
  * Writes are recorded by the global ActivityInterceptor ('/i18n/:locale/:key').
  */
 @ApiTags('i18n')
-@Controller('i18n')
+@Controller()
 export class TranslationsController {
   constructor(private readonly translations: TranslationsService) {}
 
   @Public()
-  @Get(':locale/overrides')
+  @Get('i18n/:locale/overrides')
   overrides(
     @ZodParam('locale', translationLocaleSchema) locale: Locale,
     @Headers('if-none-match') ifNoneMatch: string | undefined,
@@ -60,33 +50,27 @@ export class TranslationsController {
 
   @ApiBearerAuth()
   @Permissions('translations.manage')
-  @Get('keys')
-  keys(@Query() query: unknown): TranslationKeysPage {
-    return this.translations.keys(parseOrThrow(translationKeysQuerySchema, query));
+  @Route(routes.keys)
+  keys(@RouteInput() { query }: RouteInputOf<typeof routes.keys>): TranslationKeysPage {
+    return asResponse(translationKeysPageSchema, this.translations.keys(query));
   }
 
   @ApiBearerAuth()
   @Permissions('translations.manage')
-  @Put(':locale/:key')
+  @Route(routes.save)
   @HttpCode(204)
   async save(
-    @Param() params: Record<string, string>,
-    @Body() body: unknown,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.save>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    const locale = parseOrThrow(translationLocaleSchema, params['locale']);
-    const { value } = parseOrThrow(translationValueSchema, body);
-    await this.translations.save({ locale, key: params['key'] ?? '', value, actorId: user.id });
+    await this.translations.save({ ...params, value: body.value, actorId: user.id });
   }
 
   @ApiBearerAuth()
   @Permissions('translations.manage')
-  @Delete(':locale/:key')
+  @Route(routes.restore)
   @HttpCode(204)
-  async restore(
-    @ZodParam('locale', translationLocaleSchema) locale: Locale,
-    @Param('key') key: string,
-  ): Promise<void> {
-    await this.translations.restore(locale, key);
+  async restore(@RouteInput() { params }: RouteInputOf<typeof routes.restore>): Promise<void> {
+    await this.translations.restore(params.locale, params.key);
   }
 }

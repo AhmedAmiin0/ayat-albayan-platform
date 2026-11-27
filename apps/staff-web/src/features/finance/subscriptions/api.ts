@@ -6,8 +6,7 @@ import type {
   SubscriptionPricing,
   SubscriptionView,
 } from '@ab/money';
-import { adminTaskCalls, startDateEditCall } from '@ab/client-core';
-import { usedBeforeEditResultSchema, usedBeforeStateSchema } from '@ab/shared';
+import { adminTaskCalls, startDateEditCall, usedBeforeCalls } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { moneyKeys } from '@/features/finance/keys';
@@ -52,6 +51,7 @@ export const studentBalanceQuery = (studentId: string) =>
   });
 
 const taskCalls = adminTaskCalls({ apiFetch, apiSend });
+const usedBefore = usedBeforeCalls({ apiFetch, apiSend });
 
 export const openTasksQuery = queryOptions({
   queryKey: moneyKeys.tasks(),
@@ -83,9 +83,7 @@ export const cancelSubscription = (id: string, body: { reason?: string }) =>
 
 /** Admins and assistants; 409 once a course is booked. */
 export const editUsedBefore = (id: string, lessonsUsedBefore: number) =>
-  apiSend('PATCH', `/subscriptions/${id}/lessons-used-before`, { lessonsUsedBefore }).then(
-    (raw: unknown) => usedBeforeEditResultSchema.parse(raw),
-  );
+  usedBefore.edit({ id, lessonsUsedBefore });
 
 /** Needs subscriptions.edit_terms; changes starts_on only. */
 export const editStartDate = startDateEditCall({ apiFetch, apiSend });
@@ -94,10 +92,7 @@ export const editStartDate = startDateEditCall({ apiFetch, apiSend });
 export const usedBeforeStateQuery = (id: string) =>
   queryOptions({
     queryKey: moneyKeys.usedBefore(id),
-    queryFn: () =>
-      apiFetch(`/subscriptions/${id}/lessons-used-before`).then((raw: unknown) =>
-        usedBeforeStateSchema.parse(raw),
-      ),
+    queryFn: () => usedBefore.state(id),
   });
 
 export const completeTask = taskCalls.done;

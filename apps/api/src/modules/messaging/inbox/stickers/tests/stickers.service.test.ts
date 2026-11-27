@@ -51,4 +51,10 @@ describe('StickersService', () => {
     const item = { message_id: sticker.id, phone: '+966500000001', key: 'sha:abc=' };
     await expect(stickers.list(ME)).resolves.toEqual({ favourites: [item], recent: [item] });
   });
+
+  it('refuses a list whose sticker has lost its chat number instead of sending it', async () => {
+    const { repo, stickers } = service();
+    repo.recent.mockResolvedValue([{ ...sticker, phone_e164: '' }]);
+    await expect(stickers.list(ME)).rejects.toThrow('response_invalid');
+  });
 });

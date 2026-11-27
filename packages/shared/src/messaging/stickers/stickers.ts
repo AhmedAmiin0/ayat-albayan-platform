@@ -54,6 +54,7 @@ export type ThreadStickerSend = z.infer<typeof threadStickerSendSchema>;
 
 /** Adds a sticker bubble to favourites. */
 export const stickerFavouriteSchema = z.object({ messageId: z.uuid() });
+export type StickerFavourite = z.infer<typeof stickerFavouriteSchema>;
 
 /** A GIPHY GIF id: the API asks GIPHY for its mp4 itself, never a link from the app. */
 export const giphyIdSchema = z.string().regex(/^[A-Za-z0-9]{1,64}$/);
@@ -64,6 +65,7 @@ export type ThreadGifSend = z.infer<typeof threadGifSendSchema>;
 
 /** GET /threads/gifs?q=: a search, or GIPHY's trending GIFs without one. */
 export const gifQuerySchema = z.object({ q: z.string().trim().max(50).optional() });
+export type GifQuery = z.input<typeof gifQuerySchema>;
 
 /** One sticker of the panel: the message holding it (its chat signs the file) and its key. */
 export const stickerItemSchema = z.object({

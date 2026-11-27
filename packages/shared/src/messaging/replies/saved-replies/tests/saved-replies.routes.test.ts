@@ -62,4 +62,15 @@ describe('savedReplyRoutes', () => {
   it('answers nothing for the delete', () => {
     expect(routes.remove.response).toBe('empty');
   });
+
+  it('lets inbox.read in, stage only inbox.send, and tags every route inbox', () => {
+    const access = Object.entries(routes).map(([name, r]) => [name, r.permissions, r.tags]);
+    expect(access).toEqual(
+      Object.keys(routes).map((name) => [
+        name,
+        [name === 'stage' ? 'inbox.send' : 'inbox.read'],
+        ['inbox'],
+      ]),
+    );
+  });
 });

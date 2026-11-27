@@ -6,3 +6,4 @@ export {
 export { templateErrorWords } from './template-errors';
 export { templateViewSchema, type AuthorTemplate } from './template-view';
 export { bodyVarCount, draftParams, previewParams, retexted } from './template-draft';
+export { lineCheckCalls, type LineCheckCalls } from './line-check';
