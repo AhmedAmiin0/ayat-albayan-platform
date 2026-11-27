@@ -1298,11 +1298,6 @@
       "count": 1
     }
   },
-  "src/edit-time/lib/queries.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/feedback/FeedbackRequestButton.tsx": {
     "no-nested-ternary": {
       "count": 2
@@ -5337,7 +5332,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/teaching/reschedule/reschedule-body.ts": {

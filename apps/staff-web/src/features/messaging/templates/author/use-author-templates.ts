@@ -1,5 +1,4 @@
-import type { AuthorTemplate } from '@ab/client-core';
-import type { TemplateAuthorInput } from '@ab/shared';
+import type { TemplateAuthorInput, TemplateView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { authoredTemplatesQuery, createAuthoredTemplate } from '@/features/messaging/templates/edit/edit-api';
@@ -7,7 +6,7 @@ import { authoredTemplatesQuery, createAuthoredTemplate } from '@/features/messa
 /** The author's list (the chat allow-list and their own), every status. */
 export const useAuthoredTemplates = () => useQuery(authoredTemplatesQuery);
 
-export function useCreateAuthored(onCreated: (tpl: AuthorTemplate) => void) {
+export function useCreateAuthored(onCreated: (tpl: TemplateView) => void) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (input: TemplateAuthorInput) => createAuthoredTemplate(input),

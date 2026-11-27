@@ -1,5 +1,4 @@
-import type { AuthorTemplate } from '@ab/client-core';
-import { templateStatusStyle } from '@ab/shared';
+import { templateStatusStyle, type TemplateView } from '@ab/shared';
 import type { TemplateStatus } from '@ab/catalog';
 import type { Glyph, Tone } from '@ab/money';
 import { t } from '@ab/mobile-kit';
@@ -29,5 +28,5 @@ export function statusWord(status: TemplateStatus): StatusWord {
 }
 
 /** Meta's rejection reason, only under a rejected template. */
-export const rejectionOf = (tpl: AuthorTemplate): string | null =>
+export const rejectionOf = (tpl: TemplateView): string | null =>
   tpl.status === 'rejected' && tpl.last_error ? tpl.last_error : null;

@@ -1,6 +1,7 @@
 import type { LessonView, OverviewTeacher } from '@ab/schedule';
 import { SLOTS } from '@/teaching/reschedule/fixtures';
 import { muscat, pending } from '@/today/testing/fixtures';
+import { answered } from '@/today/testing/answered';
 import { FakeBackend } from '@/test/fake-backend';
 import { abrar, omar } from '@/calendar/overview/overview-fixtures';
 
@@ -48,7 +49,7 @@ export function calendarBackend() {
       if (!old) throw new Error('no such lesson');
       const moved: LessonView = { ...old, starts_at: startsAt, ends_at: new Date(Date.parse(startsAt) + 45 * MINUTE).toISOString(), status: 'scheduled' };
       state.lessons = state.lessons.map((l) => (l.id === old.id ? moved : l));
-      return moved;
+      return answered(moved);
     });
   return { backend, state };
 }

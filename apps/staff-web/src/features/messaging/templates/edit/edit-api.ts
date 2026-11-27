@@ -1,32 +1,29 @@
-import { templateViewSchema, type AuthorTemplate } from '@ab/client-core';
-import { AUTHOR_DAILY_LIMIT, type TemplateAuthorInput, type TemplateEditInput } from '@ab/shared';
+import { adminTemplateCalls, authoredTemplateCalls } from '@ab/client-core';
+import { AUTHOR_DAILY_LIMIT, type TemplateEditInput } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { z } from 'zod';
 import { templateKeys } from '@/features/messaging/keys';
 import { templateErrorText } from '@/features/messaging/templates/api';
-import { ApiError, apiFetch, apiSend, type SendMethod } from '@ab/web-kit';
+import { ApiError, apiFetch, apiSend } from '@ab/web-kit';
 
 // The admin edits via templates.manage; authors use /messaging/templates/authored.
 
-const AUTHORED = '/messaging/templates/authored';
-const path = (key: string) => encodeURIComponent(key);
-const listSchema = z.array(templateViewSchema);
-/** The answer as it came: parsed below (rule 12), never trusted by a type argument. */
-const sendRaw: (method: SendMethod, path: string, body: unknown) => Promise<unknown> = apiSend;
-const saved = (r: unknown): AuthorTemplate => templateViewSchema.parse(r);
+const client = { apiFetch, apiSend };
+const admin = adminTemplateCalls(client);
+const authored = authoredTemplateCalls(client);
 
 /** The author's list: the chat allow-list and their own templates, every status. */
 export const authoredTemplatesQuery = queryOptions({
   queryKey: templateKeys.authored(),
-  queryFn: async () => listSchema.parse(await apiFetch(AUTHORED)),
+  queryFn: authored.list,
 });
 
 /** Who saves the edit: the admin's route, or the author's (the allow-list only). */
 export type EditMode = 'admin' | 'author';
 
-const EDIT_URL: Record<EditMode, (key: string) => string> = {
-  admin: (key) => `/messaging/templates/${path(key)}/content`,
-  author: (key) => `${AUTHORED}/${path(key)}`,
+const EDIT: Record<EditMode, typeof admin.editContent> = {
+  admin: admin.editContent,
+  author: authored.edit,
 };
 
 export interface EditCall {
@@ -35,11 +32,9 @@ export interface EditCall {
   input: TemplateEditInput;
 }
 
-export const editTemplate = async ({ mode, key, input }: EditCall) =>
-  saved(await sendRaw('PATCH', EDIT_URL[mode](key), input));
+export const editTemplate = ({ mode, key, input }: EditCall) => EDIT[mode]({ key, input });
 
-export const createAuthoredTemplate = async (input: TemplateAuthorInput) =>
-  saved(await sendRaw('POST', AUTHORED, input));
+export const createAuthoredTemplate = authored.create;
 
 const reasonSchema = z.object({ message_ar: z.string().min(1) });
 

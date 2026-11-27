@@ -4199,7 +4199,7 @@
   },
   "src/modules/messaging/whatsapp/messages/wa-json.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/numbers/media-client.ts": {
@@ -8605,11 +8605,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/lessons/reschedule/lesson-reschedule.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/lessons/reschedule/reschedule-one.service.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -8636,11 +8631,6 @@
     },
     "ab/module-boundaries": {
       "count": 2
-    }
-  },
-  "src/modules/teaching/lessons/reschedule/rule-cancel.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/modules/teaching/lessons/reschedule/rule-plan.ts": {
@@ -8861,9 +8851,6 @@
   },
   "src/modules/teaching/lessons/time-edit/lesson-time.controller.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
       "count": 1
     }
   },

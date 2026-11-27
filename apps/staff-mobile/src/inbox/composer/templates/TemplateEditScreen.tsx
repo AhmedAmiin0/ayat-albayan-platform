@@ -1,6 +1,6 @@
-import type { AuthorTemplate, TemplateListMode } from '@ab/client-core';
+import type { TemplateListMode } from '@ab/client-core';
 import { bodyVarCount } from '@ab/client-core';
-import { editRoute, isCodeBound } from '@ab/shared';
+import { editRoute, isCodeBound, type TemplateView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { t, ErrorState, Screen, ScreenHeader, Button, ErrorLine } from '@ab/mobile-kit';
@@ -9,19 +9,20 @@ import {
   BodyFields, ButtonsField, DraftPreview, draftOf, editPayload, EditRules, useTemplateDraft,
 } from '@/inbox/composer/templates/form';
 import {
-  templateApi, templateErrorText, useTemplateList, useTemplateMode, useTemplateSave,
+  adminTemplates, authoredTemplates, templateErrorText, useTemplateList, useTemplateMode,
+  useTemplateSave,
 } from './templates-api';
 
 /** The admin edits through /:key/content, an author through /authored/:key. */
-const SEND = { admin: templateApi.editContent, author: templateApi.editAuthored } as const;
+const SEND = { admin: adminTemplates.editContent, author: authoredTemplates.edit } as const;
 
 interface EditFormProps {
-  template: AuthorTemplate;
+  template: TemplateView;
   mode: TemplateListMode;
 }
 
 /** A code-bound template keeps its number of variables: the words around them change only. */
-const varsKept = (template: AuthorTemplate, body: string): boolean =>
+const varsKept = (template: TemplateView, body: string): boolean =>
   !isCodeBound(template.key) || bodyVarCount(body) === template.params.length;
 
 function EditForm({ template, mode }: EditFormProps) {

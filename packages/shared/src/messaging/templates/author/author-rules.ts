@@ -1,6 +1,6 @@
 import type { Permission } from '@ab/catalog';
 import { OWN_BUTTON_TEMPLATES, type TemplateSender } from '../restricted-templates';
-import type { TemplateView } from '../template-views';
+import type { TemplateView } from '../catalog/template-view.schemas';
 import type { AuthorCategory } from './template-edit';
 import { isCodeBound } from './code-bound';
 import { editRoute } from './edit-limits';

@@ -1,38 +1,27 @@
-import { ruleCancelRequestSchema, type LessonView } from '@ab/schedule';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ruleCancelRoutes } from '@ab/schedule';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { LessonCancelService } from '@/modules/teaching/lessons/status/lesson-cancel.service';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 
-/** docs/10 route 10 response. */
-interface RuleCancelResult {
-  rule_id: string;
-  cancelled: LessonView[];
-}
+type CancelIn = RouteInputOf<typeof ruleCancelRoutes.cancel>;
 
 /** POST /schedule-rules/:id/cancel — ends a rule and cancels its open lessons (R-SCH-07). */
-@ApiTags('schedule-rules')
 @ApiBearerAuth()
-@Permissions('lessons.write')
-@Controller('schedule-rules')
+@Controller()
 export class RuleCancelController {
   constructor(
     private readonly cancels: LessonCancelService,
     private readonly views: LessonViews,
   ) {}
 
-  @Post(':id/cancel')
+  @Route(ruleCancelRoutes.cancel)
   @HttpCode(200)
-  async cancel(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodBody(ruleCancelRequestSchema) req: z.output<typeof ruleCancelRequestSchema>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<RuleCancelResult> {
-    const ids = await this.cancels.cancelRule({ ruleId: id, body: req, actor: user });
-    return { rule_id: id, cancelled: await this.views.many(ids, 'admin') };
+  async cancel(@RouteInput() { params, body }: CancelIn, @CurrentUser() user: AuthUser) {
+    const ids = await this.cancels.cancelRule({ ruleId: params.id, body, actor: user });
+    return { rule_id: params.id, cancelled: await this.views.many(ids, 'admin') };
   }
 }

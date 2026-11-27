@@ -1,15 +1,14 @@
-import type { AuthorTemplate } from '@ab/client-core';
-import { authorMayEdit, isCodeBound } from '@ab/shared';
+import { authorMayEdit, isCodeBound, type TemplateView } from '@ab/shared';
 import { Ltr, StatusChip, Button, t } from '@ab/web-kit';
 import { AUTHOR_STATUS_STYLE, authorStatus } from './author-status';
 
 const S = t.templates.author;
 
 export interface AuthorTemplateCardProps {
-  tpl: AuthorTemplate;
+  tpl: TemplateView;
   /** The signed-in user (their own templates say so). */
   me: string | undefined;
-  onEdit: (tpl: AuthorTemplate) => void;
+  onEdit: (tpl: TemplateView) => void;
 }
 
 export function AuthorTemplateCard({ tpl, me, onEdit }: AuthorTemplateCardProps) {

@@ -1,11 +1,10 @@
-import type { AuthorTemplate } from '@ab/client-core';
-import { isCodeBound } from '@ab/shared';
+import { isCodeBound, type TemplateView } from '@ab/shared';
 import { View } from 'react-native';
 import { t, StatusChip, ListRow, AppText, type, useTheme } from '@ab/mobile-kit';
 import { rejectionOf, statusWord } from './status-words';
 
 interface TemplateItemProps {
-  template: AuthorTemplate;
+  template: TemplateView;
   mine: boolean;
   /** Present only where this user may edit it. */
   onEdit?: () => void;

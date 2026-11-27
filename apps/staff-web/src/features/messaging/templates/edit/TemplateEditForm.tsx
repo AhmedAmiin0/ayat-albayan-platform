@@ -1,5 +1,4 @@
-import type { AuthorTemplate } from '@ab/client-core';
-import { templateEditSchema, type TemplateEditInput } from '@ab/shared';
+import { templateEditSchema, type TemplateEditInput, type TemplateView } from '@ab/shared';
 import { useState, type SubmitEvent } from 'react';
 import { varsOf } from '@/features/messaging/templates/create/template-draft';
 import { t } from '@ab/web-kit';
@@ -10,7 +9,7 @@ import { WordsFields } from './WordsFields';
 
 export interface TemplateEditFormProps {
   formId: string;
-  tpl: AuthorTemplate;
+  tpl: TemplateView;
   /** Variables and buttons fixed (code-bound): a different variable count is refused here first. */
   bound: boolean;
   /** An author's template: plain quick replies only. */
@@ -19,7 +18,7 @@ export interface TemplateEditFormProps {
 }
 
 /** Which fields the last save refused (by top-level name), and the parsed body when none. */
-function check(draft: EditDraft, opts: { bound: boolean; tpl: AuthorTemplate }) {
+function check(draft: EditDraft, opts: { bound: boolean; tpl: TemplateView }) {
   const parsed = templateEditSchema.safeParse(toEditInput(draft));
   const varsMoved = opts.bound && varsOf(draft).length !== opts.tpl.params.length;
   const refused = parsed.success ? [] : parsed.error.issues.map((i) => String(i.path[0]));

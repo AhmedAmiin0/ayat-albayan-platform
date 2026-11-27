@@ -2,10 +2,7 @@ import { id, instant } from '@ab/core';
 import { lessonStatusSchema, messageDirectionSchema } from '@ab/catalog';
 import { z } from 'zod';
 import { crmValuesSchema } from '../crm-names';
-import {
-  templateButtonKindSchema,
-  templateHeaderKindSchema,
-} from '../../templates/template-block/template-block';
+import { templateDisplaySchema } from '../../templates/catalog/template-view.schemas';
 
 /** Body variables {{1}}…{{9}} by position (BODY_SLOTS). */
 const slot = z.string().optional();
@@ -32,18 +29,9 @@ export const templateParamsSchema = bodySlots.extend({
 
 /** What WhatsApp draws around a template's body: header, footer and buttons. */
 export const messageTemplateBlockSchema = z.object({
-  header: z
-    .object({ type: templateHeaderKindSchema, text: z.string().optional() })
-    .nullable(),
+  header: templateDisplaySchema.shape.header,
   footer: z.string().nullable(),
-  buttons: z.array(
-    z.object({
-      type: templateButtonKindSchema,
-      text: z.string(),
-      url: z.string().optional(),
-      phone: z.string().optional(),
-    }),
-  ),
+  buttons: templateDisplaySchema.shape.buttons,
 });
 
 /** The message a bubble answers, or the marker that WhatsApp quoted one we never stored. */
