@@ -59,11 +59,13 @@ export const replyQuoteSchema = z.union([
   }),
 ]);
 
+/** A bubble's reactions; `ours_by` = the staff member who reacted (profiles.full_name). */
 export const messageReactionsSchema = z.object({
   theirs: z.string().nullable(),
   ours: z.string().nullable(),
   ours_by: z.string().nullable(),
 });
+export type MessageReactions = z.infer<typeof messageReactionsSchema>;
 
 /** Hidden from the platform: who hid it (null once their login is gone) and when. */
 export const messageHiddenSchema = z.object({ by_name: z.string().nullable(), at: instant });
