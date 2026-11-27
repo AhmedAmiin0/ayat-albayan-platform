@@ -1,7 +1,7 @@
 import type { StudentStatus } from '@ab/catalog';
 import type { Page } from '@ab/core';
 import type { DuplicateStudentBody, StudentListItem, StudentRef } from '@ab/shared';
-import { studentCalls, type StudentCreateBody } from '@ab/client-core';
+import { studentCalls } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
@@ -66,8 +66,7 @@ export const teacherOptionsQuery = queryOptions({
   staleTime: 5 * 60_000,
 });
 
-export const createStudent = (body: StudentCreateBody) =>
-  apiSend<StudentRef>('POST', '/students', body);
+export const createStudent = students.create;
 
 export const updateStudent = students.update;
 
