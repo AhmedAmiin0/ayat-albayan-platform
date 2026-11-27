@@ -1,7 +1,14 @@
-import { customConfigUpsertSchema, customKeySchema, type CustomConfigView } from '@ab/settings';
-import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Put } from '@nestjs/common';
+import {
+  customConfigRoutes as routes,
+  customConfigUpsertSchema,
+  customKeySchema,
+  type CustomConfigView,
+} from '@ab/settings';
+import { Body, Controller, HttpCode, NotFoundException, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '@/common/http/http';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ZodParam } from '@/common/http/zod-inputs';
 import { AuditService } from '@/common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
@@ -10,24 +17,26 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { CustomConfigService } from './custom-config.service';
 
 /** Admin CRUD of the free-form entries. Every change is audited with the old and new value. */
-@ApiTags('config')
 @ApiBearerAuth()
-@Permissions('settings.read')
-@Controller('config/custom')
+@Controller()
 export class CustomConfigController {
   constructor(
     private readonly custom: CustomConfigService,
     private readonly audit: AuditService,
   ) {}
 
-  @Get()
-  list(): Promise<CustomConfigView[]> {
-    return this.custom.list();
+  @Route(routes.list)
+  async list(): Promise<CustomConfigView[]> {
+    return asResponse(routes.list.response, await this.custom.list());
   }
 
-  /** 400 on a bad key (or one reserved by a registry setting), a null or a value over 8 KB. */
-  @Put(':key')
+  /**
+   * 400 on a bad key (or one reserved by a registry setting), a null or a value over 8 KB.
+   * Kept off its route object: there the body is read first, so a bad key would no longer win.
+   */
+  @Put('config/custom/:key')
   @Permissions('settings.write')
+  @ApiTags('config')
   async put(
     @ZodParam('key', customKeySchema) key: string,
     @Body() body: unknown,
@@ -47,11 +56,10 @@ export class CustomConfigController {
     return after;
   }
 
-  @Delete(':key')
-  @Permissions('settings.write')
+  @Route(routes.remove)
   @HttpCode(204)
   async remove(
-    @ZodParam('key', customKeySchema) key: string,
+    @RouteInput() { params: { key } }: RouteInputOf<typeof routes.remove>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
     const before = await this.custom.find(key);
