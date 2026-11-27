@@ -1,15 +1,19 @@
 import type { Page } from '@ab/core';
 import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
-import type { SalesPersonView, SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
+import { salesAssignCalls, salesPortalCalls } from '@ab/client-core';
+import type { SalesSubscriptionKind } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { myMoneyKeys, salesKeys, salesSubscriptionKeys } from '@/features/sales/keys';
+
+const salesPortal = salesPortalCalls({ apiFetch, apiSend });
+const salesAssign = salesAssignCalls({ apiFetch, apiSend });
 
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
 export const salesSubscriptionsQuery = (kind: SalesSubscriptionKind) =>
   queryOptions({
     queryKey: salesSubscriptionKeys.list(kind),
-    queryFn: () => apiFetch<SalesSubscriptionView[]>(`/sales/subscriptions?kind=${kind}`),
+    queryFn: () => salesPortal.subscriptions(kind),
   });
 
 // The assistant's own pages (R-ASST-06). The API answers only for the caller: students they brought,
@@ -52,7 +56,7 @@ export const updateMyPaymentAmount = (id: string, amount: number) =>
 /** GET /sales/people (admin):the salespeople with their open-lead counts. */
 export const salesPeopleQuery = queryOptions({
   queryKey: salesKeys.people(),
-  queryFn: () => apiFetch<SalesPersonView[]>('/sales/people'),
+  queryFn: () => salesAssign.people(),
 });
 
 /** POST /leads/:id/assign (admin): hand a lead to a salesperson, or null to take it back. */
@@ -60,4 +64,4 @@ export const assignLead = ({ leadId, profileId }: { leadId: string; profileId: s
   apiSend<unknown>('POST', `/leads/${leadId}/assign`, { profileId });
 
 /** POST /leads/assign-unassigned (admin): spread every ownerless lead over the salespeople. */
-export const assignUnassigned = () => apiSend<{ assigned: number }>('POST', '/leads/assign-unassigned');
+export const assignUnassigned = () => salesAssign.assignUnassigned();

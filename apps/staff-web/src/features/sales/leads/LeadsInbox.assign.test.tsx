@@ -31,7 +31,12 @@ const ROW: LeadView = {
   last_inbound_at: null, last_outbound_at: null, created_at: '2026-09-28T10:00:00+00:00',
   assigned_to: null, assigned_to_name: null,
 };
-const PEOPLE = [{ id: 'p1', name: 'منى', open_leads: 2 }, { id: 'p2', name: 'خالد', open_leads: 0 }];
+const P1 = 'a0000000-0000-4000-8000-000000000001';
+const P2 = 'a0000000-0000-4000-8000-000000000002';
+const PEOPLE = [
+  { id: P1, name: 'منى', open_leads: 2 },
+  { id: P2, name: 'خالد', open_leads: 0 },
+];
 
 function open(row: LeadView = ROW) {
   apiFetch.mockImplementation(async (path: string) =>
@@ -58,14 +63,14 @@ describe('leads: «مسؤول المبيعات» (admin)', () => {
     expect([...select.options].map((o) => o.textContent)).toEqual([t.sales.assign.none, 'منى', 'خالد']);
     expect(select.value).toBe('');
     apiSend.mockResolvedValue({});
-    fireEvent.change(select, { target: { value: 'p2' } });
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/assign', { profileId: 'p2' }));
+    fireEvent.change(select, { target: { value: P2 } });
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/assign', { profileId: P2 }));
   });
 
   it('choosing «بدون مسؤول» sends profileId null', async () => {
-    open({ ...ROW, assigned_to: 'p1', assigned_to_name: 'منى' });
+    open({ ...ROW, assigned_to: P1, assigned_to_name: 'منى' });
     const select = await screen.findByRole<HTMLSelectElement>('combobox', { name: /مسؤول المبيعات لـ/ });
-    await waitFor(() => expect(select.value).toBe('p1'));
+    await waitFor(() => expect(select.value).toBe(P1));
     apiSend.mockResolvedValue({});
     fireEvent.change(select, { target: { value: '' } });
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/assign', { profileId: null }));
@@ -76,6 +81,6 @@ describe('leads: «مسؤول المبيعات» (admin)', () => {
     apiSend.mockResolvedValue({ assigned: 7 });
     fireEvent.click(await screen.findByRole('button', { name: t.sales.assign.assignAll }));
     expect(await screen.findByText('عُيّن 7 عميل')).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/leads/assign-unassigned');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/leads/assign-unassigned', undefined);
   });
 });
