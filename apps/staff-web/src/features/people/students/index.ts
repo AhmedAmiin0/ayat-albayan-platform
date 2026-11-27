@@ -1,6 +1,5 @@
 export {
   createStudent,
-  type CreateStudentBody,
   duplicateCandidates,
   isStatusChanged,
   mergeStudents,
