@@ -15,7 +15,10 @@ const LIST_KEYS: Record<TemplateListMode, string[]> = {
 };
 
 export function templateQueries(client: ApiClient): TemplateQueries {
-  const lists = { admin: adminTemplateCalls(client).list, author: authoredTemplateCalls(client).list };
+  const lists = {
+    admin: adminTemplateCalls(client).list,
+    author: authoredTemplateCalls(client).list,
+  };
   return {
     templateListQuery: (mode) => ({ queryKey: LIST_KEYS[mode], queryFn: lists[mode] }),
   };

@@ -2,9 +2,11 @@ import { id, instant } from '@ab/core';
 import { TEMPLATE_CATEGORIES, TEMPLATE_STATUSES, WA_LINES } from '@ab/catalog';
 import { z } from 'zod';
 import { QUICK_REPLY_INTENTS } from '../../replies/quick-reply';
-import { templateButtonKindSchema, templateHeaderKindSchema } from '../template-block/template-block';
+import {
+  templateButtonKindSchema, templateHeaderKindSchema,
+} from '../template-block/template-block';
 
-/** message_templates.buttons: a link with its {{1}} suffix, or a quick reply and what a tap does. */
+/** message_templates.buttons: a link with its {{1}} suffix, or a quick reply and its tap. */
 export const templateButtonSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('url'),
@@ -12,7 +14,11 @@ export const templateButtonSchema = z.discriminatedUnion('type', [
     text: z.string().optional(),
     example: z.string().optional(),
   }),
-  z.object({ type: z.literal('quick_reply'), text: z.string(), intent: z.enum(QUICK_REPLY_INTENTS) }),
+  z.object({
+    type: z.literal('quick_reply'),
+    text: z.string(),
+    intent: z.enum(QUICK_REPLY_INTENTS),
+  }),
 ]);
 
 /** message_templates.display: the header and every button as Meta's sync last reported them. */

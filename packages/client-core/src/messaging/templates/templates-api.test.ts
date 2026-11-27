@@ -11,10 +11,12 @@ const view = {
   sales_starter: true,
 };
 const clientOf = () => ({
-  apiFetch: vi.fn(async () => [view]),
-  apiSend: vi.fn(async () => view),
-}) as unknown as ApiClient & { apiFetch: ReturnType<typeof vi.fn>; apiSend: ReturnType<typeof vi.fn> };
-const input = { body: 'مرحبًا {{1}} بك', footer: null, params: [{ name: 'var_1', sample: 'أحمد' }], buttons: [] };
+  apiFetch: vi.fn<ApiClient['apiFetch']>(async () => [view]),
+  apiSend: vi.fn<ApiClient['apiSend']>(async () => view),
+});
+const input = {
+  body: 'مرحبًا {{1}} بك', footer: null, params: [{ name: 'var_1', sample: 'أحمد' }], buttons: [],
+};
 
 describe('template lists', () => {
   it('lists the admin registry or the author\'s list, both under one key', async () => {
@@ -40,16 +42,19 @@ describe('template writes', () => {
   it('creates and edits through the author routes', async () => {
     const client = clientOf();
     const authored = authoredTemplateCalls(client);
-    await expect(authored.create({ key: null, category: 'utility', ...input })).resolves.toEqual(view);
+    const create = authored.create({ key: null, category: 'utility', ...input });
+    await expect(create).resolves.toEqual(view);
     const created = expect.objectContaining({ category: 'utility' });
     expect(client.apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/authored', created);
     await authored.edit({ key: 'offer_x', input });
-    expect(client.apiSend).toHaveBeenCalledWith('PATCH', '/messaging/templates/authored/offer_x', input);
+    const path = '/messaging/templates/authored/offer_x';
+    expect(client.apiSend).toHaveBeenCalledWith('PATCH', path, input);
   });
 
   it('edits any template\'s words through /content as the admin', async () => {
     const client = clientOf();
     await adminTemplateCalls(client).editContent({ key: 'lesson_reminder', input });
-    expect(client.apiSend).toHaveBeenCalledWith('PATCH', '/messaging/templates/lesson_reminder/content', input);
+    const path = '/messaging/templates/lesson_reminder/content';
+    expect(client.apiSend).toHaveBeenCalledWith('PATCH', path, input);
   });
 });

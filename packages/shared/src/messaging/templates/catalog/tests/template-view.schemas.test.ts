@@ -7,8 +7,8 @@ const parses = (v: unknown) => templateViewSchema.safeParse(v).success;
 describe('templateViewSchema', () => {
   it('reads a full row and one from an older api without the optional parts', () => {
     const full = aTemplateView();
-    const { display, numbers, number_id, crm_name, crm_language, created_by, approved_edits, ...old } =
-      full;
+    const { display, numbers, number_id, crm_name, crm_language, ...rest } = full;
+    const { created_by, approved_edits, ...old } = rest;
     expect(templateViewSchema.parse(full)).toEqual(full);
     expect(templateViewSchema.parse(old)).toEqual(old);
   });
