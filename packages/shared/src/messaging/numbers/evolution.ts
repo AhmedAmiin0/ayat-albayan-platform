@@ -1,7 +1,5 @@
 import { z } from 'zod';
-import { EVOLUTION_MODES, type EvolutionMode } from '@ab/catalog';
-import type { EvolutionConfig } from './evolution-config';
-import type { EvolutionSyncView } from './evolution-sync';
+import { EVOLUTION_MODES } from '@ab/catalog';
 
 // An Evolution number (docs/19 «Evolution driver»): its instance name is the row's
 // phone_number_id, its token the number secret `evolution_token`; these are the rest.
@@ -18,20 +16,6 @@ export const EVOLUTION_STATES = ['open', 'connecting', 'close', 'refused'] as co
 export type EvolutionState = (typeof EVOLUTION_STATES)[number];
 export const evolutionStateOf = (raw: unknown): EvolutionState | null =>
   EVOLUTION_STATES.find((s) => s === raw) ?? null;
-
-/** NumberView.evolution: null on any other provider. */
-export interface NumberEvolutionView {
-  mode: EvolutionMode;
-  auto_sends: boolean;
-  /** Last state Evolution reported by webhook, and when (null = never). */
-  state: EvolutionState | null;
-  state_at: string | null;
-  /** Every option of the number (no secret), and the last push read back (null = never). */
-  config: EvolutionConfig;
-  sync: EvolutionSyncView | null;
-  /** The webhook URL the server pushes (read-only; null = its origin is not configured). */
-  hook_url: string | null;
-}
 
 /** Evolution's current connectionState. */
 export interface EvolutionStateView {
