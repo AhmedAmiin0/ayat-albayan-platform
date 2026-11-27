@@ -2,8 +2,9 @@ import { tidyUsername, usernameApiError, usernameChange } from '@ab/client-core'
 import type { TeacherCreate, Teacher } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button, Dialog, apiSend, t, FormAlert } from '@ab/web-kit';
+import { Button, Dialog, t, FormAlert } from '@ab/web-kit';
 import { teacherKeys, userKeys } from '@/features/people/keys';
+import { saveTeacher } from '@/features/people/teachers/api';
 import {
   apiErrorMessage,
   emptyTeacherForm,
@@ -29,10 +30,7 @@ export function TeacherDialog({ teacher, onClose }: Props) {
   const set: SetField = (key, value) => setForm((f) => ({ ...f, [key]: value }));
 
   const save = useMutation({
-    mutationFn: (payload: Payload) =>
-      teacher
-        ? apiSend<Teacher>('PATCH', `/teachers/${teacher.id}`, payload)
-        : apiSend<Teacher>('POST', '/teachers', payload),
+    mutationFn: (payload: Payload) => saveTeacher(teacher?.id ?? null, payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: teacherKeys.all });
       await queryClient.invalidateQueries({ queryKey: userKeys.all });
