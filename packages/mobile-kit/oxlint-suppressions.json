@@ -180,11 +180,6 @@
       "count": 1
     }
   },
-  "src/lib/profile/my-profile.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/lib/query/pull-refresh.ts": {
     "ab/no-restricted-syntax": {
       "count": 1
