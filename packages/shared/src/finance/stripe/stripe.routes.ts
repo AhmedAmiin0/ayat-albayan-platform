@@ -1,7 +1,7 @@
 import { defineRoute } from '@ab/core';
 import { stripeFeatureSchema, stripeWebhookAnswerSchema } from './stripe.schemas';
 
-const access = { tags: ['stripe'] } as const;
+const access = { tags: ['stripe'], isPublic: true } as const;
 
 /** Online payment (docs/30), written once for the api and its clients. */
 export const stripeRoutes = {

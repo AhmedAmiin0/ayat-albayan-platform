@@ -3,7 +3,7 @@ import { publicPaymentLinkSchema } from '@ab/shared';
 import { z } from 'zod';
 
 const byToken = z.object({ token: z.string() });
-const page = { method: 'GET', params: byToken, tags: ['stripe'] } as const;
+const page = { method: 'GET', params: byToken, tags: ['stripe'], isPublic: true } as const;
 
 /** The pages a payer's browser opens (docs/30); no client calls them, so they stay in the api. */
 export const payPageRoutes = {
