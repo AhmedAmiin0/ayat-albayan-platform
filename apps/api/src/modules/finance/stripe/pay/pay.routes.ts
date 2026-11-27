@@ -1,0 +1,12 @@
+import { defineRoute } from '@ab/core';
+import { z } from 'zod';
+
+const byToken = z.object({ token: z.string() });
+const page = { method: 'GET', params: byToken, tags: ['stripe'] } as const;
+
+/** The pages a payer's browser opens (docs/30); no client calls them, so they stay in the api. */
+export const payPageRoutes = {
+  checkout: defineRoute({ ...page, path: '/pay/:token/checkout', response: 'redirect' }),
+  done: defineRoute({ ...page, path: '/pay/:token/done', response: 'file' }),
+  cancelled: defineRoute({ ...page, path: '/pay/:token/cancelled', response: 'file' }),
+};
