@@ -5339,6 +5339,176 @@
    ]
   }
  },
+ "GET /sales/teachers/:id/overview": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "weekly": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "rule_id": {
+        "type": "string"
+       },
+       "weekday": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 6
+       },
+       "time": {
+        "type": "string"
+       },
+       "at": {
+        "type": "string"
+       },
+       "duration_min": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+       },
+       "students": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "name": {
+           "type": "string"
+          },
+          "code": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "name",
+          "code"
+         ]
+        }
+       }
+      },
+      "required": [
+       "rule_id",
+       "weekday",
+       "time",
+       "duration_min",
+       "students"
+      ]
+     }
+    },
+    "attendance": {
+     "type": "object",
+     "properties": {
+      "days": {
+       "type": "integer",
+       "exclusiveMinimum": 0,
+       "maximum": 9007199254740991
+      },
+      "totals": {
+       "type": "object",
+       "propertyNames": {
+        "type": "string",
+        "enum": [
+         "held",
+         "student_absent",
+         "cancelled_by_teacher",
+         "cancelled_by_admin",
+         "other"
+        ]
+       },
+       "additionalProperties": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+       },
+       "required": [
+        "held",
+        "student_absent",
+        "cancelled_by_teacher",
+        "cancelled_by_admin",
+        "other"
+       ]
+      },
+      "latest": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "lesson_id": {
+          "type": "string"
+         },
+         "starts_at": {
+          "type": "string"
+         },
+         "status": {
+          "type": "string",
+          "enum": [
+           "scheduled",
+           "confirmed",
+           "completed",
+           "late",
+           "excused",
+           "no_show",
+           "cancelled_by_teacher",
+           "cancelled_by_admin",
+           "rescheduled"
+          ]
+         },
+         "students": {
+          "type": "array",
+          "items": {
+           "type": "object",
+           "properties": {
+            "name": {
+             "type": "string"
+            },
+            "code": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "name",
+            "code"
+           ]
+          }
+         }
+        },
+        "required": [
+         "lesson_id",
+         "starts_at",
+         "status",
+         "students"
+        ]
+       }
+      }
+     },
+     "required": [
+      "days",
+      "totals",
+      "latest"
+     ]
+    }
+   },
+   "required": [
+    "weekly",
+    "attendance"
+   ]
+  }
+ },
  "GET /saved-replies": {
   "response": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
