@@ -22,6 +22,7 @@ export * from './finance/quote-sheet';
 export type * from './finance/list-filters';
 export * from './sales/lead-sort';
 export * from './sales/job-applicants';
+export * from './sales/used-before';
 export * from './people/assistants';
 export * from './teaching/reports';
 export * from './teaching/report-draft';

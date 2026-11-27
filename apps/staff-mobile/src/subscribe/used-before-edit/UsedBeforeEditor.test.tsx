@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
-import { PATH, press, show, stateOf, SUB } from './test-util';
+import { PATH, press, RESULT, show, stateOf, SUB } from './test-util';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -16,7 +16,7 @@ const saveButton = () => screen.getByRole('button', { name: e.save });
 
 beforeEach(() => {
   mockApiFetch.mockReset().mockResolvedValue(stateOf());
-  mockApiSend.mockReset().mockResolvedValue(undefined);
+  mockApiSend.mockReset().mockResolvedValue(RESULT);
 });
 
 test('starts at the stored number, stops at the server max; «حفظ» disabled while unchanged', async () => {
