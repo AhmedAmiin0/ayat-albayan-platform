@@ -24,6 +24,7 @@ export * from './sales/lead-sort';
 export * from './sales/job-applicants';
 export * from './people/assistants';
 export * from './reporting/dashboard';
+export * from './reporting/report-page';
 export * from './teaching/reports';
 export * from './teaching/report-draft';
 export * from './teaching/booking';

@@ -40,12 +40,13 @@ describe('reportPageRoutes', () => {
   });
 
   it('lets any signed-in reader ask and files both under the reports tag', () => {
-    expect(Object.values(routes).map((r) => r.permissions)).toEqual([undefined, undefined]);
+    expect(Object.values(routes).some((r) => 'permissions' in r)).toBe(false);
     expect(Object.values(routes).map((r) => r.tags)).toEqual([['reports'], ['reports']]);
   });
 
   it('takes a 32-hex public id or a report uuid, and refuses anything else', () => {
-    expect(routes.byPublicId.params.parse({ publicId: PUBLIC_ID })).toEqual({ publicId: PUBLIC_ID });
+    const byPublic = { publicId: PUBLIC_ID };
+    expect(routes.byPublicId.params.parse(byPublic)).toEqual(byPublic);
     expect(routes.byPublicId.params.safeParse({ publicId: 'ABC' }).success).toBe(false);
     expect(routes.byReportId.params.parse({ id: REPORT_ID })).toEqual({ id: REPORT_ID });
     expect(routes.byReportId.params.safeParse({ id: 'not-a-uuid' }).success).toBe(false);

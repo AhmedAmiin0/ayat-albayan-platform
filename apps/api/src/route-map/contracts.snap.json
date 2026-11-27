@@ -4834,6 +4834,668 @@
    "required": [
     "publicId"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "public_id": {
+     "type": "string",
+     "pattern": "^[0-9a-f]{32}$"
+    },
+    "student": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "teacher": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "lesson": {
+     "type": "object",
+     "properties": {
+      "starts_at": {
+       "type": "string"
+      },
+      "ends_at": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "starts_at",
+      "ends_at"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "report": {
+     "type": "object",
+     "properties": {
+      "form_version": {
+       "anyOf": [
+        {
+         "type": "number",
+         "const": 1
+        },
+        {
+         "type": "number",
+         "const": 2
+        }
+       ]
+      },
+      "attendance": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "on_time",
+          "late",
+          "excused",
+          "absent"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "program": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "quran",
+          "arabic",
+          "islamic_studies"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "recited": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "new_memorization": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "revision": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "theory": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "grades": {
+       "type": "object",
+       "properties": {
+        "recitation": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "memorization": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "revision": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "tajweed": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "engagement": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "commitment": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        }
+       },
+       "required": [
+        "recitation",
+        "memorization",
+        "revision",
+        "tajweed",
+        "engagement",
+        "commitment"
+       ]
+      },
+      "grade_overall": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "excellent",
+          "very_good",
+          "good",
+          "acceptable",
+          "needs_review"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "notes": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "homework": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "next_plan": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "content": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "segments": {
+           "default": [],
+           "maxItems": 9,
+           "type": "array",
+           "items": {
+            "type": "object",
+            "properties": {
+             "kind": {
+              "type": "string",
+              "enum": [
+               "recited",
+               "new",
+               "revision"
+              ]
+             },
+             "surah": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 114
+             },
+             "from": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 286
+             },
+             "to": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 286
+             },
+             "grade": {
+              "default": null,
+              "anyOf": [
+               {
+                "type": "string",
+                "enum": [
+                 "excellent",
+                 "very_good",
+                 "good",
+                 "acceptable",
+                 "needs_review"
+                ]
+               },
+               {
+                "type": "null"
+               }
+              ]
+             }
+            },
+            "required": [
+             "kind",
+             "surah",
+             "from",
+             "to"
+            ]
+           }
+          },
+          "tajweed": {
+           "default": null,
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "noon_sakin",
+              "meem_sakin",
+              "madd",
+              "qalqala",
+              "makharij"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "arabic": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "topic": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "skills": {
+               "default": {},
+               "type": "object",
+               "properties": {
+                "reading": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "writing": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "listening": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "grammar": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                }
+               }
+              }
+             }
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "islamic": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "domain": {
+               "default": null,
+               "anyOf": [
+                {
+                 "type": "string",
+                 "enum": [
+                  "aqeedah",
+                  "fiqh",
+                  "seerah",
+                  "hadith",
+                  "adab"
+                 ]
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "topic": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "memorized": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "rates": {
+               "default": {},
+               "type": "object",
+               "properties": {
+                "comprehension": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "participation": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                }
+               }
+              }
+             }
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "quick": {
+           "default": [],
+           "maxItems": 3,
+           "type": "array",
+           "items": {
+            "type": "string",
+            "enum": [
+             "keep_going",
+             "daily_revision",
+             "tajweed_focus"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "version": {
+       "type": "integer",
+       "minimum": -9007199254740991,
+       "maximum": 9007199254740991
+      },
+      "submitted_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "edited_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "form_version",
+      "attendance",
+      "program",
+      "recited",
+      "new_memorization",
+      "revision",
+      "theory",
+      "grades",
+      "grade_overall",
+      "notes",
+      "homework",
+      "next_plan",
+      "content",
+      "version",
+      "submitted_at",
+      "edited_at"
+     ]
+    },
+    "attachments": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+       },
+       "mime": {
+        "type": "string"
+       },
+       "size": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "url": {
+        "type": "string",
+        "format": "uri"
+       }
+      },
+      "required": [
+       "id",
+       "mime",
+       "size",
+       "url"
+      ]
+     }
+    },
+    "pdf": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "url": {
+         "type": "string",
+         "format": "uri"
+        }
+       },
+       "required": [
+        "url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "public_id",
+    "student",
+    "teacher",
+    "lesson",
+    "tz",
+    "report",
+    "attachments",
+    "pdf"
+   ]
   }
  },
  "GET /report-pages/by-report/:id": {
@@ -4849,6 +5511,668 @@
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "public_id": {
+     "type": "string",
+     "pattern": "^[0-9a-f]{32}$"
+    },
+    "student": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "teacher": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "name"
+     ]
+    },
+    "lesson": {
+     "type": "object",
+     "properties": {
+      "starts_at": {
+       "type": "string"
+      },
+      "ends_at": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "starts_at",
+      "ends_at"
+     ]
+    },
+    "tz": {
+     "type": "string"
+    },
+    "report": {
+     "type": "object",
+     "properties": {
+      "form_version": {
+       "anyOf": [
+        {
+         "type": "number",
+         "const": 1
+        },
+        {
+         "type": "number",
+         "const": 2
+        }
+       ]
+      },
+      "attendance": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "on_time",
+          "late",
+          "excused",
+          "absent"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "program": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "quran",
+          "arabic",
+          "islamic_studies"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "recited": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "new_memorization": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "revision": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "theory": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "grades": {
+       "type": "object",
+       "properties": {
+        "recitation": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "memorization": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "revision": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "tajweed": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "engagement": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "commitment": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "excellent",
+            "very_good",
+            "good",
+            "acceptable",
+            "needs_review"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        }
+       },
+       "required": [
+        "recitation",
+        "memorization",
+        "revision",
+        "tajweed",
+        "engagement",
+        "commitment"
+       ]
+      },
+      "grade_overall": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "excellent",
+          "very_good",
+          "good",
+          "acceptable",
+          "needs_review"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "notes": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "homework": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "next_plan": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "content": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "segments": {
+           "default": [],
+           "maxItems": 9,
+           "type": "array",
+           "items": {
+            "type": "object",
+            "properties": {
+             "kind": {
+              "type": "string",
+              "enum": [
+               "recited",
+               "new",
+               "revision"
+              ]
+             },
+             "surah": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 114
+             },
+             "from": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 286
+             },
+             "to": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 286
+             },
+             "grade": {
+              "default": null,
+              "anyOf": [
+               {
+                "type": "string",
+                "enum": [
+                 "excellent",
+                 "very_good",
+                 "good",
+                 "acceptable",
+                 "needs_review"
+                ]
+               },
+               {
+                "type": "null"
+               }
+              ]
+             }
+            },
+            "required": [
+             "kind",
+             "surah",
+             "from",
+             "to"
+            ]
+           }
+          },
+          "tajweed": {
+           "default": null,
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "noon_sakin",
+              "meem_sakin",
+              "madd",
+              "qalqala",
+              "makharij"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "arabic": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "topic": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "skills": {
+               "default": {},
+               "type": "object",
+               "properties": {
+                "reading": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "writing": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "listening": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "grammar": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                }
+               }
+              }
+             }
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "islamic": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "domain": {
+               "default": null,
+               "anyOf": [
+                {
+                 "type": "string",
+                 "enum": [
+                  "aqeedah",
+                  "fiqh",
+                  "seerah",
+                  "hadith",
+                  "adab"
+                 ]
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "topic": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "memorized": {
+               "anyOf": [
+                {
+                 "type": "string",
+                 "maxLength": 300
+                },
+                {
+                 "type": "null"
+                }
+               ]
+              },
+              "rates": {
+               "default": {},
+               "type": "object",
+               "properties": {
+                "comprehension": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                },
+                "participation": {
+                 "default": null,
+                 "anyOf": [
+                  {
+                   "type": "string",
+                   "enum": [
+                    "excellent",
+                    "very_good",
+                    "good",
+                    "acceptable",
+                    "needs_review"
+                   ]
+                  },
+                  {
+                   "type": "null"
+                  }
+                 ]
+                }
+               }
+              }
+             }
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "quick": {
+           "default": [],
+           "maxItems": 3,
+           "type": "array",
+           "items": {
+            "type": "string",
+            "enum": [
+             "keep_going",
+             "daily_revision",
+             "tajweed_focus"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "version": {
+       "type": "integer",
+       "minimum": -9007199254740991,
+       "maximum": 9007199254740991
+      },
+      "submitted_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "edited_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "form_version",
+      "attendance",
+      "program",
+      "recited",
+      "new_memorization",
+      "revision",
+      "theory",
+      "grades",
+      "grade_overall",
+      "notes",
+      "homework",
+      "next_plan",
+      "content",
+      "version",
+      "submitted_at",
+      "edited_at"
+     ]
+    },
+    "attachments": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+       },
+       "mime": {
+        "type": "string"
+       },
+       "size": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "url": {
+        "type": "string",
+        "format": "uri"
+       }
+      },
+      "required": [
+       "id",
+       "mime",
+       "size",
+       "url"
+      ]
+     }
+    },
+    "pdf": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "url": {
+         "type": "string",
+         "format": "uri"
+        }
+       },
+       "required": [
+        "url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "public_id",
+    "student",
+    "teacher",
+    "lesson",
+    "tz",
+    "report",
+    "attachments",
+    "pdf"
    ]
   }
  },
