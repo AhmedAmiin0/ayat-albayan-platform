@@ -1,6 +1,5 @@
+import { assistantsApi, type AssistantPick } from '@ab/client-core';
 import type {
-  AssistantLessonView,
-  AssistantView,
   JoinLinkResult,
   JoinLinkUrl,
   LessonView,
@@ -12,6 +11,8 @@ import { apiFetch, apiSend, publicApiSend } from '@ab/web-kit/lib/http/api';
 import { viewerZone } from '@ab/web-kit/lib/clock-text';
 
 export const CLASSROOM_KEY = ['classroom'] as const;
+
+const assistants = assistantsApi({ apiFetch, apiSend });
 
 /** A public join: the link, and the name typed on the page (none when the link names the student). */
 interface GuestJoinInput {
@@ -39,31 +40,19 @@ export const copyJoinLinkUrl = (lessonId: string) => apiSend<JoinLinkUrl>('POST'
 /** GET /assistants (admin): every assistant login. */
 export const assistantsQuery = queryOptions({
   queryKey: [...CLASSROOM_KEY, 'assistants'],
-  queryFn: () => apiFetch<AssistantView[]>('/assistants'),
+  queryFn: assistants.all,
 });
 
 /** GET /students/:id/assistants. */
 export const studentAssistantsQuery = (studentId: string) =>
   queryOptions({
     queryKey: [...CLASSROOM_KEY, 'student', studentId],
-    queryFn: () => apiFetch<AssistantView[]>(`/students/${studentId}/assistants`),
+    queryFn: () => assistants.forStudent(studentId),
   });
 
-export const assignAssistant = ({
-  studentId,
-  profileId,
-}: {
-  studentId: string;
-  profileId: string;
-}) => apiSend<AssistantView[]>('POST', `/students/${studentId}/assistants`, { profileId });
+export const assignAssistant = (pick: AssistantPick) => assistants.assign(pick);
 
-export const removeAssistant = ({
-  studentId,
-  profileId,
-}: {
-  studentId: string;
-  profileId: string;
-}) => apiSend<AssistantView[]>('DELETE', `/students/${studentId}/assistants/${profileId}`);
+export const removeAssistant = (pick: AssistantPick) => assistants.remove(pick);
 
 /** The local day `date` in `tz` [00:00, next 00:00) as ISO instants (classroom-day.golden). */
 function dayIn(date: string, tz: string): { from: string; to: string } {
@@ -80,7 +69,7 @@ export function localDay(now: Date, tz = viewerZone()): { from: string; to: stri
 export const assistantLessonsQuery = (day: { from: string; to: string }) =>
   queryOptions({
     queryKey: [...CLASSROOM_KEY, 'mine', day.from],
-    queryFn: () => apiFetch<AssistantLessonView[]>(`/assistants/me/lessons?${new URLSearchParams(day)}`),
+    queryFn: () => assistants.mine(day),
   });
 
 /** The browser-local day `offset` days from `now`, as ISO instants. */
