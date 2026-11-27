@@ -8,6 +8,7 @@
     "types": ["node"]
   },
   "include": [
+    "api-one/**/*.ts",
     "ci-checks/move-module.ts",
     "ci-checks/move-module/**/*.ts",
     "ci-checks/deploy/**/*.ts",
