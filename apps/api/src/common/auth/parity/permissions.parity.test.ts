@@ -1,13 +1,6 @@
 import { isPermission, systemPermissionsOf, USER_ROLES, type UserRole } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
-import {
-  accessBefore,
-  isGatedBy,
-  permissionKeys,
-  walkRoutes,
-  type BeforeAccess,
-  type RouteAccess,
-} from './route-walk.test-util';
+import { accessBefore, permissionKeys, walkRoutes, type BeforeAccess, type RouteAccess } from './route-walk.test-util';
 
 // THE safety net of dynamic roles: for every endpoint, each of the five system roles (and a user
 // with no role) is admitted or refused exactly as under the old @Roles metadata, frozen in
@@ -96,7 +89,7 @@ describe('system-role parity with the old @Roles table', () => {
   });
 
   it('pricing.read gates the pricing routes only, for admin and sales', () => {
-    const gated = routes.filter((r) => isGatedBy(r, 'pricing.read')).map((r) => r.key).sort();
+    const gated = routes.filter((r) => permissionKeys(r).join('|') === 'pricing.read').map((r) => r.key).sort();
     expect(gated).toEqual(['catalog', 'list', 'quote'].map((h) => `PricingController.${h}`));
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('pricing.read'))).toEqual(['admin', 'sales']);
   });
