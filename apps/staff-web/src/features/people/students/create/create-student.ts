@@ -1,7 +1,7 @@
 import type { Gender, LeadSource, Program } from '@ab/catalog';
 import { normalizePhone } from '@ab/core';
 import { t } from '@ab/web-kit';
-import type { CreateStudentBody } from '@/features/people/students/api';
+import type { StudentCreateBody } from '@ab/client-core';
 
 export type CreateStudentValues = {
   guardianPhone: string;
@@ -61,7 +61,7 @@ export function toCreateBody(
   v: CreateStudentValues,
   force: boolean,
   leadId?: string,
-): CreateStudentBody {
+): StudentCreateBody {
   return {
     name: v.name.trim(),
     age: parseAge(v.age) ?? null,

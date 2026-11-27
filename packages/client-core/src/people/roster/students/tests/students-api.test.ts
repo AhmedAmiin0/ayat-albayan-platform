@@ -1,7 +1,6 @@
 import {
   statusCountsFixture,
   studentProfileFixture,
-  studentRowFixture,
   teacherOptionFixture,
 } from '@ab/shared/testing';
 import { describe, expect, it, vi } from 'vitest';
