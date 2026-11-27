@@ -10939,6 +10939,53 @@
    "required": [
     "code"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "title": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "state": {
+     "type": "string",
+     "enum": [
+      "open",
+      "gone"
+     ]
+    },
+    "goneReason": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "expired",
+        "revoked"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "needs": {
+     "type": "string",
+     "const": "sign_in_or_code"
+    },
+    "codesAvailable": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "title",
+    "state",
+    "goneReason",
+    "needs",
+    "codesAvailable"
+   ]
   }
  },
  "GET /public/student/:token": {
@@ -11098,7 +11145,8 @@
    "required": [
     "code"
    ]
-  }
+  },
+  "response": "redirect"
  },
  "GET /ready": {
   "response": {
@@ -32459,6 +32507,43 @@
    "required": [
     "code"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "oneOf": [
+    {
+     "type": "object",
+     "properties": {
+      "outcome": {
+       "type": "string",
+       "const": "open"
+      },
+      "target": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "outcome",
+      "target"
+     ]
+    },
+    {
+     "type": "object",
+     "properties": {
+      "outcome": {
+       "type": "string",
+       "enum": [
+        "gone",
+        "not_allowed",
+        "limit_reached"
+       ]
+      }
+     },
+     "required": [
+      "outcome"
+     ]
+    }
+   ]
   }
  },
  "POST /public/short-links/:code/otp/start": {
@@ -32486,7 +32571,8 @@
    "required": [
     "phone"
    ]
-  }
+  },
+  "response": "empty"
  },
  "POST /public/short-links/:code/otp/verify": {
   "params": {
@@ -32516,6 +32602,43 @@
    "required": [
     "phone",
     "code"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "oneOf": [
+    {
+     "type": "object",
+     "properties": {
+      "outcome": {
+       "type": "string",
+       "const": "open"
+      },
+      "target": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "outcome",
+      "target"
+     ]
+    },
+    {
+     "type": "object",
+     "properties": {
+      "outcome": {
+       "type": "string",
+       "enum": [
+        "gone",
+        "not_allowed",
+        "limit_reached"
+       ]
+      }
+     },
+     "required": [
+      "outcome"
+     ]
+    }
    ]
   }
  },
