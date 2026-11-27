@@ -4,6 +4,7 @@ import { courseStopQuerySchema, courseStopSchema } from './course-stop';
 import { courseStopPreviewSchema, courseStopResultSchema } from './course-stop.schemas';
 
 const byStudent = z.object({ id: z.uuid() });
+const access = { permissions: ['subscriptions.stop'], tags: ['course-actions'] } as const;
 
 /** Stopping a student's course (migration 990), written once for the api and its clients. */
 export const courseStopRoutes = {
@@ -14,6 +15,7 @@ export const courseStopRoutes = {
     params: byStudent,
     query: courseStopQuerySchema,
     response: courseStopPreviewSchema,
+    ...access,
   }),
   /** A retry with the same clientRequestId answers the first stop. */
   stop: defineRoute({
@@ -22,5 +24,6 @@ export const courseStopRoutes = {
     params: byStudent,
     body: courseStopSchema,
     response: courseStopResultSchema,
+    ...access,
   }),
 };

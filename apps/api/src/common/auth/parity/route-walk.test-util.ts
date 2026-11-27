@@ -54,6 +54,10 @@ function routeOf(cls: object, handler: object): string {
 export const permissionKeys = (route: Pick<RouteAccess, 'permission'>): unknown[] =>
   [route.permission ?? []].flat();
 
+/** True when exactly this one key gates the route, whether a handler or a route object set it. */
+export const isGatedBy = (route: Pick<RouteAccess, 'permission'>, key: string): boolean =>
+  permissionKeys(route).join('|') === key;
+
 const tagsSchema = z.array(z.string()).default([]);
 
 const classOutSchema = z.tuple([z.boolean()]).optional();
