@@ -721,6 +721,316 @@
    }
   }
  },
+ "GET /feedback": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "teacher": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "lesson": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "kind": {
+     "type": "string",
+     "enum": [
+      "trial",
+      "subscription"
+     ]
+    },
+    "rating": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "from": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    },
+    "to": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    },
+    "recommend": {
+     "type": "string",
+     "enum": [
+      "yes",
+      "maybe",
+      "no"
+     ]
+    },
+    "quick_rating": {
+     "type": "string",
+     "enum": [
+      "excellent",
+      "good",
+      "needs_work"
+     ]
+    },
+    "student": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 100
+    },
+    "note": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 100
+    },
+    "sort": {
+     "type": "string",
+     "enum": [
+      "teacher",
+      "kind",
+      "quick_rating",
+      "rating",
+      "recommend",
+      "note"
+     ]
+    },
+    "dir": {
+     "type": "string",
+     "enum": [
+      "asc",
+      "desc"
+     ]
+    },
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10000
+    },
+    "pageSize": {
+     "default": 25,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 100
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "lesson_id": {
+        "type": "string"
+       },
+       "student": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "code": {
+          "type": "string"
+         },
+         "name": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "id",
+         "code",
+         "name"
+        ]
+       },
+       "kind": {
+        "type": "string",
+        "enum": [
+         "trial",
+         "subscription"
+        ]
+       },
+       "requested_at": {
+        "type": "string"
+       },
+       "expires_at": {
+        "type": "string"
+       },
+       "rating": {
+        "anyOf": [
+         {
+          "type": "number",
+          "enum": [
+           1,
+           2,
+           3,
+           4,
+           5
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "recommend": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "yes",
+           "maybe",
+           "no"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "note": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "submitted_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "quick_rating": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "excellent",
+           "good",
+           "needs_work"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "quick_rated_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "teacher": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "name": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "id",
+         "name"
+        ]
+       },
+       "contact_phone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "lesson_id",
+       "student",
+       "kind",
+       "requested_at",
+       "expires_at",
+       "rating",
+       "recommend",
+       "note",
+       "submitted_at",
+       "teacher",
+       "contact_phone"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
+  }
+ },
+ "GET /feedback/summary": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "avg_rating": {
+      "type": "number"
+     },
+     "n": {
+      "type": "number"
+     },
+     "recommend_yes_pct": {
+      "type": "number"
+     },
+     "teacher": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "name": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "name"
+      ]
+     }
+    },
+    "required": [
+     "avg_rating",
+     "n",
+     "recommend_yes_pct",
+     "teacher"
+    ]
+   }
+  }
+ },
  "GET /guardians": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4328,6 +4638,279 @@
    "required": [
     "studentId",
     "messageId"
+   ]
+  }
+ },
+ "GET /teachers/me/feedback": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "teacher": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "lesson": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "kind": {
+     "type": "string",
+     "enum": [
+      "trial",
+      "subscription"
+     ]
+    },
+    "rating": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "from": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    },
+    "to": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    },
+    "recommend": {
+     "type": "string",
+     "enum": [
+      "yes",
+      "maybe",
+      "no"
+     ]
+    },
+    "quick_rating": {
+     "type": "string",
+     "enum": [
+      "excellent",
+      "good",
+      "needs_work"
+     ]
+    },
+    "student": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 100
+    },
+    "note": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 100
+    },
+    "sort": {
+     "type": "string",
+     "enum": [
+      "teacher",
+      "kind",
+      "quick_rating",
+      "rating",
+      "recommend",
+      "note"
+     ]
+    },
+    "dir": {
+     "type": "string",
+     "enum": [
+      "asc",
+      "desc"
+     ]
+    },
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10000
+    },
+    "pageSize": {
+     "default": 25,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 100
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "lesson_id": {
+        "type": "string"
+       },
+       "student": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "code": {
+          "type": "string"
+         },
+         "name": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "id",
+         "code",
+         "name"
+        ]
+       },
+       "kind": {
+        "type": "string",
+        "enum": [
+         "trial",
+         "subscription"
+        ]
+       },
+       "requested_at": {
+        "type": "string"
+       },
+       "expires_at": {
+        "type": "string"
+       },
+       "rating": {
+        "anyOf": [
+         {
+          "type": "number",
+          "enum": [
+           1,
+           2,
+           3,
+           4,
+           5
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "recommend": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "yes",
+           "maybe",
+           "no"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "note": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "submitted_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "quick_rating": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "excellent",
+           "good",
+           "needs_work"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "quick_rated_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "lesson_id",
+       "student",
+       "kind",
+       "requested_at",
+       "expires_at",
+       "rating",
+       "recommend",
+       "note",
+       "submitted_at"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "average": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "avg_rating": {
+         "type": "number"
+        },
+        "n": {
+         "type": "number"
+        },
+        "recommend_yes_pct": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "avg_rating",
+        "n",
+        "recommend_yes_pct"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize",
+    "average"
    ]
   }
  },
@@ -10127,6 +10710,20 @@
   }
  },
  "POST /lessons/:id/feedback-request": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -10142,6 +10739,38 @@
    },
    "required": [
     "studentId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "requested_at": {
+     "type": "string"
+    },
+    "expires_at": {
+     "type": "string"
+    },
+    "replayed": {
+     "type": "boolean"
+    },
+    "message_status": {
+     "type": "string",
+     "enum": [
+      "queued",
+      "sent",
+      "delivered",
+      "read",
+      "failed",
+      "sent_manually"
+     ]
+    }
+   },
+   "required": [
+    "requested_at",
+    "expires_at",
+    "replayed",
+    "message_status"
    ]
   }
  },

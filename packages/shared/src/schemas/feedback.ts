@@ -1,14 +1,7 @@
 import { z } from 'zod';
-import {
-  FEEDBACK_KINDS,
-  type MessageStatus,
-  FEEDBACK_RECOMMEND,
-  type FeedbackKind,
-  type FeedbackRating,
-  type FeedbackRecommend,
-} from '@ab/catalog';
-import { LESSON_RATINGS, type LessonRating } from '../messaging/lesson/rating';
-import { listSortShape, phoneE164 } from '@ab/core';
+import { FEEDBACK_KINDS, FEEDBACK_RECOMMEND } from '@ab/catalog';
+import { LESSON_RATINGS } from '../messaging/lesson/rating';
+import { listSortShape, pageQuery, phoneE164 } from '@ab/core';
 import type { Attendance, LessonStatus } from '@ab/catalog';
 
 // Feedback (docs/13-forms-spec.md form 3): the server fills teacher and kind from the signed link.
@@ -70,69 +63,19 @@ export const feedbackQuerySchema = z.object({
 });
 export type FeedbackQuery = z.output<typeof feedbackQuerySchema>;
 
-/** GET /public/feedback/:token — nothing beyond the teacher, the kind and the prefilled phone. */
-export interface FeedbackFormView {
-  teacherName: string;
-  kind: FeedbackKind;
-  contactPhone: string;
-  alreadySubmitted: boolean;
+const feedbackPagedQuerySchema = feedbackQuerySchema.extend(pageQuery({ size: 25 }));
+
+/** Keeps the value; any filter issue stops the parse before the paging is read. */
+function filterFirst(value: z.input<typeof feedbackPagedQuerySchema>, ctx: z.RefinementCtx) {
+  for (const { path, message } of feedbackQuerySchema.safeParse(value).error?.issues ?? [])
+    ctx.addIssue({ code: 'custom', path, message });
+  return value;
 }
 
-/** One feedback row for the admin list. */
-export interface FeedbackRowView {
-  id: string;
-  lesson_id: string;
-  student: { id: string; code: string; name: string };
-  teacher: { id: string; name: string };
-  kind: FeedbackKind;
-  requested_at: string;
-  expires_at: string;
-  /** null while the family has not answered. */
-  rating: FeedbackRating | null;
-  recommend: FeedbackRecommend | null;
-  note: string | null;
-  submitted_at: string | null;
-  /** The guardian's WhatsApp button answer (lesson_rating, migration 195); null until they tap. Absent in an old cache. */
-  quick_rating?: LessonRating | null;
-  quick_rated_at?: string | null;
-  /** Admin only: the family's contact number; never in a teacher's view. */
-  contact_phone: string | null;
-}
-
-/** A teacher's own rows: the student's name stays, contact phone and guardian are omitted. */
-export type TeacherFeedbackRowView = Omit<FeedbackRowView, 'contact_phone' | 'teacher'>;
-
-/** A row of either list: the teacher's own rows have no teacher block and no contact phone. */
-export type FeedbackListRow = TeacherFeedbackRowView & {
-  teacher?: FeedbackRowView['teacher'];
-  contact_phone?: string | null;
-};
-
-export interface FeedbackAverage {
-  avg_rating: number;
-  n: number;
-  recommend_yes_pct: number;
-}
-
-/** GET /feedback/summary: per teacher. */
-export interface TeacherFeedbackSummary extends FeedbackAverage {
-  teacher: { id: string; name: string };
-}
-
-/** GET /teachers/me/feedback: own rows plus the teacher's own average (null before the first answer). */
-export interface TeacherFeedbackView {
-  items: TeacherFeedbackRowView[];
-  total: number;
-  page: number;
-  pageSize: number;
-  average: FeedbackAverage | null;
-}
-
-/** POST /lessons/:lessonId/feedback-request: `replayed` = already requested, nothing new was sent. */
-export interface FeedbackRequestResult {
-  requested_at: string;
-  expires_at: string;
-  replayed: boolean;
-  /** The queued row's status: queued while sending is gated off, failed carries nothing to resend but a new link. */
-  message_status: MessageStatus;
-}
+/**
+ * GET /feedback and /teachers/me/feedback: the filter is checked before the paging, so a bad
+ * filter is the only issue reported when both are bad.
+ */
+export const feedbackListQuerySchema = z.preprocess(filterFirst, feedbackPagedQuerySchema);
+export type FeedbackListQuery = z.output<typeof feedbackListQuerySchema>;
+export type FeedbackListQueryInput = z.input<typeof feedbackListQuerySchema>;

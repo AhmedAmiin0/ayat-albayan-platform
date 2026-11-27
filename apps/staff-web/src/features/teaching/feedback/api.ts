@@ -1,20 +1,18 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule';
+import { feedbackCalls } from '@ab/client-core';
 import { ApiError, apiFetch, apiSend, publicApiFetch, publicApiSend, t } from '@ab/web-kit';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ServerListState } from '@/lib/list/server-list-search';
-import {
-  FEEDBACK_KINDS,
-  type FeedbackFormView,
-  type TeacherFeedbackSummary,
-  type TeacherFeedbackView,
-} from './types';
-import type { FeedbackRowView, FeedbackSubmit } from '@ab/shared';
+import { FEEDBACK_KINDS, type FeedbackFormView } from './types';
+import type { FeedbackRowView, FeedbackSubmit, TeacherFeedbackView } from '@ab/shared';
 import type { Page } from '@ab/core';
 import { feedbackKeys } from '@/features/teaching/feedback/keys';
 
 export const FEEDBACK_KEY = feedbackKeys.all;
 export const FEEDBACK_PAGE_SIZE = 20;
+
+const feedback = feedbackCalls({ apiFetch, apiSend });
 
 // The guardian's link has no login: these calls never carry the admin's session token.
 
@@ -77,7 +75,7 @@ export const feedbackListQuery = (s: ServerListState) =>
 /** Admin only: average, count and recommend rate per teacher. */
 export const feedbackSummaryQuery = queryOptions({
   queryKey: feedbackKeys.summary(),
-  queryFn: () => apiFetch<TeacherFeedbackSummary[]>('/feedback/summary'),
+  queryFn: () => feedback.summary(),
 });
 
 /** GET /teachers/me/feedback: only my rows (sorted, filtered, paged like the admin's) and my own average. */
@@ -89,8 +87,7 @@ export const myFeedbackQuery = (s: ServerListState) =>
   });
 
 /** Admin only: queues the feedback WhatsApp template. */
-export const requestFeedback = ({ lessonId, studentId }: { lessonId: string; studentId: string }) =>
-  apiSend('POST', `/lessons/${lessonId}/feedback-request`, { studentId });
+export const requestFeedback = feedback.request;
 
 export function requestErrorText(error: unknown): string {
   return errorCode(error) === 'template_not_approved'

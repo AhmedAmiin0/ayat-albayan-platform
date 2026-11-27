@@ -8493,11 +8493,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/feedback/feedback.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 3
-    }
-  },
   "src/modules/teaching/feedback/feedback.fakes.ts": {
     "stylistic/max-len": {
       "count": 2
