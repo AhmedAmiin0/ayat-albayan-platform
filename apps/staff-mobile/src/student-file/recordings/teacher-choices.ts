@@ -1,12 +1,18 @@
 import type { StudentRecordingView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { apiFetch } from '@ab/mobile-kit';
+import { studentCalls } from '@ab/client-core';
+import type { TeacherOptionView } from '@ab/shared';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { studentKeys } from '@/core/lib/keys';
 import { teacherLabel } from './recording-format';
 import type { TeacherChoice } from './RecordingFiltersBar';
 
-type Option = { id: string; display_name_ar: string; display_name_en?: string | null };
+type Option = Pick<TeacherOptionView, 'id' | 'display_name_ar'> & {
+  display_name_en?: string | null;
+};
+
+const students = studentCalls({ apiFetch, apiSend });
 
 /** The teachers to filter by: every active teacher for the admin (GET /students/teacher-options), else those on the loaded rows. */
 export function mergeChoices(rows: StudentRecordingView[], all: Option[]): TeacherChoice[] {
@@ -24,7 +30,7 @@ function unionChoices(a: TeacherChoice[], b: TeacherChoice[]): TeacherChoice[] {
 export function useTeacherChoices(rows: StudentRecordingView[], admin: boolean): TeacherChoice[] {
   const options = useQuery({
     queryKey: studentKeys.teacherOptions(),
-    queryFn: () => apiFetch<Option[]>('/students/teacher-options'),
+    queryFn: () => students.teacherOptions(),
     enabled: admin,
     staleTime: 10 * 60_000,
   });
