@@ -23,10 +23,10 @@ describe('threadReadRoutes', () => {
     expect(lines).toEqual(['GET /threads/sync']);
   });
 
-  it('asks from the first row with the default page, or from a cursor', () => {
+  it('asks from the first row with the default page, or from a cursor read apart', () => {
     expect(routes.sync.query.parse({})).toEqual({ limit: SYNC_LIMIT_DEFAULT });
     expect(routes.sync.query.parse({ since: CURSOR, limit: '20' })).toEqual({
-      since: CURSOR,
+      since: { at: '2026-11-06T10:00:00.000001+00:00', id: ID },
       limit: 20,
     });
   });

@@ -48,6 +48,7 @@ export * from './wa';
 export * from './thread-delta';
 export * from './sync-cursor';
 export * from './thread-sync';
+export * from './chat/thread-reads';
 export type * from './chat/views';
 export * from './chat/message-view';
 export type * from './templates/template-views';
