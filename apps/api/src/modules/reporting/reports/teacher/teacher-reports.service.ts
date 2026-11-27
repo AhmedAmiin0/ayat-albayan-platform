@@ -1,8 +1,9 @@
-import type { TeacherReportsQuery, TeacherReportView } from '@ab/shared';
+import { reportHistoryRoutes, type TeacherReportsQuery, type TeacherReportView } from '@ab/shared';
 import type { Page } from '@ab/core';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { PageQuery } from '@/common/http/http';
+import { asResponse } from '@/common/http/returns';
 import { ReportGate } from '@/modules/reporting/reports/shared/report-gate';
 import { ReportHistoryQueries } from '@/modules/reporting/reports/history/report-history.queries';
 import { toTeacherReportView } from './teacher-reports.mapper';
@@ -37,11 +38,7 @@ export class TeacherReportsService {
       now: ctx.now,
       minutes: ctx.minutes,
     };
-    return {
-      items: rows.map((r) => toTeacherReportView(r, parts)),
-      total,
-      page: page.page,
-      pageSize: page.pageSize,
-    };
+    const items = rows.map((r) => toTeacherReportView(r, parts));
+    return asResponse(reportHistoryRoutes.mine.response, { items, total, ...page });
   }
 }

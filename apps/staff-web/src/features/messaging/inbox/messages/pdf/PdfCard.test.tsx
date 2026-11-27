@@ -13,7 +13,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 // A chat PDF like WhatsApp's on the web: page 1 as a card, no click first.
 const PDF_URL = 'https://storage.test/wa-media/m-1.pdf?token=x';
 const THUMB = 'https://storage.test/wa-media/pdf/m-1/1.jpg?token=x';
-const PAGE = { url: THUMB, expires_at: '2026-10-29T12:00:00Z', page: 1, pages: 12, bytes: 1.2 * 1024 * 1024 };
+const PAGE = { url: THUMB, expires_at: '2026-10-29T12:00:00Z', page: 1, pages: 12, bytes: Math.round(1.2 * 1024 * 1024) };
 const row = (patch: Partial<MessageView> = {}) =>
   message({ id: 'm-1', body: null, media_mime: 'application/pdf', media_name: 'خطة الحفظ.pdf', ...patch });
 const serve = (page: () => Promise<unknown>) =>

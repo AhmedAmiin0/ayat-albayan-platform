@@ -33,6 +33,12 @@ export const HELD_REPORT = {
   id: 'rep-held', lesson_id: 'held', submitted_at: '2026-10-27T15:30:00+00:00', sent_at: null,
 };
 
+/** A label's stable uuid: the http fixtures carry uuid ids, as the database does. */
+export const uuidOf = (label: string): string =>
+  `1e550000-0000-4000-8000-${Buffer.from(label).toString('hex').padEnd(12, '0').slice(0, 12)}`;
+
+export const STORED_HELD_REPORT = { ...HELD_REPORT, id: uuidOf('rep-held'), lesson_id: uuidOf('held') };
+
 /** October in Riyadh: one of each kind, one still ahead (left out), newest first. */
 export const octoberLessons = (): AttendanceLessonRow[] => [
   lessonRow('future', '2026-10-29T15:00:00+00:00', { status: 'scheduled' }),
@@ -62,9 +68,9 @@ export const STUDENT_HEAD = { id: STUDENT, code: 'AB-0101', name: 'ياسمين'
 
 export function resetAttendance(q: AttendanceFake): void {
   q.exists.mockImplementation(async (id: string) => id === STUDENT);
-  q.lessons.mockResolvedValue(octoberLessons());
+  q.lessons.mockResolvedValue(octoberLessons().map((l) => ({ ...l, id: uuidOf(l.id) })));
   q.starts.mockResolvedValue(['2026-10-27T15:00:00+00:00', '2026-09-30T20:00:00+00:00', '2026-08-01T10:00:00+00:00']);
-  q.reports.mockResolvedValue([HELD_REPORT]);
+  q.reports.mockResolvedValue([STORED_HELD_REPORT]);
   q.student.mockImplementation(async (id: string) => (id === STUDENT ? { ...STUDENT_HEAD } : null));
   q.taughtBy.mockResolvedValue(false);
   q.packages.mockResolvedValue([]);

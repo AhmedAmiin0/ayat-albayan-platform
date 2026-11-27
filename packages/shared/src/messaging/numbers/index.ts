@@ -1,4 +1,4 @@
-export * from './views';
+export * from './secret-names';
 export * from './schemas';
 export * from './routing';
 export * from './evolution';
@@ -6,3 +6,4 @@ export * from './evolution-config';
 export * from './evolution-sync';
 export * from './crm-webhook';
 export * from './communications';
+export * from './admin';

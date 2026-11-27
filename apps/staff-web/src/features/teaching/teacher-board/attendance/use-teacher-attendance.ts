@@ -1,19 +1,15 @@
-import { attendanceTableSchema, teacherLessonPaths } from '@ab/client-core';
-import type { StudentAttendanceTable } from '@ab/shared';
+import { teacherStudentFileCalls } from '@ab/client-core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { lessonKeys } from '@/features/teaching/schedule';
-import { apiFetch } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 
-const readLog = async (url: string): Promise<StudentAttendanceTable> =>
-  attendanceTableSchema.parse(await apiFetch(url));
+const studentFile = teacherStudentFileCalls({ apiFetch, apiSend });
 
 /** Her own lessons only (docs/46 C5); null month is current; the last month stays while loading. */
 export function useTeacherAttendance(studentId: string, month: string | null) {
-  const path = teacherLessonPaths.attendance(studentId);
-  const url = month ? `${path}?month=${month}` : path;
   return useQuery({
     queryKey: lessonKeys.attendance(studentId, month),
-    queryFn: () => readLog(url),
+    queryFn: () => studentFile.attendance({ studentId, month: month ?? undefined }),
     placeholderData: keepPreviousData,
   });
 }

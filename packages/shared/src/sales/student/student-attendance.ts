@@ -1,75 +1,13 @@
 import { z } from 'zod';
-import type { Attendance, LessonStatus, ReportStatus } from '@ab/catalog';
 import { addCalendarMonths, monthRangeIn, RIYADH_TZ, riyadhToday } from '@ab/time';
 import { monthParam } from '@ab/money';
-import { attendanceKind, type AttendanceKind } from './student-details';
+import type { AttendanceTableRow, AttendanceTotalKind } from '../student-file/attendance.schemas';
+import { attendanceKind } from './student-details';
 
 // One student's past lessons in a Riyadh month; never a price, payment, meeting link or note.
 
 /** `?month=YYYY-MM` (optional: the current Riyadh month). */
 export const attendanceMonthQuery = z.object({ month: monthParam.optional() });
-
-/** `kind` is attendanceKind; null when moved. */
-export interface AttendanceTableRow {
-  lesson_id: string;
-  starts_at: string;
-  duration_min: number;
-  teacher_name: string | null;
-  status: LessonStatus;
-  /** The student's own lesson_students.attendance (on_time / late / absent / excused), null: unmarked. */
-  attendance: Attendance | null;
-  kind: AttendanceKind | null;
-  /** A report of this student for this lesson was submitted (sent). */
-  report_sent: boolean;
-  /** That report's id (it opens for any student); else null. */
-  report_id: string | null;
-  /** Only for a cancelled lesson. */
-  cancel_reason: string | null;
-  is_trial: boolean;
-  is_makeup: boolean;
-  /** This lesson replaced a moved one. */
-  is_rescheduled: boolean;
-  /** docs/47: the start of the lesson it replaced, else its time before an edit. */
-  moved_from?: string | null;
-  /** The start of the lesson this one moved to (a 'rescheduled' row). */
-  moved_to?: string | null;
-  /** A one-lesson move's reason (same teacher only). */
-  move_reason?: string | null;
-  /** The teacher reader's report of this lesson (docs/47); staff rows never carry it. */
-  report?: AttendanceRowReport | null;
-}
-
-/** The row's report state for the teacher: write / edit (inside the window) / view. */
-export interface AttendanceRowReport {
-  status: ReportStatus;
-  submitted_at: string | null;
-  sent_at: string | null;
-  can_edit: boolean;
-  edit_until: string | null;
-}
-
-/** late is part of held; cancelled is per side; rescheduled is moved away. */
-export type AttendanceTotalKind =
-  | 'held'
-  | 'late'
-  | 'absent'
-  | 'excused'
-  | 'cancelled_by_teacher'
-  | 'cancelled_by_admin'
-  | 'rescheduled'
-  | 'unmarked';
-
-export interface StudentAttendanceTable {
-  /** "YYYY-MM" in Riyadh. */
-  month: string;
-  /** Every Riyadh month with a past lesson, newest first (the current one always). */
-  months: string[];
-  /** Newest first. */
-  items: AttendanceTableRow[];
-  totals: Record<AttendanceTotalKind, number>;
-  /** Hers (the sales tree; always true for the admin); a sent report opens either way (2026-10-30). */
-  mine: boolean;
-}
 
 /** "YYYY-MM" of an instant on the Riyadh calendar. */
 export const riyadhMonthOf = (at: Date): string => riyadhToday(at).slice(0, 7);

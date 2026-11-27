@@ -14,3 +14,4 @@ export * from './meeting-mode';
 export * from './room-state';
 export * from './meeting-rooms';
 export * from './lesson-room';
+export * from './lesson-join';

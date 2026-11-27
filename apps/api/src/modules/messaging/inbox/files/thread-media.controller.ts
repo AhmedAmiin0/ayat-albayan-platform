@@ -1,35 +1,33 @@
-import type { ThreadFile } from '@ab/shared';
-import { phoneE164 } from '@ab/core';
-import type { ThreadMediaItem } from '@ab/schedule';
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
+import { id, phoneE164 } from '@ab/core';
+import { chatMediaRoutes as routes, type ThreadFile, type ThreadMediaItem } from '@ab/shared';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ZodParam } from '@/common/http/zod-inputs';
 import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { ThreadMediaService } from './thread-media.service';
 
-/**
- * R-MSG-06: the images and PDFs a guardian sent in a chat. Admin only (a teacher never sees a
- * payment proof), unlike the rest of /threads where a teacher reads their own families' chats.
- */
-@ApiTags('inbox')
+// Admin only (inbox.media on the routes): a teacher never sees a payment proof, unlike the rest of
+// /threads where a teacher reads their own families' chats. `messageId` comes last on purpose:
+// Nest runs the later param's pipe first, so a bad id still wins over a bad phone, as it did.
+
 @ApiBearerAuth()
-@Permissions('inbox.media')
-@Controller('threads')
+@Controller()
 export class ThreadMediaController {
   constructor(private readonly media: ThreadMediaService) {}
 
-  /** Inbound image / PDF messages of the last 30 days, newest first, at most 12; nothing is downloaded. */
-  @Get(':phone/media')
-  list(@ZodParam('phone', phoneE164, invalidPhone) phone: string): Promise<ThreadMediaItem[]> {
-    return this.media.list(phone);
+  @Route(routes.list)
+  list(
+    @RouteInput({ badParam: invalidPhone }) { params }: RouteInputOf<typeof routes.list>,
+  ): Promise<ThreadMediaItem[]> {
+    return this.media.list(params.phone);
   }
 
-  /** The file as a signed URL (downloaded from WhatsApp on first use); 410 media_expired when it is gone. */
-  @Get(':phone/media/:messageId')
+  /** WhatsApp's file is downloaded on first use; 410 media_expired when it is gone. */
+  @Route(routes.file)
   file(
     @ZodParam('phone', phoneE164, invalidPhone) phone: string,
-    @Param('messageId', ParseUUIDPipe) messageId: string,
+    @ZodParam('messageId', id()) messageId: string,
   ): Promise<ThreadFile> {
     return this.media.file({ phone, messageId });
   }

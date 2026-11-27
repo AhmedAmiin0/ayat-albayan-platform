@@ -51,4 +51,20 @@ describe('GET /students/:id/reports (R5; R-REP-05) and /teachers/me/pending-repo
     expect(unlinked.statusCode).toBe(404);
     expect(unlinked.json().code).toBe('teacher_not_linked');
   });
+
+  it('a student id that is not a uuid is a 400 before any read', async () => {
+    const res = await h.call({ method: 'GET', url: '/students/s-1/reports', token: 'admin' });
+    expect(res.statusCode).toBe(400);
+    expect(h.history.student).not.toHaveBeenCalled();
+  });
+
+  it('a stored lesson status the schema refuses is a 500 response_invalid, never the row', async () => {
+    const lessons = { starts_at: '2026-10-04T14:00:00+00:00', status: 'missed' };
+    const student = { id: 's1', code: 'AB-0001', name: 'سهيلة' };
+    h.history.pending.mockResolvedValue([{ lesson_id: 'l1', student, lessons, lesson_reports: null }]);
+    const res = await h.call({ method: 'GET', url: '/teachers/me/pending-reports' });
+    expect(res.statusCode).toBe(500);
+    expect(res.json().code).toBe('response_invalid');
+    expect(res.body).not.toContain('سهيلة');
+  });
 });

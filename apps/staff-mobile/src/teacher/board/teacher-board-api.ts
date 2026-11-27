@@ -1,10 +1,8 @@
-import {
-  attendanceTableSchema,
-  teacherLessonPaths,
-  teacherStudentHeadSchema,
-} from '@ab/client-core';
+import { teacherLessonPaths, teacherStudentFileCalls } from '@ab/client-core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+
+const studentFile = teacherStudentFileCalls({ apiFetch, apiSend });
 
 /**
  * GET /teachers/me/students/:id/attendance?month= (docs/46 C5): her own lessons with one of her
@@ -13,10 +11,9 @@ import { apiFetch, pathKey } from '@ab/mobile-kit';
  */
 export function useTeacherAttendance(studentId: string, month: string | null) {
   const path = teacherLessonPaths.attendance(studentId);
-  const url = month ? `${path}?month=${month}` : path;
   return useQuery({
     queryKey: [...pathKey(path), month ?? 'current'],
-    queryFn: async () => attendanceTableSchema.parse(await apiFetch(url)),
+    queryFn: () => studentFile.attendance({ studentId, month: month ?? undefined }),
     enabled: studentId !== '',
     placeholderData: keepPreviousData,
   });
@@ -28,10 +25,9 @@ export function useTeacherAttendance(studentId: string, month: string | null) {
  * submit (refreshAfterSubmit) refreshes it with the log.
  */
 export function useTeacherStudentHead(studentId: string) {
-  const path = teacherLessonPaths.student(studentId);
   return useQuery({
-    queryKey: pathKey(path),
-    queryFn: async () => teacherStudentHeadSchema.parse(await apiFetch(path)),
+    queryKey: pathKey(teacherLessonPaths.student(studentId)),
+    queryFn: () => studentFile.head(studentId),
     enabled: studentId !== '',
   });
 }

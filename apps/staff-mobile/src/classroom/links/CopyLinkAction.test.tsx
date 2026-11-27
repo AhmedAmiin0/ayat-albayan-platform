@@ -22,7 +22,7 @@ test('a tap fetches a fresh URL (POST) and hands exactly it to the share sheet',
   await renderWithQuery(<CopyLinkAction lessonId="l-1" />);
   await press();
   expect(await screen.findByText(t.classroom.linkWindow)).toBeTruthy();
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/join-link/url');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/join-link/url', undefined);
   expect(share).toHaveBeenCalledWith({ message: 'https://app/join/abc' });
   await press();
   expect(mockApiSend).toHaveBeenCalledTimes(2);
