@@ -39,7 +39,7 @@ describe('AcademyContactLink: settings.academy_contact from GET /settings/public
   });
 
   it('nothing usable in the setting: the fallback text, no link', async () => {
-    answer({ site: '' });
+    answer({});
     renderWithClient(<AcademyContactLink fallback={FALLBACK} />);
     expect(await screen.findByText(FALLBACK)).toBeTruthy();
     expect(screen.queryByRole('link')).toBeNull();

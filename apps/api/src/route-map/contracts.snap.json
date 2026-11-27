@@ -18800,6 +18800,11 @@
    ]
   }
  },
+ "GET /settings/public": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema"
+  }
+ },
  "GET /short-links": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",

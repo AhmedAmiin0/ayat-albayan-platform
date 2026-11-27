@@ -1,5 +1,7 @@
 import { defineRoute } from '@ab/core';
 import { z } from 'zod';
+import { PUBLIC_CONFIG_PATH } from './public-config';
+import { publicConfigSchema } from './public-config-schema';
 import { customConfigUpsertSchema, customKeySchema } from './schema';
 import { customConfigViewSchema } from './views.schemas';
 
@@ -26,4 +28,14 @@ export const customConfigRoutes = {
     ...writer,
   }),
   remove: defineRoute({ method: 'DELETE', path: PATH, params, response: 'empty', ...writer }),
+};
+
+/** The public settings and public custom values every app reads, before and after login. */
+export const publicConfigRoutes = {
+  get: defineRoute({
+    method: 'GET',
+    path: PUBLIC_CONFIG_PATH,
+    response: publicConfigSchema,
+    tags: ['settings'],
+  }),
 };
