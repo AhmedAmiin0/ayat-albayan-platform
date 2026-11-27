@@ -1,12 +1,7 @@
-import {
-  portalFileUrlSchema,
-  portalRoomLinkSchema,
-  type PortalFileUrl,
-  type PortalRoomLink,
-} from '@ab/shared';
+import { portalRoutes as routes, type PortalFileUrl, type PortalRoomLink } from '@ab/shared';
 import { JOIN_ROLES, type RoomJoinResult } from '@ab/schedule';
 import { z } from 'zod';
-import type { ApiClient } from '../../core/http';
+import { callWith, type ApiClient } from '../../core/http';
 
 // The family portal's writes: the guest admission to our classroom (inside the window only), the
 // signed /join link that opens it in the phone's browser (no second sign-in), and a signed link
@@ -45,15 +40,23 @@ export interface PortalSends {
 const enc = encodeURIComponent;
 const studentPath = (id: string) => `/portal/students/${enc(id)}`;
 
+/** POST …/join keeps its path until the classroom's join answer has a shared schema. */
 export function portalSends(client: ApiClient): PortalSends {
-  const post = <T>(path: string, schema: { parse: (v: unknown) => T }): Promise<T> =>
-    client.apiSend('POST', path).then((r: unknown) => schema.parse(r));
+  const call = callWith(client);
+  const fileUrls: Record<PortalFileKind, (i: PortalFileInput) => Promise<PortalFileUrl>> = {
+    reports: (i) => call({ route: routes.reportUrl, params: { id: i.studentId, reportId: i.id } }),
+    recordings: (i) =>
+      call({ route: routes.recordingUrl, params: { id: i.studentId, recordingId: i.id } }),
+  };
   return {
     join: ({ studentId, lessonId }) =>
-      post(`${studentPath(studentId)}/lessons/${enc(lessonId)}/join`, roomJoinResultSchema),
+      call({
+        method: 'POST',
+        path: `${studentPath(studentId)}/lessons/${enc(lessonId)}/join`,
+        schema: roomJoinResultSchema,
+      }),
     roomLink: ({ studentId, lessonId }) =>
-      post(`${studentPath(studentId)}/lessons/${enc(lessonId)}/room-link`, portalRoomLinkSchema),
-    fileUrl: ({ studentId, kind, id }) =>
-      post(`${studentPath(studentId)}/${kind}/${enc(id)}/url`, portalFileUrlSchema),
+      call({ route: routes.roomLink, params: { id: studentId, lessonId } }),
+    fileUrl: (input) => fileUrls[input.kind](input),
   };
 }

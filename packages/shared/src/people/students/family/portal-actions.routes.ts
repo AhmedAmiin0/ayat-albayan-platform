@@ -10,6 +10,7 @@ import {
 
 const byLesson = z.object({ id: z.uuid(), lessonId: z.uuid() });
 const path = '/portal/students/:id/lessons/:lessonId';
+const access = { permissions: ['self.portal'], tags: ['portal'] } as const;
 
 /** The family app sends its excuse with no body when no reason was typed. */
 const cancelBody = z.preprocess(
@@ -27,6 +28,7 @@ export const portalLessonRoutes = {
     path: `${path}/confirm`,
     params: byLesson,
     response: portalActionResultSchema,
+    ...access,
   }),
   /** The answer's `counts`: whether the cancelled lesson counts from the package. */
   cancel: defineRoute({
@@ -35,6 +37,7 @@ export const portalLessonRoutes = {
     params: byLesson,
     body: cancelBody,
     response: portalActionResultSchema,
+    ...access,
   }),
   /** 409 proposal_pending (one waiting request per lesson), 400 date_in_past. */
   request: defineRoute({
@@ -43,6 +46,7 @@ export const portalLessonRoutes = {
     params: byLesson,
     body: portalRequestSchema,
     response: portalActionResultSchema,
+    ...access,
   }),
   /** 409 no_request when nothing waits. */
   withdraw: defineRoute({
@@ -50,6 +54,7 @@ export const portalLessonRoutes = {
     path: `${path}/withdraw`,
     params: byLesson,
     response: portalActionResultSchema,
+    ...access,
   }),
   slots: defineRoute({
     method: 'GET',
@@ -57,5 +62,6 @@ export const portalLessonRoutes = {
     params: byLesson,
     query: portalSlotsQuerySchema,
     response: portalSlotsSchema,
+    ...access,
   }),
 };
