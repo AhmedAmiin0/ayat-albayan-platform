@@ -1,10 +1,11 @@
-import { uploadOnce } from '@ab/client-core';
-import type { ExpenseView } from '@ab/money';
+import { expenseCalls, uploadOnce } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { apiSend } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { expenseBody, type ExpenseDraft } from './expense-draft';
 import { uploadExpenseReceipt } from './upload-expense-receipt';
+
+const calls = expenseCalls({ apiFetch, apiSend });
 
 /** The receipt uploads once so a retry after a failed POST does not upload it again. */
 export function useAddExpense() {
@@ -16,7 +17,7 @@ export function useAddExpense() {
       const path = receipt
         ? await receiptOnce(receipt.uri, () => uploadExpenseReceipt(receipt))
         : null;
-      return apiSend<ExpenseView>('POST', '/expenses', expenseBody(draft, path, new Date()));
+      return calls.create(expenseBody(draft, path, new Date()));
     },
     onSuccess: () => Promise.all(['expenses', 'dashboard'].map((key) => client.invalidateQueries({ queryKey: [key] }))),
   });

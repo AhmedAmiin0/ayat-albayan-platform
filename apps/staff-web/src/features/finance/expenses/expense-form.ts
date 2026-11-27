@@ -1,4 +1,3 @@
-import type { PaymentMethod } from '@ab/catalog';
 import { parseAmount } from '@ab/money';
 import { t } from '@ab/web-kit';
 import type { ExpenseBody, ExpenseView } from './api';
@@ -11,7 +10,7 @@ export type ExpenseForm = {
   currency: string;
   paidOn: string;
   vendor: string;
-  method: PaymentMethod | '';
+  method: NonNullable<ExpenseView['method']> | '';
   recurring: boolean;
   note: string;
 };

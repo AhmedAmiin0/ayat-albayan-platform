@@ -75,7 +75,7 @@ describe('ExpensesPage (R-RPT-02, E4)', () => {
     fireEvent.click(screen.getByRole('button', { name: t.common.delete }));
     const confirm = await screen.findByRole('dialog', { name: t.expenses.deleteConfirm });
     fireEvent.click(within(confirm).getByRole('button', { name: t.common.delete }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/expenses/00000000-0000-4000-8000-000000000001'));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/expenses/00000000-0000-4000-8000-000000000001', undefined));
   });
 
   it('the year table shows the months in the reporting currency and warns about a missing rate', async () => {
