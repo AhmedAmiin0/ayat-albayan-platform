@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Animated, StyleSheet } from 'react-native';
-import { t } from '../../lib/i18n/i18n';
-import { palette, type } from '../../theme';
+import { t } from '../../../lib/i18n/i18n';
+import { palette, type } from '../../../theme';
 import { StartupStatus } from './StartupStatus';
-import type { StartupStage } from './startup-mode';
+import type { StartupStage } from '../startup-mode';
 
 // The status line and the retry area on their own: what each stage shows and the font gate.
 const c = t.mobile.connection;

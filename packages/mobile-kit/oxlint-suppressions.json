@@ -410,11 +410,6 @@
       "count": 3
     }
   },
-  "src/ui/startup/RetryButton.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/ui/startup/StartupEmblem.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -435,11 +430,6 @@
   },
   "src/ui/startup/StartupScreen.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/ui/startup/StartupStatus.tsx": {
-    "ab/no-restricted-syntax": {
       "count": 1
     }
   },
