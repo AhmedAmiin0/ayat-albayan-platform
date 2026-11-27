@@ -5,6 +5,13 @@ import { done, isUniqueViolation, maybe, pgError, rows } from '@/common/db/error
 import { ownerColumns, type RoomTarget } from './recording-target';
 
 export type RecordingRow = Tables<'lesson_recordings'>;
+/** The columns a room's recording list reads. */
+export type ListedRecording = Pick<
+  RecordingRow,
+  'id' | 'status' | 'started_at' | 'ended_at' | 'file_path'
+>;
+
+const LISTED = 'id, status, started_at, ended_at, file_path';
 
 
 export interface FinishInput {
@@ -50,10 +57,10 @@ export class RecordingRepo {
   }
 
   /** The lesson's or the meeting's recordings, newest first (removed ones are not listed). */
-  async forTarget(target: RoomTarget): Promise<RecordingRow[]> {
+  async forTarget(target: RoomTarget): Promise<ListedRecording[]> {
     const data = rows(await this.db
       .from('lesson_recordings')
-      .select('*')
+      .select(LISTED)
       .eq(target.kind === 'lesson' ? 'lesson_id' : 'meeting_id', target.id)
       .neq('status', 'deleted')
       .order('started_at', { ascending: false }));

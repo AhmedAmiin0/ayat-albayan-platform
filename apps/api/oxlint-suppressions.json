@@ -8218,11 +8218,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/moderation/moderation.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/teaching/classroom/moderation/moderation.fakes.ts": {
     "no-nested-ternary": {
       "count": 1
@@ -8244,28 +8239,9 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/moderation/mute.controller.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/teaching/classroom/moderation/mute.service.ts": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/modules/teaching/classroom/moderation/share-grant.controller.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 4
-    },
-    "typescript/dot-notation": {
-      "count": 2
     }
   },
   "src/modules/teaching/classroom/moderation/share-grant.service.ts": {
@@ -8298,11 +8274,6 @@
   },
   "src/modules/teaching/classroom/recordings/recording.starter.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/classroom/recordings/recordings.controller.ts": {
-    "ab/zod-inputs": {
       "count": 1
     }
   },

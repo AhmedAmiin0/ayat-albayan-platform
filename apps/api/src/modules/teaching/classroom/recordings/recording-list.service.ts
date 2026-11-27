@@ -7,14 +7,11 @@ import { notFound } from '@/common/http/errors';
 import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { canManageMeeting } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
-import { RecordingRepo, type RecordingRow } from './recording.repo';
+import { RecordingRepo, type ListedRecording } from './recording.repo';
+import { toRecordingView } from './recording.mapper';
 import { lessonTarget, meetingTarget, type RoomTarget } from './recording-target';
 
-const STATUSES = ['recording', 'done', 'failed'] as const;
-type Status = LessonRecordingView['status'];
-const asStatus = (s: string): Status => STATUSES.find((x) => x === s) ?? 'failed';
-
-type SignableRecording = Pick<RecordingRow, 'id' | 'status' | 'file_path'>;
+type SignableRecording = Pick<ListedRecording, 'id' | 'status' | 'file_path'>;
 
 const isDone = (row: SignableRecording): boolean => row.status === 'done';
 
@@ -22,12 +19,6 @@ const linkOf = (row: SignableRecording, urls: ReadonlyMap<string, string>): [str
   const url = urls.get(row.file_path);
   return url === undefined ? [] : [[row.id, url]];
 };
-
-/** A row as the clients see it; `url` only for a finished file. */
-export function recordingView(row: RecordingRow, url: string | null): LessonRecordingView {
-  const status = asStatus(row.status);
-  return { id: row.id, status, started_at: row.started_at, ended_at: row.ended_at, url: status === 'done' ? url : null };
-}
 
 /** A room's recordings, newest first, with 1-hour signed links to the finished files. */
 @Injectable()
@@ -40,7 +31,7 @@ export class RecordingViews {
   async of(target: RoomTarget): Promise<LessonRecordingView[]> {
     const rows = await this.queries.forTarget(target);
     const urls = await this.urlsOf(rows);
-    return rows.map((row) => recordingView(row, urls.get(row.id) ?? null));
+    return rows.map((row) => toRecordingView(row, urls.get(row.id) ?? null));
   }
 
   /**
