@@ -1,10 +1,11 @@
-import { messageHits, messageSearchPages } from '@ab/client-core';
+import { inboxSearchCalls, messageHits, messageSearchPages } from '@ab/client-core';
 import { searchesMessages } from '@ab/shared';
 import { infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 
-const messageSearchQuery = (q: string) =>
-  infiniteQueryOptions(messageSearchPages(q, (path) => apiFetch(path)));
+const searches = inboxSearchCalls({ apiFetch, apiSend });
+
+const messageSearchQuery = (q: string) => infiniteQueryOptions(messageSearchPages(q, searches));
 
 export type HitsPhase = 'searching' | 'failed' | 'empty' | 'found';
 

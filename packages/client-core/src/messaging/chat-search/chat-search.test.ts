@@ -1,11 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   canStep,
   CHAT_SEARCH_CLOSED,
-  chatSearchPath,
+  chatSearchPages,
   chatSearchReducer,
   needsSearchPage,
-  parseChatSearchPage,
   searchCounter,
   searchHits,
 } from '../..';
@@ -16,20 +15,23 @@ const hit = (n: number) => ({
   snippet: `s${n}`,
 });
 
-describe('chat search requests', () => {
-  it('encodes the phone and the words; the cursor only when given', () => {
-    expect(chatSearchPath('+966500000001', 'درس 50%')).toBe(
-      `/threads/%2B966500000001/search?q=${encodeURIComponent('درس')}+50%25`,
-    );
-    expect(chatSearchPath('+1', 'a', 'c_1')).toBe('/threads/%2B1/search?q=a&cursor=c_1');
+describe('chat search pages', () => {
+  it('asks the chat per cursor and pages on until a null cursor; nothing for blank words', async () => {
+    const page = { items: [hit(1)], total: 3, next_cursor: 'x' };
+    const chat = vi.fn().mockResolvedValue(page);
+    const o = chatSearchPages('+966500000001', 'درس', { chat });
+    await expect(o.queryFn({ pageParam: 'c_1' })).resolves.toEqual(page);
+    expect(chat).toHaveBeenCalledWith({ phone: '+966500000001' }, { q: 'درس', cursor: 'c_1' });
+    expect(o.getNextPageParam(page)).toBe('x');
+    expect(o.getNextPageParam({ ...page, next_cursor: null })).toBeUndefined();
+    expect([o.enabled, chatSearchPages('+1', '', { chat }).enabled]).toEqual([true, false]);
   });
 
-  it('parses the page and flattens the loaded hits, the total from the first page', () => {
-    const page = parseChatSearchPage({ items: [hit(1)], total: 3, next_cursor: 'x' });
-    const next = parseChatSearchPage({ items: [hit(2)], total: 3, next_cursor: null });
+  it('flattens the loaded hits, the total from the first page', () => {
+    const page = { items: [hit(1)], total: 3, next_cursor: 'x' };
+    const next = { items: [hit(2)], total: 3, next_cursor: null };
     expect(searchHits([page, next])).toEqual({ hits: [hit(1), hit(2)], total: 3 });
     expect(searchHits(undefined)).toEqual({ hits: [], total: 0 });
-    expect(() => parseChatSearchPage({ items: 'x' })).toThrow();
   });
 });
 

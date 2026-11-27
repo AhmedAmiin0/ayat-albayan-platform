@@ -6256,23 +6256,12 @@
       "count": 2
     }
   },
-  "src/modules/sales/job-applicants/job-applicants.controller.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 8
-    }
-  },
   "src/modules/sales/job-applicants/job-applicants.list.ts": {
     "stylistic/max-len": {
       "count": 2
     }
   },
   "src/modules/sales/job-applicants/job-applicants.repo.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 2
     }

@@ -13,6 +13,7 @@ export * from './people/students/student-lists';
 export * from './people/students';
 export type * from './people/teachers';
 export * from './sales/pick-sales';
+export * from './sales/job-applicants';
 export * from './sales/views';
 export * from './sales/academy';
 export * from './sales/schedule';

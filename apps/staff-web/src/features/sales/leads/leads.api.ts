@@ -3,11 +3,14 @@ import { apiFetch, apiSend } from '@ab/web-kit';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ListUrlState } from '@/lib/list/list-url';
 import type { LeadSearch } from './types';
-import type { JobApplicantView, LeadView } from '@ab/shared';
+import { jobApplicantCalls } from '@ab/client-core';
+import { jobApplicantListQuerySchema, type JobApplicantView, type LeadView } from '@ab/shared';
 import type { Page } from '@ab/core';
 import { applicantKeys, leadKeys } from '@/features/sales/keys';
 
 export const PAGE_SIZE = 25;
+
+const applicants = jobApplicantCalls({ apiFetch, apiSend });
 
 export const leadsQuery = (s: LeadSearch) =>
   queryOptions({
@@ -31,8 +34,9 @@ export const jobApplicantsQuery = (s: ListUrlState) =>
   queryOptions({
     queryKey: applicantKeys.list(s),
     queryFn: () => {
-      const qs = new URLSearchParams([['page', String(s.page)], ['pageSize', String(PAGE_SIZE)], ...sortFilterParams(s.sort, s.filters)]);
-      return apiFetch<Page<JobApplicantView>>(`/job-applicants?${qs}`);
+      const params = Object.fromEntries(sortFilterParams(s.sort, s.filters));
+      const page = { page: s.page, pageSize: PAGE_SIZE };
+      return applicants.list(jobApplicantListQuerySchema.parse({ ...page, ...params }));
     },
     placeholderData: keepPreviousData,
   });
