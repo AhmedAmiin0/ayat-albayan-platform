@@ -13,6 +13,9 @@ import { signedDownloadSchema, signedUploadSchema } from '../../reports';
 import { emptyWhenMissing } from '../empty-when-missing';
 
 const byId = z.object({ id: id() });
+const read = { permissions: ['assistantpay.read'], tags: ['assistant-pay'] } as const;
+const write = { permissions: ['assistantpay.write'], tags: ['assistant-pay'] } as const;
+const approver = { permissions: ['assistantpay.approve'], tags: ['assistant-pay'] } as const;
 
 /** The receipt of a statement's payment: the same files as teacher receipts. */
 export const assistantReceiptUploadSchema = teacherReceiptUploadSchema.extend({
@@ -29,36 +32,42 @@ export const assistantStatementRoutes = {
     path: '/assistant-pay/statements',
     query: assistantStatementsQuery,
     response: assistantStatementListSchema,
+    ...read,
   }),
   get: defineRoute({
     method: 'GET',
     path: '/assistant-pay/statements/:id',
     params: byId,
     response: assistantStatementViewSchema,
+    ...read,
   }),
   receipt: defineRoute({
     method: 'GET',
     path: '/assistant-pay/statements/:id/receipt',
     params: byId,
     response: signedDownloadSchema,
+    ...read,
   }),
   generate: defineRoute({
     method: 'POST',
     path: '/assistant-pay/statements',
     body: assistantStatementGenerateSchema,
     response: assistantStatementViewSchema,
+    ...write,
   }),
   approve: defineRoute({
     method: 'POST',
     path: '/assistant-pay/statements/:id/approve',
     params: byId,
     response: assistantStatementViewSchema,
+    ...approver,
   }),
   reopen: defineRoute({
     method: 'POST',
     path: '/assistant-pay/statements/:id/reopen',
     params: byId,
     response: assistantStatementViewSchema,
+    ...approver,
   }),
   pay: defineRoute({
     method: 'POST',
@@ -66,6 +75,7 @@ export const assistantStatementRoutes = {
     params: byId,
     body: emptyWhenMissing(assistantStatementPaySchema),
     response: assistantStatementViewSchema,
+    ...write,
   }),
   unpay: defineRoute({
     method: 'POST',
@@ -73,11 +83,13 @@ export const assistantStatementRoutes = {
     params: byId,
     body: emptyWhenMissing(assistantReasonSchema),
     response: assistantStatementViewSchema,
+    ...approver,
   }),
   receiptUploadUrl: defineRoute({
     method: 'POST',
     path: '/assistant-pay/receipt-upload-url',
     body: assistantReceiptUploadSchema,
     response: signedUploadSchema,
+    ...write,
   }),
 };
