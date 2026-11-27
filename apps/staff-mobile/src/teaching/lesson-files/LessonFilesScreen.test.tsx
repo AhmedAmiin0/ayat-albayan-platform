@@ -75,5 +75,7 @@ test('«أزل الملف» asks once more before the file goes', async () => {
   expect(screen.getByText(`${F.removeConfirm} ${F.removeConfirmBody}`)).toBeTruthy();
   const [, confirm] = screen.getAllByRole('button', { name: F.remove });
   await fireEvent.press(confirm ?? screen.getByRole('button', { name: F.remove }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('DELETE', '/lesson-files/f1'));
+  await waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('DELETE', '/lesson-files/f1', undefined),
+  );
 });

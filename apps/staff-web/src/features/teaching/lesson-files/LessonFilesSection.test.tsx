@@ -70,6 +70,8 @@ describe('LessonFilesSection files', () => {
     expect(screen.getByText(F.removeConfirmBody)).toBeTruthy();
     const dialog = screen.getByRole('dialog');
     fireEvent.click(within(dialog).getByRole('button', { name: F.remove }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/lesson-files/f-1'));
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('DELETE', '/lesson-files/f-1', undefined),
+    );
   });
 });

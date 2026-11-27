@@ -1,25 +1,11 @@
-import {
-  lessonFileRegisterSchema,
-  lessonFileUploadSchema,
-  lessonFileVisibilitySchema,
-  type LessonAssets,
-  type LessonFileRegister,
-  type LessonFileUpload,
-  type LessonFileView,
-  type LessonFileVisibility,
-  type SignedDownload,
-  type SignedUpload,
-} from '@ab/shared';
-import { Controller, Delete, Get, HttpCode, Inject, Patch, Post } from '@nestjs/common';
+import { lessonFilesRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode, Inject } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { LessonAssetsService } from './lesson-assets.service';
 import { LessonFilesService } from './lesson-files.service';
-
-const ID = z.uuid();
 
 /** recordings.read to look, recordings.manage to change; services keep a teacher to own lessons. */
 @ApiTags('classroom')
@@ -32,52 +18,52 @@ export class LessonFilesController {
     @Inject(LessonFilesService) private readonly files: LessonFilesService,
   ) {}
 
-  @Get('lessons/:id/files')
-  list(@ZodParam('id', ID) lessonId: string, @CurrentUser() user: AuthUser): Promise<LessonAssets> {
-    return this.assets.of({ user, lessonId });
+  @Route(routes.list)
+  list(@RouteInput() { params }: RouteInputOf<typeof routes.list>, @CurrentUser() user: AuthUser) {
+    return this.assets.of({ user, lessonId: params.id });
   }
 
-  @Post('lessons/:id/files/upload-url')
+  @Route(routes.uploadUrl)
   @Permissions('recordings.manage')
   @HttpCode(200)
   uploadUrl(
-    @ZodParam('id', ID) id: string,
-    @ZodBody(lessonFileUploadSchema) file: LessonFileUpload,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.uploadUrl>,
     @CurrentUser() user: AuthUser,
-  ): Promise<SignedUpload> {
-    return this.files.uploadUrl({ user, id, file });
+  ) {
+    return this.files.uploadUrl({ user, id: params.id, file: body });
   }
 
-  @Post('lessons/:id/files')
+  @Route(routes.register)
   @Permissions('recordings.manage')
   register(
-    @ZodParam('id', ID) id: string,
-    @ZodBody(lessonFileRegisterSchema) file: LessonFileRegister,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.register>,
     @CurrentUser() user: AuthUser,
-  ): Promise<LessonFileView> {
-    return this.files.register({ user, id, file });
+  ) {
+    return this.files.register({ user, id: params.id, file: body });
   }
 
-  @Patch('lesson-files/:id/visibility')
+  @Route(routes.visibility)
   @Permissions('recordings.manage')
   visibility(
-    @ZodParam('id', ID) id: string,
-    @ZodBody(lessonFileVisibilitySchema) body: LessonFileVisibility,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.visibility>,
     @CurrentUser() user: AuthUser,
-  ): Promise<LessonFileView> {
-    return this.files.setVisible({ user, id, visible: body.visible });
+  ) {
+    return this.files.setVisible({ user, id: params.id, visible: body.visible });
   }
 
-  @Delete('lesson-files/:id')
+  @Route(routes.remove)
   @Permissions('recordings.manage')
   @HttpCode(204)
-  async remove(@ZodParam('id', ID) id: string, @CurrentUser() user: AuthUser): Promise<void> {
-    await this.files.remove({ user, id });
+  async remove(
+    @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    await this.files.remove({ user, id: params.id });
   }
 
-  @Post('lesson-files/:id/url')
+  @Route(routes.url)
   @HttpCode(200)
-  url(@ZodParam('id', ID) id: string, @CurrentUser() user: AuthUser): Promise<SignedDownload> {
-    return this.files.url({ user, id });
+  url(@RouteInput() { params }: RouteInputOf<typeof routes.url>, @CurrentUser() user: AuthUser) {
+    return this.files.url({ user, id: params.id });
   }
 }
