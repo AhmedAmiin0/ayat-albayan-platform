@@ -50,7 +50,7 @@ export * from './sync-cursor';
 export * from './thread-sync';
 export type * from './chat/views';
 export * from './chat/message-view';
-export type * from './templates/template-views';
+export * from './templates/catalog';
 export * from './chat/line-check';
 export type * from './templates/template-sync-views';
 export * from './replies/saved-replies';

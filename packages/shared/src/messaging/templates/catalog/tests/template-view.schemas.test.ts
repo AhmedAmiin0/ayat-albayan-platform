@@ -15,7 +15,7 @@ describe('templateViewSchema', () => {
 
   it('reads a url button and a row never synced', () => {
     const url = { type: 'url', url: 'https://meet.test/{{1}}', example: 'https://meet.test/abc' };
-    const row = aTemplateView({ buttons: [url] as never, display: null, status: 'draft' });
+    const row = aTemplateView({ buttons: [url] as never, display: null, status: 'not_submitted' });
     expect(parses(row)).toBe(true);
   });
 
