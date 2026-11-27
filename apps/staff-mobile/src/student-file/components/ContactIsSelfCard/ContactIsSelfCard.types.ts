@@ -6,7 +6,7 @@ export interface ContactIsSelfCardProps {
   value: boolean | undefined;
 }
 
-export interface ContactIsSelfCardText {
+interface ContactIsSelfCardText {
   label: TextStyle;
   hint: TextStyle;
   alert: TextStyle;
