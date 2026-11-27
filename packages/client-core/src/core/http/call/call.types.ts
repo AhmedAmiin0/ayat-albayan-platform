@@ -7,6 +7,7 @@ import type {
   RouteSpec,
 } from '@ab/core';
 import type { z } from 'zod';
+import type { ApiRequest } from '../api-client';
 
 /** A route a client can call: it answers JSON or nothing (a file or redirect uses routePath). */
 export type CallableRoute = RouteSpec & { response: z.ZodType | Extract<RouteAnswer, 'empty'> };
@@ -33,3 +34,8 @@ export type CallRequest<R extends CallableRoute> = { route: R } & NoInfer<CallIn
 
 /** Bound once per api client (docs/62 part 3 §3). */
 export type Call = <R extends CallableRoute>(request: CallRequest<R>) => Promise<RouteResult<R>>;
+
+/** What call() hands an api client: the answer is parsed by call() itself. */
+export type AskRequest = Omit<ApiRequest, 'schema'>;
+
+export type Ask = (request: AskRequest) => Promise<unknown>;

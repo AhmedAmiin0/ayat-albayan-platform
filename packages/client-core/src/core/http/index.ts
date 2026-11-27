@@ -7,8 +7,12 @@ export {
   type ApiBlob,
   type ApiClient,
   type ApiClientOptions,
+  type ApiRequest,
   type BlobClient,
+  type Requester,
+  type RequestMethod,
   type SchemaInit,
+  type SchemaRequest,
   type SendMethod,
   type SendOptions,
 } from './api-client';

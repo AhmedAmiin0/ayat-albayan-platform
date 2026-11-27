@@ -5,8 +5,12 @@ export type {
   ApiBlob,
   ApiClient,
   ApiClientOptions,
+  ApiRequest,
   BlobClient,
+  Requester,
+  RequestMethod,
   SchemaInit,
+  SchemaRequest,
   SendMethod,
   SendOptions,
 } from './api-client.types';
