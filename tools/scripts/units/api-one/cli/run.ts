@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { posix } from 'node:path';
-import { parseExcludes } from '../../units/components/cli/discover.ts';
-import { formatFiles, writeFiles } from '../../units/components/cli/write.ts';
-import { trackedFiles } from '../../units/scan/tree.ts';
+import { parseExcludes } from '../../components/cli/discover.ts';
+import { formatFiles, writeFiles } from '../../components/cli/write.ts';
+import { trackedFiles } from '../../scan/tree.ts';
 import { parseApiOneArgs } from './args.ts';
 import type { ApiOneIo } from './cli.types.ts';
 import { inScope, planAll } from './plan.ts';

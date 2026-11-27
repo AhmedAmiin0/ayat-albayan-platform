@@ -1,6 +1,6 @@
 import ts from 'typescript';
 import { narrow, propKey, unwrap } from '../ast.ts';
-import { findAll } from '../../units/components/model/source.ts';
+import { findAll } from '../../components/model/source.ts';
 import type { SendArg } from './source.types.ts';
 
 const OPTION_KEYS = new Set(['body', 'schema']);

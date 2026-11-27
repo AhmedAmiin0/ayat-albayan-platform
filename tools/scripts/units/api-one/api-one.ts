@@ -3,5 +3,5 @@
 import { fileURLToPath } from 'node:url';
 import { runApiOne } from './cli/run.ts';
 
-const root = fileURLToPath(new URL('../../..', import.meta.url)).replace(/\/$/, '');
+const root = fileURLToPath(new URL('../../../..', import.meta.url)).replace(/\/$/, '');
 runApiOne(process.argv.slice(2), { root, cwd: process.cwd(), log: console.log });

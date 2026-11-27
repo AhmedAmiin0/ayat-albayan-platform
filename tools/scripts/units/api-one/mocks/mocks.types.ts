@@ -1,5 +1,5 @@
 import type ts from 'typescript';
-import type { TextEdit } from '../../units/components/model/model.types.ts';
+import type { TextEdit } from '../../components/model/model.types.ts';
 
 /** A read mock stands for apiFetch, a write mock for apiSend. */
 export type MockKind = 'read' | 'write';

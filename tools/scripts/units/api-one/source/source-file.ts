@@ -1,7 +1,7 @@
 import ts from 'typescript';
 import { identifiersNamed, lineOf, narrow } from '../ast.ts';
-import { applyEdits } from '../../units/components/model/edits.ts';
-import { parseFile } from '../../units/components/model/source.ts';
+import { applyEdits } from '../../components/model/edits.ts';
+import { parseFile } from '../../components/model/source.ts';
 import { planCalls } from './calls.ts';
 import { importEdits, leftReferences } from './imports.ts';
 import { importedPair, isPairName } from './pair.ts';

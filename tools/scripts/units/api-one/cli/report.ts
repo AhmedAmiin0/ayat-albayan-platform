@@ -1,4 +1,4 @@
-import { groupBy } from '../../units/components/model/group.ts';
+import { groupBy } from '../../components/model/group.ts';
 import type { Row } from './cli.types.ts';
 
 const wsOf = (path: string): string => path.split('/').slice(0, 2).join('/');

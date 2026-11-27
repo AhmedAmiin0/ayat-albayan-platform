@@ -1,6 +1,6 @@
 import ts from 'typescript';
 import { lineEnd } from '../ast.ts';
-import type { TextEdit } from '../../units/components/model/model.types.ts';
+import type { TextEdit } from '../../components/model/model.types.ts';
 import { namesOf } from './declarations.ts';
 import { handlerText } from './handler.ts';
 import type { Binding, Declared, Handler, Inline, KitMock, MockKind } from './mocks.types.ts';

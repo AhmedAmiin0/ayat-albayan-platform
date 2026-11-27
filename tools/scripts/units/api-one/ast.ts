@@ -1,5 +1,5 @@
 import ts from 'typescript';
-import { findAll } from '../units/components/model/source.ts';
+import { findAll } from '../components/model/source.ts';
 
 /** The node when `is` accepts it. */
 export const narrow = <T extends ts.Node>(

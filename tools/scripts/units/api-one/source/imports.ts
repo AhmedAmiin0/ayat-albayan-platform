@@ -1,6 +1,6 @@
 import ts from 'typescript';
 import { identifiersNamed, lineEnd, narrow } from '../ast.ts';
-import type { TextEdit } from '../../units/components/model/model.types.ts';
+import type { TextEdit } from '../../components/model/model.types.ts';
 import type { CallEdit } from './source.types.ts';
 import { isPairName } from './pair.ts';
 

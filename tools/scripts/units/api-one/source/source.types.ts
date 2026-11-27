@@ -1,4 +1,4 @@
-import type { TextEdit } from '../../units/components/model/model.types.ts';
+import type { TextEdit } from '../../components/model/model.types.ts';
 
 /** The object text a pair call becomes, or why it stays as it is. */
 export type Built = { kind: 'text'; text: string } | { kind: 'refused'; reason: string };

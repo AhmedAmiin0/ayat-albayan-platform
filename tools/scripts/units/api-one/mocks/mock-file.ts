@@ -1,7 +1,7 @@
 import ts from 'typescript';
 import { identifiersNamed, lineOf } from '../ast.ts';
-import { applyEdits } from '../../units/components/model/edits.ts';
-import { parseFile } from '../../units/components/model/source.ts';
+import { applyEdits } from '../../components/model/edits.ts';
+import { parseFile } from '../../components/model/source.ts';
 import type { FileResult } from '../source/source.types.ts';
 import { mockDeclarations, namesOf } from './declarations.ts';
 import { bindingOf, kitMocks } from './kit-mock.ts';

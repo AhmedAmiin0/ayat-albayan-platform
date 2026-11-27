@@ -1,6 +1,6 @@
 import ts from 'typescript';
 import { narrow, propKey, unwrap } from '../ast.ts';
-import { findAll } from '../../units/components/model/source.ts';
+import { findAll } from '../../components/model/source.ts';
 import { isMockFn } from './declarations.ts';
 import { handlerText } from './handler.ts';
 import type { Bound, Inline, KitMock, MockKind } from './mocks.types.ts';

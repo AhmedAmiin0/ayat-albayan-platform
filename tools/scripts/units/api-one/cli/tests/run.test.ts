@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { posix } from 'node:path';
 import { test } from 'node:test';
-import { makeRepo, snapshot } from '../../../ci-checks/move-module/fixture.test-util.ts';
+import { makeRepo, snapshot } from '../../../../ci-checks/move-module/fixture.test-util.ts';
 import { runApiOne } from '../run.ts';
 
 const API = 'apps/staff-web/src/x/api.ts';

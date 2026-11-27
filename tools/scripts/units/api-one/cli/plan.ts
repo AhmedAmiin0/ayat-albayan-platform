@@ -1,4 +1,4 @@
-import { excludedWhy } from '../../units/components/cli/discover.ts';
+import { excludedWhy } from '../../components/cli/discover.ts';
 import { rewriteMocks } from '../mocks/mock-file.ts';
 import { rewriteSource } from '../source/source-file.ts';
 import type { Found } from '../source/source.types.ts';

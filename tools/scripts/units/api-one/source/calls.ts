@@ -1,6 +1,6 @@
 import ts from 'typescript';
 import { lineOf } from '../ast.ts';
-import { findAll } from '../../units/components/model/source.ts';
+import { findAll } from '../../components/model/source.ts';
 import {
   importedPair,
   isSendName,
