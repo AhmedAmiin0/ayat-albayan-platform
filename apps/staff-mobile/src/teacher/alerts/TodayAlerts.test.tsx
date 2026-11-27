@@ -43,7 +43,7 @@ test('her alerts: the report to write, the lesson to confirm, the bell row; one 
   const { onOpen, onReport } = await mount();
   expect(await screen.findByText('طالب جديد')).toBeTruthy();
   await fireEvent.press(screen.getByText(t.reports.open));
-  expect(onReport).toHaveBeenCalledWith('held');
+  expect(onReport).toHaveBeenCalledWith(held.id);
   await fireEvent.press(screen.getByText(t.teacherAlerts.open));
   expect(onOpen).toHaveBeenCalledWith(later);
 });

@@ -1,6 +1,6 @@
 import { payoutListSchema } from '@ab/money';
-import type { LessonProposalRequest, LessonView, TeacherMe } from '@ab/schedule';
-import { TEACHER_REFRESH_MS, teacherProposalCalls } from '@ab/client-core';
+import type { LessonProposalRequest, TeacherMe } from '@ab/schedule';
+import { TEACHER_REFRESH_MS, teacherLessonCalls, teacherProposalCalls } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { lessonKeys, type Window } from '@/features/teaching/schedule';
 import { moneyKeys } from '@/features/finance/keys';
@@ -16,15 +16,17 @@ export const teacherMeQuery = queryOptions({
   retry: false,
 });
 
+const lessons = teacherLessonCalls({ apiFetch, apiSend });
+
 /**
- * GET /teachers/me/lessons?from&to — own lessons only, every status. Polled every 30 s (docs/48),
- * paused by TanStack on a hidden tab (refetchIntervalInBackground is false).
+ * Own lessons only, every status. Polled every 30 s (docs/48), paused by TanStack on a hidden tab
+ * (refetchIntervalInBackground is false).
  */
 export const myLessonsQuery = (w: Window) => {
-  const params = new URLSearchParams({ from: w.from.toISOString(), to: w.to.toISOString() });
+  const window = { from: w.from.toISOString(), to: w.to.toISOString() };
   return queryOptions({
-    queryKey: lessonKeys.mine(params.toString()),
-    queryFn: () => apiFetch<LessonView[]>(`/teachers/me/lessons?${params}`),
+    queryKey: lessonKeys.mine(new URLSearchParams(window).toString()),
+    queryFn: () => lessons.lessons(window),
     placeholderData: keepPreviousData,
     refetchInterval: TEACHER_REFRESH_MS,
   });

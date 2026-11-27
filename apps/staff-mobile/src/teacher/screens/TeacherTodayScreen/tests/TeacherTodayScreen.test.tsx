@@ -62,7 +62,7 @@ test('an ended row keeps its report lead; it opens the form in «اليوم»’
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   await fireEvent.press(await screen.findByRole('button', { name: counted(t.today.endedFold, 1) }));
   await fireEvent.press(screen.getByRole('button', { name: t.reports.open }));
-  expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/held');
+  expect(mockPush).toHaveBeenCalledWith(`/teacher/today/report/${held.id}`);
 });
 
 test('«سأحضر» on the hero is optimistic: «حضورك مؤكَّد» before the answer', async () => {
@@ -73,7 +73,7 @@ test('«سأحضر» on the hero is optimistic: «حضورك مؤكَّد» befo
   expect(await screen.findByText(t.teacherBoard.confirmedChip)).toBeTruthy();
   expect(mockApiSend).toHaveBeenCalledWith(
     'POST',
-    '/teachers/me/lessons/later/confirm-attendance',
+    `/teachers/me/lessons/${later.id}/confirm-attendance`,
     undefined,
   );
 });
