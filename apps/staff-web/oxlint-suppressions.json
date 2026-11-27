@@ -5530,11 +5530,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/classroom/api/meetings-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/features/teaching/classroom/join/GuestJoinPage.tsx": {
     "complexity": {
       "count": 1

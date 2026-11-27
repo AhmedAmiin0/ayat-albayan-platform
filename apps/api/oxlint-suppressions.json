@@ -7817,11 +7817,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/join/room-open.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/classroom/join/room-open.service.ts": {
     "complexity": {
       "count": 1
@@ -8275,7 +8270,7 @@
   },
   "src/modules/teaching/classroom/student-link/student-link.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/student-link/student-link.fakes.ts": {
