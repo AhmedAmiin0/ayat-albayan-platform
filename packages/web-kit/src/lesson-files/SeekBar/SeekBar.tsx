@@ -1,24 +1,8 @@
-import { formatClock, progressOf, seekAtPoint, seekByKey } from '@ab/client-core';
+import { formatClock, progressOf, seekByKey } from '@ab/client-core';
 import type { KeyboardEvent, PointerEvent } from 'react';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
-
-const P = t.audioPlayer;
-
-interface Props {
-  position: number;
-  duration: number;
-  seek: (position: number) => void;
-}
-
-const isRtl = (el: HTMLElement): boolean => getComputedStyle(el).direction === 'rtl';
-
-/** The position under the pointer on the bar. */
-function pointAt(e: PointerEvent<HTMLDivElement>, duration: number): number {
-  const box = e.currentTarget.getBoundingClientRect();
-  const point = { x: e.clientX - box.left, width: box.width, duration };
-  return seekAtPoint({ ...point, rtl: isRtl(e.currentTarget) });
-}
+import type { Props } from './SeekBar.types';
+import { P, isRtl, pointAt } from './seek-bar.helpers';
 
 /** Each time is an LTR island in the RTL row. */
 export function SeekBar({ position, duration, seek }: Props) {
