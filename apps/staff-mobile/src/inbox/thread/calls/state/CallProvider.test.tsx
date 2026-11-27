@@ -1,3 +1,4 @@
+import { aMessageView } from '@ab/shared/testing';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Vibration } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -73,6 +74,7 @@ test('the phone icon: with permission, our gathered offer goes to POST /calls on
 
 test('no permission inside the window: «اطلب إذن الاتصال» sends the request through the API', async () => {
   mockFetch.mockImplementation(routes({ config: ON, permission: 'request' }));
+  mockSend.mockResolvedValue(aMessageView({ phone_e164: '+966501234567' }));
   await renderWithQuery(ui());
   await fireEvent.press(await screen.findByTestId('call-button'));
   await fireEvent.press(await screen.findByText(t.calls.permission.request));

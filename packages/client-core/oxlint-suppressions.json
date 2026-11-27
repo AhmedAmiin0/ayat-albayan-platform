@@ -153,9 +153,6 @@
     },
     "stylistic/max-len": {
       "count": 6
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/messaging/calls/calls-realtime.ts": {

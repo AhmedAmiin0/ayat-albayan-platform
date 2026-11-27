@@ -1,4 +1,4 @@
-import type { MessageView } from '../chat/views';
+import type { MessageView } from '../chat/message-view';
 
 // A view's edit / delete marks from messages.edited_at / deleted_at (migration
 // 992). A message deleted for everyone keeps its row (audit) but nobody reads it again: its text,

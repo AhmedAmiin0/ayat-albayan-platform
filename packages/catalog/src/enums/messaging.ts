@@ -67,7 +67,8 @@ export const NUMBER_PURPOSES = [
   'calls',
 ] as const;
 
-export type MessageDirection = (typeof MESSAGE_DIRECTIONS)[number];
+export const messageDirectionSchema = z.enum(MESSAGE_DIRECTIONS);
+export type MessageDirection = z.infer<typeof messageDirectionSchema>;
 export const messageStatusSchema = z.enum(MESSAGE_STATUSES);
 export type MessageStatus = z.infer<typeof messageStatusSchema>;
 export const templateStatusSchema = z.enum(TEMPLATE_STATUSES);
@@ -85,7 +86,8 @@ export type WaLine = z.infer<typeof waLineSchema>;
  * A wa_numbers role: a messaging line, or `calls` (a number that only carries WhatsApp calls,
  * docs/28 §10).
  */
-export type NumberPurpose = (typeof NUMBER_PURPOSES)[number];
+export const numberPurposeSchema = z.enum(NUMBER_PURPOSES);
+export type NumberPurpose = z.infer<typeof numberPurposeSchema>;
 /** A messaging line (not `calls`): what may send, open a reply window or own a template. */
 export const isWaLine = (v: string | null | undefined): v is WaLine => waLineSchema.validate(v);
 /**

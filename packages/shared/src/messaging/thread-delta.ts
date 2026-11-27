@@ -1,4 +1,5 @@
-import type { MessageView, ThreadView } from './chat/views';
+import type { MessageView } from './chat/message-view';
+import type { ThreadView } from './chat/views';
 
 /**
  * GET /threads/:phone?after=<ISO>&pending=<id,…>: what changed in an

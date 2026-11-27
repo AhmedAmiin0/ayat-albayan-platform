@@ -48,16 +48,6 @@
       "count": 2
     }
   },
-  "src/messaging/chat/sender.test.ts": {
-    "typescript/no-deprecated": {
-      "count": 2
-    }
-  },
-  "src/messaging/chat/sender.ts": {
-    "typescript/no-deprecated": {
-      "count": 1
-    }
-  },
   "src/messaging/chat/thread-people/thread-people.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -78,7 +68,7 @@
   },
   "src/messaging/chat/views.ts": {
     "stylistic/max-len": {
-      "count": 10
+      "count": 4
     }
   },
   "src/messaging/lesson/meeting-link.ts": {
@@ -208,7 +198,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     }
   },
   "src/messaging/templates/template-number.ts": {

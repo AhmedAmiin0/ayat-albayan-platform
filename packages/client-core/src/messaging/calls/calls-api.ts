@@ -1,7 +1,6 @@
 import {
   callsRoutes as routes,
   type ActiveCallView,
-  type MessageView,
   type StartCallInput,
 } from '@ab/shared';
 import { callWith, type ApiClient } from '../../core/http';
@@ -27,8 +26,6 @@ interface CallsApiDeps {
   requestId: () => string;
 }
 
-const enc = encodeURIComponent;
-
 /** One chat's last 50 calls, or the newest 100 of the whole log. */
 const listQuery = (phone: string | null) => (phone ? { phone, limit: 50 } : { limit: 100 });
 
@@ -42,8 +39,10 @@ export function callSends({ client, requestId }: CallsApiDeps) {
     rejectCall: (id: string) => call({ route: routes.reject, params: { id } }),
     endCall: (id: string) => call({ route: routes.end, params: { id } }),
     requestCallPermission: (phone: string) =>
-      client.apiSend<MessageView>('POST', `/calls/permission/${enc(phone)}/request`, {
-        clientRequestId: requestId(),
+      call({
+        route: routes.permissionRequest,
+        params: { phone },
+        body: { clientRequestId: requestId() },
       }),
   };
 }
