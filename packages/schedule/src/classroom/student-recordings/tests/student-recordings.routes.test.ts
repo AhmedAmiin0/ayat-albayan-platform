@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { studentRecordingsRoutes as routes } from './student-recordings.routes';
+import { studentRecordingsRoutes as routes } from '..';
 
 const ID = '0b9f4a3e-7c1d-4e2a-9b6f-1d2c3e4f5a6b';
 const row = {
