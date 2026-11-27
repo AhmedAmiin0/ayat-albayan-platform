@@ -1,7 +1,6 @@
 import type {
   SalesChatReceipt,
   SalesChatReceiptFile,
-  SalesCourseView,
   SalesFamilyView,
   SalesMoneySubscriptionView,
   SalesPaymentView,
@@ -13,7 +12,7 @@ import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import { pathKey } from '@ab/client-core';
+import { pathKey, salesCourseCalls } from '@ab/client-core';
 import { myMoneyKeys, salesMoneyKeys, salesSubscriptionKeys } from '@/features/sales/keys';
 
 // The salesperson's money writes from the chat (R-ASST-01/04, docs/16): /sales/money/*,
@@ -118,9 +117,11 @@ export async function refreshAfterSalesWrite(queryClient: QueryClient): Promise<
   ]);
 }
 
+const salesCourse = salesCourseCalls({ apiFetch, apiSend });
+
 /** What the course-days dialog needs: the subscription's facts, or why she can't book. */
 export const salesCourseQuery = (studentId: string) =>
   queryOptions({
     queryKey: salesMoneyKeys.course(studentId),
-    queryFn: () => apiFetch<SalesCourseView>(`/sales/booking/course?studentId=${encodeURIComponent(studentId)}`),
+    queryFn: () => salesCourse.view(studentId),
   });

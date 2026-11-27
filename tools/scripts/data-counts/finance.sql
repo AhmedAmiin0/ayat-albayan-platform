@@ -47,3 +47,12 @@ select count(*) from subscriptions where not (price_source @> '{}');
 select count(*) from subscriptions where duration not in (30, 45, 60, 90);
 -- count: subscriptions_package_out_of_enum
 select count(*) from subscriptions where package is not null and package::text not in ('trial', '4', '8', '12', '16', '20', '28');
+-- Rows the payment link answer schema would refuse (docs/62 C1).
+-- count: payment_links_required_null
+select count(*) from payment_links where student_id is null or token is null or amount is null or reference_price is null or currency is null or lessons is null or expires_at is null or created_at is null;
+-- count: payment_links_kind_out_of_enum
+select count(*) from payment_links where kind is null or kind::text not in ('new', 'renewal');
+-- count: payment_links_duration_out_of_enum
+select count(*) from payment_links where duration is null or duration not in (30, 45, 60, 90);
+-- count: payment_links_package_out_of_enum
+select count(*) from payment_links where package is not null and package::text not in ('trial', '4', '8', '12', '16', '20', '28');

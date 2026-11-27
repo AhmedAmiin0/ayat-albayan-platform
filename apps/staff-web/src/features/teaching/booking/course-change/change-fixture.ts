@@ -52,7 +52,7 @@ export function routeChange(apiFetch: Mock): void {
 export function routeChangeSend(apiSend: Mock, check: unknown, answers: unknown[] = []): void {
   apiSend.mockImplementation((_m: string, path: string) => {
     if (path.endsWith('/change/check')) return Promise.resolve(check);
-    const answer = answers.shift() ?? { subscriptionId: COURSE.subscriptionId, ruleIds: ['r-9'], endsOn: CHECK.endsOn };
+    const answer = answers.shift() ?? { subscriptionId: COURSE.subscriptionId, ruleIds: ['9a1b2c3d-0000-4000-8000-000000000009'], endsOn: CHECK.endsOn };
     return answer instanceof Error ? Promise.reject(answer) : Promise.resolve(answer);
   });
 }

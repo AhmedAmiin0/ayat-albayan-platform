@@ -4,8 +4,6 @@ import {
   courseStopBody,
   stopDoneLines,
   type StopDone,
-  courseMoveBase,
-  courseMoveErrorCode,
   courseStopCalls,
   courseTeacherCalls,
   courseTimesCalls,
@@ -51,27 +49,6 @@ export const courseTeachersQuery = (studentId: string) =>
     queryKey: courseKeys.teachers(studentId),
     queryFn: () => teacherMoves.teachers(studentId),
   });
-
-const OWN = new Set([
-  'same_teacher',
-  'teacher_inactive',
-  'teacher_not_found',
-  'subscription_not_found',
-]);
-
-/** The CourseChangeForm's routes for this student and kind, and the profile's own refusal codes. */
-export const moveTarget = (input: {
-  studentId: string;
-  kind: CourseMoveKind;
-  teacherId?: string;
-}) => ({
-  base: courseMoveBase(input),
-  teacherId: input.teacherId,
-  errorText: (error: unknown): string | null => {
-    const code = courseMoveErrorCode(error);
-    return OWN.has(code) ? t.courseActions.errors[code] : null;
-  },
-});
 
 /**
  * After a write: the actions, the student (file, lists, status chip), the money and the lessons.

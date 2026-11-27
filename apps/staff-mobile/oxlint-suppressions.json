@@ -3982,14 +3982,6 @@
       "count": 1
     }
   },
-  "src/sales-course/change/change-queries.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/sales-course/change/change-test-setup.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -4056,11 +4048,6 @@
   },
   "src/sales-course/components/CourseWizard/tests/continue.test.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/sales-course/hooks/course-queries.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -4329,9 +4316,6 @@
   "src/sales-subscribe/payment-link/link-api.ts": {
     "stylistic/max-len": {
       "count": 4
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 5
     }
   },
   "src/sales-subscribe/payment-link/link-text.ts": {

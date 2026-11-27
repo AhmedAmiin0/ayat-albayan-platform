@@ -1,37 +1,5 @@
-import type { Duration, PackageSize } from '@ab/catalog';
-import type { SalesQuoteView, SalesStudentRef } from '../money-views';
-import type { PaymentLinkKind, PaymentLinkStatus } from './schemas';
-
-/** One payment link as its assistant (or an admin) sees it. */
-export interface PaymentLinkView {
-  id: string;
-  /** https://<web>/pay/<token>: what she sends in the chat. */
-  url: string;
-  kind: PaymentLinkKind;
-  status: PaymentLinkStatus;
-  amount: number;
-  currency: string;
-  /** The calculator price of the package when the link was made. */
-  reference_price: number;
-  student: SalesStudentRef;
-  subscription_id: string | null;
-  /** null = a custom lesson count. */
-  package: PackageSize | null;
-  lessons: number;
-  duration: Duration;
-  expires_at: string;
-  paid_at: string | null;
-  created_at: string;
-}
-
-/** POST /sales/payment-links/quote: the reference price and the admin's cap on the agreed amount. */
-export interface PaymentLinkQuoteView {
-  quote: SalesQuoteView;
-  /** settings max_discount_pct; null = no cap. */
-  max_discount_pct: number | null;
-  /** The lowest amount allowed (null = anything above 0). */
-  min_amount: number | null;
-}
+import type { PackageSize } from '@ab/catalog';
+import type { PaymentLinkStatus } from './schemas';
 
 /** GET /pay/:token (public): no personal data beyond the first name. `processing` = an async payment pending. */
 export interface PublicPaymentLink {

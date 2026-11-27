@@ -1,16 +1,13 @@
-import type {
-  PaymentLinkCreate,
-  PaymentLinkQuoteView,
-  PaymentLinkView,
-  PublicPaymentLink,
-} from '@ab/shared';
-import { stripeFeatureCall } from '@ab/client-core';
+import type { PaymentLinkCreate, PublicPaymentLink } from '@ab/shared';
+import { paymentLinkCalls, stripeFeatureCall } from '@ab/client-core';
 import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend, env } from '@ab/web-kit';
 import { paymentLinkKeys, publicLinkKeys, stripeKeys } from '@/features/sales/keys';
 
 // Payment links (docs/30) need FEATURE_STRIPE; reads go behind stripeBuild(); 404 means no Stripe.
+
+const links = paymentLinkCalls({ apiFetch, apiSend });
 
 /** Her links and their quotes. */
 export const PAYMENT_LINKS_KEY = paymentLinkKeys.all;
@@ -26,15 +23,15 @@ export const stripeFeatureQuery = queryOptions({
 /** GET /sales/payment-links: hers, newest first. */
 export const paymentLinksQuery = queryOptions({
   queryKey: paymentLinkKeys.list(),
-  queryFn: () => apiFetch<PaymentLinkView[]>('/sales/payment-links'),
+  queryFn: () => links.list(),
 });
 
 export const quotePaymentLink = (body: { studentId: string; pricing: SubscriptionPricing }) =>
-  apiSend<PaymentLinkQuoteView>('POST', '/sales/payment-links/quote', body);
+  links.quote(body);
 
-export const createPaymentLink = (body: PaymentLinkCreate) => apiSend<PaymentLinkView>('POST', '/sales/payment-links', body);
+export const createPaymentLink = (body: PaymentLinkCreate) => links.create(body);
 
-export const cancelPaymentLink = (id: string) => apiSend<PaymentLinkView>('POST', `/sales/payment-links/${id}/cancel`);
+export const cancelPaymentLink = (id: string) => links.cancel(id);
 
 /** GET /pay/:token (public, no login) as JSON: without the Accept header the API answers its own HTML page. */
 export const publicLinkQuery = (token: string) =>

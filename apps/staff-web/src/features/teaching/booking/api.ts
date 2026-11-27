@@ -1,6 +1,5 @@
 import type { BookingRequest } from '@ab/shared';
-import { guardianCalls, type BookingMode } from '@ab/client-core';
-import { courseDraftSavedSchema } from '@ab/shared';
+import { guardianCalls, salesCourseCalls, type BookingMode } from '@ab/client-core';
 import { PACKAGE_SIZES, type Gender, type PackageSize, type Program } from '@ab/catalog';
 import type { BookingResult } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
@@ -30,12 +29,11 @@ const guardians = guardianCalls({ apiFetch, apiSend });
 export const guardianQuery = (id: string) =>
   queryOptions({ queryKey: guardianKeys.detail(id), queryFn: () => guardians.get(id) });
 
-/** apiSend with its reply left unknown, for the schema to parse. */
-const put: (method: 'PUT', path: string, body: unknown) => Promise<unknown> = apiSend;
+const salesCourse = salesCourseCalls({ apiFetch, apiSend });
 
 /** PUT /sales/booking/course/draft: null = kept until the payment. */
 async function saveCourseDraft(body: BookingRequest): Promise<BookingResult | null> {
-  const saved = courseDraftSavedSchema.parse(await put('PUT', '/sales/booking/course/draft', body));
+  const saved = await salesCourse.draft(body);
   return saved.state === 'booked' ? saved.booking : null;
 }
 

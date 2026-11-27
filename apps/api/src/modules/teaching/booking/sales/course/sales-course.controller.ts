@@ -1,25 +1,24 @@
-import type { CourseChangeCheck, CourseChangeResult, SalesCourseView } from '@ab/shared';
-import { courseChangeCheckSchema, courseChangeSchema } from '@ab/schedule';
-import { bookingBodySchema, type BookingRequest, type CourseDraftSaved } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Post, Put, Query } from '@nestjs/common';
-import { ZodBody } from '@/common/http/zod-inputs';
-import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
-import { CourseDrafts } from '@/modules/teaching/booking/sales/course-draft/course-draft.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { salesCourseRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden } from '@/common/http/errors';
-import { parseOrThrow } from '@/common/http/http';
-import { courseQuerySchema } from '@/modules/teaching/booking/booking.dto';
-import { CourseChange, type ChangeActor } from '@/modules/teaching/booking/course-change/course-change.service';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
+import {
+  CourseChange,
+  type ChangeActor,
+} from '@/modules/teaching/booking/course-change/course-change.service';
+import { CourseDrafts } from '@/modules/teaching/booking/sales/course-draft/course-draft.service';
 import { SalesCourse } from './sales-course.service';
 
-/** R-ASST-01: needs self.sales_money and self.sales; renew_any opens any (docs/16 row 38). */
-@ApiTags('booking')
+type Input<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
+
+/** Her routes also need self.sales; renew_any opens any student (docs/16 row 38). */
 @ApiBearerAuth()
-@Permissions('self.sales_money')
-@Controller('sales/booking')
+@Controller()
 export class SalesCourseController {
   constructor(
     private readonly course: SalesCourse,
@@ -27,37 +26,35 @@ export class SalesCourseController {
     private readonly drafts: CourseDrafts,
   ) {}
 
-  /** 200 SalesCourseView; 403 not_your_student; 404 student_not_found. */
-  @Get('course')
-  view(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<SalesCourseView> {
-    if (!can(user, 'self.sales')) throw forbidden('forbidden');
-    return this.course.view(parseOrThrow(courseQuerySchema, query).studentId, user);
+  @Route(routes.view)
+  view(@RouteInput() { query }: Input<'view'>, @CurrentUser() user: AuthUser) {
+    assertSales(user);
+    return this.course.view(query.studentId, user);
   }
 
-  /** 200 { conflicts, remaining, endsOn }, nothing written; 403 not_your_student / override_not_allowed. */
-  @Post('course/change/check')
+  @Route(routes.check)
   @HttpCode(200)
-  check(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CourseChangeCheck> {
-    if (!can(user, 'self.sales')) throw forbidden('forbidden');
-    return this.changes.check(parseOrThrow(courseChangeCheckSchema, body), salesActor(user));
+  check(@RouteInput() { body }: Input<'check'>, @CurrentUser() user: AuthUser) {
+    assertSales(user);
+    return this.changes.check(body, salesActor(user));
   }
 
-  /** Unpaid with an open link keeps the picks until payment, else books at once. */
-  @Put('course/draft')
-  draft(
-    @ZodBody(bookingBodySchema) req: BookingRequest,
-    @CurrentUser() user: AuthUser,
-  ): Promise<CourseDraftSaved> {
-    if (!can(user, 'self.sales')) throw forbidden('forbidden');
-    return this.drafts.save(clientRequest(req, user.role), user);
+  @Route(routes.draft)
+  draft(@RouteInput() { body }: Input<'draft'>, @CurrentUser() user: AuthUser) {
+    assertSales(user);
+    return this.drafts.save(clientRequest(body, user.role), user);
   }
 
-  /** 201 CourseChangeResult; codes: CourseChange.change (a clash is always 409 conflict). */
-  @Post('course/change')
-  change(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CourseChangeResult> {
-    if (!can(user, 'self.sales')) throw forbidden('forbidden');
-    return this.changes.change(parseOrThrow(courseChangeSchema, body), salesActor(user));
+  /** Codes: CourseChange.change. */
+  @Route(routes.change)
+  change(@RouteInput() { body }: Input<'change'>, @CurrentUser() user: AuthUser) {
+    assertSales(user);
+    return this.changes.change(body, salesActor(user));
   }
+}
+
+function assertSales(user: AuthUser): void {
+  if (!can(user, 'self.sales')) throw forbidden('forbidden');
 }
 
 /** The assistant changes her own student's course; ANY student's with sales.renew_any. */
