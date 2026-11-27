@@ -15,7 +15,7 @@ export class CourseCardController {
   }
 }
 
-/** self.sales_academy, any student, as GET /sales/students/:id. */
+/** Any student, as GET /sales/students/:id. */
 @ApiBearerAuth()
 @Controller()
 export class SalesCourseCardController {
