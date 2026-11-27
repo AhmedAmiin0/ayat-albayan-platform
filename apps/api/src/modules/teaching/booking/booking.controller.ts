@@ -7,7 +7,7 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { clientRequest } from './core/booking.payload';
-import { outsideSlotsQuerySchema, slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
+import { outsideSlotsQuerySchema, slotsQuerySchema, teacherOptionsQuerySchema } from '@ab/schedule';
 import { BookingService } from './core/booking.service';
 import { SlotsService } from './plan/slots.service';
 import { TeacherOptionsService } from './teacher/teacher-options.service';

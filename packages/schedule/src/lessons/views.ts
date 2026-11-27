@@ -103,34 +103,6 @@ export interface TeacherMe {
   students: { id: string; code: string; name: string; tz: string; status: StudentStatus }[];
 }
 
-/** GET /booking/teachers items (R-SCH-06). */
-export interface BookingTeacherOption {
-  id: string;
-  display_name_ar: string;
-  gender: Gender;
-  programs: Program[];
-  tz: string;
-  meeting_link: string | null;
-  /** usesPlatform(teachers.meeting_mode, settings.meeting_link_auto): the lessons go out with our classroom. */
-  platform_classroom: boolean;
-  students_count: number;
-  max_students: number | null;
-  /** false = no weekly availability rows; the wizard shows the teacher disabled. */
-  has_availability: boolean;
-}
-
-/** GET /booking/slots: candidate starts inside the teacher's availability; [] conflicts = free. */
-export interface SlotView {
-  starts_at: string;
-  ends_at: string;
-  conflicts: Conflict[];
-}
-export interface SlotsResponse {
-  teacher_tz: string;
-  step_min: number;
-  slots: SlotView[];
-}
-
 /** POST /booking 201. */
 export interface BookingResult {
   rule_id: string;

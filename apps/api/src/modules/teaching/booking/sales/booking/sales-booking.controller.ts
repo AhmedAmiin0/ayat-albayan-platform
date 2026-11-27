@@ -11,7 +11,7 @@ import {
   outsideSlotsQuerySchema,
   slotsQuerySchema,
   teacherOptionsQuerySchema,
-} from '@/modules/teaching/booking/booking.dto';
+} from '@ab/schedule';
 import { SalesBookingOptions, SalesBookingService } from './sales-booking.service';
 
 /**

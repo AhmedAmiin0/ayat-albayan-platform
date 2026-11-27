@@ -1,7 +1,7 @@
 import { meetingModeOf, usesPlatform, type BookingTeacherOption } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
-import type { TeacherOptionsQuery } from '@/modules/teaching/booking/booking.dto';
+import type { TeacherOptionsQuery } from '@ab/schedule';
 import { TeacherOptionsRepo, type TeacherFilter } from './teacher-options.repo';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { httpError } from '@/common/http/errors';

@@ -144,7 +144,7 @@
   },
   "src/lessons/views.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
