@@ -6,7 +6,10 @@ import { HeldBell } from './HeldBell';
 
 const mockApiFetch = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p),
+  call: (s: { route: { method: string; path: string }; body?: unknown }) =>
+    mockApiFetch(s.route.path),
+}));
 
 const page = { items: [], total: 0, page: 1, pageSize: 20, unread: 0 };
 
@@ -21,7 +24,7 @@ test('without notifications.push there is no bell and no notifications read', as
   await renderWithQuery(<HeldBell tree="sales" />, createTestQueryClient({ meFromApi: true }));
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
   expect(screen.queryByRole('button', { name: t.bell.mobile.open })).toBeNull();
-  expect(mockApiFetch).not.toHaveBeenCalledWith('/me/notifications?page=1&pageSize=20');
+  expect(mockApiFetch).not.toHaveBeenCalledWith('/me/notifications');
 });
 
 test('while /auth/me has not answered no bell flashes', async () => {

@@ -12,6 +12,10 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
+  call: (s: { route: { method: string; path: string }; body?: unknown }) =>
+    s.route.method === 'GET'
+      ? mockApiFetch(s.route.path)
+      : mockApiSend(s.route.method, s.route.path, s.body),
 }));
 
 const B = t.bell.mobile;

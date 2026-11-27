@@ -32,7 +32,8 @@ function open(rows: MyCommissionRow[], over: { total?: number; wallet?: MyEarnin
     if (over.earningsDown) throw new Error('down');
     return { ...EARNINGS, wallet: over.wallet ?? EARNINGS.wallet };
   });
-  bellReads.mockImplementation(async () => ({ items: bell, total: bell.length, page: 1, pageSize: 20, unread: 0 }));
+  const bellPage = () => ({ items: bell, total: bell.length, page: 1, pageSize: 20, unread: 0 });
+  bellReads.mockImplementation(async () => bellPage());
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(
     <QueryClientProvider client={client}>

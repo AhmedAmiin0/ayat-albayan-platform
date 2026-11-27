@@ -5,7 +5,10 @@ import { commissionPage, earnings, myCommission, myPayment } from '@/sales-money
 import { MyMoneyScreen } from '@/sales-money/screens/MyMoneyScreen/MyMoneyScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p),
+  call: (s: { route: { method: string; path: string }; body?: unknown }) =>
+    mockApiFetch(s.route.path),
+}));
 const mockParams = jest.fn((): { view?: string } => ({}));
 jest.mock('expo-router', () => ({ router: { back: jest.fn() }, useLocalSearchParams: () => mockParams() }));
 

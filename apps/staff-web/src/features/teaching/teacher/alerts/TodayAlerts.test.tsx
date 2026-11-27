@@ -11,7 +11,8 @@ import { reloadHomePrefs } from './home-prefs';
 import { TodayAlerts } from './TodayAlerts';
 
 const read = vi.hoisted(() => vi.fn());
-const write = vi.hoisted(() => vi.fn(() => Promise.resolve(undefined)));
+type Write = (sent: unknown) => Promise<undefined>;
+const write = vi.hoisted(() => vi.fn<Write>(() => Promise.resolve(undefined)));
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
   call: (sent: { route: { method: string } }) =>

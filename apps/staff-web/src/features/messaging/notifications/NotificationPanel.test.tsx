@@ -57,7 +57,9 @@ describe('NotificationPanel', () => {
       .mockResolvedValue(page([{ ...ITEM, read_at: ITEM.created_at }]));
     renderWithClient(<NotificationPanel onPick={vi.fn()} />);
     fireEvent.click(await screen.findByRole('button', { name: t.bell.markAll }));
-    await waitFor(() => expect(write).toHaveBeenCalledWith({ route: meNotificationRoutes.read, body: {} }));
+    await waitFor(() =>
+      expect(write).toHaveBeenCalledWith({ route: meNotificationRoutes.read, body: {} }),
+    );
     await waitFor(() => expect(screen.queryByRole('button', { name: t.bell.markAll })).toBeNull());
     expect(read).toHaveBeenCalledTimes(2);
   });

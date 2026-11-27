@@ -8,7 +8,10 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
 const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p),
+  call: (s: { route: { method: string; path: string }; body?: unknown }) =>
+    mockApiFetch(s.route.path),
+}));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 const page = { items: [], total: 0, page: 1, pageSize: 20, unread: 2 };

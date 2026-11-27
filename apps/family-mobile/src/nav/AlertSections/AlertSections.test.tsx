@@ -11,6 +11,10 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: jest.fn(async () => ({})),
   apiSend: (...args: unknown[]) => mockSend(...args),
+  call: (s: { route: { method: string; path: string }; body?: unknown }) =>
+    s.route.method === 'GET'
+      ? Promise.resolve({})
+      : mockSend(s.route.method, s.route.path, s.body),
 }));
 
 const item = (over: Partial<NotificationItem> = {}): NotificationItem => ({

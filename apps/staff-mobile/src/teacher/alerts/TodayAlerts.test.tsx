@@ -10,11 +10,14 @@ import { resetHomePrefs, saveHomePrefs } from './home-prefs';
 import { TodayAlerts } from './TodayAlerts';
 
 const mockApiFetch = jest.fn();
-const mockApiSend = jest.fn(() => Promise.resolve(undefined));
+const mockApiSend = jest.fn(async (..._args: unknown[]) => undefined);
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
-  apiSend: (...a: unknown[]) => mockApiSend(...(a as [])),
+  call: (s: { route: { method: string; path: string }; body?: unknown }) =>
+    s.route.method === 'GET'
+      ? mockApiFetch(s.route.path)
+      : mockApiSend(s.route.method, s.route.path, s.body),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 

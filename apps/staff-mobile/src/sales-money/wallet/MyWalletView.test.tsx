@@ -7,7 +7,10 @@ import { commissionPage, earnings, myCommission } from '@/sales-money/testing/fi
 import { MyWalletView } from './MyWalletView';
 
 const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p),
+  call: (s: { route: { method: string; path: string }; body?: unknown }) =>
+    mockApiFetch(s.route.path),
+}));
 
 const W = t.assistantPortal.wallet;
 const bellRow = (id: string): NotificationItem =>

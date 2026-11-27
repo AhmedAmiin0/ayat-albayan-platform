@@ -13,6 +13,10 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: jest.fn(async () => mockPage.current),
   apiSend: (...args: unknown[]) => mockSend(...args),
+  call: (s: { route: { method: string; path: string }; body?: unknown }) =>
+    s.route.method === 'GET'
+      ? Promise.resolve(mockPage.current)
+      : mockSend(s.route.method, s.route.path, s.body),
 }));
 
 const markAll = t.portal.app.alerts.markAll;

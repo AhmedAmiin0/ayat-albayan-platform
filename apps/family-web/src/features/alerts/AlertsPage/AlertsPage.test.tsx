@@ -6,7 +6,8 @@ import { renderAt } from '@/test/render-at';
 import { AlertsPage } from './AlertsPage';
 
 const bellRead = vi.hoisted(() => vi.fn());
-const bellWrite = vi.hoisted(() => vi.fn(async () => undefined));
+type Write = (sent: unknown) => Promise<undefined>;
+const bellWrite = vi.hoisted(() => vi.fn<Write>(async () => undefined));
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
   call: (sent: { route: { method: string } }) =>
@@ -36,7 +37,9 @@ describe('«الإشعارات» of the family pages', () => {
     expect(await screen.findByRole('region', { name: t.portal.app.alerts.today })).toBeTruthy();
     expect(screen.getByRole('region', { name: t.portal.app.alerts.older })).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.portal.app.alerts.markAll }));
-    await waitFor(() => expect(bellWrite).toHaveBeenCalledWith({ route: meNotificationRoutes.read, body: {} }));
+    await waitFor(() =>
+      expect(bellWrite).toHaveBeenCalledWith({ route: meNotificationRoutes.read, body: {} }),
+    );
   });
 
   it('a tap marks the row read', async () => {
@@ -44,7 +47,10 @@ describe('«الإشعارات» of the family pages', () => {
     renderAt(<AlertsPage kind="guardian" />);
     fireEvent.click(await screen.findByRole('button', { name: /title a/ }));
     await waitFor(() =>
-      expect(bellWrite).toHaveBeenCalledWith({ route: meNotificationRoutes.read, body: { ids: ['a'] } }),
+      expect(bellWrite).toHaveBeenCalledWith({
+        route: meNotificationRoutes.read,
+        body: { ids: ['a'] },
+      }),
     );
   });
 
