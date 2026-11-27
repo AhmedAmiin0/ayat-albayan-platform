@@ -1,3 +1,5 @@
+import type { JoinState, JoinWindow } from './join-window.schemas';
+
 /** The classroom window in minutes (joinWindow's third argument). */
 export interface JoinWindowConfig {
   opensBeforeMin: number;
@@ -20,15 +22,6 @@ export const joinWindowConfig = (s: {
 export const DEFAULT_JOIN_WINDOW: JoinWindowConfig = { opensBeforeMin: 15, closesAfterMin: 120 };
 
 const MIN_MS = 60_000;
-
-export type JoinState = 'early' | 'open' | 'closed';
-
-export interface JoinWindow {
-  state: JoinState;
-  /** ISO instants of the two edges, for opening-time messages. */
-  opens_at: string;
-  closes_at: string;
-}
 
 /** room_opened_at is set when the room is opened early (lessons.room_opened_at). */
 export interface WindowLesson {

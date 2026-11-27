@@ -64,7 +64,7 @@ test('ending asks first, then POSTs and refreshes the list', async () => {
   await press(L.end);
   expect(mockApiSend).not.toHaveBeenCalled();
   await press(t.mobileClassroom.endAction);
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/m1/end'));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/m1/end', undefined));
   const lists = () => mockApiFetch.mock.calls.filter(([p]) => p === '/meetings').length;
   await waitFor(() => expect(lists()).toBe(2));
 });
@@ -76,7 +76,7 @@ test('a new link asks first (the old one stops), then goes to the share sheet', 
   await press(L.newLink);
   await press(t.mobileClassroom.newLinkAction);
   expect(await screen.findByText(t.mobileClassroom.newLinkReady)).toBeTruthy();
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/m1/link');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/m1/link', undefined);
   await press(t.mobileClassroom.shareLink);
   expect(share).toHaveBeenCalledWith({ message: 'https://app/m/tok' });
 });

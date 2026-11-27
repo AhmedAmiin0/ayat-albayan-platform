@@ -14,7 +14,7 @@
   },
   "src/classroom/meeting-invites.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/classroom/meeting-mode.ts": {
@@ -37,7 +37,7 @@
   },
   "src/classroom/room.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/classroom/student-recordings/student-recordings.ts": {

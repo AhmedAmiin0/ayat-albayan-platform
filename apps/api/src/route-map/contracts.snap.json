@@ -3101,6 +3101,155 @@
    }
   }
  },
+ "GET /meetings": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "title": {
+      "type": "string"
+     },
+     "created_by": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "created_at": {
+      "type": "string"
+     },
+     "ends_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "starts_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "planned_end_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "cancelled_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "state": {
+      "type": "string",
+      "enum": [
+       "open",
+       "ended"
+      ]
+     },
+     "window": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "state": {
+          "type": "string",
+          "enum": [
+           "early",
+           "open",
+           "closed"
+          ]
+         },
+         "opens_at": {
+          "type": "string"
+         },
+         "closes_at": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "state",
+         "opens_at",
+         "closes_at"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "can_join": {
+      "type": "boolean"
+     },
+     "invitees_count": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+     },
+     "my_invite": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "status": {
+          "type": "string",
+          "enum": [
+           "pending",
+           "sent",
+           "window_closed",
+           "failed",
+           "cancelled"
+          ]
+         },
+         "channel": {
+          "type": "string",
+          "enum": [
+           "in_app",
+           "whatsapp",
+           "link"
+          ]
+         }
+        },
+        "required": [
+         "status",
+         "channel"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "can_manage": {
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "id",
+     "title",
+     "created_by",
+     "created_at",
+     "ends_at",
+     "starts_at",
+     "planned_end_at",
+     "cancelled_at",
+     "state",
+     "window",
+     "can_join",
+     "invitees_count",
+     "my_invite",
+     "can_manage"
+    ]
+   }
+  }
+ },
  "GET /meetings/:id/recordings": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3157,6 +3306,32 @@
      "url"
     ]
    }
+  }
+ },
+ "GET /meetings/by-link/:token": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "token"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
   }
  },
  "GET /people/guardians": {
@@ -4523,6 +4698,54 @@
     "kind",
     "contactPhone",
     "alreadySubmitted"
+   ]
+  }
+ },
+ "GET /public/meetings/:token": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "token"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "title": {
+     "type": "string"
+    },
+    "state": {
+     "type": "string",
+     "enum": [
+      "open",
+      "ended"
+     ]
+    },
+    "starts_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "opens_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "title",
+    "state",
+    "starts_at",
+    "opens_at"
    ]
   }
  },
@@ -14421,6 +14644,299 @@
    ]
   }
  },
+ "POST /meetings": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "default": {},
+   "type": "object",
+   "properties": {
+    "title": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 60
+    },
+    "startsAt": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "durationMin": {
+     "type": "integer",
+     "minimum": 15,
+     "maximum": 240
+    },
+    "invitees": {
+     "maxItems": 30,
+     "type": "array",
+     "items": {
+      "oneOf": [
+       {
+        "type": "object",
+        "properties": {
+         "kind": {
+          "type": "string",
+          "const": "staff"
+         },
+         "profileId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+         }
+        },
+        "required": [
+         "kind",
+         "profileId"
+        ]
+       },
+       {
+        "type": "object",
+        "properties": {
+         "kind": {
+          "type": "string",
+          "const": "student"
+         },
+         "studentId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+         }
+        },
+        "required": [
+         "kind",
+         "studentId"
+        ]
+       },
+       {
+        "type": "object",
+        "properties": {
+         "kind": {
+          "type": "string",
+          "const": "phone"
+         },
+         "phone": {
+          "type": "string",
+          "minLength": 6,
+          "maxLength": 32
+         }
+        },
+        "required": [
+         "kind",
+         "phone"
+        ]
+       }
+      ]
+     }
+    },
+    "clientRequestId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "url": {
+     "type": "string"
+    },
+    "invitees": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "kind": {
+        "type": "string",
+        "enum": [
+         "staff",
+         "student",
+         "phone"
+        ]
+       },
+       "display_name": {
+        "type": "string"
+       },
+       "channel": {
+        "type": "string",
+        "enum": [
+         "in_app",
+         "whatsapp",
+         "link"
+        ]
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "pending",
+         "sent",
+         "window_closed",
+         "failed",
+         "cancelled"
+        ]
+       },
+       "error_code": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sent_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "link": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "invitation_text": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "kind",
+       "display_name",
+       "channel",
+       "status",
+       "error_code",
+       "sent_at",
+       "link",
+       "invitation_text"
+      ]
+     }
+    },
+    "replayed": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "url",
+    "invitees",
+    "replayed"
+   ]
+  }
+ },
+ "POST /meetings/:id/end": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
+ },
+ "POST /meetings/:id/join": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "url": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "room": {
+     "type": "string"
+    },
+    "role": {
+     "type": "string",
+     "enum": [
+      "teacher",
+      "admin",
+      "assistant",
+      "sales",
+      "guest"
+     ]
+    },
+    "recording": {
+     "type": "string",
+     "enum": [
+      "on",
+      "off"
+     ]
+    },
+    "chat": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "url",
+    "token",
+    "room",
+    "role"
+   ]
+  }
+ },
+ "POST /meetings/:id/link": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "url"
+   ]
+  }
+ },
  "POST /meetings/:id/participants/:identity/mute": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -14463,15 +14979,21 @@
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
    "properties": {
-    "identity": {
+    "id": {
      "type": "string",
-     "pattern": "^[a-z]+-[0-9a-f]{12}$"
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "identity": {
+     "type": "string"
     }
    },
    "required": [
+    "id",
     "identity"
    ]
-  }
+  },
+  "response": "empty"
  },
  "POST /meetings/:id/participants/:identity/share": {
   "params": {

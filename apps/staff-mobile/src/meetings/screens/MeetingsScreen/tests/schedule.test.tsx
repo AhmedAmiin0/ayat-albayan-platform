@@ -22,8 +22,8 @@ const made = {
   url: 'https://app/m/new',
   replayed: false,
   invitees: [
-    { id: 'i1', kind: 'phone', display_name: '+201000000101', channel: 'link', status: 'window_closed', error_code: 'session_closed', link: 'https://app/i/tok1', invitation_text: invitation },
-    { id: 'i2', kind: 'staff', display_name: 'أبرار', channel: 'in_app', status: 'sent', error_code: null, link: null, invitation_text: null },
+    { id: 'i1', kind: 'phone', display_name: '+201000000101', channel: 'link', status: 'window_closed', error_code: 'session_closed', sent_at: null, link: 'https://app/i/tok1', invitation_text: invitation },
+    { id: 'i2', kind: 'staff', display_name: 'أبرار', channel: 'in_app', status: 'sent', error_code: null, sent_at: null, link: null, invitation_text: null },
   ],
 };
 const press = (name: string) => fireEvent.press(screen.getByRole('button', { name }));

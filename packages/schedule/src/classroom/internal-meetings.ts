@@ -1,13 +1,8 @@
 import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindow, type JoinWindowConfig } from './join-window';
-import {
-  MAX_MEETING_INVITEES,
-  meetingDurationSchema,
-  meetingInviteeInputSchema,
-  type MeetingInviteResult,
-  type MyMeetingInvite,
-} from './meeting-invites';
+import { MAX_MEETING_INVITEES, meetingDurationSchema, meetingInviteeInputSchema } from './meeting-invites';
+import type { MeetingState } from './meeting-rooms/meeting-views.schemas';
 
 // Internal meeting (migration 193): no lesson or teacher; schedulable since migration 410.
 
@@ -23,51 +18,6 @@ export const createMeetingSchema = z.object({
   clientRequestId: clientRequestId.optional(),
 });
 export type CreateMeeting = z.output<typeof createMeetingSchema>;
-
-/** POST /meetings/:id/link: the link is shown once (only its hash is stored). */
-export interface MeetingCreated {
-  id: string;
-  url: string;
-}
-
-/** POST /meetings: the link, and one result per invitee. `replayed` = a retried clientRequestId. */
-export interface MeetingCreateResult extends MeetingCreated {
-  invitees: MeetingInviteResult[];
-  replayed: boolean;
-}
-
-export type MeetingState = 'open' | 'ended';
-
-/** One row of GET /meetings: the caller's own and the ones they are invited to (admin: all). */
-export interface MeetingView {
-  id: string;
-  title: string;
-  created_by: string | null;
-  created_at: string;
-  ends_at: string | null;
-  /** null = an instant meeting. */
-  starts_at: string | null;
-  planned_end_at: string | null;
-  cancelled_at: string | null;
-  state: MeetingState;
-  /** The join window of a scheduled meeting; null for an instant one, open until ended. */
-  window: JoinWindow | null;
-  /** Join is shown when open, not cancelled and, if scheduled, inside its window. */
-  can_join: boolean;
-  invitees_count: number;
-  my_invite: MyMeetingInvite | null;
-  /** The caller may end, cancel, reschedule and invite (its creator, or any admin). */
-  can_manage: boolean;
-}
-
-/** GET /public/meetings/:token: what the guest page shows before joining. */
-export interface PublicMeetingView {
-  title: string;
-  state: MeetingState;
-  starts_at: string | null;
-  /** When a scheduled meeting's room opens (join_not_open_yet before it). */
-  opens_at: string | null;
-}
 
 export interface MeetingTimes {
   ends_at: string | null;

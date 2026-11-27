@@ -4,6 +4,7 @@ import {
   MEETING_INVITE_STATUSES,
   MEETING_INVITEE_KINDS,
   meetingState,
+  meetingViewSchema,
   meetingWindow,
   type JoinWindowConfig,
   type MeetingInviteChannel,
@@ -14,6 +15,7 @@ import {
   type MyMeetingInvite,
 } from '@ab/schedule';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { asResponse } from '@/common/http/returns';
 import type { MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { canManageMeeting } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 
@@ -58,7 +60,7 @@ interface ViewContext {
 }
 
 export function toMeetingView(r: MeetingRow, ctx: ViewContext): MeetingView {
-  return {
+  return asResponse(meetingViewSchema, {
     id: r.id,
     title: r.title,
     created_by: r.created_by,
@@ -73,7 +75,7 @@ export function toMeetingView(r: MeetingRow, ctx: ViewContext): MeetingView {
     invitees_count: ctx.counts.get(r.id) ?? 0,
     my_invite: ctx.mine.get(r.id) ?? null,
     can_manage: canManageMeeting(ctx.user, r),
-  };
+  });
 }
 
 const LIST_MAX = 30;
