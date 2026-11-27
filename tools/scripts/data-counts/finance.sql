@@ -31,3 +31,10 @@ select count(*) from assistant_commissions where commission_type is null or comm
 select count(*) from assistant_commissions where status is null or status::text not in ('earned', 'voided');
 -- count: assistant_terms_type_out_of_enum
 select count(*) from assistant_terms where commission_type is not null and commission_type::text not in ('percent', 'fixed');
+-- Rows the assistant statement answer schema would refuse (docs/62 C1).
+-- count: assistant_statements_required_null
+select count(*) from assistant_statements where assistant_id is null or month is null or status is null;
+-- count: assistant_statements_status_out_of_enum
+select count(*) from assistant_statements where status::text not in ('draft', 'approved', 'paid');
+-- count: assistant_statements_method_out_of_enum
+select count(*) from assistant_statements where method is not null and method::text not in ('bank', 'wallet', 'cash', 'other', 'card');
