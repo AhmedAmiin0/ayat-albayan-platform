@@ -1419,9 +1419,6 @@
   "src/features/messaging/inbox/lists/lib/api.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 3
     }
   },
   "src/features/messaging/inbox/lists/lib/member-cache.test.ts": {

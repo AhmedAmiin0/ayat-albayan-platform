@@ -1893,11 +1893,6 @@
       "count": 1
     }
   },
-  "src/inbox/lists/lib/use-chat-lists.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 3
-    }
-  },
   "src/inbox/lists/lib/use-list-membership.test.ts": {
     "complexity": {
       "count": 1

@@ -40,14 +40,6 @@
       "count": 1
     }
   },
-  "src/messaging/chat/chat-lists.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    }
-  },
   "src/messaging/chat/crm-names.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
