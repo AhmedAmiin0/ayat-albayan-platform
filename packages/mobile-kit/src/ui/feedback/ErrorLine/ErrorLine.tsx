@@ -1,8 +1,9 @@
 import { type, useTheme } from '../../../theme';
 import { AppText } from '../../primitives/AppText';
+import type { ErrorLineProps } from './ErrorLine.types';
 
 /** A failed action under its control, announced as an alert. The data on screen rolled back. */
-export function ErrorLine({ message }: { message: string }) {
+export function ErrorLine({ message }: ErrorLineProps) {
   const { color } = useTheme();
   return (
     <AppText

@@ -4,12 +4,7 @@ import { type, useTheme } from '../../../theme';
 import { Button } from '../../primitives/Button';
 import { NuqtaGlyph } from '../../primitives/NuqtaGlyph';
 import { AppText } from '../../primitives/AppText';
-
-interface ErrorStateProps {
-  /** Usually the query's `refetch`. */
-  onRetry: () => void;
-  message?: string;
-}
+import type { ErrorStateProps } from './ErrorState.types';
 
 /**
  * A read that failed with nothing cached. Show it only when there is no data: with cached data

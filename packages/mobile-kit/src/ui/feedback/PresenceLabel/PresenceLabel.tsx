@@ -1,14 +1,7 @@
 import { View } from 'react-native';
 import { type, useTheme } from '../../../theme';
 import { AppText } from '../../primitives/AppText';
-
-interface PresenceLabelProps {
-  /** An empty string renders nothing. */
-  text: string;
-  /** Online now: a small success-toned dot before the words (never colour alone). */
-  online?: boolean;
-  testID?: string;
-}
+import type { PresenceLabelProps } from './PresenceLabel.types';
 
 /** A person's status in one small line (docs/33 §4): the dot only when online. */
 export function PresenceLabel({ text, online = false, testID }: PresenceLabelProps) {

@@ -2,9 +2,10 @@ import { View } from 'react-native';
 import { shape, type, useTheme } from '../../../theme';
 import { AppText } from '../../primitives/AppText';
 import { NuqtaGlyph } from '../../primitives/NuqtaGlyph';
+import type { NoticeProps } from './Notice.types';
 
 /** docs/07 §10 toast look, inline; undo is not offered yet (R-MOB-02: no undo route). */
-export function Notice({ message }: { message: string }) {
+export function Notice({ message }: NoticeProps) {
   const { color, elevation } = useTheme();
   return (
     <View

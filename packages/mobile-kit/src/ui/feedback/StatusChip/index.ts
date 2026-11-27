@@ -1,1 +1,3 @@
-export { StatusChip, type StatusChipProps, toneColors } from './StatusChip';
+export { StatusChip } from './StatusChip';
+export { toneColors } from './status-chip.helpers';
+export type { StatusChipProps } from './StatusChip.types';
