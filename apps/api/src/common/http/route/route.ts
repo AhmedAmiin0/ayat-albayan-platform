@@ -1,7 +1,7 @@
 import type { RouteList, RouteMethod, RouteSpec } from '@ab/core';
-import { applyDecorators, Delete, Get, Patch, Post, Put } from '@nestjs/common';
+import { applyDecorators, Delete, Get, Patch, Post, Put, SetMetadata } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { PERMISSION } from '@/common/auth/decorators';
+import { IS_PUBLIC, PERMISSION } from '@/common/auth/decorators';
 import { declareReturns } from '@/common/http/returns';
 
 const METHODS: Record<RouteMethod, (path: string) => MethodDecorator> = {
@@ -30,7 +30,11 @@ const grant =
     Reflect.defineMetadata(PERMISSION, permissions, value);
   };
 
-const accessOf = ({ permissions, tags }: RouteSpec): MethodDecorator[] => [
+/** The guard's public flag without @Public's own mark, which stays the handler's alone. */
+const PUBLIC: readonly MethodDecorator[] = [SetMetadata(IS_PUBLIC, true)];
+
+const accessOf = ({ permissions, tags, isPublic }: RouteSpec): MethodDecorator[] => [
+  ...(isPublic === true ? PUBLIC : []),
   ...[permissions].flatMap((list) => (list === undefined ? [] : [grant(list)])),
   ...[tags].flatMap((list) => (list === undefined ? [] : [ApiTags(...list)])),
 ];
@@ -38,8 +42,8 @@ const accessOf = ({ permissions, tags }: RouteSpec): MethodDecorator[] => [
 /**
  * Serves a shared route object (docs/62 part 3 §2): its method and full path, under a
  * `@Controller()` without a prefix, its permissions (any one lets a caller in), its Swagger tags
- * and its JSON answer as @Returns does. Guards, throttles, @Public, @SignedIn and @HttpCode stay on
- * the handler.
+ * its `isPublic` and its JSON answer as @Returns does. Guards, throttles, @SignedIn and @HttpCode
+ * stay on the handler.
  */
 export function Route(route: RouteSpec): MethodDecorator {
   const remember: MethodDecorator = (_target, _key, descriptor) => {

@@ -8,7 +8,7 @@ import { Test } from '@nestjs/testing';
 import { z } from 'zod';
 import { AppModule } from '@/app.module';
 import { PERMISSION_RESOLVER, systemResolver } from '@/common/auth/auth.guard';
-import { IS_PUBLIC, PERMISSION, SIGNED_IN } from '@/common/auth/decorators';
+import { IS_PUBLIC, OWN_PUBLIC, PERMISSION, SIGNED_IN } from '@/common/auth/decorators';
 import { routeOf as routeObjectOf } from '@/common/http/route';
 
 /** One controller handler as the AuthGuard sees it. key = 'StudentsController.list'. */
@@ -17,6 +17,9 @@ export interface RouteAccess {
   /** 'GET /students/:id': the controller path joined with the handler path. */
   route: string;
   isPublic: boolean;
+  /** Each source of isPublic on its own: the route object's flag, the handler's own @Public. */
+  routePublic: boolean;
+  ownPublic: boolean;
   signedIn: boolean;
   /** Raw metadata the guard reads: one catalog key, or the route object's list. */
   permission: unknown;
@@ -87,6 +90,8 @@ function accessOf(reflector: Reflector, { cls, name, handler }: Walked): RouteAc
     key: `${cls.name}.${name}`,
     route: routeOf(cls, handler),
     isPublic: reflector.getAllAndOverride<boolean | undefined>(IS_PUBLIC, targets) === true,
+    routePublic: routeObjectOf(handler)?.isPublic === true,
+    ownPublic: Reflect.getMetadata(OWN_PUBLIC, handler) === true,
     signedIn: reflector.getAllAndOverride<boolean | undefined>(SIGNED_IN, targets) === true,
     permission: reflector.getAllAndOverride<unknown>(PERMISSION, targets),
     handlerPermission: Reflect.getMetadata(PERMISSION, handler),

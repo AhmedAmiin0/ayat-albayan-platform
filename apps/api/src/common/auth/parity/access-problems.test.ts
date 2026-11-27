@@ -8,6 +8,8 @@ const aRoute = (overrides: Partial<RouteAccess> = {}): RouteAccess => ({
   key: 'ProbeController.list',
   route: 'GET /probe',
   isPublic: false,
+  routePublic: false,
+  ownPublic: false,
   signedIn: false,
   permission: 'students.read',
   handlerPermission: 'students.read',
@@ -19,6 +21,14 @@ const aRoute = (overrides: Partial<RouteAccess> = {}): RouteAccess => ({
 });
 const fromList = (overrides: Partial<RouteAccess> = {}): RouteAccess =>
   aRoute({ permission: LIST, handlerPermission: LIST, routePermissions: LIST, ...overrides });
+const publicRoute = (overrides: Partial<RouteAccess> = {}): RouteAccess =>
+  aRoute({
+    isPublic: true,
+    routePublic: true,
+    permission: undefined,
+    handlerPermission: undefined,
+    ...overrides,
+  });
 
 describe('accessProblems', () => {
   it('accepts a handler key, a class key and a route object list on their own', () => {
@@ -75,5 +85,30 @@ describe('accessProblems', () => {
 
   it('lets a handler hidden from the document go without a tag', () => {
     expect(accessProblems(aRoute({ tags: [], inDocument: false }))).toEqual([]);
+  });
+
+  it('accepts a route object that says isPublic as the only source', () => {
+    expect(accessProblems(publicRoute())).toEqual([]);
+  });
+
+  it("refuses a route object's isPublic beside the handler's own @Public", () => {
+    expect(accessProblems(publicRoute({ ownPublic: true }))).toEqual([
+      'ProbeController.list: public from two sources',
+    ]);
+  });
+
+  it('refuses a public route object with a permission from the handler or the class', () => {
+    const fromHandler = publicRoute({ handlerPermission: 'students.read' });
+    const fromClass = publicRoute({ classPermission: 'students.read' });
+    expect([fromHandler, fromClass].flatMap(accessProblems)).toEqual([
+      'ProbeController.list: a permission on a public route',
+      'ProbeController.list: a permission on a public route',
+    ]);
+  });
+
+  it('refuses a public route object with its own permissions list', () => {
+    expect(accessProblems(publicRoute({ routePermissions: LIST }))).toContain(
+      'ProbeController.list: a permission on a public route',
+    );
   });
 });
