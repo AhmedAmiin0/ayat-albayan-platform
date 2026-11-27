@@ -1,7 +1,8 @@
 import { QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { isLoaded } from 'expo-font';
 import { Slot } from 'expo-router';
-import { fireEvent, render, renderRouter, screen } from 'expo-router/testing-library';
+import { render } from '@testing-library/react-native';
+import { fireEvent, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { freshQueryClient } from '../../../testing/query';
