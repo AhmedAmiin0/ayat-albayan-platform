@@ -6413,6 +6413,582 @@
    "required": [
     "token"
    ]
+  },
+  "response": "redirect"
+ },
+ "GET /lessons": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "from": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "to": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "teacherId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "from",
+    "to"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "rule_byday": {
+      "anyOf": [
+       {
+        "type": "array",
+        "items": {
+         "type": "integer",
+         "minimum": 0,
+         "maximum": 6
+        }
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "trial": {
+      "type": "boolean"
+     },
+     "course_subscription_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "makeup": {
+      "type": "boolean"
+     },
+     "makeup_of": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "starts_at": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "id",
+         "starts_at"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "auto_held": {
+      "type": "boolean"
+     },
+     "platform_classroom": {
+      "type": "boolean"
+     },
+     "teacher_confirmed_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "room_opened_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "room": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "liveSince": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "endedAt": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "inRoom": {
+          "type": "array",
+          "items": {
+           "type": "object",
+           "properties": {
+            "name": {
+             "type": "string"
+            },
+            "role": {
+             "type": "string",
+             "enum": [
+              "teacher",
+              "student",
+              "guardian",
+              "staff",
+              "guest"
+             ]
+            }
+           },
+           "required": [
+            "role"
+           ]
+          }
+         }
+        },
+        "required": [
+         "liveSince",
+         "endedAt",
+         "inRoom"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "instant": {
+      "type": "boolean"
+     },
+     "time_edit_mode": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "move",
+         "correct"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "time_edit": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "at": {
+          "type": "string"
+         },
+         "reason": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "was": {
+          "type": "object",
+          "properties": {
+           "starts_at": {
+            "type": "string"
+           },
+           "ends_at": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "starts_at",
+           "ends_at"
+          ]
+         }
+        },
+        "required": [
+         "at",
+         "reason",
+         "was"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+     },
+     "rule_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "teacher": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "display_name_ar": {
+        "type": "string"
+       },
+       "display_name_en": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "tz": {
+        "type": "string"
+       },
+       "avatar_url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "display_name_ar",
+       "tz"
+      ]
+     },
+     "starts_at": {
+      "type": "string"
+     },
+     "ends_at": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "scheduled",
+       "confirmed",
+       "completed",
+       "late",
+       "excused",
+       "no_show",
+       "cancelled_by_teacher",
+       "cancelled_by_admin",
+       "rescheduled"
+      ]
+     },
+     "meeting_link": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "cancel_reason": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "override_reason": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "confirmed_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "rescheduled_from_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "students": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        "code": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "tz": {
+         "type": "string"
+        },
+        "attendance": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "on_time",
+            "late",
+            "excused",
+            "absent"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "chargeable": {
+         "type": "boolean"
+        },
+        "seq": {
+         "anyOf": [
+          {
+           "type": "integer",
+           "minimum": -9007199254740991,
+           "maximum": 9007199254740991
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "unpaid": {
+         "type": "boolean"
+        },
+        "makeup": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "lesson_id": {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            "starts_at": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "lesson_id",
+            "starts_at"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "report": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "id": {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            "status": {
+             "type": "string",
+             "enum": [
+              "draft",
+              "submitted"
+             ]
+            },
+            "submitted_at": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "sent_at": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "can_edit": {
+             "type": "boolean"
+            },
+            "edit_until": {
+             "type": [
+              "string",
+              "null"
+             ]
+            }
+           },
+           "required": [
+            "id",
+            "status"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        }
+       },
+       "required": [
+        "id",
+        "code",
+        "name",
+        "tz",
+        "attendance",
+        "chargeable",
+        "seq"
+       ]
+      }
+     },
+     "allowed_events": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "enum": [
+        "confirm",
+        "complete",
+        "mark_late",
+        "excuse",
+        "mark_no_show",
+        "cancel_by_teacher",
+        "cancel_by_admin",
+        "reschedule"
+       ]
+      }
+     },
+     "conflicts": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "kind": {
+         "type": "string",
+         "enum": [
+          "teacher_busy",
+          "student_busy",
+          "outside_availability",
+          "time_off"
+         ]
+        },
+        "startsAt": {
+         "type": "string"
+        },
+        "endsAt": {
+         "type": "string"
+        },
+        "lessonId": {
+         "type": "string"
+        },
+        "studentId": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "kind",
+        "startsAt",
+        "endsAt"
+       ]
+      }
+     },
+     "pending_proposal": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "proposed_starts_at": {
+          "type": "string"
+         },
+         "note": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "created_at": {
+          "type": "string"
+         },
+         "requested_by": {
+          "type": "string",
+          "enum": [
+           "teacher",
+           "family"
+          ]
+         }
+        },
+        "required": [
+         "id",
+         "proposed_starts_at",
+         "note",
+         "created_at"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "rule_id",
+     "teacher",
+     "starts_at",
+     "ends_at",
+     "status",
+     "meeting_link",
+     "cancel_reason",
+     "override_reason",
+     "confirmed_at",
+     "rescheduled_from_id",
+     "students",
+     "allowed_events",
+     "conflicts",
+     "pending_proposal"
+    ]
+   }
   }
  },
  "GET /lessons/:id/files": {
@@ -6693,6 +7269,1325 @@
      "url"
     ]
    }
+  }
+ },
+ "GET /lessons/day": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "date": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    },
+    "tz": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "date"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "rule_byday": {
+      "anyOf": [
+       {
+        "type": "array",
+        "items": {
+         "type": "integer",
+         "minimum": 0,
+         "maximum": 6
+        }
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "trial": {
+      "type": "boolean"
+     },
+     "course_subscription_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "makeup": {
+      "type": "boolean"
+     },
+     "makeup_of": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "starts_at": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "id",
+         "starts_at"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "auto_held": {
+      "type": "boolean"
+     },
+     "platform_classroom": {
+      "type": "boolean"
+     },
+     "teacher_confirmed_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "room_opened_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "room": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "liveSince": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "endedAt": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "inRoom": {
+          "type": "array",
+          "items": {
+           "type": "object",
+           "properties": {
+            "name": {
+             "type": "string"
+            },
+            "role": {
+             "type": "string",
+             "enum": [
+              "teacher",
+              "student",
+              "guardian",
+              "staff",
+              "guest"
+             ]
+            }
+           },
+           "required": [
+            "role"
+           ]
+          }
+         }
+        },
+        "required": [
+         "liveSince",
+         "endedAt",
+         "inRoom"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "instant": {
+      "type": "boolean"
+     },
+     "time_edit_mode": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "move",
+         "correct"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "time_edit": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "at": {
+          "type": "string"
+         },
+         "reason": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "was": {
+          "type": "object",
+          "properties": {
+           "starts_at": {
+            "type": "string"
+           },
+           "ends_at": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "starts_at",
+           "ends_at"
+          ]
+         }
+        },
+        "required": [
+         "at",
+         "reason",
+         "was"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+     },
+     "rule_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "teacher": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "display_name_ar": {
+        "type": "string"
+       },
+       "display_name_en": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "tz": {
+        "type": "string"
+       },
+       "avatar_url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "display_name_ar",
+       "tz"
+      ]
+     },
+     "starts_at": {
+      "type": "string"
+     },
+     "ends_at": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "scheduled",
+       "confirmed",
+       "completed",
+       "late",
+       "excused",
+       "no_show",
+       "cancelled_by_teacher",
+       "cancelled_by_admin",
+       "rescheduled"
+      ]
+     },
+     "meeting_link": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "cancel_reason": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "override_reason": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "confirmed_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "rescheduled_from_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "students": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        "code": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "tz": {
+         "type": "string"
+        },
+        "attendance": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "on_time",
+            "late",
+            "excused",
+            "absent"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "chargeable": {
+         "type": "boolean"
+        },
+        "seq": {
+         "anyOf": [
+          {
+           "type": "integer",
+           "minimum": -9007199254740991,
+           "maximum": 9007199254740991
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "unpaid": {
+         "type": "boolean"
+        },
+        "makeup": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "lesson_id": {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            "starts_at": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "lesson_id",
+            "starts_at"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "report": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "id": {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            "status": {
+             "type": "string",
+             "enum": [
+              "draft",
+              "submitted"
+             ]
+            },
+            "submitted_at": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "sent_at": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "can_edit": {
+             "type": "boolean"
+            },
+            "edit_until": {
+             "type": [
+              "string",
+              "null"
+             ]
+            }
+           },
+           "required": [
+            "id",
+            "status"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        }
+       },
+       "required": [
+        "id",
+        "code",
+        "name",
+        "tz",
+        "attendance",
+        "chargeable",
+        "seq"
+       ]
+      }
+     },
+     "allowed_events": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "enum": [
+        "confirm",
+        "complete",
+        "mark_late",
+        "excuse",
+        "mark_no_show",
+        "cancel_by_teacher",
+        "cancel_by_admin",
+        "reschedule"
+       ]
+      }
+     },
+     "conflicts": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "kind": {
+         "type": "string",
+         "enum": [
+          "teacher_busy",
+          "student_busy",
+          "outside_availability",
+          "time_off"
+         ]
+        },
+        "startsAt": {
+         "type": "string"
+        },
+        "endsAt": {
+         "type": "string"
+        },
+        "lessonId": {
+         "type": "string"
+        },
+        "studentId": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "kind",
+        "startsAt",
+        "endsAt"
+       ]
+      }
+     },
+     "pending_proposal": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "proposed_starts_at": {
+          "type": "string"
+         },
+         "note": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "created_at": {
+          "type": "string"
+         },
+         "requested_by": {
+          "type": "string",
+          "enum": [
+           "teacher",
+           "family"
+          ]
+         }
+        },
+        "required": [
+         "id",
+         "proposed_starts_at",
+         "note",
+         "created_at"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "rule_id",
+     "teacher",
+     "starts_at",
+     "ends_at",
+     "status",
+     "meeting_link",
+     "cancel_reason",
+     "override_reason",
+     "confirmed_at",
+     "rescheduled_from_id",
+     "students",
+     "allowed_events",
+     "conflicts",
+     "pending_proposal"
+    ]
+   }
+  }
+ },
+ "GET /lessons/overview": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "from": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "to": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "teacherId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "from",
+    "to"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "from": {
+     "type": "string"
+    },
+    "to": {
+     "type": "string"
+    },
+    "teachers": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "display_name_ar": {
+        "type": "string"
+       },
+       "display_name_en": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "gender": {
+        "type": "string",
+        "enum": [
+         "male",
+         "female"
+        ]
+       },
+       "programs": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "enum": [
+          "quran",
+          "arabic",
+          "islamic_studies"
+         ]
+        }
+       },
+       "tz": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "active",
+         "inactive"
+        ]
+       },
+       "meeting_link": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "avatar_url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "students_count": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "max_students": {
+        "anyOf": [
+         {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "windows": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "starts_at": {
+           "type": "string"
+          },
+          "ends_at": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "starts_at",
+          "ends_at"
+         ]
+        }
+       },
+       "time_off": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "starts_at": {
+           "type": "string"
+          },
+          "ends_at": {
+           "type": "string"
+          },
+          "id": {
+           "type": "string",
+           "format": "uuid",
+           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+          },
+          "reason": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "starts_at",
+          "ends_at",
+          "id",
+          "reason"
+         ]
+        }
+       },
+       "free": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "starts_at": {
+           "type": "string"
+          },
+          "ends_at": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "starts_at",
+          "ends_at"
+         ]
+        }
+       }
+      },
+      "required": [
+       "id",
+       "display_name_ar",
+       "gender",
+       "programs",
+       "tz",
+       "status",
+       "meeting_link",
+       "students_count",
+       "max_students",
+       "windows",
+       "time_off",
+       "free"
+      ]
+     }
+    },
+    "lessons": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "rule_byday": {
+        "anyOf": [
+         {
+          "type": "array",
+          "items": {
+           "type": "integer",
+           "minimum": 0,
+           "maximum": 6
+          }
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "trial": {
+        "type": "boolean"
+       },
+       "course_subscription_id": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "makeup": {
+        "type": "boolean"
+       },
+       "makeup_of": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           "starts_at": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "starts_at"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "auto_held": {
+        "type": "boolean"
+       },
+       "platform_classroom": {
+        "type": "boolean"
+       },
+       "teacher_confirmed_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "room_opened_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "room": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "liveSince": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "endedAt": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "inRoom": {
+            "type": "array",
+            "items": {
+             "type": "object",
+             "properties": {
+              "name": {
+               "type": "string"
+              },
+              "role": {
+               "type": "string",
+               "enum": [
+                "teacher",
+                "student",
+                "guardian",
+                "staff",
+                "guest"
+               ]
+              }
+             },
+             "required": [
+              "role"
+             ]
+            }
+           }
+          },
+          "required": [
+           "liveSince",
+           "endedAt",
+           "inRoom"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "instant": {
+        "type": "boolean"
+       },
+       "time_edit_mode": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "move",
+           "correct"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "time_edit": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "at": {
+            "type": "string"
+           },
+           "reason": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "was": {
+            "type": "object",
+            "properties": {
+             "starts_at": {
+              "type": "string"
+             },
+             "ends_at": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "starts_at",
+             "ends_at"
+            ]
+           }
+          },
+          "required": [
+           "at",
+           "reason",
+           "was"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "rule_id": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "teacher": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "display_name_ar": {
+          "type": "string"
+         },
+         "display_name_en": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "tz": {
+          "type": "string"
+         },
+         "avatar_url": {
+          "type": [
+           "string",
+           "null"
+          ]
+         }
+        },
+        "required": [
+         "id",
+         "display_name_ar",
+         "tz"
+        ]
+       },
+       "starts_at": {
+        "type": "string"
+       },
+       "ends_at": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "scheduled",
+         "confirmed",
+         "completed",
+         "late",
+         "excused",
+         "no_show",
+         "cancelled_by_teacher",
+         "cancelled_by_admin",
+         "rescheduled"
+        ]
+       },
+       "meeting_link": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "cancel_reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "override_reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "confirmed_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "rescheduled_from_id": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "students": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": "string",
+           "format": "uuid",
+           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+          },
+          "code": {
+           "type": "string"
+          },
+          "name": {
+           "type": "string"
+          },
+          "tz": {
+           "type": "string"
+          },
+          "attendance": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "on_time",
+              "late",
+              "excused",
+              "absent"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "chargeable": {
+           "type": "boolean"
+          },
+          "seq": {
+           "anyOf": [
+            {
+             "type": "integer",
+             "minimum": -9007199254740991,
+             "maximum": 9007199254740991
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "unpaid": {
+           "type": "boolean"
+          },
+          "makeup": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "lesson_id": {
+               "type": "string",
+               "format": "uuid",
+               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+              },
+              "starts_at": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "lesson_id",
+              "starts_at"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "report": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "id": {
+               "type": "string",
+               "format": "uuid",
+               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+              },
+              "status": {
+               "type": "string",
+               "enum": [
+                "draft",
+                "submitted"
+               ]
+              },
+              "submitted_at": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "sent_at": {
+               "type": [
+                "string",
+                "null"
+               ]
+              },
+              "can_edit": {
+               "type": "boolean"
+              },
+              "edit_until": {
+               "type": [
+                "string",
+                "null"
+               ]
+              }
+             },
+             "required": [
+              "id",
+              "status"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          }
+         },
+         "required": [
+          "id",
+          "code",
+          "name",
+          "tz",
+          "attendance",
+          "chargeable",
+          "seq"
+         ]
+        }
+       },
+       "allowed_events": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "enum": [
+          "confirm",
+          "complete",
+          "mark_late",
+          "excuse",
+          "mark_no_show",
+          "cancel_by_teacher",
+          "cancel_by_admin",
+          "reschedule"
+         ]
+        }
+       },
+       "conflicts": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "kind": {
+           "type": "string",
+           "enum": [
+            "teacher_busy",
+            "student_busy",
+            "outside_availability",
+            "time_off"
+           ]
+          },
+          "startsAt": {
+           "type": "string"
+          },
+          "endsAt": {
+           "type": "string"
+          },
+          "lessonId": {
+           "type": "string"
+          },
+          "studentId": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "kind",
+          "startsAt",
+          "endsAt"
+         ]
+        }
+       },
+       "pending_proposal": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           "proposed_starts_at": {
+            "type": "string"
+           },
+           "note": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "created_at": {
+            "type": "string"
+           },
+           "requested_by": {
+            "type": "string",
+            "enum": [
+             "teacher",
+             "family"
+            ]
+           }
+          },
+          "required": [
+           "id",
+           "proposed_starts_at",
+           "note",
+           "created_at"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "rule_id",
+       "teacher",
+       "starts_at",
+       "ends_at",
+       "status",
+       "meeting_link",
+       "cancel_reason",
+       "override_reason",
+       "confirmed_at",
+       "rescheduled_from_id",
+       "students",
+       "allowed_events",
+       "conflicts",
+       "pending_proposal"
+      ]
+     }
+    }
+   },
+   "required": [
+    "from",
+    "to",
+    "teachers",
+    "lessons"
+   ]
   }
  },
  "GET /meetings": {
@@ -9358,6 +11253,9 @@
     "configured"
    ]
   }
+ },
+ "GET /report-link/legacy/*": {
+  "response": "redirect"
  },
  "GET /report-pages/:publicId": {
   "params": {
@@ -27728,6 +29626,9 @@
     "lessonId"
    ]
   }
+ },
+ "POST /livekit/webhook": {
+  "response": "empty"
  },
  "POST /me/avatar/upload-url": {
   "body": {

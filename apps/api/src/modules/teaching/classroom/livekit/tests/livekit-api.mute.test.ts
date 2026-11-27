@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { CONFIG } from '@/modules/teaching/classroom/classroom.fakes';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import { muteTrack, trackSidOf } from '@/modules/teaching/classroom/livekit/livekit-api.mute';
 
 const PARTICIPANT = { identity: 'guest-0123456789ab', tracks: [{ sid: 'TR_cam', source: 'CAMERA' }, { sid: 'TR_mic', source: 'MICROPHONE' }] };

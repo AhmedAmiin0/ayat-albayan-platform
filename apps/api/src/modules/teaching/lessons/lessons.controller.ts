@@ -1,17 +1,17 @@
-import type { LessonView, ScheduleOverview } from '@ab/schedule';
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
-import { parseDay, parseWindow } from './store/lesson-queries.schema';
+import { lessonListRoutes as routes } from '@ab/schedule';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { toDay, toWindow } from './store/lesson-queries.schema';
 import { LessonViews } from './store/lesson-views';
 import { LessonsSettings } from './lessons.settings';
 import { OverviewService } from './overview/overview.service';
 
+type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
+
 /** Admin lists across teachers (docs/10 routes 1, 2): every status, by starts_at (R-SCH-01). */
-@ApiTags('lessons')
 @ApiBearerAuth()
-@Permissions('lessons.read')
-@Controller('lessons')
+@Controller()
 export class LessonsController {
   constructor(
     private readonly views: LessonViews,
@@ -20,24 +20,24 @@ export class LessonsController {
   ) {}
 
   /** Week view: starts_at ∈ [from, to), optional teacherId, at most 31 days. */
-  @Get()
-  list(@Query() query: unknown): Promise<LessonView[]> {
-    return this.views.window(parseWindow(query), 'admin');
+  @Route(routes.list)
+  list(@RouteInput() { query }: In<'list'>) {
+    return this.views.window(toWindow(query), 'admin');
   }
 
   /** Day view: one local day in `tz` (default settings.academy_timezone). */
-  @Get('day')
-  async day(@Query() query: unknown): Promise<LessonView[]> {
+  @Route(routes.day)
+  async day(@RouteInput() { query }: In<'day'>) {
     const { academy_timezone: tz } = await this.settings.read();
-    return this.views.window(parseDay(query, tz), 'admin');
+    return this.views.window(toDay(query, tz), 'admin');
   }
 
   /**
    * All-teachers calendar (R-SCH-09): every teacher with load, windows, time off and free spans,
    * plus the window's lessons. Same `?from&to[&teacherId]` and 31-day cap as the week view.
    */
-  @Get('overview')
-  overview(@Query() query: unknown): Promise<ScheduleOverview> {
-    return this.overviews.overview(parseWindow(query));
+  @Route(routes.overview)
+  overview(@RouteInput() { query }: In<'overview'>) {
+    return this.overviews.overview(toWindow(query));
   }
 }

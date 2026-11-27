@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { makeupOffer } from '../../../lessons/makeup-offer';
-import type { LessonView } from '../../../lessons/views';
+import type { LessonView } from '../../../lessons/lesson-view';
 import { makeupEligible } from '../../../schemas/booking-extras';
 import { canJoinNow, DEFAULT_JOIN_WINDOW, joinWindow, joinWindowConfig, roomClosesAt } from '../join-window';
 import { pickStudentLesson } from '../../student-lesson';

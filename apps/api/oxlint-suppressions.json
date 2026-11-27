@@ -8543,11 +8543,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/lessons.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 3
-    }
-  },
   "src/modules/teaching/lessons/lessons.fakes.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -8824,11 +8819,6 @@
   },
   "src/modules/teaching/lessons/store/lesson-access.ts": {
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/lessons/store/lesson-queries.schema.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },

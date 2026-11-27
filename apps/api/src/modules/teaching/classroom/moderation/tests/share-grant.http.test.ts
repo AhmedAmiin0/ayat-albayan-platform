@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { LESSON_ID } from '@/modules/teaching/classroom/classroom.fakes';
 import { MEETING_ID } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
-import { sentBody as bodyOf } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody as bodyOf } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import { http, participantRow } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { classroomApp } from '@/modules/teaching/classroom/test-app';
 

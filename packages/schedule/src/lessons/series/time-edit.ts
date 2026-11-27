@@ -1,8 +1,7 @@
 import type { LessonStatus } from '@ab/catalog';
+import type { TimeEditMode } from '../lesson-view/lesson-view.schemas';
 
 // R-SCH-11 edits one lesson's time in place, unlike reschedule which creates a twin (docs/10 §10).
-
-export type TimeEditMode = 'move' | 'correct';
 
 const MODES: Partial<Record<LessonStatus, TimeEditMode>> = {
   scheduled: 'move',
@@ -13,13 +12,6 @@ const MODES: Partial<Record<LessonStatus, TimeEditMode>> = {
 
 /** What an admin may do to this lesson's time, null = nothing. */
 export const timeEditMode = (status: LessonStatus): TimeEditMode | null => MODES[status] ?? null;
-
-/** LessonView.time_edit: the last in-place edit, from lessons.time_edit_*. */
-export interface LessonTimeEditView {
-  at: string;
-  reason: string | null;
-  was: { starts_at: string; ends_at: string };
-}
 
 /** Domain error codes of PATCH /lessons/:id/time (each has an ar.json lessons.error message). */
 export const TIME_EDIT_ERRORS = [

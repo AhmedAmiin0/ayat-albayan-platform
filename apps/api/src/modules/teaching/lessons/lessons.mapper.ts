@@ -1,10 +1,10 @@
 import {
   allowedLessonEvents,
-  CONFLICT_KINDS,
   isClosedLesson,
   isOpenLesson,
   meetingModeOf,
   usesPlatform,
+  conflictSchema,
   type Conflict,
   type LessonEvent,
   timeEditMode,
@@ -125,15 +125,7 @@ function activeMakeup(row: LessonRow, studentId: string): LessonStudentView['mak
   return m ? { lesson_id: m.id, starts_at: iso(m.starts_at) } : null;
 }
 
-const conflictList = z.array(
-  z.object({
-    kind: z.enum(CONFLICT_KINDS),
-    startsAt: z.string(),
-    endsAt: z.string(),
-    lessonId: z.string().optional(),
-    studentId: z.string().optional(),
-  }),
-);
+const conflictList = z.array(conflictSchema);
 
 /** lessons.conflicts jsonb → Conflict[] ([] when none or unreadable). */
 export function storedConflicts(value: unknown): Conflict[] {
