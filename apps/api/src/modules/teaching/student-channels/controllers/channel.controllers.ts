@@ -1,10 +1,12 @@
 import { ChannelEditsController } from './channel.edits.controller';
 import { ChannelFilesController } from './channel.files.controller';
-import { MonitorChannelController } from './channel.monitor.controller';
-import { PortalChannelController } from './channel.portal.controller';
 import { ChannelPresenceController } from './channel.presence.controller';
 import { SalesChannelController } from './channel.sales.controller';
-import { TeacherChannelsController } from './channel.teacher.controller';
+import {
+  MonitorChannelController,
+  PortalChannelController,
+  TeacherChannelsController,
+} from './channel.threads.controller';
 
 /**
  * Every controller of the student channel: participants (teacher, family, the seated assistant),

@@ -50,6 +50,9 @@ export const channelReadSchema = z.object({
   at: z.iso.datetime({ offset: true }).optional(),
 });
 
+/** A read mark sent without a body reads up to now. */
+export const channelReadMarkSchema = z.preprocess((body) => body ?? {}, channelReadSchema);
+
 /** POST …/messages or …/read on a closed channel (409). */
 export const CHANNEL_NOT_OPEN = 'channel_not_open';
 
