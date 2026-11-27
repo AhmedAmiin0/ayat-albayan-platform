@@ -5,5 +5,4 @@ export {
   type ChannelEditError,
   channelMessagePath,
   channelReadsPath,
-  threadHidePath,
 } from './channel-edits';

@@ -33,11 +33,15 @@ describe('a message hidden from the platform', () => {
   });
 
   it('only the admin gets «إظهار», which DELETEs the hide', async () => {
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(undefined);
     showLog(hidden, ADMIN);
     fireEvent.click(screen.getByRole('button', { name: h.unhide }));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('DELETE', '/threads/%2B966501234567/messages/m1/hide'),
+      expect(apiSend).toHaveBeenCalledWith(
+        'DELETE',
+        '/threads/%2B966501234567/messages/m1/hide',
+        undefined,
+      ),
     );
   });
 });

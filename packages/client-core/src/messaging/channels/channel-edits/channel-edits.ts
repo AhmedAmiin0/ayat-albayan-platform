@@ -49,10 +49,6 @@ export const channelReadsPath = (input: {
   messageId: string;
 }): string => `${channelMessagePath(input)}/reads`;
 
-/** POST hides a WhatsApp bubble from the platform, DELETE shows it again. */
-export const threadHidePath = (phone: string, messageId: string): string =>
-  `/threads/${encodeURIComponent(phone)}/messages/${messageId}/hide`;
-
 /** The API's refusal codes the menus explain in words; anything else is a generic failure. */
 export const CHANNEL_EDIT_ERRORS = [
   'edit_window_closed',
