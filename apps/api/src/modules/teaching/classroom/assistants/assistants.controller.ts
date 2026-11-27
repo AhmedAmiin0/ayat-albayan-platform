@@ -1,11 +1,12 @@
-import type { AssistantLessonView, AssistantView } from '@ab/schedule';
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { assistantsRoutes as routes } from '@ab/schedule';
+import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { AssistantsService } from './assistants.service';
 
-/** Teaching assistants: the admin assigns them per student; an assistant reads only their own sessions. */
+/** The admin assigns assistants per student; an assistant reads only their own sessions. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('assistants.read')
@@ -14,33 +15,39 @@ export class AssistantsController {
   constructor(private readonly assistants: AssistantsService) {}
 
   /** Every assistant login, for the picker. */
-  @Get('assistants')
-  all(): Promise<AssistantView[]> {
+  @Route(routes.all)
+  all() {
     return this.assistants.all();
   }
 
-  /** The caller's own sessions between `from` and `to` (ISO instants). */
-  @Get('assistants/me/lessons')
+  @Route(routes.mine)
   @Permissions('self.assistant')
-  mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<AssistantLessonView[]> {
-    return this.assistants.mine({ profileId: user.id, query });
+  mine(
+    @RouteInput() { query }: RouteInputOf<typeof routes.mine>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.assistants.mine({ profileId: user.id, day: query });
   }
 
-  @Get('students/:id/assistants')
-  forStudent(@Param('id', ParseUUIDPipe) id: string): Promise<AssistantView[]> {
-    return this.assistants.forStudent(id);
+  @Route(routes.forStudent)
+  forStudent(@RouteInput() { params }: RouteInputOf<typeof routes.forStudent>) {
+    return this.assistants.forStudent(params.id);
   }
 
-  @Post('students/:id/assistants')
+  @Route(routes.assign)
   @HttpCode(200)
   @Permissions('assistants.write')
-  assign(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AssistantView[]> {
-    return this.assistants.assign({ studentId: id, body, actorId: user.id });
+  assign(
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.assign>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const pick = { studentId: params.id, profileId: body.profileId };
+    return this.assistants.assign({ ...pick, actorId: user.id });
   }
 
-  @Delete('students/:id/assistants/:profileId')
+  @Route(routes.remove)
   @Permissions('assistants.write')
-  remove(@Param('id', ParseUUIDPipe) id: string, @Param('profileId', ParseUUIDPipe) profileId: string): Promise<AssistantView[]> {
-    return this.assistants.remove(id, profileId);
+  remove(@RouteInput() { params }: RouteInputOf<typeof routes.remove>) {
+    return this.assistants.remove(params.id, params.profileId);
   }
 }

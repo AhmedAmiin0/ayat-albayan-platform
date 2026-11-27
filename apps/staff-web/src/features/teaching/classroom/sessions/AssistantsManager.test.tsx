@@ -55,7 +55,8 @@ describe('AssistantsManager', () => {
     open([NOUR], [NOUR]);
     apiSend.mockResolvedValue([]);
     fireEvent.click(await screen.findByRole('button', { name: t.classroom.assistants.remove }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/students/s-1/assistants/p-1'));
+    const removed = ['DELETE', '/students/s-1/assistants/p-1', undefined];
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith(...removed));
   });
 
   it('says when every assistant is already assigned', async () => {

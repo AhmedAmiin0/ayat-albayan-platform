@@ -1,7 +1,8 @@
 import { defineRoute, id, pageOf } from '@ab/core';
 import { z } from 'zod';
-import { feedbackListQuerySchema, feedbackRequestSchema } from './feedback';
+import { feedbackListQuerySchema, feedbackRequestSchema, feedbackSubmitSchema } from './feedback';
 import {
+  feedbackFormViewSchema,
   feedbackRequestResultSchema,
   feedbackRowViewSchema,
   teacherFeedbackSummarySchema,
@@ -33,5 +34,26 @@ export const feedbackRoutes = {
     path: '/teachers/me/feedback',
     query: feedbackListQuerySchema,
     response: teacherFeedbackViewSchema,
+  }),
+};
+
+/** Any token text: a wrong, expired or used link is the service's 404, 410 or 409, never a 400. */
+const tokenParams = z.object({ token: z.string() });
+
+/** The guardian's page, no login: the signed token in the path is the whole credential. */
+export const feedbackPublicRoutes = {
+  form: defineRoute({
+    method: 'GET',
+    path: '/public/feedback/:token',
+    params: tokenParams,
+    response: feedbackFormViewSchema,
+  }),
+  /** The body is parsed after the rate limit and the token checks, so those answer first. */
+  submit: defineRoute({
+    method: 'POST',
+    path: '/public/feedback/:token',
+    params: tokenParams,
+    body: feedbackSubmitSchema,
+    response: z.object({ submitted: z.literal(true) }),
   }),
 };

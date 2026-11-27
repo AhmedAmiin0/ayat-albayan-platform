@@ -7653,14 +7653,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/assistants/assistants.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 6
-    }
-  },
   "src/modules/teaching/classroom/assistants/assistants.lessons.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -7679,7 +7671,7 @@
   },
   "src/modules/teaching/classroom/assistants/assistants.service.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/classroom/classroom.config.ts": {
@@ -8531,7 +8523,7 @@
   },
   "src/modules/teaching/feedback/public/feedback.public.controller.ts": {
     "ab/zod-inputs": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/feedback/public/feedback.public.http.test.ts": {
