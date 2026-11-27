@@ -1,20 +1,19 @@
 import {
   PENDING_IDS_MAX,
   sendsAllTemplates,
-  threadTemplateSchema,
-  threadTextSchema,
+  threadSendRoutes as sends,
   type MessageView,
-  type ThreadTemplate,
-  type ThreadText,
+  type TextSendAnswer,
 } from '@ab/shared';
 import { phoneE164 } from '@ab/core';
-import { Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
+import { Route, type RouteInputOf } from '@/common/http/route';
 import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { invalidPhone, phoneParam } from './phone-param';
 import { onePageMode } from '@/modules/messaging/inbox/reads/page-mode';
@@ -58,8 +57,7 @@ const onePage = detailQuery.superRefine((q, ctx) => {
  */
 @ApiTags('inbox')
 @ApiBearerAuth()
-@Permissions('inbox.read')
-@Controller('threads')
+@Controller()
 export class ThreadsController {
   constructor(
     private readonly reads: ThreadReads,
@@ -67,7 +65,8 @@ export class ThreadsController {
     private readonly audit: AuditService,
   ) {}
 
-  @Get()
+  @Get('threads')
+  @Permissions('inbox.read')
   list(
     @ZodQuery(threadListQuery) query: z.output<typeof threadListQuery>,
     @CurrentUser() user: AuthUser,
@@ -76,7 +75,8 @@ export class ThreadsController {
   }
 
   /** A page (`before`), or with `after` only what changed since (ThreadDelta, ~2 reads). */
-  @Get(':phone')
+  @Get('threads/:phone')
+  @Permissions('inbox.read')
   detail(
     @ZodParam('phone', phoneE164, invalidPhone) phone: string,
     @Query() query: Record<string, unknown> | undefined,
@@ -87,14 +87,13 @@ export class ThreadsController {
     return this.reads.detail({ phone, ...parseOrThrow(onePage, query) }, user);
   }
 
-  @Post(':phone/text')
+  @Route(sends.text)
   @HttpCode(201)
-  @Permissions('inbox.send')
   async text(
     @Param('phone') raw: string,
-    @ZodBody(threadTextSchema) input: ThreadText,
+    @ZodBody(sends.text.body) input: RouteInputOf<typeof sends.text>['body'],
     @CurrentUser() user: AuthUser,
-  ) {
+  ): Promise<TextSendAnswer> {
     const { scope, sales } = await this.scopes(user);
     const sent = await this.sends.text({
       phone: phoneParam(raw),
@@ -110,14 +109,13 @@ export class ThreadsController {
     return { ...view, replayed: sent.replayed, same_request: sent.sameRequest === true };
   }
 
-  @Post(':phone/template')
+  @Route(sends.template)
   @HttpCode(201)
-  @Permissions('inbox.send')
   async template(
     @Param('phone') raw: string,
-    @ZodBody(threadTemplateSchema) input: ThreadTemplate,
+    @ZodBody(sends.template.body) input: RouteInputOf<typeof sends.template>['body'],
     @CurrentUser() user: AuthUser,
-  ) {
+  ): Promise<MessageView> {
     const { scope, sales } = await this.scopes(user);
     const restricted = !sendsAllTemplates(user);
     const sent = await this.sends.template({

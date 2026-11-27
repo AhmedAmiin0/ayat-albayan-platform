@@ -6,6 +6,7 @@ import { bulkSa } from '@/finance/pricing/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { QuoteSheet } from '@/inbox/composer/quote/QuoteSheet/QuoteSheet';
+import { sentText, uid } from '@/inbox/shared/thread-fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -45,10 +46,9 @@ async function listSheet(open = true) {
 }
 
 test('«أرسل العرض» posts the whole list as one chat text and closes the sheet', async () => {
-  mockApiSend.mockImplementation(async (_m: string, _p: string, b: { text: string }) => ({
-    id: 'm1',
-    body: b.text,
-  }));
+  mockApiSend.mockImplementation(async (_m: string, _p: string, b: { text: string }) =>
+    sentText({ id: uid('m1'), body: b.text }),
+  );
   const onClose = await listSheet();
   await fireEvent.press(button(q.send));
   await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));

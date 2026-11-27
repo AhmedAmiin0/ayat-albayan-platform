@@ -1,7 +1,7 @@
 import type { ThreadDetail } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
-import { message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { PHONE, sentText, uid } from '@/inbox/shared/thread-fixtures';
 import { clearChatMemory } from '@/inbox/thread/anchor';
 import { type ThreadCache, threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { useSendMessage } from '@/inbox/thread/hooks/use-thread';
@@ -25,10 +25,10 @@ jest.mock('@/inbox/thread/hooks/inbox-sync', () => ({
 const page = { messages: [], has_more: false } as unknown as ThreadDetail;
 const fix = (text: string) => ({
   id: 'req-1',
-  out: { kind: 'text' as const, text, correctsId: 'o1' },
+  out: { kind: 'text' as const, text, correctsId: uid('o1') },
   pin: 'box' as const,
 });
-const answer = (over: object) => ({ ...message({ id: 'srv-1', status: 'sent' }), ...over });
+const answer = (over: object) => ({ ...sentText({ id: uid('srv-1'), status: 'sent' }), ...over });
 
 async function sendFix(text: string) {
   const client = createTestQueryClient();
@@ -45,10 +45,10 @@ beforeEach(() => {
 });
 
 test.each([
-  ['a shortened resend', { body: 'تصحيح: الساعة الخامسة', corrects_id: 'o1', same_request: false }],
-  ['no word from the API', { body: 'تصحيح: الخامسة', corrects_id: 'o1' }],
+  ['a shortened resend', { body: 'تصحيح: الساعة الخامسة', corrects_id: uid('o1'), same_request: false }],
+  ['no word from the API', { body: 'تصحيح: الخامسة', corrects_id: uid('o1') }],
   ['a plain text first, then «تعديل»', { body: 'الخامسة', corrects_id: null }],
-  ['the same text on another message', { body: 'تصحيح: الخامسة', corrects_id: 'o2' }],
+  ['the same text on another message', { body: 'تصحيح: الخامسة', corrects_id: uid('o2') }],
 ])('%s: the replayed row is not this correction (note, text back)', async (_, row) => {
   mockApiSend.mockResolvedValue(answer({ ...row, replayed: true }));
   await sendFix('الخامسة');
@@ -58,7 +58,7 @@ test.each([
 
 test('a retry of this very correction after a lost answer is this send', async () => {
   mockApiSend.mockResolvedValue(
-    answer({ body: 'تصحيح: الخامسة', corrects_id: 'o1', replayed: true, same_request: true }),
+    answer({ body: 'تصحيح: الخامسة', corrects_id: uid('o1'), replayed: true, same_request: true }),
   );
   await sendFix('الخامسة');
   expect(PINS.box.replayed(PHONE)).toBe(false);
@@ -66,7 +66,7 @@ test('a retry of this very correction after a lost answer is this send', async (
 });
 
 test('a second correction of the original goes once and is reported sent (round 3)', async () => {
-  mockApiSend.mockResolvedValue(answer({ body: 'تصحيح: السادسة', corrects_id: 'o1', replayed: false }));
+  mockApiSend.mockResolvedValue(answer({ body: 'تصحيح: السادسة', corrects_id: uid('o1'), replayed: false }));
   await sendFix('السادسة');
   expect(mockApiSend).toHaveBeenCalledTimes(1);
   expect(PINS.box.replayed(PHONE)).toBe(false);
@@ -75,7 +75,7 @@ test('a second correction of the original goes once and is reported sent (round 
 test('a reworded prefix this app never saw: the API says same_request (round 4)', async () => {
   const before = t.inbox.correction.prefix;
   t.inbox.correction.prefix = 'Correction: ';
-  const first = { body: 'تعديل: الخامسة', corrects_id: 'o1', replayed: true, same_request: true };
+  const first = { body: 'تعديل: الخامسة', corrects_id: uid('o1'), replayed: true, same_request: true };
   mockApiSend.mockResolvedValue(answer(first));
   await sendFix('الخامسة');
   t.inbox.correction.prefix = before;

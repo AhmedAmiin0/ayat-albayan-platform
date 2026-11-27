@@ -2,7 +2,7 @@ import type { ThreadDetail } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@ab/mobile-kit';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
-import { message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { message, PHONE, sentText, uid } from '@/inbox/shared/thread-fixtures';
 import { clearChatMemory } from '@/inbox/thread/anchor';
 import { type ThreadCache, threadKey, threadMessages } from '@/inbox/thread/hooks/thread-cache';
 import { useSendMessage } from '@/inbox/thread/hooks/use-thread';
@@ -28,7 +28,8 @@ const old = message({ id: 'm0', body: 'قديمة', created_at: '2026-01-01T00:0
 const page = (rows = [old]) => ({ messages: rows, has_more: false }) as unknown as ThreadDetail;
 const noAnswer = () => new TypeError('Network request failed');
 const box = (id: string, text: string) => ({ id, out: { kind: 'text' as const, text }, pin: 'box' as const });
-const serverRow = (body: string) => message({ id: 'srv-1', body, status: 'sent' });
+const SERVER_ID = uid('srv-1');
+const serverRow = (body: string) => sentText({ id: SERVER_ID, body, status: 'sent' });
 
 async function setup() {
   const client = createTestQueryClient();

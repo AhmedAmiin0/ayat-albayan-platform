@@ -9,6 +9,7 @@ import { getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draf
 import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { QuoteDialog } from '@/features/messaging/inbox/composer/quote/QuoteDialog/QuoteDialog';
+import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -66,17 +67,16 @@ it('«أرسل العرض» posts the offer once through the chat text route, ev
 
 it('a sent offer closes the sheet', async () => {
   // The API echoes the offer it sent (another body would be a replay of a first offer).
-  apiSend.mockImplementation(async (_m: string, _p: string, b: { text: string }) => ({
-    id: 'm1',
-    body: b.text,
-  }));
+  apiSend.mockImplementation(async (_m: string, _p: string, b: { text: string }) =>
+    sentText({ id: uid('m1'), body: b.text }),
+  );
   const { onClose } = await show();
   fireEvent.click(button(q.send));
   await waitFor(() => expect(onClose).toHaveBeenCalled());
 });
 
 it('a 2xx carrying another offer (a replay of the first) keeps the sheet open with the note', async () => {
-  apiSend.mockResolvedValue({ id: 'm0', body: 'عرض سابق' });
+  apiSend.mockResolvedValue(sentText({ id: uid('m0'), body: 'عرض سابق', replayed: true }));
   const { onClose } = await show();
   fireEvent.click(button(q.send));
   expect(await screen.findByText(t.inbox.error.send_replayed)).toBeTruthy();

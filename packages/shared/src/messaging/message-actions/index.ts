@@ -8,3 +8,4 @@ export * from './message-hide';
 export * from './thread-forward';
 export * from './inbox-search';
 export * from './message-status';
+export * from './thread-send';

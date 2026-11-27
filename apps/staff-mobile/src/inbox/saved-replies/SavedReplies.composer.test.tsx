@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, inbound, message, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, inbound, sentText, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { REPLIES } from './testing/fixtures';
@@ -83,7 +83,11 @@ test('tabs and search: «ردودي» shows her own; the search matches the text
 test('the staged file: removable; «أرسل» sends the text, then stages and sends the file', async () => {
   // A text's answer echoes it (another body would be a replay of a first message).
   const row = (path: string, sent?: { text?: string }) =>
-    message({ id: path.endsWith('/file') ? 'c3333333-3333-4333-8333-333333333333' : 't1', status: 'queued', body: sent?.text ?? null });
+    sentText({
+      id: path.endsWith('/file') ? 'c3333333-3333-4333-8333-333333333333' : uid('t1'),
+      status: 'queued',
+      body: sent?.text ?? null,
+    });
   mockApiSend.mockImplementation(async (_m: string, path: string, sent?: { text?: string }) =>
     path.endsWith('/stage') ? { path: 'out/s1/r/x.pdf', filename: 'الأسعار.pdf' } : row(path, sent),
   );

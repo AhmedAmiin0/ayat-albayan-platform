@@ -1148,7 +1148,7 @@
       "count": 5
     },
     "ab/no-untyped-api-calls": {
-      "count": 9
+      "count": 7
     }
   },
   "src/features/messaging/inbox/api/live/live.ts": {
