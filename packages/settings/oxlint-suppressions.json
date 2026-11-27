@@ -89,11 +89,6 @@
       "count": 1
     }
   },
-  "src/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
-    }
-  },
   "src/layout.ts": {
     "stylistic/max-len": {
       "count": 2

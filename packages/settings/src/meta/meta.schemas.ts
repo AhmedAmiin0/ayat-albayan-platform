@@ -1,11 +1,16 @@
-/** Who last changed one settings row, and when (GET /config/meta). */
-export interface SettingMeta {
-  updatedAt: string;
-  updatedBy: string | null;
-  updatedByName: string | null;
-}
+import { id, instant } from '@ab/core';
+import { z } from 'zod';
 
-/** GET /config/meta: one entry per stored settings row, by row key. */
-export interface SettingsMetaResponse {
-  meta: Record<string, SettingMeta>;
-}
+/** Who last changed one settings row, and when. */
+export const settingMetaSchema = z.object({
+  updatedAt: instant,
+  updatedBy: id().nullable(),
+  updatedByName: z.string().nullable(),
+});
+export type SettingMeta = z.infer<typeof settingMetaSchema>;
+
+/** One entry per stored settings row, by row key; a row never written has none. */
+export const settingsMetaResponseSchema = z.object({
+  meta: z.record(z.string(), settingMetaSchema),
+});
+export type SettingsMetaResponse = z.infer<typeof settingsMetaResponseSchema>;
