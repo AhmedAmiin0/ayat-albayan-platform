@@ -22915,6 +22915,84 @@
      "maximum": 500
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "messages": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "phone_e164": {
+        "type": "string"
+       },
+       "updated_at": {
+        "type": "string"
+       },
+       "created_at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "phone_e164",
+       "updated_at",
+       "created_at"
+      ],
+      "additionalProperties": {}
+     }
+    },
+    "threads": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "phone_e164": {
+        "type": "string"
+       },
+       "last_message_id": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "phone_e164",
+       "last_message_id"
+      ],
+      "additionalProperties": {}
+     }
+    },
+    "gone": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "cursor": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "has_more": {
+     "type": "boolean"
+    },
+    "scope": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "messages",
+    "threads",
+    "gone",
+    "cursor",
+    "has_more",
+    "scope"
+   ]
   }
  },
  "GET /users": {
