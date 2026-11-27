@@ -34,4 +34,17 @@ describe('/sales/people and /leads/assign-unassigned served from their route obj
     const res = await t.call({ method: 'POST', url: '/leads/assign-unassigned', token: 'admin' });
     expect([res.statusCode, res.json()]).toEqual([200, { assigned: 0 }]);
   });
+
+  it('a lead id that is not a uuid is a 400 before anything is read', async () => {
+    const body = { profileId: A };
+    const res = await t.call({ method: 'POST', url: '/leads/abc/assign', token: 'admin', body });
+    expect(res.statusCode).toBe(400);
+    expect(t.assign.setAssignee).not.toHaveBeenCalled();
+  });
+
+  it('a profile id that is neither a uuid nor null is a 400', async () => {
+    const url = `/leads/${A}/assign`;
+    const res = await t.call({ method: 'POST', url, token: 'admin', body: { profileId: 'x' } });
+    expect(res.statusCode).toBe(400);
+  });
 });

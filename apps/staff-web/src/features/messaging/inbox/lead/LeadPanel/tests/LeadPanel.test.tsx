@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { leadRow } from '@ab/shared/testing';
 import { SETTINGS } from '@/test/settings-fixture';
 import { ApiError, t } from '@ab/web-kit';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
@@ -49,7 +50,7 @@ describe('lead panel in the thread (R-LEAD-02/03/05)', () => {
     const time = within(screen.getByRole('group', { name: t.leads.preferredTime }));
     fireEvent.change(time.getByRole('combobox', { name: t.availability.from }), { target: { value: '16:00' } });
     fireEvent.change(time.getByRole('combobox', { name: t.availability.to }), { target: { value: '18:30' } });
-    apiSend.mockResolvedValue(lead());
+    apiSend.mockResolvedValue(leadRow({ id: 'lead-1', phone_e164: PHONE }));
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
     await waitFor(() =>
       expect(apiSend).toHaveBeenCalledWith('PATCH', '/leads/lead-1/qualification', {

@@ -1,4 +1,3 @@
-import type { LeadFollowUp } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
@@ -7,7 +6,7 @@ import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 import { followUpLines } from '@/inbox/qualification/lib/follow-up-text';
 import { Heading } from './Heading';
-import { saveErrorText, useFollowUpTotal, useLeadPatch, type LeadProfile } from '@/inbox/qualification/lib/queries';
+import { saveErrorText, useFollowUpTotal, useLeadPatch, savePause, type LeadProfile } from '@/inbox/qualification/lib/queries';
 import { useClockCycle } from '@/core/lib/clock';
 
 const f = t.followUps;
@@ -23,7 +22,7 @@ export function FollowUpCard({ lead, offline }: FollowUpCardProps) {
   const cycle = useClockCycle();
   const { color } = useTheme();
   const total = useFollowUpTotal();
-  const pause = useLeadPatch<LeadFollowUp>('follow-up');
+  const pause = useLeadPatch(savePause);
   const [confirming, setConfirming] = useState(false);
   const paused = lead.follow_up_paused === true;
   const byLead = paused && lead.follow_up_paused_by === 'lead';

@@ -4,7 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { huda } from '@/inbox/shared/fixtures';
 import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
-import { answer, hudaProfile } from '@/inbox/qualification/lib/fixtures';
+import { answer, hudaProfile, hudaRow } from '@/inbox/qualification/lib/fixtures';
 import { LeadProfileSection } from '@/inbox/qualification/components/LeadProfileSection/LeadProfileSection';
 import type { LeadProfile } from '@/inbox/qualification/lib/queries';
 
@@ -34,7 +34,9 @@ test('when the next follow-up is due, in the device zone, and how many of the se
 });
 
 test('«أوقف المتابعة» pauses at once: PATCH follow-up, then the answer shows it paused', async () => {
-  mockApiSend.mockResolvedValue({ ...hudaProfile, follow_up_paused: true, follow_up_paused_by: 'admin', next_follow_up_at: null });
+  mockApiSend.mockResolvedValue(
+    hudaRow({ follow_up_paused: true, follow_up_paused_by: 'admin', next_follow_up_at: null }),
+  );
   await serve(hudaProfile);
   await screen.findByDisplayValue('سهيلة');
   await fireEvent.press(screen.getByRole('button', { name: f.pause }));
@@ -45,7 +47,7 @@ test('«أوقف المتابعة» pauses at once: PATCH follow-up, then the an
 });
 
 test('paused by the admin: «استأنف المتابعة» resumes without asking', async () => {
-  mockApiSend.mockResolvedValue(hudaProfile);
+  mockApiSend.mockResolvedValue(hudaRow());
   await serve({ ...hudaProfile, follow_up_paused: true, follow_up_paused_by: 'admin' });
   expect(await screen.findByText(f.paused)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: f.resume }));
@@ -63,7 +65,7 @@ test('the lead sent «وقف» themselves: resuming asks first; «إلغاء» s
   expect(screen.queryByText(f.resumeLeadConfirm)).toBeNull();
   expect(mockApiSend).not.toHaveBeenCalled();
 
-  mockApiSend.mockResolvedValue(hudaProfile);
+  mockApiSend.mockResolvedValue(hudaRow());
   await fireEvent.press(screen.getByRole('button', { name: f.resume }));
   await fireEvent.press(screen.getByRole('button', { name: f.resumeLeadYes }));
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/leads/a1/follow-up', { paused: false });
