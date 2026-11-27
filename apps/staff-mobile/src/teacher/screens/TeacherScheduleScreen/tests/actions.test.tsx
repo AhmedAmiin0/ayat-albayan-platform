@@ -3,6 +3,7 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { TeacherScheduleScreen } from '@/teacher/screens/TeacherScheduleScreen/TeacherScheduleScreen';
+import { answered } from '@/today/testing/answered';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -38,7 +39,7 @@ const openSheet = async () =>
   );
 
 test('«تفاصيل الحلقة» of a lesson ahead: «سأحضر» posts confirm-attendance and says so', async () => {
-  mockApiSend.mockResolvedValue({ ...ahead, teacher_confirmed_at: '2026-10-01T12:00:00Z' });
+  mockApiSend.mockResolvedValue(answered({ ...ahead, teacher_confirmed_at: '2026-10-01T12:00:00Z' }));
   await renderWithQuery(<TeacherScheduleScreen />);
   await openSheet();
   expect(screen.queryByRole('button', { name: t.today.confirm })).toBeNull();
@@ -54,7 +55,7 @@ test('«تفاصيل الحلقة» of a lesson ahead: «سأحضر» posts conf
 });
 
 test('«إلغاء الحلقة» in the sheet: the reason form, then the teacher route', async () => {
-  mockApiSend.mockResolvedValue({ ...ahead, status: 'cancelled_by_teacher' });
+  mockApiSend.mockResolvedValue(answered({ ...ahead, status: 'cancelled_by_teacher' }));
   await renderWithQuery(<TeacherScheduleScreen />);
   await openSheet();
   await fireEvent.press(screen.getByRole('button', { name: w.cancel }));

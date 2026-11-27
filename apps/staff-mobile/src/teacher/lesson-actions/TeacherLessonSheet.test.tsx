@@ -4,6 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { TeacherLessonSheet } from './TeacherLessonSheet';
+import { answered } from '@/today/testing/answered';
 
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -64,7 +65,7 @@ test('after the start: exactly ONE report button, and it goes through onReport',
 });
 
 test('a landed cancel closes the sheet once and hands the screen its notice', async () => {
-  mockApiSend.mockResolvedValue(lesson({ id: 'c', status: 'cancelled_by_teacher' }));
+  mockApiSend.mockResolvedValue(answered(lesson({ id: 'c', status: 'cancelled_by_teacher' })));
   await open(lesson({ id: 'c' }));
   await fireEvent.press(screen.getByRole('button', { name: w.cancel }));
   await fireEvent.changeText(screen.getByLabelText(new RegExp(w.reason)), 'مرض');
