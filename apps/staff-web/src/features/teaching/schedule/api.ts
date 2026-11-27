@@ -5,13 +5,12 @@ import type {
   Conflict,
   LessonView,
   RescheduleRequest,
-  SlotsResponse,
   StatusRouteEvent,
   ScheduleOverview,
 } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend, errorCode, t } from '@ab/web-kit';
-import { bookingBase } from '@/features/teaching/booking/mode';
+import { bookingCallsOf } from '@/features/teaching/booking/mode';
 import type { Window } from '@ab/web-kit';
 import { lessonKeys } from './lesson.keys';
 
@@ -46,25 +45,22 @@ export interface SlotsParams extends Window {
   lessonId?: string | undefined;
 }
 
-/** The optional slot params, sent as named when set. */
-const OPTIONAL_SLOT_PARAMS = ['excludeCourse', 'excludeLessonId', 'lessonId'] as const;
-
-/** GET /booking/slots (≤ 14 days; the assistant's mirror under /sales/booking): the teacher's candidate starts, each with its conflicts. */
+/** GET /booking/slots (≤ 14 days; the assistant's mirror under /sales/booking): the candidate
+ * starts of the teacher, each with its conflicts. */
 export const slotsQuery = (p: SlotsParams, mode: BookingMode = 'admin') => {
-  const params = new URLSearchParams({
+  const query = {
     teacherId: p.teacherId,
     from: p.from.toISOString(),
     to: p.to.toISOString(),
-    durationMin: String(p.durationMin),
-  });
-  if (p.studentIds.length > 0) params.set('studentIds', p.studentIds.join(','));
-  for (const key of OPTIONAL_SLOT_PARAMS) {
-    const value = p[key];
-    if (value) params.set(key, value);
-  }
+    durationMin: p.durationMin,
+    studentIds: p.studentIds.length > 0 ? p.studentIds.join(',') : undefined,
+    excludeCourse: p.excludeCourse || undefined,
+    excludeLessonId: p.excludeLessonId || undefined,
+    lessonId: p.lessonId || undefined,
+  };
   return queryOptions({
-    queryKey: lessonKeys.slots(mode, params.toString()),
-    queryFn: () => apiFetch<SlotsResponse>(`${bookingBase(mode)}/slots?${params}`),
+    queryKey: lessonKeys.slots(mode, JSON.stringify(query)),
+    queryFn: () => bookingCallsOf[mode].slots(query),
     placeholderData: keepPreviousData,
   });
 };

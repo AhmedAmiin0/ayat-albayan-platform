@@ -495,15 +495,12 @@
   },
   "src/features/finance/payments/api.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 3
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -3132,7 +3129,7 @@
   },
   "src/features/people/teachers/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/people/teachers/availability/AvailabilityDay.tsx": {
@@ -3155,16 +3152,7 @@
     "typescript/consistent-type-definitions": {
       "count": 1
     },
-    "max-lines-per-function": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -3337,14 +3325,6 @@
       "count": 1
     },
     "max-lines-per-function": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    }
-  },
-  "src/features/people/teachers/time-off/TimeOffList.tsx": {
-    "ab/forbidden-imports": {
       "count": 1
     }
   },
@@ -5169,9 +5149,6 @@
     "complexity": {
       "count": 1
     },
-    "ab/no-untyped-api-calls": {
-      "count": 3
-    },
     "typescript/dot-notation": {
       "count": 9
     }
@@ -5879,13 +5856,13 @@
   },
   "src/features/teaching/schedule/api.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 10
+      "count": 9
     }
   },
   "src/features/teaching/schedule/edit-time/EditTime.captions.test.tsx": {

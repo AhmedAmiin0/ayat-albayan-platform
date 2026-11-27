@@ -87,3 +87,20 @@ export const slotsResponseSchema = z.object({
   slots: z.array(slotViewSchema),
 });
 export type SlotsResponse = z.infer<typeof slotsResponseSchema>;
+
+/** POST /booking/check: the whole series' clashes, nothing written; [] = free. */
+export const bookingConflictsSchema = z.object({ conflicts: z.array(conflictSchema) });
+export type BookingConflicts = z.infer<typeof bookingConflictsSchema>;
+
+/** POST /booking 201. */
+export const bookingResultSchema = z.object({
+  rule_id: id(),
+  student_ids: z.array(id()),
+  guardian_ids: z.array(id()),
+  lessons: z.array(z.object({ id: id(), starts_at: instant, ends_at: instant })),
+  /** Queued booking_confirmation* messages, one per guardian (docs/10 §5.11). */
+  message_ids: z.array(id()),
+  /** The stored invoice (null for a trial). */
+  invoice_id: id().nullable(),
+});
+export type BookingResult = z.infer<typeof bookingResultSchema>;

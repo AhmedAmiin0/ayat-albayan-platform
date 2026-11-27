@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { paymentListQuery } from './payments.dto';
+import { paymentListQuery } from '@ab/shared';
 import { PaymentsRepo } from './payments.repo';
 
 const page = { page: 1, pageSize: 25 };

@@ -1,7 +1,5 @@
-import { parseResponse } from '@ab/client-core';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
-import type { z } from 'zod';
 import { t } from '@ab/web-kit';
 import { PAYMENT } from '@/features/finance/subscriptions/money-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
@@ -19,11 +17,9 @@ const page = (amount: unknown) => ({
   totals: [],
 });
 
-/** The real client's parse, so the page sees what a broken answer becomes. */
+/** The raw answer: the call parses it with the route's schema, as the real client does. */
 function answer(body: unknown) {
-  apiFetch.mockImplementation(async (path: string, init: { schema: z.ZodType }) =>
-    parseResponse(init.schema, body, path),
-  );
+  apiFetch.mockResolvedValue(body);
 }
 
 afterEach(() => apiFetch.mockReset());

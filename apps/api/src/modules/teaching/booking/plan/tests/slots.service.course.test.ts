@@ -23,12 +23,12 @@ describe('SlotsService — excludeCourse', () => {
     const deps = fakeContext();
     const service = new SlotsService(deps.queries as unknown as BookingRepo, deps.context, readerOf(BookingSettings, { teachers_always_available: false }));
     const at = (h: number) => ({ starts_at: new Date(`2026-10-04T${h}:00:00Z`), ends_at: new Date(`2026-10-04T${h}:45:00Z`) });
-    deps.availability.listBusyLessons.mockResolvedValue([{ id: 'COURSE', ...at(14) }]);
+    deps.availability.listBusyLessons.mockResolvedValue([{ id: 'e9999999-9999-4999-8999-999999999995', ...at(14) }]);
     deps.busy.studentLessons.mockResolvedValue([
-      { id: 'COURSE', student_id: IDS.s1, ...at(14) },
-      { id: 'OTHER', student_id: IDS.s1, ...at(16) },
+      { id: 'e9999999-9999-4999-8999-999999999995', student_id: IDS.s1, ...at(14) },
+      { id: 'e9999999-9999-4999-8999-999999999994', student_id: IDS.s1, ...at(16) },
     ]);
-    deps.busy.courseLessonIds.mockResolvedValue(['COURSE']);
+    deps.busy.courseLessonIds.mockResolvedValue(['e9999999-9999-4999-8999-999999999995']);
     const blocked = async (over: Partial<SlotsQuery>) =>
       (await service.slots(query(over))).slots.filter((s) => s.conflicts.length > 0).map((s) => s.starts_at.slice(11, 16));
     expect(await blocked({})).toEqual(['14:00', '16:00']);

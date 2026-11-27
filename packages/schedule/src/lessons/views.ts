@@ -102,15 +102,3 @@ export interface TeacherMe {
   platform_classroom?: boolean;
   students: { id: string; code: string; name: string; tz: string; status: StudentStatus }[];
 }
-
-/** POST /booking 201. */
-export interface BookingResult {
-  rule_id: string;
-  student_ids: string[];
-  guardian_ids: string[];
-  lessons: { id: string; starts_at: string; ends_at: string }[];
-  /** Queued booking_confirmation* messages, one per guardian (docs/10 §5.11). */
-  message_ids: string[];
-  /** The stored invoice (null for a trial). */
-  invoice_id: string | null;
-}

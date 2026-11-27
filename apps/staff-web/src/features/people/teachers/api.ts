@@ -1,5 +1,6 @@
-import { teacherCalls } from '@ab/client-core';
-import type { AvailabilityRow, TeacherCreate, TeacherListRow, TimeOff } from '@ab/shared';
+import { availabilityCalls, teacherCalls } from '@ab/client-core';
+import type { AvailabilitySlot, TimeOffCreate } from '@ab/schedule';
+import type { TeacherCreate, TeacherListRow } from '@ab/shared';
 import type { Page } from '@ab/core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -10,6 +11,7 @@ import type { ListUrlState } from '@/lib/list/list-url';
 export const PAGE_SIZE = 25;
 
 const teachers = teacherCalls({ apiFetch, apiSend });
+const availability = availabilityCalls({ apiFetch, apiSend });
 
 /** GET /teachers: the page, column sort and filters (R-NFR-08). */
 export const teachersPageQuery = ({ page, sort, filters }: ListUrlState) =>
@@ -41,11 +43,21 @@ export const saveTeacher = (
 export const availabilityQuery = (id: string) =>
   queryOptions({
     queryKey: teacherKeys.availability(id),
-    queryFn: () => apiFetch<AvailabilityRow[]>(`/teachers/${id}/availability`),
+    queryFn: () => availability.grid(id),
   });
 
 export const timeOffQuery = (id: string) =>
   queryOptions({
     queryKey: teacherKeys.timeOff(id),
-    queryFn: () => apiFetch<TimeOff[]>(`/teachers/${id}/time-off`),
+    queryFn: () => availability.timeOff(id),
   });
+
+/** PUT /teachers/:id/availability: the whole weekly grid at once (R-TCH-02). */
+export const saveAvailability = (teacherId: string, slots: AvailabilitySlot[]) =>
+  availability.replaceGrid(teacherId, { slots });
+
+export const addTimeOff = (teacherId: string, body: TimeOffCreate) =>
+  availability.addTimeOff(teacherId, body);
+
+export const removeTimeOff = (teacherId: string, timeOffId: string) =>
+  availability.removeTimeOff({ id: teacherId, timeOffId });

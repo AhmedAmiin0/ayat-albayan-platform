@@ -1,5 +1,5 @@
 import { outsideSlotsResponseSchema } from '@ab/shared';
-import { findConflicts, freeSlots } from '@ab/schedule';
+import { findConflicts, freeSlots, slotsResponseSchema } from '@ab/schedule';
 import { DAY_MS } from '@ab/time';
 import type { OutsideSlotsResponse } from '@ab/shared';
 import type { Conflict, Occurrence, SlotsResponse, SlotView } from '@ab/schedule';
@@ -10,6 +10,7 @@ import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { ConflictContext } from './conflict-context';
 import { outsideGrid } from './outside-slots';
 import { httpError } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 
 const MAX_SLOT_RANGE_DAYS = 14;
 const OUTSIDE_DAYS = 14;
@@ -60,7 +61,8 @@ export class SlotsService {
     const grid = freeSlots({ from, to, durationMin, availability: rows.availability, timeOff: [], busy: [], stepMin });
     const proposed = grid.map((s) => ({ starts_at: s.start, ends_at: s.end }));
     const conflicts = findConflicts({ proposed, ...rows });
-    return { teacher_tz: teacher.tz, step_min: stepMin, slots: slotViews(proposed, conflicts) };
+    const slots = slotViews(proposed, conflicts);
+    return asResponse(slotsResponseSchema, { teacher_tz: teacher.tz, step_min: stepMin, slots });
   }
   /** Decided on the server clock, returned as `server_now`; the client only formats the starts. */
   async outside(q: OutsideSlotsQuery): Promise<OutsideSlotsResponse> {
@@ -77,6 +79,6 @@ export class SlotsService {
     const slots = outsideGrid({ ...range, durationMin, stepMin, teacherTz: teacher.tz, rows });
     const server_now = now.toISOString();
     const body = { server_now, teacher_tz: teacher.tz, step_min: stepMin, slots };
-    return outsideSlotsResponseSchema.parse(body);
+    return asResponse(outsideSlotsResponseSchema, body);
   }
 }
