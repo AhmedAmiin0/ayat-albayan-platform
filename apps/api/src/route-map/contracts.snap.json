@@ -5339,6 +5339,45 @@
    ]
   }
  },
+ "GET /sales/students/:id/reports/:reportId/pdf": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "reportId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id",
+    "reportId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "url": {
+     "type": "string",
+     "format": "uri"
+    },
+    "expires_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "url",
+    "expires_at"
+   ]
+  }
+ },
  "GET /sales/teachers/:id/overview": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
