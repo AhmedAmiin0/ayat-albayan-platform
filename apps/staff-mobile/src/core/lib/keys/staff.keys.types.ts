@@ -2,6 +2,7 @@ export type StaffKey = readonly unknown[];
 
 export interface StudentKeys {
   all: StaffKey;
+  one: (id: string) => StaffKey;
   statusCounts: (filters: unknown) => StaffKey;
   teacherOptions: () => StaffKey;
 }
