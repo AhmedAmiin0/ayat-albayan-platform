@@ -15,7 +15,11 @@ const template = (status: string) => [{ key: 'lesson_feedback_request', status }
 
 const text = t.mobile.feedback;
 const lesson = (status: string, names = ['يوسف أحمد']) =>
-  ({ id: 'l-1', status, students: names.map((name, i) => ({ id: `s-${i + 1}`, name })) }) as unknown as LessonView;
+  ({
+    id: 'l-1',
+    status,
+    students: names.map((name, i) => ({ id: `s-${i + 1}`, name })),
+  }) as unknown as LessonView;
 const named = (name: string) => ({ name: text.sendFor.replace('{name}', name) });
 
 beforeEach(() => {
@@ -23,15 +27,30 @@ beforeEach(() => {
   mockApiFetch.mockResolvedValue(template('approved'));
 });
 
+const queued = {
+  requested_at: '2026-10-03T09:00:00+00:00',
+  expires_at: '2026-10-10T09:00:00+00:00',
+  replayed: false,
+  message_status: 'queued',
+};
+
 test('a completed lesson: «أرسل طلب الرأي» posts the student, then says «اتبعت» and stays off', async () => {
-  mockApiSend.mockResolvedValue({});
+  mockApiSend.mockResolvedValue(queued);
   await renderWithQuery(<FeedbackRequestButton lesson={lesson('completed')} />);
-  await waitFor(() => expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(false));
+  await waitFor(() =>
+    expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(
+      false,
+    ),
+  );
   await fireEvent.press(screen.getByRole('button', named('يوسف أحمد')));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/feedback-request', { studentId: 's-1' });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/feedback-request', {
+    studentId: 's-1',
+  });
   const sent = await screen.findByText(text.sent);
   expect(sent).toBeTruthy();
-  expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(true);
+  expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(
+    true,
+  );
 });
 
 test.each([
@@ -49,27 +68,45 @@ test.each([
 test('the template not approved yet: the refusal is said in words, and the button stays usable', async () => {
   mockApiSend.mockRejectedValue(new ApiError(409, { code: 'template_not_approved' }));
   await renderWithQuery(<FeedbackRequestButton lesson={lesson('completed')} />);
-  await waitFor(() => expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(false));
+  await waitFor(() =>
+    expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(
+      false,
+    ),
+  );
   await fireEvent.press(screen.getByRole('button', named('يوسف أحمد')));
   expect(await screen.findByText(text.error.template_not_approved)).toBeTruthy();
-  expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(false);
+  expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(
+    false,
+  );
 });
 
 test('a group lesson: one button per student, each with its own state', async () => {
-  mockApiSend.mockResolvedValue({});
-  await renderWithQuery(<FeedbackRequestButton lesson={lesson('completed', ['يوسف أحمد', 'مريم علي'])} />);
-  await waitFor(() => expect(screen.getByRole('button', named('مريم علي')).props.accessibilityState.disabled).toBe(false));
+  mockApiSend.mockResolvedValue(queued);
+  await renderWithQuery(
+    <FeedbackRequestButton lesson={lesson('completed', ['يوسف أحمد', 'مريم علي'])} />,
+  );
+  await waitFor(() =>
+    expect(screen.getByRole('button', named('مريم علي')).props.accessibilityState.disabled).toBe(
+      false,
+    ),
+  );
   await fireEvent.press(screen.getByRole('button', named('مريم علي')));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/feedback-request', { studentId: 's-2' });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/feedback-request', {
+    studentId: 's-2',
+  });
   expect(await screen.findAllByText(text.sent)).toHaveLength(1);
-  expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(false);
+  expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(
+    false,
+  );
 });
 
 test('the template not approved on WhatsApp yet: the button is off and the note says why', async () => {
   mockApiFetch.mockResolvedValue(template('pending'));
   await renderWithQuery(<FeedbackRequestButton lesson={lesson('completed')} />);
   expect(await screen.findByText(t.feedback.templateNotApproved)).toBeTruthy();
-  expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(true);
+  expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(
+    true,
+  );
 });
 
 test('a student who was absent or excused gets no button, a sibling who came does', async () => {
@@ -77,7 +114,11 @@ test('a student who was absent or excused gets no button, a sibling who came doe
     { id: 's-1', name: 'يوسف أحمد', attendance: 'absent' },
     { id: 's-2', name: 'مريم علي', attendance: 'on_time' },
   ];
-  await renderWithQuery(<FeedbackRequestButton lesson={{ ...lesson('completed'), students } as unknown as LessonView} />);
+  await renderWithQuery(
+    <FeedbackRequestButton
+      lesson={{ ...lesson('completed'), students } as unknown as LessonView}
+    />,
+  );
   expect(screen.queryByRole('button', named('يوسف أحمد'))).toBeNull();
   expect(screen.getByRole('button', named('مريم علي'))).toBeTruthy();
 });

@@ -56,4 +56,5 @@ export * from './teaching/booking-extras';
 export * from './teaching/audio-player';
 export * from './teaching/lesson-files';
 export * from './teaching/lesson-room';
+export * from './teaching/feedback';
 export * from './platform/legal';
