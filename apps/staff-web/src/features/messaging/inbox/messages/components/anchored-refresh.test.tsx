@@ -82,7 +82,8 @@ describe('bubble actions refresh an anchored window', () => {
   });
 
   it('«إعادة المحاولة» (MessageActions)', async () => {
-    const failed = message({ id: 'm1', direction: 'outbound', status: 'failed', phone_e164: PHONE });
+    const failed = message({ ...M, direction: 'outbound', status: 'failed', phone_e164: PHONE });
+    apiSend.mockResolvedValue({ ...failed, status: 'queued' });
     const client = mount(<MessageActions message={failed} />);
     fireEvent.click(screen.getByRole('button', { name: t.messages.retry }));
     await waitFor(() => expect(refreshed(client)).toBe(true));
