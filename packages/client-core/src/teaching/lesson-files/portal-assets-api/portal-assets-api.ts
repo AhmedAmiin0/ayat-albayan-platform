@@ -1,5 +1,5 @@
 import { fillRoutePath, type RouteSpec } from '@ab/core';
-import { portalAssetsRoutes as routes } from '@ab/shared';
+import { portalAssetsRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../../core/http';
 import { pathKey } from '../../../core/keys';
 import type { PortalAssetsApi, PortalRead } from './portal-assets-api.types';
@@ -20,15 +20,21 @@ export function portalAssetsApi(client: ApiClient): PortalAssetsApi {
   return {
     portalRecordingsQuery: (studentId) => {
       const params = { id: studentId };
-      return read(keyOf(routes.recordings, params), () =>
-        call({ route: routes.recordings, params }),
+      return read(keyOf(portalAssetsRoutes.recordings, params), () =>
+        call({ route: portalAssetsRoutes.recordings, params }),
       );
     },
     portalLessonAssetsQuery: ({ studentId, lessonId }) => {
       const params = { id: studentId, lessonId };
-      return read(keyOf(routes.lesson, params), () => call({ route: routes.lesson, params }));
+      return read(keyOf(portalAssetsRoutes.lesson, params), () =>
+        call({ route: portalAssetsRoutes.lesson, params }),
+      );
     },
     lessonFileUrl: ({ studentId, fileId, download }) =>
-      call({ route: routes.fileUrl, params: { id: studentId, fileId }, query: { download } }),
+      call({
+        route: portalAssetsRoutes.fileUrl,
+        params: { id: studentId, fileId },
+        query: { download },
+      }),
   };
 }
