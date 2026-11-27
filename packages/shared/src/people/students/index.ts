@@ -13,3 +13,4 @@ export * from './stop-choices/stop-choices.schemas';
 export * from './board-students';
 export type * from './student-views';
 export type { TeacherStudentCounts } from './student-lists';
+export * from './roster';

@@ -30,6 +30,8 @@ export const peopleEditRoutes = {
     path: '/people/students/:id',
     params: byId,
     response: peopleEditViewSchema,
+    permissions: ['people.edit'],
+    tags: ['people'],
   }),
   editStudent: defineRoute({
     method: 'PATCH',
@@ -37,6 +39,8 @@ export const peopleEditRoutes = {
     params: byId,
     body: blanksToNull(peopleStudentPatchSchema),
     response: peopleEditReplySchema,
+    permissions: ['people.edit'],
+    tags: ['people'],
   }),
   editGuardian: defineRoute({
     method: 'PATCH',
@@ -44,6 +48,8 @@ export const peopleEditRoutes = {
     params: byId,
     body: blanksToNull(peopleGuardianPatchSchema),
     response: peopleEditReplySchema,
+    permissions: ['people.edit'],
+    tags: ['people'],
   }),
   /** The family's second number only; 404 phone_not_found for the main one. */
   removePhone: defineRoute({
@@ -51,12 +57,16 @@ export const peopleEditRoutes = {
     path: '/people/guardians/:id/phones/:phone',
     params: byId.extend({ phone: phoneE164 }),
     response: 'empty',
+    permissions: ['people.edit'],
+    tags: ['people'],
   }),
   families: defineRoute({
     method: 'GET',
     path: '/people/guardians',
     query: familySearchSchema,
     response: familyOptionsSchema,
+    permissions: ['students.attach_guardian'],
+    tags: ['people'],
   }),
   /** 409 same_guardian. */
   move: defineRoute({
@@ -65,6 +75,8 @@ export const peopleEditRoutes = {
     params: byId,
     body: blanksToNull(familyMoveSchema),
     response: familyMoveReplySchema,
+    permissions: ['students.attach_guardian'],
+    tags: ['people'],
   }),
   /** 409 family_has_self. */
   contactSelf: defineRoute({
@@ -73,6 +85,8 @@ export const peopleEditRoutes = {
     params: byId,
     body: contactSelfSchema,
     response: contactSelfReplySchema,
+    permissions: ['people.switch_role'],
+    tags: ['people'],
   }),
   /** 409 guardian_has_self or duplicate_student. */
   toStudent: defineRoute({
@@ -80,6 +94,8 @@ export const peopleEditRoutes = {
     path: '/people/guardians/:id/to-student',
     params: byId,
     response: convertedStudentSchema,
+    permissions: ['people.switch_role'],
+    tags: ['people'],
   }),
   /** 409 student_has_login or student_has_records. */
   toGuardian: defineRoute({
@@ -87,5 +103,7 @@ export const peopleEditRoutes = {
     path: '/people/students/:id/to-guardian',
     params: byId,
     response: familyReplySchema,
+    permissions: ['people.switch_role'],
+    tags: ['people'],
   }),
 };

@@ -1,17 +1,14 @@
 import { bookingExtraRoutes as routes } from '@ab/shared';
 import { uploadMaxBytes } from '@ab/settings';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { BookingInvoices } from './invoice/booking.invoice';
 import { BookingSettings } from './booking.settings';
 import { MakeupCandidates } from './core/makeup/makeup-candidates.service';
 
 /** The invoice and the makeup half of the booking wizard API (R-PAY-03, R-SCH-10). Admin only. */
-@ApiTags('booking')
 @ApiBearerAuth()
-@Permissions('booking.write')
 @Controller()
 export class BookingExtrasController {
   constructor(

@@ -524,7 +524,7 @@
   },
   "src/sales/course/course.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/family-link.ts": {

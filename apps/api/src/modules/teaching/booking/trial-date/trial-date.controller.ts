@@ -1,7 +1,7 @@
 import { salesTrialDateRoutes, trialDateRoutes } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
@@ -14,9 +14,7 @@ type SalesInput<K extends keyof typeof salesTrialDateRoutes> = RouteInputOf<
 >;
 
 /** Admin only; an upcoming trial moves (kept as rescheduled), else a new trial is booked. */
-@ApiTags('booking')
 @ApiBearerAuth()
-@Permissions('booking.write')
 @Controller()
 export class TrialDateController {
   constructor(private readonly dates: TrialDates) {}
@@ -43,9 +41,7 @@ export class TrialDateController {
 }
 
 /** The same for an assistant from the family's chat, scoped like her trial booking. */
-@ApiTags('booking')
 @ApiBearerAuth()
-@Permissions('self.sales')
 @Controller()
 export class SalesTrialDateController {
   constructor(private readonly dates: SalesTrialDates) {}

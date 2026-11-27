@@ -1,6 +1,6 @@
 import { systemPermissionsOf, USER_ROLES } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { walkRoutes, type RouteAccess } from './route-walk.test-util';
+import { permissionKeys, walkRoutes, type RouteAccess } from './route-walk.test-util';
 
 // The assistant can update people's data: three narrow keys under /people/*, held by the
 // system admin and the system sales role, never students.write / guardians.write for sales.
@@ -30,7 +30,7 @@ describe('«تعديل البيانات» routes', () => {
     (key, handlers) => {
       expect(
         routes
-          .filter((r) => r.permission === key)
+          .filter((r) => permissionKeys(r).includes(key))
           .map((r) => r.key)
           .sort(),
       ).toEqual([...handlers].sort());

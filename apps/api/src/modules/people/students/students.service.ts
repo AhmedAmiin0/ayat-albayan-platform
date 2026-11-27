@@ -14,7 +14,7 @@ import { peopleErrors } from '@/modules/people/guardians/http';
 import { maybe, one, rows } from '@/common/db/errors';
 import { detectDuplicates } from './duplicate-detector';
 import { LeadLink } from './lead-link';
-import type { StudentCreateRequest } from './students.dto';
+import type { StudentCreateRequest } from '@ab/shared';
 import { toStudentInsert, toStudentPatch } from './students.mapper';
 
 type Student = Tables<'students'>;

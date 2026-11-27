@@ -1,3 +1,5 @@
+import { studentProfileFixture } from '@ab/shared/testing';
+import type { StudentStatus } from '@ab/catalog';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
@@ -12,20 +14,18 @@ vi.mock('@/features/finance/subscriptions/balance/BalanceCard/BalanceCard', () =
 vi.mock('@/features/people/students/profile/StudentProfileForm/StudentProfileForm', () => ({ StudentProfileForm: () => null }));
 vi.mock('@/features/people/students/duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
 
-const student = (status: string) => ({
-  id: 's1',
-  code: 'AB-0183',
-  name: 'سهيلة',
-  status,
-  guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: '+966500000001' },
-  meeting_link: null,
-  siblings: [],
-});
+const student = (status: StudentStatus) =>
+  studentProfileFixture({
+    id: 's1',
+    status,
+    guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: '+966500000001', students: [], phones: [] },
+    teacher: null,
+  });
 
 /** The file's lists answer lists; '/students/s1' alone would also catch its sub-paths. */
 const LISTS = [['/students/s1/assistants', []], ['/assistants', []]] as const;
 
-function renderPage(status: string) {
+function renderPage(status: StudentStatus) {
   routeFetch(apiFetch, [
     ['/students/s1/balance', balanceOf([WEEKLY])],
     ...LISTS,

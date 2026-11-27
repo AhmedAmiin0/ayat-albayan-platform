@@ -1,3 +1,4 @@
+import { studentProfileFixture } from '@ab/shared/testing';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
@@ -12,15 +13,11 @@ vi.mock('@/features/finance/subscriptions/balance/BalanceCard/BalanceCard', () =
 vi.mock('@/features/people/students/profile/StudentProfileForm/StudentProfileForm', () => ({ StudentProfileForm: () => null }));
 vi.mock('@/features/people/students/duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
 
-const STUDENT = {
+const STUDENT = studentProfileFixture({
   id: 's1',
-  code: 'AB-0183',
-  name: 'سهيلة',
-  status: 'active',
-  guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: '+966500000001' },
-  meeting_link: null,
-  siblings: [],
-};
+  guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: '+966500000001', students: [], phones: [] },
+  teacher: null,
+});
 
 describe('StudentProfilePage head (R-STU-05, R-REP-05)', () => {
   it('links to the student’s «سجل التقارير» and to booking', async () => {

@@ -20,4 +20,12 @@ describe('startDateEditRoutes', () => {
   it('rejects an id that is not a uuid', () => {
     expect(startDateEditRoutes.edit.params.safeParse({ id: 'nope' }).success).toBe(false);
   });
+
+  it('carries the edit-terms permission and the subscriptions tag', () => {
+    const { permissions, tags } = startDateEditRoutes.edit;
+    expect({ permissions, tags }).toEqual({
+      permissions: ['subscriptions.edit_terms'],
+      tags: ['subscriptions'],
+    });
+  });
 });

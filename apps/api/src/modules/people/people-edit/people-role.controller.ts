@@ -1,7 +1,7 @@
 import { peopleEditRoutes as routes, type ConvertedStudent, type FamilyOption } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { FamilyMoveService, type MoveTarget } from './family-move.service';
@@ -9,7 +9,6 @@ import { RoleSwitchService } from './role-switch.service';
 import { PeopleOwnership } from './access/people-ownership';
 
 /** Every write is audited; nothing with money, lessons or chats is moved or deleted. */
-@ApiTags('people')
 @ApiBearerAuth()
 @Controller()
 export class PeopleRoleController {
@@ -21,7 +20,6 @@ export class PeopleRoleController {
 
   /** The guardian picker: ?search= a name, a number (main or second) or a child's code. */
   @Route(routes.families)
-  @Permissions('students.attach_guardian')
   search(@RouteInput() { query }: RouteInputOf<typeof routes.families>): Promise<FamilyOption[]> {
     return this.families.families(query.search);
   }
@@ -29,7 +27,6 @@ export class PeopleRoleController {
   /** { guardian_id } or { guardian: { name, phone_e164, tz, country } }. */
   @Route(routes.move)
   @HttpCode(200)
-  @Permissions('students.attach_guardian')
   async move(
     @RouteInput() { params, body }: RouteInputOf<typeof routes.move>,
     @CurrentUser() user: AuthUser,
@@ -41,7 +38,6 @@ export class PeopleRoleController {
   }
 
   @Route(routes.contactSelf)
-  @Permissions('people.switch_role')
   async contactSelf(
     @RouteInput() { params, body }: RouteInputOf<typeof routes.contactSelf>,
     @CurrentUser() user: AuthUser,
@@ -53,7 +49,6 @@ export class PeopleRoleController {
   }
 
   @Route(routes.toStudent)
-  @Permissions('people.switch_role')
   async toStudent(
     @RouteInput() { params }: RouteInputOf<typeof routes.toStudent>,
     @CurrentUser() user: AuthUser,
@@ -64,7 +59,6 @@ export class PeopleRoleController {
 
   @Route(routes.toGuardian)
   @HttpCode(200)
-  @Permissions('people.switch_role')
   async toGuardian(
     @RouteInput() { params }: RouteInputOf<typeof routes.toGuardian>,
     @CurrentUser() user: AuthUser,

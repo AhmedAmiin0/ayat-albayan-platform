@@ -1,7 +1,7 @@
 import { bookingRoutes } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { clientRequest } from './core/booking.payload';
@@ -12,9 +12,7 @@ import { TeacherOptionsService } from './teacher/teacher-options.service';
 type Input<K extends keyof typeof bookingRoutes> = RouteInputOf<(typeof bookingRoutes)[K]>;
 
 /** Booking wizard API (R-SCH-06, R-SCH-04, R-LEAD-06; docs/10 §5 #12–14). Admin only. */
-@ApiTags('booking')
 @ApiBearerAuth()
-@Permissions('booking.write')
 @Controller()
 export class BookingController {
   constructor(

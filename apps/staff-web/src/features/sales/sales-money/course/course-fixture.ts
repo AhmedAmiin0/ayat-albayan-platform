@@ -6,7 +6,10 @@ import { ABRAR, SLOT, WED_SLOT } from '@/features/teaching/booking/wizard-fixtur
 
 export const COURSE_STUDENT_ID = '0b6a7c1e-2222-4a8e-9b00-000000000002';
 
-export const COURSE_SUB: CourseSubscription = { id: 'sub-1', package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-03' };
+const SUB_0 = 'e0000000-0000-4000-8000-0000000000a0';
+const SUB_1 = 'e0000000-0000-4000-8000-0000000000a1';
+
+export const COURSE_SUB: CourseSubscription = { id: SUB_1, package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-03' };
 
 export const COURSE_VIEW: SalesCourseView = {
   student: {
@@ -53,7 +56,7 @@ export function routeCourseSend(apiSend: Mock, check: unknown = { conflicts: [] 
 // A renewal: the previous course ran Sunday 17:00 + Wednesday 19:30 until Saturday
 // 10 October, so the new one opens on Sunday 11 October with the same days prefilled.
 export const PREVIOUS: BookedCourse = {
-  subscriptionId: 'sub-0',
+  subscriptionId: SUB_0,
   teacherId: ABRAR.id,
   teacherTz: 'Africa/Cairo',
   durationMin: 45,
