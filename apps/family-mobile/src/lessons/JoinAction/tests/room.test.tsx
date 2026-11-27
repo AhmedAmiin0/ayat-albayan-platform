@@ -50,9 +50,7 @@ beforeEach(() => {
 test('setting on: joins, hands the token to the room and opens it in the app', async () => {
   const l = await press({}, true);
   const s = student();
-  await waitFor(() =>
-    expect(router.push).toHaveBeenCalledWith(`/room/${l.id}?student=${s.id}`),
-  );
+  await waitFor(() => expect(router.push).toHaveBeenCalledWith(`/room/${l.id}?student=${s.id}`));
   expect(mockHandOff).toHaveBeenCalledWith({ kind: 'lesson', id: l.id }, JOIN);
   expect(Linking.openURL).not.toHaveBeenCalled();
 });
