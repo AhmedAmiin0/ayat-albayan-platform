@@ -1,15 +1,15 @@
 import { myPayoutRoutes, type PendingReportView } from '@ab/shared';
 import { routePath } from '@ab/core';
 import type { LessonView, TeacherMe } from '@ab/schedule';
-import { myPayoutCalls, TEACHER_REFRESH_MS } from '@ab/client-core';
+import { availabilityCalls, myPayoutCalls, TEACHER_REFRESH_MS } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
-import type { AvailabilityRow } from '@ab/shared';
 
 // The signed-in teacher's own reads (R-TCH-03, R-TCH-04). Every route is scoped by the session on
 // the API (no teacher id to tamper with); the persisted cache keeps them for an offline start.
 
 const ME = '/teachers/me';
+const availability = availabilityCalls({ apiFetch, apiSend });
 
 /** GET /teachers/me: name, tz, link, students. 404 `teacher_not_linked` without a teachers row. */
 export function useTeacherMe(enabled = true) {
@@ -52,10 +52,10 @@ export function useMyPayouts() {
 
 /** GET /teachers/:id/availability for me (OwnTeacherGuard), once /teachers/me gave my id. */
 export function useMyAvailability(id: string | undefined) {
-  const path = `/teachers/${id ?? ''}/availability`;
+  const teacherId = id ?? '';
   return useQuery({
-    queryKey: pathKey(path),
-    queryFn: () => apiFetch<AvailabilityRow[]>(path),
-    enabled: !!id,
+    queryKey: pathKey(`/teachers/${teacherId}/availability`),
+    queryFn: () => availability.grid(teacherId),
+    enabled: teacherId !== '',
   });
 }

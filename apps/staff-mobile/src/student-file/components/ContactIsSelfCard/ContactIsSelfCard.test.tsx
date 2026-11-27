@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
 import { t } from '@ab/mobile-kit';
+import { studentRowFixture } from '@ab/shared/testing';
 import { ContactIsSelfCard } from './ContactIsSelfCard';
 
 const C = t.familyAuth.contactIsSelf;
@@ -10,7 +11,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 
-beforeEach(() => mockApiSend.mockReset().mockResolvedValue({}));
+beforeEach(() => mockApiSend.mockReset().mockResolvedValue(studentRowFixture({ id: 's1' })));
 
 const checked = (name: string) => screen.getByRole('radio', { name }).props.accessibilityState?.checked;
 
@@ -33,6 +34,13 @@ test('a self-contact student can go back to «ولي الأمر» (false is sent
 
 test('a failed save says so', async () => {
   mockApiSend.mockRejectedValue(new Error('x'));
+  await renderWithQuery(<ContactIsSelfCard studentId="s1" value={false} />);
+  await fireEvent.press(screen.getByRole('radio', { name: C.self }));
+  expect(await screen.findByText(t.common.error)).toBeTruthy();
+});
+
+test('an answer that is not the student row says so', async () => {
+  mockApiSend.mockResolvedValue({});
   await renderWithQuery(<ContactIsSelfCard studentId="s1" value={false} />);
   await fireEvent.press(screen.getByRole('radio', { name: C.self }));
   expect(await screen.findByText(t.common.error)).toBeTruthy();
