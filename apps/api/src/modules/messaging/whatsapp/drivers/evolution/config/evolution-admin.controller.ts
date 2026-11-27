@@ -1,39 +1,45 @@
-import type { EvolutionQrView, EvolutionStateView } from '@ab/shared';
-import { Controller, Get } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { Permissions } from '@/common/auth/decorators';
-import { ZodParam } from '@/common/http/zod-inputs';
+import {
+  evolutionQrViewSchema,
+  evolutionRoutes as routes,
+  evolutionStateViewSchema,
+  type EvolutionQrView,
+  type EvolutionStateView,
+} from '@ab/shared';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { asResponse } from '@/common/http/returns';
 import { NumbersEvolution } from '@/modules/messaging/numbers';
 import { evolutionFailure as failure } from './evolution-failure';
 import { instanceQr, instanceState } from '@/modules/messaging/whatsapp/drivers/evolution/evolution-instance';
 
-const ID = z.uuid();
-
-/** numbers.manage since the QR links a WhatsApp account; read calls only, no token leaves. */
-@ApiTags('numbers')
+/** Read calls only: no token leaves. */
 @ApiBearerAuth()
-@Controller('admin/numbers/:id/evolution')
+@Controller()
 export class NumbersEvolutionController {
   constructor(private readonly numbers: NumbersEvolution) {}
 
-  @Get('state')
-  @Permissions('numbers.manage')
-  async state(@ZodParam('id', ID) id: string): Promise<EvolutionStateView> {
-    const env = await this.numbers.instanceEnv(id);
+  @Route(routes.state)
+  async state(
+    @RouteInput() { params }: RouteInputOf<typeof routes.state>,
+  ): Promise<EvolutionStateView> {
+    const env = await this.numbers.instanceEnv(params.id);
     const state = await instanceState({ env }).catch((e: unknown) => {
       throw failure(e);
     });
-    return { state, checked_at: new Date().toISOString() };
+    return asResponse(evolutionStateViewSchema, { state, checked_at: new Date().toISOString() });
   }
 
-  @Get('qr')
-  @Permissions('numbers.manage')
-  async qr(@ZodParam('id', ID) id: string): Promise<EvolutionQrView> {
-    const env = await this.numbers.instanceEnv(id);
+  @Route(routes.qr)
+  async qr(@RouteInput() { params }: RouteInputOf<typeof routes.qr>): Promise<EvolutionQrView> {
+    const env = await this.numbers.instanceEnv(params.id);
     const q = await instanceQr({ env }).catch((e: unknown) => {
       throw failure(e);
     });
-    return { state: q.state, qr: q.qr, pairing_code: q.pairingCode };
+    return asResponse(evolutionQrViewSchema, {
+      state: q.state,
+      qr: q.qr,
+      pairing_code: q.pairingCode,
+    });
   }
 }

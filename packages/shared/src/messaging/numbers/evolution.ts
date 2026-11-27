@@ -13,25 +13,10 @@ export const evolutionFieldsSchema = z.object({
 
 /** Evolution's connection states (CONNECTION_UPDATE / connectionState); anything else = unknown. */
 export const EVOLUTION_STATES = ['open', 'connecting', 'close', 'refused'] as const;
-export type EvolutionState = (typeof EVOLUTION_STATES)[number];
+export const evolutionStateSchema = z.enum(EVOLUTION_STATES);
+export type EvolutionState = z.infer<typeof evolutionStateSchema>;
 export const evolutionStateOf = (raw: unknown): EvolutionState | null =>
   EVOLUTION_STATES.find((s) => s === raw) ?? null;
-
-/** Evolution's current connectionState. */
-export interface EvolutionStateView {
-  state: EvolutionState | null;
-  checked_at: string;
-}
-
-/**
- * GET /admin/numbers/:id/evolution/qr: Evolution's /instance/connect. A QR (data URL of a PNG)
- * while the instance waits for a scan; null once connected (state open).
- */
-export interface EvolutionQrView {
-  state: EvolutionState | null;
-  qr: string | null;
-  pairing_code: string | null;
-}
 
 /** Only a PNG data URL is ever shown as the QR image (never a link to another host). */
 export const QR_DATA_URL_RE = /^data:image\/png;base64,[A-Za-z0-9+/=]+$/;

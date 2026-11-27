@@ -119,6 +119,7 @@ export const evolutionConfigSchema = z.object({
   cloud: evolutionCloudSchema.default(evolutionCloudSchema.parse({})),
 });
 export type EvolutionConfig = z.infer<typeof evolutionConfigSchema>;
+export type EvolutionConfigInput = z.input<typeof evolutionConfigSchema>;
 
 const storedSchema = z.record(z.string(), z.unknown());
 /** One section read back; unreadable = that section's defaults only. */

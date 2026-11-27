@@ -1,32 +1,20 @@
-import { evolutionSyncSchema, type EvolutionConfig, type EvolutionSyncView } from '@ab/shared';
+import { evolutionCalls } from '@ab/client-core';
 import { z } from 'zod';
-import { ApiError, apiFetch, t } from '@ab/web-kit';
+import { ApiError, apiFetch, apiSend, t } from '@ab/web-kit';
 
 // An Evolution number's options (numbers.manage, docs/19 «Evolution driver»): every answer is the
 // sync view (each part pushed to Evolution, read back), parsed before it is shown.
 
-const base = (id: string) => `/admin/numbers/${encodeURIComponent(id)}/evolution`;
-const viewOf = (raw: unknown): EvolutionSyncView => evolutionSyncSchema.parse(raw);
+const evolution = evolutionCalls({ apiFetch, apiSend });
 
-const JSON_HEADERS = { 'Content-Type': 'application/json' };
-
-/** A write whose answer is the sync view (parsed, never trusted as typed). */
-async function sendFor(method: 'PUT' | 'POST', path: string, body?: EvolutionConfig) {
-  const json = body === undefined ? {} : { headers: JSON_HEADERS, body: JSON.stringify(body) };
-  const raw: unknown = await apiFetch(path, { method, ...json });
-  return viewOf(raw);
-}
-
-/** PUT …/evolution/config: saves every option, pushes them to Evolution and reads them back. */
-export const putEvolutionConfig = (input: { id: string; config: EvolutionConfig }) =>
-  sendFor('PUT', `${base(input.id)}/config`, input.config);
+/** Saves every option, pushes them to Evolution and reads them back. */
+export const putEvolutionConfig = evolution.saveConfig;
 
 /** Pushes the saved options to Evolution again. */
-export const pushEvolutionSync = (id: string) => sendFor('POST', `${base(id)}/sync`);
+export const pushEvolutionSync = evolution.push;
 
 /** Reads Evolution back only and writes nothing. */
-export const readEvolutionSync = async (id: string) =>
-  viewOf(await apiFetch(`${base(id)}/sync`));
+export const readEvolutionSync = evolution.verify;
 
 /** The codes these routes answer (400 / 409 / 502); anything else is said generically. */
 export const EVOLUTION_CALL_ERRORS = [
