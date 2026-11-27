@@ -22,7 +22,8 @@ import { meetingTarget } from '@/modules/teaching/classroom/recordings/recording
 import { RoomAdmission } from '@/modules/teaching/classroom/join/room-admission';
 
 /** 410 meeting_ended: the meeting was ended or the row was revoked. */
-export const meetingEnded = (): HttpException => new HttpException({ code: 'meeting_ended', message: 'meeting_ended' }, HttpStatus.GONE);
+export const meetingEnded = (): HttpException =>
+  new HttpException({ code: 'meeting_ended', message: 'meeting_ended' }, HttpStatus.GONE);
 
 /** Internal meeting join: every join ensures recording; nobody is blocked (migration 212). */
 @Injectable()
@@ -68,7 +69,10 @@ export class InternalMeetingJoinService {
   }
 
   /** 429, 503 classroom_not_configured, 400 name, 404 link_invalid, 410 meeting_ended. */
-  async guest(input: { token: string; ip: string; body: unknown }, now = new Date()): Promise<RoomJoinResult> {
+  async guest(
+    input: { token: string; ip: string; body: unknown },
+    now = new Date(),
+  ): Promise<RoomJoinResult> {
     this.limit.assert({ ip: input.ip, token: input.token }, now.getTime());
     this.admission.livekit();
     const { name } = parseOrThrow(guestJoinSchema, input.body);
@@ -82,9 +86,11 @@ export class InternalMeetingJoinService {
    * window (R-MEET-01): 403 join_not_open_yet (with opens_at) before it, 410 join_closed after it.
    */
   private async assertOpen(meeting: MeetingRow, now: Date): Promise<void> {
-    if (meetingState({ ...meeting, starts_at: null, planned_end_at: null }, now) === 'ended') throw meetingEnded();
+    const untimed = { ...meeting, starts_at: null, planned_end_at: null };
+    if (meetingState(untimed, now) === 'ended') throw meetingEnded();
     if (meeting.starts_at && meeting.planned_end_at) {
-      assertWindowOpen({ starts_at: meeting.starts_at, ends_at: meeting.planned_end_at }, now, await this.queries.joinWindow());
+      const times = { starts_at: meeting.starts_at, ends_at: meeting.planned_end_at };
+      assertWindowOpen(times, now, await this.queries.joinWindow());
     }
   }
 
@@ -97,12 +103,16 @@ export class InternalMeetingJoinService {
     return meeting;
   }
 
-  private mint(input: { meeting: MeetingRow; role: JoinRole; name: string }, now: Date): RoomJoinResult {
+  private mint(
+    input: { meeting: MeetingRow; role: JoinRole; name: string },
+    now: Date,
+  ): RoomJoinResult {
     const config = this.admission.livekit();
     const room = meetingRoomName(input.meeting.id);
     const identity = newIdentity(input.role);
     const token = mintToken(config, { room, role: input.role, name: input.name, identity }, now);
     this.admission.record(meetingTarget(input.meeting.id), now);
-    return { url: config.url, token, room, role: input.role, recording: this.admission.recordingState };
+    const recording = this.admission.recordingState;
+    return { url: config.url, token, room, role: input.role, recording };
   }
 }

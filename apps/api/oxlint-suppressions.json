@@ -7715,11 +7715,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/internal-meetings/internal-meetings.join.service.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.kick.service.ts": {
     "complexity": {
       "count": 1
