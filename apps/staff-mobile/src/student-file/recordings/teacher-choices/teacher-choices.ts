@@ -5,8 +5,8 @@ import { studentCalls } from '@ab/client-core';
 import type { TeacherOptionView } from '@ab/shared';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { studentKeys } from '@/core/lib/keys';
-import { teacherLabel } from './recording-format';
-import type { TeacherChoice } from './RecordingFiltersBar';
+import { teacherLabel } from '@/student-file/recordings/recording-format';
+import type { TeacherChoice } from '@/student-file/recordings/RecordingFiltersBar';
 
 type Option = Pick<TeacherOptionView, 'id' | 'display_name_ar'> & {
   display_name_en?: string | null;
@@ -14,7 +14,10 @@ type Option = Pick<TeacherOptionView, 'id' | 'display_name_ar'> & {
 
 const students = studentCalls({ apiFetch, apiSend });
 
-/** The teachers to filter by: every active teacher for the admin (GET /students/teacher-options), else those on the loaded rows. */
+/**
+ * The teachers to filter by: every active teacher for the admin
+ * (GET /students/teacher-options), else those on the loaded rows.
+ */
 export function mergeChoices(rows: StudentRecordingView[], all: Option[]): TeacherChoice[] {
   const seen = new Map(all.map((x) => [x.id, teacherLabel(x)]));
   for (const r of rows) if (r.teacher) seen.set(r.teacher.id, teacherLabel(r.teacher));

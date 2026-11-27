@@ -4902,10 +4902,7 @@
       "count": 2
     }
   },
-  "src/student-file/recordings/teacher-choices.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
+  "src/student-file/recordings/teacher-choices/teacher-choices.ts": {
     "ab/no-restricted-syntax": {
       "count": 1
     }

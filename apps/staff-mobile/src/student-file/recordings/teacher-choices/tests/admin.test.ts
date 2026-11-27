@@ -3,8 +3,8 @@ import { teacherOptionFixture } from '@ab/shared/testing';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import { studentKeys } from '@/core/lib/keys';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import type { TeacherChoice } from './RecordingFiltersBar';
-import { useTeacherChoices } from './teacher-choices';
+import type { TeacherChoice } from '@/student-file/recordings/RecordingFiltersBar';
+import { useTeacherChoices } from '@/student-file/recordings/teacher-choices/teacher-choices';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
