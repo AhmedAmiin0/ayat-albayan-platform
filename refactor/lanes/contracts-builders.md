@@ -14,12 +14,18 @@ A base is a branch that collects the work of several builders and lands on devel
 | Builder | Area | API modules (`apps/api/src/modules/…`) | Base | Sub-branch |
 |---|---|---|---|---|
 | 1 | finance | `finance/*` | C1 | `lane/contracts-finance` |
-| 2 | people | `people/*` | C1 | `lane/contracts-people` |
+| 2 | people | `people/students`, `people/guardians`, `people/teachers`, `people/teacher-students`, `people/people-edit`, `people/test-accounts` | C1 | `lane/contracts-people` |
 | 3 | booking | `teaching/booking`, `teaching/scheduling`, `teaching/schedule-notices`, `teaching/course-pause`, `teaching/course-stop` | C1 | `lane/contracts-booking` |
-| 4 | messaging | `messaging/*` | C2 | `lane/contracts-messaging` |
-| 5 | teaching | `teaching/*` except builder 3's five modules | C2 | `lane/contracts-teaching` |
+| 4 | messaging | `messaging/inbox`, `messaging/chat-lists`, `messaging/saved-replies`, `messaging/follow-ups`, `messaging/calls` | C2 | `lane/contracts-messaging` |
+| 5 | teaching | `teaching/lessons`, `teaching/lesson-links`, `teaching/lesson-rating`, `teaching/classroom` | C2 | `lane/contracts-teaching` |
 | 6 | sales | `sales/*` | C2 | `lane/contracts-sales` |
-| 7 | reporting and platform | `reporting/*`, `platform/*` | C2 | `lane/contracts-reporting` |
+| 7 | reporting | `reporting/*` | C2 | `lane/contracts-reporting` |
+| 8 | channels | `teaching/student-channels`, `teaching/student-recordings`, `teaching/feedback` | C2 | `lane/contracts-channels` |
+| 9 | lines | `messaging/numbers`, `messaging/whatsapp`, `messaging/webhook`, `messaging/notification-rules`, `messaging/reminders`, `messaging/messaging-jobs`, `messaging/push` | C2 | `lane/contracts-lines` |
+| 10 | platform | `platform/*` | C2 | `lane/contracts-platform` |
+| 11 | accounts | `people/users`, `people/roles`, `people/sign-in`, `people/me`, `people/portal`, `people/presence` | C1 | `lane/contracts-accounts` |
+
+On 2026-11-27 four areas were split to add builders 8 to 11. A module that already has an open sub-PR or unmerged work on its previous builder's sub-branch stays with that builder until that work is merged; the new builder starts with the modules nobody has touched.
 
 Every API module has a builder. A builder whose own area has no handler left on plain decorators takes the area with the most handlers still on plain decorators that no other builder is working on (no open sub-PR and no sub-branch of another builder touches it), on a new sub-branch `lane/contracts-<area>` of the C2 base, and says so in its summary.
 
@@ -80,7 +86,7 @@ A new sub-folder inside one of these is fine, within the same cap of 12 code fil
 Owner 2026-11-27: each route object carries its permissions and its API tags, and a route with several permissions lets in a caller who has any one of them. The core of it comes in the PR from `feat/route-permissions-tags` into develop. Until that PR is merged, nothing in this section applies.
 
 - **When it is merged:** the keeper of each base merges develop into its base once, in its next run, regenerates as «Generated files» says and verifies. The C2 base takes that one merge too, the only exception to «merges nothing else into it until C1 is on develop».
-- **Every route object you write or touch** after that carries `permissions` (the permission keys of `@ab/catalog`, at least one) and `tags` (the Swagger tag its controller uses today), and its handler loses its own `@Permissions(…)`. A class-level `@Permissions` or `@ApiTags` goes once no handler of that class needs it. `@Public()`, `@SignedIn()`, guards, throttles and `@HttpCode` stay on the handler.
+- **Every route object you write or touch** after that carries `permissions` (the permission keys of `@ab/catalog`, at least one) and `tags` (the Swagger tag its controller uses today), and its handler loses its own `@Permissions(…)`. A class-level `@Permissions` or `@ApiTags` goes once no handler of that class needs it. `@SignedIn()`, guards, throttles and `@HttpCode` stay on the handler. Once `RouteSpec` on develop has `isPublic` (a follow-up to the same PR), a public route says `isPublic: true` on its route object instead of `@Public()` on its handler, and carries no `permissions`; until then `@Public()` stays.
 - **Backfill:** the route objects of your area already on the base get the two fields in your next part, before new route groups.
 - **Proof:** `routes.snap.txt` stays byte-identical. A route whose permission or tag would change is a mistake, not a move.
 
