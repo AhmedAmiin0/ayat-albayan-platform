@@ -1,8 +1,4 @@
-import {
-  courseResumePreviewSchema,
-  type CourseCardView,
-  type CourseResumePreview,
-} from '@ab/shared';
+import type { CourseCardView } from '@ab/shared';
 import type { StudentStatus } from '@ab/catalog';
 import { apiErrorCode } from '../../../core/http';
 import { courseActionsKey } from '../course-actions';
@@ -10,16 +6,11 @@ import { courseActionsKey } from '../course-actions';
 // Course card query key, paths and parsers (rule 12) for web and mobile; the card's own calls are
 // in course-card-api.
 
-const student = (studentId: string): string => `/students/${studentId}`;
-
 /** The card's query key: under the course actions' (every action's re-read refreshes it). */
 export const courseCardKey = (studentId: string): readonly ['course-actions', string, 'card'] => [
   ...courseActionsKey(studentId),
   'card',
 ];
-
-export const courseResumePreviewPath = (studentId: string): string =>
-  `${student(studentId)}/course-pause/resume-preview`;
 
 const MINUTE_MS = 60_000;
 
@@ -42,9 +33,6 @@ export async function readLessonAt<L extends { id: string }>(
   const rows = await fetch(lessonAtPath(lesson.startsAt));
   return rows.find((l) => l.id === lesson.id) ?? null;
 }
-
-export const parseResumePreview = (data: unknown): CourseResumePreview =>
-  courseResumePreviewSchema.parse(data);
 
 /** Extending is offered only when package lessons are left without a date. */
 export const extendOffered = (card: CourseCardView | undefined): boolean =>

@@ -73,7 +73,7 @@ describe('CoursePausePanel: the banner', () => {
     apiSend.mockResolvedValue({ pause: PAUSE, cancelled: 0, left: 0, reopened: 3, conflicts: 2 });
     fireEvent.click(dialog.getByRole('button', { name: words.resumeConfirm }));
     await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(words.resumedConflicts.replace('{n}', '2')));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-pause/resume');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-pause/resume', {});
   });
 
   it('«تغيير نهاية الإيقاف»: emptied = until resume, PATCH …/until', async () => {

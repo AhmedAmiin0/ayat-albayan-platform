@@ -329,7 +329,7 @@
   },
   "src/teaching/booking/course-pause.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 2
