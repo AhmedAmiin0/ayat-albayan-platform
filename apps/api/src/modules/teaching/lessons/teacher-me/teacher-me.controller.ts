@@ -1,7 +1,12 @@
-import { teacherLessonRoutes as routes, type LessonView, type TeacherMe } from '@ab/schedule';
-import { Controller, Get, Inject } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import {
+  teacherLessonRoutes as routes,
+  teacherMeRoutes,
+  type LessonView,
+  type TeacherMe,
+} from '@ab/schedule';
+import { Controller, Inject } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -24,9 +29,7 @@ export class TeacherMeController {
     @Inject(LessonViews) private readonly views: LessonViews,
   ) {}
 
-  @Get('teachers/me')
-  @ApiTags('teachers')
-  @Permissions('self.teacher')
+  @Route(teacherMeRoutes.me)
   async me(@CurrentUser() user: AuthUser): Promise<TeacherMe> {
     const me = await this.queries.me(user.id);
     if (!me) throw notFound('teacher_not_linked');

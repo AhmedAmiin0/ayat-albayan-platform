@@ -4,6 +4,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { withMeeting } from '@/modules/people/teachers/meeting-view';
 import { maybe, pgError } from '@/common/db/errors';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
+import { toTeacherMe } from './teacher-me.mapper';
 
 type MyStudent = TeacherMe['students'][number];
 const STUDENT = 'id, code, name, tz, status' as const;
@@ -28,7 +29,7 @@ export class TeacherMeRepo {
       .maybeSingle());
     if (!data) return null;
     const auto = (await this.settings.read()).meeting_link_auto;
-    return { ...withMeeting(data, auto), students: await this.students(data.id) };
+    return toTeacherMe({ ...withMeeting(data, auto), students: await this.students(data.id) });
   }
 
   /**
