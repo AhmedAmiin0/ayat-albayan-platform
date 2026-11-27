@@ -59,3 +59,12 @@ test('an error shows its line', async () => {
   await show('تعذّر الإرسال').view;
   expect(screen.getByText('تعذّر الإرسال')).toBeTruthy();
 });
+
+test('closing hands the close over and leaves the decline form', async () => {
+  const { view, onClose } = show();
+  await view;
+  await fireEvent.press(screen.getByRole('button', { name: A.decline }));
+  await fireEvent.press(screen.getByLabelText(t.common.cancel, { includeHiddenElements: true }));
+  expect(onClose).toHaveBeenCalledTimes(1);
+  expect(screen.getByRole('button', { name: A.confirm })).toBeTruthy();
+});
