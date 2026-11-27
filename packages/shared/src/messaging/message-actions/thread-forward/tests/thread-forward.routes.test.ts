@@ -26,12 +26,19 @@ describe('threadForwardRoutes', () => {
     expect(routes.forward.response.parse(answer)).toEqual(answer);
   });
 
-  it('refuses an unknown skip reason, a sent copy with no id and the internal replay flag', () => {
+  it('refuses an unknown skip reason and a sent copy with no id', () => {
     const bad = [
       { phone: '+201000000001', sent: false, reason: 'busy' },
       { phone: '+201000000001', sent: true },
-      { phone: '+201000000001', sent: true, message_id: ID, replayed: true },
     ];
-    for (const r of bad) expect(routes.forward.response.safeParse({ results: [r] }).success).toBe(false);
+    for (const r of bad) {
+      expect(routes.forward.response.safeParse({ results: [r] }).success).toBe(false);
+    }
+  });
+
+  it('never lets the internal replay flag reach the wire', () => {
+    const replayed = { phone: '+201000000001', sent: true, message_id: ID, replayed: true };
+    const { results } = routes.forward.response.parse({ results: [replayed] });
+    expect(results[0]).not.toHaveProperty('replayed');
   });
 });

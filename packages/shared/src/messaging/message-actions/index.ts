@@ -5,3 +5,4 @@ export * from './search-snippet';
 export * from './message-search';
 export * from './correction/correction';
 export * from './message-hide';
+export * from './thread-forward';

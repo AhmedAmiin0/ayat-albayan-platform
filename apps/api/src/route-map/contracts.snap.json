@@ -19110,6 +19110,70 @@
     "targets",
     "clientRequestId"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "results": {
+     "type": "array",
+     "items": {
+      "oneOf": [
+       {
+        "type": "object",
+        "properties": {
+         "phone": {
+          "type": "string"
+         },
+         "sent": {
+          "type": "boolean",
+          "const": true
+         },
+         "message_id": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "phone",
+         "sent",
+         "message_id"
+        ]
+       },
+       {
+        "type": "object",
+        "properties": {
+         "phone": {
+          "type": "string"
+         },
+         "sent": {
+          "type": "boolean",
+          "const": false
+         },
+         "reason": {
+          "type": "string",
+          "enum": [
+           "session_closed",
+           "not_your_thread",
+           "own_thread_read_only",
+           "line_not_configured",
+           "files_forbidden",
+           "send_failed"
+          ]
+         }
+        },
+        "required": [
+         "phone",
+         "sent",
+         "reason"
+        ]
+       }
+      ]
+     }
+    }
+   },
+   "required": [
+    "results"
+   ]
   }
  },
  "POST /users": {
