@@ -32,7 +32,8 @@ const chatFiles = chatFileCalls({ apiFetch, apiSend });
 const ratings = lessonRatingCalls({ apiFetch, apiSend });
 const messageStatus = messageStatusCalls({ apiFetch, apiSend });
 const sends = threadSendCalls({ apiFetch, apiSend });
-const reads = threadReadCalls({ apiFetch, apiSend });
+/** The inbox's reads: the chats list and a chat's page or delta (docs/12 §4 H1–H2, docs/37). */
+export const threadReads = threadReadCalls({ apiFetch, apiSend });
 
 /** New WhatsApp messages arrive by webhook; the open chat polls for them with a delta (10 s; e2e 1 s). */
 export const INBOX_REFRESH_MS = env.inboxRefreshMs;
@@ -43,17 +44,11 @@ export const threadsQuery = (s: InboxSearch) => {
   const query = threadListQuery(s);
   return queryOptions({
     queryKey: threadKeys.list(threadListKey(query)),
-    queryFn: ({ signal }) => reads.list(query, signal),
+    queryFn: ({ signal }) => threadReads.list(query, signal),
     placeholderData: keepPreviousData,
     refetchInterval: () => liveInterval(inboxLive.isLive(), env.inboxListRefreshMs),
   });
 };
-
-/** `+` must not reach the path raw (docs/12 H2: url-encoded E.164). */
-export const threadPath = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
-
-/** One page of a chat (live or anchored, docs/37): GET /threads/:phone with its page's query. */
-export const threadPage = (path: string, init?: RequestInit) => apiFetch<ThreadDetail>(path, init);
 
 /** A file in a chat bubble as a signed URL of our own copy (ThreadMediaService.file). */
 /**

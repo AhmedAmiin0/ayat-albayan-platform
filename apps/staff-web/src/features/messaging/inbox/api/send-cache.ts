@@ -11,7 +11,7 @@ import {
 import type { MessageView, ThreadView } from '@ab/shared';
 import type { Page } from '@ab/core';
 import type { QueryClient } from '@tanstack/react-query';
-import { threadPage, threadPath } from './api';
+import { threadReads } from './api';
 import { threadQuery } from './thread-query';
 
 // What a send does to the cached chat and lists (docs/44 BUG3, as mobile does): the provisional row
@@ -45,7 +45,7 @@ function refreshSentChat(client: QueryClient, row: MessageView, own: string[]): 
     shown: () => client.getQueryCache().find({ queryKey, exact: true })?.isActive() === true,
     read: () => client.getQueryData(queryKey),
     write: (edit) => client.setQueryData(queryKey, edit),
-    newest: () => threadPage(threadPath(row.phone_e164)),
+    newest: () => threadReads.page({ phone: row.phone_e164, query: {} }),
     reload: () => client.invalidateQueries({ queryKey }),
   });
 }

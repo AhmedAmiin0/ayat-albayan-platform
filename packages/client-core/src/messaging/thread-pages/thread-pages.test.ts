@@ -16,14 +16,12 @@ const row = (id: string, created_at: string) => ({ id, created_at });
 
 describe('threadPageQuery', () => {
   it('newest, compound keyset, around and a legacy persisted string', () => {
-    expect(threadPageQuery(null)).toBe('');
-    expect(threadPageQuery(undefined)).toBe('');
-    expect(threadPageQuery('')).toBe('');
-    expect(threadPageQuery({ before: AT, before_id: ID })).toBe(
-      `?before=${encodeURIComponent(AT)}&before_id=${ID}`,
-    );
-    expect(threadPageQuery({ around: ID })).toBe(`?around=${ID}`);
-    expect(threadPageQuery(AT)).toBe(`?before=${encodeURIComponent(AT)}`);
+    expect(threadPageQuery(null)).toEqual({});
+    expect(threadPageQuery(undefined)).toEqual({});
+    expect(threadPageQuery('')).toEqual({});
+    expect(threadPageQuery({ before: AT, before_id: ID })).toEqual({ before: AT, before_id: ID });
+    expect(threadPageQuery({ around: ID })).toEqual({ around: ID });
+    expect(threadPageQuery(AT)).toEqual({ before: AT });
   });
 });
 
@@ -47,7 +45,7 @@ describe('anchoredThreadPages', () => {
     const { signal } = new AbortController();
     await o.queryFn({ pageParam: o.initialPageParam, signal });
     // TanStack's signal reaches the GET (docs/43 AU8).
-    expect(get).toHaveBeenCalledWith(`/threads/%2B966500000001?around=${ID}`, { signal });
+    expect(get).toHaveBeenCalledWith({ phone: '+966500000001', query: { around: ID }, signal });
     expect(o.getNextPageParam(detail)).toEqual({ before: AT, before_id: 'a' });
     expect(o.staleTime).toBe(Number.POSITIVE_INFINITY);
   });
