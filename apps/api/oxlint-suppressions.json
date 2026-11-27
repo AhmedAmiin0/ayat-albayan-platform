@@ -2562,9 +2562,6 @@
     }
   },
   "src/modules/messaging/inbox/files/thread-forward.controller.ts": {
-    "no-nested-ternary": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     }
