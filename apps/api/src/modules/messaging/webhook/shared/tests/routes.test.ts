@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { webhookRoutes as routes } from '..';
+import { webhookRoutes as routes } from '@/modules/messaging/webhook/shared';
 
 describe('webhookRoutes', () => {
   it('keeps the paths of today', () => {

@@ -44,7 +44,11 @@ const text = {
 };
 const req = (body: unknown, token: string | null = TOKEN) =>
   ({ body, headers: token === null ? {} : { 'x-evolution-token': token } });
-const AT = { params: { instance: 'secondary-1' }, query: undefined, body: undefined };
+const AT = {
+  params: { instance: 'secondary-1' },
+  query: undefined,
+  body: undefined,
+};
 const status = (e: unknown) => (e as { getStatus(): number }).getStatus();
 
 afterEach(() => setNumbersOverlay(null));
@@ -71,7 +75,8 @@ describe('EvolutionWebhookController', () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: [NUMBER] });
     const h = harness();
     expect(status(await h.controller.receive(AT, req(text, 'nope')).catch((e: unknown) => e))).toBe(401);
-    expect(status(await h.controller.receive(AT, req(text, null)).catch((e: unknown) => e))).toBe(401);
+    const noToken = await h.controller.receive(AT, req(text, null)).catch((e: unknown) => e);
+    expect(status(noToken)).toBe(401);
     expect(h.handle).not.toHaveBeenCalled();
   });
 
