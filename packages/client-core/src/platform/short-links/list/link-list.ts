@@ -1,5 +1,5 @@
 import { SHORT_LINK_STATUSES, type ShortLinkRow, type ShortLinkStatus } from '@ab/shared';
-import type { ShortLinkListFilter } from '../short-links-api';
+import type { ShortLinkListFilter } from '../api';
 
 // The list's filters both apps show (boards LinkXWebList, LinkXStaffList): the status chips,
 // the owner (short_links.all) and the search, as the API's query.
