@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { channelSalesRoutes as routes } from '../channel-sales.routes';
+import { channelSalesRoutes as routes } from '../channel-chat.routes';
 import { channelSeatRoutes } from '../channel-seat.routes';
 
 const ID = 'a1111111-1111-4111-8111-111111111111';
@@ -9,6 +9,7 @@ describe('channelSalesRoutes', () => {
   it('keeps the paths the api serves today', () => {
     const lines = Object.values(routes).map((r) => `${r.method} ${r.path}`);
     expect(lines).toEqual([
+      'GET /sales/students/:id/channel/messages',
       'POST /sales/students/:id/channel/messages',
       'POST /sales/students/:id/channel/read',
       'GET /sales/students/:id/channel/unread',
@@ -41,6 +42,6 @@ describe('channelSalesRoutes', () => {
   it('every assistant chat route lets in self.sales under the student-channels tag', () => {
     const all = [...Object.values(routes), ...Object.values(channelSeatRoutes)];
     const access = all.map((r) => [r.permissions, r.tags]);
-    expect(access).toEqual(Array(6).fill([['self.sales'], ['student-channels']]));
+    expect(access).toEqual(Array(7).fill([['self.sales'], ['student-channels']]));
   });
 });

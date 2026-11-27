@@ -10,7 +10,7 @@ const PAGES: [string, Who][] = [
   ['/students/x/channel/messages', 'admin'],
   ['/sales/students/x/channel/messages', 'sales'],
 ];
-const answer = (r: { statusCode: number; json: <T>() => T }) => [
+const answer = (r: Awaited<ReturnType<App['call']>>) => [
   r.statusCode,
   r.json<{ message: string }>().message,
 ];

@@ -1,13 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { channelMonitorRoutes } from '../channel-monitor.routes';
-import { channelPortalRoutes } from '../channel-portal.routes';
-import { channelSalesRoutes } from '../channel-sales.routes';
+import { channelPortalRoutes, channelSalesRoutes } from '../channel-chat.routes';
 import { channelTeacherRoutes } from '../channel-teacher.routes';
 
 const ID = 'a1111111-1111-4111-8111-111111111111';
 const AT = '2026-11-27T10:00:00.000Z';
 const lines = (table: object) =>
   Object.values(table).map((r: { method: string; path: string }) => `${r.method} ${r.path}`);
+
+const access = (table: object) =>
+  Object.values(table).map((r: { permissions: unknown; tags: unknown }) => [r.permissions, r.tags]);
 
 describe('student chat thread routes per audience', () => {
   it('keeps the paths the api serves today', () => {
@@ -57,15 +59,10 @@ describe('student chat thread routes per audience', () => {
   });
 
   it('lets each audience in by its own permission under the student-channels tag', () => {
-    const tables = [channelTeacherRoutes, channelPortalRoutes, channelMonitorRoutes];
-    const access = tables.map((t) => [
-      ...new Set(Object.values(t).map((r) => `${r.permissions.join()} ${r.tags.join()}`)),
-    ]);
-    expect(access).toEqual([
-      ['self.teacher student-channels'],
-      ['self.portal student-channels'],
-      ['student_channels.monitor student-channels'],
-    ]);
-    expect(channelSalesRoutes.page.permissions).toEqual(['self.sales']);
+    const tag = ['student-channels'];
+    expect(access(channelTeacherRoutes)).toEqual(Array(4).fill([['self.teacher'], tag]));
+    expect(access(channelPortalRoutes)).toEqual(Array(4).fill([['self.portal'], tag]));
+    expect(access(channelMonitorRoutes)).toEqual([[['student_channels.monitor'], tag]]);
+    expect(access({ page: channelSalesRoutes.page })).toEqual([[['self.sales'], tag]]);
   });
 });
