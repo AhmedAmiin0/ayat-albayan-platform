@@ -1,4 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { VIEW } from '@/modules/teaching/booking/course-change/course-change.fakes';
 import { BODY, profileApp, RESULT, S1, SALES, SUB_ID, T_NEW } from '@/modules/teaching/booking/profile/profile-course.fakes';
 
 type App = Awaited<ReturnType<typeof profileApp>>;
@@ -110,5 +111,11 @@ describe('profile course changes: roles and routes', () => {
     expect(res.statusCode).toBe(200);
     expect(t.m.repo.currentSubscription).toHaveBeenCalledWith(S1);
     expect(t.m.views.view).toHaveBeenCalledWith(SUB_ID);
+  });
+
+  it('a course view the schema refuses answers 500 response_invalid, never the bad body', async () => {
+    t.m.views.view.mockResolvedValue({ ...VIEW, course: { ...VIEW.course, durationMin: 'x' } });
+    const res = await t.get('sales', `${TIMES}?subscriptionId=${SUB_ID}`);
+    expect([res.statusCode, res.json().code]).toEqual([500, 'response_invalid']);
   });
 });

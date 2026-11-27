@@ -78,3 +78,22 @@ export function setup(o: { rules?: ChangeRule[]; owned?: string[] } = {}) {
   );
   return { queries, lessons, scope, deps, writer, service };
 }
+
+/** The read of SUB's course as CourseChangeViews answers it (a whole BookedCourse). */
+export const VIEW = {
+  student: { id: S1, name: 'سهيلة', code: 'AB-0001', tz: 'Asia/Riyadh' },
+  course: {
+    subscriptionId: SUB_ID,
+    teacherId: 'd0000000-0000-4000-8000-0000000000e1',
+    teacherTz: 'Africa/Cairo',
+    durationMin: 45,
+    tz: 'Asia/Riyadh',
+    startsOn: '2026-10-01',
+    endsOn: '2026-10-28',
+    running: true,
+    opensOn: '2026-10-18',
+    days: [{ weekday: 2, startTimeLocal: '17:00' }],
+    lessonsTotal: 8,
+    perWeek: 2,
+  },
+};

@@ -48,6 +48,7 @@ export * from './sales/course/course-picks';
 export * from './sales/course/course-card';
 export * from './schedule/booking';
 export * from './schedule/booking-extras';
+export * from './schedule/course-move';
 export * from './people/users';
 export * from './people/account';
 export * from './people/presence';
